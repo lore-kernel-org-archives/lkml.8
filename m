@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF0CAC10F25
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:04:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60489C10F25
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:04:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FCF720873
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:04:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3213C20873
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:04:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583780684;
-	bh=nL2H54S6ZM4KIrumKkrnU5dL/kC8mAPn3giJtrQXiGY=;
+	s=default; t=1583780689;
+	bh=q8wFuSwvuEuIe9lRu5wkWqOK3pIggrmojKpsBfFiQ2c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tzf79ZVu3VEgb7oIlswIU8oKTdAo5D5vmTSafODMFjPaUmgbt8YgMkXkMowRHnRJP
-	 MeVLtt/nq5nY+emtDGE/qywUIwcyYigRHCwQruLSB0Gy9mrd2Q4EaPE2hwFy/s3Wit
-	 mEAOhQOhb7NZvWYbzw41JFj+y2YNhDfT6tza410s=
+	b=zrqErYGlVQ1DG4bIjKlk9WohCmIJRaRrVEI1VMUAOOvVGXzFADLd88eeaCuHJalE6
+	 5AS4Ig07Er0v8AN9D4Q6waFEmSXt9e4TdYkFNV7PHsRbHtyLdP48wFqNd7uhwmgY21
+	 qbNJlrgtZubtDB/4y8v+36jzaTK3QpCxXz+ZJMUQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727718AbgCITEn (ORCPT
+        id S1727735AbgCITEs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 15:04:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47842 "EHLO mail.kernel.org"
+        Mon, 9 Mar 2020 15:04:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48060 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727627AbgCITEb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 15:04:31 -0400
+        id S1727641AbgCITEa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 15:04:30 -0400
 Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2754B24680;
-        Mon,  9 Mar 2020 19:04:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2366824679;
+        Mon,  9 Mar 2020 19:04:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583780670;
-        bh=nL2H54S6ZM4KIrumKkrnU5dL/kC8mAPn3giJtrQXiGY=;
+        s=default; t=1583780669;
+        bh=q8wFuSwvuEuIe9lRu5wkWqOK3pIggrmojKpsBfFiQ2c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aMiU5N8D21eiIK1CkE8d/ZxRc37MeIJR5jMoJImepM07SDKPRpZT1zo0EKjs932Ee
-         kchXe4TWFxRSMT7LEkNfEDgiPRXnQGI63bHGjv0FMd2/eeRrHkTS2eWWxQyzSIf70z
-         fDuOicSQJ8rdihMScCIupv2zfhikUxkEEy9t989o=
+        b=QzyY5YC4789TpJ1a0Jgb1pU5+tM3USqg/QBYY0RK2NOb87W/xfN78Sk5UXAsin2Tl
+         FKq0v375aaguWAfS78proEi6Zkov7Yd+tI8+gGhNuY72jq58J5tuFJoHpPk0rCVU3X
+         oePUj041zAPxOO+56Erd7fhkkNlmPgmQgLP8Ums0=
 From:   paulmck@kernel.org
 To:     linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
         kernel-team@fb.com, mingo@kernel.org
 Cc:     elver@google.com, andreyknvl@google.com, glider@google.com,
         dvyukov@google.com, cai@lca.pw, boqun.feng@gmail.com,
         "Paul E . McKenney" <paulmck@kernel.org>
-Subject: [PATCH kcsan 32/32] kcsan: Update API documentation in kcsan-checks.h
-Date:   Mon,  9 Mar 2020 12:04:20 -0700
-Message-Id: <20200309190420.6100-32-paulmck@kernel.org>
+Subject: [PATCH kcsan 28/32] kcsan: Add option for verbose reporting
+Date:   Mon,  9 Mar 2020 12:04:16 -0700
+Message-Id: <20200309190420.6100-28-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20200309190359.GA5822@paulmck-ThinkPad-P72>
 References: <20200309190359.GA5822@paulmck-ThinkPad-P72>
@@ -58,219 +58,228 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Marco Elver <elver@google.com>
 
-Update the API documentation for ASSERT_EXCLUSIVE_* macros and make them
-generate readable documentation for the code examples.
-
-All @variable short summaries were missing ':', which was updated for
-the whole file.
-
-Tested with "make htmldocs".
+Adds CONFIG_KCSAN_VERBOSE to optionally enable more verbose reports.
+Currently information about the reporting task's held locks and IRQ
+trace events are shown, if they are enabled.
 
 Signed-off-by: Marco Elver <elver@google.com>
+Suggested-by: Qian Cai <cai@lca.pw>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- include/linux/kcsan-checks.h | 98 +++++++++++++++++++++++++++-----------------
- 1 file changed, 61 insertions(+), 37 deletions(-)
+ kernel/kcsan/core.c   |   4 +-
+ kernel/kcsan/kcsan.h  |   3 ++
+ kernel/kcsan/report.c | 103 +++++++++++++++++++++++++++++++++++++++++++++++++-
+ lib/Kconfig.kcsan     |  13 +++++++
+ 4 files changed, 120 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/kcsan-checks.h b/include/linux/kcsan-checks.h
-index 1b8aac5..14fd10e 100644
---- a/include/linux/kcsan-checks.h
-+++ b/include/linux/kcsan-checks.h
-@@ -26,9 +26,9 @@
- /**
-  * __kcsan_check_access - check generic access for races
-  *
-- * @ptr address of access
-- * @size size of access
-- * @type access type modifier
-+ * @ptr: address of access
-+ * @size: size of access
-+ * @type: access type modifier
-  */
- void __kcsan_check_access(const volatile void *ptr, size_t size, int type);
+diff --git a/kernel/kcsan/core.c b/kernel/kcsan/core.c
+index e7387fe..065615d 100644
+--- a/kernel/kcsan/core.c
++++ b/kernel/kcsan/core.c
+@@ -18,8 +18,8 @@
+ #include "kcsan.h"
  
-@@ -64,7 +64,7 @@ void kcsan_flat_atomic_end(void);
-  * Force treating the next n memory accesses for the current context as atomic
-  * operations.
-  *
-- * @n number of following memory accesses to treat as atomic.
-+ * @n: number of following memory accesses to treat as atomic.
-  */
- void kcsan_atomic_next(int n);
+ static bool kcsan_early_enable = IS_ENABLED(CONFIG_KCSAN_EARLY_ENABLE);
+-static unsigned int kcsan_udelay_task = CONFIG_KCSAN_UDELAY_TASK;
+-static unsigned int kcsan_udelay_interrupt = CONFIG_KCSAN_UDELAY_INTERRUPT;
++unsigned int kcsan_udelay_task = CONFIG_KCSAN_UDELAY_TASK;
++unsigned int kcsan_udelay_interrupt = CONFIG_KCSAN_UDELAY_INTERRUPT;
+ static long kcsan_skip_watch = CONFIG_KCSAN_SKIP_WATCH;
+ static bool kcsan_interrupt_watcher = IS_ENABLED(CONFIG_KCSAN_INTERRUPT_WATCHER);
  
-@@ -74,7 +74,7 @@ void kcsan_atomic_next(int n);
-  * Set the access mask for all accesses for the current context if non-zero.
-  * Only value changes to bits set in the mask will be reported.
-  *
-- * @mask bitmask
-+ * @mask: bitmask
-  */
- void kcsan_set_access_mask(unsigned long mask);
+diff --git a/kernel/kcsan/kcsan.h b/kernel/kcsan/kcsan.h
+index 892de51..e282f8b 100644
+--- a/kernel/kcsan/kcsan.h
++++ b/kernel/kcsan/kcsan.h
+@@ -13,6 +13,9 @@
+ /* The number of adjacent watchpoints to check. */
+ #define KCSAN_CHECK_ADJACENT 1
  
-@@ -106,16 +106,16 @@ static inline void kcsan_check_access(const volatile void *ptr, size_t size,
- /**
-  * __kcsan_check_read - check regular read access for races
-  *
-- * @ptr address of access
-- * @size size of access
-+ * @ptr: address of access
-+ * @size: size of access
++extern unsigned int kcsan_udelay_task;
++extern unsigned int kcsan_udelay_interrupt;
++
+ /*
+  * Globally enable and disable KCSAN.
   */
- #define __kcsan_check_read(ptr, size) __kcsan_check_access(ptr, size, 0)
+diff --git a/kernel/kcsan/report.c b/kernel/kcsan/report.c
+index 11c791b..7bdb515 100644
+--- a/kernel/kcsan/report.c
++++ b/kernel/kcsan/report.c
+@@ -1,5 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
  
- /**
-  * __kcsan_check_write - check regular write access for races
-  *
-- * @ptr address of access
-- * @size size of access
-+ * @ptr: address of access
-+ * @size: size of access
-  */
- #define __kcsan_check_write(ptr, size)                                         \
- 	__kcsan_check_access(ptr, size, KCSAN_ACCESS_WRITE)
-@@ -123,16 +123,16 @@ static inline void kcsan_check_access(const volatile void *ptr, size_t size,
- /**
-  * kcsan_check_read - check regular read access for races
-  *
-- * @ptr address of access
-- * @size size of access
-+ * @ptr: address of access
-+ * @size: size of access
-  */
- #define kcsan_check_read(ptr, size) kcsan_check_access(ptr, size, 0)
++#include <linux/debug_locks.h>
++#include <linux/delay.h>
+ #include <linux/jiffies.h>
+ #include <linux/kernel.h>
+ #include <linux/lockdep.h>
+@@ -31,7 +33,26 @@ static struct {
+ 	int			cpu_id;
+ 	unsigned long		stack_entries[NUM_STACK_ENTRIES];
+ 	int			num_stack_entries;
+-} other_info = { .ptr = NULL };
++
++	/*
++	 * Optionally pass @current. Typically we do not need to pass @current
++	 * via @other_info since just @task_pid is sufficient. Passing @current
++	 * has additional overhead.
++	 *
++	 * To safely pass @current, we must either use get_task_struct/
++	 * put_task_struct, or stall the thread that populated @other_info.
++	 *
++	 * We cannot rely on get_task_struct/put_task_struct in case
++	 * release_report() races with a task being released, and would have to
++	 * free it in release_report(). This may result in deadlock if we want
++	 * to use KCSAN on the allocators.
++	 *
++	 * Since we also want to reliably print held locks for
++	 * CONFIG_KCSAN_VERBOSE, the current implementation stalls the thread
++	 * that populated @other_info until it has been consumed.
++	 */
++	struct task_struct	*task;
++} other_info;
  
- /**
-  * kcsan_check_write - check regular write access for races
-  *
-- * @ptr address of access
-- * @size size of access
-+ * @ptr: address of access
-+ * @size: size of access
+ /*
+  * Information about reported races; used to rate limit reporting.
+@@ -245,6 +266,16 @@ static int sym_strcmp(void *addr1, void *addr2)
+ 	return strncmp(buf1, buf2, sizeof(buf1));
+ }
+ 
++static void print_verbose_info(struct task_struct *task)
++{
++	if (!task)
++		return;
++
++	pr_err("\n");
++	debug_show_held_locks(task);
++	print_irqtrace_events(task);
++}
++
+ /*
+  * Returns true if a report was generated, false otherwise.
   */
- #define kcsan_check_write(ptr, size)                                           \
- 	kcsan_check_access(ptr, size, KCSAN_ACCESS_WRITE)
-@@ -158,14 +158,26 @@ static inline void kcsan_check_access(const volatile void *ptr, size_t size,
-  * allowed. This assertion can be used to specify properties of concurrent code,
-  * where violation cannot be detected as a normal data race.
-  *
-- * For example, if a per-CPU variable is only meant to be written by a single
-- * CPU, but may be read from other CPUs; in this case, reads and writes must be
-- * marked properly, however, if an off-CPU WRITE_ONCE() races with the owning
-- * CPU's WRITE_ONCE(), would not constitute a data race but could be a harmful
-- * race condition. Using this macro allows specifying this property in the code
-- * and catch such bugs.
-+ * For example, if we only have a single writer, but multiple concurrent
-+ * readers, to avoid data races, all these accesses must be marked; even
-+ * concurrent marked writes racing with the single writer are bugs.
-+ * Unfortunately, due to being marked, they are no longer data races. For cases
-+ * like these, we can use the macro as follows:
-  *
-- * @var variable to assert on
-+ * .. code-block:: c
+@@ -319,6 +350,9 @@ static bool print_report(const volatile void *ptr, size_t size, int access_type,
+ 				  other_info.num_stack_entries - other_skipnr,
+ 				  0);
+ 
++		if (IS_ENABLED(CONFIG_KCSAN_VERBOSE))
++		    print_verbose_info(other_info.task);
++
+ 		pr_err("\n");
+ 		pr_err("%s to 0x%px of %zu bytes by %s on cpu %i:\n",
+ 		       get_access_type(access_type), ptr, size,
+@@ -340,6 +374,9 @@ static bool print_report(const volatile void *ptr, size_t size, int access_type,
+ 	stack_trace_print(stack_entries + skipnr, num_stack_entries - skipnr,
+ 			  0);
+ 
++	if (IS_ENABLED(CONFIG_KCSAN_VERBOSE))
++		print_verbose_info(current);
++
+ 	/* Print report footer. */
+ 	pr_err("\n");
+ 	pr_err("Reported by Kernel Concurrency Sanitizer on:\n");
+@@ -358,6 +395,67 @@ static void release_report(unsigned long *flags, enum kcsan_report_type type)
+ }
+ 
+ /*
++ * Sets @other_info.task and awaits consumption of @other_info.
 + *
-+ *	void writer(void) {
-+ *		spin_lock(&update_foo_lock);
-+ *		ASSERT_EXCLUSIVE_WRITER(shared_foo);
-+ *		WRITE_ONCE(shared_foo, ...);
-+ *		spin_unlock(&update_foo_lock);
-+ *	}
-+ *	void reader(void) {
-+ *		// update_foo_lock does not need to be held!
-+ *		... = READ_ONCE(shared_foo);
-+ *	}
-+ *
-+ * @var: variable to assert on
-  */
- #define ASSERT_EXCLUSIVE_WRITER(var)                                           \
- 	__kcsan_check_access(&(var), sizeof(var), KCSAN_ACCESS_ASSERT)
-@@ -177,16 +189,22 @@ static inline void kcsan_check_access(const volatile void *ptr, size_t size,
-  * writers). This assertion can be used to specify properties of concurrent
-  * code, where violation cannot be detected as a normal data race.
-  *
-- * For example, in a reference-counting algorithm where exclusive access is
-- * expected after the refcount reaches 0. We can check that this property
-- * actually holds as follows:
-+ * For example, where exclusive access is expected after determining no other
-+ * users of an object are left, but the object is not actually freed. We can
-+ * check that this property actually holds as follows:
-+ *
-+ * .. code-block:: c
-  *
-  *	if (refcount_dec_and_test(&obj->refcnt)) {
-  *		ASSERT_EXCLUSIVE_ACCESS(*obj);
-- *		safely_dispose_of(obj);
-+ *		do_some_cleanup(obj);
-+ *		release_for_reuse(obj);
-  *	}
-  *
-- * @var variable to assert on
-+ * Note: For cases where the object is freed, `KASAN <kasan.html>`_ is a better
-+ * fit to detect use-after-free bugs.
-+ *
-+ * @var: variable to assert on
-  */
- #define ASSERT_EXCLUSIVE_ACCESS(var)                                           \
- 	__kcsan_check_access(&(var), sizeof(var), KCSAN_ACCESS_WRITE | KCSAN_ACCESS_ASSERT)
-@@ -200,7 +218,7 @@ static inline void kcsan_check_access(const volatile void *ptr, size_t size,
-  * concurrent readers are permitted. This assertion captures more detailed
-  * bit-level properties, compared to the other (word granularity) assertions.
-  * Only the bits set in @mask are checked for concurrent modifications, while
-- * ignoring the remaining bits, i.e. concurrent writes (or reads) to ~@mask bits
-+ * ignoring the remaining bits, i.e. concurrent writes (or reads) to ~mask bits
-  * are ignored.
-  *
-  * Use this for variables, where some bits must not be modified concurrently,
-@@ -210,17 +228,21 @@ static inline void kcsan_check_access(const volatile void *ptr, size_t size,
-  * but other bits may still be modified concurrently. A reader may wish to
-  * assert that this is true as follows:
-  *
-+ * .. code-block:: c
-+ *
-  *	ASSERT_EXCLUSIVE_BITS(flags, READ_ONLY_MASK);
-  *	foo = (READ_ONCE(flags) & READ_ONLY_MASK) >> READ_ONLY_SHIFT;
-  *
-- *   Note: The access that immediately follows ASSERT_EXCLUSIVE_BITS() is
-- *   assumed to access the masked bits only, and KCSAN optimistically assumes it
-- *   is therefore safe, even in the presence of data races, and marking it with
-- *   READ_ONCE() is optional from KCSAN's point-of-view. We caution, however,
-- *   that it may still be advisable to do so, since we cannot reason about all
-- *   compiler optimizations when it comes to bit manipulations (on the reader
-- *   and writer side). If you are sure nothing can go wrong, we can write the
-- *   above simply as:
-+ * Note: The access that immediately follows ASSERT_EXCLUSIVE_BITS() is assumed
-+ * to access the masked bits only, and KCSAN optimistically assumes it is
-+ * therefore safe, even in the presence of data races, and marking it with
-+ * READ_ONCE() is optional from KCSAN's point-of-view. We caution, however, that
-+ * it may still be advisable to do so, since we cannot reason about all compiler
-+ * optimizations when it comes to bit manipulations (on the reader and writer
-+ * side). If you are sure nothing can go wrong, we can write the above simply
-+ * as:
-+ *
-+ * .. code-block:: c
-  *
-  * 	ASSERT_EXCLUSIVE_BITS(flags, READ_ONLY_MASK);
-  *	foo = (flags & READ_ONLY_MASK) >> READ_ONLY_SHIFT;
-@@ -230,15 +252,17 @@ static inline void kcsan_check_access(const volatile void *ptr, size_t size,
-  * be modified concurrently. Writers, where other bits may change concurrently,
-  * could use the assertion as follows:
-  *
-+ * .. code-block:: c
-+ *
-  *	spin_lock(&foo_lock);
-  *	ASSERT_EXCLUSIVE_BITS(flags, FOO_MASK);
-- *	old_flags = READ_ONCE(flags);
-+ *	old_flags = flags;
-  *	new_flags = (old_flags & ~FOO_MASK) | (new_foo << FOO_SHIFT);
-  *	if (cmpxchg(&flags, old_flags, new_flags) != old_flags) { ... }
-  *	spin_unlock(&foo_lock);
-  *
-- * @var variable to assert on
-- * @mask only check for modifications to bits set in @mask
-+ * @var: variable to assert on
-+ * @mask: only check for modifications to bits set in @mask
-  */
- #define ASSERT_EXCLUSIVE_BITS(var, mask)                                       \
- 	do {                                                                   \
++ * Precondition: report_lock is held.
++ * Postcondition: report_lock is held.
++ */
++static void
++set_other_info_task_blocking(unsigned long *flags, const volatile void *ptr)
++{
++	/*
++	 * We may be instrumenting a code-path where current->state is already
++	 * something other than TASK_RUNNING.
++	 */
++	const bool is_running = current->state == TASK_RUNNING;
++	/*
++	 * To avoid deadlock in case we are in an interrupt here and this is a
++	 * race with a task on the same CPU (KCSAN_INTERRUPT_WATCHER), provide a
++	 * timeout to ensure this works in all contexts.
++	 *
++	 * Await approximately the worst case delay of the reporting thread (if
++	 * we are not interrupted).
++	 */
++	int timeout = max(kcsan_udelay_task, kcsan_udelay_interrupt);
++
++	other_info.task = current;
++	do {
++		if (is_running) {
++			/*
++			 * Let lockdep know the real task is sleeping, to print
++			 * the held locks (recall we turned lockdep off, so
++			 * locking/unlocking @report_lock won't be recorded).
++			 */
++			set_current_state(TASK_UNINTERRUPTIBLE);
++		}
++		spin_unlock_irqrestore(&report_lock, *flags);
++		/*
++		 * We cannot call schedule() since we also cannot reliably
++		 * determine if sleeping here is permitted -- see in_atomic().
++		 */
++
++		udelay(1);
++		spin_lock_irqsave(&report_lock, *flags);
++		if (timeout-- < 0) {
++			/*
++			 * Abort. Reset other_info.task to NULL, since it
++			 * appears the other thread is still going to consume
++			 * it. It will result in no verbose info printed for
++			 * this task.
++			 */
++			other_info.task = NULL;
++			break;
++		}
++		/*
++		 * If @ptr nor @current matches, then our information has been
++		 * consumed and we may continue. If not, retry.
++		 */
++	} while (other_info.ptr == ptr && other_info.task == current);
++	if (is_running)
++		set_current_state(TASK_RUNNING);
++}
++
++/*
+  * Depending on the report type either sets other_info and returns false, or
+  * acquires the matching other_info and returns true. If other_info is not
+  * required for the report type, simply acquires report_lock and returns true.
+@@ -388,6 +486,9 @@ static bool prepare_report(unsigned long *flags, const volatile void *ptr,
+ 		other_info.cpu_id		= cpu_id;
+ 		other_info.num_stack_entries	= stack_trace_save(other_info.stack_entries, NUM_STACK_ENTRIES, 1);
+ 
++		if (IS_ENABLED(CONFIG_KCSAN_VERBOSE))
++			set_other_info_task_blocking(flags, ptr);
++
+ 		spin_unlock_irqrestore(&report_lock, *flags);
+ 
+ 		/*
+diff --git a/lib/Kconfig.kcsan b/lib/Kconfig.kcsan
+index 081ed2e..0f1447f 100644
+--- a/lib/Kconfig.kcsan
++++ b/lib/Kconfig.kcsan
+@@ -20,6 +20,19 @@ menuconfig KCSAN
+ 
+ if KCSAN
+ 
++config KCSAN_VERBOSE
++	bool "Show verbose reports with more information about system state"
++	depends on PROVE_LOCKING
++	help
++	  If enabled, reports show more information about the system state that
++	  may help better analyze and debug races. This includes held locks and
++	  IRQ trace events.
++
++	  While this option should generally be benign, we call into more
++	  external functions on report generation; if a race report is
++	  generated from any one of them, system stability may suffer due to
++	  deadlocks or recursion.  If in doubt, say N.
++
+ config KCSAN_DEBUG
+ 	bool "Debugging of KCSAN internals"
+ 
 -- 
 2.9.5
 
