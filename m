@@ -2,120 +2,157 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E42DC10F29
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 17:35:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14AF7C18E5A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 17:36:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E82C722B48
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 17:35:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="I21B09BW"
+	by mail.kernel.org (Postfix) with ESMTP id E5D8F20828
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 17:36:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727430AbgCIRe7 (ORCPT
+        id S1727366AbgCIRgs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 13:34:59 -0400
-Received: from mail-am6eur05on2065.outbound.protection.outlook.com ([40.107.22.65]:19287
-        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727257AbgCIRe6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 13:34:58 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OxpzD6485r7or3rhplcXYwCOAEXh36wJz7wP8XtCli4pl9ZYXBWk1CQxFXUvQ1as8GBvBe57F+AEk7nxdo3cIWLOM2SccXHabef+3tsAGmwXRQZWzsoNzitrp10XuO5jFSrfr2vzO9MjIOJBfd9XdPd38bFrkfrKxpQk3DAhEHbXBRxqmgfWzVa7OARD2HIYeSeo5ccW39OOkGa4IUFlC/NHBwZbS+J5K2rT9EgE1PBfs80OunqN/Ogbn9UOS8ntAioaJ/ffjE0YIF6rGBBc0uS1V2axzU2Stx77ntB/KberBbsKoTpSSmCE5i39OaSR/S9XypkXJGaGJS3WTgsTOw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lyvH6uLP1cqKFnzh1Euzle9kVCHGGGaKd2hMo+2y4+o=;
- b=Hf8NzNEpCO2rnDkjCdmqaor6ai7S4olr1SPQJPV8/ZCj32kQiwUFRlmBqWXgOak++cqafpYMCak1LZrYiYneMWzTB3gVSttMKKKRD982ToISpJdUZvMvXzL1OEpsF3d4dFku8vS8q/Rst++qRxKbomv/xzlzsEL73jPIc2WpyB5RtRY4Qw3IIrILHoTTEraWppevlwpbWmR87Zzam5Fjv2GOn5Wg5WbtXdWs54S5FYT7yhFRVb2Sfq5bS8cpghHxWGv3rzHbFlFFO1R9+ErTo/IFvgimV4u/thwsqzcMWQGqtDoo9TOKN9sDVw9s3YnEW28ozNS9ACmcGy+J2nm0dg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lyvH6uLP1cqKFnzh1Euzle9kVCHGGGaKd2hMo+2y4+o=;
- b=I21B09BWrRU/7yVCL173o9GXrkoujJFqwSL3mkUyDWcQev6bSMcDhH3Rv+2LB0YLqLa3yMhTIaIqRGGNE1hhTTrWXxr/TDuA0XZGn08Ji2NHKENJzuqMI2+gH2qf86sB04p5onPUZ4+uZ/q6djlLT0kvDu+jqokQnzAZzp8B9FM=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (52.133.14.15) by
- VI1PR05MB4767.eurprd05.prod.outlook.com (20.176.8.13) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2793.17; Mon, 9 Mar 2020 17:34:55 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::ed46:4337:c1cd:1887]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::ed46:4337:c1cd:1887%7]) with mapi id 15.20.2793.013; Mon, 9 Mar 2020
- 17:34:55 +0000
-Date:   Mon, 9 Mar 2020 14:34:51 -0300
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     syzbot <syzbot+e11efb687f5ab7f01f3d@syzkaller.appspotmail.com>
-Cc:     dledford@redhat.com, linux-kernel@vger.kernel.org,
-        linux-rdma@vger.kernel.org, monis@mellanox.com,
-        syzkaller-bugs@googlegroups.com, yanjunz@mellanox.com
-Subject: Re: KASAN: use-after-free Read in rxe_query_port
-Message-ID: <20200309173451.GA15143@mellanox.com>
-References: <0000000000000c9e12059fc941ff@google.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0000000000000c9e12059fc941ff@google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-ClientProxiedBy: MN2PR22CA0022.namprd22.prod.outlook.com
- (2603:10b6:208:238::27) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:44::15)
+        Mon, 9 Mar 2020 13:36:48 -0400
+Received: from out02.mta.xmission.com ([166.70.13.232]:60476 "EHLO
+        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727257AbgCIRgr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 13:36:47 -0400
+Received: from in01.mta.xmission.com ([166.70.13.51])
+        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jBMKZ-00016U-Gy; Mon, 09 Mar 2020 11:36:43 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jBMKY-0007sX-Iu; Mon, 09 Mar 2020 11:36:43 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Bernd Edlinger <bernd.edlinger@hotmail.de>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Andrei Vagin <avagin@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Peter Zijlstra \(Intel\)" <peterz@infradead.org>,
+        Yuyang Du <duyuyang@gmail.com>,
+        David Hildenbrand <david@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        David Howells <dhowells@redhat.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christian Kellner <christian@kellner.me>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        "linux-doc\@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel\@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-mm\@kvack.org" <linux-mm@kvack.org>,
+        "stable\@vger.kernel.org" <stable@vger.kernel.org>,
+        "linux-api\@vger.kernel.org" <linux-api@vger.kernel.org>
+References: <AM6PR03MB5170EB4427BF5C67EE98FF09E4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <87v9nmjulm.fsf@x220.int.ebiederm.org>
+        <AM6PR03MB5170B976E6387FDDAD59A118E4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <202003021531.C77EF10@keescook>
+        <20200303085802.eqn6jbhwxtmz4j2x@wittgenstein>
+        <AM6PR03MB5170285B336790D3450E2644E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <87v9nlii0b.fsf@x220.int.ebiederm.org>
+        <AM6PR03MB5170609D44967E044FD1BE40E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <87a74xi4kz.fsf@x220.int.ebiederm.org>
+        <AM6PR03MB51705AA3009B4986BB6EF92FE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <87r1y8dqqz.fsf@x220.int.ebiederm.org>
+        <AM6PR03MB517053AED7DC89F7C0704B7DE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <AM6PR03MB51703B44170EAB4626C9B2CAE4E20@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <87tv32cxmf.fsf_-_@x220.int.ebiederm.org>
+        <87v9ne5y4y.fsf_-_@x220.int.ebiederm.org>
+        <87pndm5y3l.fsf_-_@x220.int.ebiederm.org>
+        <AM6PR03MB5170FBDA2F0F19ECF2906703E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+Date:   Mon, 09 Mar 2020 12:34:24 -0500
+In-Reply-To: <AM6PR03MB5170FBDA2F0F19ECF2906703E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        (Bernd Edlinger's message of "Mon, 9 Mar 2020 13:56:54 +0000")
+Message-ID: <87mu8p4elb.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mlx.ziepe.ca (142.68.57.212) by MN2PR22CA0022.namprd22.prod.outlook.com (2603:10b6:208:238::27) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.16 via Frontend Transport; Mon, 9 Mar 2020 17:34:55 +0000
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)     (envelope-from <jgg@mellanox.com>)      id 1jBMIl-0003x3-Hu; Mon, 09 Mar 2020 14:34:51 -0300
-X-Originating-IP: [142.68.57.212]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 60274afc-317a-43e2-fe83-08d7c4502e65
-X-MS-TrafficTypeDiagnostic: VI1PR05MB4767:|VI1PR05MB4767:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR05MB476753266B0A3C18F3CFD60ECFFE0@VI1PR05MB4767.eurprd05.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-Forefront-PRVS: 0337AFFE9A
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10001)(10009020)(4636009)(346002)(396003)(136003)(366004)(39860400002)(376002)(189003)(199004)(2616005)(4326008)(478600001)(9746002)(86362001)(36756003)(66946007)(2906002)(8676002)(66476007)(66556008)(1076003)(52116002)(9786002)(107886003)(4744005)(186003)(966005)(33656002)(26005)(5660300002)(316002)(81166006)(81156014)(8936002)(99710200001)(24400500001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB4767;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-Received-SPF: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: DIXsMxkf/F1WPQkDpU1znY7x2Q2jsVx9XdWSZ0i5QV9d3iWdDdd/buCL6YA5Ml+cEE4YA1HXlm7DFN7bPuezagbP4z9S7R+a8wcCn0tk+mBEwZqFg032V0G0wGCt6kq4xmuTva8VhMFnseYqkq4gtpqu0LfEfLkwh2W3OT2teqmeimfFAEfG3SoxWaKRimFbKFVYNw/zzmVmcxpRWb3/5+XY8fNGmBUh5g/ytCjQGm6VHIvSIxMI9sIaq+OhB7+74HTqwG1tT+BTNzE8z/jnndkSasJF8Yr+gUJPYbjStDe+Pr1y3t8G/S878zXDlR2uu0msgON8nSUzHYY9C7jnLP3+3wPGuYjuCgHLFVCOnIi3Lj0K8JZLbo1Y1md4A3AFjWUz0xObvJtRqtfBTNxmThTZTv6H3GzlqmQHyfUYOHguhf0tQ269dTIISSqvXl8+EQP5UVtp15m3Kh7q704TTe1W+4/dCVZ5GdsEIStS3E9d4i/kdFEIjTq6r1VtYT5Tnn9o4B8GYut7jFZFrWFIpcerAQsQZa+M7ZvQ3gaFP2VeCZC0nEZlmYvEEC4OmJqF811PpOxIvCocvyqI7cWMGD5vKGNEvpsOiNfVDDBjkaKwl2BGx4C2oqxtLj+pYNkapi9yFJ6TjJyb4b7KE53hkf9biYAU3ZNrBopTwUNA2veyfLQepGYVR238C+26W2ZC
-X-MS-Exchange-AntiSpam-MessageData: nZxdsOraAVrMMyy9fvi0V+d+ODmtlFIOpz0M6fc+xes7lf9cFzQ035zL+/Ae5Bk+g+nxp4OsAUkrghptxgvV3aZTpHal68aLhwPQDiz0T+WAWnhfiOHDRmCmPORyJIg6GzlPnmwyJ2dHIR7rv9bdtA==
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 60274afc-317a-43e2-fe83-08d7c4502e65
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Mar 2020 17:34:55.4266
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 4QJ3VrWGUbBsj9pMaBeNe4gOwDe2OhjX5e8AZd3aLGzAcWNAo8MxaLEvJ7AH3wionsNnlsp9Hf0x1LuTXjTF4g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB4767
+Content-Type: text/plain
+X-XM-SPF: eid=1jBMKY-0007sX-Iu;;;mid=<87mu8p4elb.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1/gNgifOiuTUXAnVHdP8jsGgkYYuPh4Nbk=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH v2 1/5] exec: Only compute current once in flush_old_exec
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 01, 2020 at 03:20:12AM -0800, syzbot wrote:
-> Hello,
-> 
-> syzbot found the following crash on:
-> 
-> HEAD commit:    f8788d86 Linux 5.6-rc3
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=132d3645e00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=9833e26bab355358
-> dashboard link: https://syzkaller.appspot.com/bug?extid=e11efb687f5ab7f01f3d
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> 
-> Unfortunately, I don't have any reproducer for this crash yet.
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+e11efb687f5ab7f01f3d@syzkaller.appspotmail.com
+Bernd Edlinger <bernd.edlinger@hotmail.de> writes:
 
-Yanjun, do you have some idea what this could be?
+> On 3/8/20 10:35 PM, Eric W. Biederman wrote:
+>> 
+>> Make it clear that current only needs to be computed once in
+>> flush_old_exec.  This may have some efficiency improvements and it
+>> makes the code easier to change.
+>> 
+>> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+>> ---
+>>  fs/exec.c | 9 +++++----
+>>  1 file changed, 5 insertions(+), 4 deletions(-)
+>> 
+>> diff --git a/fs/exec.c b/fs/exec.c
+>> index db17be51b112..c3f34791f2f0 100644
+>> --- a/fs/exec.c
+>> +++ b/fs/exec.c
+>> @@ -1260,13 +1260,14 @@ void __set_task_comm(struct task_struct *tsk, const char *buf, bool exec)
+>>   */
+>>  int flush_old_exec(struct linux_binprm * bprm)
+>>  {
+>> +	struct task_struct *me = current;
+>>  	int retval;
+>>  
+>>  	/*
+>>  	 * Make sure we have a private signal table and that
+>>  	 * we are unassociated from the previous thread group.
+>>  	 */
+>> -	retval = de_thread(current);
+>> +	retval = de_thread(me);
+>>  	if (retval)
+>>  		goto out;
+>>  
+>> @@ -1294,10 +1295,10 @@ int flush_old_exec(struct linux_binprm * bprm)
+>>  	bprm->mm = NULL;
+>>  
+>>  	set_fs(USER_DS);
+>> -	current->flags &= ~(PF_RANDOMIZE | PF_FORKNOEXEC | PF_KTHREAD |
+>> +	me->flags &= ~(PF_RANDOMIZE | PF_FORKNOEXEC | PF_KTHREAD |
+>>  					PF_NOFREEZE | PF_NO_SETAFFINITY);
+>
+> I wonder if this line should be aligned with the previous?
 
-Thanks,
-Jason
+In this case I don't think so.  The style used for second line is indent
+with tabs as much as possible to the right.  I haven't changed that.
+
+Further mixing a change in indentation style with just a variable rename
+will make the patch confusing to read because two things have to be
+verified at the same time.
+
+So while I see why you ask I think this bit needs to stay as is.
+
+Eric
+
+
+
+
