@@ -2,140 +2,220 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA07EC10F25
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:24:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DB6FC10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:25:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C24A124654
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:24:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="elynEZvM"
+	by mail.kernel.org (Postfix) with ESMTP id 140D32465D
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:25:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726389AbgCITYd (ORCPT
+        id S1726467AbgCITZE convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 15:24:33 -0400
-Received: from gateway21.websitewelcome.com ([192.185.45.154]:36385 "EHLO
-        gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726106AbgCITYd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 15:24:33 -0400
-Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
-        by gateway21.websitewelcome.com (Postfix) with ESMTP id 2AD73403D535D
-        for <linux-kernel@vger.kernel.org>; Mon,  9 Mar 2020 13:15:54 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id BMwUjS119vBMdBMwUjLWgD; Mon, 09 Mar 2020 13:15:54 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=C0MvE7PDdq001QbWyBr/GhST3oWeMyr56RQn0qh4KTk=; b=elynEZvMG+011WYLVnxAPS+XYV
-        F2MuUQiXYDlm9MKJf3WJCWQ6j+W/x5i0a2BvpscHyBXnQ2c5//1g+XWZEx/Y2rZdaJwzyEUEpA24n
-        fhPst3r6Mj/qD9wmKT5gTqGB4tnYMSpHlUOke0hgX2vXPoAIUvUjoGBqHfLpTuCK+nyKZz6chkECM
-        OJIEFPAPwqHMJ199TXnqrn0bkJHlOCd+jncb65SyG8hZM/xd+dhK+8qk7Xupb15r/gZZQdg6X/Y4/
-        Y7AwKn9wGNeFz2lqQIs6zFhMevNDVrgVhLd9Q2NJnw9bk5O2URcLp1zri/rANb41owtgNSi/+YyX9
-        i62/BP+A==;
-Received: from [201.162.240.150] (port=12425 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1jBMwR-004IWa-Nt; Mon, 09 Mar 2020 13:15:52 -0500
-Date:   Mon, 9 Mar 2020 13:19:04 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     David Woodhouse <dwmw2@infradead.org>,
-        Richard Weinberger <richard@nod.at>
-Cc:     linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] jffs2: summary.h: Replace zero-length array with
- flexible-array member
-Message-ID: <20200309181904.GA4669@embeddedor>
+        Mon, 9 Mar 2020 15:25:04 -0400
+Received: from mail-oln040092074084.outbound.protection.outlook.com ([40.92.74.84]:21838
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725956AbgCITZD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 15:25:03 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=P5fR3R6NRmtmYFXf90r1KviiRMR7E1L7qiV+TTXxEk2OZaJScmjYKT1+bdO8wsFAj98rWUpgLjUSYChGM98RgOr+jqcAekTSHIfm0hoDrwELnFNfCWERtepNkT0qCCtWI40uOuPQ5jn6cBEhVS6eq8P3+kvpOf9kAmxyRo7VPrSN5VD+OfDynNG2uhNl0Pt1Hxlqy4JUSlzNgrPgsmrBe0LfDtBdiF3n5YHiKMvEubCEFhbaKk75KgseWQYtlbKzWx9xgoL6xJba3MkfeTA+uaGDRk45DEBKOkXeLxrGL1qicLyHa9XGHAGqacotRR6a2s6orLmIml72x+i8fL6+Qg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LtVsWtk2lDzAfqdQxqczErsKzeZfKoLfMiXjfWi5gyI=;
+ b=ClyikgLAz2iIcV0Nk8UDJPBK4wy4xDUTlBecsqwpwTh1rT1og5FK2nkaboV3DmCS/OBQEl2QJRRH3sgveVZ/KIgh8kQH+uG9jZbOlaKMZpXINQmlKKJrFbrJavtLg67Pfw8qT/btpXfxhbw6ItVdGHwHlFJpusuWTDYz3zYZlSYlGhj6gKLCZ4RMAzBIEAbuc1ESNzPG04W70WEVkG/QJarEeLU5q5//zYeBPOsJWdPSxAlEJkUF7+VaKdGUNkVFiMaD72z1/ymLj7EvhXITr7banpy73duSHyfqpcbcq2d0OaqEVd7tprvQHmCtMakFs+iR6GoHf4oTDSmJCEBMaQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Received: from HE1EUR04FT025.eop-eur04.prod.protection.outlook.com
+ (2a01:111:e400:7e0d::35) by
+ HE1EUR04HT225.eop-eur04.prod.protection.outlook.com (2a01:111:e400:7e0d::410)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.11; Mon, 9 Mar
+ 2020 19:24:58 +0000
+Received: from AM6PR03MB5170.eurprd03.prod.outlook.com (10.152.26.60) by
+ HE1EUR04FT025.mail.protection.outlook.com (10.152.27.28) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2793.11 via Frontend Transport; Mon, 9 Mar 2020 19:24:58 +0000
+Received: from AM6PR03MB5170.eurprd03.prod.outlook.com
+ ([fe80::1956:d274:cab3:b4dd]) by AM6PR03MB5170.eurprd03.prod.outlook.com
+ ([fe80::1956:d274:cab3:b4dd%6]) with mapi id 15.20.2772.019; Mon, 9 Mar 2020
+ 19:24:58 +0000
+Received: from [192.168.1.101] (92.77.140.102) by AM0PR0102CA0029.eurprd01.prod.exchangelabs.com (2603:10a6:208:14::42) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.16 via Frontend Transport; Mon, 9 Mar 2020 19:24:56 +0000
+From:   Bernd Edlinger <bernd.edlinger@hotmail.de>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+CC:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Andrei Vagin <avagin@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Yuyang Du <duyuyang@gmail.com>,
+        David Hildenbrand <david@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        David Howells <dhowells@redhat.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christian Kellner <christian@kellner.me>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>
+Subject: Re: [PATCH v2 5/5] exec: Add a exec_update_mutex to replace
+ cred_guard_mutex
+Thread-Topic: [PATCH v2 5/5] exec: Add a exec_update_mutex to replace
+ cred_guard_mutex
+Thread-Index: AQHV9ZJHYfsGvDLnM0SksOJ5MpqOZahARvEAgABCQ42AAAUtgIAAA0/bgAADytmAAANO2YAAAnOAgAAE4zCAAAWQgA==
+Date:   Mon, 9 Mar 2020 19:24:58 +0000
+Message-ID: <AM6PR03MB5170DF45E3245F55B95CCD91E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+References: <AM6PR03MB5170EB4427BF5C67EE98FF09E4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87a74xi4kz.fsf@x220.int.ebiederm.org>
+ <AM6PR03MB51705AA3009B4986BB6EF92FE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87r1y8dqqz.fsf@x220.int.ebiederm.org>
+ <AM6PR03MB517053AED7DC89F7C0704B7DE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <AM6PR03MB51703B44170EAB4626C9B2CAE4E20@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87tv32cxmf.fsf_-_@x220.int.ebiederm.org>
+ <87v9ne5y4y.fsf_-_@x220.int.ebiederm.org>
+ <87zhcq4jdj.fsf_-_@x220.int.ebiederm.org>
+ <AM6PR03MB5170BC58D90BAD80CDEF3F8BE4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <878sk94eay.fsf@x220.int.ebiederm.org>
+ <AM6PR03MB517086003BD2C32E199690A3E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87r1y12yc7.fsf@x220.int.ebiederm.org> <87k13t2xpd.fsf@x220.int.ebiederm.org>
+ <87d09l2x5n.fsf@x220.int.ebiederm.org>
+ <AM6PR03MB5170F0F9DC18F5EA77C9A857E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <871rq12vxu.fsf@x220.int.ebiederm.org>
+In-Reply-To: <871rq12vxu.fsf@x220.int.ebiederm.org>
+Accept-Language: en-US, en-GB, de-DE
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: AM0PR0102CA0029.eurprd01.prod.exchangelabs.com
+ (2603:10a6:208:14::42) To AM6PR03MB5170.eurprd03.prod.outlook.com
+ (2603:10a6:20b:ca::23)
+x-incomingtopheadermarker: OriginalChecksum:71A99711ADA16EC1C24CC5F8D4E994C5C61558DC91E28170A71D7A2DE7384D8B;UpperCasedChecksum:138B6000CDB757DAF3D086CF6285744E3811657112A8F186F10221148F6207F1;SizeAsReceived:9999;Count:50
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tmn:  [B/29M+tTQ8jZwO8bBX+aFjHrnBQUzxaI]
+x-microsoft-original-message-id: <8bc15c6d-2811-5965-cf3a-0dee5d3ef4a7@hotmail.de>
+x-ms-publictraffictype: Email
+x-incomingheadercount: 50
+x-eopattributedmessage: 0
+x-ms-office365-filtering-correlation-id: 5b640f5a-1970-4e2f-2a79-08d7c45f8e32
+x-ms-traffictypediagnostic: HE1EUR04HT225:
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: yRwriaax4luQh2eE4Kv/5gl1xgtV+JhFn3r4omhcZdQLtpEnZ5wArAUY4QNOr9h2IZIMedZxh+rethkj8ygU0pcUw/1z20Mmt+DeKfEBy6dVNVB9GGIRS0wJwO0n+/dU/4JSft9BH+xomh1RItAhwsuXYvw9U3slEuQRKa89/6j+UP2Oh6AidizbkcozgOSgMI2zIDI+G18wMkpMWz2COa8Mq1fFnGz9kBwFiCRCBe4=
+x-ms-exchange-antispam-messagedata: ihJ0a1uBNLzETZ0EmKa6rky1cWiaSkYyOGteR6EOKC18aVBNv+NQojy58E5NM24js9Phk+70KCAHX1D/k7WThPHE2uRSy6XlGK8SCQCnVBeuJlHfU+++kQzGOumEGPWBhsUPpC6BDlGBMcqv1aoohQ==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="Windows-1252"
+Content-ID: <D977AB8180FC5246BAA1C16ED22CAA18@eurprd03.prod.outlook.com>
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.162.240.150
-X-Source-L: No
-X-Exim-ID: 1jBMwR-004IWa-Nt
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [201.162.240.150]:12425
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 24
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5b640f5a-1970-4e2f-2a79-08d7c45f8e32
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Mar 2020 19:24:58.6072
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Internet
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1EUR04HT225
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
 
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertently introduced[3] to the codebase from now on.
+On 3/9/20 8:02 PM, Eric W. Biederman wrote:
+> Bernd Edlinger <bernd.edlinger@hotmail.de> writes:
+> 
+>> On 3/9/20 7:36 PM, Eric W. Biederman wrote:
+>>>
+>>>
+>>> Does that sound better?
+>>>
+>>
+>> almost done.
+> 
+> I think this text is finally clean.
+> 
+>     exec: Add exec_update_mutex to replace cred_guard_mutex
+>     
+>     The cred_guard_mutex is problematic as it is held over possibly
+>     indefinite waits for userspace.  The possilbe indefinite waits for
+>     userspace that I have identified are: The cred_guard_mutex is held in
+>     PTRACE_EVENT_EXIT waiting for the tracer.  The cred_guard_mutex is
+>     held over "put_user(0, tsk->clear_child_tid)" in exit_mm().  The
+>     cred_guard_mutex is held over "get_user(futex_offset, ...")  in
+>     exit_robust_list.  The cred_guard_mutex held over copy_strings.
+>     
+>     The functions get_user and put_user can trigger a page fault which can
+>     potentially wait indefinitely in the case of userfaultfd or if
+>     userspace implements part of the page fault path.
+>     
+>     In any of those cases the userspace process that the kernel is waiting
+>     for might make a different system call that winds up taking the
+>     cred_guard_mutex and result in deadlock.
+>     
+>     Holding a mutex over any of those possibly indefinite waits for
+>     userspace does not appear necessary.  Add exec_update_mutex that will
+>     just cover updating the process during exec where the permissions and
+>     the objects pointed to by the task struct may be out of sync.
+>     
+>     The plan is to switch the users of cred_guard_mutex to
+>     exec_update_mutex one by one.  This lets us move forward while still
+>     being careful and not introducing any regressions.
+>     
+>     Link: https://lore.kernel.org/lkml/20160921152946.GA24210@dhcp22.suse.cz/
+>     Link: https://lore.kernel.org/lkml/AM6PR03MB5170B06F3A2B75EFB98D071AE4E60@AM6PR03MB5170.eurprd03.prod.outlook.com/
+>     Link: https://lore.kernel.org/linux-fsdevel/20161102181806.GB1112@redhat.com/
+>     Link: https://lore.kernel.org/lkml/20160923095031.GA14923@redhat.com/
+>     Link: https://lore.kernel.org/lkml/20170213141452.GA30203@redhat.com/
+>     Ref: 45c1a159b85b ("Add PTRACE_O_TRACEVFORKDONE and PTRACE_O_TRACEEXIT facilities.")
+>     Ref: 456f17cd1a28 ("[PATCH] user-vm-unlock-2.5.31-A2")
 
-Also, notice that, dynamic memory allocations won't be affected by
-this change:
+I checked the urls they all work.
+Just one last question, are these git references?
+I can't find them in my linux git tree (cloned from linus' git)?
 
-"Flexible array members have incomplete type, and so the sizeof operator
-may not be applied. As a quirk of the original implementation of
-zero-length arrays, sizeof evaluates to zero."[1]
+Sorry for being pedantically.
 
-This issue was found with the help of Coccinelle.
 
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+>     Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+> 
+> 
+> Bernd do you want to give me your Reviewed-by for this part of the
+> series?
+> 
 
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- fs/jffs2/summary.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Sure also the other parts of course.
 
-diff --git a/fs/jffs2/summary.h b/fs/jffs2/summary.h
-index 60207a2ae952..e4131cb1f1d4 100644
---- a/fs/jffs2/summary.h
-+++ b/fs/jffs2/summary.h
-@@ -61,7 +61,7 @@ struct jffs2_sum_dirent_flash
- 	jint32_t ino; 		/* == zero for unlink */
- 	uint8_t nsize;		/* dirent name size */
- 	uint8_t type;		/* dirent type */
--	uint8_t name[0];	/* dirent name */
-+	uint8_t name[];	/* dirent name */
- } __attribute__((packed));
- 
- struct jffs2_sum_xattr_flash
-@@ -117,7 +117,7 @@ struct jffs2_sum_dirent_mem
- 	jint32_t ino; 		/* == zero for unlink */
- 	uint8_t nsize;		/* dirent name size */
- 	uint8_t type;		/* dirent type */
--	uint8_t name[0];	/* dirent name */
-+	uint8_t name[];	/* dirent name */
- } __attribute__((packed));
- 
- struct jffs2_sum_xattr_mem
--- 
-2.25.0
+Reviewed-by: Bernd Edlinger <bernd.edlinger@hotmail.de>
 
+> After that do you think you can write the obvious patch for mm_access?
+> 
+
+Yes, I can do that.
+I also have some typos in comments, will make them extra patches as well.
+
+I wonder if the test case is okay to include the ptrace_attach altough
+that is not yet passing?
+
+
+Thanks
+Bernd.
