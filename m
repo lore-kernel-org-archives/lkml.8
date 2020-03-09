@@ -2,114 +2,109 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26BA6C10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 08:08:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEF51C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 08:09:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7FAB20728
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 08:08:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="I7sjVMFr"
+	by mail.kernel.org (Postfix) with ESMTP id CB58C20728
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 08:09:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726490AbgCIIIg (ORCPT
+        id S1726461AbgCIIJM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 04:08:36 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:21009 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725956AbgCIIIg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 04:08:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583741315;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-        bh=T8KT/+n14Cn5HelmWM4TG6Zo6L21o7FLn2E43AQONUI=;
-        b=I7sjVMFrQyszBieK7l81PBbXu3hkzHcGu1wuxeWxaxy9mt8RSC0xHZHxIpqw6fCdX+kdjD
-        LJZeHKJOz3OCKFK+WvKMsJJkcgBYPptT+LM8wEl1p8plGMF4Dxb8a7S9QVfzUbhds9JWPM
-        eFNtJt5Hel2J2my9omQ3Hwovm7F6RS4=
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
- [209.85.222.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-261-8tCvUCihOjyldnt_vtd-aw-1; Mon, 09 Mar 2020 04:08:33 -0400
-X-MC-Unique: 8tCvUCihOjyldnt_vtd-aw-1
-Received: by mail-qk1-f197.google.com with SMTP id n6so6727306qkk.11
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 01:08:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=T8KT/+n14Cn5HelmWM4TG6Zo6L21o7FLn2E43AQONUI=;
-        b=PdEa0ct7kXnzi2LjI+QWocskLV+DWZRJCsVI6FU4k/7Qbo4aE7EfBhyrBxmLZ0lCot
-         IwouOiPkQd1avvVCF7jjHyvLnV9uavo7/UbbLmYjYg9Bq0t+kJyzNKo69Q/71hCfV1CB
-         90/K6jHGX7qQ9W12J6XQfGK0OUn5b8ZGL7VvR0wD9iXmRg7cxbA81TmAIid/T9lmHatj
-         9FeiJC28v6/ompSPMdASGcKivmp1+DYdgtXQEvdkAa6NZx7fMpwnq7F9lv16pbeURX+h
-         GPhGhyoBQgboCWkZ1EtetFeG5m3EU6s1Lt4XHSraZPNPoTr0r2Gdcb9bbmspPfJzf6dj
-         O6PQ==
-X-Gm-Message-State: ANhLgQ2Y5O7xWwC5qnjiFE0t+A3KFeG6zMPil24BPq9KBJj06JkQXLHi
-        6ptAy+AUsi884ecUwDy35BDHtaUM7bzK5/mlGFrk88N6Ny2ivvn3y82hZma5rqML7aZg17NP8vO
-        QymmONWmPFTNTMvTQ2XiVIcYj
-X-Received: by 2002:a0c:c244:: with SMTP id w4mr13815579qvh.104.1583741311603;
-        Mon, 09 Mar 2020 01:08:31 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vsDCYFx3tgEt/18zqy2Hj0onYaUrEMtYoBKu3yJ+l1tw+IzBr80xlV0fKvKv/QcwEaRhnxGPw==
-X-Received: by 2002:a0c:c244:: with SMTP id w4mr13815565qvh.104.1583741311386;
-        Mon, 09 Mar 2020 01:08:31 -0700 (PDT)
-Received: from redhat.com (bzq-79-178-2-19.red.bezeqint.net. [79.178.2.19])
-        by smtp.gmail.com with ESMTPSA id k11sm21885175qti.68.2020.03.09.01.08.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Mar 2020 01:08:30 -0700 (PDT)
-Date:   Mon, 9 Mar 2020 04:08:25 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        axboe@kernel.dk, jasowang@redhat.com, mst@redhat.com,
-        natechancellor@gmail.com, pasic@linux.ibm.com, s-anna@ti.com
-Subject: [GIT PULL] virtio: fixes
-Message-ID: <20200309040825-mutt-send-email-mst@kernel.org>
+        Mon, 9 Mar 2020 04:09:12 -0400
+Received: from mga07.intel.com ([134.134.136.100]:11140 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726071AbgCIIJL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 04:09:11 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Mar 2020 01:09:10 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,532,1574150400"; 
+   d="scan'208";a="353318738"
+Received: from hao-dev.bj.intel.com (HELO localhost) ([10.238.157.65])
+  by fmsmga001.fm.intel.com with ESMTP; 09 Mar 2020 01:09:08 -0700
+Date:   Mon, 9 Mar 2020 15:47:58 +0800
+From:   Wu Hao <hao.wu@intel.com>
+To:     mdf@kernel.org, will@kernel.org, mark.rutland@arm.com,
+        gregkh@linuxfoundation.org, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     linux-api@vger.kernel.org, atull@kernel.org, yilun.xu@intel.com
+Subject: Re: [PATCH v8 0/2] add performance reporting support to FPGA DFL
+ drivers
+Message-ID: <20200309074758.GA4295@hao-dev>
+References: <1582503707-10737-1-git-send-email-hao.wu@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-X-Mutt-Fcc: =sent
+In-Reply-To: <1582503707-10737-1-git-send-email-hao.wu@intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit 98d54f81e36ba3bf92172791eba5ca5bd813989b:
+Hi Will,
 
-  Linux 5.6-rc4 (2020-03-01 16:38:46 -0600)
+Just a gentle ping. Do you have Any comments to this new version?
 
-are available in the Git repository at:
+Hao
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/mst/vhost.git tags/for_linus
-
-for you to fetch changes up to 6ae4edab2fbf86ec92fbf0a8f0c60b857d90d50f:
-
-  virtio_balloon: Adjust label in virtballoon_probe (2020-03-08 05:35:24 -0400)
-
-----------------------------------------------------------------
-virtio: fixes
-
-Some bug fixes all over the place.
-
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-
-----------------------------------------------------------------
-Halil Pasic (2):
-      virtio-blk: fix hw_queue stopped on arbitrary error
-      virtio-blk: improve virtqueue error to BLK_STS
-
-Nathan Chancellor (1):
-      virtio_balloon: Adjust label in virtballoon_probe
-
-Suman Anna (1):
-      virtio_ring: Fix mem leak with vring_new_virtqueue()
-
- drivers/block/virtio_blk.c      | 17 ++++++++++++-----
- drivers/virtio/virtio_balloon.c |  2 +-
- drivers/virtio/virtio_ring.c    |  4 ++--
- 3 files changed, 15 insertions(+), 8 deletions(-)
-
+On Mon, Feb 24, 2020 at 08:21:45AM +0800, Wu Hao wrote:
+> Hi all,
+> 
+> This patchset adds performance reporting support for FPGA DFL drivers. It
+> introduces one pmu to expose userspace interfaces via standard perf API.
+> User could use standard perf tool to access perf events exposed via pmu.
+> 
+> This patchset is generated based on 5.6-rc2.
+> 
+> Main changes from v7:
+>  - rename pmu name from "fme%d" to "dfl_fme%d".
+>  - monitor cpu hotplug for cpumask sysfs and update cpumask sysfs doc.
+>  - add extra read for 64bit counter registers to avoid 2-32bit readl issue.
+> 
+> Main changes from v6:
+>  - add a new ABI/testing/ sysfs documentation in patch #2.
+>  - fix a warning reported by kbuild in patch #2.
+> 
+> Main changes from v5:
+>  - use dev_ext_attribute instead of fme_perf_event_attr.
+>  - use is_visible function to decide which events to expose per
+>    hardware capability, and add event_init checking for all events.
+> 
+> Main changes from v4:
+>  - rebase and clean up.
+>  - update Kconfig for PERF_EVENTS dependency.
+> 
+> Main changes from v3:
+>  - add more descriptions in doc, including how to use perf tool for these
+>    hardware counters. (patch #1)
+>  - use standard perf API instead of sysfs entries. (patch #2)
+> 
+> Wu Hao (1):
+>   fpga: dfl: fme: add performance reporting support
+> 
+> Xu Yilun (1):
+>   Documentation: fpga: dfl: add description for performance reporting
+>     support
+> 
+>  .../testing/sysfs-bus-event_source-devices-dfl_fme |  104 ++
+>  Documentation/fpga/dfl.rst                         |   84 ++
+>  drivers/fpga/Kconfig                               |    2 +-
+>  drivers/fpga/Makefile                              |    1 +
+>  drivers/fpga/dfl-fme-main.c                        |    4 +
+>  drivers/fpga/dfl-fme-perf.c                        | 1021 ++++++++++++++++++++
+>  drivers/fpga/dfl-fme.h                             |    2 +
+>  drivers/fpga/dfl.h                                 |    2 +
+>  8 files changed, 1219 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/ABI/testing/sysfs-bus-event_source-devices-dfl_fme
+>  create mode 100644 drivers/fpga/dfl-fme-perf.c
+> 
+> -- 
+> 1.8.3.1
