@@ -2,211 +2,141 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0AA3C10F25
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:21:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48A0CC10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:22:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A49A521655
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:21:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24C0522522
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:22:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PKCtKC7u"
+	dkim=pass (2048-bit key) header.d=anarazel.de header.i=@anarazel.de header.b="Zx+aJhCQ";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Jz9WWT0O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726335AbgCITVW (ORCPT
+        id S1726382AbgCITWr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 15:21:22 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:37053 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726266AbgCITVV (ORCPT
+        Mon, 9 Mar 2020 15:22:47 -0400
+Received: from new2-smtp.messagingengine.com ([66.111.4.224]:52095 "EHLO
+        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726118AbgCITWq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 15:21:21 -0400
-Received: by mail-pf1-f196.google.com with SMTP id p14so5276340pfn.4
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 12:21:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=/Ve3mrSvm1dOHAsegEEjiuaMrFQOijqF+lr2yreUyLE=;
-        b=PKCtKC7uyC8i/DN0MO+jBy7A9dYjm0BvRQHCcABOBfgDupKb+axXLHJ1pIr5+0N6v+
-         EOZwJYSIfs2miXWm90Qjb6yE5EBWGSBAsw/IRyuFapS9v6j5tiHTfsj8sy8fndA4ooO9
-         UKs1UUhQk1xKwDJGKHHRiGZ4SR4ShkUpFn6QuntqJF3mhLrBK3keXR9SOUl0Epx2yryK
-         dqYB3wkDKVT3frMmHokgUdQyCvgwBogJgN9Hy0rbNBvNYsfsuDcnCMas98lYqxyv775v
-         T7xrFLTYcuTQgavNN3+2Qvly5vFOFiA8Upap+DllXIKkLvxGERM74sfSGkAAiWy7yk2p
-         JNtQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/Ve3mrSvm1dOHAsegEEjiuaMrFQOijqF+lr2yreUyLE=;
-        b=ccEgg4NkrNWXC0q6g9zrYcXiJxLThpZEu+zwPjiRSNfFaC4RE1MIq/vmjj++XxEmaT
-         vdOI3jw3nPrfyZjPplrGBvmZVNGyxxpvtGhrJWjY5icqUfg3gOo/d2mPEOU1B5hInmAH
-         tdL3ppW9ctTGMNch6OMibCaUrgZfqgQN8nWhmXMFXN5ItkPa3hDBpmhyYjeTvgxvNI5c
-         famHeqHGMC5L3F6HyDDMaxgGLQywy2KOwN9jJv7IezUAcoA/zGWpByRPkXv9ofTjo22i
-         NKRATeIU5XMDfno0aS3Hgx2X/pXi1uhhI1eirYtbjUeBdOIXQ1NVui4zkgZ/O8zq05iI
-         uVxw==
-X-Gm-Message-State: ANhLgQ2YBU+8+xDyUUbPtl6RcMrCOsjMXpheqmuY+n9YVZENfFO8sfyi
-        NHDB2691+CHRBQyqYkIulvpPxQ==
-X-Google-Smtp-Source: ADFU+vv4DHskMayr9V263F+RoX6mwXATWLbep1JlrTDrd3s5h6v5M8VMmhrUgv94rrg0OOERe/5wyg==
-X-Received: by 2002:a62:25c3:: with SMTP id l186mr18053778pfl.52.1583781678971;
-        Mon, 09 Mar 2020 12:21:18 -0700 (PDT)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id u14sm27167815pgg.67.2020.03.09.12.21.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Mar 2020 12:21:18 -0700 (PDT)
-Date:   Mon, 9 Mar 2020 13:21:15 -0600
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Clement Leger <cleger@kalray.eu>
-Cc:     Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        linux-remoteproc@vger.kernel.org,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Andy Gross <agross@kernel.org>,
-        Patrice Chotard <patrice.chotard@st.com>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org,
-        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
-        Loic PALLARDY <loic.pallardy@st.com>, s-anna <s-anna@ti.com>
-Subject: Re: [PATCH v5 2/8] remoteproc: Use size_t instead of int for
- rproc_mem_entry len
-Message-ID: <20200309192115.GB1399@xps15>
-References: <20200210162209.23149-1-cleger@kalray.eu>
- <20200302093902.27849-1-cleger@kalray.eu>
- <20200302093902.27849-3-cleger@kalray.eu>
+        Mon, 9 Mar 2020 15:22:46 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 0273F2165;
+        Mon,  9 Mar 2020 15:22:43 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Mon, 09 Mar 2020 15:22:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=anarazel.de; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=9OPUApP7XHwBJ2ua/845zHXN+Bx
+        CiMndYLVmUljdPfs=; b=Zx+aJhCQuuW9zL3vV9mkX5vIdNdmN8/IWDffz8jj8Gb
+        2VqO7mxto+/Dg70LiN2yzj5fiYHNKAZzx3yPelxgwUoQ+is2cdcJE5cIvJzPpLwP
+        1xPCpmX1WtFmzCKNubm6b5P2EF7CkKxJXHsEs6ybNxRzQCPJzbqZOZSd96rAWA/s
+        7nO1xn8GN/rhw5+44q9xquYivc/LsB5DNy1Sr7wODuT8vz1B9CEd7RzJQ6+yCPws
+        Q4BQsksfc1slCjyk7DZeBxKlsDmu+IkwTWvjrJ+31T+ybHClZpCgA7ZxHxIt60ze
+        0rjBlnXvVbJq19rll/30PhxY+fbw911ReY76p4D4+Zg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=9OPUAp
+        P7XHwBJ2ua/845zHXN+BxCiMndYLVmUljdPfs=; b=Jz9WWT0OhfWbV49D+wIuxm
+        3sJ9Kel6t8sFJrmVyv19hsEiQzOp4evJzLdEZVY55UsNPi/dB2hyJt29LHCe6dgR
+        e9kD+L7Mfl3qIo5ngts0zeS4esAEGVEiQFlDYmvxdL6dProHeRHBKtaE/tUyf/00
+        8oGdCWK0UbGe2iA2wkAaSoN7+HqKLQfmK+nd513rMwVTTJKW1TPnr406mI6fJgBD
+        SO+dv4s23dzemFtebeyTZ4TOCeYWUAeWda6lC3gkrRn/vRPfMhiXV1tyvQYLY7M6
+        H1SvTye3XXhWvy0SBwMOBi4R8fHduIcKySwDxPapJ+gRfXM3EFhrm2VGK8Ka2Q+A
+        ==
+X-ME-Sender: <xms:gpdmXp0izSospZhLf9jd8uC2VihdmnYjkksGoMYJO5iAvhtB2c7OrA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedruddukedguddvgecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomheptehnughr
+    vghsucfhrhgvuhhnugcuoegrnhgurhgvshesrghnrghrrgiivghlrdguvgeqnecukfhppe
+    eijedrudeitddrvddujedrvdehtdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgr
+    mhepmhgrihhlfhhrohhmpegrnhgurhgvshesrghnrghrrgiivghlrdguvg
+X-ME-Proxy: <xmx:gpdmXqsjquW8ESXmD9dxw71lrZxnA5nkpUkgfENiIXmvTlgnk7KhPw>
+    <xmx:gpdmXt-8hZpIoe7KcTaKx1a6wafRA-cm_jvCbBkbXxQTt9fR8FhqqQ>
+    <xmx:gpdmXsFJrGZGb8n1mvKJXXT6i_-ZMHWQeAlCmdtbguoV7-ys584J8Q>
+    <xmx:g5dmXndVRmQTWz4NUF8L_57jSTW2SmewMAEhD-D5atrKfdws8K2IJA>
+Received: from intern.anarazel.de (c-67-160-217-250.hsd1.ca.comcast.net [67.160.217.250])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 0771F328005A;
+        Mon,  9 Mar 2020 15:22:42 -0400 (EDT)
+Date:   Mon, 9 Mar 2020 12:22:40 -0700
+From:   Andres Freund <andres@anarazel.de>
+To:     Jeff Layton <jlayton@redhat.com>
+Cc:     David Howells <dhowells@redhat.com>, torvalds@linux-foundation.org,
+        viro@zeniv.linux.org.uk, Theodore Ts'o <tytso@mit.edu>,
+        Stefan Metzmacher <metze@samba.org>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        linux-ext4@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        linux-nfs@vger.kernel.org, linux-api@vger.kernel.org,
+        raven@themaw.net, mszeredi@redhat.com, christian@brauner.io,
+        jannh@google.com, darrick.wong@oracle.com, kzak@redhat.com,
+        linux-fsdevel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 00/14] VFS: Filesystem information [ver #18]
+Message-ID: <20200309192240.nqf5bxylptw7mdm3@alap3.anarazel.de>
+References: <158376244589.344135.12925590041630631412.stgit@warthog.procyon.org.uk>
+ <2d31e2658e5f6651dc7d9908c4c12b6ba461fc88.camel@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200302093902.27849-3-cleger@kalray.eu>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <2d31e2658e5f6651dc7d9908c4c12b6ba461fc88.camel@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 02, 2020 at 10:38:56AM +0100, Clement Leger wrote:
-> Now that rproc_da_to_va uses a size_t for length, use a size_t for len field
-> of rproc_mem_entry. Function used to create such structures now takes
-> a size_t instead of int to allow full size range to be handled.
-> 
-> Signed-off-by: Clement Leger <cleger@kalray.eu>
+Hi,
 
-With the checkpatch warning fixed:
+On 2020-03-09 13:50:59 -0400, Jeff Layton wrote:
+> The PostgreSQL devs asked a while back for some way to tell whether
+> there have been any writeback errors on a superblock w/o having to do
+> any sort of flush -- just "have there been any so far".
 
-Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Indeed.
 
-> ---
->  drivers/remoteproc/remoteproc_core.c    | 14 ++++++++------
->  drivers/remoteproc/remoteproc_debugfs.c |  2 +-
->  include/linux/remoteproc.h              |  6 +++---
->  3 files changed, 12 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-> index 5ab094fc1b55..4bfaf4a3c4a3 100644
-> --- a/drivers/remoteproc/remoteproc_core.c
-> +++ b/drivers/remoteproc/remoteproc_core.c
-> @@ -318,8 +318,9 @@ int rproc_alloc_vring(struct rproc_vdev *rvdev, int i)
->  	struct device *dev = &rproc->dev;
->  	struct rproc_vring *rvring = &rvdev->vring[i];
->  	struct fw_rsc_vdev *rsc;
-> -	int ret, size, notifyid;
-> +	int ret, notifyid;
->  	struct rproc_mem_entry *mem;
-> +	size_t size;
->  
->  	/* actual size of vring (in bytes) */
->  	size = PAGE_ALIGN(vring_size(rvring->len, rvring->align));
-> @@ -746,11 +747,12 @@ static int rproc_alloc_carveout(struct rproc *rproc,
->  	va = dma_alloc_coherent(dev->parent, mem->len, &dma, GFP_KERNEL);
->  	if (!va) {
->  		dev_err(dev->parent,
-> -			"failed to allocate dma memory: len 0x%x\n", mem->len);
-> +			"failed to allocate dma memory: len 0x%zx\n",
-> +			mem->len);
->  		return -ENOMEM;
->  	}
->  
-> -	dev_dbg(dev, "carveout va %pK, dma %pad, len 0x%x\n",
-> +	dev_dbg(dev, "carveout va %pK, dma %pad, len 0x%zx\n",
->  		va, &dma, mem->len);
->  
->  	if (mem->da != FW_RSC_ADDR_ANY && !rproc->domain) {
-> @@ -957,7 +959,7 @@ EXPORT_SYMBOL(rproc_add_carveout);
->   */
->  struct rproc_mem_entry *
->  rproc_mem_entry_init(struct device *dev,
-> -		     void *va, dma_addr_t dma, int len, u32 da,
-> +		     void *va, dma_addr_t dma, size_t len, u32 da,
->  		     int (*alloc)(struct rproc *, struct rproc_mem_entry *),
->  		     int (*release)(struct rproc *, struct rproc_mem_entry *),
->  		     const char *name, ...)
-> @@ -999,7 +1001,7 @@ EXPORT_SYMBOL(rproc_mem_entry_init);
->   * provided by client.
->   */
->  struct rproc_mem_entry *
-> -rproc_of_resm_mem_entry_init(struct device *dev, u32 of_resm_idx, int len,
-> +rproc_of_resm_mem_entry_init(struct device *dev, u32 of_resm_idx, size_t len,
->  			     u32 da, const char *name, ...)
->  {
->  	struct rproc_mem_entry *mem;
-> @@ -1270,7 +1272,7 @@ static void rproc_resource_cleanup(struct rproc *rproc)
->  		unmapped = iommu_unmap(rproc->domain, entry->da, entry->len);
->  		if (unmapped != entry->len) {
->  			/* nothing much to do besides complaining */
-> -			dev_err(dev, "failed to unmap %u/%zu\n", entry->len,
-> +			dev_err(dev, "failed to unmap %zx/%zu\n", entry->len,
->  				unmapped);
->  		}
->  
-> diff --git a/drivers/remoteproc/remoteproc_debugfs.c b/drivers/remoteproc/remoteproc_debugfs.c
-> index dd93cf04e17f..82dc34b819df 100644
-> --- a/drivers/remoteproc/remoteproc_debugfs.c
-> +++ b/drivers/remoteproc/remoteproc_debugfs.c
-> @@ -293,7 +293,7 @@ static int rproc_carveouts_show(struct seq_file *seq, void *p)
->  		seq_printf(seq, "\tVirtual address: %pK\n", carveout->va);
->  		seq_printf(seq, "\tDMA address: %pad\n", &carveout->dma);
->  		seq_printf(seq, "\tDevice address: 0x%x\n", carveout->da);
-> -		seq_printf(seq, "\tLength: 0x%x Bytes\n\n", carveout->len);
-> +		seq_printf(seq, "\tLength: 0x%zx Bytes\n\n", carveout->len);
->  	}
->  
->  	return 0;
-> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
-> index 89215798eaea..bee559330204 100644
-> --- a/include/linux/remoteproc.h
-> +++ b/include/linux/remoteproc.h
-> @@ -329,7 +329,7 @@ struct rproc;
->  struct rproc_mem_entry {
->  	void *va;
->  	dma_addr_t dma;
-> -	int len;
-> +	size_t len;
->  	u32 da;
->  	void *priv;
->  	char name[32];
-> @@ -599,13 +599,13 @@ void rproc_add_carveout(struct rproc *rproc, struct rproc_mem_entry *mem);
->  
->  struct rproc_mem_entry *
->  rproc_mem_entry_init(struct device *dev,
-> -		     void *va, dma_addr_t dma, int len, u32 da,
-> +		     void *va, dma_addr_t dma, size_t len, u32 da,
->  		     int (*alloc)(struct rproc *, struct rproc_mem_entry *),
->  		     int (*release)(struct rproc *, struct rproc_mem_entry *),
->  		     const char *name, ...);
->  
->  struct rproc_mem_entry *
-> -rproc_of_resm_mem_entry_init(struct device *dev, u32 of_resm_idx, int len,
-> +rproc_of_resm_mem_entry_init(struct device *dev, u32 of_resm_idx, size_t len,
->  			     u32 da, const char *name, ...);
->  
->  int rproc_boot(struct rproc *rproc);
-> -- 
-> 2.15.0.276.g89ea799
-> 
+
+> I sent a patch a few weeks ago to make syncfs() return errors when there
+> have been writeback errors on the superblock. It's not merged yet, but
+> once we have something like that in place, we could expose info from the
+> errseq_t to userland using this interface.
+
+I'm still a bit worried about the details of errseq_t being exposed to
+userland. Partially because it seems to restrict further evolution of
+errseq_t, and partially because it will likely up with userland trying
+to understand it (it's e.g. just too attractive to report a count of
+errors etc).
+
+Is there a reason to not instead report a 64bit counter instead of the
+cookie? In contrast to the struct file case we'd only have the space
+overhead once per superblock, rather than once per #files * #fd. And it
+seems that the maintenance of that counter could be done without
+widespread changes, e.g. instead/in addition to your change:
+
+> diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
+> index ccb14b6a16b5..897439475315 100644
+> --- a/include/linux/pagemap.h
+> +++ b/include/linux/pagemap.h
+> @@ -51,7 +51,10 @@ static inline void mapping_set_error(struct address_space *mapping, int error)
+>  		return;
+>
+>  	/* Record in wb_err for checkers using errseq_t based tracking */
+> -	filemap_set_wb_err(mapping, error);
+> +	__filemap_set_wb_err(mapping, error);
+> +
+> +	/* Record it in superblock */
+> +	errseq_set(&mapping->host->i_sb->s_wb_err, error);
+>
+>  	/* Record it in flags for now, for legacy callers */
+>  	if (error == -ENOSPC)
+
+Btw, seems like mapping_set_error() should have a non-inline cold path?
+
+Greetings,
+
+Andres Freund
