@@ -4,43 +4,43 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34302C10F25
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:48:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 661A2C10F25
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:48:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1268B24682
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:48:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44A8220828
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:48:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583783316;
-	bh=j9EFBRUeGEgaJou7VzJyPRqtYH74YJhWOcl/Fg2SBEc=;
-	h=From:To:Subject:Date:In-Reply-To:References:In-Reply-To:
+	s=default; t=1583783322;
+	bh=Qn10r7wDKeypNpswGyjvqlxGn6R2+JzdLyxqbNYaR5A=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
 	 References:List-ID:From;
-	b=QX2asZgO+46OuKA2drnU7hlTcLYG9TQFiLPE+Qjr9vSFhrzFx3CQ2zoL4PnHiry5g
-	 joCmfvvazeVHf9pOCkuOFz0xtTDZNi1HCNTPzXtBdstjqxj5W7im0MQPzvhLb3jySk
-	 cpruBU9HcQNt7I1SZ/63wCERCh/lLcOoTDPwrIwY=
+	b=gPIXFr8UMbG0TJpsGQyaH3svMw7O4WVsdILb6etDxDDgaHGvyltZxRlFdidFdl1IN
+	 RSAy9lSuL78Jt8+KWE5q0//GQ7qlzaWRgURijfp7G6/Ts8nXRUoEUXDjuGTsktmfyt
+	 QaRuLuzUYnyQ38deh9+cZtJ8oHHgjTx8Vtg4b0mw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726444AbgCITse (ORCPT
+        id S1726704AbgCITsS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 15:48:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38322 "EHLO mail.kernel.org"
+        Mon, 9 Mar 2020 15:48:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38212 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726809AbgCITsV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 15:48:21 -0400
+        id S1725992AbgCITsQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 15:48:16 -0400
 Received: from localhost.localdomain (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2891024677;
-        Mon,  9 Mar 2020 19:48:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E5DE524656;
+        Mon,  9 Mar 2020 19:48:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583783300;
-        bh=j9EFBRUeGEgaJou7VzJyPRqtYH74YJhWOcl/Fg2SBEc=;
-        h=From:To:Subject:Date:In-Reply-To:References:In-Reply-To:
+        s=default; t=1583783295;
+        bh=Qn10r7wDKeypNpswGyjvqlxGn6R2+JzdLyxqbNYaR5A=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=N76Iv7B7LuNwOci4o5wYZZxDF9JgCRR1cIZi+Ds659KD/vHryPrcf/0tAyu8nu0Ze
-         BVfnOmuEmjzAPzAHUmYaL3qUSdkILHqs5YFKpYS9oc3qZI/qGm28fDzveS68lvR8vv
-         xnBiTSLAFYOrCt9VIUZ+h2Q+8/StGW05GKFnkuis=
+        b=ej7ZwgcZQjIGEm4uJBDf7OGbLnonIrkQj41AShxp7CMw0Vz4lm7eggXB4sn/ibb9r
+         A2qR5kejQs/yUCO3GsXD3sbsR12zuGA5FJIYqwXp2xrsEC9Yqp+xz++/nnEsbIGTxZ
+         9bbeRBTi+rdHjPcGF9AHbNf99VyNKYHy0A73Zcbw=
 From:   zanussi@kernel.org
 To:     LKML <linux-kernel@vger.kernel.org>,
         linux-rt-users <linux-rt-users@vger.kernel.org>,
@@ -51,9 +51,10 @@ To:     LKML <linux-kernel@vger.kernel.org>,
         Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
         Daniel Wagner <wagi@monom.org>,
         Tom Zanussi <zanussi@kernel.org>
-Subject: [PATCH RT 6/8] drm/vmwgfx: Drop preempt_disable() in vmw_fifo_ping_host()
-Date:   Mon,  9 Mar 2020 14:47:51 -0500
-Message-Id: <7b50a4187b38dd305b91907c235c2382cc87bca1.1583783251.git.zanussi@kernel.org>
+Cc:     stable-rt@vger.kernel.org
+Subject: [PATCH RT 1/8] userfaultfd: Use a seqlock instead of seqcount
+Date:   Mon,  9 Mar 2020 14:47:46 -0500
+Message-Id: <ef275aaeea4c9c1a75514eed061e29cb78a929c3.1583783251.git.zanussi@kernel.org>
 X-Mailer: git-send-email 2.14.1
 In-Reply-To: <cover.1583783251.git.zanussi@kernel.org>
 References: <cover.1583783251.git.zanussi@kernel.org>
@@ -72,41 +73,77 @@ If anyone has any objections, please let me know.
 -----------
 
 
-[ Upstream commit b901491e7b9b7a676818d84e482b69be72fc142f ]
+[ Upstream commit dc952a564d02997330654be9628bbe97ba2a05d3 ]
 
-vmw_fifo_ping_host() disables preemption around a test and a register
-write via vmw_write(). The write function acquires a spinlock_t typed
-lock which is not allowed in a preempt_disable()ed section on
-PREEMPT_RT. This has been reported in the bugzilla.
+On RT write_seqcount_begin() disables preemption which leads to warning
+in add_wait_queue() while the spinlock_t is acquired.
+The waitqueue can't be converted to swait_queue because
+userfaultfd_wake_function() is used as a custom wake function.
 
-It has been explained by Thomas Hellstrom that this preempt_disable()ed
-section is not required for correctness.
+Use seqlock instead seqcount to avoid the preempt_disable() section
+during add_wait_queue().
 
-Remove the preempt_disable() section.
-
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=206591
-Link: https://lkml.kernel.org/r/0b5e1c65d89951de993deab06d1d197b40fd67aa.camel@vmware.com
+Cc: stable-rt@vger.kernel.org
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Signed-off-by: Tom Zanussi <zanussi@kernel.org>
 ---
- drivers/gpu/drm/vmwgfx/vmwgfx_fifo.c | 2 --
- 1 file changed, 2 deletions(-)
+ fs/userfaultfd.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_fifo.c b/drivers/gpu/drm/vmwgfx/vmwgfx_fifo.c
-index a1c68e6a689e3..713f202fca2cd 100644
---- a/drivers/gpu/drm/vmwgfx/vmwgfx_fifo.c
-+++ b/drivers/gpu/drm/vmwgfx/vmwgfx_fifo.c
-@@ -167,10 +167,8 @@ void vmw_fifo_ping_host(struct vmw_private *dev_priv, uint32_t reason)
- {
- 	u32 *fifo_mem = dev_priv->mmio_virt;
+diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
+index e2b2196fd9428..71886a8e8f71b 100644
+--- a/fs/userfaultfd.c
++++ b/fs/userfaultfd.c
+@@ -51,7 +51,7 @@ struct userfaultfd_ctx {
+ 	/* waitqueue head for events */
+ 	wait_queue_head_t event_wqh;
+ 	/* a refile sequence protected by fault_pending_wqh lock */
+-	struct seqcount refile_seq;
++	seqlock_t refile_seq;
+ 	/* pseudo fd refcounting */
+ 	atomic_t refcount;
+ 	/* userfaultfd syscall flags */
+@@ -1047,7 +1047,7 @@ static ssize_t userfaultfd_ctx_read(struct userfaultfd_ctx *ctx, int no_wait,
+ 			 * waitqueue could become empty if this is the
+ 			 * only userfault.
+ 			 */
+-			write_seqcount_begin(&ctx->refile_seq);
++			write_seqlock(&ctx->refile_seq);
  
--	preempt_disable();
- 	if (cmpxchg(fifo_mem + SVGA_FIFO_BUSY, 0, 1) == 0)
- 		vmw_write(dev_priv, SVGA_REG_SYNC, reason);
--	preempt_enable();
+ 			/*
+ 			 * The fault_pending_wqh.lock prevents the uwq
+@@ -1073,7 +1073,7 @@ static ssize_t userfaultfd_ctx_read(struct userfaultfd_ctx *ctx, int no_wait,
+ 			list_del(&uwq->wq.entry);
+ 			__add_wait_queue(&ctx->fault_wqh, &uwq->wq);
+ 
+-			write_seqcount_end(&ctx->refile_seq);
++			write_sequnlock(&ctx->refile_seq);
+ 
+ 			/* careful to always initialize msg if ret == 0 */
+ 			*msg = uwq->msg;
+@@ -1246,11 +1246,11 @@ static __always_inline void wake_userfault(struct userfaultfd_ctx *ctx,
+ 	 * sure we've userfaults to wake.
+ 	 */
+ 	do {
+-		seq = read_seqcount_begin(&ctx->refile_seq);
++		seq = read_seqbegin(&ctx->refile_seq);
+ 		need_wakeup = waitqueue_active(&ctx->fault_pending_wqh) ||
+ 			waitqueue_active(&ctx->fault_wqh);
+ 		cond_resched();
+-	} while (read_seqcount_retry(&ctx->refile_seq, seq));
++	} while (read_seqretry(&ctx->refile_seq, seq));
+ 	if (need_wakeup)
+ 		__wake_userfault(ctx, range);
+ }
+@@ -1915,7 +1915,7 @@ static void init_once_userfaultfd_ctx(void *mem)
+ 	init_waitqueue_head(&ctx->fault_wqh);
+ 	init_waitqueue_head(&ctx->event_wqh);
+ 	init_waitqueue_head(&ctx->fd_wqh);
+-	seqcount_init(&ctx->refile_seq);
++	seqlock_init(&ctx->refile_seq);
  }
  
- void vmw_fifo_release(struct vmw_private *dev_priv, struct vmw_fifo_state *fifo)
+ /**
 -- 
 2.14.1
 
