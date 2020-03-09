@@ -2,136 +2,89 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E24D4C10F25
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:47:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D090C10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:47:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C16BE20828
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:47:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40AA020828
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:47:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aQ6d4P7G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726604AbgCITrh (ORCPT
+        id S1726641AbgCITrw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 15:47:37 -0400
-Received: from out01.mta.xmission.com ([166.70.13.231]:33434 "EHLO
-        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725992AbgCITrg (ORCPT
+        Mon, 9 Mar 2020 15:47:52 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:39769 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725992AbgCITrv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 15:47:36 -0400
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jBONC-0000ls-98; Mon, 09 Mar 2020 13:47:34 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jBONB-0006yu-FV; Mon, 09 Mar 2020 13:47:34 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Bernd Edlinger <bernd.edlinger@hotmail.de>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Andrei Vagin <avagin@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Peter Zijlstra \(Intel\)" <peterz@infradead.org>,
-        Yuyang Du <duyuyang@gmail.com>,
-        David Hildenbrand <david@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        David Howells <dhowells@redhat.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christian Kellner <christian@kellner.me>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        "linux-doc\@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel\@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-mm\@kvack.org" <linux-mm@kvack.org>,
-        "stable\@vger.kernel.org" <stable@vger.kernel.org>,
-        "linux-api\@vger.kernel.org" <linux-api@vger.kernel.org>
-References: <AM6PR03MB5170EB4427BF5C67EE98FF09E4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <87v9nmjulm.fsf@x220.int.ebiederm.org>
-        <AM6PR03MB5170B976E6387FDDAD59A118E4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <202003021531.C77EF10@keescook>
-        <20200303085802.eqn6jbhwxtmz4j2x@wittgenstein>
-        <AM6PR03MB5170285B336790D3450E2644E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <87v9nlii0b.fsf@x220.int.ebiederm.org>
-        <AM6PR03MB5170609D44967E044FD1BE40E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <87a74xi4kz.fsf@x220.int.ebiederm.org>
-        <AM6PR03MB51705AA3009B4986BB6EF92FE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <87r1y8dqqz.fsf@x220.int.ebiederm.org>
-        <AM6PR03MB517053AED7DC89F7C0704B7DE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <AM6PR03MB51703B44170EAB4626C9B2CAE4E20@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <87tv32cxmf.fsf_-_@x220.int.ebiederm.org>
-        <87v9ne5y4y.fsf_-_@x220.int.ebiederm.org>
-        <875zfe5xzb.fsf_-_@x220.int.ebiederm.org>
-        <AM6PR03MB5170C3A4319BA6A057C3CCACE4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
-Date:   Mon, 09 Mar 2020 14:45:15 -0500
-In-Reply-To: <AM6PR03MB5170C3A4319BA6A057C3CCACE4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        (Bernd Edlinger's message of "Mon, 9 Mar 2020 19:34:59 +0000")
-Message-ID: <87tv2xz510.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Mon, 9 Mar 2020 15:47:51 -0400
+Received: by mail-io1-f65.google.com with SMTP id f21so6247274iol.6;
+        Mon, 09 Mar 2020 12:47:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QKbim7kyHkrPMGudkJ1vg0pEcBDWWCn0qINKqdVbA5w=;
+        b=aQ6d4P7G+51cW8y0i8NEFCtsKyBIAmDQUSzYlkLtf9MQzoqQGdQwySUYgdQkPk65et
+         BmWWjn2rjrHZIQjLlcNULODk5WgZGKexl56EwBzIjXJ2GiyoEJSk5cDo2hgN9YpBNIb8
+         i2sMa23eSaQbyjhj2W3NPQDmtj26SJ/U1V3VzobgYIPUdOS2Cbpck23EfWzcEQdEyVTI
+         /fcFr/U2P/oupRc223/fzVPBB+C5DOCFR1akIOVvpeXO5nsVE3EHbFMmaQpwIwPDAlTj
+         smSK6qzxupxo+4IFoT6Bdzhxc4oyqdojunjeJjFrBJ6Bbs8sw1Ie34TVuOangoKlhGCz
+         UXiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QKbim7kyHkrPMGudkJ1vg0pEcBDWWCn0qINKqdVbA5w=;
+        b=KrF24B0nuBYnro1LPewWqK+aSWt2nDjXZWLjRNM9G2boLLbiciI4KMLzPojQiDvUgJ
+         kpq61GGhTxq5EsZE2tV7VzvsJcdAHaSv5qDGcfSrOnZtb2uL17Qihg/PjGGFF+ndiQ+K
+         Jli5L3dLEqSG/ap0irg1KeZdpxOFhAFwpNYTYmT3cYDSXhaSN6FPIQ3X6mvrG5UNTj5Y
+         8CLkQXaDipbt/l0jbcUHy8CA8AZbGqn+KgM0W4BGwzH4U5obRR8O+Jj29WdGjNAM+xKV
+         ByYUCX4bcoWoW6IgAMDe/AVELbpwMTFPpJUyWYcNmJ2jauDzfKMwE7c/46x1LchTyYH/
+         kW5A==
+X-Gm-Message-State: ANhLgQ1ICCLoeTeuSQlCW2ZAENMl/T7VtpEI9pD4DjoVo036tHL3tLZw
+        IH6WcooghTtg+R3Y4+HkzZyYlzb05jvGZeTKZamVyBic
+X-Google-Smtp-Source: ADFU+vu0kdCSLs3bzWD+F6sDXLWQMKarERkN7jRfqXBo+1Uyqq+GkdyoCW1iIkJTYgvcqSWEJbTCkD7eLiN5QW2hczI=
+X-Received: by 2002:a6b:2c52:: with SMTP id s79mr14709222ios.160.1583783270045;
+ Mon, 09 Mar 2020 12:47:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jBONB-0006yu-FV;;;mid=<87tv2xz510.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX19PMadbznaJfutgyOFU+nq1+wKoP70FUBk=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH v2 4/5] exec: Move exec_mmap right after de_thread in flush_old_exec
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+References: <20200308055445.1992189-1-bjorn.andersson@linaro.org>
+In-Reply-To: <20200308055445.1992189-1-bjorn.andersson@linaro.org>
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Date:   Mon, 9 Mar 2020 13:47:38 -0600
+Message-ID: <CAOCk7NrYxPRsT+wqgW=ShkYNnkuLfuzzVACDL7Zn-phKSgqvfw@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: qcom: msm8998-mtp: Disable funnel 4 and 5
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Jeffrey Hugo <jhugo@codeaurora.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Bernd Edlinger <bernd.edlinger@hotmail.de> writes:
-
-> On 3/8/20 10:38 PM, Eric W. Biederman wrote:
->> 
->> This consolidation allows the creation of a mutex to replace
->> cred_guard_mutex that is not held of possible indefinite userspace
+On Sat, Mar 7, 2020 at 10:58 PM Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
 >
-> can you also reword this "held of" thing here as well?
+> Disable Coresight funnel 4 and 5, for now, as these causes the MTP to
+> crash when clock late_initcall disables unused clocks.
+>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-Done:
+Reviewed-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
 
-    exec: Move exec_mmap right after de_thread in flush_old_exec
-    
-    I have read through the code in exec_mmap and I do not see anything
-    that depends on sighand or the sighand lock, or on signals in anyway
-    so this should be safe.
-    
-    This rearrangement of code has two siginficant benefits.  It makes
-    the determination of passing the point of no return by testing bprm->mm
-    accurate.  All failures prior to that point in flush_old_exec are
-    either truly recoverable or they are fatal.
-    
-    Futher this consolidates all of the possible indefinite waits for
-    userspace together at the top of flush_old_exec.  The possible wait
-    for a ptracer on PTRACE_EVENT_EXIT, the possible wait for a page fault
-    to be resolved in clear_child_tid, and the possible wait for a page
-    fault in exit_robust_list.
-    
-    This consolidation allows the creation of a mutex to replace
-    cred_guard_mutex that is not held over possible indefinite userspace
-    waits.  Which will allow removing deadlock scenarios from the kernel.
-    
-    Reviewed-by: Bernd Edlinger <bernd.edlinger@hotmail.de>
-    Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+I'm guessing that these are accessed by something else in the system,
+without properly putting its own vote or something.  Similar to
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?h=v5.6-rc5&id=12eced09cd301aa7b1868a67c50a651c2aacd363
 
-Eric
+If I get some time, I'll try to repro and hopefully identify what is
+exactly going wrong.
