@@ -4,130 +4,250 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D405EC10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 14:59:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02CCCC10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 15:01:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A48ED21655
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 14:59:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD04621655
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 15:01:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sitAIa6q"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="UNx86Hn7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726825AbgCIO7z (ORCPT
+        id S1726922AbgCIPBd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 10:59:55 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:45498 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726729AbgCIO7z (ORCPT
+        Mon, 9 Mar 2020 11:01:33 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:38082 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726772AbgCIPBd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 10:59:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:
-        Subject:Sender:Reply-To:Cc:Content-ID:Content-Description;
-        bh=+RbY562ZlHYwkdPKappIm3cW8cBre3bUqcDMjctvcSU=; b=sitAIa6qb1pheuvQV1LusSjSQZ
-        1tHDTms/4mth+g3nW1TAeMrIuDeXghdRtiLSY5GncNSWLrph03RWjdrKdAvDy6Gr0MGzKTRdwyXkQ
-        fWkUuAwVzFSlijJk8Ya8h2KS5JP8EWddyx4rJDy0Ma6XsApu9xV2oIuD11a7+gPRH/M3TFkkDSjgN
-        vx/4/s9/a37jtCo5I8MoGz87SmroAKoeX/ngam0PZLfrruls24ju3Xzd+GlX/AsKXhm4WTikPEVH5
-        LVPGRjGUSCj+HIvdOhTtJglej4kpzh++gB8r7ppdqVnSojEYxHjfYrB9Ekw4FflqFPh/aYMMxgwTK
-        0pIKSz0Q==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jBJso-0002OX-JD; Mon, 09 Mar 2020 14:59:54 +0000
-Subject: Re: [PATCH] ktest: Fix typos in ktest.pl
-To:     Masanari Iida <standby24x7@gmail.com>,
-        linux-kernel@vger.kernel.org, rostedt@goodmis.org
-References: <20200309115430.57540-1-standby24x7@gmail.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <097cdf11-33b5-45be-6a41-0e5354276bad@infradead.org>
-Date:   Mon, 9 Mar 2020 07:59:52 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Mon, 9 Mar 2020 11:01:33 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1583766092; h=In-Reply-To: Content-Type: MIME-Version:
+ References: Message-ID: Subject: Cc: To: From: Date: Sender;
+ bh=OfeXMwCy0tr21RuuUPUFSbLXXtySnJ162vCqOeqxiCI=; b=UNx86Hn7iZEGNIvPAT23ozEp3x4Pvlr3y0s6XjWHKc3+EYezlL2Tyn3dOa9UHw7aFzGv/Fk0
+ baGSkaZbIstqXaSF5E3cqW+Bu6/JMSBJI0q7Az0M9BZlr6mnW9vBy54lsnmRCieNmfZIeS6R
+ FE2zPkZTm9wxik9nPA9C/K2zhVM=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e665a31.7f3d35f82228-smtp-out-n03;
+ Mon, 09 Mar 2020 15:01:05 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 3A50FC43637; Mon,  9 Mar 2020 15:01:05 +0000 (UTC)
+Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jcrouse)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0EE80C433CB;
+        Mon,  9 Mar 2020 15:01:02 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0EE80C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
+Date:   Mon, 9 Mar 2020 09:01:01 -0600
+From:   Jordan Crouse <jcrouse@codeaurora.org>
+To:     Brian Masney <masneyb@onstation.org>
+Cc:     robh+dt@kernel.org, robdclark@gmail.com, sean@poorly.run,
+        devicetree@vger.kernel.org, jeffrey.l.hugo@gmail.com,
+        airlied@linux.ie, linux-arm-msm@vger.kernel.org,
+        smasetty@codeaurora.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+        sam@ravnborg.org
+Subject: Re: [Freedreno] [PATCH] dt-bindings: display: msm: gmu: move sram
+ property to gpu bindings
+Message-ID: <20200309150101.GA29092@jcrouse1-lnx.qualcomm.com>
+Mail-Followup-To: Brian Masney <masneyb@onstation.org>, robh+dt@kernel.org,
+        robdclark@gmail.com, sean@poorly.run, devicetree@vger.kernel.org,
+        jeffrey.l.hugo@gmail.com, airlied@linux.ie,
+        linux-arm-msm@vger.kernel.org, smasetty@codeaurora.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, sam@ravnborg.org
+References: <20200309111804.188162-1-masneyb@onstation.org>
 MIME-Version: 1.0
-In-Reply-To: <20200309115430.57540-1-standby24x7@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200309111804.188162-1-masneyb@onstation.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/9/20 4:54 AM, Masanari Iida wrote:
-> This patch fixes multipe spelling typo found in ktest.pl.
+On Mon, Mar 09, 2020 at 07:18:04AM -0400, Brian Masney wrote:
+> The sram property was incorrectly added to the GMU binding when it
+> really belongs with the GPU binding instead. Let's go ahead and
+> move it.
 > 
-> Signed-off-by: Masanari Iida <standby24x7@gmail.com>
+> While changes are being made here, let's update the sram property
+> description to mention that this property is only valid for a3xx and
+> a4xx GPUs. The a3xx/a4xx example in the GPU is replaced with what was
+> in the GMU.
 
-Looks good.  Thanks.
+Thank you kindly!  I'll re-submit my stack on top of this.
 
-Acked-by: Randy Dunlap <rdunlap@infradead.org>
+Acked-by: Jordan Crouse <jcrouse@codeaurora.org>
 
+> Signed-off-by: Brian Masney <masneyb@onstation.org>
+> Fixes: 198a72c8f9ee ("dt-bindings: display: msm: gmu: add optional ocmem property")
 > ---
->  tools/testing/ktest/ktest.pl | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
+> Background thread:
+> https://lore.kernel.org/lkml/20200303170159.GA13109@jcrouse1-lnx.qualcomm.com/
 > 
-> diff --git a/tools/testing/ktest/ktest.pl b/tools/testing/ktest/ktest.pl
-> index 6a605ba75dd6..dab03d80c902 100755
-> --- a/tools/testing/ktest/ktest.pl
-> +++ b/tools/testing/ktest/ktest.pl
-> @@ -1030,7 +1030,7 @@ sub __read_config {
->  	    }
->  
->  	    if (!$skip && $rest !~ /^\s*$/) {
-> -		die "$name: $.: Gargbage found after $type\n$_";
-> +		die "$name: $.: Garbage found after $type\n$_";
->  	    }
->  
->  	    if ($skip && $type eq "TEST_START") {
-> @@ -1063,7 +1063,7 @@ sub __read_config {
->  	    }
->  
->  	    if ($rest !~ /^\s*$/) {
-> -		die "$name: $.: Gargbage found after DEFAULTS\n$_";
-> +		die "$name: $.: Garbage found after DEFAULTS\n$_";
->  	    }
->  
->  	} elsif (/^\s*INCLUDE\s+(\S+)/) {
-> @@ -1154,7 +1154,7 @@ sub __read_config {
->  	    # on of these sections that have SKIP defined.
->  	    # The save variable can be
->  	    # defined multiple times and the new one simply overrides
-> -	    # the prevous one.
-> +	    # the previous one.
->  	    set_variable($lvalue, $rvalue);
->  
->  	} else {
-> @@ -1234,7 +1234,7 @@ sub read_config {
->  	foreach my $option (keys %not_used) {
->  	    print "$option\n";
->  	}
-> -	print "Set IGRNORE_UNUSED = 1 to have ktest ignore unused variables\n";
-> +	print "Set IGNORE_UNUSED = 1 to have ktest ignore unused variables\n";
->  	if (!read_yn "Do you want to continue?") {
->  	    exit -1;
->  	}
-> @@ -1345,7 +1345,7 @@ sub eval_option {
->  	# Check for recursive evaluations.
->  	# 100 deep should be more than enough.
->  	if ($r++ > 100) {
-> -	    die "Over 100 evaluations accurred with $option\n" .
-> +	    die "Over 100 evaluations occurred with $option\n" .
->  		"Check for recursive variables\n";
->  	}
->  	$prev = $option;
-> @@ -1461,7 +1461,7 @@ sub get_test_name() {
->  
->  sub dodie {
->  
-> -    # avoid recusion
-> +    # avoid recursion
->      return if ($in_die);
->      $in_die = 1;
->  
+> I started to look at what it would take to convert the GPU bindings to
+> YAML, however I am unsure of the complete list of "qcom,adreno-XYZ.W"
+> compatibles that are valid.
 > 
-
+>  .../devicetree/bindings/display/msm/gmu.txt   | 51 -----------------
+>  .../devicetree/bindings/display/msm/gpu.txt   | 55 ++++++++++++++-----
+>  2 files changed, 42 insertions(+), 64 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/display/msm/gmu.txt b/Documentation/devicetree/bindings/display/msm/gmu.txt
+> index bf9c7a2a495c..90af5b0a56a9 100644
+> --- a/Documentation/devicetree/bindings/display/msm/gmu.txt
+> +++ b/Documentation/devicetree/bindings/display/msm/gmu.txt
+> @@ -31,10 +31,6 @@ Required properties:
+>  - iommus: phandle to the adreno iommu
+>  - operating-points-v2: phandle to the OPP operating points
+>  
+> -Optional properties:
+> -- sram: phandle to the On Chip Memory (OCMEM) that's present on some Snapdragon
+> -        SoCs. See Documentation/devicetree/bindings/sram/qcom,ocmem.yaml.
+> -
+>  Example:
+>  
+>  / {
+> @@ -67,50 +63,3 @@ Example:
+>  		operating-points-v2 = <&gmu_opp_table>;
+>  	};
+>  };
+> -
+> -a3xx example with OCMEM support:
+> -
+> -/ {
+> -	...
+> -
+> -	gpu: adreno@fdb00000 {
+> -		compatible = "qcom,adreno-330.2",
+> -		             "qcom,adreno";
+> -		reg = <0xfdb00000 0x10000>;
+> -		reg-names = "kgsl_3d0_reg_memory";
+> -		interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
+> -		interrupt-names = "kgsl_3d0_irq";
+> -		clock-names = "core",
+> -		              "iface",
+> -		              "mem_iface";
+> -		clocks = <&mmcc OXILI_GFX3D_CLK>,
+> -		         <&mmcc OXILICX_AHB_CLK>,
+> -		         <&mmcc OXILICX_AXI_CLK>;
+> -		sram = <&gmu_sram>;
+> -		power-domains = <&mmcc OXILICX_GDSC>;
+> -		operating-points-v2 = <&gpu_opp_table>;
+> -		iommus = <&gpu_iommu 0>;
+> -	};
+> -
+> -	ocmem@fdd00000 {
+> -		compatible = "qcom,msm8974-ocmem";
+> -
+> -		reg = <0xfdd00000 0x2000>,
+> -		      <0xfec00000 0x180000>;
+> -		reg-names = "ctrl",
+> -		             "mem";
+> -
+> -		clocks = <&rpmcc RPM_SMD_OCMEMGX_CLK>,
+> -		         <&mmcc OCMEMCX_OCMEMNOC_CLK>;
+> -		clock-names = "core",
+> -		              "iface";
+> -
+> -		#address-cells = <1>;
+> -		#size-cells = <1>;
+> -
+> -		gmu_sram: gmu-sram@0 {
+> -			reg = <0x0 0x100000>;
+> -			ranges = <0 0 0xfec00000 0x100000>;
+> -		};
+> -	};
+> -};
+> diff --git a/Documentation/devicetree/bindings/display/msm/gpu.txt b/Documentation/devicetree/bindings/display/msm/gpu.txt
+> index 7edc298a15f2..fd779cd6994d 100644
+> --- a/Documentation/devicetree/bindings/display/msm/gpu.txt
+> +++ b/Documentation/devicetree/bindings/display/msm/gpu.txt
+> @@ -35,25 +35,54 @@ Required properties:
+>    bring the GPU out of secure mode.
+>  - firmware-name: optional property of the 'zap-shader' node, listing the
+>    relative path of the device specific zap firmware.
+> +- sram: phandle to the On Chip Memory (OCMEM) that's present on some a3xx and
+> +        a4xx Snapdragon SoCs. See
+> +        Documentation/devicetree/bindings/sram/qcom,ocmem.yaml.
+>  
+> -Example 3xx/4xx/a5xx:
+> +Example 3xx/4xx:
+>  
+>  / {
+>  	...
+>  
+> -	gpu: qcom,kgsl-3d0@4300000 {
+> -		compatible = "qcom,adreno-320.2", "qcom,adreno";
+> -		reg = <0x04300000 0x20000>;
+> +	gpu: adreno@fdb00000 {
+> +		compatible = "qcom,adreno-330.2",
+> +		             "qcom,adreno";
+> +		reg = <0xfdb00000 0x10000>;
+>  		reg-names = "kgsl_3d0_reg_memory";
+> -		interrupts = <GIC_SPI 80 0>;
+> -		clock-names =
+> -		    "core",
+> -		    "iface",
+> -		    "mem_iface";
+> -		clocks =
+> -		    <&mmcc GFX3D_CLK>,
+> -		    <&mmcc GFX3D_AHB_CLK>,
+> -		    <&mmcc MMSS_IMEM_AHB_CLK>;
+> +		interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
+> +		interrupt-names = "kgsl_3d0_irq";
+> +		clock-names = "core",
+> +		              "iface",
+> +		              "mem_iface";
+> +		clocks = <&mmcc OXILI_GFX3D_CLK>,
+> +		         <&mmcc OXILICX_AHB_CLK>,
+> +		         <&mmcc OXILICX_AXI_CLK>;
+> +		sram = <&gpu_sram>;
+> +		power-domains = <&mmcc OXILICX_GDSC>;
+> +		operating-points-v2 = <&gpu_opp_table>;
+> +		iommus = <&gpu_iommu 0>;
+> +	};
+> +
+> +	gpu_sram: ocmem@fdd00000 {
+> +		compatible = "qcom,msm8974-ocmem";
+> +
+> +		reg = <0xfdd00000 0x2000>,
+> +		      <0xfec00000 0x180000>;
+> +		reg-names = "ctrl",
+> +		            "mem";
+> +
+> +		clocks = <&rpmcc RPM_SMD_OCMEMGX_CLK>,
+> +		         <&mmcc OCMEMCX_OCMEMNOC_CLK>;
+> +		clock-names = "core",
+> +		              "iface";
+> +
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +
+> +		gpu_sram: gpu-sram@0 {
+> +			reg = <0x0 0x100000>;
+> +			ranges = <0 0 0xfec00000 0x100000>;
+> +		};
+>  	};
+>  };
+>  
+> -- 
+> 2.24.1
+> 
+> _______________________________________________
+> Freedreno mailing list
+> Freedreno@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/freedreno
 
 -- 
-~Randy
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
