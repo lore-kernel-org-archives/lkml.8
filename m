@@ -2,134 +2,85 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66BD2C10F25
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 22:34:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DA45C10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 22:34:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DDB124649
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 22:34:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7711C24649
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 22:34:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727412AbgCIWeC (ORCPT
+        id S1727425AbgCIWeU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 18:34:02 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:38362 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726536AbgCIWeB (ORCPT
+        Mon, 9 Mar 2020 18:34:20 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:41567 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726937AbgCIWeU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 18:34:01 -0400
-Received: by mail-ot1-f66.google.com with SMTP id i14so11312020otp.5
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 15:34:01 -0700 (PDT)
+        Mon, 9 Mar 2020 18:34:20 -0400
+Received: from mail-pj1-f71.google.com ([209.85.216.71])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <matthew.ruffell@canonical.com>)
+        id 1jBQyX-0004k8-Rt
+        for linux-kernel@vger.kernel.org; Mon, 09 Mar 2020 22:34:18 +0000
+Received: by mail-pj1-f71.google.com with SMTP id z5so708866pjq.9
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 15:34:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pLnP9gGfDbqjzLs0w/R1F12ZQEp2IKQhsRrBYCzbdX4=;
-        b=dt0UCkTrmuGNjUMVDamP5m7H98LNatafdhLnvnBe9ZHcBBP8Bi59/HG+IFoDVu6T9a
-         CqiE+AMmka5JYYgTMOOS1UAv93V0LTq368frruy0mNCPrcwNd1p6ME6M6IYRkYUX3u/t
-         7WcdK4X5GDM1+1UQHTPXLXQkfSovibGV7f2IoaWGmxUz1k6XwZyBkUujIVvFxgcsg/6X
-         qcRpa+v/IZBaUcrlvz/O3ntnNPsU2cRpfm1mO5A8HkND9FDfSuFnpEfnSZ7QnQ+7EYrn
-         SMAFw7HiphCQ7BGcP6/S3NYpsWax4IkAnQBEj+tzYMOUeoh1YrcBzjURa2t1KmQzED+Z
-         m/rA==
-X-Gm-Message-State: ANhLgQ20v5GqNnMTOSRMVd85zGJ5ewZtiFuRPHwfMQY8LiI4VA6jbPNG
-        pQCZrdESusjB6xbnZ3yglO9SumDV
-X-Google-Smtp-Source: ADFU+vuukqKD5c8WG/QW975iAe/FzFyzJnWIErWpmtXJOaHsMgc4DB1D0O1V0tAs0nn6+iMYwuAB7w==
-X-Received: by 2002:a9d:76d6:: with SMTP id p22mr15130125otl.37.1583793240855;
-        Mon, 09 Mar 2020 15:34:00 -0700 (PDT)
-Received: from mail-ot1-f42.google.com (mail-ot1-f42.google.com. [209.85.210.42])
-        by smtp.gmail.com with ESMTPSA id s12sm3562887oic.31.2020.03.09.15.34.00
-        for <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=+KQcrw2yUpe9WcR5YMys+lGugYtYd9Ok8ZJgn9f16J4=;
+        b=sFbLTyOMdtKfT5TpUOt0+rw7FvmNxAxMBR7oE/4/EhY1ybUrLTZZ+TjIB0DJMAh0vL
+         cQXmA8QMy0WoNClv88GewTJsE2Z/uOybAECd6OccPh4Wwqf9Oh/mpK5YguoYzirVgDOS
+         rXgWUCcbomwXI2RdirF+mfJVta2z+RVyQsfad5xkR7I8leSt2FkGMEliZbEI6FzE654F
+         iHAga4swCXGIO8sbXvVQoCAP5oEIMzSPe8taHkNPWVYjWG3LdgBlGUnpgulLlcMRYEct
+         Kwd68aCkUK+EOCUJ6osWEgF3oZ1ohqnjhqrYtPep3akOvrh4bFhIGfpFYQGSi3d06+7d
+         TX3A==
+X-Gm-Message-State: ANhLgQ3S+W+ANG8+drM2nuLfGeoJwRMwC/TQ+wYWa6tYZ1mIaucVSt/n
+        77WcHluWJHBkUKKPQqChkj+KqWbTldIItAafrgy6Sf1CYidMWLmTWxCiDydKDty9REx/4/tfabT
+        fuvm14J36iU41y8joq0abe/5uYS8rK10B/LFa56/HFA==
+X-Received: by 2002:a17:90a:34f:: with SMTP id 15mr1519159pjf.94.1583793255496;
+        Mon, 09 Mar 2020 15:34:15 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vs9VxY4puLe/6q81FmP2tIbuWYuBZTOustWorHqidrzJwquI0Ks5GiUbA9IKsHYKfvh7tTcIQ==
+X-Received: by 2002:a17:90a:34f:: with SMTP id 15mr1519132pjf.94.1583793255202;
+        Mon, 09 Mar 2020 15:34:15 -0700 (PDT)
+Received: from [192.168.1.107] (222-154-99-146-fibre.sparkbb.co.nz. [222.154.99.146])
+        by smtp.gmail.com with ESMTPSA id t142sm36524584pgb.31.2020.03.09.15.34.11
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Mar 2020 15:34:00 -0700 (PDT)
-Received: by mail-ot1-f42.google.com with SMTP id a9so5095865otl.6
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 15:34:00 -0700 (PDT)
-X-Received: by 2002:a05:6830:104a:: with SMTP id b10mr14900892otp.63.1583793240222;
- Mon, 09 Mar 2020 15:34:00 -0700 (PDT)
+        Mon, 09 Mar 2020 15:34:14 -0700 (PDT)
+Subject: Re: [PATCH 0/1] coredump: Fix null pointer dereference when
+ kernel.core_pattern is "|"
+To:     viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Paul Wise <pabs3@bonedaddy.net>,
+        Neil Horman <nhorman@tuxdriver.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jakub Wilk <jwilk@jwilk.net>
+References: <20200220051015.14971-1-matthew.ruffell@canonical.com>
+ <645fcbdfdd1321ff3e0afaafe7eccfd034e57748.camel@bonedaddy.net>
+From:   Matthew Ruffell <matthew.ruffell@canonical.com>
+Message-ID: <87a47997-3cde-bc86-423b-6154849183e9@canonical.com>
+Date:   Tue, 10 Mar 2020 11:34:09 +1300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <20200221083637.13392-1-yuehaibing@huawei.com>
-In-Reply-To: <20200221083637.13392-1-yuehaibing@huawei.com>
-From:   Li Yang <leoyang.li@nxp.com>
-Date:   Mon, 9 Mar 2020 17:33:49 -0500
-X-Gmail-Original-Message-ID: <CADRPPNTb2_-0QpD=iuP-W-Tk6n-a3rHKp-M38xw5kf+BXXrbPg@mail.gmail.com>
-Message-ID: <CADRPPNTb2_-0QpD=iuP-W-Tk6n-a3rHKp-M38xw5kf+BXXrbPg@mail.gmail.com>
-Subject: Re: [PATCH -next] soc: fsl: dpio: remove set but not used variable 'addr_cena'
-To:     YueHaibing <yuehaibing@huawei.com>,
-        Youri Querry <youri.querry_1@nxp.com>
-Cc:     Roy Pledge <Roy.Pledge@nxp.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <645fcbdfdd1321ff3e0afaafe7eccfd034e57748.camel@bonedaddy.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 2:38 AM YueHaibing <yuehaibing@huawei.com> wrote:
->
-> commit 3b2abda7d28c ("soc: fsl: dpio: Replace QMAN array
-> mode with ring mode enqueue") introduced this, but not
-> used, so remove it.
->
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  drivers/soc/fsl/dpio/qbman-portal.c | 4 ----
->  1 file changed, 4 deletions(-)
->
-> diff --git a/drivers/soc/fsl/dpio/qbman-portal.c b/drivers/soc/fsl/dpio/qbman-portal.c
-> index 740ee0d..350de56 100644
-> --- a/drivers/soc/fsl/dpio/qbman-portal.c
-> +++ b/drivers/soc/fsl/dpio/qbman-portal.c
-> @@ -658,7 +658,6 @@ int qbman_swp_enqueue_multiple_direct(struct qbman_swp *s,
->         const uint32_t *cl = (uint32_t *)d;
->         uint32_t eqcr_ci, eqcr_pi, half_mask, full_mask;
->         int i, num_enqueued = 0;
-> -       uint64_t addr_cena;
->
->         spin_lock(&s->access_spinlock);
->         half_mask = (s->eqcr.pi_ci_mask>>1);
-> @@ -711,7 +710,6 @@ int qbman_swp_enqueue_multiple_direct(struct qbman_swp *s,
->
->         /* Flush all the cacheline without load/store in between */
->         eqcr_pi = s->eqcr.pi;
-> -       addr_cena = (size_t)s->addr_cena;
->         for (i = 0; i < num_enqueued; i++)
->                 eqcr_pi++;
->         s->eqcr.pi = eqcr_pi & full_mask;
-> @@ -822,7 +820,6 @@ int qbman_swp_enqueue_multiple_desc_direct(struct qbman_swp *s,
->         const uint32_t *cl;
->         uint32_t eqcr_ci, eqcr_pi, half_mask, full_mask;
->         int i, num_enqueued = 0;
-> -       uint64_t addr_cena;
->
->         half_mask = (s->eqcr.pi_ci_mask>>1);
->         full_mask = s->eqcr.pi_ci_mask;
-> @@ -866,7 +863,6 @@ int qbman_swp_enqueue_multiple_desc_direct(struct qbman_swp *s,
->
->         /* Flush all the cacheline without load/store in between */
->         eqcr_pi = s->eqcr.pi;
-> -       addr_cena = (uint64_t)s->addr_cena;
+Hi,
 
-Hi Youri,
+Can I please get some feedback on this patch? Would be good to clear up the
+null pointer dereference.
 
-Looks like this problem exposed another issue that you removed the
-cacheline related code in the upstream version.  Then the comment /*
-Flush all the cacheline without load/store in between */ is no longer
-true now, and probably the whole block can be replaced with a single
-line to increase s->eqcr.pi?   The same for the block above.  Can you
-provide a better fix for this issue?
-
-Regards,
-Leo
-
->         for (i = 0; i < num_enqueued; i++)
->                 eqcr_pi++;
->         s->eqcr.pi = eqcr_pi & full_mask;
-> --
-> 2.7.4
->
->
+Thanks,
+Matthew
