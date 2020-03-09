@@ -2,200 +2,198 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65193C10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 11:26:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEE63C10F29
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 11:27:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E76B20637
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 11:26:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A28120873
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 11:27:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=habanalabs.onmicrosoft.com header.i=@habanalabs.onmicrosoft.com header.b="wfeT62dQ"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="PS/dZXZj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726383AbgCILZ6 (ORCPT
+        id S1726442AbgCIL1X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 07:25:58 -0400
-Received: from mail-am6eur05on2126.outbound.protection.outlook.com ([40.107.22.126]:23602
-        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
+        Mon, 9 Mar 2020 07:27:23 -0400
+Received: from mail-eopbgr690067.outbound.protection.outlook.com ([40.107.69.67]:19919
+        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725796AbgCILZ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 07:25:58 -0400
+        id S1725942AbgCIL1X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 07:27:23 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Lmc58QkQyOpavEsUVBEmzR2DsffDHcc9nKND5v/+iZYOESGvNOB+QFukyhOtBoWwoAzB13qCeNr2xw1zFw+lSV0ZAxddukPOLYzeRKKwDVeCyAhjjSK251h2lS/4HTW8kOsxyMaOcO7zKz9cF2xwfPqEeRV6ccirSM2lbX/PrRUOfxIy/ste4CgAHkFBwdo2Dlt7DB1ByYb7KcfloFNcqmlldgxB/FUpZoGoCQsxV1CpDEcZiYok6mJvGBRX/8jNiqOnF7/MvGhM0pF0X9DIPHxmi2vZVV22KochLwBeZpjnwgTocMFpKxGk7d2u7NtLEarBIsQ+kRh7mnglHjgVvg==
+ b=lHZCQ8Rl1EHFI6OuFeyyjTONuixCSYVPI2sYyIwYUYdPNOl0UNYgmt6rSwwkibbt2S5up3DUffc/8gL2BfxLWgL0Ta/Loid6+xds98n98tWSouxHS2LyQqHPFZMRO6niwE7ZH0qepJH2WBkRfobGtNzq0RMKqGn7rdGA/lXF+jM8Vj2OZ9iQ6F9tEA8u3K/r2rs4n5V6oF+nP5xsIcCnPUgslsV2W8a4ewBmGpAzUi8QpZka7khzVqsLSGQDpgZ0JeAdMfS/XWI2V6RNM7jerFG1aT8IQM67mfMgV1RcrS270nOJhoyUSqQkbk3DEdT7rKrSbs0If77bG7ZB+GCZ6Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VmYhKF061Kz2SDLY/8oXeYPA9iJ2YvxUePqLRzQ7FNI=;
- b=WNDNKNtOCIH3+a7Vt2IyiTE0SJZc/tfo3WE5Zmd3QDtoPhh6W1GMv206pDf8u6DNnQShQRzzG847aHUoakWYFkFLsLkOxQ/26CweD7WxJ0+yQsZ7SapYMuRc86FT2ak4GchUhcMUsO0eRFpEtvjonCVDj+XQOZ64/XE+JkveFXCDmzDNqQtvBJiUmrvMV5c8iKQJ6TdspKddclrM3SNxrhDHlr8iXReQVJYw6W13DQ3l5jmnaM3W/LI6FgAqXJcoMa/IEaCN5p0yf42MktvIr2CIspz4B+0QfFBiuI2rgM4sAP15ET3YjaWGNKrMKbAOUPXs+mUlz/zFgKjXpFOvxA==
+ bh=3n7Rs97IfLs3SKdWR14x4fOM5C25zPmTcFwlv79I8Wc=;
+ b=e49RutTGyH9IV3xLvCR7SgfYkV185JyLjNTJznTevV16wfTlmCtGFvMasPyp0VfX/SD29tB7T9G8YtP047opu8B/B5LLBfh7i0+7w1HF7jl5W1gWDuNoX7ykwGafNqRoe+QiCXCbV+Qt1RA3d8S6naQbUNKcaLoCU2v0kp5ewVxL0FGa6DtGRXzCImWY2Wg3agh+NezNSAO4HuaUQCzrLppAj94e6BRV9EM9hnT+6VYmO1PMKb8uD0opr5pOKv6xuh7WKUzpPPC6ll2AmG2B9mFzEyIAv2SXLKvb+Mp7xYjpuZs8OOVmOy2lBLQJ2Wc8vsvmchsuRgLH+Yy1JVOUAw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=habana.ai; dmarc=pass action=none header.from=habana.ai;
- dkim=pass header.d=habana.ai; arc=none
+ smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
+ dkim=pass header.d=xilinx.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=habanalabs.onmicrosoft.com; s=selector2-habanalabs-onmicrosoft-com;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VmYhKF061Kz2SDLY/8oXeYPA9iJ2YvxUePqLRzQ7FNI=;
- b=wfeT62dQ4M+o2B99UWdMaxuE1E4p0bbRzhSm0h5fEVneiOtArULMlrPrOMSs2E5/dkgxY4ZQG/6caX1dunAfOzifkt4r7gzLjQFrJB75hpvIrWyRh6BzCoJAEbsZNw8SPwNCZGZjr/AMG485D/0TKVRLFFOYL/S9TzVM2xlm98E=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=oshpigelman@habana.ai; 
-Received: from AM0PR02MB5523.eurprd02.prod.outlook.com (10.255.29.216) by
- AM0PR02MB5779.eurprd02.prod.outlook.com (52.132.215.21) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2793.17; Mon, 9 Mar 2020 11:25:54 +0000
-Received: from AM0PR02MB5523.eurprd02.prod.outlook.com
- ([fe80::8112:12dd:4130:9206]) by AM0PR02MB5523.eurprd02.prod.outlook.com
- ([fe80::8112:12dd:4130:9206%3]) with mapi id 15.20.2793.013; Mon, 9 Mar 2020
- 11:25:54 +0000
-From:   Omer Shpigelman <oshpigelman@habana.ai>
-To:     oded.gabbay@gmail.com
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH] habanalabs: add print upon clock change
-Date:   Mon,  9 Mar 2020 13:25:47 +0200
-Message-Id: <20200309112547.22123-1-oshpigelman@habana.ai>
-X-Mailer: git-send-email 2.17.1
-Content-Type: text/plain
-X-ClientProxiedBy: AM4PR05CA0025.eurprd05.prod.outlook.com (2603:10a6:205::38)
- To AM0PR02MB5523.eurprd02.prod.outlook.com (2603:10a6:208:15e::24)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from oshpigelman2-vm.habana-labs.com (31.154.190.6) by AM4PR05CA0025.eurprd05.prod.outlook.com (2603:10a6:205::38) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.15 via Frontend Transport; Mon, 9 Mar 2020 11:25:54 +0000
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [31.154.190.6]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: f4d59b59-11d6-4bcb-8c19-08d7c41ca174
-X-MS-TrafficTypeDiagnostic: AM0PR02MB5779:
-X-Microsoft-Antispam-PRVS: <AM0PR02MB57793E9F8BEE197456E59FE7B8FE0@AM0PR02MB5779.eurprd02.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:245;
-X-Forefront-PRVS: 0337AFFE9A
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(396003)(136003)(376002)(346002)(366004)(39830400003)(199004)(189003)(1076003)(36756003)(2616005)(81166006)(8676002)(81156014)(6512007)(478600001)(26005)(2906002)(8936002)(6916009)(316002)(6666004)(186003)(956004)(66946007)(66476007)(86362001)(4326008)(16526019)(6486002)(6506007)(66556008)(5660300002)(52116002);DIR:OUT;SFP:1102;SCL:1;SRVR:AM0PR02MB5779;H:AM0PR02MB5523.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-Received-SPF: None (protection.outlook.com: habana.ai does not designate
+ bh=3n7Rs97IfLs3SKdWR14x4fOM5C25zPmTcFwlv79I8Wc=;
+ b=PS/dZXZjTrWUclVgmJn4f5ag2ugZr7oiGdfjVPViTjN3yFAlYtih5LM9zJ3YPHCBslc97/1csl1RggYOTXTE5pdzB7N4vQbXdF5o/YS24xjGvaLcASK8euZckORXtvnWD9YcmbQaMHX5kalFmg/odCZCwtIQ5Zr/FKwbn3zBZ+s=
+Received: from MN2PR02MB6336.namprd02.prod.outlook.com (2603:10b6:208:1b8::30)
+ by MN2PR02MB6704.namprd02.prod.outlook.com (2603:10b6:208:1d6::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.16; Mon, 9 Mar
+ 2020 11:27:19 +0000
+Received: from MN2PR02MB6336.namprd02.prod.outlook.com
+ ([fe80::b51f:8bc4:7e18:f227]) by MN2PR02MB6336.namprd02.prod.outlook.com
+ ([fe80::b51f:8bc4:7e18:f227%7]) with mapi id 15.20.2793.013; Mon, 9 Mar 2020
+ 11:27:19 +0000
+From:   Bharat Kumar Gogada <bharatku@xilinx.com>
+To:     "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        Ravikiran Gummaluri <rgummal@xilinx.com>,
+        "maz@kernel.org" <maz@kernel.org>
+Subject: RE: [PATCH v5 2/2] PCI: xilinx-cpm: Add Versal CPM Root Port driver
+Thread-Topic: [PATCH v5 2/2] PCI: xilinx-cpm: Add Versal CPM Root Port driver
+Thread-Index: AQHV14gyqXPkldKNt0SLTelX37u03Kgr8Z6AgAAlV5CABIIlAIAAIZtQgArnjQCAAAJtIIAAP3cAgAR3LmA=
+Date:   Mon, 9 Mar 2020 11:27:18 +0000
+Message-ID: <MN2PR02MB6336BC1C755CC4F2F616C6CDA5FE0@MN2PR02MB6336.namprd02.prod.outlook.com>
+References: <1580400771-12382-1-git-send-email-bharat.kumar.gogada@xilinx.com>
+ <1580400771-12382-3-git-send-email-bharat.kumar.gogada@xilinx.com>
+ <20200225114013.GB6913@e121166-lin.cambridge.arm.com>
+ <MN2PR02MB63365B50058B35AA37341BC9A5ED0@MN2PR02MB6336.namprd02.prod.outlook.com>
+ <20200228104442.GA2874@e121166-lin.cambridge.arm.com>
+ <MN2PR02MB6336569F378683B05B262D4AA5E80@MN2PR02MB6336.namprd02.prod.outlook.com>
+ <20200306111620.GA10297@e121166-lin.cambridge.arm.com>
+ <MN2PR02MB6336BBFDCB07F424C36742B0A5E30@MN2PR02MB6336.namprd02.prod.outlook.com>
+ <20200306151210.GB10297@e121166-lin.cambridge.arm.com>
+In-Reply-To: <20200306151210.GB10297@e121166-lin.cambridge.arm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=bharatku@xilinx.com; 
+x-originating-ip: [149.199.50.133]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: b26ea53d-32c3-4486-89a2-08d7c41cd400
+x-ms-traffictypediagnostic: MN2PR02MB6704:|MN2PR02MB6704:
+x-ld-processed: 657af505-d5df-48d0-8300-c31994686c5c,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MN2PR02MB67046B10A35E3A996481BF4AA5FE0@MN2PR02MB6704.namprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5516;
+x-forefront-prvs: 0337AFFE9A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(366004)(376002)(396003)(39860400002)(346002)(199004)(189003)(86362001)(6506007)(7696005)(53546011)(9686003)(5660300002)(66946007)(76116006)(55016002)(66476007)(64756008)(66446008)(316002)(66556008)(478600001)(52536014)(8936002)(2906002)(8676002)(54906003)(81166006)(186003)(81156014)(26005)(33656002)(6916009)(4326008)(71200400001);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR02MB6704;H:MN2PR02MB6336.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: xilinx.com does not designate
  permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: kpXTRKBe5Qf9Z1opDyaACQ1ePWP2s+eSr1lqvceLKsaxUOg0+QMEX1XODusZbO6zjFzG4hGYQ3cS3UPP1BoDYcAWDYuzg+f2u9rfcf/qsUxeHuJVauQOb6uDRB1k9XsFHu3rRxoPw2qdklddFP2hqPHlR16/sg9s9GLTD6WTbYIo3bdV0tpPXg9ulGkA28Po18mBBLJ4mYq9mQwDa2cs9PyV5e9rFFChsGAgr/m6cW/GNM0KaNf6BwH+Yss4C297aPU/HDLnT17rBpLiteqMp72G9IyveYIYsSwS8qGHwHtq7wfHY1utNrhOZxiJ6bYsWSahExlvtLWnLk/eV2HmML6V9sb4wrgfEDlnGj1Yhxid/b7Z2s5F+wHKZBoMFblwB+hte+ADuLwA8ysrhFguuSkucnyxm2ivwcWA/YWv95y+U0KqiHUOVBWUHCnqimIH
-X-MS-Exchange-AntiSpam-MessageData: vTZgRYzU+yZK7XIfTkCInKXvBLETkpPhIFJgd3FJTKyGKBxsUHBvpmvgL+guIRXkYcSDZrF2IAppHGD80+WJYFgstGB3VEfgW/Q/D8tq9C8JOO7JdPP4bDJiE12YxQCRCey3pZJB1br+W89MOk0lsA==
-X-OriginatorOrg: habana.ai
-X-MS-Exchange-CrossTenant-Network-Message-Id: f4d59b59-11d6-4bcb-8c19-08d7c41ca174
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Mar 2020 11:25:54.5021
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: LDY9fSHvR9JXc8K3pvcZ7DtVJJE2H+c4wyL37Do2KnBNAITlVE8kUNQRm1CIPfjpfSuYgkKLqZhDw20uRXgEtDjXYb7q3//wUDA6YfJ4yMVU72EbHNIwu2X9+4ddRQ3pW2VmE6bPYMMm99fFHJeXM7l5AQwv8Bja2JuxY3xvOCsbXQPnbrEuSN/qDUqyiPhLGPXK4iRLp7MV+bfhRnGOnj8dpOf2Np5lB03OMVrVQsF9veWPkbRZrp5DXLhcZqByeHkwvXxPibzdCO2R+Mp639UWJxsLiL/3b+0NJqDbjK1BDSoMoQ1Y6vsdtWzpuydk0XgrhVxyb2EHwrCYg/gbUkSNKkpdTsfLAaGu/giRnaVPf+G7V/aKQswfBcLdb/nwAB+mVHVnS9+hHntXNeyqlOvHxJGZhnEmpWWBYYiQwSZ+sPMBN+WFE74cLbh3q7QU
+x-ms-exchange-antispam-messagedata: Sl9ykdBXg4OsL3aD+JINbAAfLeEglFIST/o2v4fpnToq7FilwlH5GqE5obHE3NgpQIVkI1OgsIZC8uq7VXXzC6Aq8WxnY1CElmuFDMG+k969g2ZwNb+wJ6KQimTXom8U3yA/LRGA+Gi2Mjfn+ikFEg==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b26ea53d-32c3-4486-89a2-08d7c41cd400
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Mar 2020 11:27:19.0128
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 0d4d4539-213c-4ed8-a251-dc9766ba127a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 01aBzWw+YV3/Jh0Tt8F7GE9QX2Vpniv2MU3qbpWuzaKfLAIeOrvEQ9cb5I85I2dj27THpAOsUEN+ZUyCUCumnA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR02MB5779
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: f0JWr3CqX6qNGolteTGaAJqnUeG/YgGDaRjAJkiJTe+50xwIzkHiwFZUFnOukZqsBCigPE2wB6jmrNS5I+Tsfw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR02MB6704
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add print upon clock slow down due to power consumption or overheating.
-In addition, add print when back to optimal clock.
+> Subject: Re: [PATCH v5 2/2] PCI: xilinx-cpm: Add Versal CPM Root Port dri=
+ver
+>=20
+> On Fri, Mar 06, 2020 at 11:45:47AM +0000, Bharat Kumar Gogada wrote:
+> > > From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> > > Sent: Friday, March 6, 2020 4:46 PM
+> > > To: Bharat Kumar Gogada <bharatku@xilinx.com>
+> > > Cc: linux-pci@vger.kernel.org; linux-kernel@vger.kernel.org;
+> > > bhelgaas@google.com; Ravikiran Gummaluri <rgummal@xilinx.com>;
+> > > maz@kernel.org
+> > > Subject: Re: [PATCH v5 2/2] PCI: xilinx-cpm: Add Versal CPM Root
+> > > Port driver
+> > >
+> > > On Fri, Feb 28, 2020 at 12:48:48PM +0000, Bharat Kumar Gogada wrote:
+> > > > > Subject: Re: [PATCH v5 2/2] PCI: xilinx-cpm: Add Versal CPM Root
+> > > > > Port driver
+> > > > >
+> > > > > [+MarcZ, FHI]
+> > > > >
+> > > > > On Tue, Feb 25, 2020 at 02:39:56PM +0000, Bharat Kumar Gogada
+> wrote:
+> > > > >
+> > > > > [...]
+> > > > >
+> > > > > > > > +/* ECAM definitions */
+> > > > > > > > +#define ECAM_BUS_NUM_SHIFT		20
+> > > > > > > > +#define ECAM_DEV_NUM_SHIFT		12
+> > > > > > >
+> > > > > > > You don't need these ECAM_* defines, you can use
+> > > pci_generic_ecam_ops.
+> > > > > > Does this need separate ranges region for ECAM space ?
+> > > > > > We have ECAM and controller space in same region.
+> > > > >
+> > > > > You can create an ECAM window with pci_ecam_create where *cfgres
+> > > > > represent the ECAM area, I don't get what you mean by "same regio=
+n".
+> > > > >
+> > > > > Do you mean "contiguous" ? Or something else ?
+> > > > Yes, contiguous; within ECAM region some space is for controller re=
+gisters.
+> > >
+> > > What does that mean ? I don't get it. Can you explain to me how this
+> > > address space works please ?
+> > >
+> > Hi Lorenzo,
+> > 		reg =3D <0x6 0x00000000 0x0 0x1000000>,
+>=20
+> This supports up to 16 busses (it is 16MB in size rather than full ECAM 2=
+56MB),
+> right ? Please make sure that the bus-range property reflects that.
+>=20
+> > 		      <0x0 0xFCA10000 0x0 0x1000>;
+> > 		reg-names =3D "cfg", "cpm_slcr";
+> >
+> > In the above cfg region some region of it reserved for bridge
+> > registers and rest for ECAM address space transactions. The bridge
+> > registers are mapped at an unused offset in config space of root port, =
+when
+> the offset hit it will access controller register space.
+> >
+> > This region is already being mapped
+> > res =3D platform_get_resource_byname(pdev, IORESOURCE_MEM, "cfg");
+> > port->reg_base =3D devm_ioremap_resource(dev, res);
+> >
+> > Does pci_ecam_create will work along with above API simultaneously ?
+>=20
+> Basically the bridge registers are accessible through the PCI config acce=
+ssors
+> (after enumeration), since they are in the bridge device specific config =
+space
+> (device specific area).
+>=20
+> IIUC the answer is yes and you can access the bridge registers through PC=
+I
+> config space accessors (after enumeration).
+>=20
+Hi Lorenzo,
 
-Signed-off-by: Omer Shpigelman <oshpigelman@habana.ai>
----
- drivers/misc/habanalabs/goya/goya.c           | 50 ++++++++++++++++++-
- .../include/goya/goya_async_events.h          |  4 ++
- 2 files changed, 53 insertions(+), 1 deletion(-)
+The bridge register access  are not using config space accessors, we have l=
+ocal pcie_read/write
+api for accessing bridge registers.
+The hardware logic have details of offsets to which it will not send config=
+ accesses it will do local
+AXI read and write accesses when the bridge registers are accessed.
 
-diff --git a/drivers/misc/habanalabs/goya/goya.c b/drivers/misc/habanalabs/goya/goya.c
-index 9d4295cc83cf..1ccf2ed9a8dc 100644
---- a/drivers/misc/habanalabs/goya/goya.c
-+++ b/drivers/misc/habanalabs/goya/goya.c
-@@ -324,7 +324,11 @@ static u32 goya_all_events[] = {
- 	GOYA_ASYNC_EVENT_ID_DMA_BM_CH1,
- 	GOYA_ASYNC_EVENT_ID_DMA_BM_CH2,
- 	GOYA_ASYNC_EVENT_ID_DMA_BM_CH3,
--	GOYA_ASYNC_EVENT_ID_DMA_BM_CH4
-+	GOYA_ASYNC_EVENT_ID_DMA_BM_CH4,
-+	GOYA_ASYNC_EVENT_ID_POWER_ENV_S,
-+	GOYA_ASYNC_EVENT_ID_POWER_ENV_E,
-+	GOYA_ASYNC_EVENT_ID_THERMAL_ENV_S,
-+	GOYA_ASYNC_EVENT_ID_THERMAL_ENV_E
- };
- 
- static int goya_mmu_clear_pgt_range(struct hl_device *hdev);
-@@ -4389,6 +4393,14 @@ static const char *_goya_get_event_desc(u16 event_type)
- 		return "TPC%d_bmon_spmu";
- 	case GOYA_ASYNC_EVENT_ID_DMA_BM_CH0 ... GOYA_ASYNC_EVENT_ID_DMA_BM_CH4:
- 		return "DMA_bm_ch%d";
-+	case GOYA_ASYNC_EVENT_ID_POWER_ENV_S:
-+		return "POWER_ENV_S";
-+	case GOYA_ASYNC_EVENT_ID_POWER_ENV_E:
-+		return "POWER_ENV_E";
-+	case GOYA_ASYNC_EVENT_ID_THERMAL_ENV_S:
-+		return "THERMAL_ENV_S";
-+	case GOYA_ASYNC_EVENT_ID_THERMAL_ENV_E:
-+		return "THERMAL_ENV_E";
- 	default:
- 		return "N/A";
- 	}
-@@ -4619,6 +4631,33 @@ static int goya_unmask_irq(struct hl_device *hdev, u16 event_type)
- 	return rc;
- }
- 
-+static void goya_print_clk_change_info(struct hl_device *hdev, u16 event_type)
-+{
-+	switch (event_type) {
-+	case GOYA_ASYNC_EVENT_ID_POWER_ENV_S:
-+		dev_info_ratelimited(hdev->dev,
-+			"Clock throttling due to power consumption\n");
-+		break;
-+	case GOYA_ASYNC_EVENT_ID_POWER_ENV_E:
-+		dev_info_ratelimited(hdev->dev,
-+			"Power envelop is safe, back to optimal clock\n");
-+		break;
-+	case GOYA_ASYNC_EVENT_ID_THERMAL_ENV_S:
-+		dev_info_ratelimited(hdev->dev,
-+			"Clock throttling due to overheating\n");
-+		break;
-+	case GOYA_ASYNC_EVENT_ID_THERMAL_ENV_E:
-+		dev_info_ratelimited(hdev->dev,
-+			"Thermal envelop is safe, back to optimal clock\n");
-+		break;
-+
-+	default:
-+		dev_err(hdev->dev, "Received invalid clock change event %d\n",
-+			event_type);
-+		break;
-+	}
-+}
-+
- void goya_handle_eqe(struct hl_device *hdev, struct hl_eq_entry *eq_entry)
- {
- 	u32 ctl = le32_to_cpu(eq_entry->hdr.ctl);
-@@ -4702,6 +4741,15 @@ void goya_handle_eqe(struct hl_device *hdev, struct hl_eq_entry *eq_entry)
- 		goya_unmask_irq(hdev, event_type);
- 		break;
- 
-+	case GOYA_ASYNC_EVENT_ID_POWER_ENV_S:
-+	case GOYA_ASYNC_EVENT_ID_POWER_ENV_E:
-+	case GOYA_ASYNC_EVENT_ID_THERMAL_ENV_S:
-+	case GOYA_ASYNC_EVENT_ID_THERMAL_ENV_E:
-+		goya_print_irq_info(hdev, event_type, false);
-+		goya_print_clk_change_info(hdev, event_type);
-+		goya_unmask_irq(hdev, event_type);
-+		break;
-+
- 	default:
- 		dev_err(hdev->dev, "Received invalid H/W interrupt %d\n",
- 				event_type);
-diff --git a/drivers/misc/habanalabs/include/goya/goya_async_events.h b/drivers/misc/habanalabs/include/goya/goya_async_events.h
-index bb7a1aa3279e..6be41a846c99 100644
---- a/drivers/misc/habanalabs/include/goya/goya_async_events.h
-+++ b/drivers/misc/habanalabs/include/goya/goya_async_events.h
-@@ -188,6 +188,10 @@ enum goya_async_event_id {
- 	GOYA_ASYNC_EVENT_ID_HALT_MACHINE = 485,
- 	GOYA_ASYNC_EVENT_ID_INTS_REGISTER = 486,
- 	GOYA_ASYNC_EVENT_ID_SOFT_RESET = 487,
-+	GOYA_ASYNC_EVENT_ID_POWER_ENV_S = 507,
-+	GOYA_ASYNC_EVENT_ID_POWER_ENV_E = 508,
-+	GOYA_ASYNC_EVENT_ID_THERMAL_ENV_S = 509,
-+	GOYA_ASYNC_EVENT_ID_THERMAL_ENV_E = 510,
- 	GOYA_ASYNC_EVENT_ID_LAST_VALID_ID = 1023,
- 	GOYA_ASYNC_EVENT_ID_SIZE
- };
--- 
-2.17.1
+Regards,
+Bharat
 
