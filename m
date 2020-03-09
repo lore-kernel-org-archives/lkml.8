@@ -2,233 +2,336 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6D7EC10F25
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:29:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF8B7C10F25
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:29:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9399A24656
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:29:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8202024656
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:29:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zzywysm.com header.i=@zzywysm.com header.b="PZuZtOnl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726446AbgCIT3D convert rfc822-to-8bit (ORCPT
+        id S1726475AbgCIT3K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 15:29:03 -0400
-Received: from mail-oln040092074067.outbound.protection.outlook.com ([40.92.74.67]:51015
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726378AbgCIT3D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 15:29:03 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DSp/MZxz2+QoiQVZL/OLbVaZq7EIpOVSKdgsheSYZPG+FPIJQFgLxNQLUjqqQfpVluay+cagx4I6R7KcLaUe8MQSk2uFUMVnNXR72vXj6es2PYhT2Y3bExXNXihmLmVrfih9yGoIsg7Lnd04qKjJctO/ThmHz/mhp/k0P2/ycRMs7yKAPTauwURmVP4jgkXL3rhi4Up/CRL2Qcw90RAAqYY1vlyU4J1J3+gjt0rNh+19w4LytKsGPAsKWc/YepOVwT6/rk/H/nbyEw/QnrDeE5D7FuXp0fSHXSxUGPOB0rRVZWqWgqSC6nHwlI0pyRmM/ZCdlz5Vsc394a0zXWEl/A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=25fEhLFqCPK19uG1MGMDMSHf5O3MxrMfxThzPBvX2zA=;
- b=ed7/mypASGkgMhkvawQM+qKQf2jDXZw+v08KatFvGKf/2eGKrmScvEnTJZQRAkIyjm15ksmu1z8XnyQr3PuvG52S7Ocb6Ye9L9kl8dFsNVkF/5fZ0tEq6b3lWbHmjQmYaLma/5meM99PQQ2HKDmg+DLg9mgEh6oEIzkJVZsiLznYnE62Oq7P/QsfcYVACu0GcBmJvkfZ3SyRzxBw7Yo/KWl/rIN6b9imI+UGBx0a1m8hvMErLiOZxPRHblzWYm+GA1Stbwx+pzRX6+pCln25Nm0/WacNzvri62neC/tkrSofTg6VL6QQjgMbPENAW+xN/YO9sK3Ex+PJv/Bhun85Rw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-Received: from HE1EUR04FT025.eop-eur04.prod.protection.outlook.com
- (2a01:111:e400:7e0d::3a) by
- HE1EUR04HT218.eop-eur04.prod.protection.outlook.com (2a01:111:e400:7e0d::128)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.11; Mon, 9 Mar
- 2020 19:28:57 +0000
-Received: from AM6PR03MB5170.eurprd03.prod.outlook.com (10.152.26.60) by
- HE1EUR04FT025.mail.protection.outlook.com (10.152.27.28) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2793.11 via Frontend Transport; Mon, 9 Mar 2020 19:28:57 +0000
-Received: from AM6PR03MB5170.eurprd03.prod.outlook.com
- ([fe80::1956:d274:cab3:b4dd]) by AM6PR03MB5170.eurprd03.prod.outlook.com
- ([fe80::1956:d274:cab3:b4dd%6]) with mapi id 15.20.2772.019; Mon, 9 Mar 2020
- 19:28:57 +0000
-Received: from [192.168.1.101] (92.77.140.102) by ZR0P278CA0002.CHEP278.PROD.OUTLOOK.COM (2603:10a6:910:16::12) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.14 via Frontend Transport; Mon, 9 Mar 2020 19:28:54 +0000
-From:   Bernd Edlinger <bernd.edlinger@hotmail.de>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-CC:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Andrei Vagin <avagin@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Yuyang Du <duyuyang@gmail.com>,
-        David Hildenbrand <david@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        David Howells <dhowells@redhat.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christian Kellner <christian@kellner.me>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>
-Subject: Re: [PATCH v2 2/5] exec: Factor unshare_sighand out of de_thread and
- call it separately
-Thread-Topic: [PATCH v2 2/5] exec: Factor unshare_sighand out of de_thread and
- call it separately
-Thread-Index: AQHV9ZHwMYkHVvw7WkOaWuLYK/D8U6hApsoA
-Date:   Mon, 9 Mar 2020 19:28:57 +0000
-Message-ID: <AM6PR03MB5170654B139FCBDB31320481E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
-References: <AM6PR03MB5170EB4427BF5C67EE98FF09E4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <87v9nmjulm.fsf@x220.int.ebiederm.org>
- <AM6PR03MB5170B976E6387FDDAD59A118E4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <202003021531.C77EF10@keescook>
- <20200303085802.eqn6jbhwxtmz4j2x@wittgenstein>
- <AM6PR03MB5170285B336790D3450E2644E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <87v9nlii0b.fsf@x220.int.ebiederm.org>
- <AM6PR03MB5170609D44967E044FD1BE40E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <87a74xi4kz.fsf@x220.int.ebiederm.org>
- <AM6PR03MB51705AA3009B4986BB6EF92FE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <87r1y8dqqz.fsf@x220.int.ebiederm.org>
- <AM6PR03MB517053AED7DC89F7C0704B7DE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <AM6PR03MB51703B44170EAB4626C9B2CAE4E20@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <87tv32cxmf.fsf_-_@x220.int.ebiederm.org>
- <87v9ne5y4y.fsf_-_@x220.int.ebiederm.org>
- <87k13u5y26.fsf_-_@x220.int.ebiederm.org>
-In-Reply-To: <87k13u5y26.fsf_-_@x220.int.ebiederm.org>
-Accept-Language: en-US, en-GB, de-DE
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: ZR0P278CA0002.CHEP278.PROD.OUTLOOK.COM
- (2603:10a6:910:16::12) To AM6PR03MB5170.eurprd03.prod.outlook.com
- (2603:10a6:20b:ca::23)
-x-incomingtopheadermarker: OriginalChecksum:771835AA78CAE5BFC139105ED5335C323419C4769AFF08F1788ABA23277AD63C;UpperCasedChecksum:9B440B72CF96ADD1588BE7715CB29C7D3398C3B8368000B6B4E6A2AAD3AF2F1C;SizeAsReceived:9923;Count:50
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn:  [1XxhMO/1r/wBolGMgXKhaxoyb6xWg5KB]
-x-microsoft-original-message-id: <9c02946b-f907-2e43-eaf6-5b09600e8221@hotmail.de>
-x-ms-publictraffictype: Email
-x-incomingheadercount: 50
-x-eopattributedmessage: 0
-x-ms-office365-filtering-correlation-id: 836277e3-0366-46ea-ec78-08d7c4601cac
-x-ms-traffictypediagnostic: HE1EUR04HT218:
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: I78APqynq+QI/pVE5NAlb3N6ZtJUWX9IqiV3wxU+7czkTOHissLQ9eo0px0kJFyiF3IdbLSZ6p7rjAXghDxMfHt3nTVSBHnWgQUIJxgepUgSDHcSoLpghf87WObhPW6n8ZX6A/RresGFagRirOeG2h+SKmLCIV/85PpWXnCmgcJ15kajMOn4tJ5GWspVfM0s
-x-ms-exchange-antispam-messagedata: 3sOZ+gQkwYYhWyLHpw7y7ceDSeK1bbnvsSVbGdSHFMpquV7mAIcfe8Ck2Qyf6bICh7jGEWGcCezK39A/dmxNDp7MKPcLvmV1E18M5TcmBe/7T+7K146mknbuOGnIIVg7k3ctUoP80vA8Bc57EdNGWQ==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="Windows-1252"
-Content-ID: <C207B16EE808B04FABD30CC9CD591EE3@eurprd03.prod.outlook.com>
-Content-Transfer-Encoding: 8BIT
-MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 836277e3-0366-46ea-ec78-08d7c4601cac
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Mar 2020 19:28:57.7621
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1EUR04HT218
+        Mon, 9 Mar 2020 15:29:10 -0400
+Received: from mail-qt1-f173.google.com ([209.85.160.173]:46065 "EHLO
+        mail-qt1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726378AbgCIT3K (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 15:29:10 -0400
+Received: by mail-qt1-f173.google.com with SMTP id a4so7880226qto.12
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 12:29:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=zzywysm.com; s=google;
+        h=from:content-transfer-encoding:mime-version:subject:message-id:date
+         :to;
+        bh=D1RQVVTaADBtxnkz7ZAg6EZYsruUO6GS4yel/89PSJg=;
+        b=PZuZtOnl2iZtFLMUBQd7KhYAc8mZdQJwb35yOxaHAWCW+bnMLWJETCaRksqS3Ept1s
+         7lU4KMrQXx+oQ1+VLvCwlHxRrDWphuN209n0c1DLc5wi6A4KCH3mRt3aQvAInGlZIQ/y
+         ag7dM+RujJAmf6Zqy5G+NQoG3aZWU4y+gG8WHFkc3V1ijp76/N4hDjnYrYPwa8kkcHAA
+         lA7huYoQXma16B0MMA7VRS5zf81dJlfwdJBsUa7sgNDdvGPuYDFFOGIlpEGZGs82NAbX
+         98hlEZusYkBAvpLQKcXc/FjRx89CHpVMhqhlcfcgMUFq1SEpOn7avS/dL1pR/40wwBfX
+         83vQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:content-transfer-encoding:mime-version
+         :subject:message-id:date:to;
+        bh=D1RQVVTaADBtxnkz7ZAg6EZYsruUO6GS4yel/89PSJg=;
+        b=Zah18ddZO+qXJQ3fsxUqsueEpdsseIrvNmJaCyrRiHQBtuICWC+lJDQ1pEvmUPvIz1
+         aLwHbM4IxTovaaiQ+O4zMXUGumNuX1Hjk1BfUEBahGROqYPpVeDXUcqQFdEDLlIeWXCF
+         r1E9y01SQJR1LZTXIvla6XSGiXHAJybCEuO4dWNe+qKxoTnKM5wsPmJUDatPJhAOyLdY
+         BOE0lt+Gm7QvKqHCp9KhTPFJuW5vDvFHYEePrYtwPzj6gOKGFjzpHxMfZlk9oR8zHX0x
+         2AchQAsLWi03jalFDR4+y7xHio67NmKGXverEiItdmLrH2NVkAc5zft5ikxd/Fd8cpfS
+         GbkQ==
+X-Gm-Message-State: ANhLgQ1g6XjXZw5R0fTYE6CzbSxM6WfSC7L2u51wofagaSCCLBkBVZQx
+        zF9+in+OxCbunOLVkNXlmeMh3XE8P30=
+X-Google-Smtp-Source: ADFU+vtzdxLJmvtWT7BeBbmUsXrS5TWSTiA2Z0DuDRinVcA7rpxTiGf/1NjhtzC5OxZBmmZMKCgDmw==
+X-Received: by 2002:ac8:1ca:: with SMTP id b10mr15531236qtg.314.1583782147730;
+        Mon, 09 Mar 2020 12:29:07 -0700 (PDT)
+Received: from [10.19.49.2] (ec2-3-17-74-181.us-east-2.compute.amazonaws.com. [3.17.74.181])
+        by smtp.gmail.com with ESMTPSA id g22sm7952517qtp.8.2020.03.09.12.29.06
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 09 Mar 2020 12:29:07 -0700 (PDT)
+From:   Zzy Wysm <zzy@zzywysm.com>
+Content-Type: text/plain;
+        charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
+Subject: Linux Warning Report - 5.6-rc5
+Message-Id: <20327C9D-3F55-41D1-86E4-DBAA7B229C88@zzywysm.com>
+Date:   Mon, 9 Mar 2020 14:29:04 -0500
+To:     linux-kernel@vger.kernel.org
+X-Mailer: Apple Mail (2.3608.60.0.2.5)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/8/20 10:36 PM, Eric W. Biederman wrote:
-> 
-> This makes the code clearer and makes it easier to implement a mutex
-> that is not taken over any locations that may block indefinitely waiting
-> for userspace.
-> 
-> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+Still holding steady at 32 warnings in the defconfig build.
 
-Reviewed-by: Bernd Edlinger <bernd.edlinger@hotmail.de>
+zzy
 
 
-Bernd.
-> ---
->  fs/exec.c | 39 ++++++++++++++++++++++++++-------------
->  1 file changed, 26 insertions(+), 13 deletions(-)
-> 
-> diff --git a/fs/exec.c b/fs/exec.c
-> index c3f34791f2f0..ff74b9a74d34 100644
-> --- a/fs/exec.c
-> +++ b/fs/exec.c
-> @@ -1194,6 +1194,23 @@ static int de_thread(struct task_struct *tsk)
->  	flush_itimer_signals();
->  #endif
->  
-> +	BUG_ON(!thread_group_leader(tsk));
-> +	return 0;
-> +
-> +killed:
-> +	/* protects against exit_notify() and __exit_signal() */
-> +	read_lock(&tasklist_lock);
-> +	sig->group_exit_task = NULL;
-> +	sig->notify_count = 0;
-> +	read_unlock(&tasklist_lock);
-> +	return -EAGAIN;
-> +}
-> +
-> +
-> +static int unshare_sighand(struct task_struct *me)
-> +{
-> +	struct sighand_struct *oldsighand = me->sighand;
-> +
->  	if (refcount_read(&oldsighand->count) != 1) {
->  		struct sighand_struct *newsighand;
->  		/*
-> @@ -1210,23 +1227,13 @@ static int de_thread(struct task_struct *tsk)
->  
->  		write_lock_irq(&tasklist_lock);
->  		spin_lock(&oldsighand->siglock);
-> -		rcu_assign_pointer(tsk->sighand, newsighand);
-> +		rcu_assign_pointer(me->sighand, newsighand);
->  		spin_unlock(&oldsighand->siglock);
->  		write_unlock_irq(&tasklist_lock);
->  
->  		__cleanup_sighand(oldsighand);
->  	}
-> -
-> -	BUG_ON(!thread_group_leader(tsk));
->  	return 0;
-> -
-> -killed:
-> -	/* protects against exit_notify() and __exit_signal() */
-> -	read_lock(&tasklist_lock);
-> -	sig->group_exit_task = NULL;
-> -	sig->notify_count = 0;
-> -	read_unlock(&tasklist_lock);
-> -	return -EAGAIN;
->  }
->  
->  char *__get_task_comm(char *buf, size_t buf_size, struct task_struct *tsk)
-> @@ -1264,13 +1271,19 @@ int flush_old_exec(struct linux_binprm * bprm)
->  	int retval;
->  
->  	/*
-> -	 * Make sure we have a private signal table and that
-> -	 * we are unassociated from the previous thread group.
-> +	 * Make this the only thread in the thread group.
->  	 */
->  	retval = de_thread(me);
->  	if (retval)
->  		goto out;
->  
-> +	/*
-> +	 * Make the signal table private.
-> +	 */
-> +	retval = unshare_sighand(me);
-> +	if (retval)
-> +		goto out;
-> +
->  	/*
->  	 * Must be called _before_ exec_mmap() as bprm->mm is
->  	 * not visibile until then. This also enables the update
-> 
+
+zzy@esquivalience:~/linux-5.6-rc5$ make -j4 KCFLAGS=3D"-Wall -Wextra =
+-Wno-unused-parameter -Wno-missing-field-initializers" > =
+build_log_5.6-rc5
+arch/x86/kernel/jump_label.c:61:1: warning: =E2=80=98inline=E2=80=99 is =
+not at beginning of declaration [-Wold-style-declaration]
+   61 | static void inline __jump_label_transform(struct jump_entry =
+*entry,
+      | ^~~~~~
+kernel/time/hrtimer.c:120:21: warning: initialized field overwritten =
+[-Woverride-init]
+  120 |  [CLOCK_REALTIME] =3D HRTIMER_BASE_REALTIME,
+      |                     ^~~~~~~~~~~~~~~~~~~~~
+kernel/time/hrtimer.c:120:21: note: (near initialization for =
+=E2=80=98hrtimer_clock_to_base_table[0]=E2=80=99)
+kernel/time/hrtimer.c:121:22: warning: initialized field overwritten =
+[-Woverride-init]
+  121 |  [CLOCK_MONOTONIC] =3D HRTIMER_BASE_MONOTONIC,
+      |                      ^~~~~~~~~~~~~~~~~~~~~~
+kernel/time/hrtimer.c:121:22: note: (near initialization for =
+=E2=80=98hrtimer_clock_to_base_table[1]=E2=80=99)
+kernel/time/hrtimer.c:122:21: warning: initialized field overwritten =
+[-Woverride-init]
+  122 |  [CLOCK_BOOTTIME] =3D HRTIMER_BASE_BOOTTIME,
+      |                     ^~~~~~~~~~~~~~~~~~~~~
+kernel/time/hrtimer.c:122:21: note: (near initialization for =
+=E2=80=98hrtimer_clock_to_base_table[7]=E2=80=99)
+kernel/time/hrtimer.c:123:17: warning: initialized field overwritten =
+[-Woverride-init]
+  123 |  [CLOCK_TAI]  =3D HRTIMER_BASE_TAI,
+      |                 ^~~~~~~~~~~~~~~~
+kernel/time/hrtimer.c:123:17: note: (near initialization for =
+=E2=80=98hrtimer_clock_to_base_table[11]=E2=80=99)
+In file included from kernel/bpf/core.c:21:
+kernel/bpf/core.c: In function =E2=80=98___bpf_prog_run=E2=80=99:
+./include/linux/filter.h:863:3: warning: cast between incompatible =
+function types from =E2=80=98u64 (*)(u64,  u64,  u64,  u64,  u64)=E2=80=99=
+ {aka =E2=80=98long long unsigned int (*)(long long unsigned int,  long =
+long unsigned int,  long long unsigned int,  long long unsigned int,  =
+long long unsigned int)=E2=80=99} to =E2=80=98u64 (*)(u64,  u64,  u64,  =
+u64,  u64,  const struct bpf_insn *)=E2=80=99 {aka =E2=80=98long long =
+unsigned int (*)(long long unsigned int,  long long unsigned int,  long =
+long unsigned int,  long long unsigned int,  long long unsigned int,  =
+const struct bpf_insn *)=E2=80=99} [-Wcast-function-type]
+  863 |  ((u64 (*)(u64, u64, u64, u64, u64, const struct bpf_insn *)) \
+      |   ^
+kernel/bpf/core.c:1513:13: note: in expansion of macro =
+=E2=80=98__bpf_call_base_args=E2=80=99
+ 1513 |   BPF_R0 =3D (__bpf_call_base_args + insn->imm)(BPF_R1, BPF_R2,
+      |             ^~~~~~~~~~~~~~~~~~~~
+kernel/bpf/core.c: In function =E2=80=98bpf_patch_call_args=E2=80=99:
+./include/linux/filter.h:863:3: warning: cast between incompatible =
+function types from =E2=80=98u64 (*)(u64,  u64,  u64,  u64,  u64)=E2=80=99=
+ {aka =E2=80=98long long unsigned int (*)(long long unsigned int,  long =
+long unsigned int,  long long unsigned int,  long long unsigned int,  =
+long long unsigned int)=E2=80=99} to =E2=80=98u64 (*)(u64,  u64,  u64,  =
+u64,  u64,  const struct bpf_insn *)=E2=80=99 {aka =E2=80=98long long =
+unsigned int (*)(long long unsigned int,  long long unsigned int,  long =
+long unsigned int,  long long unsigned int,  long long unsigned int,  =
+const struct bpf_insn *)=E2=80=99} [-Wcast-function-type]
+  863 |  ((u64 (*)(u64, u64, u64, u64, u64, const struct bpf_insn *)) \
+      |   ^
+kernel/bpf/core.c:1704:3: note: in expansion of macro =
+=E2=80=98__bpf_call_base_args=E2=80=99
+ 1704 |   __bpf_call_base_args;
+      |   ^~~~~~~~~~~~~~~~~~~~
+kernel/trace/blktrace.c: In function =E2=80=98__trace_note_message=E2=80=99=
+:
+kernel/trace/blktrace.c:145:63: warning: parameter =E2=80=98blkcg=E2=80=99=
+ set but not used [-Wunused-but-set-parameter]
+  145 | void __trace_note_message(struct blk_trace *bt, struct blkcg =
+*blkcg,
+      |                                                 =
+~~~~~~~~~~~~~~^~~~~
+In file included from ./include/linux/capability.h:16,
+                 from security/commoncap.c:5:
+security/commoncap.c: In function =E2=80=98cap_prctl_drop=E2=80=99:
+./include/uapi/linux/capability.h:373:27: warning: comparison of =
+unsigned expression >=3D 0 is always true [-Wtype-limits]
+  373 | #define cap_valid(x) ((x) >=3D 0 && (x) <=3D CAP_LAST_CAP)
+      |                           ^~
+security/commoncap.c:1145:7: note: in expansion of macro =E2=80=98cap_vali=
+d=E2=80=99
+ 1145 |  if (!cap_valid(cap))
+      |       ^~~~~~~~~
+security/commoncap.c: In function =E2=80=98cap_task_prctl=E2=80=99:
+./include/uapi/linux/capability.h:373:27: warning: comparison of =
+unsigned expression >=3D 0 is always true [-Wtype-limits]
+  373 | #define cap_valid(x) ((x) >=3D 0 && (x) <=3D CAP_LAST_CAP)
+      |                           ^~
+security/commoncap.c:1175:8: note: in expansion of macro =E2=80=98cap_vali=
+d=E2=80=99
+ 1175 |   if (!cap_valid(arg2))
+      |        ^~~~~~~~~
+./include/uapi/linux/capability.h:373:27: warning: comparison of =
+unsigned expression >=3D 0 is always true [-Wtype-limits]
+  373 | #define cap_valid(x) ((x) >=3D 0 && (x) <=3D CAP_LAST_CAP)
+      |                           ^~
+security/commoncap.c:1260:10: note: in expansion of macro =
+=E2=80=98cap_valid=E2=80=99
+ 1260 |   if (((!cap_valid(arg3)) | arg4 | arg5))
+      |          ^~~~~~~~~
+drivers/video/fbdev/core/fbmon.c: In function =E2=80=98get_monspecs=E2=80=99=
+:
+drivers/video/fbdev/core/fbmon.c:812:47: warning: suggest braces around =
+empty body in an =E2=80=98if=E2=80=99 statement [-Wempty-body]
+  812 |   DPRINTK("      Configurable signal level\n");
+      |                                               ^
+drivers/video/fbdev/core/fbmon.c:842:24: warning: suggest braces around =
+empty body in an =E2=80=98else=E2=80=99 statement [-Wempty-body]
+  842 |   DPRINTK("variable\n");
+      |                        ^
+drivers/video/fbdev/core/fbmon.c:847:24: warning: suggest braces around =
+empty body in an =E2=80=98else=E2=80=99 statement [-Wempty-body]
+  847 |   DPRINTK("variable\n");
+      |                        ^
+drivers/acpi/scan.c: In function =E2=80=98acpi_bus_get_wakeup_device_flags=
+=E2=80=99:
+drivers/acpi/scan.c:903:43: warning: suggest braces around empty body in =
+an =E2=80=98if=E2=80=99 statement [-Wempty-body]
+  903 |     "error in _DSW or _PSW evaluation\n"));
+      |                                           ^
+drivers/acpi/acpi_processor.c: In function =
+=E2=80=98acpi_processor_errata_piix4=E2=80=99:
+drivers/acpi/acpi_processor.c:133:67: warning: suggest braces around =
+empty body in an =E2=80=98if=E2=80=99 statement [-Wempty-body]
+  133 |       "Bus master activity detection (BM-IDE) erratum =
+enabled\n"));
+      |                                                                  =
+ ^
+drivers/acpi/acpi_processor.c:136:54: warning: suggest braces around =
+empty body in an =E2=80=98if=E2=80=99 statement [-Wempty-body]
+  136 |       "Type-F DMA livelock erratum (C3 disabled)\n"));
+      |                                                      ^
+drivers/acpi/acpi_processor.c: In function =
+=E2=80=98acpi_processor_get_info=E2=80=99:
+drivers/acpi/acpi_processor.c:251:49: warning: suggest braces around =
+empty body in an =E2=80=98else=E2=80=99 statement [-Wempty-body]
+  251 |       "No bus mastering arbitration control\n"));
+      |                                                 ^
+drivers/acpi/processor_pdc.c: In function =E2=80=98acpi_processor_eval_pdc=
+=E2=80=99:
+drivers/acpi/processor_pdc.c:136:65: warning: suggest braces around =
+empty body in an =E2=80=98if=E2=80=99 statement [-Wempty-body]
+  136 |       "Could not evaluate _PDC, using legacy perf. =
+control.\n"));
+      |                                                                 =
+^
+drivers/tty/vt/keyboard.c: In function =E2=80=98k_fn=E2=80=99:
+drivers/tty/vt/keyboard.c:740:22: warning: comparison is always true due =
+to limited range of data type [-Wtype-limits]
+  740 |  if ((unsigned)value < ARRAY_SIZE(func_table)) {
+      |                      ^
+fs/posix_acl.c: In function =E2=80=98get_acl=E2=80=99:
+fs/posix_acl.c:127:22: warning: suggest braces around empty body in an =
+=E2=80=98if=E2=80=99 statement [-Wempty-body]
+  127 |   /* fall through */ ;
+      |                      ^
+lib/errname.c:15:67: warning: initialized field overwritten =
+[-Woverride-init]
+   15 | #define E(err) [err + BUILD_BUG_ON_ZERO(err <=3D 0 || err > =
+300)] =3D "-" #err
+      |                                                                  =
+ ^~~
+lib/errname.c:172:2: note: in expansion of macro =E2=80=98E=E2=80=99
+  172 |  E(EDEADLK), /* EDEADLOCK */
+      |  ^
+lib/errname.c:15:67: note: (near initialization for =E2=80=98names_0[35]=E2=
+=80=99)
+   15 | #define E(err) [err + BUILD_BUG_ON_ZERO(err <=3D 0 || err > =
+300)] =3D "-" #err
+      |                                                                  =
+ ^~~
+lib/errname.c:172:2: note: in expansion of macro =E2=80=98E=E2=80=99
+  172 |  E(EDEADLK), /* EDEADLOCK */
+      |  ^
+lib/radix-tree.c: In function =E2=80=98set_iter_tags=E2=80=99:
+lib/radix-tree.c:1134:15: warning: comparison is always false due to =
+limited range of data type [-Wtype-limits]
+ 1134 |  if (tag_long < RADIX_TREE_TAG_LONGS - 1) {
+      |               ^
+In file included from drivers/ata/ahci.c:35:
+drivers/ata/ahci.h:384:16: warning: initialized field overwritten =
+[-Woverride-init]
+  384 |  .can_queue  =3D AHCI_MAX_CMDS,   \
+      |                ^~~~~~~~~~~~~
+drivers/ata/ahci.c:103:2: note: in expansion of macro =E2=80=98AHCI_SHT=E2=
+=80=99
+  103 |  AHCI_SHT("ahci"),
+      |  ^~~~~~~~
+drivers/ata/ahci.h:384:16: note: (near initialization for =
+=E2=80=98ahci_sht.can_queue=E2=80=99)
+  384 |  .can_queue  =3D AHCI_MAX_CMDS,   \
+      |                ^~~~~~~~~~~~~
+drivers/ata/ahci.c:103:2: note: in expansion of macro =E2=80=98AHCI_SHT=E2=
+=80=99
+  103 |  AHCI_SHT("ahci"),
+      |  ^~~~~~~~
+drivers/ata/ahci.h:388:17: warning: initialized field overwritten =
+[-Woverride-init]
+  388 |  .sdev_attrs  =3D ahci_sdev_attrs
+      |                 ^~~~~~~~~~~~~~~
+drivers/ata/ahci.c:103:2: note: in expansion of macro =E2=80=98AHCI_SHT=E2=
+=80=99
+  103 |  AHCI_SHT("ahci"),
+      |  ^~~~~~~~
+drivers/ata/ahci.h:388:17: note: (near initialization for =
+=E2=80=98ahci_sht.sdev_attrs=E2=80=99)
+  388 |  .sdev_attrs  =3D ahci_sdev_attrs
+      |                 ^~~~~~~~~~~~~~~
+drivers/ata/ahci.c:103:2: note: in expansion of macro =E2=80=98AHCI_SHT=E2=
+=80=99
+  103 |  AHCI_SHT("ahci"),
+      |  ^~~~~~~~
+drivers/usb/core/sysfs.c: In function =E2=80=98usb_create_sysfs_intf_files=
+=E2=80=99:
+drivers/usb/core/sysfs.c:1266:3: warning: suggest braces around empty =
+body in an =E2=80=98if=E2=80=99 statement [-Wempty-body]
+ 1266 |   ; /* We don't actually care if the function fails. */
+      |   ^
+drivers/input/mouse/synaptics.c: In function =
+=E2=80=98synaptics_process_packet=E2=80=99:
+drivers/input/mouse/synaptics.c:1105:6: warning: suggest braces around =
+empty body in an =E2=80=98if=E2=80=99 statement [-Wempty-body]
+ 1105 |      ;   /* Nothing, treat a pen as a single finger */
+      |      ^
+drivers/md/md.c: In function =E2=80=98bind_rdev_to_array=E2=80=99:
+drivers/md/md.c:2438:27: warning: suggest braces around empty body in an =
+=E2=80=98if=E2=80=99 statement [-Wempty-body]
+ 2438 |   /* failure here is OK */;
+      |                           ^
+drivers/md/md.c: In function =E2=80=98slot_store=E2=80=99:
+drivers/md/md.c:3200:28: warning: suggest braces around empty body in an =
+=E2=80=98if=E2=80=99 statement [-Wempty-body]
+ 3200 |    /* failure here is OK */;
+      |                            ^
+drivers/md/md.c: In function =E2=80=98remove_and_add_spares=E2=80=99:
+drivers/md/md.c:9045:29: warning: suggest braces around empty body in an =
+=E2=80=98if=E2=80=99 statement [-Wempty-body]
+ 9045 |     /* failure here is OK */;
+      |                             ^
+drivers/hid/hid-lgff.c: In function =E2=80=98hid_lgff_play=E2=80=99:
+drivers/hid/hid-lgff.c:65:24: warning: comparison of unsigned expression =
+< 0 is always false [-Wtype-limits]
+   65 | #define CLAMP(x) if (x < 0) x =3D 0; if (x > 0xff) x =3D 0xff
+      |                        ^
+drivers/hid/hid-lgff.c:86:3: note: in expansion of macro =E2=80=98CLAMP=E2=
+=80=99
+   86 |   CLAMP(left);
+      |   ^~~~~
+drivers/hid/hid-lgff.c:65:24: warning: comparison of unsigned expression =
+< 0 is always false [-Wtype-limits]
+   65 | #define CLAMP(x) if (x < 0) x =3D 0; if (x > 0xff) x =3D 0xff
+      |                        ^
+drivers/hid/hid-lgff.c:87:3: note: in expansion of macro =E2=80=98CLAMP=E2=
+=80=99
+   87 |   CLAMP(right);
+      |   ^~~~~
+
