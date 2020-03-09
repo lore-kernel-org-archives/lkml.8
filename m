@@ -2,80 +2,98 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE906C10DCE
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 03:09:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 687C2C10F28
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 03:20:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B297120675
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 03:09:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4003C206D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 03:20:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nYASToVe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726556AbgCIDJE (ORCPT
+        id S1726616AbgCIDUy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Mar 2020 23:09:04 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:33390 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726352AbgCIDJE (ORCPT
+        Sun, 8 Mar 2020 23:20:54 -0400
+Received: from mail-qv1-f68.google.com ([209.85.219.68]:41497 "EHLO
+        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726403AbgCIDUy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Mar 2020 23:09:04 -0400
-Received: by mail-io1-f70.google.com with SMTP id b4so2893657iok.0
-        for <linux-kernel@vger.kernel.org>; Sun, 08 Mar 2020 20:09:02 -0700 (PDT)
+        Sun, 8 Mar 2020 23:20:54 -0400
+Received: by mail-qv1-f68.google.com with SMTP id s15so3734681qvn.8;
+        Sun, 08 Mar 2020 20:20:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3z+/ShsiL7nlqYnENb1XAVXEchprEjWk3+VW1W/e/ko=;
+        b=nYASToVe8kuAbflDDY7FoWCWNG5pIZit55VlLjAOluo+AUhN5vV178BT6F72ZdMcNR
+         F9586M22WrlY+/IE6LBiBkHplQnD58K4SHr/0R7KMXJCFHFNfGByEoFUWDcZl8H/suf2
+         wxMu1q1IQEp9W7+jGuKfCDCZZdFIBcI9fn6qNE3zqAOACCGjVaPl9xaHGwvdQbbYqi6Q
+         w7jc1w3se27wBp1aOPjh0UEVWxtImvGID+9E/4xBycoqnpvG3wZxlOxQi/Sd1O3P+KtP
+         RYKKg90ivYbnVTUC/8C8oUcyu99ZzwTRxZAeXqNy3pbQyC9NzNRJCW3E2Z6L4+5uXG71
+         tTyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=WbPwkzgEPrAuJzlxX3CcbeuVGuo6guJ+1bROjxY+tqA=;
-        b=EGjtWrqx9azFi34PWGlJnVcTVZwYZmlvpk5lnbNM/KI0nqUI+uJIJzhlpbm2kDR+5o
-         feazoodRqztAJhrVZZrKAmW8hY7YVrPiv6+ig6cuBqYI1FmKbZbveR4HYXzlObksxXyE
-         D3us64C4cmXuvHGWj3+UqyE9pbbVbXfjkQvHWHO8m862PH3QFg1QBf1E/plTbEV3/maa
-         dUqd/+irPt0lg5qYWElFWcY1Rs2bWwX9UfWsQH1Ik5JnuKAY8DyoDI2gsNIig3zL9nIB
-         x43NW239cPIp2pracQp4jiuT7JJ33LR+yWV7vDd5R4K51XDovSWuN1t54AJLi3iqJLyr
-         Kd5Q==
-X-Gm-Message-State: ANhLgQ2FEqjo0rfPNrxwqdWgk+cijMgxb/j8xfzbiSwT9UL/viczHVp8
-        6/VV3LTnBN28NniZfg3Lz46IXTxgLHnJSmgZA38dPMqkuunW
-X-Google-Smtp-Source: ADFU+vuLUQs3pQJgI40e0FlWP1Od+6cgMq10RNWRdC+c5ejp2eHk5Lw4iP8+qGXXffXMdih3mGWzBhI08RLSfGUmhMETIsJUodno
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3z+/ShsiL7nlqYnENb1XAVXEchprEjWk3+VW1W/e/ko=;
+        b=eOT0yLka64SDfVYaqHEe25QZZOP3gCT/0wcSvDZzSdsJL8NkFLsLnIm6m6hjHWEY8J
+         Cqrkesx+HIgOuHxA9gPI+74BqeqQ8a9/SVXEt638kqLWWlKEh49GvgZb5ImjGy/tj6FD
+         xcGrP+t5HMev+y5sffoLg2laxKxPoZkutWeL80k8xeZb1FrkTc/sDnj+xVfoFRD6hNkF
+         6bh0vv1FoOuS7Uuuapil4Ka+bXX2rRSR8HpyZxOKlqvyBA0xZ3hLK9EeGvJRjuhwS/N2
+         o5OI5A5GNQBHplt3cj+bTe0IdeMh7aFjo4KsXAHKlBxvzryEEevPawcOC0F6ZMCe+wMk
+         zpRA==
+X-Gm-Message-State: ANhLgQ3wWL1MTh9+DveL7uW/WWIDFpf7j9FN5D1T64PBwnbDZYirGD5J
+        62XY68pvSfRcEXnEqJDcvE82U6wbepsC+TeTXEVFSQ==
+X-Google-Smtp-Source: ADFU+vvPnPJtWjGOupyrIxJlXmPGxbTe0E6hUS6GR8Ych8dvr9UMCtAKlUjtY1OUuKl6m4TzlQJVpNcnJd3xkPMiKr8=
+X-Received: by 2002:ad4:4e88:: with SMTP id dy8mr13140314qvb.118.1583724052805;
+ Sun, 08 Mar 2020 20:20:52 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:1786:: with SMTP id y6mr2447173iox.62.1583723342108;
- Sun, 08 Mar 2020 20:09:02 -0700 (PDT)
-Date:   Sun, 08 Mar 2020 20:09:02 -0700
-In-Reply-To: <0000000000006f20e205a01ef5e1@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000003a9d4f05a063536a@google.com>
-Subject: Re: possible deadlock in __static_key_slow_dec
-From:   syzbot <syzbot+61ffbb75d30176841f76@syzkaller.appspotmail.com>
-To:     arvid.brodin@alten.se, bristot@redhat.com, davem@davemloft.net,
-        kuba@kernel.org, linux-kernel@vger.kernel.org, mingo@kernel.org,
-        netdev@vger.kernel.org, peterz@infradead.org,
-        simon.horman@netronome.com, syzkaller-bugs@googlegroups.com,
-        xiyou.wangcong@gmail.com
+References: <5e098be25c70e07c37e743f84a901f6f756090e0.1583461755.git.baolin.wang7@gmail.com>
+ <20200306204712.dgomi52jzyakylky@earth.universe>
+In-Reply-To: <20200306204712.dgomi52jzyakylky@earth.universe>
+From:   Baolin Wang <baolin.wang7@gmail.com>
+Date:   Mon, 9 Mar 2020 11:20:41 +0800
+Message-ID: <CADBw62owL-G_B7pU87sH2U+0vCNEG9rkMRpHZXL5_9YZcvQfxg@mail.gmail.com>
+Subject: Re: [PATCH v2] power: supply: Allow charger manager can be built as a module
+To:     Sebastian Reichel <sre@kernel.org>
+Cc:     Orson Zhai <orsonzhai@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Saravana Kannan <saravanak@google.com>,
+        Android Kernel Team <kernel-team@android.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+Hi Sebastian,
 
-commit b9a1e627405d68d475a3c1f35e685ccfb5bbe668
-Author: Cong Wang <xiyou.wangcong@gmail.com>
-Date:   Thu Jul 4 00:21:13 2019 +0000
+On Sat, Mar 7, 2020 at 4:47 AM Sebastian Reichel <sre@kernel.org> wrote:
+>
+> Hi,
+>
+> On Fri, Mar 06, 2020 at 10:34:10AM +0800, Baolin Wang wrote:
+> > Allow charger manager can be built as a module like other charger
+> > drivers.
+> >
+> > Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
+> > ---
+>
+> Thanks, queued. I do not like this driver, but its the best we have
+> at the moment.
 
-    hsr: implement dellink to clean up resources
+Thanks. I understood your concern, do you have any plan to re-design
+the charger manager driver in kernel? Or do you have some thoughts
+about re-designing it? Now we have some out of tree code to use the
+old charger manger, and we'd like to change to the new charger manger
+driver and upstream them.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1449a0b1e00000
-start commit:   63623fd4 Merge tag 'for-linus' of git://git.kernel.org/pub..
-git tree:       upstream
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=1649a0b1e00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=1249a0b1e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=5d2e033af114153f
-dashboard link: https://syzkaller.appspot.com/bug?extid=61ffbb75d30176841f76
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14f0efa1e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=119cf3b5e00000
-
-Reported-by: syzbot+61ffbb75d30176841f76@syzkaller.appspotmail.com
-Fixes: b9a1e627405d ("hsr: implement dellink to clean up resources")
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+-- 
+Baolin Wang
