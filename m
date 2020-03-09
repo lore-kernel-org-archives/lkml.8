@@ -4,43 +4,43 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07A18C10F29
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:48:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8621EC10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:48:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEF2A24682
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:48:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 653D824679
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:48:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583783308;
-	bh=lsMfP3k9nqqOalUYsdvpoPo/rDyn6TAlb80enEyNUoU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
+	s=default; t=1583783313;
+	bh=DHgaPoXIlY1cM6abocvK6wxA7mw7OuaqdKOLEtP6vNU=;
+	h=From:To:Subject:Date:In-Reply-To:References:In-Reply-To:
 	 References:List-ID:From;
-	b=sUIKVtp44BtLEgAF/Eshy66fKl2RdqClBsHtg8wkdMbjU3Sm3LGSCxIJ47kHZlQaF
-	 v0IAkcsDtX8IttnQNfYkQ2HNUFze/N8vCxlSTjVSyzOSP9A5lklvMZjo5hYrOuBMLd
-	 292fg+md2wlVYj0fXHgV4nWmEnQg+8zCNxZ4uAN8=
+	b=GPfQekoyhmLSpNK9xniHD8cz5yhnIX1bfpOEOE69Kl26ve6s1KzyWhVoZBbqwCmIT
+	 JlsOIarr4QCTYskzTqSVlkGJJOVQ/q/pUsZ+zAblNdw2wlyfMVmE3l+dNldcvE0TcT
+	 4kkoohBMhtMFG0juscVz4277NGRh6xFj2ikt3Jmo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726899AbgCITsY (ORCPT
+        id S1726990AbgCITsc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 15:48:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38294 "EHLO mail.kernel.org"
+        Mon, 9 Mar 2020 15:48:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38378 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726739AbgCITsT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 15:48:19 -0400
+        id S1726845AbgCITsW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 15:48:22 -0400
 Received: from localhost.localdomain (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1BA742465A;
-        Mon,  9 Mar 2020 19:48:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C0662467C;
+        Mon,  9 Mar 2020 19:48:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583783298;
-        bh=lsMfP3k9nqqOalUYsdvpoPo/rDyn6TAlb80enEyNUoU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
+        s=default; t=1583783301;
+        bh=DHgaPoXIlY1cM6abocvK6wxA7mw7OuaqdKOLEtP6vNU=;
+        h=From:To:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=n6Y2l5ThdUW1TT2tyZooM+zBtPKplMlOY/1Di9xgtM2W0zRt4htjUAZRcvw9bkrHd
-         ULmbmZcnZspko55eTUN6exkXwpmV4i8HqjpL1kYggAMxKbeWOsnPAuwXO5uhqdAgTH
-         zIImgJmaLVhpty9qaqnKo1kUnvW/jIWNeXkSF6tE=
+        b=ua/Ua6ibrf8csvzxj3hhjH9wav49bYx3QJ/Hoh7fcSkLLjwGqRslDQPSKLjki2MEm
+         9YibqYrnVHoM4wipswHm3skQMyO9QscYo6y+EJFfmrnyu6uXaNTImpm15Cn5vzWYah
+         Px9wRvor7/x+zRxriayNPUggAKoS1FddpXoB9TiA=
 From:   zanussi@kernel.org
 To:     LKML <linux-kernel@vger.kernel.org>,
         linux-rt-users <linux-rt-users@vger.kernel.org>,
@@ -51,10 +51,9 @@ To:     LKML <linux-kernel@vger.kernel.org>,
         Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
         Daniel Wagner <wagi@monom.org>,
         Tom Zanussi <zanussi@kernel.org>
-Cc:     Matt Fleming <matt@codeblueprint.co.uk>
-Subject: [PATCH RT 4/8] mm/memcontrol: Move misplaced local_unlock_irqrestore()
-Date:   Mon,  9 Mar 2020 14:47:49 -0500
-Message-Id: <41b2fe158cc09157964879dce19e74e1de962f27.1583783251.git.zanussi@kernel.org>
+Subject: [PATCH RT 7/8] tracing: make preempt_lazy and migrate_disable counter smaller
+Date:   Mon,  9 Mar 2020 14:47:52 -0500
+Message-Id: <0012457a5fe618e36a20b4d1b27265be51c6e8b1.1583783251.git.zanussi@kernel.org>
 X-Mailer: git-send-email 2.14.1
 In-Reply-To: <cover.1583783251.git.zanussi@kernel.org>
 References: <cover.1583783251.git.zanussi@kernel.org>
@@ -65,7 +64,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matt Fleming <matt@codeblueprint.co.uk>
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
 v4.14.172-rt78-rc1 stable review patch.
 If anyone has any objections, please let me know.
@@ -73,38 +72,52 @@ If anyone has any objections, please let me know.
 -----------
 
 
-[ Upstream commit 071a1d6a6e14d0dec240a8c67b425140d7f92f6a ]
+[ Upstream commit dd430bf5ecb40f9a89679c85868826475d71de54 ]
 
-The comment about local_lock_irqsave() mentions just the counters and
-css_put_many()'s callback just invokes a worker so it is safe to move the
-unlock function after memcg_check_events() so css_put_many() can be invoked
-without the lock acquired.
+The migrate_disable counter should not exceed 255 so it is enough to
+store it in an 8bit field.
+With this change we can move the `preempt_lazy_count' member into the
+gap so the whole struct shrinks by 4 bytes to 12 bytes in total.
+Remove the `padding' field, it is not needed.
+Update the tracing fields in trace_define_common_fields() (it was
+missing the preempt_lazy_count field).
 
-Cc: Daniel Wagner <wagi@monom.org>
-Signed-off-by: Matt Fleming <matt@codeblueprint.co.uk>
-[bigeasy: rewrote the patch description]
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Signed-off-by: Tom Zanussi <zanussi@kernel.org>
 ---
- mm/memcontrol.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/trace_events.h | 3 +--
+ kernel/trace/trace_events.c  | 4 ++--
+ 2 files changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 0503b31e2a873..a359a24ebd9f0 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -6102,10 +6102,10 @@ void mem_cgroup_swapout(struct page *page, swp_entry_t entry)
- 	mem_cgroup_charge_statistics(memcg, page, PageTransHuge(page),
- 				     -nr_entries);
- 	memcg_check_events(memcg, page);
-+	local_unlock_irqrestore(event_lock, flags);
+diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
+index edd1e42e8a2f7..01e9ab3107531 100644
+--- a/include/linux/trace_events.h
++++ b/include/linux/trace_events.h
+@@ -62,8 +62,7 @@ struct trace_entry {
+ 	unsigned char		flags;
+ 	unsigned char		preempt_count;
+ 	int			pid;
+-	unsigned short		migrate_disable;
+-	unsigned short		padding;
++	unsigned char		migrate_disable;
+ 	unsigned char		preempt_lazy_count;
+ };
  
- 	if (!mem_cgroup_is_root(memcg))
- 		css_put_many(&memcg->css, nr_entries);
--	local_unlock_irqrestore(event_lock, flags);
+diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+index 60e371451ec31..edd43841c94ad 100644
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -187,8 +187,8 @@ static int trace_define_common_fields(void)
+ 	__common_field(unsigned char, flags);
+ 	__common_field(unsigned char, preempt_count);
+ 	__common_field(int, pid);
+-	__common_field(unsigned short, migrate_disable);
+-	__common_field(unsigned short, padding);
++	__common_field(unsigned char, migrate_disable);
++	__common_field(unsigned char, preempt_lazy_count);
+ 
+ 	return ret;
  }
- 
- /**
 -- 
 2.14.1
 
