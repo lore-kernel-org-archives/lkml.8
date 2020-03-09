@@ -2,156 +2,151 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA5CDC10F25
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 20:25:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 878E3C10F25
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 20:27:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A020B24649
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 20:25:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6274520828
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 20:27:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583785637;
+	bh=Cp2OSP+6393xKUwgxAT6OGHAr/9fHNhb62H4ClztTX8=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=FKQnrD2fVBvOtpd63DYgjT04jsCcP+fO+vNF4FqOluI/+vS/+w0wp3ADUyv2kL7RO
+	 nU5Nb6g5xUDWvisVeriMT/aPV/DFs0Qwdb/+yoo8qJFciV/B2wXO77jOkd7A4eOnkm
+	 ApiyLMQzoMQ2JKCTtIemktTbAgIdQFybTVRRmmds=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726871AbgCIUZF (ORCPT
+        id S1726307AbgCIU1Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 16:25:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50806 "EHLO mail.kernel.org"
+        Mon, 9 Mar 2020 16:27:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51476 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726197AbgCIUYx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 16:24:53 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        id S1725992AbgCIU1Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 16:27:16 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6EFD22253D;
-        Mon,  9 Mar 2020 20:24:52 +0000 (UTC)
-Received: from rostedt by gandalf.local.home with local (Exim 4.93)
-        (envelope-from <rostedt@goodmis.org>)
-        id 1jBOxH-00340R-Cf; Mon, 09 Mar 2020 16:24:51 -0400
-Message-Id: <20200309202451.274453442@goodmis.org>
-User-Agent: quilt/0.65
-Date:   Mon, 09 Mar 2020 16:22:32 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     "John Warthog9 Hawley" <warthog9@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Masanari Iida <standby24x7@gmail.com>
-Subject: [for-linus][PATCH 1/4] ktest: Fix some typos in sample.conf
-References: <20200309202231.580868511@goodmis.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id 2675620409;
+        Mon,  9 Mar 2020 20:27:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583785635;
+        bh=Cp2OSP+6393xKUwgxAT6OGHAr/9fHNhb62H4ClztTX8=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=wKWOOwaEs7ml5tl0PLrde2wyBO0l8WOs6GCqSpiDv0Aq14wakbNp25Y0Hn0MFW2Nx
+         osCbeJkh/eNAAvRDA3k098kq5lRApEBb9lMfioQKyS6mddhlx8eB0mWTgRRaBzmFpL
+         EW/OI6UcUFaELfFoNFy8LQ6Wm0MndX2RcOrZgsI4=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id EB47E3522730; Mon,  9 Mar 2020 13:27:14 -0700 (PDT)
+Date:   Mon, 9 Mar 2020 13:27:14 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
+        kernel-team@fb.com, mingo@kernel.org, elver@google.com,
+        andreyknvl@google.com, glider@google.com, dvyukov@google.com,
+        cai@lca.pw, boqun.feng@gmail.com
+Subject: Re: [PATCH kcsan 26/32] kcsan, trace: Make KCSAN compatible with
+ tracing
+Message-ID: <20200309202714.GT2935@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200309190359.GA5822@paulmck-ThinkPad-P72>
+ <20200309190420.6100-26-paulmck@kernel.org>
+ <20200309155722.49d6bb93@gandalf.local.home>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200309155722.49d6bb93@gandalf.local.home>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masanari Iida <standby24x7@gmail.com>
+On Mon, Mar 09, 2020 at 03:57:22PM -0400, Steven Rostedt wrote:
+> On Mon,  9 Mar 2020 12:04:14 -0700
+> paulmck@kernel.org wrote:
+> 
+> > From: Marco Elver <elver@google.com>
+> > 
+> > Previously the system would lock up if ftrace was enabled together with
+> > KCSAN. This is due to recursion on reporting if the tracer code is
+> > instrumented with KCSAN.
+> > 
+> > To avoid this for all types of tracing, disable KCSAN instrumentation
+> > for all of kernel/trace.
+> > 
+> > Furthermore, since KCSAN relies on udelay() to introduce delay, we have
+> > to disable ftrace for udelay() (currently done for x86) in case KCSAN is
+> > used together with lockdep and ftrace. The reason is that it may corrupt
+> > lockdep IRQ flags tracing state due to a peculiar case of recursion
+> > (details in Makefile comment).
+> > 
+> > Signed-off-by: Marco Elver <elver@google.com>
+> > Reported-by: Qian Cai <cai@lca.pw>
+> > Cc: Paul E. McKenney <paulmck@kernel.org>
+> > Cc: Steven Rostedt <rostedt@goodmis.org>
+> 
+> Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-This patch fixes some spelling typo in sample.conf
+Applied, thank you!
 
-Link: http://lkml.kernel.org/r/20190930124925.20250-1-standby24x7@gmail.com
+							Thanx, Paul
 
-Acked-by: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Masanari Iida <standby24x7@gmail.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
----
- tools/testing/ktest/sample.conf | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
-
-diff --git a/tools/testing/ktest/sample.conf b/tools/testing/ktest/sample.conf
-index c3bc933d437b..10af34819642 100644
---- a/tools/testing/ktest/sample.conf
-+++ b/tools/testing/ktest/sample.conf
-@@ -10,7 +10,7 @@
- #
- 
- # Options set in the beginning of the file are considered to be
--# default options. These options can be overriden by test specific
-+# default options. These options can be overridden by test specific
- # options, with the following exceptions:
- #
- #  LOG_FILE
-@@ -204,7 +204,7 @@
- #
- # This config file can also contain "config variables".
- # These are assigned with ":=" instead of the ktest option
--# assigment "=".
-+# assignment "=".
- #
- # The difference between ktest options and config variables
- # is that config variables can be used multiple times,
-@@ -263,7 +263,7 @@
- #### Using options in other options ####
- #
- # Options that are defined in the config file may also be used
--# by other options. All options are evaulated at time of
-+# by other options. All options are evaluated at time of
- # use (except that config variables are evaluated at config
- # processing time).
- #
-@@ -707,7 +707,7 @@
- 
- # Line to define a successful boot up in console output.
- # This is what the line contains, not the entire line. If you need
--# the entire line to match, then use regural expression syntax like:
-+# the entire line to match, then use regular expression syntax like:
- #  (do not add any quotes around it)
- #
- #  SUCCESS_LINE = ^MyBox Login:$
-@@ -839,7 +839,7 @@
- # (ignored if POWEROFF_ON_SUCCESS is set)
- #REBOOT_ON_SUCCESS = 1
- 
--# In case there are isses with rebooting, you can specify this
-+# In case there are issues with rebooting, you can specify this
- # to always powercycle after this amount of time after calling
- # reboot.
- # Note, POWERCYCLE_AFTER_REBOOT = 0 does NOT disable it. It just
-@@ -848,7 +848,7 @@
- # (default undefined)
- #POWERCYCLE_AFTER_REBOOT = 5
- 
--# In case there's isses with halting, you can specify this
-+# In case there's issues with halting, you can specify this
- # to always poweroff after this amount of time after calling
- # halt.
- # Note, POWEROFF_AFTER_HALT = 0 does NOT disable it. It just
-@@ -972,7 +972,7 @@
- #
- #  PATCHCHECK_START is required and is the first patch to
- #   test (the SHA1 of the commit). You may also specify anything
--#   that git checkout allows (branch name, tage, HEAD~3).
-+#   that git checkout allows (branch name, tag, HEAD~3).
- #
- #  PATCHCHECK_END is the last patch to check (default HEAD)
- #
-@@ -994,7 +994,7 @@
- #     IGNORE_WARNINGS is set for the given commit's sha1
- #
- #   IGNORE_WARNINGS can be used to disable the failure of patchcheck
--#     on a particuler commit (SHA1). You can add more than one commit
-+#     on a particular commit (SHA1). You can add more than one commit
- #     by adding a list of SHA1s that are space delimited.
- #
- #   If BUILD_NOCLEAN is set, then make mrproper will not be run on
-@@ -1093,7 +1093,7 @@
- #   whatever reason. (Can't reboot, want to inspect each iteration)
- #   Doing a BISECT_MANUAL will have the test wait for you to
- #   tell it if the test passed or failed after each iteration.
--#   This is basicall the same as running git bisect yourself
-+#   This is basically the same as running git bisect yourself
- #   but ktest will rebuild and install the kernel for you.
- #
- # BISECT_CHECK = 1 (optional, default 0)
-@@ -1239,7 +1239,7 @@
- #
- # CONFIG_BISECT_EXEC (optional)
- #  The config bisect is a separate program that comes with ktest.pl.
--#  By befault, it will look for:
-+#  By default, it will look for:
- #    `pwd`/config-bisect.pl # the location ktest.pl was executed from.
- #  If it does not find it there, it will look for:
- #    `dirname <ktest.pl>`/config-bisect.pl # The directory that holds ktest.pl
--- 
-2.25.0
-
-
+> -- Steve
+> 
+> > Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+> > Tested-by: Qian Cai <cai@lca.pw>
+> > ---
+> >  arch/x86/lib/Makefile | 5 +++++
+> >  kernel/kcsan/Makefile | 2 ++
+> >  kernel/trace/Makefile | 3 +++
+> >  3 files changed, 10 insertions(+)
+> > 
+> > diff --git a/arch/x86/lib/Makefile b/arch/x86/lib/Makefile
+> > index 432a077..6110bce7 100644
+> > --- a/arch/x86/lib/Makefile
+> > +++ b/arch/x86/lib/Makefile
+> > @@ -8,6 +8,11 @@ KCOV_INSTRUMENT_delay.o	:= n
+> >  
+> >  # KCSAN uses udelay for introducing watchpoint delay; avoid recursion.
+> >  KCSAN_SANITIZE_delay.o := n
+> > +ifdef CONFIG_KCSAN
+> > +# In case KCSAN+lockdep+ftrace are enabled, disable ftrace for delay.o to avoid
+> > +# lockdep -> [other libs] -> KCSAN -> udelay -> ftrace -> lockdep recursion.
+> > +CFLAGS_REMOVE_delay.o = $(CC_FLAGS_FTRACE)
+> > +endif
+> >  
+> >  # Early boot use of cmdline; don't instrument it
+> >  ifdef CONFIG_AMD_MEM_ENCRYPT
+> > diff --git a/kernel/kcsan/Makefile b/kernel/kcsan/Makefile
+> > index df6b779..d4999b3 100644
+> > --- a/kernel/kcsan/Makefile
+> > +++ b/kernel/kcsan/Makefile
+> > @@ -4,6 +4,8 @@ KCOV_INSTRUMENT := n
+> >  UBSAN_SANITIZE := n
+> >  
+> >  CFLAGS_REMOVE_core.o = $(CC_FLAGS_FTRACE)
+> > +CFLAGS_REMOVE_debugfs.o = $(CC_FLAGS_FTRACE)
+> > +CFLAGS_REMOVE_report.o = $(CC_FLAGS_FTRACE)
+> >  
+> >  CFLAGS_core.o := $(call cc-option,-fno-conserve-stack,) \
+> >  	$(call cc-option,-fno-stack-protector,)
+> > diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
+> > index 0e63db6..9072486 100644
+> > --- a/kernel/trace/Makefile
+> > +++ b/kernel/trace/Makefile
+> > @@ -6,6 +6,9 @@ ifdef CONFIG_FUNCTION_TRACER
+> >  ORIG_CFLAGS := $(KBUILD_CFLAGS)
+> >  KBUILD_CFLAGS = $(subst $(CC_FLAGS_FTRACE),,$(ORIG_CFLAGS))
+> >  
+> > +# Avoid recursion due to instrumentation.
+> > +KCSAN_SANITIZE := n
+> > +
+> >  ifdef CONFIG_FTRACE_SELFTEST
+> >  # selftest needs instrumentation
+> >  CFLAGS_trace_selftest_dynamic.o = $(CC_FLAGS_FTRACE)
+> 
