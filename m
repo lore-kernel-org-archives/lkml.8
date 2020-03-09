@@ -2,109 +2,182 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBAD7C10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 13:55:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7204C10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 13:57:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B1DB21655
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 13:55:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="V8BRRqr6"
+	by mail.kernel.org (Postfix) with ESMTP id 9EFF820848
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 13:57:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726751AbgCINzX (ORCPT
+        id S1726779AbgCIN47 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 09:55:23 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:38306 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726383AbgCINzX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 09:55:23 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 029DtIPs108459;
-        Mon, 9 Mar 2020 08:55:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1583762118;
-        bh=nDBAlUhcSYBKIaek9S1ySWQkNuPZQhpRQxOxLs4U7cE=;
-        h=Date:From:To:CC:Subject:References:In-Reply-To;
-        b=V8BRRqr6EvVSnOntUmqDr4NLvCn+zNh9LErK5iKjxYPVCxLV9OVsGN5N+t+Lwe+6O
-         g8UuXQHrPFlkG/t6/KucVXFIwNBqWRo1VTpcUfGdp7MtU5p+PqD86rPeQ37QekXQPG
-         B63coBjq83kycoNHCK75JePHvc+mdSbkm7ykdWRE=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 029DtIrN033581;
-        Mon, 9 Mar 2020 08:55:18 -0500
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 9 Mar
- 2020 08:55:18 -0500
-Received: from localhost.localdomain (10.64.41.19) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 9 Mar 2020 08:55:17 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by localhost.localdomain (8.15.2/8.15.2) with ESMTP id 029DtHbS087470;
-        Mon, 9 Mar 2020 08:55:17 -0500
-Date:   Mon, 9 Mar 2020 09:01:06 -0500
-From:   Bin Liu <b-liu@ti.com>
-To:     Mans Rullgard <mans@mansr.com>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] usb: musb: fix crash with highmen PIO and usbmon
-Message-ID: <20200309140106.GA31115@iaqt7>
-Mail-Followup-To: Bin Liu <b-liu@ti.com>, Mans Rullgard <mans@mansr.com>,
+        Mon, 9 Mar 2020 09:56:59 -0400
+Received: from mail-vi1eur05olkn2037.outbound.protection.outlook.com ([40.92.90.37]:53517
+        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726383AbgCIN46 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 09:56:58 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Z6WTAis9vkniD1rAvb5y3z3wX6r0wjcdC33gHSae6T1DHzEZTcbdVOvSMG9G+fc3K7BAIHWl6ztsFeLuHpH3tZZMOAraF6KCk9lnUIE+tEJqyum/zz865uCqmq5wA5j9bATjARFXuzykvmuuv2eSzI0UGi9mLShsGCDb01olhkBEu5ZKSeH1kCjsFuMk5aOMH1iWtZW3qKBsMkN5xTjsBS48DFALmXhiRGW/4td9a1E9JdxekNyFE08MYlxcU8C6ZrNQilhiIY5dEdyV8r/1dduV2SokfALZ6I9Z8jF9ulxgjx5lPomwTSPouE97X07wLd2UKlm0U6ZJ/xQL2SBaFQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Yi8+Ifj7+IVwk8cKLYgjMHk+362bsnsvCoRPq48uwvQ=;
+ b=jMQUHKZmkP2Xl5Nd0WVbRY+CTrVRY+qlAz7MyYeWg4e6XwK96G41vLVpDdXl+ZdFYt1L552tSA9wnQqNxC8wjRee3Kh0tnNpcpU0GvDIcHqNlwHwB9pWVsPJtiGMqu0dnMUZl+11n5njilqJL7RV91L2cTSSt0Xo5qhfKZ2lXTeJMS4i0/dqdYxt5Fq6fwHgii9TYMVOeaFJPvWd1VDyPQSHbrU/SOpBSGLJzKLl3MCWnUzjOp957L4a5kjhDRoKh7JWZMdvV7e1nk1b/jRN9PzeQwzJ3k7PvipuUXTRV4WRBxGbW/wK7aE8fm0wo678j9WnWuYs8MRgMzMjUEyeNQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Received: from AM6EUR05FT032.eop-eur05.prod.protection.outlook.com
+ (2a01:111:e400:fc11::3a) by
+ AM6EUR05HT249.eop-eur05.prod.protection.outlook.com (2a01:111:e400:fc11::335)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.11; Mon, 9 Mar
+ 2020 13:56:54 +0000
+Received: from AM6PR03MB5170.eurprd03.prod.outlook.com (10.233.240.56) by
+ AM6EUR05FT032.mail.protection.outlook.com (10.233.240.101) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2793.11 via Frontend Transport; Mon, 9 Mar 2020 13:56:54 +0000
+Received: from AM6PR03MB5170.eurprd03.prod.outlook.com
+ ([fe80::1956:d274:cab3:b4dd]) by AM6PR03MB5170.eurprd03.prod.outlook.com
+ ([fe80::1956:d274:cab3:b4dd%6]) with mapi id 15.20.2772.019; Mon, 9 Mar 2020
+ 13:56:54 +0000
+Received: from [192.168.1.101] (92.77.140.102) by ZR0P278CA0047.CHEP278.PROD.OUTLOOK.COM (2603:10a6:910:1d::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.15 via Frontend Transport; Mon, 9 Mar 2020 13:56:52 +0000
+From:   Bernd Edlinger <bernd.edlinger@hotmail.de>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+CC:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Andrei Vagin <avagin@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Yuyang Du <duyuyang@gmail.com>,
+        David Hildenbrand <david@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        David Howells <dhowells@redhat.com>,
+        James Morris <jamorris@linux.microsoft.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200307130720.16652-1-mans@mansr.com>
+        Shakeel Butt <shakeelb@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christian Kellner <christian@kellner.me>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>
+Subject: Re: [PATCH v2 1/5] exec: Only compute current once in flush_old_exec
+Thread-Topic: [PATCH v2 1/5] exec: Only compute current once in flush_old_exec
+Thread-Index: AQHV9ZHPFX16pJkAgEa5cakb87d5R6hASgaA
+Date:   Mon, 9 Mar 2020 13:56:54 +0000
+Message-ID: <AM6PR03MB5170FBDA2F0F19ECF2906703E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+References: <AM6PR03MB5170EB4427BF5C67EE98FF09E4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87v9nmjulm.fsf@x220.int.ebiederm.org>
+ <AM6PR03MB5170B976E6387FDDAD59A118E4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <202003021531.C77EF10@keescook>
+ <20200303085802.eqn6jbhwxtmz4j2x@wittgenstein>
+ <AM6PR03MB5170285B336790D3450E2644E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87v9nlii0b.fsf@x220.int.ebiederm.org>
+ <AM6PR03MB5170609D44967E044FD1BE40E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87a74xi4kz.fsf@x220.int.ebiederm.org>
+ <AM6PR03MB51705AA3009B4986BB6EF92FE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87r1y8dqqz.fsf@x220.int.ebiederm.org>
+ <AM6PR03MB517053AED7DC89F7C0704B7DE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <AM6PR03MB51703B44170EAB4626C9B2CAE4E20@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87tv32cxmf.fsf_-_@x220.int.ebiederm.org>
+ <87v9ne5y4y.fsf_-_@x220.int.ebiederm.org>
+ <87pndm5y3l.fsf_-_@x220.int.ebiederm.org>
+In-Reply-To: <87pndm5y3l.fsf_-_@x220.int.ebiederm.org>
+Accept-Language: en-US, en-GB, de-DE
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: ZR0P278CA0047.CHEP278.PROD.OUTLOOK.COM
+ (2603:10a6:910:1d::16) To AM6PR03MB5170.eurprd03.prod.outlook.com
+ (2603:10a6:20b:ca::23)
+x-incomingtopheadermarker: OriginalChecksum:B515126297876112A916F44DFDB18DD9BFDBD252421E38E513258B332AB5B72C;UpperCasedChecksum:C3A00DC04B939B54E45B83C53CBF058525589B878FBDAEF83C6AC291945DED88;SizeAsReceived:9855;Count:50
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tmn:  [K825C0teb3P5ZldLrD3eKiX488msngkX]
+x-microsoft-original-message-id: <f62b143d-0170-1a4c-37db-33edf87aa84f@hotmail.de>
+x-ms-publictraffictype: Email
+x-incomingheadercount: 50
+x-eopattributedmessage: 0
+x-ms-office365-filtering-correlation-id: aa99d3ea-e3b2-492e-dfe3-08d7c431b987
+x-ms-traffictypediagnostic: AM6EUR05HT249:
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: N29AFT5gwOdXOw4Ift49nAsui4EvcbcVwrocPIbUJxnOplygYGoostbkPz3VwpBrlE4fmlUqDbqlRtCUgO2TFSllAzW0dAQRKueAgTxI5RmdcJsqC3RmuHfAsnvRmCorQ0E57P66gJTqub6d3vWW1IwY1vGFuEpbal2Sj2fYz/oCuS3/MnDygk5wSxr4MFvB
+x-ms-exchange-antispam-messagedata: CAXBwo9svyP7QuhSTsiq2S2ZAE3T/XRuhCoQdJ/s0j1smOu3w6NKWyNxuBiGYGFwiF01/Bu1Yr3cZsf9c6Oum9XreIgdOWgr0lHIQeVg5ntrr69H5bYPMSLr2kscu8UQPMZ3qUSbqTA9TSWOS4oHuw==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="Windows-1252"
+Content-ID: <E25BBE82D2843C4781C74B3274FB5F83@eurprd03.prod.outlook.com>
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200307130720.16652-1-mans@mansr.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: aa99d3ea-e3b2-492e-dfe3-08d7c431b987
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Mar 2020 13:56:54.5613
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Internet
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6EUR05HT249
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mans,
-
-On Sat, Mar 07, 2020 at 01:07:20PM +0000, Mans Rullgard wrote:
-> When handling a PIO bulk transfer with highmem buffer, a temporary
-> mapping is assigned to urb->transfer_buffer.  After the transfer is
-> complete, an invalid address is left behind in this pointer.  This is
-> not ordinarily a problem since nothing touches that buffer before the
-> urb is released.  However, when usbmon is active, usbmon_urb_complete()
-> calls (indirectly) mon_bin_get_data() which does access the transfer
-> buffer if it is set.  To prevent an invalid memory access here, reset
-> urb->tranfer_buffer to NULL when finished.
+On 3/8/20 10:35 PM, Eric W. Biederman wrote:
 > 
-> Fixes: 8e8a55165469 ("usb: musb: host: Handle highmem in PIO mode")
-> Signed-off-by: Mans Rullgard <mans@mansr.com>
-
-Thanks for fixing the bug.
-
+> Make it clear that current only needs to be computed once in
+> flush_old_exec.  This may have some efficiency improvements and it
+> makes the code easier to change.
+> 
+> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
 > ---
->  drivers/usb/musb/musb_host.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
+>  fs/exec.c | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
 > 
-> diff --git a/drivers/usb/musb/musb_host.c b/drivers/usb/musb/musb_host.c
-> index 1c813c37462a..b67b40de1947 100644
-> --- a/drivers/usb/musb/musb_host.c
-> +++ b/drivers/usb/musb/musb_host.c
-> @@ -1459,8 +1459,10 @@ void musb_host_tx(struct musb *musb, u8 epnum)
->  	qh->segsize = length;
+> diff --git a/fs/exec.c b/fs/exec.c
+> index db17be51b112..c3f34791f2f0 100644
+> --- a/fs/exec.c
+> +++ b/fs/exec.c
+> @@ -1260,13 +1260,14 @@ void __set_task_comm(struct task_struct *tsk, const char *buf, bool exec)
+>   */
+>  int flush_old_exec(struct linux_binprm * bprm)
+>  {
+> +	struct task_struct *me = current;
+>  	int retval;
 >  
->  	if (qh->use_sg) {
-> -		if (offset + length >= urb->transfer_buffer_length)
-> +		if (offset + length >= urb->transfer_buffer_length) {
->  			qh->use_sg = false;
-> +			urb->transfer_buffer = NULL;
-> +		}
+>  	/*
+>  	 * Make sure we have a private signal table and that
+>  	 * we are unassociated from the previous thread group.
+>  	 */
+> -	retval = de_thread(current);
+> +	retval = de_thread(me);
+>  	if (retval)
+>  		goto out;
+>  
+> @@ -1294,10 +1295,10 @@ int flush_old_exec(struct linux_binprm * bprm)
+>  	bprm->mm = NULL;
+>  
+>  	set_fs(USER_DS);
+> -	current->flags &= ~(PF_RANDOMIZE | PF_FORKNOEXEC | PF_KTHREAD |
+> +	me->flags &= ~(PF_RANDOMIZE | PF_FORKNOEXEC | PF_KTHREAD |
+>  					PF_NOFREEZE | PF_NO_SETAFFINITY);
 
-In this tx case, can you directly pass qh->sg_miter.addr to
-musb_write_fifo() so that urb->transfer_buffer is not touched at all?
+I wonder if this line should be aligned with the previous?
 
--Bin.
+
+Bernd.
