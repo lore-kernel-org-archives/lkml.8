@@ -2,84 +2,98 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACCE5C10F25
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 20:36:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CB3FC10F29
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 20:37:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 884CE24679
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 20:36:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="lS7kCk0C"
+	by mail.kernel.org (Postfix) with ESMTP id DE78520409
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 20:37:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583786234;
+	bh=5+Sb/qN3yZlUduJg7rDZcqaSKiZkM8mntRD6QBcZcmU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=EPUYxUBPLfpsybtGBI3KijRBRTejRkmWL+qkUVvs8z6VkEBT2W9iJhkwl81Huvzyb
+	 tXz1pF4fmb1UM5AnCCqAkWonx8BElbMFZBWSvg/J83HRNI9nRcw1qvVu8+KocyUfUx
+	 fQmMWA/9lWhOQDqOAzBpDZ7MpDNUtDvyOSPLbXXk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726890AbgCIUgp (ORCPT
+        id S1726928AbgCIUhO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 16:36:45 -0400
-Received: from mail.z3ntu.xyz ([128.199.32.197]:57364 "EHLO mail.z3ntu.xyz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726266AbgCIUg3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 16:36:29 -0400
-Received: from localhost.localdomain (80-110-126-226.cgn.dynamic.surfer.at [80.110.126.226])
-        by mail.z3ntu.xyz (Postfix) with ESMTPSA id C62F4C3FCA;
-        Mon,  9 Mar 2020 20:36:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=z3ntu.xyz; s=z3ntu;
-        t=1583786187; bh=OHuOuAn8dDK8twim3X48JfmlWA8R2S+SMV+iVj445pE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=lS7kCk0CvDscR40c2+DWE5YXM1+8WXBRYev7dEzrcsoaNZ8LIZF4e+NHiUewURAem
-         cN5C9tA0vP6D5v61lUqar9pPb1iJXo1xyJUUtroTTJWQ4PWBw5L8JdVN1Yxc6Z+OX3
-         VUFSobg9lJrwz9HTrS1h3YvuNwfMkiBtE/DBPDoM=
-From:   Luca Weiss <luca@z3ntu.xyz>
-To:     linux-leds@vger.kernel.org
-Cc:     Dan Murphy <dmurphy@ti.com>, Heiko Stuebner <heiko@sntech.de>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org,
+        Mon, 9 Mar 2020 16:37:14 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:44402 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726106AbgCIUhN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 16:37:13 -0400
+Received: by mail-ot1-f68.google.com with SMTP id v22so10954672otq.11;
+        Mon, 09 Mar 2020 13:37:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=1n4yXD8CThTOxD2EDR7I2aRpPsppUZVF3HLI87zQ4ZY=;
+        b=go0dVBjgRN87R/f7y7T8y5AItvvdkRgUs/xYZe7kqzytFhavX9tv46YfeTf1uJ3q5g
+         UJAzixwSlwm2K/WibdZpSMLNEGhZLBSbgfG/rEdbNHxrWBrU987sQV4/49jsgX+/h6Qc
+         wv6eRlqPQjDxThE57/yD9LfkiRG+Xe3FNzagfeeEJ8CDVKh+0vDotqDKQtFaWDV7kF6S
+         78nB8tytw2GXXLQ8gBuEfh/LGzKEgBAywJT+jusYs+MksEmVlKZpugNSExTcsEV5uSgC
+         rje8OjXy6jhGOktO3tuY8ESosWJytC3PYNvmefT9KzujaKuNwbTyeR0AmLVmd6IOZgYQ
+         bbpg==
+X-Gm-Message-State: ANhLgQ3hoaGoTRl2IZc4zeIwq7yU68+a+ph3a5legtfoedrShHd1kjBo
+        gv33Zew+s5DAzfgJ97pvW7YPhco=
+X-Google-Smtp-Source: ADFU+vt7V3uyoj4pVmg02Jxf/Z1VF/kbucOhU+qbtUfrGu4N3GDlO3Br9L3hOmcZncjvzboSC3Tyhw==
+X-Received: by 2002:a05:6830:1345:: with SMTP id r5mr987211otq.342.1583786232592;
+        Mon, 09 Mar 2020 13:37:12 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id w15sm3464104oiw.43.2020.03.09.13.37.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Mar 2020 13:37:11 -0700 (PDT)
+Received: (nullmailer pid 27764 invoked by uid 1000);
+        Mon, 09 Mar 2020 20:37:11 -0000
+Date:   Mon, 9 Mar 2020 15:37:11 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Grygorii Strashko <grygorii.strashko@ti.com>
+Cc:     Tero Kristo <t-kristo@ti.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        netdev <netdev@vger.kernel.org>, Roger Quadros <rogerq@ti.com>,
+        devicetree@vger.kernel.org, Murali Karicheri <m-karicheri2@ti.com>,
+        Sekhar Nori <nsekhar@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
         linux-kernel@vger.kernel.org,
-        ~postmarketos/upstreaming@lists.sr.ht, Luca Weiss <luca@z3ntu.xyz>
-Subject: [PATCH 1/3] dt-bindings: Add vendor prefix for SG Micro Corp
-Date:   Mon,  9 Mar 2020 21:35:56 +0100
-Message-Id: <20200309203558.305725-2-luca@z3ntu.xyz>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200309203558.305725-1-luca@z3ntu.xyz>
-References: <20200309203558.305725-1-luca@z3ntu.xyz>
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: Re: [PATCH net-next v2 4/9] dt-binding: ti: am65x: document mcu cpsw
+ nuss
+Message-ID: <20200309203711.GA15678@bogus>
+References: <20200306234734.15014-1-grygorii.strashko@ti.com>
+ <20200306234734.15014-5-grygorii.strashko@ti.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200306234734.15014-5-grygorii.strashko@ti.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"SG Micro Corp (SGMICRO) specializes in high performance, high quality
-analog IC design, marketing and sales." (http://www.sg-micro.com/)
+On Sat, 7 Mar 2020 01:47:29 +0200, Grygorii Strashko wrote:
+> Document device tree bindings for The TI AM654x/J721E SoC Gigabit Ethernet MAC
+> (Media Access Controller - CPSW2G NUSS). The CPSW NUSS provides Ethernet packet
+> communication for the device.
+> 
+> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+> ---
+>  .../bindings/net/ti,k3-am654-cpsw-nuss.yaml   | 225 ++++++++++++++++++
+>  1 file changed, 225 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/ti,k3-am654-cpsw-nuss.yaml
+> 
 
-Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
----
-Changes since RFC:
-- new patch
+My bot found errors running 'make dt_binding_check' on your patch:
 
- Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/net/ti,k3-am654-cpsw-nuss.example.dt.yaml: ethernet@46000000: 'pinctrl-0' is a dependency of 'pinctrl-names'
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index 8d306af435a3..059ff7bc0c79 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -843,6 +843,8 @@ patternProperties:
-     description: Small Form Factor Committee
-   "^sgd,.*":
-     description: Solomon Goldentek Display Corporation
-+  "^sgmicro,.*":
-+    description: SG Micro Corp
-   "^sgx,.*":
-     description: SGX Sensortech
-   "^sharp,.*":
--- 
-2.25.1
-
+See https://patchwork.ozlabs.org/patch/1250679
+Please check and re-submit.
