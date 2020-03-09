@@ -2,144 +2,91 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5643BC10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 07:05:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98261C10F28
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 07:10:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 250B72072A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 07:05:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583737540;
-	bh=2KvCwHFsSQAdpSeO3Lrv4bLbVDryixX5cclnODTcftA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rCxd3WIXjm5HWJg3nYmttINTNTarRNr8IRNC4jaTEzO5p4fWBX8E3zlM3Q3LW5qLY
-	 5GXBUtws2/mu8mObWdKW+ZW9HH0yjV4VhfzccWepbKoCAlVcMZzO/Eor1+nKOTNznt
-	 hGsFxtP2XNmeYd32IaON9Tpxfp6oYQqNW/m7DXKI=
+	by mail.kernel.org (Postfix) with ESMTP id 6571420665
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 07:10:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="O+owxSwo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726464AbgCIHFj (ORCPT
+        id S1726403AbgCIHKL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 03:05:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39020 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725796AbgCIHFi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 03:05:38 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 97F1620727;
-        Mon,  9 Mar 2020 07:05:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583737538;
-        bh=2KvCwHFsSQAdpSeO3Lrv4bLbVDryixX5cclnODTcftA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=imf7ucjj9mMJnBpte57EShocWEVms4ljEkg/SztU53q07rUnwnBJbvVB11UYnPbyT
-         /vf0MtvOtUA4s8D+LULFasg6rfyO6nsEmJzL5Hh5yELA4WyaPfD77oS5TnBmUAfR0m
-         IP+9eFChq3WGfY1OEGqwMhktrqmq922r8dLxhzZo=
-Date:   Mon, 9 Mar 2020 08:05:34 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Cc:     Joe Perches <joe@perches.com>, Guenter Roeck <groeck@google.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Julius Werner <jwerner@chromium.org>,
-        kernel-janitors@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH RFC] MAINTAINERS: include GOOGLE FIRMWARE entry
-Message-ID: <20200309070534.GA4093795@kroah.com>
-References: <20200308195116.12836-1-lukas.bulwahn@gmail.com>
- <CABXOdTcrxoBCz24Ap=YJYZnr+oLAmaR10xZ9ar2mYbE1=RAoug@mail.gmail.com>
- <5129f7dbd8506cc9fd5a8f76dc993d789566af6c.camel@perches.com>
- <alpine.DEB.2.21.2003090702440.3325@felia>
+        Mon, 9 Mar 2020 03:10:11 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:52836 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726002AbgCIHKL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 03:10:11 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0297A0fD010391;
+        Mon, 9 Mar 2020 02:10:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1583737800;
+        bh=uZAT8o07ZjnRf5vBt9YtdwA7qFwAH2KyAIpBPpjxOzM=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=O+owxSwo5ZuYAsLRqzOQcQTztjfmer4a/5uQZyihMDROaHptvvljVCu6RvQZ0pR8t
+         7k4ei8ZsVpiozO0DPJEg1TWnEy6fH/X/zB3+7rgXd1R/YUSA73TvX/HLuk/YOw4REL
+         bvUOZO1w128iv46Iv7AX8Sqeu0sb13jJGYXIXRhE=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0297A0tZ077937
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 9 Mar 2020 02:10:00 -0500
+Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 9 Mar
+ 2020 02:09:59 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 9 Mar 2020 02:09:59 -0500
+Received: from [10.24.69.157] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02979veZ046277;
+        Mon, 9 Mar 2020 02:09:57 -0500
+Subject: Re: [PATCH] arm: dts: ti: k3-am654-main: Update otap-del-sel values
+To:     Tero Kristo <t-kristo@ti.com>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+CC:     <mark.rutland@arm.com>, <robh+dt@kernel.org>, <nm@ti.com>
+References: <20200109085152.10573-1-faiz_abbas@ti.com>
+ <5dc0bca0-502d-01b8-554b-4c4bc06688a8@ti.com>
+From:   Faiz Abbas <faiz_abbas@ti.com>
+Message-ID: <54c5abfd-7ac5-92ba-e89b-aeae9ee4e275@ti.com>
+Date:   Mon, 9 Mar 2020 12:41:47 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.2003090702440.3325@felia>
+In-Reply-To: <5dc0bca0-502d-01b8-554b-4c4bc06688a8@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 09, 2020 at 07:32:10AM +0100, Lukas Bulwahn wrote:
-> 
-> 
-> On Sun, 8 Mar 2020, Joe Perches wrote:
-> 
-> > On Sun, 2020-03-08 at 15:32 -0700, Guenter Roeck wrote:
-> > > On Sun, Mar 8, 2020 at 12:51 PM Lukas Bulwahn <lukas.bulwahn@gmail.com> wrote:
-> > > > All files in drivers/firmware/google/ are identified as part of THE REST
-> > > > according to MAINTAINERS, but they are really maintained by others.
-> > []
-> > > > diff --git a/MAINTAINERS b/MAINTAINERS
-> > []
-> > > > @@ -7111,6 +7111,14 @@ S:       Supported
-> > > >  F:     Documentation/networking/device_drivers/google/gve.rst
-> > > >  F:     drivers/net/ethernet/google
-> > > > 
-> > > > +GOOGLE FIRMWARE
-> > > > +M:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > > > +M:     Stephen Boyd <swboyd@chromium.org>
-> > > > +R:     Guenter Roeck <groeck@chromium.org>
-> > > > +R:     Julius Werner <jwerner@chromium.org>
-> > > > +S:     Maintained
-> > > > +F:     drivers/firmware/google/
-> > > > +
-> > > 
-> > > FWIW, I would not mind stepping up as maintainer if needed, but I
-> > > think we should strongly discourage this kind of auto-assignment of
-> > > maintainers and/or reviewers.
-> > 
-> > Auto assignment should definitely _not_ be done.
-> > 
-> > This is an RFC proposal though.
-> > 
-> > Sometimes it's better to not produce an RFC as
-> > a patch, but maybe just show a proposed section
-> > and ask if is appropriate may be a better style
-> > going forward.
-> >
-> 
-> Please interpret the RFC patch similar to an email as Joe wrote below, 
-> simply reaching out to you.
-> 
-> There is no auto-assignment intended, nor did I expect the patch to be 
-> picked up on the first attempt of uneducated guessing.
-> 
-> There are currently around 3,000 files identified being part of THE REST;
-> so they are all assigned to Linus and LKML.
-> 
-> To confirm that they actually are maintained by someone else and reflect 
-> that in MAINTAINERS, a bit of educated guessing who to contact and to 
-> which entry to add the files to is required.
-> 
-> I am starting with the "bigger" clustered files in drivers, and then try 
-> to look at files in include and Documentation/ABI/.
-> 
-> Here is a rough statistics on how many files from each directory are in
-> THE REST:
-> 
->    1368 include
->     566 tools
->     327 lib
->     321 Documentation
->     100 drivers
->      91 kernel
->      84 scripts
->      75 samples
->      13 ipc
->      13 init
->       8 usr
->       2 arch
->       1 virt
+Tero,
 
-When you use the get_maintainer.pl script, it should find reasonable
-people/lists for those files, so why not just stick with that?  Trying
-to classify all of the kernel files to have MAINTAINERS entries seems
-like a loosing proposition as there are file that no one has touched in
-years.
+On 17/01/20 1:38 pm, Tero Kristo wrote:
+> On 09/01/2020 10:51, Faiz Abbas wrote:
+>> According to the latest AM65x Data Manual[1], a different output tap
+>> delay value is optimum for a given speed mode. Update these values.
+>>
+>> [1] http://www.ti.com/lit/gpn/am6526
+>>
+>> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+> 
+> I believe this patch is going to be updated, as the dt binding has
+> received comments. As such, going to ignore this for now.
+> 
 
-thanks,
+Those other series are merged now so you should be able to pick this up.
 
-greg k-h
+Thanks,
+Faiz
