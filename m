@@ -2,203 +2,150 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E212AC10F29
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 17:42:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E60FFC18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 17:42:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4ADA20828
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 17:42:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lj7DWSw+"
+	by mail.kernel.org (Postfix) with ESMTP id BDE58222D9
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 17:42:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727328AbgCIRmP (ORCPT
+        id S1727364AbgCIRm6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 13:42:15 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:53671 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727270AbgCIRmP (ORCPT
+        Mon, 9 Mar 2020 13:42:58 -0400
+Received: from out01.mta.xmission.com ([166.70.13.231]:40156 "EHLO
+        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726661AbgCIRm5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 13:42:15 -0400
-Received: by mail-wm1-f68.google.com with SMTP id g134so446755wme.3;
-        Mon, 09 Mar 2020 10:42:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=O5XzlRhJXpNd17/Q76toYeUyU8DPAcT326EwGlOZF0s=;
-        b=Lj7DWSw+kOYjv01pETYilz6LW14y0nMDyeJQC8epwaQzKflWIeQw/Cbmh0qhmorkGz
-         eigKpe1tp2Ooo4Rao6mdypvT05TriZ0WZLJQmTwEGXIIdU+w+p+OrNnBnYl8tyoEjE8B
-         bLLDGjqhHa1WQL97KMBlUuAPEF5I3XrlyZJckaJHsGZGnYdDIiKRePNPpYoZsa8suUfJ
-         b9cMxxXPl7PrZVfDQGm5Akd7jqyz1sd+2zMpzIpzdhlyzVtRZ21MMzu2O1vrHSZLldYd
-         wWB90AtkNSdIIhK9c657+WT0sUlzWEdZ/nJpkEKK/UAO9WLNb1fdujX8sGw2kOC6QgFe
-         JpnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=O5XzlRhJXpNd17/Q76toYeUyU8DPAcT326EwGlOZF0s=;
-        b=r6ywhngrc9ZfdXNfK+rK2w0RAWGi3BQwtQkcgTEaEyH6wlHsgRBWgraXTRxvyOoz+x
-         pm/nGu8Sl+paQA+MWmL1TsWOxcifoypfhEPVp/0rlay+NlHcC8mOSYbK9P5wTg3MAoXY
-         jwXlbxaGdifj/q8sk3XlpxNgVhS8DdLC6BUtni3UKNZGJ3WIAr0eYOHoP3cKkvb8zvjp
-         9Fk7epvLSG7FVyt/mV7f2htVAPUYgW9DMHP6q/JmguYLyQ2ACakuS2JtdyBis+ykIm6V
-         YruFnOiSrvRqBwGRouOphk7TuX19uZg6/Hefd6cKS8Us2caVSLz0brwj0ffh8snWHwL7
-         mGQQ==
-X-Gm-Message-State: ANhLgQ17CM3Gu4X680w76tMAp6HjlbSxGSAcfYiX3vH2OOG7Np9rVjXJ
-        agOvc/IY8Z2VmLpBKePtuC300iL7
-X-Google-Smtp-Source: ADFU+vsgfcaDnGCgWzq7miqzip7oobaJk0VZBJ3UrJVPQc39Yk5G4P9OVGUsu05EbLby4faR/vJsQw==
-X-Received: by 2002:a1c:25c1:: with SMTP id l184mr367337wml.122.1583775732276;
-        Mon, 09 Mar 2020 10:42:12 -0700 (PDT)
-Received: from [10.67.49.112] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id c8sm1517272wrt.33.2020.03.09.10.42.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Mar 2020 10:42:11 -0700 (PDT)
-Subject: Re: [PATCH] gpio: brcmstb: support gpio-line-names property
-To:     Gregory Fong <gregory.0xf0@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-References: <1583539986-573-1-git-send-email-opendmb@gmail.com>
- <CADtm3G4eq_p1YZtQrtcx4LGPiY82BpgXf55YtJCW+WJSrM7siw@mail.gmail.com>
-From:   Doug Berger <opendmb@gmail.com>
-Autocrypt: addr=opendmb@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- rQQYjNSD8+NSdOsIpGNCZ9xhWw==
-Message-ID: <810d8c3d-482f-078c-70b5-c4123c2679b8@gmail.com>
-Date:   Mon, 9 Mar 2020 10:42:08 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 9 Mar 2020 13:42:57 -0400
+Received: from in01.mta.xmission.com ([166.70.13.51])
+        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jBMQa-0000Mu-4R; Mon, 09 Mar 2020 11:42:56 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jBMQZ-0002BG-3k; Mon, 09 Mar 2020 11:42:55 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Bernd Edlinger <bernd.edlinger@hotmail.de>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Andrei Vagin <avagin@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Peter Zijlstra \(Intel\)" <peterz@infradead.org>,
+        Yuyang Du <duyuyang@gmail.com>,
+        David Hildenbrand <david@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        David Howells <dhowells@redhat.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christian Kellner <christian@kellner.me>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        "linux-doc\@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel\@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-mm\@kvack.org" <linux-mm@kvack.org>,
+        "stable\@vger.kernel.org" <stable@vger.kernel.org>,
+        "linux-api\@vger.kernel.org" <linux-api@vger.kernel.org>
+References: <AM6PR03MB5170EB4427BF5C67EE98FF09E4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <87v9nmjulm.fsf@x220.int.ebiederm.org>
+        <AM6PR03MB5170B976E6387FDDAD59A118E4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <202003021531.C77EF10@keescook>
+        <20200303085802.eqn6jbhwxtmz4j2x@wittgenstein>
+        <AM6PR03MB5170285B336790D3450E2644E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <87v9nlii0b.fsf@x220.int.ebiederm.org>
+        <AM6PR03MB5170609D44967E044FD1BE40E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <87a74xi4kz.fsf@x220.int.ebiederm.org>
+        <AM6PR03MB51705AA3009B4986BB6EF92FE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <87r1y8dqqz.fsf@x220.int.ebiederm.org>
+        <AM6PR03MB517053AED7DC89F7C0704B7DE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <AM6PR03MB51703B44170EAB4626C9B2CAE4E20@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <87tv32cxmf.fsf_-_@x220.int.ebiederm.org>
+        <87v9ne5y4y.fsf_-_@x220.int.ebiederm.org>
+        <87zhcq4jdj.fsf_-_@x220.int.ebiederm.org>
+        <AM6PR03MB5170BC58D90BAD80CDEF3F8BE4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+Date:   Mon, 09 Mar 2020 12:40:37 -0500
+In-Reply-To: <AM6PR03MB5170BC58D90BAD80CDEF3F8BE4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        (Bernd Edlinger's message of "Mon, 9 Mar 2020 13:45:52 +0000")
+Message-ID: <878sk94eay.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <CADtm3G4eq_p1YZtQrtcx4LGPiY82BpgXf55YtJCW+WJSrM7siw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-XM-SPF: eid=1jBMQZ-0002BG-3k;;;mid=<878sk94eay.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX18+CRYcVXyL7K70DHjZAhuv5wHOtH7gaUo=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH v2 5/5] exec: Add a exec_update_mutex to replace cred_guard_mutex
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/9/20 12:45 AM, Gregory Fong wrote:
-> Hi Doug,
-> 
-> On Fri, Mar 6, 2020 at 4:14 PM Doug Berger <opendmb@gmail.com> wrote:
->>
->> The default handling of the gpio-line-names property by the
->> gpiolib-of implementation does not work with the multiple
->> gpiochip banks per device structure used by the gpio-brcmstb
->> driver.
->>
->> This commit adds driver level support for the device tree
->> property so that GPIO lines can be assigned friendly names.
->>
->> Signed-off-by: Doug Berger <opendmb@gmail.com>
-> 
-> I've added a few comments below.  With the suggested updates:
-> Acked-by: Gregory Fong <gregory.0xf0@gmail.com>
-> 
->> ---
->>  drivers/gpio/gpio-brcmstb.c | 44 ++++++++++++++++++++++++++++++++++++++++++++
->>  1 file changed, 44 insertions(+)
->>
->> diff --git a/drivers/gpio/gpio-brcmstb.c b/drivers/gpio/gpio-brcmstb.c
->> index 05e3f99ae59c..e9ab246e2d42 100644
->> --- a/drivers/gpio/gpio-brcmstb.c
->> +++ b/drivers/gpio/gpio-brcmstb.c
->> @@ -603,6 +603,49 @@ static const struct dev_pm_ops brcmstb_gpio_pm_ops = {
->>         .resume_noirq = brcmstb_gpio_resume,
->>  };
->>
->> +static void brcmstb_gpio_set_names(struct device *dev,
->> +                                  struct brcmstb_gpio_bank *bank)
->> +{
->> +       struct device_node *np = dev->of_node;
->> +       const char **names;
->> +       int nstrings, base;
->> +       unsigned int i;
->> +
->> +       base = bank->id * MAX_GPIO_PER_BANK;
->> +
->> +       nstrings = of_property_count_strings(np, "gpio-line-names");
->> +       if (nstrings <= base)
->> +               /* Line names not present */
->> +               return;
->> +
->> +       names = devm_kcalloc(dev, MAX_GPIO_PER_BANK, sizeof(char *),
-> 
-> Please use sizeof(*names) instead of sizeof(char *).
-Good idea. Will do.
+Bernd Edlinger <bernd.edlinger@hotmail.de> writes:
 
-> 
->> +                            GFP_KERNEL);
->> +       if (!names)
->> +               return;
->> +
->> +       /*
->> +        * Make sure to not index beyond the end of the number of descriptors
->> +        * of the GPIO device.
->> +        */
->> +       for (i = 0; i < bank->width; i++) {
->> +               const char *name;
->> +               int ret;
->> +
->> +               ret = of_property_read_string_index(np, "gpio-line-names",
->> +                                                   base + i, &name);
->> +               if (ret) {
->> +                       if (ret != -ENODATA)
->> +                               dev_err(dev, "unable to name line %d: %d\n",
->> +                                       i, ret);
-> 
-> Recommend adding the GPIO bank ID to this error message.
-I'll use the absolute line number rather than the bank relative line
-number to reduce confusion, but since it's different from your
-suggestion I'll leave off your Ack in case you really want the bank
-number for some reason.
+> On 3/8/20 10:38 PM, Eric W. Biederman wrote:
+>> 
+>> The cred_guard_mutex is problematic.  The cred_guard_mutex is held
+>> over the userspace accesses as the arguments from userspace are read.
+>> The cred_guard_mutex is held of PTRACE_EVENT_EXIT as the the other
+                                ^ over
+>
+> ... is held while waiting for the trace parent to handle PTRACE_EVENT_EXIT
+> or something?
 
-> 
-> Best regards,
-> Gregory
-> 
-Thanks Gregory!
-V2 coming soon.
+Yes.  Let me see if I can phrase that better.
+
+> I wonder if we also should mention that
+> it is held while waiting for the trace parent to
+> receive the exit code with "wait"?
+
+I don't think we have to spell out the details of how it all works,
+unless that makes things clearer.  Kernel developers can be expected
+to figure out how the kernel works.  The critical thing is that it is
+an indefinite wait for userspace to take action.
+
+But I will look.
+
+>> threads are killed.  The cred_guard_mutex is held over
+>> "put_user(0, tsk->clear_child_tid)" in exit_mm().
+>> 
+>> Any of those can result in deadlock, as the cred_guard_mutex is held
+>> over a possible indefinite userspace waits for userspace.
+>> 
+>> Add exec_update_mutex that is only held over exec updating process
+>
+> Add ?
+
+Yes.  That is what the change does: add exec_update_mutex.
+
+>> with the new contents of exec, so that code that needs not to be
+>> confused by exec changing the mm and the cred in ways that can not
+>> happen during ordinary execution of a process.
+>> 
+>> The plan is to switch the users of cred_guard_mutex to
+>> exec_udpate_mutex one by one.  This lets us move forward while still
+>
+> s/udpate/update/
+
+Yes.  Very much so.
+
+Eric
+
