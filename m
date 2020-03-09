@@ -2,139 +2,100 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76E53C10F29
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:27:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77FA4C10F25
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:28:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C0DE2465A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:27:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A6B924656
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:28:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726402AbgCIT1b (ORCPT
+        id S1726284AbgCIT2i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 15:27:31 -0400
-Received: from mga01.intel.com ([192.55.52.88]:20358 "EHLO mga01.intel.com"
+        Mon, 9 Mar 2020 15:28:38 -0400
+Received: from mga02.intel.com ([134.134.136.20]:1482 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725992AbgCIT1a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 15:27:30 -0400
+        id S1725956AbgCIT2i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 15:28:38 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Mar 2020 12:27:29 -0700
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Mar 2020 12:28:37 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,534,1574150400"; 
-   d="scan'208";a="414918030"
-Received: from yyu32-desk.sc.intel.com ([143.183.136.146])
-  by orsmga005.jf.intel.com with ESMTP; 09 Mar 2020 12:27:28 -0700
-Message-ID: <fed72ecc917373669ac546d4e8214793d78bd513.camel@intel.com>
-Subject: Re: [RFC PATCH v9 01/27] Documentation/x86: Add CET description
-From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
-To:     Dave Hansen <dave.hansen@intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-mm@kvack.org,
-        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>, x86-patch-review@intel.com
-Date:   Mon, 09 Mar 2020 12:27:28 -0700
-In-Reply-To: <968af1c2-a5b4-fb48-dfa9-499ec37f677c@intel.com>
-References: <20200205181935.3712-1-yu-cheng.yu@intel.com>
-         <20200205181935.3712-2-yu-cheng.yu@intel.com>
-         <9ae1cf84-1d84-1d34-c0ce-48b0d70b8f3f@intel.com>
-         <0f43463e02d1be2af6bcf8ff6917e751ba7676a0.camel@intel.com>
-         <968af1c2-a5b4-fb48-dfa9-499ec37f677c@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+   d="scan'208";a="235693532"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga008.fm.intel.com with ESMTP; 09 Mar 2020 12:28:37 -0700
+Received: from [10.251.21.146] (kliang2-mobl.ccr.corp.intel.com [10.251.21.146])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id 964265802A3;
+        Mon,  9 Mar 2020 12:28:33 -0700 (PDT)
+Subject: Re: [PATCH v1 01/11] perf/x86/core: Support KVM to assign a dedicated
+ counter for guest PEBS
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Luwei Kang <luwei.kang@intel.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org, tglx@linutronix.de, bp@alien8.de,
+        hpa@zytor.com, pbonzini@redhat.com,
+        sean.j.christopherson@intel.com, vkuznets@redhat.com,
+        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
+        pawan.kumar.gupta@linux.intel.com, ak@linux.intel.com,
+        thomas.lendacky@amd.com, fenghua.yu@intel.com,
+        like.xu@linux.intel.com
+References: <1583431025-19802-1-git-send-email-luwei.kang@intel.com>
+ <1583431025-19802-2-git-send-email-luwei.kang@intel.com>
+ <20200306135317.GD12561@hirez.programming.kicks-ass.net>
+ <b72cb68e-1a0a-eeff-21b4-ce412e939cfd@linux.intel.com>
+ <20200309100443.GG12561@hirez.programming.kicks-ass.net>
+ <97ce1ba4-d75a-8db2-ea2f-7d334942b4e6@linux.intel.com>
+ <20200309150526.GI12561@hirez.programming.kicks-ass.net>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+Message-ID: <45a1a575-9363-f778-b5f5-bcdf28d3e34b@linux.intel.com>
+Date:   Mon, 9 Mar 2020 15:28:31 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
+In-Reply-To: <20200309150526.GI12561@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-03-09 at 10:21 -0700, Dave Hansen wrote:
-> On 3/9/20 10:00 AM, Yu-cheng Yu wrote:
-> > On Wed, 2020-02-26 at 09:57 -0800, Dave Hansen wrote:
-> > > > index ade4e6ec23e0..8b69ebf0baed 100644
-> > > > --- a/Documentation/admin-guide/kernel-parameters.txt
-> > > > +++ b/Documentation/admin-guide/kernel-parameters.txt
-> > > > @@ -3001,6 +3001,12 @@
-> > > >  			noexec=on: enable non-executable mappings (default)
-> > > >  			noexec=off: disable non-executable mappings
-> > > >  
-> > > > +	no_cet_shstk	[X86-64] Disable Shadow Stack for user-mode
-> > > > +			applications
-> > > 
-> > > If we ever add kernel support, "no_cet_shstk" will mean "no cet shstk
-> > > for userspace"?
-> > 
-> > What about no_user_shstk, no_kernel_shstk?
 
-[...]
 
-> > > > +Note:
-> > > > +  There is no CET-enabling arch_prctl function.  By design, CET is
-> > > > +  enabled automatically if the binary and the system can support it.
-> > > 
-> > > This is kinda interesting.  It means that a JIT couldn't choose to
-> > > protect the code it generates and have different rules from itself?
-> > 
-> > JIT needs to be updated for CET first.  Once that is done, it runs with CET
-> > enabled.  It can use the NOTRACK prefix, for example.
+On 3/9/2020 11:05 AM, Peter Zijlstra wrote:
+>> In the new proposal, KVM user is treated the same as other host events with
+>> event constraint. The scheduler is free to choose whether or not to assign a
+>> counter for it.
+> That's what it does, I understand that. I'm saying that that is creating
+> artificial contention.
 > 
-> Am I missing something?
 > 
-> What's the direct connection between shadow stacks and Indirect Branch
-> Tracking other than Intel marketing umbrellas?
+> Why is this needed anyway? Can't we force the guest to flush and then
+> move it over to a new counter?
 
-What I meant is that JIT code needs to be updated first; if it skips RETs,
-it needs to unwind the stack, and if it does indirect JMPs somewhere it
-needs to fix up the branch target or use NOTRACK.
+KVM only traps the MSR access. There is no MSR access during the 
+scheduling in guest.
+KVM/host only knows the request counter, when guest tries to enable the 
+counter. It's too late for guest to start over.
 
-> > > > +  The parameters passed are always unsigned 64-bit.  When an IA32
-> > > > +  application passing pointers, it should only use the lower 32 bits.
-> > > 
-> > > Won't a 32-bit app calling prctl() use the 32-bit ABI?  How would it
-> > > even know it's running on a 64-bit kernel?
-> > 
-> > The 32-bit app is passing only a pointer to an array of 64-bit numbers.
-> 
-> Well, the documentation just talked about pointers and I naively assume
-> it means the "unsigned long *" you had in there.
-> 
-> Rather than make suggestions, just say that the ABI is universally
-> 64-bit.  Saying that the pointers must be valid is just kinda silly.
-> It's also not 100% clear what an "IA32 application" *MEANS* given fun
-> things like x32.
+Regarding to the artificial contention, as my understanding, it should 
+rarely happen in practical.
+Cloud vendors have to explicitly set pebs option in qemu to enable PEBS 
+support for guest. They knows the environment well. They can avoid the 
+contention. (We may implement some patches for qemu/KVM later to 
+temporarily disable PEBS in runtime if they require.)
 
-Ok, I will update the text.
+For now, I think we may print a warning when both host and guest require 
+the same counter. Host can get a clue from the warning.
 
-> 
-> Also, I went to go find this implementation in your series.  I couldn't
-> find it.  Did I miss a patch?  Or are you documenting things you didn't
-> even implement?
-
-In patch #27: Add arch_prctl functions for Shadow Stack.
-
-Yu-cheng
-
+Thanks,
+Kan
