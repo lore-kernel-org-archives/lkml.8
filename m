@@ -2,152 +2,138 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7247C10F25
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 23:50:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01AD5C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 23:52:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1C762465A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 23:50:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0A392146E
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 23:52:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fyg2S+K7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727405AbgCIXuR (ORCPT
+        id S1727462AbgCIXwL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 19:50:17 -0400
-Received: from mga03.intel.com ([134.134.136.65]:48348 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726275AbgCIXuR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 19:50:17 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Mar 2020 16:50:16 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,535,1574150400"; 
-   d="scan'208";a="242129451"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga003.jf.intel.com with ESMTP; 09 Mar 2020 16:50:16 -0700
-Date:   Mon, 9 Mar 2020 16:50:16 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Dave Hansen <dave.hansen@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org, peterz@infradead.org
-Subject: Re: [RFC][PATCH 1/2] x86: remove duplicate TSC DEADLINE MSR
- definitions
-Message-ID: <20200309235016.GE19235@linux.intel.com>
-References: <20200305174706.0D6B8EE4@viggo.jf.intel.com>
+        Mon, 9 Mar 2020 19:52:11 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:32795 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726275AbgCIXwK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 19:52:10 -0400
+Received: by mail-oi1-f196.google.com with SMTP id q81so12081256oig.0;
+        Mon, 09 Mar 2020 16:52:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=o4lgiWH6eSguIJ+rpfWkJ3kTc3LqylAb1v0iFg82xVM=;
+        b=fyg2S+K7jn/qeT9SgWQmqN2geEgL65yx1H+rp5dCEV5PiPqK6ni9UqjEfhJfsgoYaW
+         OziD6jaWal/oW3ui7xlXuTch25yO5o22rGOlNiUK5YmTxJh5jehHuiLNSzBszIN6EtX3
+         FrTk+Aj1ToutZgYVqlzApuoQLjLKFsmKpz/w+eMQPBcLDX1pGXaQPDHRvWEAyPktuZVD
+         cmqOIzRYB0UeOH/pENt97g0eaUUAdFksLKMVrcnH4xtgwdC3a3f3j2xPzohJeWb/1dD6
+         rDcMDBEK3h/W2+BvLcnxPhuhQalhW+3B2lKG9z/3a0N/RsNgVuDjidisF35y5lXkfYMW
+         1loA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=o4lgiWH6eSguIJ+rpfWkJ3kTc3LqylAb1v0iFg82xVM=;
+        b=K9inyATudbDqwinGIwiQDFqZtLorQK8jIOIyVeMJ6Higm2UkFcZKdLTKU7sZU7+LYO
+         iTGRrMPJZTdfEOFUHTaX3RR7iePHZDtuIQhO86APsOpXLPmsYzU1fvQ2SK3p0Gs1BD9l
+         WF+jtsvYS2AspvkYMzKv29mzXiL/NGspHalzgRASHWPcSD14lcQIp3yX2H8U4U8IiDHJ
+         bA7wogdbCri/dcD2KCTsSPjUvWGnq21WiyTFTjfOKI44epore8kBOIEgRHJGVhCWivLa
+         0LcmQe1zEmgHa8Am9juxnX139oeF6CJaPeGCpS1Nk6LCpXzBIOWomlg7wOw2P2bvmGII
+         YDkA==
+X-Gm-Message-State: ANhLgQ0pf8OnGdWNHasf4bVn8/RaPuCWQ+zOn5rsu3yxAhn7/zOOf1Me
+        A+LEeFCnrlfiTwljEWCni5LZWIn0/Z6wwv3GDbE=
+X-Google-Smtp-Source: ADFU+vtEjAEHBi2r0HOKp9WNI5n1E/YGOoHJGFBrfYB7gKDnfNXOVIOjv6F5WCNaeeh2EliI2CYabh3NkPzI97TzCXc=
+X-Received: by 2002:a05:6808:56:: with SMTP id v22mr1166010oic.116.1583797929940;
+ Mon, 09 Mar 2020 16:52:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200305174706.0D6B8EE4@viggo.jf.intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <CAMe9rOoRTVUzNC88Ho2XTTNJCymrd3L=XdB9xFcgxPVwAZ0FWA@mail.gmail.com>
+ <AE81FEF5-ECC5-46AA-804D-9D64E656D16E@amacapital.net> <CAMe9rOoDMenvD9XRL1szR5yLQEwv9Q6f4O7CtwbdZ-cJqzezKA@mail.gmail.com>
+ <0088001c-0b12-a7dc-ff2a-9d5c282fa36b@intel.com> <CAMe9rOqf0OHL9397Vikgb=UWhRMf+FmGq-9VAJNmfmzNMMDkCw@mail.gmail.com>
+ <56ab33ac-865b-b37e-75f2-a489424566c3@intel.com> <CAMe9rOrzrXORQgcAwzGn+=PBvxCEgc5Km_TQq+P7uoqwiacJSA@mail.gmail.com>
+ <c06073a2-6858-d5dc-d74b-ef2568bd9423@intel.com>
+In-Reply-To: <c06073a2-6858-d5dc-d74b-ef2568bd9423@intel.com>
+From:   "H.J. Lu" <hjl.tools@gmail.com>
+Date:   Mon, 9 Mar 2020 16:51:33 -0700
+Message-ID: <CAMe9rOrxM=RefftngNXhP906mrW1SMy7vp+O=yOj_WwcdQpGcg@mail.gmail.com>
+Subject: Re: [RFC PATCH v9 01/27] Documentation/x86: Add CET description
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     Andy Lutomirski <luto@amacapital.net>,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org,
+        Linux-MM <linux-mm@kvack.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>, x86-patch-review@intel.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 05, 2020 at 09:47:06AM -0800, Dave Hansen wrote:
-> 
-> There are two definitions for the TSC deadline MSR in msr-index.h,
-> one with an underscore and one without.  Axe one of them and move
-> all the references over to the other one.
+On Mon, Mar 9, 2020 at 4:21 PM Dave Hansen <dave.hansen@intel.com> wrote:
+>
+> On 3/9/20 4:11 PM, H.J. Lu wrote:
+> > A threaded application is loaded from disk.  The object file on disk is
+> > either CET enabled or not CET enabled.
+>
+> Huh.  Are you saying that all instructions executed on userspace on
+> Linux come off of object files on the disk?  That's an interesting
+> assertion.  You might want to go take a look at the processes on your
+> systems.  Here's my browser for example:
+>
+> # for p in $(ps aux | grep chromium | awk '{print $2}' ); do cat
+> /proc/$p/maps; done | grep ' r-xp 00000000 00:00 0'
+> ...
+> 202f00082000-202f000bf000 r-xp 00000000 00:00 0
+> 202f000c2000-202f000c3000 r-xp 00000000 00:00 0
+> 202f00102000-202f00103000 r-xp 00000000 00:00 0
+> 202f00142000-202f00143000 r-xp 00000000 00:00 0
+> 202f00182000-202f001bf000 r-xp 00000000 00:00 0
+>
+> Lots of funny looking memory areas which are anonymous and executable!
+> Those didn't come off the disk.  Same thing in firefox.  Weird.  Any
+> idea what those are?
+>
+> One guess: https://en.wikipedia.org/wiki/Just-in-time_compilation
 
-It's worth calling out that you're keeping the one that matches Intel's
-SDM.
+jitted code belongs to a process loaded from disk.  Enable CET in
+an application which uses JIT engine means to also enable CET in
+JIT engine.  Take git as an example, "git grep" crashed for me on Tiger
+Lake.   It turned out that git itself was compiled with -fcf-protection and
+git was linked against libpcre2-8.so.0 also compiled with -fcf-protection,
+which has a JIT, sljit, which was not CET enabled.  git crashed in the
+jitted codes due to missing ENDBR.  I had to enable CET in sljit to make
+git working on CET enabled Tiger Lake.  So we need to enable CET in
+JIT engine before enabling CET in applications which use JIT engine.
 
-I was going to suggest renaming KVM's functions/variables to add the
-underscore, but after looking at the code it's probably best to leave
-that churn for a different time.
 
-> Cc: x86@kernel.org
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> 
-> ---
-> 
->  b/arch/x86/include/asm/msr-index.h                       |    2 --
->  b/arch/x86/kvm/x86.c                                     |    6 +++---
->  b/tools/arch/x86/include/asm/msr-index.h                 |    2 --
->  b/tools/perf/trace/beauty/tracepoints/x86_msr.sh         |    2 +-
->  b/tools/testing/selftests/kvm/include/x86_64/processor.h |    2 --
->  5 files changed, 4 insertions(+), 10 deletions(-)
-> 
-> diff -puN arch/x86/include/asm/msr-index.h~kill-dup-MSR_IA32_TSCDEADLINE arch/x86/include/asm/msr-index.h
-> --- a/arch/x86/include/asm/msr-index.h~kill-dup-MSR_IA32_TSCDEADLINE	2020-03-05 09:42:37.049901042 -0800
-> +++ b/arch/x86/include/asm/msr-index.h	2020-03-05 09:42:37.062901042 -0800
-> @@ -576,8 +576,6 @@
->  #define MSR_IA32_APICBASE_ENABLE	(1<<11)
->  #define MSR_IA32_APICBASE_BASE		(0xfffff<<12)
->  
-> -#define MSR_IA32_TSCDEADLINE		0x000006e0
-> -
->  #define MSR_IA32_UCODE_WRITE		0x00000079
->  #define MSR_IA32_UCODE_REV		0x0000008b
->  
-> diff -puN arch/x86/kvm/x86.c~kill-dup-MSR_IA32_TSCDEADLINE arch/x86/kvm/x86.c
-> --- a/arch/x86/kvm/x86.c~kill-dup-MSR_IA32_TSCDEADLINE	2020-03-05 09:42:37.051901042 -0800
-> +++ b/arch/x86/kvm/x86.c	2020-03-05 09:42:37.065901042 -0800
-> @@ -1200,7 +1200,7 @@ static const u32 emulated_msrs_all[] = {
->  	MSR_KVM_PV_EOI_EN,
->  
->  	MSR_IA32_TSC_ADJUST,
-> -	MSR_IA32_TSCDEADLINE,
-> +	MSR_IA32_TSC_DEADLINE,
->  	MSR_IA32_ARCH_CAPABILITIES,
->  	MSR_IA32_MISC_ENABLE,
->  	MSR_IA32_MCG_STATUS,
-> @@ -2688,7 +2688,7 @@ int kvm_set_msr_common(struct kvm_vcpu *
->  		return kvm_set_apic_base(vcpu, msr_info);
->  	case APIC_BASE_MSR ... APIC_BASE_MSR + 0x3ff:
->  		return kvm_x2apic_msr_write(vcpu, msr, data);
-> -	case MSR_IA32_TSCDEADLINE:
-> +	case MSR_IA32_TSC_DEADLINE:
->  		kvm_set_lapic_tscdeadline_msr(vcpu, data);
->  		break;
->  	case MSR_IA32_TSC_ADJUST:
-> @@ -3009,7 +3009,7 @@ int kvm_get_msr_common(struct kvm_vcpu *
->  	case APIC_BASE_MSR ... APIC_BASE_MSR + 0x3ff:
->  		return kvm_x2apic_msr_read(vcpu, msr_info->index, &msr_info->data);
->  		break;
-> -	case MSR_IA32_TSCDEADLINE:
-> +	case MSR_IA32_TSC_DEADLINE:
->  		msr_info->data = kvm_get_lapic_tscdeadline_msr(vcpu);
->  		break;
->  	case MSR_IA32_TSC_ADJUST:
-> diff -puN tools/arch/x86/include/asm/msr-index.h~kill-dup-MSR_IA32_TSCDEADLINE tools/arch/x86/include/asm/msr-index.h
-> --- a/tools/arch/x86/include/asm/msr-index.h~kill-dup-MSR_IA32_TSCDEADLINE	2020-03-05 09:42:37.055901042 -0800
-> +++ b/tools/arch/x86/include/asm/msr-index.h	2020-03-05 09:42:37.066901042 -0800
-> @@ -576,8 +576,6 @@
->  #define MSR_IA32_APICBASE_ENABLE	(1<<11)
->  #define MSR_IA32_APICBASE_BASE		(0xfffff<<12)
->  
-> -#define MSR_IA32_TSCDEADLINE		0x000006e0
-> -
->  #define MSR_IA32_UCODE_WRITE		0x00000079
->  #define MSR_IA32_UCODE_REV		0x0000008b
->  
-> diff -puN tools/perf/trace/beauty/tracepoints/x86_msr.sh~kill-dup-MSR_IA32_TSCDEADLINE tools/perf/trace/beauty/tracepoints/x86_msr.sh
-> --- a/tools/perf/trace/beauty/tracepoints/x86_msr.sh~kill-dup-MSR_IA32_TSCDEADLINE	2020-03-05 09:42:37.057901042 -0800
-> +++ b/tools/perf/trace/beauty/tracepoints/x86_msr.sh	2020-03-05 09:42:37.066901042 -0800
-> @@ -15,7 +15,7 @@ x86_msr_index=${arch_x86_header_dir}/msr
->  
->  printf "static const char *x86_MSRs[] = {\n"
->  regex='^[[:space:]]*#[[:space:]]*define[[:space:]]+MSR_([[:alnum:]][[:alnum:]_]+)[[:space:]]+(0x00000[[:xdigit:]]+)[[:space:]]*.*'
-> -egrep $regex ${x86_msr_index} | egrep -v 'MSR_(ATOM|P[46]|AMD64|IA32_TSCDEADLINE|IDT_FCR4)' | \
-> +egrep $regex ${x86_msr_index} | egrep -v 'MSR_(ATOM|P[46]|AMD64|IA32_TSC_DEADLINE|IDT_FCR4)' | \
->  	sed -r "s/$regex/\2 \1/g" | sort -n | \
->  	xargs printf "\t[%s] = \"%s\",\n"
->  printf "};\n\n"
-> diff -puN tools/testing/selftests/kvm/include/x86_64/processor.h~kill-dup-MSR_IA32_TSCDEADLINE tools/testing/selftests/kvm/include/x86_64/processor.h
-> --- a/tools/testing/selftests/kvm/include/x86_64/processor.h~kill-dup-MSR_IA32_TSCDEADLINE	2020-03-05 09:42:37.058901042 -0800
-> +++ b/tools/testing/selftests/kvm/include/x86_64/processor.h	2020-03-05 09:42:37.067901042 -0800
-> @@ -813,8 +813,6 @@ void kvm_get_cpu_address_width(unsigned
->  #define		APIC_VECTOR_MASK	0x000FF
->  #define	APIC_ICR2	0x310
->  
-> -#define MSR_IA32_TSCDEADLINE		0x000006e0
-> -
->  #define MSR_IA32_UCODE_WRITE		0x00000079
->  #define MSR_IA32_UCODE_REV		0x0000008b
->  
-> _
+-- 
+H.J.
