@@ -2,283 +2,113 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C444C10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 15:18:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3119C18E5A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 15:19:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DE9220578
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 15:18:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD7C020578
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 15:19:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="qgaYhUGO"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="L5c2JhCC";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="MSgwcIOh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727144AbgCIPSO (ORCPT
+        id S1727026AbgCIPTN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 11:18:14 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:38403 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727089AbgCIPSO (ORCPT
+        Mon, 9 Mar 2020 11:19:13 -0400
+Received: from out4-smtp.messagingengine.com ([66.111.4.28]:43549 "EHLO
+        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726446AbgCIPTN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 11:18:14 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1583767093; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=cjfeR7a86Xm4RFTgAuAL+CrjMFUACm4dEBBr/wrjbTM=; b=qgaYhUGOLOLisdvFyN1B0LyG9y+YEN0MbMW9raXEgNnqIdhfEfTmO3zUFM2n5ClujVBnaa5M
- jnYvyXbAsWNRroaaM4AWDOt/ITnmOQjRcSmfF7DXz3Fkb1BWy72GcJyKRq2TBmHmmDabttZL
- Z97tFRLdP2AdP07mhL/mbgYYd1E=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e665e22.7fb578bdd8b8-smtp-out-n02;
- Mon, 09 Mar 2020 15:17:54 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id B00E6C4478C; Mon,  9 Mar 2020 15:17:54 +0000 (UTC)
-Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C5B2CC432C2;
-        Mon,  9 Mar 2020 15:17:51 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C5B2CC432C2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     linux-arm-msm@vger.kernel.org
-Cc:     smasetty@codeaurora.org, John Stultz <john.stultz@linaro.org>,
-        Sean Paul <sean@poorly.run>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Brian Masney <masneyb@onstation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Rob Clark <robdclark@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        freedreno@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>
-Subject: [PATCH v5 1/2] dt-bindings: display: msm: Convert GMU bindings to YAML
-Date:   Mon,  9 Mar 2020 09:17:45 -0600
-Message-Id: <1583767066-1555-2-git-send-email-jcrouse@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1583767066-1555-1-git-send-email-jcrouse@codeaurora.org>
-References: <1583767066-1555-1-git-send-email-jcrouse@codeaurora.org>
+        Mon, 9 Mar 2020 11:19:13 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id 5C3C9220BD;
+        Mon,  9 Mar 2020 11:19:12 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Mon, 09 Mar 2020 11:19:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=/JPDb7JZb245BQ0JKZ050bxEsfb
+        WQHkBiU4vwt4NoJw=; b=L5c2JhCCO8JJzN92UkJlQp988apYtWXsX/tztvNhJrR
+        CHAQCi7ObXXy1M6BR58JMZOf4qP+wGgdDxiTYbDEdZwcI/Zpjneai63YqKDD126K
+        CS4Q2xOT7MDipse+GqpOon4bcW9nVRojs69jI6SfjP+wssNM29Cso18S8/N44fgi
+        pWBqdK+/s3l3v0yBWbrtbOXkGxw8sMAlx5vsHWaUp4+X6iLgnyVT7GYeu0mxnSvm
+        NgpKyf6MBtwPv3eKhpIygCBVCnBhaY9SCEUaQr2fElbKY5rc+LXgkx3Q4dNk1xiD
+        6nDM46gSfRrq+NUxPlSXFXOYggH962/dRs7MH8ia2SA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=/JPDb7
+        JZb245BQ0JKZ050bxEsfbWQHkBiU4vwt4NoJw=; b=MSgwcIOhE/mkeOpm4c4bel
+        LDLDuqLcQwGduHHp4XFaV0Cv2mb5jVG3GrkMRdZiRdmW9wba+X1344gxIP4cv8Kl
+        jetUfJI7WK4BJucfsg7mjOb7CPhSRRQgog/dxXvyftxYN/HlV07V8+IN4PDXAjsZ
+        5j7DYdzDo1EN5cq+4mSk63XMiCopklooadN7KFNGdD3Szgb5by4GTHt2JaBr9jyN
+        FJSl5Sal7d8ydMzf/EjP2XeR6qHqgweamkXFNG/tDWTFDnlbDTug6jPuXgZmgfjO
+        +Gd4SlGbA/dPzZHqiHQX7HoPiEE89239RxOpptoGnn+3P5WbawRmeKXERIs82vyA
+        ==
+X-ME-Sender: <xms:bl5mXlXNnGXqAx1aTjZD4juTlwHGcpVCqEQwyRSLToVUuYfOj6IF6w>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedruddukedgjeeiucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuffhomhgrih
+    hnpehinhhfrhgruggvrggurdhorhhgnecukfhppeeltddrkeelrdeikedrjeeinecuvehl
+    uhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvse
+    gtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:bl5mXkEJIASZKCuUPId8-MJ8b2AEkehqodn2I41oagWxX6ko4x_LjA>
+    <xmx:bl5mXoNy3OWQ3pmDMwbrKw6Hr3XBs5fmiTQN1d5we4ZA_1tJiJ0rZA>
+    <xmx:bl5mXoW_6OnAHq-ijqYQu3d-bzgxMKSRYTjFkcwlZjxBPe4cEgmrPw>
+    <xmx:cF5mXvv3eVSsBzst4zFDuUJQ0lq36jWOyfBpEVp7yUEzIA8SDlgJOA>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 65C6A3280065;
+        Mon,  9 Mar 2020 11:19:10 -0400 (EDT)
+Date:   Mon, 9 Mar 2020 16:19:09 +0100
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Jernej Skrabec <jernej.skrabec@siol.net>
+Cc:     wens@csie.org, robh+dt@kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+Subject: Re: [PATCH 0/2] arm64: dts: allwinner: h6: orangepi-one-plus:
+ ethernet and HDMI
+Message-ID: <20200309151909.qkcybvtqhltjx5pf@gilmour.lan>
+References: <20200308164840.110747-1-jernej.skrabec@siol.net>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="3gs76qg3etkdsmvv"
+Content-Disposition: inline
+In-Reply-To: <20200308164840.110747-1-jernej.skrabec@siol.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert display/msm/gmu.txt to display/msm/gmu.yaml and remove the old
-text bindings. 
 
-Acked-by: Sam Ravnborg <sam@ravnborg.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
----
+--3gs76qg3etkdsmvv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
- .../devicetree/bindings/display/msm/gmu.txt        |  65 -----------
- .../devicetree/bindings/display/msm/gmu.yaml       | 123 +++++++++++++++++++++
- 2 files changed, 123 insertions(+), 65 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/display/msm/gmu.txt
- create mode 100644 Documentation/devicetree/bindings/display/msm/gmu.yaml
+On Sun, Mar 08, 2020 at 05:48:38PM +0100, Jernej Skrabec wrote:
+> This short series enables ethernet on OrangePi One Plus and HDMI output on
+> OrangePi One Plus and OrangePi Lite 2 (shared DTSI).
+>
+> Note that patch 2 (HDMI) is based on top of:
+> http://lists.infradead.org/pipermail/linux-arm-kernel/2020-March/716661.html
 
-diff --git a/Documentation/devicetree/bindings/display/msm/gmu.txt b/Documentation/devicetree/bindings/display/msm/gmu.txt
-deleted file mode 100644
-index 90af5b0..0000000
---- a/Documentation/devicetree/bindings/display/msm/gmu.txt
-+++ /dev/null
-@@ -1,65 +0,0 @@
--Qualcomm adreno/snapdragon GMU (Graphics management unit)
--
--The GMU is a programmable power controller for the GPU. the CPU controls the
--GMU which in turn handles power controls for the GPU.
--
--Required properties:
--- compatible: "qcom,adreno-gmu-XYZ.W", "qcom,adreno-gmu"
--    for example: "qcom,adreno-gmu-630.2", "qcom,adreno-gmu"
--  Note that you need to list the less specific "qcom,adreno-gmu"
--  for generic matches and the more specific identifier to identify
--  the specific device.
--- reg: Physical base address and length of the GMU registers.
--- reg-names: Matching names for the register regions
--  * "gmu"
--  * "gmu_pdc"
--  * "gmu_pdc_seg"
--- interrupts: The interrupt signals from the GMU.
--- interrupt-names: Matching names for the interrupts
--  * "hfi"
--  * "gmu"
--- clocks: phandles to the device clocks
--- clock-names: Matching names for the clocks
--   * "gmu"
--   * "cxo"
--   * "axi"
--   * "mnoc"
--- power-domains: should be:
--	<&clock_gpucc GPU_CX_GDSC>
--	<&clock_gpucc GPU_GX_GDSC>
--- power-domain-names: Matching names for the power domains
--- iommus: phandle to the adreno iommu
--- operating-points-v2: phandle to the OPP operating points
--
--Example:
--
--/ {
--	...
--
--	gmu: gmu@506a000 {
--		compatible="qcom,adreno-gmu-630.2", "qcom,adreno-gmu";
--
--		reg = <0x506a000 0x30000>,
--			<0xb280000 0x10000>,
--			<0xb480000 0x10000>;
--		reg-names = "gmu", "gmu_pdc", "gmu_pdc_seq";
--
--		interrupts = <GIC_SPI 304 IRQ_TYPE_LEVEL_HIGH>,
--		     <GIC_SPI 305 IRQ_TYPE_LEVEL_HIGH>;
--		interrupt-names = "hfi", "gmu";
--
--		clocks = <&gpucc GPU_CC_CX_GMU_CLK>,
--			<&gpucc GPU_CC_CXO_CLK>,
--			<&gcc GCC_DDRSS_GPU_AXI_CLK>,
--			<&gcc GCC_GPU_MEMNOC_GFX_CLK>;
--		clock-names = "gmu", "cxo", "axi", "memnoc";
--
--		power-domains = <&gpucc GPU_CX_GDSC>,
--				<&gpucc GPU_GX_GDSC>;
--		power-domain-names = "cx", "gx";
--
--		iommus = <&adreno_smmu 5>;
--
--		operating-points-v2 = <&gmu_opp_table>;
--	};
--};
-diff --git a/Documentation/devicetree/bindings/display/msm/gmu.yaml b/Documentation/devicetree/bindings/display/msm/gmu.yaml
-new file mode 100644
-index 0000000..0b8736a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/msm/gmu.yaml
-@@ -0,0 +1,123 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+# Copyright 2019-2020, The Linux Foundation, All Rights Reserved
-+%YAML 1.2
-+---
-+
-+$id: "http://devicetree.org/schemas/display/msm/gmu.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: Devicetree bindings for the GMU attached to certain Adreno GPUs
-+
-+maintainers:
-+  - Rob Clark <robdclark@gmail.com>
-+
-+description: |
-+  These bindings describe the Graphics Management Unit (GMU) that is attached
-+  to members of the Adreno A6xx GPU family. The GMU provides on-device power
-+  management and support to improve power efficiency and reduce the load on
-+  the CPU.
-+
-+properties:
-+  compatible:
-+    items:
-+      - enum:
-+          - qcom,adreno-gmu-630.2
-+      - const: qcom,adreno-gmu
-+
-+  reg:
-+    items:
-+      - description: Core GMU registers
-+      - description: GMU PDC registers
-+      - description: GMU PDC sequence registers
-+
-+  reg-names:
-+    items:
-+      - const: gmu
-+      - const: gmu_pdc
-+      - const: gmu_pdc_seq
-+
-+  clocks:
-+    items:
-+     - description: GMU clock
-+     - description: GPU CX clock
-+     - description: GPU AXI clock
-+     - description: GPU MEMNOC clock
-+
-+  clock-names:
-+    items:
-+      - const: gmu
-+      - const: cxo
-+      - const: axi
-+      - const: memnoc
-+
-+  interrupts:
-+    items:
-+     - description: GMU HFI interrupt
-+     - description: GMU interrupt
-+
-+
-+  interrupt-names:
-+    items:
-+      - const: hfi
-+      - const: gmu
-+
-+  power-domains:
-+     items:
-+       - description: CX power domain
-+       - description: GX power domain
-+
-+  power-domain-names:
-+     items:
-+       - const: cx
-+       - const: gx
-+
-+  iommus:
-+    maxItems: 1
-+
-+  operating-points-v2: true
-+
-+required:
-+  - compatible
-+  - reg
-+  - reg-names
-+  - clocks
-+  - clock-names
-+  - interrupts
-+  - interrupt-names
-+  - power-domains
-+  - power-domain-names
-+  - iommus
-+  - operating-points-v2
-+
-+examples:
-+ - |
-+   #include <dt-bindings/clock/qcom,gpucc-sdm845.h>
-+   #include <dt-bindings/clock/qcom,gcc-sdm845.h>
-+   #include <dt-bindings/interrupt-controller/irq.h>
-+   #include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+   gmu: gmu@506a000 {
-+        compatible="qcom,adreno-gmu-630.2", "qcom,adreno-gmu";
-+
-+        reg = <0x506a000 0x30000>,
-+              <0xb280000 0x10000>,
-+              <0xb480000 0x10000>;
-+        reg-names = "gmu", "gmu_pdc", "gmu_pdc_seq";
-+
-+        clocks = <&gpucc GPU_CC_CX_GMU_CLK>,
-+                 <&gpucc GPU_CC_CXO_CLK>,
-+                 <&gcc GCC_DDRSS_GPU_AXI_CLK>,
-+                 <&gcc GCC_GPU_MEMNOC_GFX_CLK>;
-+        clock-names = "gmu", "cxo", "axi", "memnoc";
-+
-+        interrupts = <GIC_SPI 304 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 305 IRQ_TYPE_LEVEL_HIGH>;
-+        interrupt-names = "hfi", "gmu";
-+
-+        power-domains = <&gpucc GPU_CX_GDSC>,
-+                        <&gpucc GPU_GX_GDSC>;
-+        power-domain-names = "cx", "gx";
-+
-+        iommus = <&adreno_smmu 5>;
-+        operating-points-v2 = <&gmu_opp_table>;
-+   };
--- 
-2.7.4
+Applie,d thanks
+
+Maxime
+
+--3gs76qg3etkdsmvv
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXmZebQAKCRDj7w1vZxhR
+xVcCAP9k/liklt0k0GvaDRpxWuOHqUvfue+5kYy/cdlvN/wBIwEAyIyQ0RG1R3DX
+9zu2J6e9HAhBaxRD1aSRE6arYFJ4cwY=
+=xynm
+-----END PGP SIGNATURE-----
+
+--3gs76qg3etkdsmvv--
