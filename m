@@ -2,140 +2,138 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A1A4C10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:05:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEDDCC18E5A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:05:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43375215A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:05:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAC68215A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:05:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="nM5LyMf+"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="EXbeZFXA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727398AbgCISFH (ORCPT
+        id S1727411AbgCISFM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 14:05:07 -0400
-Received: from gateway32.websitewelcome.com ([192.185.145.107]:31449 "EHLO
-        gateway32.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726353AbgCISFG (ORCPT
+        Mon, 9 Mar 2020 14:05:12 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:43435 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726353AbgCISFM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 14:05:06 -0400
-Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
-        by gateway32.websitewelcome.com (Postfix) with ESMTP id 84301984A6
-        for <linux-kernel@vger.kernel.org>; Mon,  9 Mar 2020 13:05:05 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id BMm1jL3Ow8vkBBMm1jDv4u; Mon, 09 Mar 2020 13:05:05 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=M/+spNsZHyAg8E48D01jPchiqr2VpON3QaUIuLiE4zI=; b=nM5LyMf+ug8N0+yKKxSEt0RQFL
-        yXvC+Ggrf0AssBa4PKtsX5zlzfSmlVZWeGIRVws/AdO6jkACKRjzCYJaVYgtdnYcWrCIMAep9T8X/
-        Fiqi4MBuKb3qgZuWMBUcT5ithvxtb5qt05qjwyM1sgwG5VhHYlllU1o2IRGeHh3kJKxrDPpuqWp9K
-        lMRbNu4U059rr9yvP7gmuEtOKqrbZi4afar1Mpk1Xi/vUPJIlH2DH8FX1QNqXsh17b/LweyBXF3ar
-        A081rcBuXV5DOte4jBE5L9iTIh7yZHMzskJiPNaye9VCR8CXAp3WQC32lmpnWuTrj+BpCOXEB+yoM
-        UtHGmRAw==;
-Received: from [201.162.240.150] (port=3342 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1jBMlw-004D0Z-Ry; Mon, 09 Mar 2020 13:05:01 -0500
-Date:   Mon, 9 Mar 2020 13:08:13 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Theodore Ts'o <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>
-Cc:     linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] ext4: xattr.h: Replace zero-length array with
- flexible-array member
-Message-ID: <20200309180813.GA3347@embeddedor>
+        Mon, 9 Mar 2020 14:05:12 -0400
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id A755823EDA;
+        Mon,  9 Mar 2020 19:05:09 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1583777109;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=7YTstUEAHOImHVubDPl/PQ3nYvKS6CDicl+KJS2YJ6Y=;
+        b=EXbeZFXASRSaA835mHDnjE2AfBIpT2EYd4khZ1LQfA8ZnK7kEsPKkPpwAmMYyKO7UByG/X
+        A410+PBrCP4qvhLHFcPMTfVWwxaD1FqBRHUWzay2+inMDYc+QqjdjT0CTdHTTZqqGfsqlf
+        Hm6SOmKPKrsJfDlWPSTi6jMt51kFSPM=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.162.240.150
-X-Source-L: No
-X-Exim-ID: 1jBMlw-004D0Z-Ry
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [201.162.240.150]:3342
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 7
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 09 Mar 2020 19:05:09 +0100
+From:   Michael Walle <michael@walle.cc>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     broonie@kernel.org, linux-spi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, shawnguo@kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, eha@deif.com, angelo@sysam.it,
+        andrew.smirnov@gmail.com, gustavo@embeddedor.com, weic@nvidia.com,
+        mhosny@nvidia.com, peng.ma@nxp.com
+Subject: Re: [PATCH 1/6] spi: spi-fsl-dspi: Don't access reserved fields in
+ SPI_MCR
+In-Reply-To: <20200309145624.10026-2-olteanv@gmail.com>
+References: <20200309145624.10026-1-olteanv@gmail.com>
+ <20200309145624.10026-2-olteanv@gmail.com>
+Message-ID: <c35b3c34123b43b26204a2cf360e7ec1@walle.cc>
+X-Sender: michael@walle.cc
+User-Agent: Roundcube Webmail/1.3.10
+X-Spamd-Bar: +
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: A755823EDA
+X-Spamd-Result: default: False [1.40 / 15.00];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         FREEMAIL_ENVRCPT(0.00)[gmail.com];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         TAGGED_RCPT(0.00)[dt];
+         MIME_GOOD(-0.10)[text/plain];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_TWELVE(0.00)[15];
+         NEURAL_HAM(-0.00)[-0.374];
+         FREEMAIL_TO(0.00)[gmail.com];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         FREEMAIL_CC(0.00)[kernel.org,vger.kernel.org,arm.com,deif.com,sysam.it,gmail.com,embeddedor.com,nvidia.com,nxp.com];
+         MID_RHS_MATCH_FROM(0.00)[];
+         SUSPICIOUS_RECIPS(1.50)[]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
+Am 2020-03-09 15:56, schrieb Vladimir Oltean:
+> From: Vladimir Oltean <vladimir.oltean@nxp.com>
+> 
+> The SPI_MCR_PCSIS macro assumes that the controller has a number of 
+> chip
+> select signals equal to 6. That is not always the case, but actually is
+> described through the driver-specific " signals equal to 6. That is not
+> always the case, but actually is described through the driver-specific
+> "spi-num-chipselects" device tree binding.
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
+Repeated sentence? Was this your intention?
 
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertently introduced[3] to the codebase from now on.
+-michael
 
-Also, notice that, dynamic memory allocations won't be affected by
-this change:
-
-"Flexible array members have incomplete type, and so the sizeof operator
-may not be applied. As a quirk of the original implementation of
-zero-length arrays, sizeof evaluates to zero."[1]
-
-This issue was found with the help of Coccinelle.
-
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- fs/ext4/xattr.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/fs/ext4/xattr.h b/fs/ext4/xattr.h
-index f39cad2abe2a..ffe21ac77f78 100644
---- a/fs/ext4/xattr.h
-+++ b/fs/ext4/xattr.h
-@@ -48,7 +48,7 @@ struct ext4_xattr_entry {
- 	__le32	e_value_inum;	/* inode in which the value is stored */
- 	__le32	e_value_size;	/* size of attribute value */
- 	__le32	e_hash;		/* hash value of name and value */
--	char	e_name[0];	/* attribute name */
-+	char	e_name[];	/* attribute name */
- };
- 
- #define EXT4_XATTR_PAD_BITS		2
-@@ -118,7 +118,7 @@ struct ext4_xattr_ibody_find {
- 
- struct ext4_xattr_inode_array {
- 	unsigned int count;		/* # of used items in the array */
--	struct inode *inodes[0];
-+	struct inode *inodes[];
- };
- 
- extern const struct xattr_handler ext4_xattr_user_handler;
--- 
-2.25.0
-
+> LS1028A for example only has
+> 4 chip selects.
+> 
+> Don't write to the upper bits of the PCSIS field, which are reserved in
+> the reference manual.
+> 
+> Fixes: 349ad66c0ab0 ("spi:Add Freescale DSPI driver for Vybrid VF610 
+> platform")
+> Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+> ---
+>  drivers/spi/spi-fsl-dspi.c | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
+> index 0683a3fbd48c..0ce26c1cbf62 100644
+> --- a/drivers/spi/spi-fsl-dspi.c
+> +++ b/drivers/spi/spi-fsl-dspi.c
+> @@ -22,7 +22,7 @@
+> 
+>  #define SPI_MCR				0x00
+>  #define SPI_MCR_MASTER			BIT(31)
+> -#define SPI_MCR_PCSIS			(0x3F << 16)
+> +#define SPI_MCR_PCSIS(x)		((x) << 16)
+>  #define SPI_MCR_CLR_TXF			BIT(11)
+>  #define SPI_MCR_CLR_RXF			BIT(10)
+>  #define SPI_MCR_XSPI			BIT(3)
+> @@ -1197,7 +1197,10 @@ static const struct regmap_config
+> dspi_xspi_regmap_config[] = {
+> 
+>  static void dspi_init(struct fsl_dspi *dspi)
+>  {
+> -	unsigned int mcr = SPI_MCR_PCSIS;
+> +	unsigned int mcr;
+> +
+> +	/* Set idle states for all chip select signals to high */
+> +	mcr = SPI_MCR_PCSIS(GENMASK(dspi->ctlr->num_chipselect - 1, 0));
+> 
+>  	if (dspi->devtype_data->trans_mode == DSPI_XSPI_MODE)
+>  		mcr |= SPI_MCR_XSPI;
