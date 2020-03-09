@@ -2,167 +2,137 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DC82C18E5A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:03:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D576C18E5A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:06:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C8E721775
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:03:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dICsTIJb"
+	by mail.kernel.org (Postfix) with ESMTP id 23F0D20674
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:06:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583744796;
+	bh=M+pCAFlfSiu03kM4uq2mrW9LaXcgseVHwHVlacuwWfg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=e7AQw6vkT4wIAC1R/MzhQVuGBkRaGUzbA4EYaHQW7Wx2SiO+s2vA2fHLWpth7fD0q
+	 mWEKx8ciKHDdneQay+D3ijbVAv59k0VZRu3F/CW9OMdp4CpvEbYAeKuxlNpJApDSDN
+	 joyGq0VYWHk9iQPix9gOe/XrWFsb5Tr6mYmqoKak=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726466AbgCIJD2 (ORCPT
+        id S1726475AbgCIJGf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 05:03:28 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:38241 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725796AbgCIJD1 (ORCPT
+        Mon, 9 Mar 2020 05:06:35 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:46005 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726389AbgCIJGe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 05:03:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583744606;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=mRmK/nwQrIpm+lcnqiWE9+zipsLilOS6a0xqccKP/9Q=;
-        b=dICsTIJbBy3XcFOjIukAab40g8g9NHb3Cqg25ifNy1omTqk3nKQo3bbFNEQSJdNMIHFBmU
-        yV/ezmR1FC9x/uFFm3qHhaMwnypgKkTig4ESHO2KqI3r7InylN7aywZ/PoIh4NPH5D9o3s
-        MXAw7NGdZvfyDxSvVw4hfFW8r7q3uuI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-93-IkvmlGpvNpGz5ls-G8Ei2Q-1; Mon, 09 Mar 2020 05:03:23 -0400
-X-MC-Unique: IkvmlGpvNpGz5ls-G8Ei2Q-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 14968800D48;
-        Mon,  9 Mar 2020 09:03:21 +0000 (UTC)
-Received: from [10.36.118.32] (unknown [10.36.118.32])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C268A5D9C5;
-        Mon,  9 Mar 2020 09:03:15 +0000 (UTC)
-Subject: Re: [PATCH v1 3/3] virtio-balloon: Switch back to OOM handler for
- VIRTIO_BALLOON_F_DEFLATE_ON_OOM
-To:     Tyler Sanderson <tysand@google.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        virtualization@lists.linux-foundation.org,
-        Wei Wang <wei.w.wang@intel.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Mon, 9 Mar 2020 05:06:34 -0400
+Received: by mail-wr1-f66.google.com with SMTP id m9so976503wro.12
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 02:06:32 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=advhTaiPpBd3xMDHQ5EkNV5OtDpYm/5MCYtszs2MKcE=;
+        b=GX82LCvTQ7q2vFkl1oLBnUSER3OHI0vCscpUfSRcj5g4pJufqar7rcrwEviRfyqoqQ
+         vJ5QLMdy7mCR+XimEfritT7xZL23chcQabbs4LQoOr5bY0nCEO4cZlKDTF5ThAw8nWNk
+         uQYWo9ESv03pOFZFR1trRF87unLVJtl9hlg+3ZkN05Ts3uAd4L6ZY+LwVfBpD7ozrXX1
+         Kkr72/w9sAf2NfIgDvftKXBaZQFJDei/scYsdXDstSyGfHmDiVOP1zsTwalyOb01AMwl
+         MqHuHQzdprZV7XS92KLdWbTPh+g7iRIDN6DFi/1dePNCGnZ7A9EPzw/bCaOYxIr18w5q
+         mihQ==
+X-Gm-Message-State: ANhLgQ2xjN7S+Vh3oE9B/yOQadRS+nh2wkp8d38d17o/ramLXew9/1dU
+        kQwk7tw4jVIPSi1ZD1kIeJs=
+X-Google-Smtp-Source: ADFU+vuwHtxz+a1BYeGUzK3Wpd1FIviWQ7fbUSfjosvB/Cg4HKU8TP5LGAhdAO8Dnz5SL4yn5zBdKg==
+X-Received: by 2002:adf:e911:: with SMTP id f17mr19002170wrm.87.1583744792202;
+        Mon, 09 Mar 2020 02:06:32 -0700 (PDT)
+Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
+        by smtp.gmail.com with ESMTPSA id q72sm6102065wme.31.2020.03.09.02.06.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Mar 2020 02:06:31 -0700 (PDT)
+Date:   Mon, 9 Mar 2020 10:06:30 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     Cannon Matthews <cannonmatthews@google.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Matthew Wilcox <willy@infradead.org>,
         David Rientjes <rientjes@google.com>,
-        Nadav Amit <namit@vmware.com>, Michal Hocko <mhocko@kernel.org>
-References: <20200205163402.42627-1-david@redhat.com>
- <20200205163402.42627-4-david@redhat.com>
- <f31eff75-b328-de41-c2cc-e55471aa27d8@redhat.com>
- <20200216044641-mutt-send-email-mst@kernel.org>
- <CAJuQAmqmOQMx3A8g81pnFLyTZ5E5joSCEGG5fBwPOBH7crdi2w@mail.gmail.com>
- <CAJuQAmphPcfew1v_EOgAdSFiprzjiZjmOf3iJDmFX0gD6b9TYQ@mail.gmail.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <86453fed-1f39-dfcc-33c6-54241478e2ab@redhat.com>
-Date:   Mon, 9 Mar 2020 10:03:14 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Greg Thelen <gthelen@google.com>,
+        Salman Qazi <sqazi@google.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, ak@linux.intel.com, x86@kernel.org
+Subject: Re: [PATCH] mm: clear 1G pages with streaming stores on x86
+Message-ID: <20200309090630.GC8447@dhcp22.suse.cz>
+References: <20200307010353.172991-1-cannonmatthews@google.com>
+ <20200309000820.f37opzmppm67g6et@box>
 MIME-Version: 1.0
-In-Reply-To: <CAJuQAmphPcfew1v_EOgAdSFiprzjiZjmOf3iJDmFX0gD6b9TYQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200309000820.f37opzmppm67g6et@box>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08.03.20 05:47, Tyler Sanderson wrote:
-> Tested-by: Tyler Sanderson <tysand@google.com>
+On Mon 09-03-20 03:08:20, Kirill A. Shutemov wrote:
+> On Fri, Mar 06, 2020 at 05:03:53PM -0800, Cannon Matthews wrote:
+> > Reimplement clear_gigantic_page() to clear gigabytes pages using the
+> > non-temporal streaming store instructions that bypass the cache
+> > (movnti), since an entire 1GiB region will not fit in the cache anyway.
+> > 
+> > Doing an mlock() on a 512GiB 1G-hugetlb region previously would take on
+> > average 134 seconds, about 260ms/GiB which is quite slow. Using `movnti`
+> > and optimizing the control flow over the constituent small pages, this
+> > can be improved roughly by a factor of 3-4x, with the 512GiB mlock()
+> > taking only 34 seconds on average, or 67ms/GiB.
+> > 
+> > The assembly code for the __clear_page_nt routine is more or less
+> > taken directly from the output of gcc with -O3 for this function with
+> > some tweaks to support arbitrary sizes and moving memory barriers:
+> > 
+> > void clear_page_nt_64i (void *page)
+> > {
+> >   for (int i = 0; i < GiB /sizeof(long long int); ++i)
+> >     {
+> >       _mm_stream_si64 (((long long int*)page) + i, 0);
+> >     }
+> >   sfence();
+> > }
+> > 
+> > Tested:
+> > 	Time to `mlock()` a 512GiB region on broadwell CPU
+> > 				AVG time (s)	% imp.	ms/page
+> > 	clear_page_erms		133.584		-	261
+> > 	clear_page_nt		34.154		74.43%	67
 > 
-> Test setup: VM with 16 CPU, 64GB RAM. Running Debian 10. We have a 42
-> GB file full of random bytes that we continually cat to /dev/null.
-> This fills the page cache as the file is read. Meanwhile we trigger
-> the balloon to inflate, with a target size of 53 GB. This setup causes
-> the balloon inflation to pressure the page cache as the page cache is
-> also trying to grow. Afterwards we shrink the balloon back to zero (so
-> total deflate = total inflate).
+> Some macrobenchmark would be great too.
 > 
-> Without patch (kernel 4.19.0-5):
-> Inflation never reaches the target until we stop the "cat file >
-> /dev/null" process. Total inflation time was 542 seconds. The longest
-> period that made no net forward progress was 315 seconds (see attached
-> graph).
-> Result of "grep balloon /proc/vmstat" after the test:
-> balloon_inflate 154828377
-> balloon_deflate 154828377
+> > An earlier version of this code was sent as an RFC patch ~July 2018
+> > https://patchwork.kernel.org/patch/10543193/ but never merged.
 > 
-> With patch (kernel 5.6.0-rc4+):
-> Total inflation duration was 63 seconds. No deflate-queue activity
-> occurs when pressuring the page-cache.
-> Result of "grep balloon /proc/vmstat" after the test:
-> balloon_inflate 12968539
-> balloon_deflate 12968539
+> Andi and I tried to use MOVNTI for large/gigantic page clearing back in
+> 2012[1]. Maybe it can be useful.
 > 
-> Conclusion: This patch fixes the issue. In the test it reduced
-> inflate/deflate activity by 12x, and reduced inflation time by 8.6x.
-> But more importantly, if we hadn't killed the "grep balloon
-> /proc/vmstat" process then, without the patch, the inflation process
-> would never reach the target.
+> That patchset is somewhat more complex trying to keep the memory around
+> the fault address hot in cache. In theory it should help to reduce latency
+> on the first access to the memory.
 > 
-> Attached is a png of a graph showing the problematic behavior without
-> this patch. It shows deflate-queue activity increasing linearly while
-> balloon size stays constant over the course of more than 8 minutes of
-> the test.
+> I was not able to get convincing numbers back then for the hardware of the
+> time. Maybe it's better now.
+> 
+> https://lore.kernel.org/r/1345470757-12005-1-git-send-email-kirill.shutemov@linux.intel.com
 
-Thanks a lot for the extended test!
+Thanks for the reminder. I've had only a very vague recollection. Your
+series had a much wider scope indeed. Since then we have gained
+process_huge_page which tries to optimize normal huge pages.
 
+Gigantic huge pages are a bit different. They are much less dynamic from
+the usage POV in my experience. Micro-optimizations for the first access
+tends to not matter at all as it is usually pre-allocation scenario. On
+the other hand, speeding up the initialization sounds like a good thing
+in general. It will be a single time benefit but if the additional code
+is not hard to maintain then I would be inclined to take it even with
+"artificial" numbers state above. There really shouldn't be other downsides
+except for the code maintenance, right?
 -- 
-Thanks,
-
-David / dhildenb
-
+Michal Hocko
+SUSE Labs
