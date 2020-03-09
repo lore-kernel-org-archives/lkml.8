@@ -2,83 +2,186 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FD68C10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 14:04:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6536C10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 14:05:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33F1D20848
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 14:04:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B51D120848
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 14:05:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="Xl4UNnGt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726772AbgCIOEt (ORCPT
+        id S1726677AbgCIOFB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 10:04:49 -0400
-Received: from mail.manjaro.org ([176.9.38.148]:60532 "EHLO mail.manjaro.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726275AbgCIOEs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 10:04:48 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.manjaro.org (Postfix) with ESMTP id 37BE937022D3;
-        Mon,  9 Mar 2020 15:04:47 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at manjaro.org
-Received: from mail.manjaro.org ([127.0.0.1])
-        by localhost (manjaro.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id l9v5AQ1gEZNV; Mon,  9 Mar 2020 15:04:45 +0100 (CET)
-Subject: Re: [RFC PATCH 0/1] Add generic inverted led triggers
-To:     Pavel Machek <pavel@ucw.cz>, Tobias Schramm <t.schramm@manjaro.org>
-Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Dan Murphy <dmurphy@ti.com>, linux-leds@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200308142722.1199260-1-t.schramm@manjaro.org>
- <20200308212649.GA31247@amd>
-From:   Tobias Schramm <t.schramm@manjaro.org>
-Message-ID: <10a57ef4-e8a3-2aea-ee28-2c3bb187c17a@manjaro.org>
-Date:   Mon, 9 Mar 2020 15:05:49 +0100
+        Mon, 9 Mar 2020 10:05:01 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:49144 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726275AbgCIOFB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 10:05:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=d26Ye+vMRYj5g5ykorwl/W5eqkd9joFbNEWspN4ENAs=; b=Xl4UNnGtpQtUvm2BgVXiCnesn
+        7sfNE6HTuF5M1sEiacWYVtLUj7JcKknJbqaOlmfa4Uc1uchICRc2UPtoZKgJ0Z4TIX9KenW7nmUtk
+        jmKticzXy8ktdt2H4UZBTcBKr1oqKdgzkaVXoyOHbYCTnXmzv7j7ETY8ebK4+jq9qBgW1p3TbEVdp
+        iMM3SFdsMiP7+ayIeGrD3Lh5qVn0R0EmfK9Ubo8B0qSyLSX6K+7nW1r6FIzw6VM/1qJeGmbKeg0bK
+        f1I3tsqkvGx8S3xga4Nb3k3LYM0BLa3gIM5rWVU8XT09RkrZFk5zOv1Eqy34iooGn9DOWutdB77v4
+        BXyB9MVUQ==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:50736)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jBJ1T-0007Ja-5X; Mon, 09 Mar 2020 14:04:47 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jBJ1L-0003Qb-Vi; Mon, 09 Mar 2020 14:04:40 +0000
+Date:   Mon, 9 Mar 2020 14:04:39 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Nishanth Menon <nm@ti.com>,
+        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+        Tero Kristo <t-kristo@ti.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Rik van Riel <riel@surriel.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Dave Chinner <david@fromorbit.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Yafang Shao <laoar.shao@gmail.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        kernel-team@fb.com, Kishon Vijay Abraham I <kishon@ti.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>
+Subject: Re: [PATCH] vfs: keep inodes with page cache off the inode shrinker
+ LRU
+Message-ID: <20200309140439.GL25745@shell.armlinux.org.uk>
+References: <CAHk-=wg1ZDADD3Vuw_sXhmBOrQ2xsp8YWxmtWiA6vG0RT-ZQ+A@mail.gmail.com>
+ <20200212085004.GL25745@shell.armlinux.org.uk>
+ <CAK8P3a3pzgVvwyDhHPoiSOqyv+h_ixbsdWMqG3sELenRJqFuew@mail.gmail.com>
+ <671b05bc-7237-7422-3ece-f1a4a3652c92@oracle.com>
+ <CAK8P3a13jGdjVW1TzvCKjRBg-Yscs_WB2K1kw9AzRfn3G9a=-Q@mail.gmail.com>
+ <7c4c1459-60d5-24c8-6eb9-da299ead99ea@oracle.com>
+ <20200306203439.peytghdqragjfhdx@kahuna>
+ <CAK8P3a0Gyqu7kzO1JF=j9=jJ0T5ut=hbKepvke-2bppuPNKTuQ@mail.gmail.com>
+ <20200308141923.GI25745@shell.armlinux.org.uk>
+ <CAK8P3a2Gz5H_fcNtW0yCCjO1cRNa0nyd568sDYR0nNphu49YqQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200308212649.GA31247@amd>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US-large
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a2Gz5H_fcNtW0yCCjO1cRNa0nyd568sDYR0nNphu49YqQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Pavel,
-
-thanks for the feedback.
-
-> Not a big fan (sorry).
+On Mon, Mar 09, 2020 at 02:33:26PM +0100, Arnd Bergmann wrote:
+> On Sun, Mar 8, 2020 at 3:20 PM Russell King - ARM Linux admin
+> <linux@armlinux.org.uk> wrote:
+> > On Sun, Mar 08, 2020 at 11:58:52AM +0100, Arnd Bergmann wrote:
+> > > On Fri, Mar 6, 2020 at 9:36 PM Nishanth Menon <nm@ti.com> wrote:
+> > > > On 13:11-20200226, santosh.shilimkar@oracle.com wrote:
+> >
+> > > - extend zswap to use all the available high memory for swap space
+> > >   when highmem is disabled.
+> >
+> > I don't think that's a good idea.  Running debian stable kernels on my
+> > 8GB laptop, I have problems when leaving firefox running long before
+> > even half the 16GB of swap gets consumed - the entire machine slows
+> > down very quickly when it starts swapping more than about 2 or so GB.
+> > It seems either the kernel has become quite bad at selecting pages to
+> > evict.
+> >
+> > It gets to the point where any git operation has a battle to fight
+> > for RAM, despite not touching anything else other than git.
+> >
+> > The behaviour is much like firefox is locking memory into core, but
+> > that doesn't seem to be what's actually going on.  I've never really
+> > got to the bottom of it though.
+> >
+> > This is with 64-bit kernel and userspace.
 > 
-> We have already _way_ too many triggers, we don't want to have twice
-> that much.
+> I agree there is something going wrong on your machine, but I
+> don't really see how that relates to my suggestion.
 
-True. Doubling the amount of triggers is probably not a good idea.
+You are suggesting for a 4GB machine to use 2GB of RAM for normal
+usage via an optimised virtual space layout, and 2GB of RAM for
+swap using ZSWAP, rather than having 4GB of RAM available via the
+present highmem / lowmem system.
 
+I'm saying that is quite risky given the behaviours I'm seeing,
+where modern Linux seems to be struggling to work out what pages
+it should be evicting.
+
+I think Linux performs way better when it doesn't have to use
+swap.
+
+> > So, I'd suggest that trading off RAM available through highmem for VM
+> > space available through zswap is likely a bad idea if you have a
+> > workload that requires 4GB of RAM on a 32-bit machine.
 > 
-> Better implementation might be to have a trigger attribute doing the
-> inverting.
-
-I agree. Especially since Jacek pointed out that some triggers do that
-already.
-
+> Aside from every workload being different, I was thinking of
+> these general observations:
 > 
-> Inverting really does not work with all the triggers; numlock-inverted
-> will not get too many
-> users. always-on-inverted... blink-inverted.... I guess it does make
-> sense for disk activity (but be warned disk can be continuously active
-> for quite a while).
-> 
-> What triggers do you think make sense inverted?
+> - If we are looking at a future without highmem, then it's better to use
+>   the extra memory for something than not using it. zswap seems like
+>   a reasonable use.
 
-I think all kinds of activity indicators (disk-activity, mmc, usb, ide,
-nand, cpu, network, etc.) make sense. Guess I'll add a flags field to
-the led_trigger struct and have an invertible flag that specifies
-whether a trigger should be invertible or not.
+I think that's still a very open question, one which hasn't been
+answered yet.
 
+> - A lot of embedded systems are configured to have no swap at all,
+>   which can be for good or not-so-good reasons. Having some
+>   swap space available often improves things, even if it comes
+>   out of RAM.
 
-Thanks again,
+How do you come up with that assertion?  What is the evidence behind
+it?
 
-Tobias
+This is kind of the crux of my point in the previous email: Linux
+with swap performs way worse for me - if I had 16GB of RAM in my
+laptop, I bet it would perform better than my current 8GB with a
+16GB swap file - where, when the swap file gets around 8GB full,
+the system as a whole starts to struggle.
+
+That's about a 50/50 split of VM space between RAM and swap.
+
+Proposing 2GB+ swap 2GB RAM would potentially place these machines
+into the same situation as my laptop, and if it also results in
+a loss of performance, we could end up with regression reports.
+
+> - A particularly important case to optimize for is 2GB of RAM with
+>   LPAE enabled. With CONFIG_VMSPLIT_2G and highmem, this
+>   leads to the paradox -ENOMEM when 256MB of highmem are
+>   full while plenty of lowmem is available. With highmem disabled,
+>   you avoid that at the cost of losing 12% of RAM.
+
+What happened to requests for memory from highmem being able to be
+sourced from lowmem if highmem wasn't available?  That used to be
+standard kernel behaviour.
+
+> - With 4GB+ of RAM and CONFIG_VMSPLIT_2G or
+>   CONFIG_VMSPLIT_3G, using gigabytes of RAM for swap
+>   space would usually be worse than highmem, but once
+>   we have VMSPLIT_4G_4G, it's the same situation as above
+>   with 6% of RAM used for zswap instead of highmem.
+
+I think the chances of that happening are very slim - I doubt there
+is the will to invest the energy amongst what is left of the 32-bit
+ARM community.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
