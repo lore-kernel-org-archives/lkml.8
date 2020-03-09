@@ -2,144 +2,173 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29956C10F25
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 06:27:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5ECEC10F25
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 06:28:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A99B2087F
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 06:27:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 962262087F
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 06:28:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="tcvkwFkf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726609AbgCIG1P (ORCPT
+        id S1726466AbgCIG2F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 02:27:15 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:3952 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726480AbgCIG1O (ORCPT
+        Mon, 9 Mar 2020 02:28:05 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:47684 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726071AbgCIG2F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 02:27:14 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0296LISJ013410
-        for <linux-kernel@vger.kernel.org>; Mon, 9 Mar 2020 02:27:13 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ym7t696rb-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 02:27:13 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <kjain@linux.ibm.com>;
-        Mon, 9 Mar 2020 06:27:11 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 9 Mar 2020 06:27:06 -0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0296R4cP52035734
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 9 Mar 2020 06:27:04 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CD6FFA405F;
-        Mon,  9 Mar 2020 06:27:04 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 00081A405C;
-        Mon,  9 Mar 2020 06:26:58 +0000 (GMT)
-Received: from localhost.localdomain.com (unknown [9.199.44.242])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon,  9 Mar 2020 06:26:58 +0000 (GMT)
-From:   Kajol Jain <kjain@linux.ibm.com>
-To:     acme@kernel.org, linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au,
-        sukadev@linux.vnet.ibm.com
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        anju@linux.vnet.ibm.com, maddy@linux.vnet.ibm.com,
-        ravi.bangoria@linux.ibm.com, peterz@infradead.org,
-        yao.jin@linux.intel.com, ak@linux.intel.com, jolsa@kernel.org,
-        kan.liang@linux.intel.com, jmario@redhat.com,
-        alexander.shishkin@linux.intel.com, mingo@kernel.org,
-        paulus@ozlabs.org, namhyung@kernel.org, mpetlan@redhat.com,
-        gregkh@linuxfoundation.org, benh@kernel.crashing.org,
-        mamatha4@linux.vnet.ibm.com, mark.rutland@arm.com,
-        tglx@linutronix.de, kjain@linux.ibm.com
-Subject: [PATCH v4 8/8] perf/tools/pmu-events/powerpc: Add hv_24x7 socket/chip level metric events
-Date:   Mon,  9 Mar 2020 11:55:52 +0530
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20200309062552.29911-1-kjain@linux.ibm.com>
-References: <20200309062552.29911-1-kjain@linux.ibm.com>
+        Mon, 9 Mar 2020 02:28:05 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1583735284; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=qy2xY/dZyMiOpfQufKuG+wtf2moSQrlU/AD39JqMigc=;
+ b=tcvkwFkfnLNgGWAL7+JjvbUqGZoNbBSaRs8wNhQaND710vNnpGe9GBfsdHoTlA6kij3Optjq
+ yFiTbtIONQb9doQAfab8LB+QxVAXBxNdzkZj9tEuQ1CuEiaqB4ljWv4clzaZeFbgCnIaZUIv
+ 6K+RfYY9OR9S0Xvt9+8yElYQES4=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e65e1e6.7efdb514f340-smtp-out-n03;
+ Mon, 09 Mar 2020 06:27:50 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 930BDC433BA; Mon,  9 Mar 2020 06:27:49 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kgunda)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id E94B8C433D2;
+        Mon,  9 Mar 2020 06:27:48 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20030906-0008-0000-0000-0000035A9AF8
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20030906-0009-0000-0000-00004A7BD9B3
-Message-Id: <20200309062552.29911-9-kjain@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-09_01:2020-03-06,2020-03-09 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_spam_definite policy=outbound score=100 impostorscore=0
- spamscore=0 bulkscore=0 mlxscore=0 adultscore=0 clxscore=1015
- priorityscore=1501 lowpriorityscore=0 malwarescore=0 phishscore=0
- mlxlogscore=539 suspectscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2001150001 definitions=main-2003090046
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 09 Mar 2020 11:57:48 +0530
+From:   kgunda@codeaurora.org
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     jingoohan1@gmail.com, lee.jones@linaro.org,
+        b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org,
+        daniel.thompson@linaro.org, jacek.anaszewski@gmail.com,
+        pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Dan Murphy <dmurphy@ti.com>,
+        Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-fbdev@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org
+Subject: Re: [PATCH V1 2/2] backlight: qcom-wled: Add support for WLED5
+ peripheral in PM8150L
+In-Reply-To: <20200308214748.GL1094083@builder>
+References: <1583153739-19170-1-git-send-email-kgunda@codeaurora.org>
+ <1583153739-19170-3-git-send-email-kgunda@codeaurora.org>
+ <20200308214748.GL1094083@builder>
+Message-ID: <d0e681ae203bb14f4061d248b935578b@codeaurora.org>
+X-Sender: kgunda@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The hv_24×7 feature in IBM® POWER9™ processor-based servers provide the
-facility to continuously collect large numbers of hardware performance
-metrics efficiently and accurately.
-This patch adds hv_24x7  metric file for different Socket/chip
-resources.
-
-Result:
-
-power9 platform:
-
-command:# ./perf stat --metric-only -M Memory_RD_BW_Chip -C 0 -I 1000
-
-     1.000096188                      0.9                      0.3
-     2.000285720                      0.5                      0.1
-     3.000424990                      0.4                      0.1
-
-command:# ./perf stat --metric-only -M PowerBUS_Frequency -C 0 -I 1000
-
-     1.000097981                        2.3                        2.3
-     2.000291713                        2.3                        2.3
-     3.000421719                        2.3                        2.3
-     4.000550912                        2.3                        2.3
-
-Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
----
- .../arch/powerpc/power9/nest_metrics.json     | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
- create mode 100644 tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
-
-diff --git a/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json b/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
-new file mode 100644
-index 000000000000..ac38f5540ac6
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
-@@ -0,0 +1,19 @@
-+[
-+    {
-+        "MetricExpr": "(hv_24x7@PM_MCS01_128B_RD_DISP_PORT01\\,chip\\=?@ + hv_24x7@PM_MCS01_128B_RD_DISP_PORT23\\,chip\\=?@ + hv_24x7@PM_MCS23_128B_RD_DISP_PORT01\\,chip\\=?@ + hv_24x7@PM_MCS23_128B_RD_DISP_PORT23\\,chip\\=?@)",
-+        "MetricName": "Memory_RD_BW_Chip",
-+        "MetricGroup": "Memory_BW",
-+        "ScaleUnit": "1.6e-2MB"
-+    },
-+    {
-+    "MetricExpr": "(hv_24x7@PM_MCS01_128B_WR_DISP_PORT01\\,chip\\=?@ + hv_24x7@PM_MCS01_128B_WR_DISP_PORT23\\,chip\\=?@ + hv_24x7@PM_MCS23_128B_WR_DISP_PORT01\\,chip\\=?@ + hv_24x7@PM_MCS23_128B_WR_DISP_PORT23\\,chip\\=?@ )",
-+        "MetricName": "Memory_WR_BW_Chip",
-+        "MetricGroup": "Memory_BW",
-+        "ScaleUnit": "1.6e-2MB"
-+    },
-+    {
-+    "MetricExpr": "(hv_24x7@PM_PB_CYC\\,chip\\=?@ )",
-+        "MetricName": "PowerBUS_Frequency",
-+        "ScaleUnit": "2.5e-7GHz"
-+    }
-+]
--- 
-2.18.1
-
+On 2020-03-09 03:17, Bjorn Andersson wrote:
+> On Mon 02 Mar 04:55 PST 2020, Kiran Gunda wrote:
+>> diff --git a/drivers/video/backlight/qcom-wled.c 
+>> b/drivers/video/backlight/qcom-wled.c
+> [..]
+>> @@ -147,14 +187,39 @@ struct wled {
+>>  	u32 max_brightness;
+>>  	u32 short_count;
+>>  	u32 auto_detect_count;
+>> +	u32 version;
+>>  	bool disabled_by_short;
+>>  	bool has_short_detect;
+>> +	bool cabc_disabled;
+>>  	int short_irq;
+>>  	int ovp_irq;
+>> 
+>>  	struct wled_config cfg;
+>>  	struct delayed_work ovp_work;
+>>  	int (*wled_set_brightness)(struct wled *wled, u16 brightness);
+>> +	int (*cabc_config)(struct wled *wled, bool enable);
+>> +	int (*wled_sync_toggle)(struct wled *wled);
+> 
+> Please split this patch in one that adds these and breaks out the wled3
+> support, and then a second patch that adds wled5.
+> 
+Sure. Will make this change in the next post.
+>> +};
+>> +
+> [..]
+>> +static int wled5_set_brightness(struct wled *wled, u16 brightness)
+>> +{
+>> +	int rc, offset;
+>> +	u16 low_limit = wled->max_brightness * 1 / 1000;
+>> +	u8 v[2], brightness_msb_mask;
+>> +
+>> +	/* WLED5's lower limit is 0.1% */
+>> +	if (brightness > 0 && brightness < low_limit)
+>> +		brightness = low_limit;
+>> +
+>> +	brightness_msb_mask = 0xf;
+>> +	if (wled->max_brightness == WLED5_SINK_REG_BRIGHT_MAX_15B)
+>> +		brightness_msb_mask = 0x7f;
+> 
+> Why not just brightness &= wled->max_brightness? But given that it 
+> seems
+> like the framework ensures that brightness <= max_brightness, why not
+> skip this altogether?
+> 
+Okay. I will modify the code to remove the min/max, low_limit checks in 
+next post.
+>> +
+>> +	v[0] = brightness & 0xff;
+>> +	v[1] = (brightness >> 8) & brightness_msb_mask;
+>> +
+>> +	offset = wled5_brightness_reg[wled->cfg.mod_sel];
+>> +	rc = regmap_bulk_write(wled->regmap, wled->sink_addr + offset,
+>> +			v, 2);
+>> +	return rc;
+>> +}
+>> +
+>>  static int wled4_set_brightness(struct wled *wled, u16 brightness)
+>>  {
+>>  	int rc, i;
+>> @@ -237,7 +325,28 @@ static int wled_module_enable(struct wled *wled, 
+>> int val)
+>>  	return 0;
+>>  }
+>> 
+>> -static int wled_sync_toggle(struct wled *wled)
+>> +static int wled5_sync_toggle(struct wled *wled)
+>> +{
+>> +	int rc;
+>> +	u8 val;
+>> +
+>> +	val = (wled->cfg.mod_sel == MOD_A) ? WLED5_SINK_REG_SYNC_MOD_A_BIT :
+>> +					     WLED5_SINK_REG_SYNC_MOD_B_BIT;
+>> +	rc = regmap_update_bits(wled->regmap,
+>> +				wled->sink_addr + WLED5_SINK_REG_MOD_SYNC_BIT,
+>> +				WLED5_SINK_REG_SYNC_MASK, val);
+>> +	if (rc < 0)
+>> +		return rc;
+>> +
+>> +	val = 0;
+> 
+> Just plug 0 in the function call.
+> 
+Sure. Will do it in next post.
+>> +	rc = regmap_update_bits(wled->regmap,
+>> +				wled->sink_addr + WLED5_SINK_REG_MOD_SYNC_BIT,
+>> +				WLED5_SINK_REG_SYNC_MASK, val);
+>> +
+>> +	return rc;
+> 
+> And return regmap_update_bits(...);
+> 
+Sure. Will do it in next post.
+>> +}
+>> +
+> 
+> Regards,
+> Bjorn
