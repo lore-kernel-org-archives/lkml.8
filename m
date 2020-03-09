@@ -2,100 +2,175 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12E6BC10F25
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 22:08:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D75DFC10F29
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 22:08:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E964224655
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 22:08:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5DBF24654
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 22:08:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727195AbgCIWIT (ORCPT
+        id S1727216AbgCIWI4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 18:08:19 -0400
-Received: from smtprelay0002.hostedemail.com ([216.40.44.2]:55902 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726536AbgCIWIT (ORCPT
+        Mon, 9 Mar 2020 18:08:56 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:43922 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726536AbgCIWI4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 18:08:19 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay05.hostedemail.com (Postfix) with ESMTP id 47DD518021B9F;
-        Mon,  9 Mar 2020 22:08:18 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: boy57_657be7daf1149
-X-Filterd-Recvd-Size: 2634
-Received: from XPS-9350.home (unknown [47.151.143.254])
-        (Authenticated sender: joe@perches.com)
-        by omf02.hostedemail.com (Postfix) with ESMTPA;
-        Mon,  9 Mar 2020 22:08:17 +0000 (UTC)
-Message-ID: <524e6933c4082608895184dbb956f6ce0bb9226d.camel@perches.com>
-Subject: Re: [PATCH] checkpatch: check proper licensing of Devicetree
- bindings
-From:   Joe Perches <joe@perches.com>
-To:     Lubomir Rintel <lkundrak@v3.sk>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Andy Whitcroft <apw@canonical.com>, linux-kernel@vger.kernel.org
-Date:   Mon, 09 Mar 2020 15:06:37 -0700
-In-Reply-To: <20200309215153.38824-1-lkundrak@v3.sk>
-References: <20200309215153.38824-1-lkundrak@v3.sk>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Mon, 9 Mar 2020 18:08:56 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id E3E7880307C8;
+        Mon,  9 Mar 2020 22:08:53 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id Mhon-ZlolZyP; Tue, 10 Mar 2020 01:08:53 +0300 (MSK)
+Date:   Tue, 10 Mar 2020 01:08:02 +0300
+From:   Sergey Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+CC:     Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
+        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/5] dmaengine: dw: Take Baikal-T1 SoC DW DMAC
+ peculiarities into account
+References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
+ <20200306132912.GA1748204@smile.fi.intel.com>
+ <20200306133756.0F74C8030793@mail.baikalelectronics.ru>
+ <20200306134829.342F4803087C@mail.baikalelectronics.ru>
+ <20200306141135.9C4F380307C2@mail.baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200306141135.9C4F380307C2@mail.baikalelectronics.ru>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Message-Id: <20200309220853.E3E7880307C8@mail.baikalelectronics.ru>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-03-09 at 22:51 +0100, Lubomir Rintel wrote:
-> According to Devicetree maintainers (see Link: below), the Devicetree
-> binding documents are preferrably licensed (GPL-2.0-only OR
-> BSD-2-Clause).
+On Fri, Mar 06, 2020 at 04:11:28PM +0200, Andy Shevchenko wrote:
+> On Fri, Mar 06, 2020 at 04:47:20PM +0300, Sergey Semin wrote:
+> > On Fri, Mar 06, 2020 at 03:30:35PM +0200, Andy Shevchenko wrote:
+> > > On Fri, Mar 06, 2020 at 03:29:12PM +0200, Andy Shevchenko wrote:
+> > > > On Fri, Mar 06, 2020 at 04:10:29PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
+> > > > > From: Serge Semin <fancer.lancer@gmail.com>
+> > > > > 
+> > > > > Baikal-T1 SoC has an DW DMAC on-board to provide a Mem-to-Mem, low-speed
+> > > > > peripherals Dev-to-Mem and Mem-to-Dev functionality. Mostly it's compatible
+> > > > > with currently implemented in the kernel DW DMAC driver, but there are some
+> > > > > peculiarities which must be taken into account in order to have the device
+> > > > > fully supported.
+> > > > > 
+> > > > > First of all traditionally we replaced the legacy plain text-based dt-binding
+> > > > > file with yaml-based one. Secondly Baikal-T1 DW DMA Controller provides eight
+> > > > > channels, which alas have different max burst length configuration.
+> > > > > In particular first two channels may burst up to 128 bits (16 bytes) at a time
+> > > > > while the rest of them just up to 32 bits. We must make sure that the DMA
+> > > > > subsystem doesn't set values exceeding these limitations otherwise the
+> > > > > controller will hang up. In third currently we discovered the problem in using
+> > > > > the DW APB SPI driver together with DW DMAC. The problem happens if there is no
+> > > > > natively implemented multi-block LLP transfers support and the SPI-transfer
+> > > > > length exceeds the max lock size. In this case due to asynchronous handling of
+> > > > > Tx- and Rx- SPI transfers interrupt we might end up with Dw APB SSI Rx FIFO
+> > > > > overflow. So if DW APB SSI (or any other DMAC service consumer) intends to use
+> > > > > the DMAC to asynchronously execute the transfers we'd have to at least warn
+> > > > > the user of the possible errors.
+> > > > > 
+> > > > > Finally there is a bug in the algorithm of the nollp flag detection.
+> > > > > In particular even if DW DMAC parameters state the multi-block transfers
+> > > > > support there is still HC_LLP (hardcode LLP) flag, which if set makes expected
+> > > > > by the driver true multi-block LLP functionality unusable. This happens cause'
+> > > > > if HC_LLP flag is set the LLP registers will be hardcoded to zero so the
+> > > > > contiguous multi-block transfers will be only supported. We must take the
+> > > > > flag into account when detecting the LLP support otherwise the driver just
+> > > > > won't work correctly.
+> > > > > 
+> > > > > This patchset is rebased and tested on the mainline Linux kernel 5.6-rc4:
+> > > > > commit 98d54f81e36b ("Linux 5.6-rc4").
+> > > > 
+> > > > Thank you for your series!
+> > > > 
+> > > > I'll definitely review it, but it will take time. So, I think due to late
+> > > > submission this is material at least for v5.8.
+> > > 
+> > 
+> > Hello Andy,
+> > Thanks for the quick response. Looking forward to get the patches
+> > reviewed and move on with the next patchset I'll send after this. It concerns
+> > DW APB SSI driver, which uses the changes introduced by this one.
 > 
-> Let's check that. The actual check is a bit more relaxed, to allow more
-> liberal but compatible licensing (e.g. GPL-2.0-or-later OR
-> BSD-2-Clause).
+> > So the
+> > sooner we finished with this patchset the better.
 > 
-> Link: https://lore.kernel.org/lkml/20200108142132.GA4830@bogus/
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-
-Fine by me.
-Andrew, please pick this up.
-
-cheers, Joe
-
-> ---
-> Changes since v1:
-> - Downgrade severity to CHECK when running against existing files [Joe
->   Perches]
-> - Add --fix support [Joe Perches]
-> Both changes are taken from here: https://lore.kernel.org/lkml/39042657067088e4ca960f630a7d222fc48f947a.camel@perches.com/
-> ---
->  scripts/checkpatch.pl | 11 +++++++++++
->  1 file changed, 11 insertions(+)
+> Everybody will win, but review will take as long as it take. And for sure it
+> will miss v5.7 release cycle. Because too many patch sets sent at once
+> followed by schedule, we almost at v5.6-rc5.
 > 
-> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-> index e2976c3fe5ff8..642e897f46e5c 100755
-> --- a/scripts/checkpatch.pl
-> +++ b/scripts/checkpatch.pl
-> @@ -3111,6 +3111,17 @@ sub process {
->  						WARN("SPDX_LICENSE_TAG",
->  						     "'$spdx_license' is not supported in LICENSES/...\n" . $herecurr);
->  					}
-> +					if ($realfile =~ m@^Documentation/devicetree/bindings/@ &&
-> +					    not $spdx_license =~ /GPL-2\.0.*BSD-2-Clause/) {
-> +						my $msg_level = \&WARN;
-> +						$msg_level = \&CHK if ($file);
-> +						if (&{$msg_level}("SPDX_LICENSE_TAG",
-> +
-> +								  "DT binding documents should be licensed (GPL-2.0-only OR BSD-2-Clause)\n" . $herecurr) &&
-> +						    $fix) {
-> +							$fixed[$fixlinenr] =~ s/SPDX-License-Identifier: .*/SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)/;
-> +						}
-> +					}
->  				}
->  			}
->  		}
 
+Yeah. 13 patchsets is a lot of work to review. I was just saying, that
+even though there are many patches sent, there are even more being
+scheduled for submission after that, which rely on the alterations
+provided by these patches. Though the pacthes dependency may change
+seeing you have issues regarding some of them.)
+
+> > Although I understand
+> > that it may take some time. I've just sent over 12 patchset, which have a lot
+> > of fixups and new drivers.)
+> > 
+> > > One thing that I can tell immediately is the broken email thread in this series.
+> > > Whenever you do a series, use `git format-patch --cover-letter --thread ...`,
+> > > so, it will link the mail properly.
+> > > 
+> > 
+> > I've got thread=true in my gitconfig file, so each email should have
+> > the proper reference and in-reply-to to the cover-letter (I see it from
+> > the log). The problem popped up from a different place. For some reason the
+> > automatic CC/To list extraction command didn't do the job right, so we ended
+> > up with lacking of mailing lists in Cc's in this patchset. The command look like
+> > this:
+> > 
+> > git send-email --cc-cmd "scripts/get_maintainer.pl --separator , --nokeywords --nogit --nogit-fallback --norolestats --nom" \
+> >                    --to-cmd "scripts/get_maintainer.pl --separator , --nokeywords --nogit --nogit-fallback --norolestats --nol" \
+> >                    --from "Serge Semin <Sergey.Semin at baikalelectronics.ru>" \
+> >                    --smtp-server-option="-abaikal" --cover-letter -5
+> 
+> I'm talking about one which makes your Message-Id/Reference headers broken
+> between cover letter and the rest of the series. It might be because of missed
+> patches in the chain.
+> 
+
+Ok. Now I see what you meant. First I had a thought there was some
+misunderstanding on your or my side, because my neomutt client didn't
+show any Ids confusion. But after another maintainer complained about
+the same problem I realized that the issue must be at someplace I
+couldn't have noticed. Then I thought that the outgoing email server
+could have changed the order of the sent emails. But it turned out the
+problem was in the message Ids replacement performed by our corporate
+exchange server. Please see the email I've sent in reply to the Vinod
+comment regarding the emailing list Ccing. It describes what was really
+wrong with the threading config.
+
+Regards,
+-Segey
+
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
+> 
