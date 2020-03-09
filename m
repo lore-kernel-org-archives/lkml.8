@@ -2,101 +2,96 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3B91C10F25
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 04:04:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2547C10F25
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 04:05:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 996DB20675
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 04:04:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="g98VXD5f"
+	by mail.kernel.org (Postfix) with ESMTP id B3C7D20675
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 04:05:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726403AbgCIEDK (ORCPT
+        id S1726488AbgCIEF3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 00:03:10 -0400
-Received: from mail-pl1-f180.google.com ([209.85.214.180]:41915 "EHLO
-        mail-pl1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725811AbgCIEDJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 00:03:09 -0400
-Received: by mail-pl1-f180.google.com with SMTP id t14so3427442plr.8
-        for <linux-kernel@vger.kernel.org>; Sun, 08 Mar 2020 21:03:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=MePM1LXmB9zu10CipKCKT3AOCH0ORjlABBFj6iXCvwo=;
-        b=g98VXD5fWvExJ1O1zTNwK2U30AXvWKVY+rszXkxQb4p4RypmzbUbGoKjultjn8YWKf
-         Cc3+YRCE/xZo+6pNSg6+mUgMRDvTBTafPeUbeaTFY8+iPw7E2FSjUlKTW0xmBEcG81ci
-         KmijLJmDOXv2p0lOtqJIWLKmTWgITI9OSPx5o=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=MePM1LXmB9zu10CipKCKT3AOCH0ORjlABBFj6iXCvwo=;
-        b=qGc/scSIZUjtZ7B3TWvqAgwVjo0AKisqSgmY5JJ6unN9Qe2HN6758cnI411aiqoBfN
-         8v1wyaX+7s1bgHcdsgWW5lDIyhkLT7Rf8LdLytdNjsafv12+KfG13G3C7m+QGoyDHtr5
-         MKoQflhzbr9D6k46Rr+jvp9gaXUFfLfSiI1MRXWt1GY3RDfWH28vSFHlISQSWBBkzUNw
-         paBLnxb5yEq2bZksKeLjS30IVTlfLUhKvkKty92m15F2pfmRKNfQFBidzS3aT0rqjMp1
-         8EmXygWlRJJbmS2eMwIRAkldwNEAIwniHCLjN4m80BhKMHytUBB2U5m7B8N0jWcVOgsi
-         ZvEw==
-X-Gm-Message-State: ANhLgQ0yjCnotibpOt4sM1AtUbI9pDggQ3nj29gqirZN90RdrbNizMiL
-        inOkPnfTKMcKkQnv+gbuKW6wkQ==
-X-Google-Smtp-Source: ADFU+vtw1v/LUtTzhPiRwFAG99XIoB6s3/fRb+QC53epenxq92s4BOkmVBFa4hEM9XaA1/1M7jNzkg==
-X-Received: by 2002:a17:90a:8586:: with SMTP id m6mr16360811pjn.121.1583726587196;
-        Sun, 08 Mar 2020 21:03:07 -0700 (PDT)
-Received: from localhost ([2401:fa00:8f:203:5bbb:c872:f2b1:f53b])
-        by smtp.gmail.com with ESMTPSA id l13sm16686316pjq.23.2020.03.08.21.03.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 08 Mar 2020 21:03:06 -0700 (PDT)
-Date:   Mon, 9 Mar 2020 13:03:05 +0900
-From:   Sergey Senozhatsky <senozhatsky@chromium.org>
-To:     Hans Verkuil <hverkuil@xs4all.nl>
-Cc:     Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Pawel Osciak <posciak@chromium.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCHv4 01/11] videobuf2: add cache management members
-Message-ID: <20200309040305.GB9460@google.com>
-References: <20200302041213.27662-1-senozhatsky@chromium.org>
- <20200302041213.27662-2-senozhatsky@chromium.org>
- <17060663-9c30-de5e-da58-0c847b93e4d3@xs4all.nl>
- <20200307094634.GB29464@google.com>
- <6f5916dd-63f6-5d19-13f4-edd523205a1f@xs4all.nl>
- <20200307112838.GA125961@google.com>
- <a4d85ac3-0eea-bc19-cd44-0c8f5b71f6bc@xs4all.nl>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a4d85ac3-0eea-bc19-cd44-0c8f5b71f6bc@xs4all.nl>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+        Mon, 9 Mar 2020 00:05:29 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:37680 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725811AbgCIEF2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 00:05:28 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 24AA52015B1;
+        Mon,  9 Mar 2020 05:05:27 +0100 (CET)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 1532620159B;
+        Mon,  9 Mar 2020 05:05:20 +0100 (CET)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id BA0544024E;
+        Mon,  9 Mar 2020 12:05:10 +0800 (SGT)
+From:   Shengjiu Wang <shengjiu.wang@nxp.com>
+To:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
+        festevam@gmail.com, broonie@kernel.org,
+        alsa-devel@alsa-project.org, lgirdwood@gmail.com, perex@perex.cz,
+        tiwai@suse.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v5 0/7] ASoC: Add new module driver for new ASRC
+Date:   Mon,  9 Mar 2020 11:58:27 +0800
+Message-Id: <cover.1583725533.git.shengjiu.wang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (20/03/07 12:47), Hans Verkuil wrote:
-> 
-> 1) attempting to use V4L2_FLAG_MEMORY_NON_CONSISTENT will clear the flag
->    upon return (test with both reqbufs and create_bufs).
-> 2) attempting to use V4L2_BUF_FLAG_NO_CACHE_INVALIDATE or V4L2_BUF_FLAG_NO_CACHE_CLEAN
->
-[..]
->
-> All these tests can be done in testReqBufs().
+Add new module driver for new ASRC in i.MX8MN, several commits
+are added for new property fsl,asrc-format
 
-MEMORY_NON_CONSISTENT is a queue property, we set it during queue setup.
-NO_CACHE_INVALIDATE/FLAG_NO_CACHE_CLEAN is a buffer property, we set it
-when we qbuf. I'm not sure if all of these can be done in testReqBufts().
+Shengjiu Wang (7):
+  ASoC: dt-bindings: fsl_asrc: Add new property fsl,asrc-format
+  ASoC: fsl-asoc-card: Support new property fsl,asrc-format
+  ASoC: fsl_asrc: Support new property fsl,asrc-format
+  ASoC: fsl_asrc: rename asrc_priv to asrc
+  ASoC: fsl_asrc: Move common definition to fsl_asrc_common
+  ASoC: dt-bindings: fsl_easrc: Add document for EASRC
+  ASoC: fsl_easrc: Add EASRC ASoC CPU DAI drivers
 
-	-ss
+changes in v5
+- Add new property fsl,asrc-format, rather than change fsl,asrc-width
+  to fsl,asrc-formt.
+- code change for above change.
+
+changes in v4
+- Add several commit for changing DT binding asrc-width to asrc-format
+- rename asrc_priv to asrc
+
+changes in v3
+- add new commit "ASoC: fsl_asrc: Change asrc_width to asrc_format"
+- modify binding doc to yaml format
+- remove fsl_easrc_dma.c, make fsl_asrc_dma.c useable for easrc.
+
+changes in v2
+- change i.MX815 to i.MX8MN
+- Add changes in Kconfig and Makefile
+
+ .../devicetree/bindings/sound/fsl,asrc.txt    |    5 +
+ .../devicetree/bindings/sound/fsl,easrc.yaml  |  101 +
+ sound/soc/fsl/Kconfig                         |   11 +
+ sound/soc/fsl/Makefile                        |    2 +
+ sound/soc/fsl/fsl-asoc-card.c                 |   20 +-
+ sound/soc/fsl/fsl_asrc.c                      |  303 +--
+ sound/soc/fsl/fsl_asrc.h                      |   74 +-
+ sound/soc/fsl/fsl_asrc_common.h               |  105 +
+ sound/soc/fsl/fsl_asrc_dma.c                  |   54 +-
+ sound/soc/fsl/fsl_easrc.c                     | 2111 +++++++++++++++++
+ sound/soc/fsl/fsl_easrc.h                     |  651 +++++
+ 11 files changed, 3203 insertions(+), 234 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/sound/fsl,easrc.yaml
+ create mode 100644 sound/soc/fsl/fsl_asrc_common.h
+ create mode 100644 sound/soc/fsl/fsl_easrc.c
+ create mode 100644 sound/soc/fsl/fsl_easrc.h
+
+-- 
+2.21.0
+
