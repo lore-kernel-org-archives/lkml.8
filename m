@@ -2,278 +2,194 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6157EC10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 16:39:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86A8AC10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 16:40:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 371A524655
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 16:39:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 532832067C
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 16:40:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="A2mIKIMp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727195AbgCIQjq (ORCPT
+        id S1727185AbgCIQkw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 12:39:46 -0400
-Received: from foss.arm.com ([217.140.110.172]:54508 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726922AbgCIQjq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 12:39:46 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3EA4F30E;
-        Mon,  9 Mar 2020 09:39:45 -0700 (PDT)
-Received: from [10.1.197.50] (e120937-lin.cambridge.arm.com [10.1.197.50])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2A6263F534;
-        Mon,  9 Mar 2020 09:39:44 -0700 (PDT)
-Subject: Re: [PATCH v4 09/13] firmware: arm_scmi: Add Power notifications
- support
-To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        sudeep.holla@arm.com, lukasz.luba@arm.com,
-        james.quinlan@broadcom.com
-References: <20200304162558.48836-1-cristian.marussi@arm.com>
- <20200304162558.48836-10-cristian.marussi@arm.com>
- <20200309122853.000019b0@Huawei.com>
-From:   Cristian Marussi <cristian.marussi@arm.com>
-Message-ID: <ec281e49-a838-1a3b-1329-b7e2b43697f2@arm.com>
-Date:   Mon, 9 Mar 2020 16:39:41 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 9 Mar 2020 12:40:52 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:40711 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727083AbgCIQkv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 12:40:51 -0400
+Received: by mail-pg1-f195.google.com with SMTP id t24so4952635pgj.7
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 09:40:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=WTvrl8fRpnRiASZqhFGETSdxBpHyS37A1HRGojDdq8A=;
+        b=A2mIKIMpPkaRMpQMHk9TwxhktTJ2T3uuBhRLddnMQ4yigfv7zwqTpURhxVyTB06iB8
+         oufBJkIiw6itkAMdjWsgbw82mco66J26jsxYw+Y0zaaQmqjnrOpdcIMPg2MwIkqyFlO5
+         xCDvsoC70L+nwUs2MygA7OZDRuHdhoEVIBA0Q=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=WTvrl8fRpnRiASZqhFGETSdxBpHyS37A1HRGojDdq8A=;
+        b=gkMzV6h3z5ieJ8Xujyr+m252yN4IQJX6TZhXxH+boQcVbj3Ad24bgjxBd4sHJLol6h
+         8ujfzaIQVR1e7AJnp3iGZY4TwQCm7AinnrJ/tIHs1pKJ3GkqXY5IRBZXUF3UrfKb1jGA
+         KIk+CXxlvi8GpdEbhvcucOTU47kGHDEhmvwkMkTg6s+Em/QduMBbeJ0oKJG0lmdDEZbN
+         +zlrd7e0P2ni7XVeTM70TkayRBeiKcYOcHPJn6XF8AcUn4QispK1GWwt1eEwJFWHqoLi
+         WO3S0MJeaGHX/LoMsknJAz29T07p3iCdrJ8D4IK3TyEYG88/Ia6sv4P2PDriMhKyRFMa
+         ZBcw==
+X-Gm-Message-State: ANhLgQ1lZ3WizZiIcTWMt9iiYXwTVpLuCd1bP4yYINhr8qQ0j7jFeR6A
+        Y2srXF/PlRzWZ19lfvsRu1Z4G9ILQk4=
+X-Google-Smtp-Source: ADFU+vs05CXKSjfSL+xssvtv8H+whaiud7nM8sXdZEPyQaf2+pNUDEb177gNXZ0D5iJN6r4SxBXqiQ==
+X-Received: by 2002:a62:5447:: with SMTP id i68mr17665917pfb.44.1583772049811;
+        Mon, 09 Mar 2020 09:40:49 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id 19sm7403775pgx.63.2020.03.09.09.40.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Mar 2020 09:40:48 -0700 (PDT)
+Date:   Mon, 9 Mar 2020 09:40:47 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     akpm@linux-foundation.org
+Cc:     Rikard Falkeborn <rikard.falkeborn@gmail.com>, bp@alien8.de,
+        geert@linux-m68k.org, haren@us.ibm.com, joe@perches.com,
+        johannes@sipsolutions.net, linux-kernel@vger.kernel.org,
+        mingo@redhat.com, tglx@linutronix.de, yamada.masahiro@socionext.com
+Subject: Re: [PATCH v5] linux/bits.h: Add compile time sanity check of
+ GENMASK inputs
+Message-ID: <202003090940.C44356F1@keescook>
+References: <20191101212857.GA889092@rikard>
+ <20200308193954.2372399-1-rikard.falkeborn@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200309122853.000019b0@Huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200308193954.2372399-1-rikard.falkeborn@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/03/2020 12:28, Jonathan Cameron wrote:
-> On Wed, 4 Mar 2020 16:25:54 +0000
-> Cristian Marussi <cristian.marussi@arm.com> wrote:
+On Sun, Mar 08, 2020 at 08:39:54PM +0100, Rikard Falkeborn wrote:
+> GENMASK() and GENMASK_ULL() are supposed to be called with the high bit
+> as the first argument and the low bit as the second argument. Mixing
+> them will return a mask with zero bits set.
 > 
->> Make SCMI Power protocol register with the notification core.
->>
->> Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
+> Recent commits show getting this wrong is not uncommon, see e.g.
+> commit aa4c0c9091b0 ("net: stmmac: Fix misuses of GENMASK macro") and
+> commit 9bdd7bb3a844 ("clocksource/drivers/npcm: Fix misuse of GENMASK
+> macro").
 > 
-> One comment inline on an unusual code construct, otherwise fine.
+> To prevent such mistakes from appearing again, add compile time sanity
+> checking to the arguments of GENMASK() and GENMASK_ULL(). If both
+> arguments are known at compile time, and the low bit is higher than the
+> high bit, break the build to detect the mistake immediately.
 > 
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Since GENMASK() is used in declarations, BUILD_BUG_ON_ZERO() must be
+> used instead of BUILD_BUG_ON().
+> 
+> __builtin_constant_p does not evaluate is argument, it only checks if it
+> is a constant or not at compile time, and __builtin_choose_expr does not
+> evaluate the expression that is not chosen. Therefore, GENMASK(x++, 0)
+> does only evaluate x++ once.
+> 
+> Commit 95b980d62d52 ("linux/bits.h: make BIT(), GENMASK(), and friends
+> available in assembly") made the macros in linux/bits.h available in
+> assembly. Since BUILD_BUG_OR_ZERO() is not asm compatible, disable the
+> checks if the file is included in an asm file.
+> 
+> Due to bugs in GCC versions before 4.9 [0], disable the check if
+> building with a too old GCC compiler.
+> 
+> [0]: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=19449
+> 
+> Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
+
+Reviewed-by: Kees Cook <keescook@chromium.org>
+
+-Kees
+
+> Reviewed-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> ---
+> Another attempt to get this merged. I've test built allmodconfig for
+> i386, x86_64 and arm64 for linux-next 20200306 without issues. Also, the
+> last known GENMASK issue was just merged into Linus tree [1].
+> 
+> [1]: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=96b4ea324ae92386db2b0c73ace597c80cde1ecb 
+> 
+> Changes in v5:
+>   - Added Masahiros Reviewed-by
+>   - Waited for bugfixes to get merged
+> 
+> Changes in v4:
+>   - Disable the argument check for GCC < 4.9 due to a compiler bug.
+> 
+> Changes in v3:
+>   - Changed back to shorter macro argument names
+>   - Remove casts and use 0 instead of UL(0) in GENMASK_INPUT_CHECK(),
+>     since all results in GENMASK_INPUT_CHECK() are now ints. Update
+>     commit message to reflect that.
+> 
+> Changes in v2:
+>   - Add comment about why inputs are not checked when used in asm file
+>   - Use UL(0) instead of 0
+>   - Extract mask creation in a separate macro to improve readability
+>   - Use high and low instead of h and l (part of this was extracted to a
+>     separate patch)
+>   - Updated commit message
+> 
+> Joe Perches sent a series to fix the existing misuses of GENMASK().
+> Those patches have been merged into Linus tree except two places where
+> the GENMASK misuse is in unused macros, which will not fail to build.
+> There was also a patch by Nathan Chancellor that have now been merged.
+> 
+>  include/linux/bits.h | 22 ++++++++++++++++++++--
+>  1 file changed, 20 insertions(+), 2 deletions(-)
+> 
+> diff --git a/include/linux/bits.h b/include/linux/bits.h
+> index 669d69441a62..f108302a3121 100644
+> --- a/include/linux/bits.h
+> +++ b/include/linux/bits.h
+> @@ -18,12 +18,30 @@
+>   * position @h. For example
+>   * GENMASK_ULL(39, 21) gives us the 64bit vector 0x000000ffffe00000.
+>   */
+> -#define GENMASK(h, l) \
+> +#if !defined(__ASSEMBLY__) && \
+> +	(!defined(CONFIG_CC_IS_GCC) || CONFIG_GCC_VERSION >= 49000)
+> +#include <linux/build_bug.h>
+> +#define GENMASK_INPUT_CHECK(h, l) \
+> +	(BUILD_BUG_ON_ZERO(__builtin_choose_expr( \
+> +		__builtin_constant_p((l) > (h)), (l) > (h), 0)))
+> +#else
+> +/*
+> + * BUILD_BUG_ON_ZERO is not available in h files included from asm files,
+> + * disable the input check if that is the case.
+> + */
+> +#define GENMASK_INPUT_CHECK(h, l) 0
+> +#endif
+> +
+> +#define __GENMASK(h, l) \
+>  	(((~UL(0)) - (UL(1) << (l)) + 1) & \
+>  	 (~UL(0) >> (BITS_PER_LONG - 1 - (h))))
+> +#define GENMASK(h, l) \
+> +	(GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
+>  
+> -#define GENMASK_ULL(h, l) \
+> +#define __GENMASK_ULL(h, l) \
+>  	(((~ULL(0)) - (ULL(1) << (l)) + 1) & \
+>  	 (~ULL(0) >> (BITS_PER_LONG_LONG - 1 - (h))))
+> +#define GENMASK_ULL(h, l) \
+> +	(GENMASK_INPUT_CHECK(h, l) + __GENMASK_ULL(h, l))
+>  
+>  #endif	/* __LINUX_BITS_H */
+> -- 
+> 2.25.1
 > 
 
-Thanks
-
-Cristian
->> ---
->> V3 --> V4
->> - scmi_event field renamed
->> V2 --> V3
->> - added handle awareness
->> V1 --> V2
->> - simplified .set_notify_enabled() implementation moving the ALL_SRCIDs
->>   logic out of protocol. ALL_SRCIDs logic is now in charge of the
->>   notification core, together with proper reference counting of enables
->> - switched to devres protocol-registration
->> ---
->>  drivers/firmware/arm_scmi/power.c | 123 ++++++++++++++++++++++++++++++
->>  include/linux/scmi_protocol.h     |  15 ++++
->>  2 files changed, 138 insertions(+)
->>
->> diff --git a/drivers/firmware/arm_scmi/power.c b/drivers/firmware/arm_scmi/power.c
->> index cf7f0312381b..281da7e7e33a 100644
->> --- a/drivers/firmware/arm_scmi/power.c
->> +++ b/drivers/firmware/arm_scmi/power.c
->> @@ -6,6 +6,7 @@
->>   */
->>  
->>  #include "common.h"
->> +#include "notify.h"
->>  
->>  enum scmi_power_protocol_cmd {
->>  	POWER_DOMAIN_ATTRIBUTES = 0x3,
->> @@ -48,6 +49,12 @@ struct scmi_power_state_notify {
->>  	__le32 notify_enable;
->>  };
->>  
->> +struct scmi_power_state_notify_payld {
->> +	__le32 agent_id;
->> +	__le32 domain_id;
->> +	__le32 power_state;
->> +};
->> +
->>  struct power_dom_info {
->>  	bool state_set_sync;
->>  	bool state_set_async;
->> @@ -63,6 +70,11 @@ struct scmi_power_info {
->>  	struct power_dom_info *dom_info;
->>  };
->>  
->> +static enum scmi_power_protocol_cmd evt_2_cmd[] = {
->> +	POWER_STATE_NOTIFY,
->> +	POWER_STATE_CHANGE_REQUESTED_NOTIFY,
->> +};
->> +
->>  static int scmi_power_attributes_get(const struct scmi_handle *handle,
->>  				     struct scmi_power_info *pi)
->>  {
->> @@ -186,6 +198,111 @@ static struct scmi_power_ops power_ops = {
->>  	.state_get = scmi_power_state_get,
->>  };
->>  
->> +static int scmi_power_request_notify(const struct scmi_handle *handle,
->> +				     u32 domain, int message_id, bool enable)
->> +{
->> +	int ret;
->> +	struct scmi_xfer *t;
->> +	struct scmi_power_state_notify *notify;
->> +
->> +	ret = scmi_xfer_get_init(handle, message_id, SCMI_PROTOCOL_POWER,
->> +				 sizeof(*notify), 0, &t);
->> +	if (ret)
->> +		return ret;
->> +
->> +	notify = t->tx.buf;
->> +	notify->domain = cpu_to_le32(domain);
->> +	notify->notify_enable = enable ? cpu_to_le32(BIT(0)) : 0;
->> +
->> +	ret = scmi_do_xfer(handle, t);
->> +
->> +	scmi_xfer_put(handle, t);
->> +	return ret;
->> +}
->> +
->> +static bool scmi_power_set_notify_enabled(const struct scmi_handle *handle,
->> +					  u8 evt_id, u32 src_id, bool enable)
->> +{
->> +	int ret, cmd_id;
->> +
->> +	cmd_id = MAP_EVT_TO_ENABLE_CMD(evt_id, evt_2_cmd);
->> +	if (cmd_id < 0)
->> +		return false;
->> +
->> +	ret = scmi_power_request_notify(handle, src_id, cmd_id, enable);
->> +	if (ret)
->> +		pr_warn("SCMI Notifications - Proto:%X - FAIL_ENABLE - evt[%X] dom[%d] - ret:%d\n",
->> +				SCMI_PROTOCOL_POWER, evt_id, src_id, ret);
->> +
->> +	return !ret ? true : false;
-> 
-> 	return !ret;
-> 
-> 	Is the same thing...
-> 
-
-ops...I'll fix
-
->> +}
->> +
->> +static void *scmi_power_fill_custom_report(u8 evt_id, u64 timestamp,
->> +					   const void *payld, size_t payld_sz,
->> +					   void *report, u32 *src_id)
->> +{
->> +	void *rep = NULL;
->> +
->> +	switch (evt_id) {
->> +	case POWER_STATE_CHANGED:
->> +	{
->> +		const struct scmi_power_state_notify_payld *p = payld;
->> +		struct scmi_power_state_changed_report *r = report;
->> +
->> +		if (sizeof(*p) != payld_sz)
->> +			break;
->> +
->> +		r->timestamp = timestamp;
->> +		r->agent_id = le32_to_cpu(p->agent_id);
->> +		r->domain_id = le32_to_cpu(p->domain_id);
->> +		r->power_state = le32_to_cpu(p->power_state);
->> +		*src_id = r->domain_id;
->> +		rep = r;
->> +		break;
->> +	}
->> +	case POWER_STATE_CHANGE_REQUESTED:
->> +	{
->> +		const struct scmi_power_state_notify_payld *p = payld;
->> +		struct scmi_power_state_change_requested_report *r = report;
->> +
->> +		if (sizeof(*p) != payld_sz)
->> +			break;
->> +
->> +		r->timestamp = timestamp;
->> +		r->agent_id = le32_to_cpu(p->agent_id);
->> +		r->domain_id = le32_to_cpu(p->domain_id);
->> +		r->power_state = le32_to_cpu(p->power_state);
->> +		*src_id = r->domain_id;
->> +		rep = r;
->> +		break;
->> +	}
->> +	default:
->> +		break;
->> +	}
->> +
->> +	return rep;
->> +}
->> +
->> +static const struct scmi_event power_events[] = {
->> +	{
->> +		.id = POWER_STATE_CHANGED,
->> +		.max_payld_sz = 12,
->> +		.max_report_sz =
->> +			sizeof(struct scmi_power_state_changed_report),
->> +	},
->> +	{
->> +		.id = POWER_STATE_CHANGE_REQUESTED,
->> +		.max_payld_sz = 12,
->> +		.max_report_sz =
->> +			sizeof(struct scmi_power_state_change_requested_report),
->> +	},
->> +};
->> +
->> +static const struct scmi_protocol_event_ops power_event_ops = {
->> +	.set_notify_enabled = scmi_power_set_notify_enabled,
->> +	.fill_custom_report = scmi_power_fill_custom_report,
->> +};
->> +
->>  static int scmi_power_protocol_init(struct scmi_handle *handle)
->>  {
->>  	int domain;
->> @@ -214,6 +331,12 @@ static int scmi_power_protocol_init(struct scmi_handle *handle)
->>  		scmi_power_domain_attributes_get(handle, domain, dom);
->>  	}
->>  
->> +	scmi_register_protocol_events(handle,
->> +				      SCMI_PROTOCOL_POWER, PAGE_SIZE,
->> +				      &power_event_ops, power_events,
->> +				      ARRAY_SIZE(power_events),
->> +				      pinfo->num_domains);
->> +
->>  	pinfo->version = version;
->>  	handle->power_ops = &power_ops;
->>  	handle->power_priv = pinfo;
->> diff --git a/include/linux/scmi_protocol.h b/include/linux/scmi_protocol.h
->> index 797e1e03ae52..baa117f9eda3 100644
->> --- a/include/linux/scmi_protocol.h
->> +++ b/include/linux/scmi_protocol.h
->> @@ -377,4 +377,19 @@ typedef int (*scmi_prot_init_fn_t)(struct scmi_handle *);
->>  int scmi_protocol_register(int protocol_id, scmi_prot_init_fn_t fn);
->>  void scmi_protocol_unregister(int protocol_id);
->>  
->> +/* SCMI Notification API - Custom Event Reports */
->> +struct scmi_power_state_changed_report {
->> +	ktime_t	timestamp;
->> +	u32	agent_id;
->> +	u32	domain_id;
->> +	u32	power_state;
->> +};
->> +
->> +struct scmi_power_state_change_requested_report {
->> +	ktime_t	timestamp;
->> +	u32	agent_id;
->> +	u32	domain_id;
->> +	u32	power_state;
->> +};
->> +
->>  #endif /* _LINUX_SCMI_PROTOCOL_H */
-> 
-> 
-
+-- 
+Kees Cook
