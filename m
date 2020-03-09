@@ -2,174 +2,217 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E853C10F25
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 22:06:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A6B4C10F29
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 22:07:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CFBB24654
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 22:06:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EB242465A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 22:07:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="eLeTdHWa"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hzKtLxXO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727089AbgCIWGt (ORCPT
+        id S1727190AbgCIWHZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 18:06:49 -0400
-Received: from gateway36.websitewelcome.com ([192.185.198.13]:47109 "EHLO
-        gateway36.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726454AbgCIWGt (ORCPT
+        Mon, 9 Mar 2020 18:07:25 -0400
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:36010 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727083AbgCIWHY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 18:06:49 -0400
-Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
-        by gateway36.websitewelcome.com (Postfix) with ESMTP id 5973640244F00
-        for <linux-kernel@vger.kernel.org>; Mon,  9 Mar 2020 16:22:18 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id BQXvj7ShwSl8qBQXvjigOO; Mon, 09 Mar 2020 17:06:47 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=QyEYx004YUXZlVKHaK5lTe6uFAirGpgtAxIsIsIZ3Us=; b=eLeTdHWaeYVGfPZzJvRZps0IM9
-        J0XeqsYpJzJGYQ7UMCVv/1Air/SXCSvA92XeEr9C/Faycss/EufScmrx/S7jvXsrjTLLeqvRH51cj
-        41OV/ixXRAJKxIu+fRktI3gVOUvHAoPiITGwUs/Y4rF4YoSO95sTarbgpxNrYnMrC4uR6v9YqaEFX
-        lhU/P7pqNbMAvn03XkeNXnZYlQka3zj4aX5QDFL7bc/CCnJ9GcAKjWNfY8LoqCZhkGuM40PCBdrv+
-        whKzyh6H8QZRtzAUIevd5ku3zL/uOJW8bw9M68lLkfaJw0zHKRG+OtlZnw928QSdnd5J8X5MboETD
-        yWCkNJ6A==;
-Received: from [201.172.20.167] (port=40794 helo=[192.168.1.39])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1jBQXv-001yca-LM; Mon, 09 Mar 2020 17:06:47 -0500
-Subject: Re: [PATCH][next] pstore: ram_core: Replace zero-length array with
- flexible-array member
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>, linux-kernel@vger.kernel.org
-References: <20200309202327.GA8813@embeddedor>
- <202003091446.6B5E42EF@keescook>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <e40b4175-5496-1d13-9459-ee6728ea4b37@embeddedor.com>
-Date:   Mon, 9 Mar 2020 17:06:23 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 9 Mar 2020 18:07:24 -0400
+Received: by mail-yw1-f66.google.com with SMTP id j71so11810340ywb.3
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 15:07:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=C2C2IyR8ADVQXo6q1zpX2vt9Gg5duZt3BO1njA9FKss=;
+        b=hzKtLxXOYKMEfxDYep/kUlMuXGnaSBQQwbXE0PdylQNjl880YZVe5LQnjdkKWRBeRe
+         1krPhRDjkJBW54vBntLvB/5tAcvcz4+j9o2Kqq5WWqJkbr92goEQplWBUtZ6y7+fOfCr
+         RNgupV59pQcE5IMLuCkj8vnYNz9cCwS8Z89LQSEzBV+weHY0mPKdyxu9CIQOx3bc1SVT
+         o8z5UwdXavYLslQShe+bYedaNiocKz8P2hPQ68OBGxacOuL/mp4rKyYt0boE4Ya0U8+n
+         zzIsSrHkQkJ+tgTU18rZn4hZYkkQV/ia4sLAXR4KoZ/IUov85T2zM59XpzLYPiqakz+Q
+         DTpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=C2C2IyR8ADVQXo6q1zpX2vt9Gg5duZt3BO1njA9FKss=;
+        b=plRdYVyjYoGVzanQqvBq6Llijoa/jmRlIz7gs+CUxMY+SDsbObZtwf5nY6D00MAdu+
+         ojQ8hRrTwrkcXs+NhwG77IO7KjtnW9V8KL3LUJLJlDjukEqogR/X27SXrGjZW+5CudN/
+         YFKzssV2cK9SBtCZ1/dmVji09zBb+0TN9Tz6WmN5biS52U82gjrI/dPr/dGsw08Zvgpu
+         Tp5FlrKcAjN+H8iOV1oPV2oRzN9llVNWHpKDI6H1zYMkjLYu71slL6KlLeem8VvKm+Yf
+         pfw4wwjmO5Ef84tdOaduNxLLrp7/6MfIFbsKt3xYWU6HdYAmWDXFeh8oD2aFqb/udlw5
+         M8tQ==
+X-Gm-Message-State: ANhLgQ3IR0ZMcMiA/JF0eA0Eoj1CtahcByekta7cAJyHPV+tAbBjvhzD
+        X9602v9Snoxtui7g48ewuhTfWEs02wtn9+x1HdIyfEc=
+X-Google-Smtp-Source: ADFU+vuoelPKbp3P8CWhPi+RqgvmvUoBO9h7BgOIMQhjAKzFvKXLYQa4eBwhg4rbdH3YDsQPttGT9D8NPxUlkVKEdMw=
+X-Received: by 2002:a0d:ddc7:: with SMTP id g190mr19393852ywe.147.1583791643313;
+ Mon, 09 Mar 2020 15:07:23 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <202003091446.6B5E42EF@keescook>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.172.20.167
-X-Source-L: No
-X-Exim-ID: 1jBQXv-001yca-LM
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.1.39]) [201.172.20.167]:40794
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 5
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+References: <1583472756-7611-1-git-send-email-mansur@codeaurora.org> <CAPBb6MW-zxK+=HHUP5=+pO4Mswkhm=hDX7V56ABDm+BCzDaGHg@mail.gmail.com>
+In-Reply-To: <CAPBb6MW-zxK+=HHUP5=+pO4Mswkhm=hDX7V56ABDm+BCzDaGHg@mail.gmail.com>
+From:   Jeffrey Kardatzke <jkardatzke@google.com>
+Date:   Mon, 9 Mar 2020 15:07:11 -0700
+Message-ID: <CA+ddPcNdC4r3XBd+dQmv2oHwF6MA3bTJrWZZpJthruBQR_THBA@mail.gmail.com>
+Subject: Re: [PATCH] venus: avoid extra locking in driver
+To:     Alexandre Courbot <acourbot@chromium.org>
+Cc:     Mansur Alisha Shaik <mansur@codeaurora.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-msm@vger.kernel.org,
+        Vikash Garodia <vgarodia@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Mar 5, 2020 at 11:50 PM Alexandre Courbot <acourbot@chromium.org> wrote:
+>
+> On Fri, Mar 6, 2020 at 2:34 PM Mansur Alisha Shaik
+> <mansur@codeaurora.org> wrote:
+> >
+> > This change will avoid extra locking in driver.
+>
+> Could you elaborate a bit more on the problem that this patch solves?
+
+For us it fixes a kernel null deref that happens when we run the
+MultipleEncoders test (I've verified this to be true).
+
+>
+> >
+> > Signed-off-by: Mansur Alisha Shaik <mansur@codeaurora.org>
+> > ---
+> >  drivers/media/platform/qcom/venus/core.c       |  2 +-
+> >  drivers/media/platform/qcom/venus/core.h       |  2 +-
+> >  drivers/media/platform/qcom/venus/helpers.c    | 11 +++++++++--
+> >  drivers/media/platform/qcom/venus/pm_helpers.c |  8 ++++----
+> >  4 files changed, 15 insertions(+), 8 deletions(-)
+> >
+> > diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/platform/qcom/venus/core.c
+> > index 194b10b9..75d38b8 100644
+> > --- a/drivers/media/platform/qcom/venus/core.c
+> > +++ b/drivers/media/platform/qcom/venus/core.c
+> > @@ -447,7 +447,7 @@ static const struct freq_tbl sdm845_freq_table[] = {
+> >         {  244800, 100000000 }, /* 1920x1080@30 */
+> >  };
+> >
+> > -static struct codec_freq_data sdm845_codec_freq_data[] =  {
+> > +static const struct codec_freq_data sdm845_codec_freq_data[] =  {
+> >         { V4L2_PIX_FMT_H264, VIDC_SESSION_TYPE_ENC, 675, 10 },
+> >         { V4L2_PIX_FMT_HEVC, VIDC_SESSION_TYPE_ENC, 675, 10 },
+> >         { V4L2_PIX_FMT_VP8, VIDC_SESSION_TYPE_ENC, 675, 10 },
+> > diff --git a/drivers/media/platform/qcom/venus/core.h b/drivers/media/platform/qcom/venus/core.h
+> > index ab7c360..8c8d0e9 100644
+> > --- a/drivers/media/platform/qcom/venus/core.h
+> > +++ b/drivers/media/platform/qcom/venus/core.h
+> > @@ -245,7 +245,7 @@ struct venus_buffer {
+> >  struct clock_data {
+> >         u32 core_id;
+> >         unsigned long freq;
+> > -       const struct codec_freq_data *codec_freq_data;
+> > +       struct codec_freq_data codec_freq_data;
+> >  };
+> >
+> >  #define to_venus_buffer(ptr)   container_of(ptr, struct venus_buffer, vb)
+> > diff --git a/drivers/media/platform/qcom/venus/helpers.c b/drivers/media/platform/qcom/venus/helpers.c
+> > index bcc6038..550c4ff 100644
+> > --- a/drivers/media/platform/qcom/venus/helpers.c
+> > +++ b/drivers/media/platform/qcom/venus/helpers.c
+> > @@ -807,6 +807,7 @@ int venus_helper_init_codec_freq_data(struct venus_inst *inst)
+> >         unsigned int i, data_size;
+> >         u32 pixfmt;
+> >         int ret = 0;
+> > +       bool found = false;
+> >
+> >         if (!IS_V4(inst->core))
+> >                 return 0;
+> > @@ -816,16 +817,22 @@ int venus_helper_init_codec_freq_data(struct venus_inst *inst)
+> >         pixfmt = inst->session_type == VIDC_SESSION_TYPE_DEC ?
+> >                         inst->fmt_out->pixfmt : inst->fmt_cap->pixfmt;
+> >
+> > +       memset(&inst->clk_data.codec_freq_data, 0,
+> > +               sizeof(inst->clk_data.codec_freq_data));
+> > +
+> >         for (i = 0; i < data_size; i++) {
+> >                 if (data[i].pixfmt == pixfmt &&
+> >                     data[i].session_type == inst->session_type) {
+> > -                       inst->clk_data.codec_freq_data = &data[i];
+> > +                       inst->clk_data.codec_freq_data = data[i];
+>
+> From the patch I'd infer that inst->clk_data.codec_freq_data needs to
+> change at runtime. Is this what happens? Why? I'd expect that
+> frequency tables remain constant, and thus that the global
+> sdm845_codec_freq_data can remain constant while
+> clock_data::codec_freq_data is a const reference to it. What prevents
+> this from happening?
+>
+> > +                       found = true;
+> >                         break;
+> >                 }
+> >         }
+> >
+> > -       if (!inst->clk_data.codec_freq_data)
+> > +       if (!found) {
+> > +               dev_err(inst->core->dev, "cannot find codec freq data\n");
+> >                 ret = -EINVAL;
+> > +       }
+> >
+> >         return ret;
+> >  }
+> > diff --git a/drivers/media/platform/qcom/venus/pm_helpers.c b/drivers/media/platform/qcom/venus/pm_helpers.c
+> > index abf9315..240845e 100644
+> > --- a/drivers/media/platform/qcom/venus/pm_helpers.c
+> > +++ b/drivers/media/platform/qcom/venus/pm_helpers.c
+> > @@ -496,7 +496,7 @@ min_loaded_core(struct venus_inst *inst, u32 *min_coreid, u32 *min_load)
+> >         list_for_each_entry(inst_pos, &core->instances, list) {
+> >                 if (inst_pos == inst)
+> >                         continue;
+> > -               vpp_freq = inst_pos->clk_data.codec_freq_data->vpp_freq;
+> > +               vpp_freq = inst_pos->clk_data.codec_freq_data.vpp_freq;
+
+This is the main thing it fixes (this is where the null deref occurs).
+If there's multiple instances in use and the other instance hasn't
+populated the codec_freq_data pointer then we'll hit a null deref
+here.
+
+> >                 coreid = inst_pos->clk_data.core_id;
+> >
+> >                 mbs_per_sec = load_per_instance(inst_pos);
+> > @@ -545,7 +545,7 @@ static int decide_core(struct venus_inst *inst)
+> >                 return 0;
+> >
+> >         inst_load = load_per_instance(inst);
+> > -       inst_load *= inst->clk_data.codec_freq_data->vpp_freq;
+> > +       inst_load *= inst->clk_data.codec_freq_data.vpp_freq;
+> >         max_freq = core->res->freq_tbl[0].freq;
+> >
+> >         min_loaded_core(inst, &min_coreid, &min_load);
+> > @@ -848,10 +848,10 @@ static unsigned long calculate_inst_freq(struct venus_inst *inst,
+> >
+> >         mbs_per_sec = load_per_instance(inst) / fps;
+> >
+> > -       vpp_freq = mbs_per_sec * inst->clk_data.codec_freq_data->vpp_freq;
+> > +       vpp_freq = mbs_per_sec * inst->clk_data.codec_freq_data.vpp_freq;
+> >         /* 21 / 20 is overhead factor */
+> >         vpp_freq += vpp_freq / 20;
+> > -       vsp_freq = mbs_per_sec * inst->clk_data.codec_freq_data->vsp_freq;
+> > +       vsp_freq = mbs_per_sec * inst->clk_data.codec_freq_data.vsp_freq;
+> >
+> >         /* 10 / 7 is overhead factor */
+> >         if (inst->session_type == VIDC_SESSION_TYPE_ENC)
+> > --
+> > 2.7.4
+> >
 
 
-On 3/9/20 4:46 PM, Kees Cook wrote:
-> On Mon, Mar 09, 2020 at 03:23:27PM -0500, Gustavo A. R. Silva wrote:
->> The current codebase makes use of the zero-length array language
->> extension to the C90 standard, but the preferred mechanism to declare
->> variable-length types such as these ones is a flexible array member[1][2],
->> introduced in C99:
->>
->> struct foo {
->>         int stuff;
->>         struct boo array[];
->> };
->>
->> By making use of the mechanism above, we will get a compiler warning
->> in case the flexible array does not occur last in the structure, which
->> will help us prevent some kind of undefined behavior bugs from being
->> inadvertently introduced[3] to the codebase from now on.
->>
->> Also, notice that, dynamic memory allocations won't be affected by
->> this change:
->>
->> "Flexible array members have incomplete type, and so the sizeof operator
->> may not be applied. As a quirk of the original implementation of
->> zero-length arrays, sizeof evaluates to zero."[1]
->>
->> This issue was found with the help of Coccinelle.
->>
->> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
->> [2] https://github.com/KSPP/linux/issues/21
->> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
->>
->> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> 
-> Thanks! Applied to for-next/pstore.
-> 
 
-Awesome. :)
-
-Thanks
---
-Gustavo
+-- 
+Jeffrey Kardatzke
+jkardatzke@google.com
+Google, Inc.
