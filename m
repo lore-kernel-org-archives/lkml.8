@@ -2,113 +2,125 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3119C18E5A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 15:19:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CEF0C10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 15:19:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD7C020578
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 15:19:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 402ED20578
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 15:19:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="L5c2JhCC";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="MSgwcIOh"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="drPScwSk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727026AbgCIPTN (ORCPT
+        id S1727159AbgCIPTY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 11:19:13 -0400
-Received: from out4-smtp.messagingengine.com ([66.111.4.28]:43549 "EHLO
-        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726446AbgCIPTN (ORCPT
+        Mon, 9 Mar 2020 11:19:24 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:55144 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726446AbgCIPTX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 11:19:13 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id 5C3C9220BD;
-        Mon,  9 Mar 2020 11:19:12 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Mon, 09 Mar 2020 11:19:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=/JPDb7JZb245BQ0JKZ050bxEsfb
-        WQHkBiU4vwt4NoJw=; b=L5c2JhCCO8JJzN92UkJlQp988apYtWXsX/tztvNhJrR
-        CHAQCi7ObXXy1M6BR58JMZOf4qP+wGgdDxiTYbDEdZwcI/Zpjneai63YqKDD126K
-        CS4Q2xOT7MDipse+GqpOon4bcW9nVRojs69jI6SfjP+wssNM29Cso18S8/N44fgi
-        pWBqdK+/s3l3v0yBWbrtbOXkGxw8sMAlx5vsHWaUp4+X6iLgnyVT7GYeu0mxnSvm
-        NgpKyf6MBtwPv3eKhpIygCBVCnBhaY9SCEUaQr2fElbKY5rc+LXgkx3Q4dNk1xiD
-        6nDM46gSfRrq+NUxPlSXFXOYggH962/dRs7MH8ia2SA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=/JPDb7
-        JZb245BQ0JKZ050bxEsfbWQHkBiU4vwt4NoJw=; b=MSgwcIOhE/mkeOpm4c4bel
-        LDLDuqLcQwGduHHp4XFaV0Cv2mb5jVG3GrkMRdZiRdmW9wba+X1344gxIP4cv8Kl
-        jetUfJI7WK4BJucfsg7mjOb7CPhSRRQgog/dxXvyftxYN/HlV07V8+IN4PDXAjsZ
-        5j7DYdzDo1EN5cq+4mSk63XMiCopklooadN7KFNGdD3Szgb5by4GTHt2JaBr9jyN
-        FJSl5Sal7d8ydMzf/EjP2XeR6qHqgweamkXFNG/tDWTFDnlbDTug6jPuXgZmgfjO
-        +Gd4SlGbA/dPzZHqiHQX7HoPiEE89239RxOpptoGnn+3P5WbawRmeKXERIs82vyA
-        ==
-X-ME-Sender: <xms:bl5mXlXNnGXqAx1aTjZD4juTlwHGcpVCqEQwyRSLToVUuYfOj6IF6w>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedruddukedgjeeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuffhomhgrih
-    hnpehinhhfrhgruggvrggurdhorhhgnecukfhppeeltddrkeelrdeikedrjeeinecuvehl
-    uhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvse
-    gtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:bl5mXkEJIASZKCuUPId8-MJ8b2AEkehqodn2I41oagWxX6ko4x_LjA>
-    <xmx:bl5mXoNy3OWQ3pmDMwbrKw6Hr3XBs5fmiTQN1d5we4ZA_1tJiJ0rZA>
-    <xmx:bl5mXoW_6OnAHq-ijqYQu3d-bzgxMKSRYTjFkcwlZjxBPe4cEgmrPw>
-    <xmx:cF5mXvv3eVSsBzst4zFDuUJQ0lq36jWOyfBpEVp7yUEzIA8SDlgJOA>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 65C6A3280065;
-        Mon,  9 Mar 2020 11:19:10 -0400 (EDT)
-Date:   Mon, 9 Mar 2020 16:19:09 +0100
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Jernej Skrabec <jernej.skrabec@siol.net>
-Cc:     wens@csie.org, robh+dt@kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
-Subject: Re: [PATCH 0/2] arm64: dts: allwinner: h6: orangepi-one-plus:
- ethernet and HDMI
-Message-ID: <20200309151909.qkcybvtqhltjx5pf@gilmour.lan>
-References: <20200308164840.110747-1-jernej.skrabec@siol.net>
+        Mon, 9 Mar 2020 11:19:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583767162;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=VX2DGxYyCfy6aqBrzrQoFIhRv7k080Iin067EZLHZHg=;
+        b=drPScwSkYakJqDjI/13ddd/boer9yWXmENtNeOuU7OFh4agsijpjA3rvpNj+RYzn+kbreX
+        vCULd3uPkB3NqzmPsnK0IrbS1gXD3kzkFo8SnCh4LCfvZsWJYTGAuYnbPYuCIFQDFJWyz3
+        04/H3fd6adG80RHr8WKzTyV479jDkdI=
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
+ [209.85.219.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-283-KfzqMuV7OiitBMs0V6VsXw-1; Mon, 09 Mar 2020 11:19:20 -0400
+X-MC-Unique: KfzqMuV7OiitBMs0V6VsXw-1
+Received: by mail-qv1-f70.google.com with SMTP id g12so3515724qvp.20
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 08:19:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=VX2DGxYyCfy6aqBrzrQoFIhRv7k080Iin067EZLHZHg=;
+        b=FgTEB0GPPXJ0supN9Em4pRUpghgvMKJpnSj9Zg6I9FC5AE5VTSicFHWTc6xM9jn4Pb
+         RgUxGiulfXPSDk8zuH1pOdPZecXZR9VN9UTARQoQqPIuIntng9bztpoYGfApYpgtPgnn
+         pN4qLJ0rRQLV9ygaQA8eHMDp+FfVyghtqWBcucqGI9jbaEXV8MxXj6mB5FAz6A95KSOc
+         lkr6T4ERjDDncsNFEz3lcHrQmA6DfxmyTr0BLWWd26W1TkbyvnN4shTCyMG+8jaEnEPl
+         5+OJ972nEGTLAap1aXkUtgjdqs9qpCSnMLZnO2C+kEjThxqVO2SbKYKqZvWj2T3s4dPH
+         b1ZA==
+X-Gm-Message-State: ANhLgQ0kTlyH4L8zmhV/U1eCAzU3rN62zp5RluenIrDu5DISeNm9nAkb
+        9hVxP998EFSYY2n5PT/+y32wgkV1jsaYJlCD/Tr7714Cg0jVL7GOi4vczNg0lowtHlyhyE0Qe5F
+        VKAI/lavmG3m4E2Ym1ArLKT79
+X-Received: by 2002:a0c:80a5:: with SMTP id 34mr2133423qvb.184.1583767160361;
+        Mon, 09 Mar 2020 08:19:20 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vt+hDUMb6rNTbLRm/d1PBNVvSGonrrDbyOE8DDgydCwYE3uygRLgoX+kWoF0qKNmYR4X+m87w==
+X-Received: by 2002:a0c:80a5:: with SMTP id 34mr2133399qvb.184.1583767160050;
+        Mon, 09 Mar 2020 08:19:20 -0700 (PDT)
+Received: from xz-x1 ([2607:9880:19c0:32::2])
+        by smtp.gmail.com with ESMTPSA id p18sm22315902qkp.47.2020.03.09.08.19.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Mar 2020 08:19:19 -0700 (PDT)
+Date:   Mon, 9 Mar 2020 11:19:17 -0400
+From:   Peter Xu <peterx@redhat.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Luiz Capitulino <lcapitulino@redhat.com>
+Subject: Re: [PATCH] sched/isolation: Allow "isolcpus=" to skip unknown
+ sub-parameters
+Message-ID: <20200309151917.GB4206@xz-x1>
+References: <20200204161639.267026-1-peterx@redhat.com>
+ <20200214194008.GA1193332@xz-x1>
+ <877e0oud5i.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="3gs76qg3etkdsmvv"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200308164840.110747-1-jernej.skrabec@siol.net>
+In-Reply-To: <877e0oud5i.fsf@nanos.tec.linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Feb 14, 2020 at 09:28:25PM +0100, Thomas Gleixner wrote:
+> Peter Xu <peterx@redhat.com> writes:
+> 
+> > On Tue, Feb 04, 2020 at 11:16:39AM -0500, Peter Xu wrote:
+> >> The "isolcpus=" parameter allows sub-parameters to exist before the
+> >> cpulist is specified, and if it sees unknown sub-parameters the whole
+> >> parameter will be ignored.  This design is incompatible with itself
+> >> when we add more sub-parameters to "isolcpus=", because the old
+> >> kernels will not recognize the new "isolcpus=" sub-parameters, then it
+> >> will invalidate the whole parameter so the CPU isolation will not
+> >> really take effect if we start to use the new sub-parameters while
+> >> later we reboot into an old kernel. Instead we will see this when
+> >> booting the old kernel:
+> >> 
+> >>     isolcpus: Error, unknown flag
+> >> 
+> >> The better and compatible way is to allow "isolcpus=" to skip unknown
+> >> sub-parameters, so that even if we add new sub-parameters to it the
+> >> old kernel will still be able to behave as usual even if with the new
+> >> sub-parameter is specified.
+> >> 
+> >> Ideally this patch should be there when we introduce the first
+> >> sub-parameter for "isolcpus=", so it's already a bit late.  However
+> >> late is better than nothing.
+> >
+> > Ping - Hi, Thomas, do you have any further comment on this patch?
+> 
+> Fine with me.
+> 
+> Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
 
---3gs76qg3etkdsmvv
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Thanks Thomas!
 
-On Sun, Mar 08, 2020 at 05:48:38PM +0100, Jernej Skrabec wrote:
-> This short series enables ethernet on OrangePi One Plus and HDMI output on
-> OrangePi One Plus and OrangePi Lite 2 (shared DTSI).
->
-> Note that patch 2 (HDMI) is based on top of:
-> http://lists.infradead.org/pipermail/linux-arm-kernel/2020-March/716661.html
+Does anyone like to pick this up, or does this patch needs more
+review?
 
-Applie,d thanks
+Thanks,
 
-Maxime
+-- 
+Peter Xu
 
---3gs76qg3etkdsmvv
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXmZebQAKCRDj7w1vZxhR
-xVcCAP9k/liklt0k0GvaDRpxWuOHqUvfue+5kYy/cdlvN/wBIwEAyIyQ0RG1R3DX
-9zu2J6e9HAhBaxRD1aSRE6arYFJ4cwY=
-=xynm
------END PGP SIGNATURE-----
-
---3gs76qg3etkdsmvv--
