@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 126FAC18E5C
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 16:56:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 794D6C2BB58
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 16:56:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0D6720727
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 16:56:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5268C20828
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 16:56:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="Sx5t7i4q"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="REj3KT9K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727357AbgCIQ4G (ORCPT
+        id S1727370AbgCIQ4K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 12:56:06 -0400
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:51923 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727317AbgCIQ4B (ORCPT
+        Mon, 9 Mar 2020 12:56:10 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:45395 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727341AbgCIQ4G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 12:56:01 -0400
-Received: by mail-pj1-f66.google.com with SMTP id y7so115130pjn.1
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 09:56:01 -0700 (PDT)
+        Mon, 9 Mar 2020 12:56:06 -0400
+Received: by mail-pf1-f196.google.com with SMTP id 2so5063067pfg.12
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 09:56:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sifive.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=eOvGoomldlItgrTMe3b4RPvPtMpqmI4vOPIxgU5N5dw=;
-        b=Sx5t7i4qo7aZC3e6rBAaMwJOSvAe94WC6mvx/MQEjX+d/7LAbkmXgEXeV1meT/5Rgx
-         WQYUaQkMp2UN5BeERTN/yq/g384+aAor82Dq3CQsz8s3fhSQIgfhNA4Mog8V77Psp6KN
-         CE8ZLqsaaRqY+gH5n7M+rHmJ6CmUOak7gZ02LWQbYgTGSKbPkQ2hmDWSDeuHYUR+lvm9
-         Dz5+6J7fnjLxSNK333c7nXq2/D0eJWn6+RIhnWK4bWLBb1ztsE459vR/CerehyiWRdS8
-         BiNmV3bfU/7SPip+wqhSyQR3OZckv4l7CqoOwRNyqHSIHlRL5P0s8GQtv38mgDU68BAn
-         MFQg==
+        bh=DKBW8Eyy8NVtYJgHutHlswaK8NeRD9IAyJm/+12aBBY=;
+        b=REj3KT9KCk7pmUAzQenlRZ2UdxDM55l7D4o43L3PCGSAW2igoKTdhOdGSHha/5ZV0k
+         PWnirmLcaBYdBy+ACtOq048Ky2eKNeoaSFswZk4gUbnNj2EpUH3DERiyVDErdUcN5bL4
+         f7rGeupxtqCtvj2wmTCxeWyv/EgbYZAPatwSOsy69GjDytGquusfnE5lStT5PC2n+LB0
+         +deFikDuHSYPI2k3e8zYswywhoFtwypPlee3loaubnkMY59DP6jyRznBAFNfCb2Z4d3x
+         94ITFyNP6J5LaBX+WtURnXC0csngUwZMMW6VnLjRJqEnlG9otg0Wqxcm4esJikPDD970
+         cB4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=eOvGoomldlItgrTMe3b4RPvPtMpqmI4vOPIxgU5N5dw=;
-        b=DKBrEiVmoYmKpX28kzL9YfN+Q4mayYJQER6pZAqL+nc93wIxhjK5CHZkkkYBPgcroY
-         OES9tyWUp/qKGJT7ks3xw8NqK3v+wmj03aC3U2ZBseJ14srDAPzpw01i3vF5fuR+0ej+
-         aSHCT0DVoI61N0NdTOMd1cUyn2EwWHIi51OXcLMzjc7TlVUpEO8fz/cTaiUF0V5EOCFV
-         E+7ZZ1+BQi0DiFFJ1Z7adhHKS6a8HJX01GDXMBju5VUDr1XDIjxC/wLqvRI0Gx2y1EzL
-         u4o/gaRbFzuBZ+sthWzBeftajJFIpQJrCYbWOTydGyXhrpn/456s4s5Mz+UFeqC6h7bC
-         DhFA==
-X-Gm-Message-State: ANhLgQ3goUsu4pNo8hx7rNW/+6/6bf7eHdtMQXZ5lYDqpNQ3BAcM6RnP
-        496XqWERTp+0oYtMuDFStLMwvg==
-X-Google-Smtp-Source: ADFU+vs7rseCVIQDvOgK+WTfSYKco3QVTCiqheNNtMu77pT1JjgjykTot1HoW3biIyEloUH6n7nrtg==
-X-Received: by 2002:a17:902:b485:: with SMTP id y5mr15847694plr.4.1583772960751;
-        Mon, 09 Mar 2020 09:56:00 -0700 (PDT)
+        bh=DKBW8Eyy8NVtYJgHutHlswaK8NeRD9IAyJm/+12aBBY=;
+        b=cSecfLF/TEkoCi+yjbvgaaLeA8bIl4EpLAE9wshZKD98a0lRGFbiVFQmxLo9uMHBpL
+         XERRPDlvCTVAVeNhQ0uYKgiwgPc8cMI1feKoy5JWQ4rg3/CA6lED+9X4KPLzavEeSPE1
+         pMrrwx1LLYP3rJzFVUEoCGFsKVnMFPg/oO9VdQWMthKFSE0VYAuAmDJMjrEF/IEGErKA
+         HKjlYutmkaHoR6mkWEP7bdp6knZOPjHJ7uYXiLQ1buZw7Cpy/Uhop8zQ7vMb4SNBq1l7
+         9Epyz3q/l6XKRIlR7aFJbov+FXxYVyyUYqSRezquVWRMODNdR4BUKpEl78f6cViQq2aV
+         AB/g==
+X-Gm-Message-State: ANhLgQ1sRYtN2I/916cLGtlP9e8OZF0vw4WwFQmo0yxyz7CYSl4bKNwB
+        hf7cNEm/VS4AeZ+eD9lFt+sLag==
+X-Google-Smtp-Source: ADFU+vuSU8d2YJr+UbuHwypGjfeETIP0OFkmwem67CPnKwSBb/4lKf72zr3M4nrZ00SVq1HLPFHWlQ==
+X-Received: by 2002:a63:348b:: with SMTP id b133mr17387820pga.372.1583772964283;
+        Mon, 09 Mar 2020 09:56:04 -0700 (PDT)
 Received: from hsinchu02.internal.sifive.com (220-132-236-182.HINET-IP.hinet.net. [220.132.236.182])
-        by smtp.gmail.com with ESMTPSA id cm2sm104013pjb.23.2020.03.09.09.55.59
+        by smtp.gmail.com with ESMTPSA id cm2sm104013pjb.23.2020.03.09.09.56.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Mar 2020 09:56:00 -0700 (PDT)
+        Mon, 09 Mar 2020 09:56:03 -0700 (PDT)
 From:   Zong Li <zong.li@sifive.com>
 To:     palmer@dabbelt.com, paul.walmsley@sifive.com,
         aou@eecs.berkeley.edu, linux-riscv@lists.infradead.org,
         linux-kernel@vger.kernel.org
 Cc:     Zong Li <zong.li@sifive.com>
-Subject: [PATCH v3 5/9] riscv: add alignment for text, rodata and data sections
-Date:   Tue, 10 Mar 2020 00:55:40 +0800
-Message-Id: <0e60e503eefbebeb9c9a24a125feef876a80c148.1583772574.git.zong.li@sifive.com>
+Subject: [PATCH v3 7/9] riscv: add macro to get instruction length
+Date:   Tue, 10 Mar 2020 00:55:42 +0800
+Message-Id: <8f933bed0478a1b4029447e1f8eef2ce0aefed4b.1583772574.git.zong.li@sifive.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1583772574.git.zong.li@sifive.com>
 References: <cover.1583772574.git.zong.li@sifive.com>
@@ -74,87 +74,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The kernel mapping will tried to optimize its mapping by using bigger
-size. In rv64, it tries to use PMD_SIZE, and tryies to use PGDIR_SIZE in
-rv32. To ensure that the start address of these sections could fit the
-mapping entry size, make them align to the biggest alignment.
-
-Define a macro SECTION_ALIGN because the HPAGE_SIZE or PMD_SIZE, etc.,
-are invisible in linker script.
-
-This patch is prepared for STRICT_KERNEL_RWX support.
+Extract the calculation of instruction length for common use.
 
 Signed-off-by: Zong Li <zong.li@sifive.com>
 ---
- arch/riscv/include/asm/set_memory.h | 13 +++++++++++++
- arch/riscv/kernel/vmlinux.lds.S     |  5 ++++-
- 2 files changed, 17 insertions(+), 1 deletion(-)
+ arch/riscv/include/asm/bug.h | 8 ++++++++
+ arch/riscv/kernel/traps.c    | 3 ++-
+ 2 files changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/arch/riscv/include/asm/set_memory.h b/arch/riscv/include/asm/set_memory.h
-index 620d81c372d9..4c5bae7ca01c 100644
---- a/arch/riscv/include/asm/set_memory.h
-+++ b/arch/riscv/include/asm/set_memory.h
-@@ -6,6 +6,7 @@
- #ifndef _ASM_RISCV_SET_MEMORY_H
- #define _ASM_RISCV_SET_MEMORY_H
+diff --git a/arch/riscv/include/asm/bug.h b/arch/riscv/include/asm/bug.h
+index 75604fec1b1b..d6f1ec08d97b 100644
+--- a/arch/riscv/include/asm/bug.h
++++ b/arch/riscv/include/asm/bug.h
+@@ -19,6 +19,14 @@
+ #define __BUG_INSN_32	_UL(0x00100073) /* ebreak */
+ #define __BUG_INSN_16	_UL(0x9002) /* c.ebreak */
  
-+#ifndef __ASSEMBLY__
- /*
-  * Functions to change memory attributes.
-  */
-@@ -24,4 +25,16 @@ static inline int set_memory_nx(unsigned long addr, int numpages) { return 0; }
- int set_direct_map_invalid_noflush(struct page *page);
- int set_direct_map_default_noflush(struct page *page);
- 
-+#endif /* __ASSEMBLY__ */
++#define GET_INSN_LENGTH(insn)						\
++({									\
++	unsigned long __len;						\
++	__len = ((insn & __INSN_LENGTH_MASK) == __INSN_LENGTH_32) ?	\
++		4UL : 2UL;						\
++	__len;								\
++})
 +
-+#ifdef CONFIG_ARCH_HAS_STRICT_KERNEL_RWX
-+#ifdef CONFIG_64BIT
-+#define SECTION_ALIGN (1 << 21)
-+#else
-+#define SECTION_ALIGN (1 << 22)
-+#endif
-+#else /* !CONFIG_ARCH_HAS_STRICT_KERNEL_RWX */
-+#define SECTION_ALIGN L1_CACHE_BYTES
-+#endif /* CONFIG_ARCH_HAS_STRICT_KERNEL_RWX */
+ typedef u32 bug_insn_t;
+ 
+ #ifdef CONFIG_GENERIC_BUG_RELATIVE_POINTERS
+diff --git a/arch/riscv/kernel/traps.c b/arch/riscv/kernel/traps.c
+index ffb3d94bf0cc..a4d136355f78 100644
+--- a/arch/riscv/kernel/traps.c
++++ b/arch/riscv/kernel/traps.c
+@@ -118,7 +118,8 @@ static inline unsigned long get_break_insn_length(unsigned long pc)
+ 
+ 	if (probe_kernel_address((bug_insn_t *)pc, insn))
+ 		return 0;
+-	return (((insn & __INSN_LENGTH_MASK) == __INSN_LENGTH_32) ? 4UL : 2UL);
 +
- #endif /* _ASM_RISCV_SET_MEMORY_H */
-diff --git a/arch/riscv/kernel/vmlinux.lds.S b/arch/riscv/kernel/vmlinux.lds.S
-index 02e948b620af..ef87deea0350 100644
---- a/arch/riscv/kernel/vmlinux.lds.S
-+++ b/arch/riscv/kernel/vmlinux.lds.S
-@@ -9,6 +9,7 @@
- #include <asm/page.h>
- #include <asm/cache.h>
- #include <asm/thread_info.h>
-+#include <asm/set_memory.h>
++	return GET_INSN_LENGTH(insn);
+ }
  
- OUTPUT_ARCH(riscv)
- ENTRY(_start)
-@@ -36,6 +37,7 @@ SECTIONS
- 	PERCPU_SECTION(L1_CACHE_BYTES)
- 	__init_end = .;
- 
-+	. = ALIGN(SECTION_ALIGN);
- 	.text : {
- 		_text = .;
- 		_stext = .;
-@@ -53,13 +55,14 @@ SECTIONS
- 
- 	/* Start of data section */
- 	_sdata = .;
--	RO_DATA(L1_CACHE_BYTES)
-+	RO_DATA(SECTION_ALIGN)
- 	.srodata : {
- 		*(.srodata*)
- 	}
- 
- 	EXCEPTION_TABLE(0x10)
- 
-+	. = ALIGN(SECTION_ALIGN);
- 	_data = .;
- 
- 	RW_DATA(L1_CACHE_BYTES, PAGE_SIZE, THREAD_SIZE)
+ asmlinkage __visible void do_trap_break(struct pt_regs *regs)
 -- 
 2.25.1
 
