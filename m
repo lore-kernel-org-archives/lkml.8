@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFB7DC10F25
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:05:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E85C6C10F25
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:06:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4F7921D56
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:05:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B94AE21D56
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:06:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583780757;
-	bh=ukpScdr/IBgKHT9ol7CmXugjm6McPESPv9J1yjfJ/z8=;
+	s=default; t=1583780760;
+	bh=XEjdlJtgaHhCYd7QOwSbHewIlN4Mq71jDXs0v9HV8Fo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y/8Q+UwUk37GvKdOtfg16eQvMnUkIq01SOj/xb/fE8B/wrHHtN3gn6buE576BDfyf
-	 Y5HtCwIDb4zTRgnYid7trXZyJo12108Kyt7OTYl8502IVBY6yInSEPASunfVBmj3Rv
-	 NJtSD3S1prpJfZjMWnQz1MUSnZYYszahgqGJHIG8=
+	b=haBD6fxMDjV2LGXuRBUjTisjPqntXvU7mQjO1/SkHAMqa3b6BtXgoRDjekc0thBU3
+	 uoOBggiOm7B8708Yl7VbyB2ZRwrnr73QUj69KSiQsDMBz94OWLs9KhkC24iNpUlvem
+	 lMMJLGQPouUdkfeKTZG+UOEiXNz0Wq4QzwzzQ9Jc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727588AbgCITF4 (ORCPT
+        id S1727446AbgCITF7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 15:05:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47662 "EHLO mail.kernel.org"
+        Mon, 9 Mar 2020 15:05:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47648 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727446AbgCITEZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727574AbgCITEZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 9 Mar 2020 15:04:25 -0400
 Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 952C524656;
+        by mail.kernel.org (Postfix) with ESMTPSA id D19F924658;
         Mon,  9 Mar 2020 19:04:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583780664;
-        bh=ukpScdr/IBgKHT9ol7CmXugjm6McPESPv9J1yjfJ/z8=;
+        s=default; t=1583780665;
+        bh=XEjdlJtgaHhCYd7QOwSbHewIlN4Mq71jDXs0v9HV8Fo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B0g67XEeyc8XUdpfd73I5W25pxNyCcTHvATMXJwveKJV3kAPwNI3nC3tsvNcvTUjz
-         AKW8J6ZPH2xVEkBwFyp/RXQTDbrncZsqbwQ2HvsIyTz7SBFxOvP82nT317WyHDPHbI
-         iUqvEzW51W1wwYaRnETyIkZXYjC9VBoe/47C6Cuc=
+        b=hIvCA7JDUyMEXIl38dzbb06OKGcjPAE1dkL1ntQ58q/KHZSL2XCS4OiZ0mvjRlQ1O
+         NLY+aDgpm5PIT6YEIhZXLmVOBDdTyyLfSIpOOwWft8Ii4N9QbMnlaAXvgoDLdRfj1C
+         0TXnOP3saXlVYf1MO+DfQumx6yzUX80796uMd83w=
 From:   paulmck@kernel.org
 To:     linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
         kernel-team@fb.com, mingo@kernel.org
 Cc:     elver@google.com, andreyknvl@google.com, glider@google.com,
         dvyukov@google.com, cai@lca.pw, boqun.feng@gmail.com,
-        "Paul E . McKenney" <paulmck@kernel.org>
-Subject: [PATCH kcsan 10/32] copy_to_user, copy_from_user: Use generic instrumented.h
-Date:   Mon,  9 Mar 2020 12:03:58 -0700
-Message-Id: <20200309190420.6100-10-paulmck@kernel.org>
+        "Paul E. McKenney" <paulmck@kernel.org>
+Subject: [PATCH kcsan 11/32] kcsan: Add docbook header for data_race()
+Date:   Mon,  9 Mar 2020 12:03:59 -0700
+Message-Id: <20200309190420.6100-11-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20200309190359.GA5822@paulmck-ThinkPad-P72>
 References: <20200309190359.GA5822@paulmck-ThinkPad-P72>
@@ -56,121 +56,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marco Elver <elver@google.com>
+From: "Paul E. McKenney" <paulmck@kernel.org>
 
-This replaces the KASAN instrumentation with generic instrumentation,
-implicitly adding KCSAN instrumentation support.
-
-For KASAN no functional change is intended.
-
-Suggested-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Marco Elver <elver@google.com>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+Cc: Marco Elver <elver@google.com>
+Cc: Dmitry Vyukov <dvyukov@google.com>
 ---
- include/linux/uaccess.h | 14 +++++++-------
- lib/usercopy.c          |  7 ++++---
- 2 files changed, 11 insertions(+), 10 deletions(-)
+ include/linux/compiler.h | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/include/linux/uaccess.h b/include/linux/uaccess.h
-index 67f01601..8a215c5 100644
---- a/include/linux/uaccess.h
-+++ b/include/linux/uaccess.h
-@@ -2,9 +2,9 @@
- #ifndef __LINUX_UACCESS_H__
- #define __LINUX_UACCESS_H__
+diff --git a/include/linux/compiler.h b/include/linux/compiler.h
+index 8c0beb1..c1bdf37 100644
+--- a/include/linux/compiler.h
++++ b/include/linux/compiler.h
+@@ -315,13 +315,15 @@ unsigned long read_word_at_a_time(const void *addr)
  
-+#include <linux/instrumented.h>
- #include <linux/sched.h>
- #include <linux/thread_info.h>
--#include <linux/kasan-checks.h>
+ #include <linux/kcsan.h>
  
- #define uaccess_kernel() segment_eq(get_fs(), KERNEL_DS)
- 
-@@ -58,7 +58,7 @@
- static __always_inline __must_check unsigned long
- __copy_from_user_inatomic(void *to, const void __user *from, unsigned long n)
- {
--	kasan_check_write(to, n);
-+	instrument_copy_from_user(to, from, n);
- 	check_object_size(to, n, false);
- 	return raw_copy_from_user(to, from, n);
- }
-@@ -67,7 +67,7 @@ static __always_inline __must_check unsigned long
- __copy_from_user(void *to, const void __user *from, unsigned long n)
- {
- 	might_fault();
--	kasan_check_write(to, n);
-+	instrument_copy_from_user(to, from, n);
- 	check_object_size(to, n, false);
- 	return raw_copy_from_user(to, from, n);
- }
-@@ -88,7 +88,7 @@ __copy_from_user(void *to, const void __user *from, unsigned long n)
- static __always_inline __must_check unsigned long
- __copy_to_user_inatomic(void __user *to, const void *from, unsigned long n)
- {
--	kasan_check_read(from, n);
-+	instrument_copy_to_user(to, from, n);
- 	check_object_size(from, n, true);
- 	return raw_copy_to_user(to, from, n);
- }
-@@ -97,7 +97,7 @@ static __always_inline __must_check unsigned long
- __copy_to_user(void __user *to, const void *from, unsigned long n)
- {
- 	might_fault();
--	kasan_check_read(from, n);
-+	instrument_copy_to_user(to, from, n);
- 	check_object_size(from, n, true);
- 	return raw_copy_to_user(to, from, n);
- }
-@@ -109,7 +109,7 @@ _copy_from_user(void *to, const void __user *from, unsigned long n)
- 	unsigned long res = n;
- 	might_fault();
- 	if (likely(access_ok(from, n))) {
--		kasan_check_write(to, n);
-+		instrument_copy_from_user(to, from, n);
- 		res = raw_copy_from_user(to, from, n);
- 	}
- 	if (unlikely(res))
-@@ -127,7 +127,7 @@ _copy_to_user(void __user *to, const void *from, unsigned long n)
- {
- 	might_fault();
- 	if (access_ok(to, n)) {
--		kasan_check_read(from, n);
-+		instrument_copy_to_user(to, from, n);
- 		n = raw_copy_to_user(to, from, n);
- 	}
- 	return n;
-diff --git a/lib/usercopy.c b/lib/usercopy.c
-index cbb4d9e..4bb1c5e 100644
---- a/lib/usercopy.c
-+++ b/lib/usercopy.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
--#include <linux/uaccess.h>
- #include <linux/bitops.h>
-+#include <linux/instrumented.h>
-+#include <linux/uaccess.h>
- 
- /* out-of-line parts */
- 
-@@ -10,7 +11,7 @@ unsigned long _copy_from_user(void *to, const void __user *from, unsigned long n
- 	unsigned long res = n;
- 	might_fault();
- 	if (likely(access_ok(from, n))) {
--		kasan_check_write(to, n);
-+		instrument_copy_from_user(to, from, n);
- 		res = raw_copy_from_user(to, from, n);
- 	}
- 	if (unlikely(res))
-@@ -25,7 +26,7 @@ unsigned long _copy_to_user(void __user *to, const void *from, unsigned long n)
- {
- 	might_fault();
- 	if (likely(access_ok(to, n))) {
--		kasan_check_read(from, n);
-+		instrument_copy_to_user(to, from, n);
- 		n = raw_copy_to_user(to, from, n);
- 	}
- 	return n;
+-/*
+- * data_race(): macro to document that accesses in an expression may conflict with
+- * other concurrent accesses resulting in data races, but the resulting
+- * behaviour is deemed safe regardless.
++/**
++ * data_race - mark an expression as containing intentional data races
++ *
++ * This data_race() macro is useful for situations in which data races
++ * should be forgiven.  One example is diagnostic code that accesses
++ * shared variables but is not a part of the core synchronization design.
+  *
+- * This macro *does not* affect normal code generation, but is a hint to tooling
+- * that data races here should be ignored.
++ * This macro *does not* affect normal code generation, but is a hint
++ * to tooling that data races here are to be ignored.
+  */
+ #define data_race(expr)                                                        \
+ 	({                                                                     \
 -- 
 2.9.5
 
