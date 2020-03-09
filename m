@@ -2,102 +2,105 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F1CDC18E5A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 21:08:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03BA6C10F29
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 21:08:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 026C224655
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 21:08:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEC5C24655
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 21:08:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="QqAvgixF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jfRwWnu0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726866AbgCIVIN (ORCPT
+        id S1726898AbgCIVIp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 17:08:13 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:55437 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726118AbgCIVIM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 17:08:12 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48brRG0C09z9sRN;
-        Tue, 10 Mar 2020 08:08:03 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1583788090;
-        bh=PvJIsVYHxPMFYB14Ey2gvRgzLeFBRUopGO6J+1r0pGo=;
-        h=Date:From:To:Cc:Subject:From;
-        b=QqAvgixF0LvbNT7cvUhkrt6gvas3f6Z8v4ETCcw2BTf9/G8wJjlGCrusJqitF1u6u
-         FxcGksl+DDk28wExnbI3cSV2dxkNYXsv5dqtPV3Dm3Aj2TzZdpZEOgjnxe2Ugf++7M
-         PIUtJRX9yMI6v5Q5Kf3MHZUIeWar4GF/DLWs1m7Z8vPn5H9jNWctvh0hDx3vG3QrCh
-         ElYxX4Sf9L/yByCU3GvFyktCTX1860b91c2yXX7c0blT7LR3kR7S/WSenNmNOIfHRh
-         vRiWX12mb9pFJep/sTOV7/QWj0CEI24BjQPWut0ABjmQOJTRPvgV1cSpMtrK5lQILs
-         vUAP+DurN6qZA==
-Date:   Tue, 10 Mar 2020 08:07:58 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Christian Brauner <christian@brauner.io>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: build warning after merge of the pidfd-fixes tree
-Message-ID: <20200310080758.0b7b6f6b@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/rW2OhgAG0fd3atcTMj2J=MI";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        Mon, 9 Mar 2020 17:08:45 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:53932 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726118AbgCIVIp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 17:08:45 -0400
+Received: by mail-wm1-f68.google.com with SMTP id g134so1070268wme.3;
+        Mon, 09 Mar 2020 14:08:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=+kMv15yJUTEdNPrEZ0z7ORWq3Tt1uXx0pRgX3Sxz6MY=;
+        b=jfRwWnu0XJu4lBt57XtZvLsh3KSPGbukCDMT//jHqaa2rhkmArh/mxjA2HP1RR76LW
+         lAayDslY1iBBJGOOvXPL/0rjP1epF3rdC/zgyxVh4tqGjvt9Sm0PbH4vtM0Ip0qsoH8I
+         reCHYam7ryG+dZkD76WVLZ0aDG1ckt25u9YsIK65fN6qjmyWr9sdr+G5XHzuNx6L7EFT
+         w4DyETuQvZ4C1m0FmVRytoecUz2ef3bP53nBqyxJd7xmm+5zu11MS9d0XyhRYeWCIBGG
+         ZNFvDuxHkJaTvULHZib1bo4wJGv7RPKGhacUvlzCmDM+UemM/hH5ynejst+gC2/hyxIg
+         BLCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=+kMv15yJUTEdNPrEZ0z7ORWq3Tt1uXx0pRgX3Sxz6MY=;
+        b=BTweVPK84qCu50A7PhMPenu7ahsPZbh3n38VgYHktUEzwhM/+48I60H2gWZO3iEH2F
+         cUlSuwW/bAteKPTZy0E8fwAZZbgTv2L7idH8Aq0vm7J7MYOpuPVxZ1wpETcw2nPGGMbr
+         f/+ovMNPHhyiDFgbvaTxssv/eLqRK/uLcTw3vwnAWnaAwkSkYcOMLoX1fRrX0H2FShSI
+         RCg2fZSBGPtNxkk0pgG9SXAhTlel49fJ3TOGnCG2VvfgVY9X4zDoaUKlQNrdmFOBwETz
+         R4+j8TwdcRiRHPUOfI7BE+5RY+euD7a0aaljC2dHVGqm9s54A+YRo/lvgG9wNP+mBp20
+         oFKA==
+X-Gm-Message-State: ANhLgQ2tjbnMPdlkBH8hLUKAUX2iI47Ce8N6AI2xPJJ2HrcA6j8SPfB6
+        DdcVWVug7YoktqTIpAfthB8vkdcVPAM=
+X-Google-Smtp-Source: ADFU+vuKHbngmBiwEfQY4TReuY49PKt2j7g7NspKCa21VTD882ngCnQipd4A6DaTIWLvjKT+IMUMLw==
+X-Received: by 2002:a1c:a345:: with SMTP id m66mr1153698wme.114.1583788122973;
+        Mon, 09 Mar 2020 14:08:42 -0700 (PDT)
+Received: from localhost.localdomain ([79.115.60.40])
+        by smtp.gmail.com with ESMTPSA id j205sm1016275wma.42.2020.03.09.14.08.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Mar 2020 14:08:42 -0700 (PDT)
+From:   Vladimir Oltean <olteanv@gmail.com>
+To:     broonie@kernel.org
+Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        shawnguo@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, eha@deif.com, angelo@sysam.it,
+        andrew.smirnov@gmail.com, gustavo@embeddedor.com, weic@nvidia.com,
+        mhosny@nvidia.com, michael@walle.cc, peng.ma@nxp.com
+Subject: [PATCH v2 0/6] NXP DSPI bugfixes and support for LS1028A
+Date:   Mon,  9 Mar 2020 23:07:49 +0200
+Message-Id: <20200309210755.6759-1-olteanv@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/rW2OhgAG0fd3atcTMj2J=MI
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+This series addresses a few issues that were missed during the previous
+series "[PATCH 00/12] TCFQ to XSPI migration for NXP DSPI driver", on
+SoCs other than LS1021A and LS1043A. DMA mode has been completely broken
+by that series, and XSPI mode never worked on little-endian controllers.
 
-Hi all,
+Then it introduces support for the LS1028A chip, whose compatible has
+recently been documented here:
 
-After merging the pidfd-fixes tree, today's linux-next build (arm
-multi_v7_defconfig) produced this warning:
+https://lore.kernel.org/linux-devicetree/20200218171418.18297-1-michael@walle.cc/
 
-In file included from include/linux/rwsem.h:18,
-                 from include/linux/mm_types.h:11,
-                 from include/linux/mmzone.h:21,
-                 from include/linux/gfp.h:6,
-                 from include/linux/mm.h:10,
-                 from kernel/pid.c:30:
-kernel/pid.c: In function 'alloc_pid':
-include/linux/err.h:26:9: warning: 'retval' may be used uninitialized in th=
-is function [-Wmaybe-uninitialized]
-   26 |  return (void *) error;
-      |         ^~~~~~~~~~~~~~
-kernel/pid.c:168:6: note: 'retval' was declared here
-  168 |  int retval;
-      |      ^~~~~~
+The device tree for the LS1028A SoC is extended with DMA channels
+definition, such that even though the default operating mode is XSPI,
+one can simply change DSPI_XSPI_MODE to DSPI_DMA_MODE in the
+devtype_data structure of the driver and use that instead.
 
-Introduced by commit
+For testing, benchmarking and debugging, the mikroBUS connector on the
+LS1028A-RDB is made available via spidev.
 
-  8deb24dcb89c ("pid: make ENOMEM return value more obvious")
+Vladimir Oltean (6):
+  spi: spi-fsl-dspi: Don't access reserved fields in SPI_MCR
+  spi: spi-fsl-dspi: Fix little endian access to PUSHR CMD and TXDATA
+  spi: spi-fsl-dspi: Fix oper_word_size of zero for DMA mode
+  spi: spi-fsl-dspi: Add support for LS1028A
+  arm64: dts: ls1028a: Specify the DMA channels for the DSPI controllers
+  arm64: dts: ls1028a-rdb: Add a spidev node for the mikroBUS
 
---=20
-Cheers,
-Stephen Rothwell
+ .../boot/dts/freescale/fsl-ls1028a-rdb.dts    | 14 ++++++
+ .../arm64/boot/dts/freescale/fsl-ls1028a.dtsi |  6 +++
+ drivers/spi/spi-fsl-dspi.c                    | 50 +++++++++++++++----
+ 3 files changed, 60 insertions(+), 10 deletions(-)
 
---Sig_/rW2OhgAG0fd3atcTMj2J=MI
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+-- 
+2.17.1
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5msC4ACgkQAVBC80lX
-0GzSwwf/eyDQ2Lvm8QB/Dvowfw+331GLu+1fKl0Ic5PEmOFMiPBOncbgjONtNo15
-mLBOZuAcloxpHuz+WN7dGM3hytSxADAlAfpI/3UMEqEB9mZ2M9bBHqyU3rGrIkvn
-3QTcwXczsjPh/1qapn2BCn65KYvqplukx4DaFkUp+5OVg/akhS5+p3v+MtGsbZNY
-3wyyI9f9jqb/7uharBhogLVv690VaRtq3JSvNTTtJS5TrQobpL3qhqyjjJQtdrwM
-2/APs4v/QpbTOdnVqWcGI8MqWDw/3t/aw9XnzC8qa5oJcEQSTwhymiabv9kGnDmn
-YI1/XQ+omlHHFBH9IQw+cXy5pCEs9Q==
-=b0oZ
------END PGP SIGNATURE-----
-
---Sig_/rW2OhgAG0fd3atcTMj2J=MI--
