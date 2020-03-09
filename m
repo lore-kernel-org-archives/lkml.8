@@ -2,66 +2,66 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-14.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1ACEC10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 16:18:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5767C10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 16:18:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB31024692
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 16:18:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB3EA2464B
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 16:18:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Wnc8fYr3"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PEkhro1u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727370AbgCIQSG (ORCPT
+        id S1727387AbgCIQSK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 12:18:06 -0400
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:33925 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727341AbgCIQSD (ORCPT
+        Mon, 9 Mar 2020 12:18:10 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:41356 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727314AbgCIQSE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 12:18:03 -0400
-Received: by mail-pj1-f67.google.com with SMTP id 39so113836pjo.1
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 09:18:02 -0700 (PDT)
+        Mon, 9 Mar 2020 12:18:04 -0400
+Received: by mail-pl1-f195.google.com with SMTP id t14so4168039plr.8
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 09:18:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=/h8DNnukgi/i/4uI4UrYhVF/plnr6/iBW/VDVCb89d4=;
-        b=Wnc8fYr3jeH0yzUL6wuPybRSTLkPM2ILTBT3LIJ1mdu+VXi975OoCJIljkYL2QOZJ9
-         8b7paZ8nRHV8cscGIonJsvSD64cjOVKBIHEOY90yVjZKBSgqF1iKz/ub5moQVDO3nDOj
-         mSJQE3hZVU0DBr0ghSJ7By6MpIKl+/n0Qx2sltHkv/ft+u8Hsp6H/pNNXE7lfvTbVZmk
-         BCMvPVDr/Y6RpJxJQxtKSxCzNsKLqSpS5k7a9fGwZJGLaTWYge+u1U3RgN//V3HuqaG6
-         jFvp9UWYQv/WtU/CRI7sQRZABxXs/8n35RMv6SLtRVTge5iNuXMvj+GHNZFYpZMvqg1I
-         ZmHQ==
+        bh=7xeSTI2PbxEvahk22xqv3ZE8AVSlO4Qu6bmPMYJwd5c=;
+        b=PEkhro1u1yGzYmZTU8Bne+MaDe5ejs2U5Hcuozmig8TyI58+GiwGJVRN8bvIWnbEhY
+         XQ2tPcGOLhR7RaQ4v51SV8JCyKWxIRs5l210IkWxqQVVWpAgw4rcT87XdJjGoHtB3tvN
+         4I87zcESvjYABtg5IHAXmJZIxSQg/wUa+XFQYJ4p1rqoMlxL5C5IIasbSBafTE23ROjI
+         DnMoTaHDykmdVlyqOgAsYbgXppGyRGTmOqUo4KnlxlWACLDYcc4GpY1Cddo8t7Xm7z53
+         xSscZ5Y3x2sGpd+vA7GrjXgJVwLJl2vnkW59GN+/+l9D5MKIJRBLwVCRY2zIezOte3aH
+         PixQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=/h8DNnukgi/i/4uI4UrYhVF/plnr6/iBW/VDVCb89d4=;
-        b=tGr29oE9Eql8VYaZ89JOM9VrryH/UmPoO96067MnWsbP5RMvLUMaFu6/Ig0+jpvbMq
-         ryzZLFeF32M/lZBWeSjoWwyZJ2eMbbJejkBQnWREB0MWSEpOq4jUExF/W+aRS2USOUyw
-         9dxMyc1x9EKYXM9Ms43FsxUJtKGscnzU1ksMnJMlRFnQs/+OqORkODQ5mhaXQUL8Qe8X
-         SwhrGZr5M7MI71MGldOggtqJDWYdBxb7cfF99I2NesUZdNN0z+qczLdl1+sNKpAEMzb0
-         Raf2AJ77euuTxkP9T4W6fM8gVSY7eTdTMJq2tZULnJQZlX4+ked8PPf5pEasAOTObmng
-         fEUg==
-X-Gm-Message-State: ANhLgQ1KNksUK9ERENnBZwyZIEGZagT8Pq/C4szuaM8nGmfEaGGsNq4r
-        THhOS8H7ey4EFOEgF9pvxqe+cH5et4M=
-X-Google-Smtp-Source: ADFU+vvf+A+UFjrpqzlDMJdlo3HBdRJl2jJu5NsAEArjghaPB2NL+qZHYVZMsmA6y5o9kG/Z4DyScA==
-X-Received: by 2002:a17:902:bd94:: with SMTP id q20mr5853060pls.305.1583770682227;
-        Mon, 09 Mar 2020 09:18:02 -0700 (PDT)
+        bh=7xeSTI2PbxEvahk22xqv3ZE8AVSlO4Qu6bmPMYJwd5c=;
+        b=T+bML1BPiav2A4KYZKeAiXt99Cddjb2aNJEcMKsw9W3RpCDXr7eehzz+cTBq3+Z126
+         62SlTlD2sjzr2YYWYyRabud+44FacHPQXWwv/P+B52OCtQ2w4drX/bzpL5BazAfpv3Xg
+         DFCgnmA44ljkCt6kepRkMiLwnmUGX+456/PStnzJSulHhJy1IIGg6sxRiOA2ksB12Ezf
+         O7WOWezhy7FIxlTedj4kQLkqtMoNcv3vabEFaB5FViKFm2P9xvYr3CL9MhQhPZrU/ujX
+         1q2HeEFTcXqvT6mPk/tbZNwpF3cQLNC5oxJ+TzdV0mabds9fUKd3+5HVA2M8jAKY+vVb
+         twzg==
+X-Gm-Message-State: ANhLgQ1ucqrlvBQNvLSJu642CDyicQMDBv1Khj9OeXUCT2y9NfWj1Gfc
+        gj7DOyLtptX8WET8+E7QY2UKYg==
+X-Google-Smtp-Source: ADFU+vtAGFavg5y+woyAvDRLrRF5zVCt/vK71+0RG5tHtfC4A5+BoGo4jFTkg1HQiWCbxhaqGppDOg==
+X-Received: by 2002:a17:902:8498:: with SMTP id c24mr11968583plo.233.1583770683209;
+        Mon, 09 Mar 2020 09:18:03 -0700 (PDT)
 Received: from xps15.cg.shawcable.net (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id m11sm38403pjl.18.2020.03.09.09.18.01
+        by smtp.gmail.com with ESMTPSA id m11sm38403pjl.18.2020.03.09.09.18.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Mar 2020 09:18:01 -0700 (PDT)
+        Mon, 09 Mar 2020 09:18:02 -0700 (PDT)
 From:   Mathieu Poirier <mathieu.poirier@linaro.org>
 To:     gregkh@linuxfoundation.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 12/13] Update MAINTAINERS to add reviewer for CoreSight
-Date:   Mon,  9 Mar 2020 10:17:47 -0600
-Message-Id: <20200309161748.31975-13-mathieu.poirier@linaro.org>
+Subject: [PATCH 13/13] coresight: cti: Remove unnecessary NULL check in cti_sig_type_name
+Date:   Mon,  9 Mar 2020 10:17:48 -0600
+Message-Id: <20200309161748.31975-14-mathieu.poirier@linaro.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200309161748.31975-1-mathieu.poirier@linaro.org>
 References: <20200309161748.31975-1-mathieu.poirier@linaro.org>
@@ -72,29 +72,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Leach <mike.leach@linaro.org>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-Added myself as a designated reviewer for the CoreSight infrastructure
-at the request of Mathieu Poirier.
+Clang warns:
 
-Signed-off-by: Mike Leach <mike.leach@linaro.org>
+drivers/hwtracing/coresight/coresight-cti-sysfs.c:948:11: warning:
+address of array 'grp->sig_types' will always evaluate to 'true'
+[-Wpointer-bool-conversion]
+        if (grp->sig_types) {
+        ~~  ~~~~~^~~~~~~~~
+1 warning generated.
+
+sig_types is at the end of a struct so it cannot be NULL.
+
+Fixes: 85b6684eab65 ("coresight: cti: Add connection information to sysfs")
+Link: https://github.com/ClangBuiltLinux/linux/issues/914
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Reported-by: kbuild test robot <lkp@intel.com>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 ---
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/hwtracing/coresight/coresight-cti-sysfs.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 5eae6e180174..07934de50a48 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1676,6 +1676,7 @@ F:	arch/arm/mach-ep93xx/micro9.c
- ARM/CORESIGHT FRAMEWORK AND DRIVERS
- M:	Mathieu Poirier <mathieu.poirier@linaro.org>
- R:	Suzuki K Poulose <suzuki.poulose@arm.com>
-+R:	Mike Leach <mike.leach@linaro.org>
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- S:	Maintained
- F:	drivers/hwtracing/coresight/*
+diff --git a/drivers/hwtracing/coresight/coresight-cti-sysfs.c b/drivers/hwtracing/coresight/coresight-cti-sysfs.c
+index abb7f492c2cb..214d6552b494 100644
+--- a/drivers/hwtracing/coresight/coresight-cti-sysfs.c
++++ b/drivers/hwtracing/coresight/coresight-cti-sysfs.c
+@@ -945,10 +945,8 @@ cti_sig_type_name(struct cti_trig_con *con, int used_count, bool in)
+ 	int idx = 0;
+ 	struct cti_trig_grp *grp = in ? con->con_in : con->con_out;
+ 
+-	if (grp->sig_types) {
+-		if (used_count < grp->nr_sigs)
+-			idx = grp->sig_types[used_count];
+-	}
++	if (used_count < grp->nr_sigs)
++		idx = grp->sig_types[used_count];
+ 	return sig_type_names[idx];
+ }
+ 
 -- 
 2.20.1
 
