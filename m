@@ -2,108 +2,130 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFEC9C10F28
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 01:04:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7E9AC10DCE
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 01:10:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA07420675
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 01:04:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583715853;
-	bh=xOZfa+fKIDwwJMXdJdRToMxH2YbKOlmyJ9br5yDPKQE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LIZIql6f8wTxFTsiBLtWj4KKMUisotamdNiIaXG7IaWOEccoDVfbYSKALMo5I1rSG
-	 2NH+Z1Xc4bibrz3JKP4igOsS87ef0Ukqbqv6Ml7xVG1lA2r23NWMvM0/w9EWZUaljK
-	 //KEgHKy7ArnqzXd7pH0u+NWQeouAKkVtyc2Xylg=
+	by mail.kernel.org (Postfix) with ESMTP id 9F41120675
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 01:10:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726610AbgCIBEM (ORCPT
+        id S1726677AbgCIBKZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Mar 2020 21:04:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57646 "EHLO mail.kernel.org"
+        Sun, 8 Mar 2020 21:10:25 -0400
+Received: from mga07.intel.com ([134.134.136.100]:42111 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726346AbgCIBEM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Mar 2020 21:04:12 -0400
-Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B074320675;
-        Mon,  9 Mar 2020 01:04:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583715851;
-        bh=xOZfa+fKIDwwJMXdJdRToMxH2YbKOlmyJ9br5yDPKQE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MwvOh/oadXZyXrLo2vL9AmDAMw023bIgYrObL6AoQonIgVZq8SUer9V2KTvCM2Uex
-         ew/MLJk6Q20LwuZVkACXJ9mdU0jgOlUkNDGPQOkeRGzrM/0TBXbbJAomIO8OQ6WjUV
-         AZkFbEnCo8aDUZocP7QFJmoxteNoBtqHLcznt/vc=
-Date:   Sun, 8 Mar 2020 18:04:10 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] xfs: clear PF_MEMALLOC before exiting xfsaild thread
-Message-ID: <20200309010410.GA371527@sol.localdomain>
-References: <0000000000000e7156059f751d7b@google.com>
- <20200308043540.1034779-1-ebiggers@kernel.org>
- <20200308230307.GM10776@dread.disaster.area>
+        id S1726622AbgCIBKZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Mar 2020 21:10:25 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Mar 2020 18:10:24 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,530,1574150400"; 
+   d="scan'208";a="414640640"
+Received: from joy-optiplex-7040.sh.intel.com (HELO joy-OptiPlex-7040) ([10.239.13.16])
+  by orsmga005.jf.intel.com with ESMTP; 08 Mar 2020 18:10:22 -0700
+Date:   Sun, 8 Mar 2020 21:00:56 -0400
+From:   Yan Zhao <yan.y.zhao@intel.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
+        "intel-gvt-dev@lists.freedesktop.org" 
+        <intel-gvt-dev@lists.freedesktop.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "peterx@redhat.com" <peterx@redhat.com>
+Subject: Re: [PATCH v3 2/7] vfio: introduce vfio_dma_rw to read/write a range
+ of IOVAs
+Message-ID: <20200309010055.GA18137@joy-OptiPlex-7040>
+Reply-To: Yan Zhao <yan.y.zhao@intel.com>
+References: <20200224084350.31574-1-yan.y.zhao@intel.com>
+ <20200224084715.31753-1-yan.y.zhao@intel.com>
+ <20200306012148.GB1530@joy-OptiPlex-7040>
+ <20200306092746.088a01a3@x1.home>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200308230307.GM10776@dread.disaster.area>
+In-Reply-To: <20200306092746.088a01a3@x1.home>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 09, 2020 at 10:03:07AM +1100, Dave Chinner wrote:
-> On Sat, Mar 07, 2020 at 08:35:40PM -0800, Eric Biggers wrote:
-> > From: Eric Biggers <ebiggers@google.com>
-> > 
-> > Leaving PF_MEMALLOC set when exiting a kthread causes it to remain set
-> > during do_exit().  That can confuse things.  For example, if BSD process
-> > accounting is enabled, then it's possible for do_exit() to end up
-> > calling ext4_write_inode().  That triggers the
-> > WARN_ON_ONCE(current->flags & PF_MEMALLOC) there, as it assumes
-> > (appropriately) that inodes aren't written when allocating memory.
+On Sat, Mar 07, 2020 at 12:27:46AM +0800, Alex Williamson wrote:
+> On Thu, 5 Mar 2020 20:21:48 -0500
+> Yan Zhao <yan.y.zhao@intel.com> wrote:
 > 
-> And just how the hell does and XFS kernel thread end up calling
-> ext4_write_inode()? That's kinda a key factor in all this, and
-> it's not explained here.
+> > On Mon, Feb 24, 2020 at 04:47:15PM +0800, Zhao, Yan Y wrote:
+> > > vfio_dma_rw will read/write a range of user space memory pointed to by
+> > > IOVA into/from a kernel buffer without enforcing pinning the user space
+> > > memory.
+> > > 
+> > > TODO: mark the IOVAs to user space memory dirty if they are written in
+> > > vfio_dma_rw().
+> > > 
+> > > Cc: Kevin Tian <kevin.tian@intel.com>
+> > > Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
+> > > ---
+> > >  drivers/vfio/vfio.c             | 49 +++++++++++++++++++++
+> > >  drivers/vfio/vfio_iommu_type1.c | 77 +++++++++++++++++++++++++++++++++
+> > >  include/linux/vfio.h            |  5 +++
+> > >  3 files changed, 131 insertions(+)
+> > > 
+> > > diff --git a/drivers/vfio/vfio.c b/drivers/vfio/vfio.c
+> > > index 914bdf4b9d73..902867627cbf 100644
+> > > --- a/drivers/vfio/vfio.c
+> > > +++ b/drivers/vfio/vfio.c
+> > > @@ -1998,6 +1998,55 @@ int vfio_unpin_pages(struct device *dev, unsigned long *user_pfn, int npage)
+> > >  }
+> > >  EXPORT_SYMBOL(vfio_unpin_pages);
+> > >  
+> > > +
+> > > +/*
+> > > + * This interface allows the CPUs to perform some sort of virtual DMA on
+> > > + * behalf of the device.
+> > > + *
+> > > + * CPUs read/write a range of IOVAs pointing to user space memory into/from
+> > > + * a kernel buffer.
+> > > + *
+> > > + * As the read/write of user space memory is conducted via the CPUs and is
+> > > + * not a real device DMA, it is not necessary to pin the user space memory.
+> > > + *
+> > > + * The caller needs to call vfio_group_get_external_user() or
+> > > + * vfio_group_get_external_user_from_dev() prior to calling this interface,
+> > > + * so as to prevent the VFIO group from disposal in the middle of the call.
+> > > + * But it can keep the reference to the VFIO group for several calls into
+> > > + * this interface.
+> > > + * After finishing using of the VFIO group, the caller needs to release the
+> > > + * VFIO group by calling vfio_group_put_external_user().
+> > > + *
+> > > + * @group [in]: vfio group of a device
+> > > + * @iova [in] : base IOVA of a user space buffer
+> > > + * @data [in] : pointer to kernel buffer
+> > > + * @len [in]  : kernel buffer length
+> > > + * @write     : indicate read or write
+> > > + * Return error code on failure or 0 on success.
+> > > + */
+> > > +int vfio_dma_rw(struct vfio_group *group, dma_addr_t iova,
+> > > +		void *data, size_t len, bool write)  
+> > hi Alex
+> > May I rename this interface to vfio_dma_rw_from_group() that takes
+> > VFIO group as arg and add another interface vfio_dma_rw(struct device *dev...) ?
+> > That might be easier for a driver to use the second one if it does not care about
+> > performance much.
 > 
-> > This case was reported by syzbot at
-> > https://lkml.kernel.org/r/0000000000000e7156059f751d7b@google.com.
-> 
-> Which doesn't really explain it, either.
-> 
-> What is the configuration conditions under which this triggers? It
-> looks like some weird combination of a no-journal ext4 root
-> filesystem and the audit subsystem being configured with O_SYNC
-> files?
-> 
-> People trying to decide if this is something that needs to be
-> backported to stable kernels need to be able to unerstand how this
-> bug is actually triggered so they can make sane decisions about
-> it...
+> Perhaps vfio_group_dma_rw() and vfio_dev_dma_rw()?  I'd be reluctant to
+> add the latter, if a caller doesn't care about performance then they
+> won't mind making a couple calls to get and release the group reference.
+> Thanks,
+>
+yes, it makes sense. Then I withdraw this request :)
 
-My guess is that syzbot enabled BSD process accounting to a file with FS_SYNC_FL
-on an ext4 nojournal fs.  It didn't provide a reproducer itself.  Sure, I'll try
-to write a reproducer and include it in the commit message.  I felt it wasn't
-quite as important for this one compared to most of the other syzbot bugs, since
-BSD process accounting can only be enabled by root, and once we're talking about
-do_exit() being able to write an arbitrary file, it's not hard to see why
-*something* could get tripped up by PF_MEMALLOC.  There are probably other ways
-it could cause problems besides this specific one.  But sure, I'll try.
-
-> 
-> I also note that cifs_demultiplex_thread() has the same problem -
-> can you please do a complete audit of all the users of PF_MEMALLOC
-> and fix all of them?
-
-I already did, that's why at the same time I sent out this patch, I also sent
-out one to fix cifs_demultiplex_thread()
-(https://lkml.kernel.org/linux-cifs/20200308043645.1034870-1-ebiggers@kernel.org/T/#t).
-These were the only two; I didn't find any others that needed to be fixed.
-
-- Eric
+Thanks
+Yan
