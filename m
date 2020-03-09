@@ -2,91 +2,116 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A801FC10F29
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 16:09:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52561C10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 16:09:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BF2320828
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 16:09:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01DDF20828
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 16:09:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="so5+iHtV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727103AbgCIQI7 (ORCPT
+        id S1727146AbgCIQJj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 12:08:59 -0400
-Received: from mga06.intel.com ([134.134.136.31]:46874 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726990AbgCIQI7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 12:08:59 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Mar 2020 09:08:58 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,533,1574150400"; 
-   d="scan'208";a="288726374"
-Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by FMSMGA003.fm.intel.com with ESMTP; 09 Mar 2020 09:08:57 -0700
-Subject: Re: [PATCH] MAINTAINERS: rectify the INTEL IADX DRIVER entry
-To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Vinod Koul <vkoul@kernel.org>
-Cc:     dmaengine@vger.kernel.org, Joe Perches <joe@perches.com>,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200307205737.5829-1-lukas.bulwahn@gmail.com>
-From:   Dave Jiang <dave.jiang@intel.com>
-Message-ID: <26c4fdca-4a36-d710-0504-569adf5ec079@intel.com>
-Date:   Mon, 9 Mar 2020 09:08:57 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Mon, 9 Mar 2020 12:09:39 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:50624 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727080AbgCIQJj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 12:09:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=4WJ6RRjRxj58Y2szEsveSp6vWyd/sdxRQxE7lizeTGg=; b=so5+iHtVgqSfai4qSOj1oxrE+
+        ZsvzKP9v8gREGRl/MnOEHqraNdvdCgWnOR4VC4jLNIf/7y2C9mFNsqDRtsDKr2onOebVCCrwu+y2p
+        k0cZmvafWm45Gll8Aq3YrRWOJMk6ofZPxt67qQRS96IiV0+eN63zp+4ZBbOkDRpfyA4NaJRn8kaED
+        1rnbleBN1ggg6DBqfxzJKpODVEdtQ1uow9Z5bLvHLw/DzcNjV/t6BUJgi/4spPloXQZQqvY/I7kCu
+        HZm5Fzt3WpbavxhUkfEVuZE4NRdpdtngH9REd60Rs3E5dGFSJqYiP0UrMN0L8ipP1n0cf4TZcmwOE
+        UGvaPY97A==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:34200)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jBKy7-0007tm-Qi; Mon, 09 Mar 2020 16:09:28 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jBKxz-0003Vd-9p; Mon, 09 Mar 2020 16:09:19 +0000
+Date:   Mon, 9 Mar 2020 16:09:19 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Nishanth Menon <nm@ti.com>,
+        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+        Tero Kristo <t-kristo@ti.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Rik van Riel <riel@surriel.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Dave Chinner <david@fromorbit.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Yafang Shao <laoar.shao@gmail.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        kernel-team@fb.com, Kishon Vijay Abraham I <kishon@ti.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>
+Subject: Re: [PATCH] vfs: keep inodes with page cache off the inode shrinker
+ LRU
+Message-ID: <20200309160919.GM25745@shell.armlinux.org.uk>
+References: <20200211164701.4ac88d9222e23d1e8cc57c51@linux-foundation.org>
+ <CAHk-=wg1ZDADD3Vuw_sXhmBOrQ2xsp8YWxmtWiA6vG0RT-ZQ+A@mail.gmail.com>
+ <20200212085004.GL25745@shell.armlinux.org.uk>
+ <CAK8P3a3pzgVvwyDhHPoiSOqyv+h_ixbsdWMqG3sELenRJqFuew@mail.gmail.com>
+ <671b05bc-7237-7422-3ece-f1a4a3652c92@oracle.com>
+ <CAK8P3a13jGdjVW1TzvCKjRBg-Yscs_WB2K1kw9AzRfn3G9a=-Q@mail.gmail.com>
+ <7c4c1459-60d5-24c8-6eb9-da299ead99ea@oracle.com>
+ <20200306203439.peytghdqragjfhdx@kahuna>
+ <CAK8P3a0Gyqu7kzO1JF=j9=jJ0T5ut=hbKepvke-2bppuPNKTuQ@mail.gmail.com>
+ <20200309155945.GA4124965@arrakis.emea.arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20200307205737.5829-1-lukas.bulwahn@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200309155945.GA4124965@arrakis.emea.arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 3/7/20 1:57 PM, Lukas Bulwahn wrote:
-> Commit bfe1d56091c1 ("dmaengine: idxd: Init and probe for Intel data
-> accelerators") added the INTEL IADX DRIVER entry in MAINTAINERS, which
-> mentions include/linux/idxd.h as file entry. However, this header file was
-> not added in this commit, nor in any later one.
+On Mon, Mar 09, 2020 at 03:59:45PM +0000, Catalin Marinas wrote:
+> On Sun, Mar 08, 2020 at 11:58:52AM +0100, Arnd Bergmann wrote:
+> > - revisit CONFIG_VMSPLIT_4G_4G for arm32 (and maybe mips32)
+> >   to see if it can be done, and what the overhead is. This is probably
+> >   more work than the others combined, but also the most promising
+> >   as it allows the most user address space and physical ram to be used.
 > 
-> Hence, since then, ./scripts/get_maintainer.pl --self-test complains:
+> A rough outline of such support (and likely to miss some corner cases):
 > 
->    warning: no file matches F: include/linux/idxd.h
+> 1. Kernel runs with its own ASID and non-global page tables.
 > 
-> Drop the file entry to the non-existing file in INTEL IADX DRIVER now.
+> 2. Trampoline code on exception entry/exit to handle the TTBR0 switching
+>    between user and kernel.
 > 
-> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+> 3. uaccess routines need to be reworked to pin the user pages in memory
+>    (get_user_pages()) and access them via the kernel address space.
+> 
+> Point 3 is probably the ugliest and it would introduce a noticeable
+> slowdown in certain syscalls.
 
-Thanks. That was a mistake.
+We also need to consider that it has implications for the single-kernel
+support; a kernel doing this kind of switching would likely be horrid
+for a kernel supporting v6+ with VIPT aliasing caches.  Would we be
+adding a new red line between kernels supporting VIPT-aliasing caches
+(present in earlier v6 implementations) and kernels using this system?
 
-Acked-by: Dave Jiang <dave.jiang@intel.com>
-
-
-
-> ---
-> applies cleanly on current master and next-20200306
-> 
->   MAINTAINERS | 1 -
->   1 file changed, 1 deletion(-)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index c93e4937164c..303e1ea83484 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -8478,7 +8478,6 @@ L:	dmaengine@vger.kernel.org
->   S:	Supported
->   F:	drivers/dma/idxd/*
->   F:	include/uapi/linux/idxd.h
-> -F:	include/linux/idxd.h
->   
->   INTEL IDLE DRIVER
->   M:	Jacob Pan <jacob.jun.pan@linux.intel.com>
-> 
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
