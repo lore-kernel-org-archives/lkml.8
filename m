@@ -2,210 +2,158 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46830C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:57:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C77F5C10F29
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:58:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 244DD20873
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:57:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0F0620866
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:58:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HTGfEese"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="tIdaUe6z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727466AbgCIS5H (ORCPT
+        id S1727510AbgCIS6H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 14:57:07 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:35781 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727380AbgCIS5G (ORCPT
+        Mon, 9 Mar 2020 14:58:07 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:33633 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727391AbgCIS6H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 14:57:06 -0400
-Received: by mail-pl1-f194.google.com with SMTP id g6so4375050plt.2
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 11:57:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=g2u/OLAgiInGN4xLm0+9cr6hTH+ZT1QAXVX+7llX76w=;
-        b=HTGfEeseSiG/j8RRQVcEwDBh/c1A0F9xo9jtWZIJetjxQKhi7UIJGvJWIxidZf1gQA
-         EfqEPOEfd6nFdkI2/0YCKJar2DBNmKMbJo7oETTCLZDm12GO7A/66QrZORz1hqVDu89o
-         Oz6vvrF4PTJVd96BjlozF/GAsU4V4TY4R6U7E=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=g2u/OLAgiInGN4xLm0+9cr6hTH+ZT1QAXVX+7llX76w=;
-        b=SEPBu54DS3fTzGQCaO7XjqyJ3gND6ynDK0mkmu+kF+kf9DzUkA0BxtmtO+blwNZ624
-         tc6dey2gpMEAqvVbSqAWKEw6eeTzfcwK0VbRviwIzo1SB1/MTTDcaxy6655Cj/+YStk7
-         7/uQN40pR+SJYNJD4TwgzIEBhTH1Uh57sVxSbbtojMWFOpL7PvCmS+2HzTqJpT9WIa2l
-         dIn4Ce6iyVuh0lrPqHaOg2luPpZyEuPfmeVsyizvaaRBio0vaJYY8nGkNDOZnYY2TBmD
-         PaNY7G0oUfWUO4YB4GyfJhLEDUcdcX27CkxMK7V8viK6ljjjhMKmmFPGuynmjfKb+Af5
-         /EpQ==
-X-Gm-Message-State: ANhLgQ3OZNBrHCc10UbMP148h59tZSb/m/kKti1ruoQ4RCUaXC42CrqC
-        GhRp4369vdNOxcKVwWQNlz8wOg==
-X-Google-Smtp-Source: ADFU+vtbNCkmpmFcbgvojdaMhluhfjve5urSrj7UFBlkS7+pLKle++6ipFzEC3JezKdUs1qmXGN61g==
-X-Received: by 2002:a17:90a:a616:: with SMTP id c22mr761854pjq.47.1583780225613;
-        Mon, 09 Mar 2020 11:57:05 -0700 (PDT)
-Received: from smtp.gmail.com ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id k8sm9007674pfk.1.2020.03.09.11.57.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Mar 2020 11:57:05 -0700 (PDT)
-From:   Stephen Boyd <swboyd@chromium.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Lina Iyer <ilina@codeaurora.org>,
-        Maulik Shah <mkshah@codeaurora.org>
-Subject: [PATCH] soc: qcom: cmd-db: Add debugfs dumping file
-Date:   Mon,  9 Mar 2020 11:57:04 -0700
-Message-Id: <20200309185704.2491-1-swboyd@chromium.org>
-X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
+        Mon, 9 Mar 2020 14:58:07 -0400
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 17AEC23EDA;
+        Mon,  9 Mar 2020 19:58:04 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1583780284;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=hS0zEEOUXqG6QOkQ9z4+cDNB6shmJNlq0wBwtzctXZ4=;
+        b=tIdaUe6zUv3UV2sk/HK81rHp1tEgrSQ5b4Fy36wBTqUlU/bW4axlVYaHhsFA4lewm7WCr2
+        sT6Ahj6xzboRdmpfwrXMfeNg7iqBgprfgoPeIMjkPe7BGZbAUscl9rYSO4XmrnwxY5zRk0
+        NvXC9CvtcqrLXZKBK6JlE2iZtoMiSgk=
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 09 Mar 2020 19:58:04 +0100
+From:   Michael Walle <michael@walle.cc>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, Esben Haabendal <eha@deif.com>,
+        angelo@sysam.it, andrew.smirnov@gmail.com,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Wei Chen <weic@nvidia.com>, Mohamed Hosny <mhosny@nvidia.com>,
+        peng.ma@nxp.com
+Subject: Re: [PATCH 6/6] arm64: dts: ls1028a-rdb: Add a spidev node for the
+ mikroBUS
+In-Reply-To: <CA+h21hqOhM9+k9cKXoA8coYpxNFWpgD+FjETeB6uWLbsfrx0uw@mail.gmail.com>
+References: <20200309145624.10026-1-olteanv@gmail.com>
+ <20200309145624.10026-7-olteanv@gmail.com>
+ <f213388d924b63d0fe265a2d731647be@walle.cc>
+ <CA+h21hqOhM9+k9cKXoA8coYpxNFWpgD+FjETeB6uWLbsfrx0uw@mail.gmail.com>
+Message-ID: <0700435a8355c9a53049d571d41da222@walle.cc>
+X-Sender: michael@walle.cc
+User-Agent: Roundcube Webmail/1.3.10
+X-Spamd-Bar: +
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: 17AEC23EDA
+X-Spamd-Result: default: False [1.40 / 15.00];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         FREEMAIL_ENVRCPT(0.00)[gmail.com];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         TAGGED_RCPT(0.00)[dt];
+         MIME_GOOD(-0.10)[text/plain];
+         DKIM_SIGNED(0.00)[];
+         DBL_PROHIBIT(0.00)[0.0.0.0:email];
+         RCPT_COUNT_TWELVE(0.00)[15];
+         NEURAL_HAM(-0.00)[-0.366];
+         FREEMAIL_TO(0.00)[gmail.com];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         FREEMAIL_CC(0.00)[kernel.org,vger.kernel.org,arm.com,deif.com,sysam.it,gmail.com,embeddedor.com,nvidia.com,nxp.com];
+         MID_RHS_MATCH_FROM(0.00)[];
+         SUSPICIOUS_RECIPS(1.50)[]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It's useful for kernel devs to understand what resources and data is
-stored inside command db. Add a file in debugufs called 'cmd-db' to dump
-the memory contents and strings for resources along with their
-addresses. E.g.
+Am 2020-03-09 19:50, schrieb Vladimir Oltean:
+> On Mon, 9 Mar 2020 at 20:35, Michael Walle <michael@walle.cc> wrote:
+>> 
+>> Am 2020-03-09 15:56, schrieb Vladimir Oltean:
+>> > From: Vladimir Oltean <vladimir.oltean@nxp.com>
+>> >
+>> > For debugging, it is useful to have access to the DSPI controller
+>> > signals. On the reference design board, these are exported to either
+>> > the
+>> > mikroBUS1 or mikroBUS2 connector (according to the CPLD register
+>> > BRDCFG3[SPI3]).
+>> >
+>> > Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+>> > ---
+>> >  arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts | 14 ++++++++++++++
+>> >  1 file changed, 14 insertions(+)
+>> >
+>> > diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
+>> > b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
+>> > index bb7ba3bcbe56..43f403b30dae 100644
+>> > --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
+>> > +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
+>> > @@ -83,6 +83,20 @@
+>> >       };
+>> >  };
+>> >
+>> > +&dspi2 {
+>> > +     bus-num = <2>;
+>> > +     status = "okay";
+>> > +
+>> > +     /* mikroBUS1 */
+>> > +     spidev@0 {
+>> > +             compatible = "spidev";
+>> 
+>> As far as I know this throws a warning at boot that you
+>> shouldn't use the compatible = "spidev", doesn't it?
+>> 
+>> /*
+>>   * spidev should never be referenced in DT without a specific
+>>   * compatible string, it is a Linux implementation thing
+>>   * rather than a description of the hardware.
+>>   */
+>> 
+> 
+> If this is supposed to mean that the "spidev" string is less
+> adequate/expressive than "rohm,dh2228fv", then ok, I'll use that.
 
- Command DB DUMP
- Slave ARC (v16.0)
- -------------------------
- 0x00030000: cx.lvl [00 00 10 00 40 00 80 00 c0 00 00 01 80 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00]
- 0x00030004: cx.tmr
- 0x00030010: mx.lvl [00 00 10 00 00 01 80 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00]
- 0x00030014: mx.tmr
+TBH I don't care, its your board ;) But I suppose that there is no
+Rohm DH2228FV on the (pluggable) mikroBUS board. I just noticed
+that compatible string. Don't shoot the messenger ;)
 
-Cc: Lina Iyer <ilina@codeaurora.org>
-Cc: Maulik Shah <mkshah@codeaurora.org>
-Signed-off-by: Stephen Boyd <swboyd@chromium.org>
----
- drivers/soc/qcom/cmd-db.c | 79 ++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 77 insertions(+), 2 deletions(-)
+-michael
 
-diff --git a/drivers/soc/qcom/cmd-db.c b/drivers/soc/qcom/cmd-db.c
-index f6c3d17b05c7..6c308f92a13c 100644
---- a/drivers/soc/qcom/cmd-db.c
-+++ b/drivers/soc/qcom/cmd-db.c
-@@ -1,12 +1,13 @@
- /* SPDX-License-Identifier: GPL-2.0 */
- /* Copyright (c) 2016-2018, The Linux Foundation. All rights reserved. */
- 
-+#include <linux/debugfs.h>
- #include <linux/kernel.h>
- #include <linux/of.h>
- #include <linux/of_address.h>
--#include <linux/of_platform.h>
- #include <linux/of_reserved_mem.h>
- #include <linux/platform_device.h>
-+#include <linux/seq_file.h>
- #include <linux/types.h>
- 
- #include <soc/qcom/cmd-db.h>
-@@ -236,6 +237,78 @@ enum cmd_db_hw_type cmd_db_read_slave_id(const char *id)
- }
- EXPORT_SYMBOL(cmd_db_read_slave_id);
- 
-+#ifdef CONFIG_DEBUG_FS
-+static int cmd_db_debugfs_dump(struct seq_file *seq, void *p)
-+{
-+	int i, j;
-+	const struct rsc_hdr *rsc;
-+	const struct entry_header *ent;
-+	const char *name;
-+	u16 len, version;
-+	u8 major, minor;
-+
-+	seq_puts(seq, "Command DB DUMP\n");
-+
-+	for (i = 0; i < MAX_SLV_ID; i++) {
-+
-+		rsc = &cmd_db_header->header[i];
-+		if (!rsc->slv_id)
-+			break;
-+
-+		switch (rsc->slv_id) {
-+		case CMD_DB_HW_ARC:
-+			name = "ARC";
-+			break;
-+		case CMD_DB_HW_VRM:
-+			name = "VRM";
-+			break;
-+		case CMD_DB_HW_BCM:
-+			name = "BCM";
-+			break;
-+		default:
-+			name = "Unknown";
-+			break;
-+		}
-+
-+		version = le16_to_cpu(rsc->version);
-+		major = version >> 8;
-+		minor = version;
-+
-+		seq_printf(seq, "Slave %s (v%u.%u)\n", name, major, minor);
-+		seq_puts(seq, "-------------------------\n");
-+
-+		ent = rsc_to_entry_header(rsc);
-+		for (j = 0; j < le16_to_cpu(rsc->cnt); j++, ent++) {
-+			seq_printf(seq, "0x%08x: %*pEp", le32_to_cpu(ent->addr),
-+				   sizeof(ent->id), ent->id);
-+
-+			len = le16_to_cpu(ent->len);
-+			if (len) {
-+				seq_printf(seq, " [%*ph]",
-+					   len, rsc_offset(rsc, ent));
-+			}
-+			seq_putc(seq, '\n');
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static int open_cmd_db_debugfs(struct inode *inode, struct file *file)
-+{
-+	return single_open(file, cmd_db_debugfs_dump, inode->i_private);
-+}
-+#endif
-+
-+static const struct file_operations cmd_db_debugfs_ops = {
-+#ifdef CONFIG_DEBUG_FS
-+	.open = open_cmd_db_debugfs,
-+#endif
-+	.read = seq_read,
-+	.llseek = seq_lseek,
-+	.release = single_release,
-+};
-+
- static int cmd_db_dev_probe(struct platform_device *pdev)
- {
- 	struct reserved_mem *rmem;
-@@ -259,12 +332,14 @@ static int cmd_db_dev_probe(struct platform_device *pdev)
- 		return -EINVAL;
- 	}
- 
-+	debugfs_create_file("cmd-db", 0400, NULL, NULL, &cmd_db_debugfs_ops);
-+
- 	return 0;
- }
- 
- static const struct of_device_id cmd_db_match_table[] = {
- 	{ .compatible = "qcom,cmd-db" },
--	{ },
-+	{ }
- };
- 
- static struct platform_driver cmd_db_dev_driver = {
-
-base-commit: 2c523b344dfa65a3738e7039832044aa133c75fb
--- 
-Sent by a computer, using git, on the internet
-
+> 
+>> -michael
+>> 
+>> > +             reg = <0>;
+>> > +             spi-max-frequency = <20000000>;
+>> > +             fsl,spi-cs-sck-delay = <100>;
+>> > +             fsl,spi-sck-cs-delay = <100>;
+>> > +     };
+>> > +};
+>> > +
+>> >  &esdhc {
+>> >       sd-uhs-sdr104;
+>> >       sd-uhs-sdr50;
