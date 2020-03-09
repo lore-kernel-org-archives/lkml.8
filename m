@@ -2,130 +2,101 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAC7BC10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 11:55:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10AB3C18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 11:56:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2114205ED
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 11:55:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C5LI8m8X"
+	by mail.kernel.org (Postfix) with ESMTP id D5DE920409
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 11:56:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726656AbgCILzy (ORCPT
+        id S1726676AbgCIL4Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 07:55:54 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:46185 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725942AbgCILzj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 07:55:39 -0400
-Received: by mail-wr1-f67.google.com with SMTP id n15so10676132wrw.13
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 04:55:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=z66mLROcRb3dfNo7Pup4ya4KCgpDgjiDJSKhfyea8EI=;
-        b=C5LI8m8XGg1Da5YEMZokiczeYXHDjbtXmogn0yFNebuJYcxWCAzewHRqGcjvTHxGZ7
-         o8qpUoBMpO3KvnqC540gtySoZ9HVSLcNMJ1fEE96pxJV31UjaSB80ayRSwzwRsSUwfoE
-         6J8qWiU4UU5U8UA0exmkktcjI3SusYLLmH+fcEKkB8vhbThvyjSA2sXmX6lPWpnhe7/h
-         zubFc1sQqQWDNRprFfbST3DYQHH6r7wGiM24Dj/RhAfXB4TPdnadO8pKx7LHaUvyukdt
-         Mpv+CJIwUhElZ1lxxbrMRwj/eRUbMK8FZ0QPMB0gLUqr6oUj/jIVY4XywgOfXVIINHho
-         RWww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=z66mLROcRb3dfNo7Pup4ya4KCgpDgjiDJSKhfyea8EI=;
-        b=M5xnYsWAP1oWbDwPdZX3i932jrtoGUm0VgfLlLjTqXH7u/NfQIom4VENrq+e0iK9Pb
-         Z3nqbvOzmn9mYKjk6spLsCbYzv4FZaBJyn/fbXoCZS6gVl9gXQZon/LmeccTaO0PGTzm
-         NksRZzXlqou3QyWEfPF1krM1RraLlyuIQbvbNogA7n6HiPWFG0JX4slT4hgc8cwNW385
-         eoppFW3igqs20efV+TnGa4grw5bqpwiNHS9fCGMspb6c/OeO4Ostjjjcp8ArVZc+miB5
-         lkg9CdkyAkeOIAhHN+nTc/2k1/9qSf30dQUE75vrOGw2yRTpF1GzZM/stYWW7ZWpcqUa
-         uuMw==
-X-Gm-Message-State: ANhLgQ3cyj+m+twy+djICgRWXncBcq0QBIc8bn43sqsck2NnIu7RZUZ3
-        zKOahmjazr8HOYiOsLdtUDs=
-X-Google-Smtp-Source: ADFU+vuFhLKerED7/hwBHARTqvsG0m5QiOg9kGgkhvKZSqKwWDcZkDRZx3aa74XyqUaBz0k4PW1kmw==
-X-Received: by 2002:adf:ee52:: with SMTP id w18mr14485829wro.369.1583754938144;
-        Mon, 09 Mar 2020 04:55:38 -0700 (PDT)
-Received: from opensdev.fritz.box (business-178-015-117-054.static.arcor-ip.net. [178.15.117.54])
-        by smtp.gmail.com with ESMTPSA id m21sm25035226wmi.27.2020.03.09.04.55.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Mar 2020 04:55:37 -0700 (PDT)
-From:   shiva.linuxworks@gmail.com
-X-Google-Original-From: sshivamurthy@micron.com
-To:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Frieder Schrempf <frieder.schrempf@kontron.de>,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Shivamurthy Shastri <sshivamurthy@micron.com>
-Subject: [PATCH v6 3/6] mtd: spinand: micron: Add new Micron SPI NAND devices
-Date:   Mon,  9 Mar 2020 12:52:27 +0100
-Message-Id: <20200309115230.7207-4-sshivamurthy@micron.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200309115230.7207-1-sshivamurthy@micron.com>
-References: <20200309115230.7207-1-sshivamurthy@micron.com>
+        Mon, 9 Mar 2020 07:56:16 -0400
+Received: from mga07.intel.com ([134.134.136.100]:23453 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725942AbgCIL4P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 07:56:15 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Mar 2020 04:56:14 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,533,1574150400"; 
+   d="scan'208";a="235664047"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.167]) ([10.237.72.167])
+  by orsmga008.jf.intel.com with ESMTP; 09 Mar 2020 04:56:11 -0700
+Subject: Re: [PATCH v2 06/11] mmc: sdhci: xenon: Use
+ sdhci_set_power_and_voltage()
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        linux-kernel@vger.kernel.org, Hu Ziji <huziji@marvell.com>
+Cc:     phil@raspberrypi.com, linux-mmc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, f.fainelli@gmail.com,
+        stefan.wahren@i2se.com, bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        Ulf Hansson <ulf.hansson@linaro.org>
+References: <20200306174413.20634-1-nsaenzjulienne@suse.de>
+ <20200306174413.20634-7-nsaenzjulienne@suse.de>
+ <4e74203a-5444-2b7a-3555-9615cc45aaae@intel.com>
+ <06fc4d492f66bfbe7260937efa849f77c7c12b0d.camel@suse.de>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <eb9cc6e8-0f15-a609-9f99-c8677eb3354f@intel.com>
+Date:   Mon, 9 Mar 2020 13:55:26 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+MIME-Version: 1.0
+In-Reply-To: <06fc4d492f66bfbe7260937efa849f77c7c12b0d.camel@suse.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shivamurthy Shastri <sshivamurthy@micron.com>
+On 9/03/20 12:53 pm, Nicolas Saenz Julienne wrote:
+> On Mon, 2020-03-09 at 09:20 +0200, Adrian Hunter wrote:
+>>> -static void xenon_set_power(struct sdhci_host *host, unsigned char mode,
+>>> -		unsigned short vdd)
+>>> -{
+>>> -	struct mmc_host *mmc = host->mmc;
+>>> -	u8 pwr = host->pwr;
+>>> -
+>>> -	sdhci_set_power_noreg(host, mode, vdd);
+>>> -
+>>> -	if (host->pwr == pwr)
+>>> -		return;
+>>> -
+>>> -	if (host->pwr == 0)
+>>> -		vdd = 0;
+>>> -
+>>> -	if (!IS_ERR(mmc->supply.vmmc))
+>>> -		mmc_regulator_set_ocr(mmc, mmc->supply.vmmc, vdd);
+>>> -}
+>>
+>> This code is different.  The commit message should explain why it is
+>> equivalent.  Has it been tested?
+> 
+> Yes, I should've pointed it out. The rationale behind including sdhci-xenon and
+> sdhci-pxav3 is based on xenon's original commit message (99c14fc360dbb):
+> 
+> 	mmc: sdhci-xenon: add set_power callback
+> 
+> 	Xenon sdh controller requests proper SD bus voltage select
+> 	bits programmed even with vmmc power supply. Any reserved
+> 	value(100b-000b) programmed in this field will lead to controller
+> 	ignore SD bus power bit and keep its value at zero.
+> 	Add set_power callback to handle this.
+> 
+> I can't test it, but it felt to me as the implementation differences are only
+> there as different people wrote the code. Ultimately, I'll be happy to drop
+> them from the series if you feel it's too much of an assumption, I can see how
+> the controllers could react badly to the ordering change. If not I can send a
+> v3 with fixed commit messages.
 
-Add device table for M79A and M78A series Micron SPI NAND devices.
-
-Signed-off-by: Shivamurthy Shastri <sshivamurthy@micron.com>
----
- drivers/mtd/nand/spi/micron.c | 30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
-
-diff --git a/drivers/mtd/nand/spi/micron.c b/drivers/mtd/nand/spi/micron.c
-index e4aeafc56f4e..5fd1f921ef12 100644
---- a/drivers/mtd/nand/spi/micron.c
-+++ b/drivers/mtd/nand/spi/micron.c
-@@ -101,6 +101,36 @@ static const struct spinand_info micron_spinand_table[] = {
- 		     0,
- 		     SPINAND_ECCINFO(&micron_8_ooblayout,
- 				     micron_8_ecc_get_status)),
-+	/* M79A 2Gb 1.8V */
-+	SPINAND_INFO("MT29F2G01ABBGD", 0x25,
-+		     NAND_MEMORG(1, 2048, 128, 64, 2048, 40, 2, 1, 1),
-+		     NAND_ECCREQ(8, 512),
-+		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants,
-+					      &write_cache_variants,
-+					      &update_cache_variants),
-+		     0,
-+		     SPINAND_ECCINFO(&micron_8_ooblayout,
-+				     micron_8_ecc_get_status)),
-+	/* M78A 1Gb 3.3V */
-+	SPINAND_INFO("MT29F1G01ABAFD", 0x14,
-+		     NAND_MEMORG(1, 2048, 128, 64, 1024, 20, 1, 1, 1),
-+		     NAND_ECCREQ(8, 512),
-+		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants,
-+					      &write_cache_variants,
-+					      &update_cache_variants),
-+		     0,
-+		     SPINAND_ECCINFO(&micron_8_ooblayout,
-+				     micron_8_ecc_get_status)),
-+	/* M78A 1Gb 1.8V */
-+	SPINAND_INFO("MT29F1G01ABAFD", 0x15,
-+		     NAND_MEMORG(1, 2048, 128, 64, 1024, 20, 1, 1, 1),
-+		     NAND_ECCREQ(8, 512),
-+		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants,
-+					      &write_cache_variants,
-+					      &update_cache_variants),
-+		     0,
-+		     SPINAND_ECCINFO(&micron_8_ooblayout,
-+				     micron_8_ecc_get_status)),
- };
- 
- static int micron_spinand_detect(struct spinand_device *spinand)
--- 
-2.17.1
-
+We can wait a bit and see if anyone provides a Tested-by tag, otherwise
+safer to drop it.
