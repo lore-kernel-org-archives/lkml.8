@@ -2,261 +2,253 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42B17C10F25
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:46:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC9AAC10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:46:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1313920828
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:46:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9192D2146E
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:46:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eykaXS3n"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NipBi1V1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726445AbgCITqF (ORCPT
+        id S1726512AbgCITq1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 15:46:05 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:41650 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725992AbgCITqE (ORCPT
+        Mon, 9 Mar 2020 15:46:27 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:38644 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725992AbgCITq1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 15:46:04 -0400
-Received: by mail-wr1-f67.google.com with SMTP id v4so12773613wrs.8;
-        Mon, 09 Mar 2020 12:46:02 -0700 (PDT)
+        Mon, 9 Mar 2020 15:46:27 -0400
+Received: by mail-ed1-f66.google.com with SMTP id h5so3097811edn.5;
+        Mon, 09 Mar 2020 12:46:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=iajNcMb4nFgTefMlkzyM3GBBDaX3XCUGHAbLXHtEp2U=;
-        b=eykaXS3nftIiU9qNCirUdhPCrcNIhvFrQbpnPPAsZheXslenyhMJYcL/p7YNzItkYa
-         niw8YKg6tcBNIhWpF2k5Im9/X/dusD24zMhnuTtuYtsiN4bG/1nPncxOpnllynv0HBDI
-         PZ0ldb+BeHB/CwCzdP88UWNtnH/IJbO1v8fXNxK4ZEhgaarlKWjXhMjjtTr1NkbiCZVw
-         hT8kIDT8i62M2dJfjJqJE7Kpp1SVLQ14WMCxfHfPZeNj1eyfC3vDcobrlv/Zv6Sq5wKW
-         bepZZucQBKFazyoqtHc+o2YE48mc5GJXaBmA+ZeqyE/pDfmXcY53qiW2agvEZ9wC8lMi
-         ySlw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GafaQTIDxRtZR3QJp5M8zL8cHUHfz+w2mpxMr87DmTg=;
+        b=NipBi1V16qvwZX2pVO1sMAKTqLsbamjVjq/UuqoLh8xcrWKfahPRDsLBiOa1e5Glxl
+         McguFHQOwTen76/dIQiy4RcgWsmJVk19hW5c/7saOb1waZW5ra1llR07rbabm4SK/LB8
+         /RwCo5davJdnPe6TMqVw54SeKH3uK25bZHhzNKd8nwwo0bXdhIMAgV6kcJ3vV1+BRWHl
+         SmIW3E+GcHfpguQ12pTdWD8NanfeYEJkr4EXDrFu86QoXfPL+AyfwVfNhTpwoyKbAKma
+         A/896W1JwUDNkBfDP2zMs6Ox9b3S8j/NO5QgnNMbxdJYpJw76Vp0dXiKtWmf2HpwllEQ
+         5NSw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=iajNcMb4nFgTefMlkzyM3GBBDaX3XCUGHAbLXHtEp2U=;
-        b=eYmIzUxpqBcg6vfdS5WY9O4rs14jaA8RicdO10pG2rNLwDduHlUFdfNPFcHt8XtDaF
-         XWC52ux6/kYsKxs44+p4m/+s+7kkTcHjdG+eSCEzpbsdA2OqHDT4gAqS3/irRR+3shaR
-         BX2Te8a2fzsMKJvO9rbpp7bhnZGN/SL3XzkogI4I+wE0L4aPFs3/5+zaDMW210z2NEMB
-         RO3zXckr0YDnqrt1BW8huCclN9e08PgtJQWZGkysAKCOjdFmznODfRJgRh0F1+eTfEE4
-         faJcaeEpkarMeC4sfxGxznJYunLtuQIV/zLtNCr/JIQ4qOeEL3dlTkEbR0erU9681+Cr
-         vDjA==
-X-Gm-Message-State: ANhLgQ38RG1KbvYt8LQ+EhdVp0NcWfsw90YvJXSxDR9EjKIy0/k5uBy6
-        gf0rQU9G0HbB+/22fGdkhcs=
-X-Google-Smtp-Source: ADFU+vtnoXo6Xy24Dkg/rmQG4Yt8eKB/a3nJC6l9sq0UV/OaeUWNujMEYL2S1jU6t+e0DAVmbctySg==
-X-Received: by 2002:adf:f7c1:: with SMTP id a1mr22442883wrq.299.1583783161378;
-        Mon, 09 Mar 2020 12:46:01 -0700 (PDT)
-Received: from ?IPv6:2003:ea:8f29:6000:fd18:ac88:8412:f02? (p200300EA8F296000FD18AC8884120F02.dip0.t-ipconnect.de. [2003:ea:8f29:6000:fd18:ac88:8412:f02])
-        by smtp.googlemail.com with ESMTPSA id k133sm785404wma.11.2020.03.09.12.45.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Mar 2020 12:46:00 -0700 (PDT)
-Subject: Re: [PATCH v2 1/2] net: phy: tja11xx: add TJA1102 support
-To:     Oleksij Rempel <o.rempel@pengutronix.de>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Pengutronix Kernel Team <kernel@pengutronix.de>,
-        linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        Marek Vasut <marex@denx.de>, David Jander <david@protonic.nl>
-References: <20200309074044.21399-1-o.rempel@pengutronix.de>
- <20200309074044.21399-2-o.rempel@pengutronix.de>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Message-ID: <ec2361a9-1b7b-b939-a2a2-fac4d1146731@gmail.com>
-Date:   Mon, 9 Mar 2020 20:45:50 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GafaQTIDxRtZR3QJp5M8zL8cHUHfz+w2mpxMr87DmTg=;
+        b=NFctmpS5A6FVqLWHDuUug776n+jEcKBcFDuCoZMF860cLHwTT8bdDBSc3Td8RSanjp
+         qCetXdGo66zraW9Weu/WV54ccVQnSjxyr/+wTOB4oBekR3llFKs2ei55M0aU7plk50qb
+         U2Mtd7IjcExSh2nddCcDxwQc0lKWmMzXBKdHzcO/Ybq91Dg/ZUUZUYDpN+mCQaW6+knn
+         3CamSEwcfOyYlD8e5vw7hS1CdIyraH42FrnqmxKBU7Noc8D9KwrqedtebNfbxlJnA7sc
+         MWAr89Z3TtmnjGsgv8WgpXtQcads5tFzp/HC9Uk2ZKjMd/9VhezeJ526AxHdTs6kn7lA
+         U5yQ==
+X-Gm-Message-State: ANhLgQ0zjYiZ+NODPZM1VP8KZbgmy4c5mgMX7ghXnaf9cg8y3NZHoFUK
+        TOB+x+s1eZ9QWUcaFKABhEaOCXCVN04EtQWDzuQ=
+X-Google-Smtp-Source: ADFU+vvbISa28RamiS7n6MURDptCTjT0Zst1Jfc9dRpyv7SayoTii1YE6z/aAXF9dDlpcwYhprgM5y6LIsJbbz/whBE=
+X-Received: by 2002:a17:906:3e1b:: with SMTP id k27mr8971822eji.258.1583783184196;
+ Mon, 09 Mar 2020 12:46:24 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200309074044.21399-2-o.rempel@pengutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200309111804.188162-1-masneyb@onstation.org>
+In-Reply-To: <20200309111804.188162-1-masneyb@onstation.org>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Mon, 9 Mar 2020 12:46:11 -0700
+Message-ID: <CAF6AEGu7NHVCjeTg94XzV19ByL4AZfYs07eBthw18E9HJ6JtsQ@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: display: msm: gmu: move sram property to gpu bindings
+To:     Brian Masney <masneyb@onstation.org>
+Cc:     Rob Herring <robh+dt@kernel.org>, Sean Paul <sean@poorly.run>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        freedreno <freedreno@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09.03.2020 08:40, Oleksij Rempel wrote:
-> TJA1102 is an dual T1 PHY chip. Both PHYs are separately addressable.
-> PHY 0 can be identified by PHY ID. PHY 1 has no PHY ID and can be
-> configured in device tree by setting compatible = "ethernet-phy-id0180.dc81".
-> 
-> PHY 1 has less supported registers and functionality. For current driver
-> it will affect only the HWMON support.
-> 
-> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+On Mon, Mar 9, 2020 at 4:18 AM Brian Masney <masneyb@onstation.org> wrote:
+>
+> The sram property was incorrectly added to the GMU binding when it
+> really belongs with the GPU binding instead. Let's go ahead and
+> move it.
+>
+> While changes are being made here, let's update the sram property
+> description to mention that this property is only valid for a3xx and
+> a4xx GPUs. The a3xx/a4xx example in the GPU is replaced with what was
+> in the GMU.
+>
+> Signed-off-by: Brian Masney <masneyb@onstation.org>
+> Fixes: 198a72c8f9ee ("dt-bindings: display: msm: gmu: add optional ocmem property")
 > ---
->  drivers/net/phy/nxp-tja11xx.c | 102 ++++++++++++++++++++++++++++++++++
->  1 file changed, 102 insertions(+)
-> 
-> diff --git a/drivers/net/phy/nxp-tja11xx.c b/drivers/net/phy/nxp-tja11xx.c
-> index b705d0bd798b..f79c9aa051ed 100644
-> --- a/drivers/net/phy/nxp-tja11xx.c
-> +++ b/drivers/net/phy/nxp-tja11xx.c
-> @@ -15,6 +15,7 @@
->  #define PHY_ID_MASK			0xfffffff0
->  #define PHY_ID_TJA1100			0x0180dc40
->  #define PHY_ID_TJA1101			0x0180dd00
-> +#define PHY_ID_TJA1102			0x0180dc80
->  
->  #define MII_ECTRL			17
->  #define MII_ECTRL_LINK_CONTROL		BIT(15)
-> @@ -40,6 +41,10 @@
->  #define MII_INTSRC_TEMP_ERR		BIT(1)
->  #define MII_INTSRC_UV_ERR		BIT(3)
->  
-> +#define MII_INTEN			22
-> +#define MII_INTEN_LINK_FAIL		BIT(10)
-> +#define MII_INTEN_LINK_UP		BIT(9)
-> +
->  #define MII_COMMSTAT			23
->  #define MII_COMMSTAT_LINK_UP		BIT(15)
->  
-> @@ -190,6 +195,7 @@ static int tja11xx_config_init(struct phy_device *phydev)
->  			return ret;
->  		break;
->  	case PHY_ID_TJA1101:
-> +	case PHY_ID_TJA1102:
->  		ret = phy_set_bits(phydev, MII_COMMCFG, MII_COMMCFG_AUTO_OP);
->  		if (ret)
->  			return ret;
-> @@ -354,6 +360,66 @@ static int tja11xx_probe(struct phy_device *phydev)
->  	return PTR_ERR_OR_ZERO(priv->hwmon_dev);
->  }
->  
-> +static int tja1102_match_phy_device(struct phy_device *phydev, bool port0)
-> +{
-> +	int ret;
-> +
-> +	if ((phydev->phy_id & PHY_ID_MASK) != PHY_ID_TJA1102)
+> Background thread:
+> https://lore.kernel.org/lkml/20200303170159.GA13109@jcrouse1-lnx.qualcomm.com/
+>
+> I started to look at what it would take to convert the GPU bindings to
+> YAML, however I am unsure of the complete list of "qcom,adreno-XYZ.W"
+> compatibles that are valid.
 
-For port 1 you rely on DT forcing the appropriate phy_id
-(else it would be 0 and port 1 wouldn't be matched).
-This is worth a describing comment.
+heh, I'm not sure anyone is ;-)
 
-> +		return 0;
-> +
-> +	ret = phy_read(phydev, MII_PHYSID2);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	/* TJA1102 Port 1 has phyid 0 and doesn't support temperature
-> +	 * and undervoltage alarms.
-> +	 */
-> +	if (port0)
-> +		return ret ? 1 : 0;
-> +
-> +	return !ret;
-> +}
-> +
-> +static int tja1102_p0_match_phy_device(struct phy_device *phydev)
-> +{
-> +	return tja1102_match_phy_device(phydev, true);
-> +}
-> +
-> +static int tja1102_p1_match_phy_device(struct phy_device *phydev)
-> +{
-> +	return tja1102_match_phy_device(phydev, false);
-> +}
-> +
-> +static int tja11xx_ack_interrupt(struct phy_device *phydev)
-> +{
-> +	int ret;
-> +
-> +	ret = phy_read(phydev, MII_INTSRC);
-> +
-> +	return (ret < 0) ? ret : 0;
-> +}
-> +
-> +static int tja11xx_config_intr(struct phy_device *phydev)
-> +{
-> +	int value;
-> +	int ret;
-> +
-> +	value = phy_read(phydev, MII_INTEN);
-> +	if (value < 0)
-> +		return value;
-> +
-> +	if (phydev->interrupts == PHY_INTERRUPT_ENABLED) {
-> +		value |= MII_INTEN_LINK_FAIL;
-> +		value |= MII_INTEN_LINK_UP;
-> +
+That said, adreno_device.c should give a complete list of XYZ (and
+*usually* the .W doesn't matter too much)
 
-This may leave unwanted interrupt sources active. Why not
-simply setting a fixed value like in the else clause?
+BR,
+-R
 
-> +		ret = phy_write(phydev, MII_INTEN, value);
-> +	}
-> +	else
-
-Kernel style:
-Closing brace and else belong to one line. And the else clause
-needs braces too. checkpatch.pl should complain here.
-
-> +		ret = phy_write(phydev, MII_INTEN, 0);
-> +
-> +	return ret;
-> +}
-> +
->  static struct phy_driver tja11xx_driver[] = {
->  	{
->  		PHY_ID_MATCH_MODEL(PHY_ID_TJA1100),
-> @@ -385,6 +451,41 @@ static struct phy_driver tja11xx_driver[] = {
->  		.get_sset_count = tja11xx_get_sset_count,
->  		.get_strings	= tja11xx_get_strings,
->  		.get_stats	= tja11xx_get_stats,
-> +	}, {
-> +		.name		= "NXP TJA1102 Port 0",
-> +		.features       = PHY_BASIC_T1_FEATURES,
-> +		.probe		= tja11xx_probe,
-> +		.soft_reset	= tja11xx_soft_reset,
-> +		.config_init	= tja11xx_config_init,
-> +		.read_status	= tja11xx_read_status,
-> +		.match_phy_device = tja1102_p0_match_phy_device,
-> +		.suspend	= genphy_suspend,
-> +		.resume		= genphy_resume,
-> +		.set_loopback   = genphy_loopback,
-> +		/* Statistics */
-> +		.get_sset_count = tja11xx_get_sset_count,
-> +		.get_strings	= tja11xx_get_strings,
-> +		.get_stats	= tja11xx_get_stats,
-> +		.ack_interrupt	= tja11xx_ack_interrupt,
-> +		.config_intr	= tja11xx_config_intr,
-> +
-> +	}, {
-> +		.name		= "NXP TJA1102 Port 1",
-> +		.features       = PHY_BASIC_T1_FEATURES,
-> +		/* currently no probe for Port 1 is need */
-> +		.soft_reset	= tja11xx_soft_reset,
-> +		.config_init	= tja11xx_config_init,
-> +		.read_status	= tja11xx_read_status,
-> +		.match_phy_device = tja1102_p1_match_phy_device,
-> +		.suspend	= genphy_suspend,
-> +		.resume		= genphy_resume,
-> +		.set_loopback   = genphy_loopback,
-> +		/* Statistics */
-> +		.get_sset_count = tja11xx_get_sset_count,
-> +		.get_strings	= tja11xx_get_strings,
-> +		.get_stats	= tja11xx_get_stats,
-> +		.ack_interrupt	= tja11xx_ack_interrupt,
-> +		.config_intr	= tja11xx_config_intr,
->  	}
+>
+>  .../devicetree/bindings/display/msm/gmu.txt   | 51 -----------------
+>  .../devicetree/bindings/display/msm/gpu.txt   | 55 ++++++++++++++-----
+>  2 files changed, 42 insertions(+), 64 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/display/msm/gmu.txt b/Documentation/devicetree/bindings/display/msm/gmu.txt
+> index bf9c7a2a495c..90af5b0a56a9 100644
+> --- a/Documentation/devicetree/bindings/display/msm/gmu.txt
+> +++ b/Documentation/devicetree/bindings/display/msm/gmu.txt
+> @@ -31,10 +31,6 @@ Required properties:
+>  - iommus: phandle to the adreno iommu
+>  - operating-points-v2: phandle to the OPP operating points
+>
+> -Optional properties:
+> -- sram: phandle to the On Chip Memory (OCMEM) that's present on some Snapdragon
+> -        SoCs. See Documentation/devicetree/bindings/sram/qcom,ocmem.yaml.
+> -
+>  Example:
+>
+>  / {
+> @@ -67,50 +63,3 @@ Example:
+>                 operating-points-v2 = <&gmu_opp_table>;
+>         };
 >  };
->  
-> @@ -393,6 +494,7 @@ module_phy_driver(tja11xx_driver);
->  static struct mdio_device_id __maybe_unused tja11xx_tbl[] = {
->  	{ PHY_ID_MATCH_MODEL(PHY_ID_TJA1100) },
->  	{ PHY_ID_MATCH_MODEL(PHY_ID_TJA1101) },
-> +	{ PHY_ID_MATCH_MODEL(PHY_ID_TJA1102) },
->  	{ }
+> -
+> -a3xx example with OCMEM support:
+> -
+> -/ {
+> -       ...
+> -
+> -       gpu: adreno@fdb00000 {
+> -               compatible = "qcom,adreno-330.2",
+> -                            "qcom,adreno";
+> -               reg = <0xfdb00000 0x10000>;
+> -               reg-names = "kgsl_3d0_reg_memory";
+> -               interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
+> -               interrupt-names = "kgsl_3d0_irq";
+> -               clock-names = "core",
+> -                             "iface",
+> -                             "mem_iface";
+> -               clocks = <&mmcc OXILI_GFX3D_CLK>,
+> -                        <&mmcc OXILICX_AHB_CLK>,
+> -                        <&mmcc OXILICX_AXI_CLK>;
+> -               sram = <&gmu_sram>;
+> -               power-domains = <&mmcc OXILICX_GDSC>;
+> -               operating-points-v2 = <&gpu_opp_table>;
+> -               iommus = <&gpu_iommu 0>;
+> -       };
+> -
+> -       ocmem@fdd00000 {
+> -               compatible = "qcom,msm8974-ocmem";
+> -
+> -               reg = <0xfdd00000 0x2000>,
+> -                     <0xfec00000 0x180000>;
+> -               reg-names = "ctrl",
+> -                            "mem";
+> -
+> -               clocks = <&rpmcc RPM_SMD_OCMEMGX_CLK>,
+> -                        <&mmcc OCMEMCX_OCMEMNOC_CLK>;
+> -               clock-names = "core",
+> -                             "iface";
+> -
+> -               #address-cells = <1>;
+> -               #size-cells = <1>;
+> -
+> -               gmu_sram: gmu-sram@0 {
+> -                       reg = <0x0 0x100000>;
+> -                       ranges = <0 0 0xfec00000 0x100000>;
+> -               };
+> -       };
+> -};
+> diff --git a/Documentation/devicetree/bindings/display/msm/gpu.txt b/Documentation/devicetree/bindings/display/msm/gpu.txt
+> index 7edc298a15f2..fd779cd6994d 100644
+> --- a/Documentation/devicetree/bindings/display/msm/gpu.txt
+> +++ b/Documentation/devicetree/bindings/display/msm/gpu.txt
+> @@ -35,25 +35,54 @@ Required properties:
+>    bring the GPU out of secure mode.
+>  - firmware-name: optional property of the 'zap-shader' node, listing the
+>    relative path of the device specific zap firmware.
+> +- sram: phandle to the On Chip Memory (OCMEM) that's present on some a3xx and
+> +        a4xx Snapdragon SoCs. See
+> +        Documentation/devicetree/bindings/sram/qcom,ocmem.yaml.
+>
+> -Example 3xx/4xx/a5xx:
+> +Example 3xx/4xx:
+>
+>  / {
+>         ...
+>
+> -       gpu: qcom,kgsl-3d0@4300000 {
+> -               compatible = "qcom,adreno-320.2", "qcom,adreno";
+> -               reg = <0x04300000 0x20000>;
+> +       gpu: adreno@fdb00000 {
+> +               compatible = "qcom,adreno-330.2",
+> +                            "qcom,adreno";
+> +               reg = <0xfdb00000 0x10000>;
+>                 reg-names = "kgsl_3d0_reg_memory";
+> -               interrupts = <GIC_SPI 80 0>;
+> -               clock-names =
+> -                   "core",
+> -                   "iface",
+> -                   "mem_iface";
+> -               clocks =
+> -                   <&mmcc GFX3D_CLK>,
+> -                   <&mmcc GFX3D_AHB_CLK>,
+> -                   <&mmcc MMSS_IMEM_AHB_CLK>;
+> +               interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
+> +               interrupt-names = "kgsl_3d0_irq";
+> +               clock-names = "core",
+> +                             "iface",
+> +                             "mem_iface";
+> +               clocks = <&mmcc OXILI_GFX3D_CLK>,
+> +                        <&mmcc OXILICX_AHB_CLK>,
+> +                        <&mmcc OXILICX_AXI_CLK>;
+> +               sram = <&gpu_sram>;
+> +               power-domains = <&mmcc OXILICX_GDSC>;
+> +               operating-points-v2 = <&gpu_opp_table>;
+> +               iommus = <&gpu_iommu 0>;
+> +       };
+> +
+> +       gpu_sram: ocmem@fdd00000 {
+> +               compatible = "qcom,msm8974-ocmem";
+> +
+> +               reg = <0xfdd00000 0x2000>,
+> +                     <0xfec00000 0x180000>;
+> +               reg-names = "ctrl",
+> +                           "mem";
+> +
+> +               clocks = <&rpmcc RPM_SMD_OCMEMGX_CLK>,
+> +                        <&mmcc OCMEMCX_OCMEMNOC_CLK>;
+> +               clock-names = "core",
+> +                             "iface";
+> +
+> +               #address-cells = <1>;
+> +               #size-cells = <1>;
+> +
+> +               gpu_sram: gpu-sram@0 {
+> +                       reg = <0x0 0x100000>;
+> +                       ranges = <0 0 0xfec00000 0x100000>;
+> +               };
+>         };
 >  };
->  
-> 
-
+>
+> --
+> 2.24.1
+>
