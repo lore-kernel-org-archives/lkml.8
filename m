@@ -2,164 +2,127 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCA02C10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 16:11:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA93DC18E5A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 16:12:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97F9E22522
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 16:11:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jjlu8YJy"
+	by mail.kernel.org (Postfix) with ESMTP id 966E92464B
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 16:12:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583770355;
+	bh=GIRsxtYGGZ/TKj/qEtugQGPGGyg7OevInygZMPq+Co0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=PA7q2jr7CrW3I0gaSorgk/cIMkjbvxBRr3s4sXiFBQq9p/4966VPrAJq1tsZNIoDX
+	 BLs/rinO6/wC3I6rBLxymtL0IqtyybpG64T4Co/O8QmWlsLK63/MsEnL78JywTT+CG
+	 76v2fxhjNX2DsE2e4XPtQDgo1AItUvtXhL5WgItI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727224AbgCIQLS (ORCPT
+        id S1727217AbgCIQMe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 12:11:18 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:35466 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727193AbgCIQLR (ORCPT
+        Mon, 9 Mar 2020 12:12:34 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:45612 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727064AbgCIQMe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 12:11:17 -0400
-Received: by mail-wm1-f65.google.com with SMTP id m3so113506wmi.0;
-        Mon, 09 Mar 2020 09:11:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Xun5inmSt0p8/3AqSHJwkgCG5OoazJFfQobHNuz3kAY=;
-        b=Jjlu8YJyTqfdUdFXfoYZJeoOd0NJZ6KHvXfpqFClpBhlOPPA5CSC5X1C3PFtd5ANPR
-         Qm8TBLIoNoosAZ1slMHvh0HAtiDTBJ72bxI++u+DAzOMVbx1FYY2rPY5voKLKylTyoK3
-         oCkOVtrfF3hEv4dZFL9hnol34k85rVRCo8dkZgSfbYCpqFY5JjR9uOMT0W1CW7ywtJzC
-         RcakjDqDnLl5ZBD+rxWzVeK6M7VSobm7R7Mayxtvq5pKGekQD6VQ6IyVxDDA/WbhhmVe
-         i50+RolhUxZB0XOWgfG9YpF83T7RvoB6FSn1/xtNLTFL3Iek4pK6yyrZmLPdzcWJ7VjQ
-         Cajw==
+        Mon, 9 Mar 2020 12:12:34 -0400
+Received: by mail-wr1-f66.google.com with SMTP id m9so2955583wro.12
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 09:12:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=Xun5inmSt0p8/3AqSHJwkgCG5OoazJFfQobHNuz3kAY=;
-        b=LXK5XmucPcPbuF2pwrNAkNOOvDfBubuyIBrn41r+9QTG91EifTsvjyzhku+4wVXan8
-         MTenv7t2zIO7d3lJlr1coBsYZMBdiidqR1nQqQUKCVElxZT7t40G2yZ3DhHibiVCTYL6
-         /PSTHtqM0/dp2emGj2UGOAvJz6dwfP6LsV5Q8v444xx8ovLRdojck33U7pwtK0HhQY+r
-         kvHw3RVVJDkWkUwHaUqJmB0VdyzRtKH3pbYepk54oS3o+gNdxEQLU9t99O/ztGyC24uB
-         i+/Se1enxnxPPddKnrW9V/EfGKdu35Dj7mnclfEWw9kpiDlkMNJN/NvwW4ysdFgdVo1p
-         U+OA==
-X-Gm-Message-State: ANhLgQ037jQ3hwY6nj42We2udaetYM8bDkCktPrpiVH9EzzugVyBJ8N/
-        KyYs29Na/ep5nZz++aG2uSI=
-X-Google-Smtp-Source: ADFU+vus+HoTa9bUQCpqaYb5BvtifqGEuUA/zX2pe3bNXXliTpzv3Rra2aycdm+orpXIdHaZWWv1Ig==
-X-Received: by 2002:a1c:25c1:: with SMTP id l184mr55026wml.122.1583770275271;
-        Mon, 09 Mar 2020 09:11:15 -0700 (PDT)
-Received: from localhost.localdomain (ip5f5bee49.dynamic.kabel-deutschland.de. [95.91.238.73])
-        by smtp.gmail.com with ESMTPSA id s14sm50104932wrv.44.2020.03.09.09.11.14
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Ns9eVzO0p4o5Bx4eeLESDE82IoXncv33ZlQOlMd3q+E=;
+        b=HjT00sgt0uwGXFLQikGbkyAzXKAHNlgFYGSXtP80snCZKRD7zT2UTj2iwtqm74ShQ7
+         8Ihay+fadQYZ5RjCdXl2SHSzgOThrT29aMZKke61zx1je7KfthTlRaAwip1+2qqwJOZX
+         SzJk6Jtpmhwxe0yQBCe7/PKI890CvVaNJbETPwpniDUjgSlKxPWMuly5Hp6KcTCRMhA3
+         xN6CF5PNN1szhHKJLqFQwduMBDI3oHK7HlcdGDiOK+AJAtnlyp9BmEoM/PMLmvSYmW6L
+         32KAeVZmbeU5SaF5rIqak7ajL44/fvXXkLwtjc6YxSejAcMs6jwc6xZ4iuwpFbJ82STR
+         xQgQ==
+X-Gm-Message-State: ANhLgQ0g+0RJKFC8hsjsu+VrlLzmVkoeHQtdux9ri9jFwUZ2jVbT8bx5
+        ZZj/SSppM+0w0+AzUwKeu4c=
+X-Google-Smtp-Source: ADFU+vtGtkMl72MPjSoG4s8UweB4LM3o4SVaJcSG020HGNIU3RPOAlOTn9cx796UeKN6w4dB0+QhJw==
+X-Received: by 2002:a5d:514a:: with SMTP id u10mr1799384wrt.360.1583770352235;
+        Mon, 09 Mar 2020 09:12:32 -0700 (PDT)
+Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
+        by smtp.gmail.com with ESMTPSA id u8sm16068166wrn.69.2020.03.09.09.12.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Mar 2020 09:11:14 -0700 (PDT)
-From:   huobean@gmail.com
-X-Google-Original-From: beanhuo@micron.com
-To:     alim.akhtar@samsung.com, avri.altman@wdc.com,
-        asutoshd@codeaurora.org, jejb@linux.ibm.com,
-        martin.petersen@oracle.com, stanley.chu@mediatek.com,
-        beanhuo@micron.com, bvanassche@acm.org, tomas.winkler@intel.com,
-        cang@codeaurora.org
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 1/1] scsi: ufs: fix LRB pointer incorrect initialization issue
-Date:   Mon,  9 Mar 2020 17:10:57 +0100
-Message-Id: <20200309161057.9897-2-beanhuo@micron.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200309161057.9897-1-beanhuo@micron.com>
-References: <20200309161057.9897-1-beanhuo@micron.com>
+        Mon, 09 Mar 2020 09:12:31 -0700 (PDT)
+Date:   Mon, 9 Mar 2020 17:12:30 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Shaju Abraham <shajunutanix@gmail.com>
+Cc:     akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org,
+        Shaju Abraham <shaju.abraham@nutanix.com>
+Subject: Re: [PATCH] mm/vmpressure.c: Include GFP_KERNEL flag to vmpressure
+Message-ID: <20200309161230.GT8447@dhcp22.suse.cz>
+References: <20200309113141.167289-1-shaju.abraham@nutanix.com>
+ <20200309115818.GK8447@dhcp22.suse.cz>
+ <CAGxeL8CxaeKsqEMtLMZL8mdxUXPcH6ZkpMNjUmzZJ6q603B-_g@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAGxeL8CxaeKsqEMtLMZL8mdxUXPcH6ZkpMNjUmzZJ6q603B-_g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bean Huo <beanhuo@micron.com>
+On Mon 09-03-20 21:02:50, Shaju Abraham wrote:
+> On Mon, Mar 9, 2020 at 5:28 PM Michal Hocko <mhocko@kernel.org> wrote:
+> 
+> > On Mon 09-03-20 11:31:41, Shaju Abraham wrote:
+> > > The VM pressure notification flags have excluded GFP_KERNEL with the
+> > > reasoning that user land will not be able to take any action in case of
+> > > kernel memory being low. This is not true always. Consider the case of
+> > > a user land program managing all the huge memory pages. By including
+> > > GFP_KERNEL flag whenever the kernel memory is low, pressure notification
+> > > can be send, and the manager process can split huge pages to satisfy
+> > kernel
+> > > memory requirement.
+> >
+> > Are you sure about this reasoning? GFP_KERNEL = __GFP_FS | __GFP_IO |
+> > __GFP_RECLAIM
+> > Two of the flags mentioned there are already listed so we are talking
+> > about __GFP_RECLAIM here. Including it here would be a more appropriate
+> > change than GFP_KERNEL btw.
+> >
+> > But still I do not really understand what is the actual problem and how
+> > is this patch meant to fix it. vmpressure is triggered only from the
+> > reclaim path which inherently requires to have __GFP_RECLAIM present
+> > so I fail to see how this can make any change at all. How have you
+> > tested it?
+> >
+> >    We have a user space application which waits on memory pressure events.
 
-There are two issues with the ufshcd_init_lrb() call in
-ufshcd_init_cmd_priv():
+> Upon receiving the event, the user space program will free up huge
+> pages to make more memory available in the system.  This mechanism
+> works fine if the memory is being consumed by other user space
+> applications. To test this, we wrote a test program which will
+> allocate all the memory available in the system using malloc() and
+> touch the allocated pages. When the free memory level becomes low,
+> the pressure event is fired and the process gets notified about it .
+> The same test is repeated with kmalloc() instead of malloc(). A test
+> kernel module is developed, which will allocate all the available
+> memory with kmalloc(GFP_KERNEL) flag.  The OOM killer gets invoked in
+> this case. The memory pressure event is not fired.  After modifying
+> the vmpressure.c with the attached patch, the pressure event gets
+> triggered.  Swap is disabled in the system we were testing.
 
-- cmd->tag is set from inside scsi_mq_prep_fn() and hence is not yet set
-  when ufshcd_init_cmd_priv() is set.
-- Inside ufshcd_init_cmd_priv() the tag can only be derived from the SCSI
-  command pointer if no scheduler has been associated with the UFS block
-  device. If no scheduler is associated with a block device, the
-  relationship between hctx->tags->static_rqs[] and rq->tag is static.
-  If a scheduler has been configured, a single tag can be associated
-  with a different struct request if a request is reallocated.
+Are you sure this is really the case? I am either missing something here
+or your test might simply be timing specific because
 
-Fixes: 34656dda81ac ("ufs: Let the SCSI core allocate per-command UFS data")
+	GFP_KERNEL & (__GFP_FS | __GFP_IO) = true
 
-v2-v3:
-    - delete ufshcd_init_cmd_priv()
-    - change commit message
+so I really do not see how the current code could bail out on the test
+you are patching so that the patch would make any change. The only real
+difference this patch makes is to trigger events for __GFP_RECLAIM
+allocations which could be GFP_NOIO. All non-sleepable allocations would
+wake kswapd and that would in turn reclaim with _GFP_FS | __GFP_IO set
+so the check doesn't change anything.
 
-Signed-off-by: Bean Huo <beanhuo@micron.com>
----
- drivers/scsi/ufs/ufshcd.c | 14 +++++---------
- 1 file changed, 5 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index e987fa3a77c7..dfb44e8cc9dd 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -2471,6 +2471,8 @@ static int ufshcd_queuecommand(struct Scsi_Host *host, struct scsi_cmnd *cmd)
- 		BUG();
- 	}
- 
-+	ufshcd_init_lrb(hba, lrbp, tag);
-+
- 	WARN_ON_ONCE(!ufshcd_is_scsi(cmd->request));
- 
- 	if (!down_read_trylock(&hba->clk_scaling_lock))
-@@ -2707,6 +2709,7 @@ static int ufshcd_exec_dev_cmd(struct ufs_hba *hba,
- 
- 	init_completion(&wait);
- 	lrbp = ufshcd_req_to_lrb(req);
-+	ufshcd_init_lrb(hba, lrbp, tag);
- 	err = ufshcd_compose_dev_cmd(hba, lrbp, cmd_type, tag);
- 	if (unlikely(err))
- 		goto out_put_tag;
-@@ -3504,14 +3507,6 @@ static void ufshcd_host_memory_configure(struct ufs_hba *hba)
- 	}
- }
- 
--static int ufshcd_init_cmd_priv(struct Scsi_Host *shost, struct scsi_cmnd *cmd)
--{
--	struct ufs_hba *hba = shost_priv(shost);
--
--	ufshcd_init_lrb(hba, scsi_cmd_priv(cmd), cmd->tag);
--	return 0;
--}
--
- /**
-  * ufshcd_dme_link_startup - Notify Unipro to perform link startup
-  * @hba: per adapter instance
-@@ -4834,6 +4829,7 @@ static void __ufshcd_transfer_req_compl(struct ufs_hba *hba,
- 			continue;
- 		cmd = blk_mq_rq_to_pdu(req);
- 		lrbp = scsi_cmd_priv(cmd);
-+		ufshcd_init_lrb(hba, lrbp, index);
- 		if (ufshcd_is_scsi(req)) {
- 			ufshcd_add_command_trace(hba, req, "complete");
- 			result = ufshcd_transfer_rsp_status(hba, lrbp);
-@@ -5900,6 +5896,7 @@ static int ufshcd_issue_devman_upiu_cmd(struct ufs_hba *hba,
- 
- 	init_completion(&wait);
- 	lrbp = ufshcd_req_to_lrb(req);
-+	ufshcd_init_lrb(hba, lrbp, tag);
- 	lrbp->sense_bufflen = 0;
- 	lrbp->sense_buffer = NULL;
- 	lrbp->task_tag = tag;
-@@ -7180,7 +7177,6 @@ static struct scsi_host_template ufshcd_driver_template = {
- 	.module			= THIS_MODULE,
- 	.name			= UFSHCD,
- 	.proc_name		= UFSHCD,
--	.init_cmd_priv		= ufshcd_init_cmd_priv,
- 	.queuecommand		= ufshcd_queuecommand,
- 	.slave_alloc		= ufshcd_slave_alloc,
- 	.slave_configure	= ufshcd_slave_configure,
+Am I missing something?
 -- 
-2.17.1
-
+Michal Hocko
+SUSE Labs
