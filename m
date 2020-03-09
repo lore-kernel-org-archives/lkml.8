@@ -2,82 +2,210 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2D76C10F25
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 21:13:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51717C10F29
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 21:13:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1E762146E
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 21:13:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y2fjlUgD"
+	by mail.kernel.org (Postfix) with ESMTP id 2F6BA2146E
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 21:13:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583788433;
+	bh=CFrKLjp8KPBWk8MMiGqTf8FTi17PQMu2DFbxAZz3YHM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xlBV7fiCNKqDFF7/CRFbyuYZY327EbfGeumMEOpuRn3ml7A8H0Bi0Jh1KlvgC1YEB
+	 qDPuW67fBkFZORkK5kxZ/8yxydyofBmDbJ+QSQEFe1LllPxSpbGA6dzTJVvGq6bpk/
+	 qm/fjDf/HrjWAmCuIbMp/dwZm8d7/vmcyQLR+jLA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726921AbgCIVNR (ORCPT
+        id S1726967AbgCIVNw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 17:13:17 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:52152 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726847AbgCIVNQ (ORCPT
+        Mon, 9 Mar 2020 17:13:52 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:42547 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726157AbgCIVNv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 17:13:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583788395;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Il8BHXhlu0rpVwjSDD1TcJtiqIzjydKT/JxTacOBPvo=;
-        b=Y2fjlUgDtFy6Pds85CMnvq0q3siGbhQb6NlsCecRi71wgKjr5GtZDQ6P1Ml736vDcOINKV
-        XzdrfujVF/RFO3MQnWO9z6dQ+uYuNhqHT6KmvfZ0Ue1DtyRmUSGkW3CJZuzqOW034kJLe3
-        tCsPN7tgcmwUAmQr3amFu8eB8fUgXhk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-408-8LJQfvrlOuG6Zr6VQp3twA-1; Mon, 09 Mar 2020 17:13:10 -0400
-X-MC-Unique: 8LJQfvrlOuG6Zr6VQp3twA-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4C9F3107ACC9;
-        Mon,  9 Mar 2020 21:13:08 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-182.rdu2.redhat.com [10.10.120.182])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 499805D9CA;
-        Mon,  9 Mar 2020 21:13:05 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <a2012ba2-e322-39e2-fa80-c8d4aef501de@samba.org>
-References: <a2012ba2-e322-39e2-fa80-c8d4aef501de@samba.org> <158376244589.344135.12925590041630631412.stgit@warthog.procyon.org.uk> <158376245699.344135.7522994074747336376.stgit@warthog.procyon.org.uk>
-To:     Stefan Metzmacher <metze@samba.org>
-Cc:     dhowells@redhat.com, torvalds@linux-foundation.org,
-        viro@zeniv.linux.org.uk, Aleksa Sarai <cyphar@cyphar.com>,
-        raven@themaw.net, mszeredi@redhat.com, christian@brauner.io,
-        jannh@google.com, darrick.wong@oracle.com, kzak@redhat.com,
-        jlayton@redhat.com, linux-api@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 01/14] VFS: Add additional RESOLVE_* flags [ver #18]
+        Mon, 9 Mar 2020 17:13:51 -0400
+Received: by mail-oi1-f193.google.com with SMTP id l12so11661288oil.9;
+        Mon, 09 Mar 2020 14:13:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=1O7KrZaULdV7e7gmb/1OPYLUWRSmATxGTYHmz7Vmh20=;
+        b=mkr1CPih4OMFAWgK/cWxUaGjKU2dRtmSp05OltKjRit5GNJuzORk4iSdHFg2dzb3iI
+         ArFiw2ayFNvLNj/utRoknekZlaDGQ/PlYNfAR6a/LrClXp5N6HYLU7sb+iXITJjNrQ+g
+         1b3ic0IoBrMQ+sjJuVWOCStEYkPOyrCN4mab2AYSh6vJZzfvElpKXqYBVcilF+Xcz3fU
+         ONJv2NlHOUcFQT+XFcLbnAA36oTC/kiX5Zlyp7a8QRsp7HYWqwIQs5QnRNXhyzY/2x9e
+         u+dVJh91eBZ0x0UualmI+UYRICLo87AzTH75+3FpPGocGiGiEZQ59yASGpGfVsfSosPC
+         UUYA==
+X-Gm-Message-State: ANhLgQ23m6FaDNVrrqy8kk/8ry+OLa8BP6NVe+M6+1eYNeCjyXiKqIn9
+        guzZOrPhKFPio+MkuN0wnw==
+X-Google-Smtp-Source: ADFU+vvRj/iiV7KhB8aESxO7wMGC+tAofKVD4gjHWM1jmr1XRP26t2xFFjso8Y1HEz3xzEJRWqX8/g==
+X-Received: by 2002:aca:56c5:: with SMTP id k188mr789156oib.165.1583788431056;
+        Mon, 09 Mar 2020 14:13:51 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id r8sm2103584otp.7.2020.03.09.14.13.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Mar 2020 14:13:50 -0700 (PDT)
+Received: (nullmailer pid 26024 invoked by uid 1000);
+        Mon, 09 Mar 2020 21:13:49 -0000
+Date:   Mon, 9 Mar 2020 16:13:49 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Sivaprakash Murugesan <sivaprak@codeaurora.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
+        mturquette@baylibre.com, sboyd@kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] clk: qcom: Add DT bindings for ipq6018 apss clock
+ controller
+Message-ID: <20200309211349.GA10752@bogus>
+References: <1582797318-26288-1-git-send-email-sivaprak@codeaurora.org>
+ <1582797318-26288-2-git-send-email-sivaprak@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <530114.1583788384.1@warthog.procyon.org.uk>
-Date:   Mon, 09 Mar 2020 21:13:04 +0000
-Message-ID: <530115.1583788384@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1582797318-26288-2-git-send-email-sivaprak@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Stefan Metzmacher <metze@samba.org> wrote:
-
-> > Automounting is currently forced by doing an open(), so adding support to
-> > openat2() for RESOLVE_NO_TRAILING_AUTOMOUNTS is not trivial.
+On Thu, Feb 27, 2020 at 03:25:17PM +0530, Sivaprakash Murugesan wrote:
+> add dt-binding for ipq6018 apss clock controller
 > 
-> lookup_flags &= ~LOOKUP_AUTOMOUNT won't work?
+> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+> ---
+>  .../devicetree/bindings/clock/qcom,apsscc.yaml     | 58 ++++++++++++++++++++++
+>  include/dt-bindings/clock/qcom,apss-ipq6018.h      | 26 ++++++++++
+>  2 files changed, 84 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/qcom,apsscc.yaml
+>  create mode 100644 include/dt-bindings/clock/qcom,apss-ipq6018.h
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/qcom,apsscc.yaml b/Documentation/devicetree/bindings/clock/qcom,apsscc.yaml
+> new file mode 100644
+> index 0000000..7433721
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/qcom,apsscc.yaml
+> @@ -0,0 +1,58 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
 
-No.  LOOKUP_OPEN overrides that.
+Dual license new bindings please:
 
-David
+(GPL-2.0-only OR BSD-2-Clause)
 
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/bindings/clock/qcom,apsscc.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm IPQ6018 APSS Clock Controller Binding
+> +
+> +maintainers:
+> +  - Stephen Boyd <sboyd@kernel.org>
+
+I'd expect this to be a QCom person, not who is applying patches.
+
+> +
+> +description: |
+
+You can drop '|'.
+
+> +  Qualcomm IPQ6018 APSS clock control module which supports the clocks with
+> +  frequencies above 800Mhz.
+> +
+> +properties:
+> +  compatible :
+> +    const: qcom,apss-ipq6018
+
+Normal ordering is: qcom,ipq6018-apss
+
+> +
+> +  clocks:
+> +    description: clocks required for this controller.
+> +    maxItems: 4
+
+Need to define what each clock is.
+
+> +
+> +  clock-names:
+> +    description: clock output names of required clocks.
+> +    maxItems: 4
+> +
+> +  '#clock-cells':
+> +    const: 1
+> +
+> +  '#reset-cells':
+> +    const: 1
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - '#clock-cells'
+> +  - '#reset-cells'
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +      #include <dt-bindings/clock/qcom,gcc-ipq6018.h>
+> +      apss_clk: qcom,apss_clk@b111000 {
+
+I thought I'd finally seen the last of these Qcom node names...
+
+clock-controller@...
+
+> +            compatible = "qcom,apss-ipq6018";
+> +            clocks = <&xo>, <&gcc GPLL0>,
+> +                        <&gcc GPLL2>, <&gcc GPLL4>;
+> +            clock-names = "xo", "gpll0",
+> +                         "gpll2", "gpll4";
+> +            reg = <0xb11100c 0x5ff4>;
+> +            #clock-cells = <1>;
+> +            #reset-cells = <1>;
+> +      };
+> +...
+> diff --git a/include/dt-bindings/clock/qcom,apss-ipq6018.h b/include/dt-bindings/clock/qcom,apss-ipq6018.h
+> new file mode 100644
+> index 0000000..ed9d7d8
+> --- /dev/null
+> +++ b/include/dt-bindings/clock/qcom,apss-ipq6018.h
+> @@ -0,0 +1,26 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+
+I'm pretty sure your employer would like an additional license here.
+
+> +/*
+> + * Copyright (c) 2016-2018, The Linux Foundation. All rights reserved.
+> + *
+> + * Permission to use, copy, modify, and/or distribute this software for any
+> + * purpose with or without fee is hereby granted, provided that the above
+> + * copyright notice and this permission notice appear in all copies.
+> + *
+> + * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+> + * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+> + * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+> + * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+> + * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+> + * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+> + * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+> + */
+> +
+> +#ifndef _DT_BINDINGS_CLOCK_QCA_APSS_IPQ6018_H
+> +#define _DT_BINDINGS_CLOCK_QCA_APSS_IPQ6018_H
+> +
+> +#define APSS_PLL_EARLY				0
+> +#define APSS_PLL				1
+> +#define APCS_ALIAS0_CLK_SRC			2
+> +#define APCS_ALIAS0_CORE_CLK			3
+> +
+> +#endif
+> -- 
+> 2.7.4
+> 
