@@ -2,319 +2,366 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F17A6C10F25
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 21:57:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B93CC10F25
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 21:58:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B976B2253D
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 21:57:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="ImFwkCgj";
-	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="IYcHburU"
+	by mail.kernel.org (Postfix) with ESMTP id 2DEA124673
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 21:58:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583791099;
+	bh=j8JudUjaVqpyhM2J1RL+ojN6W74AclALW8V/PLr7bGk=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=TJ6t8ftYDRf9hgCCGFbFaVRUVPvbIZxHsz6e5tg7KHUmegrOLm/C9QXNj1q9MNL3K
+	 M36ilI9NCToBYpFFUv4YPRcE148zlkuVE2sQJIKPKttcjaCqy4y1nxgg3NxrNvI9xt
+	 QbYq57OkGsg5Kbm6ZpbiI07I2Z4dVK9MFXgfDAoI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727080AbgCIV5i (ORCPT
+        id S1727124AbgCIV6S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 17:57:38 -0400
-Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:39766 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726439AbgCIV5i (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 17:57:38 -0400
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 029LgeG9011145;
-        Mon, 9 Mar 2020 14:57:32 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=date : from : to :
- cc : subject : message-id : references : content-type : in-reply-to :
- mime-version; s=pfpt0818; bh=XXq0MC9f7fghQeINkNiUwrL98TyUFSKjT5Eae2kzfVs=;
- b=ImFwkCgjXlvY1xxqmp24ntVkFjJaSxwFN50fyD3MafyAhKMg2kBu+noMFIxhOCuExcYP
- hpnJzvsu7oghBg+ll39GnUquWQjDj6dVypEYVS5TqOrDSFBMJrzDg0WDZKUgFB0B9zDz
- XpYcy8cu5KxtQOIiy0mhXokA41vGudGHsZBwVa2GTwT4Rg/yEiJUv8yOUTWjgJGrnzNe
- M9nyVsB9lPwJZn3PnpJNUi+hSJqEUPbnFBJ3LcXtuQsv5XXkGZd3XxX8cECK9is2DP1t
- PO9OLiupqb+qdVOPWFKpi81oKxkL25Yd57KU6XfWTWbkBIxlU9XuJcGDhVZWgDUi8sS4 Kw== 
-Received: from sc-exch03.marvell.com ([199.233.58.183])
-        by mx0b-0016f401.pphosted.com with ESMTP id 2ymc0ss2ej-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Mon, 09 Mar 2020 14:57:32 -0700
-Received: from SC-EXCH02.marvell.com (10.93.176.82) by SC-EXCH03.marvell.com
- (10.93.176.83) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 9 Mar
- 2020 14:57:29 -0700
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.174)
- by SC-EXCH02.marvell.com (10.93.176.82) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2 via Frontend Transport; Mon, 9 Mar 2020 14:57:29 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DI0xCDgx0RmyqH2vOcvdCsbUoVKbNg3qzStftxXmjpYVJpLB3Hna4JUpA4ZSkjXPfiWkgAywKM4fm6lMDrwZfdYvJ85pkenLA6opLOfL9AWYkvWSxtJxX/AfQjEFgikjq4s4YXq9jdHIK0134jmEy4ckvf3H3xYJrYCMQxV4SU8/H09YTi6FBQwE9AvKmit0pLKQ9ZOxpzYWLCRQ8FvPJrQeAqM7aF+/lKiR/TKbaZeRFYj0tsEgEqrFwxAJbjrCqBUYPaHPmfOT2r1m8SOOJboS3+emtcL78dZqC+9/mssP8gAoDXjygkRqiS5MT6G2vRlkKcRAU4PzP+QFxx+GIA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XXq0MC9f7fghQeINkNiUwrL98TyUFSKjT5Eae2kzfVs=;
- b=FLrJvf/d4bAJ5RmaaZZ2ZYpynFtdM+jyMNw5bwWwrrGPKPlQzXVz2pN0GNHaYtUB8eCkLDVg2s8w7OxuMQ8uEkB7pC09YU9XdhJ6xxyxqBVf2W/muVVAD1yVSbdrAwnJedLRjCB2z/67svNio5ZLPsiqTCDVwuMQUE+45mHoovXJv443VTlbbv3nxWvlU0cwdTeMPMUqKNMrWitsdDs0UdRWBQ2E+jX+gxJLDXWDGxNa8hKRLcQTvYP6RI3UvvV+bnYY6mOdw6h1gvECE1184bbRs2wkbzxFqyuliAlCJXRtUPaiFKATSOBCMhRgBqMV7ughyypibS+mZoEhyxrXdA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
- dkim=pass header.d=marvell.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=marvell.onmicrosoft.com; s=selector1-marvell-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XXq0MC9f7fghQeINkNiUwrL98TyUFSKjT5Eae2kzfVs=;
- b=IYcHburU6X+D2hRwnxv/FMQtTax38Bz3lFwqllGBtFPhUfcfMMHF0Tzyt8D1JNGer6Ha0baGCYkuvDu8bcGEBGSE6XBUFODpPGWE+hEZRbsoikIWu92CONk4DNyMjHyP5oMRG1jxH0TrT6/x+TuU9XTUa0Tk8sl4iA8m7ZgVMAk=
-Received: from MN2PR18MB3408.namprd18.prod.outlook.com (2603:10b6:208:165::10)
- by MN2PR18MB2686.namprd18.prod.outlook.com (2603:10b6:208:ad::30) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.17; Mon, 9 Mar
- 2020 21:57:28 +0000
-Received: from MN2PR18MB3408.namprd18.prod.outlook.com
- ([fe80::30c4:52fe:fdf8:faff]) by MN2PR18MB3408.namprd18.prod.outlook.com
- ([fe80::30c4:52fe:fdf8:faff%7]) with mapi id 15.20.2793.013; Mon, 9 Mar 2020
- 21:57:28 +0000
-Date:   Mon, 9 Mar 2020 22:57:21 +0100
-From:   Robert Richter <rrichter@marvell.com>
-To:     Marc Zyngier <maz@kernel.org>
-CC:     Mark Salter <msalter@redhat.com>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] irqchip/gic-v3: avoid reading typer2 if GICv3
-Message-ID: <20200309215720.yiubhtgymnece6dm@rric.localdomain>
-References: <20200307233442.958122-1-msalter@redhat.com>
- <20200308102756.4bae3c27@why>
- <20200309151425.nex3scw46sgrxu5v@rric.localdomain>
- <47e631b06719415f4b3cf8ffb6b158fc@kernel.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <47e631b06719415f4b3cf8ffb6b158fc@kernel.org>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-ClientProxiedBy: HE1PR05CA0220.eurprd05.prod.outlook.com
- (2603:10a6:3:fa::20) To MN2PR18MB3408.namprd18.prod.outlook.com
- (2603:10b6:208:165::10)
+        Mon, 9 Mar 2020 17:58:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48442 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726439AbgCIV6R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 17:58:17 -0400
+Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F1D712253D;
+        Mon,  9 Mar 2020 21:58:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583791096;
+        bh=j8JudUjaVqpyhM2J1RL+ojN6W74AclALW8V/PLr7bGk=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=tLh3awgHjrkugCZkLXtjvhHPQZ7Z29Nzqc5+wDUvympdq1RLdXxSfkyObzPqzxk+h
+         YbBC3PaxxbYJKceo0IZL4U0nxvhOFvu/JGQkocy3NLMNkRq5qtYcCdjz6GH4L17skB
+         9mYzNmBC7o4sbTA22dHhx/jVZb8UW/FsgrKCVGuw=
+Message-ID: <926c589a579e28a349c84c9fca9fa5d5eadc6203.camel@kernel.org>
+Subject: Re: [locks] 6d390e4b5d: will-it-scale.per_process_ops -96.6%
+ regression
+From:   Jeff Layton <jlayton@kernel.org>
+To:     NeilBrown <neilb@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     kernel test robot <rong.a.chen@intel.com>,
+        yangerkun <yangerkun@huawei.com>,
+        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org,
+        Bruce Fields <bfields@fieldses.org>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Date:   Mon, 09 Mar 2020 17:58:14 -0400
+In-Reply-To: <87blp5urwq.fsf@notabene.neil.brown.name>
+References: <20200308140314.GQ5972@shao2-debian>
+         <e3783d060c778cb41b77380ad3e278133b52f57e.camel@kernel.org>
+         <CAHk-=whGK712fPqmQ3FSHxqe3Aqny4bEeWEvfaytLeLV2+ijCQ@mail.gmail.com>
+         <34355c4fe6c3968b1f619c60d5ff2ca11a313096.camel@kernel.org>
+         <1bfba96b4bf0d3ca9a18a2bced3ef3a2a7b44dad.camel@kernel.org>
+         <87blp5urwq.fsf@notabene.neil.brown.name>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from rric.localdomain (31.208.96.227) by HE1PR05CA0220.eurprd05.prod.outlook.com (2603:10a6:3:fa::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.11 via Frontend Transport; Mon, 9 Mar 2020 21:57:27 +0000
-X-Originating-IP: [31.208.96.227]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: a7ae8856-9bc7-4597-b630-08d7c474dbcd
-X-MS-TrafficTypeDiagnostic: MN2PR18MB2686:
-X-Microsoft-Antispam-PRVS: <MN2PR18MB2686416BF0CAB89104C59362D9FE0@MN2PR18MB2686.namprd18.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-Forefront-PRVS: 0337AFFE9A
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(39850400004)(346002)(396003)(366004)(376002)(189003)(199004)(81156014)(966005)(66476007)(956004)(81166006)(45080400002)(478600001)(66556008)(86362001)(4326008)(6666004)(1076003)(66946007)(8936002)(316002)(186003)(52116002)(55016002)(9686003)(7696005)(16526019)(53546011)(6506007)(2906002)(5660300002)(26005)(6916009)(8676002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB2686;H:MN2PR18MB3408.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-Received-SPF: None (protection.outlook.com: marvell.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: wemyjYa5UL51iElBC7OsJMPxLx+Cl7PQtuaI+RPp8wypEFZsSWgQ9nR49GWhGXmZvC1WYYwHUVdePL3AJU1yrp0xTVUm8FFx7nYJ6dBn4SJep3rj3BoWDAac8gsuYiPfH5r9n3ErRL8KfWDrovzFe3/T6OBbZ7idrkPdc22EzX1onpENDZfulMdMcbglqzHCtEnqAbTGcbbSJ8SjBdcNY3PDX5tc3i97OQaqz4/v1H+Unvy2DHS1iQ5bmGlcXHx4Gsc/vFhLJLiGJhzSrKvjyqXakXuTIvgf48l5Lguu6kDDMr0tXqG6oChk9QZBrQfl4ZRQQs0q6Y60jz8tWfDff6qCefOXjUsNKhA/9Pmo1I75swxe2VDx91hgBjBSQaZ6Emvl6q0zsXovTHe2JQG5Sezy7fgwNF2y3uD6zweJFR7J5V7SvXAEPEXHoyYIq9ZGPnHHJLW1aEhj5EAUa0Dl89VbADhwyMJ3WG7BHm3GgyHkMOZ36eFSiVWBvWGoDV5JjrDQklp7HqBO7yFZTLYA9w==
-X-MS-Exchange-AntiSpam-MessageData: u57bB9x73wFvilptXuMZFx7vzIijMnwpDIhdzY19JF3wwQ/KSaD+vONz21gwQAp2+DANNzTOrBHnqvis5tHfBoCdw1aNmOGxn5yShy851PgkjH8meVvKKxqJv5KUfQHwm8DuYzzERuslhnxIQtgFJg==
-X-MS-Exchange-CrossTenant-Network-Message-Id: a7ae8856-9bc7-4597-b630-08d7c474dbcd
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Mar 2020 21:57:28.1755
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: D3d/KNyd/9P8Vix3IDELM4knsYeeMucGhXXECk0IqaxJBqe7XWru0YnKT+fXvYi81mm+SbujQ4e4s3aIUfxt5w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB2686
-X-OriginatorOrg: marvell.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-09_11:2020-03-09,2020-03-09 signatures=0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09.03.20 17:15:00, Marc Zyngier wrote:
-> Hi Robert,
+On Tue, 2020-03-10 at 08:42 +1100, NeilBrown wrote:
+> On Mon, Mar 09 2020, Jeff Layton wrote:
 > 
-> On 2020-03-09 15:14, Robert Richter wrote:
-> > Marc,
+> > On Mon, 2020-03-09 at 13:22 -0400, Jeff Layton wrote:
+> > > On Mon, 2020-03-09 at 08:52 -0700, Linus Torvalds wrote:
+> > > > On Mon, Mar 9, 2020 at 7:36 AM Jeff Layton <jlayton@kernel.org> wrote:
+> > > > > On Sun, 2020-03-08 at 22:03 +0800, kernel test robot wrote:
+> > > > > > FYI, we noticed a -96.6% regression of will-it-scale.per_process_ops due to commit:
+> > > > > 
+> > > > > This is not completely unexpected as we're banging on the global
+> > > > > blocked_lock_lock now for every unlock. This test just thrashes file
+> > > > > locks and unlocks without doing anything in between, so the workload
+> > > > > looks pretty artificial [1].
+> > > > > 
+> > > > > It would be nice to avoid the global lock in this codepath, but it
+> > > > > doesn't look simple to do. I'll keep thinking about it, but for now I'm
+> > > > > inclined to ignore this result unless we see a problem in more realistic
+> > > > > workloads.
+> > > > 
+> > > > That is a _huge_ regression, though.
+> > > > 
+> > > > What about something like the attached? Wouldn't that work? And make
+> > > > the code actually match the old comment about wow "fl_blocker" being
+> > > > NULL being special.
+> > > > 
+> > > > The old code seemed to not know about things like memory ordering either.
+> > > > 
+> > > > Patch is entirely untested, but aims to have that "smp_store_release()
+> > > > means I'm done and not going to touch it any more", making that
+> > > > smp_load_acquire() test hopefully be valid as per the comment..
+> > > 
+> > > Yeah, something along those lines maybe. I don't think we can use
+> > > fl_blocker that way though, as the wait_event_interruptible is waiting
+> > > on it to go to NULL, and the wake_up happens before fl_blocker is
+> > > cleared.
+> > > 
+> > > Maybe we need to mix in some sort of FL_BLOCK_ACTIVE flag and use that
+> > > instead of testing for !fl_blocker to see whether we can avoid the
+> > > blocked_lock_lock?
+> > >   
 > > 
-> > On 08.03.20 10:27:56, Marc Zyngier wrote:
-> > > Hi Mark,
-> > > 
-> > > +Robert for Marvell/Cavium
-> > > 
-> > > On Sat,  7 Mar 2020 18:34:42 -0500
-> > > Mark Salter <msalter@redhat.com> wrote:
-> > > 
-> > > > Trying to boot v5.6-rc1 on a ThunderX platform leads to
-> > > > a SEA splat when trying to read the GICv4 TYPER2 register:
-> > > 
-> > > There is no such thing as a GICv4 register. All registers exist on all
-> > > versions of the architecture. They all have a well defined behaviour
-> > > when not implemented, which is RAZ/WI. New versions of the GICv3
-> > > architecture (which continues to evolve in parallel to GICv4) may use
-> > > this register as well, and this patch would then become a problem on
-> > > its own.
-> > > 
-> > > Now, to the issue itself:
-> > > 
-> > > >
-> > > > [    0.000000] GICv3: 0 Extended SPIs implemented
-> > > > [    0.000000] Internal error: synchronous external abort: 96000210 [#1] SMP
-> > > > [    0.000000] Modules linked in:
-> > > > [    0.000000] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.5.0-rc4+ #11
-> > > > [    0.000000] Hardware name: Cavium ThunderX CN88XX board (DT)
-> > > > [    0.000000] pstate: 60400085 (nZCv daIf +PAN -UAO)
-> > > > [    0.000000] pc : __raw_readl+0x0/0x8
-> > > > [    0.000000] lr : gic_init_bases+0x110/0x4b0
-> > > > [    0.000000] sp : ffff800011973dd0
-> > > > [    0.000000] x29: ffff800011973dd0 x28: 0000000002150018
-> > > > [    0.000000] x27: 0000000000000018 x26: 0000000000000000
-> > > > [    0.000000] x25: 0000000000000002 x24: ffff010fe7ef6700
-> > > > [    0.000000] x23: 0000000000000000 x22: ffff800010dc3b90
-> > > > [    0.000000] x21: ffff010fef138020 x20: 00000000009b0404
-> > > > [    0.000000] x19: ffff80001198c508 x18: 0000000000000005
-> > > > [    0.000000] x17: 000000006fc20c07 x16: 0000000000000001
-> > > > [    0.000000] x15: 0000000000000010 x14: ffffffffffffffff
-> > > > [    0.000000] x13: ffff800091973b4f x12: ffff800011973b5c
-> > > > [    0.000000] x11: ffff800011989000 x10: 0000000000000080
-> > > > [    0.000000] x9 : ffff8000101991e4 x8 : 0000000000040000
-> > > > [    0.000000] x7 : 000000000000413d x6 : 0000000000000000
-> > > > [    0.000000] x5 : 0000000000000000 x4 : 0000000000000000
-> > > > [    0.000000] x3 : 0000000000000080 x2 : ffff8000119c1f10
-> > > > [    0.000000] x1 : ffff800011991a40 x0 : ffff800013c9000c
-> > > > [    0.000000] Call trace:
-> > > > [    0.000000]  __raw_readl+0x0/0x8
-> > > > [    0.000000]  gic_of_init+0x170/0x1f8
-> > > > [    0.000000]  of_irq_init+0x1e4/0x3c4
-> > > > [    0.000000]  irqchip_init+0x1c/0x40
-> > > > [    0.000000]  init_IRQ+0x164/0x194
-> > > > [    0.000000]  start_kernel+0x334/0x4cc
-> > > >
-> > > > So avoid reading TYPER2 on GICv3.
+> > How about something like this instead? (untested other than for
+> > compilation)
 > > 
-> > we can confirm that access to a GIC3.0 unspecified register will cause
-> > a fault.
-> 
-> Not unspecified. It is specified as "Reserved", for which the behaviour
-> is perfectly defined. Does it also mean that other register in the
-> GICD space will suffer from the same problem? How about the redistributors,
-> the ITS?
-
-It is only clear for GICD, for other cases the actual behavior was
-hard to find out, see below.
-
-> 
-> > I have double-checked with the specification (GICv3 spec, ARM
-> > IHI 0069C). Rev. C of the spec includes already GICv4 parts and the
-> > register size is there set to 64 bit with the upper bits set to RES0
-> > for the GICv3 case. This would mean a violation of the spec. I don't
-> > have an earlier GICv3 spec at hand, but Appendix C, Revisions
-> > indicates the register is 64 bits from the beginning, though, I am not
-> > sure here.
-> 
-> I don't follow. My copy of IHI0096C shows:
-> 
-> - GICD_IIDR: Offset 8
-> - Reserved: Offset  0xc
-> - GICD_STATUSR: Offset 0x10
-> 
-> I can't see how you'd squeeze a 64bit register between IIDR and STATUSR.
-
-I screwed this up with GITS_TYPER, sorry.
-
-I now found 8.8 The GIC Distributor register map of IHI0096C which
-says "Reserved register addresses are RAZ/WI."
-
-> 
-> > It could be anyway that the upper part (offset 0xc) was marked as
-> > Reserved in the beginning (a draft or earlier version) the same way as
-> > other ranges in the ITS register map (8.18 The ITS register map). An
-> > access to 'Reserved' ranges is defined in the Glossary as
-> > UNPREDICTABLE.
-> 
-> It's not an ITS register. This is a distributor register, and these are
-> always 32bit. Even the 64bit registers must support 32bit accesses
-> because of AArch32 (such as GICD_IROUTERn).
-> 
-> > So the spec might have been imprecise here in the beginning. That
-> > said, it might be better to check for ArchRev of GICD_PIDR2 for >= 4
-> > before accessing typer2, instead of checking for certain part IDs.
-> 
-> No, the spec has always been pretty precise. It says [IHI0069A, 8.8]:
-> 
-> "Unless otherwise stated in the register description, all GIC registers
-> are 32-bits wide."
-
-I don't have the version A of the spec, but does it also describe the
-access behavior? I agree that version C is clear for GICD registers.
-But still version C is from July 2016 and even June 2015 for the A
-release is far after tapeout of that chip that was shown running at
-SC2014. Please keep that in mind.
-
-Other parts are not that clear. Mostly the spec marks such addresses
-as 'Reserved' only without further note, meaning there is only the
-Glossary describing access of "Reserved" registers as "UNPREDICTABLE
-behavior."  (I also agree a fault is not the best we can do here, but
-at least it is unpredictable :-).
-
-> 
-> And the reason for that is that it has to work with 32bit CPUs. So as far
-> as I can see, TX1 is violating the letter of the architecture. As for
-> checking
-> ArchRev, that's a firm No. All registers exist on all revision of the
-> architecture, which is why there's a unified GICv3/v4 architecture document.
-> 
-> > > I have reported this exact problem back in October:
-> > > 
-> > > https://lore.kernel.org/lkml/20191027144234.8395-1-maz@kernel.org/
-> > > 
-> > > and proposed a patch for it:
-> > > 
-> > > https://lore.kernel.org/lkml/20191027144234.8395-11-maz@kernel.org/
+> > Basically, this just switches the waiters over to wait for
+> > fl_blocked_member to go empty. That still happens before the wakeup, so
+> > it should be ok to wait on that.
 > > 
-> > There are more parts affected than with ProductID 0xa1, I will reply
-> > to the patch.
+> > I think we can also eliminate the lockless list_empty check in
+> > locks_delete_block, as the fl_blocker check should be sufficient now.
+> > -- 
+> > Jeff Layton <jlayton@kernel.org>
+> > From c179d779c9b72838ed9996a65d686d86679d1639 Mon Sep 17 00:00:00 2001
+> > From: Linus Torvalds <torvalds@linux-foundation.org>
+> > Date: Mon, 9 Mar 2020 14:35:43 -0400
+> > Subject: [PATCH] locks: reinstate locks_delete_lock optimization
 > > 
-> > > I've been repeatedly asking for Marvell/Cavium to come up with a
-> > > description of the issue so that we know the extent of the problem. So
-> > > far, all I've heard is the sound of crickets, which confirm my
-> > > impression that this HW is dead to its manufacturer and that they
-> > > don't
-> > > want to support it. I'm not asking much though: just tell me what is
-> > > wrong (again!) with this CPU, which are the affected revisions, what
-> > > is
-> > > the errata number and I'll deal with it.
+> > ...by using smp_load_acquire and smp_store_release to close the race
+> > window.
 > > 
-> > There is no errata number yet, sorry. There will be one once a spec
-> > violation is confirmed.
+> > [ jlayton: wait on the fl_blocked_requests list to go empty instead of
+> > 	   the fl_blocker pointer to clear. Remove the list_empty check
+> > 	   from locks_delete_lock shortcut. ]
 > 
-> /me grabs pop-corn and waits...
+> Why do you think it is OK to remove that list_empty check?  I don't
+> think it is.  There might be locked requests that need to be woken up.
 > 
-> > > I can't get that information. Can you?
-> > > 
-> > > I'm now proposing that we fully remove support for TX1 from the
-> > > mainline kernel, because every single bit of this CPU is completely
-> > > busted. Just look at the number of workarounds we have to carry
-> > > around.
-> > > Without involvement from Marvell, this CPU is a liability for the rest
-> > > of the arm64 kernel (just look at what we have to do to enable KPTI
-> > > *because of TX1*, the amount of crap I added to KVM to fully emulate
-> > > the broken CPU interface, and plenty of other things).
-> > 
-> > This is a bit unfair, during 2015/16 timeframe this was the only
-> > non-ARM cpu available at all. So everything was in the beginning there
-> > and things may happen. But many errata have been fixed in newer
-> > revisions (which stops of course when newer CPUs become available).
-> 
-> Even XGene-1 was available before TX1, and wasn't so grossly buggy.
-> And even then. Having a buggy CPU is not the end of the world if
-> the SV works with us. Over the past 5 years, we have had to work
-> *despite* Cavium. Yes, I'm a bit bitter about it.
-> 
-> > > I intend to propose such removal once 5.7-rc1 lands.
-> > 
-> > I hope we can work on a better solution here.
-> 
-> How about getting Marvell to actually work with upstream? Over 5 months
-> between a bug being reported and the first acknowledgement that "yes,
-> we may have a problem here" is not exactly something that fills me
-> with the utmost confidence.
 
-I read your message here.
+Temporary braino. We definitely cannot remove that check.
 
-Thanks,
-
--Robert
-
+> As the problem here is a use-after-free due to a race, one option would
+> be to use rcu_free() on the file_lock, and hold rcu_read_lock() around
+> test/use.
 > 
->         M.
-> -- 
-> Jazz is not dead. It just smells funny...
+
+Yeah, I was considering this too, but Linus' approach seemed simpler.
+
+> Another option is to use a different lock.  The fl_wait contains a
+> spinlock, and we have wake_up_locked() which is provided for exactly
+> these sorts of situations where the wake_up call can race with a thread
+> waking up.
+> 
+> So my compile-tested-only proposal is below.
+> I can probably a proper change-log entry if you think the patch is a
+> good way to go.
+> 
+> NeilBrown
+> 
+> 
+> diff --git a/fs/locks.c b/fs/locks.c
+> index 426b55d333d5..8aa04d5ac8b3 100644
+> --- a/fs/locks.c
+> +++ b/fs/locks.c
+> @@ -735,11 +735,13 @@ static void __locks_wake_up_blocks(struct file_lock *blocker)
+>  
+>  		waiter = list_first_entry(&blocker->fl_blocked_requests,
+>  					  struct file_lock, fl_blocked_member);
+> +		spin_lock(&waiter->fl_wait.lock);
+>  		__locks_delete_block(waiter);
+>  		if (waiter->fl_lmops && waiter->fl_lmops->lm_notify)
+>  			waiter->fl_lmops->lm_notify(waiter);
+>  		else
+> -			wake_up(&waiter->fl_wait);
+> +			wake_up_locked(&waiter->fl_wait);
+> +		spin_unlock(&waiter->fl_wait.lock);
+>  	}
+>  }
+>  
+> @@ -753,6 +755,31 @@ int locks_delete_block(struct file_lock *waiter)
+>  {
+>  	int status = -ENOENT;
+>  
+> +	/*
+> +	 * If fl_blocker is NULL, it won't be set again as this thread
+> +	 * "owns" the lock and is the only one that might try to claim
+> +	 * the lock.  So it is safe to test fl_blocker locklessly.
+> +	 * Also if fl_blocker is NULL, this waiter is not listed on
+> +	 * fl_blocked_requests for some lock, so no other request can
+> +	 * be added to the list of fl_blocked_requests for this
+> +	 * request.  So if fl_blocker is NULL, it is safe to
+> +	 * locklessly check if fl_blocked_requests is empty.  If both
+> +	 * of these checks succeed, there is no need to take the lock.
+> +	 * However, some other thread might have only *just* set
+> +	 * fl_blocker to NULL and it about to send a wakeup on
+> +	 * fl_wait, so we mustn't return too soon or we might free waiter
+> +	 * before that wakeup can be sent.  So take the fl_wait.lock
+> +	 * to serialize with the wakeup in __locks_wake_up_blocks().
+> +	 */
+> +	if (waiter->fl_blocker == NULL) {
+> +		spin_lock(&waiter->fl_wait.lock);
+> +		if (waiter->fl_blocker == NULL &&
+> +		    list_empty(&waiter->fl_blocked_requests)) {
+> +			spin_unlock(&waiter->fl_wait.lock);
+> +			return status;
+> +		}
+> +		spin_unlock(&waiter->fl_wait.lock);
+> +	}
+>  	spin_lock(&blocked_lock_lock);
+>  	if (waiter->fl_blocker)
+>  		status = 0;
+
+Yeah, this is simpler for me to prove to myself that it's correct, and I
+like that it touches less code, tbh. I'll give it a try here in a bit
+and see if it also fixes up the perf regression.
+
+FWIW, here's the variant of Linus' patch I've been testing. It seems to
+fix the performance regression too.
+
+--------------8<---------------
+
+[PATCH] locks: reinstate locks_delete_lock optimization
+
+There is measurable performance impact in some synthetic tests in commit
+6d390e4b5d48 (locks: fix a potential use-after-free problem when wakeup
+a waiter).  Fix the race condition instead by clearing the fl_blocker
+pointer after the wakeup and by using smp_load_acquire and
+smp_store_release to handle the access.
+
+This means that we can no longer use the clearing of fl_blocker clearing
+as the wait condition, so switch over to checking whether the
+fl_blocked_member list is empty.
+
+[ jlayton: wait on the fl_blocked_requests list to go empty instead of
+	   the fl_blocker pointer to clear. ]
+
+Cc: yangerkun <yangerkun@huawei.com>
+Fixes: 6d390e4b5d48 (locks: fix a potential use-after-free problem when wakeup a waiter)
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+---
+ fs/cifs/file.c |  3 ++-
+ fs/locks.c     | 43 +++++++++++++++++++++++++++++++++++++------
+ 2 files changed, 39 insertions(+), 7 deletions(-)
+
+diff --git a/fs/cifs/file.c b/fs/cifs/file.c
+index 3b942ecdd4be..8f9d849a0012 100644
+--- a/fs/cifs/file.c
++++ b/fs/cifs/file.c
+@@ -1169,7 +1169,8 @@ cifs_posix_lock_set(struct file *file, struct file_lock *flock)
+ 	rc = posix_lock_file(file, flock, NULL);
+ 	up_write(&cinode->lock_sem);
+ 	if (rc == FILE_LOCK_DEFERRED) {
+-		rc = wait_event_interruptible(flock->fl_wait, !flock->fl_blocker);
++		rc = wait_event_interruptible(flock->fl_wait,
++					list_empty(&flock->fl_blocked_member));
+ 		if (!rc)
+ 			goto try_again;
+ 		locks_delete_block(flock);
+diff --git a/fs/locks.c b/fs/locks.c
+index 426b55d333d5..e78d37c73df5 100644
+--- a/fs/locks.c
++++ b/fs/locks.c
+@@ -725,7 +725,6 @@ static void __locks_delete_block(struct file_lock *waiter)
+ {
+ 	locks_delete_global_blocked(waiter);
+ 	list_del_init(&waiter->fl_blocked_member);
+-	waiter->fl_blocker = NULL;
+ }
+ 
+ static void __locks_wake_up_blocks(struct file_lock *blocker)
+@@ -740,6 +739,12 @@ static void __locks_wake_up_blocks(struct file_lock *blocker)
+ 			waiter->fl_lmops->lm_notify(waiter);
+ 		else
+ 			wake_up(&waiter->fl_wait);
++
++		/*
++		 * Tell the world we're done with it - see comment at
++		 * top of locks_delete_block().
++		 */
++		smp_store_release(&waiter->fl_blocker, NULL);
+ 	}
+ }
+ 
+@@ -753,11 +758,32 @@ int locks_delete_block(struct file_lock *waiter)
+ {
+ 	int status = -ENOENT;
+ 
++	/*
++	 * If fl_blocker is NULL, it won't be set again as this thread
++	 * "owns" the lock and is the only one that might try to claim
++	 * the lock.  So it is safe to test fl_blocker locklessly.
++	 * Also if fl_blocker is NULL, this waiter is not listed on
++	 * fl_blocked_requests for some lock, so no other request can
++	 * be added to the list of fl_blocked_requests for this
++	 * request.  So if fl_blocker is NULL, it is safe to
++	 * locklessly check if fl_blocked_requests is empty.  If both
++	 * of these checks succeed, there is no need to take the lock.
++	 */
++	if (!smp_load_acquire(&waiter->fl_blocker) &&
++	    list_empty(&waiter->fl_blocked_requests))
++		return status;
++
+ 	spin_lock(&blocked_lock_lock);
+ 	if (waiter->fl_blocker)
+ 		status = 0;
+ 	__locks_wake_up_blocks(waiter);
+ 	__locks_delete_block(waiter);
++
++	/*
++	 * Tell the world we're done with it - see comment at top
++	 * of this function
++	 */
++	smp_store_release(&waiter->fl_blocker, NULL);
+ 	spin_unlock(&blocked_lock_lock);
+ 	return status;
+ }
+@@ -1350,7 +1376,8 @@ static int posix_lock_inode_wait(struct inode *inode, struct file_lock *fl)
+ 		error = posix_lock_inode(inode, fl, NULL);
+ 		if (error != FILE_LOCK_DEFERRED)
+ 			break;
+-		error = wait_event_interruptible(fl->fl_wait, !fl->fl_blocker);
++		error = wait_event_interruptible(fl->fl_wait,
++					list_empty(&fl->fl_blocked_member));
+ 		if (error)
+ 			break;
+ 	}
+@@ -1435,7 +1462,8 @@ int locks_mandatory_area(struct inode *inode, struct file *filp, loff_t start,
+ 		error = posix_lock_inode(inode, &fl, NULL);
+ 		if (error != FILE_LOCK_DEFERRED)
+ 			break;
+-		error = wait_event_interruptible(fl.fl_wait, !fl.fl_blocker);
++		error = wait_event_interruptible(fl.fl_wait,
++					list_empty(&fl.fl_blocked_member));
+ 		if (!error) {
+ 			/*
+ 			 * If we've been sleeping someone might have
+@@ -1638,7 +1666,8 @@ int __break_lease(struct inode *inode, unsigned int mode, unsigned int type)
+ 
+ 	locks_dispose_list(&dispose);
+ 	error = wait_event_interruptible_timeout(new_fl->fl_wait,
+-						!new_fl->fl_blocker, break_time);
++					list_empty(&new_fl->fl_blocked_member),
++					break_time);
+ 
+ 	percpu_down_read(&file_rwsem);
+ 	spin_lock(&ctx->flc_lock);
+@@ -2122,7 +2151,8 @@ static int flock_lock_inode_wait(struct inode *inode, struct file_lock *fl)
+ 		error = flock_lock_inode(inode, fl);
+ 		if (error != FILE_LOCK_DEFERRED)
+ 			break;
+-		error = wait_event_interruptible(fl->fl_wait, !fl->fl_blocker);
++		error = wait_event_interruptible(fl->fl_wait,
++				list_empty(&fl->fl_blocked_member));
+ 		if (error)
+ 			break;
+ 	}
+@@ -2399,7 +2429,8 @@ static int do_lock_file_wait(struct file *filp, unsigned int cmd,
+ 		error = vfs_lock_file(filp, cmd, fl, NULL);
+ 		if (error != FILE_LOCK_DEFERRED)
+ 			break;
+-		error = wait_event_interruptible(fl->fl_wait, !fl->fl_blocker);
++		error = wait_event_interruptible(fl->fl_wait,
++					list_empty(&fl->fl_blocked_member));
+ 		if (error)
+ 			break;
+ 	}
+-- 
+2.24.1
+
+
