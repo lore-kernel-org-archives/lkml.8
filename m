@@ -2,101 +2,227 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7D38C10F28
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 03:37:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B443C10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 03:37:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BEA4206D5
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 03:37:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA10B2064A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 03:37:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FvS6f/w4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726776AbgCIDg7 (ORCPT
+        id S1726847AbgCIDhE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Mar 2020 23:36:59 -0400
-Received: from mga11.intel.com ([192.55.52.93]:5773 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726352AbgCIDg7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Mar 2020 23:36:59 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Mar 2020 20:36:58 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,531,1574150400"; 
-   d="scan'208";a="414670446"
-Received: from pg-nxl3.altera.com ([10.142.129.93])
-  by orsmga005.jf.intel.com with ESMTP; 08 Mar 2020 20:36:56 -0700
-From:   "Ooi, Joyce" <joyce.ooi@intel.com>
-To:     Dinh Nguyen <dinguyen@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Joyce Ooi <joyce.ooi@intel.com>,
-        Tan Ley Foon <ley.foon.tan@intel.com>,
-        See Chin Liang <chin.liang.see@intel.com>,
-        Chee Hong Ang <chee.hong.ang@intel.com>
-Subject: [PATCH] arm64: dts: increase the QSPI reg address for Stratix10 and Agilex
-Date:   Mon,  9 Mar 2020 11:36:49 +0800
-Message-Id: <20200309033649.15208-1-joyce.ooi@intel.com>
-X-Mailer: git-send-email 2.13.0
+        Sun, 8 Mar 2020 23:37:04 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:20756 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726352AbgCIDhE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Mar 2020 23:37:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583725023;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=S0qLVKfYZK8pYenESepAxVRIXfABKBnhJdpq7W8RSUA=;
+        b=FvS6f/w4SECuy2VxxH9RF8pAfMk+pi28SOrL1tsBMMv/h4oejTIllrxz06xG91EJ1OpvDw
+        wMTQtNlLVxozKTly+Vh9wEIEbPb2pNFFm+KFoFXbkXYso0QefymMuIsExrDEyhfUmQoq/v
+        HVgv7ypj4e/pNQXoimtrx4KTrLc1amQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-47-VoLRSUGNOjaqQVz4KT5Ihg-1; Sun, 08 Mar 2020 23:36:59 -0400
+X-MC-Unique: VoLRSUGNOjaqQVz4KT5Ihg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 65DFC477;
+        Mon,  9 Mar 2020 03:36:57 +0000 (UTC)
+Received: from [10.72.13.185] (ovpn-13-185.pek2.redhat.com [10.72.13.185])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2A06D9008F;
+        Mon,  9 Mar 2020 03:36:47 +0000 (UTC)
+Subject: Re: [PATCH v2 0/7] vfio/pci: SR-IOV support
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     "Tian, Kevin" <kevin.tian@intel.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dev@dpdk.org" <dev@dpdk.org>,
+        "mtosatti@redhat.com" <mtosatti@redhat.com>,
+        "thomas@monjalon.net" <thomas@monjalon.net>,
+        "bluca@debian.org" <bluca@debian.org>,
+        "jerinjacobk@gmail.com" <jerinjacobk@gmail.com>,
+        "Richardson, Bruce" <bruce.richardson@intel.com>,
+        "cohuck@redhat.com" <cohuck@redhat.com>
+References: <158213716959.17090.8399427017403507114.stgit@gimli.home>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D79A8A7@SHSMSX104.ccr.corp.intel.com>
+ <a6c04bac-0a37-f4c0-876e-e5cf2a8a6c3f@redhat.com>
+ <20200305101406.02703e2a@w520.home>
+ <3e8db1d0-8afc-f1e9-e857-aead4717fa11@redhat.com>
+ <20200306092445.1bd4611c@x1.home>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <d9ac428f-c764-014c-db5b-3f94d8f3e626@redhat.com>
+Date:   Mon, 9 Mar 2020 11:36:46 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <20200306092445.1bd4611c@x1.home>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joyce Ooi <joyce.ooi@intel.com>
 
-This patch increases the reg addresses for QSPI boot and QSPI rootfs for
-Stratix10 and Agilex to cater for the increased size of kernel Image.
+On 2020/3/7 =E4=B8=8A=E5=8D=8812:24, Alex Williamson wrote:
+> On Fri, 6 Mar 2020 11:35:21 +0800
+> Jason Wang <jasowang@redhat.com> wrote:
+>
+>> On 2020/3/6 =E4=B8=8A=E5=8D=881:14, Alex Williamson wrote:
+>>> On Tue, 25 Feb 2020 14:09:07 +0800
+>>> Jason Wang <jasowang@redhat.com> wrote:
+>>>  =20
+>>>> On 2020/2/25 =E4=B8=8A=E5=8D=8810:33, Tian, Kevin wrote:
+>>>>>> From: Alex Williamson
+>>>>>> Sent: Thursday, February 20, 2020 2:54 AM
+>>>>>>
+>>>>>> Changes since v1 are primarily to patch 3/7 where the commit log i=
+s
+>>>>>> rewritten, along with option parsing and failure logging based on
+>>>>>> upstream discussions.  The primary user visible difference is that
+>>>>>> option parsing is now much more strict.  If a vf_token option is
+>>>>>> provided that cannot be used, we generate an error.  As a result o=
+f
+>>>>>> this, opening a PF with a vf_token option will serve as a mechanis=
+m of
+>>>>>> setting the vf_token.  This seems like a more user friendly API th=
+an
+>>>>>> the alternative of sometimes requiring the option (VFs in use) and
+>>>>>> sometimes rejecting it, and upholds our desire that the option is
+>>>>>> always either used or rejected.
+>>>>>>
+>>>>>> This also means that the VFIO_DEVICE_FEATURE ioctl is not the only
+>>>>>> means of setting the VF token, which might call into question whet=
+her
+>>>>>> we absolutely need this new ioctl.  Currently I'm keeping it becau=
+se I
+>>>>>> can imagine use cases, for example if a hypervisor were to support
+>>>>>> SR-IOV, the PF device might be opened without consideration for a =
+VF
+>>>>>> token and we'd require the hypservisor to close and re-open the PF=
+ in
+>>>>>> order to set a known VF token, which is impractical.
+>>>>>>
+>>>>>> Series overview (same as provided with v1):
+>>>>> Thanks for doing this!
+>>>>>     =20
+>>>>>> The synopsis of this series is that we have an ongoing desire to d=
+rive
+>>>>>> PCIe SR-IOV PFs from userspace with VFIO.  There's an immediate ne=
+ed
+>>>>>> for this with DPDK drivers and potentially interesting future use
+>>>>> Can you provide a link to the DPDK discussion?
+>>>>>     =20
+>>>>>> cases in virtualization.  We've been reluctant to add this support
+>>>>>> previously due to the dependency and trust relationship between th=
+e
+>>>>>> VF device and PF driver.  Minimally the PF driver can induce a den=
+ial
+>>>>>> of service to the VF, but depending on the specific implementation=
+,
+>>>>>> the PF driver might also be responsible for moving data between VF=
+s
+>>>>>> or have direct access to the state of the VF, including data or st=
+ate
+>>>>>> otherwise private to the VF or VF driver.
+>>>>> Just a loud thinking. While the motivation of VF token sounds reaso=
+nable
+>>>>> to me, I'm curious why the same concern is not raised in other usag=
+es.
+>>>>> For example, there is no such design in virtio framework, where the
+>>>>> virtio device could also be restarted, putting in separate process =
+(vhost-user),
+>>>>> and even in separate VM (virtio-vhost-user), etc.
+>>>> AFAIK, the restart could only be triggered by either VM or qemu. But
+>>>> yes, the datapath could be offloaded.
+>>>>
+>>>> But I'm not sure introducing another dedicated mechanism is better t=
+han
+>>>> using the exist generic POSIX mechanism to make sure the connection
+>>>> (AF_UINX) is secure.
+>>>>
+>>>>  =20
+>>>>>     Of course the para-
+>>>>> virtualized attribute of virtio implies some degree of trust, but a=
+s you
+>>>>> mentioned many SR-IOV implementations support VF->PF communication
+>>>>> which also implies some level of trust. It's perfectly fine if VFIO=
+ just tries
+>>>>> to do better than other sub-systems, but knowing how other people
+>>>>> tackle the similar problem may make the whole picture clearer. =F0=9F=
+=98=8A
+>>>>>
+>>>>> +Jason.
+>>>> I'm not quite sure e.g allowing userspace PF driver with kernel VF
+>>>> driver would not break the assumption of kernel security model. At l=
+east
+>>>> we should forbid a unprivileged PF driver running in userspace.
+>>> It might be useful to have your opinion on this series, because that'=
+s
+>>> exactly what we're trying to do here.  Various environments, DPDK
+>>> specifically, want a userspace PF driver.  This series takes steps to
+>>> mitigate the risk of having such a driver, such as requiring this VF
+>>> token interface to extend the VFIO interface and validate participati=
+on
+>>> around a PF that is not considered trusted by the kernel.
+>>
+>> I may miss something. But what happens if:
+>>
+>> - PF driver is running by unprivileged user
+>> - PF is programmed to send translated DMA request
+>> - Then unprivileged user can mangle the kernel data
+> ATS is a security risk regardless of SR-IOV, how does this change it?
+> Thanks,
 
-Signed-off-by: Joyce Ooi <joyce.ooi@intel.com>
----
- .../boot/dts/altera/socfpga_stratix10_socdk.dts    |    6 +++---
- arch/arm64/boot/dts/intel/socfpga_agilex_socdk.dts |    6 +++---
- 2 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts b/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
-index fb11ef0..f6c4a15 100644
---- a/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
-+++ b/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
-@@ -178,12 +178,12 @@
- 
- 			qspi_boot: partition@0 {
- 				label = "Boot and fpga data";
--				reg = <0x0 0x034B0000>;
-+				reg = <0x0 0x03FE0000>;
- 			};
- 
--			qspi_rootfs: partition@4000000 {
-+			qspi_rootfs: partition@3FE0000 {
- 				label = "Root Filesystem - JFFS2";
--				reg = <0x034B0000 0x0EB50000>;
-+				reg = <0x03FE0000 0x0C020000>;
- 			};
- 		};
- 	};
-diff --git a/arch/arm64/boot/dts/intel/socfpga_agilex_socdk.dts b/arch/arm64/boot/dts/intel/socfpga_agilex_socdk.dts
-index 44d38af..ac6e51b 100644
---- a/arch/arm64/boot/dts/intel/socfpga_agilex_socdk.dts
-+++ b/arch/arm64/boot/dts/intel/socfpga_agilex_socdk.dts
-@@ -129,12 +129,12 @@
- 
- 			qspi_boot: partition@0 {
- 				label = "Boot and fpga data";
--				reg = <0x0 0x034B0000>;
-+				reg = <0x0 0x03FE0000>;
- 			};
- 
--			qspi_rootfs: partition@34B0000 {
-+			qspi_rootfs: partition@3FE0000 {
- 				label = "Root Filesystem - JFFS2";
--				reg = <0x034B0000 0x0EB50000>;
-+				reg = <0x03FE0000 0x0C020000>;
- 			};
- 		};
- 	};
--- 
-1.7.1
+My understanding is the ATS only happen for some bugous devices. Some=20
+hardware has on-chip IOMMU, this probably means unprivileged userspace=20
+PF driver can control the on-chip IOMMU in this case.
+
+Thanks
+
+
+>
+> Alex
+>
+>>> We also set
+>>> a driver_override to try to make sure no host kernel driver can
+>>> automatically bind to a VF of a user owned PF, only vfio-pci, but we
+>>> don't prevent the admin from creating configurations where the VFs ar=
+e
+>>> used by other host kernel drivers.
+>>>
+>>> I think the question Kevin is inquiring about is whether virtio devic=
+es
+>>> are susceptible to the type of collaborative, shared key environment
+>>> we're creating here.  For example, can a VM or qemu have access to
+>>> reset a virtio device in a way that could affect other devices, ex. F=
+LR
+>>> on a PF that could interfere with VF operation.  Thanks,
+>>
+>> Right, but I'm not sure it can be done only via virtio or need support
+>> from transport (e.g PCI).
+>>
+>> Thanks
+>>
+>>
+>>> Alex
+>>>  =20
 
