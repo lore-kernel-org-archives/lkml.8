@@ -2,213 +2,127 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EC8AC18E5A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 13:40:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B196DC10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 13:40:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30A2720866
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 13:40:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87D4120675
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 13:40:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="GcjkwchO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TvE+QjV/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbgCINk1 (ORCPT
+        id S1726770AbgCINkb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 09:40:27 -0400
-Received: from mail-eopbgr40047.outbound.protection.outlook.com ([40.107.4.47]:8975
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726427AbgCINk0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 09:40:26 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lYnVjA3zP0uVnB8rHCxVNQe+5QyodIUayaujkMu6VnwRsaaWMcNA3yCwtciDCTdV98+OGCC2nP7eFIEKKJDdlJYLZ23KTqX0Uwd8oXJCwm3tF+8FKnojmzrJVvG1pAbxfDGyoYGEGS1YPK1PGWMPSmmu1jomsAfSoTtUchFiahE+ko1nS321pFFaLl3Zdft0Y+fpdnzdP7BYAd8u0oII/4sbXqdgT+jkQ/K2774Ku2xbgHth2QUne+KNpLk0Jl+s+7uJ4VgVGAUzQ5oPH0kNFirkyjjNRcReQFMKRKmVgekTcuqK/KH0rR7Z6e+3t51D/GjByps5AeCed7BvaMSjKQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KMidsTvdLF3grg+vGMKuvpMmjkv8LS6hXSx26cqDJXk=;
- b=QpSY8l9FHO/wc3hjsJmg6B2bOt/moSWfNCea4GiTKBgf4K7nbkSaIG4Dbchh+u7CDwCm3KABrQXTxh23Ksg76fjaQbWFNCU26ge23LzIqz8yAI65oPgi4V2mS/Z9FoN+gCsDxVCZxNEOI8cuyDjbRtvQASEtBRXWjfZzL2l48FAV0AuOG7geNxz1+nzvKhK1x8mMLBNnVTt394v9VkW9JtEdfaUpotLlxnixwUeDPR4E0ToT96y5UTbOxU6LI2Y0DO5nhG2syLMv/CCMcA0gYWFUZ251reD2oxvzvArJKq+d5apfv8YMl+bskzWjHV3Wpp25mDZEGB4OBQ8aiDbsqw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KMidsTvdLF3grg+vGMKuvpMmjkv8LS6hXSx26cqDJXk=;
- b=GcjkwchOxIzhFiZTSy+HdEn4sER+0yjIqpCG93T959cq6B5yvBcFaATIpgNJT5MPeCN2lJg5d/NEq9/Z9v+bPS1ilzBgauSyNpA13SYOtYgko5rYogcO+Svh3Sra2ZY+oXGjHmLvkLC94eTt0POQRGWwStXleLzAo55vK4pXxeg=
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
- AM0PR04MB6659.eurprd04.prod.outlook.com (20.179.255.152) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2793.11; Mon, 9 Mar 2020 13:40:18 +0000
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::548f:4941:d4eb:4c11]) by AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::548f:4941:d4eb:4c11%6]) with mapi id 15.20.2793.013; Mon, 9 Mar 2020
- 13:40:18 +0000
-From:   Peng Fan <peng.fan@nxp.com>
-To:     Anson Huang <anson.huang@nxp.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "rui.zhang@intel.com" <rui.zhang@intel.com>,
-        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
-        "amit.kucheria@verdurent.com" <amit.kucheria@verdurent.com>,
-        "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
-        "linux@roeck-us.net" <linux@roeck-us.net>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux@rempel-privat.de" <linux@rempel-privat.de>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "m.felsch@pengutronix.de" <m.felsch@pengutronix.de>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "ronald@innovation.ch" <ronald@innovation.ch>,
-        "krzk@kernel.org" <krzk@kernel.org>,
-        "robh@kernel.org" <robh@kernel.org>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH V3 1/7] firmware: imx: Add stubs for !CONFIG_IMX_SCU case
-Thread-Topic: [PATCH V3 1/7] firmware: imx: Add stubs for !CONFIG_IMX_SCU case
-Thread-Index: AQHV9av6lP0y7UryDUCSkdoJ2q6AXKhARRTA
-Date:   Mon, 9 Mar 2020 13:40:18 +0000
-Message-ID: <AM0PR04MB4481F087AC3CDA691300710288FE0@AM0PR04MB4481.eurprd04.prod.outlook.com>
-References: <1583714300-19085-1-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1583714300-19085-1-git-send-email-Anson.Huang@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peng.fan@nxp.com; 
-x-originating-ip: [119.31.174.68]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: de9658cf-a8b4-490b-12b4-08d7c42f67f1
-x-ms-traffictypediagnostic: AM0PR04MB6659:|AM0PR04MB6659:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR04MB665911A08592AAC8535CF9B288FE0@AM0PR04MB6659.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1360;
-x-forefront-prvs: 0337AFFE9A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(396003)(366004)(39860400002)(376002)(346002)(199004)(189003)(8936002)(9686003)(55016002)(7416002)(4326008)(2906002)(86362001)(66946007)(6506007)(5660300002)(966005)(81156014)(81166006)(7696005)(71200400001)(316002)(76116006)(44832011)(478600001)(33656002)(52536014)(66476007)(66446008)(8676002)(186003)(66556008)(26005)(64756008)(110136005)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB6659;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 1PoFkMa15tZ46KLhGlyo8zb94cPa2Upb+OL0q3ee4X0V0YqwKW+AQxl6FSzVG4v6mKfhW1mLh7C+KdoQO0d4dfoWflV4vdEo25Utb7TeEDGEoi1E9xdRI0AIGcAkh9Kk6Ravpd/TXTAHCaOCAvvDi1tMcP9W++/6mZ9GzVTSUvF1WSp3AJG96njWkBc99H2Aho4S0zWFyn6Z3GaF2bfCcgsxbun8ReGZVqIiZAVnOECEI2MT4vN4JleGIhnGmiksZwVHG79cNYoDKNi8vswD7hiBQTvJa5tpi2FlHtHfl1zU8BvOMlDVSMSot+Nv08nooePpVF+Kh78n///rxfcKfRUaqLhPF91WeoJ6T12TI1IqpjEKkUbgE9ym8SveOobiB8Pfd0tFS6f+TaGYitrFv4ZDvns8fMcB/yY+d50dzQDRVv/6xahZHznJArPoEVmnDbHBgEnEGHJN+qGSDbsfQq3zN92EIXEPYIu28EsuU91lPmn3c30K9oVIBqRtMaHWpK7JOvDlRtbvB1j1abU1IFMVwCE0jgtAOmqQ2LzeXxAkolUKazlQt9IKx1v+JqksBMKIQOkLtDcajuXUuBJ5aw==
-x-ms-exchange-antispam-messagedata: pq6kPcSrFhIFN19wWcF2MPiJKUHgunIozl4hXG9thhhS73JNDw9pyNrv6q2TMk9ufBeXJ9IbZaZ1ZW8IIQY+40ukMaV9smeK+FlgxGtC9SrWuBZDTVIatkSTFWxq17/nCn8ZOOJ5iDEmWcgR1kiVNQ==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: de9658cf-a8b4-490b-12b4-08d7c42f67f1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Mar 2020 13:40:18.0814
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ESZRSNZMHriNm9xIi4xELVmoB4YRXTHo1mspcwwexasFf9vwa5SUQSPh1ypwMGGeCb3PCXU7ABBoTuGs1t0JQg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6659
+        Mon, 9 Mar 2020 09:40:31 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:45856 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726749AbgCINka (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 09:40:30 -0400
+Received: by mail-wr1-f66.google.com with SMTP id m9so2186082wro.12;
+        Mon, 09 Mar 2020 06:40:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=dfCIxcOnP/0No04iQLbl9qRZ5XXuFOMBWpVPNhSslK0=;
+        b=TvE+QjV/Emq8Ejod4yOAQ3SjW85I9pv4uA1tuM280dy+KaH8L+rQ+0/nqV9rlllRl3
+         6qc2ydP1JNclBtIw6xQYxivq5UnAgp5mqn86M6p0yx3dLW63cYSX4covJC3RKMZMuybD
+         hIy5eZ99mJLKOhGh4sazWeUvxa2zaMc2mB636k5Cxh1N/W61/9fuv3UebPQUsTAVRR97
+         MXqShPt2kM1mXpGDpgk6lPFb5Pfrjtq9rro7lxlewNqVlVPsO4cFvXm+sgduc5X09Z3j
+         MNx3cZ3DpBPa5O5TIoq2kWX2Uycp7XI1cxY6swoxzmhcScv7iBBUFKWscptX7dtHAHFm
+         W72g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=dfCIxcOnP/0No04iQLbl9qRZ5XXuFOMBWpVPNhSslK0=;
+        b=drVpeB/WMNKcWi/Ph3RnXY85uys36DsmnRov2XzR8Su6F4+c8+207+z7Gw1ZG//HFn
+         Dc3yr4d4+PpdpJbPClLKXsQKhyC5OfIGHKiQh8UL00+zj2oCC7HNEw/PcDzfiKH5ofS+
+         XGX+yrKFniBZqbbk+X87KSWhe89ZVY4X3qWgWnYtWf0l1v5AGS1BIUGkNymfk1mYChg7
+         7Wiu7hnsYYJxSd5FgyAhaa53cUR/SRS/zJLCPuky/7qrIpluuWUqnUvW53IYLyQ16lsy
+         68QpA+Z0+AxPMiRjXRXPINOx27k5gSGWFj/9wnFPmi1rRlOA915xzNi/W6eGuKiK6rsz
+         2/YQ==
+X-Gm-Message-State: ANhLgQ1vVwykEMgLdlgDyXWq76/oXoAqMkFfSJkwKX0iiIpvnNHZYegX
+        kn/fhsJ4fSYjOQue5hluwZI=
+X-Google-Smtp-Source: ADFU+vum0vFqAdXvHbJNX40jof7bCt99HKnCoeew+WNOZtw7BQ4UtkW70Jon8MgOr+2lGqDoKY28Rw==
+X-Received: by 2002:adf:a419:: with SMTP id d25mr22152214wra.210.1583761227808;
+        Mon, 09 Mar 2020 06:40:27 -0700 (PDT)
+Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id i14sm8888439wrp.82.2020.03.09.06.40.26
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 09 Mar 2020 06:40:27 -0700 (PDT)
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     heiko@sntech.de
+Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [RFC PATCH] ARM: dts: rockchip: remove #dma-cells from dma client nodes for rv1108
+Date:   Mon,  9 Mar 2020 14:40:20 +0100
+Message-Id: <20200309134020.14935-1-jbx6244@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Subject: [PATCH V3 1/7] firmware: imx: Add stubs for !CONFIG_IMX_SCU case
+When we combine spi-rockchip.yaml and
+spi-controller.yaml and add 'additionalProperties: false'
+it gives for example this error:
 
-I have one patch pending reviewing.
-https://patchwork.kernel.org/patch/11395247/
+arch/arm/boot/dts/rv1108-evb.dt.yaml: spi@10270000:
+'#dma-cells' does not match any of the regexes:
+'^.*@[0-9a-f]+$', '^slave$'
 
-Thanks,
-Peng.
+'#dma-cells' are not used for dma clients, so remove them all.
 
->=20
-> Add stubs for those i.MX SCU APIs to make those modules depending on
-> IMX_SCU can pass build when COMPILE_TEST is enabled.
->=20
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
-> Changes since V2:
-> 	- return error for stubs.
-> ---
->  include/linux/firmware/imx/ipc.h | 11 +++++++++++
-> include/linux/firmware/imx/sci.h | 19 +++++++++++++++++++
->  2 files changed, 30 insertions(+)
->=20
-> diff --git a/include/linux/firmware/imx/ipc.h
-> b/include/linux/firmware/imx/ipc.h
-> index 8910574..9e3d808 100644
-> --- a/include/linux/firmware/imx/ipc.h
-> +++ b/include/linux/firmware/imx/ipc.h
-> @@ -34,6 +34,7 @@ struct imx_sc_rpc_msg {
->  	uint8_t func;
->  };
->=20
-> +#ifdef CONFIG_IMX_SCU
->  /*
->   * This is an function to send an RPC message over an IPC channel.
->   * It is called by client-side SCFW API function shims.
-> @@ -55,4 +56,14 @@ int imx_scu_call_rpc(struct imx_sc_ipc *ipc, void *msg=
-,
-> bool have_resp);
->   * @return Returns an error code (0 =3D success, failed if < 0)
->   */
->  int imx_scu_get_handle(struct imx_sc_ipc **ipc);
-> +#else
-> +static inline int imx_scu_call_rpc(struct imx_sc_ipc *ipc, void *msg,
-> +bool have_resp) {
-> +	return -ENOENT;
-> +}
-> +static inline int imx_scu_get_handle(struct imx_sc_ipc **ipc) {
-> +	return -ENOENT;
-> +}
-> +#endif
->  #endif /* _SC_IPC_H */
-> diff --git a/include/linux/firmware/imx/sci.h
-> b/include/linux/firmware/imx/sci.h
-> index 17ba4e4..022129b 100644
-> --- a/include/linux/firmware/imx/sci.h
-> +++ b/include/linux/firmware/imx/sci.h
-> @@ -16,8 +16,27 @@
->  #include <linux/firmware/imx/svc/misc.h>  #include
-> <linux/firmware/imx/svc/pm.h>
->=20
-> +#ifdef CONFIG_IMX_SCU
->  int imx_scu_enable_general_irq_channel(struct device *dev);  int
-> imx_scu_irq_register_notifier(struct notifier_block *nb);  int
-> imx_scu_irq_unregister_notifier(struct notifier_block *nb);  int
-> imx_scu_irq_group_enable(u8 group, u32 mask, u8 enable);
-> +#else
-> +static inline int imx_scu_enable_general_irq_channel(struct device
-> +*dev) {
-> +	return -ENOENT;
-> +}
-> +static inline int imx_scu_irq_register_notifier(struct notifier_block
-> +*nb) {
-> +	return -ENOENT;
-> +}
-> +static inline int imx_scu_irq_unregister_notifier(struct notifier_block
-> +*nb) {
-> +	return -ENOENT;
-> +}
-> +static inline int imx_scu_irq_group_enable(u8 group, u32 mask, u8
-> +enable) {
-> +	return -ENOENT;
-> +}
-> +#endif
->  #endif /* _SC_SCI_H */
-> --
-> 2.7.4
+make ARCH=arm dtbs_check
+DT_SCHEMA_FILES=Documentation/devicetree/bindings/spi/spi-rockchip.yaml
+
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+---
+ arch/arm/boot/dts/rv1108.dtsi | 4 ----
+ 1 file changed, 4 deletions(-)
+
+diff --git a/arch/arm/boot/dts/rv1108.dtsi b/arch/arm/boot/dts/rv1108.dtsi
+index 59295babd..fda16f976 100644
+--- a/arch/arm/boot/dts/rv1108.dtsi
++++ b/arch/arm/boot/dts/rv1108.dtsi
+@@ -120,7 +120,6 @@
+ 		clocks = <&cru SCLK_UART2>, <&cru PCLK_UART2>;
+ 		clock-names = "baudclk", "apb_pclk";
+ 		dmas = <&pdma 6>, <&pdma 7>;
+-		#dma-cells = <2>;
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&uart2m0_xfer>;
+ 		status = "disabled";
+@@ -136,7 +135,6 @@
+ 		clocks = <&cru SCLK_UART1>, <&cru PCLK_UART1>;
+ 		clock-names = "baudclk", "apb_pclk";
+ 		dmas = <&pdma 4>, <&pdma 5>;
+-		#dma-cells = <2>;
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&uart1_xfer>;
+ 		status = "disabled";
+@@ -152,7 +150,6 @@
+ 		clocks = <&cru SCLK_UART0>, <&cru PCLK_UART0>;
+ 		clock-names = "baudclk", "apb_pclk";
+ 		dmas = <&pdma 2>, <&pdma 3>;
+-		#dma-cells = <2>;
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&uart0_xfer &uart0_cts &uart0_rts>;
+ 		status = "disabled";
+@@ -208,7 +205,6 @@
+ 		clock-names = "spiclk", "apb_pclk";
+ 		dmas = <&pdma 8>, <&pdma 9>;
+ 		dma-names = "tx", "rx";
+-		#dma-cells = <2>;
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 		status = "disabled";
+-- 
+2.11.0
 
