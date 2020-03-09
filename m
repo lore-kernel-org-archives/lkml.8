@@ -2,173 +2,387 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5ECEC10F25
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 06:28:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 610A1C10F25
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 06:28:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 962262087F
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 06:28:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="tcvkwFkf"
+	by mail.kernel.org (Postfix) with ESMTP id 2B5E820866
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 06:28:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726466AbgCIG2F (ORCPT
+        id S1726480AbgCIG2v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 02:28:05 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:47684 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726071AbgCIG2F (ORCPT
+        Mon, 9 Mar 2020 02:28:51 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:2210 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725962AbgCIG2u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 02:28:05 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1583735284; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=qy2xY/dZyMiOpfQufKuG+wtf2moSQrlU/AD39JqMigc=;
- b=tcvkwFkfnLNgGWAL7+JjvbUqGZoNbBSaRs8wNhQaND710vNnpGe9GBfsdHoTlA6kij3Optjq
- yFiTbtIONQb9doQAfab8LB+QxVAXBxNdzkZj9tEuQ1CuEiaqB4ljWv4clzaZeFbgCnIaZUIv
- 6K+RfYY9OR9S0Xvt9+8yElYQES4=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e65e1e6.7efdb514f340-smtp-out-n03;
- Mon, 09 Mar 2020 06:27:50 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 930BDC433BA; Mon,  9 Mar 2020 06:27:49 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kgunda)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E94B8C433D2;
-        Mon,  9 Mar 2020 06:27:48 +0000 (UTC)
+        Mon, 9 Mar 2020 02:28:50 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0296Ki0j095303
+        for <linux-kernel@vger.kernel.org>; Mon, 9 Mar 2020 02:28:48 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2ynek9k6qn-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 02:28:39 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <kjain@linux.ibm.com>;
+        Mon, 9 Mar 2020 06:26:59 -0000
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 9 Mar 2020 06:26:53 -0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0296QqCB21430406
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 9 Mar 2020 06:26:52 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0DEBEA4062;
+        Mon,  9 Mar 2020 06:26:52 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 432AAA4065;
+        Mon,  9 Mar 2020 06:26:46 +0000 (GMT)
+Received: from localhost.localdomain.com (unknown [9.199.44.242])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon,  9 Mar 2020 06:26:46 +0000 (GMT)
+From:   Kajol Jain <kjain@linux.ibm.com>
+To:     acme@kernel.org, linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au,
+        sukadev@linux.vnet.ibm.com
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        anju@linux.vnet.ibm.com, maddy@linux.vnet.ibm.com,
+        ravi.bangoria@linux.ibm.com, peterz@infradead.org,
+        yao.jin@linux.intel.com, ak@linux.intel.com, jolsa@kernel.org,
+        kan.liang@linux.intel.com, jmario@redhat.com,
+        alexander.shishkin@linux.intel.com, mingo@kernel.org,
+        paulus@ozlabs.org, namhyung@kernel.org, mpetlan@redhat.com,
+        gregkh@linuxfoundation.org, benh@kernel.crashing.org,
+        mamatha4@linux.vnet.ibm.com, mark.rutland@arm.com,
+        tglx@linutronix.de, kjain@linux.ibm.com
+Subject: [PATCH v4 6/8] perf/tools: Enhance JSON/metric infrastructure to handle "?"
+Date:   Mon,  9 Mar 2020 11:55:50 +0530
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20200309062552.29911-1-kjain@linux.ibm.com>
+References: <20200309062552.29911-1-kjain@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 09 Mar 2020 11:57:48 +0530
-From:   kgunda@codeaurora.org
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     jingoohan1@gmail.com, lee.jones@linaro.org,
-        b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org,
-        daniel.thompson@linaro.org, jacek.anaszewski@gmail.com,
-        pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Dan Murphy <dmurphy@ti.com>,
-        Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-fbdev@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org
-Subject: Re: [PATCH V1 2/2] backlight: qcom-wled: Add support for WLED5
- peripheral in PM8150L
-In-Reply-To: <20200308214748.GL1094083@builder>
-References: <1583153739-19170-1-git-send-email-kgunda@codeaurora.org>
- <1583153739-19170-3-git-send-email-kgunda@codeaurora.org>
- <20200308214748.GL1094083@builder>
-Message-ID: <d0e681ae203bb14f4061d248b935578b@codeaurora.org>
-X-Sender: kgunda@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20030906-0008-0000-0000-0000035A9AF2
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20030906-0009-0000-0000-00004A7BD9AF
+Message-Id: <20200309062552.29911-7-kjain@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-09_01:2020-03-06,2020-03-09 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_spam_definite policy=outbound score=100 lowpriorityscore=0
+ impostorscore=0 clxscore=1015 mlxlogscore=271 spamscore=0 mlxscore=0
+ bulkscore=0 suspectscore=0 adultscore=0 malwarescore=0 phishscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003090046
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-03-09 03:17, Bjorn Andersson wrote:
-> On Mon 02 Mar 04:55 PST 2020, Kiran Gunda wrote:
->> diff --git a/drivers/video/backlight/qcom-wled.c 
->> b/drivers/video/backlight/qcom-wled.c
-> [..]
->> @@ -147,14 +187,39 @@ struct wled {
->>  	u32 max_brightness;
->>  	u32 short_count;
->>  	u32 auto_detect_count;
->> +	u32 version;
->>  	bool disabled_by_short;
->>  	bool has_short_detect;
->> +	bool cabc_disabled;
->>  	int short_irq;
->>  	int ovp_irq;
->> 
->>  	struct wled_config cfg;
->>  	struct delayed_work ovp_work;
->>  	int (*wled_set_brightness)(struct wled *wled, u16 brightness);
->> +	int (*cabc_config)(struct wled *wled, bool enable);
->> +	int (*wled_sync_toggle)(struct wled *wled);
-> 
-> Please split this patch in one that adds these and breaks out the wled3
-> support, and then a second patch that adds wled5.
-> 
-Sure. Will make this change in the next post.
->> +};
->> +
-> [..]
->> +static int wled5_set_brightness(struct wled *wled, u16 brightness)
->> +{
->> +	int rc, offset;
->> +	u16 low_limit = wled->max_brightness * 1 / 1000;
->> +	u8 v[2], brightness_msb_mask;
->> +
->> +	/* WLED5's lower limit is 0.1% */
->> +	if (brightness > 0 && brightness < low_limit)
->> +		brightness = low_limit;
->> +
->> +	brightness_msb_mask = 0xf;
->> +	if (wled->max_brightness == WLED5_SINK_REG_BRIGHT_MAX_15B)
->> +		brightness_msb_mask = 0x7f;
-> 
-> Why not just brightness &= wled->max_brightness? But given that it 
-> seems
-> like the framework ensures that brightness <= max_brightness, why not
-> skip this altogether?
-> 
-Okay. I will modify the code to remove the min/max, low_limit checks in 
-next post.
->> +
->> +	v[0] = brightness & 0xff;
->> +	v[1] = (brightness >> 8) & brightness_msb_mask;
->> +
->> +	offset = wled5_brightness_reg[wled->cfg.mod_sel];
->> +	rc = regmap_bulk_write(wled->regmap, wled->sink_addr + offset,
->> +			v, 2);
->> +	return rc;
->> +}
->> +
->>  static int wled4_set_brightness(struct wled *wled, u16 brightness)
->>  {
->>  	int rc, i;
->> @@ -237,7 +325,28 @@ static int wled_module_enable(struct wled *wled, 
->> int val)
->>  	return 0;
->>  }
->> 
->> -static int wled_sync_toggle(struct wled *wled)
->> +static int wled5_sync_toggle(struct wled *wled)
->> +{
->> +	int rc;
->> +	u8 val;
->> +
->> +	val = (wled->cfg.mod_sel == MOD_A) ? WLED5_SINK_REG_SYNC_MOD_A_BIT :
->> +					     WLED5_SINK_REG_SYNC_MOD_B_BIT;
->> +	rc = regmap_update_bits(wled->regmap,
->> +				wled->sink_addr + WLED5_SINK_REG_MOD_SYNC_BIT,
->> +				WLED5_SINK_REG_SYNC_MASK, val);
->> +	if (rc < 0)
->> +		return rc;
->> +
->> +	val = 0;
-> 
-> Just plug 0 in the function call.
-> 
-Sure. Will do it in next post.
->> +	rc = regmap_update_bits(wled->regmap,
->> +				wled->sink_addr + WLED5_SINK_REG_MOD_SYNC_BIT,
->> +				WLED5_SINK_REG_SYNC_MASK, val);
->> +
->> +	return rc;
-> 
-> And return regmap_update_bits(...);
-> 
-Sure. Will do it in next post.
->> +}
->> +
-> 
-> Regards,
-> Bjorn
+Patch enhances current metric infrastructure to handle "?" in the metric
+expression. The "?" can be use for parameters whose value not known while
+creating metric events and which can be replace later at runtime to
+the proper value. It also add flexibility to create multiple events out
+of single metric event added in json file.
+
+Patch adds function 'arch_get_runtimeparam' which is a arch specific
+function, returns the count of metric events need to be created.
+By default it return 1.
+
+One loop is added in function 'metricgroup__add_metric', which create
+multiple events at run time depend on return value of
+'arch_get_runtimeparam' and merge that event in 'group_list'.
+
+This infrastructure needed for hv_24x7 socket/chip level events.
+"hv_24x7" chip level events needs specific chip-id to which the
+data is requested. Function 'arch_get_runtimeparam' implemented
+in header.c which extract number of sockets from sysfs file
+"sockets" under "/sys/devices/hv_24x7/interface/".
+
+Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
+---
+ tools/perf/arch/powerpc/util/header.c |  22 +++++
+ tools/perf/util/expr.h                |   1 +
+ tools/perf/util/expr.l                |  19 +++-
+ tools/perf/util/metricgroup.c         | 124 ++++++++++++++++++++------
+ tools/perf/util/metricgroup.h         |   1 +
+ tools/perf/util/stat-shadow.c         |   8 ++
+ 6 files changed, 148 insertions(+), 27 deletions(-)
+
+diff --git a/tools/perf/arch/powerpc/util/header.c b/tools/perf/arch/powerpc/util/header.c
+index 3b4cdfc5efd6..036f6b2ce202 100644
+--- a/tools/perf/arch/powerpc/util/header.c
++++ b/tools/perf/arch/powerpc/util/header.c
+@@ -7,6 +7,11 @@
+ #include <string.h>
+ #include <linux/stringify.h>
+ #include "header.h"
++#include "metricgroup.h"
++#include "evlist.h"
++#include <dirent.h>
++#include "pmu.h"
++#include <api/fs/fs.h>
+ 
+ #define mfspr(rn)       ({unsigned long rval; \
+ 			 asm volatile("mfspr %0," __stringify(rn) \
+@@ -16,6 +21,8 @@
+ #define PVR_VER(pvr)    (((pvr) >>  16) & 0xFFFF) /* Version field */
+ #define PVR_REV(pvr)    (((pvr) >>   0) & 0xFFFF) /* Revison field */
+ 
++#define SOCKETS_INFO_FILE_PATH "/devices/hv_24x7/interface/"
++
+ int
+ get_cpuid(char *buffer, size_t sz)
+ {
+@@ -44,3 +51,18 @@ get_cpuid_str(struct perf_pmu *pmu __maybe_unused)
+ 
+ 	return bufp;
+ }
++
++int arch_get_runtimeparam(void)
++{
++	int count;
++	char path[PATH_MAX];
++	char filename[] = "sockets";
++
++	snprintf(path, PATH_MAX,
++		 SOCKETS_INFO_FILE_PATH "%s", filename);
++
++	if (sysfs__read_ull(path, (unsigned long long *)&count) < 0)
++		return 1;
++	else
++		return count;
++}
+diff --git a/tools/perf/util/expr.h b/tools/perf/util/expr.h
+index 9377538f4097..d17664e628db 100644
+--- a/tools/perf/util/expr.h
++++ b/tools/perf/util/expr.h
+@@ -15,6 +15,7 @@ struct parse_ctx {
+ 	struct parse_id ids[MAX_PARSE_ID];
+ };
+ 
++int expr__runtimeparam;
+ void expr__ctx_init(struct parse_ctx *ctx);
+ void expr__add_id(struct parse_ctx *ctx, const char *id, double val);
+ int expr__parse(double *final_val, struct parse_ctx *ctx, const char *expr);
+diff --git a/tools/perf/util/expr.l b/tools/perf/util/expr.l
+index 1928f2a3dddc..ec4b00671f67 100644
+--- a/tools/perf/util/expr.l
++++ b/tools/perf/util/expr.l
+@@ -45,6 +45,21 @@ static char *normalize(char *str)
+ 			*dst++ = '/';
+ 		else if (*str == '\\')
+ 			*dst++ = *++str;
++        else if (*str == '?') {
++
++			int size = snprintf(NULL, 0, "%d", expr__runtimeparam);
++			char * paramval = (char *)malloc(size);
++			int i = 0;
++
++			if(!paramval)
++				*dst++ = '0';
++			else {
++				sprintf(paramval, "%d", expr__runtimeparam);
++				while(i < size)
++					*dst++ = paramval[i++];
++				free(paramval);
++			}
++		}
+ 		else
+ 			*dst++ = *str;
+ 		str++;
+@@ -72,8 +87,8 @@ number		[0-9]+
+ 
+ sch		[-,=]
+ spec		\\{sch}
+-sym		[0-9a-zA-Z_\.:@]+
+-symbol		{spec}*{sym}*{spec}*{sym}*
++sym		[0-9a-zA-Z_\.:@?]+
++symbol		{spec}*{sym}*{spec}*{sym}*{spec}*{sym}
+ 
+ %%
+ 	{
+diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+index c3a8c701609a..11eeeb929b91 100644
+--- a/tools/perf/util/metricgroup.c
++++ b/tools/perf/util/metricgroup.c
+@@ -474,6 +474,98 @@ static bool metricgroup__has_constraint(struct pmu_event *pe)
+ 	return false;
+ }
+ 
++int __weak arch_get_runtimeparam(void)
++{
++	return 1;
++}
++
++static int metricgroup__add_metric_runtime_param(struct strbuf *events,
++			struct list_head *group_list, struct pmu_event *pe)
++{
++	int i, count;
++	int ret = -EINVAL;
++
++	count = arch_get_runtimeparam();
++
++	/* This loop is added to create multiple
++	 * events depend on count value and add
++	 * those events to group_list.
++	 */
++
++	for (i = 0; i < count; i++) {
++		const char **ids;
++		int idnum;
++		struct egroup *eg;
++		char value[PATH_MAX];
++
++		expr__runtimeparam = i;
++
++		if (expr__find_other(pe->metric_expr,
++					NULL, &ids, &idnum) < 0)
++			return ret;
++
++		if (events->len > 0)
++			strbuf_addf(events, ",");
++
++		if (metricgroup__has_constraint(pe))
++			metricgroup__add_metric_non_group(events, ids, idnum);
++		else
++			metricgroup__add_metric_weak_group(events, ids, idnum);
++
++		eg = malloc(sizeof(struct egroup));
++		if (!eg) {
++			ret = -ENOMEM;
++			return ret;
++		}
++		sprintf(value, "%s%c%d", pe->metric_name, '_', i);
++		eg->ids = ids;
++		eg->idnum = idnum;
++		eg->metric_name = strdup(value);
++		eg->metric_expr = pe->metric_expr;
++		eg->metric_unit = pe->unit;
++		list_add_tail(&eg->nd, group_list);
++		ret = 0;
++
++		if (ret != 0)
++			break;
++	}
++	return ret;
++}
++static int metricgroup__add_metric_param(struct strbuf *events,
++			struct list_head *group_list, struct pmu_event *pe)
++{
++
++	const char **ids;
++	int idnum;
++	struct egroup *eg;
++	int ret = -EINVAL;
++
++	if (expr__find_other(pe->metric_expr,
++					     NULL, &ids, &idnum) < 0)
++		return ret;
++	if (events->len > 0)
++		strbuf_addf(events, ",");
++
++	if (metricgroup__has_constraint(pe))
++		metricgroup__add_metric_non_group(events, ids, idnum);
++	else
++		metricgroup__add_metric_weak_group(events, ids, idnum);
++
++	eg = malloc(sizeof(struct egroup));
++	if (!eg)
++		ret = -ENOMEM;
++
++	eg->ids = ids;
++	eg->idnum = idnum;
++	eg->metric_name = pe->metric_name;
++	eg->metric_expr = pe->metric_expr;
++	eg->metric_unit = pe->unit;
++	list_add_tail(&eg->nd, group_list);
++	ret = 0;
++
++	return ret;
++}
++
+ static int metricgroup__add_metric(const char *metric, struct strbuf *events,
+ 				   struct list_head *group_list)
+ {
+@@ -493,35 +585,17 @@ static int metricgroup__add_metric(const char *metric, struct strbuf *events,
+ 			continue;
+ 		if (match_metric(pe->metric_group, metric) ||
+ 		    match_metric(pe->metric_name, metric)) {
+-			const char **ids;
+-			int idnum;
+-			struct egroup *eg;
+ 
+ 			pr_debug("metric expr %s for %s\n", pe->metric_expr, pe->metric_name);
+ 
+-			if (expr__find_other(pe->metric_expr,
+-					     NULL, &ids, &idnum) < 0)
+-				continue;
+-			if (events->len > 0)
+-				strbuf_addf(events, ",");
+-
+-			if (metricgroup__has_constraint(pe))
+-				metricgroup__add_metric_non_group(events, ids, idnum);
++			if (strstr(pe->metric_expr, "?"))
++				ret = metricgroup__add_metric_runtime_param(events,
++							group_list, pe);
+ 			else
+-				metricgroup__add_metric_weak_group(events, ids, idnum);
+-
+-			eg = malloc(sizeof(struct egroup));
+-			if (!eg) {
+-				ret = -ENOMEM;
+-				break;
+-			}
+-			eg->ids = ids;
+-			eg->idnum = idnum;
+-			eg->metric_name = pe->metric_name;
+-			eg->metric_expr = pe->metric_expr;
+-			eg->metric_unit = pe->unit;
+-			list_add_tail(&eg->nd, group_list);
+-			ret = 0;
++				ret = metricgroup__add_metric_param(events,
++							group_list, pe);
++			if (ret == -EINVAL)
++				continue;
+ 		}
+ 	}
+ 	return ret;
+diff --git a/tools/perf/util/metricgroup.h b/tools/perf/util/metricgroup.h
+index 475c7f912864..81224ba1270d 100644
+--- a/tools/perf/util/metricgroup.h
++++ b/tools/perf/util/metricgroup.h
+@@ -34,4 +34,5 @@ int metricgroup__parse_groups(const struct option *opt,
+ void metricgroup__print(bool metrics, bool groups, char *filter,
+ 			bool raw, bool details);
+ bool metricgroup__has_metric(const char *metric);
++int arch_get_runtimeparam(void);
+ #endif
+diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+index 0fd713d3674f..92c4c9abbaa0 100644
+--- a/tools/perf/util/stat-shadow.c
++++ b/tools/perf/util/stat-shadow.c
+@@ -777,6 +777,14 @@ static void generic_metric(struct perf_stat_config *config,
+ 	}
+ 
+ 	if (!metric_events[i]) {
++
++		if (strstr(metric_expr, "?")) {
++			char *tmp = strrchr(metric_name, '_');
++
++			tmp++;
++			expr__runtimeparam = strtol(tmp, &tmp, 10);
++		}
++
+ 		if (expr__parse(&ratio, &pctx, metric_expr) == 0) {
+ 			char *unit;
+ 			char metric_bf[64];
+-- 
+2.18.1
+
