@@ -2,69 +2,87 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A77BC10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 08:17:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ADADC10F29
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 08:19:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50D0320674
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 08:17:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05DB520828
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 08:19:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SNJxfUQM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726464AbgCIIRp (ORCPT
+        id S1726467AbgCIITH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 04:17:45 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:52612 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725796AbgCIIRo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 04:17:44 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 79827FD2151E12FE420E;
-        Mon,  9 Mar 2020 16:17:40 +0800 (CST)
-Received: from [127.0.0.1] (10.173.222.27) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.487.0; Mon, 9 Mar 2020
- 16:17:32 +0800
-Subject: Re: [PATCH v5 00/23] irqchip/gic-v4: GICv4.1 architecture support
-To:     Marc Zyngier <maz@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <kvmarm@lists.cs.columbia.edu>, <kvm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Robert Richter <rrichter@marvell.com>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        Eric Auger <eric.auger@redhat.com>,
-        "James Morse" <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>
-References: <20200304203330.4967-1-maz@kernel.org>
-From:   Zenghui Yu <yuzenghui@huawei.com>
-Message-ID: <a2994971-0997-f723-4745-c6404a68e65a@huawei.com>
-Date:   Mon, 9 Mar 2020 16:17:30 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
-MIME-Version: 1.0
-In-Reply-To: <20200304203330.4967-1-maz@kernel.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.222.27]
-X-CFilter-Loop: Reflected
+        Mon, 9 Mar 2020 04:19:07 -0400
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:53950 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725796AbgCIITG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 04:19:06 -0400
+Received: by mail-pj1-f67.google.com with SMTP id l36so1266199pjb.3;
+        Mon, 09 Mar 2020 01:19:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=b126q4DqzibX5cGWOXgCwm/SUajAvk8qLJv/aL83Yfs=;
+        b=SNJxfUQMAQG/oj6VF2coTyVvOIYt3XMxjPNZoE6A1nqPtuHafSAEfBSLPY1oWdIr30
+         kaMrSGKPmMsDx9oo7FkotMCdI+FDdjFhR47OW3kkJOqsM8sXVLK/+lMpyNzEARxs39qP
+         8J7QOnT18MAkXEBVkoMCmTpIaScatrQyCYWY5LdtdzzHxp4ZsELMqs8BCBsCD78Duiqf
+         Q+JL8Q0vXnKMeoP2/YG+7+pqUur8yhaowYhL4NsYqOa5HHTZg59+tvhouWkFsgZCQLYv
+         SLbJnOjJCat+ZP503+Mq4mlCSbZfs2oTL7KwaBQdte5wtTPfe8DfpFjB7zAX324Ey7kK
+         aSIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=b126q4DqzibX5cGWOXgCwm/SUajAvk8qLJv/aL83Yfs=;
+        b=W2u6KTgewM537xFJZH0c/HgP2MBeFPd/keTqFAj2n5NwdXc9lrilcVns+qs4NT8p1a
+         BSU32i1uPP0K+trzUnkocbN3liUqsurvRgyLufGZyW0S/CifpGOdtbau2+IZC0p9GdEJ
+         pdsvx8Q3qwNJ9FYYH3UprPMWqbE85dOZewb/XswpbxgEHgO8lk61gGhMKMp7oDnoT9HP
+         fcVGVNAHVgC5nGgvzXXgrBv0z+i3RmRiyNzRbvZ+ZJrhXNhoSP5KPEpGvV8NWQpfjFJO
+         GtiHlUZ+so3bJu82doQMNoEkKZJF3OCUh2ZW7ZZlNhqW6pd6sAC+ulSOQQ6Ikpc6Ptz/
+         uQrg==
+X-Gm-Message-State: ANhLgQ1yjm2MwbJgN1aHeUItvpvrs8ne3AC6cmKAIY8lKavXNKbZjeQV
+        Jo5cjAEj2geDk+kah3zQ7vQ=
+X-Google-Smtp-Source: ADFU+vsQF42VtkDq+fAiy5iVu3dSX6rOcDKzrJPohcZmG01oVBYOzA+drDZYYNaYFbnkYuDuECKuhA==
+X-Received: by 2002:a17:902:8485:: with SMTP id c5mr14900060plo.156.1583741945481;
+        Mon, 09 Mar 2020 01:19:05 -0700 (PDT)
+Received: from sh03840pcu.spreadtrum.com ([117.18.48.82])
+        by smtp.gmail.com with ESMTPSA id 193sm21862277pfu.181.2020.03.09.01.19.03
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 09 Mar 2020 01:19:05 -0700 (PDT)
+From:   Baolin Wang <baolin.wang7@gmail.com>
+To:     sre@kernel.org
+Cc:     baolin.wang7@gmail.com, orsonzhai@gmail.com, zhang.lyra@gmail.com,
+        kernel-team@android.com, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3] Some optimization for SC27XX poweroff driver
+Date:   Mon,  9 Mar 2020 16:18:43 +0800
+Message-Id: <cover.1583740881.git.baolin.wang7@gmail.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/3/5 4:33, Marc Zyngier wrote:
-> On the other hand, public documentation is not available yet, so that's a
-> bit annoying...
+This patch set fixes external subsystems' power issue and allows
+the SC27XX poweroff driver building into a module.
 
-The IHI0069F is now available. People can have a look at:
+Baolin Wang (2):
+  power: reset: sc27xx: Change to use cpu_down()
+  power: reset: sc27xx: Allow the SC27XX poweroff driver building into a
+    module
 
-https://developer.arm.com/docs/ihi0069/latest
+Sherry Zong (1):
+  power: reset: sc27xx: Power off the external subsystems' connection
 
+ drivers/power/reset/Kconfig           |  2 +-
+ drivers/power/reset/sc27xx-poweroff.c | 21 +++++++++++++++++----
+ 2 files changed, 18 insertions(+), 5 deletions(-)
 
-Thanks,
-Zenghui
+-- 
+1.9.1
 
