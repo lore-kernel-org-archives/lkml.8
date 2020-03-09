@@ -2,141 +2,164 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 123A3C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 16:42:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8505DC10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 16:43:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBC96222C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 16:42:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583772145;
-	bh=AqHC79An81ITVTfFFLqLDIERNnyYCXO2bSpyF2Wa1X4=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=Gn9lzuRCASP035AFqnd/xKS60uslN54n0lBZUhFJlV9fYur8Rmibc+3jB6SfzNceT
-	 3SGl/pm7kP5ycXBUTBdpnCt2gqLg2muU4CfaLYvbQYa/i58wrMttayhzkvVomtylqN
-	 BrdI80Vr9oLW2YkviQp7JZgS7ETX6X/SaZKGyhHM=
+	by mail.kernel.org (Postfix) with ESMTP id 572EE222C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 16:43:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="d3uh9M6l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727210AbgCIQmZ (ORCPT
+        id S1727222AbgCIQm7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 12:42:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59536 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727059AbgCIQmY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 12:42:24 -0400
-Received: from [192.168.1.24] (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C723222C3;
-        Mon,  9 Mar 2020 16:42:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583772143;
-        bh=AqHC79An81ITVTfFFLqLDIERNnyYCXO2bSpyF2Wa1X4=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=iNPOY5WGBRIFDDMHxfq3VypZqVXCeDv5yV1Q09pXJrrGoTvpEU7JBqZxom5OVUeAl
-         BWIDwNQMvGdWo74MUeKa/oU1VMPEXCXv7A/gL0ycqg0JVDMBYYvm8VpyPNMOw4fo01
-         wq5xaKA5Oyo66pFEqPFKJMhKjdnNWVGfgamTqePk=
-Subject: Re: [PATCH] arm64: dts: increase the QSPI reg address for Stratix10
- and Agilex
-To:     "Ooi, Joyce" <joyce.ooi@intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Tan Ley Foon <ley.foon.tan@intel.com>,
-        See Chin Liang <chin.liang.see@intel.com>,
-        Chee Hong Ang <chee.hong.ang@intel.com>
-References: <20200309033649.15208-1-joyce.ooi@intel.com>
-From:   Dinh Nguyen <dinguyen@kernel.org>
-Autocrypt: addr=dinguyen@kernel.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <5dfb55b4-f8fe-b4b9-1abc-9946eadf5535@kernel.org>
-Date:   Mon, 9 Mar 2020 11:42:21 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 9 Mar 2020 12:42:59 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:49180 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727132AbgCIQm6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 12:42:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=056cC6UExI7EITXmRveT4fgg6/iSJZHYBvWmw0x6Cbs=; b=d3uh9M6lDEjF6yzZgsEx7WDrpV
+        6zsGeYCvl16po4Gdy+PrT5bqoT5OiHQAXMSLTou4Wfqd1+tVb0zMVK5YUv8nnmmyRGWEkBo7L/PHr
+        fhkq1BzUAhm75EspaMqhbqHUCMkk7a9MMNUZyynxE5KtxHHl5fb2+LWHP4RNnNxUo1FyFagSGRBMU
+        3PwF/DVaF8Unr8F8mZYoQatxW81pV2NJZDJyjoE5XU2SdJWe9Ar/GpOG4CbHcjRjyUB75Ka896BZJ
+        /Fyxhvti8l0H2Zahl9JmwpEKseZfUlIJBz0QVUEM4gcQiouvyYEkp4cLwDUSsGrptkG2OyuAdEf+J
+        gKQbuNtA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jBLUP-0000ZO-E2; Mon, 09 Mar 2020 16:42:49 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id B5CFE300F7A;
+        Mon,  9 Mar 2020 17:42:46 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 6724220137FA8; Mon,  9 Mar 2020 17:42:46 +0100 (CET)
+Date:   Mon, 9 Mar 2020 17:42:46 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     kbuild test robot <lkp@intel.com>
+Cc:     kbuild-all@lists.01.org, Masami Hiramatsu <mhiramat@kernel.org>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH] x86/optprobe: Fix OPTPROBE vs UACCESS
+Message-ID: <20200309164246.GJ12561@hirez.programming.kicks-ass.net>
+References: <20200305092130.GU2596@hirez.programming.kicks-ass.net>
+ <202003060834.DBgMQaJ6%lkp@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200309033649.15208-1-joyce.ooi@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202003060834.DBgMQaJ6%lkp@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Mar 06, 2020 at 08:56:15AM +0800, kbuild test robot wrote:
 
+> All warnings (new ones prefixed by >>):
+> 
+> >> arch/x86/kernel/kprobes/opt.o: warning: objtool: arch_prepare_optimized_kprobe()+0x156: unreachable instruction
 
-On 3/8/20 10:36 PM, Ooi, Joyce wrote:
-> From: Joyce Ooi <joyce.ooi@intel.com>
-> 
-> This patch increases the reg addresses for QSPI boot and QSPI rootfs for
-> Stratix10 and Agilex to cater for the increased size of kernel Image.
-> 
-> Signed-off-by: Joyce Ooi <joyce.ooi@intel.com>
-> ---
->  .../boot/dts/altera/socfpga_stratix10_socdk.dts    |    6 +++---
->  arch/arm64/boot/dts/intel/socfpga_agilex_socdk.dts |    6 +++---
->  2 files changed, 6 insertions(+), 6 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts b/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
-> index fb11ef0..f6c4a15 100644
-> --- a/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
-> +++ b/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
-> @@ -178,12 +178,12 @@
->  
->  			qspi_boot: partition@0 {
->  				label = "Boot and fpga data";
-> -				reg = <0x0 0x034B0000>;
-> +				reg = <0x0 0x03FE0000>;
->  			};
->  
-> -			qspi_rootfs: partition@4000000 {
-> +			qspi_rootfs: partition@3FE0000 {
->  				label = "Root Filesystem - JFFS2";
-> 
+Duh.. I changed it so.
 
-Applied, thanks!
+---
+Subject: x86/optprobe: Fix OPTPROBE vs UACCESS
+From: Peter Zijlstra <peterz@infradead.org>
+Date: Thu, 5 Mar 2020 10:21:30 +0100
 
-Dinh
+While looking at an objtool UACCESS warning, it suddenly occurred to me
+that it is entirely possible to have an OPTPROBE right in the middle of
+an UACCESS region.
+
+In this case we must of course clear FLAGS.AC while running the KPROBE.
+Luckily the trampoline already saves/restores [ER]FLAGS, so all we need
+to do is inject a CLAC. Unfortunately we cannot use ALTERNATIVE() in the
+trampoline text, so we have to frob that manually.
+
+Fixes: ca0bbc70f147 ("sched/x86_64: Don't save flags on context switch")
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+Link: https://lkml.kernel.org/r/20200305092130.GU2596@hirez.programming.kicks-ass.net
+---
+ arch/x86/include/asm/kprobes.h |    1 +
+ arch/x86/kernel/kprobes/opt.c  |   24 ++++++++++++++++++++++++
+ 2 files changed, 25 insertions(+)
+
+--- a/arch/x86/include/asm/kprobes.h
++++ b/arch/x86/include/asm/kprobes.h
+@@ -36,6 +36,7 @@ typedef u8 kprobe_opcode_t;
+ 
+ /* optinsn template addresses */
+ extern __visible kprobe_opcode_t optprobe_template_entry[];
++extern __visible kprobe_opcode_t optprobe_template_clac[];
+ extern __visible kprobe_opcode_t optprobe_template_val[];
+ extern __visible kprobe_opcode_t optprobe_template_call[];
+ extern __visible kprobe_opcode_t optprobe_template_end[];
+--- a/arch/x86/kernel/kprobes/opt.c
++++ b/arch/x86/kernel/kprobes/opt.c
+@@ -72,6 +72,20 @@ unsigned long __recover_optprobed_insn(k
+ 	return (unsigned long)buf;
+ }
+ 
++static void synthesize_clac(kprobe_opcode_t *addr)
++{
++	/*
++	 * Can't be static_cpu_has() due to how objtool treats this feature bit.
++	 * This isn't a fast path anyway.
++	 */
++	if (!boot_cpu_has(X86_FEATURE_SMAP))
++		return;
++
++	addr[0] = 0x0f;
++	addr[1] = 0x01;
++	addr[2] = 0xca;
++}
++
+ /* Insert a move instruction which sets a pointer to eax/rdi (1st arg). */
+ static void synthesize_set_arg1(kprobe_opcode_t *addr, unsigned long val)
+ {
+@@ -93,6 +107,9 @@ asm (
+ 			/* We don't bother saving the ss register */
+ 			"	pushq %rsp\n"
+ 			"	pushfq\n"
++			".global optprobe_template_clac\n"
++			"optprobe_template_clac:\n"
++			ASM_NOP3
+ 			SAVE_REGS_STRING
+ 			"	movq %rsp, %rsi\n"
+ 			".global optprobe_template_val\n"
+@@ -112,6 +129,9 @@ asm (
+ #else /* CONFIG_X86_32 */
+ 			"	pushl %esp\n"
+ 			"	pushfl\n"
++			".global optprobe_template_clac\n"
++			"optprobe_template_clac:\n"
++			ASM_NOP3
+ 			SAVE_REGS_STRING
+ 			"	movl %esp, %edx\n"
+ 			".global optprobe_template_val\n"
+@@ -135,6 +155,8 @@ asm (
+ void optprobe_template_func(void);
+ STACK_FRAME_NON_STANDARD(optprobe_template_func);
+ 
++#define TMPL_CLAC_IDX \
++	((long)optprobe_template_clac - (long)optprobe_template_entry)
+ #define TMPL_MOVE_IDX \
+ 	((long)optprobe_template_val - (long)optprobe_template_entry)
+ #define TMPL_CALL_IDX \
+@@ -391,6 +413,8 @@ int arch_prepare_optimized_kprobe(struct
+ 	op->optinsn.size = ret;
+ 	len = TMPL_END_IDX + op->optinsn.size;
+ 
++	synthesize_clac(buf + TMPL_CLAC_IDX);
++
+ 	/* Set probe information */
+ 	synthesize_set_arg1(buf + TMPL_MOVE_IDX, (unsigned long)op);
+ 
