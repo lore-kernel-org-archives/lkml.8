@@ -2,237 +2,116 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9544CC10DCE
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 02:17:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54C65C10DCE
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 02:18:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F88320665
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 02:17:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26FE920665
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 02:18:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZU5fwAZK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727065AbgCICRy (ORCPT
+        id S1727076AbgCICSJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Mar 2020 22:17:54 -0400
-Received: from mga11.intel.com ([192.55.52.93]:2170 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726354AbgCICRx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Mar 2020 22:17:53 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Mar 2020 19:17:53 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,530,1574150400"; 
-   d="scan'208";a="235527186"
-Received: from yhuang-dev.sh.intel.com ([10.239.159.23])
-  by orsmga008.jf.intel.com with ESMTP; 08 Mar 2020 19:17:49 -0700
-From:   "Huang, Ying" <ying.huang@intel.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Huang Ying <ying.huang@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        David Hildenbrand <david@redhat.com>,
-        Mel Gorman <mgorman@suse.de>, Vlastimil Babka <vbabka@suse.cz>,
-        Zi Yan <ziy@nvidia.com>, Michal Hocko <mhocko@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Minchan Kim <minchan@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Hugh Dickins <hughd@google.com>
-Subject: [PATCH -V3] mm: Add PageLayzyFree() helper functions for MADV_FREE
+        Sun, 8 Mar 2020 22:18:09 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:41554 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726595AbgCICSJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Mar 2020 22:18:09 -0400
+Received: by mail-pl1-f193.google.com with SMTP id t14so3344196plr.8
+        for <linux-kernel@vger.kernel.org>; Sun, 08 Mar 2020 19:18:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=WLxH7ad0XRd0xt+wbIowBUivNdpU+jvJokFmcSJMpU8=;
+        b=ZU5fwAZKIgqaNdwVLrK/Xjt8rxOeawd5ZJVwsFEs+For+lnZYeVydn5MuI74RojCIv
+         2UEb/lsPJ4kGmLqJAAPzr1qxL/MdU0UOSdqHs4Lc4MDOK7mPSBYW8gDX1ZQcElM7a4Ap
+         Ku2EQpa1/3bevO11AmrDR5Vm78HEZyNfQ5loyg00hCFbI+wqwkapz0jaTyxu9yKsYFHs
+         cRT9B5UGzfi4NoR2R0gB6qUafL5rdD/fsqjSw+ijJX3GLgX9vJnbX9w9BIRsSCMLEK0h
+         aC7GMkmCIvR01htkt2hvt3i4oYqkqwryP66mWg9ETxIM5gyzLjzrdHAzH6RawjO2LTZL
+         fY9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=WLxH7ad0XRd0xt+wbIowBUivNdpU+jvJokFmcSJMpU8=;
+        b=Pm7AlLzN54YWKX0MlAHzwr9LfH30muRkv27ztmeTepD1UsT/SCGLmEPKtlqzxIJmBG
+         6qqGiIxnkt9C8B8xr76N0vzGyZEaUkWaYuOVIGzbkks/WUftRUjy+qnOgZbzHBO2PMas
+         c8KzqEnA/Q6Q7o5ToNv4fiD1dZRDuKOFU807VFHcZvxbx3RO+tHg8oX3rIE9qV1mZt9P
+         iV6vpW+UVIjpBq7IRw+HC6i5Uol/yXB2Rv997y4CMY7yCOlsErTVkxisr+XNlty6dORO
+         sph1dC8Vk5Bh/KEVBWoFGv73KIVFHb2xLultHQCZgCFAb0BFUXpbel5d9tt1YIgEOzig
+         lZIg==
+X-Gm-Message-State: ANhLgQ0MzPRx6PUKxrGSNtgqLqcb4efj5VtCGtshYB2tGyYwWTGhthp6
+        9dsObZdHxV95Cx2+A80c4ieIFmpD
+X-Google-Smtp-Source: ADFU+vtYEnqD78gBY+v9SfpDf7+QJlaYwfrB0bMuvj/AA3A6369f6DjMWKw8apOPoJXzS4tCsh4ktQ==
+X-Received: by 2002:a17:902:760a:: with SMTP id k10mr13733390pll.306.1583720288242;
+        Sun, 08 Mar 2020 19:18:08 -0700 (PDT)
+Received: from ZB-PF114XEA.360buyad.local ([103.90.76.242])
+        by smtp.gmail.com with ESMTPSA id r12sm42394043pgu.93.2020.03.08.19.18.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 08 Mar 2020 19:18:07 -0700 (PDT)
+From:   Zhenzhong Duan <zhenzhong.duan@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     jdike@addtoit.com, richard@nod.at, anton.ivanov@cambridgegreys.com,
+        miguel.ojeda.sandonis@gmail.com, willy@haproxy.com,
+        ksenija.stanojevic@gmail.com, arnd@arndb.de,
+        gregkh@linuxfoundation.org, mpm@selenic.com,
+        herbert@gondor.apana.org.au, jonathan@buzzard.org.uk,
+        benh@kernel.crashing.org, davem@davemloft.net,
+        b.zolnierkie@samsung.com, rjw@rjwysocki.net, pavel@ucw.cz,
+        len.brown@intel.com, Zhenzhong Duan <zhenzhong.duan@gmail.com>
+Subject: [PATCH RFC 0/3] clean up misc device minor numbers
 Date:   Mon,  9 Mar 2020 10:17:44 +0800
-Message-Id: <20200309021744.1309482-1-ying.huang@intel.com>
-X-Mailer: git-send-email 2.25.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-Id: <20200309021747.626-1-zhenzhong.duan@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Huang Ying <ying.huang@intel.com>
+Some the misc device minor numbers definitions spread in different
+local c files, specially some are duplicate number with different
+name, some are same name with conflict numbers, some prefer dynamic
+minors.
 
-Now PageSwapBacked() is used as the helper function to check whether
-pages have been freed lazily via MADV_FREE.  This isn't very obvious.
-So Dave suggested to add PageLazyFree() family helper functions to
-improve the code readability.
+This patchset try to address all of them.
 
-Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
-Suggested-by: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: David Hildenbrand <david@redhat.com>
-Cc: Mel Gorman <mgorman@suse.de>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: Zi Yan <ziy@nvidia.com>
-Cc: Michal Hocko <mhocko@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Minchan Kim <minchan@kernel.org>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Hugh Dickins <hughd@google.com>
----
-Changelog:
+To be honest, I didn't try build on arm or sparc arch which some
+drivers depend on as I have little experience on cross-compile.
+But I still checked the patch carefully to ensure it builds
+in theory. Appreciate if anyone willing to test build on those arch.
 
-v3:
+Zhenzhong Duan (3):
+  misc: cleanup minor number definitions in c file into miscdevice.h
+  misc: move FLASH_MINOR into miscdevice.h and fix conflicts
+  speakup: misc: Use dynamic minor numbers for speakup devices
 
-- Improved comments, Thanks David Hildenbrand!
+ arch/arm/include/asm/nwflash.h         |  1 -
+ arch/um/drivers/random.c               |  4 +---
+ drivers/auxdisplay/charlcd.c           |  2 --
+ drivers/auxdisplay/panel.c             |  2 --
+ drivers/char/applicom.c                |  1 -
+ drivers/char/hw_random/core.c          |  2 +-
+ drivers/char/nwbutton.h                |  1 -
+ drivers/char/nwflash.c                 |  2 +-
+ drivers/char/toshiba.c                 |  2 --
+ drivers/macintosh/ans-lcd.c            |  2 +-
+ drivers/macintosh/ans-lcd.h            |  2 --
+ drivers/macintosh/via-pmu.c            |  3 ---
+ drivers/sbus/char/envctrl.c            |  2 --
+ drivers/sbus/char/flash.c              |  4 +---
+ drivers/sbus/char/uctrl.c              |  2 --
+ drivers/staging/speakup/devsynth.c     | 10 +++-------
+ drivers/staging/speakup/speakup_soft.c | 14 +++++++-------
+ drivers/video/fbdev/pxa3xx-gcu.c       |  7 +++----
+ include/linux/miscdevice.h             | 14 +++++++++++++-
+ kernel/power/user.c                    |  2 --
+ 20 files changed, 31 insertions(+), 48 deletions(-)
 
-- Use the helper function in /proc/PID/smaps lazyfree reporting.
-
-v2:
-
-- Avoid code bloat via removing VM_BUG_ON_PAGE(), which doesn't exist
-  in the original code.  Now there is no any text/data/bss size
-  change.
-
-- Fix one wrong replacement in try_to_unmap_one().
-
----
- fs/proc/task_mmu.c         |  2 +-
- include/linux/page-flags.h | 25 +++++++++++++++++++++++++
- mm/rmap.c                  |  4 ++--
- mm/swap.c                  | 11 +++--------
- mm/vmscan.c                |  7 +++----
- 5 files changed, 34 insertions(+), 15 deletions(-)
-
-diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
-index 3ba9ae83bff5..3458d5711e57 100644
---- a/fs/proc/task_mmu.c
-+++ b/fs/proc/task_mmu.c
-@@ -471,7 +471,7 @@ static void smaps_account(struct mem_size_stats *mss, struct page *page,
- 	 */
- 	if (PageAnon(page)) {
- 		mss->anonymous += size;
--		if (!PageSwapBacked(page) && !dirty && !PageDirty(page))
-+		if (__PageLazyFree(page) && !dirty && !PageDirty(page))
- 			mss->lazyfree += size;
- 	}
- 
-diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
-index 49c2697046b9..bb26f74cbe8e 100644
---- a/include/linux/page-flags.h
-+++ b/include/linux/page-flags.h
-@@ -498,6 +498,31 @@ static __always_inline int PageKsm(struct page *page)
- TESTPAGEFLAG_FALSE(Ksm)
- #endif
- 
-+/*
-+ * For pages freed lazily via MADV_FREE.  Lazyfree pages are clean
-+ * anonymous pages.  They don't have PG_swapbacked set, to distinguish
-+ * them from normal anonymous pages.
-+ */
-+static __always_inline int __PageLazyFree(struct page *page)
-+{
-+	return !PageSwapBacked(page);
-+}
-+
-+static __always_inline int PageLazyFree(struct page *page)
-+{
-+	return PageAnon(page) && __PageLazyFree(page);
-+}
-+
-+static __always_inline void SetPageLazyFree(struct page *page)
-+{
-+	ClearPageSwapBacked(page);
-+}
-+
-+static __always_inline void ClearPageLazyFree(struct page *page)
-+{
-+	SetPageSwapBacked(page);
-+}
-+
- u64 stable_page_flags(struct page *page);
- 
- static inline int PageUptodate(struct page *page)
-diff --git a/mm/rmap.c b/mm/rmap.c
-index 1c02adaa233e..6ec96c8e7826 100644
---- a/mm/rmap.c
-+++ b/mm/rmap.c
-@@ -1609,7 +1609,7 @@ static bool try_to_unmap_one(struct page *page, struct vm_area_struct *vma,
- 			}
- 
- 			/* MADV_FREE page check */
--			if (!PageSwapBacked(page)) {
-+			if (__PageLazyFree(page)) {
- 				if (!PageDirty(page)) {
- 					/* Invalidate as we cleared the pte */
- 					mmu_notifier_invalidate_range(mm,
-@@ -1623,7 +1623,7 @@ static bool try_to_unmap_one(struct page *page, struct vm_area_struct *vma,
- 				 * discarded. Remap the page to page table.
- 				 */
- 				set_pte_at(mm, address, pvmw.pte, pteval);
--				SetPageSwapBacked(page);
-+				ClearPageLazyFree(page);
- 				ret = false;
- 				page_vma_mapped_walk_done(&pvmw);
- 				break;
-diff --git a/mm/swap.c b/mm/swap.c
-index c1d3ca80ea10..d83f2cd4cdb8 100644
---- a/mm/swap.c
-+++ b/mm/swap.c
-@@ -563,7 +563,7 @@ static void lru_deactivate_fn(struct page *page, struct lruvec *lruvec,
- static void lru_lazyfree_fn(struct page *page, struct lruvec *lruvec,
- 			    void *arg)
- {
--	if (PageLRU(page) && PageAnon(page) && PageSwapBacked(page) &&
-+	if (PageLRU(page) && PageAnon(page) && !__PageLazyFree(page) &&
- 	    !PageSwapCache(page) && !PageUnevictable(page)) {
- 		bool active = PageActive(page);
- 
-@@ -571,12 +571,7 @@ static void lru_lazyfree_fn(struct page *page, struct lruvec *lruvec,
- 				       LRU_INACTIVE_ANON + active);
- 		ClearPageActive(page);
- 		ClearPageReferenced(page);
--		/*
--		 * lazyfree pages are clean anonymous pages. They have
--		 * SwapBacked flag cleared to distinguish normal anonymous
--		 * pages
--		 */
--		ClearPageSwapBacked(page);
-+		SetPageLazyFree(page);
- 		add_page_to_lru_list(page, lruvec, LRU_INACTIVE_FILE);
- 
- 		__count_vm_events(PGLAZYFREE, hpage_nr_pages(page));
-@@ -678,7 +673,7 @@ void deactivate_page(struct page *page)
-  */
- void mark_page_lazyfree(struct page *page)
- {
--	if (PageLRU(page) && PageAnon(page) && PageSwapBacked(page) &&
-+	if (PageLRU(page) && PageAnon(page) && !__PageLazyFree(page) &&
- 	    !PageSwapCache(page) && !PageUnevictable(page)) {
- 		struct pagevec *pvec = &get_cpu_var(lru_lazyfree_pvecs);
- 
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index eca49a1c2f68..40bb41ada2d2 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -1043,8 +1043,7 @@ static void page_check_dirty_writeback(struct page *page,
- 	 * Anonymous pages are not handled by flushers and must be written
- 	 * from reclaim context. Do not stall reclaim based on them
- 	 */
--	if (!page_is_file_cache(page) ||
--	    (PageAnon(page) && !PageSwapBacked(page))) {
-+	if (!page_is_file_cache(page) || PageLazyFree(page)) {
- 		*dirty = false;
- 		*writeback = false;
- 		return;
-@@ -1235,7 +1234,7 @@ static unsigned long shrink_page_list(struct list_head *page_list,
- 		 * Try to allocate it some swap space here.
- 		 * Lazyfree page could be freed directly
- 		 */
--		if (PageAnon(page) && PageSwapBacked(page)) {
-+		if (PageAnon(page) && !__PageLazyFree(page)) {
- 			if (!PageSwapCache(page)) {
- 				if (!(sc->gfp_mask & __GFP_IO))
- 					goto keep_locked;
-@@ -1411,7 +1410,7 @@ static unsigned long shrink_page_list(struct list_head *page_list,
- 			}
- 		}
- 
--		if (PageAnon(page) && !PageSwapBacked(page)) {
-+		if (PageLazyFree(page)) {
- 			/* follow __remove_mapping for reference */
- 			if (!page_ref_freeze(page, 1))
- 				goto keep_locked;
 -- 
-2.25.0
+1.8.3.1
 
