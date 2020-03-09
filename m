@@ -2,167 +2,89 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76AAAC10F29
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 20:24:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B8CFC10F25
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 20:24:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5571520828
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 20:24:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583785478;
-	bh=StFL5QvmItJfOwz5VxmHCR0sM7EiUH0ldEUy/9kuvBI=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=03l9A/Ud4lURcyzP3e5f9R2BFF1h/6MP9vVg3p+34XJ1pZYiK1BhrHrx4pRisTqKL
-	 RshjAYmGYDsacxi4boclKf5eJUd3Ku1gnhalFkVdPA7zDPQBWzirMkrLLUhpq6Lh4k
-	 Kr9eFXivLx/YgVnVd5qgK+TPzHI7ElWg6EvTmHNE=
+	by mail.kernel.org (Postfix) with ESMTP id DA4EF24649
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 20:24:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726636AbgCIUYh (ORCPT
+        id S1726733AbgCIUYx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 16:24:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50606 "EHLO mail.kernel.org"
+        Mon, 9 Mar 2020 16:24:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50828 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726106AbgCIUYg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 16:24:36 -0400
-Received: from kernel.org (unknown [104.132.0.74])
+        id S1726266AbgCIUYx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 16:24:53 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D87F62146E;
-        Mon,  9 Mar 2020 20:24:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583785476;
-        bh=StFL5QvmItJfOwz5VxmHCR0sM7EiUH0ldEUy/9kuvBI=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=mEltg4vcLqtYrMmRBSqoDNjFIEKXPWo+0y9RcaDbIdUbJgApQjySqLUB03QgQkVHQ
-         MiLGalrDdPxg9svfAdIjRCd5U7eMPLG7pUgeFQr/CgHNkq2dj1Mtn71lHcXyn5XBVP
-         3ShE/8zhFEQvjPWlCh8RuqexbeyA1TD3J/wmlz8I=
-Content-Type: text/plain; charset="utf-8"
+        by mail.kernel.org (Postfix) with ESMTPSA id 977C324671;
+        Mon,  9 Mar 2020 20:24:52 +0000 (UTC)
+Received: from rostedt by gandalf.local.home with local (Exim 4.93)
+        (envelope-from <rostedt@goodmis.org>)
+        id 1jBOxH-00340v-HS; Mon, 09 Mar 2020 16:24:51 -0400
+Message-Id: <20200309202451.415031054@goodmis.org>
+User-Agent: quilt/0.65
+Date:   Mon, 09 Mar 2020 16:22:33 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     "John Warthog9 Hawley" <warthog9@kernel.org>
+Subject: [for-linus][PATCH 2/4] ktest: Make default build option oldconfig not randconfig
+References: <20200309202231.580868511@goodmis.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1582797318-26288-3-git-send-email-sivaprak@codeaurora.org>
-References: <1582797318-26288-1-git-send-email-sivaprak@codeaurora.org> <1582797318-26288-3-git-send-email-sivaprak@codeaurora.org>
-Subject: Re: [PATCH 2/2] clk: qcom: Add ipq6018 apss clock controller
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     sivaprak@codeaurora.org
-To:     Sivaprakash Murugesan <sivaprak@codeaurora.org>, agross@kernel.org,
-        bjorn.andersson@linaro.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mturquette@baylibre.com,
-        robh+dt@kernel.org
-Date:   Mon, 09 Mar 2020 13:24:35 -0700
-Message-ID: <158378547505.66766.155212878365765346@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+Content-Type: text/plain; charset=ISO-8859-15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Sivaprakash Murugesan (2020-02-27 01:55:18)
-> diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
-> index 15cdcdc..37e4ce2 100644
-> --- a/drivers/clk/qcom/Kconfig
-> +++ b/drivers/clk/qcom/Kconfig
-> @@ -89,6 +89,14 @@ config APQ_MMCC_8084
->           Say Y if you want to support multimedia devices such as display,
->           graphics, video encode/decode, camera, etc.
-> =20
-> +config IPQ_APSS_6018
-> +       tristate "IPQ6018 APSS Clock Controller"
-> +       select IPQ_GCC_6018
-> +       help
-> +         Support for APSS clock controller on ipq6018 devices. The
-> +         APSS clock controller supports frequencies higher than 800Mhz.
+From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
 
-supports CPU frequencies? It's not clear what APSS is to a lot of people
-out there.
+For the last time, I screwed up my ktest config file, and the build went
+into the default "randconfig", blowing away the .config that I had set up.
+The reason for the default randconfig was because when this was first
+written, I wanted to do a bunch of randconfigs. But as time progressed,
+ktest isn't about randconfig anymore, and because randconfig destroys the
+config in the build directory, it's a dangerous default to have. Use
+oldconfig as the default.
 
-> +         Say Y if you want to support higher frequencies on ipq6018 devi=
-ces.
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+---
+ tools/testing/ktest/ktest.pl    | 2 +-
+ tools/testing/ktest/sample.conf | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-support CPU frequency scaling on ipq6018?
+diff --git a/tools/testing/ktest/ktest.pl b/tools/testing/ktest/ktest.pl
+index 220d04f958a6..6a605ba75dd6 100755
+--- a/tools/testing/ktest/ktest.pl
++++ b/tools/testing/ktest/ktest.pl
+@@ -30,7 +30,7 @@ my %default = (
+     "EMAIL_WHEN_STARTED"	=> 0,
+     "NUM_TESTS"			=> 1,
+     "TEST_TYPE"			=> "build",
+-    "BUILD_TYPE"		=> "randconfig",
++    "BUILD_TYPE"		=> "oldconfig",
+     "MAKE_CMD"			=> "make",
+     "CLOSE_CONSOLE_SIGNAL"	=> "INT",
+     "TIMEOUT"			=> 120,
+diff --git a/tools/testing/ktest/sample.conf b/tools/testing/ktest/sample.conf
+index 10af34819642..27666b8007ed 100644
+--- a/tools/testing/ktest/sample.conf
++++ b/tools/testing/ktest/sample.conf
+@@ -505,7 +505,7 @@
+ #TEST = ssh user@machine /root/run_test
+ 
+ # The build type is any make config type or special command
+-#  (default randconfig)
++#  (default oldconfig)
+ #   nobuild - skip the clean and build step
+ #   useconfig:/path/to/config - use the given config and run
+ #              oldconfig on it.
+-- 
+2.25.0
 
-> +
->  config IPQ_GCC_4019
->         tristate "IPQ4019 Global Clock Controller"
->         help
-> diff --git a/drivers/clk/qcom/apss-ipq6018.c b/drivers/clk/qcom/apss-ipq6=
-018.c
-> new file mode 100644
-> index 0000000..04b8962
-> --- /dev/null
-> +++ b/drivers/clk/qcom/apss-ipq6018.c
-> @@ -0,0 +1,210 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2018, The Linux Foundation. All rights reserved.
-> + */
-> +
-> +#include <linux/kernel.h>
-> +#include <linux/err.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/module.h>
 
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-
-Are these two includes needed at all?
-
-> +#include <linux/clk-provider.h>
-> +#include <linux/regmap.h>
-> +
-> +#include <linux/reset-controller.h>
-> +#include <dt-bindings/clock/qcom,apss-ipq6018.h>
-> +
-> +#include "common.h"
-> +#include "clk-regmap.h"
-> +#include "clk-pll.h"
-> +#include "clk-rcg.h"
-> +#include "clk-branch.h"
-> +#include "clk-alpha-pll.h"
-> +#include "clk-regmap-divider.h"
-> +#include "clk-regmap-mux.h"
-> +#include "reset.h"
-> +
-> +#define F(f, s, h, m, n) { (f), (s), (2 * (h) - 1), (m), (n) }
-
-This can be removed. It's common in clk-rcg.h now
-
-> +
-> +static struct clk_branch apcs_alias0_core_clk =3D {
-> +       .halt_reg =3D 0x004c,
-> +       .clkr =3D {
-> +               .enable_reg =3D 0x004c,
-> +               .enable_mask =3D BIT(0),
-> +               .hw.init =3D &(struct clk_init_data){
-> +                       .name =3D "apcs_alias0_core_clk",
-> +                       .parent_hws =3D (const struct clk_hw *[]){
-> +                               &apcs_alias0_clk_src.clkr.hw },
-> +                       .num_parents =3D 1,
-> +                       .flags =3D CLK_SET_RATE_PARENT | CLK_IS_CRITICAL,
-
-Please add a comment about why CLK_IS_CRITICAL is here. Presumably in
-the case that a cpufreq driver doesn't probe and claim this clk?
-
-> +                       .ops =3D &clk_branch2_ops,
-> +               },
-> +       },
-> +};
-> +
-> +
-[...]
-> +
-> +static int __init apss_ipq6018_init(void)
-> +{
-> +       return platform_driver_register(&apss_ipq6018_driver);
-> +}
-> +core_initcall(apss_ipq6018_init);
-> +
-> +static void __exit apss_ipq6018_exit(void)
-> +{
-> +       platform_driver_unregister(&apss_ipq6018_driver);
-> +}
-> +module_exit(apss_ipq6018_exit);
-
-Any reason this can't just be module_platform_driver()?
