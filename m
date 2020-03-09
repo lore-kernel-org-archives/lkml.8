@@ -7,87 +7,123 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29C2EC10F29
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 23:08:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A87DC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 23:11:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA4992146E
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 23:08:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33B3E24655
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 23:11:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ErJy79Kb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rulg74NM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727433AbgCIXIP (ORCPT
+        id S1727426AbgCIXLm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 19:08:15 -0400
-Received: from mail-yw1-f65.google.com ([209.85.161.65]:43246 "EHLO
-        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726536AbgCIXIO (ORCPT
+        Mon, 9 Mar 2020 19:11:42 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:33827 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726698AbgCIXLm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 19:08:14 -0400
-Received: by mail-yw1-f65.google.com with SMTP id p69so11889394ywh.10;
-        Mon, 09 Mar 2020 16:08:14 -0700 (PDT)
+        Mon, 9 Mar 2020 19:11:42 -0400
+Received: by mail-ot1-f68.google.com with SMTP id j16so11396669otl.1;
+        Mon, 09 Mar 2020 16:11:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=YBrgj95YDWeT6B7iosvroZAr99Kor3UDGVq8CoZfnPk=;
-        b=ErJy79KbuvPzPWmVfQGUBPh4YGQxBGv+HXj2NN6SlbrXkPaNqqGLloBZxX6bcp5bF4
-         8RRbr3YGFC+WRncP9c0C9CDhuAMxJr+bZY9cjAc6IWTTWMhvR9VVWmrDW4dtV07TWr0A
-         YZsN8n+gtCVhem8fQXcE1uX6ks2EuF0d4WX2EkzB4l5iloMj7t4g1uBfxTkPFFf52NZb
-         LNsddCPb1F4XMpM9+obTNHSF1GK8INf+D/uwdQZJTReVcLiHpmkPaPEanilm6bkZHiSO
-         +Nt8NaX0pGFPEAzkYU8KV62VN+rcupaTFPgZM1cJiiMT1IKyKjy7eiZLO87b22TJNovi
-         RZOQ==
+        bh=LKRHxYimFMZUOSCFWBWPQEeraoRwWzQd26N8/GrplsA=;
+        b=rulg74NMqVMzZo2by+XKSp3K4FvZFLEJZX14TihGtvaEapM1a5FXYMGx4Y0CzF/XQb
+         p5dlHlN5peWB/cQQ+ltlHoDtJDdFFIH2cKE2/b21VuJ79VlmdZBJSNqtpUMpKFoqMtr+
+         vmTtA1Kb22Sjvk/j66aWnqe06zNZBrP/+eNgVAC4ii9Ag1J8R0Jw2KbLs5fAn2FxG/Wm
+         iDulToOeNyr0vnAEviO9klOQ4enf00c4roCnTPxv6qb6m9Uho20RwTMPGNjBPuuUef14
+         FVaiSZ7QGc6bkPz6hck+9VM+xv1ZB5pwevCFNa4q1ycFRFVouUkX/2NW8kMtZComw9kc
+         vmxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=YBrgj95YDWeT6B7iosvroZAr99Kor3UDGVq8CoZfnPk=;
-        b=tIbseVC2JDiZtPsPyUD/xLxqAZJXDAc5pyed5oXOTD67ZKllQl4vaQ5jpo/ZEEV2KT
-         gFUiThL+bhdxDcLALVyEPpEsw8TZAvXTMzwqgSiYrWs/cmb4M7f6asx/BjxiLlaCJ57X
-         FOZWz38OTZ1D4sx1x786Lf+OGqqbrHNHJVy9ggVR4ImbZ1FGBZicRxnkcHUK8Wwe6SlJ
-         tDyw+d3M7f4I+iPWQDZG/L7o34s7OQHe68J5TkqBtUaD40TzB8Izt/WSondzEctj7CkA
-         XXYbQFTvb160jAcKjl4ApTXaaywSiJ0B3Zc8dX1NvcuGlNcbJEOnPZIDFa+EeFVQ6YjI
-         rEWA==
-X-Gm-Message-State: ANhLgQ0qijlj35a+Z625p98MePttChvXJ0Dv8kwU1dGd7RmYTkL3vS/x
-        WCWfMeCa0iGAeApBp84Cgus7ypnFZOOB9Y6S0FGbS3GP
-X-Google-Smtp-Source: ADFU+vsjOKr6BzWi6LrzbOSSXDkC0x4ZWL/FbgfxVnW15EhwjJKLEZxvrIO+r5LlDMRETQJl0Ryj/5vl8XVT1tT2/6w=
-X-Received: by 2002:a25:86c9:: with SMTP id y9mr21568200ybm.376.1583795293391;
- Mon, 09 Mar 2020 16:08:13 -0700 (PDT)
+        bh=LKRHxYimFMZUOSCFWBWPQEeraoRwWzQd26N8/GrplsA=;
+        b=QoooLDU0OZ0mBJ4AXcfvmyn3m64Mx/RLByRaTjPR1IDD9QCqJMfaONEhgMpkCVCSwE
+         WitEoWCLPt/VNszX8dFQlmOhDfPbq62oRT6iexALTQUezRGKVhBJYo4b+5jA22uNQmp5
+         ueGQ5vadetrERNMxGW2AGxO+BNj8pS+ZLCiSZI9uJNS5ebTz2/3kvzbY0AGqSTMa7Auy
+         cY+YYNisAjFTdNoh0r3lJrg7QPnnuCrSNl+6M39jyg7g8UVR3GPptanAkz9bMgEa/QR7
+         6nUO7IpO3US4AvY2ycvewsTpi5flvZL4bjRgTscCCrMSEYwfRFMGofXVG5VQ31WW7ltx
+         9XtA==
+X-Gm-Message-State: ANhLgQ1QXK3Xq27G5I9gvlao4AHatUOuEY4U0GXcvrAPHeWqOjO23c8I
+        D37bW4j+bJlkhHu/QLmjfMBZwANXT2iOsNLpcaI=
+X-Google-Smtp-Source: ADFU+vtL/gChUunHBPDJ//510Fa7sEtCs5vnQQ5R8G6UMz//hGSWJNgzgLHodYMrsAEKImkJ7AcjxUHEpiE6XdjOIn8=
+X-Received: by 2002:a9d:6c94:: with SMTP id c20mr15239729otr.285.1583795499756;
+ Mon, 09 Mar 2020 16:11:39 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200310092805.7c37c3c1@canb.auug.org.au>
-In-Reply-To: <20200310092805.7c37c3c1@canb.auug.org.au>
-From:   Steve French <smfrench@gmail.com>
-Date:   Mon, 9 Mar 2020 18:07:25 -0500
-Message-ID: <CAH2r5ms6qT7gd7HbZQ3UDYyY8VX+Oqu2xbYw4wixNTDDAtbg5Q@mail.gmail.com>
-Subject: Re: linux-next: Signed-off-by missing for commit in the cifs tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     CIFS <linux-cifs@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <CAMe9rOoRTVUzNC88Ho2XTTNJCymrd3L=XdB9xFcgxPVwAZ0FWA@mail.gmail.com>
+ <AE81FEF5-ECC5-46AA-804D-9D64E656D16E@amacapital.net> <CAMe9rOoDMenvD9XRL1szR5yLQEwv9Q6f4O7CtwbdZ-cJqzezKA@mail.gmail.com>
+ <0088001c-0b12-a7dc-ff2a-9d5c282fa36b@intel.com> <CAMe9rOqf0OHL9397Vikgb=UWhRMf+FmGq-9VAJNmfmzNMMDkCw@mail.gmail.com>
+ <56ab33ac-865b-b37e-75f2-a489424566c3@intel.com>
+In-Reply-To: <56ab33ac-865b-b37e-75f2-a489424566c3@intel.com>
+From:   "H.J. Lu" <hjl.tools@gmail.com>
+Date:   Mon, 9 Mar 2020 16:11:03 -0700
+Message-ID: <CAMe9rOrzrXORQgcAwzGn+=PBvxCEgc5Km_TQq+P7uoqwiacJSA@mail.gmail.com>
+Subject: Re: [RFC PATCH v9 01/27] Documentation/x86: Add CET description
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     Andy Lutomirski <luto@amacapital.net>,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org,
+        Linux-MM <linux-mm@kvack.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>, x86-patch-review@intel.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-fixed
+On Mon, Mar 9, 2020 at 3:19 PM Dave Hansen <dave.hansen@intel.com> wrote:
+>
+> On 3/9/20 2:12 PM, H.J. Lu wrote:
+> >> But what are the rules for clone()?  Should there be rules for
+> >> mismatches for CET enabling between threads if a process (not child
+> >> processes)?
+> > What did you mean? A threaded application is either CET enabled or not
+> > CET enabled.   A new thread from clone makes no difference.
+>
+> Stacks are fundamentally thread-local resources.  The registers that
+> point to them and MSRs that manage shadow stacks are all CPU-thread
+> local.  Nothing is fundamentally tied to the address space shared across
+> the process.
+>
+> A thread might also share *no* control flow with its child.  It might
+> ask the thread to start in code that the parent can never even reach.
+>
+> It sounds like you've picked a Linux implementation that has
+> restrictions on top of the fundamentals.  That's not wrong per se, but
+> it does deserve explanation and deliberate, not experimental design.
+>
+> Could you go back to the folks at Intel and try to figure out what this
+> was designed to *do*?  Yes, I'm probably one of those folks.  You know
+> where to find me. :)
 
-On Mon, Mar 9, 2020 at 5:28 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->
-> Hi all,
->
-> Commit
->
->   91737cf1a418 ("cifs: smb2pdu.h: Replace zero-length array with flexible-array member")
->
-> is missing a Signed-off-by from its committer.
->
-> --
-> Cheers,
-> Stephen Rothwell
-
-
+A threaded application is loaded from disk.  The object file on disk is
+either CET enabled or not CET enabled.
 
 -- 
-Thanks,
-
-Steve
+H.J.
