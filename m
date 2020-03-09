@@ -2,206 +2,86 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B688C10F29
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 08:37:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CF56C10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 08:37:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DF662072A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 08:37:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="gCGuSu0c"
+	by mail.kernel.org (Postfix) with ESMTP id 3C9112072A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 08:37:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726801AbgCIIhc (ORCPT
+        id S1726820AbgCIIhj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 04:37:32 -0400
-Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:42398 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726071AbgCIIgp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 04:36:45 -0400
-Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id F18A9C04C2;
-        Mon,  9 Mar 2020 08:36:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1583743004; bh=B4fi+wGhWTrFTQp3mAnhu+p1yjvs3nFstYvqGhSlpYE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
-         References:From;
-        b=gCGuSu0cHw9XWnuyfdn+0l3N2bLAY+tmOgeWAy5/AQnbPVPm7n1PdsPDqUrhOUS3y
-         KVMo96VC4UpMu7/Tz4j+IRkrIdxVLF0M+k52AN6GuxkCtlAf/10V8LeyqtNY3xeq1Z
-         PTamDuAkNWBS/Gyqd0PgHDtwyAhl/WUhq8OibxirzKLyDuBhW6JptArTvbEo1sTuOJ
-         z1uKsMZUpb9Q9thG7bqQZp/0Py5csGuToy7gnPG59WPMajXrNCGMHbp0x5s33sxJFY
-         AbqlAA9apRHuOe3NZv32Z8odwJX3HjN6WV+CyyqHBJgTGxt6uYf0HhZqLSv8hUsJ+s
-         w1SZCczazTlgQ==
-Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 54EA7A006D;
-        Mon,  9 Mar 2020 08:36:41 +0000 (UTC)
-From:   Jose Abreu <Jose.Abreu@synopsys.com>
-To:     netdev@vger.kernel.org
-Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
-        Jose Abreu <Jose.Abreu@synopsys.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <Jose.Abreu@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net-next 4/8] net: stmmac: Use resolved link config in mac_link_up()
-Date:   Mon,  9 Mar 2020 09:36:23 +0100
-Message-Id: <8841e003101a27c97f59f9f1fe8c044a2807dcdb.1583742615.git.Jose.Abreu@synopsys.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1583742615.git.Jose.Abreu@synopsys.com>
-References: <cover.1583742615.git.Jose.Abreu@synopsys.com>
-In-Reply-To: <cover.1583742615.git.Jose.Abreu@synopsys.com>
-References: <cover.1583742615.git.Jose.Abreu@synopsys.com>
+        Mon, 9 Mar 2020 04:37:39 -0400
+Received: from mga18.intel.com ([134.134.136.126]:59851 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726071AbgCIIhi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 04:37:38 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Mar 2020 01:37:37 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,532,1574150400"; 
+   d="scan'208";a="230853650"
+Received: from shao2-debian.sh.intel.com (HELO [10.239.13.3]) ([10.239.13.3])
+  by orsmga007.jf.intel.com with ESMTP; 09 Mar 2020 01:37:36 -0700
+Subject: Re: [kbuild-all] Re: arch/x86/mm/fault.o: warning: objtool:
+ do_page_fault()+0x4fb: unreachable instruction
+To:     Frederic Weisbecker <frederic@kernel.org>,
+        kbuild test robot <lkp@intel.com>
+Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
+        Ingo Molnar <mingo@kernel.org>
+References: <202003061843.YVzsDc3A%lkp@intel.com>
+ <20200306142732.GA8590@lenoir>
+From:   Rong Chen <rong.a.chen@intel.com>
+Message-ID: <d242f3cb-e95b-441e-0a32-a0279100eeaf@intel.com>
+Date:   Mon, 9 Mar 2020 16:37:24 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <20200306142732.GA8590@lenoir>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the stmmac ethernet driver to use the finalised link parameters
-in mac_link_up() rather than the parameters in mac_config().
 
-Suggested-by: Russell King <rmk+kernel@armlinux.org.uk>
-Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
 
----
-Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-Cc: Alexandre Torgue <alexandre.torgue@st.com>
-Cc: Jose Abreu <joabreu@synopsys.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc: Russell King <linux@armlinux.org.uk>
-Cc: Andrew Lunn <andrew@lunn.ch>
-Cc: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Heiner Kallweit <hkallweit1@gmail.com>
-Cc: netdev@vger.kernel.org
-Cc: linux-stm32@st-md-mailman.stormreply.com
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
----
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 66 +++++++++++------------
- 1 file changed, 33 insertions(+), 33 deletions(-)
+On 3/6/20 10:27 PM, Frederic Weisbecker wrote:
+> On Fri, Mar 06, 2020 at 06:48:47PM +0800, kbuild test robot wrote:
+>> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+>> head:   9f65ed5fe41ce08ed1cb1f6a950f9ec694c142ad
+>> commit: ee6352b2c47a24234398e06381edd93a8e965976 x86/context-tracking: Remove exception_enter/exit() from do_page_fault()
+>> date:   8 weeks ago
+>> config: x86_64-randconfig-a002-20200306 (attached as .config)
+>> compiler: gcc-4.9 (Debian 4.9.2-10+deb8u1) 4.9.2
+>> reproduce:
+>>          git checkout ee6352b2c47a24234398e06381edd93a8e965976
+>>          # save the attached .config to linux build tree
+>>          make ARCH=x86_64
+>>
+>> If you fix the issue, kindly add following tag
+>> Reported-by: kbuild test robot <lkp@intel.com>
+>>
+>> All warnings (new ones prefixed by >>):
+>>
+>>>> arch/x86/mm/fault.o: warning: objtool: do_page_fault()+0x4fb: unreachable instruction
+> I tried several versions of gcc and I can't reproduce the warning. Also looking
+> at the code I fail to find an actual unreachable path. Do you still have the vmlinux around?
+>
+>
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index 8e555f4e82d7..3a190cf250e6 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -874,14 +874,39 @@ static void stmmac_mac_pcs_get_state(struct phylink_config *config,
- static void stmmac_mac_config(struct phylink_config *config, unsigned int mode,
- 			      const struct phylink_link_state *state)
- {
-+	/* Nothing for now. */
-+}
-+
-+static void stmmac_mac_an_restart(struct phylink_config *config)
-+{
-+	/* Not Supported */
-+}
-+
-+static void stmmac_mac_link_down(struct phylink_config *config,
-+				 unsigned int mode, phy_interface_t interface)
-+{
-+	struct stmmac_priv *priv = netdev_priv(to_net_dev(config->dev));
-+
-+	stmmac_mac_set(priv, priv->ioaddr, false);
-+	priv->eee_active = false;
-+	stmmac_eee_init(priv);
-+	stmmac_set_eee_pls(priv, priv->hw, false);
-+}
-+
-+static void stmmac_mac_link_up(struct phylink_config *config,
-+			       struct phy_device *phy,
-+			       unsigned int mode, phy_interface_t interface,
-+			       int speed, int duplex,
-+			       bool tx_pause, bool rx_pause)
-+{
- 	struct stmmac_priv *priv = netdev_priv(to_net_dev(config->dev));
- 	u32 ctrl;
- 
- 	ctrl = readl(priv->ioaddr + MAC_CTRL_REG);
- 	ctrl &= ~priv->hw->link.speed_mask;
- 
--	if (state->interface == PHY_INTERFACE_MODE_USXGMII) {
--		switch (state->speed) {
-+	if (interface == PHY_INTERFACE_MODE_USXGMII) {
-+		switch (speed) {
- 		case SPEED_10000:
- 			ctrl |= priv->hw->link.xgmii.speed10000;
- 			break;
-@@ -895,7 +920,7 @@ static void stmmac_mac_config(struct phylink_config *config, unsigned int mode,
- 			return;
- 		}
- 	} else {
--		switch (state->speed) {
-+		switch (speed) {
- 		case SPEED_2500:
- 			ctrl |= priv->hw->link.speed2500;
- 			break;
-@@ -913,46 +938,21 @@ static void stmmac_mac_config(struct phylink_config *config, unsigned int mode,
- 		}
- 	}
- 
--	priv->speed = state->speed;
-+	priv->speed = speed;
- 
- 	if (priv->plat->fix_mac_speed)
--		priv->plat->fix_mac_speed(priv->plat->bsp_priv, state->speed);
-+		priv->plat->fix_mac_speed(priv->plat->bsp_priv, speed);
- 
--	if (!state->duplex)
-+	if (!duplex)
- 		ctrl &= ~priv->hw->link.duplex;
- 	else
- 		ctrl |= priv->hw->link.duplex;
- 
- 	/* Flow Control operation */
--	if (state->pause)
--		stmmac_mac_flow_ctrl(priv, state->duplex);
-+	if (tx_pause && rx_pause)
-+		stmmac_mac_flow_ctrl(priv, duplex);
- 
- 	writel(ctrl, priv->ioaddr + MAC_CTRL_REG);
--}
--
--static void stmmac_mac_an_restart(struct phylink_config *config)
--{
--	/* Not Supported */
--}
--
--static void stmmac_mac_link_down(struct phylink_config *config,
--				 unsigned int mode, phy_interface_t interface)
--{
--	struct stmmac_priv *priv = netdev_priv(to_net_dev(config->dev));
--
--	stmmac_mac_set(priv, priv->ioaddr, false);
--	priv->eee_active = false;
--	stmmac_eee_init(priv);
--	stmmac_set_eee_pls(priv, priv->hw, false);
--}
--
--static void stmmac_mac_link_up(struct phylink_config *config,
--			       struct phy_device *phy,
--			       unsigned int mode, phy_interface_t interface,
--			       int speed, int duplex,
--			       bool tx_pause, bool rx_pause)
--{
--	struct stmmac_priv *priv = netdev_priv(to_net_dev(config->dev));
- 
- 	stmmac_mac_set(priv, priv->ioaddr, true);
- 	if (phy && priv->dma_cap.eee) {
--- 
-2.7.4
+Hi Frederic,
 
+Sorry for the inconvenience, we checked again and only found this issue 
+on gcc-4.9.2,
+and there's no issue on gcc-4.9.3 or other new versions.
+
+Best Regards,
+Rong Chen
