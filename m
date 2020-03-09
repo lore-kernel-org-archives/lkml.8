@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D990C10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 17:47:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 067D2C10F29
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 17:47:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23A0D21655
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 17:47:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCC0320873
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 17:47:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727393AbgCIRrn (ORCPT
+        id S1727407AbgCIRrp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 13:47:43 -0400
+        Mon, 9 Mar 2020 13:47:45 -0400
 Received: from mga14.intel.com ([192.55.52.115]:12899 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726510AbgCIRrl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727311AbgCIRrl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 9 Mar 2020 13:47:41 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Mar 2020 10:47:40 -0700
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Mar 2020 10:47:41 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,518,1574150400"; 
-   d="scan'208";a="260490362"
+   d="scan'208";a="260490369"
 Received: from labuser-ice-lake-client-platform.jf.intel.com ([10.54.55.45])
-  by orsmga002.jf.intel.com with ESMTP; 09 Mar 2020 10:47:40 -0700
+  by orsmga002.jf.intel.com with ESMTP; 09 Mar 2020 10:47:41 -0700
 From:   kan.liang@linux.intel.com
 To:     acme@kernel.org, jolsa@redhat.com, peterz@infradead.org,
         mingo@redhat.com, linux-kernel@vger.kernel.org
@@ -36,9 +36,9 @@ Cc:     namhyung@kernel.org, adrian.hunter@intel.com,
         alexey.budankov@linux.intel.com, vitaly.slobodskoy@intel.com,
         pavel.gerasimov@intel.com, mpe@ellerman.id.au, eranian@google.com,
         ak@linux.intel.com, Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH V2 8/9] perf c2c: Add option to enable the LBR stitching approach
-Date:   Mon,  9 Mar 2020 10:46:38 -0700
-Message-Id: <20200309174639.4594-9-kan.liang@linux.intel.com>
+Subject: [PATCH V2 9/9] perf hist: Add fast path for duplicate entries check approach
+Date:   Mon,  9 Mar 2020 10:46:39 -0700
+Message-Id: <20200309174639.4594-10-kan.liang@linux.intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200309174639.4594-1-kan.liang@linux.intel.com>
 References: <20200309174639.4594-1-kan.liang@linux.intel.com>
@@ -49,74 +49,116 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Kan Liang <kan.liang@linux.intel.com>
 
-With the LBR stitching approach, the reconstructed LBR call stack
-can break the HW limitation. However, it may reconstruct invalid call
-stacks in some cases, e.g. exception handing such as setjmp/longjmp.
-Also, it may impact the processing time especially when the number of
-samples with stitched LBRs are huge.
+Perf checks the duplicate entries in a callchain before adding an entry.
+However the check is very slow especially with deeper call stack.
+Almost ~50% elapsed time of perf report is spent on the check when the
+call stack is always depth of 32.
 
-Add an option to enable the approach.
+The hist_entry__cmp() is used to compare the new entry with the old
+entries. It will go through all the available sorts in the sort_list,
+and call the specific cmp of each sort, which is very slow.
+Actually, for most cases, there are no duplicate entries in callchain.
+The symbols are usually different. It's much faster to do a quick check
+for symbols first. Only do the full cmp when the symbols are exactly the
+same.
+The quick check is only to check symbols, not dso. Export
+_sort__sym_cmp.
 
-Reviewed-by: Andi Kleen <ak@linux.intel.com>
+ $perf record --call-graph lbr ./tchain_edit_64
+
+ Without the patch
+ $time perf report --stdio
+ real    0m21.142s
+ user    0m21.110s
+ sys     0m0.033s
+
+ With the patch
+ $time perf report --stdio
+ real    0m10.977s
+ user    0m10.948s
+ sys     0m0.027s
+
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/Documentation/perf-c2c.txt | 11 +++++++++++
- tools/perf/builtin-c2c.c              |  6 ++++++
- 2 files changed, 17 insertions(+)
+ tools/perf/util/hist.c | 23 +++++++++++++++++++++++
+ tools/perf/util/sort.c |  2 +-
+ tools/perf/util/sort.h |  2 ++
+ 3 files changed, 26 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/Documentation/perf-c2c.txt b/tools/perf/Documentation/perf-c2c.txt
-index e6150f21267d..2133eb320cb0 100644
---- a/tools/perf/Documentation/perf-c2c.txt
-+++ b/tools/perf/Documentation/perf-c2c.txt
-@@ -111,6 +111,17 @@ REPORT OPTIONS
- --display::
- 	Switch to HITM type (rmt, lcl) to display and sort on. Total HITMs as default.
+diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+index e74a5acf66d9..311d6d119f3c 100644
+--- a/tools/perf/util/hist.c
++++ b/tools/perf/util/hist.c
+@@ -1057,6 +1057,20 @@ iter_next_cumulative_entry(struct hist_entry_iter *iter,
+ 	return fill_callchain_info(al, node, iter->hide_unresolved);
+ }
  
-+--stitch-lbr::
-+	Show callgraph with stitched LBRs, which may have more complete
-+	callgraph. The perf.data file must have been obtained using
-+	perf c2c record --call-graph lbr.
-+	Disabled by default. In common cases with call stack overflows,
-+	it can recreate better call stacks than the default lbr call stack
-+	output. But this approach is not full proof. There can be cases
-+	where it creates incorrect call stacks from incorrect matches.
-+	The known limitations include exception handing such as
-+	setjmp/longjmp will have calls/returns not match.
++static bool
++hist_entry__fast__sym_diff(struct hist_entry *left,
++			   struct hist_entry *right)
++{
++	struct symbol *sym_l = left->ms.sym;
++	struct symbol *sym_r = right->ms.sym;
 +
- C2C RECORD
- ----------
- The perf c2c record command setup options related to HITM cacheline analysis
-diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-index 246ac0b4d54f..c798763f62db 100644
---- a/tools/perf/builtin-c2c.c
-+++ b/tools/perf/builtin-c2c.c
-@@ -95,6 +95,7 @@ struct perf_c2c {
- 	bool			 use_stdio;
- 	bool			 stats_only;
- 	bool			 symbol_full;
-+	bool			 stitch_lbr;
- 
- 	/* HITM shared clines stats */
- 	struct c2c_stats	hitm_stats;
-@@ -273,6 +274,9 @@ static int process_sample_event(struct perf_tool *tool __maybe_unused,
- 		return -1;
- 	}
- 
-+	if (c2c.stitch_lbr)
-+		al.thread->lbr_stitch_enable = true;
++	if (!sym_l && !sym_r)
++		return left->ip != right->ip;
 +
- 	ret = sample__resolve_callchain(sample, &callchain_cursor, NULL,
- 					evsel, &al, sysctl_perf_event_max_stack);
- 	if (ret)
-@@ -2752,6 +2756,8 @@ static int perf_c2c__report(int argc, const char **argv)
- 	OPT_STRING('c', "coalesce", &coalesce, "coalesce fields",
- 		   "coalesce fields: pid,tid,iaddr,dso"),
- 	OPT_BOOLEAN('f', "force", &symbol_conf.force, "don't complain, do it"),
-+	OPT_BOOLEAN(0, "stitch-lbr", &c2c.stitch_lbr,
-+		    "Enable LBR callgraph stitching approach"),
- 	OPT_PARENT(c2c_options),
- 	OPT_END()
++	return !!_sort__sym_cmp(sym_l, sym_r);
++}
++
++
+ static int
+ iter_add_next_cumulative_entry(struct hist_entry_iter *iter,
+ 			       struct addr_location *al)
+@@ -1083,6 +1097,7 @@ iter_add_next_cumulative_entry(struct hist_entry_iter *iter,
  	};
+ 	int i;
+ 	struct callchain_cursor cursor;
++	bool fast = hists__has(he_tmp.hists, sym);
+ 
+ 	callchain_cursor_snapshot(&cursor, &callchain_cursor);
+ 
+@@ -1093,6 +1108,14 @@ iter_add_next_cumulative_entry(struct hist_entry_iter *iter,
+ 	 * It's possible that it has cycles or recursive calls.
+ 	 */
+ 	for (i = 0; i < iter->curr; i++) {
++		/*
++		 * For most cases, there are no duplicate entries in callchain.
++		 * The symbols are usually different. Do a quick check for
++		 * symbols first.
++		 */
++		if (fast && hist_entry__fast__sym_diff(he_cache[i], &he_tmp))
++			continue;
++
+ 		if (hist_entry__cmp(he_cache[i], &he_tmp) == 0) {
+ 			/* to avoid calling callback function */
+ 			iter->he = NULL;
+diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
+index ab0cfd790ad0..33e0fa1bc203 100644
+--- a/tools/perf/util/sort.c
++++ b/tools/perf/util/sort.c
+@@ -234,7 +234,7 @@ static int64_t _sort__addr_cmp(u64 left_ip, u64 right_ip)
+ 	return (int64_t)(right_ip - left_ip);
+ }
+ 
+-static int64_t _sort__sym_cmp(struct symbol *sym_l, struct symbol *sym_r)
++int64_t _sort__sym_cmp(struct symbol *sym_l, struct symbol *sym_r)
+ {
+ 	if (!sym_l || !sym_r)
+ 		return cmp_null(sym_l, sym_r);
+diff --git a/tools/perf/util/sort.h b/tools/perf/util/sort.h
+index 6c862d62d052..c3c3c68cbfdd 100644
+--- a/tools/perf/util/sort.h
++++ b/tools/perf/util/sort.h
+@@ -309,5 +309,7 @@ int64_t
+ sort__daddr_cmp(struct hist_entry *left, struct hist_entry *right);
+ int64_t
+ sort__dcacheline_cmp(struct hist_entry *left, struct hist_entry *right);
++int64_t
++_sort__sym_cmp(struct symbol *sym_l, struct symbol *sym_r);
+ char *hist_entry__srcline(struct hist_entry *he);
+ #endif	/* __PERF_SORT_H */
 -- 
 2.17.1
 
