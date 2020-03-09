@@ -2,111 +2,116 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB50DC10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 15:18:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E67EC18E5C
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 15:18:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A47C620578
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 15:18:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 080E5208C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 15:18:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="fMNyTTJk"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="mZjuohJ0";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="A/PofnUF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727080AbgCIPSG (ORCPT
+        id S1727115AbgCIPSK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 11:18:06 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:13959 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726960AbgCIPSG (ORCPT
+        Mon, 9 Mar 2020 11:18:10 -0400
+Received: from out4-smtp.messagingengine.com ([66.111.4.28]:40943 "EHLO
+        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726922AbgCIPSJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 11:18:06 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1583767085; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=YVYbQhWH93yMJttmVAt9QPfzMj6O51Wc3s1MVkrJ7yE=; b=fMNyTTJkprdCijEK/6TBAU1qNhUF3mZKn1plTjAIhFHWjlzXpdpFSSSLsXZGTvZJNbH+Jnmd
- oSHbovboaD/jmSfRBVw/P5kOljimkU0qP8pPOpNYWESvUXl5hhMZFlyoKcUtl0i+nK5B2s12
- BwyUUXROxwwKQV1FSu7bOCzorS4=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e665e20.7fc5209067a0-smtp-out-n03;
- Mon, 09 Mar 2020 15:17:52 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 953F7C44792; Mon,  9 Mar 2020 15:17:52 +0000 (UTC)
-Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1B462C433D2;
-        Mon,  9 Mar 2020 15:17:50 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1B462C433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     linux-arm-msm@vger.kernel.org
-Cc:     smasetty@codeaurora.org, John Stultz <john.stultz@linaro.org>,
-        Sean Paul <sean@poorly.run>, devicetree@vger.kernel.org,
-        Stephen Boyd <swboyd@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Brian Masney <masneyb@onstation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Rob Clark <robdclark@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        "Michael J. Ruhl" <michael.j.ruhl@intel.com>,
-        freedreno@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>
-Subject: [PATCH v5 0/2] msm/gpu/a6xx: use the DMA-API for GMU memory allocations
-Date:   Mon,  9 Mar 2020 09:17:44 -0600
-Message-Id: <1583767066-1555-1-git-send-email-jcrouse@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Mon, 9 Mar 2020 11:18:09 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id BB9E322050;
+        Mon,  9 Mar 2020 11:18:08 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Mon, 09 Mar 2020 11:18:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=FzkSUNOJXK4eu8BOSDV7DOU/ZSv
+        0p8/ceeRaBi0OHNk=; b=mZjuohJ0nrVUq8Ue73mun2mtyARxgeJ/pndzyv8JVoq
+        LLGkv8gIoDpQWf9UIDMKntzoe4ZexFB43zTNvXtGLioHPhijF3FPUtaDAmnnf3UX
+        WAVwsMaH2V5m24509WN/OKYNSfSKDKu8GVzG2drbWNUpc04mnzOaSq2lj2J7XMge
+        8Y/UaH0ccDs6oC+xFPI2n491EXkRpEshZUij3YU/X12ZWlLFP2F3MWoM/IG2vcIG
+        b2qPqafr1n25DTUD6H8sYwqBpwFhR+CqDhOQubwHgY6oWOBtJuCcGMgeKlTGLcIo
+        p2iBrjXVZr6ZAOJP2xm35t3EyApvzDvhWoKkqfj2hqw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=FzkSUN
+        OJXK4eu8BOSDV7DOU/ZSv0p8/ceeRaBi0OHNk=; b=A/PofnUFdfVssU2mni2W9H
+        7mnoSAT49qAooyCQVmUz+Cl42YTZU1JZERaZCdIqodYkLsdMS8IoLAAlFvZSASyj
+        9bDTSlonWFG2Q56WfNxysMbi1aR21Iza2m69qbsvi91RtIOLZxdP/RFmj3w9Hbr7
+        ApPni+iJY5xds7FKSWErx5YyVPRkEor+HpXgBXWTfSUF5Bx1trrFJQZFuIK1Q5YV
+        eSpGIpRUGXssK4crjdQHu2szfcVnKoo5ewBwh2Jtteilq4VV73ZEoD+/El77ZAtE
+        Qcv1DwI2BBw7keImgiSz4BIdiXPzy5iVoz2izn0oaERaozRlSZS0UJ2/6F5pq7+A
+        ==
+X-ME-Sender: <xms:MF5mXr180yGr00Kr_31--sZ11gGHmIwUmROBtRXaV9Yr-SRyuqnDQQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedruddukedgjeeiucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltd
+    drkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgepudenucfrrghrrghmpehmrghi
+    lhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:MF5mXkWdGVq1UT1bBxS1jkvlAh__HZ4myBbz4np9x0C676ie2lrZYA>
+    <xmx:MF5mXhWQ-M6iLmYQXobJM0O8J3Z-dlhsr5XUXP-8mX_YV3qTAMUSdA>
+    <xmx:MF5mXnFWQ8WVdg27LQrhLc17QJJ6oNnFrU-OnznAdkQTZvqaFeKOCA>
+    <xmx:MF5mXgUrUSNa6IpyrNAGFYeYHfV5k2i-0hwIypr3y7mqm3vIdqKdvQ>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id EFFB4328005D;
+        Mon,  9 Mar 2020 11:18:07 -0400 (EDT)
+Date:   Mon, 9 Mar 2020 16:18:06 +0100
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Jernej Skrabec <jernej.skrabec@siol.net>
+Cc:     wens@csie.org, robh+dt@kernel.org, a.zummo@towertech.it,
+        alexandre.belloni@bootlin.com,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] arm64: dts: allwinner: h6: Move ext. oscillator
+ to board DTs
+Message-ID: <20200309151806.7sxgis4akb6zdmuv@gilmour.lan>
+References: <20200308135849.106333-1-jernej.skrabec@siol.net>
+ <20200308135849.106333-3-jernej.skrabec@siol.net>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="elcgw7ieqvmk4fns"
+Content-Disposition: inline
+In-Reply-To: <20200308135849.106333-3-jernej.skrabec@siol.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When CONFIG_INIT_ON_ALLOC_DEFAULT_ON the GMU memory allocator runs afoul of
-cache coherency issues because it is mapped as write-combine without clearing
-the cache after it was zeroed.
 
-Rather than duplicate the hacky workaround we use in the GEM allocator for the
-same reason it turns out that we don't need to have a bespoke memory allocator
-for the GMU anyway. It uses a flat, global address space and there are only
-two relatively minor allocations anyway. In short, this is essentially what the
-DMA API was created for so replace a bunch of memory management code with two
-calls to allocate and free DMA memory and we're fine.
+--elcgw7ieqvmk4fns
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-In a previous version of this series I added the dma-ranges property to the
-device tree file for the GMU and updated the bindings to YAML. Rob correctly
-pointed out that we didn't need dma-ranges any more but I'm still pushing the
-YAML conversion because it is good and we'll eventually need it anyway so why
-not.
+On Sun, Mar 08, 2020 at 02:58:49PM +0100, Jernej Skrabec wrote:
+> It turns out that not all H6 boards have external 32kHz oscillator.
+> Currently the only one known such H6 board is Tanix TX6.
+>
+> Move external oscillator node from common H6 dtsi to board specific dts
+> files where present.
+>
+> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
 
-v5: Refresh on Brian Masney's patch that removes sram from gmu.txt [1]
+Applied, thanks
 
-v4: Use dma_alloc_wc() wrappers per Michael Ruhl.
+Maxime
 
-v3: Fix YAML description per RobH and remove dma-ranges and replace it with the
-correct DMA mask in the GMU device. Convert the iova type to a dma_attr_t to
-make it 32 bit friendly.
+--elcgw7ieqvmk4fns
+Content-Type: application/pgp-signature; name="signature.asc"
 
-v2: Fix the example bindings for dma-ranges - the third item is the size
-Pass false to of_dma_configure so that it fails probe if the DMA region is not
-set up.
+-----BEGIN PGP SIGNATURE-----
 
-[1] https://patchwork.freedesktop.org/patch/356869/?series=74446&rev=1
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXmZeLgAKCRDj7w1vZxhR
+xellAP97yFvv1suUpEeMYtlmRBIx/T+Noww6myEv6ikcflh4ZwD9E0I1jVOnDbbP
+S3hbh1vdMREygEhT05r0c3C4QcQ26A0=
+=+m/H
+-----END PGP SIGNATURE-----
 
-Jordan Crouse (2):
-  dt-bindings: display: msm: Convert GMU bindings to YAML
-  drm/msm/a6xx: Use the DMA API for GMU memory objects
-
- .../devicetree/bindings/display/msm/gmu.txt        |  65 -----------
- .../devicetree/bindings/display/msm/gmu.yaml       | 123 +++++++++++++++++++++
- drivers/gpu/drm/msm/adreno/a6xx_gmu.c              | 113 ++-----------------
- drivers/gpu/drm/msm/adreno/a6xx_gmu.h              |   6 +-
- 4 files changed, 135 insertions(+), 172 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/display/msm/gmu.txt
- create mode 100644 Documentation/devicetree/bindings/display/msm/gmu.yaml
-
--- 
-2.7.4
+--elcgw7ieqvmk4fns--
