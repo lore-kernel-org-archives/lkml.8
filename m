@@ -2,328 +2,155 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2BEFC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 22:32:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA7F8C10F25
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 22:32:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F36424670
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 22:32:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACBD824649
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 22:32:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="UwkJOHUd"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="hilCaDqY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727309AbgCIWcb (ORCPT
+        id S1727360AbgCIWcf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 18:32:31 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:48734 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726536AbgCIWcb (ORCPT
+        Mon, 9 Mar 2020 18:32:35 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:58082 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726536AbgCIWce (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 18:32:31 -0400
-Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 029MUDRN018581
-        for <linux-kernel@vger.kernel.org>; Mon, 9 Mar 2020 15:32:30 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=facebook;
- bh=a7ab9YxxrzbzsAzxRTc7PISmeH7sx6ZzKqxtpjiU778=;
- b=UwkJOHUdrdYqV/3tafOOulVlbwfZN5yO1PtPaFD53D5kyWKrf22P7+eIrzPE5jc/RcXL
- R+uq9cDHPvD+CSRBkD7Ql2+fJUYmTlleXRae/Upb2aqoNI2dAoMYY+5VpxzdhpJVSvRy
- qyBiHfqubvuKrH0tCvhbeY5yfyYRv6/Ysyc= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 2ymv8w75ed-15
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 15:32:29 -0700
-Received: from intmgw001.41.prn1.facebook.com (2620:10d:c0a8:1b::d) by
- mail.thefacebook.com (2620:10d:c0a8:82::c) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1847.3; Mon, 9 Mar 2020 15:32:28 -0700
-Received: by devvm2643.prn2.facebook.com (Postfix, from userid 111017)
-        id 7EA3D3369D6AD; Mon,  9 Mar 2020 15:32:23 -0700 (PDT)
-Smtp-Origin-Hostprefix: devvm
-From:   Roman Gushchin <guro@fb.com>
-Smtp-Origin-Hostname: devvm2643.prn2.facebook.com
-To:     Andrew Morton <akpm@linux-foundation.org>
-CC:     Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>, <linux-mm@kvack.org>,
-        <kernel-team@fb.com>, <linux-kernel@vger.kernel.org>,
-        Rik van Riel <riel@surriel.com>, Roman Gushchin <guro@fb.com>
-Smtp-Origin-Cluster: prn2c23
-Subject: [PATCH] mm: hugetlb: optionally allocate gigantic hugepages using cma
-Date:   Mon, 9 Mar 2020 15:32:16 -0700
-Message-ID: <20200309223216.1974290-1-guro@fb.com>
-X-Mailer: git-send-email 2.17.1
-X-FB-Internal: Safe
+        Mon, 9 Mar 2020 18:32:34 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 029MWNVK042013;
+        Mon, 9 Mar 2020 22:32:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=tq17O7z5+LSWWtt71bXuxsimmGS7Yq5nKi9TCgbpVsE=;
+ b=hilCaDqYMeIOyZal7R26evZRpQhscYG+IsKosrmlAgnZ3trlgjN5RempUya/PcfpSMtk
+ fUms6SXotkQ//3WbMc/+2NUy4wLTw06ezTxIUP8Td+kum+4WBc+loS3rVrdKKTtuxt3u
+ 9Yr73h2q1Yq9D5vZhHmFgeaWdv+BZ7qwlpnECiSlDBNcn4YSaLvmxgPZQ5qnR1J/KFwM
+ 0bDclzOp89wgB56qvovGosZQg7bdPK9HHPqnPa0ZLlroACij0AAcg4tH66FloD07mhQJ
+ VDEozSuiFW5hYIfMmTBuoTI+lG1psvUYUo+7Lq+TcHddtJWs/CGohFwetmUq1haIUVAP Bw== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 2ym48sstkk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 09 Mar 2020 22:32:23 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 029MVTFM086702;
+        Mon, 9 Mar 2020 22:31:29 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 2ymndfmaf3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 09 Mar 2020 22:31:29 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 029MVRd3006196;
+        Mon, 9 Mar 2020 22:31:27 GMT
+Received: from bostrovs-us.us.oracle.com (/10.152.32.65)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 09 Mar 2020 15:31:27 -0700
+Subject: Re: [PATCH v2] xen: Use evtchn_type_t as a type for event channels
+To:     Yan Yankovskyi <yyankovskyi@gmail.com>
+Cc:     Jan Beulich <jbeulich@suse.com>, Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org
+References: <20200307134322.GA27756@kbp1-lhp-F74019>
+ <d190793c-fe6b-263e-7793-ccd73f9ccad4@oracle.com>
+ <20200308131944.GA18740@kbp1-lhp-F74019>
+From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Autocrypt: addr=boris.ostrovsky@oracle.com; keydata=
+ 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
+ Jg6OxFYd01z+a+oL
+Message-ID: <6dc48b0e-084a-88fb-04a3-4edcc37a682c@oracle.com>
+Date:   Mon, 9 Mar 2020 18:31:17 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-09_11:2020-03-09,2020-03-09 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- lowpriorityscore=0 spamscore=0 impostorscore=0 phishscore=0 mlxscore=0
- mlxlogscore=999 suspectscore=2 adultscore=0 clxscore=1015 bulkscore=0
+In-Reply-To: <20200308131944.GA18740@kbp1-lhp-F74019>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9555 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 spamscore=0 bulkscore=0
+ mlxscore=0 suspectscore=0 mlxlogscore=999 phishscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2003090135
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9555 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 impostorscore=0
+ mlxlogscore=999 suspectscore=0 priorityscore=1501 lowpriorityscore=0
+ phishscore=0 adultscore=0 spamscore=0 mlxscore=0 clxscore=1015
  malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003090136
-X-FB-Internal: deliver
+ engine=8.12.0-2001150001 definitions=main-2003090135
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 944d9fec8d7a ("hugetlb: add support for gigantic page allocation
-at runtime") has added the run-time allocation of gigantic pages. However
-it actually works only at early stages of the system loading, when
-the majority of memory is free. After some time the memory gets
-fragmented by non-movable pages, so the chances to find a contiguous
-1 GB block are getting close to zero. Even dropping caches manually
-doesn't help a lot.
 
-At large scale rebooting servers in order to allocate gigantic hugepages
-is quite expensive and complex. At the same time keeping some constant
-percentage of memory in reserved hugepages even if the workload isn't
-using it is a big waste: not all workloads can benefit from using 1 GB
-pages.
 
-The following solution can solve the problem:
-1) On boot time a dedicated cma area* is reserved. The size is passed
-   as a kernel argument.
-2) Run-time allocations of gigantic hugepages are performed using the
-   cma allocator and the dedicated cma area
+On 3/8/20 9:19 AM, Yan Yankovskyi wrote:
+> On Sat, Mar 07, 2020 at 02:41:44PM -0500, Boris Ostrovsky wrote:
+>
+>> I also think that, given that this patch is trying to get types in
+>> order, find_virq() will need more changes: it is supposed to return
+>> evtchn_port_t. But then it also wants to return a (signed) error.
+> =20
+> As we don't care which error we got during find_virq call, we can just
+> return 0 in case of error, and port number otherwise. Port 0 is never
+> valid, so this approach can work for the other functions as well.
+> On the other hand, passing port using pointer and returning actual
+> error message, as it's done in xenbus_alloc_evtchn(), sounds like a
+> better approach overall. What do you think?
 
-In this case gigantic hugepages can be allocated successfully with a
-high probability, however the memory isn't completely wasted if nobody
-is using 1GB hugepages: it can be used for pagecache, anon memory,
-THPs, etc.
+Either way should be fine.
 
-* On a multi-node machine a per-node cma area is allocated on each node.
-  Following gigantic hugetlb allocation are using the first available
-  numa node if the mask isn't specified by a user.
+(BTW, you also need to update evtchn_from_irq(), I think you missed it).
 
-Usage:
-1) configure the kernel to allocate a cma area for hugetlb allocations:
-   pass hugetlb_cma=10G as a kernel argument
+-boris
 
-2) allocate hugetlb pages as usual, e.g.
-   echo 10 > /sys/kernel/mm/hugepages/hugepages-1048576kB/nr_hugepages
 
-If the option isn't enabled or the allocation of the cma area failed,
-the current behavior of the system is preserved.
 
-Only x86 is covered by this patch, but it's trivial to extend it to
-cover other architectures as well.
-
-Signed-off-by: Roman Gushchin <guro@fb.com>
----
- .../admin-guide/kernel-parameters.txt         |   7 ++
- arch/x86/kernel/setup.c                       |   3 +
- include/linux/hugetlb.h                       |   2 +
- mm/hugetlb.c                                  | 108 ++++++++++++++++++
- 4 files changed, 120 insertions(+)
-
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 0c9894247015..d3349ec1dbef 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -1452,6 +1452,13 @@
- 	hpet_mmap=	[X86, HPET_MMAP] Allow userspace to mmap HPET
- 			registers.  Default set by CONFIG_HPET_MMAP_DEFAULT.
- 
-+	hugetlb_cma=	[x86-64] The size of a cma area used for allocation
-+			of gigantic hugepages.
-+			Format: nn[GTPE] | nn%
-+
-+			If enabled, boot-time allocation of gigantic hugepages
-+			is skipped.
-+
- 	hugepages=	[HW,X86-32,IA-64] HugeTLB pages to allocate at boot.
- 	hugepagesz=	[HW,IA-64,PPC,X86-64] The size of the HugeTLB pages.
- 			On x86-64 and powerpc, this option can be specified
-diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-index a74262c71484..ceeb06ddfd41 100644
---- a/arch/x86/kernel/setup.c
-+++ b/arch/x86/kernel/setup.c
-@@ -16,6 +16,7 @@
- #include <linux/pci.h>
- #include <linux/root_dev.h>
- #include <linux/sfi.h>
-+#include <linux/hugetlb.h>
- #include <linux/tboot.h>
- #include <linux/usb/xhci-dbgp.h>
- 
-@@ -1158,6 +1159,8 @@ void __init setup_arch(char **cmdline_p)
- 	initmem_init();
- 	dma_contiguous_reserve(max_pfn_mapped << PAGE_SHIFT);
- 
-+	hugetlb_cma_reserve();
-+
- 	/*
- 	 * Reserve memory for crash kernel after SRAT is parsed so that it
- 	 * won't consume hotpluggable memory.
-diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
-index 50480d16bd33..50050c981ab9 100644
---- a/include/linux/hugetlb.h
-+++ b/include/linux/hugetlb.h
-@@ -157,6 +157,8 @@ pte_t *huge_pmd_share(struct mm_struct *mm, unsigned long addr, pud_t *pud);
- extern int sysctl_hugetlb_shm_group;
- extern struct list_head huge_boot_pages;
- 
-+extern void __init hugetlb_cma_reserve(void);
-+
- /* arch callbacks */
- 
- pte_t *huge_pte_alloc(struct mm_struct *mm,
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index 7fb31750e670..f2e6e0a37263 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -28,6 +28,7 @@
- #include <linux/jhash.h>
- #include <linux/numa.h>
- #include <linux/llist.h>
-+#include <linux/cma.h>
- 
- #include <asm/page.h>
- #include <asm/pgtable.h>
-@@ -44,6 +45,9 @@
- int hugetlb_max_hstate __read_mostly;
- unsigned int default_hstate_idx;
- struct hstate hstates[HUGE_MAX_HSTATE];
-+
-+static struct cma *hugetlb_cma[MAX_NUMNODES];
-+
- /*
-  * Minimum page order among possible hugepage sizes, set to a proper value
-  * at boot time.
-@@ -1228,6 +1232,11 @@ static void destroy_compound_gigantic_page(struct page *page,
- 
- static void free_gigantic_page(struct page *page, unsigned int order)
- {
-+	if (hugetlb_cma[0]) {
-+		cma_release(hugetlb_cma[page_to_nid(page)], page, 1 << order);
-+		return;
-+	}
-+
- 	free_contig_range(page_to_pfn(page), 1 << order);
- }
- 
-@@ -1237,6 +1246,23 @@ static struct page *alloc_gigantic_page(struct hstate *h, gfp_t gfp_mask,
- {
- 	unsigned long nr_pages = 1UL << huge_page_order(h);
- 
-+	if (hugetlb_cma[0]) {
-+		struct page *page;
-+		int nid;
-+
-+		for_each_node_mask(nid, *nodemask) {
-+			if (!hugetlb_cma[nid])
-+				break;
-+
-+			page = cma_alloc(hugetlb_cma[nid], nr_pages,
-+					 huge_page_order(h), true);
-+			if (page)
-+				return page;
-+		}
-+
-+		return NULL;
-+	}
-+
- 	return alloc_contig_pages(nr_pages, gfp_mask, nid, nodemask);
- }
- 
-@@ -2439,6 +2465,10 @@ static void __init hugetlb_hstate_alloc_pages(struct hstate *h)
- 
- 	for (i = 0; i < h->max_huge_pages; ++i) {
- 		if (hstate_is_gigantic(h)) {
-+			if (hugetlb_cma[0]) {
-+				pr_warn_once("HugeTLB: hugetlb_cma is enabled, skip boot time allocation\n");
-+				break;
-+			}
- 			if (!alloc_bootmem_huge_page(h))
- 				break;
- 		} else if (!alloc_pool_huge_page(h,
-@@ -5372,3 +5402,81 @@ void move_hugetlb_state(struct page *oldpage, struct page *newpage, int reason)
- 		spin_unlock(&hugetlb_lock);
- 	}
- }
-+
-+static unsigned long hugetlb_cma_size __initdata;
-+static unsigned long hugetlb_cma_percent __initdata;
-+
-+static int __init cmdline_parse_hugetlb_cma(char *p)
-+{
-+	unsigned long long val;
-+	char *endptr;
-+
-+	if (!p)
-+		return -EINVAL;
-+
-+	/* Value may be a percentage of total memory, otherwise bytes */
-+	val = simple_strtoull(p, &endptr, 0);
-+	if (*endptr == '%')
-+		hugetlb_cma_percent = clamp_t(unsigned long, val, 0, 100);
-+	else
-+		hugetlb_cma_size = memparse(p, &p);
-+
-+	return 0;
-+}
-+
-+early_param("hugetlb_cma", cmdline_parse_hugetlb_cma);
-+
-+void __init hugetlb_cma_reserve(void)
-+{
-+	unsigned long totalpages = 0;
-+	unsigned long start_pfn, end_pfn;
-+	phys_addr_t size;
-+	int nid, i, res;
-+
-+	if (!hugetlb_cma_size && !hugetlb_cma_percent)
-+		return;
-+
-+	if (hugetlb_cma_percent) {
-+		for_each_mem_pfn_range(i, MAX_NUMNODES, &start_pfn, &end_pfn,
-+				       NULL)
-+			totalpages += end_pfn - start_pfn;
-+
-+		size = PAGE_SIZE * (hugetlb_cma_percent * 100 * totalpages) /
-+			10000UL;
-+	} else {
-+		size = hugetlb_cma_size;
-+	}
-+
-+	pr_info("hugetlb_cma: reserve %llu, %llu per node\n", size,
-+		size / nr_online_nodes);
-+
-+	size /= nr_online_nodes;
-+
-+	for_each_node_state(nid, N_ONLINE) {
-+		unsigned long min_pfn = 0, max_pfn = 0;
-+
-+		for_each_mem_pfn_range(i, nid, &start_pfn, &end_pfn, NULL) {
-+			if (!min_pfn)
-+				min_pfn = start_pfn;
-+			max_pfn = end_pfn;
-+		}
-+
-+		res = cma_declare_contiguous(PFN_PHYS(min_pfn), size,
-+					     PFN_PHYS(max_pfn), (1UL << 30),
-+					     0, false,
-+					     "hugetlb", &hugetlb_cma[nid]);
-+		if (res) {
-+			pr_warn("hugetlb_cma: reservation failed: err %d, node %d, [%llu, %llu)",
-+				res, nid, PFN_PHYS(min_pfn), PFN_PHYS(max_pfn));
-+
-+			for (; nid >= 0; nid--)
-+				hugetlb_cma[nid] = NULL;
-+
-+			break;
-+		}
-+
-+		pr_info("hugetlb_cma: successfully reserved %llu on node %d\n",
-+			size, nid);
-+	}
-+}
-+
--- 
-2.24.1
 
