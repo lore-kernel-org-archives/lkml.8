@@ -2,81 +2,99 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72915C10F28
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:29:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7F2FC10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:29:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 469FB20727
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:29:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B924F2072A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:29:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="e7eCoXwJ"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RCzJvzds"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726428AbgCIJ3L (ORCPT
+        id S1726464AbgCIJ30 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 05:29:11 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:37893 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725956AbgCIJ3K (ORCPT
+        Mon, 9 Mar 2020 05:29:26 -0400
+Received: from mail-pg1-f175.google.com ([209.85.215.175]:32947 "EHLO
+        mail-pg1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725956AbgCIJ30 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 05:29:10 -0400
-Received: by mail-lf1-f67.google.com with SMTP id x22so7057873lff.5
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 02:29:07 -0700 (PDT)
+        Mon, 9 Mar 2020 05:29:26 -0400
+Received: by mail-pg1-f175.google.com with SMTP id m5so4462185pgg.0
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 02:29:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/x3bOS8+EQ730wvwzViwYAyxSIAy+Gqe4DlDcCBFmac=;
-        b=e7eCoXwJn2Jq3avlPXDgQK9Rx/D9sv6dMMc8asjsu4JqGIdjFQ3+Tvma1SXSOhr7YI
-         gQznjl6GdDgBkjgwCtHbuqrUoNwW+q1mYBZlXjqVLNH9OtaWlHwrTydkv/lBF9uMCHLo
-         /2D0ERQdHCCCHUQ8MgMPH6ocbKoE0iD+vAgs4Feiu2PU4KEU/Lk8dU3I0jDfk4fnsdP7
-         Cc88vNqxKVhDyZP8ACw+iid8ZvAxTgEioqBRlvDYEi633fqtmjmvJxUgjkvwm4+Maftd
-         otTV8ue5JmmtIS4Es8BgpsbROdUrHq0Fe7jt2BevM2NF16Ty6aktOTSgqE+GGnH73Dt2
-         Z3Mg==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=GyFtCdRxR6sVhw72KswIK0rDXamwneP6LD6kWfJp1pc=;
+        b=RCzJvzdseBmJqOvEfcFOWx3FDbQWFcOvN13MelV3ubCWasbOfIICbV1Xt8Cl+IGAxp
+         VCF4OHvnNBa/q6tTTGlZpBO3DwbV0vGrgUTGApyfClRP8Ot5HaP3ddHTqb0llWbUIN7t
+         TsJpvI0gFscNO/nvlU/TpFcSiRunodUd5MRrE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/x3bOS8+EQ730wvwzViwYAyxSIAy+Gqe4DlDcCBFmac=;
-        b=bx10sc+ggDF4DZAH/bMSBXAfbZj/9ZTyQPLs0T7g83Sh2E9pn6jFtUIkBNCsNRZrEs
-         NWe9rt/u6ELlJ+Dpp0Xfp6ZOmuM3lF2w8mU7rU40w1zbZzpXIBMXgG4YLt/Rc6BfSD3d
-         4C3STdCHBiJa8vPRWl698yuBSrI9+ciiFcjyLedPortvEN7bMVuUn0poHB9O4lfNL5Qd
-         8j2UeeAq/SuYCuxoVu6sDmChMCMUgg5t2fWB/PuxkrDcR3m0+w69ch0qsliHu8gL8TSL
-         y5Y6qd/BH/aYRMpLzYs8z5n8ruS0Ly3wEosFIJoPM0GrFORp1FNa16CNs3redAI7P3l7
-         ek+Q==
-X-Gm-Message-State: ANhLgQ1OQKsnwBi6O8fBEFm3BMoT0ur/bSvngw1gdLemBj6oZ2HEOUXr
-        E4vioyXIAJRaTCg8ZF2/m7JqsgQYt7N6CNFSjhyp5Fye
-X-Google-Smtp-Source: ADFU+vsM0JTR3ANUQQsabsuZJsGRykwEGIjqSJXt/IVH98XX9FTs6BBkjNP3H6lsmBa6je9qc6mHr1lZrLe8Agh2tcQ=
-X-Received: by 2002:a19:f503:: with SMTP id j3mr8990215lfb.77.1583746146910;
- Mon, 09 Mar 2020 02:29:06 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=GyFtCdRxR6sVhw72KswIK0rDXamwneP6LD6kWfJp1pc=;
+        b=L+/73id8pptr7efDNKAtBlLFU2f5LyTDL6V0MNxKc5xZpbmBtuRvVioq/08glFnAN9
+         uLMqQUVIM5rPN2mzOdhlKhNatsGMoJ3R2PsCRq4elFFFH4cT3eCnxU7jRb/HmCwBYTcr
+         Zxh8qBEDF5NH5CdIJNPU5GcBeMVAL11GJz6ba4L4nhD9hkEjfEytAC7vt5PbEQWbqnrP
+         /8Z58V6rTeRSFkbzP6VdNxgZNuwry3GH3X3w1y/SqaKuMseYVQnHDeOoCka9IpyU8qEV
+         hqDpagcoQ8f87SSzjwAiU0MkIIbnIcy2007TcFtETLDRXis3Um+psJSGoPeBowVrB8BJ
+         AMmg==
+X-Gm-Message-State: ANhLgQ0fKGftJ0UZAWh2E+0neWrXSDdPb/9ERPFpVvOYQ13uT17tLxue
+        w+L9TBCs14X/4XG3rqLmHUC6AQ==
+X-Google-Smtp-Source: ADFU+vsk2pdMU3AJSsduLv1AvRkyUmXAC+5jInBmomYPmE3cw6Hj6w2NZASekEuWgdN18gXfuZcSFA==
+X-Received: by 2002:a65:669a:: with SMTP id b26mr15435134pgw.24.1583746164892;
+        Mon, 09 Mar 2020 02:29:24 -0700 (PDT)
+Received: from localhost ([2401:fa00:8f:203:5bbb:c872:f2b1:f53b])
+        by smtp.gmail.com with ESMTPSA id a3sm21102522pfi.161.2020.03.09.02.29.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Mar 2020 02:29:24 -0700 (PDT)
+Date:   Mon, 9 Mar 2020 18:29:22 +0900
+From:   Sergey Senozhatsky <senozhatsky@chromium.org>
+To:     Tomasz Figa <tfiga@chromium.org>
+Cc:     Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Pawel Osciak <posciak@chromium.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Subject: Re: [PATCHv4 01/11] videobuf2: add cache management members
+Message-ID: <20200309092922.GB231920@google.com>
+References: <6f5916dd-63f6-5d19-13f4-edd523205a1f@xs4all.nl>
+ <20200307112838.GA125961@google.com>
+ <a4d85ac3-0eea-bc19-cd44-0c8f5b71f6bc@xs4all.nl>
+ <20200309032707.GA9460@google.com>
+ <40cd09d9-49a6-2159-3c50-825732151221@xs4all.nl>
+ <20200309072526.GC46830@google.com>
+ <e31197b6-5d22-0c3a-cc77-e9506136ada5@xs4all.nl>
+ <CAAFQd5Ajopb019HZmtNJfDZmZbssDHfztmT0BvAD07QttXmZ1g@mail.gmail.com>
+ <20200309090802.GA231920@google.com>
+ <CAAFQd5BH2rFZkABej+JfW76f2tjmBBKWm8WjW+TOTBjfewm_9w@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200305182245.9636-1-dev@kresin.me>
-In-Reply-To: <20200305182245.9636-1-dev@kresin.me>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 9 Mar 2020 10:28:55 +0100
-Message-ID: <CACRpkdbBao6ij4SNDJso2X0q0gbU38PQu0DUtWk+QyV7KW4njA@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: falcon: fix syntax error
-To:     Mathias Kresin <dev@kresin.me>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAAFQd5BH2rFZkABej+JfW76f2tjmBBKWm8WjW+TOTBjfewm_9w@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 5, 2020 at 7:22 PM Mathias Kresin <dev@kresin.me> wrote:
+On (20/03/09 18:17), Tomasz Figa wrote:
+> 
+> I think that's fine, but we need to make it explicit. :)
+> 
 
-> Add the missing semicolon after of_node_put to get the file compiled.
->
-> Fixes: f17d2f54d36d ("pinctrl: falcon: Add of_node_put() before return")
-> Cc: stable@vger.kernel.org # v5.4+
-> Signed-off-by: Mathias Kresin <dev@kresin.me>
+I'll improve Docs.
 
-Patch applied for fixes with Thomas Ack.
-
-Yours,
-Linus Walleij
+	-ss
