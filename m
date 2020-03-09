@@ -2,542 +2,264 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B45EAC18E5A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 14:03:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78E69C10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 14:03:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7050320848
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 14:03:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4767420848
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 14:03:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VaSexvDv"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Xxyk6Ue9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727229AbgCIODF (ORCPT
+        id S1726669AbgCIODm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 10:03:05 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:58864 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726170AbgCIODE (ORCPT
+        Mon, 9 Mar 2020 10:03:42 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:49604 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726170AbgCIODl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 10:03:04 -0400
+        Mon, 9 Mar 2020 10:03:41 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583762582;
+        s=mimecast20190719; t=1583762620;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=JqBZ5ucGun2ike3+Um3CEnbH5g0Inw1C+CFIXZ0++3M=;
-        b=VaSexvDvWiKePkRDCJLc0sc3qbrNcMZp9P8nWP2aPhVSangGe+oV1zPf4+b09ASBtdAsiK
-        BWB0l2YDHz0oBwRLcx6IxHjOqyg26oqM6MBL5GitFzFfeykCgq4n48wT8wLCHfBleUvcu1
-        7iwJmy5PSgN7jfXhcw6jF3fje/QzZ1o=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-102-ITIgPHjsPOSooUrck8N7bw-1; Mon, 09 Mar 2020 10:03:01 -0400
-X-MC-Unique: ITIgPHjsPOSooUrck8N7bw-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 40973107ACC9;
-        Mon,  9 Mar 2020 14:02:59 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-182.rdu2.redhat.com [10.10.120.182])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2B51762667;
-        Mon,  9 Mar 2020 14:02:56 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH 14/14] fsinfo: Example support for NFS [ver #18]
-From:   David Howells <dhowells@redhat.com>
-To:     torvalds@linux-foundation.org, viro@zeniv.linux.org.uk
-Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        linux-nfs@vger.kernel.org, dhowells@redhat.com, raven@themaw.net,
-        mszeredi@redhat.com, christian@brauner.io, jannh@google.com,
-        darrick.wong@oracle.com, kzak@redhat.com, jlayton@redhat.com,
-        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Mon, 09 Mar 2020 14:02:55 +0000
-Message-ID: <158376257548.344135.8679839467502250854.stgit@warthog.procyon.org.uk>
-In-Reply-To: <158376244589.344135.12925590041630631412.stgit@warthog.procyon.org.uk>
-References: <158376244589.344135.12925590041630631412.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/0.21
+        bh=AAx8Db+fYqXMdq0yYrv0VdVkrDWQ8+roRtbZieuiPgc=;
+        b=Xxyk6Ue9j//wtRK9emVdjZp5UZ2FkTrCIyqObB9zWzfxeOu5CTyD4M5Y/GzoqS1O6mX074
+        AV2bSiOmii/+CgWmeynKmoZi3jsr1LIRKL3n9nxebMXInwQ1ivZbdz4N9x+JXIwtDvZwlL
+        36iF87X1lfo423x1f8Bl4mrfEsoJTAw=
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com
+ [209.85.166.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-300-8F6wB-DtN_ueqtz8tb45uQ-1; Mon, 09 Mar 2020 10:03:38 -0400
+X-MC-Unique: 8F6wB-DtN_ueqtz8tb45uQ-1
+Received: by mail-io1-f71.google.com with SMTP id r2so6657171iop.13
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 07:03:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AAx8Db+fYqXMdq0yYrv0VdVkrDWQ8+roRtbZieuiPgc=;
+        b=C3wDCx4GXLBxDfX8f5BNQU0a+6rWHB8bhVRyAZ3r31P0SFUGilWddkKYhqg+knfM+f
+         8DQEBpQFAcB6X+/80aD8H0U75PjLXikFEO3ZbEd0oFLRFzn16hKhKw5/CxYRADOOXz6m
+         8emfiEzuz8wxmcf3qXcL4UAcdU7X+sZSuSln5jXMWk+v1v2PXBI3d0wexGRMM0QMsBZu
+         ye9cHQirpbbfgXLm1sbucHkzlrQx1/TbDDMNZ+Vl0ppJr9lpxvts6fZqivYsLZy8tweL
+         7a19lLNIDHvZT+s0+lVZVcrQkmGFmACzEMnYFCwBX19E6qIGEaMnMqn8oT+4VioKr4vi
+         csvg==
+X-Gm-Message-State: ANhLgQ2VJIcjj5G8zrb4/0eWiXvmuGLk0stQexitsHR3LGwT6oBZyo3P
+        xn5NZMiDYSAen5EM2bwtVbm1Ve8w1fopO8MCZDNwd2mltf34UIkcm51mQ3T93Dc0dJuOuLPLtX4
+        44caexnQEtSzX7fT+dX4ap0ikHT7/+VgY8cvkAKhk
+X-Received: by 2002:a05:6e02:685:: with SMTP id o5mr4046397ils.86.1583762617979;
+        Mon, 09 Mar 2020 07:03:37 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vt4cIFMj9otyn2Lqt9XgikIkKQh0PPT/KVUuvAi53LPRuVm8CdzlLRfTdn1l0l6hV1m6QypDgnDQXaETWIm1zM=
+X-Received: by 2002:a05:6e02:685:: with SMTP id o5mr4046371ils.86.1583762617640;
+ Mon, 09 Mar 2020 07:03:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+References: <20200306172010.1213899-1-ckuehl@redhat.com> <20200306172010.1213899-2-ckuehl@redhat.com>
+ <alpine.DEB.2.21.2003081450450.58178@chino.kir.corp.google.com>
+In-Reply-To: <alpine.DEB.2.21.2003081450450.58178@chino.kir.corp.google.com>
+From:   Nathaniel McCallum <npmccallum@redhat.com>
+Date:   Mon, 9 Mar 2020 10:03:26 -0400
+Message-ID: <CAOASepNLcJSQn32xwszD3KDQro1TLWMoqXV5J0j=APUuJrRcoQ@mail.gmail.com>
+Subject: Re: [PATCH 1/1] crypto: ccp: use file mode for sev ioctl permissions
+To:     David Rientjes <rientjes@google.com>
+Cc:     Connor Kuehl <ckuehl@redhat.com>,
+        "Lendacky, Thomas" <thomas.lendacky@amd.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>, davem@davemloft.net,
+        "Hook, Gary" <gary.hook@amd.com>, erdemaktas@google.com,
+        "Singh, Brijesh" <brijesh.singh@amd.com>,
+        Bandan Das <bsd@redhat.com>, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the ability to list NFS server addresses and hostname, timestamp
-information and capabilities as an example.
+On Sun, Mar 8, 2020 at 5:54 PM David Rientjes <rientjes@google.com> wrote:
+>
+> On Fri, 6 Mar 2020, Connor Kuehl wrote:
+>
+> > Instead of using CAP_SYS_ADMIN which is restricted to the root user,
+> > check the file mode for write permissions before executing commands that
+> > can affect the platform. This allows for more fine-grained access
+> > control to the SEV ioctl interface. This would allow a SEV-only user
+> > or group the ability to administer the platform without requiring them
+> > to be root or granting them overly powerful permissions.
+> >
+> > For example:
+> >
+> > chown root:root /dev/sev
+> > chmod 600 /dev/sev
+>
+> Hi Connor,
+>
+> I'm curious why do you need to do the two above commands?  It implies that
+> /dev/sev is either not owned by root or that it is not already restricted
+> to only being owner read and writable.
+>
+> Or perhaps these two commands were included only for clarity to explain
+> what the defaults should be?
 
-Is this useful for export from NFS?  Is there anything else that would be
-useful?
+Correct. Those are just exemplary. They represent the existing permissions.
 
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Trond Myklebust <trond.myklebust@hammerspace.com>
-cc: Anna Schumaker <anna.schumaker@netapp.com>
-cc: linux-nfs@vger.kernel.org
----
-
- fs/nfs/Makefile              |    1 
- fs/nfs/fsinfo.c              |  230 ++++++++++++++++++++++++++++++++++++++++++
- fs/nfs/internal.h            |    6 +
- fs/nfs/nfs4super.c           |    3 +
- fs/nfs/super.c               |    3 +
- include/uapi/linux/fsinfo.h  |   29 +++++
- include/uapi/linux/windows.h |   35 ++++++
- samples/vfs/test-fsinfo.c    |   38 +++++++
- 8 files changed, 345 insertions(+)
- create mode 100644 fs/nfs/fsinfo.c
- create mode 100644 include/uapi/linux/windows.h
-
-diff --git a/fs/nfs/Makefile b/fs/nfs/Makefile
-index 2433c3e03cfa..20fbc9596833 100644
---- a/fs/nfs/Makefile
-+++ b/fs/nfs/Makefile
-@@ -13,6 +13,7 @@ nfs-y 			:= client.o dir.o file.o getroot.o inode.o super.o \
- nfs-$(CONFIG_ROOT_NFS)	+= nfsroot.o
- nfs-$(CONFIG_SYSCTL)	+= sysctl.o
- nfs-$(CONFIG_NFS_FSCACHE) += fscache.o fscache-index.o
-+nfs-$(CONFIG_FSINFO)	+= fsinfo.o
- 
- obj-$(CONFIG_NFS_V2) += nfsv2.o
- nfsv2-y := nfs2super.o proc.o nfs2xdr.o
-diff --git a/fs/nfs/fsinfo.c b/fs/nfs/fsinfo.c
-new file mode 100644
-index 000000000000..a0299ec27efd
---- /dev/null
-+++ b/fs/nfs/fsinfo.c
-@@ -0,0 +1,230 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Filesystem information for NFS
-+ *
-+ * Copyright (C) 2020 Red Hat, Inc. All Rights Reserved.
-+ * Written by David Howells (dhowells@redhat.com)
-+ */
-+
-+#include <linux/nfs_fs.h>
-+#include <linux/windows.h>
-+#include "internal.h"
-+
-+static const struct fsinfo_timestamp_info nfs_timestamp_info = {
-+	.atime = {
-+		.minimum	= 0,
-+		.maximum	= UINT_MAX,
-+		.gran_mantissa	= 1,
-+		.gran_exponent	= 0,
-+	},
-+	.mtime = {
-+		.minimum	= 0,
-+		.maximum	= UINT_MAX,
-+		.gran_mantissa	= 1,
-+		.gran_exponent	= 0,
-+	},
-+	.ctime = {
-+		.minimum	= 0,
-+		.maximum	= UINT_MAX,
-+		.gran_mantissa	= 1,
-+		.gran_exponent	= 0,
-+	},
-+	.btime = {
-+		.minimum	= 0,
-+		.maximum	= UINT_MAX,
-+		.gran_mantissa	= 1,
-+		.gran_exponent	= 0,
-+	},
-+};
-+
-+static int nfs_fsinfo_get_timestamp_info(struct path *path, struct fsinfo_context *ctx)
-+{
-+	const struct nfs_server *server = NFS_SB(path->dentry->d_sb);
-+	struct fsinfo_timestamp_info *r = ctx->buffer;
-+	unsigned long long nsec;
-+	unsigned int rem, mant;
-+	int exp = -9;
-+
-+	*r = nfs_timestamp_info;
-+
-+	nsec = server->time_delta.tv_nsec;
-+	nsec += server->time_delta.tv_sec * 1000000000ULL;
-+	if (nsec == 0)
-+		goto out;
-+
-+	do {
-+		mant = nsec;
-+		rem = do_div(nsec, 10);
-+		if (rem)
-+			break;
-+		exp++;
-+	} while (nsec);
-+
-+	r->atime.gran_mantissa = mant;
-+	r->atime.gran_exponent = exp;
-+	r->btime.gran_mantissa = mant;
-+	r->btime.gran_exponent = exp;
-+	r->ctime.gran_mantissa = mant;
-+	r->ctime.gran_exponent = exp;
-+	r->mtime.gran_mantissa = mant;
-+	r->mtime.gran_exponent = exp;
-+
-+out:
-+	return sizeof(*r);
-+}
-+
-+static int nfs_fsinfo_get_info(struct path *path, struct fsinfo_context *ctx)
-+{
-+	const struct nfs_server *server = NFS_SB(path->dentry->d_sb);
-+	const struct nfs_client *clp = server->nfs_client;
-+	struct fsinfo_nfs_info *r = ctx->buffer;
-+
-+	r->version		= clp->rpc_ops->version;
-+	r->minor_version	= clp->cl_minorversion;
-+	r->transport_proto	= clp->cl_proto;
-+	return sizeof(*r);
-+}
-+
-+static int nfs_fsinfo_get_server_name(struct path *path, struct fsinfo_context *ctx)
-+{
-+	const struct nfs_server *server = NFS_SB(path->dentry->d_sb);
-+	const struct nfs_client *clp = server->nfs_client;
-+
-+	return fsinfo_string(clp->cl_hostname, ctx);
-+}
-+
-+static int nfs_fsinfo_get_server_addresses(struct path *path, struct fsinfo_context *ctx)
-+{
-+	const struct nfs_server *server = NFS_SB(path->dentry->d_sb);
-+	const struct nfs_client *clp = server->nfs_client;
-+	struct fsinfo_nfs_server_address *addr = ctx->buffer;
-+	int ret;
-+
-+	ret = 1 * sizeof(*addr);
-+	if (ret <= ctx->buf_size)
-+		memcpy(&addr[0].address, &clp->cl_addr, clp->cl_addrlen);
-+	return ret;
-+
-+}
-+
-+static int nfs_fsinfo_get_gssapi_name(struct path *path, struct fsinfo_context *ctx)
-+{
-+	const struct nfs_server *server = NFS_SB(path->dentry->d_sb);
-+	const struct nfs_client *clp = server->nfs_client;
-+
-+	return fsinfo_string(clp->cl_acceptor, ctx);
-+}
-+
-+static int nfs_fsinfo_get_limits(struct path *path, struct fsinfo_context *ctx)
-+{
-+	const struct nfs_server *server = NFS_SB(path->dentry->d_sb);
-+	struct fsinfo_limits *lim = ctx->buffer;
-+
-+	lim->max_file_size.hi	= 0;
-+	lim->max_file_size.lo	= server->maxfilesize;
-+	lim->max_ino.hi		= 0;
-+	lim->max_ino.lo		= U64_MAX;
-+	lim->max_hard_links	= UINT_MAX;
-+	lim->max_uid		= UINT_MAX;
-+	lim->max_gid		= UINT_MAX;
-+	lim->max_filename_len	= NAME_MAX - 1;
-+	lim->max_symlink_len	= PATH_MAX - 1;
-+	return sizeof(*lim);
-+}
-+
-+static int nfs_fsinfo_get_supports(struct path *path, struct fsinfo_context *ctx)
-+{
-+	const struct nfs_server *server = NFS_SB(path->dentry->d_sb);
-+	struct fsinfo_supports *sup = ctx->buffer;
-+
-+	/* Don't set STATX_INO as i_ino is fabricated and may not be unique. */
-+
-+	if (!(server->caps & NFS_CAP_MODE))
-+		sup->stx_mask |= STATX_TYPE | STATX_MODE;
-+	if (server->caps & NFS_CAP_OWNER)
-+		sup->stx_mask |= STATX_UID;
-+	if (server->caps & NFS_CAP_OWNER_GROUP)
-+		sup->stx_mask |= STATX_GID;
-+	if (server->caps & NFS_CAP_ATIME)
-+		sup->stx_mask |= STATX_ATIME;
-+	if (server->caps & NFS_CAP_CTIME)
-+		sup->stx_mask |= STATX_CTIME;
-+	if (server->caps & NFS_CAP_MTIME)
-+		sup->stx_mask |= STATX_MTIME;
-+	if (server->attr_bitmask[0] & FATTR4_WORD0_SIZE)
-+		sup->stx_mask |= STATX_SIZE;
-+	if (server->attr_bitmask[1] & FATTR4_WORD1_NUMLINKS)
-+		sup->stx_mask |= STATX_NLINK;
-+
-+	if (server->attr_bitmask[0] & FATTR4_WORD0_ARCHIVE)
-+		sup->win_file_attrs |= ATTR_ARCHIVE;
-+	if (server->attr_bitmask[0] & FATTR4_WORD0_HIDDEN)
-+		sup->win_file_attrs |= ATTR_HIDDEN;
-+	if (server->attr_bitmask[1] & FATTR4_WORD1_SYSTEM)
-+		sup->win_file_attrs |= ATTR_SYSTEM;
-+
-+	sup->stx_attributes = STATX_ATTR_AUTOMOUNT;
-+	return sizeof(*sup);
-+}
-+
-+static int nfs_fsinfo_get_features(struct path *path, struct fsinfo_context *ctx)
-+{
-+	const struct nfs_server *server = NFS_SB(path->dentry->d_sb);
-+	struct fsinfo_features *ft = ctx->buffer;
-+
-+	fsinfo_set_feature(ft, FSINFO_FEAT_IS_NETWORK_FS);
-+	fsinfo_set_feature(ft, FSINFO_FEAT_AUTOMOUNTS);
-+	fsinfo_set_feature(ft, FSINFO_FEAT_O_SYNC);
-+	fsinfo_set_feature(ft, FSINFO_FEAT_O_DIRECT);
-+	fsinfo_set_feature(ft, FSINFO_FEAT_ADV_LOCKS);
-+	fsinfo_set_feature(ft, FSINFO_FEAT_DEVICE_FILES);
-+	fsinfo_set_feature(ft, FSINFO_FEAT_UNIX_SPECIALS);
-+	if (server->nfs_client->rpc_ops->version == 4) {
-+		fsinfo_set_feature(ft, FSINFO_FEAT_LEASES);
-+		fsinfo_set_feature(ft, FSINFO_FEAT_IVER_ALL_CHANGE);
-+	}
-+
-+	if (server->caps & NFS_CAP_OWNER)
-+		fsinfo_set_feature(ft, FSINFO_FEAT_UIDS);
-+	if (server->caps & NFS_CAP_OWNER_GROUP)
-+		fsinfo_set_feature(ft, FSINFO_FEAT_GIDS);
-+	if (!(server->caps & NFS_CAP_MODE))
-+		fsinfo_set_feature(ft, FSINFO_FEAT_NO_UNIX_MODE);
-+	if (server->caps & NFS_CAP_ACLS)
-+		fsinfo_set_feature(ft, FSINFO_FEAT_HAS_ACL);
-+	if (server->caps & NFS_CAP_SYMLINKS)
-+		fsinfo_set_feature(ft, FSINFO_FEAT_SYMLINKS);
-+	if (server->caps & NFS_CAP_HARDLINKS)
-+		fsinfo_set_feature(ft, FSINFO_FEAT_HARD_LINKS);
-+	if (server->caps & NFS_CAP_ATIME)
-+		fsinfo_set_feature(ft, FSINFO_FEAT_HAS_ATIME);
-+	if (server->caps & NFS_CAP_CTIME)
-+		fsinfo_set_feature(ft, FSINFO_FEAT_HAS_CTIME);
-+	if (server->caps & NFS_CAP_MTIME)
-+		fsinfo_set_feature(ft, FSINFO_FEAT_HAS_MTIME);
-+
-+	if (server->attr_bitmask[0] & FATTR4_WORD0_CASE_INSENSITIVE)
-+		fsinfo_set_feature(ft, FSINFO_FEAT_NAME_CASE_INDEP);
-+	if ((server->attr_bitmask[0] & FATTR4_WORD0_ARCHIVE) ||
-+	    (server->attr_bitmask[0] & FATTR4_WORD0_HIDDEN) ||
-+	    (server->attr_bitmask[1] & FATTR4_WORD1_SYSTEM))
-+		fsinfo_set_feature(ft, FSINFO_FEAT_WINDOWS_ATTRS);
-+
-+	return sizeof(*ft);
-+}
-+
-+static const struct fsinfo_attribute nfs_fsinfo_attributes[] = {
-+	FSINFO_VSTRUCT	(FSINFO_ATTR_TIMESTAMP_INFO,	nfs_fsinfo_get_timestamp_info),
-+	FSINFO_VSTRUCT	(FSINFO_ATTR_LIMITS,		nfs_fsinfo_get_limits),
-+	FSINFO_VSTRUCT	(FSINFO_ATTR_SUPPORTS,		nfs_fsinfo_get_supports),
-+	FSINFO_VSTRUCT	(FSINFO_ATTR_FEATURES,		nfs_fsinfo_get_features),
-+	FSINFO_VSTRUCT	(FSINFO_ATTR_NFS_INFO,		nfs_fsinfo_get_info),
-+	FSINFO_STRING	(FSINFO_ATTR_NFS_SERVER_NAME,	nfs_fsinfo_get_server_name),
-+	FSINFO_LIST	(FSINFO_ATTR_NFS_SERVER_ADDRESSES, nfs_fsinfo_get_server_addresses),
-+	FSINFO_STRING	(FSINFO_ATTR_NFS_GSSAPI_NAME,	nfs_fsinfo_get_gssapi_name),
-+	{}
-+};
-+
-+int nfs_fsinfo(struct path *path, struct fsinfo_context *ctx)
-+{
-+	return fsinfo_get_attribute(path, ctx, nfs_fsinfo_attributes);
-+}
-diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
-index f80c47d5ff27..59e407066b45 100644
---- a/fs/nfs/internal.h
-+++ b/fs/nfs/internal.h
-@@ -10,6 +10,7 @@
- #include <linux/sunrpc/addr.h>
- #include <linux/nfs_page.h>
- #include <linux/wait_bit.h>
-+#include <linux/fsinfo.h>
- 
- #define NFS_SB_MASK (SB_RDONLY|SB_NOSUID|SB_NODEV|SB_NOEXEC|SB_SYNCHRONOUS)
- 
-@@ -247,6 +248,11 @@ extern const struct svc_version nfs4_callback_version4;
- /* fs_context.c */
- extern struct file_system_type nfs_fs_type;
- 
-+/* fsinfo.c */
-+#ifdef CONFIG_FSINFO
-+extern int nfs_fsinfo(struct path *path, struct fsinfo_context *ctx);
-+#endif
-+
- /* pagelist.c */
- extern int __init nfs_init_nfspagecache(void);
- extern void nfs_destroy_nfspagecache(void);
-diff --git a/fs/nfs/nfs4super.c b/fs/nfs/nfs4super.c
-index 1475f932d7da..cd38da87cbd3 100644
---- a/fs/nfs/nfs4super.c
-+++ b/fs/nfs/nfs4super.c
-@@ -26,6 +26,9 @@ static const struct super_operations nfs4_sops = {
- 	.write_inode	= nfs4_write_inode,
- 	.drop_inode	= nfs_drop_inode,
- 	.statfs		= nfs_statfs,
-+#ifdef CONFIG_FSINFO
-+	.fsinfo		= nfs_fsinfo,
-+#endif
- 	.evict_inode	= nfs4_evict_inode,
- 	.umount_begin	= nfs_umount_begin,
- 	.show_options	= nfs_show_options,
-diff --git a/fs/nfs/super.c b/fs/nfs/super.c
-index dada09b391c6..27ac751d3789 100644
---- a/fs/nfs/super.c
-+++ b/fs/nfs/super.c
-@@ -76,6 +76,9 @@ const struct super_operations nfs_sops = {
- 	.write_inode	= nfs_write_inode,
- 	.drop_inode	= nfs_drop_inode,
- 	.statfs		= nfs_statfs,
-+#ifdef CONFIG_FSINFO
-+	.fsinfo		= nfs_fsinfo,
-+#endif
- 	.evict_inode	= nfs_evict_inode,
- 	.umount_begin	= nfs_umount_begin,
- 	.show_options	= nfs_show_options,
-diff --git a/include/uapi/linux/fsinfo.h b/include/uapi/linux/fsinfo.h
-index d8d05f0f1473..346cf0cf42cb 100644
---- a/include/uapi/linux/fsinfo.h
-+++ b/include/uapi/linux/fsinfo.h
-@@ -43,6 +43,11 @@
- 
- #define FSINFO_ATTR_EXT4_TIMESTAMPS	0x400	/* Ext4 superblock timestamps */
- 
-+#define FSINFO_ATTR_NFS_INFO		0x500	/* Information about an NFS mount */
-+#define FSINFO_ATTR_NFS_SERVER_NAME	0x501	/* Name of the server (string) */
-+#define FSINFO_ATTR_NFS_SERVER_ADDRESSES 0x502	/* List of addresses of the server */
-+#define FSINFO_ATTR_NFS_GSSAPI_NAME	0x503	/* GSSAPI acceptor name */
-+
- /*
-  * Optional fsinfo() parameter structure.
-  *
-@@ -328,4 +333,28 @@ struct fsinfo_ext4_timestamps {
- 
- #define FSINFO_ATTR_EXT4_TIMESTAMPS__STRUCT struct fsinfo_ext4_timestamps
- 
-+/*
-+ * Information struct for fsinfo(FSINFO_ATTR_NFS_INFO).
-+ *
-+ * Get information about an NFS mount.
-+ */
-+struct fsinfo_nfs_info {
-+	__u32		version;
-+	__u32		minor_version;
-+	__u32		transport_proto;
-+};
-+
-+#define FSINFO_ATTR_NFS_INFO__STRUCT struct fsinfo_nfs_info
-+
-+/*
-+ * Information struct for fsinfo(FSINFO_ATTR_NFS_SERVER_ADDRESSES).
-+ *
-+ * Get the addresses of the server for an NFS mount.
-+ */
-+struct fsinfo_nfs_server_address {
-+	struct __kernel_sockaddr_storage address;
-+};
-+
-+#define FSINFO_ATTR_NFS_SERVER_ADDRESSES__STRUCT struct fsinfo_nfs_server_address
-+
- #endif /* _UAPI_LINUX_FSINFO_H */
-diff --git a/include/uapi/linux/windows.h b/include/uapi/linux/windows.h
-new file mode 100644
-index 000000000000..17efb9a40529
---- /dev/null
-+++ b/include/uapi/linux/windows.h
-@@ -0,0 +1,35 @@
-+/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-+/*
-+ * Common windows attributes
-+ */
-+#ifndef _UAPI_LINUX_WINDOWS_H
-+#define _UAPI_LINUX_WINDOWS_H
-+
-+/*
-+ * File Attribute flags
-+ */
-+#define ATTR_READONLY		0x0001
-+#define ATTR_HIDDEN		0x0002
-+#define ATTR_SYSTEM		0x0004
-+#define ATTR_VOLUME		0x0008
-+#define ATTR_DIRECTORY		0x0010
-+#define ATTR_ARCHIVE		0x0020
-+#define ATTR_DEVICE		0x0040
-+#define ATTR_NORMAL		0x0080
-+#define ATTR_TEMPORARY		0x0100
-+#define ATTR_SPARSE		0x0200
-+#define ATTR_REPARSE		0x0400
-+#define ATTR_COMPRESSED		0x0800
-+#define ATTR_OFFLINE		0x1000	/* ie file not immediately available -
-+					   on offline storage */
-+#define ATTR_NOT_CONTENT_INDEXED 0x2000
-+#define ATTR_ENCRYPTED		0x4000
-+#define ATTR_POSIX_SEMANTICS	0x01000000
-+#define ATTR_BACKUP_SEMANTICS	0x02000000
-+#define ATTR_DELETE_ON_CLOSE	0x04000000
-+#define ATTR_SEQUENTIAL_SCAN	0x08000000
-+#define ATTR_RANDOM_ACCESS	0x10000000
-+#define ATTR_NO_BUFFERING	0x20000000
-+#define ATTR_WRITE_THROUGH	0x80000000
-+
-+#endif /* _UAPI_LINUX_WINDOWS_H */
-diff --git a/samples/vfs/test-fsinfo.c b/samples/vfs/test-fsinfo.c
-index 829297e9d1b6..b03869faef01 100644
---- a/samples/vfs/test-fsinfo.c
-+++ b/samples/vfs/test-fsinfo.c
-@@ -408,6 +408,40 @@ static void dump_ext4_fsinfo_timestamps(void *reply, unsigned int size)
- 	printf("\tlast-err: %s\n", dump_ext4_time(buffer, r->last_error_time));
- }
- 
-+static void dump_nfs_fsinfo_info(void *reply, unsigned int size)
-+{
-+	struct fsinfo_nfs_info *r = reply;
-+
-+	printf("ver=%u.%u proto=%u\n", r->version, r->minor_version, r->transport_proto);
-+}
-+
-+static void dump_nfs_fsinfo_server_addresses(void *reply, unsigned int size)
-+{
-+	struct fsinfo_nfs_server_address *r = reply;
-+	struct sockaddr_storage *ss = (struct sockaddr_storage *)&r->address;
-+	struct sockaddr_in6 *sin6;
-+	struct sockaddr_in *sin;
-+	char buf[1024];
-+
-+	switch (ss->ss_family) {
-+	case AF_INET:
-+		sin = (struct sockaddr_in *)ss;
-+		if (!inet_ntop(AF_INET, &sin->sin_addr, buf, sizeof(buf)))
-+			break;
-+		printf("%5u %s\n", ntohs(sin->sin_port), buf);
-+		return;
-+	case AF_INET6:
-+		sin6 = (struct sockaddr_in6 *)ss;
-+		if (!inet_ntop(AF_INET6, &sin6->sin6_addr, buf, sizeof(buf)))
-+			break;
-+		printf("%5u %s\n", ntohs(sin6->sin6_port), buf);
-+		return;
-+	default:
-+		printf("family=%u\n", ss->ss_family);
-+		return;
-+	}
-+}
-+
- static void dump_string(void *reply, unsigned int size)
- {
- 	char *s = reply, *p;
-@@ -495,6 +529,10 @@ static const struct fsinfo_attribute fsinfo_attributes[] = {
- 	FSINFO_STRING	(FSINFO_ATTR_AFS_SERVER_NAME,	string),
- 	FSINFO_LIST_N	(FSINFO_ATTR_AFS_SERVER_ADDRESSES, afs_fsinfo_server_address),
- 	FSINFO_VSTRUCT	(FSINFO_ATTR_EXT4_TIMESTAMPS,	ext4_fsinfo_timestamps),
-+	FSINFO_VSTRUCT	(FSINFO_ATTR_NFS_INFO,		nfs_fsinfo_info),
-+	FSINFO_STRING	(FSINFO_ATTR_NFS_SERVER_NAME,	string),
-+	FSINFO_LIST	(FSINFO_ATTR_NFS_SERVER_ADDRESSES, nfs_fsinfo_server_addresses),
-+	FSINFO_STRING	(FSINFO_ATTR_NFS_GSSAPI_NAME,	string),
- 	{}
- };
- 
-
+> > setfacl -m g:sev:r /dev/sev
+> > setfacl -m g:sev-admin:rw /dev/sev
+> >
+> > In this instance, members of the "sev-admin" group have the ability to
+> > perform all ioctl calls (including the ones that modify platform state).
+> > Members of the "sev" group only have access to the ioctls that do not
+> > modify the platform state.
+> >
+> > This also makes opening "/dev/sev" more consistent with how file
+> > descriptors are usually handled. By only checking for CAP_SYS_ADMIN,
+> > the file descriptor could be opened read-only but could still execute
+> > ioctls that modify the platform state. This patch enforces that the file
+> > descriptor is opened with write privileges if it is going to be used to
+> > modify the platform state.
+> >
+> > This flexibility is completely opt-in, and if it is not desirable by
+> > the administrator then they do not need to give anyone else access to
+> > /dev/sev.
+> >
+> > Signed-off-by: Connor Kuehl <ckuehl@redhat.com>
+> > ---
+> >  drivers/crypto/ccp/sev-dev.c | 33 +++++++++++++++++----------------
+> >  1 file changed, 17 insertions(+), 16 deletions(-)
+> >
+> > diff --git a/drivers/crypto/ccp/sev-dev.c b/drivers/crypto/ccp/sev-dev.c
+> > index e467860f797d..416b80938a3e 100644
+> > --- a/drivers/crypto/ccp/sev-dev.c
+> > +++ b/drivers/crypto/ccp/sev-dev.c
+> > @@ -283,11 +283,11 @@ static int sev_get_platform_state(int *state, int *error)
+> >       return rc;
+> >  }
+> >
+> > -static int sev_ioctl_do_reset(struct sev_issue_cmd *argp)
+> > +static int sev_ioctl_do_reset(struct sev_issue_cmd *argp, bool writable)
+> >  {
+> >       int state, rc;
+> >
+> > -     if (!capable(CAP_SYS_ADMIN))
+> > +     if (!writable)
+> >               return -EPERM;
+> >
+> >       /*
+> > @@ -331,12 +331,12 @@ static int sev_ioctl_do_platform_status(struct sev_issue_cmd *argp)
+> >       return ret;
+> >  }
+> >
+> > -static int sev_ioctl_do_pek_pdh_gen(int cmd, struct sev_issue_cmd *argp)
+> > +static int sev_ioctl_do_pek_pdh_gen(int cmd, struct sev_issue_cmd *argp, bool writable)
+> >  {
+> >       struct sev_device *sev = psp_master->sev_data;
+> >       int rc;
+> >
+> > -     if (!capable(CAP_SYS_ADMIN))
+> > +     if (!writable)
+> >               return -EPERM;
+> >
+> >       if (sev->state == SEV_STATE_UNINIT) {
+> > @@ -348,7 +348,7 @@ static int sev_ioctl_do_pek_pdh_gen(int cmd, struct sev_issue_cmd *argp)
+> >       return __sev_do_cmd_locked(cmd, NULL, &argp->error);
+> >  }
+> >
+> > -static int sev_ioctl_do_pek_csr(struct sev_issue_cmd *argp)
+> > +static int sev_ioctl_do_pek_csr(struct sev_issue_cmd *argp, bool writable)
+> >  {
+> >       struct sev_device *sev = psp_master->sev_data;
+> >       struct sev_user_data_pek_csr input;
+> > @@ -356,7 +356,7 @@ static int sev_ioctl_do_pek_csr(struct sev_issue_cmd *argp)
+> >       void *blob = NULL;
+> >       int ret;
+> >
+> > -     if (!capable(CAP_SYS_ADMIN))
+> > +     if (!writable)
+> >               return -EPERM;
+> >
+> >       if (copy_from_user(&input, (void __user *)argp->data, sizeof(input)))
+> > @@ -539,7 +539,7 @@ static int sev_update_firmware(struct device *dev)
+> >       return ret;
+> >  }
+> >
+> > -static int sev_ioctl_do_pek_import(struct sev_issue_cmd *argp)
+> > +static int sev_ioctl_do_pek_import(struct sev_issue_cmd *argp, bool writable)
+> >  {
+> >       struct sev_device *sev = psp_master->sev_data;
+> >       struct sev_user_data_pek_cert_import input;
+> > @@ -547,7 +547,7 @@ static int sev_ioctl_do_pek_import(struct sev_issue_cmd *argp)
+> >       void *pek_blob, *oca_blob;
+> >       int ret;
+> >
+> > -     if (!capable(CAP_SYS_ADMIN))
+> > +     if (!writable)
+> >               return -EPERM;
+> >
+> >       if (copy_from_user(&input, (void __user *)argp->data, sizeof(input)))
+> > @@ -698,7 +698,7 @@ static int sev_ioctl_do_get_id(struct sev_issue_cmd *argp)
+> >       return ret;
+> >  }
+> >
+> > -static int sev_ioctl_do_pdh_export(struct sev_issue_cmd *argp)
+> > +static int sev_ioctl_do_pdh_export(struct sev_issue_cmd *argp, bool writable)
+> >  {
+> >       struct sev_device *sev = psp_master->sev_data;
+> >       struct sev_user_data_pdh_cert_export input;
+> > @@ -708,7 +708,7 @@ static int sev_ioctl_do_pdh_export(struct sev_issue_cmd *argp)
+> >
+> >       /* If platform is not in INIT state then transition it to INIT. */
+> >       if (sev->state != SEV_STATE_INIT) {
+> > -             if (!capable(CAP_SYS_ADMIN))
+> > +             if (!writable)
+> >                       return -EPERM;
+> >
+> >               ret = __sev_platform_init_locked(&argp->error);
+> > @@ -801,6 +801,7 @@ static long sev_ioctl(struct file *file, unsigned int ioctl, unsigned long arg)
+> >       void __user *argp = (void __user *)arg;
+> >       struct sev_issue_cmd input;
+> >       int ret = -EFAULT;
+> > +     bool writable = file->f_mode & FMODE_WRITE;
+> >
+> >       if (!psp_master || !psp_master->sev_data)
+> >               return -ENODEV;
+> > @@ -819,25 +820,25 @@ static long sev_ioctl(struct file *file, unsigned int ioctl, unsigned long arg)
+> >       switch (input.cmd) {
+> >
+> >       case SEV_FACTORY_RESET:
+> > -             ret = sev_ioctl_do_reset(&input);
+> > +             ret = sev_ioctl_do_reset(&input, writable);
+> >               break;
+> >       case SEV_PLATFORM_STATUS:
+> >               ret = sev_ioctl_do_platform_status(&input);
+> >               break;
+> >       case SEV_PEK_GEN:
+> > -             ret = sev_ioctl_do_pek_pdh_gen(SEV_CMD_PEK_GEN, &input);
+> > +             ret = sev_ioctl_do_pek_pdh_gen(SEV_CMD_PEK_GEN, &input, writable);
+> >               break;
+> >       case SEV_PDH_GEN:
+> > -             ret = sev_ioctl_do_pek_pdh_gen(SEV_CMD_PDH_GEN, &input);
+> > +             ret = sev_ioctl_do_pek_pdh_gen(SEV_CMD_PDH_GEN, &input, writable);
+> >               break;
+> >       case SEV_PEK_CSR:
+> > -             ret = sev_ioctl_do_pek_csr(&input);
+> > +             ret = sev_ioctl_do_pek_csr(&input, writable);
+> >               break;
+> >       case SEV_PEK_CERT_IMPORT:
+> > -             ret = sev_ioctl_do_pek_import(&input);
+> > +             ret = sev_ioctl_do_pek_import(&input, writable);
+> >               break;
+> >       case SEV_PDH_CERT_EXPORT:
+> > -             ret = sev_ioctl_do_pdh_export(&input);
+> > +             ret = sev_ioctl_do_pdh_export(&input, writable);
+> >               break;
+> >       case SEV_GET_ID:
+> >               pr_warn_once("SEV_GET_ID command is deprecated, use SEV_GET_ID2\n");
+> > --
+> > 2.24.1
+> >
+> >
+>
 
