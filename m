@@ -2,49 +2,52 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D7DAC10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 13:12:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E67DBC10F29
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 13:13:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E011022525
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 13:12:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5E5122525
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 13:13:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583759631;
+	bh=35FQ8G3j5ksoqdAlW7Zk4d/LBcnIMm9U8mBsQ+8SyYI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ohiLf6l47IGIwrsJTXf0/Q/0GuAdLstj21xJJ2SbgepcDc9icc56uKeeT2Zs5q2La
+	 k665MnmmgZMrYKz3gT5jxPF7MiM0196MoTrrSXgHIx0nhQgIBsr/SzmtUVilbLomSK
+	 poTBqem0ptF1wL973OYDDlQUvKmUuyRybDRz2w2E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726621AbgCINMx (ORCPT
+        id S1726477AbgCINNu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 09:12:53 -0400
-Received: from mga01.intel.com ([192.55.52.88]:56481 "EHLO mga01.intel.com"
+        Mon, 9 Mar 2020 09:13:50 -0400
+Received: from foss.arm.com ([217.140.110.172]:51986 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726582AbgCINMv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 09:12:51 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Mar 2020 06:12:40 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,533,1574150400"; 
-   d="gz'50?scan'50,208,50";a="353365141"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga001.fm.intel.com with ESMTP; 09 Mar 2020 06:12:38 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jBICz-000Fe1-UK; Mon, 09 Mar 2020 21:12:37 +0800
-Date:   Mon, 9 Mar 2020 21:12:08 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Zong Li <zong.li@sifive.com>
-Cc:     kbuild-all@lists.01.org, palmer@dabbelt.com,
-        paul.walmsley@sifive.com, aou@eecs.berkeley.edu,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 8/9] riscv: introduce interfaces to patch kernel code
-Message-ID: <202003092121.lEcswcgH%lkp@intel.com>
-References: <e2a42afbce47b364bf790b4cf8edf76235e48d53.1583741997.git.zong.li@sifive.com>
+        id S1725956AbgCINNu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 09:13:50 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6ACD630E;
+        Mon,  9 Mar 2020 06:13:49 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DE6AE3F67D;
+        Mon,  9 Mar 2020 06:13:48 -0700 (PDT)
+Date:   Mon, 9 Mar 2020 13:13:46 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Eason Yen <eason.yen@mediatek.com>
+Cc:     Matthias Brugger <matthias.bgg@gmail.com>, jiaxin.yu@mediatek.com,
+        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        devicetree@vger.kernel.org, wsd_upstream@mediatek.com
+Subject: Re: [PATCH 2/2] ASoC: codec: mediatek: add mt6359 codec driver
+Message-ID: <20200309131346.GF4101@sirena.org.uk>
+References: <1583465622-16628-1-git-send-email-eason.yen@mediatek.com>
+ <1583465622-16628-3-git-send-email-eason.yen@mediatek.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="y0ulUmNC+osPPQO6"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Y1L3PTX8QE8cb2T+"
 Content-Disposition: inline
-In-Reply-To: <e2a42afbce47b364bf790b4cf8edf76235e48d53.1583741997.git.zong.li@sifive.com>
+In-Reply-To: <1583465622-16628-3-git-send-email-eason.yen@mediatek.com>
+X-Cookie: Above all things, reverence yourself.
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -52,221 +55,219 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---y0ulUmNC+osPPQO6
+--Y1L3PTX8QE8cb2T+
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-Hi Zong,
+On Fri, Mar 06, 2020 at 11:33:42AM +0800, Eason Yen wrote:
 
-Thank you for the patch! Yet something to improve:
+> +static void capture_gpio_reset(struct mt6359_priv *priv)
+> +{
+> +	/* set pad_aud_*_miso to GPIO mode and dir input
+> +	 * reason:
+> +	 * pad_aud_clk_miso, because when playback only the miso_clk
+> +	 * will also have 26m, so will have power leak
+> +	 * pad_aud_dat_miso*, because the pin is used as boot strap
+> +	 */
 
-[auto build test ERROR on v5.6-rc5]
-[also build test ERROR on next-20200306]
-[if your patch is applied to the wrong git tree, please drop us a note to help
-improve the system. BTW, we also suggest to use '--base' option to specify the
-base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+This looks like things that might be better exposed via pinctrl and
+gpiolib for board specific configuration - what exactly are these GPIOs
+doing?  A lot of this code looks like it might be board specific.
 
-url:    https://github.com/0day-ci/linux/commits/Zong-Li/Support-strict-kernel-memory-permissions-for-security/20200309-172554
-base:    2c523b344dfa65a3738e7039832044aa133c75fb
-config: riscv-nommu_virt_defconfig (attached as .config)
-compiler: riscv64-linux-gcc (GCC) 7.5.0
-reproduce:
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # save the attached .config to linux build tree
-        GCC_VERSION=7.5.0 make.cross ARCH=riscv 
+> +/* use only when not govern by DAPM */
+> +static int mt6359_set_dcxo(struct mt6359_priv *priv, bool enable)
+> +{
 
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp@intel.com>
+Why might this sometimes be controlled outside of DAPM?
 
-All errors (new ones prefixed by >>):
+> +/* reg idx for -40dB*/
+> +#define PGA_MINUS_40_DB_REG_VAL 0x1f
+> +#define HP_PGA_MINUS_40_DB_REG_VAL 0x3f
+> +static const char *const dl_pga_gain[] = {
+> +	"8Db", "7Db", "6Db", "5Db", "4Db",
+> +	"3Db", "2Db", "1Db", "0Db", "-1Db",
+> +	"-2Db", "-3Db",	"-4Db", "-5Db", "-6Db",
+> +	"-7Db", "-8Db", "-9Db", "-10Db", "-40Db"
+> +};
+> +
+> +static const char *const hp_dl_pga_gain[] = {
+> +	"8Db", "7Db", "6Db", "5Db", "4Db",
+> +	"3Db", "2Db", "1Db", "0Db", "-1Db",
+> +	"-2Db", "-3Db",	"-4Db", "-5Db", "-6Db",
+> +	"-7Db", "-8Db", "-9Db", "-10Db", "-11Db",
+> +	"-12Db", "-13Db", "-14Db", "-15Db", "-16Db",
+> +	"-17Db", "-18Db", "-19Db", "-20Db", "-21Db",
+> +	"-22Db", "-40Db"
+> +};
 
-   In file included from arch/riscv//kernel/patch.c:6:0:
-   arch/riscv//kernel/patch.c: In function 'riscv_insn_write':
->> arch/riscv//kernel/patch.c:63:25: error: 'patch_lock' undeclared (first use in this function); did you mean 'patch_map'?
-     raw_spin_lock_irqsave(&patch_lock, flags);
-                            ^
-   include/linux/spinlock.h:250:34: note: in definition of macro 'raw_spin_lock_irqsave'
-      flags = _raw_spin_lock_irqsave(lock); \
-                                     ^~~~
-   arch/riscv//kernel/patch.c:63:25: note: each undeclared identifier is reported only once for each function it appears in
-     raw_spin_lock_irqsave(&patch_lock, flags);
-                            ^
-   include/linux/spinlock.h:250:34: note: in definition of macro 'raw_spin_lock_irqsave'
-      flags = _raw_spin_lock_irqsave(lock); \
-                                     ^~~~
->> arch/riscv//kernel/patch.c:66:25: error: 'FIX_TEXT_POKE1' undeclared (first use in this function)
-      patch_map(addr + len, FIX_TEXT_POKE1);
-                            ^~~~~~~~~~~~~~
->> arch/riscv//kernel/patch.c:68:26: error: 'FIX_TEXT_POKE0' undeclared (first use in this function); did you mean 'FIX_TEXT_POKE1'?
-     waddr = patch_map(addr, FIX_TEXT_POKE0);
-                             ^~~~~~~~~~~~~~
-                             FIX_TEXT_POKE1
+I can't see any users of these tables in the driver?  That's good since
+the driver should be translating these into TLV controls rather than
+using enums but these variables aren't used then so should be removed.
 
-vim +63 arch/riscv//kernel/patch.c
+> +
+> +	if (!is_valid_hp_pga_idx(from) || !is_valid_hp_pga_idx(to))
+> +		dev_warn(priv->dev, "%s(), volume index is not valid, from %d, to %d\n",
+> +			 __func__, from, to);
 
-    55	
-    56	static int __kprobes riscv_insn_write(void *addr, const void *insn, size_t len)
-    57	{
-    58		void *waddr = addr;
-    59		bool across_pages = (((uintptr_t) addr & ~PAGE_MASK) + len) > PAGE_SIZE;
-    60		unsigned long flags = 0;
-    61		int ret;
-    62	
-  > 63		raw_spin_lock_irqsave(&patch_lock, flags);
-    64	
-    65		if (across_pages)
-  > 66			patch_map(addr + len, FIX_TEXT_POKE1);
-    67	
-  > 68		waddr = patch_map(addr, FIX_TEXT_POKE0);
-    69	
-    70		ret = probe_kernel_write(waddr, insn, len);
-    71	
-    72		patch_unmap(FIX_TEXT_POKE0);
-    73	
-    74		if (across_pages)
-    75			patch_unmap(FIX_TEXT_POKE1);
-    76	
-    77		raw_spin_unlock_irqrestore(&patch_lock, flags);
-    78	
-    79		return ret;
-    80	}
-    81	
+Shouldn't we return an error then?
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+> +
+> +	dev_info(priv->dev, "%s(), from %d, to %d\n",
+> +		 __func__, from, to);
 
---y0ulUmNC+osPPQO6
-Content-Type: application/gzip
-Content-Disposition: attachment; filename=".config.gz"
-Content-Transfer-Encoding: base64
+At most this should be a dev_dbg(), having a dev_info() log is going to
+be far too verbose.  There's a lot of these in the driver.
 
-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
+> +static const char *const mic_type_mux_map[] = {
+> +	"Idle",
+> +	"ACC",
+> +	"DMIC",
+> +	"DCC",
+> +	"DCC_ECM_DIFF",
+> +	"DCC_ECM_SINGLE",
+> +	"VOW_ACC",
+> +	"VOW_DMIC",
+> +	"VOW_DMIC_LP",
+> +	"VOW_DCC",
+> +	"VOW_DCC_ECM_DIFF",
+> +	"VOW_DCC_ECM_SINGLE"
+> +};
 
---y0ulUmNC+osPPQO6--
+This looks like something that should be being set by DT or other
+platform data rather than at runtime - we're not likely to change from a
+digital to analogue microphone at runtime for example.
+
+> +static int mt6359_put_volsw(struct snd_kcontrol *kcontrol,
+> +			    struct snd_ctl_elem_value *ucontrol)
+> +{
+> +	struct snd_soc_component *component =
+> +			snd_soc_kcontrol_component(kcontrol);
+> +	struct mt6359_priv *priv = snd_soc_component_get_drvdata(component);
+> +	struct soc_mixer_control *mc =
+> +			(struct soc_mixer_control *)kcontrol->private_value;
+> +	unsigned int reg;
+> +	int index = ucontrol->value.integer.value[0];
+> +	int ret;
+> +
+> +	ret = snd_soc_put_volsw(kcontrol, ucontrol);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	switch (mc->reg) {
+> +	case MT6359_ZCD_CON2:
+> +		regmap_read(priv->regmap, MT6359_ZCD_CON2, &reg);
+> +		priv->ana_gain[AUDIO_ANALOG_VOLUME_HPOUTL] =
+> +			(reg >> RG_AUDHPLGAIN_SFT) & RG_AUDHPLGAIN_MASK;
+> +		priv->ana_gain[AUDIO_ANALOG_VOLUME_HPOUTR] =
+> +			(reg >> RG_AUDHPRGAIN_SFT) & RG_AUDHPRGAIN_MASK;
+> +		break;
+
+It's unclear what's going on with this custom function.  As far as I can
+see all it's doing is taking a copy of the gain setting for later use by
+rampig functions but since we're immediately writing the set value into
+the register map surely we don't need that as we can just read the value
+back from the register?
+
+> +static const struct snd_kcontrol_new mt6359_snd_controls[] = {
+> +	/* dl pga gain */
+> +	SOC_SINGLE_EXT_TLV("HeadsetL Volume",
+> +			   MT6359_ZCD_CON2, 0, 0x1E, 0,
+> +			   snd_soc_get_volsw, mt6359_put_volsw,
+> +			   hp_playback_tlv),
+> +	SOC_SINGLE_EXT_TLV("HeadsetR Volume",
+> +			   MT6359_ZCD_CON2, 7, 0x1E, 0,
+> +			   snd_soc_get_volsw, mt6359_put_volsw,
+> +			   hp_playback_tlv),
+> +	SOC_SINGLE_EXT_TLV("LineoutL Volume",
+> +			   MT6359_ZCD_CON1, 0, 0x12, 0,
+> +			   snd_soc_get_volsw, mt6359_put_volsw, playback_tlv),
+> +	SOC_SINGLE_EXT_TLV("LineoutR Volume",
+> +			   MT6359_ZCD_CON1, 7, 0x12, 0,
+> +			   snd_soc_get_volsw, mt6359_put_volsw, playback_tlv),
+
+These should be stereo controls not pairs of mono controls.
+
+> +	/* ul pga gain */
+> +	SOC_SINGLE_EXT_TLV("PGAL Volume",
+> +			   MT6359_AUDENC_ANA_CON0, RG_AUDPREAMPLGAIN_SFT, 4, 0,
+> +			   snd_soc_get_volsw, mt6359_put_volsw, capture_tlv),
+> +	SOC_SINGLE_EXT_TLV("PGAR Volume",
+> +			   MT6359_AUDENC_ANA_CON1, RG_AUDPREAMPRGAIN_SFT, 4, 0,
+> +			   snd_soc_get_volsw, mt6359_put_volsw, capture_tlv),
+
+Same here.
+
+> +static const char * const lo_in_mux_map[] = {
+> +	"Open", "Playback_L_DAC", "Playback", "Test Mode"
+> +};
+> +
+> +static int lo_in_mux_map_value[] = {
+> +	0x0, 0x1, 0x2, 0x3,
+> +};
+
+Why use a value enum here, a normal mux should be fine?
+
+> +static int mt_delay_250_event(struct snd_soc_dapm_widget *w,
+> +			      struct snd_kcontrol *kcontrol,
+> +			      int event)
+> +{
+> +	switch (event) {
+> +	case SND_SOC_DAPM_POST_PMU:
+> +	case SND_SOC_DAPM_PRE_PMD:
+> +		usleep_range(250, 270);
+
+Why would having a sleep before power down be useful?
+
+> +static int mt6359_codec_probe(struct snd_soc_component *cmpnt)
+> +{
+> +	struct mt6359_priv *priv = snd_soc_component_get_drvdata(cmpnt);
+> +	int ret;
+> +
+> +	snd_soc_component_init_regmap(cmpnt, priv->regmap);
+> +
+> +	snd_soc_add_component_controls(cmpnt,
+> +				       mt6359_snd_vow_controls,
+> +				       ARRAY_SIZE(mt6359_snd_vow_controls));
+
+Use the controls member of the component driver struct.
+
+> +	priv->ana_gain[AUDIO_ANALOG_VOLUME_HPOUTL] = 8;
+> +	priv->ana_gain[AUDIO_ANALOG_VOLUME_HPOUTR] = 8;
+> +	priv->ana_gain[AUDIO_ANALOG_VOLUME_MICAMP1] = 3;
+> +	priv->ana_gain[AUDIO_ANALOG_VOLUME_MICAMP2] = 3;
+> +	priv->ana_gain[AUDIO_ANALOG_VOLUME_MICAMP3] = 3;
+
+These should be left at the hardware defaults.
+
+> +	priv->avdd_reg = devm_regulator_get(priv->dev, "vaud18");
+> +	if (IS_ERR(priv->avdd_reg)) {
+> +		dev_err(priv->dev, "%s(), have no vaud18 supply", __func__);
+> +		return PTR_ERR(priv->avdd_reg);
+> +	}
+
+The driver should request resources during device model probe rather
+than component probe.
+
+> +	ret = regulator_enable(priv->avdd_reg);
+> +	if (ret)
+> +		return ret;
+> +
+
+There's nothing to disable this on remove.
+
+--Y1L3PTX8QE8cb2T+
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5mQQkACgkQJNaLcl1U
+h9DX5Af/ZXEkllI5PwLFc3+3O8BAAFuHXUMEpdJcOuRRbpDI/b75g0ksRcz1vyXG
+UYtDhpLHnj5zofuVANdhydI13V32Yx034ouL9Q0S6aS/fGRIa802yamSKh0O4fys
+Of5CMYR/5WaN7l6s143v3MlBJidu0bkw9XVX/Gl/MveEnXRM8Ch0Jbme29Wah+9c
+IUtxbwU9s5y0ARbxUsm5vYILnoWIGADDQBDRYJDKYwvgUskiERFiR0+PWUie9hs9
+hmImd1VmfXoKe6bC3NGFu96DuzTv6GOlA8JhfJpddifrIATZwAL3CksEzBaylQl6
+PJSoObx4lvvIWT0DWP9kUrcsytDe7g==
+=XoPC
+-----END PGP SIGNATURE-----
+
+--Y1L3PTX8QE8cb2T+--
