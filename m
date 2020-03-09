@@ -2,87 +2,132 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10CB8C10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 14:50:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49E2CC10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 14:52:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D70212067C
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 14:50:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 206F321655
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 14:52:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Ah6XKPYg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726801AbgCIOum convert rfc822-to-8bit (ORCPT
+        id S1726858AbgCIOwq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 10:50:42 -0400
-Received: from unicorn.mansr.com ([81.2.72.234]:54228 "EHLO unicorn.mansr.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726650AbgCIOum (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 10:50:42 -0400
-X-Greylist: delayed 580 seconds by postgrey-1.27 at vger.kernel.org; Mon, 09 Mar 2020 10:50:42 EDT
-Received: by unicorn.mansr.com (Postfix, from userid 51770)
-        id 727D415F11; Mon,  9 Mar 2020 14:41:01 +0000 (GMT)
-From:   =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans@mansr.com>
-To:     Bin Liu <b-liu@ti.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] usb: musb: fix crash with highmen PIO and usbmon
-References: <20200307130720.16652-1-mans@mansr.com>
-        <20200309140106.GA31115@iaqt7>
-Date:   Mon, 09 Mar 2020 14:41:01 +0000
-In-Reply-To: <20200309140106.GA31115@iaqt7> (Bin Liu's message of "Mon, 9 Mar
-        2020 09:01:06 -0500")
-Message-ID: <yw1xpndlioaq.fsf@mansr.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.3 (gnu/linux)
+        Mon, 9 Mar 2020 10:52:46 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:25450 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726439AbgCIOwp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 10:52:45 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 029EqZPX019446;
+        Mon, 9 Mar 2020 15:52:35 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=dA0MNAnLTz0IYOJPapDxgoGP7Yrm9Fs9Y8Li113GzqI=;
+ b=Ah6XKPYgFgDp1fh0mqFg0w72uX4L+DX/d8WYRQahlDj6ggls2OXJBHcNB+f1GJhw4iYl
+ ZdmQAYgRgwMvhuvmVob4jOaX+GgRdWO7pR8+mx04h+29hvImoaYMSXOcweTe8QrNMNX4
+ 8c7QLwGIbQSx8mTXFFWFLpEAy9wsSFRK2b2kYH79OyOifnTa5idFnZ/+K+FLId9GN8Xx
+ X5VAwc7zHYAad7lHDQuuO8itqJk5tZUTY/735FqJtbbVvEu8AJ/ige6EeW+Pizatk7Da
+ EO8rWKrB/I0NElleF9UW+yOXh/Xf4qghnbK3E9ZxxubGSLOTd1DJy0GmB4v7NslSLdEX 8g== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2ym2924v6r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 09 Mar 2020 15:52:35 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id F2A82100034;
+        Mon,  9 Mar 2020 15:52:28 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag5node2.st.com [10.75.127.14])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id E56492A5443;
+        Mon,  9 Mar 2020 15:52:28 +0100 (CET)
+Received: from [10.48.1.172] (10.75.127.49) by SFHDAG5NODE2.st.com
+ (10.75.127.14) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 9 Mar
+ 2020 15:52:28 +0100
+Subject: Re: [PATCH] i2c: stm32f7: do not backup read-only PECR register
+To:     Alain Volmat <alain.volmat@st.com>, <wsa@the-dreams.de>
+CC:     <alexandre.torgue@st.com>, <linux-i2c@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <fabrice.gasnier@st.com>
+References: <1583413141-1268-1-git-send-email-alain.volmat@st.com>
+From:   Pierre Yves MORDRET <pierre-yves.mordret@st.com>
+Message-ID: <5b19cf9c-9556-09c9-929d-0c396f689521@st.com>
+Date:   Mon, 9 Mar 2020 15:52:20 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <1583413141-1268-1-git-send-email-alain.volmat@st.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.75.127.49]
+X-ClientProxiedBy: SFHDAG2NODE1.st.com (10.75.127.4) To SFHDAG5NODE2.st.com
+ (10.75.127.14)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-09_06:2020-03-09,2020-03-09 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Bin Liu <b-liu@ti.com> writes:
+Hi Alain
 
-> Hi Mans,
->
-> On Sat, Mar 07, 2020 at 01:07:20PM +0000, Mans Rullgard wrote:
->> When handling a PIO bulk transfer with highmem buffer, a temporary
->> mapping is assigned to urb->transfer_buffer.  After the transfer is
->> complete, an invalid address is left behind in this pointer.  This is
->> not ordinarily a problem since nothing touches that buffer before the
->> urb is released.  However, when usbmon is active, usbmon_urb_complete()
->> calls (indirectly) mon_bin_get_data() which does access the transfer
->> buffer if it is set.  To prevent an invalid memory access here, reset
->> urb->tranfer_buffer to NULL when finished.
->> 
->> Fixes: 8e8a55165469 ("usb: musb: host: Handle highmem in PIO mode")
->> Signed-off-by: Mans Rullgard <mans@mansr.com>
->
-> Thanks for fixing the bug.
->
->> ---
->>  drivers/usb/musb/musb_host.c | 8 ++++++--
->>  1 file changed, 6 insertions(+), 2 deletions(-)
->> 
->> diff --git a/drivers/usb/musb/musb_host.c b/drivers/usb/musb/musb_host.c
->> index 1c813c37462a..b67b40de1947 100644
->> --- a/drivers/usb/musb/musb_host.c
->> +++ b/drivers/usb/musb/musb_host.c
->> @@ -1459,8 +1459,10 @@ void musb_host_tx(struct musb *musb, u8 epnum)
->>  	qh->segsize = length;
->>  
->>  	if (qh->use_sg) {
->> -		if (offset + length >= urb->transfer_buffer_length)
->> +		if (offset + length >= urb->transfer_buffer_length) {
->>  			qh->use_sg = false;
->> +			urb->transfer_buffer = NULL;
->> +		}
->
-> In this tx case, can you directly pass qh->sg_miter.addr to
-> musb_write_fifo() so that urb->transfer_buffer is not touched at all?
+Look good for me
 
-Yes, that seems to work.  I'll prepare a new patch.
+Reviewed-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
 
--- 
-Måns Rullgård
+Regards
+
+On 3/5/20 1:59 PM, Alain Volmat wrote:
+> The PECR register provides received packet computed PEC value.Â 
+> It makes no sense restoring its value after a reset, and anyway,
+> as read-only register it cannot be restored.
+> 
+> Fixes: ea6dd25deeb5 ("i2c: stm32f7: add PM_SLEEP suspend/resume support")
+> Signed-off-by: Alain Volmat <alain.volmat@st.com>
+> ---
+>  drivers/i2c/busses/i2c-stm32f7.c | 4 ----
+>  1 file changed, 4 deletions(-)
+> 
+> diff --git a/drivers/i2c/busses/i2c-stm32f7.c b/drivers/i2c/busses/i2c-stm32f7.c
+> index 378956ac6d1d..4d7401d62b71 100644
+> --- a/drivers/i2c/busses/i2c-stm32f7.c
+> +++ b/drivers/i2c/busses/i2c-stm32f7.c
+> @@ -176,7 +176,6 @@
+>   * @cr2: Control register 2
+>   * @oar1: Own address 1 register
+>   * @oar2: Own address 2 register
+> - * @pecr: PEC register
+>   * @tmgr: Timing register
+>   */
+>  struct stm32f7_i2c_regs {
+> @@ -184,7 +183,6 @@ struct stm32f7_i2c_regs {
+>  	u32 cr2;
+>  	u32 oar1;
+>  	u32 oar2;
+> -	u32 pecr;
+>  	u32 tmgr;
+>  };
+>  
+> @@ -2146,7 +2144,6 @@ static int stm32f7_i2c_regs_backup(struct stm32f7_i2c_dev *i2c_dev)
+>  	backup_regs->cr2 = readl_relaxed(i2c_dev->base + STM32F7_I2C_CR2);
+>  	backup_regs->oar1 = readl_relaxed(i2c_dev->base + STM32F7_I2C_OAR1);
+>  	backup_regs->oar2 = readl_relaxed(i2c_dev->base + STM32F7_I2C_OAR2);
+> -	backup_regs->pecr = readl_relaxed(i2c_dev->base + STM32F7_I2C_PECR);
+>  	backup_regs->tmgr = readl_relaxed(i2c_dev->base + STM32F7_I2C_TIMINGR);
+>  
+>  	pm_runtime_put_sync(i2c_dev->dev);
+> @@ -2178,7 +2175,6 @@ static int stm32f7_i2c_regs_restore(struct stm32f7_i2c_dev *i2c_dev)
+>  	writel_relaxed(backup_regs->cr2, i2c_dev->base + STM32F7_I2C_CR2);
+>  	writel_relaxed(backup_regs->oar1, i2c_dev->base + STM32F7_I2C_OAR1);
+>  	writel_relaxed(backup_regs->oar2, i2c_dev->base + STM32F7_I2C_OAR2);
+> -	writel_relaxed(backup_regs->pecr, i2c_dev->base + STM32F7_I2C_PECR);
+>  
+>  	pm_runtime_put_sync(i2c_dev->dev);
+>  
+> 
