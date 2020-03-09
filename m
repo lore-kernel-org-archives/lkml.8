@@ -2,139 +2,181 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B582C18E5A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 14:29:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECD1BC10F29
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 14:35:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4568C222C2
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 14:29:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE2E22067C
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 14:35:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="SAn3421T"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vod/MyYb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726779AbgCIO3M (ORCPT
+        id S1726715AbgCIOf5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 10:29:12 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:49386 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726617AbgCIO3L (ORCPT
+        Mon, 9 Mar 2020 10:35:57 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:39041 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726400AbgCIOf5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 10:29:11 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 029ESbNs038839;
-        Mon, 9 Mar 2020 09:28:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1583764118;
-        bh=PK9HkNhFkjhSgbGPGf8aZjBq6q1NmO8OJkQ0UtLLUrY=;
-        h=Subject:From:To:CC:References:Date:In-Reply-To;
-        b=SAn3421TiO84EvcU9BpsikWSA7JcG9TeTbS74dJ9CuUaj/W4qCxM8fB1bLvYwzywm
-         IZI88wB5cUFyHKslgUJH4OPJ2CNLN+wQQYzklbnNR3RrJTP3/Sd/ftkFhxU0EArGqX
-         tGaKORIcLhVvGK4/hxqc3NAglL8E/IP3Jvk8WNy8=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 029ESbBw082094;
-        Mon, 9 Mar 2020 09:28:37 -0500
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 9 Mar
- 2020 09:28:37 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 9 Mar 2020 09:28:37 -0500
-Received: from [10.24.69.157] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 029ESXq0049548;
-        Mon, 9 Mar 2020 09:28:34 -0500
-Subject: Re: [PATCH v2 1/3] dt-bindings: m_can: Add Documentation for
- transceiver regulator
-From:   Faiz Abbas <faiz_abbas@ti.com>
-To:     Marc Kleine-Budde <mkl@pengutronix.de>,
-        Rob Herring <robh@kernel.org>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <linux-can@vger.kernel.org>,
-        <broonie@kernel.org>, <lgirdwood@gmail.com>,
-        <catalin.marinas@arm.com>, <mark.rutland@arm.com>,
-        <wg@grandegger.com>, <sriram.dash@samsung.com>, <dmurphy@ti.com>
-References: <20200217142836.23702-1-faiz_abbas@ti.com>
- <20200217142836.23702-2-faiz_abbas@ti.com> <20200219203529.GA21085@bogus>
- <a987bcd7-ca1c-dfda-72f3-cd2004a87ea5@ti.com>
- <20b86553-9b98-1a9d-3757-54174aa67c62@pengutronix.de>
- <72e4b1f4-e7f1-cccd-6327-0c8ab6f9f9a7@ti.com>
- <679bdfd3-5325-b903-de5f-1beb5b577d73@ti.com>
-Message-ID: <8400282d-8003-549b-3560-5b55b318e57a@ti.com>
-Date:   Mon, 9 Mar 2020 20:00:23 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 9 Mar 2020 10:35:57 -0400
+Received: by mail-qk1-f194.google.com with SMTP id e16so9396400qkl.6;
+        Mon, 09 Mar 2020 07:35:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=5jAy914ctIMdKta9JuUGrpnLf6WaH5WzoC+86aivxiI=;
+        b=Vod/MyYbR1Dx57lAsnEqZPeHZr9tyCwDnK+o0lvYZc/yGoeG5Zkw7CZ8kT5elNxeET
+         WCvV606gKdzZ5BaBqNV9kFav25u78hItE24J7zWedXDF9RiBY8mnR++LAPYyaSkj8Owm
+         TEfN4h6hoWcUKnepRRBhc70Fe1enkjr6IJ1fsj0egtXMsL7MkIWVIikXBhPbUg4DrHrm
+         hsLd40H7pWYfheUDbVLO4fds7pnLwPA7aqg0F8lg26nh7bKEjjk+mMAXgWg2T2QPo59U
+         T/9xWCGKnn1atfS4StLR0AU9yw+Y+9UfY48Htb8TtnC/IElGiSL6qMjKwcd+pOSrli9+
+         nGHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=5jAy914ctIMdKta9JuUGrpnLf6WaH5WzoC+86aivxiI=;
+        b=luRhWHhY/C6X+ttPcHo8foyKeOMFsnxIH8Ov2rM2urvhezS7R/wTBdZaGcvLm0zzsX
+         LYp9b79ICKvcIJWmPwPXd5jjIhlovadjgagPBp/O7tyhjCqWdF0BrH0fgVoYk+B7qeOA
+         5T9Ic0wmm4ssT8QGcKpKyB9GmdQk7wQllb2Ibs9qpm51kcbbqvk5SJxhZ7PUlZRuE2/H
+         jJXcBnsvGtDgTI79k6BxMhd/zKbZ1TbfHscOmvMUX4rprokCURbHqOwzl81S+WsL8LIK
+         axyoYHDivqh8xt7p9VNl3sx9AH9ui7Rxg/NwK1LNjVKyQMl7GewMWvpPBWvFwgTboQ6E
+         dc/A==
+X-Gm-Message-State: ANhLgQ3Il4e82fYnUFXBasJsyMrx6zAdf0ffzxfJlj87R9872JmR9Et5
+        9izRLSerK5aJoIde2N/UtbY=
+X-Google-Smtp-Source: ADFU+vsKCcBzRKWf1W59h0lUF1gUHp4hBeMziSwnCnlwUZ3NK0Xa2PKr2UG9Epf8gMM6h0BqAQsmmg==
+X-Received: by 2002:a37:67c4:: with SMTP id b187mr7681788qkc.209.1583764555383;
+        Mon, 09 Mar 2020 07:35:55 -0700 (PDT)
+Received: from auth1-smtp.messagingengine.com (auth1-smtp.messagingengine.com. [66.111.4.227])
+        by smtp.gmail.com with ESMTPSA id p16sm22360496qkp.12.2020.03.09.07.35.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 09 Mar 2020 07:35:53 -0700 (PDT)
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailauth.nyi.internal (Postfix) with ESMTP id 0786022148;
+        Mon,  9 Mar 2020 10:35:52 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Mon, 09 Mar 2020 10:35:52 -0400
+X-ME-Sender: <xms:RlRmXh7AhVcgDalB_YgnDdCKIk9Cw4yFlgdun8y9ZgunLxIiENoeMg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedruddukedgieekucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeeuohhquhhn
+    ucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuffhomhgrih
+    hnpehkvghrnhgvlhdrohhrghenucfkphephedvrdduheehrdduuddurdejudenucevlhhu
+    shhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsohhquhhnodhmvg
+    hsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdeigedqudejjeekheeh
+    hedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfihigmhgvrdhnrghmvg
+X-ME-Proxy: <xmx:RlRmXvyESB274MuNPqwBvmeuuDIpkZZIsJKS-4GP_DH8P-fo2ApRSA>
+    <xmx:RlRmXpc0aLy-UzpXL4M6i3X152o-XVdssVXbhfZUsVQhyQv91Oasfw>
+    <xmx:RlRmXsGhCxIzUY-W_t-VC1u3qWDVLhAmhPBAvm0olHuhVrrPsd9iEw>
+    <xmx:SFRmXpuz8Gn8qa90c8fLB50qXqcHDDcwz4iSNzcJmKoyhwmQ5ZG-HmWSNEQ>
+Received: from localhost (unknown [52.155.111.71])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 03317306130A;
+        Mon,  9 Mar 2020 10:35:49 -0400 (EDT)
+Date:   Mon, 9 Mar 2020 22:35:48 +0800
+From:   Boqun Feng <boqun.feng@gmail.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     linux-pci@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Michael Kelley <mikelley@microsoft.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Andrew Murray <andrew.murray@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v3 0/3] PCI: hv: Generify pci-hyperv.c
+Message-ID: <20200309143548.GB118238@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
+References: <20200210033953.99692-1-boqun.feng@gmail.com>
+ <20200221023344.GJ69864@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
+ <20200221104454.GA8595@e121166-lin.cambridge.arm.com>
 MIME-Version: 1.0
-In-Reply-To: <679bdfd3-5325-b903-de5f-1beb5b577d73@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200221104454.GA8595@e121166-lin.cambridge.arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc,
+Hi Lorenzo,
 
-On 02/03/20 1:46 pm, Faiz Abbas wrote:
-> Marc,
+On Fri, Feb 21, 2020 at 10:44:54AM +0000, Lorenzo Pieralisi wrote:
+> On Fri, Feb 21, 2020 at 10:33:44AM +0800, Boqun Feng wrote:
+> > Ping ;-)
+> > 
+> > Any suggestion or plan on this patchset?
 > 
-> On 26/02/20 2:40 pm, Faiz Abbas wrote:
->> Hi Marc,
->>
->> On 21/02/20 2:01 pm, Marc Kleine-Budde wrote:
->>> On 2/21/20 9:31 AM, Faiz Abbas wrote:
->>>> Hi Rob,
->>>>
->>>> On 20/02/20 2:05 am, Rob Herring wrote:
->>>>> On Mon, Feb 17, 2020 at 07:58:34PM +0530, Faiz Abbas wrote:
->>>>>> Some CAN transceivers have a standby line that needs to be asserted
->>>>>> before they can be used. Model this GPIO lines as an optional
->>>>>> fixed-regulator node. Document bindings for the same.
->>>>>>
->>>>>> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
->>>>>> ---
->>>>>>  Documentation/devicetree/bindings/net/can/m_can.txt | 3 +++
->>>>>>  1 file changed, 3 insertions(+)
->>>>>
->>>>> This has moved to DT schema in my tree, so please adjust it and resend.
->>>>
->>>> Ok.
->>>>>
->>>>>> diff --git a/Documentation/devicetree/bindings/net/can/m_can.txt b/Documentation/devicetree/bindings/net/can/m_can.txt
->>>>>> index ed614383af9c..f17e2a5207dc 100644
->>>>>> --- a/Documentation/devicetree/bindings/net/can/m_can.txt
->>>>>> +++ b/Documentation/devicetree/bindings/net/can/m_can.txt
->>>>>> @@ -48,6 +48,9 @@ Optional Subnode:
->>>>>>  			  that can be used for CAN/CAN-FD modes. See
->>>>>>  			  Documentation/devicetree/bindings/net/can/can-transceiver.txt
->>>>>>  			  for details.
->>>>>> +
->>>>>> +- xceiver-supply: Regulator that powers the CAN transceiver.
->>>>>
->>>>> The supply for a transceiver should go in the transceiver node.
->>>>>
->>>>
->>>> Marc, while I have you here, do you agree with this?
->>>
->>> I'll look into the details later today.
->>>
->>
->> Sure. Be sure to take another look at my attempt to use the transceiver
->> with a phy driver some time ago.
->>
->> https://lore.kernel.org/patchwork/patch/1006238/
->>
+> Hi,
 > 
-> Do you have any comments?
+> I shall have a look shortly, thanks.
 > 
 
-Gentle ping.
+Any chance you got some time to look into this?
 
-Thanks,
-Faiz
+Regards,
+Boqun
+
+> Lorenzo
+> 
+> > Thanks and Regards,
+> > Boqun
+> > 
+> > On Mon, Feb 10, 2020 at 11:39:50AM +0800, Boqun Feng wrote:
+> > > Hi,
+> > > 
+> > > This is the first part for virtual PCI support of Hyper-V guest on
+> > > ARM64. The whole patchset doesn't have any functional change, but only
+> > > refactors the pci-hyperv.c code to make it more arch-independent.
+> > > 
+> > > Previous version:
+> > > v1: https://lore.kernel.org/lkml/20200121015713.69691-1-boqun.feng@gmail.com/
+> > > v2: https://lore.kernel.org/linux-arm-kernel/20200203050313.69247-1-boqun.feng@gmail.com/
+> > > 
+> > > Changes since v2:
+> > > 
+> > > *	Rebased on 5.6-rc1
+> > > 
+> > > *	Reword commit logs as per Andrew's suggestion.
+> > > 
+> > > *	It makes more sense to have a generic interface to set the whole
+> > > 	msi_entry rather than only the "address" field. So change
+> > > 	hv_set_msi_address_from_desc() to hv_set_msi_entry_from_desc().
+> > > 	Additionally, make it an inline function as per the suggestion
+> > > 	of Andrew and Thomas.
+> > > 
+> > > *	Add the missing comment saying the partition_id of
+> > > 	hv_retarget_device_interrupt must be self.
+> > > 
+> > > *	Add the explanation for why "__packed" is needed for TLFS
+> > > 	structures.
+> > > 
+> > > I've done compile and boot test of this patchset, also done some tests
+> > > with a pass-through NVMe device.
+> > > 
+> > > Suggestions and comments are welcome!
+> > > 
+> > > Regards,
+> > > Boqun
+> > > 
+> > > Boqun Feng (3):
+> > >   PCI: hv: Move hypercall related definitions into tlfs header
+> > >   PCI: hv: Move retarget related structures into tlfs header
+> > >   PCI: hv: Introduce hv_msi_entry
+> > > 
+> > >  arch/x86/include/asm/hyperv-tlfs.h  | 41 +++++++++++++++++++++++++++
+> > >  arch/x86/include/asm/mshyperv.h     |  8 ++++++
+> > >  drivers/pci/controller/pci-hyperv.c | 43 ++---------------------------
+> > >  3 files changed, 52 insertions(+), 40 deletions(-)
+> > > 
+> > > -- 
+> > > 2.24.1
+> > > 
