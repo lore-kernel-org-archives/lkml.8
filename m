@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5386C18E5A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 16:18:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B0B4C10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 16:18:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A79C62464B
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 16:18:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 025A92464B
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 16:18:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Rcw937Id"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ljvw9vFR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727159AbgCIQSM (ORCPT
+        id S1727416AbgCIQSW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 12:18:12 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:46137 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727333AbgCIQSC (ORCPT
+        Mon, 9 Mar 2020 12:18:22 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:46133 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726990AbgCIQR7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 12:18:02 -0400
-Received: by mail-pl1-f195.google.com with SMTP id w12so4158147pll.13
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 09:18:01 -0700 (PDT)
+        Mon, 9 Mar 2020 12:17:59 -0400
+Received: by mail-pl1-f193.google.com with SMTP id w12so4158096pll.13
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 09:17:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=+wlgIsv56XP9ChgVPt1iQ62zzRWTySx1bmIClqGGtzg=;
-        b=Rcw937Id5n9l5hHoEmhlRjQ9VKSAy09yjJNGa8kFr1XOJcXRhEPzZCUlakVkpuATe6
-         B+r4WQSoLQtQ3dY2LUFAIN5LsY8YZXBAqBiwZxKgVj/O9RoflG344TaX+zB2B6YN6dCl
-         KLOmxiO5olG7a77eps7NnkOMx/9Ss31S7x/KA+acm8T1Ap+AZq/IpUqkY+PmQtCJwU4q
-         E5F8+4gPHPY2BrQcfmTpBsyMpEZUBRa4YJBhnzRAmbjrQCJQEkHVFcWiAmPlL0bxjfsS
-         1iLrc5Lrd8kreMfBrdQj0dsqJuQCvxrixO7EJJtHTTD2vKLokTEh5aJx5oELDhTwZf5c
-         nDrQ==
+        bh=ra6+MKTNcYvgpbycuFy2z9Nuwmu6yAkQr4DzWFRYEgk=;
+        b=Ljvw9vFRSLg75dtw/GVe+GKYfhHNXULK80H7tC9RxZD7p/Cay+nEi7t2CwLZbEVwSR
+         5AQ/Um/ZnIEQtUzYMsKTuAaPXoaALsXPTVxmrZHk7ahXeUnhOLd0OJww/Nsu633kzS6M
+         mNfB3o9/ek8j8AufZV8+vU0AeSN+R2wF3NRgOFi7naGk30yr0X7FVkhc/ID4E3gPpWFV
+         1y6stKewdccu5Tq1gmU4Sw//2bo9bH32OI+xx/NA8ricuE07WSLso5k3SXtDvhMDas7b
+         JqCsNB4XOG9pIEdsey5l84hoxNidh53yOM2DcAOVzqCVuYCXJ+f67oCzVw3ZQoMXua5u
+         vz1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=+wlgIsv56XP9ChgVPt1iQ62zzRWTySx1bmIClqGGtzg=;
-        b=SxGZsmxk8j/TuUawfLw8h1Bea8QgqGl1FvZK9QTzWkT9zxdHeYCyWTjiHVD066lVeJ
-         /Unv8DdBjCLyGdFsp6WYmpC3SGFZrinVsWEXuTavyo4MuKeNr5lgzMWmCrmdeQzHwDYq
-         YzjcpTkgqpMbJIoqcpjEOWQsuBeaTiQWWxEYh/mAHkh1jY7CgTfkUqRks5/Vy15QkN1T
-         gJE/vNNAQsjHqc2Bi4gsCBaEzUo1tJ+q3tCt/2klBNFv+2aRfjlklW0bVVVeAUQ4auYV
-         uU5uaCfXTUVascEDIS7gIEpM6FYfjeqbXUkEJBpCUgSqrWrCDOhWHA80tDT89dzabefl
-         Vi7w==
-X-Gm-Message-State: ANhLgQ0l+jo/QHspjJWXOWax7s3zMExfhMvays3HpnCFoFfqwwtRhBcU
-        ZbUne63pG3K9C1zKGFL/iWH9gYjmhkU=
-X-Google-Smtp-Source: ADFU+vsiNj0ZuhNs3YX2oUxnYCWFzEJOMBtDjTajVxQmSd+eBa1k6DZxd8C08K+HIn29AUlROgo7UQ==
-X-Received: by 2002:a17:902:b089:: with SMTP id p9mr16404839plr.85.1583770681163;
-        Mon, 09 Mar 2020 09:18:01 -0700 (PDT)
+        bh=ra6+MKTNcYvgpbycuFy2z9Nuwmu6yAkQr4DzWFRYEgk=;
+        b=Wo9bnTj6b0Y7JZL4bGOxG6+1UT5t/1I8GIEPTzLFj+fZxF4SDh0LiZfm8mfcfEZfSw
+         vjYw5WnBBV/f4zGqhJPE6CI9IVARENILYzf8R1q2aYnXf2K04XY0iBDbr+44kvmF5nmD
+         NldRuGFkNytFuRQjYRu6rL5/3OWyBG3MHoJKWPIt0jlVbOBnUD2R4U4Hszttsh6CbWkv
+         b8MqNJWN36KEqojMWmfVIv2pPw/z8k49DRs+6fi3HkF5zmf/XWyIBOtV6Mio7nboOKRW
+         3msMjKPBW+EcqbiSH2JPaJYKAYZFciF8MTzUJYeIS3ncvgj6BoDPrgUKaNgGWRK+dbsa
+         a5FQ==
+X-Gm-Message-State: ANhLgQ07Q+o2Q+dPfGQXQhzXV4GCoo/BS55q0fn3YiIXtqIW1F3qBHEO
+        bL0e1i/Pz14sbPlKXCH+NuKKnw==
+X-Google-Smtp-Source: ADFU+vvrGiTqAWBgx0crIZdqrgirrEipZQE00mQGKyXpRrqYt09uj1pNBW0vRsrpbY1yaPOLjH78IA==
+X-Received: by 2002:a17:902:a514:: with SMTP id s20mr16784145plq.300.1583770677939;
+        Mon, 09 Mar 2020 09:17:57 -0700 (PDT)
 Received: from xps15.cg.shawcable.net (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id m11sm38403pjl.18.2020.03.09.09.18.00
+        by smtp.gmail.com with ESMTPSA id m11sm38403pjl.18.2020.03.09.09.17.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Mar 2020 09:18:00 -0700 (PDT)
+        Mon, 09 Mar 2020 09:17:57 -0700 (PDT)
 From:   Mathieu Poirier <mathieu.poirier@linaro.org>
 To:     gregkh@linuxfoundation.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 11/13] docs: sysfs: coresight: Add sysfs ABI documentation for CTI
-Date:   Mon,  9 Mar 2020 10:17:46 -0600
-Message-Id: <20200309161748.31975-12-mathieu.poirier@linaro.org>
+Subject: [PATCH 08/13] coresight: cti: Enable CTI associated with devices
+Date:   Mon,  9 Mar 2020 10:17:43 -0600
+Message-Id: <20200309161748.31975-9-mathieu.poirier@linaro.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200309161748.31975-1-mathieu.poirier@linaro.org>
 References: <20200309161748.31975-1-mathieu.poirier@linaro.org>
@@ -74,243 +74,394 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Mike Leach <mike.leach@linaro.org>
 
-Add API usage document for sysfs API in CTI driver.
+The CoreSight subsystem enables a path of devices from source to sink.
+Any CTI devices associated with the path devices must be enabled at the
+same time.
+
+This patch adds an associated coresight_device element to the main
+coresight device structure, and uses this to create associations between
+the CTI and other devices based on the device tree data. The associated
+device element is used to enable CTI in conjunction with the path elements.
+
+CTI devices are reference counted so where a single CTI is associated with
+multiple elements on the path, it will be enabled on the first associated
+device enable, and disabled with the last associated device disable.
 
 Signed-off-by: Mike Leach <mike.leach@linaro.org>
-[Fixed kernel release month and version]
+Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 ---
- .../testing/sysfs-bus-coresight-devices-cti   | 221 ++++++++++++++++++
- 1 file changed, 221 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-bus-coresight-devices-cti
+ drivers/hwtracing/coresight/coresight-cti.c  | 125 +++++++++++++++++++
+ drivers/hwtracing/coresight/coresight-cti.h  |   1 +
+ drivers/hwtracing/coresight/coresight-priv.h |  12 ++
+ drivers/hwtracing/coresight/coresight.c      |  71 ++++++++++-
+ include/linux/coresight.h                    |   4 +
+ 5 files changed, 208 insertions(+), 5 deletions(-)
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-coresight-devices-cti b/Documentation/ABI/testing/sysfs-bus-coresight-devices-cti
-new file mode 100644
-index 000000000000..8443feb92ee9
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-bus-coresight-devices-cti
-@@ -0,0 +1,221 @@
-+What:		/sys/bus/coresight/devices/<cti-name>/enable
-+Date:		March 2020
-+KernelVersion	5.7
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(RW) Enable/Disable the CTI hardware.
+diff --git a/drivers/hwtracing/coresight/coresight-cti.c b/drivers/hwtracing/coresight/coresight-cti.c
+index b8c94027fed0..2fc68760efbe 100644
+--- a/drivers/hwtracing/coresight/coresight-cti.c
++++ b/drivers/hwtracing/coresight/coresight-cti.c
+@@ -4,6 +4,7 @@
+  * Author: Mike Leach <mike.leach@linaro.org>
+  */
+ 
++#include <linux/property.h>
+ #include "coresight-cti.h"
+ 
+ /**
+@@ -441,6 +442,127 @@ int cti_channel_setop(struct device *dev, enum cti_chan_set_op op,
+ 	return err;
+ }
+ 
++/*
++ * Look for a matching connection device name in the list of connections.
++ * If found then swap in the csdev name, set trig con association pointer
++ * and return found.
++ */
++static bool
++cti_match_fixup_csdev(struct cti_device *ctidev, const char *node_name,
++		      struct coresight_device *csdev)
++{
++	struct cti_trig_con *tc;
 +
-+What:		/sys/bus/coresight/devices/<cti-name>/ctmid
-+Date:		March 2020
-+KernelVersion	5.7
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(R) Display the associated CTM ID
++	list_for_each_entry(tc, &ctidev->trig_cons, node) {
++		if (tc->con_dev_name) {
++			if (!strcmp(node_name, tc->con_dev_name)) {
++				/* match: so swap in csdev name & dev */
++				tc->con_dev_name = dev_name(&csdev->dev);
++				tc->con_dev = csdev;
++				return true;
++			}
++		}
++	}
++	return false;
++}
 +
-+What:		/sys/bus/coresight/devices/<cti-name>/nr_trigger_cons
-+Date:		March 2020
-+KernelVersion	5.7
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(R) Number of devices connected to triggers on this CTI
++/*
++ * Search the cti list to add an associated CTI into the supplied CS device
++ * This will set the association if CTI declared before the CS device.
++ * (called from coresight_register() with coresight_mutex locked).
++ */
++void cti_add_assoc_to_csdev(struct coresight_device *csdev)
++{
++	struct cti_drvdata *ect_item;
++	struct cti_device *ctidev;
++	const char *node_name = NULL;
 +
-+What:		/sys/bus/coresight/devices/<cti-name>/triggers<N>/name
-+Date:		March 2020
-+KernelVersion	5.7
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(R) Name of connected device <N>
++	/* protect the list */
++	mutex_lock(&ect_mutex);
 +
-+What:		/sys/bus/coresight/devices/<cti-name>/triggers<N>/in_signals
-+Date:		March 2020
-+KernelVersion	5.7
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(R) Input trigger signals from connected device <N>
++	/* exit if current is an ECT device.*/
++	if ((csdev->type == CORESIGHT_DEV_TYPE_ECT) || list_empty(&ect_net))
++		goto cti_add_done;
 +
-+What:		/sys/bus/coresight/devices/<cti-name>/triggers<N>/in_types
-+Date:		March 2020
-+KernelVersion	5.7
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(R) Functional types for the input trigger signals
-+		from connected device <N>
++	/* if we didn't find the csdev previously we used the fwnode name */
++	node_name = cti_plat_get_node_name(dev_fwnode(csdev->dev.parent));
++	if (!node_name)
++		goto cti_add_done;
 +
-+What:		/sys/bus/coresight/devices/<cti-name>/triggers<N>/out_signals
-+Date:		March 2020
-+KernelVersion	5.7
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(R) Output trigger signals to connected device <N>
++	/* for each CTI in list... */
++	list_for_each_entry(ect_item, &ect_net, node) {
++		ctidev = &ect_item->ctidev;
++		if (cti_match_fixup_csdev(ctidev, node_name, csdev)) {
++			/*
++			 * if we found a matching csdev then update the ECT
++			 * association pointer for the device with this CTI.
++			 */
++			csdev->ect_dev = ect_item->csdev;
++			break;
++		}
++	}
++cti_add_done:
++	mutex_unlock(&ect_mutex);
++}
++EXPORT_SYMBOL_GPL(cti_add_assoc_to_csdev);
 +
-+What:		/sys/bus/coresight/devices/<cti-name>/triggers<N>/out_types
-+Date:		March 2020
-+KernelVersion	5.7
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(R) Functional types for the output trigger signals
-+		to connected device <N>
++/*
++ * Removing the associated devices is easier.
++ * A CTI will not have a value for csdev->ect_dev.
++ */
++void cti_remove_assoc_from_csdev(struct coresight_device *csdev)
++{
++	struct cti_drvdata *ctidrv;
++	struct cti_trig_con *tc;
++	struct cti_device *ctidev;
 +
-+What:		/sys/bus/coresight/devices/<cti-name>/regs/inout_sel
-+Date:		March 2020
-+KernelVersion	5.7
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(RW) Select the index for inen and outen registers.
++	mutex_lock(&ect_mutex);
++	if (csdev->ect_dev) {
++		ctidrv = csdev_to_cti_drvdata(csdev->ect_dev);
++		ctidev = &ctidrv->ctidev;
++		list_for_each_entry(tc, &ctidev->trig_cons, node) {
++			if (tc->con_dev == csdev->ect_dev) {
++				tc->con_dev = NULL;
++				break;
++			}
++		}
++		csdev->ect_dev = NULL;
++	}
++	mutex_unlock(&ect_mutex);
++}
++EXPORT_SYMBOL_GPL(cti_remove_assoc_from_csdev);
 +
-+What:		/sys/bus/coresight/devices/<cti-name>/regs/inen
-+Date:		March 2020
-+KernelVersion	5.7
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(RW) Read or write the CTIINEN register selected by inout_sel.
++/*
++ * Update the cross references where the associated device was found
++ * while we were building the connection info. This will occur if the
++ * assoc device was registered before the CTI.
++ */
++static void cti_update_conn_xrefs(struct cti_drvdata *drvdata)
++{
++	struct cti_trig_con *tc;
++	struct cti_device *ctidev = &drvdata->ctidev;
 +
-+What:		/sys/bus/coresight/devices/<cti-name>/regs/outen
-+Date:		March 2020
-+KernelVersion	5.7
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(RW) Read or write the CTIOUTEN register selected by inout_sel.
++	list_for_each_entry(tc, &ctidev->trig_cons, node) {
++		if (tc->con_dev)
++			/* set tc->con_dev->ect_dev */
++			coresight_set_assoc_ectdev_mutex(tc->con_dev,
++							 drvdata->csdev);
++	}
++}
 +
-+What:		/sys/bus/coresight/devices/<cti-name>/regs/gate
-+Date:		March 2020
-+KernelVersion	5.7
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(RW) Read or write CTIGATE register.
++static void cti_remove_conn_xrefs(struct cti_drvdata *drvdata)
++{
++	struct cti_trig_con *tc;
++	struct cti_device *ctidev = &drvdata->ctidev;
 +
-+What:		/sys/bus/coresight/devices/<cti-name>/regs/asicctl
-+Date:		March 2020
-+KernelVersion	5.7
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(RW) Read or write ASICCTL register.
++	list_for_each_entry(tc, &ctidev->trig_cons, node) {
++		if (tc->con_dev) {
++			coresight_set_assoc_ectdev_mutex(tc->con_dev,
++							 NULL);
++		}
++	}
++}
 +
-+What:		/sys/bus/coresight/devices/<cti-name>/regs/intack
-+Date:		March 2020
-+KernelVersion	5.7
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(W) Write the INTACK register.
+ /** cti ect operations **/
+ int cti_enable(struct coresight_device *csdev)
+ {
+@@ -475,6 +597,7 @@ static void cti_device_release(struct device *dev)
+ 	struct cti_drvdata *ect_item, *ect_tmp;
+ 
+ 	mutex_lock(&ect_mutex);
++	cti_remove_conn_xrefs(drvdata);
+ 
+ 	/* remove from the list */
+ 	list_for_each_entry_safe(ect_item, ect_tmp, &ect_net, node) {
+@@ -566,6 +689,8 @@ static int cti_probe(struct amba_device *adev, const struct amba_id *id)
+ 	/* add to list of CTI devices */
+ 	mutex_lock(&ect_mutex);
+ 	list_add(&drvdata->node, &ect_net);
++	/* set any cross references */
++	cti_update_conn_xrefs(drvdata);
+ 	mutex_unlock(&ect_mutex);
+ 
+ 	/* set up release chain */
+diff --git a/drivers/hwtracing/coresight/coresight-cti.h b/drivers/hwtracing/coresight/coresight-cti.h
+index f664b4bb4644..ca277633b04f 100644
+--- a/drivers/hwtracing/coresight/coresight-cti.h
++++ b/drivers/hwtracing/coresight/coresight-cti.h
+@@ -216,6 +216,7 @@ int cti_channel_setop(struct device *dev, enum cti_chan_set_op op,
+ 		      u32 channel_idx);
+ struct coresight_platform_data *
+ coresight_cti_get_platform_data(struct device *dev);
++const char *cti_plat_get_node_name(struct fwnode_handle *fwnode);
+ 
+ /* cti powered and enabled */
+ static inline bool cti_active(struct cti_config *cfg)
+diff --git a/drivers/hwtracing/coresight/coresight-priv.h b/drivers/hwtracing/coresight/coresight-priv.h
+index 357ffef7b825..890f9a5c97c6 100644
+--- a/drivers/hwtracing/coresight/coresight-priv.h
++++ b/drivers/hwtracing/coresight/coresight-priv.h
+@@ -162,6 +162,16 @@ static inline int etm_readl_cp14(u32 off, unsigned int *val) { return 0; }
+ static inline int etm_writel_cp14(u32 off, u32 val) { return 0; }
+ #endif
+ 
++#ifdef CONFIG_CORESIGHT_CTI
++extern void cti_add_assoc_to_csdev(struct coresight_device *csdev);
++extern void cti_remove_assoc_from_csdev(struct coresight_device *csdev);
 +
-+What:		/sys/bus/coresight/devices/<cti-name>/regs/appset
-+Date:		March 2020
-+KernelVersion	5.7
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(RW) Set CTIAPPSET register to activate channel. Read back to
-+		determine current value of register.
++#else
++static inline void cti_add_assoc_to_csdev(struct coresight_device *csdev) {}
++static inline void
++cti_remove_assoc_from_csdev(struct coresight_device *csdev) {}
++#endif
 +
-+What:		/sys/bus/coresight/devices/<cti-name>/regs/appclear
-+Date:		March 2020
-+KernelVersion	5.7
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(W) Write APPCLEAR register to deactivate channel.
+ /*
+  * Macros and inline functions to handle CoreSight UCI data and driver
+  * private data in AMBA ID table entries, and extract data values.
+@@ -204,5 +214,7 @@ static inline void *coresight_get_uci_data(const struct amba_id *id)
+ void coresight_release_platform_data(struct coresight_platform_data *pdata);
+ struct coresight_device *
+ coresight_find_csdev_by_fwnode(struct fwnode_handle *r_fwnode);
++void coresight_set_assoc_ectdev_mutex(struct coresight_device *csdev,
++				      struct coresight_device *ect_csdev);
+ 
+ #endif
+diff --git a/drivers/hwtracing/coresight/coresight.c b/drivers/hwtracing/coresight/coresight.c
+index 39a5d9f7a395..c71553c09f8e 100644
+--- a/drivers/hwtracing/coresight/coresight.c
++++ b/drivers/hwtracing/coresight/coresight.c
+@@ -216,6 +216,44 @@ void coresight_disclaim_device(void __iomem *base)
+ 	CS_LOCK(base);
+ }
+ 
++/* enable or disable an associated CTI device of the supplied CS device */
++static int
++coresight_control_assoc_ectdev(struct coresight_device *csdev, bool enable)
++{
++	int ect_ret = 0;
++	struct coresight_device *ect_csdev = csdev->ect_dev;
 +
-+What:		/sys/bus/coresight/devices/<cti-name>/regs/apppulse
-+Date:		March 2020
-+KernelVersion	5.7
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(W) Write APPPULSE to pulse a channel active for one clock
-+		cycle.
++	if (!ect_csdev)
++		return 0;
 +
-+What:		/sys/bus/coresight/devices/<cti-name>/regs/chinstatus
-+Date:		March 2020
-+KernelVersion	5.7
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(R) Read current status of channel inputs.
++	if (enable) {
++		if (ect_ops(ect_csdev)->enable)
++			ect_ret = ect_ops(ect_csdev)->enable(ect_csdev);
++	} else {
++		if (ect_ops(ect_csdev)->disable)
++			ect_ret = ect_ops(ect_csdev)->disable(ect_csdev);
++	}
 +
-+What:		/sys/bus/coresight/devices/<cti-name>/regs/choutstatus
-+Date:		March 2020
-+KernelVersion	5.7
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(R) read current status of channel outputs.
++	/* output warning if ECT enable is preventing trace operation */
++	if (ect_ret)
++		dev_info(&csdev->dev, "Associated ECT device (%s) %s failed\n",
++			 dev_name(&ect_csdev->dev),
++			 enable ? "enable" : "disable");
++	return ect_ret;
++}
 +
-+What:		/sys/bus/coresight/devices/<cti-name>/regs/triginstatus
-+Date:		March 2020
-+KernelVersion	5.7
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(R) read current status of input trigger signals
++/*
++ * Set the associated ect / cti device while holding the coresight_mutex
++ * to avoid a race with coresight_enable that may try to use this value.
++ */
++void coresight_set_assoc_ectdev_mutex(struct coresight_device *csdev,
++				      struct coresight_device *ect_csdev)
++{
++	mutex_lock(&coresight_mutex);
++	csdev->ect_dev = ect_csdev;
++	mutex_unlock(&coresight_mutex);
++}
 +
-+What:		/sys/bus/coresight/devices/<cti-name>/regs/trigoutstatus
-+Date:		March 2020
-+KernelVersion	5.7
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(R) read current status of output trigger signals.
+ static int coresight_enable_sink(struct coresight_device *csdev,
+ 				 u32 mode, void *data)
+ {
+@@ -228,9 +266,14 @@ static int coresight_enable_sink(struct coresight_device *csdev,
+ 	if (!sink_ops(csdev)->enable)
+ 		return -EINVAL;
+ 
+-	ret = sink_ops(csdev)->enable(csdev, mode, data);
++	ret = coresight_control_assoc_ectdev(csdev, true);
+ 	if (ret)
+ 		return ret;
++	ret = sink_ops(csdev)->enable(csdev, mode, data);
++	if (ret) {
++		coresight_control_assoc_ectdev(csdev, false);
++		return ret;
++	}
+ 	csdev->enable = true;
+ 
+ 	return 0;
+@@ -246,6 +289,7 @@ static void coresight_disable_sink(struct coresight_device *csdev)
+ 	ret = sink_ops(csdev)->disable(csdev);
+ 	if (ret)
+ 		return;
++	coresight_control_assoc_ectdev(csdev, false);
+ 	csdev->enable = false;
+ }
+ 
+@@ -269,8 +313,15 @@ static int coresight_enable_link(struct coresight_device *csdev,
+ 	if (link_subtype == CORESIGHT_DEV_SUBTYPE_LINK_SPLIT && outport < 0)
+ 		return outport;
+ 
+-	if (link_ops(csdev)->enable)
+-		ret = link_ops(csdev)->enable(csdev, inport, outport);
++	if (link_ops(csdev)->enable) {
++		ret = coresight_control_assoc_ectdev(csdev, true);
++		if (!ret) {
++			ret = link_ops(csdev)->enable(csdev, inport, outport);
++			if (ret)
++				coresight_control_assoc_ectdev(csdev, false);
++		}
++	}
 +
-+What:		/sys/bus/coresight/devices/<cti-name>/channels/trigin_attach
-+Date:		March 2020
-+KernelVersion	5.7
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(W) Attach a CTI input trigger to a CTM channel.
-+
-+What:		/sys/bus/coresight/devices/<cti-name>/channels/trigin_detach
-+Date:		March 2020
-+KernelVersion	5.7
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(W) Detach a CTI input trigger from a CTM channel.
-+
-+What:		/sys/bus/coresight/devices/<cti-name>/channels/trigout_attach
-+Date:		March 2020
-+KernelVersion	5.7
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(W) Attach a CTI output trigger to a CTM channel.
-+
-+What:		/sys/bus/coresight/devices/<cti-name>/channels/trigout_detach
-+Date:		March 2020
-+KernelVersion	5.7
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(W) Detach a CTI output trigger from a CTM channel.
-+
-+What:		/sys/bus/coresight/devices/<cti-name>/channels/chan_gate_enable
-+Date:		March 2020
-+KernelVersion	5.7
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(RW) Enable CTIGATE for single channel (W) or list enabled
-+		channels through the gate (R).
-+
-+What:		/sys/bus/coresight/devices/<cti-name>/channels/chan_gate_disable
-+Date:		March 2020
-+KernelVersion	5.7
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(W) Disable CTIGATE for single channel.
-+
-+What:		/sys/bus/coresight/devices/<cti-name>/channels/chan_set
-+Date:		March 2020
-+KernelVersion	5.7
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(W) Activate a single channel.
-+
-+What:		/sys/bus/coresight/devices/<cti-name>/channels/chan_clear
-+Date:		March 2020
-+KernelVersion	5.7
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(W) Deactivate a single channel.
-+
-+What:		/sys/bus/coresight/devices/<cti-name>/channels/chan_pulse
-+Date:		March 2020
-+KernelVersion	5.7
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(W) Pulse a single channel - activate for a single clock cycle.
-+
-+What:		/sys/bus/coresight/devices/<cti-name>/channels/trigout_filtered
-+Date:		March 2020
-+KernelVersion	5.7
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(R) List of output triggers filtered across all connections.
-+
-+What:		/sys/bus/coresight/devices/<cti-name>/channels/trig_filter_enable
-+Date:		March 2020
-+KernelVersion	5.7
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(RW) Enable or disable trigger output signal filtering.
-+
-+What:		/sys/bus/coresight/devices/<cti-name>/channels/chan_inuse
-+Date:		March 2020
-+KernelVersion	5.7
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(R) show channels with at least one attached trigger signal.
-+
-+What:		/sys/bus/coresight/devices/<cti-name>/channels/chan_free
-+Date:		March 2020
-+KernelVersion	5.7
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(R) show channels with no attached trigger signals.
-+
-+What:		/sys/bus/coresight/devices/<cti-name>/channels/chan_xtrigs_view
-+Date:		March 2020
-+KernelVersion	5.7
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(RW) Write channel number to select a channel to view, read to
-+		see triggers attached to selected channel on this CTI.
-+
-+What:		/sys/bus/coresight/devices/<cti-name>/channels/chan_xtrigs_reset
-+Date:		March 2020
-+KernelVersion	5.7
-+Contact:	Mike Leach or Mathieu Poirier
-+Description:	(W) Clear all channel / trigger programming.
+ 	if (!ret)
+ 		csdev->enable = true;
+ 
+@@ -300,8 +351,10 @@ static void coresight_disable_link(struct coresight_device *csdev,
+ 		nr_conns = 1;
+ 	}
+ 
+-	if (link_ops(csdev)->disable)
++	if (link_ops(csdev)->disable) {
+ 		link_ops(csdev)->disable(csdev, inport, outport);
++		coresight_control_assoc_ectdev(csdev, false);
++	}
+ 
+ 	for (i = 0; i < nr_conns; i++)
+ 		if (atomic_read(&csdev->refcnt[i]) != 0)
+@@ -322,9 +375,14 @@ static int coresight_enable_source(struct coresight_device *csdev, u32 mode)
+ 
+ 	if (!csdev->enable) {
+ 		if (source_ops(csdev)->enable) {
+-			ret = source_ops(csdev)->enable(csdev, NULL, mode);
++			ret = coresight_control_assoc_ectdev(csdev, true);
+ 			if (ret)
+ 				return ret;
++			ret = source_ops(csdev)->enable(csdev, NULL, mode);
++			if (ret) {
++				coresight_control_assoc_ectdev(csdev, false);
++				return ret;
++			};
+ 		}
+ 		csdev->enable = true;
+ 	}
+@@ -347,6 +405,7 @@ static bool coresight_disable_source(struct coresight_device *csdev)
+ 	if (atomic_dec_return(csdev->refcnt) == 0) {
+ 		if (source_ops(csdev)->disable)
+ 			source_ops(csdev)->disable(csdev, NULL);
++		coresight_control_assoc_ectdev(csdev, false);
+ 		csdev->enable = false;
+ 	}
+ 	return !csdev->enable;
+@@ -964,6 +1023,7 @@ static void coresight_device_release(struct device *dev)
+ {
+ 	struct coresight_device *csdev = to_coresight_device(dev);
+ 
++	cti_remove_assoc_from_csdev(csdev);
+ 	fwnode_handle_put(csdev->dev.fwnode);
+ 	kfree(csdev->refcnt);
+ 	kfree(csdev);
+@@ -1246,6 +1306,7 @@ struct coresight_device *coresight_register(struct coresight_desc *desc)
+ 
+ 	coresight_fixup_device_conns(csdev);
+ 	coresight_fixup_orphan_conns(csdev);
++	cti_add_assoc_to_csdev(csdev);
+ 
+ 	mutex_unlock(&coresight_mutex);
+ 
+diff --git a/include/linux/coresight.h b/include/linux/coresight.h
+index b3e582d96a34..193cc9dbf448 100644
+--- a/include/linux/coresight.h
++++ b/include/linux/coresight.h
+@@ -163,6 +163,8 @@ struct coresight_connection {
+  *		activated but not yet enabled.  Enabling for a _sink_
+  *		appens when a source has been selected for that it.
+  * @ea:		Device attribute for sink representation under PMU directory.
++ * @ect_dev:	Associated cross trigger device. Not part of the trace data
++ *		path or connections.
+  */
+ struct coresight_device {
+ 	struct coresight_platform_data *pdata;
+@@ -176,6 +178,8 @@ struct coresight_device {
+ 	/* sink specific fields */
+ 	bool activated;	/* true only if a sink is part of a path */
+ 	struct dev_ext_attribute *ea;
++	/* cross trigger handling */
++	struct coresight_device *ect_dev;
+ };
+ 
+ /*
 -- 
 2.20.1
 
