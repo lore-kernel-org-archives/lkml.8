@@ -2,233 +2,157 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3502CC18E5A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 17:33:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9E23C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 17:34:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3DA42253D
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 17:33:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95F262464B
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 17:34:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="E2ikta4r"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gRt7ekmO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727392AbgCIRds (ORCPT
+        id S1727406AbgCIReY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 13:33:48 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:12860 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727254AbgCIRdr (ORCPT
+        Mon, 9 Mar 2020 13:34:24 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:34527 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727254AbgCIReY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 13:33:47 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e667dca0000>; Mon, 09 Mar 2020 10:32:59 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 09 Mar 2020 10:33:42 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 09 Mar 2020 10:33:42 -0700
-Received: from [10.2.175.232] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 9 Mar
- 2020 17:33:42 +0000
-Subject: Re: LKFT: arm x15: mmc1: cache flush error -110
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-CC:     Jon Hunter <jonathanh@nvidia.com>,
-        Bitan Biswas <bbiswas@nvidia.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        Alexei Starovoitov <ast@kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        <lkft-triage@lists.linaro.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        John Stultz <john.stultz@linaro.org>,
-        Faiz Abbas <faiz_abbas@ti.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Kishon <kishon@ti.com>
-References: <CA+G9fYuqAQfhzF2BzHr7vMHx68bo8-jT+ob_F3eHQ3=oFjgYdg@mail.gmail.com>
- <CAPDyKFokE6x0mn+v5B9=so-SyrdTn0JBU8Mrp3Zdu6kSaCie2g@mail.gmail.com>
- <0963b60f-15e7-4bc6-10df-6fc8003e4d42@nvidia.com>
- <CAPDyKFq5NoeHEBK3sv3yOSD2+pm9FueH1gaTyPq0j7GLfa6vnA@mail.gmail.com>
- <34fd84d7-387b-b6f3-7fb3-aa490909e205@ti.com>
- <CAPDyKFrrO4noYqdxWL9Y8Nx75LopbDudKGMotkGbGcAF1oq==w@mail.gmail.com>
- <5e9b5646-bd48-e55b-54ee-1c2c41fc9218@nvidia.com>
- <CAPDyKFqpNo_4OePBR1KnJNO=kR8XEqbcsEd=icSceSdDH+Rk1Q@mail.gmail.com>
- <757853cf-987e-f6b6-9259-b4560a031692@nvidia.com>
- <d12fe142-7e72-ab58-33ab-17817e35096f@nvidia.com>
- <c216f131-6f83-c9c9-9d17-8d44ec06972d@nvidia.com>
- <87ad7586-9569-4276-044a-adb64e84ca15@nvidia.com>
- <a0962e0b-0f1d-9f32-f6e9-92f69f93167f@nvidia.com>
- <57ddddc2-3ee8-d867-bba0-0dd9929ba37d@nvidia.com>
- <CAPDyKFqZSd9E3+16yFsmpee2JsbRJ-DGThxx7NJHu6UE00Xi1Q@mail.gmail.com>
- <26ee7225-9483-4664-c2d7-b5cefeadcd4b@nvidia.com>
- <CAPDyKFqwVQDEnPNi33mc9ycTxpaT1cRLejbR3Ja4c8dha4gFRw@mail.gmail.com>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <0301bbd5-8d4d-4a77-42c7-8a1391c2d60a@nvidia.com>
-Date:   Mon, 9 Mar 2020 10:35:31 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 9 Mar 2020 13:34:24 -0400
+Received: by mail-lf1-f68.google.com with SMTP id i19so2485866lfl.1
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 10:34:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OKwweRnte1MOD7p9TA/S2S3zf2g/0Z5sCRLZSuMOcIs=;
+        b=gRt7ekmOg8rl5K+/4iBSCKcg6XtIM8giPFm9yVKDZMspyiOsDz19mv7YtW0EjPRmh+
+         p1RLG4nYMhBc0w3RcvGOU1aYRVjPKHgqcD26DAfRgks0ixDF/rPNrNduwPv8pX0XwjXa
+         U0ZIgtMaqHvJ6AhJ3iG5FSSA1anL8uvx569WyECwfgYmr6nUNg2v2W5Bm7pdNJHLZTWn
+         KQjYMRvSXsO8CslfFBsouUi7OOPyTVO2pa/hTgJOzs5tuGtCPRq2Jvt737L3IxXxzGEH
+         XH6HfGZZbNWgs0bzI+d/Bld6xU1ebtB0AFslJkd+SxjLYgRI3cWjdDnb9Xqb8te3jZj8
+         JyJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OKwweRnte1MOD7p9TA/S2S3zf2g/0Z5sCRLZSuMOcIs=;
+        b=QlxfyACasNtIiajXpNnuL8gv7IJJkMQ5oqkZzU2MHvy8rt0+H03Dti6+1DlV6O/9k1
+         8p65GwhXVp4Wrgk2+j3MKQyN+QOBrVrCHIbnpKljXaoo2QuqhoUDgrhLZgOEAGs1JQju
+         BC5HenHW6RLAY+TjW5QHnuUMQRbBgP5RS6kQCy2Sr5iGeXpKl42iyhb2kk89qPRtWVIC
+         TOUHFTJ3v3DDlgB92GRz9GR1ngQa7DUc63nl++3t2iBq+8DJlRKsr1gH/ZDPjI1GGz8K
+         QrzvZ/EdP4GwJecg0RI2HeKW731etR+Y2/4muHPhMVnInT1F71sRhQav60tKDyw/fMeD
+         +V/A==
+X-Gm-Message-State: ANhLgQ1EVcn+4Lg6qHYN/B4Vr59P9HnZDjO5iFpsQaGOymvrGmFr9Bz1
+        pGWcvFNN1uEGpRJZfwW0/bJxdtkjSC5E6RhTLe26rQ==
+X-Google-Smtp-Source: ADFU+vuICxdS5HcWd7C+Tu3VndUCAPMP28WDkPVH8R+sJ4h8bsJf+5vcfGqb2LvTsz7pvpD2B2HIZdzAE0cuPTRXa8k=
+X-Received: by 2002:a05:6512:304c:: with SMTP id b12mr10177018lfb.196.1583775261668;
+ Mon, 09 Mar 2020 10:34:21 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAPDyKFqwVQDEnPNi33mc9ycTxpaT1cRLejbR3Ja4c8dha4gFRw@mail.gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1583775179; bh=CYaifugh60g9oO62CRHXR8kHhNzWHbyTDaF0kgHrBPI=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=E2ikta4rTotdZ9vdOIYMuaIOOfvDngHacwS6IlqPRUsxZweuaoG3VC/1Gs/3jaZsO
-         ddnzbKnqD2ckd79tq/qAMwzMYcsYOoL73Er4IYO7b89lc/Hb931hSi54+Eum1e5xtJ
-         dvoBWxSrJ3CTgTvobhl/Z9tKPh+cLuHJ2lnHtzgw4dJrjvsimdfplUK4S7hHrzX4hB
-         AnD+9fxTno86x/XJ19gd8GKflyH2jFX9+dRM/JFk3EFbjNAdDN3maGR41UHxbI/EJn
-         HDbUeTv0bzS8RFp0fboaWszYVGwJbhrObA2x7dsChfuK4ElohDYgrqWblNCAqyO9fX
-         wgQ1RWrxj3V2A==
+References: <1583241493-21212-1-git-send-email-okukatla@codeaurora.org> <1583241493-21212-3-git-send-email-okukatla@codeaurora.org>
+In-Reply-To: <1583241493-21212-3-git-send-email-okukatla@codeaurora.org>
+From:   Evan Green <evgreen@google.com>
+Date:   Mon, 9 Mar 2020 10:33:45 -0700
+Message-ID: <CAE=gft5LE=_hBLbkWHDAQ6O9vrbfF=LtS7B=1tWWDE3euZov_g@mail.gmail.com>
+Subject: Re: [v5, 2/3] interconnect: qcom: Add SC7180 interconnect provider driver
+To:     Odelu Kukatla <okukatla@codeaurora.org>
+Cc:     Georgi Djakov <georgi.djakov@linaro.org>,
+        David Dai <daidavid1@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        linux-pm@vger.kernel.org, sboyd@kernel.org,
+        Lina Iyer <ilina@codeaurora.org>,
+        Sean Sweeney <seansw@qti.qualcomm.com>,
+        Alex Elder <elder@linaro.org>,
+        linux-arm-msm-owner@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Mar 3, 2020 at 5:18 AM Odelu Kukatla <okukatla@codeaurora.org> wrote:
+>
+> Add driver for the Qualcomm interconnect buses found in SC7180 based
+> platforms. The topology consists of several NoCs that are controlled by
+> a remote processor that collects the aggregated bandwidth for each
+> master-slave pairs.
+>
+> Signed-off-by: Odelu Kukatla <okukatla@codeaurora.org>
+> ---
+>  drivers/interconnect/qcom/Kconfig  |  10 +
+>  drivers/interconnect/qcom/Makefile |   2 +
+>  drivers/interconnect/qcom/sc7180.c | 641 +++++++++++++++++++++++++++++++++++++
+>  drivers/interconnect/qcom/sc7180.h | 149 +++++++++
+>  4 files changed, 802 insertions(+)
+>  create mode 100644 drivers/interconnect/qcom/sc7180.c
+>  create mode 100644 drivers/interconnect/qcom/sc7180.h
+>
+> diff --git a/drivers/interconnect/qcom/Kconfig b/drivers/interconnect/qcom/Kconfig
+> index f6418a6..482c5be 100644
+> --- a/drivers/interconnect/qcom/Kconfig
+> +++ b/drivers/interconnect/qcom/Kconfig
+> @@ -42,6 +42,16 @@ config INTERCONNECT_QCOM_RPMH
+>         depends on INTERCONNECT_QCOM || COMPILE_TEST
+>         depends on QCOM_COMMAND_DB
+>
+> +config INTERCONNECT_QCOM_SC7180
+> +       tristate "Qualcomm SC7180 interconnect driver"
+> +       depends on INTERCONNECT_QCOM
+> +       depends on (QCOM_RPMH && QCOM_COMMAND_DB && OF) || COMPILE_TEST
+> +       select INTERCONNECT_QCOM_RPMH
+> +       select INTERCONNECT_QCOM_BCM_VOTER
+> +       help
+> +         This is a driver for the Qualcomm Network-on-Chip on sc7180-based
+> +         platforms.
+> +
+>  config INTERCONNECT_QCOM_SDM845
+>         tristate "Qualcomm SDM845 interconnect driver"
+>         depends on INTERCONNECT_QCOM
+> diff --git a/drivers/interconnect/qcom/Makefile b/drivers/interconnect/qcom/Makefile
+> index d591bb5..5325558 100644
+> --- a/drivers/interconnect/qcom/Makefile
+> +++ b/drivers/interconnect/qcom/Makefile
+> @@ -5,6 +5,7 @@ qnoc-msm8916-objs                       := msm8916.o
+>  qnoc-msm8974-objs                      := msm8974.o
+>  qnoc-qcs404-objs                       := qcs404.o
+>  icc-rpmh-obj                           := icc-rpmh.o
+> +qnoc-sc7180-objs                       := sc7180.o
+>  qnoc-sdm845-objs                       := sdm845.o
+>  icc-smd-rpm-objs                       := smd-rpm.o
+>
+> @@ -13,5 +14,6 @@ obj-$(CONFIG_INTERCONNECT_QCOM_MSM8916) += qnoc-msm8916.o
+>  obj-$(CONFIG_INTERCONNECT_QCOM_MSM8974) += qnoc-msm8974.o
+>  obj-$(CONFIG_INTERCONNECT_QCOM_QCS404) += qnoc-qcs404.o
+>  obj-$(CONFIG_INTERCONNECT_QCOM_RPMH) += icc-rpmh.o
+> +obj-$(CONFIG_INTERCONNECT_QCOM_SC7180) += qnoc-sc7180.o
+>  obj-$(CONFIG_INTERCONNECT_QCOM_SDM845) += qnoc-sdm845.o
+>  obj-$(CONFIG_INTERCONNECT_QCOM_SMD_RPM) += icc-smd-rpm.o
+> diff --git a/drivers/interconnect/qcom/sc7180.c b/drivers/interconnect/qcom/sc7180.c
+> new file mode 100644
+> index 0000000..dcf493d
+> --- /dev/null
+> +++ b/drivers/interconnect/qcom/sc7180.c
+> @@ -0,0 +1,641 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2020, The Linux Foundation. All rights reserved.
+> + *
+> + */
+> +
+> +#include <linux/device.h>
+> +#include <linux/interconnect.h>
+> +#include <linux/interconnect-provider.h>
+> +#include <linux/module.h>
+> +#include <linux/of_platform.h>
 
-On 3/6/20 3:14 AM, Ulf Hansson wrote:
-> External email: Use caution opening links or attachments
->
->
-> [...]
->
->>>>>>>>>>> Actually we always use R1B with CMD6 as per spec.
->>>>>>>>>> I fully agree that R1B is preferable, but it's not against the
->>>>>>>>>> spec to
->>>>>>>>>> send CMD13 to poll for busy.
->>>>>>>>>>
->>>>>>>>>> Moreover, we need to cope with the scenario when the host has
->>>>>>>>>> specified a maximum timeout that isn't sufficiently long enough for
->>>>>>>>>> the requested operation. Do you have another proposal for how to
->>>>>>>>>> manage this, but disabling MMC_RSP_BUSY?
->>>>>>>>>>
->>>>>>>>>> Let's assume you driver would get a R1B for the CMD6 (we force it),
->>>>>>>>>> then what timeout would the driver be using if we would set
->>>>>>>>>> cmd.busy_timeout to 30ms?
->>>>>>>>>>
->>>> Sorry didn't understood clearly. Are you asking with 30s timeout, whats
->>>> the data timeout counter used?
->>> Yes. It seems like it will pick the maximum, which is 11s?
->> yes
-> Okay, thanks!
->
->>>> Because of above mentioned issue on our host where CMD interrupt happens
->>>> after busy state, poll for busy returns right away as not busy.
->>> I see.
->>>
->>>> So issuing CMD13 after CMD6-R1 followed by busy poll should be working.
->>>> But weird that with small delay of 1ms or debug print before CMD13 it
->>>> doesn't timeout and works all the time.
->>> I have digested the information you provided in these emails. Let me
->>> summarize it, to see if I have understood correctly.
->>>
->>> 1.
->>> Your controller can't distinguish between R1 and R1B because of a
->>> limitation in the HW. So, in both cases you need to wait for the card
->>> to stop signal busy, before the controller can give an IRQ to notify
->>> that the R1 response has been received. Correct?
->>>
->>> In this context, I am wondering if sdhci_send_command(), really
->>> conforms to these requirements. For example, depending on if the CMD6
->>> has MMC_RSP_BUSY or not, it may pick either SDHCI_CMD_RESP_SHORT or
->>> SDHCI_CMD_RESP_SHORT_BUSY.
->>>
->>> Does this work as expected for your case?
->> Design team re-verified internally and bug where HW waits for busy state
->> before IRQ is only for R1B and R1 is spec compliant.
->>
->> So, with R1, CMD complete is generated after response received.
-> Okay.
->
-> So, the issue we see for CMD6 with R1, is a software problem that we
-> should be able to fix.
->
->> With R1B, CMD complete and xfer complete both are generated after
->> response received + device busy (max timeout of 11s)
->> DATA timeout interrupt will be asserted incase if HW busy detection fails.
->>
->> With R1B we may see DATA Timeout if operation takes more than max busy
->> timeout of 11s.
-> Okay, I see.
->
->>> 2.
->>> Assuming my interpretation of the above is somewhat correct. Then you
->>> always need to set a busy timeout for R1/R1B responses in the
->>> controller. The maximum timeout seems to be 11s long. Obviously, this
->>> isn't enough for all cases, such as cache flushing and erase, for
->>> example. So, what can we do to support a longer timeouts than 11s?
->>> Would it be possible to disable the HW timeout, if the requested
->>> timeout is longer than 11s and use a SW timeout instead?
->>>
->>> Kind regards
->>> Uffe
->> For erase long operations we have register bit to enable for infinite
->> busy wait mode where host controller would be monitoring until card is busy.
-> Alright, that sounds great!
->
->> But so far for emmc devices we used on our platforms, we haven't seen
->> cache flush taking more than 11s.
-> I understand that 11s is probably fine to use, for most cases.
->
-> However, it's not spec compliant, as for some operations there are
-> simply no timeout specified. BKOPS, cache flush, sanitize are cases
-> like this - and then 11s is definitely not sufficient.
->
->> Will get back on possibility of disabling HW timeout and using SW timeout..
-> Thanks!
->
-> I would like to get the regression fixed asap, but I also would like
-> to avoid reverting patches, unless really necessary. May I propose the
-> following two options.
->
-> 1. Find out why polling with ->card_busy() or CMD13, for a CMD6 with
-> an R1 response doesn't work - and then fix that behaviour.
->
-> 2. Set the mmc->max_busy_timeout to zero for sdhci-tegra, which makes
-> the core to always use R1B for CMD6 (and erase). This also means that
-> when the cmd->busy_timeout becomes longer than 11s, sdhci-tegra must
-> disable the HW busy timeout and just wait "forever".
->
-> If you decide for 2, you can add the software timeout support on top,
-> but make that can be considered as a next step of an improvement,
-> rather than needed as fix. Note that, I believe there are some support
-> for software timeout already in the sdhci core, maybe you need to
-> tweak it a bit for your case, I don't know.
->
-> Kind regards
-> Uffe
+Nit: As Georgi mentioned in the previous review, you can remove this
+an replace it with of_device.h. No need to spin for just that, though.
 
-Hi Uffe
-
-Will go with 2nd option and will send patches out when ready.
-
-BTW, Tegra host also supports SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK for 
-data timeout based on host clock when using finite mode (HW busy 
-detection based on DATA TIMEOUT count value when cmd operation timeout 
-is < 11s for tegra host).
-
-So, looks like we cant set host max_busy_timeout to 0 for Tegra host to 
-force R1B during SWITCH and SLEEP_AWAKE.
-
-So, was thinking to introduce host capability MMC_CAP2_LONG_WAIT_HW_BUSY 
-which can be used for hosts supporting long or infinite HW busy wait 
-detection and will update mmc and mmc_ops drivers to not allow convert 
-R1B to R1B for hosts with this capability during SLEEP_AWAKE and SWITCH.
-
-Thanks
-
-Sowjanya
-
+Reviewed-by: Evan Green <evgreen@chromium.org>
