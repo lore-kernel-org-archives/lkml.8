@@ -2,253 +2,144 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1358CC10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 07:41:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A233C10F29
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 07:45:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E87E32072A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 07:41:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F45220675
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 07:45:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HP+Om+gm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726428AbgCIHkw (ORCPT
+        id S1726402AbgCIHpd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 03:40:52 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:36819 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726071AbgCIHkw (ORCPT
+        Mon, 9 Mar 2020 03:45:33 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:45596 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725796AbgCIHpd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 03:40:52 -0400
-Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jBD1r-00047c-VK; Mon, 09 Mar 2020 08:40:47 +0100
-Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jBD1q-0006PZ-PF; Mon, 09 Mar 2020 08:40:46 +0100
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        Marek Vasut <marex@denx.de>, David Jander <david@protonic.nl>
-Subject: [PATCH v2 2/2] net: phy: tja11xx: add delayed registration of TJA1102 PHY1
-Date:   Mon,  9 Mar 2020 08:40:44 +0100
-Message-Id: <20200309074044.21399-3-o.rempel@pengutronix.de>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200309074044.21399-1-o.rempel@pengutronix.de>
-References: <20200309074044.21399-1-o.rempel@pengutronix.de>
+        Mon, 9 Mar 2020 03:45:33 -0400
+Received: by mail-wr1-f67.google.com with SMTP id m9so690091wro.12;
+        Mon, 09 Mar 2020 00:45:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JohOmOJ2T+csOaen6ynllfQT2PQ8VgsBqiM3qEbp8as=;
+        b=HP+Om+gmFPxPOXCJQ4AgXeIEU4/wRrwvfwQH7ZxwqOgJbeyO9kv2rUkMUkXSWLslto
+         m5Bf9EmNlvde6i0960insg5nBP0LL+mrPaueYnFfZwdWllo5wyB8nqTH906n2IFvoUFC
+         mk0Kgl5ryDblG0fZEEPLTl/51Py2oVhukshG+F5BDobuFxf0QJdzoc/OLAeCjm7W5ORV
+         Ti3pxp0c4v5390A8Q/T19lw1wQA+71tX3p9oRELquG68t5KXXE+rbUc5CLrKsoSxfCnE
+         rpdXolv2ETmowsmmfOS4L+BGcIRl8YHMW+5X5WvRMGlXl/vhWwgz1yLmFOv+E9SK8aYy
+         qt7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JohOmOJ2T+csOaen6ynllfQT2PQ8VgsBqiM3qEbp8as=;
+        b=PdU4khU6ZNR+g9XcIx0mCSmT7MzXRf7MNB2K/0QJKxXamneyvTqzYv1o0dZZhoTxos
+         GNQ0v3shQjbahzRVe5n/CLGT9/F42uYbXnQqSuYxQOga/zshJkt5nRGfHOoMMjBcj8XS
+         dtzoxDqv1aaKf6iN2JZGSMiH9nVC2bVAWH1P0kBLrGbV+td/oJtx6hI5ycAeDgAHFcog
+         j0TsD1d9PRTCH/Y47SSAbXtmSLSEcxts6/HhEmDz5D+bQ8g5spVo6E5wPi1YawfAgLT1
+         1URKhE8tZ8MTyGWkIxOSxgt+RCklydtkSX52Ndxx0wd+obLGLVlbSYPcuBqcvd+WQJQq
+         fXUA==
+X-Gm-Message-State: ANhLgQ3A82275pYCsfCJ84ovOrwUrx9v2B9XviUzag1O27B59Nlh9Q4p
+        HEoTfdrnrrTNBnu9IPSLGLiyaqEWDx98krw463kKqQ==
+X-Google-Smtp-Source: ADFU+vt4iAmDL5h0y/kV4E7Ipmkv+BBc24pv9MRc0ozJhfCIh3aP/zVHGMnQwBBM+ci4u4lNUsbZ8iMb8yog2Jeb0TA=
+X-Received: by 2002:a5d:4902:: with SMTP id x2mr20682737wrq.301.1583739929355;
+ Mon, 09 Mar 2020 00:45:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <1583539986-573-1-git-send-email-opendmb@gmail.com>
+In-Reply-To: <1583539986-573-1-git-send-email-opendmb@gmail.com>
+From:   Gregory Fong <gregory.0xf0@gmail.com>
+Date:   Mon, 9 Mar 2020 00:45:02 -0700
+Message-ID: <CADtm3G4eq_p1YZtQrtcx4LGPiY82BpgXf55YtJCW+WJSrM7siw@mail.gmail.com>
+Subject: Re: [PATCH] gpio: brcmstb: support gpio-line-names property
+To:     Doug Berger <opendmb@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-TJA1102 is a dual PHY package with PHY0 having proper PHYID and PHY1
-having no ID. On one hand it is possible to for PHY detection by
-compatible, on other hand we should be able to reset complete chip
-before PHY1 configured it, and we need to define dependencies for proper
-power management.
+Hi Doug,
 
-We can solve it by defining PHY1 as child of PHY0:
-	tja1102_phy0: ethernet-phy@4 {
-		reg = <0x4>;
+On Fri, Mar 6, 2020 at 4:14 PM Doug Berger <opendmb@gmail.com> wrote:
+>
+> The default handling of the gpio-line-names property by the
+> gpiolib-of implementation does not work with the multiple
+> gpiochip banks per device structure used by the gpio-brcmstb
+> driver.
+>
+> This commit adds driver level support for the device tree
+> property so that GPIO lines can be assigned friendly names.
+>
+> Signed-off-by: Doug Berger <opendmb@gmail.com>
 
-		interrupts-extended = <&gpio5 8 IRQ_TYPE_LEVEL_LOW>;
+I've added a few comments below.  With the suggested updates:
+Acked-by: Gregory Fong <gregory.0xf0@gmail.com>
 
-		reset-gpios = <&gpio5 9 GPIO_ACTIVE_LOW>;
-		reset-assert-us = <20>;
-		reset-deassert-us = <2000>;
+> ---
+>  drivers/gpio/gpio-brcmstb.c | 44 ++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 44 insertions(+)
+>
+> diff --git a/drivers/gpio/gpio-brcmstb.c b/drivers/gpio/gpio-brcmstb.c
+> index 05e3f99ae59c..e9ab246e2d42 100644
+> --- a/drivers/gpio/gpio-brcmstb.c
+> +++ b/drivers/gpio/gpio-brcmstb.c
+> @@ -603,6 +603,49 @@ static const struct dev_pm_ops brcmstb_gpio_pm_ops = {
+>         .resume_noirq = brcmstb_gpio_resume,
+>  };
+>
+> +static void brcmstb_gpio_set_names(struct device *dev,
+> +                                  struct brcmstb_gpio_bank *bank)
+> +{
+> +       struct device_node *np = dev->of_node;
+> +       const char **names;
+> +       int nstrings, base;
+> +       unsigned int i;
+> +
+> +       base = bank->id * MAX_GPIO_PER_BANK;
+> +
+> +       nstrings = of_property_count_strings(np, "gpio-line-names");
+> +       if (nstrings <= base)
+> +               /* Line names not present */
+> +               return;
+> +
+> +       names = devm_kcalloc(dev, MAX_GPIO_PER_BANK, sizeof(char *),
 
-		tja1102_phy1: ethernet-phy@5 {
-			reg = <0x5>;
+Please use sizeof(*names) instead of sizeof(char *).
 
-			interrupts-extended = <&gpio5 8 IRQ_TYPE_LEVEL_LOW>;
-		};
-	};
+> +                            GFP_KERNEL);
+> +       if (!names)
+> +               return;
+> +
+> +       /*
+> +        * Make sure to not index beyond the end of the number of descriptors
+> +        * of the GPIO device.
+> +        */
+> +       for (i = 0; i < bank->width; i++) {
+> +               const char *name;
+> +               int ret;
+> +
+> +               ret = of_property_read_string_index(np, "gpio-line-names",
+> +                                                   base + i, &name);
+> +               if (ret) {
+> +                       if (ret != -ENODATA)
+> +                               dev_err(dev, "unable to name line %d: %d\n",
+> +                                       i, ret);
 
-The PHY1 should be a subnode of PHY0 and registered only after PHY0 was
-completely reset and initialized.
+Recommend adding the GPIO bank ID to this error message.
 
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
----
- drivers/net/phy/nxp-tja11xx.c | 116 ++++++++++++++++++++++++++++++++--
- 1 file changed, 109 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/net/phy/nxp-tja11xx.c b/drivers/net/phy/nxp-tja11xx.c
-index f79c9aa051ed..53e9e0aa9b5b 100644
---- a/drivers/net/phy/nxp-tja11xx.c
-+++ b/drivers/net/phy/nxp-tja11xx.c
-@@ -6,11 +6,14 @@
- #include <linux/delay.h>
- #include <linux/ethtool.h>
- #include <linux/kernel.h>
-+#include <linux/mdio.h>
- #include <linux/mii.h>
- #include <linux/module.h>
- #include <linux/phy.h>
- #include <linux/hwmon.h>
- #include <linux/bitfield.h>
-+#include <linux/of_mdio.h>
-+#include <linux/of_irq.h>
- 
- #define PHY_ID_MASK			0xfffffff0
- #define PHY_ID_TJA1100			0x0180dc40
-@@ -57,6 +60,8 @@
- struct tja11xx_priv {
- 	char		*hwmon_name;
- 	struct device	*hwmon_dev;
-+	struct phy_device *phydev;
-+	struct work_struct phy_register_work;
- };
- 
- struct tja11xx_phy_stats {
-@@ -333,16 +338,12 @@ static const struct hwmon_chip_info tja11xx_hwmon_chip_info = {
- 	.info		= tja11xx_hwmon_info,
- };
- 
--static int tja11xx_probe(struct phy_device *phydev)
-+static int tja11xx_hwmon_register(struct phy_device *phydev,
-+				  struct tja11xx_priv *priv)
- {
- 	struct device *dev = &phydev->mdio.dev;
--	struct tja11xx_priv *priv;
- 	int i;
- 
--	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
--	if (!priv)
--		return -ENOMEM;
--
- 	priv->hwmon_name = devm_kstrdup(dev, dev_name(dev), GFP_KERNEL);
- 	if (!priv->hwmon_name)
- 		return -ENOMEM;
-@@ -360,6 +361,107 @@ static int tja11xx_probe(struct phy_device *phydev)
- 	return PTR_ERR_OR_ZERO(priv->hwmon_dev);
- }
- 
-+static int tja11xx_probe(struct phy_device *phydev)
-+{
-+	struct device *dev = &phydev->mdio.dev;
-+	struct tja11xx_priv *priv;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->phydev = phydev;
-+
-+	return tja11xx_hwmon_register(phydev, priv);
-+}
-+
-+static void tja1102_p1_register(struct work_struct *work)
-+{
-+	struct tja11xx_priv *priv = container_of(work, struct tja11xx_priv,
-+						 phy_register_work);
-+
-+	struct phy_device *phydev_phy0 = priv->phydev;
-+        struct mii_bus *bus = phydev_phy0->mdio.bus;
-+	struct device *dev = &phydev_phy0->mdio.dev;
-+	struct device_node *np = dev->of_node;
-+	struct device_node *child;
-+	int ret;
-+
-+	for_each_available_child_of_node(np, child) {
-+		struct phy_device *phy;
-+		int addr;
-+
-+		addr = of_mdio_parse_addr(dev, child);
-+		if (addr < 0) {
-+			dev_err(dev, "Can't parse addr\n");
-+			continue;
-+		}
-+
-+		/* skip already registered PHYs */
-+		if (mdiobus_is_registered_device(bus, addr)) {
-+			dev_err(dev, "device is already registred \n");
-+			continue;
-+		}
-+
-+		phy = phy_device_create(bus, addr, PHY_ID_TJA1102,
-+						false, NULL);
-+		if (IS_ERR(phy)) {
-+			dev_err(dev, "Can't register Port : %i\n", addr);
-+			continue;
-+		}
-+
-+		ret = of_irq_get(child, 0);
-+		/* can we be deferred here? */
-+		if (ret > 0) {
-+			phy->irq = ret;
-+			bus->irq[addr] = ret;
-+		} else {
-+			phy->irq = bus->irq[addr];
-+		}
-+
-+		/* overwrite parent phy_device_create() set parent to the
-+		 * mii_bus->dev
-+		 */
-+		phy->mdio.dev.parent = dev;
-+
-+		/* Associate the OF node with the device structure so it
-+		 * can be looked up later */
-+		of_node_get(child);
-+		phy->mdio.dev.of_node = child;
-+		phy->mdio.dev.fwnode = of_fwnode_handle(child);
-+
-+		/* All data is now stored in the phy struct;
-+		 * register it */
-+		ret = phy_device_register(phy);
-+		if (ret) {
-+			phy_device_free(phy);
-+			of_node_put(child);
-+		}
-+	}
-+}
-+
-+static int tja1102_p0_probe(struct phy_device *phydev)
-+{
-+	struct device *dev = &phydev->mdio.dev;
-+	struct tja11xx_priv *priv;
-+	int ret;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->phydev = phydev;
-+	INIT_WORK(&priv->phy_register_work, tja1102_p1_register);
-+
-+	ret = tja11xx_hwmon_register(phydev, priv);
-+	if (ret)
-+		return ret;
-+
-+	schedule_work(&priv->phy_register_work);
-+
-+	return 0;
-+}
-+
- static int tja1102_match_phy_device(struct phy_device *phydev, bool port0)
- {
- 	int ret;
-@@ -454,7 +556,7 @@ static struct phy_driver tja11xx_driver[] = {
- 	}, {
- 		.name		= "NXP TJA1102 Port 0",
- 		.features       = PHY_BASIC_T1_FEATURES,
--		.probe		= tja11xx_probe,
-+		.probe		= tja1102_p0_probe,
- 		.soft_reset	= tja11xx_soft_reset,
- 		.config_init	= tja11xx_config_init,
- 		.read_status	= tja11xx_read_status,
--- 
-2.25.1
-
+Best regards,
+Gregory
