@@ -2,190 +2,71 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E7DEC10F29
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:37:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A025BC10F25
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:41:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B1502465A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:37:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B3C024656
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:41:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726491AbgCIThw (ORCPT
+        id S1726195AbgCITlt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 15:37:52 -0400
-Received: from out03.mta.xmission.com ([166.70.13.233]:57330 "EHLO
-        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726156AbgCIThv (ORCPT
+        Mon, 9 Mar 2020 15:41:49 -0400
+Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:47591 "EHLO
+        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725992AbgCITlt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 15:37:51 -0400
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jBODe-00015d-OU; Mon, 09 Mar 2020 13:37:42 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jBODd-0004Wy-QQ; Mon, 09 Mar 2020 13:37:42 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Bernd Edlinger <bernd.edlinger@hotmail.de>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Andrei Vagin <avagin@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Peter Zijlstra \(Intel\)" <peterz@infradead.org>,
-        Yuyang Du <duyuyang@gmail.com>,
-        David Hildenbrand <david@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        David Howells <dhowells@redhat.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christian Kellner <christian@kellner.me>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        "linux-doc\@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel\@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-mm\@kvack.org" <linux-mm@kvack.org>,
-        "stable\@vger.kernel.org" <stable@vger.kernel.org>,
-        "linux-api\@vger.kernel.org" <linux-api@vger.kernel.org>
-References: <AM6PR03MB5170EB4427BF5C67EE98FF09E4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <87a74xi4kz.fsf@x220.int.ebiederm.org>
-        <AM6PR03MB51705AA3009B4986BB6EF92FE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <87r1y8dqqz.fsf@x220.int.ebiederm.org>
-        <AM6PR03MB517053AED7DC89F7C0704B7DE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <AM6PR03MB51703B44170EAB4626C9B2CAE4E20@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <87tv32cxmf.fsf_-_@x220.int.ebiederm.org>
-        <87v9ne5y4y.fsf_-_@x220.int.ebiederm.org>
-        <87zhcq4jdj.fsf_-_@x220.int.ebiederm.org>
-        <AM6PR03MB5170BC58D90BAD80CDEF3F8BE4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <878sk94eay.fsf@x220.int.ebiederm.org>
-        <AM6PR03MB517086003BD2C32E199690A3E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <87r1y12yc7.fsf@x220.int.ebiederm.org>
-        <87k13t2xpd.fsf@x220.int.ebiederm.org>
-        <87d09l2x5n.fsf@x220.int.ebiederm.org>
-        <AM6PR03MB5170F0F9DC18F5EA77C9A857E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <871rq12vxu.fsf@x220.int.ebiederm.org>
-        <AM6PR03MB5170DF45E3245F55B95CCD91E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
-Date:   Mon, 09 Mar 2020 14:35:24 -0500
-In-Reply-To: <AM6PR03MB5170DF45E3245F55B95CCD91E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        (Bernd Edlinger's message of "Mon, 9 Mar 2020 19:24:58 +0000")
-Message-ID: <87fteh1fur.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Mon, 9 Mar 2020 15:41:49 -0400
+Received: from unknown (HELO ironmsg04-sd.qualcomm.com) ([10.53.140.144])
+  by alexa-out-sd-02.qualcomm.com with ESMTP; 09 Mar 2020 12:41:48 -0700
+Received: from gurus-linux.qualcomm.com ([10.46.162.81])
+  by ironmsg04-sd.qualcomm.com with ESMTP; 09 Mar 2020 12:41:48 -0700
+Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
+        id 420C74A19; Mon,  9 Mar 2020 12:41:48 -0700 (PDT)
+Date:   Mon, 9 Mar 2020 12:41:48 -0700
+From:   Guru Das Srinagesh <gurus@codeaurora.org>
+To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     linux-pwm@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
+        linux-kernel@vger.kernel.org, kernel@pengutronix.de
+Subject: Re: [RESEND v6 1/2] pwm: Convert drivers to use 64-bit period and
+ duty cycle
+Message-ID: <20200309194148.GA30211@codeaurora.org>
+References: <cover.1583177501.git.gurus@codeaurora.org>
+ <28090aef9900ad483cbfbe77883e5ffcd8745907.1583177501.git.gurus@codeaurora.org>
+ <20200306074440.ykekwwlvnbodxkjc@pengutronix.de>
+ <20200306185252.GA2758@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jBODd-0004Wy-QQ;;;mid=<87fteh1fur.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1+DDWQI5cjwElTn1n4Tvz89F0vLYf/zGAA=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH v2 5/5] exec: Add a exec_update_mutex to replace cred_guard_mutex
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200306185252.GA2758@codeaurora.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Bernd Edlinger <bernd.edlinger@hotmail.de> writes:
+Hi Uwe,
 
-> On 3/9/20 8:02 PM, Eric W. Biederman wrote:
->> Bernd Edlinger <bernd.edlinger@hotmail.de> writes:
->> 
->>> On 3/9/20 7:36 PM, Eric W. Biederman wrote:
->>>>
->>>>
->>>> Does that sound better?
->>>>
->>>
->>> almost done.
->> 
->> I think this text is finally clean.
->> 
->>     exec: Add exec_update_mutex to replace cred_guard_mutex
->>     
->>     The cred_guard_mutex is problematic as it is held over possibly
->>     indefinite waits for userspace.  The possilbe indefinite waits for
->>     userspace that I have identified are: The cred_guard_mutex is held in
->>     PTRACE_EVENT_EXIT waiting for the tracer.  The cred_guard_mutex is
->>     held over "put_user(0, tsk->clear_child_tid)" in exit_mm().  The
->>     cred_guard_mutex is held over "get_user(futex_offset, ...")  in
->>     exit_robust_list.  The cred_guard_mutex held over copy_strings.
->>     
->>     The functions get_user and put_user can trigger a page fault which can
->>     potentially wait indefinitely in the case of userfaultfd or if
->>     userspace implements part of the page fault path.
->>     
->>     In any of those cases the userspace process that the kernel is waiting
->>     for might make a different system call that winds up taking the
->>     cred_guard_mutex and result in deadlock.
->>     
->>     Holding a mutex over any of those possibly indefinite waits for
->>     userspace does not appear necessary.  Add exec_update_mutex that will
->>     just cover updating the process during exec where the permissions and
->>     the objects pointed to by the task struct may be out of sync.
->>     
->>     The plan is to switch the users of cred_guard_mutex to
->>     exec_update_mutex one by one.  This lets us move forward while still
->>     being careful and not introducing any regressions.
->>     
->>     Link: https://lore.kernel.org/lkml/20160921152946.GA24210@dhcp22.suse.cz/
->>     Link: https://lore.kernel.org/lkml/AM6PR03MB5170B06F3A2B75EFB98D071AE4E60@AM6PR03MB5170.eurprd03.prod.outlook.com/
->>     Link: https://lore.kernel.org/linux-fsdevel/20161102181806.GB1112@redhat.com/
->>     Link: https://lore.kernel.org/lkml/20160923095031.GA14923@redhat.com/
->>     Link: https://lore.kernel.org/lkml/20170213141452.GA30203@redhat.com/
->>     Ref: 45c1a159b85b ("Add PTRACE_O_TRACEVFORKDONE and PTRACE_O_TRACEEXIT facilities.")
->>     Ref: 456f17cd1a28 ("[PATCH] user-vm-unlock-2.5.31-A2")
->
-> I checked the urls they all work.
-> Just one last question, are these git references?
-> I can't find them in my linux git tree (cloned from linus' git)?
->
-> Sorry for being pedantically.
+On Fri, Mar 06, 2020 at 10:56:59AM -0800, Guru Das Srinagesh wrote:
+> On Fri, Mar 06, 2020 at 08:44:40AM +0100, Uwe Kleine-König wrote:
+> > I guess we need acks from the affected maintainers. While I think the
+> > changes are fine I think you won't evade having to expand the audience
+> > of your patch and (depending on feedback) maybe split this patch up
+> > further.
+> 
+> Sure. I'll split up this patch into one per file and add the respective
+> maintainers for ease of reviewing.
 
-You have to track down tglx's historicaly git tree from when everything
-was in bitkeeper.
+I used the get_maintainer.pl script to add the respective maintainers of
+the files. Could you please provide feedback on whether v7 what you had
+in mind in your comment above?
 
-But yes they are git references and yes they work.  Just that part
-of the history is not in linux.git.
+Thank you.
 
->>     Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
->> 
->> 
->> Bernd do you want to give me your Reviewed-by for this part of the
->> series?
->> 
->
-> Sure also the other parts of course.
->
-> Reviewed-by: Bernd Edlinger <bernd.edlinger@hotmail.de>
->
->> After that do you think you can write the obvious patch for mm_access?
->> 
->
-> Yes, I can do that.
-> I also have some typos in comments, will make them extra patches as well.
->
-> I wonder if the test case is okay to include the ptrace_attach altough
-> that is not yet passing?
-
-It is an existing kernel but that it doesn't pass.
-
-My sense is that if you include it as a separate patch if it is a
-problem for someone we can identify it easily via bisect and we do
-whatever is appropriate.
-
-Eric
+Guru Das.
