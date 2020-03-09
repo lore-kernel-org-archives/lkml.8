@@ -2,168 +2,172 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1209DC10F29
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:43:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C49C4C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:54:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBDE520727
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:43:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Yt3uC7cs"
+	by mail.kernel.org (Postfix) with ESMTP id A75132083E
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:54:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726463AbgCIJnm (ORCPT
+        id S1726451AbgCIJyF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 05:43:42 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:43046 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725962AbgCIJnl (ORCPT
+        Mon, 9 Mar 2020 05:54:05 -0400
+Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:36868 "EHLO
+        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725942AbgCIJyF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 05:43:41 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0299hQi3050123;
-        Mon, 9 Mar 2020 04:43:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1583747006;
-        bh=RzlZesRpFJqS5mJhJut0NkSOELlsfKSMiUyjJ8TsFEc=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=Yt3uC7csFiagxt6uf3UP+yZDR/6dzb6qTY1gjp9YIsfRn7pkJmn2Y0c91Y+24gbdD
-         RNskelBfK//xg3/y4hfTAeUubV6WlzKJJC+z6jWuJfKvUJyH9P/i3K3f5O5Lr5viGE
-         amIoYITMXbruK0ayWo+/DSiveJkkP32spU5njSmI=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0299hQi5019087
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 9 Mar 2020 04:43:26 -0500
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 9 Mar
- 2020 04:43:26 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 9 Mar 2020 04:43:26 -0500
-Received: from [192.168.2.14] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0299hN6X114936;
-        Mon, 9 Mar 2020 04:43:23 -0500
-Subject: Re: [PATCH] ARM: OMAP: DTS: N900: fix onenand timings
-To:     Arthur Demchenkov <spinal.by@gmail.com>
-CC:     =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
+        Mon, 9 Mar 2020 05:54:05 -0400
+Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
+  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 09 Mar 2020 15:24:02 +0530
+Received: from c-sanm-linux.qualcomm.com ([10.206.25.31])
+  by ironmsg01-blr.qualcomm.com with ESMTP; 09 Mar 2020 15:23:45 +0530
+Received: by c-sanm-linux.qualcomm.com (Postfix, from userid 2343233)
+        id BE4F5230B; Mon,  9 Mar 2020 15:23:44 +0530 (IST)
+From:   Sandeep Maheswaram <sanm@codeaurora.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Ladislav Michl <ladis@linux-mips.org>,
-        <linux-omap@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200308191934.8263-1-spinal.by@gmail.com>
-From:   Roger Quadros <rogerq@ti.com>
-Message-ID: <abd076bf-20aa-c981-bf4f-7bdf10ec58d1@ti.com>
-Date:   Mon, 9 Mar 2020 11:43:22 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <20200308191934.8263-1-spinal.by@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Stephen Boyd <swboyd@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>
+Subject: [PATCH v5 6/9] phy: qcom-qusb2: Add new overriding tuning parameters in QUSB2 V2 PHY
+Date:   Mon,  9 Mar 2020 15:23:06 +0530
+Message-Id: <1583747589-17267-7-git-send-email-sanm@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1583747589-17267-1-git-send-email-sanm@codeaurora.org>
+References: <1583747589-17267-1-git-send-email-sanm@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Added support for overriding bias-ctrl-value,charge-ctrl-value and
+hsdisc-trim-value params for QUSB2 V2 PHY
 
+Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
+---
+ drivers/phy/qualcomm/phy-qcom-qusb2.c | 51 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 51 insertions(+)
 
-On 08/03/2020 21:19, Arthur Demchenkov wrote:
-> Commit a758f50f10cf ("mtd: onenand: omap2: Configure driver from DT")
-> started using DT specified timings for GPMC, and as a result the
-> OneNAND stopped working on N900 as we had wrong values in the DT.
-> Fix by updating the values to bootloader timings that have been tested
-> to be working on Nokia N900 with OneNAND manufacturers: Samsung,
-> Numonyx.
-> 
-> Fixes: a758f50f10cf ("mtd: onenand: omap2: Configure driver from DT")
-> Signed-off-by: Arthur Demchenkov <spinal.by@gmail.com>
-
-Reviewed-by: Roger Quadros <rogerq@ti.com>
-
-> ---
->   arch/arm/boot/dts/omap3-n900.dts | 44 +++++++++++++++++++++++++---------------
->   1 file changed, 28 insertions(+), 16 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/omap3-n900.dts b/arch/arm/boot/dts/omap3-n900.dts
-> index c3c6d7d04a76..4089d97405c9 100644
-> --- a/arch/arm/boot/dts/omap3-n900.dts
-> +++ b/arch/arm/boot/dts/omap3-n900.dts
-> @@ -854,34 +854,46 @@
->   		compatible = "ti,omap2-onenand";
->   		reg = <0 0 0x20000>;	/* CS0, offset 0, IO size 128K */
->   
-> +		/*
-> +		 * These timings are based on CONFIG_OMAP_GPMC_DEBUG=y reported
-> +		 * bootloader set values when booted with v5.1
-> +		 * (OneNAND Manufacturer: Samsung):
-> +		 *
-> +		 *   cs0 GPMC_CS_CONFIG1: 0xfb001202
-> +		 *   cs0 GPMC_CS_CONFIG2: 0x00111100
-> +		 *   cs0 GPMC_CS_CONFIG3: 0x00020200
-> +		 *   cs0 GPMC_CS_CONFIG4: 0x11001102
-> +		 *   cs0 GPMC_CS_CONFIG5: 0x03101616
-> +		 *   cs0 GPMC_CS_CONFIG6: 0x90060000
-> +		 */
->   		gpmc,sync-read;
->   		gpmc,sync-write;
->   		gpmc,burst-length = <16>;
->   		gpmc,burst-read;
->   		gpmc,burst-wrap;
->   		gpmc,burst-write;
-> -		gpmc,device-width = <2>; /* GPMC_DEVWIDTH_16BIT */
-> -		gpmc,mux-add-data = <2>; /* GPMC_MUX_AD */
-> +		gpmc,device-width = <2>;
-> +		gpmc,mux-add-data = <2>;
->   		gpmc,cs-on-ns = <0>;
-> -		gpmc,cs-rd-off-ns = <87>;
-> -		gpmc,cs-wr-off-ns = <87>;
-> +		gpmc,cs-rd-off-ns = <102>;
-> +		gpmc,cs-wr-off-ns = <102>;
->   		gpmc,adv-on-ns = <0>;
-> -		gpmc,adv-rd-off-ns = <10>;
-> -		gpmc,adv-wr-off-ns = <10>;
-> -		gpmc,oe-on-ns = <15>;
-> -		gpmc,oe-off-ns = <87>;
-> +		gpmc,adv-rd-off-ns = <12>;
-> +		gpmc,adv-wr-off-ns = <12>;
-> +		gpmc,oe-on-ns = <12>;
-> +		gpmc,oe-off-ns = <102>;
->   		gpmc,we-on-ns = <0>;
-> -		gpmc,we-off-ns = <87>;
-> -		gpmc,rd-cycle-ns = <112>;
-> -		gpmc,wr-cycle-ns = <112>;
-> -		gpmc,access-ns = <81>;
-> -		gpmc,page-burst-access-ns = <15>;
-> +		gpmc,we-off-ns = <102>;
-> +		gpmc,rd-cycle-ns = <132>;
-> +		gpmc,wr-cycle-ns = <132>;
-> +		gpmc,access-ns = <96>;
-> +		gpmc,page-burst-access-ns = <18>;
->   		gpmc,bus-turnaround-ns = <0>;
->   		gpmc,cycle2cycle-delay-ns = <0>;
->   		gpmc,wait-monitoring-ns = <0>;
-> -		gpmc,clk-activation-ns = <5>;
-> -		gpmc,wr-data-mux-bus-ns = <30>;
-> -		gpmc,wr-access-ns = <81>;
-> +		gpmc,clk-activation-ns = <6>;
-> +		gpmc,wr-data-mux-bus-ns = <36>;
-> +		gpmc,wr-access-ns = <96>;
->   		gpmc,sync-clk-ps = <15000>;
->   
->   		/*
-> 
-
+diff --git a/drivers/phy/qualcomm/phy-qcom-qusb2.c b/drivers/phy/qualcomm/phy-qcom-qusb2.c
+index 44841c9..3708d43 100644
+--- a/drivers/phy/qualcomm/phy-qcom-qusb2.c
++++ b/drivers/phy/qualcomm/phy-qcom-qusb2.c
+@@ -66,6 +66,14 @@
+ #define IMP_RES_OFFSET_MASK			GENMASK(5, 0)
+ #define IMP_RES_OFFSET_SHIFT			0x0
+ 
++/* QUSB2PHY_PLL_BIAS_CONTROL_2 register bits */
++#define BIAS_CTRL2_RES_OFFSET_MASK		GENMASK(5, 0)
++#define BIAS_CTRL2_RES_OFFSET_SHIFT		0x0
++
++/* QUSB2PHY_CHG_CONTROL_2 register bits */
++#define CHG_CTRL2_OFFSET_MASK			GENMASK(5, 4)
++#define CHG_CTRL2_OFFSET_SHIFT			0x4
++
+ /* QUSB2PHY_PORT_TUNE1 register bits */
+ #define HSTX_TRIM_MASK				GENMASK(7, 4)
+ #define HSTX_TRIM_SHIFT				0x4
+@@ -73,6 +81,10 @@
+ #define PREEMPHASIS_EN_MASK			GENMASK(1, 0)
+ #define PREEMPHASIS_EN_SHIFT			0x0
+ 
++/* QUSB2PHY_PORT_TUNE2 register bits */
++#define HSDISC_TRIM_MASK			GENMASK(1, 0)
++#define HSDISC_TRIM_SHIFT			0x0
++
+ #define QUSB2PHY_PLL_ANALOG_CONTROLS_TWO	0x04
+ #define QUSB2PHY_PLL_CLOCK_INVERTERS		0x18c
+ #define QUSB2PHY_PLL_CMODE			0x2c
+@@ -291,12 +303,18 @@ struct override_param {
+  * @hstx_trim: HSTX_TRIM to be updated in TUNE1 register
+  * @preemphasis: Amplitude Pre-Emphasis to be updated in TUNE1 register
+  * @preemphasis_width: half/full-width Pre-Emphasis updated via TUNE1
++ * @bias_ctrl: bias ctrl to be updated in BIAS_CONTROL_2 register
++ * @charge_ctrl: charge ctrl to be updated in CHG_CTRL2 register
++ * @hsdisc_trim: disconnect threshold to be updated in TUNE2 register
+  */
+ struct override_params {
+ 	struct override_param imp_res_offset;
+ 	struct override_param hstx_trim;
+ 	struct override_param preemphasis;
+ 	struct override_param preemphasis_width;
++	struct override_param bias_ctrl;
++	struct override_param charge_ctrl;
++	struct override_param hsdisc_trim;
+ };
+ 
+ /**
+@@ -409,6 +427,16 @@ static void qusb2_phy_override_phy_params(struct qusb2_phy *qphy)
+ 		or->imp_res_offset.value << IMP_RES_OFFSET_SHIFT,
+ 			     IMP_RES_OFFSET_MASK);
+ 
++	if (or->bias_ctrl.override)
++		qusb2_write_mask(qphy->base, QUSB2PHY_PLL_BIAS_CONTROL_2,
++		or->bias_ctrl.value << BIAS_CTRL2_RES_OFFSET_SHIFT,
++			   BIAS_CTRL2_RES_OFFSET_MASK);
++
++	if (or->charge_ctrl.override)
++		qusb2_write_mask(qphy->base, QUSB2PHY_CHG_CTRL2,
++		or->charge_ctrl.value << CHG_CTRL2_OFFSET_SHIFT,
++			     CHG_CTRL2_OFFSET_MASK);
++
+ 	if (or->hstx_trim.override)
+ 		qusb2_write_mask(qphy->base, cfg->regs[QUSB2PHY_PORT_TUNE1],
+ 		or->hstx_trim.value << HSTX_TRIM_SHIFT,
+@@ -430,6 +458,11 @@ static void qusb2_phy_override_phy_params(struct qusb2_phy *qphy)
+ 				      cfg->regs[QUSB2PHY_PORT_TUNE1],
+ 				      PREEMPH_WIDTH_HALF_BIT);
+ 	}
++
++	if (or->hsdisc_trim.override)
++		qusb2_write_mask(qphy->base, cfg->regs[QUSB2PHY_PORT_TUNE2],
++		or->hsdisc_trim.value << HSDISC_TRIM_SHIFT,
++				 HSDISC_TRIM_MASK);
+ }
+ 
+ /*
+@@ -879,6 +912,18 @@ static int qusb2_phy_probe(struct platform_device *pdev)
+ 		or->imp_res_offset.override = true;
+ 	}
+ 
++	if (!of_property_read_u32(dev->of_node, "qcom,bias-ctrl-value",
++				  &value)) {
++		or->bias_ctrl.value = (u8)value;
++		or->bias_ctrl.override = true;
++	}
++
++	if (!of_property_read_u32(dev->of_node, "qcom,charge-ctrl-value",
++				  &value)) {
++		or->charge_ctrl.value = (u8)value;
++		or->charge_ctrl.override = true;
++	}
++
+ 	if (!of_property_read_u32(dev->of_node, "qcom,hstx-trim-value",
+ 				  &value)) {
+ 		or->hstx_trim.value = (u8)value;
+@@ -897,6 +942,12 @@ static int qusb2_phy_probe(struct platform_device *pdev)
+ 		or->preemphasis_width.override = true;
+ 	}
+ 
++	if (!of_property_read_u32(dev->of_node, "qcom,hsdisc-trim-value",
++				  &value)) {
++		or->hsdisc_trim.value = (u8)value;
++		or->hsdisc_trim.override = true;
++	}
++
+ 	pm_runtime_set_active(dev);
+ 	pm_runtime_enable(dev);
+ 	/*
 -- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
+
