@@ -2,71 +2,73 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18743C10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 11:13:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9E70C10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 11:13:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E56D12051A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 11:13:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A355120848
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 11:13:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="OPuFONLR"
+	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="GxBeNiBm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726866AbgCILNV (ORCPT
+        id S1726979AbgCILN2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 07:13:21 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:39961 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726758AbgCILNS (ORCPT
+        Mon, 9 Mar 2020 07:13:28 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:38138 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726758AbgCILNY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 07:13:18 -0400
-Received: by mail-wm1-f67.google.com with SMTP id e26so9088552wme.5
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 04:13:16 -0700 (PDT)
+        Mon, 9 Mar 2020 07:13:24 -0400
+Received: by mail-wr1-f68.google.com with SMTP id t11so10533570wrw.5
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 04:13:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=cloudflare.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=VhnNh0FQpU0IXnemYuyXF82fe/AvYFMA5w4Rk3Zgjg8=;
-        b=OPuFONLR+flmNj8q3OtmclC70Xv8ZSwnJ2b3unDxiP/H22qOrNB0U8O9evExpS2Pvh
-         aANMarFYBxasC60dzb2/yI3+GoWDeoshz7mgTXsYd9GrRYkLoFPeUABNInnZ49oxNSrj
-         Jd0ozRGwe7VkvtE/yTFobFyc9k1B4iEgb52uU=
+        bh=QNC/yhj9eA7H5WupK4I1s6LtyzXa8KAaxTwNXTgRG+w=;
+        b=GxBeNiBm2mw9UI6mhddkvq45q7UbHjkdwFsx/G6K5dHtl2OypwWM2kampZowcxoGyO
+         UtKAhLWsBrfT8UnX39SdHN/iLM5lL1ckz3uyjYB99EHXapWIfysp5TlQXwK9HGsz7Vkd
+         xrGTS8hNKVVie+Tbyrlk/8lsFj6lZKn5N5qrU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=VhnNh0FQpU0IXnemYuyXF82fe/AvYFMA5w4Rk3Zgjg8=;
-        b=LILPZt5RyZcBb6H/QbttwUey4ALWHEAMDHceBgh45v4mktVO3pV+cv7YECOqhDs+KQ
-         ssu/488S6TjHcKKLg3KEEG50nI0xa0LQU36mZ7EctIGdnxzj8x1VbPEEIhuZd+kPKqI3
-         M2/V5Tr9sMm149BFcZr7RklOmTsWkJpiXbrn0Q9dNkGIk67c7eemHhGt7kH8gQIIhxNA
-         deky0IcVsY5kKjdrLw1QyqVfXyO5sl56KJdgOiLf3R6iV6gE15dkXOgf2qjE+NHHDbhk
-         d0VuYlsiKrKQnkd7AznzEnCyC5CIUqISmPdeR2zdYNEzsrRbihbSE0EY8fjhnLwhvO8o
-         neNA==
-X-Gm-Message-State: ANhLgQ14OJQ1FxFdEjmXOIsE/IBg7d1tOGyfVQs+TFA8d3AVbf9uLggH
-        dZsT28qBvULAaue+xCzHPorGiQ==
-X-Google-Smtp-Source: ADFU+vvw76jpjuBquu29c/ImGlyugCxB+gF1RrtRq0128jT1ZEa3yp+jKznj7UEb3KCDKavSApSTJw==
-X-Received: by 2002:a1c:2b44:: with SMTP id r65mr19143120wmr.72.1583752395887;
-        Mon, 09 Mar 2020 04:13:15 -0700 (PDT)
+        bh=QNC/yhj9eA7H5WupK4I1s6LtyzXa8KAaxTwNXTgRG+w=;
+        b=tuV6ym0vBB2Q6HA+H1lh2FIsovTrITmwOlI3Ph5EngiBqq8JHSDEAqxQs0OfEl4hNm
+         HA+jbDSVdXXiHY6VFacWcM5NX8QzoAmQOdUdezy9hwJ2HARiU7Yn9H40HwAy5OQe9xhy
+         7DByMXr4p9OV5OAP1bWYj8svpKjpU8p70yE/yigHNJe2jUHMFZMKpTn39lpBUCGNkCXi
+         jaJncneEYk/uJtcM7r4EN2XDUskUhmpAW/HLw1khovcmWPgWmiKvktELlFP86hvyWK+i
+         r5cskjfN0tjwcI8d5tqPbkAvnfII5B1yhhqw+RjmjRO6Qf6bkUg+Nw/aRl+3itXKphsf
+         tSpA==
+X-Gm-Message-State: ANhLgQ1X3u6QeakTz9OtGmAOnmE9zkdX6ifRltXGw3UIxAq94ljhl3xz
+        nlywEcxt3CG+/XrsaIvBnBxfHA==
+X-Google-Smtp-Source: ADFU+vvAMeq2nRoM6YsXxONyyZ6j5Q6m9ww8bHHSCZpNHNFCMi/9yJbzsoo4bEpH6kYjYcusvK9+8g==
+X-Received: by 2002:a5d:4206:: with SMTP id n6mr19844910wrq.119.1583752401537;
+        Mon, 09 Mar 2020 04:13:21 -0700 (PDT)
 Received: from localhost.localdomain ([2a06:98c0:1000:8250:3dcc:c1d:7f05:4873])
-        by smtp.gmail.com with ESMTPSA id a5sm25732846wmb.37.2020.03.09.04.13.14
+        by smtp.gmail.com with ESMTPSA id a5sm25732846wmb.37.2020.03.09.04.13.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Mar 2020 04:13:15 -0700 (PDT)
+        Mon, 09 Mar 2020 04:13:20 -0700 (PDT)
 From:   Lorenz Bauer <lmb@cloudflare.com>
-To:     Eric Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
+To:     "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>
-Cc:     kernel-team@cloudflare.com, Lorenz Bauer <lmb@cloudflare.com>,
-        Jakub Sitnicki <jakub@cloudflare.com>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
         John Fastabend <john.fastabend@gmail.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH bpf-next v4 04/12] bpf: tcp: guard declarations with CONFIG_NET_SOCK_MSG
-Date:   Mon,  9 Mar 2020 11:12:35 +0000
-Message-Id: <20200309111243.6982-5-lmb@cloudflare.com>
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jakub Sitnicki <jakub@cloudflare.com>,
+        Lorenz Bauer <lmb@cloudflare.com>,
+        Alexei Starovoitov <ast@kernel.org>
+Cc:     kernel-team@cloudflare.com, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org
+Subject: [PATCH bpf-next v4 07/12] bpf: add sockmap hooks for UDP sockets
+Date:   Mon,  9 Mar 2020 11:12:38 +0000
+Message-Id: <20200309111243.6982-8-lmb@cloudflare.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200309111243.6982-1-lmb@cloudflare.com>
 References: <20200309111243.6982-1-lmb@cloudflare.com>
@@ -77,43 +79,117 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tcp_bpf.c is only included in the build if CONFIG_NET_SOCK_MSG is
-selected. The declaration should therefore be guarded as such.
+Add basic psock hooks for UDP sockets. This allows adding and
+removing sockets, as well as automatic removal on unhash and close.
 
 Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
-Reviewed-by: Jakub Sitnicki <jakub@cloudflare.com>
+Signed-off-by: Jakub Sitnicki <jakub@cloudflare.com>
 Acked-by: John Fastabend <john.fastabend@gmail.com>
 ---
- include/net/tcp.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ MAINTAINERS        |  1 +
+ include/net/udp.h  |  5 +++++
+ net/ipv4/Makefile  |  1 +
+ net/ipv4/udp_bpf.c | 53 ++++++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 60 insertions(+)
+ create mode 100644 net/ipv4/udp_bpf.c
 
-diff --git a/include/net/tcp.h b/include/net/tcp.h
-index ccf39d80b695..ad3abeaa703e 100644
---- a/include/net/tcp.h
-+++ b/include/net/tcp.h
-@@ -2195,6 +2195,7 @@ void tcp_update_ulp(struct sock *sk, struct proto *p,
- struct sk_msg;
- struct sk_psock;
+diff --git a/MAINTAINERS b/MAINTAINERS
+index c23884e084be..14554bde1c06 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -9370,6 +9370,7 @@ F:	include/linux/skmsg.h
+ F:	net/core/skmsg.c
+ F:	net/core/sock_map.c
+ F:	net/ipv4/tcp_bpf.c
++F:	net/ipv4/udp_bpf.c
  
-+#ifdef CONFIG_NET_SOCK_MSG
- int tcp_bpf_init(struct sock *sk);
- int tcp_bpf_sendmsg_redir(struct sock *sk, struct sk_msg *msg, u32 bytes,
- 			  int flags);
-@@ -2202,13 +2203,12 @@ int tcp_bpf_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
- 		    int nonblock, int flags, int *addr_len);
- int __tcp_bpf_recvmsg(struct sock *sk, struct sk_psock *psock,
- 		      struct msghdr *msg, int len, int flags);
--#ifdef CONFIG_NET_SOCK_MSG
- void tcp_bpf_clone(const struct sock *sk, struct sock *newsk);
- #else
- static inline void tcp_bpf_clone(const struct sock *sk, struct sock *newsk)
- {
+ LANTIQ / INTEL Ethernet drivers
+ M:	Hauke Mehrtens <hauke@hauke-m.de>
+diff --git a/include/net/udp.h b/include/net/udp.h
+index e55d5f765807..a8fa6c0c6ded 100644
+--- a/include/net/udp.h
++++ b/include/net/udp.h
+@@ -503,4 +503,9 @@ static inline struct sk_buff *udp_rcv_segment(struct sock *sk,
+ 	return segs;
  }
--#endif
-+#endif /* CONFIG_NET_SOCK_MSG */
  
- /* Call BPF_SOCK_OPS program that returns an int. If the return value
-  * is < 0, then the BPF op failed (for example if the loaded BPF
++#ifdef CONFIG_BPF_STREAM_PARSER
++struct sk_psock;
++struct proto *udp_bpf_get_proto(struct sock *sk, struct sk_psock *psock);
++#endif /* BPF_STREAM_PARSER */
++
+ #endif	/* _UDP_H */
+diff --git a/net/ipv4/Makefile b/net/ipv4/Makefile
+index 9d97bace13c8..9e1a186a3671 100644
+--- a/net/ipv4/Makefile
++++ b/net/ipv4/Makefile
+@@ -61,6 +61,7 @@ obj-$(CONFIG_TCP_CONG_LP) += tcp_lp.o
+ obj-$(CONFIG_TCP_CONG_YEAH) += tcp_yeah.o
+ obj-$(CONFIG_TCP_CONG_ILLINOIS) += tcp_illinois.o
+ obj-$(CONFIG_NET_SOCK_MSG) += tcp_bpf.o
++obj-$(CONFIG_BPF_STREAM_PARSER) += udp_bpf.o
+ obj-$(CONFIG_NETLABEL) += cipso_ipv4.o
+ 
+ obj-$(CONFIG_XFRM) += xfrm4_policy.o xfrm4_state.o xfrm4_input.o \
+diff --git a/net/ipv4/udp_bpf.c b/net/ipv4/udp_bpf.c
+new file mode 100644
+index 000000000000..eddd973e6575
+--- /dev/null
++++ b/net/ipv4/udp_bpf.c
+@@ -0,0 +1,53 @@
++// SPDX-License-Identifier: GPL-2.0
++/* Copyright (c) 2020 Cloudflare Ltd https://cloudflare.com */
++
++#include <linux/skmsg.h>
++#include <net/sock.h>
++#include <net/udp.h>
++
++enum {
++	UDP_BPF_IPV4,
++	UDP_BPF_IPV6,
++	UDP_BPF_NUM_PROTS,
++};
++
++static struct proto *udpv6_prot_saved __read_mostly;
++static DEFINE_SPINLOCK(udpv6_prot_lock);
++static struct proto udp_bpf_prots[UDP_BPF_NUM_PROTS];
++
++static void udp_bpf_rebuild_protos(struct proto *prot, const struct proto *base)
++{
++	*prot        = *base;
++	prot->unhash = sock_map_unhash;
++	prot->close  = sock_map_close;
++}
++
++static void udp_bpf_check_v6_needs_rebuild(struct sock *sk, struct proto *ops)
++{
++	if (sk->sk_family == AF_INET6 &&
++	    unlikely(ops != smp_load_acquire(&udpv6_prot_saved))) {
++		spin_lock_bh(&udpv6_prot_lock);
++		if (likely(ops != udpv6_prot_saved)) {
++			udp_bpf_rebuild_protos(&udp_bpf_prots[UDP_BPF_IPV6], ops);
++			smp_store_release(&udpv6_prot_saved, ops);
++		}
++		spin_unlock_bh(&udpv6_prot_lock);
++	}
++}
++
++static int __init udp_bpf_v4_build_proto(void)
++{
++	udp_bpf_rebuild_protos(&udp_bpf_prots[UDP_BPF_IPV4], &udp_prot);
++	return 0;
++}
++core_initcall(udp_bpf_v4_build_proto);
++
++struct proto *udp_bpf_get_proto(struct sock *sk, struct sk_psock *psock)
++{
++	int family = sk->sk_family == AF_INET ? UDP_BPF_IPV4 : UDP_BPF_IPV6;
++
++	if (!psock->sk_proto)
++		udp_bpf_check_v6_needs_rebuild(sk, READ_ONCE(sk->sk_prot));
++
++	return &udp_bpf_prots[family];
++}
 -- 
 2.20.1
 
