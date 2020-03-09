@@ -2,130 +2,233 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 819E9C10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 17:33:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3502CC18E5A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 17:33:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A0972253D
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 17:33:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3DA42253D
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 17:33:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="DQxdAFgB"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="E2ikta4r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727385AbgCIRdf (ORCPT
+        id S1727392AbgCIRds (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 13:33:35 -0400
-Received: from mail-lf1-f44.google.com ([209.85.167.44]:44209 "EHLO
-        mail-lf1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727309AbgCIRde (ORCPT
+        Mon, 9 Mar 2020 13:33:48 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:12860 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727254AbgCIRdr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 13:33:34 -0400
-Received: by mail-lf1-f44.google.com with SMTP id i10so8393566lfg.11
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 10:33:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=from:references:in-reply-to:mime-version:thread-index:date
-         :message-id:subject:to:cc;
-        bh=bgiHSLTQXM8E0mv0SF7G09UBPAaNCg/++oKU9IO6Jv0=;
-        b=DQxdAFgBLzOAYx5M0Q2Fh/zkVoV6kRmCETSjJWCX2qfbDblPeSMRSyXVWiyOt5Ig3w
-         gMJcpRqwnRBelmbxOy+sO0cchBZqoMdedCWSBBTnV3n3ng/yHVlq3GqcCNbjCr0OjUSN
-         bIhthscycsWpgsCe1Hw6pRZIVFPhvr5K67Giw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:references:in-reply-to:mime-version
-         :thread-index:date:message-id:subject:to:cc;
-        bh=bgiHSLTQXM8E0mv0SF7G09UBPAaNCg/++oKU9IO6Jv0=;
-        b=DINjUTw2IJl2/VmJTKLktwyru+wPIVLVormH82ZKOX7iPtguV66ySjfuJhQSI9AQcR
-         nx0JTKiMZp/YW0HbJOsa6Ny6lpvxb6ieskvFReiVga0bzJaBvMtDG7a56uDMWOicFtdH
-         KES8YDLJLgNLu5/IMUzaKuIKhcgxhQQpWFs1gvucmtYm1Z89/QdA5O8FLpWj1q/jDprK
-         ZOj+pue1T5p9MT3OiyBvU4UDy6ssTzXCA9HzJL5MUsE8TKPj9TnXcDwLj45DhAmm/Sq7
-         +kqekqJ1T+0kLoqybmaQW89mvr5ZtH3o0oKRzwCHF+P2IypStDYRsZ0oJIjeeBY6EUsg
-         0GKw==
-X-Gm-Message-State: ANhLgQ1Kz9L0W61OM98sH0m3X9seSNI4BmmIMmTTTa83BLzNcogtIS7h
-        uu2xr/BiYVRSf5/nbQdpHky6L/TffClO5aWa6Zh9QA==
-X-Google-Smtp-Source: ADFU+vuq3eH9wkuVNiO3iVGw7rhwXN2qPoAEtL/Vxw8RjRXO3sz1OPnFMpu3+6cw1VwM6E+14wRoY4uUL6ksq3D8aLA=
-X-Received: by 2002:ac2:4834:: with SMTP id 20mr9943688lft.93.1583775213105;
- Mon, 09 Mar 2020 10:33:33 -0700 (PDT)
-From:   Kevin Li <kevin-ke.li@broadcom.com>
-References: <20200306222705.13309-1-kevin-ke.li@broadcom.com> <20200309123307.GE4101@sirena.org.uk>
-In-Reply-To: <20200309123307.GE4101@sirena.org.uk>
+        Mon, 9 Mar 2020 13:33:47 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e667dca0000>; Mon, 09 Mar 2020 10:32:59 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 09 Mar 2020 10:33:42 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 09 Mar 2020 10:33:42 -0700
+Received: from [10.2.175.232] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 9 Mar
+ 2020 17:33:42 +0000
+Subject: Re: LKFT: arm x15: mmc1: cache flush error -110
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+CC:     Jon Hunter <jonathanh@nvidia.com>,
+        Bitan Biswas <bbiswas@nvidia.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        Alexei Starovoitov <ast@kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        <lkft-triage@lists.linaro.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        John Stultz <john.stultz@linaro.org>,
+        Faiz Abbas <faiz_abbas@ti.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Kishon <kishon@ti.com>
+References: <CA+G9fYuqAQfhzF2BzHr7vMHx68bo8-jT+ob_F3eHQ3=oFjgYdg@mail.gmail.com>
+ <CAPDyKFokE6x0mn+v5B9=so-SyrdTn0JBU8Mrp3Zdu6kSaCie2g@mail.gmail.com>
+ <0963b60f-15e7-4bc6-10df-6fc8003e4d42@nvidia.com>
+ <CAPDyKFq5NoeHEBK3sv3yOSD2+pm9FueH1gaTyPq0j7GLfa6vnA@mail.gmail.com>
+ <34fd84d7-387b-b6f3-7fb3-aa490909e205@ti.com>
+ <CAPDyKFrrO4noYqdxWL9Y8Nx75LopbDudKGMotkGbGcAF1oq==w@mail.gmail.com>
+ <5e9b5646-bd48-e55b-54ee-1c2c41fc9218@nvidia.com>
+ <CAPDyKFqpNo_4OePBR1KnJNO=kR8XEqbcsEd=icSceSdDH+Rk1Q@mail.gmail.com>
+ <757853cf-987e-f6b6-9259-b4560a031692@nvidia.com>
+ <d12fe142-7e72-ab58-33ab-17817e35096f@nvidia.com>
+ <c216f131-6f83-c9c9-9d17-8d44ec06972d@nvidia.com>
+ <87ad7586-9569-4276-044a-adb64e84ca15@nvidia.com>
+ <a0962e0b-0f1d-9f32-f6e9-92f69f93167f@nvidia.com>
+ <57ddddc2-3ee8-d867-bba0-0dd9929ba37d@nvidia.com>
+ <CAPDyKFqZSd9E3+16yFsmpee2JsbRJ-DGThxx7NJHu6UE00Xi1Q@mail.gmail.com>
+ <26ee7225-9483-4664-c2d7-b5cefeadcd4b@nvidia.com>
+ <CAPDyKFqwVQDEnPNi33mc9ycTxpaT1cRLejbR3Ja4c8dha4gFRw@mail.gmail.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <0301bbd5-8d4d-4a77-42c7-8a1391c2d60a@nvidia.com>
+Date:   Mon, 9 Mar 2020 10:35:31 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-Mailer: Microsoft Outlook 15.0
-Thread-Index: AQK6AtPk+W1UvlC/8YJn5FlJAEq5hQGCyJpIpmw/bzA=
-Date:   Mon, 9 Mar 2020 10:33:30 -0700
-Message-ID: <69138568e9c18afa57d5edba6be9887b@mail.gmail.com>
-Subject: RE: [PATCH] ASoC: brcm: Add DSL/PON SoC audio driver
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>,
-        Ray Jui <rjui@broadcom.com>, Jaroslav Kysela <perex@perex.cz>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Stephen Boyd <swboyd@chromium.org>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAPDyKFqwVQDEnPNi33mc9ycTxpaT1cRLejbR3Ja4c8dha4gFRw@mail.gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1583775179; bh=CYaifugh60g9oO62CRHXR8kHhNzWHbyTDaF0kgHrBPI=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=E2ikta4rTotdZ9vdOIYMuaIOOfvDngHacwS6IlqPRUsxZweuaoG3VC/1Gs/3jaZsO
+         ddnzbKnqD2ckd79tq/qAMwzMYcsYOoL73Er4IYO7b89lc/Hb931hSi54+Eum1e5xtJ
+         dvoBWxSrJ3CTgTvobhl/Z9tKPh+cLuHJ2lnHtzgw4dJrjvsimdfplUK4S7hHrzX4hB
+         AnD+9fxTno86x/XJ19gd8GKflyH2jFX9+dRM/JFk3EFbjNAdDN3maGR41UHxbI/EJn
+         HDbUeTv0bzS8RFp0fboaWszYVGwJbhrObA2x7dsChfuK4ElohDYgrqWblNCAqyO9fX
+         wgQ1RWrxj3V2A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mark,
 
-The SoC I2S block we currently have shares one clock and frame sync signal
-for both playback and capture stream, plus playback and capture can only
-have one master at a time. If we set playback and capture master at same
-time, it will have jitter on clock and FS.
+On 3/6/20 3:14 AM, Ulf Hansson wrote:
+> External email: Use caution opening links or attachments
+>
+>
+> [...]
+>
+>>>>>>>>>>> Actually we always use R1B with CMD6 as per spec.
+>>>>>>>>>> I fully agree that R1B is preferable, but it's not against the
+>>>>>>>>>> spec to
+>>>>>>>>>> send CMD13 to poll for busy.
+>>>>>>>>>>
+>>>>>>>>>> Moreover, we need to cope with the scenario when the host has
+>>>>>>>>>> specified a maximum timeout that isn't sufficiently long enough for
+>>>>>>>>>> the requested operation. Do you have another proposal for how to
+>>>>>>>>>> manage this, but disabling MMC_RSP_BUSY?
+>>>>>>>>>>
+>>>>>>>>>> Let's assume you driver would get a R1B for the CMD6 (we force it),
+>>>>>>>>>> then what timeout would the driver be using if we would set
+>>>>>>>>>> cmd.busy_timeout to 30ms?
+>>>>>>>>>>
+>>>> Sorry didn't understood clearly. Are you asking with 30s timeout, whats
+>>>> the data timeout counter used?
+>>> Yes. It seems like it will pick the maximum, which is 11s?
+>> yes
+> Okay, thanks!
+>
+>>>> Because of above mentioned issue on our host where CMD interrupt happens
+>>>> after busy state, poll for busy returns right away as not busy.
+>>> I see.
+>>>
+>>>> So issuing CMD13 after CMD6-R1 followed by busy poll should be working.
+>>>> But weird that with small delay of 1ms or debug print before CMD13 it
+>>>> doesn't timeout and works all the time.
+>>> I have digested the information you provided in these emails. Let me
+>>> summarize it, to see if I have understood correctly.
+>>>
+>>> 1.
+>>> Your controller can't distinguish between R1 and R1B because of a
+>>> limitation in the HW. So, in both cases you need to wait for the card
+>>> to stop signal busy, before the controller can give an IRQ to notify
+>>> that the R1 response has been received. Correct?
+>>>
+>>> In this context, I am wondering if sdhci_send_command(), really
+>>> conforms to these requirements. For example, depending on if the CMD6
+>>> has MMC_RSP_BUSY or not, it may pick either SDHCI_CMD_RESP_SHORT or
+>>> SDHCI_CMD_RESP_SHORT_BUSY.
+>>>
+>>> Does this work as expected for your case?
+>> Design team re-verified internally and bug where HW waits for busy state
+>> before IRQ is only for R1B and R1 is spec compliant.
+>>
+>> So, with R1, CMD complete is generated after response received.
+> Okay.
+>
+> So, the issue we see for CMD6 with R1, is a software problem that we
+> should be able to fix.
+>
+>> With R1B, CMD complete and xfer complete both are generated after
+>> response received + device busy (max timeout of 11s)
+>> DATA timeout interrupt will be asserted incase if HW busy detection fails.
+>>
+>> With R1B we may see DATA Timeout if operation takes more than max busy
+>> timeout of 11s.
+> Okay, I see.
+>
+>>> 2.
+>>> Assuming my interpretation of the above is somewhat correct. Then you
+>>> always need to set a busy timeout for R1/R1B responses in the
+>>> controller. The maximum timeout seems to be 11s long. Obviously, this
+>>> isn't enough for all cases, such as cache flushing and erase, for
+>>> example. So, what can we do to support a longer timeouts than 11s?
+>>> Would it be possible to disable the HW timeout, if the requested
+>>> timeout is longer than 11s and use a SW timeout instead?
+>>>
+>>> Kind regards
+>>> Uffe
+>> For erase long operations we have register bit to enable for infinite
+>> busy wait mode where host controller would be monitoring until card is busy.
+> Alright, that sounds great!
+>
+>> But so far for emmc devices we used on our platforms, we haven't seen
+>> cache flush taking more than 11s.
+> I understand that 11s is probably fine to use, for most cases.
+>
+> However, it's not spec compliant, as for some operations there are
+> simply no timeout specified. BKOPS, cache flush, sanitize are cases
+> like this - and then 11s is definitely not sufficient.
+>
+>> Will get back on possibility of disabling HW timeout and using SW timeout..
+> Thanks!
+>
+> I would like to get the regression fixed asap, but I also would like
+> to avoid reverting patches, unless really necessary. May I propose the
+> following two options.
+>
+> 1. Find out why polling with ->card_busy() or CMD13, for a CMD6 with
+> an R1 response doesn't work - and then fix that behaviour.
+>
+> 2. Set the mmc->max_busy_timeout to zero for sdhci-tegra, which makes
+> the core to always use R1B for CMD6 (and erase). This also means that
+> when the cmd->busy_timeout becomes longer than 11s, sdhci-tegra must
+> disable the HW busy timeout and just wait "forever".
+>
+> If you decide for 2, you can add the software timeout support on top,
+> but make that can be considered as a next step of an improvement,
+> rather than needed as fix. Note that, I believe there are some support
+> for software timeout already in the sdhci core, maybe you need to
+> tweak it a bit for your case, I don't know.
+>
+> Kind regards
+> Uffe
 
-Based on above, for playback and capture, whichever starts first, it will
-be master, another stream will be slave if it starts before the first
-stream shutting  down. So working as master or slave for a stream is
-depending on another stream's status.
+Hi Uffe
 
-Same thing for shutting down a stream. A master stream shutting down will
-have to set another stream to master if another stream is on working
-status as a slave. A glitch/Jitter will happen at this moment. But we
-minimize it.
+Will go with 2nd option and will send patches out when ready.
 
-That is why this master/slave mode handles in startup/shutdown functions.
-Not sure how other company handles this kind of I2S block.
+BTW, Tegra host also supports SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK for 
+data timeout based on host clock when using finite mode (HW busy 
+detection based on DATA TIMEOUT count value when cmd operation timeout 
+is < 11s for tegra host).
 
-Let me know if it is still not clear.
+So, looks like we cant set host max_busy_timeout to 0 for Tegra host to 
+force R1B during SWITCH and SLEEP_AWAKE.
 
-Yes, set_fmt() is not needed. Will be addressed along with rest questions
-you mentioned on the next patch, with a patch version.
+So, was thinking to introduce host capability MMC_CAP2_LONG_WAIT_HW_BUSY 
+which can be used for hosts supporting long or infinite HW busy wait 
+detection and will update mmc and mmc_ops drivers to not allow convert 
+R1B to R1B for hosts with this capability during SLEEP_AWAKE and SWITCH.
 
+Thanks
 
-Thanks!
-Kevin
+Sowjanya
 
-
-> +	struct bcm_i2s_priv *i2s_priv = snd_soc_dai_get_drvdata(dai);
-> +	struct regmap *regmap_i2s = i2s_priv->regmap_i2s;
-> +
-> +	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
-> +		regmap_update_bits(regmap_i2s, I2S_TX_CFG,
-> +				   I2S_TX_OUT_R | I2S_TX_DATA_ALIGNMENT |
-> +				   I2S_TX_DATA_ENABLE |
-I2S_TX_CLOCK_ENABLE,
-> +				   I2S_TX_OUT_R | I2S_TX_DATA_ALIGNMENT |
-> +				   I2S_TX_DATA_ENABLE |
-I2S_TX_CLOCK_ENABLE);
-> +		regmap_write(regmap_i2s, I2S_TX_IRQ_CTL, 0);
-> +		regmap_write(regmap_i2s, I2S_TX_IRQ_IFF_THLD, 0);
-> +		regmap_write(regmap_i2s, I2S_TX_IRQ_OFF_THLD, 1);
-> +
-> +		regmap_read(regmap_i2s, I2S_RX_CFG_2, &slaveMode);
-> +		if (slaveMode & I2S_RX_SLAVE_MODE_MASK)
-> +			regmap_update_bits(regmap_i2s, I2S_TX_CFG_2,
-> +					   I2S_TX_SLAVE_MODE_MASK,
-> +					   I2S_TX_MASTER_MODE);
-> +		else
-> +			regmap_update_bits(regmap_i2s, I2S_TX_CFG_2,
-> +					   I2S_TX_SLAVE_MODE_MASK,
-> +					   I2S_TX_SLAVE_MODE);
-
-Setting master or slave mode should be done with a set_fmt() operation but
-your set_fmt() operation was empty.  How would this be configured?
