@@ -2,108 +2,102 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE587C10F25
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 21:07:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F1CDC18E5A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 21:08:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D8C32464B
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 21:07:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 026C224655
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 21:08:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="czH3TJwK"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="QqAvgixF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726756AbgCIVH6 (ORCPT
+        id S1726866AbgCIVIN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 17:07:58 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:36321 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726118AbgCIVH4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 17:07:56 -0400
-Received: by mail-pl1-f193.google.com with SMTP id g12so4508382plo.3
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 14:07:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=Wg7ehxrunSfoR3umIXJG6GeJRSgWVF/eVhTjd0DeUpo=;
-        b=czH3TJwKaynTxAvppZyJ015RDYBkBPs2pb5+XLo29ytW+Ib2kKleMNca9WHbclK+ut
-         s40C6dyix2Rh5Dng2HUhh6pbw3+n4CtUwPtKc/By8YuLfx/lG4emfrekiHNNKd8R3DFa
-         lgt3hjPrRhh7RCQYwjI0Ie4IXv6jEvCuzh0Lo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Wg7ehxrunSfoR3umIXJG6GeJRSgWVF/eVhTjd0DeUpo=;
-        b=CI0prWqbN/OEJv7OqPYQu0yXWLbKCVrMia3qlfJvXHm5IR4+pT6Bq0qm8Ktzj1E3qq
-         4MlIJq/N9/RFx6abFKK0D0CN39xQmDuz7ZMypNc6MbFe94aHsll+QsIgwyYfhv1gR97u
-         ZLyyFxe8RUT97UGyoZfmU9xM0NIl/vG4h1HED+BRevHXGwc91R0eJjl9/Ux3ZOoIlH8I
-         5U0UjqGhQOIb6FZxcf9UdzJQ4GsthNxsXi1TIT4A9KCDCIr5/ZjkvIGTA1rQ2LTER+Ne
-         Xf9FDji3P7WM5ZE9tFfnlilIu4EjQG5M5XRfW76j6cOmS+oR/7XUJy7QKxWjsfKF3s2i
-         0OoA==
-X-Gm-Message-State: ANhLgQ3mMyCirOFH1XX7KMseOFsT0P3Lode9l0KP5VjkBPUsITQB4H5z
-        QRRBvhzvfnJqTYV51WFPgYqnRg==
-X-Google-Smtp-Source: ADFU+vtxrF3SIlgRDL8tah3k0WYVLq8W7zIdoqLKtPNGtefE87yW3fuwxIJr+qp9R7BfS0ylIEkFOw==
-X-Received: by 2002:a17:90a:21ce:: with SMTP id q72mr926921pjc.160.1583788075123;
-        Mon, 09 Mar 2020 14:07:55 -0700 (PDT)
-Received: from dev-psajeepa.dev.purestorage.com ([192.30.188.252])
-        by smtp.googlemail.com with ESMTPSA id w206sm2876936pfc.54.2020.03.09.14.07.53
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 09 Mar 2020 14:07:54 -0700 (PDT)
-From:   Prabhath Sajeepa <psajeepa@purestorage.com>
-To:     kbusch@kernel.org, axboe@fb.com, hch@lst.de, sagi@grimberg.me,
-        linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     psajeepa@purestorage.com, roland@purestorage.com
-Subject: [PATCH] nvme-rdma: Avoid double freeing of async event data
-Date:   Mon,  9 Mar 2020 15:07:53 -0600
-Message-Id: <1583788073-39681-1-git-send-email-psajeepa@purestorage.com>
-X-Mailer: git-send-email 2.7.4
+        Mon, 9 Mar 2020 17:08:13 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:55437 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726118AbgCIVIM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 17:08:12 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48brRG0C09z9sRN;
+        Tue, 10 Mar 2020 08:08:03 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1583788090;
+        bh=PvJIsVYHxPMFYB14Ey2gvRgzLeFBRUopGO6J+1r0pGo=;
+        h=Date:From:To:Cc:Subject:From;
+        b=QqAvgixF0LvbNT7cvUhkrt6gvas3f6Z8v4ETCcw2BTf9/G8wJjlGCrusJqitF1u6u
+         FxcGksl+DDk28wExnbI3cSV2dxkNYXsv5dqtPV3Dm3Aj2TzZdpZEOgjnxe2Ugf++7M
+         PIUtJRX9yMI6v5Q5Kf3MHZUIeWar4GF/DLWs1m7Z8vPn5H9jNWctvh0hDx3vG3QrCh
+         ElYxX4Sf9L/yByCU3GvFyktCTX1860b91c2yXX7c0blT7LR3kR7S/WSenNmNOIfHRh
+         vRiWX12mb9pFJep/sTOV7/QWj0CEI24BjQPWut0ABjmQOJTRPvgV1cSpMtrK5lQILs
+         vUAP+DurN6qZA==
+Date:   Tue, 10 Mar 2020 08:07:58 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Christian Brauner <christian@brauner.io>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: build warning after merge of the pidfd-fixes tree
+Message-ID: <20200310080758.0b7b6f6b@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/rW2OhgAG0fd3atcTMj2J=MI";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The timeout of identify cmd, which is invoked as part of admin queue
-creation, can result in freeing of async event data both in
-nvme_rdma_timeout handler and error handling path of
-nvme_rdma_configure_admin queue thus causing NULL pointer reference.
-Call Trace:
- ? nvme_rdma_setup_ctrl+0x223/0x800 [nvme_rdma]
- nvme_rdma_create_ctrl+0x2ba/0x3f7 [nvme_rdma]
- nvmf_dev_write+0xa54/0xcc6 [nvme_fabrics]
- __vfs_write+0x1b/0x40
- vfs_write+0xb2/0x1b0
- ksys_write+0x61/0xd0
- __x64_sys_write+0x1a/0x20
- do_syscall_64+0x60/0x1e0
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
+--Sig_/rW2OhgAG0fd3atcTMj2J=MI
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Prabhath Sajeepa <psajeepa@purestorage.com>
-Reviewed-by: Roland Dreier <roland@purestorage.com>
----
- drivers/nvme/host/rdma.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+Hi all,
 
-diff --git a/drivers/nvme/host/rdma.c b/drivers/nvme/host/rdma.c
-index 3e85c5c..0fe08c4 100644
---- a/drivers/nvme/host/rdma.c
-+++ b/drivers/nvme/host/rdma.c
-@@ -850,9 +850,11 @@ static int nvme_rdma_configure_admin_queue(struct nvme_rdma_ctrl *ctrl,
- 	if (new)
- 		blk_mq_free_tag_set(ctrl->ctrl.admin_tagset);
- out_free_async_qe:
--	nvme_rdma_free_qe(ctrl->device->dev, &ctrl->async_event_sqe,
--		sizeof(struct nvme_command), DMA_TO_DEVICE);
--	ctrl->async_event_sqe.data = NULL;
-+	if (ctrl->async_event_sqe.data) {
-+		nvme_rdma_free_qe(ctrl->device->dev, &ctrl->async_event_sqe,
-+			sizeof(struct nvme_command), DMA_TO_DEVICE);
-+		ctrl->async_event_sqe.data = NULL;
-+	}
- out_free_queue:
- 	nvme_rdma_free_queue(&ctrl->queues[0]);
- 	return error;
--- 
-2.7.4
+After merging the pidfd-fixes tree, today's linux-next build (arm
+multi_v7_defconfig) produced this warning:
 
+In file included from include/linux/rwsem.h:18,
+                 from include/linux/mm_types.h:11,
+                 from include/linux/mmzone.h:21,
+                 from include/linux/gfp.h:6,
+                 from include/linux/mm.h:10,
+                 from kernel/pid.c:30:
+kernel/pid.c: In function 'alloc_pid':
+include/linux/err.h:26:9: warning: 'retval' may be used uninitialized in th=
+is function [-Wmaybe-uninitialized]
+   26 |  return (void *) error;
+      |         ^~~~~~~~~~~~~~
+kernel/pid.c:168:6: note: 'retval' was declared here
+  168 |  int retval;
+      |      ^~~~~~
+
+Introduced by commit
+
+  8deb24dcb89c ("pid: make ENOMEM return value more obvious")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/rW2OhgAG0fd3atcTMj2J=MI
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5msC4ACgkQAVBC80lX
+0GzSwwf/eyDQ2Lvm8QB/Dvowfw+331GLu+1fKl0Ic5PEmOFMiPBOncbgjONtNo15
+mLBOZuAcloxpHuz+WN7dGM3hytSxADAlAfpI/3UMEqEB9mZ2M9bBHqyU3rGrIkvn
+3QTcwXczsjPh/1qapn2BCn65KYvqplukx4DaFkUp+5OVg/akhS5+p3v+MtGsbZNY
+3wyyI9f9jqb/7uharBhogLVv690VaRtq3JSvNTTtJS5TrQobpL3qhqyjjJQtdrwM
+2/APs4v/QpbTOdnVqWcGI8MqWDw/3t/aw9XnzC8qa5oJcEQSTwhymiabv9kGnDmn
+YI1/XQ+omlHHFBH9IQw+cXy5pCEs9Q==
+=b0oZ
+-----END PGP SIGNATURE-----
+
+--Sig_/rW2OhgAG0fd3atcTMj2J=MI--
