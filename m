@@ -6,102 +6,207 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E8A4C18E5A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 08:59:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C00CC18E5A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 08:59:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 313F421775
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 08:59:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E761621775
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 08:59:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726623AbgCII7E (ORCPT
+        id S1726988AbgCII7s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 04:59:04 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:61014 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726582AbgCII7A (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 04:59:00 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0298oZcA123892
-        for <linux-kernel@vger.kernel.org>; Mon, 9 Mar 2020 04:58:59 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ym8g2wsqe-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 04:58:59 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <ravi.bangoria@linux.ibm.com>;
-        Mon, 9 Mar 2020 08:58:57 -0000
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 9 Mar 2020 08:58:53 -0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0298wq2J61276322
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 9 Mar 2020 08:58:52 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 113BDA4057;
-        Mon,  9 Mar 2020 08:58:52 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8D108A4040;
-        Mon,  9 Mar 2020 08:58:49 +0000 (GMT)
-Received: from bangoria.in.ibm.com (unknown [9.124.31.44])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon,  9 Mar 2020 08:58:49 +0000 (GMT)
-From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-To:     mpe@ellerman.id.au, mikey@neuling.org
-Cc:     apopple@linux.ibm.com, paulus@samba.org, npiggin@gmail.com,
-        christophe.leroy@c-s.fr, naveen.n.rao@linux.vnet.ibm.com,
-        peterz@infradead.org, jolsa@kernel.org, oleg@redhat.com,
-        fweisbec@gmail.com, mingo@kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Subject: [PATCH 04/15] powerpc/watchpoint/ptrace: Return actual num of available watchpoints
-Date:   Mon,  9 Mar 2020 14:27:55 +0530
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200309085806.155823-1-ravi.bangoria@linux.ibm.com>
-References: <20200309085806.155823-1-ravi.bangoria@linux.ibm.com>
+        Mon, 9 Mar 2020 04:59:48 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:41624 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726027AbgCII7r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 04:59:47 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 609C5D3890AF7904DCED;
+        Mon,  9 Mar 2020 16:59:41 +0800 (CST)
+Received: from linux-kDCJWP.huawei.com (10.175.104.212) by
+ DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
+ 14.3.487.0; Mon, 9 Mar 2020 16:59:35 +0800
+From:   Keqian Zhu <zhukeqian1@huawei.com>
+To:     <kvmarm@lists.cs.columbia.edu>, <kvm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+CC:     <wanghaibin.wang@huawei.com>, Keqian Zhu <zhukeqian1@huawei.com>,
+        Jay Zhou <jianjay.zhou@huawei.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Peter Xu <peterx@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Subject: [RFC] KVM: arm64: support enabling dirty log graually in small chunks
+Date:   Mon, 9 Mar 2020 16:57:27 +0800
+Message-ID: <20200309085727.1106-1-zhukeqian1@huawei.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20030908-4275-0000-0000-000003A9B419
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20030908-4276-0000-0000-000038BEC9D2
-Message-Id: <20200309085806.155823-5-ravi.bangoria@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-09_02:2020-03-06,2020-03-09 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxscore=0
- suspectscore=0 priorityscore=1501 lowpriorityscore=0 clxscore=1015
- impostorscore=0 mlxlogscore=949 spamscore=0 malwarescore=0 bulkscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003090066
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.104.212]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-User can ask for num of available watchpoints(dbginfo.num_data_bps)
-using ptrace(PPC_PTRACE_GETHWDBGINFO). Return actual number of
-available watchpoints on the machine rather than hardcoded 1.
+There is already support of enabling dirty log graually
+in small chunks for x86. This adds support for arm64.
 
-Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Under the Huawei Kunpeng 920 2.6GHz platform, I did some
+tests with a 128G linux VM and counted the time taken of
+memory_global_dirty_log_start, here is the numbers:
+
+VM Size        Before    After optimization
+128G           527ms     4ms
+
+Signed-off-by: Keqian Zhu <zhukeqian1@huawei.com>
 ---
- arch/powerpc/kernel/ptrace.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Cc: Jay Zhou <jianjay.zhou@huawei.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com> 
+Cc: Peter Xu <peterx@redhat.com>
+Cc: Sean Christopherson <sean.j.christopherson@intel.com>
+---
+ Documentation/virt/kvm/api.rst    |  2 +-
+ arch/arm64/include/asm/kvm_host.h |  4 ++++
+ virt/kvm/arm/mmu.c                | 30 ++++++++++++++++++++++--------
+ 3 files changed, 27 insertions(+), 9 deletions(-)
 
-diff --git a/arch/powerpc/kernel/ptrace.c b/arch/powerpc/kernel/ptrace.c
-index 25c0424e8868..dd46e174dbe7 100644
---- a/arch/powerpc/kernel/ptrace.c
-+++ b/arch/powerpc/kernel/ptrace.c
-@@ -3074,7 +3074,7 @@ long arch_ptrace(struct task_struct *child, long request,
- #else /* !CONFIG_PPC_ADV_DEBUG_REGS */
- 		dbginfo.num_instruction_bps = 0;
- 		if (ppc_breakpoint_available())
--			dbginfo.num_data_bps = 1;
-+			dbginfo.num_data_bps = nr_wp_slots();
- 		else
- 			dbginfo.num_data_bps = 0;
- 		dbginfo.num_condition_regs = 0;
+diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
+index 0adef66585b1..89d4f2680af1 100644
+--- a/Documentation/virt/kvm/api.rst
++++ b/Documentation/virt/kvm/api.rst
+@@ -5735,7 +5735,7 @@ will be initialized to 1 when created.  This also improves performance because
+ dirty logging can be enabled gradually in small chunks on the first call
+ to KVM_CLEAR_DIRTY_LOG.  KVM_DIRTY_LOG_INITIALLY_SET depends on
+ KVM_DIRTY_LOG_MANUAL_PROTECT_ENABLE (it is also only available on
+-x86 for now).
++x86 and arm64 for now).
+ 
+ KVM_CAP_MANUAL_DIRTY_LOG_PROTECT2 was previously available under the name
+ KVM_CAP_MANUAL_DIRTY_LOG_PROTECT, but the implementation had bugs that make
+diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
+index d87aa609d2b6..0deb2ac7d091 100644
+--- a/arch/arm64/include/asm/kvm_host.h
++++ b/arch/arm64/include/asm/kvm_host.h
+@@ -16,6 +16,7 @@
+ #include <linux/jump_label.h>
+ #include <linux/kvm_types.h>
+ #include <linux/percpu.h>
++#include <linux/kvm.h>
+ #include <asm/arch_gicv3.h>
+ #include <asm/barrier.h>
+ #include <asm/cpufeature.h>
+@@ -45,6 +46,9 @@
+ #define KVM_REQ_VCPU_RESET	KVM_ARCH_REQ(2)
+ #define KVM_REQ_RECORD_STEAL	KVM_ARCH_REQ(3)
+ 
++#define KVM_DIRTY_LOG_MANUAL_CAPS   (KVM_DIRTY_LOG_MANUAL_PROTECT_ENABLE | \
++					KVM_DIRTY_LOG_INITIALLY_SET)
++
+ DECLARE_STATIC_KEY_FALSE(userspace_irqchip_in_use);
+ 
+ extern unsigned int kvm_sve_max_vl;
+diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
+index e3b9ee268823..5c7ca84dec85 100644
+--- a/virt/kvm/arm/mmu.c
++++ b/virt/kvm/arm/mmu.c
+@@ -1438,9 +1438,11 @@ static void stage2_wp_ptes(pmd_t *pmd, phys_addr_t addr, phys_addr_t end)
+  * @pud:	pointer to pud entry
+  * @addr:	range start address
+  * @end:	range end address
++ * @wp_ptes:	write protect ptes or not
+  */
+ static void stage2_wp_pmds(struct kvm *kvm, pud_t *pud,
+-			   phys_addr_t addr, phys_addr_t end)
++			   phys_addr_t addr, phys_addr_t end,
++			   bool wp_ptes)
+ {
+ 	pmd_t *pmd;
+ 	phys_addr_t next;
+@@ -1453,7 +1455,7 @@ static void stage2_wp_pmds(struct kvm *kvm, pud_t *pud,
+ 			if (pmd_thp_or_huge(*pmd)) {
+ 				if (!kvm_s2pmd_readonly(pmd))
+ 					kvm_set_s2pmd_readonly(pmd);
+-			} else {
++			} else if (wp_ptes) {
+ 				stage2_wp_ptes(pmd, addr, next);
+ 			}
+ 		}
+@@ -1465,9 +1467,11 @@ static void stage2_wp_pmds(struct kvm *kvm, pud_t *pud,
+  * @pgd:	pointer to pgd entry
+  * @addr:	range start address
+  * @end:	range end address
++ * @wp_ptes:	write protect ptes or not
+  */
+ static void  stage2_wp_puds(struct kvm *kvm, pgd_t *pgd,
+-			    phys_addr_t addr, phys_addr_t end)
++			    phys_addr_t addr, phys_addr_t end,
++			    bool wp_ptes)
+ {
+ 	pud_t *pud;
+ 	phys_addr_t next;
+@@ -1480,7 +1484,7 @@ static void  stage2_wp_puds(struct kvm *kvm, pgd_t *pgd,
+ 				if (!kvm_s2pud_readonly(pud))
+ 					kvm_set_s2pud_readonly(pud);
+ 			} else {
+-				stage2_wp_pmds(kvm, pud, addr, next);
++				stage2_wp_pmds(kvm, pud, addr, next, wp_ptes);
+ 			}
+ 		}
+ 	} while (pud++, addr = next, addr != end);
+@@ -1491,8 +1495,10 @@ static void  stage2_wp_puds(struct kvm *kvm, pgd_t *pgd,
+  * @kvm:	The KVM pointer
+  * @addr:	Start address of range
+  * @end:	End address of range
++ * @wp_ptes:	Write protect ptes or not
+  */
+-static void stage2_wp_range(struct kvm *kvm, phys_addr_t addr, phys_addr_t end)
++static void stage2_wp_range(struct kvm *kvm, phys_addr_t addr,
++			    phys_addr_t end, bool wp_ptes)
+ {
+ 	pgd_t *pgd;
+ 	phys_addr_t next;
+@@ -1513,7 +1519,7 @@ static void stage2_wp_range(struct kvm *kvm, phys_addr_t addr, phys_addr_t end)
+ 			break;
+ 		next = stage2_pgd_addr_end(kvm, addr, end);
+ 		if (stage2_pgd_present(kvm, *pgd))
+-			stage2_wp_puds(kvm, pgd, addr, next);
++			stage2_wp_puds(kvm, pgd, addr, next, wp_ptes);
+ 	} while (pgd++, addr = next, addr != end);
+ }
+ 
+@@ -1535,6 +1541,7 @@ void kvm_mmu_wp_memory_region(struct kvm *kvm, int slot)
+ 	struct kvm_memslots *slots = kvm_memslots(kvm);
+ 	struct kvm_memory_slot *memslot = id_to_memslot(slots, slot);
+ 	phys_addr_t start, end;
++	bool wp_ptes;
+ 
+ 	if (WARN_ON_ONCE(!memslot))
+ 		return;
+@@ -1543,7 +1550,14 @@ void kvm_mmu_wp_memory_region(struct kvm *kvm, int slot)
+ 	end = (memslot->base_gfn + memslot->npages) << PAGE_SHIFT;
+ 
+ 	spin_lock(&kvm->mmu_lock);
+-	stage2_wp_range(kvm, start, end);
++	/*
++	 * If we're with initial-all-set, we don't need to write protect
++	 * any small page because they're reported as dirty already.
++	 * However we still need to write-protect huge pages so that the
++	 * page split can happen lazily on the first write to the huge page.
++	 */
++	wp_ptes = !kvm_dirty_log_manual_protect_and_init_set(kvm);
++	stage2_wp_range(kvm, start, end, wp_ptes);
+ 	spin_unlock(&kvm->mmu_lock);
+ 	kvm_flush_remote_tlbs(kvm);
+ }
+@@ -1567,7 +1581,7 @@ static void kvm_mmu_write_protect_pt_masked(struct kvm *kvm,
+ 	phys_addr_t start = (base_gfn +  __ffs(mask)) << PAGE_SHIFT;
+ 	phys_addr_t end = (base_gfn + __fls(mask) + 1) << PAGE_SHIFT;
+ 
+-	stage2_wp_range(kvm, start, end);
++	stage2_wp_range(kvm, start, end, true);
+ }
+ 
+ /*
 -- 
-2.21.1
+2.19.1
 
