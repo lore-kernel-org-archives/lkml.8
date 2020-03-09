@@ -7,127 +7,214 @@ X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49E2CC10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 14:52:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3088C10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 14:56:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 206F321655
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 14:52:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81483222C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 14:56:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Ah6XKPYg"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="i1pDQIwt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726858AbgCIOwq (ORCPT
+        id S1726779AbgCIO4U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 10:52:46 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:25450 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726439AbgCIOwp (ORCPT
+        Mon, 9 Mar 2020 10:56:20 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:32808 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726488AbgCIO4T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 10:52:45 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 029EqZPX019446;
-        Mon, 9 Mar 2020 15:52:35 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=dA0MNAnLTz0IYOJPapDxgoGP7Yrm9Fs9Y8Li113GzqI=;
- b=Ah6XKPYgFgDp1fh0mqFg0w72uX4L+DX/d8WYRQahlDj6ggls2OXJBHcNB+f1GJhw4iYl
- ZdmQAYgRgwMvhuvmVob4jOaX+GgRdWO7pR8+mx04h+29hvImoaYMSXOcweTe8QrNMNX4
- 8c7QLwGIbQSx8mTXFFWFLpEAy9wsSFRK2b2kYH79OyOifnTa5idFnZ/+K+FLId9GN8Xx
- X5VAwc7zHYAad7lHDQuuO8itqJk5tZUTY/735FqJtbbVvEu8AJ/ige6EeW+Pizatk7Da
- EO8rWKrB/I0NElleF9UW+yOXh/Xf4qghnbK3E9ZxxubGSLOTd1DJy0GmB4v7NslSLdEX 8g== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2ym2924v6r-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 09 Mar 2020 15:52:35 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id F2A82100034;
-        Mon,  9 Mar 2020 15:52:28 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag5node2.st.com [10.75.127.14])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id E56492A5443;
-        Mon,  9 Mar 2020 15:52:28 +0100 (CET)
-Received: from [10.48.1.172] (10.75.127.49) by SFHDAG5NODE2.st.com
- (10.75.127.14) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 9 Mar
- 2020 15:52:28 +0100
-Subject: Re: [PATCH] i2c: stm32f7: do not backup read-only PECR register
-To:     Alain Volmat <alain.volmat@st.com>, <wsa@the-dreams.de>
-CC:     <alexandre.torgue@st.com>, <linux-i2c@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <fabrice.gasnier@st.com>
-References: <1583413141-1268-1-git-send-email-alain.volmat@st.com>
-From:   Pierre Yves MORDRET <pierre-yves.mordret@st.com>
-Message-ID: <5b19cf9c-9556-09c9-929d-0c396f689521@st.com>
-Date:   Mon, 9 Mar 2020 15:52:20 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 9 Mar 2020 10:56:19 -0400
+Received: by mail-pl1-f194.google.com with SMTP id ay11so4081142plb.0
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 07:56:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=l7FHNY6Bbi9OnenKcPgyo/jmVSkbWzMI4bouMG2Uqo8=;
+        b=i1pDQIwtLSnFTc1rMqSvmlFtRX9Q+SNwCdmQ3QOuy4qND0Gyr+6sHTiI3mKNSJM5SP
+         +2c2oQHdadPavvbfXW2KHtpewSJK5ELMENtcuB7IAc1AzbhAXksQzT+YPUzUpJBb50TY
+         XbYGOaVszuPBwzyP218/bkuDdQ/9CCXeI+65IEbrl5/pdysolFhttoXo0N2cWbKCq866
+         yLld6vH0Y039fFtPGmeNGHXMzv2okXH2ld9h8lekDNmGV4SX8IY58QfzOVGJaOMC3b1x
+         80itFzlckFh4Att+XfEkzgxB5yulxLW4JnNsikr5iPJUyLMCTO+BvFfDtYEMlPSaiuQE
+         Vn4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=l7FHNY6Bbi9OnenKcPgyo/jmVSkbWzMI4bouMG2Uqo8=;
+        b=i1UT9C1GBDop9crhclY9hHg4C56L9B7RMqC7qkmarjFfPIS1IwXeRCUH/zuNq7D2Km
+         RoVkalQztZF6k99mkwDkCeGp7333014nB7TXc/1xlUS7doNKCTOOD5QuzqgdTu59YcAG
+         SfKXA+L5GSFZpK8idQ+fVNsvPCKVboWLr+fYN2JRWy6KpXoR7Jp9edaohLfit5iUTNd3
+         jXP9bhroA+tWWjRZDhEjTTsh5263IuFfJcftHCGnPBr+uBUA2WS7CB8ckmwdJ8s4BuVW
+         nmvA4hIEpnSpj5xCibZXmf36xU+0sHqIleG0WK39+YKSSzaIrTCGQg2oyX+AEHaZ+QwL
+         bBkQ==
+X-Gm-Message-State: ANhLgQ3LORE77HXVigUSEtgs82He9uQaB1hVoAZVV5tD+ChQv4bn3vkS
+        zHobV41Fr8V6l83RxRLdZu0hIQ==
+X-Google-Smtp-Source: ADFU+vufHk9XjSPHhPjvmBwO1flM6I5vCy5bZdtxyZynlplLAY6XaQzgS4SY6rq1r7dAatTXMKLdoA==
+X-Received: by 2002:a17:90a:bf16:: with SMTP id c22mr20016360pjs.58.1583765778307;
+        Mon, 09 Mar 2020 07:56:18 -0700 (PDT)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id s125sm45074491pgc.53.2020.03.09.07.56.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Mar 2020 07:56:17 -0700 (PDT)
+Date:   Mon, 9 Mar 2020 08:56:15 -0600
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Rishabh Bhatnagar <rishabhb@codeaurora.org>
+Cc:     linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bjorn.andersson@linaro.org, tsoni@codeaurora.org,
+        psodagud@codeaurora.org, sidgup@codeaurora.org
+Subject: Re: [PATCH 2/2] dt-bindings: remoteproc: Add documentation for SPSS
+ remoteproc
+Message-ID: <20200309145615.GA24489@xps15>
+References: <1583522467-3499-1-git-send-email-rishabhb@codeaurora.org>
+ <1583522467-3499-3-git-send-email-rishabhb@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <1583413141-1268-1-git-send-email-alain.volmat@st.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.75.127.49]
-X-ClientProxiedBy: SFHDAG2NODE1.st.com (10.75.127.4) To SFHDAG5NODE2.st.com
- (10.75.127.14)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-09_06:2020-03-09,2020-03-09 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1583522467-3499-3-git-send-email-rishabhb@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alain
+Hi Rishabh,
 
-Look good for me
+On Fri, Mar 06, 2020 at 11:21:07AM -0800, Rishabh Bhatnagar wrote:
+> Add devicetree binding for Secure Subsystem remote processor
+> support in remoteproc framework. This describes all the resources
+> needed by SPSS to boot and handle crash and shutdown scenarios.
+>
 
-Reviewed-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
-
-Regards
-
-On 3/5/20 1:59 PM, Alain Volmat wrote:
-> The PECR register provides received packet computed PEC value. 
-> It makes no sense restoring its value after a reset, and anyway,
-> as read-only register it cannot be restored.
-> 
-> Fixes: ea6dd25deeb5 ("i2c: stm32f7: add PM_SLEEP suspend/resume support")
-> Signed-off-by: Alain Volmat <alain.volmat@st.com>
+Bindings in txt format are no longer accepted - everything needs to be in yaml
+Also, this needs to be reviewed by the DT brigade.  As such you will
+have to CC the device tree mailing list and Rob Herring.
+ 
+> Signed-off-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
 > ---
->  drivers/i2c/busses/i2c-stm32f7.c | 4 ----
->  1 file changed, 4 deletions(-)
+>  .../devicetree/bindings/remoteproc/qcom,spss.txt   | 114 +++++++++++++++++++++
+>  1 file changed, 114 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/remoteproc/qcom,spss.txt
 > 
-> diff --git a/drivers/i2c/busses/i2c-stm32f7.c b/drivers/i2c/busses/i2c-stm32f7.c
-> index 378956ac6d1d..4d7401d62b71 100644
-> --- a/drivers/i2c/busses/i2c-stm32f7.c
-> +++ b/drivers/i2c/busses/i2c-stm32f7.c
-> @@ -176,7 +176,6 @@
->   * @cr2: Control register 2
->   * @oar1: Own address 1 register
->   * @oar2: Own address 2 register
-> - * @pecr: PEC register
->   * @tmgr: Timing register
->   */
->  struct stm32f7_i2c_regs {
-> @@ -184,7 +183,6 @@ struct stm32f7_i2c_regs {
->  	u32 cr2;
->  	u32 oar1;
->  	u32 oar2;
-> -	u32 pecr;
->  	u32 tmgr;
->  };
->  
-> @@ -2146,7 +2144,6 @@ static int stm32f7_i2c_regs_backup(struct stm32f7_i2c_dev *i2c_dev)
->  	backup_regs->cr2 = readl_relaxed(i2c_dev->base + STM32F7_I2C_CR2);
->  	backup_regs->oar1 = readl_relaxed(i2c_dev->base + STM32F7_I2C_OAR1);
->  	backup_regs->oar2 = readl_relaxed(i2c_dev->base + STM32F7_I2C_OAR2);
-> -	backup_regs->pecr = readl_relaxed(i2c_dev->base + STM32F7_I2C_PECR);
->  	backup_regs->tmgr = readl_relaxed(i2c_dev->base + STM32F7_I2C_TIMINGR);
->  
->  	pm_runtime_put_sync(i2c_dev->dev);
-> @@ -2178,7 +2175,6 @@ static int stm32f7_i2c_regs_restore(struct stm32f7_i2c_dev *i2c_dev)
->  	writel_relaxed(backup_regs->cr2, i2c_dev->base + STM32F7_I2C_CR2);
->  	writel_relaxed(backup_regs->oar1, i2c_dev->base + STM32F7_I2C_OAR1);
->  	writel_relaxed(backup_regs->oar2, i2c_dev->base + STM32F7_I2C_OAR2);
-> -	writel_relaxed(backup_regs->pecr, i2c_dev->base + STM32F7_I2C_PECR);
->  
->  	pm_runtime_put_sync(i2c_dev->dev);
->  
-> 
+> diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,spss.txt b/Documentation/devicetree/bindings/remoteproc/qcom,spss.txt
+> new file mode 100644
+> index 0000000..79d6258
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/remoteproc/qcom,spss.txt
+> @@ -0,0 +1,114 @@
+> +Qualcomm SPSS Peripheral Image Loader
+> +
+> +This document defines the binding for a component that loads and boots firmware
+> +on the Qualcomm Secure Peripheral Processor. This processor is booted in the
+> +bootloader stage and it attaches itself to linux later on in the boot process.
+> +
+> +- compatible:
+> +	Usage: required
+> +	Value type: <string>
+> +	Definition: must be one of:
+> +		    "qcom,sm8250-spss-pas"
+> +
+> +- reg:
+> +	Should contain an entry for each value in 'reg-names'. Each entry
+> +	have memory region's start address and size of the region.
+> +
+> +- reg-names:
+> +	Should contain strings with the following names each representing
+> +	a specific region in memory.
+> +	"sp2soc_irq_status", "sp2soc_irq_clr", "sp2soc_irq_mask", "rmb_err",
+> +	"rmb_err_spare2"
+> +
+> +- interrupts:
+> +	Should contain the generic interrupt assigned to remote processor.
+> +	The values should follow the interrupt-specifier format as dictated
+> +	by the 'interrupt-parent' node.
+> +
+> +- clocks:
+> +	Usage: required
+> +	Value type: <prop-encoded-array>
+> +	Definition: reference to the xo clock and optionally aggre2 clock to be
+> +		    held on behalf of the booting Hexagon core
+> +
+> +- clock-names:
+> +	Usage: required
+> +	Value type: <stringlist>
+> +	Definition: must be "xo" and optionally include "aggre2"
+> +
+> +- cx-supply:
+> +	Usage: required
+> +	Value type: <phandle>
+> +	Definition: reference to the regulator to be held on behalf of the
+> +		    booting Hexagon core
+> +
+> +- px-supply:
+> +	Usage: required
+> +	Value type: <phandle>
+> +	Definition: reference to the px regulator to be held on behalf of the
+> +		    booting Hexagon core
+> +
+> +- memory-region:
+> +	Usage: required
+> +	Value type: <phandle>
+> +	Definition: reference to the reserved-memory for the SPSS
+> +
+> +- qcom,spss-scsr-bits:
+> +	Usage: required
+> +	Value type: <array>
+> +	Definition: Bits that are set by remote processor in the irq status
+> +		    register region to represent different states during
+> +		    boot process
+> +
+> += SUBNODES
+> +The spss node may have an subnode named either "smd-edge" or "glink-edge" that
+> +describes the communication edge, channels and devices related to the SPSS.
+> +See ../soc/qcom/qcom,smd.txt and ../soc/qcom/qcom,glink.txt for details on how
+> +to describe these.
+> +
+> += EXAMPLE
+> +The following example describes the resources needed to boot the
+> +Secure Processor, as it is found on SM8250 boards.
+> +
+> +	spss {
+> +		compatible = "qcom,sm8250-spss-pil";
+> +		reg = <0x188101c 0x4>,
+> +                      <0x1881024 0x4>,
+> +                      <0x1881028 0x4>,
+> +                      <0x188103c 0x4>,
+> +                      <0x1882014 0x4>;
+> +                reg-names = "sp2soc_irq_status", "sp2soc_irq_clr",
+> +                            "sp2soc_irq_mask", "rmb_err", "rmb_err_spare2";
+> +                interrupts = <0 352 1>;
+> +
+> +                cx-supply = <&VDD_CX_LEVEL>;
+> +                cx-uV-uA = <RPMH_REGULATOR_LEVEL_TURBO 100000>;
+> +                px-supply = <&VDD_MX_LEVEL>;
+> +                px-uV = <RPMH_REGULATOR_LEVEL_TURBO 100000>;
+> +
+> +                clocks = <&clock_rpmh RPMH_CXO_CLK>;
+> +                clock-names = "xo";
+> +                qcom,proxy-clock-names = "xo";
+> +                status = "ok";
+> +
+> +                memory-region = <&pil_spss_mem>;
+> +                qcom,spss-scsr-bits = <24 25>;
+> +
+> +                glink-edge {
+> +                        qcom,remote-pid = <8>;
+> +                        transport = "spss";
+> +                        mboxes = <&sp_scsr 0>;
+> +                        mbox-names = "spss_spss";
+> +                        interrupt-parent = <&intsp>;
+> +                        interrupts = <0 0 IRQ_TYPE_LEVEL_HIGH>;
+> +
+> +                        reg = <0x1885008 0x8>,
+> +                              <0x1885010 0x4>;
+> +                        reg-names = "qcom,spss-addr",
+> +                                    "qcom,spss-size";
+> +
+> +                        label = "spss";
+> +                        qcom,glink-label = "spss";
+> +                };
+> +	};
+> +
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
