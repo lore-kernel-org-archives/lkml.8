@@ -2,131 +2,100 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FE53C10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 15:45:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B76CC10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 15:48:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A3D920578
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 15:45:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5642020578
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 15:48:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="tPSMc7Z9"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="YeZJOaBV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726990AbgCIPp3 (ORCPT
+        id S1726922AbgCIPsN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 11:45:29 -0400
-Received: from gateway33.websitewelcome.com ([192.185.145.9]:35664 "EHLO
-        gateway33.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726866AbgCIPp2 (ORCPT
+        Mon, 9 Mar 2020 11:48:13 -0400
+Received: from mail-lj1-f177.google.com ([209.85.208.177]:37722 "EHLO
+        mail-lj1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726436AbgCIPsN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 11:45:28 -0400
-Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
-        by gateway33.websitewelcome.com (Postfix) with ESMTP id A883E1C90A3
-        for <linux-kernel@vger.kernel.org>; Mon,  9 Mar 2020 10:45:27 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id BKatjOdZ8vBMdBKatjIASX; Mon, 09 Mar 2020 10:45:27 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=KI6kL70mhANfZo9ZyMWV1zqSX43MGFW8/O1xkIeRzhE=; b=tPSMc7Z9L+B5gQinOJRz2/20On
-        whgJuyq5HOnz0RSo1cs06B3ldkLSZNaud/e7LNgjBfZnwomgdudBJf+TR8P6vztUvfZX2CTWvsNf4
-        z1PlLgK5n/aQ5Fv4IoMCFAFkuZoE0QGVlgxR0e4rMHjtxNUWHPLcVWlpZzTYX1r37yobYgt5+mpJw
-        kxvPu/WKNeLfYGQRNBMSL3kNvWvkGqtxgfXeHl/e4xYiHwhR5jJ+mqD+v/+04t4+gcZQG1dd8aoiU
-        pYc6ImS9uVgYLg1Ry1amtqbC4e1saiR7fBnQcy5qM14Ncw4db+czNn3v4xNRBtEGjV8T9rfRqtWgg
-        c7+3/8iA==;
-Received: from [201.162.240.150] (port=12300 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1jBKar-002wEp-SU; Mon, 09 Mar 2020 10:45:26 -0500
-Date:   Mon, 9 Mar 2020 10:48:38 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Theodore Ts'o <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>
-Cc:     linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] ext4: dir: Replace zero-length array with
- flexible-array member
-Message-ID: <20200309154838.GA31559@embeddedor>
+        Mon, 9 Mar 2020 11:48:13 -0400
+Received: by mail-lj1-f177.google.com with SMTP id d12so10484925lji.4
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 08:48:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=jLofNn5qpSrLQRtfD1EwGyzB1Lhve2KpO5PXEfPUq5Q=;
+        b=YeZJOaBVkiXVfs+D9QtkZpXnQncn6cQi6ttJO8GeDr/u0vs5Ok6D71vFPTbDaSrOSU
+         a9vwiyAxGdd0jOPbAWRDxgQ/dVaWxrVoe46Psg3MiFYj6KPcMIJ4sjItaMalHGo9tC7r
+         nyjbHigjgQzZcxdVvtJBHh6hNSUGhAl0ydVpCvN+KWP3/HSx50Z1TLzQ7Ut1tSmFiO3s
+         eD8QkJqOAB/I8mPL1wRQv4qqSb5sF2dPDZE6sA+/YT9biwdnXeGxIfQd459PlU+HDMnC
+         H3c/Iyrli+xZ9UctINSRWGEVnO97rNrPAS7ZJfRJI/twc49hhWGLZUjKLJUuwSTaliYS
+         PWLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=jLofNn5qpSrLQRtfD1EwGyzB1Lhve2KpO5PXEfPUq5Q=;
+        b=juOJTTCGL/KCRVSFlbdrS0BCrkuWz1RkMlEEAx/eBIqzfEt/Ex61aAzLB+ncAVK99L
+         AjE4Rjs2qYZ13yNM4ee5WNhsXoU7NhW11Wit39S91kZ0HthK/GDup2lKLAyF+6CYHPfm
+         kVfy+MgTTx9GeT0yKGiGmYN8okre0sySrFpqzGKDuwla+TINGr57QYg9TWZD++TAqGyZ
+         jUrExeT2QTUgmgEd87KukekzdYjBltBc/QeyTQKSzrRuzzH8OxCml33TsMH2LzdUQstz
+         nEdt8TngqLaOWGUMim5Hg1Cz1S6Xdzn3zgVqJvw+kXDDnjVmWRUZvvtukF0pLI1jd0Cp
+         ONrg==
+X-Gm-Message-State: ANhLgQ2gqHRqyc2nPb6VAvLoUTznzt/oEDT1whCikNFjeCDAS42LosWd
+        Gjw1wNpLECtgkolqbI8tl1fAug==
+X-Google-Smtp-Source: ADFU+vuj8tlb8v26bk/4k8K0XSFLhHmuNKVELyWTxsk4bDFJDUNxDGlblztnptVJt3IAVmZYmV9KRg==
+X-Received: by 2002:a2e:9a90:: with SMTP id p16mr6809006lji.277.1583768891451;
+        Mon, 09 Mar 2020 08:48:11 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id t3sm11168342lfp.81.2020.03.09.08.48.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Mar 2020 08:48:10 -0700 (PDT)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id 977EB1013CA; Mon,  9 Mar 2020 18:48:10 +0300 (+03)
+Date:   Mon, 9 Mar 2020 18:48:10 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     David Rientjes <rientjes@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Yang Shi <shy828301@gmail.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Jeremy Cline <jcline@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>
+Subject: Re: [patch 1/2] mm, shmem: add vmstat for hugepage fallback
+Message-ID: <20200309154810.7cp5e57y3jymhluz@box>
+References: <alpine.DEB.2.21.2003061421240.7412@chino.kir.corp.google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.162.240.150
-X-Source-L: No
-X-Exim-ID: 1jBKar-002wEp-SU
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [201.162.240.150]:12300
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 8
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+In-Reply-To: <alpine.DEB.2.21.2003061421240.7412@chino.kir.corp.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
+On Fri, Mar 06, 2020 at 02:22:32PM -0800, David Rientjes wrote:
+> The existing thp_fault_fallback indicates when thp attempts to allocate a
+> hugepage but fails, or if the hugepage cannot be charged to the mem cgroup
+> hierarchy.
+> 
+> Extend this to shmem as well.  Adds a new thp_file_fallback to complement
+> thp_file_alloc that gets incremented when a hugepage is attempted to be
+> allocated but fails, or if it cannot be charged to the mem cgroup
+> hierarchy.
+> 
+> Additionally, remove the check for CONFIG_TRANSPARENT_HUGE_PAGECACHE from
+> shmem_alloc_hugepage() since it is only called with this configuration
+> option.
+> 
+> Signed-off-by: David Rientjes <rientjes@google.com>
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
+Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertently introduced[3] to the codebase from now on.
-
-Also, notice that, dynamic memory allocations won't be affected by
-this change:
-
-"Flexible array members have incomplete type, and so the sizeof operator
-may not be applied. As a quirk of the original implementation of
-zero-length arrays, sizeof evaluates to zero."[1]
-
-This issue was found with the help of Coccinelle.
-
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- fs/ext4/dir.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/fs/ext4/dir.c b/fs/ext4/dir.c
-index 9aa1f75409b0..c654205f648d 100644
---- a/fs/ext4/dir.c
-+++ b/fs/ext4/dir.c
-@@ -392,7 +392,7 @@ struct fname {
- 	__u32		inode;
- 	__u8		name_len;
- 	__u8		file_type;
--	char		name[0];
-+	char		name[];
- };
- 
- /*
 -- 
-2.25.0
-
+ Kirill A. Shutemov
