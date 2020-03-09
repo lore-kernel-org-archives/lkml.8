@@ -2,101 +2,105 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D127EC10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 07:17:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7B98C10F29
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 07:21:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FBC42072A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 07:17:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="DqgJY8mV"
+	by mail.kernel.org (Postfix) with ESMTP id 7E0EE20728
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 07:21:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726539AbgCIHRL (ORCPT
+        id S1726384AbgCIHVC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 03:17:11 -0400
-Received: from lb2-smtp-cloud8.xs4all.net ([194.109.24.25]:47135 "EHLO
-        lb2-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726427AbgCIHRL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 03:17:11 -0400
-Received: from [192.168.2.10] ([46.9.234.233])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id BCesjfMUyhVf8BCewjElMT; Mon, 09 Mar 2020 08:17:09 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1583738229; bh=32KlxDk90Be6PEioTy1TcN8IjnKPfRs1x3JsVTLCOg4=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=DqgJY8mV8S7o7gcfn+cQs6L1gHKlNIrGFUr41UrJYLw+Eoh9sVsFnNtO0mxC+WbKR
-         NqaKpCpP9LLVS/VxWvm03MTSYd9UQWaZqROZMtweTKrgZ7kZFUIt7gUvZZKwnpVzVo
-         wHT4mNfps8Nt82Z+cWVwabvletmOS7zoyMzENNr8q11iY542mZeYeoEb5sbMKIxYlo
-         Xp4x3Ed85Si7tYsV++85hXutSHGx+CM6F1Qo2xM7fgbjQMUubblmhZERH73y/FKvIb
-         nt51Y1NRzQIgDWhgyTJ+iKGwbjEYoHojKUT7zMu3NNENP9ZNVp8DuUU+FozzR3BQvB
-         Tnp492gRqyQOw==
-Subject: Re: [PATCHv4 01/11] videobuf2: add cache management members
-To:     Sergey Senozhatsky <senozhatsky@chromium.org>
-Cc:     Hans Verkuil <hans.verkuil@cisco.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Pawel Osciak <posciak@chromium.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200302041213.27662-1-senozhatsky@chromium.org>
- <20200302041213.27662-2-senozhatsky@chromium.org>
- <17060663-9c30-de5e-da58-0c847b93e4d3@xs4all.nl>
- <20200307094634.GB29464@google.com>
- <6f5916dd-63f6-5d19-13f4-edd523205a1f@xs4all.nl>
- <20200307112838.GA125961@google.com>
- <a4d85ac3-0eea-bc19-cd44-0c8f5b71f6bc@xs4all.nl>
- <20200309040305.GB9460@google.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <4cd4f794-1d84-9fff-746c-e516bc411549@xs4all.nl>
-Date:   Mon, 9 Mar 2020 08:17:02 +0100
+        Mon, 9 Mar 2020 03:21:02 -0400
+Received: from mga01.intel.com ([192.55.52.88]:34568 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725796AbgCIHVC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 03:21:02 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Mar 2020 00:21:01 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,532,1574150400"; 
+   d="scan'208";a="235518417"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.167]) ([10.237.72.167])
+  by fmsmga008.fm.intel.com with ESMTP; 09 Mar 2020 00:20:58 -0700
+Subject: Re: [PATCH v2 05/11] mmc: sdhci: pxav3: Use
+ sdhci_set_power_and_voltage()
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        linux-kernel@vger.kernel.org
+Cc:     phil@raspberrypi.com, linux-mmc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, f.fainelli@gmail.com,
+        stefan.wahren@i2se.com, bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        Ulf Hansson <ulf.hansson@linaro.org>
+References: <20200306174413.20634-1-nsaenzjulienne@suse.de>
+ <20200306174413.20634-6-nsaenzjulienne@suse.de>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <92473c9e-693a-fa98-2a96-a200a86dc2fc@intel.com>
+Date:   Mon, 9 Mar 2020 09:20:14 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200309040305.GB9460@google.com>
+In-Reply-To: <20200306174413.20634-6-nsaenzjulienne@suse.de>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfP0Ii/2CEImmUL0aGzJj48bCfBaJoRpOw8bibhnHKFGwuJYS5Vp2a23+WcZ08klJHUnOr4LO61wYTWnM8ba1VJtu5XzDweqrsjC8CcXmq9JbVAd2h1c8
- E9UCE7Q63zDdjzOBXZJneC8Q3CBEdPGm9K9MqycB4YHBOk93l30ZhsxDr5jeOi4l8WHT0EieGqub/JN00iYNDb6M6+dt1R177Ds85MW/bs0DdAo2LE5bOMKZ
- 0r70rBdm0OH6SRS31Iqw2d0MoHicsjVMp0RDfuk6OI4gmHZruS7IZTeJ8z3wbu6ZzjuF9AALrKgIKFPgyHwjqBTTZ1Wr1Jgk5C1eSrRPeOD9kC2Sp+6gp2gm
- zk27KaEvTN/RHzjBMs7ZaqSYyMTILijYKgCKVuUNbt3lLp0bGCfpinLqXtj1Tti0K0HXG7me8+4+tViRzr5cwxxJsPFrZW+8OouAd7ndtA3p4aIJ9wT9PpRH
- hef7lz+vsGTU/kI/YaRqlDFJ5gPYbzC2etqtLqD7rge2a0X4Di25ezR5qP0SbQJVllmhYB6xECuvvTxT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/9/20 5:03 AM, Sergey Senozhatsky wrote:
-> On (20/03/07 12:47), Hans Verkuil wrote:
->>
->> 1) attempting to use V4L2_FLAG_MEMORY_NON_CONSISTENT will clear the flag
->>    upon return (test with both reqbufs and create_bufs).
->> 2) attempting to use V4L2_BUF_FLAG_NO_CACHE_INVALIDATE or V4L2_BUF_FLAG_NO_CACHE_CLEAN
->>
-> [..]
->>
->> All these tests can be done in testReqBufs().
+On 6/03/20 7:44 pm, Nicolas Saenz Julienne wrote:
+> The sdhci core provides a helper function with the same functionality as
+> this controller's set_power() callback. Use it instead.
 > 
-> MEMORY_NON_CONSISTENT is a queue property, we set it during queue setup.
-> NO_CACHE_INVALIDATE/FLAG_NO_CACHE_CLEAN is a buffer property, we set it
-> when we qbuf. I'm not sure if all of these can be done in testReqBufts().
-
-testReqBufs can call qbuf, but not streamon. Since you don't need streaming
-for this, testReqBufs should be fine.
-
-Regards,
-
-	Hans
-
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> ---
+>  drivers/mmc/host/sdhci-pxav3.c | 20 +-------------------
+>  1 file changed, 1 insertion(+), 19 deletions(-)
 > 
-> 	-ss
+> diff --git a/drivers/mmc/host/sdhci-pxav3.c b/drivers/mmc/host/sdhci-pxav3.c
+> index e55037ceda73..75fe90b88f9b 100644
+> --- a/drivers/mmc/host/sdhci-pxav3.c
+> +++ b/drivers/mmc/host/sdhci-pxav3.c
+> @@ -297,27 +297,9 @@ static void pxav3_set_uhs_signaling(struct sdhci_host *host, unsigned int uhs)
+>  		__func__, uhs, ctrl_2);
+>  }
+>  
+> -static void pxav3_set_power(struct sdhci_host *host, unsigned char mode,
+> -			    unsigned short vdd)
+> -{
+> -	struct mmc_host *mmc = host->mmc;
+> -	u8 pwr = host->pwr;
+> -
+> -	sdhci_set_power_noreg(host, mode, vdd);
+> -
+> -	if (host->pwr == pwr)
+> -		return;
+> -
+> -	if (host->pwr == 0)
+> -		vdd = 0;
+> -
+> -	if (!IS_ERR(mmc->supply.vmmc))
+> -		mmc_regulator_set_ocr(mmc, mmc->supply.vmmc, vdd);
+> -}
+
+This code is different.  The commit message should explain why it is
+equivalent.  Has it been tested?
+
+> -
+>  static const struct sdhci_ops pxav3_sdhci_ops = {
+>  	.set_clock = sdhci_set_clock,
+> -	.set_power = pxav3_set_power,
+> +	.set_power = sdhci_set_power_and_bus_voltage,
+>  	.platform_send_init_74_clocks = pxav3_gen_init_74_clocks,
+>  	.get_max_clock = sdhci_pltfm_clk_get_max_clock,
+>  	.set_bus_width = sdhci_set_bus_width,
 > 
 
