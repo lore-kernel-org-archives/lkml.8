@@ -2,140 +2,140 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A11B0C18E5A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:04:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A1A4C10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:05:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FCFC215A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:04:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583777096;
-	bh=Ptre7CW0SKo87QNNsafIdExhNEvOolW6MbLzvP3uyuo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zzsm6Ex21cwWcizWamQQTAddc08FXxMeLMSYNrsNXXETRQ+3b/JhBzZoynb8lhtr8
-	 TigCC8sa1tVAH0xyFMDaIOxtW79tcAOEPxRkxWutQGqi3Awo0rz/Abtn6FThk+hHQ/
-	 DHS2slmLIxXIsKH3bd1lDOxCykbuXt5SSQ0VgFEw=
+	by mail.kernel.org (Postfix) with ESMTP id 43375215A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:05:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="nM5LyMf+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727390AbgCISEz (ORCPT
+        id S1727398AbgCISFH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 14:04:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55954 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726571AbgCISEz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 14:04:55 -0400
-Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 30C3E215A4;
-        Mon,  9 Mar 2020 18:04:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583777094;
-        bh=Ptre7CW0SKo87QNNsafIdExhNEvOolW6MbLzvP3uyuo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=V3hLucMxbfoBCLqQDU1+xW61P2qX2lGqX11VEdovINh3xVOtqIJrrf2bhlSJAFlAP
-         1xWj+LSgIOv4b6NVe3XcLHKSBQFxHqb/nBf9c0Xs5BmqXxDN1WfHn5hpQIUUsFBYOA
-         FlPdmuqXttMJw9mM9IY/cY7l7hsGczQfbg2IOlfg=
-Date:   Mon, 9 Mar 2020 11:04:52 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] xfs: clear PF_MEMALLOC before exiting xfsaild thread
-Message-ID: <20200309180452.GA1073@sol.localdomain>
-References: <20200309010410.GA371527@sol.localdomain>
- <20200309043430.143206-1-ebiggers@kernel.org>
- <20200309162439.GB8045@magnolia>
+        Mon, 9 Mar 2020 14:05:07 -0400
+Received: from gateway32.websitewelcome.com ([192.185.145.107]:31449 "EHLO
+        gateway32.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726353AbgCISFG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 14:05:06 -0400
+Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
+        by gateway32.websitewelcome.com (Postfix) with ESMTP id 84301984A6
+        for <linux-kernel@vger.kernel.org>; Mon,  9 Mar 2020 13:05:05 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id BMm1jL3Ow8vkBBMm1jDv4u; Mon, 09 Mar 2020 13:05:05 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=M/+spNsZHyAg8E48D01jPchiqr2VpON3QaUIuLiE4zI=; b=nM5LyMf+ug8N0+yKKxSEt0RQFL
+        yXvC+Ggrf0AssBa4PKtsX5zlzfSmlVZWeGIRVws/AdO6jkACKRjzCYJaVYgtdnYcWrCIMAep9T8X/
+        Fiqi4MBuKb3qgZuWMBUcT5ithvxtb5qt05qjwyM1sgwG5VhHYlllU1o2IRGeHh3kJKxrDPpuqWp9K
+        lMRbNu4U059rr9yvP7gmuEtOKqrbZi4afar1Mpk1Xi/vUPJIlH2DH8FX1QNqXsh17b/LweyBXF3ar
+        A081rcBuXV5DOte4jBE5L9iTIh7yZHMzskJiPNaye9VCR8CXAp3WQC32lmpnWuTrj+BpCOXEB+yoM
+        UtHGmRAw==;
+Received: from [201.162.240.150] (port=3342 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1jBMlw-004D0Z-Ry; Mon, 09 Mar 2020 13:05:01 -0500
+Date:   Mon, 9 Mar 2020 13:08:13 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Theodore Ts'o <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>
+Cc:     linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH][next] ext4: xattr.h: Replace zero-length array with
+ flexible-array member
+Message-ID: <20200309180813.GA3347@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200309162439.GB8045@magnolia>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.162.240.150
+X-Source-L: No
+X-Exim-ID: 1jBMlw-004D0Z-Ry
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [201.162.240.150]:3342
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 7
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 09, 2020 at 09:24:39AM -0700, Darrick J. Wong wrote:
-> On Sun, Mar 08, 2020 at 09:34:30PM -0700, Eric Biggers wrote:
-> > From: Eric Biggers <ebiggers@google.com>
-> > 
-> > Leaving PF_MEMALLOC set when exiting a kthread causes it to remain set
-> > during do_exit().  That can confuse things.  For example, if BSD process
-> > accounting is enabled and the accounting file has FS_SYNC_FL set and is
-> > located on an ext4 filesystem without a journal, then do_exit() ends up
-> > calling ext4_write_inode().  That triggers the
-> > WARN_ON_ONCE(current->flags & PF_MEMALLOC) there, as it assumes
-> > (appropriately) that inodes aren't written when allocating memory.
-> > 
-> > Fix this in xfsaild() by using the helper functions to save and restore
-> > PF_MEMALLOC.
-> > 
-> > This can be reproduced as follows in the kvm-xfstests test appliance
-> > modified to add the 'acct' Debian package, and with kvm-xfstests's
-> > recommended kconfig modified to add CONFIG_BSD_PROCESS_ACCT=y:
-> > 
-> > 	mkfs.ext2 -F /dev/vdb
-> > 	mount /vdb -t ext4
-> > 	touch /vdb/file
-> > 	chattr +S /vdb/file
-> 
-> Does this trip if the process accounting file is also on an xfs
-> filesystem?
-> 
-> > 	accton /vdb/file
-> > 	mkfs.xfs -f /dev/vdc
-> > 	mount /vdc
-> > 	umount /vdc
-> 
-> ...and if so, can this be turned into an fstests case, please?
+The current codebase makes use of the zero-length array language
+extension to the C90 standard, but the preferred mechanism to declare
+variable-length types such as these ones is a flexible array member[1][2],
+introduced in C99:
 
-I wasn't expecting it, but it turns out it does actually trip a similar warning
-in iomap_do_writepage():
+struct foo {
+        int stuff;
+        struct boo array[];
+};
 
-        mkfs.xfs -f /dev/vdb
-        mount /vdb
-        touch /vdb/file
-        chattr +S /vdb/file
-        accton /vdb/file
-        mkfs.xfs -f /dev/vdc
-        mount /vdc
-        umount /vdc
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertently introduced[3] to the codebase from now on.
 
-causes...
+Also, notice that, dynamic memory allocations won't be affected by
+this change:
 
-	WARNING: CPU: 1 PID: 336 at fs/iomap/buffered-io.c:1534
-	CPU: 1 PID: 336 Comm: xfsaild/vdc Not tainted 5.6.0-rc5 #3
-	Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS ?-20191223_100556-anatol 04/01/2014
-	RIP: 0010:iomap_do_writepage+0x16b/0x1f0 fs/iomap/buffered-io.c:1534
-	[...]
-	Call Trace:
-	 write_cache_pages+0x189/0x4d0 mm/page-writeback.c:2238
-	 iomap_writepages+0x1c/0x33 fs/iomap/buffered-io.c:1642
-	 xfs_vm_writepages+0x65/0x90 fs/xfs/xfs_aops.c:578
-	 do_writepages+0x41/0xe0 mm/page-writeback.c:2344
-	 __filemap_fdatawrite_range+0xd2/0x120 mm/filemap.c:421
-	 file_write_and_wait_range+0x71/0xc0 mm/filemap.c:760
-	 xfs_file_fsync+0x7a/0x2b0 fs/xfs/xfs_file.c:114
-	 generic_write_sync include/linux/fs.h:2867 [inline]
-	 xfs_file_buffered_aio_write+0x379/0x3b0 fs/xfs/xfs_file.c:691
-	 call_write_iter include/linux/fs.h:1901 [inline]
-	 new_sync_write+0x130/0x1d0 fs/read_write.c:483
-	 __kernel_write+0x54/0xe0 fs/read_write.c:515
-	 do_acct_process+0x122/0x170 kernel/acct.c:522
-	 slow_acct_process kernel/acct.c:581 [inline]
-	 acct_process+0x1d4/0x27c kernel/acct.c:607
-	 do_exit+0x83d/0xbc0 kernel/exit.c:791
-	 kthread+0xf1/0x140 kernel/kthread.c:257
-	 ret_from_fork+0x27/0x50 arch/x86/entry/entry_64.S:352
+"Flexible array members have incomplete type, and so the sizeof operator
+may not be applied. As a quirk of the original implementation of
+zero-length arrays, sizeof evaluates to zero."[1]
 
-So sure, since it's not necessarily a multi-filesystem thing, I can try to turn
-it into an xfstest.  There's currently no way to enable BSD process accounting
-in xfstests though, so we'll either need to make the test depend on the 'acct'
-program or add a helper test program.
+This issue was found with the help of Coccinelle.
 
-Also, do you want me to update the commit message again, to mention the above
-case?
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[2] https://github.com/KSPP/linux/issues/21
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
 
-- Eric
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ fs/ext4/xattr.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/fs/ext4/xattr.h b/fs/ext4/xattr.h
+index f39cad2abe2a..ffe21ac77f78 100644
+--- a/fs/ext4/xattr.h
++++ b/fs/ext4/xattr.h
+@@ -48,7 +48,7 @@ struct ext4_xattr_entry {
+ 	__le32	e_value_inum;	/* inode in which the value is stored */
+ 	__le32	e_value_size;	/* size of attribute value */
+ 	__le32	e_hash;		/* hash value of name and value */
+-	char	e_name[0];	/* attribute name */
++	char	e_name[];	/* attribute name */
+ };
+ 
+ #define EXT4_XATTR_PAD_BITS		2
+@@ -118,7 +118,7 @@ struct ext4_xattr_ibody_find {
+ 
+ struct ext4_xattr_inode_array {
+ 	unsigned int count;		/* # of used items in the array */
+-	struct inode *inodes[0];
++	struct inode *inodes[];
+ };
+ 
+ extern const struct xattr_handler ext4_xattr_user_handler;
+-- 
+2.25.0
+
