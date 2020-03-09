@@ -2,97 +2,103 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12F05C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 17:21:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E982C10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 17:22:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E362B222D9
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 17:21:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="Cr+A+zgp"
+	by mail.kernel.org (Postfix) with ESMTP id DA9A6215A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 17:22:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583774551;
+	bh=1cu4d+oO7XWpJIvbZCH3HtArOArgUHyZxzWlPouuQ1Q=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=SgsKJxv8hbhN6i8YSLfuH+4Qli+0tKfZbKDc3g+95lG/WL4Syj46pGKa1JLzivvXm
+	 szxi2MHvq1MW7NMwRPuGeUSCKePwpdcEx3hqn+JyO7X/Om761NUHnAX8PScUYPD8WY
+	 scjnm4+3PRlGS9iNSTseV5MnD2eFdL95e3HxoFGE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727350AbgCIRVw (ORCPT
+        id S1727323AbgCIRWa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 13:21:52 -0400
-Received: from mail-qv1-f66.google.com ([209.85.219.66]:33535 "EHLO
-        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727323AbgCIRVw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 13:21:52 -0400
-Received: by mail-qv1-f66.google.com with SMTP id cz10so1322803qvb.0
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 10:21:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=rXjYgzydEIFf6l4K9Z+TCKu5LCpXzo28EhasuTaYcPc=;
-        b=Cr+A+zgpZdvxbpOgYgNFNbOk7jcWMIim0WKuj8k5ZLfc9pq/eLdoUOtag1aVvG90DB
-         fACdHaxZ9DUgQoPDU+xUerOF8obi3FgOOSHln+z3aZF9ZtzfRbJJ3QMt0iTKmAb5Tdb1
-         VEk/G9iiHGDON4B7ESjtKiohfcYBvRb6b5UdTs/ZhjmJu4IV0CO8P5Fo53NAhUHUhfUS
-         kyWd0zdIwLqG2IIb40smVrle8jemsBXnf0hf9LzWQoVb353+gD0zFbPcbo/bYlPLTSjT
-         m4uva7wEuPZtbQc4HC6ABUyvS3DHiTFRx9fe0mJs7CRzGCq8Ppfq8oGxOl8uYjGAMvaJ
-         0y9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rXjYgzydEIFf6l4K9Z+TCKu5LCpXzo28EhasuTaYcPc=;
-        b=d4fCemi4/qg0E8pdP7ISDzydxEco7hsk8a0+Ekfbk6BfqtuK2LFm7oWzCbssrULZsT
-         zCJ1HiG2zBvmDFg7bWq9CYdv6NYxqlt86AE7mifo/s5hSegDfgSLEMjd0ypS3YEOIBoa
-         7FJCHRxBNmUvx4AmBCKe0d36A6Z3BnXFzhXIp+DRGGvLeuA+7RcJvGScRX606xQwBtoo
-         e3S7di9pUH5XJ4zqnOkhreU1J8JAQNRiskycN6qlM14j6vdZwE4M+98Xtoc83S8JBAPM
-         Mwd0AmUmr1j8VvlIa6DZuu2EpIr0+JqWeEw0bKBKUdtmLOtjYjoNaog3JFtR+NJt9BRL
-         7cqg==
-X-Gm-Message-State: ANhLgQ1oiZliWXZx/U1NlrpDds2/37AOshQBxnePtsUyfFWuK5ev0ZYY
-        flUmjIqxMUb+OP0HG970nTAgog==
-X-Google-Smtp-Source: ADFU+vv1L/8G08f/Yc85KgGY+AnoOBeVnN2dPlRns5bBi0k507dbTfnEb3f5U4Ev6N1wE3oD9bTBbQ==
-X-Received: by 2002:a0c:c209:: with SMTP id l9mr1222037qvh.190.1583774511330;
-        Mon, 09 Mar 2020 10:21:51 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id 17sm5825822qkm.105.2020.03.09.10.21.50
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 09 Mar 2020 10:21:50 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jBM6A-0003hk-Cd; Mon, 09 Mar 2020 14:21:50 -0300
-Date:   Mon, 9 Mar 2020 14:21:50 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     syzbot <syzbot+0abbad99bee187cf63d4@syzkaller.appspotmail.com>
-Cc:     chuck.lever@oracle.com, dledford@redhat.com, leon@kernel.org,
-        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-        parav@mellanox.com, syzkaller-bugs@googlegroups.com
-Subject: Re: INFO: task hung in rdma_destroy_id
-Message-ID: <20200309172150.GU31668@ziepe.ca>
-References: <00000000000059e701059fe3ec2f@google.com>
+        Mon, 9 Mar 2020 13:22:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45094 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727101AbgCIRWa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 13:22:30 -0400
+Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5FE55208C3;
+        Mon,  9 Mar 2020 17:22:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583774550;
+        bh=1cu4d+oO7XWpJIvbZCH3HtArOArgUHyZxzWlPouuQ1Q=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=saf4rYJy6tRsbQfoEujMGfmyBgkiMEgICumgmP5NzqCJGbXcXHXn+CJPp4Wio+lvR
+         KpOaAlBhlhUgq+nNioXedK640RclUAE2whsPldklde+E+6i0p5sEF8fOQ39LK95QX0
+         oRXxcYUTLz6qH+OiNSPi4I7AzjIe6AJDmTEDz/8E=
+Message-ID: <34355c4fe6c3968b1f619c60d5ff2ca11a313096.camel@kernel.org>
+Subject: Re: [locks] 6d390e4b5d: will-it-scale.per_process_ops -96.6%
+ regression
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     kernel test robot <rong.a.chen@intel.com>,
+        yangerkun <yangerkun@huawei.com>,
+        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org,
+        Neil Brown <neilb@suse.de>,
+        Bruce Fields <bfields@fieldses.org>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Date:   Mon, 09 Mar 2020 13:22:28 -0400
+In-Reply-To: <CAHk-=whGK712fPqmQ3FSHxqe3Aqny4bEeWEvfaytLeLV2+ijCQ@mail.gmail.com>
+References: <20200308140314.GQ5972@shao2-debian>
+         <e3783d060c778cb41b77380ad3e278133b52f57e.camel@kernel.org>
+         <CAHk-=whGK712fPqmQ3FSHxqe3Aqny4bEeWEvfaytLeLV2+ijCQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <00000000000059e701059fe3ec2f@google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 02, 2020 at 11:09:15AM -0800, syzbot wrote:
-> Hello,
+On Mon, 2020-03-09 at 08:52 -0700, Linus Torvalds wrote:
+> On Mon, Mar 9, 2020 at 7:36 AM Jeff Layton <jlayton@kernel.org> wrote:
+> > On Sun, 2020-03-08 at 22:03 +0800, kernel test robot wrote:
+> > > FYI, we noticed a -96.6% regression of will-it-scale.per_process_ops due to commit:
+> > 
+> > This is not completely unexpected as we're banging on the global
+> > blocked_lock_lock now for every unlock. This test just thrashes file
+> > locks and unlocks without doing anything in between, so the workload
+> > looks pretty artificial [1].
+> > 
+> > It would be nice to avoid the global lock in this codepath, but it
+> > doesn't look simple to do. I'll keep thinking about it, but for now I'm
+> > inclined to ignore this result unless we see a problem in more realistic
+> > workloads.
 > 
-> syzbot found the following crash on:
+> That is a _huge_ regression, though.
 > 
-> HEAD commit:    63623fd4 Merge tag 'for-linus' of git://git.kernel.org/pub..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=160452c3e00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=9833e26bab355358
-> dashboard link: https://syzkaller.appspot.com/bug?extid=0abbad99bee187cf63d4
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> What about something like the attached? Wouldn't that work? And make
+> the code actually match the old comment about wow "fl_blocker" being
+> NULL being special.
 > 
-> Unfortunately, I don't have any reproducer for this crash yet.
+> The old code seemed to not know about things like memory ordering either.
 > 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+0abbad99bee187cf63d4@syzkaller.appspotmail.com
+> Patch is entirely untested, but aims to have that "smp_store_release()
+> means I'm done and not going to touch it any more", making that
+> smp_load_acquire() test hopefully be valid as per the comment..
 
-#syz dup: KASAN: use-after-free Read in rdma_listen (2)
+Yeah, something along those lines maybe. I don't think we can use
+fl_blocker that way though, as the wait_event_interruptible is waiting
+on it to go to NULL, and the wake_up happens before fl_blocker is
+cleared.
+
+Maybe we need to mix in some sort of FL_BLOCK_ACTIVE flag and use that
+instead of testing for !fl_blocker to see whether we can avoid the
+blocked_lock_lock?
+  
+-- 
+Jeff Layton <jlayton@kernel.org>
+
