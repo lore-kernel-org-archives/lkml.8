@@ -2,168 +2,159 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF051C10DCE
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 02:28:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B82FC10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 02:33:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6F71206D5
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 02:28:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583720914;
-	bh=5Klv9i0gcwrEZVuZa+BIxD+FYTa6nxm4aw60GyHS0xI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1lb5fjP9PPUQ4wYgP6Lw7ZgWvSNMeZ+/RA8a02fBdFw+sutYox7yVMTJ8r4mxsG8o
-	 DHuCvi/a7kfwtKleeY7uz+URgZnfzgdBfq4cAJoOg1I/Pttpy7IhjJqF0UnlMVx0qJ
-	 hhcJMvcuICn7B9qMB/iwHqSQnTrOXkc2U6qa5dWU=
+	by mail.kernel.org (Postfix) with ESMTP id 4EA6C206D5
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 02:33:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="kTl4R+qa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726712AbgCIC2d (ORCPT
+        id S1726733AbgCICdg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Mar 2020 22:28:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46504 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726363AbgCIC2c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Mar 2020 22:28:32 -0400
-Received: from localhost (lfbn-ncy-1-985-231.w90-101.abo.wanadoo.fr [90.101.63.231])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD74B20637;
-        Mon,  9 Mar 2020 02:28:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583720912;
-        bh=5Klv9i0gcwrEZVuZa+BIxD+FYTa6nxm4aw60GyHS0xI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hNSdzBDok5iJiJMWz5xJCqDSs2Kiw1Njm5O8MpOv68dsn0lXzL9Ly20CTyKNErqdj
-         ire7Go761k+v5N+w7FDOgFMhXBJtxuKpw9trPEUy8Lq3o7H7uYTnOFSuJiYhlpLkhu
-         zER5t9sviw+3mq1MeCu+MgQmxwblkqzSxeEpCk8E=
-Date:   Mon, 9 Mar 2020 03:28:30 +0100
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     Alex Belits <abelits@marvell.com>
-Cc:     "mingo@kernel.org" <mingo@kernel.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        Prasun Kapoor <pkapoor@marvell.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "will@kernel.org" <will@kernel.org>
-Subject: Re: [EXT] Re: [PATCH 11/12] task_isolation: kick_all_cpus_sync:
- don't kick isolated cpus
-Message-ID: <20200309022829.GB9615@lenoir>
-References: <4473787e1b6bc3cc226067e8d122092a678b63de.camel@marvell.com>
- <dfa5e0e9f34e6ff0ef048c81bc70496354f31300.camel@marvell.com>
- <20200306153446.GC8590@lenoir>
- <7e0ce8988f4811e7453859e22654d2618557d9ab.camel@marvell.com>
+        Sun, 8 Mar 2020 22:33:36 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:31131 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726363AbgCICdf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Mar 2020 22:33:35 -0400
+X-UUID: 1e79d5a4c0cf488b84d112d6a33cdc61-20200309
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=dVRMX7HzacB89Rfs5D6p0q4PZANziX89+dXutatF4V0=;
+        b=kTl4R+qack+CW/5g0o7i/btiiRSIyCynqSsAVQoowR8r9lP3+YnZ5/ND9oPwEfJ2Yn5Zszt6WCDR3ltv4Y2xzN+k72FoJxF2g+x1EZHHJby81EYVxpfwVxNwZHKYtJ2Ys4awG/PiYG6s4OzXPR/VaHmqcSMK9E1qrd9vMkmCUzw=;
+X-UUID: 1e79d5a4c0cf488b84d112d6a33cdc61-20200309
+Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw02.mediatek.com
+        (envelope-from <yingjoe.chen@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 116088916; Mon, 09 Mar 2020 10:33:30 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs05n2.mediatek.inc (172.21.101.140) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 9 Mar 2020 10:32:26 +0800
+Received: from [172.21.77.4] (172.21.77.4) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 9 Mar 2020 10:30:47 +0800
+Message-ID: <1583721209.28755.29.camel@mtksdaap41>
+Subject: Re: [PATCH v8 4/5] rtc: mt6397: Add support for the MediaTek MT6358
+ RTC
+From:   Yingjoe Chen <yingjoe.chen@mediatek.com>
+To:     Ran Bi <ran.bi@mediatek.com>
+CC:     Nicolas Boichat <drinkcat@chromium.org>,
+        Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        "Rob Herring" <robh+dt@kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Alessandro Zummo" <a.zummo@towertech.it>,
+        Josef Friedl <josef.friedl@speed.at>,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        Frank Wunderlich <frank-w@public-files.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Richard Fontana <rfontana@redhat.com>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Eddie Huang <eddie.huang@mediatek.com>,
+        <linux-rtc@vger.kernel.org>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>
+Date:   Mon, 9 Mar 2020 10:33:29 +0800
+In-Reply-To: <1583393876.8521.15.camel@mhfsdcap03>
+References: <1580730044-30501-1-git-send-email-hsin-hsiung.wang@mediatek.com>
+         <1580730044-30501-5-git-send-email-hsin-hsiung.wang@mediatek.com>
+         <1580748607.31376.3.camel@mtksdaap41>
+         <1581911502.20099.13.camel@mhfsdcap03>
+         <CANMq1KDTHcFV8Gue1PuOWkWXL20z_-j58u8JpwbBm_wUvLeqSg@mail.gmail.com>
+         <1583393876.8521.15.camel@mhfsdcap03>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7e0ce8988f4811e7453859e22654d2618557d9ab.camel@marvell.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 08, 2020 at 06:48:43AM +0000, Alex Belits wrote:
-> On Fri, 2020-03-06 at 16:34 +0100, Frederic Weisbecker wrote:
-> > On Wed, Mar 04, 2020 at 04:15:24PM +0000, Alex Belits wrote:
-> > > From: Yuri Norov <ynorov@marvell.com>
-> > > 
-> > > Make sure that kick_all_cpus_sync() does not call CPUs that are
-> > > running
-> > > isolated tasks.
-> > > 
-> > > Signed-off-by: Alex Belits <abelits@marvell.com>
-> > > ---
-> > >  kernel/smp.c | 14 +++++++++++++-
-> > >  1 file changed, 13 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/kernel/smp.c b/kernel/smp.c
-> > > index 3a8bcbdd4ce6..d9b4b2fedfed 100644
-> > > --- a/kernel/smp.c
-> > > +++ b/kernel/smp.c
-> > > @@ -731,9 +731,21 @@ static void do_nothing(void *unused)
-> > >   */
-> > >  void kick_all_cpus_sync(void)
-> > >  {
-> > > +	struct cpumask mask;
-> > > +
-> > >  	/* Make sure the change is visible before we kick the cpus */
-> > >  	smp_mb();
-> > > -	smp_call_function(do_nothing, NULL, 1);
-> > > +
-> > > +	preempt_disable();
-> > > +#ifdef CONFIG_TASK_ISOLATION
-> > > +	cpumask_clear(&mask);
-> > > +	task_isolation_cpumask(&mask);
-> > > +	cpumask_complement(&mask, &mask);
-> > > +#else
-> > > +	cpumask_setall(&mask);
-> > > +#endif
-> > > +	smp_call_function_many(&mask, do_nothing, NULL, 1);
-> > > +	preempt_enable();
-> > >  }
-> > 
-> > That looks very dangerous, the callers of kick_all_cpus_sync() want
-> > to
-> > sync all CPUs for a reason. You will rather need to fix the callers.
-> 
-> All callers of this use this function to synchronize IPIs and icache,
-> and they have no idea if there is anything special about the state of
-> CPUs. If a task is isolated, this call would not be necessary because
-> the task is in userspace, and it would have to enter kernel for any of
-> that to become relevant but then it will have to switch from userspace
-> to kernel. At worst it is returning to userspace after entering
-> isolation or back in kernel running cleanup after isolation is broken
-> but before tsk_thread_flags_cache is updated. There will be nothing to
-> run on the same CPU because we have just left isolation, so task will
-> either exit or go back to userspace.
-> 
-> Is there any reason for a race at that point?
+T24gVGh1LCAyMDIwLTAzLTA1IGF0IDE1OjM3ICswODAwLCBSYW4gQmkgd3JvdGU6DQo+IEhpLA0K
+PiANCj4gT24gV2VkLCAyMDIwLTAzLTA0IGF0IDIwOjU5ICswODAwLCBOaWNvbGFzIEJvaWNoYXQg
+d3JvdGU6DQo+ID4gSGksDQo+ID4gDQo+ID4gT24gTW9uLCBGZWIgMTcsIDIwMjAgYXQgMTE6NTIg
+QU0gUmFuIEJpIDxyYW4uYmlAbWVkaWF0ZWsuY29tPiB3cm90ZToNCj4gPiA+DQo+ID4gPiBPbiBU
+dWUsIDIwMjAtMDItMDQgYXQgMDA6NTAgKzA4MDAsIFlpbmdqb2UgQ2hlbiB3cm90ZToNCg0KPC4u
+Li4+DQoNCj4gPiA+ID4NCj4gPiA+ID4gUHV0dGluZyB0aGVzZSBpbiBoZWFkZXIgZmlsZSBkb2Vz
+bid0IGxvb2tzIHJpZ2h0IHRvIG1lLg0KPiA+ID4gPiBXaG8gbmVlZCB0aGlzPyBjYW4geW91IG1v
+dmUgdGhlbSBiYWNrIHRvIHJ0Yy1tdDYzOTcuYz8NCj4gPiA+ID4gSm9lLkMNCj4gPiA+ID4NCj4g
+PiA+DQo+ID4gPiBUaGlzIGNvdWxkIGFsc28gZWZmZWN0IGtlcm5lbC9kcml2ZXJzL3Bvd2VyL3Jl
+c2V0L210NjMyMy1wb3dlcm9mZi5jDQo+ID4gPiB3aGljaCB1c2luZyBzYW1lIHJlZ2lvbiBvZiBS
+VEMgcmVnaXN0ZXJzLg0KPiA+ID4gVGhlcmUgYXJlIDIgd2F5cyBvZiBtb2RpZmljYXRpb246DQo+
+ID4gPiAxLiBrZXJuZWwvZHJpdmVycy9ydGMvcnRjLW10NjM5Ny5jIGltcGxlbWVudCBkb19wd3Jv
+ZmYgZnVuY3Rpb24gYW5kDQo+ID4gPiBleHBvcnQgdG8gbXQ2MzIzLXBvd2Vyb2ZmLmMNCj4gPiA+
+IDIuIEp1c3QgbW9kaWZ5IG10NjMyMy1wb3dlcm9mZi5jIGZpbGUgdG8gY29tcGF0aWJsZSB0aGlz
+IHBhdGNoLiBJIG1lYW4NCj4gPiA+IHVzaW5nIFJUQ19XUlRHUl9NVDYzOTcgdG8gcmVwbGFjZSBS
+VENfV1JUR1IuIE9yIG1vZGlmeSBtdDYzMjMtcG93ZXJvZmYuYw0KPiA+ID4gbGlrZSBydGMtbXQ2
+Mzk3LmMNCj4gPiANCj4gPiBPaCwgSSBzZWUsIHNvIGJhc2ljYWxseSBib3RoIHJ0Yy1tdDYzOTcu
+YyBhbmQgbXQ2MzIzLXBvd2Vyb2ZmLmMgbmVlZA0KPiA+IHRvIGtub3cgYXQgd2hhdCBvZmZzZXQg
+UlRDX1dSVEdSIGFjdHVhbGx5IGlzLiBDb3JyZWN0Pw0KPiA+IA0KPiANCj4gWWVzLCB5b3UgYXJl
+IHJpZ2h0IGJvdGggZHJpdmVycyBuZWVkIHRvIGtub3cgUlRDX1dSVEdSIG9mZnNldC4gT2Zmc2V0
+cw0KPiBvZiBvdGhlciByZWdpc3RlcnMgYXJlIHRoZSBzYW1lLg0KPiANCj4gPiBJcyB0aGVyZSBh
+bnkgcGxhbiB0byBoYXZlIG10NjMyMy1wb3dlcm9mZi5jIHN1cHBvcnQgYW55IG9mIHRoZSBvdGhl
+cg0KPiA+IFBNSUNzIChub3QganVzdCBNVDYzMjM/KT8NCj4gPiANCj4gDQo+IEN1cnJlbnRseSwg
+d2UgZG9uJ3QgaGF2ZSBhIHBsYW4gdG8gbGV0IG10NjMyMy1wb3dlcm9mZi5jIHN1cHBvcnQgb3Ro
+ZXINCj4gUE1JQ3MuIEJlY2F1c2Ugb3RoZXIgUE1JQ3MgbGlrZSBtdDYzOTcgYW5kIG10NjM1OCBj
+b3VsZCB1c2luZw0KPiBhcm0tdHJ1c3QtZmlybXdhcmUgUFNDSSBwb3dlciBvZmYgZmxvdyBpbnN0
+ZWFkLiBtdDYzMjMtcG93ZXJvZmYuYyB3YXMNCj4gcHJlcGFyZWQgZm9yIHBsYXRmb3JtIHdpdGhv
+dXQgYXJtLXRydXN0LWZpcm13YXJlLg0KDQpUaGlzIGRlcGVuZHMgb24gU29DIGluc3RlYWQgb2Yg
+UE1JQy4NCldlIHdpbGwgbmVlZCBtdDYzMjMtcG93ZXJvZmYuYyBmb3Igc29jIHdpdGggYXJtdjcg
+Q1BVLCBiZWNhdXNlIHdlIHdvbid0DQpoYXZlIEFURiBvbiB0aGVtLiBJJ20gbm90IGF3YXJlIG9m
+IG5ldyBwbGFuIGZvciB0aGlzLg0KDQoNCj4gPiBhLiBJZiBub3QsIEknZCBqdXN0IGFkZDoNCj4g
+PiAjZGVmaW5lIFJUQ19XUlRHUl9NVDYzMjMgUlRDX1dSVEdSX01UNjM5Nw0KPiA+IGluIHJ0Yy5o
+LCBmb3IgYWRkZWQgY2xhcml0eSwgdXNlIHRoYXQgaW4gbXQ2MzIzLXBvd2Vyb2ZmLmMNCj4gPiAo
+cy9SVENfV1JUR1IvUlRDX1dSVEdSX01UNjMyMy8pLCBhbmQgYmUgZG9uZSB3aXRoIGl0Lg0KPiA+
+IA0KPiANCj4gSSB3b3VsZCBqdXN0IGNoYW5nZSBSVENfV1JUR1IgdG8gUlRDX1dSVEdSX01UNjM5
+NyBpbiBtdDYzMjMtcG93ZXJvZmYuYw0KPiBhdCBuZXh0IHBhdGNoc2V0Lg0KPiANCj4gPiBBY3R1
+YWxseSwgZXZlbiBpZiB0aGVyZSdzIGEgcGxhbiwgeW91IGNhbiBnbyBhaGVhZCB3aXRoIHRoaXMg
+c2ltcGxlcg0KPiA+IHNvbHV0aW9uIGZvciBub3csIGFuZCBmaXggbGF0ZXIgd2hlbiB0aGUgaXNz
+dWUgY29tZXMgdXAuDQo+ID4gDQo+ID4gYi4gSWYgeW91IGV2ZXIgd2FudCB0byBzdXBwb3J0IG11
+bHRpcGxlIFBNSUNzIHdpdGggbXQ2MzIzLXBvd2Vyb2ZmLmMsDQo+ID4geW91J2QgbmVlZCB0aGF0
+IG9mZnNldCBmb3IgMiBkaWZmZXJlbnQgc3ViLWRldmljZXMgdW5kZXIgdGhlIHNhbWUgbWZkLA0K
+PiA+IHNvIHRoZSBtYXRjaGluZyBsb2dpYyBiZWxvbmdzIGluIHRoZSBtYWluIG1mZCBkZXZpY2Us
+IG5vdCBpbg0KPiA+IHJ0Yy9wb3dlcm9mZiBkcml2ZXIuDQo+ID4gDQo+ID4gU28gSSdkIG1vdmUg
+dGhlIG1hdGNoaW5nIGxvZ2ljIGluIGRyaXZlcnMvbWZkL210NjM5Ny1jb3JlLmMsIGFuZCBhZGQN
+Cj4gPiBydGNfd3J0Z3Igb2Zmc2V0IChvciBhIGZ1bGwgX2RhdGEgc3RydWN0dXJlKSB0byBgc3Ry
+dWN0IG10NjM5N19jaGlwYCwNCj4gPiBvciwgcHJvYmFibHkgYmV0dGVyLCBhZGQgYSBJT1JFU09V
+UkNFX1JFRyB0byB0aGUgbWF0Y2hpbmcgcmVzb3VyY2VzIHRvDQo+ID4gc3BlY2lmeSB0aGUgb2Zm
+c2V0ICh0aGF0J3Mgd2hhdCBkcml2ZXJzL21mZC84OHBtODYweC1jb3JlLmMgc2VlbXMgdG8NCj4g
+PiBiZSBkb2luZywgZm9yIGV4YW1wbGUpLg0KPiA+IA0KPiA+IEFuZCB0aGVuIG10NjMyMy1wb3dl
+cm9mZi5jIHNob3VsZCBwcm9iYWJseSBiZSByZW5hbWVkIHRvIG10NjM5Ny1wb3dlcm9mZi5jLg0K
+PiA+IA0KPiA+IChhY3R1YWxseSwgbG9va2luZyBhdCB0aGlzLCBJJ20gZXZlbiBxdWVzdGlvbmlu
+ZyBpZiBtdDYzMjMtcG93ZXJvZmYuYw0KPiA+IHNob3VsZCBldmVuIGV4aXN0LCBhbmQgaWYgeW91
+IHNob3VsZCBqdXN0IGZvbGQgaXQgaW50byBydGMtbXQ2Mzk3LmM/DQo+ID4gU2luY2UgdGhleSB1
+c2UgdGhlIHNhbWUgcmVnaXN0ZXJzPykNCj4gPiANCj4gDQo+IG10NjMyMy1wb3dlcm9mZi5jIHdo
+aWNoIGhpamFjayBwbV9wb3dlcl9vZmYgcG9pbnRlciBpcyBvbmx5IGZvciBwbGF0Zm9ybQ0KPiB3
+aXRob3V0IGFybS10cnVzdC1maXJtd2FyZS4gVGhpcyBpcyB0aGUgcmVhc29uIEkgYW0gY29uc2lk
+ZXJpbmcNCj4gbXQ2MzIzLXBvd2Vyb2ZmLmMgc2hvdWxkIG5vdCBiZSBmb2xkZWQgaW50byBydGMt
+bXQ2Mzk3LmMuDQoNCg0KVXNpbmcvc2hhcmluZyBzYW1lIHNldCBvZiByZWdpc3RlcnMgZnJvbSBk
+aWZmZXJlbnQgZHJpdmVycyBpcyBub3QgZ29vZDogDQoNCi0gV1JUR1IgaXMgYSBzcGVjaWFsIHJl
+Z2lzdGVyIHRvICdjb21taXQnIHByZXZpb3VzIGNoYW5nZXMuIElmIDIgZHJpdmVycw0KYXJlIHJ1
+bm5pbmcgYXQgdGhlIHNhbWUgdGltZSwgaXQgaXMgcG9zc2libGUgdG8gY29tbWl0IGluY29tcGxl
+dGUgdXBkYXRlDQphbmQgY2F1c2UgdW5leHBlY3RlZCByZXN1bHQuIEl0IGlzIGVhc2llciB0byBj
+b250cm9sIHRoaXMgZnJvbSBzYW1lDQpkcml2ZXIuDQoNCi0gSXQgaXMgZWFzeSB0byBvdmVybG9v
+ayB0aGUgcmVnaXN0ZXIgaXMgYWNjZXNzIGJ5IG90aGVycyBhbmQgbGVhZCB0bw0KYnVncy9idWls
+ZCBmYWlscyB3aGVuIGRvaW5nIGRyaXZlciB1cGRhdGUsIGVnLCB0aGlzIHBhdGNoc2V0Lg0KDQot
+IFRoZSB0cmlnZ2VyIGNvZGUgaXMgZHVwbGljYXRlIGluIG10NjMyMy1wb3dlcm9mZi5jLCBjYW4g
+anVzdCBjYWxsDQptdGtfcnRjX3dyaXRlX3RyaWdnZXIuDQoNCg0KU28gSSBhZ3JlZSB3aXRoIE5p
+Y29sYXMsIG10NjMyMy1wb3dlcm9mZiBzaG91bGQgYmUgZm9sZGVkIGludG8NCnJ0Yy1tdDYzOTcu
+Yy4gV2Ugc2hvdWxkIGJlIGFibGUgdG8gZGlzYWJsZSBwbV9wb3dlcl9vZmYgaGlqYWNraW5nIGZv
+cg0KcGxhdGZvcm0gd2l0aCBhcm1WOCBDUFUuIE1heWJlIHdlIGNhbiBrZWVwICJtZWRpYXRlayxt
+dDYzMjMtcHdyYyINCmNvbXBhdGlibGUgaW4gbXQ2MzIzLXBvd2Vyb2ZmLmMgZm9yIHRoaXMuDQoN
+CkknbSBvayB3aXRoIGltcGxlbWVudCBhLiBhcyBzdWdnZXN0ZWQgYnkgTmljb2xhcyBmb3Igbm93
+Lg0KDQpKb2UuQw0KDQo=
 
-
-I can imagine several races:
-
-1) The isolated task has set the cpumask but hasn't exited the kernel
-yet. If it still runs kernel code while kick_all_cpus_sync() has completed,
-we fail.
-
-2) The isolated task is running do_exit() but the caller of kick_all_cpus_sync()
-still sees the target as part of the isolated mask.
-
-3) The isolated task has just set the isolated cpumask and entered userspace
-but the caller still don't see the new value in the isolated cpumask, so it sends
-the IPI to the isolated CPU.
-
-Besides, any caller of kick_all_cpus_sync() is in its right to expect that
-everything preceding the call to that function is visible to all CPUs
-after that call. If you spare that IPI to an isolated CPU, what ensures
-it will see what it is supposed to once it calls do_exit() or prctl()?
-
-Is there a way we could fix the callers instead? For example synchronize_rcu()
-could be a replacement (it handles very well nohz_full CPUs), provided the
-callsites can sleep. It seems to be the case for __do_tune_cpucache() at least.
-
-flush_icache_range() is scarier I have to admit, doesn't look like it can
-sleep.
-
-
-> > Thanks.
-> > 
-> > >  EXPORT_SYMBOL_GPL(kick_all_cpus_sync);
-> > >  
-> > > -- 
-> > > 2.20.1
-> > > 
-> 
-> -- 
-> Alex
