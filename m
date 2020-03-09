@@ -2,154 +2,114 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0D2FC18E5A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 10:03:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AF22C10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 10:05:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B3E420674
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 10:03:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63A4920828
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 10:05:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="DozwLS7K"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gqsfUsen"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726402AbgCIKDV (ORCPT
+        id S1726446AbgCIKFS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 06:03:21 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:23122 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725796AbgCIKDV (ORCPT
+        Mon, 9 Mar 2020 06:05:18 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:33420 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725796AbgCIKFR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 06:03:21 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 029A2fit029340;
-        Mon, 9 Mar 2020 11:02:53 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=EEpTmJLKqEHuccfl2GlQ14M0nlV3ck8Nzcse6ro+Vy0=;
- b=DozwLS7K8kjaoo53KukoT1Z+NXxCmbP7h3EUHK7cGIQZrZXjKmG+JsYRiDtBupGmmVFH
- vhxxpC7Ivt0Fo+dg+5NcWdK1VGixf6WupJXPGrCB+pFWpbxVcraRToID8QB3Bnic0bME
- Z0hV84ISLOxIFJv33Oa3bNQVirotzVg5Hs5mjQAg1yRc0XsxDyvBAoQAFueJVV5RqhBa
- rRfLUEJezI83Ku6w0tRJGxJaB6FONysIPAmNI7aDl5gnUOQ4sljXC666unlI53lxPOUS
- oR8pvNXS1kBXVWW7eE2/ue/nn96RT86i7eq+xc8lv9/krJ4jBk82tJDd5vV8PT/aynXG /g== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2ym292391k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 09 Mar 2020 11:02:53 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 68A0E100038;
-        Mon,  9 Mar 2020 11:02:48 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag6node2.st.com [10.75.127.17])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 2D6082A9719;
-        Mon,  9 Mar 2020 11:02:48 +0100 (CET)
-Received: from localhost (10.75.127.44) by SFHDAG6NODE2.st.com (10.75.127.17)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 9 Mar 2020 11:02:47
- +0100
-From:   Olivier Moysan <olivier.moysan@st.com>
-To:     <jic23@kernel.org>, <knaack.h@gmx.de>, <lars@metafoo.de>,
-        <pmeerw@pmeerw.net>, <alexandre.torgue@st.com>,
-        <fabrice.gasnier@st.com>, <benjamin.gaignard@st.com>,
-        <olivier.moysan@st.com>
-CC:     <linux-iio@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2] iio: adc: stm32-adc: fix sleep in atomic context
-Date:   Mon, 9 Mar 2020 11:02:12 +0100
-Message-ID: <20200309100212.16499-1-olivier.moysan@st.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 9 Mar 2020 06:05:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=cH9d5s5skj+POkYSuWj5kZEqcL/x30ONYbTKCTwNqJo=; b=gqsfUsenwszWL3nli8z5CzNc2i
+        W+77bUrm7N3nyuSb4y+Oev7DBRugilabh+W6Dlsrl1M8N+uTNCumnq79J4R5xM8raQDE6KcW8+mjl
+        kUXxLI6ljPz+p5pmmZRstg8jzkWc8ADF6HDeZRw5IcE5p1sjPKutoarcxOyv70E+3TVF/DXMJgQZU
+        /VK8oliwK4CGXtlYV7Sg6dTjKS7WUGGQvOrAgknXM2oUHm/xgIrgw7mgH7hfK2xlr+JC50s9X1b5I
+        5cam09L3pNDVTpQOlzZAZhfgaRZdkh/l2FKuBJJ2iDhyaUguAPwfLPs83aYlzi2iSvS2r4US/7sef
+        wjAO1ifQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jBFHC-0004fF-FA; Mon, 09 Mar 2020 10:04:46 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 2620430066E;
+        Mon,  9 Mar 2020 11:04:43 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 1166B25F2A4F2; Mon,  9 Mar 2020 11:04:43 +0100 (CET)
+Date:   Mon, 9 Mar 2020 11:04:43 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Liang, Kan" <kan.liang@linux.intel.com>
+Cc:     Luwei Kang <luwei.kang@intel.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org, tglx@linutronix.de, bp@alien8.de,
+        hpa@zytor.com, pbonzini@redhat.com,
+        sean.j.christopherson@intel.com, vkuznets@redhat.com,
+        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
+        pawan.kumar.gupta@linux.intel.com, ak@linux.intel.com,
+        thomas.lendacky@amd.com, fenghua.yu@intel.com,
+        like.xu@linux.intel.com
+Subject: Re: [PATCH v1 01/11] perf/x86/core: Support KVM to assign a
+ dedicated counter for guest PEBS
+Message-ID: <20200309100443.GG12561@hirez.programming.kicks-ass.net>
+References: <1583431025-19802-1-git-send-email-luwei.kang@intel.com>
+ <1583431025-19802-2-git-send-email-luwei.kang@intel.com>
+ <20200306135317.GD12561@hirez.programming.kicks-ass.net>
+ <b72cb68e-1a0a-eeff-21b4-ce412e939cfd@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.44]
-X-ClientProxiedBy: SFHDAG5NODE3.st.com (10.75.127.15) To SFHDAG6NODE2.st.com
- (10.75.127.17)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-09_02:2020-03-08,2020-03-09 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b72cb68e-1a0a-eeff-21b4-ce412e939cfd@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This commit fixes the following error:
-"BUG: sleeping function called from invalid context at kernel/irq/chip.c"
+On Fri, Mar 06, 2020 at 09:42:47AM -0500, Liang, Kan wrote:
+> 
+> 
+> On 3/6/2020 8:53 AM, Peter Zijlstra wrote:
+> > On Fri, Mar 06, 2020 at 01:56:55AM +0800, Luwei Kang wrote:
+> > > From: Kan Liang <kan.liang@linux.intel.com>
+> > > 
+> > > The PEBS event created by host needs to be assigned specific counters
+> > > requested by the guest, which means the guest and host counter indexes
+> > > have to be the same or fail to create. This is needed because PEBS leaks
+> > > counter indexes into the guest. Otherwise, the guest driver will be
+> > > confused by the counter indexes in the status field of the PEBS record.
+> > > 
+> > > A guest_dedicated_idx field is added to indicate the counter index
+> > > specifically requested by KVM. The dedicated event constraints would
+> > > constrain the counter in the host to the same numbered counter in guest.
+> > > 
+> > > A intel_ctrl_guest_dedicated_mask field is added to indicate the enabled
+> > > counters for guest PEBS events. The IA32_PEBS_ENABLE MSR will be switched
+> > > during the VMX transitions if intel_ctrl_guest_owned is set.
+> > > 
+> > 
+> > > +	/* the guest specified counter index of KVM owned event, e.g PEBS */
+> > > +	int				guest_dedicated_idx;
+> > 
+> > We've always objected to guest 'owned' counters, they destroy scheduling
+> > freedom. Why are you expecting that to be any different this time?
+> > 
+> 
+> The new proposal tries to 'own' a counter by setting the event constraint.
+> It doesn't stop other events using the counter.
+> If there is high priority event which requires the same counter, scheduler
+> can still reject the request from KVM.
+> I don't think it destroys the scheduling freedom this time.
 
-In DMA mode suppress the trigger irq handler, and make the buffer
-transfers directly in DMA callback, instead.
+Suppose your KVM thing claims counter 0/2 (ICL/SKL) for some random PEBS
+event, and then the host wants to use PREC_DIST.. Then one of them will
+be screwed for no reason what so ever.
 
-Fixes: 2763ea0585c9 ("iio: adc: stm32: add optional dma support")
-
-Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
----
-Changes in v2:
-- Add "Fixes" tag in commit message
-
-This solution has been already discussed in the thread
-https://lkml.org/lkml/2019/3/30/171, and applied in STM32 DFSDM driver:
-e19ac9d9a978 ("iio: adc: stm32-dfsdm: fix sleep in atomic context")
----
- drivers/iio/adc/stm32-adc.c | 31 ++++++++++++++++++++++++++++---
- 1 file changed, 28 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/iio/adc/stm32-adc.c b/drivers/iio/adc/stm32-adc.c
-index 80c3f963527b..ae622ee6d08c 100644
---- a/drivers/iio/adc/stm32-adc.c
-+++ b/drivers/iio/adc/stm32-adc.c
-@@ -1418,8 +1418,30 @@ static unsigned int stm32_adc_dma_residue(struct stm32_adc *adc)
- static void stm32_adc_dma_buffer_done(void *data)
- {
- 	struct iio_dev *indio_dev = data;
-+	struct stm32_adc *adc = iio_priv(indio_dev);
-+	int residue = stm32_adc_dma_residue(adc);
-+
-+	/*
-+	 * In DMA mode the trigger services of IIO are not used
-+	 * (e.g. no call to iio_trigger_poll).
-+	 * Calling irq handler associated to the hardware trigger is not
-+	 * relevant as the conversions have already been done. Data
-+	 * transfers are performed directly in DMA callback instead.
-+	 * This implementation avoids to call trigger irq handler that
-+	 * may sleep, in an atomic context (DMA irq handler context).
-+	 */
-+	dev_dbg(&indio_dev->dev, "%s bufi=%d\n", __func__, adc->bufi);
- 
--	iio_trigger_poll_chained(indio_dev->trig);
-+	while (residue >= indio_dev->scan_bytes) {
-+		u16 *buffer = (u16 *)&adc->rx_buf[adc->bufi];
-+
-+		iio_push_to_buffers(indio_dev, buffer);
-+
-+		residue -= indio_dev->scan_bytes;
-+		adc->bufi += indio_dev->scan_bytes;
-+		if (adc->bufi >= adc->rx_buf_sz)
-+			adc->bufi = 0;
-+	}
- }
- 
- static int stm32_adc_dma_start(struct iio_dev *indio_dev)
-@@ -1845,6 +1867,7 @@ static int stm32_adc_probe(struct platform_device *pdev)
- {
- 	struct iio_dev *indio_dev;
- 	struct device *dev = &pdev->dev;
-+	irqreturn_t (*handler)(int irq, void *p) = NULL;
- 	struct stm32_adc *adc;
- 	int ret;
- 
-@@ -1911,9 +1934,11 @@ static int stm32_adc_probe(struct platform_device *pdev)
- 	if (ret < 0)
- 		return ret;
- 
-+	if (!adc->dma_chan)
-+		handler = &stm32_adc_trigger_handler;
-+
- 	ret = iio_triggered_buffer_setup(indio_dev,
--					 &iio_pollfunc_store_time,
--					 &stm32_adc_trigger_handler,
-+					 &iio_pollfunc_store_time, handler,
- 					 &stm32_adc_buffer_setup_ops);
- 	if (ret) {
- 		dev_err(&pdev->dev, "buffer setup failed\n");
--- 
-2.17.1
-
+How is that not destroying scheduling freedom? Any other situation we'd
+have moved the !PREC_DIST PEBS event to another counter.
