@@ -2,122 +2,126 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BABF4C10F25
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 21:45:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCBBFC10F25
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 21:45:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E12124649
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 21:45:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 963CD24649
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 21:45:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZQCP9nQ/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727250AbgCIVpA (ORCPT
+        id S1727249AbgCIVpG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 17:45:00 -0400
-Received: from mga01.intel.com ([192.55.52.88]:29758 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727233AbgCIVo4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 17:44:56 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Mar 2020 14:44:55 -0700
-X-IronPort-AV: E=Sophos;i="5.70,534,1574150400"; 
-   d="scan'208";a="245476220"
-Received: from rchatre-mobl.amr.corp.intel.com (HELO [10.251.21.24]) ([10.251.21.24])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 09 Mar 2020 14:44:54 -0700
-Subject: Re: [PATCH V1 01/13] selftests/resctrl: Fix feature detection
-To:     Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
-        shuah@kernel.org, linux-kselftest@vger.kernel.org
-Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        tony.luck@intel.com, babu.moger@amd.com, james.morse@arm.com,
-        ravi.v.shankar@intel.com, fenghua.yu@intel.com, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-References: <cover.1583657204.git.sai.praneeth.prakhya@intel.com>
- <7e3e4b91f5786a489e68eecda21e1d8049b60181.1583657204.git.sai.praneeth.prakhya@intel.com>
-From:   Reinette Chatre <reinette.chatre@intel.com>
-Message-ID: <a7407b0d-4e4d-d0cf-621c-769d218fdace@intel.com>
-Date:   Mon, 9 Mar 2020 14:44:53 -0700
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Mon, 9 Mar 2020 17:45:06 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:37858 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726974AbgCIVoj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 17:44:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583790278;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=mfTkC/PY7xB+DvD3BXQd6wkmojeJ73JPJ868luIW5QI=;
+        b=ZQCP9nQ/9xzOj/FdWSo1DwsXTnb/8pswGXCENeo2zEwXGfziEp8O+T9RkC5QbB79jHi09X
+        /WrIbDXqc54Iy6DbyZhzTDGtYi18EHLSVQmdQ0O7AurHVGqoiliefvfSISRxdWlcQcP+1i
+        XWhdBXfCiurrrysK+jEt55CkScVBMho=
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
+ [209.85.160.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-161-2xznUvRpNU6TtC0jHENvpA-1; Mon, 09 Mar 2020 17:44:34 -0400
+X-MC-Unique: 2xznUvRpNU6TtC0jHENvpA-1
+Received: by mail-qt1-f197.google.com with SMTP id r16so7773036qtt.13
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 14:44:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=mfTkC/PY7xB+DvD3BXQd6wkmojeJ73JPJ868luIW5QI=;
+        b=Vf+FINGvjOgkYAG6qabsARkyl655E0edBcoeIyrciCo1kfYKBOrxYqqclT0VIHluD6
+         qsO66MRN2D8PI2+3mASSmwsuLD0fWfoieSGGp+OiayyupSHt56lNi+jM9tBIkyUnUPTJ
+         i3ksi83yJLf87DFH1ptxalfWxrb6h5rITF0ZeFoPiW56EbD0fQHHMbte45q0VbbISDzP
+         LLdHE1jNyJMX/NPjfw/PAk4/bZqRgOZ2uD2oqnIDnZuwggcVDZN1ty4ABK9bily6T4Wt
+         eHHS81+PonHe80u1+wKsM+NXxdDJ+drHVn14AG8IO3oXBEp/Ts+wxoCfwy+3B7cUHRL7
+         MXCw==
+X-Gm-Message-State: ANhLgQ1TxE1WCph09j0gRTHItiOXpBhsCNqYIt7jt7+6/HxztOsfIjTh
+        BQNUB64o7IWS4oJmCGo2kkPLhZYDZk8v9iyW5wpPfU64eh9u8IqrFtvJMok85lcO5iQ2rlNvhIr
+        FmcASmrRfVZnxkICguYkQ007w
+X-Received: by 2002:a05:620a:10b3:: with SMTP id h19mr17258501qkk.440.1583790273660;
+        Mon, 09 Mar 2020 14:44:33 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vvsM+A/HXt2SdA20F9/F6ZEZxnI2TYHMgtduNetNttyjBPSSVebBrYy4uvOhyP6E4shJ1zt5A==
+X-Received: by 2002:a05:620a:10b3:: with SMTP id h19mr17258480qkk.440.1583790273430;
+        Mon, 09 Mar 2020 14:44:33 -0700 (PDT)
+Received: from xz-x1.redhat.com ([2607:9880:19c0:32::2])
+        by smtp.gmail.com with ESMTPSA id m11sm19777447qkh.31.2020.03.09.14.44.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Mar 2020 14:44:32 -0700 (PDT)
+From:   Peter Xu <peterx@redhat.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Yan Zhao <yan.y.zhao@intel.com>, Jason Wang <jasowang@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        peterx@redhat.com, Vitaly Kuznetsov <vkuznets@redhat.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        Christophe de Dinechin <dinechin@redhat.com>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Subject: [PATCH v6 02/14] KVM: Cache as_id in kvm_memory_slot
+Date:   Mon,  9 Mar 2020 17:44:12 -0400
+Message-Id: <20200309214424.330363-3-peterx@redhat.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200309214424.330363-1-peterx@redhat.com>
+References: <20200309214424.330363-1-peterx@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <7e3e4b91f5786a489e68eecda21e1d8049b60181.1583657204.git.sai.praneeth.prakhya@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sai,
+Cache the address space ID just like the slot ID.  It will be used in
+order to fill in the dirty ring entries.
 
-On 3/6/2020 7:40 PM, Sai Praneeth Prakhya wrote:
-> From: Reinette Chatre <reinette.chatre@intel.com>
-> 
-> The intention of the resctrl selftests is to only run the tests
-> associated with the feature(s) supported by the platform. Through
-> parsing of the feature flags found in /proc/cpuinfo it is possible
-> to learn which features are supported by the plaform.
-> 
-> There are currently two issues with the platform feature detection that
-> together result in tests always being run, whether the platform supports
-> a feature or not. First, the parsing of the the feature flags loads the
-> line containing the flags in a buffer that is too small (256 bytes) to
-> always contain all flags. The consequence is that the flags of the features
-> being tested for may not be present in the buffer. Second, the actual
-> test for presence of a feature has an error in the logic, negating the
-> test for a particular feature flag instead of testing for the presence of a
-> particular feature flag.
-> 
-> These two issues combined results in all tests being run on all
-> platforms, whether the feature is supported or not.
-> 
-> Fix these issue by (1) increasing the buffer size being used to parse
-> the feature flags, and (2) change the logic to test for presence of the
-> feature being tested for.
-> 
-> Signed-off-by: Reinette Chatre <reinette.chatre@intel.com>
-> Signed-off-by: Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>
-> ---
->  tools/testing/selftests/resctrl/resctrlfs.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/resctrl/resctrlfs.c b/tools/testing/selftests/resctrl/resctrlfs.c
-> index 19c0ec4045a4..226dd7fdcfb1 100644
-> --- a/tools/testing/selftests/resctrl/resctrlfs.c
-> +++ b/tools/testing/selftests/resctrl/resctrlfs.c
-> @@ -596,11 +596,11 @@ bool check_resctrlfs_support(void)
->  
->  char *fgrep(FILE *inf, const char *str)
->  {
-> -	char line[256];
->  	int slen = strlen(str);
-> +	char line[2048];
->  
->  	while (!feof(inf)) {
-> -		if (!fgets(line, 256, inf))
-> +		if (!fgets(line, 2048, inf))
->  			break;
->  		if (strncmp(line, str, slen))
->  			continue;
-> @@ -631,7 +631,7 @@ bool validate_resctrl_feature_request(char *resctrl_val)
->  	if (res) {
->  		char *s = strchr(res, ':');
->  
-> -		found = s && !strstr(s, resctrl_val);
-> +		found = s && strstr(s, resctrl_val);
->  		free(res);
->  	}
->  	fclose(inf);
-> 
+Suggested-by: Paolo Bonzini <pbonzini@redhat.com>
+Suggested-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Peter Xu <peterx@redhat.com>
+---
+ include/linux/kvm_host.h | 1 +
+ virt/kvm/kvm_main.c      | 2 ++
+ 2 files changed, 3 insertions(+)
 
-Please note that this is only a partial fix. The current feature
-detection relies on the feature flags found in /proc/cpuinfo. Quirks and
-kernel boot parameters are not taken into account. This fix only
-addresses the parsing of feature flags. If a feature has been disabled
-via kernel boot parameter or quirk then the resctrl tests would still
-attempt to run the test for it.
+diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+index bcb9b2ac0791..afa0e9034881 100644
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -346,6 +346,7 @@ struct kvm_memory_slot {
+ 	unsigned long userspace_addr;
+ 	u32 flags;
+ 	short id;
++	u8 as_id;
+ };
+ 
+ static inline unsigned long kvm_dirty_bitmap_bytes(struct kvm_memory_slot *memslot)
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index 70f03ce0e5c1..e6484dabfc59 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -1036,6 +1036,8 @@ int __kvm_set_memory_region(struct kvm *kvm,
+ 
+ 	new = old = *slot;
+ 
++	BUILD_BUG_ON(U8_MAX < KVM_ADDRESS_SPACE_NUM);
++	new.as_id = as_id;
+ 	new.id = id;
+ 	new.base_gfn = base_gfn;
+ 	new.npages = npages;
+-- 
+2.24.1
 
-Reinette
