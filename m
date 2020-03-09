@@ -2,125 +2,158 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EAAFC10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 12:53:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C333C18E5A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 12:56:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D768F20828
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 12:53:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c8WLYOiC"
+	by mail.kernel.org (Postfix) with ESMTP id E99CF20675
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 12:56:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583758583;
+	bh=Xwqksif7BZPncu4luIX5F7cfLR9MIzGxD2o53j9RqSo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=sA07YJtTqO1DIyuWLHCVg2sA8LDkDdQFtkKwuJnjQhFUGikUzESBz3gE4uAOo9H/C
+	 biVvCYXRskQ0xwAg9SumX4pNYlkZQATR7WrAz8kkNFQxUCAGgEaI1L/n5TcuF3dW5M
+	 KpPuPgf2ZfSjowiHnVASn8FvHQLmY06KEHCSRX4A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726528AbgCIMxl (ORCPT
+        id S1726442AbgCIM4V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 08:53:41 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:36927 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726368AbgCIMxl (ORCPT
+        Mon, 9 Mar 2020 08:56:21 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:38396 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725956AbgCIM4V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 08:53:41 -0400
-Received: by mail-wm1-f67.google.com with SMTP id a141so9445318wme.2;
-        Mon, 09 Mar 2020 05:53:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KH1VNE2zt1RlYZ8rl8KTG3SK8e66WbruwQJVkNVIE98=;
-        b=c8WLYOiCVOo3TcVaTgnTw3VXuNGVreLagIf8x9lrWlUI/FaUFPULrCKTH3PRrBMCE0
-         NYbkl6g/ahGSwyC083KTSyICT2cjG7uhyV7GpOs7coflZdu7ALapA431f3RimNbGUJJD
-         3sp3/TTIMpcr0IjS4IHRJ7eafDL5O34K+6HyfHmuVJpgUIAvHbiE/mwRGuFploheBc4s
-         +D8sGjuke/hh0bXwvbAto2Vq1iMJhcZ3GVNADe87INxRAfzMwEAgq/3vp/kkmxJfMs6Y
-         bvn93fJ/F7uDE+1oe/1LceBv/cJ+VBP+04+7CHy+emD3+7fYSH5sgMPsanG1/oEObc+v
-         q6fg==
+        Mon, 9 Mar 2020 08:56:21 -0400
+Received: by mail-wm1-f65.google.com with SMTP id n2so2974930wmc.3
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 05:56:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KH1VNE2zt1RlYZ8rl8KTG3SK8e66WbruwQJVkNVIE98=;
-        b=Qn7C0tfgxFPfq9azqsbiGKijLCKGqs4kSsMMYU2Vc/ripgJ8nFjkFH2AuIrSgzTehC
-         Hn80sL/wwwrxgviG3WTQR7H1VAO3ruBDdZ5uU03/v5Iv0k6BXEsGKQWa8aM/90WllR3y
-         TOzPTypveEDBejjOWKRExoziY34QxYByA8b4/yXHZcCMxmaJFIgRb2A3/KObpOCuR0cy
-         way3eDRLdCW9TuvfQUxpFpxwTHR/gad/jq1m8Fwhpq591m2sON4hM6ugQtnJXRBfyXC4
-         hnsWE9JvTGAWrufo0JrpuYjvFeiNNaIXfKLw6aNwlqdsT8WjpM9+gnObfMA7ZuowEtFl
-         vbsw==
-X-Gm-Message-State: ANhLgQ1kF7BGXF8Oa8kQk86TutQMm74c0tg48C+6XLZRPgaojhLM2Yuv
-        2Vbg/KzS/nFHH0mwBQ+YcOQ=
-X-Google-Smtp-Source: ADFU+vtxz72bTI5i3Dyf4QaCSEg7XW/rjT5sFXoowpjaK8taEIwzAXYNCeUCdqFCnzrrMFztHVPfRw==
-X-Received: by 2002:a1c:9e85:: with SMTP id h127mr19292611wme.145.1583758419327;
-        Mon, 09 Mar 2020 05:53:39 -0700 (PDT)
-Received: from localhost.localdomain (178.43.54.24.ipv4.supernova.orange.pl. [178.43.54.24])
-        by smtp.gmail.com with ESMTPSA id q1sm19653144wrx.19.2020.03.09.05.53.38
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 09 Mar 2020 05:53:38 -0700 (PDT)
-From:   Dominik 'disconnect3d' Czarnota <dominik.b.czarnota@gmail.com>
-Cc:     dominik.b.czarnota@gmail.com, Antonino Daplas <adaplas@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] Fix off by one in nvidia driver strncpy size arg
-Date:   Mon,  9 Mar 2020 13:49:46 +0100
-Message-Id: <20200309124947.4502-1-dominik.b.czarnota@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=gq8lvDnUmFCRgH6sF6xrnqEuLK4v2Ud/2P7jS7ef2Bo=;
+        b=PfwQ3S/u1vkreU2Wtg6IVlJOFZUNrKL5U/1cxy331BEg4A/CgmaX1212jj1/lBhFVr
+         Zm0kXYMTSTy1Z+AMSSO2+vMSrJuGdnHbxxfoNpQo96aeswrDkCkSEu2TOmAMBSFqNkLQ
+         +XK8BwyzKdU9epLMXEOM6Zr80gtJF4BqfbCjsqA8wsohoqJJ8ScthCTfLT4RhRROsNkj
+         TkERNGr05edx0JZmaiodZeLVAC5IHZCUBQ5T5HjkFfJggFu2DvPV3IhmkfLq2/4MWOkd
+         /qTxM/BL0EonXrp0PKFAP22JDMBlv+RtpwxWu2U/3hJBF+AIjsno9fnk4c6KNFKFH3Bf
+         E6vg==
+X-Gm-Message-State: ANhLgQ09YwmqfhIbxoAt/vEhdvdstPe8B1MzXwcOEfA9ZSMvfPYBclcT
+        BlQ3obIZCUqL38LCE1C96fA=
+X-Google-Smtp-Source: ADFU+vsP+Jrln3/r7fb9RQkXChPfF5rGSDid6SM6LWBFHSC/65uEv1bVz/YB4D7HcoTj4W+A+t63gg==
+X-Received: by 2002:a7b:c2a2:: with SMTP id c2mr19703362wmk.19.1583758579074;
+        Mon, 09 Mar 2020 05:56:19 -0700 (PDT)
+Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
+        by smtp.gmail.com with ESMTPSA id c8sm52475887wru.7.2020.03.09.05.56.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Mar 2020 05:56:18 -0700 (PDT)
+Date:   Mon, 9 Mar 2020 13:56:17 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Baoquan He <bhe@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org, david@redhat.com,
+        richardw.yang@linux.intel.com, dan.j.williams@intel.com,
+        osalvador@suse.de, rppt@linux.ibm.com
+Subject: Re: [PATCH v3 1/7] mm/hotplug: fix hot remove failure in
+ SPARSEMEM|!VMEMMAP case
+Message-ID: <20200309125617.GO8447@dhcp22.suse.cz>
+References: <20200307084229.28251-1-bhe@redhat.com>
+ <20200307084229.28251-2-bhe@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200307084229.28251-2-bhe@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: disconnect3d <dominik.b.czarnota@gmail.com>
+On Sat 07-03-20 16:42:23, Baoquan He wrote:
+> In section_deactivate(), pfn_to_page() doesn't work any more after
+> ms->section_mem_map is resetting to NULL in SPARSEMEM|!VMEMMAP case.
+> It caused hot remove failure:
+> 
+> kernel BUG at mm/page_alloc.c:4806!
+> invalid opcode: 0000 [#1] SMP PTI
+> CPU: 3 PID: 8 Comm: kworker/u16:0 Tainted: G        W         5.5.0-next-20200205+ #340
+> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+> Workqueue: kacpi_hotplug acpi_hotplug_work_fn
+> RIP: 0010:free_pages+0x85/0xa0
+> Call Trace:
+>  __remove_pages+0x99/0xc0
+>  arch_remove_memory+0x23/0x4d
+>  try_remove_memory+0xc8/0x130
+>  ? walk_memory_blocks+0x72/0xa0
+>  __remove_memory+0xa/0x11
+>  acpi_memory_device_remove+0x72/0x100
+>  acpi_bus_trim+0x55/0x90
+>  acpi_device_hotplug+0x2eb/0x3d0
+>  acpi_hotplug_work_fn+0x1a/0x30
+>  process_one_work+0x1a7/0x370
+>  worker_thread+0x30/0x380
+>  ? flush_rcu_work+0x30/0x30
+>  kthread+0x112/0x130
+>  ? kthread_create_on_node+0x60/0x60
+>  ret_from_fork+0x35/0x40
+> 
+> Let's move the ->section_mem_map resetting after depopulate_section_memmap()
+> to fix it.
+> 
+> Fixes: ba72b4c8cf60 ("mm/sparsemem: support sub-section hotplug")
+> Signed-off-by: Baoquan He <bhe@redhat.com>
+> Cc: stable@vger.kernel.org
 
-This patch fixes an off-by-one error in strncpy size argument in
-drivers/video/fbdev/nvidia/nvidia.c. The issue is that in:
+Acked-by: Michal Hocko <mhocko@suse.com>
 
-        strncmp(this_opt, "noaccel", 6)
+> ---
+>  mm/sparse.c | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
+> 
+> diff --git a/mm/sparse.c b/mm/sparse.c
+> index 42c18a38ffaa..1b50c15677d7 100644
+> --- a/mm/sparse.c
+> +++ b/mm/sparse.c
+> @@ -734,6 +734,7 @@ static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
+>  	struct mem_section *ms = __pfn_to_section(pfn);
+>  	bool section_is_early = early_section(ms);
+>  	struct page *memmap = NULL;
+> +	bool empty = false;
+>  	unsigned long *subsection_map = ms->usage
+>  		? &ms->usage->subsection_map[0] : NULL;
+>  
+> @@ -764,7 +765,8 @@ static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
+>  	 * For 2/ and 3/ the SPARSEMEM_VMEMMAP={y,n} cases are unified
+>  	 */
+>  	bitmap_xor(subsection_map, map, subsection_map, SUBSECTIONS_PER_SECTION);
+> -	if (bitmap_empty(subsection_map, SUBSECTIONS_PER_SECTION)) {
+> +	empty = bitmap_empty(subsection_map, SUBSECTIONS_PER_SECTION);
+> +	if (empty) {
+>  		unsigned long section_nr = pfn_to_section_nr(pfn);
+>  
+>  		/*
+> @@ -779,13 +781,15 @@ static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
+>  			ms->usage = NULL;
+>  		}
+>  		memmap = sparse_decode_mem_map(ms->section_mem_map, section_nr);
+> -		ms->section_mem_map = (unsigned long)NULL;
+>  	}
+>  
+>  	if (section_is_early && memmap)
+>  		free_map_bootmem(memmap);
+>  	else
+>  		depopulate_section_memmap(pfn, nr_pages, altmap);
+> +
+> +	if (empty)
+> +		ms->section_mem_map = (unsigned long)NULL;
+>  }
+>  
+>  static struct page * __meminit section_activate(int nid, unsigned long pfn,
+> -- 
+> 2.17.2
+> 
 
-the passed string literal: "noaccel" has 7 bytes (without the NULL byte)
-and the passed size argument is 6. As a result, the logic will also
-match/accept string "noacce" or "noacceX".
-
-This bug doesn't seem to have any security impact since its present in
-the driver's setup and just accepts slighty changed string to enable the
-`noaccel` flag.
-
-Signed-off-by: disconnect3d <dominik.b.czarnota@gmail.com>
----
-
-Notes:
-    The bug could also be fixed by changing the size argument to
-    `sizeof("string literal")-1` but I am not proposing this change as that
-    would have to be changed in other places.
-    
-    There are also more cases like this in kernel sources which I
-    reported/will report soon.
-    
-    This bug has been found by running a massive grep-like search using
-    Google's BigQuery on GitHub repositories data. I am also going to work
-    on a CodeQL/Semmle query to be able to find more sophisticated cases
-    like this that can't be found via grepping.
-
- drivers/video/fbdev/nvidia/nvidia.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/video/fbdev/nvidia/nvidia.c b/drivers/video/fbdev/nvidia/nvidia.c
-index c583c018304d..b77efeb33477 100644
---- a/drivers/video/fbdev/nvidia/nvidia.c
-+++ b/drivers/video/fbdev/nvidia/nvidia.c
-@@ -1470,7 +1470,7 @@ static int nvidiafb_setup(char *options)
- 			flatpanel = 1;
- 		} else if (!strncmp(this_opt, "hwcur", 5)) {
- 			hwcur = 1;
--		} else if (!strncmp(this_opt, "noaccel", 6)) {
-+		} else if (!strncmp(this_opt, "noaccel", 7)) {
- 			noaccel = 1;
- 		} else if (!strncmp(this_opt, "noscale", 7)) {
- 			noscale = 1;
 -- 
-2.25.1
-
+Michal Hocko
+SUSE Labs
