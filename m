@@ -2,318 +2,239 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ACC9C10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 23:44:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34E62C10F25
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 23:45:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F17624655
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 23:44:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE75624654
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 23:45:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ge1B4hGA"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TEQwnLgh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727451AbgCIXon (ORCPT
+        id S1727501AbgCIXpY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 19:44:43 -0400
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:40240 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727242AbgCIXom (ORCPT
+        Mon, 9 Mar 2020 19:45:24 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:33993 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727452AbgCIXpX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 19:44:42 -0400
-Received: by mail-vs1-f65.google.com with SMTP id c18so7257140vsq.7
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 16:44:40 -0700 (PDT)
+        Mon, 9 Mar 2020 19:45:23 -0400
+Received: by mail-ot1-f67.google.com with SMTP id j16so11461509otl.1
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 16:45:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xs7n6p/5EOR908vUlGJCRK4XfcfhF6iASL+/f9fqBa4=;
-        b=ge1B4hGATR9s3Ng2NYfxGB5RxmZBNi0v8NQmaecDV77poEgjv5+h7zBVxFdwf7XK5H
-         Nez68YCXSUynjff11ajiGPs5JC8wLuO8aBCzjqybcTIEB50rWF6OPV7RTNS246DWz7bI
-         BeXdcQmVdU4sYy4V5QzKLaUqjVMItoqG0StPg=
+         :cc:content-transfer-encoding;
+        bh=fmBdIxd2DBH3drat2RxXw5EvMETx4X35UelSAv/ALh8=;
+        b=TEQwnLgh8B3PsJKBlW2TWyJTnA9DDlkOy51XwT8ZvW45CdlsU0L88IRmKnKkRltzBm
+         kGOI6UBw/K7+paEi85+jlPPq3aiTme3vzGx0b9SuJDLCK0DjPl3v+LDgpJwsWFjalO1g
+         VMe5PrqnKGg8d5GsqbZHoRMhh7Niv0b3RLcDFnfMlagHZIzScsm1LLtypLf7E73dZsIz
+         Uu+rOdydlnVXzRtmsfDp6JQRHCADpg+3xOUK4fvE+ZcX7GO7hPaNAxIED0JiHv2Ndvjm
+         IgTFCLoYEf13ad9TCi4MxxRLj54zFArGjR3fZwoYAoFD1Y+5F1sl/nxCYT1zPUp2xbwH
+         keJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xs7n6p/5EOR908vUlGJCRK4XfcfhF6iASL+/f9fqBa4=;
-        b=KhO261yhNriO1UQh4DrNEYatzZ4mqrxPJ6znvyOhhMbg2Ecd9i5p+XeUiyIkzEcQE0
-         +49w3yahf0sx7LS70WC1KVRl5i06neI06Rfdkm5rbOuOdybq18seruc7JgyAnrtLcgZ0
-         VrQnUENlQ08vWuRh0Lni1qgbKgt2gIli1O2/U8zVQrU28YHUCQwp9zmhNjaQOFADgCG8
-         KfSgMH5TaucgcLCUHLwirFRqLvhG37IW06+Zy23y4oUnX1YYVInkg5AwBiHnwWK2rMty
-         KR11GKQfFgdMWG6bJn5N9ARquBCIG9BuzdxX2PUV2RcvuDOrZ0RFmDsOC6b2mWK9iA/1
-         Is7A==
-X-Gm-Message-State: ANhLgQ3pYmqNhCp3S9Wge8vljF2rJnxyKqTjgbLha+/KYWFuJHERz7GS
-        CajTTIBPWnWqzOy/c/D7v8ZcRrzqvNw=
-X-Google-Smtp-Source: ADFU+vuswhYSiCrHyLQVfyGU4plBP0RhK13rG5iyqUk93zyVytCrFbYJ2A9Wl5CaKVlyBfYID8Hwpg==
-X-Received: by 2002:a05:6102:124b:: with SMTP id p11mr11852010vsg.38.1583797480039;
-        Mon, 09 Mar 2020 16:44:40 -0700 (PDT)
-Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com. [209.85.217.43])
-        by smtp.gmail.com with ESMTPSA id h67sm12819393vka.25.2020.03.09.16.44.39
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Mar 2020 16:44:39 -0700 (PDT)
-Received: by mail-vs1-f43.google.com with SMTP id u26so7282181vsg.2
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 16:44:39 -0700 (PDT)
-X-Received: by 2002:a05:6102:2dc:: with SMTP id h28mr11670096vsh.169.1583797478587;
- Mon, 09 Mar 2020 16:44:38 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=fmBdIxd2DBH3drat2RxXw5EvMETx4X35UelSAv/ALh8=;
+        b=V7y9bDRb+Swg9OEaF+icoEZbkjE5CRs5NTBZXp1OBAF1NkVkJi+Y1/fymXNeWQQF7f
+         DfLlNbBO2CTLrOXGwpTpEN0rVYNezJQew760U8KwgpxuEJgUXf2LvBiXDjPEnuAKeZNW
+         ii5PtH1OACLN+AouedUQFjCgvcdwwdG5m9prO+VGkSpTx7ggE/9JFGfjiBnAEUznVhyQ
+         YxsyDCjpbiW1ggMKWxpuY9UCCbXwoZRKGBt4/NMR1nzhE6CLOAsfm2GqoEh2YYRFpA2i
+         4tnp9oWw5rjk2T6Ybta1Z1bCfZrHJ5soKUgscwpX9wljj/h2bq1bRcd/qVkU4q/8kcKN
+         iyjw==
+X-Gm-Message-State: ANhLgQ3Uh8Uw9BPcZ+bDszAr6s5SvcGtFH0RNqchqEYM7Tg0b8I7YeU7
+        uO/zsUWVxsw1yhQ2RMFT2wplYqrQQKt5fCyCGURxD4xN
+X-Google-Smtp-Source: ADFU+vu3ctqe66UiWnus61OOtoDCVSNb+kXOZJ2waD27t2a3YUthZNqfb4fWuw2uMljnqbH/s6/XwWZrmf2yGIRlebQ=
+X-Received: by 2002:a9d:7358:: with SMTP id l24mr14121308otk.228.1583797521077;
+ Mon, 09 Mar 2020 16:45:21 -0700 (PDT)
 MIME-Version: 1.0
-References: <1583746236-13325-1-git-send-email-mkshah@codeaurora.org> <1583746236-13325-6-git-send-email-mkshah@codeaurora.org>
-In-Reply-To: <1583746236-13325-6-git-send-email-mkshah@codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Mon, 9 Mar 2020 16:44:27 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=UugityQX+TG2c41dyaaCrhYe534UgXxm0G0igLz-9LSw@mail.gmail.com>
-Message-ID: <CAD=FV=UugityQX+TG2c41dyaaCrhYe534UgXxm0G0igLz-9LSw@mail.gmail.com>
-Subject: Re: [PATCH v13 5/5] drivers: qcom: Update rpmh clients to use start
- and end transactions
-To:     Maulik Shah <mkshah@codeaurora.org>
-Cc:     Stephen Boyd <swboyd@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Evan Green <evgreen@chromium.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>, lsrao@codeaurora.org,
-        Taniya Das <tdas@codeaurora.org>,
-        Odelu Kukatla <okukatla@codeaurora.org>,
-        Kiran Gunda <kgunda@codeaurora.org>,
-        Sibi Sankar <sibis@codeaurora.org>
+References: <20200224160215.4136-1-mic@digikod.net>
+In-Reply-To: <20200224160215.4136-1-mic@digikod.net>
+From:   Jann Horn <jannh@google.com>
+Date:   Tue, 10 Mar 2020 00:44:54 +0100
+Message-ID: <CAG48ez21bEn0wL1bbmTiiu8j9jP5iEWtHOwz4tURUJ+ki0ydYw@mail.gmail.com>
+Subject: Re: [RFC PATCH v14 00/10] Landlock LSM
+To:     =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>
+Cc:     kernel list <linux-kernel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        James Morris <jmorris@namei.org>, Jann Horn <jann@thejh.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mickael.salaun@ssi.gouv.fr>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vincent Dagonneau <vincent.dagonneau@ssi.gouv.fr>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-doc@vger.kernel.org,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On Mon, Mar 9, 2020 at 2:31 AM Maulik Shah <mkshah@codeaurora.org> wrote:
+On Mon, Feb 24, 2020 at 5:03 PM Micka=C3=ABl Sala=C3=BCn <mic@digikod.net> =
+wrote:
+> This new version of Landlock is a major revamp of the previous series
+> [1], hence the RFC tag.  The three main changes are the replacement of
+> eBPF with a dedicated safe management of access rules, the replacement
+> of the use of seccomp(2) with a dedicated syscall, and the management of
+> filesystem access-control (back from the v10).
 >
-> Update all rpmh clients to start using rpmh_start_transaction() and
-> rpmh_end_transaction().
+> As discussed in [2], eBPF may be too powerful and dangerous to be put in
+> the hand of unprivileged and potentially malicious processes, especially
+> because of side-channel attacks against access-controls or other parts
+> of the kernel.
 >
-> Cc: Taniya Das <tdas@codeaurora.org>
-> Cc: Odelu Kukatla <okukatla@codeaurora.org>
-> Cc: Kiran Gunda <kgunda@codeaurora.org>
-> Cc: Sibi Sankar <sibis@codeaurora.org>
-> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
-> ---
->  drivers/clk/qcom/clk-rpmh.c             | 21 ++++++++++++++-------
->  drivers/interconnect/qcom/bcm-voter.c   | 13 +++++++++----
->  drivers/regulator/qcom-rpmh-regulator.c |  4 ++++
->  drivers/soc/qcom/rpmhpd.c               | 11 +++++++++--
-
-This needs to be 4 separate patches since the change to each subsystem
-will go through a different maintainer.
-
-Also: it'll be a lot easier to land this if you make the new
-rpmh_start_transaction() and rpmh_end_transaction() calls _optional_
-for now, especially since they are just a speed optimization and not
-for correctness.  That is, if a driver makes a call to rpmh_write(),
-rpmh_write_async(), rpmh_write_batch(), or rpmh_invalidate() without
-doing rpmh_start_transaction() then it should still work--just flush
-right away.  Since you have rpmh_start_transaction() refcounted that's
-as simple as making a call to rpmh_start_transaction() at the
-beginning of all public calls and rpmh_end_transaction() at the end.
-If there was already a refcount then no harm done.  If there wasn't
-you'll get a flush at the end.
-
-Once you make the call optional, you can actually leave changing the
-callers until after your series lands.  Then you don't end up
-bothering all the other maintainers with the back-and-forth.
-
-Once all callers are updated you can make the call required.  ...or
-(as noted below) maybe we should just keep it optional...
-
-One last note here: you have a regulator change here but aren't
-sending it to the regulator maintainer.  That won't work.  You also
-have an interconnect change without sending it to the interconnect
-maintainer.
-
-
->  4 files changed, 36 insertions(+), 13 deletions(-)
+> Thanks to this new implementation (1540 SLOC), designed from the ground
+> to be used by unprivileged processes, this series enables a process to
+> sandbox itself without requiring CAP_SYS_ADMIN, but only the
+> no_new_privs constraint (like seccomp).  Not relying on eBPF also
+> enables to improve performances, especially for stacked security
+> policies thanks to mergeable rulesets.
 >
-> diff --git a/drivers/clk/qcom/clk-rpmh.c b/drivers/clk/qcom/clk-rpmh.c
-> index 12bd871..16f68d4 100644
-> --- a/drivers/clk/qcom/clk-rpmh.c
-> +++ b/drivers/clk/qcom/clk-rpmh.c
-> @@ -154,22 +154,27 @@ static int clk_rpmh_send_aggregate_command(struct clk_rpmh *c)
->         cmd_state = c->aggr_state;
->         on_val = c->res_on_val;
+> The compiled documentation is available here:
+> https://landlock.io/linux-doc/landlock-v14/security/landlock/index.html
 >
-> +       rpmh_start_transaction(c->dev);
-> +
->         for (; state <= RPMH_ACTIVE_ONLY_STATE; state++) {
->                 if (has_state_changed(c, state)) {
->                         if (cmd_state & BIT(state))
->                                 cmd.data = on_val;
->
->                         ret = rpmh_write_async(c->dev, state, &cmd, 1);
-> -                       if (ret) {
-> -                               dev_err(c->dev, "set %s state of %s failed: (%d)\n",
-> -                                       !state ? "sleep" :
-> -                                       state == RPMH_WAKE_ONLY_STATE   ?
-> -                                       "wake" : "active", c->res_name, ret);
-> -                               return ret;
-> -                       }
-> +                       if (ret)
-> +                               break;
->                 }
->         }
->
-> +       ret |= rpmh_end_transaction(c->dev);
+> This series can be applied on top of v5.6-rc3.  This can be tested with
+> CONFIG_SECURITY_LANDLOCK and CONFIG_SAMPLE_LANDLOCK.  This patch series
+> can be found in a Git repository here:
+> https://github.com/landlock-lsm/linux/commits/landlock-v14
+> I would really appreciate constructive comments on the design and the cod=
+e.
 
-You can't do this.  "ret" is an integer and you're munging two error
-codes into one int.  I don't think there is any clever way to do this,
-but probably this would be fine (the compiler should optimize):
+I've looked through the patchset, and I think that it would be
+possible to simplify it quite a bit. I have tried to do that (and
+compiled-tested it, but not actually tried running it); here's what I
+came up with:
 
-if (ret)
-  rpmh_end_transaction(c->dev);
-else
-  ret = rpmh_end_transaction(c->dev);
+https://github.com/thejh/linux/commits/landlock-mod
 
-...or just leave the "dev_err" and "return ret" where they were and
-call rpmh_end_transaction() above without looking at the return value.
+The three modified patches (patches 1, 2 and 5) are marked with
+"[MODIFIED]" in their title. Please take a look - what do you think?
+Feel free to integrate my changes into your patches if you think they
+make sense.
 
 
-> +       if (ret) {
-> +               dev_err(c->dev, "set %s state of %s failed: (%d)\n",
-> +                       !state ? "sleep" : state == RPMH_WAKE_ONLY_STATE ?
-> +                       "wake" : "active", c->res_name, ret);
-> +               return ret;
-> +       }
+Apart from simplifying the code, I also found the following issues,
+which I have fixed in the modified patches:
 
-Technically the error message above is now misleading if the
-"end_transaction" failed.  Namely it will blame things on the active
-only state whereas that wasn't the problem.
+put_hierarchy() has to drop a reference on its parent. (However, this
+must not recurse, so we have to do it with a loop.)
 
+put_ruleset() is not in an RCU read-side critical section, so as soon
+as it calls kfree_rcu(), "freeme" might disappear; but "orig" is in
+"freeme", so when the loop tries to find the next element with
+rb_next(orig), that can be a UAF.
+rbtree_postorder_for_each_entry_safe() exists for dealing with such
+issues.
 
-> +
->         c->last_sent_aggr_state = c->aggr_state;
->         c->peer->last_sent_aggr_state =  c->last_sent_aggr_state;
->
-> @@ -267,7 +272,9 @@ static int clk_rpmh_bcm_send_cmd(struct clk_rpmh *c, bool enable)
->         cmd.addr = c->res_addr;
->         cmd.data = BCM_TCS_CMD(1, enable, 0, cmd_state);
->
-> +       rpmh_start_transaction(c->dev);
->         ret = rpmh_write_async(c->dev, RPMH_ACTIVE_ONLY_STATE, &cmd, 1);
-> +       ret |= rpmh_end_transaction(c->dev);
+AFAIK the calls to rb_erase() in clean_ruleset() is not safe if
+someone is concurrently accessing the rbtree as an RCU reader, because
+concurrent rotations can prevent a lookup from succeeding. The
+simplest fix is probably to just make any rbtree that has been
+installed on a process immutable, and give up on the cleaning -
+arguably the memory wastage that can cause is pretty limited. (By the
+way, as a future optimization, we might want to turn the rbtree into a
+hashtable when installing it?)
 
-Again, no |=
-
-Also: one argument for keeping start_transaction and end_transaction
-optional long term is that you could completely eliminate this change.
-
-
->         if (ret) {
->                 dev_err(c->dev, "set active state of %s failed: (%d)\n",
->                         c->res_name, ret);
-> diff --git a/drivers/interconnect/qcom/bcm-voter.c b/drivers/interconnect/qcom/bcm-voter.c
-> index 2adfde8..fbe18b2 100644
-> --- a/drivers/interconnect/qcom/bcm-voter.c
-> +++ b/drivers/interconnect/qcom/bcm-voter.c
-> @@ -263,7 +263,9 @@ int qcom_icc_bcm_voter_commit(struct bcm_voter *voter)
->         tcs_list_gen(&voter->commit_list, QCOM_ICC_BUCKET_AMC, cmds, commit_idx);
->
->         if (!commit_idx[0])
-> -               goto out;
-> +               goto end;
-> +
-> +       rpmh_start_transaction(voter-dev);
->
->         ret = rpmh_invalidate(voter->dev);
->         if (ret) {
-> @@ -312,12 +314,15 @@ int qcom_icc_bcm_voter_commit(struct bcm_voter *voter)
->         tcs_list_gen(&voter->commit_list, QCOM_ICC_BUCKET_SLEEP, cmds, commit_idx);
->
->         ret = rpmh_write_batch(voter->dev, RPMH_SLEEP_STATE, cmds, commit_idx);
-> -       if (ret) {
-> +       if (ret)
->                 pr_err("Error sending SLEEP RPMH requests (%d)\n", ret);
-> -               goto out;
-> -       }
->
->  out:
-> +       ret = rpmh_end_transaction(voter-dev);
-> +       if (ret)
-> +               pr_err("Error ending rpmh transaction (%d)\n", ret);
-> +
-> +end:
-
-Personally I don't think "out" and "end" are very descriptive.  My own
-favorite is to name these types of labels based on what has been done
-so far.  So:
-
-exit_started_rpmh_transaction:
-exit_constructed_list:
+The iput() in landlock_release_inode() looks unsafe - you need to
+guarantee that even if the deletion of a ruleset races with
+generic_shutdown_super(), every iput() for that superblock finishes
+before landlock_release_inodes() returns, even if the iput() is
+happening in the context of ruleset deletion. This is why
+fsnotify_unmount_inodes() has that wait_var_event() at the end.
 
 
->         list_for_each_entry_safe(bcm, bcm_tmp, &voter->commit_list, list)
->                 list_del_init(&bcm->list);
->
-> diff --git a/drivers/regulator/qcom-rpmh-regulator.c b/drivers/regulator/qcom-rpmh-regulator.c
-> index c86ad40..f4b9176 100644
-> --- a/drivers/regulator/qcom-rpmh-regulator.c
-> +++ b/drivers/regulator/qcom-rpmh-regulator.c
-> @@ -163,12 +163,16 @@ static int rpmh_regulator_send_request(struct rpmh_vreg *vreg,
->  {
->         int ret;
->
-> +       rpmh_start_transaction(vreg->dev);
-> +
->         if (wait_for_ack || vreg->always_wait_for_ack)
->                 ret = rpmh_write(vreg->dev, RPMH_ACTIVE_ONLY_STATE, cmd, 1);
->         else
->                 ret = rpmh_write_async(vreg->dev, RPMH_ACTIVE_ONLY_STATE, cmd,
->                                         1);
->
-> +       ret |= rpmh_end_transaction(vreg->dev);
+Aside from those things, there is also a major correctness issue where
+I'm not sure how to solve it properly:
 
-Again, no |=.
+Let's say a process installs a filter on itself like this:
 
-...and again, if starting/ending was optional you wouldn't need this change.
+struct landlock_attr_ruleset ruleset =3D { .handled_access_fs =3D
+ACCESS_FS_ROUGHLY_WRITE};
+int ruleset_fd =3D landlock(LANDLOCK_CMD_CREATE_RULESET,
+LANDLOCK_OPT_CREATE_RULESET, sizeof(ruleset), &ruleset);
+struct landlock_attr_path_beneath path_beneath =3D {
+  .ruleset_fd =3D ruleset_fd,
+  .allowed_access =3D ACCESS_FS_ROUGHLY_WRITE,
+  .parent_fd =3D open("/tmp/foobar", O_PATH),
+};
+landlock(LANDLOCK_CMD_ADD_RULE, LANDLOCK_OPT_ADD_RULE_PATH_BENEATH,
+sizeof(path_beneath), &path_beneath);
+prctl(PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0);
+struct landlock_attr_enforce attr_enforce =3D { .ruleset_fd =3D ruleset_fd =
+};
+landlock(LANDLOCK_CMD_ENFORCE_RULESET, LANDLOCK_OPT_ENFORCE_RULESET,
+sizeof(attr_enforce), &attr_enforce);
 
+At this point, the process is not supposed to be able to write to
+anything outside /tmp/foobar, right? But what happens if the process
+does the following next?
 
-> +
->         return ret;
->  }
->
-> diff --git a/drivers/soc/qcom/rpmhpd.c b/drivers/soc/qcom/rpmhpd.c
-> index 4d264d0..0e9d204 100644
-> --- a/drivers/soc/qcom/rpmhpd.c
-> +++ b/drivers/soc/qcom/rpmhpd.c
-> @@ -193,19 +193,26 @@ static const struct of_device_id rpmhpd_match_table[] = {
->  static int rpmhpd_send_corner(struct rpmhpd *pd, int state,
->                               unsigned int corner, bool sync)
->  {
-> +       int ret;
->         struct tcs_cmd cmd = {
->                 .addr = pd->addr,
->                 .data = corner,
->         };
->
-> +       rpmh_start_transaction(pd->dev);
-> +
->         /*
->          * Wait for an ack only when we are increasing the
->          * perf state of the power domain
->          */
->         if (sync)
-> -               return rpmh_write(pd->dev, state, &cmd, 1);
-> +               ret = rpmh_write(pd->dev, state, &cmd, 1);
->         else
-> -               return rpmh_write_async(pd->dev, state, &cmd, 1);
-> +               ret = rpmh_write_async(pd->dev, state, &cmd, 1);
-> +
-> +       ret |= rpmh_end_transaction(pd->dev);
+struct landlock_attr_ruleset ruleset =3D { .handled_access_fs =3D
+ACCESS_FS_ROUGHLY_WRITE};
+int ruleset_fd =3D landlock(LANDLOCK_CMD_CREATE_RULESET,
+LANDLOCK_OPT_CREATE_RULESET, sizeof(ruleset), &ruleset);
+struct landlock_attr_path_beneath path_beneath =3D {
+  .ruleset_fd =3D ruleset_fd,
+  .allowed_access =3D ACCESS_FS_ROUGHLY_WRITE,
+  .parent_fd =3D open("/", O_PATH),
+};
+landlock(LANDLOCK_CMD_ADD_RULE, LANDLOCK_OPT_ADD_RULE_PATH_BENEATH,
+sizeof(path_beneath), &path_beneath);
+prctl(PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0);
+struct landlock_attr_enforce attr_enforce =3D { .ruleset_fd =3D ruleset_fd =
+};
+landlock(LANDLOCK_CMD_ENFORCE_RULESET, LANDLOCK_OPT_ENFORCE_RULESET,
+sizeof(attr_enforce), &attr_enforce);
 
-Again, no |=.
+As far as I can tell from looking at the source, after this, you will
+have write access to the entire filesystem again. I think the idea is
+that LANDLOCK_CMD_ENFORCE_RULESET should only let you drop privileges,
+not increase them, right?
 
-...and again, if starting/ending was optional you wouldn't need this change.
+I think the easy way to fix this would be to add a bitmask to each
+rule that says from which ruleset it originally comes, and then let
+check_access_path() collect these bitmasks from each rule with OR, and
+check at the end whether the resulting bitmask is full - if not, at
+least one of the rulesets did not permit the access, and it should be
+denied.
 
+But maybe it would make more sense to change how the API works
+instead, and get rid of the concept of "merging" two rulesets
+together? Instead, we could make the API work like this:
 
+ - LANDLOCK_CMD_CREATE_RULESET gives you a file descriptor whose
+->private_data contains a pointer to the old ruleset of the process,
+as well as a pointer to a new empty ruleset.
+ - LANDLOCK_CMD_ADD_RULE fails if the specified rule would not be
+permitted by the old ruleset, then adds the rule to the new ruleset
+ - LANDLOCK_CMD_ENFORCE_RULESET fails if the old ruleset pointer in
+->private_data doesn't match the current ruleset of the process, then
+replaces the old ruleset with the new ruleset.
 
--Doug
+With this, the new ruleset is guaranteed to be a subset of the old
+ruleset because each of the new ruleset's rules is permitted by the
+old ruleset. (Unless the directory hierarchy rotates, but in that case
+the inaccuracy isn't much worse than what would've been possible
+through RCU path walk anyway AFAIK.)
+
+What do you think?
