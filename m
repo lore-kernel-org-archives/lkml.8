@@ -2,252 +2,136 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02CCCC10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 15:01:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ABA5C10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 15:03:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD04621655
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 15:01:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="UNx86Hn7"
+	by mail.kernel.org (Postfix) with ESMTP id 5F84621655
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 15:03:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726922AbgCIPBd (ORCPT
+        id S1726863AbgCIPDn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 11:01:33 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:38082 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726772AbgCIPBd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 11:01:33 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1583766092; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=OfeXMwCy0tr21RuuUPUFSbLXXtySnJ162vCqOeqxiCI=; b=UNx86Hn7iZEGNIvPAT23ozEp3x4Pvlr3y0s6XjWHKc3+EYezlL2Tyn3dOa9UHw7aFzGv/Fk0
- baGSkaZbIstqXaSF5E3cqW+Bu6/JMSBJI0q7Az0M9BZlr6mnW9vBy54lsnmRCieNmfZIeS6R
- FE2zPkZTm9wxik9nPA9C/K2zhVM=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e665a31.7f3d35f82228-smtp-out-n03;
- Mon, 09 Mar 2020 15:01:05 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 3A50FC43637; Mon,  9 Mar 2020 15:01:05 +0000 (UTC)
-Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0EE80C433CB;
-        Mon,  9 Mar 2020 15:01:02 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0EE80C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-Date:   Mon, 9 Mar 2020 09:01:01 -0600
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     Brian Masney <masneyb@onstation.org>
-Cc:     robh+dt@kernel.org, robdclark@gmail.com, sean@poorly.run,
-        devicetree@vger.kernel.org, jeffrey.l.hugo@gmail.com,
-        airlied@linux.ie, linux-arm-msm@vger.kernel.org,
-        smasetty@codeaurora.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
-        sam@ravnborg.org
-Subject: Re: [Freedreno] [PATCH] dt-bindings: display: msm: gmu: move sram
- property to gpu bindings
-Message-ID: <20200309150101.GA29092@jcrouse1-lnx.qualcomm.com>
-Mail-Followup-To: Brian Masney <masneyb@onstation.org>, robh+dt@kernel.org,
-        robdclark@gmail.com, sean@poorly.run, devicetree@vger.kernel.org,
-        jeffrey.l.hugo@gmail.com, airlied@linux.ie,
-        linux-arm-msm@vger.kernel.org, smasetty@codeaurora.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, sam@ravnborg.org
-References: <20200309111804.188162-1-masneyb@onstation.org>
+        Mon, 9 Mar 2020 11:03:43 -0400
+Received: from foss.arm.com ([217.140.110.172]:53500 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726739AbgCIPDn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 11:03:43 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6083C30E;
+        Mon,  9 Mar 2020 08:03:42 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 46AE03F6CF;
+        Mon,  9 Mar 2020 08:03:40 -0700 (PDT)
+Date:   Mon, 9 Mar 2020 15:03:28 +0000
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Boqun Feng <boqun.feng@gmail.com>
+Cc:     linux-pci@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Michael Kelley <mikelley@microsoft.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Andrew Murray <andrew.murray@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v3 0/3] PCI: hv: Generify pci-hyperv.c
+Message-ID: <20200309150319.GA18350@e121166-lin.cambridge.arm.com>
+References: <20200210033953.99692-1-boqun.feng@gmail.com>
+ <20200221023344.GJ69864@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
+ <20200221104454.GA8595@e121166-lin.cambridge.arm.com>
+ <20200309143548.GB118238@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200309111804.188162-1-masneyb@onstation.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200309143548.GB118238@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 09, 2020 at 07:18:04AM -0400, Brian Masney wrote:
-> The sram property was incorrectly added to the GMU binding when it
-> really belongs with the GPU binding instead. Let's go ahead and
-> move it.
+On Mon, Mar 09, 2020 at 10:35:48PM +0800, Boqun Feng wrote:
+> Hi Lorenzo,
 > 
-> While changes are being made here, let's update the sram property
-> description to mention that this property is only valid for a3xx and
-> a4xx GPUs. The a3xx/a4xx example in the GPU is replaced with what was
-> in the GMU.
+> On Fri, Feb 21, 2020 at 10:44:54AM +0000, Lorenzo Pieralisi wrote:
+> > On Fri, Feb 21, 2020 at 10:33:44AM +0800, Boqun Feng wrote:
+> > > Ping ;-)
+> > > 
+> > > Any suggestion or plan on this patchset?
+> > 
+> > Hi,
+> > 
+> > I shall have a look shortly, thanks.
+> > 
+> 
+> Any chance you got some time to look into this?
 
-Thank you kindly!  I'll re-submit my stack on top of this.
+I did last week and I applied it now, pci/hv for v5.7.
 
-Acked-by: Jordan Crouse <jcrouse@codeaurora.org>
+Thanks,
+Lorenzo
 
-> Signed-off-by: Brian Masney <masneyb@onstation.org>
-> Fixes: 198a72c8f9ee ("dt-bindings: display: msm: gmu: add optional ocmem property")
-> ---
-> Background thread:
-> https://lore.kernel.org/lkml/20200303170159.GA13109@jcrouse1-lnx.qualcomm.com/
+> Regards,
+> Boqun
 > 
-> I started to look at what it would take to convert the GPU bindings to
-> YAML, however I am unsure of the complete list of "qcom,adreno-XYZ.W"
-> compatibles that are valid.
-> 
->  .../devicetree/bindings/display/msm/gmu.txt   | 51 -----------------
->  .../devicetree/bindings/display/msm/gpu.txt   | 55 ++++++++++++++-----
->  2 files changed, 42 insertions(+), 64 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/display/msm/gmu.txt b/Documentation/devicetree/bindings/display/msm/gmu.txt
-> index bf9c7a2a495c..90af5b0a56a9 100644
-> --- a/Documentation/devicetree/bindings/display/msm/gmu.txt
-> +++ b/Documentation/devicetree/bindings/display/msm/gmu.txt
-> @@ -31,10 +31,6 @@ Required properties:
->  - iommus: phandle to the adreno iommu
->  - operating-points-v2: phandle to the OPP operating points
->  
-> -Optional properties:
-> -- sram: phandle to the On Chip Memory (OCMEM) that's present on some Snapdragon
-> -        SoCs. See Documentation/devicetree/bindings/sram/qcom,ocmem.yaml.
-> -
->  Example:
->  
->  / {
-> @@ -67,50 +63,3 @@ Example:
->  		operating-points-v2 = <&gmu_opp_table>;
->  	};
->  };
-> -
-> -a3xx example with OCMEM support:
-> -
-> -/ {
-> -	...
-> -
-> -	gpu: adreno@fdb00000 {
-> -		compatible = "qcom,adreno-330.2",
-> -		             "qcom,adreno";
-> -		reg = <0xfdb00000 0x10000>;
-> -		reg-names = "kgsl_3d0_reg_memory";
-> -		interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
-> -		interrupt-names = "kgsl_3d0_irq";
-> -		clock-names = "core",
-> -		              "iface",
-> -		              "mem_iface";
-> -		clocks = <&mmcc OXILI_GFX3D_CLK>,
-> -		         <&mmcc OXILICX_AHB_CLK>,
-> -		         <&mmcc OXILICX_AXI_CLK>;
-> -		sram = <&gmu_sram>;
-> -		power-domains = <&mmcc OXILICX_GDSC>;
-> -		operating-points-v2 = <&gpu_opp_table>;
-> -		iommus = <&gpu_iommu 0>;
-> -	};
-> -
-> -	ocmem@fdd00000 {
-> -		compatible = "qcom,msm8974-ocmem";
-> -
-> -		reg = <0xfdd00000 0x2000>,
-> -		      <0xfec00000 0x180000>;
-> -		reg-names = "ctrl",
-> -		             "mem";
-> -
-> -		clocks = <&rpmcc RPM_SMD_OCMEMGX_CLK>,
-> -		         <&mmcc OCMEMCX_OCMEMNOC_CLK>;
-> -		clock-names = "core",
-> -		              "iface";
-> -
-> -		#address-cells = <1>;
-> -		#size-cells = <1>;
-> -
-> -		gmu_sram: gmu-sram@0 {
-> -			reg = <0x0 0x100000>;
-> -			ranges = <0 0 0xfec00000 0x100000>;
-> -		};
-> -	};
-> -};
-> diff --git a/Documentation/devicetree/bindings/display/msm/gpu.txt b/Documentation/devicetree/bindings/display/msm/gpu.txt
-> index 7edc298a15f2..fd779cd6994d 100644
-> --- a/Documentation/devicetree/bindings/display/msm/gpu.txt
-> +++ b/Documentation/devicetree/bindings/display/msm/gpu.txt
-> @@ -35,25 +35,54 @@ Required properties:
->    bring the GPU out of secure mode.
->  - firmware-name: optional property of the 'zap-shader' node, listing the
->    relative path of the device specific zap firmware.
-> +- sram: phandle to the On Chip Memory (OCMEM) that's present on some a3xx and
-> +        a4xx Snapdragon SoCs. See
-> +        Documentation/devicetree/bindings/sram/qcom,ocmem.yaml.
->  
-> -Example 3xx/4xx/a5xx:
-> +Example 3xx/4xx:
->  
->  / {
->  	...
->  
-> -	gpu: qcom,kgsl-3d0@4300000 {
-> -		compatible = "qcom,adreno-320.2", "qcom,adreno";
-> -		reg = <0x04300000 0x20000>;
-> +	gpu: adreno@fdb00000 {
-> +		compatible = "qcom,adreno-330.2",
-> +		             "qcom,adreno";
-> +		reg = <0xfdb00000 0x10000>;
->  		reg-names = "kgsl_3d0_reg_memory";
-> -		interrupts = <GIC_SPI 80 0>;
-> -		clock-names =
-> -		    "core",
-> -		    "iface",
-> -		    "mem_iface";
-> -		clocks =
-> -		    <&mmcc GFX3D_CLK>,
-> -		    <&mmcc GFX3D_AHB_CLK>,
-> -		    <&mmcc MMSS_IMEM_AHB_CLK>;
-> +		interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
-> +		interrupt-names = "kgsl_3d0_irq";
-> +		clock-names = "core",
-> +		              "iface",
-> +		              "mem_iface";
-> +		clocks = <&mmcc OXILI_GFX3D_CLK>,
-> +		         <&mmcc OXILICX_AHB_CLK>,
-> +		         <&mmcc OXILICX_AXI_CLK>;
-> +		sram = <&gpu_sram>;
-> +		power-domains = <&mmcc OXILICX_GDSC>;
-> +		operating-points-v2 = <&gpu_opp_table>;
-> +		iommus = <&gpu_iommu 0>;
-> +	};
-> +
-> +	gpu_sram: ocmem@fdd00000 {
-> +		compatible = "qcom,msm8974-ocmem";
-> +
-> +		reg = <0xfdd00000 0x2000>,
-> +		      <0xfec00000 0x180000>;
-> +		reg-names = "ctrl",
-> +		            "mem";
-> +
-> +		clocks = <&rpmcc RPM_SMD_OCMEMGX_CLK>,
-> +		         <&mmcc OCMEMCX_OCMEMNOC_CLK>;
-> +		clock-names = "core",
-> +		              "iface";
-> +
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +
-> +		gpu_sram: gpu-sram@0 {
-> +			reg = <0x0 0x100000>;
-> +			ranges = <0 0 0xfec00000 0x100000>;
-> +		};
->  	};
->  };
->  
-> -- 
-> 2.24.1
-> 
-> _______________________________________________
-> Freedreno mailing list
-> Freedreno@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/freedreno
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+> > Lorenzo
+> > 
+> > > Thanks and Regards,
+> > > Boqun
+> > > 
+> > > On Mon, Feb 10, 2020 at 11:39:50AM +0800, Boqun Feng wrote:
+> > > > Hi,
+> > > > 
+> > > > This is the first part for virtual PCI support of Hyper-V guest on
+> > > > ARM64. The whole patchset doesn't have any functional change, but only
+> > > > refactors the pci-hyperv.c code to make it more arch-independent.
+> > > > 
+> > > > Previous version:
+> > > > v1: https://lore.kernel.org/lkml/20200121015713.69691-1-boqun.feng@gmail.com/
+> > > > v2: https://lore.kernel.org/linux-arm-kernel/20200203050313.69247-1-boqun.feng@gmail.com/
+> > > > 
+> > > > Changes since v2:
+> > > > 
+> > > > *	Rebased on 5.6-rc1
+> > > > 
+> > > > *	Reword commit logs as per Andrew's suggestion.
+> > > > 
+> > > > *	It makes more sense to have a generic interface to set the whole
+> > > > 	msi_entry rather than only the "address" field. So change
+> > > > 	hv_set_msi_address_from_desc() to hv_set_msi_entry_from_desc().
+> > > > 	Additionally, make it an inline function as per the suggestion
+> > > > 	of Andrew and Thomas.
+> > > > 
+> > > > *	Add the missing comment saying the partition_id of
+> > > > 	hv_retarget_device_interrupt must be self.
+> > > > 
+> > > > *	Add the explanation for why "__packed" is needed for TLFS
+> > > > 	structures.
+> > > > 
+> > > > I've done compile and boot test of this patchset, also done some tests
+> > > > with a pass-through NVMe device.
+> > > > 
+> > > > Suggestions and comments are welcome!
+> > > > 
+> > > > Regards,
+> > > > Boqun
+> > > > 
+> > > > Boqun Feng (3):
+> > > >   PCI: hv: Move hypercall related definitions into tlfs header
+> > > >   PCI: hv: Move retarget related structures into tlfs header
+> > > >   PCI: hv: Introduce hv_msi_entry
+> > > > 
+> > > >  arch/x86/include/asm/hyperv-tlfs.h  | 41 +++++++++++++++++++++++++++
+> > > >  arch/x86/include/asm/mshyperv.h     |  8 ++++++
+> > > >  drivers/pci/controller/pci-hyperv.c | 43 ++---------------------------
+> > > >  3 files changed, 52 insertions(+), 40 deletions(-)
+> > > > 
+> > > > -- 
+> > > > 2.24.1
+> > > > 
