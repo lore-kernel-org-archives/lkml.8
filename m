@@ -4,28 +4,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8913FC10F29
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:35:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3202DC10F25
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:35:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BDA424671
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:35:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 177D52465A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:35:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726451AbgCITfW (ORCPT
+        id S1726637AbgCITfZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 15:35:22 -0400
+        Mon, 9 Mar 2020 15:35:25 -0400
 Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:22361 "EHLO
         alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725992AbgCITfV (ORCPT
+        by vger.kernel.org with ESMTP id S1726115AbgCITfX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 15:35:21 -0400
-Received: from unknown (HELO ironmsg04-sd.qualcomm.com) ([10.53.140.144])
-  by alexa-out-sd-02.qualcomm.com with ESMTP; 09 Mar 2020 12:35:20 -0700
+        Mon, 9 Mar 2020 15:35:23 -0400
+Received: from unknown (HELO ironmsg-SD-alpha.qualcomm.com) ([10.53.140.30])
+  by alexa-out-sd-02.qualcomm.com with ESMTP; 09 Mar 2020 12:35:21 -0700
 Received: from gurus-linux.qualcomm.com ([10.46.162.81])
-  by ironmsg04-sd.qualcomm.com with ESMTP; 09 Mar 2020 12:35:20 -0700
+  by ironmsg-SD-alpha.qualcomm.com with ESMTP; 09 Mar 2020 12:35:21 -0700
 Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
-        id 9BAB9463E; Mon,  9 Mar 2020 12:35:20 -0700 (PDT)
+        id 1D0414A19; Mon,  9 Mar 2020 12:35:21 -0700 (PDT)
 From:   Guru Das Srinagesh <gurus@codeaurora.org>
 To:     linux-pwm@vger.kernel.org
 Cc:     Thierry Reding <thierry.reding@gmail.com>,
@@ -33,15 +33,12 @@ Cc:     Thierry Reding <thierry.reding@gmail.com>,
         Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
         linux-kernel@vger.kernel.org,
         Guru Das Srinagesh <gurus@codeaurora.org>,
-        Kamil Debski <kamil@wypas.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, linux-hwmon@vger.kernel.org
-Subject: [PATCH v7 03/13] hwmon: pwm-fan: Use 64-bit division macros for period and duty cycle
-Date:   Mon,  9 Mar 2020 12:35:06 -0700
-Message-Id: <b503833e0f58bd6dd9fe84d866124e7c457e099e.1583782035.git.gurus@codeaurora.org>
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>
+Subject: [PATCH v7 11/13] pwm: sun4i: Use 64-bit division macros for period and duty cycle
+Date:   Mon,  9 Mar 2020 12:35:14 -0700
+Message-Id: <e553511c1c29ebf5af7d2798f92adf886711c861.1583782035.git.gurus@codeaurora.org>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <cover.1583782035.git.gurus@codeaurora.org>
 References: <cover.1583782035.git.gurus@codeaurora.org>
@@ -73,32 +70,28 @@ DIV64_* macros:
 - DIV64_U64_ROUND_CLOSEST
 - div64_u64
 
-Cc: Kamil Debski <kamil@wypas.org>
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc: Jean Delvare <jdelvare@suse.com>
-Cc: Guenter Roeck <linux@roeck-us.net>
-Cc: Liam Girdwood <lgirdwood@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: linux-hwmon@vger.kernel.org
+Cc: Maxime Ripard <mripard@kernel.org>
+Cc: Chen-Yu Tsai <wens@csie.org>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>
 
 Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
 ---
- drivers/hwmon/pwm-fan.c | 2 +-
+ drivers/pwm/pwm-sun4i.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/hwmon/pwm-fan.c b/drivers/hwmon/pwm-fan.c
-index 42ffd2e..283423a 100644
---- a/drivers/hwmon/pwm-fan.c
-+++ b/drivers/hwmon/pwm-fan.c
-@@ -437,7 +437,7 @@ static int pwm_fan_resume(struct device *dev)
- 		return 0;
+diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
+index 3e3efa6..772fdf4 100644
+--- a/drivers/pwm/pwm-sun4i.c
++++ b/drivers/pwm/pwm-sun4i.c
+@@ -286,7 +286,7 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	val = (duty & PWM_DTY_MASK) | PWM_PRD(period);
+ 	sun4i_pwm_writel(sun4i_pwm, val, PWM_CH_PRD(pwm->hwpwm));
+ 	sun4i_pwm->next_period[pwm->hwpwm] = jiffies +
+-		usecs_to_jiffies(cstate.period / 1000 + 1);
++		usecs_to_jiffies(div_u64(cstate.period, 1000) + 1);
+ 	sun4i_pwm->needs_delay[pwm->hwpwm] = true;
  
- 	pwm_get_args(ctx->pwm, &pargs);
--	duty = DIV_ROUND_UP(ctx->pwm_value * (pargs.period - 1), MAX_PWM);
-+	duty = DIV_ROUND_UP_ULL(ctx->pwm_value * (pargs.period - 1), MAX_PWM);
- 	ret = pwm_config(ctx->pwm, duty, pargs.period);
- 	if (ret)
- 		return ret;
+ 	if (state->polarity != PWM_POLARITY_NORMAL)
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
