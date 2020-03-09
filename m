@@ -2,115 +2,111 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63C73C18E5A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 08:50:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 664E5C18E5A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 08:50:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3976A20637
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 08:50:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CAB52072A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 08:50:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="c9gPUBVs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726521AbgCIIuB (ORCPT
+        id S1726491AbgCIIuu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 04:50:01 -0400
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:57289 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725956AbgCIIuB (ORCPT
+        Mon, 9 Mar 2020 04:50:50 -0400
+Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17842 "EHLO
+        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725956AbgCIIut (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 04:50:01 -0400
-Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
-  Ludovic.Desroches@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Ludovic.Desroches@microchip.com";
-  x-sender="Ludovic.Desroches@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
-  include:servers.mcsv.net include:mktomail.com
-  include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa3.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Ludovic.Desroches@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa3.microchip.iphmx.com; spf=Pass smtp.mailfrom=Ludovic.Desroches@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: CtE5m+ELkGAVPTcPcGWF0bzBHDYq/y1TZA9/A/Lh6/eGyiKlxgVGEMrs2Xkv6LOIBeQBMvAmIu
- WhBqEtZ2Lu4v8vuYsg2Hp5cw6tmkhWcowBBL2JDzSFrTvRgZAZGiqaj75MMA2IWMVOkym8kHl1
- yaJaW9gcnpSVICSc+seTCSwjSMhcldrNPZCl+c2HPsqRlczDfhE8k3gKo9vUTOJs9nhGx5K1ud
- qkyHCOCaWp0C65H04VHomaZTfE4EFlhTdtwRjKkaZQ6rtbWHB4PHv+OjuVYzgBiGxJ2XWvqGNF
- 4Oo=
-X-IronPort-AV: E=Sophos;i="5.70,532,1574146800"; 
-   d="scan'208";a="69310236"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 09 Mar 2020 01:49:59 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 9 Mar 2020 01:49:59 -0700
-Received: from localhost (10.10.115.15) by chn-vm-ex01.mchp-main.com
- (10.10.85.143) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
- Transport; Mon, 9 Mar 2020 01:49:56 -0700
-Date:   Mon, 9 Mar 2020 09:49:13 +0100
-From:   Ludovic Desroches <ludovic.desroches@microchip.com>
-To:     Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-CC:     <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] dt-bindings: pinctrl: at91: Fix a typo ("descibe")
-Message-ID: <20200309084913.sgecbf3h2ajog3d7@M43218.corp.atmel.com>
-Mail-Followup-To: Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        linux-gpio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-References: <20200308214230.15193-1-j.neuschaefer@gmx.net>
+        Mon, 9 Mar 2020 04:50:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1583743805;
+        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
+        h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding;
+        bh=arbMPqUJNmVr7z8xDGX4dxhr0Jiu/21GH9BeGGFEGqM=;
+        b=c9gPUBVssKTdnoFnpfLyta/PBYHPP/eNOKjJboGMgjuf+KpKU/ErK1jko5L5RUDe
+        e6M40FwTByqvsri6OqJNxafWBFFp9nZyJac3G61SiT9bqqDL3MHXg41EkGbbe8BQOis
+        DhQPwqyOvO110mqrpmmmtgbWZTavGMQLcHpfI5GM=
+Received: from mail.baihui.com by mx.zoho.com.cn
+        with SMTP id 15837438034103.9039562753517885; Mon, 9 Mar 2020 16:50:03 +0800 (CST)
+Date:   Mon, 09 Mar 2020 16:50:03 +0800
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     "Tiezhu Yang" <yangtiezhu@loongson.cn>
+Cc:     "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>,
+        "Huacai Chen" <chenhc@lemote.com>,
+        "Bjorn Helgaas" <bhelgaas@google.com>,
+        "Jens Axboe" <axboe@kernel.dk>,
+        "linux-mips" <linux-mips@vger.kernel.org>,
+        "linux-pci" <linux-pci@vger.kernel.org>,
+        "linux-ide" <linux-ide@vger.kernel.org>,
+        "linux-kernel" <linux-kernel@vger.kernel.org>,
+        "Xuefeng Li" <lixuefeng@loongson.cn>
+Message-ID: <170be7ca00e.133ea84fa2305.7803335422925759322@flygoat.com>
+In-Reply-To: <1583742206-29163-2-git-send-email-yangtiezhu@loongson.cn>
+References: <1583742206-29163-1-git-send-email-yangtiezhu@loongson.cn> <1583742206-29163-2-git-send-email-yangtiezhu@loongson.cn>
+Subject: =?UTF-8?Q?=E5=9B=9E=E5=A4=8D:[PATCH_1/6]_PCI:_Add_Loongson?=
+ =?UTF-8?Q?_vendor_ID_and_7A1000_device_IDs?=
 MIME-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200308214230.15193-1-j.neuschaefer@gmx.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Priority: Medium
+User-Agent: ZohoCN Mail
+X-Mailer: ZohoCN Mail
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 08, 2020 at 10:42:30PM +0100, Jonathan Neuschäfer wrote:
-> 
-> Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
-Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
 
-> ---
->  .../devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt          | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
-> index eb39f5051159..e8abbdad7b5d 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
-> +++ b/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
-> @@ -38,7 +38,7 @@ Bank: 3 (A, B and C)
->    0xffffffff 0x7fff3ccf  /* pioB */
->    0xffffffff 0x007fffff  /* pioC */
-> 
-> -For each peripheral/bank we will descibe in a u32 if a pin can be
-> +For each peripheral/bank we will describe in a u32 if a pin can be
->  configured in it by putting 1 to the pin bit (1 << pin)
-> 
->  Let's take the pioA on peripheral B
-> --
-> 2.20.1
-> 
+ ---- =E5=9C=A8 =E6=98=9F=E6=9C=9F=E4=B8=80, 2020-03-09 16:23:21 Tiezhu Yan=
+g <yangtiezhu@loongson.cn> =E6=92=B0=E5=86=99 ----
+ > Add the Loongson vendor ID and 7A1000 device IDs to pci_ids.h
+ > to be used by the controller driver in the future.
+ >=20
+ > The Loongson IDs can be found at the following link:
+ > https://git.kernel.org/pub/scm/utils/pciutils/pciutils.git/tree/pci.ids
+ >=20
+ > Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+ > ---
+ >  include/linux/pci_ids.h | 18 ++++++++++++++++++
+ >  1 file changed, 18 insertions(+)
+ >=20
+ > diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+ > index 352c0d7..0125ab4 100644
+ > --- a/include/linux/pci_ids.h
+ > +++ b/include/linux/pci_ids.h
+ > @@ -3113,4 +3113,22 @@
+ > =20
+ >  #define PCI_VENDOR_ID_NCUBE        0x10ff
+ > =20
+ > +#define PCI_VENDOR_ID_LOONGSON            0x0014
+ > +#define PCI_DEVICE_ID_LOONGSON_7A1000_HT    0x7a00
+ > +#define PCI_DEVICE_ID_LOONGSON_7A1000_APB    0x7a02
+ > +#define PCI_DEVICE_ID_LOONGSON_7A1000_GMAC    0x7a03
+ > +#define PCI_DEVICE_ID_LOONGSON_7A1000_OTG    0x7a04
+ > +#define PCI_DEVICE_ID_LOONGSON_7A1000_DC    0x7a06
+ > +#define PCI_DEVICE_ID_LOONGSON_7A1000_HDA    0x7a07
+ > +#define PCI_DEVICE_ID_LOONGSON_7A1000_SATA    0x7a08
+ > +#define PCI_DEVICE_ID_LOONGSON_7A1000_PCIE_X1    0x7a09
+ > +#define PCI_DEVICE_ID_LOONGSON_7A1000_SPI    0x7a0b
+ > +#define PCI_DEVICE_ID_LOONGSON_7A1000_LPC    0x7a0c
+ > +#define PCI_DEVICE_ID_LOONGSON_7A1000_DMA    0x7a0f
+ > +#define PCI_DEVICE_ID_LOONGSON_7A1000_EHCI    0x7a14
+ > +#define PCI_DEVICE_ID_LOONGSON_7A1000_GPU    0x7a15
+ > +#define PCI_DEVICE_ID_LOONGSON_7A1000_PCIE_X4    0x7a19
+ > +#define PCI_DEVICE_ID_LOONGSON_7A1000_OHCI    0x7a24
+ > +#define PCI_DEVICE_ID_LOONGSON_7A1000_PCIE_X8    0x7a29
+
+Devices IDs are unlikely to be reused by mutiple subsystems, so probably we=
+ don't need
+to add them here?
+=20
+> +
+ >  #endif /* _LINUX_PCI_IDS_H */
+ > --=20
+ > 2.1.0
+ >=20
+ >
