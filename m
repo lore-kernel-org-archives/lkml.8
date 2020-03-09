@@ -2,107 +2,203 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9501FC10F25
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:25:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF4BAC10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:27:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65EDD22B48
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:25:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="le8ftsl+"
+	by mail.kernel.org (Postfix) with ESMTP id BDEA724656
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:27:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726498AbgCITZz (ORCPT
+        id S1726293AbgCIT1N convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 15:25:55 -0400
-Received: from mail.efficios.com ([167.114.26.124]:58454 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726295AbgCITZy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 15:25:54 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 1B380268C87;
-        Mon,  9 Mar 2020 15:25:54 -0400 (EDT)
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id KnxvgsnLBXtE; Mon,  9 Mar 2020 15:25:53 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id D62F3268C86;
-        Mon,  9 Mar 2020 15:25:53 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com D62F3268C86
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1583781953;
-        bh=70bU9x4pFcw4EitJgLR67S4Wwba/RzoCmlkulbS+k70=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=le8ftsl+IzBrbyTQsXyfsvDSs/ACVk1v/NrLSE3i/cVEsBCpmT4zIcylFdX5TLRRT
-         xkRsXEEbkNGgz09vLnNytZvfjVRQmVHAqjKXbjYFmDk7Rf70lkZG4A9ZGWoYXtZgCo
-         cgV0/OoDYAr3aQgxxeYGhAorm+i3c+22gQ+VP50IvFRl1qakbne9gp2Vro9uD5+h84
-         r3HnvHlvW7E5RYJg/PPT3lMKCvhfZmyD5PjR5tNBbhRI8yCr+6G73oQ3JlVL4tBleD
-         6+1npY5Y8DZC/0W+EPYx0b8UOFJpAddskEnzlQ3WPYvKgUGSQmvv32qQY4jq8i4+aW
-         HOelWCi3O0gAQ==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id uGVwlSgowVas; Mon,  9 Mar 2020 15:25:53 -0400 (EDT)
-Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
-        by mail.efficios.com (Postfix) with ESMTP id C9797268A1C;
-        Mon,  9 Mar 2020 15:25:53 -0400 (EDT)
-Date:   Mon, 9 Mar 2020 15:25:53 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     rostedt <rostedt@goodmis.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        paulmck <paulmck@kernel.org>,
-        "Joel Fernandes, Google" <joel@joelfernandes.org>,
-        Frederic Weisbecker <frederic@kernel.org>
-Message-ID: <1421454673.21890.1583781953778.JavaMail.zimbra@efficios.com>
-In-Reply-To: <20200309150940.26730dee@gandalf.local.home>
-References: <87mu8p797b.fsf@nanos.tec.linutronix.de> <1403546357.21810.1583779060302.JavaMail.zimbra@efficios.com> <20200309144427.0ce0eabc@gandalf.local.home> <1851876075.21840.1583779960064.JavaMail.zimbra@efficios.com> <20200309150940.26730dee@gandalf.local.home>
-Subject: Re: Instrumentation and RCU
+        Mon, 9 Mar 2020 15:27:13 -0400
+Received: from mail-oln040092074079.outbound.protection.outlook.com ([40.92.74.79]:25813
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725992AbgCIT1N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 15:27:13 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VQ67fH9gpW1qd/9XtnGUsZzxnLCp8kFPh/NnOGCAzZ8ZFNTYPvOJ2Ij22dURElGsjpgg4L/skOHGczm/stWQVUy7Bvl2hDdImr+gBSx9Wu5tyOV3/b2c9n1YbLukH1F1s8e2FXs0cMu3LpbI3EdRNPFLEdHvbv5YFCdusRMze3rTEfng6gqkHSSzndE5kYYdmQod/4GSugv4vtzkteUKv07a6yFPulUs1uJUz7cl6nRnYRKFgIdLwYsQu8Da4e+GZe/mX5O/Z8FIM73/7xD7Ggp8j8hgyFCGStI5fRrLuwwcX4B0vQa+7NfWd9Gib4SDNEf0c/F4I0gTdg8ad3EIwg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qV+f3ezPIzB/u0ub2WCLVwnugNFFo6iQr9wWg3ERqBg=;
+ b=F3opbmMqJQudRrtCQ2kXIDHj4M2LyXh2too0TaLD+7+b9damptesA5vF4BzVMKgkFiLGipJwQdKZJ3h7uhIc08htG3ql0A03UJGd9cYSh72B6MVScvIEx+DJZVriZOtna2/xA5R8Go6B8MmdGx6kpn/ikHDS+ccZevwZoYps+DEHPFhk8fGLvneOOYvIDAU2R/tY4kwaZXUKAaTNyPlsQsu3T9tDMZvpNF6QxfUhKtpdNuM/x2jvsFt04HJ8f0PjddyodeckucQi00B1ui/OMoLGHfJF7HG7xHtZ7AFYbf63k69tNk9nBsVJgc3TlEepIs+3m8lQxvsiZCczoysEqg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Received: from HE1EUR04FT025.eop-eur04.prod.protection.outlook.com
+ (2a01:111:e400:7e0d::35) by
+ HE1EUR04HT242.eop-eur04.prod.protection.outlook.com (2a01:111:e400:7e0d::185)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.11; Mon, 9 Mar
+ 2020 19:27:07 +0000
+Received: from AM6PR03MB5170.eurprd03.prod.outlook.com (10.152.26.60) by
+ HE1EUR04FT025.mail.protection.outlook.com (10.152.27.28) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2793.11 via Frontend Transport; Mon, 9 Mar 2020 19:27:07 +0000
+Received: from AM6PR03MB5170.eurprd03.prod.outlook.com
+ ([fe80::1956:d274:cab3:b4dd]) by AM6PR03MB5170.eurprd03.prod.outlook.com
+ ([fe80::1956:d274:cab3:b4dd%6]) with mapi id 15.20.2772.019; Mon, 9 Mar 2020
+ 19:27:07 +0000
+Received: from [192.168.1.101] (92.77.140.102) by ZR0P278CA0051.CHEP278.PROD.OUTLOOK.COM (2603:10a6:910:1d::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.16 via Frontend Transport; Mon, 9 Mar 2020 19:27:04 +0000
+From:   Bernd Edlinger <bernd.edlinger@hotmail.de>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+CC:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Andrei Vagin <avagin@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Yuyang Du <duyuyang@gmail.com>,
+        David Hildenbrand <david@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        David Howells <dhowells@redhat.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christian Kellner <christian@kellner.me>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>
+Subject: Re: [PATCH v2 1/5] exec: Only compute current once in flush_old_exec
+Thread-Topic: [PATCH v2 1/5] exec: Only compute current once in flush_old_exec
+Thread-Index: AQHV9ZHPFX16pJkAgEa5cakb87d5R6hASgaAgAA9eBuAAAV1gIAAGVQA
+Date:   Mon, 9 Mar 2020 19:27:06 +0000
+Message-ID: <AM6PR03MB5170051D0E2FF2B6772189F6E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+References: <AM6PR03MB5170EB4427BF5C67EE98FF09E4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <20200303085802.eqn6jbhwxtmz4j2x@wittgenstein>
+ <AM6PR03MB5170285B336790D3450E2644E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87v9nlii0b.fsf@x220.int.ebiederm.org>
+ <AM6PR03MB5170609D44967E044FD1BE40E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87a74xi4kz.fsf@x220.int.ebiederm.org>
+ <AM6PR03MB51705AA3009B4986BB6EF92FE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87r1y8dqqz.fsf@x220.int.ebiederm.org>
+ <AM6PR03MB517053AED7DC89F7C0704B7DE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <AM6PR03MB51703B44170EAB4626C9B2CAE4E20@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87tv32cxmf.fsf_-_@x220.int.ebiederm.org>
+ <87v9ne5y4y.fsf_-_@x220.int.ebiederm.org>
+ <87pndm5y3l.fsf_-_@x220.int.ebiederm.org>
+ <AM6PR03MB5170FBDA2F0F19ECF2906703E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87mu8p4elb.fsf@x220.int.ebiederm.org>
+ <AM6PR03MB51700E6A252CA1E3093B3ED8E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+In-Reply-To: <AM6PR03MB51700E6A252CA1E3093B3ED8E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+Accept-Language: en-US, en-GB, de-DE
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: ZR0P278CA0051.CHEP278.PROD.OUTLOOK.COM
+ (2603:10a6:910:1d::20) To AM6PR03MB5170.eurprd03.prod.outlook.com
+ (2603:10a6:20b:ca::23)
+x-incomingtopheadermarker: OriginalChecksum:BBD5AB725885809191725ED86FF2795C5D228C0C94C44F429CAC1C5471B58054;UpperCasedChecksum:554CDE560CC1A53740F55DA4E0690775688176AD61F0B5C7B7E9AE58ACC25E50;SizeAsReceived:9989;Count:50
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tmn:  [A6bJYUQbLM4Tyu3Vck1oLGye8YGMUiax]
+x-microsoft-original-message-id: <ac137e26-34c5-0ace-9e99-6b7447802a99@hotmail.de>
+x-ms-publictraffictype: Email
+x-incomingheadercount: 50
+x-eopattributedmessage: 0
+x-ms-office365-filtering-correlation-id: 48f02d6a-a849-4537-5e8c-08d7c45fdab1
+x-ms-traffictypediagnostic: HE1EUR04HT242:
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: /Ub1ITtPpsoHh3oIsE6eM577SKl1VSH402Qiy9rN+wkLzHQL/abTL32qpbjYvBF8OlyZrrpqKi4wYijN9wbHYuT0AyUTEXK21KRajkKLoFiggKKaRZG8vL+rYaeNlGXtMj7kRQ9NI8R7UKNkz4cjYl5+NZO0wcssA+m3LgP28AshRLVaVEqGILwceUoBUz9C
+x-ms-exchange-antispam-messagedata: D4sD6C0tRl3FbqRkJWniBTCI4db8FbZ5L9MzUGb14pVGdE5YMWal/8zaTiN9FInDYX28cKOEHpE895zrcN3bJHobbpHzXRgD4Kjpb5q+pjAtUxuAwHIMOpo5VO/7cHrEnww1DQDzWrYwJIT3BbvttQ==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="Windows-1252"
+Content-ID: <E0967702A2E3524C95DB0C9796E6FFA2@eurprd03.prod.outlook.com>
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.26.124]
-X-Mailer: Zimbra 8.8.15_GA_3901 (ZimbraWebClient - FF73 (Linux)/8.8.15_GA_3895)
-Thread-Topic: Instrumentation and RCU
-Thread-Index: i3rbokcdGHS5QSdW4VDvsuVnJMyLcQ==
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 48f02d6a-a849-4537-5e8c-08d7c45fdab1
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Mar 2020 19:27:06.9207
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Internet
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1EUR04HT242
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Mar 9, 2020, at 3:09 PM, rostedt rostedt@goodmis.org wrote:
-
-> On Mon, 9 Mar 2020 14:52:40 -0400 (EDT)
-> Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
+On 3/9/20 6:56 PM, Bernd Edlinger wrote:
+> On 3/9/20 6:34 PM, Eric W. Biederman wrote:
+>> Bernd Edlinger <bernd.edlinger@hotmail.de> writes:
+>>
+>>> On 3/8/20 10:35 PM, Eric W. Biederman wrote:
+>>>>
+>>>> Make it clear that current only needs to be computed once in
+>>>> flush_old_exec.  This may have some efficiency improvements and it
+>>>> makes the code easier to change.
+>>>>
+>>>> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+>>>> ---
+>>>>  fs/exec.c | 9 +++++----
+>>>>  1 file changed, 5 insertions(+), 4 deletions(-)
+>>>>
+>>>> diff --git a/fs/exec.c b/fs/exec.c
+>>>> index db17be51b112..c3f34791f2f0 100644
+>>>> --- a/fs/exec.c
+>>>> +++ b/fs/exec.c
+>>>> @@ -1260,13 +1260,14 @@ void __set_task_comm(struct task_struct *tsk, const char *buf, bool exec)
+>>>>   */
+>>>>  int flush_old_exec(struct linux_binprm * bprm)
+>>>>  {
+>>>> +	struct task_struct *me = current;
+>>>>  	int retval;
+>>>>  
+>>>>  	/*
+>>>>  	 * Make sure we have a private signal table and that
+>>>>  	 * we are unassociated from the previous thread group.
+>>>>  	 */
+>>>> -	retval = de_thread(current);
+>>>> +	retval = de_thread(me);
+>>>>  	if (retval)
+>>>>  		goto out;
+>>>>  
+>>>> @@ -1294,10 +1295,10 @@ int flush_old_exec(struct linux_binprm * bprm)
+>>>>  	bprm->mm = NULL;
+>>>>  
+>>>>  	set_fs(USER_DS);
+>>>> -	current->flags &= ~(PF_RANDOMIZE | PF_FORKNOEXEC | PF_KTHREAD |
+>>>> +	me->flags &= ~(PF_RANDOMIZE | PF_FORKNOEXEC | PF_KTHREAD |
+>>>>  					PF_NOFREEZE | PF_NO_SETAFFINITY);
+>>>
+>>> I wonder if this line should be aligned with the previous?
+>>
+>> In this case I don't think so.  The style used for second line is indent
+>> with tabs as much as possible to the right.  I haven't changed that.
+>>
+>> Further mixing a change in indentation style with just a variable rename
+>> will make the patch confusing to read because two things have to be
+>> verified at the same time.
+>>
+>> So while I see why you ask I think this bit needs to stay as is.
+>>
 > 
->> And when I say "go back to plain RCU", I really mean removing use of SRCU
->> from the tracepoints until we have other purposes for it (e.g. taking
->> faults within specific tracepoint probes such as syscall enter/exit).
+> Ah, okay, I see.
+> Thanks for explaining this rule, I was not aware of it,
+> but I am still new here :)
 > 
-> Actually, with both you and Alexei talking about having a sleeping
-> tracepoint callback, where we can add a can sleep check (but not in the
-> DO_TRACE macro, I would think that registered sleeping callbacks would be
-> its own callback), I would think we do not want to remove the SRCU usage.
 
-Whether we keep it or add it back later when needed should not make much
-difference.
+Reviewed-by: Bernd Edlinger <bernd.edlinger@hotmail.de>
 
-In any case, considering that overhead which motivated use of SRCU for the rcuidle
-case could instead be handled by using is_rcu_watching() and normal RCU, I would
-prefer removing it from the rcuidle tracepoints for now, and add it back when we
-add a new kind of "sleepable" tracepoints later on.
 
-Thanks,
-
-Mathieu
-
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+Bernd.
