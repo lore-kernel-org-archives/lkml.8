@@ -2,169 +2,218 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80DC6C10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 11:15:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D525C18E5A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 11:18:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52FB420828
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 11:15:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1500B2051A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 11:18:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zPZSzVFO"
+	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="d/CPPE9u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726838AbgCILPv (ORCPT
+        id S1726557AbgCILSS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 07:15:51 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:41663 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726637AbgCILPu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 07:15:50 -0400
-Received: by mail-lj1-f195.google.com with SMTP id o10so2727693ljc.8
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 04:15:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=0x8fgi0ytJn5jh/uttLWlvF3qbwpztPE+Wqbly2aQ4g=;
-        b=zPZSzVFOomf+WSU42nis8HI2QYGPUv9nR68m1C372MpiovUy9avVIQ2xODxX8kvuD7
-         yxOuxOkQvfX8apr3NvuwFzPsroMl7wDD0JlcwOb0DIfkkVJlWPoe4umak5fHrJ2BDabW
-         2cRwJ5NXPipX2sI7G97aiGxnsol33Vs8XfV4ZZ7VPaG0GZZuhh27be5PN67p1gPJGF8A
-         27dSZIy/6En2spdw/RvVIG5dCV6CbgNqCQvcxLKg4C50MNfeq4U0wuv42SBVTsbalq8/
-         loDXs1yFmH2+a/hDfnCqG81Hj4BcY8pl077nwhaCIvp9U7QCMn3PWIrCFUNP2GevyrvR
-         7qIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=0x8fgi0ytJn5jh/uttLWlvF3qbwpztPE+Wqbly2aQ4g=;
-        b=ubzLFEeDJBHaPznDwj38bU0N+AaNM5y6HYvl5eTlj49RKxtAMcYVUOZmx+89JM4T1X
-         YWbv3+scUKM+85MXRhKpy0C0nu6ugDRWTJJbi6zRQIvXr/5edX98OFl7ktBfkkpnEBz8
-         LklLV/A5U2ESpV88Zzht8KcAYbopqZX1pubwHqE+x0v3j5aMRQEmaRt6/gUtZe5qyic1
-         XRFWRKZ8Ggxxs86GZpLRnIjzm4OiaW3S8NKgjbmBg4iKpzYxpJ2iG6Qo0o7wppt2t7Co
-         o91Z3sMZZTi+zu3dOeO/B7eqzs5wsgFhbsUkTAim7WoYf4F7vRlJv9YAUZhHT8Mmpg3c
-         Zl6g==
-X-Gm-Message-State: ANhLgQ3IdUHQeyBECTE4u3nSh4ZsnU/9afIDIfNF0jPF10+pcYIuA4gf
-        WOWPucXagipWXyUZqHBwlR+HjVs7FtXASfIG7c0eVA==
-X-Google-Smtp-Source: ADFU+vvGmEudDF0cQvq+MHyw5tCPEv0fizeCD7oHF0FiQIP/rtTsfTBOw/7/XvFz5ild4F/n9ikISUV70t6Kh+YHVNs=
-X-Received: by 2002:a2e:b5c3:: with SMTP id g3mr3444500ljn.151.1583752548843;
- Mon, 09 Mar 2020 04:15:48 -0700 (PDT)
+        Mon, 9 Mar 2020 07:18:18 -0400
+Received: from onstation.org ([52.200.56.107]:44078 "EHLO onstation.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725956AbgCILSR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 07:18:17 -0400
+Received: from localhost.localdomain (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: masneyb)
+        by onstation.org (Postfix) with ESMTPSA id 0EF123E94B;
+        Mon,  9 Mar 2020 11:18:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
+        s=default; t=1583752696;
+        bh=3QDZGZgiS58VF0JjyLEvpXThSA6/Pvydn+fwYa8zhWk=;
+        h=From:To:Cc:Subject:Date:From;
+        b=d/CPPE9uBD1E08FiabSDpgtLduLgdQu47yp1Q/DZr9Q+6GV9K5AcFtwvExSutg0so
+         SzCenrkWJjQYHyHSHYZ+UisKp34at5vc15UsFaW7fKjS+G7Jqk+G+AmGzTda/MSqyl
+         K3G6ZydlLGdCoklOYBuekT6EMrM/JBXaLR/Igwbo=
+From:   Brian Masney <masneyb@onstation.org>
+To:     robh+dt@kernel.org, robdclark@gmail.com, sean@poorly.run
+Cc:     jcrouse@codeaurora.org, jeffrey.l.hugo@gmail.com, sam@ravnborg.org,
+        devicetree@vger.kernel.org, airlied@linux.ie,
+        linux-arm-msm@vger.kernel.org, smasetty@codeaurora.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org
+Subject: [PATCH] dt-bindings: display: msm: gmu: move sram property to gpu bindings
+Date:   Mon,  9 Mar 2020 07:18:04 -0400
+Message-Id: <20200309111804.188162-1-masneyb@onstation.org>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-References: <44fa1cee-08db-e4ab-e5ab-08d6fbd421d7@linux.alibaba.com>
- <20200303195245.GF2596@hirez.programming.kicks-ass.net> <xm26o8tc3qkv.fsf@bsegall-linux.svl.corp.google.com>
- <1180c6cd-ff61-2c9f-d689-ffe58f8c5a68@linux.alibaba.com> <xm267dzx47k9.fsf@bsegall-linux.svl.corp.google.com>
-In-Reply-To: <xm267dzx47k9.fsf@bsegall-linux.svl.corp.google.com>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Mon, 9 Mar 2020 12:15:36 +0100
-Message-ID: <CAKfTPtDKTp_G1VNgAXnh=_yLS_T6YkipOsQQ52tBRp-m612JEw@mail.gmail.com>
-Subject: Re: [RFC PATCH] sched: fix the nonsense shares when load of cfs_rq is
- too, small
-To:     Ben Segall <bsegall@google.com>
-Cc:     =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mel Gorman <mgorman@suse.de>,
-        "open list:SCHEDULER" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 6 Mar 2020 at 20:17, <bsegall@google.com> wrote:
->
-> =E7=8E=8B=E8=B4=87 <yun.wang@linux.alibaba.com> writes:
->
-> > On 2020/3/5 =E4=B8=8A=E5=8D=882:47, bsegall@google.com wrote:
-> > [snip]
-> >>> Argh, because A->cfs_rq.load.weight is B->se.load.weight which is
-> >>> B->shares/nr_cpus.
-> >>>
-> >>>> While the se of D on root cfs_rq is far more bigger than 2, so it
-> >>>> wins the battle.
-> >>>>
-> >>>> This patch add a check on the zero load and make it as MIN_SHARES
-> >>>> to fix the nonsense shares, after applied the group C wins as
-> >>>> expected.
-> >>>>
-> >>>> Signed-off-by: Michael Wang <yun.wang@linux.alibaba.com>
-> >>>> ---
-> >>>>  kernel/sched/fair.c | 2 ++
-> >>>>  1 file changed, 2 insertions(+)
-> >>>>
-> >>>> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> >>>> index 84594f8aeaf8..53d705f75fa4 100644
-> >>>> --- a/kernel/sched/fair.c
-> >>>> +++ b/kernel/sched/fair.c
-> >>>> @@ -3182,6 +3182,8 @@ static long calc_group_shares(struct cfs_rq *c=
-fs_rq)
-> >>>>    tg_shares =3D READ_ONCE(tg->shares);
-> >>>>
-> >>>>    load =3D max(scale_load_down(cfs_rq->load.weight), cfs_rq->avg.lo=
-ad_avg);
-> >>>> +  if (!load && cfs_rq->load.weight)
-> >>>> +          load =3D MIN_SHARES;
-> >>>>
-> >>>>    tg_weight =3D atomic_long_read(&tg->load_avg);
-> >>>
-> >>> Yeah, I suppose that'll do. Hurmph, wants a comment though.
-> >>>
-> >>> But that has me looking at other users of scale_load_down(), and does=
-n't
-> >>> at least update_tg_cfs_load() suffer the same problem?
-> >>
-> >> I think instead we should probably scale_load_down(tg_shares) and
-> >> scale_load(load_avg). tg_shares is always a scaled integer, so just
-> >> moving the source of the scaling in the multiply should do the job.
-> >>
-> >> ie
-> >>
-> >> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> >> index fcc968669aea..6d7a9d72d742 100644
-> >> --- a/kernel/sched/fair.c
-> >> +++ b/kernel/sched/fair.c
-> >> @@ -3179,9 +3179,9 @@ static long calc_group_shares(struct cfs_rq *cfs=
-_rq)
-> >>         long tg_weight, tg_shares, load, shares;
-> >>         struct task_group *tg =3D cfs_rq->tg;
-> >>
-> >> -       tg_shares =3D READ_ONCE(tg->shares);
-> >> +       tg_shares =3D scale_load_down(READ_ONCE(tg->shares));
-> >>
-> >> -       load =3D max(scale_load_down(cfs_rq->load.weight), cfs_rq->avg=
-.load_avg);
-> >> +       load =3D max(cfs_rq->load.weight, scale_load(cfs_rq->avg.load_=
-avg));
-> >>
-> >>         tg_weight =3D atomic_long_read(&tg->load_avg);
-> >
-> > Get the point, but IMHO fix scale_load_down() sounds better, to
-> > cover all the similar cases, let's first try that way see if it's
-> > working :-)
->
-> Yeah, that might not be a bad idea as well; it's just that doing this
-> fix would keep you from losing all your precision (and I'd have to think
-> if that would result in fairness issues like having all the group ses
-> having the full tg shares, or something like that).
+The sram property was incorrectly added to the GMU binding when it
+really belongs with the GPU binding instead. Let's go ahead and
+move it.
 
-AFAICT, we already have a fairness problem case because
-scale_load_down is used in calc_delta_fair() so all sched groups that
-have a weight lower than 1024 will end up with the same increase of
-their vruntime when running.
-Then the load_avg is used to balance between rq so load_balance will
-ensure at least 1 task per CPU but not more because the load_avg which
-is then used will stay null.
+While changes are being made here, let's update the sram property
+description to mention that this property is only valid for a3xx and
+a4xx GPUs. The a3xx/a4xx example in the GPU is replaced with what was
+in the GMU.
 
-That being said, having a min of 2 for scale_load_down will enable us
-to have the tg->load_avg !=3D 0 so a tg_weight !=3D 0 and each sched group
-will not have the full shares. But it will make those group completely
-fair anyway.
-The best solution would be not to scale down the weight but that's a
-bigger change
+Signed-off-by: Brian Masney <masneyb@onstation.org>
+Fixes: 198a72c8f9ee ("dt-bindings: display: msm: gmu: add optional ocmem property")
+---
+Background thread:
+https://lore.kernel.org/lkml/20200303170159.GA13109@jcrouse1-lnx.qualcomm.com/
+
+I started to look at what it would take to convert the GPU bindings to
+YAML, however I am unsure of the complete list of "qcom,adreno-XYZ.W"
+compatibles that are valid.
+
+ .../devicetree/bindings/display/msm/gmu.txt   | 51 -----------------
+ .../devicetree/bindings/display/msm/gpu.txt   | 55 ++++++++++++++-----
+ 2 files changed, 42 insertions(+), 64 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/display/msm/gmu.txt b/Documentation/devicetree/bindings/display/msm/gmu.txt
+index bf9c7a2a495c..90af5b0a56a9 100644
+--- a/Documentation/devicetree/bindings/display/msm/gmu.txt
++++ b/Documentation/devicetree/bindings/display/msm/gmu.txt
+@@ -31,10 +31,6 @@ Required properties:
+ - iommus: phandle to the adreno iommu
+ - operating-points-v2: phandle to the OPP operating points
+ 
+-Optional properties:
+-- sram: phandle to the On Chip Memory (OCMEM) that's present on some Snapdragon
+-        SoCs. See Documentation/devicetree/bindings/sram/qcom,ocmem.yaml.
+-
+ Example:
+ 
+ / {
+@@ -67,50 +63,3 @@ Example:
+ 		operating-points-v2 = <&gmu_opp_table>;
+ 	};
+ };
+-
+-a3xx example with OCMEM support:
+-
+-/ {
+-	...
+-
+-	gpu: adreno@fdb00000 {
+-		compatible = "qcom,adreno-330.2",
+-		             "qcom,adreno";
+-		reg = <0xfdb00000 0x10000>;
+-		reg-names = "kgsl_3d0_reg_memory";
+-		interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
+-		interrupt-names = "kgsl_3d0_irq";
+-		clock-names = "core",
+-		              "iface",
+-		              "mem_iface";
+-		clocks = <&mmcc OXILI_GFX3D_CLK>,
+-		         <&mmcc OXILICX_AHB_CLK>,
+-		         <&mmcc OXILICX_AXI_CLK>;
+-		sram = <&gmu_sram>;
+-		power-domains = <&mmcc OXILICX_GDSC>;
+-		operating-points-v2 = <&gpu_opp_table>;
+-		iommus = <&gpu_iommu 0>;
+-	};
+-
+-	ocmem@fdd00000 {
+-		compatible = "qcom,msm8974-ocmem";
+-
+-		reg = <0xfdd00000 0x2000>,
+-		      <0xfec00000 0x180000>;
+-		reg-names = "ctrl",
+-		             "mem";
+-
+-		clocks = <&rpmcc RPM_SMD_OCMEMGX_CLK>,
+-		         <&mmcc OCMEMCX_OCMEMNOC_CLK>;
+-		clock-names = "core",
+-		              "iface";
+-
+-		#address-cells = <1>;
+-		#size-cells = <1>;
+-
+-		gmu_sram: gmu-sram@0 {
+-			reg = <0x0 0x100000>;
+-			ranges = <0 0 0xfec00000 0x100000>;
+-		};
+-	};
+-};
+diff --git a/Documentation/devicetree/bindings/display/msm/gpu.txt b/Documentation/devicetree/bindings/display/msm/gpu.txt
+index 7edc298a15f2..fd779cd6994d 100644
+--- a/Documentation/devicetree/bindings/display/msm/gpu.txt
++++ b/Documentation/devicetree/bindings/display/msm/gpu.txt
+@@ -35,25 +35,54 @@ Required properties:
+   bring the GPU out of secure mode.
+ - firmware-name: optional property of the 'zap-shader' node, listing the
+   relative path of the device specific zap firmware.
++- sram: phandle to the On Chip Memory (OCMEM) that's present on some a3xx and
++        a4xx Snapdragon SoCs. See
++        Documentation/devicetree/bindings/sram/qcom,ocmem.yaml.
+ 
+-Example 3xx/4xx/a5xx:
++Example 3xx/4xx:
+ 
+ / {
+ 	...
+ 
+-	gpu: qcom,kgsl-3d0@4300000 {
+-		compatible = "qcom,adreno-320.2", "qcom,adreno";
+-		reg = <0x04300000 0x20000>;
++	gpu: adreno@fdb00000 {
++		compatible = "qcom,adreno-330.2",
++		             "qcom,adreno";
++		reg = <0xfdb00000 0x10000>;
+ 		reg-names = "kgsl_3d0_reg_memory";
+-		interrupts = <GIC_SPI 80 0>;
+-		clock-names =
+-		    "core",
+-		    "iface",
+-		    "mem_iface";
+-		clocks =
+-		    <&mmcc GFX3D_CLK>,
+-		    <&mmcc GFX3D_AHB_CLK>,
+-		    <&mmcc MMSS_IMEM_AHB_CLK>;
++		interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-names = "kgsl_3d0_irq";
++		clock-names = "core",
++		              "iface",
++		              "mem_iface";
++		clocks = <&mmcc OXILI_GFX3D_CLK>,
++		         <&mmcc OXILICX_AHB_CLK>,
++		         <&mmcc OXILICX_AXI_CLK>;
++		sram = <&gpu_sram>;
++		power-domains = <&mmcc OXILICX_GDSC>;
++		operating-points-v2 = <&gpu_opp_table>;
++		iommus = <&gpu_iommu 0>;
++	};
++
++	gpu_sram: ocmem@fdd00000 {
++		compatible = "qcom,msm8974-ocmem";
++
++		reg = <0xfdd00000 0x2000>,
++		      <0xfec00000 0x180000>;
++		reg-names = "ctrl",
++		            "mem";
++
++		clocks = <&rpmcc RPM_SMD_OCMEMGX_CLK>,
++		         <&mmcc OCMEMCX_OCMEMNOC_CLK>;
++		clock-names = "core",
++		              "iface";
++
++		#address-cells = <1>;
++		#size-cells = <1>;
++
++		gpu_sram: gpu-sram@0 {
++			reg = <0x0 0x100000>;
++			ranges = <0 0 0xfec00000 0x100000>;
++		};
+ 	};
+ };
+ 
+-- 
+2.24.1
+
