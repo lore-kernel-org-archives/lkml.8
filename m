@@ -2,112 +2,104 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38933C18E5C
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 08:23:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37510C10F28
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 08:23:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A7D02084E
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 08:23:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="XVjAAwpw"
+	by mail.kernel.org (Postfix) with ESMTP id 19A8C20727
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 08:23:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726718AbgCIIXI (ORCPT
+        id S1726729AbgCIIXq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 04:23:08 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:35407 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726539AbgCIIWq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 04:22:46 -0400
-Received: by mail-pf1-f193.google.com with SMTP id u68so3778586pfb.2
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 01:22:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=eOiyM2uGzUc6zhWPwWC3bZJGaa62phcZiPuWR1LO/LM=;
-        b=XVjAAwpw3TIfdPOsY5Hi9J6JcOtTWJAkDw9er4N1bmY9EtLRPbDrcMGvAuAN1JHlB8
-         dvqJ/Id+necoQN/ItafyLCv12x3kRG6RRPocDa80UcowtkzhRoeyWwZoycO+Bt1Jb9qp
-         HUpIX3GJRn2JzDI82wwL+0aPH1UbuekEvyEs/DMyolW4PH6WGXB1Gy7i9TLlmXtZUgAG
-         jkC2Pq5L4tjZjokC/bwL+s2QhLWvMFvyyu16q6xQ3n23abW4DhRd7bkhBd0wUFafG4cG
-         ZqvbxIyP/bpIUcqHbWkp6RsM/kdKT7m5GLx0ljSkH0K7ZFK5hXsyt5T5y7A2tiEYViee
-         zWdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=eOiyM2uGzUc6zhWPwWC3bZJGaa62phcZiPuWR1LO/LM=;
-        b=BPYDKqYtHYyP2ekxrFAXfhNrgKkqGLSdC1dbA/k1W9r0W4qWjQQGjPTBeLvCKgZ3TE
-         ZsX5WG4yr7BJSz3Wr13ED9FCicQoSZyBBrSW56jLMKT0TULs+Wb5qyOziXi/mS2cDZ0X
-         TGdUTD1vHuaGLv2OZ87L+ufFtFwsaBrZCQ4eA/l6cUmq2T18Y38DXwwRJke4jILt8ZTT
-         4h1iY9czK3KBMK3RSHSOtIrchEWWaV3Q6DPUkkVdsEOUJM5WEquHnMrw3HsacIXxMvMu
-         AcscZN47BZ1O8DjO4kFAN0AOxEkaQG6eH+2Gji9xcnRilVmXHJjRtL7Rjmhj2jxQNbNS
-         NNiQ==
-X-Gm-Message-State: ANhLgQ3SjaBInWEriZ2JuQg2WPCRemN7KdnmIhLu6Jo3o0q68LOtVR4P
-        YnTgA+GdN+WNHjBaGk+x8O4EZg==
-X-Google-Smtp-Source: ADFU+vun+g27lkPxDCAAj467Dy8sCcdhE7EoSAKg4LPyr31qU0IxBeR2FOjubEoQClHB6p/eqbb+LA==
-X-Received: by 2002:a63:715:: with SMTP id 21mr14981815pgh.234.1583742165744;
-        Mon, 09 Mar 2020 01:22:45 -0700 (PDT)
-Received: from hsinchu02.internal.sifive.com (220-132-236-182.HINET-IP.hinet.net. [220.132.236.182])
-        by smtp.gmail.com with ESMTPSA id v5sm18364779pfn.64.2020.03.09.01.22.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Mar 2020 01:22:45 -0700 (PDT)
-From:   Zong Li <zong.li@sifive.com>
-To:     palmer@dabbelt.com, paul.walmsley@sifive.com,
-        aou@eecs.berkeley.edu, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Zong Li <zong.li@sifive.com>
-Subject: [PATCH v2 4/9] riscv: move exception table immediately after RO_DATA
-Date:   Mon,  9 Mar 2020 16:22:24 +0800
-Message-Id: <96f4735f9845ddf7f778d4977c25d405ade92644.1583741997.git.zong.li@sifive.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <cover.1583741997.git.zong.li@sifive.com>
-References: <cover.1583741997.git.zong.li@sifive.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Mon, 9 Mar 2020 04:23:46 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:55946 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726384AbgCIIXq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 04:23:46 -0400
+Received: from linux.localdomain (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxb9_+_GVesb4YAA--.12S3;
+        Mon, 09 Mar 2020 16:23:29 +0800 (CST)
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jens Axboe <axboe@kernel.dk>
+Cc:     linux-mips@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>
+Subject: [PATCH 1/6] PCI: Add Loongson vendor ID and 7A1000 device IDs
+Date:   Mon,  9 Mar 2020 16:23:21 +0800
+Message-Id: <1583742206-29163-2-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+In-Reply-To: <1583742206-29163-1-git-send-email-yangtiezhu@loongson.cn>
+References: <1583742206-29163-1-git-send-email-yangtiezhu@loongson.cn>
+X-CM-TRANSID: AQAAf9Dxb9_+_GVesb4YAA--.12S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxJr48KrWrury8CF1DXr1UKFg_yoW8WF4Dpr
+        10vrZ3KFs7trWxZwn7trn8GrWfJF4qy34DuFya9F45JFnxXw48JwnFvFs8CrW2qrs3X3y7
+        Zr4qk3y7G3ZIywUanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUPC14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jr4l82xGYIkIc2
+        x26xkF7I0E14v26r1I6r4UM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
+        Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84
+        ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVWxJr0_GcWl
+        e2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI
+        8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwAC
+        jcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka0x
+        kIwI1lc2xSY4AK67AK6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4U
+        MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67
+        AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0
+        cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z2
+        80aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI
+        43ZEXa7VUUgo7tUUUUU==
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move EXCEPTION_TABLE immediately after RO_DATA. Make it easy to set the
-attribution of the sections which should be read-only at a time.
-Add _data to specify the start of data section with write permission.
-This patch is prepared for STRICT_KERNEL_RWX support.
+Add the Loongson vendor ID and 7A1000 device IDs to pci_ids.h
+to be used by the controller driver in the future.
 
-Signed-off-by: Zong Li <zong.li@sifive.com>
+The Loongson IDs can be found at the following link:
+https://git.kernel.org/pub/scm/utils/pciutils/pciutils.git/tree/pci.ids
+
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 ---
- arch/riscv/kernel/vmlinux.lds.S | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ include/linux/pci_ids.h | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-diff --git a/arch/riscv/kernel/vmlinux.lds.S b/arch/riscv/kernel/vmlinux.lds.S
-index 1e0193ded420..02e948b620af 100644
---- a/arch/riscv/kernel/vmlinux.lds.S
-+++ b/arch/riscv/kernel/vmlinux.lds.S
-@@ -58,6 +58,10 @@ SECTIONS
- 		*(.srodata*)
- 	}
+diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+index 352c0d7..0125ab4 100644
+--- a/include/linux/pci_ids.h
++++ b/include/linux/pci_ids.h
+@@ -3113,4 +3113,22 @@
  
-+	EXCEPTION_TABLE(0x10)
+ #define PCI_VENDOR_ID_NCUBE		0x10ff
+ 
++#define PCI_VENDOR_ID_LOONGSON			0x0014
++#define PCI_DEVICE_ID_LOONGSON_7A1000_HT	0x7a00
++#define PCI_DEVICE_ID_LOONGSON_7A1000_APB	0x7a02
++#define PCI_DEVICE_ID_LOONGSON_7A1000_GMAC	0x7a03
++#define PCI_DEVICE_ID_LOONGSON_7A1000_OTG	0x7a04
++#define PCI_DEVICE_ID_LOONGSON_7A1000_DC	0x7a06
++#define PCI_DEVICE_ID_LOONGSON_7A1000_HDA	0x7a07
++#define PCI_DEVICE_ID_LOONGSON_7A1000_SATA	0x7a08
++#define PCI_DEVICE_ID_LOONGSON_7A1000_PCIE_X1	0x7a09
++#define PCI_DEVICE_ID_LOONGSON_7A1000_SPI	0x7a0b
++#define PCI_DEVICE_ID_LOONGSON_7A1000_LPC	0x7a0c
++#define PCI_DEVICE_ID_LOONGSON_7A1000_DMA	0x7a0f
++#define PCI_DEVICE_ID_LOONGSON_7A1000_EHCI	0x7a14
++#define PCI_DEVICE_ID_LOONGSON_7A1000_GPU	0x7a15
++#define PCI_DEVICE_ID_LOONGSON_7A1000_PCIE_X4	0x7a19
++#define PCI_DEVICE_ID_LOONGSON_7A1000_OHCI	0x7a24
++#define PCI_DEVICE_ID_LOONGSON_7A1000_PCIE_X8	0x7a29
 +
-+	_data = .;
-+
- 	RW_DATA(L1_CACHE_BYTES, PAGE_SIZE, THREAD_SIZE)
- 	.sdata : {
- 		__global_pointer$ = . + 0x800;
-@@ -69,8 +73,6 @@ SECTIONS
- 
- 	BSS_SECTION(PAGE_SIZE, PAGE_SIZE, 0)
- 
--	EXCEPTION_TABLE(0x10)
--
- 	.rel.dyn : {
- 		*(.rel.dyn*)
- 	}
+ #endif /* _LINUX_PCI_IDS_H */
 -- 
-2.25.1
+2.1.0
 
