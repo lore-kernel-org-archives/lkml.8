@@ -2,186 +2,232 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6536C10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 14:05:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50FFEC10F29
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 14:06:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B51D120848
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 14:05:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 229A621D56
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 14:06:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="Xl4UNnGt"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="pSzTMYzW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726677AbgCIOFB (ORCPT
+        id S1726885AbgCIOGM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 10:05:01 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:49144 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726275AbgCIOFB (ORCPT
+        Mon, 9 Mar 2020 10:06:12 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:46750 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726233AbgCIOGL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 10:05:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=d26Ye+vMRYj5g5ykorwl/W5eqkd9joFbNEWspN4ENAs=; b=Xl4UNnGtpQtUvm2BgVXiCnesn
-        7sfNE6HTuF5M1sEiacWYVtLUj7JcKknJbqaOlmfa4Uc1uchICRc2UPtoZKgJ0Z4TIX9KenW7nmUtk
-        jmKticzXy8ktdt2H4UZBTcBKr1oqKdgzkaVXoyOHbYCTnXmzv7j7ETY8ebK4+jq9qBgW1p3TbEVdp
-        iMM3SFdsMiP7+ayIeGrD3Lh5qVn0R0EmfK9Ubo8B0qSyLSX6K+7nW1r6FIzw6VM/1qJeGmbKeg0bK
-        f1I3tsqkvGx8S3xga4Nb3k3LYM0BLa3gIM5rWVU8XT09RkrZFk5zOv1Eqy34iooGn9DOWutdB77v4
-        BXyB9MVUQ==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:50736)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jBJ1T-0007Ja-5X; Mon, 09 Mar 2020 14:04:47 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jBJ1L-0003Qb-Vi; Mon, 09 Mar 2020 14:04:40 +0000
-Date:   Mon, 9 Mar 2020 14:04:39 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Nishanth Menon <nm@ti.com>,
-        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
-        Tero Kristo <t-kristo@ti.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Rik van Riel <riel@surriel.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Dave Chinner <david@fromorbit.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        Yafang Shao <laoar.shao@gmail.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        kernel-team@fb.com, Kishon Vijay Abraham I <kishon@ti.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>
-Subject: Re: [PATCH] vfs: keep inodes with page cache off the inode shrinker
- LRU
-Message-ID: <20200309140439.GL25745@shell.armlinux.org.uk>
-References: <CAHk-=wg1ZDADD3Vuw_sXhmBOrQ2xsp8YWxmtWiA6vG0RT-ZQ+A@mail.gmail.com>
- <20200212085004.GL25745@shell.armlinux.org.uk>
- <CAK8P3a3pzgVvwyDhHPoiSOqyv+h_ixbsdWMqG3sELenRJqFuew@mail.gmail.com>
- <671b05bc-7237-7422-3ece-f1a4a3652c92@oracle.com>
- <CAK8P3a13jGdjVW1TzvCKjRBg-Yscs_WB2K1kw9AzRfn3G9a=-Q@mail.gmail.com>
- <7c4c1459-60d5-24c8-6eb9-da299ead99ea@oracle.com>
- <20200306203439.peytghdqragjfhdx@kahuna>
- <CAK8P3a0Gyqu7kzO1JF=j9=jJ0T5ut=hbKepvke-2bppuPNKTuQ@mail.gmail.com>
- <20200308141923.GI25745@shell.armlinux.org.uk>
- <CAK8P3a2Gz5H_fcNtW0yCCjO1cRNa0nyd568sDYR0nNphu49YqQ@mail.gmail.com>
+        Mon, 9 Mar 2020 10:06:11 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 029E61p8032736;
+        Mon, 9 Mar 2020 09:06:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1583762761;
+        bh=OBEMkMtQkZWkB6dMggM3oEJ5U6LXoaCTY0euFw3mrjU=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=pSzTMYzWMpM2XCn827dB74GvBmR/MeCOvSM/xd9U+ieliB2FMQBfSt4W0NIpzpgnp
+         vvRdhv4fV33n+uhaPeE1xZN/0EeQiavn/OdXdgXGVgpwj3OFozEsD2Eq21PwL4x2VB
+         OgOayw1urwCW6SXQMpRtGAInQ8fD9TVcEyRFe8Vg=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 029E619H049757;
+        Mon, 9 Mar 2020 09:06:01 -0500
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 9 Mar
+ 2020 09:06:00 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 9 Mar 2020 09:06:01 -0500
+Received: from [10.24.69.157] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 029E5tgQ059978;
+        Mon, 9 Mar 2020 09:05:56 -0500
+Subject: Re: LKFT: arm x15: mmc1: cache flush error -110
+To:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>
+CC:     Jon Hunter <jonathanh@nvidia.com>,
+        Bitan Biswas <bbiswas@nvidia.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        Alexei Starovoitov <ast@kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        <lkft-triage@lists.linaro.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        John Stultz <john.stultz@linaro.org>,
+        Thierry Reding <treding@nvidia.com>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Kishon <kishon@ti.com>
+References: <CA+G9fYuqAQfhzF2BzHr7vMHx68bo8-jT+ob_F3eHQ3=oFjgYdg@mail.gmail.com>
+ <CAPDyKFokE6x0mn+v5B9=so-SyrdTn0JBU8Mrp3Zdu6kSaCie2g@mail.gmail.com>
+ <0963b60f-15e7-4bc6-10df-6fc8003e4d42@nvidia.com>
+ <CAPDyKFq5NoeHEBK3sv3yOSD2+pm9FueH1gaTyPq0j7GLfa6vnA@mail.gmail.com>
+ <34fd84d7-387b-b6f3-7fb3-aa490909e205@ti.com>
+ <CAPDyKFrrO4noYqdxWL9Y8Nx75LopbDudKGMotkGbGcAF1oq==w@mail.gmail.com>
+ <5e9b5646-bd48-e55b-54ee-1c2c41fc9218@nvidia.com>
+ <CAPDyKFqpNo_4OePBR1KnJNO=kR8XEqbcsEd=icSceSdDH+Rk1Q@mail.gmail.com>
+ <757853cf-987e-f6b6-9259-b4560a031692@nvidia.com>
+ <d12fe142-7e72-ab58-33ab-17817e35096f@nvidia.com>
+ <c216f131-6f83-c9c9-9d17-8d44ec06972d@nvidia.com>
+ <87ad7586-9569-4276-044a-adb64e84ca15@nvidia.com>
+ <a0962e0b-0f1d-9f32-f6e9-92f69f93167f@nvidia.com>
+ <57ddddc2-3ee8-d867-bba0-0dd9929ba37d@nvidia.com>
+ <CAPDyKFqZSd9E3+16yFsmpee2JsbRJ-DGThxx7NJHu6UE00Xi1Q@mail.gmail.com>
+ <26ee7225-9483-4664-c2d7-b5cefeadcd4b@nvidia.com>
+ <CAPDyKFqwVQDEnPNi33mc9ycTxpaT1cRLejbR3Ja4c8dha4gFRw@mail.gmail.com>
+From:   Faiz Abbas <faiz_abbas@ti.com>
+Message-ID: <a67b2831-3eff-545a-de67-102dffe4a0d9@ti.com>
+Date:   Mon, 9 Mar 2020 19:37:45 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a2Gz5H_fcNtW0yCCjO1cRNa0nyd568sDYR0nNphu49YqQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAPDyKFqwVQDEnPNi33mc9ycTxpaT1cRLejbR3Ja4c8dha4gFRw@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 09, 2020 at 02:33:26PM +0100, Arnd Bergmann wrote:
-> On Sun, Mar 8, 2020 at 3:20 PM Russell King - ARM Linux admin
-> <linux@armlinux.org.uk> wrote:
-> > On Sun, Mar 08, 2020 at 11:58:52AM +0100, Arnd Bergmann wrote:
-> > > On Fri, Mar 6, 2020 at 9:36 PM Nishanth Menon <nm@ti.com> wrote:
-> > > > On 13:11-20200226, santosh.shilimkar@oracle.com wrote:
-> >
-> > > - extend zswap to use all the available high memory for swap space
-> > >   when highmem is disabled.
-> >
-> > I don't think that's a good idea.  Running debian stable kernels on my
-> > 8GB laptop, I have problems when leaving firefox running long before
-> > even half the 16GB of swap gets consumed - the entire machine slows
-> > down very quickly when it starts swapping more than about 2 or so GB.
-> > It seems either the kernel has become quite bad at selecting pages to
-> > evict.
-> >
-> > It gets to the point where any git operation has a battle to fight
-> > for RAM, despite not touching anything else other than git.
-> >
-> > The behaviour is much like firefox is locking memory into core, but
-> > that doesn't seem to be what's actually going on.  I've never really
-> > got to the bottom of it though.
-> >
-> > This is with 64-bit kernel and userspace.
+Uffe,
+
+On 06/03/20 4:44 pm, Ulf Hansson wrote:
+> [...]
 > 
-> I agree there is something going wrong on your machine, but I
-> don't really see how that relates to my suggestion.
-
-You are suggesting for a 4GB machine to use 2GB of RAM for normal
-usage via an optimised virtual space layout, and 2GB of RAM for
-swap using ZSWAP, rather than having 4GB of RAM available via the
-present highmem / lowmem system.
-
-I'm saying that is quite risky given the behaviours I'm seeing,
-where modern Linux seems to be struggling to work out what pages
-it should be evicting.
-
-I think Linux performs way better when it doesn't have to use
-swap.
-
-> > So, I'd suggest that trading off RAM available through highmem for VM
-> > space available through zswap is likely a bad idea if you have a
-> > workload that requires 4GB of RAM on a 32-bit machine.
+>>>>>>>>>>>
+>>>>>>>>>>> Actually we always use R1B with CMD6 as per spec.
+>>>>>>>>>> I fully agree that R1B is preferable, but it's not against the
+>>>>>>>>>> spec to
+>>>>>>>>>> send CMD13 to poll for busy.
+>>>>>>>>>>
+>>>>>>>>>> Moreover, we need to cope with the scenario when the host has
+>>>>>>>>>> specified a maximum timeout that isn't sufficiently long enough for
+>>>>>>>>>> the requested operation. Do you have another proposal for how to
+>>>>>>>>>> manage this, but disabling MMC_RSP_BUSY?
+>>>>>>>>>>
+>>>>>>>>>> Let's assume you driver would get a R1B for the CMD6 (we force it),
+>>>>>>>>>> then what timeout would the driver be using if we would set
+>>>>>>>>>> cmd.busy_timeout to 30ms?
+>>>>>>>>>>
+>>>> Sorry didn't understood clearly. Are you asking with 30s timeout, whats
+>>>> the data timeout counter used?
+>>> Yes. It seems like it will pick the maximum, which is 11s?
+>> yes
 > 
-> Aside from every workload being different, I was thinking of
-> these general observations:
+> Okay, thanks!
 > 
-> - If we are looking at a future without highmem, then it's better to use
->   the extra memory for something than not using it. zswap seems like
->   a reasonable use.
+>>>
+>>>> Because of above mentioned issue on our host where CMD interrupt happens
+>>>> after busy state, poll for busy returns right away as not busy.
+>>> I see.
+>>>
+>>>> So issuing CMD13 after CMD6-R1 followed by busy poll should be working.
+>>>> But weird that with small delay of 1ms or debug print before CMD13 it
+>>>> doesn't timeout and works all the time.
+>>> I have digested the information you provided in these emails. Let me
+>>> summarize it, to see if I have understood correctly.
+>>>
+>>> 1.
+>>> Your controller can't distinguish between R1 and R1B because of a
+>>> limitation in the HW. So, in both cases you need to wait for the card
+>>> to stop signal busy, before the controller can give an IRQ to notify
+>>> that the R1 response has been received. Correct?
+>>>
+>>> In this context, I am wondering if sdhci_send_command(), really
+>>> conforms to these requirements. For example, depending on if the CMD6
+>>> has MMC_RSP_BUSY or not, it may pick either SDHCI_CMD_RESP_SHORT or
+>>> SDHCI_CMD_RESP_SHORT_BUSY.
+>>>
+>>> Does this work as expected for your case?
+>> Design team re-verified internally and bug where HW waits for busy state
+>> before IRQ is only for R1B and R1 is spec compliant.
+>>
+>> So, with R1, CMD complete is generated after response received.
+> 
+> Okay.
+> 
+> So, the issue we see for CMD6 with R1, is a software problem that we
+> should be able to fix.
+> 
+>>
+>> With R1B, CMD complete and xfer complete both are generated after
+>> response received + device busy (max timeout of 11s)
+>> DATA timeout interrupt will be asserted incase if HW busy detection fails.
+>>
+>> With R1B we may see DATA Timeout if operation takes more than max busy
+>> timeout of 11s.
+> 
+> Okay, I see.
+> 
+>>
+>>> 2.
+>>> Assuming my interpretation of the above is somewhat correct. Then you
+>>> always need to set a busy timeout for R1/R1B responses in the
+>>> controller. The maximum timeout seems to be 11s long. Obviously, this
+>>> isn't enough for all cases, such as cache flushing and erase, for
+>>> example. So, what can we do to support a longer timeouts than 11s?
+>>> Would it be possible to disable the HW timeout, if the requested
+>>> timeout is longer than 11s and use a SW timeout instead?
+>>>
+>>> Kind regards
+>>> Uffe
+>>
+>> For erase long operations we have register bit to enable for infinite
+>> busy wait mode where host controller would be monitoring until card is busy.
+> 
+> Alright, that sounds great!
+> 
+>>
+>> But so far for emmc devices we used on our platforms, we haven't seen
+>> cache flush taking more than 11s.
+> 
+> I understand that 11s is probably fine to use, for most cases.
+> 
+> However, it's not spec compliant, as for some operations there are
+> simply no timeout specified. BKOPS, cache flush, sanitize are cases
+> like this - and then 11s is definitely not sufficient.
+> 
+>>
+>> Will get back on possibility of disabling HW timeout and using SW timeout..
+> 
+> Thanks!
+> 
+> I would like to get the regression fixed asap, but I also would like
+> to avoid reverting patches, unless really necessary. May I propose the
+> following two options.
+> 
+> 1. Find out why polling with ->card_busy() or CMD13, for a CMD6 with
+> an R1 response doesn't work - and then fix that behaviour.
+> 
+> 2. Set the mmc->max_busy_timeout to zero for sdhci-tegra, which makes
+> the core to always use R1B for CMD6 (and erase). This also means that
+> when the cmd->busy_timeout becomes longer than 11s, sdhci-tegra must
+> disable the HW busy timeout and just wait "forever".
+> 
+> If you decide for 2, you can add the software timeout support on top,
+> but make that can be considered as a next step of an improvement,
+> rather than needed as fix. Note that, I believe there are some support
+> for software timeout already in the sdhci core, maybe you need to
+> tweak it a bit for your case, I don't know.
+> 
 
-I think that's still a very open question, one which hasn't been
-answered yet.
+I was able to reproduce the issue on sdhci-omap with your patch applied.
 
-> - A lot of embedded systems are configured to have no swap at all,
->   which can be for good or not-so-good reasons. Having some
->   swap space available often improves things, even if it comes
->   out of RAM.
+In our case, the dat0 line never comes back up when trying to send a
+CMD6 with R1. It needs an R1b to work properly. I also set
+mmc->max_busy_timeout to 0 and that made it work as well.
 
-How do you come up with that assertion?  What is the evidence behind
-it?
+I wanna try it out with other R1b commands like erase to see if it works
+properly if the delay is actually very long.
 
-This is kind of the crux of my point in the previous email: Linux
-with swap performs way worse for me - if I had 16GB of RAM in my
-laptop, I bet it would perform better than my current 8GB with a
-16GB swap file - where, when the swap file gets around 8GB full,
-the system as a whole starts to struggle.
-
-That's about a 50/50 split of VM space between RAM and swap.
-
-Proposing 2GB+ swap 2GB RAM would potentially place these machines
-into the same situation as my laptop, and if it also results in
-a loss of performance, we could end up with regression reports.
-
-> - A particularly important case to optimize for is 2GB of RAM with
->   LPAE enabled. With CONFIG_VMSPLIT_2G and highmem, this
->   leads to the paradox -ENOMEM when 256MB of highmem are
->   full while plenty of lowmem is available. With highmem disabled,
->   you avoid that at the cost of losing 12% of RAM.
-
-What happened to requests for memory from highmem being able to be
-sourced from lowmem if highmem wasn't available?  That used to be
-standard kernel behaviour.
-
-> - With 4GB+ of RAM and CONFIG_VMSPLIT_2G or
->   CONFIG_VMSPLIT_3G, using gigabytes of RAM for swap
->   space would usually be worse than highmem, but once
->   we have VMSPLIT_4G_4G, it's the same situation as above
->   with 6% of RAM used for zswap instead of highmem.
-
-I think the chances of that happening are very slim - I doubt there
-is the will to invest the energy amongst what is left of the 32-bit
-ARM community.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
+Thanks,
+Faiz
