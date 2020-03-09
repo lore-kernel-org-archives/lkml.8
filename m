@@ -2,166 +2,125 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA5D4C10F29
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 22:28:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22DDFC10F29
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 22:30:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2EC724649
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 22:28:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MgajOmyy"
+	by mail.kernel.org (Postfix) with ESMTP id EAA5D24655
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 22:30:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583793006;
+	bh=Ug0zeSOe7y0l/++Oomd/cMJ1Mcz3Y3Ukl281K3wA12M=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=gDwdSggUMnOqJuHIWYcKrdFz3k94FF+vZCdFkNvU+EQwLZoH6u+JkAj6SY/OrrQR5
+	 eTElxMJcGvtSYJQWPoSGmnvgu7ur0K5TJ+fM6OEstc7L1p3p3UfaKBnqIVM466iukA
+	 aNQUAUxtmvwyr8h06uMRlBOfNh/EWLnuTPGin+z0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727347AbgCIW2x (ORCPT
+        id S1727269AbgCIWaF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 18:28:53 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:33372 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726838AbgCIW2x (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 18:28:53 -0400
-Received: by mail-oi1-f193.google.com with SMTP id q81so11904597oig.0;
-        Mon, 09 Mar 2020 15:28:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Es47KjDK/hWadKH/v9xPd4F0lLQoQ3sr2417oAXr/tU=;
-        b=MgajOmyyAtv7UmYDoPC0jd1MOj3beqW7IbyfooxKtCGGP3FkaOcT2Ovhp0Fi0/ojnT
-         lGtY+8OxAz7maq86dfZDNNzRH9zLr7c1L3xiV6VYC97WdiUxW1TP2dYeItkRafKMHVXc
-         n4q0/+/KaHKttvMb0Cr+khailijU+LBjcH8/Vivy13zJPV3Wa8G+jvqT80sJa9oQgNgG
-         CniC59RMHaz2xDrqGnkuzFC9AKBTpVLQQ9ebjsdEplXRiA3Q9wolMM5zR0QlBIlUT4Ku
-         cM/WzAeCeVWfhM8SpVls+fcztK01Ozegzsm/2RW5UGJPzRnmMTWLZUDRJhJ2GV0spdY+
-         YtbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Es47KjDK/hWadKH/v9xPd4F0lLQoQ3sr2417oAXr/tU=;
-        b=MtUwD4n5KjjWB8W2G2zMf38qv11+CF22hxwezwq9lXIX4Z5Z4SLrwNhZVUkxTL7kS2
-         oxpxmwpof/RlJpkmwbIOpWpY/eLYfnHPCpwWlTtahr/NAbfahjxBcdXZ5Q5mq0XuWYd0
-         1JftOIWkNxhKolY64onwf2hpc6Q56jPREJn1gqpW8LTgZyw9BLF8hgA3xY+S7FUI6qgm
-         9G5XBNEsp0C7soBoiJzHHpdatXtBH2oxT6zhHjBLhXplVXzyVGTBTgFQZ6p16CwnnMr8
-         fAviQkfIAZCArPcNJuFlgoyobOgitVXuCQ62ul2GNpW/SaCq5wavUUrs1AnKU4bI0/uC
-         28lw==
-X-Gm-Message-State: ANhLgQ1K/WrUIIxvmwuUzOIPS3NOoMRrSMCFjYpBiPXN3GqQf0etMOy9
-        f4GX+HLipCXMP+YRKSW53ZyyC1ktZlOhT5yhgk4=
-X-Google-Smtp-Source: ADFU+vtU5GX2EEb6Reuz4YRODMRzYC78NkJFKaejN4jv+zCbJpOs9anR6SY8vnKCcYwgMaaXCVp7rl1Kf+AESBzJ0FQ=
-X-Received: by 2002:aca:ac89:: with SMTP id v131mr1044761oie.7.1583792932582;
- Mon, 09 Mar 2020 15:28:52 -0700 (PDT)
+        Mon, 9 Mar 2020 18:30:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60170 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726838AbgCIWaE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 18:30:04 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 114C324649;
+        Mon,  9 Mar 2020 22:30:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583793004;
+        bh=Ug0zeSOe7y0l/++Oomd/cMJ1Mcz3Y3Ukl281K3wA12M=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=j1vLlyPLYfZLdGfvn6AnKPWxKGQgcM1vmYd0y5UV7xABU8qlsm+kOVo3HiPKHFBCj
+         qAFN8+em2FucvCPA1qLPigqSjKVfpEJqt3b8Md8AJd+7tAh3c9IOFNxBVUd7NiN42/
+         nX7mDD/yRRy7DjiZTxbupR/bChRfUQQwzrCO/6GY=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20200306152031.14212-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200309203242.GA14486@bogus> <CA+V-a8uAhrkRPUaQOOAUgeKFnwH7zZOF-raQiYvtc9edUeHJ7g@mail.gmail.com>
- <20200309214739.GA11495@ravnborg.org>
-In-Reply-To: <20200309214739.GA11495@ravnborg.org>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Mon, 9 Mar 2020 22:28:26 +0000
-Message-ID: <CA+V-a8uRD2Vi05rPw2fw6SQO66EHWG=Z+ZAL23xR_9QSVz7WBw@mail.gmail.com>
-Subject: Re: [RESEND PATCH v7] dt-bindings: display: Add idk-2121wr binding
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     Rob Herring <robh@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        dri-devel@lists.freedesktop.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200309171653.27630-3-dinguyen@kernel.org>
+References: <20200309171653.27630-1-dinguyen@kernel.org> <20200309171653.27630-3-dinguyen@kernel.org>
+Subject: Re: [PATCHv2 2/3] dt-bindings: documentation: add clock bindings information for Agilex
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     dinguyen@kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, mturquette@baylibre.com,
+        robh+dt@kernel.org, mark.rutland@arm.com
+To:     Dinh Nguyen <dinguyen@kernel.org>, linux-clk@vger.kernel.org
+Date:   Mon, 09 Mar 2020 15:30:03 -0700
+Message-ID: <158379300325.149997.17942016518688387697@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sam,
+Quoting Dinh Nguyen (2020-03-09 10:16:52)
+> diff --git a/Documentation/devicetree/bindings/clock/intc,agilex.yaml b/D=
+ocumentation/devicetree/bindings/clock/intc,agilex.yaml
+> new file mode 100644
+> index 000000000000..bd5c4f590e12
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/intc,agilex.yaml
+> @@ -0,0 +1,79 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/clock/intc,agilex.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Intel SoCFPGA Agilex platform clock controller binding
+> +
+> +maintainers:
+> +  - Dinh Nguyen <dinguyen@kernel.org>
+> +
+> +description: |
+> +  The Intel Agilex Clock controller is an integrated clock controller, w=
+hich
+> +  generates and supplies to all modules.
+> +
+> +  This binding uses the common clock binding[1].
+> +  [1] Documentation/devicetree/bindings/clock/clock-bindings.txt
 
-On Mon, Mar 9, 2020 at 9:47 PM Sam Ravnborg <sam@ravnborg.org> wrote:
->
-> Hi Prabhakar
->
-> On Mon, Mar 09, 2020 at 09:23:24PM +0000, Lad, Prabhakar wrote:
-> > Hi Rob,
-> >
-> > On Mon, Mar 9, 2020 at 8:32 PM Rob Herring <robh@kernel.org> wrote:
-> > >
-> > > On Fri,  6 Mar 2020 15:20:31 +0000, Lad Prabhakar wrote:
-> > > > From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> > > >
-> > > > Add binding for the idk-2121wr LVDS panel from Advantech.
-> > > >
-> > > > Some panel-specific documentation can be found here:
-> > > > https://buy.advantech.eu/Displays/Embedded-LCD-Kits-High-Brightness/model-IDK-2121WR-K2FHA2E.htm
-> > > >
-> > > > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> > > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > > ---
-> > > > Apologies for flooding in I missed to add the ML email-ids for the earlier
-> > > > version so resending it.
-> > > >
-> > > > Hi All,
-> > > >
-> > > > This patch is part of series [1] ("Add dual-LVDS panel support to EK874),
-> > > > all the patches have been accepted from it except this one. I have fixed
-> > > > Rob's comments in this version of the patch.
-> > > >
-> > > > [1] https://patchwork.kernel.org/cover/11297589/
-> > > >
-> > > > v6->7
-> > > >  * Added reference to lvds.yaml
-> > > >  * Changed maintainer to myself
-> > > >  * Switched to dual license
-> > > >  * Dropped required properties except for ports as rest are already listed
-> > > >    in lvds.panel
-> > > >  * Dropped Reviewed-by tag of Laurent, due to the changes made it might not
-> > > >    be valid.
-> > > >
-> > > > v5->v6:
-> > > >  * No change
-> > > >
-> > > > v4->v5:
-> > > > * No change
-> > > >
-> > > > v3->v4:
-> > > > * Absorbed patch "dt-bindings: display: Add bindings for LVDS
-> > > >   bus-timings"
-> > > > * Big restructuring after Rob's and Laurent's comments
-> > > >
-> > > > v2->v3:
-> > > > * New patch
-> > > >
-> > > >  .../display/panel/advantech,idk-2121wr.yaml        | 120 +++++++++++++++++++++
-> > > >  1 file changed, 120 insertions(+)
-> > > >  create mode 100644 Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.yaml
-> > > >
-> > >
-> > > My bot found errors running 'make dt_binding_check' on your patch:
-> > >
-> > > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.example.dt.yaml: panel-lvds: 'port' is a required property
-> > > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.example.dt.yaml: panel-lvds: 'port' is a required property
-> > >
-> > This panel is a dual channel LVDS, as a result the root port is called as
-> > ports instead of port and the child node port@0 and port@1 are used for
-> > even and odd pixels, hence binding has required property as ports instead
-> > of port.
->
-> What goes wrong is that you have a ref to lvds.yaml - and thus you get
-> also required from that file.
->
-Agreed.
+I think you can remove this last sentence, and drop the | on the
+description because formatting doesn't matter.
 
-> So basically - I think this binding should not have a ref to lvds.yaml -
-> as the binding needs to be different.
->
-Yes makes sense, will post a v8 dropping the reference to lvds.yaml
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - items:
+> +          - enum:
+> +              - intel,agilex-clkmgr
+> +
 
-Cheers,
---Prabhakar
+Just use
 
->         Sam
+  compatible:
+    const: intel,agilex-clkmgr
+
+> +  '#clock-cells':
+> +    const: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - '#clock-cells'
+> +
+> +examples:
+> +  # Clock controller node
+> +  - |
+> +       clkmgr: clock-controller@ffd10000 {
+> +               compatible =3D "intel,agilex-clkmgr";
+> +               reg =3D <0xffd10000 0x1000>;
+> +               #clock-cells =3D <1>;
+
+Does it consume any clks?
+
+> +       };
+> +
+> +  # External clocks
+
+Everything below here is not necessary and shouldn't be in the binding.
