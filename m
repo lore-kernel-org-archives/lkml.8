@@ -2,132 +2,271 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82432C10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 13:12:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D7DAC10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 13:12:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58F6C22525
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 13:12:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E011022525
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 13:12:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726551AbgCINMs (ORCPT
+        id S1726621AbgCINMx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 09:12:48 -0400
-Received: from mga04.intel.com ([192.55.52.120]:23411 "EHLO mga04.intel.com"
+        Mon, 9 Mar 2020 09:12:53 -0400
+Received: from mga01.intel.com ([192.55.52.88]:56481 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725956AbgCINMs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 09:12:48 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
+        id S1726582AbgCINMv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 09:12:51 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Mar 2020 06:12:47 -0700
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Mar 2020 06:12:40 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,533,1574150400"; 
-   d="scan'208";a="442740252"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga006.fm.intel.com with ESMTP; 09 Mar 2020 06:12:46 -0700
-Received: from [10.251.21.146] (kliang2-mobl.ccr.corp.intel.com [10.251.21.146])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id 036345802A3;
-        Mon,  9 Mar 2020 06:12:43 -0700 (PDT)
-Subject: Re: [PATCH v1 01/11] perf/x86/core: Support KVM to assign a dedicated
- counter for guest PEBS
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Luwei Kang <luwei.kang@intel.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, tglx@linutronix.de, bp@alien8.de,
-        hpa@zytor.com, pbonzini@redhat.com,
-        sean.j.christopherson@intel.com, vkuznets@redhat.com,
-        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
-        pawan.kumar.gupta@linux.intel.com, ak@linux.intel.com,
-        thomas.lendacky@amd.com, fenghua.yu@intel.com,
-        like.xu@linux.intel.com
-References: <1583431025-19802-1-git-send-email-luwei.kang@intel.com>
- <1583431025-19802-2-git-send-email-luwei.kang@intel.com>
- <20200306135317.GD12561@hirez.programming.kicks-ass.net>
- <b72cb68e-1a0a-eeff-21b4-ce412e939cfd@linux.intel.com>
- <20200309100443.GG12561@hirez.programming.kicks-ass.net>
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-Message-ID: <97ce1ba4-d75a-8db2-ea2f-7d334942b4e6@linux.intel.com>
-Date:   Mon, 9 Mar 2020 09:12:42 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+   d="gz'50?scan'50,208,50";a="353365141"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga001.fm.intel.com with ESMTP; 09 Mar 2020 06:12:38 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jBICz-000Fe1-UK; Mon, 09 Mar 2020 21:12:37 +0800
+Date:   Mon, 9 Mar 2020 21:12:08 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Zong Li <zong.li@sifive.com>
+Cc:     kbuild-all@lists.01.org, palmer@dabbelt.com,
+        paul.walmsley@sifive.com, aou@eecs.berkeley.edu,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 8/9] riscv: introduce interfaces to patch kernel code
+Message-ID: <202003092121.lEcswcgH%lkp@intel.com>
+References: <e2a42afbce47b364bf790b4cf8edf76235e48d53.1583741997.git.zong.li@sifive.com>
 MIME-Version: 1.0
-In-Reply-To: <20200309100443.GG12561@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="y0ulUmNC+osPPQO6"
+Content-Disposition: inline
+In-Reply-To: <e2a42afbce47b364bf790b4cf8edf76235e48d53.1583741997.git.zong.li@sifive.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--y0ulUmNC+osPPQO6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 3/9/2020 6:04 AM, Peter Zijlstra wrote:
-> On Fri, Mar 06, 2020 at 09:42:47AM -0500, Liang, Kan wrote:
->>
->>
->> On 3/6/2020 8:53 AM, Peter Zijlstra wrote:
->>> On Fri, Mar 06, 2020 at 01:56:55AM +0800, Luwei Kang wrote:
->>>> From: Kan Liang <kan.liang@linux.intel.com>
->>>>
->>>> The PEBS event created by host needs to be assigned specific counters
->>>> requested by the guest, which means the guest and host counter indexes
->>>> have to be the same or fail to create. This is needed because PEBS leaks
->>>> counter indexes into the guest. Otherwise, the guest driver will be
->>>> confused by the counter indexes in the status field of the PEBS record.
->>>>
->>>> A guest_dedicated_idx field is added to indicate the counter index
->>>> specifically requested by KVM. The dedicated event constraints would
->>>> constrain the counter in the host to the same numbered counter in guest.
->>>>
->>>> A intel_ctrl_guest_dedicated_mask field is added to indicate the enabled
->>>> counters for guest PEBS events. The IA32_PEBS_ENABLE MSR will be switched
->>>> during the VMX transitions if intel_ctrl_guest_owned is set.
->>>>
->>>
->>>> +	/* the guest specified counter index of KVM owned event, e.g PEBS */
->>>> +	int				guest_dedicated_idx;
->>>
->>> We've always objected to guest 'owned' counters, they destroy scheduling
->>> freedom. Why are you expecting that to be any different this time?
->>>
->>
->> The new proposal tries to 'own' a counter by setting the event constraint.
->> It doesn't stop other events using the counter.
->> If there is high priority event which requires the same counter, scheduler
->> can still reject the request from KVM.
->> I don't think it destroys the scheduling freedom this time.
-> 
-> Suppose your KVM thing claims counter 0/2 (ICL/SKL) for some random PEBS
-> event, and then the host wants to use PREC_DIST.. Then one of them will
-> be screwed for no reason what so ever.
->
+Hi Zong,
 
-The multiplexing should be triggered.
+Thank you for the patch! Yet something to improve:
 
-For host, if both user A and user B requires PREC_DIST, the multiplexing 
-should be triggered for them.
-Now, the user B is KVM. I don't think there is difference. The 
-multiplexing should still be triggered. Why it is screwed?
+[auto build test ERROR on v5.6-rc5]
+[also build test ERROR on next-20200306]
+[if your patch is applied to the wrong git tree, please drop us a note to help
+improve the system. BTW, we also suggest to use '--base' option to specify the
+base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
 
+url:    https://github.com/0day-ci/linux/commits/Zong-Li/Support-strict-kernel-memory-permissions-for-security/20200309-172554
+base:    2c523b344dfa65a3738e7039832044aa133c75fb
+config: riscv-nommu_virt_defconfig (attached as .config)
+compiler: riscv64-linux-gcc (GCC) 7.5.0
+reproduce:
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # save the attached .config to linux build tree
+        GCC_VERSION=7.5.0 make.cross ARCH=riscv 
 
-> How is that not destroying scheduling freedom? Any other situation we'd
-> have moved the !PREC_DIST PEBS event to another counter.
-> 
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
 
-All counters are equivalent for them. It doesn't matter if we move it to 
-another counter. There is no impact for the user.
+All errors (new ones prefixed by >>):
 
-In the new proposal, KVM user is treated the same as other host events 
-with event constraint. The scheduler is free to choose whether or not to 
-assign a counter for it.
+   In file included from arch/riscv//kernel/patch.c:6:0:
+   arch/riscv//kernel/patch.c: In function 'riscv_insn_write':
+>> arch/riscv//kernel/patch.c:63:25: error: 'patch_lock' undeclared (first use in this function); did you mean 'patch_map'?
+     raw_spin_lock_irqsave(&patch_lock, flags);
+                            ^
+   include/linux/spinlock.h:250:34: note: in definition of macro 'raw_spin_lock_irqsave'
+      flags = _raw_spin_lock_irqsave(lock); \
+                                     ^~~~
+   arch/riscv//kernel/patch.c:63:25: note: each undeclared identifier is reported only once for each function it appears in
+     raw_spin_lock_irqsave(&patch_lock, flags);
+                            ^
+   include/linux/spinlock.h:250:34: note: in definition of macro 'raw_spin_lock_irqsave'
+      flags = _raw_spin_lock_irqsave(lock); \
+                                     ^~~~
+>> arch/riscv//kernel/patch.c:66:25: error: 'FIX_TEXT_POKE1' undeclared (first use in this function)
+      patch_map(addr + len, FIX_TEXT_POKE1);
+                            ^~~~~~~~~~~~~~
+>> arch/riscv//kernel/patch.c:68:26: error: 'FIX_TEXT_POKE0' undeclared (first use in this function); did you mean 'FIX_TEXT_POKE1'?
+     waddr = patch_map(addr, FIX_TEXT_POKE0);
+                             ^~~~~~~~~~~~~~
+                             FIX_TEXT_POKE1
 
-Thanks,
-Kan
+vim +63 arch/riscv//kernel/patch.c
+
+    55	
+    56	static int __kprobes riscv_insn_write(void *addr, const void *insn, size_t len)
+    57	{
+    58		void *waddr = addr;
+    59		bool across_pages = (((uintptr_t) addr & ~PAGE_MASK) + len) > PAGE_SIZE;
+    60		unsigned long flags = 0;
+    61		int ret;
+    62	
+  > 63		raw_spin_lock_irqsave(&patch_lock, flags);
+    64	
+    65		if (across_pages)
+  > 66			patch_map(addr + len, FIX_TEXT_POKE1);
+    67	
+  > 68		waddr = patch_map(addr, FIX_TEXT_POKE0);
+    69	
+    70		ret = probe_kernel_write(waddr, insn, len);
+    71	
+    72		patch_unmap(FIX_TEXT_POKE0);
+    73	
+    74		if (across_pages)
+    75			patch_unmap(FIX_TEXT_POKE1);
+    76	
+    77		raw_spin_unlock_irqrestore(&patch_lock, flags);
+    78	
+    79		return ret;
+    80	}
+    81	
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+
+--y0ulUmNC+osPPQO6
+Content-Type: application/gzip
+Content-Disposition: attachment; filename=".config.gz"
+Content-Transfer-Encoding: base64
+
+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
+
+--y0ulUmNC+osPPQO6--
