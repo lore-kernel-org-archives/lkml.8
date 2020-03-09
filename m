@@ -2,91 +2,140 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B7DAC10F25
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:23:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA07EC10F25
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:24:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D9B122525
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:23:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C24A124654
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:24:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="elynEZvM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726486AbgCITXz convert rfc822-to-8bit (ORCPT
+        id S1726389AbgCITYd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 15:23:55 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:60073 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726384AbgCITXy (ORCPT
+        Mon, 9 Mar 2020 15:24:33 -0400
+Received: from gateway21.websitewelcome.com ([192.185.45.154]:36385 "EHLO
+        gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726106AbgCITYd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 15:23:54 -0400
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jBNzw-0005xU-TG; Mon, 09 Mar 2020 20:23:33 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 2F3E610408A; Mon,  9 Mar 2020 20:23:32 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Mark Rutland <mark.rutland@arm.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>
-Cc:     Andy Lutomirski <luto@amacapital.net>, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mips@vger.kernel.org, clang-built-linux@googlegroups.com,
-        x86@kernel.org, Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Paul Burton <paul.burton@mips.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Mark Salyzyn <salyzyn@android.com>,
-        Kees Cook <keescook@chromium.org>,
-        Peter Collingbourne <pcc@google.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Andrei Vagin <avagin@openvz.org>,
-        Nick Desaulniers <ndesaulniers@google.com>
-Subject: Re: [PATCH v2 00/20] Introduce common headers
-In-Reply-To: <20200309122429.GB26309@lakrids.cambridge.arm.com>
-References: <20200306133242.26279-1-vincenzo.frascino@arm.com> <3278D604-28F1-47A1-BAB8-D8EB439995E8@amacapital.net> <b18c7ce1-0948-a9e2-2d7e-d019669a71e1@arm.com> <20200309122429.GB26309@lakrids.cambridge.arm.com>
-Date:   Mon, 09 Mar 2020 20:23:32 +0100
-Message-ID: <877dzt72ob.fsf@nanos.tec.linutronix.de>
+        Mon, 9 Mar 2020 15:24:33 -0400
+Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
+        by gateway21.websitewelcome.com (Postfix) with ESMTP id 2AD73403D535D
+        for <linux-kernel@vger.kernel.org>; Mon,  9 Mar 2020 13:15:54 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id BMwUjS119vBMdBMwUjLWgD; Mon, 09 Mar 2020 13:15:54 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=C0MvE7PDdq001QbWyBr/GhST3oWeMyr56RQn0qh4KTk=; b=elynEZvMG+011WYLVnxAPS+XYV
+        F2MuUQiXYDlm9MKJf3WJCWQ6j+W/x5i0a2BvpscHyBXnQ2c5//1g+XWZEx/Y2rZdaJwzyEUEpA24n
+        fhPst3r6Mj/qD9wmKT5gTqGB4tnYMSpHlUOke0hgX2vXPoAIUvUjoGBqHfLpTuCK+nyKZz6chkECM
+        OJIEFPAPwqHMJ199TXnqrn0bkJHlOCd+jncb65SyG8hZM/xd+dhK+8qk7Xupb15r/gZZQdg6X/Y4/
+        Y7AwKn9wGNeFz2lqQIs6zFhMevNDVrgVhLd9Q2NJnw9bk5O2URcLp1zri/rANb41owtgNSi/+YyX9
+        i62/BP+A==;
+Received: from [201.162.240.150] (port=12425 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1jBMwR-004IWa-Nt; Mon, 09 Mar 2020 13:15:52 -0500
+Date:   Mon, 9 Mar 2020 13:19:04 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     David Woodhouse <dwmw2@infradead.org>,
+        Richard Weinberger <richard@nod.at>
+Cc:     linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH][next] jffs2: summary.h: Replace zero-length array with
+ flexible-array member
+Message-ID: <20200309181904.GA4669@embeddedor>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.162.240.150
+X-Source-L: No
+X-Exim-ID: 1jBMwR-004IWa-Nt
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [201.162.240.150]:12425
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 24
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mark Rutland <mark.rutland@arm.com> writes:
-> On Mon, Mar 09, 2020 at 11:07:08AM +0000, Vincenzo Frascino wrote:
->> On 3/6/20 4:04 PM, Andy Lutomirski wrote:
->> >> To solve the problem, I decided to use the approach below:
->> >>  * Extract from include/linux/ the vDSO required kernel interface
->> >>    and place it in include/common/
->> > 
->> > I really like the approach, but I’m wondering if “common” is the
->> > right name. This directory is headers that aren’t stable ABI like
->> > uapi but are shared between the kernel and the vDSO. Regular user
->> > code should *not* include these, right?
->> > 
->> > Would “vdso” or perhaps “private-abi” be clearer?
->> 
->> Thanks! These headers are definitely not "uapi" like and they are meant to
->> evolve in future like any other kernel header. We have just to make sure that
->> the evolution does not break what we are trying to achieve with this series.
->
-> Given we already include uapi/* headers in kernel code, I think placing
-> these in a vdso/* namespace would be fine. I think that more clearly
-> expresses the constraints on the headers than private-abi/* would.
+The current codebase makes use of the zero-length array language
+extension to the C90 standard, but the preferred mechanism to declare
+variable-length types such as these ones is a flexible array member[1][2],
+introduced in C99:
 
-Yes, that makes most sense.
+struct foo {
+        int stuff;
+        struct boo array[];
+};
 
-Thanks,
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertently introduced[3] to the codebase from now on.
 
-        tglx
+Also, notice that, dynamic memory allocations won't be affected by
+this change:
+
+"Flexible array members have incomplete type, and so the sizeof operator
+may not be applied. As a quirk of the original implementation of
+zero-length arrays, sizeof evaluates to zero."[1]
+
+This issue was found with the help of Coccinelle.
+
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[2] https://github.com/KSPP/linux/issues/21
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ fs/jffs2/summary.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/fs/jffs2/summary.h b/fs/jffs2/summary.h
+index 60207a2ae952..e4131cb1f1d4 100644
+--- a/fs/jffs2/summary.h
++++ b/fs/jffs2/summary.h
+@@ -61,7 +61,7 @@ struct jffs2_sum_dirent_flash
+ 	jint32_t ino; 		/* == zero for unlink */
+ 	uint8_t nsize;		/* dirent name size */
+ 	uint8_t type;		/* dirent type */
+-	uint8_t name[0];	/* dirent name */
++	uint8_t name[];	/* dirent name */
+ } __attribute__((packed));
+ 
+ struct jffs2_sum_xattr_flash
+@@ -117,7 +117,7 @@ struct jffs2_sum_dirent_mem
+ 	jint32_t ino; 		/* == zero for unlink */
+ 	uint8_t nsize;		/* dirent name size */
+ 	uint8_t type;		/* dirent type */
+-	uint8_t name[0];	/* dirent name */
++	uint8_t name[];	/* dirent name */
+ } __attribute__((packed));
+ 
+ struct jffs2_sum_xattr_mem
+-- 
+2.25.0
+
