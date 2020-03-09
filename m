@@ -2,152 +2,134 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A56B9C10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 16:02:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 379C3C18E5A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 16:03:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 767DF208C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 16:02:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="po9U227B"
+	by mail.kernel.org (Postfix) with ESMTP id 19BE9208C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 16:03:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727059AbgCIQCV (ORCPT
+        id S1727083AbgCIQDf convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 12:02:21 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:44154 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726758AbgCIQCV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 12:02:21 -0400
-Received: by mail-pl1-f195.google.com with SMTP id d9so4137752plo.11
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 09:02:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=FPahBlx9BxgYf27cCynxoigTpGq1oNMafhDT1t5E2i0=;
-        b=po9U227B3G8D+omYOHGTuf/4x0/W09eJkeNJg4vLPzb4Rd5ucAh7Z21VTV2lLryz0I
-         rHFfoxh7V+x1VQOAC9k8tgGB2zDS/nkEEZ83Btpw9Ch6e2PytlZqxUbUD2HLdIYPY71w
-         pvtjSoyW6mUBooxIseZ94yeg8ejfVUHsSlgJxdzFvgJEwsmv5QO9WkhyGXv4TEB1TMcz
-         q+aQKW2Qs5vlLv4e1vkQMh0/rsTGBJfBoi/gt1QTUi8/DyZ3PGsmaOPGLsw/3yLgB3eD
-         G6ImskgVSMfs12GhCwE1Ge/4SUoJJ9UuhPGzpqae1vYOG/0Zm4GvRM21CLEeDuT0kYIg
-         dPdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=FPahBlx9BxgYf27cCynxoigTpGq1oNMafhDT1t5E2i0=;
-        b=QnbNVKWTu9pK6Nq2hnvzVviRnDudsU9t5PVWY0VMI5oHLbiZWicOqxT+vN0H3wCfkm
-         fEUxuHE+rV4yxkHKBu5ogbOjzR9iD9xihrkb7ltKe7KJoBCCHCp1PkS4wwRiI0A6KXWm
-         ln0f+QvRqaIc8YjjxxGzLl30pP5DNTuCzFUKQfXc8QHSrB8SOwAQqR0nm0gQqgHjzGrc
-         Bvp2xL2yRQ9POhofsfW4alu8DUoZIuBnp8hyzKgFHR0YLGZNBFJ1Dx0yq19Vp9++VbR2
-         adT71XQNPRbWwrag4tTiTQ9xWnWBT8PuREp+XsR8w0Z80kwKPq0bkdAh2QoHjoHcDc60
-         LcNA==
-X-Gm-Message-State: ANhLgQ1odImggpkydnhu2/9kTItCneNyDpIXI34ewfYutCmftAnOwxV8
-        uAu2PkvfWkPdqmuVZctoqpE=
-X-Google-Smtp-Source: ADFU+vuTmDpK2u1hSHiAOuALuH6EjpV9vE0STSXYwk6jvu0PW54pEH7vbVVsSmLV0pI67uFpz6AJOQ==
-X-Received: by 2002:a17:90a:8:: with SMTP id 8mr18953pja.130.1583769740092;
-        Mon, 09 Mar 2020 09:02:20 -0700 (PDT)
-Received: from localhost ([43.224.245.179])
-        by smtp.gmail.com with ESMTPSA id q12sm45104429pfh.158.2020.03.09.09.02.18
-        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
-        Mon, 09 Mar 2020 09:02:19 -0700 (PDT)
-From:   qiwuchen55@gmail.com
-To:     akpm@linux-foundation.org, peterz@infradead.org, walken@google.com,
-        rfontana@redhat.com, dbueso@suse.de
-Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org,
-        chenqiwu <chenqiwu@xiaomi.com>
-Subject: [PATCH] rbtree: introduce three helpers about sort-order iteration
-Date:   Tue, 10 Mar 2020 00:02:14 +0800
-Message-Id: <1583769734-1311-1-git-send-email-qiwuchen55@gmail.com>
-X-Mailer: git-send-email 1.9.1
+        Mon, 9 Mar 2020 12:03:35 -0400
+Received: from mail-oln040092254045.outbound.protection.outlook.com ([40.92.254.45]:6116
+        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727026AbgCIQDf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 12:03:35 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ThitrIB36IbtAljLV/O9KIQiuEV7v6R6hWOilcPad60HD05YW+1HMxEU97gDNYZgL3uRSWs3D6oMdWaSsGIQeHwGbDcc83sYEvFaXg1htmnjdr0+An7+kRoE0eKVIwtmEyVse3LLV4xM2iVMGi2V2ByQrsIqLbqcvbyfaghim2p/MY2Xo8Cme0tz+LI0/iVYmemMVL66An00JTehGNS84x6ogpioeX/kTVP9ULwWUodv0Cw89EDnaPHU0LJ8RSg4NNq3pXHchIgZjhTTRl3CD1KLW0iLvRVAlMYtzXvdKRliTFWMoItf/3qg792XdInysSS9b19NcVpPdow2E7XpCQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8zXRmhiMb6jCM3iZOj6Ex+guv69Zwd7KgvKfK/O1L0o=;
+ b=b5UNk1wNJCMeLBs6iTWJBodvCVSjYG19rIu7nORvxHlxqC9gXSXD11m7++5tXf4BMqFl42Uvx2CDGSjATvPCGeutNQND+KYC4kbV9GZNKHlCtJJqaaN18UW5pbs5uvzJUo+Eu7DWojUj1UrEFcXGrycJnszdDICu1L12LxXDpa02nZNYCjT4jEoZOgwL1bvbZyccz75xMZRq8dpoqhjmUeqKNvpghEKvUjPPp6d/M6+y8I3pWI9tE5YWNDk1DVraqfz8RTzM5sNfgMmSNE66FGVTL7yBUKMyszb+HhAxHNMdP9Obw9Fr/Ac2xfYA63OUwzABSLXAexfjLDVoS/nGsw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Received: from SG2APC01FT017.eop-APC01.prod.protection.outlook.com
+ (2a01:111:e400:7ebd::33) by
+ SG2APC01HT152.eop-APC01.prod.protection.outlook.com (2a01:111:e400:7ebd::437)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.11; Mon, 9 Mar
+ 2020 16:03:28 +0000
+Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM (10.152.250.55) by
+ SG2APC01FT017.mail.protection.outlook.com (10.152.250.203) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2793.11 via Frontend Transport; Mon, 9 Mar 2020 16:03:28 +0000
+Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ ([fe80::a5dc:fc1:6544:5cb2]) by PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ ([fe80::a5dc:fc1:6544:5cb2%7]) with mapi id 15.20.2793.013; Mon, 9 Mar 2020
+ 16:03:28 +0000
+Received: from nicholas-dell-linux (2001:44b8:605f:11:6375:33df:328c:d925) by ME2PR01CA0024.ausprd01.prod.outlook.com (2603:10c6:201:15::36) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.15 via Frontend Transport; Mon, 9 Mar 2020 16:03:26 +0000
+From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+To:     =?iso-8859-1?Q?Christian_K=F6nig?= <christian.koenig@amd.com>
+CC:     xinhui pan <xinhui.pan@amd.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Felix.Kuehling@amd.com" <Felix.Kuehling@amd.com>,
+        "Alexander.Deucher@amd.com" <Alexander.Deucher@amd.com>
+Subject: Re: [PATCH] drm/amdgpu: Correct the condition of warning while bo
+ release
+Thread-Topic: [PATCH] drm/amdgpu: Correct the condition of warning while bo
+ release
+Thread-Index: AQHV9iAWGvTdIfRZI0Kw62U7ndmsIqhAVmIAgAAV3YA=
+Date:   Mon, 9 Mar 2020 16:03:28 +0000
+Message-ID: <PSXP216MB0438A4A1EFC2F67579542BB480FE0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+References: <20200309143458.18411-1-xinhui.pan@amd.com>
+ <9da8f3a9-5d28-37b9-cda6-8be336068e7b@amd.com>
+In-Reply-To: <9da8f3a9-5d28-37b9-cda6-8be336068e7b@amd.com>
+Accept-Language: en-AU, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: ME2PR01CA0024.ausprd01.prod.outlook.com
+ (2603:10c6:201:15::36) To PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ (2603:1096:300:d::20)
+x-incomingtopheadermarker: OriginalChecksum:56A6BEE9EDE6721B21D4B0CEDD12E86AAFCCB3BDE54510C40BF28C64C9F85AD2;UpperCasedChecksum:86D8B6F206AA44457AE4A7311CAD5025CF43A2446E0C5D1FAB50961D8103125F;SizeAsReceived:7957;Count:50
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tmn:  [dE6dk91ZefiW1+TQzKm03HM8Ja+j6COL0VTItOMcLPHeRm7S1biUwidW8Tx96pKG]
+x-microsoft-original-message-id: <20200309160319.GA2812@nicholas-dell-linux>
+x-ms-publictraffictype: Email
+x-incomingheadercount: 50
+x-eopattributedmessage: 0
+x-ms-office365-filtering-correlation-id: 33125ac1-888e-451b-e2df-08d7c4436793
+x-ms-traffictypediagnostic: SG2APC01HT152:
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: LhjCBJEkkFHTkkAAVegh1IXPQR1GHNhuxl6cvFuQk1gbvlB7KVnvL4Eqe4vgyKpX1cpAZPr/qLNINNz+Iwo40fD9jl6qg56sPuQAIjOxQwOyJxf90DI07lXYtaRRBuudspu9PFQDs8IG7/zgXXLV2RHyqORAH63cC4I04Lm3butxnxs2icWcXttXicq2zk4E
+x-ms-exchange-antispam-messagedata: 7fOxPWnRiQOEFnYSlOjgu1lOR5YNH+OJ/B+OnJ1g5gB+wgTMXChVN6M97zDkH+l/0pE0SlEdChvO12UUAnQpsHxQtE5V8T0oIgxH4ukAzOIeivnmnuZMv5/K91M7k/8W2wCHpCot3EnKok9Ra8OkX1PL1ZGcL0oR/MTJsJuuBcWKiGVNzfmG4RYOms983XoJwIFHNbz3+fO7/wt6mcKwTQ==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="iso-8859-1"
+Content-ID: <D35AF6ECF8697C469713E19640664B10@KORP216.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 33125ac1-888e-451b-e2df-08d7c4436793
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Mar 2020 16:03:28.0540
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Internet
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2APC01HT152
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: chenqiwu <chenqiwu@xiaomi.com>
+On Mon, Mar 09, 2020 at 03:45:04PM +0100, Christian König wrote:
+> Am 09.03.20 um 15:34 schrieb xinhui pan:
+> > Only kernel bo has kfd eviction fence.
+> > This warning is to give a notice that kfd only remove eviction fence on
+> > individual bos.
+> > 
+> > Signed-off-by: xinhui pan <xinhui.pan@amd.com>
+> 
+> Reviewed-by: Christian König <christian.koenig@amd.com>
+If applicable (I reported but was not the first to report / you were 
+already aware):
 
-I noticed that there are many relatively common usages about the
-sort-order iteration for rbtree, like this:
+Tested-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
 
-[drivers/android/binder.c]
-for (n = rb_first(&proc->nodes); n != NULL; n = rb_next(n)) {
-	struct binder_node *node = rb_entry(n, struct binder_node,
-					    rb_node);
-	......
-}
+The warning went away when applied.
 
-This patch introduced three helpers to simplify sort-order iteration
-for rbtree.
-
-Signed-off-by: chenqiwu <chenqiwu@xiaomi.com>
----
- include/linux/rbtree.h | 45 +++++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 43 insertions(+), 2 deletions(-)
-
-diff --git a/include/linux/rbtree.h b/include/linux/rbtree.h
-index 1fd61a9..26b4359 100644
---- a/include/linux/rbtree.h
-+++ b/include/linux/rbtree.h
-@@ -90,11 +90,52 @@ static inline void rb_link_node_rcu(struct rb_node *node, struct rb_node *parent
- 	})
- 
- /**
-+ * rbtree_for_each - iterate in sort-order over a rbtree.
-+ * @pos:	the 'rb_node *' to use as a loop cursor.
-+ * @root:	'rb_root *' of the rbtree.
-+ */
-+#define rbtree_for_each(pos, root) \
-+	for (pos = rb_first(root); pos; pos = rb_next(pos))
-+
-+/**
-+ * rbtree_for_each_entry - iterate in sort-order over rb_root of given type.
-+ * @pos:	the 'type *' to use as a loop cursor.
-+ * @root:	'rb_root *' of the rbtree.
-+ * @field:	the name of the rb_node field within 'type'.
-+ */
-+#define rbtree_for_each_entry(pos, root, field) \
-+	for (pos = rb_entry_safe(rb_first(root), typeof(*pos), field); \
-+	     pos; \
-+	     pos = rb_entry_safe(rb_next(&pos->field), typeof(*pos), field))
-+
-+/**
-+ * rbtree_for_each_entry_safe - iterate in sort-order over of given type
-+ * allowing the backing memory of @pos to be invalidated.
-+ * @pos:	the 'type *' to use as a loop cursor.
-+ * @n:		another 'type *' to use as temporary storage.
-+ * @root:	'rb_root *' of the rbtree.
-+ * @field:	the name of the rb_node field within 'type'.
-+ *
-+ * rbtree_order_for_each_entry_safe() provides a similar guarantee as
-+ * list_for_each_entry_safe() and allows the sort-order iteration to
-+ * continue independent of changes to @pos by the body of the loop.
-+ *
-+ * Note, however, that it cannot handle other modifications that re-order the
-+ * rbtree it is iterating over. This includes calling rb_erase() on @pos, as
-+ * rb_erase() may rebalance the tree, causing us to miss some nodes.
-+ */
-+#define rbtree_for_each_entry_safe(pos, n, root, field) \
-+	for (pos = rb_entry_safe(rb_first(root), typeof(*pos), field); \
-+	     pos && ({ n = rb_entry_safe(rb_next(&pos->field), \
-+			typeof(*pos), field); 1; }); \
-+	     pos = n)
-+
-+/**
-  * rbtree_postorder_for_each_entry_safe - iterate in post-order over rb_root of
-- * given type allowing the backing memory of @pos to be invalidated
-+ * given type allowing the backing memory of @pos to be invalidated.
-  *
-  * @pos:	the 'type *' to use as a loop cursor.
-- * @n:		another 'type *' to use as temporary storage
-+ * @n:		another 'type *' to use as temporary storage.
-  * @root:	'rb_root *' of the rbtree.
-  * @field:	the name of the rb_node field within 'type'.
-  *
--- 
-1.9.1
-
+Cheers!
+> 
+> > ---
+> >   drivers/gpu/drm/amd/amdgpu/amdgpu_object.c | 3 ++-
+> >   1 file changed, 2 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_object.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_object.c
+> > index 5766d20f29d8..e99f68af2bf7 100644
+> > --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_object.c
+> > +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_object.c
+> > @@ -1308,7 +1308,8 @@ void amdgpu_bo_release_notify(struct ttm_buffer_object *bo)
+> >   		amdgpu_amdkfd_unreserve_memory_limit(abo);
+> >   	/* We only remove the fence if the resv has individualized. */
+> > -	WARN_ON_ONCE(bo->base.resv != &bo->base._resv);
+> > +	WARN_ON_ONCE(bo->type == ttm_bo_type_kernel
+> > +			&& bo->base.resv != &bo->base._resv);
+> >   	if (bo->base.resv == &bo->base._resv)
+> >   		amdgpu_amdkfd_remove_fence_on_pt_pd_bos(abo);
+> 
