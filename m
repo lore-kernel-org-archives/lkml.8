@@ -2,87 +2,88 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BD37C10F29
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 10:27:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5030DC10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 10:31:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EF5420409
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 10:27:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2ADF620409
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 10:31:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726610AbgCIK1O (ORCPT
+        id S1726467AbgCIKb6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 06:27:14 -0400
-Received: from smtp2200-217.mail.aliyun.com ([121.197.200.217]:42580 "EHLO
-        smtp2200-217.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725956AbgCIK1N (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 06:27:13 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.1169725|-1;CH=blue;DM=||false|;DS=CONTINUE|ham_system_inform|0.0111236-0.0031218-0.985755;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03300;MF=zhiwei_liu@c-sky.com;NM=1;PH=DS;RN=12;RT=12;SR=0;TI=SMTPD_---.GyXya.O_1583749628;
-Received: from 172.16.31.150(mailfrom:zhiwei_liu@c-sky.com fp:SMTPD_---.GyXya.O_1583749628)
-          by smtp.aliyun-inc.com(10.147.41.143);
-          Mon, 09 Mar 2020 18:27:09 +0800
-Subject: Re: [RFC PATCH V3 00/11] riscv: Add vector ISA support
-To:     Greentime Hu <greentime.hu@sifive.com>, guoren@kernel.org
-Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>, Anup.Patel@wdc.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arch@vger.kernel.org, arnd@arndb.de,
-        linux-csky@vger.kernel.org,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Guo Ren <guoren@linux.alibaba.com>,
-        Dave Martin <Dave.Martin@arm.com>
-References: <20200308094954.13258-1-guoren@kernel.org>
- <CAHCEeh+XYD3uVmaQRGpY=VGxpO9hzMeKasNmAojhkZe9PJ9Lug@mail.gmail.com>
-From:   LIU Zhiwei <zhiwei_liu@c-sky.com>
-Message-ID: <95e3bba4-65c0-8991-9523-c16977f6350f@c-sky.com>
-Date:   Mon, 9 Mar 2020 18:27:08 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
-MIME-Version: 1.0
-In-Reply-To: <CAHCEeh+XYD3uVmaQRGpY=VGxpO9hzMeKasNmAojhkZe9PJ9Lug@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+        Mon, 9 Mar 2020 06:31:58 -0400
+Received: from mga01.intel.com ([192.55.52.88]:46791 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725956AbgCIKb5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 06:31:57 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Mar 2020 03:31:57 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,532,1574150400"; 
+   d="scan'208";a="288655000"
+Received: from yilunxu-optiplex-7050.sh.intel.com ([10.239.159.141])
+  by FMSMGA003.fm.intel.com with ESMTP; 09 Mar 2020 03:31:56 -0700
+From:   Xu Yilun <yilun.xu@intel.com>
+To:     mdf@kernel.org, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Xu Yilun <yilun.xu@intel.com>
+Subject: [PATCH 0/7] Add interrupt support to FPGA DFL drivers
+Date:   Mon,  9 Mar 2020 18:29:43 +0800
+Message-Id: <1583749790-10837-1-git-send-email-yilun.xu@intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This patchset add interrupt support to FPGA DFL drivers.
 
+With these patches, DFL driver will parse and assign interrupt resources
+for enumerated feature devices and their sub features.
 
-On 2020/3/9 11:41, Greentime Hu wrote:
-> On Sun, Mar 8, 2020 at 5:50 PM <guoren@kernel.org> wrote:
->> From: Guo Ren <guoren@linux.alibaba.com>
->>
->> The implementation follow the RISC-V "V" Vector Extension draft v0.8 with
->> 128bit-vlen and it's based on linux-5.6-rc3 and tested with qemu [1].
->>
->> The patch implement basic context switch, sigcontext save/restore and
->> ptrace interface with a new regset NT_RISCV_VECTOR. Only fixed 128bit-vlen
->> is implemented. We need to discuss about vlen-size for libc sigcontext and
->> ptrace (the maximum size of vlen is unlimited in spec).
->>
->> Puzzle:
->> Dave Martin has talked "Growing CPU register state without breaking ABI" [2]
->> before, and riscv also met vlen size problem. Let's discuss the common issue
->> for all architectures and we need a better solution for unlimited vlen.
->>
->> Any help are welcomed :)
->>
->>   1: https://github.com/romanheros/qemu.git branch:vector-upstream-v3
-> Hi Guo,
->
-> Thanks for your patch.
-> It seems the qemu repo doesn't have this branch?
-Hi Greentime,
+This patchset also introduces a set of APIs for user to monitor DFL
+interrupts. Three sub features (DFL FME error, DFL AFU error and user
+interrupt) drivers now support these APIs.
 
-It's a promise from me. Now it's ready.  You can turn on vector by 
-"qemu-system-riscv64 -cpu rv64,v=true,vext_spec=v0.7.1".
+Patch #1: DFL framework change. Accept interrupt info input from DFL bus
+	  driver, and add interrupt parsing and assignment for feature
+	  sub devices.
+Patch #2: DFL pci driver change, add interrupt info on DFL enumeration.
+Patch #3: DFL framework change. Add helper functions for feature sub
+	  device drivers to handle interrupt and notify users.
+Patch #4: Add interrupt support for AFU error reporting sub feature.
+Patch #5: Add interrupt support for FME global error reporting sub
+	  feature.
+Patch #6: Add interrupt support for a new sub feature, to handle user
+	  interrupts implemented in AFU.
+Patch #7: Documentation for DFL interrupt handling.
 
-Zhiwei
+Xu Yilun (7):
+  fpga: dfl: parse interrupt info for feature devices on enumeration
+  fpga: dfl: pci: add irq info for feature devices enumeration
+  fpga: dfl: introduce interrupt trigger setting API
+  fpga: dfl: afu: add interrupt support for error reporting
+  fpga: dfl: fme: add interrupt support for global error reporting
+  fpga: dfl: afu: add user interrupt support
+  Documentation: fpga: dfl: add descriptions for interrupt related
+    interfaces.
 
+ Documentation/fpga/dfl.rst    |  17 +++
+ drivers/fpga/dfl-afu-error.c  |  69 +++++++++++++
+ drivers/fpga/dfl-afu-main.c   |  83 +++++++++++++++
+ drivers/fpga/dfl-fme-error.c  |  71 +++++++++++++
+ drivers/fpga/dfl-fme-main.c   |   6 ++
+ drivers/fpga/dfl-pci.c        |  66 +++++++++++-
+ drivers/fpga/dfl.c            | 233 +++++++++++++++++++++++++++++++++++++++++-
+ drivers/fpga/dfl.h            |  51 +++++++++
+ include/uapi/linux/fpga-dfl.h |  89 ++++++++++++++++
+ 9 files changed, 676 insertions(+), 9 deletions(-)
+
+-- 
+2.7.4
 
