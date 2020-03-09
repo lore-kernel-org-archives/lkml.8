@@ -2,142 +2,243 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-10.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D782C10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 07:49:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E21DC10F28
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 07:49:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 276CD20675
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 07:49:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Jq7oN9z+"
+	by mail.kernel.org (Postfix) with ESMTP id 14C3720675
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 07:49:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726384AbgCIHtk (ORCPT
+        id S1726451AbgCIHtz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 03:49:40 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:42892 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725796AbgCIHtj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 03:49:39 -0400
-Received: by mail-ed1-f67.google.com with SMTP id n18so10866990edw.9
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 00:49:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tGvHVL+X8ENX8ZlFkJ4aTUiRtrm/fcY3/mfmmVzMIbM=;
-        b=Jq7oN9z+T3yHMHlBWmtg/oPw3NMpUuf+HHE/AEB6ve19jbPtvt5AEZ3WDPvkS0xNRJ
-         TxPi+1T+CforxzUbaOpceljyeEB1qThb+1+7Yv5FETpD/6MLNoUiLzGPTdjvfyt2N7yA
-         204omxFy4IXZZH2/4KFT1X0Gv3NC+THh/SuOk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tGvHVL+X8ENX8ZlFkJ4aTUiRtrm/fcY3/mfmmVzMIbM=;
-        b=AI/1f7GPf01fgZ5s2qFg/s2MTWSyqbZrf10N3od/UvOHJQPNdPCs2luYIAzyNG6QmM
-         wmDt+R0umIGyO38YrUJHUvywGMVkBoABotO9SyUZVoSvPM1G2Kz4YI7kjN+r+wgHep2U
-         gXykKgvQtALRuvYhX0jr9vJ76gYjqd0SOKDAZx0anGh8D2m9Yr8WiLqf72BfdyQBjtB1
-         cWH4ymAXsVN1itEXj7eZLA5HCQ5aETJGbRbEz6gBZqs+dY/iX2SKSCNb6M7RM9jIebAs
-         lSOhatAVGpjv1QEsfLhw1tzNMBu0IJAWcR8q7ngkJYwyaD7XY+S46ie3eu6zdAc3i79r
-         zOxQ==
-X-Gm-Message-State: ANhLgQ1QIFUbCWMYErGrylIwCp4JjOceu1rxtciNpAKJZFqC9+ZyBvQE
-        R5cg0T9XDrQnKwYROXxWIE9okGCcWdbxWidsEj5XFg==
-X-Google-Smtp-Source: ADFU+vunIbfF7cF+cg/5HQCVkQIHDO6ScLBXRU/yTPevJyjOidbI5t2wOJVf0V1aAGYL0Qe0suR5rmu4QLvHq6Gpl3U=
-X-Received: by 2002:a17:907:2154:: with SMTP id rk20mr13348435ejb.322.1583740177890;
- Mon, 09 Mar 2020 00:49:37 -0700 (PDT)
-MIME-Version: 1.0
-References: <1583735298-19266-1-git-send-email-allen.chen@ite.com.tw> <1583735298-19266-4-git-send-email-allen.chen@ite.com.tw>
-In-Reply-To: <1583735298-19266-4-git-send-email-allen.chen@ite.com.tw>
-From:   Pi-Hsun Shih <pihsun@chromium.org>
-Date:   Mon, 9 Mar 2020 15:49:01 +0800
-Message-ID: <CANdKZ0cB-nWR75RcpAet+UDj6t+QXi1rjF3jMiM6_+awhZzAOg@mail.gmail.com>
-Subject: Re: [PATCH v7 3/3] drm/bridge: add it6505 driver
-To:     allen <allen.chen@ite.com.tw>
-Cc:     Jau-Chih Tseng <Jau-Chih.Tseng@ite.com.tw>,
-        Jitao Shi <jitao.shi@mediatek.com>,
-        Yilun Lin <yllin@google.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Mon, 9 Mar 2020 03:49:55 -0400
+Received: from mx2.suse.de ([195.135.220.15]:53410 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726403AbgCIHty (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 03:49:54 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 8A072AD48;
+        Mon,  9 Mar 2020 07:49:50 +0000 (UTC)
+Subject: Re: [PATCH][next] drm: Replace zero-length array with flexible-array
+ member
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Russell King <linux+etnaviv@armlinux.org.uk>,
+        Christian Gmeiner <christian.gmeiner@gmail.com>,
         David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        Patrik Jakobsson <patrik.r.jakobsson@gmail.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        Dave Airlie <airlied@redhat.com>,
+        Gerd Hoffmann <kraxel@redhat.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Eric Anholt <eric@anholt.net>,
+        VMware Graphics <linux-graphics-maintainer@vmware.com>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>
+Cc:     etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
+        linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
+        virtualization@lists.linux-foundation.org,
+        spice-devel@lists.freedesktop.org
+References: <20200225140347.GA22864@embeddedor> <87a756sqdc.fsf@intel.com>
+ <138ff691-94b3-1ce5-e7fa-e6d7c436bf8e@embeddedor.com>
+From:   Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ mQENBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAG0J1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPokBVAQTAQgAPhYh
+ BHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsDBQkDwmcABQsJCAcCBhUKCQgLAgQWAgMB
+ Ah4BAheAAAoJEGgNwR1TC3ojR80H/jH+vYavwQ+TvO8ksXL9JQWc3IFSiGpuSVXLCdg62AmR
+ irxW+qCwNncNQyb9rd30gzdectSkPWL3KSqEResBe24IbA5/jSkPweJasgXtfhuyoeCJ6PXo
+ clQQGKIoFIAEv1s8l0ggPZswvCinegl1diyJXUXmdEJRTWYAtxn/atut1o6Giv6D2qmYbXN7
+ mneMC5MzlLaJKUtoH7U/IjVw1sx2qtxAZGKVm4RZxPnMCp9E1MAr5t4dP5gJCIiqsdrVqI6i
+ KupZstMxstPU//azmz7ZWWxT0JzgJqZSvPYx/SATeexTYBP47YFyri4jnsty2ErS91E6H8os
+ Bv6pnSn7eAq5AQ0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRH
+ UE9eosYbT6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgT
+ RjP+qbU63Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+R
+ dhgATnWWGKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zb
+ ehDda8lvhFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r
+ 12+lqdsAEQEAAYkBPAQYAQgAJhYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsMBQkD
+ wmcAAAoJEGgNwR1TC3ojpfcIAInwP5OlcEKokTnHCiDTz4Ony4GnHRP2fXATQZCKxmu4AJY2
+ h9ifw9Nf2TjCZ6AMvC3thAN0rFDj55N9l4s1CpaDo4J+0fkrHuyNacnT206CeJV1E7NYntxU
+ n+LSiRrOdywn6erjxRi9EYTVLCHcDhBEjKmFZfg4AM4GZMWX1lg0+eHbd5oL1as28WvvI/uI
+ aMyV8RbyXot1r/8QLlWldU3NrTF5p7TMU2y3ZH2mf5suSKHAMtbE4jKJ8ZHFOo3GhLgjVrBW
+ HE9JXO08xKkgD+w6v83+nomsEuf6C6LYrqY/tsZvyEX6zN8CtirPdPWu/VXNRYAl/lat7lSI
+ 3H26qrE=
+Message-ID: <67c46a2b-8127-a4b7-c825-8cba6f28db8c@suse.de>
+Date:   Mon, 9 Mar 2020 08:49:45 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+MIME-Version: 1.0
+In-Reply-To: <138ff691-94b3-1ce5-e7fa-e6d7c436bf8e@embeddedor.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="Ul1CrpBm5H0rrZlYhdIfEA75XDUYdEO4y"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi allen,
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--Ul1CrpBm5H0rrZlYhdIfEA75XDUYdEO4y
+Content-Type: multipart/mixed; boundary="0DgKy29qpwpTjPxx9ZHosYzYcoKck294a";
+ protected-headers="v1"
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+ Jani Nikula <jani.nikula@linux.intel.com>,
+ Lucas Stach <l.stach@pengutronix.de>,
+ Russell King <linux+etnaviv@armlinux.org.uk>,
+ Christian Gmeiner <christian.gmeiner@gmail.com>,
+ David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+ Patrik Jakobsson <patrik.r.jakobsson@gmail.com>,
+ Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>, Rob Clark <robdclark@gmail.com>,
+ Sean Paul <sean@poorly.run>, Dave Airlie <airlied@redhat.com>,
+ Gerd Hoffmann <kraxel@redhat.com>, Hans de Goede <hdegoede@redhat.com>,
+ Eric Anholt <eric@anholt.net>,
+ VMware Graphics <linux-graphics-maintainer@vmware.com>,
+ Thomas Hellstrom <thellstrom@vmware.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>
+Cc: etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
+ linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
+ virtualization@lists.linux-foundation.org, spice-devel@lists.freedesktop.org
+Message-ID: <67c46a2b-8127-a4b7-c825-8cba6f28db8c@suse.de>
+Subject: Re: [PATCH][next] drm: Replace zero-length array with flexible-array
+ member
+References: <20200225140347.GA22864@embeddedor> <87a756sqdc.fsf@intel.com>
+ <138ff691-94b3-1ce5-e7fa-e6d7c436bf8e@embeddedor.com>
+In-Reply-To: <138ff691-94b3-1ce5-e7fa-e6d7c436bf8e@embeddedor.com>
 
-On Mon, Mar 9, 2020 at 2:32 PM allen <allen.chen@ite.com.tw> wrote:
->
-> From: Allen Chen <allen.chen@ite.com.tw>
->
-> This adds support for the iTE IT6505.
-> This device can convert DPI signal to DP output.
->
-> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
-> Signed-off-by: Yilun Lin <yllin@google.com>
-> Signed-off-by: Allen Chen <allen.chen@ite.com.tw>
-> Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
-> ---
->  drivers/gpu/drm/bridge/Kconfig      |   11 +-
->  drivers/gpu/drm/bridge/Makefile     |    6 +-
->  drivers/gpu/drm/bridge/ite-it6505.c | 3022 +++++++++++++++++++++++++++++++++++
->  3 files changed, 3035 insertions(+), 4 deletions(-)
->  create mode 100644 drivers/gpu/drm/bridge/ite-it6505.c
->
-> diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
-> index aaed234..ff81681 100644
-> --- a/drivers/gpu/drm/bridge/Kconfig
-> +++ b/drivers/gpu/drm/bridge/Kconfig
-> @@ -38,8 +38,15 @@ config DRM_DISPLAY_CONNECTOR
->           on ARM-based platforms. Saying Y here when this driver is not needed
->           will not cause any issue.
->
-> -config DRM_LVDS_CODEC
-> -       tristate "Transparent LVDS encoders and decoders support"
-> +config DRM_ITE_IT6505
-> +       tristate "ITE IT6505 DP bridge"
-> +       depends on OF
-> +       select DRM_KMS_HELPER
-> +       help
-> +         ITE IT6505 DP bridge chip driver.
-> +
-> +config DRM_LVDS_ENCODER
-> +       tristate "Transparent parallel to LVDS encoder support"
->         depends on OF
->         select DRM_KMS_HELPER
->         select DRM_PANEL_BRIDGE
-> diff --git a/drivers/gpu/drm/bridge/Makefile b/drivers/gpu/drm/bridge/Makefile
-> index 6fb062b..e6c80ab 100644
-> --- a/drivers/gpu/drm/bridge/Makefile
-> +++ b/drivers/gpu/drm/bridge/Makefile
-> @@ -1,7 +1,9 @@
->  # SPDX-License-Identifier: GPL-2.0
->  obj-$(CONFIG_DRM_CDNS_DSI) += cdns-dsi.o
-> -obj-$(CONFIG_DRM_DISPLAY_CONNECTOR) += display-connector.o
-> -obj-$(CONFIG_DRM_LVDS_CODEC) += lvds-codec.o
-> +obj-$(CONFIG_DRM_DUMB_VGA_DAC) += dumb-vga-dac.o
-> +obj-$(CONFIG_DRM_GENERIC_GPIO_MUX) += generic-gpio-mux.o
-> +obj-$(CONFIG_DRM_ITE_IT6505) += ite-it6505.o
-> +obj-$(CONFIG_DRM_LVDS_ENCODER) += lvds-encoder.o
->  obj-$(CONFIG_DRM_MEGACHIPS_STDPXXXX_GE_B850V3_FW) += megachips-stdpxxxx-ge-b850v3-fw.o
->  obj-$(CONFIG_DRM_NXP_PTN3460) += nxp-ptn3460.o
->  obj-$(CONFIG_DRM_PARADE_PS8622) += parade-ps8622.o
+--0DgKy29qpwpTjPxx9ZHosYzYcoKck294a
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-There are unrelated changes to it6505 in the Makefile and Kconfig,
-please remove them.
+Hi Gustavo
+
+Am 03.03.20 um 19:20 schrieb Gustavo A. R. Silva:
+>=20
+>=20
+> On 2/25/20 08:17, Jani Nikula wrote:
+>> On Tue, 25 Feb 2020, "Gustavo A. R. Silva" <gustavo@embeddedor.com> wr=
+ote:
+>>> The current codebase makes use of the zero-length array language
+>>> extension to the C90 standard, but the preferred mechanism to declare=
+
+>>> variable-length types such as these ones is a flexible array member[1=
+][2],
+>>> introduced in C99:
+>>>
+>>> struct foo {
+>>>         int stuff;
+>>>         struct boo array[];
+>>> };
+>>>
+>>> By making use of the mechanism above, we will get a compiler warning
+>>> in case the flexible array does not occur last in the structure, whic=
+h
+>>> will help us prevent some kind of undefined behavior bugs from being
+>>> inadvertently introduced[3] to the codebase from now on.
+>>>
+>>> Also, notice that, dynamic memory allocations won't be affected by
+>>> this change:
+>>>
+>>> "Flexible array members have incomplete type, and so the sizeof opera=
+tor
+>>> may not be applied. As a quirk of the original implementation of
+>>> zero-length arrays, sizeof evaluates to zero."[1]
+>>>
+>>> This issue was found with the help of Coccinelle.
+>>>
+>>> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+>>> [2] https://github.com/KSPP/linux/issues/21
+>>> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+>>>
+>>> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+>>> ---
+>>>  drivers/gpu/drm/etnaviv/etnaviv_gem.h         | 2 +-
+>>>  drivers/gpu/drm/gma500/intel_bios.h           | 2 +-
+>>>  drivers/gpu/drm/i915/display/intel_vbt_defs.h | 4 ++--
+>>>  drivers/gpu/drm/i915/gt/intel_lrc.c           | 2 +-
+>>>  drivers/gpu/drm/i915/i915_gpu_error.h         | 2 +-
+>>
+>> Please split out the i915 changes to a separate patch.
+>>
+>=20
+> Sure thing. I can do that.
+
+I think each driver deserves it's own patch. Makes backporting easier.
+
+Best regards
+Thomas
+
+>=20
+>>>  drivers/gpu/drm/msm/msm_gem.h                 | 2 +-
+>>>  drivers/gpu/drm/qxl/qxl_cmd.c                 | 2 +-
+>>>  drivers/gpu/drm/vboxvideo/vboxvideo.h         | 2 +-
+>>>  drivers/gpu/drm/vc4/vc4_drv.h                 | 2 +-
+>>>  drivers/gpu/drm/vmwgfx/vmwgfx_page_dirty.c    | 2 +-
+>>>  drivers/gpu/drm/vmwgfx/vmwgfx_surface.c       | 2 +-
+>>>  include/drm/bridge/mhl.h                      | 4 ++--
+>>>  include/drm/drm_displayid.h                   | 2 +-
+>>>  include/uapi/drm/i915_drm.h                   | 4 ++--
+>>
+>> Not sure it's worth touching uapi headers. They're full of both [0] an=
+d
+>> []. Again, please at least split it to a separate patch to be decided
+>> separately.
+>>
+>=20
+> Yeah, it's worth it; the purpose of these patches is to replace [0] wit=
+h [] across
+> the whole tree.
+>=20
+> Thanks
+> --
+> Gustavo
+>=20
+
+--=20
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
+(HRB 36809, AG N=C3=BCrnberg)
+Gesch=C3=A4ftsf=C3=BChrer: Felix Imend=C3=B6rffer
+
+
+--0DgKy29qpwpTjPxx9ZHosYzYcoKck294a--
+
+--Ul1CrpBm5H0rrZlYhdIfEA75XDUYdEO4y
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl5l9RkACgkQaA3BHVML
+eiNGUQgAgjKSCBND55SWYJrmDfa3irwlGfO6EKxH9F6r/W+oYNLwfa7Re8zDiRjN
+oMHZLY2a2iKckXvawizS65l/0mqLfNQ11BfXFGBr6RAgxWt7Ac2pw1wP9FaVQ3HN
+PSksqH6ASJUhgDm9hfZSRu9fZDLV1AGIWdTE/pHRcJ8inzEV543+SffD2ddPFjwV
+m+hBDC678jVfSux+/aBkp40Mv9VryJTVN4TyQNRuUtmciIWSoVvoiJxk5d+0Ykcn
+McM6bm+GmCvvUmjlLa7LNv8Fv9zr17XF3Q2Nv2v8Gn+sYDXY2S8RU8BXlV05XZVE
+xLoQ88iIqzrGQjmARyUf0W4vvek8XQ==
+=9S1h
+-----END PGP SIGNATURE-----
+
+--Ul1CrpBm5H0rrZlYhdIfEA75XDUYdEO4y--
