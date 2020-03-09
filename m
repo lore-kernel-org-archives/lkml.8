@@ -2,85 +2,124 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB9CEC10DCE
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 02:15:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 465CBC10F28
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 02:17:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCA6520665
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 02:15:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 210E02067C
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 02:17:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="K9clpEC4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727005AbgCICP2 (ORCPT
+        id S1727052AbgCICRG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Mar 2020 22:15:28 -0400
-Received: from mga18.intel.com ([134.134.136.126]:40323 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726449AbgCICP2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Mar 2020 22:15:28 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Mar 2020 19:15:27 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,530,1574150400"; 
-   d="scan'208";a="230774999"
-Received: from yhuang-dev.sh.intel.com (HELO yhuang-dev) ([10.239.159.23])
-  by orsmga007.jf.intel.com with ESMTP; 08 Mar 2020 19:15:23 -0700
-From:   "Huang\, Ying" <ying.huang@intel.com>
-To:     David Rientjes <rientjes@google.com>
-Cc:     David Hildenbrand <david@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Mel Gorman <mgorman@suse.de>, Vlastimil Babka <vbabka@suse.cz>,
-        Zi Yan <ziy@nvidia.com>, Michal Hocko <mhocko@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Minchan Kim <minchan@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Hugh Dickins <hughd@google.com>
-Subject: Re: [PATCH -V2] mm: Add PageLayzyFree() helper functions for MADV_FREE
-References: <20200304081732.563536-1-ying.huang@intel.com>
-        <d7dcb472-76fa-9d8b-513a-793a7ab8580d@redhat.com>
-        <87y2sf1ki1.fsf@yhuang-dev.intel.com>
-        <alpine.DEB.2.21.2003061240480.181741@chino.kir.corp.google.com>
-Date:   Mon, 09 Mar 2020 10:15:22 +0800
-In-Reply-To: <alpine.DEB.2.21.2003061240480.181741@chino.kir.corp.google.com>
-        (David Rientjes's message of "Fri, 6 Mar 2020 12:41:32 -0800")
-Message-ID: <87eeu2z32d.fsf@yhuang-dev.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Sun, 8 Mar 2020 22:17:06 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:38528 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726677AbgCICRG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Mar 2020 22:17:06 -0400
+Received: by mail-pf1-f195.google.com with SMTP id g21so4111500pfb.5
+        for <linux-kernel@vger.kernel.org>; Sun, 08 Mar 2020 19:17:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=sah9gLZTqUqU0I81LxravMIHbnOhX63QQcmQKAkQUow=;
+        b=K9clpEC4mqCP5m3LggsyttZ5WLsNeKIvPLMMUCLdxJZB+8pDr5uWeG3j6p2+ShXZZY
+         lU45Nx0lqjLQePc8KH+C4xw7Hg59WYZnDVhmi2GwfH9+4zIRXAWeQ/wzzhDxJLR8zaRu
+         fH3/z0wchAbfhXgEmkf4AipB/eJ2quqZ7qJmh18STmzHcLjhBaQlRxqL1TAVAkPH2/Sa
+         g+CRXoP3ARKEOj/slFdjrSMQgJANqhs7AAJ8gAtKK0JSUUZlc2ajd/bUs8i7CZmzl5VL
+         q+vtjr+ELeDmqlFq+rw5jaDEzDJxMkYAWpElVNV9CJMWqZ127Mtdw9QcdaqghrmxXpDp
+         5cuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=sah9gLZTqUqU0I81LxravMIHbnOhX63QQcmQKAkQUow=;
+        b=cCu2iyX47SccW6b34dOJZXt8Z0bbaBCMjsZtXgjv5B1jcWG2mpM0eKWkGyjMEKMIp/
+         iNmYeCE9Yo00hYFo3X9G4Mur/PXzEhbeJXasWcr6yNcZev3UavbRKKibjWpxmynmUCZn
+         kxi/bmH+9ghPCqwNRZ5asFSa39IoOQRC1bbpccvw8dah3fU7OYd4zo78yDRjs+/HKKcP
+         00NRAD83mJUlLsyL+wai9p8hiRZajJEBahyJq8vIHSbykawgUKU9PgWGKViG3E6FCIvl
+         Rf9grg7VL7/dhFF6e8iT0Bxufb0jy01MQgRvD/2tfRRZvE8Yygp1i02Yhnts0J390Zvc
+         h+Hg==
+X-Gm-Message-State: ANhLgQ2bXtpXy0WF4uIVG14LzFI4yto06+ANN0m3BzhDlqAhBgBSqJ3V
+        McZsQOR/zBjBMdR31NyxPi5ULg==
+X-Google-Smtp-Source: ADFU+vtj6VW9hZWcmopICbuUwylcQpDz8olJjzSn1kttXjJQyLEfzRLL3i3XgayuL2ashk5MbeohIg==
+X-Received: by 2002:a63:485f:: with SMTP id x31mr12381883pgk.347.1583720223731;
+        Sun, 08 Mar 2020 19:17:03 -0700 (PDT)
+Received: from [192.168.1.188] ([66.219.217.145])
+        by smtp.gmail.com with ESMTPSA id o19sm15830487pjr.2.2020.03.08.19.17.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 08 Mar 2020 19:17:03 -0700 (PDT)
+Subject: Re: general protection fault in __queue_work (2)
+To:     Hillf Danton <hdanton@sina.com>,
+        syzbot <syzbot+889cc963ed79ee90f74f@syzkaller.appspotmail.com>
+Cc:     akpm@linux-foundation.org, hannes@cmpxchg.org,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        schatzberg.dan@gmail.com, sfr@canb.auug.org.au,
+        syzkaller-bugs@googlegroups.com
+References: <20200308094448.15320-1-hdanton@sina.com>
+ <20200309020900.16756-1-hdanton@sina.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <092fab4c-5308-4a14-ab3d-e63707efa2f6@kernel.dk>
+Date:   Sun, 8 Mar 2020 20:17:01 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+In-Reply-To: <20200309020900.16756-1-hdanton@sina.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-David Rientjes <rientjes@google.com> writes:
+On 3/8/20 8:09 PM, Hillf Danton wrote:
+> 
+> On Sun, 8 Mar 2020 10:17:33 -0600 Jens Axboe wrote:
+>> On 3/8/20 3:44 AM, Hillf Danton wrote:
+>>> @@ -1208,8 +1211,16 @@ static int __loop_clr_fd(struct loop_dev
+>>>  	 *
+>>>  	 * 3) unlock, del_timer_sync so if timer raced it will be a no-op
+>>>  	 */
+>>> -	loop_unprepare_queue(lo);
+>>>  	spin_lock_irq(&lo->lo_lock);
+>>> +	do {
+>>> +		struct workqueue_struct *wq = lo->workqueue;
+>>> +
+>>> +		lo->workqueue = ERR_PTR(-EINVAL);
+>>> +		spin_unlock_irq(&lo->lo_lock);
+>>> +		destroy_workqueue(wq);
+>>> +		spin_lock_irq(&lo->lo_lock);
+>>> +	} while (0);
+>>
+>> This looks highly suspicious, what's the point of this loop?
+> 
+> It is a while(0) loop that just gives me the chance for adding the
+> transient local variable wq.
 
-> On Thu, 5 Mar 2020, Huang, Ying wrote:
->
->> > In general, I don't think this patch really improves the situation ...
->> > it's only a handful of places where this change slightly makes the code
->> > easier to understand. And there, only slightly ... I'd prefer better
->> > comments instead (e.g., in PageAnon()), documenting what it means for a
->> > anon page to either have PageSwapBacked() set or not.
->> 
->> Personally, I still prefer the better named functions than the comments
->> here and there.  But I can understand that people may have different
->> flavor.
->> 
->
-> Maybe add a comment to page-flags.h referring to what PageSwapBacked 
-> indicates when PageAnon is true?
+I think that adds more confusion than what is necessary, and I don't think
+the approach is great to begin with as you now need various checks as well
+for the workqueue pointer.
 
-If someone find a confusing PageSwapBacked() invocation, and if we only
-want to use comments to resolve the confusing, the best place to add the
-comments is above the line where PageSwapBacked() is invoked.  Because
-it's harder for people to dig out the right comments in page-flags.h.
-The appropriate named helper functions can replace that comments and be
-more elegant.
+We're freezing the queue right after anyway, which will ensure that
+nobody is going to hit an invalid workqueue pointer in terms of queueing.
+This looks more like an ordering issue.
 
-Best Regards,
-Huang, Ying
+>> Also think this series a) might not be fully cooked, and b) really
+>> should have gone through the block tree.
+> 
+> Gavel in your hand, Sir.
+
+Andrew, can you please drop this series so we can work out the kinks and
+get it properly queued up after?
+
+-- 
+Jens Axboe
+
