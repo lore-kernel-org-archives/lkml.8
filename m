@@ -7,39 +7,39 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BA96C10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 08:37:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA418C10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 08:37:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 312CF2083E
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 08:37:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFEE220828
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 08:37:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="fYa+tb2P"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="UE4HnfD9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726647AbgCIIhC (ORCPT
+        id S1726695AbgCIIhL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 04:37:02 -0400
-Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:42482 "EHLO
+        Mon, 9 Mar 2020 04:37:11 -0400
+Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:42500 "EHLO
         smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726389AbgCIIgq (ORCPT
+        by vger.kernel.org with ESMTP id S1726391AbgCIIgp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 04:36:46 -0400
+        Mon, 9 Mar 2020 04:36:45 -0400
 Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 0698BC04C7;
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id F1330C04C1;
         Mon,  9 Mar 2020 08:36:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1583743004; bh=sdFOgGRqnWlm6LxUiszwcGSqpMz+rX6fzqX2yGl6yKo=;
+        t=1583743004; bh=G3io2HtqWrz75qyPw31i1mMVlC9mUpQx2JEEWDPYGq4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=fYa+tb2P/P8bo3WgSzN8N3/P1jPIEW4Z603V6O8EDg+XK4pqkt9sdrUrrX/dzksg0
-         Xob4ezbP/4SpqPQqD687joXsn8lMRginiuf6GGJQt9zLBisu8sPL27neU7R2ILgOEK
-         zr8I/q6HAeUyRfOdXUEoMqTYd6D9iFq5uQf4HoGHnocqTrey0z7vj5Qh0PjIySFfBG
-         o1rVLVmIY0dcwJSki9KgH3t0/n65zfMRA1hAyoBY8MfpTRXKyYS6sD2pNuUeNNxo0k
-         puQQFzL8GDRK/0+YA4QBt7N8g9fRt1QWwMIDsFe4tdBDCS1ms1V+Yf2wyQrWAXX7iK
-         kqrbUIx4jNhXg==
+        b=UE4HnfD9Y4yrPQJP78MfJT9lw1jU3QpfncTPiPFXyfjvW7PEh9FIzKpneVk0wQ7XT
+         fIYqs5Nk07lIV0u40Ht7NP0nomYopwWWuXXeRd7bs91XqdtgwyLbd0qJ39GfWd1I6R
+         1iLsFtBssXKINU1hgu4KKDrCByE2iMRKsmn/ElRXyN404iRRwljyGIkyhHDlCceORR
+         aF4vADoFRFNHLy1NpRRTKgQ5jMDQuI/+4v5ht3kZ4AQT9/W25CnPexj0KFL3uLOoR9
+         e8yTWEI5ksEhHApIgDVcYqTRLP2KCZMvKrlQXBpABLjFv3TuGsZ8wPm4BKodLQIMSA
+         uXdmQR6FL9qDg==
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 415F7A0064;
+        by mailhost.synopsys.com (Postfix) with ESMTP id 5E9FAA0071;
         Mon,  9 Mar 2020 08:36:41 +0000 (UTC)
 From:   Jose Abreu <Jose.Abreu@synopsys.com>
 To:     netdev@vger.kernel.org
@@ -57,9 +57,9 @@ Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
         Heiner Kallweit <hkallweit1@gmail.com>,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net-next 2/8] net: stmmac: Switch to linkmode_and()/linkmode_andnot()
-Date:   Mon,  9 Mar 2020 09:36:21 +0100
-Message-Id: <35064f17a0a0dee90fe29da85345343085bd111a.1583742615.git.Jose.Abreu@synopsys.com>
+Subject: [PATCH net-next 5/8] net: phylink: Add missing Backplane speeds
+Date:   Mon,  9 Mar 2020 09:36:24 +0100
+Message-Id: <72f937085fd6167f9dd6e8c72e0f7f0a161d8001.1583742616.git.Jose.Abreu@synopsys.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1583742615.git.Jose.Abreu@synopsys.com>
 References: <cover.1583742615.git.Jose.Abreu@synopsys.com>
@@ -70,7 +70,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the linkmode_and()/linkmode_andnot() helpers to simplify the code.
+USXGMII also supports these missing backplane speeds.
 
 Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
 
@@ -90,33 +90,27 @@ Cc: linux-stm32@st-md-mailman.stormreply.com
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 13 +++++--------
- 1 file changed, 5 insertions(+), 8 deletions(-)
+ drivers/net/phy/phylink.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index cb7a5bad4cfe..cf184241b85e 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -858,14 +858,11 @@ static void stmmac_validate(struct phylink_config *config,
- 		phylink_set(mask, 1000baseT_Half);
- 	}
- 
--	bitmap_and(supported, supported, mac_supported,
--		   __ETHTOOL_LINK_MODE_MASK_NBITS);
--	bitmap_andnot(supported, supported, mask,
--		      __ETHTOOL_LINK_MODE_MASK_NBITS);
--	bitmap_and(state->advertising, state->advertising, mac_supported,
--		   __ETHTOOL_LINK_MODE_MASK_NBITS);
--	bitmap_andnot(state->advertising, state->advertising, mask,
--		      __ETHTOOL_LINK_MODE_MASK_NBITS);
-+	linkmode_and(supported, supported, mac_supported);
-+	linkmode_andnot(supported, supported, mask);
-+
-+	linkmode_and(state->advertising, state->advertising, mac_supported);
-+	linkmode_andnot(state->advertising, state->advertising, mask);
- }
- 
- static void stmmac_mac_pcs_get_state(struct phylink_config *config,
+diff --git a/drivers/net/phy/phylink.c b/drivers/net/phy/phylink.c
+index b4367fab7899..47f4ce02d7bc 100644
+--- a/drivers/net/phy/phylink.c
++++ b/drivers/net/phy/phylink.c
+@@ -312,11 +312,13 @@ static int phylink_parse_mode(struct phylink *pl, struct fwnode_handle *fwnode)
+ 			phylink_set(pl->supported, 1000baseT_Half);
+ 			phylink_set(pl->supported, 1000baseT_Full);
+ 			phylink_set(pl->supported, 1000baseX_Full);
++			phylink_set(pl->supported, 1000baseKX_Full);
+ 			phylink_set(pl->supported, 2500baseT_Full);
+ 			phylink_set(pl->supported, 2500baseX_Full);
+ 			phylink_set(pl->supported, 5000baseT_Full);
+ 			phylink_set(pl->supported, 10000baseT_Full);
+ 			phylink_set(pl->supported, 10000baseKR_Full);
++			phylink_set(pl->supported, 10000baseKX4_Full);
+ 			phylink_set(pl->supported, 10000baseCR_Full);
+ 			phylink_set(pl->supported, 10000baseSR_Full);
+ 			phylink_set(pl->supported, 10000baseLR_Full);
 -- 
 2.7.4
 
