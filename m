@@ -4,68 +4,69 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EF40C10F29
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 23:43:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ACC9C10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 23:44:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00D8D24654
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 23:43:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F17624655
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 23:44:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VY4SMTk6"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ge1B4hGA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727500AbgCIXnX (ORCPT
+        id S1727451AbgCIXon (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 19:43:23 -0400
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:41658 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727287AbgCIXnX (ORCPT
+        Mon, 9 Mar 2020 19:44:43 -0400
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:40240 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727242AbgCIXom (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 19:43:23 -0400
-Received: by mail-vs1-f67.google.com with SMTP id k188so7260725vsc.8
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 16:43:21 -0700 (PDT)
+        Mon, 9 Mar 2020 19:44:42 -0400
+Received: by mail-vs1-f65.google.com with SMTP id c18so7257140vsq.7
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 16:44:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=FibW53f2XxatAXzQLRanxzBiW2G6Q3K28hu/UJkitds=;
-        b=VY4SMTk6vsGRDhLZYbbrzvskYLAv0dyBIz+L42LJnUmMdfdX0NdQF2RMFNvZ4PDpiN
-         5/WGDXg0GwWQ4hEwLcG3snpjszaIYRKkYksKOPa0UV4q2zgJHCwUB59wWedTBR4q4J9a
-         tHYO9L6w1lFciwSG0kzyawq617UecGBS0iYRg=
+        bh=xs7n6p/5EOR908vUlGJCRK4XfcfhF6iASL+/f9fqBa4=;
+        b=ge1B4hGATR9s3Ng2NYfxGB5RxmZBNi0v8NQmaecDV77poEgjv5+h7zBVxFdwf7XK5H
+         Nez68YCXSUynjff11ajiGPs5JC8wLuO8aBCzjqybcTIEB50rWF6OPV7RTNS246DWz7bI
+         BeXdcQmVdU4sYy4V5QzKLaUqjVMItoqG0StPg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=FibW53f2XxatAXzQLRanxzBiW2G6Q3K28hu/UJkitds=;
-        b=VyjGxpw1u0jFuA6Cm5YdshCIaZEwj4fdE+qUn7FVNTVG3IcQLQTUbBDl67bM3ENZBJ
-         FmaS8WvJhpwylqolDcTtK7yK6LZH89uwK40MdJSZ6QX7eDbRIuj610x8Xk6a2zXmDGFt
-         8uqZ2jo1TXxMm8jkJEQ+sv83dslbpT30A3STMY/gQys7zxdOjrYsBo6qC5kpIQwzzOUX
-         PIyuERLpVMDY6lp+cg3P0yZljo97lmqMAWHIUsLnlaroZICtWj4iC6mnzbWtfKB11R0J
-         hFEfalayVeTt7xBgliqfhrvrUKvaLrDX92DTpaqt+HVVvtsB3FN+/sq16oh0HLdHQRN+
-         hP/g==
-X-Gm-Message-State: ANhLgQ14R5gUxIyQ63CLLx+BsITYtuGv0heFHQmrfEYkUKo4L7irnvvH
-        1Z9+qRVjySIfW37zxEFzHzWH9nSmhfw=
-X-Google-Smtp-Source: ADFU+vuob5bNQC+D6j+7t0sclgXztXg15Jmd/OluylpS5QouymX0xd7TvYL2/URmvKonXXef76CW+A==
-X-Received: by 2002:a67:32d5:: with SMTP id y204mr11349255vsy.137.1583797400766;
-        Mon, 09 Mar 2020 16:43:20 -0700 (PDT)
-Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com. [209.85.217.41])
-        by smtp.gmail.com with ESMTPSA id c77sm1290497vke.7.2020.03.09.16.43.19
+        bh=xs7n6p/5EOR908vUlGJCRK4XfcfhF6iASL+/f9fqBa4=;
+        b=KhO261yhNriO1UQh4DrNEYatzZ4mqrxPJ6znvyOhhMbg2Ecd9i5p+XeUiyIkzEcQE0
+         +49w3yahf0sx7LS70WC1KVRl5i06neI06Rfdkm5rbOuOdybq18seruc7JgyAnrtLcgZ0
+         VrQnUENlQ08vWuRh0Lni1qgbKgt2gIli1O2/U8zVQrU28YHUCQwp9zmhNjaQOFADgCG8
+         KfSgMH5TaucgcLCUHLwirFRqLvhG37IW06+Zy23y4oUnX1YYVInkg5AwBiHnwWK2rMty
+         KR11GKQfFgdMWG6bJn5N9ARquBCIG9BuzdxX2PUV2RcvuDOrZ0RFmDsOC6b2mWK9iA/1
+         Is7A==
+X-Gm-Message-State: ANhLgQ3pYmqNhCp3S9Wge8vljF2rJnxyKqTjgbLha+/KYWFuJHERz7GS
+        CajTTIBPWnWqzOy/c/D7v8ZcRrzqvNw=
+X-Google-Smtp-Source: ADFU+vuswhYSiCrHyLQVfyGU4plBP0RhK13rG5iyqUk93zyVytCrFbYJ2A9Wl5CaKVlyBfYID8Hwpg==
+X-Received: by 2002:a05:6102:124b:: with SMTP id p11mr11852010vsg.38.1583797480039;
+        Mon, 09 Mar 2020 16:44:40 -0700 (PDT)
+Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com. [209.85.217.43])
+        by smtp.gmail.com with ESMTPSA id h67sm12819393vka.25.2020.03.09.16.44.39
         for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Mar 2020 16:43:20 -0700 (PDT)
-Received: by mail-vs1-f41.google.com with SMTP id z125so3359308vsb.13
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 16:43:19 -0700 (PDT)
-X-Received: by 2002:a67:694f:: with SMTP id e76mr9520510vsc.73.1583797399296;
- Mon, 09 Mar 2020 16:43:19 -0700 (PDT)
+        Mon, 09 Mar 2020 16:44:39 -0700 (PDT)
+Received: by mail-vs1-f43.google.com with SMTP id u26so7282181vsg.2
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 16:44:39 -0700 (PDT)
+X-Received: by 2002:a05:6102:2dc:: with SMTP id h28mr11670096vsh.169.1583797478587;
+ Mon, 09 Mar 2020 16:44:38 -0700 (PDT)
 MIME-Version: 1.0
-References: <1583746236-13325-1-git-send-email-mkshah@codeaurora.org> <1583746236-13325-5-git-send-email-mkshah@codeaurora.org>
-In-Reply-To: <1583746236-13325-5-git-send-email-mkshah@codeaurora.org>
+References: <1583746236-13325-1-git-send-email-mkshah@codeaurora.org> <1583746236-13325-6-git-send-email-mkshah@codeaurora.org>
+In-Reply-To: <1583746236-13325-6-git-send-email-mkshah@codeaurora.org>
 From:   Doug Anderson <dianders@chromium.org>
-Date:   Mon, 9 Mar 2020 16:43:08 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=VknUHs8R6pu3pBCR-D50ibeuSVVp9=_t7NLa4U+06XKQ@mail.gmail.com>
-Message-ID: <CAD=FV=VknUHs8R6pu3pBCR-D50ibeuSVVp9=_t7NLa4U+06XKQ@mail.gmail.com>
-Subject: Re: [PATCH v13 4/5] soc: qcom: rpmh: Invoke rpmh_flush() for dirty caches
+Date:   Mon, 9 Mar 2020 16:44:27 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=UugityQX+TG2c41dyaaCrhYe534UgXxm0G0igLz-9LSw@mail.gmail.com>
+Message-ID: <CAD=FV=UugityQX+TG2c41dyaaCrhYe534UgXxm0G0igLz-9LSw@mail.gmail.com>
+Subject: Re: [PATCH v13 5/5] drivers: qcom: Update rpmh clients to use start
+ and end transactions
 To:     Maulik Shah <mkshah@codeaurora.org>
 Cc:     Stephen Boyd <swboyd@chromium.org>,
         Matthias Kaehlcke <mka@chromium.org>,
@@ -75,7 +76,11 @@ Cc:     Stephen Boyd <swboyd@chromium.org>,
         linux-arm-msm <linux-arm-msm@vger.kernel.org>,
         Andy Gross <agross@kernel.org>,
         Rajendra Nayak <rnayak@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>, lsrao@codeaurora.org
+        Lina Iyer <ilina@codeaurora.org>, lsrao@codeaurora.org,
+        Taniya Das <tdas@codeaurora.org>,
+        Odelu Kukatla <okukatla@codeaurora.org>,
+        Kiran Gunda <kgunda@codeaurora.org>,
+        Sibi Sankar <sibis@codeaurora.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -86,283 +91,228 @@ Hi,
 
 On Mon, Mar 9, 2020 at 2:31 AM Maulik Shah <mkshah@codeaurora.org> wrote:
 >
-> Add changes to invoke rpmh flush() from within cache_lock when the data in
-> cache is dirty.
+> Update all rpmh clients to start using rpmh_start_transaction() and
+> rpmh_end_transaction().
 >
-> Introduce two new APIs for this. Clients can use rpmh_start_transaction()
-> before any rpmh transaction once done invoke rpmh_end_transaction() which
-> internally invokes rpmh_flush() if the caches has become dirty.
->
-> Add support to control this with flush_dirty flag.
->
+> Cc: Taniya Das <tdas@codeaurora.org>
+> Cc: Odelu Kukatla <okukatla@codeaurora.org>
+> Cc: Kiran Gunda <kgunda@codeaurora.org>
+> Cc: Sibi Sankar <sibis@codeaurora.org>
 > Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
-> Reviewed-by: Srinivas Rao L <lsrao@codeaurora.org>
 > ---
->  drivers/soc/qcom/rpmh-internal.h |  4 +++
->  drivers/soc/qcom/rpmh-rsc.c      |  6 +++-
->  drivers/soc/qcom/rpmh.c          | 64 ++++++++++++++++++++++++++++++++--------
->  include/soc/qcom/rpmh.h          | 10 +++++++
->  4 files changed, 71 insertions(+), 13 deletions(-)
+>  drivers/clk/qcom/clk-rpmh.c             | 21 ++++++++++++++-------
+>  drivers/interconnect/qcom/bcm-voter.c   | 13 +++++++++----
+>  drivers/regulator/qcom-rpmh-regulator.c |  4 ++++
+>  drivers/soc/qcom/rpmhpd.c               | 11 +++++++++--
 
-As mentioned previously but not addressed [3], I believe your series
-breaks things if there are zero ACTIVE TCSs and you're using the
-immediate-flush solution.  Specifically any attempt to set something's
-"active" state will clobber the sleep/wake.  I believe this is hard to
-fix, especially if you want rpmh_write_async() to work properly and
-need to be robust to the last man going down while rpmh_write_async()
-is running but hasn't finished.  My suggestion was to consider it to
-be an error at probe time for now.
+This needs to be 4 separate patches since the change to each subsystem
+will go through a different maintainer.
 
-Actually, though, I'd be super surprised if the "active == 0" case
-works anyway.  Aside from subtle problems of not handling -EAGAIN (see
-another previous message that you didn't respond to [2]), I think
-you'll also get failures because you never enable interrupts in
-RSC_DRV_IRQ_ENABLE for anything other than the ACTIVE_TCS.  Thus
-you'll never get interrupts saying when your transactions on the
-borrowed "wake" TCS finish.
+Also: it'll be a lot easier to land this if you make the new
+rpmh_start_transaction() and rpmh_end_transaction() calls _optional_
+for now, especially since they are just a speed optimization and not
+for correctness.  That is, if a driver makes a call to rpmh_write(),
+rpmh_write_async(), rpmh_write_batch(), or rpmh_invalidate() without
+doing rpmh_start_transaction() then it should still work--just flush
+right away.  Since you have rpmh_start_transaction() refcounted that's
+as simple as making a call to rpmh_start_transaction() at the
+beginning of all public calls and rpmh_end_transaction() at the end.
+If there was already a refcount then no harm done.  If there wasn't
+you'll get a flush at the end.
 
-Speaking of previous emails that you didn't respond to, I think you
-still have these action items:
+Once you make the call optional, you can actually leave changing the
+callers until after your series lands.  Then you don't end up
+bothering all the other maintainers with the back-and-forth.
 
-* Document that rpmh_write(active) and rpmh_write_async(active) also
-updates wake state. [1]
+Once all callers are updated you can make the call required.  ...or
+(as noted below) maybe we should just keep it optional...
 
-* Change is_req_valid() to still return true if (sleep == wake), or
-keep track of "active" and return true if (sleep != wake || wake !=
-active). [1]
-
-* Document that for batch a write to active doesn't update wake. [1]
+One last note here: you have a regulator change here but aren't
+sending it to the regulator maintainer.  That won't work.  You also
+have an interconnect change without sending it to the interconnect
+maintainer.
 
 
-> diff --git a/drivers/soc/qcom/rpmh-internal.h b/drivers/soc/qcom/rpmh-internal.h
-> index 6eec32b..d36be3d 100644
-> --- a/drivers/soc/qcom/rpmh-internal.h
-> +++ b/drivers/soc/qcom/rpmh-internal.h
-> @@ -70,13 +70,17 @@ struct rpmh_request {
->   *
->   * @cache: the list of cached requests
->   * @cache_lock: synchronize access to the cache data
-> + * @active_clients: count of rpmh transaction in progress
->   * @dirty: was the cache updated since flush
-> + * @flush_dirty: if the dirty cache need immediate flush
->   * @batch_cache: Cache sleep and wake requests sent as batch
->   */
->  struct rpmh_ctrlr {
->         struct list_head cache;
->         spinlock_t cache_lock;
-> +       u32 active_clients;
->         bool dirty;
-> +       bool flush_dirty;
->         struct list_head batch_cache;
->  };
+>  4 files changed, 36 insertions(+), 13 deletions(-)
 >
-> diff --git a/drivers/soc/qcom/rpmh-rsc.c b/drivers/soc/qcom/rpmh-rsc.c
-> index e278fc1..b6391e1 100644
-> --- a/drivers/soc/qcom/rpmh-rsc.c
-> +++ b/drivers/soc/qcom/rpmh-rsc.c
-> @@ -61,6 +61,8 @@
->  #define CMD_STATUS_ISSUED              BIT(8)
->  #define CMD_STATUS_COMPL               BIT(16)
+> diff --git a/drivers/clk/qcom/clk-rpmh.c b/drivers/clk/qcom/clk-rpmh.c
+> index 12bd871..16f68d4 100644
+> --- a/drivers/clk/qcom/clk-rpmh.c
+> +++ b/drivers/clk/qcom/clk-rpmh.c
+> @@ -154,22 +154,27 @@ static int clk_rpmh_send_aggregate_command(struct clk_rpmh *c)
+>         cmd_state = c->aggr_state;
+>         on_val = c->res_on_val;
 >
-> +#define FLUSH_DIRTY                    1
+> +       rpmh_start_transaction(c->dev);
 > +
->  static u32 read_tcs_reg(struct rsc_drv *drv, int reg, int tcs_id, int cmd_id)
->  {
->         return readl_relaxed(drv->tcs_base + reg + RSC_DRV_TCS_OFFSET * tcs_id +
-> @@ -670,13 +672,15 @@ static int rpmh_rsc_probe(struct platform_device *pdev)
->         INIT_LIST_HEAD(&drv->client.cache);
->         INIT_LIST_HEAD(&drv->client.batch_cache);
+>         for (; state <= RPMH_ACTIVE_ONLY_STATE; state++) {
+>                 if (has_state_changed(c, state)) {
+>                         if (cmd_state & BIT(state))
+>                                 cmd.data = on_val;
 >
-> +       drv->client.flush_dirty = device_get_match_data(&pdev->dev);
-> +
->         dev_set_drvdata(&pdev->dev, drv);
->
->         return devm_of_platform_populate(&pdev->dev);
->  }
->
->  static const struct of_device_id rpmh_drv_match[] = {
-> -       { .compatible = "qcom,rpmh-rsc", },
-> +       { .compatible = "qcom,rpmh-rsc", .data = (void *)FLUSH_DIRTY },
-
-Ick.  This is just confusing.  IMO better to set
-'drv->client.flush_dirty = true' directly in probe with a comment
-saying that it could be removed if we had OSI.
-
-...and while you're at it, why not fire off a separate patch (not in
-your series) adding the stub to 'include/linux/psci.h'.  Then when we
-revisit this in a year it'll be there and it'll be super easy to set
-the value properly.
-
-
->         { }
->  };
->
-> diff --git a/drivers/soc/qcom/rpmh.c b/drivers/soc/qcom/rpmh.c
-> index 5bed8f4..9d40209 100644
-> --- a/drivers/soc/qcom/rpmh.c
-> +++ b/drivers/soc/qcom/rpmh.c
-> @@ -297,12 +297,10 @@ static int flush_batch(struct rpmh_ctrlr *ctrlr)
->  {
->         struct batch_cache_req *req;
->         const struct rpmh_request *rpm_msg;
-> -       unsigned long flags;
->         int ret = 0;
->         int i;
->
->         /* Send Sleep/Wake requests to the controller, expect no response */
-> -       spin_lock_irqsave(&ctrlr->cache_lock, flags);
->         list_for_each_entry(req, &ctrlr->batch_cache, list) {
->                 for (i = 0; i < req->count; i++) {
->                         rpm_msg = req->rpm_msgs + i;
-> @@ -312,7 +310,6 @@ static int flush_batch(struct rpmh_ctrlr *ctrlr)
->                                 break;
+>                         ret = rpmh_write_async(c->dev, state, &cmd, 1);
+> -                       if (ret) {
+> -                               dev_err(c->dev, "set %s state of %s failed: (%d)\n",
+> -                                       !state ? "sleep" :
+> -                                       state == RPMH_WAKE_ONLY_STATE   ?
+> -                                       "wake" : "active", c->res_name, ret);
+> -                               return ret;
+> -                       }
+> +                       if (ret)
+> +                               break;
 >                 }
 >         }
-> -       spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
 >
+> +       ret |= rpmh_end_transaction(c->dev);
+
+You can't do this.  "ret" is an integer and you're munging two error
+codes into one int.  I don't think there is any clever way to do this,
+but probably this would be fine (the compiler should optimize):
+
+if (ret)
+  rpmh_end_transaction(c->dev);
+else
+  ret = rpmh_end_transaction(c->dev);
+
+...or just leave the "dev_err" and "return ret" where they were and
+call rpmh_end_transaction() above without looking at the return value.
+
+
+> +       if (ret) {
+> +               dev_err(c->dev, "set %s state of %s failed: (%d)\n",
+> +                       !state ? "sleep" : state == RPMH_WAKE_ONLY_STATE ?
+> +                       "wake" : "active", c->res_name, ret);
+> +               return ret;
+> +       }
+
+Technically the error message above is now misleading if the
+"end_transaction" failed.  Namely it will blame things on the active
+only state whereas that wasn't the problem.
+
+
+> +
+>         c->last_sent_aggr_state = c->aggr_state;
+>         c->peer->last_sent_aggr_state =  c->last_sent_aggr_state;
+>
+> @@ -267,7 +272,9 @@ static int clk_rpmh_bcm_send_cmd(struct clk_rpmh *c, bool enable)
+>         cmd.addr = c->res_addr;
+>         cmd.data = BCM_TCS_CMD(1, enable, 0, cmd_state);
+>
+> +       rpmh_start_transaction(c->dev);
+>         ret = rpmh_write_async(c->dev, RPMH_ACTIVE_ONLY_STATE, &cmd, 1);
+> +       ret |= rpmh_end_transaction(c->dev);
+
+Again, no |=
+
+Also: one argument for keeping start_transaction and end_transaction
+optional long term is that you could completely eliminate this change.
+
+
+>         if (ret) {
+>                 dev_err(c->dev, "set active state of %s failed: (%d)\n",
+>                         c->res_name, ret);
+> diff --git a/drivers/interconnect/qcom/bcm-voter.c b/drivers/interconnect/qcom/bcm-voter.c
+> index 2adfde8..fbe18b2 100644
+> --- a/drivers/interconnect/qcom/bcm-voter.c
+> +++ b/drivers/interconnect/qcom/bcm-voter.c
+> @@ -263,7 +263,9 @@ int qcom_icc_bcm_voter_commit(struct bcm_voter *voter)
+>         tcs_list_gen(&voter->commit_list, QCOM_ICC_BUCKET_AMC, cmds, commit_idx);
+>
+>         if (!commit_idx[0])
+> -               goto out;
+> +               goto end;
+> +
+> +       rpmh_start_transaction(voter-dev);
+>
+>         ret = rpmh_invalidate(voter->dev);
+>         if (ret) {
+> @@ -312,12 +314,15 @@ int qcom_icc_bcm_voter_commit(struct bcm_voter *voter)
+>         tcs_list_gen(&voter->commit_list, QCOM_ICC_BUCKET_SLEEP, cmds, commit_idx);
+>
+>         ret = rpmh_write_batch(voter->dev, RPMH_SLEEP_STATE, cmds, commit_idx);
+> -       if (ret) {
+> +       if (ret)
+>                 pr_err("Error sending SLEEP RPMH requests (%d)\n", ret);
+> -               goto out;
+> -       }
+>
+>  out:
+> +       ret = rpmh_end_transaction(voter-dev);
+> +       if (ret)
+> +               pr_err("Error ending rpmh transaction (%d)\n", ret);
+> +
+> +end:
+
+Personally I don't think "out" and "end" are very descriptive.  My own
+favorite is to name these types of labels based on what has been done
+so far.  So:
+
+exit_started_rpmh_transaction:
+exit_constructed_list:
+
+
+>         list_for_each_entry_safe(bcm, bcm_tmp, &voter->commit_list, list)
+>                 list_del_init(&bcm->list);
+>
+> diff --git a/drivers/regulator/qcom-rpmh-regulator.c b/drivers/regulator/qcom-rpmh-regulator.c
+> index c86ad40..f4b9176 100644
+> --- a/drivers/regulator/qcom-rpmh-regulator.c
+> +++ b/drivers/regulator/qcom-rpmh-regulator.c
+> @@ -163,12 +163,16 @@ static int rpmh_regulator_send_request(struct rpmh_vreg *vreg,
+>  {
+>         int ret;
+>
+> +       rpmh_start_transaction(vreg->dev);
+> +
+>         if (wait_for_ack || vreg->always_wait_for_ack)
+>                 ret = rpmh_write(vreg->dev, RPMH_ACTIVE_ONLY_STATE, cmd, 1);
+>         else
+>                 ret = rpmh_write_async(vreg->dev, RPMH_ACTIVE_ONLY_STATE, cmd,
+>                                         1);
+>
+> +       ret |= rpmh_end_transaction(vreg->dev);
+
+Again, no |=.
+
+...and again, if starting/ending was optional you wouldn't need this change.
+
+
+> +
 >         return ret;
 >  }
-> @@ -433,16 +430,63 @@ static int send_single(struct rpmh_ctrlr *ctrlr, enum rpmh_state state,
->  }
 >
->  /**
-> + * rpmh_start_transaction: Indicates start of rpmh transactions, this
-> + * must be ended by invoking rpmh_end_transaction().
-> + *
-> + * @dev: the device making the request
-> + */
-> +void rpmh_start_transaction(const struct device *dev)
-> +{
-> +       struct rpmh_ctrlr *ctrlr = get_rpmh_ctrlr(dev);
-> +       unsigned long flags;
-> +
-> +       if (!ctrlr->flush_dirty)
-> +               return;
-> +
-> +       spin_lock_irqsave(&ctrlr->cache_lock, flags);
-> +       ctrlr->active_clients++;
-
-Wouldn't hurt to have something like:
-
-/*
- * Detect likely leak; we shouldn't have 1000
- * people making in-flight changes at the same time.
- */
-WARN_ON(ctrlr->active_clients > 1000)
-
-
-> +       spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
-> +}
-> +EXPORT_SYMBOL(rpmh_start_transaction);
-> +
-> +/**
-> + * rpmh_end_transaction: Indicates end of rpmh transactions. All dirty data
-> + * in cache can be flushed immediately when ctrlr->flush_dirty is set
-> + *
-> + * @dev: the device making the request
-> + *
-> + * Return: 0 on success, error number otherwise.
-> + */
-> +int rpmh_end_transaction(const struct device *dev)
-> +{
-> +       struct rpmh_ctrlr *ctrlr = get_rpmh_ctrlr(dev);
-> +       unsigned long flags;
-> +       int ret = 0;
-> +
-> +       if (!ctrlr->flush_dirty)
-> +               return ret;
-> +
-> +       spin_lock_irqsave(&ctrlr->cache_lock, flags);
-
-WARN_ON(!active_clients);
-
-
-> +
-> +       ctrlr->active_clients--;
-> +       if (ctrlr->dirty && !ctrlr->active_clients)
-> +               ret = rpmh_flush(ctrlr);
-
-As mentioned previously [2], I don't think it's valid to call
-rpmh_flush() with interrupts disabled.  Specifically (as of your
-previous patch) rpmh_flush now loops if rpmh_rsc_invalidate() returns
--EAGAIN.  I believe that the caller needs to enable interrupts for a
-little bit before trying again.  If the caller doesn't need to enable
-interrupts for a little bit before trying again then why was -EAGAIN
-even returned?  tcs_invalidate() could have just looped itself and all
-the code would be much simpler.
-
-
-> +
-> +       spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
-> +
-> +       return ret;
-> +}
-> +EXPORT_SYMBOL(rpmh_end_transaction);
-> +
-> +/**
->   * rpmh_flush: Flushes the buffered active and sleep sets to TCS
->   *
->   * @ctrlr: controller making request to flush cached data
->   *
-> - * Return: -EBUSY if the controller is busy, probably waiting on a response
-> - * to a RPMH request sent earlier.
-> + * Return: 0 on success, error number otherwise.
->   *
-> - * This function is always called from the sleep code from the last CPU
-> - * that is powering down the entire system. Since no other RPMH API would be
-> - * executing at this time, it is safe to run lockless.
-> + * This function can either be called from sleep code on the last CPU
-> + * (thus no spinlock needed) or with the ctrlr->cache_lock already held.
->   */
->  int rpmh_flush(struct rpmh_ctrlr *ctrlr)
+> diff --git a/drivers/soc/qcom/rpmhpd.c b/drivers/soc/qcom/rpmhpd.c
+> index 4d264d0..0e9d204 100644
+> --- a/drivers/soc/qcom/rpmhpd.c
+> +++ b/drivers/soc/qcom/rpmhpd.c
+> @@ -193,19 +193,26 @@ static const struct of_device_id rpmhpd_match_table[] = {
+>  static int rpmhpd_send_corner(struct rpmhpd *pd, int state,
+>                               unsigned int corner, bool sync)
 >  {
-> @@ -464,10 +508,6 @@ int rpmh_flush(struct rpmh_ctrlr *ctrlr)
->         if (ret)
->                 return ret;
+> +       int ret;
+>         struct tcs_cmd cmd = {
+>                 .addr = pd->addr,
+>                 .data = corner,
+>         };
 >
-> -       /*
-> -        * Nobody else should be calling this function other than system PM,
-> -        * hence we can run without locks.
-> -        */
->         list_for_each_entry(p, &ctrlr->cache, list) {
->                 if (!is_req_valid(p)) {
->                         pr_debug("%s: skipping RPMH req: a:%#x s:%#x w:%#x",
-> diff --git a/include/soc/qcom/rpmh.h b/include/soc/qcom/rpmh.h
-> index f9ec353..85e1ab2 100644
-> --- a/include/soc/qcom/rpmh.h
-> +++ b/include/soc/qcom/rpmh.h
-> @@ -22,6 +22,10 @@ int rpmh_write_batch(const struct device *dev, enum rpmh_state state,
->
->  int rpmh_invalidate(const struct device *dev);
->
-> +void rpmh_start_transaction(const struct device *dev);
+> +       rpmh_start_transaction(pd->dev);
 > +
-> +int rpmh_end_transaction(const struct device *dev);
+>         /*
+>          * Wait for an ack only when we are increasing the
+>          * perf state of the power domain
+>          */
+>         if (sync)
+> -               return rpmh_write(pd->dev, state, &cmd, 1);
+> +               ret = rpmh_write(pd->dev, state, &cmd, 1);
+>         else
+> -               return rpmh_write_async(pd->dev, state, &cmd, 1);
+> +               ret = rpmh_write_async(pd->dev, state, &cmd, 1);
 > +
->  #else
->
->  static inline int rpmh_write(const struct device *dev, enum rpmh_state state,
-> @@ -41,6 +45,12 @@ static inline int rpmh_write_batch(const struct device *dev,
->  static inline int rpmh_invalidate(const struct device *dev)
->  { return -ENODEV; }
->
-> +void rpmh_start_transaction(const struct device *dev)
-> +{ return -ENODEV; }
+> +       ret |= rpmh_end_transaction(pd->dev);
 
-Unexpected return from void function.
+Again, no |=.
 
-
-> +
-> +int rpmh_end_transaction(const struct device *dev)
-> +{ return -ENODEV; }
-> +
->  #endif /* CONFIG_QCOM_RPMH */
->
->  #endif /* __SOC_QCOM_RPMH_H__ */
-
-[1] https://lore.kernel.org/r/CAD=FV=VzNnRdDN5uPYskJ6kQHq2bAi2ysEqt0=taagdd_qZb-g@mail.gmail.com
-[2] https://lore.kernel.org/r/CAD=FV=UYpO2rSOoF-OdZd3jKfSZGKnpQJPoiE5fzH+u1uafS6g@mail.gmail.com
-[3] https://lore.kernel.org/r/CAD=FV=VNaqwiti+UB8fLgjF5r2CD2xeF_p7qHS-_yXqf+ZDrBg@mail.gmail.com
+...and again, if starting/ending was optional you wouldn't need this change.
 
 
 
