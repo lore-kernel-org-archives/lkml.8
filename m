@@ -2,130 +2,115 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECDB0C10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:03:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2832CC18E5A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:04:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4D3821655
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:03:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="XSTizcLY"
+	by mail.kernel.org (Postfix) with ESMTP id 0499B215A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:04:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726676AbgCISDK (ORCPT
+        id S1727308AbgCISEa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 14:03:10 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:43203 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726169AbgCISDK (ORCPT
+        Mon, 9 Mar 2020 14:04:30 -0400
+Received: from 1.mo6.mail-out.ovh.net ([46.105.56.136]:45623 "EHLO
+        1.mo6.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726169AbgCISEa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 14:03:10 -0400
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 81D7723EDA;
-        Mon,  9 Mar 2020 19:03:06 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1583776986;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=SYAsbg2s3Mo8kPRtJGAKizEqhE6GcsxTsCs9SgyjEoc=;
-        b=XSTizcLYC0Z1wEWo+0FNnboZ+ZkjmWPYViMSAUgFbvUsl485/Orepr/YJ+rfQXfRzOQYV/
-        OmxLRL0SBS8yJqiDREkAfEVxidWmuskeYXtCN/ntN4cancVoCcUMI7JD3or8vBp8wDRdYV
-        vLJXclUFqy7Nra9BH503GqNW1D+dlUg=
+        Mon, 9 Mar 2020 14:04:30 -0400
+Received: from player690.ha.ovh.net (unknown [10.110.103.180])
+        by mo6.mail-out.ovh.net (Postfix) with ESMTP id 10C661FE5B7
+        for <linux-kernel@vger.kernel.org>; Mon,  9 Mar 2020 19:04:28 +0100 (CET)
+Received: from sk2.org (82-65-25-201.subs.proxad.net [82.65.25.201])
+        (Authenticated sender: steve@sk2.org)
+        by player690.ha.ovh.net (Postfix) with ESMTPSA id 5FC20101AF5E1;
+        Mon,  9 Mar 2020 18:04:16 +0000 (UTC)
+From:   Stephen Kitt <steve@sk2.org>
+To:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>, bpf@vger.kernel.org
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Stephen Kitt <steve@sk2.org>
+Subject: [PATCH v2] docs: sysctl/kernel: document BPF entries
+Date:   Mon,  9 Mar 2020 19:03:50 +0100
+Message-Id: <20200309180350.21075-1-steve@sk2.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 09 Mar 2020 19:03:06 +0100
-From:   Michael Walle <michael@walle.cc>
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     broonie@kernel.org, linux-spi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, shawnguo@kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, eha@deif.com, angelo@sysam.it,
-        andrew.smirnov@gmail.com, gustavo@embeddedor.com, weic@nvidia.com,
-        mhosny@nvidia.com, peng.ma@nxp.com
-Subject: Re: [PATCH 0/6] NXP DSPI bugfixes and support for LS1028A
-In-Reply-To: <20200309145624.10026-1-olteanv@gmail.com>
-References: <20200309145624.10026-1-olteanv@gmail.com>
-Message-ID: <f530a0740f34b2cf26a8055d4eae2527@walle.cc>
-X-Sender: michael@walle.cc
-User-Agent: Roundcube Webmail/1.3.10
-X-Spamd-Bar: +
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: 81D7723EDA
-X-Spamd-Result: default: False [1.40 / 15.00];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[dt];
-         MIME_GOOD(-0.10)[text/plain];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_TWELVE(0.00)[15];
-         NEURAL_HAM(-0.00)[-0.528];
-         FREEMAIL_TO(0.00)[gmail.com];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         FREEMAIL_CC(0.00)[kernel.org,vger.kernel.org,arm.com,deif.com,sysam.it,gmail.com,embeddedor.com,nvidia.com,nxp.com];
-         MID_RHS_MATCH_FROM(0.00)[];
-         SUSPICIOUS_RECIPS(1.50)[]
+Content-Transfer-Encoding: 8bit
+X-Ovh-Tracer-Id: 9596044907779345695
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedugedruddukedguddtkecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomhepufhtvghphhgvnhcumfhithhtuceoshhtvghvvgesshhkvddrohhrgheqnecukfhppedtrddtrddtrddtpdekvddrieehrddvhedrvddtudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphdqohhuthdphhgvlhhopehplhgrhigvrheiledtrdhhrgdrohhvhhdrnhgvthdpihhnvghtpedtrddtrddtrddtpdhmrghilhhfrhhomhepshhtvghvvgesshhkvddrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 2020-03-09 15:56, schrieb Vladimir Oltean:
-> From: Vladimir Oltean <vladimir.oltean@nxp.com>
-> 
-> This series addresses a few issues that were missed during the previous
-> series "[PATCH 00/12] TCFQ to XSPI migration for NXP DSPI driver", on
-> SoCs other than LS1021A and LS1043A. DMA mode has been completely 
-> broken
-> by that series, and XSPI mode never worked on little-endian 
-> controllers.
-> 
-> Then it introduces support for the LS1028A chip, whose compatible has
-> recently been documented here:
-> 
-> https://lore.kernel.org/linux-devicetree/20200218171418.18297-1-michael@walle.cc/
+Based on the implementation in kernel/bpf/syscall.c,
+kernel/bpf/trampoline.c, include/linux/filter.h, and the documentation
+in bpftool-prog.rst.
 
-If it is not compatible with the LS1021A the second compatible string
-should be removed. Depending on the other remark about the endianess,
-it might still be compatible, though.
+The section style doesn't match the surrounding sections; it matches
+the style of the reworked kernel.rst queued up in docs-next.
 
+Signed-off-by: Stephen Kitt <steve@sk2.org>
+---
 
-> The device tree for the LS1028A SoC is extended with DMA channels
-> definition, such that even though the default operating mode is XSPI,
-> one can simply change DSPI_XSPI_MODE to DSPI_DMA_MODE in the
-> devtype_data structure of the driver and use that instead.
+Notes:
+    Changes since v1:
+    - rebased on bpf-next instead of docs-next.
 
-wouldn't it make more sense, to use DMA is the dma node is present
-in the device tree? otherwise use XSPI mode? I don't think it is
-really handy to change the mode inside the driver.
+ Documentation/admin-guide/sysctl/kernel.rst | 24 +++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
--michael
+diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
+index def074807cee..eea7afd509ac 100644
+--- a/Documentation/admin-guide/sysctl/kernel.rst
++++ b/Documentation/admin-guide/sysctl/kernel.rst
+@@ -174,6 +174,20 @@ See the type_of_loader and ext_loader_ver fields in
+ Documentation/x86/boot.rst for additional information.
+ 
+ 
++bpf_stats_enabled
++=================
++
++Controls whether the kernel should collect statistics on BPF programs
++(total time spent running, number of times run...). Enabling
++statistics causes a slight reduction in performance on each program
++run. The statistics can be seen using ``bpftool``.
++
++= ===================================
++0 Don't collect statistics (default).
++1 Collect statistics.
++= ===================================
++
++
+ cap_last_cap:
+ =============
+ 
+@@ -1123,6 +1137,16 @@ NMI switch that most IA32 servers have fires unknown NMI up, for
+ example.  If a system hangs up, try pressing the NMI switch.
+ 
+ 
++unprivileged_bpf_disabled
++=========================
++
++Writing 1 to this entry will disabled unprivileged calls to ``bpf()``;
++once disabled, calling ``bpf()`` without ``CAP_SYS_ADMIN`` will return
++``-EPERM``.
++
++Once set, this can't be cleared.
++
++
+ watchdog:
+ =========
+ 
 
-> 
-> For testing, benchmarking and debugging, the mikroBUS connector on the
-> LS1028A-RDB is made available via spidev.
-> 
-> Vladimir Oltean (6):
->   spi: spi-fsl-dspi: Don't access reserved fields in SPI_MCR
->   spi: spi-fsl-dspi: Fix little endian access to PUSHR CMD and TXDATA
->   spi: spi-fsl-dspi: Fix oper_word_size of zero for DMA mode
->   spi: spi-fsl-dspi: Add support for LS1028A
->   arm64: dts: ls1028a: Specify the DMA channels for the DSPI 
-> controllers
->   arm64: dts: ls1028a-rdb: Add a spidev node for the mikroBUS
-> 
->  .../boot/dts/freescale/fsl-ls1028a-rdb.dts    | 14 +++++
->  .../arm64/boot/dts/freescale/fsl-ls1028a.dtsi |  6 +++
->  drivers/spi/spi-fsl-dspi.c                    | 54 +++++++++++++++----
->  3 files changed, 64 insertions(+), 10 deletions(-)
+base-commit: 3e7c67d90e3ed2f34fce42699f11b150dd1d3999
+-- 
+2.20.1
+
