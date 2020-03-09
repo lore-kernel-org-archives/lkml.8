@@ -2,155 +2,203 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 856FEC10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 17:38:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E212AC10F29
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 17:42:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DEA020828
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 17:38:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4ADA20828
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 17:42:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lS9XfaG7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lj7DWSw+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727369AbgCIRiJ (ORCPT
+        id S1727328AbgCIRmP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 13:38:09 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:33649 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727254AbgCIRiJ (ORCPT
+        Mon, 9 Mar 2020 13:42:15 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:53671 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727270AbgCIRmP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 13:38:09 -0400
-Received: by mail-wr1-f65.google.com with SMTP id a25so8530610wrd.0
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 10:38:06 -0700 (PDT)
+        Mon, 9 Mar 2020 13:42:15 -0400
+Received: by mail-wm1-f68.google.com with SMTP id g134so446755wme.3;
+        Mon, 09 Mar 2020 10:42:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lrRaa2oLGASoVUcKPYHBNJIYaKUXkZG1vLWKS/FETTM=;
-        b=lS9XfaG7i9K70Uz52uiZGAJLSYBH0BwEbvNfFeQPbZAYCDFVg/xbQB9QBhNNzCmUyu
-         DSQtXZF5lXClDT+BykDCQ2AGOlo462xlHcjCAYxutGzmYVVxvY818q8mgVTL0c3xe9jd
-         nHq2G1WLeBJcFdqMJGKQoqGRS+nlOJRam4fIRajkKbQSsWSgEsQ3fDmFNr1jza1SUgXK
-         0jlAlAvCH3dDmuuOLqZ9nOw144R77rwiOEgB5X9fyhumtQT8mEqQwci9ICaPRF1IcE97
-         j+No9luh0JXOFwjkH4uzLsGXk5GHgIcUbVZUmc9/uVIaPjq31qJzhZmQK0A8hB7wSBuB
-         rz6A==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=O5XzlRhJXpNd17/Q76toYeUyU8DPAcT326EwGlOZF0s=;
+        b=Lj7DWSw+kOYjv01pETYilz6LW14y0nMDyeJQC8epwaQzKflWIeQw/Cbmh0qhmorkGz
+         eigKpe1tp2Ooo4Rao6mdypvT05TriZ0WZLJQmTwEGXIIdU+w+p+OrNnBnYl8tyoEjE8B
+         bLLDGjqhHa1WQL97KMBlUuAPEF5I3XrlyZJckaJHsGZGnYdDIiKRePNPpYoZsa8suUfJ
+         b9cMxxXPl7PrZVfDQGm5Akd7jqyz1sd+2zMpzIpzdhlyzVtRZ21MMzu2O1vrHSZLldYd
+         wWB90AtkNSdIIhK9c657+WT0sUlzWEdZ/nJpkEKK/UAO9WLNb1fdujX8sGw2kOC6QgFe
+         JpnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lrRaa2oLGASoVUcKPYHBNJIYaKUXkZG1vLWKS/FETTM=;
-        b=VEryOYRBLPy8UxSAX+hZ39oUtyBvdUF28/c2LJ7bbW22/42wCSUYUGShC3w94dtuNH
-         rD+ccO57kg6ysT3TEunjMHuUI8NdUXjG43uLiCg5fuFFtOFP3iu7VsCOT4JR32NcyBR5
-         4YR+8USxogenFBIy7Gt1pbOd99lv2kqm8knHI9f4nkJKl1VFxlnvzuY+aAxtWbfzkAVO
-         WwyIUEB9TUc/qfkCjX0eCF+Ve9NNv81J/tnwbNO9XpbnmYreuyv3wvrOv81jRiNokMzP
-         wRAEB+Qt2jjyBOnejGONabHMabL5iPC8nOgEG+fz2XbRUJYwCG6JH5OIpuoQ3uSThBZQ
-         UdQg==
-X-Gm-Message-State: ANhLgQ1J/zJbdGNczGxxVi52POiNzCrp/eSUwlgDbNWDm/UxLfRq3R07
-        fGLYsgVPeV3yYInL7O3mZ1DPJA==
-X-Google-Smtp-Source: ADFU+vvLfd/MwARBYr7I+uIlvy/rGZiD/jQkUZifoVZVosaPYiFgIKPRqE2d04DkNXkKUpUoZ7WeAQ==
-X-Received: by 2002:a5d:514a:: with SMTP id u10mr2144282wrt.360.1583775485460;
-        Mon, 09 Mar 2020 10:38:05 -0700 (PDT)
-Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.gmail.com with ESMTPSA id w81sm321838wmg.19.2020.03.09.10.38.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Mar 2020 10:38:04 -0700 (PDT)
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-To:     vkoul@kernel.org
-Cc:     pierre-louis.bossart@linux.intel.com, linux-kernel@vger.kernel.org,
-        alsa-devel@alsa-project.org,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [RFC PATCH] soundwire: bus: Add flag to mark DPN_BlockCtrl1 as readonly
-Date:   Mon,  9 Mar 2020 17:37:55 +0000
-Message-Id: <20200309173755.955-1-srinivas.kandagatla@linaro.org>
-X-Mailer: git-send-email 2.21.0
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=O5XzlRhJXpNd17/Q76toYeUyU8DPAcT326EwGlOZF0s=;
+        b=r6ywhngrc9ZfdXNfK+rK2w0RAWGi3BQwtQkcgTEaEyH6wlHsgRBWgraXTRxvyOoz+x
+         pm/nGu8Sl+paQA+MWmL1TsWOxcifoypfhEPVp/0rlay+NlHcC8mOSYbK9P5wTg3MAoXY
+         jwXlbxaGdifj/q8sk3XlpxNgVhS8DdLC6BUtni3UKNZGJ3WIAr0eYOHoP3cKkvb8zvjp
+         9Fk7epvLSG7FVyt/mV7f2htVAPUYgW9DMHP6q/JmguYLyQ2ACakuS2JtdyBis+ykIm6V
+         YruFnOiSrvRqBwGRouOphk7TuX19uZg6/Hefd6cKS8Us2caVSLz0brwj0ffh8snWHwL7
+         mGQQ==
+X-Gm-Message-State: ANhLgQ17CM3Gu4X680w76tMAp6HjlbSxGSAcfYiX3vH2OOG7Np9rVjXJ
+        agOvc/IY8Z2VmLpBKePtuC300iL7
+X-Google-Smtp-Source: ADFU+vsgfcaDnGCgWzq7miqzip7oobaJk0VZBJ3UrJVPQc39Yk5G4P9OVGUsu05EbLby4faR/vJsQw==
+X-Received: by 2002:a1c:25c1:: with SMTP id l184mr367337wml.122.1583775732276;
+        Mon, 09 Mar 2020 10:42:12 -0700 (PDT)
+Received: from [10.67.49.112] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id c8sm1517272wrt.33.2020.03.09.10.42.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 09 Mar 2020 10:42:11 -0700 (PDT)
+Subject: Re: [PATCH] gpio: brcmstb: support gpio-line-names property
+To:     Gregory Fong <gregory.0xf0@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+References: <1583539986-573-1-git-send-email-opendmb@gmail.com>
+ <CADtm3G4eq_p1YZtQrtcx4LGPiY82BpgXf55YtJCW+WJSrM7siw@mail.gmail.com>
+From:   Doug Berger <opendmb@gmail.com>
+Autocrypt: addr=opendmb@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+ rQQYjNSD8+NSdOsIpGNCZ9xhWw==
+Message-ID: <810d8c3d-482f-078c-70b5-c4123c2679b8@gmail.com>
+Date:   Mon, 9 Mar 2020 10:42:08 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CADtm3G4eq_p1YZtQrtcx4LGPiY82BpgXf55YtJCW+WJSrM7siw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-According to SoundWire Specification Version 1.2.
-"A Data Port number X (in the range 0-14) which supports only one
-value of WordLength may implement the WordLength field in the
-DPX_BlockCtrl1 Register as Read-Only, returning the fixed value of
-WordLength in response to reads."
+On 3/9/20 12:45 AM, Gregory Fong wrote:
+> Hi Doug,
+> 
+> On Fri, Mar 6, 2020 at 4:14 PM Doug Berger <opendmb@gmail.com> wrote:
+>>
+>> The default handling of the gpio-line-names property by the
+>> gpiolib-of implementation does not work with the multiple
+>> gpiochip banks per device structure used by the gpio-brcmstb
+>> driver.
+>>
+>> This commit adds driver level support for the device tree
+>> property so that GPIO lines can be assigned friendly names.
+>>
+>> Signed-off-by: Doug Berger <opendmb@gmail.com>
+> 
+> I've added a few comments below.  With the suggested updates:
+> Acked-by: Gregory Fong <gregory.0xf0@gmail.com>
+> 
+>> ---
+>>  drivers/gpio/gpio-brcmstb.c | 44 ++++++++++++++++++++++++++++++++++++++++++++
+>>  1 file changed, 44 insertions(+)
+>>
+>> diff --git a/drivers/gpio/gpio-brcmstb.c b/drivers/gpio/gpio-brcmstb.c
+>> index 05e3f99ae59c..e9ab246e2d42 100644
+>> --- a/drivers/gpio/gpio-brcmstb.c
+>> +++ b/drivers/gpio/gpio-brcmstb.c
+>> @@ -603,6 +603,49 @@ static const struct dev_pm_ops brcmstb_gpio_pm_ops = {
+>>         .resume_noirq = brcmstb_gpio_resume,
+>>  };
+>>
+>> +static void brcmstb_gpio_set_names(struct device *dev,
+>> +                                  struct brcmstb_gpio_bank *bank)
+>> +{
+>> +       struct device_node *np = dev->of_node;
+>> +       const char **names;
+>> +       int nstrings, base;
+>> +       unsigned int i;
+>> +
+>> +       base = bank->id * MAX_GPIO_PER_BANK;
+>> +
+>> +       nstrings = of_property_count_strings(np, "gpio-line-names");
+>> +       if (nstrings <= base)
+>> +               /* Line names not present */
+>> +               return;
+>> +
+>> +       names = devm_kcalloc(dev, MAX_GPIO_PER_BANK, sizeof(char *),
+> 
+> Please use sizeof(*names) instead of sizeof(char *).
+Good idea. Will do.
 
-As WSA881x interfaces in PDM mode making the only field "WordLength"
-in DPX_BlockCtrl1" fixed and read-only. Behaviour of writing to this
-register on WSA881x soundwire slave with Qualcomm Soundwire Controller
-is throwing up an error. Not sure how other controllers deal with
-writing to readonly registers, but this patch provides a way to avoid
-writes to DPN_BlockCtrl1 register by providing a ro_blockctrl1_reg
-flag in struct sdw_port_runtime.
+> 
+>> +                            GFP_KERNEL);
+>> +       if (!names)
+>> +               return;
+>> +
+>> +       /*
+>> +        * Make sure to not index beyond the end of the number of descriptors
+>> +        * of the GPIO device.
+>> +        */
+>> +       for (i = 0; i < bank->width; i++) {
+>> +               const char *name;
+>> +               int ret;
+>> +
+>> +               ret = of_property_read_string_index(np, "gpio-line-names",
+>> +                                                   base + i, &name);
+>> +               if (ret) {
+>> +                       if (ret != -ENODATA)
+>> +                               dev_err(dev, "unable to name line %d: %d\n",
+>> +                                       i, ret);
+> 
+> Recommend adding the GPIO bank ID to this error message.
+I'll use the absolute line number rather than the bank relative line
+number to reduce confusion, but since it's different from your
+suggestion I'll leave off your Ack in case you really want the bank
+number for some reason.
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
----
-
-I will send patch for WSA881x to include this change once this patch
-is accepted.
-
- drivers/soundwire/bus.h    |  2 ++
- drivers/soundwire/stream.c | 17 ++++++++++-------
- 2 files changed, 12 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/soundwire/bus.h b/drivers/soundwire/bus.h
-index 204204a26db8..791e8d14093e 100644
---- a/drivers/soundwire/bus.h
-+++ b/drivers/soundwire/bus.h
-@@ -79,6 +79,7 @@ int sdw_find_col_index(int col);
-  * @num: Port number. For audio streams, valid port number ranges from
-  * [1,14]
-  * @ch_mask: Channel mask
-+ * @ro_blockctrl1_reg: Read Only flag for DPN_BlockCtrl1 register
-  * @transport_params: Transport parameters
-  * @port_params: Port parameters
-  * @port_node: List node for Master or Slave port_list
-@@ -89,6 +90,7 @@ int sdw_find_col_index(int col);
- struct sdw_port_runtime {
- 	int num;
- 	int ch_mask;
-+	bool ro_blockctrl1_reg;
- 	struct sdw_transport_params transport_params;
- 	struct sdw_port_params port_params;
- 	struct list_head port_node;
-diff --git a/drivers/soundwire/stream.c b/drivers/soundwire/stream.c
-index 00348d1fc606..4491643aeb4a 100644
---- a/drivers/soundwire/stream.c
-+++ b/drivers/soundwire/stream.c
-@@ -167,13 +167,15 @@ static int sdw_program_slave_port_params(struct sdw_bus *bus,
- 		return ret;
- 	}
- 
--	/* Program DPN_BlockCtrl1 register */
--	ret = sdw_write(s_rt->slave, addr2, (p_params->bps - 1));
--	if (ret < 0) {
--		dev_err(&s_rt->slave->dev,
--			"DPN_BlockCtrl1 register write failed for port %d\n",
--			t_params->port_num);
--		return ret;
-+	if (!p_rt->ro_blockctrl1_reg) {
-+		/* Program DPN_BlockCtrl1 register */
-+		ret = sdw_write(s_rt->slave, addr2, (p_params->bps - 1));
-+		if (ret < 0) {
-+			dev_err(&s_rt->slave->dev,
-+				"DPN_BlockCtrl1 register write failed for port %d\n",
-+				t_params->port_num);
-+			return ret;
-+		}
- 	}
- 
- 	/* Program DPN_SampleCtrl1 register */
-@@ -1195,6 +1197,7 @@ static struct sdw_port_runtime
- 
- 	p_rt->ch_mask = port_config[port_index].ch_mask;
- 	p_rt->num = port_config[port_index].num;
-+	p_rt->ro_blockctrl1_reg = port_config[port_index].ro_blockctrl1_reg;
- 
- 	return p_rt;
- }
--- 
-2.21.0
-
+> 
+> Best regards,
+> Gregory
+> 
+Thanks Gregory!
+V2 coming soon.
