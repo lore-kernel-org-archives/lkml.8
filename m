@@ -2,135 +2,115 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A8FBC10F29
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 08:49:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63C73C18E5A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 08:50:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03E4520637
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 08:49:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WcNCx5NY"
+	by mail.kernel.org (Postfix) with ESMTP id 3976A20637
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 08:50:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726488AbgCIItv (ORCPT
+        id S1726521AbgCIIuB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 04:49:51 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:47999 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725956AbgCIItu (ORCPT
+        Mon, 9 Mar 2020 04:50:01 -0400
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:57289 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725956AbgCIIuB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 04:49:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583743789;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=8QZ2VpmXmGjbC2jzOGtJlLDEr7srXarmJid3qae+hIk=;
-        b=WcNCx5NYwumGHMTwpCIK5mikEOHZ+dDOul6QY3o4Ra0u+bBCbSsdmN+dqR+ltUYBUnorcl
-        e/O5mufUcPc0+sC7ZMfK0izZuo/sbn9SkQC6pkG4dV5vMdY688K7PL44vETWNVbXJoISvO
-        1rDFa8j4dU+5VrjGnzUD2nwW4hLEIaM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-31-lzLAc4gnPQ6CJwC1rmfv3Q-1; Mon, 09 Mar 2020 04:49:47 -0400
-X-MC-Unique: lzLAc4gnPQ6CJwC1rmfv3Q-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 59F1DA3743;
-        Mon,  9 Mar 2020 08:49:45 +0000 (UTC)
-Received: from krava (ovpn-205-132.brq.redhat.com [10.40.205.132])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 14E2519C58;
-        Mon,  9 Mar 2020 08:49:41 +0000 (UTC)
-Date:   Mon, 9 Mar 2020 09:49:24 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     John Garry <john.garry@huawei.com>
-Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        namhyung@kernel.org, will@kernel.org, ak@linux.intel.com,
-        linuxarm@huawei.com, linux-kernel@vger.kernel.org,
-        james.clark@arm.com, qiangqing.zhang@nxp.com
-Subject: Re: [PATCH 6/6] perf test: Add pmu-events test
-Message-ID: <20200309084924.GA65888@krava>
-References: <1583406486-154841-1-git-send-email-john.garry@huawei.com>
- <1583406486-154841-7-git-send-email-john.garry@huawei.com>
+        Mon, 9 Mar 2020 04:50:01 -0400
+Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
+  Ludovic.Desroches@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
+  envelope-from="Ludovic.Desroches@microchip.com";
+  x-sender="Ludovic.Desroches@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
+  include:servers.mcsv.net include:mktomail.com
+  include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa3.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
+  envelope-from="Ludovic.Desroches@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa3.microchip.iphmx.com; spf=Pass smtp.mailfrom=Ludovic.Desroches@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: CtE5m+ELkGAVPTcPcGWF0bzBHDYq/y1TZA9/A/Lh6/eGyiKlxgVGEMrs2Xkv6LOIBeQBMvAmIu
+ WhBqEtZ2Lu4v8vuYsg2Hp5cw6tmkhWcowBBL2JDzSFrTvRgZAZGiqaj75MMA2IWMVOkym8kHl1
+ yaJaW9gcnpSVICSc+seTCSwjSMhcldrNPZCl+c2HPsqRlczDfhE8k3gKo9vUTOJs9nhGx5K1ud
+ qkyHCOCaWp0C65H04VHomaZTfE4EFlhTdtwRjKkaZQ6rtbWHB4PHv+OjuVYzgBiGxJ2XWvqGNF
+ 4Oo=
+X-IronPort-AV: E=Sophos;i="5.70,532,1574146800"; 
+   d="scan'208";a="69310236"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 09 Mar 2020 01:49:59 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Mon, 9 Mar 2020 01:49:59 -0700
+Received: from localhost (10.10.115.15) by chn-vm-ex01.mchp-main.com
+ (10.10.85.143) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
+ Transport; Mon, 9 Mar 2020 01:49:56 -0700
+Date:   Mon, 9 Mar 2020 09:49:13 +0100
+From:   Ludovic Desroches <ludovic.desroches@microchip.com>
+To:     Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+CC:     <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] dt-bindings: pinctrl: at91: Fix a typo ("descibe")
+Message-ID: <20200309084913.sgecbf3h2ajog3d7@M43218.corp.atmel.com>
+Mail-Followup-To: Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        linux-gpio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+References: <20200308214230.15193-1-j.neuschaefer@gmx.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Disposition: inline
-In-Reply-To: <1583406486-154841-7-git-send-email-john.garry@huawei.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200308214230.15193-1-j.neuschaefer@gmx.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 05, 2020 at 07:08:06PM +0800, John Garry wrote:
-> Add a pmu-events test.
+On Sun, Mar 08, 2020 at 10:42:30PM +0100, Jonathan Neuschäfer wrote:
 > 
-> This test will scan all PMUs in the system, and run a PMU event aliasing
-> test for each CPU or uncore PMU.
+> Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
+Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+
+> ---
+>  .../devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt          | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> For known aliases added in pmu-events/arch/test, we need to add an entry
-> in test_cpu_aliases[] or test_uncore_aliases[].
-
-heya, awesome! ;-)
-
+> diff --git a/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
+> index eb39f5051159..e8abbdad7b5d 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
+> +++ b/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
+> @@ -38,7 +38,7 @@ Bank: 3 (A, B and C)
+>    0xffffffff 0x7fff3ccf  /* pioB */
+>    0xffffffff 0x007fffff  /* pioC */
 > 
-> A sample run is as follows for x86:
+> -For each peripheral/bank we will descibe in a u32 if a pin can be
+> +For each peripheral/bank we will describe in a u32 if a pin can be
+>  configured in it by putting 1 to the pin bit (1 << pin)
 > 
-> Couldn't bump rlimit(MEMLOCK), failures may take place when creating BPF maps, etc
-> 10: PMU event aliases                                     :
-> --- start ---
-> test child forked, pid 30869
-> Using CPUID GenuineIntel-6-9E-9
-> intel_pt default config: tsc,mtc,mtc_period=3,psb_period=3,pt,branch
-> skipping testing PMU software
-> testing PMU power: skip
-> testing PMU cpu: matched event segment_reg_loads.any
-> testing PMU cpu: matched event dispatch_blocked.any
-> testing PMU cpu: matched event eist_trans
-> testing PMU cpu: matched event bp_l1_btb_correct
-> testing PMU cpu: matched event bp_l2_btb_correct
-> testing PMU cpu: pass
-> testing PMU cstate_core: skip
-> testing PMU uncore_cbox_2: matched event unc_cbo_xsnp_response.miss_eviction
-> testing PMU uncore_cbox_2: pass
-> skipping testing PMU breakpoint
-> testing PMU uncore_cbox_0: matched event unc_cbo_xsnp_response.miss_eviction
-> testing PMU uncore_cbox_0: pass
-> skipping testing PMU tracepoint
-> testing PMU cstate_pkg: skip
-> testing PMU uncore_arb: skip
-> testing PMU msr: skip
-> testing PMU uncore_cbox_3: matched event unc_cbo_xsnp_response.miss_eviction
-> testing PMU uncore_cbox_3: pass
-> testing PMU intel_pt: skip
-> testing PMU uncore_cbox_1: matched event unc_cbo_xsnp_response.miss_eviction
-> testing PMU uncore_cbox_1: pass
-> test child finished with 0
-> ---- end ----
-> PMU event aliases: Ok
-
-SNIP
-
-> +int test__pmu_event_aliases(struct test *test __maybe_unused,
-> +			    int subtest __maybe_unused)
-> +{
-> +	struct perf_pmu *pmu = NULL;
-> +
-> +	while ((pmu = perf_pmu__scan(pmu)) != NULL) {
-> +		int count = 0;
-
-I don't follow the pmu iteration in here.. I'd expect
-we create 'test' pmu and check that all the aliasses
-are in place as we expect them.. why do we match them
-to existing events?
-
-or as I'm thinking about that now, would it be enough
-to check pme_test_cpu array to have string that we
-expect?
-
-thanks for doing this,
-jirka
-
+>  Let's take the pioA on peripheral B
+> --
+> 2.20.1
+> 
