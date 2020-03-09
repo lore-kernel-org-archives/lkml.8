@@ -2,142 +2,169 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8F01C10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:26:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A55D0C18E5A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:26:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2D6C208C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:26:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583778371;
-	bh=eT0kOzEakczMXlQYl1J8bn5DoxtQ2UnGAnmkEdwTmgk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=q3pkEKfZxPno/qLWPoe6OGHzr9ekednlg6VRLZIahx2IjZfWHf/SLCF3tQyGNMggd
-	 DCJXvbKYwxz/BB3PSZ/K/JaWkjDsDnX1ZpNZJ0rvnItHXkg2kgUPikOJT/1Ig25M43
-	 SVkcPPeHrldblLSf+tsuFUrJgCGl9BW9KwkOR6cY=
+	by mail.kernel.org (Postfix) with ESMTP id 848E4205F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:26:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727389AbgCIS0K (ORCPT
+        id S1727433AbgCIS0x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 14:26:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35992 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727263AbgCIS0K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 14:26:10 -0400
-Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6BD39205F4;
-        Mon,  9 Mar 2020 18:26:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583778369;
-        bh=eT0kOzEakczMXlQYl1J8bn5DoxtQ2UnGAnmkEdwTmgk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=uPDGYdnddJT0uTL17VGEK3PrRwbbVptbQmCBeHhmxmOEDzXlabplCxwWejYRzDz2F
-         YjHeHWZtvooRfv3hThH8oM4cid//RR4ZQzbALsq5XpN7WZIQHOqNvZCaNepFmNvVCr
-         cMqY0Ywiyk3ra0gJHqQYK+EjW/QCJhUQ4sgOsxOg=
-Date:   Mon, 9 Mar 2020 11:26:08 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Lutomirski <luto@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, X86 ML <x86@kernel.org>,
-        Jann Horn <jannh@google.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Subject: Re: general protection fault in syscall_return_slowpath
-Message-ID: <20200309182608.GC1073@sol.localdomain>
-References: <000000000000ff323f05a053100c@google.com>
- <CALCETrV7JcVt3ejMbHxTs4-CFmKjcmSbW2eMmmMZUM7dg2mBuA@mail.gmail.com>
- <87eeu28zzl.fsf@nanos.tec.linutronix.de>
- <CACT4Y+YX72sz2LsqQOTQ=TdDK_f7zURjA9j9VyYwj7GgLrajkQ@mail.gmail.com>
+        Mon, 9 Mar 2020 14:26:53 -0400
+Received: from out03.mta.xmission.com ([166.70.13.233]:36482 "EHLO
+        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727350AbgCIS0x (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 14:26:53 -0400
+Received: from in01.mta.xmission.com ([166.70.13.51])
+        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jBN72-0001Yq-SW; Mon, 09 Mar 2020 12:26:48 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jBN71-00066p-Tz; Mon, 09 Mar 2020 12:26:48 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Bernd Edlinger <bernd.edlinger@hotmail.de>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Andrei Vagin <avagin@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Peter Zijlstra \(Intel\)" <peterz@infradead.org>,
+        Yuyang Du <duyuyang@gmail.com>,
+        David Hildenbrand <david@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        David Howells <dhowells@redhat.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christian Kellner <christian@kellner.me>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        "linux-doc\@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel\@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-mm\@kvack.org" <linux-mm@kvack.org>,
+        "stable\@vger.kernel.org" <stable@vger.kernel.org>,
+        "linux-api\@vger.kernel.org" <linux-api@vger.kernel.org>
+References: <AM6PR03MB5170EB4427BF5C67EE98FF09E4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <202003021531.C77EF10@keescook>
+        <20200303085802.eqn6jbhwxtmz4j2x@wittgenstein>
+        <AM6PR03MB5170285B336790D3450E2644E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <87v9nlii0b.fsf@x220.int.ebiederm.org>
+        <AM6PR03MB5170609D44967E044FD1BE40E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <87a74xi4kz.fsf@x220.int.ebiederm.org>
+        <AM6PR03MB51705AA3009B4986BB6EF92FE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <87r1y8dqqz.fsf@x220.int.ebiederm.org>
+        <AM6PR03MB517053AED7DC89F7C0704B7DE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <AM6PR03MB51703B44170EAB4626C9B2CAE4E20@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <87tv32cxmf.fsf_-_@x220.int.ebiederm.org>
+        <87v9ne5y4y.fsf_-_@x220.int.ebiederm.org>
+        <87zhcq4jdj.fsf_-_@x220.int.ebiederm.org>
+        <AM6PR03MB5170BC58D90BAD80CDEF3F8BE4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <878sk94eay.fsf@x220.int.ebiederm.org>
+        <AM6PR03MB517086003BD2C32E199690A3E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <87r1y12yc7.fsf@x220.int.ebiederm.org>
+Date:   Mon, 09 Mar 2020 13:24:30 -0500
+In-Reply-To: <87r1y12yc7.fsf@x220.int.ebiederm.org> (Eric W. Biederman's
+        message of "Mon, 09 Mar 2020 13:10:48 -0500")
+Message-ID: <87k13t2xpd.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACT4Y+YX72sz2LsqQOTQ=TdDK_f7zURjA9j9VyYwj7GgLrajkQ@mail.gmail.com>
+Content-Type: text/plain
+X-XM-SPF: eid=1jBN71-00066p-Tz;;;mid=<87k13t2xpd.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1/WnV4wYiwwbgU9GE0A9FUPBqxzJcDuRb4=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH v2 5/5] exec: Add a exec_update_mutex to replace cred_guard_mutex
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 09, 2020 at 09:34:25AM +0100, 'Dmitry Vyukov' via syzkaller-bugs wrote:
-> 
-> I see the repro opens /dev/fb0, so this may be related to the exact
-> type of framebuffer on the machine. That's what Jann tried to figure
-> out.
-> 
-> There is a plenty of open bugs on dashboard related to fb/tty, just
-> doing a quick grep based on titles:
-> 
-> https://syzkaller.appspot.com/upstream
-> BUG: unable to handle kernel paging request in
-> drm_fb_helper_dirty_work 7 4d20h 90d
-> BUG: unable to handle kernel paging request in vga16fb_imageblit 1 74d 73d
-> divide error in fbcon_switch C cause 141 3d15h 96d
-> general protection fault in fbcon_cursor C cause 12 13h48m 87d
-> general protection fault in fbcon_fb_blanked 3 88d 90d
-> general protection fault in fbcon_invert_region 1 49d 48d
-> general protection fault in fbcon_modechanged 3 89d 90d
-> INFO: task hung in do_fb_ioctl 6 36d 57d
-> INFO: task hung in fb_compat_ioctl 1 87d 87d
-> INFO: task hung in fb_open C cause 171 1h06m 96d
-> INFO: task hung in fb_release C cause 23 2d12h 77d
-> INFO: task hung in release_tty 3 6d16h 62d
-> INFO: task hung in tty_ldisc_hangup C cause 15 17d 92d
-> INFO: trying to register non-static key in hci_uart_tty_receive (2) 1 103d 99d
-> KASAN: global-out-of-bounds Read in fbcon_get_font C cause 19 7d06h 90d
-> KASAN: global-out-of-bounds Read in fb_pad_aligned_buffer C cause 5 4d22h 92d
-> KASAN: global-out-of-bounds Read in vga16fb_imageblit C cause 225 1d11h 96d
-> KASAN: slab-out-of-bounds Read in fbcon_get_font C cause 42 5d04h 96d
-> KASAN: slab-out-of-bounds Read in fb_pad_aligned_buffer 4 9d00h 48d
-> KASAN: slab-out-of-bounds Write in fbcon_scroll 1 75d 73d
-> KASAN: use-after-free Read in fbcon_cursor syz cause 3 41d 84d
-> KASAN: use-after-free Read in fb_mode_is_equal syz cause 70 5h49m 92d
-> KASAN: use-after-free Read in tty_open C cause 7 42d 96d
-> KASAN: use-after-free Write in release_tty C cause 544 4h01m 96d
-> KASAN: vmalloc-out-of-bounds Read in drm_fb_helper_dirty_work 1 80d 80d
-> KASAN: vmalloc-out-of-bounds Write in drm_fb_helper_dirty_work 2 64d 76d
-> KCSAN: data-race in echo_char / n_tty_receive_buf_common 11 21d 125d
-> KMSAN: kernel-infoleak in tty_compat_ioctl C 81 2h17m 14d
-> memory leak in tty_init_dev C 3 121d 192d
-> possible deadlock in n_tty_receive_buf_common C cause 585 1h18m 23d
-> possible deadlock in tty_port_close_start C cause 4 9d18h 25d
-> WARNING in dlfb_submit_urb/usb_submit_urb C 190 8d23h 251d
-> 
-> So if you don't see something obvious here, it may be not worth
-> spending more time until these, more obvious ones are fixed. This may
-> be a previous silent memory corruption that wasn't caught by KASAN.
+ebiederm@xmission.com (Eric W. Biederman) writes:
 
-Yesterday I was looking at a similar bug
-"general protection fault in do_con_write"
-(https://syzkaller.appspot.com/bug?id=f82ab89451323208e343f4a8632014ef12b1252d).
+> Bernd Edlinger <bernd.edlinger@hotmail.de> writes:
+>
+>> On 3/9/20 6:40 PM, Eric W. Biederman wrote:
+>>> Bernd Edlinger <bernd.edlinger@hotmail.de> writes:
+>>> 
+>>>> On 3/8/20 10:38 PM, Eric W. Biederman wrote:
+>>>>>
+>>>>> The cred_guard_mutex is problematic.  The cred_guard_mutex is held
+>>>>> over the userspace accesses as the arguments from userspace are read.
+>>>>> The cred_guard_mutex is held of PTRACE_EVENT_EXIT as the the other
+>>>                                 ^ over
+>>>>
+>>>> ... is held while waiting for the trace parent to handle PTRACE_EVENT_EXIT
+>>>> or something?
+>>> 
+>>> Yes.  Let me see if I can phrase that better.
+>>> 
+>>>> I wonder if we also should mention that
+>>>> it is held while waiting for the trace parent to
+>>>> receive the exit code with "wait"?
+>>> 
+>>> I don't think we have to spell out the details of how it all works,
+>>> unless that makes things clearer.  Kernel developers can be expected
+>>> to figure out how the kernel works.  The critical thing is that it is
+>>> an indefinite wait for userspace to take action.
+>>> 
+>>> But I will look.
+>>> 
+>>>>> threads are killed.  The cred_guard_mutex is held over
+>>>>> "put_user(0, tsk->clear_child_tid)" in exit_mm().
+>>>>>
+>>>>> Any of those can result in deadlock, as the cred_guard_mutex is held
+>>>>> over a possible indefinite userspace waits for userspace.
+>>>>>
+>>>>> Add exec_update_mutex that is only held over exec updating process
+>>>>
+>>>> Add ?
+>>> 
+>>> Yes.  That is what the change does: add exec_update_mutex.
+>>> 
+>>
+>> I just kind of missed the "subject" in this sentence,
+>> like "This patch adds an exec_update_mutex that is ..."
+>> but english is a foreign language for me, so may be okay as is.
+>
+> English has a lot of options.  I think this is a stylistic difference.
+>
+> Instead of being an observer and describing what the change does:
+> "This patch adds exec_update_mutex ..."  
+>
+> I was being there in the moment and saying/commading what is happening:
+> "Add exec_update_mutex ..."
+>
+> Using the more immdediate form ends up with more concise and clearer
+> sentences.
+>
+> Every one of my writing teachers in school emphasized that point
+> and I see the who it works when I write things.  But writing is hard and
+> I still tend toward long rambling sentences with many qualifiers that
+> confuse and detract from the point rather than make it clear what is
+> happening.
 
-It has a simple single-threaded reproducer at
-https://syzkaller.appspot.com/text?tag=ReproC&x=169c4c81e00000 that just:
+And reading through it all now I can see your confusion.  That
+description of my changes was not well done.  Reworking it now.
 
-	1. Calls FBIOPUT_VSCREENINFO on /dev/fb0
-	2. Opens /dev/tty20 and writes something to it
-
-Presumably, to reproduce this you at least need some graphics hardware with a
-corresponding framebuffer driver (to get /dev/fb0), as well as
-CONFIG_FRAMEBUFFER_CONSOLE=y (so that the virtual console /dev/tty20 uses a
-framebuffer console and not something else like a VGA text mode console).
-
-However, when I tried to reproduce this locally in QEMU with the same kconfig
-(https://syzkaller.appspot.com/text?tag=KernelConfig&x=31018567b8f0fc70) and
-with graphics enabled (-vga std), it didn't work.
-
-I then tried to reproduce on a Google Compute Engine VM with the exact same
-kconfig, and it worked.  I think the framebuffer driver in use was vga16fb.c.
-It's odd because the same driver seems to be used in the QEMU case, and in both
-cases the virtual consoles were bound to the framebuffer console.
-
-I need to double-check all this though.
-
-And yes, probably many of the above bugs have the same cause.
-
-- Eric
+Eric
