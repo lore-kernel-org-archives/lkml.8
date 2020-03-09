@@ -2,57 +2,58 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 556CBC10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 11:13:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D516AC10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 11:13:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2878B2051A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 11:13:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99BC220866
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 11:13:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="vhJLcMYm"
+	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="KEx0ardF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727103AbgCILNq (ORCPT
+        id S1727124AbgCILNu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 07:13:46 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:38150 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726991AbgCILNa (ORCPT
+        Mon, 9 Mar 2020 07:13:50 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:50644 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726977AbgCILNa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 9 Mar 2020 07:13:30 -0400
-Received: by mail-wm1-f67.google.com with SMTP id n2so2632384wmc.3
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 04:13:28 -0700 (PDT)
+Received: by mail-wm1-f65.google.com with SMTP id a5so9392715wmb.0
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 04:13:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=cloudflare.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=QaTFcTkFq4Xguxn8bSzfnksfS0c2jnlyVSoCBPs8eek=;
-        b=vhJLcMYmm/qr33TiAo7JT5z9HUaVRDrZxOEz87v6imXUfpQppv5xXULXiHOZUArRRp
-         FFGy2atvM1OycOehbNrLU6P63rckxQ5xm5mpMolVJvbPuKMVwijc1yTXJj+7Q6XXNB9u
-         mCjeJOvp1kRypn4zZL6FicO2iv+f6FuzwaSm0=
+        bh=kfIbQ9egZOgHYEi4ZCtd5fcolR6Q2j1G5CwpXRfW+tU=;
+        b=KEx0ardFKYz7mGkN7NWnfSDkRafDapDG2sLJYkCv+JC2SBmTcFSiYizOTPYGLtPwGg
+         bKeyCtwHIy/Z7AkMcCWM04z37PJvzgsnFbsqJ/0sbqLj3L0uzjmytRUSdSQqpfcLzzXg
+         HsIKE38qf+XFkSf2BiB2MbBviHa0n40VfdxG4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=QaTFcTkFq4Xguxn8bSzfnksfS0c2jnlyVSoCBPs8eek=;
-        b=rHh4It/O8yuBVNacLOLupT0mmRvR2D4sEZ/SlGmOq3n6liZrLQPoc0e9tlOKyvOmZm
-         jDNMnd9d7Xyu2JaTk3M+/cZfo0Hp3M7/QXlYGje+YIvA9f7EzyGg6ogXij3tPKV6NKtV
-         Mg7nHt9s/FJta8//NOEKUua6CCl1lYK5yGjO+FQ/1JZbC4nQSqWHHKrtbSFoRKmJ9MIf
-         LkNUhCD7H4B45F+Ri2wC3ecPaCru7aYnmV/VSSufnXJoaXN0eoQwkVNf1Ust3LBQd22B
-         HUd7wntdDErI19VpalSf8d2rupiU53YHcXQvKGRGHgmjO1j572LS1EWSWw962FVP0DoY
-         0RmQ==
-X-Gm-Message-State: ANhLgQ31j6U/dxPH/ctIiKVK3G54zJrNTO0tG0bOvgq29V7EruLd3WXW
-        q2j+0mqJxeRhxrDaIuu8BN/XXw==
-X-Google-Smtp-Source: ADFU+vtelcGYQQ7cq2t6WKsONlaRaq72BxVgq3eY1uel/I49QzMryenNk1JX3ZTxqPj2w/PQTT0LSA==
-X-Received: by 2002:a05:600c:2214:: with SMTP id z20mr18926382wml.57.1583752408076;
-        Mon, 09 Mar 2020 04:13:28 -0700 (PDT)
+        bh=kfIbQ9egZOgHYEi4ZCtd5fcolR6Q2j1G5CwpXRfW+tU=;
+        b=tA89uk2Q4HgpkeS3ShILeSA73c6KqeD7NUGg5IfllQGOQbvBZ+J/zhvm97T7GkQxhQ
+         j9eeaaUEzYhM/TJgP38dNMHWQUL9rZ0JJ8N3CI1zq6CeIfR6DBwr79PdZP+vRx1oog5i
+         2NeP+KLqBr/OrazBz8J2ndXiTpJkEF89hZKEfKxZyAYFCVGQ/wgHhqrI23vl+QHr8am1
+         oNr06E9pwJzISplgiF/7wc1YxSB1Cb4pliHdzytTOCcU9T8R2jSwgEXaMEwqQNqFKvOK
+         9lG1XodLRZmeZ6Eik72QKZpIpPlFtq6cnH8WWcPs+RTJQLKjX2Z9YXhhDRt2rXaarb+w
+         tdtg==
+X-Gm-Message-State: ANhLgQ3FiFG/01R2xak07BiB+SufeHlo08DVQucUd41lmQVbqQcokydY
+        uWJX2WfKqy9e0ASEUNF0Dnjjcg==
+X-Google-Smtp-Source: ADFU+vuRfiz5krPEg4BZ5r6jV4YZnMKnig5RI9m5gj5KCO1aBqQF6rqXdPIJcLzJwmHHi1znJBAZHw==
+X-Received: by 2002:a1c:a102:: with SMTP id k2mr6140449wme.125.1583752406466;
+        Mon, 09 Mar 2020 04:13:26 -0700 (PDT)
 Received: from localhost.localdomain ([2a06:98c0:1000:8250:3dcc:c1d:7f05:4873])
-        by smtp.gmail.com with ESMTPSA id a5sm25732846wmb.37.2020.03.09.04.13.26
+        by smtp.gmail.com with ESMTPSA id a5sm25732846wmb.37.2020.03.09.04.13.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Mar 2020 04:13:27 -0700 (PDT)
+        Mon, 09 Mar 2020 04:13:25 -0700 (PDT)
 From:   Lorenz Bauer <lmb@cloudflare.com>
 To:     Shuah Khan <shuah@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
         Daniel Borkmann <daniel@iogearbox.net>
@@ -61,9 +62,9 @@ Cc:     kernel-team@cloudflare.com, Lorenz Bauer <lmb@cloudflare.com>,
         John Fastabend <john.fastabend@gmail.com>,
         linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
         bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH bpf-next v4 11/12] selftests: bpf: enable UDP sockmap reuseport tests
-Date:   Mon,  9 Mar 2020 11:12:42 +0000
-Message-Id: <20200309111243.6982-12-lmb@cloudflare.com>
+Subject: [PATCH bpf-next v4 10/12] selftests: bpf: add tests for UDP sockets in sockmap
+Date:   Mon,  9 Mar 2020 11:12:41 +0000
+Message-Id: <20200309111243.6982-11-lmb@cloudflare.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200309111243.6982-1-lmb@cloudflare.com>
 References: <20200309111243.6982-1-lmb@cloudflare.com>
@@ -74,33 +75,325 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove the guard that disables UDP tests now that sockmap
-has support for them.
+Expand the TCP sockmap test suite to also check UDP sockets.
 
+Signed-off-by: Jakub Sitnicki <jakub@cloudflare.com>
 Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
-Reviewed-by: Jakub Sitnicki <jakub@cloudflare.com>
 Acked-by: John Fastabend <john.fastabend@gmail.com>
 ---
- tools/testing/selftests/bpf/prog_tests/select_reuseport.c | 6 ------
- 1 file changed, 6 deletions(-)
+ .../selftests/bpf/prog_tests/sockmap_listen.c | 157 ++++++++++++++----
+ 1 file changed, 127 insertions(+), 30 deletions(-)
 
-diff --git a/tools/testing/selftests/bpf/prog_tests/select_reuseport.c b/tools/testing/selftests/bpf/prog_tests/select_reuseport.c
-index a1dd13b34d4b..821b4146b7b6 100644
---- a/tools/testing/selftests/bpf/prog_tests/select_reuseport.c
-+++ b/tools/testing/selftests/bpf/prog_tests/select_reuseport.c
-@@ -805,12 +805,6 @@ static void test_config(int sotype, sa_family_t family, bool inany)
- 	char s[MAX_TEST_NAME];
- 	const struct test *t;
+diff --git a/tools/testing/selftests/bpf/prog_tests/sockmap_listen.c b/tools/testing/selftests/bpf/prog_tests/sockmap_listen.c
+index 4ba41dd26d6b..52aa468bdccd 100644
+--- a/tools/testing/selftests/bpf/prog_tests/sockmap_listen.c
++++ b/tools/testing/selftests/bpf/prog_tests/sockmap_listen.c
+@@ -108,6 +108,22 @@
+ 		__ret;                                                         \
+ 	})
  
--	/* SOCKMAP/SOCKHASH don't support UDP yet */
--	if (sotype == SOCK_DGRAM &&
--	    (inner_map_type == BPF_MAP_TYPE_SOCKMAP ||
--	     inner_map_type == BPF_MAP_TYPE_SOCKHASH))
--		return;
--
++#define xsend(fd, buf, len, flags)                                             \
++	({                                                                     \
++		ssize_t __ret = send((fd), (buf), (len), (flags));             \
++		if (__ret == -1)                                               \
++			FAIL_ERRNO("send");                                    \
++		__ret;                                                         \
++	})
++
++#define xrecv(fd, buf, len, flags)                                             \
++	({                                                                     \
++		ssize_t __ret = recv((fd), (buf), (len), (flags));             \
++		if (__ret == -1)                                               \
++			FAIL_ERRNO("recv");                                    \
++		__ret;                                                         \
++	})
++
+ #define xsocket(family, sotype, flags)                                         \
+ 	({                                                                     \
+ 		int __ret = socket(family, sotype, flags);                     \
+@@ -330,7 +346,7 @@ static void test_insert_bound(int family, int sotype, int mapfd)
+ 	xclose(s);
+ }
+ 
+-static void test_insert_listening(int family, int sotype, int mapfd)
++static void test_insert(int family, int sotype, int mapfd)
+ {
+ 	u64 value;
+ 	u32 key;
+@@ -467,7 +483,7 @@ static void test_lookup_32_bit_value(int family, int sotype, int mapfd)
+ 	xclose(s);
+ }
+ 
+-static void test_update_listening(int family, int sotype, int mapfd)
++static void test_update_existing(int family, int sotype, int mapfd)
+ {
+ 	int s1, s2;
+ 	u64 value;
+@@ -1116,7 +1132,7 @@ static void test_reuseport_select_listening(int family, int sotype,
+ {
+ 	struct sockaddr_storage addr;
+ 	unsigned int pass;
+-	int s, c, p, err;
++	int s, c, err;
+ 	socklen_t len;
+ 	u64 value;
+ 	u32 key;
+@@ -1145,19 +1161,33 @@ static void test_reuseport_select_listening(int family, int sotype,
+ 	if (err)
+ 		goto close_cli;
+ 
+-	p = xaccept(s, NULL, NULL);
+-	if (p < 0)
+-		goto close_cli;
++	if (sotype == SOCK_STREAM) {
++		int p;
++
++		p = xaccept(s, NULL, NULL);
++		if (p < 0)
++			goto close_cli;
++		xclose(p);
++	} else {
++		char b = 'a';
++		ssize_t n;
++
++		n = xsend(c, &b, sizeof(b), 0);
++		if (n == -1)
++			goto close_cli;
++
++		n = xrecv(s, &b, sizeof(b), 0);
++		if (n == -1)
++			goto close_cli;
++	}
+ 
+ 	key = SK_PASS;
+ 	err = xbpf_map_lookup_elem(verd_map, &key, &pass);
+ 	if (err)
+-		goto close_peer;
++		goto close_cli;
+ 	if (pass != 1)
+ 		FAIL("want pass count 1, have %d", pass);
+ 
+-close_peer:
+-	xclose(p);
+ close_cli:
+ 	xclose(c);
+ close_srv:
+@@ -1201,9 +1231,24 @@ static void test_reuseport_select_connected(int family, int sotype,
+ 	if (err)
+ 		goto close_cli0;
+ 
+-	p0 = xaccept(s, NULL, NULL);
+-	if (err)
+-		goto close_cli0;
++	if (sotype == SOCK_STREAM) {
++		p0 = xaccept(s, NULL, NULL);
++		if (p0 < 0)
++			goto close_cli0;
++	} else {
++		p0 = xsocket(family, sotype, 0);
++		if (p0 < 0)
++			goto close_cli0;
++
++		len = sizeof(addr);
++		err = xgetsockname(c0, sockaddr(&addr), &len);
++		if (err)
++			goto close_cli0;
++
++		err = xconnect(p0, sockaddr(&addr), len);
++		if (err)
++			goto close_cli0;
++	}
+ 
+ 	/* Update sock_map[0] to redirect to a connected socket */
+ 	key = 0;
+@@ -1216,8 +1261,24 @@ static void test_reuseport_select_connected(int family, int sotype,
+ 	if (c1 < 0)
+ 		goto close_peer0;
+ 
++	len = sizeof(addr);
++	err = xgetsockname(s, sockaddr(&addr), &len);
++	if (err)
++		goto close_srv;
++
+ 	errno = 0;
+ 	err = connect(c1, sockaddr(&addr), len);
++	if (sotype == SOCK_DGRAM) {
++		char b = 'a';
++		ssize_t n;
++
++		n = xsend(c1, &b, sizeof(b), 0);
++		if (n == -1)
++			goto close_cli1;
++
++		n = recv(c1, &b, sizeof(b), 0);
++		err = n == -1;
++	}
+ 	if (!err || errno != ECONNREFUSED)
+ 		FAIL_ERRNO("connect: expected ECONNREFUSED");
+ 
+@@ -1281,7 +1342,18 @@ static void test_reuseport_mixed_groups(int family, int sotype, int sock_map,
+ 		goto close_srv2;
+ 
+ 	err = connect(c, sockaddr(&addr), len);
+-	if (err && errno != ECONNREFUSED) {
++	if (sotype == SOCK_DGRAM) {
++		char b = 'a';
++		ssize_t n;
++
++		n = xsend(c, &b, sizeof(b), 0);
++		if (n == -1)
++			goto close_cli;
++
++		n = recv(c, &b, sizeof(b), 0);
++		err = n == -1;
++	}
++	if (!err || errno != ECONNREFUSED) {
+ 		FAIL_ERRNO("connect: expected ECONNREFUSED");
+ 		goto close_cli;
+ 	}
+@@ -1302,9 +1374,9 @@ static void test_reuseport_mixed_groups(int family, int sotype, int sock_map,
+ 	xclose(s1);
+ }
+ 
+-#define TEST(fn)                                                               \
++#define TEST(fn, ...)                                                          \
+ 	{                                                                      \
+-		fn, #fn                                                        \
++		fn, #fn, __VA_ARGS__                                           \
+ 	}
+ 
+ static void test_ops_cleanup(const struct bpf_map *map)
+@@ -1353,18 +1425,31 @@ static const char *map_type_str(const struct bpf_map *map)
+ 	}
+ }
+ 
++static const char *sotype_str(int sotype)
++{
++	switch (sotype) {
++	case SOCK_DGRAM:
++		return "UDP";
++	case SOCK_STREAM:
++		return "TCP";
++	default:
++		return "unknown";
++	}
++}
++
+ static void test_ops(struct test_sockmap_listen *skel, struct bpf_map *map,
+ 		     int family, int sotype)
+ {
+ 	const struct op_test {
+ 		void (*fn)(int family, int sotype, int mapfd);
+ 		const char *name;
++		int sotype;
+ 	} tests[] = {
+ 		/* insert */
+ 		TEST(test_insert_invalid),
+ 		TEST(test_insert_opened),
+-		TEST(test_insert_bound),
+-		TEST(test_insert_listening),
++		TEST(test_insert_bound, SOCK_STREAM),
++		TEST(test_insert),
+ 		/* delete */
+ 		TEST(test_delete_after_insert),
+ 		TEST(test_delete_after_close),
+@@ -1373,28 +1458,32 @@ static void test_ops(struct test_sockmap_listen *skel, struct bpf_map *map,
+ 		TEST(test_lookup_after_delete),
+ 		TEST(test_lookup_32_bit_value),
+ 		/* update */
+-		TEST(test_update_listening),
++		TEST(test_update_existing),
+ 		/* races with insert/delete */
+-		TEST(test_destroy_orphan_child),
+-		TEST(test_syn_recv_insert_delete),
+-		TEST(test_race_insert_listen),
++		TEST(test_destroy_orphan_child, SOCK_STREAM),
++		TEST(test_syn_recv_insert_delete, SOCK_STREAM),
++		TEST(test_race_insert_listen, SOCK_STREAM),
+ 		/* child clone */
+-		TEST(test_clone_after_delete),
+-		TEST(test_accept_after_delete),
+-		TEST(test_accept_before_delete),
++		TEST(test_clone_after_delete, SOCK_STREAM),
++		TEST(test_accept_after_delete, SOCK_STREAM),
++		TEST(test_accept_before_delete, SOCK_STREAM),
+ 	};
+-	const char *family_name, *map_name;
++	const char *family_name, *map_name, *sotype_name;
+ 	const struct op_test *t;
+ 	char s[MAX_TEST_NAME];
+ 	int map_fd;
+ 
+ 	family_name = family_str(family);
+ 	map_name = map_type_str(map);
++	sotype_name = sotype_str(sotype);
+ 	map_fd = bpf_map__fd(map);
+ 
  	for (t = tests; t < tests + ARRAY_SIZE(tests); t++) {
- 		if (t->need_sotype && t->need_sotype != sotype)
- 			continue; /* test not compatible with socket type */
+-		snprintf(s, sizeof(s), "%s %s %s", map_name, family_name,
+-			 t->name);
++		snprintf(s, sizeof(s), "%s %s %s %s", map_name, family_name,
++			 sotype_name, t->name);
++
++		if (t->sotype != 0 && t->sotype != sotype)
++			continue;
+ 
+ 		if (!test__start_subtest(s))
+ 			continue;
+@@ -1427,6 +1516,7 @@ static void test_redir(struct test_sockmap_listen *skel, struct bpf_map *map,
+ 	for (t = tests; t < tests + ARRAY_SIZE(tests); t++) {
+ 		snprintf(s, sizeof(s), "%s %s %s", map_name, family_name,
+ 			 t->name);
++
+ 		if (!test__start_subtest(s))
+ 			continue;
+ 
+@@ -1441,26 +1531,31 @@ static void test_reuseport(struct test_sockmap_listen *skel,
+ 		void (*fn)(int family, int sotype, int socket_map,
+ 			   int verdict_map, int reuseport_prog);
+ 		const char *name;
++		int sotype;
+ 	} tests[] = {
+ 		TEST(test_reuseport_select_listening),
+ 		TEST(test_reuseport_select_connected),
+ 		TEST(test_reuseport_mixed_groups),
+ 	};
+ 	int socket_map, verdict_map, reuseport_prog;
+-	const char *family_name, *map_name;
++	const char *family_name, *map_name, *sotype_name;
+ 	const struct reuseport_test *t;
+ 	char s[MAX_TEST_NAME];
+ 
+ 	family_name = family_str(family);
+ 	map_name = map_type_str(map);
++	sotype_name = sotype_str(sotype);
+ 
+ 	socket_map = bpf_map__fd(map);
+ 	verdict_map = bpf_map__fd(skel->maps.verdict_map);
+ 	reuseport_prog = bpf_program__fd(skel->progs.prog_reuseport);
+ 
+ 	for (t = tests; t < tests + ARRAY_SIZE(tests); t++) {
+-		snprintf(s, sizeof(s), "%s %s %s", map_name, family_name,
+-			 t->name);
++		snprintf(s, sizeof(s), "%s %s %s %s", map_name, family_name,
++			 sotype_name, t->name);
++
++		if (t->sotype != 0 && t->sotype != sotype)
++			continue;
+ 
+ 		if (!test__start_subtest(s))
+ 			continue;
+@@ -1473,8 +1568,10 @@ static void run_tests(struct test_sockmap_listen *skel, struct bpf_map *map,
+ 		      int family)
+ {
+ 	test_ops(skel, map, family, SOCK_STREAM);
++	test_ops(skel, map, family, SOCK_DGRAM);
+ 	test_redir(skel, map, family, SOCK_STREAM);
+ 	test_reuseport(skel, map, family, SOCK_STREAM);
++	test_reuseport(skel, map, family, SOCK_DGRAM);
+ }
+ 
+ void test_sockmap_listen(void)
 -- 
 2.20.1
 
