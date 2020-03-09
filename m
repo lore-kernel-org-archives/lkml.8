@@ -2,92 +2,139 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B9BBC10F29
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 12:24:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F31FC10F29
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 12:25:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F4AE20828
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 12:24:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5008320828
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 12:25:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583756708;
+	bh=yPA9w9zVqEd1n9209AsggUpc6u72Nd3iHGc0tLQavZU=;
+	h=Date:From:To:To:To:Cc:Cc:Cc:Subject:In-Reply-To:References:
+	 List-ID:From;
+	b=c/k5js9a/sSdh7fD4BED6IL/7cFWLwKmo7aD2DYv3y3BejMwymAL1mQgtEC9T/Anm
+	 6aOKUkr44RYZdj5Ex6N5SMjTryZrHnCNVG6AsuYVxPf3udw5bG6jj91K1eNoCo3DVc
+	 O0gAxv+16xSw5U7tp0nKM2xzc9V7GIRGYgmd41Pw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726463AbgCIMYg (ORCPT
+        id S1726546AbgCIMZH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 08:24:36 -0400
-Received: from foss.arm.com ([217.140.110.172]:51506 "EHLO foss.arm.com"
+        Mon, 9 Mar 2020 08:25:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50806 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726368AbgCIMYg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 08:24:36 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F1B7F30E;
-        Mon,  9 Mar 2020 05:24:34 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 20D953F6CF;
-        Mon,  9 Mar 2020 05:24:32 -0700 (PDT)
-Date:   Mon, 9 Mar 2020 12:24:30 +0000
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
-Cc:     Andy Lutomirski <luto@amacapital.net>, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mips@vger.kernel.org, clang-built-linux@googlegroups.com,
-        x86@kernel.org, Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Paul Burton <paul.burton@mips.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Mark Salyzyn <salyzyn@android.com>,
-        Kees Cook <keescook@chromium.org>,
-        Peter Collingbourne <pcc@google.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Andrei Vagin <avagin@openvz.org>,
-        Nick Desaulniers <ndesaulniers@google.com>
-Subject: Re: [PATCH v2 00/20] Introduce common headers
-Message-ID: <20200309122429.GB26309@lakrids.cambridge.arm.com>
-References: <20200306133242.26279-1-vincenzo.frascino@arm.com>
- <3278D604-28F1-47A1-BAB8-D8EB439995E8@amacapital.net>
- <b18c7ce1-0948-a9e2-2d7e-d019669a71e1@arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b18c7ce1-0948-a9e2-2d7e-d019669a71e1@arm.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+        id S1726368AbgCIMZG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 08:25:06 -0400
+Received: from localhost (unknown [137.135.114.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5043620866;
+        Mon,  9 Mar 2020 12:25:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583756705;
+        bh=yPA9w9zVqEd1n9209AsggUpc6u72Nd3iHGc0tLQavZU=;
+        h=Date:From:To:To:To:Cc:Cc:Cc:Subject:In-Reply-To:References:From;
+        b=GAWaz842ND0G6pPkcb4p1DXd1MOFNQLArq/aAPHoMBoAqbnsHQHR+1FrDPbY1KLaT
+         na9Lj5+1Se52qtQ+Dlsr+Lftxx7rZXFFwfCIDuYWi2gRzU/vj0z/R3+a5jDSlBbbKz
+         QrP3SNdwXFJh1+QAyWjIq5SPpNbia3aV6zZjFBQw=
+Date:   Mon, 09 Mar 2020 12:25:04 +0000
+From:   Sasha Levin <sashal@kernel.org>
+To:     Sasha Levin <sashal@kernel.org>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     stable@vger.kernel.org
+Cc:     stable@vger.kernel.org
+Subject: Re: [PATCH] kbuild: Disable -Wpointer-to-enum-cast
+In-Reply-To: <20200308073400.23398-1-natechancellor@gmail.com>
+References: <20200308073400.23398-1-natechancellor@gmail.com>
+Message-Id: <20200309122505.5043620866@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 09, 2020 at 11:07:08AM +0000, Vincenzo Frascino wrote:
-> Hi Andy,
-> 
-> On 3/6/20 4:04 PM, Andy Lutomirski wrote:
-> 
-> [...]
-> 
-> >>
-> >> To solve the problem, I decided to use the approach below:
-> >>  * Extract from include/linux/ the vDSO required kernel interface
-> >>    and place it in include/common/
-> > 
-> > I really like the approach, but I’m wondering if “common” is the
-> > right name. This directory is headers that aren’t stable ABI like
-> > uapi but are shared between the kernel and the vDSO. Regular user
-> > code should *not* include these, right?
-> > 
-> > Would “vdso” or perhaps “private-abi” be clearer?
-> 
-> Thanks! These headers are definitely not "uapi" like and they are meant to
-> evolve in future like any other kernel header. We have just to make sure that
-> the evolution does not break what we are trying to achieve with this series.
+Hi
 
-Given we already include uapi/* headers in kernel code, I think placing
-these in a vdso/* namespace would be fine. I think that more clearly
-expresses the constraints on the headers than private-abi/* would.
+[This is an automated email]
 
-Thanks,
-Mark.
+This commit has been processed because it contains a -stable tag.
+The stable tag indicates that it's relevant for the following trees: all
+
+The bot has tested the following trees: v5.5.8, v5.4.24, v4.19.108, v4.14.172, v4.9.215, v4.4.215.
+
+v5.5.8: Build OK!
+v5.4.24: Build OK!
+v4.19.108: Failed to apply! Possible dependencies:
+    076f421da5d4 ("kbuild: replace cc-name test with CONFIG_CC_IS_CLANG")
+    a1494304346a ("kbuild: add all Clang-specific flags unconditionally")
+
+v4.14.172: Failed to apply! Possible dependencies:
+    076f421da5d4 ("kbuild: replace cc-name test with CONFIG_CC_IS_CLANG")
+    a1494304346a ("kbuild: add all Clang-specific flags unconditionally")
+    c6d6f4c55f5c ("MIPS: Always specify -EB or -EL when using clang")
+    ee67855ecd9d ("MIPS: vdso: Allow clang's --target flag in VDSO cflags")
+
+v4.9.215: Failed to apply! Possible dependencies:
+    076f421da5d4 ("kbuild: replace cc-name test with CONFIG_CC_IS_CLANG")
+    0e5e7f5e9700 ("powerpc/64: Reclaim CPU_FTR_SUBCORE")
+    1421dc6d4829 ("powerpc/kbuild: Use flags variables rather than overriding LD/CC/AS")
+    250122baed29 ("powerpc64/module: Tighten detection of mcount call sites with -mprofile-kernel")
+    2a056f58fd33 ("powerpc: consolidate -mno-sched-epilog into FTRACE flags")
+    3a849815a136 ("powerpc/book3s64: Always build for power4 or later")
+    43c9127d94d6 ("powerpc: Add option to use thin archives")
+    471d7ff8b51b ("powerpc/64s: Remove POWER4 support")
+    5a61ef74f269 ("powerpc/64s: Support new device tree binding for discovering CPU features")
+    6977f95e63b9 ("powerpc: avoid -mno-sched-epilog on GCC 4.9 and newer")
+    73aca179d78e ("powerpc/modules: Fix crashes by adding CONFIG_RELOCATABLE to vermagic")
+    951eedebcdea ("powerpc/64: Handle linker stubs in low .text code")
+    a1494304346a ("kbuild: add all Clang-specific flags unconditionally")
+    a73657ea19ae ("powerpc/64: Add GENERIC_CPU support for little endian")
+    abba759796f9 ("powerpc/kbuild: move -mprofile-kernel check to Kconfig")
+    b40b2386bce9 ("powerpc/Makefile: Fix ld version check with 64-bit LE-only toolchain")
+    b71c9ffb1405 ("powerpc: Add arch/powerpc/tools directory")
+    baa25b571a16 ("powerpc/64: Do not link crtsavres.o in vmlinux")
+    badf436f6fa5 ("powerpc/Makefiles: Convert ifeq to ifdef where possible")
+    c0d64cf9fefd ("powerpc: Use feature bit for RTC presence rather than timebase presence")
+    c1807e3f8466 ("powerpc/64: Free up CPU_FTR_ICSWX")
+    c6d6f4c55f5c ("MIPS: Always specify -EB or -EL when using clang")
+    cf43d3b26452 ("powerpc: Enable pkey subsystem")
+    ee67855ecd9d ("MIPS: vdso: Allow clang's --target flag in VDSO cflags")
+    efe0160cfd40 ("powerpc/64: Linker on-demand sfpr functions for modules")
+    f188d0524d7e ("powerpc: Use the new post-link pass to check relocations")
+
+v4.4.215: Failed to apply! Possible dependencies:
+    076f421da5d4 ("kbuild: replace cc-name test with CONFIG_CC_IS_CLANG")
+    07e45c120c9c ("powerpc: Don't disable kernel FP/VMX/VSX MSR bits on context switch")
+    152d523e6307 ("powerpc: Create context switch helpers save_sprs() and restore_sprs()")
+    20dbe6706206 ("powerpc: Call restore_sprs() before _switch()")
+    2a056f58fd33 ("powerpc: consolidate -mno-sched-epilog into FTRACE flags")
+    3f3b5dc14c25 ("powerpc/pseries: PACA save area fix for general exception vs MCE")
+    579e633e764e ("powerpc: create flush_all_to_thread()")
+    57f266497d81 ("powerpc: Use gas sections for arranging exception vectors")
+    6977f95e63b9 ("powerpc: avoid -mno-sched-epilog on GCC 4.9 and newer")
+    70fe3d980f5f ("powerpc: Restore FPU/VEC/VSX if previously used")
+    8c50b72a3b4f ("powerpc/ftrace: Add Kconfig & Make glue for mprofile-kernel")
+    951eedebcdea ("powerpc/64: Handle linker stubs in low .text code")
+    a1494304346a ("kbuild: add all Clang-specific flags unconditionally")
+    a74599a50419 ("powerpc/pseries: PACA save area fix for MCE vs MCE")
+    abba759796f9 ("powerpc/kbuild: move -mprofile-kernel check to Kconfig")
+    c208505900b2 ("powerpc: create giveup_all()")
+    c6d6f4c55f5c ("MIPS: Always specify -EB or -EL when using clang")
+    caca285e5ab4 ("powerpc/mm/radix: Use STD_MMU_64 to properly isolate hash related code")
+    d1e1cf2e38de ("powerpc: clean up asm/switch_to.h")
+    d8d42b0511fe ("powerpc/64: Do load of PACAKBASE in LOAD_HANDLER")
+    ee67855ecd9d ("MIPS: vdso: Allow clang's --target flag in VDSO cflags")
+    f0f558b131db ("powerpc/mm: Preserve CFAR value on SLB miss caused by access to bogus address")
+    f3d885ccba85 ("powerpc: Rearrange __switch_to()")
+
+
+NOTE: The patch will not be queued to stable trees until it is upstream.
+
+How should we proceed with this patch?
+
+-- 
+Thanks
+Sasha
