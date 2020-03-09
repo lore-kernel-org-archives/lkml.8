@@ -2,110 +2,101 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D78EC10F29
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 21:48:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CFBBC10F25
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 21:52:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B60324649
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 21:48:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EnAOLY3l"
+	by mail.kernel.org (Postfix) with ESMTP id 157332146E
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 21:52:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727152AbgCIVs1 (ORCPT
+        id S1726974AbgCIVwA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 17:48:27 -0400
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:36819 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726118AbgCIVs0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 17:48:26 -0400
-Received: by mail-pj1-f67.google.com with SMTP id l41so503224pjb.1;
-        Mon, 09 Mar 2020 14:48:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=M+Yc5KaBBvqlUu6IX9+jhdSvvYBrtTQ1N/+uZrTujAY=;
-        b=EnAOLY3lknQn3MrFOnTG47rE/msuLtkHcwI9CiqqLxAphICFFDtZpSmVBdHY1gjaT1
-         nF3ZgHtiuEflpauwpjHLTa11NmOBCgIGoRnB/lC61GeUFJGTQUhR7M5jhLKEkVom/atE
-         rGNK46z/+EJGKYmexGaRptMczx6WalQZ7vm1+hnINGCorC4R+/lDj28HCN2YFObBXibf
-         TbBc8ktb/3tvgKvbKZYVuXQFQ1jCh7q5i2kNRpO8mDbWAxKJ4bf2OPG8x6COaosxKY5L
-         JbUlwomEzIjo5YEQYdlVnYLt8bnVg32QPMRPbi/wBzdkVbfsh8Q61ZV2waG0vTF+9vHY
-         Rdwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=M+Yc5KaBBvqlUu6IX9+jhdSvvYBrtTQ1N/+uZrTujAY=;
-        b=mm7w3L8jqlQIB8Lu2kEgJxyj37wTFyz2EXsB840lnf6J2Wfio0xEfHjW201sfChTZr
-         bjFAuPv5mC1gn1ux0eEJKc0qQimcpXBxZZ5ivDC7wgnc6sVqBYGIuduMOeqhG8qlErOy
-         RjP926mWRMhXUVFWVOOOJdGskqAVJ8PTOYrDmeKZWjCNEKkrdPHQ0KFZi27D7l2XyA3K
-         os0kSgnol6L/ha9RlAtqDD6+rcQlfjiOhZ42NVMvx19h+vXdU+MAPE3YOeNlOyvWwRop
-         ntPccf2Q92sAXrCFu0XijIeg/64JgHKrB+k0pXPAwfy3q5WGocl8lKxZ8Q3fi1tSCFcr
-         h6fA==
-X-Gm-Message-State: ANhLgQ0bbrk3KOLcIuUyShwCSv7CT+iQh+iyEZ/GhN8VctyhYwSkfVDH
-        3V9O0t6TCjsx6N/jj/XCZOo=
-X-Google-Smtp-Source: ADFU+vspwoKFKjFMDUf9nlAvLvUHioLAIIAwk15+/ODm/1HJWpwGZy4//EuoLeQ1SRiulbB+FAF01Q==
-X-Received: by 2002:a17:90a:ba89:: with SMTP id t9mr1352540pjr.93.1583790503831;
-        Mon, 09 Mar 2020 14:48:23 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id q15sm9321748pgn.68.2020.03.09.14.48.22
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 09 Mar 2020 14:48:23 -0700 (PDT)
-Date:   Mon, 9 Mar 2020 14:48:22 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Guru Das Srinagesh <gurus@codeaurora.org>
-Cc:     linux-pwm@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <uwe@kleine-koenig.org>,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        linux-kernel@vger.kernel.org, Kamil Debski <kamil@wypas.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, linux-hwmon@vger.kernel.org
-Subject: Re: [PATCH v7 03/13] hwmon: pwm-fan: Use 64-bit division macros for
- period and duty cycle
-Message-ID: <20200309214822.GA19773@roeck-us.net>
-References: <cover.1583782035.git.gurus@codeaurora.org>
- <b503833e0f58bd6dd9fe84d866124e7c457e099e.1583782035.git.gurus@codeaurora.org>
+        Mon, 9 Mar 2020 17:52:00 -0400
+Received: from mail.v3.sk ([167.172.186.51]:46822 "EHLO shell.v3.sk"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726742AbgCIVv7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 17:51:59 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id BB0B9E01A2;
+        Mon,  9 Mar 2020 21:52:16 +0000 (UTC)
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id kmu3_uheh0bv; Mon,  9 Mar 2020 21:52:16 +0000 (UTC)
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id E3B29E019F;
+        Mon,  9 Mar 2020 21:52:15 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at zimbra.v3.sk
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id O3nIKDN6wsol; Mon,  9 Mar 2020 21:52:15 +0000 (UTC)
+Received: from furthur.lan (unknown [109.183.109.54])
+        by zimbra.v3.sk (Postfix) with ESMTPSA id 81046DEDF6;
+        Mon,  9 Mar 2020 21:52:15 +0000 (UTC)
+From:   Lubomir Rintel <lkundrak@v3.sk>
+To:     Joe Perches <joe@perches.com>
+Cc:     Andy Whitcroft <apw@canonical.com>, linux-kernel@vger.kernel.org,
+        Lubomir Rintel <lkundrak@v3.sk>
+Subject: [PATCH] checkpatch: check proper licensing of Devicetree bindings
+Date:   Mon,  9 Mar 2020 22:51:53 +0100
+Message-Id: <20200309215153.38824-1-lkundrak@v3.sk>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b503833e0f58bd6dd9fe84d866124e7c457e099e.1583782035.git.gurus@codeaurora.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 09, 2020 at 12:35:06PM -0700, Guru Das Srinagesh wrote:
-> Because period and duty cycle are defined in the PWM framework structs
-> as ints with units of nanoseconds, the maximum time duration that can be
-> set is limited to ~2.147 seconds. Redefining them as u64 values will
-> enable larger time durations to be set.
-> 
-> As a first step, prepare drivers to handle the switch to u64 period and
-> duty_cycle by replacing division operations involving pwm period and duty cycle
-> with their 64-bit equivalents as appropriate. The actual switch to u64 period
-> and duty_cycle follows as a separate patch.
-> 
-> Where the dividend is 64-bit but the divisor is 32-bit, use *_ULL
-> macros:
-> - DIV_ROUND_UP_ULL
-> - DIV_ROUND_CLOSEST_ULL
-> - div_u64
-> 
-> Where the divisor is 64-bit (dividend may be 32-bit or 64-bit), use
-> DIV64_* macros:
-> - DIV64_U64_ROUND_CLOSEST
-> - div64_u64
-> 
-There is no explanation why this is necessary. What is the use case ?
-It is hard to imagine a real-world use case with a duty cycle of more
-than 2 seconds.
+According to Devicetree maintainers (see Link: below), the Devicetree
+binding documents are preferrably licensed (GPL-2.0-only OR
+BSD-2-Clause).
 
-Guenter
+Let's check that. The actual check is a bit more relaxed, to allow more
+liberal but compatible licensing (e.g. GPL-2.0-or-later OR
+BSD-2-Clause).
+
+Link: https://lore.kernel.org/lkml/20200108142132.GA4830@bogus/
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+
+---
+Changes since v1:
+- Downgrade severity to CHECK when running against existing files [Joe
+  Perches]
+- Add --fix support [Joe Perches]
+Both changes are taken from here: https://lore.kernel.org/lkml/3904265706=
+7088e4ca960f630a7d222fc48f947a.camel@perches.com/
+---
+ scripts/checkpatch.pl | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index e2976c3fe5ff8..642e897f46e5c 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -3111,6 +3111,17 @@ sub process {
+ 						WARN("SPDX_LICENSE_TAG",
+ 						     "'$spdx_license' is not supported in LICENSES/...\n" . $herec=
+urr);
+ 					}
++					if ($realfile =3D~ m@^Documentation/devicetree/bindings/@ &&
++					    not $spdx_license =3D~ /GPL-2\.0.*BSD-2-Clause/) {
++						my $msg_level =3D \&WARN;
++						$msg_level =3D \&CHK if ($file);
++						if (&{$msg_level}("SPDX_LICENSE_TAG",
++
++								  "DT binding documents should be licensed (GPL-2.0-only OR BSD-=
+2-Clause)\n" . $herecurr) &&
++						    $fix) {
++							$fixed[$fixlinenr] =3D~ s/SPDX-License-Identifier: .*/SPDX-Licens=
+e-Identifier: (GPL-2.0-only OR BSD-2-Clause)/;
++						}
++					}
+ 				}
+ 			}
+ 		}
+--=20
+2.25.1
+
