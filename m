@@ -2,144 +2,115 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEF8FC10F29
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 20:38:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63596C10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 20:38:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF3CA20409
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 20:38:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FA8720409
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 20:38:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583786299;
+	bh=nRQQIW1PpVXrk006TULzmGf13Dnlv/dcFEy2mKJYWCI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=iIwOJjzTyIrZhEtxlLF5OgHNq/Bwvh40BeRBZb54it6JEsOzT9bCTdXKwd6BXy8Yj
+	 vWA2S1kWfFG8zkTM6E+Ve4HMbmyFAGZ2aEY5tBhXCB/8fw3cmHKTLR/7acRGL0jU2a
+	 WjtmKMWONAgn37WgEK0u1XPYsQ6mBUE3oypE3OcE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726557AbgCIUiH (ORCPT
+        id S1726772AbgCIUiR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 16:38:07 -0400
-Received: from out02.mta.xmission.com ([166.70.13.232]:42716 "EHLO
-        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725992AbgCIUiH (ORCPT
+        Mon, 9 Mar 2020 16:38:17 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:42459 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726096AbgCIUiR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 16:38:07 -0400
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jBPA0-0000iR-U1; Mon, 09 Mar 2020 14:38:00 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jBPA0-0000KM-14; Mon, 09 Mar 2020 14:38:00 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Bernd Edlinger <bernd.edlinger@hotmail.de>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Andrei Vagin <avagin@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Peter Zijlstra \(Intel\)" <peterz@infradead.org>,
-        Yuyang Du <duyuyang@gmail.com>,
-        David Hildenbrand <david@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        David Howells <dhowells@redhat.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christian Kellner <christian@kellner.me>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        "linux-doc\@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel\@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-mm\@kvack.org" <linux-mm@kvack.org>,
-        "stable\@vger.kernel.org" <stable@vger.kernel.org>,
-        "linux-api\@vger.kernel.org" <linux-api@vger.kernel.org>
-References: <AM6PR03MB5170EB4427BF5C67EE98FF09E4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <AM6PR03MB5170285B336790D3450E2644E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <87v9nlii0b.fsf@x220.int.ebiederm.org>
-        <AM6PR03MB5170609D44967E044FD1BE40E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <87a74xi4kz.fsf@x220.int.ebiederm.org>
-        <AM6PR03MB51705AA3009B4986BB6EF92FE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <87r1y8dqqz.fsf@x220.int.ebiederm.org>
-        <AM6PR03MB517053AED7DC89F7C0704B7DE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <AM6PR03MB51703B44170EAB4626C9B2CAE4E20@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <87tv32cxmf.fsf_-_@x220.int.ebiederm.org>
-        <87v9ne5y4y.fsf_-_@x220.int.ebiederm.org>
-        <875zfe5xzb.fsf_-_@x220.int.ebiederm.org>
-        <AM6PR03MB5170C3A4319BA6A057C3CCACE4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <87tv2xz510.fsf@x220.int.ebiederm.org>
-        <AM6PR03MB51709D441EE6830DC8CE3090E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <87mu8pz4ex.fsf@x220.int.ebiederm.org>
-        <AM6PR03MB5170E548767878B3E454756AE4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
-Date:   Mon, 09 Mar 2020 15:35:42 -0500
-In-Reply-To: <AM6PR03MB5170E548767878B3E454756AE4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        (Bernd Edlinger's message of "Mon, 9 Mar 2020 20:03:46 +0000")
-Message-ID: <87sgihxo4h.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Mon, 9 Mar 2020 16:38:17 -0400
+Received: by mail-ot1-f65.google.com with SMTP id 66so10971998otd.9;
+        Mon, 09 Mar 2020 13:38:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4sv47E3whDnk7QFlUz6K8G7Rk9bNvaKAJ3x+BtFqMd8=;
+        b=XDnFVn47oye6Q/VhPPqy25QWTqwgGYvlxyDgKvncP8MXRc32LQJV+KPPdZ6u7RoKZW
+         w5W19cBYQ+TV38+LYFbzSkUh2UXqNb2CdqZgNCdUZ0MpSIENynqifj8RuiutOMKuQfQt
+         6UWeg5hvzFVGS7l8ydOdij8fvUeDk1z+Zwzne6hgTWeo6EoImu9n/Lz3C8G62Km0f8a1
+         9tuIPQ1BzyRkf5f0OzG+ZKJZCpn3Y2I5/tyaxnDCZYs6+nzBZZZlepjhHJnfHYCv1pcl
+         TF+HMPSMXfXYv8YzBa+3THJzveKdP9Nf0QRPEHQFBK6ZX9sXjClz7X8KbOdRs/4mbuAx
+         3mcw==
+X-Gm-Message-State: ANhLgQ24K5EytBywQrO+ZUGKFSrYkylRhzDVeexdsrE0KiCwsIJvPald
+        9UFdPYUgHh3YePXyL3XflY3k0DE=
+X-Google-Smtp-Source: ADFU+vt/J1NMy19Vg3cxnshnY12AaBqTlB+fN96FHy9+jFEUvpyhOuxvj76cKzr6obrAP+oVo7WySA==
+X-Received: by 2002:a9d:23e4:: with SMTP id t91mr14274415otb.125.1583786296250;
+        Mon, 09 Mar 2020 13:38:16 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id t21sm2358588otp.80.2020.03.09.13.38.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Mar 2020 13:38:14 -0700 (PDT)
+Received: (nullmailer pid 30910 invoked by uid 1000);
+        Mon, 09 Mar 2020 20:38:14 -0000
+Date:   Mon, 9 Mar 2020 15:38:14 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Artur Rojek <contact@artur-rojek.eu>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Heiko Stuebner <heiko@sntech.de>, linux-input@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org, Artur Rojek <contact@artur-rojek.eu>
+Subject: Re: [PATCH v4 4/5] dt-bindings: input: Add docs for ADC driven
+ joystick.
+Message-ID: <20200309203814.GA29255@bogus>
+References: <20200307211412.44148-1-contact@artur-rojek.eu>
+ <20200307211412.44148-4-contact@artur-rojek.eu>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jBPA0-0000KM-14;;;mid=<87sgihxo4h.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1+C9q7AJy/XzZqfp4+4zJkdcGkx/cUL5xE=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH v2 4/5] exec: Move exec_mmap right after de_thread in flush_old_exec
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200307211412.44148-4-contact@artur-rojek.eu>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Bernd Edlinger <bernd.edlinger@hotmail.de> writes:
+On Sat,  7 Mar 2020 22:14:11 +0100, Artur Rojek wrote:
+> Add documentation for the adc-joystick driver, used to provide support
+> for joysticks connected over ADC.
+> 
+> Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
+> Tested-by: Paul Cercueil <paul@crapouillou.net>
+> ---
+> 
+>  Changes:
+> 
+>  v2: - Add `reg` property to axis subnode in order to enumerate the axes,
+>      - rename `linux,abs-code` property to `linux,code`,
+>      - drop `linux,` prefix from the remaining properties of axis subnode
+> 
+>  v3: no change
+> 
+>  v4: - remove "bindings" from the unique identifier string,
+>      - replace `|` with `>` for all description properties,
+>      - specify the number of items for `io-channels`,
+>      - correct the regex pattern of `axis` property,
+>      - specify the value range of `reg` property for each axis,
+>      - put `abs-range` properties under `allOf` 
+> 
+>  .../bindings/input/adc-joystick.yaml          | 121 ++++++++++++++++++
+>  1 file changed, 121 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/input/adc-joystick.yaml
+> 
 
-> On 3/9/20 8:58 PM, Eric W. Biederman wrote:
->> 
->> Ok.  I think this has it sorted:
->> 
->>     exec: Move exec_mmap right after de_thread in flush_old_exec
->>     
->>     I have read through the code in exec_mmap and I do not see anything
->>     that depends on sighand or the sighand lock, or on signals in anyway
->>     so this should be safe.
->>     
->>     This rearrangement of code has two significant benefits.  It makes
->>     the determination of passing the point of no return by testing bprm->mm
->>     accurate.  All failures prior to that point in flush_old_exec are
->>     either truly recoverable or they are fatal.
->>     
->>     Further this consolidates all of the possible indefinite waits for
->>     userspace together at the top of flush_old_exec.  The possible wait
->>     for a ptracer on PTRACE_EVENT_EXIT, the possible wait for a page fault
->>     to be resolved in clear_child_tid, and the possible wait for a page
->>     fault in exit_robust_list.
->>     
->>     This consolidation allows the creation of a mutex to replace
->>     cred_guard_mutex that is not held over possible indefinite userspace
->>     waits.  Which will allow removing deadlock scenarios from the kernel.
->>     
->>     Reviewed-by: Bernd Edlinger <bernd.edlinger@hotmail.de>
->>     Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
->> 
->> 
->> I don't think I usually have this many typos.  Sigh.
->> 
->
-> OK.
->
-> never mind,
+My bot found errors running 'make dt_binding_check' on your patch:
 
-No no.  I really appreciate all of the scrutiny.  Frequently the issues
-that will produce typos or poor patch descriptions are also the issues
-that will produce sloppy patches as well.  I was just frustrated with
-myself.
+Error: Documentation/devicetree/bindings/input/adc-joystick.example.dts:22.31-32 syntax error
+FATAL ERROR: Unable to parse input tree
+scripts/Makefile.lib:311: recipe for target 'Documentation/devicetree/bindings/input/adc-joystick.example.dt.yaml' failed
+make[1]: *** [Documentation/devicetree/bindings/input/adc-joystick.example.dt.yaml] Error 1
+Makefile:1262: recipe for target 'dt_binding_check' failed
+make: *** [dt_binding_check] Error 2
 
-Eric
+See https://patchwork.ozlabs.org/patch/1250951
+Please check and re-submit.
