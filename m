@@ -2,79 +2,80 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE18FC10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:32:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2EEDC10F28
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:34:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDB022072A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:32:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99C7520727
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:34:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726464AbgCIJc5 (ORCPT
+        id S1726478AbgCIJeA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 05:32:57 -0400
-Received: from mx2.suse.de ([195.135.220.15]:40514 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725962AbgCIJc5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 05:32:57 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 3CEF8ACBD;
-        Mon,  9 Mar 2020 09:32:55 +0000 (UTC)
-Subject: Re: [patch part-III V2 00/23] x86/entry: Consolidation - Part III
- (simple exceptions)
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        Brian Gerst <brgerst@gmail.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>
-References: <20200308231410.905396057@linutronix.de>
-From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Message-ID: <9763700c-1f8f-f065-60b3-2a25e166fac1@suse.com>
-Date:   Mon, 9 Mar 2020 10:32:53 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Mon, 9 Mar 2020 05:34:00 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:46323 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725956AbgCIJeA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 05:34:00 -0400
+Received: by mail-ot1-f67.google.com with SMTP id 111so4528193oth.13;
+        Mon, 09 Mar 2020 02:33:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WvHxGDbM4xXg1EcvuRgNde2oxcAJwP0NhI/8JQp0zEY=;
+        b=L3T8/hxC0oDJF+55FZSJ7MCPdYS4iEO54lYy6WoVH1A0iII2t8IhtG8xZw5JFFv8xm
+         UBpYW4wxMnhfOwG0mAiAzHFYHKy9iKviy2DREQZGxI7qmH5cDi2XQe91kvb+sE7+s18n
+         1UQhsU+TD5gBdWen5J8+TCQ7Jan2IlLAjI4KwA12WWTbSflHa5p4GI37/6I6r1x24qy6
+         5jhxvnfnExi29XfXvhvukCRM7vZh8Nblo876BHPKUkLd16+Zam/Yq5laUybcq5KCqegS
+         E8jz6qWuE0Zk53w313t/D56zATmYIpFfgkjU5BtuXZIt75hgnOQzALMqUcEK62b7xzLy
+         YHCw==
+X-Gm-Message-State: ANhLgQ0dnN7miRrXDnsuP/eMiBdCzNqt/LnJSgCPewCj4gS92j7qeRCo
+        G8obF2/BcE8LO4RcC8wY22pLteKqaQtiR9XdP0Hvmg==
+X-Google-Smtp-Source: ADFU+vvGXVMhNMBu467qKoGTYw07Jrqf4CWMrfjNI5VI/gydRbL/mvE+UHDShNSmuzoQ4WgBSiT0S1tNIZFLWepP+gU=
+X-Received: by 2002:a9d:4d02:: with SMTP id n2mr2935668otf.107.1583746438904;
+ Mon, 09 Mar 2020 02:33:58 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200308231410.905396057@linutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200309092950.3042-1-geert@linux-m68k.org>
+In-Reply-To: <20200309092950.3042-1-geert@linux-m68k.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 9 Mar 2020 10:33:47 +0100
+Message-ID: <CAMuHMdVtNjtuxJYtE9npQheDe58iWwKihkz6xUB3iuzgV8hEWg@mail.gmail.com>
+Subject: Re: Build regressions/improvements in v5.6-rc5
+To:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Cc:     linux-um <linux-um@lists.infradead.org>,
+        netdev <netdev@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09.03.20 00:14, Thomas Gleixner wrote:
-> Hi!
-> 
-> This is the second version of the entry consolidation work part III
-> covering simple exceptions. V1 can be found here:
-> 
->    https://lore.kernel.org/r/20200225221606.511535280@linutronix.de
-> 
-> It applies on top of part II which is available here
-> 
->    https://lore.kernel.org/r/20200308222359.370649591@linutronix.de
-> 
-> and is also available from git (including part II):
-> 
->      git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel entry-v2-part3
-> 
-> The changes vs. V1:
-> 
->    - Remove #BP (int3) conversion as this needs extra care vs. kprobes (Peter)
-> 
->    - Fixup the FOOF bug do_invalid_op() call in fault.c
-> 
->    - Address the few review comments (mostly changelog and comment improvements)
-> 
->    - Picked up Reviewed-by and Acked-by tags
+On Mon, Mar 9, 2020 at 10:31 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> JFYI, when comparing v5.6-rc5[1] to v5.6-rc4[3], the summaries are:
+>   - build errors: +2/-0
 
-FWIW: tested to be bootable as Xen dom0 (at least when adding commit
-bba42affa732d6fd5b).
+  + error: "devm_ioremap_resource"
+[drivers/net/ethernet/xilinx/xilinx_emac.ko] undefined!:  => N/A
+  + error: "devm_ioremap_resource" [drivers/ptp/ptp_ines.ko] undefined!:  => N/A
 
+um-all{mod,yes}config
 
-Juergen
+> [1] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/2c523b344dfa65a3738e7039832044aa133c75fb/ (all 239 configs)
+> [3] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/98d54f81e36ba3bf92172791eba5ca5bd813989b/ (all 239 configs)
+
+>   + error: "devm_ioremap_resource" [drivers/net/ethernet/xilinx/xilinx_emac.ko] undefined!:  => N/A
+>   + error: "devm_ioremap_resource" [drivers/ptp/ptp_ines.ko] undefined!:  => N/A
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
