@@ -2,209 +2,215 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E689C10F25
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 21:42:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89136C10F25
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 21:43:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEAB724649
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 21:42:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35DD524655
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 21:43:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uDnfx1vs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727141AbgCIVm2 (ORCPT
+        id S1727073AbgCIVn1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 17:42:28 -0400
-Received: from mx2.suse.de ([195.135.220.15]:46800 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726266AbgCIVm2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 17:42:28 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 5CA25AC37;
-        Mon,  9 Mar 2020 21:42:24 +0000 (UTC)
-From:   NeilBrown <neilb@suse.de>
-To:     Jeff Layton <jlayton@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 10 Mar 2020 08:42:13 +1100
-Cc:     kernel test robot <rong.a.chen@intel.com>,
-        yangerkun <yangerkun@huawei.com>,
-        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org,
-        Bruce Fields <bfields@fieldses.org>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Subject: Re: [locks] 6d390e4b5d: will-it-scale.per_process_ops -96.6% regression
-In-Reply-To: <1bfba96b4bf0d3ca9a18a2bced3ef3a2a7b44dad.camel@kernel.org>
-References: <20200308140314.GQ5972@shao2-debian> <e3783d060c778cb41b77380ad3e278133b52f57e.camel@kernel.org> <CAHk-=whGK712fPqmQ3FSHxqe3Aqny4bEeWEvfaytLeLV2+ijCQ@mail.gmail.com> <34355c4fe6c3968b1f619c60d5ff2ca11a313096.camel@kernel.org> <1bfba96b4bf0d3ca9a18a2bced3ef3a2a7b44dad.camel@kernel.org>
-Message-ID: <87blp5urwq.fsf@notabene.neil.brown.name>
+        Mon, 9 Mar 2020 17:43:27 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:43803 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726266AbgCIVn0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 17:43:26 -0400
+Received: by mail-pg1-f193.google.com with SMTP id u12so5309897pgb.10
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 14:43:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=F4gTp56ur6uQjTLhO+QT0ClKii4W0AXDeyJ/ghlfGhY=;
+        b=uDnfx1vsQ5N3XqdFswJkqxPXBlJuHQ04vErZOpQ0DLuCbL184RwjKJOLrUSTIjoa7r
+         vyagJEmiedu/orTidbRCGjWJMqKaJQhzlGCUOW1zq6eYtoZ8KE7wjwaIKlxuYHaB31CY
+         EuZcmtE80Ibs9gDTLFcUjz5bHDhUFG4+lk1A+3ZVCl6LWUgKOTnvwc2mkaLazbT0uV+c
+         EoxG1vgCIBErMheYCNUEZZ3KSMCQaiZvX/ahNk3+mtjJ4WsDF2KXkOia7xb4HFUaBFIH
+         Te2HXrY2x4WRe3guNuHV2DKO4U3cMCcG/+b46LaLIM4Aur7Zi/Fy3LpTHpGbv/MHQYtJ
+         RxGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=F4gTp56ur6uQjTLhO+QT0ClKii4W0AXDeyJ/ghlfGhY=;
+        b=ST3RApZMHQarDy7/2aVOtWlooKma/Oa/HRt17rUCTTHYQkub00xVt2XO4OCNbC9kem
+         PriA3vkxUhXVIXjD8hRRHyr6kGS00PAe2UDfQpXFX+bDYRsIzyft//4uv2Ge6pJ/6FdW
+         yX4hC30mUmbGjRmZKbmV71et4Rt99jEx0iKa6nmbMb7fCc7wda6mJIE+HHJJ+z9+UnKr
+         JJJx4ot7KvnbOPfa0oFg7WKB9QvYMS52toHg9aKSLsw9e9UHTl7iUgIk8yrbkojf6uhy
+         lKVR+gfQ1IKSPRLyI+ZDhkE+jQcsE5Ge9m+j6VVIH4QFfkL1j+heeBwgThPKDrNWvimA
+         Zu3g==
+X-Gm-Message-State: ANhLgQ1eqeh5Gk0go2ckrgqp8owBbVgnrnprCbnTzTbLsjYBs7W3m3Ki
+        T8KzOYMzc/UmkxjcgFMfzPFo+xraKUPYBIxaRPiKCQ==
+X-Google-Smtp-Source: ADFU+vuHt49TZ9CHks3Y4yLQe2o5AbwW2en0PWT6GmyYy455v6utArIU5J7kuHNsjwFMTgzL5hxqmXAIRnaUXBKDZMA=
+X-Received: by 2002:a62:6842:: with SMTP id d63mr18560202pfc.113.1583790204937;
+ Mon, 09 Mar 2020 14:43:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+References: <CA+G9fYvRZ9eCE29FjXkv1dQfrdGO3uWp4Tvkip5Z_jsgjVJeAQ@mail.gmail.com>
+ <CAHp75VfhKoLtWkLHUyzg6m=rx833qiCVimWJVKU13qrX+aJz-Q@mail.gmail.com>
+ <CAFd5g45GbSX1BkuaH=8639ESHi-MCGkpFhEZZpycm9=jQb93rg@mail.gmail.com>
+ <CAFd5g47aaE+tGeHPrQmhfi6_nrvi1K4DvtRodh=zN21-uiQ1DQ@mail.gmail.com>
+ <20200305223350.GA2852@mara.localdomain> <20200306120525.GC68079@kuha.fi.intel.com>
+ <CAFd5g45c9L4BBRNtxtQf_NFr2bR6Wgt9uOHW86gzb6Ozeb0SBA@mail.gmail.com>
+In-Reply-To: <CAFd5g45c9L4BBRNtxtQf_NFr2bR6Wgt9uOHW86gzb6Ozeb0SBA@mail.gmail.com>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Mon, 9 Mar 2020 14:43:13 -0700
+Message-ID: <CAFd5g45cdygYfxGoCkk710tLXFADeLNb+6w-=vhkDMLP9OM7bw@mail.gmail.com>
+Subject: Re: BUG: kernel NULL pointer dereference, address: 00 - ida_free+0x76/0x140
+To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        hdegoede@redhat.com,
+        "rafael.j.wysocki" <rafael.j.wysocki@intel.com>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        lkft-triage@lists.linaro.org,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Mar 09 2020, Jeff Layton wrote:
-
-> On Mon, 2020-03-09 at 13:22 -0400, Jeff Layton wrote:
->> On Mon, 2020-03-09 at 08:52 -0700, Linus Torvalds wrote:
->> > On Mon, Mar 9, 2020 at 7:36 AM Jeff Layton <jlayton@kernel.org> wrote:
->> > > On Sun, 2020-03-08 at 22:03 +0800, kernel test robot wrote:
->> > > > FYI, we noticed a -96.6% regression of will-it-scale.per_process_o=
-ps due to commit:
->> > >=20
->> > > This is not completely unexpected as we're banging on the global
->> > > blocked_lock_lock now for every unlock. This test just thrashes file
->> > > locks and unlocks without doing anything in between, so the workload
->> > > looks pretty artificial [1].
->> > >=20
->> > > It would be nice to avoid the global lock in this codepath, but it
->> > > doesn't look simple to do. I'll keep thinking about it, but for now =
-I'm
->> > > inclined to ignore this result unless we see a problem in more reali=
-stic
->> > > workloads.
->> >=20
->> > That is a _huge_ regression, though.
->> >=20
->> > What about something like the attached? Wouldn't that work? And make
->> > the code actually match the old comment about wow "fl_blocker" being
->> > NULL being special.
->> >=20
->> > The old code seemed to not know about things like memory ordering eith=
-er.
->> >=20
->> > Patch is entirely untested, but aims to have that "smp_store_release()
->> > means I'm done and not going to touch it any more", making that
->> > smp_load_acquire() test hopefully be valid as per the comment..
->>=20
->> Yeah, something along those lines maybe. I don't think we can use
->> fl_blocker that way though, as the wait_event_interruptible is waiting
->> on it to go to NULL, and the wake_up happens before fl_blocker is
->> cleared.
->>=20
->> Maybe we need to mix in some sort of FL_BLOCK_ACTIVE flag and use that
->> instead of testing for !fl_blocker to see whether we can avoid the
->> blocked_lock_lock?
->>=20=20=20
+On Mon, Mar 9, 2020 at 1:35 PM Brendan Higgins
+<brendanhiggins@google.com> wrote:
 >
-> How about something like this instead? (untested other than for
-> compilation)
+> On Fri, Mar 6, 2020 at 4:05 AM Heikki Krogerus
+> <heikki.krogerus@linux.intel.com> wrote:
+> >
+> > On Fri, Mar 06, 2020 at 12:33:50AM +0200, Sakari Ailus wrote:
+> > > Hi Brendan,
+> > >
+> > > On Thu, Mar 05, 2020 at 11:51:20AM -0800, Brendan Higgins wrote:
+> > > > On Thu, Mar 5, 2020 at 11:40 AM Brendan Higgins
+> > > > <brendanhiggins@google.com> wrote:
+> > > > >
+> > > > > On Thu, Mar 5, 2020 at 11:18 AM Andy Shevchenko
+> > > > > <andy.shevchenko@gmail.com> wrote:
+> > > > > >
+> > > > > > +Cc: Sakari
+> > > > > >
+> > > > > > On Thu, Mar 5, 2020 at 6:00 PM Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+> > > > > > >
+> > > > > > > Regression reported on Linux next 5.6.0-rc4-next-20200305 on x86_64,
+> > > > > > > i386, arm and arm64. The steps to reproduce is running kselftests lib
+> > > > > > > printf.sh test case.
+> > > > > > > Which is doing modprobe operations.
+> > > > > > >
+> > > > > > > BTW, there are few RCU warnings from the boot log.
+> > > > > > > Please refer below link for more details.
+> > > > > > >
+> > > > > > > Steps reproduce by using kselftests,
+> > > > > > >
+> > > > > > >           - lsmod || true
+> > > > > > >           - cd /opt/kselftests/default-in-kernel/lib/
+> > > > > > >           - export PATH=/opt/kselftests/default-in-kernel/kselftest:$PATH
+> > > > > > >           - ./printf.sh || true
+> > > > > > >           - ./bitmap.sh || true
+> > > > > > >           - ./prime_numbers.sh || true
+> > > > > > >           - ./strscpy.sh || true
+> > > > > > >
+> > > > > > > x86_64 kernel BUG dump.
+> > > > > > > + ./printf.sh
+> > > > >
+> > > > > Oops, I am wondering if I broke this with my change "Revert "software
+> > > > > node: Simplify software_node_release() function"":
+> > > > >
+> > > > > https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=d1c19322388d6935b534b494a2c223dd089e30dd
+> > > > >
+> > > > > I am still investigating, will update later.
+> > > >
+> > > > Okay, yeah, I am pretty sure I caused the breakage. I got an email
+> > > > from kernel test robot a couple days ago that I didn't see:
+> > > >
+> > > > https://lists.01.org/hyperkitty/list/lkp@lists.01.org/thread/N3ZN5XH7HK24JVEJ5WSQD2SK6YCDRILR/
+> > > >
+> > > > It shows the same breakage after applying this change.
+> > > >
+> > > > I am still investigating how my change broke it, nevertheless.
+> > >
+> > > As nodes in the tree are being removed, the code before the patch that
+> > > "simplified" the software_node_release() function accessed the node's parent
+> > > in its release function.
+> > >
+> > > And if CONFIG_DEBUG_KOBJECT_RELEASE is defined, the release functions are no
+> > > longer necessarily called in order, leading to referencing released memory.
+> > > Oops!
+> > >
+> > > So Heikki's patch actually fixed a bug. :-)
+> >
+> > Well, I think it just hid the problem. It looks like the core
+> > (lib/kobject.c) allows the parent kobject to be released before the
+> > last child kobject is released. To be honest, that does not sound
+> > right to me...
+> >
+> > I think we can workaround this problem by taking reference to the
+> > parent when the child is added, and then releasing it when the child
+> > is released, and in that way be guaranteed that the parent will not
+> > disappear before the child is fully released, but that still does not
+> > feel right. It feels more like the core is not doing it's job to me.
+> > The parent just should not be released before its children.
+> >
+> > Either I'm wrong about that, and we still should take the reference on
+> > the parent, or we revert my patch like Brendan proposed and then fix
 >
-> Basically, this just switches the waiters over to wait for
-> fl_blocked_member to go empty. That still happens before the wakeup, so
-> it should be ok to wait on that.
+> Either way, isn't it wrong to release the node ID before deleting the
+> sysfs entry? I am not sure that my fix was the correct one, but I
+> believe the bug that Heidi and I found is actually a bug.
 >
-> I think we can also eliminate the lockless list_empty check in
-> locks_delete_block, as the fl_blocker check should be sufficient now.
-> --=20
-> Jeff Layton <jlayton@kernel.org>
-> From c179d779c9b72838ed9996a65d686d86679d1639 Mon Sep 17 00:00:00 2001
-> From: Linus Torvalds <torvalds@linux-foundation.org>
-> Date: Mon, 9 Mar 2020 14:35:43 -0400
-> Subject: [PATCH] locks: reinstate locks_delete_lock optimization
+> > the core with something like this (warning, I did not even try to
+> > compile that):
 >
-> ...by using smp_load_acquire and smp_store_release to close the race
-> window.
+> I will try it out.
 >
-> [ jlayton: wait on the fl_blocked_requests list to go empty instead of
-> 	   the fl_blocker pointer to clear. Remove the list_empty check
-> 	   from locks_delete_lock shortcut. ]
+> > diff --git a/lib/kobject.c b/lib/kobject.c
+> > index 83198cb37d8d..ec5774992337 100644
+> > --- a/lib/kobject.c
+> > +++ b/lib/kobject.c
+> > @@ -680,6 +680,12 @@ static void kobject_cleanup(struct kobject *kobj)
+> >                 kobject_uevent(kobj, KOBJ_REMOVE);
+> >         }
+> >
+> > +       if (t && t->release) {
+> > +               pr_debug("kobject: '%s' (%p): calling ktype release\n",
+> > +                        kobject_name(kobj), kobj);
+> > +               t->release(kobj);
+> > +       }
+> > +
+> >         /* remove from sysfs if the caller did not do it */
+> >         if (kobj->state_in_sysfs) {
+> >                 pr_debug("kobject: '%s' (%p): auto cleanup kobject_del\n",
+> > @@ -687,12 +693,6 @@ static void kobject_cleanup(struct kobject *kobj)
+> >                 kobject_del(kobj);
+> >         }
+> >
+> > -       if (t && t->release) {
+> > -               pr_debug("kobject: '%s' (%p): calling ktype release\n",
+> > -                        kobject_name(kobj), kobj);
+> > -               t->release(kobj);
+> > -       }
+> > -
+> >         /* free name if we allocated it */
+> >         if (name) {
+> >                 pr_debug("kobject: '%s': free name\n", name);
 
-Why do you think it is OK to remove that list_empty check?  I don't
-think it is.  There might be locked requests that need to be woken up.
+Alright, so I tried it and it looks like Heikki's suggestion worked.
 
-As the problem here is a use-after-free due to a race, one option would
-be to use rcu_free() on the file_lock, and hold rcu_read_lock() around
-test/use.
+Is everyone comfortable going this route?
 
-Another option is to use a different lock.  The fl_wait contains a
-spinlock, and we have wake_up_locked() which is provided for exactly
-these sorts of situations where the wake_up call can race with a thread
-waking up.
-
-So my compile-tested-only proposal is below.
-I can probably a proper change-log entry if you think the patch is a
-good way to go.
-
-NeilBrown
-
-
-diff --git a/fs/locks.c b/fs/locks.c
-index 426b55d333d5..8aa04d5ac8b3 100644
-=2D-- a/fs/locks.c
-+++ b/fs/locks.c
-@@ -735,11 +735,13 @@ static void __locks_wake_up_blocks(struct file_lock *=
-blocker)
-=20
- 		waiter =3D list_first_entry(&blocker->fl_blocked_requests,
- 					  struct file_lock, fl_blocked_member);
-+		spin_lock(&waiter->fl_wait.lock);
- 		__locks_delete_block(waiter);
- 		if (waiter->fl_lmops && waiter->fl_lmops->lm_notify)
- 			waiter->fl_lmops->lm_notify(waiter);
- 		else
-=2D			wake_up(&waiter->fl_wait);
-+			wake_up_locked(&waiter->fl_wait);
-+		spin_unlock(&waiter->fl_wait.lock);
- 	}
- }
-=20
-@@ -753,6 +755,31 @@ int locks_delete_block(struct file_lock *waiter)
- {
- 	int status =3D -ENOENT;
-=20
-+	/*
-+	 * If fl_blocker is NULL, it won't be set again as this thread
-+	 * "owns" the lock and is the only one that might try to claim
-+	 * the lock.  So it is safe to test fl_blocker locklessly.
-+	 * Also if fl_blocker is NULL, this waiter is not listed on
-+	 * fl_blocked_requests for some lock, so no other request can
-+	 * be added to the list of fl_blocked_requests for this
-+	 * request.  So if fl_blocker is NULL, it is safe to
-+	 * locklessly check if fl_blocked_requests is empty.  If both
-+	 * of these checks succeed, there is no need to take the lock.
-+	 * However, some other thread might have only *just* set
-+	 * fl_blocker to NULL and it about to send a wakeup on
-+	 * fl_wait, so we mustn't return too soon or we might free waiter
-+	 * before that wakeup can be sent.  So take the fl_wait.lock
-+	 * to serialize with the wakeup in __locks_wake_up_blocks().
-+	 */
-+	if (waiter->fl_blocker =3D=3D NULL) {
-+		spin_lock(&waiter->fl_wait.lock);
-+		if (waiter->fl_blocker =3D=3D NULL &&
-+		    list_empty(&waiter->fl_blocked_requests)) {
-+			spin_unlock(&waiter->fl_wait.lock);
-+			return status;
-+		}
-+		spin_unlock(&waiter->fl_wait.lock);
-+	}
- 	spin_lock(&blocked_lock_lock);
- 	if (waiter->fl_blocker)
- 		status =3D 0;
-
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl5muDgACgkQOeye3VZi
-gbl3tQ//WG1aE9dJOm6lVwZE8QAYH86Yf2SNH9TbiZSKz9cegn/oLLipES9nk9NL
-qVrVKDWHEB2IYi9pQo2W9C8RMGd0sl3uDP3D/xF//72yrG5mgcuQrehvSpROJ1zu
-MsjrbFOC6mUfsWd+MNZ41miR/ZmxuVwHsdMqvTExkxaRszgU9zUsFkmkl4eTvB4D
-G1zczLrkD2GeAvIQiC/c9AoKtcM1P0KEK3Hn/xcLWtDchD9INd4R57+PZ/HMzt6Y
-aAlEZHxI9t/CDjS5WYRQ98zXD+mNeRpAoLN0fPVCxwgNpHjMNUj4hViwXEdQpJ5P
-cBXr2yFi6f6ts3mSLQT/yAHwG+30M10LS8FtRa0dgTxdMCMENIq1YkjnBt6ktd3n
-bfG82pZrUHK8yxQBefpsV8odkJLmo9qVuLT9vTOsUd9xDNVi9xidICrDhN8JbsVd
-Zt4C0sZfCLIdL4ZFTP6DSTHSQxmvsE8FD1YLYBh0SoyXYNSvQk8tmXdaHKAQvTtg
-HCHVMVnb0QI5kLdb/53f9Db1FyIjHpLfHaouhtOjY+mpr7jdpGWp4zmcsZNBo8UL
-nEwT3tG4XP+BPS8i9d5QpDfY8YdUOF40g73G897mqlaM9E3qogEbDccQMA3oz62f
-56d5OKO4CF2HXcmPOpPzkVx1bimZaQyC0rRW26PqK1oGp53Pl7s=
-=xVa1
------END PGP SIGNATURE-----
---=-=-=--
+Also, should I send this fix as a separate patch? Or do people want me
+to send an updated revision of my revert patch with the fix?
