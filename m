@@ -2,86 +2,145 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5043CC18E5A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 13:34:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FD6EC18E5A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 13:37:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29C8C20873
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 13:34:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D429D20675
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 13:37:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="HUKsGOZN"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="AtqoN+FX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726641AbgCINe6 (ORCPT
+        id S1726632AbgCINhN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 09:34:58 -0400
-Received: from ozlabs.org ([203.11.71.1]:57213 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726427AbgCINe5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 09:34:57 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48bfNG6J86z9sPJ;
-        Tue, 10 Mar 2020 00:34:52 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1583760895;
-        bh=AltDo9M4fmtAGo4MuZpe3IL+JKXOUDDbG5Ju5kWPlzU=;
-        h=Date:From:To:Cc:Subject:From;
-        b=HUKsGOZNoD/te05QzCuOH5xOMAGmE8JRbKNKkpaTXJ1ZzKV5vbXa0raElhp/ZT957
-         o3iMUYMaLV81+C4vf4400rdAmIVw/dIO3Yj0RGgyHXJrOdQHK14jQQt7CUDpVNN6ew
-         A7aVDV5C3DwPQ2I9JWk0a5J15KpvDeck0Kuh6RUx3cUzNrnY1vmEdoeiQc2kRNPXQA
-         RDht92uRhdMvHu7BNQZursRnGFiw3VY8drRhW7YIm7u/g/xHKOgjknQt5K3W5B6bVO
-         ZRdelHNVYTs4j6EAFEEVunBthX98KCK4bmTjOiOrvFG/f7znD5TVS5R0bnhXhIQrd3
-         nqOCOt0X0ginA==
-Date:   Tue, 10 Mar 2020 00:34:44 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Michal Simek <monstr@monstr.eu>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: Signed-off-by missing for commit in the microblaze tree
-Message-ID: <20200310003444.50d98639@canb.auug.org.au>
+        Mon, 9 Mar 2020 09:37:13 -0400
+Received: from mail-eopbgr60055.outbound.protection.outlook.com ([40.107.6.55]:64514
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726427AbgCINhN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 09:37:13 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Nw9yB7A08OHbVPwGalgIY9UeK57fLLjwXkuVkuS0Cfz+GIYmDeRV0m+VHmcr3cFzHUn+yOBWfAZ7cm9F+MRvaSU1APj9fyqycwHKLdKygi4PWf43W4nOzx1DREm+7c7aU7PUrVp5+t6MX1i/CTbUo8v/qFiG2Aqp8Y7AoTxxCnT4qT+q3T9F3LpVIZwLUTwBk+C8IIggho+eLWXmb8ftzpaUIL8D9akwpXKokmD/8zS2g0fno33+1jC0gz8QkfE/xQUiOegVVt4VW7xMuOBqRmhk/WjuDI/kl/kUI/76xF8f87AXTmqoZIuPISGAW1yJCKzuDrNCGUf/J7F1wb0OpA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4zaGIN+vMn6CQ7AMDzBnDfmCSotkEzqv3Hb3T2hzfRY=;
+ b=AfZ0Fl9hWYpIZI+PIjjbncfrJDQy9hpgpctxvysDiH/8dYtXkeNB6tz+okk60l1GSgxkE1aYog/Ct/btbZ+f4qYGCZ5puLo0Ue/KTSqX78mqWurDMu2BrBzOReDjsggmMAkFhtR095X0ybo3HfS1oknWJ9bFnn7HUYcGj6ADdq9EDOkYrOJ62LZmBTtPoXgynyInztXtzT4yJt4r6OsjDSpz7Y0pyWI3BZlUdXw3JPPuDGRLvq/FxIDOVBjTJAmaEvGryX+ltLxoyV7QorQdKtRzeZ0SlHOowMHdpjIz+IJvlc6kAzrmGr3qxurQILj+L+JJldIJlEOy38cgZtkYfA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4zaGIN+vMn6CQ7AMDzBnDfmCSotkEzqv3Hb3T2hzfRY=;
+ b=AtqoN+FX+0p35to28knoJpw9BjEWjaz+6DjbBqGPttFnK1KDA54ttvQ5TdVRasw+Sl9sLgfLyC9d5ccqlaJYVVEuSV/LYMDCEOdb5CbpvUzw7dPB4AIVfg+lNIuuXXIq7W42emN5RcD/DbutqOkUjBbxoAja1KcfNIgJ9BgdJoo=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
+ DB3PR0402MB3898.eurprd04.prod.outlook.com (52.134.65.139) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2793.17; Mon, 9 Mar 2020 13:37:09 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::e44d:fa34:a0af:d96]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::e44d:fa34:a0af:d96%5]) with mapi id 15.20.2793.013; Mon, 9 Mar 2020
+ 13:37:09 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     Guenter Roeck <linux@roeck-us.net>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+CC:     "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "rui.zhang@intel.com" <rui.zhang@intel.com>,
+        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+        "amit.kucheria@verdurent.com" <amit.kucheria@verdurent.com>,
+        "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux@rempel-privat.de" <linux@rempel-privat.de>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "m.felsch@pengutronix.de" <m.felsch@pengutronix.de>,
+        "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "ronald@innovation.ch" <ronald@innovation.ch>,
+        "krzk@kernel.org" <krzk@kernel.org>,
+        "robh@kernel.org" <robh@kernel.org>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH V3 1/7] firmware: imx: Add stubs for !CONFIG_IMX_SCU case
+Thread-Topic: [PATCH V3 1/7] firmware: imx: Add stubs for !CONFIG_IMX_SCU case
+Thread-Index: AQHV9av62LAReQhoZkKZ9LnT5dFdbahAGiGAgAAnYQCAAAHeEA==
+Date:   Mon, 9 Mar 2020 13:37:09 +0000
+Message-ID: <DB3PR0402MB3916AE9BA2DEDA066DF0FCCDF5FE0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1583714300-19085-1-git-send-email-Anson.Huang@nxp.com>
+ <20200309110609.GE3563@piout.net>
+ <1ad38cdb-bf0d-1c19-b233-15a5857bd6fa@roeck-us.net>
+In-Reply-To: <1ad38cdb-bf0d-1c19-b233-15a5857bd6fa@roeck-us.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=anson.huang@nxp.com; 
+x-originating-ip: [119.31.174.68]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 2d9fe1ca-2e10-4ffc-34f0-08d7c42ef78f
+x-ms-traffictypediagnostic: DB3PR0402MB3898:|DB3PR0402MB3898:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB3PR0402MB3898C32BB528FB881D7C4C80F5FE0@DB3PR0402MB3898.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4714;
+x-forefront-prvs: 0337AFFE9A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(136003)(396003)(346002)(376002)(39860400002)(199004)(189003)(52536014)(8936002)(478600001)(33656002)(44832011)(7416002)(2906002)(81166006)(81156014)(8676002)(4744005)(316002)(71200400001)(7696005)(86362001)(110136005)(66446008)(54906003)(66476007)(26005)(5660300002)(6506007)(53546011)(66946007)(66556008)(76116006)(55016002)(4326008)(64756008)(186003)(9686003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3898;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: uVrf0xUjhbn7vMkpRw8Z0QweYAFgF2reVg3oEcpwRIBP4zbXCvO3V9q77eR/d93a7DHafwgjV8cpMR6mAWPp4QrReVuVc90R9NMXtmMI8KOkBnBV3wkLU7OkzxA52b0oSi6j42QuuqdfPNykD7rC+J69mFrRlzRsxe7lGWiXQHUpgUvQ89OlBHEbQ2jBbTO1BxhIqFUOOVt54wczZkA8Fqk6T00I8Qvw3T5nOsEN49N26AwhSq+T/fO8A9meKdt6ED86UHpXwrqC/9UB/d4YxeRozMan9gLMTI0pdC9xyfmsdZXIqgn51o054+ranTSt9hHeMZHHKatNYH3dupIV+OeCtgCqTvJLI9L3H1aIZ7JgHhbVGji7abIKDkoHcRouW5xzHphssB1zHCigZHc1yKR6IPt0Qp37HVSkBOsbCUF5KrsUdTO+8ctDIR7eZo56
+x-ms-exchange-antispam-messagedata: C05c6USiZ6HarBI6x/Y6/GM1g+6pqn3jMIxG7faApeoC4m2toOZej+Lx4M1V615ls/O+QTXS0y/nbKt4NSOZ9mTmDKSVt6NgRFgynE2H+64A0aiyjsrW4EEhmghiaWznIBFpTmBBz1QH1eDyD8T8+w==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/Q=ETE/5qIJmjC2kZiRgdeYz";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2d9fe1ca-2e10-4ffc-34f0-08d7c42ef78f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Mar 2020 13:37:09.6332
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: mgvCLy9koV3zP3CA0mJu7Lb30m0hlz/ghnlMCLYEEfxPPgtJQ7qWShxoh7gbIlIDQbaggqw97cowwO5NxMlRNQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3898
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/Q=ETE/5qIJmjC2kZiRgdeYz
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi all,
-
-Commit
-
-  299c61cb37fb ("microblaze: Replace setup_irq() by request_irq()")
-
-is missing a Signed-off-by from its committer.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/Q=ETE/5qIJmjC2kZiRgdeYz
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5mRfQACgkQAVBC80lX
-0GwtcAf/Z2CxfR3xoP3bIYlqUSH57eFGqlmYokVnfJg2+jMXhasG7dmChKrBj+iE
-uvyTMS8Xs0ytkNbocF22v0NF3w6KB7q9WNAQ2eKm8ycOw0lHh+WVy3dE3cVrSuOR
-d/OFJsVoQDJjp/06L6xpTvXlXaE5/eXaqAJJmgOKIdoqRpxWvidhydUs/Whtvdn3
-BMfKuiM90iUwVa8jJceQD49eTScPcRjkk+TlLxXTuWKdVW/nc5gsP6eEatus+X0l
-OJ5xG543gIr1hZbyNbotIPm5lnVWIUx9c+78+kquvU8iAWbBOAHUkT0gytLhWbuK
-uV7ADACUieNitNHchEEKMbGmtW1BPw==
-=psrd
------END PGP SIGNATURE-----
-
---Sig_/Q=ETE/5qIJmjC2kZiRgdeYz--
+DQoNCj4gU3ViamVjdDogUmU6IFtQQVRDSCBWMyAxLzddIGZpcm13YXJlOiBpbXg6IEFkZCBzdHVi
+cyBmb3IgIUNPTkZJR19JTVhfU0NVDQo+IGNhc2UNCj4gDQo+IE9uIDMvOS8yMCA0OjA2IEFNLCBB
+bGV4YW5kcmUgQmVsbG9uaSB3cm90ZToNCj4gPiBPbiAwOS8wMy8yMDIwIDA4OjM4OjE0KzA4MDAs
+IEFuc29uIEh1YW5nIHdyb3RlOg0KPiA+PiBBZGQgc3R1YnMgZm9yIHRob3NlIGkuTVggU0NVIEFQ
+SXMgdG8gbWFrZSB0aG9zZSBtb2R1bGVzIGRlcGVuZGluZyBvbg0KPiA+PiBJTVhfU0NVIGNhbiBw
+YXNzIGJ1aWxkIHdoZW4gQ09NUElMRV9URVNUIGlzIGVuYWJsZWQuDQo+ID4+DQo+ID4+IFNpZ25l
+ZC1vZmYtYnk6IEFuc29uIEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KPiA+PiAtLS0NCj4g
+Pj4gQ2hhbmdlcyBzaW5jZSBWMjoNCj4gPj4gCS0gcmV0dXJuIGVycm9yIGZvciBzdHVicy4NCj4g
+Pg0KPiA+IEknbSBub3Qgc3VyZSB3aHkgeW91IGFyZSBzZW5kaW5nIHYzIHdpdGggdGhlIHN0dWJz
+IGFzIHdlIGRldGVybWluZWQNCj4gPiB0aGF0DQo+ID4gMi83IGlzIGVub3VnaCB0byBjb21waWxl
+IGFsbCB0aGUgZHJpdmVycyB3aXRoIENPTVBJTEVfVEVTVC4NCj4gPg0KPiA+DQo+IDIvNyBhbG9u
+ZSBpcyBub3Qgc3VmZmljaWVudC4gV2l0aCBvbmx5IDIvNywgb25lIGNhbiBleHBsaWNpdGx5IGNv
+bmZpZ3VyZQ0KPiBJTVhfU0NVPW4sIENPTVBJTEVfVEVTVD15LCBhbmQgZ2V0IGxvdHMgb2YgY29t
+cGlsZSBmYWlsdXJlcy4gR3JhbnRlZCwgb25lDQo+IHNob3VsZCBub3QgZG8gdGhhdCwgYnV0IDBk
+YXkgZG9lcyAoSSBkb24ndCBrbm93IGlmIHRoYXQgaXMgdGhlIHJlc3VsdCBvZg0KPiBSQU5EQ09O
+RklHKSwgYW5kIEkgYW0gbm90IGxvb2tpbmcgZm9yd2FyZCBoYXZpbmcgdG8gZGVhbCB3aXRoIHRo
+ZSBmYWxsb3V0Lg0KDQpTbyB0aGUgVjMgcGF0Y2ggc2VyaWVzIGxvb2tzIGJldHRlciwgYWRkaW5n
+IHN0dWJzIGNhbiBjb3ZlciB2YXJpb3VzIGNvcm5lciBjYXNlcy4NCg0KQW5zb24NCg==
