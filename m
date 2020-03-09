@@ -2,88 +2,156 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00CE7C10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 11:14:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F190C18E5A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 11:15:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC09920828
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 11:14:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27B672051A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 11:15:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="uAKW4z7b"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fEhO9+lH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727195AbgCILOy (ORCPT
+        id S1726769AbgCILPo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 07:14:54 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:14849 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726952AbgCILOv (ORCPT
+        Mon, 9 Mar 2020 07:15:44 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:54369 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725956AbgCILPn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 07:14:51 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1583752491; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=LvRgUS2GPVnVxIRg71uUANQy7ugCA9gGeQ+P+0GdE3U=; b=uAKW4z7bWzcd165hJdO/PkHxqenwkisgKA+VuJ8/ENZAu8uFnVuggB3PbYIP1COQYt4FISjZ
- xV+YmBsckDbTb+LjhE5d1XO7q8FejM+p1iAp7aDufxQvfJcCH3Qnx0c5aj+aG0s/12fbkQq8
- fZFuWB57rgQKllxNdAQwEUWUBjw=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e662528.7f3c9e3c8dc0-smtp-out-n01;
- Mon, 09 Mar 2020 11:14:48 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id E3E71C433CB; Mon,  9 Mar 2020 11:14:47 +0000 (UTC)
-Received: from mkshah-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7B886C433BA;
-        Mon,  9 Mar 2020 11:14:42 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7B886C433BA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-From:   Maulik Shah <mkshah@codeaurora.org>
-To:     swboyd@chromium.org, mka@chromium.org, evgreen@chromium.org,
-        bjorn.andersson@linaro.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        agross@kernel.org, dianders@chromium.org, rnayak@codeaurora.org,
-        ilina@codeaurora.org, lsrao@codeaurora.org,
-        Maulik Shah <mkshah@codeaurora.org>
-Subject: [PATCH v4 4/4] arm64: defconfig: Enable SoC sleep stats driver
-Date:   Mon,  9 Mar 2020 16:44:17 +0530
-Message-Id: <1583752457-21159-5-git-send-email-mkshah@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1583752457-21159-1-git-send-email-mkshah@codeaurora.org>
-References: <1583752457-21159-1-git-send-email-mkshah@codeaurora.org>
+        Mon, 9 Mar 2020 07:15:43 -0400
+Received: by mail-wm1-f66.google.com with SMTP id n8so5356771wmc.4;
+        Mon, 09 Mar 2020 04:15:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/Z9IntIaAH0gIeT3+u7wpsy0raBlZ5rU0UOJH1kx/N0=;
+        b=fEhO9+lHjep+JjEc7uneYDDO1Ri2n5X4rLu0msbWHrfcEJqgwj9DhmiKriYDiubLiT
+         qv53KMLQWdh0dcpQNfWct4l8BAN5EoKiDxpMBIpOotQxG5tDyY3UHKuvU5eexPsnE0yS
+         sbhz0+n37JoEC2FCjVAm7CnL31Bzfch3QPsyyyaGlUYc8HhRNmEKtD143hbaBigob3ZZ
+         kfkLzgP03LxK+JojSmpe4X7sOuXTScbKtYzUObY7+cmjeSDoUHA2qhYZtiC5bPRvrRf4
+         QpUva4ZsnEVH86ZuGdN1BxxEUKfVjrVpRf4nPGCTWWfn5Zv2iY0CKNVNLEI7y3lKpNrr
+         sinA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/Z9IntIaAH0gIeT3+u7wpsy0raBlZ5rU0UOJH1kx/N0=;
+        b=kaV8kr8de9phBNh/ZhKUSqPdqLs0I1zw4QDlawg46gvJ9zTh46iHolVKFep+UgWP6d
+         XXTkH5uu05aB8/2tir/OLC2qKFPkppIGzUaLjjtbieMb0cGX1EA3oCnGr8NxEBzUvlAv
+         bBthz/mabHMoWivLvzyRhaSOHgXXLwHH5nEljTe9U2nX5At5usMx+Ey36lR0fmt+j7oE
+         gTqL/yX5EciM7kWXkZXgWf63+yXkDsz7N4NYXOmzJ/46MslihxU0ACbN9rSZvArd1Lxj
+         pr9+rf9GhFNh7RIhFC9iCQfLP1mxS4VKrkq5PzUzrO+Wc3LgXOZeE3hbCgnAdpPvVGB3
+         vwyQ==
+X-Gm-Message-State: ANhLgQ0m68++lQmg7BCHWAQqBus0jE+ipY2f8ERVhVR1C4Y7p5fVZnlV
+        7ECOXA7f8yyKK2Dx0M2ee1zqmYGpajOzVyuCzfk=
+X-Google-Smtp-Source: ADFU+vt6I91CwVNgM6NGjmlLea01N4tLsGPz6lgr4s6/6dSnTK0Eo+uQT+uUNJ7Qxquzez1kNQV5507pUbSD/R0ONSY=
+X-Received: by 2002:a1c:7e08:: with SMTP id z8mr5445439wmc.166.1583752541669;
+ Mon, 09 Mar 2020 04:15:41 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200305103228.9686-1-zhang.lyra@gmail.com> <20200305103228.9686-2-zhang.lyra@gmail.com>
+ <CAMuHMdU-gAhupHotQTHAZfopkGF_jQc-VrVxb24caw_BfzWd6g@mail.gmail.com>
+ <CAAfSe-sonfA=6x9uvQXaHniQaXR8hWZa4uOcWxoo+Z_XT9QNhw@mail.gmail.com>
+ <CAMuHMdUBkS+pPyPid2K=40jaTOSnAE_L-vJP5knmyVr8Fr5_hg@mail.gmail.com>
+ <CAAfSe-uZSYZopDCGxQbGBQQ5+NZK6L79P+T62nfnL9CiZka++g@mail.gmail.com> <CAMuHMdXY5=QS4FA0T55_G=ARPs9V0NLbWwF3hd76rwO=8ahZbA@mail.gmail.com>
+In-Reply-To: <CAMuHMdXY5=QS4FA0T55_G=ARPs9V0NLbWwF3hd76rwO=8ahZbA@mail.gmail.com>
+From:   Chunyan Zhang <zhang.lyra@gmail.com>
+Date:   Mon, 9 Mar 2020 19:15:05 +0800
+Message-ID: <CAAfSe-tbKVQX=796q-8vM=_B9JbDj0q9F514D3bG0+WMZ6Sacw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] tty: serial: make SERIAL_SPRD not depend on ARCH_SPRD
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Jiri Slaby <jslaby@suse.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable SoC sleep stats driver. The driver gives statistics for
-various low power modes on Qualcomm Technologies, Inc. (QTI) SoCs.
+On Mon, 9 Mar 2020 at 18:32, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>
+> Hi Chunyan,
+>
+> On Mon, Mar 9, 2020 at 9:43 AM Chunyan Zhang <zhang.lyra@gmail.com> wrote:
+> > On Mon, 9 Mar 2020 at 16:01, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > > On Mon, Mar 9, 2020 at 2:18 AM Chunyan Zhang <zhang.lyra@gmail.com> wrote:
+> > > > On Fri, 6 Mar 2020 at 20:41, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > > > > On Thu, Mar 5, 2020 at 11:33 AM Chunyan Zhang <zhang.lyra@gmail.com> wrote:
+> > > > > > From: Chunyan Zhang <chunyan.zhang@unisoc.com>
+> > > > > >
+> > > > > > Remove the dependency with ARCH_SPRD from sprd serial/console Kconfig-s,
+> > > > > > since we want them can be built-in when ARCH_SPRD is set as 'm'.
+> > > > >
+> > > > > Why would you want a serial driver for a specific platform to be builtin,
+> > > > > while all other platform support is modular?
+> > > >
+> > > > Oh, that's not this patch means.
+> > > >
+> > > > We just want serial driver can be builtin for any platform, so it
+> > >
+> > > What would be the benefit of the user to be able to have the SPRD serial
+> > > driver built-in on any platform?  AFAIU, it supports only Spreadtrum
+> > > platforms.
+> >
+> > Right, it does support Spreadtrum platforms only indeed.
+> > Like I said on the replay to patch 1/2, simply because I want serial
+> > driver can be builtin all the time, no matter ARCH_SPRD is m or y.
+>
+> OK.
+>
+> So shouldn't the dependency become
+>
+>     depends on ARCH_SPRD || ARCH_SPRD=m || COMPILE_TEST
 
-Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+Oh, right, this's better than just removing dependency to ARCH_SPRD,
+but considering that this patch has been merged into Greg's tree, I
+will post another patch to add this.
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index a8de3d3..2dd543b 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -793,6 +793,7 @@ CONFIG_QCOM_SMD_RPM=y
- CONFIG_QCOM_SMP2P=y
- CONFIG_QCOM_SMSM=y
- CONFIG_QCOM_SOCINFO=m
-+CONFIG_QCOM_SOC_SLEEP_STATS=m
- CONFIG_ARCH_R8A774A1=y
- CONFIG_ARCH_R8A774B1=y
- CONFIG_ARCH_R8A774C0=y
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+Thanks for your comments!
+Chunyan
+
+>
+> instead, to avoid asking the question when you're not building a kernel
+> plus modules for Spreadtrum platforms?
+>
+>
+> > > > should not depend on a config which can be set as 'm' (i.e. ARCH_SPRD)
+> > > > , otherwise if the config was set as 'm', the serial driver can't be
+> > > > selected as 'y' then.
+> > >
+> > > I ask about that as a reply to PATCH 1/2.
+> > >
+> > > > That's what I mean.
+> > >
+> > > > > > --- a/drivers/tty/serial/Kconfig
+> > > > > > +++ b/drivers/tty/serial/Kconfig
+> > > > > > @@ -1452,7 +1452,6 @@ config SERIAL_MEN_Z135
+> > > > > >
+> > > > > >  config SERIAL_SPRD
+> > > > > >         tristate "Support for Spreadtrum serial"
+> > > > > > -       depends on ARCH_SPRD
+> > > > > >         select SERIAL_CORE
+> > > > > >         help
+> > > > > >           This enables the driver for the Spreadtrum's serial.
+>
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
