@@ -2,353 +2,246 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D8C8C10F29
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:21:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F8AFC10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:22:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6C3320727
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:21:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CE5220727
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:22:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iSqHM8iS"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="IWc7ph/j";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="aXGrM3dn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726403AbgCIJVv (ORCPT
+        id S1726466AbgCIJWT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 05:21:51 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:36368 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725796AbgCIJVv (ORCPT
+        Mon, 9 Mar 2020 05:22:19 -0400
+Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:58822 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725796AbgCIJWS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 05:21:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583745709;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=35Fqn91KTsp+nbtyNrqhSGie2+eGkJNYycKiLotOV/0=;
-        b=iSqHM8iSFGwUi7086hgoct3isfJ5FCdPsJRN3KosnSuotUmRFmSPMf03ghTtWXuNzPIb9M
-        7bZ+5ryt/jn/mxbgLZvAwqE/Nmiz0WZIcy8tXeeqwETDJgKYOtS7XSyWdcllFxbMOTOjFc
-        qCpBPPw8hBr7GMI1N1EKUHDtAw9FSY8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-207-HdV7dvOVMAqwpOs1L7wz7A-1; Mon, 09 Mar 2020 05:21:45 -0400
-X-MC-Unique: HdV7dvOVMAqwpOs1L7wz7A-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Mon, 9 Mar 2020 05:22:18 -0400
+Received: from mailhost.synopsys.com (badc-mailhost2.synopsys.com [10.192.0.18])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 21504101FC70;
-        Mon,  9 Mar 2020 09:21:43 +0000 (UTC)
-Received: from [10.36.118.32] (unknown [10.36.118.32])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 13F3528980;
-        Mon,  9 Mar 2020 09:21:35 +0000 (UTC)
-Subject: Re: [PATCH -V3] mm: Add PageLayzyFree() helper functions for
- MADV_FREE
-To:     "Huang, Ying" <ying.huang@intel.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Mel Gorman <mgorman@suse.de>, Vlastimil Babka <vbabka@suse.cz>,
-        Zi Yan <ziy@nvidia.com>, Michal Hocko <mhocko@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Minchan Kim <minchan@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Hugh Dickins <hughd@google.com>
-References: <20200309021744.1309482-1-ying.huang@intel.com>
- <68360241-eb18-b3d8-bf6f-4dbbed258ee6@redhat.com>
- <87r1y1yjll.fsf@yhuang-dev.intel.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <23076072-7875-cabf-768f-ce27cba3480d@redhat.com>
-Date:   Mon, 9 Mar 2020 10:21:33 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <87r1y1yjll.fsf@yhuang-dev.intel.com>
-Content-Type: text/plain; charset=windows-1252
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id D4EEB40064;
+        Mon,  9 Mar 2020 09:22:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1583745738; bh=/Me148QZ8ckeM03vekb8lkVBetYzZbsMU8smEOfgd1c=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=IWc7ph/jNbtP1DgUeydQ6GrquurupV/oZ49Gq+HbHH/pDtuNrTfAYhWmJlz+6iNDb
+         Ka6vi/HZFWKE2CREezJgd9mNiyJvLejwBbdWQRUwd0tHXwLEKDIOGHkEj5GXkqpdrD
+         xqYQYQRgfmcfLYRnutzfmAX853qeowfns/MPeCbNaO5YCKihmvuijXGCDk7ysnKA/9
+         kQZcdkakOzhxeeG8hqmh1Lndn8jWpytF/NwF+5zmx8L9venqdZycfIqBe03Tw4h7EX
+         d4A4+7ZPB+pRVFTexKhhucgipWMgJIN2hCbsNCHhUVm9i23DncYh6Pl0h8b6n4GMPF
+         WpDe4w60wehDQ==
+Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id B3267A0067;
+        Mon,  9 Mar 2020 09:22:14 +0000 (UTC)
+Received: from us01hybrid1.internal.synopsys.com (10.200.27.51) by
+ US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Mon, 9 Mar 2020 02:22:14 -0700
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (10.202.3.67) by
+ mrs.synopsys.com (10.200.27.51) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Mon, 9 Mar 2020 02:22:13 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=WPtYzB6+DjRo0BSq3GbhR3stNdTy5MZ4ZxJVrsm+30nOUx4t1nrpaDiVqd/Ko6mm+q6uggAYvovZ8tP54CNM8QZdylEMWurRZpgYPqzQbpjIaJEdKM8087THLmoRECKVlHbZfhbr9bjuY02340xOv1nMDZaUY12JTQan7X5ncfG4u9h5T79Cq6mpwEyLKa/dzdjKTZygANJ/b0iPBeVFxDYUtDB5d6n4f8hQTpLh6L4YybBblsXlW5ClxRlTxqP6CIDmVP/zl9c+kUxBrZQj3UbMFswHB3VWawT+LF7lNULTKL+ymV1sLCzFehbyW5rPlyibgjjPQCY933iuuLqULQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ufpYa88ph5YLFZaLlT6DnjsHiR26YQXh7Uya4vuoMxU=;
+ b=NiuHrRY411CuhYbVHDAQmPbcbOvAFJJci25Ys12B9g0Q+eE2QSJ1ip45RU2ILUXE7xSP0jdDQSd+++8GsKtRHBi9FNTaRJr/nHynhxvjoz2S+WFO/WT6sb9+HSxPJrz4+ZdKERw2Ap/EjcLOYqGfcfZkefyYhpKoosh8XBaf9Dp0VZeO3/cBINbNLqVom5ePyOX9jBzt3QMlyhgtSHO2ZV2DiU8SSoYrEGsQ0PFbqJ3UlQqPwWDwOmGZ4NrVnuqTFedhLX8AAhIdSXnNYjlbFAD6pOc/jW8S/w93hLmtKDTR5Ui6jG5grn7zeqK4w+Rmnk6tX/b0ev+jx9FXtSQqJA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
+ dkim=pass header.d=synopsys.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=synopsys.onmicrosoft.com; s=selector2-synopsys-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ufpYa88ph5YLFZaLlT6DnjsHiR26YQXh7Uya4vuoMxU=;
+ b=aXGrM3dnFLHLUzG29L3I7r0Xp7ZT/A/n/AJD2+hLNSnB5qwLNmCryz+Dp0j9S2iKmsz2iOSTBNZjrJACm5OGYIVlfkzzkeEdaM2FeBKnKNv5ZlMICf5iTp1yWel9zj0dc0rS53/KC5OeylyD6w1VftnlgNHh8FVOn7RLz7uPyX4=
+Received: from BN8PR12MB3266.namprd12.prod.outlook.com (2603:10b6:408:6e::17)
+ by BN8PR12MB3345.namprd12.prod.outlook.com (2603:10b6:408:64::30) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.17; Mon, 9 Mar
+ 2020 09:22:12 +0000
+Received: from BN8PR12MB3266.namprd12.prod.outlook.com
+ ([fe80::c9ed:b08e:f3c5:42fa]) by BN8PR12MB3266.namprd12.prod.outlook.com
+ ([fe80::c9ed:b08e:f3c5:42fa%7]) with mapi id 15.20.2793.013; Mon, 9 Mar 2020
+ 09:22:12 +0000
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     "Chng, Jack Ping" <jack.ping.chng@linux.intel.com>
+CC:     Andrew Lunn <andrew@lunn.ch>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Joao Pinto <Joao.Pinto@synopsys.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: Re:[RFC net-next] net: phy: Add basic support for Synopsys XPCS
+ using a PHY driver
+Thread-Topic: Re:[RFC net-next] net: phy: Add basic support for Synopsys XPCS
+ using a PHY driver
+Thread-Index: AQHVyhMHPh1TkUf6pU+JUVzLFdFzk6fomWeAgAAAjSCAAAp/gIAKvyCAgAAHGACAAANl4IAACl2AgBdyL2mANWk/gA==
+Date:   Mon, 9 Mar 2020 09:22:12 +0000
+Message-ID: <BN8PR12MB3266C896974574439AFEA0D6D3FE0@BN8PR12MB3266.namprd12.prod.outlook.com>
+References: <20200120113935.GC25745@shell.armlinux.org.uk>
+ <e942b414-08bd-0305-9128-26666a7a5d5a@linux.intel.com>
+ <99652f12-c7b4-756d-d169-4770cf1f0d96@linux.intel.com>
+In-Reply-To: <99652f12-c7b4-756d-d169-4770cf1f0d96@linux.intel.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=joabreu@synopsys.com; 
+x-originating-ip: [83.174.63.141]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 0aa31fe2-0a6e-4220-b6b7-08d7c40b59e3
+x-ms-traffictypediagnostic: BN8PR12MB3345:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BN8PR12MB3345C87DA9098A60453FD99AD3FE0@BN8PR12MB3345.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3173;
+x-forefront-prvs: 0337AFFE9A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(346002)(136003)(376002)(366004)(39860400002)(189003)(199004)(26005)(7696005)(8676002)(316002)(8936002)(33656002)(52536014)(6916009)(2906002)(5660300002)(81166006)(81156014)(6506007)(966005)(66446008)(66556008)(55016002)(76116006)(186003)(66946007)(4326008)(71200400001)(66476007)(4744005)(86362001)(478600001)(54906003)(64756008)(9686003);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR12MB3345;H:BN8PR12MB3266.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: synopsys.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: VdCtP0htTFl0NZgzvRg/R46vvJWp7ARa9r48b0md01hv9CcYn7wmwCKgw3opS8HAcT68UsoRJFnus8uq9EycupK0sn8eLiZoXJu2OsKg7q3Gb4oZXs3jI+fIoxqH7gY1BKXvGOMqSQjeVdRvzYDmgaBA0H4Yk7if7+LeKechEqwuLTRuaBY1J/r+gstXJ6cCIGZu1bvsNPWZqqX35FePmhuadCUQddp44kAMorXN2HvgXnBHoWi2/M3WTTBy2rLIvdaD16W15bjE9c4tQvjIY1QOQrPftQ/hkS/2U/E+QrAGXWM6q+1no9vynGMeqOpaq4F7C8PecZyJaBPsDhLtIeYO/qoNWfv/a/hGodfsZTq6Vbn8nqWzkbTxUHO3aqJHXIaMtbpvwCLtoZF7nf1487NGm9KvFemYOW2JQp9W4y33Jk8EuGdXGmLQMQzzMmmMK5XqixJbucSdoXRQ2mSsj6EinWRRgSShcBsG86oxkupK5/fx5iOCn9Bn+Sr2ucv0vCzY0gf3BD/wiODr8ShS/w==
+x-ms-exchange-antispam-messagedata: anUWSvVLw6FhZ6m6+ax3S5pgH9I4DJpyLu5LO7aQHUyTD1Tzx/MBmZtLkfC3S5vWAtaWbpwP1YJ11yUGx8wQfmipq2uF2Uwn04vv300BkcCneY9ZjwsGS1EjGF1G0Xt3pov5yZk0tL0h2QfcEJOOPw==
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0aa31fe2-0a6e-4220-b6b7-08d7c40b59e3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Mar 2020 09:22:12.6885
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: q1DUBxJaGbUPfZ8h2xEg1ZOZzqxF5SjnA00sm3QDv8USX1HGmVs6leNacESNzIjn4Hvwb3WNsWfNF/oxK0jsgQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB3345
+X-OriginatorOrg: synopsys.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09.03.20 10:15, Huang, Ying wrote:
-> David Hildenbrand <david@redhat.com> writes:
-> 
->> On 09.03.20 03:17, Huang, Ying wrote:
->>> From: Huang Ying <ying.huang@intel.com>
->>>
->>> Now PageSwapBacked() is used as the helper function to check whether
->>> pages have been freed lazily via MADV_FREE.  This isn't very obvious.
->>> So Dave suggested to add PageLazyFree() family helper functions to
->>> improve the code readability.
->>>
->>> Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
->>> Suggested-by: Dave Hansen <dave.hansen@linux.intel.com>
->>> Cc: David Hildenbrand <david@redhat.com>
->>> Cc: Mel Gorman <mgorman@suse.de>
->>> Cc: Vlastimil Babka <vbabka@suse.cz>
->>> Cc: Zi Yan <ziy@nvidia.com>
->>> Cc: Michal Hocko <mhocko@kernel.org>
->>> Cc: Peter Zijlstra <peterz@infradead.org>
->>> Cc: Minchan Kim <minchan@kernel.org>
->>> Cc: Johannes Weiner <hannes@cmpxchg.org>
->>> Cc: Hugh Dickins <hughd@google.com>
->>> ---
->>> Changelog:
->>>
->>> v3:
->>>
->>> - Improved comments, Thanks David Hildenbrand!
->>>
->>> - Use the helper function in /proc/PID/smaps lazyfree reporting.
->>>
->>> v2:
->>>
->>> - Avoid code bloat via removing VM_BUG_ON_PAGE(), which doesn't exist
->>>   in the original code.  Now there is no any text/data/bss size
->>>   change.
->>>
->>> - Fix one wrong replacement in try_to_unmap_one().
->>>
->>> ---
->>>  fs/proc/task_mmu.c         |  2 +-
->>>  include/linux/page-flags.h | 25 +++++++++++++++++++++++++
->>>  mm/rmap.c                  |  4 ++--
->>>  mm/swap.c                  | 11 +++--------
->>>  mm/vmscan.c                |  7 +++----
->>>  5 files changed, 34 insertions(+), 15 deletions(-)
->>>
->>> diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
->>> index 3ba9ae83bff5..3458d5711e57 100644
->>> --- a/fs/proc/task_mmu.c
->>> +++ b/fs/proc/task_mmu.c
->>> @@ -471,7 +471,7 @@ static void smaps_account(struct mem_size_stats *mss, struct page *page,
->>>  	 */
->>>  	if (PageAnon(page)) {
->>>  		mss->anonymous += size;
->>> -		if (!PageSwapBacked(page) && !dirty && !PageDirty(page))
->>> +		if (__PageLazyFree(page) && !dirty && !PageDirty(page))
->>>  			mss->lazyfree += size;
->>>  	}
->>>  
->>> diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
->>> index 49c2697046b9..bb26f74cbe8e 100644
->>> --- a/include/linux/page-flags.h
->>> +++ b/include/linux/page-flags.h
->>> @@ -498,6 +498,31 @@ static __always_inline int PageKsm(struct page *page)
->>>  TESTPAGEFLAG_FALSE(Ksm)
->>>  #endif
->>>  
->>> +/*
->>> + * For pages freed lazily via MADV_FREE.  Lazyfree pages are clean
->>> + * anonymous pages.  They don't have PG_swapbacked set, to distinguish
->>> + * them from normal anonymous pages.
->>> + */
->>> +static __always_inline int __PageLazyFree(struct page *page)
->>> +{
->>> +	return !PageSwapBacked(page);
->>> +}
->>> +
->>> +static __always_inline int PageLazyFree(struct page *page)
->>> +{
->>> +	return PageAnon(page) && __PageLazyFree(page);
->>> +}
->>> +
->>> +static __always_inline void SetPageLazyFree(struct page *page)
->>> +{
->>> +	ClearPageSwapBacked(page);
->>> +}
->>> +
->>> +static __always_inline void ClearPageLazyFree(struct page *page)
->>> +{
->>> +	SetPageSwapBacked(page);
->>> +}
->>> +
->>>  u64 stable_page_flags(struct page *page);
->>>  
->>>  static inline int PageUptodate(struct page *page)
->>> diff --git a/mm/rmap.c b/mm/rmap.c
->>> index 1c02adaa233e..6ec96c8e7826 100644
->>> --- a/mm/rmap.c
->>> +++ b/mm/rmap.c
->>> @@ -1609,7 +1609,7 @@ static bool try_to_unmap_one(struct page *page, struct vm_area_struct *vma,
->>>  			}
->>>  
->>>  			/* MADV_FREE page check */
->>> -			if (!PageSwapBacked(page)) {
->>> +			if (__PageLazyFree(page)) {
->>>  				if (!PageDirty(page)) {
->>>  					/* Invalidate as we cleared the pte */
->>>  					mmu_notifier_invalidate_range(mm,
->>> @@ -1623,7 +1623,7 @@ static bool try_to_unmap_one(struct page *page, struct vm_area_struct *vma,
->>>  				 * discarded. Remap the page to page table.
->>>  				 */
->>>  				set_pte_at(mm, address, pvmw.pte, pteval);
->>> -				SetPageSwapBacked(page);
->>> +				ClearPageLazyFree(page);
->>>  				ret = false;
->>>  				page_vma_mapped_walk_done(&pvmw);
->>>  				break;
->>> diff --git a/mm/swap.c b/mm/swap.c
->>> index c1d3ca80ea10..d83f2cd4cdb8 100644
->>> --- a/mm/swap.c
->>> +++ b/mm/swap.c
->>> @@ -563,7 +563,7 @@ static void lru_deactivate_fn(struct page *page, struct lruvec *lruvec,
->>>  static void lru_lazyfree_fn(struct page *page, struct lruvec *lruvec,
->>>  			    void *arg)
->>>  {
->>> -	if (PageLRU(page) && PageAnon(page) && PageSwapBacked(page) &&
->>> +	if (PageLRU(page) && PageAnon(page) && !__PageLazyFree(page) &&
->>>  	    !PageSwapCache(page) && !PageUnevictable(page)) {
->>>  		bool active = PageActive(page);
->>>  
->>> @@ -571,12 +571,7 @@ static void lru_lazyfree_fn(struct page *page, struct lruvec *lruvec,
->>>  				       LRU_INACTIVE_ANON + active);
->>>  		ClearPageActive(page);
->>>  		ClearPageReferenced(page);
->>> -		/*
->>> -		 * lazyfree pages are clean anonymous pages. They have
->>> -		 * SwapBacked flag cleared to distinguish normal anonymous
->>> -		 * pages
->>> -		 */
->>> -		ClearPageSwapBacked(page);
->>> +		SetPageLazyFree(page);
->>>  		add_page_to_lru_list(page, lruvec, LRU_INACTIVE_FILE);
->>>  
->>>  		__count_vm_events(PGLAZYFREE, hpage_nr_pages(page));
->>> @@ -678,7 +673,7 @@ void deactivate_page(struct page *page)
->>>   */
->>>  void mark_page_lazyfree(struct page *page)
->>>  {
->>> -	if (PageLRU(page) && PageAnon(page) && PageSwapBacked(page) &&
->>> +	if (PageLRU(page) && PageAnon(page) && !__PageLazyFree(page) &&
->>>  	    !PageSwapCache(page) && !PageUnevictable(page)) {
->>>  		struct pagevec *pvec = &get_cpu_var(lru_lazyfree_pvecs);
->>>  
->>> diff --git a/mm/vmscan.c b/mm/vmscan.c
->>> index eca49a1c2f68..40bb41ada2d2 100644
->>> --- a/mm/vmscan.c
->>> +++ b/mm/vmscan.c
->>> @@ -1043,8 +1043,7 @@ static void page_check_dirty_writeback(struct page *page,
->>>  	 * Anonymous pages are not handled by flushers and must be written
->>>  	 * from reclaim context. Do not stall reclaim based on them
->>>  	 */
->>> -	if (!page_is_file_cache(page) ||
->>> -	    (PageAnon(page) && !PageSwapBacked(page))) {
->>> +	if (!page_is_file_cache(page) || PageLazyFree(page)) {
->>>  		*dirty = false;
->>>  		*writeback = false;
->>>  		return;
->>> @@ -1235,7 +1234,7 @@ static unsigned long shrink_page_list(struct list_head *page_list,
->>>  		 * Try to allocate it some swap space here.
->>>  		 * Lazyfree page could be freed directly
->>>  		 */
->>> -		if (PageAnon(page) && PageSwapBacked(page)) {
->>> +		if (PageAnon(page) && !__PageLazyFree(page)) {
->>>  			if (!PageSwapCache(page)) {
->>>  				if (!(sc->gfp_mask & __GFP_IO))
->>>  					goto keep_locked;
->>> @@ -1411,7 +1410,7 @@ static unsigned long shrink_page_list(struct list_head *page_list,
->>>  			}
->>>  		}
->>>  
->>> -		if (PageAnon(page) && !PageSwapBacked(page)) {
->>> +		if (PageLazyFree(page)) {
->>>  			/* follow __remove_mapping for reference */
->>>  			if (!page_ref_freeze(page, 1))
->>>  				goto keep_locked;
->>>
->>
->> I still prefer something like
->>
->> diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
->> index fd6d4670ccc3..7538501230bd 100644
->> --- a/include/linux/page-flags.h
->> +++ b/include/linux/page-flags.h
->> @@ -63,6 +63,10 @@
->>   * page_waitqueue(page) is a wait queue of all tasks waiting for the page
->>   * to become unlocked.
->>   *
->> + * PG_swapbacked used with anonymous pages (PageAnon()) indicates that a
->> + * page is backed by swap. Anonymous pages without PG_swapbacked are
->> + * pages that can be lazily freed (e.g., MADV_FREE) on demand.
->> + *
->>   * PG_uptodate tells whether the page's contents is valid.  When a read
->>   * completes, the page becomes uptodate, unless a disk I/O error happened.
->>   *
-> 
-> Why not just send a formal patch?  So Andrew can just pick anything he
-> likes.  I am totally OK with that.
+From: Chng, Jack Ping <jack.ping.chng@linux.intel.com>
+Date: Feb/04/2020, 09:41:35 (UTC+00:00)
 
-Because you're working on cleaning this up.
+> Currently our network SoC has something like this:
+> XGMAC-> XPCS -> Combo PHY -> PHY
+>=20
+> In the xpcs driver probe(), get and calibrate the phy:
+>=20
+> priv->phy =3D devm_phy_get(&pdev->dev, "phy");
+> if (IS_ERR(priv->phy)) {
+>  =A0=A0=A0 dev_warn(dev, "No phy\n");
+>  =A0=A0=A0 return PTR_ERR(priv->phy);
+> }
+>=20
+> ret =3D phy_init(priv->phy);
+> if (ret)
+>  =A0=A0=A0 return ret;
+>=20
+> ret =3D phy_power_on(priv->phy);
+> if (ret) {
+>  =A0=A0=A0 phy_exit(priv->phy);
+>  =A0=A0=A0 return ret;
+> }
+> ret =3D phy_calibrate(priv->phy);
+> if (ret) {
+>  =A0=A0=A0 phy_exit(priv->phy);
+>  =A0=A0=A0 return ret;
+> }
+>=20
+> xpcs driver needs to handle phy or phy_device depending on the phy?
 
-> 
->> and really don't like the use of !__PageLazyFree() instead of PageSwapBacked().
-> 
-> If adopted, !__PageLazyFree() should only be used in the context where
-> we really want to check whether pages are freed lazily.  Otherwise,
-> PageSwapBacked() should be used.
-> 
+Apologies for the delayed answer.
 
-Yeah, and once again, personally, I don't like this approach. E.g.,
-ClearPageLazyFree() sets PG_swapbacked. You already have to be aware
-that this is a single flag being used in the background and what the
-implications are. IMHO, in no way better than the current approach. I
-prefer better documentation instead.
+I think XPCS should be agnostic of PHY so this should be handled by stmmac=
+=20
+core and=20
 
-But I am just a reviewer and not a maintainer, so it's just my 2 cents.
 
--- 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+PHYLINK.
+
+I submitted a new series: https://patchwork.ozlabs.org/project/netdev/list/=
+?series=3D163171
+
+Can you please test it ?
+
+---
 Thanks,
-
-David / dhildenb
-
+Jose Miguel Abreu
