@@ -2,159 +2,109 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CDA5C10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 10:57:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFC7BC10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 10:58:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 219E12072A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 10:57:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="S34WtJjI"
+	by mail.kernel.org (Postfix) with ESMTP id A54B520828
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 10:58:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583751498;
+	bh=6wG6vgG5x0+FSi2MXDXl6/RsymKq0azjyM9RKzCRupY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dLrIVRi87j4Uo4IhnRQABgsmhi8ZkhUr06vvHTkPi0fD1+vVcY/Lba7eIGvCjsopm
+	 BhQD8QepOsRvlJdeHZTE8OuYlr/K/0iViybWH10eaMiuB0j8I47YCuVf36Yl34nd2N
+	 y98GeJGrgskFclnnUbSZ6zZmICfnyJ/nQ4vT+zEY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726703AbgCIK5M (ORCPT
+        id S1726551AbgCIK6R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 06:57:12 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:29882 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726384AbgCIK5L (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 06:57:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583751430;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=xOLtbpkEtoBfkKGGOTIvWhE3qqxQoqcopRPrLUYG0b8=;
-        b=S34WtJjIwLS5LDjAxkgTGLM88ZFLNh55PX7UwF7sJECKjaYGsnWEIRVgd08i/xYCTbqtqc
-        5PCgtu1dX9KB2bW04yrDBzV/mpK7+aovkjfuGnlG3aOUwhOTCgewIavvbK7KOxC5srWRio
-        detIHOaUd3jUBAhMkr2AUdsrZxPChTw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-327-kesc2179MmiUsjkFlfkzcQ-1; Mon, 09 Mar 2020 06:57:07 -0400
-X-MC-Unique: kesc2179MmiUsjkFlfkzcQ-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Mon, 9 Mar 2020 06:58:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55380 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725962AbgCIK6R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 06:58:17 -0400
+Received: from linux-8ccs.fritz.box (p5B2812F9.dip0.t-ipconnect.de [91.40.18.249])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1F64D1007268;
-        Mon,  9 Mar 2020 10:57:06 +0000 (UTC)
-Received: from bfoster (dhcp-41-2.bos.redhat.com [10.18.41.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 74CEB91D95;
-        Mon,  9 Mar 2020 10:57:05 +0000 (UTC)
-Date:   Mon, 9 Mar 2020 06:57:03 -0400
-From:   Brian Foster <bfoster@redhat.com>
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] xfs: clear PF_MEMALLOC before exiting xfsaild thread
-Message-ID: <20200309105703.GA36070@bfoster>
-References: <20200309010410.GA371527@sol.localdomain>
- <20200309043430.143206-1-ebiggers@kernel.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id B2E5A2072A;
+        Mon,  9 Mar 2020 10:58:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583751496;
+        bh=6wG6vgG5x0+FSi2MXDXl6/RsymKq0azjyM9RKzCRupY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=L8SSrXKJJ5SUty0L7bmy7Z2ZP7jO7fZYviPSY2ILjUSCCjuGyA/pSa1GjjCXt0lzU
+         lqrAfAGn9n+3WphZpvW/qJlbI2QfP+wxT0oycqll6wXKLLOTvUHBKQPjCSSmmoq0AB
+         h8baJV47eRvuvQPuJUWDdqh4qwRS1GwPcnz1wLFk=
+Date:   Mon, 9 Mar 2020 11:58:12 +0100
+From:   Jessica Yu <jeyu@kernel.org>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Matthias Maennich <maennich@google.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 1/2] modpost: rework and consolidate logging interface
+Message-ID: <20200309105812.GC18870@linux-8ccs.fritz.box>
+References: <20200306160206.5609-1-jeyu@kernel.org>
+ <CAK7LNARZ4VgaCa_TiDBG-99amBGTTXTQMs9LsK3nO4k+y-5KDQ@mail.gmail.com>
+ <20200309095914.GA18870@linux-8ccs.fritz.box>
+ <CAK7LNARf9CzZ8dcK5O5vxUoncpDdpzSZctd0YuKeWyfDG_cdwA@mail.gmail.com>
+ <20200309103935.GB18870@linux-8ccs.fritz.box>
+ <CAK7LNARpJ-FAvCUEH9rrNCiqx5LwRHmWospvRnT-ERQoEGjK-Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20200309043430.143206-1-ebiggers@kernel.org>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+In-Reply-To: <CAK7LNARpJ-FAvCUEH9rrNCiqx5LwRHmWospvRnT-ERQoEGjK-Q@mail.gmail.com>
+X-OS:   Linux linux-8ccs 5.5.0-lp150.12.61-default x86_64
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 08, 2020 at 09:34:30PM -0700, Eric Biggers wrote:
-> From: Eric Biggers <ebiggers@google.com>
-> 
-> Leaving PF_MEMALLOC set when exiting a kthread causes it to remain set
-> during do_exit().  That can confuse things.  For example, if BSD process
-> accounting is enabled and the accounting file has FS_SYNC_FL set and is
-> located on an ext4 filesystem without a journal, then do_exit() ends up
-> calling ext4_write_inode().  That triggers the
-> WARN_ON_ONCE(current->flags & PF_MEMALLOC) there, as it assumes
-> (appropriately) that inodes aren't written when allocating memory.
-> 
-> Fix this in xfsaild() by using the helper functions to save and restore
-> PF_MEMALLOC.
-> 
-> This can be reproduced as follows in the kvm-xfstests test appliance
-> modified to add the 'acct' Debian package, and with kvm-xfstests's
-> recommended kconfig modified to add CONFIG_BSD_PROCESS_ACCT=y:
-> 
-> 	mkfs.ext2 -F /dev/vdb
-> 	mount /vdb -t ext4
-> 	touch /vdb/file
-> 	chattr +S /vdb/file
-> 	accton /vdb/file
-> 	mkfs.xfs -f /dev/vdc
-> 	mount /vdc
-> 	umount /vdc
-> 
-> It causes:
-> 	WARNING: CPU: 0 PID: 332 at fs/ext4/inode.c:5097 ext4_write_inode+0x140/0x1a0
-> 	CPU: 0 PID: 332 Comm: xfsaild/vdc Not tainted 5.6.0-rc5 #5
-> 	[...]
-> 	RIP: 0010:ext4_write_inode+0x140/0x1a0 fs/ext4/inode.c:5097
-> 	[...]
-> 	Call Trace:
-> 	 write_inode fs/fs-writeback.c:1312 [inline]
-> 	 __writeback_single_inode+0x465/0x5f0 fs/fs-writeback.c:1511
-> 	 writeback_single_inode+0xad/0x120 fs/fs-writeback.c:1565
-> 	 sync_inode fs/fs-writeback.c:2602 [inline]
-> 	 sync_inode_metadata+0x3d/0x57 fs/fs-writeback.c:2622
-> 	 ext4_fsync_nojournal fs/ext4/fsync.c:94 [inline]
-> 	 ext4_sync_file+0x243/0x4b0 fs/ext4/fsync.c:172
-> 	 generic_write_sync include/linux/fs.h:2867 [inline]
-> 	 ext4_buffered_write_iter+0xe1/0x130 fs/ext4/file.c:277
-> 	 call_write_iter include/linux/fs.h:1901 [inline]
-> 	 new_sync_write+0x130/0x1d0 fs/read_write.c:483
-> 	 __kernel_write+0x54/0xe0 fs/read_write.c:515
-> 	 do_acct_process+0x122/0x170 kernel/acct.c:522
-> 	 slow_acct_process kernel/acct.c:581 [inline]
-> 	 acct_process+0x1d4/0x27c kernel/acct.c:607
-> 	 do_exit+0x83d/0xbc0 kernel/exit.c:791
-> 	 kthread+0xf1/0x140 kernel/kthread.c:257
-> 	 ret_from_fork+0x27/0x50 arch/x86/entry/entry_64.S:352
-> 
-> This case was originally reported by syzbot at
-> https://lore.kernel.org/r/0000000000000e7156059f751d7b@google.com.
-> 
-> Reported-by: syzbot+1f9dc49e8de2582d90c2@syzkaller.appspotmail.com
-> Signed-off-by: Eric Biggers <ebiggers@google.com>
-> ---
++++ Masahiro Yamada [09/03/20 19:49 +0900]:
+>On Mon, Mar 9, 2020 at 7:39 PM Jessica Yu <jeyu@kernel.org> wrote:
+>>
+>> Ah, sorry, I mean the kbuild 0-day bot errors. I am just realizing
+>> the 0-day bot emails are not CC'd to lkml. Here is the error I got
+>> from the bot:
+>>
+>> ---
+>>
+>> I love your patch! Yet something to improve:
+>>
+>> [auto build test ERROR on linus/master]
+>> [also build test ERROR on v5.6-rc4 next-20200306]
+>> [if your patch is applied to the wrong git tree, please drop us a note to help
+>> improve the system. BTW, we also suggest to use '--base' option to specify the
+>> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+>>
+>> url:    https://github.com/0day-ci/linux/commits/Jessica-Yu/modpost-rework-and-consolidate-logging-interface/20200307-052346
+>> base:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 30fe0d07fd7b27d41d9b31a224052cc4e910947a
+>> config: sh-randconfig-a001-20200306 (attached as .config)
+>> compiler: sh4-linux-gcc (GCC) 7.5.0
+>> reproduce:
+>>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>>         chmod +x ~/bin/make.cross
+>>         # save the attached .config to linux build tree
+>>         GCC_VERSION=7.5.0 make.cross ARCH=sh
+>>
+>> If you fix the issue, kindly add following tag
+>> Reported-by: kbuild test robot <lkp@intel.com>
+>>
+>> All errors (new ones prefixed by >>):
+>>
+>> >> ERROR: modpost: "adc_single" [arch/sh/boards/mach-hp6xx/hp6xx_apm.ko] undefined!
+>
+>
+>Indeed, this one is odd.
+>I have no idea...
 
-Reviewed-by: Brian Foster <bfoster@redhat.com>
+I've pushed the patches to a branch to let the kbuild bot run through its
+build tests again, and if I have extra time today I will try to
+reproduce this and let you know the results.
 
-> 
-> v2: include more details in the commit message.
-> 
->  fs/xfs/xfs_trans_ail.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/fs/xfs/xfs_trans_ail.c b/fs/xfs/xfs_trans_ail.c
-> index 00cc5b8734be8..3bc570c90ad97 100644
-> --- a/fs/xfs/xfs_trans_ail.c
-> +++ b/fs/xfs/xfs_trans_ail.c
-> @@ -529,8 +529,9 @@ xfsaild(
->  {
->  	struct xfs_ail	*ailp = data;
->  	long		tout = 0;	/* milliseconds */
-> +	unsigned int	noreclaim_flag;
->  
-> -	current->flags |= PF_MEMALLOC;
-> +	noreclaim_flag = memalloc_noreclaim_save();
->  	set_freezable();
->  
->  	while (1) {
-> @@ -601,6 +602,7 @@ xfsaild(
->  		tout = xfsaild_push(ailp);
->  	}
->  
-> +	memalloc_noreclaim_restore(noreclaim_flag);
->  	return 0;
->  }
->  
-> -- 
-> 2.25.1
-> 
+Thanks,
 
+Jessica
