@@ -5,46 +5,46 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACCA0C18E5A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 08:57:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 339A4C18E5C
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 08:58:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78AEF20637
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 08:57:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0763620637
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 08:58:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iNvH2Qxt"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cux5itZW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726523AbgCII5F (ORCPT
+        id S1726444AbgCII6k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 04:57:05 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:41378 "EHLO
+        Mon, 9 Mar 2020 04:58:40 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:48395 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725796AbgCII5E (ORCPT
+        by vger.kernel.org with ESMTP id S1725796AbgCII6k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 04:57:04 -0400
+        Mon, 9 Mar 2020 04:58:40 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583744224;
+        s=mimecast20190719; t=1583744318;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=FLow7QjaCQ9sm04eXSAADbzZJYLzhqYCrkj6e/53ZSY=;
-        b=iNvH2QxtQ6/mNzMef69feo9ZWjnjquwM8DRFg5pHbMQ8vVzAuG92Gxh/i4H3OdTSL7wV2Z
-        HNRiVpSNaKbxbvY2PI9HtbriIA4Q3eU4CC6zdkvEoaBuZSQDKutnDeF/ioi9I6DpGUvQcb
-        oIVVVsgDE1zY/Kggdm3KvLErGxSpo5A=
+        bh=rM8SCMKgbVq0dsxwT36P0gEDRUGcdYNOLo6h+hPX3dE=;
+        b=cux5itZWuiNCDgYo7G0HLzW2znn9r9THc56z0yeQPYj+zHpbWFI+5D/EFjBilXJT25T0X6
+        VyqXfFhArfnMFdx4CGmkPqOZn0j1t5mahK3VxLXScJcHzoGsia14hl0lpoE5GJ/DuQ+ul2
+        4x7bzhan6dwOPsPiBB+m+dXqaGmv/vg=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-339-BjcSSUSrO5y9HFq62QFOFg-1; Mon, 09 Mar 2020 04:57:00 -0400
-X-MC-Unique: BjcSSUSrO5y9HFq62QFOFg-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+ us-mta-303-AktURqhXMZWfBXJxbeBmOQ-1; Mon, 09 Mar 2020 04:58:34 -0400
+X-MC-Unique: AktURqhXMZWfBXJxbeBmOQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4A1C0800D48;
-        Mon,  9 Mar 2020 08:56:58 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D19118017CC;
+        Mon,  9 Mar 2020 08:58:32 +0000 (UTC)
 Received: from [10.36.118.32] (unknown [10.36.118.32])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5857E5C13D;
-        Mon,  9 Mar 2020 08:56:55 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 148298B75C;
+        Mon,  9 Mar 2020 08:58:29 +0000 (UTC)
 Subject: Re: [PATCH v3 1/7] mm/hotplug: fix hot remove failure in
  SPARSEMEM|!VMEMMAP case
 To:     Baoquan He <bhe@redhat.com>, linux-kernel@vger.kernel.org
@@ -98,8 +98,8 @@ Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  njnuI31KBiLUks+paRkHQlFcgS2N3gkRBzH7xSZ+t7Re3jvXdXEzKBbQ+dC3lpJB0wPnyMcX
  FOTT3aZT7IgePkt5iC/BKBk3hqKteTnJFeVIT7EC+a6YUFg=
 Organization: Red Hat GmbH
-Message-ID: <56640bcb-d7f9-9154-4965-12d8b25d050a@redhat.com>
-Date:   Mon, 9 Mar 2020 09:56:54 +0100
+Message-ID: <b0ff37b3-bae1-bdd6-8a4f-62f03e028839@redhat.com>
+Date:   Mon, 9 Mar 2020 09:58:29 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.5.0
 MIME-Version: 1.0
@@ -107,7 +107,7 @@ In-Reply-To: <20200307084229.28251-2-bhe@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -160,39 +160,9 @@ On 07.03.20 09:42, Baoquan He wrote:
 >  	bool section_is_early = early_section(ms);
 >  	struct page *memmap = NULL;
 > +	bool empty = false;
->  	unsigned long *subsection_map = ms->usage
->  		? &ms->usage->subsection_map[0] : NULL;
->  
-> @@ -764,7 +765,8 @@ static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
->  	 * For 2/ and 3/ the SPARSEMEM_VMEMMAP={y,n} cases are unified
->  	 */
->  	bitmap_xor(subsection_map, map, subsection_map, SUBSECTIONS_PER_SECTION);
-> -	if (bitmap_empty(subsection_map, SUBSECTIONS_PER_SECTION)) {
-> +	empty = bitmap_empty(subsection_map, SUBSECTIONS_PER_SECTION);
-> +	if (empty) {
->  		unsigned long section_nr = pfn_to_section_nr(pfn);
->  
->  		/*
-> @@ -779,13 +781,15 @@ static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
->  			ms->usage = NULL;
->  		}
->  		memmap = sparse_decode_mem_map(ms->section_mem_map, section_nr);
-> -		ms->section_mem_map = (unsigned long)NULL;
->  	}
->  
->  	if (section_is_early && memmap)
->  		free_map_bootmem(memmap);
->  	else
->  		depopulate_section_memmap(pfn, nr_pages, altmap);
-> +
-> +	if (empty)
-> +		ms->section_mem_map = (unsigned long)NULL;
->  }
->  
->  static struct page * __meminit section_activate(int nid, unsigned long pfn,
-> 
 
-Reviewed-by: David Hildenbrand <david@redhat.com>
+Oh, one NIT: no need to initialize empty to false.
+
 
 -- 
 Thanks,
