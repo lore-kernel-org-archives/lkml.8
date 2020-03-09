@@ -2,145 +2,137 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAD_ENC_HEADER,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA815C10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:21:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3FCDC10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:21:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C362120828
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:21:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82A69208C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:21:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="Kbde3Il7"
+	dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b="bZuCeSSW";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="22A3LS72"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727398AbgCISVf (ORCPT
+        id S1727439AbgCISVi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 14:21:35 -0400
-Received: from gateway20.websitewelcome.com ([192.185.54.2]:46537 "EHLO
-        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727323AbgCISVf (ORCPT
+        Mon, 9 Mar 2020 14:21:38 -0400
+Received: from out1-smtp.messagingengine.com ([66.111.4.25]:40231 "EHLO
+        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727323AbgCISVh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 14:21:35 -0400
-Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
-        by gateway20.websitewelcome.com (Postfix) with ESMTP id A7551400D5CCB
-        for <linux-kernel@vger.kernel.org>; Mon,  9 Mar 2020 12:06:34 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id BN1vjWxa6AGTXBN1vjyjj7; Mon, 09 Mar 2020 13:21:31 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=94Q67ojJZX0sr3cTE6wQF4GveZtQlKTfPuEaR91kEuo=; b=Kbde3Il7M3zJ70zSOwLiT3SbLZ
-        mOUvlifuwYuxtTck+M1RWB+lkNJJEFU7af6Oq6QHGgq2exvgq0Qq8rsMJrQbcasMUu6p7CRWqyl4N
-        JDRdNpcU6o42jPnrp0T1slNC4mQ8VjPGEakca1J1yXoJtP3IrUFerpTx9g8HvqP+dKLHiC349i5+4
-        jzYCdYD2ULtSM+xYKiWxxEbhkgcM0vpa7XOKcin3qL/3vXUzy+uLMnNVO+OB2B71He6FmLqwWcyJa
-        CFz2JOxoJ0tKhb/LILTOHHUaW1Zk3uK5PcHwjSPdX9re1qQX/i+3dT7o0mX+VTW7iY7JmdQ1ByONx
-        VUJB7tuA==;
-Received: from [201.162.240.150] (port=28860 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1jBN1u-004LTL-1r; Mon, 09 Mar 2020 13:21:30 -0500
-Date:   Mon, 9 Mar 2020 13:24:42 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>
-Cc:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] nfs: Replace zero-length array with flexible-array
- member
-Message-ID: <20200309182442.GA5422@embeddedor>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.162.240.150
-X-Source-L: No
-X-Exim-ID: 1jBN1u-004LTL-1r
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [201.162.240.150]:28860
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 31
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+        Mon, 9 Mar 2020 14:21:37 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id 1336E21B6B;
+        Mon,  9 Mar 2020 14:21:36 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Mon, 09 Mar 2020 14:21:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dxuuu.xyz; h=
+        content-transfer-encoding:content-type:in-reply-to:date:cc
+        :subject:from:to:message-id; s=fm2; bh=Dj8K1Y9A/sg8En4uAWfo+rhEO
+        VoMBMW9TFciIFvXrkE=; b=bZuCeSSWq8fdUjsWIYiXViPPtFUijVzJJqyfWz8RD
+        j2/DY/zLoVyKzJoIBj9Nx6EcdQY9qnVeWyQXPurcNir6/dV6HhcXESlOKquWL+oV
+        fkrlFouUR5dexW/dFMzJRxEh2jN7kSqIBSC2evA0hlKfWn7YGJ4jmsvjmMkd0eOg
+        JMixXV0tw6bKBLwQxAEsq3JpxdniJBeIYQkKIYwnpsiECzKbhqp3x3tppviJv/F7
+        2VBbikfuB/obg++ywvEAf/6g9dRpn7wvdKaUf5d+zdJTTSH2JwLACpVEo+tb/Pru
+        NywFXqw9X6DXUNRAqnATJWqa4HkvxYbuV/nKjPrABWy5g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=Dj8K1Y
+        9A/sg8En4uAWfo+rhEOVoMBMW9TFciIFvXrkE=; b=22A3LS72KSpNWbka0RGeLW
+        vfHJrUbDsKroCmTxe1wyBSoPYA+NgvED+pCnW6ue8y1/9huYTCxp7p6fNrGFUOr4
+        yd9OdRI7Jo66M4EChIlDKrsg9nDBhVwtk2UDVB7I7R/EdwUB7JILB2qXxhJrfDgE
+        WMBEEXQLzwxrqgLTMHjyUAmaHUUKZxRKTDzz6BaWvF09eOeYoQKRKKwiGyW9bQXD
+        QC4KZcV8Culz97nevi5ZHVAlNQeFs0y2xDXni87lVuH2cwyCi99gvXR8OWUl6Knm
+        HAEQwVEl4RDt0oyHC0/bjYA6HA5EgkzLOv/64evH9vfX4UWRiiKJRcvBiGoTN9lA
+        ==
+X-ME-Sender: <xms:L4lmXrvXVdEmqXlyQLgMcCYhhHG6U9i5iu9N4EKgFDI4icsK3poaDQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedruddukedgudduvdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecufghrlhcuvffnffculdejtddmnecujfgurhepgf
+    gtjgffuffhvffksehtqhertddttdejnecuhfhrohhmpedfffgrnhhivghlucgiuhdfuceo
+    ugiguhesugiguhhuuhdrgiihiieqnecukfhppeduieefrdduudegrddufedvrdegnecuve
+    hluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepugiguhesugig
+    uhhuuhdrgiihii
+X-ME-Proxy: <xmx:L4lmXlrmc5u4avNOqwDM1yp0UvNNKZMv-aP3rNqFePmT-aueyP51vA>
+    <xmx:L4lmXo7R87Uj2tueGW9Hs6RhR--EJRjNECTG0cTRBVWqLU5qre2xSw>
+    <xmx:L4lmXrEgIRcFXK6XPZvE8RJKcaAZ3UweuHkAmpyHvTkL7_IKV9QkNQ>
+    <xmx:MIlmXv879FWIgXqfvjqSfDKDF_m9o0IjyvOfX5nFFgZKY8Mcx67Njg>
+Received: from localhost (unknown [163.114.132.4])
+        by mail.messagingengine.com (Postfix) with ESMTPA id E6F153280065;
+        Mon,  9 Mar 2020 14:21:33 -0400 (EDT)
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Originalfrom: "Joe Perches" <joe@perches.com>
+Original: =?utf-8?q?On_Thu,_2020-03-05_at_13:16_-0800,_Daniel_Xu_wrote:
+ =0D=0A>_It's?= =?utf-8?q?_not_really_necessary_to_have_contiguous_physical_memory_for_xa?=
+ =?utf-8?q?ttr=0D=0A>_values._We_no_longer_need_to_worry_about_higher_orde?=
+ =?utf-8?q?r_allocations=0D=0A>_failing_with_kvmalloc,_especially_because_?=
+ =?utf-8?q?the_xattr_size_limit_is_at=0D=0A>_64K.=0D=0A=0D=0ASo_why_use_vm?=
+ =?utf-8?q?alloc_memory_at_all=3F=0D=0A=0D=0A>_diff_--git_a/fs/xattr.c_b/f?=
+ =?utf-8?q?s/xattr.c=0D=0A']=0D=0A>_@@_-817,7_+817,7_@@_struct_simple=5Fxa?=
+ =?utf-8?q?ttr_*simple=5Fxattr=5Falloc(const_void_*value,_size=5Ft_size)?=
+ =?utf-8?q?=0D=0A>__=09if_(len_<_sizeof(*new=5Fxattr))=0D=0A>__=09=09retur?=
+ =?utf-8?q?n_NULL;=0D=0A>__=0D=0A>_-=09new=5Fxattr_=3D_kmalloc(len,_GFP=5F?=
+ =?utf-8?q?KERNEL);=0D=0A>_+=09new=5Fxattr_=3D_kvmalloc(len,_GFP=5FKERNEL)?=
+ =?utf-8?q?;=0D=0A=0D=0AWhy_is_this_sensible=3F=0D=0Avmalloc_memory_is_a_m?=
+ =?utf-8?q?uch_more_limited_resource.=0D=0A=0D=0AAlso,_it_seems_as_if_the_?=
+ =?utf-8?q?function_should_set=0D=0Anew=5Fxattr->name_to_NULL_before_the_r?=
+ =?utf-8?q?eturn.=0D=0A=0D=0A=0D=0A?=
+In-Reply-To: <58c6e6dafabea52e5b030d18b83c13e4f43ab8e3.camel@perches.com>
+Originaldate: Fri Mar 6, 2020 at 12:49 AM
+Date:   Mon, 09 Mar 2020 11:21:33 -0700
+Cc:     <shakeelb@google.com>, <linux-kernel@vger.kernel.org>,
+        <gregkh@linuxfoundation.org>, <kernel-team@fb.com>
+Subject: Re: [PATCH v2 1/4] kernfs: kvmalloc xattr value instead of kmalloc
+From:   "Daniel Xu" <dxu@dxuuu.xyz>
+To:     "Joe Perches" <joe@perches.com>, <cgroups@vger.kernel.org>,
+        <tj@kernel.org>, <lizefan@huawei.com>, <hannes@cmpxchg.org>
+Message-Id: <C16IH7NEXW4J.440OGTNY7CWX@dlxu-fedora-R90QNFJV>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
+Hi Joe,
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
+On Fri Mar 6, 2020 at 12:49 AM, Joe Perches wrote:
+> On Thu, 2020-03-05 at 13:16 -0800, Daniel Xu wrote:
+> > It's not really necessary to have contiguous physical memory for xattr
+> > values. We no longer need to worry about higher order allocations
+> > failing with kvmalloc, especially because the xattr size limit is at
+> > 64K.
+>
+>=20
+> So why use vmalloc memory at all?
+>
+>=20
+> > diff --git a/fs/xattr.c b/fs/xattr.c
+> ']
+> > @@ -817,7 +817,7 @@ struct simple_xattr *simple_xattr_alloc(const void =
+*value, size_t size)
+> >  	if (len < sizeof(*new_xattr))
+> >  		return NULL;
+> > =20
+> > -	new_xattr =3D kmalloc(len, GFP_KERNEL);
+> > +	new_xattr =3D kvmalloc(len, GFP_KERNEL);
+>
+>=20
+> Why is this sensible?
+> vmalloc memory is a much more limited resource.
 
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertently introduced[3] to the codebase from now on.
+What would be the alternative? As Greg said, contiguous memory should be
+more scarce.
 
-Also, notice that, dynamic memory allocations won't be affected by
-this change:
+> Also, it seems as if the function should set
+> new_xattr->name to NULL before the return.
+>
 
-"Flexible array members have incomplete type, and so the sizeof operator
-may not be applied. As a quirk of the original implementation of
-zero-length arrays, sizeof evaluates to zero."[1]
+Will add and send in a different patch.
 
-This issue was found with the help of Coccinelle.
 
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- fs/nfs/dir.c      | 2 +-
- fs/nfs/nfs4proc.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
-index d4b839b6cf89..a551a30047f9 100644
---- a/fs/nfs/dir.c
-+++ b/fs/nfs/dir.c
-@@ -141,7 +141,7 @@ struct nfs_cache_array {
- 	int size;
- 	int eof_index;
- 	u64 last_cookie;
--	struct nfs_cache_array_entry array[0];
-+	struct nfs_cache_array_entry array[];
- };
- 
- typedef int (*decode_dirent_t)(struct xdr_stream *, struct nfs_entry *, bool);
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index 69b7ab7a5815..cc0960558284 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -5550,7 +5550,7 @@ static int buf_to_pages_noslab(const void *buf, size_t buflen,
- struct nfs4_cached_acl {
- 	int cached;
- 	size_t len;
--	char data[0];
-+	char data[];
- };
- 
- static void nfs4_set_cached_acl(struct inode *inode, struct nfs4_cached_acl *acl)
--- 
-2.25.0
-
+Thanks,
+Daniel
