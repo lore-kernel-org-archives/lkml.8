@@ -2,126 +2,120 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74D66C10F25
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:57:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D9A8C10F29
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:59:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 590E824656
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:57:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AEA120866
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:59:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ms/8ZoJQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726449AbgCIT5Z (ORCPT
+        id S1726271AbgCIT7q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 15:57:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41992 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726096AbgCIT5Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 15:57:25 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C8C1A24654;
-        Mon,  9 Mar 2020 19:57:23 +0000 (UTC)
-Date:   Mon, 9 Mar 2020 15:57:22 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     paulmck@kernel.org
-Cc:     linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
-        kernel-team@fb.com, mingo@kernel.org, elver@google.com,
-        andreyknvl@google.com, glider@google.com, dvyukov@google.com,
-        cai@lca.pw, boqun.feng@gmail.com
-Subject: Re: [PATCH kcsan 26/32] kcsan, trace: Make KCSAN compatible with
- tracing
-Message-ID: <20200309155722.49d6bb93@gandalf.local.home>
-In-Reply-To: <20200309190420.6100-26-paulmck@kernel.org>
-References: <20200309190359.GA5822@paulmck-ThinkPad-P72>
-        <20200309190420.6100-26-paulmck@kernel.org>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 9 Mar 2020 15:59:46 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:35036 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725992AbgCIT7p (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 15:59:45 -0400
+Received: by mail-ed1-f67.google.com with SMTP id a20so7545554edj.2;
+        Mon, 09 Mar 2020 12:59:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VmBXxLKmo+++3JevDuJgXXYNelP3ARfrGqq9jGQ7Y7E=;
+        b=ms/8ZoJQ8nLPB660/C1W5wBbhezgkvnTQ4JipsElaAt9WEAK7C3RspKMI05wCln7uH
+         vOjrZ+hEU8wRmNb7cV3l0iKwIXxvFNVNWOQmveMjVZUk/BXuAm3qkMYlHX/SHf/B5RRW
+         uUFD7T10eBMQNsE+3IvbNRAewmIdNmqoVC+tVMc0glgiOSNnId0iRCT/ALNOOxwVbuIl
+         qAUA5E3tQv2ToAcgD9PLekxJJ04FtHSTzWRI0le6cl1qKf4dgfMJfyRVxEbmyGaZlYOF
+         AUtRu4kjq46Jn3gTIHNUzDPJFbOQns50H/KyEiTCSboV7UlsQ8zbQDd4MWHpWBh9T1eX
+         V9tA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VmBXxLKmo+++3JevDuJgXXYNelP3ARfrGqq9jGQ7Y7E=;
+        b=Ble8vhjCq4wmkm7lqc+teYGnlBYDRBZNy2xagLCmerocdu9ePmL9rPjjrI/G7VYc0L
+         hmjCAfkt3xWhIQjOfTRalD63ulGXQxWjMJ+/47LDIDNoOdvxg75fpiZCVX+yrAVhwU5v
+         RBEjNqtRokjE+REIc7O1T7M3ESRohq3uftTTIrPydbt0V+91hxuVd98JUwCwMgLxuLd9
+         XWLgyHu3FTsJAlbPgu0ZGnFHvVBumDKagoA6g/qLOREh8pDGb600/73WzsDKDjfqzyqc
+         rxO/qsWopkpAibHomAqiUj0hGYyRTjkuUIbpSDeOgs8sA8kPUIzVMtguqfiasiWXUHQo
+         1ZhA==
+X-Gm-Message-State: ANhLgQ1yHdaUx4RD+HtS35UGx2BJ9OEXrJdiui/XGQsqglUJXWjufrih
+        sSYP9krkkUgQb2zzH2X35wmaw0j6X+tffzZlnbg=
+X-Google-Smtp-Source: ADFU+vui/3sVmKBiJj2kgewtRz/H76d3oN3MyBRFSaJd5Yt5pd15za9zixZuGhwGvUsQxOOsjnSrE1+XaMuiRPIv2WQ=
+X-Received: by 2002:a17:906:f49:: with SMTP id h9mr16777311ejj.6.1583783983011;
+ Mon, 09 Mar 2020 12:59:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20200309145624.10026-1-olteanv@gmail.com> <20200309145624.10026-6-olteanv@gmail.com>
+ <83af52172a3cabd662de1ed9574e4247@walle.cc>
+In-Reply-To: <83af52172a3cabd662de1ed9574e4247@walle.cc>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Mon, 9 Mar 2020 21:59:32 +0200
+Message-ID: <CA+h21hp2MxLqLJL9AnufmW_-OQFdiY7p4Db97G3eTr_MUkH4TA@mail.gmail.com>
+Subject: Re: [PATCH 5/6] arm64: dts: ls1028a: Specify the DMA channels for the
+ DSPI controllers
+To:     Michael Walle <michael@walle.cc>
+Cc:     Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, Esben Haabendal <eha@deif.com>,
+        angelo@sysam.it, andrew.smirnov@gmail.com,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Wei Chen <weic@nvidia.com>, Mohamed Hosny <mhosny@nvidia.com>,
+        peng.ma@nxp.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon,  9 Mar 2020 12:04:14 -0700
-paulmck@kernel.org wrote:
+On Mon, 9 Mar 2020 at 21:06, Michael Walle <michael@walle.cc> wrote:
+>
+> Am 2020-03-09 15:56, schrieb Vladimir Oltean:
+> > From: Vladimir Oltean <vladimir.oltean@nxp.com>
+> >
+> > LS1028A has a functional connection to the eDMA module. Even if the
+> > spi-fsl-dspi.c driver is not using DMA for LS1028A now, define the
+> > slots
+> > in the DMAMUX for connecting the eDMA channels to the 3 DSPI
+> > controllers.
+> >
+> > Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+> > ---
+> >  arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 6 ++++++
+> >  1 file changed, 6 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> > b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> > index 515e0a1b934f..18155273a46e 100644
+> > --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> > +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> > @@ -298,6 +298,8 @@
+> >                       interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
+> >                       clock-names = "dspi";
+> >                       clocks = <&clockgen 4 1>;
+> > +                     dmas = <&edma0 0 62>, <&edma0 0 60>;
+> > +                     dma-names = "tx", "rx";
+>
+> minor nit. Other nodes specified the dma channels as
+>
+> dma-names = "tx", "rx";
+> dmas = <&edma0 0 62>,
+>         <&edma0 0 60>;
+>
+> -michael
+>
 
-> From: Marco Elver <elver@google.com>
-> 
-> Previously the system would lock up if ftrace was enabled together with
-> KCSAN. This is due to recursion on reporting if the tracer code is
-> instrumented with KCSAN.
-> 
-> To avoid this for all types of tracing, disable KCSAN instrumentation
-> for all of kernel/trace.
-> 
-> Furthermore, since KCSAN relies on udelay() to introduce delay, we have
-> to disable ftrace for udelay() (currently done for x86) in case KCSAN is
-> used together with lockdep and ftrace. The reason is that it may corrupt
-> lockdep IRQ flags tracing state due to a peculiar case of recursion
-> (details in Makefile comment).
-> 
-> Signed-off-by: Marco Elver <elver@google.com>
-> Reported-by: Qian Cai <cai@lca.pw>
-> Cc: Paul E. McKenney <paulmck@kernel.org>
-> Cc: Steven Rostedt <rostedt@goodmis.org>
+Does it matter?
 
-Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-
--- Steve
-
-> Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> Tested-by: Qian Cai <cai@lca.pw>
-> ---
->  arch/x86/lib/Makefile | 5 +++++
->  kernel/kcsan/Makefile | 2 ++
->  kernel/trace/Makefile | 3 +++
->  3 files changed, 10 insertions(+)
-> 
-> diff --git a/arch/x86/lib/Makefile b/arch/x86/lib/Makefile
-> index 432a077..6110bce7 100644
-> --- a/arch/x86/lib/Makefile
-> +++ b/arch/x86/lib/Makefile
-> @@ -8,6 +8,11 @@ KCOV_INSTRUMENT_delay.o	:= n
->  
->  # KCSAN uses udelay for introducing watchpoint delay; avoid recursion.
->  KCSAN_SANITIZE_delay.o := n
-> +ifdef CONFIG_KCSAN
-> +# In case KCSAN+lockdep+ftrace are enabled, disable ftrace for delay.o to avoid
-> +# lockdep -> [other libs] -> KCSAN -> udelay -> ftrace -> lockdep recursion.
-> +CFLAGS_REMOVE_delay.o = $(CC_FLAGS_FTRACE)
-> +endif
->  
->  # Early boot use of cmdline; don't instrument it
->  ifdef CONFIG_AMD_MEM_ENCRYPT
-> diff --git a/kernel/kcsan/Makefile b/kernel/kcsan/Makefile
-> index df6b779..d4999b3 100644
-> --- a/kernel/kcsan/Makefile
-> +++ b/kernel/kcsan/Makefile
-> @@ -4,6 +4,8 @@ KCOV_INSTRUMENT := n
->  UBSAN_SANITIZE := n
->  
->  CFLAGS_REMOVE_core.o = $(CC_FLAGS_FTRACE)
-> +CFLAGS_REMOVE_debugfs.o = $(CC_FLAGS_FTRACE)
-> +CFLAGS_REMOVE_report.o = $(CC_FLAGS_FTRACE)
->  
->  CFLAGS_core.o := $(call cc-option,-fno-conserve-stack,) \
->  	$(call cc-option,-fno-stack-protector,)
-> diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
-> index 0e63db6..9072486 100644
-> --- a/kernel/trace/Makefile
-> +++ b/kernel/trace/Makefile
-> @@ -6,6 +6,9 @@ ifdef CONFIG_FUNCTION_TRACER
->  ORIG_CFLAGS := $(KBUILD_CFLAGS)
->  KBUILD_CFLAGS = $(subst $(CC_FLAGS_FTRACE),,$(ORIG_CFLAGS))
->  
-> +# Avoid recursion due to instrumentation.
-> +KCSAN_SANITIZE := n
-> +
->  ifdef CONFIG_FTRACE_SELFTEST
->  # selftest needs instrumentation
->  CFLAGS_trace_selftest_dynamic.o = $(CC_FLAGS_FTRACE)
-
+Regards,
+-Vladimir
