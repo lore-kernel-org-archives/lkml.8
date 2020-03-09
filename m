@@ -2,190 +2,101 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 198C2C10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 12:19:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68D32C10F29
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 12:20:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E34AA205ED
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 12:19:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DB5920674
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 12:20:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bKXVbKzq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PFu51PxI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727049AbgCIMTz (ORCPT
+        id S1727066AbgCIMUA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 08:19:55 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:40509 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726744AbgCIMTx (ORCPT
+        Mon, 9 Mar 2020 08:20:00 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:43096 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727052AbgCIMT6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 08:19:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583756393;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=GyJi62FBwsHTe3Zl4H44iXaw4BfzG8ra8uaMuD9rQ7s=;
-        b=bKXVbKzqgRe5FH/3GQb3LFZqmwwPQPG9A2M++Qsvtf3KoDbTTSFLYmBcsIwL3DwjIWMTYB
-        anpiy9c9PQ9BaiUKa0HXqM5nsML1TQtTlYQZzkeTk+WetYprPaR/69qqf78aWyuEhJ3KKH
-        84vv7ItkUXWgvt2ztNlD0Bg2Q9p4U5Q=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-42-Wsrr7mZfMMSBkoQbAWtN0g-1; Mon, 09 Mar 2020 08:19:51 -0400
-X-MC-Unique: Wsrr7mZfMMSBkoQbAWtN0g-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6E51A100550E;
-        Mon,  9 Mar 2020 12:19:49 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-182.rdu2.redhat.com [10.10.120.182])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id AF4FE1001B3F;
-        Mon,  9 Mar 2020 12:19:46 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-Subject: [RFC PATCH 17/17] watch_queue: sample: Display superblock
- notifications [ver #4]
-From:   David Howells <dhowells@redhat.com>
-To:     torvalds@linux-foundation.org, viro@zeniv.linux.org.uk
-Cc:     dhowells@redhat.com, dhowells@redhat.com, casey@schaufler-ca.com,
-        sds@tycho.nsa.gov, nicolas.dichtel@6wind.com, raven@themaw.net,
-        christian@brauner.io, andres@anarazel.de, jlayton@redhat.com,
-        dray@redhat.com, kzak@redhat.com, keyrings@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Mon, 09 Mar 2020 12:19:46 +0000
-Message-ID: <158375638603.334846.5465237543300472274.stgit@warthog.procyon.org.uk>
-In-Reply-To: <158375623086.334846.16121725232323108842.stgit@warthog.procyon.org.uk>
-References: <158375623086.334846.16121725232323108842.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/0.21
+        Mon, 9 Mar 2020 08:19:58 -0400
+Received: by mail-pf1-f195.google.com with SMTP id c144so4736963pfb.10
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 05:19:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Ej6XSzJLYzxEyi6Ocy5OL+BE9DVMwhDVxnF5ycV3aIk=;
+        b=PFu51PxIgJeDVhu7L9GMap2eWWU3fBEtgaGKiFxkIIxq2NO0AqSLX0NdoR2iMu7YsY
+         khArj/LGCX97paN9bCCLIdFaV5ZJcY16Ae0m2/SaTJw7xSNOpr6ob7BoMPo+2JbLokMa
+         SwMbwkdpWLLoGYPbO9xaYGa5dywKXY4hYWhz0djBT9V98DZUBkI02C5ph3O7NPw7ePpm
+         mPD6txkpShzFOePuw/uPXOoaFXOhji2K0WFH5qtoQPAsPk/oUseWFw4A3ep51e65iGNv
+         6+taN+BFCB8Ki3+pJetpYCGI7KdhrK8ZSZRaFbWvHWnEDl7he+acJHa1Ve8LrcmMcjYn
+         RMMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Ej6XSzJLYzxEyi6Ocy5OL+BE9DVMwhDVxnF5ycV3aIk=;
+        b=pemUawJ99lQPWfW7yvZzbXuhqevLBxVug3jrm5njK/8HF+eyYVBwrj+1fSlrlKoBT6
+         UCycCnCRAU+727oiEhtSwNYnQNYawvzm/9C+HjDyi9WbeKuCGrSrfvtHwSTD5BbPb77P
+         ewwecqeSS1NI19QdKJb9F533DvBAJHclJ5J7GhIEbIz9Vi3URnekLseJK144UCRTS5oE
+         LkaFILWtEFvDgOfaMIYqH3hS2MPi04u5/aw1qEcshIATCyGPx9Yx6JT+/fzHlxFxWzsz
+         tyC2yZMn5SWpJG+C2ick0k4oRAnDB90rgwGbSueYmQB3Ku3pk9A2rUFFlvX5QY3/BoTI
+         yfYA==
+X-Gm-Message-State: ANhLgQ0/5GeUTMw310W409yM45o27ZsOX56ml0PGzD3/jB0+pprPlV4m
+        HtVgVFUfWny420VARkEfwOo=
+X-Google-Smtp-Source: ADFU+vtClGXedATmMO0ze3AXltE9YTnUAE5pH/7dif6BPipMZxsEXrF9KLZksP0HB/4yi1AHbw0Y4Q==
+X-Received: by 2002:a63:445:: with SMTP id 66mr15727738pge.351.1583756397519;
+        Mon, 09 Mar 2020 05:19:57 -0700 (PDT)
+Received: from localhost ([106.51.232.35])
+        by smtp.gmail.com with ESMTPSA id p21sm44552991pfn.103.2020.03.09.05.19.56
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 09 Mar 2020 05:19:56 -0700 (PDT)
+Date:   Mon, 9 Mar 2020 17:49:55 +0530
+From:   afzal mohammed <afzal.mohd.ma@gmail.com>
+To:     Lubomir Rintel <lkundrak@v3.sk>
+Cc:     Olof Johansson <olof@lixom.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Enrico Weigelt <info@metux.net>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] ARM: mmp: replace setup_irq() by request_irq()
+Message-ID: <20200309121942.GA10426@afzalpc>
+References: <20200301122243.4129-1-afzal.mohd.ma@gmail.com>
+ <20200308145348.GA7062@afzalpc>
+ <20200308161903.GA156645@furthur.local>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200308161903.GA156645@furthur.local>
+User-Agent: Mutt/1.9.3 (2018-01-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The notification is run as:
+Hi Lubo,
 
-	./watch_test
+On Sun, Mar 08, 2020 at 05:19:03PM +0100, Lubomir Rintel wrote:
 
-and it then watches "/mnt" for superblock notifications:
+> It has been
+> Acked-by: Lubomir Rintel <lkundrak@v3.sk>
+> Tested-by: Lubomir Rintel <lkundrak@v3.sk>
 
-	# mount -t tmpfs none /mnt
-	# ./watch_test &
-	# mount -o remount,ro /mnt
-	# mount -o remount,rw /mnt
+Thanks
 
-producing:
+> (afzal; I believe I've responded with the Tested-by before; please don't
+> forget collect those when resubmitting patches in future. Thanks!)
 
-	# ./watch_test
-	NOTIFY[000]: ty=000003 sy=00 i=03010010
-	SUPER 157eb57ca7 change=0[readonly]
-	read() = 16
-	NOTIFY[000]: ty=000002 sy=04 i=02010010
-	MOUNT 000001a0 change=4[setattr] aux=0
-	read() = 16
-	NOTIFY[000]: ty=000002 sy=04 i=02010010
-	MOUNT 000001a0 change=4[setattr] aux=0
+The reason was a few minor changes in v3 vs v2, as that was the case i
+was unsure whether to keep it or not, so went conservative & removed it.
 
-Signed-off-by: David Howells <dhowells@redhat.com>
----
-
- samples/watch_queue/watch_test.c |   39 +++++++++++++++++++++++++++++++++++++-
- 1 file changed, 38 insertions(+), 1 deletion(-)
-
-diff --git a/samples/watch_queue/watch_test.c b/samples/watch_queue/watch_test.c
-index 49d185150506..eea3bd8c6569 100644
---- a/samples/watch_queue/watch_test.c
-+++ b/samples/watch_queue/watch_test.c
-@@ -29,6 +29,9 @@
- #ifndef __NR_watch_mount
- #define __NR_watch_mount -1
- #endif
-+#ifndef __NR_watch_sb
-+#define __NR_watch_sb -1
-+#endif
- 
- #define BUF_SIZE 256
- 
-@@ -82,6 +85,24 @@ static void saw_mount_change(struct watch_notification *n, size_t len)
- 	       m->triggered_on, n->subtype, mount_subtypes[n->subtype], m->changed_mount);
- }
- 
-+static const char *super_subtypes[256] = {
-+	[NOTIFY_SUPERBLOCK_READONLY]	= "readonly",
-+	[NOTIFY_SUPERBLOCK_ERROR]	= "error",
-+	[NOTIFY_SUPERBLOCK_EDQUOT]	= "edquot",
-+	[NOTIFY_SUPERBLOCK_NETWORK]	= "network",
-+};
-+
-+static void saw_super_change(struct watch_notification *n, size_t len)
-+{
-+	struct superblock_notification *s = (struct superblock_notification *)n;
-+
-+	if (len < sizeof(struct superblock_notification))
-+		return;
-+
-+	printf("SUPER %08llx change=%u[%s]\n",
-+	       s->sb_id, n->subtype, super_subtypes[n->subtype]);
-+}
-+
- /*
-  * Consume and display events.
-  */
-@@ -161,6 +182,9 @@ static void consumer(int fd)
- 			case WATCH_TYPE_MOUNT_NOTIFY:
- 				saw_mount_change(&n.n, len);
- 				break;
-+			case WATCH_TYPE_SB_NOTIFY:
-+				saw_super_change(&n.n, len);
-+				break;
- 			}
- 
- 			p += len;
-@@ -169,7 +193,7 @@ static void consumer(int fd)
- }
- 
- static struct watch_notification_filter filter = {
--	.nr_filters	= 2,
-+	.nr_filters	= 3,
- 	.filters = {
- 		[0]	= {
- 			.type			= WATCH_TYPE_KEY_NOTIFY,
-@@ -180,6 +204,14 @@ static struct watch_notification_filter filter = {
- 			// Reject move-from notifications
- 			.subtype_filter[0]	= UINT_MAX & ~(1 << NOTIFY_MOUNT_MOVE_FROM),
- 		},
-+		[2]	= {
-+			.type			= WATCH_TYPE_SB_NOTIFY,
-+			// Only accept notification of changes to R/O state
-+			.subtype_filter[0]	= (1 << NOTIFY_SUPERBLOCK_READONLY),
-+			// Only accept notifications of change-to-R/O
-+			.info_mask		= WATCH_INFO_FLAG_0,
-+			.info_filter		= WATCH_INFO_FLAG_0,
-+		},
- 	},
- };
- 
-@@ -218,6 +250,11 @@ int main(int argc, char **argv)
- 		exit(1);
- 	}
- 
-+	if (syscall(__NR_watch_sb, AT_FDCWD, "/mnt", 0, fd, 0x03) == -1) {
-+		perror("watch_sb");
-+		exit(1);
-+	}
-+
- 	consumer(fd);
- 	exit(0);
- }
-
-
+Regards
+afzal
