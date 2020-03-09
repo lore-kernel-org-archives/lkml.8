@@ -5,57 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A965DC10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 21:09:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D294C10F25
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 21:09:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87C8324656
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 21:09:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33C4024655
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 21:09:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YYjBZ90U"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CrwxY7ZR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727092AbgCIVIz (ORCPT
+        id S1727018AbgCIVIw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 17:08:55 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:42910 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726998AbgCIVIw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 9 Mar 2020 17:08:52 -0400
-Received: by mail-wr1-f68.google.com with SMTP id v11so13021448wrm.9;
-        Mon, 09 Mar 2020 14:08:50 -0700 (PDT)
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:33136 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726157AbgCIVIq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 17:08:46 -0400
+Received: by mail-wm1-f66.google.com with SMTP id r7so898999wmg.0;
+        Mon, 09 Mar 2020 14:08:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=3+pDepDyRd9WIgsrKAnVdJt5zeWPjx4zXJajcwJEkC8=;
-        b=YYjBZ90UQunn2F8G3mVjPWqz4msh8jVIw2W+YsV4erRhiDx3EgaPVm47CrxFLKX5iD
-         fdZdCIOv4SBPx8tdJKJt7Bc69XMYFF/UJbBbTgVcbH6Qif20OGc2A/SsfX230CVAMMaZ
-         SjJgnG1FpYfPyp+n3i3ExSQqaAwZJD9uLwIxnT6ogwxmyZLUBrD1zOzM8cht/JeTEHje
-         2uKeION61n0HiUQbW5ChJ8gZOPrL6uqPRTiitJRH0F6GR9ITVTxhL+WI2zD/Ye7xNAMQ
-         +VMXSNUvYOA83qwBdhHDx/loaeify5KtNI2xsTVcMFVR5Jb/BoInCMl4VGQX8i9hZrS3
-         ApqQ==
+        bh=CfDH5kEUG81plCORDpkFLQzd1G9WILL1xGRX2zS0AUk=;
+        b=CrwxY7ZR6In1d7iROlEuUzpfNKBFDbpZPqCUkocPVZNOENXBw4jC/JJtoLAnjKMBmS
+         mzYGwac2GkF2j7iRFopyVzjbnAhAHPHOMBo6CR89ffaUr05/kAXqILQsylkErvr2d6vg
+         JZxTUVFytnkEXDKTZXxEjMrZSiUlztjjRzrUGMYKgkD6GWVlfrgeAf9urCwk5u7dcBDh
+         xJunIrKr7TLh3yJfcBDfz1vBuiPdqH2KE3D8vtbUXFg+JcDcmAkfTzrXz0/eFs1hlMWB
+         rAV5o4AkQun/4Ggpwlnaxxj4+0JSZts6v20CzvIE0wzDgH0Vu0T6YDkY18qRgmNhCgm2
+         suKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=3+pDepDyRd9WIgsrKAnVdJt5zeWPjx4zXJajcwJEkC8=;
-        b=mmffplLlc+g4JwLMMSKXQBWf5ecCMEXwI7Ijq3ypdzPfoenzbEcYziC5WvuLhUrHVo
-         Y7CWtniVQy8LuqQBaQVPizV7kjzl69P1JbhgW4u8kRKMqhhSotddOlzavXueEwnByWSG
-         46u/mBheET+1VSwEHcw2AoMQNgIIKFUvnQNR+da4VkdErgCfB0zAlBDPtDjy7O4Egs1L
-         M9cu5kqPiF4IkazJDjZ7qCQNMKlYOLRruZ1y1kS9lEOborT2HScJH5o+jQKMDPt1KZL7
-         s6Nr0Bsgc72u2XwlKmsnpEev2Kf3ZE6noB9Iyq+/Fpcot+DfBQkiSePsOjmPxiTX1Wbn
-         SD+g==
-X-Gm-Message-State: ANhLgQ272zccZxfy8ovsMCLTtVWkGl3219ms7nQZmoqESzMceFBdxER5
-        1TJEe3gId8fAp67cIthaUhc=
-X-Google-Smtp-Source: ADFU+vuLGgm5z604QlSI/vPeJh9b9W6r9PDuFcm3SzqgCTn7hktSoOptMylhwduYM0hpwRj6iiyR6w==
-X-Received: by 2002:a05:6000:44:: with SMTP id k4mr8141644wrx.205.1583788130125;
-        Mon, 09 Mar 2020 14:08:50 -0700 (PDT)
+        bh=CfDH5kEUG81plCORDpkFLQzd1G9WILL1xGRX2zS0AUk=;
+        b=ebTHPyk+sF0OyNcP1D0fh3ftdNjz2rJoKLGIyBBGWC8bOZeDlycTdM4sskAk3+HwQe
+         h5PlhagrFBLm2KVb7qSXbtIk7zJrf2k11H2KL0MUogFrpIWYssgw3KpVYsttgnICpXyR
+         g8x1D7JYxoQF3CvdupJYSZwWTz01NXt1dMTvxxS/nbfx18m17/S0rk1n80rWhXyVQb+e
+         W8mAXDucv3rtP9euaCQe/sxOWOFFoW0KwU05ycw/Jdyv/gmkagDPv96CYii03KggJiul
+         Krjk6/ciFwMz+A5awJvwzCKyNNglBM92qaA8hQtxbjVa3/IZOIHDWenoEca9kMI1w+vk
+         r3lg==
+X-Gm-Message-State: ANhLgQ29Hz68a3e8r4v7k3kJ+LyqZBEnbIkbKpC1g6V3AdhIZX+iiO63
+        azS1YWQYB2rv39nJNwW2Nug=
+X-Google-Smtp-Source: ADFU+vsumCQXCdxuwgBJelhAJ2sOygVZNVEmCBkTrHMsyvrvvC9USb/FjvggJwneWGdkvyCY/dJ6CQ==
+X-Received: by 2002:a05:600c:4107:: with SMTP id j7mr1044307wmi.169.1583788124508;
+        Mon, 09 Mar 2020 14:08:44 -0700 (PDT)
 Received: from localhost.localdomain ([79.115.60.40])
-        by smtp.gmail.com with ESMTPSA id j205sm1016275wma.42.2020.03.09.14.08.48
+        by smtp.gmail.com with ESMTPSA id j205sm1016275wma.42.2020.03.09.14.08.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Mar 2020 14:08:49 -0700 (PDT)
+        Mon, 09 Mar 2020 14:08:44 -0700 (PDT)
 From:   Vladimir Oltean <olteanv@gmail.com>
 To:     broonie@kernel.org
 Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -63,9 +63,9 @@ Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org, eha@deif.com, angelo@sysam.it,
         andrew.smirnov@gmail.com, gustavo@embeddedor.com, weic@nvidia.com,
         mhosny@nvidia.com, michael@walle.cc, peng.ma@nxp.com
-Subject: [PATCH v2 5/6] arm64: dts: ls1028a: Specify the DMA channels for the DSPI controllers
-Date:   Mon,  9 Mar 2020 23:07:54 +0200
-Message-Id: <20200309210755.6759-6-olteanv@gmail.com>
+Subject: [PATCH v2 1/6] spi: spi-fsl-dspi: Don't access reserved fields in SPI_MCR
+Date:   Mon,  9 Mar 2020 23:07:50 +0200
+Message-Id: <20200309210755.6759-2-olteanv@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200309210755.6759-1-olteanv@gmail.com>
 References: <20200309210755.6759-1-olteanv@gmail.com>
@@ -76,50 +76,48 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Vladimir Oltean <vladimir.oltean@nxp.com>
 
-LS1028A has a functional connection to the eDMA module. Even if the
-spi-fsl-dspi.c driver is not using DMA for LS1028A now, define the slots
-in the DMAMUX for connecting the eDMA channels to the 3 DSPI
-controllers.
+The SPI_MCR_PCSIS macro assumes that the controller has a number of chip
+select signals equal to 6. That is not always the case, but actually is
+described through the driver-specific "spi-num-chipselects" device tree
+binding. LS1028A for example only has 4 chip selects.
 
+Don't write to the upper bits of the PCSIS field, which are reserved in
+the reference manual.
+
+Fixes: 349ad66c0ab0 ("spi:Add Freescale DSPI driver for Vybrid VF610 platform")
 Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
 ---
 Changes in v2:
-None.
+Remove duplicate phrase in commit message.
 
- arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/spi/spi-fsl-dspi.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-index 515e0a1b934f..18155273a46e 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-@@ -298,6 +298,8 @@
- 			interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
- 			clock-names = "dspi";
- 			clocks = <&clockgen 4 1>;
-+			dmas = <&edma0 0 62>, <&edma0 0 60>;
-+			dma-names = "tx", "rx";
- 			spi-num-chipselects = <4>;
- 			little-endian;
- 			status = "disabled";
-@@ -311,6 +313,8 @@
- 			interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
- 			clock-names = "dspi";
- 			clocks = <&clockgen 4 1>;
-+			dmas = <&edma0 0 58>, <&edma0 0 56>;
-+			dma-names = "tx", "rx";
- 			spi-num-chipselects = <4>;
- 			little-endian;
- 			status = "disabled";
-@@ -324,6 +328,8 @@
- 			interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
- 			clock-names = "dspi";
- 			clocks = <&clockgen 4 1>;
-+			dmas = <&edma0 0 54>, <&edma0 0 2>;
-+			dma-names = "tx", "rx";
- 			spi-num-chipselects = <3>;
- 			little-endian;
- 			status = "disabled";
+diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
+index 0683a3fbd48c..0ce26c1cbf62 100644
+--- a/drivers/spi/spi-fsl-dspi.c
++++ b/drivers/spi/spi-fsl-dspi.c
+@@ -22,7 +22,7 @@
+ 
+ #define SPI_MCR				0x00
+ #define SPI_MCR_MASTER			BIT(31)
+-#define SPI_MCR_PCSIS			(0x3F << 16)
++#define SPI_MCR_PCSIS(x)		((x) << 16)
+ #define SPI_MCR_CLR_TXF			BIT(11)
+ #define SPI_MCR_CLR_RXF			BIT(10)
+ #define SPI_MCR_XSPI			BIT(3)
+@@ -1197,7 +1197,10 @@ static const struct regmap_config dspi_xspi_regmap_config[] = {
+ 
+ static void dspi_init(struct fsl_dspi *dspi)
+ {
+-	unsigned int mcr = SPI_MCR_PCSIS;
++	unsigned int mcr;
++
++	/* Set idle states for all chip select signals to high */
++	mcr = SPI_MCR_PCSIS(GENMASK(dspi->ctlr->num_chipselect - 1, 0));
+ 
+ 	if (dspi->devtype_data->trans_mode == DSPI_XSPI_MODE)
+ 		mcr |= SPI_MCR_XSPI;
 -- 
 2.17.1
 
