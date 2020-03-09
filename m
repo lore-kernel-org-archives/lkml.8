@@ -2,145 +2,186 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D2E3C10F25
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:29:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54D32C10F29
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:30:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 273EE24656
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:29:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xRFA/xvQ"
+	by mail.kernel.org (Postfix) with ESMTP id 32B902465A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:30:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726497AbgCIT3X (ORCPT
+        id S1726411AbgCITa6 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 15:29:23 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:42493 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726168AbgCIT3X (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 15:29:23 -0400
-Received: by mail-pl1-f194.google.com with SMTP id t3so2138748plz.9
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 12:29:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=PjCahE7HDbhWso9X6d1lzPSE1/CDEaSUn45Mvn78hrg=;
-        b=xRFA/xvQUxQ/6xcy+vthbrS8cMcvOJqFPfY+MOOQuO3UiIaxHA7QmLD2cXfq70ORvt
-         4YhDNRrAODTMYmGfjYzmYu+XJybODGw/rvX3F6BtSYPX/8tIicTuBNq65Hyp3qa18/XQ
-         dUmRnBBvrkGbjWXQbEwml0DRlZ3fRnI0jYtrufclmOfpOOvRh5NrOzXgBy+lE+YfVIqe
-         HQ/8W+P+YGcbgOOr5JzrVm4d12Y0Ms3Nze795sGA0ltPWoQVNc5+QLZdV9J/HZxfY3/J
-         Qinwu8ZFLQlg0NW5RpI6nCuaKZ5f1C6nngBuyuw+aR6ARGZwhzl1r2FqNzEE/Dz4u49z
-         oAaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=PjCahE7HDbhWso9X6d1lzPSE1/CDEaSUn45Mvn78hrg=;
-        b=FRDHD94Wut2NTHEu+G3T0t3WhArAqjzTpHHZmuv710g4tp16bA3HxUgnzh2Ctbk8LS
-         BKorH5Htw0YLjrFy9EKAXSwa2uYf/uAfGfv1QfM5UN4WQUExfe4VrAGwwp29bqMfsDpR
-         IzKAOOrqKVrkpnjy3tbx5q+DZX7Q5jh/7ZE0qcdwyrEX2g4XCqnKDHY3Nqkxmm45gP2s
-         DsudQOehrIvAelYYW9tpkbdT1X2NpGVpoibN7ey5SlZFw7ZiXyStlwE23tb95c/kiPAj
-         3KRyf7LMzPqPUGi4XKup+dic/sJJffJs7lEnLw2iIYzqCo4izCpVd9shs8fTIKWwMugC
-         TsFw==
-X-Gm-Message-State: ANhLgQ0YdyzhcFF4/KStK7ocB2QuxJrIPZNt2T14bftDZa97cXObZ7md
-        jVV7w0TbQ1hVhqcbmkiDqcYIBwJJN5g=
-X-Google-Smtp-Source: ADFU+vuecIUzxw+F0r5oweE7mmL21uOUoxea3p5BAhmf7NogmqrAB9MM2idoTRwQXH0m8Xl/9Kc1Lg==
-X-Received: by 2002:a17:902:342:: with SMTP id 60mr16526200pld.206.1583782162073;
-        Mon, 09 Mar 2020 12:29:22 -0700 (PDT)
-Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id u19sm31438770pgf.11.2020.03.09.12.29.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Mar 2020 12:29:21 -0700 (PDT)
-Date:   Mon, 9 Mar 2020 12:29:19 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Sandeep Maheswaram <sanm@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Doug Anderson <dianders@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>
-Subject: Re: [PATCH v5 0/9] Add QUSB2 PHY support for SC7180
-Message-ID: <20200309192919.GE1098305@builder>
-References: <1583747589-17267-1-git-send-email-sanm@codeaurora.org>
+        Mon, 9 Mar 2020 15:30:58 -0400
+Received: from mail-oln040092073073.outbound.protection.outlook.com ([40.92.73.73]:43971
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726106AbgCITa5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 15:30:57 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=WQS9JVkpHcFeZxqgH/0JGbj5Cds27H8qPYwSn1Tl1ZxWhWOyD2xr7uNRDfarncOaQc9JL1lrPyvpwpdiT9GvufZHIXYQoEpK8JQ/0UGQJDQI6rJc5X9Pw7DiwFCp275Ax+UpEbalu1I0SzrdLGPwJGiAMks7kWxuMhQpnVm9lXcAfUu6Z+Vze7XkFgZZRFxpoYTFD9ySodW+0tK3u+LhRP4jHhgOGQoQ7h+ol/3M9JO9NZeyPOKUKLuxPYgCg8RbkfYtgBhTgvfWfH0rpqUQBA7R8mcZz+YGWSsjSOgP8Au3BNyQMMl077GdZ3C9gSMZ9N/shlNBXoh2HjQTaZ6Sqg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jxx6MlQD/1BAFg8WI2pnsDjsoz3s+EOs2w5Pc/bBL/4=;
+ b=gdqKrYKZ9HZWUqGjiVoL5N87BcFyZurhBCVcW7VQLqJ2Yaft2N4ZE8+3cCTPZJVWDltR2XCYgUYSxEIve/I+CYqWX3f7msLefXNjPcKxFFbnf1GwCjom2MSoSZiODMXPtCiRHc/kdUNrqVXnFytCkxHjG9RyBUqKVkzAEJPHkFGomWbHdGeuIC0F+GXeUrMaxPjmgungJ9JO4+XwAH4q7kPVReaCY7Ew6j8V80Df00JiF2s+kOxg2a1za9tKrrZQ+NfkG3u+KEIK3QMaGopdmWtnaziNKRuMbx9RtRJuURihdzKaRb3srDfojs0ystLcjYaEG//V8m0/ik8b29TzLg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Received: from HE1EUR04FT025.eop-eur04.prod.protection.outlook.com
+ (2a01:111:e400:7e0d::33) by
+ HE1EUR04HT222.eop-eur04.prod.protection.outlook.com (2a01:111:e400:7e0d::105)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.11; Mon, 9 Mar
+ 2020 19:30:13 +0000
+Received: from AM6PR03MB5170.eurprd03.prod.outlook.com (10.152.26.60) by
+ HE1EUR04FT025.mail.protection.outlook.com (10.152.27.28) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2793.11 via Frontend Transport; Mon, 9 Mar 2020 19:30:13 +0000
+Received: from AM6PR03MB5170.eurprd03.prod.outlook.com
+ ([fe80::1956:d274:cab3:b4dd]) by AM6PR03MB5170.eurprd03.prod.outlook.com
+ ([fe80::1956:d274:cab3:b4dd%6]) with mapi id 15.20.2772.019; Mon, 9 Mar 2020
+ 19:30:13 +0000
+Received: from [192.168.1.101] (92.77.140.102) by AM0PR01CA0025.eurprd01.prod.exchangelabs.com (2603:10a6:208:69::38) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.15 via Frontend Transport; Mon, 9 Mar 2020 19:30:07 +0000
+From:   Bernd Edlinger <bernd.edlinger@hotmail.de>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+CC:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Andrei Vagin <avagin@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Yuyang Du <duyuyang@gmail.com>,
+        David Hildenbrand <david@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        David Howells <dhowells@redhat.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christian Kellner <christian@kellner.me>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>
+Subject: Re: [PATCH v2 3/5] exec: Move cleanup of posix timers on exec out of
+ de_thread
+Thread-Topic: [PATCH v2 3/5] exec: Move cleanup of posix timers on exec out of
+ de_thread
+Thread-Index: AQHV9ZIEZxv0OjAlrUW8EbkPvU5OCqhApyIA
+Date:   Mon, 9 Mar 2020 19:30:13 +0000
+Message-ID: <AM6PR03MB5170B4D58F3FA5D33FE7657AE4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+References: <AM6PR03MB5170EB4427BF5C67EE98FF09E4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87v9nmjulm.fsf@x220.int.ebiederm.org>
+ <AM6PR03MB5170B976E6387FDDAD59A118E4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <202003021531.C77EF10@keescook>
+ <20200303085802.eqn6jbhwxtmz4j2x@wittgenstein>
+ <AM6PR03MB5170285B336790D3450E2644E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87v9nlii0b.fsf@x220.int.ebiederm.org>
+ <AM6PR03MB5170609D44967E044FD1BE40E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87a74xi4kz.fsf@x220.int.ebiederm.org>
+ <AM6PR03MB51705AA3009B4986BB6EF92FE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87r1y8dqqz.fsf@x220.int.ebiederm.org>
+ <AM6PR03MB517053AED7DC89F7C0704B7DE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <AM6PR03MB51703B44170EAB4626C9B2CAE4E20@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87tv32cxmf.fsf_-_@x220.int.ebiederm.org>
+ <87v9ne5y4y.fsf_-_@x220.int.ebiederm.org>
+ <87eeu25y14.fsf_-_@x220.int.ebiederm.org>
+In-Reply-To: <87eeu25y14.fsf_-_@x220.int.ebiederm.org>
+Accept-Language: en-US, en-GB, de-DE
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: AM0PR01CA0025.eurprd01.prod.exchangelabs.com
+ (2603:10a6:208:69::38) To AM6PR03MB5170.eurprd03.prod.outlook.com
+ (2603:10a6:20b:ca::23)
+x-incomingtopheadermarker: OriginalChecksum:1D11F3C52AA20EBC430DB346C09A4699A65F93F93FDB2F1ABAF13885F9D9B20A;UpperCasedChecksum:F65111DBCA5A0AC806A7EA7BA1E0E4446D647E0342302557EC34E3FF14B48D07;SizeAsReceived:9916;Count:50
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tmn:  [OcD0NgGcG0JZG4F3xK7jxWsbdT9smler]
+x-microsoft-original-message-id: <49c40113-05fa-e31d-478a-d01915ed0059@hotmail.de>
+x-ms-publictraffictype: Email
+x-incomingheadercount: 50
+x-eopattributedmessage: 0
+x-ms-office365-filtering-correlation-id: d7a4e64a-a427-4c0e-b75b-08d7c4604967
+x-ms-traffictypediagnostic: HE1EUR04HT222:
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: sNkwfI6O9nw/LbblTEqNANU0FcxXdbSkAk5YU+vMggTkwlweJGhwZuLThErFUiRkCtAyW+7xoxZAPX5JRxdR1b56GRqLIhB979M4xDYKdOEqJvBN7tCzaV9jVpEF0Z2laBH/nECodfbIvF69rmQJtsrnW3B3IovHZsAqIxayr9xQ/uen3I3y6Dc73o/rsdk5
+x-ms-exchange-antispam-messagedata: vwHuoFtHtZ6FSlkk/P+IIWY5p10IbcCxjKqwOho3gWhDGBLd6Ucr1iC3EMUbdtgN2mhPOAmzdno8TicB5PfqWRF/DsPrOqoMf5zHy3rh/no/ppzQCjMfzjK5je2i2ca/SgVJSWHDHKOioh4pPaS2JQ==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="Windows-1252"
+Content-ID: <3386F6868CEAF14D9BF18D15F4701AD9@eurprd03.prod.outlook.com>
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1583747589-17267-1-git-send-email-sanm@codeaurora.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: d7a4e64a-a427-4c0e-b75b-08d7c4604967
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Mar 2020 19:30:13.2687
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Internet
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1EUR04HT222
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 09 Mar 02:53 PDT 2020, Sandeep Maheswaram wrote:
+On 3/8/20 10:36 PM, Eric W. Biederman wrote:
+> 
+> These functions have very little to do with de_thread move them out
+> of de_thread an into flush_old_exec proper so it can be more clearly
+> seen what flush_old_exec is doing.
+> 
+> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
 
-Kishon, let me know if/when you're picking up patch 1-6 and I can pick
-the dts patches through the qcom soc tree.
+Reviewed-by: Bernd Edlinger <bernd.edlinger@hotmail.de>
 
-Regards,
-Bjorn
 
-> Converting dt binding to yaml.
-> Adding compatible for SC7180 in dt bindings.
-> Added generic QUSB2 V2 PHY support and using the same SC7180 and SDM845.
+Bernd.
+> ---
+>  fs/exec.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
 > 
-> Changes in v5:
-> *Added the dt bindings which are applicable only to QUSB2 V2 PHY in 
->  separate block as per comments from Matthias in patch 1/9 and patch 4/9
->  and addressed Rob's comment in patch 1/9.
-> *Separated the patch for new override params and added a local variable
->  to access overrides as per comments from Matthias patch 5/9 and 6/9.
-> 
-> Changes in v4:
-> *Addressed Rob Herrings comments in dt bindings.
-> *Added new structure for all the overriding tuning params.
-> *Removed the sc7180 and sdm845 compatible from driver and added qusb2 v2 phy. 
-> *Added the qusb2 v2 phy compatible in device tree for sc7180 and sdm845. 
-> 
-> Changes in v3:
-> *Using the generic phy cfg table for QUSB2 V2 phy.
-> *Added support for overriding tuning parameters in QUSB2 V2 PHY
-> from device tree.
-> 
-> Changes in v2:
-> Sorted the compatible in driver.
-> Converted dt binding to yaml.
-> Added compatible in yaml.
-> 
-> Sandeep Maheswaram (9):
->   dt-bindings: phy: qcom,qusb2: Convert QUSB2 phy bindings to yaml
->   dt-bindings: phy: qcom,qusb2: Add compatibles for QUSB2 V2 phy and
->     SC7180
->   phy: qcom-qusb2: Add generic QUSB2 V2 PHY support
->   dt-bindings: phy: qcom-qusb2: Add support for overriding Phy tuning
->     parameters
->   phy: qcom-qusb2: Add support for overriding tuning parameters in QUSB2
->     V2 PHY
->   phy: qcom-qusb2: Add new overriding tuning parameters in QUSB2 V2 PHY
->   arm64: dts: qcom: sc7180: Add generic QUSB2 V2 Phy compatible
->   arm64: dts: qcom: sdm845: Add generic QUSB2 V2 Phy compatible
->   arm64: dts: qcom: sc7180: Update QUSB2 V2 Phy params for SC7180 IDP
->     device
-> 
->  .../devicetree/bindings/phy/qcom,qusb2-phy.yaml    | 187 +++++++++++++++++++++
->  .../devicetree/bindings/phy/qcom-qusb2-phy.txt     |  68 --------
->  arch/arm64/boot/dts/qcom/sc7180-idp.dts            |   6 +-
->  arch/arm64/boot/dts/qcom/sc7180.dtsi               |   2 +-
->  arch/arm64/boot/dts/qcom/sdm845.dtsi               |   4 +-
->  drivers/phy/qualcomm/phy-qcom-qusb2.c              | 144 +++++++++++-----
->  6 files changed, 297 insertions(+), 114 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml
->  delete mode 100644 Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
-> 
-> -- 
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> of Code Aurora Forum, hosted by The Linux Foundation
+> diff --git a/fs/exec.c b/fs/exec.c
+> index ff74b9a74d34..215d86f77b63 100644
+> --- a/fs/exec.c
+> +++ b/fs/exec.c
+> @@ -1189,11 +1189,6 @@ static int de_thread(struct task_struct *tsk)
+>  	/* we have changed execution domain */
+>  	tsk->exit_signal = SIGCHLD;
+>  
+> -#ifdef CONFIG_POSIX_TIMERS
+> -	exit_itimers(sig);
+> -	flush_itimer_signals();
+> -#endif
+> -
+>  	BUG_ON(!thread_group_leader(tsk));
+>  	return 0;
+>  
+> @@ -1277,6 +1272,11 @@ int flush_old_exec(struct linux_binprm * bprm)
+>  	if (retval)
+>  		goto out;
+>  
+> +#ifdef CONFIG_POSIX_TIMERS
+> +	exit_itimers(me->signal);
+> +	flush_itimer_signals();
+> +#endif
+> +
+>  	/*
+>  	 * Make the signal table private.
+>  	 */
 > 
