@@ -2,209 +2,111 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13EBBC10F28
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:54:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9308FC10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:56:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E993F2086A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:54:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71D7520674
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:56:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726501AbgCIJyH (ORCPT
+        id S1726556AbgCIJ4M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 05:54:07 -0400
-Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:55522 "EHLO
-        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726379AbgCIJyG (ORCPT
+        Mon, 9 Mar 2020 05:56:12 -0400
+Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:43892 "EHLO
+        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726027AbgCIJ4L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 05:54:06 -0400
-Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
-  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 09 Mar 2020 15:24:02 +0530
-Received: from c-sanm-linux.qualcomm.com ([10.206.25.31])
-  by ironmsg01-blr.qualcomm.com with ESMTP; 09 Mar 2020 15:23:44 +0530
-Received: by c-sanm-linux.qualcomm.com (Postfix, from userid 2343233)
-        id 114082418; Mon,  9 Mar 2020 15:23:44 +0530 (IST)
-From:   Sandeep Maheswaram <sanm@codeaurora.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Doug Anderson <dianders@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>,
-        Sandeep Maheswaram <sanm@codeaurora.org>
-Subject: [PATCH v5 5/9] phy: qcom-qusb2: Add support for overriding tuning parameters in QUSB2 V2 PHY
-Date:   Mon,  9 Mar 2020 15:23:05 +0530
-Message-Id: <1583747589-17267-6-git-send-email-sanm@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1583747589-17267-1-git-send-email-sanm@codeaurora.org>
-References: <1583747589-17267-1-git-send-email-sanm@codeaurora.org>
+        Mon, 9 Mar 2020 05:56:11 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04397;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0Ts5Rsuh_1583747765;
+Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0Ts5Rsuh_1583747765)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Mon, 09 Mar 2020 17:56:06 +0800
+Subject: Re: linux-next test error: BUG: using __this_cpu_read() in
+ preemptible code in __mod_memcg_state
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>,
+        syzbot <syzbot+826543256ed3b8c37f62@syzkaller.appspotmail.com>
+Cc:     akpm@linux-foundation.org, cgroups@vger.kernel.org,
+        hannes@cmpxchg.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, mhocko@kernel.org,
+        syzkaller-bugs@googlegroups.com, vdavydov.dev@gmail.com
+References: <00000000000022640205a04a20d8@google.com>
+ <20200309092423.2ww3aw6yfyce7yty@box>
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+Message-ID: <5b1196be-09ce-51f7-f5e7-63f2e597f91e@linux.alibaba.com>
+Date:   Mon, 9 Mar 2020 17:56:04 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <20200309092423.2ww3aw6yfyce7yty@box>
+Content-Type: text/plain; charset=gbk
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Added new structure for overriding tuning parameters in QUSB2 V2 PHY as the
-override params are increased due to usage of generic QUSB2 V2 phy table.
 
-Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
----
- drivers/phy/qualcomm/phy-qcom-qusb2.c | 75 ++++++++++++++++++++---------------
- 1 file changed, 43 insertions(+), 32 deletions(-)
 
-diff --git a/drivers/phy/qualcomm/phy-qcom-qusb2.c b/drivers/phy/qualcomm/phy-qcom-qusb2.c
-index 70c9da6..44841c9 100644
---- a/drivers/phy/qualcomm/phy-qcom-qusb2.c
-+++ b/drivers/phy/qualcomm/phy-qcom-qusb2.c
-@@ -277,6 +277,28 @@ static const char * const qusb2_phy_vreg_names[] = {
- 
- #define QUSB2_NUM_VREGS		ARRAY_SIZE(qusb2_phy_vreg_names)
- 
-+/* struct override_param - structure holding qusb2 v2 phy overriding param
-+ * set override true if the  device tree property exists and read and assign
-+ * to value
-+ */
-+struct override_param {
-+	bool override;
-+	u8 value;
-+};
-+
-+/*struct override_params - structure holding qusb2 v2 phy overriding params
-+ * @imp_res_offset: rescode offset to be updated in IMP_CTRL1 register
-+ * @hstx_trim: HSTX_TRIM to be updated in TUNE1 register
-+ * @preemphasis: Amplitude Pre-Emphasis to be updated in TUNE1 register
-+ * @preemphasis_width: half/full-width Pre-Emphasis updated via TUNE1
-+ */
-+struct override_params {
-+	struct override_param imp_res_offset;
-+	struct override_param hstx_trim;
-+	struct override_param preemphasis;
-+	struct override_param preemphasis_width;
-+};
-+
- /**
-  * struct qusb2_phy - structure holding qusb2 phy attributes
-  *
-@@ -292,14 +314,7 @@ static const char * const qusb2_phy_vreg_names[] = {
-  * @tcsr: TCSR syscon register map
-  * @cell: nvmem cell containing phy tuning value
-  *
-- * @override_imp_res_offset: PHY should use different rescode offset
-- * @imp_res_offset_value: rescode offset to be updated in IMP_CTRL1 register
-- * @override_hstx_trim: PHY should use different HSTX o/p current value
-- * @hstx_trim_value: HSTX_TRIM value to be updated in TUNE1 register
-- * @override_preemphasis: PHY should use different pre-amphasis amplitude
-- * @preemphasis_level: Amplitude Pre-Emphasis to be updated in TUNE1 register
-- * @override_preemphasis_width: PHY should use different pre-emphasis duration
-- * @preemphasis_width: half/full-width Pre-Emphasis updated via TUNE1
-+ * @overrides: pointer to structure for all overriding tuning params
-  *
-  * @cfg: phy config data
-  * @has_se_clk_scheme: indicate if PHY has single-ended ref clock scheme
-@@ -319,14 +334,7 @@ struct qusb2_phy {
- 	struct regmap *tcsr;
- 	struct nvmem_cell *cell;
- 
--	bool override_imp_res_offset;
--	u8 imp_res_offset_value;
--	bool override_hstx_trim;
--	u8 hstx_trim_value;
--	bool override_preemphasis;
--	u8 preemphasis_level;
--	bool override_preemphasis_width;
--	u8 preemphasis_width;
-+	struct override_params overrides;
- 
- 	const struct qusb2_phy_cfg *cfg;
- 	bool has_se_clk_scheme;
-@@ -394,24 +402,25 @@ void qcom_qusb2_phy_configure(void __iomem *base,
- static void qusb2_phy_override_phy_params(struct qusb2_phy *qphy)
- {
- 	const struct qusb2_phy_cfg *cfg = qphy->cfg;
-+	struct override_params *or = &qphy->overrides;
- 
--	if (qphy->override_imp_res_offset)
-+	if (or->imp_res_offset.override)
- 		qusb2_write_mask(qphy->base, QUSB2PHY_IMP_CTRL1,
--			     qphy->imp_res_offset_value << IMP_RES_OFFSET_SHIFT,
-+		or->imp_res_offset.value << IMP_RES_OFFSET_SHIFT,
- 			     IMP_RES_OFFSET_MASK);
- 
--	if (qphy->override_hstx_trim)
-+	if (or->hstx_trim.override)
- 		qusb2_write_mask(qphy->base, cfg->regs[QUSB2PHY_PORT_TUNE1],
--				 qphy->hstx_trim_value << HSTX_TRIM_SHIFT,
-+		or->hstx_trim.value << HSTX_TRIM_SHIFT,
- 				 HSTX_TRIM_MASK);
- 
--	if (qphy->override_preemphasis)
-+	if (or->preemphasis.override)
- 		qusb2_write_mask(qphy->base, cfg->regs[QUSB2PHY_PORT_TUNE1],
--				qphy->preemphasis_level << PREEMPHASIS_EN_SHIFT,
-+		or->preemphasis.value << PREEMPHASIS_EN_SHIFT,
- 				PREEMPHASIS_EN_MASK);
- 
--	if (qphy->override_preemphasis_width) {
--		if (qphy->preemphasis_width ==
-+	if (or->preemphasis_width.override) {
-+		if (or->preemphasis_width.value ==
- 		    QUSB2_V2_PREEMPHASIS_WIDTH_HALF_BIT)
- 			qusb2_setbits(qphy->base,
- 				      cfg->regs[QUSB2PHY_PORT_TUNE1],
-@@ -796,10 +805,12 @@ static int qusb2_phy_probe(struct platform_device *pdev)
- 	int ret, i;
- 	int num;
- 	u32 value;
-+	struct override_params *or;
- 
- 	qphy = devm_kzalloc(dev, sizeof(*qphy), GFP_KERNEL);
- 	if (!qphy)
- 		return -ENOMEM;
-+	or = &qphy->overrides;
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	qphy->base = devm_ioremap_resource(dev, res);
-@@ -864,26 +875,26 @@ static int qusb2_phy_probe(struct platform_device *pdev)
- 
- 	if (!of_property_read_u32(dev->of_node, "qcom,imp-res-offset-value",
- 				  &value)) {
--		qphy->imp_res_offset_value = (u8)value;
--		qphy->override_imp_res_offset = true;
-+		or->imp_res_offset.value = (u8)value;
-+		or->imp_res_offset.override = true;
- 	}
- 
- 	if (!of_property_read_u32(dev->of_node, "qcom,hstx-trim-value",
- 				  &value)) {
--		qphy->hstx_trim_value = (u8)value;
--		qphy->override_hstx_trim = true;
-+		or->hstx_trim.value = (u8)value;
-+		or->hstx_trim.override = true;
- 	}
- 
- 	if (!of_property_read_u32(dev->of_node, "qcom,preemphasis-level",
- 				     &value)) {
--		qphy->preemphasis_level = (u8)value;
--		qphy->override_preemphasis = true;
-+		or->preemphasis.value = (u8)value;
-+		or->preemphasis.override = true;
- 	}
- 
- 	if (!of_property_read_u32(dev->of_node, "qcom,preemphasis-width",
- 				     &value)) {
--		qphy->preemphasis_width = (u8)value;
--		qphy->override_preemphasis_width = true;
-+		or->preemphasis_width.value = (u8)value;
-+		or->preemphasis_width.override = true;
- 	}
- 
- 	pm_runtime_set_active(dev);
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+ÔÚ 2020/3/9 ÏÂÎç5:24, Kirill A. Shutemov Ð´µÀ:
+>> check_preemption_disabled: 3 callbacks suppressed
+>> BUG: using __this_cpu_read() in preemptible [00000000] code: syz-fuzzer/9432
+>> caller is __mod_memcg_state+0x27/0x1a0 mm/memcontrol.c:689
+>> CPU: 1 PID: 9432 Comm: syz-fuzzer Not tainted 5.6.0-rc4-next-20200306-syzkaller #0
+>> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+>> Call Trace:
+>>  __dump_stack lib/dump_stack.c:77 [inline]
+>>  dump_stack+0x188/0x20d lib/dump_stack.c:118
+>>  check_preemption_disabled lib/smp_processor_id.c:47 [inline]
+>>  __this_cpu_preempt_check.cold+0x84/0x90 lib/smp_processor_id.c:64
+>>  __mod_memcg_state+0x27/0x1a0 mm/memcontrol.c:689
+>>  __split_huge_page mm/huge_memory.c:2575 [inline]
+>>  split_huge_page_to_list+0x124b/0x3380 mm/huge_memory.c:2862
+>>  split_huge_page include/linux/huge_mm.h:167 [inline]
+> It looks like a regression due to c8cba0cc2a80 ("mm/thp: narrow lru
+> locking").
+
+yes, I guess so.
+
+In this patch, I am very bold to move the lru unlock from before 
+'remap_page(head);' up to before 'ClearPageCompound(head);' which is
+often checked in lrulock. I want to know which part that real should
+stay in lru_lock. 
+
+So revert this patch or move it back or move after ClearPageCompound
+should fix this problem. 
+
+In the weekend and today, I tried a lot to reproduce this bug on my 2
+machines, but still can't. :~(
+
+Many thanks to give a try!
+
+Thank
+Alex 
+
+line 2605 mm/huge_memory.c:
+        spin_unlock_irqrestore(&pgdat->lru_lock, flags);
+
+        ClearPageCompound(head);
+
+        split_page_owner(head, HPAGE_PMD_ORDER);
+
+        /* See comment in __split_huge_page_tail() */
+        if (PageAnon(head)) {
+                /* Additional pin to swap cache */
+                if (PageSwapCache(head)) {
+                        page_ref_add(head, 2);
+                        xa_unlock(&swap_cache->i_pages);
+                } else {
+                        page_ref_inc(head);
+                }
+        } else {
+                /* Additional pin to page cache */
+                page_ref_add(head, 2);
+                xa_unlock(&head->mapping->i_pages);
+        }
+
+        remap_page(head);
 
