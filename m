@@ -4,38 +4,37 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92515C10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 20:25:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B830C10F29
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 20:25:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63A4E24649
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 20:25:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 722AA2465A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 20:25:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726825AbgCIUZA (ORCPT
+        id S1726785AbgCIUY6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 16:25:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50844 "EHLO mail.kernel.org"
+        Mon, 9 Mar 2020 16:24:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50842 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726656AbgCIUYx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726454AbgCIUYx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 9 Mar 2020 16:24:53 -0400
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E5A7824679;
+        by mail.kernel.org (Postfix) with ESMTPSA id C8CC324676;
         Mon,  9 Mar 2020 20:24:52 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.93)
         (envelope-from <rostedt@goodmis.org>)
-        id 1jBOxH-00341u-S8; Mon, 09 Mar 2020 16:24:51 -0400
-Message-Id: <20200309202451.752853896@goodmis.org>
+        id 1jBOxH-00341Q-Na; Mon, 09 Mar 2020 16:24:51 -0400
+Message-Id: <20200309202451.571226644@goodmis.org>
 User-Agent: quilt/0.65
-Date:   Mon, 09 Mar 2020 16:22:35 -0400
+Date:   Mon, 09 Mar 2020 16:22:34 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     "John Warthog9 Hawley" <warthog9@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Masanari Iida <standby24x7@gmail.com>
-Subject: [for-linus][PATCH 4/4] ktest: Fix typos in ktest.pl
+        stable@vger.kernel.org
+Subject: [for-linus][PATCH 3/4] ktest: Add timeout for ssh sync testing
 References: <20200309202231.580868511@goodmis.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-15
@@ -44,77 +43,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masanari Iida <standby24x7@gmail.com>
+From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
 
-This patch fixes multipe spelling typo found in ktest.pl.
+Before rebooting the box, a "ssh sync" is called to the test machine to see
+if it is alive or not. But if the test machine is in a partial state, that
+ssh may never actually finish, and the ktest test hangs.
 
-Link: http://lkml.kernel.org/r/20200309115430.57540-1-standby24x7@gmail.com
+Add a 10 second timeout to the sync test, which will fail after 10 seconds
+and then cause the test to reboot the test machine.
 
-Acked-by: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Masanari Iida <standby24x7@gmail.com>
+Cc: stable@vger.kernel.org
+Fixes: 6474ace999edd ("ktest.pl: Powercycle the box on reboot if no connection can be made")
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- tools/testing/ktest/ktest.pl | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ tools/testing/ktest/ktest.pl | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/tools/testing/ktest/ktest.pl b/tools/testing/ktest/ktest.pl
-index 8bdd7253c110..7570e36d636d 100755
+index 6a605ba75dd6..8bdd7253c110 100755
 --- a/tools/testing/ktest/ktest.pl
 +++ b/tools/testing/ktest/ktest.pl
-@@ -1030,7 +1030,7 @@ sub __read_config {
- 	    }
+@@ -1383,7 +1383,7 @@ sub reboot {
  
- 	    if (!$skip && $rest !~ /^\s*$/) {
--		die "$name: $.: Gargbage found after $type\n$_";
-+		die "$name: $.: Garbage found after $type\n$_";
- 	    }
+     } else {
+ 	# Make sure everything has been written to disk
+-	run_ssh("sync");
++	run_ssh("sync", 10);
  
- 	    if ($skip && $type eq "TEST_START") {
-@@ -1063,7 +1063,7 @@ sub __read_config {
- 	    }
- 
- 	    if ($rest !~ /^\s*$/) {
--		die "$name: $.: Gargbage found after DEFAULTS\n$_";
-+		die "$name: $.: Garbage found after DEFAULTS\n$_";
- 	    }
- 
- 	} elsif (/^\s*INCLUDE\s+(\S+)/) {
-@@ -1154,7 +1154,7 @@ sub __read_config {
- 	    # on of these sections that have SKIP defined.
- 	    # The save variable can be
- 	    # defined multiple times and the new one simply overrides
--	    # the prevous one.
-+	    # the previous one.
- 	    set_variable($lvalue, $rvalue);
- 
- 	} else {
-@@ -1234,7 +1234,7 @@ sub read_config {
- 	foreach my $option (keys %not_used) {
- 	    print "$option\n";
- 	}
--	print "Set IGRNORE_UNUSED = 1 to have ktest ignore unused variables\n";
-+	print "Set IGNORE_UNUSED = 1 to have ktest ignore unused variables\n";
- 	if (!read_yn "Do you want to continue?") {
- 	    exit -1;
- 	}
-@@ -1345,7 +1345,7 @@ sub eval_option {
- 	# Check for recursive evaluations.
- 	# 100 deep should be more than enough.
- 	if ($r++ > 100) {
--	    die "Over 100 evaluations accurred with $option\n" .
-+	    die "Over 100 evaluations occurred with $option\n" .
- 		"Check for recursive variables\n";
- 	}
- 	$prev = $option;
-@@ -1461,7 +1461,7 @@ sub get_test_name() {
- 
- sub dodie {
- 
--    # avoid recusion
-+    # avoid recursion
-     return if ($in_die);
-     $in_die = 1;
- 
+ 	if (defined($time)) {
+ 	    start_monitor;
 -- 
 2.25.0
 
