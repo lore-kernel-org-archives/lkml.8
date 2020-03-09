@@ -2,138 +2,149 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE22DC10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 15:52:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D243AC10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 15:53:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83CD4208C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 15:52:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A98FC208C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 15:53:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fKtapjT8"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="zlBTN05m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727111AbgCIPw3 (ORCPT
+        id S1727269AbgCIPw7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 11:52:29 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:59728 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726488AbgCIPw2 (ORCPT
+        Mon, 9 Mar 2020 11:52:59 -0400
+Received: from gateway22.websitewelcome.com ([192.185.46.152]:20685 "EHLO
+        gateway22.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726703AbgCIPw6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 11:52:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583769147;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=3E4LIBi/eaTA+USlOTfstaQ+9ylrR99sJyL6v/S7Fzk=;
-        b=fKtapjT8EGbaeMdtDDNv3HxuapRSH2RWSfl7zPvA04UjiadJdQOuh46yOS2oEikofv9Fb0
-        tv43mgFxzY0mQgcYTp6+K8mMzVt3Sb0JSa5kegA6HUzh0A9N3IX1yngMc53Fl/zcy0DCfr
-        oBMmsEok2P+ghKVzBZeQnZtIzPzQja4=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-43-qVazAxTiO8ScCi1GI0Ptaw-1; Mon, 09 Mar 2020 11:52:23 -0400
-X-MC-Unique: qVazAxTiO8ScCi1GI0Ptaw-1
-Received: by mail-wr1-f70.google.com with SMTP id c6so5364900wrm.18
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 08:52:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=3E4LIBi/eaTA+USlOTfstaQ+9ylrR99sJyL6v/S7Fzk=;
-        b=O1XnJWhWOI1Gu4k1Je8bG91jV++5j4L/uS8Sni2zeXmYpA28HqVBkQsYpR9kF5tV9g
-         iDFEFbAD/2p1ICrK1apBjGoReoJTwNyTREH4sypV75i4pJLsVZqdtvk+odnR/7y44Hlo
-         BU8kTE0QtjMGvP86PGuG+0PW/okaHDkEazWvL/l4audTx3XAf1jQnMDPk/kpoIQqxtyI
-         3OqHYJjqDnYRKIj+cBJ83IZCApxk2n26kK9lJ04P/bYTpGRyY5x/F4cyW1q+ebtrlqmI
-         Co4zWod2fxqWB03iTFbw3AOnLLpu0A5EIgnse9ziggmS+DfCDhj6ojsTcyj4YeCWCKAi
-         Ra2w==
-X-Gm-Message-State: ANhLgQ3Qp5O1fWSYpV6IrCBfLmaCZGpZ2BHvhll7mvsDgfr5cQqHVxAY
-        OVZhb/BtHD+t8r7MXN6Nmk1FjFGqaZulIH3duPv9q2MfJH+0RcAgceQRpVRf/jE4WpY/OSROcso
-        QHNiYKWxsFZTyyx1/+Wc36cC9
-X-Received: by 2002:a5d:5411:: with SMTP id g17mr20557074wrv.4.1583769142613;
-        Mon, 09 Mar 2020 08:52:22 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vs9pNoq6eROQLSMnQjOi+/bC2QHYG7NKgj7y/VTWqWWzCnhRUMXrJkC1KQDPqK4jhMpsxv/EA==
-X-Received: by 2002:a5d:5411:: with SMTP id g17mr20557054wrv.4.1583769142367;
-        Mon, 09 Mar 2020 08:52:22 -0700 (PDT)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id q4sm17294521wro.56.2020.03.09.08.52.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Mar 2020 08:52:20 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Jim Mattson <jmattson@google.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Liran Alon <liran.alon@oracle.com>,
-        Miaohe Lin <linmiaohe@huawei.com>
-Subject: [PATCH 1/6] KVM: nVMX: avoid NULL pointer dereference with incorrect EVMCS GPAs
-Date:   Mon,  9 Mar 2020 16:52:11 +0100
-Message-Id: <20200309155216.204752-2-vkuznets@redhat.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200309155216.204752-1-vkuznets@redhat.com>
-References: <20200309155216.204752-1-vkuznets@redhat.com>
+        Mon, 9 Mar 2020 11:52:58 -0400
+Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
+        by gateway22.websitewelcome.com (Postfix) with ESMTP id 9558F23661
+        for <linux-kernel@vger.kernel.org>; Mon,  9 Mar 2020 10:52:57 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id BKi9jO1DmRP4zBKi9jkWhj; Mon, 09 Mar 2020 10:52:57 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=0JMHXTq/G0YoEBdhsaZPfnkbHay+4mmZgJTTUG0Tcqk=; b=zlBTN05mgAOfMHn+HaCObwNdic
+        u1VY7Z26OOm0w8w9O0mso6XzIBKwBuD1g055X9zHi9zpTBOnoJIj9ydI79sxTvik1oHAsU2VApGxu
+        HgkIBGuGMzN3ybE13N+5GrxXqhgQKk275fdEHPr/x3qi2aI6JLh2Bvc5US9n93SvHwzxNYpUrY0yf
+        XhqNaWpKWBlXr8DzbX1F1WaViPjgOdWtnge3KIYqtOris9Q77gLBUY7OOt+pAOUupJzPtInTPFblF
+        ARwPXCpko1RVaoXUs3N25jCl5Ryc1VODvgywnNKx/1UH0a18OYXOLkf9wL2CpeKnuwa/32M+tztaB
+        rXnaBYVQ==;
+Received: from [201.162.240.150] (port=28052 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1jBKi7-00302e-Nn; Mon, 09 Mar 2020 10:52:56 -0500
+Date:   Mon, 9 Mar 2020 10:56:08 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Christine Caulfield <ccaulfie@redhat.com>,
+        David Teigland <teigland@redhat.com>
+Cc:     cluster-devel@redhat.com, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH][next] dlm: dlm_internal: Replace zero-length array with
+ flexible-array member
+Message-ID: <20200309155608.GA31883@embeddedor>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.162.240.150
+X-Source-L: No
+X-Exim-ID: 1jBKi7-00302e-Nn
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [201.162.240.150]:28052
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 12
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When an EVMCS enabled L1 guest on KVM will tries doing enlightened VMEnter
-with EVMCS GPA = 0 the host crashes because the
+The current codebase makes use of the zero-length array language
+extension to the C90 standard, but the preferred mechanism to declare
+variable-length types such as these ones is a flexible array member[1][2],
+introduced in C99:
 
-evmcs_gpa != vmx->nested.hv_evmcs_vmptr
+struct foo {
+        int stuff;
+        struct boo array[];
+};
 
-condition in nested_vmx_handle_enlightened_vmptrld() will evaluate to
-false (as nested.hv_evmcs_vmptr is zeroed after init). The crash will
-happen on vmx->nested.hv_evmcs pointer dereference.
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertently introduced[3] to the codebase from now on.
 
-Another problematic EVMCS ptr value is '-1' but it only causes host crash
-after nested_release_evmcs() invocation. The problem is exactly the same as
-with '0', we mistakenly think that the EVMCS pointer hasn't changed and
-thus nested.hv_evmcs_vmptr is valid.
+Also, notice that, dynamic memory allocations won't be affected by
+this change:
 
-Resolve the issue by adding an additional !vmx->nested.hv_evmcs
-check to nested_vmx_handle_enlightened_vmptrld(), this way we will
-always be trying kvm_vcpu_map() when nested.hv_evmcs is NULL
-and this is supposed to catch all invalid EVMCS GPAs.
+"Flexible array members have incomplete type, and so the sizeof operator
+may not be applied. As a quirk of the original implementation of
+zero-length arrays, sizeof evaluates to zero."[1]
 
-Also, initialize hv_evmcs_vmptr to '0' in nested_release_evmcs()
-to be consistent with initialization where we don't currently
-set hv_evmcs_vmptr to '-1'.
+This issue was found with the help of Coccinelle.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[2] https://github.com/KSPP/linux/issues/21
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 ---
- arch/x86/kvm/vmx/nested.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ fs/dlm/dlm_internal.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index e920d7834d73..9750e590c89d 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -224,7 +224,7 @@ static inline void nested_release_evmcs(struct kvm_vcpu *vcpu)
- 		return;
+diff --git a/fs/dlm/dlm_internal.h b/fs/dlm/dlm_internal.h
+index 416d9de35679..d231ae5d2c65 100644
+--- a/fs/dlm/dlm_internal.h
++++ b/fs/dlm/dlm_internal.h
+@@ -421,7 +421,7 @@ struct dlm_message {
+ 	int			m_bastmode;
+ 	int			m_asts;
+ 	int			m_result;	/* 0 or -EXXX */
+-	char			m_extra[0];	/* name or lvb */
++	char			m_extra[];	/* name or lvb */
+ };
  
- 	kvm_vcpu_unmap(vcpu, &vmx->nested.hv_evmcs_map, true);
--	vmx->nested.hv_evmcs_vmptr = -1ull;
-+	vmx->nested.hv_evmcs_vmptr = 0;
- 	vmx->nested.hv_evmcs = NULL;
- }
  
-@@ -1923,7 +1923,8 @@ static int nested_vmx_handle_enlightened_vmptrld(struct kvm_vcpu *vcpu,
- 	if (!nested_enlightened_vmentry(vcpu, &evmcs_gpa))
- 		return 1;
+@@ -450,7 +450,7 @@ struct dlm_rcom {
+ 	uint64_t		rc_id;		/* match reply with request */
+ 	uint64_t		rc_seq;		/* sender's ls_recover_seq */
+ 	uint64_t		rc_seq_reply;	/* remote ls_recover_seq */
+-	char			rc_buf[0];
++	char			rc_buf[];
+ };
  
--	if (unlikely(evmcs_gpa != vmx->nested.hv_evmcs_vmptr)) {
-+	if (unlikely(!vmx->nested.hv_evmcs ||
-+		     evmcs_gpa != vmx->nested.hv_evmcs_vmptr)) {
- 		if (!vmx->nested.hv_evmcs)
- 			vmx->nested.current_vmptr = -1ull;
+ union dlm_packet {
+@@ -506,7 +506,7 @@ struct rcom_lock {
+ 	__le16			rl_wait_type;
+ 	__le16			rl_namelen;
+ 	char			rl_name[DLM_RESNAME_MAXLEN];
+-	char			rl_lvb[0];
++	char			rl_lvb[];
+ };
  
+ /*
 -- 
-2.24.1
+2.25.0
 
