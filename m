@@ -2,92 +2,91 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59149C10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 16:11:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A799AC10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 16:11:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21B5524658
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 16:11:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71E6D2467E
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 16:11:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="EqYwQhUb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gfBo7b1F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727171AbgCIQLH (ORCPT
+        id S1727101AbgCIQLQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 12:11:07 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:51184 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726990AbgCIQLG (ORCPT
+        Mon, 9 Mar 2020 12:11:16 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:36629 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726990AbgCIQLQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 12:11:06 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 029GB1Ti064923;
-        Mon, 9 Mar 2020 11:11:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1583770261;
-        bh=BoPPFSIyv/x3zMoh4vQgW2YRQN7431G4sFt8c/J7vYc=;
-        h=Date:From:To:CC:Subject:References:In-Reply-To;
-        b=EqYwQhUbuF3q890fCxM+d4REL/Eqtuv8qr6Tm0fiXm95JwcuTHhOGJRTzO0BoE1Wq
-         gVwXxl9d1JMJh/vBAzjXSbcSwrJRnlPLPsrn18c6ts/CmvNwMzAS57E+u3Wojlo5GS
-         LBXjoIWQJ8Ms0rR8pue03bKCCoxB+s6wBDcHqxl8=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 029GB1gI071804
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 9 Mar 2020 11:11:01 -0500
-Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 9 Mar
- 2020 11:10:23 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 9 Mar 2020 11:10:23 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 029GAM4O038113;
-        Mon, 9 Mar 2020 11:10:22 -0500
-Date:   Mon, 9 Mar 2020 11:16:11 -0500
-From:   Bin Liu <b-liu@ti.com>
-To:     Mans Rullgard <mans@mansr.com>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] usb: musb: fix crash with highmen PIO and usbmon
-Message-ID: <20200309161611.GC31115@iaqt7>
-Mail-Followup-To: Bin Liu <b-liu@ti.com>, Mans Rullgard <mans@mansr.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200309152653.29161-1-mans@mansr.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200309152653.29161-1-mans@mansr.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Mon, 9 Mar 2020 12:11:16 -0400
+Received: by mail-wm1-f65.google.com with SMTP id g62so1675wme.1;
+        Mon, 09 Mar 2020 09:11:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=uWD6OmCc/Giz/7rKVyMfrzR5IhxZKcEZvTGrG7yLYLs=;
+        b=gfBo7b1Ffo9O4U5qquVVpcT52aKU2dNihOMsEcGR/9alUJ+yXukzI49SQExLztLQOx
+         ooo5hobvn2aVB9mvCknptB+IECv0XR18G3TKMF2cFnZH6+foWGfQZ6MsbnNawdEM7YtF
+         MXAZdKvDstdVslGORA27sEf1UFYFryx9X48S2WqzpfPO4poQzLVTpVT3FbhVxw97NOv0
+         YhgA0hkX1HbIgPBnpjD7AmCVIRFUp5pOzRI4WQTXltzJ9t5wjNHpUDirjWj14YXnCoGn
+         tB4Kv3ovJbVuySgHeHEQaNgRoFyb7aeoBkxEn1ugLS1ya37rFlX//EdHGOzwEBh7FO/G
+         uPPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=uWD6OmCc/Giz/7rKVyMfrzR5IhxZKcEZvTGrG7yLYLs=;
+        b=WhPk5U+c3N44dwoTf+47cAEu3qvSuV3NUywf7lPTFkq0WJCsxe8Cn48ylCphLe+U9O
+         v0wn3yoWGYCBeeX/0hChM3Q9aBozlNcir+0GjctfPFeyXPQblXNZSvupDgJmrOdVcy2K
+         +uzbL5Vc0qylXvJI3siphk00xjuxHn/6BoCOTmRArdKJrm+34NxxQVXppe5w8pD8czZQ
+         5smp7BmQj9Y2OPD+2FJOX4wRo5cQKmUG0zsTTUW3XnOoKkA2u5l8rj2rV56LIEEgVZ2H
+         B5NXPD7dssPU0aIiOdmd4XO4QdEklO1hFa9SaI4E7p93ijRPFb/qPFLFVl4w4FQcUheW
+         OUmg==
+X-Gm-Message-State: ANhLgQ1FZ6QvfOguZ5p6UYWybbCNYC7jCSB6egGOaEvlD1KcttNGiJfV
+        cZMdxJLQjGsxU7p4ppMJqGc=
+X-Google-Smtp-Source: ADFU+vuw1Gn/gxv91C8ZwB+oVwi9gMsS2phal1+uxIjUXty+KwUa7GLLvqosl4RNPBebPvsCgW33Ug==
+X-Received: by 2002:a7b:c944:: with SMTP id i4mr29675wml.77.1583770273978;
+        Mon, 09 Mar 2020 09:11:13 -0700 (PDT)
+Received: from localhost.localdomain (ip5f5bee49.dynamic.kabel-deutschland.de. [95.91.238.73])
+        by smtp.gmail.com with ESMTPSA id s14sm50104932wrv.44.2020.03.09.09.11.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Mar 2020 09:11:12 -0700 (PDT)
+From:   huobean@gmail.com
+X-Google-Original-From: beanhuo@micron.com
+To:     alim.akhtar@samsung.com, avri.altman@wdc.com,
+        asutoshd@codeaurora.org, jejb@linux.ibm.com,
+        martin.petersen@oracle.com, stanley.chu@mediatek.com,
+        beanhuo@micron.com, bvanassche@acm.org, tomas.winkler@intel.com,
+        cang@codeaurora.org
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/1] scsi: ufs: fix LRB pointer incorrect initialization issue
+Date:   Mon,  9 Mar 2020 17:10:56 +0100
+Message-Id: <20200309161057.9897-1-beanhuo@micron.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 09, 2020 at 03:26:53PM +0000, Mans Rullgard wrote:
-> When handling a PIO bulk transfer with highmem buffer, a temporary
-> mapping is assigned to urb->transfer_buffer.  After the transfer is
-> complete, an invalid address is left behind in this pointer.  This is
-> not ordinarily a problem since nothing touches that buffer before the
-> urb is released.  However, when usbmon is active, usbmon_urb_complete()
-> calls (indirectly) mon_bin_get_data() which does access the transfer
-> buffer if it is set.  To prevent an invalid memory access here, reset
-> urb->tranfer_buffer to NULL when finished (musb_host_rx()), or do not
+From: Bean Huo <beanhuo@micron.com>
 
-WARNING: 'tranfer' may be misspelled
+Hi, Martin and Bart
 
-I have fixed it locally.
+Based on the Bart's suggestion, delete ufshcd_init_lrb(), and update the patch
+to v3. This version patch passed stress test.
+Thanks,
 
-> set it at all (musb_host_tx()).
-> 
-> Fixes: 8e8a55165469 ("usb: musb: host: Handle highmem in PIO mode")
-> Signed-off-by: Mans Rullgard <mans@mansr.com>
+//Bean
 
-Applied. Thanks.
--Bin.
+Bean Huo (1):
+  scsi: ufs: fix LRB pointer incorrect initialization issue
+
+ drivers/scsi/ufs/ufshcd.c | 14 +++++---------
+ 1 file changed, 5 insertions(+), 9 deletions(-)
+
+-- 
+2.17.1
+
