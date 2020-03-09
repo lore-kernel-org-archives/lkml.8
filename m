@@ -2,215 +2,129 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89136C10F25
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 21:43:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4911C10F29
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 21:44:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35DD524655
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 21:43:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACD3D24649
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 21:44:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uDnfx1vs"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PFqG5EoC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727073AbgCIVn1 (ORCPT
+        id S1727111AbgCIVoe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 17:43:27 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:43803 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726266AbgCIVn0 (ORCPT
+        Mon, 9 Mar 2020 17:44:34 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:37488 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726536AbgCIVod (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 17:43:26 -0400
-Received: by mail-pg1-f193.google.com with SMTP id u12so5309897pgb.10
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 14:43:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=F4gTp56ur6uQjTLhO+QT0ClKii4W0AXDeyJ/ghlfGhY=;
-        b=uDnfx1vsQ5N3XqdFswJkqxPXBlJuHQ04vErZOpQ0DLuCbL184RwjKJOLrUSTIjoa7r
-         vyagJEmiedu/orTidbRCGjWJMqKaJQhzlGCUOW1zq6eYtoZ8KE7wjwaIKlxuYHaB31CY
-         EuZcmtE80Ibs9gDTLFcUjz5bHDhUFG4+lk1A+3ZVCl6LWUgKOTnvwc2mkaLazbT0uV+c
-         EoxG1vgCIBErMheYCNUEZZ3KSMCQaiZvX/ahNk3+mtjJ4WsDF2KXkOia7xb4HFUaBFIH
-         Te2HXrY2x4WRe3guNuHV2DKO4U3cMCcG/+b46LaLIM4Aur7Zi/Fy3LpTHpGbv/MHQYtJ
-         RxGA==
+        Mon, 9 Mar 2020 17:44:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583790272;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=zL6sq31OFwBXF/RS7PK1GArrpq69jRR45bepTSw46TU=;
+        b=PFqG5EoC0uX1BIn2GRxaiLxkhT7N6VDDbtmW3ZBB8oKdUuzLWEV7LCL1274UsMnBp5nllY
+        gbtNWSB4FpLUbT9WMkCumjnUjHEdbWja2wXmg1pOxkGq+evza8+OMYXK+KBrOyqqj16e5G
+        CiED/rp5ZoRIrGyR20LYj/2rcKczaYI=
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
+ [209.85.219.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-200-X_uYKjuPM52V9W-Ybet6dg-1; Mon, 09 Mar 2020 17:44:31 -0400
+X-MC-Unique: X_uYKjuPM52V9W-Ybet6dg-1
+Received: by mail-qv1-f69.google.com with SMTP id z39so7686970qve.5
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 14:44:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=F4gTp56ur6uQjTLhO+QT0ClKii4W0AXDeyJ/ghlfGhY=;
-        b=ST3RApZMHQarDy7/2aVOtWlooKma/Oa/HRt17rUCTTHYQkub00xVt2XO4OCNbC9kem
-         PriA3vkxUhXVIXjD8hRRHyr6kGS00PAe2UDfQpXFX+bDYRsIzyft//4uv2Ge6pJ/6FdW
-         yX4hC30mUmbGjRmZKbmV71et4Rt99jEx0iKa6nmbMb7fCc7wda6mJIE+HHJJ+z9+UnKr
-         JJJx4ot7KvnbOPfa0oFg7WKB9QvYMS52toHg9aKSLsw9e9UHTl7iUgIk8yrbkojf6uhy
-         lKVR+gfQ1IKSPRLyI+ZDhkE+jQcsE5Ge9m+j6VVIH4QFfkL1j+heeBwgThPKDrNWvimA
-         Zu3g==
-X-Gm-Message-State: ANhLgQ1eqeh5Gk0go2ckrgqp8owBbVgnrnprCbnTzTbLsjYBs7W3m3Ki
-        T8KzOYMzc/UmkxjcgFMfzPFo+xraKUPYBIxaRPiKCQ==
-X-Google-Smtp-Source: ADFU+vuHt49TZ9CHks3Y4yLQe2o5AbwW2en0PWT6GmyYy455v6utArIU5J7kuHNsjwFMTgzL5hxqmXAIRnaUXBKDZMA=
-X-Received: by 2002:a62:6842:: with SMTP id d63mr18560202pfc.113.1583790204937;
- Mon, 09 Mar 2020 14:43:24 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=zL6sq31OFwBXF/RS7PK1GArrpq69jRR45bepTSw46TU=;
+        b=hI/vaeZUZNDgoxwcc4/Oq/F/2VfXW5kzt5GjvS++nJB7h/UPse+SH4MN66kDvb95Az
+         nNiIBhXP6g7PK8RxYZwh5jl05ls/mlZ7eSaetpIVt+CYxN27TlS3oPKAkGNXZ/d9ulKW
+         lIaY9HOtwERafcZSWS9Bk9nUY6a4B5qbVxkN5PxYagntAxw2q0SXOSrsL1AIUzO35lzC
+         CXS+H1fDyvM7xNJtRpsuJJbHb20cy79XfusYUTkjui2ScGOIKZu4wNW/7SOdjRZKDOrP
+         +70F30UK5Y9XPZdfFdsnyo2Z8nD2xBzjp7zMGUFD4Evg6e6fFdOzOEDlA0FMTTxh9P/P
+         UqWQ==
+X-Gm-Message-State: ANhLgQ1ErkSp8c8VbYUoDAA8zndAIolwSJWar3ZSkL75CPMv9uLKi4I1
+        4mg4XWyC5+miQ1BItqov/nn/bTx7OZbtKXJDK5suaY3jrIkT1tRtEeLGKL9S/D+YHZv9cjuoTXm
+        9HS1Hw3ccvpNvHHu+yBYFWYJ0
+X-Received: by 2002:ac8:7613:: with SMTP id t19mr15821443qtq.203.1583790270264;
+        Mon, 09 Mar 2020 14:44:30 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vtNsKwrUcoUekUZLm7aMwtJB3yh7uevNGAMIN8cX3luE4VyH2NbSx/AJmszLvjz/oRxyaNn7A==
+X-Received: by 2002:ac8:7613:: with SMTP id t19mr15821436qtq.203.1583790270038;
+        Mon, 09 Mar 2020 14:44:30 -0700 (PDT)
+Received: from xz-x1.redhat.com ([2607:9880:19c0:32::2])
+        by smtp.gmail.com with ESMTPSA id 65sm22758686qtc.4.2020.03.09.14.44.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Mar 2020 14:44:29 -0700 (PDT)
+From:   Peter Xu <peterx@redhat.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Yan Zhao <yan.y.zhao@intel.com>, Jason Wang <jasowang@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        peterx@redhat.com, Vitaly Kuznetsov <vkuznets@redhat.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        Christophe de Dinechin <dinechin@redhat.com>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Subject: [PATCH v6 01/14] KVM: X86: Change parameter for fast_page_fault tracepoint
+Date:   Mon,  9 Mar 2020 17:44:11 -0400
+Message-Id: <20200309214424.330363-2-peterx@redhat.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200309214424.330363-1-peterx@redhat.com>
+References: <20200309214424.330363-1-peterx@redhat.com>
 MIME-Version: 1.0
-References: <CA+G9fYvRZ9eCE29FjXkv1dQfrdGO3uWp4Tvkip5Z_jsgjVJeAQ@mail.gmail.com>
- <CAHp75VfhKoLtWkLHUyzg6m=rx833qiCVimWJVKU13qrX+aJz-Q@mail.gmail.com>
- <CAFd5g45GbSX1BkuaH=8639ESHi-MCGkpFhEZZpycm9=jQb93rg@mail.gmail.com>
- <CAFd5g47aaE+tGeHPrQmhfi6_nrvi1K4DvtRodh=zN21-uiQ1DQ@mail.gmail.com>
- <20200305223350.GA2852@mara.localdomain> <20200306120525.GC68079@kuha.fi.intel.com>
- <CAFd5g45c9L4BBRNtxtQf_NFr2bR6Wgt9uOHW86gzb6Ozeb0SBA@mail.gmail.com>
-In-Reply-To: <CAFd5g45c9L4BBRNtxtQf_NFr2bR6Wgt9uOHW86gzb6Ozeb0SBA@mail.gmail.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Mon, 9 Mar 2020 14:43:13 -0700
-Message-ID: <CAFd5g45cdygYfxGoCkk710tLXFADeLNb+6w-=vhkDMLP9OM7bw@mail.gmail.com>
-Subject: Re: BUG: kernel NULL pointer dereference, address: 00 - ida_free+0x76/0x140
-To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        hdegoede@redhat.com,
-        "rafael.j.wysocki" <rafael.j.wysocki@intel.com>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        lkft-triage@lists.linaro.org,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 9, 2020 at 1:35 PM Brendan Higgins
-<brendanhiggins@google.com> wrote:
->
-> On Fri, Mar 6, 2020 at 4:05 AM Heikki Krogerus
-> <heikki.krogerus@linux.intel.com> wrote:
-> >
-> > On Fri, Mar 06, 2020 at 12:33:50AM +0200, Sakari Ailus wrote:
-> > > Hi Brendan,
-> > >
-> > > On Thu, Mar 05, 2020 at 11:51:20AM -0800, Brendan Higgins wrote:
-> > > > On Thu, Mar 5, 2020 at 11:40 AM Brendan Higgins
-> > > > <brendanhiggins@google.com> wrote:
-> > > > >
-> > > > > On Thu, Mar 5, 2020 at 11:18 AM Andy Shevchenko
-> > > > > <andy.shevchenko@gmail.com> wrote:
-> > > > > >
-> > > > > > +Cc: Sakari
-> > > > > >
-> > > > > > On Thu, Mar 5, 2020 at 6:00 PM Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
-> > > > > > >
-> > > > > > > Regression reported on Linux next 5.6.0-rc4-next-20200305 on x86_64,
-> > > > > > > i386, arm and arm64. The steps to reproduce is running kselftests lib
-> > > > > > > printf.sh test case.
-> > > > > > > Which is doing modprobe operations.
-> > > > > > >
-> > > > > > > BTW, there are few RCU warnings from the boot log.
-> > > > > > > Please refer below link for more details.
-> > > > > > >
-> > > > > > > Steps reproduce by using kselftests,
-> > > > > > >
-> > > > > > >           - lsmod || true
-> > > > > > >           - cd /opt/kselftests/default-in-kernel/lib/
-> > > > > > >           - export PATH=/opt/kselftests/default-in-kernel/kselftest:$PATH
-> > > > > > >           - ./printf.sh || true
-> > > > > > >           - ./bitmap.sh || true
-> > > > > > >           - ./prime_numbers.sh || true
-> > > > > > >           - ./strscpy.sh || true
-> > > > > > >
-> > > > > > > x86_64 kernel BUG dump.
-> > > > > > > + ./printf.sh
-> > > > >
-> > > > > Oops, I am wondering if I broke this with my change "Revert "software
-> > > > > node: Simplify software_node_release() function"":
-> > > > >
-> > > > > https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=d1c19322388d6935b534b494a2c223dd089e30dd
-> > > > >
-> > > > > I am still investigating, will update later.
-> > > >
-> > > > Okay, yeah, I am pretty sure I caused the breakage. I got an email
-> > > > from kernel test robot a couple days ago that I didn't see:
-> > > >
-> > > > https://lists.01.org/hyperkitty/list/lkp@lists.01.org/thread/N3ZN5XH7HK24JVEJ5WSQD2SK6YCDRILR/
-> > > >
-> > > > It shows the same breakage after applying this change.
-> > > >
-> > > > I am still investigating how my change broke it, nevertheless.
-> > >
-> > > As nodes in the tree are being removed, the code before the patch that
-> > > "simplified" the software_node_release() function accessed the node's parent
-> > > in its release function.
-> > >
-> > > And if CONFIG_DEBUG_KOBJECT_RELEASE is defined, the release functions are no
-> > > longer necessarily called in order, leading to referencing released memory.
-> > > Oops!
-> > >
-> > > So Heikki's patch actually fixed a bug. :-)
-> >
-> > Well, I think it just hid the problem. It looks like the core
-> > (lib/kobject.c) allows the parent kobject to be released before the
-> > last child kobject is released. To be honest, that does not sound
-> > right to me...
-> >
-> > I think we can workaround this problem by taking reference to the
-> > parent when the child is added, and then releasing it when the child
-> > is released, and in that way be guaranteed that the parent will not
-> > disappear before the child is fully released, but that still does not
-> > feel right. It feels more like the core is not doing it's job to me.
-> > The parent just should not be released before its children.
-> >
-> > Either I'm wrong about that, and we still should take the reference on
-> > the parent, or we revert my patch like Brendan proposed and then fix
->
-> Either way, isn't it wrong to release the node ID before deleting the
-> sysfs entry? I am not sure that my fix was the correct one, but I
-> believe the bug that Heidi and I found is actually a bug.
->
-> > the core with something like this (warning, I did not even try to
-> > compile that):
->
-> I will try it out.
->
-> > diff --git a/lib/kobject.c b/lib/kobject.c
-> > index 83198cb37d8d..ec5774992337 100644
-> > --- a/lib/kobject.c
-> > +++ b/lib/kobject.c
-> > @@ -680,6 +680,12 @@ static void kobject_cleanup(struct kobject *kobj)
-> >                 kobject_uevent(kobj, KOBJ_REMOVE);
-> >         }
-> >
-> > +       if (t && t->release) {
-> > +               pr_debug("kobject: '%s' (%p): calling ktype release\n",
-> > +                        kobject_name(kobj), kobj);
-> > +               t->release(kobj);
-> > +       }
-> > +
-> >         /* remove from sysfs if the caller did not do it */
-> >         if (kobj->state_in_sysfs) {
-> >                 pr_debug("kobject: '%s' (%p): auto cleanup kobject_del\n",
-> > @@ -687,12 +693,6 @@ static void kobject_cleanup(struct kobject *kobj)
-> >                 kobject_del(kobj);
-> >         }
-> >
-> > -       if (t && t->release) {
-> > -               pr_debug("kobject: '%s' (%p): calling ktype release\n",
-> > -                        kobject_name(kobj), kobj);
-> > -               t->release(kobj);
-> > -       }
-> > -
-> >         /* free name if we allocated it */
-> >         if (name) {
-> >                 pr_debug("kobject: '%s': free name\n", name);
+It would be clearer to dump the return value to know easily on whether
+did we go through the fast path for handling current page fault.
+Remove the old two last parameters because after all the old/new sptes
+were dumped in the same line.
 
-Alright, so I tried it and it looks like Heikki's suggestion worked.
+Signed-off-by: Peter Xu <peterx@redhat.com>
+---
+ arch/x86/kvm/mmutrace.h | 9 ++-------
+ 1 file changed, 2 insertions(+), 7 deletions(-)
 
-Is everyone comfortable going this route?
+diff --git a/arch/x86/kvm/mmutrace.h b/arch/x86/kvm/mmutrace.h
+index ffcd96fc02d0..ef523e760743 100644
+--- a/arch/x86/kvm/mmutrace.h
++++ b/arch/x86/kvm/mmutrace.h
+@@ -244,9 +244,6 @@ TRACE_EVENT(
+ 		  __entry->access)
+ );
+ 
+-#define __spte_satisfied(__spte)				\
+-	(__entry->retry && is_writable_pte(__entry->__spte))
+-
+ TRACE_EVENT(
+ 	fast_page_fault,
+ 	TP_PROTO(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa, u32 error_code,
+@@ -274,12 +271,10 @@ TRACE_EVENT(
+ 	),
+ 
+ 	TP_printk("vcpu %d gva %llx error_code %s sptep %p old %#llx"
+-		  " new %llx spurious %d fixed %d", __entry->vcpu_id,
++		  " new %llx ret %d", __entry->vcpu_id,
+ 		  __entry->cr2_or_gpa, __print_flags(__entry->error_code, "|",
+ 		  kvm_mmu_trace_pferr_flags), __entry->sptep,
+-		  __entry->old_spte, __entry->new_spte,
+-		  __spte_satisfied(old_spte), __spte_satisfied(new_spte)
+-	)
++		  __entry->old_spte, __entry->new_spte, __entry->retry)
+ );
+ 
+ TRACE_EVENT(
+-- 
+2.24.1
 
-Also, should I send this fix as a separate patch? Or do people want me
-to send an updated revision of my revert patch with the fix?
