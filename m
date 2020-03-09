@@ -2,71 +2,73 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20044C10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 11:14:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDFA1C10F29
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 11:14:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE5622051A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 11:14:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE0342051A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 11:14:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="GClSFCOK"
+	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="lsDFCtzX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726932AbgCILN0 (ORCPT
+        id S1727143AbgCILOO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 07:13:26 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:46701 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726879AbgCILNZ (ORCPT
+        Mon, 9 Mar 2020 07:14:14 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:42105 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726379AbgCILNR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 07:13:25 -0400
-Received: by mail-wr1-f67.google.com with SMTP id n15so10493720wrw.13
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 04:13:24 -0700 (PDT)
+        Mon, 9 Mar 2020 07:13:17 -0400
+Received: by mail-wr1-f66.google.com with SMTP id v11so10494826wrm.9
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 04:13:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=cloudflare.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=YCPLoXcP+lpHnWKxQvj+YI13qZvo01PQWJqE3eh/Ik4=;
-        b=GClSFCOK/i7yD4ZQLIXnEWvmlsZPqbeOKuo0zI5fWUUn09VmLVjxF4GBSVX+YOfgom
-         rz3fELsHAof9pkf615s9KWN/7iTehWLcklyUjFh3NeJc22XD1sJSK2oZ44DfG0dLFhZW
-         Jrp6ysOu5yaJoeZVO+ssyMBUN+BtbcPSJxs3E=
+        bh=l0ktpDWRQDpySqc55O3ycjYmqR9R3A/TAGAj92uhxn4=;
+        b=lsDFCtzXoGyzp8BojMVT0mpbNB9e5AzYEbZF7+Vflwqw/Yu6HaPKpfJFS9jfR4DUrx
+         s3AkLVbeMXqYviEixKJlNtUkFGZM5yHLT8Kd1JBBB6bUoEzRvqGHLAKzSlNRxq0hiN3C
+         RdVOYhNPXTEh3G0Qe0Y4eiC61rnfsrHOsYpyY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=YCPLoXcP+lpHnWKxQvj+YI13qZvo01PQWJqE3eh/Ik4=;
-        b=qOIWcurzdbvK1ygjCNBvvBAXkEsruX9xOnkZdWnH9POW1qpRrvbg4BZPm+pcc8OCtH
-         lDEmI96Z1WejOt5eamCxrpCa90uha98M5eOvJJV0TqJsK4TQcLnPlVsgo9t9t7aScuCG
-         3Iu7vYS60SD30/hzDNnp0VYSHU09A6/TiwLSbBo3uIC0pBvZIaQP2RJ2gh/puZNP098d
-         gM/qk4kUKW2fvc1+rDV/utDrurdca7DltD+f/1fQzZ5t1E0D8d/SArmXU0zkXfdH6Gbc
-         nvWhoBMbHJ1YPiB9LUaouW02eWCfKOEhmqFFTujinL559NzBNHMzKF90IOHzWXsDP5Li
-         ondw==
-X-Gm-Message-State: ANhLgQ0wa1ltM9odbO0pSpbx5fmVGSkwTwRlV7pQKmwPKycxcoHkN1LQ
-        ae2I6AWWVXsg91c9uMS7O6QYRw==
-X-Google-Smtp-Source: ADFU+vv08iVdGwkGLNH4/nhgz74hG4LCZtJBIYml6lPUnB0/kXp9/a3ESDCjiVyIpxamKHUlTIvVKg==
-X-Received: by 2002:a5d:6141:: with SMTP id y1mr19541463wrt.146.1583752403214;
-        Mon, 09 Mar 2020 04:13:23 -0700 (PDT)
+        bh=l0ktpDWRQDpySqc55O3ycjYmqR9R3A/TAGAj92uhxn4=;
+        b=Z7JDhbK6tj0Pcp124FlVMaIjqtQ7cBemJ66DBbBl3oeZhWJPpCTFwrXSml0z/vdugW
+         KHkZdDW3kEyLJYfOAK0UX/SGdT34SG6tG0ISt7kE01OARFmhqeVnQ6otP4ohpG8Jeb8W
+         grJdXrW1YT5nCLO7cMCswiDJNwf+/4eRT5e9Zesy+4sskWnLlXDpXL0Dfc/1h8cqAzTn
+         rrcXVQhyLM/yF2lavcrYKEY/5I2Te3l04mLvjXnMUI59dste0BfV4SoUAW0o7aa+3UGO
+         hoiRVAutpE9NK1XRMwbtOGGldIwIJmHskjhlafKKXdMkyGNj0ymfywTpKwI4Ou9obW5z
+         S+Ug==
+X-Gm-Message-State: ANhLgQ3QFcy8eInOwhYF9ImlvnAyscdQDnayMolAH33Ei12K7y6s7Y1q
+        R1gkfzTYuWxQScUKK+g7YqjS9Q==
+X-Google-Smtp-Source: ADFU+vuZLy9l5fDEExjlVjYsQqqtTJX6BELy9Vyk7fsm0xfvThaVLXjqvV3FD10xTBBoJsm1XPY6hA==
+X-Received: by 2002:a5d:550f:: with SMTP id b15mr20607372wrv.19.1583752394074;
+        Mon, 09 Mar 2020 04:13:14 -0700 (PDT)
 Received: from localhost.localdomain ([2a06:98c0:1000:8250:3dcc:c1d:7f05:4873])
-        by smtp.gmail.com with ESMTPSA id a5sm25732846wmb.37.2020.03.09.04.13.22
+        by smtp.gmail.com with ESMTPSA id a5sm25732846wmb.37.2020.03.09.04.13.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Mar 2020 04:13:22 -0700 (PDT)
+        Mon, 09 Mar 2020 04:13:13 -0700 (PDT)
 From:   Lorenz Bauer <lmb@cloudflare.com>
-To:     John Fastabend <john.fastabend@gmail.com>,
+To:     Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
         Daniel Borkmann <daniel@iogearbox.net>,
         Jakub Sitnicki <jakub@cloudflare.com>,
         Lorenz Bauer <lmb@cloudflare.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
         Alexei Starovoitov <ast@kernel.org>
 Cc:     kernel-team@cloudflare.com, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH bpf-next v4 08/12] bpf: sockmap: add UDP support
-Date:   Mon,  9 Mar 2020 11:12:39 +0000
-Message-Id: <20200309111243.6982-9-lmb@cloudflare.com>
+        linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+Subject: [PATCH bpf-next v4 03/12] bpf: tcp: move assertions into tcp_bpf_get_proto
+Date:   Mon,  9 Mar 2020 11:12:34 +0000
+Message-Id: <20200309111243.6982-4-lmb@cloudflare.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200309111243.6982-1-lmb@cloudflare.com>
 References: <20200309111243.6982-1-lmb@cloudflare.com>
@@ -77,91 +79,168 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allow adding hashed UDP sockets to sockmaps.
+We need to ensure that sk->sk_prot uses certain callbacks, so that
+code that directly calls e.g. tcp_sendmsg in certain corner cases
+works. To avoid spurious asserts, we must to do this only if
+sk_psock_update_proto has not yet been called. The same invariants
+apply for tcp_bpf_check_v6_needs_rebuild, so move the call as well.
+
+Doing so allows us to merge tcp_bpf_init and tcp_bpf_reinit.
 
 Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
-Signed-off-by: Jakub Sitnicki <jakub@cloudflare.com>
+Reviewed-by: Jakub Sitnicki <jakub@cloudflare.com>
 Acked-by: John Fastabend <john.fastabend@gmail.com>
 ---
- net/core/sock_map.c | 37 +++++++++++++++++++++++++++++++++----
- 1 file changed, 33 insertions(+), 4 deletions(-)
+ include/net/tcp.h   |  1 -
+ net/core/sock_map.c | 25 +++++++++----------------
+ net/ipv4/tcp_bpf.c  | 42 ++++++++++++++++++++++--------------------
+ 3 files changed, 31 insertions(+), 37 deletions(-)
 
+diff --git a/include/net/tcp.h b/include/net/tcp.h
+index 07f947cc80e6..ccf39d80b695 100644
+--- a/include/net/tcp.h
++++ b/include/net/tcp.h
+@@ -2196,7 +2196,6 @@ struct sk_msg;
+ struct sk_psock;
+ 
+ int tcp_bpf_init(struct sock *sk);
+-void tcp_bpf_reinit(struct sock *sk);
+ int tcp_bpf_sendmsg_redir(struct sock *sk, struct sk_msg *msg, u32 bytes,
+ 			  int flags);
+ int tcp_bpf_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
 diff --git a/net/core/sock_map.c b/net/core/sock_map.c
-index edfdce17b951..a7075b3b4489 100644
+index cb8f740f7949..fafcbd22ecba 100644
 --- a/net/core/sock_map.c
 +++ b/net/core/sock_map.c
-@@ -11,6 +11,7 @@
- #include <linux/list.h>
- #include <linux/jhash.h>
- #include <linux/sock_diag.h>
-+#include <net/udp.h>
+@@ -145,8 +145,8 @@ static int sock_map_link(struct bpf_map *map, struct sk_psock_progs *progs,
+ 			 struct sock *sk)
+ {
+ 	struct bpf_prog *msg_parser, *skb_parser, *skb_verdict;
+-	bool skb_progs, sk_psock_is_new = false;
+ 	struct sk_psock *psock;
++	bool skb_progs;
+ 	int ret;
  
- struct bpf_stab {
- 	struct bpf_map map;
-@@ -147,7 +148,19 @@ static int sock_map_init_proto(struct sock *sk, struct sk_psock *psock)
+ 	skb_verdict = READ_ONCE(progs->skb_verdict);
+@@ -191,18 +191,14 @@ static int sock_map_link(struct bpf_map *map, struct sk_psock_progs *progs,
+ 			ret = -ENOMEM;
+ 			goto out_progs;
+ 		}
+-		sk_psock_is_new = true;
+ 	}
+ 
+ 	if (msg_parser)
+ 		psock_set_prog(&psock->progs.msg_parser, msg_parser);
+-	if (sk_psock_is_new) {
+-		ret = tcp_bpf_init(sk);
+-		if (ret < 0)
+-			goto out_drop;
+-	} else {
+-		tcp_bpf_reinit(sk);
+-	}
++
++	ret = tcp_bpf_init(sk);
++	if (ret < 0)
++		goto out_drop;
+ 
+ 	write_lock_bh(&sk->sk_callback_lock);
+ 	if (skb_progs && !psock->parser.enabled) {
+@@ -239,15 +235,12 @@ static int sock_map_link_no_progs(struct bpf_map *map, struct sock *sk)
+ 	if (IS_ERR(psock))
+ 		return PTR_ERR(psock);
+ 
+-	if (psock) {
+-		tcp_bpf_reinit(sk);
+-		return 0;
++	if (!psock) {
++		psock = sk_psock_init(sk, map->numa_node);
++		if (!psock)
++			return -ENOMEM;
+ 	}
+ 
+-	psock = sk_psock_init(sk, map->numa_node);
+-	if (!psock)
+-		return -ENOMEM;
+-
+ 	ret = tcp_bpf_init(sk);
+ 	if (ret < 0)
+ 		sk_psock_put(sk, psock);
+diff --git a/net/ipv4/tcp_bpf.c b/net/ipv4/tcp_bpf.c
+index 3327afa05c3d..ed8a8f3c9afe 100644
+--- a/net/ipv4/tcp_bpf.c
++++ b/net/ipv4/tcp_bpf.c
+@@ -629,14 +629,6 @@ static int __init tcp_bpf_v4_build_proto(void)
+ }
+ core_initcall(tcp_bpf_v4_build_proto);
+ 
+-static void tcp_bpf_update_sk_prot(struct sock *sk, struct sk_psock *psock)
+-{
+-	int family = sk->sk_family == AF_INET6 ? TCP_BPF_IPV6 : TCP_BPF_IPV4;
+-	int config = psock->progs.msg_parser   ? TCP_BPF_TX   : TCP_BPF_BASE;
+-
+-	sk_psock_update_proto(sk, psock, &tcp_bpf_prots[family][config]);
+-}
+-
+ static int tcp_bpf_assert_proto_ops(struct proto *ops)
+ {
+ 	/* In order to avoid retpoline, we make assumptions when we call
+@@ -648,34 +640,44 @@ static int tcp_bpf_assert_proto_ops(struct proto *ops)
+ 	       ops->sendpage == tcp_sendpage ? 0 : -ENOTSUPP;
+ }
+ 
+-void tcp_bpf_reinit(struct sock *sk)
++static struct proto *tcp_bpf_get_proto(struct sock *sk, struct sk_psock *psock)
+ {
+-	struct sk_psock *psock;
++	int family = sk->sk_family == AF_INET6 ? TCP_BPF_IPV6 : TCP_BPF_IPV4;
++	int config = psock->progs.msg_parser   ? TCP_BPF_TX   : TCP_BPF_BASE;
+ 
+-	sock_owned_by_me(sk);
++	if (!psock->sk_proto) {
++		struct proto *ops = READ_ONCE(sk->sk_prot);
+ 
+-	rcu_read_lock();
+-	psock = sk_psock(sk);
+-	tcp_bpf_update_sk_prot(sk, psock);
+-	rcu_read_unlock();
++		if (tcp_bpf_assert_proto_ops(ops))
++			return ERR_PTR(-EINVAL);
++
++		tcp_bpf_check_v6_needs_rebuild(sk, ops);
++	}
++
++	return &tcp_bpf_prots[family][config];
+ }
+ 
+ int tcp_bpf_init(struct sock *sk)
+ {
+-	struct proto *ops = READ_ONCE(sk->sk_prot);
+ 	struct sk_psock *psock;
++	struct proto *prot;
  
  	sock_owned_by_me(sk);
  
--	prot = tcp_bpf_get_proto(sk, psock);
-+	switch (sk->sk_type) {
-+	case SOCK_STREAM:
-+		prot = tcp_bpf_get_proto(sk, psock);
-+		break;
-+
-+	case SOCK_DGRAM:
-+		prot = udp_bpf_get_proto(sk, psock);
-+		break;
-+
-+	default:
-+		return -EINVAL;
-+	}
-+
- 	if (IS_ERR(prot))
- 		return PTR_ERR(prot);
- 
-@@ -162,7 +175,7 @@ static struct sk_psock *sock_map_psock_get_checked(struct sock *sk)
  	rcu_read_lock();
  	psock = sk_psock(sk);
- 	if (psock) {
--		if (sk->sk_prot->recvmsg != tcp_bpf_recvmsg) {
-+		if (sk->sk_prot->close != sock_map_close) {
- 			psock = ERR_PTR(-EBUSY);
- 			goto out;
- 		}
-@@ -474,15 +487,31 @@ static bool sock_map_op_okay(const struct bpf_sock_ops_kern *ops)
- 	       ops->op == BPF_SOCK_OPS_TCP_LISTEN_CB;
- }
- 
--static bool sock_map_sk_is_suitable(const struct sock *sk)
-+static bool sk_is_tcp(const struct sock *sk)
- {
- 	return sk->sk_type == SOCK_STREAM &&
- 	       sk->sk_protocol == IPPROTO_TCP;
- }
- 
-+static bool sk_is_udp(const struct sock *sk)
-+{
-+	return sk->sk_type == SOCK_DGRAM &&
-+	       sk->sk_protocol == IPPROTO_UDP;
-+}
+-	if (unlikely(!psock || psock->sk_proto ||
+-		     tcp_bpf_assert_proto_ops(ops))) {
++	if (unlikely(!psock)) {
+ 		rcu_read_unlock();
+ 		return -EINVAL;
+ 	}
+-	tcp_bpf_check_v6_needs_rebuild(sk, ops);
+-	tcp_bpf_update_sk_prot(sk, psock);
 +
-+static bool sock_map_sk_is_suitable(const struct sock *sk)
-+{
-+	return sk_is_tcp(sk) || sk_is_udp(sk);
-+}
++	prot = tcp_bpf_get_proto(sk, psock);
++	if (IS_ERR(prot)) {
++		rcu_read_unlock();
++		return PTR_ERR(prot);
++	}
 +
- static bool sock_map_sk_state_allowed(const struct sock *sk)
- {
--	return (1 << sk->sk_state) & (TCPF_ESTABLISHED | TCPF_LISTEN);
-+	if (sk_is_tcp(sk))
-+		return (1 << sk->sk_state) & (TCPF_ESTABLISHED | TCPF_LISTEN);
-+	else if (sk_is_udp(sk))
-+		return sk_hashed(sk);
-+
-+	return false;
++	sk_psock_update_proto(sk, psock, prot);
+ 	rcu_read_unlock();
+ 	return 0;
  }
- 
- static int sock_map_update_elem(struct bpf_map *map, void *key,
 -- 
 2.20.1
 
