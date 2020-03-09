@@ -6,58 +6,52 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCFE5C10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 17:10:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DE76C10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 17:10:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB07320663
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 17:10:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 716F124676
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 17:10:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727233AbgCIRKH (ORCPT
+        id S1727270AbgCIRKL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 13:10:07 -0400
-Received: from foss.arm.com ([217.140.110.172]:54890 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726804AbgCIRKH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 13:10:07 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 73BE11FB;
-        Mon,  9 Mar 2020 10:10:06 -0700 (PDT)
-Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.71])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B598E3F534;
-        Mon,  9 Mar 2020 10:10:04 -0700 (PDT)
-Date:   Mon, 9 Mar 2020 17:10:02 +0000
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     =?utf-8?B?546L56iL5Yia?= <wangchenggang@vivo.com>
-Cc:     'Will Deacon' <will@kernel.org>,
-        'Mark Rutland' <mark.rutland@arm.com>,
-        'Marc Zyngier' <maz@kernel.org>,
-        'Allison Randal' <allison@lohutok.net>,
-        'Greg Kroah-Hartman' <gregkh@linuxfoundation.org>,
-        'Andrew Murray' <amurray@thegoodpenguin.co.uk>,
-        'Thomas Gleixner' <tglx@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        trivial@kernel.org, wenhu.wang@vivo.com
-Subject: Re: [PATCH] arch/arm64: fix typo in a comment
-Message-ID: <20200309171002.GD4124965@arrakis.emea.arm.com>
-References: <000401d5f5e3$622aefa0$2680cee0$@vivo.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <000401d5f5e3$622aefa0$2680cee0$@vivo.com>
+        Mon, 9 Mar 2020 13:10:11 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:58788 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726804AbgCIRKK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 13:10:10 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 79B151591360F;
+        Mon,  9 Mar 2020 10:10:09 -0700 (PDT)
+Date:   Mon, 09 Mar 2020 10:10:08 -0700 (PDT)
+Message-Id: <20200309.101008.1933325639100013092.davem@davemloft.net>
+To:     tsbogend@alpha.franken.de
+Cc:     ralf@linux-mips.org, linux-mips@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next] net: sgi: ioc3-eth: Remove phy workaround
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200309123240.15035-1-tsbogend@alpha.franken.de>
+References: <20200309123240.15035-1-tsbogend@alpha.franken.de>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 09 Mar 2020 10:10:09 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 09, 2020 at 03:21:42PM +0800, 王程刚 wrote:
-> Fix typo in a comment in arch/arm64/include/asm/esr.h
-> 
-> "Unallocted" -> "Unallocated"
-> 
-> Signed-off-by: Chenggang Wang <wangchenggang@vivo.com>
+From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Date: Mon,  9 Mar 2020 13:32:40 +0100
 
-Queued for 5.7. Thanks.
+> Commit a8d0f11ee50d ("MIPS: SGI-IP27: Enable ethernet phy on second
+> Origin 200 module") fixes the root cause of not detected PHYs.
+> Therefore the workaround can go away now.
+> 
+> Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 
--- 
-Catalin
+Applied, thank you.
