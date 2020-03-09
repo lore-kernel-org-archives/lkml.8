@@ -2,101 +2,167 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 770B2C10DCE
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 03:41:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51894C10DCE
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 03:44:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A9C22064A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 03:41:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F82F2064A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 03:44:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="VHknv8LB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eup1A0De"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726874AbgCIDlv (ORCPT
+        id S1726898AbgCIDoS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Mar 2020 23:41:51 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:34889 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726659AbgCIDlv (ORCPT
+        Sun, 8 Mar 2020 23:44:18 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:35878 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726495AbgCIDoS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 8 Mar 2020 23:41:51 -0400
-Received: by mail-qt1-f195.google.com with SMTP id v15so6083838qto.2
-        for <linux-kernel@vger.kernel.org>; Sun, 08 Mar 2020 20:41:49 -0700 (PDT)
+        Sun, 8 Mar 2020 23:44:18 -0400
+Received: by mail-pl1-f195.google.com with SMTP id g12so3419905plo.3;
+        Sun, 08 Mar 2020 20:44:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=CNYYFTCalmUuSxAWR7XaCM/gxKPhcvr0JtZkj6eTI9Y=;
-        b=VHknv8LB3GFRw23ZbiPdreuz6d01GLWWAJvdX5EgeD9/c/GcOS3IP+ZhkeICb0JhfH
-         XVw67cYfVsHCMH6qw7HsKBL6jpr+j6KBSqMec750uAs+10sQ6riV2cVg2oqfVtKcQHyP
-         Z9hT3Z+Ws38DjPnOB/+jFMRTCz1yayzN6dXEs0YuebKNXz0BN2awgZsy5VV/cWs6MZoZ
-         d94/E5LVYK9fXw1NUB6hQ8fdh3XQZyglH788D+Wk2e0T7MP2IAqDsaAincG5B8kjJe9i
-         NQzh+apsnX9PlOHTG2BZPhAyc6uIbxHgmQJKN3JkWRl0MO23Fvjem4bcygW4f+/zlNW8
-         V8iw==
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=SZYwS0wBSR9ObIxr/+MURp0MdHoz2IhLi0TZLfZyOTU=;
+        b=eup1A0DeKBFVOz6T3J0URSdmZ1hQudQEv1N41R+lHlOEiLqLDRnb6LeUNBLT5K/NYW
+         FE8ncknBevLDVp9K2QIXi1QQuebxCMB9EFWTaUOvve1h6LvDfmLQalY5Q3uPBcPQ4C3+
+         gf2s8hqmolWy9hxaiU8ClJf2uIth8NMoihf962Pzi1Huk9bplvt3RCIZFmQgqIijzULH
+         v5nNSNsyaNBcGPtZMWVDeaMg3AWSLg7C1TGxwGVLyi3iGRD4l/xjbojhAvCj7q5mOo7e
+         W57RtFVOD5UMCOmA8/W09pUbU9O/Y2q0esSwg7myRM+Vi+MeLI/QA3znlkaMUJB5shi2
+         VuGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CNYYFTCalmUuSxAWR7XaCM/gxKPhcvr0JtZkj6eTI9Y=;
-        b=sgbUrR2T9K5n7br/8ckgEup+SiRxP223bDhj05wf96ua9sXM73/VU+CWcY25XgUQso
-         Uus2SOjyOpVIkWF/3MLbJ2AxBwAemc4j1z6hUw9sI/CPPHPi9eg00Ct8PQiDWb6PJBbu
-         Gav2abB17w7KxSscCm4wvDfYi4uRTZ12seqbUV3rb6A5RNnHY6FyomK5ZZoI6oUEHNs9
-         4JPfeKLbbuL0lb95en6R2S9y5jSe491+LGuRjw6tlrmo+gB6wt83oxFQrkvi2QErbOkf
-         YlFW51xMT9EVt62O4dynWshMEIUfG9ScL3HJoUZe4R6lCc4IlxHlE1iWpgJHZwCOURC9
-         /qGQ==
-X-Gm-Message-State: ANhLgQ1Ol08NvV02OQ9/dCtfjxAvjwrJJ6AvuU02hKE4SkIE4Ks1Gpfu
-        v7sQHtaSFFmn7e+ATxC+QhaN0QMFQRmtcFZyq8sFpA==
-X-Google-Smtp-Source: ADFU+vt7hRKCpjY9Y/6PbDXX5/P/aKDMHT0L5G/8Gt3a3KMISifEbxYw8sWoZVsjM25ruYRMFoTYggX7kXK+ZNULFqA=
-X-Received: by 2002:ac8:1345:: with SMTP id f5mr12999290qtj.128.1583725308848;
- Sun, 08 Mar 2020 20:41:48 -0700 (PDT)
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=SZYwS0wBSR9ObIxr/+MURp0MdHoz2IhLi0TZLfZyOTU=;
+        b=kPnyPtoLffOHoffNTic92uMAeFkTDP/xtBBq7AKTcO9HlPqbhH8YX2+/YiCEKvCttB
+         PGf4kAUcMDJx5i2TGCM6q0Kr/UPW3Vgtc66TNe93Dm91P4QV9IznKp22h+su6WbQsYGf
+         5x1Fq1anjp8IZfCF3GIypNHAUmnjhuxTIFN7DNQW9HSUI5NpRhvExt8AokqlJ1AdOrpn
+         lMSPveo/pP9PznEHWM+8U4v9AXyp1pNn/oDkAi9cYU6IUItsWOcOAtY0sYHDClUdb/N+
+         gpTtkpbwML4kcHs/e8nM/GmOFUujJ3Kyu6ZeXg/wzNnZkbp20mBtoGgmjLgS5Ohn86bw
+         wx9Q==
+X-Gm-Message-State: ANhLgQ0W6X0iV5slbLlrgt+kBE+Ra7mDOEE1fRoAxNVCmgkLRYc6yr2d
+        +fvYUk/EWL8aizFlwzMKSOE=
+X-Google-Smtp-Source: ADFU+vvG+YKWPdRs9C1NLT8ETuvdO7X1tBR1oGdPAbynQM0KWoPZUudW2me8RoQqL4qPrvbi/EXOBg==
+X-Received: by 2002:a17:90a:bf83:: with SMTP id d3mr16756667pjs.77.1583725455161;
+        Sun, 08 Mar 2020 20:44:15 -0700 (PDT)
+Received: from localhost ([2a00:79e1:abc:f604:6e29:95ff:fe2d:8f34])
+        by smtp.gmail.com with ESMTPSA id 13sm41391456pgo.13.2020.03.08.20.44.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 08 Mar 2020 20:44:14 -0700 (PDT)
+From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+X-Google-Original-From: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Date:   Mon, 9 Mar 2020 12:44:11 +0900
+To:     Hans Verkuil <hverkuil@xs4all.nl>
+Cc:     Hans Verkuil <hans.verkuil@cisco.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Pawel Osciak <posciak@chromium.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Sergey Senozhatsky <senozhatsky@chromium.org>
+Subject: Re: [PATCHv4 01/11] videobuf2: add cache management members
+Message-ID: <20200309034411.GA856@jagdpanzerIV.localdomain>
+References: <20200302041213.27662-1-senozhatsky@chromium.org>
+ <20200302041213.27662-2-senozhatsky@chromium.org>
+ <17060663-9c30-de5e-da58-0c847b93e4d3@xs4all.nl>
+ <20200307094634.GB29464@google.com>
+ <6f5916dd-63f6-5d19-13f4-edd523205a1f@xs4all.nl>
+ <20200307112838.GA125961@google.com>
+ <a4d85ac3-0eea-bc19-cd44-0c8f5b71f6bc@xs4all.nl>
+ <20200309032707.GA9460@google.com>
 MIME-Version: 1.0
-References: <20200308094954.13258-1-guoren@kernel.org>
-In-Reply-To: <20200308094954.13258-1-guoren@kernel.org>
-From:   Greentime Hu <greentime.hu@sifive.com>
-Date:   Mon, 9 Mar 2020 11:41:37 +0800
-Message-ID: <CAHCEeh+XYD3uVmaQRGpY=VGxpO9hzMeKasNmAojhkZe9PJ9Lug@mail.gmail.com>
-Subject: Re: [RFC PATCH V3 00/11] riscv: Add vector ISA support
-To:     guoren@kernel.org
-Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>, Anup.Patel@wdc.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arch@vger.kernel.org, arnd@arndb.de,
-        linux-csky@vger.kernel.org,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Guo Ren <guoren@linux.alibaba.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Liu Zhiwei <zhiwei_liu@c-sky.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200309032707.GA9460@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 8, 2020 at 5:50 PM <guoren@kernel.org> wrote:
->
-> From: Guo Ren <guoren@linux.alibaba.com>
->
-> The implementation follow the RISC-V "V" Vector Extension draft v0.8 with
-> 128bit-vlen and it's based on linux-5.6-rc3 and tested with qemu [1].
->
-> The patch implement basic context switch, sigcontext save/restore and
-> ptrace interface with a new regset NT_RISCV_VECTOR. Only fixed 128bit-vlen
-> is implemented. We need to discuss about vlen-size for libc sigcontext and
-> ptrace (the maximum size of vlen is unlimited in spec).
->
-> Puzzle:
-> Dave Martin has talked "Growing CPU register state without breaking ABI" [2]
-> before, and riscv also met vlen size problem. Let's discuss the common issue
-> for all architectures and we need a better solution for unlimited vlen.
->
-> Any help are welcomed :)
->
->  1: https://github.com/romanheros/qemu.git branch:vector-upstream-v3
+On (20/03/09 12:27), Sergey Senozhatsky wrote:
+> On (20/03/07 12:47), Hans Verkuil wrote:
+> > 
+> > Create those tests in v4l2-compliance: that's where they belong.
+> >
+> > You need these tests:
+> > 
+> > For non-MMAP modes:
+> > 
+> > 1) test that V4L2_BUF_CAP_SUPPORTS_CACHE_HINTS is never set.
+> > 
+> > If V4L2_BUF_CAP_SUPPORTS_CACHE_HINTS is not set, then:
+> > 
+> > 1) attempting to use V4L2_FLAG_MEMORY_NON_CONSISTENT will clear the flag
+> >    upon return (test with both reqbufs and create_bufs).
+> > 2) attempting to use V4L2_BUF_FLAG_NO_CACHE_INVALIDATE or V4L2_BUF_FLAG_NO_CACHE_CLEAN
+> >    will clear those flags upon return (do we actually do that in the patch series?).
+> 
+> NO_CACHE_INVALIDATE/NO_CACHE_CLEAN are cleared in vb2_fill_vb2_v4l2_buffer()
+> [as was suggested], then the struct is copied back to user. But I think it
+> would be better to clear those flags when we clear
+> V4L2_FLAG_MEMORY_NON_CONSISTENT. We have 4 places which do something
+> like
+> 	"if !vb2_queue_allows_cache_hints(q) then clear flags bit".
 
-Hi Guo,
+No. I'll just move NO_CACHE_INVALIDATE/NO_CACHE_CLEAN handling to
+set_buffer_cache_hints(). This is where we take care of q->memory
+and q->allow_cache_hints, this is where we set/clear the
+->need_cache_sync flags, this is where we also can clear v4l2_buffer
+->flags. Seems like a better place than vb2_fill_vb2_v4l2_buffer().
 
-Thanks for your patch.
-It seems the qemu repo doesn't have this branch?
+---
+ .../media/common/videobuf2/videobuf2-v4l2.c   | 19 +++++++++----------
+ 1 file changed, 9 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/media/common/videobuf2/videobuf2-v4l2.c b/drivers/media/common/videobuf2/videobuf2-v4l2.c
+index b4b379f3bf98..0a6bd4a1f58e 100644
+--- a/drivers/media/common/videobuf2/videobuf2-v4l2.c
++++ b/drivers/media/common/videobuf2/videobuf2-v4l2.c
+@@ -199,15 +199,6 @@ static int vb2_fill_vb2_v4l2_buffer(struct vb2_buffer *vb, struct v4l2_buffer *b
+ 	vbuf->request_fd = -1;
+ 	vbuf->is_held = false;
+ 
+-	/*
+-	 * Clear buffer cache flags if queue does not support user space hints.
+-	 * That's to indicate to userspace that these flags won't work.
+-	 */
+-	if (!vb2_queue_allows_cache_hints(q)) {
+-		b->flags &= ~V4L2_BUF_FLAG_NO_CACHE_INVALIDATE;
+-		b->flags &= ~V4L2_BUF_FLAG_NO_CACHE_CLEAN;
+-	}
+-
+ 	if (V4L2_TYPE_IS_MULTIPLANAR(b->type)) {
+ 		switch (b->memory) {
+ 		case VB2_MEMORY_USERPTR:
+@@ -368,8 +359,16 @@ static void set_buffer_cache_hints(struct vb2_queue *q,
+ 	vb->need_cache_sync_on_prepare = 1;
+ 	vb->need_cache_sync_on_finish = 1;
+ 
+-	if (!vb2_queue_allows_cache_hints(q))
++	if (!vb2_queue_allows_cache_hints(q)) {
++		/*
++		 * Clear buffer cache flags if queue does not support user
++		 * space hints. That's to indicate to userspace that these
++		 * flags won't work.
++		 */
++		b->flags &= ~V4L2_BUF_FLAG_NO_CACHE_INVALIDATE;
++		b->flags &= ~V4L2_BUF_FLAG_NO_CACHE_CLEAN;
+ 		return;
++	}
+ 
+ 	/*
+ 	 * ->finish() cache sync can be avoided when queue direction is
+-- 
+2.25.1
+
