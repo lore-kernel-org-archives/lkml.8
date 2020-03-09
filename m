@@ -2,138 +2,110 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A607C10F29
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 21:47:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D78EC10F29
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 21:48:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2225B2465A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 21:47:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B60324649
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 21:48:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EnAOLY3l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727132AbgCIVrs (ORCPT
+        id S1727152AbgCIVs1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 17:47:48 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:47536 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726118AbgCIVrr (ORCPT
+        Mon, 9 Mar 2020 17:48:27 -0400
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:36819 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726118AbgCIVs0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 17:47:47 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 8915A20021;
-        Mon,  9 Mar 2020 22:47:40 +0100 (CET)
-Date:   Mon, 9 Mar 2020 22:47:39 +0100
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Cc:     Rob Herring <robh@kernel.org>,
+        Mon, 9 Mar 2020 17:48:26 -0400
+Received: by mail-pj1-f67.google.com with SMTP id l41so503224pjb.1;
+        Mon, 09 Mar 2020 14:48:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=M+Yc5KaBBvqlUu6IX9+jhdSvvYBrtTQ1N/+uZrTujAY=;
+        b=EnAOLY3lknQn3MrFOnTG47rE/msuLtkHcwI9CiqqLxAphICFFDtZpSmVBdHY1gjaT1
+         nF3ZgHtiuEflpauwpjHLTa11NmOBCgIGoRnB/lC61GeUFJGTQUhR7M5jhLKEkVom/atE
+         rGNK46z/+EJGKYmexGaRptMczx6WalQZ7vm1+hnINGCorC4R+/lDj28HCN2YFObBXibf
+         TbBc8ktb/3tvgKvbKZYVuXQFQ1jCh7q5i2kNRpO8mDbWAxKJ4bf2OPG8x6COaosxKY5L
+         JbUlwomEzIjo5YEQYdlVnYLt8bnVg32QPMRPbi/wBzdkVbfsh8Q61ZV2waG0vTF+9vHY
+         Rdwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=M+Yc5KaBBvqlUu6IX9+jhdSvvYBrtTQ1N/+uZrTujAY=;
+        b=mm7w3L8jqlQIB8Lu2kEgJxyj37wTFyz2EXsB840lnf6J2Wfio0xEfHjW201sfChTZr
+         bjFAuPv5mC1gn1ux0eEJKc0qQimcpXBxZZ5ivDC7wgnc6sVqBYGIuduMOeqhG8qlErOy
+         RjP926mWRMhXUVFWVOOOJdGskqAVJ8PTOYrDmeKZWjCNEKkrdPHQ0KFZi27D7l2XyA3K
+         os0kSgnol6L/ha9RlAtqDD6+rcQlfjiOhZ42NVMvx19h+vXdU+MAPE3YOeNlOyvWwRop
+         ntPccf2Q92sAXrCFu0XijIeg/64JgHKrB+k0pXPAwfy3q5WGocl8lKxZ8Q3fi1tSCFcr
+         h6fA==
+X-Gm-Message-State: ANhLgQ0bbrk3KOLcIuUyShwCSv7CT+iQh+iyEZ/GhN8VctyhYwSkfVDH
+        3V9O0t6TCjsx6N/jj/XCZOo=
+X-Google-Smtp-Source: ADFU+vspwoKFKjFMDUf9nlAvLvUHioLAIIAwk15+/ODm/1HJWpwGZy4//EuoLeQ1SRiulbB+FAF01Q==
+X-Received: by 2002:a17:90a:ba89:: with SMTP id t9mr1352540pjr.93.1583790503831;
+        Mon, 09 Mar 2020 14:48:23 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id q15sm9321748pgn.68.2020.03.09.14.48.22
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 09 Mar 2020 14:48:23 -0700 (PDT)
+Date:   Mon, 9 Mar 2020 14:48:22 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Guru Das Srinagesh <gurus@codeaurora.org>
+Cc:     linux-pwm@vger.kernel.org,
         Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        dri-devel@lists.freedesktop.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: Re: [RESEND PATCH v7] dt-bindings: display: Add idk-2121wr binding
-Message-ID: <20200309214739.GA11495@ravnborg.org>
-References: <20200306152031.14212-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200309203242.GA14486@bogus>
- <CA+V-a8uAhrkRPUaQOOAUgeKFnwH7zZOF-raQiYvtc9edUeHJ7g@mail.gmail.com>
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <uwe@kleine-koenig.org>,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
+        linux-kernel@vger.kernel.org, Kamil Debski <kamil@wypas.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, linux-hwmon@vger.kernel.org
+Subject: Re: [PATCH v7 03/13] hwmon: pwm-fan: Use 64-bit division macros for
+ period and duty cycle
+Message-ID: <20200309214822.GA19773@roeck-us.net>
+References: <cover.1583782035.git.gurus@codeaurora.org>
+ <b503833e0f58bd6dd9fe84d866124e7c457e099e.1583782035.git.gurus@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CA+V-a8uAhrkRPUaQOOAUgeKFnwH7zZOF-raQiYvtc9edUeHJ7g@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=VwQbUJbxAAAA:8
-        a=yC-0_ovQAAAA:8 a=NcFk6D9gAAAA:8 a=S6n1fyGeoZp7psgl2-IA:9
-        a=CjuIK1q_8ugA:10 a=gDps05xe3HUA:10 a=-FEs8UIgK8oA:10 a=CojVow1nldcA:10
-        a=NWVoK91CQyQA:10 a=AjGcO6oz07-iQ99wixmX:22 a=QsnFDINu91a9xkgZirup:22
-        a=dT0RXAwTRpxWjiziVLXF:22
+In-Reply-To: <b503833e0f58bd6dd9fe84d866124e7c457e099e.1583782035.git.gurus@codeaurora.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prabhakar
-
-On Mon, Mar 09, 2020 at 09:23:24PM +0000, Lad, Prabhakar wrote:
-> Hi Rob,
+On Mon, Mar 09, 2020 at 12:35:06PM -0700, Guru Das Srinagesh wrote:
+> Because period and duty cycle are defined in the PWM framework structs
+> as ints with units of nanoseconds, the maximum time duration that can be
+> set is limited to ~2.147 seconds. Redefining them as u64 values will
+> enable larger time durations to be set.
 > 
-> On Mon, Mar 9, 2020 at 8:32 PM Rob Herring <robh@kernel.org> wrote:
-> >
-> > On Fri,  6 Mar 2020 15:20:31 +0000, Lad Prabhakar wrote:
-> > > From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> > >
-> > > Add binding for the idk-2121wr LVDS panel from Advantech.
-> > >
-> > > Some panel-specific documentation can be found here:
-> > > https://buy.advantech.eu/Displays/Embedded-LCD-Kits-High-Brightness/model-IDK-2121WR-K2FHA2E.htm
-> > >
-> > > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > ---
-> > > Apologies for flooding in I missed to add the ML email-ids for the earlier
-> > > version so resending it.
-> > >
-> > > Hi All,
-> > >
-> > > This patch is part of series [1] ("Add dual-LVDS panel support to EK874),
-> > > all the patches have been accepted from it except this one. I have fixed
-> > > Rob's comments in this version of the patch.
-> > >
-> > > [1] https://patchwork.kernel.org/cover/11297589/
-> > >
-> > > v6->7
-> > >  * Added reference to lvds.yaml
-> > >  * Changed maintainer to myself
-> > >  * Switched to dual license
-> > >  * Dropped required properties except for ports as rest are already listed
-> > >    in lvds.panel
-> > >  * Dropped Reviewed-by tag of Laurent, due to the changes made it might not
-> > >    be valid.
-> > >
-> > > v5->v6:
-> > >  * No change
-> > >
-> > > v4->v5:
-> > > * No change
-> > >
-> > > v3->v4:
-> > > * Absorbed patch "dt-bindings: display: Add bindings for LVDS
-> > >   bus-timings"
-> > > * Big restructuring after Rob's and Laurent's comments
-> > >
-> > > v2->v3:
-> > > * New patch
-> > >
-> > >  .../display/panel/advantech,idk-2121wr.yaml        | 120 +++++++++++++++++++++
-> > >  1 file changed, 120 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.yaml
-> > >
-> >
-> > My bot found errors running 'make dt_binding_check' on your patch:
-> >
-> > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.example.dt.yaml: panel-lvds: 'port' is a required property
-> > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.example.dt.yaml: panel-lvds: 'port' is a required property
-> >
-> This panel is a dual channel LVDS, as a result the root port is called as
-> ports instead of port and the child node port@0 and port@1 are used for
-> even and odd pixels, hence binding has required property as ports instead
-> of port.
+> As a first step, prepare drivers to handle the switch to u64 period and
+> duty_cycle by replacing division operations involving pwm period and duty cycle
+> with their 64-bit equivalents as appropriate. The actual switch to u64 period
+> and duty_cycle follows as a separate patch.
+> 
+> Where the dividend is 64-bit but the divisor is 32-bit, use *_ULL
+> macros:
+> - DIV_ROUND_UP_ULL
+> - DIV_ROUND_CLOSEST_ULL
+> - div_u64
+> 
+> Where the divisor is 64-bit (dividend may be 32-bit or 64-bit), use
+> DIV64_* macros:
+> - DIV64_U64_ROUND_CLOSEST
+> - div64_u64
+> 
+There is no explanation why this is necessary. What is the use case ?
+It is hard to imagine a real-world use case with a duty cycle of more
+than 2 seconds.
 
-What goes wrong is that you have a ref to lvds.yaml - and thus you get
-also required from that file.
-
-So basically - I think this binding should not have a ref to lvds.yaml -
-as the binding needs to be different.
-
-	Sam
+Guenter
