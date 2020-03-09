@@ -2,220 +2,107 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DB6FC10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:25:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9501FC10F25
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:25:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 140D32465D
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:25:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65EDD22B48
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:25:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="le8ftsl+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726467AbgCITZE convert rfc822-to-8bit (ORCPT
+        id S1726498AbgCITZz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 15:25:04 -0400
-Received: from mail-oln040092074084.outbound.protection.outlook.com ([40.92.74.84]:21838
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725956AbgCITZD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 15:25:03 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=P5fR3R6NRmtmYFXf90r1KviiRMR7E1L7qiV+TTXxEk2OZaJScmjYKT1+bdO8wsFAj98rWUpgLjUSYChGM98RgOr+jqcAekTSHIfm0hoDrwELnFNfCWERtepNkT0qCCtWI40uOuPQ5jn6cBEhVS6eq8P3+kvpOf9kAmxyRo7VPrSN5VD+OfDynNG2uhNl0Pt1Hxlqy4JUSlzNgrPgsmrBe0LfDtBdiF3n5YHiKMvEubCEFhbaKk75KgseWQYtlbKzWx9xgoL6xJba3MkfeTA+uaGDRk45DEBKOkXeLxrGL1qicLyHa9XGHAGqacotRR6a2s6orLmIml72x+i8fL6+Qg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LtVsWtk2lDzAfqdQxqczErsKzeZfKoLfMiXjfWi5gyI=;
- b=ClyikgLAz2iIcV0Nk8UDJPBK4wy4xDUTlBecsqwpwTh1rT1og5FK2nkaboV3DmCS/OBQEl2QJRRH3sgveVZ/KIgh8kQH+uG9jZbOlaKMZpXINQmlKKJrFbrJavtLg67Pfw8qT/btpXfxhbw6ItVdGHwHlFJpusuWTDYz3zYZlSYlGhj6gKLCZ4RMAzBIEAbuc1ESNzPG04W70WEVkG/QJarEeLU5q5//zYeBPOsJWdPSxAlEJkUF7+VaKdGUNkVFiMaD72z1/ymLj7EvhXITr7banpy73duSHyfqpcbcq2d0OaqEVd7tprvQHmCtMakFs+iR6GoHf4oTDSmJCEBMaQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-Received: from HE1EUR04FT025.eop-eur04.prod.protection.outlook.com
- (2a01:111:e400:7e0d::35) by
- HE1EUR04HT225.eop-eur04.prod.protection.outlook.com (2a01:111:e400:7e0d::410)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.11; Mon, 9 Mar
- 2020 19:24:58 +0000
-Received: from AM6PR03MB5170.eurprd03.prod.outlook.com (10.152.26.60) by
- HE1EUR04FT025.mail.protection.outlook.com (10.152.27.28) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2793.11 via Frontend Transport; Mon, 9 Mar 2020 19:24:58 +0000
-Received: from AM6PR03MB5170.eurprd03.prod.outlook.com
- ([fe80::1956:d274:cab3:b4dd]) by AM6PR03MB5170.eurprd03.prod.outlook.com
- ([fe80::1956:d274:cab3:b4dd%6]) with mapi id 15.20.2772.019; Mon, 9 Mar 2020
- 19:24:58 +0000
-Received: from [192.168.1.101] (92.77.140.102) by AM0PR0102CA0029.eurprd01.prod.exchangelabs.com (2603:10a6:208:14::42) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.16 via Frontend Transport; Mon, 9 Mar 2020 19:24:56 +0000
-From:   Bernd Edlinger <bernd.edlinger@hotmail.de>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-CC:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Andrei Vagin <avagin@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Yuyang Du <duyuyang@gmail.com>,
-        David Hildenbrand <david@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        David Howells <dhowells@redhat.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christian Kellner <christian@kellner.me>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>
-Subject: Re: [PATCH v2 5/5] exec: Add a exec_update_mutex to replace
- cred_guard_mutex
-Thread-Topic: [PATCH v2 5/5] exec: Add a exec_update_mutex to replace
- cred_guard_mutex
-Thread-Index: AQHV9ZJHYfsGvDLnM0SksOJ5MpqOZahARvEAgABCQ42AAAUtgIAAA0/bgAADytmAAANO2YAAAnOAgAAE4zCAAAWQgA==
-Date:   Mon, 9 Mar 2020 19:24:58 +0000
-Message-ID: <AM6PR03MB5170DF45E3245F55B95CCD91E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
-References: <AM6PR03MB5170EB4427BF5C67EE98FF09E4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <87a74xi4kz.fsf@x220.int.ebiederm.org>
- <AM6PR03MB51705AA3009B4986BB6EF92FE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <87r1y8dqqz.fsf@x220.int.ebiederm.org>
- <AM6PR03MB517053AED7DC89F7C0704B7DE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <AM6PR03MB51703B44170EAB4626C9B2CAE4E20@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <87tv32cxmf.fsf_-_@x220.int.ebiederm.org>
- <87v9ne5y4y.fsf_-_@x220.int.ebiederm.org>
- <87zhcq4jdj.fsf_-_@x220.int.ebiederm.org>
- <AM6PR03MB5170BC58D90BAD80CDEF3F8BE4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <878sk94eay.fsf@x220.int.ebiederm.org>
- <AM6PR03MB517086003BD2C32E199690A3E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <87r1y12yc7.fsf@x220.int.ebiederm.org> <87k13t2xpd.fsf@x220.int.ebiederm.org>
- <87d09l2x5n.fsf@x220.int.ebiederm.org>
- <AM6PR03MB5170F0F9DC18F5EA77C9A857E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <871rq12vxu.fsf@x220.int.ebiederm.org>
-In-Reply-To: <871rq12vxu.fsf@x220.int.ebiederm.org>
-Accept-Language: en-US, en-GB, de-DE
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: AM0PR0102CA0029.eurprd01.prod.exchangelabs.com
- (2603:10a6:208:14::42) To AM6PR03MB5170.eurprd03.prod.outlook.com
- (2603:10a6:20b:ca::23)
-x-incomingtopheadermarker: OriginalChecksum:71A99711ADA16EC1C24CC5F8D4E994C5C61558DC91E28170A71D7A2DE7384D8B;UpperCasedChecksum:138B6000CDB757DAF3D086CF6285744E3811657112A8F186F10221148F6207F1;SizeAsReceived:9999;Count:50
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn:  [B/29M+tTQ8jZwO8bBX+aFjHrnBQUzxaI]
-x-microsoft-original-message-id: <8bc15c6d-2811-5965-cf3a-0dee5d3ef4a7@hotmail.de>
-x-ms-publictraffictype: Email
-x-incomingheadercount: 50
-x-eopattributedmessage: 0
-x-ms-office365-filtering-correlation-id: 5b640f5a-1970-4e2f-2a79-08d7c45f8e32
-x-ms-traffictypediagnostic: HE1EUR04HT225:
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: yRwriaax4luQh2eE4Kv/5gl1xgtV+JhFn3r4omhcZdQLtpEnZ5wArAUY4QNOr9h2IZIMedZxh+rethkj8ygU0pcUw/1z20Mmt+DeKfEBy6dVNVB9GGIRS0wJwO0n+/dU/4JSft9BH+xomh1RItAhwsuXYvw9U3slEuQRKa89/6j+UP2Oh6AidizbkcozgOSgMI2zIDI+G18wMkpMWz2COa8Mq1fFnGz9kBwFiCRCBe4=
-x-ms-exchange-antispam-messagedata: ihJ0a1uBNLzETZ0EmKa6rky1cWiaSkYyOGteR6EOKC18aVBNv+NQojy58E5NM24js9Phk+70KCAHX1D/k7WThPHE2uRSy6XlGK8SCQCnVBeuJlHfU+++kQzGOumEGPWBhsUPpC6BDlGBMcqv1aoohQ==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="Windows-1252"
-Content-ID: <D977AB8180FC5246BAA1C16ED22CAA18@eurprd03.prod.outlook.com>
-Content-Transfer-Encoding: 8BIT
+        Mon, 9 Mar 2020 15:25:55 -0400
+Received: from mail.efficios.com ([167.114.26.124]:58454 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726295AbgCITZy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 15:25:54 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 1B380268C87;
+        Mon,  9 Mar 2020 15:25:54 -0400 (EDT)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id KnxvgsnLBXtE; Mon,  9 Mar 2020 15:25:53 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id D62F3268C86;
+        Mon,  9 Mar 2020 15:25:53 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com D62F3268C86
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1583781953;
+        bh=70bU9x4pFcw4EitJgLR67S4Wwba/RzoCmlkulbS+k70=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=le8ftsl+IzBrbyTQsXyfsvDSs/ACVk1v/NrLSE3i/cVEsBCpmT4zIcylFdX5TLRRT
+         xkRsXEEbkNGgz09vLnNytZvfjVRQmVHAqjKXbjYFmDk7Rf70lkZG4A9ZGWoYXtZgCo
+         cgV0/OoDYAr3aQgxxeYGhAorm+i3c+22gQ+VP50IvFRl1qakbne9gp2Vro9uD5+h84
+         r3HnvHlvW7E5RYJg/PPT3lMKCvhfZmyD5PjR5tNBbhRI8yCr+6G73oQ3JlVL4tBleD
+         6+1npY5Y8DZC/0W+EPYx0b8UOFJpAddskEnzlQ3WPYvKgUGSQmvv32qQY4jq8i4+aW
+         HOelWCi3O0gAQ==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id uGVwlSgowVas; Mon,  9 Mar 2020 15:25:53 -0400 (EDT)
+Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
+        by mail.efficios.com (Postfix) with ESMTP id C9797268A1C;
+        Mon,  9 Mar 2020 15:25:53 -0400 (EDT)
+Date:   Mon, 9 Mar 2020 15:25:53 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     rostedt <rostedt@goodmis.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        paulmck <paulmck@kernel.org>,
+        "Joel Fernandes, Google" <joel@joelfernandes.org>,
+        Frederic Weisbecker <frederic@kernel.org>
+Message-ID: <1421454673.21890.1583781953778.JavaMail.zimbra@efficios.com>
+In-Reply-To: <20200309150940.26730dee@gandalf.local.home>
+References: <87mu8p797b.fsf@nanos.tec.linutronix.de> <1403546357.21810.1583779060302.JavaMail.zimbra@efficios.com> <20200309144427.0ce0eabc@gandalf.local.home> <1851876075.21840.1583779960064.JavaMail.zimbra@efficios.com> <20200309150940.26730dee@gandalf.local.home>
+Subject: Re: Instrumentation and RCU
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5b640f5a-1970-4e2f-2a79-08d7c45f8e32
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Mar 2020 19:24:58.6072
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1EUR04HT225
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.26.124]
+X-Mailer: Zimbra 8.8.15_GA_3901 (ZimbraWebClient - FF73 (Linux)/8.8.15_GA_3895)
+Thread-Topic: Instrumentation and RCU
+Thread-Index: i3rbokcdGHS5QSdW4VDvsuVnJMyLcQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+----- On Mar 9, 2020, at 3:09 PM, rostedt rostedt@goodmis.org wrote:
 
-
-On 3/9/20 8:02 PM, Eric W. Biederman wrote:
-> Bernd Edlinger <bernd.edlinger@hotmail.de> writes:
+> On Mon, 9 Mar 2020 14:52:40 -0400 (EDT)
+> Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
 > 
->> On 3/9/20 7:36 PM, Eric W. Biederman wrote:
->>>
->>>
->>> Does that sound better?
->>>
->>
->> almost done.
+>> And when I say "go back to plain RCU", I really mean removing use of SRCU
+>> from the tracepoints until we have other purposes for it (e.g. taking
+>> faults within specific tracepoint probes such as syscall enter/exit).
 > 
-> I think this text is finally clean.
-> 
->     exec: Add exec_update_mutex to replace cred_guard_mutex
->     
->     The cred_guard_mutex is problematic as it is held over possibly
->     indefinite waits for userspace.  The possilbe indefinite waits for
->     userspace that I have identified are: The cred_guard_mutex is held in
->     PTRACE_EVENT_EXIT waiting for the tracer.  The cred_guard_mutex is
->     held over "put_user(0, tsk->clear_child_tid)" in exit_mm().  The
->     cred_guard_mutex is held over "get_user(futex_offset, ...")  in
->     exit_robust_list.  The cred_guard_mutex held over copy_strings.
->     
->     The functions get_user and put_user can trigger a page fault which can
->     potentially wait indefinitely in the case of userfaultfd or if
->     userspace implements part of the page fault path.
->     
->     In any of those cases the userspace process that the kernel is waiting
->     for might make a different system call that winds up taking the
->     cred_guard_mutex and result in deadlock.
->     
->     Holding a mutex over any of those possibly indefinite waits for
->     userspace does not appear necessary.  Add exec_update_mutex that will
->     just cover updating the process during exec where the permissions and
->     the objects pointed to by the task struct may be out of sync.
->     
->     The plan is to switch the users of cred_guard_mutex to
->     exec_update_mutex one by one.  This lets us move forward while still
->     being careful and not introducing any regressions.
->     
->     Link: https://lore.kernel.org/lkml/20160921152946.GA24210@dhcp22.suse.cz/
->     Link: https://lore.kernel.org/lkml/AM6PR03MB5170B06F3A2B75EFB98D071AE4E60@AM6PR03MB5170.eurprd03.prod.outlook.com/
->     Link: https://lore.kernel.org/linux-fsdevel/20161102181806.GB1112@redhat.com/
->     Link: https://lore.kernel.org/lkml/20160923095031.GA14923@redhat.com/
->     Link: https://lore.kernel.org/lkml/20170213141452.GA30203@redhat.com/
->     Ref: 45c1a159b85b ("Add PTRACE_O_TRACEVFORKDONE and PTRACE_O_TRACEEXIT facilities.")
->     Ref: 456f17cd1a28 ("[PATCH] user-vm-unlock-2.5.31-A2")
+> Actually, with both you and Alexei talking about having a sleeping
+> tracepoint callback, where we can add a can sleep check (but not in the
+> DO_TRACE macro, I would think that registered sleeping callbacks would be
+> its own callback), I would think we do not want to remove the SRCU usage.
 
-I checked the urls they all work.
-Just one last question, are these git references?
-I can't find them in my linux git tree (cloned from linus' git)?
+Whether we keep it or add it back later when needed should not make much
+difference.
 
-Sorry for being pedantically.
+In any case, considering that overhead which motivated use of SRCU for the rcuidle
+case could instead be handled by using is_rcu_watching() and normal RCU, I would
+prefer removing it from the rcuidle tracepoints for now, and add it back when we
+add a new kind of "sleepable" tracepoints later on.
 
+Thanks,
 
->     Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
-> 
-> 
-> Bernd do you want to give me your Reviewed-by for this part of the
-> series?
-> 
+Mathieu
 
-Sure also the other parts of course.
-
-Reviewed-by: Bernd Edlinger <bernd.edlinger@hotmail.de>
-
-> After that do you think you can write the obvious patch for mm_access?
-> 
-
-Yes, I can do that.
-I also have some typos in comments, will make them extra patches as well.
-
-I wonder if the test case is okay to include the ptrace_attach altough
-that is not yet passing?
-
-
-Thanks
-Bernd.
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
