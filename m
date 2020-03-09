@@ -2,98 +2,70 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3FC0C10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 12:57:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8681FC10F29
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 12:58:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7905D20675
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 12:57:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="PND02V6c"
+	by mail.kernel.org (Postfix) with ESMTP id 68CFE20828
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 12:58:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726488AbgCIM5x (ORCPT
+        id S1726545AbgCIM6C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 08:57:53 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:34305 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726383AbgCIM5v (ORCPT
+        Mon, 9 Mar 2020 08:58:02 -0400
+Received: from web2.default.djames.uk0.bigv.io ([213.138.101.246]:35602 "EHLO
+        web2.default.djames.uk0.bigv.io" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726383AbgCIM6B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 08:57:51 -0400
-Received: by mail-qt1-f195.google.com with SMTP id 59so6867899qtb.1
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 05:57:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=miMLkBCmq91TU9yIA6m0qBL/sLuRcI7EOPQvuCnK0ME=;
-        b=PND02V6c5mkNsAkLk07pOXpP9XvnX4Sdm+ABzlZ1nv0JPQ/kAsdlU0JofrwLRESoPH
-         CJSDhAOJfPNqAeooa7Z4BlQjtvBloG7P9L7W4NK7c3icW41EFX4lohMbM/6TEwtXZQi1
-         SolkrNZGusb9a+Qt2Lk0k+QzLeMnnkBC61PKKgbKW/zug4QUS1Fg00KOrX5Lo2odMTeT
-         3wGJmYZFTq12k2X4iAQMIM9Ca5WBn2xilTCI9Bu8nVxSp+u6jQo2iw0/cjMLoQf0Jt1K
-         /OZGS+ljIeMI1n3j/DJkgTkS7k5+x5pgW+36xpoiPA+zcoZ/w9XChkMf/9rhpcITFlSE
-         l7Ow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=miMLkBCmq91TU9yIA6m0qBL/sLuRcI7EOPQvuCnK0ME=;
-        b=IFaQRpMKoJTw1/PNkYt1wWMwGCwhhnmAAg9tZaGVaJoaHL9sKYX0hP7fv/jR9IDYvN
-         1CN2qZrhpB3tgmd++u+cCyYBmx9jN4LeyoXsT0hJeZFlPEe2n+bQBheRMDqW5NLDpNXW
-         pjpNWj2Cg42QF4JdOvFRc9H36Kd33aV1Ox8tKN7hJHwjCrZvspamyXa1XpTvJ0Zu80ie
-         0coNLMirARZWtLwdrt+X5mEYYj7tNPqbnb8PfBSzGXVBDeWYKWLHsIpHevEXj+1uoahS
-         148R1p7QXLlooPZN33yDwSqtUHjcbHBbFTWdwxy2QqeLUTdq8+bwbr7PuMmYdOZ95CbQ
-         xfcg==
-X-Gm-Message-State: ANhLgQ3gmYdUjzqdOPL7lrERuTEQzJIsLgQdj0oqGlkxoYKw5A8MlYaK
-        n1iNUZTTRIZMCLIK6B7iljXDYA==
-X-Google-Smtp-Source: ADFU+vu6bvfxesOU9AguoQQ2yTyNVmKJCW8oR4oSVQnin4fkXmnK8mlGS93WLKLIinDLJYbIQny60Q==
-X-Received: by 2002:ac8:4659:: with SMTP id f25mr14091414qto.273.1583758668881;
-        Mon, 09 Mar 2020 05:57:48 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id x22sm870587qki.54.2020.03.09.05.57.48
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 09 Mar 2020 05:57:48 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jBHyd-00087L-Pc; Mon, 09 Mar 2020 09:57:47 -0300
-Date:   Mon, 9 Mar 2020 09:57:47 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     syzbot <syzbot+3fbea977bd382a4e6140@syzkaller.appspotmail.com>
-Cc:     bmt@zurich.ibm.com, dledford@redhat.com,
-        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: Re: possible deadlock in siw_create_listen
-Message-ID: <20200309125747.GP31668@ziepe.ca>
-References: <000000000000161ee805a039a49e@google.com>
- <000000000000002a8c05a0600814@google.com>
+        Mon, 9 Mar 2020 08:58:01 -0400
+X-Greylist: delayed 1937 seconds by postgrey-1.27 at vger.kernel.org; Mon, 09 Mar 2020 08:58:00 EDT
+Received: from mail-il1-f172.google.com ([209.85.166.172])
+        by web2.default.djames.uk0.bigv.io with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <chris@64studio.com>)
+        id 1jBHTZ-00019T-Lp; Mon, 09 Mar 2020 12:25:41 +0000
+Received: by mail-il1-f172.google.com with SMTP id o18so8408530ilg.10;
+        Mon, 09 Mar 2020 05:25:41 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ1SxhF1uqV4XljuLOdfF96Q4ow3Q5t+d3pGlFrNWCZp2RiPqpbf
+        DU+HZ0AKTxiBe2l8VIjb0cTkexntvnFJ7Fyd63E=
+X-Google-Smtp-Source: ADFU+vvrP6s95F70KAX+G0iZkhUaLDICZcpMKzCTLzJhjvlacWG0XFUUaMBOD/Ff4COtuy5/V3gYe+1JcR0FTgevcTI=
+X-Received: by 2002:a92:40c2:: with SMTP id d63mr15438368ill.23.1583756740126;
+ Mon, 09 Mar 2020 05:25:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <000000000000002a8c05a0600814@google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200308164840.110747-1-jernej.skrabec@siol.net> <20200308164840.110747-2-jernej.skrabec@siol.net>
+In-Reply-To: <20200308164840.110747-2-jernej.skrabec@siol.net>
+From:   Christopher Obbard <chris@64studio.com>
+Date:   Mon, 9 Mar 2020 12:25:29 +0000
+X-Gmail-Original-Message-ID: <CAP03XerBUbpC-4XL_BFjAwCnR1JT14d=4VwoJUJqzLFDzkFcaQ@mail.gmail.com>
+Message-ID: <CAP03XerBUbpC-4XL_BFjAwCnR1JT14d=4VwoJUJqzLFDzkFcaQ@mail.gmail.com>
+Subject: Re: [linux-sunxi] [PATCH 1/2] arm64: dts: allwinner: h6:
+ orangepi-one-plus: Enable ethernet
+To:     jernej.skrabec@siol.net
+Cc:     mripard@kernel.org, wens@csie.org, robh+dt@kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        mailing list linux-sunxi <linux-sunxi@googlegroups.com>,
+        Marcus Cooper <codekipper@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 08, 2020 at 04:13:15PM -0700, syzbot wrote:
-> syzbot has found a reproducer for the following crash on:
-> 
-> HEAD commit:    425c075d Merge branch 'tun-debug'
-> git tree:       net-next
-> console output: https://syzkaller.appspot.com/x/log.txt?x=1531a0b1e00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=598678fc6e800071
-> dashboard link: https://syzkaller.appspot.com/bug?extid=3fbea977bd382a4e6140
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10e3df31e00000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=163d0439e00000
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+3fbea977bd382a4e6140@syzkaller.appspotmail.com
+Hi Jernej,
 
-#syz test: git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git for-next
+> From: Marcus Cooper <codekipper@gmail.com>
+>
+> OrangePi One Plus has gigabit ethernet. Add nodes for it.
+>
+> Signed-off-by: Marcus Cooper <codekipper@gmail.com>
+> [patch split and commit message]
+> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> ---
+>  .../allwinner/sun50i-h6-orangepi-one-plus.dts | 33 +++++++++++++++++++
+>  1 file changed, 33 insertions(+)
 
-Jason
+Reviewed-by: Christopher Obbard <chris@64studio.com>
+Tested-by: Christopher Obbard <chris@64studio.com>
