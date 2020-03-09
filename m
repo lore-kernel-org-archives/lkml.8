@@ -2,177 +2,143 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 963E9C10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:19:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07802C10F29
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:19:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B141208C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:19:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="sfGPJzrZ"
+	by mail.kernel.org (Postfix) with ESMTP id DDFA6222C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:19:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727546AbgCISTU (ORCPT
+        id S1727571AbgCISTX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 9 Mar 2020 14:19:23 -0400
+Received: from foss.arm.com ([217.140.110.172]:55782 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727543AbgCISTU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 9 Mar 2020 14:19:20 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:57444 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727499AbgCISTR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 14:19:17 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 029IEKrl100776;
-        Mon, 9 Mar 2020 18:19:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=xPy123V3RIz8bxbouiJ3n3qPl+LjqJRf+kLqlw4C0B8=;
- b=sfGPJzrZzR8mXMroGoYe1fP7QadhC3yJQqSPxoLmAtCltAiwYm9MmrgvmY4XhLHaYEr3
- bjw42tY2EH6lqbpAwrmySHAvz79VBwZbZ6EhMez9eag3DNNOJzz3M+FzSZ/LL4Kg1guM
- WGslN8wBq4n6RygI43eJqZHWJ6sVesq+jf8FK70Nc/khYMx51U3+0nvLPGcEsX/WItU6
- D36J8nAcjTHDNVHoUFvtkPM3OeUUmPp74hAiz14FjLU2uiWTh3QAz2aiQSxsBXUlZKis
- YGewl8nBjAxI2oPOqwjvPoR50f1fPYCQpZ4cRuvhwVCxEwGsepaA4Qys8yQa9jB2ohLb 8A== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2ym3jqgswy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 09 Mar 2020 18:19:14 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 029IGm8O095657;
-        Mon, 9 Mar 2020 18:17:13 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 2ymn3gf9g3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 09 Mar 2020 18:17:12 +0000
-Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 029IDW01004007;
-        Mon, 9 Mar 2020 18:13:32 GMT
-Received: from localhost (/10.159.248.213)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 09 Mar 2020 11:13:32 -0700
-Date:   Mon, 9 Mar 2020 11:13:32 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] xfs: clear PF_MEMALLOC before exiting xfsaild thread
-Message-ID: <20200309181332.GJ1752567@magnolia>
-References: <20200309010410.GA371527@sol.localdomain>
- <20200309043430.143206-1-ebiggers@kernel.org>
- <20200309162439.GB8045@magnolia>
- <20200309180452.GA1073@sol.localdomain>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200309180452.GA1073@sol.localdomain>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9555 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- mlxlogscore=716 phishscore=0 spamscore=0 mlxscore=0 bulkscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003090112
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9555 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 clxscore=1015
- priorityscore=1501 mlxscore=0 phishscore=0 mlxlogscore=777 impostorscore=0
- bulkscore=0 spamscore=0 suspectscore=0 lowpriorityscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2003090112
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D350D139F;
+        Mon,  9 Mar 2020 11:19:19 -0700 (PDT)
+Received: from donnerap.arm.com (donnerap.cambridge.arm.com [10.1.197.25])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8518C3F67D;
+        Mon,  9 Mar 2020 11:19:18 -0700 (PDT)
+From:   Andre Przywara <andre.przywara@arm.com>
+To:     "David S . Miller" <davem@davemloft.net>,
+        Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
+Cc:     Michal Simek <michal.simek@xilinx.com>,
+        Robert Hancock <hancock@sedsystems.ca>, netdev@vger.kernel.org,
+        rmk+kernel@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>
+Subject: [PATCH v2 11/14] net: axienet: Wrap DMA pointer writes to prepare for 64 bit
+Date:   Mon,  9 Mar 2020 18:18:48 +0000
+Message-Id: <20200309181851.190164-12-andre.przywara@arm.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200309181851.190164-1-andre.przywara@arm.com>
+References: <20200309181851.190164-1-andre.przywara@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 09, 2020 at 11:04:52AM -0700, Eric Biggers wrote:
-> On Mon, Mar 09, 2020 at 09:24:39AM -0700, Darrick J. Wong wrote:
-> > On Sun, Mar 08, 2020 at 09:34:30PM -0700, Eric Biggers wrote:
-> > > From: Eric Biggers <ebiggers@google.com>
-> > > 
-> > > Leaving PF_MEMALLOC set when exiting a kthread causes it to remain set
-> > > during do_exit().  That can confuse things.  For example, if BSD process
-> > > accounting is enabled and the accounting file has FS_SYNC_FL set and is
-> > > located on an ext4 filesystem without a journal, then do_exit() ends up
-> > > calling ext4_write_inode().  That triggers the
-> > > WARN_ON_ONCE(current->flags & PF_MEMALLOC) there, as it assumes
-> > > (appropriately) that inodes aren't written when allocating memory.
-> > > 
-> > > Fix this in xfsaild() by using the helper functions to save and restore
-> > > PF_MEMALLOC.
-> > > 
-> > > This can be reproduced as follows in the kvm-xfstests test appliance
-> > > modified to add the 'acct' Debian package, and with kvm-xfstests's
-> > > recommended kconfig modified to add CONFIG_BSD_PROCESS_ACCT=y:
-> > > 
-> > > 	mkfs.ext2 -F /dev/vdb
-> > > 	mount /vdb -t ext4
-> > > 	touch /vdb/file
-> > > 	chattr +S /vdb/file
-> > 
-> > Does this trip if the process accounting file is also on an xfs
-> > filesystem?
-> > 
-> > > 	accton /vdb/file
-> > > 	mkfs.xfs -f /dev/vdc
-> > > 	mount /vdc
-> > > 	umount /vdc
-> > 
-> > ...and if so, can this be turned into an fstests case, please?
-> 
-> I wasn't expecting it, but it turns out it does actually trip a similar warning
-> in iomap_do_writepage():
-> 
->         mkfs.xfs -f /dev/vdb
->         mount /vdb
->         touch /vdb/file
->         chattr +S /vdb/file
->         accton /vdb/file
->         mkfs.xfs -f /dev/vdc
->         mount /vdc
->         umount /vdc
-> 
-> causes...
-> 
-> 	WARNING: CPU: 1 PID: 336 at fs/iomap/buffered-io.c:1534
-> 	CPU: 1 PID: 336 Comm: xfsaild/vdc Not tainted 5.6.0-rc5 #3
-> 	Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS ?-20191223_100556-anatol 04/01/2014
-> 	RIP: 0010:iomap_do_writepage+0x16b/0x1f0 fs/iomap/buffered-io.c:1534
-> 	[...]
-> 	Call Trace:
-> 	 write_cache_pages+0x189/0x4d0 mm/page-writeback.c:2238
-> 	 iomap_writepages+0x1c/0x33 fs/iomap/buffered-io.c:1642
-> 	 xfs_vm_writepages+0x65/0x90 fs/xfs/xfs_aops.c:578
-> 	 do_writepages+0x41/0xe0 mm/page-writeback.c:2344
-> 	 __filemap_fdatawrite_range+0xd2/0x120 mm/filemap.c:421
-> 	 file_write_and_wait_range+0x71/0xc0 mm/filemap.c:760
-> 	 xfs_file_fsync+0x7a/0x2b0 fs/xfs/xfs_file.c:114
-> 	 generic_write_sync include/linux/fs.h:2867 [inline]
-> 	 xfs_file_buffered_aio_write+0x379/0x3b0 fs/xfs/xfs_file.c:691
-> 	 call_write_iter include/linux/fs.h:1901 [inline]
-> 	 new_sync_write+0x130/0x1d0 fs/read_write.c:483
-> 	 __kernel_write+0x54/0xe0 fs/read_write.c:515
-> 	 do_acct_process+0x122/0x170 kernel/acct.c:522
-> 	 slow_acct_process kernel/acct.c:581 [inline]
-> 	 acct_process+0x1d4/0x27c kernel/acct.c:607
-> 	 do_exit+0x83d/0xbc0 kernel/exit.c:791
-> 	 kthread+0xf1/0x140 kernel/kthread.c:257
-> 	 ret_from_fork+0x27/0x50 arch/x86/entry/entry_64.S:352
-> 
-> So sure, since it's not necessarily a multi-filesystem thing, I can try to turn
-> it into an xfstest.  There's currently no way to enable BSD process accounting
-> in xfstests though, so we'll either need to make the test depend on the 'acct'
-> program or add a helper test program.
-> 
-> Also, do you want me to update the commit message again, to mention the above
-> case?
+Newer versions of the Xilink DMA IP support busses with more than 32
+address bits, by introducing an MSB word for the registers holding DMA
+pointers (tail/current, RX/TX descriptor addresses).
+On IP configured for more than 32 bits, it is also *required* to write
+both words, to let the IP recognise this as a start condition for an
+MM2S request, for instance.
 
-I think it's worth mentioning that this is a general problem that
-applies any time the process accounting file has that sync flag set,
-since this problem isn't specific to ext4 + xfs.
+Wrap the DMA pointer writes with a separate function, to add this
+functionality later. For now we stick to the lower 32 bits.
 
-(and now I wonder how many other places in the kernel suffer from these
-kinds of file write surprises...)
+Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+---
+ .../net/ethernet/xilinx/xilinx_axienet_main.c | 26 ++++++++++++-------
+ 1 file changed, 16 insertions(+), 10 deletions(-)
 
---D
+diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+index 74cd11d65cd8..ea44ef4cf288 100644
+--- a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
++++ b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+@@ -147,6 +147,12 @@ static inline void axienet_dma_out32(struct axienet_local *lp,
+ 	iowrite32(value, lp->dma_regs + reg);
+ }
+ 
++static void axienet_dma_out_addr(struct axienet_local *lp, off_t reg,
++				 dma_addr_t addr)
++{
++	axienet_dma_out32(lp, reg, lower_32_bits(addr));
++}
++
+ /**
+  * axienet_dma_bd_release - Release buffer descriptor rings
+  * @ndev:	Pointer to the net_device structure
+@@ -285,18 +291,18 @@ static int axienet_dma_bd_init(struct net_device *ndev)
+ 	/* Populate the tail pointer and bring the Rx Axi DMA engine out of
+ 	 * halted state. This will make the Rx side ready for reception.
+ 	 */
+-	axienet_dma_out32(lp, XAXIDMA_RX_CDESC_OFFSET, lp->rx_bd_p);
++	axienet_dma_out_addr(lp, XAXIDMA_RX_CDESC_OFFSET, lp->rx_bd_p);
+ 	cr = axienet_dma_in32(lp, XAXIDMA_RX_CR_OFFSET);
+ 	axienet_dma_out32(lp, XAXIDMA_RX_CR_OFFSET,
+ 			  cr | XAXIDMA_CR_RUNSTOP_MASK);
+-	axienet_dma_out32(lp, XAXIDMA_RX_TDESC_OFFSET, lp->rx_bd_p +
+-			  (sizeof(*lp->rx_bd_v) * (lp->rx_bd_num - 1)));
++	axienet_dma_out_addr(lp, XAXIDMA_RX_TDESC_OFFSET, lp->rx_bd_p +
++			     (sizeof(*lp->rx_bd_v) * (lp->rx_bd_num - 1)));
+ 
+ 	/* Write to the RS (Run-stop) bit in the Tx channel control register.
+ 	 * Tx channel is now ready to run. But only after we write to the
+ 	 * tail pointer register that the Tx channel will start transmitting.
+ 	 */
+-	axienet_dma_out32(lp, XAXIDMA_TX_CDESC_OFFSET, lp->tx_bd_p);
++	axienet_dma_out_addr(lp, XAXIDMA_TX_CDESC_OFFSET, lp->tx_bd_p);
+ 	cr = axienet_dma_in32(lp, XAXIDMA_TX_CR_OFFSET);
+ 	axienet_dma_out32(lp, XAXIDMA_TX_CR_OFFSET,
+ 			  cr | XAXIDMA_CR_RUNSTOP_MASK);
+@@ -754,7 +760,7 @@ axienet_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+ 
+ 	tail_p = lp->tx_bd_p + sizeof(*lp->tx_bd_v) * lp->tx_bd_tail;
+ 	/* Start the transfer */
+-	axienet_dma_out32(lp, XAXIDMA_TX_TDESC_OFFSET, tail_p);
++	axienet_dma_out_addr(lp, XAXIDMA_TX_TDESC_OFFSET, tail_p);
+ 	if (++lp->tx_bd_tail >= lp->tx_bd_num)
+ 		lp->tx_bd_tail = 0;
+ 
+@@ -846,7 +852,7 @@ static void axienet_recv(struct net_device *ndev)
+ 	ndev->stats.rx_bytes += size;
+ 
+ 	if (tail_p)
+-		axienet_dma_out32(lp, XAXIDMA_RX_TDESC_OFFSET, tail_p);
++		axienet_dma_out_addr(lp, XAXIDMA_RX_TDESC_OFFSET, tail_p);
+ }
+ 
+ /**
+@@ -1688,18 +1694,18 @@ static void axienet_dma_err_handler(struct work_struct *work)
+ 	/* Populate the tail pointer and bring the Rx Axi DMA engine out of
+ 	 * halted state. This will make the Rx side ready for reception.
+ 	 */
+-	axienet_dma_out32(lp, XAXIDMA_RX_CDESC_OFFSET, lp->rx_bd_p);
++	axienet_dma_out_addr(lp, XAXIDMA_RX_CDESC_OFFSET, lp->rx_bd_p);
+ 	cr = axienet_dma_in32(lp, XAXIDMA_RX_CR_OFFSET);
+ 	axienet_dma_out32(lp, XAXIDMA_RX_CR_OFFSET,
+ 			  cr | XAXIDMA_CR_RUNSTOP_MASK);
+-	axienet_dma_out32(lp, XAXIDMA_RX_TDESC_OFFSET, lp->rx_bd_p +
+-			  (sizeof(*lp->rx_bd_v) * (lp->rx_bd_num - 1)));
++	axienet_dma_out_addr(lp, XAXIDMA_RX_TDESC_OFFSET, lp->rx_bd_p +
++			     (sizeof(*lp->rx_bd_v) * (lp->rx_bd_num - 1)));
+ 
+ 	/* Write to the RS (Run-stop) bit in the Tx channel control register.
+ 	 * Tx channel is now ready to run. But only after we write to the
+ 	 * tail pointer register that the Tx channel will start transmitting
+ 	 */
+-	axienet_dma_out32(lp, XAXIDMA_TX_CDESC_OFFSET, lp->tx_bd_p);
++	axienet_dma_out_addr(lp, XAXIDMA_TX_CDESC_OFFSET, lp->tx_bd_p);
+ 	cr = axienet_dma_in32(lp, XAXIDMA_TX_CR_OFFSET);
+ 	axienet_dma_out32(lp, XAXIDMA_TX_CR_OFFSET,
+ 			  cr | XAXIDMA_CR_RUNSTOP_MASK);
+-- 
+2.17.1
 
-> - Eric
