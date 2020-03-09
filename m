@@ -2,86 +2,156 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22AABC18E5A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:11:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8770FC10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:12:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E64A920873
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:11:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583777518;
-	bh=g4rrfzjCL4hI6s6dopZcQt/VCDFZg5ds7WQUwVk+JNk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vtQO10jeXi5Ec+BNBPgDWQnJy/eWTH+IUDbXeN/TkzosbMjPOQfQv/Bs1Wj7A0N4E
-	 Xfx0rlBs2VmueNivohLaZiYkeWCNgTzynCEcomhAyL6u7mCTQESB7YAGso6xYHu0bN
-	 +4zIdnyXqm3P7c5N00Nr7yroIFwUZzY+eV3salls=
+	by mail.kernel.org (Postfix) with ESMTP id 6146D20578
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:12:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="UBOITjMP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727380AbgCISL4 (ORCPT
+        id S1727393AbgCISMZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 14:11:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58264 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726169AbgCISL4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 14:11:56 -0400
-Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E71BE20578;
-        Mon,  9 Mar 2020 18:11:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583777516;
-        bh=g4rrfzjCL4hI6s6dopZcQt/VCDFZg5ds7WQUwVk+JNk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=brUnLUwvrCnMEr/yJII2YhYLe6aEfst7VS4X7H8UvrTWQGb82h1uCvWqFA5Gbh1HO
-         zIng1d3UkVO+F7/YioYf50YJn0eFxsn5wRbLdaxddQzcJuOwXuKk6E2Wlrj2liubmM
-         qJZdJCSs9gWk5mnh2e2JiR0NuZCZvMCfkSjyiztM=
-Date:   Mon, 9 Mar 2020 11:11:54 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Alexander Potapenko <glider@google.com>
-Cc:     syzbot <syzbot+af962bf9e7e27bccd025@syzkaller.appspotmail.com>,
-        len.brown@intel.com, LKML <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Subject: Re: KMSAN: uninit-value in snapshot_compat_ioctl
-Message-ID: <20200309181154.GB1073@sol.localdomain>
-References: <000000000000938a57059f7cafe4@google.com>
- <20200307235437.GW15444@sol.localdomain>
- <20200308032434.GX15444@sol.localdomain>
- <CAG_fn=X8UkYx5=3ARUtW3+asc+3tEdeBg=1NKS9VzChSCp33Yg@mail.gmail.com>
+        Mon, 9 Mar 2020 14:12:25 -0400
+Received: from gateway36.websitewelcome.com ([192.185.187.5]:19477 "EHLO
+        gateway36.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726169AbgCISMY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 14:12:24 -0400
+Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
+        by gateway36.websitewelcome.com (Postfix) with ESMTP id 54CC1400C8B41
+        for <linux-kernel@vger.kernel.org>; Mon,  9 Mar 2020 12:27:54 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id BMt6jLEUW8vkBBMt6jE66l; Mon, 09 Mar 2020 13:12:24 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        To:From:Date:Sender:Reply-To:Cc:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=1BqnBgcIZWcdwyXyY58wkKDJ6z4EHF65kFVf0+SX/4w=; b=UBOITjMP3k/jvlJ5kjBGGWr3B2
+        UNwDEomSNJ1MOMY9++ZkkTeJklnYIbdJ1zy8nQPWqN0zaphfLTsZ34VeKesKuT91HzZSLfXZhAcDQ
+        1EMe4Zwm9Is+lH0v5zCAyeVbI4hQYS9rTJRZg8W6OPotRgXi14zAC0wFQPw5tI+zU1umuuPXfDk4O
+        2TW04y1iARAOoepNU96R1v2I8Rh4nCH4W/eyQSTActhVEHDyLZEoYFmZ+JdE83jhi0qCk+w6btzG7
+        2FGFDBTtprjpmE4dkKfoqSNm1KnW3O23zUaNTy2NJ4s0q+kIcFEhttL2j8xWWwlpgIDWxN6YI9Axo
+        Prs3BUjg==;
+Received: from [201.162.240.150] (port=22004 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1jBMt4-004GjZ-D5; Mon, 09 Mar 2020 13:12:23 -0500
+Date:   Mon, 9 Mar 2020 13:15:27 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH][next] isofs: rock.h: Replace zero-length array with
+ flexible-array member
+Message-ID: <20200309181527.GA4134@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAG_fn=X8UkYx5=3ARUtW3+asc+3tEdeBg=1NKS9VzChSCp33Yg@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.162.240.150
+X-Source-L: No
+X-Exim-ID: 1jBMt4-004GjZ-D5
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [201.162.240.150]:22004
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 16
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 09, 2020 at 12:53:28PM +0100, 'Alexander Potapenko' via syzkaller-bugs wrote:
-> > > Looks like a KMSAN false positive?  As far as I can tell, the memory is being
-> > > initialized by put_user() called under set_fs(KERNEL_DS).
-> 
-> Why? put_user() doesn't write to kernel memory, instead it copies a
-> value to the userspace.
-> That's why KMSAN performs kmsan_check_memory() on it.
-> It would actually be better if KMSAN printed an kernel-infoleak warning instead.
+The current codebase makes use of the zero-length array language
+extension to the C90 standard, but the preferred mechanism to declare
+variable-length types such as these ones is a flexible array member[1][2],
+introduced in C99:
 
-When under set_fs(KERNEL_DS), the userspace access functions like put_user() and
-copy_to_user() can write to kernel memory.  It's discouraged and people have
-been trying to get rid of uses of set_fs(), but a lot still remain, since
-sometimes it's useful to allow code to operate on both user and kernel memory.
-A common example is kernel_read().
+struct foo {
+        int stuff;
+        struct boo array[];
+};
 
-> 
-> > Although, it also looks like the problematic code can just be removed, since
-> > always sizeof(compat_loff_t) == sizeof(loff_t).  I'll send a patch to do that...
-> 
-> Thanks!
-> 
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertently introduced[3] to the codebase from now on.
 
-- Eric
+Also, notice that, dynamic memory allocations won't be affected by
+this change:
+
+"Flexible array members have incomplete type, and so the sizeof operator
+may not be applied. As a quirk of the original implementation of
+zero-length arrays, sizeof evaluates to zero."[1]
+
+This issue was found with the help of Coccinelle.
+
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[2] https://github.com/KSPP/linux/issues/21
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ fs/isofs/rock.h | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/fs/isofs/rock.h b/fs/isofs/rock.h
+index 1558cf22ef8a..ee9660e9671c 100644
+--- a/fs/isofs/rock.h
++++ b/fs/isofs/rock.h
+@@ -22,7 +22,7 @@ struct SU_ER_s {
+ 	__u8 len_des;
+ 	__u8 len_src;
+ 	__u8 ext_ver;
+-	__u8 data[0];
++	__u8 data[];
+ } __attribute__ ((packed));
+ 
+ struct RR_RR_s {
+@@ -44,7 +44,7 @@ struct RR_PN_s {
+ struct SL_component {
+ 	__u8 flags;
+ 	__u8 len;
+-	__u8 text[0];
++	__u8 text[];
+ } __attribute__ ((packed));
+ 
+ struct RR_SL_s {
+@@ -54,7 +54,7 @@ struct RR_SL_s {
+ 
+ struct RR_NM_s {
+ 	__u8 flags;
+-	char name[0];
++	char name[];
+ } __attribute__ ((packed));
+ 
+ struct RR_CL_s {
+@@ -71,7 +71,7 @@ struct stamp {
+ 
+ struct RR_TF_s {
+ 	__u8 flags;
+-	struct stamp times[0];	/* Variable number of these beasts */
++	struct stamp times[];	/* Variable number of these beasts */
+ } __attribute__ ((packed));
+ 
+ /* Linux-specific extension for transparent decompression */
+-- 
+2.25.0
+
