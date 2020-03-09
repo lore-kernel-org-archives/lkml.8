@@ -2,109 +2,295 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8819C18E5B
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:08:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C07AC18E5A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:08:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FDB020674
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:08:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37D5620674
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:08:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lb76EOjr"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="boKSTWdF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726556AbgCIJIG (ORCPT
+        id S1726567AbgCIJIi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 05:08:06 -0400
-Received: from mail-pj1-f45.google.com ([209.85.216.45]:55158 "EHLO
-        mail-pj1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726501AbgCIJIG (ORCPT
+        Mon, 9 Mar 2020 05:08:38 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:20522 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726027AbgCIJIh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 05:08:06 -0400
-Received: by mail-pj1-f45.google.com with SMTP id np16so4088164pjb.4
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 02:08:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Zn5cohc9+dV+bc+jr0Y3IxVaSp3atkPAhci1ZiQCOiE=;
-        b=lb76EOjrQJ2kmq2xRlbXLyDCaHjzcbZRLgkdY5Gnb4qTOS++wMphzDSsoXFT5w+EFT
-         Uz+HZ10OCpASqR6vDFKkpvPRUsfD3TaSSpkbl2KX/Sbifvg9Yrfc4uP6qqexi8OB8obE
-         FArxbS5v3MTQCSAO6tQIHpfrO3Hicd4Kw4FoA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Zn5cohc9+dV+bc+jr0Y3IxVaSp3atkPAhci1ZiQCOiE=;
-        b=cIP5Sq2iQyXEsvil9LNpD00Y8YH8tGj4uZYVrBG6Xu3K/dlFeA1J7AOxhd5y9kPKWM
-         vQVwGhpH6cr0qRwTSl74sNjdN7HEj8y3SjoIRQsdymf1L66/fjkc+oEoUPgPK2SscT1Q
-         HhV8lXrSkA0iek8LBV1ZfEWZtz5GULFXjg3+WRHzvK/vxGk+P9Tz8dj3EPG2/t9iOkzN
-         AKolyGBtqAQDqJiZ4cBKhAxx7a44n8Wr5KJgbKgTFZAtf2I2Rj9An1VyUg+rl7qKpuJH
-         DASc5dhzTqp2eDAQASz+s03PFRs6vYqHaPXIw41CDAdEJN8TuLsgChqaGfy2WxCYaRsg
-         1KGQ==
-X-Gm-Message-State: ANhLgQ2QV2c/nCOOB2NpGxPrRC92Jae2fz8yzkRquQkHeqWPySWkb4Lx
-        48UcPWmQN0MppHtT0zRa3No2Tw==
-X-Google-Smtp-Source: ADFU+vv0zF7N2cmYA5X/gp1rv27g/hBfgjCfbp21zaZtDnFG9hJlIvEUCyJpYWMqejwNtOCrkdPgwA==
-X-Received: by 2002:a17:90a:5d88:: with SMTP id t8mr17937901pji.120.1583744885055;
-        Mon, 09 Mar 2020 02:08:05 -0700 (PDT)
-Received: from localhost ([2401:fa00:8f:203:5bbb:c872:f2b1:f53b])
-        by smtp.gmail.com with ESMTPSA id e3sm12252590pgm.15.2020.03.09.02.08.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Mar 2020 02:08:04 -0700 (PDT)
-Date:   Mon, 9 Mar 2020 18:08:02 +0900
-From:   Sergey Senozhatsky <senozhatsky@chromium.org>
-To:     Tomasz Figa <tfiga@chromium.org>
-Cc:     Hans Verkuil <hverkuil@xs4all.nl>,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Pawel Osciak <posciak@chromium.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Subject: Re: [PATCHv4 01/11] videobuf2: add cache management members
-Message-ID: <20200309090802.GA231920@google.com>
-References: <17060663-9c30-de5e-da58-0c847b93e4d3@xs4all.nl>
- <20200307094634.GB29464@google.com>
- <6f5916dd-63f6-5d19-13f4-edd523205a1f@xs4all.nl>
- <20200307112838.GA125961@google.com>
- <a4d85ac3-0eea-bc19-cd44-0c8f5b71f6bc@xs4all.nl>
- <20200309032707.GA9460@google.com>
- <40cd09d9-49a6-2159-3c50-825732151221@xs4all.nl>
- <20200309072526.GC46830@google.com>
- <e31197b6-5d22-0c3a-cc77-e9506136ada5@xs4all.nl>
- <CAAFQd5Ajopb019HZmtNJfDZmZbssDHfztmT0BvAD07QttXmZ1g@mail.gmail.com>
+        Mon, 9 Mar 2020 05:08:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583744916;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=ui+vsM4EZA4C9qRbwqzArF2Gu3IiffJ8PyjzfQECUJA=;
+        b=boKSTWdFJl8Y3COPCvEp4Ct8+oz81+NJM2rektMLxRWVrXr1YV3n2941LNsMIiyOb7msBZ
+        L96WbWMxJVD8OtOLo77uoRS3LILddD7ZbimbLU85KNs1M+B/NmyeKayiFvn+8NA2Vd7hjx
+        V0yxK2XIyPPgH4IQgG5d2LW85DKLn/o=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-104-kyfYlm2IN0af0D1PIcaoSQ-1; Mon, 09 Mar 2020 05:08:34 -0400
+X-MC-Unique: kyfYlm2IN0af0D1PIcaoSQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3DC008017CC;
+        Mon,  9 Mar 2020 09:08:33 +0000 (UTC)
+Received: from [10.36.118.32] (unknown [10.36.118.32])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9CB047386B;
+        Mon,  9 Mar 2020 09:08:29 +0000 (UTC)
+Subject: Re: [PATCH v3 6/7] mm/sparse.c: move subsection_map related codes
+ together
+To:     Baoquan He <bhe@redhat.com>, linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, akpm@linux-foundation.org, mhocko@suse.com,
+        richardw.yang@linux.intel.com, dan.j.williams@intel.com,
+        osalvador@suse.de, rppt@linux.ibm.com
+References: <20200307084229.28251-1-bhe@redhat.com>
+ <20200307084229.28251-7-bhe@redhat.com>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <8462ca2b-822f-52c0-5986-93377d252fac@redhat.com>
+Date:   Mon, 9 Mar 2020 10:08:27 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAAFQd5Ajopb019HZmtNJfDZmZbssDHfztmT0BvAD07QttXmZ1g@mail.gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20200307084229.28251-7-bhe@redhat.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (20/03/09 17:58), Tomasz Figa wrote:
-[..]
-> > > I see. Hmm, how do I do "test that V4L2_BUF_CAP_SUPPORTS_CACHE_HINTS
-> > > is never set" then?
-> >
-> > Not sure I understand your question. When requesting buffers for non-MMAP memory,
-> > this capability must never be returned. That has nothing to do with a cache_hints
-> > module option.
->
-> Have we decided that we explicitly don't want to support this for
-> USERPTR memory, even though technically possible and without much
-> extra code needed?
+On 07.03.20 09:42, Baoquan He wrote:
+> No functional change.
+> 
+> Signed-off-by: Baoquan He <bhe@redhat.com>
+> ---
+>  mm/sparse.c | 134 +++++++++++++++++++++++++---------------------------
+>  1 file changed, 65 insertions(+), 69 deletions(-)
+> 
+> diff --git a/mm/sparse.c b/mm/sparse.c
+> index 0fbd79c4ad81..fde651ab8741 100644
+> --- a/mm/sparse.c
+> +++ b/mm/sparse.c
+> @@ -244,10 +244,75 @@ void __init subsection_map_init(unsigned long pfn, unsigned long nr_pages)
+>  		nr_pages -= pfns;
+>  	}
+>  }
+> +
+> +static int clear_subsection_map(unsigned long pfn, unsigned long nr_pages)
+> +{
+> +	DECLARE_BITMAP(map, SUBSECTIONS_PER_SECTION) = { 0 };
+> +	DECLARE_BITMAP(tmp, SUBSECTIONS_PER_SECTION) = { 0 };
+> +	struct mem_section *ms = __pfn_to_section(pfn);
+> +	unsigned long *subsection_map = ms->usage
+> +		? &ms->usage->subsection_map[0] : NULL;
+> +
+> +	subsection_mask_set(map, pfn, nr_pages);
+> +	if (subsection_map)
+> +		bitmap_and(tmp, map, subsection_map, SUBSECTIONS_PER_SECTION);
+> +
+> +	if (WARN(!subsection_map || !bitmap_equal(tmp, map, SUBSECTIONS_PER_SECTION),
+> +				"section already deactivated (%#lx + %ld)\n",
+> +				pfn, nr_pages))
+> +		return -EINVAL;
+> +
+> +	bitmap_xor(subsection_map, map, subsection_map, SUBSECTIONS_PER_SECTION);
+> +
+> +	return 0;
+> +}
+> +
+> +static bool is_subsection_map_empty(struct mem_section *ms)
+> +{
+> +	return bitmap_empty(&ms->usage->subsection_map[0],
+> +			    SUBSECTIONS_PER_SECTION);
+> +}
+> +
+> +static int fill_subsection_map(unsigned long pfn, unsigned long nr_pages)
+> +{
+> +	struct mem_section *ms = __pfn_to_section(pfn);
+> +	DECLARE_BITMAP(map, SUBSECTIONS_PER_SECTION) = { 0 };
+> +	unsigned long *subsection_map;
+> +	int rc = 0;
+> +
+> +	subsection_mask_set(map, pfn, nr_pages);
+> +
+> +	subsection_map = &ms->usage->subsection_map[0];
+> +
+> +	if (bitmap_empty(map, SUBSECTIONS_PER_SECTION))
+> +		rc = -EINVAL;
+> +	else if (bitmap_intersects(map, subsection_map, SUBSECTIONS_PER_SECTION))
+> +		rc = -EEXIST;
+> +	else
+> +		bitmap_or(subsection_map, map, subsection_map,
+> +				SUBSECTIONS_PER_SECTION);
+> +
+> +	return rc;
+> +}
+>  #else
+>  void __init subsection_map_init(unsigned long pfn, unsigned long nr_pages)
+>  {
+>  }
+> +
+> +static int clear_subsection_map(unsigned long pfn, unsigned long nr_pages)
+> +{
+> +	return 0;
+> +}
+> +
+> +static bool is_subsection_map_empty(struct mem_section *ms)
+> +{
+> +	return true;
+> +}
+> +
+> +static int fill_subsection_map(unsigned long pfn, unsigned long nr_pages)
+> +{
+> +	return 0;
+> +}
+>  #endif
+>  
+>  /* Record a memory area against a node. */
+> @@ -732,46 +797,6 @@ static void free_map_bootmem(struct page *memmap)
+>  }
+>  #endif /* CONFIG_SPARSEMEM_VMEMMAP */
+>  
+> -#ifdef CONFIG_SPARSEMEM_VMEMMAP
+> -static int clear_subsection_map(unsigned long pfn, unsigned long nr_pages)
+> -{
+> -	DECLARE_BITMAP(map, SUBSECTIONS_PER_SECTION) = { 0 };
+> -	DECLARE_BITMAP(tmp, SUBSECTIONS_PER_SECTION) = { 0 };
+> -	struct mem_section *ms = __pfn_to_section(pfn);
+> -	unsigned long *subsection_map = ms->usage
+> -		? &ms->usage->subsection_map[0] : NULL;
+> -
+> -	subsection_mask_set(map, pfn, nr_pages);
+> -	if (subsection_map)
+> -		bitmap_and(tmp, map, subsection_map, SUBSECTIONS_PER_SECTION);
+> -
+> -	if (WARN(!subsection_map || !bitmap_equal(tmp, map, SUBSECTIONS_PER_SECTION),
+> -				"section already deactivated (%#lx + %ld)\n",
+> -				pfn, nr_pages))
+> -		return -EINVAL;
+> -
+> -	bitmap_xor(subsection_map, map, subsection_map, SUBSECTIONS_PER_SECTION);
+> -
+> -	return 0;
+> -}
+> -
+> -static bool is_subsection_map_empty(struct mem_section *ms)
+> -{
+> -	return bitmap_empty(&ms->usage->subsection_map[0],
+> -			    SUBSECTIONS_PER_SECTION);
+> -}
+> -#else
+> -static int clear_subsection_map(unsigned long pfn, unsigned long nr_pages)
+> -{
+> -	return 0;
+> -}
+> -
+> -static bool is_subsection_map_empty(struct mem_section *ms)
+> -{
+> -	return true;
+> -}
+> -#endif
+> -
+>  /*
+>   * To deactivate a memory region, there are 3 cases to handle across
+>   * two configurations (SPARSEMEM_VMEMMAP={y,n}):
+> @@ -826,35 +851,6 @@ static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
+>  		ms->section_mem_map = (unsigned long)NULL;
+>  }
+>  
+> -#ifdef CONFIG_SPARSEMEM_VMEMMAP
+> -static int fill_subsection_map(unsigned long pfn, unsigned long nr_pages)
+> -{
+> -	struct mem_section *ms = __pfn_to_section(pfn);
+> -	DECLARE_BITMAP(map, SUBSECTIONS_PER_SECTION) = { 0 };
+> -	unsigned long *subsection_map;
+> -	int rc = 0;
+> -
+> -	subsection_mask_set(map, pfn, nr_pages);
+> -
+> -	subsection_map = &ms->usage->subsection_map[0];
+> -
+> -	if (bitmap_empty(map, SUBSECTIONS_PER_SECTION))
+> -		rc = -EINVAL;
+> -	else if (bitmap_intersects(map, subsection_map, SUBSECTIONS_PER_SECTION))
+> -		rc = -EEXIST;
+> -	else
+> -		bitmap_or(subsection_map, map, subsection_map,
+> -				SUBSECTIONS_PER_SECTION);
+> -
+> -	return rc;
+> -}
+> -#else
+> -static int fill_subsection_map(unsigned long pfn, unsigned long nr_pages)
+> -{
+> -	return 0;
+> -}
+> -#endif
+> -
+>  static struct page * __meminit section_activate(int nid, unsigned long pfn,
+>  		unsigned long nr_pages, struct vmem_altmap *altmap)
+>  {
+> 
 
-My irrelevant 5 cents (sorry), I'd probably prefer to land MMAP
-first + test drivers patches + v4l-util patches. The effort
-required to land this is getting bigger.
+IMHO, we don't need this patch - but just my personal opinion. Change
+itself looks good on a quick glance.
 
-	-ss
+-- 
+Thanks,
+
+David / dhildenb
+
