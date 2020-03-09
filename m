@@ -2,81 +2,168 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5400EC10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:39:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1209DC10F29
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:43:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DC4020866
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:39:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBDE520727
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:43:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vXkFRFdz"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Yt3uC7cs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726383AbgCIJjZ (ORCPT
+        id S1726463AbgCIJnm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 05:39:25 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:42051 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725956AbgCIJjZ (ORCPT
+        Mon, 9 Mar 2020 05:43:42 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:43046 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725962AbgCIJnl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 05:39:25 -0400
-Received: by mail-lj1-f193.google.com with SMTP id q19so9156710ljp.9
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 02:39:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GWafhgkHqGjhRe8y+m1pE0quFmlowBtOnAE/oPWGyN0=;
-        b=vXkFRFdzlpOZtT+31ydgd9FX6Z1Zvo7ZtEaYUUUUW+uBV0RVnItMZc3YcFbcE7StgI
-         vFAu7B5k5ORVKbJJlmV5EaSIhBSm06bToQPWxW2sw0hcVM+qy6K+yhMcZaQzIacJvJnk
-         me07kNBcAGV55Bm1xfEIxflpbzWiBrTxe/u04FpXKoHPfK+iddC/bwDnFI2tr0SQIOyd
-         iElasMAdPOJOJjbiD8Df9etU+Xl/hIVTSSAN4OFehXJBCj5AukvJdc+mEHgduzN6ckSU
-         pA9oabtckEopSKnlebbTUOLNLAse71uhJXUJks5a8jE7XQC1qt36yei5GNrrB10bz5C7
-         UIvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GWafhgkHqGjhRe8y+m1pE0quFmlowBtOnAE/oPWGyN0=;
-        b=dmO66drECLc5H4Yw6bfHqQhO5xCgK/dfqcLaLoCQ13H1p6+A7nm9r882HwNf1m604D
-         Rd4UqTQN8rPvWehGAb7GPgaqNNb4NNhrGkzv22HwFvbcsJlrmQTpciLZUo9Aq4ekvV+W
-         xUAN+dFyepuwo9ObO/a8L7Yzpd5KU7PAKW1ybzc0N8ct8iKJrCmczzvQNfqm9RZ0iYrZ
-         Xr9ooyZWTsTCMOxcDTu47v5w/LmtS14tY2tKDkNZ+9Fkc9F6L69x11AB9hj4P0T2mbp0
-         gRoDR4w08E7LwQmwGejVbjRBlaFtRBBnbkxKmmIFBBhEhGIqxfO0WFD9BBXTSoA5WqV9
-         9xjQ==
-X-Gm-Message-State: ANhLgQ3GvTzCPHCl3DznahliNPN6Mmr2EVwnSJJEQbRXP6L2SXhrV3IL
-        mph19EMZ4AcA1G2nD7hTRjqMA/V/AUZ3X5807gCpWg==
-X-Google-Smtp-Source: ADFU+vu6HqaH4j3SJuv247SDzYUyvCKTi4MauowZ3Ck69fFNO8x9HHykET10xqulLd8bodNOiiPts9wgXPa49Wa6eH0=
-X-Received: by 2002:a2e:894d:: with SMTP id b13mr8156479ljk.99.1583746761788;
- Mon, 09 Mar 2020 02:39:21 -0700 (PDT)
+        Mon, 9 Mar 2020 05:43:41 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0299hQi3050123;
+        Mon, 9 Mar 2020 04:43:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1583747006;
+        bh=RzlZesRpFJqS5mJhJut0NkSOELlsfKSMiUyjJ8TsFEc=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=Yt3uC7csFiagxt6uf3UP+yZDR/6dzb6qTY1gjp9YIsfRn7pkJmn2Y0c91Y+24gbdD
+         RNskelBfK//xg3/y4hfTAeUubV6WlzKJJC+z6jWuJfKvUJyH9P/i3K3f5O5Lr5viGE
+         amIoYITMXbruK0ayWo+/DSiveJkkP32spU5njSmI=
+Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0299hQi5019087
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 9 Mar 2020 04:43:26 -0500
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 9 Mar
+ 2020 04:43:26 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 9 Mar 2020 04:43:26 -0500
+Received: from [192.168.2.14] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0299hN6X114936;
+        Mon, 9 Mar 2020 04:43:23 -0500
+Subject: Re: [PATCH] ARM: OMAP: DTS: N900: fix onenand timings
+To:     Arthur Demchenkov <spinal.by@gmail.com>
+CC:     =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Ladislav Michl <ladis@linux-mips.org>,
+        <linux-omap@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200308191934.8263-1-spinal.by@gmail.com>
+From:   Roger Quadros <rogerq@ti.com>
+Message-ID: <abd076bf-20aa-c981-bf4f-7bdf10ec58d1@ti.com>
+Date:   Mon, 9 Mar 2020 11:43:22 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200306010101.39517-1-alexandre.belloni@bootlin.com>
-In-Reply-To: <20200306010101.39517-1-alexandre.belloni@bootlin.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 9 Mar 2020 10:39:10 +0100
-Message-ID: <CACRpkdZ_GdA=37mng6OBA=9JAVGxesAJF2_DeYBOzJy3Y1UvDg@mail.gmail.com>
-Subject: Re: [PATCH] rtc: ab8500: switch to rtc_time64_to_tm/rtc_tm_to_time64
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     Alessandro Zummo <a.zummo@towertech.it>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-rtc@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200308191934.8263-1-spinal.by@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 6, 2020 at 2:01 AM Alexandre Belloni
-<alexandre.belloni@bootlin.com> wrote:
 
-> Call the 64bit versions of rtc_tm time conversion.
->
-> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+On 08/03/2020 21:19, Arthur Demchenkov wrote:
+> Commit a758f50f10cf ("mtd: onenand: omap2: Configure driver from DT")
+> started using DT specified timings for GPMC, and as a result the
+> OneNAND stopped working on N900 as we had wrong values in the DT.
+> Fix by updating the values to bootloader timings that have been tested
+> to be working on Nokia N900 with OneNAND manufacturers: Samsung,
+> Numonyx.
+> 
+> Fixes: a758f50f10cf ("mtd: onenand: omap2: Configure driver from DT")
+> Signed-off-by: Arthur Demchenkov <spinal.by@gmail.com>
 
-Yours,
-Linus Walleij
+Reviewed-by: Roger Quadros <rogerq@ti.com>
+
+> ---
+>   arch/arm/boot/dts/omap3-n900.dts | 44 +++++++++++++++++++++++++---------------
+>   1 file changed, 28 insertions(+), 16 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/omap3-n900.dts b/arch/arm/boot/dts/omap3-n900.dts
+> index c3c6d7d04a76..4089d97405c9 100644
+> --- a/arch/arm/boot/dts/omap3-n900.dts
+> +++ b/arch/arm/boot/dts/omap3-n900.dts
+> @@ -854,34 +854,46 @@
+>   		compatible = "ti,omap2-onenand";
+>   		reg = <0 0 0x20000>;	/* CS0, offset 0, IO size 128K */
+>   
+> +		/*
+> +		 * These timings are based on CONFIG_OMAP_GPMC_DEBUG=y reported
+> +		 * bootloader set values when booted with v5.1
+> +		 * (OneNAND Manufacturer: Samsung):
+> +		 *
+> +		 *   cs0 GPMC_CS_CONFIG1: 0xfb001202
+> +		 *   cs0 GPMC_CS_CONFIG2: 0x00111100
+> +		 *   cs0 GPMC_CS_CONFIG3: 0x00020200
+> +		 *   cs0 GPMC_CS_CONFIG4: 0x11001102
+> +		 *   cs0 GPMC_CS_CONFIG5: 0x03101616
+> +		 *   cs0 GPMC_CS_CONFIG6: 0x90060000
+> +		 */
+>   		gpmc,sync-read;
+>   		gpmc,sync-write;
+>   		gpmc,burst-length = <16>;
+>   		gpmc,burst-read;
+>   		gpmc,burst-wrap;
+>   		gpmc,burst-write;
+> -		gpmc,device-width = <2>; /* GPMC_DEVWIDTH_16BIT */
+> -		gpmc,mux-add-data = <2>; /* GPMC_MUX_AD */
+> +		gpmc,device-width = <2>;
+> +		gpmc,mux-add-data = <2>;
+>   		gpmc,cs-on-ns = <0>;
+> -		gpmc,cs-rd-off-ns = <87>;
+> -		gpmc,cs-wr-off-ns = <87>;
+> +		gpmc,cs-rd-off-ns = <102>;
+> +		gpmc,cs-wr-off-ns = <102>;
+>   		gpmc,adv-on-ns = <0>;
+> -		gpmc,adv-rd-off-ns = <10>;
+> -		gpmc,adv-wr-off-ns = <10>;
+> -		gpmc,oe-on-ns = <15>;
+> -		gpmc,oe-off-ns = <87>;
+> +		gpmc,adv-rd-off-ns = <12>;
+> +		gpmc,adv-wr-off-ns = <12>;
+> +		gpmc,oe-on-ns = <12>;
+> +		gpmc,oe-off-ns = <102>;
+>   		gpmc,we-on-ns = <0>;
+> -		gpmc,we-off-ns = <87>;
+> -		gpmc,rd-cycle-ns = <112>;
+> -		gpmc,wr-cycle-ns = <112>;
+> -		gpmc,access-ns = <81>;
+> -		gpmc,page-burst-access-ns = <15>;
+> +		gpmc,we-off-ns = <102>;
+> +		gpmc,rd-cycle-ns = <132>;
+> +		gpmc,wr-cycle-ns = <132>;
+> +		gpmc,access-ns = <96>;
+> +		gpmc,page-burst-access-ns = <18>;
+>   		gpmc,bus-turnaround-ns = <0>;
+>   		gpmc,cycle2cycle-delay-ns = <0>;
+>   		gpmc,wait-monitoring-ns = <0>;
+> -		gpmc,clk-activation-ns = <5>;
+> -		gpmc,wr-data-mux-bus-ns = <30>;
+> -		gpmc,wr-access-ns = <81>;
+> +		gpmc,clk-activation-ns = <6>;
+> +		gpmc,wr-data-mux-bus-ns = <36>;
+> +		gpmc,wr-access-ns = <96>;
+>   		gpmc,sync-clk-ps = <15000>;
+>   
+>   		/*
+> 
+
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
