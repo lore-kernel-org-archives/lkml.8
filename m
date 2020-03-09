@@ -2,72 +2,105 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9021BC10F25
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:31:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A079AC10F25
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:33:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64B792465A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:31:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 879582465A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:33:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726442AbgCITbv (ORCPT
+        id S1726378AbgCITdh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 15:31:51 -0400
-Received: from smtprelay0221.hostedemail.com ([216.40.44.221]:48014 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726106AbgCITbv (ORCPT
+        Mon, 9 Mar 2020 15:33:37 -0400
+Received: from vmicros1.altlinux.org ([194.107.17.57]:50988 "EHLO
+        vmicros1.altlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726115AbgCITdh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 15:31:51 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay01.hostedemail.com (Postfix) with ESMTP id D9FB01025604F;
-        Mon,  9 Mar 2020 19:31:49 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: desk11_2ce8ed604532a
-X-Filterd-Recvd-Size: 1434
-Received: from XPS-9350.home (unknown [47.151.143.254])
-        (Authenticated sender: joe@perches.com)
-        by omf15.hostedemail.com (Postfix) with ESMTPA;
-        Mon,  9 Mar 2020 19:31:48 +0000 (UTC)
-Message-ID: <19abedb11fae1b96aa052090e7a0d5bbea416824.camel@perches.com>
-Subject: Re: [PATCH] xattr: NULL initialize name in simple_xattr_alloc
-From:   Joe Perches <joe@perches.com>
-To:     Daniel Xu <dxu@dxuuu.xyz>, viro@zeniv.linux.org.uk,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     kernel-team@fb.com
-Date:   Mon, 09 Mar 2020 12:30:07 -0700
-In-Reply-To: <20200309183719.3451-1-dxu@dxuuu.xyz>
-References: <20200309183719.3451-1-dxu@dxuuu.xyz>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Mon, 9 Mar 2020 15:33:37 -0400
+Received: from mua.local.altlinux.org (mua.local.altlinux.org [192.168.1.14])
+        by vmicros1.altlinux.org (Postfix) with ESMTP id 7101872CCE7;
+        Mon,  9 Mar 2020 22:33:33 +0300 (MSK)
+Received: by mua.local.altlinux.org (Postfix, from userid 508)
+        id 2DD3B7CC7FF; Mon,  9 Mar 2020 22:33:33 +0300 (MSK)
+Date:   Mon, 9 Mar 2020 22:33:33 +0300
+From:   "Dmitry V. Levin" <ldv@altlinux.org>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Andrei Vagin <avagin@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Yuyang Du <duyuyang@gmail.com>,
+        David Hildenbrand <david@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        David Howells <dhowells@redhat.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christian Kellner <christian@kellner.me>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>
+Subject: Re: [PATCH v2 5/5] exec: Add a exec_update_mutex to replace
+ cred_guard_mutex
+Message-ID: <20200309193332.GA13534@altlinux.org>
+References: <87v9ne5y4y.fsf_-_@x220.int.ebiederm.org>
+ <87zhcq4jdj.fsf_-_@x220.int.ebiederm.org>
+ <AM6PR03MB5170BC58D90BAD80CDEF3F8BE4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <878sk94eay.fsf@x220.int.ebiederm.org>
+ <AM6PR03MB517086003BD2C32E199690A3E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87r1y12yc7.fsf@x220.int.ebiederm.org>
+ <87k13t2xpd.fsf@x220.int.ebiederm.org>
+ <87d09l2x5n.fsf@x220.int.ebiederm.org>
+ <AM6PR03MB5170F0F9DC18F5EA77C9A857E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <871rq12vxu.fsf@x220.int.ebiederm.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <871rq12vxu.fsf@x220.int.ebiederm.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-03-09 at 11:37 -0700, Daniel Xu wrote:
-> It's preferable to initialize structs to a deterministic state.
-
-Thanks Daniel.
-
-> Signed-off-by: Daniel Xu <dxu@dxuuu.xyz>
-> ---
->  fs/xattr.c | 1 +
->  1 file changed, 1 insertion(+)
+On Mon, Mar 09, 2020 at 02:02:37PM -0500, Eric W. Biederman wrote:
+> Bernd Edlinger <bernd.edlinger@hotmail.de> writes:
 > 
-> diff --git a/fs/xattr.c b/fs/xattr.c
-> index 90dd78f0eb27..92b324c265d2 100644
-> --- a/fs/xattr.c
-> +++ b/fs/xattr.c
-> @@ -821,6 +821,7 @@ struct simple_xattr *simple_xattr_alloc(const void *value, size_t size)
->  	if (!new_xattr)
->  		return NULL;
->  
-> +	new_xattr->name = NULL;
->  	new_xattr->size = size;
->  	memcpy(new_xattr->value, value, size);
->  	return new_xattr;
+> > On 3/9/20 7:36 PM, Eric W. Biederman wrote:
+> >> 
+> >> 
+> >> Does that sound better?
+> >> 
+> >
+> > almost done.
+> 
+> I think this text is finally clean.
+> 
+>     exec: Add exec_update_mutex to replace cred_guard_mutex
+>     
+>     The cred_guard_mutex is problematic as it is held over possibly
+>     indefinite waits for userspace.  The possilbe indefinite waits for
 
+-------------------------------------------^^^^^^^^ possible?
+
+
+-- 
+ldv
