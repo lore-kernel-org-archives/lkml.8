@@ -4,42 +4,42 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 006C7C10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 08:36:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02A30C10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 08:36:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C34D92072A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 08:36:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF9062072A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 08:36:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="GhfM+gEP"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="B+6fx6mp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726533AbgCIIgq (ORCPT
+        id S1726632AbgCIIgz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 04:36:46 -0400
-Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:42380 "EHLO
+        Mon, 9 Mar 2020 04:36:55 -0400
+Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:42518 "EHLO
         smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725962AbgCIIgp (ORCPT
+        by vger.kernel.org with ESMTP id S1726449AbgCIIgq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 04:36:45 -0400
+        Mon, 9 Mar 2020 04:36:46 -0400
 Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 240C8C04CC;
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 0BE24C04C9;
         Mon,  9 Mar 2020 08:36:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1583743004; bh=PJxQQe6LRMVQ+GUC/YIJKHseFjn16R2owaP2nQ3enlM=;
+        t=1583743005; bh=l4GGId4B8ITZnEheuBbnHxTOMeyOh89oiemUVnP91n4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=GhfM+gEPE2rdDpD6uK0VCQrjK3vv52i/xumuZHUkiNNCG0ML/JJ4/Szovod8HE9am
-         sXxNNoUIxPiHX7lc3Ew1DbNopkuMp4GhDk7FvKRZUrHUpiFwvRykMaROW819jxGI5F
-         eULcHeUGtwYFPyjSxXxk5uYf1Vr7foGt6SDuibdBz3jVaMVgEYA3Mig/4eitogSSUk
-         fcP7HT7nKC3kXZMV4O9/TLzfGqwDnFBz6CrieRBUDbt39LLEu1JLe/YgiYG/WOSXrR
-         vVr+lRXWSNnVgDOWepkk8vYXgcqVbkL1G2jaosGQbAXWUc/k/TLMvVNHvkqMFo48Kz
-         JjAZSW3w0BvhA==
+        b=B+6fx6mpT48iBw+hv1r49pCI4sDvO0ntudaH96Ju2bucqI2sISfbhq9UK6ipq74ro
+         /9ho3uv6t+uNhyhNNw8zFG0ao9C0loxXG6IJaeyQtSBnaJZ9hJkfwRDIBU1eGwv2pO
+         Izl3i+Qls8rLIddtLQPz/ZhwkYsER3iQb6PnTsKZqgaLnHprNKellxK+XHh9UURhBO
+         /VF/UvIMrCmxqEy7n8skzKOvpS/XvT9QtPNeLeUySJInolU8B64evWfdDlSmkkbc4o
+         RJMs64BpjrEjiKeDOFEzE3nFKGBNMLNFVCki8bcJ5fTmZpRQcC1N1y0AXCIsret235
+         j4166sK961YwQ==
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 36F02A005E;
+        by mailhost.synopsys.com (Postfix) with ESMTP id 676CAA0075;
         Mon,  9 Mar 2020 08:36:41 +0000 (UTC)
 From:   Jose Abreu <Jose.Abreu@synopsys.com>
 To:     netdev@vger.kernel.org
@@ -57,9 +57,9 @@ Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
         Heiner Kallweit <hkallweit1@gmail.com>,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net-next 1/8] net: stmmac: selftests: Do not fail if PHY is not attached
-Date:   Mon,  9 Mar 2020 09:36:20 +0100
-Message-Id: <a1972df027e3a71a65375f78c9b442298d9da3d6.1583742615.git.Jose.Abreu@synopsys.com>
+Subject: [PATCH net-next 6/8] net: phylink: Test if MAC/PCS support Autoneg
+Date:   Mon,  9 Mar 2020 09:36:25 +0100
+Message-Id: <001bd169362fa564d515d423ca6d42640a35df6a.1583742616.git.Jose.Abreu@synopsys.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1583742615.git.Jose.Abreu@synopsys.com>
 References: <cover.1583742615.git.Jose.Abreu@synopsys.com>
@@ -70,9 +70,8 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If a PHY is not attached, we can still run the tests with MAC loopback
-mode. Return -EOPNOTSUPP error code in PHY loopback test so that global
-status is not a failure.
+We may have cases where MAC or PCS do not support Autoneg. Check if it
+is supported after validate callback is called.
 
 Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
 
@@ -92,22 +91,23 @@ Cc: linux-stm32@st-md-mailman.stormreply.com
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/phy/phylink.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
-index 2aba2673d6c3..586a657be984 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
-@@ -380,7 +380,7 @@ static int stmmac_test_phy_loopback(struct stmmac_priv *priv)
- 	int ret;
+diff --git a/drivers/net/phy/phylink.c b/drivers/net/phy/phylink.c
+index 47f4ce02d7bc..19db68d74cb4 100644
+--- a/drivers/net/phy/phylink.c
++++ b/drivers/net/phy/phylink.c
+@@ -340,6 +340,9 @@ static int phylink_parse_mode(struct phylink *pl, struct fwnode_handle *fwnode)
+ 				    "failed to validate link configuration for in-band status\n");
+ 			return -EINVAL;
+ 		}
++
++		/* Check if MAC/PCS also supports Autoneg. */
++		pl->link_config.an_enabled = phylink_test(pl->supported, Autoneg);
+ 	}
  
- 	if (!priv->dev->phydev)
--		return -EBUSY;
-+		return -EOPNOTSUPP;
- 
- 	ret = phy_loopback(priv->dev->phydev, true);
- 	if (ret)
+ 	return 0;
 -- 
 2.7.4
 
