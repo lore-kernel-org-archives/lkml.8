@@ -2,151 +2,145 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A3F9C18E5A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 13:49:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94869C10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 13:50:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 478B520675
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 13:49:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="u26t0s/Q"
+	by mail.kernel.org (Postfix) with ESMTP id 72D5B20873
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 13:50:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726692AbgCINtS (ORCPT
+        id S1726695AbgCINuh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 09:49:18 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:43138 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726536AbgCINtS (ORCPT
+        Mon, 9 Mar 2020 09:50:37 -0400
+Received: from mout.kundenserver.de ([212.227.126.134]:41957 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726528AbgCINuh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 09:49:18 -0400
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 029Dj0p7024830;
-        Mon, 9 Mar 2020 09:49:16 -0400
-Received: from nam12-dm6-obe.outbound.protection.outlook.com (mail-dm6nam12lp2171.outbound.protection.outlook.com [104.47.59.171])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2ym6bcdn4b-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 09 Mar 2020 09:49:16 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=O0d0YF2i85EI0Khvjgr/7LuIeRwLrnCb5QPwaA0f/rNPtEk7sm0PlchiaPw8nJIarMM9N+EvhdUUpx7E5N+zXB2QsXpjkMXCu3rHCYbLYon1PXmaP1Sn0wvtUSwEY4vTzBbsskC7jNMqo7jJ2dx2+KHFphmmA0G5soO8HBm17eIjL2jCclfVKn05tNMRhLiG4QJQ24yXZ5IU5vXwy1hqGHXE89Zc+NPhjOHtqU61fV3JTs4smZfZvQ/WQkErm7gMdzOHv30SsHixooAC4i5HL1T8j2JMKl4o8++YRIj9aSOwyGmFCOjde5SSZAGynjRsvfq8vpqN7r+34jwRNduuGg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=U9d/hFzBxcDuGza/K2xp4O+1to+heQcSLqm8DG71mS0=;
- b=mBaqjqkflMXzNEuAUEMYJ9fjfc8hoCSInA/kHCbfqTZkBfnf7Y9tjIDzs1DxtwYNRyCg4zK+k0Z4e+htT4T1VIKW1CDwgX66Rlxq2Sdp2D3GEd4CSG/teMUM4I2y0AEvHv+tLFz2JwFywmuK/5EAxeV6xbPQTLkf4wOXvZHUv8WiavowCzg5K4dbe3sG5/4mQO6Y5vXnIJakweObqqZn2VsyhT5MFFKJE6CkQUD7dksOu8EUUUfg/rxipUhAJpCaDetl20AHrSDEebsSCcTEdg5dlw33ECOAp8OrQwwVb2lJP+/wyh5HAFFcfRrPx7tRVyQxYzIpOCNHB0y9tyqdcQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
- dkim=pass header.d=analog.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=U9d/hFzBxcDuGza/K2xp4O+1to+heQcSLqm8DG71mS0=;
- b=u26t0s/Q3nzbZ6lbdK/vkMzNSkaFOd/Y76Eqdag5dSB+yaGaZ+g++t7v2dpRIR3JQX3C383+N4ODOOkiqUsf7rVT5XZKInvYWwdeyJRGsPHIa7aOWEu0m6FahaFVzDsq0KqbvQeho5bMp2jjmRM9Rq+jv8ZEfi/oC9KeCQJBs2M=
-Received: from DM6PR03MB4411.namprd03.prod.outlook.com (2603:10b6:5:10f::14)
- by DM6PR03MB4028.namprd03.prod.outlook.com (2603:10b6:5:5e::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.16; Mon, 9 Mar
- 2020 13:49:14 +0000
-Received: from DM6PR03MB4411.namprd03.prod.outlook.com
- ([fe80::f8c4:f7f2:c7a0:cc19]) by DM6PR03MB4411.namprd03.prod.outlook.com
- ([fe80::f8c4:f7f2:c7a0:cc19%6]) with mapi id 15.20.2793.013; Mon, 9 Mar 2020
- 13:49:14 +0000
-From:   "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-To:     "mdf@kernel.org" <mdf@kernel.org>,
-        "jic23@kernel.org" <jic23@kernel.org>
-CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>
-Subject: Re: [PATCH v8 1/8] include: fpga: adi-axi-common.h: fixup whitespace
- tab -> space
-Thread-Topic: [PATCH v8 1/8] include: fpga: adi-axi-common.h: fixup whitespace
- tab -> space
-Thread-Index: AQHV86YcLfFvUC7MJkGk6PQIj2NY7qg9MSuAgABcmACAAr36AA==
-Date:   Mon, 9 Mar 2020 13:49:14 +0000
-Message-ID: <a2a8f3a0928dc071beee1ef2ff6f33add8694e42.camel@analog.com>
-References: <20200306110100.22092-1-alexandru.ardelean@analog.com>
-         <20200306110100.22092-2-alexandru.ardelean@analog.com>
-         <20200307142521.3efbe4a4@archlinux> <20200307195646.GB38707@epycbox.lan>
-In-Reply-To: <20200307195646.GB38707@epycbox.lan>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [137.71.226.54]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 0d1ce9f6-5420-41f5-eb2d-08d7c430a7cf
-x-ms-traffictypediagnostic: DM6PR03MB4028:
-x-microsoft-antispam-prvs: <DM6PR03MB4028C7C32FE493556BAEA7F0F9FE0@DM6PR03MB4028.namprd03.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3276;
-x-forefront-prvs: 0337AFFE9A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(396003)(366004)(136003)(346002)(376002)(199004)(189003)(186003)(26005)(86362001)(4326008)(2616005)(316002)(6506007)(110136005)(71200400001)(54906003)(8936002)(81166006)(81156014)(8676002)(2906002)(966005)(36756003)(91956017)(478600001)(5660300002)(6486002)(66946007)(66476007)(66446008)(64756008)(66556008)(6512007)(76116006);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR03MB4028;H:DM6PR03MB4411.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: analog.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 0bXLUvFPh02gT1MLCgi7o502hXjQwYGw6zDGvQiR3H1VWapkVPJLtCaR1UEJH7Lzq06GWSd88np2qsJ9G/aMn2CK1AA6tezyRXCuVMlOOuS0ejWM8JfjeYJn1TC1dIBvZXCAaKkAMvdxei9FHPsYxofLTTAJ2pFQSD8bGB8Jn7CGkhvDJiIyjGxKNlBeeeNitrTIxNssNGbDGiTAmgr3pFv+hW1AuYxY+uU3CwAABcHZDVL8N8yBK27kQzCw3SqWKFLkuvKzpQyilCg0Gamb9gvVka6swymHxbcCXXTJeCjAa+q2bTu5+k4E6tmyEVQzJVVfJd/cnpCjTQta4CbLiU0jsrff9xCfpZ/KtpLKxJWxipB9VLft/BqkfJiWMqt5ivJAIQYBpITgg+jxd5GWc5S9GHyFdmdEp7Pq45azDWCluMVVXgKPC0k1kZ6Ii4t4AXqpxN3QHzQRZxiwjT7elWwUbAixRLYAXZDNEWJfFTV4PJrP2/ABU8A3l1z3zMoozTa0gRzpSsB50nEgBQFHMA==
-x-ms-exchange-antispam-messagedata: Il7VmhTDYJYnhcCPuKiRzDHYa39/bsIUkj7GqFdDMR3UsPaRQvncnrAxy5VVvFGp132d8OAR3ZuzNyxJhBIEaIFvMdsJB1S/pZ3oPPF1i4HgBHM+54ZD9uAaCMF2DydJWzntQ25iNAF8euvFatqQLA==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <59E13B88203C6C44A2052053412EEEB2@namprd03.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Mon, 9 Mar 2020 09:50:37 -0400
+Received: from mail-qk1-f172.google.com ([209.85.222.172]) by
+ mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MUXlA-1ikrz03lNg-00QTSJ for <linux-kernel@vger.kernel.org>; Mon, 09 Mar
+ 2020 14:50:35 +0100
+Received: by mail-qk1-f172.google.com with SMTP id b5so9218122qkh.8
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 06:50:34 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ2V7GyZaD7jEDi/oQwYO6B8pbmJGalIdPjdkEiZ463vlPRmegrj
+        nT+sD4Rfxv93NhfZO1FZZY/C2Tb9/g9Ny4dzH/g=
+X-Google-Smtp-Source: ADFU+vuqpwW8ZhxLQBpNPchoZcyzxLU401q7S/l6dUozKVJq9KHwtsxSODvooMUjZKLBpgQVX9CQBQG+FwLDoTO1dSg=
+X-Received: by 2002:a37:a4d6:: with SMTP id n205mr4917403qke.352.1583761833703;
+ Mon, 09 Mar 2020 06:50:33 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0d1ce9f6-5420-41f5-eb2d-08d7c430a7cf
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Mar 2020 13:49:14.7231
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: MKBMmvXr4GerRC6yVgSvjF200cAVXel2OVTVaftxShFYptl+q8lfxeFblIvlPmjAciSkFtfkX1zG6vGd88CGh1D9HpmdZ68FnxdwJaKki44=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR03MB4028
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-09_04:2020-03-09,2020-03-09 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 impostorscore=0
- mlxlogscore=999 spamscore=0 lowpriorityscore=0 phishscore=0 adultscore=0
- mlxscore=0 suspectscore=0 bulkscore=0 priorityscore=1501 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2003090095
+References: <1578989048-10162-1-git-send-email-peng.fan@nxp.com>
+ <20200114081751.3wjbbnaem7lbnn3v@pengutronix.de> <AM0PR04MB4481A2FB7E2C56C2386297E888340@AM0PR04MB4481.eurprd04.prod.outlook.com>
+ <CAK8P3a3x55A8y9kR34zy8YyRhto8uay7PZGbDAufupiNS3+ihA@mail.gmail.com>
+ <AM0PR04MB44813A1D55659658E3FA203188370@AM0PR04MB4481.eurprd04.prod.outlook.com>
+ <CAK8P3a29=KWrhO8uu7mMS2gbeCGpkL7Q-xaaUVO2wcVD9MN93g@mail.gmail.com>
+ <CAHCN7xKtfKVQeaAg9sjvc3cHjLoAqAX6F-JyvkG5u23w1OG8CA@mail.gmail.com>
+ <AM0PR04MB4481B8BDAD2CD7376208B5F2880B0@AM0PR04MB4481.eurprd04.prod.outlook.com>
+ <CAK8P3a2gOq=qv5C6_0QwBXPuENqhBinK_KkzL5AcAEJtTDyB1w@mail.gmail.com> <AM0PR04MB44813F8292A36D84B3F80AEA88FE0@AM0PR04MB4481.eurprd04.prod.outlook.com>
+In-Reply-To: <AM0PR04MB44813F8292A36D84B3F80AEA88FE0@AM0PR04MB4481.eurprd04.prod.outlook.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 9 Mar 2020 14:50:17 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a0Lc--pDmBG3mBiKyjpOEZVdKVBnLNYBdCjzdgN1byU3w@mail.gmail.com>
+Message-ID: <CAK8P3a0Lc--pDmBG3mBiKyjpOEZVdKVBnLNYBdCjzdgN1byU3w@mail.gmail.com>
+Subject: Re: [PATCH] soc: imx: Makefile: only build soc-imx8 when CONFIG_ARM64
+To:     Peng Fan <peng.fan@nxp.com>
+Cc:     Adam Ford <aford173@gmail.com>, Abel Vesa <abel.vesa@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:u7tZKW5GDcfSZ9sax7R5+vm+jAt0yrVmNNZQ6u1xKx9YoHjIeOp
+ RfkJqLn/IgMZGERhAOGIcLG4G+poMj/CTaqQQslcRrBqdKVmxetSuIKXaxKZCkLZ7yctDi6
+ elOAsKo5Ax/GT4/1hzha5YBpJjHyqReWaJlBiZVegR4XT/Vt27+d0Nypk7XXlx79IatrObZ
+ SBcxRIRyV8xXV1Q2VnfyQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:xvD5qQK+WuY=:bwpgLGFEWED+oX8g9vGM++
+ elcMEMKqIiXppt73NiHVzDgi2ZnJ98ADPg9pHphvqHBE1E6B8SVZmzBHOGULwbCe1Fpey2aXb
+ yOStb+7igZpEEwwUAiZf7s+kM02kHvlKrRFa9wObvvK/lxKjBgHQbtvyDjSvdvknTkAqk7997
+ zLzsE9xXKzjwzGkV5enWOk+7d8PrICbiJOnnR/kHlui5sslVaeRJJPOAfKH/ONNfUgW7KFW0u
+ qAz+7hGoK/IeMQ4XvapYzZ4Dr0gLDhM9mRwlgUFJ9OfXOBiP6OKXU4IOoO1yDmf8czGdiO27N
+ TWNLAwRe+4Yyq9b7SxI9J5wgBIl0AaZ4gQ7XXSE8a76UDF8LwWaLcRuFpC4o36TIg44ceYZZu
+ OYZZVM0zzzFOJ/09NELd1L5a0SclEHlGxLDCzwFq2XSWR8Bk4wtbAibnZ8VoM1K5tPekoe6L2
+ wltIcdYSIuO/Sx2YCzVU3w5ya3cMI8Jk6Z3PmzZUsY0IFGMqQWyC97ngbe5GqoIkuahqpb25K
+ rmXMb3cp6LKAxcEMFyI+9PsEyWx+dkO79+P9gTTmC5BVM3tUTbwrPowmYWOwEaWwupmpRLzic
+ 2VXdMuZdIlYo9Y2i70tENlo/xd0SRZQZuRxIwSY880RQViqu7rvtNExfx7c3HBgaCjwRXNPXd
+ 42u1D9zy23eXYOmODYYG3+gH6ujvij+zJ8E3w1QzNJMqGwxqyBNeywoIVKGC3VrjrgvpDUspg
+ POG0zuxqpMA5ZYZ0xmTjI5LPGS+V63PiW9dABxBnQtaW7Ao8bOmjlwfzqcWwth8rHDMkEX3Tn
+ tNjNKHfp6vydK9hPRmCzfhKWl71ooP3R1xFrqfuz+EovwSl/0A=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gU2F0LCAyMDIwLTAzLTA3IGF0IDExOjU2IC0wODAwLCBNb3JpdHogRmlzY2hlciB3cm90ZToN
-Cj4gT24gU2F0LCBNYXIgMDcsIDIwMjAgYXQgMDI6MjU6MjFQTSArMDAwMCwgSm9uYXRoYW4gQ2Ft
-ZXJvbiB3cm90ZToNCj4gPiBPbiBGcmksIDYgTWFyIDIwMjAgMTM6MDA6NTMgKzAyMDANCj4gPiBB
-bGV4YW5kcnUgQXJkZWxlYW4gPGFsZXhhbmRydS5hcmRlbGVhbkBhbmFsb2cuY29tPiB3cm90ZToN
-Cj4gPiANCj4gPiA+IFRoZSBpbml0aWFsIHZlcnNpb24gdXNlIGEgdGFiIGJldHdlZW4gJyNkZWZp
-bmUnICYgJ0FESV9BWElfUkVHX1ZFUlNJT04nLg0KPiA+ID4gVGhpcyBjaGFuZ2VzIGl0IHRvIHNw
-YWNlLiBUaGUgY2hhbmdlIGlzIHB1cmVseSBjb3NtZXRpYy4NCj4gPiA+IA0KPiA+ID4gU2lnbmVk
-LW9mZi1ieTogQWxleGFuZHJ1IEFyZGVsZWFuIDxhbGV4YW5kcnUuYXJkZWxlYW5AYW5hbG9nLmNv
-bT4NCj4gQWNrZWQtYnk6IE1vcml0eiBGaXNjaGVyIDxtZGZAa2VybmVsLm9yZz4NCg0KSSdtIHN0
-aWxsIGEgYml0IHZhZ3VlIG9uIHdobyBtYWludGFpbnMgd2hhdC4NClRoZSBpbml0aWFsIHZlcnNp
-b24gb2YgdGhpcyBoZWFkZXIgZGlkIG5vdCBnZXQgc3VibWl0dGVkIHRvIE1vcml0eidzIGF0dGVu
-dGlvbg0KQXBvbG9naWVzIGZvciB0aGF0Lg0KDQpJdCBjYW1lIHRvIGV4aXN0IGFzIGEgcmVzdWx0
-IG9mIHVwc3RyZWFtaW5nIHBhcnRzIG9mIHRoZSBBREkgQVhJIERNQUMgZHJpdmVyLg0KDQpodHRw
-czovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20vbGludXgva2VybmVsL2dpdC90b3J2YWxkcy9saW51
-eC5naXQvY29tbWl0Lz9pZD1kMjdhYzJlMDJiZjI1NmQ0ZTgyNGU3YzFlMWUxYWZhMmI5NmNlZmNj
-DQoNClRoZSBpbml0aWFsIGNvbXBsYWludCB3YXMgdGhhdCBzb21lIG1hZ2ljIG51bWJlcnMgd2Vy
-ZSB1c2VkIGFuZCB0aGVuIEkgYWRkZWQNCnRoaXMgaGVhZGVyLCB3aGljaCBpcyBhIHNtYWxsZXIg
-dmVyc2lvbiBvZiB0aGUgb25lIHdlIGhhdmUgaW4gdGhlIEFESSB0cmVlLg0KDQpUaGFua3MNCkFs
-ZXgNCg0KPiANCj4gPiBXaGlsc3QgdGhpcyBpcyB0cml2aWFsIGl0IHN0aWxsIG5lZWRzIGFuIGFj
-ayBmcm9tIHJlbGV2YW50IG1haW50YWluZXINCj4gPiBmb3IgdGhhdCBkaXJlY3RvcnkuIE1vcml0
-eiBJIHRoaW5rLi4uDQo+ID4gDQo+ID4gSm9uYXRoYW4NCj4gPiANCj4gPiA+IC0tLQ0KPiA+ID4g
-IGluY2x1ZGUvbGludXgvZnBnYS9hZGktYXhpLWNvbW1vbi5oIHwgMiArLQ0KPiA+ID4gIDEgZmls
-ZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMSBkZWxldGlvbigtKQ0KPiA+ID4gDQo+ID4gPiBk
-aWZmIC0tZ2l0IGEvaW5jbHVkZS9saW51eC9mcGdhL2FkaS1heGktY29tbW9uLmggYi9pbmNsdWRl
-L2xpbnV4L2ZwZ2EvYWRpLQ0KPiA+ID4gYXhpLWNvbW1vbi5oDQo+ID4gPiBpbmRleCA3ZmM5NWQ1
-Yzk1YmIuLmViZDRlMDdhZTNkOCAxMDA2NDQNCj4gPiA+IC0tLSBhL2luY2x1ZGUvbGludXgvZnBn
-YS9hZGktYXhpLWNvbW1vbi5oDQo+ID4gPiArKysgYi9pbmNsdWRlL2xpbnV4L2ZwZ2EvYWRpLWF4
-aS1jb21tb24uaA0KPiA+ID4gQEAgLTExLDcgKzExLDcgQEANCj4gPiA+ICAjaWZuZGVmIEFESV9B
-WElfQ09NTU9OX0hfDQo+ID4gPiAgI2RlZmluZSBBRElfQVhJX0NPTU1PTl9IXw0KPiA+ID4gIA0K
-PiA+ID4gLSNkZWZpbmUJQURJX0FYSV9SRUdfVkVSU0lPTgkJCTB4MDAwMA0KPiA+ID4gKyNkZWZp
-bmUgQURJX0FYSV9SRUdfVkVSU0lPTgkJCTB4MDAwMA0KPiA+ID4gIA0KPiA+ID4gICNkZWZpbmUg
-QURJX0FYSV9QQ09SRV9WRVIobWFqb3IsIG1pbm9yLCBwYXRjaCkJXA0KPiA+ID4gIAkoKChtYWpv
-cikgPDwgMTYpIHwgKChtaW5vcikgPDwgOCkgfCAocGF0Y2gpKQ0K
+On Mon, Mar 9, 2020 at 2:28 PM Peng Fan <peng.fan@nxp.com> wrote:
+> > Subject: Re: [PATCH] soc: imx: Makefile: only build soc-imx8 when
+> > CONFIG_ARM64
+> >
+> > On Mon, Jan 27, 2020 at 6:05 AM Peng Fan <peng.fan@nxp.com> wrote:
+> > > > Subject: Re: [PATCH] soc: imx: Makefile: only build soc-imx8 when
+> > > > Does anyone have any suggestions on where I might find some generic
+> > > > stuff for either iMX8M or generic ARMv8 docs for doing something like
+> > this?
+> > >
+> > > We did a porting for one customer, but code is not public available.
+> > >
+> > > First let uboot switch to AARCH32 mode when booting Linux, this is
+> > > already supported by uboot mailine.
+> > >
+> > > Second, create a mach-imx8m.c under arch/arm/mach-imx to handle
+> > i.MX8M
+> > > just like other i.mx arm32 socs. This is not preferred by Linux community.
+> > >
+> > > 3rd, build i.MX8M drivers when using imx_v7_defconfig( or
+> > > imx_v6_v7_defconfig in upstream)
+> >
+> > I think the third part is something we can clearly do once it actually boots.
+> >
+> > Can you post the patch for the second part for reference? In theory nothing
+> > should be necessary there, so I wonder what I'm missing (as we need no code
+> > for arch/arm64) and what we can do differently to make it work out of the
+> > box.
+> >
+> > Is the problem that the SMP bringup using PSCI for arm64 doesn't work with
+> > the 32-bit kernel for some reason?
+>
+> Sorry for long time delay. I forgot your mail. I did some try again, seems only need
+> the following piece code to make it boot, also select GIC_V3 and drop some ARM64
+> dependencies in Kconfig for some i.MX drivers.
+> Need some addition work in ATF/U-Boot
+> to make smp work, that is not Linux related.
+
+Ah, nice!
+
+> +static const char *const imx8mm_dt_compat[] __initconst = {
+> +       "fsl,imx8mm",
+> +       NULL,
+> +};
+> +
+> +#include <asm/mach/arch.h>
+> +DT_MACHINE_START(IMX7D, "Freescale i.MX8MM (Device Tree)")
+> +       .dt_compat      = imx8mm_dt_compat,
+> +MACHINE_END
+>
+>
+> Are you ok we add such piece code in drivers/soc/imx/soc-imx8.c to support
+> aarch32 linux?
+
+I don't think that code does anything other than set the machine name. Are you
+sure it doesn't work without that?
+
+If it's indeed required, I'd prefer to add a file for in arch/arm/mach-imx than
+in drivers/soc/.
+
+      Arnd
