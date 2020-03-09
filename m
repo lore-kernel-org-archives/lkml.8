@@ -2,161 +2,89 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2523C10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 22:49:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3DDDC10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 22:51:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5B082253D
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 22:49:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HR21PSz2"
+	by mail.kernel.org (Postfix) with ESMTP id D8C792253D
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 22:51:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727368AbgCIWth (ORCPT
+        id S1727386AbgCIWvQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 18:49:37 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:57391 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727320AbgCIWth (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 18:49:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583794175;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=HV3qgkcKTLqlj5wcbDRS2AXp9vzUwXBC/9+EqfzmMvM=;
-        b=HR21PSz2YUlAgq9+xbzW4xwXnvcwDMe/xXZ6fqabR1O3aLrgT2p1Vf3lWR+xgbkeqrHNw0
-        93zUl90kxIKimP/fUDunwcL3ajGLEEVMJXXYXb457Xs+B2IxA9WIHkjcaJtORYQd7pebls
-        W1UTKAwDyNq/myibhxlHg5U6H3La+bI=
-Received: from mail-yw1-f71.google.com (mail-yw1-f71.google.com
- [209.85.161.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-44-kFCNyIp0PyKH-IhLQfTRyA-1; Mon, 09 Mar 2020 18:49:34 -0400
-X-MC-Unique: kFCNyIp0PyKH-IhLQfTRyA-1
-Received: by mail-yw1-f71.google.com with SMTP id o79so18087043ywo.14
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 15:49:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=HV3qgkcKTLqlj5wcbDRS2AXp9vzUwXBC/9+EqfzmMvM=;
-        b=TxIaNB9GhnMFpiyvKceybbHMtt+cSRpzq8F13b36sioPGmy5O146aEig1ImyH3Vh5Z
-         7kvtRVoP4P/iDtd44p21BdT8Z0JLWYtUfZx3w55ja3GO172uVtd5hqf/fgIprwSns/u9
-         Iu6ovrUAfSlxGQMjhRfo3uJDJZC6JneM2JR9UNUsQsd05ZohKMMKu8LVar7pYX5GMu8N
-         oeRXyc9ps9Z77awLbdENLVPHUdy9llXX/FVSIQBQWSuZTZ0mDacjG/ORI6ewgC02KYfj
-         7uddzK19fdUGJ8ahGD2ZaPgIOMcY76p6698oaVdWI/oW4lp2x4+e3Dqa7DHAY+TgWC05
-         +ZHA==
-X-Gm-Message-State: ANhLgQ2JD+gAN3bTKYmu4TdmSZLLfGt9zw96ALKgf2mQlgJ/wlmM7qJf
-        LG3toBd/CUs3WMjCmcqFptEBuYv+uqC92NME1MLrIBpS4d+Xc72aIyWCdqhCL50oZQ+sW9yO+X7
-        xMoQfS7FMTECKIUWnwQ/TkZpZ
-X-Received: by 2002:a25:2146:: with SMTP id h67mr19645206ybh.92.1583794173508;
-        Mon, 09 Mar 2020 15:49:33 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vvt6Q0tj/V6bzMSoorE++/YZCJuiryDKikREWseTxP4/vg08CzbzDn75K5ktPnB52gDWscllg==
-X-Received: by 2002:a25:2146:: with SMTP id h67mr19645165ybh.92.1583794173070;
-        Mon, 09 Mar 2020 15:49:33 -0700 (PDT)
-Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net. [68.20.15.154])
-        by smtp.gmail.com with ESMTPSA id w17sm3584845ywa.8.2020.03.09.15.49.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Mar 2020 15:49:32 -0700 (PDT)
-Message-ID: <32c384ac3adf0cf924d3071a13af7edffe53cc2b.camel@redhat.com>
-Subject: Re: [PATCH 00/14] VFS: Filesystem information [ver #18]
-From:   Jeff Layton <jlayton@redhat.com>
-To:     Andres Freund <andres@anarazel.de>
-Cc:     David Howells <dhowells@redhat.com>, torvalds@linux-foundation.org,
-        viro@zeniv.linux.org.uk, Theodore Ts'o <tytso@mit.edu>,
-        Stefan Metzmacher <metze@samba.org>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        linux-ext4@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        linux-nfs@vger.kernel.org, linux-api@vger.kernel.org,
-        raven@themaw.net, mszeredi@redhat.com, christian@brauner.io,
-        jannh@google.com, darrick.wong@oracle.com, kzak@redhat.com,
-        linux-fsdevel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Mon, 09 Mar 2020 18:49:31 -0400
-In-Reply-To: <20200309192240.nqf5bxylptw7mdm3@alap3.anarazel.de>
-References: <158376244589.344135.12925590041630631412.stgit@warthog.procyon.org.uk>
-         <2d31e2658e5f6651dc7d9908c4c12b6ba461fc88.camel@redhat.com>
-         <20200309192240.nqf5bxylptw7mdm3@alap3.anarazel.de>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        Mon, 9 Mar 2020 18:51:16 -0400
+Received: from mga12.intel.com ([192.55.52.136]:2373 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726656AbgCIWvQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 18:51:16 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Mar 2020 15:51:15 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,534,1574150400"; 
+   d="scan'208";a="235856561"
+Received: from orsmsx104.amr.corp.intel.com ([10.22.225.131])
+  by orsmga008.jf.intel.com with ESMTP; 09 Mar 2020 15:51:15 -0700
+Received: from orsmsx114.amr.corp.intel.com ([169.254.8.140]) by
+ ORSMSX104.amr.corp.intel.com ([169.254.4.192]) with mapi id 14.03.0439.000;
+ Mon, 9 Mar 2020 15:51:14 -0700
+From:   "Prakhya, Sai Praneeth" <sai.praneeth.prakhya@intel.com>
+To:     "Chatre, Reinette" <reinette.chatre@intel.com>,
+        "shuah@kernel.org" <shuah@kernel.org>,
+        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>
+CC:     "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "Luck, Tony" <tony.luck@intel.com>,
+        "babu.moger@amd.com" <babu.moger@amd.com>,
+        "james.morse@arm.com" <james.morse@arm.com>,
+        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
+        "Yu, Fenghua" <fenghua.yu@intel.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH V1 01/13] selftests/resctrl: Fix feature detection
+Thread-Topic: [PATCH V1 01/13] selftests/resctrl: Fix feature detection
+Thread-Index: AQHV9DL72y2lBowYF0OswuZ3RsHuuahBROGA//+RIaCAAHyVgP//jqDA
+Date:   Mon, 9 Mar 2020 22:51:14 +0000
+Message-ID: <FFF73D592F13FD46B8700F0A279B802F573084EC@ORSMSX114.amr.corp.intel.com>
+References: <cover.1583657204.git.sai.praneeth.prakhya@intel.com>
+ <7e3e4b91f5786a489e68eecda21e1d8049b60181.1583657204.git.sai.praneeth.prakhya@intel.com>
+ <a7407b0d-4e4d-d0cf-621c-769d218fdace@intel.com>
+ <FFF73D592F13FD46B8700F0A279B802F57307F89@ORSMSX114.amr.corp.intel.com>
+ <d0409729-b546-f0b9-4944-cbe5c9a74f76@intel.com>
+In-Reply-To: <d0409729-b546-f0b9-4944-cbe5c9a74f76@intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.22.254.140]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-03-09 at 12:22 -0700, Andres Freund wrote:
-> Hi,
-> 
-> On 2020-03-09 13:50:59 -0400, Jeff Layton wrote:
-> > The PostgreSQL devs asked a while back for some way to tell whether
-> > there have been any writeback errors on a superblock w/o having to do
-> > any sort of flush -- just "have there been any so far".
-> 
-> Indeed.
-> 
-> 
-> > I sent a patch a few weeks ago to make syncfs() return errors when there
-> > have been writeback errors on the superblock. It's not merged yet, but
-> > once we have something like that in place, we could expose info from the
-> > errseq_t to userland using this interface.
-> 
-> I'm still a bit worried about the details of errseq_t being exposed to
-> userland. Partially because it seems to restrict further evolution of
-> errseq_t, and partially because it will likely up with userland trying
-> to understand it (it's e.g. just too attractive to report a count of
-> errors etc).
-
-Trying to interpret the counter field won't really tell you anything.
-The counter is not incremented unless someone has queried the value
-since it was last checked. A single increment could represent a single
-writeback error or 10000 identical ones.
-
-There _is_ a flag that tells you whether someone has queried it, but
-that gets masked off before copying the cookie to userland.
-
-> Is there a reason to not instead report a 64bit counter instead of the
-> cookie? In contrast to the struct file case we'd only have the space
-> overhead once per superblock, rather than once per #files * #fd. And it
-> seems that the maintenance of that counter could be done without
-> widespread changes, e.g. instead/in addition to your change:
-> 
-
-What problem would moving to a 64-bit counter solve? I get the concern
-about people trying to get a counter out of the cookie field, but giving
-people an explicit 64-bit counter seems even more open to
-misinterpretation.
-
-All that said, is an opaque cookie still something you'd find useful?
-
-> > diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
-> > index ccb14b6a16b5..897439475315 100644
-> > --- a/include/linux/pagemap.h
-> > +++ b/include/linux/pagemap.h
-> > @@ -51,7 +51,10 @@ static inline void mapping_set_error(struct address_space *mapping, int error)
-> >  		return;
-> > 
-> >  	/* Record in wb_err for checkers using errseq_t based tracking */
-> > -	filemap_set_wb_err(mapping, error);
-> > +	__filemap_set_wb_err(mapping, error);
-> > +
-> > +	/* Record it in superblock */
-> > +	errseq_set(&mapping->host->i_sb->s_wb_err, error);
-> > 
-> >  	/* Record it in flags for now, for legacy callers */
-> >  	if (error == -ENOSPC)
-> 
-> Btw, seems like mapping_set_error() should have a non-inline cold path?
-
-Good point. I'll do that in the next iteration.
-
--- 
-Jeff Layton <jlayton@redhat.com>
-
+SGkgUmVpbmV0dGUsDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUmVp
+bmV0dGUgQ2hhdHJlIDxyZWluZXR0ZS5jaGF0cmVAaW50ZWwuY29tPg0KPiBTZW50OiBNb25kYXks
+IE1hcmNoIDksIDIwMjAgMzozNCBQTQ0KDQpbU05JUF0NCg0KPiA+IFRoYXQncyBhIGdvb2QgcG9p
+bnQgYW5kIG1ha2VzIHNlbnNlIHRvIG1lLiBJIHRoaW5rIHdlIGNvdWxkIGZpeCBpdCBpbg0KPiA+
+IHR3byB3YXlzIDEuIGdyZXAgZm9yIHN0cmluZ3MgaW4gZG1lc2cgYnV0IHRoYXQgd2lsbCBzdGls
+bCBsZWF2ZQ0KPiA+IGFtYmlndWl0eSBpbiBkZWNpZGluZyBiL3cgbWJtIGFuZCBjcW0gYmVjYXVz
+ZSBrZXJuZWwgcHJpbnRzICJyZXNjdHJsOiBMMw0KPiBtb25pdG9yaW5nIGRldGVjdGVkIiBmb3Ig
+Ym90aCB0aGUgZmVhdHVyZXMgMi4gQ2hlY2sgaW4gImluZm8iIGRpcmVjdG9yeQ0KPiA+IAlhLiBG
+b3IgY2F0X2wzLCB3ZSBjb3VsZCBzZWFyY2ggZm9yIGluZm8vTDMNCj4gPiAJYi4gRm9yIG1iYSwg
+d2UgY291bGQgc2VhcmNoIGZvciBpbmZvL01CDQo+ID4gCWMuIEZvciBjcW0gYW5kIG1ibSwgd2Ug
+Y291bGQgc2VhcmNoIGZvciBzcGVjaWZpZWQgc3RyaW5nIGluDQo+ID4gaW5mby9MM19NT04vbW9u
+X2ZlYXR1cmVzDQo+ID4NCj4gPiBJIHRoaW5rIG9wdGlvbiAyIG1pZ2h0IGJlIGJldHRlciBiZWNh
+dXNlIGl0IGNhbiBoYW5kbGUgYWxsIGNhc2VzLCBwbGVhc2UgbGV0IG1lDQo+IGtub3cgd2hhdCB5
+b3UgdGhpbmsuDQo+IA0KPiBJIGFncmVlLiBGb3IgdGhlIHJlYXNvbnMgeW91IG1lbnRpb24gYW5k
+IGFsc28gdGhhdCAoMSkgbWF5IG5vdCBiZSBwb3NzaWJsZSBpZiB0aGUNCj4gbG9nbGV2ZWwgcHJl
+dmVudHMgdGhvc2UgbGluZXMgZnJvbSBiZWluZyBwcmludGVkLg0KDQpNYWtlcyBzZW5zZS4gSSB3
+aWxsIHdvcmsgb24gdGhlIGZpeC4NCg0KUmVnYXJkcywNClNhaQ0K
