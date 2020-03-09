@@ -6,48 +6,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBB2BC18E5A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 08:59:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E4B0C18E5A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 08:59:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0E1E22522
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 08:59:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2198E21739
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 08:59:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726612AbgCII7B (ORCPT
+        id S1726645AbgCII7F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 04:59:01 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:11850 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726498AbgCII66 (ORCPT
+        Mon, 9 Mar 2020 04:59:05 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:46029 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726449AbgCII7D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 04:58:58 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0298pGtw004975
-        for <linux-kernel@vger.kernel.org>; Mon, 9 Mar 2020 04:58:57 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ym7t6e11s-1
+        Mon, 9 Mar 2020 04:59:03 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0298pVgB084602
+        for <linux-kernel@vger.kernel.org>; Mon, 9 Mar 2020 04:59:02 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2ym5e1rrkw-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 04:58:56 -0400
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 04:59:02 -0400
 Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-kernel@vger.kernel.org> from <ravi.bangoria@linux.ibm.com>;
-        Mon, 9 Mar 2020 08:58:54 -0000
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        Mon, 9 Mar 2020 08:59:00 -0000
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 9 Mar 2020 08:58:50 -0000
+        Mon, 9 Mar 2020 08:58:56 -0000
 Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0298wnxg32112882
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0298wspq60620998
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 9 Mar 2020 08:58:49 GMT
+        Mon, 9 Mar 2020 08:58:54 GMT
 Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4751AA4055;
-        Mon,  9 Mar 2020 08:58:49 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id C56DDA4040;
+        Mon,  9 Mar 2020 08:58:54 +0000 (GMT)
 Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CBA71A404D;
-        Mon,  9 Mar 2020 08:58:46 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 57177A404D;
+        Mon,  9 Mar 2020 08:58:52 +0000 (GMT)
 Received: from bangoria.in.ibm.com (unknown [9.124.31.44])
         by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon,  9 Mar 2020 08:58:46 +0000 (GMT)
+        Mon,  9 Mar 2020 08:58:52 +0000 (GMT)
 From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 To:     mpe@ellerman.id.au, mikey@neuling.org
 Cc:     apopple@linux.ibm.com, paulus@samba.org, npiggin@gmail.com,
@@ -56,119 +56,116 @@ Cc:     apopple@linux.ibm.com, paulus@samba.org, npiggin@gmail.com,
         fweisbec@gmail.com, mingo@kernel.org,
         linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
         Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Subject: [PATCH 03/15] powerpc/watchpoint: Introduce function to get nr watchpoints dynamically
-Date:   Mon,  9 Mar 2020 14:27:54 +0530
+Subject: [PATCH 05/15] powerpc/watchpoint: Provide DAWR number to set_dawr
+Date:   Mon,  9 Mar 2020 14:27:56 +0530
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200309085806.155823-1-ravi.bangoria@linux.ibm.com>
 References: <20200309085806.155823-1-ravi.bangoria@linux.ibm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-x-cbid: 20030908-0012-0000-0000-0000038E7F51
+x-cbid: 20030908-0016-0000-0000-000002EE81C7
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20030908-0013-0000-0000-000021CB4666
-Message-Id: <20200309085806.155823-4-ravi.bangoria@linux.ibm.com>
+x-cbparentid: 20030908-0017-0000-0000-00003351E00E
+Message-Id: <20200309085806.155823-6-ravi.bangoria@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
  definitions=2020-03-09_02:2020-03-06,2020-03-09 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 spamscore=0
- bulkscore=0 mlxscore=0 adultscore=0 clxscore=1015 priorityscore=1501
- lowpriorityscore=0 malwarescore=0 phishscore=0 mlxlogscore=999
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003090066
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ impostorscore=0 priorityscore=1501 adultscore=0 malwarescore=0
+ phishscore=0 spamscore=0 bulkscore=0 lowpriorityscore=0 mlxscore=0
+ mlxlogscore=826 clxscore=1015 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2001150001 definitions=main-2003090066
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-So far we had only one watchpoint, so we have hardcoded HBP_NUM to 1.
-But future Power architecture is introducing 2nd DAWR and thus kernel
-should be able to dynamically find actual number of watchpoints
-supported by hw it's running on. Introduce function for the same.
-Also convert HBP_NUM macro to HBP_NUM_MAX, which will now represent
-maximum number of watchpoints supported by Powerpc.
+Introduce new parameter 'nr' to set_dawr() which indicates which DAWR
+should be programed.
 
 Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 ---
- arch/powerpc/include/asm/cputable.h      | 6 +++++-
- arch/powerpc/include/asm/hw_breakpoint.h | 2 ++
- arch/powerpc/include/asm/processor.h     | 2 +-
- arch/powerpc/kernel/hw_breakpoint.c      | 2 +-
- arch/powerpc/kernel/process.c            | 6 ++++++
- 5 files changed, 15 insertions(+), 3 deletions(-)
+ arch/powerpc/include/asm/hw_breakpoint.h |  4 ++--
+ arch/powerpc/kernel/dawr.c               | 15 ++++++++++-----
+ arch/powerpc/kernel/process.c            |  2 +-
+ 3 files changed, 13 insertions(+), 8 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/cputable.h b/arch/powerpc/include/asm/cputable.h
-index 40a4d3c6fd99..c67b94f3334c 100644
---- a/arch/powerpc/include/asm/cputable.h
-+++ b/arch/powerpc/include/asm/cputable.h
-@@ -614,7 +614,11 @@ enum {
- };
- #endif /* __powerpc64__ */
- 
--#define HBP_NUM 1
-+/*
-+ * Maximum number of hw breakpoint supported on powerpc. Number of
-+ * breakpoints supported by actual hw might be less than this.
-+ */
-+#define HBP_NUM_MAX	1
- 
- #endif /* !__ASSEMBLY__ */
- 
 diff --git a/arch/powerpc/include/asm/hw_breakpoint.h b/arch/powerpc/include/asm/hw_breakpoint.h
-index f2f8d8aa8e3b..741c4f7573c4 100644
+index 741c4f7573c4..c4e797753895 100644
 --- a/arch/powerpc/include/asm/hw_breakpoint.h
 +++ b/arch/powerpc/include/asm/hw_breakpoint.h
-@@ -43,6 +43,8 @@ struct arch_hw_breakpoint {
- #define DABR_MAX_LEN	8
- #define DAWR_MAX_LEN	512
- 
-+extern int nr_wp_slots(void);
-+
- #ifdef CONFIG_HAVE_HW_BREAKPOINT
- #include <linux/kdebug.h>
- #include <asm/reg.h>
-diff --git a/arch/powerpc/include/asm/processor.h b/arch/powerpc/include/asm/processor.h
-index 8387698bd5b6..666b2825278c 100644
---- a/arch/powerpc/include/asm/processor.h
-+++ b/arch/powerpc/include/asm/processor.h
-@@ -176,7 +176,7 @@ struct thread_struct {
- 	int		fpexc_mode;	/* floating-point exception mode */
- 	unsigned int	align_ctl;	/* alignment handling control */
- #ifdef CONFIG_HAVE_HW_BREAKPOINT
--	struct perf_event *ptrace_bps[HBP_NUM];
-+	struct perf_event *ptrace_bps[HBP_NUM_MAX];
- 	/*
- 	 * Helps identify source of single-step exception and subsequent
- 	 * hw-breakpoint enablement
-diff --git a/arch/powerpc/kernel/hw_breakpoint.c b/arch/powerpc/kernel/hw_breakpoint.c
-index d0854320bb50..e68798cee3fa 100644
---- a/arch/powerpc/kernel/hw_breakpoint.c
-+++ b/arch/powerpc/kernel/hw_breakpoint.c
-@@ -38,7 +38,7 @@ static DEFINE_PER_CPU(struct perf_event *, bp_per_reg);
- int hw_breakpoint_slots(int type)
+@@ -101,10 +101,10 @@ static inline bool dawr_enabled(void)
  {
- 	if (type == TYPE_DATA)
--		return HBP_NUM;
-+		return nr_wp_slots();
- 	return 0;		/* no instruction breakpoints available */
+ 	return dawr_force_enable;
+ }
+-int set_dawr(struct arch_hw_breakpoint *brk);
++int set_dawr(struct arch_hw_breakpoint *brk, int nr);
+ #else
+ static inline bool dawr_enabled(void) { return false; }
+-static inline int set_dawr(struct arch_hw_breakpoint *brk) { return -1; }
++static inline int set_dawr(struct arch_hw_breakpoint *brk, int nr) { return -1; }
+ #endif
+ 
+ #endif	/* __KERNEL__ */
+diff --git a/arch/powerpc/kernel/dawr.c b/arch/powerpc/kernel/dawr.c
+index e91b613bf137..311e51ee09f4 100644
+--- a/arch/powerpc/kernel/dawr.c
++++ b/arch/powerpc/kernel/dawr.c
+@@ -16,7 +16,7 @@
+ bool dawr_force_enable;
+ EXPORT_SYMBOL_GPL(dawr_force_enable);
+ 
+-int set_dawr(struct arch_hw_breakpoint *brk)
++int set_dawr(struct arch_hw_breakpoint *brk, int nr)
+ {
+ 	unsigned long dawr, dawrx, mrd;
+ 
+@@ -39,15 +39,20 @@ int set_dawr(struct arch_hw_breakpoint *brk)
+ 	if (ppc_md.set_dawr)
+ 		return ppc_md.set_dawr(dawr, dawrx);
+ 
+-	mtspr(SPRN_DAWR0, dawr);
+-	mtspr(SPRN_DAWRX0, dawrx);
++	if (nr == 0) {
++		mtspr(SPRN_DAWR0, dawr);
++		mtspr(SPRN_DAWRX0, dawrx);
++	} else {
++		mtspr(SPRN_DAWR1, dawr);
++		mtspr(SPRN_DAWRX1, dawrx);
++	}
+ 
+ 	return 0;
  }
  
+ static void set_dawr_cb(void *info)
+ {
+-	set_dawr(info);
++	set_dawr(info, 0);
+ }
+ 
+ static ssize_t dawr_write_file_bool(struct file *file,
+@@ -60,7 +65,7 @@ static ssize_t dawr_write_file_bool(struct file *file,
+ 	/* Send error to user if they hypervisor won't allow us to write DAWR */
+ 	if (!dawr_force_enable &&
+ 	    firmware_has_feature(FW_FEATURE_LPAR) &&
+-	    set_dawr(&null_brk) != H_SUCCESS)
++	    set_dawr(&null_brk, 0) != H_SUCCESS)
+ 		return -ENODEV;
+ 
+ 	rc = debugfs_write_file_bool(file, user_buf, count, ppos);
 diff --git a/arch/powerpc/kernel/process.c b/arch/powerpc/kernel/process.c
-index 110db94cdf3c..6d4b029532e2 100644
+index 6d4b029532e2..0657b3a3792a 100644
 --- a/arch/powerpc/kernel/process.c
 +++ b/arch/powerpc/kernel/process.c
-@@ -835,6 +835,12 @@ static inline bool hw_brk_match(struct arch_hw_breakpoint *a,
- 	return true;
- }
+@@ -799,7 +799,7 @@ void __set_breakpoint(struct arch_hw_breakpoint *brk)
  
-+/* Returns total number of data breakpoints available. */
-+int nr_wp_slots(void)
-+{
-+	return HBP_NUM_MAX;
-+}
-+
- #ifdef CONFIG_PPC_TRANSACTIONAL_MEM
- 
- static inline bool tm_enabled(struct task_struct *tsk)
+ 	if (dawr_enabled())
+ 		// Power8 or later
+-		set_dawr(brk);
++		set_dawr(brk, 0);
+ 	else if (IS_ENABLED(CONFIG_PPC_8xx))
+ 		set_breakpoint_8xx(brk);
+ 	else if (!cpu_has_feature(CPU_FTR_ARCH_207S))
 -- 
 2.21.1
 
