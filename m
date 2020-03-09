@@ -2,63 +2,67 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E29DC10F25
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:54:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46830C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:57:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 794DF20873
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:54:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583780041;
-	bh=j5PYCp0DQXlPHf9ZuHlkBJfnb0z/zwoDWENZXOV9YRE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wu1aUDhPZJUSduqHc20pAs6RZDeWds+SNFNK1ZgdVDfbJKPDqlXGwgGsLmIXaE06r
-	 bXEqm1xq9eK0ErzmvJwIFOFjrXsyjYOoofD3KNl31biSu8HEGEBkePS2CxurilA7nA
-	 lsysiD8X38j9lpnf01i8rwnZ/gVFMZ11FHCmiM6Q=
+	by mail.kernel.org (Postfix) with ESMTP id 244DD20873
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:57:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HTGfEese"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727601AbgCISyA (ORCPT
+        id S1727466AbgCIS5H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 14:54:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45018 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727574AbgCISx6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 14:53:58 -0400
-Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F157B20663;
-        Mon,  9 Mar 2020 18:53:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583780038;
-        bh=j5PYCp0DQXlPHf9ZuHlkBJfnb0z/zwoDWENZXOV9YRE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MYL1uZLCtKkORh2rdUuu8aEkMdGZQU0e7rfLfvNMxErGx0TpoVd9RbMVK0d1S9tC0
-         afV7hMK/6uKrOOKPRJde/6A+IsZOlt3RCeQNcq+f3LSo5NbZuM401zOsG6o3NfIBSC
-         oyQF1aw4dWV3s2zkhCkw+c3lxK81RTLd0WzvPRpA=
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Alexandre Ghiti <alex@ghiti.fr>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sasha Levin <sashal@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 6/6] perf probe: Do not depend on dwfl_module_addrsym()
-Date:   Mon,  9 Mar 2020 15:53:23 -0300
-Message-Id: <20200309185323.22583-7-acme@kernel.org>
-X-Mailer: git-send-email 2.21.1
-In-Reply-To: <20200309185323.22583-1-acme@kernel.org>
-References: <20200309185323.22583-1-acme@kernel.org>
+        Mon, 9 Mar 2020 14:57:07 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:35781 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727380AbgCIS5G (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 14:57:06 -0400
+Received: by mail-pl1-f194.google.com with SMTP id g6so4375050plt.2
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 11:57:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=g2u/OLAgiInGN4xLm0+9cr6hTH+ZT1QAXVX+7llX76w=;
+        b=HTGfEeseSiG/j8RRQVcEwDBh/c1A0F9xo9jtWZIJetjxQKhi7UIJGvJWIxidZf1gQA
+         EfqEPOEfd6nFdkI2/0YCKJar2DBNmKMbJo7oETTCLZDm12GO7A/66QrZORz1hqVDu89o
+         Oz6vvrF4PTJVd96BjlozF/GAsU4V4TY4R6U7E=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=g2u/OLAgiInGN4xLm0+9cr6hTH+ZT1QAXVX+7llX76w=;
+        b=SEPBu54DS3fTzGQCaO7XjqyJ3gND6ynDK0mkmu+kF+kf9DzUkA0BxtmtO+blwNZ624
+         tc6dey2gpMEAqvVbSqAWKEw6eeTzfcwK0VbRviwIzo1SB1/MTTDcaxy6655Cj/+YStk7
+         7/uQN40pR+SJYNJD4TwgzIEBhTH1Uh57sVxSbbtojMWFOpL7PvCmS+2HzTqJpT9WIa2l
+         dIn4Ce6iyVuh0lrPqHaOg2luPpZyEuPfmeVsyizvaaRBio0vaJYY8nGkNDOZnYY2TBmD
+         PaNY7G0oUfWUO4YB4GyfJhLEDUcdcX27CkxMK7V8viK6ljjjhMKmmFPGuynmjfKb+Af5
+         /EpQ==
+X-Gm-Message-State: ANhLgQ3OZNBrHCc10UbMP148h59tZSb/m/kKti1ruoQ4RCUaXC42CrqC
+        GhRp4369vdNOxcKVwWQNlz8wOg==
+X-Google-Smtp-Source: ADFU+vtbNCkmpmFcbgvojdaMhluhfjve5urSrj7UFBlkS7+pLKle++6ipFzEC3JezKdUs1qmXGN61g==
+X-Received: by 2002:a17:90a:a616:: with SMTP id c22mr761854pjq.47.1583780225613;
+        Mon, 09 Mar 2020 11:57:05 -0700 (PDT)
+Received: from smtp.gmail.com ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id k8sm9007674pfk.1.2020.03.09.11.57.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Mar 2020 11:57:05 -0700 (PDT)
+From:   Stephen Boyd <swboyd@chromium.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Lina Iyer <ilina@codeaurora.org>,
+        Maulik Shah <mkshah@codeaurora.org>
+Subject: [PATCH] soc: qcom: cmd-db: Add debugfs dumping file
+Date:   Mon,  9 Mar 2020 11:57:04 -0700
+Message-Id: <20200309185704.2491-1-swboyd@chromium.org>
+X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -66,62 +70,142 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+It's useful for kernel devs to understand what resources and data is
+stored inside command db. Add a file in debugufs called 'cmd-db' to dump
+the memory contents and strings for resources along with their
+addresses. E.g.
 
-Do not depend on dwfl_module_addrsym() because it can fail on user-space
-shared libraries.
+ Command DB DUMP
+ Slave ARC (v16.0)
+ -------------------------
+ 0x00030000: cx.lvl [00 00 10 00 40 00 80 00 c0 00 00 01 80 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00]
+ 0x00030004: cx.tmr
+ 0x00030010: mx.lvl [00 00 10 00 00 01 80 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00]
+ 0x00030014: mx.tmr
 
-Actually, same bug was fixed by commit 664fee3dc379 ("perf probe: Do not
-use dwfl_module_addrsym if dwarf_diename finds symbol name"), but commit
-07d369857808 ("perf probe: Fix wrong address verification) reverted to
-get actual symbol address from symtab.
-
-This fixes it again by getting symbol address from DIE, and only if the
-DIE has only address range, it uses dwfl_module_addrsym().
-
-Fixes: 07d369857808 ("perf probe: Fix wrong address verification)
-Reported-by: Alexandre Ghiti <alex@ghiti.fr>
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Tested-by: Alexandre Ghiti <alex@ghiti.fr>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Sasha Levin <sashal@kernel.org>
-Link: http://lore.kernel.org/lkml/158281812176.476.14164573830975116234.stgit@devnote2
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Lina Iyer <ilina@codeaurora.org>
+Cc: Maulik Shah <mkshah@codeaurora.org>
+Signed-off-by: Stephen Boyd <swboyd@chromium.org>
 ---
- tools/perf/util/probe-finder.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ drivers/soc/qcom/cmd-db.c | 79 ++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 77 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
-index 1c817add6ca4..e4cff49384f4 100644
---- a/tools/perf/util/probe-finder.c
-+++ b/tools/perf/util/probe-finder.c
-@@ -637,14 +637,19 @@ static int convert_to_trace_point(Dwarf_Die *sp_die, Dwfl_Module *mod,
+diff --git a/drivers/soc/qcom/cmd-db.c b/drivers/soc/qcom/cmd-db.c
+index f6c3d17b05c7..6c308f92a13c 100644
+--- a/drivers/soc/qcom/cmd-db.c
++++ b/drivers/soc/qcom/cmd-db.c
+@@ -1,12 +1,13 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ /* Copyright (c) 2016-2018, The Linux Foundation. All rights reserved. */
+ 
++#include <linux/debugfs.h>
+ #include <linux/kernel.h>
+ #include <linux/of.h>
+ #include <linux/of_address.h>
+-#include <linux/of_platform.h>
+ #include <linux/of_reserved_mem.h>
+ #include <linux/platform_device.h>
++#include <linux/seq_file.h>
+ #include <linux/types.h>
+ 
+ #include <soc/qcom/cmd-db.h>
+@@ -236,6 +237,78 @@ enum cmd_db_hw_type cmd_db_read_slave_id(const char *id)
+ }
+ EXPORT_SYMBOL(cmd_db_read_slave_id);
+ 
++#ifdef CONFIG_DEBUG_FS
++static int cmd_db_debugfs_dump(struct seq_file *seq, void *p)
++{
++	int i, j;
++	const struct rsc_hdr *rsc;
++	const struct entry_header *ent;
++	const char *name;
++	u16 len, version;
++	u8 major, minor;
++
++	seq_puts(seq, "Command DB DUMP\n");
++
++	for (i = 0; i < MAX_SLV_ID; i++) {
++
++		rsc = &cmd_db_header->header[i];
++		if (!rsc->slv_id)
++			break;
++
++		switch (rsc->slv_id) {
++		case CMD_DB_HW_ARC:
++			name = "ARC";
++			break;
++		case CMD_DB_HW_VRM:
++			name = "VRM";
++			break;
++		case CMD_DB_HW_BCM:
++			name = "BCM";
++			break;
++		default:
++			name = "Unknown";
++			break;
++		}
++
++		version = le16_to_cpu(rsc->version);
++		major = version >> 8;
++		minor = version;
++
++		seq_printf(seq, "Slave %s (v%u.%u)\n", name, major, minor);
++		seq_puts(seq, "-------------------------\n");
++
++		ent = rsc_to_entry_header(rsc);
++		for (j = 0; j < le16_to_cpu(rsc->cnt); j++, ent++) {
++			seq_printf(seq, "0x%08x: %*pEp", le32_to_cpu(ent->addr),
++				   sizeof(ent->id), ent->id);
++
++			len = le16_to_cpu(ent->len);
++			if (len) {
++				seq_printf(seq, " [%*ph]",
++					   len, rsc_offset(rsc, ent));
++			}
++			seq_putc(seq, '\n');
++		}
++	}
++
++	return 0;
++}
++
++static int open_cmd_db_debugfs(struct inode *inode, struct file *file)
++{
++	return single_open(file, cmd_db_debugfs_dump, inode->i_private);
++}
++#endif
++
++static const struct file_operations cmd_db_debugfs_ops = {
++#ifdef CONFIG_DEBUG_FS
++	.open = open_cmd_db_debugfs,
++#endif
++	.read = seq_read,
++	.llseek = seq_lseek,
++	.release = single_release,
++};
++
+ static int cmd_db_dev_probe(struct platform_device *pdev)
+ {
+ 	struct reserved_mem *rmem;
+@@ -259,12 +332,14 @@ static int cmd_db_dev_probe(struct platform_device *pdev)
  		return -EINVAL;
  	}
  
--	/* Try to get actual symbol name from symtab */
--	symbol = dwfl_module_addrsym(mod, paddr, &sym, NULL);
-+	if (dwarf_entrypc(sp_die, &eaddr) == 0) {
-+		/* If the DIE has entrypc, use it. */
-+		symbol = dwarf_diename(sp_die);
-+	} else {
-+		/* Try to get actual symbol name and address from symtab */
-+		symbol = dwfl_module_addrsym(mod, paddr, &sym, NULL);
-+		eaddr = sym.st_value;
-+	}
- 	if (!symbol) {
- 		pr_warning("Failed to find symbol at 0x%lx\n",
- 			   (unsigned long)paddr);
- 		return -ENOENT;
- 	}
--	eaddr = sym.st_value;
++	debugfs_create_file("cmd-db", 0400, NULL, NULL, &cmd_db_debugfs_ops);
++
+ 	return 0;
+ }
  
- 	tp->offset = (unsigned long)(paddr - eaddr);
- 	tp->address = (unsigned long)paddr;
+ static const struct of_device_id cmd_db_match_table[] = {
+ 	{ .compatible = "qcom,cmd-db" },
+-	{ },
++	{ }
+ };
+ 
+ static struct platform_driver cmd_db_dev_driver = {
+
+base-commit: 2c523b344dfa65a3738e7039832044aa133c75fb
 -- 
-2.21.1
+Sent by a computer, using git, on the internet
 
