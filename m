@@ -2,103 +2,119 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E982C10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 17:22:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CDABC10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 17:22:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA9A6215A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 17:22:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583774551;
-	bh=1cu4d+oO7XWpJIvbZCH3HtArOArgUHyZxzWlPouuQ1Q=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=SgsKJxv8hbhN6i8YSLfuH+4Qli+0tKfZbKDc3g+95lG/WL4Syj46pGKa1JLzivvXm
-	 szxi2MHvq1MW7NMwRPuGeUSCKePwpdcEx3hqn+JyO7X/Om761NUHnAX8PScUYPD8WY
-	 scjnm4+3PRlGS9iNSTseV5MnD2eFdL95e3HxoFGE=
+	by mail.kernel.org (Postfix) with ESMTP id 3009D208C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 17:22:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727323AbgCIRWa (ORCPT
+        id S1727369AbgCIRWn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 13:22:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45094 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727101AbgCIRWa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 13:22:30 -0400
-Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5FE55208C3;
-        Mon,  9 Mar 2020 17:22:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583774550;
-        bh=1cu4d+oO7XWpJIvbZCH3HtArOArgUHyZxzWlPouuQ1Q=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=saf4rYJy6tRsbQfoEujMGfmyBgkiMEgICumgmP5NzqCJGbXcXHXn+CJPp4Wio+lvR
-         KpOaAlBhlhUgq+nNioXedK640RclUAE2whsPldklde+E+6i0p5sEF8fOQ39LK95QX0
-         oRXxcYUTLz6qH+OiNSPi4I7AzjIe6AJDmTEDz/8E=
-Message-ID: <34355c4fe6c3968b1f619c60d5ff2ca11a313096.camel@kernel.org>
-Subject: Re: [locks] 6d390e4b5d: will-it-scale.per_process_ops -96.6%
- regression
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     kernel test robot <rong.a.chen@intel.com>,
-        yangerkun <yangerkun@huawei.com>,
-        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org,
-        Neil Brown <neilb@suse.de>,
-        Bruce Fields <bfields@fieldses.org>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Date:   Mon, 09 Mar 2020 13:22:28 -0400
-In-Reply-To: <CAHk-=whGK712fPqmQ3FSHxqe3Aqny4bEeWEvfaytLeLV2+ijCQ@mail.gmail.com>
-References: <20200308140314.GQ5972@shao2-debian>
-         <e3783d060c778cb41b77380ad3e278133b52f57e.camel@kernel.org>
-         <CAHk-=whGK712fPqmQ3FSHxqe3Aqny4bEeWEvfaytLeLV2+ijCQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        Mon, 9 Mar 2020 13:22:43 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:34115 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727254AbgCIRWn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 13:22:43 -0400
+Received: from mail-wr1-f71.google.com ([209.85.221.71])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <andrea.righi@canonical.com>)
+        id 1jBM6z-0000ke-0a
+        for linux-kernel@vger.kernel.org; Mon, 09 Mar 2020 17:22:41 +0000
+Received: by mail-wr1-f71.google.com with SMTP id n7so5509964wro.9
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 10:22:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:content-transfer-encoding;
+        bh=RpSrK82GO+XpUM86Hc84ckqih+54BcF5pmkDsAsQd94=;
+        b=tM7EK9CwULG7xZEdqBODzT6JU+ALJp7DCbPpQyQrj60BEJYSWeTCA2JEtSDq9JGgL0
+         e2u7HR9IOZcwQAQFHBsqTpVBMfWAEjFV33OHD/Gbfv8pZeV9fojBUnridhR1XLFc9ILr
+         2QCbdBPjBlz0qgZEOXA6EuAC4KQGGJyOylimrLt1Fj2nGslaXYFFg5jkxSV9D7ep5Mxf
+         vqNovIdeqbH6Y7sGUuHYovZ8sUilfLe58NALdcvllY3/fqBKpy42Rxy8rRBGEg21a1Qo
+         KUvNXBO9hHcBiGjI5Qf6D45GVWl9ar9pTaApbdPEpKw31r3pNljnIrZCaB8jTSJ8lTMG
+         o8xQ==
+X-Gm-Message-State: ANhLgQ1Dg+Qgt+zx3YFUofBWJdCmjmABDf2WaYm3a2EAwcWu+pzGYH63
+        wHCp1q9JZvufNfZFsHFMcCH7H2BNmSZnGbgZiwgn0xPnSM3yS16qwzU9KG+rR59hoCYmiztsZA3
+        ZbHc3CfYf0PFHwdhYj7rqngnMioNKwpuy1dBEe1Y1zg==
+X-Received: by 2002:a05:6000:120e:: with SMTP id e14mr1259387wrx.182.1583774560365;
+        Mon, 09 Mar 2020 10:22:40 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vv8sQL3WWVTi+4BELgM2W/7njbFPyjSiHW1ToTXk7sW2lk01O+Ey4fXnfe0i9+DFCXBS6PtsA==
+X-Received: by 2002:a05:6000:120e:: with SMTP id e14mr1259366wrx.182.1583774560108;
+        Mon, 09 Mar 2020 10:22:40 -0700 (PDT)
+Received: from localhost (host96-127-dynamic.32-79-r.retail.telecomitalia.it. [79.32.127.96])
+        by smtp.gmail.com with ESMTPSA id y189sm286063wmb.26.2020.03.09.10.22.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Mar 2020 10:22:39 -0700 (PDT)
+Date:   Mon, 9 Mar 2020 18:22:38 +0100
+From:   Andrea Righi <andrea.righi@canonical.com>
+To:     Richard Cochran <richardcochran@gmail.com>,
+        Vladis Dronov <vdronov@redhat.com>
+Cc:     "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] ptp: free ptp clock properly
+Message-ID: <20200309172238.GJ267906@xps-13>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-03-09 at 08:52 -0700, Linus Torvalds wrote:
-> On Mon, Mar 9, 2020 at 7:36 AM Jeff Layton <jlayton@kernel.org> wrote:
-> > On Sun, 2020-03-08 at 22:03 +0800, kernel test robot wrote:
-> > > FYI, we noticed a -96.6% regression of will-it-scale.per_process_ops due to commit:
-> > 
-> > This is not completely unexpected as we're banging on the global
-> > blocked_lock_lock now for every unlock. This test just thrashes file
-> > locks and unlocks without doing anything in between, so the workload
-> > looks pretty artificial [1].
-> > 
-> > It would be nice to avoid the global lock in this codepath, but it
-> > doesn't look simple to do. I'll keep thinking about it, but for now I'm
-> > inclined to ignore this result unless we see a problem in more realistic
-> > workloads.
-> 
-> That is a _huge_ regression, though.
-> 
-> What about something like the attached? Wouldn't that work? And make
-> the code actually match the old comment about wow "fl_blocker" being
-> NULL being special.
-> 
-> The old code seemed to not know about things like memory ordering either.
-> 
-> Patch is entirely untested, but aims to have that "smp_store_release()
-> means I'm done and not going to touch it any more", making that
-> smp_load_acquire() test hopefully be valid as per the comment..
+There is a bug in ptp_clock_unregister() where pps_unregister_source()
+can free up resources needed by posix_clock_unregister() to properly
+destroy a related sysfs device.
 
-Yeah, something along those lines maybe. I don't think we can use
-fl_blocker that way though, as the wait_event_interruptible is waiting
-on it to go to NULL, and the wake_up happens before fl_blocker is
-cleared.
+Fix this by calling pps_unregister_source() in ptp_clock_release().
 
-Maybe we need to mix in some sort of FL_BLOCK_ACTIVE flag and use that
-instead of testing for !fl_blocker to see whether we can avoid the
-blocked_lock_lock?
-  
+See also:
+commit 75718584cb3c ("ptp: free ptp device pin descriptors properly").
+
+BugLink: https://bugs.launchpad.net/bugs/1864754
+Fixes: a33121e5487b ("ptp: fix the race between the release of ptp_clock and cdev")
+Tested-by: Piotr Morgwai Kotarbiński <foss@morgwai.pl>
+Signed-off-by: Andrea Righi <andrea.righi@canonical.com>
+---
+
+v2: move pps_unregister_source() to ptp_clock_release(), instead of
+    posix_clock_unregister(), that would just introduce a resource leak
+
+ drivers/ptp/ptp_clock.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/ptp/ptp_clock.c b/drivers/ptp/ptp_clock.c
+index ac1f2bf9e888..468286ef61ad 100644
+--- a/drivers/ptp/ptp_clock.c
++++ b/drivers/ptp/ptp_clock.c
+@@ -170,6 +170,9 @@ static void ptp_clock_release(struct device *dev)
+ {
+ 	struct ptp_clock *ptp = container_of(dev, struct ptp_clock, dev);
+ 
++	/* Release the clock's resources. */
++	if (ptp->pps_source)
++		pps_unregister_source(ptp->pps_source);
+ 	ptp_cleanup_pin_groups(ptp);
+ 	mutex_destroy(&ptp->tsevq_mux);
+ 	mutex_destroy(&ptp->pincfg_mux);
+@@ -298,11 +301,6 @@ int ptp_clock_unregister(struct ptp_clock *ptp)
+ 		kthread_cancel_delayed_work_sync(&ptp->aux_work);
+ 		kthread_destroy_worker(ptp->kworker);
+ 	}
+-
+-	/* Release the clock's resources. */
+-	if (ptp->pps_source)
+-		pps_unregister_source(ptp->pps_source);
+-
+ 	posix_clock_unregister(&ptp->clock);
+ 
+ 	return 0;
 -- 
-Jeff Layton <jlayton@kernel.org>
+2.25.0
 
