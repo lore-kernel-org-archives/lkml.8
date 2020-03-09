@@ -2,152 +2,105 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17A37C10F29
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:23:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1553BC10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:23:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDAEB20727
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:23:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D601220727
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:23:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726490AbgCIJXI convert rfc822-to-8bit (ORCPT
+        id S1726497AbgCIJXx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 05:23:08 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2517 "EHLO huawei.com"
+        Mon, 9 Mar 2020 05:23:53 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2518 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725962AbgCIJXH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 05:23:07 -0400
-Received: from lhreml707-cah.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id EFEBBDAF59E32787575D;
-        Mon,  9 Mar 2020 09:23:05 +0000 (GMT)
-Received: from lhreml713-chm.china.huawei.com (10.201.108.64) by
- lhreml707-cah.china.huawei.com (10.201.108.48) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Mon, 9 Mar 2020 09:23:05 +0000
-Received: from lhreml715-chm.china.huawei.com (10.201.108.66) by
- lhreml713-chm.china.huawei.com (10.201.108.64) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 9 Mar 2020 09:23:05 +0000
-Received: from lhreml715-chm.china.huawei.com ([10.201.108.66]) by
- lhreml715-chm.china.huawei.com ([10.201.108.66]) with mapi id 15.01.1713.004;
- Mon, 9 Mar 2020 09:23:05 +0000
-From:   Shiju Jose <shiju.jose@huawei.com>
-To:     "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "helgaas@kernel.org" <helgaas@kernel.org>,
-        "lenb@kernel.org" <lenb@kernel.org>, "bp@alien8.de" <bp@alien8.de>,
-        "james.morse@arm.com" <james.morse@arm.com>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "zhangliguang@linux.alibaba.com" <zhangliguang@linux.alibaba.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>
-CC:     Linuxarm <linuxarm@huawei.com>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        tanxiaofei <tanxiaofei@huawei.com>,
-        yangyicong <yangyicong@huawei.com>
-Subject: RE: [PATCH v4 0/2] ACPI: APEI: Add support to notify the vendor
- specific HW errors
-Thread-Topic: [PATCH v4 0/2] ACPI: APEI: Add support to notify the vendor
- specific HW errors
-Thread-Index: AQHV3aHkegohdCgESkuEgBYAy0dBQqhALNvg
-Date:   Mon, 9 Mar 2020 09:23:05 +0000
-Message-ID: <30d704c86d8b4be591ee36c0e735069d@huawei.com>
-References: <Shiju Jose> <20200207103143.20104-1-shiju.jose@huawei.com>
-In-Reply-To: <20200207103143.20104-1-shiju.jose@huawei.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.47.83.9]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        id S1725956AbgCIJXx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 05:23:53 -0400
+Received: from lhreml709-cah.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id DA1F5627232FA6AA24A9;
+        Mon,  9 Mar 2020 09:23:51 +0000 (GMT)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ lhreml709-cah.china.huawei.com (10.201.108.32) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Mon, 9 Mar 2020 09:23:51 +0000
+Received: from [127.0.0.1] (10.202.226.45) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Mon, 9 Mar 2020
+ 09:23:51 +0000
+Subject: Re: [PATCH v2] scsi: aacraid: fix -Wcast-function-type
+To:     Phong Tran <tranmanphong@gmail.com>, <aacraid@microsemi.com>,
+        <jejb@linux.ibm.com>, <martin.petersen@oracle.com>,
+        <bvanassche@acm.org>
+CC:     <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <keescook@chromium.org>
+References: <20200307132103.4687-1-tranmanphong@gmail.com>
+ <20200308020143.9351-1-tranmanphong@gmail.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <9a0e6373-b4a3-0822-3b65-e3b326266832@huawei.com>
+Date:   Mon, 9 Mar 2020 09:23:50 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
+In-Reply-To: <20200308020143.9351-1-tranmanphong@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.202.226.45]
+X-ClientProxiedBy: lhreml720-chm.china.huawei.com (10.201.108.71) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi All,
+On 08/03/2020 02:01, Phong Tran wrote:
+> correct usage prototype of callback scsi_cmnd.scsi_done()
+> Report by: https://github.com/KSPP/linux/issues/20
+> 
 
-Gentle reminder on this patch set.
+no harm to add:
 
-Thanks,
-Shiju
+drivers/scsi/aacraid/aachba.c:813:23: warning: cast between incompatible 
+function types from ‘int (*)(struct scsi_cmnd *)’ to ‘void (*)(struct 
+scsi_cmnd *)’ [-Wcast-function-type]
 
->-----Original Message-----
->From: linux-acpi-owner@vger.kernel.org [mailto:linux-acpi-
->owner@vger.kernel.org] On Behalf Of Shiju Jose
->Sent: 07 February 2020 10:32
->To: linux-acpi@vger.kernel.org; linux-pci@vger.kernel.org; linux-
->kernel@vger.kernel.org; rjw@rjwysocki.net; helgaas@kernel.org;
->lenb@kernel.org; bp@alien8.de; james.morse@arm.com; tony.luck@intel.com;
->gregkh@linuxfoundation.org; zhangliguang@linux.alibaba.com;
->tglx@linutronix.de
->Cc: Linuxarm <linuxarm@huawei.com>; Jonathan Cameron
-><jonathan.cameron@huawei.com>; tanxiaofei <tanxiaofei@huawei.com>;
->yangyicong <yangyicong@huawei.com>; Shiju Jose <shiju.jose@huawei.com>
->Subject: [PATCH v4 0/2] ACPI: APEI: Add support to notify the vendor specific
->HW errors
->
->Presently the vendor drivers are unable to do the recovery for the vendor
->specific recoverable HW errors, reported to the APEI driver in the vendor
->defined sections, because APEI driver does not support reporting the same to
->the vendor drivers.
->
->This patch set
->1. add an interface to the APEI driver to enable the vendor drivers to register
->the event handling functions for the corresponding vendor specific HW errors
->and report the error to the vendor driver.
->
->2. add driver to handle HiSilicon hip08 PCIe controller's errors
->   which is an example application of the above APEI interface.
->
->Changes:
->
->V4:
->1. Fix for the smatch warning in the PCIe error driver:
->   warn: should '((((1))) << (9 + i))' be a 64 bit type?
->   if (err->val_bits & BIT(HISI_PCIE_LOCAL_VALID_ERR_MISC + i))
->	^^^ This should be BIT_ULL() because it goes up to 9 + 32.
->
->V3:
->1. Fix the comments from Bjorn Helgaas.
->
->V2:
->1. Changes in the HiSilicon PCIe controller's error handling driver
->   for the comments from Bjorn Helgaas.
->
->2. Changes in the APEI interface to support reporting the vendor error
->   for module with multiple devices, but use the same section type.
->   In the error handler will use socket id/sub module id etc to distinguish
->   the device.
->
->V1:
->1. Fix comments from James Morse.
->
->2. add driver to handle HiSilicon hip08 PCIe controller's errors,
->   which is an application of the above interface.
->
->Shiju Jose (1):
->  ACPI: APEI: Add support to notify the vendor specific HW errors
->
->Yicong Yang (1):
->  PCI: HIP: Add handling of HiSilicon HIP PCIe controller errors
->
-> drivers/acpi/apei/ghes.c                 | 116 ++++++++++-
-> drivers/pci/controller/Kconfig           |   8 +
-> drivers/pci/controller/Makefile          |   1 +
-> drivers/pci/controller/pcie-hisi-error.c | 334
->+++++++++++++++++++++++++++++++
-> include/acpi/ghes.h                      |  56 ++++++
-> 5 files changed, 510 insertions(+), 5 deletions(-)  create mode 100644
->drivers/pci/controller/pcie-hisi-error.c
->
->--
->1.9.1
->
+
+> Signed-off-by: Phong Tran <tranmanphong@gmail.com>
+> ---
+>   drivers/scsi/aacraid/aachba.c | 7 ++++++-
+>   1 file changed, 6 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/scsi/aacraid/aachba.c b/drivers/scsi/aacraid/aachba.c
+> index 33dbc051bff9..20ca3647d211 100644
+> --- a/drivers/scsi/aacraid/aachba.c
+> +++ b/drivers/scsi/aacraid/aachba.c
+> @@ -798,6 +798,11 @@ static int aac_probe_container_callback1(struct scsi_cmnd * scsicmd)
+>   	return 0;
+>   }
+>   
+> +static void  aac_probe_container_scsi_done(struct scsi_cmnd *scsi_cmnd)
+
+supernit: double whitespace
+
+> +{
+> +	aac_probe_container_callback1(scsi_cmnd);
+> +}
+> +
+>   int aac_probe_container(struct aac_dev *dev, int cid)
+>   {
+>   	struct scsi_cmnd *scsicmd = kmalloc(sizeof(*scsicmd), GFP_KERNEL);
+> @@ -810,7 +815,7 @@ int aac_probe_container(struct aac_dev *dev, int cid)
+>   		return -ENOMEM;
+>   	}
+>   	scsicmd->list.next = NULL;
+> -	scsicmd->scsi_done = (void (*)(struct scsi_cmnd*))aac_probe_container_callback1;
+> +	scsicmd->scsi_done = aac_probe_container_scsi_done;
+>   
+>   	scsicmd->device = scsidev;
+>   	scsidev->sdev_state = 0;
+> 
 
