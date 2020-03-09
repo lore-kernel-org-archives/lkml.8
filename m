@@ -2,97 +2,143 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62FBBC10F25
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:51:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B52D5C10F25
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:52:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4069920873
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:51:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D00D20663
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:52:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="n/gHlBJq"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="GYqByHGE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727532AbgCISva (ORCPT
+        id S1727464AbgCISwm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 14:51:30 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:42413 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727504AbgCISv0 (ORCPT
+        Mon, 9 Mar 2020 14:52:42 -0400
+Received: from mail.efficios.com ([167.114.26.124]:42734 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727334AbgCISwm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 14:51:26 -0400
-Received: by mail-pl1-f195.google.com with SMTP id t3so2098210plz.9
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 11:51:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KlRXdnxj2Ny2y1SE3JlpQNEkyXKUGq38gqBn9QXInvI=;
-        b=n/gHlBJqW+XXY/SauS2FEzFd+YOJE/NOQ9qA9YuexD16c6s/bT2qX7CBZaahLEfCP6
-         hMkH3Z+CaU7WJL87znswp53rgJuUJyiJM7C2oZTeIM7Zya49z4vcS2fG4vR/2w5IIItc
-         soHjU4a0bumE/+uVBcuAbC07De4cXkbtikDyg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KlRXdnxj2Ny2y1SE3JlpQNEkyXKUGq38gqBn9QXInvI=;
-        b=SeYafT5f8o/whdXEF4y7/JJdx/17WNOcPvF8FAvIHkGDFfZZJk76CqkjWXP7dNpmq7
-         b+mxk2/WxX5AmawLnAxqzaVn5Lx3i3z7fJ0yXfpTGPAAeZHVDgwnAgFuABoAnwOmLCP5
-         UdWIXriCIbP+bxu0z4wM8j33PV8MW5Py74ihckXHWlRuhSCTDJWwTwalQXFMTNN6CE1P
-         OFlueYLUJYAopTOLphyqLsz+A9+J//vYMamDUjGPufAEUa/e8kBrrZbHJ2LPCDARVjNr
-         U2U/wJ1ofm6RM9Ggv/BAL7P42diK9MfF9kRjGOXFeuqTV7mwRhO9/fAGT02xcBre2v7q
-         Qy1w==
-X-Gm-Message-State: ANhLgQ2915phdpS6V8BjyUPo+y4ptCP8YLdTxNi2pyauU/ITVEtfVKgT
-        Gtvd+AU750qnd/DPwhgAf47BYw==
-X-Google-Smtp-Source: ADFU+vsVGrRceJW/ujmAZpF6YeR9HYUMhFCBSm78ZivX9FVTSj2vlAA+5vyP+j4yQEhXkjJD/I/nFg==
-X-Received: by 2002:a17:90a:8d86:: with SMTP id d6mr89910pjo.119.1583779884729;
-        Mon, 09 Mar 2020 11:51:24 -0700 (PDT)
-Received: from smtp.gmail.com ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id u23sm45168990pfm.29.2020.03.09.11.51.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Mar 2020 11:51:24 -0700 (PDT)
-From:   Stephen Boyd <swboyd@chromium.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Vaishali Thakkar <vaishali.thakkar@linaro.org>
-Subject: [PATCH] soc: qcom: socinfo: Use seq_putc() if possible
-Date:   Mon,  9 Mar 2020 11:51:23 -0700
-Message-Id: <20200309185123.65265-1-swboyd@chromium.org>
-X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
+        Mon, 9 Mar 2020 14:52:42 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 7A6EC268442;
+        Mon,  9 Mar 2020 14:52:40 -0400 (EDT)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id unUE-b_3TSZu; Mon,  9 Mar 2020 14:52:40 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 336B2268722;
+        Mon,  9 Mar 2020 14:52:40 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 336B2268722
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1583779960;
+        bh=pE8bJ9ixsc7cm2JfC2ndvLTF4nXTDmZja0Dbm38GqhM=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=GYqByHGEkCTsDiWNmXVoDMf+F0+Xg+MvIb3gf7SAq62tWNg2Ok9zz+tb+J2ZPmEvi
+         czlzV2bCpyas3Lc+++jfI3rxJxfFMR48C0Zq4i3k9p2uoMqEgB5DSGQLPlFnj7QBh1
+         Cd6966Ss+9ilIBAzNku7N6lyZutGwVGbULDy8/V1qUBmEjW/BZyl9+Zzbs/CY38lGz
+         L/5dhsnJgcavErn+qvesncShw/2UnWd3r2O39AczFSWyqE/44MQrSSb/m2szrpyfJQ
+         jMqkyO2dVd+N5A8uhQD5/sygPOGaRFfYtdtZTLLcbILXO3dHNczuTp46d7i45pV6Tt
+         IDG38QXW9Wcvg==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id if5RhueP52Ff; Mon,  9 Mar 2020 14:52:40 -0400 (EDT)
+Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
+        by mail.efficios.com (Postfix) with ESMTP id 26AA3268441;
+        Mon,  9 Mar 2020 14:52:40 -0400 (EDT)
+Date:   Mon, 9 Mar 2020 14:52:40 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     rostedt <rostedt@goodmis.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        paulmck <paulmck@kernel.org>,
+        "Joel Fernandes, Google" <joel@joelfernandes.org>,
+        Frederic Weisbecker <frederic@kernel.org>
+Message-ID: <1851876075.21840.1583779960064.JavaMail.zimbra@efficios.com>
+In-Reply-To: <20200309144427.0ce0eabc@gandalf.local.home>
+References: <87mu8p797b.fsf@nanos.tec.linutronix.de> <1403546357.21810.1583779060302.JavaMail.zimbra@efficios.com> <20200309144427.0ce0eabc@gandalf.local.home>
+Subject: Re: Instrumentation and RCU
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.26.124]
+X-Mailer: Zimbra 8.8.15_GA_3901 (ZimbraWebClient - FF73 (Linux)/8.8.15_GA_3895)
+Thread-Topic: Instrumentation and RCU
+Thread-Index: NW7KV4uXEwGhR5W3UrelonrIpWyYaQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a single character that we're printing out. Use seq_putc() for
-that to simplify the code.
+----- On Mar 9, 2020, at 2:44 PM, rostedt rostedt@goodmis.org wrote:
 
-Cc: Vaishali Thakkar <vaishali.thakkar@linaro.org>
-Signed-off-by: Stephen Boyd <swboyd@chromium.org>
----
- drivers/soc/qcom/socinfo.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> On Mon, 9 Mar 2020 14:37:40 -0400 (EDT)
+> Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
+> 
+>> So I think we could go back to plain RCU for rcuidle tracepoints if we do
+>> the cheaper "rcu_is_watching()" check rather than invoking
+>> rcu_irq_{enter,exit}_irqson() unconditionally.
+> 
+> You mean something like this?
 
-diff --git a/drivers/soc/qcom/socinfo.c b/drivers/soc/qcom/socinfo.c
-index 7864b75ce569..ebb49aee179b 100644
---- a/drivers/soc/qcom/socinfo.c
-+++ b/drivers/soc/qcom/socinfo.c
-@@ -277,7 +277,7 @@ static int show_image_##type(struct seq_file *seq, void *p)		  \
- {								  \
- 	struct smem_image_version *image_version = seq->private;  \
- 	seq_puts(seq, image_version->type);			  \
--	seq_puts(seq, "\n");					  \
-+	seq_putc(seq, '\n');					  \
- 	return 0;						  \
- }								  \
- static int open_image_##type(struct inode *inode, struct file *file)	  \
+I have a hard time applying this patch to any tree I can fetch, so
+I will use caution and say: probably not. ;-)
 
-base-commit: 2c523b344dfa65a3738e7039832044aa133c75fb
+And when I say "go back to plain RCU", I really mean removing use of SRCU
+from the tracepoints until we have other purposes for it (e.g. taking
+faults within specific tracepoint probes such as syscall enter/exit).
+
+Thanks,
+
+Mathieu
+
+> 
+> -- Steve
+> 
+> diff --git a/include/linux/tracepoint.h b/include/linux/tracepoint.h
+> index 5f4de82ffa0f..1904dbb3a921 100644
+> --- a/include/linux/tracepoint.h
+> +++ b/include/linux/tracepoint.h
+> @@ -164,7 +164,7 @@ static inline struct tracepoint
+> *tracepoint_ptr_deref(tracepoint_ptr_t *p)
+> 		struct tracepoint_func *it_func_ptr;			\
+> 		void *it_func;						\
+> 		void *__data;						\
+> -		int __maybe_unused __idx = 0;				\
+> +		int __maybe_unused __idx = -1;				\
+> 									\
+> 		if (!(cond))						\
+> 			return;						\
+> @@ -179,8 +179,8 @@ static inline struct tracepoint
+> *tracepoint_ptr_deref(tracepoint_ptr_t *p)
+> 		 * For rcuidle callers, use srcu since sched-rcu	\
+> 		 * doesn't work from the idle path.			\
+> 		 */							\
+> -		if (rcuidle)						\
+> -			__idx = srcu_read_lock_notrace(&tracepoint_srcu);\
+> +		if (rcuidle && !rcu_is_watching())			\
+> +			__idx = srcu_read_lock_notrace(&tracepoint_srcu); \
+> 									\
+> 		it_func_ptr = rcu_dereference_raw((tp)->funcs);		\
+> 									\
+> @@ -199,7 +199,7 @@ static inline struct tracepoint
+> *tracepoint_ptr_deref(tracepoint_ptr_t *p)
+> 			} while ((++it_func_ptr)->func);		\
+> 		}							\
+> 									\
+> -		if (rcuidle)						\
+> +		if (rcuidle && __idx != -1)				\
+> 			rcu_irq_exit_irqson();				\
+> 									\
+>  		preempt_enable_notrace();				\
+
 -- 
-Sent by a computer, using git, on the internet
-
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
