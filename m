@@ -2,74 +2,118 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 344ADC10F25
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 06:06:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF743C10F28
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 06:20:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 107B020675
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 06:06:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 941EF2166E
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 06:20:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oLuNqixN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726379AbgCIGGz (ORCPT
+        id S1726391AbgCIGUv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 02:06:55 -0400
-Received: from ZXSHCAS1.zhaoxin.com ([203.148.12.81]:52880 "EHLO
-        ZXSHCAS1.zhaoxin.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725796AbgCIGGy (ORCPT
+        Mon, 9 Mar 2020 02:20:51 -0400
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:37163 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726071AbgCIGUu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 02:06:54 -0400
-Received: from zxbjmbx1.zhaoxin.com (10.29.252.163) by ZXSHCAS1.zhaoxin.com
- (10.28.252.161) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1261.35; Mon, 9 Mar
- 2020 14:06:36 +0800
-Received: from tony-HX002EA.zhaoxin.com (10.32.64.44) by zxbjmbx1.zhaoxin.com
- (10.29.252.163) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1261.35; Mon, 9 Mar
- 2020 14:06:34 +0800
-From:   Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
-To:     <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
-        <hpa@zytor.com>, <x86@kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <DavidWang@zhaoxin.com>, <CooperYan@zhaoxin.com>,
-        <QiyuanWang@zhaoxin.com>, <HerryYang@zhaoxin.com>,
-        <CobeChen@zhaoxin.com>
-Subject: [PATCH] x86/Kconfig: make X86_UMIP to cover any X86 CPU
-Date:   Mon, 9 Mar 2020 14:06:30 +0800
-Message-ID: <1583733990-2587-1-git-send-email-TonyWWang-oc@zhaoxin.com>
-X-Mailer: git-send-email 2.7.4
+        Mon, 9 Mar 2020 02:20:50 -0400
+Received: by mail-pj1-f65.google.com with SMTP id ca13so1726520pjb.2;
+        Sun, 08 Mar 2020 23:20:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=g75Qh0w0IMlX/zV9hQvw54yKT3VrtMDkZu/Q14Db4QQ=;
+        b=oLuNqixNl1JxNVT152qOq/xNxOVKrrzZ6dbHvCBWH/+3doPheUSai4W8Asav3nC6uU
+         qdEv2xwxy2lA/KdtQMkqQ5FFkvz4Q5F7Cq598Htvjw6tVym6ZXB5wFlesntytgI8+TSj
+         3T0R+fC5Fyk9OrD2EaoizKfpnsFYktFYpsuD8L4qYUQvATxVO8f5L1/ezu7ZNh8U4a47
+         4XEYWEVzUzKzoycFQQi+5nySgzPSrZQWph39MGZ5OJMn2QV0b/knhiraNQexExmY02pg
+         yI5Ed4aPCD/hqzR2JiRjsQhrkwxv8OVH12+aZ9NL25gytbe/L7taOxw0caVyRszKWETB
+         kR8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=g75Qh0w0IMlX/zV9hQvw54yKT3VrtMDkZu/Q14Db4QQ=;
+        b=nFvENOHmBnp2HcFZDj/ZPrz7r0Ukz3U05fH003biui7j9mjzCmOiYoUwjKc9kdD1m/
+         5dXaLPdSmydvaGW7rv7e97TnjHf0F3RpQdCm/vAsJPwywOp/J2FaXAivN8F8pxjTp9n3
+         +NdqQyUEGvqDUxlhphKMiZO7ifw9h90tnLuOiJ66GB/SsaOy2HInmWUbLQPEAFa0BieL
+         KA5vN38SFwS9C6X8FN+J6YUF/TciT0naOMjiL7kl6YSokuyJdDzlFvJ7jCB6bGa3ZYvZ
+         8DWb0hog7yDrhqN9eoujnRme7XzJyGStc/uHDM7mwDQlU/d+pm/PZoLWPVfJNTjZKyJC
+         NOVQ==
+X-Gm-Message-State: ANhLgQ1EukIbudNnP9C8YYj0+vMijPyj5wqubiyCkjsSERzZ2RsIXBfs
+        hmhZLZyGK9TS1eZELgJ0JiY=
+X-Google-Smtp-Source: ADFU+vuTacwZljz++7mnGUt/1ePVmD3eBqPVSmeedFPkE4WHnu5hOKP7jdOfQMZ9g3/9NHhJm+yNiA==
+X-Received: by 2002:a17:902:70c8:: with SMTP id l8mr14211162plt.89.1583734849681;
+        Sun, 08 Mar 2020 23:20:49 -0700 (PDT)
+Received: from localhost ([2401:fa00:8f:203:5bbb:c872:f2b1:f53b])
+        by smtp.gmail.com with ESMTPSA id l189sm3156157pga.64.2020.03.08.23.20.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 08 Mar 2020 23:20:48 -0700 (PDT)
+Date:   Mon, 9 Mar 2020 15:20:46 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     Joe Perches <joe@perches.com>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Hugh Dickins <hughd@google.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Nitin Gupta <ngupta@vflare.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        cgroups@vger.kernel.org
+Subject: Re: [PATCH] mm: Use fallthrough;
+Message-ID: <20200309062046.GA46830@google.com>
+References: <f62fea5d10eb0ccfc05d87c242a620c261219b66.camel@perches.com>
+ <20200308031825.GB1125@jagdpanzerIV.localdomain>
+ <5f297e8995b22c9ccf06d4d0a04f7d9a37d3cd77.camel@perches.com>
+ <20200309041551.GA1765@jagdpanzerIV.localdomain>
+ <84f3c9891d4e89909d5537f34ea9d75de339c415.camel@perches.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.32.64.44]
-X-ClientProxiedBy: ZXSHCAS1.zhaoxin.com (10.28.252.161) To
- zxbjmbx1.zhaoxin.com (10.29.252.163)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <84f3c9891d4e89909d5537f34ea9d75de339c415.camel@perches.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While the UMIP (User-Mode Instruction Prevention) is a generic X86 CPU
-feature, there is no need to tie X86_UMIP only to Intel and AMD.
+On (20/03/08 21:51), Joe Perches wrote:
+> On Mon, 2020-03-09 at 13:15 +0900, Sergey Senozhatsky wrote:
+> > On (20/03/07 19:54), Joe Perches wrote:
+> > > On Sun, 2020-03-08 at 12:18 +0900, Sergey Senozhatsky wrote:
+> > > > On (20/03/06 23:58), Joe Perches wrote:
+> > > > [..]
 
-So remove that dependency from the Kconfig rules.
+[..]
 
-Signed-off-by: Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
----
- arch/x86/Kconfig | 1 -
- 1 file changed, 1 deletion(-)
+> > > Consecutive case labels do not need an interleaving fallthrough;
+> > > 
+> > > ie: ditto
+> > 
+> > I see. Shall this be mentioned in the commit message, maybe?
+> 
+> <shrug, maybe>  I've no real opinion about that necessity.
+> 
+> fallthrough commments are relatively rarely used as a
+> separating element between case labels.
+> 
+> It's by far most common to just have consecutive case labels
+> without any other content.
+> 
+> It's somewhere between 500:1 to 1000:1 in the kernel.
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 5ad3957..ca16b762 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -1871,7 +1871,6 @@ config X86_SMAP
- 
- config X86_UMIP
- 	def_bool y
--	depends on CPU_SUP_INTEL || CPU_SUP_AMD
- 	prompt "User Mode Instruction Prevention" if EXPERT
- 	---help---
- 	  User Mode Instruction Prevention (UMIP) is a security feature in
--- 
-2.7.4
+I thought that those labels were used by some static code analysis
+tools, so that the removal of some labels raised questions. But I
+don't think I have opinions otherwise.
 
+	-ss
