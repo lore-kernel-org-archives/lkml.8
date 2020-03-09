@@ -2,138 +2,148 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEDDCC18E5A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:05:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84417C10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:05:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAC68215A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:05:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="EXbeZFXA"
+	by mail.kernel.org (Postfix) with ESMTP id 6A08921D56
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:05:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727411AbgCISFM (ORCPT
+        id S1727417AbgCISFY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 14:05:12 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:43435 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726353AbgCISFM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 14:05:12 -0400
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id A755823EDA;
-        Mon,  9 Mar 2020 19:05:09 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1583777109;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=7YTstUEAHOImHVubDPl/PQ3nYvKS6CDicl+KJS2YJ6Y=;
-        b=EXbeZFXASRSaA835mHDnjE2AfBIpT2EYd4khZ1LQfA8ZnK7kEsPKkPpwAmMYyKO7UByG/X
-        A410+PBrCP4qvhLHFcPMTfVWwxaD1FqBRHUWzay2+inMDYc+QqjdjT0CTdHTTZqqGfsqlf
-        Hm6SOmKPKrsJfDlWPSTi6jMt51kFSPM=
+        Mon, 9 Mar 2020 14:05:24 -0400
+Received: from mga11.intel.com ([192.55.52.93]:59940 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726859AbgCISFX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 14:05:23 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Mar 2020 11:05:23 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,534,1574150400"; 
+   d="scan'208";a="231020439"
+Received: from jdbostic-mobl1.amr.corp.intel.com (HELO [10.251.152.35]) ([10.251.152.35])
+  by orsmga007.jf.intel.com with ESMTP; 09 Mar 2020 11:05:22 -0700
+Subject: Re: [RFC PATCH] soundwire: bus: Add flag to mark DPN_BlockCtrl1 as
+ readonly
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        vkoul@kernel.org
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+References: <20200309173755.955-1-srinivas.kandagatla@linaro.org>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <d94fca16-ed61-632a-6f8c-84e3a97869c7@linux.intel.com>
+Date:   Mon, 9 Mar 2020 13:05:22 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <20200309173755.955-1-srinivas.kandagatla@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Mon, 09 Mar 2020 19:05:09 +0100
-From:   Michael Walle <michael@walle.cc>
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     broonie@kernel.org, linux-spi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, shawnguo@kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, eha@deif.com, angelo@sysam.it,
-        andrew.smirnov@gmail.com, gustavo@embeddedor.com, weic@nvidia.com,
-        mhosny@nvidia.com, peng.ma@nxp.com
-Subject: Re: [PATCH 1/6] spi: spi-fsl-dspi: Don't access reserved fields in
- SPI_MCR
-In-Reply-To: <20200309145624.10026-2-olteanv@gmail.com>
-References: <20200309145624.10026-1-olteanv@gmail.com>
- <20200309145624.10026-2-olteanv@gmail.com>
-Message-ID: <c35b3c34123b43b26204a2cf360e7ec1@walle.cc>
-X-Sender: michael@walle.cc
-User-Agent: Roundcube Webmail/1.3.10
-X-Spamd-Bar: +
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: A755823EDA
-X-Spamd-Result: default: False [1.40 / 15.00];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[dt];
-         MIME_GOOD(-0.10)[text/plain];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_TWELVE(0.00)[15];
-         NEURAL_HAM(-0.00)[-0.374];
-         FREEMAIL_TO(0.00)[gmail.com];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         FREEMAIL_CC(0.00)[kernel.org,vger.kernel.org,arm.com,deif.com,sysam.it,gmail.com,embeddedor.com,nvidia.com,nxp.com];
-         MID_RHS_MATCH_FROM(0.00)[];
-         SUSPICIOUS_RECIPS(1.50)[]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 2020-03-09 15:56, schrieb Vladimir Oltean:
-> From: Vladimir Oltean <vladimir.oltean@nxp.com>
-> 
-> The SPI_MCR_PCSIS macro assumes that the controller has a number of 
-> chip
-> select signals equal to 6. That is not always the case, but actually is
-> described through the driver-specific " signals equal to 6. That is not
-> always the case, but actually is described through the driver-specific
-> "spi-num-chipselects" device tree binding.
 
-Repeated sentence? Was this your intention?
 
--michael
+On 3/9/20 12:37 PM, Srinivas Kandagatla wrote:
+> According to SoundWire Specification Version 1.2.
+> "A Data Port number X (in the range 0-14) which supports only one
+> value of WordLength may implement the WordLength field in the
+> DPX_BlockCtrl1 Register as Read-Only, returning the fixed value of
+> WordLength in response to reads."
 
-> LS1028A for example only has
-> 4 chip selects.
+Interesting.
+
+I think it's a spec issue that you want to bring to the MIPI Audio WG 
+attention.
+
+The note below says 'the DPx_BlockCtrl1 Register remains as Read-Write, 
+but the value written to the Read-Only field is not used'
+
+Ignoring a value and returning an error are two different behaviors indeed.
+
+My recommendation would be to add a DisCo property stating the 
+WordLength value can be used by the bus code but not written to the 
+Slave device registers.
+
 > 
-> Don't write to the upper bits of the PCSIS field, which are reserved in
-> the reference manual.
+> As WSA881x interfaces in PDM mode making the only field "WordLength"
+> in DPX_BlockCtrl1" fixed and read-only. Behaviour of writing to this
+> register on WSA881x soundwire slave with Qualcomm Soundwire Controller
+> is throwing up an error. Not sure how other controllers deal with
+> writing to readonly registers, but this patch provides a way to avoid
+> writes to DPN_BlockCtrl1 register by providing a ro_blockctrl1_reg
+> flag in struct sdw_port_runtime.
 > 
-> Fixes: 349ad66c0ab0 ("spi:Add Freescale DSPI driver for Vybrid VF610 
-> platform")
-> Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 > ---
->  drivers/spi/spi-fsl-dspi.c | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
-> index 0683a3fbd48c..0ce26c1cbf62 100644
-> --- a/drivers/spi/spi-fsl-dspi.c
-> +++ b/drivers/spi/spi-fsl-dspi.c
-> @@ -22,7 +22,7 @@
+> I will send patch for WSA881x to include this change once this patch
+> is accepted.
 > 
->  #define SPI_MCR				0x00
->  #define SPI_MCR_MASTER			BIT(31)
-> -#define SPI_MCR_PCSIS			(0x3F << 16)
-> +#define SPI_MCR_PCSIS(x)		((x) << 16)
->  #define SPI_MCR_CLR_TXF			BIT(11)
->  #define SPI_MCR_CLR_RXF			BIT(10)
->  #define SPI_MCR_XSPI			BIT(3)
-> @@ -1197,7 +1197,10 @@ static const struct regmap_config
-> dspi_xspi_regmap_config[] = {
+>   drivers/soundwire/bus.h    |  2 ++
+>   drivers/soundwire/stream.c | 17 ++++++++++-------
+>   2 files changed, 12 insertions(+), 7 deletions(-)
 > 
->  static void dspi_init(struct fsl_dspi *dspi)
->  {
-> -	unsigned int mcr = SPI_MCR_PCSIS;
-> +	unsigned int mcr;
-> +
-> +	/* Set idle states for all chip select signals to high */
-> +	mcr = SPI_MCR_PCSIS(GENMASK(dspi->ctlr->num_chipselect - 1, 0));
+> diff --git a/drivers/soundwire/bus.h b/drivers/soundwire/bus.h
+> index 204204a26db8..791e8d14093e 100644
+> --- a/drivers/soundwire/bus.h
+> +++ b/drivers/soundwire/bus.h
+> @@ -79,6 +79,7 @@ int sdw_find_col_index(int col);
+>    * @num: Port number. For audio streams, valid port number ranges from
+>    * [1,14]
+>    * @ch_mask: Channel mask
+> + * @ro_blockctrl1_reg: Read Only flag for DPN_BlockCtrl1 register
+>    * @transport_params: Transport parameters
+>    * @port_params: Port parameters
+>    * @port_node: List node for Master or Slave port_list
+> @@ -89,6 +90,7 @@ int sdw_find_col_index(int col);
+>   struct sdw_port_runtime {
+>   	int num;
+>   	int ch_mask;
+> +	bool ro_blockctrl1_reg;
+>   	struct sdw_transport_params transport_params;
+>   	struct sdw_port_params port_params;
+>   	struct list_head port_node;
+> diff --git a/drivers/soundwire/stream.c b/drivers/soundwire/stream.c
+> index 00348d1fc606..4491643aeb4a 100644
+> --- a/drivers/soundwire/stream.c
+> +++ b/drivers/soundwire/stream.c
+> @@ -167,13 +167,15 @@ static int sdw_program_slave_port_params(struct sdw_bus *bus,
+>   		return ret;
+>   	}
+>   
+> -	/* Program DPN_BlockCtrl1 register */
+> -	ret = sdw_write(s_rt->slave, addr2, (p_params->bps - 1));
+> -	if (ret < 0) {
+> -		dev_err(&s_rt->slave->dev,
+> -			"DPN_BlockCtrl1 register write failed for port %d\n",
+> -			t_params->port_num);
+> -		return ret;
+> +	if (!p_rt->ro_blockctrl1_reg) {
+> +		/* Program DPN_BlockCtrl1 register */
+> +		ret = sdw_write(s_rt->slave, addr2, (p_params->bps - 1));
+> +		if (ret < 0) {
+> +			dev_err(&s_rt->slave->dev,
+> +				"DPN_BlockCtrl1 register write failed for port %d\n",
+> +				t_params->port_num);
+> +			return ret;
+> +		}
+>   	}
+>   
+>   	/* Program DPN_SampleCtrl1 register */
+> @@ -1195,6 +1197,7 @@ static struct sdw_port_runtime
+>   
+>   	p_rt->ch_mask = port_config[port_index].ch_mask;
+>   	p_rt->num = port_config[port_index].num;
+> +	p_rt->ro_blockctrl1_reg = port_config[port_index].ro_blockctrl1_reg;
+>   
+>   	return p_rt;
+>   }
 > 
->  	if (dspi->devtype_data->trans_mode == DSPI_XSPI_MODE)
->  		mcr |= SPI_MCR_XSPI;
