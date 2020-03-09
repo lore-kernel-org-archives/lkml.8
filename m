@@ -6,22 +6,22 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BBC0C10F29
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:43:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7122EC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:43:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2448D24656
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:43:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F2FC24656
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:43:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726622AbgCITnL (ORCPT
+        id S1726650AbgCITnP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 15:43:11 -0400
-Received: from v6.sk ([167.172.42.174]:34560 "EHLO v6.sk"
+        Mon, 9 Mar 2020 15:43:15 -0400
+Received: from v6.sk ([167.172.42.174]:34574 "EHLO v6.sk"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726598AbgCITnK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 15:43:10 -0400
+        id S1726598AbgCITnO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 15:43:14 -0400
 Received: from localhost (v6.sk [IPv6:::1])
-        by v6.sk (Postfix) with ESMTP id 889F660FF9;
-        Mon,  9 Mar 2020 19:43:08 +0000 (UTC)
+        by v6.sk (Postfix) with ESMTP id 5C6F2612FC;
+        Mon,  9 Mar 2020 19:43:12 +0000 (UTC)
 From:   Lubomir Rintel <lkundrak@v3.sk>
 To:     Stephen Boyd <sboyd@kernel.org>
 Cc:     Michael Turquette <mturquette@baylibre.com>,
@@ -29,10 +29,10 @@ Cc:     Michael Turquette <mturquette@baylibre.com>,
         Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
-        Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH v2 02/17] clk: mmp2: Constify some strings
-Date:   Mon,  9 Mar 2020 20:42:39 +0100
-Message-Id: <20200309194254.29009-3-lkundrak@v3.sk>
+        Lubomir Rintel <lkundrak@v3.sk>, Rob Herring <robh@kernel.org>
+Subject: [PATCH v2 03/17] dt-bindings: clock: Convert marvell,mmp2-clock to json-schema
+Date:   Mon,  9 Mar 2020 20:42:40 +0100
+Message-Id: <20200309194254.29009-4-lkundrak@v3.sk>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200309194254.29009-1-lkundrak@v3.sk>
 References: <20200309194254.29009-1-lkundrak@v3.sk>
@@ -43,98 +43,121 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-All the parent clock names for the muxes are constant. Add const.
+Convert the fixed-factor-clock binding to DT schema format using
+json-schema.
+
+While at that, fix a couple of small errors: make the file base name
+match the compatible string, add an example and document the reg-names
+property.
 
 Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
----
- drivers/clk/mmp/clk-mix.c     |  2 +-
- drivers/clk/mmp/clk-of-mmp2.c | 13 +++++++------
- drivers/clk/mmp/clk.h         |  4 ++--
- 3 files changed, 10 insertions(+), 9 deletions(-)
+Reviewed-by: Rob Herring <robh@kernel.org>
 
-diff --git a/drivers/clk/mmp/clk-mix.c b/drivers/clk/mmp/clk-mix.c
-index d2cd36c54474f..7a351ec65564e 100644
---- a/drivers/clk/mmp/clk-mix.c
-+++ b/drivers/clk/mmp/clk-mix.c
-@@ -441,7 +441,7 @@ const struct clk_ops mmp_clk_mix_ops = {
- 
- struct clk *mmp_clk_register_mix(struct device *dev,
- 					const char *name,
--					const char **parent_names,
-+					const char * const *parent_names,
- 					u8 num_parents,
- 					unsigned long flags,
- 					struct mmp_clk_mix_config *config,
-diff --git a/drivers/clk/mmp/clk-of-mmp2.c b/drivers/clk/mmp/clk-of-mmp2.c
-index 6e71591e63a00..ee086d9714160 100644
---- a/drivers/clk/mmp/clk-of-mmp2.c
-+++ b/drivers/clk/mmp/clk-of-mmp2.c
-@@ -127,16 +127,16 @@ static void mmp2_pll_init(struct mmp2_clk_unit *pxa_unit)
- static DEFINE_SPINLOCK(uart0_lock);
- static DEFINE_SPINLOCK(uart1_lock);
- static DEFINE_SPINLOCK(uart2_lock);
--static const char *uart_parent_names[] = {"uart_pll", "vctcxo"};
-+static const char * const uart_parent_names[] = {"uart_pll", "vctcxo"};
- 
- static DEFINE_SPINLOCK(ssp0_lock);
- static DEFINE_SPINLOCK(ssp1_lock);
- static DEFINE_SPINLOCK(ssp2_lock);
- static DEFINE_SPINLOCK(ssp3_lock);
--static const char *ssp_parent_names[] = {"vctcxo_4", "vctcxo_2", "vctcxo", "pll1_16"};
-+static const char * const ssp_parent_names[] = {"vctcxo_4", "vctcxo_2", "vctcxo", "pll1_16"};
- 
- static DEFINE_SPINLOCK(timer_lock);
--static const char *timer_parent_names[] = {"clk32", "vctcxo_4", "vctcxo_2", "vctcxo"};
-+static const char * const timer_parent_names[] = {"clk32", "vctcxo_4", "vctcxo_2", "vctcxo"};
- 
- static DEFINE_SPINLOCK(reset_lock);
- 
-@@ -190,7 +190,7 @@ static void mmp2_apb_periph_clk_init(struct mmp2_clk_unit *pxa_unit)
- }
- 
- static DEFINE_SPINLOCK(sdh_lock);
--static const char *sdh_parent_names[] = {"pll1_4", "pll2", "usb_pll", "pll1"};
-+static const char * const sdh_parent_names[] = {"pll1_4", "pll2", "usb_pll", "pll1"};
- static struct mmp_clk_mix_config sdh_mix_config = {
- 	.reg_info = DEFINE_MIX_REG_INFO(4, 10, 2, 8, 32),
- };
-@@ -201,11 +201,12 @@ static DEFINE_SPINLOCK(usbhsic1_lock);
- 
- static DEFINE_SPINLOCK(disp0_lock);
- static DEFINE_SPINLOCK(disp1_lock);
--static const char *disp_parent_names[] = {"pll1", "pll1_16", "pll2", "vctcxo"};
-+static const char * const disp_parent_names[] = {"pll1", "pll1_16", "pll2", "vctcxo"};
- 
- static DEFINE_SPINLOCK(ccic0_lock);
- static DEFINE_SPINLOCK(ccic1_lock);
--static const char *ccic_parent_names[] = {"pll1_2", "pll1_16", "vctcxo"};
-+static const char * const ccic_parent_names[] = {"pll1_2", "pll1_16", "vctcxo"};
+---
+Changes since v1:
+- Collected Rob's Reviewed-by tag
+
+ .../bindings/clock/marvell,mmp2-clock.yaml    | 62 +++++++++++++++++++
+ .../bindings/clock/marvell,mmp2.txt           | 21 -------
+ 2 files changed, 62 insertions(+), 21 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/marvell,mmp2-clock.yaml
+ delete mode 100644 Documentation/devicetree/bindings/clock/marvell,mmp2.txt
+
+diff --git a/Documentation/devicetree/bindings/clock/marvell,mmp2-clock.yaml b/Documentation/devicetree/bindings/clock/marvell,mmp2-clock.yaml
+new file mode 100644
+index 0000000000000..c5fc2ad0236dd
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/marvell,mmp2-clock.yaml
+@@ -0,0 +1,62 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/clock/marvell,mmp2-clock.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
- static struct mmp_clk_mix_config ccic0_mix_config = {
- 	.reg_info = DEFINE_MIX_REG_INFO(4, 17, 2, 6, 32),
- };
-diff --git a/drivers/clk/mmp/clk.h b/drivers/clk/mmp/clk.h
-index 5bcbced3f458e..37d1e1d7b664c 100644
---- a/drivers/clk/mmp/clk.h
-+++ b/drivers/clk/mmp/clk.h
-@@ -97,7 +97,7 @@ struct mmp_clk_mix {
- extern const struct clk_ops mmp_clk_mix_ops;
- extern struct clk *mmp_clk_register_mix(struct device *dev,
- 					const char *name,
--					const char **parent_names,
-+					const char * const *parent_names,
- 					u8 num_parents,
- 					unsigned long flags,
- 					struct mmp_clk_mix_config *config,
-@@ -193,7 +193,7 @@ void mmp_register_gate_clks(struct mmp_clk_unit *unit,
- struct mmp_param_mux_clk {
- 	unsigned int id;
- 	char *name;
--	const char **parent_name;
-+	const char * const *parent_name;
- 	u8 num_parents;
- 	unsigned long flags;
- 	unsigned long offset;
++title: Marvell MMP2 Clock Controller
++
++maintainers:
++  - Lubomir Rintel <lkundrak@v3.sk>
++
++description: |
++  The MMP2 clock subsystem generates and supplies clock to various
++  controllers within the MMP2 SoC.
++
++  Each clock is assigned an identifier and client nodes use this identifier
++  to specify the clock which they consume.
++
++  All these identifiers could be found in <dt-bindings/clock/marvell,mmp2.h>.
++
++properties:
++  compatible:
++    const: marvell,mmp2-clock # controller compatible with MMP2 SoC
++
++  reg:
++    items:
++      - description: MPMU register region
++      - description: APMU register region
++      - description: APBC register region
++
++  reg-names:
++    items:
++      - const: mpmu
++      - const: apmu
++      - const: apbc
++
++  '#clock-cells':
++    const: 1
++
++  '#reset-cells':
++    const: 1
++
++required:
++  - compatible
++  - reg
++  - reg-names
++  - '#clock-cells'
++  - '#reset-cells'
++
++additionalProperties: false
++
++examples:
++  - |
++    clock-controller@d4050000 {
++      compatible = "marvell,mmp2-clock";
++      reg = <0xd4050000 0x1000>,
++            <0xd4282800 0x400>,
++            <0xd4015000 0x1000>;
++      reg-names = "mpmu", "apmu", "apbc";
++      #clock-cells = <1>;
++      #reset-cells = <1>;
++    };
+diff --git a/Documentation/devicetree/bindings/clock/marvell,mmp2.txt b/Documentation/devicetree/bindings/clock/marvell,mmp2.txt
+deleted file mode 100644
+index 23b52dc02266a..0000000000000
+--- a/Documentation/devicetree/bindings/clock/marvell,mmp2.txt
++++ /dev/null
+@@ -1,21 +0,0 @@
+-* Marvell MMP2 Clock Controller
+-
+-The MMP2 clock subsystem generates and supplies clock to various
+-controllers within the MMP2 SoC.
+-
+-Required Properties:
+-
+-- compatible: should be one of the following.
+-  - "marvell,mmp2-clock" - controller compatible with MMP2 SoC.
+-
+-- reg: physical base address of the clock subsystem and length of memory mapped
+-  region. There are 3 places in SOC has clock control logic:
+-  "mpmu", "apmu", "apbc". So three reg spaces need to be defined.
+-
+-- #clock-cells: should be 1.
+-- #reset-cells: should be 1.
+-
+-Each clock is assigned an identifier and client nodes use this identifier
+-to specify the clock which they consume.
+-
+-All these identifiers could be found in <dt-bindings/clock/marvell,mmp2.h>.
 -- 
 2.25.1
 
