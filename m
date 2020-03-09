@@ -2,115 +2,65 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63596C10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 20:38:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B4E2C10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 20:38:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FA8720409
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 20:38:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583786299;
-	bh=nRQQIW1PpVXrk006TULzmGf13Dnlv/dcFEy2mKJYWCI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=iIwOJjzTyIrZhEtxlLF5OgHNq/Bwvh40BeRBZb54it6JEsOzT9bCTdXKwd6BXy8Yj
-	 vWA2S1kWfFG8zkTM6E+Ve4HMbmyFAGZ2aEY5tBhXCB/8fw3cmHKTLR/7acRGL0jU2a
-	 WjtmKMWONAgn37WgEK0u1XPYsQ6mBUE3oypE3OcE=
+	by mail.kernel.org (Postfix) with ESMTP id 7196C20828
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 20:38:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726772AbgCIUiR (ORCPT
+        id S1726833AbgCIUi1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 16:38:17 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:42459 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726096AbgCIUiR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 16:38:17 -0400
-Received: by mail-ot1-f65.google.com with SMTP id 66so10971998otd.9;
-        Mon, 09 Mar 2020 13:38:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4sv47E3whDnk7QFlUz6K8G7Rk9bNvaKAJ3x+BtFqMd8=;
-        b=XDnFVn47oye6Q/VhPPqy25QWTqwgGYvlxyDgKvncP8MXRc32LQJV+KPPdZ6u7RoKZW
-         w5W19cBYQ+TV38+LYFbzSkUh2UXqNb2CdqZgNCdUZ0MpSIENynqifj8RuiutOMKuQfQt
-         6UWeg5hvzFVGS7l8ydOdij8fvUeDk1z+Zwzne6hgTWeo6EoImu9n/Lz3C8G62Km0f8a1
-         9tuIPQ1BzyRkf5f0OzG+ZKJZCpn3Y2I5/tyaxnDCZYs6+nzBZZZlepjhHJnfHYCv1pcl
-         TF+HMPSMXfXYv8YzBa+3THJzveKdP9Nf0QRPEHQFBK6ZX9sXjClz7X8KbOdRs/4mbuAx
-         3mcw==
-X-Gm-Message-State: ANhLgQ24K5EytBywQrO+ZUGKFSrYkylRhzDVeexdsrE0KiCwsIJvPald
-        9UFdPYUgHh3YePXyL3XflY3k0DE=
-X-Google-Smtp-Source: ADFU+vt/J1NMy19Vg3cxnshnY12AaBqTlB+fN96FHy9+jFEUvpyhOuxvj76cKzr6obrAP+oVo7WySA==
-X-Received: by 2002:a9d:23e4:: with SMTP id t91mr14274415otb.125.1583786296250;
-        Mon, 09 Mar 2020 13:38:16 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id t21sm2358588otp.80.2020.03.09.13.38.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Mar 2020 13:38:14 -0700 (PDT)
-Received: (nullmailer pid 30910 invoked by uid 1000);
-        Mon, 09 Mar 2020 20:38:14 -0000
-Date:   Mon, 9 Mar 2020 15:38:14 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Artur Rojek <contact@artur-rojek.eu>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Heiko Stuebner <heiko@sntech.de>, linux-input@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-iio@vger.kernel.org, Artur Rojek <contact@artur-rojek.eu>
-Subject: Re: [PATCH v4 4/5] dt-bindings: input: Add docs for ADC driven
- joystick.
-Message-ID: <20200309203814.GA29255@bogus>
-References: <20200307211412.44148-1-contact@artur-rojek.eu>
- <20200307211412.44148-4-contact@artur-rojek.eu>
+        Mon, 9 Mar 2020 16:38:27 -0400
+Received: from mail.v3.sk ([167.172.186.51]:46374 "EHLO shell.v3.sk"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726096AbgCIUi0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 16:38:26 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id 5A406E01A7;
+        Mon,  9 Mar 2020 20:38:43 +0000 (UTC)
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id vHjEUqfQWJnP; Mon,  9 Mar 2020 20:38:42 +0000 (UTC)
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id D28E5DFFD9;
+        Mon,  9 Mar 2020 20:38:41 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at zimbra.v3.sk
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id 5DW_7i8Y8SzI; Mon,  9 Mar 2020 20:38:41 +0000 (UTC)
+Received: from furthur.lan (unknown [109.183.109.54])
+        by zimbra.v3.sk (Postfix) with ESMTPSA id 5CE79DEDF6;
+        Mon,  9 Mar 2020 20:38:41 +0000 (UTC)
+From:   Lubomir Rintel <lkundrak@v3.sk>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/4] mfd: Add ENE KB3930 Embedded Controller driver
+Date:   Mon,  9 Mar 2020 21:38:14 +0100
+Message-Id: <20200309203818.31266-1-lkundrak@v3.sk>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200307211412.44148-4-contact@artur-rojek.eu>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat,  7 Mar 2020 22:14:11 +0100, Artur Rojek wrote:
-> Add documentation for the adc-joystick driver, used to provide support
-> for joysticks connected over ADC.
-> 
-> Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
-> Tested-by: Paul Cercueil <paul@crapouillou.net>
-> ---
-> 
->  Changes:
-> 
->  v2: - Add `reg` property to axis subnode in order to enumerate the axes,
->      - rename `linux,abs-code` property to `linux,code`,
->      - drop `linux,` prefix from the remaining properties of axis subnode
-> 
->  v3: no change
-> 
->  v4: - remove "bindings" from the unique identifier string,
->      - replace `|` with `>` for all description properties,
->      - specify the number of items for `io-channels`,
->      - correct the regex pattern of `axis` property,
->      - specify the value range of `reg` property for each axis,
->      - put `abs-range` properties under `allOf` 
-> 
->  .../bindings/input/adc-joystick.yaml          | 121 ++++++++++++++++++
->  1 file changed, 121 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/input/adc-joystick.yaml
-> 
+Hi,
 
-My bot found errors running 'make dt_binding_check' on your patch:
+please take a look at the following patch set and consider applying it
+to the MFD tree. It is essentially a new driver with DT binding
+documentation changes.
 
-Error: Documentation/devicetree/bindings/input/adc-joystick.example.dts:22.31-32 syntax error
-FATAL ERROR: Unable to parse input tree
-scripts/Makefile.lib:311: recipe for target 'Documentation/devicetree/bindings/input/adc-joystick.example.dt.yaml' failed
-make[1]: *** [Documentation/devicetree/bindings/input/adc-joystick.example.dt.yaml] Error 1
-Makefile:1262: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
+It will be used by the driver for the three status LEDs that will be
+submitted separately.
 
-See https://patchwork.ozlabs.org/patch/1250951
-Please check and re-submit.
+Thanks,
+Lubo
+
+
