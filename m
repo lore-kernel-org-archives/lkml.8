@@ -2,148 +2,168 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C90E6C18E5A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 13:58:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C9ADC10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 13:59:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AD7221655
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 13:58:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05D1721D7E
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 13:59:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="en4dNoeE"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="KQvRs/bM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726833AbgCIN6s (ORCPT
+        id S1726760AbgCIN7m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 09:58:48 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:32168 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726632AbgCIN6s (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 09:58:48 -0400
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 029DvUbI016259;
-        Mon, 9 Mar 2020 09:58:47 -0400
-Received: from nam10-bn7-obe.outbound.protection.outlook.com (mail-bn7nam10lp2106.outbound.protection.outlook.com [104.47.70.106])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2ym9db5cfh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 09 Mar 2020 09:58:46 -0400
+        Mon, 9 Mar 2020 09:59:42 -0400
+Received: from mail-dm6nam11on2076.outbound.protection.outlook.com ([40.107.223.76]:52065
+        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726383AbgCIN7m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 09:59:42 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HqLfwEvmDYLFxsWAlS4QA4Io3sV+boPVap7Jf4r/TYqGcSEVGgNbXa1rZj2z/S28GEw+S3lKOMUC2mFKdFNn7YJdL5JdB+TPbM4KUnsGY3oMK4zdPVR7LHRkdeFx70T7yYWrqvG/u5cfleQ1JbI1ya79JbYoyYO/auQaP7DaJujbkNbUtvhR1PdeHalsGTT0jSbI2UFVNHu5hQxa+nMcXlFHexrCmU37/tkWf7Mhwq6Xhp7XlJ70cICBn+uQjcQQKu+Op6WBE7jpkJPipnE9/kV146nDoG3v2Oo3Wml6wO0tBIg4H5ejrDFLIQdC7GY4JRDz3+Edm4GxnkVKRs+84A==
+ b=htj4AicrqFaKqvsCvptncdpehgG0lcTsl379Hnd/EutlHKd/SCxRTnGgjIC3VXZbTZ8Vco0G9WLFeQAavcR77k2jh23vSqTfsdYjxbb4t+lXH5YAVT4Xmne0Ux/j9gHtDF4vTOPN0UILEWOvr7w8BjX2SwAsAXUpyhRWXO6iBO4VWpyMeRiIxa6jsfZMN8voS3by1qLi/AehZKUXseXxSotrFzpDnaWqUDTvtO5qztDgJ2tAtOr2Dct+6vdCYkicDpPux8hxFNolmOJpXQyP1hMaqMlYQQyyU/taB7bCsId0DPAozwrTm+9QQcitS5FGjZx1h3PtRjm2z/8WFJD8pA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AhrzlkANeRUJ02ZJWIAj5eahF5oetBFTAajrkNfqOs8=;
- b=U7Yg5QX1VvqwztoUL9oUzWgXUueZAfxPX+xJf87lmpmZan74pwrng2Iq6coBr/AG+ocV3lojWgEScVJCGuy5gq9SxHHjBqIMwCPkBoaEo0teM859pAOOWwAmCrI4vZVHu87+gzoDAxNQyZlhEwDfy5mlBoRSrrvq6kestJvCPIn71MFnUnNNODCYZp22Z08V0sRz2AvXnzfU7EureK+CgN0MmyjSxTFCwL9N0JmlCPTR9vEH9XOpBnax64y5F+cG9pQ35r2N5XcPKy1JZIlcg96RwPMcljG699f7u/xXAyAFhdLanosQ5TzD6Ph5UVmYlvcwcnO+nTY12P52/fD7pA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
- dkim=pass header.d=analog.com; arc=none
+ bh=c/yFPanKaBWRVJiEVODE38gVrswQhEqwZuED6CYR1OE=;
+ b=GcLddAI8xJ3x1o3xt/LfMvnV6qSwbtaZ9McDTIVS/eDh+qFwx6+AQotA/d921wGwa0zMK5c8wJeMQBCkPcak6k3ju9AUIQ6FO2DSXnnWsZuowoNr1wTqv2xIwv+zTjU5lbjIJFMxnQ2EvGHkBleln4jZW69Iusf1gaxNidBNJKRJ/mOCHJmjVG3vP+QKShKb1xHnLXOCmx+WpnrQxSCHt2eN/Cf7nWCCA8xknYy6O5ePEsD85azJ4rGnRrTa4Fo4nlLsgxbKvbknBpqo8MxnNlfnklRnVNkYm97q8Nt5X/x1ycsxBw5rdDnqXhiKUPkVlvCSlgVBFalocXSAljdCUA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=linaro.org smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AhrzlkANeRUJ02ZJWIAj5eahF5oetBFTAajrkNfqOs8=;
- b=en4dNoeE1qFi0r+Zpo2U3j/rAJ2va4sfni3yHdN+C3HZQJ9Kpr+KJs5ASa02HpVhHLxwZ99CRG85NPQfpUw6+dfXowQxoInlCdgl5jzURE3dzRWsDy1+GMG6DRNh9gbQl0vM8R++yJtN/Avq+w9aSve4Y+kaYzC+9/JJDBhMD4E=
-Received: from DM6PR03MB4411.namprd03.prod.outlook.com (2603:10b6:5:10f::14)
- by DM6PR03MB4761.namprd03.prod.outlook.com (2603:10b6:5:18d::23) with
+ bh=c/yFPanKaBWRVJiEVODE38gVrswQhEqwZuED6CYR1OE=;
+ b=KQvRs/bMdMR9bTjxe31A1qjfIJ8eJpEEt+sETT9qkMv5fcdJiAtIytBgNwEdUH/82tyLCf1mmNtvzVWGqa+ekUu6fXfalVH6cLAc0IGFYgPa8Hsr98Tc+zoeAWEepodfUQzF4VweZOlPb0BRdD4AiSU/XQ45F9+yAHDmEIh6VHk=
+Received: from MN2PR12CA0018.namprd12.prod.outlook.com (2603:10b6:208:a8::31)
+ by CH2PR02MB6662.namprd02.prod.outlook.com (2603:10b6:610:aa::10) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.17; Mon, 9 Mar
- 2020 13:58:45 +0000
-Received: from DM6PR03MB4411.namprd03.prod.outlook.com
- ([fe80::f8c4:f7f2:c7a0:cc19]) by DM6PR03MB4411.namprd03.prod.outlook.com
- ([fe80::f8c4:f7f2:c7a0:cc19%6]) with mapi id 15.20.2793.013; Mon, 9 Mar 2020
- 13:58:45 +0000
-From:   "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-To:     "mdf@kernel.org" <mdf@kernel.org>,
-        "jic23@kernel.org" <jic23@kernel.org>
-CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>
-Subject: Re: [PATCH v8 2/8] include: fpga: adi-axi-common.h: add version
- helper macros
-Thread-Topic: [PATCH v8 2/8] include: fpga: adi-axi-common.h: add version
- helper macros
-Thread-Index: AQHV86YcBP6rketQYUC8BeRDNruucag9MV4AgABcPoCAAsDIAA==
-Date:   Mon, 9 Mar 2020 13:58:44 +0000
-Message-ID: <f1022947596ef9f0d94ca606f26f236c84288b89.camel@analog.com>
-References: <20200306110100.22092-1-alexandru.ardelean@analog.com>
-         <20200306110100.22092-3-alexandru.ardelean@analog.com>
-         <20200307142604.7d597667@archlinux> <20200307195613.GA38707@epycbox.lan>
-In-Reply-To: <20200307195613.GA38707@epycbox.lan>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [137.71.226.54]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: c0efd62a-29d3-491b-7578-08d7c431fbae
-x-ms-traffictypediagnostic: DM6PR03MB4761:
-x-microsoft-antispam-prvs: <DM6PR03MB4761E722FC416281FD948B58F9FE0@DM6PR03MB4761.namprd03.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0337AFFE9A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(39860400002)(136003)(396003)(346002)(366004)(199004)(189003)(4326008)(36756003)(71200400001)(54906003)(6486002)(6512007)(966005)(110136005)(316002)(8676002)(81166006)(81156014)(8936002)(26005)(91956017)(76116006)(186003)(6506007)(5660300002)(64756008)(66556008)(66446008)(66946007)(66476007)(478600001)(86362001)(2906002)(2616005);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR03MB4761;H:DM6PR03MB4411.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: analog.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: xs8T2h7wWDa61KOap6isvwFREmbLtG63NQarItkiBpeJPO34/OnbfBC7SgWJzE+EUEb2yNdVoe3k9wjBdHWdCX+1vyXTOCKNeKxgmqfMBKRLBybK5Nrf+N0V+90m6I3jzX+jF5rRBGAXScqnkvB+nBJyogt/nb8XdUUrb5jSkCxSFVuXgw2IAw3soK4JN9vfHIzK5eRMhsLVgtPnUC3b6KNKR6wdL2Vknwi6Bkx7iRZUUZfXRd1rEFMtP95h9pkFFUFtkmRFjkCyaecGPzsNXZ61ZETDIf6MuRJJcoPfMCIMsbszx+FLupkgORPUMsLeVvnTwAn015/cxS2fa5wNYYwo06S80+nK8AXuP/pTRnBtU/0dUhTOTZNjLhpuS9lH9d6wKlo6Nt2ior+GvgD5Al7Bxg7kYLFCj0p9HPJCgzqHB2IrYjhJlrx8wuvfQToxYpzWvt51b06zwUQOIXpFAi5M3oBeXmwbTNw9+jJVHL/+bTk+P8Jc5jboJtK5U0mylHEafhBym0GDFHN4L6csYQ==
-x-ms-exchange-antispam-messagedata: g0FocDeOMXlmY8qmpJFcoEW9LsjhW7kfV5Fj4frcJkW+8OaB3mQRv2nHVD9p24mwWOab7Sd8L5f53BfkU4gvM4o/t0+ZOCKMZ+wslV7sRagS7po5WJO16DvC+gUUabs9tchVic4lpjpdJCIWS6euEQ==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <459DCDB9C617464AB06481564BFBBD0D@namprd03.prod.outlook.com>
-Content-Transfer-Encoding: base64
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.14; Mon, 9 Mar
+ 2020 13:59:40 +0000
+Received: from BL2NAM02FT059.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:208:a8:cafe::3) by MN2PR12CA0018.outlook.office365.com
+ (2603:10b6:208:a8::31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.16 via Frontend
+ Transport; Mon, 9 Mar 2020 13:59:40 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; linaro.org; dkim=none (message not signed)
+ header.d=none;linaro.org; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ BL2NAM02FT059.mail.protection.outlook.com (10.152.76.247) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2793.11
+ via Frontend Transport; Mon, 9 Mar 2020 13:59:39 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1jBIwV-00065e-5u; Mon, 09 Mar 2020 06:59:39 -0700
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1jBIwQ-0005P2-2v; Mon, 09 Mar 2020 06:59:34 -0700
+Received: from xsj-pvapsmtp01 (xsj-mail.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 029DxPV0013678;
+        Mon, 9 Mar 2020 06:59:25 -0700
+Received: from [172.30.17.108]
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <michals@xilinx.com>)
+        id 1jBIwH-0005O7-8X; Mon, 09 Mar 2020 06:59:25 -0700
+Subject: Re: [PATCH] arch: arm64: xilinx: Make zynqmp_firmware driver optional
+To:     Jolly Shah <jolly.shah@xilinx.com>, ard.biesheuvel@linaro.org,
+        mingo@kernel.org, gregkh@linuxfoundation.org,
+        matt@codeblueprint.co.uk, sudeep.holla@arm.com,
+        hkallweit1@gmail.com, keescook@chromium.org,
+        dmitry.torokhov@gmail.com, michal.simek@xilinx.com
+Cc:     rajanv@xilinx.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Tejas Patel <tejas.patel@xilinx.com>
+References: <1582675460-26914-1-git-send-email-jolly.shah@xilinx.com>
+From:   Michal Simek <michal.simek@xilinx.com>
+Message-ID: <3d6e9823-d601-bafd-8bf3-8ff857228ec6@xilinx.com>
+Date:   Mon, 9 Mar 2020 14:59:21 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c0efd62a-29d3-491b-7578-08d7c431fbae
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Mar 2020 13:58:45.0061
+In-Reply-To: <1582675460-26914-1-git-send-email-jolly.shah@xilinx.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(376002)(136003)(39850400004)(346002)(396003)(199004)(189003)(478600001)(2906002)(7416002)(8676002)(5660300002)(426003)(81166006)(4326008)(36756003)(2616005)(44832011)(81156014)(336012)(8936002)(316002)(70206006)(26005)(186003)(356004)(9786002)(6666004)(70586007)(107886003)(31686004)(31696002)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR02MB6662;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: e5a964b5-0a0c-429a-3612-08d7c4321c65
+X-MS-TrafficTypeDiagnostic: CH2PR02MB6662:
+X-Microsoft-Antispam-PRVS: <CH2PR02MB6662D8B24E07F6354E933EAAC6FE0@CH2PR02MB6662.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
+X-Forefront-PRVS: 0337AFFE9A
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: H3ZbRJh6fA1RQPdX33TYfOgIyEVWNhqH4/IC1/ij1ER5c/8xVpUenZ/vdmSjoMtk3Yi5CeeoN7ULVI3veBq0b4jZThGZnJall9IJho9QY5nz0dy0XWbmvUI96McTi6e5RGJrq3tC5Y1CsCu2Lat2PmpztcXTfutLwsoDWMpZzd7zMQ8RmxTApRIv/y7vu7veWuGkHbZj9XMBo/gwdQJKyySEwd+qjt8QwrBbYsKTKxnoun50v35XzWNwuPwE29Y0CMspPfLXxwVI2wXItQ8hYfQwTLKPrxu9WWNdvCLnPVYf+7uLjUwWjKppaz9T43shlsaahw7cWblD3xAFr12eoRlMArmWpe+PuTFWFmHrwG4XilsF7wOl/tYE24bd8lMU1H8DfDmOFa2O9XohSQZ9jYeKfarmtTjk18bygUD6mn0kFEDvWIk3yvB+7fjjzkYOvMHAu6BqP4o12TJLPN43fp7KHiss9SqtGvv7nLaUGN/FBWh4lF3AWUyrlCYEpaDQ
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Mar 2020 13:59:39.8277
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: vncXNmIcc54EfBM1MuMjUumN3ZRoY+bHdyBQ9puEgnE2ecG12c4jHZamNBWopbb9oOoecliVEjkN4JbZXIKn8efmy2y4w2LIIZlZ5RCN+WI=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR03MB4761
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-09_04:2020-03-09,2020-03-09 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
- clxscore=1015 impostorscore=0 bulkscore=0 priorityscore=1501 phishscore=0
- mlxscore=0 lowpriorityscore=0 spamscore=0 suspectscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2003090096
+X-MS-Exchange-CrossTenant-Network-Message-Id: e5a964b5-0a0c-429a-3612-08d7c4321c65
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR02MB6662
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gU2F0LCAyMDIwLTAzLTA3IGF0IDExOjU2IC0wODAwLCBNb3JpdHogRmlzY2hlciB3cm90ZToN
-Cj4gW0V4dGVybmFsXQ0KPiANCj4gT24gU2F0LCBNYXIgMDcsIDIwMjAgYXQgMDI6MjY6MDRQTSAr
-MDAwMCwgSm9uYXRoYW4gQ2FtZXJvbiB3cm90ZToNCj4gPiBPbiBGcmksIDYgTWFyIDIwMjAgMTM6
-MDA6NTQgKzAyMDANCj4gPiBBbGV4YW5kcnUgQXJkZWxlYW4gPGFsZXhhbmRydS5hcmRlbGVhbkBh
-bmFsb2cuY29tPiB3cm90ZToNCj4gPiANCj4gPiA+IFRoZSBmb3JtYXQgZm9yIGFsbCBBREkgQVhJ
-IElQIGNvcmVzIGlzIHRoZSBzYW1lLg0KPiA+ID4gaS5lLiAnbWFqb3IubWlub3IucGF0Y2gnLg0K
-PiA+ID4gDQo+ID4gPiBUaGlzIHBhdGNoIGFkZHMgdGhlIGhlbHBlciBtYWNyb3MgdG8gYmUgcmUt
-dXNlZCBpbiBBREkgQVhJIGRyaXZlcnMuDQo+ID4gPiANCj4gPiA+IFNpZ25lZC1vZmYtYnk6IEFs
-ZXhhbmRydSBBcmRlbGVhbiA8YWxleGFuZHJ1LmFyZGVsZWFuQGFuYWxvZy5jb20+DQo+IEFja2Vk
-LWJ5OiBNb3JpdHogRmlzY2hlciA8bWRmQGtlcm5lbC5vcmc+DQo+IA0KPiA+IEFnYWluLCB0cml2
-aWFsIGJ1dCBuZWVkcyBhIE1vcml0eiBhY2sgYXMgaXQncyBoaXMgc3Vic3lzdGVtLg0KPiANCj4g
-SSBoYWQgb3JpZ2luYWxseSBhc2tlZCB0byBub3QgcHV0IGl0IHVuZGVyIGluY2x1ZGUvbGludXgv
-ZnBnYSwgYnV0IGFsYXMsDQo+IG5vdyBpdCdzIGhlcmUgOikNCj4gDQo+IEl0IG5ldmVyIG1hZGUg
-bXVjaCBzZW5zZSBpbWhvIHRvIGRyb3AgaXQgdW5kZXIgbGludXgvZnBnYSBqdXN0IGJlY2F1c2UN
-Cj4gaXQncyBhIGhhcmR3YXJlIGltcGxlbWVudGVkIGluIGFuIEZQR0EuLi4uDQoNCldlIGNhbiBh
-bHdheXMgbW92ZSBpdC4NCkkgZG9uJ3QgcmVtZW1iZXIgYWJvdXQgYW55IGRpc2N1c3Npb24gb24g
-dGhpcyBtYXR0ZXIuDQpPciBtYXliZSBJIHdhc24ndCBpbmNsdWRlZC4NCk9yIG1heWJlIEkgaGF2
-ZSBzb21lIHNldmVyZSBjYXNlIG9mIGFtbmVzaWEgb3IgY2FyZWxlc3NuZXNzIGZvciBvbWl0dGlu
-Zw0KdGhyZWFkcy4gSSBhbSB0ZXJyaWJsZSBhdCBmb2xsb3dpbmcgdGhyZWFkcy4NCg0KQXBvbG9n
-aWVzIGZvciBhbnl0aGluZyBvbiBteSBwYXJ0Lg0KDQpJZiB5b3UgcHJvcG9zZSBhbm90aGVyIGxv
-Y2F0aW9uLCBJIGNhbiBzcGluLXVwIGEgcGF0Y2ggb24gaXQuDQoNClRoZXNlIHJlZy1kZWZpbml0
-aW9ucyBhcmUgY29tbW9uIHRvIGFsbCBBREkgSERMIHJlZ3MuDQpNYXliZSBtb3JlIG1heSBjb21l
-IHVwIGFzIHN0dWZmIGdldHMgdXBzdHJlYW1lZC4NCg0KVGhlIGZ1bGwtYmxvd24vaW50ZXJuYWwg
-dmVyc2lvbiB3ZSBoYXZlIGlzOg0KaHR0cHM6Ly9naXRodWIuY29tL2FuYWxvZ2RldmljZXNpbmMv
-bGludXgvYmxvYi9tYXN0ZXIvaW5jbHVkZS9saW51eC9mcGdhL2FkaS1heGktY29tbW9uLmgNCg0K
-SXQgdHJpZXMgdG8gZGVmaW5lIHNvbWUgdGhpbmdzIHRoYXQgYXJlIGNvbW1vbiBiZXR3ZWVuIElu
-dGVsLCBYaWxpbnggYW5kIEFESSBJUA0KY29yZXMgYWNyb3NzIFt0aGVzZSBhbmQgaG9wZWZ1bGx5
-IG90aGVyXSBGUEdBIGJvYXJkcy4NCkknbSBub3Qgc2F5aW5nIGl0J3MgZG9pbmcgYSBnb29kIGpv
-YiBvZiB0aGF0IGF0IHRoZSBtb21lbnQuDQrCr1xfKOODhClfL8KvDQpUaGFua3MNCkFsZXgNCg0K
-PiANCj4gQ2hlZXJzLA0KPiBNb3JpdHoNCg==
+On 26. 02. 20 1:04, Jolly Shah wrote:
+> From: Tejas Patel <tejas.patel@xilinx.com>
+> 
+> Make zynqmp_firmware driver as optional to disable it, if user don't
+> want to use default zynqmp firmware interface.
+> 
+> Signed-off-by: Tejas Patel <tejas.patel@xilinx.com>
+> Signed-off-by: Jolly Shah <jolly.shah@xilinx.com>
+> ---
+>  arch/arm64/Kconfig.platforms    | 1 -
+>  drivers/firmware/xilinx/Kconfig | 2 ++
+>  2 files changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
+> index b2b504e..563c93d 100644
+> --- a/arch/arm64/Kconfig.platforms
+> +++ b/arch/arm64/Kconfig.platforms
+> @@ -301,7 +301,6 @@ config ARCH_ZX
+>  
+>  config ARCH_ZYNQMP
+>  	bool "Xilinx ZynqMP Family"
+> -	select ZYNQMP_FIRMWARE
+>  	help
+>  	  This enables support for Xilinx ZynqMP Family
+>  
+> diff --git a/drivers/firmware/xilinx/Kconfig b/drivers/firmware/xilinx/Kconfig
+> index bd33bbf..9a9bd19 100644
+> --- a/drivers/firmware/xilinx/Kconfig
+> +++ b/drivers/firmware/xilinx/Kconfig
+> @@ -6,6 +6,8 @@ menu "Zynq MPSoC Firmware Drivers"
+>  
+>  config ZYNQMP_FIRMWARE
+>  	bool "Enable Xilinx Zynq MPSoC firmware interface"
+> +	depends on ARCH_ZYNQMP
+> +	default y if ARCH_ZYNQMP
+>  	select MFD_CORE
+>  	help
+>  	  Firmware interface driver is used by different
+> 
+
+Applied but with arm64: zynqmp: Prefixes.
+
+Thanks,
+Michal
