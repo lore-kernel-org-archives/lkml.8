@@ -2,275 +2,112 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 933C9C10F29
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 12:28:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E32AC18E5A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 12:30:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BCE42072A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 12:28:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 664DF20828
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 12:30:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583757008;
+	bh=diq25L1IPlx433ZM3VoDc5SJPfrMcgY8a1nf8LbuVPk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ouCQT66FW7uo829kSpXhxCalzvjvmCwzv+8atdyK64iF6yyhxHpVdWqQsRD1t5b4G
+	 soIpPTy+T4Mf3sDMTX9rDpq4s88f511RL0LksykSe5gDwgMpBO/TLQnu96usY9mAD+
+	 LSPgsOHrsorELKucDwRIJGNEG5eqALcVtSfR47rQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726450AbgCIM26 (ORCPT
+        id S1726533AbgCIMaH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 08:28:58 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2524 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726368AbgCIM26 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 08:28:58 -0400
-Received: from lhreml702-cah.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id 25BE655240FDB99D9C3C;
-        Mon,  9 Mar 2020 12:28:56 +0000 (GMT)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- lhreml702-cah.china.huawei.com (10.201.108.43) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Mon, 9 Mar 2020 12:28:55 +0000
-Received: from localhost (10.202.226.57) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5; Mon, 9 Mar 2020
- 12:28:55 +0000
-Date:   Mon, 9 Mar 2020 12:28:53 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Cristian Marussi <cristian.marussi@arm.com>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <sudeep.holla@arm.com>,
-        <lukasz.luba@arm.com>, <james.quinlan@broadcom.com>
-Subject: Re: [PATCH v4 09/13] firmware: arm_scmi: Add Power notifications
- support
-Message-ID: <20200309122853.000019b0@Huawei.com>
-In-Reply-To: <20200304162558.48836-10-cristian.marussi@arm.com>
-References: <20200304162558.48836-1-cristian.marussi@arm.com>
-        <20200304162558.48836-10-cristian.marussi@arm.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Mon, 9 Mar 2020 08:30:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52162 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726368AbgCIMaH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 08:30:07 -0400
+Received: from earth.universe (dyndsl-095-033-170-219.ewe-ip-backbone.de [95.33.170.219])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 83EA02072A;
+        Mon,  9 Mar 2020 12:30:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583757006;
+        bh=diq25L1IPlx433ZM3VoDc5SJPfrMcgY8a1nf8LbuVPk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=y11VkzV4imOBaLXieqJLXLqJyBpp8d3exizNybEUy/71PcBs+5HBbLVQ7LHhqQVo1
+         axJkhGWGL45ws/yvks/CkQ2muH41PHWRXnZbFdHIMei2VIbZfG4fdh5PFtWFl0rICo
+         ZCLF/27wogqmRkos2xg99GZ8weKkUqKlTGhD7puM=
+Received: by earth.universe (Postfix, from userid 1000)
+        id 6652D3C0C82; Mon,  9 Mar 2020 13:30:02 +0100 (CET)
+Date:   Mon, 9 Mar 2020 13:30:02 +0100
+From:   Sebastian Reichel <sre@kernel.org>
+To:     Lokesh Vutla <lokeshvutla@ti.com>
+Cc:     Tony Lindgren <tony@atomide.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Sekhar Nori <nsekhar@ti.com>, Vignesh R <vigneshr@ti.com>
+Subject: Re: [PATCH v2 4/6] pwm: omap-dmtimer: Fix pwm disabling sequence
+Message-ID: <20200309123002.dy3jqqcm2us4ygpo@earth.universe>
+References: <20200228095651.32464-1-lokeshvutla@ti.com>
+ <20200228095651.32464-5-lokeshvutla@ti.com>
+ <20200306181443.GJ37466@atomide.com>
+ <9129d4fe-a17e-2fa6-764c-6a746fa5096d@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.57]
-X-ClientProxiedBy: lhreml706-chm.china.huawei.com (10.201.108.55) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="eosgsryqn2a77iww"
+Content-Disposition: inline
+In-Reply-To: <9129d4fe-a17e-2fa6-764c-6a746fa5096d@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 4 Mar 2020 16:25:54 +0000
-Cristian Marussi <cristian.marussi@arm.com> wrote:
 
-> Make SCMI Power protocol register with the notification core.
-> 
-> Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
+--eosgsryqn2a77iww
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-One comment inline on an unusual code construct, otherwise fine.
+Hi,
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+On Mon, Mar 09, 2020 at 10:21:59AM +0530, Lokesh Vutla wrote:
+> > [0] https://git.collabora.com/cgit/user/sre/rumble-test.git/plain/rumbl=
+e-test.c
+>=20
+> This is redirecting to collabora.com. Is this code available in github or=
+ some
+> public repo?
+>=20
+> Thanks and regards,
+> Lokesh
 
-> ---
-> V3 --> V4
-> - scmi_event field renamed
-> V2 --> V3
-> - added handle awareness
-> V1 --> V2
-> - simplified .set_notify_enabled() implementation moving the ALL_SRCIDs
->   logic out of protocol. ALL_SRCIDs logic is now in charge of the
->   notification core, together with proper reference counting of enables
-> - switched to devres protocol-registration
-> ---
->  drivers/firmware/arm_scmi/power.c | 123 ++++++++++++++++++++++++++++++
->  include/linux/scmi_protocol.h     |  15 ++++
->  2 files changed, 138 insertions(+)
-> 
-> diff --git a/drivers/firmware/arm_scmi/power.c b/drivers/firmware/arm_scmi/power.c
-> index cf7f0312381b..281da7e7e33a 100644
-> --- a/drivers/firmware/arm_scmi/power.c
-> +++ b/drivers/firmware/arm_scmi/power.c
-> @@ -6,6 +6,7 @@
->   */
->  
->  #include "common.h"
-> +#include "notify.h"
->  
->  enum scmi_power_protocol_cmd {
->  	POWER_DOMAIN_ATTRIBUTES = 0x3,
-> @@ -48,6 +49,12 @@ struct scmi_power_state_notify {
->  	__le32 notify_enable;
->  };
->  
-> +struct scmi_power_state_notify_payld {
-> +	__le32 agent_id;
-> +	__le32 domain_id;
-> +	__le32 power_state;
-> +};
-> +
->  struct power_dom_info {
->  	bool state_set_sync;
->  	bool state_set_async;
-> @@ -63,6 +70,11 @@ struct scmi_power_info {
->  	struct power_dom_info *dom_info;
->  };
->  
-> +static enum scmi_power_protocol_cmd evt_2_cmd[] = {
-> +	POWER_STATE_NOTIFY,
-> +	POWER_STATE_CHANGE_REQUESTED_NOTIFY,
-> +};
-> +
->  static int scmi_power_attributes_get(const struct scmi_handle *handle,
->  				     struct scmi_power_info *pi)
->  {
-> @@ -186,6 +198,111 @@ static struct scmi_power_ops power_ops = {
->  	.state_get = scmi_power_state_get,
->  };
->  
-> +static int scmi_power_request_notify(const struct scmi_handle *handle,
-> +				     u32 domain, int message_id, bool enable)
-> +{
-> +	int ret;
-> +	struct scmi_xfer *t;
-> +	struct scmi_power_state_notify *notify;
-> +
-> +	ret = scmi_xfer_get_init(handle, message_id, SCMI_PROTOCOL_POWER,
-> +				 sizeof(*notify), 0, &t);
-> +	if (ret)
-> +		return ret;
-> +
-> +	notify = t->tx.buf;
-> +	notify->domain = cpu_to_le32(domain);
-> +	notify->notify_enable = enable ? cpu_to_le32(BIT(0)) : 0;
-> +
-> +	ret = scmi_do_xfer(handle, t);
-> +
-> +	scmi_xfer_put(handle, t);
-> +	return ret;
-> +}
-> +
-> +static bool scmi_power_set_notify_enabled(const struct scmi_handle *handle,
-> +					  u8 evt_id, u32 src_id, bool enable)
-> +{
-> +	int ret, cmd_id;
-> +
-> +	cmd_id = MAP_EVT_TO_ENABLE_CMD(evt_id, evt_2_cmd);
-> +	if (cmd_id < 0)
-> +		return false;
-> +
-> +	ret = scmi_power_request_notify(handle, src_id, cmd_id, enable);
-> +	if (ret)
-> +		pr_warn("SCMI Notifications - Proto:%X - FAIL_ENABLE - evt[%X] dom[%d] - ret:%d\n",
-> +				SCMI_PROTOCOL_POWER, evt_id, src_id, ret);
-> +
-> +	return !ret ? true : false;
+Sorry, we migrated to gitlab under different domain. I pushed it
+here now: https://github.com/sre/rumble-test
 
-	return !ret;
+-- Sebastian
 
-	Is the same thing...
+--eosgsryqn2a77iww
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> +}
-> +
-> +static void *scmi_power_fill_custom_report(u8 evt_id, u64 timestamp,
-> +					   const void *payld, size_t payld_sz,
-> +					   void *report, u32 *src_id)
-> +{
-> +	void *rep = NULL;
-> +
-> +	switch (evt_id) {
-> +	case POWER_STATE_CHANGED:
-> +	{
-> +		const struct scmi_power_state_notify_payld *p = payld;
-> +		struct scmi_power_state_changed_report *r = report;
-> +
-> +		if (sizeof(*p) != payld_sz)
-> +			break;
-> +
-> +		r->timestamp = timestamp;
-> +		r->agent_id = le32_to_cpu(p->agent_id);
-> +		r->domain_id = le32_to_cpu(p->domain_id);
-> +		r->power_state = le32_to_cpu(p->power_state);
-> +		*src_id = r->domain_id;
-> +		rep = r;
-> +		break;
-> +	}
-> +	case POWER_STATE_CHANGE_REQUESTED:
-> +	{
-> +		const struct scmi_power_state_notify_payld *p = payld;
-> +		struct scmi_power_state_change_requested_report *r = report;
-> +
-> +		if (sizeof(*p) != payld_sz)
-> +			break;
-> +
-> +		r->timestamp = timestamp;
-> +		r->agent_id = le32_to_cpu(p->agent_id);
-> +		r->domain_id = le32_to_cpu(p->domain_id);
-> +		r->power_state = le32_to_cpu(p->power_state);
-> +		*src_id = r->domain_id;
-> +		rep = r;
-> +		break;
-> +	}
-> +	default:
-> +		break;
-> +	}
-> +
-> +	return rep;
-> +}
-> +
-> +static const struct scmi_event power_events[] = {
-> +	{
-> +		.id = POWER_STATE_CHANGED,
-> +		.max_payld_sz = 12,
-> +		.max_report_sz =
-> +			sizeof(struct scmi_power_state_changed_report),
-> +	},
-> +	{
-> +		.id = POWER_STATE_CHANGE_REQUESTED,
-> +		.max_payld_sz = 12,
-> +		.max_report_sz =
-> +			sizeof(struct scmi_power_state_change_requested_report),
-> +	},
-> +};
-> +
-> +static const struct scmi_protocol_event_ops power_event_ops = {
-> +	.set_notify_enabled = scmi_power_set_notify_enabled,
-> +	.fill_custom_report = scmi_power_fill_custom_report,
-> +};
-> +
->  static int scmi_power_protocol_init(struct scmi_handle *handle)
->  {
->  	int domain;
-> @@ -214,6 +331,12 @@ static int scmi_power_protocol_init(struct scmi_handle *handle)
->  		scmi_power_domain_attributes_get(handle, domain, dom);
->  	}
->  
-> +	scmi_register_protocol_events(handle,
-> +				      SCMI_PROTOCOL_POWER, PAGE_SIZE,
-> +				      &power_event_ops, power_events,
-> +				      ARRAY_SIZE(power_events),
-> +				      pinfo->num_domains);
-> +
->  	pinfo->version = version;
->  	handle->power_ops = &power_ops;
->  	handle->power_priv = pinfo;
-> diff --git a/include/linux/scmi_protocol.h b/include/linux/scmi_protocol.h
-> index 797e1e03ae52..baa117f9eda3 100644
-> --- a/include/linux/scmi_protocol.h
-> +++ b/include/linux/scmi_protocol.h
-> @@ -377,4 +377,19 @@ typedef int (*scmi_prot_init_fn_t)(struct scmi_handle *);
->  int scmi_protocol_register(int protocol_id, scmi_prot_init_fn_t fn);
->  void scmi_protocol_unregister(int protocol_id);
->  
-> +/* SCMI Notification API - Custom Event Reports */
-> +struct scmi_power_state_changed_report {
-> +	ktime_t	timestamp;
-> +	u32	agent_id;
-> +	u32	domain_id;
-> +	u32	power_state;
-> +};
-> +
-> +struct scmi_power_state_change_requested_report {
-> +	ktime_t	timestamp;
-> +	u32	agent_id;
-> +	u32	domain_id;
-> +	u32	power_state;
-> +};
-> +
->  #endif /* _LINUX_SCMI_PROTOCOL_H */
+-----BEGIN PGP SIGNATURE-----
 
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl5mNrIACgkQ2O7X88g7
++ppmFRAAmZJVN7L3IfK3pDbnpFFcwSlwwZC88ezxxQML6+PgbESuKJ/ku3Y1JQ6T
+FYJzl25NvaMjPWKKXrPhMhd08J3nY08OerY/R6g6jJ3YktXuDN93EScwlOQ4Lifq
++lW7gB8GLh23ddSdVuzoPv55/8/rAsBGpwj1MFLddSJvtSC6KDKqd+ZO1+/W5kK5
+d+6ZtPrLTEwBC7jC4swzTRYGKWgqTitulTloq9snCMoa7lerisacaplmv0L7G3Mp
+MhnLhyrYvw9p5X8JK6Is+BkMctlTgMaq75jXZ5tj+YMY17+9tAOyfdzQnmeJVsUq
+hZjcyqHWCX3HWYQdjQONG/4Yxrgz64mlyYARzm9hoREPdvLpUyRtGpDlJtHDw6u6
+8XkAeIdVn6FKbm+WT2dTDGju4W7GN4kUs9VvF4enwVX4clYO2VMvtOIkP9BSWZUZ
+6ODkheoCultJGLEmTnnO+b86cclhPb3c/S2qqnZz3K4jH7kJH+V5CGc057R/FDKC
+NeREUSbYo0dIujnEq3i0+NmsTaEkB5a47Z2+gfKrvkbM3uRXzKsBmunGnoy1BHxh
+rLjLn+BdqAHAgx2OsU3UVWi34It7Av7mzdoRohJEleXUPmT6SRHmR6PpNM0yicM/
+qyJ6gCH51Q4lwEQ2ro24fyc2V3w0TK/BFat2M0WC3w3z0FnMWOQ=
+=MhfD
+-----END PGP SIGNATURE-----
 
+--eosgsryqn2a77iww--
