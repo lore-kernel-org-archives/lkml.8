@@ -2,162 +2,119 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5747C10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 15:53:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C6E9C18E5A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 15:53:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 904EF208C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 15:53:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583769185;
-	bh=gMmrwKuiiPSrE5zFSZjJ3AXpeMxjqa2zX8pRsdKTGR8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=zu9pNFJvIQZpz1HyZ66Adp9kMinqlkNNaXtLZ653Wzg8oMRzLoo/L26KKhfvCPMxc
-	 UIxba4WYygWlorJ0k5ewgw9brYObzBTs7IX3INNWGXSiovvHgUhKHE1EvLykThpcw4
-	 nKSMip1I6KUK6CRYMRRnRcmuA7ZIDQ4nkJEpIePU=
+	by mail.kernel.org (Postfix) with ESMTP id E5014208C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 15:53:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y5wSdA1s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727286AbgCIPxE (ORCPT
+        id S1727224AbgCIPxg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 11:53:04 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:34510 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727196AbgCIPxD (ORCPT
+        Mon, 9 Mar 2020 11:53:36 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:47015 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726973AbgCIPxg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 11:53:03 -0400
-Received: by mail-lj1-f195.google.com with SMTP id s13so1274550ljm.1
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 08:53:01 -0700 (PDT)
+        Mon, 9 Mar 2020 11:53:36 -0400
+Received: by mail-pg1-f196.google.com with SMTP id y30so4867961pga.13;
+        Mon, 09 Mar 2020 08:53:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EXfBgHukxBvsUIUUHVjFpSxz9MtCVwuKfkDGjmbjA74=;
-        b=TUfdKwyMIdzZABuGfaz29jdL4jBWhfe9EDROAoWo7k6cs3dhd+ODiA8Fuv0zwjS7aR
-         kaKK1YDIK5c5LCpnpOC9idRXWgQRLP0+CSXvTrz1Mfum6aCAyVhgPh163mCqXrvVGstE
-         th+lI57YSlrxDwtOGDYLNp/qugF7/3vQm9KV4=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=0QOwGWZDroTuYZKUvEz4ThZBE28k0R9BlVBpj2B89t4=;
+        b=Y5wSdA1sUAyKXpPWRphvCWwfduXynvra+u0WNhAfzkPhfNscROVbGY1S/bkaVAtR0d
+         DWMvs8OIREJ2zcLq4NdG0hahwt1OzZt2yRnkl7O5eDMvo3y7kE/ujGZIGHRI7Tdp844p
+         PBvypNHY1xNK/dsjrSC5IB/6EysRnW3R9ehUfxBd8dbMeyyS6mcs+V5dZYdnDZfV0SCY
+         60WQA2j3zEZQ9Sv9UYyTU/rf4JJRqKbPXsvRewmszm/qQgtdpewpwyyvdysdb8ROXcVj
+         Ti4UFYqV1Xp5vL87P/TG+TtI1QU22yrhdESprjAPQyapSkpHbXI+Ea4QsO5OxvEphEEg
+         Gwkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EXfBgHukxBvsUIUUHVjFpSxz9MtCVwuKfkDGjmbjA74=;
-        b=kES7Fojmeejgjo3DA5xAGThAHj7XsYN5WezM7MSvNSv9+TMYznfuHaOmMHTHUkT8wg
-         WpSY90VJwE7jFdxNG95csqEkIXYkRI384CwconONcky7IuJFdamfVHWsyE/4MeLggGZX
-         J6WQgiYc6a6CdmjAZsVKJ8c5yYaH4/p9lZ9AzmZd+DiYTa+Iwg2r/liZUYsJY+6A644/
-         YsAPNgzrasPoY/+uAuD9f81ejM2y2z93/UcFz2LFCG3+/uEhlMYWpEc7Q0v2rJhcMSNP
-         NDLsC5ts8/X1jc6+ZQnLXrxcBbauh3TGhNR7rtenNcRc0a3qILUCj1NKgkYVTdqRRZf7
-         jM+A==
-X-Gm-Message-State: ANhLgQ3+AGM0+SjU5L6E7mmAHLxie7Hx+kwU3KgzhtnsywxUA0134LtH
-        mF6iVPkrp6X+fgL9w4yGBwp4mOstP48=
-X-Google-Smtp-Source: ADFU+vskVYLFU7Qg5OXkUaOT5v4RyS6fAybzsvJ+Geg2dA6Tu9qGP8tYovZI5rIhPvlYZZaD0N16zQ==
-X-Received: by 2002:a05:651c:201d:: with SMTP id s29mr4035841ljo.240.1583769180356;
-        Mon, 09 Mar 2020 08:53:00 -0700 (PDT)
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com. [209.85.208.180])
-        by smtp.gmail.com with ESMTPSA id x23sm8433088ljj.8.2020.03.09.08.52.57
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Mar 2020 08:52:58 -0700 (PDT)
-Received: by mail-lj1-f180.google.com with SMTP id w1so10495106ljh.5
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 08:52:57 -0700 (PDT)
-X-Received: by 2002:a2e:5850:: with SMTP id x16mr9457422ljd.209.1583769177624;
- Mon, 09 Mar 2020 08:52:57 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=0QOwGWZDroTuYZKUvEz4ThZBE28k0R9BlVBpj2B89t4=;
+        b=iqu/wZSi/w3IsN//BSOcRQJNz/Up/UoNNwAjqHd86lFJcrOfLNchLKLycgGGQHK2za
+         AKiKpYnkTOptXWUQVWqrY771FJ50zwVgpD7k4/CjdwXxOl5q7gKYHOfO6RcNFbxiCQTA
+         Gzw/mM6bQnvgcU5epJc9QXVFwvkEalRtUcxOzwiWmbpHTx1sDe+lVKbaWxm1s8Csb+zz
+         DeWmTFeH6+pdcTO17QEo8HcYFasO81IVShLiaU1RVTyjGNIZeO1v/UEpp7Ak9plnDO62
+         wi+j3Ze6ADZ7UkrMhOF30RfCT2ZqJrIuPfuGHCJAAR5pcJsqLCVw6SbZb/LE86nwbGDV
+         A8wg==
+X-Gm-Message-State: ANhLgQ0gDNnx0Ys2fo4nxK43NdSWTwTikPIuG66TreEpXFN7op7r1Hbz
+        vVpGm4traA1u5XF+X3KTSHQ=
+X-Google-Smtp-Source: ADFU+vuQluF3zszB7MLftbqie/sqdqSHh8ucl+t/SkIiqtpGEtE4K7yJ2sP012gDBJrIwKyGUerv9w==
+X-Received: by 2002:a63:1862:: with SMTP id 34mr13988788pgy.191.1583769214024;
+        Mon, 09 Mar 2020 08:53:34 -0700 (PDT)
+Received: from debian.net.fpt ([2405:4800:58c7:2b5b:996c:8b3a:a70f:c38a])
+        by smtp.gmail.com with ESMTPSA id w31sm19138587pgl.84.2020.03.09.08.53.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Mar 2020 08:53:33 -0700 (PDT)
+From:   Phong Tran <tranmanphong@gmail.com>
+To:     john.garry@huawei.com
+Cc:     aacraid@microsemi.com, bvanassche@acm.org, jejb@linux.ibm.com,
+        keescook@chromium.org, linux-kernel@vger.kernel.org,
+        linux-scsi@vger.kernel.org, martin.petersen@oracle.com,
+        tranmanphong@gmail.com
+Subject: [PATCH v3] scsi: aacraid: cleanup warning cast-function-type
+Date:   Mon,  9 Mar 2020 22:53:19 +0700
+Message-Id: <20200309155319.12658-1-tranmanphong@gmail.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <9a0e6373-b4a3-0822-3b65-e3b326266832@huawei.com>
+References: <9a0e6373-b4a3-0822-3b65-e3b326266832@huawei.com>
 MIME-Version: 1.0
-References: <20200308140314.GQ5972@shao2-debian> <e3783d060c778cb41b77380ad3e278133b52f57e.camel@kernel.org>
-In-Reply-To: <e3783d060c778cb41b77380ad3e278133b52f57e.camel@kernel.org>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 9 Mar 2020 08:52:41 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whGK712fPqmQ3FSHxqe3Aqny4bEeWEvfaytLeLV2+ijCQ@mail.gmail.com>
-Message-ID: <CAHk-=whGK712fPqmQ3FSHxqe3Aqny4bEeWEvfaytLeLV2+ijCQ@mail.gmail.com>
-Subject: Re: [locks] 6d390e4b5d: will-it-scale.per_process_ops -96.6% regression
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     kernel test robot <rong.a.chen@intel.com>,
-        yangerkun <yangerkun@huawei.com>,
-        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org,
-        Neil Brown <neilb@suse.de>,
-        Bruce Fields <bfields@fieldses.org>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Content-Type: multipart/mixed; boundary="0000000000003d346305a06dff90"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---0000000000003d346305a06dff90
-Content-Type: text/plain; charset="UTF-8"
+Make the aacraid driver -Wcast-function-type clean
+Report by: https://github.com/KSPP/linux/issues/20
 
-On Mon, Mar 9, 2020 at 7:36 AM Jeff Layton <jlayton@kernel.org> wrote:
->
-> On Sun, 2020-03-08 at 22:03 +0800, kernel test robot wrote:
-> >
-> > FYI, we noticed a -96.6% regression of will-it-scale.per_process_ops due to commit:
->
-> This is not completely unexpected as we're banging on the global
-> blocked_lock_lock now for every unlock. This test just thrashes file
-> locks and unlocks without doing anything in between, so the workload
-> looks pretty artificial [1].
->
-> It would be nice to avoid the global lock in this codepath, but it
-> doesn't look simple to do. I'll keep thinking about it, but for now I'm
-> inclined to ignore this result unless we see a problem in more realistic
-> workloads.
+drivers/scsi/aacraid/aachba.c:813:23:
+warning: cast between incompatible function types from
+'int (*)(struct scsi_cmnd *)' to 'void (*)(struct scsi_cmnd *)'
+[-Wcast-function-type]
 
-That is a _huge_ regression, though.
+Reviewed-by: Bart van Assche <bvanassche@acm.org>
+Signed-off-by: Phong Tran <tranmanphong@gmail.com>
+---
+ drivers/scsi/aacraid/aachba.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-What about something like the attached? Wouldn't that work? And make
-the code actually match the old comment about wow "fl_blocker" being
-NULL being special.
+diff --git a/drivers/scsi/aacraid/aachba.c b/drivers/scsi/aacraid/aachba.c
+index 33dbc051bff9..ebfb42af67f5 100644
+--- a/drivers/scsi/aacraid/aachba.c
++++ b/drivers/scsi/aacraid/aachba.c
+@@ -798,6 +798,11 @@ static int aac_probe_container_callback1(struct scsi_cmnd * scsicmd)
+ 	return 0;
+ }
+ 
++static void aac_probe_container_scsi_done(struct scsi_cmnd *scsi_cmnd)
++{
++	aac_probe_container_callback1(scsi_cmnd);
++}
++
+ int aac_probe_container(struct aac_dev *dev, int cid)
+ {
+ 	struct scsi_cmnd *scsicmd = kmalloc(sizeof(*scsicmd), GFP_KERNEL);
+@@ -810,7 +815,7 @@ int aac_probe_container(struct aac_dev *dev, int cid)
+ 		return -ENOMEM;
+ 	}
+ 	scsicmd->list.next = NULL;
+-	scsicmd->scsi_done = (void (*)(struct scsi_cmnd*))aac_probe_container_callback1;
++	scsicmd->scsi_done = aac_probe_container_scsi_done;
+ 
+ 	scsicmd->device = scsidev;
+ 	scsidev->sdev_state = 0;
+-- 
+2.20.1
 
-The old code seemed to not know about things like memory ordering either.
-
-Patch is entirely untested, but aims to have that "smp_store_release()
-means I'm done and not going to touch it any more", making that
-smp_load_acquire() test hopefully be valid as per the comment..
-
-Hmm?
-
-                    Linus
-
---0000000000003d346305a06dff90
-Content-Type: text/x-patch; charset="US-ASCII"; name="patch.diff"
-Content-Disposition: attachment; filename="patch.diff"
-Content-Transfer-Encoding: base64
-Content-ID: <f_k7kn615a0>
-X-Attachment-Id: f_k7kn615a0
-
-IGZzL2xvY2tzLmMgfCAyOSArKysrKysrKysrKysrKysrKysrKysrKysrKysrLQogMSBmaWxlIGNo
-YW5nZWQsIDI4IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkKCmRpZmYgLS1naXQgYS9mcy9s
-b2Nrcy5jIGIvZnMvbG9ja3MuYwppbmRleCA0MjZiNTVkMzMzZDUuLmJjNWNhNTRhMDc0OSAxMDA2
-NDQKLS0tIGEvZnMvbG9ja3MuYworKysgYi9mcy9sb2Nrcy5jCkBAIC03MjUsNyArNzI1LDYgQEAg
-c3RhdGljIHZvaWQgX19sb2Nrc19kZWxldGVfYmxvY2soc3RydWN0IGZpbGVfbG9jayAqd2FpdGVy
-KQogewogCWxvY2tzX2RlbGV0ZV9nbG9iYWxfYmxvY2tlZCh3YWl0ZXIpOwogCWxpc3RfZGVsX2lu
-aXQoJndhaXRlci0+ZmxfYmxvY2tlZF9tZW1iZXIpOwotCXdhaXRlci0+ZmxfYmxvY2tlciA9IE5V
-TEw7CiB9CiAKIHN0YXRpYyB2b2lkIF9fbG9ja3Nfd2FrZV91cF9ibG9ja3Moc3RydWN0IGZpbGVf
-bG9jayAqYmxvY2tlcikKQEAgLTc0MCw2ICs3MzksMTIgQEAgc3RhdGljIHZvaWQgX19sb2Nrc193
-YWtlX3VwX2Jsb2NrcyhzdHJ1Y3QgZmlsZV9sb2NrICpibG9ja2VyKQogCQkJd2FpdGVyLT5mbF9s
-bW9wcy0+bG1fbm90aWZ5KHdhaXRlcik7CiAJCWVsc2UKIAkJCXdha2VfdXAoJndhaXRlci0+Zmxf
-d2FpdCk7CisKKwkJLyoKKwkJICogVGVsbCB0aGUgd29ybGQgd2UncmUgZG9uZSB3aXRoIGl0IC0g
-c2VlIGNvbW1lbnQgYXQKKwkJICogdG9wIG9mIGxvY2tzX2RlbGV0ZV9ibG9jaygpLgorCQkgKi8K
-KwkJc21wX3N0b3JlX3JlbGVhc2UoJndhaXRlci0+ZmxfYmxvY2tlciwgTlVMTCk7CiAJfQogfQog
-CkBAIC03NTMsMTEgKzc1OCwzMyBAQCBpbnQgbG9ja3NfZGVsZXRlX2Jsb2NrKHN0cnVjdCBmaWxl
-X2xvY2sgKndhaXRlcikKIHsKIAlpbnQgc3RhdHVzID0gLUVOT0VOVDsKIAorCS8qCisJICogSWYg
-ZmxfYmxvY2tlciBpcyBOVUxMLCBpdCB3b24ndCBiZSBzZXQgYWdhaW4gYXMgdGhpcyB0aHJlYWQK
-KwkgKiAib3ducyIgdGhlIGxvY2sgYW5kIGlzIHRoZSBvbmx5IG9uZSB0aGF0IG1pZ2h0IHRyeSB0
-byBjbGFpbQorCSAqIHRoZSBsb2NrLiAgU28gaXQgaXMgc2FmZSB0byB0ZXN0IGZsX2Jsb2NrZXIg
-bG9ja2xlc3NseS4KKwkgKiBBbHNvIGlmIGZsX2Jsb2NrZXIgaXMgTlVMTCwgdGhpcyB3YWl0ZXIg
-aXMgbm90IGxpc3RlZCBvbgorCSAqIGZsX2Jsb2NrZWRfcmVxdWVzdHMgZm9yIHNvbWUgbG9jaywg
-c28gbm8gb3RoZXIgcmVxdWVzdCBjYW4KKwkgKiBiZSBhZGRlZCB0byB0aGUgbGlzdCBvZiBmbF9i
-bG9ja2VkX3JlcXVlc3RzIGZvciB0aGlzCisJICogcmVxdWVzdC4gIFNvIGlmIGZsX2Jsb2NrZXIg
-aXMgTlVMTCwgaXQgaXMgc2FmZSB0bworCSAqIGxvY2tsZXNzbHkgY2hlY2sgaWYgZmxfYmxvY2tl
-ZF9yZXF1ZXN0cyBpcyBlbXB0eS4gIElmIGJvdGgKKwkgKiBvZiB0aGVzZSBjaGVja3Mgc3VjY2Vl
-ZCwgdGhlcmUgaXMgbm8gbmVlZCB0byB0YWtlIHRoZSBsb2NrLgorCSAqLworCWlmICghc21wX2xv
-YWRfYWNxdWlyZSgmd2FpdGVyLT5mbF9ibG9ja2VyKSkgeworCQlpZiAobGlzdF9lbXB0eSgmd2Fp
-dGVyLT5mbF9ibG9ja2VkX3JlcXVlc3RzKSkKKwkJICAgICAgICByZXR1cm4gc3RhdHVzOworCX0K
-KwogCXNwaW5fbG9jaygmYmxvY2tlZF9sb2NrX2xvY2spOwogCWlmICh3YWl0ZXItPmZsX2Jsb2Nr
-ZXIpCiAJCXN0YXR1cyA9IDA7CiAJX19sb2Nrc193YWtlX3VwX2Jsb2Nrcyh3YWl0ZXIpOwogCV9f
-bG9ja3NfZGVsZXRlX2Jsb2NrKHdhaXRlcik7CisKKwkvKgorCSAqIFRlbGwgdGhlIHdvcmxkIHdl
-J3JlIGRvbmUgd2l0aCBpdCAtIHNlZSBjb21taXQgYXQgdG9wCisJICogb2YgdGhpcyBmdW5jdGlv
-bgorCSAqLworCXNtcF9zdG9yZV9yZWxlYXNlKCZ3YWl0ZXItPmZsX2Jsb2NrZXIsIE5VTEwpOwog
-CXNwaW5fdW5sb2NrKCZibG9ja2VkX2xvY2tfbG9jayk7CiAJcmV0dXJuIHN0YXR1czsKIH0K
---0000000000003d346305a06dff90--
