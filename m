@@ -2,239 +2,445 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34E62C10F25
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 23:45:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC746C10F29
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 23:46:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE75624654
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 23:45:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B4D724655
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 23:46:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TEQwnLgh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cdnk6m5b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727501AbgCIXpY (ORCPT
+        id S1727484AbgCIXqd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 19:45:24 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:33993 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727452AbgCIXpX (ORCPT
+        Mon, 9 Mar 2020 19:46:33 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:45318 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727322AbgCIXqd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 19:45:23 -0400
-Received: by mail-ot1-f67.google.com with SMTP id j16so11461509otl.1
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 16:45:21 -0700 (PDT)
+        Mon, 9 Mar 2020 19:46:33 -0400
+Received: by mail-pl1-f193.google.com with SMTP id b22so4642096pls.12;
+        Mon, 09 Mar 2020 16:46:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=fmBdIxd2DBH3drat2RxXw5EvMETx4X35UelSAv/ALh8=;
-        b=TEQwnLgh8B3PsJKBlW2TWyJTnA9DDlkOy51XwT8ZvW45CdlsU0L88IRmKnKkRltzBm
-         kGOI6UBw/K7+paEi85+jlPPq3aiTme3vzGx0b9SuJDLCK0DjPl3v+LDgpJwsWFjalO1g
-         VMe5PrqnKGg8d5GsqbZHoRMhh7Niv0b3RLcDFnfMlagHZIzScsm1LLtypLf7E73dZsIz
-         Uu+rOdydlnVXzRtmsfDp6JQRHCADpg+3xOUK4fvE+ZcX7GO7hPaNAxIED0JiHv2Ndvjm
-         IgTFCLoYEf13ad9TCi4MxxRLj54zFArGjR3fZwoYAoFD1Y+5F1sl/nxCYT1zPUp2xbwH
-         keJw==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=tSkT8n/Z430nm+g00OtvcSfjHhJpGkNA3fExCO40Te8=;
+        b=cdnk6m5blgp+J3OCCWG1EwTcX7VfYmlhHPdekIezpQYnw7MyShxIo+/25t7RrD32Q4
+         oT9z6/nuIhAgI3gTTN8PWbCYh/7/8cF2iBEfVdUQCtCvAHf1zMWmJYcuQdc7Z8+bcU7a
+         6EwKAVirPwfhw3llXme6c+Aa28WKjcugihN3i/iyNs/XGp1ZpzWcVNbo93e3RxK9+n02
+         9D7t2C6UZ1SFq8qX1yTzuqHsqLkb2JbMgzWGdOnAkpE6h9uOQsfnG+CNx78qRNNSMOsR
+         8HOd5pWydhBGSPcueNfSizyLXkI/yS3BTxydl0nAbUjDAeCetUQE8/g9iPT8bKJH/vIF
+         +kLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=fmBdIxd2DBH3drat2RxXw5EvMETx4X35UelSAv/ALh8=;
-        b=V7y9bDRb+Swg9OEaF+icoEZbkjE5CRs5NTBZXp1OBAF1NkVkJi+Y1/fymXNeWQQF7f
-         DfLlNbBO2CTLrOXGwpTpEN0rVYNezJQew760U8KwgpxuEJgUXf2LvBiXDjPEnuAKeZNW
-         ii5PtH1OACLN+AouedUQFjCgvcdwwdG5m9prO+VGkSpTx7ggE/9JFGfjiBnAEUznVhyQ
-         YxsyDCjpbiW1ggMKWxpuY9UCCbXwoZRKGBt4/NMR1nzhE6CLOAsfm2GqoEh2YYRFpA2i
-         4tnp9oWw5rjk2T6Ybta1Z1bCfZrHJ5soKUgscwpX9wljj/h2bq1bRcd/qVkU4q/8kcKN
-         iyjw==
-X-Gm-Message-State: ANhLgQ3Uh8Uw9BPcZ+bDszAr6s5SvcGtFH0RNqchqEYM7Tg0b8I7YeU7
-        uO/zsUWVxsw1yhQ2RMFT2wplYqrQQKt5fCyCGURxD4xN
-X-Google-Smtp-Source: ADFU+vu3ctqe66UiWnus61OOtoDCVSNb+kXOZJ2waD27t2a3YUthZNqfb4fWuw2uMljnqbH/s6/XwWZrmf2yGIRlebQ=
-X-Received: by 2002:a9d:7358:: with SMTP id l24mr14121308otk.228.1583797521077;
- Mon, 09 Mar 2020 16:45:21 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=tSkT8n/Z430nm+g00OtvcSfjHhJpGkNA3fExCO40Te8=;
+        b=qZWD7TkbDo5dToxG33WJAkbluqLRbNoikAFK6kXoeakTvEyAW+uxCr7ld2iy5cwqpP
+         z1idQ7jeuvfOEBy729ppq9oATmDwNLLJkkukvEZriXw6ZiehXhOvsA9RTg4z2bXMNILl
+         fLyC2J9BgzLzzVqLOIwgfGCAR0ypE9jplkhq3Sc6dV9qHP+m71CSQa5lZxSaNsO/qRTj
+         +7/JDUyNuaRAfnFeibnOLofnfHNy0fGniXdzxN3h77TcjgDjWCliYOGL1VP1nxd3TvrH
+         bbPx/umAPbjqQAlZ2yUC6TaKFBqfhOPoPfQ1QOYUPyA3CKsrqHlgJyqDRSpVGF4RQHH/
+         w/cA==
+X-Gm-Message-State: ANhLgQ3xoCL2fZI0WsLHdArIVOQ64qvBNs4bsksUUx2hXF2z8LyfZ8W6
+        /54x9Bvxuo99so4xxHAiEhA=
+X-Google-Smtp-Source: ADFU+vsfl38+Tfau/1SStKLehhrwyQ4BxIJ94XjQFG8sY7tPuku0xQ39POC0QDmboqLCgaw1GJYNEA==
+X-Received: by 2002:a17:902:b40f:: with SMTP id x15mr18684112plr.82.1583797590271;
+        Mon, 09 Mar 2020 16:46:30 -0700 (PDT)
+Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
+        by smtp.gmail.com with ESMTPSA id i21sm942112pgn.5.2020.03.09.16.46.29
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 09 Mar 2020 16:46:29 -0700 (PDT)
+Date:   Mon, 9 Mar 2020 16:46:39 -0700
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     Shengjiu Wang <shengjiu.wang@nxp.com>
+Cc:     timur@kernel.org, Xiubo.Lee@gmail.com, festevam@gmail.com,
+        broonie@kernel.org, alsa-devel@alsa-project.org,
+        lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 7/7] ASoC: fsl_easrc: Add EASRC ASoC CPU DAI drivers
+Message-ID: <20200309234638.GD11333@Asurada-Nvidia.nvidia.com>
+References: <cover.1583725533.git.shengjiu.wang@nxp.com>
+ <2616bfd81df982add337b169b2d424a8d50c6bda.1583725533.git.shengjiu.wang@nxp.com>
 MIME-Version: 1.0
-References: <20200224160215.4136-1-mic@digikod.net>
-In-Reply-To: <20200224160215.4136-1-mic@digikod.net>
-From:   Jann Horn <jannh@google.com>
-Date:   Tue, 10 Mar 2020 00:44:54 +0100
-Message-ID: <CAG48ez21bEn0wL1bbmTiiu8j9jP5iEWtHOwz4tURUJ+ki0ydYw@mail.gmail.com>
-Subject: Re: [RFC PATCH v14 00/10] Landlock LSM
-To:     =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>
-Cc:     kernel list <linux-kernel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        James Morris <jmorris@namei.org>, Jann Horn <jann@thejh.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mickael.salaun@ssi.gouv.fr>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Vincent Dagonneau <vincent.dagonneau@ssi.gouv.fr>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-doc@vger.kernel.org,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2616bfd81df982add337b169b2d424a8d50c6bda.1583725533.git.shengjiu.wang@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 5:03 PM Micka=C3=ABl Sala=C3=BCn <mic@digikod.net> =
-wrote:
-> This new version of Landlock is a major revamp of the previous series
-> [1], hence the RFC tag.  The three main changes are the replacement of
-> eBPF with a dedicated safe management of access rules, the replacement
-> of the use of seccomp(2) with a dedicated syscall, and the management of
-> filesystem access-control (back from the v10).
->
-> As discussed in [2], eBPF may be too powerful and dangerous to be put in
-> the hand of unprivileged and potentially malicious processes, especially
-> because of side-channel attacks against access-controls or other parts
-> of the kernel.
->
-> Thanks to this new implementation (1540 SLOC), designed from the ground
-> to be used by unprivileged processes, this series enables a process to
-> sandbox itself without requiring CAP_SYS_ADMIN, but only the
-> no_new_privs constraint (like seccomp).  Not relying on eBPF also
-> enables to improve performances, especially for stacked security
-> policies thanks to mergeable rulesets.
->
-> The compiled documentation is available here:
-> https://landlock.io/linux-doc/landlock-v14/security/landlock/index.html
->
-> This series can be applied on top of v5.6-rc3.  This can be tested with
-> CONFIG_SECURITY_LANDLOCK and CONFIG_SAMPLE_LANDLOCK.  This patch series
-> can be found in a Git repository here:
-> https://github.com/landlock-lsm/linux/commits/landlock-v14
-> I would really appreciate constructive comments on the design and the cod=
-e.
+A few small comments -- trying to improve readability.
 
-I've looked through the patchset, and I think that it would be
-possible to simplify it quite a bit. I have tried to do that (and
-compiled-tested it, but not actually tried running it); here's what I
-came up with:
+On Mon, Mar 09, 2020 at 11:58:34AM +0800, Shengjiu Wang wrote:
+> EASRC (Enhanced Asynchronous Sample Rate Converter) is a new IP module
+> found on i.MX8MN. It is different with old ASRC module.
+> 
+> The primary features for the EASRC are as follows:
+> - 4 Contexts - groups of channels with an independent time base
+> - Fully independent and concurrent context control
+> - Simultaneous processing of up to 32 audio channels
+> - Programmable filter charachteristics for each context
+> - 32, 24, 20, and 16-bit fixed point audio sample support
+> - 32-bit floating point audio sample support
+> - 8kHz to 384kHz sample rate
+> - 1/16 to 8x sample rate conversion ratio
+> 
+> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+> Signed-off-by: Cosmin-Gabriel Samoila <cosmin.samoila@nxp.com>
+> ---
+>  sound/soc/fsl/Kconfig     |   11 +
+>  sound/soc/fsl/Makefile    |    2 +
+>  sound/soc/fsl/fsl_easrc.c | 2111 +++++++++++++++++++++++++++++++++++++
+>  sound/soc/fsl/fsl_easrc.h |  651 ++++++++++++
+>  4 files changed, 2775 insertions(+)
+>  create mode 100644 sound/soc/fsl/fsl_easrc.c
+>  create mode 100644 sound/soc/fsl/fsl_easrc.h
 
-https://github.com/thejh/linux/commits/landlock-mod
+> diff --git a/sound/soc/fsl/fsl_easrc.c b/sound/soc/fsl/fsl_easrc.c
 
-The three modified patches (patches 1, 2 and 5) are marked with
-"[MODIFIED]" in their title. Please take a look - what do you think?
-Feel free to integrate my changes into your patches if you think they
-make sense.
+> +static int fsl_easrc_resampler_config(struct fsl_asrc *easrc)
+> +{
+> +	struct device *dev = &easrc->pdev->dev;
+> +	struct fsl_easrc_priv *easrc_priv = easrc->private;
+> +	struct asrc_firmware_hdr *hdr =  easrc_priv->firmware_hdr;
+> +	struct interp_params *interp = easrc_priv->interp;
+> +	struct interp_params *selected_interp = NULL;
+> +	unsigned int num_coeff;
+> +	unsigned int i;
+> +	u64 *arr;
+> +	u32 *r;
+> +	int ret;
+> +
+> +	if (!hdr) {
+> +		dev_err(dev, "firmware not loaded!\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	for (i = 0; i < hdr->interp_scen; i++) {
+> +		if ((interp[i].num_taps - 1) ==
+> +		    bits_taps_to_val(easrc_priv->rs_num_taps)) {
 
+Could fit everything under 80 characters:
 
-Apart from simplifying the code, I also found the following issues,
-which I have fixed in the modified patches:
-
-put_hierarchy() has to drop a reference on its parent. (However, this
-must not recurse, so we have to do it with a loop.)
-
-put_ruleset() is not in an RCU read-side critical section, so as soon
-as it calls kfree_rcu(), "freeme" might disappear; but "orig" is in
-"freeme", so when the loop tries to find the next element with
-rb_next(orig), that can be a UAF.
-rbtree_postorder_for_each_entry_safe() exists for dealing with such
-issues.
-
-AFAIK the calls to rb_erase() in clean_ruleset() is not safe if
-someone is concurrently accessing the rbtree as an RCU reader, because
-concurrent rotations can prevent a lookup from succeeding. The
-simplest fix is probably to just make any rbtree that has been
-installed on a process immutable, and give up on the cleaning -
-arguably the memory wastage that can cause is pretty limited. (By the
-way, as a future optimization, we might want to turn the rbtree into a
-hashtable when installing it?)
-
-The iput() in landlock_release_inode() looks unsafe - you need to
-guarantee that even if the deletion of a ruleset races with
-generic_shutdown_super(), every iput() for that superblock finishes
-before landlock_release_inodes() returns, even if the iput() is
-happening in the context of ruleset deletion. This is why
-fsnotify_unmount_inodes() has that wait_var_event() at the end.
++		if ((interp[i].num_taps - 1) !=
++		    bits_taps_to_val(easrc_priv->rs_num_taps))
++			continue;
++
++		arr = interp[i].coeff;
++		selected_interp = &interp[i];
++		dev_dbg(dev, "Selected interp_filter: %u taps - %u phases\n",
++			selected_interp->num_taps,
++			selected_interp->num_phases);
++		break;
 
 
-Aside from those things, there is also a major correctness issue where
-I'm not sure how to solve it properly:
+> +static int fsl_easrc_normalize_filter(struct fsl_asrc *easrc,
+> +				      u64 *infilter,
+> +				      u64 *outfilter,
+> +				      int shift)
+> +{
+> +	struct device *dev = &easrc->pdev->dev;
+> +	u64 coef = *infilter;
 
-Let's say a process installs a filter on itself like this:
+> +	s64 exp  = (coef & 0x7ff0000000000000ll) >> 52;
 
-struct landlock_attr_ruleset ruleset =3D { .handled_access_fs =3D
-ACCESS_FS_ROUGHLY_WRITE};
-int ruleset_fd =3D landlock(LANDLOCK_CMD_CREATE_RULESET,
-LANDLOCK_OPT_CREATE_RULESET, sizeof(ruleset), &ruleset);
-struct landlock_attr_path_beneath path_beneath =3D {
-  .ruleset_fd =3D ruleset_fd,
-  .allowed_access =3D ACCESS_FS_ROUGHLY_WRITE,
-  .parent_fd =3D open("/tmp/foobar", O_PATH),
-};
-landlock(LANDLOCK_CMD_ADD_RULE, LANDLOCK_OPT_ADD_RULE_PATH_BENEATH,
-sizeof(path_beneath), &path_beneath);
-prctl(PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0);
-struct landlock_attr_enforce attr_enforce =3D { .ruleset_fd =3D ruleset_fd =
-};
-landlock(LANDLOCK_CMD_ENFORCE_RULESET, LANDLOCK_OPT_ENFORCE_RULESET,
-sizeof(attr_enforce), &attr_enforce);
+Hmm...by masking 0x7ff0000000000000ll, MSB (sign bit) is gone.
+Would the result still possibly be a negative value?
 
-At this point, the process is not supposed to be able to write to
-anything outside /tmp/foobar, right? But what happens if the process
-does the following next?
+> +	/*
+> +	 * If exponent is zero (value == 0), or 7ff (value == NaNs)
+> +	 * dont touch the content
+> +	 */
+> +	if (((coef & 0x7ff0000000000000ll) == 0) ||
+> +	    ((coef & 0x7ff0000000000000ll) == ((u64)0x7ff << 52))) {
 
-struct landlock_attr_ruleset ruleset =3D { .handled_access_fs =3D
-ACCESS_FS_ROUGHLY_WRITE};
-int ruleset_fd =3D landlock(LANDLOCK_CMD_CREATE_RULESET,
-LANDLOCK_OPT_CREATE_RULESET, sizeof(ruleset), &ruleset);
-struct landlock_attr_path_beneath path_beneath =3D {
-  .ruleset_fd =3D ruleset_fd,
-  .allowed_access =3D ACCESS_FS_ROUGHLY_WRITE,
-  .parent_fd =3D open("/", O_PATH),
-};
-landlock(LANDLOCK_CMD_ADD_RULE, LANDLOCK_OPT_ADD_RULE_PATH_BENEATH,
-sizeof(path_beneath), &path_beneath);
-prctl(PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0);
-struct landlock_attr_enforce attr_enforce =3D { .ruleset_fd =3D ruleset_fd =
-};
-landlock(LANDLOCK_CMD_ENFORCE_RULESET, LANDLOCK_OPT_ENFORCE_RULESET,
-sizeof(attr_enforce), &attr_enforce);
+You have extracted "exp" already:
++	if (exp == 0 || (u64)exp & 0x7ff == 0x7ff)
 
-As far as I can tell from looking at the source, after this, you will
-have write access to the entire filesystem again. I think the idea is
-that LANDLOCK_CMD_ENFORCE_RULESET should only let you drop privileges,
-not increase them, right?
+> +		*outfilter = coef;
 
-I think the easy way to fix this would be to add a bitmask to each
-rule that says from which ruleset it originally comes, and then let
-check_access_path() collect these bitmasks from each rule with OR, and
-check at the end whether the resulting bitmask is full - if not, at
-least one of the rulesets did not permit the access, and it should be
-denied.
+Could simply a bit by returning here:
++		return 0;
++	}
+	
+Then:
 
-But maybe it would make more sense to change how the API works
-instead, and get rid of the concept of "merging" two rulesets
-together? Instead, we could make the API work like this:
++	/* coef * 2^shift == exp + shift */
++	exp += shift;
++
++	if ((shift > 0 && exp >= 2047) || (shift < 0 && exp <= 0)) {
++		dev_err(dev, "coef out of range\n");
++		return -EINVAL;
++	}
++
++	outcoef = (u64)(coef & 0x800FFFFFFFFFFFFFll) + ((u64)exp << 52);
++	*outfilter = outcoef;
 
- - LANDLOCK_CMD_CREATE_RULESET gives you a file descriptor whose
-->private_data contains a pointer to the old ruleset of the process,
-as well as a pointer to a new empty ruleset.
- - LANDLOCK_CMD_ADD_RULE fails if the specified rule would not be
-permitted by the old ruleset, then adds the rule to the new ruleset
- - LANDLOCK_CMD_ENFORCE_RULESET fails if the old ruleset pointer in
-->private_data doesn't match the current ruleset of the process, then
-replaces the old ruleset with the new ruleset.
 
-With this, the new ruleset is guaranteed to be a subset of the old
-ruleset because each of the new ruleset's rules is permitted by the
-old ruleset. (Unless the directory hierarchy rotates, but in that case
-the inaccuracy isn't much worse than what would've been possible
-through RCU path walk anyway AFAIK.)
+> +static int fsl_easrc_write_pf_coeff_mem(struct fsl_asrc *easrc, int ctx_id,
+> +					u64 *arr, int n_taps, int shift)
+> +{
+> +	if (!arr) {
+> +		dev_err(dev, "NULL buffer\n");
 
-What do you think?
+Could it be slightly more specific?
+
+
+> +static int fsl_easrc_prefilter_config(struct fsl_asrc *easrc,
+> +				      unsigned int ctx_id)
+> +{
+> +	ctx_priv->in_filled_sample = bits_taps_to_val(easrc_priv->rs_num_taps) / 2;
+> +	ctx_priv->out_missed_sample = ctx_priv->in_filled_sample *
+> +					  ctx_priv->out_params.sample_rate /
+> +					  ctx_priv->in_params.sample_rate;
+
+There are quite a few references to sample_rate and sample_format
+here, so we could use some local variables to cache them:
+
++       in_s_rate = ctx_priv->in_params.sample_rate;
++       out_s_rate = ctx_priv->out_params.sample_rate;
++       in_s_fmt = ctx_priv->in_params.sample_format;
++       out_s_fmt = ctx_priv->out_params.sample_format;
+
+
+> +static int fsl_easrc_config_slot(struct fsl_asrc *easrc, unsigned int ctx_id)
+> +{
+> +	struct fsl_easrc_priv *easrc_priv = easrc->private;
+> +	struct fsl_asrc_pair *ctx = easrc->pair[ctx_id];
+> +	int req_channels = ctx->channels;
+> +	int start_channel = 0, avail_channel;
+> +	struct fsl_easrc_slot *slot0, *slot1;
+> +	int i, ret;
+> +
+> +	if (req_channels <= 0)
+> +		return -EINVAL;
+> +
+> +	for (i = 0; i < EASRC_CTX_MAX_NUM; i++) {
+> +		slot0 = &easrc_priv->slot[i][0];
+> +		slot1 = &easrc_priv->slot[i][1];
+> +
+> +		if (slot0->busy && slot1->busy)
+> +			continue;
+> +
+
+Could merge the duplication by doing:
++	struct fsl_easrc_slot *slot = NULL;
+...
++		else if ((slot0->busy && slot0->ctx_index == ctx->index) ||
++			 (slot1->busy && slot1->ctx_index == ctx->index))
++			continue;
++		else if (!slot0->busy)
++			slot = slot0;
++		else if (!slot1->busy)
++			slot = slot1;
++
++		if (!slot)
++			continue;
++
++		avail_channel = fsl_easrc_max_ch_for_slot(ctx, slot);
++		if (avail_channel <= 0)
++			continue;
++
++		slot->slot_index = 0;
++
++		ret = fsl_easrc_config_one_slot(ctx, slot, i, &req_channels,
++						&start_channel, &avail_channel);
++		if (ret)
++			return ret;
++
++		if (req_channels > 0)
++			continue;
++		else
++			break;
+
+# Please double check before doing copy-n-paste.
+
+
+> +int fsl_easrc_config_context(struct fsl_asrc *easrc, unsigned int ctx_id)
+> +{
+> +	/* Context Input FIFO Watermark */
+> +	regmap_update_bits(easrc->regmap, REG_EASRC_CC(ctx_id),
+> +			   EASRC_CC_FIFO_WTMK_MASK,
+> +			   EASRC_CC_FIFO_WTMK(ctx_priv->in_params.fifo_wtmk));
+> +
+> +	/* Context Output FIFO Watermark */
+> +	regmap_update_bits(easrc->regmap, REG_EASRC_COC(ctx_id),
+> +			   EASRC_COC_FIFO_WTMK_MASK,
+> +			   EASRC_COC_FIFO_WTMK(ctx_priv->out_params.fifo_wtmk - 1));
+
+Why a "-1" here vs. no "-1" for input FIFO? Could probably put
+the reason in the comments?
+
+
+> +void fsl_easrc_release_context(struct fsl_asrc_pair *ctx)
+> +{
+> +	unsigned long lock_flags;
+> +	struct fsl_asrc *easrc;
+> +	struct device *dev;
+> +	int ret;
+> +
+> +	if (!ctx)
+> +		return;
+> +
+> +	easrc = ctx->asrc;
+> +	dev = &easrc->pdev->dev;
+> +
+> +	spin_lock_irqsave(&easrc->lock, lock_flags);
+> +
+> +	ret = fsl_easrc_release_slot(easrc, ctx->index);
+
+Where is this "ret" used?
+
+> +
+> +	easrc->channel_avail += ctx->channels;
+> +	easrc->pair[ctx->index] = NULL;
+> +
+> +	spin_unlock_irqrestore(&easrc->lock, lock_flags);
+> +}
+
+
+> +void fsl_easrc_dump_firmware(struct fsl_asrc *easrc)
+
+Hmm..where is this function being used? From outside?
+
+> +int fsl_easrc_get_firmware(struct fsl_asrc *easrc)
+
+static?
+
+If it's being called from an outsider, it might be safer to check
+easrc->private pointer too?
+
+
+> +{
+> +	struct fsl_easrc_priv *easrc_priv;
+
+Could probably clean up some wrappings with:
++	struct firmware **fw_p;
+
+> +	u32 pnum, inum, offset;
+
++	u8 *data;
+
+> +	int ret;
+> +
+> +	if (!easrc)
+> +		return -EINVAL;
+> +
+> +	easrc_priv = easrc->private;
+
++	fw_p = &easrc_priv->fw;
+
+> +	ret = request_firmware(&easrc_priv->fw, easrc_priv->fw_name,
+> +			       &easrc->pdev->dev);
+
++	ret = request_firmware(fw_p, easrc_priv->fw_name, &easrc->pdev->dev);
+
+> +	if (ret)
+> +		return ret;
+
++	data = easrc_priv->fw->data;
+
+And replace all data references.
+
+
+> +static int fsl_easrc_get_fifo_addr(u8 dir, enum asrc_pair_index index)
+> +{
+> +	return REG_EASRC_FIFO(dir, index);
+
+Maybe an inline type or simply a macro?
+
+
+> +static int fsl_easrc_probe(struct platform_device *pdev)
+> +{
+: +	irq = platform_get_irq(pdev, 0);
+> +	if (irq < 0) {
+> +		dev_err(&pdev->dev, "no irq for node %s\n",
+> +			dev_name(&pdev->dev));
+
+Probably could save some wrappings in this function if we have a:
+	struct device *dev = &pdev->dev;
+
+And dev_err() prints dev_name() actually, so it'd be better use:
++		dev_err(dev, "no irq for node %pOF\n", np);
+
+
+> +	ret = of_property_read_string(np,
+> +				      "fsl,easrc-ram-script-name",
+> +				      &easrc_priv->fw_name);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "failed to get firmware name\n");
+> +		return ret;
+> +	}
+
+Could we move this to the place where we parse DT bindings?
+
+
+> +static int fsl_easrc_runtime_resume(struct device *dev)
+> +{
+
+> +	for (i = ASRC_PAIR_A; i < EASRC_CTX_MAX_NUM; i++) {
+> +		ctx = easrc->pair[i];
+> +		if (ctx) {
+
+Could do this to save some indentations from following lines:
++		if (!ctx)
++			continue;
+
+> +			ctx_priv = ctx->private;
+> +			fsl_easrc_set_rs_ratio(ctx);
+> +			ctx_priv->out_missed_sample = ctx_priv->in_filled_sample *
+> +							  ctx_priv->out_params.sample_rate /
+> +							  ctx_priv->in_params.sample_rate;
+> +			if (ctx_priv->in_filled_sample * ctx_priv->out_params.sample_rate
+> +					% ctx_priv->in_params.sample_rate != 0)
+> +				ctx_priv->out_missed_sample += 1;
+> +
+> +			ret = fsl_easrc_write_pf_coeff_mem(easrc, i,
+> +							   ctx_priv->st1_coeff,
+> +							   ctx_priv->st1_num_taps,
+> +							   ctx_priv->st1_addexp);
+> +			if (ret)
+> +				goto disable_mem_clk;
+> +
+> +			ret = fsl_easrc_write_pf_coeff_mem(easrc, i,
+> +							   ctx_priv->st2_coeff,
+> +							   ctx_priv->st2_num_taps,
+> +							   ctx_priv->st2_addexp);
+> +			if (ret)
+> +				goto disable_mem_clk;
+
+
+> diff --git a/sound/soc/fsl/fsl_easrc.h b/sound/soc/fsl/fsl_easrc.h
+> +struct fsl_easrc_slot {
+> +	bool busy;
+> +	int ctx_index;
+> +	int slot_index;
+> +	int num_channel;  /*maximum is 8*/
+	
+Spaces for comments: 	/* maximum is 8 */
+
+
+> +/**
+> + * fsl_easrc_priv: EASRC private data
+> + *
+> + * @slot: slot setting
+> + * @firmware_hdr:  the header of firmware
+> + * @interp: pointer to interpolation filter coeff
+> + * @prefil: pointer to prefilter coeff
+> + * @fw: firmware of coeff table
+> + * @fw_name: firmware name
+> + * @rs_num_taps:  resample filter taps, 32, 64, or 128
+> + * @bps_i2c958: bits per sample of IEC958
+
+i2c or iec?
