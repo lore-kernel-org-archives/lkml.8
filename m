@@ -2,72 +2,139 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A52CC10F25
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 20:20:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A175C10F25
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 20:21:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 025B320873
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 20:20:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F1B720828
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 20:21:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="Pz7R/rVH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726283AbgCIUUE (ORCPT
+        id S1726269AbgCIUVk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 16:20:04 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:47977 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725992AbgCIUUE (ORCPT
+        Mon, 9 Mar 2020 16:21:40 -0400
+Received: from gateway34.websitewelcome.com ([192.185.149.72]:23542 "EHLO
+        gateway34.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725992AbgCIUVk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 16:20:04 -0400
-Received: by mail-io1-f72.google.com with SMTP id w21so1265318iod.14
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 13:20:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=gyTYavcaeh0FJZVoSDoUf1t6qJ3EWa/zCCs9/HoGRTA=;
-        b=eIvlXJYMmFfr62KEodP9m+Xa8zbxh0Wh/OqVO5/sLAQ6lpEbBXMaOZIe1HzctmTLoW
-         93QgM3nHTP3ZhHNs1b2AqN/g4wRoyqb5UqmfXCY2O/0btV8gmeD/Zm6pSco/z6eNnvuo
-         HuZioSoVn+ta93H1QsN/Vs2rdJtHFk3fHfXsZp/bT4E7Tqv6x2QlCaLAr0PbFdnF2Teo
-         L9YLxx1dSEnhZNGRnHMju2esX55+a0BRzKa/HOsReCOVnMsKk4RRK+9frzg27qQpsPwj
-         QMB6Ga1FB75BrKcgR3+cyVH/KrCszGBnIIOaC5GVb8F0P4Io3X2TJ0E8qmzNV4SsnHSw
-         ytdg==
-X-Gm-Message-State: ANhLgQ3PODd4VmT/PQL03aKOi+AiXMiyKwpTsCQscIf0gzOdsERWyrpm
-        e9e0VHewF15QggonqBuWDd6DIAzIaYKJMapbZDizbcrM96u0
-X-Google-Smtp-Source: ADFU+vtLpDu+/CtlDbPIe7Sj8SmC+jO0L8zvUKvlPaWQgCfWwBFwahCGzUuo1dV8TUz97cepb2d5B4KrdLVs1thpRVK88iWuf9/Q
+        Mon, 9 Mar 2020 16:21:40 -0400
+Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
+        by gateway34.websitewelcome.com (Postfix) with ESMTP id BF0FD67A64F
+        for <linux-kernel@vger.kernel.org>; Mon,  9 Mar 2020 15:21:38 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id BOuAjUlJ7vBMdBOuAjOFy5; Mon, 09 Mar 2020 15:21:38 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=KLV5yJSsYHCCLskrtRv6u1HK/r2QKBRZk7ghDZkHXAU=; b=Pz7R/rVH3x7D6lgGJyt/IlsXFD
+        euImYoH8hRNDBfV4BZ1XYhTVwl1dQ3eFEbQSbi/XvbNTaWgdhpQkVllgtvc6mrbtk0f8EV+furKzM
+        qooxbDinjvIfFFn0ZrfSsgA1m7ElwKde3cs6fLA91c77zfAkPGGBVrvCdO8pooJH2w3ZeHygnTMiO
+        y9du0YzGWeBAKfUp4zXuBPrnBWAMzVLtzof7wUVSW038K0ArGnJ7dxtc4aRB3y7sRdseQSRsSIfyb
+        MdUFhVvfrNsNxVXII1zwbitya6AEqT753Rh/rZ5yywk13JzP9MLorXZyUE/OetoKt2VztUICOHp89
+        PJvm55Jw==;
+Received: from [201.162.168.201] (port=20442 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1jBOu8-000zkz-PA; Mon, 09 Mar 2020 15:21:37 -0500
+Date:   Mon, 9 Mar 2020 15:24:49 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Alexander Viro <viro@zeniv.linux.org.uk>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH][next] fs: select: Replace zero-length array with
+ flexible-array member
+Message-ID: <20200309202449.GA9027@embeddedor>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:618:: with SMTP id g24mr16405705jar.87.1583785204118;
- Mon, 09 Mar 2020 13:20:04 -0700 (PDT)
-Date:   Mon, 09 Mar 2020 13:20:04 -0700
-In-Reply-To: <20200309172430.GV31668@ziepe.ca>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000007dfeb705a071ba51@google.com>
-Subject: Re: BUG: corrupted list in _cma_attach_to_dev
-From:   syzbot <syzbot+06b50ee4a9bd73e8b89f@syzkaller.appspotmail.com>
-To:     chuck.lever@oracle.com, dledford@redhat.com, jgg@ziepe.ca,
-        leon@kernel.org, linux-kernel@vger.kernel.org,
-        linux-rdma@vger.kernel.org, parav@mellanox.com,
-        syzkaller-bugs@googlegroups.com, willy@infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.162.168.201
+X-Source-L: No
+X-Exim-ID: 1jBOu8-000zkz-PA
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [201.162.168.201]:20442
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 26
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+The current codebase makes use of the zero-length array language
+extension to the C90 standard, but the preferred mechanism to declare
+variable-length types such as these ones is a flexible array member[1][2],
+introduced in C99:
 
-syzbot has tested the proposed patch and the reproducer did not trigger crash:
+struct foo {
+        int stuff;
+        struct boo array[];
+};
 
-Reported-and-tested-by: syzbot+06b50ee4a9bd73e8b89f@syzkaller.appspotmail.com
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertently introduced[3] to the codebase from now on.
 
-Tested on:
+Also, notice that, dynamic memory allocations won't be affected by
+this change:
 
-commit:         0aeb3622 RDMA/hns: fix spelling mistake "attatch" -> "atta..
-git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git for-next
-kernel config:  https://syzkaller.appspot.com/x/.config?x=b58f96e9824c82cb
-dashboard link: https://syzkaller.appspot.com/bug?extid=06b50ee4a9bd73e8b89f
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+"Flexible array members have incomplete type, and so the sizeof operator
+may not be applied. As a quirk of the original implementation of
+zero-length arrays, sizeof evaluates to zero."[1]
 
-Note: testing is done by a robot and is best-effort only.
+This issue was found with the help of Coccinelle.
+
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[2] https://github.com/KSPP/linux/issues/21
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ fs/select.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/fs/select.c b/fs/select.c
+index 11d0285d46b7..f38a8a7480f7 100644
+--- a/fs/select.c
++++ b/fs/select.c
+@@ -97,7 +97,7 @@ u64 select_estimate_accuracy(struct timespec64 *tv)
+ struct poll_table_page {
+ 	struct poll_table_page * next;
+ 	struct poll_table_entry * entry;
+-	struct poll_table_entry entries[0];
++	struct poll_table_entry entries[];
+ };
+ 
+ #define POLL_TABLE_FULL(table) \
+@@ -826,7 +826,7 @@ SYSCALL_DEFINE1(old_select, struct sel_arg_struct __user *, arg)
+ struct poll_list {
+ 	struct poll_list *next;
+ 	int len;
+-	struct pollfd entries[0];
++	struct pollfd entries[];
+ };
+ 
+ #define POLLFD_PER_PAGE  ((PAGE_SIZE-sizeof(struct poll_list)) / sizeof(struct pollfd))
+-- 
+2.25.0
+
