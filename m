@@ -2,1020 +2,233 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AF18C10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 11:50:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C7F6C18E5A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 11:51:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01E3820409
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 11:50:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21DB520409
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 11:51:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="ZP6ZKs86"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726445AbgCILuK (ORCPT
+        id S1726450AbgCILvd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 07:50:10 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2522 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725796AbgCILuK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 07:50:10 -0400
-Received: from lhreml709-cah.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id CB8181F42FED4E1758FF;
-        Mon,  9 Mar 2020 11:50:08 +0000 (GMT)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- lhreml709-cah.china.huawei.com (10.201.108.32) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Mon, 9 Mar 2020 11:50:08 +0000
-Received: from localhost (10.202.226.57) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5; Mon, 9 Mar 2020
- 11:50:08 +0000
-Date:   Mon, 9 Mar 2020 11:50:06 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Cristian Marussi <cristian.marussi@arm.com>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <sudeep.holla@arm.com>,
-        <lukasz.luba@arm.com>, <james.quinlan@broadcom.com>
-Subject: Re: [PATCH v4 06/13] firmware: arm_scmi: Add notification
- callbacks-registration
-Message-ID: <20200309115006.00004e7a@Huawei.com>
-In-Reply-To: <20200304162558.48836-7-cristian.marussi@arm.com>
-References: <20200304162558.48836-1-cristian.marussi@arm.com>
-        <20200304162558.48836-7-cristian.marussi@arm.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Mon, 9 Mar 2020 07:51:33 -0400
+Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:53310 "EHLO
+        mx0b-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725796AbgCILvc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 07:51:32 -0400
+Received: from pps.filterd (m0167090.ppops.net [127.0.0.1])
+        by mx0b-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 029BndJb015496;
+        Mon, 9 Mar 2020 07:51:17 -0400
+Received: from nam02-cy1-obe.outbound.protection.outlook.com (mail-cys01nam02lp2059.outbound.protection.outlook.com [104.47.37.59])
+        by mx0b-00128a01.pphosted.com with ESMTP id 2ym94cmhqn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 09 Mar 2020 07:51:17 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=HonutNd4wE9hRPxGNAjWDccc3kcJsh+v2HQ+doAKu1lgDQbpoQhGyNa7TLmWgNtsJxDO0LXrkOjyrzwpkQ3eMyJjHcKjVZCW3PPnrXrPcmfXnZl31OEziv2kFbSevFJByOUy/68e9ZsEQ3rE//QWCG/OHLo9TZ8Z3JBUR606U0vwxj7Vkepe5kjcKQF4cw8DZS/idn5gvu1L3W5oTAt9aeTnaUZwIBSnR2G/GlTYfC5BYi/MKu7Fh8U7tPRKPcJI2i9+DYU69f7J3ZOdzcKK5Kcsh6pTbbfmdMK8WOQu1haa4BXOB9iJXzkJ850B4qh/XIadp4kmEz4iimUg8F2/ag==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OOmZHTyPIQoGPQjkEtYd6no5w5rjNI3/qmxn7jmUJG8=;
+ b=Zd1NkP6WgsvRxI9xx324rD6lO1vGRvDsXAd49UUu9EcTW2EVmy7qLX0MTSXb1JLIE3jhNaUvovsotqjsbclZv+06YxMTYK6E/2rjZzSiFnWoyO/9xTATc/MPmrKDyQO36FATE6xXM3ypjOFBn34HQxe9O0jSxIYcB05YrsIqH0DGWQ8NABGziJxOfKKp3CTMA5rmainxJgaZHVvU1lvYeuhVb48b89HhOG8/ZxZwjRXGaMSnnwYUaYyJ9MKG7jzzSA9g/qmjkky541TS5q5zCCDnfjM/P2SLMtKog2hDc4/w5b6iVTqyzP4ZKtwJL7DAKitqFzvv39n2f8zo8ULYDQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
+ dkim=pass header.d=analog.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OOmZHTyPIQoGPQjkEtYd6no5w5rjNI3/qmxn7jmUJG8=;
+ b=ZP6ZKs86BpyHZiNlPg7QrrE7MRzmdHvt/4r7ahG3LTx+yFqMSaGgfkMXNDon+6rx5sNTFd294Iv+WqygJ79Sp6oN4GV6l53/YHXUsuWRqm8um4antV9Ut/0IyWXL7U4zNCh8gWT6S5eELM/sHOltaynXw27+J7Qy+gljf3NgAr0=
+Received: from DM6PR03MB4411.namprd03.prod.outlook.com (2603:10b6:5:10f::14)
+ by DM6PR03MB4105.namprd03.prod.outlook.com (2603:10b6:5:5f::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.17; Mon, 9 Mar
+ 2020 11:51:13 +0000
+Received: from DM6PR03MB4411.namprd03.prod.outlook.com
+ ([fe80::f8c4:f7f2:c7a0:cc19]) by DM6PR03MB4411.namprd03.prod.outlook.com
+ ([fe80::f8c4:f7f2:c7a0:cc19%6]) with mapi id 15.20.2793.013; Mon, 9 Mar 2020
+ 11:51:13 +0000
+From:   "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+To:     "jic23@kernel.org" <jic23@kernel.org>
+CC:     "Hennerich, Michael" <Michael.Hennerich@analog.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "lars@metafoo.de" <lars@metafoo.de>
+Subject: Re: [PATCH v8 7/8] iio: adc: ad9467: add support AD9467 ADC
+Thread-Topic: [PATCH v8 7/8] iio: adc: ad9467: add support AD9467 ADC
+Thread-Index: AQHV86YjlgUdRcwJn06pzHDhp7+VcKg9PE6AgALudAA=
+Date:   Mon, 9 Mar 2020 11:51:12 +0000
+Message-ID: <849280cfb709f14f6407925c750547ee4bfa8fff.camel@analog.com>
+References: <20200306110100.22092-1-alexandru.ardelean@analog.com>
+         <20200306110100.22092-8-alexandru.ardelean@analog.com>
+         <20200307150513.053b198a@archlinux>
+In-Reply-To: <20200307150513.053b198a@archlinux>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [137.71.226.54]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 881dbb29-09a3-4c29-f466-08d7c4202aac
+x-ms-traffictypediagnostic: DM6PR03MB4105:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM6PR03MB4105179529B5B8E4D0B5D377F9FE0@DM6PR03MB4105.namprd03.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0337AFFE9A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(396003)(346002)(39860400002)(366004)(136003)(189003)(199004)(4326008)(186003)(54906003)(36756003)(6512007)(6916009)(966005)(478600001)(86362001)(26005)(81166006)(81156014)(5660300002)(64756008)(316002)(6506007)(66476007)(66556008)(2906002)(66446008)(8676002)(8936002)(2616005)(66946007)(76116006)(6486002)(91956017)(71200400001);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR03MB4105;H:DM6PR03MB4411.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: analog.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: +0VJ2eBBYCbo7k6RunkDcZ3U6Khovw5tGBYh8ATg65SkL3vRM1+UloVs61zClDR3jVF5T0anbnQGDDEQ7+QlIKOo3Ve6yuNcNBtmEwGo2ZFL4AYhehlRHIoc6Ea7C69a8YaGaYevnQVTAaIqI6bx9alfTtpdYf3tDF5lrxFyaJvRZUX6utoYJLtiY2/PnGqE563alqOCDz65H6FxxAJFM1lOOUYsIn61EbG9n3M3Ev93RwhKn7NVuqSpAXl00BWgkLLdZPngXfeF2b6P89OBCE16kH2qkdknXc8+cTKzfWAnHvft+eTN/MqQEbgxOfR4Uj1cXjrZpVzpBaltOSKhXej2GF7JFVqzGm3tN+2B/jSwweGCS4qcin/6YUUYOB5GqP+xBsAVFy4mStIokYVbdpZuj5HmZa1AxCwFRrJFOwQaZi2gSz7TB4e1VXO4wUkjNh7vqKPcFP2bD05QBdvLHrH8Alrr7Jiz9bnA8dZAvBB2ydBBLGbRQiie+2eM8Ad7kzCZe20jEViPmZBoRf1sWA==
+x-ms-exchange-antispam-messagedata: xLK6mav/kG0ODU+sqv2jaOHVaqa2J5H7jNtOIP+loC7Q484AGpJGVdJdxO4PoFXZvSETfE76qpiOoA52m893pb8iywApDPGA47kyetDnQLzFQ+8zNNBENX6XBKRPGuIFvMsMgdp0caQn82SY9GuRIQ==
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <F3AB8F125083FC4DA2EED68B3327A02E@namprd03.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.57]
-X-ClientProxiedBy: lhreml706-chm.china.huawei.com (10.201.108.55) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 881dbb29-09a3-4c29-f466-08d7c4202aac
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Mar 2020 11:51:12.8151
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 9N0zZYcSiI5iItu/Wa+ZWCzaAoPb0bMWfBotynT81zSJ26k9TeyCB2FWzeCkxmWBbyJbBBT5FB56GumvUMOlhw9bCcoau6j23Mbv9ZAm0ek=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR03MB4105
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-09_02:2020-03-08,2020-03-09 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ mlxlogscore=999 clxscore=1015 adultscore=0 phishscore=0 impostorscore=0
+ suspectscore=0 priorityscore=1501 mlxscore=0 spamscore=0 bulkscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003090084
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 4 Mar 2020 16:25:51 +0000
-Cristian Marussi <cristian.marussi@arm.com> wrote:
-
-> Add core SCMI Notifications callbacks-registration support: allow users
-> to register their own callbacks against the desired events.
-> Whenever a registration request is issued against a still non existent
-> event, mark such request as pending for later processing, in order to
-> account for possible late initializations of SCMI Protocols associated
-> to loadable drivers.
-> 
-> Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
-Another one that you should run the kernel-doc scripts over. I haven't checked
-but fairly sure they won't like some of this...
-
-Otherwise a few trivial things inline.
-
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
-Thanks,
-
-Jonathan
-
-> ---
-> V3 --> V4
-> - split registered_handlers hashtable on a per-protocol basis to reduce
->   unneeded contention
-> - introduced pending_handlers table and related late_init worker to finalize
->   handlers registration upon effective protocols' registrations
-> - introduced further safe accessors macros for registered_protocols
->   and registered_events arrays
-> V2 --> V3
-> - refactored get/put event_handler
-> - removed generic non-handle-based API
-> V1 --> V2
-> - splitted out of V1 patch 04
-> - moved from IDR maps to real HashTables to store event_handlers
-> - added proper enable_events refcounting via __scmi_enable_evt()
->   [was broken in V1 when using ALL_SRCIDs notification chains]
-> - reviewed hashtable cleanup strategy in scmi_notifications_exit()
-> - added scmi_register_event_notifier()/scmi_unregister_event_notifier()
->   to include/linux/scmi_protocol.h as a candidate user API
->   [no EXPORTs still]
-> - added notify_ops to handle during initialization as an additional
->   internal API for scmi_drivers
-> ---
->  drivers/firmware/arm_scmi/notify.c | 700 +++++++++++++++++++++++++++++
->  drivers/firmware/arm_scmi/notify.h |  12 +
->  include/linux/scmi_protocol.h      |  50 +++
->  3 files changed, 762 insertions(+)
-> 
-> diff --git a/drivers/firmware/arm_scmi/notify.c b/drivers/firmware/arm_scmi/notify.c
-> index 31e49cb7d88e..d6c08cce3c63 100644
-> --- a/drivers/firmware/arm_scmi/notify.c
-> +++ b/drivers/firmware/arm_scmi/notify.c
-> @@ -16,18 +16,50 @@
->   * this core its set of supported events using @scmi_register_protocol_events():
->   * all the needed descriptors are stored in the @registered_protocols and
->   * @registered_events arrays.
-> + *
-> + * Kernel users interested in some specific event can register their callbacks
-> + * providing the usual notifier_block descriptor, since this core implements
-> + * events' delivery using the standard Kernel notification chains machinery.
-> + *
-> + * Given the number of possible events defined by SCMI and the extensibility
-> + * of the SCMI Protocol itself, the underlying notification chains are created
-> + * and destroyed dynamically on demand depending on the number of users
-> + * effectively registered for an event, so that no support structures or chains
-> + * are allocated until at least one user has registered a notifier_block for
-> + * such event. Similarly, events' generation itself is enabled at the platform
-> + * level only after at least one user has registered, and it is shutdown after
-> + * the last user for that event has gone.
-> + *
-> + * All users provided callbacks and allocated notification-chains are stored in
-> + * the @registered_events_handlers hashtable. Callbacks' registration requests
-> + * for still to be registered events are instead kept in the dedicated common
-> + * hashtable @pending_events_handlers.
-> + *
-> + * An event is identified univocally by the tuple (proto_id, evt_id, src_id)
-> + * and is served by its own dedicated notification chain; information contained
-> + * in such tuples is used, in a few different ways, to generate the needed
-> + * hash-keys.
-> + *
-> + * Here proto_id and evt_id are simply the protocol_id and message_id numbers
-> + * as described in the SCMI Protocol specification, while src_id represents an
-> + * optional, protocol dependent, source identifier (like domain_id, perf_id
-> + * or sensor_id and so forth).
->   */
->  
->  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
->  
->  #include <linux/atomic.h>
-> +#include <linux/bitfield.h>
->  #include <linux/bug.h>
->  #include <linux/compiler.h>
->  #include <linux/device.h>
->  #include <linux/err.h>
-> +#include <linux/hashtable.h>
->  #include <linux/kernel.h>
->  #include <linux/kfifo.h>
-> +#include <linux/list.h>
->  #include <linux/mutex.h>
-> +#include <linux/notifier.h>
->  #include <linux/refcount.h>
->  #include <linux/scmi_protocol.h>
->  #include <linux/slab.h>
-> @@ -47,6 +79,71 @@
->  #define MAKE_ALL_SRCS_KEY(p, e)			\
->  	MAKE_HASH_KEY((p), (e), SCMI_ALL_SRC_IDS)
->  
-> +/**
-> + * Assumes that the stored obj includes its own hash-key in a field named 'key':
-> + * with this simplification this macro can be equally used for all the objects'
-> + * types hashed by this implementation.
-> + *
-> + * @__ht: The hashtable name
-> + * @__obj: A pointer to the object type to be retrieved from the hashtable;
-> + *	   it will be used as a cursor while scanning the hastable and it will
-> + *	   be possibly left as NULL when @__k is not found
-> + * @__k: The key to search for
-> + */
-> +#define KEY_FIND(__ht, __obj, __k)				\
-> +({								\
-> +	hash_for_each_possible((__ht), (__obj), hash, (__k))	\
-> +		if (likely((__obj)->key == (__k)))		\
-> +			break;					\
-> +	__obj;							\
-> +})
-> +
-> +#define PROTO_ID_MASK			GENMASK(31, 24)
-> +#define EVT_ID_MASK			GENMASK(23, 16)
-> +#define SRC_ID_MASK			GENMASK(15, 0)
-> +#define KEY_XTRACT_PROTO_ID(key)	FIELD_GET(PROTO_ID_MASK, (key))
-> +#define KEY_XTRACT_EVT_ID(key)		FIELD_GET(EVT_ID_MASK, (key))
-> +#define KEY_XTRACT_SRC_ID(key)		FIELD_GET(SRC_ID_MASK, (key))
-> +
-> +/**
-> + * A set of macros used to access safely @registered_protocols and
-> + * @registered_events arrays; these are fixed in size and each entry is possibly
-> + * populated at protocols' registration time and then only read but NEVER
-> + * modified or removed.
-> + */
-> +#define SCMI_GET_PROTO(__ni, __pid)					\
-> +({									\
-> +	struct scmi_registered_protocol_events_desc *__pd = NULL;	\
-> +									\
-> +	if ((__ni) && (__pid) < SCMI_MAX_PROTO)				\
-> +		__pd = READ_ONCE((__ni)->registered_protocols[(__pid)]);\
-> +	__pd;								\
-> +})
-> +
-> +#define SCMI_GET_REVT_FROM_PD(__pd, __eid)				\
-> +({									\
-> +	struct scmi_registered_event *__revt = NULL;			\
-> +									\
-> +	if ((__pd) && (__eid) < (__pd)->num_events)			\
-> +		__revt = READ_ONCE((__pd)->registered_events[(__eid)]);	\
-> +	__revt;								\
-> +})
-> +
-> +#define SCMI_GET_REVT(__ni, __pid, __eid)				\
-> +({									\
-> +	struct scmi_registered_event *__revt = NULL;			\
-> +	struct scmi_registered_protocol_events_desc *__pd = NULL;	\
-> +									\
-> +	__pd = SCMI_GET_PROTO((__ni), (__pid));				\
-> +	__revt = SCMI_GET_REVT_FROM_PD(__pd, (__eid));			\
-> +	__revt;								\
-> +})
-> +
-> +/* A couple of utility macros to limit cruft when calling protocols' helpers */
-> +#define REVT_NOTIFY_ENABLE(revt, ...)	\
-> +	((revt)->proto->ops->set_notify_enabled((revt)->proto->ni->handle,     \
-> +						__VA_ARGS__))
-> +
->  struct scmi_registered_protocol_events_desc;
->  
->  /**
-> @@ -60,16 +157,25 @@ struct scmi_registered_protocol_events_desc;
->   * @initialized: A flag that indicates if the core resources have been allocated
->   *		 and protocols are allowed to register their supported events
->   * @enabled: A flag to indicate events can be enabled and start flowing
-> + * @init_work: A work item to perform final initializations of pending handlers
-> + * @pending_mtx: A mutex to protect @pending_events_handlers
->   * @registered_protocols: An statically allocated array containing pointers to
->   *			  all the registered protocol-level specific information
->   *			  related to events' handling
-> + * @pending_events_handlers: An hashtable containing all pending events'
-> + *			     handlers descriptors
->   */
->  struct scmi_notify_instance {
->  	void						*gid;
->  	struct scmi_handle				*handle;
->  	atomic_t					initialized;
->  	atomic_t					enabled;
-> +
-> +	struct work_struct				init_work;
-> +
-> +	struct mutex					pending_mtx;
->  	struct scmi_registered_protocol_events_desc	**registered_protocols;
-> +	DECLARE_HASHTABLE(pending_events_handlers, 8);
->  };
->  
->  /**
-> @@ -132,6 +238,9 @@ struct scmi_registered_event;
->   * @registered_events: A dynamically allocated array holding all the registered
->   *		       events' descriptors, whose fixed-size is determined at
->   *		       compile time.
-> + * @registered_mtx: A mutex to protect @registered_events_handlers
-> + * @registered_events_handlers: An hashtable containing all events' handlers
-> + *				descriptors registered for this protocol
->   */
->  struct scmi_registered_protocol_events_desc {
->  	u8					id;
-> @@ -143,6 +252,8 @@ struct scmi_registered_protocol_events_desc {
->  	void					*in_flight;
->  	int					num_events;
->  	struct scmi_registered_event		**registered_events;
-> +	struct mutex				registered_mtx;
-> +	DECLARE_HASHTABLE(registered_events_handlers, 8);
->  };
->  
->  /**
-> @@ -175,6 +286,38 @@ struct scmi_registered_event {
->  	struct mutex					sources_mtx;
->  };
->  
-> +/**
-> + * scmi_event_handler  - Event handler information
-> + *
-> + * This structure collects all the information needed to process a received
-> + * event identified by the tuple (proto_id, evt_id, src_id).
-> + * These descriptors are stored in a per-protocol @registered_events_handlers
-> + * table using as a key a value derived from that tuple.
-> + *
-> + * @key: The used hashkey
-> + * @users: A reference count for number of active users for this handler
-> + * @r_evt: A reference to the associated registered event; when this is NULL
-> + *	   this handler is pending, which means that identifies a set of
-> + *	   callbacks intended to be attached to an event which is still not
-> + *	   known nor registered by any protocol at that point in time
-> + * @chain: The notification chain dedicated to this specific event tuple
-> + * @hash: The hlist_node used for collision handling
-> + * @enabled: A boolean which records if event's generation has been already
-> + *	     enabled for this handler as a whole
-> + */
-> +struct scmi_event_handler {
-> +	u32				key;
-> +	refcount_t			users;
-> +	struct scmi_registered_event	*r_evt;
-> +	struct blocking_notifier_head	chain;
-> +	struct hlist_node		hash;
-> +	bool				enabled;
-> +};
-> +
-> +#define IS_HNDL_PENDING(hndl)	((hndl)->r_evt == NULL)
-> +
-> +static void scmi_put_handler_unlocked(struct scmi_notify_instance *ni,
-> +				      struct scmi_event_handler *hndl);
->  /**
->   * scmi_initialize_events_queue  - Allocate/Initialize a kfifo buffer
->   *
-> @@ -252,6 +395,10 @@ scmi_allocate_registered_protocol_desc(struct scmi_notify_instance *ni,
->  		return ERR_PTR(-ENOMEM);
->  	pd->num_events = num_events;
->  
-> +	/* Initialize per protocol handlers table */
-> +	mutex_init(&pd->registered_mtx);
-> +	hash_init(pd->registered_events_handlers);
-> +
->  	return pd;
->  }
->  
-> @@ -338,6 +485,12 @@ int scmi_register_protocol_events(const struct scmi_handle *handle,
->  
->  	devres_close_group(ni->handle->dev, ni->gid);
->  
-> +	/*
-> +	 * Finalize any pending events' handler which could have been waiting
-> +	 * for this protocol's events registration.
-> +	 */
-> +	schedule_work(&ni->init_work);
-> +
->  	return 0;
->  
->  err:
-> @@ -349,6 +502,547 @@ int scmi_register_protocol_events(const struct scmi_handle *handle,
->  	return -ENOMEM;
->  }
->  
-> +/**
-> + * scmi_allocate_event_handler  - Allocate Event handler
-> + *
-> + * Allocate an event handler and related notification chain associated with
-> + * the provided event handler key.
-> + * Note that, at this point, a related registered_event is still to be
-> + * associated to this handler descriptor (hndl->r_evt == NULL), so the handler
-> + * is initialized as pending.
-> + *
-> + * Assumes to be called with @pending_mtx already acquired.
-> + *
-> + * @ni: A reference to the notification instance to use
-> + * @evt_key: 32bit key uniquely bind to the event identified by the tuple
-> + *	     (proto_id, evt_id, src_id)
-> + *
-> + * Return: the freshly allocated structure on Success
-> + */
-> +static struct scmi_event_handler *
-> +scmi_allocate_event_handler(struct scmi_notify_instance *ni, u32 evt_key)
-> +{
-> +	struct scmi_event_handler *hndl;
-> +
-> +	hndl = kzalloc(sizeof(*hndl), GFP_KERNEL);
-> +	if (!hndl)
-> +		return ERR_PTR(-ENOMEM);
-> +	hndl->key = evt_key;
-> +	BLOCKING_INIT_NOTIFIER_HEAD(&hndl->chain);
-> +	refcount_set(&hndl->users, 1);
-> +	/* New handlers are created pending */
-> +	hash_add(ni->pending_events_handlers, &hndl->hash, hndl->key);
-> +
-> +	return hndl;
-> +}
-> +
-> +/**
-> + * scmi_free_event_handler  - Free the provided Event handler
-> + *
-> + * Assumes to be called with proper locking acquired depending on the situation.
-> + *
-> + * @hndl: The event handler structure to free
-> + */
-> +static void scmi_free_event_handler(struct scmi_event_handler *hndl)
-> +{
-> +	hash_del(&hndl->hash);
-> +	kfree(hndl);
-> +}
-> +
-> +/**
-> + * scmi_bind_event_handler  - Helper to attempt binding an handler to an event
-> + *
-> + * If an associated registered event is found, move the handler from the pending
-> + * into the registered table.
-> + *
-> + * Assumes to be called with @pending_mtx already acquired.
-> + *
-> + * @ni: A reference to the notification instance to use
-> + * @hndl: The event handler to bind
-> + *
-> + * Return: True if bind was successful, False otherwise
-> + */
-> +static inline bool scmi_bind_event_handler(struct scmi_notify_instance *ni,
-> +					   struct scmi_event_handler *hndl)
-> +{
-> +	struct scmi_registered_event *r_evt;
-> +
-> +
-> +	r_evt = SCMI_GET_REVT(ni, KEY_XTRACT_PROTO_ID(hndl->key),
-> +			      KEY_XTRACT_EVT_ID(hndl->key));
-> +	if (unlikely(!r_evt))
-> +		return false;
-> +
-> +	/* Remove from pending and insert into registered */
-> +	hash_del(&hndl->hash);
-> +	hndl->r_evt = r_evt;
-> +	mutex_lock(&r_evt->proto->registered_mtx);
-> +	hash_add(r_evt->proto->registered_events_handlers,
-> +		 &hndl->hash, hndl->key);
-> +	mutex_unlock(&r_evt->proto->registered_mtx);
-> +
-> +	return true;
-> +}
-> +
-> +/**
-> + * scmi_valid_pending_handler  - Helper to check pending status of handlers
-> + *
-> + * An handler is considered pending when its r_evt == NULL, because the related
-> + * event was still unknown at handler's registration time; anyway, since all
-> + * protocols register their supported events once for all at protocols'
-> + * initialization time, a pending handler cannot be considered valid anymore if
-> + * the underlying event (which it is waiting for), belongs to an already
-> + * initialized and registered protocol.
-> + *
-> + * @ni: A reference to the notification instance to use
-> + * @hndl: The event handler to check
-> + *
-> + * Return: True if pending registration is still valid, False otherwise.
-> + */
-> +static inline bool scmi_valid_pending_handler(struct scmi_notify_instance *ni,
-> +					      struct scmi_event_handler *hndl)
-> +{
-> +	struct scmi_registered_protocol_events_desc *pd;
-> +
-> +	if (unlikely(!IS_HNDL_PENDING(hndl)))
-> +		return false;
-> +
-> +	pd = SCMI_GET_PROTO(ni, KEY_XTRACT_PROTO_ID(hndl->key));
-> +	if (pd)
-> +		return false;
-> +
-> +	return true;
-> +}
-> +
-> +/**
-> + * scmi_register_event_handler  - Register whenever possible an Event handler
-> + *
-> + * At first try to bind an event handler to its associated event, then check if
-> + * it was at least a valid pending handler: if it was not bound nor valid return
-> + * false.
-> + *
-> + * Valid pending incomplete bindings will be periodically retried by a dedicated
-> + * worker which is kicked each time a new protocol completes its own
-> + * registration phase.
-> + *
-> + * Assumes to be called with @pending_mtx acquired.
-> + *
-> + * @ni: A reference to the notification instance to use
-> + * @hndl: The event handler to register
-> + *
-> + * Return: True if a normal or a valid pending registration has been completed,
-> + *	   False otherwise
-> + */
-> +static bool scmi_register_event_handler(struct scmi_notify_instance *ni,
-> +					struct scmi_event_handler *hndl)
-> +{
-> +	bool ret;
-> +
-> +	ret = scmi_bind_event_handler(ni, hndl);
-> +	if (ret) {
-> +		pr_info("SCMI Notifications: registered NEW handler - key:%X\n",
-> +			hndl->key);
-> +	} else {
-> +		ret = scmi_valid_pending_handler(ni, hndl);
-> +		if (ret)
-> +			pr_info("SCMI Notifications: registered PENDING handler - key:%X\n",
-> +				hndl->key);
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +/**
-> + * __scmi_event_handler_get_ops  - Utility to get or create an event handler
-> + *
-> + * Search for the desired handler matching the key in both the per-protocol
-> + * registered table and the common pending table:
-> + *  - if found adjust users refcount
-> + *  - if not found and @create is true, create and register the new handler:
-> + *    handler could end up being registered as pending if no matching event
-> + *    could be found.
-> + *
-> + * An handler is guaranteed to reside in one and only one of the tables at
-> + * any one time; to ensure this the whole search and create is performed
-> + * holding the @pending_mtx lock, with @registered_mtx additionally acquired
-> + * if needed.
-> + * Note that when a nested acquisition of these mutexes is needed the locking
-> + * order is always (same as in @init_work):
-> + *	1. pending_mtx
-> + *	2. registered_mtx
-> + *
-> + * Events generation is NOT enabled right after creation within this routine
-> + * since at creation time we usually want to have all setup and ready before
-> + * events really start flowing.
-> + *
-> + * @ni: A reference to the notification instance to use
-> + * @evt_key: The event key to use
-> + * @create: A boolean flag to specify if a handler must be created when
-> + *	    not already existent
-> + *
-> + * Return: A properly refcounted handler on Success, NULL on Failure
-> + */
-> +static inline struct scmi_event_handler *
-> +__scmi_event_handler_get_ops(struct scmi_notify_instance *ni,
-> +			     u32 evt_key, bool create)
-> +{
-> +	struct scmi_registered_event *r_evt;
-> +	struct scmi_event_handler *hndl = NULL;
-> +
-> +	r_evt = SCMI_GET_REVT(ni, KEY_XTRACT_PROTO_ID(evt_key),
-> +			      KEY_XTRACT_EVT_ID(evt_key));
-> +
-> +	mutex_lock(&ni->pending_mtx);
-> +	/* Search registered events at first ... if possible at all */
-> +	if (likely(r_evt)) {
-> +		mutex_lock(&r_evt->proto->registered_mtx);
-> +		hndl = KEY_FIND(r_evt->proto->registered_events_handlers,
-> +				hndl, evt_key);
-> +		if (likely(hndl))
-> +			refcount_inc(&hndl->users);
-> +		mutex_unlock(&r_evt->proto->registered_mtx);
-> +	}
-> +
-> +	/* ...then amongst pending. */
-> +	if (unlikely(!hndl)) {
-> +		hndl = KEY_FIND(ni->pending_events_handlers, hndl, evt_key);
-> +		if (likely(hndl))
-> +			refcount_inc(&hndl->users);
-> +	}
-> +
-> +	/* Create if still not found and required */
-> +	if (!hndl && create) {
-> +		hndl = scmi_allocate_event_handler(ni, evt_key);
-> +		if (!IS_ERR_OR_NULL(hndl)) {
-> +			if (!scmi_register_event_handler(ni, hndl)) {
-> +				pr_info("SCMI Notifications: purging UNKNOWN handler - key:%X\n",
-> +					hndl->key);
-> +				/* this hndl can be only a pending one */
-> +				scmi_put_handler_unlocked(ni, hndl);
-> +				hndl = NULL;
-> +			}
-> +		}
-> +	}
-> +	mutex_unlock(&ni->pending_mtx);
-> +
-> +	return hndl;
-> +}
-> +
-> +static struct scmi_event_handler *
-> +scmi_get_handler(struct scmi_notify_instance *ni, u32 evt_key)
-> +{
-> +	return __scmi_event_handler_get_ops(ni, evt_key, false);
-> +}
-> +
-> +static struct scmi_event_handler *
-> +scmi_get_or_create_handler(struct scmi_notify_instance *ni, u32 evt_key)
-> +{
-> +	return __scmi_event_handler_get_ops(ni, evt_key, true);
-> +}
-> +
-> +/**
-> + * __scmi_enable_evt  - Enable/disable events generation
-> + *
-> + * Takes care of proper refcounting while performing enable/disable: handles
-> + * the special case of ALL sources requests by itself.
-> + *
-> + * @r_evt: The registered event to act upon
-> + * @src_id: The src_id to act upon
-> + * @enable: The action to perform: true->Enable, false->Disable
-> + *
-> + * Return: True when the required @action has been successfully executed
-> + */
-> +static inline bool __scmi_enable_evt(struct scmi_registered_event *r_evt,
-> +				     u32 src_id, bool enable)
-> +{
-> +	int ret = 0;
-> +	u32 num_sources;
-> +	refcount_t *sid;
-> +
-> +	if (src_id == SCMI_ALL_SRC_IDS) {
-> +		src_id = 0;
-> +		num_sources = r_evt->num_sources;
-> +	} else if (src_id < r_evt->num_sources) {
-> +		num_sources = 1;
-> +	} else {
-> +		return ret;
-> +	}
-> +
-> +	mutex_lock(&r_evt->sources_mtx);
-> +	if (enable) {
-> +		for (; num_sources; src_id++, num_sources--) {
-> +			bool r;
-> +
-> +			sid = &r_evt->sources[src_id];
-> +			if (refcount_read(sid) == 0) {
-> +				r = REVT_NOTIFY_ENABLE(r_evt,
-> +						       r_evt->evt->id,
-> +						       src_id, enable);
-
-I would make the enable explicit in this call so it is obvious we are
-in the enable path rather than disable.
-
-> +				if (r)
-> +					refcount_set(sid, 1);
-> +			} else {
-> +				refcount_inc(sid);
-> +				r = true;
-> +			}
-> +			ret += r;
-> +		}
-> +	} else {
-> +		for (; num_sources; src_id++, num_sources--) {
-> +			sid = &r_evt->sources[src_id];
-> +			if (refcount_dec_and_test(sid))
-> +				REVT_NOTIFY_ENABLE(r_evt,
-> +						   r_evt->evt->id,
-> +						   src_id, enable);
-
-As above, make the enable value explicit.
-
-> +		}
-> +		ret = 1;
-> +	}
-> +	mutex_unlock(&r_evt->sources_mtx);
-> +
-> +	return ret;
-> +}
-> +
-> +static bool scmi_enable_events(struct scmi_event_handler *hndl)
-> +{
-> +	if (!hndl->enabled)
-> +		hndl->enabled = __scmi_enable_evt(hndl->r_evt,
-> +						  KEY_XTRACT_SRC_ID(hndl->key),
-> +						  true);
-> +	return hndl->enabled;
-> +}
-> +
-> +static bool scmi_disable_events(struct scmi_event_handler *hndl)
-> +{
-> +	if (hndl->enabled)
-> +		hndl->enabled = !__scmi_enable_evt(hndl->r_evt,
-> +						   KEY_XTRACT_SRC_ID(hndl->key),
-> +						   false);
-> +	return !hndl->enabled;
-> +}
-> +
-> +/**
-> + * scmi_put_handler_unlocked  - Put an event handler
-> + *
-> + * After having got exclusive access to the registered handlers hashtable,
-> + * update the refcount and if @hndl is no more in use by anyone:
-> + *
-> + *  - ask for events' generation disabling
-> + *  - unregister and free the handler itself
-> + *
-> + *  Assumes all the proper locking has been managed by the caller.
-> + *
-> + * @ni: A reference to the notification instance to use
-> + * @hndl: The event handler to act upon
-> + */
-> +
-> +static void
-> +scmi_put_handler_unlocked(struct scmi_notify_instance *ni,
-> +				struct scmi_event_handler *hndl)
-> +{
-> +	if (refcount_dec_and_test(&hndl->users)) {
-> +		if (likely(!IS_HNDL_PENDING(hndl)))
-> +			scmi_disable_events(hndl);
-> +		scmi_free_event_handler(hndl);
-> +	}
-> +}
-> +
-> +static void scmi_put_handler(struct scmi_notify_instance *ni,
-> +			     struct scmi_event_handler *hndl)
-> +{
-> +	struct scmi_registered_event *r_evt = hndl->r_evt;
-> +
-> +	mutex_lock(&ni->pending_mtx);
-> +	if (r_evt)
-> +		mutex_lock(&r_evt->proto->registered_mtx);
-> +
-> +	scmi_put_handler_unlocked(ni, hndl);
-> +
-> +	if (r_evt)
-> +		mutex_unlock(&r_evt->proto->registered_mtx);
-> +	mutex_unlock(&ni->pending_mtx);
-> +}
-> +
-> +/**
-> + * scmi_event_handler_enable_events  - Enable events associated to an handler
-> + *
-> + * @hndl: The Event handler to act upon
-> + *
-> + * Return: True on success
-> + */
-> +static bool scmi_event_handler_enable_events(struct scmi_event_handler *hndl)
-> +{
-> +	if (!scmi_enable_events(hndl)) {
-> +		pr_err("SCMI Notifications: Failed to ENABLE events for key:%X !\n",
-> +		       hndl->key);
-> +		return false;
-> +	}
-> +
-> +	return true;
-> +}
-> +
-> +/**
-> + * scmi_register_notifier  - Register a notifier_block for an event
-> + *
-> + * Generic helper to register a notifier_block against a protocol event.
-> + *
-> + * A notifier_block @nb will be registered for each distinct event identified
-> + * by the tuple (proto_id, evt_id, src_id) on a dedicated notification chain
-> + * so that:
-> + *
-> + *	(proto_X, evt_Y, src_Z) --> chain_X_Y_Z
-> + *
-> + * @src_id meaning is protocol specific and identifies the origin of the event
-> + * (like domain_id, sensor_id and so forth).
-> + *
-> + * @src_id can be NULL to signify that the caller is interested in receiving
-> + * notifications from ALL the available sources for that protocol OR simply that
-> + * the protocol does not support distinct sources.
-> + *
-> + * As soon as one user for the specified tuple appears, an handler is created,
-> + * and that specific event's generation is enabled at the platform level, unless
-> + * an associated registered event is found missing, meaning that the needed
-> + * protocol is still to be initialized and the handler has just been registered
-> + * as still pending.
-> + *
-> + * @handle: The handle identifying the platform instance against which the
-> + *	    callback is registered
-> + * @proto_id: Protocol ID
-> + * @evt_id: Event ID
-> + * @src_id: Source ID, when NULL register for events coming form ALL possible
-> + *	    sources
-> + * @nb: A standard notifier block to register for the specified event
-> + *
-> + * Return: Return 0 on Success
-> + */
-> +static int scmi_register_notifier(const struct scmi_handle *handle,
-> +				  u8 proto_id, u8 evt_id, u32 *src_id,
-> +				  struct notifier_block *nb)
-> +{
-> +	int ret = 0;
-> +	u32 evt_key;
-> +	struct scmi_event_handler *hndl;
-> +	struct scmi_notify_instance *ni = handle->notify_priv;
-> +
-> +	if (unlikely(!ni || !atomic_read(&ni->initialized)))
-> +		return 0;
-> +
-> +	evt_key = MAKE_HASH_KEY(proto_id, evt_id,
-> +				src_id ? *src_id : SCMI_ALL_SRC_IDS);
-> +	hndl = scmi_get_or_create_handler(ni, evt_key);
-> +	if (IS_ERR_OR_NULL(hndl))
-> +		return PTR_ERR(hndl);
-> +
-> +	blocking_notifier_chain_register(&hndl->chain, nb);
-> +
-> +	/* Enable events for not pending handlers */
-> +	if (likely(!IS_HNDL_PENDING(hndl))) {
-> +		if (!scmi_event_handler_enable_events(hndl)) {
-> +			scmi_put_handler(ni, hndl);
-> +			ret = -EINVAL;
-> +		}
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +/**
-> + * scmi_unregister_notifier  - Unregister a notifier_block for an event
-> + *
-> + * Takes care to unregister the provided @nb from the notification chain
-> + * associated to the specified event and, if there are no more users for the
-> + * event handler, frees also the associated event handler structures.
-> + * (this could possibly cause disabling of event's generation at platform level)
-> + *
-> + * @handle: The handle identifying the platform instance against which the
-> + *	    callback is unregistered
-> + * @proto_id: Protocol ID
-> + * @evt_id: Event ID
-> + * @src_id: Source ID
-> + * @nb: The notifier_block to unregister
-> + *
-> + * Return: 0 on Success
-> + */
-> +static int scmi_unregister_notifier(const struct scmi_handle *handle,
-> +				    u8 proto_id, u8 evt_id, u32 *src_id,
-> +				    struct notifier_block *nb)
-> +{
-> +	u32 evt_key;
-> +	struct scmi_event_handler *hndl;
-> +	struct scmi_notify_instance *ni = handle->notify_priv;
-> +
-> +	if (unlikely(!ni || !atomic_read(&ni->initialized)))
-> +		return 0;
-> +
-> +	evt_key = MAKE_HASH_KEY(proto_id, evt_id,
-> +				src_id ? *src_id : SCMI_ALL_SRC_IDS);
-> +	hndl = scmi_get_handler(ni, evt_key);
-> +	if (IS_ERR_OR_NULL(hndl))
-> +		return -EINVAL;
-> +
-> +	blocking_notifier_chain_unregister(&hndl->chain, nb);
-> +	scmi_put_handler(ni, hndl);
-> +
-> +	/*
-> +	 * Free the handler (and stop events) if this happens to be the last
-> +	 * known user callback for this handler; a possible concurrently ongoing
-> +	 * run of @scmi_lookup_and_call_event_chain will cause this to happen
-> +	 * in that context safely instead.
-> +	 */
-> +	scmi_put_handler(ni, hndl);
-> +
-> +	return 0;
-> +}
-> +
-> +/**
-> + * scmi_protocols_late_init  - Worker for late initialization
-> + *
-> + * This kicks in whenever a new protocol has completed its own registration via
-> + * scmi_register_protocol_events(): it is in charge of scanning the table of
-> + * pending handlers (registered by users while the related protocol was still
-> + * not initialized) and finalizing their initialization whenever possible;
-> + * invalid pending handlers are purged at this point in time.
-> + *
-> + * @work: The work item to use associated to the proper SCMI instance
-> + */
-> +static void scmi_protocols_late_init(struct work_struct *work)
-> +{
-> +	int bkt;
-> +	struct scmi_event_handler *hndl;
-> +	struct scmi_notify_instance *ni;
-> +	struct hlist_node *tmp;
-> +
-> +	ni = container_of(work, struct scmi_notify_instance, init_work);
-> +
-> +	mutex_lock(&ni->pending_mtx);
-> +	hash_for_each_safe(ni->pending_events_handlers, bkt, tmp, hndl, hash) {
-> +		bool ret;
-> +
-> +		ret = scmi_bind_event_handler(ni, hndl);
-> +		if (ret) {
-> +			pr_info("SCMI Notifications: finalized PENDING handler - key:%X\n",
-> +				hndl->key);
-> +			ret = scmi_event_handler_enable_events(hndl);
-> +		} else {
-> +			ret = scmi_valid_pending_handler(ni, hndl);
-> +		}
-> +		if (!ret) {
-> +			pr_info("SCMI Notifications: purging PENDING handler - key:%X\n",
-> +				hndl->key);
-> +			/* this hndl can be only a pending one */
-> +			scmi_put_handler_unlocked(ni, hndl);
-> +		}
-> +	}
-> +	mutex_unlock(&ni->pending_mtx);
-> +}
-> +
-> +/*
-> + * notify_ops are attached to the handle so that can be accessed
-> + * directly from an scmi_driver to register its own notifiers.
-> + */
-> +static struct scmi_notify_ops notify_ops = {
-> +	.register_event_notifier = scmi_register_notifier,
-> +	.unregister_event_notifier = scmi_unregister_notifier,
-> +};
-> +
->  /**
->   * scmi_notification_init  - Initializes Notification Core Support
->   *
-> @@ -398,7 +1092,13 @@ int scmi_notification_init(struct scmi_handle *handle)
->  	if (!ni->registered_protocols)
->  		goto err;
->  
-> +	mutex_init(&ni->pending_mtx);
-> +	hash_init(ni->pending_events_handlers);
-> +
-> +	INIT_WORK(&ni->init_work, scmi_protocols_late_init);
-> +
->  	handle->notify_priv = ni;
-> +	handle->notify_ops = &notify_ops;
->  
->  	atomic_set(&ni->initialized, 1);
->  	atomic_set(&ni->enabled, 1);
-> diff --git a/drivers/firmware/arm_scmi/notify.h b/drivers/firmware/arm_scmi/notify.h
-> index a7ece64e8842..f765acda2311 100644
-> --- a/drivers/firmware/arm_scmi/notify.h
-> +++ b/drivers/firmware/arm_scmi/notify.h
-> @@ -9,9 +9,21 @@
->  #ifndef _SCMI_NOTIFY_H
->  #define _SCMI_NOTIFY_H
->  
-> +#include <linux/bug.h>
->  #include <linux/device.h>
->  #include <linux/types.h>
->  
-> +#define MAP_EVT_TO_ENABLE_CMD(id, map)			\
-> +({							\
-> +	int ret = -1;					\
-> +							\
-> +	if (likely((id) < ARRAY_SIZE((map))))		\
-> +		ret = (map)[(id)];			\
-> +	else						\
-> +		WARN(1, "UN-KNOWN evt_id:%d\n", (id));	\
-> +	ret;						\
-> +})
-> +
->  /**
->   * scmi_event  - Describes an event to be supported
->   *
-> diff --git a/include/linux/scmi_protocol.h b/include/linux/scmi_protocol.h
-> index 0679f10ab05e..797e1e03ae52 100644
-> --- a/include/linux/scmi_protocol.h
-> +++ b/include/linux/scmi_protocol.h
-> @@ -9,6 +9,8 @@
->  #define _LINUX_SCMI_PROTOCOL_H
->  
->  #include <linux/device.h>
-> +#include <linux/ktime.h>
-> +#include <linux/notifier.h>
->  #include <linux/types.h>
->  
->  #define SCMI_MAX_STR_SIZE	16
-> @@ -211,6 +213,52 @@ struct scmi_reset_ops {
->  	int (*deassert)(const struct scmi_handle *handle, u32 domain);
->  };
->  
-> +/**
-> + * scmi_notify_ops  - represents notifications' operations provided by SCMI core
-> + *
-> + * A user can register/unregister its own notifier_block against the wanted
-> + * platform instance regarding the desired event identified by the
-> + * tuple: (proto_id, evt_id, src_id)
-> + *
-> + * @register_event_notifier: Register a notifier_block for the requested event
-> + * @unregister_event_notifier: Unregister a notifier_block for the requested
-> + *			       event
-> + *
-> + * where:
-> + *
-> + * @handle: The handle identifying the platform instance to use
-> + * @proto_id: The protocol ID as in SCMI Specification
-> + * @evt_id: The message ID of the desired event as in SCMI Specification
-> + * @src_id: A pointer to the desired source ID if different sources are
-> + *	    possible for the protocol (like domain_id, sensor_id...etc)
-> + *
-> + * @src_id can be provided as NULL if it simply does NOT make sense for
-> + * the protocol at hand, OR if the user is explicitly interested in
-> + * receiving notifications from ANY existent source associated to the
-> + * specified proto_id / evt_id.
-> + *
-> + * Received notifications are finally delivered to the registered users,
-> + * invoking the callback provided with the notifier_block *nb as follows:
-> + *
-> + *	int user_cb(nb, evt_id, report)
-> + *
-> + * with:
-> + *
-> + * @nb: The notifier block provided by the user
-> + * @evt_id: The message ID of the delivered event
-> + * @report: A custom struct describing the specific event delivered
-> + *
-> + * Events' customized report structs are detailed in the following.
-> + */
-> +struct scmi_notify_ops {
-> +	int (*register_event_notifier)(const struct scmi_handle *handle,
-> +				       u8 proto_id, u8 evt_id, u32 *src_id,
-> +				       struct notifier_block *nb);
-> +	int (*unregister_event_notifier)(const struct scmi_handle *handle,
-> +					 u8 proto_id, u8 evt_id, u32 *src_id,
-> +					 struct notifier_block *nb);
-> +};
-> +
->  /**
->   * struct scmi_handle - Handle returned to ARM SCMI clients for usage.
->   *
-> @@ -221,6 +269,7 @@ struct scmi_reset_ops {
->   * @clk_ops: pointer to set of clock protocol operations
->   * @sensor_ops: pointer to set of sensor protocol operations
->   * @reset_ops: pointer to set of reset protocol operations
-> + * @notify_ops: pointer to set of notifications related operations
->   * @perf_priv: pointer to private data structure specific to performance
->   *	protocol(for internal use only)
->   * @clk_priv: pointer to private data structure specific to clock
-> @@ -242,6 +291,7 @@ struct scmi_handle {
->  	struct scmi_power_ops *power_ops;
->  	struct scmi_sensor_ops *sensor_ops;
->  	struct scmi_reset_ops *reset_ops;
-> +	struct scmi_notify_ops *notify_ops;
->  	/* for protocol internal use */
->  	void *perf_priv;
->  	void *clk_priv;
-
-
+T24gU2F0LCAyMDIwLTAzLTA3IGF0IDE1OjA1ICswMDAwLCBKb25hdGhhbiBDYW1lcm9uIHdyb3Rl
+Og0KPiBbRXh0ZXJuYWxdDQo+IA0KPiBPbiBGcmksIDYgTWFyIDIwMjAgMTM6MDA6NTkgKzAyMDAN
+Cj4gQWxleGFuZHJ1IEFyZGVsZWFuIDxhbGV4YW5kcnUuYXJkZWxlYW5AYW5hbG9nLmNvbT4gd3Jv
+dGU6DQo+IA0KPiA+IEZyb206IE1pY2hhZWwgSGVubmVyaWNoIDxtaWNoYWVsLmhlbm5lcmljaEBh
+bmFsb2cuY29tPg0KPiA+IA0KPiA+IFRoZSBBRDk0NjcgaXMgYSAxNi1iaXQsIG1vbm9saXRoaWMs
+IElGIHNhbXBsaW5nIGFuYWxvZy10by1kaWdpdGFsIGNvbnZlcnRlcg0KPiA+IChBREMpLiBJdCBp
+cyBvcHRpbWl6ZWQgZm9yIGhpZ2ggcGVyZm9ybWFuY2VvdmVyIHdpZGUgYmFuZHdpZHRocyBhbmQg
+ZWFzZSBvZg0KPiA+IHVzZS4gVGhlIHByb2R1Y3Qgb3BlcmF0ZXMgYXQgYSAyNTAgTVNQUyBjb252
+ZXJzaW9uIHJhdGUgYW5kIGlzIGRlc2lnbmVkIGZvcg0KPiA+IHdpcmVsZXNzIHJlY2VpdmVycywg
+aW5zdHJ1bWVudGF0aW9uLCBhbmQgdGVzdCBlcXVpcG1lbnQgdGhhdCByZXF1aXJlIGEgaGlnaA0K
+PiA+IGR5bmFtaWMgcmFuZ2UuIFRoZSBBREMgcmVxdWlyZXMgMS44IFYgYW5kIDMuMyBWIHBvd2Vy
+IHN1cHBsaWVzIGFuZCBhIGxvdw0KPiA+IHZvbHRhZ2UgZGlmZmVyZW50aWFsIGlucHV0IGNsb2Nr
+IGZvciBmdWxsIHBlcmZvcm1hbmNlIG9wZXJhdGlvbi4gTm8NCj4gPiBleHRlcm5hbCByZWZlcmVu
+Y2Ugb3IgZHJpdmVyIGNvbXBvbmVudHMgYXJlIHJlcXVpcmVkIGZvciBtYW55IGFwcGxpY2F0aW9u
+cy4NCj4gPiBEYXRhIG91dHB1dHMgYXJlIExWRFMgY29tcGF0aWJsZSAoQU5TSS02NDQgY29tcGF0
+aWJsZSkgYW5kIGluY2x1ZGUgdGhlDQo+ID4gbWVhbnMgdG8gcmVkdWNlIHRoZSBvdmVyYWxsIGN1
+cnJlbnQgbmVlZGVkIGZvciBzaG9ydCB0cmFjZSBkaXN0YW5jZXMuDQo+ID4gDQo+ID4gU2luY2Ug
+dGhlIGNoaXAgY2FuIG9wZXJhdGUgYXQgc3VjaCBoaWdoIHNhbXBsZS1yYXRlcyAobXVjaCBoaWdo
+ZXIgdGhhbg0KPiA+IGNsYXNzaWNhbCBpbnRlcmZhY2VzKSwgaXQgcmVxdWlyZXMgdGhhdCBhIERN
+QSBjb250cm9sbGVyIGJlIHVzZWQgdG8NCj4gPiBpbnRlcmZhY2UgZGlyZWN0bHkgdG8gdGhlIGNo
+aXAgYW5kIHB1c2ggZGF0YSBpbnRvIG1lbW9yeS4NCj4gPiBUeXBpY2FsbHksIHRoZSBBWEkgQURD
+IElQIGNvcmUgaXMgdXNlZCB0byBpbnRlcmZhY2Ugd2l0aCBpdC4NCj4gPiANCj4gPiBMaW5rOiAN
+Cj4gPiBodHRwczovL3d3dy5hbmFsb2cuY29tL21lZGlhL2VuL3RlY2huaWNhbC1kb2N1bWVudGF0
+aW9uL2RhdGEtc2hlZXRzL0FEOTQ2Ny5wZGYNCj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBMYXJz
+LVBldGVyIENsYXVzZW4gPGxhcnNAbWV0YWZvby5kZT4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBNaWNo
+YWVsIEhlbm5lcmljaCA8bWljaGFlbC5oZW5uZXJpY2hAYW5hbG9nLmNvbT4NCj4gPiBTaWduZWQt
+b2ZmLWJ5OiBBbGV4YW5kcnUgQXJkZWxlYW4gPGFsZXhhbmRydS5hcmRlbGVhbkBhbmFsb2cuY29t
+Pg0KPiANCj4gQSBmZXcgbWlub3IgdGhpbmdzIGJ1dCBvdGhlcndpc2UgbG9va3MgZ29vZCB0byBt
+ZS4uDQo+IA0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJzL2lpby9hZGMvS2NvbmZpZyAgfCAgMTUgKysN
+Cj4gPiAgZHJpdmVycy9paW8vYWRjL01ha2VmaWxlIHwgICAxICsNCj4gPiAgZHJpdmVycy9paW8v
+YWRjL2FkOTQ2Ny5jIHwgNDMyICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+Kw0KPiA+ICAzIGZpbGVzIGNoYW5nZWQsIDQ0OCBpbnNlcnRpb25zKCspDQo+ID4gIGNyZWF0ZSBt
+b2RlIDEwMDY0NCBkcml2ZXJzL2lpby9hZGMvYWQ5NDY3LmMNCj4gPiANCj4gPiBkaWZmIC0tZ2l0
+IGEvZHJpdmVycy9paW8vYWRjL0tjb25maWcgYi9kcml2ZXJzL2lpby9hZGMvS2NvbmZpZw0KPiA+
+IGluZGV4IDQ0NTA3MGFiZjM3Ni4uYTA3OTY1MTBmOWQ0IDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZl
+cnMvaWlvL2FkYy9LY29uZmlnDQo+ID4gKysrIGIvZHJpdmVycy9paW8vYWRjL0tjb25maWcNCj4g
+PiBAQCAtMjQ2LDYgKzI0NiwyMSBAQCBjb25maWcgQUQ3OTlYDQo+ID4gIAkgIFRvIGNvbXBpbGUg
+dGhpcyBkcml2ZXIgYXMgYSBtb2R1bGUsIGNob29zZSBNIGhlcmU6IHRoZSBtb2R1bGUgd2lsbCBi
+ZQ0KPiA+ICAJICBjYWxsZWQgYWQ3OTl4Lg0KPiA+ICANCj4gLi4uDQo+ID4gK3N0YXRpYyBpbnQg
+YWQ5NDY3X3NwaV9yZWFkKHN0cnVjdCBzcGlfZGV2aWNlICpzcGksIHVuc2lnbmVkIGludCByZWcp
+DQo+ID4gK3sNCj4gPiArCXVuc2lnbmVkIGNoYXIgYnVmWzNdOw0KPiA+ICsJaW50IHJldDsNCj4g
+PiArDQo+ID4gKwlidWZbMF0gPSAweDgwIHwgKHJlZyA+PiA4KTsNCj4gPiArCWJ1ZlsxXSA9IHJl
+ZyAmIDB4RkY7DQo+ID4gKw0KPiA+ICsJcmV0ID0gc3BpX3dyaXRlX3RoZW5fcmVhZChzcGksICZi
+dWZbMF0sIDIsICZidWZbMl0sIDEpOw0KPiANCj4gV2h5IG5vdCBzcGxpdCBidWYgaW50byBzZW5k
+IHBhcnQgYW5kIHJlY2VpdmU/ICBNaWdodCBtYWtlIGl0IHNsaWdodGx5DQo+IG1vcmUgcmVhZGFi
+bGUgZm9yIG5vIGFjdHVhbCBjb3N0Li4NCg0Kc3VyZQ0KDQo+IA0KPiA+ICsNCj4gPiArCWlmIChy
+ZXQgPCAwKQ0KPiA+ICsJCXJldHVybiByZXQ7DQo+ID4gKw0KPiA+ICsJcmV0dXJuIGJ1ZlsyXTsN
+Cj4gPiArfQ0KPiAuLi4NCj4gDQo+ID4gK3N0YXRpYyBpbnQgYWQ5NDY3X3dyaXRlX3JhdyhzdHJ1
+Y3QgYWRpX2F4aV9hZGNfY29udiAqY29udiwNCj4gPiArCQkJICAgIHN0cnVjdCBpaW9fY2hhbl9z
+cGVjIGNvbnN0ICpjaGFuLA0KPiA+ICsJCQkgICAgaW50IHZhbCwgaW50IHZhbDIsIGxvbmcgbWFz
+aykNCj4gPiArew0KPiA+ICsJY29uc3Qgc3RydWN0IGFkaV9heGlfYWRjX2NoaXBfaW5mbyAqaW5m
+byA9IGNvbnYtPmNoaXBfaW5mbzsNCj4gPiArCXN0cnVjdCBhZDk0Njdfc3RhdGUgKnN0ID0gYWRp
+X2F4aV9hZGNfY29udl9wcml2KGNvbnYpOw0KPiA+ICsJdW5zaWduZWQgbG9uZyByX2NsazsNCj4g
+PiArDQo+ID4gKwlzd2l0Y2ggKG1hc2spIHsNCj4gPiArCWNhc2UgSUlPX0NIQU5fSU5GT19TQ0FM
+RToNCj4gPiArCQlyZXR1cm4gYWQ5NDY3X3NldF9zY2FsZShjb252LCB2YWwsIHZhbDIpOw0KPiA+
+ICsJY2FzZSBJSU9fQ0hBTl9JTkZPX1NBTVBfRlJFUToNCj4gPiArCQlpZiAoIXN0LT5jbGspDQo+
+ID4gKwkJCXJldHVybiAtRU5PREVWOw0KPiA+ICsNCj4gPiArCQlpZiAoY2hhbi0+ZXh0ZW5kX25h
+bWUpDQo+IA0KPiBUaGlzIGlzIGEgdmVyeSAnb2RkJyB0ZXN0LiAgV2h5Pw0KDQpsZWZ0LW92ZXIg
+ZnJvbSB0aGUgb3JpZ2luYWwgZHJpdmVyOyBhbmQgaXQgc2xpcHBlZCB3aGVuIGkgYWRhcHRlZCBm
+cm9tIHRoYXQ7DQpubyBpZGVhIHdoeSBpdCB3YXMgYWRkZWQ7IGFuZCBnaXQgaGlzdG9yeSBpcyBu
+b3QgaGVscGluZyBlaXRoZXI7DQp3aWxsIGRyb3A7DQoNCj4gDQo+ID4gKwkJCXJldHVybiAtRU5P
+REVWOw0KPiA+ICsNCj4gPiArCQlyX2NsayA9IGNsa19yb3VuZF9yYXRlKHN0LT5jbGssIHZhbCk7
+DQo+ID4gKwkJaWYgKHJfY2xrIDwgMCB8fCByX2NsayA+IGluZm8tPm1heF9yYXRlKSB7DQo+ID4g
+KwkJCWRldl93YXJuKCZzdC0+c3BpLT5kZXYsDQo+ID4gKwkJCQkgIkVycm9yIHNldHRpbmcgQURD
+IHNhbXBsZSByYXRlICVsZCIsIHJfY2xrKTsNCj4gPiArCQkJcmV0dXJuIC1FSU5WQUw7DQo+ID4g
+KwkJfQ0KPiA+ICsNCj4gPiArCQlyZXR1cm4gY2xrX3NldF9yYXRlKHN0LT5jbGssIHJfY2xrKTsN
+Cj4gPiArCWRlZmF1bHQ6DQo+ID4gKwkJcmV0dXJuIC1FSU5WQUw7DQo+ID4gKwl9DQo+ID4gK30N
+Cj4gPiArDQo+IC4uLg0KPiA+ICtzdGF0aWMgaW50IGFkOTQ2N19wcm9iZShzdHJ1Y3Qgc3BpX2Rl
+dmljZSAqc3BpKQ0KPiA+ICt7DQo+ID4gKwljb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkICpvaWQ7
+DQo+ID4gKwlzdHJ1Y3QgYWRpX2F4aV9hZGNfY29udiAqY29udjsNCj4gPiArCXN0cnVjdCBhZDk0
+Njdfc3RhdGUgKnN0Ow0KPiA+ICsJdW5zaWduZWQgaW50IGlkOw0KPiA+ICsJaW50IHJldDsNCj4g
+PiArDQo+ID4gKwlpZiAoIXNwaS0+ZGV2Lm9mX25vZGUpIHsNCj4gPiArCQlkZXZfZXJyKCZzcGkt
+PmRldiwgIkRUIG5vZGUgaXMgbnVsbFxuIik7DQo+ID4gKwkJcmV0dXJuIC1FTk9ERVY7DQo+IA0K
+PiBTaWxseSBxdWVzdGlvbiBmb3IgeW91LiAgQ2FuIHRoaXMgaGFwcGVuPyAgV2UgY2FuIG9ubHkg
+cHJvYmUgdGhpcw0KPiBpZiBpdCBpcyBpbiBEVCBhbmQgaGVuY2UgdGhlcmUgbXVzdCBiZSBhIG5v
+ZGUgdG8gZ2V0IGhlcmUgSSB0aGluay4NCg0KZ29vZCBwb2ludDsNCndpbGwgZHJvcDsNCmxvb2tz
+IGxpa2Ugc29tZXRoaW5nIGkgYWRkZWQgaW5lcnRpYWxseQ0KDQo+IA0KPiA+ICsJfQ0KPiA+ICsN
+Cj4gPiArCW9pZCA9IG9mX21hdGNoX25vZGUoYWQ5NDY3X29mX21hdGNoLCBzcGktPmRldi5vZl9u
+b2RlKTsNCj4gPiArCWlmICghb2lkKQ0KPiA+ICsJCXJldHVybiAtRU5PREVWOw0KPiANCj4gWW91
+IG9ubHkgZXZlciB3YW50IHRoZSBkYXRhIGZpZWxkIHNvIHlvdSBjYW4gZ2V0IHRoYXQgZGlyZWN0
+bHkuDQo+IG9mX2RldmljZV9nZXRfbWF0Y2hfZGF0YQ0KDQphY2sNCg0KPiANCj4gPiArDQo+ID4g
+Kwljb252ID0gZGV2bV9hZGlfYXhpX2FkY19jb252X3JlZ2lzdGVyKCZzcGktPmRldiwgc2l6ZW9m
+KCpzdCkpOw0KPiA+ICsJaWYgKElTX0VSUihjb252KSkNCj4gPiArCQlyZXR1cm4gUFRSX0VSUihj
+b252KTsNCj4gPiArDQo+ID4gKwlzdCA9IGFkaV9heGlfYWRjX2NvbnZfcHJpdihjb252KTsNCj4g
+PiArCXN0LT5zcGkgPSBzcGk7DQo+ID4gKw0KPiA+ICsJc3QtPmNsayA9IGRldm1fY2xrX2dldCgm
+c3BpLT5kZXYsICJhZGMtY2xrIik7DQo+ID4gKwlpZiAoSVNfRVJSKHN0LT5jbGspKQ0KPiA+ICsJ
+CXJldHVybiBQVFJfRVJSKHN0LT5jbGspOw0KPiA+ICsNCj4gPiArCXJldCA9IGNsa19wcmVwYXJl
+X2VuYWJsZShzdC0+Y2xrKTsNCj4gPiArCWlmIChyZXQgPCAwKQ0KPiA+ICsJCXJldHVybiByZXQ7
+DQo+ID4gKw0KPiA+ICsJcmV0ID0gZGV2bV9hZGRfYWN0aW9uX29yX3Jlc2V0KCZzcGktPmRldiwg
+YWQ5NDY3X2Nsa19kaXNhYmxlLCBzdCk7DQo+ID4gKwlpZiAocmV0KQ0KPiA+ICsJCXJldHVybiBy
+ZXQ7DQo+ID4gKw0KPiA+ICsJc3QtPnB3cmRvd25fZ3BpbyA9IGRldm1fZ3Bpb2RfZ2V0X29wdGlv
+bmFsKCZzcGktPmRldiwgInBvd2VyZG93biIsDQo+ID4gKwkJCQkJCSAgIEdQSU9EX09VVF9MT1cp
+Ow0KPiA+ICsJaWYgKElTX0VSUihzdC0+cHdyZG93bl9ncGlvKSkNCj4gPiArCQlyZXR1cm4gUFRS
+X0VSUihzdC0+cHdyZG93bl9ncGlvKTsNCj4gPiArDQo+ID4gKwlzdC0+cmVzZXRfZ3BpbyA9IGRl
+dm1fZ3Bpb2RfZ2V0X29wdGlvbmFsKCZzcGktPmRldiwgInJlc2V0IiwNCj4gPiArCQkJCQkJIEdQ
+SU9EX09VVF9MT1cpOw0KPiA+ICsJaWYgKElTX0VSUihzdC0+cmVzZXRfZ3BpbykpDQo+ID4gKwkJ
+cmV0dXJuIFBUUl9FUlIoc3QtPnJlc2V0X2dwaW8pOw0KPiA+ICsNCj4gPiArCWlmIChzdC0+cmVz
+ZXRfZ3Bpbykgew0KPiA+ICsJCXVkZWxheSgxKTsNCj4gPiArCQlyZXQgPSBncGlvZF9kaXJlY3Rp
+b25fb3V0cHV0KHN0LT5yZXNldF9ncGlvLCAxKTsNCj4gPiArCQltZGVsYXkoMTApOw0KPiA+ICsJ
+fQ0KPiA+ICsNCj4gPiArCXNwaV9zZXRfZHJ2ZGF0YShzcGksIHN0KTsNCj4gPiArDQo+ID4gKwlp
+ZCA9ICh1bnNpZ25lZCBpbnQpb2lkLT5kYXRhOw0KPiA+ICsJY29udi0+Y2hpcF9pbmZvID0gJmFk
+OTQ2N19jaGlwX2luZm9fdGJsW2lkXTsNCj4gPiArDQo+ID4gKwlpZCA9IGFkOTQ2N19zcGlfcmVh
+ZChzcGksIEFOODc3X0FEQ19SRUdfQ0hJUF9JRCk7DQo+ID4gKwlpZiAoaWQgIT0gY29udi0+Y2hp
+cF9pbmZvLT5pZCkgew0KPiA+ICsJCWRldl9lcnIoJnNwaS0+ZGV2LCAiVW5yZWNvZ25pemVkIENI
+SVBfSUQgMHglWFxuIiwgaWQpOw0KPiA+ICsJCXJldHVybiAtRU5PREVWOw0KPiA+ICsJfQ0KPiA+
+ICsNCj4gPiArCWNvbnYtPnJlZ19hY2Nlc3MgPSBhZDk0NjdfcmVnX2FjY2VzczsNCj4gPiArCWNv
+bnYtPndyaXRlX3JhdyA9IGFkOTQ2N193cml0ZV9yYXc7DQo+ID4gKwljb252LT5yZWFkX3JhdyA9
+IGFkOTQ2N19yZWFkX3JhdzsNCj4gPiArCWNvbnYtPnByZWVuYWJsZV9zZXR1cCA9IGFkOTQ2N19w
+cmVlbmFibGVfc2V0dXA7DQo+ID4gKw0KPiA+ICsJcmV0dXJuIGFkOTQ2N19zZXR1cChzdCwgaWQp
+Ow0KPiA+ICt9DQo+ID4gKw0KPiA+ICtzdGF0aWMgc3RydWN0IHNwaV9kcml2ZXIgYWQ5NDY3X2Ry
+aXZlciA9IHsNCj4gPiArCS5kcml2ZXIgPSB7DQo+ID4gKwkJLm5hbWUgPSAiYWQ5NDY3IiwNCj4g
+PiArCQkub2ZfbWF0Y2hfdGFibGUgPSBhZDk0Njdfb2ZfbWF0Y2gsDQo+ID4gKwl9LA0KPiA+ICsJ
+LnByb2JlID0gYWQ5NDY3X3Byb2JlLA0KPiA+ICt9Ow0KPiA+ICttb2R1bGVfc3BpX2RyaXZlcihh
+ZDk0NjdfZHJpdmVyKTsNCj4gPiArDQo+ID4gK01PRFVMRV9BVVRIT1IoIk1pY2hhZWwgSGVubmVy
+aWNoIDxtaWNoYWVsLmhlbm5lcmljaEBhbmFsb2cuY29tPiIpOw0KPiA+ICtNT0RVTEVfREVTQ1JJ
+UFRJT04oIkFuYWxvZyBEZXZpY2VzIEFEOTQ2NyBBREMgZHJpdmVyIik7DQo+ID4gK01PRFVMRV9M
+SUNFTlNFKCJHUEwgdjIiKTsNCg==
