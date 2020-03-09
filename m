@@ -2,249 +2,91 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFBBAC10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 15:57:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9CC2C10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 15:59:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DD86208C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 15:57:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wGb7G/oj"
+	by mail.kernel.org (Postfix) with ESMTP id 7EB1D21D7E
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 15:59:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727070AbgCIP5k (ORCPT
+        id S1727071AbgCIP7v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 11:57:40 -0400
-Received: from mail-ua1-f66.google.com ([209.85.222.66]:37546 "EHLO
-        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726973AbgCIP5k (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 11:57:40 -0400
-Received: by mail-ua1-f66.google.com with SMTP id h32so3504851uah.4
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 08:57:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pCRd2UEbEJTn5mfXepX9c61lhmQ/IqiJL7ywIto/CQw=;
-        b=wGb7G/oj6hspozY0jRklGG9i3hdO4FwSj1vwBXsKEq7SgzsswMznpltaAZp3zoa5f6
-         n/oq31BIy+k3AODVPylffydQIJtTFJMpght6yOR86WM4gDzVhsNFB8QcI1e3b3VJ9+0c
-         b38AK8ylGkFmW48/4FRvjLFS9PT7+PiS1GNPK37JE+EWavPu8qqV2SbvbuUtwY6iqxjO
-         onQ0dLrgFyIlJsSbVaKYfh823nESfyTZxb3aMIZDdlH0awx5q+BuJ0YE6wko3sk+NVUS
-         xujcScGOmNNviQWC0MuJ+eKutyaAjz4JkNA7Cngty5jYWleivrYGioI4YGlM99SanOX9
-         ET2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pCRd2UEbEJTn5mfXepX9c61lhmQ/IqiJL7ywIto/CQw=;
-        b=nS7fsFZAU03RuG+FU+UUl3E1UjmOQ5K+KpnJCHoJCS/8XagPbCO8d4X8QF6Ym9L9uM
-         icelAANnAnpDLWQA9YBGWq7llAsed7vroQYO9PlBTTNM+5cEG8ZWjIw1yuAKtgOMBvHM
-         PovvjFh8NVqkgGDYodsQoyfuDn0FuhXSx6OhC0niWGuswQXcQnvAulNVoNya9hy+vGyc
-         618beyltSm0p6S2OEks+dYBjKlip6Kadgekwm2VLFL+qT9fI5+sizZ0/yVOxC8RXlAnd
-         LgHbEt2hk0U4cbwWZ009I/vE2FNREB1PhZiR8KHxwLeCSY+tPBuvP/gdECb2gdWmvwgo
-         geaA==
-X-Gm-Message-State: ANhLgQ2fVnzNHa5du1ZCYYwlXXQYhxSwmzK72wOpgMcierajBAvh3U3b
-        hPDGYg6oBg5b8/8CUHHJEx/1yQl8/xMSRP5ExKXP2Q==
-X-Google-Smtp-Source: ADFU+vtFgOOCmRSQPSf7CEJwiUNA+g1wHtqy+hLf7WB6ZnEytbypnc3boO4lzqtz6KH7aUm6G/dQPc06T/1yNYg/jp8=
-X-Received: by 2002:ab0:7802:: with SMTP id x2mr9482796uaq.100.1583769457230;
- Mon, 09 Mar 2020 08:57:37 -0700 (PDT)
+        Mon, 9 Mar 2020 11:59:51 -0400
+Received: from foss.arm.com ([217.140.110.172]:53974 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726488AbgCIP7v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 11:59:51 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4142930E;
+        Mon,  9 Mar 2020 08:59:50 -0700 (PDT)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.71])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B3D203F534;
+        Mon,  9 Mar 2020 08:59:47 -0700 (PDT)
+Date:   Mon, 9 Mar 2020 15:59:45 +0000
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Nishanth Menon <nm@ti.com>,
+        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+        Tero Kristo <t-kristo@ti.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Rik van Riel <riel@surriel.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Dave Chinner <david@fromorbit.com>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Yafang Shao <laoar.shao@gmail.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        kernel-team@fb.com, Kishon Vijay Abraham I <kishon@ti.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>
+Subject: Re: [PATCH] vfs: keep inodes with page cache off the inode shrinker
+ LRU
+Message-ID: <20200309155945.GA4124965@arrakis.emea.arm.com>
+References: <CAHk-=wiGbz3oRvAVFtN-whW-d2F-STKsP1MZT4m_VeycAr1_VQ@mail.gmail.com>
+ <20200211164701.4ac88d9222e23d1e8cc57c51@linux-foundation.org>
+ <CAHk-=wg1ZDADD3Vuw_sXhmBOrQ2xsp8YWxmtWiA6vG0RT-ZQ+A@mail.gmail.com>
+ <20200212085004.GL25745@shell.armlinux.org.uk>
+ <CAK8P3a3pzgVvwyDhHPoiSOqyv+h_ixbsdWMqG3sELenRJqFuew@mail.gmail.com>
+ <671b05bc-7237-7422-3ece-f1a4a3652c92@oracle.com>
+ <CAK8P3a13jGdjVW1TzvCKjRBg-Yscs_WB2K1kw9AzRfn3G9a=-Q@mail.gmail.com>
+ <7c4c1459-60d5-24c8-6eb9-da299ead99ea@oracle.com>
+ <20200306203439.peytghdqragjfhdx@kahuna>
+ <CAK8P3a0Gyqu7kzO1JF=j9=jJ0T5ut=hbKepvke-2bppuPNKTuQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <CA+G9fYuqAQfhzF2BzHr7vMHx68bo8-jT+ob_F3eHQ3=oFjgYdg@mail.gmail.com>
- <CAPDyKFokE6x0mn+v5B9=so-SyrdTn0JBU8Mrp3Zdu6kSaCie2g@mail.gmail.com>
- <0963b60f-15e7-4bc6-10df-6fc8003e4d42@nvidia.com> <CAPDyKFq5NoeHEBK3sv3yOSD2+pm9FueH1gaTyPq0j7GLfa6vnA@mail.gmail.com>
- <34fd84d7-387b-b6f3-7fb3-aa490909e205@ti.com> <CAPDyKFrrO4noYqdxWL9Y8Nx75LopbDudKGMotkGbGcAF1oq==w@mail.gmail.com>
- <5e9b5646-bd48-e55b-54ee-1c2c41fc9218@nvidia.com> <CAPDyKFqpNo_4OePBR1KnJNO=kR8XEqbcsEd=icSceSdDH+Rk1Q@mail.gmail.com>
- <757853cf-987e-f6b6-9259-b4560a031692@nvidia.com> <d12fe142-7e72-ab58-33ab-17817e35096f@nvidia.com>
- <c216f131-6f83-c9c9-9d17-8d44ec06972d@nvidia.com> <87ad7586-9569-4276-044a-adb64e84ca15@nvidia.com>
- <a0962e0b-0f1d-9f32-f6e9-92f69f93167f@nvidia.com> <57ddddc2-3ee8-d867-bba0-0dd9929ba37d@nvidia.com>
- <CAPDyKFqZSd9E3+16yFsmpee2JsbRJ-DGThxx7NJHu6UE00Xi1Q@mail.gmail.com>
- <26ee7225-9483-4664-c2d7-b5cefeadcd4b@nvidia.com> <CAPDyKFqwVQDEnPNi33mc9ycTxpaT1cRLejbR3Ja4c8dha4gFRw@mail.gmail.com>
- <a67b2831-3eff-545a-de67-102dffe4a0d9@ti.com>
-In-Reply-To: <a67b2831-3eff-545a-de67-102dffe4a0d9@ti.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Mon, 9 Mar 2020 16:57:00 +0100
-Message-ID: <CAPDyKFpDUnaZ_x=Xoj625t=t1J_+xZWmkxwK78ruELsvLi+x+g@mail.gmail.com>
-Subject: Re: LKFT: arm x15: mmc1: cache flush error -110
-To:     Faiz Abbas <faiz_abbas@ti.com>
-Cc:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Bitan Biswas <bbiswas@nvidia.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        Alexei Starovoitov <ast@kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        lkft-triage@lists.linaro.org,
-        open list <linux-kernel@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        John Stultz <john.stultz@linaro.org>,
-        Thierry Reding <treding@nvidia.com>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Kishon <kishon@ti.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a0Gyqu7kzO1JF=j9=jJ0T5ut=hbKepvke-2bppuPNKTuQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 9 Mar 2020 at 15:06, Faiz Abbas <faiz_abbas@ti.com> wrote:
->
-> Uffe,
->
-> On 06/03/20 4:44 pm, Ulf Hansson wrote:
-> > [...]
-> >
-> >>>>>>>>>>>
-> >>>>>>>>>>> Actually we always use R1B with CMD6 as per spec.
-> >>>>>>>>>> I fully agree that R1B is preferable, but it's not against the
-> >>>>>>>>>> spec to
-> >>>>>>>>>> send CMD13 to poll for busy.
-> >>>>>>>>>>
-> >>>>>>>>>> Moreover, we need to cope with the scenario when the host has
-> >>>>>>>>>> specified a maximum timeout that isn't sufficiently long enough for
-> >>>>>>>>>> the requested operation. Do you have another proposal for how to
-> >>>>>>>>>> manage this, but disabling MMC_RSP_BUSY?
-> >>>>>>>>>>
-> >>>>>>>>>> Let's assume you driver would get a R1B for the CMD6 (we force it),
-> >>>>>>>>>> then what timeout would the driver be using if we would set
-> >>>>>>>>>> cmd.busy_timeout to 30ms?
-> >>>>>>>>>>
-> >>>> Sorry didn't understood clearly. Are you asking with 30s timeout, whats
-> >>>> the data timeout counter used?
-> >>> Yes. It seems like it will pick the maximum, which is 11s?
-> >> yes
-> >
-> > Okay, thanks!
-> >
-> >>>
-> >>>> Because of above mentioned issue on our host where CMD interrupt happens
-> >>>> after busy state, poll for busy returns right away as not busy.
-> >>> I see.
-> >>>
-> >>>> So issuing CMD13 after CMD6-R1 followed by busy poll should be working.
-> >>>> But weird that with small delay of 1ms or debug print before CMD13 it
-> >>>> doesn't timeout and works all the time.
-> >>> I have digested the information you provided in these emails. Let me
-> >>> summarize it, to see if I have understood correctly.
-> >>>
-> >>> 1.
-> >>> Your controller can't distinguish between R1 and R1B because of a
-> >>> limitation in the HW. So, in both cases you need to wait for the card
-> >>> to stop signal busy, before the controller can give an IRQ to notify
-> >>> that the R1 response has been received. Correct?
-> >>>
-> >>> In this context, I am wondering if sdhci_send_command(), really
-> >>> conforms to these requirements. For example, depending on if the CMD6
-> >>> has MMC_RSP_BUSY or not, it may pick either SDHCI_CMD_RESP_SHORT or
-> >>> SDHCI_CMD_RESP_SHORT_BUSY.
-> >>>
-> >>> Does this work as expected for your case?
-> >> Design team re-verified internally and bug where HW waits for busy state
-> >> before IRQ is only for R1B and R1 is spec compliant.
-> >>
-> >> So, with R1, CMD complete is generated after response received.
-> >
-> > Okay.
-> >
-> > So, the issue we see for CMD6 with R1, is a software problem that we
-> > should be able to fix.
-> >
-> >>
-> >> With R1B, CMD complete and xfer complete both are generated after
-> >> response received + device busy (max timeout of 11s)
-> >> DATA timeout interrupt will be asserted incase if HW busy detection fails.
-> >>
-> >> With R1B we may see DATA Timeout if operation takes more than max busy
-> >> timeout of 11s.
-> >
-> > Okay, I see.
-> >
-> >>
-> >>> 2.
-> >>> Assuming my interpretation of the above is somewhat correct. Then you
-> >>> always need to set a busy timeout for R1/R1B responses in the
-> >>> controller. The maximum timeout seems to be 11s long. Obviously, this
-> >>> isn't enough for all cases, such as cache flushing and erase, for
-> >>> example. So, what can we do to support a longer timeouts than 11s?
-> >>> Would it be possible to disable the HW timeout, if the requested
-> >>> timeout is longer than 11s and use a SW timeout instead?
-> >>>
-> >>> Kind regards
-> >>> Uffe
-> >>
-> >> For erase long operations we have register bit to enable for infinite
-> >> busy wait mode where host controller would be monitoring until card is busy.
-> >
-> > Alright, that sounds great!
-> >
-> >>
-> >> But so far for emmc devices we used on our platforms, we haven't seen
-> >> cache flush taking more than 11s.
-> >
-> > I understand that 11s is probably fine to use, for most cases.
-> >
-> > However, it's not spec compliant, as for some operations there are
-> > simply no timeout specified. BKOPS, cache flush, sanitize are cases
-> > like this - and then 11s is definitely not sufficient.
-> >
-> >>
-> >> Will get back on possibility of disabling HW timeout and using SW timeout..
-> >
-> > Thanks!
-> >
-> > I would like to get the regression fixed asap, but I also would like
-> > to avoid reverting patches, unless really necessary. May I propose the
-> > following two options.
-> >
-> > 1. Find out why polling with ->card_busy() or CMD13, for a CMD6 with
-> > an R1 response doesn't work - and then fix that behaviour.
-> >
-> > 2. Set the mmc->max_busy_timeout to zero for sdhci-tegra, which makes
-> > the core to always use R1B for CMD6 (and erase). This also means that
-> > when the cmd->busy_timeout becomes longer than 11s, sdhci-tegra must
-> > disable the HW busy timeout and just wait "forever".
-> >
-> > If you decide for 2, you can add the software timeout support on top,
-> > but make that can be considered as a next step of an improvement,
-> > rather than needed as fix. Note that, I believe there are some support
-> > for software timeout already in the sdhci core, maybe you need to
-> > tweak it a bit for your case, I don't know.
-> >
->
-> I was able to reproduce the issue on sdhci-omap with your patch applied.
+On Sun, Mar 08, 2020 at 11:58:52AM +0100, Arnd Bergmann wrote:
+> - revisit CONFIG_VMSPLIT_4G_4G for arm32 (and maybe mips32)
+>   to see if it can be done, and what the overhead is. This is probably
+>   more work than the others combined, but also the most promising
+>   as it allows the most user address space and physical ram to be used.
 
-Great, thanks for confirming!
+A rough outline of such support (and likely to miss some corner cases):
 
->
-> In our case, the dat0 line never comes back up when trying to send a
-> CMD6 with R1. It needs an R1b to work properly. I also set
+1. Kernel runs with its own ASID and non-global page tables.
 
-Do you know if that is because of how the driver manages R1B/R1 or
-because of a limitation in the HW?
+2. Trampoline code on exception entry/exit to handle the TTBR0 switching
+   between user and kernel.
 
-> mmc->max_busy_timeout to 0 and that made it work as well.
+3. uaccess routines need to be reworked to pin the user pages in memory
+   (get_user_pages()) and access them via the kernel address space.
 
-Okay, good.
+Point 3 is probably the ugliest and it would introduce a noticeable
+slowdown in certain syscalls.
 
->
-> I wanna try it out with other R1b commands like erase to see if it works
-> properly if the delay is actually very long.
-
-Right, it probably works for most cases. In any case, this was broken
-even before my three patches that screwed things up.
-
-BTW, what HW busy time out will you be using for sdhci omap if
-cmd->busy_timeout exceeds it? Is it 2581ms for all sdhci-omap
-instances or does it differ depending on platform?
-
-Anyway, in this phase, it sounds like we should move forward with a
-patch setting max_busy_timeout to zero for sdhci omap, as that
-restores things to the earlier behavior. Would you mind posting a
-patch, or do you want me to manage it?
-
-Kind regards
-Uffe
+-- 
+Catalin
