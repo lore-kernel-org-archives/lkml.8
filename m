@@ -2,211 +2,206 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C00CC18E5A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 08:59:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5C70C18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:00:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E761621775
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 08:59:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A321A21739
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:00:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dAxOi7yQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726988AbgCII7s (ORCPT
+        id S1726521AbgCIJAL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 04:59:48 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:41624 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726027AbgCII7r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 04:59:47 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 609C5D3890AF7904DCED;
-        Mon,  9 Mar 2020 16:59:41 +0800 (CST)
-Received: from linux-kDCJWP.huawei.com (10.175.104.212) by
- DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
- 14.3.487.0; Mon, 9 Mar 2020 16:59:35 +0800
-From:   Keqian Zhu <zhukeqian1@huawei.com>
-To:     <kvmarm@lists.cs.columbia.edu>, <kvm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-CC:     <wanghaibin.wang@huawei.com>, Keqian Zhu <zhukeqian1@huawei.com>,
-        Jay Zhou <jianjay.zhou@huawei.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Peter Xu <peterx@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: [RFC] KVM: arm64: support enabling dirty log graually in small chunks
-Date:   Mon, 9 Mar 2020 16:57:27 +0800
-Message-ID: <20200309085727.1106-1-zhukeqian1@huawei.com>
-X-Mailer: git-send-email 2.19.1
+        Mon, 9 Mar 2020 05:00:11 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:31596 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726464AbgCIJAK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 05:00:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583744408;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=q8Pqq1U3DNOSEmLFKWQ8ORhFiEwVUYYs4KSZXLmofx4=;
+        b=dAxOi7yQvm6fQCxWEagiI7eDLSKp2f3D+yRci5Eppnv63ZEE4OdRopG7LUuCiiUQtxqXI4
+        7eunUSanBHB2LvIeyPeqNGjrBtnkoyB8/1584R+2F0QHTGF3jpiG+sdsaP9KyJRAuOurNW
+        jxeOq2WtKwwpq4cuwi1Pe5SRT0YYIfY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-392-2fOWrhqOMIeQyhBt2LPMpA-1; Mon, 09 Mar 2020 05:00:06 -0400
+X-MC-Unique: 2fOWrhqOMIeQyhBt2LPMpA-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 31105107ACC9;
+        Mon,  9 Mar 2020 09:00:05 +0000 (UTC)
+Received: from [10.36.118.32] (unknown [10.36.118.32])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CFAE819C58;
+        Mon,  9 Mar 2020 08:59:59 +0000 (UTC)
+Subject: Re: [PATCH v3 3/7] mm/sparse.c: introduce a new function
+ clear_subsection_map()
+To:     Baoquan He <bhe@redhat.com>, linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, akpm@linux-foundation.org, mhocko@suse.com,
+        richardw.yang@linux.intel.com, dan.j.williams@intel.com,
+        osalvador@suse.de, rppt@linux.ibm.com
+References: <20200307084229.28251-1-bhe@redhat.com>
+ <20200307084229.28251-4-bhe@redhat.com>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <d09c9598-4fbf-71c8-151f-f34921ed565b@redhat.com>
+Date:   Mon, 9 Mar 2020 09:59:57 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.104.212]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20200307084229.28251-4-bhe@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is already support of enabling dirty log graually
-in small chunks for x86. This adds support for arm64.
+On 07.03.20 09:42, Baoquan He wrote:
+> Factor out the code which clear subsection map of one memory region from
+> section_deactivate() into clear_subsection_map().
+> 
+> Signed-off-by: Baoquan He <bhe@redhat.com>
+> ---
+>  mm/sparse.c | 31 ++++++++++++++++++++++++-------
+>  1 file changed, 24 insertions(+), 7 deletions(-)
+> 
+> diff --git a/mm/sparse.c b/mm/sparse.c
+> index e37c0abcdc89..d9dcd58d5c1d 100644
+> --- a/mm/sparse.c
+> +++ b/mm/sparse.c
+> @@ -726,15 +726,11 @@ static void free_map_bootmem(struct page *memmap)
+>  }
+>  #endif /* CONFIG_SPARSEMEM_VMEMMAP */
+>  
+> -static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
+> -		struct vmem_altmap *altmap)
+> +static int clear_subsection_map(unsigned long pfn, unsigned long nr_pages)
+>  {
+>  	DECLARE_BITMAP(map, SUBSECTIONS_PER_SECTION) = { 0 };
+>  	DECLARE_BITMAP(tmp, SUBSECTIONS_PER_SECTION) = { 0 };
+>  	struct mem_section *ms = __pfn_to_section(pfn);
+> -	bool section_is_early = early_section(ms);
+> -	struct page *memmap = NULL;
+> -	bool empty = false;
+>  	unsigned long *subsection_map = ms->usage
+>  		? &ms->usage->subsection_map[0] : NULL;
+>  
+> @@ -745,8 +741,31 @@ static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
+>  	if (WARN(!subsection_map || !bitmap_equal(tmp, map, SUBSECTIONS_PER_SECTION),
+>  				"section already deactivated (%#lx + %ld)\n",
+>  				pfn, nr_pages))
+> +		return -EINVAL;
+> +
+> +	bitmap_xor(subsection_map, map, subsection_map, SUBSECTIONS_PER_SECTION);
+> +
 
-Under the Huawei Kunpeng 920 2.6GHz platform, I did some
-tests with a 128G linux VM and counted the time taken of
-memory_global_dirty_log_start, here is the numbers:
+Nit: I'd drop this line.
 
-VM Size        Before    After optimization
-128G           527ms     4ms
+> +	return 0;
+> +}
+> +
+> +static bool is_subsection_map_empty(struct mem_section *ms)
+> +{
+> +	return bitmap_empty(&ms->usage->subsection_map[0],
+> +			    SUBSECTIONS_PER_SECTION);
+> +}
+> +
+> +static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
+> +		struct vmem_altmap *altmap)
+> +{
+> +	struct mem_section *ms = __pfn_to_section(pfn);
+> +	bool section_is_early = early_section(ms);
+> +	struct page *memmap = NULL;
+> +	bool empty = false;
 
-Signed-off-by: Keqian Zhu <zhukeqian1@huawei.com>
----
-Cc: Jay Zhou <jianjay.zhou@huawei.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com> 
-Cc: Peter Xu <peterx@redhat.com>
-Cc: Sean Christopherson <sean.j.christopherson@intel.com>
----
- Documentation/virt/kvm/api.rst    |  2 +-
- arch/arm64/include/asm/kvm_host.h |  4 ++++
- virt/kvm/arm/mmu.c                | 30 ++++++++++++++++++++++--------
- 3 files changed, 27 insertions(+), 9 deletions(-)
+Nit: No need to initialize empty.
 
-diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
-index 0adef66585b1..89d4f2680af1 100644
---- a/Documentation/virt/kvm/api.rst
-+++ b/Documentation/virt/kvm/api.rst
-@@ -5735,7 +5735,7 @@ will be initialized to 1 when created.  This also improves performance because
- dirty logging can be enabled gradually in small chunks on the first call
- to KVM_CLEAR_DIRTY_LOG.  KVM_DIRTY_LOG_INITIALLY_SET depends on
- KVM_DIRTY_LOG_MANUAL_PROTECT_ENABLE (it is also only available on
--x86 for now).
-+x86 and arm64 for now).
- 
- KVM_CAP_MANUAL_DIRTY_LOG_PROTECT2 was previously available under the name
- KVM_CAP_MANUAL_DIRTY_LOG_PROTECT, but the implementation had bugs that make
-diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
-index d87aa609d2b6..0deb2ac7d091 100644
---- a/arch/arm64/include/asm/kvm_host.h
-+++ b/arch/arm64/include/asm/kvm_host.h
-@@ -16,6 +16,7 @@
- #include <linux/jump_label.h>
- #include <linux/kvm_types.h>
- #include <linux/percpu.h>
-+#include <linux/kvm.h>
- #include <asm/arch_gicv3.h>
- #include <asm/barrier.h>
- #include <asm/cpufeature.h>
-@@ -45,6 +46,9 @@
- #define KVM_REQ_VCPU_RESET	KVM_ARCH_REQ(2)
- #define KVM_REQ_RECORD_STEAL	KVM_ARCH_REQ(3)
- 
-+#define KVM_DIRTY_LOG_MANUAL_CAPS   (KVM_DIRTY_LOG_MANUAL_PROTECT_ENABLE | \
-+					KVM_DIRTY_LOG_INITIALLY_SET)
-+
- DECLARE_STATIC_KEY_FALSE(userspace_irqchip_in_use);
- 
- extern unsigned int kvm_sve_max_vl;
-diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
-index e3b9ee268823..5c7ca84dec85 100644
---- a/virt/kvm/arm/mmu.c
-+++ b/virt/kvm/arm/mmu.c
-@@ -1438,9 +1438,11 @@ static void stage2_wp_ptes(pmd_t *pmd, phys_addr_t addr, phys_addr_t end)
-  * @pud:	pointer to pud entry
-  * @addr:	range start address
-  * @end:	range end address
-+ * @wp_ptes:	write protect ptes or not
-  */
- static void stage2_wp_pmds(struct kvm *kvm, pud_t *pud,
--			   phys_addr_t addr, phys_addr_t end)
-+			   phys_addr_t addr, phys_addr_t end,
-+			   bool wp_ptes)
- {
- 	pmd_t *pmd;
- 	phys_addr_t next;
-@@ -1453,7 +1455,7 @@ static void stage2_wp_pmds(struct kvm *kvm, pud_t *pud,
- 			if (pmd_thp_or_huge(*pmd)) {
- 				if (!kvm_s2pmd_readonly(pmd))
- 					kvm_set_s2pmd_readonly(pmd);
--			} else {
-+			} else if (wp_ptes) {
- 				stage2_wp_ptes(pmd, addr, next);
- 			}
- 		}
-@@ -1465,9 +1467,11 @@ static void stage2_wp_pmds(struct kvm *kvm, pud_t *pud,
-  * @pgd:	pointer to pgd entry
-  * @addr:	range start address
-  * @end:	range end address
-+ * @wp_ptes:	write protect ptes or not
-  */
- static void  stage2_wp_puds(struct kvm *kvm, pgd_t *pgd,
--			    phys_addr_t addr, phys_addr_t end)
-+			    phys_addr_t addr, phys_addr_t end,
-+			    bool wp_ptes)
- {
- 	pud_t *pud;
- 	phys_addr_t next;
-@@ -1480,7 +1484,7 @@ static void  stage2_wp_puds(struct kvm *kvm, pgd_t *pgd,
- 				if (!kvm_s2pud_readonly(pud))
- 					kvm_set_s2pud_readonly(pud);
- 			} else {
--				stage2_wp_pmds(kvm, pud, addr, next);
-+				stage2_wp_pmds(kvm, pud, addr, next, wp_ptes);
- 			}
- 		}
- 	} while (pud++, addr = next, addr != end);
-@@ -1491,8 +1495,10 @@ static void  stage2_wp_puds(struct kvm *kvm, pgd_t *pgd,
-  * @kvm:	The KVM pointer
-  * @addr:	Start address of range
-  * @end:	End address of range
-+ * @wp_ptes:	Write protect ptes or not
-  */
--static void stage2_wp_range(struct kvm *kvm, phys_addr_t addr, phys_addr_t end)
-+static void stage2_wp_range(struct kvm *kvm, phys_addr_t addr,
-+			    phys_addr_t end, bool wp_ptes)
- {
- 	pgd_t *pgd;
- 	phys_addr_t next;
-@@ -1513,7 +1519,7 @@ static void stage2_wp_range(struct kvm *kvm, phys_addr_t addr, phys_addr_t end)
- 			break;
- 		next = stage2_pgd_addr_end(kvm, addr, end);
- 		if (stage2_pgd_present(kvm, *pgd))
--			stage2_wp_puds(kvm, pgd, addr, next);
-+			stage2_wp_puds(kvm, pgd, addr, next, wp_ptes);
- 	} while (pgd++, addr = next, addr != end);
- }
- 
-@@ -1535,6 +1541,7 @@ void kvm_mmu_wp_memory_region(struct kvm *kvm, int slot)
- 	struct kvm_memslots *slots = kvm_memslots(kvm);
- 	struct kvm_memory_slot *memslot = id_to_memslot(slots, slot);
- 	phys_addr_t start, end;
-+	bool wp_ptes;
- 
- 	if (WARN_ON_ONCE(!memslot))
- 		return;
-@@ -1543,7 +1550,14 @@ void kvm_mmu_wp_memory_region(struct kvm *kvm, int slot)
- 	end = (memslot->base_gfn + memslot->npages) << PAGE_SHIFT;
- 
- 	spin_lock(&kvm->mmu_lock);
--	stage2_wp_range(kvm, start, end);
-+	/*
-+	 * If we're with initial-all-set, we don't need to write protect
-+	 * any small page because they're reported as dirty already.
-+	 * However we still need to write-protect huge pages so that the
-+	 * page split can happen lazily on the first write to the huge page.
-+	 */
-+	wp_ptes = !kvm_dirty_log_manual_protect_and_init_set(kvm);
-+	stage2_wp_range(kvm, start, end, wp_ptes);
- 	spin_unlock(&kvm->mmu_lock);
- 	kvm_flush_remote_tlbs(kvm);
- }
-@@ -1567,7 +1581,7 @@ static void kvm_mmu_write_protect_pt_masked(struct kvm *kvm,
- 	phys_addr_t start = (base_gfn +  __ffs(mask)) << PAGE_SHIFT;
- 	phys_addr_t end = (base_gfn + __fls(mask) + 1) << PAGE_SHIFT;
- 
--	stage2_wp_range(kvm, start, end);
-+	stage2_wp_range(kvm, start, end, true);
- }
- 
- /*
+> +
+> +	if (clear_subsection_map(pfn, nr_pages))
+>  		return;
+>  
+
+Nit: I'd drop this empty line.
+
+> +	empty = is_subsection_map_empty(ms);
+>  	/*
+>  	 * There are 3 cases to handle across two configurations
+>  	 * (SPARSEMEM_VMEMMAP={y,n}):
+> @@ -764,8 +783,6 @@ static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
+>  	 *
+>  	 * For 2/ and 3/ the SPARSEMEM_VMEMMAP={y,n} cases are unified
+>  	 */
+> -	bitmap_xor(subsection_map, map, subsection_map, SUBSECTIONS_PER_SECTION);
+> -	empty = bitmap_empty(subsection_map, SUBSECTIONS_PER_SECTION);
+
+I do wonder why you moved this up the comment?
+
+>  	if (empty) {
+>  		unsigned long section_nr = pfn_to_section_nr(pfn);
+>  
+> 
+
+Reviewed-by: David Hildenbrand <david@redhat.com>
+
 -- 
-2.19.1
+Thanks,
+
+David / dhildenb
 
