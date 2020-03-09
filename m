@@ -2,148 +2,124 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1763C10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 23:21:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AEFCC10F29
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 23:21:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3F3324654
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 23:21:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 605F124655
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 23:21:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Y+LkSq/5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727435AbgCIXVB (ORCPT
+        id S1727455AbgCIXVN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 19:21:01 -0400
-Received: from mga12.intel.com ([192.55.52.136]:4307 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726698AbgCIXVA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 19:21:00 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Mar 2020 16:20:59 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,535,1574150400"; 
-   d="scan'208";a="245503019"
-Received: from acrisan1-mobl1.amr.corp.intel.com (HELO [10.251.22.118]) ([10.251.22.118])
-  by orsmga006.jf.intel.com with ESMTP; 09 Mar 2020 16:20:58 -0700
-Subject: Re: [RFC PATCH v9 01/27] Documentation/x86: Add CET description
-To:     "H.J. Lu" <hjl.tools@gmail.com>
-Cc:     Andy Lutomirski <luto@amacapital.net>,
-        Yu-cheng Yu <yu-cheng.yu@intel.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
+        Mon, 9 Mar 2020 19:21:13 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:55010 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726698AbgCIXVN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 19:21:13 -0400
+X-UUID: 1624f9f01a604613bd62eb2b8e1aca56-20200310
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=/ML3Ledtqy4m3bKFwbFWPyytmDkR4UuhLn++0IipQ84=;
+        b=Y+LkSq/54wUygpz2HTCRiMO68JO39kSH/LYYXlQpDe7OdiNW5lD1yis3agyiM1ms4CdW8712f4Mfla2EEo3pXxdSwU2v9RSoDQ029EtGsRqJHvIesuCUu6rpOEUcJCLXIRCVrQrKeB0kThjySKFWVtS8CZFjsbw41yUkpkVyxGk=;
+X-UUID: 1624f9f01a604613bd62eb2b8e1aca56-20200310
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
+        (envelope-from <chun-hung.wu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 720479230; Tue, 10 Mar 2020 07:21:06 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 10 Mar 2020 07:19:53 +0800
+Received: from [172.21.77.33] (172.21.77.33) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 10 Mar 2020 07:18:21 +0800
+Message-ID: <1583796065.23665.8.camel@mtkswgap22>
+Subject: Re: [PATCH 1/4] [1/4] mmc: core: expose MMC_CAP2_CQE* to dt
+From:   Chun-Hung Wu <chun-hung.wu@mediatek.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+CC:     Chaotian Jing <chaotian.jing@mediatek.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "Pavel Machek" <pavel@ucw.cz>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Pan Bian <bianpan2016@163.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org,
-        Linux-MM <linux-mm@kvack.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>, x86-patch-review@intel.com
-References: <CAMe9rOoRTVUzNC88Ho2XTTNJCymrd3L=XdB9xFcgxPVwAZ0FWA@mail.gmail.com>
- <AE81FEF5-ECC5-46AA-804D-9D64E656D16E@amacapital.net>
- <CAMe9rOoDMenvD9XRL1szR5yLQEwv9Q6f4O7CtwbdZ-cJqzezKA@mail.gmail.com>
- <0088001c-0b12-a7dc-ff2a-9d5c282fa36b@intel.com>
- <CAMe9rOqf0OHL9397Vikgb=UWhRMf+FmGq-9VAJNmfmzNMMDkCw@mail.gmail.com>
- <56ab33ac-865b-b37e-75f2-a489424566c3@intel.com>
- <CAMe9rOrzrXORQgcAwzGn+=PBvxCEgc5Km_TQq+P7uoqwiacJSA@mail.gmail.com>
-From:   Dave Hansen <dave.hansen@intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-Message-ID: <c06073a2-6858-d5dc-d74b-ef2568bd9423@intel.com>
-Date:   Mon, 9 Mar 2020 16:20:57 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Allison Randal <allison@lohutok.net>,
+        Mathieu Malaterre <malat@debian.org>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Kuohong Wang <kuohong.wang@mediatek.com>,
+        <kernel-team@android.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, <wsd_upstream@mediatek.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Date:   Tue, 10 Mar 2020 07:21:05 +0800
+In-Reply-To: <CACRpkdauCe-zAcsO5q_79+Ux_a2=bktA5UqKjWs4XdBJZ3wWeg@mail.gmail.com>
+References: <1581921111-24172-1-git-send-email-chun-hung.wu@mediatek.com>
+         <1581921111-24172-2-git-send-email-chun-hung.wu@mediatek.com>
+         <CACRpkdauCe-zAcsO5q_79+Ux_a2=bktA5UqKjWs4XdBJZ3wWeg@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-In-Reply-To: <CAMe9rOrzrXORQgcAwzGn+=PBvxCEgc5Km_TQq+P7uoqwiacJSA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/9/20 4:11 PM, H.J. Lu wrote:
-> A threaded application is loaded from disk.  The object file on disk is
-> either CET enabled or not CET enabled.
+T24gRnJpLCAyMDIwLTAyLTIxIGF0IDE1OjMzICswMTAwLCBMaW51cyBXYWxsZWlqIHdyb3RlOg0K
+PiBPbiBNb24sIEZlYiAxNywgMjAyMCBhdCA3OjMyIEFNIENodW4tSHVuZyBXdSA8Y2h1bi1odW5n
+Lnd1QG1lZGlhdGVrLmNvbT4gd3JvdGU6DQo+IA0KPiA+IEV4cG9zZSBNTUNfQ0FQMl9DUUUgYW5k
+IE1NQ19DQVAyX0NRRV9EQ01EDQo+ID4gdG8gaG9zdC0+Y2FwczIgaWYNCj4gPiAxLiAic3VwcG9y
+dHMtY3FlIiBpcyBkZWZpbmVkIGluIGR0IGFuZA0KPiA+IDIuICJkaXNhYmxlLWNxZS1kY21kIiBp
+cyBub3QgZGVmaW5lZCBpbiBkdC4NCj4gPg0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJzL21tYy9jb3Jl
+L2hvc3QuYyB8IDggKysrKysrKysNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDggaW5zZXJ0aW9ucygr
+KQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbW1jL2NvcmUvaG9zdC5jIGIvZHJpdmVy
+cy9tbWMvY29yZS9ob3N0LmMNCj4gPiBpbmRleCAxMDViN2E3Li5lZmIwZGJlIDEwMDY0NA0KPiA+
+IC0tLSBhL2RyaXZlcnMvbW1jL2NvcmUvaG9zdC5jDQo+ID4gKysrIGIvZHJpdmVycy9tbWMvY29y
+ZS9ob3N0LmMNCj4gPiBAQCAtMzE5LDYgKzMxOSwxNCBAQCBpbnQgbW1jX29mX3BhcnNlKHN0cnVj
+dCBtbWNfaG9zdCAqaG9zdCkNCj4gPiAgICAgICAgICAgICAgICAgaG9zdC0+Y2FwczIgfD0gTU1D
+X0NBUDJfTk9fU0Q7DQo+ID4gICAgICAgICBpZiAoZGV2aWNlX3Byb3BlcnR5X3JlYWRfYm9vbChk
+ZXYsICJuby1tbWMiKSkNCj4gPiAgICAgICAgICAgICAgICAgaG9zdC0+Y2FwczIgfD0gTU1DX0NB
+UDJfTk9fTU1DOw0KPiA+ICsgICAgICAgaWYgKGRldmljZV9wcm9wZXJ0eV9yZWFkX2Jvb2woZGV2
+LCAic3VwcG9ydHMtY3FlIikpDQo+ID4gKyAgICAgICAgICAgICAgIGhvc3QtPmNhcHMyIHw9IE1N
+Q19DQVAyX0NRRTsNCj4gDQo+IEkgZG9uJ3QgdW5kZXJzdGFuZCB3aHkgdGhpcyBpcyBldmVuIGEg
+RFQgcHJvcGVydHkgYXMgaXQgc2hvdWxkDQo+IGJlIGNsZWFyIGZyb20gdGhlIGhvc3RzIGNvbXBh
+dGlibGUgd2hldGhlciBpdCBzdXBwb3J0cyBDUUUgb3INCj4gbm90LiBCdXQgaXQncyB0b28gbGF0
+ZSB0byBkbyBhbnl0aGluZyBhYm91dCB0aGF0IEkgc3VwcG9zZSwgYW5kDQo+IEkganVzdCBhc3N1
+bWUgdGhlcmUgaXMgc29tZXRoaW5nIEkgZG9uJ3QgdW5kZXJzdGFuZCBoZXJlLg0KInN1cHBvcnRz
+LWNxZSIgYXMgbXkgdW5kZXJzdGFuZGluZyBpcyBsaWtlIEhTNDAwIEhTMjAwIGlzIGEgaG9zdA0K
+Y2FwYWJpbGl0eS4NCj4gDQo+ID4gKyAgICAgICAvKiBNdXN0IGJlIGFmdGVyICJzdXBwb3J0cy1j
+cWUiIGNoZWNrICovDQo+ID4gKyAgICAgICBpZiAoIWRldmljZV9wcm9wZXJ0eV9yZWFkX2Jvb2wo
+ZGV2LCAiZGlzYWJsZS1jcWUtZGNtZCIpKSB7DQo+ID4gKyAgICAgICAgICAgICAgIGlmIChob3N0
+LT5jYXBzMiAmIE1NQ19DQVAyX0NRRSkNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBob3N0
+LT5jYXBzMiB8PSBNTUNfQ0FQMl9DUUVfRENNRDsNCj4gPiArICAgICAgIH0NCj4gDQo+IFRoaXMg
+aXMgdGhlIHJpZ2h0IHBsYWNlIHRvIGRvIHRoaXMgSSBzdXBwb3NlLiBEaXNhYmxpbmcgQ1FFDQo+
+IHNlbGVjdGl2ZWx5IGlzIHNvbWV0aGluZyB5b3UgbWlnaHQgd2FubmEgZG8gZm9yIGRlYnVnZ2lu
+Zy4NCj4gQWNrZWQtYnk6IExpbnVzIFdhbGxlaWogPGxpbnVzLndhbGxlaWpAbGluYXJvLm9yZz4N
+Cj4gDQo+IEkgc2VlIHRoYXQgc29tZSBkcml2ZXJzIGFyZSBhbHJlYWR5IHBhcnNpbmcgdGhpcyBE
+VCBwcm9wZXJ0eQ0KPiBvbiB0aGVpciBvd24sIHNob3VsZCB3ZSBmb2xsb3cgdXAgd2l0aCBwYXRj
+aGVzIHNvIHRoYXQgdGhlc2U6DQo+IA0KPiAkIGdpdCBncmVwICdzdXBwb3J0cy1jcWUnDQo+IGRy
+aXZlcnMvbW1jL2hvc3Qvc2RoY2ktYnJjbXN0Yi5jOiAgICAgICBpZg0KPiAoZGV2aWNlX3Byb3Bl
+cnR5X3JlYWRfYm9vbCgmcGRldi0+ZGV2LCAic3VwcG9ydHMtY3FlIikpIHsNCj4gZHJpdmVycy9t
+bWMvaG9zdC9zZGhjaS1tc20uYzogICBpZiAob2ZfcHJvcGVydHlfcmVhZF9ib29sKG5vZGUsICJz
+dXBwb3J0cy1jcWUiKSkNCj4gZHJpdmVycy9tbWMvaG9zdC9zZGhjaS10ZWdyYS5jOiBpZg0KPiAo
+ZGV2aWNlX3Byb3BlcnR5X3JlYWRfYm9vbChob3N0LT5tbWMtPnBhcmVudCwgInN1cHBvcnRzLWNx
+ZSIpKQ0KPiANCj4gTWFrZSB1c2Ugb2YgdGhlIGNlbnRyYWwgcGFyc2luZyBpbnN0ZWFkPw0KSW4g
+djQsIEkgd2lsbCByZW1vdmUgdGhlIHZlbmRvciBkcml2ZXIgZHQgc2V0dGluZyBhbmQgdXNlIGNl
+bnRyYWwNCnBhcnNpbmcgaW5zdGVhZC4NCj4gDQo+IFlvdXJzLA0KPiBMaW51cyBXYWxsZWlqDQoN
+Cg==
 
-Huh.  Are you saying that all instructions executed on userspace on
-Linux come off of object files on the disk?  That's an interesting
-assertion.  You might want to go take a look at the processes on your
-systems.  Here's my browser for example:
-
-# for p in $(ps aux | grep chromium | awk '{print $2}' ); do cat
-/proc/$p/maps; done | grep ' r-xp 00000000 00:00 0'
-...
-202f00082000-202f000bf000 r-xp 00000000 00:00 0
-202f000c2000-202f000c3000 r-xp 00000000 00:00 0
-202f00102000-202f00103000 r-xp 00000000 00:00 0
-202f00142000-202f00143000 r-xp 00000000 00:00 0
-202f00182000-202f001bf000 r-xp 00000000 00:00 0
-
-Lots of funny looking memory areas which are anonymous and executable!
-Those didn't come off the disk.  Same thing in firefox.  Weird.  Any
-idea what those are?
-
-One guess: https://en.wikipedia.org/wiki/Just-in-time_compilation
