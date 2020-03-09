@@ -2,117 +2,196 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC238C10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 13:52:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 230A2C10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 13:54:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A99320848
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 13:52:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6A9420848
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 13:54:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bskPpamX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="py+Rp1rI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbgCINwx (ORCPT
+        id S1726676AbgCINye (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 09:52:53 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:45644 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726528AbgCINwx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 09:52:53 -0400
-Received: by mail-wr1-f66.google.com with SMTP id m9so2253702wro.12
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 06:52:51 -0700 (PDT)
+        Mon, 9 Mar 2020 09:54:34 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:33561 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726383AbgCINye (ORCPT
+        <rfc822;Linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 09:54:34 -0400
+Received: by mail-qk1-f193.google.com with SMTP id p62so9271902qkb.0
+        for <Linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 06:54:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=PfZu5RD0EkiRIzyfyoJo3cq7qDSD4XfrrbjoyTCBf4U=;
-        b=bskPpamXDjt6HermMBgC7riSz1e6tedwQyK04CGOiWZ9CavV1oDf8Yvo+ixJagBjsO
-         vbGjtJ33rJ2PpBPjMruYDD6MM6t/ph3vYbww5KZDzbsz2FiOdskBi1ESKuCr/XKw5chi
-         ewp5cPwop40x0qJ4s4ojUyX8g0dPFta/q6ZFFEfHIny41ZIHe9up72XbU4RGhM7KNv5p
-         OKHoAlhSAf4oMcbACZh4gEExYMey+nqEhBTNum+A2UghGiFIhkuO/WSW3ZgReXYjFuWC
-         crWSNFaqh/Oz8ZvCo2QMhgQeJfJdHl4Qj+pL7CSL9dXcY8t88julw7HokOACfWIocxM8
-         fyhA==
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=8pp0THMmMx4UvzN5NEuTvX9hAaXGDE8wNI8e/tQjQoc=;
+        b=py+Rp1rIUPeqQJV8bCqBLVOcdh9+tqfOr3l+U0PJFwyw77rP2D1gDlDFgZWN7dQU90
+         /U4R/msJCqmTg4vdVMcDWd3P9iIBt7oHkyt0u3rOaO2UqKp22CXU1BP8pNTYbe41xNCE
+         49lQqPpyEYoxmrGetjMay2hf0xqr4ExDE3VLqBdyc7er7NZiASxZOnMK5zduD3sSMhKY
+         iP4YcK+A3lIZguaLVgTH7u0IEplOKWL2rimKRmkRY+/JQ/hI7tdQl9beHe4YwnUMgqkm
+         Elv0NDQXchqsHf+lG4/0QIsYXkVLMgbpzENCASjdHyu3XooluxoAK3iG7TsNUwGDrZ1u
+         alOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=PfZu5RD0EkiRIzyfyoJo3cq7qDSD4XfrrbjoyTCBf4U=;
-        b=JYQPws2+c+1u0PnPOD4VNCYG74tB2VmMwyn2yE/LbAKF6u1N8WFNI2WMLpJiE5Rrz0
-         FkTBzOPxzra6thaftb3QtWflzCwe8BxW27EJCX6r5l6qIePZEF5QZNqSFhDDbeZ97Y6V
-         QKgFCUEvKMJoIaST4TcmcwGRH/cS1x4zes4PSg5nBWakOO9qPZdch6NTZFSIwo3At7tK
-         FBorgiXJgRoQhuGqVhxvpioTOr+KiJ+nqh+SpEkaT9lBF6sM6IFk2FSarpvC3MJ789yJ
-         MIp2XsrkgscFGbJl2MywvvipopVVPEyUunB4NnU6aRneEr7guwNBWIOX1GJKn4TC8CNw
-         pgVg==
-X-Gm-Message-State: ANhLgQ240/LgRiHFs/S8EWET6yq+jMRSbI8BsVKCnaDUWAhkhD5h8MFr
-        mC0E24s43i3Kf7E3vRtGcJD/hA==
-X-Google-Smtp-Source: ADFU+vsAKabuIQXOSE7o3xg7D222ujCIl4Yh+N8hP4yA3DJUzAA3XMts4YjRQ/egv8e3+zEZfzmuxg==
-X-Received: by 2002:a5d:4b82:: with SMTP id b2mr21302349wrt.102.1583761971175;
-        Mon, 09 Mar 2020 06:52:51 -0700 (PDT)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id v20sm9940563wrv.17.2020.03.09.06.52.49
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 09 Mar 2020 06:52:50 -0700 (PDT)
-Subject: Re: [PATCH] nvmem: jz4780-efuse: fix build warnings on ARCH=x86_64 or
- riscv
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>,
-        PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>
-Cc:     linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-        letux-kernel@openphoenux.org, kbuild test robot <lkp@intel.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>, malat@debian.org,
-        paul@crapouillou.net
-References: <79e1dec195d287001515600b1dae0bcaa33fbf65.1583522277.git.hns@goldelico.com>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <e444754a-3bd3-d46f-d2f9-188fb2cc6f0e@linaro.org>
-Date:   Mon, 9 Mar 2020 13:52:49 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=8pp0THMmMx4UvzN5NEuTvX9hAaXGDE8wNI8e/tQjQoc=;
+        b=MWuAOQcx959+WTwCEK09EYdYKR18rXzMsRalM2atCBoByDH9Upoa9X699a740yz1FT
+         Nd5mMTySPYVGtpLMHZ5xpG0DY8hmsoOa0H7AaECtV2GYovocgwqK/payS7ByPJBYlV4W
+         mVgyNT9J/d56QccHqgGW9pb9HPUhpO2SLmhrifnqbyoRiN+VrWxKbjnltTlwUuW9VoaO
+         mm2iZdCZ9rfNIH3SBeRCr3jFRlOiWv5tqqtAOI9rkDHgeP/y34XtkVrfj+UcDYWnGiud
+         U5oQ7oXEf3tXas3N/nDn309zQQcZUH/UBPKesZmIJqTFXVhf4hi6sfuLaPbcAhtl9zL5
+         X5IA==
+X-Gm-Message-State: ANhLgQ2yTxoHEd6XEhAe7Dr9Y7J/xz6fBU6P1i5MwHreHltEQcUUM83N
+        6sZVIFCKc31sE1fjOfnpPkmSdxde6/Y=
+X-Google-Smtp-Source: ADFU+vtwmok9pRpUEX3bScQH7KlUMjMxjR79VL0ECjcygwxMeJ8aYQtClS0EpxxQCZ157py0Nl5yNA==
+X-Received: by 2002:a37:6e84:: with SMTP id j126mr14359500qkc.77.1583762072622;
+        Mon, 09 Mar 2020 06:54:32 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.37.151])
+        by smtp.gmail.com with ESMTPSA id h25sm12307987qtn.30.2020.03.09.06.54.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Mar 2020 06:54:31 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 8A5C040009; Mon,  9 Mar 2020 10:54:29 -0300 (-03)
+Date:   Mon, 9 Mar 2020 10:54:29 -0300
+To:     Jin Yao <yao.jin@linux.intel.com>
+Cc:     jolsa@kernel.org, peterz@infradead.org, mingo@redhat.com,
+        alexander.shishkin@linux.intel.com, Linux-kernel@vger.kernel.org,
+        ak@linux.intel.com, kan.liang@intel.com, yao.jin@intel.com
+Subject: Re: [PATCH v6 4/4] perf util: Support color ops to print block
+ percents in color
+Message-ID: <20200309135429.GF477@kernel.org>
+References: <20200202141655.32053-1-yao.jin@linux.intel.com>
+ <20200202141655.32053-5-yao.jin@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <79e1dec195d287001515600b1dae0bcaa33fbf65.1583522277.git.hns@goldelico.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200202141655.32053-5-yao.jin@linux.intel.com>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Em Sun, Feb 02, 2020 at 10:16:55PM +0800, Jin Yao escreveu:
+> It would be nice to print the block percents with colors.
+> 
+> This patch supports the 'Sampled Cycles%' and 'Avg Cycles%'
+> printed in colors.
+> 
+> For example,
+> 
+> perf record -b ...
+> perf report --total-cycles or perf report --total-cycles --stdio
+> 
+> percent > 5%, colored in red
+> percent > 0.5%, colored in green
+> percent < 0.5%, default color
+> 
+>  v3/v4/v5/v6:
+>  ------------
+>  No change
 
+Thanks, tested the coloring, all works as advertised, thanks, applied to
+perf/core, should be in git.kernel.org soon.
 
-On 06/03/2020 19:17, H. Nikolaus Schaller wrote:
-> kbuild-robot did find a type error in the min(a, b)
-> function used by this driver if built for x86_64 or riscv.
+- Arnaldo
+ 
+>  v2:
+>  ---
+>  No functional change
 > 
-> Althought it is very unlikely that this driver is built
-> for those platforms it could be used as a template
-> for something else and therefore should be correct.
-> 
-> The problem is that we implicitly cast a size_t to
-> unsigned int inside the implementation of the min() function.
-> 
-> Since size_t may differ on different compilers and
-> plaforms there may be warnings or not.
-> 
-> So let's use only size_t variables on all platforms.
-> 
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> Cc: srinivas.kandagatla@linaro.org
-> Cc: prasannatsmkumar@gmail.com
-> Cc: malat@debian.org
-> Cc: paul@crapouillou.net
-> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+> Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
 > ---
->   drivers/nvmem/jz4780-efuse.c | 6 +++---
->   1 file changed, 3 insertions(+), 3 deletions(-)
+>  tools/perf/util/block-info.c | 25 +++++++++++++++----------
+>  1 file changed, 15 insertions(+), 10 deletions(-)
+> 
+> diff --git a/tools/perf/util/block-info.c b/tools/perf/util/block-info.c
+> index e0e56f30e6a6..4268c0ffb77a 100644
+> --- a/tools/perf/util/block-info.c
+> +++ b/tools/perf/util/block-info.c
+> @@ -181,6 +181,17 @@ static int block_column_width(struct perf_hpp_fmt *fmt,
+>  	return block_fmt->width;
+>  }
+>  
+> +static int color_pct(struct perf_hpp *hpp, int width, double pct)
+> +{
+> +#ifdef HAVE_SLANG_SUPPORT
+> +	if (use_browser) {
+> +		return __hpp__slsmg_color_printf(hpp, "%*.2f%%",
+> +						 width - 1, pct);
+> +	}
+> +#endif
+> +	return hpp_color_scnprintf(hpp, "%*.2f%%", width - 1, pct);
+> +}
+> +
+>  static int block_total_cycles_pct_entry(struct perf_hpp_fmt *fmt,
+>  					struct perf_hpp *hpp,
+>  					struct hist_entry *he)
+> @@ -188,14 +199,11 @@ static int block_total_cycles_pct_entry(struct perf_hpp_fmt *fmt,
+>  	struct block_fmt *block_fmt = container_of(fmt, struct block_fmt, fmt);
+>  	struct block_info *bi = he->block_info;
+>  	double ratio = 0.0;
+> -	char buf[16];
+>  
+>  	if (block_fmt->total_cycles)
+>  		ratio = (double)bi->cycles / (double)block_fmt->total_cycles;
+>  
+> -	sprintf(buf, "%.2f%%", 100.0 * ratio);
+> -
+> -	return scnprintf(hpp->buf, hpp->size, "%*s", block_fmt->width, buf);
+> +	return color_pct(hpp, block_fmt->width, 100.0 * ratio);
+>  }
+>  
+>  static int64_t block_total_cycles_pct_sort(struct perf_hpp_fmt *fmt,
+> @@ -248,16 +256,13 @@ static int block_cycles_pct_entry(struct perf_hpp_fmt *fmt,
+>  	struct block_info *bi = he->block_info;
+>  	double ratio = 0.0;
+>  	u64 avg;
+> -	char buf[16];
+>  
+>  	if (block_fmt->block_cycles && bi->num_aggr) {
+>  		avg = bi->cycles_aggr / bi->num_aggr;
+>  		ratio = (double)avg / (double)block_fmt->block_cycles;
+>  	}
+>  
+> -	sprintf(buf, "%.2f%%", 100.0 * ratio);
+> -
+> -	return scnprintf(hpp->buf, hpp->size, "%*s", block_fmt->width, buf);
+> +	return color_pct(hpp, block_fmt->width, 100.0 * ratio);
+>  }
+>  
+>  static int block_avg_cycles_entry(struct perf_hpp_fmt *fmt,
+> @@ -344,7 +349,7 @@ static void hpp_register(struct block_fmt *block_fmt, int idx,
+>  
+>  	switch (idx) {
+>  	case PERF_HPP_REPORT__BLOCK_TOTAL_CYCLES_PCT:
+> -		fmt->entry = block_total_cycles_pct_entry;
+> +		fmt->color = block_total_cycles_pct_entry;
+>  		fmt->cmp = block_info__cmp;
+>  		fmt->sort = block_total_cycles_pct_sort;
+>  		break;
+> @@ -352,7 +357,7 @@ static void hpp_register(struct block_fmt *block_fmt, int idx,
+>  		fmt->entry = block_cycles_lbr_entry;
+>  		break;
+>  	case PERF_HPP_REPORT__BLOCK_CYCLES_PCT:
+> -		fmt->entry = block_cycles_pct_entry;
+> +		fmt->color = block_cycles_pct_entry;
+>  		break;
+>  	case PERF_HPP_REPORT__BLOCK_AVG_CYCLES:
+>  		fmt->entry = block_avg_cycles_entry;
+> -- 
+> 2.17.1
 > 
 
-Applied thanks,
-srini
+-- 
+
+- Arnaldo
