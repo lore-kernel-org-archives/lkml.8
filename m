@@ -2,147 +2,130 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89FB4C10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:30:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25D4FC18E5A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:30:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 688FC205F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:30:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0281D208C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:30:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EQLSmaWU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727421AbgCISaE (ORCPT
+        id S1727430AbgCISaw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 14:30:04 -0400
-Received: from foss.arm.com ([217.140.110.172]:56132 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727334AbgCISaE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 14:30:04 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8606C1FB;
-        Mon,  9 Mar 2020 11:30:03 -0700 (PDT)
-Received: from donnerap.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 42EEA3F67D;
-        Mon,  9 Mar 2020 11:30:02 -0700 (PDT)
-Date:   Mon, 9 Mar 2020 18:29:59 +0000
-From:   Andre Przywara <andre.przywara@arm.com>
-To:     "David S . Miller" <davem@davemloft.net>,
-        Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
-Cc:     Michal Simek <michal.simek@xilinx.com>,
-        Robert Hancock <hancock@sedsystems.ca>, netdev@vger.kernel.org,
-        rmk+kernel@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v2 04/14] net: axienet: Fix DMA descriptor cleanup path
-Message-ID: <20200309182959.080fa773@donnerap.cambridge.arm.com>
-In-Reply-To: <20200309181851.190164-5-andre.przywara@arm.com>
-References: <20200309181851.190164-1-andre.przywara@arm.com>
-        <20200309181851.190164-5-andre.przywara@arm.com>
-Organization: ARM
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
+        Mon, 9 Mar 2020 14:30:52 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:34266 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726661AbgCISaw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 14:30:52 -0400
+Received: by mail-pf1-f195.google.com with SMTP id 23so3416670pfj.1
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 11:30:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=CgKKPr0xwtPbP32XtsKM4Pg2CezZujX8rIh5aLwqY9k=;
+        b=EQLSmaWU2q/bTK6Rz1P45GyBkBUFS3bk+2CbcMCpLyAq43eVc2WPreKL5a+i6z50IO
+         BR/zXDncKdn8muBymm9WU8GSDEM56XkkyORl7tIgBvKivwmAbhAmAHHB3ovqIRKKOshO
+         EtoXWfLN/L5BEe5k5H+RUPFvglpuGtZ1vk6/J0cJEcAdXRO6vZaJ+QrMbU10kyjDdDW+
+         ZuflQ1anPI1URnPeiwClBJyJKSLi8SWY4D4iX00Qp+5PLH7NZfgZtE7NdrBgxzhmmPr6
+         OLpFA3LMf/Q66PZmU+NuBJAXMbCJ40awnoImK4en1CTK0jPuUL/XqKcm0TVxut5RraVS
+         G69Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=CgKKPr0xwtPbP32XtsKM4Pg2CezZujX8rIh5aLwqY9k=;
+        b=tCYJXwN8GF3nrYlwmgqHVTDymPspjw9v0gXSATXUkswkbfuPnbYjaCKWM+HkzzhBIM
+         ChWDneegApTB2NjnFrHfSdXBsKsYW5JHJyElOnIP4IJZBUjmT45WCgjyTOsUhTYt22Gt
+         ZzTWzw7Zjct1gstmfVnssn/PlrtjpNWuJ76+mVrS72UT9qUX3bbC5jOEgcaDqIjWMAeo
+         7qMOwjeQAhCWshwsYlCV/EF5Yq7gW1pYUWQcEn2D4K/1EsXWObzq18O4a+oR+60fgyjV
+         k6cr4Noqj7XJtek9R+gORH6N+f06rxbprxRlhvCAhbgbWLo6eTIiDS31XSRnhr/Xizmt
+         +dUA==
+X-Gm-Message-State: ANhLgQ0bmNFmkUcHYXXaoOmvvVHeVd0R2oqXchNUCU85Rrr74etpju2U
+        RwUO/yaXM/kiKPJHlGLZp6Iuiw==
+X-Google-Smtp-Source: ADFU+vtOyOd1fQy9lpTnW6EA7iLOMrbyb2Fi2EGCNHqKSXzU/O1QZSHNMGuRlAmRob7bmFMt7xi8cg==
+X-Received: by 2002:a63:7783:: with SMTP id s125mr17195558pgc.214.1583778651239;
+        Mon, 09 Mar 2020 11:30:51 -0700 (PDT)
+Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id d22sm249134pja.14.2020.03.09.11.30.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Mar 2020 11:30:50 -0700 (PDT)
+Date:   Mon, 9 Mar 2020 11:30:48 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+Cc:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
+        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, dianders@google.com,
+        mka@chromium.org, Ritesh Harjani <riteshh@codeaurora.org>,
+        Asutosh Das <asutoshd@codeaurora.org>
+Subject: Re: [PATCH V2] mmc: cqhci: Update cqhci memory ioresource name
+Message-ID: <20200309183048.GB1098305@builder>
+References: <1583323250-23596-1-git-send-email-vbadigan@codeaurora.org>
+ <1583328320-9981-1-git-send-email-vbadigan@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1583328320-9981-1-git-send-email-vbadigan@codeaurora.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon,  9 Mar 2020 18:18:41 +0000
-Andre Przywara <andre.przywara@arm.com> wrote:
+On Wed 04 Mar 05:25 PST 2020, Veerabhadrarao Badiganti wrote:
 
-Hi Radhey,
-
-you looked at this patch before, it was [PATCH 03/14] back then.
-You ended up saying "Looks fine then.", but I didn't dare to convert this into a "Reviewed-by:" tag.
-Just a hint that I didn't change anything, that might simplify the review.
-
-Cheers,
-Andre
-
-> When axienet_dma_bd_init() bails out during the initialisation process,
-> it might do so with parts of the structure already allocated and
-> initialised, while other parts have not been touched yet. Before
-> returning in this case, we call axienet_dma_bd_release(), which does not
-> take care of this corner case.
-> This is most obvious by the first loop happily dereferencing
-> lp->rx_bd_v, which we actually check to be non NULL *afterwards*.
+> Update cqhci memory ioresource name from cqhci_mem to cqhci since
+> suffix _mem is redundant.
 > 
-> Make sure we only unmap or free already allocated structures, by:
-> - directly returning with -ENOMEM if nothing has been allocated at all
-> - checking for lp->rx_bd_v to be non-NULL *before* using it
-> - only unmapping allocated DMA RX regions
+> Only sdhci-msm driver is making use of this resource as of now.
+> No other vendor's driver is using it. So this update shouldn't affect
+> any other vendor's cqhci functionality.
 > 
-> This avoids NULL pointer dereferences when initialisation fails.
-> 
-> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+
+I do favor using names without the "_mem" suffix and it seems like the
+existing code only acquire the first two regions by index. So this
+should be fine.
+
+Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+
+
+But I do expect to see some patches fixing up the 8 dts files that now
+has invalid reg-names.
+
+Regards,
+Bjorn
+
 > ---
->  .../net/ethernet/xilinx/xilinx_axienet_main.c | 43 ++++++++++++-------
->  1 file changed, 28 insertions(+), 15 deletions(-)
+> Corresponding binding change:
+> https://lore.kernel.org/linux-arm-msm/1582545470-11530-1-git-send-email-vbadigan@codeaurora.org/
 > 
-> diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-> index 64f73533cabe..9903205d57ec 100644
-> --- a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-> +++ b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-> @@ -160,24 +160,37 @@ static void axienet_dma_bd_release(struct net_device *ndev)
->  	int i;
->  	struct axienet_local *lp = netdev_priv(ndev);
+> Changes sicne V1:
+> 	- Updated commit text expalining this change affects *only*
+> 	  qcom cqhci functionality.
+> 
+> ---
+>  drivers/mmc/host/cqhci.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/mmc/host/cqhci.c b/drivers/mmc/host/cqhci.c
+> index e2ea2c4..e24b8ff 100644
+> --- a/drivers/mmc/host/cqhci.c
+> +++ b/drivers/mmc/host/cqhci.c
+> @@ -1077,7 +1077,7 @@ struct cqhci_host *cqhci_pltfm_init(struct platform_device *pdev)
 >  
-> +	/* If we end up here, tx_bd_v must have been DMA allocated. */
-> +	dma_free_coherent(ndev->dev.parent,
-> +			  sizeof(*lp->tx_bd_v) * lp->tx_bd_num,
-> +			  lp->tx_bd_v,
-> +			  lp->tx_bd_p);
-> +
-> +	if (!lp->rx_bd_v)
-> +		return;
-> +
->  	for (i = 0; i < lp->rx_bd_num; i++) {
-> -		dma_unmap_single(ndev->dev.parent, lp->rx_bd_v[i].phys,
-> -				 lp->max_frm_size, DMA_FROM_DEVICE);
-> +		/* A NULL skb means this descriptor has not been initialised
-> +		 * at all.
-> +		 */
-> +		if (!lp->rx_bd_v[i].skb)
-> +			break;
-> +
->  		dev_kfree_skb(lp->rx_bd_v[i].skb);
-> -	}
->  
-> -	if (lp->rx_bd_v) {
-> -		dma_free_coherent(ndev->dev.parent,
-> -				  sizeof(*lp->rx_bd_v) * lp->rx_bd_num,
-> -				  lp->rx_bd_v,
-> -				  lp->rx_bd_p);
-> -	}
-> -	if (lp->tx_bd_v) {
-> -		dma_free_coherent(ndev->dev.parent,
-> -				  sizeof(*lp->tx_bd_v) * lp->tx_bd_num,
-> -				  lp->tx_bd_v,
-> -				  lp->tx_bd_p);
-> +		/* For each descriptor, we programmed cntrl with the (non-zero)
-> +		 * descriptor size, after it had been successfully allocated.
-> +		 * So a non-zero value in there means we need to unmap it.
-> +		 */
-> +		if (lp->rx_bd_v[i].cntrl)
-> +			dma_unmap_single(ndev->dev.parent, lp->rx_bd_v[i].phys,
-> +					 lp->max_frm_size, DMA_FROM_DEVICE);
->  	}
-> +
-> +	dma_free_coherent(ndev->dev.parent,
-> +			  sizeof(*lp->rx_bd_v) * lp->rx_bd_num,
-> +			  lp->rx_bd_v,
-> +			  lp->rx_bd_p);
->  }
->  
->  /**
-> @@ -207,7 +220,7 @@ static int axienet_dma_bd_init(struct net_device *ndev)
->  					 sizeof(*lp->tx_bd_v) * lp->tx_bd_num,
->  					 &lp->tx_bd_p, GFP_KERNEL);
->  	if (!lp->tx_bd_v)
-> -		goto out;
-> +		return -ENOMEM;
->  
->  	lp->rx_bd_v = dma_alloc_coherent(ndev->dev.parent,
->  					 sizeof(*lp->rx_bd_v) * lp->rx_bd_num,
-
+>  	/* check and setup CMDQ interface */
+>  	cqhci_memres = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+> -						   "cqhci_mem");
+> +						   "cqhci");
+>  	if (!cqhci_memres) {
+>  		dev_dbg(&pdev->dev, "CMDQ not supported\n");
+>  		return ERR_PTR(-EINVAL);
+> -- 
+> Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc., is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
