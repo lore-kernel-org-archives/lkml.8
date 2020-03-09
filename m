@@ -2,88 +2,88 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DDCDC18E7A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:09:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1101BC18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:10:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9F8520674
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:09:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDAD720674
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:10:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726655AbgCIJJG (ORCPT
+        id S1726450AbgCIJKJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 05:09:06 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:58275 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726383AbgCIJJF (ORCPT
+        Mon, 9 Mar 2020 05:10:09 -0400
+Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:34336 "EHLO
+        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726071AbgCIJKJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 05:09:05 -0400
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jBEPF-0004Dh-IA; Mon, 09 Mar 2020 10:09:01 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id A737310408A; Mon,  9 Mar 2020 10:09:00 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        kvm list <kvm@vger.kernel.org>, stable <stable@vger.kernel.org>
-Subject: Re: [PATCH v2] x86/kvm: Disable KVM_ASYNC_PF_SEND_ALWAYS
-In-Reply-To: <37440ade-1657-648b-bf72-2b8ca4ac21ce@redhat.com>
-References: <ed71d0967113a35f670a9625a058b8e6e0b2f104.1583547991.git.luto@kernel.org> <CALCETrVmsF9JSMLSd44-3GGWEz6siJQxudeaYiVnvv__YDT1BQ@mail.gmail.com> <87ftek9ngq.fsf@nanos.tec.linutronix.de> <CALCETrVsc-t=tDRPbCg5dWHDY0NFv2zjz12ahD-vnGPn8T+RXA@mail.gmail.com> <87a74s9ehb.fsf@nanos.tec.linutronix.de> <87wo7v8g4j.fsf@nanos.tec.linutronix.de> <877dzu8178.fsf@nanos.tec.linutronix.de> <37440ade-1657-648b-bf72-2b8ca4ac21ce@redhat.com>
-Date:   Mon, 09 Mar 2020 10:09:00 +0100
-Message-ID: <871rq199oz.fsf@nanos.tec.linutronix.de>
+        Mon, 9 Mar 2020 05:10:09 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R731e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04396;MF=richard.weiyang@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0Ts2w.vr_1583745003;
+Received: from localhost(mailfrom:richard.weiyang@linux.alibaba.com fp:SMTPD_---0Ts2w.vr_1583745003)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Mon, 09 Mar 2020 17:10:03 +0800
+From:   Wei Yang <richard.weiyang@linux.alibaba.com>
+To:     akpm@linux-foundation.org
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Wei Yang <richard.weiyang@linux.alibaba.com>
+Subject: [PATCH] mm/swap_slots.c: don't reset the cache slot after use
+Date:   Mon,  9 Mar 2020 17:09:40 +0800
+Message-Id: <20200309090940.34130-1-richard.weiyang@linux.alibaba.com>
+X-Mailer: git-send-email 2.20.1 (Apple Git-117)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Paolo Bonzini <pbonzini@redhat.com> writes:
-> On 09/03/20 07:57, Thomas Gleixner wrote:
->> Thomas Gleixner <tglx@linutronix.de> writes:
->>
->> guest side:
->> 
->>    nmi()/mce() ...
->>    
->>         stash_crs();
->> 
->> +       stash_and_clear_apf_reason();
->> 
->>         ....
->> 
->> +       restore_apf_reason();
->> 
->> 	restore_cr2();
->> 
->> Too obvious, isn't it?
->
-> Yes, this works but Andy was not happy about adding more
-> save-and-restore to NMIs.  If you do not want to do that, I'm okay with
-> disabling async page fault support for now.
+Currently we would clear the cache slot if it is used. While this is not
+necessary, since this entry would not be used until refilled.
 
-I'm fine with doing that save/restore dance, but I have no strong
-opinion either.
+Leave it untouched and assigned the value directly to entry which makes
+the code little more neat.
 
-> Storing the page fault reason in memory was not a good idea.  Better
-> options would be to co-opt the page fault error code (e.g. store the
-> reason in bits 31:16, mark bits 15:0 with the invalid error code
-> RSVD=1/P=0), or to use the virtualization exception area.
+Also this patch merges the else and if, since this is the only case we
+refill and repeat swap cache.
 
-Memory store is not the problem. The real problem is hijacking #PF.
+Signed-off-by: Wei Yang <richard.weiyang@linux.alibaba.com>
+---
+ mm/swap_slots.c | 11 ++++-------
+ 1 file changed, 4 insertions(+), 7 deletions(-)
 
-If you'd have just used a separate VECTOR_ASYNC_PF then none of these
-problems would exist at all.
+diff --git a/mm/swap_slots.c b/mm/swap_slots.c
+index 63a7b4563a57..ff695df3db26 100644
+--- a/mm/swap_slots.c
++++ b/mm/swap_slots.c
+@@ -309,7 +309,7 @@ int free_swap_slot(swp_entry_t entry)
+ 
+ swp_entry_t get_swap_page(struct page *page)
+ {
+-	swp_entry_t entry, *pentry;
++	swp_entry_t entry;
+ 	struct swap_slots_cache *cache;
+ 
+ 	entry.val = 0;
+@@ -336,13 +336,10 @@ swp_entry_t get_swap_page(struct page *page)
+ 		if (cache->slots) {
+ repeat:
+ 			if (cache->nr) {
+-				pentry = &cache->slots[cache->cur++];
+-				entry = *pentry;
+-				pentry->val = 0;
++				entry = cache->slots[cache->cur++];
+ 				cache->nr--;
+-			} else {
+-				if (refill_swap_slots_cache(cache))
+-					goto repeat;
++			} else if (refill_swap_slots_cache(cache)) {
++				goto repeat;
+ 			}
+ 		}
+ 		mutex_unlock(&cache->alloc_lock);
+-- 
+2.20.1 (Apple Git-117)
 
-Thanks,
-
-        tglx
