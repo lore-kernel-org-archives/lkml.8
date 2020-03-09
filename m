@@ -2,98 +2,195 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 214DFC10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:15:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AADAEC10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:15:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0220320873
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:15:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 882EF21927
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:15:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727357AbgCISPd (ORCPT
+        id S1727466AbgCISPu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 14:15:33 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:59880 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726467AbgCISPd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 14:15:33 -0400
-Received: from [5.158.153.53] (helo=debian-buster-darwi.lab.linutronix.de.)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA1:256)
-        (Exim 4.80)
-        (envelope-from <a.darwish@linutronix.de>)
-        id 1jBMw6-0004Yd-M5; Mon, 09 Mar 2020 19:15:30 +0100
-From:   "Ahmed S. Darwish" <a.darwish@linutronix.de>
+        Mon, 9 Mar 2020 14:15:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59544 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726467AbgCISPu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 14:15:50 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7427020578;
+        Mon,  9 Mar 2020 18:15:48 +0000 (UTC)
+Date:   Mon, 9 Mar 2020 14:15:46 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
 To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        "Ahmed S . Darwish" <a.darwish@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: [PATCH] sched/clock: expire timer in hardirq context
-Date:   Mon,  9 Mar 2020 18:15:29 +0000
-Message-Id: <20200309181529.26558-1-a.darwish@linutronix.de>
-X-Mailer: git-send-email 2.20.1
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Frederic Weisbecker <frederic@kernel.org>
+Subject: Re: Instrumentation and RCU
+Message-ID: <20200309141546.5b574908@gandalf.local.home>
+In-Reply-To: <87mu8p797b.fsf@nanos.tec.linutronix.de>
+References: <87mu8p797b.fsf@nanos.tec.linutronix.de>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To minimize latency, PREEMPT_RT kernels expires hrtimes in preemptible
-softirq context by default. This can be overriden by marking the timer's
-expiry with HRTIMER_MODE_HARD.
+On Mon, 09 Mar 2020 18:02:32 +0100
+Thomas Gleixner <tglx@linutronix.de> wrote:
 
-sched_clock_timer is missing this annotation: if its callback is
-preempted and the duration of the preemption exceeds the wrap around
-time of the underlying clocksource, sched clock will get out of sync.
+> Folks,
+> 
+> I'm starting a new conversation because there are about 20 different
+> threads which look at that problem in various ways and the information
+> is so scattered that creating a coherent picture is pretty much
+> impossible.
+> 
+> There are several problems to solve:
+> 
+>    1) Fragile low level entry code
+> 
+>    2) Breakpoint utilization
+> 
+>    3) RCU idle
+> 
+>    4) Callchain protection
+> 
+> #1 Fragile low level entry code
+> 
+>    While I understand the desire of instrumentation to observe
+>    everything we really have to ask the question whether it is worth the
+>    trouble especially with entry trainwrecks like x86, PTI and other
+>    horrors in that area.
+> 
+>    I don't think so and we really should just bite the bullet and forbid
+>    any instrumentation in that code unless it is explicitly designed
+>    for that case, makes sense and has a real value from an observation
+>    perspective.
+> 
+>    This is very much related to #3..
 
-Mark the sched_clock_timer for expiry in hard interrupt context.
+Now for just entry portions (entering into interrupt context or
+coming from userspace into normal kernel code) I agree, and I'm fine if we
+can move things around and not trace these entry points if possible.
 
-Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
----
- kernel/time/sched_clock.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+> 
+> #2) Breakpoint utilization
+> 
+>     As recent findings have shown, breakpoint utilization needs to be
+>     extremly careful about not creating infinite breakpoint recursions.
+> 
+>     I think that's pretty much obvious, but falls into the overall
+>     question of how to protect callchains.
 
-diff --git a/kernel/time/sched_clock.c b/kernel/time/sched_clock.c
-index e4332e3e2d56..fa3f800d7d76 100644
---- a/kernel/time/sched_clock.c
-+++ b/kernel/time/sched_clock.c
-@@ -208,7 +208,8 @@ sched_clock_register(u64 (*read)(void), int bits, unsigned long rate)
- 
- 	if (sched_clock_timer.function != NULL) {
- 		/* update timeout for clock wrap */
--		hrtimer_start(&sched_clock_timer, cd.wrap_kt, HRTIMER_MODE_REL);
-+		hrtimer_start(&sched_clock_timer, cd.wrap_kt,
-+			      HRTIMER_MODE_REL_HARD);
- 	}
- 
- 	r = rate;
-@@ -254,9 +255,9 @@ void __init generic_sched_clock_init(void)
- 	 * Start the timer to keep sched_clock() properly updated and
- 	 * sets the initial epoch.
- 	 */
--	hrtimer_init(&sched_clock_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
-+	hrtimer_init(&sched_clock_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL_HARD);
- 	sched_clock_timer.function = sched_clock_poll;
--	hrtimer_start(&sched_clock_timer, cd.wrap_kt, HRTIMER_MODE_REL);
-+	hrtimer_start(&sched_clock_timer, cd.wrap_kt, HRTIMER_MODE_REL_HARD);
- }
- 
- /*
-@@ -293,7 +294,7 @@ void sched_clock_resume(void)
- 	struct clock_read_data *rd = &cd.read_data[0];
- 
- 	rd->epoch_cyc = cd.actual_read_sched_clock();
--	hrtimer_start(&sched_clock_timer, cd.wrap_kt, HRTIMER_MODE_REL);
-+	hrtimer_start(&sched_clock_timer, cd.wrap_kt, HRTIMER_MODE_REL_HARD);
- 	rd->read_sched_clock = cd.actual_read_sched_clock;
- }
- 
--- 
-2.20.1
+This is rather unique, and I agree that its best to at least get to a point
+where we limit the tracing within breakpoint code. I'm fine with making
+rcu_nmi_exit() nokprobe too.
 
+
+> 
+> #3) RCU idle
+> 
+>     Being able to trace code inside RCU idle sections is very similar to
+>     the question raised in #1.
+> 
+>     Assume all of the instrumentation would be doing conditional RCU
+>     schemes, i.e.:
+> 
+>     if (rcuidle)
+>     	....
+>     else
+>         rcu_read_lock_sched()
+> 
+>     before invoking the actual instrumentation functions and of course
+>     undoing that right after it, that really begs the question whether
+>     it's worth it.
+> 
+>     Especially constructs like:
+> 
+>     trace_hardirqs_off()
+>        idx = srcu_read_lock()
+>        rcu_irq_enter_irqson();
+>        ...
+>        rcu_irq_exit_irqson();
+>        srcu_read_unlock(idx);
+> 
+>     if (user_mode)
+>        user_exit_irqsoff();
+>     else
+>        rcu_irq_enter();
+> 
+>     are really more than questionable. For 99.9999% of instrumentation
+>     users it's absolutely irrelevant whether this traces the interrupt
+>     disabled time of user_exit_irqsoff() or rcu_irq_enter() or not.
+> 
+>     But what's relevant is the tracer overhead which is e.g. inflicted
+>     with todays trace_hardirqs_off/on() implementation because that
+>     unconditionally uses the rcuidle variant with the scru/rcu_irq dance
+>     around every tracepoint.
+> 
+>     Even if the tracepoint sits in the ASM code it just covers about ~20
+>     low level ASM instructions more. The tracer invocation, which is
+>     even done twice when coming from user space on x86 (the second call
+>     is optimized in the tracer C-code), costs definitely way more
+>     cycles. When you take the scru/rcu_irq dance into account it's a
+>     complete disaster performance wise.
+
+Is this specifically to do with the kernel/trace/trace_preemptirqs.c code
+that was added by Joel?
+
+> 
+> #4 Protecting call chains
+> 
+>    Our current approach of annotating functions with notrace/noprobe is
+>    pretty much broken.
+> 
+>    Functions which are marked NOPROBE or notrace call out into functions
+>    which are not marked and while this might be ok, there are enough
+>    places where it is not. But we have no way to verify that.
+
+Note, if notrace is an issue it shows up pretty quickly, as just enabling
+function tracing will enable all non notrace locations, and if something
+shouldn't be traced, it will crash immediately.
+
+I have a RCU option for ftrace ops to set, if it requires RCU to be
+watching, and in that case, it wont call the callback if RCU is not
+watching.
+
+
+> 
+>    That's just a recipe for disaster. We really cannot request from
+>    sysadmins who want to use instrumentation to stare at the code first
+>    whether they can place/enable an instrumentation point somewhere.
+>    That'd be just a bad joke.
+> 
+>    I really think we need to have proper text sections which are off
+>    limit for any form of instrumentation and have tooling to analyze the
+>    calls into other sections. These calls need to be annotated as safe
+>    and intentional.
+> 
+> Thoughts?
+
+This can expand quite a bit. At least when I did something similar with
+NMIs, as there was a time I wanted to flag all places that could be called
+from NMI, and found that there's a lot of code that can be.
+
+I can imagine the same for marking nokprobes as well. And I really don't
+want to make all notrace stop tracing the entire function and all that it
+can call, as that will go back to removing all callers from NMIs as
+do_nmi() itself is notrace.
+
+
+-- Steve
