@@ -2,120 +2,109 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64C72C18E7A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:07:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8819C18E5B
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:08:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F48120674
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:07:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FDB020674
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:08:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lb76EOjr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726498AbgCIJHo (ORCPT
+        id S1726556AbgCIJIG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 05:07:44 -0400
-Received: from mga01.intel.com ([192.55.52.88]:41673 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725796AbgCIJHn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 05:07:43 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Mar 2020 02:07:43 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,532,1574150400"; 
-   d="scan'208";a="276438111"
-Received: from pgsmsx108.gar.corp.intel.com ([10.221.44.103])
-  by fmsmga002.fm.intel.com with ESMTP; 09 Mar 2020 02:07:41 -0700
-Received: from pgsmsx102.gar.corp.intel.com ([169.254.6.245]) by
- PGSMSX108.gar.corp.intel.com ([169.254.8.177]) with mapi id 14.03.0439.000;
- Mon, 9 Mar 2020 17:02:58 +0800
-From:   "Pan, Harry" <harry.pan@intel.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-CC:     LKML <linux-kernel@vger.kernel.org>, Harry Pan <gs0622@gmail.com>,
-        "Jacob Pan" <jacob.jun.pan@linux.intel.com>,
-        Len Brown <lenb@kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>
-Subject: RE: [PATCH v3] intel_idle: Add Comet Lake support
-Thread-Topic: [PATCH v3] intel_idle: Add Comet Lake support
-Thread-Index: AQHV8TuIsnm0plXkJ0qxTNV1fBgP1Kg3rPoAgACovO2AABVjAIAHke5k
-Date:   Mon, 9 Mar 2020 09:02:57 +0000
-Message-ID: <6089B7674E6F464F847AB76B599E0EAA78AB6A98@PGSMSX102.gar.corp.intel.com>
-References: <20200227013411.1.Ica3bb9fa898499d94e0b0a2bfa08ec46c89d84fa@changeid>
- <20200303170948.1.I108734f38ade020c3e5da825839dca11d2a2ff87@changeid>
- <CAJZ5v0j+bx5fh1wv738MNoui_SaZ-c21rDnZkWOqi_GCVg5stQ@mail.gmail.com>
- <F8C6368A-1537-482B-8FE5-350A18D936A8@intel.com>,<CAJZ5v0iBMiGKeFXRTLkR8oFQbdCJq0TnhpFZkMBK4gF0VNjumA@mail.gmail.com>
-In-Reply-To: <CAJZ5v0iBMiGKeFXRTLkR8oFQbdCJq0TnhpFZkMBK4gF0VNjumA@mail.gmail.com>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.19.9.41]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 9 Mar 2020 05:08:06 -0400
+Received: from mail-pj1-f45.google.com ([209.85.216.45]:55158 "EHLO
+        mail-pj1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726501AbgCIJIG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 05:08:06 -0400
+Received: by mail-pj1-f45.google.com with SMTP id np16so4088164pjb.4
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 02:08:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Zn5cohc9+dV+bc+jr0Y3IxVaSp3atkPAhci1ZiQCOiE=;
+        b=lb76EOjrQJ2kmq2xRlbXLyDCaHjzcbZRLgkdY5Gnb4qTOS++wMphzDSsoXFT5w+EFT
+         Uz+HZ10OCpASqR6vDFKkpvPRUsfD3TaSSpkbl2KX/Sbifvg9Yrfc4uP6qqexi8OB8obE
+         FArxbS5v3MTQCSAO6tQIHpfrO3Hicd4Kw4FoA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Zn5cohc9+dV+bc+jr0Y3IxVaSp3atkPAhci1ZiQCOiE=;
+        b=cIP5Sq2iQyXEsvil9LNpD00Y8YH8tGj4uZYVrBG6Xu3K/dlFeA1J7AOxhd5y9kPKWM
+         vQVwGhpH6cr0qRwTSl74sNjdN7HEj8y3SjoIRQsdymf1L66/fjkc+oEoUPgPK2SscT1Q
+         HhV8lXrSkA0iek8LBV1ZfEWZtz5GULFXjg3+WRHzvK/vxGk+P9Tz8dj3EPG2/t9iOkzN
+         AKolyGBtqAQDqJiZ4cBKhAxx7a44n8Wr5KJgbKgTFZAtf2I2Rj9An1VyUg+rl7qKpuJH
+         DASc5dhzTqp2eDAQASz+s03PFRs6vYqHaPXIw41CDAdEJN8TuLsgChqaGfy2WxCYaRsg
+         1KGQ==
+X-Gm-Message-State: ANhLgQ2QV2c/nCOOB2NpGxPrRC92Jae2fz8yzkRquQkHeqWPySWkb4Lx
+        48UcPWmQN0MppHtT0zRa3No2Tw==
+X-Google-Smtp-Source: ADFU+vv0zF7N2cmYA5X/gp1rv27g/hBfgjCfbp21zaZtDnFG9hJlIvEUCyJpYWMqejwNtOCrkdPgwA==
+X-Received: by 2002:a17:90a:5d88:: with SMTP id t8mr17937901pji.120.1583744885055;
+        Mon, 09 Mar 2020 02:08:05 -0700 (PDT)
+Received: from localhost ([2401:fa00:8f:203:5bbb:c872:f2b1:f53b])
+        by smtp.gmail.com with ESMTPSA id e3sm12252590pgm.15.2020.03.09.02.08.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Mar 2020 02:08:04 -0700 (PDT)
+Date:   Mon, 9 Mar 2020 18:08:02 +0900
+From:   Sergey Senozhatsky <senozhatsky@chromium.org>
+To:     Tomasz Figa <tfiga@chromium.org>
+Cc:     Hans Verkuil <hverkuil@xs4all.nl>,
+        Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Pawel Osciak <posciak@chromium.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Subject: Re: [PATCHv4 01/11] videobuf2: add cache management members
+Message-ID: <20200309090802.GA231920@google.com>
+References: <17060663-9c30-de5e-da58-0c847b93e4d3@xs4all.nl>
+ <20200307094634.GB29464@google.com>
+ <6f5916dd-63f6-5d19-13f4-edd523205a1f@xs4all.nl>
+ <20200307112838.GA125961@google.com>
+ <a4d85ac3-0eea-bc19-cd44-0c8f5b71f6bc@xs4all.nl>
+ <20200309032707.GA9460@google.com>
+ <40cd09d9-49a6-2159-3c50-825732151221@xs4all.nl>
+ <20200309072526.GC46830@google.com>
+ <e31197b6-5d22-0c3a-cc77-e9506136ada5@xs4all.nl>
+ <CAAFQd5Ajopb019HZmtNJfDZmZbssDHfztmT0BvAD07QttXmZ1g@mail.gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAAFQd5Ajopb019HZmtNJfDZmZbssDHfztmT0BvAD07QttXmZ1g@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgUmFmYWVsLA0KDQpUaGFua3MgZm9yIHRoZSBjb21tZW50cy4NCkkgaGF2ZSBzb21lIHF1ZXN0
-aW9ucywgSSBhbSB3b25kZXJpbmcgaWYgeW91IGNhbiBzaGFyZSB1cHN0cmVhbSB0aG91Z2h0IHcu
-ci50IHRoZSBmdXR1cmUgZGV2ZWxvcG1lbnQgb2YgaW50ZWxfaWRsZS4NCg0KIC0gSXQgbG9va3Mg
-dG8gbWUgc2luY2UgdjUuNiBpbnRlbF9pZGxlIHdpbGwgcHJlZmVyIF9DU1Qgb2YgQUNQSSByYXRo
-ZXIgdGhhbiB0aGUgZ2VuZXJhbCB0YWJsZSBlbWJlZGRlZCBpbiB0aGlzIGRyaXZlci4NCiAtIEFu
-eSBwcm9zIGFuZCBjb25zIG9mIHVzaW5nIHRoZSB0YWJsZXMgb2YgX0NTVCBpbiBmaXJtd2FyZSBh
-bmQgZW1iZWRkZWQgb25lIGluIHRoZSBrZXJuZWw/DQogLSBDYW4gdGhlIHRhYmxlIGluIF9DU1Qg
-YXJjaGl2ZSBtb3JlIG9wdGltYWwgaWRsZSBzdGF0ZXMgbWFuYWdlbWVudD8gDQoNCklmIHRoZXJl
-IGlzIGFscmVhZHkgYW55IHJlZmVyZW5jZSwgZG9jdW1lbnRzIEkgbWlzc2VkLCBraW5kbHkgZW5s
-aWdodGVuIG1lIHRoZW4gSSB3b3VsZCBsaWtlIHRvIHJlYWQgaXQgZmlyc3QgYmVmb3JlIHJlZmlu
-aW5nIHRoZSBxdWVzdGlvbnMuDQoNClRoYW5rcyBhbmQgdGFrZSBjYXJlLA0KSGFycnkNCl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18NCuW+njogUmFmYWVsIEouIFd5c29j
-a2kgW3JhZmFlbEBrZXJuZWwub3JnXQ0K5a+E5Lu25pel5pyfOiAyMDIw5bm0M+aciDXml6Ug5LiK
-5Y2IIDA1OjE0DQroh7M6IFBhbiwgSGFycnkNCuWJr+acrDogUmFmYWVsIEouIFd5c29ja2k7IExL
-TUw7IEhhcnJ5IFBhbjsgSmFjb2IgUGFuOyBMZW4gQnJvd247IExpbnV4IFBNDQrkuLvml6g6IFJl
-OiBbUEFUQ0ggdjNdIGludGVsX2lkbGU6IEFkZCBDb21ldCBMYWtlIHN1cHBvcnQNCg0KT24gV2Vk
-LCBNYXIgNCwgMjAyMCBhdCAxMjo1NyBQTSBQYW4sIEhhcnJ5IDxoYXJyeS5wYW5AaW50ZWwuY29t
-PiB3cm90ZToNCj4NCj4gSGkgUmFmYWVsLA0KPg0KPiBZZXMsIEkgc2tpcHBlZCBpdCBjb25zaWRl
-cmluZyB0byBhbGlnbiBDTUwtVSBWMCBhbmQgQTAgc3RlcHBpbmcgdy8gdGhlIHNhbWUgdGFibGU7
-IEkgc2VudCB2NCBmb3IgeW91ciByZXZpZXcuDQoNClNraXBwaW5nIHRoYXQgZmxhZyBpcyByaXNr
-eSwgYmVjYXVzZSBpdCBtYXkgY2F1c2Ugc29tZSBDLXN0YXRlcyB0byBiZQ0KZW5hYmxlZCBvbiBz
-eXN0ZW1zIHdoZXJlIHRoZXkgaGF2ZSBub3QgYmVlbiB2YWxpZGF0ZWQgKGUuZy4gc3lzdGVtcw0K
-c2hpcHBpbmcgd2l0aCBvdGhlciBPU2VzIHdoaWNoIG9ubHkgdXNlIF9DU1QgQy1zdGF0ZXMpLiAg
-VGhlcmUgd2VyZQ0KcHJvYmxlbXMgcmVsYXRlZCB0byB0aGF0IGluIHRoZSBwYXN0IHdoaWNoIGlz
-IG9uZSBvZiB0aGUgcmVhc29ucyBmb3INCmFkZGluZyBfQ1NUIHN1cHBvcnQgdG8gaW50ZWxfaWRs
-ZS4gIHVzZV9hY3BpIHNob3VsZCBiZSBzZXQgZm9yIGFsbCBuZXcNCnBsYXRmb3JtcyBnb2luZyBm
-b3J3YXJkIGFzIGEgcnVsZS4NCg0KPiBJbiB0aGUgb3RoZXIgaGFuZCwgSSBhbSBwcm9wb3Npbmcg
-dXNpbmcgX0NTVCBhcyBsb25nIHRlcm0gcGxhbiBpbiBDck9TIGRldiB0ZWFtcy4NCg0KVGhhdCBJ
-IG9idmlvdXNseSBhZ3JlZSB3aXRoLiA6LSkNCg0KDQo+ID4gT24gTWFyIDQsIDIwMjAsIGF0IDE3
-OjUzLCBSYWZhZWwgSi4gV3lzb2NraSA8cmFmYWVsQGtlcm5lbC5vcmc+IHdyb3RlOg0KPiA+DQo+
-ID4g77u/T24gVHVlLCBNYXIgMywgMjAyMCBhdCAxMDoxMCBBTSBIYXJyeSBQYW4gPGhhcnJ5LnBh
-bkBpbnRlbC5jb20+IHdyb3RlOg0KPiA+Pg0KPiA+PiBBZGQgYSBnZW5lcmFsIEMtc3RhdGUgdGFi
-bGUgaW4gb3JkZXIgdG8gc3VwcG9ydCBDb21ldCBMYWtlLg0KPiA+Pg0KPiA+PiBTaWduZWQtb2Zm
-LWJ5OiBIYXJyeSBQYW4gPGhhcnJ5LnBhbkBpbnRlbC5jb20+DQo+ID4+DQo+ID4+IC0tLQ0KPiA+
-Pg0KPiA+PiBkcml2ZXJzL2lkbGUvaW50ZWxfaWRsZS5jIHwgNyArKysrKysrDQo+ID4+IDEgZmls
-ZSBjaGFuZ2VkLCA3IGluc2VydGlvbnMoKykNCj4gPj4NCj4gPj4gZGlmZiAtLWdpdCBhL2RyaXZl
-cnMvaWRsZS9pbnRlbF9pZGxlLmMgYi9kcml2ZXJzL2lkbGUvaW50ZWxfaWRsZS5jDQo+ID4+IGlu
-ZGV4IGQ1NTYwNjYwOGFjOC4uMDViY2U1OTVmYWZlIDEwMDY0NA0KPiA+PiAtLS0gYS9kcml2ZXJz
-L2lkbGUvaW50ZWxfaWRsZS5jDQo+ID4+ICsrKyBiL2RyaXZlcnMvaWRsZS9pbnRlbF9pZGxlLmMN
-Cj4gPj4gQEAgLTEwNjcsNiArMTA2NywxMSBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IGlkbGVfY3B1
-IGlkbGVfY3B1X2RudiA9IHsNCj4gPj4gICAgICAgIC51c2VfYWNwaSA9IHRydWUsDQo+ID4+IH07
-DQo+ID4+DQo+ID4+ICtzdGF0aWMgY29uc3Qgc3RydWN0IGlkbGVfY3B1IGlkbGVfY3B1X2NtbCA9
-IHsNCj4gPj4gKyAgICAgICAuc3RhdGVfdGFibGUgPSBza2xfY3N0YXRlcywNCj4gPj4gKyAgICAg
-ICAuZGlzYWJsZV9wcm9tb3Rpb25fdG9fYzFlID0gdHJ1ZSwNCj4gPg0KPiA+IC51c2VfYWNwaSA9
-IHRydWUsDQo+ID4NCj4gPiBtaXNzaW5nPyAgT3RoZXJ3aXNlIHlvdSBjYW4ganVzdCB1c2UgaWRs
-ZV9jcHVfc2tsIGFzIGlzLCBjYW4ndCB5b3U/DQo+ID4NCj4gPj4gK307DQo+ID4+ICsNCj4gPj4g
-c3RhdGljIGNvbnN0IHN0cnVjdCB4ODZfY3B1X2lkIGludGVsX2lkbGVfaWRzW10gX19pbml0Y29u
-c3QgPSB7DQo+ID4+ICAgICAgICBJTlRFTF9DUFVfRkFNNihORUhBTEVNX0VQLCAgICAgICAgICAg
-ICAgaWRsZV9jcHVfbmh4KSwNCj4gPj4gICAgICAgIElOVEVMX0NQVV9GQU02KE5FSEFMRU0sICAg
-ICAgICAgICAgICAgICBpZGxlX2NwdV9uZWhhbGVtKSwNCj4gPj4gQEAgLTExMDUsNiArMTExMCw4
-IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgeDg2X2NwdV9pZCBpbnRlbF9pZGxlX2lkc1tdIF9faW5p
-dGNvbnN0ID0gew0KPiA+PiAgICAgICAgSU5URUxfQ1BVX0ZBTTYoQVRPTV9HT0xETU9OVF9QTFVT
-LCAgICAgIGlkbGVfY3B1X2J4dCksDQo+ID4+ICAgICAgICBJTlRFTF9DUFVfRkFNNihBVE9NX0dP
-TERNT05UX0QsICAgICAgICAgaWRsZV9jcHVfZG52KSwNCj4gPj4gICAgICAgIElOVEVMX0NQVV9G
-QU02KEFUT01fVFJFTU9OVF9ELCAgICAgICAgICBpZGxlX2NwdV9kbnYpLA0KPiA+PiArICAgICAg
-IElOVEVMX0NQVV9GQU02KENPTUVUTEFLRV9MLCAgICAgICAgICAgICBpZGxlX2NwdV9jbWwpLA0K
-PiA+PiArICAgICAgIElOVEVMX0NQVV9GQU02KENPTUVUTEFLRSwgICAgICAgICAgICAgICBpZGxl
-X2NwdV9jbWwpLA0KPiA+PiAgICAgICAge30NCj4gPj4gfTsNCj4gPj4NCj4gPj4gLS0NCj4gPj4g
-Mi4yNC4xDQo+ID4+DQo=
+On (20/03/09 17:58), Tomasz Figa wrote:
+[..]
+> > > I see. Hmm, how do I do "test that V4L2_BUF_CAP_SUPPORTS_CACHE_HINTS
+> > > is never set" then?
+> >
+> > Not sure I understand your question. When requesting buffers for non-MMAP memory,
+> > this capability must never be returned. That has nothing to do with a cache_hints
+> > module option.
+>
+> Have we decided that we explicitly don't want to support this for
+> USERPTR memory, even though technically possible and without much
+> extra code needed?
+
+My irrelevant 5 cents (sorry), I'd probably prefer to land MMAP
+first + test drivers patches + v4l-util patches. The effort
+required to land this is getting bigger.
+
+	-ss
