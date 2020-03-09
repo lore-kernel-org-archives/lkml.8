@@ -2,30 +2,30 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99CD3C10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:54:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5968C10F29
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:54:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7729820863
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:54:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0C8720863
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:54:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726770AbgCIJyb (ORCPT
+        id S1726595AbgCIJyK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 05:54:31 -0400
-Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:36868 "EHLO
+        Mon, 9 Mar 2020 05:54:10 -0400
+Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:55522 "EHLO
         alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726567AbgCIJyM (ORCPT
+        by vger.kernel.org with ESMTP id S1726465AbgCIJyI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 05:54:12 -0400
+        Mon, 9 Mar 2020 05:54:08 -0400
 Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
-  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 09 Mar 2020 15:24:03 +0530
+  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 09 Mar 2020 15:24:02 +0530
 Received: from c-sanm-linux.qualcomm.com ([10.206.25.31])
-  by ironmsg01-blr.qualcomm.com with ESMTP; 09 Mar 2020 15:23:41 +0530
+  by ironmsg01-blr.qualcomm.com with ESMTP; 09 Mar 2020 15:23:44 +0530
 Received: by c-sanm-linux.qualcomm.com (Postfix, from userid 2343233)
-        id 3AE86230B; Mon,  9 Mar 2020 15:23:40 +0530 (IST)
+        id 4808B230B; Mon,  9 Mar 2020 15:23:43 +0530 (IST)
 From:   Sandeep Maheswaram <sanm@codeaurora.org>
 To:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
@@ -38,67 +38,85 @@ To:     Andy Gross <agross@kernel.org>,
 Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>,
         Sandeep Maheswaram <sanm@codeaurora.org>
-Subject: [PATCH v5 0/9] Add QUSB2 PHY support for SC7180
-Date:   Mon,  9 Mar 2020 15:23:00 +0530
-Message-Id: <1583747589-17267-1-git-send-email-sanm@codeaurora.org>
+Subject: [PATCH v5 4/9] dt-bindings: phy: qcom-qusb2: Add support for overriding Phy tuning parameters
+Date:   Mon,  9 Mar 2020 15:23:04 +0530
+Message-Id: <1583747589-17267-5-git-send-email-sanm@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1583747589-17267-1-git-send-email-sanm@codeaurora.org>
+References: <1583747589-17267-1-git-send-email-sanm@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Converting dt binding to yaml.
-Adding compatible for SC7180 in dt bindings.
-Added generic QUSB2 V2 PHY support and using the same SC7180 and SDM845.
+Add support for overriding QUSB2 V2 phy tuning parameters
+in device tree bindings.
 
-Changes in v5:
-*Added the dt bindings which are applicable only to QUSB2 V2 PHY in 
- separate block as per comments from Matthias in patch 1/9 and patch 4/9
- and addressed Rob's comment in patch 1/9.
-*Separated the patch for new override params and added a local variable
- to access overrides as per comments from Matthias patch 5/9 and 6/9.
+Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+---
+ .../devicetree/bindings/phy/qcom,qusb2-phy.yaml    | 32 +++++++++++++++++++++-
+ 1 file changed, 31 insertions(+), 1 deletion(-)
 
-Changes in v4:
-*Addressed Rob Herrings comments in dt bindings.
-*Added new structure for all the overriding tuning params.
-*Removed the sc7180 and sdm845 compatible from driver and added qusb2 v2 phy. 
-*Added the qusb2 v2 phy compatible in device tree for sc7180 and sdm845. 
-
-Changes in v3:
-*Using the generic phy cfg table for QUSB2 V2 phy.
-*Added support for overriding tuning parameters in QUSB2 V2 PHY
-from device tree.
-
-Changes in v2:
-Sorted the compatible in driver.
-Converted dt binding to yaml.
-Added compatible in yaml.
-
-Sandeep Maheswaram (9):
-  dt-bindings: phy: qcom,qusb2: Convert QUSB2 phy bindings to yaml
-  dt-bindings: phy: qcom,qusb2: Add compatibles for QUSB2 V2 phy and
-    SC7180
-  phy: qcom-qusb2: Add generic QUSB2 V2 PHY support
-  dt-bindings: phy: qcom-qusb2: Add support for overriding Phy tuning
-    parameters
-  phy: qcom-qusb2: Add support for overriding tuning parameters in QUSB2
-    V2 PHY
-  phy: qcom-qusb2: Add new overriding tuning parameters in QUSB2 V2 PHY
-  arm64: dts: qcom: sc7180: Add generic QUSB2 V2 Phy compatible
-  arm64: dts: qcom: sdm845: Add generic QUSB2 V2 Phy compatible
-  arm64: dts: qcom: sc7180: Update QUSB2 V2 Phy params for SC7180 IDP
-    device
-
- .../devicetree/bindings/phy/qcom,qusb2-phy.yaml    | 187 +++++++++++++++++++++
- .../devicetree/bindings/phy/qcom-qusb2-phy.txt     |  68 --------
- arch/arm64/boot/dts/qcom/sc7180-idp.dts            |   6 +-
- arch/arm64/boot/dts/qcom/sc7180.dtsi               |   2 +-
- arch/arm64/boot/dts/qcom/sdm845.dtsi               |   4 +-
- drivers/phy/qualcomm/phy-qcom-qusb2.c              | 144 +++++++++++-----
- 6 files changed, 297 insertions(+), 114 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml
- delete mode 100644 Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
-
+diff --git a/Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml b/Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml
+index 60124a3..144ae29 100644
+--- a/Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml
++++ b/Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml
+@@ -75,7 +75,7 @@ if:
+   properties:
+     compatible:
+       contains:
+-        const: qcom,sdm845-qusb2-phy
++        const: qcom,qusb2-v2-phy
+ then:
+   properties:
+     qcom,imp-res-offset-value:
+@@ -89,6 +89,26 @@ then:
+           maximum: 63
+           default: 0
+ 
++    qcom,bias-ctrl-value:
++      description:
++        It is a 6 bit value that specifies bias-ctrl-value. It is a PHY
++        tuning parameter that may vary for different boards of same SOC.
++      allOf:
++        - $ref: /schemas/types.yaml#/definitions/uint32
++        - minimum: 0
++          maximum: 63
++          default: 0
++
++    qcom,charge-ctrl-value:
++     description:
++        It is a 2 bit value that specifies charge-ctrl-value. It is a PHY
++        tuning parameter that may vary for different boards of same SOC.
++     allOf:
++       - $ref: /schemas/types.yaml#/definitions/uint32
++       - minimum: 0
++         maximum: 3
++         default: 0
++
+     qcom,hstx-trim-value:
+       description:
+         It is a 4 bit value that specifies tuning for HSTX
+@@ -124,6 +144,16 @@ then:
+           maximum: 1
+           default: 0
+ 
++    qcom,hsdisc-trim-value:
++      description:
++        It is a 2 bit value tuning parameter that control disconnect
++        threshold and may vary for different boards of same SOC.
++      allOf:
++        - $ref: /schemas/types.yaml#/definitions/uint32
++        - minimum: 0
++          maximum: 3
++          default: 0
++
+ required:
+   - compatible
+   - reg
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
 of Code Aurora Forum, hosted by The Linux Foundation
