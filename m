@@ -2,95 +2,72 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EBB5C10F25
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 20:18:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A52CC10F25
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 20:20:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 705652253D
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 20:18:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="btPRRmqp"
+	by mail.kernel.org (Postfix) with ESMTP id 025B320873
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 20:20:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726642AbgCIUS4 (ORCPT
+        id S1726283AbgCIUUE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 16:18:56 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:43046 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726157AbgCIUS4 (ORCPT
+        Mon, 9 Mar 2020 16:20:04 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:47977 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725992AbgCIUUE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 16:18:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=TWIHUDy3jBW0cS7WR3QKj5Hh4Aa7h7NpiybbLVlDwD8=; b=btPRRmqpXB8zYUKvCBAnCYqbS8
-        zLOXODaCWXirdkuGQEu+x4UaVagtE/ql7+eji0mE0GDDQ1xci4BGXfnEFd+Gfy2+36YLHUc8HMQVm
-        Ku9dVwcwbcpsPaPHTm258mG5vuJmzZBrwXUSIDVLOrZm2pEH5FD8iOKze/wwGZpRURxjTeUeC2YKJ
-        3JBswWTz3orI/X4b6M8iAfLCn2llhLew6McPjYx8E/T4K1EvuRNAVgoRL5zwf52uEALeq6TarclTd
-        ERovtuTRXMakFf1nmoY3XQcmRz+mYMhFRJ9WByAtVbqMeSaP3WLdEod56mrUi8j/pVeX0IuT7lM3i
-        vPMaa0xQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jBOrN-0001up-J9; Mon, 09 Mar 2020 20:18:45 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 2F8C23011E0;
-        Mon,  9 Mar 2020 21:18:42 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id DF2BF214344E6; Mon,  9 Mar 2020 21:18:42 +0100 (CET)
-Date:   Mon, 9 Mar 2020 21:18:42 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>
-Subject: Re: Instrumentation and RCU
-Message-ID: <20200309201842.GL12561@hirez.programming.kicks-ass.net>
-References: <87mu8p797b.fsf@nanos.tec.linutronix.de>
+        Mon, 9 Mar 2020 16:20:04 -0400
+Received: by mail-io1-f72.google.com with SMTP id w21so1265318iod.14
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 13:20:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=gyTYavcaeh0FJZVoSDoUf1t6qJ3EWa/zCCs9/HoGRTA=;
+        b=eIvlXJYMmFfr62KEodP9m+Xa8zbxh0Wh/OqVO5/sLAQ6lpEbBXMaOZIe1HzctmTLoW
+         93QgM3nHTP3ZhHNs1b2AqN/g4wRoyqb5UqmfXCY2O/0btV8gmeD/Zm6pSco/z6eNnvuo
+         HuZioSoVn+ta93H1QsN/Vs2rdJtHFk3fHfXsZp/bT4E7Tqv6x2QlCaLAr0PbFdnF2Teo
+         L9YLxx1dSEnhZNGRnHMju2esX55+a0BRzKa/HOsReCOVnMsKk4RRK+9frzg27qQpsPwj
+         QMB6Ga1FB75BrKcgR3+cyVH/KrCszGBnIIOaC5GVb8F0P4Io3X2TJ0E8qmzNV4SsnHSw
+         ytdg==
+X-Gm-Message-State: ANhLgQ3PODd4VmT/PQL03aKOi+AiXMiyKwpTsCQscIf0gzOdsERWyrpm
+        e9e0VHewF15QggonqBuWDd6DIAzIaYKJMapbZDizbcrM96u0
+X-Google-Smtp-Source: ADFU+vtLpDu+/CtlDbPIe7Sj8SmC+jO0L8zvUKvlPaWQgCfWwBFwahCGzUuo1dV8TUz97cepb2d5B4KrdLVs1thpRVK88iWuf9/Q
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87mu8p797b.fsf@nanos.tec.linutronix.de>
+X-Received: by 2002:a05:6638:618:: with SMTP id g24mr16405705jar.87.1583785204118;
+ Mon, 09 Mar 2020 13:20:04 -0700 (PDT)
+Date:   Mon, 09 Mar 2020 13:20:04 -0700
+In-Reply-To: <20200309172430.GV31668@ziepe.ca>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000007dfeb705a071ba51@google.com>
+Subject: Re: BUG: corrupted list in _cma_attach_to_dev
+From:   syzbot <syzbot+06b50ee4a9bd73e8b89f@syzkaller.appspotmail.com>
+To:     chuck.lever@oracle.com, dledford@redhat.com, jgg@ziepe.ca,
+        leon@kernel.org, linux-kernel@vger.kernel.org,
+        linux-rdma@vger.kernel.org, parav@mellanox.com,
+        syzkaller-bugs@googlegroups.com, willy@infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 09, 2020 at 06:02:32PM +0100, Thomas Gleixner wrote:
-> #4 Protecting call chains
-> 
->    Our current approach of annotating functions with notrace/noprobe is
->    pretty much broken.
-> 
->    Functions which are marked NOPROBE or notrace call out into functions
->    which are not marked and while this might be ok, there are enough
->    places where it is not. But we have no way to verify that.
-> 
->    That's just a recipe for disaster. We really cannot request from
->    sysadmins who want to use instrumentation to stare at the code first
->    whether they can place/enable an instrumentation point somewhere.
->    That'd be just a bad joke.
-> 
->    I really think we need to have proper text sections which are off
->    limit for any form of instrumentation and have tooling to analyze the
->    calls into other sections. These calls need to be annotated as safe
->    and intentional.
+Hello,
 
-So the only tool I know of that does full callchains is smatch. And in
-one of my series I did prod Dan about this.
+syzbot has tested the proposed patch and the reproducer did not trigger crash:
 
-The alternative is that we bite the bullet and add a vmlinux objtool
-pass. This keeps getting mentioned, so maybe it is time :/ I'd hate it,
-because it will increase build time at the slowest point, but it'd get
-us the coverage we need here.
+Reported-and-tested-by: syzbot+06b50ee4a9bd73e8b89f@syzkaller.appspotmail.com
+
+Tested on:
+
+commit:         0aeb3622 RDMA/hns: fix spelling mistake "attatch" -> "atta..
+git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git for-next
+kernel config:  https://syzkaller.appspot.com/x/.config?x=b58f96e9824c82cb
+dashboard link: https://syzkaller.appspot.com/bug?extid=06b50ee4a9bd73e8b89f
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+
+Note: testing is done by a robot and is best-effort only.
