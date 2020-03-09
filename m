@@ -2,90 +2,120 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87808C18E5A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:07:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64C72C18E7A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:07:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A41C20674
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:07:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ifovaK/k"
+	by mail.kernel.org (Postfix) with ESMTP id 3F48120674
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:07:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726480AbgCIJHI (ORCPT
+        id S1726498AbgCIJHo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 05:07:08 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:45998 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726215AbgCIJHH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 05:07:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
-        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description;
-        bh=ovwAOrod+pcHugf+bHywQDDeJcz0ScIRA7A9zSI+2vM=; b=ifovaK/kO8/X67kmI3vvmgEMFF
-        FRSpZQLKfdun9jAgIFz5xMpIbEQmoH41eGKCSSh1F6bXXTZUqrzvxgkB6MR9siuaACaSXzRB8gXVV
-        Ddy7r00J7jM5rnenJgxdYK754Vmg1vbuV9cO8I/GOeu6BK+NpAlw9+tr9GNvOArkHMjPMTRQBZ4OW
-        cuNZfFIN5WE47Vsrr9kAx877r+CBW1CDcn80mrcumxiRjtgmU+/obDicBiUc1JftwOWOIHIjLEhNj
-        wJJH9keSms1ln6ufyZZVdcSmFiRJO5nS1vW7yIOtlM23aQcpgf1BjOs560IsOYwmGMjxg06N53Mnc
-        YslE+Hzw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jBENB-0001JG-PJ; Mon, 09 Mar 2020 09:06:53 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id F295030066E;
-        Mon,  9 Mar 2020 10:06:50 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id D590225F2C26C; Mon,  9 Mar 2020 10:06:50 +0100 (CET)
-Date:   Mon, 9 Mar 2020 10:06:50 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>
-Cc:     linux-doc@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Will Deacon <will@kernel.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        David Howells <dhowells@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Akira Yokosawa <akiyks@gmail.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org
-Subject: Re: [PATCH 0/3] docs: a few improvements for atomic_ops.rst
-Message-ID: <20200309090650.GF12561@hirez.programming.kicks-ass.net>
-References: <20200308195618.22768-1-j.neuschaefer@gmx.net>
+        Mon, 9 Mar 2020 05:07:44 -0400
+Received: from mga01.intel.com ([192.55.52.88]:41673 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725796AbgCIJHn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 05:07:43 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Mar 2020 02:07:43 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,532,1574150400"; 
+   d="scan'208";a="276438111"
+Received: from pgsmsx108.gar.corp.intel.com ([10.221.44.103])
+  by fmsmga002.fm.intel.com with ESMTP; 09 Mar 2020 02:07:41 -0700
+Received: from pgsmsx102.gar.corp.intel.com ([169.254.6.245]) by
+ PGSMSX108.gar.corp.intel.com ([169.254.8.177]) with mapi id 14.03.0439.000;
+ Mon, 9 Mar 2020 17:02:58 +0800
+From:   "Pan, Harry" <harry.pan@intel.com>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+CC:     LKML <linux-kernel@vger.kernel.org>, Harry Pan <gs0622@gmail.com>,
+        "Jacob Pan" <jacob.jun.pan@linux.intel.com>,
+        Len Brown <lenb@kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>
+Subject: RE: [PATCH v3] intel_idle: Add Comet Lake support
+Thread-Topic: [PATCH v3] intel_idle: Add Comet Lake support
+Thread-Index: AQHV8TuIsnm0plXkJ0qxTNV1fBgP1Kg3rPoAgACovO2AABVjAIAHke5k
+Date:   Mon, 9 Mar 2020 09:02:57 +0000
+Message-ID: <6089B7674E6F464F847AB76B599E0EAA78AB6A98@PGSMSX102.gar.corp.intel.com>
+References: <20200227013411.1.Ica3bb9fa898499d94e0b0a2bfa08ec46c89d84fa@changeid>
+ <20200303170948.1.I108734f38ade020c3e5da825839dca11d2a2ff87@changeid>
+ <CAJZ5v0j+bx5fh1wv738MNoui_SaZ-c21rDnZkWOqi_GCVg5stQ@mail.gmail.com>
+ <F8C6368A-1537-482B-8FE5-350A18D936A8@intel.com>,<CAJZ5v0iBMiGKeFXRTLkR8oFQbdCJq0TnhpFZkMBK4gF0VNjumA@mail.gmail.com>
+In-Reply-To: <CAJZ5v0iBMiGKeFXRTLkR8oFQbdCJq0TnhpFZkMBK4gF0VNjumA@mail.gmail.com>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.19.9.41]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200308195618.22768-1-j.neuschaefer@gmx.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 08, 2020 at 08:56:15PM +0100, Jonathan Neuschäfer wrote:
-> Hi,
-> 
-> this is a short series of unrelated fixes that make the atomic
-> operations documentation look and read a bit better.
-> 
-> Jonathan Neuschäfer (3):
->   docs: atomic_ops: Remove colons where they don't make sense
->   docs: atomic_ops: Move two paragraphs into the warning block above
->   docs: atomic_ops: Steer readers towards using refcount_t for reference
->     counts
-> 
->  Documentation/core-api/atomic_ops.rst         | 24 ++++++++++++-------
-
-FWIW, I consider this a dead document. I've written
-Documentation/atomic_t.txt and Documentation/atomic_bitops.txt as a
-replacement. If there is anything in atomic_ops you feel is missing from
-those two, please tell as I'm planing to delete atomic_ops soon.
+SGkgUmFmYWVsLA0KDQpUaGFua3MgZm9yIHRoZSBjb21tZW50cy4NCkkgaGF2ZSBzb21lIHF1ZXN0
+aW9ucywgSSBhbSB3b25kZXJpbmcgaWYgeW91IGNhbiBzaGFyZSB1cHN0cmVhbSB0aG91Z2h0IHcu
+ci50IHRoZSBmdXR1cmUgZGV2ZWxvcG1lbnQgb2YgaW50ZWxfaWRsZS4NCg0KIC0gSXQgbG9va3Mg
+dG8gbWUgc2luY2UgdjUuNiBpbnRlbF9pZGxlIHdpbGwgcHJlZmVyIF9DU1Qgb2YgQUNQSSByYXRo
+ZXIgdGhhbiB0aGUgZ2VuZXJhbCB0YWJsZSBlbWJlZGRlZCBpbiB0aGlzIGRyaXZlci4NCiAtIEFu
+eSBwcm9zIGFuZCBjb25zIG9mIHVzaW5nIHRoZSB0YWJsZXMgb2YgX0NTVCBpbiBmaXJtd2FyZSBh
+bmQgZW1iZWRkZWQgb25lIGluIHRoZSBrZXJuZWw/DQogLSBDYW4gdGhlIHRhYmxlIGluIF9DU1Qg
+YXJjaGl2ZSBtb3JlIG9wdGltYWwgaWRsZSBzdGF0ZXMgbWFuYWdlbWVudD8gDQoNCklmIHRoZXJl
+IGlzIGFscmVhZHkgYW55IHJlZmVyZW5jZSwgZG9jdW1lbnRzIEkgbWlzc2VkLCBraW5kbHkgZW5s
+aWdodGVuIG1lIHRoZW4gSSB3b3VsZCBsaWtlIHRvIHJlYWQgaXQgZmlyc3QgYmVmb3JlIHJlZmlu
+aW5nIHRoZSBxdWVzdGlvbnMuDQoNClRoYW5rcyBhbmQgdGFrZSBjYXJlLA0KSGFycnkNCl9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18NCuW+njogUmFmYWVsIEouIFd5c29j
+a2kgW3JhZmFlbEBrZXJuZWwub3JnXQ0K5a+E5Lu25pel5pyfOiAyMDIw5bm0M+aciDXml6Ug5LiK
+5Y2IIDA1OjE0DQroh7M6IFBhbiwgSGFycnkNCuWJr+acrDogUmFmYWVsIEouIFd5c29ja2k7IExL
+TUw7IEhhcnJ5IFBhbjsgSmFjb2IgUGFuOyBMZW4gQnJvd247IExpbnV4IFBNDQrkuLvml6g6IFJl
+OiBbUEFUQ0ggdjNdIGludGVsX2lkbGU6IEFkZCBDb21ldCBMYWtlIHN1cHBvcnQNCg0KT24gV2Vk
+LCBNYXIgNCwgMjAyMCBhdCAxMjo1NyBQTSBQYW4sIEhhcnJ5IDxoYXJyeS5wYW5AaW50ZWwuY29t
+PiB3cm90ZToNCj4NCj4gSGkgUmFmYWVsLA0KPg0KPiBZZXMsIEkgc2tpcHBlZCBpdCBjb25zaWRl
+cmluZyB0byBhbGlnbiBDTUwtVSBWMCBhbmQgQTAgc3RlcHBpbmcgdy8gdGhlIHNhbWUgdGFibGU7
+IEkgc2VudCB2NCBmb3IgeW91ciByZXZpZXcuDQoNClNraXBwaW5nIHRoYXQgZmxhZyBpcyByaXNr
+eSwgYmVjYXVzZSBpdCBtYXkgY2F1c2Ugc29tZSBDLXN0YXRlcyB0byBiZQ0KZW5hYmxlZCBvbiBz
+eXN0ZW1zIHdoZXJlIHRoZXkgaGF2ZSBub3QgYmVlbiB2YWxpZGF0ZWQgKGUuZy4gc3lzdGVtcw0K
+c2hpcHBpbmcgd2l0aCBvdGhlciBPU2VzIHdoaWNoIG9ubHkgdXNlIF9DU1QgQy1zdGF0ZXMpLiAg
+VGhlcmUgd2VyZQ0KcHJvYmxlbXMgcmVsYXRlZCB0byB0aGF0IGluIHRoZSBwYXN0IHdoaWNoIGlz
+IG9uZSBvZiB0aGUgcmVhc29ucyBmb3INCmFkZGluZyBfQ1NUIHN1cHBvcnQgdG8gaW50ZWxfaWRs
+ZS4gIHVzZV9hY3BpIHNob3VsZCBiZSBzZXQgZm9yIGFsbCBuZXcNCnBsYXRmb3JtcyBnb2luZyBm
+b3J3YXJkIGFzIGEgcnVsZS4NCg0KPiBJbiB0aGUgb3RoZXIgaGFuZCwgSSBhbSBwcm9wb3Npbmcg
+dXNpbmcgX0NTVCBhcyBsb25nIHRlcm0gcGxhbiBpbiBDck9TIGRldiB0ZWFtcy4NCg0KVGhhdCBJ
+IG9idmlvdXNseSBhZ3JlZSB3aXRoLiA6LSkNCg0KDQo+ID4gT24gTWFyIDQsIDIwMjAsIGF0IDE3
+OjUzLCBSYWZhZWwgSi4gV3lzb2NraSA8cmFmYWVsQGtlcm5lbC5vcmc+IHdyb3RlOg0KPiA+DQo+
+ID4g77u/T24gVHVlLCBNYXIgMywgMjAyMCBhdCAxMDoxMCBBTSBIYXJyeSBQYW4gPGhhcnJ5LnBh
+bkBpbnRlbC5jb20+IHdyb3RlOg0KPiA+Pg0KPiA+PiBBZGQgYSBnZW5lcmFsIEMtc3RhdGUgdGFi
+bGUgaW4gb3JkZXIgdG8gc3VwcG9ydCBDb21ldCBMYWtlLg0KPiA+Pg0KPiA+PiBTaWduZWQtb2Zm
+LWJ5OiBIYXJyeSBQYW4gPGhhcnJ5LnBhbkBpbnRlbC5jb20+DQo+ID4+DQo+ID4+IC0tLQ0KPiA+
+Pg0KPiA+PiBkcml2ZXJzL2lkbGUvaW50ZWxfaWRsZS5jIHwgNyArKysrKysrDQo+ID4+IDEgZmls
+ZSBjaGFuZ2VkLCA3IGluc2VydGlvbnMoKykNCj4gPj4NCj4gPj4gZGlmZiAtLWdpdCBhL2RyaXZl
+cnMvaWRsZS9pbnRlbF9pZGxlLmMgYi9kcml2ZXJzL2lkbGUvaW50ZWxfaWRsZS5jDQo+ID4+IGlu
+ZGV4IGQ1NTYwNjYwOGFjOC4uMDViY2U1OTVmYWZlIDEwMDY0NA0KPiA+PiAtLS0gYS9kcml2ZXJz
+L2lkbGUvaW50ZWxfaWRsZS5jDQo+ID4+ICsrKyBiL2RyaXZlcnMvaWRsZS9pbnRlbF9pZGxlLmMN
+Cj4gPj4gQEAgLTEwNjcsNiArMTA2NywxMSBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IGlkbGVfY3B1
+IGlkbGVfY3B1X2RudiA9IHsNCj4gPj4gICAgICAgIC51c2VfYWNwaSA9IHRydWUsDQo+ID4+IH07
+DQo+ID4+DQo+ID4+ICtzdGF0aWMgY29uc3Qgc3RydWN0IGlkbGVfY3B1IGlkbGVfY3B1X2NtbCA9
+IHsNCj4gPj4gKyAgICAgICAuc3RhdGVfdGFibGUgPSBza2xfY3N0YXRlcywNCj4gPj4gKyAgICAg
+ICAuZGlzYWJsZV9wcm9tb3Rpb25fdG9fYzFlID0gdHJ1ZSwNCj4gPg0KPiA+IC51c2VfYWNwaSA9
+IHRydWUsDQo+ID4NCj4gPiBtaXNzaW5nPyAgT3RoZXJ3aXNlIHlvdSBjYW4ganVzdCB1c2UgaWRs
+ZV9jcHVfc2tsIGFzIGlzLCBjYW4ndCB5b3U/DQo+ID4NCj4gPj4gK307DQo+ID4+ICsNCj4gPj4g
+c3RhdGljIGNvbnN0IHN0cnVjdCB4ODZfY3B1X2lkIGludGVsX2lkbGVfaWRzW10gX19pbml0Y29u
+c3QgPSB7DQo+ID4+ICAgICAgICBJTlRFTF9DUFVfRkFNNihORUhBTEVNX0VQLCAgICAgICAgICAg
+ICAgaWRsZV9jcHVfbmh4KSwNCj4gPj4gICAgICAgIElOVEVMX0NQVV9GQU02KE5FSEFMRU0sICAg
+ICAgICAgICAgICAgICBpZGxlX2NwdV9uZWhhbGVtKSwNCj4gPj4gQEAgLTExMDUsNiArMTExMCw4
+IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgeDg2X2NwdV9pZCBpbnRlbF9pZGxlX2lkc1tdIF9faW5p
+dGNvbnN0ID0gew0KPiA+PiAgICAgICAgSU5URUxfQ1BVX0ZBTTYoQVRPTV9HT0xETU9OVF9QTFVT
+LCAgICAgIGlkbGVfY3B1X2J4dCksDQo+ID4+ICAgICAgICBJTlRFTF9DUFVfRkFNNihBVE9NX0dP
+TERNT05UX0QsICAgICAgICAgaWRsZV9jcHVfZG52KSwNCj4gPj4gICAgICAgIElOVEVMX0NQVV9G
+QU02KEFUT01fVFJFTU9OVF9ELCAgICAgICAgICBpZGxlX2NwdV9kbnYpLA0KPiA+PiArICAgICAg
+IElOVEVMX0NQVV9GQU02KENPTUVUTEFLRV9MLCAgICAgICAgICAgICBpZGxlX2NwdV9jbWwpLA0K
+PiA+PiArICAgICAgIElOVEVMX0NQVV9GQU02KENPTUVUTEFLRSwgICAgICAgICAgICAgICBpZGxl
+X2NwdV9jbWwpLA0KPiA+PiAgICAgICAge30NCj4gPj4gfTsNCj4gPj4NCj4gPj4gLS0NCj4gPj4g
+Mi4yNC4xDQo+ID4+DQo=
