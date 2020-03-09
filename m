@@ -2,411 +2,145 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91F81C10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 22:18:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D791C10F29
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 22:19:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EE6124671
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 22:18:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 539F824654
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 22:19:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727179AbgCIWSx (ORCPT
+        id S1727231AbgCIWTQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 18:18:53 -0400
-Received: from retiisi.org.uk ([95.216.213.190]:51644 "EHLO
-        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726656AbgCIWSw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 18:18:52 -0400
-Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 3132D634C87;
-        Tue, 10 Mar 2020 00:18:05 +0200 (EET)
-Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
-        (envelope-from <sakari.ailus@retiisi.org.uk>)
-        id 1jBQir-0001Fd-8K; Tue, 10 Mar 2020 00:18:05 +0200
-Date:   Tue, 10 Mar 2020 00:18:05 +0200
-From:   Sakari Ailus <sakari.ailus@iki.fi>
-To:     Luca Weiss <luca@z3ntu.xyz>
-Cc:     linux-leds@vger.kernel.org, Dan Murphy <dmurphy@ti.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
-Subject: Re: [PATCH 3/3] leds: add sgm3140 driver
-Message-ID: <20200309221805.GD2619@valkosipuli.retiisi.org.uk>
-References: <20200309203558.305725-1-luca@z3ntu.xyz>
- <20200309203558.305725-4-luca@z3ntu.xyz>
+        Mon, 9 Mar 2020 18:19:16 -0400
+Received: from mga06.intel.com ([134.134.136.31]:5055 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727191AbgCIWTP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 18:19:15 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Mar 2020 15:19:15 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,534,1574150400"; 
+   d="scan'208";a="245486701"
+Received: from acrisan1-mobl1.amr.corp.intel.com (HELO [10.251.22.118]) ([10.251.22.118])
+  by orsmga006.jf.intel.com with ESMTP; 09 Mar 2020 15:19:14 -0700
+Subject: Re: [RFC PATCH v9 01/27] Documentation/x86: Add CET description
+To:     "H.J. Lu" <hjl.tools@gmail.com>
+Cc:     Andy Lutomirski <luto@amacapital.net>,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org,
+        Linux-MM <linux-mm@kvack.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>, x86-patch-review@intel.com
+References: <CAMe9rOoRTVUzNC88Ho2XTTNJCymrd3L=XdB9xFcgxPVwAZ0FWA@mail.gmail.com>
+ <AE81FEF5-ECC5-46AA-804D-9D64E656D16E@amacapital.net>
+ <CAMe9rOoDMenvD9XRL1szR5yLQEwv9Q6f4O7CtwbdZ-cJqzezKA@mail.gmail.com>
+ <0088001c-0b12-a7dc-ff2a-9d5c282fa36b@intel.com>
+ <CAMe9rOqf0OHL9397Vikgb=UWhRMf+FmGq-9VAJNmfmzNMMDkCw@mail.gmail.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+Message-ID: <56ab33ac-865b-b37e-75f2-a489424566c3@intel.com>
+Date:   Mon, 9 Mar 2020 15:19:13 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200309203558.305725-4-luca@z3ntu.xyz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAMe9rOqf0OHL9397Vikgb=UWhRMf+FmGq-9VAJNmfmzNMMDkCw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Luca,
+On 3/9/20 2:12 PM, H.J. Lu wrote:
+>> But what are the rules for clone()?  Should there be rules for
+>> mismatches for CET enabling between threads if a process (not child
+>> processes)?
+> What did you mean? A threaded application is either CET enabled or not
+> CET enabled.   A new thread from clone makes no difference.
 
-Thanks for the patch.
+Stacks are fundamentally thread-local resources.  The registers that
+point to them and MSRs that manage shadow stacks are all CPU-thread
+local.  Nothing is fundamentally tied to the address space shared across
+the process.
 
-On Mon, Mar 09, 2020 at 09:35:58PM +0100, Luca Weiss wrote:
-> Add a driver for the SGMICRO SGM3140 Buck/Boost Charge Pump LED driver.
-> 
-> This device is controlled by two GPIO pins, one for enabling and the
-> second one for switching between torch and flash mode.
-> 
-> Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
-> ---
-> Changes since RFC:
-> - address review comments from Jacek Anaszewski:
->   - implement strobe_get op
->   - implement timeout_set op
->   - init v4l2_sd_cfg variable
->   - remove init_data.devicename assignemnt
->   - use devm_ version of led_classdev_flash_register_ext
->   - release child_node in case of success
-> 
->  drivers/leds/Kconfig        |   9 ++
->  drivers/leds/Makefile       |   1 +
->  drivers/leds/leds-sgm3140.c | 260 ++++++++++++++++++++++++++++++++++++
->  3 files changed, 270 insertions(+)
->  create mode 100644 drivers/leds/leds-sgm3140.c
-> 
-> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
-> index 4b68520ac251..9206fc66799d 100644
-> --- a/drivers/leds/Kconfig
-> +++ b/drivers/leds/Kconfig
-> @@ -836,6 +836,15 @@ config LEDS_LM36274
->  	  Say Y to enable the LM36274 LED driver for TI LMU devices.
->  	  This supports the LED device LM36274.
->  
-> +config LEDS_SGM3140
-> +	tristate "LED support for the SGM3140"
-> +	depends on LEDS_CLASS_FLASH
-> +	depends on V4L2_FLASH_LED_CLASS || !V4L2_FLASH_LED_CLASS
-> +	depends on OF
-> +	help
-> +	  This option enables support for the SGM3140 500mA Buck/Boost Charge
-> +	  Pump LED Driver.
-> +
->  comment "LED Triggers"
->  source "drivers/leds/trigger/Kconfig"
->  
-> diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
-> index 2da39e896ce8..38d57dd53e4b 100644
-> --- a/drivers/leds/Makefile
-> +++ b/drivers/leds/Makefile
-> @@ -85,6 +85,7 @@ obj-$(CONFIG_LEDS_LM3601X)		+= leds-lm3601x.o
->  obj-$(CONFIG_LEDS_TI_LMU_COMMON)	+= leds-ti-lmu-common.o
->  obj-$(CONFIG_LEDS_LM3697)		+= leds-lm3697.o
->  obj-$(CONFIG_LEDS_LM36274)		+= leds-lm36274.o
-> +obj-$(CONFIG_LEDS_SGM3140)		+= leds-sgm3140.o
->  
->  # LED SPI Drivers
->  obj-$(CONFIG_LEDS_CR0014114)		+= leds-cr0014114.o
-> diff --git a/drivers/leds/leds-sgm3140.c b/drivers/leds/leds-sgm3140.c
-> new file mode 100644
-> index 000000000000..357f4cbb279a
-> --- /dev/null
-> +++ b/drivers/leds/leds-sgm3140.c
-> @@ -0,0 +1,260 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +// Copyright (C) 2020 Luca Weiss <luca@z3ntu.xyz>
-> +
-> +#include <linux/gpio/consumer.h>
-> +#include <linux/led-class-flash.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +
-> +#include <media/v4l2-flash-led-class.h>
-> +
-> +#define FLASH_TIMEOUT_DEFAULT		250000 /* 250ms */
-> +#define FLASH_MAX_TIMEOUT_DEFAULT	300000 /* 300ms */
+A thread might also share *no* control flow with its child.  It might
+ask the thread to start in code that the parent can never even reach.
 
-Add U, and you can remove the cast elsewhere.
+It sounds like you've picked a Linux implementation that has
+restrictions on top of the fundamentals.  That's not wrong per se, but
+it does deserve explanation and deliberate, not experimental design.
 
-> +
-> +struct sgm3140 {
-> +	struct gpio_desc *flash_gpio;
-> +	struct gpio_desc *enable_gpio;
-> +
-> +	/* current timeout in us */
-> +	u32 timeout;
-> +	/* maximum timeout in us */
-> +	u32 max_timeout;
-> +
-> +	struct led_classdev_flash fled_cdev;
-> +	struct v4l2_flash *v4l2_flash;
-> +
-> +	struct timer_list powerdown_timer;
-> +};
-> +
-> +static struct sgm3140 *flcdev_to_sgm3140(struct led_classdev_flash *flcdev)
-> +{
-> +	return container_of(flcdev, struct sgm3140, fled_cdev);
-> +}
-> +
-> +static int sgm3140_strobe_set(struct led_classdev_flash *fled_cdev, bool state)
-> +{
-> +	struct sgm3140 *priv = flcdev_to_sgm3140(fled_cdev);
-> +
-> +	if (state) {
-> +		gpiod_set_value_cansleep(priv->flash_gpio, 1);
-> +		gpiod_set_value_cansleep(priv->enable_gpio, 1);
-> +		mod_timer(&priv->powerdown_timer,
-> +			  jiffies + usecs_to_jiffies(priv->timeout));
-> +	} else {
-> +		gpiod_set_value_cansleep(priv->enable_gpio, 0);
-> +		gpiod_set_value_cansleep(priv->flash_gpio, 0);
-> +		del_timer_sync(&priv->powerdown_timer);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int sgm3140_strobe_get(struct led_classdev_flash *fled_cdev, bool *state)
-> +{
-> +	struct sgm3140 *priv = flcdev_to_sgm3140(fled_cdev);
-> +
-> +	*state = timer_pending(&priv->powerdown_timer);
-> +
-> +	return 0;
-> +}
-> +
-> +static int sgm3140_timeout_set(struct led_classdev_flash *fled_cdev, u32 timeout)
-> +{
-> +	struct sgm3140 *priv = flcdev_to_sgm3140(fled_cdev);
-> +
-> +	priv->timeout = timeout;
-> +
-> +	return 0;
-> +}
-> +
-> +struct led_flash_ops sgm3140_flash_ops = {
-
-const?
-
-> +	.strobe_set = sgm3140_strobe_set,
-> +	.strobe_get = sgm3140_strobe_get,
-> +	.timeout_set = sgm3140_timeout_set,
-> +};
-> +
-> +int sgm3140_brightness_set(struct led_classdev *led_cdev,
-> +			   enum led_brightness brightness)
-
-static
-
-> +{
-> +	struct led_classdev_flash *fled_cdev = lcdev_to_flcdev(led_cdev);
-> +	struct sgm3140 *priv = flcdev_to_sgm3140(fled_cdev);
-> +
-> +	if (brightness == LED_OFF)
-> +		gpiod_set_value_cansleep(priv->enable_gpio, 0);
-> +	else
-> +		gpiod_set_value_cansleep(priv->enable_gpio, 1);
-> +
-> +	return 0;
-> +}
-> +
-> +static void sgm3140_powerdown_timer(struct timer_list *t)
-> +{
-> +	struct sgm3140 *priv = from_timer(priv, t, powerdown_timer);
-> +
-> +	gpiod_set_value_cansleep(priv->enable_gpio, 0);
-> +	gpiod_set_value_cansleep(priv->flash_gpio, 0);
-
-You'll need a work queue to use sleeping gpiod_set. In this case, I'd use
-gpiod_set_value() instead, as elsewhere. I think it's unlikely you'd come
-across a board where it'd sleep.
-
-> +}
-> +
-> +static void sgm3140_init_flash_timeout(struct sgm3140 *priv)
-> +{
-> +	struct led_classdev_flash *fled_cdev = &priv->fled_cdev;
-> +	struct led_flash_setting *s;
-> +
-> +	/* Init flash timeout setting */
-> +	s = &fled_cdev->timeout;
-> +	s->min = 1;
-> +	s->max = priv->max_timeout;
-> +	s->step = 1;
-> +	s->val = FLASH_TIMEOUT_DEFAULT;
-> +}
-> +
-> +#if IS_ENABLED(CONFIG_V4L2_FLASH_LED_CLASS)
-> +static void sgm3140_init_v4l2_flash_config(struct sgm3140 *priv,
-> +					   struct v4l2_flash_config *v4l2_sd_cfg)
-> +{
-> +	struct led_classdev *led_cdev = &priv->fled_cdev.led_cdev;
-> +	struct led_flash_setting *s;
-> +
-> +	strlcpy(v4l2_sd_cfg->dev_name, led_cdev->dev->kobj.name,
-> +		sizeof(v4l2_sd_cfg->dev_name));
-
-strscpy()?
-
-> +
-> +	/* Init flash intensity setting */
-> +	s = &v4l2_sd_cfg->intensity;
-> +	s->min = 0;
-> +	s->max = 1;
-> +	s->step = 1;
-> +	s->val = 1;
-> +}
-> +
-> +#else
-
-The prototype doesn't change. I'd put the #if ... #endif inside the
-function. Up to you.
-
-> +static void sgm3140_init_v4l2_flash_config(struct sgm3140 *priv,
-> +					   struct v4l2_flash_config *v4l2_sd_cfg)
-> +{
-> +}
-> +#endif
-> +
-> +static int sgm3140_probe(struct platform_device *pdev)
-> +{
-> +	struct sgm3140 *priv;
-> +	struct led_classdev *led_cdev;
-> +	struct led_classdev_flash *fled_cdev;
-> +	struct led_init_data init_data = {};
-> +	struct device_node *child_node;
-> +	struct v4l2_flash_config v4l2_sd_cfg = {};
-> +	int ret;
-> +
-> +	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	priv->flash_gpio = devm_gpiod_get(&pdev->dev, "flash", GPIOD_OUT_LOW);
-> +	ret = PTR_ERR_OR_ZERO(priv->flash_gpio);
-> +	if (ret) {
-> +		if (ret != -EPROBE_DEFER)
-> +			dev_err(&pdev->dev, "Failed to request flash gpio: %d\n",
-> +				ret);
-> +		return ret;
-> +	}
-> +
-> +	priv->enable_gpio = devm_gpiod_get(&pdev->dev, "enable", GPIOD_OUT_LOW);
-> +	ret = PTR_ERR_OR_ZERO(priv->enable_gpio);
-> +	if (ret) {
-> +		if (ret != -EPROBE_DEFER)
-> +			dev_err(&pdev->dev, "Failed to request enable gpio: %d\n",
-> +				ret);
-> +		return ret;
-> +	}
-> +
-> +	child_node = of_get_next_available_child(pdev->dev.of_node, NULL);
-> +	if (!child_node) {
-> +		dev_err(&pdev->dev, "No DT child node found for connected LED.\n");
-
-You could wrap this. There are a few more above and below, too.
-
-> +		return -EINVAL;
-> +	}
-> +
-> +
-> +	ret = of_property_read_u32(child_node, "flash-max-timeout-us",
-> +				   &priv->max_timeout);
-> +	if (ret < 0) {
-> +		priv->max_timeout = FLASH_MAX_TIMEOUT_DEFAULT;
-> +		dev_warn(&pdev->dev, "flash-max-timeout-us DT property missing\n");
-> +	}
-> +
-> +	/*
-> +	 * Set default timeout to FLASH_DEFAULT_TIMEOUT except if max_timeout
-> +	 * from DT is lower.
-> +	 */
-> +	priv->timeout = min(priv->max_timeout, (u32)FLASH_TIMEOUT_DEFAULT);
-> +
-> +	timer_setup(&priv->powerdown_timer, sgm3140_powerdown_timer, 0);
-> +
-> +	fled_cdev = &priv->fled_cdev;
-> +	led_cdev = &fled_cdev->led_cdev;
-> +
-> +	fled_cdev->ops = &sgm3140_flash_ops;
-> +
-> +	led_cdev->brightness_set_blocking = sgm3140_brightness_set;
-> +	led_cdev->max_brightness = LED_ON;
-> +	led_cdev->flags |= LED_DEV_CAP_FLASH;
-> +
-> +	sgm3140_init_flash_timeout(priv);
-> +
-> +	init_data.fwnode = of_fwnode_handle(child_node);
-> +
-> +	platform_set_drvdata(pdev, priv);
-> +
-> +	/* Register in the LED subsystem */
-> +	ret = devm_led_classdev_flash_register_ext(&pdev->dev, fled_cdev, &init_data);
-> +	if (ret < 0) {
-> +		dev_err(&pdev->dev, "Failed to register flash device: %d\n",
-> +			ret);
-> +		goto err;
-> +	}
-> +
-> +	sgm3140_init_v4l2_flash_config(priv, &v4l2_sd_cfg);
-> +
-> +	/* Create V4L2 Flash subdev */
-> +	priv->v4l2_flash = v4l2_flash_init(&pdev->dev, of_fwnode_handle(child_node),
-> +					   fled_cdev, NULL,
-> +					   &v4l2_sd_cfg);
-> +	if (IS_ERR(priv->v4l2_flash)) {
-> +		ret = PTR_ERR(priv->v4l2_flash);
-> +		goto err;
-> +	}
-> +
-> +err:
-> +	of_node_put(child_node);
-> +	return ret;
-> +}
-> +
-> +static int sgm3140_remove(struct platform_device *pdev)
-> +{
-> +	struct sgm3140 *priv = platform_get_drvdata(pdev);
-> +
-> +	del_timer_sync(&priv->powerdown_timer);
-> +
-> +	v4l2_flash_release(priv->v4l2_flash);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id sgm3140_dt_match[] = {
-> +	{ .compatible = "sgmicro,sgm3140" },
-> +	{ /* sentinel */ }
-> +};
-> +MODULE_DEVICE_TABLE(of, sgm3140_dt_match);
-> +
-> +static struct platform_driver sgm3140_driver = {
-> +	.probe	= sgm3140_probe,
-> +	.remove	= sgm3140_remove,
-> +	.driver	= {
-> +		.name	= "sgm3140",
-> +		.of_match_table = sgm3140_dt_match,
-> +	},
-> +};
-> +
-> +module_platform_driver(sgm3140_driver);
-> +
-> +MODULE_AUTHOR("Luca Weiss <luca@z3ntu.xyz>");
-> +MODULE_DESCRIPTION("SG Micro SGM3140 charge pump led driver");
-> +MODULE_LICENSE("GPL v2");
-
--- 
-Kind regards,
-
-Sakari Ailus
+Could you go back to the folks at Intel and try to figure out what this
+was designed to *do*?  Yes, I'm probably one of those folks.  You know
+where to find me. :)
