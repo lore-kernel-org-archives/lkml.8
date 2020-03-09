@@ -2,105 +2,96 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E9A6C10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 16:29:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E8DEC18E5A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 16:32:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51D362253D
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 16:29:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0300121D56
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 16:32:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727180AbgCIQ3Q (ORCPT
+        id S1727185AbgCIQcG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 12:29:16 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:58560 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726922AbgCIQ3Q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 12:29:16 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 5B62C1C0316; Mon,  9 Mar 2020 17:29:14 +0100 (CET)
-Date:   Mon, 9 Mar 2020 17:29:12 +0100
-From:   Pavel Machek <pavel@ucw.cz>
-To:     jbrunet@baylibre.com, lgirdwood@gmail.com, broonie@kernel.org,
-        perex@perex.cz, tiwai@suse.com, khilman@baylibre.com,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] sound/soc/meson: fix irq leak in error path
-Message-ID: <20200309162912.GA21498@amd>
+        Mon, 9 Mar 2020 12:32:06 -0400
+Received: from 8bytes.org ([81.169.241.247]:50386 "EHLO theia.8bytes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727061AbgCIQcF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 12:32:05 -0400
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 29E2E39B; Mon,  9 Mar 2020 17:32:04 +0100 (CET)
+Date:   Mon, 9 Mar 2020 17:32:02 +0100
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
+Cc:     Hanjun Guo <guohanjun@huawei.com>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        virtualization@lists.linux-foundation.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Linuxarm <linuxarm@huawei.com>
+Subject: Re: [PATCH 00/14] iommu: Move iommu_fwspec out of 'struct device'
+Message-ID: <20200309163202.nk7yotb7awzido7b@8bytes.org>
+References: <20200228150820.15340-1-joro@8bytes.org>
+ <ea839f32-194a-29ea-57fc-22caea40b981@huawei.com>
+ <20200306100955.GB50020@myrica>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="3MwIy2ne0vdjdPXF"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20200306100955.GB50020@myrica>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Jean-Philippe,
 
---3MwIy2ne0vdjdPXF
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Fri, Mar 06, 2020 at 11:09:55AM +0100, Jean-Philippe Brucker wrote:
+> I think that's because patch 01/14 move the fwspec access too early. In 
+> 
+>                 err = pci_for_each_dma_alias(to_pci_dev(dev),
+>                                              iort_pci_iommu_init, &info);
+> 
+>                 if (!err && iort_pci_rc_supports_ats(node))
+>                         dev->iommu_fwspec->flags |= IOMMU_FWSPEC_PCI_RC_ATS;
+> 
+> the iommu_fwspec is only valid if iort_pci_iommu_init() initialized it
+> successfully, if err == 0. The following might fix it:
+> 
+> diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
+> index 0e981d7f3c7d..7d04424189df 100644
+> --- a/drivers/acpi/arm64/iort.c
+> +++ b/drivers/acpi/arm64/iort.c
+> @@ -1015,7 +1015,7 @@ const struct iommu_ops *iort_iommu_configure(struct device *dev)
+>  		return ops;
+> 
+>  	if (dev_is_pci(dev)) {
+> -		struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
+> +		struct iommu_fwspec *fwspec;
+>  		struct pci_bus *bus = to_pci_dev(dev)->bus;
+>  		struct iort_pci_alias_info info = { .dev = dev };
+> 
+> @@ -1028,7 +1028,8 @@ const struct iommu_ops *iort_iommu_configure(struct device *dev)
+>  		err = pci_for_each_dma_alias(to_pci_dev(dev),
+>  					     iort_pci_iommu_init, &info);
+> 
+> -		if (!err && iort_pci_rc_supports_ats(node))
+> +		fwspec = dev_iommu_fwspec_get(dev);
+> +		if (fwspec && iort_pci_rc_supports_ats(node))
+>  			fwspec->flags |= IOMMU_FWSPEC_PCI_RC_ATS;
+>  	} else {
+>  		int i = 0;
 
-Irq seems to be leaked in error path. Fix that.
+Thanks a lot for the fix! I added it to patch 1/14.
 
-Signed-off-by: Pavel Machek <pavel@denx.de>
+Regards,
 
----
-
-I noticed problem during -stable review, and don't have hardware or
-ability to test the patch. Handle with care.
-
-diff --git a/sound/soc/meson/axg-fifo.c b/sound/soc/meson/axg-fifo.c
-index 2f44e93359f6..fbac6de891cd 100644
---- a/sound/soc/meson/axg-fifo.c
-+++ b/sound/soc/meson/axg-fifo.c
-@@ -249,7 +249,7 @@ int axg_fifo_pcm_open(struct snd_soc_component *compone=
-nt,
- 	/* Enable pclk to access registers and clock the fifo ip */
- 	ret =3D clk_prepare_enable(fifo->pclk);
- 	if (ret)
--		return ret;
-+		goto free_irq;
-=20
- 	/* Setup status2 so it reports the memory pointer */
- 	regmap_update_bits(fifo->map, FIFO_CTRL1,
-@@ -270,8 +269,14 @@ int axg_fifo_pcm_open(struct snd_soc_component *compon=
-ent,
- 	/* Take memory arbitror out of reset */
- 	ret =3D reset_control_deassert(fifo->arb);
- 	if (ret)
--		clk_disable_unprepare(fifo->pclk);
-+		goto free_clk;
-+
-+	return 0;
-=20
-+free_clk:
-+	clk_disable_unprepare(fifo->pclk);
-+free_irq:
-+	free_irq(fifo->irq, ss);
- 	return ret;
- }
- EXPORT_SYMBOL_GPL(axg_fifo_pcm_open);
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---3MwIy2ne0vdjdPXF
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl5mbtgACgkQMOfwapXb+vJefgCeM7d1Qx3cehrDJzEYzLcj4iyP
-CKMAnA6pptOXe9GMjiERO2VaCYnThakN
-=fqcx
------END PGP SIGNATURE-----
-
---3MwIy2ne0vdjdPXF--
+	Joerg
