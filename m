@@ -2,174 +2,131 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 627D4C10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 10:32:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC1D1C18E5A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 10:32:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4370120409
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 10:32:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F7A920409
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 10:32:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726833AbgCIKcc (ORCPT
+        id S1726860AbgCIKck (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 06:32:32 -0400
-Received: from foss.arm.com ([217.140.110.172]:50242 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726545AbgCIKcb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 06:32:31 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 08E7D1FB;
-        Mon,  9 Mar 2020 03:32:31 -0700 (PDT)
-Received: from [10.1.195.32] (e112269-lin.cambridge.arm.com [10.1.195.32])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 75E5F3F67D;
-        Mon,  9 Mar 2020 03:32:29 -0700 (PDT)
-Subject: Re: [PATCH] arm64: add check_wx_pages debugfs for CHECK_WX
-To:     Phong Tran <tranmanphong@gmail.com>,
-        Catalin Marinas <Catalin.Marinas@arm.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "alexios.zavras@intel.com" <alexios.zavras@intel.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        Steve Capper <Steve.Capper@arm.com>,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "keescook@chromium.org" <keescook@chromium.org>
-Cc:     "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kernel-hardening@lists.openwall.com" 
-        <kernel-hardening@lists.openwall.com>
-References: <20200307093926.27145-1-tranmanphong@gmail.com>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <34739c99-3436-e88f-769b-43c48caa8817@arm.com>
-Date:   Mon, 9 Mar 2020 10:32:27 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Mon, 9 Mar 2020 06:32:40 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:38862 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726838AbgCIKcj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 06:32:39 -0400
+Received: by mail-ot1-f66.google.com with SMTP id i14so9037566otp.5;
+        Mon, 09 Mar 2020 03:32:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=W04cd8gXdHqCmadUdyg5wxomjkoAadthvQ2P3gMSd+8=;
+        b=VenxMpC4NJdiKmHAUl+WZItPzOKwfDxhxwZmqqx/Fiu4buEOTwBD3XJdR2B8eQCqE/
+         XYg/XQrEVWKJuGTBtHa8tOw/YPZNGt6ymrRdvMM85Yp1/DbWIAK0LrL/gt3EVBlLI0R/
+         mg7ulM3fATDKw5j4ruKbM+qSwO6xePcOGjfTRY1on+Bk+4V0Z/c5p4nUPR5Z39vspOyO
+         Do4HIa1wtKT/iUWUtP5BdibDTx9Df74aHdT3ZqD7RRLO6UNeUtQrcegOT6S+c92f3xty
+         5Q62TTOQQf6Xdo3TIXu9t3dMrCLBqf7c3at8e62B9VhrM5pkG1z3srcANX3kSUWvjzYb
+         gPpg==
+X-Gm-Message-State: ANhLgQ2F59feRebgmGH+riuRa5txRasqAYYs74SlMfRplJVjmJ8+lcj3
+        2BHyW8CihIif/O1XUfyvz+E7rpctpt/NBtAfdnY=
+X-Google-Smtp-Source: ADFU+vuVh6fkJGhu+5hmMbyrYecsnL9gWVa5R6t/lywxheWDLQwPc4My1fEjTIzo75HPjSFXa2cg380naqShaRyyTng=
+X-Received: by 2002:a9d:1708:: with SMTP id i8mr10206182ota.250.1583749957218;
+ Mon, 09 Mar 2020 03:32:37 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200307093926.27145-1-tranmanphong@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200305103228.9686-1-zhang.lyra@gmail.com> <20200305103228.9686-2-zhang.lyra@gmail.com>
+ <CAMuHMdU-gAhupHotQTHAZfopkGF_jQc-VrVxb24caw_BfzWd6g@mail.gmail.com>
+ <CAAfSe-sonfA=6x9uvQXaHniQaXR8hWZa4uOcWxoo+Z_XT9QNhw@mail.gmail.com>
+ <CAMuHMdUBkS+pPyPid2K=40jaTOSnAE_L-vJP5knmyVr8Fr5_hg@mail.gmail.com> <CAAfSe-uZSYZopDCGxQbGBQQ5+NZK6L79P+T62nfnL9CiZka++g@mail.gmail.com>
+In-Reply-To: <CAAfSe-uZSYZopDCGxQbGBQQ5+NZK6L79P+T62nfnL9CiZka++g@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 9 Mar 2020 11:32:25 +0100
+Message-ID: <CAMuHMdXY5=QS4FA0T55_G=ARPs9V0NLbWwF3hd76rwO=8ahZbA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] tty: serial: make SERIAL_SPRD not depend on ARCH_SPRD
+To:     Chunyan Zhang <zhang.lyra@gmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Jiri Slaby <jslaby@suse.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/03/2020 09:39, Phong Tran wrote:
-> follow the suggestion from
-> https://github.com/KSPP/linux/issues/35
-> 
-> Signed-off-by: Phong Tran <tranmanphong@gmail.com>
-> ---
->  arch/arm64/Kconfig.debug        |  3 ++-
->  arch/arm64/include/asm/ptdump.h |  2 ++
->  arch/arm64/mm/dump.c            |  1 +
->  arch/arm64/mm/ptdump_debugfs.c  | 18 ++++++++++++++++++
->  4 files changed, 23 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/Kconfig.debug b/arch/arm64/Kconfig.debug
-> index 1c906d932d6b..be552fa351e2 100644
-> --- a/arch/arm64/Kconfig.debug
-> +++ b/arch/arm64/Kconfig.debug
-> @@ -48,7 +48,8 @@ config DEBUG_WX
->  	  of other unfixed kernel bugs easier.
->  
->  	  There is no runtime or memory usage effect of this option
-> -	  once the kernel has booted up - it's a one time check.
-> +	  once the kernel has booted up - it's a one time check and
-> +	  can be checked by echo "1" to "check_wx_pages" debugfs in runtime.
+Hi Chunyan,
 
-I would suggest it may be better spelling this out a bit more, because
-at the moment it's a little confusing when the config option is "Warn on
-W+X mappings at boot", but your change makes it sound like it only
-happens when you do the echo. Perhaps something like:
+On Mon, Mar 9, 2020 at 9:43 AM Chunyan Zhang <zhang.lyra@gmail.com> wrote:
+> On Mon, 9 Mar 2020 at 16:01, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > On Mon, Mar 9, 2020 at 2:18 AM Chunyan Zhang <zhang.lyra@gmail.com> wrote:
+> > > On Fri, 6 Mar 2020 at 20:41, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > > > On Thu, Mar 5, 2020 at 11:33 AM Chunyan Zhang <zhang.lyra@gmail.com> wrote:
+> > > > > From: Chunyan Zhang <chunyan.zhang@unisoc.com>
+> > > > >
+> > > > > Remove the dependency with ARCH_SPRD from sprd serial/console Kconfig-s,
+> > > > > since we want them can be built-in when ARCH_SPRD is set as 'm'.
+> > > >
+> > > > Why would you want a serial driver for a specific platform to be builtin,
+> > > > while all other platform support is modular?
+> > >
+> > > Oh, that's not this patch means.
+> > >
+> > > We just want serial driver can be builtin for any platform, so it
+> >
+> > What would be the benefit of the user to be able to have the SPRD serial
+> > driver built-in on any platform?  AFAIU, it supports only Spreadtrum
+> > platforms.
+>
+> Right, it does support Spreadtrum platforms only indeed.
+> Like I said on the replay to patch 1/2, simply because I want serial
+> driver can be builtin all the time, no matter ARCH_SPRD is m or y.
 
-	  There is no runtime or memory usage effect of this option
-	  once the kernel has booted up - it's a one time check at
-	  boot, and can also be triggered at runtime by echo "1" to
-	  "check_wx_pages".
+OK.
 
->  
->  	  If in doubt, say "Y".
->  
-> diff --git a/arch/arm64/include/asm/ptdump.h b/arch/arm64/include/asm/ptdump.h
-> index 38187f74e089..b80d6b4fc508 100644
-> --- a/arch/arm64/include/asm/ptdump.h
-> +++ b/arch/arm64/include/asm/ptdump.h
-> @@ -24,9 +24,11 @@ struct ptdump_info {
->  void ptdump_walk(struct seq_file *s, struct ptdump_info *info);
->  #ifdef CONFIG_PTDUMP_DEBUGFS
->  void ptdump_debugfs_register(struct ptdump_info *info, const char *name);
-> +int ptdump_check_wx_init(void);
->  #else
->  static inline void ptdump_debugfs_register(struct ptdump_info *info,
->  					   const char *name) { }
-> +static inline int ptdump_check_wx_init(void) { return 0; }
->  #endif
->  void ptdump_check_wx(void);
->  #endif /* CONFIG_PTDUMP_CORE */
+So shouldn't the dependency become
 
-This is a confusing! Why have you made it dependent on
-CONFIG_PTDUMP_DEBUGFS?
+    depends on ARCH_SPRD || ARCH_SPRD=m || COMPILE_TEST
 
-Well actually I can see why - it's because you've put the new functions
-in ptdump_debugfs.c which is (currently) only built when
-CONFIG_PTDUMP_DBEUGFS is enabled.
+instead, to avoid asking the question when you're not building a kernel
+plus modules for Spreadtrum platforms?
 
-So you need to either:
 
- a) Ensure the new code is built when CONFIG_PTDUMP_DEBUGFS isn't enabled.
+> > > should not depend on a config which can be set as 'm' (i.e. ARCH_SPRD)
+> > > , otherwise if the config was set as 'm', the serial driver can't be
+> > > selected as 'y' then.
+> >
+> > I ask about that as a reply to PATCH 1/2.
+> >
+> > > That's what I mean.
+> >
+> > > > > --- a/drivers/tty/serial/Kconfig
+> > > > > +++ b/drivers/tty/serial/Kconfig
+> > > > > @@ -1452,7 +1452,6 @@ config SERIAL_MEN_Z135
+> > > > >
+> > > > >  config SERIAL_SPRD
+> > > > >         tristate "Support for Spreadtrum serial"
+> > > > > -       depends on ARCH_SPRD
+> > > > >         select SERIAL_CORE
+> > > > >         help
+> > > > >           This enables the driver for the Spreadtrum's serial.
 
- b) Update the Kconfig help text to say that the debugfs file for
-triggering a runtime W+X check is only available if
-CONFIG_PTDUMP_DEBUGFS is also enabled.
+Gr{oetje,eeting}s,
 
-Other than the confusion over config symbols this looks good.
+                        Geert
 
-Thanks,
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-Steve
-
-> diff --git a/arch/arm64/mm/dump.c b/arch/arm64/mm/dump.c
-> index 860c00ec8bd3..60c99a047763 100644
-> --- a/arch/arm64/mm/dump.c
-> +++ b/arch/arm64/mm/dump.c
-> @@ -378,6 +378,7 @@ static int ptdump_init(void)
->  #endif
->  	ptdump_initialize();
->  	ptdump_debugfs_register(&kernel_ptdump_info, "kernel_page_tables");
-> +	ptdump_check_wx_init();
->  	return 0;
->  }
->  device_initcall(ptdump_init);
-> diff --git a/arch/arm64/mm/ptdump_debugfs.c b/arch/arm64/mm/ptdump_debugfs.c
-> index 1f2eae3e988b..73cddc12c3c2 100644
-> --- a/arch/arm64/mm/ptdump_debugfs.c
-> +++ b/arch/arm64/mm/ptdump_debugfs.c
-> @@ -16,3 +16,21 @@ void ptdump_debugfs_register(struct ptdump_info *info, const char *name)
->  {
->  	debugfs_create_file(name, 0400, NULL, info, &ptdump_fops);
->  }
-> +
-> +static int check_wx_debugfs_set(void *data, u64 val)
-> +{
-> +	if (val != 1ULL)
-> +		return -EINVAL;
-> +
-> +	ptdump_check_wx();
-> +
-> +	return 0;
-> +}
-> +
-> +DEFINE_SIMPLE_ATTRIBUTE(check_wx_fops, NULL, check_wx_debugfs_set, "%llu\n");
-> +
-> +int ptdump_check_wx_init(void)
-> +{
-> +	return debugfs_create_file("check_wx_pages", 0200, NULL,
-> +				   NULL, &check_wx_fops) ? 0 : -ENOMEM;
-> +}
-> 
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
