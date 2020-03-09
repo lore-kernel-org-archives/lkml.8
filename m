@@ -2,114 +2,99 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6A87C10F29
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 22:59:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFAEFC10F29
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 23:03:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0EEF24649
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 22:59:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9F0624654
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 23:03:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="KL0cHZS1"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="gyPUS950"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727364AbgCIW7W (ORCPT
+        id S1727332AbgCIXDu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 18:59:22 -0400
-Received: from ozlabs.org ([203.11.71.1]:36845 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726536AbgCIW7W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 18:59:22 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48btvW4YyRz9sPJ;
-        Tue, 10 Mar 2020 09:59:19 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1583794760;
-        bh=206rIbkp0C/1Ogfui2ffVjFpvbdu0zvMFzur9BTxmis=;
-        h=Date:From:To:Cc:Subject:From;
-        b=KL0cHZS1CHJrnpydDUzSv+aZO234X7kPD9BBh4vKBn2nGlncweo5Fz0QTjScDjYnG
-         st6l0WXtJWNVQWk/ri+oWWAu9EJ0arvZopaua3/XRZQlMUlXT78VbEWph+hezrT1aA
-         byXy30GsiySgmsxBSwvRpyp2G6+IEqESd9Zfl/LF/+60ChIWPCb4Wk+vqwZfaeMYBB
-         sTLlTLXy499jrUmwMTp/9OpXmZSPk1gneV+Dkbkl2pdAFSZsM3746Cry9UmqIjMW60
-         5uze4UAw+ief5KjguJKTmG+J+DM5m7BljWLNrSlfMs+37/oqYuHtBh4qDP8h+Y1Odi
-         vWEpwy+XEvUlg==
-Date:   Tue, 10 Mar 2020 09:59:18 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Al Viro <viro@ZenIV.linux.org.uk>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Namjae Jeon <namjae.jeon@samsung.com>,
-        Sungjong Seo <sj1557.seo@samsung.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Pali =?UTF-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>,
-        Christoph Hellwig <hch@lst.de>
-Subject: linux-next: build warning after merge of the vfs tree
-Message-ID: <20200310095918.3ea6432f@canb.auug.org.au>
+        Mon, 9 Mar 2020 19:03:50 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:45448 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726698AbgCIXDt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 19:03:49 -0400
+Received: by mail-qk1-f195.google.com with SMTP id c145so5220893qke.12
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 16:03:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=DG5Pmu1RlQqHBWl+2qUX5CoGznFuBPO5I6Xwyxwb+Cs=;
+        b=gyPUS950qwVdh0+braV/e3jgiwyl9rKeMblixJMxHnbVM14lXi0z+IVb1BLL5qohGB
+         Oj1x2W/5X1R4dMQUKlvVgKlRrgpGVWXRJjsDvt3nI/eDWNEzJI1ZBLb/1mFdGII05Qoa
+         N6kOMSXBHafiqYJKag3k4o3UIJsI6B4CPraCKX7ZqIN4Wz3SC4XboMQKljz2gZmSWZ/h
+         Va11KdhuaGezvM3vV1fmFfxIL4z+Y+2FMtXNgTHiMocYpIZ8u2JaFHLbKqSh/gMI0CS2
+         oLVN2kEAVhszQoBMkC693ll3B6py0pMcBDAOepqOVTDEEhPXsNbxXH6mBTI4ddpE5gAP
+         LnvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=DG5Pmu1RlQqHBWl+2qUX5CoGznFuBPO5I6Xwyxwb+Cs=;
+        b=Xe5NA7VUMf/znMRCrWAQYfhGAsYcOZCRIWpsUrvYO1sWd4Uc+ZA7uVTe/Flv2t3swy
+         GhHVjheVL71dHFBj9iigVXqplPUJmn8MygmJTlVfNJIONQYeLXZYvk9evFs8WGJt+TFI
+         CSKZtwYcUmyGqaF0yAeaWvHdFFVdI9SV80RCrYur0FWTETMJ8f7qPMtnpZsUpxhB/E7Z
+         7+wIdBBpMMC8Ud6t0DMYqw57qy9P8qBDciWIww+5zGCuNBtq8PcC4gxqPq1QF/HlXbKg
+         aJPqSB886Y0GSBYIpqyjHXiVRLYPYpVWCTWWlWhVSTy80iNRSS9CRm+J+lRWLtvb53iu
+         wX1w==
+X-Gm-Message-State: ANhLgQ2rvk6jAh8RPiVZi0NxS/3lCl6wj/5Rs7a6EtN1vuH+VNeg/EJa
+        LW3GFbbbILBn6/j0iJkBvg4DCw==
+X-Google-Smtp-Source: ADFU+vsVuThcYSPMT2Kil8KJF1J3XD2L42eeVKLwA6rk3nlN3INK1pTC1Eso1Jbfa3D4sIWSdor1Jg==
+X-Received: by 2002:a37:664d:: with SMTP id a74mr16712041qkc.256.1583795028784;
+        Mon, 09 Mar 2020 16:03:48 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
+        by smtp.gmail.com with ESMTPSA id q142sm3151748qke.45.2020.03.09.16.03.47
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 09 Mar 2020 16:03:48 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1jBRR5-0004ho-F5; Mon, 09 Mar 2020 20:03:47 -0300
+Date:   Mon, 9 Mar 2020 20:03:47 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     syzbot <syzbot+06b50ee4a9bd73e8b89f@syzkaller.appspotmail.com>
+Cc:     chuck.lever@oracle.com, dledford@redhat.com, leon@kernel.org,
+        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+        parav@mellanox.com, syzkaller-bugs@googlegroups.com,
+        willy@infradead.org
+Subject: Re: BUG: corrupted list in _cma_attach_to_dev
+Message-ID: <20200309230347.GY31668@ziepe.ca>
+References: <20200309172430.GV31668@ziepe.ca>
+ <0000000000007dfeb705a071ba51@google.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/knfUsg6=EcD246GvZQuo23u";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0000000000007dfeb705a071ba51@google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/knfUsg6=EcD246GvZQuo23u
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Mon, Mar 09, 2020 at 01:20:04PM -0700, syzbot wrote:
+> Hello,
+> 
+> syzbot has tested the proposed patch and the reproducer did not trigger crash:
+> 
+> Reported-and-tested-by: syzbot+06b50ee4a9bd73e8b89f@syzkaller.appspotmail.com
+> 
+> Tested on:
+> 
+> commit:         0aeb3622 RDMA/hns: fix spelling mistake "attatch" -> "atta..
+> git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git for-next
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=b58f96e9824c82cb
+> dashboard link: https://syzkaller.appspot.com/bug?extid=06b50ee4a9bd73e8b89f
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> 
+> Note: testing is done by a robot and is best-effort only.
 
-Hi all,
-
-After merging the vfs tree, today's linux-next build (x86_64 allmodconfig)
-produced this warning:
-
-warning: same module names found:
-  fs/exfat/exfat.ko
-  drivers/staging/exfat/exfat.ko
-
-Introduced by commit
-
-  b9d1e2e6265f ("exfat: add Kconfig and Makefile")
-
-and not fixed by commit
-
-  1a3c0509ce83 ("staging: exfat: make staging/exfat and fs/exfat mutually e=
-xclusive")
-
-$ grep EXFAT .config
-CONFIG_STAGING_EXFAT_FS=3Dm
-CONFIG_STAGING_EXFAT_DISCARD=3Dy
-CONFIG_STAGING_EXFAT_DELAYED_SYNC=3Dy
-CONFIG_STAGING_EXFAT_KERNEL_DEBUG=3Dy
-CONFIG_STAGING_EXFAT_DEBUG_MSG=3Dy
-CONFIG_STAGING_EXFAT_DEFAULT_CODEPAGE=3D437
-CONFIG_STAGING_EXFAT_DEFAULT_IOCHARSET=3D"utf8"
-# DOS/FAT/EXFAT/NT Filesystems
-CONFIG_EXFAT_FS=3Dm
-CONFIG_EXFAT_DEFAULT_IOCHARSET=3D"utf8"
-# end of DOS/FAT/EXFAT/NT Filesystems
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/knfUsg6=EcD246GvZQuo23u
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5mykYACgkQAVBC80lX
-0GzkhQf/exGVw+61mho1oNpxk0lkPhRIPu1I+ySRrOBDnt9vf3ltuv3S1ZTyQiA/
-NAAp15Shp3oe99nvLX5Hr709QdTxdvjbEC74aekJtglpUNUfXyoP5fcwplGgAZ1Y
-W9rNhapWVjcIozUnVrynTgp4joVv1MzvmjXDKH+pPHA6ndYe/4dw+VoApupldasE
-08zMQ3wC7TWwjO7vjzp7L0M5Zkv2Mj9v2vX68ZErjGMkHDer2E46SIOXPu52lMhY
-e2zi2VQdG0/kq679dB0kdnsnStXzdO+NonbCKfuk8bxLpTCfeAwpCqTwvXIkDG1A
-54ax7ZOZ2c/L4EPt2GYbERvHeSEwmg==
-=e7uC
------END PGP SIGNATURE-----
-
---Sig_/knfUsg6=EcD246GvZQuo23u--
+#syz dup: KASAN: use-after-free Read in rdma_listen (2)
