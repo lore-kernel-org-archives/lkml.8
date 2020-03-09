@@ -2,141 +2,137 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48A0CC10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:22:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3969C10F25
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:22:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24C0522522
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:22:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=anarazel.de header.i=@anarazel.de header.b="Zx+aJhCQ";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Jz9WWT0O"
+	by mail.kernel.org (Postfix) with ESMTP id AA6CE222C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 19:22:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726382AbgCITWr (ORCPT
+        id S1726436AbgCITWu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 15:22:47 -0400
-Received: from new2-smtp.messagingengine.com ([66.111.4.224]:52095 "EHLO
-        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726118AbgCITWq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 15:22:46 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 0273F2165;
-        Mon,  9 Mar 2020 15:22:43 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Mon, 09 Mar 2020 15:22:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=anarazel.de; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm1; bh=9OPUApP7XHwBJ2ua/845zHXN+Bx
-        CiMndYLVmUljdPfs=; b=Zx+aJhCQuuW9zL3vV9mkX5vIdNdmN8/IWDffz8jj8Gb
-        2VqO7mxto+/Dg70LiN2yzj5fiYHNKAZzx3yPelxgwUoQ+is2cdcJE5cIvJzPpLwP
-        1xPCpmX1WtFmzCKNubm6b5P2EF7CkKxJXHsEs6ybNxRzQCPJzbqZOZSd96rAWA/s
-        7nO1xn8GN/rhw5+44q9xquYivc/LsB5DNy1Sr7wODuT8vz1B9CEd7RzJQ6+yCPws
-        Q4BQsksfc1slCjyk7DZeBxKlsDmu+IkwTWvjrJ+31T+ybHClZpCgA7ZxHxIt60ze
-        0rjBlnXvVbJq19rll/30PhxY+fbw911ReY76p4D4+Zg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=9OPUAp
-        P7XHwBJ2ua/845zHXN+BxCiMndYLVmUljdPfs=; b=Jz9WWT0OhfWbV49D+wIuxm
-        3sJ9Kel6t8sFJrmVyv19hsEiQzOp4evJzLdEZVY55UsNPi/dB2hyJt29LHCe6dgR
-        e9kD+L7Mfl3qIo5ngts0zeS4esAEGVEiQFlDYmvxdL6dProHeRHBKtaE/tUyf/00
-        8oGdCWK0UbGe2iA2wkAaSoN7+HqKLQfmK+nd513rMwVTTJKW1TPnr406mI6fJgBD
-        SO+dv4s23dzemFtebeyTZ4TOCeYWUAeWda6lC3gkrRn/vRPfMhiXV1tyvQYLY7M6
-        H1SvTye3XXhWvy0SBwMOBi4R8fHduIcKySwDxPapJ+gRfXM3EFhrm2VGK8Ka2Q+A
-        ==
-X-ME-Sender: <xms:gpdmXp0izSospZhLf9jd8uC2VihdmnYjkksGoMYJO5iAvhtB2c7OrA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedruddukedguddvgecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomheptehnughr
-    vghsucfhrhgvuhhnugcuoegrnhgurhgvshesrghnrghrrgiivghlrdguvgeqnecukfhppe
-    eijedrudeitddrvddujedrvdehtdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgr
-    mhepmhgrihhlfhhrohhmpegrnhgurhgvshesrghnrghrrgiivghlrdguvg
-X-ME-Proxy: <xmx:gpdmXqsjquW8ESXmD9dxw71lrZxnA5nkpUkgfENiIXmvTlgnk7KhPw>
-    <xmx:gpdmXt-8hZpIoe7KcTaKx1a6wafRA-cm_jvCbBkbXxQTt9fR8FhqqQ>
-    <xmx:gpdmXsFJrGZGb8n1mvKJXXT6i_-ZMHWQeAlCmdtbguoV7-ys584J8Q>
-    <xmx:g5dmXndVRmQTWz4NUF8L_57jSTW2SmewMAEhD-D5atrKfdws8K2IJA>
-Received: from intern.anarazel.de (c-67-160-217-250.hsd1.ca.comcast.net [67.160.217.250])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 0771F328005A;
-        Mon,  9 Mar 2020 15:22:42 -0400 (EDT)
-Date:   Mon, 9 Mar 2020 12:22:40 -0700
-From:   Andres Freund <andres@anarazel.de>
-To:     Jeff Layton <jlayton@redhat.com>
-Cc:     David Howells <dhowells@redhat.com>, torvalds@linux-foundation.org,
-        viro@zeniv.linux.org.uk, Theodore Ts'o <tytso@mit.edu>,
-        Stefan Metzmacher <metze@samba.org>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        linux-ext4@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        linux-nfs@vger.kernel.org, linux-api@vger.kernel.org,
-        raven@themaw.net, mszeredi@redhat.com, christian@brauner.io,
-        jannh@google.com, darrick.wong@oracle.com, kzak@redhat.com,
-        linux-fsdevel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 00/14] VFS: Filesystem information [ver #18]
-Message-ID: <20200309192240.nqf5bxylptw7mdm3@alap3.anarazel.de>
-References: <158376244589.344135.12925590041630631412.stgit@warthog.procyon.org.uk>
- <2d31e2658e5f6651dc7d9908c4c12b6ba461fc88.camel@redhat.com>
+        Mon, 9 Mar 2020 15:22:50 -0400
+Received: from mx2.suse.de ([195.135.220.15]:52992 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726121AbgCITWt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 15:22:49 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 55DADB06A;
+        Mon,  9 Mar 2020 19:22:47 +0000 (UTC)
+Message-ID: <9e685fce547d808f269e59e2290331e75c66f3e4.camel@suse.de>
+Subject: Re: [PATCH] ARM: dts: bcm283x: Use firmware PM driver for V3D
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Stefan Wahren <stefan.wahren@i2se.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Eric Anholt <eric@anholt.net>
+Cc:     devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        wahrenst@gmx.net
+Date:   Mon, 09 Mar 2020 20:22:45 +0100
+In-Reply-To: <ddcb8fd5-9e35-454c-b38d-d36e7b41ef07@i2se.com>
+References: <20200303173217.3987-1-nsaenzjulienne@suse.de>
+         <736f0c59-352b-03b2-f77f-bfc22171b3fb@i2se.com>
+         <03fcb1e2bc7f3ff389b6dfbf3964e159a93ae835.camel@suse.de>
+         <d3d40174-9c08-f42f-e088-08e23c2dc029@i2se.com>
+         <f2ec22160ac86aec8d252ade7d6eb8789777cc42.camel@suse.de>
+         <01ceb60e-a791-b6ca-352e-ad2e79f264e3@i2se.com>
+         <ddcb8fd5-9e35-454c-b38d-d36e7b41ef07@i2se.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-tZ303xiG7cDiGT02SWOp"
+User-Agent: Evolution 3.34.4 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2d31e2658e5f6651dc7d9908c4c12b6ba461fc88.camel@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-On 2020-03-09 13:50:59 -0400, Jeff Layton wrote:
-> The PostgreSQL devs asked a while back for some way to tell whether
-> there have been any writeback errors on a superblock w/o having to do
-> any sort of flush -- just "have there been any so far".
+--=-tZ303xiG7cDiGT02SWOp
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Indeed.
+Hi Stefan,
+
+On Mon, 2020-03-09 at 16:41 +0100, Stefan Wahren wrote:
+> Hi Nicolas,
+>=20
+> On 06.03.20 21:33, Stefan Wahren wrote:
+> > Hi Nicolas,
+> >=20
+> > Am 05.03.20 um 11:44 schrieb Nicolas Saenz Julienne:
+> > > Hi Stefan,
+> > >=20
+> > > On Tue, 2020-03-03 at 20:24 +0100, Stefan Wahren wrote:
+> > > > > > > Note: I tested this on RPi3b, RPi3a+ and RPi2b.
+> > > > > > as i already wrote this prevent X to start on current Raspbian =
+on my
+> > > > > > Raspberry Pi 3A+ (multi_v7_defconfig, no u-boot). We must be ca=
+reful
+> > > > > > here.
+> > > > > >=20
+> > > > > > I will take a look at the debug UART. Maybe there are more help=
+ful
+> > > > > > information.
+> > > > > It seems we're seeing different things, I tested this on raspbian
+> > > > > (multi_v7_defconfig) and on arm64. I'll try again from scratch
+> > > > > tomorrow.
+> > > > My modifications to the Raspbian image (from 13.2.2020) are little:
+> > > >=20
+> > > > - specify devicetree to config.txt
+> > > > - change console to ttyS1 and remove "silent" in cmdline.txt
+> > > > - rename all original kernel7*.img
+> > > > - copy dtb and kernel7.img to boot partition
+> > > > - copy kernel modules to root partition
+> > > Would you mind retesting with the latest linux-next? I validated an i=
+mage
+> > > based
+> > > on 5.6.0-rc4-next-20200305-00001-g285a7a64cd56 and a fresh raspbian
+> > > download on
+> > > RPi3a+ without X issues.
+> > i retested with todays linux-next and the issue persists on my RPi 3A+ =
+/
+> > HP ZR2440w with this patch applied.
+>=20
+> I tested my display with a RPI 3B, 3B+ and a Zero W. All of them had the
+> same issue. Btw i used this display the last years for testing the
+> Raspberry Pi.
+>=20
+> After that i connected the RPI 3B to my TV screen and it works with the
+> patch applied.
+
+Thanks for taking the time on this. I guess all we have left is looking dee=
+per
+into it. I'll add it to my backlog for now.
+
+Regards,
+Nicolas
 
 
-> I sent a patch a few weeks ago to make syncfs() return errors when there
-> have been writeback errors on the superblock. It's not merged yet, but
-> once we have something like that in place, we could expose info from the
-> errseq_t to userland using this interface.
+--=-tZ303xiG7cDiGT02SWOp
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
 
-I'm still a bit worried about the details of errseq_t being exposed to
-userland. Partially because it seems to restrict further evolution of
-errseq_t, and partially because it will likely up with userland trying
-to understand it (it's e.g. just too attractive to report a count of
-errors etc).
+-----BEGIN PGP SIGNATURE-----
 
-Is there a reason to not instead report a 64bit counter instead of the
-cookie? In contrast to the struct file case we'd only have the space
-overhead once per superblock, rather than once per #files * #fd. And it
-seems that the maintenance of that counter could be done without
-widespread changes, e.g. instead/in addition to your change:
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl5ml4UACgkQlfZmHno8
+x/43iAgAkAzhEC+LqzxtkdHiNML8ngJfJVRbuYYwyH9gHGl/3lrYW1ecvisK9ZwB
+aJkbQkDEpPceupdXb9TsNr98lJ1Idhk4b8yZbm2FCzVFnHuIYc2NsxlkGc6fvp9a
+S6BIgQYnfRyBzmMBpLofF7rDmdcd9SBtLqkLTKmJx4WROMK17jREEkOSYLF3//RO
+Z1urTNh2l1hUHq5DGyJvGQX5KMPGYfxoZ1IL4FgLB54DelxscpQxxdgli2RNHKxA
+9WkI0l6XlcL1b5ke6KcoU0lKbPQ3SEcLrZUukqd37JxhgIXu8ow1RK5dAtWOGZVK
+oo6I7gSafUtvGrFpqlNpc9hepfltCQ==
+=/qXY
+-----END PGP SIGNATURE-----
 
-> diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
-> index ccb14b6a16b5..897439475315 100644
-> --- a/include/linux/pagemap.h
-> +++ b/include/linux/pagemap.h
-> @@ -51,7 +51,10 @@ static inline void mapping_set_error(struct address_space *mapping, int error)
->  		return;
->
->  	/* Record in wb_err for checkers using errseq_t based tracking */
-> -	filemap_set_wb_err(mapping, error);
-> +	__filemap_set_wb_err(mapping, error);
-> +
-> +	/* Record it in superblock */
-> +	errseq_set(&mapping->host->i_sb->s_wb_err, error);
->
->  	/* Record it in flags for now, for legacy callers */
->  	if (error == -ENOSPC)
+--=-tZ303xiG7cDiGT02SWOp--
 
-Btw, seems like mapping_set_error() should have a non-inline cold path?
-
-Greetings,
-
-Andres Freund
