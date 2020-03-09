@@ -2,126 +2,142 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCBBFC10F25
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 21:45:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9E8CC10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 21:46:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 963CD24649
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 21:45:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZQCP9nQ/"
+	by mail.kernel.org (Postfix) with ESMTP id D098C24649
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 21:46:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727249AbgCIVpG (ORCPT
+        id S1727023AbgCIVql (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 17:45:06 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:37858 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726974AbgCIVoj (ORCPT
+        Mon, 9 Mar 2020 17:46:41 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:43830 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726118AbgCIVql (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 17:44:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583790278;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=mfTkC/PY7xB+DvD3BXQd6wkmojeJ73JPJ868luIW5QI=;
-        b=ZQCP9nQ/9xzOj/FdWSo1DwsXTnb/8pswGXCENeo2zEwXGfziEp8O+T9RkC5QbB79jHi09X
-        /WrIbDXqc54Iy6DbyZhzTDGtYi18EHLSVQmdQ0O7AurHVGqoiliefvfSISRxdWlcQcP+1i
-        XWhdBXfCiurrrysK+jEt55CkScVBMho=
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
- [209.85.160.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-161-2xznUvRpNU6TtC0jHENvpA-1; Mon, 09 Mar 2020 17:44:34 -0400
-X-MC-Unique: 2xznUvRpNU6TtC0jHENvpA-1
-Received: by mail-qt1-f197.google.com with SMTP id r16so7773036qtt.13
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 14:44:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=mfTkC/PY7xB+DvD3BXQd6wkmojeJ73JPJ868luIW5QI=;
-        b=Vf+FINGvjOgkYAG6qabsARkyl655E0edBcoeIyrciCo1kfYKBOrxYqqclT0VIHluD6
-         qsO66MRN2D8PI2+3mASSmwsuLD0fWfoieSGGp+OiayyupSHt56lNi+jM9tBIkyUnUPTJ
-         i3ksi83yJLf87DFH1ptxalfWxrb6h5rITF0ZeFoPiW56EbD0fQHHMbte45q0VbbISDzP
-         LLdHE1jNyJMX/NPjfw/PAk4/bZqRgOZ2uD2oqnIDnZuwggcVDZN1ty4ABK9bily6T4Wt
-         eHHS81+PonHe80u1+wKsM+NXxdDJ+drHVn14AG8IO3oXBEp/Ts+wxoCfwy+3B7cUHRL7
-         MXCw==
-X-Gm-Message-State: ANhLgQ1TxE1WCph09j0gRTHItiOXpBhsCNqYIt7jt7+6/HxztOsfIjTh
-        BQNUB64o7IWS4oJmCGo2kkPLhZYDZk8v9iyW5wpPfU64eh9u8IqrFtvJMok85lcO5iQ2rlNvhIr
-        FmcASmrRfVZnxkICguYkQ007w
-X-Received: by 2002:a05:620a:10b3:: with SMTP id h19mr17258501qkk.440.1583790273660;
-        Mon, 09 Mar 2020 14:44:33 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vvsM+A/HXt2SdA20F9/F6ZEZxnI2TYHMgtduNetNttyjBPSSVebBrYy4uvOhyP6E4shJ1zt5A==
-X-Received: by 2002:a05:620a:10b3:: with SMTP id h19mr17258480qkk.440.1583790273430;
-        Mon, 09 Mar 2020 14:44:33 -0700 (PDT)
-Received: from xz-x1.redhat.com ([2607:9880:19c0:32::2])
-        by smtp.gmail.com with ESMTPSA id m11sm19777447qkh.31.2020.03.09.14.44.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Mar 2020 14:44:32 -0700 (PDT)
-From:   Peter Xu <peterx@redhat.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     Yan Zhao <yan.y.zhao@intel.com>, Jason Wang <jasowang@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        peterx@redhat.com, Vitaly Kuznetsov <vkuznets@redhat.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Christophe de Dinechin <dinechin@redhat.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: [PATCH v6 02/14] KVM: Cache as_id in kvm_memory_slot
-Date:   Mon,  9 Mar 2020 17:44:12 -0400
-Message-Id: <20200309214424.330363-3-peterx@redhat.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200309214424.330363-1-peterx@redhat.com>
-References: <20200309214424.330363-1-peterx@redhat.com>
+        Mon, 9 Mar 2020 17:46:41 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 8150B803087C;
+        Mon,  9 Mar 2020 21:46:36 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id EgbOXeQlax4M; Tue, 10 Mar 2020 00:46:35 +0300 (MSK)
+Date:   Tue, 10 Mar 2020 00:45:38 +0300
+From:   Sergey Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Vinod Koul <vkoul@kernel.org>
+CC:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
+        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/5] dmaengine: dw: Take Baikal-T1 SoC DW DMAC
+ peculiarities into account
+References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
+ <20200306132912.GA1748204@smile.fi.intel.com>
+ <20200306133035.GB1748204@smile.fi.intel.com>
+ <20200306135050.40094803087C@mail.baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200306135050.40094803087C@mail.baikalelectronics.ru>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Message-Id: <20200309214636.8150B803087C@mail.baikalelectronics.ru>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Cache the address space ID just like the slot ID.  It will be used in
-order to fill in the dirty ring entries.
+On Fri, Mar 06, 2020 at 07:13:12PM +0530, Vinod Koul wrote:
+> On 06-03-20, 15:30, Andy Shevchenko wrote:
+> > On Fri, Mar 06, 2020 at 03:29:12PM +0200, Andy Shevchenko wrote:
+> > > On Fri, Mar 06, 2020 at 04:10:29PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
+> > > > From: Serge Semin <fancer.lancer@gmail.com>
+> > > > 
+> > > > Baikal-T1 SoC has an DW DMAC on-board to provide a Mem-to-Mem, low-speed
+> > > > peripherals Dev-to-Mem and Mem-to-Dev functionality. Mostly it's compatible
+> > > > with currently implemented in the kernel DW DMAC driver, but there are some
+> > > > peculiarities which must be taken into account in order to have the device
+> > > > fully supported.
+> > > > 
+> > > > First of all traditionally we replaced the legacy plain text-based dt-binding
+> > > > file with yaml-based one. Secondly Baikal-T1 DW DMA Controller provides eight
+> > > > channels, which alas have different max burst length configuration.
+> > > > In particular first two channels may burst up to 128 bits (16 bytes) at a time
+> > > > while the rest of them just up to 32 bits. We must make sure that the DMA
+> > > > subsystem doesn't set values exceeding these limitations otherwise the
+> > > > controller will hang up. In third currently we discovered the problem in using
+> > > > the DW APB SPI driver together with DW DMAC. The problem happens if there is no
+> > > > natively implemented multi-block LLP transfers support and the SPI-transfer
+> > > > length exceeds the max lock size. In this case due to asynchronous handling of
+> > > > Tx- and Rx- SPI transfers interrupt we might end up with Dw APB SSI Rx FIFO
+> > > > overflow. So if DW APB SSI (or any other DMAC service consumer) intends to use
+> > > > the DMAC to asynchronously execute the transfers we'd have to at least warn
+> > > > the user of the possible errors.
+> > > > 
+> > > > Finally there is a bug in the algorithm of the nollp flag detection.
+> > > > In particular even if DW DMAC parameters state the multi-block transfers
+> > > > support there is still HC_LLP (hardcode LLP) flag, which if set makes expected
+> > > > by the driver true multi-block LLP functionality unusable. This happens cause'
+> > > > if HC_LLP flag is set the LLP registers will be hardcoded to zero so the
+> > > > contiguous multi-block transfers will be only supported. We must take the
+> > > > flag into account when detecting the LLP support otherwise the driver just
+> > > > won't work correctly.
+> > > > 
+> > > > This patchset is rebased and tested on the mainline Linux kernel 5.6-rc4:
+> > > > commit 98d54f81e36b ("Linux 5.6-rc4").
+> > > 
+> > > Thank you for your series!
+> > > 
+> > > I'll definitely review it, but it will take time. So, I think due to late
+> > > submission this is material at least for v5.8.
+> > 
+> > One thing that I can tell immediately is the broken email thread in this series.
+> > Whenever you do a series, use `git format-patch --cover-letter --thread ...`,
+> > so, it will link the mail properly.
+> 
+> And all the dmaengine specific patches should be sent to dmaengine list,
+> I see only few of them on the list.. that confuses tools like
+> patchwork..
+> 
+> Pls fix these and resubmit
+> 
 
-Suggested-by: Paolo Bonzini <pbonzini@redhat.com>
-Suggested-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Peter Xu <peterx@redhat.com>
----
- include/linux/kvm_host.h | 1 +
- virt/kvm/kvm_main.c      | 2 ++
- 2 files changed, 3 insertions(+)
+Folks. I've found out what was wrong with the emails threading. As I
+said my gitconfig had the next settings set: chainreplyto = false,
+thread = true. So the emails should have been formatted as expected by
+the requirements. And they were on my emails client side, so I didn't see
+the problem you've got.
 
-diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index bcb9b2ac0791..afa0e9034881 100644
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -346,6 +346,7 @@ struct kvm_memory_slot {
- 	unsigned long userspace_addr;
- 	u32 flags;
- 	short id;
-+	u8 as_id;
- };
- 
- static inline unsigned long kvm_dirty_bitmap_bytes(struct kvm_memory_slot *memslot)
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index 70f03ce0e5c1..e6484dabfc59 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -1036,6 +1036,8 @@ int __kvm_set_memory_region(struct kvm *kvm,
- 
- 	new = old = *slot;
- 
-+	BUILD_BUG_ON(U8_MAX < KVM_ADDRESS_SPACE_NUM);
-+	new.as_id = as_id;
- 	new.id = id;
- 	new.base_gfn = base_gfn;
- 	new.npages = npages;
--- 
-2.24.1
+It wasn't a first time I was submitting patches to the kernel, but it was
+a first time of me using the corporate exchange server for it. It turned out
+the damn server changed the Message-Id field of the emails header on the
+way of transmitting the messages. If you take a look at the non-cover-letter
+emails you've got from me you'll see that they actually have the In-Reply-To
+and References fields with Id's referring to the original Message-Id. After
+our system administrator fixes that problem and we come up with solutions
+for the issues you've found in the patches I'll definitely resend the
+patchset. This time I'll also make sure the emailing lists are also included
+in Cc. Sorry for the inconvenience.
 
+Regards,
+-Sergey
+
+> Thanks
+> -- 
+> ~Vinod
