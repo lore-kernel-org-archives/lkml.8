@@ -2,100 +2,96 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D406CC10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 17:16:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7F5BC18E5A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 17:17:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7229208C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 17:16:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QDYaXBJk"
+	by mail.kernel.org (Postfix) with ESMTP id 988AB208C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 17:17:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583774225;
+	bh=5yHR3Ujn0DynzVH9Ws0JWy8TxK1tv97Kz6riXZaz3J0=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=zuLGtJp45V124S3V7yqGixA+utY0ygQVW3wx53f63D29YQQZ4juD20urMSALeR54J
+	 VM6SXy8S9qf/pRGMGl6kmWzPl2Zt8ZhHacEUSqStR+7WQ36cbJICEfnJnQ1XF9Df4+
+	 1L8oGr4EC0bqIX/jY3kH/x23++8MJaojnhRs+xZ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727272AbgCIRQY (ORCPT
+        id S1727322AbgCIRRE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 13:16:24 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:42011 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727195AbgCIRQY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 13:16:24 -0400
-Received: by mail-pl1-f195.google.com with SMTP id t3so1985052plz.9;
-        Mon, 09 Mar 2020 10:16:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=aQaEz5n43Zv/bRgX8rTrwpFJGgT572GHf6K14yTbgTc=;
-        b=QDYaXBJk9xBthEaQNh+gxQ88iXlNOPsMKsSDCxj7OkpI7OfwJFwLO8Asxvvhkxg5BV
-         UWk/vPNpZiko4pfSCNz5xrk9/hQyY2nd3FFvlctZqIlK23+ELZZ31/BLT5XZIjOKwM67
-         ibgnaH2TGIPBGviAdXotmEwQXQfg4MvwQ79EZAY0t4xlY4BZ47Wu9Qrm5zjJ9tgdiQDD
-         Is+4oKO9s6sxQGfcdoyaggwBlVyKnqYD5jFxa4u2FEz+Bdi7f/KK2bbytYYyUIkEitQP
-         qM/hsPe9a4HkSFibumar+FWnkb/7Moh9DTToWErSB6kD3LD02hdxmY+AYJnwXlKzNE58
-         Nfyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=aQaEz5n43Zv/bRgX8rTrwpFJGgT572GHf6K14yTbgTc=;
-        b=A+5hRq0Ka1Pd2Gz2AcCOfoPjzEblEuxX7fSGB9LlkaqC7NKYN9x5mUH1KSRhszN64I
-         /LAVUm7ZU92AKPywk2mU2xSM/aofu6ZX8GFWvN1cl751GYQWywZKEHZTM4TaAJ+ajHYL
-         6wYlzclxSQruRktfClNWMznDhaRKcm6U9Fa4HQUCEUTLbnRlILZdW2/rLj6zYCgAW1wa
-         tQhyM8FO7e8mJyaQqGZSN2FWYT2aF+91cjvhQ3/y8RLYw/Xx67MxWu9L5LkCt4OilUE8
-         mDMZMCkgzmA9YXRfhYTT9FmnBrknLfNp04DbRo6S32UsmtHCrheCdc+j9eOGBCgRJyog
-         PXMQ==
-X-Gm-Message-State: ANhLgQ3EFYVI63Eo5uRhmkt4hR8IoFsPlLY3JxDwOnmqzvSnwDUQ0do+
-        MoaHDPegFaDPbWgGUT9fpgo=
-X-Google-Smtp-Source: ADFU+vv96/cmd+ESTMe/yWp3mZTBy1Je98MgxBDt+qcLHmqckEQ238uv3hcur21QB24JCyHlsFazvg==
-X-Received: by 2002:a17:90a:ab0a:: with SMTP id m10mr310824pjq.105.1583774183135;
-        Mon, 09 Mar 2020 10:16:23 -0700 (PDT)
-Received: from VM_0_35_centos.localdomain ([150.109.62.251])
-        by smtp.gmail.com with ESMTPSA id u23sm45039835pfm.29.2020.03.09.10.16.21
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 09 Mar 2020 10:16:22 -0700 (PDT)
-From:   Qiujun Huang <hqjagain@gmail.com>
-To:     broonie@kernel.org
-Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Qiujun Huang <hqjagain@gmail.com>
-Subject: [PATCH] spi: update the structure documentation
-Date:   Tue, 10 Mar 2020 01:16:19 +0800
-Message-Id: <1583774179-30736-1-git-send-email-hqjagain@gmail.com>
-X-Mailer: git-send-email 1.8.3.1
+        Mon, 9 Mar 2020 13:17:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43630 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727195AbgCIRRE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 13:17:04 -0400
+Received: from localhost.localdomain (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A4ADE20828;
+        Mon,  9 Mar 2020 17:17:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583774223;
+        bh=5yHR3Ujn0DynzVH9Ws0JWy8TxK1tv97Kz6riXZaz3J0=;
+        h=From:To:Cc:Subject:Date:From;
+        b=CDi1KzsbcpSmQ2xbABBuFQQCx8uyO2Y0j+8cAr5lq6u8MDFPAeD4RaAHuLwPF9pgX
+         VX3MbgqNvUX/wzaRyjH2ASXHWoAcxTsxaja8NwUcvUpdOHZGzqxqw6Weey0s5CKbxU
+         3VHnxLUN+JUwa/2uSMCaMT/341doGUzO/4/0no8g=
+From:   Dinh Nguyen <dinguyen@kernel.org>
+To:     linux-clk@vger.kernel.org
+Cc:     dinguyen@kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, sboyd@kernel.org,
+        mturquette@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com
+Subject: [PATCHv2 0/3] clk: agilex: add clock driver
+Date:   Mon,  9 Mar 2020 12:16:50 -0500
+Message-Id: <20200309171653.27630-1-dinguyen@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-some members were not described in documentation.
+Hi,
 
-Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
----
- include/linux/spi/spi.h | 3 +++
- 1 file changed, 3 insertions(+)
+This is version 2 of the patchset to add clock driver to the Agilex
+platform. It's been while since I posted v1 so I want clarify the
+patches a bit in this cover letter.
 
-diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
-index 6d16ba0..2f28692 100644
---- a/include/linux/spi/spi.h
-+++ b/include/linux/spi/spi.h
-@@ -135,6 +135,8 @@ struct spi_delay {
-  * @modalias: Name of the driver to use with this device, or an alias
-  *	for that name.  This appears in the sysfs "modalias" attribute
-  *	for driver coldplugging, and in uevents used for hotplugging
-+ * @driver_override: If the name of a driver is written to this attribute, then
-+ *	the device will bind to the named driver and only the named driver.
-  * @cs_gpio: LEGACY: gpio number of the chipselect line (optional, -ENOENT when
-  *	not using a GPIO line) use cs_gpiod in new drivers by opting in on
-  *	the spi_master.
-@@ -443,6 +445,7 @@ static inline void spi_unregister_driver(struct spi_driver *sdrv)
-  *	@spi_transfer->ptp_sts_word_post were transmitted.
-  *	If the driver does not set this, the SPI core takes the snapshot as
-  *	close to the driver hand-over as possible.
-+ * @irq_flags: Interrupt enable state during PTP system timestamping
-  *
-  * Each SPI controller can communicate with one or more @spi_device
-  * children.  These make a small bus, sharing MOSI, MISO and SCK signals
+Since the Agilex clocking is very similar to Stratix10, the
+driver is very similar and will re-use the clock data structures of
+Stratix10. Thus, there needs to be updates to the Stratix10 clock
+driver.
+
+Patch 1/3 : update the Stratix10 clock driver to make use of the new
+	parent data scheme
+Patch 2/3 : version 2 of the documenation, converted to YAML
+Patch 3/4 : version 2 of the clock driver with comments from v1
+	addressed
+
+Thanks,
+Dinh
+
+Dinh Nguyen (3):
+  clk: socfpga: stratix10: use new parent data scheme
+  dt-bindings: documentation: add clock bindings information for Agilex
+  clk: socfpga: agilex: add clock driver for the Agilex platform
+
+ .../bindings/clock/intc,agilex.yaml           |  79 ++++
+ drivers/clk/Makefile                          |   1 +
+ drivers/clk/socfpga/Makefile                  |   2 +
+ drivers/clk/socfpga/clk-agilex.c              | 369 ++++++++++++++++++
+ drivers/clk/socfpga/clk-gate-s10.c            |   5 +-
+ drivers/clk/socfpga/clk-periph-s10.c          |  10 +-
+ drivers/clk/socfpga/clk-pll-s10.c             |  74 +++-
+ drivers/clk/socfpga/clk-s10.c                 | 110 ++++--
+ drivers/clk/socfpga/stratix10-clk.h           |  10 +-
+ include/dt-bindings/clock/agilex-clock.h      |  70 ++++
+ 10 files changed, 689 insertions(+), 41 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/intc,agilex.yaml
+ create mode 100644 drivers/clk/socfpga/clk-agilex.c
+ create mode 100644 include/dt-bindings/clock/agilex-clock.h
+
 -- 
-1.8.3.1
+2.17.1
 
