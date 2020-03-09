@@ -2,127 +2,155 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA93DC18E5A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 16:12:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69D83C10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 16:12:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 966E92464B
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 16:12:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583770355;
-	bh=GIRsxtYGGZ/TKj/qEtugQGPGGyg7OevInygZMPq+Co0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PA7q2jr7CrW3I0gaSorgk/cIMkjbvxBRr3s4sXiFBQq9p/4966VPrAJq1tsZNIoDX
-	 BLs/rinO6/wC3I6rBLxymtL0IqtyybpG64T4Co/O8QmWlsLK63/MsEnL78JywTT+CG
-	 76v2fxhjNX2DsE2e4XPtQDgo1AItUvtXhL5WgItI=
+	by mail.kernel.org (Postfix) with ESMTP id 42B802464B
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 16:12:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727217AbgCIQMe (ORCPT
+        id S1727232AbgCIQMp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 12:12:34 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:45612 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727064AbgCIQMe (ORCPT
+        Mon, 9 Mar 2020 12:12:45 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:38719 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727064AbgCIQMo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 12:12:34 -0400
-Received: by mail-wr1-f66.google.com with SMTP id m9so2955583wro.12
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 09:12:32 -0700 (PDT)
+        Mon, 9 Mar 2020 12:12:44 -0400
+Received: by mail-wm1-f67.google.com with SMTP id n2so95563wmc.3
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 09:12:43 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Ns9eVzO0p4o5Bx4eeLESDE82IoXncv33ZlQOlMd3q+E=;
-        b=HjT00sgt0uwGXFLQikGbkyAzXKAHNlgFYGSXtP80snCZKRD7zT2UTj2iwtqm74ShQ7
-         8Ihay+fadQYZ5RjCdXl2SHSzgOThrT29aMZKke61zx1je7KfthTlRaAwip1+2qqwJOZX
-         SzJk6Jtpmhwxe0yQBCe7/PKI890CvVaNJbETPwpniDUjgSlKxPWMuly5Hp6KcTCRMhA3
-         xN6CF5PNN1szhHKJLqFQwduMBDI3oHK7HlcdGDiOK+AJAtnlyp9BmEoM/PMLmvSYmW6L
-         32KAeVZmbeU5SaF5rIqak7ajL44/fvXXkLwtjc6YxSejAcMs6jwc6xZ4iuwpFbJ82STR
-         xQgQ==
-X-Gm-Message-State: ANhLgQ0g+0RJKFC8hsjsu+VrlLzmVkoeHQtdux9ri9jFwUZ2jVbT8bx5
-        ZZj/SSppM+0w0+AzUwKeu4c=
-X-Google-Smtp-Source: ADFU+vtGtkMl72MPjSoG4s8UweB4LM3o4SVaJcSG020HGNIU3RPOAlOTn9cx796UeKN6w4dB0+QhJw==
-X-Received: by 2002:a5d:514a:: with SMTP id u10mr1799384wrt.360.1583770352235;
-        Mon, 09 Mar 2020 09:12:32 -0700 (PDT)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id u8sm16068166wrn.69.2020.03.09.09.12.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Mar 2020 09:12:31 -0700 (PDT)
-Date:   Mon, 9 Mar 2020 17:12:30 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Shaju Abraham <shajunutanix@gmail.com>
-Cc:     akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        Shaju Abraham <shaju.abraham@nutanix.com>
-Subject: Re: [PATCH] mm/vmpressure.c: Include GFP_KERNEL flag to vmpressure
-Message-ID: <20200309161230.GT8447@dhcp22.suse.cz>
-References: <20200309113141.167289-1-shaju.abraham@nutanix.com>
- <20200309115818.GK8447@dhcp22.suse.cz>
- <CAGxeL8CxaeKsqEMtLMZL8mdxUXPcH6ZkpMNjUmzZJ6q603B-_g@mail.gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=WIn0YB/fi28OzKNPE4pD/fi5XGezinkenU4RHCyDI0M=;
+        b=opPPO+4JRmlWjArtZUpz+IQpXrbGtSFT3t0A7t19gOAu0iKOUEy0e/yys6Is9u6gOy
+         J8alEuC0qf4oqblHYzh/raH/nO0VjTc48TDgPusPSihOdBAK1GhUl3RBoBq0n78BZXPG
+         GyJKmdHa5mpFMYHkKCfVVwg7wb7X0EC2jMgUzK3xhcBlfx6hvCP8H6wjcSHvAOnxXirr
+         iWpou+cotuCxIlJwuOxr6YTQY0cjiIOaas/1ChaCywfKHmi9aikXxfq6fLGHmZiF3LF4
+         q87Z0mLqkPME/0v94tbeFDNjvGo0HWGZssFIpW5TAt9fK+doIn8mGke35ubrP0ij0xJF
+         mgQA==
+X-Gm-Message-State: ANhLgQ1ARj4w9TuyGGU8+9aPhgwOqTPT8Z+RZ/fsGTBjognR9QI1siT8
+        AvfK6Vhy/UdehGdRuYOczMMOS5U073g=
+X-Google-Smtp-Source: ADFU+vuQd0Okc69ZFMvN4OSQNFb8iI0y/eFX4+aVglXJyiJiSBvRXNIWvcDrbgdIjjl9GngRlTYg9Q==
+X-Received: by 2002:a7b:c081:: with SMTP id r1mr74972wmh.12.1583770362403;
+        Mon, 09 Mar 2020 09:12:42 -0700 (PDT)
+Received: from ?IPv6:2a0b:e7c0:0:107::49? ([2a0b:e7c0:0:107::49])
+        by smtp.gmail.com with ESMTPSA id c26sm63342wmb.8.2020.03.09.09.12.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 09 Mar 2020 09:12:41 -0700 (PDT)
+Subject: Re: [PATCH 18/22] tty: mips_ejtag_fdc: Mark expected switch
+ fall-through
+To:     Sergey.Semin@baikalelectronics.ru,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        linux-kernel@vger.kernel.org
+References: <20200306124705.6595-1-Sergey.Semin@baikalelectronics.ru>
+ <20200306124913.151A68030792@mail.baikalelectronics.ru>
+From:   Jiri Slaby <jslaby@suse.com>
+Autocrypt: addr=jslaby@suse.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <bc24ebb5-45ce-f5d4-1427-d5e5786ded6f@suse.com>
+Date:   Mon, 9 Mar 2020 17:12:40 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAGxeL8CxaeKsqEMtLMZL8mdxUXPcH6ZkpMNjUmzZJ6q603B-_g@mail.gmail.com>
+In-Reply-To: <20200306124913.151A68030792@mail.baikalelectronics.ru>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 09-03-20 21:02:50, Shaju Abraham wrote:
-> On Mon, Mar 9, 2020 at 5:28 PM Michal Hocko <mhocko@kernel.org> wrote:
+On 06. 03. 20, 13:47, Sergey.Semin@baikalelectronics.ru wrote:
+> From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 > 
-> > On Mon 09-03-20 11:31:41, Shaju Abraham wrote:
-> > > The VM pressure notification flags have excluded GFP_KERNEL with the
-> > > reasoning that user land will not be able to take any action in case of
-> > > kernel memory being low. This is not true always. Consider the case of
-> > > a user land program managing all the huge memory pages. By including
-> > > GFP_KERNEL flag whenever the kernel memory is low, pressure notification
-> > > can be send, and the manager process can split huge pages to satisfy
-> > kernel
-> > > memory requirement.
-> >
-> > Are you sure about this reasoning? GFP_KERNEL = __GFP_FS | __GFP_IO |
-> > __GFP_RECLAIM
-> > Two of the flags mentioned there are already listed so we are talking
-> > about __GFP_RECLAIM here. Including it here would be a more appropriate
-> > change than GFP_KERNEL btw.
-> >
-> > But still I do not really understand what is the actual problem and how
-> > is this patch meant to fix it. vmpressure is triggered only from the
-> > reclaim path which inherently requires to have __GFP_RECLAIM present
-> > so I fail to see how this can make any change at all. How have you
-> > tested it?
-> >
-> >    We have a user space application which waits on memory pressure events.
+> Mark mips_ejtag_fdc_encode() methods switch-case-4 as expecting to
+> fall through.
+> 
+> This patch fixes the following warning:
+> 
+> drivers/tty/mips_ejtag_fdc.c: In function ‘mips_ejtag_fdc_encode’:
+> drivers/tty/mips_ejtag_fdc.c:245:13: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>    word.word &= 0x00ffffff;
+>    ~~~~~~~~~~^~~~~~~~~~~~~
+> drivers/tty/mips_ejtag_fdc.c:246:2: note: here
+>   case 3:
+>   ^~~~
+> 
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> Cc: Paul Burton <paulburton@kernel.org>
+> Cc: Ralf Baechle <ralf@linux-mips.org>
+> ---
+>  drivers/tty/mips_ejtag_fdc.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/tty/mips_ejtag_fdc.c b/drivers/tty/mips_ejtag_fdc.c
+> index 620d8488b83e..21e76a2ec182 100644
+> --- a/drivers/tty/mips_ejtag_fdc.c
+> +++ b/drivers/tty/mips_ejtag_fdc.c
+> @@ -243,6 +243,7 @@ static struct fdc_word mips_ejtag_fdc_encode(const char **ptrs,
+>  		/* Fall back to a 3 byte encoding */
+>  		word.bytes = 3;
+>  		word.word &= 0x00ffffff;
+> +		/* Fall through */
 
-> Upon receiving the event, the user space program will free up huge
-> pages to make more memory available in the system.  This mechanism
-> works fine if the memory is being consumed by other user space
-> applications. To test this, we wrote a test program which will
-> allocate all the memory available in the system using malloc() and
-> touch the allocated pages. When the free memory level becomes low,
-> the pressure event is fired and the process gets notified about it .
-> The same test is repeated with kmalloc() instead of malloc(). A test
-> kernel module is developed, which will allocate all the available
-> memory with kmalloc(GFP_KERNEL) flag.  The OOM killer gets invoked in
-> this case. The memory pressure event is not fired.  After modifying
-> the vmpressure.c with the attached patch, the pressure event gets
-> triggered.  Swap is disabled in the system we were testing.
+We now have "fallthrough;", so I believe you should use that instead of
+comments.
 
-Are you sure this is really the case? I am either missing something here
-or your test might simply be timing specific because
-
-	GFP_KERNEL & (__GFP_FS | __GFP_IO) = true
-
-so I really do not see how the current code could bail out on the test
-you are patching so that the patch would make any change. The only real
-difference this patch makes is to trigger events for __GFP_RECLAIM
-allocations which could be GFP_NOIO. All non-sleepable allocations would
-wake kswapd and that would in turn reclaim with _GFP_FS | __GFP_IO set
-so the check doesn't change anything.
-
-Am I missing something?
+thanks,
 -- 
-Michal Hocko
-SUSE Labs
+js
+suse labs
