@@ -2,223 +2,95 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD12FC10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:31:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BF8AC10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:31:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 996502072A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:31:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12ABA2072A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 09:31:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="sjhn6rjQ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DFHk3IxU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726695AbgCIJbo (ORCPT
+        id S1726721AbgCIJbs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 05:31:44 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:44905 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726668AbgCIJbo (ORCPT
+        Mon, 9 Mar 2020 05:31:48 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:51517 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726698AbgCIJbq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 05:31:44 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1583746303; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=b+OMlUkujLRmWNAOLxKHBxLAHMWPs5UHeP/OZ8evMOM=; b=sjhn6rjQgmF6L4ZRIgDwdViSgkk7HmNLmhETMH0zAycBcle2n1pAYyxheGkn2lAzO/tubnqO
- 8OEfI5mI4gJY5Y9UoRrxdgGbscj6c7255nxhhFBbAgPoELpkSAaUPXKg/VTVhSt8RQf73pAc
- 61NHy5EG+kkYDJLXIdR4rSfmuxY=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e660cff.7fb6016697a0-smtp-out-n01;
- Mon, 09 Mar 2020 09:31:43 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 63861C433CB; Mon,  9 Mar 2020 09:31:43 +0000 (UTC)
-Received: from mkshah-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5E4E2C4478F;
-        Mon,  9 Mar 2020 09:31:36 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5E4E2C4478F
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-From:   Maulik Shah <mkshah@codeaurora.org>
-To:     swboyd@chromium.org, mka@chromium.org, evgreen@chromium.org,
-        bjorn.andersson@linaro.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        agross@kernel.org, dianders@chromium.org, rnayak@codeaurora.org,
-        ilina@codeaurora.org, lsrao@codeaurora.org,
-        Maulik Shah <mkshah@codeaurora.org>,
-        Taniya Das <tdas@codeaurora.org>,
-        Odelu Kukatla <okukatla@codeaurora.org>,
-        Kiran Gunda <kgunda@codeaurora.org>,
-        Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH v13 5/5] drivers: qcom: Update rpmh clients to use start and end transactions
-Date:   Mon,  9 Mar 2020 15:00:36 +0530
-Message-Id: <1583746236-13325-6-git-send-email-mkshah@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1583746236-13325-1-git-send-email-mkshah@codeaurora.org>
-References: <1583746236-13325-1-git-send-email-mkshah@codeaurora.org>
+        Mon, 9 Mar 2020 05:31:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583746305;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=bAxovC+YmLxqKmhTg+wnldWy/2Z+UUqMLgm0E3zQGuQ=;
+        b=DFHk3IxUINZwdC2JpdGtGAVJp42jIMbIAhgu+s8O/DwLVGNDdgpFa8JKszs30lFWl5udY/
+        yPpJxbhD6j1q8Aqrqj4PAeyi8eDd7uyOOyXKlwvs3XcJ9/SNUW/uIM0x0yJKMODk3WcXR/
+        qXNowZ+wWedVGuFdSzjrM8Z5SLjZ/iM=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-72-D4T39OEoOTaNbMS9sGpNSA-1; Mon, 09 Mar 2020 05:31:44 -0400
+X-MC-Unique: D4T39OEoOTaNbMS9sGpNSA-1
+Received: by mail-wm1-f69.google.com with SMTP id p17so2221173wmc.9
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 02:31:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=bAxovC+YmLxqKmhTg+wnldWy/2Z+UUqMLgm0E3zQGuQ=;
+        b=hz0QUpi7VvgTzVmlv/huBypdgsl4StWXDVS6m7uUDvN1yxQGK4RrXAEtaYINLCBn98
+         4UMq/TxbK+57zbDkjkv8e8Xf3iKCjgRhZewpHCwgb/9XVRBqJWAth7DzlFtxQX3VbUmk
+         ru16AGonxrrB0D9PFI6nDqMoce3hCDhdcnn1mwylM2ObirTc7p7NcbfYPDkjVd/IzvcQ
+         QQQsIxHh6u0gXcuhDfGXJS4KQ4CoM3XwNiN33Jso2V//QiqaZkUqjxNTYKvzA1y0tEC3
+         ZFOH1u3AEaeDyFtfizkm1nDVRDsjofnE5V7jE3NXZUeuBmGk9vI8iZ7U+Iy3iuEkp4FC
+         9avQ==
+X-Gm-Message-State: ANhLgQ0ga0fSY6mbFICaoYgA8p4H7Y/uiPYSlG9KkPmW3pD8r5/hHpnC
+        BH0w9nmy9sQh0LVDi/C8PfMz7agxV1MoS/Z0hmOAxD9LGLOZaeAvK3WUWsnRpiY06Rjzm75Bmjj
+        AFJm+BFEmUn1g73GujAkCvmfV
+X-Received: by 2002:a05:600c:215:: with SMTP id 21mr19153915wmi.119.1583746302712;
+        Mon, 09 Mar 2020 02:31:42 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vukk69NSM339Baa9gmzJoWipsNi+hBKkDBAew96ERxS+NgbmmfnSmY3RZMXrY0CvF3CeTM9/w==
+X-Received: by 2002:a05:600c:215:: with SMTP id 21mr19153896wmi.119.1583746302471;
+        Mon, 09 Mar 2020 02:31:42 -0700 (PDT)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id d15sm59386303wrp.37.2020.03.09.02.31.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Mar 2020 02:31:41 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Krish Sadhukhan <krish.sadhukhan@oracle.com>,
+        Jim Mattson <jmattson@google.com>,
+        Wanpeng Li <wanpengli@tencent.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/2] KVM: VMX: untangle VMXON revision_id setting when using eVMCS
+In-Reply-To: <20200307002852.GA28225@linux.intel.com>
+References: <20200306130215.150686-1-vkuznets@redhat.com> <20200306130215.150686-3-vkuznets@redhat.com> <908345f1-9bfd-004f-3ba6-0d6dce67d11e@oracle.com> <20200306230747.GA27868@linux.intel.com> <ceb19682-4374-313a-cf05-8af6cd8d6c3b@oracle.com> <20200307002852.GA28225@linux.intel.com>
+Date:   Mon, 09 Mar 2020 10:31:41 +0100
+Message-ID: <87mu8pdgci.fsf@vitty.brq.redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Update all rpmh clients to start using rpmh_start_transaction() and
-rpmh_end_transaction().
+Sean Christopherson <sean.j.christopherson@intel.com> writes:
 
-Cc: Taniya Das <tdas@codeaurora.org>
-Cc: Odelu Kukatla <okukatla@codeaurora.org>
-Cc: Kiran Gunda <kgunda@codeaurora.org>
-Cc: Sibi Sankar <sibis@codeaurora.org>
-Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
----
- drivers/clk/qcom/clk-rpmh.c             | 21 ++++++++++++++-------
- drivers/interconnect/qcom/bcm-voter.c   | 13 +++++++++----
- drivers/regulator/qcom-rpmh-regulator.c |  4 ++++
- drivers/soc/qcom/rpmhpd.c               | 11 +++++++++--
- 4 files changed, 36 insertions(+), 13 deletions(-)
+>   enum vmcs_type {
+> 	VMXON_VMCS,
+> 	VMCS,
+> 	SHADOW_VMCS,
+>   };
+>
 
-diff --git a/drivers/clk/qcom/clk-rpmh.c b/drivers/clk/qcom/clk-rpmh.c
-index 12bd871..16f68d4 100644
---- a/drivers/clk/qcom/clk-rpmh.c
-+++ b/drivers/clk/qcom/clk-rpmh.c
-@@ -154,22 +154,27 @@ static int clk_rpmh_send_aggregate_command(struct clk_rpmh *c)
- 	cmd_state = c->aggr_state;
- 	on_val = c->res_on_val;
- 
-+	rpmh_start_transaction(c->dev);
-+
- 	for (; state <= RPMH_ACTIVE_ONLY_STATE; state++) {
- 		if (has_state_changed(c, state)) {
- 			if (cmd_state & BIT(state))
- 				cmd.data = on_val;
- 
- 			ret = rpmh_write_async(c->dev, state, &cmd, 1);
--			if (ret) {
--				dev_err(c->dev, "set %s state of %s failed: (%d)\n",
--					!state ? "sleep" :
--					state == RPMH_WAKE_ONLY_STATE	?
--					"wake" : "active", c->res_name, ret);
--				return ret;
--			}
-+			if (ret)
-+				break;
- 		}
- 	}
- 
-+	ret |= rpmh_end_transaction(c->dev);
-+	if (ret) {
-+		dev_err(c->dev, "set %s state of %s failed: (%d)\n",
-+			!state ? "sleep" : state == RPMH_WAKE_ONLY_STATE ?
-+			"wake" : "active", c->res_name, ret);
-+		return ret;
-+	}
-+
- 	c->last_sent_aggr_state = c->aggr_state;
- 	c->peer->last_sent_aggr_state =  c->last_sent_aggr_state;
- 
-@@ -267,7 +272,9 @@ static int clk_rpmh_bcm_send_cmd(struct clk_rpmh *c, bool enable)
- 	cmd.addr = c->res_addr;
- 	cmd.data = BCM_TCS_CMD(1, enable, 0, cmd_state);
- 
-+	rpmh_start_transaction(c->dev);
- 	ret = rpmh_write_async(c->dev, RPMH_ACTIVE_ONLY_STATE, &cmd, 1);
-+	ret |= rpmh_end_transaction(c->dev);
- 	if (ret) {
- 		dev_err(c->dev, "set active state of %s failed: (%d)\n",
- 			c->res_name, ret);
-diff --git a/drivers/interconnect/qcom/bcm-voter.c b/drivers/interconnect/qcom/bcm-voter.c
-index 2adfde8..fbe18b2 100644
---- a/drivers/interconnect/qcom/bcm-voter.c
-+++ b/drivers/interconnect/qcom/bcm-voter.c
-@@ -263,7 +263,9 @@ int qcom_icc_bcm_voter_commit(struct bcm_voter *voter)
- 	tcs_list_gen(&voter->commit_list, QCOM_ICC_BUCKET_AMC, cmds, commit_idx);
- 
- 	if (!commit_idx[0])
--		goto out;
-+		goto end;
-+
-+	rpmh_start_transaction(voter-dev);
- 
- 	ret = rpmh_invalidate(voter->dev);
- 	if (ret) {
-@@ -312,12 +314,15 @@ int qcom_icc_bcm_voter_commit(struct bcm_voter *voter)
- 	tcs_list_gen(&voter->commit_list, QCOM_ICC_BUCKET_SLEEP, cmds, commit_idx);
- 
- 	ret = rpmh_write_batch(voter->dev, RPMH_SLEEP_STATE, cmds, commit_idx);
--	if (ret) {
-+	if (ret)
- 		pr_err("Error sending SLEEP RPMH requests (%d)\n", ret);
--		goto out;
--	}
- 
- out:
-+	ret = rpmh_end_transaction(voter-dev);
-+	if (ret)
-+		pr_err("Error ending rpmh transaction (%d)\n", ret);
-+
-+end:
- 	list_for_each_entry_safe(bcm, bcm_tmp, &voter->commit_list, list)
- 		list_del_init(&bcm->list);
- 
-diff --git a/drivers/regulator/qcom-rpmh-regulator.c b/drivers/regulator/qcom-rpmh-regulator.c
-index c86ad40..f4b9176 100644
---- a/drivers/regulator/qcom-rpmh-regulator.c
-+++ b/drivers/regulator/qcom-rpmh-regulator.c
-@@ -163,12 +163,16 @@ static int rpmh_regulator_send_request(struct rpmh_vreg *vreg,
- {
- 	int ret;
- 
-+	rpmh_start_transaction(vreg->dev);
-+
- 	if (wait_for_ack || vreg->always_wait_for_ack)
- 		ret = rpmh_write(vreg->dev, RPMH_ACTIVE_ONLY_STATE, cmd, 1);
- 	else
- 		ret = rpmh_write_async(vreg->dev, RPMH_ACTIVE_ONLY_STATE, cmd,
- 					1);
- 
-+	ret |= rpmh_end_transaction(vreg->dev);
-+
- 	return ret;
- }
- 
-diff --git a/drivers/soc/qcom/rpmhpd.c b/drivers/soc/qcom/rpmhpd.c
-index 4d264d0..0e9d204 100644
---- a/drivers/soc/qcom/rpmhpd.c
-+++ b/drivers/soc/qcom/rpmhpd.c
-@@ -193,19 +193,26 @@ static const struct of_device_id rpmhpd_match_table[] = {
- static int rpmhpd_send_corner(struct rpmhpd *pd, int state,
- 			      unsigned int corner, bool sync)
- {
-+	int ret;
- 	struct tcs_cmd cmd = {
- 		.addr = pd->addr,
- 		.data = corner,
- 	};
- 
-+	rpmh_start_transaction(pd->dev);
-+
- 	/*
- 	 * Wait for an ack only when we are increasing the
- 	 * perf state of the power domain
- 	 */
- 	if (sync)
--		return rpmh_write(pd->dev, state, &cmd, 1);
-+		ret = rpmh_write(pd->dev, state, &cmd, 1);
- 	else
--		return rpmh_write_async(pd->dev, state, &cmd, 1);
-+		ret = rpmh_write_async(pd->dev, state, &cmd, 1);
-+
-+	ret |= rpmh_end_transaction(pd->dev);
-+
-+	return ret;
- }
- 
- static void to_active_sleep(struct rpmhpd *pd, unsigned int corner,
+No objections from my side. v4 or would it be possible to tweak it upon
+commit?
+
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+Vitaly
+
