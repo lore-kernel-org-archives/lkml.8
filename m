@@ -2,241 +2,123 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA103C18E5A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 17:59:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5305C18E5A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:01:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DB0420873
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 17:59:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="sdce2DA9"
+	by mail.kernel.org (Postfix) with ESMTP id 9D97720873
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:01:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726437AbgCIR7J (ORCPT
+        id S1726859AbgCISB2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 13:59:09 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:58955 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726168AbgCIR7J (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 13:59:09 -0400
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 4FA4B23EB3;
-        Mon,  9 Mar 2020 18:59:04 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1583776745;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=rZ28TfUvwJ1itgNfROyuxzqF3oOBSx8iDyoQZE1QoIU=;
-        b=sdce2DA9ReD8BSZfA8tQOnNqs8NpxR82clomsNdrrGSyLM+J9c7vox5+Y3zOxTeSYK+vLe
-        QNrz6YmI35AUyqaUnhp/VMPC0K7WVmAczW0nSkVV3uY2/EIGNDM2C62FIHG4BRVq4eJvGn
-        YQbl38FmlejEQ6G/cZYSFrL5tQYmPKI=
+        Mon, 9 Mar 2020 14:01:28 -0400
+Received: from muru.com ([72.249.23.125]:59418 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726170AbgCISB2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 14:01:28 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id A5E9C80FA;
+        Mon,  9 Mar 2020 18:02:12 +0000 (UTC)
+Date:   Mon, 9 Mar 2020 11:01:23 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Lokesh Vutla <lokeshvutla@ti.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Sekhar Nori <nsekhar@ti.com>, Vignesh R <vigneshr@ti.com>,
+        Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCH v2 4/6] pwm: omap-dmtimer: Fix pwm disabling sequence
+Message-ID: <20200309180123.GP37466@atomide.com>
+References: <20200228095651.32464-1-lokeshvutla@ti.com>
+ <20200228095651.32464-5-lokeshvutla@ti.com>
+ <20200306181443.GJ37466@atomide.com>
+ <9129d4fe-a17e-2fa6-764c-6a746fa5096d@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 09 Mar 2020 18:59:04 +0100
-From:   Michael Walle <michael@walle.cc>
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     broonie@kernel.org, linux-spi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, shawnguo@kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, eha@deif.com, angelo@sysam.it,
-        andrew.smirnov@gmail.com, gustavo@embeddedor.com, weic@nvidia.com,
-        mhosny@nvidia.com, peng.ma@nxp.com
-Subject: Re: [PATCH 2/6] spi: spi-fsl-dspi: Fix little endian access to PUSHR
- CMD and TXDATA
-In-Reply-To: <20200309145624.10026-3-olteanv@gmail.com>
-References: <20200309145624.10026-1-olteanv@gmail.com>
- <20200309145624.10026-3-olteanv@gmail.com>
-Message-ID: <d8e39e402328b962cdbc25316a27eac8@walle.cc>
-X-Sender: michael@walle.cc
-User-Agent: Roundcube Webmail/1.3.10
-X-Spamd-Bar: +
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: 4FA4B23EB3
-X-Spamd-Result: default: False [1.40 / 15.00];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[dt];
-         MIME_GOOD(-0.10)[text/plain];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_TWELVE(0.00)[15];
-         NEURAL_HAM(-0.00)[-0.386];
-         FREEMAIL_TO(0.00)[gmail.com];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         FREEMAIL_CC(0.00)[kernel.org,vger.kernel.org,arm.com,deif.com,sysam.it,gmail.com,embeddedor.com,nvidia.com,nxp.com];
-         MID_RHS_MATCH_FROM(0.00)[];
-         SUSPICIOUS_RECIPS(1.50)[]
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9129d4fe-a17e-2fa6-764c-6a746fa5096d@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 2020-03-09 15:56, schrieb Vladimir Oltean:
-> From: Vladimir Oltean <vladimir.oltean@nxp.com>
+* Lokesh Vutla <lokeshvutla@ti.com> [200309 04:53]:
+> Hi Tony,
 > 
-> In XSPI mode, the 32-bit PUSHR register can be written to separately:
-> the higher 16 bits are for commands and the lower 16 bits are for data.
+> On 06/03/20 11:44 PM, Tony Lindgren wrote:
+> > * Lokesh Vutla <lokeshvutla@ti.com> [200228 09:58]:
+> >> pwm_omap_dmtimer_disable() calls .stop callback which abruptly stops the
+> >> timer counter. This doesn't complete the current pwm cycle and
+> >> immediately disables the pwm. Instead disable the auto reload
+> >> functionality which allows to complete the current pwm cycle and then
+> >> disables the timer.
+> >>
+> >> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+> >> ---
+> >>  drivers/pwm/pwm-omap-dmtimer.c | 10 +++++++++-
+> >>  1 file changed, 9 insertions(+), 1 deletion(-)
+> >>
+> >> diff --git a/drivers/pwm/pwm-omap-dmtimer.c b/drivers/pwm/pwm-omap-dmtimer.c
+> >> index bc338619232d..89b3c25d02b8 100644
+> >> --- a/drivers/pwm/pwm-omap-dmtimer.c
+> >> +++ b/drivers/pwm/pwm-omap-dmtimer.c
+> >> @@ -93,8 +93,16 @@ static void pwm_omap_dmtimer_disable(struct pwm_chip *chip,
+> >>  {
+> >>  	struct pwm_omap_dmtimer_chip *omap = to_pwm_omap_dmtimer_chip(chip);
+> >>  
+> >> +	/*
+> >> +	 * Disable auto reload so that the current cycle gets completed and
+> >> +	 * then the counter stops.
+> >> +	 */
+> >>  	mutex_lock(&omap->mutex);
+> >> -	omap->pdata->stop(omap->dm_timer);
+> >> +	omap->pdata->set_pwm(omap->dm_timer,
+> >> +			     pwm_get_polarity(pwm) == PWM_POLARITY_INVERSED,
+> >> +			     true, OMAP_TIMER_TRIGGER_OVERFLOW_AND_COMPARE,
+> >> +			     false);
+> >> +
+> >>  	mutex_unlock(&omap->mutex);
+> >>  }
+> > 
+> > I'm seeing an issue with this patch where after use something is
+> > left on and power consumption stays higher by about 30 mW after
+> > use.
 > 
-> This has nicely been hacked around, by defining a second regmap with a
-> width of 16 bits, and effectively splitting a 32-bit register into 2
-> 16-bit ones, from the perspective of this regmap_pushr.
-> 
-> The problem is the assumption about the controller's endianness. If the
-> controller is little endian (such as anything post-LS1046A), then the
-> first 2 bytes, in the order imposed by memory layout, will actually 
-> hold
-> the TXDATA, and the last 2 bytes will hold the CMD.
-> 
-> So take the controller's endianness into account when performing split
-> writes to PUSHR. The obvious and simple solution would have been to 
-> call
-> regmap_get_val_endian(), but that is an internal regmap function and we
-> don't want to change regmap just for this. Therefore, we define the
-> offsets per-instantiation, in the devtype_data structure. This means
-> that we have to know from the driver which controllers are big- and
-> which are little-endian (which is fine, we do, but it makes the device
-> tree binding itself a little redundant except for regmap_config).
-> 
-> This patch does not apply cleanly to stable trees, and a punctual fix 
-> to
-> the commit cannot be provided given this constraint of lack of access 
-> to
-> regmap_get_val_endian(). The per-SoC devtype_data structures (and
-> therefore the premises to fix this bug) have been introduced only a few
-> commits ago, in commit d35054010b57 ("spi: spi-fsl-dspi: Use specific
-> compatible strings for all SoC instantiations")
-> 
-> Fixes: 58ba07ec79e6 ("spi: spi-fsl-dspi: Add support for XSPI mode 
-> registers")
-> Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
-> ---
->  drivers/spi/spi-fsl-dspi.c | 28 ++++++++++++++++++++++------
->  1 file changed, 22 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
-> index 0ce26c1cbf62..a8e56abe20ac 100644
-> --- a/drivers/spi/spi-fsl-dspi.c
-> +++ b/drivers/spi/spi-fsl-dspi.c
-> @@ -103,10 +103,6 @@
->  #define SPI_FRAME_BITS(bits)		SPI_CTAR_FMSZ((bits) - 1)
->  #define SPI_FRAME_EBITS(bits)		SPI_CTARE_FMSZE(((bits) - 1) >> 4)
-> 
-> -/* Register offsets for regmap_pushr */
-> -#define PUSHR_CMD			0x0
-> -#define PUSHR_TX			0x2
-> -
->  #define DMA_COMPLETION_TIMEOUT		msecs_to_jiffies(3000)
-> 
->  struct chip_data {
-> @@ -124,6 +120,12 @@ struct fsl_dspi_devtype_data {
->  	u8			max_clock_factor;
->  	int			fifo_size;
->  	int			dma_bufsize;
-> +	/*
-> +	 * Offsets for CMD and TXDATA within SPI_PUSHR when accessed
-> +	 * individually (in XSPI mode)
-> +	 */
-> +	int			pushr_cmd;
-> +	int			pushr_tx;
->  };
+> Interesting...What is the PWM period and duty cycle in the test case?
+> Can you dump the following registers before and after disabling:
+> - TLDR
+> - TMAR
+> - TCLR
 
-Shouldn't this just read the "little-endian" property of the
-device tree node? Like it worked before with regmap, which takes
-the little-endian/big-endian property into account.
+Here's the state dumped before and after in omap_dm_timer_set_pwm():
 
-If I understand this correctly, this solution would mix the methods
-how the IP endianess is determined. Eg. regmap_xx uses the
-little-endian property and this driver then also uses the compatible
-string to also distinguish between the endianess.
+omap_timer 4803e000.timer: XXX set_pwm before: tldr: fffffeb8 tmar: fffffffe tclr: 00000040
+omap_timer 4803e000.timer: XXX set_pwm after: tldr: fffffeb8 tmar: fffffffe tclr: 00001842
+omap_timer 4013e000.timer: XXX set_pwm before: tldr: fffffeb8 tmar: fffffffe tclr: 00000040
+omap_timer 4013e000.timer: XXX set_pwm after: tldr: fffffeb8 tmar: fffffffe tclr: 00001842
+omap_timer 4013e000.timer: XXX set_pwm before: tldr: fffffeb8 tmar: fffffffe tclr: 00001843
+omap_timer 4013e000.timer: XXX set_pwm after: tldr: fffffeb8 tmar: fffffffe tclr: 00001841
+omap_timer 4803e000.timer: XXX set_pwm before: tldr: fffffeb8 tmar: fffffffe tclr: 00001843
+omap_timer 4803e000.timer: XXX set_pwm after: tldr: fffffeb8 tmar: fffffffe tclr: 00001841
 
--michael
+So looks like the start bit is still enabled after use?
 
->  enum {
-> @@ -150,42 +152,56 @@ static const struct fsl_dspi_devtype_data
-> devtype_data[] = {
->  		.trans_mode		= DSPI_XSPI_MODE,
->  		.max_clock_factor	= 8,
->  		.fifo_size		= 4,
-> +		.pushr_cmd		= 0,
-> +		.pushr_tx		= 2,
->  	},
->  	[LS1012A] = {
->  		/* Has A-011218 DMA erratum */
->  		.trans_mode		= DSPI_XSPI_MODE,
->  		.max_clock_factor	= 8,
->  		.fifo_size		= 16,
-> +		.pushr_cmd		= 0,
-> +		.pushr_tx		= 2,
->  	},
->  	[LS1043A] = {
->  		/* Has A-011218 DMA erratum */
->  		.trans_mode		= DSPI_XSPI_MODE,
->  		.max_clock_factor	= 8,
->  		.fifo_size		= 16,
-> +		.pushr_cmd		= 0,
-> +		.pushr_tx		= 2,
->  	},
->  	[LS1046A] = {
->  		/* Has A-011218 DMA erratum */
->  		.trans_mode		= DSPI_XSPI_MODE,
->  		.max_clock_factor	= 8,
->  		.fifo_size		= 16,
-> +		.pushr_cmd		= 0,
-> +		.pushr_tx		= 2,
->  	},
->  	[LS2080A] = {
->  		.trans_mode		= DSPI_DMA_MODE,
->  		.dma_bufsize		= 8,
->  		.max_clock_factor	= 8,
->  		.fifo_size		= 4,
-> +		.pushr_cmd		= 2,
-> +		.pushr_tx		= 0,
->  	},
->  	[LS2085A] = {
->  		.trans_mode		= DSPI_DMA_MODE,
->  		.dma_bufsize		= 8,
->  		.max_clock_factor	= 8,
->  		.fifo_size		= 4,
-> +		.pushr_cmd		= 2,
-> +		.pushr_tx		= 0,
->  	},
->  	[LX2160A] = {
->  		.trans_mode		= DSPI_DMA_MODE,
->  		.dma_bufsize		= 8,
->  		.max_clock_factor	= 8,
->  		.fifo_size		= 4,
-> +		.pushr_cmd		= 2,
-> +		.pushr_tx		= 0,
->  	},
->  	[MCF5441X] = {
->  		.trans_mode		= DSPI_EOQ_MODE,
-> @@ -670,12 +686,12 @@ static void dspi_pushr_cmd_write(struct fsl_dspi
-> *dspi, u16 cmd)
->  	 */
->  	if (dspi->len > dspi->oper_word_size)
->  		cmd |= SPI_PUSHR_CMD_CONT;
-> -	regmap_write(dspi->regmap_pushr, PUSHR_CMD, cmd);
-> +	regmap_write(dspi->regmap_pushr, dspi->devtype_data->pushr_cmd, cmd);
->  }
+I think the duty cycle depends on the strength set for rumble-test.c.
+
+> > I can reproduce this easily on droid4 with Sebastian's rumble-test
+> > app[0]. After use, I sometimes also hear the vibrator keep chirping
+> > quietly, so there seems to be some pwm still happening after disable :)
 > 
->  static void dspi_pushr_txdata_write(struct fsl_dspi *dspi, u16 txdata)
->  {
-> -	regmap_write(dspi->regmap_pushr, PUSHR_TX, txdata);
-> +	regmap_write(dspi->regmap_pushr, dspi->devtype_data->pushr_tx, 
-> txdata);
->  }
-> 
->  static void dspi_xspi_write(struct fsl_dspi *dspi, int cnt, bool eoq)
+> hmm..The line clearly goes down on the scope after the current pwm duty cycle is
+> done and never comes back.
+
+OK
+
+Regards,
+
+Tony
