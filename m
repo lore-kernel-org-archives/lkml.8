@@ -2,242 +2,211 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77D5EC10DCE
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 01:32:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CA6FC10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 01:33:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4705F2064A
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 01:32:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E7B32064A
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 01:33:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uy0aA5hv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726666AbgCIBcA (ORCPT
+        id S1726712AbgCIBdq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 8 Mar 2020 21:32:00 -0400
-Received: from mga09.intel.com ([134.134.136.24]:58821 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726346AbgCIBb7 (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Sun, 8 Mar 2020 21:31:59 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Mar 2020 18:31:58 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,530,1574150400"; 
-   d="scan'208";a="265092582"
-Received: from kbl.sh.intel.com ([10.239.159.24])
-  by fmsmga004.fm.intel.com with ESMTP; 08 Mar 2020 18:31:55 -0700
-From:   Jin Yao <yao.jin@linux.intel.com>
-To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com
-Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com,
-        Jin Yao <yao.jin@linux.intel.com>
-Subject: [PATCH] perf/x86/pmu-events: Use CPU_CLK_UNHALTED.THREAD in Kernel_Utilization metric
-Date:   Mon,  9 Mar 2020 09:31:25 +0800
-Message-Id: <20200309013125.7559-1-yao.jin@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
+        Sun, 8 Mar 2020 21:33:46 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:35141 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726346AbgCIBdq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 8 Mar 2020 21:33:46 -0400
+Received: by mail-wr1-f67.google.com with SMTP id r7so9056268wro.2;
+        Sun, 08 Mar 2020 18:33:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BOLz31PfM94v71nBp9rIJn7CPiQJaqmEk0QWIWrZ18k=;
+        b=uy0aA5hv89h7EzmyCXpXpFncO8YGNvoOxx3zxS2ocVl+qzviqLEy0tRQvKxHOMayPq
+         HF3gyl0yRChm8q5vLcesLwyEvnlK6vFH4LK4gCn5xwPf+ZZTBSg3ch6QrmcwiGKkfyyH
+         HbNZBsivQW5FridAhAugcMnUy4PnunzJpRGfu4dprWJd8TJHUxbC/wNXmTodrbtjKY4G
+         JBDkFvRwUOzAT2CmeZMuUwDOPjkA2MPI3LrQQvMNdnJ0ETew8LeeJPW4+hymJOBbQR0Z
+         GB6TmTBlE6kf9Nx3XiPToAKhFwl4nefCtt5BNmP2NTapTPexoECd1ZmKNWPWe6G+2Q5k
+         ukSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BOLz31PfM94v71nBp9rIJn7CPiQJaqmEk0QWIWrZ18k=;
+        b=LiwCdwnQglXJCyuY+1Ic4jfJPDpHmiel/ZyXitRh9kq4w/vrIPGa0CqimRN31HqQLp
+         PQaLvL0fDsuDv8QeVEcWx1cu31FJyJIQQSRgp/zWAGXRlZb/EJgvxQiqe+AeU82pkHI2
+         RAc+IcMN3hPNYVAL8fpRPWncJ1DXOnfsXuZMAQr7jdy1k3fxX4KjEmKd4T71sLud0ycz
+         D99UAJNlXmnFftHEgdIygQY+NCsGVfq9DlEMuOBIA/9gMthmr9XQyvIQNx6ZyHVLqPdy
+         cg6Qe6QO7+uQKN0j+j1OaM27vdhNNpdH6vSBomAD2Gm39tXRUDTNf0eoYQlOu3W2HDFi
+         wL6w==
+X-Gm-Message-State: ANhLgQ0olTtkdRGg8YknVVTaL1qF4NnruDbl+AChpVjn+NMmCnotVit3
+        TwzfOWdi3vtocu8yvGLXG9BkzLP7xm4aRfv/t4E=
+X-Google-Smtp-Source: ADFU+vscvdqCsLNsZ/dm1KHbMRBDWbFtHrDeccAWQ9yH2mE3+K6oA3dm3JxkBPV9RAVpMjNHSx3qio3W59xJDMMLXF8=
+X-Received: by 2002:adf:e408:: with SMTP id g8mr18539592wrm.198.1583717623496;
+ Sun, 08 Mar 2020 18:33:43 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200304072730.9193-1-zhang.lyra@gmail.com> <20200304072730.9193-4-zhang.lyra@gmail.com>
+In-Reply-To: <20200304072730.9193-4-zhang.lyra@gmail.com>
+From:   Chunyan Zhang <zhang.lyra@gmail.com>
+Date:   Mon, 9 Mar 2020 09:33:07 +0800
+Message-ID: <CAAfSe-sJU77_aA5DXcM9D6dnjSgcy8V7zABunFbCSvL2k-RY8Q@mail.gmail.com>
+Subject: Re: [PATCH v6 3/7] dt-bindings: clk: sprd: add bindings for sc9863a
+ clock controller
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     linux-clk <linux-clk@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The kernel utilization metric does multiplexing currently and is somewhat
-unreliable. The problem is that it uses two instances of the fixed counter,
-and the kernel has to multipleplex which causes errors. So should use
-CPU_CLK_UNHALTED.THREAD instead.
+Hi Rob,
 
-Before:
+Can I have your acked-by on this patch now? Or do you have comments?
 
-  # perf stat -M Kernel_Utilization -- sleep 1
+Thanks,
+Chunyan
 
-  Performance counter stats for 'sleep 1':
 
-          1,419,425      cpu_clk_unhalted.ref_tsc:k
-      <not counted>      cpu_clk_unhalted.ref_tsc	(0.00%)
-
-After:
-
-  # perf stat -M Kernel_Utilization -- sleep 1
-
-  Performance counter stats for 'sleep 1':
-
-            746,688      cpu_clk_unhalted.thread:k #      0.7 Kernel_Utilization
-          1,088,348      cpu_clk_unhalted.thread
-
-Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
----
- tools/perf/pmu-events/arch/x86/broadwell/bdw-metrics.json     | 2 +-
- tools/perf/pmu-events/arch/x86/broadwellde/bdwde-metrics.json | 2 +-
- tools/perf/pmu-events/arch/x86/broadwellx/bdx-metrics.json    | 2 +-
- tools/perf/pmu-events/arch/x86/cascadelakex/clx-metrics.json  | 2 +-
- tools/perf/pmu-events/arch/x86/haswell/hsw-metrics.json       | 2 +-
- tools/perf/pmu-events/arch/x86/haswellx/hsx-metrics.json      | 2 +-
- tools/perf/pmu-events/arch/x86/ivybridge/ivb-metrics.json     | 2 +-
- tools/perf/pmu-events/arch/x86/ivytown/ivt-metrics.json       | 2 +-
- tools/perf/pmu-events/arch/x86/jaketown/jkt-metrics.json      | 2 +-
- tools/perf/pmu-events/arch/x86/sandybridge/snb-metrics.json   | 2 +-
- tools/perf/pmu-events/arch/x86/skylake/skl-metrics.json       | 2 +-
- tools/perf/pmu-events/arch/x86/skylakex/skx-metrics.json      | 2 +-
- 12 files changed, 12 insertions(+), 12 deletions(-)
-
-diff --git a/tools/perf/pmu-events/arch/x86/broadwell/bdw-metrics.json b/tools/perf/pmu-events/arch/x86/broadwell/bdw-metrics.json
-index 45a34ce4fe89..8cdc7c13dc2a 100644
---- a/tools/perf/pmu-events/arch/x86/broadwell/bdw-metrics.json
-+++ b/tools/perf/pmu-events/arch/x86/broadwell/bdw-metrics.json
-@@ -297,7 +297,7 @@
-     },
-     {
-         "BriefDescription": "Fraction of cycles spent in Kernel mode",
--        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:k / CPU_CLK_UNHALTED.REF_TSC",
-+        "MetricExpr": "CPU_CLK_UNHALTED.THREAD:k / CPU_CLK_UNHALTED.THREAD",
-         "MetricGroup": "Summary",
-         "MetricName": "Kernel_Utilization"
-     },
-diff --git a/tools/perf/pmu-events/arch/x86/broadwellde/bdwde-metrics.json b/tools/perf/pmu-events/arch/x86/broadwellde/bdwde-metrics.json
-index 961fe4395758..16fd8a7490fc 100644
---- a/tools/perf/pmu-events/arch/x86/broadwellde/bdwde-metrics.json
-+++ b/tools/perf/pmu-events/arch/x86/broadwellde/bdwde-metrics.json
-@@ -115,7 +115,7 @@
-     },
-     {
-         "BriefDescription": "Fraction of cycles spent in Kernel mode",
--        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:k / CPU_CLK_UNHALTED.REF_TSC",
-+        "MetricExpr": "CPU_CLK_UNHALTED.THREAD:k / CPU_CLK_UNHALTED.THREAD",
-         "MetricGroup": "Summary",
-         "MetricName": "Kernel_Utilization"
-     },
-diff --git a/tools/perf/pmu-events/arch/x86/broadwellx/bdx-metrics.json b/tools/perf/pmu-events/arch/x86/broadwellx/bdx-metrics.json
-index 746734ce09be..1eb0415fa11a 100644
---- a/tools/perf/pmu-events/arch/x86/broadwellx/bdx-metrics.json
-+++ b/tools/perf/pmu-events/arch/x86/broadwellx/bdx-metrics.json
-@@ -297,7 +297,7 @@
-     },
-     {
-         "BriefDescription": "Fraction of cycles spent in Kernel mode",
--        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:k / CPU_CLK_UNHALTED.REF_TSC",
-+        "MetricExpr": "CPU_CLK_UNHALTED.THREAD:k / CPU_CLK_UNHALTED.THREAD",
-         "MetricGroup": "Summary",
-         "MetricName": "Kernel_Utilization"
-     },
-diff --git a/tools/perf/pmu-events/arch/x86/cascadelakex/clx-metrics.json b/tools/perf/pmu-events/arch/x86/cascadelakex/clx-metrics.json
-index f94653229dd4..a2c32db8f14e 100644
---- a/tools/perf/pmu-events/arch/x86/cascadelakex/clx-metrics.json
-+++ b/tools/perf/pmu-events/arch/x86/cascadelakex/clx-metrics.json
-@@ -315,7 +315,7 @@
-     },
-     {
-         "BriefDescription": "Fraction of cycles spent in Kernel mode",
--        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:k / CPU_CLK_UNHALTED.REF_TSC",
-+        "MetricExpr": "CPU_CLK_UNHALTED.THREAD:k / CPU_CLK_UNHALTED.THREAD",
-         "MetricGroup": "Summary",
-         "MetricName": "Kernel_Utilization"
-     },
-diff --git a/tools/perf/pmu-events/arch/x86/haswell/hsw-metrics.json b/tools/perf/pmu-events/arch/x86/haswell/hsw-metrics.json
-index 5402cd3120f9..f57c5f3506c2 100644
---- a/tools/perf/pmu-events/arch/x86/haswell/hsw-metrics.json
-+++ b/tools/perf/pmu-events/arch/x86/haswell/hsw-metrics.json
-@@ -267,7 +267,7 @@
-     },
-     {
-         "BriefDescription": "Fraction of cycles spent in Kernel mode",
--        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:k / CPU_CLK_UNHALTED.REF_TSC",
-+        "MetricExpr": "CPU_CLK_UNHALTED.THREAD:k / CPU_CLK_UNHALTED.THREAD",
-         "MetricGroup": "Summary",
-         "MetricName": "Kernel_Utilization"
-     },
-diff --git a/tools/perf/pmu-events/arch/x86/haswellx/hsx-metrics.json b/tools/perf/pmu-events/arch/x86/haswellx/hsx-metrics.json
-index 832f3cb40b34..311a005dc35b 100644
---- a/tools/perf/pmu-events/arch/x86/haswellx/hsx-metrics.json
-+++ b/tools/perf/pmu-events/arch/x86/haswellx/hsx-metrics.json
-@@ -267,7 +267,7 @@
-     },
-     {
-         "BriefDescription": "Fraction of cycles spent in Kernel mode",
--        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:k / CPU_CLK_UNHALTED.REF_TSC",
-+        "MetricExpr": "CPU_CLK_UNHALTED.THREAD:k / CPU_CLK_UNHALTED.THREAD",
-         "MetricGroup": "Summary",
-         "MetricName": "Kernel_Utilization"
-     },
-diff --git a/tools/perf/pmu-events/arch/x86/ivybridge/ivb-metrics.json b/tools/perf/pmu-events/arch/x86/ivybridge/ivb-metrics.json
-index d69b2a8fc0bc..28e25447d3ef 100644
---- a/tools/perf/pmu-events/arch/x86/ivybridge/ivb-metrics.json
-+++ b/tools/perf/pmu-events/arch/x86/ivybridge/ivb-metrics.json
-@@ -285,7 +285,7 @@
-     },
-     {
-         "BriefDescription": "Fraction of cycles spent in Kernel mode",
--        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:k / CPU_CLK_UNHALTED.REF_TSC",
-+        "MetricExpr": "CPU_CLK_UNHALTED.THREAD:k / CPU_CLK_UNHALTED.THREAD",
-         "MetricGroup": "Summary",
-         "MetricName": "Kernel_Utilization"
-     },
-diff --git a/tools/perf/pmu-events/arch/x86/ivytown/ivt-metrics.json b/tools/perf/pmu-events/arch/x86/ivytown/ivt-metrics.json
-index 5f465fd81315..db23db2e98be 100644
---- a/tools/perf/pmu-events/arch/x86/ivytown/ivt-metrics.json
-+++ b/tools/perf/pmu-events/arch/x86/ivytown/ivt-metrics.json
-@@ -285,7 +285,7 @@
-     },
-     {
-         "BriefDescription": "Fraction of cycles spent in Kernel mode",
--        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:k / CPU_CLK_UNHALTED.REF_TSC",
-+        "MetricExpr": "CPU_CLK_UNHALTED.THREAD:k / CPU_CLK_UNHALTED.THREAD",
-         "MetricGroup": "Summary",
-         "MetricName": "Kernel_Utilization"
-     },
-diff --git a/tools/perf/pmu-events/arch/x86/jaketown/jkt-metrics.json b/tools/perf/pmu-events/arch/x86/jaketown/jkt-metrics.json
-index 3e909b306003..dbb33e00b72a 100644
---- a/tools/perf/pmu-events/arch/x86/jaketown/jkt-metrics.json
-+++ b/tools/perf/pmu-events/arch/x86/jaketown/jkt-metrics.json
-@@ -171,7 +171,7 @@
-     },
-     {
-         "BriefDescription": "Fraction of cycles spent in Kernel mode",
--        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:k / CPU_CLK_UNHALTED.REF_TSC",
-+        "MetricExpr": "CPU_CLK_UNHALTED.THREAD:k / CPU_CLK_UNHALTED.THREAD",
-         "MetricGroup": "Summary",
-         "MetricName": "Kernel_Utilization"
-     },
-diff --git a/tools/perf/pmu-events/arch/x86/sandybridge/snb-metrics.json b/tools/perf/pmu-events/arch/x86/sandybridge/snb-metrics.json
-index 50c053235752..fb2d7b8875f8 100644
---- a/tools/perf/pmu-events/arch/x86/sandybridge/snb-metrics.json
-+++ b/tools/perf/pmu-events/arch/x86/sandybridge/snb-metrics.json
-@@ -171,7 +171,7 @@
-     },
-     {
-         "BriefDescription": "Fraction of cycles spent in Kernel mode",
--        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:k / CPU_CLK_UNHALTED.REF_TSC",
-+        "MetricExpr": "CPU_CLK_UNHALTED.THREAD:k / CPU_CLK_UNHALTED.THREAD",
-         "MetricGroup": "Summary",
-         "MetricName": "Kernel_Utilization"
-     },
-diff --git a/tools/perf/pmu-events/arch/x86/skylake/skl-metrics.json b/tools/perf/pmu-events/arch/x86/skylake/skl-metrics.json
-index e7feb60f9fa9..e3afc3178958 100644
---- a/tools/perf/pmu-events/arch/x86/skylake/skl-metrics.json
-+++ b/tools/perf/pmu-events/arch/x86/skylake/skl-metrics.json
-@@ -303,7 +303,7 @@
-     },
-     {
-         "BriefDescription": "Fraction of cycles spent in Kernel mode",
--        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:k / CPU_CLK_UNHALTED.REF_TSC",
-+        "MetricExpr": "CPU_CLK_UNHALTED.THREAD:k / CPU_CLK_UNHALTED.THREAD",
-         "MetricGroup": "Summary",
-         "MetricName": "Kernel_Utilization"
-     },
-diff --git a/tools/perf/pmu-events/arch/x86/skylakex/skx-metrics.json b/tools/perf/pmu-events/arch/x86/skylakex/skx-metrics.json
-index 21d7a0c2c2e8..12d1efba79bb 100644
---- a/tools/perf/pmu-events/arch/x86/skylakex/skx-metrics.json
-+++ b/tools/perf/pmu-events/arch/x86/skylakex/skx-metrics.json
-@@ -315,7 +315,7 @@
-     },
-     {
-         "BriefDescription": "Fraction of cycles spent in Kernel mode",
--        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:k / CPU_CLK_UNHALTED.REF_TSC",
-+        "MetricExpr": "CPU_CLK_UNHALTED.THREAD:k / CPU_CLK_UNHALTED.THREAD",
-         "MetricGroup": "Summary",
-         "MetricName": "Kernel_Utilization"
-     },
--- 
-2.17.1
-
+On Wed, 4 Mar 2020 at 15:28, Chunyan Zhang <zhang.lyra@gmail.com> wrote:
+>
+> From: Chunyan Zhang <chunyan.zhang@unisoc.com>
+>
+> add a new bindings to describe sc9863a clock compatible string.
+>
+> Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
+> ---
+>  .../bindings/clock/sprd,sc9863a-clk.yaml      | 105 ++++++++++++++++++
+>  1 file changed, 105 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/sprd,sc9863a-clk.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/clock/sprd,sc9863a-clk.yaml b/Documentation/devicetree/bindings/clock/sprd,sc9863a-clk.yaml
+> new file mode 100644
+> index 000000000000..bb3a78d8105e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/sprd,sc9863a-clk.yaml
+> @@ -0,0 +1,105 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +# Copyright 2019 Unisoc Inc.
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/clock/sprd,sc9863a-clk.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: SC9863A Clock Control Unit Device Tree Bindings
+> +
+> +maintainers:
+> +  - Orson Zhai <orsonzhai@gmail.com>
+> +  - Baolin Wang <baolin.wang7@gmail.com>
+> +  - Chunyan Zhang <zhang.lyra@gmail.com>
+> +
+> +properties:
+> +  "#clock-cells":
+> +    const: 1
+> +
+> +  compatible :
+> +    enum:
+> +      - sprd,sc9863a-ap-clk
+> +      - sprd,sc9863a-aon-clk
+> +      - sprd,sc9863a-apahb-gate
+> +      - sprd,sc9863a-pmu-gate
+> +      - sprd,sc9863a-aonapb-gate
+> +      - sprd,sc9863a-pll
+> +      - sprd,sc9863a-mpll
+> +      - sprd,sc9863a-rpll
+> +      - sprd,sc9863a-dpll
+> +      - sprd,sc9863a-mm-gate
+> +      - sprd,sc9863a-apapb-gate
+> +
+> +  clocks:
+> +    minItems: 1
+> +    maxItems: 4
+> +    description: |
+> +      The input parent clock(s) phandle for this clock, only list fixed
+> +      clocks which are declared in devicetree.
+> +
+> +  clock-names:
+> +    minItems: 1
+> +    maxItems: 4
+> +    items:
+> +      - const: ext-26m
+> +      - const: ext-32k
+> +      - const: ext-4m
+> +      - const: rco-100m
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - '#clock-cells'
+> +
+> +if:
+> +  properties:
+> +    compatible:
+> +      enum:
+> +        - sprd,sc9863a-ap-clk
+> +        - sprd,sc9863a-aon-clk
+> +then:
+> +  required:
+> +    - reg
+> +
+> +else:
+> +  description: |
+> +    Other SC9863a clock nodes should be the child of a syscon node in
+> +    which compatible string shoule be:
+> +            "sprd,sc9863a-glbregs", "syscon", "simple-mfd"
+> +
+> +    The 'reg' property for the clock node is also required if there is a sub
+> +    range of registers for the clocks.
+> +
+> +examples:
+> +  - |
+> +    ap_clk: clock-controller@21500000 {
+> +      compatible = "sprd,sc9863a-ap-clk";
+> +      reg = <0 0x21500000 0 0x1000>;
+> +      clocks = <&ext_26m>, <&ext_32k>;
+> +      clock-names = "ext-26m", "ext-32k";
+> +      #clock-cells = <1>;
+> +    };
+> +
+> +  - |
+> +    soc {
+> +      #address-cells = <2>;
+> +      #size-cells = <2>;
+> +
+> +      ap_ahb_regs: syscon@20e00000 {
+> +        compatible = "sprd,sc9863a-glbregs", "syscon", "simple-mfd";
+> +        reg = <0 0x20e00000 0 0x4000>;
+> +        #address-cells = <1>;
+> +        #size-cells = <1>;
+> +        ranges = <0 0 0x20e00000 0x4000>;
+> +
+> +        apahb_gate: apahb-gate@0 {
+> +          compatible = "sprd,sc9863a-apahb-gate";
+> +          reg = <0x0 0x1020>;
+> +          #clock-cells = <1>;
+> +        };
+> +      };
+> +    };
+> +
+> +...
+> --
+> 2.20.1
+>
