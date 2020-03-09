@@ -2,140 +2,134 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D289C10F29
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 08:43:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 336D7C10F29
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 08:44:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75FC320828
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 08:43:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00B5D20828
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 08:44:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UlsaYbna"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="rnAYiizi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726558AbgCIIn0 (ORCPT
+        id S1726551AbgCIIos (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 04:43:26 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:38639 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725962AbgCIIn0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 04:43:26 -0400
-Received: by mail-wr1-f68.google.com with SMTP id t11so9903415wrw.5;
-        Mon, 09 Mar 2020 01:43:25 -0700 (PDT)
+        Mon, 9 Mar 2020 04:44:48 -0400
+Received: from mail-mw2nam12on2075.outbound.protection.outlook.com ([40.107.244.75]:6235
+        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726360AbgCIIos (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 04:44:48 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=R3fE9ELvfle4XZWNLJYmxcQazeEw5c1YN6xGw/24flpQWetun8cmVMH++Wyae1/wkxiGZQ/Im8Z1Bj4TlJcLqxxXWCLcf4+CAxeiehP+Z5EL+Z4/Ej8N0G23+Lmf+VhFNICUeYXI62BJqK8sEzwtDIL044p+F6FyTTSmjq+WtqGQd/Z9tOQskFlTzIRDehppUckeKjkD3HLhL+EIuSK6oObtOlJlqc1DSEHG0VAIrzqElo67ZhnhiUv6NPTvn4Cs+E8QfcqJdwvvlvYOC2zpen+MPA/EYi/MYasrlADaE028esAv2dOdszJdxnoVwbIaKcycwTcmR9kDjTE9ZyKr6A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4vd9WVY/K1mKhb5pvx8kTMBR3MH10GFhE2aSaSkj5SU=;
+ b=QhA2w/bTxY/E/tJ8Zz6V8B4xzWrCrB0ht5zpG9ij5y0Ks4a8gesrmxF8SDmh6fcwPgkSE+PlxQh8vTD1BEtxgcntj7C4VlVHKxn14fd+rjyWm9Ckha2vCvz6Gq2AAKLbViHz4s5bl6LE11SCQO7nYaKsvuqRwm/gMbBcCrVXETpWEiRmtH5V5qAn+SnpgQgaibFVpOcq3eQ3gRKw8IXtOGC3fcdI5MSF2ABvZ3HucWhbfpvLSYuyV5kOjkqdf0VplMg8BMGnUP545sHV5jGat/PkuD9WwT2ldGf6YHPogn2Mx6rVWo3Cot21HZpn/oR0P/kjUZli7TnJbkXSnwtNzA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
+ dkim=pass header.d=xilinx.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3dyCaH2EW2/yhe02ff2ihoVbT2xLpKUPZBSJ5O6aTkg=;
-        b=UlsaYbnawVwWDoz+SC65neHjnGA3JlFL/BKjzfb3XdecPlJ2q7iXUj/m/CxgL57NwA
-         jkWqz4tevZEOYjaAKDASvUCxSrjr2VGEDYyqmAJT+xLeUAb7y7hFIdq6vcduvAJF1RD/
-         AKgUtUptLfZUX1zAWluUCPjpqamMBz0lTYkk7hsggrYjyAKvtyFun7n0Tz6hgN/xRgr5
-         DCQovat/CwPRfdWIMRfI+WLcX7mmsXk6U+2+bu+clngAvEjOx44jOhlPftJSnReNLhVK
-         GYm0MQIS8hdy0fIfwcdQD8cvkgSEuiH1MD+0ro5qMKUgEBdSiJvu0rCWzztJaau7ym76
-         sQ4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3dyCaH2EW2/yhe02ff2ihoVbT2xLpKUPZBSJ5O6aTkg=;
-        b=I/Jk8m+gkurHPxrTMRGm/864g7Wbz2tDR9ZMFlguex/D1EbD350Na7T5ixy83sGGbn
-         jPevE/shyO87DNMjzWtzZL8grnzdrjxZVAIrtQ05qtr9lkYCEzSaeNFFoLQZzHl5/K+l
-         2nFePOs96diM0OgA14ufbjdJAMZYz9J8u0KJIB7mJ6dnXBYj3Pifk0RSuC3L25LzBHuG
-         9us2kGxpRvrB1xYKGjHq3EBvREkMMKEZuTbaOwWSIybnG2KJbj7FLXvaRA9IPqdDyxti
-         41giYkZA/o6q7Z6HLEMKfNzMc7t0W0ncxXDhNyO/AwPZKYt/NjK2N4o+j7jdheJs1SuD
-         K9Qg==
-X-Gm-Message-State: ANhLgQ2sD+1sDYKv3Tcd3mF9Z6pzWhnlmc9N0YlapdfvgwvVD4KyiMiM
-        OQ4OOYqvGDGeSgI3rvEWKQL1omOUDooTlHlw7LW1vw==
-X-Google-Smtp-Source: ADFU+vshR/9K1P4joj1qyXF1zngyt9MyksUpJP02ZOzlb7IUD8H4JCMFkF32Q2elfFLlWVYTyw6IrnLfB2TayQgWuk4=
-X-Received: by 2002:adf:fac3:: with SMTP id a3mr19960796wrs.370.1583743404409;
- Mon, 09 Mar 2020 01:43:24 -0700 (PDT)
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4vd9WVY/K1mKhb5pvx8kTMBR3MH10GFhE2aSaSkj5SU=;
+ b=rnAYiiziKiZSHNIVPF33+s2WjNYrXyoQxavqwq5RHsMOwzmfdwaradvy06gADcboMvigx3LXi8QIrgGQ4Aua+DhUOhbo4JTYmbqJSo9D6LRP+EdG8S5jMGA/Aq1069LYOhdXnsk41KsM6rSPMY+eQqyEXno5DcNlFS9tHTDopY0=
+Received: from DM6PR02MB4426.namprd02.prod.outlook.com (2603:10b6:5:22::28) by
+ DM6PR02MB6541.namprd02.prod.outlook.com (2603:10b6:5:20b::10) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2793.17; Mon, 9 Mar 2020 08:44:44 +0000
+Received: from DM6PR02MB4426.namprd02.prod.outlook.com
+ ([fe80::2458:ae1:e813:f217]) by DM6PR02MB4426.namprd02.prod.outlook.com
+ ([fe80::2458:ae1:e813:f217%6]) with mapi id 15.20.2793.013; Mon, 9 Mar 2020
+ 08:44:44 +0000
+From:   Manish Narani <MNARANI@xilinx.com>
+To:     Sherry Sun <sherry.sun@nxp.com>, "bp@alien8.de" <bp@alien8.de>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "james.morse@arm.com" <james.morse@arm.com>,
+        "rrichter@marvell.com" <rrichter@marvell.com>,
+        Michal Simek <michals@xilinx.com>
+CC:     "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-imx@nxp.com" <linux-imx@nxp.com>,
+        "frank.li@nxp.com" <frank.li@nxp.com>
+Subject: RE: [PATCH v2] EDAC: synopsys: Fix the wrong call of pinf->col
+ parameter
+Thread-Topic: [PATCH v2] EDAC: synopsys: Fix the wrong call of pinf->col
+ parameter
+Thread-Index: AQHV7d35tp+sKUPo50Cn2nONmd7VuKhAAVCw
+Date:   Mon, 9 Mar 2020 08:44:44 +0000
+Message-ID: <DM6PR02MB44264FE7166FB2D23D4B4503C1FE0@DM6PR02MB4426.namprd02.prod.outlook.com>
+References: <1582856183-5007-1-git-send-email-sherry.sun@nxp.com>
+In-Reply-To: <1582856183-5007-1-git-send-email-sherry.sun@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=MNARANI@xilinx.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [157.44.130.49]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 76693ed5-3f7e-41f2-eb24-08d7c4061dbb
+x-ms-traffictypediagnostic: DM6PR02MB6541:|DM6PR02MB6541:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM6PR02MB65411580FEEC4AF33A370973C1FE0@DM6PR02MB6541.namprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2331;
+x-forefront-prvs: 0337AFFE9A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(39860400002)(366004)(376002)(346002)(396003)(189003)(199004)(52536014)(26005)(9686003)(6636002)(186003)(7696005)(5660300002)(7416002)(44832011)(64756008)(66476007)(66556008)(66446008)(33656002)(4326008)(66946007)(76116006)(55016002)(478600001)(4744005)(316002)(2906002)(110136005)(54906003)(53546011)(71200400001)(81156014)(8676002)(6506007)(81166006)(8936002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR02MB6541;H:DM6PR02MB4426.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: xilinx.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: MkfWPj0v++J6L4jQnCtPjlPIrL5teOjqdojqoBIRgXWbbNDVQ7qhw7yR17UPBahRAOpI/lvkawkmLdVLE8ZUu+ByWPUeoaT+aPCIGam0Fp0/HP4EmE0jAdfhPPSnZIle0UP76HONlRCQOL3zH/56gTeb4wuyzgInRrvOqq1piEGJ7kxdSer33nvaKekNOjRdFM55i5jDw2p9RBxgs9LYSK3vGofeUmX2Uf0KVhKBQhQsy00gXeikURWlVAqRYFBkr1a5TXikZ3fCfk5Gw1mZVoQlrVe/AUzJUdG9dTzA1xBuLqPWP79PWHIoq/vJlROiN6y9nviIc89HBnjFiosqXkYGYeXVQ5yfwpKR78X1iVDq+276THdwcqkWbNq3zsFig1wTdvR5i7dww1mhQUGjBF7d3QJP5fylWCrw3NVEigD0p6IAvlutpq1VsdmdqbFD
+x-ms-exchange-antispam-messagedata: DxGYRLcitdUbY228QvZ/6nvVDYM0Vd9JmnDiE1X03wMqAcDd3sttaoHnQ1A1Gz2UNVXNSbK5NUHAzr2fVQ7f5oNm57WiAAZ5TKbTqJi452a7MHc3CV5Fe9zVAPjlzORVXWLbomfq8a1zZd3Nip5RLA==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20200305103228.9686-1-zhang.lyra@gmail.com> <20200305103228.9686-2-zhang.lyra@gmail.com>
- <CAMuHMdU-gAhupHotQTHAZfopkGF_jQc-VrVxb24caw_BfzWd6g@mail.gmail.com>
- <CAAfSe-sonfA=6x9uvQXaHniQaXR8hWZa4uOcWxoo+Z_XT9QNhw@mail.gmail.com> <CAMuHMdUBkS+pPyPid2K=40jaTOSnAE_L-vJP5knmyVr8Fr5_hg@mail.gmail.com>
-In-Reply-To: <CAMuHMdUBkS+pPyPid2K=40jaTOSnAE_L-vJP5knmyVr8Fr5_hg@mail.gmail.com>
-From:   Chunyan Zhang <zhang.lyra@gmail.com>
-Date:   Mon, 9 Mar 2020 16:42:48 +0800
-Message-ID: <CAAfSe-uZSYZopDCGxQbGBQQ5+NZK6L79P+T62nfnL9CiZka++g@mail.gmail.com>
-Subject: Re: [PATCH 2/2] tty: serial: make SERIAL_SPRD not depend on ARCH_SPRD
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Jiri Slaby <jslaby@suse.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Chunyan Zhang <chunyan.zhang@unisoc.com>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 76693ed5-3f7e-41f2-eb24-08d7c4061dbb
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Mar 2020 08:44:44.2717
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: q3wEnhv2FPMFfDDUAY0V3bojxWi8u84Io4MA5jqO6LcwBZbpKQtuDRAvW4opWJsURDR/3gGGTe987qLOOF/rQw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR02MB6541
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Geert,
+Hi,
 
-On Mon, 9 Mar 2020 at 16:01, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->
-> Hi Chunyan,
->
-> On Mon, Mar 9, 2020 at 2:18 AM Chunyan Zhang <zhang.lyra@gmail.com> wrote:
-> > On Fri, 6 Mar 2020 at 20:41, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > > On Thu, Mar 5, 2020 at 11:33 AM Chunyan Zhang <zhang.lyra@gmail.com> wrote:
-> > > > From: Chunyan Zhang <chunyan.zhang@unisoc.com>
-> > > >
-> > > > Remove the dependency with ARCH_SPRD from sprd serial/console Kconfig-s,
-> > > > since we want them can be built-in when ARCH_SPRD is set as 'm'.
-> > >
-> > > Why would you want a serial driver for a specific platform to be builtin,
-> > > while all other platform support is modular?
-> >
-> > Oh, that's not this patch means.
-> >
-> > We just want serial driver can be builtin for any platform, so it
->
-> What would be the benefit of the user to be able to have the SPRD serial
-> driver built-in on any platform?  AFAIU, it supports only Spreadtrum
-> platforms.
+> -----Original Message-----
+> From: Sherry Sun <sherry.sun@nxp.com>
+> Sent: Friday, February 28, 2020 7:46 AM
+> To: bp@alien8.de; mchehab@kernel.org; tony.luck@intel.com;
+> james.morse@arm.com; rrichter@marvell.com; Michal Simek
+> <michals@xilinx.com>; Manish Narani <MNARANI@xilinx.com>
+> Cc: linux-edac@vger.kernel.org; linux-kernel@vger.kernel.org; linux-
+> imx@nxp.com; frank.li@nxp.com
+> Subject: [PATCH v2] EDAC: synopsys: Fix the wrong call of pinf->col param=
+eter
+>=20
+> Since ZynqMP platform call zynqmp_get_error_info() function to get ce/ue
+> information. In this function, pinf->col parameter is not used, this
+> parameter is only used by Zynq platforme in zynq_get_error_info(). So
+> here pinf->col should not be called and printed for ZynqMP, need remove
+> it.
+>=20
+> Fixes: b500b4a029d57 ("EDAC, synopsys: Add ECC support for ZynqMP DDR
+> controller")
+> Signed-off-by: Sherry Sun <sherry.sun@nxp.com>
 
-Right, it does support Spreadtrum platforms only indeed.
-Like I said on the replay to patch 1/2, simply because I want serial
-driver can be builtin all the time, no matter ARCH_SPRD is m or y.
+Reviewed-by: Manish Narani <manish.narani@xilinx.com>
 
-Regards,
-Chunyan
-
->
-> > should not depend on a config which can be set as 'm' (i.e. ARCH_SPRD)
-> > , otherwise if the config was set as 'm', the serial driver can't be
-> > selected as 'y' then.
->
-> I ask about that as a reply to PATCH 1/2.
->
-> > That's what I mean.
->
-> > > > --- a/drivers/tty/serial/Kconfig
-> > > > +++ b/drivers/tty/serial/Kconfig
-> > > > @@ -1452,7 +1452,6 @@ config SERIAL_MEN_Z135
-> > > >
-> > > >  config SERIAL_SPRD
-> > > >         tristate "Support for Spreadtrum serial"
-> > > > -       depends on ARCH_SPRD
-> > > >         select SERIAL_CORE
-> > > >         help
-> > > >           This enables the driver for the Spreadtrum's serial.
->
-> Gr{oetje,eeting}s,
->
->                         Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
->
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
+Thanks,
+Manish
