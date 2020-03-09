@@ -2,93 +2,184 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9DC9C10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 08:31:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82259C10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 08:31:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CE792084E
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 08:31:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583742666;
-	bh=sLXvjGCJnnzW+uQLTDT14+oKIKR/17ArcoVG6GZsO+M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=aWLatPku9ByxmxUYnqjCPjs+OnrLEjUrW//UtionMqz54o6YtIZllYSwbincP6Ft/
-	 1wdRz2Q98QVX7IEoGRCkUqA+GRkOolk+F4RD270fnZDsuhqB8UnViu3RPq/kd615De
-	 eLbiRZpZ6oL6BO1qdZTbda+OXuI7RLwYsE49F/Xk=
+	by mail.kernel.org (Postfix) with ESMTP id 56E4220866
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 08:31:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=diehl.com header.i=@diehl.com header.b="KgvIPbuC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726442AbgCIIbF (ORCPT
+        id S1726475AbgCIIbX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 04:31:05 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:41831 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725796AbgCIIbF (ORCPT
+        Mon, 9 Mar 2020 04:31:23 -0400
+Received: from enterprise02.smtp.diehl.com ([193.201.238.220]:23378 "EHLO
+        enterprise02.smtp.diehl.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725796AbgCIIbX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 04:31:05 -0400
-Received: by mail-lj1-f195.google.com with SMTP id o10so2225152ljc.8
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 01:31:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=NJLkCkuMzzpPuugQcQ0p8avakDTUhh8cOIKlBZwAH50=;
-        b=SHI+D42vIKCfVfhubgrE7mQySwz2KY4n7wex8dsyr3e8XOz+JBMlyTe/gOyfXIx53U
-         EBUU8o6CNYM0PoOzFre/BYvTVgDBDd3FoB9PV/j414GLVkHS7KpUmh6b1ZTxmUDFjuAI
-         qtRLI5R3lDhj4p+xyz9WgQ1T3QdUYLk3X6ElaCx0URctgwnrItlmdL6a5WzCfgu56+Y2
-         brz/B0SX6CYBIi2C/NgP/SF5v3GOExYSB+CBxsDpzUcV8vJ8jpseKUah1NFHMmfLIhqu
-         +M02MiacGiwHp9JspNqmM5YRQqN1E8DJIq2G/+GtjobR9ocWxyWMhzK+Z24gkAECCIrl
-         eRZQ==
-X-Gm-Message-State: ANhLgQ3rIcRmTgduqusxAC95xR4Cb0NvIrT9/H3CBpHaWrueZyV3m8Jv
-        SC6S3blIw/NfWjgqsX+6V4ukMCP0
-X-Google-Smtp-Source: ADFU+vstW8cNSfPuh7HcES1v35XdnhqmfHlxAQ2GEL9hma2Cnbdj+5C4Kn5Ha+yDjLUgikjjxUWlBg==
-X-Received: by 2002:a2e:978d:: with SMTP id y13mr8365758lji.287.1583742663353;
-        Mon, 09 Mar 2020 01:31:03 -0700 (PDT)
-Received: from xi.terra (c-12aae455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.170.18])
-        by smtp.gmail.com with ESMTPSA id u15sm11477985ljl.34.2020.03.09.01.31.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Mar 2020 01:31:02 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.92.3)
-        (envelope-from <johan@kernel.org>)
-        id 1jBDoH-0004nB-23; Mon, 09 Mar 2020 09:30:49 +0100
-Date:   Mon, 9 Mar 2020 09:30:49 +0100
-From:   Johan Hovold <johan@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Rui Miguel Silva <rmfrfs@gmail.com>,
-        Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        greybus-dev@lists.linaro.org
-Subject: Re: [PATCH] staging: greybus: Fix the irq API abuse
-Message-ID: <20200309083049.GA14211@localhost>
-References: <87o8t9boqq.fsf@nanos.tec.linutronix.de>
+        Mon, 9 Mar 2020 04:31:23 -0400
+X-Greylist: delayed 430 seconds by postgrey-1.27 at vger.kernel.org; Mon, 09 Mar 2020 04:31:22 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=diehl.com; i=@diehl.com; q=dns/txt; s=default;
+  t=1583742682; x=1615278682;
+  h=from:to:cc:subject:date:message-id:
+   content-transfer-encoding:mime-version;
+  bh=UgnIsQyrw7V0RiG+5o4AS/b+Nah9kEs6rkBtBbKMBog=;
+  b=KgvIPbuCgunfKgnvu6jsOkhtPSmMiqmdGglzBmjQhHPYTbWejvC4FVGD
+   0p7n5vYGohhzfFTh6rscxlUjKViPdjokuGopL86zAPCARWYWE5vw8ENEQ
+   VxbS4PDfsKgHprSSWzco4/xWDVp5RBCdqTerWGCEFsd2bf1Too6+N6+mK
+   0jrCZbQr/a2vkybl4CDrfxQ4crSUtDi1d1cP4WNNySGPAUNRoXD88CNJb
+   +UQEFPWW99OIWW+xH4HeWg2IOybVVzwy0zDUx3xT8T09NUho66AFm7nLv
+   TCEPTdpAzt3vsSgDphWymkyQAnOZDdjrk4yjy9ptXVaA13lP5zx2dyDzy
+   A==;
+IronPort-SDR: tG2W2IlNj001FKiGJn+JIVXn/ulyclJn6PgAvVSosfqgLki2eO5UiXHQRTzUimUQ32F0NJ82oq
+ MZIW9saqpznA==
+From:   Denis Osterland-Heim <denis.osterland@diehl.com>
+To:     "dmurphy@ti.com" <dmurphy@ti.com>, "pavel@ucw.cz" <pavel@ucw.cz>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Denis Osterland-Heim" <denis.osterland@diehl.com>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: [RFC PATCH] leds: pwm: add flag to start without PWM init
+Thread-Topic: [RFC PATCH] leds: pwm: add flag to start without PWM init
+Thread-Index: AQHV9ewaOIgIxoAtxUq/BaTh5/4IBw==
+Date:   Mon, 9 Mar 2020 08:24:09 +0000
+Message-ID: <20200309082218.13263-1-Denis.Osterland@diehl.com>
+Accept-Language: de-DE, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+x-ms-exchange-messagesentrepresentingtype: 1
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87o8t9boqq.fsf@nanos.tec.linutronix.de>
+X-TrailerSkip: 1
+X-GBS-PROC: PkB65aL1SqtESF35r/jQn+utJHGlOfM4q7b0EC8/4akyCQ5zbSEBILSrYpOrT7a6
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 06, 2020 at 02:24:13PM +0100, Thomas Gleixner wrote:
-> Nothing outside of low level architecture code is supposed to look up
-> interrupt descriptors and fiddle with them.
-> 
-> Replace the open coded abuse by calling generic_handle_irq().
-> 
-> This still does not explain why and in which context this connection
-> magic is injecting interrupts in the first place and why this is correct
-> and safe, but at least the API abuse is gone.
+This patch add =22pwm,uninitalized=22 devicetree flag support to pwm
+leds, which allows to defer pwm init to first use of led.
 
-Yeah, there's more to that story. The interrupt-handling was known to
-have issues, but I can't seem to find the details right now.
+This allows to configure the PWM early in bootloader to let the LED
+blink until an application in Linux userspace set something different.
 
-> Fixes: 036aad9d0224 ("greybus: gpio: add interrupt handling support")
-> Fixes: 2611ebef8322 ("greybus: gpio: don't call irq-flow handler directly")
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Denis Osterland-Heim <Denis.Osterland@diehl.com>
+---
+Hi,
 
-Acked-by: Johan Hovold <johan@kernel.org>
+I want to ask if such a patch is intresting for mainline and
+if it is woth to think about how to represent this state to user space.
 
-Johan
+Regards Denis
+
+ Documentation/devicetree/bindings/leds/leds-pwm.txt |  1 +
+ drivers/leds/leds-pwm.c                             | 10 ++++++++--
+ include/linux/leds_pwm.h                            |  1 +
+ 3 files changed, 10 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/leds/leds-pwm.txt b/Docume=
+ntation/devicetree/bindings/leds/leds-pwm.txt
+index 6c6583c35f2f..4f58df631fc9 100644
+--- a/Documentation/devicetree/bindings/leds/leds-pwm.txt
++++ b/Documentation/devicetree/bindings/leds/leds-pwm.txt
+@@ -19,6 +19,7 @@ LED sub-node properties:
+   see Documentation/devicetree/bindings/leds/common.txt
+ - linux,default-trigger :  (optional)
+   see Documentation/devicetree/bindings/leds/common.txt
++- pwm,uninitalized : defer PWM init to first brightness change of led
+=20
+ Example:
+=20
+diff --git a/drivers/leds/leds-pwm.c b/drivers/leds/leds-pwm.c
+index 8b6965a563e9..02c90f05602a 100644
+--- a/drivers/leds/leds-pwm.c
++++ b/drivers/leds/leds-pwm.c
+@@ -97,7 +97,8 @@ static int led_pwm_add(struct device *dev, struct led_p=
+wm_priv *priv,
+ 	 * FIXME: pwm_apply_args() should be removed when switching to the
+ 	 * atomic PWM API.
+ 	 */
+-	pwm_apply_args(led_data->pwm);
++	if (!led->pwm_uninitialized)
++		pwm_apply_args(led_data->pwm);
+=20
+ 	pwm_get_args(led_data->pwm, &pargs);
+=20
+@@ -108,7 +109,9 @@ static int led_pwm_add(struct device *dev, struct led=
+_pwm_priv *priv,
+ 	ret =3D devm_led_classdev_register(dev, &led_data->cdev);
+ 	if (ret =3D=3D 0) {
+ 		priv->num_leds++;
+-		led_pwm_set(&led_data->cdev, led_data->cdev.brightness);
++		if (!led->pwm_uninitialized)
++			led_pwm_set(&led_data->cdev,
++					led_data->cdev.brightness);
+ 	} else {
+ 		dev_err(dev, =22failed to register PWM led for %s: %d=5Cn=22,
+ 			led->name, ret);
+@@ -143,6 +146,9 @@ static int led_pwm_create_fwnode(struct device *dev, =
+struct led_pwm_priv *priv)
+ 		fwnode_property_read_u32(fwnode, =22max-brightness=22,
+ 					 &led.max_brightness);
+=20
++		led.pwm_uninitialized =3D fwnode_property_read_bool(fwnode,
++							=22pwm,uninitialized=22);
++
+ 		ret =3D led_pwm_add(dev, priv, &led, fwnode);
+ 		if (ret) {
+ 			fwnode_handle_put(fwnode);
+diff --git a/include/linux/leds_pwm.h b/include/linux/leds_pwm.h
+index 93d101d28943..0b04dfd43654 100644
+--- a/include/linux/leds_pwm.h
++++ b/include/linux/leds_pwm.h
+@@ -10,6 +10,7 @@ struct led_pwm {
+ 	const char	*default_trigger;
+ 	unsigned	pwm_id __deprecated;
+ 	u8 		active_low;
++	u8		pwm_uninitialized;
+ 	unsigned 	max_brightness;
+ 	unsigned	pwm_period_ns;
+ };
+--=20
+2.25.1
+
+
+
+Diehl Connectivity Solutions GmbH
+Gesch=E4ftsf=FChrung: Horst Leonberger
+Sitz der Gesellschaft: N=FCrnberg - Registergericht: Amtsgericht
+N=FCrnberg: HRB 32315
+_________________________________________________________________________=
+__________________________
+
+Der Inhalt der vorstehenden E-Mail ist nicht rechtlich bindend. Diese E-M=
+ail enthaelt vertrauliche und/oder rechtlich geschuetzte Informationen.
+Informieren Sie uns bitte, wenn Sie diese E-Mail faelschlicherweise erhal=
+ten haben. Bitte loeschen Sie in diesem Fall die Nachricht.
+Jede unerlaubte Form der Reproduktion, Bekanntgabe, Aenderung, Verteilung=
+ und/oder Publikation dieser E-Mail ist strengstens untersagt.
+- Informationen zum Datenschutz, insbesondere zu Ihren Rechten, erhalten =
+Sie unter https://www.diehl.com/group/de/transparenz-und-informationspfli=
+chten/
+
+The contents of the above mentioned e-mail is not legally binding. This e=
+-mail contains confidential and/or legally protected information. Please =
+inform us if you have received this e-mail by
+mistake and delete it in such a case. Each unauthorized reproduction, dis=
+closure, alteration, distribution and/or publication of this e-mail is st=
+rictly prohibited.=20
+- For general information on data protection and your respective rights p=
+lease visit https://www.diehl.com/group/en/transparency-and-information-o=
+bligations/
