@@ -2,92 +2,131 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29CCDC10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 15:44:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FE53C10F27
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 15:45:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B03021D56
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 15:44:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A3D920578
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 15:45:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="tPSMc7Z9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727174AbgCIPoq (ORCPT
+        id S1726990AbgCIPp3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 11:44:46 -0400
-Received: from mga11.intel.com ([192.55.52.93]:48920 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726804AbgCIPoq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 11:44:46 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Mar 2020 08:44:46 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,533,1574150400"; 
-   d="scan'208";a="245377488"
-Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
-  by orsmga006.jf.intel.com with ESMTP; 09 Mar 2020 08:44:45 -0700
-Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id A0610301BCC; Mon,  9 Mar 2020 08:44:45 -0700 (PDT)
-Date:   Mon, 9 Mar 2020 08:44:45 -0700
-From:   Andi Kleen <ak@linux.intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     "Liang, Kan" <kan.liang@linux.intel.com>,
-        Luwei Kang <luwei.kang@intel.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, tglx@linutronix.de, bp@alien8.de,
-        hpa@zytor.com, pbonzini@redhat.com,
-        sean.j.christopherson@intel.com, vkuznets@redhat.com,
-        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
-        pawan.kumar.gupta@linux.intel.com, thomas.lendacky@amd.com,
-        fenghua.yu@intel.com, like.xu@linux.intel.com
-Subject: Re: [PATCH v1 01/11] perf/x86/core: Support KVM to assign a
- dedicated counter for guest PEBS
-Message-ID: <20200309154445.GL1454533@tassilo.jf.intel.com>
-References: <1583431025-19802-1-git-send-email-luwei.kang@intel.com>
- <1583431025-19802-2-git-send-email-luwei.kang@intel.com>
- <20200306135317.GD12561@hirez.programming.kicks-ass.net>
- <b72cb68e-1a0a-eeff-21b4-ce412e939cfd@linux.intel.com>
- <20200309100443.GG12561@hirez.programming.kicks-ass.net>
+        Mon, 9 Mar 2020 11:45:29 -0400
+Received: from gateway33.websitewelcome.com ([192.185.145.9]:35664 "EHLO
+        gateway33.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726866AbgCIPp2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 11:45:28 -0400
+Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
+        by gateway33.websitewelcome.com (Postfix) with ESMTP id A883E1C90A3
+        for <linux-kernel@vger.kernel.org>; Mon,  9 Mar 2020 10:45:27 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id BKatjOdZ8vBMdBKatjIASX; Mon, 09 Mar 2020 10:45:27 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=KI6kL70mhANfZo9ZyMWV1zqSX43MGFW8/O1xkIeRzhE=; b=tPSMc7Z9L+B5gQinOJRz2/20On
+        whgJuyq5HOnz0RSo1cs06B3ldkLSZNaud/e7LNgjBfZnwomgdudBJf+TR8P6vztUvfZX2CTWvsNf4
+        z1PlLgK5n/aQ5Fv4IoMCFAFkuZoE0QGVlgxR0e4rMHjtxNUWHPLcVWlpZzTYX1r37yobYgt5+mpJw
+        kxvPu/WKNeLfYGQRNBMSL3kNvWvkGqtxgfXeHl/e4xYiHwhR5jJ+mqD+v/+04t4+gcZQG1dd8aoiU
+        pYc6ImS9uVgYLg1Ry1amtqbC4e1saiR7fBnQcy5qM14Ncw4db+czNn3v4xNRBtEGjV8T9rfRqtWgg
+        c7+3/8iA==;
+Received: from [201.162.240.150] (port=12300 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1jBKar-002wEp-SU; Mon, 09 Mar 2020 10:45:26 -0500
+Date:   Mon, 9 Mar 2020 10:48:38 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Theodore Ts'o <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>
+Cc:     linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH][next] ext4: dir: Replace zero-length array with
+ flexible-array member
+Message-ID: <20200309154838.GA31559@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200309100443.GG12561@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.162.240.150
+X-Source-L: No
+X-Exim-ID: 1jBKar-002wEp-SU
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [201.162.240.150]:12300
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 8
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Suppose your KVM thing claims counter 0/2 (ICL/SKL) for some random PEBS
-> event, and then the host wants to use PREC_DIST.. Then one of them will
-> be screwed for no reason what so ever.
+The current codebase makes use of the zero-length array language
+extension to the C90 standard, but the preferred mechanism to declare
+variable-length types such as these ones is a flexible array member[1][2],
+introduced in C99:
 
-It's no different from some user using an event that requires some
-specific counter.
+struct foo {
+        int stuff;
+        struct boo array[];
+};
 
-> 
-> How is that not destroying scheduling freedom? Any other situation we'd
-> have moved the !PREC_DIST PEBS event to another counter.
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertently introduced[3] to the codebase from now on.
 
-Anyways what are you suggesting to do instead? Do you have a better proposal?
+Also, notice that, dynamic memory allocations won't be affected by
+this change:
 
-The only alternative I know to doing this would be to go through the PEBS
-buffer in the guest and patch the applicable counter field up on each PMI.
+"Flexible array members have incomplete type, and so the sizeof operator
+may not be applied. As a quirk of the original implementation of
+zero-length arrays, sizeof evaluates to zero."[1]
 
-I tried that at some point (still have code somewhere), but it was
-quite complicated and tricky and somewhat slow, so I gave up eventually.
+This issue was found with the help of Coccinelle.
 
-It's also inherently racy because if the guest starts looking at
-the PEBS buffer before an PMI it could see the unpatched values
-Given I don't know any real software which would break from this,
-but such "polled PEBS" usages are certainly concievable.
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[2] https://github.com/KSPP/linux/issues/21
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
 
-The artificial constraint is a lot simpler and straight forward,
-and also doesn't have any holes like this.
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ fs/ext4/dir.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
--Andi
+diff --git a/fs/ext4/dir.c b/fs/ext4/dir.c
+index 9aa1f75409b0..c654205f648d 100644
+--- a/fs/ext4/dir.c
++++ b/fs/ext4/dir.c
+@@ -392,7 +392,7 @@ struct fname {
+ 	__u32		inode;
+ 	__u8		name_len;
+ 	__u8		file_type;
+-	char		name[0];
++	char		name[];
+ };
+ 
+ /*
+-- 
+2.25.0
 
