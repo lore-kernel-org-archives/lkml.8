@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CE77C10F29
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1DDBC18E5B
 	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 17:47:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE0CA208C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 17:47:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FABA21D56
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 17:47:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726295AbgCIRrg (ORCPT
+        id S1726571AbgCIRrh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 13:47:36 -0400
+        Mon, 9 Mar 2020 13:47:37 -0400
 Received: from mga14.intel.com ([192.55.52.115]:12899 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726134AbgCIRrf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 13:47:35 -0400
+        id S1726307AbgCIRrg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 13:47:36 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Mar 2020 10:47:34 -0700
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Mar 2020 10:47:36 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,518,1574150400"; 
-   d="scan'208";a="260490311"
+   d="scan'208";a="260490329"
 Received: from labuser-ice-lake-client-platform.jf.intel.com ([10.54.55.45])
-  by orsmga002.jf.intel.com with ESMTP; 09 Mar 2020 10:47:34 -0700
+  by orsmga002.jf.intel.com with ESMTP; 09 Mar 2020 10:47:36 -0700
 From:   kan.liang@linux.intel.com
 To:     acme@kernel.org, jolsa@redhat.com, peterz@infradead.org,
         mingo@redhat.com, linux-kernel@vger.kernel.org
@@ -36,9 +36,9 @@ Cc:     namhyung@kernel.org, adrian.hunter@intel.com,
         alexey.budankov@linux.intel.com, vitaly.slobodskoy@intel.com,
         pavel.gerasimov@intel.com, mpe@ellerman.id.au, eranian@google.com,
         ak@linux.intel.com, Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH V2 1/9] perf pmu: Add support for PMU capabilities
-Date:   Mon,  9 Mar 2020 10:46:31 -0700
-Message-Id: <20200309174639.4594-2-kan.liang@linux.intel.com>
+Subject: [PATCH V2 3/9] perf machine: Refine the function for LBR call stack reconstruction
+Date:   Mon,  9 Mar 2020 10:46:33 -0700
+Message-Id: <20200309174639.4594-4-kan.liang@linux.intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200309174639.4594-1-kan.liang@linux.intel.com>
 References: <20200309174639.4594-1-kan.liang@linux.intel.com>
@@ -49,163 +49,238 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Kan Liang <kan.liang@linux.intel.com>
 
-The PMU capabilities information, which is located at
-/sys/bus/event_source/devices/<dev>/caps, is required by perf tool.
-For example, the max LBR information is required to stitch LBR call
-stack.
+LBR only collect the user call stack. To reconstruct a call stack, both
+kernel call stack and user call stack are required. The function
+resolve_lbr_callchain_sample() mix the kernel call stack and user
+call stack. Now, with the help of HW idx, perf tool can reconstruct a
+more complete call stack by adding some user call stack from previous
+sample. However, current implementation is hard to be extended to
+support it.
 
-Add perf_pmu__caps_parse() to parse the PMU capabilities information.
-The information is stored in a list.
+Abstract two new functions to resolve user call stack and kernel
+call stack respectively.
 
-Add perf_pmu__scan_caps() to scan the capabilities one by one.
-
-The following patch will store the capabilities information in perf
-header.
+No functional changes.
 
 Reviewed-by: Andi Kleen <ak@linux.intel.com>
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 ---
- tools/perf/util/pmu.c | 87 +++++++++++++++++++++++++++++++++++++++++++
- tools/perf/util/pmu.h | 12 ++++++
- 2 files changed, 99 insertions(+)
+ tools/perf/util/machine.c | 186 ++++++++++++++++++++++++--------------
+ 1 file changed, 120 insertions(+), 66 deletions(-)
 
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index 8b99fd312aae..13634ca09096 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -844,6 +844,7 @@ static struct perf_pmu *pmu_lookup(const char *name)
- 
- 	INIT_LIST_HEAD(&pmu->format);
- 	INIT_LIST_HEAD(&pmu->aliases);
-+	INIT_LIST_HEAD(&pmu->caps);
- 	list_splice(&format, &pmu->format);
- 	list_splice(&aliases, &pmu->aliases);
- 	list_add_tail(&pmu->list, &pmus);
-@@ -1565,3 +1566,89 @@ int perf_pmu__scan_file(struct perf_pmu *pmu, const char *name, const char *fmt,
- 	va_end(args);
- 	return ret;
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index fd14f1489802..4687067d609b 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -2159,6 +2159,97 @@ static int remove_loops(struct branch_entry *l, int nr,
+ 	return nr;
  }
+ 
 +
-+static int perf_pmu__new_caps(struct list_head *list, char *name, char *value)
++static int lbr_callchain_add_kernel_ip(struct thread *thread,
++				       struct callchain_cursor *cursor,
++				       struct perf_sample *sample,
++				       struct symbol **parent,
++				       struct addr_location *root_al,
++				       bool callee, int end)
 +{
-+	struct perf_pmu_caps *caps;
++	struct ip_callchain *chain = sample->callchain;
++	u8 cpumode = PERF_RECORD_MISC_USER;
++	int err, i;
 +
-+	caps = zalloc(sizeof(*caps));
-+	if (!caps)
-+		return -ENOMEM;
++	if (callee) {
++		for (i = 0; i < end + 1; i++) {
++			err = add_callchain_ip(thread, cursor, parent,
++					       root_al, &cpumode, chain->ips[i],
++					       false, NULL, NULL, 0);
++			if (err)
++				return err;
++		}
++	} else {
++		for (i = end; i >= 0; i--) {
++			err = add_callchain_ip(thread, cursor, parent,
++					       root_al, &cpumode, chain->ips[i],
++					       false, NULL, NULL, 0);
++			if (err)
++				return err;
++		}
++	}
 +
-+	caps->name = strdup(name);
-+	caps->value = strndup(value, strlen(value) - 1);
-+	list_add_tail(&caps->list, list);
 +	return 0;
 +}
 +
-+/*
-+ * Reading/parsing the given pmu capabilities, which should be located at:
-+ * /sys/bus/event_source/devices/<dev>/caps as sysfs group attributes.
-+ * Return the number of capabilities
-+ */
-+int perf_pmu__caps_parse(struct perf_pmu *pmu)
++static int lbr_callchain_add_lbr_ip(struct thread *thread,
++				    struct callchain_cursor *cursor,
++				    struct perf_sample *sample,
++				    struct symbol **parent,
++				    struct addr_location *root_al,
++				    bool callee)
 +{
-+	struct stat st;
-+	char caps_path[PATH_MAX];
-+	const char *sysfs = sysfs__mountpoint();
-+	DIR *caps_dir;
-+	struct dirent *evt_ent;
-+	int nr_caps = 0;
++	struct branch_stack *lbr_stack = sample->branch_stack;
++	struct branch_entry *entries = perf_sample__branch_entries(sample);
++	u8 cpumode = PERF_RECORD_MISC_USER;
++	int lbr_nr = lbr_stack->nr;
++	struct branch_flags *flags;
++	u64 ip, branch_from = 0;
++	int err, i;
 +
-+	if (!sysfs)
-+		return -1;
++	if (callee) {
++		ip = entries[0].to;
++		flags = &entries[0].flags;
++		branch_from = entries[0].from;
++		err = add_callchain_ip(thread, cursor, parent,
++				       root_al, &cpumode, ip,
++				       true, flags, NULL, branch_from);
++		if (err)
++			return err;
 +
-+	snprintf(caps_path, PATH_MAX,
-+		 "%s" EVENT_SOURCE_DEVICE_PATH "%s/caps", sysfs, pmu->name);
-+
-+	if (stat(caps_path, &st) < 0)
-+		return 0;	/* no error if caps does not exist */
-+
-+	caps_dir = opendir(caps_path);
-+	if (!caps_dir)
-+		return -EINVAL;
-+
-+	while ((evt_ent = readdir(caps_dir)) != NULL) {
-+		char path[PATH_MAX + NAME_MAX + 1];
-+		char *name = evt_ent->d_name;
-+		char value[128];
-+		FILE *file;
-+
-+		if (!strcmp(name, ".") || !strcmp(name, ".."))
-+			continue;
-+
-+		snprintf(path, sizeof(path), "%s/%s", caps_path, name);
-+
-+		file = fopen(path, "r");
-+		if (!file)
-+			break;
-+
-+		if (!fgets(value, sizeof(value), file) ||
-+		    (perf_pmu__new_caps(&pmu->caps, name, value) < 0)) {
-+			fclose(file);
-+			break;
++		for (i = 0; i < lbr_nr; i++) {
++			ip = entries[i].from;
++			flags = &entries[i].flags;
++			err = add_callchain_ip(thread, cursor, parent,
++					       root_al, &cpumode, ip,
++					       true, flags, NULL, branch_from);
++			if (err)
++				return err;
++		}
++	} else {
++		for (i = lbr_nr - 1; i >= 0; i--) {
++			ip = entries[i].from;
++			flags = &entries[i].flags;
++			err = add_callchain_ip(thread, cursor, parent,
++					       root_al, &cpumode, ip,
++					       true, flags, NULL, branch_from);
++			if (err)
++				return err;
 +		}
 +
-+		nr_caps++;
-+		fclose(file);
++		ip = entries[0].to;
++		flags = &entries[0].flags;
++		branch_from = entries[0].from;
++		err = add_callchain_ip(thread, cursor, parent,
++				       root_al, &cpumode, ip,
++				       true, flags, NULL, branch_from);
++		if (err)
++			return err;
 +	}
 +
-+	closedir(caps_dir);
-+
-+	return nr_caps;
++	return 0;
 +}
 +
-+struct perf_pmu_caps *perf_pmu__scan_caps(struct perf_pmu *pmu,
-+					  struct perf_pmu_caps *caps)
-+{
-+	if (!pmu)
-+		return NULL;
-+
-+	if (!caps)
-+		caps = list_prepare_entry(caps, &pmu->caps, list);
-+
-+	list_for_each_entry_continue(caps, &pmu->caps, list)
-+		return caps;
-+
-+	return NULL;
-+}
-diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
-index 6737e3d5d568..a228e27ae462 100644
---- a/tools/perf/util/pmu.h
-+++ b/tools/perf/util/pmu.h
-@@ -21,6 +21,12 @@ enum {
+ /*
+  * Recolve LBR callstack chain sample
+  * Return:
+@@ -2174,81 +2265,44 @@ static int resolve_lbr_callchain_sample(struct thread *thread,
+ 					int max_stack)
+ {
+ 	struct ip_callchain *chain = sample->callchain;
+-	int chain_nr = min(max_stack, (int)chain->nr), i;
+-	u8 cpumode = PERF_RECORD_MISC_USER;
+-	u64 ip, branch_from = 0;
++	int chain_nr = min(max_stack, (int)chain->nr);
++	int i, err;
  
- struct perf_event_attr;
+ 	for (i = 0; i < chain_nr; i++) {
+ 		if (chain->ips[i] == PERF_CONTEXT_USER)
+ 			break;
+ 	}
  
-+struct perf_pmu_caps {
-+	char *name;
-+	char *value;
-+	struct list_head list;
-+};
-+
- struct perf_pmu {
- 	char *name;
- 	__u32 type;
-@@ -32,6 +38,7 @@ struct perf_pmu {
- 	struct perf_cpu_map *cpus;
- 	struct list_head format;  /* HEAD struct perf_pmu_format -> list */
- 	struct list_head aliases; /* HEAD struct perf_pmu_alias -> list */
-+	struct list_head caps;    /* HEAD struct perf_pmu_caps -> list */
- 	struct list_head list;    /* ELEM */
- };
+-	/* LBR only affects the user callchain */
+-	if (i != chain_nr) {
+-		struct branch_stack *lbr_stack = sample->branch_stack;
+-		struct branch_entry *entries = perf_sample__branch_entries(sample);
+-		int lbr_nr = lbr_stack->nr, j, k;
+-		bool branch;
+-		struct branch_flags *flags;
+-		/*
+-		 * LBR callstack can only get user call chain.
+-		 * The mix_chain_nr is kernel call chain
+-		 * number plus LBR user call chain number.
+-		 * i is kernel call chain number,
+-		 * 1 is PERF_CONTEXT_USER,
+-		 * lbr_nr + 1 is the user call chain number.
+-		 * For details, please refer to the comments
+-		 * in callchain__printf
+-		 */
+-		int mix_chain_nr = i + 1 + lbr_nr + 1;
+-
+-		for (j = 0; j < mix_chain_nr; j++) {
+-			int err;
+-			branch = false;
+-			flags = NULL;
+-
+-			if (callchain_param.order == ORDER_CALLEE) {
+-				if (j < i + 1)
+-					ip = chain->ips[j];
+-				else if (j > i + 1) {
+-					k = j - i - 2;
+-					ip = entries[k].from;
+-					branch = true;
+-					flags = &entries[k].flags;
+-				} else {
+-					ip = entries[0].to;
+-					branch = true;
+-					flags = &entries[0].flags;
+-					branch_from = entries[0].from;
+-				}
+-			} else {
+-				if (j < lbr_nr) {
+-					k = lbr_nr - j - 1;
+-					ip = entries[k].from;
+-					branch = true;
+-					flags = &entries[k].flags;
+-				}
+-				else if (j > lbr_nr)
+-					ip = chain->ips[i + 1 - (j - lbr_nr)];
+-				else {
+-					ip = entries[0].to;
+-					branch = true;
+-					flags = &entries[0].flags;
+-					branch_from = entries[0].from;
+-				}
+-			}
++	/*
++	 * LBR only affects the user callchain.
++	 * Fall back if there is no user callchain.
++	 */
++	if (i == chain_nr)
++		return 0;
  
-@@ -102,4 +109,9 @@ struct pmu_events_map *perf_pmu__find_map(struct perf_pmu *pmu);
+-			err = add_callchain_ip(thread, cursor, parent,
+-					       root_al, &cpumode, ip,
+-					       branch, flags, NULL,
+-					       branch_from);
+-			if (err)
+-				return (err < 0) ? err : 0;
+-		}
+-		return 1;
++	if (callchain_param.order == ORDER_CALLEE) {
++		err = lbr_callchain_add_kernel_ip(thread, cursor, sample,
++						  parent, root_al, true, i);
++		if (err)
++			goto error;
++		err = lbr_callchain_add_lbr_ip(thread, cursor, sample,
++					       parent, root_al, true);
++		if (err)
++			goto error;
++	} else {
++		err = lbr_callchain_add_lbr_ip(thread, cursor, sample,
++					       parent, root_al, false);
++		if (err)
++			goto error;
++		err = lbr_callchain_add_kernel_ip(thread, cursor, sample,
++						  parent, root_al, false, i);
++		if (err)
++			goto error;
+ 	}
  
- int perf_pmu__convert_scale(const char *scale, char **end, double *sval);
+-	return 0;
++	return 1;
++error:
++	return (err < 0) ? err : 0;
+ }
  
-+int perf_pmu__caps_parse(struct perf_pmu *pmu);
-+
-+struct perf_pmu_caps *perf_pmu__scan_caps(struct perf_pmu *pmu,
-+					  struct perf_pmu_caps *caps);
-+
- #endif /* __PMU_H */
+ static int find_prev_cpumode(struct ip_callchain *chain, struct thread *thread,
 -- 
 2.17.1
 
