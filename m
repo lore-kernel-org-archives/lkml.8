@@ -2,150 +2,161 @@ Return-Path: <SRS0=fsZL=42=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7896C10F27
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:21:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5D32C10F29
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:23:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92BDB215A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:21:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94BCE208C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  9 Mar 2020 18:23:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="U3mVtLLU"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="oLl6S0gM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727500AbgCISVl (ORCPT
+        id S1727391AbgCISXI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 14:21:41 -0400
-Received: from gateway34.websitewelcome.com ([192.185.148.142]:33734 "EHLO
-        gateway34.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727323AbgCISVk (ORCPT
+        Mon, 9 Mar 2020 14:23:08 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:36152 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726661AbgCISXH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 14:21:40 -0400
-Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
-        by gateway34.websitewelcome.com (Postfix) with ESMTP id 7F633532C7
-        for <linux-kernel@vger.kernel.org>; Mon,  9 Mar 2020 13:19:58 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id BN0QjRLHPRP4zBN0QjnpbW; Mon, 09 Mar 2020 13:19:58 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=63jw/prEVJock7mXqnT82GLzheK/ipgQZ6xG7DJdzt8=; b=U3mVtLLU9t4qqmh6bUX4Q6KiKe
-        3GfIRllL3lkcjyiAQ+3noBaZOHMAk+aOZ+xFRJsiVRKhoICwsZq0eQ9FZ4sSdGbro6fCjwOCcpW8a
-        i1TcWMcAcXTaTQo0VX6oDDlU3vIjQbiSLNn9SSdi2HGfvW51EC7H5NrGQpaT28ETmxJ/TQRl8uRU0
-        9lfipkv0hyLKfdznBPfdQSPznKUz2xvZJEIVF7HYoSZCwRQxCYycI0ky/dLpGyH5lKKNedneJLG+J
-        yrbPqxq9PMmufQ+iObTvRfR57cU5oZci0LfDlGZtqnQxcuOL5OTpHB9ZRKnbkFKjdVpVc01Eq88lv
-        H82vd/1w==;
-Received: from [201.162.240.150] (port=1609 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1jBN0O-004KYO-Ii; Mon, 09 Mar 2020 13:19:57 -0500
-Date:   Mon, 9 Mar 2020 13:23:08 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Dave Kleikamp <shaggy@kernel.org>
-Cc:     jfs-discussion@lists.sourceforge.net, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] jfs: Replace zero-length array with flexible-array
- member
-Message-ID: <20200309182308.GA5087@embeddedor>
+        Mon, 9 Mar 2020 14:23:07 -0400
+Received: by mail-pf1-f195.google.com with SMTP id i13so5206281pfe.3
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 11:23:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=82dH+sJ15Ldshryiq0HsH5AclffhvcMdjvdymma/EAM=;
+        b=oLl6S0gM4gLxCh+cd88ogRCnh4JBCz5iq0tCYjiarP4lY6rV8yz1pfTfPhF0WfK/qJ
+         gFz0VA+eLUw2SNrcIed9mr2QCj06ekq9xCZPVRUYrxt3lh+6R1CSLWJJ59YRdwiaapIN
+         PWwtibFjepZgVXEjR138LljiCrB1T18zef8XA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=82dH+sJ15Ldshryiq0HsH5AclffhvcMdjvdymma/EAM=;
+        b=dxUtvaFCAlQatyFEETZlTZfSA9l2skENI4KvYWas6D3VU6dG8uD18W1xn3JwkKVFrh
+         8OGtsmLdbKI3AfyQaVo0uzTPo4MH9mjcnS+uifGIvKAw/xIebiTALlmooPlzvFDdAO4a
+         8TcMuYMiOGJGMuF5Lnvx9mhsrCmK6jwBGMPntkifuvvUHcOEWS3nliptQ0sTWn23ydJd
+         o2bN5T31hQJa6Y3AMqT1upp1pbaGcUfRU8m4YVN0/m2TPoLEhlW/MI/olylCDkNqYwzc
+         EXkxa75LUPiQcAP6lRDzQnj7BnOmynaJwp63KfPeBjmOdi8sao6VlT/Y0w/hp57d2uVQ
+         w/wQ==
+X-Gm-Message-State: ANhLgQ17ccokZgfu6LV3706OJ6QzuyeKz5BwCoredPBTYPnOY2dAJCTz
+        /gpG1ta8bJ1mIMSo/L15qq/rlPMQ3r8=
+X-Google-Smtp-Source: ADFU+vt76X0Uszasj2fbq6k4WAAfFHzB09o/cHllk3EBigMBTQ2q7C01Ws3zAVvmNKzgaOqyMhCq/g==
+X-Received: by 2002:a63:7f1d:: with SMTP id a29mr17893011pgd.123.1583778186633;
+        Mon, 09 Mar 2020 11:23:06 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id q30sm244145pjh.5.2020.03.09.11.23.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Mar 2020 11:23:06 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.162.240.150
-X-Source-L: No
-X-Exim-ID: 1jBN0O-004KYO-Ii
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [201.162.240.150]:1609
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 27
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1583752457-21159-2-git-send-email-mkshah@codeaurora.org>
+References: <1583752457-21159-1-git-send-email-mkshah@codeaurora.org> <1583752457-21159-2-git-send-email-mkshah@codeaurora.org>
+Subject: Re: [PATCH v4 1/4] dt-bindings: Introduce SoC sleep stats bindings
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        agross@kernel.org, dianders@chromium.org, rnayak@codeaurora.org,
+        ilina@codeaurora.org, lsrao@codeaurora.org,
+        Mahesh Sivasubramanian <msivasub@codeaurora.org>,
+        devicetree@vger.kernel.org, Maulik Shah <mkshah@codeaurora.org>
+To:     Maulik Shah <mkshah@codeaurora.org>, bjorn.andersson@linaro.org,
+        evgreen@chromium.org, mka@chromium.org
+Date:   Mon, 09 Mar 2020 11:23:05 -0700
+Message-ID: <158377818530.66766.4481786840843320343@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
+Quoting Maulik Shah (2020-03-09 04:14:14)
+> From: Mahesh Sivasubramanian <msivasub@codeaurora.org>
+>=20
+> Add device binding documentation for Qualcomm Technologies, Inc. (QTI)
+> SoC sleep stats driver. The driver is used for displaying SoC sleep
+> statistic maintained by Always On Processor or Resource Power Manager.
+>=20
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Mahesh Sivasubramanian <msivasub@codeaurora.org>
+> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+>  .../bindings/soc/qcom/soc-sleep-stats.yaml         | 46 ++++++++++++++++=
+++++++
+>  1 file changed, 46 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soc/qcom/soc-sleep-=
+stats.yaml
+>=20
+> diff --git a/Documentation/devicetree/bindings/soc/qcom/soc-sleep-stats.y=
+aml b/Documentation/devicetree/bindings/soc/qcom/soc-sleep-stats.yaml
+> new file mode 100644
+> index 00000000..7c29c61
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/soc/qcom/soc-sleep-stats.yaml
+> @@ -0,0 +1,46 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/soc/qcom/soc-sleep-stats.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm Technologies, Inc. (QTI) SoC sleep stats bindings
+> +
+> +maintainers:
+> +  - Maulik Shah <mkshah@codeaurora.org>
+> +  - Lina Iyer <ilina@codeaurora.org>
+> +
+> +description:
+> +  Always On Processor/Resource Power Manager maintains statistics of the=
+ SoC
+> +  sleep modes involving powering down of the rails and oscillator clock.
+> +
+> +  Statistics includes SoC sleep mode type, number of times low power mod=
+e were
+> +  entered, time of last entry, time of last exit and accumulated sleep d=
+uration.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - qcom,rpmh-sleep-stats
+> +      - qcom,rpm-sleep-stats
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +examples:
+> +  # Example of rpmh sleep stats
+> +  - |
+> +    rpmh_sleep_stats@c3f0000 {
+> +      compatible =3D "qcom,rpmh-sleep-stats";
+> +      reg =3D <0 0xc3f0000 0 0x400>;
+> +    };
+> +  # Example of rpm sleep stats
+> +  - |
+> +    rpm_sleep_stats@4690000 {
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
+Node names don't have underscores. It really feels like we should be able
+to get away with not having this device node at all. Why can't we have
+the rpm message ram be a node that covers the entire range and then have
+that either create a platform device for debugfs stats or just have it
+register the stat information from whatever driver attaches to that
+node?
 
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertently introduced[3] to the codebase from now on.
-
-Also, notice that, dynamic memory allocations won't be affected by
-this change:
-
-"Flexible array members have incomplete type, and so the sizeof operator
-may not be applied. As a quirk of the original implementation of
-zero-length arrays, sizeof evaluates to zero."[1]
-
-This issue was found with the help of Coccinelle.
-
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- fs/jfs/jfs_dtree.c | 2 +-
- fs/jfs/jfs_xattr.h | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/fs/jfs/jfs_dtree.c b/fs/jfs/jfs_dtree.c
-index 3acc954f7c04..837d42f61464 100644
---- a/fs/jfs/jfs_dtree.c
-+++ b/fs/jfs/jfs_dtree.c
-@@ -2964,7 +2964,7 @@ struct jfs_dirent {
- 	loff_t position;
- 	int ino;
- 	u16 name_len;
--	char name[0];
-+	char name[];
- };
- 
- /*
-diff --git a/fs/jfs/jfs_xattr.h b/fs/jfs/jfs_xattr.h
-index f0558b3348da..c50167a7bc50 100644
---- a/fs/jfs/jfs_xattr.h
-+++ b/fs/jfs/jfs_xattr.h
-@@ -17,12 +17,12 @@ struct jfs_ea {
- 	u8 flag;	/* Unused? */
- 	u8 namelen;	/* Length of name */
- 	__le16 valuelen;	/* Length of value */
--	char name[0];	/* Attribute name (includes null-terminator) */
-+	char name[];	/* Attribute name (includes null-terminator) */
- };			/* Value immediately follows name */
- 
- struct jfs_ea_list {
- 	__le32 size;		/* overall size */
--	struct jfs_ea ea[0];	/* Variable length list */
-+	struct jfs_ea ea[];	/* Variable length list */
- };
- 
- /* Macros for defining maxiumum number of bytes supported for EAs */
--- 
-2.25.0
-
+Carving this up into multiple nodes and making compatible strings
+doesn't seem very useful here because we're essentially making device
+nodes in DT for logical software components that exist in the rpm
+message ram.
