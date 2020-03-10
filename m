@@ -2,116 +2,152 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53E22C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 17:39:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBBF5C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 17:40:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FB4B21D7E
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 17:39:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583861997;
-	bh=6FjAu21bPwSRBdA1VQ4xafI+DYfCjDLEQqCnSzn84jQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0heTOLug5piQXKsPwFKhnbLVVjes5okXxGgH3PtLmZHeEfAPrADXxi87ahhm/chjF
-	 UkmewPWmTUs9gfoVg10yqHWyrnot3zdvJkZO4KmXOM3vVqfhE5ji7D/avPAxIS5V/n
-	 y3c5fgR511qQUMz+SY686IUd2oV+16rXCrF4YWfA=
+	by mail.kernel.org (Postfix) with ESMTP id 8C4C421D7E
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 17:40:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="mfjjClrc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726720AbgCJRjz (ORCPT
+        id S1726809AbgCJRkG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 13:39:55 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:39146 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726271AbgCJRjz (ORCPT
+        Tue, 10 Mar 2020 13:40:06 -0400
+Received: from mail.efficios.com ([167.114.26.124]:47352 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726438AbgCJRkG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 13:39:55 -0400
-Received: by mail-wm1-f65.google.com with SMTP id f7so2353978wml.4
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 10:39:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=mi8lNzzOnKeYsD5u8ot6xkdW2xJgJMBQyDw8ffSdpAY=;
-        b=Sc8YqEzgMyj+9jAsW15y1MGX58durmfcxD7UvIbvirQp5d8n5sG+HNF6C0AZUxbkOV
-         3wYkSq6Vwge5XaosiqlTBk6g3a8EVykouLyxduyDMTw6tj/eFCtTL+sU1U1zEdhbfiip
-         3I6Hb9ETeb2KLZOQ2Dy6n2GbY7k8iKgquPnVU7IdV0AOistFAiOUkscPhMXGLucXQnrE
-         9LqB6GZfG2QoMsgYG4V5u1YGaVTJa3k3ppfaV/CHx6FHJPtQRBIAwlz6m51RaSG5RhtL
-         Lci+HHs6gPfV9P/z3mrPg0Y5u7vozma5lRjc04S9GdDjkTjtsXsvH7ROaWd9W6XODFbu
-         HiKg==
-X-Gm-Message-State: ANhLgQ1tRQLrb02EuK0tFAGvYNgJEZ8c8xW5uGTpgKaDcDEJRO9bWyQm
-        6P1W4bXYeswyHvfIWgIyrGA=
-X-Google-Smtp-Source: ADFU+vteQx+Y6fhAAgT08Ei8v41vQmEuC4dL/8yPoVzAOVAO9xUONQ+PcE5PlmBE3Trjkl7MyKgqQQ==
-X-Received: by 2002:a1c:9c4c:: with SMTP id f73mr3048235wme.125.1583861993519;
-        Tue, 10 Mar 2020 10:39:53 -0700 (PDT)
-Received: from localhost (ip-37-188-253-35.eurotel.cz. [37.188.253.35])
-        by smtp.gmail.com with ESMTPSA id q6sm4893875wmj.6.2020.03.10.10.39.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Mar 2020 10:39:52 -0700 (PDT)
-Date:   Tue, 10 Mar 2020 18:39:51 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>, linux-mm@kvack.org,
-        kernel-team@fb.com, linux-kernel@vger.kernel.org,
-        Rik van Riel <riel@surriel.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>
-Subject: Re: [PATCH v2] mm: hugetlb: optionally allocate gigantic hugepages
- using cma
-Message-ID: <20200310173951.GX8447@dhcp22.suse.cz>
-References: <20200310002524.2291595-1-guro@fb.com>
- <20200310090121.GB8447@dhcp22.suse.cz>
- <20200310173056.GB85000@carbon.dhcp.thefacebook.com>
+        Tue, 10 Mar 2020 13:40:06 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 901812718AE;
+        Tue, 10 Mar 2020 13:40:04 -0400 (EDT)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id 7u8iEzcEV_87; Tue, 10 Mar 2020 13:40:04 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 2CBC52717D1;
+        Tue, 10 Mar 2020 13:40:04 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 2CBC52717D1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1583862004;
+        bh=iONBCAnNnPUIdJmi3a+nz18hpW44b+1vL2nzHQR+DuQ=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=mfjjClrcJZA6gu5jXccb1pKaRSypbi4RF+6lz5aZdSN5aW1mOa6UONJljm9SM/aiD
+         tH/7QhsfrT4deUqGZlfdwwhUnDiADbP8jPPsoYLxgB6YZIAg47PZ+zxch0f12PjsKY
+         vU/ZyN+v6hZT1vyHjjN9L43/TLJUmbuERf+vAXfwf7mLaNsK7GxsnysFXP5++H2Xs7
+         chh3RU9aGhmxvGDlnkR7gY0v1SVWlfRg/VGDoF7d689mNyKHxAGnlOlsqJ7CUrx7lq
+         ks3OT8/hHAVMEgREzRb61mOLWpM6n+NlgD9F38wsVQvaopONiYPaPT6pjeRCa+259n
+         cziePMG5SDqAw==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id OWi771wHAZwD; Tue, 10 Mar 2020 13:40:04 -0400 (EDT)
+Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
+        by mail.efficios.com (Postfix) with ESMTP id 15C3E271929;
+        Tue, 10 Mar 2020 13:40:04 -0400 (EDT)
+Date:   Tue, 10 Mar 2020 13:40:03 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        paulmck <paulmck@kernel.org>,
+        "Joel Fernandes, Google" <joel@joelfernandes.org>,
+        Frederic Weisbecker <frederic@kernel.org>
+Message-ID: <1666704263.23816.1583862003925.JavaMail.zimbra@efficios.com>
+In-Reply-To: <87imjc5f6a.fsf@nanos.tec.linutronix.de>
+References: <87mu8p797b.fsf@nanos.tec.linutronix.de> <1403546357.21810.1583779060302.JavaMail.zimbra@efficios.com> <871rq171ca.fsf@nanos.tec.linutronix.de> <1489283504.23399.1583852595008.JavaMail.zimbra@efficios.com> <87imjc5f6a.fsf@nanos.tec.linutronix.de>
+Subject: Re: Instrumentation and RCU
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200310173056.GB85000@carbon.dhcp.thefacebook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.26.124]
+X-Mailer: Zimbra 8.8.15_GA_3901 (ZimbraWebClient - FF73 (Linux)/8.8.15_GA_3895)
+Thread-Topic: Instrumentation and RCU
+Thread-Index: 0nTX/RKhF+4jMm6zLS3dy/aLVWymRA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 10-03-20 10:30:56, Roman Gushchin wrote:
-> On Tue, Mar 10, 2020 at 10:01:21AM +0100, Michal Hocko wrote:
-> > On Mon 09-03-20 17:25:24, Roman Gushchin wrote:
-> > [...]
-> > > 2) Run-time allocations of gigantic hugepages are performed using the
-> > >    cma allocator and the dedicated cma area
-> > 
-> > [...]
-> > > @@ -1237,6 +1246,23 @@ static struct page *alloc_gigantic_page(struct hstate *h, gfp_t gfp_mask,
-> > >  {
-> > >  	unsigned long nr_pages = 1UL << huge_page_order(h);
-> > >  
-> > > +	if (IS_ENABLED(CONFIG_CMA) && hugetlb_cma[0]) {
-> > > +		struct page *page;
-> > > +		int nid;
-> > > +
-> > > +		for_each_node_mask(nid, *nodemask) {
-> > > +			if (!hugetlb_cma[nid])
-> > > +				break;
-> > > +
-> > > +			page = cma_alloc(hugetlb_cma[nid], nr_pages,
-> > > +					 huge_page_order(h), true);
-> > > +			if (page)
-> > > +				return page;
-> > > +		}
-> > > +
-> > > +		return NULL;
-> > 
-> > Is there any strong reason why the alloaction annot fallback to non-CMA
-> > allocator when the cma is depleted?
-> 
-> The reason is that that gigantic pages allocated using cma require
-> a special handling on releasing. It's solvable by using an additional
-> page flag, but because the current code is usually not working except
-> a short time just after the system start, I don't think it's worth it.
+----- On Mar 10, 2020, at 12:48 PM, Thomas Gleixner tglx@linutronix.de wrote:
 
-I am not deeply familiar with the cma much TBH but cma_release seems to
-be documented to return false if the area doesn't belong to the area so
-the free patch can try cma_release and fallback to the regular free, no?
+> Mathieu Desnoyers <mathieu.desnoyers@efficios.com> writes:
+[...]
+> See the entry series I'm working on. Aside of moving all this nonsense
+> into C-code it splits lockdep and tracing so it looks like this:
+> 
+>            lockdep_hardirqs_off();
+>            user_exit_irqsoff();
+>            __trace_hardirqs_off();
+> 
+> The latter uses regular RCU and not the scru/rcu_irq dance.
+> 
+
+Awesome :)
+
+> 
+>>>> If a tracer recurses, or if a tracer attempts to trace another tracer, the
+>>>> instrumentation would break the recursion chain by preventing instrumentation
+>>>> from firing. If we end up caring about tracers tracing other tracers, we could
+>>>> have one distinct flag per tracer and let each tracer break the recursion chain.
+>>>>
+>>>> Having this flag per kernel stack rather than per CPU or per thread would
+>>>> allow tracing of nested interrupt handlers (and NMIs), but would break
+>>>> call chains both within the same stack or going through a trap. I think
+>>>> it could be a nice complementary safety net to handle mishaps in a non-fatal
+>>>> way.
+>>> 
+>>> That works as long as none of this uses breakpoint based patching to
+>>> dynamically disable/enable stuff.
+>>
+>> I'm clearly missing something here. I was expecting the "in_tracing" flag trick
+>> to be able to fix the breakpoint recursion issue. What is the problem I'm
+>> missing
+>> here ?
+> 
+> How do you "fix" that when you can't reach the tracepoint because you
+> trip over a breakpoint and then while trying to fixup that stuff you hit
+> another one?
+
+I may still be missing something, but if the fixup code (AFAIU the code performing
+the out-of-line single-stepping of the original instruction) belongs to a section
+hidden from instrumentation, it should not be an issue.
+
+The basic idea would be, e.g. pseudo-code for int3:
+
+<int3>  <---- in section which cannot be instrumented
+if (recursion_ctx->in_tracer) {
+   single-step original instruction
+   iret
+}
+[...] prepare stuff
+recursion_ctx->in_tracer = true;
+instr_allowed()
+
+call external kernel functions (which can be instrumented)
+
+instr_disallowed()
+recursion_ctx->in_tracer = false;
+single-step original instruction
+iret
+
+The purpose of the "in_tracer" flag is to protect whatever is done within external
+kernel functions (which can be instrumented) from triggering tracer recursion. It
+needs to be combined with hiding of early/late low-level entry/exit functions from
+instrumentation (as you propose) to work.
+
+Thanks,
+
+Mathieu
 
 -- 
-Michal Hocko
-SUSE Labs
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
