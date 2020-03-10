@@ -2,273 +2,200 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 007EEC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 16:05:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45282C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 16:05:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA1E521D56
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 16:05:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HcJKtKV3"
+	by mail.kernel.org (Postfix) with ESMTP id 1DD3C21D56
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 16:05:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727024AbgCJQFY (ORCPT
+        id S1727041AbgCJQFx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 12:05:24 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:32779 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726514AbgCJQFY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 12:05:24 -0400
-Received: by mail-pf1-f195.google.com with SMTP id n7so6694667pfn.0
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 09:05:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=sLf7cjV6sKyJ3S2m+wChaUAMrLlKHv984iQszIo5XuY=;
-        b=HcJKtKV3OKjj6dhRPoQYRG/kvS0+vNnaxm8j8U4T+m9qfTsZmvxGf2+QCNc2SFMk+m
-         q9QatLbpA48uHbIkMybJqE4CQQlwl4c7w2p0YoC8aQ9KEJ35K615PWp7FamupISL5Ffh
-         Nr9DHNRl3duMZPUhQ2LZg5FwCcDrtWfM45ntY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=sLf7cjV6sKyJ3S2m+wChaUAMrLlKHv984iQszIo5XuY=;
-        b=m3/uf20GQUMlR28daVzwgh55wqbLbel+JHbMzJXcSCpYY7dwqoRpa/nBCW1kwMof8u
-         TTYQ0ZZRInGalKeIDz/7zO8ZYIfNtzx3h9v5rhNRXsSRIb7HJzb7iw+NxVdnFXjVtF0z
-         xVLbcE25ZVgYHmA8MYIJQdCOkKEnMkWUXB3IpreuMwRCAcR6z9+pr1XioDehVvEuV9UN
-         DPC5b+w7AZ07sqj+kM0lfN9IHAbYYRNTrERhFDQNFehW8wrjbv9mmwDvNjpBggEGOjvO
-         ZFQDhj5J1QLw7GSFO2cefxUuuTQEH2QOPLuavGWEib/iAEaYN8nz4NA2/6bNZ25ConHo
-         XbPw==
-X-Gm-Message-State: ANhLgQ1nd2YtfXm/UV2WfmrR7DAS8k+t04p6ORPL4OUEEQhU1QfUhZ5e
-        dVNTfYvsIZtL2pskQccxyM5mRE6ShZM=
-X-Google-Smtp-Source: ADFU+vuXyYflO0g/EvFIzQokRR+IW62j+HNAi7eXxAMSobOsn1ELnJtq5DP4tFSNLj5MqXDtXL3yZw==
-X-Received: by 2002:a62:25c3:: with SMTP id l186mr22397268pfl.52.1583856322805;
-        Tue, 10 Mar 2020 09:05:22 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id j126sm41079485pfb.129.2020.03.10.09.05.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Mar 2020 09:05:21 -0700 (PDT)
-Date:   Tue, 10 Mar 2020 09:05:20 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     "Guilherme G. Piccoli" <gpiccoli@canonical.com>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-doc@vger.kernel.org, mcgrof@kernel.org, yzaikin@google.com,
-        tglx@linutronix.de, kernel@gpiccoli.net,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Subject: Re: [PATCH] kernel/hung_task.c: Introduce sysctl to print all traces
- when a hung task is detected
-Message-ID: <202003100904.A4EBBD532@keescook>
-References: <20200310155650.17968-1-gpiccoli@canonical.com>
+        Tue, 10 Mar 2020 12:05:53 -0400
+Received: from mga18.intel.com ([134.134.136.126]:46544 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726283AbgCJQFw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 12:05:52 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Mar 2020 09:05:51 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,518,1574150400"; 
+   d="scan'208";a="260834221"
+Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
+  by orsmga002.jf.intel.com with SMTP; 10 Mar 2020 09:05:46 -0700
+Received: by stinkbox (sSMTP sendmail emulation); Tue, 10 Mar 2020 18:05:45 +0200
+Date:   Tue, 10 Mar 2020 18:05:45 +0200
+From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
+To:     Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>
+Cc:     jani.nikula@linux.intel.com, daniel@ffwll.ch,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        airlied@linux.ie, maarten.lankhorst@linux.intel.com,
+        tzimmermann@suse.de, mripard@kernel.org, mihail.atanassov@arm.com,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        =?iso-8859-1?Q?Jos=E9?= Roberto de Souza 
+        <jose.souza@intel.com>,
+        Juha-Pekka Heikkila <juhapekka.heikkila@gmail.com>,
+        linux-kernel@vger.kernel.org, ankit.k.nautiyal@intel.com
+Subject: Re: [RFC][PATCH 3/5] drm/i915: Enable scaling filter for plane and
+ pipe
+Message-ID: <20200310160545.GI13686@intel.com>
+References: <20200225070545.4482-1-pankaj.laxminarayan.bharadiya@intel.com>
+ <20200225070545.4482-4-pankaj.laxminarayan.bharadiya@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200310155650.17968-1-gpiccoli@canonical.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200225070545.4482-4-pankaj.laxminarayan.bharadiya@intel.com>
+X-Patchwork-Hint: comment
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 10, 2020 at 12:56:50PM -0300, Guilherme G. Piccoli wrote:
-> Commit 401c636a0eeb ("kernel/hung_task.c: show all hung tasks before panic")
-> introduced a change in that we started to show all CPUs backtraces when a
-> hung task is detected _and_ the sysctl/kernel parameter "hung_task_panic"
-> is set. The idea is good, because usually when observing deadlocks (that
-> may lead to hung tasks), the culprit is another task holding a lock and
-> not necessarily the task detected as hung.
+On Tue, Feb 25, 2020 at 12:35:43PM +0530, Pankaj Bharadiya wrote:
+> Attach scaling filter property for crtc and plane and program the
+> scaler control register for the selected filter type.
 > 
-> The problem with this approach is that dumping backtraces is a slightly
-> expensive task, specially printing that on console (and specially in many
-> CPU machines, as servers commonly found nowadays). So, users that plan to
-> collect a kdump to investigate the hung tasks and narrow down the deadlock
-> definitely don't need the CPUs backtrace on dmesg/console, which will delay
-> the panic and pollute the log (crash tool would easily grab all CPUs traces
-> with 'bt -a' command).
-> Also, there's the reciprocal scenario: some users may be interested in
-> seeing the CPUs backtraces but not have the system panic when a hung task
-> is detected. The current approach hence is almost as embedding a policy in
-> the kernel, by forcing the CPUs backtraces' dump (only) on hung_task_panic.
+> This is preparatory patch to enable Nearest-neighbor integer scaling.
 > 
-> This patch decouples the panic event on hung task from the CPUs backtraces
-> dump, by creating (and documenting) a new sysctl/kernel parameter called
-> "hung_task_all_cpu_backtrace", analog to the approach taken on soft/hard
-> lockups, that have both a panic and an "all_cpu_backtrace" sysctl to allow
-> individual control. The new mechanism for dumping the CPUs backtraces on
-> hung task detection respects "hung_task_warnings" by not dumping the
-> traces in case there's no warnings left.
-> 
-> Cc: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-> Signed-off-by: Guilherme G. Piccoli <gpiccoli@canonical.com>
-
-bikeshed: should hung_task_show_bt be renamed hung_task_show_all_bt ?
-
--Kees
-
+> Signed-off-by: Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>
+> Signed-off-by: Ankit Nautiyal <ankit.k.nautiyal@intel.com>
 > ---
->  .../admin-guide/kernel-parameters.txt         |  6 ++++
->  Documentation/admin-guide/sysctl/kernel.rst   | 15 ++++++++++
->  include/linux/sched/sysctl.h                  |  7 +++++
->  kernel/hung_task.c                            | 30 +++++++++++++++++--
->  kernel/sysctl.c                               | 11 +++++++
->  5 files changed, 67 insertions(+), 2 deletions(-)
+>  drivers/gpu/drm/i915/display/intel_display.c | 17 +++++++++++++++--
+>  drivers/gpu/drm/i915/display/intel_sprite.c  | 12 +++++++++++-
+>  drivers/gpu/drm/i915/i915_reg.h              |  1 +
+>  3 files changed, 27 insertions(+), 3 deletions(-)
 > 
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index adf77ead02c3..4c6595b5f6c8 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -1453,6 +1453,12 @@
->  			x86-64 are 2M (when the CPU supports "pse") and 1G
->  			(when the CPU supports the "pdpe1gb" cpuinfo flag).
+> diff --git a/drivers/gpu/drm/i915/display/intel_display.c b/drivers/gpu/drm/i915/display/intel_display.c
+> index 3031e64ee518..b5903ef3c5a0 100644
+> --- a/drivers/gpu/drm/i915/display/intel_display.c
+> +++ b/drivers/gpu/drm/i915/display/intel_display.c
+> @@ -6242,6 +6242,8 @@ static void skl_pfit_enable(const struct intel_crtc_state *crtc_state)
+>  	struct intel_crtc *crtc = to_intel_crtc(crtc_state->uapi.crtc);
+>  	struct drm_i915_private *dev_priv = to_i915(crtc->base.dev);
+>  	enum pipe pipe = crtc->pipe;
+> +	const struct drm_crtc_state *state = &crtc_state->uapi;
+> +	u32 scaling_filter = PS_FILTER_MEDIUM;
+>  	const struct intel_crtc_scaler_state *scaler_state =
+>  		&crtc_state->scaler_state;
 >  
-> +	hung_task_all_cpu_backtrace=
-> +			[KNL] Should kernel generates backtraces on all cpus
-> +			when a hung task is detected. Defaults to 0 and can
-> +			be controlled by hung_task_all_cpu_backtrace sysctl.
-> +			Format: <integer>
-> +
->  	hung_task_panic=
->  			[KNL] Should the hung task detector generate panics.
->  			Format: <integer>
-> diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
-> index 95b2f3256323..218c717c1354 100644
-> --- a/Documentation/admin-guide/sysctl/kernel.rst
-> +++ b/Documentation/admin-guide/sysctl/kernel.rst
-> @@ -40,6 +40,7 @@ show up in /proc/sys/kernel:
->  - hotplug
->  - hardlockup_all_cpu_backtrace
->  - hardlockup_panic
-> +- hung_task_all_cpu_backtrace
->  - hung_task_panic
->  - hung_task_check_count
->  - hung_task_timeout_secs
-> @@ -339,6 +340,20 @@ Path for the hotplug policy agent.
->  Default value is "/sbin/hotplug".
+> @@ -6258,6 +6260,11 @@ static void skl_pfit_enable(const struct intel_crtc_state *crtc_state)
+>  		pfit_w = (crtc_state->pch_pfit.size >> 16) & 0xFFFF;
+>  		pfit_h = crtc_state->pch_pfit.size & 0xFFFF;
 >  
+> +		if (state->scaling_filter ==
+> +		    DRM_SCALING_FILTER_NEAREST_NEIGHBOR) {
+> +			scaling_filter = PS_FILTER_PROGRAMMED;
+> +		}
+
+Just make that a function that can be used all over.
+skl_scaler_filter(scaling_filter) or something.
+
+> +
+>  		hscale = (crtc_state->pipe_src_w << 16) / pfit_w;
+>  		vscale = (crtc_state->pipe_src_h << 16) / pfit_h;
 >  
-> +hung_task_all_cpu_backtrace:
-> +================
-> +
-> +Determines if kernel should NMI all CPUs to dump their backtraces when
-> +a hung task is detected. This file shows up if CONFIG_DETECT_HUNG_TASK
-> +and CONFIG_SMP are enabled.
-> +
-> +0: Won't show all CPUs backtraces when a hung task is detected.
-> +This is the default behavior.
-> +
-> +1: Will NMI all CPUs and dump their backtraces when a hung task
-> +is detected.
-> +
-> +
->  hung_task_panic:
->  ================
+> @@ -6268,8 +6275,10 @@ static void skl_pfit_enable(const struct intel_crtc_state *crtc_state)
 >  
-> diff --git a/include/linux/sched/sysctl.h b/include/linux/sched/sysctl.h
-> index d4f6215ee03f..8cd29440ec8a 100644
-> --- a/include/linux/sched/sysctl.h
-> +++ b/include/linux/sched/sysctl.h
-> @@ -7,6 +7,13 @@
->  struct ctl_table;
+>  		spin_lock_irqsave(&dev_priv->uncore.lock, irqflags);
 >  
->  #ifdef CONFIG_DETECT_HUNG_TASK
-> +
-> +#ifdef CONFIG_SMP
-> +extern unsigned int sysctl_hung_task_all_cpu_backtrace;
-> +#else
-> +#define sysctl_hung_task_all_cpu_backtrace 0
-> +#endif /* CONFIG_SMP */
-> +
->  extern int	     sysctl_hung_task_check_count;
->  extern unsigned int  sysctl_hung_task_panic;
->  extern unsigned long sysctl_hung_task_timeout_secs;
-> diff --git a/kernel/hung_task.c b/kernel/hung_task.c
-> index 14a625c16cb3..54152b26117e 100644
-> --- a/kernel/hung_task.c
-> +++ b/kernel/hung_task.c
-> @@ -53,9 +53,28 @@ int __read_mostly sysctl_hung_task_warnings = 10;
->  static int __read_mostly did_panic;
->  static bool hung_task_show_lock;
->  static bool hung_task_call_panic;
-> +static bool hung_task_show_bt;
->  
->  static struct task_struct *watchdog_task;
->  
-> +#ifdef CONFIG_SMP
-> +/*
-> + * Should we dump all CPUs backtraces in a hung task event?
-> + * Defaults to 0, can be changed either via cmdline or sysctl.
-> + */
-> +unsigned int __read_mostly sysctl_hung_task_all_cpu_backtrace;
-> +
-> +static int __init hung_task_backtrace_setup(char *str)
-> +{
-> +	int rc = kstrtouint(str, 0, &sysctl_hung_task_all_cpu_backtrace);
-> +
-> +	if (rc)
-> +		return rc;
-> +	return 1;
-> +}
-> +__setup("hung_task_all_cpu_backtrace=", hung_task_backtrace_setup);
-> +#endif /* CONFIG_SMP */
-> +
->  /*
->   * Should we panic (and reboot, if panic_timeout= is set) when a
->   * hung task is detected:
-> @@ -137,6 +156,9 @@ static void check_hung_task(struct task_struct *t, unsigned long timeout)
->  			" disables this message.\n");
->  		sched_show_task(t);
->  		hung_task_show_lock = true;
-> +
-> +		if (sysctl_hung_task_all_cpu_backtrace)
-> +			hung_task_show_bt = true;
+> -		intel_de_write_fw(dev_priv, SKL_PS_CTRL(pipe, id), PS_SCALER_EN |
+> -				  PS_FILTER_MEDIUM | scaler_state->scalers[id].mode);
+> +		intel_de_write_fw(dev_priv, SKL_PS_CTRL(pipe, id),
+> +				  PS_SCALER_EN |
+> +				  scaling_filter |
+> +				  scaler_state->scalers[id].mode);
+>  		intel_de_write_fw(dev_priv, SKL_PS_VPHASE(pipe, id),
+>  				  PS_Y_PHASE(0) | PS_UV_RGB_PHASE(uv_rgb_vphase));
+>  		intel_de_write_fw(dev_priv, SKL_PS_HPHASE(pipe, id),
+> @@ -16695,6 +16704,10 @@ static int intel_crtc_init(struct drm_i915_private *dev_priv, enum pipe pipe)
+>  		dev_priv->plane_to_crtc_mapping[i9xx_plane] = crtc;
 >  	}
 >  
->  	touch_nmi_watchdog();
-> @@ -201,10 +223,14 @@ static void check_hung_uninterruptible_tasks(unsigned long timeout)
->  	rcu_read_unlock();
->  	if (hung_task_show_lock)
->  		debug_show_all_locks();
-> -	if (hung_task_call_panic) {
 > +
-> +	if (hung_task_show_bt) {
-> +		hung_task_show_bt = false;
->  		trigger_all_cpu_backtrace();
-> +	}
+> +	if (INTEL_GEN(dev_priv) >= 11)
+
+gen >= 10 actually. Even glk seems to have it but bspec says not to
+use it on glk. Supposedly not validated.
+
+ilk/snb/ivb pfits also has programmable coefficients actually. So
+IMO we should enable this on those as well.
+
+The bigger problem will be how is userspace supposed to use this if it's
+a crtc property? Those will not get automagically exposed via xrandr.
+
+> +		drm_crtc_enable_scaling_filter(&crtc->base);
 > +
-> +	if (hung_task_call_panic)
->  		panic("hung_task: blocked tasks");
-> -	}
->  }
+>  	intel_color_init(crtc);
 >  
->  static long hung_timeout_jiffies(unsigned long last_checked,
-> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-> index ad5b88a53c5a..238f268de486 100644
-> --- a/kernel/sysctl.c
-> +++ b/kernel/sysctl.c
-> @@ -1098,6 +1098,17 @@ static struct ctl_table kern_table[] = {
->  	},
->  #endif
->  #ifdef CONFIG_DETECT_HUNG_TASK
-> +#ifdef CONFIG_SMP
-> +	{
-> +		.procname	= "hung_task_all_cpu_backtrace",
-> +		.data		= &sysctl_hung_task_all_cpu_backtrace,
-> +		.maxlen		= sizeof(int),
-> +		.mode		= 0644,
-> +		.proc_handler	= proc_dointvec_minmax,
-> +		.extra1		= SYSCTL_ZERO,
-> +		.extra2		= SYSCTL_ONE,
-> +	},
-> +#endif /* CONFIG_SMP */
->  	{
->  		.procname	= "hung_task_panic",
->  		.data		= &sysctl_hung_task_panic,
+>  	drm_WARN_ON(&dev_priv->drm, drm_crtc_index(&crtc->base) != crtc->pipe);
+> diff --git a/drivers/gpu/drm/i915/display/intel_sprite.c b/drivers/gpu/drm/i915/display/intel_sprite.c
+> index 7abeefe8dce5..fd7b31a21723 100644
+> --- a/drivers/gpu/drm/i915/display/intel_sprite.c
+> +++ b/drivers/gpu/drm/i915/display/intel_sprite.c
+> @@ -414,6 +414,12 @@ skl_program_scaler(struct intel_plane *plane,
+>  	u16 y_hphase, uv_rgb_hphase;
+>  	u16 y_vphase, uv_rgb_vphase;
+>  	int hscale, vscale;
+> +	const struct drm_plane_state *state = &plane_state->uapi;
+> +	u32 scaling_filter = PS_FILTER_MEDIUM;
+> +
+> +	if (state->scaling_filter == DRM_SCALING_FILTER_NEAREST_NEIGHBOR) {
+> +		scaling_filter = PS_FILTER_PROGRAMMED;
+> +	}
+>  
+>  	hscale = drm_rect_calc_hscale(&plane_state->uapi.src,
+>  				      &plane_state->uapi.dst,
+> @@ -441,7 +447,8 @@ skl_program_scaler(struct intel_plane *plane,
+>  	}
+>  
+>  	intel_de_write_fw(dev_priv, SKL_PS_CTRL(pipe, scaler_id),
+> -			  PS_SCALER_EN | PS_PLANE_SEL(plane->id) | scaler->mode);
+> +			  scaling_filter | PS_SCALER_EN |
+> +			  PS_PLANE_SEL(plane->id) | scaler->mode);
+>  	intel_de_write_fw(dev_priv, SKL_PS_VPHASE(pipe, scaler_id),
+>  			  PS_Y_PHASE(y_vphase) | PS_UV_RGB_PHASE(uv_rgb_vphase));
+>  	intel_de_write_fw(dev_priv, SKL_PS_HPHASE(pipe, scaler_id),
+> @@ -3104,6 +3111,9 @@ skl_universal_plane_create(struct drm_i915_private *dev_priv,
+>  
+>  	drm_plane_create_zpos_immutable_property(&plane->base, plane_id);
+>  
+> +	if (INTEL_GEN(dev_priv) >= 11)
+
+also gen>=10
+
+Also this patch breaks things as we don't yet have the code to program
+the coefficients. So the series needs to be reordered.
+
+> +		drm_plane_enable_scaling_filter(&plane->base);
+> +
+>  	drm_plane_helper_add(&plane->base, &intel_plane_helper_funcs);
+>  
+>  	return plane;
+> diff --git a/drivers/gpu/drm/i915/i915_reg.h b/drivers/gpu/drm/i915/i915_reg.h
+> index f45b5e86ec63..34923b1c284c 100644
+> --- a/drivers/gpu/drm/i915/i915_reg.h
+> +++ b/drivers/gpu/drm/i915/i915_reg.h
+> @@ -7212,6 +7212,7 @@ enum {
+>  #define PS_PLANE_SEL(plane) (((plane) + 1) << 25)
+>  #define PS_FILTER_MASK         (3 << 23)
+>  #define PS_FILTER_MEDIUM       (0 << 23)
+> +#define PS_FILTER_PROGRAMMED   (1 << 23)
+>  #define PS_FILTER_EDGE_ENHANCE (2 << 23)
+>  #define PS_FILTER_BILINEAR     (3 << 23)
+>  #define PS_VERT3TAP            (1 << 21)
 > -- 
-> 2.25.1
-> 
+> 2.23.0
 
 -- 
-Kees Cook
+Ville Syrjälä
+Intel
