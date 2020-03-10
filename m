@@ -5,52 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A86AC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:48:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAD59C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:48:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24CCD2468D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:48:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E85724691
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:48:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583844493;
-	bh=fVMYinxaYFkfkSebpKMHUC3DxbydeGk4V7PgQkK/xyo=;
+	s=default; t=1583844496;
+	bh=LPWEOXXHH5EmBECDqoJMdQuy16xACdmF1Y8tC/ZfenU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d3V1rvDuVJsyo0y6sE7lCh7uA0DqYivaFpBn8IwQoZAm1UR9sHT7hWAzyBqsqfiyR
-	 VW2S1wehSN87Jp4OzMOhZe8izL7oH/cVr1pIk2nZIcgfSAnk3wlulI6/xIYL7EIG6i
-	 bnKYQYjDMvKRii5Fym7+TAnVMYjWnvxdZ9Pajz1w=
+	b=wMHneKXz2LZJ8V7OH/GoW8OZaCdJ3SqB86ct5/MkmA7P+QpG5RNDumGRra2VLKDHU
+	 Jrvetq6hZKmF3LOMub8I1Jd2eSzUnc9YpGjItoc2CWGjQeIgbLx8e2LygUIH9+wSxj
+	 EzzTbpNDcG2NyCw66iJwv4SNQV23SwXyJmJqihew=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727936AbgCJMsL (ORCPT
+        id S1728294AbgCJMsP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:48:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52124 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:48:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52196 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728276AbgCJMsJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:48:09 -0400
+        id S1727624AbgCJMsM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:48:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E76A20674;
-        Tue, 10 Mar 2020 12:48:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 268CD2467D;
+        Tue, 10 Mar 2020 12:48:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844487;
-        bh=fVMYinxaYFkfkSebpKMHUC3DxbydeGk4V7PgQkK/xyo=;
+        s=default; t=1583844491;
+        bh=LPWEOXXHH5EmBECDqoJMdQuy16xACdmF1Y8tC/ZfenU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wnMVRUgq+cJxvTn1hm8/kHnuX7WLl7vtdDLYgsKmDU8ti/a9J1xgHnyW+0PqK7Gac
-         ZoEZmdYtwi9dM36X++1P9T7exGuWGX0IxIkjmt0+gf7pK7u+B848LWhebShuWOLmnE
-         7cI4GNuXxVCy4mKA052cHuBHBXYLsrrkKg8yAOYM=
+        b=ISNzU1erqjKptA/FMheDcF6Rswpg186h0RL7qXxxylTz6q6IwPUldff8quAosXRZm
+         XuQOMsymy1NYmsVsqRJUNGX12gC1Apvn1sNbzN/Hi4syaeh7dBqOzPr7Ycd/kRfUCX
+         1OaGJJPneofpsvCMdwCHUyJLi5JC94L06moqr9To=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+        stable@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
+        Bob Liu <bob.liu@oracle.com>,
         "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, bristot@redhat.com,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 011/168] kprobes: Fix optimize_kprobe()/unoptimize_kprobe() cancellation logic
-Date:   Tue, 10 Mar 2020 13:37:37 +0100
-Message-Id: <20200310123636.899326378@linuxfoundation.org>
+        Cengiz Can <cengiz@kernel.wtf>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 012/168] blktrace: fix dereference after null check
+Date:   Tue, 10 Mar 2020 13:37:38 +0100
+Message-Id: <20200310123636.981272933@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123635.322799692@linuxfoundation.org>
 References: <20200310123635.322799692@linuxfoundation.org>
@@ -63,164 +62,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Cengiz Can <cengiz@kernel.wtf>
 
-[ Upstream commit e4add247789e4ba5e08ad8256183ce2e211877d4 ]
+[ Upstream commit 153031a301bb07194e9c37466cfce8eacb977621 ]
 
-optimize_kprobe() and unoptimize_kprobe() cancels if a given kprobe
-is on the optimizing_list or unoptimizing_list already. However, since
-the following commit:
+There was a recent change in blktrace.c that added a RCU protection to
+`q->blk_trace` in order to fix a use-after-free issue during access.
 
-  f66c0447cca1 ("kprobes: Set unoptimized flag after unoptimizing code")
+However the change missed an edge case that can lead to dereferencing of
+`bt` pointer even when it's NULL:
 
-modified the update timing of the KPROBE_FLAG_OPTIMIZED, it doesn't
-work as expected anymore.
+Coverity static analyzer marked this as a FORWARD_NULL issue with CID
+1460458.
 
-The optimized_kprobe could be in the following states:
+```
+/kernel/trace/blktrace.c: 1904 in sysfs_blk_trace_attr_store()
+1898            ret = 0;
+1899            if (bt == NULL)
+1900                    ret = blk_trace_setup_queue(q, bdev);
+1901
+1902            if (ret == 0) {
+1903                    if (attr == &dev_attr_act_mask)
+>>>     CID 1460458:  Null pointer dereferences  (FORWARD_NULL)
+>>>     Dereferencing null pointer "bt".
+1904                            bt->act_mask = value;
+1905                    else if (attr == &dev_attr_pid)
+1906                            bt->pid = value;
+1907                    else if (attr == &dev_attr_start_lba)
+1908                            bt->start_lba = value;
+1909                    else if (attr == &dev_attr_end_lba)
+```
 
-- [optimizing]: Before inserting jump instruction
-  op.kp->flags has KPROBE_FLAG_OPTIMIZED and
-  op->list is not empty.
+Added a reassignment with RCU annotation to fix the issue.
 
-- [optimized]: jump inserted
-  op.kp->flags has KPROBE_FLAG_OPTIMIZED and
-  op->list is empty.
-
-- [unoptimizing]: Before removing jump instruction (including unused
-  optprobe)
-  op.kp->flags has KPROBE_FLAG_OPTIMIZED and
-  op->list is not empty.
-
-- [unoptimized]: jump removed
-  op.kp->flags doesn't have KPROBE_FLAG_OPTIMIZED and
-  op->list is empty.
-
-Current code mis-expects [unoptimizing] state doesn't have
-KPROBE_FLAG_OPTIMIZED, and that can cause incorrect results.
-
-To fix this, introduce optprobe_queued_unopt() to distinguish [optimizing]
-and [unoptimizing] states and fixes the logic in optimize_kprobe() and
-unoptimize_kprobe().
-
-[ mingo: Cleaned up the changelog and the code a bit. ]
-
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Fixes: c780e86dd48 ("blktrace: Protect q->blk_trace with RCU")
+Cc: stable@vger.kernel.org
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
+Reviewed-by: Bob Liu <bob.liu@oracle.com>
 Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: bristot@redhat.com
-Fixes: f66c0447cca1 ("kprobes: Set unoptimized flag after unoptimizing code")
-Link: https://lkml.kernel.org/r/157840814418.7181.13478003006386303481.stgit@devnote2
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Cengiz Can <cengiz@kernel.wtf>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/kprobes.c | 67 +++++++++++++++++++++++++++++++-----------------
- 1 file changed, 43 insertions(+), 24 deletions(-)
+ kernel/trace/blktrace.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-index 34e28b236d680..2625c241ac00f 100644
---- a/kernel/kprobes.c
-+++ b/kernel/kprobes.c
-@@ -612,6 +612,18 @@ void wait_for_kprobe_optimizer(void)
- 	mutex_unlock(&kprobe_mutex);
- }
- 
-+static bool optprobe_queued_unopt(struct optimized_kprobe *op)
-+{
-+	struct optimized_kprobe *_op;
-+
-+	list_for_each_entry(_op, &unoptimizing_list, list) {
-+		if (op == _op)
-+			return true;
-+	}
-+
-+	return false;
-+}
-+
- /* Optimize kprobe if p is ready to be optimized */
- static void optimize_kprobe(struct kprobe *p)
- {
-@@ -633,17 +645,21 @@ static void optimize_kprobe(struct kprobe *p)
- 		return;
- 
- 	/* Check if it is already optimized. */
--	if (op->kp.flags & KPROBE_FLAG_OPTIMIZED)
-+	if (op->kp.flags & KPROBE_FLAG_OPTIMIZED) {
-+		if (optprobe_queued_unopt(op)) {
-+			/* This is under unoptimizing. Just dequeue the probe */
-+			list_del_init(&op->list);
-+		}
- 		return;
-+	}
- 	op->kp.flags |= KPROBE_FLAG_OPTIMIZED;
- 
--	if (!list_empty(&op->list))
--		/* This is under unoptimizing. Just dequeue the probe */
--		list_del_init(&op->list);
--	else {
--		list_add(&op->list, &optimizing_list);
--		kick_kprobe_optimizer();
--	}
-+	/* On unoptimizing/optimizing_list, op must have OPTIMIZED flag */
-+	if (WARN_ON_ONCE(!list_empty(&op->list)))
-+		return;
-+
-+	list_add(&op->list, &optimizing_list);
-+	kick_kprobe_optimizer();
- }
- 
- /* Short cut to direct unoptimizing */
-@@ -665,30 +681,33 @@ static void unoptimize_kprobe(struct kprobe *p, bool force)
- 		return; /* This is not an optprobe nor optimized */
- 
- 	op = container_of(p, struct optimized_kprobe, kp);
--	if (!kprobe_optimized(p)) {
--		/* Unoptimized or unoptimizing case */
--		if (force && !list_empty(&op->list)) {
--			/*
--			 * Only if this is unoptimizing kprobe and forced,
--			 * forcibly unoptimize it. (No need to unoptimize
--			 * unoptimized kprobe again :)
--			 */
--			list_del_init(&op->list);
--			force_unoptimize_kprobe(op);
--		}
-+	if (!kprobe_optimized(p))
- 		return;
--	}
- 
- 	if (!list_empty(&op->list)) {
--		/* Dequeue from the optimization queue */
--		list_del_init(&op->list);
-+		if (optprobe_queued_unopt(op)) {
-+			/* Queued in unoptimizing queue */
-+			if (force) {
-+				/*
-+				 * Forcibly unoptimize the kprobe here, and queue it
-+				 * in the freeing list for release afterwards.
-+				 */
-+				force_unoptimize_kprobe(op);
-+				list_move(&op->list, &freeing_list);
-+			}
-+		} else {
-+			/* Dequeue from the optimizing queue */
-+			list_del_init(&op->list);
-+			op->kp.flags &= ~KPROBE_FLAG_OPTIMIZED;
-+		}
- 		return;
+diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
+index 4b2ad374167bc..e7e483cdbea61 100644
+--- a/kernel/trace/blktrace.c
++++ b/kernel/trace/blktrace.c
+@@ -1888,8 +1888,11 @@ static ssize_t sysfs_blk_trace_attr_store(struct device *dev,
  	}
-+
- 	/* Optimized kprobe case */
--	if (force)
-+	if (force) {
- 		/* Forcibly update the code: this is a special case */
- 		force_unoptimize_kprobe(op);
--	else {
-+	} else {
- 		list_add(&op->list, &unoptimizing_list);
- 		kick_kprobe_optimizer();
- 	}
+ 
+ 	ret = 0;
+-	if (bt == NULL)
++	if (bt == NULL) {
+ 		ret = blk_trace_setup_queue(q, bdev);
++		bt = rcu_dereference_protected(q->blk_trace,
++				lockdep_is_held(&q->blk_trace_mutex));
++	}
+ 
+ 	if (ret == 0) {
+ 		if (attr == &dev_attr_act_mask)
 -- 
 2.20.1
 
