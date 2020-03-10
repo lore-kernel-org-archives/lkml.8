@@ -2,113 +2,112 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71126C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 19:20:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E68AFC18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 19:22:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C4F420727
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 19:20:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B81D621D7E
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 19:22:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Gp/3+tK3"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MmjLu5wl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727312AbgCJTUc (ORCPT
+        id S1727273AbgCJTWZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 15:20:32 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:44289 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726604AbgCJTUb (ORCPT
+        Tue, 10 Mar 2020 15:22:25 -0400
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:38476 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726546AbgCJTWZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 15:20:31 -0400
-Received: by mail-pg1-f196.google.com with SMTP id 37so2578335pgm.11
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 12:20:31 -0700 (PDT)
+        Tue, 10 Mar 2020 15:22:25 -0400
+Received: by mail-pj1-f68.google.com with SMTP id a16so854107pju.3
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 12:22:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=cC2057sPqmPcpMKTkeB3a8bTjc/o1vrfqpJvHiGtnZU=;
-        b=Gp/3+tK3D+e1w351TKt3AZhjG7ssptPYwoN75sKp8UNBt+HYPDOF0OuAmp/1t3HyEA
-         TA3d6tn36/U+iKROF0bxiFHF8/ZMxBC44qGb9zVh9byUtO0ME4tgbJHE1hBMaBJBBi0R
-         iKNszHZ7hKuuvpRvrZ1jghA+/1QDoDgVCerX7dS7fJm1hXCEdfXWd4sCU3WU7Ow8YN7I
-         Us/anH7lZ0Nt+sSP+sgA8JTLVbaoPDek1O01K4AKCrAD0qCFrNRIMNLff21NmMXUgfdk
-         PimTnrj3zfOlwtgqyY9waZRr2/3dzy0kJbLM547JpbxcxX4kZ6S7xeeSynQ6VoyHcsEp
-         E2Ew==
+        bh=Vrf8fXIC1r2+JvlXlYgJWxCM5oPrpq5MZD/CQnIzo+w=;
+        b=MmjLu5wlCm1KVWVg8MptJtFwJswJGmrA7TNTK6MlBe1QSv/l6sU0nu+xKUKFI5me9o
+         88d+/cMpF6gvVKH5e38OY0sZpb0yCnFMSTlBQPQcLhTCOcS96CUUksnCUaHuQvU1WaFN
+         06B+kAybXERrT5cBsw8iPIopCKaMFgckQdHZI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=cC2057sPqmPcpMKTkeB3a8bTjc/o1vrfqpJvHiGtnZU=;
-        b=UcF1iWH5yCdYZi2AAJ7UmseyfqY8nQIYzAXnxMpLv+JZP6ITlbrJ5bX8HAWpYTAA9i
-         mrWK0sDYdqF1yCbXTbRGdXBhtwwUvtMBPwTvf8+rE35/NF98nVYcRbka8pfjp3Eavznp
-         ee5MdsPBu876gfymxIfd4SsKvMLRvRoAefliVrmcAjBPQJRbBGWxAmaVKnPNofJ3d5Ei
-         8ALDBgKTkzL+ew3zzphrnKB3HRcRmfeXx3Lff+/1Yn8/ebd4oCAepJxcNxcIFf29b3pi
-         Q09fPRhwUWvPXV8mYxXt3TLLStF8hmUv9SceKokEnPXuzTcNgzIpoWiC6usyAXoireFI
-         YYqQ==
-X-Gm-Message-State: ANhLgQ2U17oiEbmG7g+644tgRJI+cV6+vgeQ64MMkRCJu5iIBoJqU0Wv
-        uKjPLyThY2k/q/Jkj3gyklKruA==
-X-Google-Smtp-Source: ADFU+vtWP5ERLP9aV0fp1zqUyf9v1Asbb4leZXOT+JfMa00W8DwkmyxfINhtLJv8waJz4e7fOejrYg==
-X-Received: by 2002:a63:6dc5:: with SMTP id i188mr21478581pgc.82.1583868030640;
-        Tue, 10 Mar 2020 12:20:30 -0700 (PDT)
-Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id o66sm35067793pfb.93.2020.03.10.12.20.29
+        bh=Vrf8fXIC1r2+JvlXlYgJWxCM5oPrpq5MZD/CQnIzo+w=;
+        b=GEJt2YpORNcjjJVTJEU7s015ubOAiwdHCiBJjixUXT4pABxjy/M5tyolX53F+WOQXt
+         lyJw50bddyL+/ErAW9sLFZJD/fAYDR657CHuBubcyAbMNhbPri6FXaNLMq3FsPFEz5AC
+         a8FnZh3k/eEF9g8AJ9ozfVDHGzJZbeY7H1gvhJwgUINoA0LLBxsZuPePpOa4J1TRDm3V
+         +6v80VWAvG1E8ESBwF4+k0gYSWkS49etIr2JVA6B2jyW91YvYQlDnUMOJnivgURwfzaJ
+         ToPql+iIEk5y5m4WUFkFXi83I8S9gFAcLt5AU8bR+9AlQ20CYPPcBHBdaeGO6VawLvCv
+         209w==
+X-Gm-Message-State: ANhLgQ2Igyq5hNvphpGgyN/y4lrfjtPNa8cpoI6PtUkpja+00gGG4rNa
+        dRlNZ8OLTL7U/HTh93l6iryuFg==
+X-Google-Smtp-Source: ADFU+vsysRpDn6XtMDd6KeAEkYr65mpcbz9mvFMHbNITyDJ6Jk+4GBWwtp+4wEdTCClVX71+QtvaoQ==
+X-Received: by 2002:a17:902:8a81:: with SMTP id p1mr21836886plo.284.1583868143955;
+        Tue, 10 Mar 2020 12:22:23 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id o66sm35070452pfb.93.2020.03.10.12.22.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Mar 2020 12:20:30 -0700 (PDT)
-Date:   Tue, 10 Mar 2020 12:20:27 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Andy Gross <agross@kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mathieu Poirier <mathieu.poirier@linaro.org>
-Subject: Re: [PATCH v4 3/5] remoteproc: qcom: Update PIL relocation info on
- load
-Message-ID: <20200310192027.GJ264362@yoga>
-References: <20200310063338.3344582-1-bjorn.andersson@linaro.org>
- <20200310063338.3344582-4-bjorn.andersson@linaro.org>
- <158386385637.149997.10680456822295964075@swboyd.mtv.corp.google.com>
+        Tue, 10 Mar 2020 12:22:22 -0700 (PDT)
+Date:   Tue, 10 Mar 2020 12:22:21 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     Joe Perches <joe@perches.com>,
+        Federico Vaga <federico.vaga@vaga.pv.it>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] docs: deprecated.rst: Clean up fall-through details
+Message-ID: <202003101221.A1388D0C@keescook>
+References: <202003041102.47A4E4B62@keescook>
+ <20200310112356.1b5b32f2@lwn.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <158386385637.149997.10680456822295964075@swboyd.mtv.corp.google.com>
+In-Reply-To: <20200310112356.1b5b32f2@lwn.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 10 Mar 11:10 PDT 2020, Stephen Boyd wrote:
-
-> Quoting Bjorn Andersson (2020-03-09 23:33:36)
-> > diff --git a/drivers/remoteproc/qcom_q6v5_adsp.c b/drivers/remoteproc/qcom_q6v5_adsp.c
-> > index e953886b2eb7..d5cdff942535 100644
-> > --- a/drivers/remoteproc/qcom_q6v5_adsp.c
-> > +++ b/drivers/remoteproc/qcom_q6v5_adsp.c
-> > @@ -164,10 +166,18 @@ static int qcom_adsp_shutdown(struct qcom_adsp *adsp)
-> >  static int adsp_load(struct rproc *rproc, const struct firmware *fw)
-> >  {
-> >         struct qcom_adsp *adsp = (struct qcom_adsp *)rproc->priv;
-> > +       int ret;
-> > +
-> > +       ret = qcom_mdt_load_no_init(adsp->dev, fw, rproc->firmware, 0,
-> > +                                   adsp->mem_region, adsp->mem_phys,
-> > +                                   adsp->mem_size, &adsp->mem_reloc);
-> > +       if (ret)
-> > +               return ret;
-> >  
-> > -       return qcom_mdt_load_no_init(adsp->dev, fw, rproc->firmware, 0,
-> > -                            adsp->mem_region, adsp->mem_phys, adsp->mem_size,
-> > -                            &adsp->mem_reloc);
-> > +       /* Failures only affect post mortem debugging, so ignore return value */
-> > +       qcom_pil_info_store(adsp->info_name, adsp->mem_reloc, adsp->mem_size);
+On Tue, Mar 10, 2020 at 11:23:56AM -0600, Jonathan Corbet wrote:
+> On Wed, 4 Mar 2020 11:03:24 -0800
+> Kees Cook <keescook@chromium.org> wrote:
 > 
-> If the return value was void then the comment wouldn't be necessary and
-> it would be self documenting as such. Can we do that?
+> > Add example of fall-through, list-ify the case ending statements, and
+> > adjust the markup for links and readability. While here, adjust
+> > strscpy() details to mention strscpy_pad().
+> > 
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> 
+> Applied, thanks.  But ...
+> 
+> > ---
+> >  Documentation/process/deprecated.rst | 48 +++++++++++++++++-----------
+> >  1 file changed, 29 insertions(+), 19 deletions(-)
+> > 
+> > diff --git a/Documentation/process/deprecated.rst b/Documentation/process/deprecated.rst
+> > index 179f2a5625a0..f9f196d3a69b 100644
+> > --- a/Documentation/process/deprecated.rst
+> > +++ b/Documentation/process/deprecated.rst
+> > @@ -94,8 +94,8 @@ and other misbehavior due to the missing termination. It also NUL-pads the
+> >  destination buffer if the source contents are shorter than the destination
+> >  buffer size, which may be a needless performance penalty for callers using
+> >  only NUL-terminated strings. The safe replacement is :c:func:`strscpy`.
+> > -(Users of :c:func:`strscpy` still needing NUL-padding will need an
+> > -explicit :c:func:`memset` added.)
+> > +(Users of :c:func:`strscpy` still needing NUL-padding should instead
+> > +use strscpy_pad().)
+> 
+> :c:func: usage should really be stomped on when we encounter it.  There's
+> a few in this file; I'll tack on a quick patch making them go away.
 
-I started off with this in v1, but agreed with Mathieu to ignore the
-failures in the place where we actually don't care, rather than inside
-qcom_pil_info_store()...
+Oops, yes, I meant to do another pass for that. I will double-check
+future patches!
 
-Regards,
-Bjorn
+-- 
+Kees Cook
