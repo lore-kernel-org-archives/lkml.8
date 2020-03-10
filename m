@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18254C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:34:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EB4BC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:35:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEFC920675
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:34:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 146EE20675
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:35:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583847298;
-	bh=LDOxMJhlqNsrmrC05OIe9jerg9X6oq49/7cKqgJ+Cqs=;
+	s=default; t=1583847310;
+	bh=b3a7LXAN/jY9XCOOcUPYLK2gXw1etQtmbR5yY1H325s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Uvxv7y91vqHpxUB2ksyme4e7+WR2sL7dpad1iETqszNdwG8W88olSpEohClfws4Yf
-	 1ZzeMf2pUjYZqQK5JVBxAb4eDYiJKtkg6/juALkkBouwOEQmDu82Ul+j82GUvLL4Qj
-	 wt23UVALjb9GuK/PBAfixmn80leTAaxdqlH9uB80=
+	b=mVbAlYKS2u/fLN63dSLN6XqgR0rBP1D3gABBITveJca5UOA/MUxrUGu3dol5acGH0
+	 G39xKhHhM+IDf3ETf7t7UNc12qw9T5tCGHdvhrPul6ys+/kgQdsy21op35n6aOfHl/
+	 iYkn6Qahp6I0+N1g25S0dW8O4XnuY9aoJCXoO5nk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728333AbgCJNe5 (ORCPT
+        id S1728321AbgCJNfI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:34:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48366 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:35:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48058 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727680AbgCJMpi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:45:38 -0400
+        id S1727902AbgCJMp0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:45:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9175C2469C;
-        Tue, 10 Mar 2020 12:45:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A8072246A3;
+        Tue, 10 Mar 2020 12:45:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844338;
-        bh=LDOxMJhlqNsrmrC05OIe9jerg9X6oq49/7cKqgJ+Cqs=;
+        s=default; t=1583844326;
+        bh=b3a7LXAN/jY9XCOOcUPYLK2gXw1etQtmbR5yY1H325s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JgbbTD2adDFY9Y+slJtyUvR172cUMMzwuaprOB/lDQuK2yI1Q5ITPOeWTQOGYjuXK
-         uQINQkK4ZYi/uZ2gZldw7NgmQt//2g9lcSO71+llIkgQ7BTGdxwsWD1ssIn7CuOzCr
-         jxwtUiCQrRuB+ppMkOG3564g/I9D2DbXXXloJjOI=
+        b=ViSAN+YpLY8yUfVT8jn4pAQbOqPn/Y1QGZmUeJucIZVza2x4qCgomd39fQXxYXIFM
+         AJ54OcIOBfuAKOCoMa4ZJX6AaZY1ZfnY7ceX2lFZG5YK76hS+di5iPkjcfhI782HEE
+         yQzhmWMt3l1FG+UGrBxCGpGHQ10AJzGfRvcMrvZg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Hannes Frederic Sowa <hannes@stressinduktion.org>,
-        Eric Dumazet <edumazet@google.com>,
-        Jason Wang <jasowang@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Tommi Rantala <tommi.t.rantala@nokia.com>
-Subject: [PATCH 4.9 45/88] tuntap: correctly set SOCKWQ_ASYNC_NOSPACE
-Date:   Tue, 10 Mar 2020 13:38:53 +0100
-Message-Id: <20200310123617.162923966@linuxfoundation.org>
+        stable@vger.kernel.org, Sameeh Jubran <sameehj@amazon.com>,
+        Saeed Bshara <saeedb@amazon.com>,
+        Arthur Kiyanovski <akiyano@amazon.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 41/88] net: ena: make ena rxfh support ETH_RSS_HASH_NO_CHANGE
+Date:   Tue, 10 Mar 2020 13:38:49 +0100
+Message-Id: <20200310123615.977525680@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123606.543939933@linuxfoundation.org>
 References: <20200310123606.543939933@linuxfoundation.org>
@@ -63,68 +61,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Wang <jasowang@redhat.com>
+From: Arthur Kiyanovski <akiyano@amazon.com>
 
-commit 2f3ab6221e4c87960347d65c7cab9bd917d1f637 upstream.
+commit 470793a78ce344bd53d31e0c2d537f71ba957547 upstream.
 
-When link is down, writes to the device might fail with
--EIO. Userspace needs an indication when the status is resolved.  As a
-fix, tun_net_open() attempts to wake up writers - but that is only
-effective if SOCKWQ_ASYNC_NOSPACE has been set in the past. This is
-not the case of vhost_net which only poll for EPOLLOUT after it meets
-errors during sendmsg().
+As the name suggests ETH_RSS_HASH_NO_CHANGE is received upon changing
+the key or indirection table using ethtool while keeping the same hash
+function.
 
-This patch fixes this by making sure SOCKWQ_ASYNC_NOSPACE is set when
-socket is not writable or device is down to guarantee EPOLLOUT will be
-raised in either tun_chr_poll() or tun_sock_write_space() after device
-is up.
+Also add a function for retrieving the current hash function from
+the ena-com layer.
 
-Cc: Hannes Frederic Sowa <hannes@stressinduktion.org>
-Cc: Eric Dumazet <edumazet@google.com>
-Fixes: 1bd4978a88ac2 ("tun: honor IFF_UP in tun_get_user()")
-Signed-off-by: Jason Wang <jasowang@redhat.com>
+Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
+Signed-off-by: Sameeh Jubran <sameehj@amazon.com>
+Signed-off-by: Saeed Bshara <saeedb@amazon.com>
+Signed-off-by: Arthur Kiyanovski <akiyano@amazon.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Tommi Rantala <tommi.t.rantala@nokia.com>
 
 ---
- drivers/net/tun.c |   19 +++++++++++++++----
- 1 file changed, 15 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/amazon/ena/ena_com.c     |    5 +++++
+ drivers/net/ethernet/amazon/ena/ena_com.h     |    8 ++++++++
+ drivers/net/ethernet/amazon/ena/ena_ethtool.c |    3 +++
+ 3 files changed, 16 insertions(+)
 
---- a/drivers/net/tun.c
-+++ b/drivers/net/tun.c
-@@ -1106,6 +1106,13 @@ static void tun_net_init(struct net_devi
- 	}
+--- a/drivers/net/ethernet/amazon/ena/ena_com.c
++++ b/drivers/net/ethernet/amazon/ena/ena_com.c
+@@ -857,6 +857,11 @@ static void ena_com_hash_key_fill_defaul
+ 	hash_key->keys_num = sizeof(hash_key->key) / sizeof(u32);
  }
  
-+static bool tun_sock_writeable(struct tun_struct *tun, struct tun_file *tfile)
++int ena_com_get_current_hash_function(struct ena_com_dev *ena_dev)
 +{
-+	struct sock *sk = tfile->socket.sk;
-+
-+	return (tun->dev->flags & IFF_UP) && sock_writeable(sk);
++	return ena_dev->rss.hash_func;
 +}
 +
- /* Character device part */
+ static int ena_com_hash_key_allocate(struct ena_com_dev *ena_dev)
+ {
+ 	struct ena_rss *rss = &ena_dev->rss;
+--- a/drivers/net/ethernet/amazon/ena/ena_com.h
++++ b/drivers/net/ethernet/amazon/ena/ena_com.h
+@@ -623,6 +623,14 @@ int ena_com_rss_init(struct ena_com_dev
+  */
+ void ena_com_rss_destroy(struct ena_com_dev *ena_dev);
  
- /* Poll */
-@@ -1128,10 +1135,14 @@ static unsigned int tun_chr_poll(struct
- 	if (!skb_array_empty(&tfile->tx_array))
- 		mask |= POLLIN | POLLRDNORM;
++/* ena_com_get_current_hash_function - Get RSS hash function
++ * @ena_dev: ENA communication layer struct
++ *
++ * Return the current hash function.
++ * @return: 0 or one of the ena_admin_hash_functions values.
++ */
++int ena_com_get_current_hash_function(struct ena_com_dev *ena_dev);
++
+ /* ena_com_fill_hash_function - Fill RSS hash function
+  * @ena_dev: ENA communication layer struct
+  * @func: The hash function (Toeplitz or crc)
+--- a/drivers/net/ethernet/amazon/ena/ena_ethtool.c
++++ b/drivers/net/ethernet/amazon/ena/ena_ethtool.c
+@@ -751,6 +751,9 @@ static int ena_set_rxfh(struct net_devic
+ 	}
  
--	if (tun->dev->flags & IFF_UP &&
--	    (sock_writeable(sk) ||
--	     (!test_and_set_bit(SOCKWQ_ASYNC_NOSPACE, &sk->sk_socket->flags) &&
--	      sock_writeable(sk))))
-+	/* Make sure SOCKWQ_ASYNC_NOSPACE is set if not writable to
-+	 * guarantee EPOLLOUT to be raised by either here or
-+	 * tun_sock_write_space(). Then process could get notification
-+	 * after it writes to a down device and meets -EIO.
-+	 */
-+	if (tun_sock_writeable(tun, tfile) ||
-+	    (!test_and_set_bit(SOCKWQ_ASYNC_NOSPACE, &sk->sk_socket->flags) &&
-+	     tun_sock_writeable(tun, tfile)))
- 		mask |= POLLOUT | POLLWRNORM;
- 
- 	if (tun->dev->reg_state != NETREG_REGISTERED)
+ 	switch (hfunc) {
++	case ETH_RSS_HASH_NO_CHANGE:
++		func = ena_com_get_current_hash_function(ena_dev);
++		break;
+ 	case ETH_RSS_HASH_TOP:
+ 		func = ENA_ADMIN_TOEPLITZ;
+ 		break;
 
 
