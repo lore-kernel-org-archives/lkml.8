@@ -2,137 +2,149 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88F05C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 15:55:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C99CAC18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 15:56:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 642E0215A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 15:55:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1C7120578
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 15:56:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SbYgGqz6"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qJJ8iwQS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726833AbgCJPzc (ORCPT
+        id S1726874AbgCJPz7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 11:55:32 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:36294 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726480AbgCJPzb (ORCPT
+        Tue, 10 Mar 2020 11:55:59 -0400
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:52599 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726695AbgCJPz7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 11:55:31 -0400
-Received: by mail-ot1-f67.google.com with SMTP id j14so13642935otq.3
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 08:55:31 -0700 (PDT)
+        Tue, 10 Mar 2020 11:55:59 -0400
+Received: by mail-pj1-f65.google.com with SMTP id f15so590712pjq.2;
+        Tue, 10 Mar 2020 08:55:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=TgqmscoWWwUwE2N+wjkp7klbD8Llg5aD9QxcbbWM91M=;
-        b=SbYgGqz6Iv/cF2Xk6HbsmaZYROCsChtMTCZqVrowfSBNRknWfl4l1M2KOEsbDuDViG
-         gz35NNiTeGIUs6AKuQ85hd+LpOAnbrCsiqXjdX8KQqXe7sYPAN3+qsNvVCKZfIlRisfw
-         d8FdhZRhYobG0/brLgrhPttDTXvZDKY2co3aN4RN+AwRGvicLAZZiSbWUv4cmlcMSEYV
-         y3pCA+lmAWxqQ1Zt2ktlka8bQcuydF8d6bzmMRc/6QhsiRaYsUAFs5SzkAyLyKI8wrmc
-         s1TDcwRI8TNmjAenvUK7oftIL/kYKvWncS50htb8hL0Me+hB5c2JE7d9rw/gD2+mtj4P
-         5H5A==
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=bwBSe9J29UDT2a8cggrqQgzSCk0l6BfTI9Jlj85gMCE=;
+        b=qJJ8iwQSiqQFSHvEveOAAjVn2jWlAdU7MU2xZnopyM83H035x0DL9cTVvEKaaYBpPj
+         v0H50596N0ZmeNWaa6ZmZRBiv/VRXPmUIA8mX9ZR3Q4UIsSyOlCdd7N11cijPmQ7v3Rw
+         SFwmDCg+OX6DIvvS1PJRBKkvfs1pj4utl+9ZZ0/yvW4DTzL0ESRU+pCbGjlIfncmzn+X
+         4d5CU/iFvIsbeqKCePILZ3atr6hszHxwC7HsDjrorF9pbw6vPeUiLReSopndYvsb8msd
+         618CO2e0mm+CqFglbd5698UpVRq6deqmOV2LV1kmDBCJcFjhon0afynxJqt5Ql44AtOK
+         eAxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=TgqmscoWWwUwE2N+wjkp7klbD8Llg5aD9QxcbbWM91M=;
-        b=WEafMbLRDsj8b471umNB1W8Xfafik2owIyVo0t6sT7lJ+LTyRYTO959JJEIMQSNv7J
-         HeK2cPRjpbcQnh4VA1nalKzR4oePs5UYSfh2RoZV49FCEPoBInDmVJmB4LPrk5n3wNey
-         y55VgNzdfBxPjcR9DVWffRTJXIgrQMNWv/eGpEBduoa1r21pVAsaE0s1XhTAnuk2glKS
-         TUs4LI7f8sG14tf6Y/10o5w2rok81eEFC7zChKOkRXZus4PWxJBwa3g2yQydXyCjRWsF
-         VXvegTweDmD58iYlbVnRemPCp8A0zC3LD06p309J84m9bkBEkvjla8Qxg0dlPEW0j7Dr
-         3pRg==
-X-Gm-Message-State: ANhLgQ0pG9ilH+bzk4Y0MVMJqNs6QIyFKZvCc7nHQQNS+QkM9712tljk
-        ekgsJOYr09JBP6kmv1GhH1edxfQ4YsiRLSKto3KD1g==
-X-Google-Smtp-Source: ADFU+vva3WOrofQsiULBwLdHFTnTgcGCFkvcJUnV+SV2B4eVtEQKOTmFmG4oUCa5cat2xXUgVCBlj6+tobSNOz5bcMI=
-X-Received: by 2002:a9d:19e9:: with SMTP id k96mr17670341otk.68.1583855731083;
- Tue, 10 Mar 2020 08:55:31 -0700 (PDT)
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=bwBSe9J29UDT2a8cggrqQgzSCk0l6BfTI9Jlj85gMCE=;
+        b=lH4PMCV2B1fBz39U+apbSR08bqpw5lfGDMvG6+mQkOxMW1PI2lXGkByXyExEF4x2cb
+         GVDnx2WNP5b0SkQf6+i6G23HVMMVv1AjXY654upR8huRyilDQ6/51QrPJaD3xtXGmFC3
+         O8lFns4ERWA5SIHMOZbVt94y2huulNXp+MEpPJyJRtrwwue5tDx2O6zfSnT3XRKZN+rw
+         6L7IdPCIQhsEXso4dV7CZQUR4wUXxbJSB7wKziPlv7K5Au67SmLgwKxo7ncjf3XXWNVA
+         FPM03mVvBWDQY7flTSA893XNE3aUJDz5o7EC52cEdOfpzm2aZfl5VCh9xGJcRhys6Mp3
+         0p3w==
+X-Gm-Message-State: ANhLgQ1rqqYcn/ChDiXh57xJkWqJRpIWyyhiVQTTUkgBjrSxzCEf7wNW
+        iWmOLeSKY81fweKwFC395+idRK6U
+X-Google-Smtp-Source: ADFU+vtmNkVYH5Lz3eKS09VC8JI23fnLYHfw6xk7pW58r1MFvtA6sGXsBZGzIfI1MBE/dVBImTHKww==
+X-Received: by 2002:a17:902:a715:: with SMTP id w21mr4422917plq.244.1583855757432;
+        Tue, 10 Mar 2020 08:55:57 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id h22sm47363643pgn.57.2020.03.10.08.55.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Mar 2020 08:55:55 -0700 (PDT)
+Subject: Re: [PATCH 5.4 000/167] 5.4.25-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+References: <20200310144113.973994620@linuxfoundation.org>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <2fc1ae97-cb04-7105-b458-cb456732f48e@roeck-us.net>
+Date:   Tue, 10 Mar 2020 08:55:54 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200310134603.30260-1-robert.foss@linaro.org>
- <20200310134603.30260-3-robert.foss@linaro.org> <20200310142652.GK1922688@smile.fi.intel.com>
-In-Reply-To: <20200310142652.GK1922688@smile.fi.intel.com>
-From:   Robert Foss <robert.foss@linaro.org>
-Date:   Tue, 10 Mar 2020 16:55:20 +0100
-Message-ID: <CAG3jFyu5S1H=r6pV92tc_a2LoCUnhb0mDbOegP2BCO8a5C1nVg@mail.gmail.com>
-Subject: Re: [v1 2/3] media: ov8856: Add devicetree support
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     ben.kao@intel.com, mchehab@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, matthias.bgg@gmail.com, davem@davemloft.net,
-        gregkh@linuxfoundation.org, Jonathan.Cameron@huawei.com,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        Dongchun Zhu <dongchun.zhu@mediatek.com>,
-        Tomasz Figa <tfiga@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200310144113.973994620@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andy,
+On 3/10/20 7:42 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.4.25 release.
+> There are 167 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Thu, 12 Mar 2020 14:40:27 +0000.
+> Anything received after that time might be too late.
+> 
 
-On Tue, 10 Mar 2020 at 15:26, Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Tue, Mar 10, 2020 at 02:46:02PM +0100, Robert Foss wrote:
-> > Add devicetree match table, and enable ov8856_probe()
-> > to initialize power, clocks and reset pins.
->
-> ...
->
-> > +#define OV8856_NUM_SUPPLIES ARRAY_SIZE(ov8856_supply_names)
->
-> Use ARRAY_SIZE() directly.
+mips:allmodconfig, nds32:allmodconfig, and probably others:
 
-Ack.
+  CC [M]  drivers/gpu/drm/virtio/virtgpu_object.o
+drivers/gpu/drm/virtio/virtgpu_object.c:31:67: error: expected ')' before 'int'
+   31 | module_param_named(virglhack, virtio_gpu_virglrenderer_workaround, int, 0400);
 
->
-> Have you seen Sakari's comments?
-> Sakari, do I have d=C3=A9j=C4=85 vu or you indeed commented this driver?
+Culprit is "drm/virtio: make resource id workaround runtime switchable.".
+Upstream commit b0138364da17617d ("drm/virtio: module_param_named() requires linux/moduleparam.h")
+is tagged 'Fixes: 3e93bc2a58aa ("drm/virtio: make resource id workaround runtime switchable.")'
+and does indeed fix this problem.
 
-Yes, I may have missed some part of it, so please tell me if I have.
+When patches are auto-selected for backports, would it be possible to also pick
+patches fixing them right away ?
 
-There is a patchset floating around that implements a larger chunk of
-functionality,
-including a couple of new modes. This is based on that series.
-
->
-> ...
->
-> > +     gpiod_set_value_cansleep(ov8856->n_shutdn_gpio, GPIOD_OUT_LOW);
->
-> > +     gpiod_set_value_cansleep(ov8856->n_shutdn_gpio, GPIOD_OUT_HIGH);
->
-> Yes, seems this one is inverted.
->
-> ...
->
-> > +{
-> > +     gpiod_set_value_cansleep(ov8856->n_shutdn_gpio, GPIOD_OUT_LOW);
-> > +     regulator_bulk_disable(OV8856_NUM_SUPPLIES, ov8856->supplies);
-> > +     clk_disable_unprepare(ov8856->xvclk);
-> > +}
-> > +
-> > +
->
-> One blank line is enough.
->
-> ...
->
-> > +     ov8856->xvclk =3D devm_clk_get(&client->dev, "xvclk");
-> > +     if (IS_ERR(ov8856->xvclk)) {
-> > +             dev_err(&client->dev, "failed to get xvclk\n");
-> > +             return -EINVAL;
-> > +     }
->
-> Previously it worked without clock provider, now you make a dependency.
->
-> This won't work.
-
-So the ideal behavior would be to only use the xclk if it is provided?
+Guenter
