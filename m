@@ -4,316 +4,200 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E02F1C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 03:03:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28E24C10F25
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 03:07:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5E342467E
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 03:03:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05BF32467E
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 03:07:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726780AbgCJDDd (ORCPT
+        id S1726382AbgCJDHk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 23:03:33 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:32876 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725845AbgCJDDd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 23:03:33 -0400
-Received: from [10.130.0.70] (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxr2h3A2deAgkZAA--.10S3;
-        Tue, 10 Mar 2020 11:03:21 +0800 (CST)
-Subject: =?UTF-8?Q?Re:_=e5=9b=9e=e5=a4=8d:[PATCH_5/6]_MIPS:_Loongson:_Add_PC?=
- =?UTF-8?Q?I_support_for_7A1000?=
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-References: <1583742206-29163-1-git-send-email-yangtiezhu@loongson.cn>
- <1583742206-29163-6-git-send-email-yangtiezhu@loongson.cn>
- <170be7abc6d.d0ea51502303.7109395874638183132@flygoat.com>
-Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        linux-mips <linux-mips@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        linux-ide <linux-ide@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Xuefeng Li <lixuefeng@loongson.cn>,
-        Jianmin Lv <lvjianmin@loongson.cn>
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <7c69c3d5-5d2d-9602-d485-553d350550ee@loongson.cn>
-Date:   Tue, 10 Mar 2020 11:03:19 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+        Mon, 9 Mar 2020 23:07:40 -0400
+Received: from mga02.intel.com ([134.134.136.20]:27605 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726170AbgCJDHk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 23:07:40 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Mar 2020 20:07:39 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,535,1574150400"; 
+   d="scan'208";a="234196802"
+Received: from hao-dev.bj.intel.com (HELO localhost) ([10.238.157.65])
+  by fmsmga007.fm.intel.com with ESMTP; 09 Mar 2020 20:07:37 -0700
+Date:   Tue, 10 Mar 2020 10:46:26 +0800
+From:   Wu Hao <hao.wu@intel.com>
+To:     Xu Yilun <yilun.xu@intel.com>
+Cc:     mdf@kernel.org, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Luwei Kang <luwei.kang@intel.com>
+Subject: Re: [PATCH 2/7] fpga: dfl: pci: add irq info for feature devices
+ enumeration
+Message-ID: <20200310024626.GB11861@hao-dev>
+References: <1583749790-10837-1-git-send-email-yilun.xu@intel.com>
+ <1583749790-10837-3-git-send-email-yilun.xu@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <170be7abc6d.d0ea51502303.7109395874638183132@flygoat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQAAf9Dxr2h3A2deAgkZAA--.10S3
-X-Coremail-Antispam: 1UD129KBjvJXoW3JFW8CF15uFWxCFy3AF48Xrb_yoW3XF4UpF
-        yfAa15Gr40qF17GF9YvFWDGrn3JrZYyr9Fkay7tFyjvasa9w10qr90gF45Krs7Zr4DXa10
-        vFyxWr47CFn8KaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUU9a14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26r1I6r4UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-        6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr
-        1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv
-        7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r
-        1j6r4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
-        n2kIc2xKxwCYjI0SjxkI62AI1cAE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFV
-        Cjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWl
-        x4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r
-        1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Wr1j
-        6rW3Jr1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8Jr
-        UvcSsGvfC2KfnxnUUI43ZEXa7VUbXdbUUUUUU==
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1583749790-10837-3-git-send-email-yilun.xu@intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/09/2020 04:47 PM, Jiaxun Yang wrote:
->
->   ---- 在 星期一, 2020-03-09 16:23:25 Tiezhu Yang <yangtiezhu@loongson.cn> 撰写 ----
->   > Add PCI support for 7A1000 to detect PCI device.
->   >
->   > Co-developed-by: Jianmin Lv <lvjianmin@loongson.cn>
->   > Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
->   > Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
->   > ---
->   >  arch/mips/include/asm/mach-loongson64/pci.h |   1 +
->   >  arch/mips/loongson64/pci.c                  |  12 ++-
->   >  arch/mips/pci/Makefile                      |   2 +-
->   >  arch/mips/pci/ops-loongson3-ls7a.c          | 132 ++++++++++++++++++++++++++++
->   >  4 files changed, 143 insertions(+), 4 deletions(-)
->   >  create mode 100644 arch/mips/pci/ops-loongson3-ls7a.c
->   >
->   > diff --git a/arch/mips/include/asm/mach-loongson64/pci.h b/arch/mips/include/asm/mach-loongson64/pci.h
->   > index 8b59d64..42c9744 100644
->   > --- a/arch/mips/include/asm/mach-loongson64/pci.h
->   > +++ b/arch/mips/include/asm/mach-loongson64/pci.h
->   > @@ -8,6 +8,7 @@
->   >  #define __ASM_MACH_LOONGSON64_PCI_H_
->   >
->   >  extern struct pci_ops loongson_pci_ops;
->   > +extern struct pci_ops loongson_ls7a_pci_ops;
->   >
->   >  /* this is an offset from mips_io_port_base */
->   >  #define LOONGSON_PCI_IO_START    0x00004000UL
->   > diff --git a/arch/mips/loongson64/pci.c b/arch/mips/loongson64/pci.c
->   > index e84ae20..b79368f 100644
->   > --- a/arch/mips/loongson64/pci.c
->   > +++ b/arch/mips/loongson64/pci.c
->   > @@ -23,8 +23,8 @@ static struct resource loongson_pci_io_resource = {
->   >      .flags    = IORESOURCE_IO,
->   >  };
->   >
->   > -static struct pci_controller  loongson_pci_controller = {
->   > -    .pci_ops    = &loongson_pci_ops,
->   > +static struct pci_controller loongson_pci_controller = {
->   > +    .pci_ops    = NULL,
->   >      .io_resource    = &loongson_pci_io_resource,
->   >      .mem_resource    = &loongson_pci_mem_resource,
->   >      .mem_offset    = 0x00000000UL,
->   > @@ -36,6 +36,11 @@ extern int sbx00_acpi_init(void);
->   >
->   >  static int __init pcibios_init(void)
->   >  {
->   > +    if (strstr(eboard->name, "780E"))
->   > +        loongson_pci_controller.pci_ops = &loongson_pci_ops;
->   > +
->   > +    if (strstr(eboard->name, "7A1000"))
->   > +        loongson_pci_controller.pci_ops = &loongson_ls7a_pci_ops;
->
-> Please do not check PCH type everywhere.
+Hi Yilun
 
-Yes, you are right.
+Some comments inline. : )
 
->
->   >
->   >      loongson_pci_controller.io_map_base = mips_io_port_base;
->   >      loongson_pci_mem_resource.start = loongson_sysconf.pci_mem_start_addr;
->   > @@ -43,7 +48,8 @@ static int __init pcibios_init(void)
->   >
->   >      register_pci_controller(&loongson_pci_controller);
->   >
->   > -    sbx00_acpi_init();
->   > +    if (strstr(eboard->name, "780E"))
->   > +        sbx00_acpi_init();
->   >
->   >      return 0;
->   >  }
->   > diff --git a/arch/mips/pci/Makefile b/arch/mips/pci/Makefile
->   > index 342ce10..7256bb1 100644
->   > --- a/arch/mips/pci/Makefile
->   > +++ b/arch/mips/pci/Makefile
->   > @@ -35,7 +35,7 @@ obj-$(CONFIG_LASAT)        += pci-lasat.o
->   >  obj-$(CONFIG_MIPS_COBALT)    += fixup-cobalt.o
->   >  obj-$(CONFIG_LEMOTE_FULOONG2E)    += fixup-fuloong2e.o ops-loongson2.o
->   >  obj-$(CONFIG_LEMOTE_MACH2F)    += fixup-lemote2f.o ops-loongson2.o
->   > -obj-$(CONFIG_MACH_LOONGSON64)    += fixup-loongson3.o ops-loongson3.o
->   > +obj-$(CONFIG_MACH_LOONGSON64)    += fixup-loongson3.o ops-loongson3.o ops-loongson3-ls7a.o
->   >  obj-$(CONFIG_MIPS_MALTA)    += fixup-malta.o pci-malta.o
->   >  obj-$(CONFIG_PMC_MSP7120_GW)    += fixup-pmcmsp.o ops-pmcmsp.o
->   >  obj-$(CONFIG_PMC_MSP7120_EVAL)    += fixup-pmcmsp.o ops-pmcmsp.o
->   > diff --git a/arch/mips/pci/ops-loongson3-ls7a.c b/arch/mips/pci/ops-loongson3-ls7a.c
->   > new file mode 100644
->   > index 0000000..4ed6c40
->   > --- /dev/null
->   > +++ b/arch/mips/pci/ops-loongson3-ls7a.c
->   > @@ -0,0 +1,132 @@
->   > +// SPDX-License-Identifier: GPL-2.0
->   > +/*
->   > + * Copyright (C) 2020 Loongson Technology Corporation Limited
->   > + *
->   > + * Author: Jianmin Lv <lvjianmin@loongson.cn>
->   > + * Author: Tiezhu Yang <yangtiezhu@loongson.cn>
->   > + */
->   > +
->   > +#include <linux/types.h>
->   > +#include <linux/pci.h>
->   > +#include <linux/kernel.h>
->   > +
->   > +#include <asm/mips-boards/bonito64.h>
->
-> Why we need this?
+On Mon, Mar 09, 2020 at 06:29:45PM +0800, Xu Yilun wrote:
+> Some DFL FPGA PCIe cards (e.g. Intel FPGA Programmable Acceleration
+> Card) support MSI-X based interrupts. This patch allows PCIe driver
+> to prepare and pass interrupt resources to DFL via enumeration API.
+> These interrupt resources could then be assigned to actual features
+> which use them.
+> 
+> Signed-off-by: Luwei Kang <luwei.kang@intel.com>
+> Signed-off-by: Wu Hao <hao.wu@intel.com>
+> Signed-off-by: Xu Yilun <yilun.xu@intel.com>
+> ---
+>  drivers/fpga/dfl-pci.c | 66 ++++++++++++++++++++++++++++++++++++++++++++++----
+>  1 file changed, 61 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/fpga/dfl-pci.c b/drivers/fpga/dfl-pci.c
+> index 5387550..a3370e5 100644
+> --- a/drivers/fpga/dfl-pci.c
+> +++ b/drivers/fpga/dfl-pci.c
+> @@ -80,8 +80,23 @@ static void cci_remove_feature_devs(struct pci_dev *pcidev)
+>  	dfl_fpga_feature_devs_remove(drvdata->cdev);
+>  }
+>  
+> +static int *cci_pci_create_irq_table(struct pci_dev *pcidev, unsigned int nvec)
+> +{
+> +	int *table, i;
+> +
+> +	table = kcalloc(nvec, sizeof(int), GFP_KERNEL);
 
-I will check it, if it is useless, I will remove it.
+Maybe devm_ version is better?
 
->
->   > +
->   > +#include <loongson.h>
->   > +
->   > +#define PCI_ACCESS_READ 0
->   > +#define PCI_ACCESS_WRITE 1
->   > +
->   > +#define HT1LO_PCICFG_BASE 0x1a000000
->   > +#define HT1LO_PCICFG_BASE_TP1 0x1b000000
->   > +
->   > +#define HT1LO_PCICFG_BASE_EXT 0xefe00000000
->   > +#define HT1LO_PCICFG_BASE_TP1_EXT 0xefe10000000
->   > +
->   > +static int ls7a_pci_config_access(unsigned char access_type,
->   > +        struct pci_bus *bus, unsigned int devfn,
->   > +        int where, u32 *data)
->   > +{
->   > +    u_int64_t addr;
->   > +    void *addrp;
->   > +    unsigned char busnum = bus->number;
->   > +    int device = PCI_SLOT(devfn);
->   > +    int function = PCI_FUNC(devfn);
->   > +    int reg = where & ~3;
->   > +
->   > +    if (where >= PCI_CFG_SPACE_EXP_SIZE)
->   > +        return PCIBIOS_DEVICE_NOT_FOUND;
->   > +
->   > +    if (busnum == 0 && device > 23)
->   > +        return PCIBIOS_DEVICE_NOT_FOUND;
->   > +
->   > +    if (where < PCI_CFG_SPACE_SIZE) { /* standard config */
->   > +        addr = (busnum << 16) | (device << 11) | (function << 8) | reg;
->   > +        if (busnum == 0) {
->   > +            addr = HT1LO_PCICFG_BASE | addr;
->   > +            addrp = (void *)TO_UNCAC(addr);
->   > +        } else {
->   > +            addr = HT1LO_PCICFG_BASE_TP1 | addr;
->   > +            addrp = (void *)TO_UNCAC(addr);
->   > +        }
->   > +    } else { /* extended config */
->   > +        reg = (reg & 0xff) | ((reg & 0xf00) << 16);
->   > +        addr = (busnum << 16) | (device << 11) | (function << 8) | reg;
->   > +        if (busnum == 0) {
->   > +            addr = HT1LO_PCICFG_BASE_EXT | addr;
->   > +            addrp = (void *)TO_UNCAC(addr);
->   > +        } else {
->   > +            addr = HT1LO_PCICFG_BASE_TP1_EXT | addr;
->   > +            addrp = (void *)TO_UNCAC(addr);
->   > +        }
->   > +    }
->   > +
->   > +    if (access_type == PCI_ACCESS_WRITE)
->   > +        *(unsigned int *)addrp = cpu_to_le32(*data);
->   > +    else {
->   > +        *data = le32_to_cpu(*(unsigned int *)addrp);
->   > +        if (busnum == 0 &&
->   > +            reg == PCI_CLASS_REVISION && *data == 0x06000001)
->   > +            *data = (PCI_CLASS_BRIDGE_PCI << 16) | (*data & 0xffff);
->
-> It should be a part of quirk. Not a part of accessing.
->
->   > +
->   > +        if (*data == 0xffffffff) {
->   > +            *data = -1;
->   > +            return PCIBIOS_DEVICE_NOT_FOUND;
->   > +        }
->   > +    }
->   > +
->   > +    return PCIBIOS_SUCCESSFUL;
->   > +}
->   > +
->   > +static int ls7a_pci_pcibios_read(struct pci_bus *bus, unsigned int devfn,
->   > +                 int where, int size, u32 *val)
->   > +{
->   > +    int ret;
->   > +    u32 data = 0;
->   > +
->   > +    ret = ls7a_pci_config_access(PCI_ACCESS_READ, bus, devfn, where, &data);
->   > +    if (ret != PCIBIOS_SUCCESSFUL)
->   > +        return ret;
->   > +
->   > +    if (size == 1)
->   > +        *val = (data >> ((where & 3) << 3)) & 0xff;
->   > +    else if (size == 2)
->   > +        *val = (data >> ((where & 3) << 3)) & 0xffff;
->   > +    else
->   > +        *val = data;
->
-> That  loggic seems identical with RS780E one, can we reuse them?
+> +	if (!table)
+> +		return NULL;
+> +
+> +	for (i = 0; i < nvec; i++)
 
-OK, I will do it.
+i should be unsigned int as well?
 
-Thanks,
+> +		table[i] = pci_irq_vector(pcidev, i);
+> +
+> +	return table;
+> +}
+> +
+>  /* enumerate feature devices under pci device */
+> -static int cci_enumerate_feature_devs(struct pci_dev *pcidev)
+> +static int cci_enumerate_feature_devs(struct pci_dev *pcidev,
+> +				      unsigned int nvec)
+>  {
+>  	struct cci_drvdata *drvdata = pci_get_drvdata(pcidev);
+>  	struct dfl_fpga_enum_info *info;
+> @@ -89,6 +104,7 @@ static int cci_enumerate_feature_devs(struct pci_dev *pcidev)
+>  	resource_size_t start, len;
+>  	int port_num, bar, i, ret = 0;
+>  	void __iomem *base;
+> +	int *irq_table;
+>  	u32 offset;
+>  	u64 v;
+>  
+> @@ -97,6 +113,18 @@ static int cci_enumerate_feature_devs(struct pci_dev *pcidev)
+>  	if (!info)
+>  		return -ENOMEM;
+>  
+> +	/* add irq info for enumeration if really needed */
+> +	if (nvec) {
+> +		irq_table = cci_pci_create_irq_table(pcidev, nvec);
+> +		if (irq_table) {
+> +			dfl_fpga_enum_info_add_irq(info, nvec, irq_table);
+> +			kfree(irq_table);
+> +		} else {
+> +			ret = -ENOMEM;
+> +			goto enum_info_free_exit;
+> +		}
+> +	}
+> +
+>  	/* start to find Device Feature List from Bar 0 */
+>  	base = cci_pci_ioremap_bar(pcidev, 0);
+>  	if (!base) {
+> @@ -173,6 +201,28 @@ static int cci_enumerate_feature_devs(struct pci_dev *pcidev)
+>  	return ret;
+>  }
+>  
+> +static int cci_pci_alloc_irq(struct pci_dev *pcidev)
+> +{
+> +	int nvec = pci_msix_vec_count(pcidev);
+> +	int ret;
+> +
+> +	if (nvec <= 0) {
+> +		dev_dbg(&pcidev->dev, "fpga interrupt not supported\n");
+> +		return 0;
+> +	}
+> +
+> +	ret = pci_alloc_irq_vectors(pcidev, nvec, nvec, PCI_IRQ_MSIX);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return nvec;
+> +}
+> +
+> +static void cci_pci_free_irq(struct pci_dev *pcidev)
+> +{
+> +	pci_free_irq_vectors(pcidev);
+> +}
+> +
+>  static
+>  int cci_pci_probe(struct pci_dev *pcidev, const struct pci_device_id *pcidevid)
+>  {
+> @@ -210,14 +260,19 @@ int cci_pci_probe(struct pci_dev *pcidev, const struct pci_device_id *pcidevid)
+>  		goto disable_error_report_exit;
+>  	}
+>  
+> -	ret = cci_enumerate_feature_devs(pcidev);
+> -	if (ret) {
+> -		dev_err(&pcidev->dev, "enumeration failure %d.\n", ret);
+> +	ret = cci_pci_alloc_irq(pcidev);
+> +	if (ret < 0) {
+> +		dev_err(&pcidev->dev, "Fail to alloc irq %d.\n", ret);
 
-Tiezhu Yang
+we prepare mmio resources in side cci_enumerate_feature_devs.
 
->
->> +
->   > +    return PCIBIOS_SUCCESSFUL;
->   > +}
->   > +
->   > +static int ls7a_pci_pcibios_write(struct pci_bus *bus, unsigned int devfn,
->   > +                  int where, int size, u32 val)
->   > +{
->   > +    int ret;
->   > +    u32 data = 0;
->   > +
->   > +    if (size == 4)
->   > +        data = val;
->   > +    else {
->   > +        ret = ls7a_pci_config_access(PCI_ACCESS_READ, bus,
->   > +                        devfn, where, &data);
->   > +        if (ret != PCIBIOS_SUCCESSFUL)
->   > +            return ret;
->   > +
->   > +        if (size == 1)
->   > +            data = (data & ~(0xff << ((where & 3) << 3))) |
->   > +                (val << ((where & 3) << 3));
->   > +        else if (size == 2)
->   > +            data = (data & ~(0xffff << ((where & 3) << 3))) |
->   > +                (val << ((where & 3) << 3));
->   > +    }
->   > +
->   > +    ret = ls7a_pci_config_access(PCI_ACCESS_WRITE, bus,
->   > +                    devfn, where, &data);
->   > +
->   > +    return ret;
->   > +}
->   > +
->   > +struct pci_ops loongson_ls7a_pci_ops = {
->   > +    .read = ls7a_pci_pcibios_read,
->   > +    .write = ls7a_pci_pcibios_write
->   > +};
->   > --
->   > 2.1.0
->   >
->   >
+maybe we could put irq resources code in side cce_enumerate_feature_devs too?
 
+
+Thanks
+Hao
+
+>  		goto disable_error_report_exit;
+>  	}
+>  
+> -	return ret;
+> +	ret = cci_enumerate_feature_devs(pcidev, (unsigned int)ret);
+> +	if (!ret)
+> +		return ret;
+> +
+> +	dev_err(&pcidev->dev, "enumeration failure %d.\n", ret);
+>  
+> +	cci_pci_free_irq(pcidev);
+>  disable_error_report_exit:
+>  	pci_disable_pcie_error_reporting(pcidev);
+>  	return ret;
+> @@ -263,6 +318,7 @@ static void cci_pci_remove(struct pci_dev *pcidev)
+>  		cci_pci_sriov_configure(pcidev, 0);
+>  
+>  	cci_remove_feature_devs(pcidev);
+> +	cci_pci_free_irq(pcidev);
+>  	pci_disable_pcie_error_reporting(pcidev);
+>  }
+>  
+> -- 
+> 2.7.4
