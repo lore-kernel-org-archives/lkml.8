@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47C6FC18E5C
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:04:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A1DDC18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:04:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11E5820409
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:04:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12545208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:04:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583845488;
-	bh=+hi5aN+D6JGLzjvA6/P2ENZRj0ICH3a32s1Tw3e6BL8=;
+	s=default; t=1583845492;
+	bh=ZqlUwVB66ydp/iIJwLEGmXhZSRl3CEmNjcB+VKOctZk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vtga2JDPQ5vFh9pMqpFv4LmDX60xQeUVOy2tGx4BqxWylaR+X3G93m0p7UbfYrRDE
-	 HQUvGTbpiISdbBZOea3nrcGvV2Kv97m39xkn4MUeJdOGfpjFCKJ4bFsREq4JmOhUO6
-	 ECRIoNENWNshN69NGg+ZEROeKVsDWQcLZtGJG87c=
+	b=jiwhk/4pGYx+iWrRd7KgPXIUSipso5LU8t/bFfORUUVY5Bb0nmJRk/8j6HesvEfBA
+	 81NVNcxRlUUIq34vN1cou4VHfjBtqDALt4f37GTgRaVDcoTB3E8L8XerADOc01bgcV
+	 3xkz4dvp1gJG7cFSvtFzk0RxALIs6PThg3e8rww0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730749AbgCJNEk (ORCPT
+        id S1730730AbgCJNEc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:04:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49738 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:04:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49538 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728343AbgCJNEg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:04:36 -0400
+        id S1729481AbgCJNE2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:04:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 10E9320409;
-        Tue, 10 Mar 2020 13:04:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 32AE320409;
+        Tue, 10 Mar 2020 13:04:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845475;
-        bh=+hi5aN+D6JGLzjvA6/P2ENZRj0ICH3a32s1Tw3e6BL8=;
+        s=default; t=1583845467;
+        bh=ZqlUwVB66ydp/iIJwLEGmXhZSRl3CEmNjcB+VKOctZk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QWD+heYmwSRDClvzv57XA6YrCEWv8PcxPwfbX0GmD7iWd46ugJ0+gHkXL62+spcRl
-         qYIhQXvVoL9ML7fH25ekEi2zrsL6cqL3r8YxH4Tj+VsecHYtvaaWxCHMHRsAYO39JD
-         1IYE0TaJa5k6QYD1B1fcf3NVXhgQ9fff2qwmYwDg=
+        b=NgqBMAkH7EaBKY1zU+gmUECYatcIgFz+IhBK6pX9d6HbJUVvi/s/sQbUNjvwT01mm
+         nzj9hrqjMGn3yShMZZ2vQ+cHGgPNuzoI/mSrUqEo53hmSoP6n+RGvFpalCExW6rmVJ
+         inrPQccTczGlmznADOLkcrqa3HnTetwOp52f4TGM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+cb0c054eabfba4342146@syzkaller.appspotmail.com,
-        Bernard Metzler <bmt@zurich.ibm.com>,
+        stable@vger.kernel.org, Leon Romanovsky <leonro@mellanox.com>,
         Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 5.5 164/189] RDMA/iwcm: Fix iwcm work deallocation
-Date:   Tue, 10 Mar 2020 13:40:01 +0100
-Message-Id: <20200310123656.595378514@linuxfoundation.org>
+Subject: [PATCH 5.5 161/189] RDMA/odp: Ensure the mm is still alive before creating an implicit child
+Date:   Tue, 10 Mar 2020 13:39:58 +0100
+Message-Id: <20200310123656.312772237@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123639.608886314@linuxfoundation.org>
 References: <20200310123639.608886314@linuxfoundation.org>
@@ -61,41 +59,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bernard Metzler <bmt@zurich.ibm.com>
+From: Jason Gunthorpe <jgg@mellanox.com>
 
-commit 810dbc69087b08fd53e1cdd6c709f385bc2921ad upstream.
+commit a4e63bce1414df7ab6eb82ca9feb8494ce13e554 upstream.
 
-The dealloc_work_entries() function must update the work_free_list pointer
-while freeing its entries, since potentially called again on same list. A
-second iteration of the work list caused system crash. This happens, if
-work allocation fails during cma_iw_listen() and free_cm_id() tries to
-free the list again during cleanup.
+Registration of a mmu_notifier requires the caller to hold a mmget() on
+the mm as registration is not permitted to race with exit_mmap(). There is
+a BUG_ON inside the mmu_notifier to guard against this.
 
-Fixes: 922a8e9fb2e0 ("RDMA: iWARP Connection Manager.")
-Link: https://lore.kernel.org/r/20200302181614.17042-1-bmt@zurich.ibm.com
-Reported-by: syzbot+cb0c054eabfba4342146@syzkaller.appspotmail.com
-Signed-off-by: Bernard Metzler <bmt@zurich.ibm.com>
-Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+Normally creating a umem is done against current which implicitly holds
+the mmget(), however an implicit ODP child is created from a pagefault
+work queue and is not guaranteed to have a mmget().
+
+Call mmget() around this registration and abort faulting if the MM has
+gone to exit_mmap().
+
+Before the patch below the notifier was registered when the implicit ODP
+parent was created, so there was no chance to register a notifier outside
+of current.
+
+Fixes: c571feca2dc9 ("RDMA/odp: use mmu_notifier_get/put for 'struct ib_ucontext_per_mm'")
+Link: https://lore.kernel.org/r/20200227114118.94736-1-leon@kernel.org
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
 Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/core/iwcm.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/infiniband/core/umem_odp.c |   24 +++++++++++++++++++-----
+ 1 file changed, 19 insertions(+), 5 deletions(-)
 
---- a/drivers/infiniband/core/iwcm.c
-+++ b/drivers/infiniband/core/iwcm.c
-@@ -159,8 +159,10 @@ static void dealloc_work_entries(struct
- {
- 	struct list_head *e, *tmp;
+--- a/drivers/infiniband/core/umem_odp.c
++++ b/drivers/infiniband/core/umem_odp.c
+@@ -187,14 +187,28 @@ ib_umem_odp_alloc_child(struct ib_umem_o
+ 	odp_data->page_shift = PAGE_SHIFT;
+ 	odp_data->notifier.ops = ops;
  
--	list_for_each_safe(e, tmp, &cm_id_priv->work_free_list)
-+	list_for_each_safe(e, tmp, &cm_id_priv->work_free_list) {
-+		list_del(e);
- 		kfree(list_entry(e, struct iwcm_work, free_list));
++	/*
++	 * A mmget must be held when registering a notifier, the owming_mm only
++	 * has a mm_grab at this point.
++	 */
++	if (!mmget_not_zero(umem->owning_mm)) {
++		ret = -EFAULT;
++		goto out_free;
 +	}
++
+ 	odp_data->tgid = get_pid(root->tgid);
+ 	ret = ib_init_umem_odp(odp_data, ops);
+-	if (ret) {
+-		put_pid(odp_data->tgid);
+-		kfree(odp_data);
+-		return ERR_PTR(ret);
+-	}
++	if (ret)
++		goto out_tgid;
++	mmput(umem->owning_mm);
+ 	return odp_data;
++
++out_tgid:
++	put_pid(odp_data->tgid);
++	mmput(umem->owning_mm);
++out_free:
++	kfree(odp_data);
++	return ERR_PTR(ret);
  }
+ EXPORT_SYMBOL(ib_umem_odp_alloc_child);
  
- static int alloc_work_entries(struct iwcm_id_private *cm_id_priv, int count)
 
 
