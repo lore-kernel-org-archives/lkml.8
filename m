@@ -2,125 +2,85 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5BFAC10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 23:56:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6529BC18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 23:56:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60D5321D56
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 23:56:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F5E1222C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 23:56:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="dm4Jj9bL"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="vyVom9i2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727823AbgCJX4U (ORCPT
+        id S1727860AbgCJX43 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 19:56:20 -0400
-Received: from mail.efficios.com ([167.114.26.124]:39838 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726380AbgCJX4T (ORCPT
+        Tue, 10 Mar 2020 19:56:29 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:59679 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726380AbgCJX43 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 19:56:19 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id EF79D2749C3;
-        Tue, 10 Mar 2020 19:56:17 -0400 (EDT)
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id zw2gTWDpFAZg; Tue, 10 Mar 2020 19:56:17 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 9FE2D274D01;
-        Tue, 10 Mar 2020 19:56:17 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 9FE2D274D01
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1583884577;
-        bh=5+o2q81iJKpSXYqIrAAN4cqWXccpMlM3thCTsGSomhs=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=dm4Jj9bLxop/lUZuzUYILSJ11X3sSAP1dTymiJ6EJ9KR+7a0k8ZdqsuxmxqiXBRa3
-         ZwiP7EaRX51bdru9DQ074862cYooHoy6Llv16on4vSZugTW1l46m/QpK0XxMhF14T7
-         q2F029bwMk/XKlXM3Mh9nR44d49cm3HdeKOvcAgsvj1Yf0KsOX40WQjhdSqQYKYgLC
-         2h3vtxB9ExATO15vjlfoUd63Qj8WT1mEYpdaYI/mMuFguW+I6E8rInh8x9Qr/frUvv
-         yFVXTY2ycwhwNnNPvOViFTYRGXMevQ7U6CS89/6ZgMXVQprq1LUH5WrUrUWQp1a9wk
-         iLM5WeuR9WrAQ==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id 2VIwxeN5l-wn; Tue, 10 Mar 2020 19:56:17 -0400 (EDT)
-Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
-        by mail.efficios.com (Postfix) with ESMTP id 92185274AAB;
-        Tue, 10 Mar 2020 19:56:17 -0400 (EDT)
-Date:   Tue, 10 Mar 2020 19:56:17 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     paulmck <paulmck@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        rostedt <rostedt@goodmis.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "Joel Fernandes, Google" <joel@joelfernandes.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        fweisbec <fweisbec@gmail.com>, Ingo Molnar <mingo@kernel.org>
-Message-ID: <1425816045.24643.1583884577489.JavaMail.zimbra@efficios.com>
-In-Reply-To: <20200310235219.GL2935@paulmck-ThinkPad-P72>
-References: <20200310202054.5880-1-mathieu.desnoyers@efficios.com> <20200310205319.GH2935@paulmck-ThinkPad-P72> <561555431.24628.1583883873699.JavaMail.zimbra@efficios.com> <20200310235219.GL2935@paulmck-ThinkPad-P72>
-Subject: Re: [PATCH] tracepoint: rcuidle: use rcu_is_watching() and tree-rcu
+        Tue, 10 Mar 2020 19:56:29 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 6EF7D891AD;
+        Wed, 11 Mar 2020 12:56:25 +1300 (NZDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1583884585;
+        bh=i6spy7H0mnXxSX3RJVNtY/uVM5eELBp7aQ01gNjYRBA=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To;
+        b=vyVom9i2s5Hx6a8/yeIyu80h7zFZuCeObPvCLW0IQy5HQ5qf8KzfUcgZJbSo1sHt5
+         76k5uwRIa/GrO8y7si75oSiILH5cRnRo2+9eQdpXTBouOHURrk/V5SCS8U33i1CQAR
+         Bva4SXT9J/bjbWKMC/u++fCOI8lEWQCkfRUr23Ep2f+owo2Jhvfed5SjRR8qywNos5
+         hsFDKkdaU+qMIt32RPy39hfNyTq/nO3uKrMDHQQ9/nixP+jX/ZgWLi0zqJwytXJ3Os
+         3Cy9aJrDN/drOS8fzJr3bbdIzI3KHCPAvE7DdkYZldOmQB9TL34kUKAJZEHxJb17Jo
+         shd2tNXqKJX9w==
+Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5e68292a0000>; Wed, 11 Mar 2020 12:56:26 +1300
+Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8)
+ by svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with
+ Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 11 Mar 2020 12:56:25 +1300
+Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
+ svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
+ 15.00.1497.006; Wed, 11 Mar 2020 12:56:25 +1300
+From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+To:     "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>
+CC:     "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1 0/2] rtc: update ds1388 support
+Thread-Topic: [PATCH v1 0/2] rtc: update ds1388 support
+Thread-Index: AQHV3WU+H1/zGGoZhUuiU3BVBeOj3ahB2kkA
+Date:   Tue, 10 Mar 2020 23:56:24 +0000
+Message-ID: <7a6941c28e4ccf8711b9511902c44c78d93caca0.camel@alliedtelesis.co.nz>
+References: <20200207031812.14424-1-chris.packham@alliedtelesis.co.nz>
+In-Reply-To: <20200207031812.14424-1-chris.packham@alliedtelesis.co.nz>
+Accept-Language: en-NZ, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [2001:df5:b000:22:65a9:299a:2e71:839f]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <8478A953076ED943AFE8BE15B99E5ACD@atlnz.lc>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.26.124]
-X-Mailer: Zimbra 8.8.15_GA_3901 (ZimbraWebClient - FF73 (Linux)/8.8.15_GA_3895)
-Thread-Topic: tracepoint: rcuidle: use rcu_is_watching() and tree-rcu
-Thread-Index: +rJk+uGnKqEfUuJ3zJM3z8A55XlNow==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Mar 10, 2020, at 7:52 PM, paulmck paulmck@kernel.org wrote:
-
-> On Tue, Mar 10, 2020 at 07:44:33PM -0400, Mathieu Desnoyers wrote:
->> ----- On Mar 10, 2020, at 4:53 PM, paulmck paulmck@kernel.org wrote:
->> 
->> > On Tue, Mar 10, 2020 at 04:20:54PM -0400, Mathieu Desnoyers wrote:
->> >> commit e6753f23d961 ("tracepoint: Make rcuidle tracepoint callers use
->> >> SRCU") aimed at improving performance of rcuidle tracepoints by using
->> >> SRCU rather than temporarily enabling tree-rcu every time.
->> >> 
->> >> commit 865e63b04e9b ("tracing: Add back in rcu_irq_enter/exit_irqson()
->> >> for rcuidle tracepoints") adds back the high-overhead enabling of
->> >> tree-rcu because perf expects RCU to be watching when called from
->> >> rcuidle tracepoints.
->> >> 
->> >> It turns out that by using "rcu_is_watching()" and conditionally
->> >> calling the high-overhead rcu_irq_enter/exit_irqson(), the original
->> >> motivation for using SRCU in the first place disappears.
->> > 
->> > Adding Alexei on CC for his thoughts, given that these were his
->> > benchmarks.  I believe that he also has additional use cases.
->> 
->> Good point! Sorry I forgot to add Alexei to my CC list for that
->> patch.
->> 
->> > But given the use cases you describe, this seems plausible.  This does
->> > mean that tracepoints cannot be attached to the CPU-hotplug code that
->> > runs on the incoming/outgoing CPU early/late in that process, though
->> > that might be OK.
->> 
->> Do you mean standard tracepoints or rcuidle tracepoints ?
->> 
->> Are there any such tracepoints early/late in the cpu hotplug code today ?
-> 
-> I have no idea.  You would know better than I.  However, I would expect
-> that the same common-code issue that applies to exception-entry/exit
-> code might also apply to the CPU hotplug code.
-
-I would also expect early/late CPU hotplug states to fall into the same
-category of "low-level entry/exit" code which Thomas would like to hide
-from instrumentation.
-
-Thanks,
-
-Mathieu
-
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+SGkgQWxsLA0KDQpPbiBGcmksIDIwMjAtMDItMDcgYXQgMTY6MTggKzEzMDAsIENocmlzIFBhY2to
+YW0gd3JvdGU6DQo+IFRoZSBkczEzODggYXMgYSBzbGlnaHRseSBkaWZmZXJlbnQgcmVnaXN0ZXIg
+bGF5b3V0IGFuZCB3YXRjaGRvZyB0aW1lcg0KPiBjYXBhYmlsaXRpZXMuIEFkZCBzdXBwb3J0IGZv
+ciBib3RoIG9mIHRoZXNlLg0KPiANCj4gQ2hyaXMgUGFja2hhbSAoMik6DQo+ICAgcnRjOiBkczEz
+MDc6IGhhbmRsZSBvc2NpbGxhdG9yIGZhaWx1cmUgZmxhZ3MgZm9yIGRzMTM4OCB2YXJpYW50DQo+
+ICAgcnRjOiBkczEzMDc6IGFkZCBzdXBwb3J0IGZvciB3YXRjaGRvZyB0aW1lciBvbiBkczEzODgN
+Cj4gDQo+ICBkcml2ZXJzL3J0Yy9ydGMtZHMxMzA3LmMgfCAxMTQgKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrDQo+ICAxIGZpbGUgY2hhbmdlZCwgMTE0IGluc2VydGlvbnMo
+KykNCj4gDQoNCkJlZW4gYSB3aGlsZSB3aXRoIG5vIHJlc3BvbnNlIG9uIHRoaXMuIEZyaWVuZGx5
+IHBpbmcuDQo=
