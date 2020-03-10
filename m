@@ -2,457 +2,93 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 255A1C10F25
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 02:51:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F003C10F25
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 02:57:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E09EC24673
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 02:51:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43F532467D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 02:57:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NFm7LQGS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bjzmyPcG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726921AbgCJCvY (ORCPT
+        id S1726695AbgCJC5l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 22:51:24 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:53589 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726739AbgCJCvW (ORCPT
+        Mon, 9 Mar 2020 22:57:41 -0400
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:36893 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725845AbgCJC5k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 22:51:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583808681;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:in-reply-to:in-reply-to:references:references;
-        bh=GPG9hcRKDbFlWDK+JQW0CXbqpOizxn+42CHZXwqXrQg=;
-        b=NFm7LQGSDTffhT0OJPplHwgM4WxzeZbfGO8JIJE1u8WCqhGENK5Ev9EA37S8JWXbhq8Wb9
-        bie1b/wZ0VrhkaaLlL2hAtrYltvZ3eZEWffSLH4VseUhkvyH/Lly/vKYui/SxhDV/9wUGg
-        PaHnFKVqXANcTnnrq7/QdjDrL0CLpmk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-158-lmAYqZe-PF27PvJCwKyN1g-1; Mon, 09 Mar 2020 22:51:17 -0400
-X-MC-Unique: lmAYqZe-PF27PvJCwKyN1g-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 34D95477;
-        Tue, 10 Mar 2020 02:51:16 +0000 (UTC)
-Received: from localhost.localdomain (ovpn-116-124.gru2.redhat.com [10.97.116.124])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 22C165C1C3;
-        Tue, 10 Mar 2020 02:51:11 +0000 (UTC)
-From:   Wainer dos Santos Moschetta <wainersm@redhat.com>
-To:     kvm@vger.kernel.org, pbonzini@redhat.com
-Cc:     linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        sean.j.christopherson@intel.com, shuah@kernel.org,
-        tglx@linutronix.de, thuth@redhat.com
-Subject: [PATCH v2 2/2] selftests: kvm: Uses TEST_FAIL in tests/utilities
-Date:   Mon,  9 Mar 2020 23:50:59 -0300
-Message-Id: <20200310025059.9301-3-wainersm@redhat.com>
-In-Reply-To: <20200310025059.9301-1-wainersm@redhat.com>
-References: <20200310025059.9301-1-wainersm@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+        Mon, 9 Mar 2020 22:57:40 -0400
+Received: by mail-pj1-f65.google.com with SMTP id ca13so800309pjb.2;
+        Mon, 09 Mar 2020 19:57:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=2M6O5OzI+IU6v1/jeWA3Iv6zMngQ6Hoh4arHeMtChQg=;
+        b=bjzmyPcG1cW+j8xHUhHoI/M2wBgQIKJz8qFuFz7kW/QIfEM83liwFjsus37E3VcopA
+         bRGsFrCUQRCao2KdQI7jgWYfRjtNI75EyFRl2zkk0bGZcMcABZnux3C8LFpUHNQvn8+G
+         qapx3IbWlz5Woo8+6gyMrKiYoi4CtdvK5mO4VxG5e16me0vCa7c1sRsy/MAE+HIzmYwj
+         2Z6xPpLgI9UjUNqkLvO29vt0AMJMtYO15H1lwBi74OgBQsTQ23265+NiMtaVODP5JTM7
+         Ov5JggDIK7ZnOnT/7W3xeevCclwvc+d3qLEIrP2nTQaC4UUbt2KUY9ghXjqaW+CCsfmo
+         uBMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2M6O5OzI+IU6v1/jeWA3Iv6zMngQ6Hoh4arHeMtChQg=;
+        b=R4qznNQ6jcm3upOzbQ/BmjaeIgfg6XGuOv1cFV0nnc43XBioOznGvLX5QyLQ1MDgE2
+         8iRbI62GqOkoTQ6Gg717MT+GyCnLbzVONpnx9N0BpVdalh1clxL76Si/vhgn757JeAAd
+         B0KsMB/zWCoZIBgZCc9ALr8nLX+nlXa+jJTEmBz+B9Q7r44DwYomg9L1jImy6vO2I5XO
+         zIafujDs+cn9Rb5FMnIMReJ2lXnh52EDL/TIlRSgioLLfOuvWTv1NMZJ+CaTn5fV5YdA
+         grCzTgyixM4q0PkUCIvv3fQG/liADln3jQYQH7DNHLyg/ruNBVn+WehE17exG/qtqYEV
+         vHzA==
+X-Gm-Message-State: ANhLgQ2Z26sTnCeMsIhKrotYn/VuZw3oz8d/7e+TnCqN4DqBZAT6ngJP
+        nLnkmWPv9fODGyboynid3Ms=
+X-Google-Smtp-Source: ADFU+vsCSStYPD9DkpF+XOPXs3X2QtTr9kOUYFeHggNhd8RoSiKV7NW2rT5nDpIuVlf7Ohcvla1a9g==
+X-Received: by 2002:a17:90a:3a8f:: with SMTP id b15mr635022pjc.178.1583809059836;
+        Mon, 09 Mar 2020 19:57:39 -0700 (PDT)
+Received: from localhost (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
+        by smtp.gmail.com with ESMTPSA id r64sm826600pjb.15.2020.03.09.19.57.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Mar 2020 19:57:39 -0700 (PDT)
+Date:   Mon, 9 Mar 2020 19:57:37 -0700
+From:   Richard Cochran <richardcochran@gmail.com>
+To:     Andrea Righi <andrea.righi@canonical.com>
+Cc:     Vladis Dronov <vdronov@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] ptp: free ptp clock properly
+Message-ID: <20200310025737.GB1679@localhost>
+References: <20200309172238.GJ267906@xps-13>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200309172238.GJ267906@xps-13>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Changed all tests and utilities to use TEST_FAIL macro
-instead of TEST_ASSERT(false,...).
+On Mon, Mar 09, 2020 at 06:22:38PM +0100, Andrea Righi wrote:
+> There is a bug in ptp_clock_unregister() where pps_unregister_source()
+> can free up resources needed by posix_clock_unregister() to properly
+> destroy a related sysfs device.
 
-Signed-off-by: Wainer dos Santos Moschetta <wainersm@redhat.com>
----
- tools/testing/selftests/kvm/dirty_log_test.c  |  7 +++----
- .../selftests/kvm/lib/aarch64/processor.c     | 17 +++++++--------
- .../testing/selftests/kvm/lib/aarch64/ucall.c |  2 +-
- tools/testing/selftests/kvm/lib/io.c          | 12 +++++------
- tools/testing/selftests/kvm/lib/kvm_util.c    | 21 ++++++++-----------
- .../selftests/kvm/lib/x86_64/processor.c      |  5 ++---
- .../kvm/x86_64/cr4_cpuid_sync_test.c          |  4 ++--
- .../testing/selftests/kvm/x86_64/evmcs_test.c |  6 +++---
- .../testing/selftests/kvm/x86_64/state_test.c |  6 +++---
- .../selftests/kvm/x86_64/svm_vmcall_test.c    |  6 ++----
- .../kvm/x86_64/vmx_close_while_nested_test.c  |  4 ++--
- .../selftests/kvm/x86_64/vmx_dirty_log_test.c |  6 +++---
- .../kvm/x86_64/vmx_tsc_adjust_test.c          |  4 ++--
- 13 files changed, 46 insertions(+), 54 deletions(-)
+This text is inadequate.  It does not identify the problem.  What
+resources?  Which related device?
 
-diff --git a/tools/testing/selftests/kvm/dirty_log_test.c b/tools/testing/selftests/kvm/dirty_log_test.c
-index 5614222a6628..137c1cfec2cc 100644
---- a/tools/testing/selftests/kvm/dirty_log_test.c
-+++ b/tools/testing/selftests/kvm/dirty_log_test.c
-@@ -166,10 +166,9 @@ static void *vcpu_worker(void *data)
- 			pages_count += TEST_PAGES_PER_LOOP;
- 			generate_random_array(guest_array, TEST_PAGES_PER_LOOP);
- 		} else {
--			TEST_ASSERT(false,
--				    "Invalid guest sync status: "
--				    "exit_reason=%s\n",
--				    exit_reason_str(run->exit_reason));
-+			TEST_FAIL("Invalid guest sync status: "
-+				  "exit_reason=%s\n",
-+				  exit_reason_str(run->exit_reason));
- 		}
- 	}
- 
-diff --git a/tools/testing/selftests/kvm/lib/aarch64/processor.c b/tools/testing/selftests/kvm/lib/aarch64/processor.c
-index 86036a59a668..f98c0444ee4f 100644
---- a/tools/testing/selftests/kvm/lib/aarch64/processor.c
-+++ b/tools/testing/selftests/kvm/lib/aarch64/processor.c
-@@ -130,7 +130,7 @@ void _virt_pg_map(struct kvm_vm *vm, uint64_t vaddr, uint64_t paddr,
- 		ptep = addr_gpa2hva(vm, pte_addr(vm, *ptep)) + pte_index(vm, vaddr) * 8;
- 		break;
- 	default:
--		TEST_ASSERT(false, "Page table levels must be 2, 3, or 4");
-+		TEST_FAIL("Page table levels must be 2, 3, or 4");
- 	}
- 
- 	*ptep = paddr | 3;
-@@ -173,14 +173,13 @@ vm_paddr_t addr_gva2gpa(struct kvm_vm *vm, vm_vaddr_t gva)
- 			goto unmapped_gva;
- 		break;
- 	default:
--		TEST_ASSERT(false, "Page table levels must be 2, 3, or 4");
-+		TEST_FAIL("Page table levels must be 2, 3, or 4");
- 	}
- 
- 	return pte_addr(vm, *ptep) + (gva & (vm->page_size - 1));
- 
- unmapped_gva:
--	TEST_ASSERT(false, "No mapping for vm virtual address, "
--		    "gva: 0x%lx", gva);
-+	TEST_FAIL("No mapping for vm virtual address, gva: 0x%lx", gva);
- 	exit(1);
- }
- 
-@@ -262,11 +261,11 @@ void aarch64_vcpu_setup(struct kvm_vm *vm, int vcpuid, struct kvm_vcpu_init *ini
- 
- 	switch (vm->mode) {
- 	case VM_MODE_P52V48_4K:
--		TEST_ASSERT(false, "AArch64 does not support 4K sized pages "
--				   "with 52-bit physical address ranges");
-+		TEST_FAIL("AArch64 does not support 4K sized pages "
-+			  "with 52-bit physical address ranges");
- 	case VM_MODE_PXXV48_4K:
--		TEST_ASSERT(false, "AArch64 does not support 4K sized pages "
--				   "with ANY-bit physical address ranges");
-+		TEST_FAIL("AArch64 does not support 4K sized pages "
-+			  "with ANY-bit physical address ranges");
- 	case VM_MODE_P52V48_64K:
- 		tcr_el1 |= 1ul << 14; /* TG0 = 64KB */
- 		tcr_el1 |= 6ul << 32; /* IPS = 52 bits */
-@@ -288,7 +287,7 @@ void aarch64_vcpu_setup(struct kvm_vm *vm, int vcpuid, struct kvm_vcpu_init *ini
- 		tcr_el1 |= 2ul << 32; /* IPS = 40 bits */
- 		break;
- 	default:
--		TEST_ASSERT(false, "Unknown guest mode, mode: 0x%x", vm->mode);
-+		TEST_FAIL("Unknown guest mode, mode: 0x%x", vm->mode);
- 	}
- 
- 	sctlr_el1 |= (1 << 0) | (1 << 2) | (1 << 12) /* M | C | I */;
-diff --git a/tools/testing/selftests/kvm/lib/aarch64/ucall.c b/tools/testing/selftests/kvm/lib/aarch64/ucall.c
-index 6cd91970fbad..c8e0ec20d3bf 100644
---- a/tools/testing/selftests/kvm/lib/aarch64/ucall.c
-+++ b/tools/testing/selftests/kvm/lib/aarch64/ucall.c
-@@ -62,7 +62,7 @@ void ucall_init(struct kvm_vm *vm, void *arg)
- 		if (ucall_mmio_init(vm, start + offset))
- 			return;
- 	}
--	TEST_ASSERT(false, "Can't find a ucall mmio address");
-+	TEST_FAIL("Can't find a ucall mmio address");
- }
- 
- void ucall_uninit(struct kvm_vm *vm)
-diff --git a/tools/testing/selftests/kvm/lib/io.c b/tools/testing/selftests/kvm/lib/io.c
-index eaf351cc7e7f..fedb2a741f0b 100644
---- a/tools/testing/selftests/kvm/lib/io.c
-+++ b/tools/testing/selftests/kvm/lib/io.c
-@@ -61,9 +61,9 @@ ssize_t test_write(int fd, const void *buf, size_t count)
- 			continue;
- 
- 		case 0:
--			TEST_ASSERT(false, "Unexpected EOF,\n"
--				    "  rc: %zi num_written: %zi num_left: %zu",
--				    rc, num_written, num_left);
-+			TEST_FAIL("Unexpected EOF,\n"
-+				  "  rc: %zi num_written: %zi num_left: %zu",
-+				  rc, num_written, num_left);
- 			break;
- 
- 		default:
-@@ -138,9 +138,9 @@ ssize_t test_read(int fd, void *buf, size_t count)
- 			break;
- 
- 		case 0:
--			TEST_ASSERT(false, "Unexpected EOF,\n"
--				    "  rc: %zi num_read: %zi num_left: %zu",
--				    rc, num_read, num_left);
-+			TEST_FAIL("Unexpected EOF,\n"
-+				  "   rc: %zi num_read: %zi num_left: %zu",
-+				  rc, num_read, num_left);
- 			break;
- 
- 		default:
-diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
-index a6dd0401eb50..b71a1e9b6a18 100644
---- a/tools/testing/selftests/kvm/lib/kvm_util.c
-+++ b/tools/testing/selftests/kvm/lib/kvm_util.c
-@@ -199,12 +199,11 @@ struct kvm_vm *_vm_create(enum vm_guest_mode mode, uint64_t phy_pages, int perm)
- 		DEBUG("Guest physical address width detected: %d\n",
- 		      vm->pa_bits);
- #else
--		TEST_ASSERT(false, "VM_MODE_PXXV48_4K not supported on "
--			    "non-x86 platforms");
-+		TEST_FAIL("VM_MODE_PXXV48_4K not supported on non-x86 platforms");
- #endif
- 		break;
- 	default:
--		TEST_ASSERT(false, "Unknown guest mode, mode: 0x%x", mode);
-+		TEST_FAIL("Unknown guest mode, mode: 0x%x", mode);
- 	}
- 
- #ifdef __aarch64__
-@@ -600,7 +599,7 @@ void vm_userspace_mem_region_add(struct kvm_vm *vm,
- 	region = (struct userspace_mem_region *) userspace_mem_region_find(
- 		vm, guest_paddr, (guest_paddr + npages * vm->page_size) - 1);
- 	if (region != NULL)
--		TEST_ASSERT(false, "overlapping userspace_mem_region already "
-+		TEST_FAIL("overlapping userspace_mem_region already "
- 			"exists\n"
- 			"  requested guest_paddr: 0x%lx npages: 0x%lx "
- 			"page_size: 0x%x\n"
-@@ -616,7 +615,7 @@ void vm_userspace_mem_region_add(struct kvm_vm *vm,
- 			break;
- 	}
- 	if (region != NULL)
--		TEST_ASSERT(false, "A mem region with the requested slot "
-+		TEST_FAIL("A mem region with the requested slot "
- 			"already exists.\n"
- 			"  requested slot: %u paddr: 0x%lx npages: 0x%lx\n"
- 			"  existing slot: %u paddr: 0x%lx size: 0x%lx",
-@@ -720,7 +719,7 @@ memslot2region(struct kvm_vm *vm, uint32_t memslot)
- 			"  requested slot: %u\n", memslot);
- 		fputs("---- vm dump ----\n", stderr);
- 		vm_dump(stderr, vm, 2);
--		TEST_ASSERT(false, "Mem region not found");
-+		TEST_FAIL("Mem region not found");
- 	}
- 
- 	return region;
-@@ -808,7 +807,7 @@ void vm_vcpu_add(struct kvm_vm *vm, uint32_t vcpuid)
- 	/* Confirm a vcpu with the specified id doesn't already exist. */
- 	vcpu = vcpu_find(vm, vcpuid);
- 	if (vcpu != NULL)
--		TEST_ASSERT(false, "vcpu with the specified id "
-+		TEST_FAIL("vcpu with the specified id "
- 			"already exists,\n"
- 			"  requested vcpuid: %u\n"
- 			"  existing vcpuid: %u state: %p",
-@@ -901,8 +900,7 @@ static vm_vaddr_t vm_vaddr_unused_gap(struct kvm_vm *vm, size_t sz,
- 	} while (pgidx_start != 0);
- 
- no_va_found:
--	TEST_ASSERT(false, "No vaddr of specified pages available, "
--		"pages: 0x%lx", pages);
-+	TEST_FAIL("No vaddr of specified pages available, pages: 0x%lx", pages);
- 
- 	/* NOT REACHED */
- 	return -1;
-@@ -1037,7 +1035,7 @@ void *addr_gpa2hva(struct kvm_vm *vm, vm_paddr_t gpa)
- 				+ (gpa - region->region.guest_phys_addr));
- 	}
- 
--	TEST_ASSERT(false, "No vm physical memory at 0x%lx", gpa);
-+	TEST_FAIL("No vm physical memory at 0x%lx", gpa);
- 	return NULL;
- }
- 
-@@ -1071,8 +1069,7 @@ vm_paddr_t addr_hva2gpa(struct kvm_vm *vm, void *hva)
- 				+ (hva - (uintptr_t) region->host_mem));
- 	}
- 
--	TEST_ASSERT(false, "No mapping to a guest physical address, "
--		"hva: %p", hva);
-+	TEST_FAIL("No mapping to a guest physical address, hva: %p", hva);
- 	return -1;
- }
- 
-diff --git a/tools/testing/selftests/kvm/lib/x86_64/processor.c b/tools/testing/selftests/kvm/lib/x86_64/processor.c
-index 683d3bdb8f6a..66fbc8aee8dc 100644
---- a/tools/testing/selftests/kvm/lib/x86_64/processor.c
-+++ b/tools/testing/selftests/kvm/lib/x86_64/processor.c
-@@ -576,8 +576,7 @@ vm_paddr_t addr_gva2gpa(struct kvm_vm *vm, vm_vaddr_t gva)
- 	return (pte[index[0]].address * vm->page_size) + (gva & 0xfffu);
- 
- unmapped_gva:
--	TEST_ASSERT(false, "No mapping for vm virtual address, "
--		    "gva: 0x%lx", gva);
-+	TEST_FAIL("No mapping for vm virtual address, gva: 0x%lx", gva);
- 	exit(EXIT_FAILURE);
- }
- 
-@@ -634,7 +633,7 @@ static void vcpu_setup(struct kvm_vm *vm, int vcpuid, int pgd_memslot, int gdt_m
- 		break;
- 
- 	default:
--		TEST_ASSERT(false, "Unknown guest mode, mode: 0x%x", vm->mode);
-+		TEST_FAIL("Unknown guest mode, mode: 0x%x", vm->mode);
- 	}
- 
- 	sregs.cr3 = vm->pgd;
-diff --git a/tools/testing/selftests/kvm/x86_64/cr4_cpuid_sync_test.c b/tools/testing/selftests/kvm/x86_64/cr4_cpuid_sync_test.c
-index 63cc9c3f5ab6..501d6217b9ed 100644
---- a/tools/testing/selftests/kvm/x86_64/cr4_cpuid_sync_test.c
-+++ b/tools/testing/selftests/kvm/x86_64/cr4_cpuid_sync_test.c
-@@ -101,12 +101,12 @@ int main(int argc, char *argv[])
- 			vcpu_sregs_set(vm, VCPU_ID, &sregs);
- 			break;
- 		case UCALL_ABORT:
--			TEST_ASSERT(false, "Guest CR4 bit (OSXSAVE) unsynchronized with CPUID bit.");
-+			TEST_FAIL("Guest CR4 bit (OSXSAVE) unsynchronized with CPUID bit.");
- 			break;
- 		case UCALL_DONE:
- 			goto done;
- 		default:
--			TEST_ASSERT(false, "Unknown ucall 0x%x.", uc.cmd);
-+			TEST_FAIL("Unknown ucall 0x%x.", uc.cmd);
- 		}
- 	}
- 
-diff --git a/tools/testing/selftests/kvm/x86_64/evmcs_test.c b/tools/testing/selftests/kvm/x86_64/evmcs_test.c
-index 92915e6408e7..a7dc3da62a65 100644
---- a/tools/testing/selftests/kvm/x86_64/evmcs_test.c
-+++ b/tools/testing/selftests/kvm/x86_64/evmcs_test.c
-@@ -109,15 +109,15 @@ int main(int argc, char *argv[])
- 
- 		switch (get_ucall(vm, VCPU_ID, &uc)) {
- 		case UCALL_ABORT:
--			TEST_ASSERT(false, "%s at %s:%d", (const char *)uc.args[0],
--				    __FILE__, uc.args[1]);
-+			TEST_FAIL("%s at %s:%d", (const char *)uc.args[0],
-+				  __FILE__, uc.args[1]);
- 			/* NOT REACHED */
- 		case UCALL_SYNC:
- 			break;
- 		case UCALL_DONE:
- 			goto done;
- 		default:
--			TEST_ASSERT(false, "Unknown ucall 0x%x.", uc.cmd);
-+			TEST_FAIL("Unknown ucall 0x%x.", uc.cmd);
- 		}
- 
- 		/* UCALL_SYNC is handled here.  */
-diff --git a/tools/testing/selftests/kvm/x86_64/state_test.c b/tools/testing/selftests/kvm/x86_64/state_test.c
-index 3ab5ec3da9f4..810d51733f91 100644
---- a/tools/testing/selftests/kvm/x86_64/state_test.c
-+++ b/tools/testing/selftests/kvm/x86_64/state_test.c
-@@ -152,15 +152,15 @@ int main(int argc, char *argv[])
- 
- 		switch (get_ucall(vm, VCPU_ID, &uc)) {
- 		case UCALL_ABORT:
--			TEST_ASSERT(false, "%s at %s:%d", (const char *)uc.args[0],
--				    __FILE__, uc.args[1]);
-+			TEST_FAIL("%s at %s:%d", (const char *)uc.args[0],
-+				  __FILE__, uc.args[1]);
- 			/* NOT REACHED */
- 		case UCALL_SYNC:
- 			break;
- 		case UCALL_DONE:
- 			goto done;
- 		default:
--			TEST_ASSERT(false, "Unknown ucall 0x%x.", uc.cmd);
-+			TEST_FAIL("Unknown ucall 0x%x.", uc.cmd);
- 		}
- 
- 		/* UCALL_SYNC is handled here.  */
-diff --git a/tools/testing/selftests/kvm/x86_64/svm_vmcall_test.c b/tools/testing/selftests/kvm/x86_64/svm_vmcall_test.c
-index e280f68f6365..3b25dc9fe7cd 100644
---- a/tools/testing/selftests/kvm/x86_64/svm_vmcall_test.c
-+++ b/tools/testing/selftests/kvm/x86_64/svm_vmcall_test.c
-@@ -61,16 +61,14 @@ int main(int argc, char *argv[])
- 
- 		switch (get_ucall(vm, VCPU_ID, &uc)) {
- 		case UCALL_ABORT:
--			TEST_ASSERT(false, "%s",
--				    (const char *)uc.args[0]);
-+			TEST_FAIL("%s", (const char *)uc.args[0]);
- 			/* NOT REACHED */
- 		case UCALL_SYNC:
- 			break;
- 		case UCALL_DONE:
- 			goto done;
- 		default:
--			TEST_ASSERT(false,
--				    "Unknown ucall 0x%x.", uc.cmd);
-+			TEST_FAIL("Unknown ucall 0x%x.", uc.cmd);
- 		}
- 	}
- done:
-diff --git a/tools/testing/selftests/kvm/x86_64/vmx_close_while_nested_test.c b/tools/testing/selftests/kvm/x86_64/vmx_close_while_nested_test.c
-index 5dfb53546a26..965c2a6ed574 100644
---- a/tools/testing/selftests/kvm/x86_64/vmx_close_while_nested_test.c
-+++ b/tools/testing/selftests/kvm/x86_64/vmx_close_while_nested_test.c
-@@ -78,10 +78,10 @@ int main(int argc, char *argv[])
- 
- 		switch (get_ucall(vm, VCPU_ID, &uc)) {
- 		case UCALL_ABORT:
--			TEST_ASSERT(false, "%s", (const char *)uc.args[0]);
-+			TEST_FAIL("%s", (const char *)uc.args[0]);
- 			/* NOT REACHED */
- 		default:
--			TEST_ASSERT(false, "Unknown ucall 0x%x.", uc.cmd);
-+			TEST_FAIL("Unknown ucall 0x%x.", uc.cmd);
- 		}
- 	}
- }
-diff --git a/tools/testing/selftests/kvm/x86_64/vmx_dirty_log_test.c b/tools/testing/selftests/kvm/x86_64/vmx_dirty_log_test.c
-index a223a6401258..d664282d9047 100644
---- a/tools/testing/selftests/kvm/x86_64/vmx_dirty_log_test.c
-+++ b/tools/testing/selftests/kvm/x86_64/vmx_dirty_log_test.c
-@@ -126,8 +126,8 @@ int main(int argc, char *argv[])
- 
- 		switch (get_ucall(vm, VCPU_ID, &uc)) {
- 		case UCALL_ABORT:
--			TEST_ASSERT(false, "%s at %s:%d", (const char *)uc.args[0],
--				    __FILE__, uc.args[1]);
-+			TEST_FAIL("%s at %s:%d", (const char *)uc.args[0],
-+				  __FILE__, uc.args[1]);
- 			/* NOT REACHED */
- 		case UCALL_SYNC:
- 			/*
-@@ -152,7 +152,7 @@ int main(int argc, char *argv[])
- 			done = true;
- 			break;
- 		default:
--			TEST_ASSERT(false, "Unknown ucall 0x%x.", uc.cmd);
-+			TEST_FAIL("Unknown ucall 0x%x.", uc.cmd);
- 		}
- 	}
- }
-diff --git a/tools/testing/selftests/kvm/x86_64/vmx_tsc_adjust_test.c b/tools/testing/selftests/kvm/x86_64/vmx_tsc_adjust_test.c
-index 69e482a95c47..abaa5cf93186 100644
---- a/tools/testing/selftests/kvm/x86_64/vmx_tsc_adjust_test.c
-+++ b/tools/testing/selftests/kvm/x86_64/vmx_tsc_adjust_test.c
-@@ -150,7 +150,7 @@ int main(int argc, char *argv[])
- 
- 		switch (get_ucall(vm, VCPU_ID, &uc)) {
- 		case UCALL_ABORT:
--			TEST_ASSERT(false, "%s", (const char *)uc.args[0]);
-+			TEST_FAIL("%s", (const char *)uc.args[0]);
- 			/* NOT REACHED */
- 		case UCALL_SYNC:
- 			report(uc.args[1]);
-@@ -158,7 +158,7 @@ int main(int argc, char *argv[])
- 		case UCALL_DONE:
- 			goto done;
- 		default:
--			TEST_ASSERT(false, "Unknown ucall 0x%x.", uc.cmd);
-+			TEST_FAIL("Unknown ucall 0x%x.", uc.cmd);
- 		}
- 	}
- 
--- 
-2.17.2
+> Fix this by calling pps_unregister_source() in ptp_clock_release().
+
+This statement is redundant, as we can see that from the patch itself.
+Instead of saying WHAT the patch does, please explain WHY that fixes
+the issue (which, as I said, you still need to identify).
+
+Thanks,
+Richard
 
