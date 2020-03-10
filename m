@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AE35C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:09:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 950E5C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:09:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E5B02468D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:09:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B2BD20873
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:09:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583845782;
-	bh=QHH9ZDp6/gEjEOe3GhgF4+iH08VXpuPOLoiGZqInhJQ=;
+	s=default; t=1583845785;
+	bh=3Y1XYXfkWamaOXHpkOn5oCvQthVNR5JtEBNATDMRc5A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D1pZx9Lj1Pkpliwacb9gXQ4gUDCbCMA3YffBtuqWe/bK+Q57NrUJYWQuNqBJNDzIC
-	 4gsDW/ZRX0OoX0bv2xRm/g63/ukc77ry4xsMvwzw+OXBw8Wuku23AUdTBVTQVigrlg
-	 PPMMCyHUfiKBHT43rlw2vUk9hvhuVojsg9FLxOwI=
+	b=GySyFIdA7AIP8jaA2LOf65Z1Ee/HuxYIyTf6QcxWyfgLW/s1bNHyIbSFPsZ+Cr5Up
+	 qrUFH+cJr6hbPCZQoZ2mBS/EGE1L4zGlgcAPvK/sEoM3i1e8ZRd3CHNNNppnjsLYvP
+	 bRLVgQ0oVt6E0kyJvQ36HUeMyMsGMJ+4ULJtWPYM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731253AbgCJNJl (ORCPT
+        id S1730437AbgCJNJo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:09:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56786 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:09:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56858 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730570AbgCJNJi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:09:38 -0400
+        id S1730889AbgCJNJl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:09:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1BFD32468D;
-        Tue, 10 Mar 2020 13:09:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99FAC24698;
+        Tue, 10 Mar 2020 13:09:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845776;
-        bh=QHH9ZDp6/gEjEOe3GhgF4+iH08VXpuPOLoiGZqInhJQ=;
+        s=default; t=1583845779;
+        bh=3Y1XYXfkWamaOXHpkOn5oCvQthVNR5JtEBNATDMRc5A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=16EMCJNyly4Mu4zdzQk0HqomH0kV71FPZWQgnXzH+7LGA9YLuSXopr6fmaTIozG8x
-         DXyeSCsU98aX9QAG39hAS9XUgm1KGV8XD2PS9Tbl1egSzjcgo7pjAfMIIb4h3fANJ4
-         winY+srCJEGG9hUoLFYxmsxAPptB15Lqw0+1VEbo=
+        b=X/WcUSEDadsiAR6Z/L4seinA7HiNXAD/YDyn7LtSZXhszafaNesI45aWaLjX04iO6
+         oNohS40XVQogjc9aqASMZweVFcXHKvDJDSoqOkLr0X5igsEtx43TeNRVxsTW1UCavr
+         DmERGwb/YRZRlgAOMPcRjaHoECOxCQ3ynE6prTd0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
+        stable@vger.kernel.org, Jim Mattson <jmattson@google.com>,
+        Andrew Honig <ahonig@google.com>,
         Sean Christopherson <sean.j.christopherson@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
         Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.14 057/126] KVM: SVM: Override default MMIO mask if memory encryption is enabled
-Date:   Tue, 10 Mar 2020 13:41:18 +0100
-Message-Id: <20200310124207.819562318@linuxfoundation.org>
+Subject: [PATCH 4.14 058/126] KVM: Check for a bad hva before dropping into the ghc slow path
+Date:   Tue, 10 Mar 2020 13:41:19 +0100
+Message-Id: <20200310124207.872563697@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310124203.704193207@linuxfoundation.org>
 References: <20200310124203.704193207@linuxfoundation.org>
@@ -61,89 +61,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Lendacky <thomas.lendacky@amd.com>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-commit 52918ed5fcf05d97d257f4131e19479da18f5d16 upstream.
+commit fcfbc617547fc6d9552cb6c1c563b6a90ee98085 upstream.
 
-The KVM MMIO support uses bit 51 as the reserved bit to cause nested page
-faults when a guest performs MMIO. The AMD memory encryption support uses
-a CPUID function to define the encryption bit position. Given this, it is
-possible that these bits can conflict.
+When reading/writing using the guest/host cache, check for a bad hva
+before checking for a NULL memslot, which triggers the slow path for
+handing cross-page accesses.  Because the memslot is nullified on error
+by __kvm_gfn_to_hva_cache_init(), if the bad hva is encountered after
+crossing into a new page, then the kvm_{read,write}_guest() slow path
+could potentially write/access the first chunk prior to detecting the
+bad hva.
 
-Use svm_hardware_setup() to override the MMIO mask if memory encryption
-support is enabled. Various checks are performed to ensure that the mask
-is properly defined and rsvd_bits() is used to generate the new mask (as
-was done prior to the change that necessitated this patch).
+Arguably, performing a partial access is semantically correct from an
+architectural perspective, but that behavior is certainly not intended.
+In the original implementation, memslot was not explicitly nullified
+and therefore the partial access behavior varied based on whether the
+memslot itself was null, or if the hva was simply bad.  The current
+behavior was introduced as a seemingly unintentional side effect in
+commit f1b9dd5eb86c ("kvm: Disallow wraparound in
+kvm_gfn_to_hva_cache_init"), which justified the change with "since some
+callers don't check the return code from this function, it sit seems
+prudent to clear ghc->memslot in the event of an error".
 
-Fixes: 28a1f3ac1d0c ("kvm: x86: Set highest physical address bits in non-present/reserved SPTEs")
-Suggested-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+Regardless of intent, the partial access is dependent on _not_ checking
+the result of the cache initialization, which is arguably a bug in its
+own right, at best simply weird.
+
+Fixes: 8f964525a121 ("KVM: Allow cross page reads and writes from cached translations.")
+Cc: Jim Mattson <jmattson@google.com>
+Cc: Andrew Honig <ahonig@google.com>
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/svm.c |   43 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 43 insertions(+)
+ virt/kvm/kvm_main.c |   12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
---- a/arch/x86/kvm/svm.c
-+++ b/arch/x86/kvm/svm.c
-@@ -1088,6 +1088,47 @@ static int avic_ga_log_notifier(u32 ga_t
- 	return 0;
- }
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -2027,12 +2027,12 @@ int kvm_write_guest_offset_cached(struct
+ 	if (slots->generation != ghc->generation)
+ 		__kvm_gfn_to_hva_cache_init(slots, ghc, ghc->gpa, ghc->len);
  
-+/*
-+ * The default MMIO mask is a single bit (excluding the present bit),
-+ * which could conflict with the memory encryption bit. Check for
-+ * memory encryption support and override the default MMIO mask if
-+ * memory encryption is enabled.
-+ */
-+static __init void svm_adjust_mmio_mask(void)
-+{
-+	unsigned int enc_bit, mask_bit;
-+	u64 msr, mask;
-+
-+	/* If there is no memory encryption support, use existing mask */
-+	if (cpuid_eax(0x80000000) < 0x8000001f)
-+		return;
-+
-+	/* If memory encryption is not enabled, use existing mask */
-+	rdmsrl(MSR_K8_SYSCFG, msr);
-+	if (!(msr & MSR_K8_SYSCFG_MEM_ENCRYPT))
-+		return;
-+
-+	enc_bit = cpuid_ebx(0x8000001f) & 0x3f;
-+	mask_bit = boot_cpu_data.x86_phys_bits;
-+
-+	/* Increment the mask bit if it is the same as the encryption bit */
-+	if (enc_bit == mask_bit)
-+		mask_bit++;
-+
-+	/*
-+	 * If the mask bit location is below 52, then some bits above the
-+	 * physical addressing limit will always be reserved, so use the
-+	 * rsvd_bits() function to generate the mask. This mask, along with
-+	 * the present bit, will be used to generate a page fault with
-+	 * PFER.RSV = 1.
-+	 *
-+	 * If the mask bit location is 52 (or above), then clear the mask.
-+	 */
-+	mask = (mask_bit < 52) ? rsvd_bits(mask_bit, 51) | PT_PRESENT_MASK : 0;
-+
-+	kvm_mmu_set_mmio_spte_mask(mask, PT_WRITABLE_MASK | PT_USER_MASK);
-+}
-+
- static __init int svm_hardware_setup(void)
- {
- 	int cpu;
-@@ -1123,6 +1164,8 @@ static __init int svm_hardware_setup(voi
- 		kvm_enable_efer_bits(EFER_SVME | EFER_LMSLE);
- 	}
+-	if (unlikely(!ghc->memslot))
+-		return kvm_write_guest(kvm, gpa, data, len);
+-
+ 	if (kvm_is_error_hva(ghc->hva))
+ 		return -EFAULT;
  
-+	svm_adjust_mmio_mask();
++	if (unlikely(!ghc->memslot))
++		return kvm_write_guest(kvm, gpa, data, len);
 +
- 	for_each_possible_cpu(cpu) {
- 		r = svm_cpu_init(cpu);
- 		if (r)
+ 	r = __copy_to_user((void __user *)ghc->hva + offset, data, len);
+ 	if (r)
+ 		return -EFAULT;
+@@ -2060,12 +2060,12 @@ int kvm_read_guest_cached(struct kvm *kv
+ 	if (slots->generation != ghc->generation)
+ 		__kvm_gfn_to_hva_cache_init(slots, ghc, ghc->gpa, ghc->len);
+ 
+-	if (unlikely(!ghc->memslot))
+-		return kvm_read_guest(kvm, ghc->gpa, data, len);
+-
+ 	if (kvm_is_error_hva(ghc->hva))
+ 		return -EFAULT;
+ 
++	if (unlikely(!ghc->memslot))
++		return kvm_read_guest(kvm, ghc->gpa, data, len);
++
+ 	r = __copy_from_user(data, (void __user *)ghc->hva, len);
+ 	if (r)
+ 		return -EFAULT;
 
 
