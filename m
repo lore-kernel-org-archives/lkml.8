@@ -2,168 +2,144 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6F86C18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:02:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90853C10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:02:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EA3A21927
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:02:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CDEF21927
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:02:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uCeDL9bW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dP0qwPIo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727551AbgCJWCn (ORCPT
+        id S1727761AbgCJWCr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 18:02:43 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:42202 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726283AbgCJWCm (ORCPT
+        Tue, 10 Mar 2020 18:02:47 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:45737 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726283AbgCJWCp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 18:02:42 -0400
-Received: by mail-pl1-f195.google.com with SMTP id t3so66855plz.9;
-        Tue, 10 Mar 2020 15:02:42 -0700 (PDT)
+        Tue, 10 Mar 2020 18:02:45 -0400
+Received: by mail-ot1-f66.google.com with SMTP id f21so14750047otp.12;
+        Tue, 10 Mar 2020 15:02:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=fOenCzVCIEgQPm4jqYWG2XEfrH3DBsvydiPOY5tUcm8=;
-        b=uCeDL9bWgmqwec8o1mMKaXAe/NbGfA9opRoCTq8WH27+lDLXsqsjnlIZWHV39Z3Nwr
-         zBnAKbeRB2bs6Sj/gFWxjNGyEfm+xTDYEMG2tPI4RVNXcd+f9vmAA1B5dyG5lNzy8YQC
-         BOcIe2KY1MoLOCg+08eJBPSzgCcX0MK0ddnsxcMbPdfysaxrOSaPoNh30buBQRR0On+S
-         tX22/N9VenQs0IRjPjiLjQu+e4Nneim+1S1K1SxABMT2QWEoZ1/yVPDioxBe4DnWSPWF
-         8mSt3XinnUQ6W5OPCY/kSUVqXtvpy5T3SurorDUs2BIrhkvOAzyM3IWt+l9Vt6VmYU34
-         dq+w==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=SF/rLdHGOUkZmCUHks4hnv/hgG7mXzY0mjAu3eORSKc=;
+        b=dP0qwPIoqktkEhRgFZTVTTWxkcFRfYDGvzuin4BmCyx1dFeyQ0uOwyb4eBHicOUILm
+         DI3VMZq1rLcTrvMuznKSlRjP7zuiHhlLoneeAP2Ukbu89NsY5cjbW5zupm8KmYjnPOQC
+         PhyMikcYH7oAz4FvqHke97OV+X/SBipPp1vmICbL+MLCxrA9ighbLPrG6XKNtMJfpKKl
+         OSmo7GIymlx5q2EcDMB1TCAheYxf6xqD7Pwng4RkPs8Zy8Esc+4aTjqft250RJeGUwcz
+         VTG6cyYyRJg83R8lsAHOiWf8xK6gxrrkg9NP8zaiqd+XvIp5Gx+JaBnF6WdRX6NPXNaV
+         GR4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=fOenCzVCIEgQPm4jqYWG2XEfrH3DBsvydiPOY5tUcm8=;
-        b=f+V1/LA6Eg/rd7x7fUHXfqIGQ/Hugzufb4pH7T1mIqv8vKqIzjLuWA3PUKb9oIGVU1
-         guTo8jPIf3s/jS9PkQ1Z2TMWB4EH1MoYbWn2ajBsNIm8w1EXWFGbseo3VdmccQFYGb3C
-         hTj3TJg678zDmAVxbZAWVrCPPeJtfFHhkAkILKA/6o3GAgKPpkp/JV6KH3Wdh+DWYKoU
-         WZeSAFCWGYKbBPeS3ISKBwtfacAP2B/7RW3SWJw8AC8XwzVVPbmseyEjB/DSTah2FWjC
-         JFk8qDonrg/ms8/3H5up+Ztu7ESZ3247fA+D9dke3+QKpu3NdXl6cguuU5l2PCRSvDdg
-         yQWQ==
-X-Gm-Message-State: ANhLgQ0ByP7ojLIQR/8GNqT8LeWHRWqwWPtMzDBzDBHjyjX2tZcBy2QV
-        fUX+/RAQsS1LqMwitYrGLzViXWi0
-X-Google-Smtp-Source: ADFU+vuBeHBNtfds/ayoEQTCZree8v5V8/ZfRAEgs4YvwePItWhgAKnZ8+6+q+sXyBp/REn8e/l5/Q==
-X-Received: by 2002:a17:90b:2290:: with SMTP id kx16mr76203pjb.152.1583877761310;
-        Tue, 10 Mar 2020 15:02:41 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id x9sm23895673pfa.60.2020.03.10.15.02.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Mar 2020 15:02:40 -0700 (PDT)
-Subject: Re: [PATCH 5.4 000/167] 5.4.25-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-References: <20200310144113.973994620@linuxfoundation.org>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <7cb23142-9e68-a4a7-8b4d-25f5268e230e@roeck-us.net>
-Date:   Tue, 10 Mar 2020 15:02:39 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SF/rLdHGOUkZmCUHks4hnv/hgG7mXzY0mjAu3eORSKc=;
+        b=iXpcxP4ZtSotvmhH/6V4tv86MDBDMbyVRa/Ba1KXgGsOpqOnqGdreHTqHNeatAH6rq
+         bZ1kopUp8iVJZB4QAeRn8yH3sRz0pZsb8kOc/SYjnnzwlhZvS+MKdyAjoVdFAV5GfnfO
+         OsJ/O9/gB78doGEf4IbMgYvoLG2cV2pQR8MWVEqmtZLHZqs1tFztXJQTjAtXWuOwj2Dg
+         Q7P3TFes+TrYTsaAErv9oA2901HFn7bPb0QFK7500ARDAyWtRhU0gJFYRuziztj2qY+J
+         adoKVca45bvadmAoobycWjft+zsGMAb6vqHUqKJKt6hzESyhpoWr4hxgzv/fgp0xCLZK
+         9DpA==
+X-Gm-Message-State: ANhLgQ0YU7H26zFqEucBI5rcekY3iS+ECKQjEVp40FvfASAFGq5W1R4p
+        o/Mth7S576Sm87n4zYtg+6iypyPUK5gbz+Ryl7k=
+X-Google-Smtp-Source: ADFU+vueS+uiLnK7xdhsPHDa9dL2BYINp7cvAGX4mf8Z/DEw5HjuYJXCQGm60Z4IpnUSa5E1ExpmM2OF+ASb4BYIOrM=
+X-Received: by 2002:a9d:4702:: with SMTP id a2mr18202147otf.319.1583877763719;
+ Tue, 10 Mar 2020 15:02:43 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200310144113.973994620@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <00000000000034513e05a05cfc23@google.com> <CAM_iQpVgQ+Mc16CVds-ywp6YHEbwbGtJwqoQXBFbrMTOUZS0YQ@mail.gmail.com>
+ <635ab023-d180-7ddf-a280-78080040512c@gmail.com>
+In-Reply-To: <635ab023-d180-7ddf-a280-78080040512c@gmail.com>
+From:   Cong Wang <xiyou.wangcong@gmail.com>
+Date:   Tue, 10 Mar 2020 15:02:32 -0700
+Message-ID: <CAM_iQpUwkLeOtbxeQ6uPA6Zm6t2Xdm08rvKOX8yJ-UCckKq9Eg@mail.gmail.com>
+Subject: Re: KASAN: invalid-free in tcf_exts_destroy
+To:     Eric Dumazet <eric.dumazet@gmail.com>
+Cc:     syzbot <syzbot+dcc34d54d68ef7d2d53d@syzkaller.appspotmail.com>,
+        David Miller <davem@davemloft.net>,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        Jiri Pirko <jiri@resnulli.us>,
+        Jakub Kicinski <kuba@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/10/20 7:42 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.4.25 release.
-> There are 167 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Thu, 12 Mar 2020 14:40:27 +0000.
-> Anything received after that time might be too late.
-> 
+On Tue, Mar 10, 2020 at 1:36 PM Eric Dumazet <eric.dumazet@gmail.com> wrote:
+>
+>
+>
+> On 3/10/20 11:33 AM, Cong Wang wrote:
+> > On Sun, Mar 8, 2020 at 12:35 PM syzbot
+> > <syzbot+dcc34d54d68ef7d2d53d@syzkaller.appspotmail.com> wrote:
+> >>
+> >> Hello,
+> >>
+> >> syzbot found the following crash on:
+> >>
+> >> HEAD commit:    c2003765 Merge tag 'io_uring-5.6-2020-03-07' of git://git...
+> >> git tree:       upstream
+> >> console output: https://syzkaller.appspot.com/x/log.txt?x=10cd2ae3e00000
+> >> kernel config:  https://syzkaller.appspot.com/x/.config?x=4527d1e2fb19fd5c
+> >> dashboard link: https://syzkaller.appspot.com/bug?extid=dcc34d54d68ef7d2d53d
+> >> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> >> userspace arch: i386
+> >> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1561b01de00000
+> >> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15aad2f9e00000
+> >>
+> >> The bug was bisected to:
+> >>
+> >> commit 599be01ee567b61f4471ee8078870847d0a11e8e
+> >> Author: Cong Wang <xiyou.wangcong@gmail.com>
+> >> Date:   Mon Feb 3 05:14:35 2020 +0000
+> >>
+> >>     net_sched: fix an OOB access in cls_tcindex
+> >>
+> >> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=10a275fde00000
+> >> final crash:    https://syzkaller.appspot.com/x/report.txt?x=12a275fde00000
+> >> console output: https://syzkaller.appspot.com/x/log.txt?x=14a275fde00000
+> >>
+> >> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> >> Reported-by: syzbot+dcc34d54d68ef7d2d53d@syzkaller.appspotmail.com
+> >> Fixes: 599be01ee567 ("net_sched: fix an OOB access in cls_tcindex")
+> >>
+> >> IPVS: ftp: loaded support on port[0] = 21
+> >> ==================================================================
+> >> BUG: KASAN: double-free or invalid-free in tcf_exts_destroy+0x62/0xc0 net/sched/cls_api.c:3002
+> >>
+> >> CPU: 1 PID: 9507 Comm: syz-executor467 Not tainted 5.6.0-rc4-syzkaller #0
+> >> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> >> Call Trace:
+> >>  __dump_stack lib/dump_stack.c:77 [inline]
+> >>  dump_stack+0x188/0x20d lib/dump_stack.c:118
+> >>  print_address_description.constprop.0.cold+0xd3/0x315 mm/kasan/report.c:374
+> >>  kasan_report_invalid_free+0x61/0xa0 mm/kasan/report.c:468
+> >>  __kasan_slab_free+0x129/0x140 mm/kasan/common.c:455
+> >>  __cache_free mm/slab.c:3426 [inline]
+> >>  kfree+0x109/0x2b0 mm/slab.c:3757
+> >>  tcf_exts_destroy+0x62/0xc0 net/sched/cls_api.c:3002
+> >>  tcf_exts_change+0xf4/0x150 net/sched/cls_api.c:3059
+> >>  tcindex_set_parms+0xed8/0x1a00 net/sched/cls_tcindex.c:456
+> >
+> > Looks like a consequence of "slab-out-of-bounds Write in tcindex_set_parms".
+> >
+> > Thanks.
+> >
+>
+> I have a dozen more syzbot reports involving net/sched code, do you want
+> me to release them right now ?
 
-For v5.4.24-168-g877097a6286a:
+I have no problem with this, at least I can close them as dup etc.. Please
+go ahead.
 
-Build results:
-	total: 158 pass: 143 fail: 15
-Failed builds:
-	alpha:allmodconfig
-	arm:allmodconfig
-	arm64:allmodconfig
-	csky:defconfig
-	csky:allnoconfig
-	csky:tinyconfig
-	m68k:allmodconfig
-	mips:allmodconfig
-	nds32:allmodconfig
-	parisc:allmodconfig
-	powerpc:allmodconfig
-	riscv:defconfig
-	s390:allmodconfig
-	sparc64:allmodconfig
-	xtensa:allmodconfig
-Qemu test results:
-	total: 422 pass: 405 fail: 17
-Failed tests:
-	<all riscv>
-
-Failures as already reported.
-
-drivers/gpu/drm/virtio/virtgpu_object.c:31:68: error: expected ‘)’ before ‘int’
- module_param_named(virglhack, virtio_gpu_virglrenderer_workaround, int, 0400);
-
-kernel/fork.c:2523:2: error: #error clone3 requires copy_thread_tls support in arch
- 2523 | #error clone3 requires copy_thread_tls support in arch
-
-Guenter
+Thanks.
