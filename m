@@ -2,193 +2,184 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4F3CC18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 08:19:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00B6EC18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 08:21:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B74B72467D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 08:19:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1F9224677
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 08:21:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="BrN7XZaQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726482AbgCJITz (ORCPT
+        id S1726467AbgCJIVe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 04:19:55 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:45781 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726220AbgCJITz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 04:19:55 -0400
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <sha@pengutronix.de>)
-        id 1jBa6p-00069G-Gm; Tue, 10 Mar 2020 09:19:27 +0100
-Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <sha@pengutronix.de>)
-        id 1jBa6n-0002TP-9h; Tue, 10 Mar 2020 09:19:25 +0100
-Date:   Tue, 10 Mar 2020 09:19:25 +0100
-From:   Sascha Hauer <s.hauer@pengutronix.de>
-To:     Robin Gong <yibin.gong@nxp.com>
-Cc:     vkoul@kernel.org, shawnguo@kernel.org,
-        u.kleine-koenig@pengutronix.de, broonie@kernel.org,
-        robh+dt@kernel.org, festevam@gmail.com, dan.j.williams@intel.com,
-        mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com,
-        l.stach@pengutronix.de, martin.fuzzey@flowbird.group,
-        kernel@pengutronix.de, linux-spi@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-imx@nxp.com, dmaengine@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [RESEND v6  09/13] dmaengine: imx-sdma: remove ERR009165 on
- i.mx6ul
-Message-ID: <20200310081925.GT3335@pengutronix.de>
-References: <1583839922-22699-1-git-send-email-yibin.gong@nxp.com>
- <1583839922-22699-10-git-send-email-yibin.gong@nxp.com>
+        Tue, 10 Mar 2020 04:21:34 -0400
+Received: from mail-eopbgr140043.outbound.protection.outlook.com ([40.107.14.43]:38574
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725919AbgCJIVe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 04:21:34 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=IPR/7ID7MuhlXr+KztCqZB9ydjY+yx1QmdMWedkXP7OCfdzBy1k5AlbAK2M3Y5Qllg1N/NOL5uqEIl9bl0nqTb8Qu6U/mptj5kP9W874ol2fAVwwIam8WTXqK/Utn3wc0KCC+OWvpK3nQOvFLyn2bsuTUIP8xVE7bmtjJYsi+PmcYyPjKRSHYfVI1jCaRu4xecI0lpCwy3FwTuz866Rl6jZlPFhX7agSA51j7OOp9PZUkI+B6UFPV58HUDXL64ljobaWOx/gPZq6OF9z2qziHuh7EGWrYTrVJWqMyAFXNhMnKf+84Yzz7vKMCb6f9VHtUGCjp4A9SJm0q8b29+GlLA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MO5L1ww3b2p/Kt5Iy+N0L1gkSZ78YxUZaclDf79TToU=;
+ b=LLNga55F5tQWER39xe5v6CCJkJ9EYugA9Vb3zzxFU/gSBBM7F4T1u+ZLlV0gXiwqLZtMAsGiYU91ssFfmL4oTDOAI5WwvVlDF33G1OHYA+Mndm/PSxR6FlTGG1KkQODdBWmMZGR4t15tTeIcMHRvg2ygfoctKdkE0c6jznGG/xZ2/q/Dxnu+G/F7YugEOEg/RAnr29v2U6K0syVP4yjYUoBAQDbRo/bjfS5n0SlXc03KiYyJ77p/iZlD0sfjyu2g3983BWFsKxRZjhBX6Pq3tm4nRoH/xNr3VqFwJcFGa0oC6ti48eawu+3lziRadr+rOywWFWAlqEGVjrPlkKW6rA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MO5L1ww3b2p/Kt5Iy+N0L1gkSZ78YxUZaclDf79TToU=;
+ b=BrN7XZaQAPRAkSfh7tl4/ncjkJOfq91agaVjl2d6cRTHteZgkEMBpZB9a8Aa6BVzboqSejlQfn6uqKvhZ5cw5y+AY9C4Hb1rarYArJqdMof8HZZiamxh8hadxbnWV25rZ8lS4lC9TjmFBwpP/TftQhwMEYaoCBTJC1TtQFmC+p8=
+Received: from AM6PR05MB5014.eurprd05.prod.outlook.com (20.177.33.13) by
+ AM6PR05MB5473.eurprd05.prod.outlook.com (20.177.118.210) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2793.16; Tue, 10 Mar 2020 08:21:29 +0000
+Received: from AM6PR05MB5014.eurprd05.prod.outlook.com
+ ([fe80::cbb:a034:c324:138b]) by AM6PR05MB5014.eurprd05.prod.outlook.com
+ ([fe80::cbb:a034:c324:138b%6]) with mapi id 15.20.2793.013; Tue, 10 Mar 2020
+ 08:21:29 +0000
+From:   Yanjun Zhu <yanjunz@mellanox.com>
+To:     Leon Romanovsky <leon@kernel.org>,
+        Jason Gunthorpe <jgg@mellanox.com>
+CC:     syzbot <syzbot+e11efb687f5ab7f01f3d@syzkaller.appspotmail.com>,
+        "dledford@redhat.com" <dledford@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        Moni Shoua <monis@mellanox.com>,
+        "syzkaller-bugs@googlegroups.com" <syzkaller-bugs@googlegroups.com>
+Subject: RE: KASAN: use-after-free Read in rxe_query_port
+Thread-Topic: KASAN: use-after-free Read in rxe_query_port
+Thread-Index: AQHV9jkJCU28FFAXfky+bua200OhVqhBcaYAgAAJUZA=
+Date:   Tue, 10 Mar 2020 08:21:29 +0000
+Message-ID: <AM6PR05MB50143279152CCAB54786D930D8FF0@AM6PR05MB5014.eurprd05.prod.outlook.com>
+References: <0000000000000c9e12059fc941ff@google.com>
+ <20200309173451.GA15143@mellanox.com> <20200310073936.GF172334@unreal>
+In-Reply-To: <20200310073936.GF172334@unreal>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yanjunz@mellanox.com; 
+x-originating-ip: [118.201.220.138]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 2351a862-edee-495a-0eef-08d7c4cc0889
+x-ms-traffictypediagnostic: AM6PR05MB5473:|AM6PR05MB5473:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM6PR05MB547345437D3E60D4E150A13DD8FF0@AM6PR05MB5473.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 033857D0BD
+x-forefront-antispam-report: SFV:NSPM;SFS:(10001)(10009020)(4636009)(346002)(136003)(39860400002)(396003)(376002)(366004)(189003)(199004)(81166006)(8936002)(81156014)(54906003)(2906002)(8676002)(6636002)(110136005)(71200400001)(4326008)(186003)(26005)(33656002)(6506007)(86362001)(7696005)(52536014)(966005)(53546011)(76116006)(478600001)(66556008)(64756008)(66476007)(66446008)(316002)(5660300002)(55016002)(9686003)(66946007)(99710200001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR05MB5473;H:AM6PR05MB5014.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 1grKfgoK2M5AYjacnY2byxxKjjbgS1plCUqgdbII9+mnDFAyp6WkmfSQfHnhB2k8vx85tPM6o7KwgDHx86hHrhuwPhlloWOg29C3Bc4Xo4H2bP/9EkNwZCTkqWlbYBLJlQJhtbT30oTEKpkHW8b4cOtUe4nqYF7TO9jpcXjhDc/HV5tExMzQCyVmtRTZWqlj0sw2iuv2mbpv4haVS6KejKS9ChL7Q0/S8DFOWqaXjKQd8SzK2jebZ+XB8eoRDC8gTq8r/+oUH4kl20wSDLPc/1EFNTcUxrYuYj1nn1K8G17tNA7rhwOBYBMfB7S8r+cfTXkw7qk6p29gEoI/7vvBlibYCoIMUcciqh76nhcLIcdHgmM9GhA9JOT8twJ51aS113LghEIc5PXntVdU625VvXI7hY2wa+IbJIiEPA5sH/fd0JC71W6bEdAV/FgwmfnGRz1bpdXmJLasDlSPN7hYNIDAO2vJmoZLEjgr8QD3H4w1MLJ/6T6C1MeGhOzxeU6fUcqsMK4MkLewmLvtA1odiW14xi+75PQRQAZd0hIeq/P/Zz9YO1wFblNOzD1XhjspRN3x8y26ugPXAasQlEDu19uEcmg3g12SjtLsvYIdmmwrXOilf8h2dIWzsuhNMZgccmNHy8qVa69fqVP6SnEksg==
+x-ms-exchange-antispam-messagedata: nmkfxGpOEzRDEfvafZsiy8hpraDaoAsUUBKYPccYPXfgveufQUVlhCiUXgo5mogJnGzC3bMo7yrZzSqK5H/mLcZGLRy8QD7O3UnG3Ptck72G+wChGRwKwpwAGxUzUW+iAc+iJS9QF0vpgUohPaNepw==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1583839922-22699-10-git-send-email-yibin.gong@nxp.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 09:04:16 up 19 days, 15:34, 45 users,  load average: 0.11, 0.18,
- 0.17
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: sha@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2351a862-edee-495a-0eef-08d7c4cc0889
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Mar 2020 08:21:29.0657
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: nLNwtZmPzN1QPPkPKQKmNW1Fnc09gUSKEeeU1mNgnbWrRRutXekLGoYjA/4fJpZe9sbhCCP0ni4jYuPG0hQ/ZQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR05MB5473
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 10, 2020 at 07:31:58PM +0800, Robin Gong wrote:
-> ECSPI issue fixed from i.mx6ul at hardware level, no need
-> ERR009165 anymore on those chips such as i.mx8mq. Add i.mx6sx
-> from where i.mx6ul source.
-> 
-> Signed-off-by: Robin Gong <yibin.gong@nxp.com>
-> Acked-by: Vinod Koul <vkoul@kernel.org>
-> ---
->  drivers/dma/imx-sdma.c | 51 +++++++++++++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 50 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
-> index 56288d8..5ae7237 100644
-> --- a/drivers/dma/imx-sdma.c
-> +++ b/drivers/dma/imx-sdma.c
-> @@ -419,6 +419,13 @@ struct sdma_driver_data {
->  	int num_events;
->  	struct sdma_script_start_addrs	*script_addrs;
->  	bool check_ratio;
-> +	/*
-> +	 * ecspi ERR009165 fixed should be done in sdma script
-> +	 * and it has been fixed in soc from i.mx6ul.
-> +	 * please get more information from the below link:
-> +	 * https://www.nxp.com/docs/en/errata/IMX6DQCE.pdf
-> +	 */
-> +	bool ecspi_fixed;
->  };
->  
->  struct sdma_engine {
-> @@ -539,6 +546,31 @@ static struct sdma_driver_data sdma_imx6q = {
->  	.script_addrs = &sdma_script_imx6q,
->  };
->  
-> +static struct sdma_script_start_addrs sdma_script_imx6sx = {
-> +	.ap_2_ap_addr = 642,
-> +	.uart_2_mcu_addr = 817,
-> +	.mcu_2_app_addr = 747,
-> +	.uartsh_2_mcu_addr = 1032,
-> +	.mcu_2_shp_addr = 960,
-> +	.app_2_mcu_addr = 683,
-> +	.shp_2_mcu_addr = 891,
-> +	.spdif_2_mcu_addr = 1100,
-> +	.mcu_2_spdif_addr = 1134,
-> +};
-> +
-> +static struct sdma_driver_data sdma_imx6sx = {
-> +	.chnenbl0 = SDMA_CHNENBL0_IMX35,
-> +	.num_events = 48,
-> +	.script_addrs = &sdma_script_imx6sx,
-> +};
-> +
-> +static struct sdma_driver_data sdma_imx6ul = {
-> +	.chnenbl0 = SDMA_CHNENBL0_IMX35,
-> +	.num_events = 48,
-> +	.script_addrs = &sdma_script_imx6sx,
-> +	.ecspi_fixed = true,
-> +};
-> +
->  static struct sdma_script_start_addrs sdma_script_imx7d = {
->  	.ap_2_ap_addr = 644,
->  	.uart_2_mcu_addr = 819,
-> @@ -584,9 +616,15 @@ static const struct platform_device_id sdma_devtypes[] = {
->  		.name = "imx6q-sdma",
->  		.driver_data = (unsigned long)&sdma_imx6q,
->  	}, {
-> +		.name = "imx6sx-sdma",
-> +		.driver_data = (unsigned long)&sdma_imx6sx,
-> +	}, {
+Hi, Leon
 
-Now the i.MX6sx uses a new sdma_script_start_addrs entry which is the same
-as the i.MX6q one we used before with one exception: it lacks the
-per_2_per_addr = 6331 entry. This is only used for IMX_DMATYPE_ASRC and
-IMX_DMATYPE_ASRC_SP, both are entirely unused in the mainline kernel. So
-why must the i.MX6sx changed here and what has this to do with ECSPI?
+Thanks. From the patch https://lore.kernel.org/netdev/20200306134518.84416-=
+1-kgraul@linux.ibm.com,
 
-Sascha
+@@ -240,6 +240,9 @@ static void smc_ib_port_event_work(struct work_struct *=
+work)
+ 		work, struct smc_ib_device, port_event_work);
+ 	u8 port_idx;
+=20
++	if (list_empty(&smcibdev->list))
++		return;
++
+ 	for_each_set_bit(port_idx, &smcibdev->port_event_mask, SMC_MAX_PORTS) {
+ 		smc_ib_remember_port_attr(smcibdev, port_idx + 1);
+ 		clear_bit(port_idx, &smcibdev->port_event_mask);
 
->  		.name = "imx7d-sdma",
->  		.driver_data = (unsigned long)&sdma_imx7d,
->  	}, {
-> +		.name = "imx6ul-sdma",
-> +		.driver_data = (unsigned long)&sdma_imx6ul,
-> +	}, {
->  		.name = "imx8mq-sdma",
->  		.driver_data = (unsigned long)&sdma_imx8mq,
->  	}, {
-> @@ -602,7 +640,9 @@ static const struct of_device_id sdma_dt_ids[] = {
->  	{ .compatible = "fsl,imx35-sdma", .data = &sdma_imx35, },
->  	{ .compatible = "fsl,imx31-sdma", .data = &sdma_imx31, },
->  	{ .compatible = "fsl,imx25-sdma", .data = &sdma_imx25, },
-> +	{ .compatible = "fsl,imx6sx-sdma", .data = &sdma_imx6sx, },
->  	{ .compatible = "fsl,imx7d-sdma", .data = &sdma_imx7d, },
-> +	{ .compatible = "fsl,imx6ul-sdma", .data = &sdma_imx6ul, },
->  	{ .compatible = "fsl,imx8mq-sdma", .data = &sdma_imx8mq, },
->  	{ /* sentinel */ }
->  };
-> @@ -1169,8 +1209,17 @@ static int sdma_config_channel(struct dma_chan *chan)
->  			if (sdmac->peripheral_type == IMX_DMATYPE_ASRC_SP ||
->  			    sdmac->peripheral_type == IMX_DMATYPE_ASRC)
->  				sdma_set_watermarklevel_for_p2p(sdmac);
-> -		} else
-> +		} else {
-> +			/*
-> +			 * ERR009165 fixed from i.mx6ul, no errata need,
-> +			 * set bit31 to let sdma script skip the errata.
-> +			 */
-> +			if (sdmac->peripheral_type == IMX_DMATYPE_CSPI &&
-> +			    sdmac->direction == DMA_MEM_TO_DEV &&
-> +			    sdmac->sdma->drvdata->ecspi_fixed)
-> +				__set_bit(31, &sdmac->watermark_level);
->  			__set_bit(sdmac->event_id0, sdmac->event_mask);
-> +		}
->  
->  		/* Address */
->  		sdmac->shp_addr = sdmac->per_address;
-> -- 
-> 2.7.4
-> 
-> 
+This block is try to check smcibdev->list to avoid ib_query_port after the =
+NIC is down.
+But smcibdev->list is used by spinlock when add and del.
+"
+...
+549         spin_lock(&smc_ib_devices.lock);
+550         list_add_tail(&smcibdev->list, &smc_ib_devices.list);
+551         spin_unlock(&smc_ib_devices.lock);
+...
 
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+579         spin_lock(&smc_ib_devices.lock);
+580         list_del_init(&smcibdev->list); /* remove from smc_ib_devices *=
+/
+581         spin_unlock(&smc_ib_devices.lock);
+...
+"
+So in the above block, is it necessary to protect  smcibdev->list when it i=
+s accessed?
+Please comment on it.
+
+Thanks a lot.
+Zhu Yanjun
+
+-----Original Message-----
+From: Leon Romanovsky <leon@kernel.org>=20
+Sent: Tuesday, March 10, 2020 3:40 PM
+To: Jason Gunthorpe <jgg@mellanox.com>
+Cc: syzbot <syzbot+e11efb687f5ab7f01f3d@syzkaller.appspotmail.com>; dledfor=
+d@redhat.com; linux-kernel@vger.kernel.org; linux-rdma@vger.kernel.org; Mon=
+i Shoua <monis@mellanox.com>; syzkaller-bugs@googlegroups.com; Yanjun Zhu <=
+yanjunz@mellanox.com>
+Subject: Re: KASAN: use-after-free Read in rxe_query_port
+
+On Mon, Mar 09, 2020 at 02:34:51PM -0300, Jason Gunthorpe wrote:
+> On Sun, Mar 01, 2020 at 03:20:12AM -0800, syzbot wrote:
+> > Hello,
+> >
+> > syzbot found the following crash on:
+> >
+> > HEAD commit:    f8788d86 Linux 5.6-rc3
+> > git tree:       upstream
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=3D132d3645e00=
+000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=3D9833e26bab3=
+55358
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=3De11efb687f5ab=
+7f01f3d
+> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> >
+> > Unfortunately, I don't have any reproducer for this crash yet.
+> >
+> > IMPORTANT: if you fix the bug, please add the following tag to the comm=
+it:
+> > Reported-by: syzbot+e11efb687f5ab7f01f3d@syzkaller.appspotmail.com
+>
+> Yanjun, do you have some idea what this could be?
+
+See this fix in the net mailing list.
+https://lore.kernel.org/netdev/20200306134518.84416-1-kgraul@linux.ibm.com
+
+Thanks
+
+>
+> Thanks,
+> Jason
