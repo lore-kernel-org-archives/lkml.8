@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBB3CC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:49:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7036C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:49:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3BBD2467D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:49:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F6952468E
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:49:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583844583;
-	bh=m3/5GV8iND6nq+ZvNW2PfXvQ5eZR+5DVF27T+hS7AB4=;
+	s=default; t=1583844586;
+	bh=EpB+hNHyM4aBcJsJprlm1tfQc8ejGExjREpw2qKL+j4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GIXBsOEUhykgxqPKLHRSxTgZf/KIBWvqR16SEdioHjaBDo+2gUvBLB4LhX7yWKIB2
-	 3VPs79TTTeMV3kx5fQuD0TZ3ZWJiR9WURKSFk24ISDkyLGX1LecfOKy8kyRB5xhj3L
-	 8qtO0cOff8kxjVanZA2sZ+46wJ3LoglIlkzpKPCw=
+	b=KtBVwsJY3GYXUpvmkqGqsjGFykPKRHFkaDpocHZBilkOcLzf4qPVG3QP+3Zo4I/Ac
+	 8rEck9x9zIGx+81QgT8pQeN4mLXCPs1fML31qjnsREPR5LH9xZcVIUkcnTmderj+4C
+	 CgzqDJAIMBlq7TBW2ooNIbSM4mV55x2c7N7qPyws=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728488AbgCJMtm (ORCPT
+        id S1728134AbgCJMtp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:49:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54100 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:49:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54182 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728484AbgCJMtk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:49:40 -0400
+        id S1728490AbgCJMtn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:49:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA15220674;
-        Tue, 10 Mar 2020 12:49:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3470F24692;
+        Tue, 10 Mar 2020 12:49:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844580;
-        bh=m3/5GV8iND6nq+ZvNW2PfXvQ5eZR+5DVF27T+hS7AB4=;
+        s=default; t=1583844582;
+        bh=EpB+hNHyM4aBcJsJprlm1tfQc8ejGExjREpw2qKL+j4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=panqf81utlWg0Tr4+FQmNHJp5Rli3fO58Xhp/ubeqcsxilSDT4tLncZkNE7cHe0Dy
-         uerkQZqpu2CoZMqjd4SBz79MkE/cG0BFAWFdBhAZyey5CqEwsThY/Bkos4Mp+w8X8W
-         N0LOnO9vckk7llfTdLaLcmIOJ9kONyfE01ZONwGM=
+        b=UINbbs+J5jhoDvpwTbiYCH68KSGDouSsI/xoUA1rKDAi26Z+9ORfu6qXvbDwKy5mN
+         3drwk2z2Foh/khNkh5+wn+kPF19sHmLtWhlHt/mgr2mbrRTqiEjeIpINW0u8xUqNP4
+         3jrWNaJFc6dgeMW4szN2AsWW7HeuUnYhcaJSuvrI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tomas Henzl <thenzl@redhat.com>,
-        Sumit Saxena <sumit.saxena@broadcom.com>,
-        Lee Duncan <lduncan@suse.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 026/168] scsi: megaraid_sas: silence a warning
-Date:   Tue, 10 Mar 2020 13:37:52 +0100
-Message-Id: <20200310123638.295083020@linuxfoundation.org>
+        stable@vger.kernel.org, "H.J. Lu" <hjl.tools@gmail.com>,
+        Borislav Petkov <bp@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 044/168] x86/boot/compressed: Dont declare __force_order in kaslr_64.c
+Date:   Tue, 10 Mar 2020 13:38:10 +0100
+Message-Id: <20200310123639.823300645@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123635.322799692@linuxfoundation.org>
 References: <20200310123635.322799692@linuxfoundation.org>
@@ -62,57 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tomas Henzl <thenzl@redhat.com>
+From: H.J. Lu <hjl.tools@gmail.com>
 
-[ Upstream commit 0e99b2c625da181aebf1a3d13493e3f7a5057a9c ]
+[ Upstream commit df6d4f9db79c1a5d6f48b59db35ccd1e9ff9adfc ]
 
-Add a flag to DMA memory allocation to silence a warning.
+GCC 10 changed the default to -fno-common, which leads to
 
-This driver allocates DMA memory for IO frames. This allocation may exceed
-MAX_ORDER pages for few megaraid_sas controllers (controllers with very
-high queue depth). Consequently, the driver has logic to keep reducing the
-controller queue depth until the DMA memory allocation succeeds.
+    LD      arch/x86/boot/compressed/vmlinux
+  ld: arch/x86/boot/compressed/pgtable_64.o:(.bss+0x0): multiple definition of `__force_order'; \
+    arch/x86/boot/compressed/kaslr_64.o:(.bss+0x0): first defined here
+  make[2]: *** [arch/x86/boot/compressed/Makefile:119: arch/x86/boot/compressed/vmlinux] Error 1
 
-On impacted megaraid_sas controllers there would be multiple DMA allocation
-failures until driver settled on an allocation that fit. These failed DMA
-allocation requests caused stack traces in system logs. These were not
-harmful and this patch silences those warnings/stack traces.
+Since __force_order is already provided in pgtable_64.c, there is no
+need to declare __force_order in kaslr_64.c.
 
-[mkp: clarified commit desc]
-
-Link: https://lore.kernel.org/r/20200204152413.7107-1-thenzl@redhat.com
-Signed-off-by: Tomas Henzl <thenzl@redhat.com>
-Acked-by: Sumit Saxena <sumit.saxena@broadcom.com>
-Reviewed-by: Lee Duncan <lduncan@suse.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: H.J. Lu <hjl.tools@gmail.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Link: https://lkml.kernel.org/r/20200124181811.4780-1-hjl.tools@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/megaraid/megaraid_sas_fusion.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ arch/x86/boot/compressed/kaslr_64.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/drivers/scsi/megaraid/megaraid_sas_fusion.c b/drivers/scsi/megaraid/megaraid_sas_fusion.c
-index 46bc062d873ef..d868388018053 100644
---- a/drivers/scsi/megaraid/megaraid_sas_fusion.c
-+++ b/drivers/scsi/megaraid/megaraid_sas_fusion.c
-@@ -594,7 +594,8 @@ megasas_alloc_request_fusion(struct megasas_instance *instance)
+diff --git a/arch/x86/boot/compressed/kaslr_64.c b/arch/x86/boot/compressed/kaslr_64.c
+index 748456c365f46..9557c5a15b91e 100644
+--- a/arch/x86/boot/compressed/kaslr_64.c
++++ b/arch/x86/boot/compressed/kaslr_64.c
+@@ -29,9 +29,6 @@
+ #define __PAGE_OFFSET __PAGE_OFFSET_BASE
+ #include "../../mm/ident_map.c"
  
- 	fusion->io_request_frames =
- 			dma_pool_alloc(fusion->io_request_frames_pool,
--				GFP_KERNEL, &fusion->io_request_frames_phys);
-+				GFP_KERNEL | __GFP_NOWARN,
-+				&fusion->io_request_frames_phys);
- 	if (!fusion->io_request_frames) {
- 		if (instance->max_fw_cmds >= (MEGASAS_REDUCE_QD_COUNT * 2)) {
- 			instance->max_fw_cmds -= MEGASAS_REDUCE_QD_COUNT;
-@@ -632,7 +633,7 @@ megasas_alloc_request_fusion(struct megasas_instance *instance)
- 
- 		fusion->io_request_frames =
- 			dma_pool_alloc(fusion->io_request_frames_pool,
--				       GFP_KERNEL,
-+				       GFP_KERNEL | __GFP_NOWARN,
- 				       &fusion->io_request_frames_phys);
- 
- 		if (!fusion->io_request_frames) {
+-/* Used by pgtable.h asm code to force instruction serialization. */
+-unsigned long __force_order;
+-
+ /* Used to track our page table allocation area. */
+ struct alloc_pgt_data {
+ 	unsigned char *pgt_buf;
 -- 
 2.20.1
 
