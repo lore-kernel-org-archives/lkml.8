@@ -2,161 +2,208 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E505C18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 23:03:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B81C6C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 23:07:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F44521927
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 23:03:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 614C22071B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 23:07:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="XJ9muEYN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727757AbgCJXDM (ORCPT
+        id S1727582AbgCJXH2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 19:03:12 -0400
-Received: from mga14.intel.com ([192.55.52.115]:63180 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726325AbgCJXDL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 19:03:11 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Mar 2020 16:03:08 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,538,1574150400"; 
-   d="scan'208";a="415363849"
-Received: from schen9-desk.jf.intel.com (HELO [10.54.74.162]) ([10.54.74.162])
-  by orsmga005.jf.intel.com with ESMTP; 10 Mar 2020 16:03:07 -0700
-Subject: Re: [PATCH] mm/swap_slots.c: don't reset the cache slot after use
-To:     Wei Yang <richard.weiyang@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Wei Yang <richard.weiyang@linux.alibaba.com>,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <20200309090940.34130-1-richard.weiyang@linux.alibaba.com>
- <20200309174854.b6b8c7f019c3dde048c28f94@linux-foundation.org>
- <005f7454-16db-e8b5-dde2-8f2ddaa42932@linux.intel.com>
- <20200310222002.lr2vurqfk6jvfo2z@master>
-From:   Tim Chen <tim.c.chen@linux.intel.com>
-Autocrypt: addr=tim.c.chen@linux.intel.com; prefer-encrypt=mutual; keydata=
- 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
- l50q2K/r651xphs7CGEdKi1nU0YJVbQxJQ==
-Message-ID: <d851c5c9-7fc0-0959-e5c9-1a62f0341cb7@linux.intel.com>
-Date:   Tue, 10 Mar 2020 16:03:07 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Tue, 10 Mar 2020 19:07:28 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:15764 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726325AbgCJXH2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 19:07:28 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e681d540000>; Tue, 10 Mar 2020 16:05:56 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 10 Mar 2020 16:07:26 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 10 Mar 2020 16:07:26 -0700
+Received: from [10.2.175.232] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 10 Mar
+ 2020 23:07:26 +0000
+Subject: Re: LKFT: arm x15: mmc1: cache flush error -110
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+CC:     Jon Hunter <jonathanh@nvidia.com>,
+        Bitan Biswas <bbiswas@nvidia.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        Alexei Starovoitov <ast@kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        <lkft-triage@lists.linaro.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        John Stultz <john.stultz@linaro.org>,
+        Faiz Abbas <faiz_abbas@ti.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Kishon <kishon@ti.com>
+References: <CA+G9fYuqAQfhzF2BzHr7vMHx68bo8-jT+ob_F3eHQ3=oFjgYdg@mail.gmail.com>
+ <CAPDyKFqpNo_4OePBR1KnJNO=kR8XEqbcsEd=icSceSdDH+Rk1Q@mail.gmail.com>
+ <757853cf-987e-f6b6-9259-b4560a031692@nvidia.com>
+ <d12fe142-7e72-ab58-33ab-17817e35096f@nvidia.com>
+ <c216f131-6f83-c9c9-9d17-8d44ec06972d@nvidia.com>
+ <87ad7586-9569-4276-044a-adb64e84ca15@nvidia.com>
+ <a0962e0b-0f1d-9f32-f6e9-92f69f93167f@nvidia.com>
+ <57ddddc2-3ee8-d867-bba0-0dd9929ba37d@nvidia.com>
+ <CAPDyKFqZSd9E3+16yFsmpee2JsbRJ-DGThxx7NJHu6UE00Xi1Q@mail.gmail.com>
+ <26ee7225-9483-4664-c2d7-b5cefeadcd4b@nvidia.com>
+ <CAPDyKFqwVQDEnPNi33mc9ycTxpaT1cRLejbR3Ja4c8dha4gFRw@mail.gmail.com>
+ <0301bbd5-8d4d-4a77-42c7-8a1391c2d60a@nvidia.com>
+ <CAPDyKFp93H0=ttazofW9NMBtL5VnjB4PdkwN0FDCtWR0pMHrPA@mail.gmail.com>
+ <f01b5533-124a-d978-a90a-9c9c6235fb65@nvidia.com>
+ <CAPDyKFqJjsuHect-azQKO8cCoq5JJQrZ=eShsdLHq97NXgXnuQ@mail.gmail.com>
+ <227d9f08-582e-fd79-e1dc-7695bddd162d@nvidia.com>
+ <2456654f-2724-0b6d-8936-afa05f345344@nvidia.com>
+Message-ID: <df939962-2cb4-1c36-0baf-d82e3527d05a@nvidia.com>
+Date:   Tue, 10 Mar 2020 16:10:08 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200310222002.lr2vurqfk6jvfo2z@master>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <2456654f-2724-0b6d-8936-afa05f345344@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1583881556; bh=s2lqu2Qb+lzPYNuF4JDNZZl1RA8ol5t2e1LCzQ5m3A8=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=XJ9muEYNewkGZ9hcoejyeLhZp00hBoFfUIYt2JHCEjGwx00h3V8GL+FW3Hti7FJCN
+         iLfacS8b1WgsPEFuNjpQx7TIk2dZ0LzbT8245qsecrovMhHNs4n/TRYHsDuRLg+y/1
+         d03IiayVciDad20rwdAJS/E16cc1xjHhgYLVuGl3VLZBtJF6ZuQqcRYr/Hl60x4U1k
+         rBbMBFHckKTRt9OYLMZi/0fRbKuro4AsGbMOBBqIPl4v77uD2UoqSW6kBetGQRdNYO
+         FHWp2ttKUUZ3plXoaKg8saoQkVH60d1uWJ1auRYTxxE7rI5zhlTlkkOeMe0syytRza
+         0p/J5TxFr8OPQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/10/20 3:20 PM, Wei Yang wrote:
-> On Tue, Mar 10, 2020 at 11:13:13AM -0700, Tim Chen wrote:
->> On 3/9/20 5:48 PM, Andrew Morton wrote:
->>> On Mon,  9 Mar 2020 17:09:40 +0800 Wei Yang <richard.weiyang@linux.alibaba.com> wrote:
+
+On 3/10/20 2:59 PM, Sowjanya Komatineni wrote:
+>
+> On 3/10/20 10:27 AM, Sowjanya Komatineni wrote:
+>>
+>> On 3/10/20 10:09 AM, Ulf Hansson wrote:
+>>> External email: Use caution opening links or attachments
 >>>
->>>> Currently we would clear the cache slot if it is used. While this is not
->>>> necessary, since this entry would not be used until refilled.
->>>>
->>>> Leave it untouched and assigned the value directly to entry which makes
->>>> the code little more neat.
->>>>
->>>> Also this patch merges the else and if, since this is the only case we
->>>> refill and repeat swap cache.
 >>>
->>> cc Tim, who can hopefully remember how this code works ;)
+>>> [...]
 >>>
->>>> --- a/mm/swap_slots.c
->>>> +++ b/mm/swap_slots.c
->>>> @@ -309,7 +309,7 @@ int free_swap_slot(swp_entry_t entry)
->>>>  
->>>>  swp_entry_t get_swap_page(struct page *page)
->>>>  {
->>>> -	swp_entry_t entry, *pentry;
->>>> +	swp_entry_t entry;
->>>>  	struct swap_slots_cache *cache;
->>>>  
->>>>  	entry.val = 0;
->>>> @@ -336,13 +336,10 @@ swp_entry_t get_swap_page(struct page *page)
->>>>  		if (cache->slots) {
->>>>  repeat:
->>>>  			if (cache->nr) {
->>>> -				pentry = &cache->slots[cache->cur++];
->>>> -				entry = *pentry;
->>>> -				pentry->val = 0;
+>>>>>>> I would like to get the regression fixed asap, but I also would 
+>>>>>>> like
+>>>>>>> to avoid reverting patches, unless really necessary. May I 
+>>>>>>> propose the
+>>>>>>> following two options.
+>>>>>>>
+>>>>>>> 1. Find out why polling with ->card_busy() or CMD13, for a CMD6 
+>>>>>>> with
+>>>>>>> an R1 response doesn't work - and then fix that behaviour.
+>>>>>>>
+>>>>>>> 2. Set the mmc->max_busy_timeout to zero for sdhci-tegra, which 
+>>>>>>> makes
+>>>>>>> the core to always use R1B for CMD6 (and erase). This also means 
+>>>>>>> that
+>>>>>>> when the cmd->busy_timeout becomes longer than 11s, sdhci-tegra 
+>>>>>>> must
+>>>>>>> disable the HW busy timeout and just wait "forever".
+>>>>>>>
+>>>>>>> If you decide for 2, you can add the software timeout support on 
+>>>>>>> top,
+>>>>>>> but make that can be considered as a next step of an improvement,
+>>>>>>> rather than needed as fix. Note that, I believe there are some 
+>>>>>>> support
+>>>>>>> for software timeout already in the sdhci core, maybe you need to
+>>>>>>> tweak it a bit for your case, I don't know.
+>>>>>>>
+>>>>>>> Kind regards
+>>>>>>> Uffe
+>>>>>> Hi Uffe
+>>>>>>
+>>>>>> Will go with 2nd option and will send patches out when ready.
+>>>>> Okay, good.
+>>>>>
+>>>>>> BTW, Tegra host also supports SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK 
+>>>>>> for
+>>>>>> data timeout based on host clock when using finite mode (HW busy
+>>>>>> detection based on DATA TIMEOUT count value when cmd operation 
+>>>>>> timeout
+>>>>>> is < 11s for tegra host).
+>>>>>>
+>>>>>> So, looks like we cant set host max_busy_timeout to 0 for Tegra 
+>>>>>> host to
+>>>>>> force R1B during SWITCH and SLEEP_AWAKE.
+>>>>>>
+>>>>>> So, was thinking to introduce host capability 
+>>>>>> MMC_CAP2_LONG_WAIT_HW_BUSY
+>>>>>> which can be used for hosts supporting long or infinite HW busy wait
+>>>>>> detection and will update mmc and mmc_ops drivers to not allow 
+>>>>>> convert
+>>>>>> R1B to R1B for hosts with this capability during SLEEP_AWAKE and 
+>>>>>> SWITCH.
+>>>>> That seems reasonable, it becomes probably both easier and clearer by
+>>>>> adding a new host cap.
+>>>>>
+>>>>> In any case, let me help out and cook a patch for this for the core
+>>>>> part (I leave the sdhci change to you). It may be a bit tricky,
+>>>>> especially since I have currently queued a bunch of new changes for
+>>>>> v5.7, that enables more users of mmc_poll_for_busy() in the core.
+>>>>> Maybe I need to temporarily drop them, so we can fix these problems
+>>>>> first. I will check.
+>>>>>
+>>>>> Probably, I would also name the cap MMC_CAP_HW_NEED_RSP_BUSY, as that
+>>>>> seems to be describing the common problem we have for sdhci
+>>>>> omap/tegra.
+>>>>>
+>>>>> Finally, it seems like MMC_CAP_WAIT_WHILE_BUSY should be set for
+>>>>> sdhci- tegra, so while at it, perhaps you can cook a patch for 
+>>>>> that as
+>>>>> well.
+>>>>>
+>>>>> Kind regards
+>>>>> Uffe
+>>>> OK, I sent v1 yesterday. Please ignore them then.
+>>> Oh, I haven't seen them. In any case, I am ignoring them.
+>>>
+>>>> Will send out patches only for HW busy wait modes program based on cmd
+>>>> timeout and WAIT_WHILE_BUSY enabled.
+>>> Great, thanks!
+>>>
+>>> Please help test the series I just posted as well, if you have the
+>>> time ofcourse.
+>>>
+>>> Kind regards
+>>> Uffe
 >>
->> The cache entry was cleared after assignment for defensive programming,  So there's
->> little chance I will be using a slot that has been assigned to someone else.
->> When I wrote swap_slots.c, this code was new and I want to make sure
->> that if something went wrong, and I assigned a swap slot that I shouldn't,
->> I will be able to detect quickly as I will only be stepping on entry 0.
+>> Sure,
 >>
->> Otherwise such bug will be harder to detect as we will have two users of some random
->> swap slot stepping on each other.
+>> Thanks
 >>
->> I'm okay if we want to get rid of this logic, now that the code has been
->> working correctly long enough.  But I think is good hygiene to clear the
->> cached entry after it has been assigned. 
->>
-> 
-> This is fine to keep the logic, while I am wondering whether we need to do
-> this through pointer. cache->slots[] contain the value, we can get and reset
-> without pointer.
-> 
-> The following code looks more obvious about the logic.
-> 
-> 		entry = cache->slots[cache->cur];
-> 		cache->slots[cache->cur++].val = 0;
-
-Yes, this looks pretty good.
-
-Thanks.
-
-Tim
-
+>> Sowjanya
+>
+>
+> mmc_sleep() also needs update to force R1B when host sets capability 
+> MMC_CAP_NEED_RSP_BUSY
+>
+>
+Tested patches and they work good.
 
