@@ -2,82 +2,112 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 981A8C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:16:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E5B9C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:16:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 706452467D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:16:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583846202;
-	bh=AB3A3EN5bgLeJbsr19jt0Pt9O73+r4j8zG6bQbnFd+A=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1GqSsHnTGqnNM9UIaAGoD+L4vz4Fm+VjGWlUjdhC2Bzmpk5XzTinC3cnNgZPTsdfs
-	 D0m9Ad1PvfOnX7m/cNPBBgt4czE05kW6nf4Ty4sEkQ3SZrzAsmdrYx2WCZQCGjf+q1
-	 L1oWwTxWfGwuI/tEFEWjTxSIvtTVrlmlpP8LJqVE=
+	by mail.kernel.org (Postfix) with ESMTP id 562B2208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:16:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="lzqQa7kx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731624AbgCJNMr (ORCPT
+        id S1731598AbgCJNMk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:12:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35062 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729230AbgCJNMn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:12:43 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 544C120409;
-        Tue, 10 Mar 2020 13:12:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845962;
-        bh=AB3A3EN5bgLeJbsr19jt0Pt9O73+r4j8zG6bQbnFd+A=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WCWGmpRoopu/XLW4rRlPOAA4i8VLAHt0LvmuU69mOtG+EWRHVj0n+kiT9ZeeNZ0Cg
-         2D1uh7e6bZvspjif5baB9Z0OiAnIDYus9NGqXUgLY7wGT5EQXWmDELl3N/5JVYvKbH
-         2FM9ZTFjnvcW/BCXglAvKc+rSUbf2PGL4Yg+8xI4=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org
-Subject: [PATCH 4.19 38/86] usb: core: hub: fix unhandled return by employing a void function
-Date:   Tue, 10 Mar 2020 13:45:02 +0100
-Message-Id: <20200310124532.839754769@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200310124530.808338541@linuxfoundation.org>
-References: <20200310124530.808338541@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 10 Mar 2020 09:12:40 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:37547 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731579AbgCJNMh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:12:37 -0400
+Received: by mail-wm1-f65.google.com with SMTP id a141so1295026wme.2
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 06:12:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=android.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=L42pOiV3jLGMDXgIEOo6/CJMt+4vo0NwEJd2XSpLcUA=;
+        b=lzqQa7kxFDW37mdZURAt89yck5+OARsY2LdJSCdEsu5+xXa2Xbg17kXA5EGl5kb6wm
+         PoFYlOQwGj3O2Ri+uO7PsFU99oR0jJVyijlGShvxiXmgpyHzoGFJ73ZHmSiNiU+MPjbC
+         gEru521iogeffswdTziIksfdFbyi0mWY/Qh2Hy54Y9u2rlNhcczLUQifXm6G/EThoTDK
+         Dv2AgEUBTIbKOvZ5lgGh1IjYuUYLh/8rROg0jxiBHq0ZTXpF9CMd5EDPUVc7mA5oZrG0
+         zMo2h48yZBvk0RnqcQHIbFGx+fU/HH2LjJNugadXuSchjJRKGFa3FBlKx8Vo9Rd8Pcgw
+         XA9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=L42pOiV3jLGMDXgIEOo6/CJMt+4vo0NwEJd2XSpLcUA=;
+        b=j0i3JQRTCfD9IOFf5dONQyM99C+xhwvZdo0bVWxCZTtGFOTWCH37rhZSCSah5pZaja
+         rory2CGyEs1GzG18V/XDsehgC9q3XX2cf+X9gkL+JGc4wWd5mkYfMtFGFfMGwKsid3aR
+         w+CRDHixD6ZcvYJYHNekrvJvQ8UFFVDz2a8P0BcL37BkDnrqZe7Dtl48B5SlBCMlx/x2
+         atoL8vldp7VLik2ZhO2+ePuWE8he+Vmfz6XfLahJ/zmfs9gwj9cC5dHgzLJuSpZDSa8b
+         ZTY5un0yE22vDjqwqv6MSx+GNR54jSNi6K78X5Q23au+Bat2jBm2y3uHk6tnLP5LL/pI
+         tgjA==
+X-Gm-Message-State: ANhLgQ27SZlaDHywBptNMAk8EI4qX+O4fNtV+rJKI5sa/bYcTqElj4LQ
+        huAFE9XGnJOlNdD0D+XNxg/CwFoaYvM=
+X-Google-Smtp-Source: ADFU+vsBo54LPFGNDNUeazMCLtEa+s5E4VYML9WS+QK+OJ1rbrRdVOCr6u1NDOhMUhn0duW7MuNqmw==
+X-Received: by 2002:a7b:c7cd:: with SMTP id z13mr2034890wmk.97.1583845954319;
+        Tue, 10 Mar 2020 06:12:34 -0700 (PDT)
+Received: from maco2.ams.corp.google.com (a83-162-234-235.adsl.xs4all.nl. [83.162.234.235])
+        by smtp.gmail.com with ESMTPSA id x5sm3658447wrv.67.2020.03.10.06.12.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Mar 2020 06:12:33 -0700 (PDT)
+From:   Martijn Coenen <maco@android.com>
+To:     axboe@kernel.dk, hch@lst.de
+Cc:     bvanassche@acm.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@android.com,
+        Martijn Coenen <maco@android.com>
+Subject: [PATCH] loop: Only change blocksize when needed.
+Date:   Tue, 10 Mar 2020 14:12:30 +0100
+Message-Id: <20200310131230.106427-1-maco@android.com>
+X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eugeniu Rosca <erosca@de.adit-jv.com>
+Return early in loop_set_block_size() if the requested block size is
+identical to the one we already have; this avoids expensive calls to
+freeze the block queue.
 
-commit 63d6d7ed475c53dc1cabdfedf63de1fd8dcd72ee upstream.
-
-Address below Coverity complaint (Feb 25, 2020, 8:06 AM CET):
-
+Signed-off-by: Martijn Coenen <maco@android.com>
 ---
- drivers/usb/core/hub.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/block/loop.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
---- a/drivers/usb/core/hub.c
-+++ b/drivers/usb/core/hub.c
-@@ -1833,7 +1833,7 @@ static int hub_probe(struct usb_interfac
+diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+index c1c844ad6b1a..a42c49e04954 100644
+--- a/drivers/block/loop.c
++++ b/drivers/block/loop.c
+@@ -1541,16 +1541,16 @@ static int loop_set_block_size(struct loop_device *lo, unsigned long arg)
+ 	if (arg < 512 || arg > PAGE_SIZE || !is_power_of_2(arg))
+ 		return -EINVAL;
  
- 	if (id->driver_info & HUB_QUIRK_DISABLE_AUTOSUSPEND) {
- 		hub->quirk_disable_autosuspend = 1;
--		usb_autopm_get_interface(intf);
-+		usb_autopm_get_interface_no_resume(intf);
- 	}
+-	if (lo->lo_queue->limits.logical_block_size != arg) {
+-		sync_blockdev(lo->lo_device);
+-		kill_bdev(lo->lo_device);
+-	}
++	if (lo->lo_queue->limits.logical_block_size == arg)
++		return 0;
++
++	sync_blockdev(lo->lo_device);
++	kill_bdev(lo->lo_device);
  
- 	if (hub_configure(hub, &desc->endpoint[0].desc) >= 0)
-
+ 	blk_mq_freeze_queue(lo->lo_queue);
+ 
+ 	/* kill_bdev should have truncated all the pages */
+-	if (lo->lo_queue->limits.logical_block_size != arg &&
+-			lo->lo_device->bd_inode->i_mapping->nrpages) {
++	if (lo->lo_device->bd_inode->i_mapping->nrpages) {
+ 		err = -EAGAIN;
+ 		pr_warn("%s: loop%d (%s) has still dirty pages (nrpages=%lu)\n",
+ 			__func__, lo->lo_number, lo->lo_file_name,
+-- 
+2.25.1.481.gfbce0eb801-goog
 
