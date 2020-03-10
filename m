@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69821C18E5C
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:45:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5E21C18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:45:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 364D5246A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:45:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8011A246A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:45:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583844309;
-	bh=B7VOlSOjO7l3I4bZleAif6TFGAkZC1jd/cnerN4SMsc=;
+	s=default; t=1583844312;
+	bh=cg2as5AkT77EQDRMH1DPFUeJrfDK/wXOqjs5Sf/uJa8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LVQZJ5QTtP471YdluHLF+4WEfzkPJ2Su3b/zYinN4xSOHL1kZXesFIa5JEetJncSu
-	 VrPNahxOBjEndr3eCHDOJYp3/w21Ryn+uh0ox2SkVkUcmdQh0M9pielkpELKaMHEeQ
-	 ABPGQhNIz26GkQJTGQLKtW9xN0YkWGJ1zeEMUw7U=
+	b=aBuxoSGYuEmYdzO5Zl2zvRZCKSDDHjfWCU+kdPRsWZ0dzaBJVClZRjwr8gp7QDIYW
+	 0OGo+5QagN+jP/mzM2J671oBbSvNVMym+DTpffmaK6WVwiap8d3Xs1dI6uwE2RJ3QO
+	 F1mRbOjkLksQIjOqITQQ36X2AXFOUPFF02TMP0Q0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727875AbgCJMpI (ORCPT
+        id S1727884AbgCJMpL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:45:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47520 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:45:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47586 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727439AbgCJMpF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:45:05 -0400
+        id S1727600AbgCJMpI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:45:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 57B00246A2;
-        Tue, 10 Mar 2020 12:45:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 16B81246A3;
+        Tue, 10 Mar 2020 12:45:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844302;
-        bh=B7VOlSOjO7l3I4bZleAif6TFGAkZC1jd/cnerN4SMsc=;
+        s=default; t=1583844306;
+        bh=cg2as5AkT77EQDRMH1DPFUeJrfDK/wXOqjs5Sf/uJa8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w0iadoxEqXEIUGnMSBvgat7ujveR9B32PjBI7flzU86kJK+imkJmoExcKt6jvevKr
-         cspqRgdBmKR0Y2A8meuJotxQb2nCqrmqT1t0hy7iLp00YAtpZw2VEM0iF/67gCd9dF
-         0WfBJvyS7LXkuvgByMTvf+0zcVW8TRp9zLXPo4rY=
+        b=M2JZ4GnwNJh0ZvzcBhLMkx/PVCz90aHHwelsFm9QU7SmMsGQmpaUJ4E9tLv33RIfn
+         qPZ831E1Sylr+JYDlSJgunTVp5mgP9s44tUFhwNsM3CoIjewA+RzypxiOarnKMF/wI
+         Yg0K25n3M+VeshODXAo6LaJfyZwGNSioG6J9PR6w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Suraj Jitindar Singh <surajjs@amazon.com>,
-        Theodore Tso <tytso@mit.edu>, Balbir Singh <sblbir@amazon.com>,
-        stable@kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 04/88] ext4: fix potential race between s_group_info online resizing and access
-Date:   Tue, 10 Mar 2020 13:38:12 +0100
-Message-Id: <20200310123607.884625011@linuxfoundation.org>
+        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        Corey Minyard <cminyard@mvista.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 05/88] ipmi:ssif: Handle a possible NULL pointer reference
+Date:   Tue, 10 Mar 2020 13:38:13 +0100
+Message-Id: <20200310123608.059439536@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123606.543939933@linuxfoundation.org>
 References: <20200310123606.543939933@linuxfoundation.org>
@@ -60,184 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suraj Jitindar Singh <surajjs@amazon.com>
+From: Corey Minyard <cminyard@mvista.com>
 
-[ Upstream commit df3da4ea5a0fc5d115c90d5aa6caa4dd433750a7 ]
+[ Upstream commit 6b8526d3abc02c08a2f888e8c20b7ac9e5776dfe ]
 
-During an online resize an array of pointers to s_group_info gets replaced
-so it can get enlarged. If there is a concurrent access to the array in
-ext4_get_group_info() and this memory has been reused then this can lead to
-an invalid memory access.
+In error cases a NULL can be passed to memcpy.  The length will always
+be zero, so it doesn't really matter, but go ahead and check for NULL,
+anyway, to be more precise and avoid static analysis errors.
 
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=206443
-Link: https://lore.kernel.org/r/20200221053458.730016-3-tytso@mit.edu
-Signed-off-by: Suraj Jitindar Singh <surajjs@amazon.com>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Reviewed-by: Balbir Singh <sblbir@amazon.com>
-Cc: stable@kernel.org
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Corey Minyard <cminyard@mvista.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/ext4.h    |  8 ++++----
- fs/ext4/mballoc.c | 52 +++++++++++++++++++++++++++++++----------------
- 2 files changed, 39 insertions(+), 21 deletions(-)
+ drivers/char/ipmi/ipmi_ssif.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
-index faa66b702059a..eb0ec50684233 100644
---- a/fs/ext4/ext4.h
-+++ b/fs/ext4/ext4.h
-@@ -1427,7 +1427,7 @@ struct ext4_sb_info {
- #endif
- 
- 	/* for buddy allocator */
--	struct ext4_group_info ***s_group_info;
-+	struct ext4_group_info ** __rcu *s_group_info;
- 	struct inode *s_buddy_cache;
- 	spinlock_t s_md_lock;
- 	unsigned short *s_mb_offsets;
-@@ -2816,13 +2816,13 @@ static inline
- struct ext4_group_info *ext4_get_group_info(struct super_block *sb,
- 					    ext4_group_t group)
- {
--	 struct ext4_group_info ***grp_info;
-+	 struct ext4_group_info **grp_info;
- 	 long indexv, indexh;
- 	 BUG_ON(group >= EXT4_SB(sb)->s_groups_count);
--	 grp_info = EXT4_SB(sb)->s_group_info;
- 	 indexv = group >> (EXT4_DESC_PER_BLOCK_BITS(sb));
- 	 indexh = group & ((EXT4_DESC_PER_BLOCK(sb)) - 1);
--	 return grp_info[indexv][indexh];
-+	 grp_info = sbi_array_rcu_deref(EXT4_SB(sb), s_group_info, indexv);
-+	 return grp_info[indexh];
- }
- 
- /*
-diff --git a/fs/ext4/mballoc.c b/fs/ext4/mballoc.c
-index c3619f3f40517..c18668e3135e8 100644
---- a/fs/ext4/mballoc.c
-+++ b/fs/ext4/mballoc.c
-@@ -2377,7 +2377,7 @@ int ext4_mb_alloc_groupinfo(struct super_block *sb, ext4_group_t ngroups)
- {
- 	struct ext4_sb_info *sbi = EXT4_SB(sb);
- 	unsigned size;
--	struct ext4_group_info ***new_groupinfo;
-+	struct ext4_group_info ***old_groupinfo, ***new_groupinfo;
- 
- 	size = (ngroups + EXT4_DESC_PER_BLOCK(sb) - 1) >>
- 		EXT4_DESC_PER_BLOCK_BITS(sb);
-@@ -2390,13 +2390,16 @@ int ext4_mb_alloc_groupinfo(struct super_block *sb, ext4_group_t ngroups)
- 		ext4_msg(sb, KERN_ERR, "can't allocate buddy meta group");
- 		return -ENOMEM;
- 	}
--	if (sbi->s_group_info) {
--		memcpy(new_groupinfo, sbi->s_group_info,
-+	rcu_read_lock();
-+	old_groupinfo = rcu_dereference(sbi->s_group_info);
-+	if (old_groupinfo)
-+		memcpy(new_groupinfo, old_groupinfo,
- 		       sbi->s_group_info_size * sizeof(*sbi->s_group_info));
--		kvfree(sbi->s_group_info);
--	}
--	sbi->s_group_info = new_groupinfo;
-+	rcu_read_unlock();
-+	rcu_assign_pointer(sbi->s_group_info, new_groupinfo);
- 	sbi->s_group_info_size = size / sizeof(*sbi->s_group_info);
-+	if (old_groupinfo)
-+		ext4_kvfree_array_rcu(old_groupinfo);
- 	ext4_debug("allocated s_groupinfo array for %d meta_bg's\n", 
- 		   sbi->s_group_info_size);
- 	return 0;
-@@ -2408,6 +2411,7 @@ int ext4_mb_add_groupinfo(struct super_block *sb, ext4_group_t group,
- {
- 	int i;
- 	int metalen = 0;
-+	int idx = group >> EXT4_DESC_PER_BLOCK_BITS(sb);
- 	struct ext4_sb_info *sbi = EXT4_SB(sb);
- 	struct ext4_group_info **meta_group_info;
- 	struct kmem_cache *cachep = get_groupinfo_cache(sb->s_blocksize_bits);
-@@ -2426,12 +2430,12 @@ int ext4_mb_add_groupinfo(struct super_block *sb, ext4_group_t group,
- 				 "for a buddy group");
- 			goto exit_meta_group_info;
- 		}
--		sbi->s_group_info[group >> EXT4_DESC_PER_BLOCK_BITS(sb)] =
--			meta_group_info;
-+		rcu_read_lock();
-+		rcu_dereference(sbi->s_group_info)[idx] = meta_group_info;
-+		rcu_read_unlock();
+diff --git a/drivers/char/ipmi/ipmi_ssif.c b/drivers/char/ipmi/ipmi_ssif.c
+index 996b9ae154042..a4ef9a6bd3678 100644
+--- a/drivers/char/ipmi/ipmi_ssif.c
++++ b/drivers/char/ipmi/ipmi_ssif.c
+@@ -746,10 +746,14 @@ static void msg_done_handler(struct ssif_info *ssif_info, int result,
+ 	flags = ipmi_ssif_lock_cond(ssif_info, &oflags);
+ 	msg = ssif_info->curr_msg;
+ 	if (msg) {
++		if (data) {
++			if (len > IPMI_MAX_MSG_LENGTH)
++				len = IPMI_MAX_MSG_LENGTH;
++			memcpy(msg->rsp, data, len);
++		} else {
++			len = 0;
++		}
+ 		msg->rsp_size = len;
+-		if (msg->rsp_size > IPMI_MAX_MSG_LENGTH)
+-			msg->rsp_size = IPMI_MAX_MSG_LENGTH;
+-		memcpy(msg->rsp, data, msg->rsp_size);
+ 		ssif_info->curr_msg = NULL;
  	}
  
--	meta_group_info =
--		sbi->s_group_info[group >> EXT4_DESC_PER_BLOCK_BITS(sb)];
-+	meta_group_info = sbi_array_rcu_deref(sbi, s_group_info, idx);
- 	i = group & (EXT4_DESC_PER_BLOCK(sb) - 1);
- 
- 	meta_group_info[i] = kmem_cache_zalloc(cachep, GFP_NOFS);
-@@ -2479,8 +2483,13 @@ int ext4_mb_add_groupinfo(struct super_block *sb, ext4_group_t group,
- exit_group_info:
- 	/* If a meta_group_info table has been allocated, release it now */
- 	if (group % EXT4_DESC_PER_BLOCK(sb) == 0) {
--		kfree(sbi->s_group_info[group >> EXT4_DESC_PER_BLOCK_BITS(sb)]);
--		sbi->s_group_info[group >> EXT4_DESC_PER_BLOCK_BITS(sb)] = NULL;
-+		struct ext4_group_info ***group_info;
-+
-+		rcu_read_lock();
-+		group_info = rcu_dereference(sbi->s_group_info);
-+		kfree(group_info[idx]);
-+		group_info[idx] = NULL;
-+		rcu_read_unlock();
- 	}
- exit_meta_group_info:
- 	return -ENOMEM;
-@@ -2493,6 +2502,7 @@ static int ext4_mb_init_backend(struct super_block *sb)
- 	struct ext4_sb_info *sbi = EXT4_SB(sb);
- 	int err;
- 	struct ext4_group_desc *desc;
-+	struct ext4_group_info ***group_info;
- 	struct kmem_cache *cachep;
- 
- 	err = ext4_mb_alloc_groupinfo(sb, ngroups);
-@@ -2527,11 +2537,16 @@ err_freebuddy:
- 	while (i-- > 0)
- 		kmem_cache_free(cachep, ext4_get_group_info(sb, i));
- 	i = sbi->s_group_info_size;
-+	rcu_read_lock();
-+	group_info = rcu_dereference(sbi->s_group_info);
- 	while (i-- > 0)
--		kfree(sbi->s_group_info[i]);
-+		kfree(group_info[i]);
-+	rcu_read_unlock();
- 	iput(sbi->s_buddy_cache);
- err_freesgi:
--	kvfree(sbi->s_group_info);
-+	rcu_read_lock();
-+	kvfree(rcu_dereference(sbi->s_group_info));
-+	rcu_read_unlock();
- 	return -ENOMEM;
- }
- 
-@@ -2720,7 +2735,7 @@ int ext4_mb_release(struct super_block *sb)
- 	ext4_group_t ngroups = ext4_get_groups_count(sb);
- 	ext4_group_t i;
- 	int num_meta_group_infos;
--	struct ext4_group_info *grinfo;
-+	struct ext4_group_info *grinfo, ***group_info;
- 	struct ext4_sb_info *sbi = EXT4_SB(sb);
- 	struct kmem_cache *cachep = get_groupinfo_cache(sb->s_blocksize_bits);
- 
-@@ -2738,9 +2753,12 @@ int ext4_mb_release(struct super_block *sb)
- 		num_meta_group_infos = (ngroups +
- 				EXT4_DESC_PER_BLOCK(sb) - 1) >>
- 			EXT4_DESC_PER_BLOCK_BITS(sb);
-+		rcu_read_lock();
-+		group_info = rcu_dereference(sbi->s_group_info);
- 		for (i = 0; i < num_meta_group_infos; i++)
--			kfree(sbi->s_group_info[i]);
--		kvfree(sbi->s_group_info);
-+			kfree(group_info[i]);
-+		kvfree(group_info);
-+		rcu_read_unlock();
- 	}
- 	kfree(sbi->s_mb_offsets);
- 	kfree(sbi->s_mb_maxs);
 -- 
 2.20.1
 
