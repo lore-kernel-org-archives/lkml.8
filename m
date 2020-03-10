@@ -2,100 +2,76 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BFD1C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 17:12:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38503C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 17:13:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43D992146E
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 17:12:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g6GVVaiY"
+	by mail.kernel.org (Postfix) with ESMTP id 1A30F2146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 17:13:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726571AbgCJRMj (ORCPT
+        id S1726446AbgCJRND (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 13:12:39 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:41850 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726466AbgCJRMj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 13:12:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583860358;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=OC/jw5IZXVx7wZDomW5T/X+1F9FrFuN9wQhaz4Xoo1Y=;
-        b=g6GVVaiYE2gDWdeHjamQ/ya0Ok9Z2GXLXbrhgCJVnWi2jMElHHqNR3fCwW1UjR9LP8wJRJ
-        bFLBaGjAlOxL6Ms5XTj20npq2FU3rAhU1/RziOcg2+okvXK6Po0BtglOI+cEJgHApXaslm
-        zU1xULQnCnz/lIuxUM5QsZcXSqTREpk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-25-7QaVQKJVOA29IpYAOK_8NQ-1; Tue, 10 Mar 2020 13:12:34 -0400
-X-MC-Unique: 7QaVQKJVOA29IpYAOK_8NQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 10 Mar 2020 13:13:03 -0400
+Received: from ms.lwn.net ([45.79.88.28]:44002 "EHLO ms.lwn.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726395AbgCJRNC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 13:13:02 -0400
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 25C0B800D48;
-        Tue, 10 Mar 2020 17:12:32 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-182.rdu2.redhat.com [10.10.120.182])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3E11260BF3;
-        Tue, 10 Mar 2020 17:12:24 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <da226448-4b76-0456-4c29-742a1a24fe79@redhat.com>
-References: <da226448-4b76-0456-4c29-742a1a24fe79@redhat.com> <20200308170410.14166-3-longman@redhat.com> <20200308170410.14166-1-longman@redhat.com> <416690.1583771540@warthog.procyon.org.uk> <a4c92057-c364-965c-a251-02cbe46229b6@redhat.com>
-To:     Waiman Long <longman@redhat.com>
-Cc:     dhowells@redhat.com,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Mimi Zohar <zohar@linux.ibm.com>, keyrings@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        Sumit Garg <sumit.garg@linaro.org>,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        Roberto Sassu <roberto.sassu@huawei.com>,
-        Eric Biggers <ebiggers@google.com>,
-        Chris von Recklinghausen <crecklin@redhat.com>
-Subject: Re: [PATCH v2 2/2] KEYS: Avoid false positive ENOMEM error on key read
+        by ms.lwn.net (Postfix) with ESMTPSA id 805B92E4;
+        Tue, 10 Mar 2020 17:13:01 +0000 (UTC)
+Date:   Tue, 10 Mar 2020 11:13:00 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Jonathan =?UTF-8?B?TmV1c2Now6RmZXI=?= <j.neuschaefer@gmx.net>,
+        Linux Documentation List <linux-doc@vger.kernel.org>,
+        Sudeep Dutt <sudeep.dutt@intel.com>,
+        Ashutosh Dixit <ashutosh.dixit@intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dragan Cvetic <dragan.cvetic@xilinx.com>,
+        Derek Kiernan <derek.kiernan@xilinx.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] docs: Move Intel Many Integrated Core documentation
+ (mic) under misc-devices
+Message-ID: <20200310111300.4bf7359a@lwn.net>
+In-Reply-To: <CAHp75VfX0hWGaWqJcrShYW6SOi9B24LGm=02BGZXg7qOevgZBg@mail.gmail.com>
+References: <20200308211519.8414-1-j.neuschaefer@gmx.net>
+        <CAHp75VfX0hWGaWqJcrShYW6SOi9B24LGm=02BGZXg7qOevgZBg@mail.gmail.com>
+Organization: LWN.net
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <675399.1583860343.1@warthog.procyon.org.uk>
-Date:   Tue, 10 Mar 2020 17:12:23 +0000
-Message-ID: <675400.1583860343@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Waiman Long <longman@redhat.com> wrote:
+On Mon, 9 Mar 2020 09:34:37 +0200
+Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
 
-> That is not as simple as I thought. First of that, there is not an
-> equivalent kzvfree() helper to clear the buffer first before clearing.
-> Of course, I can do that manually.
+> On Sun, Mar 8, 2020 at 11:17 PM Jonathan Neuschäfer
+> <j.neuschaefer@gmx.net> wrote:
+> >
+> > It doesn't need to be a top-level chapter.
+> >
+> > This patch also updates MAINTAINERS and makes sure the F: lines are
+> > properly sorted.
+> >  
+> 
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> for MAINTAINERS change.
+> 
+> > Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
 
-Yeah, the actual substance of vfree() may get deferred.  It may be worth
-adding a kvzfree() that switches between kzfree() and memset(),vfree().
+Applied, thanks.
 
-> With patch 2, the allocated buffer length will be max(1024, keylen). The
-> security code uses kmalloc() for allocation. If we use kvalloc() here,
-> perhaps we should also use that for allocation that can be potentially
-> large like that in big_key. What do you think?
-
-Not for big_key: if it's larger than BIG_KEY_FILE_THRESHOLD (~1KiB) it gets
-written encrypted into shmem so that it can be swapped out to disk when not in
-use.
-
-However, other cases, sure - just be aware that on a 32-bit system,
-vmalloc/vmap space is a strictly limited resource.
-
-David
-
+jon
