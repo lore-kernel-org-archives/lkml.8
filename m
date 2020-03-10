@@ -2,101 +2,127 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0186C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 14:49:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 454B2C18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 14:51:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 989AA2146E
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 14:49:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A062205F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 14:51:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727483AbgCJOtA (ORCPT
+        id S1727510AbgCJOvD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 10:49:00 -0400
-Received: from mga17.intel.com ([192.55.52.151]:49085 "EHLO mga17.intel.com"
+        Tue, 10 Mar 2020 10:51:03 -0400
+Received: from mga12.intel.com ([192.55.52.136]:61409 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726546AbgCJOtA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 10:49:00 -0400
+        id S1726378AbgCJOvD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 10:51:03 -0400
 X-Amp-Result: UNKNOWN
 X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Mar 2020 07:48:59 -0700
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Mar 2020 07:49:20 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,537,1574150400"; 
-   d="scan'208";a="276977480"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by fmsmga002.fm.intel.com with ESMTP; 10 Mar 2020 07:48:59 -0700
-Date:   Tue, 10 Mar 2020 07:48:59 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Peter Xu <peterx@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Yan Zhao <yan.y.zhao@intel.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Christophe de Dinechin <dinechin@redhat.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [PATCH v6 02/14] KVM: Cache as_id in kvm_memory_slot
-Message-ID: <20200310144858.GA7600@linux.intel.com>
-References: <20200309214424.330363-1-peterx@redhat.com>
- <20200309214424.330363-3-peterx@redhat.com>
+   d="scan'208";a="353639779"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by fmsmga001.fm.intel.com with SMTP; 10 Mar 2020 07:49:14 -0700
+Received: by lahna (sSMTP sendmail emulation); Tue, 10 Mar 2020 16:49:13 +0200
+Date:   Tue, 10 Mar 2020 16:49:13 +0200
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     =?utf-8?Q?Micha=C5=82?= Stanek <mst@semihalf.com>
+Cc:     linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stanekm@google.com,
+        stable@vger.kernel.org, Marcin Wojtas <mw@semihalf.com>,
+        levinale@chromium.org, andriy.shevchenko@linux.intel.com,
+        Linus Walleij <linus.walleij@linaro.org>,
+        bgolaszewski@baylibre.com, rafael.j.wysocki@intel.com,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH] pinctrl: cherryview: Add quirk with custom translation
+ of ACPI GPIO numbers
+Message-ID: <20200310144913.GY2540@lahna.fi.intel.com>
+References: <20200205194804.1647-1-mst@semihalf.com>
+ <20200206083149.GK2667@lahna.fi.intel.com>
+ <CAMiGqYi2rVAc=hepkY-4S1U_3dJdbR4pOoB0f8tbBL4pzWLdxA@mail.gmail.com>
+ <20200207075654.GB2667@lahna.fi.intel.com>
+ <CAMiGqYjmd2edUezEXsX4JBSyOozzks1Pu8miPEviGsx=x59nZQ@mail.gmail.com>
+ <20200210101414.GN2667@lahna.fi.intel.com>
+ <CAMiGqYiYp=aSgW-4ro5ceUEaB7g0XhepFg+HZgfPvtvQL9Z1jA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200309214424.330363-3-peterx@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMiGqYiYp=aSgW-4ro5ceUEaB7g0XhepFg+HZgfPvtvQL9Z1jA@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 09, 2020 at 05:44:12PM -0400, Peter Xu wrote:
-> Cache the address space ID just like the slot ID.  It will be used in
-> order to fill in the dirty ring entries.
+On Tue, Mar 10, 2020 at 03:12:00PM +0100, Michał Stanek wrote:
+> On Mon, Feb 10, 2020 at 11:14 AM Mika Westerberg
+> <mika.westerberg@linux.intel.com> wrote:
+> >
+> > On Sat, Feb 08, 2020 at 07:43:24PM +0100, Michał Stanek wrote:
+> > > > >
+> > > > > Hi Mika,
+> > > > >
+> > > > > The previous patches from Dmitry handled IRQ numbering, here we have a
+> > > > > similar issue with GPIO to pin translation - hardcoded values in FW
+> > > > > which do not agree with the (non-consecutive) numbering in newer
+> > > > > kernels.
+> > > >
+> > > > Hmm, so instead of passing GpioIo/GpioInt resources to devices the
+> > > > firmware uses some hard-coded Linux GPIO numbering scheme? Would you
+> > > > able to share the exact firmware description where this happens?
+> > >
+> > > Actually it is a GPIO offset in ACPI tables for Braswell that was
+> > > hardcoded in the old firmware to match the previous (consecutive)
+> > > Linux GPIO numbering.
+> >
+> > Can you share the ACPI tables and point me to the GPIO that is using
+> > Linux number?
 > 
-> Suggested-by: Paolo Bonzini <pbonzini@redhat.com>
-> Suggested-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> Signed-off-by: Peter Xu <peterx@redhat.com>
-> ---
->  include/linux/kvm_host.h | 1 +
->  virt/kvm/kvm_main.c      | 2 ++
->  2 files changed, 3 insertions(+)
+> I think this is the one:
+> https://chromium-review.googlesource.com/c/chromiumos/third_party/coreboot/%2B/286534/2/src/mainboard/google/cyan/acpi/chromeos.asl
 > 
-> diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-> index bcb9b2ac0791..afa0e9034881 100644
-> --- a/include/linux/kvm_host.h
-> +++ b/include/linux/kvm_host.h
-> @@ -346,6 +346,7 @@ struct kvm_memory_slot {
->  	unsigned long userspace_addr;
->  	u32 flags;
->  	short id;
-> +	u8 as_id;
+> On Kefka the sysfs GPIO number for wpsw_cur was gpio392 before the
+> translation change occurred in Linux.
 
-My vote is to store this as a u16 and remove the BUILD_BUG_ON.  Using a u8
-doesn't save any memory since the compiler will pad out the struct.
+But that table does not seem to have any GPIO numbers in it.
 
->  };
->  
->  static inline unsigned long kvm_dirty_bitmap_bytes(struct kvm_memory_slot *memslot)
-> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-> index 70f03ce0e5c1..e6484dabfc59 100644
-> --- a/virt/kvm/kvm_main.c
-> +++ b/virt/kvm/kvm_main.c
-> @@ -1036,6 +1036,8 @@ int __kvm_set_memory_region(struct kvm *kvm,
->  
->  	new = old = *slot;
->  
-> +	BUILD_BUG_ON(U8_MAX < KVM_ADDRESS_SPACE_NUM);
-> +	new.as_id = as_id;
->  	new.id = id;
->  	new.base_gfn = base_gfn;
->  	new.npages = npages;
-> -- 
-> 2.24.1
+> > > > > > What GPIO(s) we are talking about and how does it show up to the user?
+> > > > >
+> > > > > As an example, the issue manifests itself when you run 'crossystem
+> > > > > wpsw_cur'. On my Kefka it incorrectly reports the value as 1 instead
+> > > > > of 0 when the write protect screw is removed.
+> > > >
+> > > > Is it poking GPIOs directly through sysfs relying the Linux GPIO
+> > > > numbering (which can change and is fragile anyway)?
+> > >
+> > > I believe so, yes.
+> >
+> > This is something that should be fixed in userspace. Using global Linux
+> > GPIO or IRQ numbers is fragile and source of issues like this. There are
+> > correct ways of using GPIOs from userspace: in case of sysfs, you can
+> > find the base of the chip and then user relative numbering against it or
+> > switch to use libgpiod that does the same but uses the newer char
+> > device. Both cases the GPIO number are relative against the GPIO chip so
+> > they work even if global Linux GPIO numbering changes.
 > 
+> I analyzed crossystem source code and it looks like it is doing
+> exactly what you're saying without any hardcoded assumptions. It gets
+> the absolute offset of the GPIO pin from sysfs using its ACPI
+> identifier, then it subtracts the base offset of the GPIO bank from it
+> and the result is added to the bank's gpiochip%d number as it shows up
+> in sysfs. The result is what is used to export and read the state of
+> the pin.
+> 
+> With the newer kernel the gpiochip%d number is different so crossystem
+> ends up reading the wrong pin.
+
+Hmm, so gpiochipX is also not considered a stable number. It is based on
+ARCH_NR_GPIOS which may change. So if the userspace is relaying certain GPIO
+chip is always gpichip200 for example then it is wrong.
