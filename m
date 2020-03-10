@@ -2,124 +2,171 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BC55C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 16:18:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 473A1C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 16:20:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71A7821D56
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 16:18:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583857121;
-	bh=S1BKfDbjA1iRAn3ZZqZEqHXcCp/sA+icgC/rWITTyl8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pm8DirwaXXnd4MzNGtLt7/Ds122QTTMGveLkNxmne3wloje/PenvJQ7bmHet0OBry
-	 QtfW2dQJmXsMTby5NssGYEMXHgyCGkahCwFx0uDcBCHJnyOHlc4wSFLVaVBt1rcDaZ
-	 RKpupd5tnidzRPLg4k0bFjFcGvkDB9EB9pup6VaU=
+	by mail.kernel.org (Postfix) with ESMTP id 1841521D56
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 16:20:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="v9PIceEl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726779AbgCJQSk (ORCPT
+        id S1726772AbgCJQUf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 12:18:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41450 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726426AbgCJQSk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 12:18:40 -0400
-Received: from localhost (unknown [104.132.1.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 287A420873;
-        Tue, 10 Mar 2020 16:18:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583857119;
-        bh=S1BKfDbjA1iRAn3ZZqZEqHXcCp/sA+icgC/rWITTyl8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AbmLKWbKqzpbhhIUi6xrKsdd4lokgJa/FCeZ1/1F11RdP+MMJbdWChWhw15lfVUZn
-         GKP+FFET/eK75dVo8jugvBoGpquwYT3h9ZtuRKMhrOyvLFw6eLKOuwXlXyvnrr3/Qj
-         bYJlaEEzuqw5Bsg7pUK2MmY9hblNNDwqtMnVc5jk=
-Date:   Tue, 10 Mar 2020 09:18:38 -0700
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Chao Yu <chao@kernel.org>
-Cc:     Chao Yu <yuchao0@huawei.com>,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] f2fs: fix to check i_compr_blocks correctly
-Message-ID: <20200310161838.GB240315@google.com>
-References: <20200225102646.43367-1-yuchao0@huawei.com>
- <3525f924-7d65-c005-a7e6-d315cf14aab2@kernel.org>
+        Tue, 10 Mar 2020 12:20:35 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:44946 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726608AbgCJQUe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 12:20:34 -0400
+Received: by mail-pl1-f193.google.com with SMTP id d9so5612067plo.11
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 09:20:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=rg0tlZ1r5JJSgGcfqdLNC6be2wreThrQF0bm9V2CBP4=;
+        b=v9PIceElWnxeoXavqqCMcnerPOpJvkrkNi3DANFBANHLHVl/niXJnuUxZmYB7ZOUVM
+         JEDa06Ujtlf38WeXQEe+PTgybub9Sow/4YlhM+WK2gV2fY+vBoMXblF+4EpANux0jrvM
+         CaDLNaiI1ZkmUnNwqLa/CQgl/FvoYsW7vhehtBj+1sUQ6BPJDYupNk3lG1UwJeoubBHx
+         5kTO6NGK87n2+L9r+THud1I8J0UemaZe1WBiqJcWJNb6ac+YuZM9pboZ0pe/YUll2UD4
+         2+aXb/GoLxjMfxM8Bk4M40b16R0/Q7lykhJiMq8NyVQ3mNanYkhvMCbshOieJsrEca9Q
+         INLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=rg0tlZ1r5JJSgGcfqdLNC6be2wreThrQF0bm9V2CBP4=;
+        b=neG43Dee1fbf78/nYPjfpRD9PUKzE9oseeH8HIJyM+ibYdYqrWeb2ja3xfR6bDuijK
+         8L8POKfTbmTqq53ESw7dhYpIqnF3/Q1EElXIv0+c2ya4GorR/U6jyPi3V8pxHeddgdge
+         9NgGHwR+2HCHoGYByJMNjWI43vi62o2YM8aJyU/qNRTEeCuNEE5NwpcOC2PEnJVcVn6W
+         eyhd0Ch6ZqjXNPoOcPnPRIApKVAHatuTnnrK3Z3s7HCEzNSRjDFIq072hQNmKgjBrQdK
+         3sbthdM4Mn78B1MoTss+WlomKnx6kQTJTzsyXwpkkE3oxKNhnmkSkH6/vi/uPHOYBtBV
+         l2tQ==
+X-Gm-Message-State: ANhLgQ1Tja6FdKPCPwXJMPAeJXqpfoLtJ10dGDZ+EOC/cm6Z8GswKIDr
+        J0J0mm3+RdPqLuSdwfSC5vrIUg==
+X-Google-Smtp-Source: ADFU+vsFBTyYg3pyF/6xABWJSKEizlfKeZ+CfT0J6b5nMVn41NLuvqaAgXzNDD0JN7sFwpw3NnRNHw==
+X-Received: by 2002:a17:902:346:: with SMTP id 64mr20737899pld.226.1583857232709;
+        Tue, 10 Mar 2020 09:20:32 -0700 (PDT)
+Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id 144sm51121112pfc.45.2020.03.10.09.20.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Mar 2020 09:20:31 -0700 (PDT)
+Date:   Tue, 10 Mar 2020 09:20:29 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Arnaud POULIQUEN <arnaud.pouliquen@st.com>
+Cc:     Andy Gross <agross@kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>,
+        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Mathieu Poirier <mathieu.poirier@linaro.org>
+Subject: Re: [PATCH v4 1/4] remoteproc: Traverse rproc_list under RCU read
+ lock
+Message-ID: <20200310162029.GI264362@yoga>
+References: <20200310063817.3344712-1-bjorn.andersson@linaro.org>
+ <20200310063817.3344712-2-bjorn.andersson@linaro.org>
+ <87a14705-186d-01a4-e8a5-1844dab4ea14@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <3525f924-7d65-c005-a7e6-d315cf14aab2@kernel.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <87a14705-186d-01a4-e8a5-1844dab4ea14@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/10, Chao Yu wrote:
-> Hi Jaegeuk,
+On Tue 10 Mar 06:41 PDT 2020, Arnaud POULIQUEN wrote:
+
+> Hi Bjorn,
 > 
-> On 2020-2-25 18:26, Chao Yu wrote:
-> > inode.i_blocks counts based on 512byte sector, we need to convert
-> > to 4kb sized block count before comparing to i_compr_blocks.
+> 
+> On 3/10/20 7:38 AM, Bjorn Andersson wrote:
+> > In order to be able to traverse the mostly read-only rproc_list without
+> > locking during panic migrate traversal to be done under rcu_read_lock().
 > > 
-> > In addition, add to print message when sanity check on inode
-> > compression configs failed.
+> > Mutual exclusion for modifications of the list continues to be handled
+> > by the rproc_list_mutex and a synchronization point is added before
+> > releasing objects that are popped from the list.
 > > 
-> > Signed-off-by: Chao Yu <yuchao0@huawei.com>
+> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 > > ---
-> >  fs/f2fs/inode.c | 23 ++++++++++++++++++++---
-> >  1 file changed, 20 insertions(+), 3 deletions(-)
 > > 
-> > diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
-> > index 156cc5ef3044..299611562f7e 100644
-> > --- a/fs/f2fs/inode.c
-> > +++ b/fs/f2fs/inode.c
-> > @@ -291,13 +291,30 @@ static bool sanity_check_inode(struct inode *inode, struct page *node_page)
-> >  			fi->i_flags & F2FS_COMPR_FL &&
-> >  			F2FS_FITS_IN_INODE(ri, fi->i_extra_isize,
-> >  						i_log_cluster_size)) {
-> > -		if (ri->i_compress_algorithm >= COMPRESS_MAX)
-> > +		if (ri->i_compress_algorithm >= COMPRESS_MAX) {
-> > +			f2fs_warn(sbi, "%s: inode (ino=%lx) has unsupported "
-> > +				"compress algorithm: %u, run fsck to fix",
-> > +				  __func__, inode->i_ino,
-> > +				  ri->i_compress_algorithm);
-> >  			return false;
-> > -		if (le64_to_cpu(ri->i_compr_blocks) > inode->i_blocks)
-> > +		}
-> > +		if (le64_to_cpu(ri->i_compr_blocks) >
-> > +				SECTOR_TO_BLOCK(inode->i_blocks)) {
-> > +			f2fs_warn(sbi, "%s: inode (ino=%lx) hash inconsistent "
-> 
-> This is a typo: hash -> has
-> 
-> Could you please manually fix this in your tree?
-
-Done.
-
-> 
-> Thanks
-> 
-> > +				"i_compr_blocks:%llu, i_blocks:%llu, run fsck to fix",
-> > +				  __func__, inode->i_ino,
-> > +				  le64_to_cpu(ri->i_compr_blocks),
-> > +				  SECTOR_TO_BLOCK(inode->i_blocks));
-> >  			return false;
-> > +		}
-> >  		if (ri->i_log_cluster_size < MIN_COMPRESS_LOG_SIZE ||
-> > -			ri->i_log_cluster_size > MAX_COMPRESS_LOG_SIZE)
-> > +			ri->i_log_cluster_size > MAX_COMPRESS_LOG_SIZE) {
-> > +			f2fs_warn(sbi, "%s: inode (ino=%lx) has unsupported "
-> > +				"log cluster size: %u, run fsck to fix",
-> > +				  __func__, inode->i_ino,
-> > +				  ri->i_log_cluster_size);
-> >  			return false;
-> > +		}
+> > Change v3:
+> > - New patch
+> > 
+> >  drivers/remoteproc/remoteproc_core.c | 13 ++++++++-----
+> >  1 file changed, 8 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
+> > index 097f33e4f1f3..f0a77c30c6b1 100644
+> > --- a/drivers/remoteproc/remoteproc_core.c
+> > +++ b/drivers/remoteproc/remoteproc_core.c
+> > @@ -1854,8 +1854,8 @@ struct rproc *rproc_get_by_phandle(phandle phandle)
+> >  	if (!np)
+> >  		return NULL;
+> >  
+> > -	mutex_lock(&rproc_list_mutex);
+> > -	list_for_each_entry(r, &rproc_list, node) {
+> > +	rcu_read_lock();
+> > +	list_for_each_entry_rcu(r, &rproc_list, node) {
+> >  		if (r->dev.parent && r->dev.parent->of_node == np) {
+> >  			/* prevent underlying implementation from being removed */
+> >  			if (!try_module_get(r->dev.parent->driver->owner)) {
+> > @@ -1868,7 +1868,7 @@ struct rproc *rproc_get_by_phandle(phandle phandle)
+> >  			break;
+> >  		}
 > >  	}
-> > 
-> >  	return true;
+> > -	mutex_unlock(&rproc_list_mutex);
+> > +	rcu_read_unlock();
+> >  
+> >  	of_node_put(np);
+> >  
+> > @@ -1925,7 +1925,7 @@ int rproc_add(struct rproc *rproc)
+> >  
+> >  	/* expose to rproc_get_by_phandle users */
+> >  	mutex_lock(&rproc_list_mutex);
+> > -	list_add(&rproc->node, &rproc_list);
+> > +	list_add_rcu(&rproc->node, &rproc_list);
+> >  	mutex_unlock(&rproc_list_mutex);
+> >  
+> >  	return 0;
+> > @@ -2140,9 +2140,12 @@ int rproc_del(struct rproc *rproc)
+> >  
+> >  	/* the rproc is downref'ed as soon as it's removed from the klist */
+> >  	mutex_lock(&rproc_list_mutex);
+> > -	list_del(&rproc->node);
+> > +	list_del_rcu(&rproc->node);
+> >  	mutex_unlock(&rproc_list_mutex);
+> i'm not familiar with rcu but as rproc_panic_handler can be called in interrupt context, 
+> does mutex should be replaced by a spinlock?
+> 
+
+Code traversing the list doesn't need to hold a lock, because the
+rculist implementation ensures that the list itself is always
+consistent.
+
+Updates however can not be done concurrently, so that's why we're
+maintaining this lock - which can be a mutex, because it now only
+protects modifications.
+
+And then the last piece is to guarantee that a node is not freed while
+it's being accessed by the code traversing the list. This is ensured by
+the synchronize_rcu() call below, which makes sure that no code holding
+a rcu_read_lock() is still traversing the list.
+
+Regards,
+Bjorn
+
+> Regards,
+> Arnaud
+> >  
+> > +	/* Ensure that no readers of rproc_list are still active */
+> > +	synchronize_rcu();
+> > +
+> >  	device_del(&rproc->dev);
+> >  
+> >  	return 0;
 > > 
