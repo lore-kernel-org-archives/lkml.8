@@ -2,127 +2,173 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 721E1C18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 19:29:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20E9BC18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 19:29:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D8E420873
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 19:29:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E64E420873
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 19:29:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727369AbgCJT3p (ORCPT
+        id S1727464AbgCJT3z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 15:29:45 -0400
-Received: from mga12.intel.com ([192.55.52.136]:21692 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726545AbgCJT3o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 15:29:44 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Mar 2020 12:29:44 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,538,1574150400"; 
-   d="scan'208";a="353693892"
-Received: from hhuan26-mobl1.amr.corp.intel.com ([10.254.76.69])
-  by fmsmga001.fm.intel.com with ESMTP; 10 Mar 2020 12:29:41 -0700
-Content-Type: text/plain; charset=iso-8859-15; format=flowed; delsp=yes
-To:     "Jarkko Sakkinen" <jarkko.sakkinen@linux.intel.com>,
-        "Dr. Greg" <greg@enjellic.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, sean.j.christopherson@intel.com,
-        nhorman@redhat.com, npmccallum@redhat.com, haitao.huang@intel.com,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        kai.svahn@intel.com, bp@alien8.de, josh@joshtriplett.org,
-        luto@kernel.org, kai.huang@intel.com, rientjes@google.com,
-        cedric.xing@intel.com, puiterwijk@redhat.com,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v28 14/22] selftests/x86: Add a selftest for SGX
-References: <20200303233609.713348-1-jarkko.sakkinen@linux.intel.com>
- <20200303233609.713348-15-jarkko.sakkinen@linux.intel.com>
- <20200306053210.GA16297@wind.enjellic.com>
-Date:   Tue, 10 Mar 2020 14:29:41 -0500
+        Tue, 10 Mar 2020 15:29:55 -0400
+Received: from out02.mta.xmission.com ([166.70.13.232]:54394 "EHLO
+        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726545AbgCJT3z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 15:29:55 -0400
+Received: from in01.mta.xmission.com ([166.70.13.51])
+        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jBkZc-0005OS-FU; Tue, 10 Mar 2020 13:29:52 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jBkZZ-0002Nd-K3; Tue, 10 Mar 2020 13:29:52 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Jann Horn <jannh@google.com>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        Kees Cook <keescook@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Andrei Vagin <avagin@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Peter Zijlstra \(Intel\)" <peterz@infradead.org>,
+        Yuyang Du <duyuyang@gmail.com>,
+        David Hildenbrand <david@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        David Howells <dhowells@redhat.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christian Kellner <christian@kellner.me>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        "linux-doc\@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel\@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-mm\@kvack.org" <linux-mm@kvack.org>,
+        "stable\@vger.kernel.org" <stable@vger.kernel.org>,
+        "linux-api\@vger.kernel.org" <linux-api@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Sargun Dhillon <sargun@sargun.me>
+References: <87r1y8dqqz.fsf@x220.int.ebiederm.org>
+        <AM6PR03MB517053AED7DC89F7C0704B7DE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <AM6PR03MB51703B44170EAB4626C9B2CAE4E20@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <87tv32cxmf.fsf_-_@x220.int.ebiederm.org>
+        <87v9ne5y4y.fsf_-_@x220.int.ebiederm.org>
+        <87eeu25y14.fsf_-_@x220.int.ebiederm.org>
+        <20200309195909.h2lv5uawce5wgryx@wittgenstein>
+        <877dztz415.fsf@x220.int.ebiederm.org>
+        <20200309201729.yk5sd26v4bz4gtou@wittgenstein>
+        <87k13txnig.fsf@x220.int.ebiederm.org>
+        <20200310085540.pztaty2mj62xt2nm@wittgenstein>
+        <87wo7svy96.fsf_-_@x220.int.ebiederm.org>
+        <CAG48ez2cUZMVOAXfHPNjKjYsMSaWkjUjOCHo0KYZ+oXQUW4viA@mail.gmail.com>
+Date:   Tue, 10 Mar 2020 14:27:30 -0500
+In-Reply-To: <CAG48ez2cUZMVOAXfHPNjKjYsMSaWkjUjOCHo0KYZ+oXQUW4viA@mail.gmail.com>
+        (Jann Horn's message of "Tue, 10 Mar 2020 20:16:47 +0100")
+Message-ID: <87k13sui1p.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-From:   "Haitao Huang" <haitao.huang@linux.intel.com>
-Organization: Intel Corp
-Message-ID: <op.0g923rgpwjvjmi@hhuan26-mobl1.amr.corp.intel.com>
-In-Reply-To: <20200306053210.GA16297@wind.enjellic.com>
-User-Agent: Opera Mail/1.0 (Win32)
+Content-Type: text/plain
+X-XM-SPF: eid=1jBkZZ-0002Nd-K3;;;mid=<87k13sui1p.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX19Z1jtSmtmPbttkGJihPVv1nviFC/pSEI0=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH] pidfd: Stop taking cred_guard_mutex
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 05 Mar 2020 23:32:10 -0600, Dr. Greg <greg@enjellic.com> wrote:
+Jann Horn <jannh@google.com> writes:
 
-> On Wed, Mar 04, 2020 at 01:36:01AM +0200, Jarkko Sakkinen wrote:
+> On Tue, Mar 10, 2020 at 7:54 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
+>> During exec some file descriptors are closed and the files struct is
+>> unshared.  But all of that can happen at other times and it has the
+>> same protections during exec as at ordinary times.  So stop taking the
+>> cred_guard_mutex as it is useless.
+>>
+>> Furthermore he cred_guard_mutex is a bad idea because it is deadlock
+>> prone, as it is held in serveral while waiting possibly indefinitely
+>> for userspace to do something.
 >
-> Good evening, I hope the end of the week is going well for everyone.
+> Please don't. Just use the new exec_update_mutex like everywhere else.
 >
->> Add a selftest for SGX. It is a trivial test where a simple enclave
->> copies one 64-bit word of memory between two memory locations given
->> to the enclave as arguments. Use ENCLS[EENTER] to invoke the
->> enclave.
+>> Cc: Sargun Dhillon <sargun@sargun.me>
+>> Cc: Christian Brauner <christian.brauner@ubuntu.com>
+>> Cc: Arnd Bergmann <arnd@arndb.de>
+>> Fixes: 8649c322f75c ("pid: Implement pidfd_getfd syscall")
+>> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+>> ---
+>>  kernel/pid.c | 6 ------
+>>  1 file changed, 6 deletions(-)
+>>
+>> Christian if you don't have any objections I will take this one through
+>> my tree.
+>>
+>> I tried to figure out why this code path takes the cred_guard_mutex and
+>> the archive on lore.kernel.org was not helpful in finding that part of
+>> the conversation.
 >
-> Just as a clarification, are you testing the new driver against signed
-> production class enclaves in .so format that also include metadata
-> layout directives or is the driver just getting tested against the two
-> page toy enclave that copies a word of memory from one memory location
-> to another?
+> That was my suggestion.
 >
+>> diff --git a/kernel/pid.c b/kernel/pid.c
+>> index 60820e72634c..53646d5616d2 100644
+>> --- a/kernel/pid.c
+>> +++ b/kernel/pid.c
+>> @@ -577,17 +577,11 @@ static struct file *__pidfd_fget(struct task_struct *task, int fd)
+>>         struct file *file;
+>>         int ret;
+>>
+>> -       ret = mutex_lock_killable(&task->signal->cred_guard_mutex);
+>> -       if (ret)
+>> -               return ERR_PTR(ret);
+>> -
+>>         if (ptrace_may_access(task, PTRACE_MODE_ATTACH_REALCREDS))
+>>                 file = fget_task(task, fd);
+>>         else
+>>                 file = ERR_PTR(-EPERM);
+>>
+>> -       mutex_unlock(&task->signal->cred_guard_mutex);
+>> -
+>>         return file ?: ERR_PTR(-EBADF);
+>>  }
+>
+> If you make this change, then if this races with execution of a setuid
+> program that afterwards e.g. opens a unix domain socket, an attacker
+> will be able to steal that socket and inject messages into
+> communication with things like DBus. procfs currently has the same
+> race, and that still needs to be fixed, but at least procfs doesn't
+> let you open things like sockets because they don't have a working
+> ->open handler, and it enforces the normal permission check for
+> opening files.
 
-We (Intel SGX SDK/PSW team) tested this driver for enclaves in .so format  
-with metadata. Our 2.8 release supports v24 and 2.9 supports v25+. Both  
-production signed and debug signed enclaves worked.
+It isn't only exec that can change credentials.  Do we need a lock for
+changing credentials?
 
-*Note* we did make some code changes in our runtime for v24+, mainly  
-dealing with src & EPC page alignment for EADD, open one fd per enclave,  
-use -z noexecstack linker option, etc. You can see the changes on GitHub.
+Wouldn't it be sufficient to simply test ptrace_may_access after
+we get a copy of the file?
 
-> Our PSW/runtime is currently failing to initialize production class
-> enclaves secondary to a return value of -4 from the ENCLU[EINIT]
-> instruction, which means the measurement of the loaded enclave has
-> failed to match the value in the signature structure.
->
-> The same enclave loads fine with the out of kernel driver.  Our
-> diagnostics tell us we are feeding identical page streams and
-> permissions to the page add ioctl's of both drivers.  The identity
-> modulus signature of the signing key for the enclave is being written
-> to the launch control registers.
->
-> We see the same behavior from both our unit test enclaves and the
-> Quoting Enclave from the Intel SGX runtime.
->
-We did not see any issue loading QE in our tests. Please directly email me  
-on this test if you have specific questions.
+If we need a lock around credential change let's design and build that.
+Having a mismatch between what a lock is designed to do, and what
+people use it for can only result in other bugs as people get confused.
 
-> When we ported our runtime loader to the new driver ABI we kept things
-> simple and add only a single page at a time in order to replicate the
-> behavior of the old driver.
->
-> Secondly, we were wondering what distribution you are building the
-> self-tests with?  Initial indications are that the selftest signing
-> utility doesn't build properly with OpenSSL 1.1.1.
->
-> Have a good day.
->
-> Dr. Greg
->
-> As always,
-> Dr. Greg Wettstein, Ph.D, Worker
-> IDfusion, LLC               SGX secured infrastructure and
-> 4206 N. 19th Ave.           autonomously self-defensive platforms.
-> Fargo, ND  58102
-> PH: 701-281-1686            EMAIL: greg@idfusion.net
-> ------------------------------------------------------------------------------
-> "Don't worry about people stealing your ideas.  If your ideas are any
->  good, you'll have to ram them down people's throats."
->                                 -- Howard Aiken
-
-
--- 
-Using Opera's mail client: http://www.opera.com/mail/
+Eric
