@@ -2,92 +2,106 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE4C0C18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 21:17:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D173AC10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 21:17:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BE31215A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 21:17:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583875023;
-	bh=kn17Q3RT1DtK80IDDd3vZQENKCcvkblAHbgGB5mcyDA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bXBpcnidnAWgfrNbOsXQaBuesCJ4CZHZHU1KDP5Rf4znpLJN8O4OmPJydIg2aeNM6
-	 ZDqfpM8/QtYapNmogglJ0yW2bV8FQH8HfL5lVmoN0DcnAArQ/FLjG2h+B5Ir8HAGNM
-	 FNiz6Iz4jtRPZes4ikPGD4cKigfSFQeKvwyai86Q=
+	by mail.kernel.org (Postfix) with ESMTP id A149921655
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 21:17:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727590AbgCJVRC (ORCPT
+        id S1727669AbgCJVRQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 17:17:02 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:32785 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726268AbgCJVRC (ORCPT
+        Tue, 10 Mar 2020 17:17:16 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:35222 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726265AbgCJVRQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 17:17:02 -0400
-Received: by mail-oi1-f196.google.com with SMTP id r7so2308337oij.0;
-        Tue, 10 Mar 2020 14:17:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=7t2XjatVgxl1m5zmI0zf3cecNSKg3Cs9fIponxPwXSw=;
-        b=KqtmxOMbEO+NZ5NaO1ZrWYHJVFmkdWz65LLAuWIfqd9OC97tvcLi7nRcdBuH+a6OQn
-         qR8YmHPRSAqytfj7GkKX2qcE4CCOFPIc6EHOCS55k3IJ8xJM3lCEUYPr+Ey4gneksKh7
-         GFMpFwClj7TL9K9dw9MfChpAA6Avx9Rv3B2ZmgaZl0KpcDRHzLrouJBTBJkbPkVlPJJ6
-         tPR5wET2+nkz1QEzzwQVh0FC7jGveHY+f7zehT8c/1yBGaCKfcVQ6wMdp5iB92eE+fkg
-         lm8Y+b42l6w4Y+zW5o4nwlbfbqDlll6KwBEB4s8Z9VywQCDTIyY+Jid3qM42CSrLr5A/
-         KLxw==
-X-Gm-Message-State: ANhLgQ12qdDU3KGGXbuA4Pn+EUVmPgIAivqy3WZaSQOjspildcN3/miO
-        F5x8wzXDT19YeH2owsna1Q==
-X-Google-Smtp-Source: ADFU+vvnBqeRTKTq5e+nF4YgIWdaO8ppO/L3bDWF/OAOgz41PPJ+xjsLP+OYrd9V6nJXHRyJ/eyJqQ==
-X-Received: by 2002:aca:4fc7:: with SMTP id d190mr2684099oib.100.1583875021566;
-        Tue, 10 Mar 2020 14:17:01 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id h6sm7816905otq.63.2020.03.10.14.17.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Mar 2020 14:17:00 -0700 (PDT)
-Received: (nullmailer pid 10621 invoked by uid 1000);
-        Tue, 10 Mar 2020 21:17:00 -0000
-Date:   Tue, 10 Mar 2020 16:17:00 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Chunyan Zhang <zhang.lyra@gmail.com>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Chunyan Zhang <chunyan.zhang@unisoc.com>
-Subject: Re: [PATCH v6 3/7] dt-bindings: clk: sprd: add bindings for sc9863a
- clock controller
-Message-ID: <20200310211659.GA10559@bogus>
-References: <20200304072730.9193-1-zhang.lyra@gmail.com>
- <20200304072730.9193-4-zhang.lyra@gmail.com>
+        Tue, 10 Mar 2020 17:17:16 -0400
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jBmFE-0003vP-75; Tue, 10 Mar 2020 22:16:56 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 1DCD7104099; Tue, 10 Mar 2020 22:16:55 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Yu-cheng Yu <yu-cheng.yu@intel.com>, Borislav Petkov <bp@alien8.de>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Rik van Riel <riel@surriel.com>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH v2 8/8] x86/fpu/xstate: Restore supervisor xstates for __fpu__restore_sig()
+In-Reply-To: <e62e968c0980b091d7b263401ddd10162773678f.camel@intel.com>
+References: <6f91699c91f9ea0f527e80ed3ea2999444a8d2d1.camel@intel.com> <20200228172202.GD25261@zn.tnic> <9a283ad42da140d73de680b1975da142e62e016e.camel@intel.com> <20200228183131.GE25261@zn.tnic> <7c6560b067436e2ec52121bba6bff64833e28d8d.camel@intel.com> <20200228214742.GF25261@zn.tnic> <c8da950a64db495088f0abe3932a489a84e4da97.camel@intel.com> <20200229143644.GA1129@zn.tnic> <6778d141a3cdbbe51cdeb3a8efb9c34e0951f6c6.camel@intel.com> <53e795ffbc029de316985476fd61845b7a9e824f.camel@intel.com> <20200306205039.GA5337@cz.tnic> <e62e968c0980b091d7b263401ddd10162773678f.camel@intel.com>
+Date:   Tue, 10 Mar 2020 22:16:55 +0100
+Message-ID: <87a74n6hbs.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200304072730.9193-4-zhang.lyra@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed,  4 Mar 2020 15:27:26 +0800, Chunyan Zhang wrote:
-> From: Chunyan Zhang <chunyan.zhang@unisoc.com>
-> 
-> add a new bindings to describe sc9863a clock compatible string.
-> 
-> Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
-> ---
->  .../bindings/clock/sprd,sc9863a-clk.yaml      | 105 ++++++++++++++++++
->  1 file changed, 105 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/sprd,sc9863a-clk.yaml
-> 
+Yu-cheng Yu <yu-cheng.yu@intel.com> writes:
+> On Fri, 2020-03-06 at 21:50 +0100, Borislav Petkov wrote:
+> Earlier you wrote:
+>
+>   53973 / (3*60 + 35) =~ 251 XSAVES invocations per second!
+>
+> I would argue that the kernel does much more than that for context
+> switches.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+And that argument is completly bogus. You deliberately ignored that
+Boris said that this is just a boring kernel build which is definitely
+not a signal heavy workload. And just if you look at what the build
+does, it spends a huge amount if time in ld which is not using signals
+at all.
+
+> These are from:
+>   perf record -a make -j32 bzImage
+
+How useful: This is a systemwide record and not a recording of the
+workload. Try again and try with and without your stuff.
+
+Even if you do it proper, those numbers are uninteresting, really.
+
+What do they tell? Nothing but a picture of a workload which is known to
+be not signal heavy. You can also run while(1); for 20 seconds thats
+equally useful.
+
+Run a signal benchmark and then show the numbers before and after and
+chose a benchmark which is not running on a single CPU, chose one which
+is bouncing signals back and forth between two busy threads pinned on
+different CPUs.
+
+> Consider this and later maintenance, I think copy_xregs_to_kernel() is at
+> least not worse than saving each state separately.
+
+Please provide precise numbers taken with TSC for both variants just for
+that particular code path.
+
+And these numbers will only tell half of the story because they still do
+not take the cache foot print into account. 1000 bytes just to throw
+away 960 of them?
+
+While I appreciate that you worry about maintenance I can assure you
+that the code will be in a maintainable state at the point where it is
+going to be merged.
+
+Thanks,
+
+        tglx
+
+
