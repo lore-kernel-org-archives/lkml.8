@@ -2,152 +2,93 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A231C10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 19:27:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACFF3C18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 19:27:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3F1720873
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 19:27:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 755A020873
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 19:27:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583868462;
+	bh=R6TURxfsYVVE4HqeCNY1zkdtw7CCWtrdDuXnpv7ZcXs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KPCkRb7g/Rf4N2bOM2lJWsx2yCUXD71SdPtcu/SxbSTuQlwDI4by+ukF9l9/ZC6pv
+	 mMKDlNzhBPJkR+vVsRuL4mY5EZN/vB5QsD62TYKV3FA9qcC+v9YezYermNYzwrS45T
+	 T4CS4FvxWfA0UKRkjcKjUfGxyovUKwFR5KKyrzrU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727391AbgCJT13 (ORCPT
+        id S1727428AbgCJT1l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 15:27:29 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:49868 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726497AbgCJT13 (ORCPT
+        Tue, 10 Mar 2020 15:27:41 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:35877 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726497AbgCJT1l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 15:27:29 -0400
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 7DC2828EDD2;
-        Tue, 10 Mar 2020 19:27:27 +0000 (GMT)
-Date:   Tue, 10 Mar 2020 20:27:23 +0100
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Mason Yang <masonccyang@mxic.com.tw>
-Cc:     miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
-        frieder.schrempf@kontron.de, tglx@linutronix.de, stefan@agner.ch,
-        juliensu@mxic.com.tw, allison@lohutok.net,
-        linux-kernel@vger.kernel.org, bbrezillon@kernel.org,
-        rfontana@redhat.com, linux-mtd@lists.infradead.org,
-        yuehaibing@huawei.com, s.hauer@pengutronix.de
-Subject: Re: [PATCH v3 1/4] mtd: rawnand: Add support manufacturer specific
- lock/unlock operation
-Message-ID: <20200310202723.16b48f4b@collabora.com>
-In-Reply-To: <1583220084-10890-2-git-send-email-masonccyang@mxic.com.tw>
-References: <1583220084-10890-1-git-send-email-masonccyang@mxic.com.tw>
-        <1583220084-10890-2-git-send-email-masonccyang@mxic.com.tw>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Tue, 10 Mar 2020 15:27:41 -0400
+Received: by mail-oi1-f193.google.com with SMTP id k18so2057027oib.3;
+        Tue, 10 Mar 2020 12:27:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2lXAOtfUNJwV/UZjRrVCvi9g1TVoJjiAHJ4McAxapBE=;
+        b=Z/UaSsJ7Xf8XQHU83iHe6WjA9jj709JqHPyL8FExhS1tFFuvkXjr2lt1W3yxeh7XSB
+         QXklCW/mdXjzTczUsJBvv0rN/0Ag3oAqI1ryeZZqr9UXRNQoTk5WRkCgXDtVEHiC0mJx
+         4sqvYi6BHW1cjjaay3klz8SJH0q+oaoaOkuCKpaTFz6c3abZZeJjFwYN+UPf3gIjeFws
+         OV6FJ0pgjt3g69qEFKxOF7hkzF12pZ+iVNjdpKk2s5ERtwPF7QkBIKDyaIjUGjtL/5rk
+         mz9nwA8pheDdQa+EpTHtZfoHttyjmsj29ydd/huvGNMiMivolAIAbxQqAJ74RHVACevg
+         A9kw==
+X-Gm-Message-State: ANhLgQ0WuRdiug5j+Ldtc2+tdscGFmqnVc3Fye6HVns9sNrouqF5INEF
+        M7FCShS5w3xo83olNqruvg==
+X-Google-Smtp-Source: ADFU+vtHlGSiCDvcMp7DplfwyvRqWh2+hg+grkGoN94UOz4kFCTNzNZ+btv/5xQ+r3ApEWQB3x7C2A==
+X-Received: by 2002:aca:8d5:: with SMTP id 204mr2257269oii.141.1583868459024;
+        Tue, 10 Mar 2020 12:27:39 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id s2sm8970666otp.35.2020.03.10.12.27.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Mar 2020 12:27:38 -0700 (PDT)
+Received: (nullmailer pid 14587 invoked by uid 1000);
+        Tue, 10 Mar 2020 19:27:37 -0000
+Date:   Tue, 10 Mar 2020 14:27:37 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Johan Jonker <jbx6244@gmail.com>
+Cc:     heiko@sntech.de, robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/3] dt-bindings: arm: add Rockchip rk3036-evb board
+Message-ID: <20200310192737.GA14520@bogus>
+References: <20200302092759.3291-1-jbx6244@gmail.com>
+ <20200302092759.3291-2-jbx6244@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200302092759.3291-2-jbx6244@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue,  3 Mar 2020 15:21:21 +0800
-Mason Yang <masonccyang@mxic.com.tw> wrote:
-
-> Add nand_lock() & nand_unlock() for manufacturer specific lock & unlock
-> operation while the device supports Block Portection function.
+On Mon,  2 Mar 2020 10:27:58 +0100, Johan Jonker wrote:
+> A test with the command below gives this error:
 > 
-> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
-> Reported-by: kbuild test robot <lkp@intel.com>
-
-Reported-by on something that's not a fix doesn't make sense. I know
-the 0day bot asked you to add this tag, but that should only be done if
-you submit a separate patch, ideally with a Fixes tag. If the offending
-patch has not been merged yet, you should just fix the commit and ignore
-the Reported-by tag (you can mention who reported the problem in the
-changelog though).
-
-> Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> arch/arm/boot/dts/rk3036-evb.dt.yaml: /: compatible:
+> ['rockchip,rk3036-evb', 'rockchip,rk3036']
+> is not valid under any of the given schemas
+> 
+> This board was somehow never added to the documentation.
+> Fix this error by adding the rk3036-evb board to rockchip.yaml.
+> 
+> make ARCH=arm dtbs_check
+> DT_SCHEMA_FILES=Documentation/devicetree/bindings/arm/rockchip.yaml
+> 
+> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
 > ---
->  drivers/mtd/nand/raw/nand_base.c | 36 ++++++++++++++++++++++++++++++++++--
->  include/linux/mtd/rawnand.h      |  5 +++++
->  2 files changed, 39 insertions(+), 2 deletions(-)
+>  Documentation/devicetree/bindings/arm/rockchip.yaml | 5 +++++
+>  1 file changed, 5 insertions(+)
 > 
-> diff --git a/drivers/mtd/nand/raw/nand_base.c b/drivers/mtd/nand/raw/nand_base.c
-> index f64e3b6..769be81 100644
-> --- a/drivers/mtd/nand/raw/nand_base.c
-> +++ b/drivers/mtd/nand/raw/nand_base.c
-> @@ -4360,6 +4360,38 @@ static void nand_shutdown(struct mtd_info *mtd)
->  	nand_suspend(mtd);
->  }
->  
-> +/**
-> + * nand_lock - [MTD Interface] Lock the NAND flash
-> + * @mtd: MTD device structure
-> + * @ofs: offset byte address
-> + * @len: number of bytes to lock (must be a multiple of block/page size)
-> + */
-> +static int nand_lock(struct mtd_info *mtd, loff_t ofs, uint64_t len)
-> +{
-> +	struct nand_chip *chip = mtd_to_nand(mtd);
-> +
-> +	if (!chip->lock_area)
-> +		return -ENOTSUPP;
-> +
-> +	return chip->lock_area(chip, ofs, len);
-> +}
-> +
-> +/**
-> + * nand_unlock - [MTD Interface] Unlock the NAND flash
-> + * @mtd: MTD device structure
-> + * @ofs: offset byte address
-> + * @len: number of bytes to unlock (must be a multiple of block/page size)
-> + */
-> +static int nand_unlock(struct mtd_info *mtd, loff_t ofs, uint64_t len)
-> +{
-> +	struct nand_chip *chip = mtd_to_nand(mtd);
-> +
-> +	if (!chip->unlock_area)
-> +		return -ENOTSUPP;
-> +
-> +	return chip->unlock_area(chip, ofs, len);
-> +}
-> +
->  /* Set default functions */
->  static void nand_set_defaults(struct nand_chip *chip)
->  {
-> @@ -5786,8 +5818,8 @@ static int nand_scan_tail(struct nand_chip *chip)
->  	mtd->_read_oob = nand_read_oob;
->  	mtd->_write_oob = nand_write_oob;
->  	mtd->_sync = nand_sync;
-> -	mtd->_lock = NULL;
-> -	mtd->_unlock = NULL;
-> +	mtd->_lock = nand_lock;
-> +	mtd->_unlock = nand_unlock;
->  	mtd->_suspend = nand_suspend;
->  	mtd->_resume = nand_resume;
->  	mtd->_reboot = nand_shutdown;
-> diff --git a/include/linux/mtd/rawnand.h b/include/linux/mtd/rawnand.h
-> index 4ab9bcc..bc2fa3c 100644
-> --- a/include/linux/mtd/rawnand.h
-> +++ b/include/linux/mtd/rawnand.h
-> @@ -1077,6 +1077,8 @@ struct nand_legacy {
->   * @manufacturer:	[INTERN] Contains manufacturer information
->   * @manufacturer.desc:	[INTERN] Contains manufacturer's description
->   * @manufacturer.priv:	[INTERN] Contains manufacturer private information
-> + * @lock_area:		[REPLACEABLE] specific NAND chip lock operation
-> + * @unlock_area:	[REPLACEABLE] specific NAND chip unlock operation
->   */
->  
->  struct nand_chip {
-> @@ -1136,6 +1138,9 @@ struct nand_chip {
->  		const struct nand_manufacturer *desc;
->  		void *priv;
->  	} manufacturer;
-> +
-> +	int (*lock_area)(struct nand_chip *chip, loff_t ofs, uint64_t len);
-> +	int (*unlock_area)(struct nand_chip *chip, loff_t ofs, uint64_t len);
->  };
->  
->  extern const struct mtd_ooblayout_ops nand_ooblayout_sp_ops;
 
+Reviewed-by: Rob Herring <robh@kernel.org>
