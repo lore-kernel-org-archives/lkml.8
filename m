@@ -2,500 +2,210 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A7A5C3F2D1
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98836C18E5A
 	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 04:18:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 162DF2467D
+	by mail.kernel.org (Postfix) with ESMTP id 4074D24681
 	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 04:18:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EtBK/yGy"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="N52PINxH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726150AbgCJERu (ORCPT
+        id S1726224AbgCJES4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 00:17:50 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:34595 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725800AbgCJERt (ORCPT
+        Tue, 10 Mar 2020 00:18:56 -0400
+Received: from mailout4.samsung.com ([203.254.224.34]:40611 "EHLO
+        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725845AbgCJES4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 00:17:49 -0400
-Received: by mail-ed1-f68.google.com with SMTP id c21so14688663edt.1
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 21:17:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZHOqz7uUgecqsn6sFVAwqyMqbdPI7yrYTT8yXex9t5w=;
-        b=EtBK/yGyHQCBjHloNYBLMIse3X2DZZtmX7NQ+RDmqbfpLe7styYnpKwv5P43Fnerez
-         FSSAJ9KpQlJhVnCjfzMbK62QvbmoPDLev+QV2NkclTu7VFPRZ//6Ty7RQb+Cg14cV5s+
-         tS4/XUpgLz89SaCFZxUs2pWldTANuYRJN3d3c=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZHOqz7uUgecqsn6sFVAwqyMqbdPI7yrYTT8yXex9t5w=;
-        b=pgo/E+MmCPOd0Iys/BjqR4YlqrVxWAED5mRL+J9nzC4ECbaOsnBtOWDgVlmXKKXVIK
-         FpOR469b74rISNWKXYeYq/neKvtms85a7koqoCpv5P9zBfEIBFHWqMRnr+Q1///xY1OE
-         cUP0cOujSG+l4lmllPaQb2f3b/mc0HMsFQ+TCXlA6dIeh/85cd3adPF5OYWVV3p6HXQi
-         F3yVRV/bjtLtl33R5JWN59qt9OWahn35a8Fqo5+a7h1WrVDslwHxzH6FHfXwM0+0Uj4F
-         KNLVZ4CCi8R2eAwPozfyMxwrZxpsDlDe33+MiuhAFgsyIlFSlZoNX79Uj2XVHN1jiPx/
-         s6DA==
-X-Gm-Message-State: ANhLgQ270DwqpiZW58pTi72rMdYkx336fNSqIFP5un0QJhc+3QjOKobm
-        QjTbXnt+7jl9MG0T1txiijQgaVFlioVxYw==
-X-Google-Smtp-Source: ADFU+vsKKXq5rNB82QS96oWZHitg2kbULiGrOFv+tU/v8zPEu69/KusJ4pGGs2EJQoCsRuOzuODkCA==
-X-Received: by 2002:a17:906:1697:: with SMTP id s23mr17899322ejd.355.1583813865839;
-        Mon, 09 Mar 2020 21:17:45 -0700 (PDT)
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com. [209.85.221.48])
-        by smtp.gmail.com with ESMTPSA id v14sm3955632edf.84.2020.03.09.21.17.44
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Mar 2020 21:17:44 -0700 (PDT)
-Received: by mail-wr1-f48.google.com with SMTP id l18so3961678wru.11
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 21:17:44 -0700 (PDT)
-X-Received: by 2002:adf:e94d:: with SMTP id m13mr23865947wrn.415.1583813863598;
- Mon, 09 Mar 2020 21:17:43 -0700 (PDT)
+        Tue, 10 Mar 2020 00:18:56 -0400
+Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200310041852epoutp04ac770e29c6618248ed178bfcf59a7eda~61mE4-1T73230032300epoutp04_
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 04:18:52 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200310041852epoutp04ac770e29c6618248ed178bfcf59a7eda~61mE4-1T73230032300epoutp04_
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1583813932;
+        bh=5Mha/f5SVWfw8/Q8Zd5koBn7mDH2Rk3jh+uI3njSA6g=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=N52PINxHmueR7WWKlsLWIJDsHvgVE++LuwYn3Hneky+dMHiwfcn0amDDQnICwST/1
+         MRT+4+TKsQa+keoZpPC3GazZyear+WchYHqUlqGiWlti3y2DcuCbIunNIVo413VNDh
+         j0ZUcBWu0kNCGJvKOY0VUbLeyoxq5pqsRk8yI9vE=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200310041851epcas1p1f559a57600d76af8315893532c922817~61mEjVwgq1001210012epcas1p10;
+        Tue, 10 Mar 2020 04:18:51 +0000 (GMT)
+Received: from epsmges1p2.samsung.com (unknown [182.195.40.165]) by
+        epsnrtp4.localdomain (Postfix) with ESMTP id 48c20B3sCvzMqYkf; Tue, 10 Mar
+        2020 04:18:50 +0000 (GMT)
+Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
+        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        AD.7E.48498.A25176E5; Tue, 10 Mar 2020 13:18:50 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200310041850epcas1p204b0a18243ba20692485e8efcb71cb4c~61mDKYJq_2991229912epcas1p2x;
+        Tue, 10 Mar 2020 04:18:50 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200310041850epsmtrp1875fa87324f8bb4238b8566dc3a9b34f~61mDJgjvs0674306743epsmtrp1o;
+        Tue, 10 Mar 2020 04:18:50 +0000 (GMT)
+X-AuditID: b6c32a36-a3dff7000001bd72-ef-5e67152a2d20
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        96.67.06569.A25176E5; Tue, 10 Mar 2020 13:18:50 +0900 (KST)
+Received: from [10.253.104.82] (unknown [10.253.104.82]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200310041849epsmtip26f4831d229229852a035803625e6c3b2~61mClYaqf1424414244epsmtip2F;
+        Tue, 10 Mar 2020 04:18:49 +0000 (GMT)
+Subject: Re: [PATCH] mm: mmap: show vm_unmapped_area error log
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, walken@google.com,
+        bp@suse.de, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        jaewon31.kim@gmail.com
+From:   Jaewon Kim <jaewon31.kim@samsung.com>
+Message-ID: <5E671520.8070700@samsung.com>
+Date:   Tue, 10 Mar 2020 13:18:40 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+        Thunderbird/38.7.2
 MIME-Version: 1.0
-References: <20191017084033.28299-1-xia.jiang@mediatek.com>
- <20191017084033.28299-6-xia.jiang@mediatek.com> <20191023103945.GA41089@chromium.org>
- <1575626384.17879.81.camel@mhfsdcap03>
-In-Reply-To: <1575626384.17879.81.camel@mhfsdcap03>
-From:   Tomasz Figa <tfiga@chromium.org>
-Date:   Tue, 10 Mar 2020 13:17:31 +0900
-X-Gmail-Original-Message-ID: <CAAFQd5A8XAT-7kZgaKktbBk1ogdfY3LRsK0xapHps4VqCQ_BZA@mail.gmail.com>
-Message-ID: <CAAFQd5A8XAT-7kZgaKktbBk1ogdfY3LRsK0xapHps4VqCQ_BZA@mail.gmail.com>
-Subject: Re: [PATCH v4 5/5] media: platform: Add jpeg dec/enc feature
-To:     Xia Jiang <xia.jiang@mediatek.com>
-Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rick Chang <Rick.Chang@mediatek.com>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        srv_heupstream <srv_heupstream@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200309140148.GK31215@bombadil.infradead.org>
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA01SWUwTURT1McN0IJY8C8gNcamTuFBTaCnFUcFoRK0BleiHy0dxhLEQuqXT
+        EpcYNSoYQFklUEtC0A8XYpNWTMHlo6IoGlyqMdG4EAkoCgYUY4KibQcif+fcd86799z3aELW
+        SiXSRWY7bzNzRoaKJm/cTVIqFfEGverzh4Wsy91GsTVVSWyFtwmxgU4Xxb5r+xvJTtYeYSd+
+        uai1El2H861E1+Jx6LyXFDrPWK1E96BxgtR5Hx3WffcsyJXsMWYU8lwBb5Pz5nxLQZHZkMlk
+        78hbn6dNV6mV6pXsCkZu5kx8JpOVk6vcWGQMzsLISzijI1jK5QSBSVmTYbM47Ly80CLYMxne
+        WmC0qlXWZIEzCQ6zITnfYlqlVqlStUHlXmPhx+YvpPXj/AN9zlLqGHqdUI6iaMBp8PjPe7Ic
+        RdMy7EPQ0NM5RcYQBNo9ESL5iWCy8WrktCVwZYQSD24jqGq7RYhkGMGp6kkUUsXiNXD/XFfQ
+        QdNxeBl8vZ4a0hDYieBOhZ8IaSi8HL611IZvlWIF3Gt0UyFM4sUw9PU7GcLxeBf4mkeRqJkD
+        D5v6w/UonAHl472SECbwQjjRfj48BOA3FDzp/kSIo2aBq749QsSxMNR9XSLiRPhcVSoRDScQ
+        DDd5kUhOInjrOYNElQbOVD4lQhEInATuzhSxvAg6JpqR2DkGRsYrwykBS+F0qUyULIGTA+NT
+        65oHfyYHprAOfN6eqdW1kTDaUEZUI7lzRjjnjEDO/51bEHEFzeWtgsnAC2pr6sxH9qDw/1Sk
+        +1Brb44fYRoxs6V4+X69LJIrEQ6a/AhogomTHlfk62XSAu7gId5mybM5jLzgR9rgvmuIxPh8
+        S/C3m+15am2qRqNh09JXpGs1TIK0b3eSXoYNnJ0v5nkrb5v2RdBRicdQipvWbLl7w/W7rEtp
+        i85+Ndhxvm+zftOPR4efbWga4gLUzc3qwXU9+56vJtL+xpF8nVBtzNp5dLS/8UvFUl9vzba4
+        /otoNPfsrJGXgcy6OyM+R8aHmMspXWP1L25a1mrLiJiWrcWRlfSzkk/be+dea31R1jk0rBdi
+        DX6Hxv30wk6GFAo5tYKwCdw/8ekRtLUDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrPLMWRmVeSWpSXmKPExsWy7bCSvK6WaHqcQetqdos569ewWUzs17To
+        3jyT0eLyrjlsFvfW/Ge1+Dep1uL3jzlsDuweO2fdZfdYsKnUY/MKLY9Nnyaxe5yY8ZvFY/Pp
+        ao/Pm+QC2KO4bFJSczLLUov07RK4Mh7Pfc1S8Fi24uGsNrYGxlviXYycHBICJhKXV71j62Lk
+        4hAS2M0o0XppLRNEQkbizfmnLF2MHEC2sMThw8UgYSGB14wSB44ygtjCAnYSx6YeYQUpERHQ
+        kHizxQhizBoWiav7prKC1DALzGCUOLLQGcRmE9CWeL9gElicV0BL4uiM9WwgNouAqsSrN59Z
+        QGxRgQiJ1euuMUPUCEqcnPkELM4pYCPR9fUcO8RMdYk/8y4xQ9jyEs1bZzNPYBSchaRlFpKy
+        WUjKFjAyr2KUTC0ozk3PLTYsMMpLLdcrTswtLs1L10vOz93ECI4GLa0djCdOxB9iFOBgVOLh
+        FdROixNiTSwrrsw9xCjBwawkwtuolRwnxJuSWFmVWpQfX1Sak1p8iFGag0VJnFc+/1ikkEB6
+        YklqdmpqQWoRTJaJg1OqgZHB2qFN7HOetfHWeI9EF+6/kw8I/ul0NlwdL686bZNQk2riarHX
+        keYxBy4fr2Y5xDzB68wNncnMJ5oXPEo8rshg41PvnZ2i1yRzdM6NLm4p1/MvJ2+rfRdxvfZL
+        vbHFtU3HPlgeYt29ZmJvv7Sye+z9+F1OKr+iRFKUc/+FL9Dym7C+3uXEHCWW4oxEQy3mouJE
+        ANzrOTeCAgAA
+X-CMS-MailID: 20200310041850epcas1p204b0a18243ba20692485e8efcb71cb4c
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200304030211epcas1p4da8cb569947aefb3aad1da039aaabce4
+References: <CGME20200304030211epcas1p4da8cb569947aefb3aad1da039aaabce4@epcas1p4.samsung.com>
+        <20200304030206.1706-1-jaewon31.kim@samsung.com>
+        <5E605749.9050509@samsung.com>
+        <20200305202443.8de3598558336b1d75afbba7@linux-foundation.org>
+        <5E61EAB6.5080609@samsung.com>
+        <20200307154744.acd523831b45efa8d0fc1dfa@linux-foundation.org>
+        <20200308015802.GD31215@bombadil.infradead.org>
+        <5E64C1D7.3000208@samsung.com>
+        <20200308123616.GH31215@bombadil.infradead.org>
+        <5E660863.2090104@samsung.com>
+        <20200309140148.GK31215@bombadil.infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Xia,
 
-On Fri, Dec 6, 2019 at 6:59 PM Xia Jiang <xia.jiang@mediatek.com> wrote:
+
+On 2020년 03월 09일 23:01, Matthew Wilcox wrote:
+> On Mon, Mar 09, 2020 at 06:12:03PM +0900, Jaewon Kim wrote:
+>> On 2020년 03월 08일 21:36, Matthew Wilcox wrote:
+>>> On Sun, Mar 08, 2020 at 06:58:47PM +0900, Jaewon Kim wrote:
+>>>> On 2020년 03월 08일 10:58, Matthew Wilcox wrote:
+>>>>> On Sat, Mar 07, 2020 at 03:47:44PM -0800, Andrew Morton wrote:
+>>>>>> On Fri, 6 Mar 2020 15:16:22 +0900 Jaewon Kim <jaewon31.kim@samsung.com> wrote:
+>>>>>>> Even on 64 bit kernel, the mmap failure can happen for a 32 bit task.
+>>>>>>> Virtual memory space shortage of a task on mmap is reported to userspace
+>>>>>>> as -ENOMEM. It can be confused as physical memory shortage of overall
+>>>>>>> system.
+>>>>> But userspace can trigger this printk.  We don't usually allow printks
+>>>>> under those circumstances, even ratelimited.
+>>>> Hello thank you your comment.
+>>>>
+>>>> Yes, userspace can trigger printk, but this was useful for to know why
+>>>> a userspace task was crashed. There seems to be still many userspace
+>>>> applications which did not check error of mmap and access invalid address.
+>>>>
+>>>> Additionally in my AARCH64 Android environment, display driver tries to
+>>>> get userspace address to map its display memory. The display driver
+>>>> report -ENOMEM from vm_unmapped_area and but also from GPU related
+>>>> address space.
+>>>>
+>>>> Please let me know your comment again if this debug is now allowed
+>>>> in that userspace triggered perspective.
+>>> The scenario that worries us is an attacker being able to fill the log
+>>> files and so also fill (eg) the /var partition.  Once it's full, future
+>>> kernel messages cannot be stored anywhere and so there will be no traces
+>>> of their privilege escalation.
+>> Although up to 10 times within 5 secs is not many, I think those log may remove
+>> other important log in log buffer if it is the system which produces very few log.
+>> In my Android phone device system, there seems to be much more kernel log though.
+> I've never seen the logs on my android phone.  All that a ratelimit is
+> going to do is make the attacker be more patient.
 >
-> On Wed, 2019-10-23 at 18:39 +0800, Tomasz Figa wrote:
-> > Hi Xia,
-> >
-> > On Thu, Oct 17, 2019 at 04:40:38PM +0800, Xia Jiang wrote:
-> > > Add mtk jpeg encode v4l2 driver based on jpeg decode, because that jpeg
-> > > decode and encode have great similarities with function operation.
-> > >
-> > > Signed-off-by: Xia Jiang <xia.jiang@mediatek.com>
-> > > ---
-> > > v4: split mtk_jpeg_try_fmt_mplane() to two functions, one for encoder,
-> > >     one for decoder.
-> > >     split mtk_jpeg_set_default_params() to two functions, one for
-> > >     encoder, one for decoder.
-> > >     add cropping support for encoder in g/s_selection ioctls.
-> > >     change exif mode support by using V4L2_JPEG_ACTIVE_MARKER_APP1.
-> > >     change MTK_JPEG_MAX_WIDTH/MTK_JPEG_MAX_HEIGH from 8192 to 65535 by
-> > >     specification.
-> > >     move width shifting operation behind aligning operation in
-> > >     mtk_jpeg_try_enc_fmt_mplane() for bug fix.
-> > >     fix user abuseing data_offset issue for DMABUF in
-> > >     mtk_jpeg_set_enc_src().
-> > >     fix kbuild warings: change MTK_JPEG_MIN_HEIGHT/MTK_JPEG_MAX_HEIGHT
-> > >                         and MTK_JPEG_MIN_WIDTH/MTK_JPEG_MAX_WIDTH from
-> > >                         'int' type to 'unsigned int' type.
-> > >                         fix msleadingly indented of 'else'.
-> > >
-> > > v3: delete Change-Id.
-> > >     only test once handler->error after the last v4l2_ctrl_new_std().
-> > >     seperate changes of v4l2-ctrls.c and v4l2-controls.h to new patch.
-> > >
-> > > v2: fix compliance test fail, check created buffer size in driver.
-> > > ---
-> > >  drivers/media/platform/mtk-jpeg/Makefile      |   5 +-
-> > >  .../media/platform/mtk-jpeg/mtk_jpeg_core.c   | 731 +++++++++++++++---
-> > >  .../media/platform/mtk-jpeg/mtk_jpeg_core.h   | 123 ++-
-> > >  .../media/platform/mtk-jpeg/mtk_jpeg_dec_hw.h |   7 +-
-> > >  .../media/platform/mtk-jpeg/mtk_jpeg_enc_hw.c | 175 +++++
-> > >  .../media/platform/mtk-jpeg/mtk_jpeg_enc_hw.h |  60 ++
-> > >  .../platform/mtk-jpeg/mtk_jpeg_enc_reg.h      |  49 ++
-> > >  7 files changed, 1004 insertions(+), 146 deletions(-)
-> > >  create mode 100644 drivers/media/platform/mtk-jpeg/mtk_jpeg_enc_hw.c
-> > >  create mode 100644 drivers/media/platform/mtk-jpeg/mtk_jpeg_enc_hw.h
-> > >  create mode 100644 drivers/media/platform/mtk-jpeg/mtk_jpeg_enc_reg.h
-> > >
-> >
-> > First of all, thanks for the patch!
-> >
-> > Please check my comments below.
-> >
-> > My general feeling about this code is that the encoder hardware block is
-> > completely orthogonal from the decoder block and there is very little code
-> > reuse from the original decoder driver.
-> >
-> > Moreover, a lot of existing code now needs if (decoder) { ... } else {... }
-> > segments, which complicates the code.
-> >
-> > Would it perhaps make sense to instead create a separate mtk-jpeg-enc
-> > driver?
-> >
-> > It would also give us a fresh start in terms of code quality, as the
-> > existing mtk-jpeg driver has a lot of quality issues unfortunately. (Some
-> > of my comments to this patch actually relate to the issues with the
-> > original code, not introduced by this patch, but we need to fix them if
-> > changing this driver already.)
-> >
-> Dear Tomasz,
+>>> Maybe a tracepoint would be a better idea?  Usually they are disabled,
+>>> but they can be enabled by a sysadmin to gain insight into why an
+>>> application is crashing.
+>> In Android phone device system, we cannot get sysadmin permission if it is built
+>> for end user. And it is not easy to reproduce this symptom because it is an user's app.
+>>
+>> Anyway let me try pr_devel_ratelimited which is disabled by default. I hope this is
+>> good enough. Additionally I moved the code from mm.h to mmap.c.
+> https://source.android.com/devices/tech/debug/ftrace
+I am not sure if an end user can enable a trace point which is not writable.
+Anyway I created trace mmap.h file and changed printk to trace_vm_unmapped_area
+without ratelimited.
+
+If there is no objection, I am going to resubmit whole patch as v2.
+Thank you for your comment.
+
+--- a/mm/mmap.c
++++ b/mm/mmap.c
+@@ -47,6 +47,8 @@
+ #include <linux/pkeys.h>
+ #include <linux/oom.h>
+ #include <linux/sched/mm.h>
++#define CREATE_TRACE_POINTS
++#include <trace/events/mmap.h>
+ 
+ #include <linux/uaccess.h>
+ #include <asm/cacheflush.h>
+@@ -2061,10 +2063,15 @@ unsigned long unmapped_area_topdown(struct vm_unmapped_area_info *info)
+  */
+ unsigned long vm_unmapped_area(struct vm_unmapped_area_info *info)
+ {
++       unsigned long addr;
++
+        if (info->flags & VM_UNMAPPED_AREA_TOPDOWN)
+-               return unmapped_area_topdown(info);
++               addr = unmapped_area_topdown(info);
+        else
+-               return unmapped_area(info);
++               addr = unmapped_area(info);
++
++       trace_vm_unmapped_area(addr, info);
++       return addr;
+ }
+
 >
-> I haved fixed the driver by following your advice in general.
->
-> Please check my reply below.
 
-Sorry, I missed this message originally. Replied below.
-
-[snip]
-> > > +   }
-> > > +   param->enc_w = q_data_src->w;
-> > > +   param->enc_h = q_data_src->h;
-> > > +
-> > > +   if (jpeg_params->enc_quality >= 97)
-> > > +           param->enc_quality = JPEG_ENCODE_QUALITY_Q97;
-> > > +   else if (jpeg_params->enc_quality >= 95)
-> > > +           param->enc_quality = JPEG_ENCODE_QUALITY_Q95;
-> >
-> > I'm wondering if the application requests 96, it doesn't expect the quality to
-> > be _at_least_ 96.
-> our jpeg enc hw do not support quality 96,only support 15 kinds of quant
-> table listed here, so if the application requests 96,a nearest and
-> highest quality will be given.
-> >
-
-Just to clarify my comment, if I remember correctly, the JPEG standard
-defines the 100 levels, so if the application requests level 96, but
-the hardware provides only 95 and 97, the quality should be favored
-and 97 used.
-
-[snip]
-> >
-> > > +   param->mem_stride = mtk_jpeg_align(width_even, (is_420 ? 16 : 32));
-> >
-> > What's the difference between img_stride and mem_stride?
->
-> In theory, mem_stride need >= img_stride,but we use the same is ok
-> >
-> > > +   param->total_encdu =
-> > > +           ((padding_width >> 4) * (padding_height >> (is_420 ? 4 : 3)) *
-> > > +           (is_420 ? 6 : 4)) - 1;
-> >
-> > The comment above the struct says this is the total number of 8x8 blocks.
-> > Why would it depend on whether the format is YUV 4:2:0? Since we should
-> > have already aligned the width and height in try_fmt, this should be as
-> > simple as (width / 8) * (height / 8).
-> becuase the image size is w*h*1.5 for yuv420 format, but w*h*2 for
-> yuv422,so for yuv420: w_16/8*h_16/8*1.5-1(because the hw will start at
-> number 0), yuv422: w_32/8*h_8/8*2-1,this number is equal to my code.
-
-Do you mean that this also includes the Cb and Cr 8x8 blocks separately?
-If so, could it be rewritten as below to improve the readability?
-
-luma_blocks = width / 8 * height / 8;
-if (is_420)
-    chroma_blocks = luma_blocks / 4;
-else
-    chroma_blocks = luma_blocks / 2;
-param->last_encdu = luma_blocks + 2 * chroma_blocks - 1;
-
-Also, does it mean that this number is actually the index of the last
-block, not the total number of blocks?
-If so, the field should be probably renamed to last_encdu and the
-description updated accordingly.
-
-[snip]
-> > Could we instead check the buffer address alignment in .buf_prepare and fail if
-> > it's not big enough?
-> >
-> > > +   bs->dma_addr_offset = p->enable_exif ? MTK_JPEG_DEFAULT_EXIF_SIZE : 0;
-> > > +   bs->dma_addr_offsetmask = bs->dma_addr & JPEG_ENC_DST_ADDR_OFFSET_MASK;
-> >
-> > What is the meaning of this offset mask?
-> our actual destination address = destination address + offset address+
-> destination address offset mask.The mask 0:No offset,1~15:offset byte
-> from the 16-byte aligned
-
-So we have dma_addr, dma_addr_offset and dma_addr_offsetmask. Why do
-we need dma_addr_offset? Would the same operation be achieved with the
-code below?
-
-dma_addr = vb2_dma_contig_plane_dma_addr(dst_buf, 0);
-if (p->enable_exif)
-    dma_addr += MTK_JPEG_DEFAULT_EXIF_SIZE;
-bs->dma_addr = dma_addr & ~JPEG_ENC_DST_ADDR_OFFSET_MASK;
-bs->dma_addr_offset = 0;
-bs->dma_addr_offsetmask = dma_addr & JPEG_ENC_DST_ADDR_OFFSET_MASK;
-
-Or does the hardware write something directly at bs->dma_addr (some
-tags?) and then the encoded image at the final desintation address?
-
-[snip]
-> > > -static void mtk_jpeg_set_default_params(struct mtk_jpeg_ctx *ctx)
-> > > +static void mtk_jpeg_set_enc_default_params(struct mtk_jpeg_ctx *ctx)
-> > > +{
-> > > +   struct mtk_jpeg_q_data *q = &ctx->out_q;
-> > > +   int align_w, align_h;
-> > > +
-> > > +   ctx->fh.ctrl_handler = &ctx->ctrl_hdl;
-> > > +
-> > > +   ctx->colorspace = V4L2_COLORSPACE_JPEG,
-> > > +   ctx->ycbcr_enc = V4L2_YCBCR_ENC_DEFAULT;
-> > > +   ctx->quantization = V4L2_QUANTIZATION_DEFAULT;
-> > > +   ctx->xfer_func = V4L2_XFER_FUNC_DEFAULT;
-> > > +
-> > > +   q->w = MTK_JPEG_MIN_WIDTH;
-> > > +   q->h = MTK_JPEG_MIN_HEIGHT;
-> > > +
-> > > +   q->fmt = mtk_jpeg_find_format(ctx, V4L2_PIX_FMT_YUYV,
-> > > +                                 MTK_JPEG_FMT_TYPE_OUTPUT);
-> > > +
-> > > +   align_w = q->w;
-> > > +   align_h = q->h;
-> > > +   align_w = round_up(align_w, 2);
-> > > +   v4l_bound_align_image(&align_w, MTK_JPEG_MIN_WIDTH, MTK_JPEG_MAX_WIDTH,
-> > > +                         5, &align_h, MTK_JPEG_MIN_HEIGHT,
-> > > +                         MTK_JPEG_MAX_HEIGHT, 3, 0);
-> > > +   align_w = align_w << 1;
-> > > +
-> > > +   if (align_w < MTK_JPEG_MIN_WIDTH &&
-> > > +       (align_w + 32) <= MTK_JPEG_MAX_WIDTH)
-> > > +           align_w += 32;
-> > > +   if (align_h < MTK_JPEG_MIN_HEIGHT &&
-> > > +       (align_h + 8) <= MTK_JPEG_MAX_HEIGHT)
-> > > +           align_h += 8;
-> > > +
-> > > +   q->sizeimage[0] = align_w * align_h;
-> > > +   q->bytesperline[0] = align_w;
-> > > +
-> > > +   q = &ctx->cap_q;
-> > > +   q->w = MTK_JPEG_MIN_WIDTH;
-> > > +   q->h = MTK_JPEG_MIN_HEIGHT;
-> > > +   q->fmt = mtk_jpeg_find_format(ctx, V4L2_PIX_FMT_JPEG,
-> > > +                                 MTK_JPEG_FMT_TYPE_CAPTURE);
-> > > +   q->bytesperline[0] = 0;
-> > > +   q->sizeimage[0] = MTK_JPEG_DEFAULT_SIZEIMAGE;
-> > > +}
-> >
-> > Could we just create an arbitrary v4l2_pix_format_mplane struct and call
-> > s_fmt instead? In general, all of the constant values and alignments should
-> > be already ensured by try_fmt, so this function should be redundant.
-> if cancel this function,the v4l2-compliance test will fail
-
-Sorry, I guess my comment was not clear. We need to initialize the
-default parameters. However, the contents of this function seem to
-heavily duplicate with the code that should be in try_fmt, so could we
-just call try_fmt from here instead of repeating the calculations?
-
-[snip]
-> > > -   ret = devm_request_irq(&pdev->dev, dec_irq, mtk_jpeg_dec_irq, 0,
-> > > +   ret = devm_request_irq(&pdev->dev, jpeg_irq, mtk_jpeg_irq, 0,
-> > >                            pdev->name, jpeg);
-> > >     if (ret) {
-> > > -           dev_err(&pdev->dev, "Failed to request dec_irq %d (%d)\n",
-> > > -                   dec_irq, ret);
-> > > -           ret = -EINVAL;
-> >
-> > This removal of ret assignment looks like a separate fix that should be
-> > done in its own patch.
-> this change is because of the adding of jpeg enc driver,not the orignal
-> driver' question, should I move it to the orignal driver's patch?
-
-Yes, please.
-
-> >
-> > > +           dev_err(&pdev->dev, "Failed to request jpeg_irq %d (%d)\n",
-> > > +                   jpeg_irq, ret);
-> > >             goto err_req_irq;
-> > >     }
-> > >
-> > > @@ -1140,33 +1602,35 @@ static int mtk_jpeg_probe(struct platform_device *pdev)
-> > >             goto err_m2m_init;
-> > >     }
-> > >
-> > > -   jpeg->dec_vdev = video_device_alloc();
-> > > -   if (!jpeg->dec_vdev) {
-> > > +   jpeg->vfd_jpeg = video_device_alloc();
-> > > +   if (!jpeg->vfd_jpeg) {
-> > >             ret = -ENOMEM;
-> > > -           goto err_dec_vdev_alloc;
-> > > +           goto err_vfd_jpeg_alloc;
-> > >     }
-> > > -   snprintf(jpeg->dec_vdev->name, sizeof(jpeg->dec_vdev->name),
-> > > -            "%s-dec", MTK_JPEG_NAME);
-> > > -   jpeg->dec_vdev->fops = &mtk_jpeg_fops;
-> > > -   jpeg->dec_vdev->ioctl_ops = &mtk_jpeg_ioctl_ops;
-> > > -   jpeg->dec_vdev->minor = -1;
-> > > -   jpeg->dec_vdev->release = video_device_release;
-> > > -   jpeg->dec_vdev->lock = &jpeg->lock;
-> > > -   jpeg->dec_vdev->v4l2_dev = &jpeg->v4l2_dev;
-> > > -   jpeg->dec_vdev->vfl_dir = VFL_DIR_M2M;
-> > > -   jpeg->dec_vdev->device_caps = V4L2_CAP_STREAMING |
-> > > +   snprintf(jpeg->vfd_jpeg->name, sizeof(jpeg->vfd_jpeg->name),
-> > > +            "%s-%s", MTK_JPEG_NAME,
-> > > +            jpeg->mode == MTK_JPEG_ENC ? "enc" : "dec");
-> > > +   jpeg->vfd_jpeg->fops = &mtk_jpeg_fops;
-> > > +   jpeg->vfd_jpeg->ioctl_ops = &mtk_jpeg_ioctl_ops;
-> > > +   jpeg->vfd_jpeg->minor = -1;
-> > > +   jpeg->vfd_jpeg->release = video_device_release;
-> > > +   jpeg->vfd_jpeg->lock = &jpeg->lock;
-> > > +   jpeg->vfd_jpeg->v4l2_dev = &jpeg->v4l2_dev;
-> > > +   jpeg->vfd_jpeg->vfl_dir = VFL_DIR_M2M;
-> > > +   jpeg->vfd_jpeg->device_caps = V4L2_CAP_STREAMING |
-> > >                                   V4L2_CAP_VIDEO_M2M_MPLANE;
-> > >
-> > > -   ret = video_register_device(jpeg->dec_vdev, VFL_TYPE_GRABBER, 3);
-> > > +   ret = video_register_device(jpeg->vfd_jpeg, VFL_TYPE_GRABBER, -1);
-> >
-> > The change from 3 to -1 also looks like something for a separate patch.
-> same as the above reply
-
-Ditto.
-
-[snip]
-> > > @@ -17,23 +18,77 @@
-> > >
-> > >  #define MTK_JPEG_FMT_FLAG_DEC_OUTPUT       BIT(0)
-> > >  #define MTK_JPEG_FMT_FLAG_DEC_CAPTURE      BIT(1)
-> > > +#define MTK_JPEG_FMT_FLAG_ENC_OUTPUT       BIT(2)
-> > > +#define MTK_JPEG_FMT_FLAG_ENC_CAPTURE      BIT(3)
-> > >
-> > >  #define MTK_JPEG_FMT_TYPE_OUTPUT   1
-> > >  #define MTK_JPEG_FMT_TYPE_CAPTURE  2
-> > >
-> > > -#define MTK_JPEG_MIN_WIDTH 32
-> > > -#define MTK_JPEG_MIN_HEIGHT        32
-> > > -#define MTK_JPEG_MAX_WIDTH 8192
-> > > -#define MTK_JPEG_MAX_HEIGHT        8192
-> > > +#define MTK_JPEG_MIN_WIDTH 32U
-> > > +#define MTK_JPEG_MIN_HEIGHT        32U
-> > > +#define MTK_JPEG_MAX_WIDTH 65535U
-> > > +#define MTK_JPEG_MAX_HEIGHT        65535U
-> >
-> > Why is it okay to change this from 8192 to 65535?
-> our hw support max width/height to 65535
-
-Does this also apply to the JPEG decoder on MT8173 for which the
-driver was developed?
-
-[snip]
-> > > +/**
-> > > + * jpeg_enc_param - parameters of jpeg encode control
-> > > + * @enable_exif:   EXIF enable for jpeg encode mode
-> > > + * @enc_quality:   destination image quality in encode mode
-> > > + * @restart_interval:      JPEG restart interval for JPEG encoding
-> > > + */
-> > > +struct jpeg_enc_param {
-> > > +   u32 enable_exif;
-> >
-> > Shouldn't this be a bool?
-> this value is seted by V4L2_CID_JPEG_ACTIVE_MARKER control,its' value is
-> V4L2_JPEG_ACTIVE_MARKER_APP1(1<<1),not a bool
-
-In this case, please call it active_marker and also update the comment
-above accordingly.
-
-Still, if this driver only cares about V4L2_JPEG_ACTIVE_MARKER_APP1,
-bool enable_exif, assigned  by the code appropriately, would make more
-sense.
-
-[snip]
-> > > +
-> > > +static void mtk_jpeg_enc_set_encFormat(void __iomem *base, u32 enc_format)
-> > > +{
-> > > +   u32 value;
-> > > +
-> > > +   value = readl(base + JPGENC_CTRL);
-> > > +   value &= ~JPEG_ENC_CTRL_YUV_BIT;
-> > > +   value |= JPGENC_FORMAT(enc_format);
-> > > +   writel(value, base + JPGENC_CTRL);
-> >
-> > The model I suggested above also avoids this kind of read modify write
-> > operations, which just unnecessarily add synchronous MMIO round trips, which
-> > means more CPU overhead.
-> >
-> > Given that the full state is always known by the driver, it can just write
-> > all the register values without the need to read them back.
-> the JPGENC_CTRL register has 32 bits,different bits have different
-> meanings. encformat is bit 3~4,so we need ready before write to
-> guarantee other bits' value not be changed
-
-I explained this more in my review comments to the latest revision,
-but this is just solving a problem that is introduced by the design of
-the code. If the code was designed so that 1 register is only changed
-in 1 function, there would be no need to read back the registers,
-because the function would initialize the full register at a time.
-That's what most of the other drivers do.
-
-[snip]
-> > > +enum {
-> > > +   MTK_JPEG_ENC_RESULT_DONE                = 0,
-> > > +   MTK_JPEG_ENC_RESULT_STALL,
-> > > +   MTK_JPEG_ENC_RESULT_VCODEC_IRQ,
-> > > +   MTK_JPEG_ENC_RESULT_ERROR_UNKNOWN
-> > > +};
-> >
-> > Do we need these intermediate error codes? Could we just use errno values
-> > instead?
-> we can just use errno values,but our interrupt status have three
-> state,done/stall,vcodec irq,maybe listing them here makes more clarity
-
-I suggested another approach in my comments for the latest revision.
-Generally the interrupt handler is the only place where this error
-handling is done, so the intermediate error codes shouldn't be
-necessary, as the interrupt handler would directly signal any issues
-to V4L2.
-
-[snip]
-> > > +#define JPGENC_FORMAT(x)           (((x) & 3) << 3)
-> > > +#define JPGENC_WIDTH_HEIGHT(w, h)  (((w) << 16) | (h))
-> > > +#define JPGENC_INIT_OFFSET(x)              ((x) & (~0xF))
-> > > +#define JPGENC_OFFSET_MASK(x)              ((x) & 0xF)
-> > > +#define JPGENC_DST_ADDR(x)         ((x) & (~0xF))
-> > > +#define JPGENC_STALL_ADDR(x, y)            (((x) + (y)) & (~0xF))
-> > > +#define JPGENC_QUALITY_MASK                0xFFFF0000
-> > > +#define JPGENC_SET_QUALITY(x, y)   (((x) & JPGENC_QUALITY_MASK) | (y))
-> >
-> > JPGENC_QUALITY_MASK is only used here, so 0xffff0000 could be just used
-> > directly.
-> done
-> >
-> > > +
-> > > +#endif /* _MTK_JPEG_ENC_REG_H */
-> >
-> > I can see some bits defined in mtk_jpeg_enc_hw.h as well. Perhaps all these
-> > could be moved there too, which would make us have 1 file less?
-> moved bits defined  and register defined to mtk_jpeg_enc_reg.h, but the
-> functions declaration about jpeg enc hw were in mtk_jpeg_enc_hw.h, is
-> that ok?
-
-My suggestion was the other way around - have all the encoder-specific
-definitions in mtk_jpeg_enc_hw.h and remove mtk_jpeg_enc_reg.h.
-
-In general, this is a relatively simple hardware block and we should
-be able to just have one file that deals with hardware registers. Then
-there would be no need for headers, as the register definitions could
-be put directly in the source file. A rule of thumb is to use a header
-when something needs to be shared between multiple source files.
-
-Best regards,
-Tomasz
