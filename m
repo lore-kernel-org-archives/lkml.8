@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3D3EC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:52:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BE08C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:52:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAE4C2253D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:52:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1852524693
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:52:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583844748;
-	bh=hN6a469Tivn8u3TsieBjrDtp/aqNDl1Fq/Mz22z/h+0=;
+	s=default; t=1583844754;
+	bh=vTWBqDRsC/tFRPDMOCq60Nxj2V6mOLrWJm0saUVbkdQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OqRjGiewwH61AEo6xj8KW3c945/C1dbCxvTgYCQnEeAa46LeMcRT0IfJWFLaaclI4
-	 Oj8bhWj+Ir9XRPP2rAoZaHw+cVSCD1GVIWd3ONztvXMlBJ0zhYFvm32ROnVwkmgUHD
-	 XOSKCg+9qhVACCYOJ2CxhOkKbteX4QRAUNS+XhbI=
+	b=XaXUrgPlwsaPu8BwoCwFSpadiMFJH1RgxxpRoRrEWbtRnZnYGoGGp+UpDLRiHE1fx
+	 glwUM/m+gOFbbrhDJLxXe1B2/DKFRmKrcVLtEGBrz6SQSwXky2sOz5FTb+B4u1BlHD
+	 k8zu6Mui6PlYIfaq4YGlmCwgv1a9fhdA9JTzPsRI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729054AbgCJMw1 (ORCPT
+        id S1729073AbgCJMwc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:52:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57980 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:52:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58168 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729039AbgCJMwU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:52:20 -0400
+        id S1729057AbgCJMw2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:52:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D1B2120674;
-        Tue, 10 Mar 2020 12:52:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A428220674;
+        Tue, 10 Mar 2020 12:52:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844739;
-        bh=hN6a469Tivn8u3TsieBjrDtp/aqNDl1Fq/Mz22z/h+0=;
+        s=default; t=1583844748;
+        bh=vTWBqDRsC/tFRPDMOCq60Nxj2V6mOLrWJm0saUVbkdQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oohqfemI2TZmaOCoYBag81LyjdZsb7hNy2whuYN6yM77tO5PUfr4NQvlMPrOhuLHS
-         1/Dod4PjA1y2U63OlMz01NsSwc179+HGsnCUBxvF+Gv8Z+A2tVEHqtLLcCulJ3S+em
-         kVpgW0eDVKg2tQMtgw/rqCYZQ2iCZroFn7L+51Qg=
+        b=XCHu0GA3XnaRxOFBItUrK76AA0q9izLx5YvPlHnevFMijXprQEswpFnwevXcSSozx
+         8gpKAoUdzdEfWdu9di7ffn677zUAL9OgrknaMGsN7/at07ObGtHfwioVxuznivD9PK
+         5iPat5XUbvS06e2G1McnPc3ikuZqAhVZUaaVcDD8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Martin Fuzzey <martin.fuzzey@flowbird.group>,
-        Fabio Estevam <festevam@gmail.com>,
+        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
         Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH 5.4 100/168] dmaengine: imx-sdma: fix context cache
-Date:   Tue, 10 Mar 2020 13:39:06 +0100
-Message-Id: <20200310123645.512315344@linuxfoundation.org>
+Subject: [PATCH 5.4 103/168] dmaengine: tegra-apb: Prevent race conditions of tasklet vs free list
+Date:   Tue, 10 Mar 2020 13:39:09 +0100
+Message-Id: <20200310123645.807416745@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123635.322799692@linuxfoundation.org>
 References: <20200310123635.322799692@linuxfoundation.org>
@@ -61,65 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Fuzzey <martin.fuzzey@flowbird.group>
+From: Dmitry Osipenko <digetx@gmail.com>
 
-commit d288bddd8374e0a043ac9dde64a1ae6a09411d74 upstream.
+commit c33ee1301c393a241d6424e36eff1071811b1064 upstream.
 
-There is a DMA problem with the serial ports on i.MX6.
+The interrupt handler puts a half-completed DMA descriptor on a free list
+and then schedules tasklet to process bottom half of the descriptor that
+executes client's callback, this creates possibility to pick up the busy
+descriptor from the free list. Thus, let's disallow descriptor's re-use
+until it is fully processed.
 
-When the following sequence is performed:
-
-1) Open a port
-2) Write some data
-3) Close the port
-4) Open a *different* port
-5) Write some data
-6) Close the port
-
-The second write sends nothing and the second close hangs.
-If the first close() is omitted it works.
-
-Adding logs to the the UART driver shows that the DMA is being setup but
-the callback is never invoked for the second write.
-
-This used to work in 4.19.
-
-Git bisect leads to:
-	ad0d92d: "dmaengine: imx-sdma: refine to load context only once"
-
-This commit adds a "context_loaded" flag used to avoid unnecessary context
-setups.
-However the flag is only reset in sdma_channel_terminate_work(),
-which is only invoked in a worker triggered by sdma_terminate_all() IF
-there is an active descriptor.
-
-So, if no active descriptor remains when the channel is terminated, the
-flag is not reset and, when the channel is later reused the old context
-is used.
-
-Fix the problem by always resetting the flag in sdma_free_chan_resources().
-
-Cc: stable@vger.kernel.org
-Signed-off-by: Martin Fuzzey <martin.fuzzey@flowbird.group>
-Fixes: ad0d92d7ba6a ("dmaengine: imx-sdma: refine to load context only once")
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
-Link: https://lore.kernel.org/r/1580305274-27274-1-git-send-email-martin.fuzzey@flowbird.group
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Acked-by: Jon Hunter <jonathanh@nvidia.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200209163356.6439-3-digetx@gmail.com
 Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/dma/imx-sdma.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/dma/tegra20-apb-dma.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/dma/imx-sdma.c
-+++ b/drivers/dma/imx-sdma.c
-@@ -1335,6 +1335,7 @@ static void sdma_free_chan_resources(str
+--- a/drivers/dma/tegra20-apb-dma.c
++++ b/drivers/dma/tegra20-apb-dma.c
+@@ -281,7 +281,7 @@ static struct tegra_dma_desc *tegra_dma_
  
- 	sdmac->event_id0 = 0;
- 	sdmac->event_id1 = 0;
-+	sdmac->context_loaded = false;
- 
- 	sdma_set_channel_priority(sdmac, 0);
- 
+ 	/* Do not allocate if desc are waiting for ack */
+ 	list_for_each_entry(dma_desc, &tdc->free_dma_desc, node) {
+-		if (async_tx_test_ack(&dma_desc->txd)) {
++		if (async_tx_test_ack(&dma_desc->txd) && !dma_desc->cb_count) {
+ 			list_del(&dma_desc->node);
+ 			spin_unlock_irqrestore(&tdc->lock, flags);
+ 			dma_desc->txd.flags = 0;
 
 
