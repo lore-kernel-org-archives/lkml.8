@@ -2,223 +2,144 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F201BC10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 21:21:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAD41C10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 21:21:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEE95215A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 21:21:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA5E5205F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 21:21:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pOgk4Qkw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726599AbgCJVVI (ORCPT
+        id S1727085AbgCJVV5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 17:21:08 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:42122 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726268AbgCJVVI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 17:21:08 -0400
-Received: from guinness.priv.deltatee.com ([172.16.1.162])
-        by ale.deltatee.com with esmtp (Exim 4.92)
-        (envelope-from <logang@deltatee.com>)
-        id 1jBmJB-0001Qz-EH; Tue, 10 Mar 2020 15:21:02 -0600
-To:     Sanjay R Mehta <sanju.mehta@amd.com>, jdmason@kudzu.us,
-        dave.jiang@intel.com, allenbh@gmail.com, arindam.nath@amd.com,
-        Shyam-sundar.S-k@amd.com
-Cc:     linux-ntb@googlegroups.com, linux-kernel@vger.kernel.org
-References: <1583873694-19151-1-git-send-email-sanju.mehta@amd.com>
- <1583873694-19151-2-git-send-email-sanju.mehta@amd.com>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <e700a5f6-1929-0d65-b204-c5bfde58f5f7@deltatee.com>
-Date:   Tue, 10 Mar 2020 15:21:00 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 10 Mar 2020 17:21:57 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:33499 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726268AbgCJVV5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 17:21:57 -0400
+Received: by mail-oi1-f194.google.com with SMTP id r7so2322655oij.0
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 14:21:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=oY6WFiAwH2rmOxKrZEesTv/eerBgzcIy7in/R7N6oGw=;
+        b=pOgk4QkwNjE9ZThPducZNz2cmkLnWvaI876S1TRO4iGhWGNwO4xeyozO2pBQZo6EHF
+         JQVEDEVWKycwGwvq+HZjVgaoiUKdDnSZFrZA3DtKiH+v+ulH0tun5BKwOMc+uNb1uJfA
+         SbHMI+ZIkwaVlXaUUt1Ss8T/jVCb93A+dlsuGEixKa/dAv1ixesVDs/rMy4jPxBcEZk0
+         pXA9JVnE7wzJoz2NxA67UWnOWzmDD1yleEt3IDn4KHJkQIJ6hql2/4wnXR6n2kzDNJ9W
+         /0rF5K2Vrm64ePyg/3wD+fRy6CLlTHlgjrj9W25Drh1Cf20NS0r00PVjesUfgMcX5zgS
+         JOJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=oY6WFiAwH2rmOxKrZEesTv/eerBgzcIy7in/R7N6oGw=;
+        b=ujz++LoEuwo5jT+q2WUeDjuJKHsO+8D90z33Y16EMQfMYx2fZkYhDmgZO1KKuwYufu
+         ReGk1SDWUQwK8R34xulsplbs8DAirLI0QIaopqBNNM40PkV6d9X+loKa649o5jbnfWVO
+         GO2Mymm1MSCRn57nsJP8aA3EftlcEEsfF0DXEQAn5lbkXbnObGmyFDxKPT2ptApUHAg4
+         Pi4NE3YlGWk86M8L0RjV2GF0Q1zqS8eL/oPTkzlvQ1GUr1EAMSs+kZ+WQqTWcGGD1cV1
+         RNpbpH0McRrhVaHysk/zJHpQMGQjwkvdgGZIdM05cRPHRMcx6HaBHP+FYGBd2hQoTs3a
+         AlHA==
+X-Gm-Message-State: ANhLgQ3pb44vWa5wEm9IyZ0UgXpkJAgoOYDFjd5ysbqWLoT+5EPs0Lug
+        QSFAe6MkAXjdnm+SRVLy0OUClkM81cOsZ+sTyuDcSQ==
+X-Google-Smtp-Source: ADFU+vse+bXb9qnaCZ0PIM2j5foMfZrUhK8BdULRDK7eOwjFVGLfjwEB0kwKfljmq3ftrHjmGdpyQbeI0qHB6H/6olE=
+X-Received: by 2002:aca:bac1:: with SMTP id k184mr2238915oif.157.1583875314976;
+ Tue, 10 Mar 2020 14:21:54 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1583873694-19151-2-git-send-email-sanju.mehta@amd.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 172.16.1.162
-X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-ntb@googlegroups.com, Shyam-sundar.S-k@amd.com, arindam.nath@amd.com, allenbh@gmail.com, dave.jiang@intel.com, jdmason@kudzu.us, sanju.mehta@amd.com
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [PATCH v2 1/5] ntb_perf: refactor code for CPU and DMA transfers
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+References: <AM6PR03MB5170EB4427BF5C67EE98FF09E4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87k142lpfz.fsf@x220.int.ebiederm.org> <AM6PR03MB51704206634C009500A8080DE4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <875zfmloir.fsf@x220.int.ebiederm.org> <AM6PR03MB51707ABF20B6CBBECC34865FE4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87v9nmjulm.fsf@x220.int.ebiederm.org> <AM6PR03MB5170B976E6387FDDAD59A118E4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <202003021531.C77EF10@keescook> <20200303085802.eqn6jbhwxtmz4j2x@wittgenstein>
+ <AM6PR03MB5170285B336790D3450E2644E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87v9nlii0b.fsf@x220.int.ebiederm.org> <AM6PR03MB5170609D44967E044FD1BE40E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87a74xi4kz.fsf@x220.int.ebiederm.org> <AM6PR03MB51705AA3009B4986BB6EF92FE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87r1y8dqqz.fsf@x220.int.ebiederm.org> <AM6PR03MB517053AED7DC89F7C0704B7DE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <AM6PR03MB51703B44170EAB4626C9B2CAE4E20@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87tv32cxmf.fsf_-_@x220.int.ebiederm.org> <87v9ne5y4y.fsf_-_@x220.int.ebiederm.org>
+ <87zhcq4jdj.fsf_-_@x220.int.ebiederm.org>
+In-Reply-To: <87zhcq4jdj.fsf_-_@x220.int.ebiederm.org>
+From:   Jann Horn <jannh@google.com>
+Date:   Tue, 10 Mar 2020 22:21:28 +0100
+Message-ID: <CAG48ez13XXWNRLrPFRHRsvPKSwSK1-6k+1F7QujWOJtVuk0QHg@mail.gmail.com>
+Subject: Re: [PATCH v2 5/5] exec: Add a exec_update_mutex to replace cred_guard_mutex
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Kees Cook <keescook@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Andrei Vagin <avagin@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Yuyang Du <duyuyang@gmail.com>,
+        David Hildenbrand <david@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        David Howells <dhowells@redhat.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christian Kellner <christian@kellner.me>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2020-03-10 2:54 p.m., Sanjay R Mehta wrote:
-> From: Arindam Nath <arindam.nath@amd.com>
-> 
-> This patch creates separate function to handle CPU
-> and DMA transfers. Since CPU transfers use memcopy
-> and DMA transfers use dmaengine APIs, these changes
-> not only allow logical separation between the two,
-> but also allows someone to clearly see the difference
-> in the way the two are handled.
-> 
-> In the case of DMA, we DMA from system memory to the
-> memory window(MW) of NTB, which is a MMIO region, we
-> should not use dma_map_page() for mapping MW. The
-> correct way to map a MMIO region is to use
-> dma_map_resource(), so the code is modified
-> accordingly.
-> 
-> dma_map_resource() expects physical address of the
-> region to be mapped for DMA, we add a new field,
-> outbuf_phys_addr, to struct perf_peer, and also
-> another field, outbuf_dma_addr, to store the
-> corresponding mapped address returned by the API.
-> 
-> Since the MW is contiguous, rather than mapping
-> chunk-by-chunk, we map the entire MW before the
-> actual DMA transfer happens. Then for each chunk,
-> we simply pass offset into the mapped region and
-> DMA to that region. Then later, we unmap the MW
-> during perf_clear_test().
-> 
-> The above means that now we need to have different
-> function parameters to deal with in the case of
-> CPU and DMA transfers. In the case of CPU transfers,
-> we simply need the CPU virtual addresses for memcopy,
-> but in the case of DMA, we need dma_addr_t, which
-> will be different from CPU physical address depending
-> on whether IOMMU is enabled or not. Thus we now
-> have two separate functions, perf_copy_chunk_cpu(),
-> and perf_copy_chunk_dma() to take care of above
-> consideration.
-> 
-> Signed-off-by: Arindam Nath <arindam.nath@amd.com>
-> Signed-off-by: Sanjay R Mehta <sanju.mehta@amd.com>
-> ---
->  drivers/ntb/test/ntb_perf.c | 141 +++++++++++++++++++++++++++++++++-----------
->  1 file changed, 105 insertions(+), 36 deletions(-)
-> 
-> diff --git a/drivers/ntb/test/ntb_perf.c b/drivers/ntb/test/ntb_perf.c
-> index e9b7c2d..6d16628 100644
-> --- a/drivers/ntb/test/ntb_perf.c
-> +++ b/drivers/ntb/test/ntb_perf.c
-> @@ -149,6 +149,8 @@ struct perf_peer {
->  	u64 outbuf_xlat;
->  	resource_size_t outbuf_size;
->  	void __iomem *outbuf;
-> +	phys_addr_t outbuf_phys_addr;
-> +	dma_addr_t outbuf_dma_addr;
->  
->  	/* Inbound MW params */
->  	dma_addr_t inbuf_xlat;
-> @@ -775,26 +777,24 @@ static void perf_dma_copy_callback(void *data)
->  	wake_up(&pthr->dma_wait);
->  }
->  
-> -static int perf_copy_chunk(struct perf_thread *pthr,
-> -			   void __iomem *dst, void *src, size_t len)
-> +static int perf_copy_chunk_cpu(struct perf_thread *pthr,
-> +			       void __iomem *dst, void *src, size_t len)
-> +{
-> +	memcpy_toio(dst, src, len);
+On Sun, Mar 8, 2020 at 10:41 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
+> The cred_guard_mutex is problematic.  The cred_guard_mutex is held
+> over the userspace accesses as the arguments from userspace are read.
+> The cred_guard_mutex is held of PTRACE_EVENT_EXIT as the the other
+> threads are killed.  The cred_guard_mutex is held over
+> "put_user(0, tsk->clear_child_tid)" in exit_mm().
+>
+> Any of those can result in deadlock, as the cred_guard_mutex is held
+> over a possible indefinite userspace waits for userspace.
+>
+> Add exec_update_mutex that is only held over exec updating process
+> with the new contents of exec, so that code that needs not to be
+> confused by exec changing the mm and the cred in ways that can not
+> happen during ordinary execution of a process.
+>
+> The plan is to switch the users of cred_guard_mutex to
+> exec_udpate_mutex one by one.  This lets us move forward while still
+> being careful and not introducing any regressions.
+[...]
+> @@ -1034,6 +1035,11 @@ static int exec_mmap(struct mm_struct *mm)
+>                         return -EINTR;
+>                 }
+>         }
 > +
-> +	return likely(atomic_read(&pthr->perf->tsync) > 0) ? 0 : -EINTR;
-> +}
-> +
-> +static int perf_copy_chunk_dma(struct perf_thread *pthr,
-> +			       dma_addr_t dst, void *src, size_t len)
->  {
->  	struct dma_async_tx_descriptor *tx;
->  	struct dmaengine_unmap_data *unmap;
->  	struct device *dma_dev;
->  	int try = 0, ret = 0;
->  
-> -	if (!use_dma) {
-> -		memcpy_toio(dst, src, len);
-> -		goto ret_check_tsync;
-> -	}
-> -
->  	dma_dev = pthr->dma_chan->device->dev;
-> -
-> -	if (!is_dma_copy_aligned(pthr->dma_chan->device, offset_in_page(src),
-> -				 offset_in_page(dst), len))
-> -		return -EIO;
+> +       ret = mutex_lock_killable(&tsk->signal->exec_update_mutex);
+> +       if (ret)
+> +               return ret;
 
-Can you please split this patch into multiple patches? It is hard to
-review and part of the reason this code is such a mess is because we
-merged large patches with a bunch of different changes rolled into one,
-many of which didn't get sufficient reviewer attention.
-
-Patches that refactor things shouldn't be making functional changes
-(like adding dma_map_resources()).
-
-
-> -static int perf_run_test(struct perf_thread *pthr)
-> +static int perf_run_test_cpu(struct perf_thread *pthr)
->  {
->  	struct perf_peer *peer = pthr->perf->test_peer;
->  	struct perf_ctx *perf = pthr->perf;
-> @@ -914,7 +903,7 @@ static int perf_run_test(struct perf_thread *pthr)
->  
->  	/* Copied field is cleared on test launch stage */
->  	while (pthr->copied < total_size) {
-> -		ret = perf_copy_chunk(pthr, flt_dst, flt_src, chunk_size);
-> +		ret = perf_copy_chunk_cpu(pthr, flt_dst, flt_src, chunk_size);
->  		if (ret) {
->  			dev_err(&perf->ntb->dev, "%d: Got error %d on test\n",
->  				pthr->tidx, ret);
-> @@ -937,6 +926,74 @@ static int perf_run_test(struct perf_thread *pthr)
->  	return 0;
->  }
->  
-> +static int perf_run_test_dma(struct perf_thread *pthr)
-> +{
-> +	struct perf_peer *peer = pthr->perf->test_peer;
-> +	struct perf_ctx *perf = pthr->perf;
-> +	struct device *dma_dev;
-> +	dma_addr_t flt_dst, bnd_dst;
-> +	u64 total_size, chunk_size;
-> +	void *flt_src;
-> +	int ret = 0;
-> +
-> +	total_size = 1ULL << total_order;
-> +	chunk_size = 1ULL << chunk_order;
-> +	chunk_size = min_t(u64, peer->outbuf_size, chunk_size);
-> +
-> +	/* Map MW for DMA */
-> +	dma_dev = pthr->dma_chan->device->dev;
-> +	peer->outbuf_dma_addr = dma_map_resource(dma_dev,
-> +						 peer->outbuf_phys_addr,
-> +						 peer->outbuf_size,
-> +						 DMA_FROM_DEVICE, 0);
-> +	if (dma_mapping_error(dma_dev, peer->outbuf_dma_addr)) {
-> +		dma_unmap_resource(dma_dev, peer->outbuf_dma_addr,
-> +				   peer->outbuf_size, DMA_FROM_DEVICE, 0);
-> +		return -EIO;
-> +	}
-> +
-> +	flt_src = pthr->src;
-> +	bnd_dst = peer->outbuf_dma_addr + peer->outbuf_size;
-> +	flt_dst = peer->outbuf_dma_addr;
-> +
-> +	pthr->duration = ktime_get();
-> +	/* Copied field is cleared on test launch stage */
-> +	while (pthr->copied < total_size) {
-> +		ret = perf_copy_chunk_dma(pthr, flt_dst, flt_src, chunk_size);
-> +		if (ret) {
-> +			dev_err(&perf->ntb->dev, "%d: Got error %d on test\n",
-> +				pthr->tidx, ret);
-> +			return ret;
-> +		}
-> +
-
-Honestly, this doesn't seem like a good approach to me. Duplicating the
-majority of the perf_run_test() function is making the code more
-complicated and harder to maintain.
-
-You should be able to just selectively call dma_map_resources() in
-perf_run_test(), or even in perf_setup_peer_mw() without needing to add
-so much extra duplicate code.
-
-Logan
+We're already holding the old mmap_sem, and now nest the
+exec_update_mutex inside it; but then while still holding the
+exec_update_mutex, we do mmput(), which can e.g. end up in ksm_exit(),
+which can do down_write(&mm->mmap_sem) from __ksm_exit(). So I think
+at least lockdep will be unhappy, and I'm not sure whether it's an
+actual problem or not.
