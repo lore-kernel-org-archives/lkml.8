@@ -2,103 +2,84 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FE2DC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 11:17:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29BD6C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 11:18:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 612F024691
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 11:17:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UWEOl2hn"
+	by mail.kernel.org (Postfix) with ESMTP id 089D8205F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 11:18:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726595AbgCJLRi (ORCPT
+        id S1726385AbgCJLSg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 07:17:38 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:45462 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726385AbgCJLRi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 07:17:38 -0400
-Received: by mail-ot1-f65.google.com with SMTP id f21so12701396otp.12;
-        Tue, 10 Mar 2020 04:17:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=m09U5Nj3Yoc7UUHoM3/K3YvvnK5tLs5UgDhB2bnbB7s=;
-        b=UWEOl2hn0i6+civfP1gv0gPmQwxE4CF6xj/4mYyIYXRpIxVZwunziiWbLGexnCHfuZ
-         WAadVKx04+a0iRAb/rnVieVBkWuLoUaRBBItAD8rAgp8nn+rzgaMOaRuyosEG7KYkidQ
-         Eii+l29ipjRGEomNmFP09PPcZWzCTu6ORe09toaXlT5ElKkPbReHKXS49GVhUn/888lc
-         5bb47DGtrwGV+kkkTSyX8v0pBOsk2+Ea3PTNiJm3eVNIwiT99zFoTeW3abX+XGgyv5Bp
-         EOJAgjh5LO6H46zOF8KQke/MnRrYlbyENrZjrwJPYhYBWy7SQRciY/QSHq0YkW1PIruB
-         fVkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=m09U5Nj3Yoc7UUHoM3/K3YvvnK5tLs5UgDhB2bnbB7s=;
-        b=GbA8Bg/92CAn6bDfLbaWrlB0WQZFz90m0Z7Av2VtTgEkMz89uvEWKGO7WeVpLRijVb
-         caHpOtKKRES80AChSNgS6bAIYBpgK7ay+WoK78UAJjXBt/Jwt+Glo0EZv5cd7CRvOBFE
-         K8fzSoMzWN4K55o666QNqfT2zEbq/MmRkpJZPZu7aPaBsOiiBmhmpo7lj4+FUD7RqgV/
-         ie/oirwFeaUJx//MyEXl7+ewl1v2s4nkln5hI9k07GO4Y7UQ7Jef3JzYG+5kF+0pBAwV
-         hukXHrZ0QzSIGZ4lT3slwERUASz9PQsxFX+B8jX/w2ScPKSyUxshNXhlPIerBS3GCptc
-         xkzA==
-X-Gm-Message-State: ANhLgQ3MSekVgARJgRO6vG2nK3p1G14FA9v/6p/D8E2NubfQ01/4erW8
-        mjQ+5OXlQYaPQFlPpKIjsk/hhix4cvo01FbFCY0=
-X-Google-Smtp-Source: ADFU+vtN+zaOZYvzPnrYZoO2Or6SvEL79vvzFTm+3xIivtNvlmRie/gGWT1dTZhv8Nz3jO1SqSMsBQ4RxqjesurQdoo=
-X-Received: by 2002:a9d:64cd:: with SMTP id n13mr16686281otl.274.1583839056416;
- Tue, 10 Mar 2020 04:17:36 -0700 (PDT)
+        Tue, 10 Mar 2020 07:18:36 -0400
+Received: from sauhun.de ([88.99.104.3]:47554 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726197AbgCJLSg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 07:18:36 -0400
+Received: from localhost (p54B33196.dip0.t-ipconnect.de [84.179.49.150])
+        by pokefinder.org (Postfix) with ESMTPSA id B82582C1EB6;
+        Tue, 10 Mar 2020 12:18:34 +0100 (CET)
+Date:   Tue, 10 Mar 2020 12:18:34 +0100
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Alain Volmat <alain.volmat@st.com>
+Cc:     pierre-yves.mordret@st.com, alexandre.torgue@st.com,
+        linux-i2c@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        fabrice.gasnier@st.com
+Subject: Re: [PATCH] i2c: stm32f7: do not backup read-only PECR register
+Message-ID: <20200310111834.GR1987@ninjato>
+References: <1583413141-1268-1-git-send-email-alain.volmat@st.com>
 MIME-Version: 1.0
-References: <20200228164126.17517-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200305114314.GP5379@paasikivi.fi.intel.com> <CA+V-a8tGEYT7sOqzLRu8cx3u1DySt4mOz0UujU57SZSGqXB=Pw@mail.gmail.com>
-In-Reply-To: <CA+V-a8tGEYT7sOqzLRu8cx3u1DySt4mOz0UujU57SZSGqXB=Pw@mail.gmail.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Tue, 10 Mar 2020 11:17:10 +0000
-Message-ID: <CA+V-a8sXP98EkrvepX6hqj8oNE8c5o5PUtU306V_QYb1Bowjpw@mail.gmail.com>
-Subject: Re: [PATCH] media: i2c: ov5645: Add virtual_channel module parameter
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-media <linux-media@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Jacopo Mondi <jacopo@jmondi.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="TDVcAd+kFgbLxwBe"
+Content-Disposition: inline
+In-Reply-To: <1583413141-1268-1-git-send-email-alain.volmat@st.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sakari,
 
-On Fri, Mar 6, 2020 at 10:18 AM Lad, Prabhakar
-<prabhakar.csengg@gmail.com> wrote:
->
-> Hi Sakari,
->
-> On Thu, Mar 5, 2020 at 11:43 AM Sakari Ailus
-> <sakari.ailus@linux.intel.com> wrote:
-> >
-> > Hi Prabhakar,
-> >
-> > On Fri, Feb 28, 2020 at 04:41:26PM +0000, Lad Prabhakar wrote:
-> > > OV5645 can operate in virtual channel 0-3 in CSI2 interfaces, this patch
-> > > adds support for module parameter virtual_channel to select the required
-> > > channel. By default OV5645 operates in virtual channel 0.
-> >
-> > What's your use case for different virtual channels?
-> >
-> Just ability to switch to different virtual channel, based on ov5640
-> driver. The rcar-csi2
-> has capability to capture  from multiple channels so that we can
-> capture simultaneously
-> from two sensors.
->
-Any thoughts on how this could be handled ?
+--TDVcAd+kFgbLxwBe
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Cheers,
---Prabhakar
+On Thu, Mar 05, 2020 at 01:59:01PM +0100, Alain Volmat wrote:
+> The PECR register provides received packet computed PEC value.=C2=A0
+> It makes no sense restoring its value after a reset, and anyway,
+> as read-only register it cannot be restored.
+>=20
+> Fixes: ea6dd25deeb5 ("i2c: stm32f7: add PM_SLEEP suspend/resume support")
+> Signed-off-by: Alain Volmat <alain.volmat@st.com>
+
+Looks good, but I can't apply. Please rebase on top of your other
+patches.
+
+
+--TDVcAd+kFgbLxwBe
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl5nd4oACgkQFA3kzBSg
+KbZHZg//eBBQyGXSgFi5dgT7rnfeukqPIx67/g3xi+EVigN2zR1MqSNIRgS6gdI2
+hou5993KGHyxg55JYVEGPjPriPPyXkBkmaXvsH5luYF1cEObodZ7CuBalIFldW47
+y/bcLA/e9Z+hyCx+W97X+AXDv6/Bncpht8hIzg5Axia8T/yLHixPKgaz3yMHdC9V
+ltIOxkEU2QEMLarGbqTeRNEa4/wzVlJuRuwzAR3htjSX0lg7N3/crNnCNZdLT30i
+zlBp3FhIJ9mHrUmDleg0rZtQimLiQK/BY0iO3aaCzfUFt3IQSyqQc5uxaqo/Tkn/
+hc8/NZ6090W2hRtydtEfJp6mE6R1RaW4w00qLf60uhiK5imsNIPXvNYHKdkG84RJ
+CwfcTWzq6JNPIJ+M1VtcZbE7u0rFsNaYVneGThOUes64T8kymMwVAn07wzaK6w7j
++3+tuJNpTWjEi8wvtpEyXRpJtJZTQstFBJPpe7BdjtHL00YViE80h7gFuc6AqoZy
+qriyt497GVbwDQPN7qO0w++2dTY/l8awDq0UAodAGcTXl92IOn8jRNvD1UpA9YNI
+TwJktN5qx9EHR4qgP1YgInk7kgL2zVT3FXR9XEz//U7ilLjT8mtZGVW1UOzhRUlb
+Yomy7tf5FP9VE86KmflMVGg/EQe8+wTIboXbdoWLktq/AS+BQoI=
+=Qlcu
+-----END PGP SIGNATURE-----
+
+--TDVcAd+kFgbLxwBe--
