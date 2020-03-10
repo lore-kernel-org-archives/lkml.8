@@ -2,137 +2,170 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41014C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:19:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6B0FC18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:21:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 150F02467F
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:19:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="mODK0PqZ"
+	by mail.kernel.org (Postfix) with ESMTP id 8A778208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:21:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726467AbgCJJTt (ORCPT
+        id S1726369AbgCJJV1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 05:19:49 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:44357 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726202AbgCJJTt (ORCPT
+        Tue, 10 Mar 2020 05:21:27 -0400
+Received: from mail.fireflyinternet.com ([109.228.58.192]:49462 "EHLO
+        fireflyinternet.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726202AbgCJJV1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 05:19:49 -0400
-Received: by mail-qk1-f196.google.com with SMTP id f198so11969743qke.11
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 02:19:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wjCevU/DO8QcnVvhecJsNsvY/Eogkcy8Wp1LUXYrp/o=;
-        b=mODK0PqZKz4tb/WcnFSbx2LYpETCoT0ilHjfL3D+Gc1Cvs24FfABK7Y5uTG1FF7S/5
-         JSEinOAr9zNhe7uvCxyPvpWevI11zfcqBZiNkCoYR6vfGQuugG9sdnCM+4DY2C7TQ480
-         6OSyktiD8UDOJi3QuaoSvnZxqbSx2QZ+cMBlApXYeppkpZsC2T+RXqhUXbTYHytUWasy
-         UlPufV8o3KWP7hmxcibzOBnDBBS9GmbuBaWiFAwupUoCbfBxlDCV0rm3OqFkflR3qQ/v
-         afQuj4Aq1FB8n3rrZzcbJCfv7itqexXpDYdMW6HMrYr5iWEhNs6iEqjcUFjcxo1bZ07/
-         A7VA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wjCevU/DO8QcnVvhecJsNsvY/Eogkcy8Wp1LUXYrp/o=;
-        b=H9pl4HtpuyBTl3um6YUbTksPiJc/agGI16s9SG1wvbSrnOeG8F9NOgLeh/Imtyeu5A
-         HluFP1YG5rE5xVUqNCilwxVAfq9eFsrjv7k8Svd2IYAz7BSp8lfGRpEgV2EPetli+9rV
-         zVgtf/gXHGlkrmWgILKTdQUikoQ3x0vjzOFm+Et7hEbSefvCNanv3Iay1h5kqTeMbfky
-         bSq8IGjDX5gWmacaaY3F9c+1558Q3xVcVz4LsUD9XJrOjgdIXAcQ7HJkvWbSmCdAiYK5
-         N4rFs+G5Uh8S7d6uLP7Xr7ld+SphY8UTViTmtg6E5VlknCmYOZJc5rJoWs2S/+S/aBuT
-         Lpnw==
-X-Gm-Message-State: ANhLgQ3diUm3E0QWGsUYcIC7U9zsTfpt9VWWY2wUAFFsiIvd27Revs6v
-        +ToU95jYiHudNWAbuIdeW1i/mSpH1/4jImUYgoQA1Q==
-X-Google-Smtp-Source: ADFU+vsmRWFj6aNZBYLKrp81MYwc1fe87ZUAz4TMoAJhlSk8+/g2pNwyYoaYHhWbyuq4lbGcnJ4gpHmmticmozr+fHI=
-X-Received: by 2002:a05:620a:1443:: with SMTP id i3mr9039808qkl.113.1583831988838;
- Tue, 10 Mar 2020 02:19:48 -0700 (PDT)
+        Tue, 10 Mar 2020 05:21:27 -0400
+X-Default-Received-SPF: pass (skip=forwardok (res=PASS)) x-ip-name=78.156.65.138;
+Received: from build.alporthouse.com (unverified [78.156.65.138]) 
+        by fireflyinternet.com (Firefly Internet (M1)) with ESMTP id 20505102-1500050 
+        for multiple; Tue, 10 Mar 2020 09:21:20 +0000
+From:   Chris Wilson <chris@chris-wilson.co.uk>
+To:     linux-kernel@vger.kernel.org
+Cc:     intel-gfx@lists.freedesktop.org,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>, stable@vger.kernel.org
+Subject: [PATCH] list: Prevent compiler reloads inside 'safe' list iteration
+Date:   Tue, 10 Mar 2020 09:21:19 +0000
+Message-Id: <20200310092119.14965-1-chris@chris-wilson.co.uk>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20200308094954.13258-1-guoren@kernel.org> <CAHCEeh+XYD3uVmaQRGpY=VGxpO9hzMeKasNmAojhkZe9PJ9Lug@mail.gmail.com>
- <95e3bba4-65c0-8991-9523-c16977f6350f@c-sky.com> <CAHCEehK0rgBpEzrWar1UTWJoOz=OQi18iw4Y+v3z5Hi=7JCEWw@mail.gmail.com>
-In-Reply-To: <CAHCEehK0rgBpEzrWar1UTWJoOz=OQi18iw4Y+v3z5Hi=7JCEWw@mail.gmail.com>
-From:   Greentime Hu <greentime.hu@sifive.com>
-Date:   Tue, 10 Mar 2020 17:19:36 +0800
-Message-ID: <CAHCEehLq5f+DGusL0T4ZUuJ2hTRhSyLSGRpKHhq5b4J3nXfBHg@mail.gmail.com>
-Subject: Re: [RFC PATCH V3 00/11] riscv: Add vector ISA support
-To:     LIU Zhiwei <zhiwei_liu@c-sky.com>
-Cc:     guoren@kernel.org, Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>, Anup.Patel@wdc.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arch@vger.kernel.org, arnd@arndb.de,
-        linux-csky@vger.kernel.org,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Guo Ren <guoren@linux.alibaba.com>,
-        Dave Martin <Dave.Martin@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 10, 2020 at 4:54 PM Greentime Hu <greentime.hu@sifive.com> wrote:
->
-> On Mon, Mar 9, 2020 at 6:27 PM LIU Zhiwei <zhiwei_liu@c-sky.com> wrote:
-> > On 2020/3/9 11:41, Greentime Hu wrote:
-> > > On Sun, Mar 8, 2020 at 5:50 PM <guoren@kernel.org> wrote:
-> > >> From: Guo Ren <guoren@linux.alibaba.com>
-> > >>
-> > >> The implementation follow the RISC-V "V" Vector Extension draft v0.8 with
-> > >> 128bit-vlen and it's based on linux-5.6-rc3 and tested with qemu [1].
-> > >>
-> > >> The patch implement basic context switch, sigcontext save/restore and
-> > >> ptrace interface with a new regset NT_RISCV_VECTOR. Only fixed 128bit-vlen
-> > >> is implemented. We need to discuss about vlen-size for libc sigcontext and
-> > >> ptrace (the maximum size of vlen is unlimited in spec).
-> > >>
-> > >> Puzzle:
-> > >> Dave Martin has talked "Growing CPU register state without breaking ABI" [2]
-> > >> before, and riscv also met vlen size problem. Let's discuss the common issue
-> > >> for all architectures and we need a better solution for unlimited vlen.
-> > >>
-> > >> Any help are welcomed :)
-> > >>
-> > >>   1: https://github.com/romanheros/qemu.git branch:vector-upstream-v3
-> > > Hi Guo,
-> > >
-> > > Thanks for your patch.
-> > > It seems the qemu repo doesn't have this branch?
-> > Hi Greentime,
-> >
-> > It's a promise from me. Now it's ready.  You can turn on vector by
-> > "qemu-system-riscv64 -cpu rv64,v=true,vext_spec=v0.7.1".
-> >
-> > Zhiwei
-> >
-> >
->
-> Hi Zhiwei,
->
-> Thank you, I see the branch in the repo now. I will give it a try and
-> let you know if I have any problem. :)
+Instruct the compiler to read the next element in the list iteration
+once, and that it is not allowed to reload the value from the stale
+element later. This is important as during the course of the safe
+iteration, the stale element may be poisoned (unbeknownst to the
+compiler).
 
-Hi Zhiwei & Guo,
+This helps prevent kcsan warnings over 'unsafe' conduct in releasing the
+list elements during list_for_each_entry_safe() and friends.
 
-It seems current version only support v0.7.1 in qemu but this patchset
-is verified in qemu too and it is based on 0.8.
-Would you please provide the qemu with 0.8 vector spec supported? or
-Did I miss something?
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: Randy Dunlap <rdunlap@infradead.org>
+Cc: stable@vger.kernel.org
+---
+ include/linux/list.h | 50 +++++++++++++++++++++++++++++++-------------
+ 1 file changed, 36 insertions(+), 14 deletions(-)
 
-489             if (cpu->cfg.vext_spec) {
-490                 if (!g_strcmp0(cpu->cfg.vext_spec, "v0.7.1")) {
-491                     vext_version = VEXT_VERSION_0_07_1;
-492                 } else {
-493                     error_setg(errp,
-494                            "Unsupported vector spec version '%s'",
-495                            cpu->cfg.vext_spec);
-496                     return;
-497                 }
-498             }
+diff --git a/include/linux/list.h b/include/linux/list.h
+index 884216db3246..c4d215d02259 100644
+--- a/include/linux/list.h
++++ b/include/linux/list.h
+@@ -536,6 +536,17 @@ static inline void list_splice_tail_init(struct list_head *list,
+ #define list_next_entry(pos, member) \
+ 	list_entry((pos)->member.next, typeof(*(pos)), member)
+ 
++/**
++ * list_next_entry_safe - get the next element in list [once]
++ * @pos:	the type * to cursor
++ * @member:	the name of the list_head within the struct.
++ *
++ * Like list_next_entry() but prevents the compiler from reloading the
++ * next element.
++ */
++#define list_next_entry_safe(pos, member) \
++	list_entry(READ_ONCE((pos)->member.next), typeof(*(pos)), member)
++
+ /**
+  * list_prev_entry - get the prev element in list
+  * @pos:	the type * to cursor
+@@ -544,6 +555,17 @@ static inline void list_splice_tail_init(struct list_head *list,
+ #define list_prev_entry(pos, member) \
+ 	list_entry((pos)->member.prev, typeof(*(pos)), member)
+ 
++/**
++ * list_prev_entry_safe - get the prev element in list [once]
++ * @pos:	the type * to cursor
++ * @member:	the name of the list_head within the struct.
++ *
++ * Like list_prev_entry() but prevents the compiler from reloading the
++ * previous element.
++ */
++#define list_prev_entry_safe(pos, member) \
++	list_entry(READ_ONCE((pos)->member.prev), typeof(*(pos)), member)
++
+ /**
+  * list_for_each	-	iterate over a list
+  * @pos:	the &struct list_head to use as a loop cursor.
+@@ -686,9 +708,9 @@ static inline void list_splice_tail_init(struct list_head *list,
+  */
+ #define list_for_each_entry_safe(pos, n, head, member)			\
+ 	for (pos = list_first_entry(head, typeof(*pos), member),	\
+-		n = list_next_entry(pos, member);			\
++		n = list_next_entry_safe(pos, member);			\
+ 	     &pos->member != (head); 					\
+-	     pos = n, n = list_next_entry(n, member))
++	     pos = n, n = list_next_entry_safe(n, member))
+ 
+ /**
+  * list_for_each_entry_safe_continue - continue list iteration safe against removal
+@@ -700,11 +722,11 @@ static inline void list_splice_tail_init(struct list_head *list,
+  * Iterate over list of given type, continuing after current point,
+  * safe against removal of list entry.
+  */
+-#define list_for_each_entry_safe_continue(pos, n, head, member) 		\
+-	for (pos = list_next_entry(pos, member), 				\
+-		n = list_next_entry(pos, member);				\
+-	     &pos->member != (head);						\
+-	     pos = n, n = list_next_entry(n, member))
++#define list_for_each_entry_safe_continue(pos, n, head, member) 	\
++	for (pos = list_next_entry(pos, member), 			\
++		n = list_next_entry_safe(pos, member);			\
++	     &pos->member != (head);					\
++	     pos = n, n = list_next_entry_safe(n, member))
+ 
+ /**
+  * list_for_each_entry_safe_from - iterate over list from current point safe against removal
+@@ -716,10 +738,10 @@ static inline void list_splice_tail_init(struct list_head *list,
+  * Iterate over list of given type from current point, safe against
+  * removal of list entry.
+  */
+-#define list_for_each_entry_safe_from(pos, n, head, member) 			\
+-	for (n = list_next_entry(pos, member);					\
+-	     &pos->member != (head);						\
+-	     pos = n, n = list_next_entry(n, member))
++#define list_for_each_entry_safe_from(pos, n, head, member) 		\
++	for (n = list_next_entry_safe(pos, member);			\
++	     &pos->member != (head);					\
++	     pos = n, n = list_next_entry_safe(n, member))
+ 
+ /**
+  * list_for_each_entry_safe_reverse - iterate backwards over list safe against removal
+@@ -733,9 +755,9 @@ static inline void list_splice_tail_init(struct list_head *list,
+  */
+ #define list_for_each_entry_safe_reverse(pos, n, head, member)		\
+ 	for (pos = list_last_entry(head, typeof(*pos), member),		\
+-		n = list_prev_entry(pos, member);			\
++		n = list_prev_entry_safe(pos, member);			\
+ 	     &pos->member != (head); 					\
+-	     pos = n, n = list_prev_entry(n, member))
++	     pos = n, n = list_prev_entry_safe(n, member))
+ 
+ /**
+  * list_safe_reset_next - reset a stale list_for_each_entry_safe loop
+@@ -750,7 +772,7 @@ static inline void list_splice_tail_init(struct list_head *list,
+  * completing the current iteration of the loop body.
+  */
+ #define list_safe_reset_next(pos, n, member)				\
+-	n = list_next_entry(pos, member)
++	n = list_next_entry_safe(pos, member)
+ 
+ /*
+  * Double linked lists with a single pointer list head.
+-- 
+2.20.1
 
-By the way, can I specify vlen in Qemu?
-Thank you. :)
