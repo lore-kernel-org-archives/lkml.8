@@ -2,136 +2,198 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74B2CC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 18:18:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEB95C18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 18:19:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 477AD21D56
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 18:18:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8708221D56
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 18:19:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nn0IsAwn"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZfafQFSJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726567AbgCJSSq (ORCPT
+        id S1726636AbgCJSTu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 14:18:46 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:46035 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726271AbgCJSSp (ORCPT
+        Tue, 10 Mar 2020 14:19:50 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:51503 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726436AbgCJSTu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 14:18:45 -0400
-Received: by mail-qk1-f193.google.com with SMTP id c145so7883604qke.12;
-        Tue, 10 Mar 2020 11:18:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=FDcMX1PePznyO53o+CArnNkwwdbPpxO8cnWHJEtCj+w=;
-        b=nn0IsAwnKmmT34whzS9D7vKKkobczy4+Jxv15WjpHhMcBo1iiSXUhNZ5zfQV7rhPJ+
-         BdKtWzLr2klQ4aM0rvu22HimGCGL9E5oxIC4bQAxUgCtV9abiaMR061IWgp3G6slG26L
-         ZvaFCGXif+EiTWwqW1Tb8/JCtJCOpSem0oPp+FHG7Qf2KhEi585uzhlL324shD/cToA5
-         cbAETcjOTJzOa1Ncn2t1AzDau/faVKd34tpUQGZrqrj2z9YlTgKRUAkR7EE2VTyufKKd
-         fKd5NMEYQJS30mQwg3bXHMAuMZOC8XoKsbWxYLD3Wbg8WYu1NquHHuYC+/q3MI3bKYcL
-         /sEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=FDcMX1PePznyO53o+CArnNkwwdbPpxO8cnWHJEtCj+w=;
-        b=aNeFHvnUTgRkxLB766S7LM7uDk3bCDTwab6/xX2KkxXge6uNfd/S1y2Yw7JBOVcfqe
-         MGY20MVZXGXJDFRShMF0332AudtbC0qojlYsp4NNGCwa6/UZiX/ZtO/SH1IDsWHrTO2m
-         Z2Ac4kraW/Qezm29z94AoXfeik86s3Y6YL+CY2OxTaBASPHZFdZiFyw1xApOXGzaCSUZ
-         uNwg6JmfJC5f+RiBzANrMwI/6Kry/VC5+EDY0gMto8J4NDqpSGJT0eFH8T2Iplu1xDD3
-         BhbyfE4me1M5CKLdKbKgU6boDRzen03IBY4fzJOz7XzUk6sEyl9OP+qYDm00a5oq3aSS
-         +Crw==
-X-Gm-Message-State: ANhLgQ02SegARlQkbssKaYaIeZF+9M1gao37/m+e186nnVt1aef1c8xs
-        ZGhZNTDKFsEwJXjijsIft+w=
-X-Google-Smtp-Source: ADFU+vvDQ6OVjY8tJy/nZ0hNWyGRHkLWwyU0bDUoyYD7chInzxdBRC6g6UidRbT/w0mvlFmonWPVGw==
-X-Received: by 2002:a37:6e84:: with SMTP id j126mr19916576qkc.77.1583864322670;
-        Tue, 10 Mar 2020 11:18:42 -0700 (PDT)
-Received: from quaco.ghostprotocols.net (179-240-149-111.3g.claro.net.br. [179.240.149.111])
-        by smtp.gmail.com with ESMTPSA id r46sm8420598qtb.87.2020.03.10.11.18.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Mar 2020 11:18:41 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 99BF840009; Tue, 10 Mar 2020 15:18:36 -0300 (-03)
-Date:   Tue, 10 Mar 2020 15:18:36 -0300
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Kajol Jain <kjain@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org,
-        mpe@ellerman.id.au, sukadev@linux.vnet.ibm.com,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        anju@linux.vnet.ibm.com, maddy@linux.vnet.ibm.com,
-        ravi.bangoria@linux.ibm.com, peterz@infradead.org,
-        yao.jin@linux.intel.com, ak@linux.intel.com, jolsa@kernel.org,
-        kan.liang@linux.intel.com, jmario@redhat.com,
-        alexander.shishkin@linux.intel.com, mingo@kernel.org,
-        paulus@ozlabs.org, namhyung@kernel.org, mpetlan@redhat.com,
-        gregkh@linuxfoundation.org, benh@kernel.crashing.org,
-        mamatha4@linux.vnet.ibm.com, mark.rutland@arm.com,
-        tglx@linutronix.de
-Subject: Re: [PATCH v4 0/8] powerpc/perf: Add json file metric support for
- the hv_24x7 socket/chip level events
-Message-ID: <20200310181836.GA12036@kernel.org>
-References: <20200309062552.29911-1-kjain@linux.ibm.com>
- <20200309093506.GB67774@krava>
+        Tue, 10 Mar 2020 14:19:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583864388;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=uG8IW8F1ik89QcwueTgT7AHnM1mDO66s69ntPDpnl4s=;
+        b=ZfafQFSJLhX+9tidrId0WsL3+G8Kr5daypTyVTwyzunVb5a0RV9/Aw/sSDuprMIyaS3S1K
+        7eYiA2vKdeL9KcDI9X2eib5wFeB/0pwsfwyJs/CmxKC8gD2S+SV8hqvGLmkMWLcEYy1rt2
+        e38mbZSu+RCCmp+bc8udA/DRZiuJbJw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-45-qCnev14MMHGNwVmv-MTKbw-1; Tue, 10 Mar 2020 14:19:46 -0400
+X-MC-Unique: qCnev14MMHGNwVmv-MTKbw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 75CB618B5FA2;
+        Tue, 10 Mar 2020 18:19:45 +0000 (UTC)
+Received: from horse.redhat.com (unknown [10.18.25.210])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 34B678F358;
+        Tue, 10 Mar 2020 18:19:37 +0000 (UTC)
+Received: by horse.redhat.com (Postfix, from userid 10451)
+        id AE75422021D; Tue, 10 Mar 2020 14:19:36 -0400 (EDT)
+Date:   Tue, 10 Mar 2020 14:19:36 -0400
+From:   Vivek Goyal <vgoyal@redhat.com>
+To:     Stefan Hajnoczi <stefanha@redhat.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvdimm@lists.01.org, virtio-fs@redhat.com, miklos@szeredi.hu,
+        dgilbert@redhat.com, mst@redhat.com,
+        Sebastien Boeuf <sebastien.boeuf@intel.com>,
+        kbuild test robot <lkp@intel.com>
+Subject: Re: [PATCH 04/20] virtio: Implement get_shm_region for PCI transport
+Message-ID: <20200310181936.GC38440@redhat.com>
+References: <20200304165845.3081-1-vgoyal@redhat.com>
+ <20200304165845.3081-5-vgoyal@redhat.com>
+ <20200310110437.GI140737@stefanha-x1.localdomain>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200309093506.GB67774@krava>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <20200310110437.GI140737@stefanha-x1.localdomain>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Mon, Mar 09, 2020 at 10:35:06AM +0100, Jiri Olsa escreveu:
-> On Mon, Mar 09, 2020 at 11:55:44AM +0530, Kajol Jain wrote:
-> > First patch of the patchset fix inconsistent results we are getting when
-> > we run multiple 24x7 events.
-> > 
-> > Patchset adds json file metric support for the hv_24x7 socket/chip level
-> > events. "hv_24x7" pmu interface events needs system dependent parameter
-> > like socket/chip/core. For example, hv_24x7 chip level events needs
-> > specific chip-id to which the data is requested should be added as part
-> > of pmu events.
-> > 
-> > So to enable JSON file support to "hv_24x7" interface, patchset expose
-> > total number of sockets and chips per-socket details in sysfs
-> > files (sockets, chips) under "/sys/devices/hv_24x7/interface/".
-> > 
-> > To get sockets and number of chips per sockets, patchset adds a rtas call
-> > with token "PROCESSOR_MODULE_INFO" to get these details. Patchset also
-> > handles partition migration case to re-init these system depended
-> > parameters by adding proper calls in post_mobility_fixup() (mobility.c).
-> > 
-> > Patch 6 & 8 of the patchset handles perf tool plumbing needed to replace
-> > the "?" character in the metric expression to proper value and hv_24x7
-> > json metric file for different Socket/chip resources.
-> > 
-> > Patch set also enable Hz/hz prinitg for --metric-only option to print
-> > metric data for bus frequency.
-> > 
-> > Applied and tested all these patches cleanly on top of jiri's flex changes
-> > with the changes done by Kan Liang for "Support metric group constraint"
-> > patchset and made required changes.
-> > 
-> > Changelog:
-> > v3 -> v4
-> > - Made changes suggested by jiri.
+On Tue, Mar 10, 2020 at 11:04:37AM +0000, Stefan Hajnoczi wrote:
+> On Wed, Mar 04, 2020 at 11:58:29AM -0500, Vivek Goyal wrote:
+> > diff --git a/drivers/virtio/virtio_pci_modern.c b/drivers/virtio/virtio_pci_modern.c
+> > index 7abcc50838b8..52f179411015 100644
+> > --- a/drivers/virtio/virtio_pci_modern.c
+> > +++ b/drivers/virtio/virtio_pci_modern.c
+> > @@ -443,6 +443,111 @@ static void del_vq(struct virtio_pci_vq_info *info)
+> >  	vring_del_virtqueue(vq);
+> >  }
+> >  
+> > +static int virtio_pci_find_shm_cap(struct pci_dev *dev,
+> > +                                   u8 required_id,
+> > +                                   u8 *bar, u64 *offset, u64 *len)
+> > +{
+> > +	int pos;
+> > +
+> > +        for (pos = pci_find_capability(dev, PCI_CAP_ID_VNDR);
 > 
-> could you please mention them next time? ;-)
-> 
-> > - Apply these patch on top of Kan liang changes.
-> 
-> Arnaldo, could you please pull the expr flex changes and Kan's
-> metric group constraint changes? it's both prereq of this patchset
+> Please fix the mixed tabs vs space indentation in this patch.
 
-Both are now in my perf/core branch, will go upstream soon, should I go
-and pickup the perf tooling bits in this patchkit?
+Will do. There are plenty of these in this patch.
 
-- Arnaldo
+> 
+> > +static bool vp_get_shm_region(struct virtio_device *vdev,
+> > +			      struct virtio_shm_region *region, u8 id)
+> > +{
+> > +	struct virtio_pci_device *vp_dev = to_vp_device(vdev);
+> > +	struct pci_dev *pci_dev = vp_dev->pci_dev;
+> > +	u8 bar;
+> > +	u64 offset, len;
+> > +	phys_addr_t phys_addr;
+> > +	size_t bar_len;
+> > +	int ret;
+> > +
+> > +	if (!virtio_pci_find_shm_cap(pci_dev, id, &bar, &offset, &len)) {
+> > +		return false;
+> > +	}
+> > +
+> > +	ret = pci_request_region(pci_dev, bar, "virtio-pci-shm");
+> > +	if (ret < 0) {
+> > +		dev_err(&pci_dev->dev, "%s: failed to request BAR\n",
+> > +			__func__);
+> > +		return false;
+> > +	}
+> > +
+> > +	phys_addr = pci_resource_start(pci_dev, bar);
+> > +	bar_len = pci_resource_len(pci_dev, bar);
+> > +
+> > +        if (offset + len > bar_len) {
+> > +                dev_err(&pci_dev->dev,
+> > +                        "%s: bar shorter than cap offset+len\n",
+> > +                        __func__);
+> > +                return false;
+> > +        }
+> > +
+> > +	region->len = len;
+> > +	region->addr = (u64) phys_addr + offset;
+> > +
+> > +	return true;
+> > +}
+> 
+> Missing pci_release_region()?
+
+Good catch. We don't have a mechanism to call pci_relese_region() and 
+virtio-mmio device's ->get_shm_region() implementation does not even
+seem to reserve the resources.
+
+So how about we leave this resource reservation to the caller.
+->get_shm_region() just returns the addr/len pair of requested resource.
+
+Something like this patch.
+
+---
+ drivers/virtio/virtio_pci_modern.c |    8 --------
+ fs/fuse/virtio_fs.c                |   13 ++++++++++---
+ 2 files changed, 10 insertions(+), 11 deletions(-)
+
+Index: redhat-linux/fs/fuse/virtio_fs.c
+===================================================================
+--- redhat-linux.orig/fs/fuse/virtio_fs.c	2020-03-10 09:13:34.624565666 -0400
++++ redhat-linux/fs/fuse/virtio_fs.c	2020-03-10 14:11:10.970284651 -0400
+@@ -763,11 +763,18 @@ static int virtio_fs_setup_dax(struct vi
+ 	if (!have_cache) {
+ 		dev_notice(&vdev->dev, "%s: No cache capability\n", __func__);
+ 		return 0;
+-	} else {
+-		dev_notice(&vdev->dev, "Cache len: 0x%llx @ 0x%llx\n",
+-			   cache_reg.len, cache_reg.addr);
+ 	}
+ 
++	if (!devm_request_mem_region(&vdev->dev, cache_reg.addr, cache_reg.len,
++				     dev_name(&vdev->dev))) {
++		dev_warn(&vdev->dev, "could not reserve region addr=0x%llx"
++			 " len=0x%llx\n", cache_reg.addr, cache_reg.len);
++		return -EBUSY;
++        }
++
++	dev_notice(&vdev->dev, "Cache len: 0x%llx @ 0x%llx\n", cache_reg.len,
++		   cache_reg.addr);
++
+ 	pgmap = devm_kzalloc(&vdev->dev, sizeof(*pgmap), GFP_KERNEL);
+ 	if (!pgmap)
+ 		return -ENOMEM;
+Index: redhat-linux/drivers/virtio/virtio_pci_modern.c
+===================================================================
+--- redhat-linux.orig/drivers/virtio/virtio_pci_modern.c	2020-03-10 08:51:36.886565666 -0400
++++ redhat-linux/drivers/virtio/virtio_pci_modern.c	2020-03-10 13:43:15.168753543 -0400
+@@ -511,19 +511,11 @@ static bool vp_get_shm_region(struct vir
+ 	u64 offset, len;
+ 	phys_addr_t phys_addr;
+ 	size_t bar_len;
+-	int ret;
+ 
+ 	if (!virtio_pci_find_shm_cap(pci_dev, id, &bar, &offset, &len)) {
+ 		return false;
+ 	}
+ 
+-	ret = pci_request_region(pci_dev, bar, "virtio-pci-shm");
+-	if (ret < 0) {
+-		dev_err(&pci_dev->dev, "%s: failed to request BAR\n",
+-			__func__);
+-		return false;
+-	}
+-
+ 	phys_addr = pci_resource_start(pci_dev, bar);
+ 	bar_len = pci_resource_len(pci_dev, bar);
+ 
+
