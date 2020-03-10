@@ -2,111 +2,65 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25C51C18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:16:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CE9AC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:16:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E53FB20873
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:16:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583846180;
-	bh=66QW2+ESPuzoUmehFdhSS+d4CRWx0EfkVdbM2bdSjKI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=01J2i4cv1DAD6Eg2gH0abispCt+t4+4y76dDcSXcw5VVOOa9qovMYOuOHwru+HUOJ
-	 bXXUmPrpqaNzNvDGWq2maMucNsGBU3jk6cwDegeBaVx1S0RKXc6dGCEGxAwXfsVgss
-	 lSJdDd8MlN4MwUZfnPj4Na7mY0N6vtGZxhZQ6G5U=
+	by mail.kernel.org (Postfix) with ESMTP id 30DD420873
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:16:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="w1tNh0x9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731710AbgCJNNa (ORCPT
+        id S1731682AbgCJNNW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:13:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36184 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:13:22 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:55102 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731699AbgCJNNZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:13:25 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 85ED62468F;
-        Tue, 10 Mar 2020 13:13:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583846005;
-        bh=66QW2+ESPuzoUmehFdhSS+d4CRWx0EfkVdbM2bdSjKI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wp6t/Py2+EZXbVGdfepUndT0G1JzZiwWfJ34gz8GuV0Q7GACbBvohql1LJ1y/qY1I
-         182yNVOVONjxH8u349I8rOrVOIdmchxFx+A8p5CvxrjFMjnJz0plP+88KcK4MVcTna
-         AMYcpN1U5BFzNp98BirFk1g9xd/PIxvC0ICyfq68=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 25/86] s390: make install not depend on vmlinux
-Date:   Tue, 10 Mar 2020 13:44:49 +0100
-Message-Id: <20200310124532.141598042@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200310124530.808338541@linuxfoundation.org>
-References: <20200310124530.808338541@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1731334AbgCJNNR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:13:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=VPcwSmSGzn5ajfB2BRITEeWuZm0bV4e+TfKsv8eLyB0=; b=w1tNh0x9O4rYta4n9sCh9xj2Ov
+        Kuidd48UylMpYIvqV2rcroRuEYIPDU1ulXN7BAEnl5nQOy7AMCf7PR0B38hCOFqr4pDE9cVxcZYG5
+        Ld2KRDLgnksVZGWRGsRviBFDz4SpGP04IgOiCFbX/30W3fuv/o9+2dS6llzv8Qjw1m+U=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jBeh5-0001jF-9D; Tue, 10 Mar 2020 14:13:11 +0100
+Date:   Tue, 10 Mar 2020 14:13:11 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Antoine Tenart <antoine.tenart@bootlin.com>
+Cc:     davem@davemloft.net, f.fainelli@gmail.com, hkallweit1@gmail.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next 1/3] net: phy: move the mscc driver to its own
+ directory
+Message-ID: <20200310131311.GD5932@lunn.ch>
+References: <20200310090720.521745-1-antoine.tenart@bootlin.com>
+ <20200310090720.521745-2-antoine.tenart@bootlin.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200310090720.521745-2-antoine.tenart@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <masahiroy@kernel.org>
+On Tue, Mar 10, 2020 at 10:07:18AM +0100, Antoine Tenart wrote:
+> The MSCC PHY driver is growing, with lots of space consuming features
+> (firmware support, full initialization, MACsec...). It's becoming hard
+> to read and navigate in its source code. This patch moves the MSCC
+> driver to its own directory, without modifying anything, as a
+> preparation for splitting up its features into dedicated files.
+> 
+> Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
 
-[ Upstream commit 94e90f727f7424d827256023cace829cad6896f4 ]
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-For the same reason as commit 19514fc665ff ("arm, kbuild: make "make
-install" not depend on vmlinux"), the install targets should never
-trigger the rebuild of the kernel.
-
-The variable, CONFIGURE, is not set by anyone. Remove it as well.
-
-Link: https://lkml.kernel.org/r/20200216144829.27023-1-masahiroy@kernel.org
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/s390/Makefile      | 2 +-
- arch/s390/boot/Makefile | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/s390/Makefile b/arch/s390/Makefile
-index 4bccde36cb161..9a3a698c8fca5 100644
---- a/arch/s390/Makefile
-+++ b/arch/s390/Makefile
-@@ -140,7 +140,7 @@ all: bzImage
- #KBUILD_IMAGE is necessary for packaging targets like rpm-pkg, deb-pkg...
- KBUILD_IMAGE	:= $(boot)/bzImage
- 
--install: vmlinux
-+install:
- 	$(Q)$(MAKE) $(build)=$(boot) $@
- 
- bzImage: vmlinux
-diff --git a/arch/s390/boot/Makefile b/arch/s390/boot/Makefile
-index f6a9b0c203553..45c72d1f9e7d2 100644
---- a/arch/s390/boot/Makefile
-+++ b/arch/s390/boot/Makefile
-@@ -46,7 +46,7 @@ quiet_cmd_ar = AR      $@
- $(obj)/startup.a: $(OBJECTS) FORCE
- 	$(call if_changed,ar)
- 
--install: $(CONFIGURE) $(obj)/bzImage
-+install:
- 	sh -x  $(srctree)/$(obj)/install.sh $(KERNELRELEASE) $(obj)/bzImage \
- 	      System.map "$(INSTALL_PATH)"
- 
--- 
-2.20.1
-
-
-
+    Andrew
