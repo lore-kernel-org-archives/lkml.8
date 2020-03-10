@@ -2,128 +2,159 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 922A6C10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 23:19:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 495E4C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 23:22:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B0EC2071B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 23:19:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F06FE2146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 23:22:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ePT3ybQq"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bXtZeMLw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727752AbgCJXTE (ORCPT
+        id S1727758AbgCJXWT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 19:19:04 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:42655 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726402AbgCJXTD (ORCPT
+        Tue, 10 Mar 2020 19:22:19 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:34730 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727484AbgCJXWT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 19:19:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583882342;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=z5sLqw2q00TFWFE2+/xEamSW6/qGE1IWWYINTtiDzeQ=;
-        b=ePT3ybQq7KlGmqxO6iw8fnPh7diSygkqL+zDJkDzSfoSPeRrt0z1uZYL9GJmmcxMWAgUIJ
-        bupMJEySk8dAf3qr+64zujsrYvGLpXGQ9rp6XYpGlIe8jtiYzdF5PjXzbscA/f6zq/oXu9
-        TuBg8tgx7poj6sxgV2q6pz6Ffz1K80w=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-183-d5Mcj0jsPY6nLI6SLsnx4A-1; Tue, 10 Mar 2020 19:18:58 -0400
-X-MC-Unique: d5Mcj0jsPY6nLI6SLsnx4A-1
-Received: by mail-ed1-f69.google.com with SMTP id y35so196404ede.4
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 16:18:58 -0700 (PDT)
+        Tue, 10 Mar 2020 19:22:19 -0400
+Received: by mail-oi1-f196.google.com with SMTP id g6so31375oiy.1
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 16:22:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0SG9alWkJ/Jgp88pmVWrlnAeORjU1Bi5WlBRFbHa1ck=;
+        b=bXtZeMLwoJSnRz7jYAT9Nxgt4EjIpibQndWXUYf0e25pPrU5HPPn1B9ylL4DXV6Z1j
+         qeFDlH1hFWzJQ70cTl0cuy/Fbm/L0h0EWDQjgHIniSeYfa1Uk+XmSZLW1QgEJFMKAzjF
+         VZiHdDIDdWe5BnM+5Noagr/GdY5lI37UwcLgkyMdVfsD/fe+MFTuOxrTeJi1nX4i8HOg
+         VUkKfaAU3TrdPfbXYQqboyCHbc0eyYBaRmxuH52Xn5Dh/TCm1e02ASC5dirfvTF1YxPx
+         lzPE++XTCgEvyiX6oaF3wYDbxIDXkcGIqFCjOGk8cU/ivzDnxBuuRsxii0nf2rzn+eB4
+         pQZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=z5sLqw2q00TFWFE2+/xEamSW6/qGE1IWWYINTtiDzeQ=;
-        b=gm/UUwTjllxqKE9Y+UMdxIbDfwIb7rM+EfVnI7yAb44dW0K1VpeTkSgbCCfuq5NDjC
-         Af9rJH0ghKhNdhV2Se9siD4/rd7iWxWKer9c/TW9QQiH3/2XUjNyLpnps50PbRx5oK6W
-         tEmdkk0oYmkUQ5OIgZEd4VC6a4MDtzKjnY3ThmxRIB2l7OJt1XptY3j+yeiaRLdwChXp
-         tjNZrdqBo2dY0w06d0R2IzqNla/aHKi3auxD0C8bmnnpJcAjn0tTKXdufbUOmCN2IFyo
-         Se2Xe/B5qfWxVMFsTbsQamhs7sGQzxE5WbEaBdl9SJb48n/IC7gpL+vxM+3HEHtlse7E
-         pvzQ==
-X-Gm-Message-State: ANhLgQ1F1wqreo4FldhAW/URD+mBbjluBSJuAhbV/N3JwhHBX1znMvKx
-        A9c4z3pkBmb+NVCsVJkXQw+y/LjW9jwm/rh3xa6Sv2fOwc0vASf4GqQTXoqYixTaCIh7j+ZigmK
-        e+IhLY6H2U9qjDNkhAY9pbnvlKnZzxHPbUnOmoVtL
-X-Received: by 2002:a17:907:262a:: with SMTP id aq10mr12415669ejc.377.1583882337422;
-        Tue, 10 Mar 2020 16:18:57 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vstjHqiZOF0xElis+31S7G0gY2aH73JLw/AluJvKeWmdJcJyHfoWoeERc+w0Ht0pyWZgseKXsqtbLAkFkQLxyM=
-X-Received: by 2002:a17:907:262a:: with SMTP id aq10mr12415648ejc.377.1583882337100;
- Tue, 10 Mar 2020 16:18:57 -0700 (PDT)
+        bh=0SG9alWkJ/Jgp88pmVWrlnAeORjU1Bi5WlBRFbHa1ck=;
+        b=iX1WGWS3JIJGLc7iaVOcC1ZDk6vF60b9OQPDgMUZw9H9q6Iz1qXgZ9N2F13XAWmulU
+         yEyfnPuOTb9SBfKo1iSr591eCSEqTfvdrS4CFseUeiBOZgO/Torad9D23WDctG8Nezmt
+         lkgRv+mgsnqYSpd/GY6aMDBE/icWruzAL0mJy6TgVBYOIuy3TcydyrOqIpalZkdphHZm
+         8+XbmtBZMWZYEue4Rpsx3HWtMT9pAKc/g5Ua1EeNhxKJsdrxDg2IPvwCHsaexkk5+BPL
+         vXvFmCMpwT+HSDAOTFbHUfhhlmZrBhAPx5RrDarsuRBkg3+uKDTXC7vDpeDhbqRgkTL0
+         rU3w==
+X-Gm-Message-State: ANhLgQ3t9viz9sJ4F7t1+2RW+gyPHFKWL6XftWZ/cFoMgpOXIl2J+U6a
+        ZKd3+SR0MO/hEsfT2qrxaPvjcJEfN+wB0V0LlT9pjA==
+X-Google-Smtp-Source: ADFU+vuSiveurHJ3mWgzsiX28P2uFv4kQvFy5FChN7qEoSlaBMM2vSEC6fMHVo5v9rjlRZlpO64Dbc+u19jr17edDf0=
+X-Received: by 2002:aca:1913:: with SMTP id l19mr51096oii.47.1583882536478;
+ Tue, 10 Mar 2020 16:22:16 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200310223516.102758-1-mcroce@redhat.com> <d473061b-688f-f4a6-c0e8-61c22b8a2b10@cloud.ionos.com>
-In-Reply-To: <d473061b-688f-f4a6-c0e8-61c22b8a2b10@cloud.ionos.com>
-From:   Matteo Croce <mcroce@redhat.com>
-Date:   Wed, 11 Mar 2020 00:18:21 +0100
-Message-ID: <CAGnkfhwjXN_T09MsD1e6P95gUqxCbWL7BcOLSy16_QOZsZKbgQ@mail.gmail.com>
-Subject: Re: [PATCH v2] block: refactor duplicated macros
-To:     Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-Cc:     linux-block@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-bcache@vger.kernel.org,
-        linux-raid <linux-raid@vger.kernel.org>,
-        linux-mmc@vger.kernel.org,
-        xen-devel <xen-devel@lists.xenproject.org>,
-        linux-scsi <linux-scsi@vger.kernel.org>,
-        linux-nfs@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Song Liu <song@kernel.org>
+References: <AM6PR03MB5170EB4427BF5C67EE98FF09E4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87k142lpfz.fsf@x220.int.ebiederm.org> <AM6PR03MB51704206634C009500A8080DE4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <875zfmloir.fsf@x220.int.ebiederm.org> <AM6PR03MB51707ABF20B6CBBECC34865FE4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87v9nmjulm.fsf@x220.int.ebiederm.org> <AM6PR03MB5170B976E6387FDDAD59A118E4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <202003021531.C77EF10@keescook> <20200303085802.eqn6jbhwxtmz4j2x@wittgenstein>
+ <AM6PR03MB5170285B336790D3450E2644E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87v9nlii0b.fsf@x220.int.ebiederm.org> <AM6PR03MB5170609D44967E044FD1BE40E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87a74xi4kz.fsf@x220.int.ebiederm.org> <AM6PR03MB51705AA3009B4986BB6EF92FE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87r1y8dqqz.fsf@x220.int.ebiederm.org> <AM6PR03MB517053AED7DC89F7C0704B7DE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <AM6PR03MB51703B44170EAB4626C9B2CAE4E20@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87tv32cxmf.fsf_-_@x220.int.ebiederm.org> <87v9ne5y4y.fsf_-_@x220.int.ebiederm.org>
+ <87zhcq4jdj.fsf_-_@x220.int.ebiederm.org> <CAG48ez13XXWNRLrPFRHRsvPKSwSK1-6k+1F7QujWOJtVuk0QHg@mail.gmail.com>
+ <87wo7roq2c.fsf@x220.int.ebiederm.org>
+In-Reply-To: <87wo7roq2c.fsf@x220.int.ebiederm.org>
+From:   Jann Horn <jannh@google.com>
+Date:   Wed, 11 Mar 2020 00:21:49 +0100
+Message-ID: <CAG48ez1j2=pdj0nc1syHkh6X4d=aHuCH1srzA6hT7+32QD+6Gg@mail.gmail.com>
+Subject: Re: [PATCH v2 5/5] exec: Add a exec_update_mutex to replace cred_guard_mutex
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Kees Cook <keescook@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Andrei Vagin <avagin@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Yuyang Du <duyuyang@gmail.com>,
+        David Hildenbrand <david@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        David Howells <dhowells@redhat.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christian Kellner <christian@kellner.me>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 12:10 AM Guoqing Jiang
-<guoqing.jiang@cloud.ionos.com> wrote:
->
->
->
-> On 3/10/20 11:35 PM, Matteo Croce wrote:
-> > +++ b/drivers/md/raid1.c
-> > @@ -2129,7 +2129,7 @@ static void process_checks(struct r1bio *r1_bio)
-> >       int vcnt;
+On Tue, Mar 10, 2020 at 10:33 PM Eric W. Biederman
+<ebiederm@xmission.com> wrote:
+> Jann Horn <jannh@google.com> writes:
+> > On Sun, Mar 8, 2020 at 10:41 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
+> >> The cred_guard_mutex is problematic.  The cred_guard_mutex is held
+> >> over the userspace accesses as the arguments from userspace are read.
+> >> The cred_guard_mutex is held of PTRACE_EVENT_EXIT as the the other
+> >> threads are killed.  The cred_guard_mutex is held over
+> >> "put_user(0, tsk->clear_child_tid)" in exit_mm().
+> >>
+> >> Any of those can result in deadlock, as the cred_guard_mutex is held
+> >> over a possible indefinite userspace waits for userspace.
+> >>
+> >> Add exec_update_mutex that is only held over exec updating process
+> >> with the new contents of exec, so that code that needs not to be
+> >> confused by exec changing the mm and the cred in ways that can not
+> >> happen during ordinary execution of a process.
+> >>
+> >> The plan is to switch the users of cred_guard_mutex to
+> >> exec_udpate_mutex one by one.  This lets us move forward while still
+> >> being careful and not introducing any regressions.
+> > [...]
+> >> @@ -1034,6 +1035,11 @@ static int exec_mmap(struct mm_struct *mm)
+> >>                         return -EINTR;
+> >>                 }
+> >>         }
+> >> +
+> >> +       ret = mutex_lock_killable(&tsk->signal->exec_update_mutex);
+> >> +       if (ret)
+> >> +               return ret;
 > >
-> >       /* Fix variable parts of all bios */
-> > -     vcnt = (r1_bio->sectors + PAGE_SIZE / 512 - 1) >> (PAGE_SHIFT - 9);
-> > +     vcnt = (r1_bio->sectors + PAGE_SECTORS - 1) >> (PAGE_SHIFT - 9);
+> > We're already holding the old mmap_sem, and now nest the
+> > exec_update_mutex inside it; but then while still holding the
+> > exec_update_mutex, we do mmput(), which can e.g. end up in ksm_exit(),
+> > which can do down_write(&mm->mmap_sem) from __ksm_exit(). So I think
+> > at least lockdep will be unhappy, and I'm not sure whether it's an
+> > actual problem or not.
 >
-> Maybe replace "PAGE_SHIFT - 9" with "PAGE_SECTORS_SHIFT" too.
->
-> Thanks,
-> Guoqing
->
+> Good point.  I should double check the lock ordering here with mmap_sem.
+> It doesn't look like mmput takes mmap_sem
 
-Wow, there are a lot of them!
+You sure about that? mmput() -> __mmput() -> ksm_exit() ->
+__ksm_exit() -> down_write(&mm->mmap_sem)
 
-$ git grep -c 'PAGE_SHIFT - 9'
-arch/ia64/include/asm/pgtable.h:2
-block/blk-settings.c:2
-block/partition-generic.c:1
-drivers/md/dm-table.c:1
-drivers/md/raid1.c:1
-drivers/md/raid10.c:1
-drivers/md/raid5-cache.c:5
-drivers/md/raid5.h:1
-drivers/nvme/host/fc.c:1
-drivers/nvme/target/loop.c:1
-fs/erofs/internal.h:1
-fs/ext2/dir.c:1
-fs/libfs.c:1
-fs/nilfs2/dir.c:1
-mm/page_io.c:2
-mm/swapfile.c:6
+Or also: mmput() -> __mmput() -> khugepaged_exit() ->
+__khugepaged_exit() -> down_write(&mm->mmap_sem)
 
--- 
-Matteo Croce
-per aspera ad upstream
-
+Or is there a reason why those paths can't happen?
