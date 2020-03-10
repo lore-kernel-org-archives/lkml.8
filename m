@@ -4,48 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84ACAC18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:41:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74C5DC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:41:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B33E24698
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:41:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 423FA24691
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:41:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583844102;
-	bh=/kRuxcuHOYsDociFLkbeQUfdfObngkhGQ3sS+2p7z/s=;
+	s=default; t=1583844107;
+	bh=BTlBOkjgyKc7KUFEV99ZCrPWLOftTICokMyxw3S9+P4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vdlcI7Gb7WUUMQElEfAbOpvArXmcgVTC43MUMgHGNxJra9xE3Qjjd+XZosw5fqNm3
-	 coeaxpqFMLRqcMDX03QOSiHFehzBIE2M+J2Z8BrRtxPiubxy+/DHdqCBFPQ1k6Kvqp
-	 IaVe0/JoGxasSBhzHVIytzRKg4jflzVzGFyaSFxY=
+	b=qO7al5GGBG6a9/2Ffd7SwCELHlOKPbofbLmZi/qeH/YSu2NJCGe5elL3rBls07kR+
+	 DRpHPMPiwYmdc/NGgJdpb3ggDpQ29VvLUt7HSZn9EXUWPUUCwmQL8NO3SPeMfgL7Zo
+	 EtNqMxpnNRTDKUYsgK9khY+Vu9Tohrdc2ViQHceE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727071AbgCJMll (ORCPT
+        id S1727085AbgCJMlp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:41:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41284 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:41:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41358 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726307AbgCJMlk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:41:40 -0400
+        id S1727073AbgCJMlo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:41:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F1C324691;
-        Tue, 10 Mar 2020 12:41:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F0366246A7;
+        Tue, 10 Mar 2020 12:41:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844099;
-        bh=/kRuxcuHOYsDociFLkbeQUfdfObngkhGQ3sS+2p7z/s=;
+        s=default; t=1583844103;
+        bh=BTlBOkjgyKc7KUFEV99ZCrPWLOftTICokMyxw3S9+P4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aGHtZVQnu3HYAKaIUSK38ImPKd7U0OWcewFVkoZBafG7SIwBOh0dw7VtPrIO5EqRM
-         /pcBRyzRbTU5xOy8//GeqtumAh+tyOqAENC1QZWmlIKfuQ8xpxB1Z9ViL5E+8/T+3v
-         caYjgFLDYKbKv+sm4T25jLtAS77EvhOFnh4TDK/4=
+        b=mN7oomRZc3BeoieTS8T6f9vQkdCFOaFr1fvGktZYo1dHhxwc2r/W4ck8+mvVVXxfu
+         jHMecJmtKJKyMuZpLyxn3z3UkZScmkKZXUThHTxPHvkMa2cbAaCormDyvFriVo/+G5
+         PX5A6OE0xrzbNhkXtZCBzSAHD3+IJ45MDKSgidCA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, yangerkun <yangerkun@huawei.com>
-Subject: [PATCH 4.4 31/72] slip: stop double free sl->dev in slip_open
-Date:   Tue, 10 Mar 2020 13:38:44 +0100
-Message-Id: <20200310123609.077059982@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Benjamin Poirier <bpoirier@cumulusnetworks.com>,
+        Michal Kubecek <mkubecek@suse.cz>,
+        David Ahern <dsahern@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 14/72] ipv6: Fix nlmsg_flags when splitting a multipath route
+Date:   Tue, 10 Mar 2020 13:38:27 +0100
+Message-Id: <20200310123605.134231758@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123601.053680753@linuxfoundation.org>
 References: <20200310123601.053680753@linuxfoundation.org>
@@ -58,31 +62,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: yangerkun <yangerkun@huawei.com>
+From: Benjamin Poirier <bpoirier@cumulusnetworks.com>
 
-After include 3b5a39979daf ("slip: Fix memory leak in slip_open error path")
-and e58c19124189 ("slip: Fix use-after-free Read in slip_open") with 4.4.y/4.9.y.
-We will trigger a bug since we can double free sl->dev in slip_open. Actually,
-we should backport cf124db566e6 ("net: Fix inconsistent teardown and release
-of private netdev state.") too since it has delete free_netdev from sl_free_netdev.
-Fix it by delete free_netdev from slip_open.
+[ Upstream commit afecdb376bd81d7e16578f0cfe82a1aec7ae18f3 ]
 
-Signed-off-by: yangerkun <yangerkun@huawei.com>
+When splitting an RTA_MULTIPATH request into multiple routes and adding the
+second and later components, we must not simply remove NLM_F_REPLACE but
+instead replace it by NLM_F_CREATE. Otherwise, it may look like the netlink
+message was malformed.
+
+For example,
+	ip route add 2001:db8::1/128 dev dummy0
+	ip route change 2001:db8::1/128 nexthop via fe80::30:1 dev dummy0 \
+		nexthop via fe80::30:2 dev dummy0
+results in the following warnings:
+[ 1035.057019] IPv6: RTM_NEWROUTE with no NLM_F_CREATE or NLM_F_REPLACE
+[ 1035.057517] IPv6: NLM_F_CREATE should be set when creating new route
+
+This patch makes the nlmsg sequence look equivalent for __ip6_ins_rt() to
+what it would get if the multipath route had been added in multiple netlink
+operations:
+	ip route add 2001:db8::1/128 dev dummy0
+	ip route change 2001:db8::1/128 nexthop via fe80::30:1 dev dummy0
+	ip route append 2001:db8::1/128 nexthop via fe80::30:2 dev dummy0
+
+Fixes: 27596472473a ("ipv6: fix ECMP route replacement")
+Signed-off-by: Benjamin Poirier <bpoirier@cumulusnetworks.com>
+Reviewed-by: Michal Kubecek <mkubecek@suse.cz>
+Reviewed-by: David Ahern <dsahern@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/net/slip/slip.c |    1 -
- 1 file changed, 1 deletion(-)
+ net/ipv6/route.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/net/slip/slip.c
-+++ b/drivers/net/slip/slip.c
-@@ -868,7 +868,6 @@ err_free_chan:
- 	tty->disc_data = NULL;
- 	clear_bit(SLF_INUSE, &sl->flags);
- 	sl_free_netdev(sl->dev);
--	free_netdev(sl->dev);
+--- a/net/ipv6/route.c
++++ b/net/ipv6/route.c
+@@ -2953,6 +2953,7 @@ static int ip6_route_multipath_add(struc
+ 		 */
+ 		cfg->fc_nlinfo.nlh->nlmsg_flags &= ~(NLM_F_EXCL |
+ 						     NLM_F_REPLACE);
++		cfg->fc_nlinfo.nlh->nlmsg_flags |= NLM_F_CREATE;
+ 		nhn++;
+ 	}
  
- err_exit:
- 	rtnl_unlock();
 
 
