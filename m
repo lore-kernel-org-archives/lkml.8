@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BE08C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:52:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82E14C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:52:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1852524693
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:52:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B70124693
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:52:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583844754;
-	bh=vTWBqDRsC/tFRPDMOCq60Nxj2V6mOLrWJm0saUVbkdQ=;
+	s=default; t=1583844756;
+	bh=9FSYDkae8qu7VN6CuUOGfJEylPiP87lYdX0dWiEBBUU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XaXUrgPlwsaPu8BwoCwFSpadiMFJH1RgxxpRoRrEWbtRnZnYGoGGp+UpDLRiHE1fx
-	 glwUM/m+gOFbbrhDJLxXe1B2/DKFRmKrcVLtEGBrz6SQSwXky2sOz5FTb+B4u1BlHD
-	 k8zu6Mui6PlYIfaq4YGlmCwgv1a9fhdA9JTzPsRI=
+	b=v34wLQkEa8Eu9vIUlbJOd3JLPfgUNcTi9o0j+OKvMEFzvy6K8NErWgrszm9KWcW0j
+	 xGnX9CjwTO/20/vrNYXNU6dzcbEEJkyyCYGpNIPbGVq41Qg+URA9aa5LcgDLMasdpG
+	 eDUZ6RLIeZT2U6+Khqw8vhp8HPKP7t9ydvLanPPE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729073AbgCJMwc (ORCPT
+        id S1727687AbgCJMwe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:52:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58168 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:52:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58238 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729057AbgCJMw2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:52:28 -0400
+        id S1729072AbgCJMwc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:52:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A428220674;
-        Tue, 10 Mar 2020 12:52:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3022320674;
+        Tue, 10 Mar 2020 12:52:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844748;
-        bh=vTWBqDRsC/tFRPDMOCq60Nxj2V6mOLrWJm0saUVbkdQ=;
+        s=default; t=1583844751;
+        bh=9FSYDkae8qu7VN6CuUOGfJEylPiP87lYdX0dWiEBBUU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XCHu0GA3XnaRxOFBItUrK76AA0q9izLx5YvPlHnevFMijXprQEswpFnwevXcSSozx
-         8gpKAoUdzdEfWdu9di7ffn677zUAL9OgrknaMGsN7/at07ObGtHfwioVxuznivD9PK
-         5iPat5XUbvS06e2G1McnPc3ikuZqAhVZUaaVcDD8=
+        b=ab9PnF3jlunNHJl24iaHyQ7viZ0o5Cwd9WI6Z19dlMeAMXGxBNQRozIc7rNzwc8UR
+         +cnV19MQLILLZrJqhbUTzEfdfrZRc0gMHGgrk9a7VktzSfR90aou7u/FnKJGH6NM2s
+         bdyVz6KSr5czZyuP4T/PGQvxtu8TdyVUr3kpngjI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH 5.4 103/168] dmaengine: tegra-apb: Prevent race conditions of tasklet vs free list
-Date:   Tue, 10 Mar 2020 13:39:09 +0100
-Message-Id: <20200310123645.807416745@linuxfoundation.org>
+        stable@vger.kernel.org, Mikulas Patocka <mpatocka@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>
+Subject: [PATCH 5.4 104/168] dm integrity: fix recalculation when moving from journal mode to bitmap mode
+Date:   Tue, 10 Mar 2020 13:39:10 +0100
+Message-Id: <20200310123645.911225481@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123635.322799692@linuxfoundation.org>
 References: <20200310123635.322799692@linuxfoundation.org>
@@ -60,37 +59,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Osipenko <digetx@gmail.com>
+From: Mikulas Patocka <mpatocka@redhat.com>
 
-commit c33ee1301c393a241d6424e36eff1071811b1064 upstream.
+commit d5bdf66108419cdb39da361b58ded661c29ff66e upstream.
 
-The interrupt handler puts a half-completed DMA descriptor on a free list
-and then schedules tasklet to process bottom half of the descriptor that
-executes client's callback, this creates possibility to pick up the busy
-descriptor from the free list. Thus, let's disallow descriptor's re-use
-until it is fully processed.
+If we resume a device in bitmap mode and the on-disk format is in journal
+mode, we must recalculate anything above ic->sb->recalc_sector. Otherwise,
+there would be non-recalculated blocks which would cause I/O errors.
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-Acked-by: Jon Hunter <jonathanh@nvidia.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200209163356.6439-3-digetx@gmail.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Fixes: 468dfca38b1a ("dm integrity: add a bitmap mode")
+Cc: stable@vger.kernel.org # v5.2+
+Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/dma/tegra20-apb-dma.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/md/dm-integrity.c |   17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
 
---- a/drivers/dma/tegra20-apb-dma.c
-+++ b/drivers/dma/tegra20-apb-dma.c
-@@ -281,7 +281,7 @@ static struct tegra_dma_desc *tegra_dma_
+--- a/drivers/md/dm-integrity.c
++++ b/drivers/md/dm-integrity.c
+@@ -2883,17 +2883,24 @@ static void dm_integrity_resume(struct d
+ 	} else {
+ 		replay_journal(ic);
+ 		if (ic->mode == 'B') {
+-			int mode;
+ 			ic->sb->flags |= cpu_to_le32(SB_FLAG_DIRTY_BITMAP);
+ 			ic->sb->log2_blocks_per_bitmap_bit = ic->log2_blocks_per_bitmap_bit;
+ 			r = sync_rw_sb(ic, REQ_OP_WRITE, REQ_FUA);
+ 			if (unlikely(r))
+ 				dm_integrity_io_error(ic, "writing superblock", r);
  
- 	/* Do not allocate if desc are waiting for ack */
- 	list_for_each_entry(dma_desc, &tdc->free_dma_desc, node) {
--		if (async_tx_test_ack(&dma_desc->txd)) {
-+		if (async_tx_test_ack(&dma_desc->txd) && !dma_desc->cb_count) {
- 			list_del(&dma_desc->node);
- 			spin_unlock_irqrestore(&tdc->lock, flags);
- 			dma_desc->txd.flags = 0;
+-			mode = ic->recalculate_flag ? BITMAP_OP_SET : BITMAP_OP_CLEAR;
+-			block_bitmap_op(ic, ic->journal, 0, ic->provided_data_sectors, mode);
+-			block_bitmap_op(ic, ic->recalc_bitmap, 0, ic->provided_data_sectors, mode);
+-			block_bitmap_op(ic, ic->may_write_bitmap, 0, ic->provided_data_sectors, mode);
++			block_bitmap_op(ic, ic->journal, 0, ic->provided_data_sectors, BITMAP_OP_CLEAR);
++			block_bitmap_op(ic, ic->recalc_bitmap, 0, ic->provided_data_sectors, BITMAP_OP_CLEAR);
++			block_bitmap_op(ic, ic->may_write_bitmap, 0, ic->provided_data_sectors, BITMAP_OP_CLEAR);
++			if (ic->sb->flags & cpu_to_le32(SB_FLAG_RECALCULATING) &&
++			    le64_to_cpu(ic->sb->recalc_sector) < ic->provided_data_sectors) {
++				block_bitmap_op(ic, ic->journal, le64_to_cpu(ic->sb->recalc_sector),
++						ic->provided_data_sectors - le64_to_cpu(ic->sb->recalc_sector), BITMAP_OP_SET);
++				block_bitmap_op(ic, ic->recalc_bitmap, le64_to_cpu(ic->sb->recalc_sector),
++						ic->provided_data_sectors - le64_to_cpu(ic->sb->recalc_sector), BITMAP_OP_SET);
++				block_bitmap_op(ic, ic->may_write_bitmap, le64_to_cpu(ic->sb->recalc_sector),
++						ic->provided_data_sectors - le64_to_cpu(ic->sb->recalc_sector), BITMAP_OP_SET);
++			}
+ 			rw_journal_sectors(ic, REQ_OP_WRITE, REQ_FUA | REQ_SYNC, 0,
+ 					   ic->n_bitmap_blocks * (BITMAP_BLOCK_SIZE >> SECTOR_SHIFT), NULL);
+ 		}
 
 
