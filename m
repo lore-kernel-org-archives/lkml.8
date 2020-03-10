@@ -2,120 +2,163 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBAB4C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 18:38:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44A5EC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 18:38:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CFD021D7E
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 18:38:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583865490;
-	bh=gI2olBaWImxhfPIT9u8VS2ZX0aYyku2Id7C5fnXAcYE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=09dGTh99StlKjOFJnZoepOPTh5sdPHQ2bFNeULErqrim0rK7a26dHKcrDnSbvJ1JG
-	 3Qfi5DlJR0bm7eNsnSpRb3aICusHx3CGESKun4179UXJj71tFyMMRm8akmjH7TqiTz
-	 v+nZH5EQkb9xOgswAkd5ER4L6eu0pK6EaH1RXQBM=
+	by mail.kernel.org (Postfix) with ESMTP id 156EE21D7E
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 18:38:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IOTPbncC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727392AbgCJSiJ (ORCPT
+        id S1727233AbgCJSie (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 14:38:09 -0400
-Received: from mail-ot1-f44.google.com ([209.85.210.44]:42779 "EHLO
-        mail-ot1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726283AbgCJSiJ (ORCPT
+        Tue, 10 Mar 2020 14:38:34 -0400
+Received: from mail-qv1-f74.google.com ([209.85.219.74]:33465 "EHLO
+        mail-qv1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726315AbgCJSid (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 14:38:09 -0400
-Received: by mail-ot1-f44.google.com with SMTP id 66so14166445otd.9;
-        Tue, 10 Mar 2020 11:38:08 -0700 (PDT)
+        Tue, 10 Mar 2020 14:38:33 -0400
+Received: by mail-qv1-f74.google.com with SMTP id o10so9740840qvn.0
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 11:38:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=DVW9btlrE9WxdPGCCpJUK2ALvJluBH0kWl1F121tkv8=;
+        b=IOTPbncCEhJ6Tlz1Iw6Gu+n2Ojfh6tB5pWO5AS2+hXov1EUWbLSoF7wSBUH20ovyt7
+         zxQlcZcCR/aX7jbuBwKpop15IyvI5jXWDoBQ2bMeD5UarniqqgyoP6g8a2UCA3SFd7l4
+         gs8EqISUW8RauHWE3mWMnRQFsk3kB4EQwyss7hkvcD7jGfOyr0mD4ZNXbVPzmQRKa4XG
+         3tMuVRUC351yCD4XC9LcUIumBkpJFggMJpk22rPpdmmjpx6mHT5dKqudgULcsj8HzLh5
+         5KFvUzlCPS1HyTGUrmGKaEuGzu9Xo/yq+rY1aul7UuhME44YuhNJueGBdclGJrLKxXPt
+         W5eA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=chsItn4WiJE7pzsGnhBJBMqcVhnfvQYQFixkTol5ZYk=;
-        b=EaGUxDpyspCcQquluDu2I+ZoHZ0/Go9Wqypajd204FqIReX2CZ4JXhzFdNA3T0YIXw
-         gjDy1IclucFf0khod4x/bJShlEZp1V4POp54fZD9oUMhpTyw8wVB2kenSBw4jqh+x4pZ
-         K4SBHeJIh85C1q4KoiPW5fLI/iAXGF8rjfkFvrQ3zT7MTNZrEmKVTOmPYe/LgE7lhOJS
-         r+3iIydPOE+jjfEOBsR3OJlPnSxqsVA6aIOePSWECAAMMDkt8e7jzJPBGiuRRuWf9jDS
-         uz+VRkPhFttUo56n5IDUYXjshXdRqv0RIfZBDUPTYx30/e9+f3MJG1r9IDO+WFU1PDwu
-         du0g==
-X-Gm-Message-State: ANhLgQ149nJdSCZEYCPehllOv/QdmBYwbKkp2yctYi9kzZvLt3n0akRJ
-        dhXLTjsXt6Kcm9TASbsqnw==
-X-Google-Smtp-Source: ADFU+vsSy3ToLL01JhINM1D/WNZOi2tkQmSVGZYt2683m4vdKUspzQPGZvwOiv6OZuKRB8eB55EM0g==
-X-Received: by 2002:a05:6830:1d6f:: with SMTP id l15mr17301226oti.299.1583865488168;
-        Tue, 10 Mar 2020 11:38:08 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id s83sm4446188oif.33.2020.03.10.11.38.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Mar 2020 11:38:06 -0700 (PDT)
-Received: (nullmailer pid 25739 invoked by uid 1000);
-        Tue, 10 Mar 2020 18:38:05 -0000
-Date:   Tue, 10 Mar 2020 13:38:05 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Robert Foss <robert.foss@linaro.org>
-Cc:     ben.kao@intel.com, mchehab@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, matthias.bgg@gmail.com, davem@davemloft.net,
-        gregkh@linuxfoundation.org, Jonathan.Cameron@huawei.com,
-        andriy.shevchenko@linux.intel.com, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        Dongchun Zhu <dongchun.zhu@mediatek.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Robert Foss <robert.foss@linaro.org>
-Subject: Re: [v1 1/3] media: dt-bindings: ov8856: Document YAML bindings
-Message-ID: <20200310183805.GA24623@bogus>
-References: <20200310134603.30260-1-robert.foss@linaro.org>
- <20200310134603.30260-2-robert.foss@linaro.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200310134603.30260-2-robert.foss@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=DVW9btlrE9WxdPGCCpJUK2ALvJluBH0kWl1F121tkv8=;
+        b=Na3n6/HaUZ8VmJXhd8jaZoPjfJtUlYSuyFqGTde0xsnCQefBIhsEWY8aZ0O8mZEu7a
+         KyG+vAibOq8rIsIht+ag+2Im87c7xy1oYRdupgg8LbSEqDXMLaykShuAI+fyxIKtfLFm
+         FN9G+y4P65vZK2pMJOlFp5MEoFHQiHz+c/BUmtLkWebOlUfaaC75izdIKbjXCXNqSiZg
+         vb1ohNI8KtpzALJaS0ILno6Aq/6D1qKbmUE/UiZK4XrIHH4cWZXoGyIRg8NferNsDIoy
+         yOYwJj2ppExyzrRYNGfEWfRaGZSew0r9WnnC1g0XMPZ9ZDgV6vjhq8dm/SwRX44fkolK
+         PZ6A==
+X-Gm-Message-State: ANhLgQ2j81+e/RakOYHWZadF4j8lTZlXDoaLITKF83F3DpfsgrJdImp1
+        Kx8hZuGSIQ9OXgliEzKq8+2K7oCBzFDVCg==
+X-Google-Smtp-Source: ADFU+vt3hko+Smop5fTqoBl8hrviV1maP8B16CI24CvOJMBylSgDWKjoTPwri0v8rrhRtvBjU7JPuD+4NG8I7Q==
+X-Received: by 2002:a0c:90a2:: with SMTP id p31mr11609515qvp.2.1583865512672;
+ Tue, 10 Mar 2020 11:38:32 -0700 (PDT)
+Date:   Tue, 10 Mar 2020 11:38:27 -0700
+Message-Id: <20200310113816.1.I12c0712e93f74506385b67c6df287658c8fdad04@changeid>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
+Subject: [PATCH] Bluetooth: clean up connection in hci_cs_disconnect
+From:   Manish Mandlik <mmandlik@google.com>
+To:     marcel@holtmann.org
+Cc:     Alain Michaud <alainm@chromium.org>,
+        linux-bluetooth@vger.kernel.org,
+        Miao-chen Chou <mcchou@chromium.org>,
+        Joseph Hwang <josephsih@chromium.org>,
+        Yoni Shavit <yshavit@chromium.org>,
+        Manish Mandlik <mmandlik@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jakub Kicinski <kuba@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 10 Mar 2020 14:46:01 +0100, Robert Foss wrote:
-> From: Dongchun Zhu <dongchun.zhu@mediatek.com>
-> 
-> This patch adds documentation of device tree in YAML schema for the
-> OV8856 CMOS image sensor.
-> 
-> Signed-off-by: Dongchun Zhu <dongchun.zhu@mediatek.com>
-> Signed-off-by: Robert Foss <robert.foss@linaro.org>
-> ---
-> 
-> - Changes since v3:
->   * robher: Fix syntax error
->   * robher: Removed maxItems
->   * Fixes yaml 'make dt-binding-check' errors
-> 
-> - Changes since v2:
->   Fixes comments from from Andy, Tomasz, Sakari, Rob.
->   * Convert text documentation to YAML schema.
-> 
-> - Changes since v1:
->   Fixes comments from Sakari, Tomasz
->   * Add clock-frequency and link-frequencies in DT
-> 
->  .../devicetree/bindings/media/i2c/ov8856.yaml | 129 ++++++++++++++++++
->  MAINTAINERS                                   |   1 +
->  2 files changed, 130 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov8856.yaml
-> 
+From: Joseph Hwang <josephsih@chromium.org>
 
-My bot found errors running 'make dt_binding_check' on your patch:
+In bluetooth core specification 4.2,
+Vol 2, Part E, 7.8.9 LE Set Advertise Enable Command, it says
 
-Error: Documentation/devicetree/bindings/media/i2c/ov8856.example.dts:26.28-29 syntax error
-FATAL ERROR: Unable to parse input tree
-scripts/Makefile.lib:311: recipe for target 'Documentation/devicetree/bindings/media/i2c/ov8856.example.dt.yaml' failed
-make[1]: *** [Documentation/devicetree/bindings/media/i2c/ov8856.example.dt.yaml] Error 1
-Makefile:1262: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
+    The Controller shall continue advertising until ...
+    or until a connection is created or ...
+    In these cases, advertising is then disabled.
 
-See https://patchwork.ozlabs.org/patch/1252173
-Please check and re-submit.
+Hence, advertising would be disabled before a connection is
+established. In current kernel implementation, advertising would
+be re-enabled when all connections are terminated.
+
+The correct disconnection flow looks like
+
+  < HCI Command: Disconnect
+
+  > HCI Event: Command Status
+      Status: Success
+
+  > HCI Event: Disconnect Complete
+      Status: Success
+
+Specifically, the last Disconnect Complete Event would trigger a
+callback function hci_event.c:hci_disconn_complete_evt() to
+cleanup the connection and re-enable advertising when proper.
+
+However, sometimes, there might occur an exception in the controller
+when disconnection is being executed. The disconnection flow might
+then look like
+
+  < HCI Command: Disconnect
+
+  > HCI Event: Command Status
+      Status: Unknown Connection Identifier
+
+  Note that "> HCI Event: Disconnect Complete" is missing when such an
+exception occurs. This would result in advertising staying disabled
+forever since the connection in question is not cleaned up correctly.
+
+To fix the controller exception issue, we need to do some connection
+cleanup when the disconnect command status indicates an error.
+
+Signed-off-by: Joseph Hwang <josephsih@chromium.org>
+Signed-off-by: Manish Mandlik <mmandlik@google.com>
+---
+
+ net/bluetooth/hci_event.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
+
+diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
+index a40ed31f6eb8f..7f7e5ba3974a8 100644
+--- a/net/bluetooth/hci_event.c
++++ b/net/bluetooth/hci_event.c
+@@ -2191,6 +2191,7 @@ static void hci_cs_disconnect(struct hci_dev *hdev, u8 status)
+ {
+ 	struct hci_cp_disconnect *cp;
+ 	struct hci_conn *conn;
++	u8 type;
+ 
+ 	if (!status)
+ 		return;
+@@ -2202,10 +2203,21 @@ static void hci_cs_disconnect(struct hci_dev *hdev, u8 status)
+ 	hci_dev_lock(hdev);
+ 
+ 	conn = hci_conn_hash_lookup_handle(hdev, __le16_to_cpu(cp->handle));
+-	if (conn)
++	if (conn) {
+ 		mgmt_disconnect_failed(hdev, &conn->dst, conn->type,
+ 				       conn->dst_type, status);
+ 
++		/* If the disconnection failed for any reason, the upper layer
++		 * does not retry to disconnect in current implementation.
++		 * Hence, we need to do some basic cleanup here and re-enable
++		 * advertising if necessary.
++		 */
++		type = conn->type;
++		hci_conn_del(conn);
++		if (type == LE_LINK)
++			hci_req_reenable_advertising(hdev);
++	}
++
+ 	hci_dev_unlock(hdev);
+ }
+ 
+-- 
+2.25.1.481.gfbce0eb801-goog
+
