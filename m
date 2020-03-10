@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12AD9C18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:09:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F107C18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:09:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D05D324691
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:09:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 517F12468C
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:09:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583845791;
-	bh=Vn8MA2JWAlQXOEu/9651uZO4QlqIhBvCV5/tHIIYK8w=;
+	s=default; t=1583845797;
+	bh=5H4liEEUiwPJ0a26myrDa3SK02rQOBFidyDZGXWWEEk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2W++noXNXrHegsm4yb7SQY0oBHnHT2dkYlgTe+PMkhW6Msg+eVp34IgaG0Ge7zaB1
-	 TQHVdJIMYpsMWYCf+ulg0BxlbBZnAjGZPN7j0njIC0O1VgrkHCTq/yca2tPYLhtdqa
-	 f7Zf2ZqYqi2iasZ9EbzU/3sPtiQ2l8ibrNGHMlx4=
+	b=NeO3of44G+VavVnhZBOW5mDE02qh6s2GMbHLUu1FgJKpj8BZBOtgFUpayGEAZvN6F
+	 Hw/29tVZspLjYOcJonc3q1kqY88aFk8alHSIsP+c++ljDhiBvYEOUA/pkJLX4VVg9C
+	 /eqSWjWAU+Z/OtowFRUKkJk1vqefxBh3xap0DGD4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730176AbgCJNJt (ORCPT
+        id S1730709AbgCJNJz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:09:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57048 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:09:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57312 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730929AbgCJNJr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:09:47 -0400
+        id S1731294AbgCJNJx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:09:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 64E4E20873;
-        Tue, 10 Mar 2020 13:09:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 680A824691;
+        Tue, 10 Mar 2020 13:09:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845786;
-        bh=Vn8MA2JWAlQXOEu/9651uZO4QlqIhBvCV5/tHIIYK8w=;
+        s=default; t=1583845792;
+        bh=5H4liEEUiwPJ0a26myrDa3SK02rQOBFidyDZGXWWEEk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B7YgwhPKFEKsLJVJIK90lkeCU7n6kFovaOyX6YLVRIB3lWN+YqDYHRGzAvMoV0GQo
-         /8ytFK0Zn1RT9ejq9F94ITHFeUb9A1J0vkTLbQH6Vob7BcEM05sUPUqAGYvNjk/3CB
-         RWyKA5LCxQ9BBwVHalfx3Qp41LdcGmzyFokxYBvE=
+        b=BkiXB6D3OeVNXLZghHTowR1QYkeWMkw3+qjLGRnNPWpLS//SP4h4AXYsNHJHAJ4fG
+         AAGIK+cd8usmHaOtulLcZWlK/ifDvQmsDmoCzPKp0V9I+ER1ExPFomsftsB/bq8yOu
+         zbFTdwL/VD1ccynaEdRkvnqC8hA0yAnDnwakhUcQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Lazewatsky <dlaz@chromium.org>,
-        Gustavo Padovan <gustavo.padovan@collabora.com>
-Subject: [PATCH 4.14 093/126] usb: quirks: add NO_LPM quirk for Logitech Screen Share
-Date:   Tue, 10 Mar 2020 13:41:54 +0100
-Message-Id: <20200310124209.700570979@linuxfoundation.org>
+        stable@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>,
+        syzbot+59997e8d5cbdc486e6f6@syzkaller.appspotmail.com
+Subject: [PATCH 4.14 103/126] vt: selection, close sel_buffer race
+Date:   Tue, 10 Mar 2020 13:42:04 +0100
+Message-Id: <20200310124210.231545518@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310124203.704193207@linuxfoundation.org>
 References: <20200310124203.704193207@linuxfoundation.org>
@@ -59,34 +59,154 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Lazewatsky <dlaz@chromium.org>
+From: Jiri Slaby <jslaby@suse.cz>
 
-commit b96ed52d781a2026d0c0daa5787c6f3d45415862 upstream.
+commit 07e6124a1a46b4b5a9b3cacc0c306b50da87abf5 upstream.
 
-LPM on the device appears to cause xHCI host controllers to claim
-that there isn't enough bandwidth to support additional devices.
+syzkaller reported this UAF:
+BUG: KASAN: use-after-free in n_tty_receive_buf_common+0x2481/0x2940 drivers/tty/n_tty.c:1741
+Read of size 1 at addr ffff8880089e40e9 by task syz-executor.1/13184
 
-Signed-off-by: Dan Lazewatsky <dlaz@chromium.org>
+CPU: 0 PID: 13184 Comm: syz-executor.1 Not tainted 5.4.7 #1
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
+Call Trace:
+...
+ kasan_report+0xe/0x20 mm/kasan/common.c:634
+ n_tty_receive_buf_common+0x2481/0x2940 drivers/tty/n_tty.c:1741
+ tty_ldisc_receive_buf+0xac/0x190 drivers/tty/tty_buffer.c:461
+ paste_selection+0x297/0x400 drivers/tty/vt/selection.c:372
+ tioclinux+0x20d/0x4e0 drivers/tty/vt/vt.c:3044
+ vt_ioctl+0x1bcf/0x28d0 drivers/tty/vt/vt_ioctl.c:364
+ tty_ioctl+0x525/0x15a0 drivers/tty/tty_io.c:2657
+ vfs_ioctl fs/ioctl.c:47 [inline]
+
+It is due to a race between parallel paste_selection (TIOCL_PASTESEL)
+and set_selection_user (TIOCL_SETSEL) invocations. One uses sel_buffer,
+while the other frees it and reallocates a new one for another
+selection. Add a mutex to close this race.
+
+The mutex takes care properly of sel_buffer and sel_buffer_lth only. The
+other selection global variables (like sel_start, sel_end, and sel_cons)
+are protected only in set_selection_user. The other functions need quite
+some more work to close the races of the variables there. This is going
+to happen later.
+
+This likely fixes (I am unsure as there is no reproducer provided) bug
+206361 too. It was marked as CVE-2020-8648.
+
+Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+Reported-by: syzbot+59997e8d5cbdc486e6f6@syzkaller.appspotmail.com
 Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Gustavo Padovan <gustavo.padovan@collabora.com>
-Link: https://lore.kernel.org/r/20200226143438.1445-1-gustavo.padovan@collabora.com
+Link: https://lore.kernel.org/r/20200210081131.23572-2-jslaby@suse.cz
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/core/quirks.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/tty/vt/selection.c |   23 +++++++++++++++++------
+ 1 file changed, 17 insertions(+), 6 deletions(-)
 
---- a/drivers/usb/core/quirks.c
-+++ b/drivers/usb/core/quirks.c
-@@ -86,6 +86,9 @@ static const struct usb_device_id usb_qu
- 	/* Logitech PTZ Pro Camera */
- 	{ USB_DEVICE(0x046d, 0x0853), .driver_info = USB_QUIRK_DELAY_INIT },
+--- a/drivers/tty/vt/selection.c
++++ b/drivers/tty/vt/selection.c
+@@ -14,6 +14,7 @@
+ #include <linux/tty.h>
+ #include <linux/sched.h>
+ #include <linux/mm.h>
++#include <linux/mutex.h>
+ #include <linux/slab.h>
+ #include <linux/types.h>
  
-+	/* Logitech Screen Share */
-+	{ USB_DEVICE(0x046d, 0x086c), .driver_info = USB_QUIRK_NO_LPM },
-+
- 	/* Logitech Quickcam Fusion */
- 	{ USB_DEVICE(0x046d, 0x08c1), .driver_info = USB_QUIRK_RESET_RESUME },
+@@ -43,6 +44,7 @@ static volatile int sel_start = -1; 	/*
+ static int sel_end;
+ static int sel_buffer_lth;
+ static char *sel_buffer;
++static DEFINE_MUTEX(sel_lock);
+ 
+ /* clear_selection, highlight and highlight_pointer can be called
+    from interrupt (via scrollback/front) */
+@@ -162,7 +164,7 @@ int set_selection(const struct tiocl_sel
+ 	char *bp, *obp;
+ 	int i, ps, pe, multiplier;
+ 	u16 c;
+-	int mode;
++	int mode, ret = 0;
+ 
+ 	poke_blanked_console();
+ 
+@@ -202,6 +204,7 @@ int set_selection(const struct tiocl_sel
+ 		pe = tmp;
+ 	}
+ 
++	mutex_lock(&sel_lock);
+ 	if (sel_cons != vc_cons[fg_console].d) {
+ 		clear_selection();
+ 		sel_cons = vc_cons[fg_console].d;
+@@ -247,9 +250,10 @@ int set_selection(const struct tiocl_sel
+ 			break;
+ 		case TIOCL_SELPOINTER:
+ 			highlight_pointer(pe);
+-			return 0;
++			goto unlock;
+ 		default:
+-			return -EINVAL;
++			ret = -EINVAL;
++			goto unlock;
+ 	}
+ 
+ 	/* remove the pointer */
+@@ -271,7 +275,7 @@ int set_selection(const struct tiocl_sel
+ 	else if (new_sel_start == sel_start)
+ 	{
+ 		if (new_sel_end == sel_end)	/* no action required */
+-			return 0;
++			goto unlock;
+ 		else if (new_sel_end > sel_end)	/* extend to right */
+ 			highlight(sel_end + 2, new_sel_end);
+ 		else				/* contract from right */
+@@ -298,7 +302,8 @@ int set_selection(const struct tiocl_sel
+ 	if (!bp) {
+ 		printk(KERN_WARNING "selection: kmalloc() failed\n");
+ 		clear_selection();
+-		return -ENOMEM;
++		ret = -ENOMEM;
++		goto unlock;
+ 	}
+ 	kfree(sel_buffer);
+ 	sel_buffer = bp;
+@@ -323,7 +328,9 @@ int set_selection(const struct tiocl_sel
+ 		}
+ 	}
+ 	sel_buffer_lth = bp - sel_buffer;
+-	return 0;
++unlock:
++	mutex_unlock(&sel_lock);
++	return ret;
+ }
+ 
+ /* Insert the contents of the selection buffer into the
+@@ -352,6 +359,7 @@ int paste_selection(struct tty_struct *t
+ 	tty_buffer_lock_exclusive(&vc->port);
+ 
+ 	add_wait_queue(&vc->paste_wait, &wait);
++	mutex_lock(&sel_lock);
+ 	while (sel_buffer && sel_buffer_lth > pasted) {
+ 		set_current_state(TASK_INTERRUPTIBLE);
+ 		if (signal_pending(current)) {
+@@ -359,7 +367,9 @@ int paste_selection(struct tty_struct *t
+ 			break;
+ 		}
+ 		if (tty_throttled(tty)) {
++			mutex_unlock(&sel_lock);
+ 			schedule();
++			mutex_lock(&sel_lock);
+ 			continue;
+ 		}
+ 		__set_current_state(TASK_RUNNING);
+@@ -368,6 +378,7 @@ int paste_selection(struct tty_struct *t
+ 					      count);
+ 		pasted += count;
+ 	}
++	mutex_unlock(&sel_lock);
+ 	remove_wait_queue(&vc->paste_wait, &wait);
+ 	__set_current_state(TASK_RUNNING);
  
 
 
