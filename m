@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A323C18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:02:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72DD7C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:02:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B00B2468C
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:02:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 457F02468C
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:02:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583845364;
-	bh=BOycNQ3hu9z5TKmz+nFLfEl5WjjEGkeMuxukdNWX07A=;
+	s=default; t=1583845366;
+	bh=9nZfuTeIzEFSEll9ZfYd1I9uPouRhsLUnRpC+SEEuSY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GgRh5FG/iexKwQ0M2yd1i3Qu0YucPDa6zVnLbwebclNY8dP6b8wresdVMmanQU1/f
-	 Dvnj0CwkkAQMAFZ+PAoGdZuLXPJjF9jgJfdkIvEGncTQu3rCU4MPYopSORxc5Fg5VJ
-	 0tOdCYEVimkeieTztXezrR3UM59qkpjFdqsMpTOc=
+	b=z2gYwo8mQlK3Z/RIYbA+QwI4XrElRCt9Gj5j7FRd7oqgkBnd6YOQx5UdLqcHO4vY0
+	 I5pmmIUVEbFciSsCcWoo81c8LUb/ndJyRfz6GjsLBsVifHGD45/OqJhA7WOLwvqaqz
+	 cFI/Emn5EQzBAkAPya2j0q3x7z8e+x7QmX0HZFTM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730457AbgCJNCm (ORCPT
+        id S1730054AbgCJNCp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:02:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46052 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:02:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46202 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730449AbgCJNCk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:02:40 -0400
+        id S1730458AbgCJNCm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:02:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F1BB20409;
-        Tue, 10 Mar 2020 13:02:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A05624691;
+        Tue, 10 Mar 2020 13:02:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845359;
-        bh=BOycNQ3hu9z5TKmz+nFLfEl5WjjEGkeMuxukdNWX07A=;
+        s=default; t=1583845362;
+        bh=9nZfuTeIzEFSEll9ZfYd1I9uPouRhsLUnRpC+SEEuSY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h+Hw4aDnFod+XWEZsmU2l4tw1QAdbA78m1gEKZIN1IZd1XQagikk5mmoM5Cd3doJc
-         nTwrlBQMXKtrXwC1dUXmtxLuBTLfIaK+uDAAKdu/O/8wT8yVNtF9eXkOgXSi35q2rP
-         hFdB8mdwzXQFu2x35+T1zvLJ3t6TCKDDytLov4a8=
+        b=CePHyTrkJWF8kwWDoQvrB3l7+Tohn++di4J5U8LSklfKCVjzDTuU7BLHzd1uQPP0z
+         jl8q7AXayxMM8h2l86UdUQxgvT1Nz4HNDLNF7Ct23ZtjVUAjCdxyNdYWrCNsK+s35C
+         kK7/aGFQlzu9hd97Tn7FVw7kvTdx8Sf2sLkfsLa4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marco Felsch <m.felsch@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>
-Subject: [PATCH 5.5 153/189] ARM: dts: imx6: phycore-som: fix emmc supply
-Date:   Tue, 10 Mar 2020 13:39:50 +0100
-Message-Id: <20200310123655.365662438@linuxfoundation.org>
+        stable@vger.kernel.org, Mikulas Patocka <mpatocka@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>
+Subject: [PATCH 5.5 118/189] dm integrity: fix recalculation when moving from journal mode to bitmap mode
+Date:   Tue, 10 Mar 2020 13:39:15 +0100
+Message-Id: <20200310123651.677058895@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123639.608886314@linuxfoundation.org>
 References: <20200310123639.608886314@linuxfoundation.org>
@@ -59,33 +59,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marco Felsch <m.felsch@pengutronix.de>
+From: Mikulas Patocka <mpatocka@redhat.com>
 
-commit eb0bbba7636b9fc81939d6087a5fe575e150c95a upstream.
+commit d5bdf66108419cdb39da361b58ded661c29ff66e upstream.
 
-Currently the vmmc is supplied by the 1.8V pmic rail but this is wrong.
-The default module behaviour is to power VCCQ and VCC by the 3.3V power
-rail. Optional the user can connect the VCCQ to the pmic 1.8V emmc
-power rail using a solder jumper.
+If we resume a device in bitmap mode and the on-disk format is in journal
+mode, we must recalculate anything above ic->sb->recalc_sector. Otherwise,
+there would be non-recalculated blocks which would cause I/O errors.
 
-Fixes: ddec5d1c0047 ("ARM: dts: imx6: Add initial support for phyCORE-i.MX 6 SOM")
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Fixes: 468dfca38b1a ("dm integrity: add a bitmap mode")
+Cc: stable@vger.kernel.org # v5.2+
+Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/boot/dts/imx6qdl-phytec-phycore-som.dtsi |    1 -
- 1 file changed, 1 deletion(-)
+ drivers/md/dm-integrity.c |   17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
 
---- a/arch/arm/boot/dts/imx6qdl-phytec-phycore-som.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-phytec-phycore-som.dtsi
-@@ -183,7 +183,6 @@
- 	pinctrl-0 = <&pinctrl_usdhc4>;
- 	bus-width = <8>;
- 	non-removable;
--	vmmc-supply = <&vdd_emmc_1p8>;
- 	status = "disabled";
- };
+--- a/drivers/md/dm-integrity.c
++++ b/drivers/md/dm-integrity.c
+@@ -2888,17 +2888,24 @@ static void dm_integrity_resume(struct d
+ 	} else {
+ 		replay_journal(ic);
+ 		if (ic->mode == 'B') {
+-			int mode;
+ 			ic->sb->flags |= cpu_to_le32(SB_FLAG_DIRTY_BITMAP);
+ 			ic->sb->log2_blocks_per_bitmap_bit = ic->log2_blocks_per_bitmap_bit;
+ 			r = sync_rw_sb(ic, REQ_OP_WRITE, REQ_FUA);
+ 			if (unlikely(r))
+ 				dm_integrity_io_error(ic, "writing superblock", r);
  
+-			mode = ic->recalculate_flag ? BITMAP_OP_SET : BITMAP_OP_CLEAR;
+-			block_bitmap_op(ic, ic->journal, 0, ic->provided_data_sectors, mode);
+-			block_bitmap_op(ic, ic->recalc_bitmap, 0, ic->provided_data_sectors, mode);
+-			block_bitmap_op(ic, ic->may_write_bitmap, 0, ic->provided_data_sectors, mode);
++			block_bitmap_op(ic, ic->journal, 0, ic->provided_data_sectors, BITMAP_OP_CLEAR);
++			block_bitmap_op(ic, ic->recalc_bitmap, 0, ic->provided_data_sectors, BITMAP_OP_CLEAR);
++			block_bitmap_op(ic, ic->may_write_bitmap, 0, ic->provided_data_sectors, BITMAP_OP_CLEAR);
++			if (ic->sb->flags & cpu_to_le32(SB_FLAG_RECALCULATING) &&
++			    le64_to_cpu(ic->sb->recalc_sector) < ic->provided_data_sectors) {
++				block_bitmap_op(ic, ic->journal, le64_to_cpu(ic->sb->recalc_sector),
++						ic->provided_data_sectors - le64_to_cpu(ic->sb->recalc_sector), BITMAP_OP_SET);
++				block_bitmap_op(ic, ic->recalc_bitmap, le64_to_cpu(ic->sb->recalc_sector),
++						ic->provided_data_sectors - le64_to_cpu(ic->sb->recalc_sector), BITMAP_OP_SET);
++				block_bitmap_op(ic, ic->may_write_bitmap, le64_to_cpu(ic->sb->recalc_sector),
++						ic->provided_data_sectors - le64_to_cpu(ic->sb->recalc_sector), BITMAP_OP_SET);
++			}
+ 			rw_journal_sectors(ic, REQ_OP_WRITE, REQ_FUA | REQ_SYNC, 0,
+ 					   ic->n_bitmap_blocks * (BITMAP_BLOCK_SIZE >> SECTOR_SHIFT), NULL);
+ 		}
 
 
