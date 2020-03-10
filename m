@@ -7,48 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D058C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:41:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84ACAC18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:41:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52F6B24695
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:41:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B33E24698
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:41:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583844100;
-	bh=+Jw2m+TVkQ8ao4GdoLg/bnKlVUlDjZzd6bnSpdyHEnw=;
+	s=default; t=1583844102;
+	bh=/kRuxcuHOYsDociFLkbeQUfdfObngkhGQ3sS+2p7z/s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xeaCFK1uoT1iISgocOnUnLPZXeU9nwrxFNOmifpr8EPQ6UwpzrswhAaiSVpwGJAOI
-	 nG/qbyXAf1uvARoHn/aWPdj0KVmW7bKxso5mRe8pqvGRwP55hIPZ5NOAVJnF7e6u+J
-	 PPoW4rGr1G1VK2jQC+0u5bhxHcHmOsU13+baDr1w=
+	b=vdlcI7Gb7WUUMQElEfAbOpvArXmcgVTC43MUMgHGNxJra9xE3Qjjd+XZosw5fqNm3
+	 coeaxpqFMLRqcMDX03QOSiHFehzBIE2M+J2Z8BrRtxPiubxy+/DHdqCBFPQ1k6Kvqp
+	 IaVe0/JoGxasSBhzHVIytzRKg4jflzVzGFyaSFxY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727059AbgCJMlj (ORCPT
+        id S1727071AbgCJMll (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:41:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41212 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:41:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41284 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726307AbgCJMli (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:41:38 -0400
+        id S1726307AbgCJMlk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:41:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AAB3024695;
-        Tue, 10 Mar 2020 12:41:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F1C324691;
+        Tue, 10 Mar 2020 12:41:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844097;
-        bh=+Jw2m+TVkQ8ao4GdoLg/bnKlVUlDjZzd6bnSpdyHEnw=;
+        s=default; t=1583844099;
+        bh=/kRuxcuHOYsDociFLkbeQUfdfObngkhGQ3sS+2p7z/s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v5fXO0711AQyGxWCaOHFE1tiZuso0X+5rsJSG9lM16Ee884dskWu59XAzW1Jgmn6E
-         trfRZT4t8I/LwseooJQ4gRM5FGVR/I7RVx+nJmfpE0u6vYOydHAXYFg+u7u5Zz5/7Y
-         qaWxAdim2ECjYs+dR816dzu60+BafdH0At/t86VA=
+        b=aGHtZVQnu3HYAKaIUSK38ImPKd7U0OWcewFVkoZBafG7SIwBOh0dw7VtPrIO5EqRM
+         /pcBRyzRbTU5xOy8//GeqtumAh+tyOqAENC1QZWmlIKfuQ8xpxB1Z9ViL5E+8/T+3v
+         caYjgFLDYKbKv+sm4T25jLtAS77EvhOFnh4TDK/4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jim Mattson <jmattson@google.com>,
-        Andrew Honig <ahonig@google.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.4 30/72] KVM: Check for a bad hva before dropping into the ghc slow path
-Date:   Tue, 10 Mar 2020 13:38:43 +0100
-Message-Id: <20200310123608.916705828@linuxfoundation.org>
+        stable@vger.kernel.org, yangerkun <yangerkun@huawei.com>
+Subject: [PATCH 4.4 31/72] slip: stop double free sl->dev in slip_open
+Date:   Tue, 10 Mar 2020 13:38:44 +0100
+Message-Id: <20200310123609.077059982@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123601.053680753@linuxfoundation.org>
 References: <20200310123601.053680753@linuxfoundation.org>
@@ -61,77 +58,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: yangerkun <yangerkun@huawei.com>
 
-commit fcfbc617547fc6d9552cb6c1c563b6a90ee98085 upstream.
+After include 3b5a39979daf ("slip: Fix memory leak in slip_open error path")
+and e58c19124189 ("slip: Fix use-after-free Read in slip_open") with 4.4.y/4.9.y.
+We will trigger a bug since we can double free sl->dev in slip_open. Actually,
+we should backport cf124db566e6 ("net: Fix inconsistent teardown and release
+of private netdev state.") too since it has delete free_netdev from sl_free_netdev.
+Fix it by delete free_netdev from slip_open.
 
-When reading/writing using the guest/host cache, check for a bad hva
-before checking for a NULL memslot, which triggers the slow path for
-handing cross-page accesses.  Because the memslot is nullified on error
-by __kvm_gfn_to_hva_cache_init(), if the bad hva is encountered after
-crossing into a new page, then the kvm_{read,write}_guest() slow path
-could potentially write/access the first chunk prior to detecting the
-bad hva.
-
-Arguably, performing a partial access is semantically correct from an
-architectural perspective, but that behavior is certainly not intended.
-In the original implementation, memslot was not explicitly nullified
-and therefore the partial access behavior varied based on whether the
-memslot itself was null, or if the hva was simply bad.  The current
-behavior was introduced as a seemingly unintentional side effect in
-commit f1b9dd5eb86c ("kvm: Disallow wraparound in
-kvm_gfn_to_hva_cache_init"), which justified the change with "since some
-callers don't check the return code from this function, it sit seems
-prudent to clear ghc->memslot in the event of an error".
-
-Regardless of intent, the partial access is dependent on _not_ checking
-the result of the cache initialization, which is arguably a bug in its
-own right, at best simply weird.
-
-Fixes: 8f964525a121 ("KVM: Allow cross page reads and writes from cached translations.")
-Cc: Jim Mattson <jmattson@google.com>
-Cc: Andrew Honig <ahonig@google.com>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: yangerkun <yangerkun@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- virt/kvm/kvm_main.c |   12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/net/slip/slip.c |    1 -
+ 1 file changed, 1 deletion(-)
 
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -1865,12 +1865,12 @@ int kvm_write_guest_cached(struct kvm *k
- 	if (slots->generation != ghc->generation)
- 		kvm_gfn_to_hva_cache_init(kvm, ghc, ghc->gpa, ghc->len);
+--- a/drivers/net/slip/slip.c
++++ b/drivers/net/slip/slip.c
+@@ -868,7 +868,6 @@ err_free_chan:
+ 	tty->disc_data = NULL;
+ 	clear_bit(SLF_INUSE, &sl->flags);
+ 	sl_free_netdev(sl->dev);
+-	free_netdev(sl->dev);
  
--	if (unlikely(!ghc->memslot))
--		return kvm_write_guest(kvm, ghc->gpa, data, len);
--
- 	if (kvm_is_error_hva(ghc->hva))
- 		return -EFAULT;
- 
-+	if (unlikely(!ghc->memslot))
-+		return kvm_write_guest(kvm, ghc->gpa, data, len);
-+
- 	r = __copy_to_user((void __user *)ghc->hva, data, len);
- 	if (r)
- 		return -EFAULT;
-@@ -1891,12 +1891,12 @@ int kvm_read_guest_cached(struct kvm *kv
- 	if (slots->generation != ghc->generation)
- 		kvm_gfn_to_hva_cache_init(kvm, ghc, ghc->gpa, ghc->len);
- 
--	if (unlikely(!ghc->memslot))
--		return kvm_read_guest(kvm, ghc->gpa, data, len);
--
- 	if (kvm_is_error_hva(ghc->hva))
- 		return -EFAULT;
- 
-+	if (unlikely(!ghc->memslot))
-+		return kvm_read_guest(kvm, ghc->gpa, data, len);
-+
- 	r = __copy_from_user(data, (void __user *)ghc->hva, len);
- 	if (r)
- 		return -EFAULT;
+ err_exit:
+ 	rtnl_unlock();
 
 
