@@ -2,91 +2,144 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 860A3C18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:30:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2889C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:30:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55B8624696
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:30:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8E5E24694
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:30:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583847018;
-	bh=SvLp9QeIlteRIJuHx2peXZJf994646fGWpEk41TPcgY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kdIq61yYTjmn4iGfRhuaZrkbwYakh6oNPNhR4Ob8NIVeQ5zn+tkhE7+Ia6yD1hLWq
-	 mi4jQ/vsGDeuXBxWaNOs29tjQdERH/mmvYGdCBr3ktTxWHc0XiwzHuNQ+So2nw6jTC
-	 8b0xeM+HnZVEB5hyD1rzppnRct44L3RxeOLZbBe4=
+	s=default; t=1583847020;
+	bh=4nXPnykUsacARlS2dVosm+pERhdkOACkmujynfGKPDc=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=Q9zJ9ao+CTBdpcUyg1eXB1kS4GE7BUP4ozk7z+Ta+nS6urfUtto/QGlLLdisbJURD
+	 bhK/Rj3/RD/cwyxKSjbYqk/TaSl6JWDdR/dPyHAKwjXagP0HVONWFIRuWx2HdQ+aMv
+	 ou2NNXoee5RMdqRSdHVILQDNNIynFXvw7QFIdGKA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728681AbgCJMul (ORCPT
+        id S1728659AbgCJMuk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:50:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55376 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:50:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55262 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728640AbgCJMuf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:50:35 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1728368AbgCJMuc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:50:32 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F23162468E;
-        Tue, 10 Mar 2020 12:50:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA3A12468D;
+        Tue, 10 Mar 2020 12:50:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844634;
-        bh=SvLp9QeIlteRIJuHx2peXZJf994646fGWpEk41TPcgY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZS5ZVbe1NXbWtwr2oSNAfdcWORvrzWTrBs/MDoGKPUeTvRZGMyrBnoqaF3eaWFzmh
-         LpWQsBYXQrgHeVzxOs1eJXQ6Dk0PTewWARRXLP3ImTCaZa6fQQYRC/n7g483NwzatW
-         6TVe0XgwdniDQHrrJogu5SHZ+gRTMi1Y+2irknt4=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christian Lachner <gladiac@gmail.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.4 062/168] ALSA: hda/realtek - Fix silent output on Gigabyte X570 Aorus Master
-Date:   Tue, 10 Mar 2020 13:38:28 +0100
-Message-Id: <20200310123641.556080956@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200310123635.322799692@linuxfoundation.org>
-References: <20200310123635.322799692@linuxfoundation.org>
-User-Agent: quilt/0.66
+        s=default; t=1583844631;
+        bh=4nXPnykUsacARlS2dVosm+pERhdkOACkmujynfGKPDc=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=LxJaWEYOLamJTgK85rUm0S/gisC6gK1qb5rPeeF4ZttSvr+VX0xdaDonSnclURJVU
+         Oy2hFi/tprPB5V1gzSnp2yfjyegJUdbpT81qPOYJlhED/knyJfBTC/PU3PI7ZVMup4
+         dhN3oqm5xBXAa4kcjPbXcmCra5t10+x/VnV3oK6c=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 5558E35226CF; Tue, 10 Mar 2020 05:50:31 -0700 (PDT)
+Date:   Tue, 10 Mar 2020 05:50:31 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     David Laight <David.Laight@ACULAB.COM>
+Cc:     'Chris Wilson' <chris@chris-wilson.co.uk>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>, elver@google.com
+Subject: Re: [PATCH] list: Prevent compiler reloads inside 'safe' list
+ iteration
+Message-ID: <20200310125031.GY2935@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200310092119.14965-1-chris@chris-wilson.co.uk>
+ <2e936d8fd2c445beb08e6dd3ee1f3891@AcuMS.aculab.com>
+ <158384100886.16414.15741589015363013386@build.alporthouse.com>
+ <723d527a4ad349b78bf11d52eba97c0e@AcuMS.aculab.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <723d527a4ad349b78bf11d52eba97c0e@AcuMS.aculab.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Lachner <gladiac@gmail.com>
+On Tue, Mar 10, 2020 at 12:23:34PM +0000, David Laight wrote:
+> From: Chris Wilson
+> > Sent: 10 March 2020 11:50
+> > 
+> > Quoting David Laight (2020-03-10 11:36:41)
+> > > From: Chris Wilson
+> > > > Sent: 10 March 2020 09:21
+> > > > Instruct the compiler to read the next element in the list iteration
+> > > > once, and that it is not allowed to reload the value from the stale
+> > > > element later. This is important as during the course of the safe
+> > > > iteration, the stale element may be poisoned (unbeknownst to the
+> > > > compiler).
+> > >
+> > > Eh?
+> > > I thought any function call will stop the compiler being allowed
+> > > to reload the value.
+> > > The 'safe' loop iterators are only 'safe' against called
+> > > code removing the current item from the list.
+> > >
+> > > > This helps prevent kcsan warnings over 'unsafe' conduct in releasing the
+> > > > list elements during list_for_each_entry_safe() and friends.
+> > >
+> > > Sounds like kcsan is buggy ????
 
-commit 0d45e86d2267d5bdf7bbb631499788da1c27ceb2 upstream.
+Adding Marco on CC for his thoughts.
 
-The Gigabyte X570 Aorus Master motherboard with ALC1220 codec
-requires a similar workaround for Clevo laptops to enforce the
-DAC/mixer connection path. Set up a quirk entry for that.
+> > The warning kcsan gave made sense (a strange case where the emptying the
+> > list from inside the safe iterator would allow that list to be taken
+> > under a global mutex and have one extra request added to it. The
+> > list_for_each_entry_safe() should be ok in this scenario, so long as the
+> > next element is read before this element is dropped, and the compiler is
+> > instructed not to reload the element.
+> 
+> Normally the loop iteration code has to hold the mutex.
+> I guess it can be released inside the loop provided no other
+> code can ever delete entries.
+> 
+> > kcsan is a little more insistent on having that annotation :)
+> > 
+> > In this instance I would say it was a false positive from kcsan, but I
+> > can see why it would complain and suspect that given a sufficiently
+> > aggressive compiler, we may be caught out by a late reload of the next
+> > element.
+> 
+> If you have:
+> 	for (; p; p = next) {
+> 		next = p->next;
+> 		external_function_call(void);
+> 	}
+> the compiler must assume that the function call
+> can change 'p->next' and read it before the call.
 
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=205275
-Signed-off-by: Christian Lachner <gladiac@gmail.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200223092416.15016-2-gladiac@gmail.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+That "must assume" is a statement of current compiler technology.
+Given the progress over the past forty years, I would not expect this
+restriction to hold forever.  Yes, we can and probably will get the
+compiler implementers to give us command-line flags to suppress global
+analysis.  But given the progress in compilers that I have seen over
+the past 4+ decades, I would expect that the day will come when we won't
+want to be using those command-line flags.
 
----
- sound/pci/hda/patch_realtek.c |    1 +
- 1 file changed, 1 insertion(+)
+But if you want to ignore KCSAN's warnings, you are free to do so.
 
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -2447,6 +2447,7 @@ static const struct snd_pci_quirk alc882
- 	SND_PCI_QUIRK(0x1071, 0x8258, "Evesham Voyaeger", ALC882_FIXUP_EAPD),
- 	SND_PCI_QUIRK(0x1458, 0xa002, "Gigabyte EP45-DS3/Z87X-UD3H", ALC889_FIXUP_FRONT_HP_NO_PRESENCE),
- 	SND_PCI_QUIRK(0x1458, 0xa0b8, "Gigabyte AZ370-Gaming", ALC1220_FIXUP_GB_DUAL_CODECS),
-+	SND_PCI_QUIRK(0x1458, 0xa0cd, "Gigabyte X570 Aorus Master", ALC1220_FIXUP_CLEVO_P950),
- 	SND_PCI_QUIRK(0x1462, 0x1228, "MSI-GP63", ALC1220_FIXUP_CLEVO_P950),
- 	SND_PCI_QUIRK(0x1462, 0x1276, "MSI-GL73", ALC1220_FIXUP_CLEVO_P950),
- 	SND_PCI_QUIRK(0x1462, 0x1293, "MSI-GP65", ALC1220_FIXUP_CLEVO_P950),
+> Is this a list with strange locking rules?
+> The only deletes are from within the loop.
+> Adds and deletes are locked.
+> The list traversal isn't locked.
+> 
+> I suspect kcsan bleats because it doesn't assume the compiler
+> will use a single instruction/memory operation to read p->next.
+> That is just stupid.
 
+Heh!  If I am still around, I will ask you for your evaluation of the
+above statement in 40 years.  Actually, 10 years will likely suffice.  ;-)
 
+							Thanx, Paul
