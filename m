@@ -2,54 +2,53 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB8C0C18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:53:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95A85C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:54:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B04AA2468E
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:53:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 686A424697
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:54:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583844838;
-	bh=4hrdHfoIQUhu4/00gDb8c5cMXC+cJiqw4UewioJaDP0=;
+	s=default; t=1583844843;
+	bh=Hdj9Xj4OjgQMShoUBLeSfokjxn4D5YsJdsBsM0BdGsU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sp1pVEYu3WpRGw0oEtDRQiNr1y+44Dlpr+U32lEtXPGU+Fkpg0u8FxLE1jKe4ZGlm
-	 u7rUbYnXQEpbu1x0lz3SUykCNI7CCc1YGyMH+9OfCW1Vv8c/wWLILJm9c/PNi3d0sW
-	 Gs9qTK4TQk84J/mPb4gtr0IhBeVmxvnZ0Si4wBFc=
+	b=yQNcYRv2YOJBwh3WtckWO75CWphQXjuaimF8Th2lG9VJxQuqJ4dcsxFuhijUCnXRs
+	 /YUNsapmpUoiW5oKgRG8jGyrVp/K95HSwkdvfnKn/dwsceCMUNvK6TXTdRZXMwLOfr
+	 khNG9rtm39igVeY6cY8pexobeGzlPfsQPRFlFwVQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729283AbgCJMx5 (ORCPT
+        id S1729288AbgCJMyB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:53:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60186 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:54:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60286 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729271AbgCJMxw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:53:52 -0400
+        id S1729284AbgCJMx6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:53:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A721F24693;
-        Tue, 10 Mar 2020 12:53:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3631824693;
+        Tue, 10 Mar 2020 12:53:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844832;
-        bh=4hrdHfoIQUhu4/00gDb8c5cMXC+cJiqw4UewioJaDP0=;
+        s=default; t=1583844837;
+        bh=Hdj9Xj4OjgQMShoUBLeSfokjxn4D5YsJdsBsM0BdGsU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DnfFL9zlBJ2rpxUkmeyOrZjzVJzinH28XQ0xVuwBA77JzKRk4Qjvpcrr8pn5/L3xk
-         NMrcbRgsYrBf96iLh2FBUshAgOcQw5b++6PCtK2SWRkc9oydVfa7j5dGdS/4ArnSHr
-         Yfi59Lqd2x2ekQMOUDKgF3g6Y4NnAssNmjFPsriQ=
+        b=Ml2plmj0JzQaUEab19U7CckWHIGp48YV4fQR/VvcvSxkDsgThqhwlHve/BDHKukcI
+         sxhOK20XujcolP3FrSa9ImfAEPFh79sRhtHbIzwCWRvQe9fIYGN7G2azsiRH73PaU+
+         XOprz5DCNJASokrCVPAemkaWOV7xoYs9yTqx5RKA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Stanislav Lisovskiy <stanislav.lisovskiy@intel.com>,
-        Matt Roper <matthew.d.roper@intel.com>,
-        Matt Atwood <matthew.s.atwood@intel.com>,
-        Jani Nikula <jani.nikula@intel.com>
-Subject: [PATCH 5.4 135/168] drm/i915: Program MBUS with rmw during initialization
-Date:   Tue, 10 Mar 2020 13:39:41 +0100
-Message-Id: <20200310123649.176075935@linuxfoundation.org>
+        Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Mike Snitzer <snitzer@redhat.com>
+Subject: [PATCH 5.4 110/168] dm zoned: Fix reference counter initial value of chunk works
+Date:   Tue, 10 Mar 2020 13:39:16 +0100
+Message-Id: <20200310123646.534986078@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123635.322799692@linuxfoundation.org>
 References: <20200310123635.322799692@linuxfoundation.org>
@@ -62,57 +61,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matt Roper <matthew.d.roper@intel.com>
+From: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
 
-commit c725161924f9a5872a3e53b73345a6026a5c170e upstream.
+commit ee63634bae02e13c8c0df1209a6a0ca5326f3189 upstream.
 
-It wasn't terribly clear from the bspec's wording, but after discussion
-with the hardware folks, it turns out that we need to preserve the
-pre-existing contents of the MBUS ABOX control register when
-initializing a few specific bits.
+Dm-zoned initializes reference counters of new chunk works with zero
+value and refcount_inc() is called to increment the counter. However, the
+refcount_inc() function handles the addition to zero value as an error
+and triggers the warning as follows:
 
-Bspec: 49213
-Bspec: 50096
-Fixes: 4cb4585e5a7f ("drm/i915/icl: initialize MBus during display init")
-Cc: Stanislav Lisovskiy <stanislav.lisovskiy@intel.com>
-Signed-off-by: Matt Roper <matthew.d.roper@intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200204011032.582737-1-matthew.d.roper@intel.com
-Reviewed-by: Matt Atwood <matthew.s.atwood@intel.com>
-(cherry picked from commit 837b63e6087838d0f1e612d448405419199d8033)
-Signed-off-by: Jani Nikula <jani.nikula@intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200228004320.127142-1-matthew.d.roper@intel.com
+refcount_t: addition on 0; use-after-free.
+WARNING: CPU: 7 PID: 1506 at lib/refcount.c:25 refcount_warn_saturate+0x68/0xf0
+...
+CPU: 7 PID: 1506 Comm: systemd-udevd Not tainted 5.4.0+ #134
+...
+Call Trace:
+ dmz_map+0x2d2/0x350 [dm_zoned]
+ __map_bio+0x42/0x1a0
+ __split_and_process_non_flush+0x14a/0x1b0
+ __split_and_process_bio+0x83/0x240
+ ? kmem_cache_alloc+0x165/0x220
+ dm_process_bio+0x90/0x230
+ ? generic_make_request_checks+0x2e7/0x680
+ dm_make_request+0x3e/0xb0
+ generic_make_request+0xcf/0x320
+ ? memcg_drain_all_list_lrus+0x1c0/0x1c0
+ submit_bio+0x3c/0x160
+ ? guard_bio_eod+0x2c/0x130
+ mpage_readpages+0x182/0x1d0
+ ? bdev_evict_inode+0xf0/0xf0
+ read_pages+0x6b/0x1b0
+ __do_page_cache_readahead+0x1ba/0x1d0
+ force_page_cache_readahead+0x93/0x100
+ generic_file_read_iter+0x83a/0xe40
+ ? __seccomp_filter+0x7b/0x670
+ new_sync_read+0x12a/0x1c0
+ vfs_read+0x9d/0x150
+ ksys_read+0x5f/0xe0
+ do_syscall_64+0x5b/0x180
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+...
+
+After this warning, following refcount API calls for the counter all fail
+to change the counter value.
+
+Fix this by setting the initial reference counter value not zero but one
+for the new chunk works. Instead, do not call refcount_inc() via
+dmz_get_chunk_work() for the new chunks works.
+
+The failure was observed with linux version 5.4 with CONFIG_REFCOUNT_FULL
+enabled. Refcount rework was merged to linux version 5.5 by the
+commit 168829ad09ca ("Merge branch 'locking-core-for-linus' of
+git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip"). After this
+commit, CONFIG_REFCOUNT_FULL was removed and the failure was observed
+regardless of kernel configuration.
+
+Linux version 4.20 merged the commit 092b5648760a ("dm zoned: target: use
+refcount_t for dm zoned reference counters"). Before this commit, dm
+zoned used atomic_t APIs which does not check addition to zero, then this
+fix is not necessary.
+
+Fixes: 092b5648760a ("dm zoned: target: use refcount_t for dm zoned reference counters")
+Cc: stable@vger.kernel.org # 5.4+
+Signed-off-by: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+Reviewed-by: Damien Le Moal <damien.lemoal@wdc.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/i915/display/intel_display_power.c |   16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
+ drivers/md/dm-zoned-target.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/drivers/gpu/drm/i915/display/intel_display_power.c
-+++ b/drivers/gpu/drm/i915/display/intel_display_power.c
-@@ -4205,13 +4205,19 @@ static void icl_dbuf_disable(struct drm_
+--- a/drivers/md/dm-zoned-target.c
++++ b/drivers/md/dm-zoned-target.c
+@@ -533,8 +533,9 @@ static int dmz_queue_chunk_work(struct d
  
- static void icl_mbus_init(struct drm_i915_private *dev_priv)
- {
--	u32 val;
-+	u32 mask, val;
+ 	/* Get the BIO chunk work. If one is not active yet, create one */
+ 	cw = radix_tree_lookup(&dmz->chunk_rxtree, chunk);
+-	if (!cw) {
+-
++	if (cw) {
++		dmz_get_chunk_work(cw);
++	} else {
+ 		/* Create a new chunk work */
+ 		cw = kmalloc(sizeof(struct dm_chunk_work), GFP_NOIO);
+ 		if (unlikely(!cw)) {
+@@ -543,7 +544,7 @@ static int dmz_queue_chunk_work(struct d
+ 		}
  
--	val = MBUS_ABOX_BT_CREDIT_POOL1(16) |
--	      MBUS_ABOX_BT_CREDIT_POOL2(16) |
--	      MBUS_ABOX_B_CREDIT(1) |
--	      MBUS_ABOX_BW_CREDIT(1);
-+	mask = MBUS_ABOX_BT_CREDIT_POOL1_MASK |
-+		MBUS_ABOX_BT_CREDIT_POOL2_MASK |
-+		MBUS_ABOX_B_CREDIT_MASK |
-+		MBUS_ABOX_BW_CREDIT_MASK;
+ 		INIT_WORK(&cw->work, dmz_chunk_work);
+-		refcount_set(&cw->refcount, 0);
++		refcount_set(&cw->refcount, 1);
+ 		cw->target = dmz;
+ 		cw->chunk = chunk;
+ 		bio_list_init(&cw->bio_list);
+@@ -556,7 +557,6 @@ static int dmz_queue_chunk_work(struct d
+ 	}
  
-+	val = I915_READ(MBUS_ABOX_CTL);
-+	val &= ~mask;
-+	val |= MBUS_ABOX_BT_CREDIT_POOL1(16) |
-+		MBUS_ABOX_BT_CREDIT_POOL2(16) |
-+		MBUS_ABOX_B_CREDIT(1) |
-+		MBUS_ABOX_BW_CREDIT(1);
- 	I915_WRITE(MBUS_ABOX_CTL, val);
- }
+ 	bio_list_add(&cw->bio_list, bio);
+-	dmz_get_chunk_work(cw);
  
+ 	dmz_reclaim_bio_acc(dmz->reclaim);
+ 	if (queue_work(dmz->chunk_wq, &cw->work))
 
 
