@@ -2,211 +2,329 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36E38C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 07:35:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA92CC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 07:38:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF3BE24655
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 07:35:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E68A24677
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 07:38:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="r/M5IHW2"
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="QCZknUty"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726295AbgCJHfT (ORCPT
+        id S1726293AbgCJHix (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 03:35:19 -0400
-Received: from mail-eopbgr140045.outbound.protection.outlook.com ([40.107.14.45]:60160
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725919AbgCJHfS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 03:35:18 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=irXZ/gw5Zvl9niuKmplVg2ZHa+plciho7L6SzAIt7iW9eQRpM1au6KUl7QU36nys8/eTog5gsgnI9aVzBkdxc26Zjw3UBL0ksT1Z2WlbfkC4PAm1GkqeYtB6vLZ0m9NqP59IUxTxE3tZTT/TzZ1RDuk1iXsIvNbGz29gRzO2GUwNK1DZsKlXAVhCrEcibaU9y3W5pNr/Bp0dDthrqID47yKQZGN5uA9I3ASYvPaAR/JU7g5wAWjLrtj0X29Q3CqjYZY26/dOenNbogjud+2Wf1v0Z1nlg5Z4fuLFLFyBAzHPolze8UmseCxpT8xV1XPhUAfCCjF4P005No+pX/xsRw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IEzocSKC8cp4HZQ3spihh/GKsnbcnFluCQ0/MbYXwtA=;
- b=Txf9pilHK4vDsXXp5gHTZp2CwmHcdMFqyXMAFUImPKo2xCjXhHxyNIaTqrPIqEPIqgMz42icAm6Ym2dOlPNxCOstrkEyyejBiCDi29TCob56lCy1uQqlEWpDhA9IihtYB6F0n1bwMxn5DzYJZQl30pTJFm0Ku8PRGQuGPpWr3tzRlpPR2VmbiexI9K0xbG7AMk4knQqoBNWv5RSUZ0Usxg+FpLMNDU6hVnD0gTPtmNg6eByON4eyuoZUeQZMLhOIa0iqi+g2h7UyrAg4Lq2uW4sGcRPTWcSyZAQHHgreehq2b+RcYFEgm8z6pKjAXw3xD4yKxFzBlwPtQUc7PvnCHQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IEzocSKC8cp4HZQ3spihh/GKsnbcnFluCQ0/MbYXwtA=;
- b=r/M5IHW2wXZ+rDbKq8o8tHZt3Wh/eKJxz8DK190FE3cfYCiHnKY471LjIeGvGDoFSO0r/qoEdnElEU+47PF1d8+AlXf1VfFtpIki1QV+p9AKck5kX4ZP8Jly534pVJl692cAYD9qxxBCFcyGJjMUhq4Layt2q95qTVkGBQSgKYU=
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
- AM0PR04MB6019.eurprd04.prod.outlook.com (20.179.34.141) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2793.17; Tue, 10 Mar 2020 07:35:14 +0000
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::548f:4941:d4eb:4c11]) by AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::548f:4941:d4eb:4c11%6]) with mapi id 15.20.2793.013; Tue, 10 Mar 2020
- 07:35:14 +0000
-From:   Peng Fan <peng.fan@nxp.com>
-To:     Shawn Guo <shawnguo@kernel.org>
-CC:     "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Abel Vesa <abel.vesa@nxp.com>
-Subject: RE: [PATCH v2 09/14] ARM: imx: cpuidle-imx7ulp: Stop mode disallowed
- when HSRUN
-Thread-Topic: [PATCH v2 09/14] ARM: imx: cpuidle-imx7ulp: Stop mode disallowed
- when HSRUN
-Thread-Index: AQHV5vuEHgK2PJFQ40mWbELKksccuKhBeBGAgAAWNZA=
-Date:   Tue, 10 Mar 2020 07:35:14 +0000
-Message-ID: <AM0PR04MB4481D2DD219E7254805CFE1E88FF0@AM0PR04MB4481.eurprd04.prod.outlook.com>
-References: <1582099197-20327-1-git-send-email-peng.fan@nxp.com>
- <1582099197-20327-10-git-send-email-peng.fan@nxp.com>
- <20200310061328.GK15729@dragon>
-In-Reply-To: <20200310061328.GK15729@dragon>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peng.fan@nxp.com; 
-x-originating-ip: [119.31.174.68]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 593d94c2-ecc0-41b1-502e-08d7c4c59287
-x-ms-traffictypediagnostic: AM0PR04MB6019:|AM0PR04MB6019:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR04MB60197B552B916EFAE9AF49DD88FF0@AM0PR04MB6019.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:52;
-x-forefront-prvs: 033857D0BD
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(366004)(376002)(39860400002)(136003)(396003)(189003)(199004)(71200400001)(54906003)(6506007)(6916009)(52536014)(2906002)(316002)(7416002)(66476007)(7696005)(76116006)(66946007)(55016002)(33656002)(81166006)(86362001)(66446008)(66556008)(44832011)(9686003)(8676002)(8936002)(81156014)(26005)(5660300002)(186003)(64756008)(4326008)(478600001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB6019;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Fo1Ax7Iwo5MlFGZ/il05Ra5wZuASWha9ydxNUSuQjn+8nDE0pmqbVPeCrlpX+p/787I9L2mm3gB8VluHtQ6+iWvP/8sKn5z3LSC70gvkI5ewzhjZZRjqb3SO3zXXOCwcw6jXQ4HOYs04OyO1PRnQFGUvIITwQSgNYeqcH6nRf02LRJzNfStd7DRYSthXBDyzJLnmPTXwqVnThoGlvLzX19PZmQuBnDFoBf2KyYLXiYQd7lKAuSzBns5Cw3bsUUWLad0p798QehHlkmnmo9SH7DtI2iC2W8GjigP8tnTEip6s5l+OarULUB9CmcDHUCCZqoqaN4XmP5mIcrKNQPX29DLG7HwU/t+0lKsfftHtM5zB77ZcnCpXZmrGKxvIy/jCqlrVTiZgyjW3aWDHvsG+kakA9ONdQsAcsPM4ciJm1CQe3D5+7nOivaqx8urlwdk4
-x-ms-exchange-antispam-messagedata: u0rXL2RL3HBxnNhNyNVK7JE1snLZeEAfACtkGqOVGixvLcZMLCvq9gROfs89ElIiOry4ItBFCTZqKc15ioyPpqOkUu2/SUje0XebQYlQtI7YCCGWvV0ieGqA8KnS9b4uy7+84M0MjtAZ9bBGXfvrLw==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 10 Mar 2020 03:38:53 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:45380 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726205AbgCJHiw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 03:38:52 -0400
+Received: by mail-wr1-f68.google.com with SMTP id m9so5454722wro.12
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 00:38:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0dFLdP85Y9Q8awZvmKHn54zR0u+MbjrnH2r4/T/oqTM=;
+        b=QCZknUtyKW1Tlu+z26Lyf3hzOfJ8dbBwlDj43PxnSWzU1ew+4lXbTeLry/MG/ijeFi
+         ghy+DoOd2lzneoouNvWg0GgTXU+J9C4W9L6smg9xJx4pTzL5QHW/if1YZ9X6Lw7B6TOO
+         H6AdrxwAMuLzgt77HZp2Zn1c5A9TrG/NSUFo+lJ9gDFVTfF98QFh0pj4Rc69wxsE/OzF
+         AOOT1T2GK2Es4FsxLpfWHTbbXQgXP+aaMtnFUuC8C2/DTdOeqD0N6IqjbgtRlGJLWBxB
+         w6++FB+X/z3cm1GQl5SQQYULo4lY1rsxC45mq2zweY3bjd3J4upsH8SP3RSRX8SXiES2
+         djnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0dFLdP85Y9Q8awZvmKHn54zR0u+MbjrnH2r4/T/oqTM=;
+        b=ERT0AqzxB/KWtOyn4+rXhRFVqgY3qsJno6lfuMrF39f8k6u6vWwTYYoMGWVTqIVp6s
+         owLdoO5En5716WCXUAt74HPi4tmm/zkYT4HBXWbaIEBN6LfIaR0rNXa4qG5jGWX8g4zI
+         qAcgJfGlli65ccMxA1bPh26LJxyulyT3NQKIfIU0/CvLvSKU9+0lHp/l3vinc8xI4L5i
+         KuUJcwPDGgZZwi4I06q3p+g6uIgWDdu3gDw2/wc7TkHiJXb3rFPMd2qg/rRwwzCLzLck
+         QBWtmAKoXkBH0sXeaALPOYRIjmyUpGQKeb4oPLdoIsm2HJgoelaMb4nvSoKxW1uvCw6l
+         a61g==
+X-Gm-Message-State: ANhLgQ0wm96xmPp7FxNTzhmGTiX0s7OXWKiH5IKWKKuva9JRW+5QlnBX
+        3LMRRmuryzVn+35OLfSICHPuPj9BnU9nsJPaVvIT5A==
+X-Google-Smtp-Source: ADFU+vtkDemeCtgwrmDObfWc/zs49KPzuQUFPvhXvrdL+aQHzY5iKeS7LyinR8U/P7wWJnFaZ0dGFEZkh4vMj7q/yrE=
+X-Received: by 2002:adf:f309:: with SMTP id i9mr16812426wro.0.1583825930137;
+ Tue, 10 Mar 2020 00:38:50 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 593d94c2-ecc0-41b1-502e-08d7c4c59287
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Mar 2020 07:35:14.1687
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 9jxlN8tTGSwtdETgRR/+OZztYZtnBXVZLYiKzfVpBf8nKMfqOnNrjec6U5vvV6liPPqAbMqKN7KfeO8WVjusFA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6019
+References: <20200226011037.7179-1-atish.patra@wdc.com> <20200226011037.7179-6-atish.patra@wdc.com>
+ <CAKv+Gu_iAzQ6et13aACarqns8-xzQ+YSqj+m3mVGGy=ny8GJBg@mail.gmail.com>
+ <26172d39fdb5ecd951ade0a89566c010f6166a03.camel@wdc.com> <CAKv+Gu8i93gM0dMqzbhvNbqsgd9dHCMGzX7E47uusrUvv6xRJA@mail.gmail.com>
+ <46e9873e288134f638cd8726a2c15c9ca63860ce.camel@wdc.com> <CAKv+Gu_2dCj74VvCMRQ9yFgBtJRENasBbEV0bwcfqLQwuaj0=A@mail.gmail.com>
+ <CAOnJCU+zBgYo0ez2ExiAbGttwpVq302vGrZJ3Y9g+S=SHTMuiw@mail.gmail.com>
+In-Reply-To: <CAOnJCU+zBgYo0ez2ExiAbGttwpVq302vGrZJ3Y9g+S=SHTMuiw@mail.gmail.com>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Tue, 10 Mar 2020 13:08:38 +0530
+Message-ID: <CAAhSdy3tT5TgRy1g=aMX1k+m7j13eo4exM0jvgt8mDS4bZ94YA@mail.gmail.com>
+Subject: Re: [RFC PATCH 5/5] RISC-V: Add EFI stub support.
+To:     Atish Patra <atishp@atishpatra.org>
+Cc:     Ard Biesheuvel <ardb@kernel.org>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+        "abner.chang@hpe.com" <abner.chang@hpe.com>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "daniel.schaefer@hpe.com" <daniel.schaefer@hpe.com>,
+        Anup Patel <Anup.Patel@wdc.com>,
+        "palmer@dabbelt.com" <palmer@dabbelt.com>,
+        "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>,
+        "agraf@csgraf.de" <agraf@csgraf.de>,
+        "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
+        "leif@nuviainc.com" <leif@nuviainc.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Shawn,
+On Tue, Mar 10, 2020 at 12:39 PM Atish Patra <atishp@atishpatra.org> wrote:
+>
+> On Thu, Feb 27, 2020 at 10:57 PM Ard Biesheuvel <ardb@kernel.org> wrote:
+> >
+> > On Fri, 28 Feb 2020 at 02:05, Atish Patra <Atish.Patra@wdc.com> wrote:
+> > >
+> > > On Thu, 2020-02-27 at 20:59 +0100, Ard Biesheuvel wrote:
+> > > > On Thu, 27 Feb 2020 at 20:53, Atish Patra <Atish.Patra@wdc.com>
+> > > > wrote:
+> > > > > On Wed, 2020-02-26 at 08:28 +0100, Ard Biesheuvel wrote:
+> > > > > > On Wed, 26 Feb 2020 at 02:10, Atish Patra <atish.patra@wdc.com>
+> > > > > > wrote:
+> > > > > > > Add a RISC-V architecture specific stub code that actually
+> > > > > > > copies
+> > > > > > > the
+> > > > > > > actual kernel image to a valid address and jump to it after
+> > > > > > > boot
+> > > > > > > services
+> > > > > > > are terminated. Enable UEFI related kernel configs as well for
+> > > > > > > RISC-V.
+> > > > > > >
+> > > > > > > Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> > > > > > > ---
+> > > > > > >  arch/riscv/Kconfig                        |  20 ++++
+> > > > > > >  arch/riscv/Makefile                       |   1 +
+> > > > > > >  arch/riscv/configs/defconfig              |   1 +
+> > > > > > >  drivers/firmware/efi/libstub/Makefile     |   8 ++
+> > > > > > >  drivers/firmware/efi/libstub/riscv-stub.c | 135
+> > > > > > > ++++++++++++++++++++++
+> > > > > > >  5 files changed, 165 insertions(+)
+> > > > > > >  create mode 100644 drivers/firmware/efi/libstub/riscv-stub.c
+> > > > > > >
+> > > > > > > diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+> > > > > > > index 42c122170cfd..68b1d565e51d 100644
+> > > > > > > --- a/arch/riscv/Kconfig
+> > > > > > > +++ b/arch/riscv/Kconfig
+> > > > > > > @@ -372,10 +372,30 @@ config CMDLINE_FORCE
+> > > > > > >
+> > > > > > >  endchoice
+> > > > > > >
+> > > > > > > +config EFI_STUB
+> > > > > > > +       bool
+> > > > > > > +
+> > > > > > > +config EFI
+> > > > > > > +       bool "UEFI runtime support"
+> > > > > > > +       depends on OF
+> > > > > > > +       select LIBFDT
+> > > > > > > +       select UCS2_STRING
+> > > > > > > +       select EFI_PARAMS_FROM_FDT
+> > > > > > > +       select EFI_STUB
+> > > > > > > +       select EFI_GENERIC_ARCH_STUB
+> > > > > > > +       default y
+> > > > > > > +       help
+> > > > > > > +         This option provides support for runtime services
+> > > > > > > provided
+> > > > > > > +         by UEFI firmware (such as non-volatile variables,
+> > > > > > > realtime
+> > > > > > > +          clock, and platform reset). A UEFI stub is also
+> > > > > > > provided
+> > > > > > > to
+> > > > > > > +         allow the kernel to be booted as an EFI application.
+> > > > > > > This
+> > > > > > > +         is only useful on systems that have UEFI firmware.
+> > > > > > > +
+> > > > > > >  endmenu
+> > > > > > >
+> > > > > > >  menu "Power management options"
+> > > > > > >
+> > > > > > >  source "kernel/power/Kconfig"
+> > > > > > > +source "drivers/firmware/Kconfig"
+> > > > > > >
+> > > > > > >  endmenu
+> > > > > > > diff --git a/arch/riscv/Makefile b/arch/riscv/Makefile
+> > > > > > > index b9009a2fbaf5..0afaa89ba9ad 100644
+> > > > > > > --- a/arch/riscv/Makefile
+> > > > > > > +++ b/arch/riscv/Makefile
+> > > > > > > @@ -78,6 +78,7 @@ head-y := arch/riscv/kernel/head.o
+> > > > > > >  core-y += arch/riscv/
+> > > > > > >
+> > > > > > >  libs-y += arch/riscv/lib/
+> > > > > > > +core-$(CONFIG_EFI_STUB) +=
+> > > > > > > $(objtree)/drivers/firmware/efi/libstub/lib.a
+> > > > > > >
+> > > > > > >  PHONY += vdso_install
+> > > > > > >  vdso_install:
+> > > > > > > diff --git a/arch/riscv/configs/defconfig
+> > > > > > > b/arch/riscv/configs/defconfig
+> > > > > > > index e2ff95cb3390..0a5d3578f51e 100644
+> > > > > > > --- a/arch/riscv/configs/defconfig
+> > > > > > > +++ b/arch/riscv/configs/defconfig
+> > > > > > > @@ -125,3 +125,4 @@ CONFIG_DEBUG_BLOCK_EXT_DEVT=y
+> > > > > > >  # CONFIG_FTRACE is not set
+> > > > > > >  # CONFIG_RUNTIME_TESTING_MENU is not set
+> > > > > > >  CONFIG_MEMTEST=y
+> > > > > > > +CONFIG_EFI=y
+> > > > > > > diff --git a/drivers/firmware/efi/libstub/Makefile
+> > > > > > > b/drivers/firmware/efi/libstub/Makefile
+> > > > > > > index 2c5b76787126..38facb61745b 100644
+> > > > > > > --- a/drivers/firmware/efi/libstub/Makefile
+> > > > > > > +++ b/drivers/firmware/efi/libstub/Makefile
+> > > > > > > @@ -21,6 +21,8 @@ cflags-$(CONFIG_ARM64)                :=
+> > > > > > > $(subst
+> > > > > > > $(CC_FLAGS_FTRACE),,$(KBUILD_CFLAGS)) \
+> > > > > > >  cflags-$(CONFIG_ARM)           := $(subst
+> > > > > > > $(CC_FLAGS_FTRACE),,$(KBUILD_CFLAGS)) \
+> > > > > > >                                    -fno-builtin -fpic \
+> > > > > > >                                    $(call cc-option,-mno-
+> > > > > > > single-
+> > > > > > > pic-base)
+> > > > > > > +cflags-$(CONFIG_RISCV)         := $(subst
+> > > > > > > $(CC_FLAGS_FTRACE),,$(KBUILD_CFLAGS)) \
+> > > > > > > +                                  -fpic
+> > > > > > >
+> > > > > > >  cflags-$(CONFIG_EFI_GENERIC_ARCH_STUB) +=
+> > > > > > > -I$(srctree)/scripts/dtc/libfdt
+> > > > > > >
+> > > > > > > @@ -55,6 +57,7 @@ lib-
+> > > > > > > $(CONFIG_EFI_GENERIC_ARCH_STUB)           +=
+> > > > > > > efi-stub.o fdt.o string.o \
+> > > > > > >  lib-$(CONFIG_ARM)              += arm32-stub.o
+> > > > > > >  lib-$(CONFIG_ARM64)            += arm64-stub.o
+> > > > > > >  lib-$(CONFIG_X86)              += x86-stub.o
+> > > > > > > +lib-$(CONFIG_RISCV)            += riscv-stub.o
+> > > > > > >  CFLAGS_arm32-stub.o            := -DTEXT_OFFSET=$(TEXT_OFFSET)
+> > > > > > >  CFLAGS_arm64-stub.o            := -DTEXT_OFFSET=$(TEXT_OFFSET)
+> > > > > > >
+> > > > > > > @@ -79,6 +82,11 @@ STUBCOPY_FLAGS-$(CONFIG_ARM64)       += --
+> > > > > > > prefix-alloc-sections=.init \
+> > > > > > >                                    --prefix-symbols=__efistub_
+> > > > > > >  STUBCOPY_RELOC-$(CONFIG_ARM64) := R_AARCH64_ABS
+> > > > > > >
+> > > > > > > +STUBCOPY_FLAGS-$(CONFIG_RISCV) += --prefix-alloc-
+> > > > > > > sections=.init \
+> > > > > > > +                                  --prefix-symbols=__efistub_
+> > > > > > > +STUBCOPY_RELOC-$(CONFIG_RISCV) := R_RISCV_HI20
+> > > > > > > +
+> > > > > > > +
+> > > > > > >  $(obj)/%.stub.o: $(obj)/%.o FORCE
+> > > > > > >         $(call if_changed,stubcopy)
+> > > > > > >
+> > > > > > > diff --git a/drivers/firmware/efi/libstub/riscv-stub.c
+> > > > > > > b/drivers/firmware/efi/libstub/riscv-stub.c
+> > > > > > > new file mode 100644
+> > > > > > > index 000000000000..3935b29ea93a
+> > > > > > > --- /dev/null
+> > > > > > > +++ b/drivers/firmware/efi/libstub/riscv-stub.c
+> > > > > > > @@ -0,0 +1,135 @@
+> > > > > > > +// SPDX-License-Identifier: GPL-2.0
+> > > > > > > +/*
+> > > > > > > + * Copyright (C) 2013, 2014 Linaro Ltd;  <roy.franz@linaro.org
+> > > > > > > >
+> > > > > > > + * Copyright (C) 2020 Western Digital Corporation or its
+> > > > > > > affiliates.
+> > > > > > > + *
+> > > > > > > + * This file implements the EFI boot stub for the RISC-V
+> > > > > > > kernel.
+> > > > > > > + * Adapted from ARM64 version at
+> > > > > > > drivers/firmware/efi/libstub/arm64-stub.c.
+> > > > > > > + */
+> > > > > > > +
+> > > > > > > +#include <linux/efi.h>
+> > > > > > > +#include <linux/libfdt.h>
+> > > > > > > +#include <linux/libfdt_env.h>
+> > > > > > > +#include <asm/efi.h>
+> > > > > > > +#include <asm/sections.h>
+> > > > > > > +
+> > > > > > > +#include "efistub.h"
+> > > > > > > +/*
+> > > > > > > + * RISCV requires the kernel image to placed TEXT_OFFSET bytes
+> > > > > > > beyond a 2 MB
+> > > > > > > + * aligned base for 64 bit and 4MB for 32 bit.
+> > > > > > > + */
+> > > > > > > +#if IS_ENABLED(CONFIG_64BIT)
+> > > > > >
+> > > > > > You can use #ifdef here
+> > > > > >
+> > > > >
+> > > > > ok.
+> > > > >
+> > > > > > > +#define MIN_KIMG_ALIGN SZ_2M
+> > > > > > > +#else
+> > > > > > > +#define MIN_KIMG_ALIGN SZ_4M
+> > > > > > > +#endif
+> > > > > > > +/*
+> > > > > > > + * TEXT_OFFSET ensures that we don't overwrite the firmware
+> > > > > > > that
+> > > > > > > probably sits
+> > > > > > > + * at the beginning of the DRAM.
+> > > > > > > + */
+> > > > > >
+> > > > > > Ugh. Really? On an EFI system, that memory should be reserved in
+> > > > > > some
+> > > > > > way, we shouldn't be able to stomp on it like that.
+> > > > > >
+> > > > >
+> > > > > Currently, we reserve the initial 128KB for run time firmware(only
+> > > > > openSBI for now, EDK2 later) by using PMP (physical memory
+> > > > > protection).
+> > > > > Any acess to that region from supervisor mode (i.e. U-Boot) will
+> > > > > result
+> > > > > in a fault.
+> > > > >
+> > > > > Is it mandatory for UEFI to reserve the beginning of the DRAM ?
+> > > > >
+> > > >
+> > > > It is mandatory to describe which memory is usable and which memory
+> > > > is
+> > > > reserved. If this memory is not usable, you either describe it as
+> > > > reserved, or not describe it at all. Describing it as usable memory,
+> > > > allocating it for the kernel but with a hidden agreement that it is
+> > > > reserved is highly likely to cause problems down the road.
+> > > >
+> > >
+> > > I completely agree with you on this. We have been talking to have a
+> > > booting guide and memory map document for RISC-V Linux to document all
+> > > the idiosyncries of RISC-V. But that has not happend until now.
+> > > Once, the ordered booting patches are merged, I will try to take a stab
+> > > at it.
+> > >
+> > > Other than that, do we need to describe it somewhere in U-boot wrt to
+> > > UEFI so that it doesn't allocate memory from that region ?
+> > >
+> >
+> > It is an idiosyncrasy that the firmware should hide from the OS.
+> >
+> > What if GRUB comes along and attempts to allocate that memory? Do we
+> > also have to teach it that the first 128 KB memory of free memory are
+> > magic and should not be touched?
+> >
+> > So the answer is to mark it as reserved. This way, no UEFI tools,
+> > bootloaders etc will ever try to use it.
+>
+> Sounds good to me. We are currently discussing the best approach to
+> provide reserved memory
+> information to U-Boot/EDK2. The idea is to U-Boot/EDK2 may have to
+> update the DT with
+> reserved-memory node so that Linux is aware of the reservation as well.
 
-> Subject: Re: [PATCH v2 09/14] ARM: imx: cpuidle-imx7ulp: Stop mode
-> disallowed when HSRUN
->=20
-> On Wed, Feb 19, 2020 at 03:59:52PM +0800, peng.fan@nxp.com wrote:
-> > From: Peng Fan <peng.fan@nxp.com>
-> >
-> > When cpu runs in HSRUN mode, cpuidle is not allowed to run into Stop
-> > mode. So add imx7ulp_get_mode to get thr cpu run mode, and use WAIT
-> > mode instead, when cpu in HSRUN mode.
-> >
-> > Signed-off-by: Peng Fan <peng.fan@nxp.com>
->=20
-> Why do you have cpuidle patches in a series titled as adding cpufreq supp=
-ort?
+The discussion is happening on Github at:
+https://github.com/riscv/riscv-sbi-doc/pull/37
 
-The whole patchset is to add cpufreq support for i.MX7ULP.
-But i.MX7ULP only support two freq points. One freq point is HSRUN point,
-When cpu runs in this point, cpu is not allowed to run into STOP mode from
-hardware perspective. Should I submit this patch as a standalone patch?
+Feel free to share your views in above mentioned Github link.
 
-Thanks,
-Peng.
-
->=20
-> Shawn
->=20
-> > ---
-> >  arch/arm/mach-imx/common.h          |  1 +
-> >  arch/arm/mach-imx/cpuidle-imx7ulp.c | 14 +++++++++++---
-> >  arch/arm/mach-imx/pm-imx7ulp.c      | 10 ++++++++++
-> >  3 files changed, 22 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/arch/arm/mach-imx/common.h
-> b/arch/arm/mach-imx/common.h
-> > index 5aa5796cff0e..db542da4fe67 100644
-> > --- a/arch/arm/mach-imx/common.h
-> > +++ b/arch/arm/mach-imx/common.h
-> > @@ -104,6 +104,7 @@ void imx6_set_int_mem_clk_lpm(bool enable);
-> void
-> > imx6sl_set_wait_clk(bool enter);  int imx_mmdc_get_ddr_type(void);
-> > int imx7ulp_set_lpm(enum ulp_cpu_pwr_mode mode);
-> > +u32 imx7ulp_get_mode(void);
-> >
-> >  void imx_cpu_die(unsigned int cpu);
-> >  int imx_cpu_kill(unsigned int cpu);
-> > diff --git a/arch/arm/mach-imx/cpuidle-imx7ulp.c
-> > b/arch/arm/mach-imx/cpuidle-imx7ulp.c
-> > index ca86c967d19e..e7009d10b331 100644
-> > --- a/arch/arm/mach-imx/cpuidle-imx7ulp.c
-> > +++ b/arch/arm/mach-imx/cpuidle-imx7ulp.c
-> > @@ -15,10 +15,18 @@
-> >  static int imx7ulp_enter_wait(struct cpuidle_device *dev,
-> >  			    struct cpuidle_driver *drv, int index)  {
-> > -	if (index =3D=3D 1)
-> > +	u32 mode;
-> > +
-> > +	if (index =3D=3D 1) {
-> >  		imx7ulp_set_lpm(ULP_PM_WAIT);
-> > -	else
-> > -		imx7ulp_set_lpm(ULP_PM_STOP);
-> > +	} else {
-> > +		mode =3D imx7ulp_get_mode();
-> > +
-> > +		if (mode =3D=3D 3)
-> > +			imx7ulp_set_lpm(ULP_PM_WAIT);
-> > +		else
-> > +			imx7ulp_set_lpm(ULP_PM_STOP);
-> > +	}
-> >
-> >  	cpu_do_idle();
-> >
-> > diff --git a/arch/arm/mach-imx/pm-imx7ulp.c
-> > b/arch/arm/mach-imx/pm-imx7ulp.c index 393faf1e8382..1410ccfc71bd
-> > 100644
-> > --- a/arch/arm/mach-imx/pm-imx7ulp.c
-> > +++ b/arch/arm/mach-imx/pm-imx7ulp.c
-> > @@ -63,6 +63,16 @@ int imx7ulp_set_lpm(enum ulp_cpu_pwr_mode
-> mode)
-> >  	return 0;
-> >  }
-> >
-> > +u32 imx7ulp_get_mode(void)
-> > +{
-> > +	u32 mode;
-> > +
-> > +	mode =3D readl_relaxed(smc1_base + SMC_PMCTRL) &
-> BM_PMCTRL_RUNM;
-> > +	mode >>=3D BP_PMCTRL_RUNM;
-> > +
-> > +	return mode;
-> > +}
-> > +
-> >  void __init imx7ulp_pm_init(void)
-> >  {
-> >  	struct device_node *np;
-> > --
-> > 2.16.4
-> >
+Regards,
+Anup
