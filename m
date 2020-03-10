@@ -2,120 +2,158 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DATE_IN_PAST_03_06,
+	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57EB9C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 17:01:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6448BC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 17:02:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27997222C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 17:01:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BF0521D7E
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 17:02:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="C7O49/VN"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HxrwY+VM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727101AbgCJRA7 (ORCPT
+        id S1727194AbgCJRCH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 13:00:59 -0400
-Received: from mail-pg1-f201.google.com ([209.85.215.201]:42373 "EHLO
-        mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726716AbgCJRA6 (ORCPT
+        Tue, 10 Mar 2020 13:02:07 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:29910 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726898AbgCJRCG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 13:00:58 -0400
-Received: by mail-pg1-f201.google.com with SMTP id m29so8951576pgd.9
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 10:00:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=utC88xO/3DQklGM/YS6f9zgx+KbjPZZi5VnmSXETSAc=;
-        b=C7O49/VNKptjw/lBpQwmcIz0a8sArXeQ42cXcwYltCRPre0Vtqll5m97ztrXC62a7W
-         QUZTB4QvdtN4Bqoiss33Thm/ckIzSGOux1JMfrkRwZr9APo6equSusZ7s6DSNDwT+4cg
-         NRVEPHW9sv3KKsX6+VQjMw0yqUw5Ki51pUJg6NvKOcEvW0VFt+5TSfgi6+0FNZPB/bMN
-         u9uGqCZ+kLYV4MUdExkun7mKU3qfokzowai0+M3L7hwDVps2X/TDyuTA/+pPy14PLzRY
-         EPgAlrIaMlmCSVJNVsvBpU+jNp+H+/aF+RvaII931y/cYa3tr4y15JqSmybv8MMeWauH
-         NE1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=utC88xO/3DQklGM/YS6f9zgx+KbjPZZi5VnmSXETSAc=;
-        b=ddG3XE5N0VmMLGj/d5itXFJotWB6ns9O/j7vDRqNmYgLl1h4izoGsb3hDdDo14VdTX
-         dbYdXAteCqK2kGFqv2sJXekjbeHbihlzQqkUWnYQ1yB2C/M2dBR85+mqcaCkXiuDSD44
-         zNHhOpO/P4EDZHPp2f0P6658Lirj3eh9Mf0OYZptyFoR0dVfRa/nMel+yCd9DW6x9YmE
-         6jBFT5HPDc1VvWjKdUvGu9Kc/TAYiodac3gKodfzFLkPDcoX9p2AgDa41tgBO6xVPnPT
-         wG8GnM/e2FiIVts124m53Qx+F9akTqhB27sZE+XJqPtFZcAFhK+ZtqH0jrI2ZRKsKp+i
-         jSmg==
-X-Gm-Message-State: ANhLgQ2WvnOu5BzFAEclcvHP11Du4+Slw0JGXmYL5PuYYKlmA+hm2qpM
-        pFQmMeBD5xWAvbimgJOLQBqjLhMzLAIADg==
-X-Google-Smtp-Source: ADFU+vvxgNuaV6N0CUwbmim8in/d79uD6t3S+h+G7BS5M8JDfoSZw2XoErdStzAGhIWo2dEYhjudJLxlOBjruQ==
-X-Received: by 2002:a17:90a:a386:: with SMTP id x6mr2667641pjp.108.1583859655698;
- Tue, 10 Mar 2020 10:00:55 -0700 (PDT)
-Date:   Tue, 10 Mar 2020 10:00:38 -0700
-Message-Id: <20200310095959.1.I864ded253b57454e732ab5acb1cae5b22c67cfae@changeid>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
-Subject: [PATCH] Bluetooth: include file and function names in logs
-From:   Manish Mandlik <mmandlik@google.com>
-To:     marcel@holtmann.org
-Cc:     Joseph Hwang <josephsih@chromium.org>,
-        Yoni Shavit <yshavit@chromium.org>,
-        Miao-chen Chou <mcchou@chromium.org>,
-        Alain Michaud <alainm@chromium.org>,
-        linux-bluetooth@vger.kernel.org,
-        Manish Mandlik <mmandlik@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jakub Kicinski <kuba@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 10 Mar 2020 13:02:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583859725;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=s059DjlnEcczveYufFN5KML3mixHomqVeP5rihntnzg=;
+        b=HxrwY+VMSzNpctBBzPeV5zBF2tSHSbb8BsUXlCVMXAx4AQiBmWjB3OHx12ppVhqVUwDpq7
+        qMDFXfBXf2CzHvCPF9HIOgiUplDoJTblBS0J29pdQDdscgJhS8HqduLVkka40SmllMMtM8
+        4gxCJkVl9kr2zmfUHigZX0Q/p/v+AO4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-273-4GdUry3_MQmA2UOKZTRSrg-1; Tue, 10 Mar 2020 13:02:02 -0400
+X-MC-Unique: 4GdUry3_MQmA2UOKZTRSrg-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B929E1937FC1;
+        Tue, 10 Mar 2020 17:02:00 +0000 (UTC)
+Received: from fuller.cnet (ovpn-116-43.gru2.redhat.com [10.97.116.43])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id E37E75D9CA;
+        Tue, 10 Mar 2020 17:01:59 +0000 (UTC)
+Received: by fuller.cnet (Postfix, from userid 1000)
+        id 8C1FE42FE412; Tue, 10 Mar 2020 10:50:06 -0300 (-03)
+Date:   Tue, 10 Mar 2020 10:50:06 -0300
+From:   Marcelo Tosatti <mtosatti@redhat.com>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Joao Martins <joao.m.martins@oracle.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Subject: Re: [PATCH] cpuidle-haltpoll: allow force loading on hosts without
+ the REALTIME hint
+Message-ID: <20200310135006.GA6397@fuller.cnet>
+References: <20200221174331.1480468-1-mail@maciej.szmigiero.name>
+ <75d483b5-8edf-efb1-9642-ca367e2f1423@maciej.szmigiero.name>
+ <2118832.28snYOIflM@kreacher>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2118832.28snYOIflM@kreacher>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joseph Hwang <josephsih@chromium.org>
+On Wed, Mar 04, 2020 at 11:31:31AM +0100, Rafael J. Wysocki wrote:
+> On Friday, February 28, 2020 6:10:18 PM CET Maciej S. Szmigiero wrote:
+> > A friendly ping here.
+> > 
+> > Maciej
+> > 
+> > On 21.02.2020 18:43, Maciej S. Szmigiero wrote:
+> > > From: "Maciej S. Szmigiero" <maciej.szmigiero@oracle.com>
+> > > 
+> > > Before commit 1328edca4a14 ("cpuidle-haltpoll: Enable kvm guest polling
+> > > when dedicated physical CPUs are available") the cpuidle-haltpoll driver
+> > > could also be used in scenarios when the host does not advertise the
+> > > KVM_HINTS_REALTIME hint.
+> > > 
+> > > While the behavior introduced by the aforementioned commit makes sense as
+> > > the default there are cases where the old behavior is desired, for example,
+> > > when other kernel changes triggered by presence by this hint are unwanted,
+> > > for some workloads where the latency benefit from polling overweights the
+> > > loss from idle CPU capacity that otherwise would be available, or just when
+> > > running under older Qemu versions that lack this hint.
+> > > 
+> > > Let's provide a typical "force" module parameter that allows restoring the
+> > > old behavior.
+> > > 
+> > > Signed-off-by: Maciej S. Szmigiero <maciej.szmigiero@oracle.com>
+> > > ---
+> > >  drivers/cpuidle/cpuidle-haltpoll.c | 12 +++++++++++-
+> > >  1 file changed, 11 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/drivers/cpuidle/cpuidle-haltpoll.c b/drivers/cpuidle/cpuidle-haltpoll.c
+> > > index b0ce9bc78113..07e5b36076bb 100644
+> > > --- a/drivers/cpuidle/cpuidle-haltpoll.c
+> > > +++ b/drivers/cpuidle/cpuidle-haltpoll.c
+> > > @@ -18,6 +18,11 @@
+> > >  #include <linux/kvm_para.h>
+> > >  #include <linux/cpuidle_haltpoll.h>
+> > >  
+> > > +static bool force __read_mostly;
+> > > +module_param(force, bool, 0444);
+> > > +MODULE_PARM_DESC(force,
+> > > +		 "Load even if the host does not provide the REALTIME hint");
+> 
+> Why not to say "Load unconditionally" here?
 
-Include file and function names in bluetooth kernel logs to
-help debugging.
+Makes sense to me.
 
-Signed-off-by: Joseph Hwang <josephsih@chromium.org>
-Signed-off-by: Manish Mandlik <mmandlik@google.com>
----
-
- include/net/bluetooth/bluetooth.h | 19 +++++++++++++++----
- 1 file changed, 15 insertions(+), 4 deletions(-)
-
-diff --git a/include/net/bluetooth/bluetooth.h b/include/net/bluetooth/bluetooth.h
-index 1576353a27732..2024d9c53d687 100644
---- a/include/net/bluetooth/bluetooth.h
-+++ b/include/net/bluetooth/bluetooth.h
-@@ -150,10 +150,21 @@ void bt_warn_ratelimited(const char *fmt, ...);
- __printf(1, 2)
- void bt_err_ratelimited(const char *fmt, ...);
- 
--#define BT_INFO(fmt, ...)	bt_info(fmt "\n", ##__VA_ARGS__)
--#define BT_WARN(fmt, ...)	bt_warn(fmt "\n", ##__VA_ARGS__)
--#define BT_ERR(fmt, ...)	bt_err(fmt "\n", ##__VA_ARGS__)
--#define BT_DBG(fmt, ...)	pr_debug(fmt "\n", ##__VA_ARGS__)
-+static inline const char *basename(const char *path)
-+{
-+	const char *str = strrchr(path, '/');
-+
-+	return str ? (str + 1) : path;
-+}
-+
-+#define BT_INFO(fmt, ...)	bt_info("%s:%s() " fmt "\n",		\
-+				basename(__FILE__), __func__, ##__VA_ARGS__)
-+#define BT_WARN(fmt, ...)	bt_warn("%s:%s() " fmt "\n",		\
-+				basename(__FILE__), __func__, ##__VA_ARGS__)
-+#define BT_ERR(fmt, ...)	bt_err("%s:%s() " fmt "\n",		\
-+				basename(__FILE__), __func__, ##__VA_ARGS__)
-+#define BT_DBG(fmt, ...)	pr_debug("%s:%s() " fmt "\n",		\
-+				basename(__FILE__), __func__, ##__VA_ARGS__)
- 
- #define bt_dev_info(hdev, fmt, ...)				\
- 	BT_INFO("%s: " fmt, (hdev)->name, ##__VA_ARGS__)
--- 
-2.25.1.481.gfbce0eb801-goog
+> As is, one needs to know what "the REALTIME hint" is to understand it.
+> 
+> > > +
+> > >  static struct cpuidle_device __percpu *haltpoll_cpuidle_devices;
+> > >  static enum cpuhp_state haltpoll_hp_state;
+> > >  
+> > > @@ -90,6 +95,11 @@ static void haltpoll_uninit(void)
+> > >  	haltpoll_cpuidle_devices = NULL;
+> > >  }
+> > >  
+> > > +static bool haltpool_want(void)
+> > > +{
+> > > +	return kvm_para_has_hint(KVM_HINTS_REALTIME) || force;
+> > > +}
+> > > +
+> > >  static int __init haltpoll_init(void)
+> > >  {
+> > >  	int ret;
+> > > @@ -102,7 +112,7 @@ static int __init haltpoll_init(void)
+> > >  	cpuidle_poll_state_init(drv);
+> > >  
+> > >  	if (!kvm_para_available() ||
+> > > -		!kvm_para_has_hint(KVM_HINTS_REALTIME))
+> > > +	    !haltpool_want())
+> 
+> And you don't need to break this line.
+> 
+> > >  		return -ENODEV;
+> > >  
+> > >  	ret = cpuidle_register_driver(drv);
+> > > 
+> > 
+> > 
+> 
+> Thanks!
+> 
+> 
 
