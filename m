@@ -2,272 +2,209 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBC22C10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 21:36:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AECE5C18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 21:39:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEC1A21655
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 21:36:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D272222C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 21:39:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NXdmMClg"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UlVfj8z2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726998AbgCJVg0 (ORCPT
+        id S1726426AbgCJVja (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 17:36:26 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:41124 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726307AbgCJVg0 (ORCPT
+        Tue, 10 Mar 2020 17:39:30 -0400
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:34228 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726271AbgCJVj3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 17:36:26 -0400
-Received: by mail-pf1-f194.google.com with SMTP id z65so76052pfz.8
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 14:36:23 -0700 (PDT)
+        Tue, 10 Mar 2020 17:39:29 -0400
+Received: by mail-pj1-f67.google.com with SMTP id 39so688804pjo.1
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 14:39:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=NWf0TdeJvck0pCGGb01hva0XMggef5ubqIU9iaLUhUA=;
-        b=NXdmMClgabWQioF4yjl5Jwd3G2+POPv9SbUzVwujJhh2o2BxjxxPsjmZx+RtR3ZTkT
-         fid8mFGefGZRDOe9uPgT1YkjFUTL2YObjeqf7oy5iWafQQpc/Nr/eBX6Dqq2cvpJd3wt
-         zEwIhTLVA6qRzzVmFGqNT3JOmI0cC8+6pR2cc=
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=T26zcDKa3B8Ccgr/TpJ2S305/X5TIZGyLp36trF+POo=;
+        b=UlVfj8z2wr/WzpEmGcDaRfms4z9TbAXtAyU2y3qiTLBfcdR4vOgKpoytN1aXHGxzOq
+         XDk/3pE6KS2Cuzy3UvR8Vz6WuZtA0ZFyvoRuMhVkW0iPKzUh9kq0R2L1Shu1OAO9na5P
+         PoRYXmQ3PZgySKo8VTUGwwOFXBiIB0WPYHB3M1S0nZc7HpdTTVfunIENsKTmb2Mhk9sq
+         /UcWyEY/lAB+oPcM9CyTq/ynZq4mvpfEtvyGKzv+z+BQhi7GUik2pSeT0M8V5HmMaOza
+         0SlOk/LV5XNbZ2+nn7CVZIzefIKHhxkgt6HDH5i9dAM6RoigIbJuohA7/IN+mspaxwsO
+         FO4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=NWf0TdeJvck0pCGGb01hva0XMggef5ubqIU9iaLUhUA=;
-        b=CDkkjGN0n6AW79RSe7lfpw+6on+Hm1J13UoMPd1Aznt6yfbfKDDAJPSZLLhe0ijBwy
-         6GvvXlK/1th4lG/Sj6Im44PUDc4I9rIY1O8Fr4sypizcWe7SYmJ0rGXlmRzBY1hJO7nc
-         FPgoUXXcUK8nLE3unU/EYs9KmqAIZmxfG8HzeUIOncaMf948umKLGr1gxYuYeA8nqD2d
-         zwBaiLlq54q/i8vE6bfi+aFcKsI1eJFjmBlBIVuM5IDPfs0kB6xvFfLn7LADstLx3iLO
-         Smv3xyQ7wBKP4sIHW45eoAOHbCnem6CaZS6GbeqISGoMCqyDgJD3OvxjLYGoZcnE0X02
-         9dJg==
-X-Gm-Message-State: ANhLgQ3t6CRRbft0XxLsxa56Ayq93e5z/Zo7Vu3mJqXcjFGSDxzc3Un5
-        h9spks7SUNjw/PTuha/QhnUJcw==
-X-Google-Smtp-Source: ADFU+vs/Uypr3q8a3tw+hkF+0Zw9ymbsnPXTwDAQkVznHvEHqBvv2ESuGLkB9ZYHjVG64HW7T+09ig==
-X-Received: by 2002:a65:44cd:: with SMTP id g13mr23586615pgs.365.1583876182960;
-        Tue, 10 Mar 2020 14:36:22 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id g11sm20159100pfo.184.2020.03.10.14.36.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Mar 2020 14:36:21 -0700 (PDT)
-Date:   Tue, 10 Mar 2020 14:36:20 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Bernd Edlinger <bernd.edlinger@hotmail.de>
-Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Andrei Vagin <avagin@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Yuyang Du <duyuyang@gmail.com>,
-        David Hildenbrand <david@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        David Howells <dhowells@redhat.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christian Kellner <christian@kellner.me>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>
-Subject: Re: [PATCH 2/4] selftests/ptrace: add test cases for dead-locks
-Message-ID: <202003101401.9A4FD3F@keescook>
-References: <878sk94eay.fsf@x220.int.ebiederm.org>
- <AM6PR03MB517086003BD2C32E199690A3E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <87r1y12yc7.fsf@x220.int.ebiederm.org>
- <87k13t2xpd.fsf@x220.int.ebiederm.org>
- <87d09l2x5n.fsf@x220.int.ebiederm.org>
- <AM6PR03MB5170F0F9DC18F5EA77C9A857E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <871rq12vxu.fsf@x220.int.ebiederm.org>
- <AM6PR03MB5170DF45E3245F55B95CCD91E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <877dzt1fnf.fsf@x220.int.ebiederm.org>
- <AM6PR03MB51703199741A2C27A78980FFE4FF0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=T26zcDKa3B8Ccgr/TpJ2S305/X5TIZGyLp36trF+POo=;
+        b=hjBIB63z5FylFTfC7LgUA+5Kv+OujDg1QMm882pj4i4x+cMZm4bayJD8cbNdciXNmz
+         IKOhmf+cKV5pkjQiZr9wMMpn7SmqbI0KHx0tjIPCiT3mlUYA196sBeG6cuerWnpmZz+r
+         1gTpU+hSCdVTmTAdiOdpH7N0v0YnG1IfPfO7sTDjeaZie1jyXq0krlVFZc4c9gRB6VY+
+         jYBbqBnq6h40DfukFx3L2ewzzJKdfhCW0r3kEp0iLuQtVoSBIyY+TSxdzj7BF/8X0e1T
+         sfTv92KufaOqnNUU9TKORfWRutLgPHRTESLLkwnt4q2bMA6ifI64XrazafKcnMbgTr4p
+         l2Hg==
+X-Gm-Message-State: ANhLgQ0RxpdV7SHJP9v73sTPHLWQ0fSKW30CKfSfI/HRaB/SBVPk/5O6
+        kVKTq4obmDw/04TXjQ/jCz/KFBqJ86Ne9FioDDkFyg==
+X-Google-Smtp-Source: ADFU+vsXRA51Z5R8J8QAlzU7dBAeXHMJIO1KbWRLfAi/7Y8ISrxHlkI7cP6T1ce42VyooMGph67CkOVhGhlLFCL8xJY=
+X-Received: by 2002:a17:90a:a587:: with SMTP id b7mr33452pjq.18.1583876367719;
+ Tue, 10 Mar 2020 14:39:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <AM6PR03MB51703199741A2C27A78980FFE4FF0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+References: <20200227024301.217042-1-trishalfonso@google.com>
+ <20200227024301.217042-2-trishalfonso@google.com> <alpine.LRH.2.20.2002271136160.12417@dhcp-10-175-190-15.vpn.oracle.com>
+In-Reply-To: <alpine.LRH.2.20.2002271136160.12417@dhcp-10-175-190-15.vpn.oracle.com>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Tue, 10 Mar 2020 14:39:16 -0700
+Message-ID: <CAFd5g44gVFyxwo4r=7gpPGdvPQoynfEjHhLfyC3_6uaU2oA0Lg@mail.gmail.com>
+Subject: Re: [RFC PATCH 2/2] KUnit: KASAN Integration
+To:     Alan Maguire <alan.maguire@oracle.com>
+Cc:     Patricia Alfonso <trishalfonso@google.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        David Gow <davidgow@google.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        KUnit Development <kunit-dev@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 10, 2020 at 02:44:01PM +0100, Bernd Edlinger wrote:
-> This adds test cases for ptrace deadlocks.
-> 
-> Additionally fixes a compile problem in get_syscall_info.c,
-> observed with gcc-4.8.4:
-> 
-> get_syscall_info.c: In function 'get_syscall_info':
-> get_syscall_info.c:93:3: error: 'for' loop initial declarations are only
->                                  allowed in C99 mode
->    for (unsigned int i = 0; i < ARRAY_SIZE(args); ++i) {
->    ^
-> get_syscall_info.c:93:3: note: use option -std=c99 or -std=gnu99 to compile
->                                your code
+On Thu, Feb 27, 2020 at 6:04 AM Alan Maguire <alan.maguire@oracle.com> wrote:
 
-*discomfort noises* (see below)
+Sorry for the delay in reviews. I have been preoccupied by some Google
+internal stuff.
 
-> 
-> Signed-off-by: Bernd Edlinger <bernd.edlinger@hotmail.de>
-> ---
->  tools/testing/selftests/ptrace/Makefile   |  4 +-
->  tools/testing/selftests/ptrace/vmaccess.c | 86 +++++++++++++++++++++++++++++++
->  2 files changed, 88 insertions(+), 2 deletions(-)
->  create mode 100644 tools/testing/selftests/ptrace/vmaccess.c
-> 
-> diff --git a/tools/testing/selftests/ptrace/Makefile b/tools/testing/selftests/ptrace/Makefile
-> index c0b7f89..2f1f532 100644
-> --- a/tools/testing/selftests/ptrace/Makefile
-> +++ b/tools/testing/selftests/ptrace/Makefile
-> @@ -1,6 +1,6 @@
->  # SPDX-License-Identifier: GPL-2.0-only
-> -CFLAGS += -iquote../../../../include/uapi -Wall
-> +CFLAGS += -std=c99 -pthread -iquote../../../../include/uapi -Wall
+> On Wed, 26 Feb 2020, Patricia Alfonso wrote:
+>
+> > Integrate KASAN into KUnit testing framework.
+>
+> This is a great idea! Some comments/suggestions below...
+>
+> >  - Fail tests when KASAN reports an error that is not expected
+> >  - Use KUNIT_EXPECT_KASAN_FAIL to expect a KASAN error in KASAN tests
+> >  - KUnit struct added to current task to keep track of the current test
+> > from KASAN code
+> >  - Booleans representing if a KASAN report is expected and if a KASAN
+> >  report is found added to kunit struct
+> >  - This prints "line# has passed" or "line# has failed"
+> >
+> > Signed-off-by: Patricia Alfonso <trishalfonso@google.com>
+> > ---
+> > If anyone has any suggestions on how best to print the failure
+> > messages, please share!
+> >
+> > One issue I have found while testing this is the allocation fails in
+> > kmalloc_pagealloc_oob_right() sometimes, but not consistently. This
+> > does cause the test to fail on the KUnit side, as expected, but it
+> > seems to skip all the tests before this one because the output starts
+> > with this failure instead of with the first test, kmalloc_oob_right().
+> >
+> >  include/kunit/test.h                | 24 ++++++++++++++++++++++++
+> >  include/linux/sched.h               |  7 ++++++-
+> >  lib/kunit/test.c                    |  7 ++++++-
+> >  mm/kasan/report.c                   | 19 +++++++++++++++++++
+> >  tools/testing/kunit/kunit_kernel.py |  2 +-
+> >  5 files changed, 56 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/include/kunit/test.h b/include/kunit/test.h
+> > index 2dfb550c6723..2e388f8937f3 100644
+> > --- a/include/kunit/test.h
+> > +++ b/include/kunit/test.h
+> > @@ -21,6 +21,8 @@ struct kunit_resource;
+> >  typedef int (*kunit_resource_init_t)(struct kunit_resource *, void *);
+> >  typedef void (*kunit_resource_free_t)(struct kunit_resource *);
+> >
+> > +void kunit_set_failure(struct kunit *test);
+> > +
+> >  /**
+> >   * struct kunit_resource - represents a *test managed resource*
+> >   * @allocation: for the user to store arbitrary data.
+> > @@ -191,6 +193,9 @@ struct kunit {
+> >        * protect it with some type of lock.
+> >        */
+> >       struct list_head resources; /* Protected by lock. */
+> > +
+> > +     bool kasan_report_expected;
+> > +     bool kasan_report_found;
+> >  };
+> >
+>
+> Is this needed here? You're testing something pretty
+> specific so it seems wrong to add to the generic
+> kunit resource unless there's a good reason. I see the
+> code around setting these values in mm/kasan/report.c,
+> but I wonder if we could do something more generic.
+>
+> How about the concept of a static resource (assuming a
+> dynamically allocated one is out because it messes
+> with memory allocation tests)? Something like this:
+>
+> #define kunit_add_static_resource(test, resource_ptr, resource_field)   \
+>         do {                                                            \
+>                 spin_lock(&test->lock);                                 \
+>                 (resource_ptr)->resource_field.init = NULL;             \
+>                 (resource_ptr)->resource_field.free = NULL;             \
+>                 list_add_tail(&(resource_ptr)->resource_field,          \
+>                               &test->resources);                        \
+>                 spin_unlock(&test->lock);                               \
+>         } while (0)
+>
+>
+> Within your kasan code you could then create a kasan-specific
+> structure that embends a kunit_resource, and contains the
+> values you need:
+>
+> struct kasan_report_resource {
+>         struct kunit_resource res;
+>         bool kasan_report_expected;
+>         bool kasan_report_found;
+> };
+>
+> (One thing we'd need to do for such static resources is fix
+> kunit_resource_free() to check if there's a free() function,
+> and if not assume a static resource)
+>
+> If you then create an init() function associated with your
+> kunit suite (which will be run for every case) it can do this:
+>
+> int kunit_kasan_test_init(struct kunit *test)
+> {
+>         kunit_add_static_resource(test, &my_kasan_report_resource, res);
+>         ...
+> }
+>
+> The above should also be used to initialize current->kasan_unit_test
+> instead of doing that in kunit_try_run_case().  With those
+> changes, you don't (I think) need to change anything in core
+> kunit (assuming support for static resources).
+>
+> To retrieve the resource during tests or in kasan context, the
+> method seems to be to use kunit_resource_find(). However, that
+> requires a match function which seems a bit heavyweight for the
+> static case.  We should probably have a default "find by name"
+> or similar function here, and add an optional "name" field
+> to kunit resources to simplify things.  Anyway here you'd
+> use something like:
+>
+>         kasan_report_resource = kunit_resource_find(test, matchfn,
+>                                                     NULL, matchdata);
+>
+>
+> Are there any barriers to taking this sort of approach (apart
+> from the support for static resources not being there yet)?
 
-This isn't the common solution in the kernel (the variable declaration
-would just be lifted out of the loop), but as it's selftest code, which
-does lots of special things ... I *guess* this is okay.
-
->  
-> -TEST_GEN_PROGS := get_syscall_info peeksiginfo
-> +TEST_GEN_PROGS := get_syscall_info peeksiginfo vmaccess
-
-I love having this deadlock test added to the selftests.
-
-I think I need to make an improvement to the test harness, though, as
-the failure mode right now just blows up after the 30 second timeout
-and leaves this deadlocked:
-
-$ ./vmaccess
-[==========] Running 2 tests from 1 test cases.
-[ RUN      ] global.vmaccess
-Alarm clock
-$ ps
-  PID TTY          TIME CMD
- 2605 pts/0    00:00:00 bash
-23360 pts/0    00:00:00 vmaccess
-23361 pts/0    00:00:00 vmaccess
-23363 pts/0    00:00:00 ps
-
-But that's mostly unrelated to this code.
-
-Reviewed-by: Kees Cook <keescook@chromium.org>
-
--Kees
-
->  
->  include ../lib.mk
-> diff --git a/tools/testing/selftests/ptrace/vmaccess.c b/tools/testing/selftests/ptrace/vmaccess.c
-> new file mode 100644
-> index 0000000..4db327b
-> --- /dev/null
-> +++ b/tools/testing/selftests/ptrace/vmaccess.c
-> @@ -0,0 +1,86 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * Copyright (c) 2020 Bernd Edlinger <bernd.edlinger@hotmail.de>
-> + * All rights reserved.
-> + *
-> + * Check whether /proc/$pid/mem can be accessed without causing deadlocks
-> + * when de_thread is blocked with ->cred_guard_mutex held.
-> + */
-> +
-> +#include "../kselftest_harness.h"
-> +#include <stdio.h>
-> +#include <fcntl.h>
-> +#include <pthread.h>
-> +#include <signal.h>
-> +#include <unistd.h>
-> +#include <sys/ptrace.h>
-> +
-> +static void *thread(void *arg)
-> +{
-> +	ptrace(PTRACE_TRACEME, 0, 0L, 0L);
-> +	return NULL;
-> +}
-> +
-> +TEST(vmaccess)
-> +{
-> +	int f, pid = fork();
-> +	char mm[64];
-> +
-> +	if (!pid) {
-> +		pthread_t pt;
-> +
-> +		pthread_create(&pt, NULL, thread, NULL);
-> +		pthread_join(pt, NULL);
-> +		execlp("true", "true", NULL);
-> +	}
-> +
-> +	sleep(1);
-> +	sprintf(mm, "/proc/%d/mem", pid);
-> +	f = open(mm, O_RDONLY);
-> +	ASSERT_GE(f, 0);
-> +	close(f);
-> +	f = kill(pid, SIGCONT);
-> +	ASSERT_EQ(f, 0);
-> +}
-> +
-> +TEST(attach)
-> +{
-> +	int s, k, pid = fork();
-> +
-> +	if (!pid) {
-> +		pthread_t pt;
-> +
-> +		pthread_create(&pt, NULL, thread, NULL);
-> +		pthread_join(pt, NULL);
-> +		execlp("sleep", "sleep", "2", NULL);
-> +	}
-> +
-> +	sleep(1);
-> +	k = ptrace(PTRACE_ATTACH, pid, 0L, 0L);
-> +	ASSERT_EQ(errno, EAGAIN);
-> +	ASSERT_EQ(k, -1);
-> +	k = waitpid(-1, &s, WNOHANG);
-> +	ASSERT_NE(k, -1);
-> +	ASSERT_NE(k, 0);
-> +	ASSERT_NE(k, pid);
-> +	ASSERT_EQ(WIFEXITED(s), 1);
-> +	ASSERT_EQ(WEXITSTATUS(s), 0);
-> +	sleep(1);
-> +	k = ptrace(PTRACE_ATTACH, pid, 0L, 0L);
-> +	ASSERT_EQ(k, 0);
-> +	k = waitpid(-1, &s, 0);
-> +	ASSERT_EQ(k, pid);
-> +	ASSERT_EQ(WIFSTOPPED(s), 1);
-> +	ASSERT_EQ(WSTOPSIG(s), SIGSTOP);
-> +	k = ptrace(PTRACE_DETACH, pid, 0L, 0L);
-> +	ASSERT_EQ(k, 0);
-> +	k = waitpid(-1, &s, 0);
-> +	ASSERT_EQ(k, pid);
-> +	ASSERT_EQ(WIFEXITED(s), 1);
-> +	ASSERT_EQ(WEXITSTATUS(s), 0);
-> +	k = waitpid(-1, NULL, 0);
-> +	ASSERT_EQ(k, -1);
-> +	ASSERT_EQ(errno, ECHILD);
-> +}
-> +
-> +TEST_HARNESS_MAIN
-> -- 
-> 1.9.1
-
--- 
-Kees Cook
+This is a really interesting idea, Alan! I never imagined
+kunit_resources being used this way, and I like it. I saw you sent
+some patches to implement this stuff, so I will withhold further
+comments on that here.
