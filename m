@@ -2,80 +2,105 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 876C5C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 08:55:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 272A4C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 08:56:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61C222465A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 08:55:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583830528;
-	bh=2sdxtpswuMghQi2CqrS8nbarm5BBY7Twk1RfEVxSRME=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=adcycJvZEUOVc8VbI/Thc/b9W09Gcsy/nqEyv/Fb4JpO0wCfF/CdtfpR9hAKM5ess
-	 Roq/7g0p3oCLugJUnMSBHYbPgV4MrgUHUkPlSTvhSPxpFeiTZgGJnXWCCoJ82SkL7V
-	 mB89C4zJR76kr/+US+YFJymjM935eDg3ahHMh6ao=
+	by mail.kernel.org (Postfix) with ESMTP id EEB6B205F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 08:56:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="SZzpt3Zd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726642AbgCJIz1 (ORCPT
+        id S1726659AbgCJI4M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 04:55:27 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:42844 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726389AbgCJIz1 (ORCPT
+        Tue, 10 Mar 2020 04:56:12 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:58696 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726389AbgCJI4L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 04:55:27 -0400
-Received: by mail-oi1-f193.google.com with SMTP id l12so13048484oil.9;
-        Tue, 10 Mar 2020 01:55:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2sdxtpswuMghQi2CqrS8nbarm5BBY7Twk1RfEVxSRME=;
-        b=XaZP7UlgED3ejJpsWPXpBh6qStBgKfcasuZZXe9qbxfXtqoh9Ua+13n8ZkhwL+cj3g
-         PNIiCbol0PcZbxu/iNYPERHE/QD9SkU1nywBVEzh9zOE7JRSidKBjiXlT/RCm7TC5dCa
-         A4V68sIf6rXOj3gWLPAP2JUBXqbZCPJnRDyHqcqFB+H17DmAIoob0aVd/EryalTHpqAz
-         vOW2I0rgM6ELh4K3d5+WL1k85UgEPovalQ4qgV7rYUZcMGpT7Sk+t0Nj/qS+SuLEFvRF
-         w9jAQCDKRbJC//13+ZTZ/FNGMQMBDK8xj2gcRjM4SFBfO6/KwebWn4wiCGFeIyzOlnGl
-         PN2A==
-X-Gm-Message-State: ANhLgQ34+KixIUd2pJeP7jDCz2dbPrnft76NUtd9oFOzsi++vQhE4Pfi
-        27fYXY7ZFFpzfy+aXLTGsBmY7YDOqZ3XG1vpTayYeA==
-X-Google-Smtp-Source: ADFU+vtHqBwQVlPlHwGR60IzGRtmFCmsCWjXRcUW7nbupazhD/5nD53PM9w490GIIaN84xdF3KO7cjRDU8OA+N0lj+I=
-X-Received: by 2002:aca:5155:: with SMTP id f82mr384236oib.103.1583830526316;
- Tue, 10 Mar 2020 01:55:26 -0700 (PDT)
+        Tue, 10 Mar 2020 04:56:11 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02A8uAcS100759;
+        Tue, 10 Mar 2020 03:56:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1583830570;
+        bh=nmwVphm5iqbtcL4ZTh/177J0aYFT1Z+EnZLR4E5cQgE=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=SZzpt3ZduvJWmJ3J1YLkfFV/yWvUzKiAGitrVN0JtlF1Tw1xqFWpunOffDeTt1gGK
+         HfuSJIMGmAMIacxwBVvCFE7vidViNoFJoJn0U7ddD2DP9hA614RURFsYfp3Zs9wECs
+         RpaCnxDKN7KljmctG3GrqGeIXCJXwcpXtYnJK7Yk=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02A8uANm003830
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 10 Mar 2020 03:56:10 -0500
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 10
+ Mar 2020 03:56:10 -0500
+Received: from localhost.localdomain (10.64.41.19) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 10 Mar 2020 03:56:10 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by localhost.localdomain (8.15.2/8.15.2) with ESMTP id 02A8u871007532;
+        Tue, 10 Mar 2020 03:56:08 -0500
+Subject: Re: [Patch v2] media: ti-vpe: cal: fix a kernel oops when unloading
+ module
+To:     Benoit Parrot <bparrot@ti.com>, Hans Verkuil <hverkuil@xs4all.nl>
+CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>
+References: <20200306130839.1209-1-bparrot@ti.com>
+From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
+Message-ID: <326ff891-baae-47cb-849d-4cd07793236c@ti.com>
+Date:   Tue, 10 Mar 2020 10:56:08 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <fcbb3dc4-38ae-8361-bd6b-a00ae00c189c@linuxfoundation.org>
-In-Reply-To: <fcbb3dc4-38ae-8361-bd6b-a00ae00c189c@linuxfoundation.org>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 10 Mar 2020 09:55:15 +0100
-Message-ID: <CAJZ5v0jqTGE5zBnwijjWbze4fuDW_h3muV9X1=EHbeHMqcF2JQ@mail.gmail.com>
-Subject: Re: [GIT PULL] cpupower update for Linux 5.6-rc6
-To:     Shuah Khan <skhan@linuxfoundation.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Mike Gilbert <floppym@gentoo.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Renninger <trenn@suse.de>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200306130839.1209-1-bparrot@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Shuah,
+On 06/03/2020 15:08, Benoit Parrot wrote:
+> After the switch to use v4l2_async_notifier_add_subdev() and
+> v4l2_async_notifier_cleanup(), unloading the ti_cal module would casue a
+> kernel oops.
+> 
+> This was root cause to the fact that v4l2_async_notifier_cleanup() tries
+> to kfree the asd pointer passed into v4l2_async_notifier_add_subdev().
+> 
+> In our case the asd reference was from a statically allocated struct.
+> So in effect v4l2_async_notifier_cleanup() was trying to free a pointer
+> that was not kalloc.
+> 
+> So here we switch to using a kzalloc struct instead of a static one.
+> To acheive this we re-order some of the calls to prevent asd allocation
+> from leaking.
+> 
+> Fixes: d079f94c9046 ("media: platform: Switch to v4l2_async_notifier_add_subdev")
+> 
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Benoit Parrot <bparrot@ti.com>
+> ---
+> Changes since v1:
+> - fix asd allocation leak
+> 
+>   drivers/media/platform/ti-vpe/cal.c | 13 ++++++++-----
+>   1 file changed, 8 insertions(+), 5 deletions(-)
 
-On Sat, Mar 7, 2020 at 1:14 AM Shuah Khan <skhan@linuxfoundation.org> wrote:
->
-> Hi Rafael,
->
-> Please pull the following cpupower update for Linux 5.6-rc6.
->
-> This cpupower update for Linux 5.6-rc6 consists of a fix from
-> Mike Gilbert for build failures when -fno-common is enabled.
-> -fno-common will be default in gcc v10.
->
-> Diff is attached.
+Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
 
-Pulled, thanks!
+  Tomi
+
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
