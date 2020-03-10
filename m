@@ -2,57 +2,54 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F95AC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:13:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A55CC18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:13:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55C8F2467D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:13:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3334D2468F
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:13:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583845986;
-	bh=64dyv7LUHdrDrxpw8t1UmC6M0VJ1Ztk8f2HrYqIaXD0=;
+	s=default; t=1583845988;
+	bh=Xvrs5Tl05cV7m4ac4tT9EVzboSu3Qc+AUWzumDZp8DI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JmpkZGOtOJtDvtoQpgzul2z8PWrIyyTaxk6oc2Bj3ebpdm55InS2MGQQTc6QMJunB
-	 wMNSdb+z1BD+LiQ+9i7UelVuCZvCUo0oS/+6cYpdwX2iUPGmXzbXKe2N6WwaNkT2gN
-	 JUL8L5rI8v7bJZDPL7aR5UYhIIuLb/JhOVFpbqVk=
+	b=gun1H6AEIkOR2pNeQuTTGUU+oaRb8nb917LpgX9wbyHL2BLW/HHSHoFhGmeoxEbBl
+	 GNNXRl2T1yDmb4NxZyW9u7gUyjsDnc9HAG23CzvZ4VQ0pAJbMPlu96Pp3QIAsxrN7n
+	 n31ZAR/uAfqgbqvP0QpULI9vRfmnGEbLbLh2Wblo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728918AbgCJNNF (ORCPT
+        id S1731642AbgCJNM5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:13:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35474 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:12:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35330 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730937AbgCJNNB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:13:01 -0400
+        id S1731636AbgCJNMz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:12:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA77320409;
-        Tue, 10 Mar 2020 13:12:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0861B20409;
+        Tue, 10 Mar 2020 13:12:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845980;
-        bh=64dyv7LUHdrDrxpw8t1UmC6M0VJ1Ztk8f2HrYqIaXD0=;
+        s=default; t=1583845974;
+        bh=Xvrs5Tl05cV7m4ac4tT9EVzboSu3Qc+AUWzumDZp8DI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2GFN3opIrnAClDL5yuK3WiLe5GsuTJwm79dej4BIe7Meu4nWmNmDjyQ6yJbAx16iw
-         PnV2PTxozMiZ8a7oTpQYCZ+FTJJyJyMQcv8ZZWUSfAqbrfElBxv5Uj/70OPk/N1xSO
-         69kDT3dY2kqLL+tJo6xa24W9Sbs2v5CzXvwOvoR0=
+        b=QrJWkf7EpHEcv7/8KuK3lh9WMba1qVZMnM3rOlCmilugotOjKnjvzS4BMgdJWeBt4
+         Yopc8cFhwtfLkKASTnGru40ZpmCn7mwTpVJeUcuGZItiZtrAVGcgRL6p64HYG3zaqR
+         3kfqy+L/RLks/tEE4YDvZE49q+3LxAtTerpDGq88=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
-        "Huang, Ying" <ying.huang@intel.com>, Zi Yan <ziy@nvidia.com>,
-        William Kucharski <william.kucharski@oracle.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Michal Hocko <mhocko@kernel.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.19 43/86] mm: fix possible PMD dirty bit lost in set_pmd_migration_entry()
-Date:   Tue, 10 Mar 2020 13:45:07 +0100
-Message-Id: <20200310124533.116095383@linuxfoundation.org>
+        stable@vger.kernel.org, Cornelia Huck <cohuck@redhat.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Vasily Averin <vvs@virtuozzo.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 24/86] s390/cio: cio_ignore_proc_seq_next should increase position index
+Date:   Tue, 10 Mar 2020 13:44:48 +0100
+Message-Id: <20200310124532.087956646@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310124530.808338541@linuxfoundation.org>
 References: <20200310124530.808338541@linuxfoundation.org>
@@ -65,56 +62,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Huang Ying <ying.huang@intel.com>
+From: Vasily Averin <vvs@virtuozzo.com>
 
-commit 8a8683ad9ba48b4b52a57f013513d1635c1ca5c4 upstream.
+[ Upstream commit 8b101a5e14f2161869636ff9cb4907b7749dc0c2 ]
 
-In set_pmd_migration_entry(), pmdp_invalidate() is used to change PMD
-atomically.  But the PMD is read before that with an ordinary memory
-reading.  If the THP (transparent huge page) is written between the PMD
-reading and pmdp_invalidate(), the PMD dirty bit may be lost, and cause
-data corruption.  The race window is quite small, but still possible in
-theory, so need to be fixed.
+if seq_file .next fuction does not change position index,
+read after some lseek can generate unexpected output.
 
-The race is fixed via using the return value of pmdp_invalidate() to get
-the original content of PMD, which is a read/modify/write atomic
-operation.  So no THP writing can occur in between.
-
-The race has been introduced when the THP migration support is added in
-the commit 616b8371539a ("mm: thp: enable thp migration in generic path").
-But this fix depends on the commit d52605d7cb30 ("mm: do not lose dirty
-and accessed bits in pmdp_invalidate()").  So it's easy to be backported
-after v4.16.  But the race window is really small, so it may be fine not
-to backport the fix at all.
-
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
-Reviewed-by: Zi Yan <ziy@nvidia.com>
-Reviewed-by: William Kucharski <william.kucharski@oracle.com>
-Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Cc: <stable@vger.kernel.org>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: Michal Hocko <mhocko@kernel.org>
-Cc: Andrea Arcangeli <aarcange@redhat.com>
-Link: http://lkml.kernel.org/r/20200220075220.2327056-1-ying.huang@intel.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=206283
+Link: https://lore.kernel.org/r/d44c53a7-9bc1-15c7-6d4a-0c10cb9dffce@virtuozzo.com
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/huge_memory.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/s390/cio/blacklist.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -2949,8 +2949,7 @@ void set_pmd_migration_entry(struct page
- 		return;
+diff --git a/drivers/s390/cio/blacklist.c b/drivers/s390/cio/blacklist.c
+index 2a3f874a21d54..9cebff8e8d740 100644
+--- a/drivers/s390/cio/blacklist.c
++++ b/drivers/s390/cio/blacklist.c
+@@ -303,8 +303,10 @@ static void *
+ cio_ignore_proc_seq_next(struct seq_file *s, void *it, loff_t *offset)
+ {
+ 	struct ccwdev_iter *iter;
++	loff_t p = *offset;
  
- 	flush_cache_range(vma, address, address + HPAGE_PMD_SIZE);
--	pmdval = *pvmw->pmd;
--	pmdp_invalidate(vma, address, pvmw->pmd);
-+	pmdval = pmdp_invalidate(vma, address, pvmw->pmd);
- 	if (pmd_dirty(pmdval))
- 		set_page_dirty(page);
- 	entry = make_migration_entry(page, pmd_write(pmdval));
+-	if (*offset >= (__MAX_SUBCHANNEL + 1) * (__MAX_SSID + 1))
++	(*offset)++;
++	if (p >= (__MAX_SUBCHANNEL + 1) * (__MAX_SSID + 1))
+ 		return NULL;
+ 	iter = it;
+ 	if (iter->devno == __MAX_SUBCHANNEL) {
+@@ -314,7 +316,6 @@ cio_ignore_proc_seq_next(struct seq_file *s, void *it, loff_t *offset)
+ 			return NULL;
+ 	} else
+ 		iter->devno++;
+-	(*offset)++;
+ 	return iter;
+ }
+ 
+-- 
+2.20.1
+
 
 
