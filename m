@@ -2,139 +2,66 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAF5EC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 18:32:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0D17C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 18:32:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7282F20727
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 18:32:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583865169;
-	bh=quuHdrlhT13p1QBQupcbdb0Ul/TP78y+7Gaad2Ei5vE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mdmq0KPeP2ssFIA8bknVuBxRe9eATU8IAFw7WYwmYdz+LWyCvU9x4grZDxdnEjZq1
-	 BJyvTna4Uk/6KNs6Qi1pw22TnYv2fM7sFbS9LEKYX67cDwSaSXdXgKa1L0qF1Ui+Uf
-	 7AZ+sauONHXbIMumpfE/YK6QfmeMqRpDRDp0xfmc=
+	by mail.kernel.org (Postfix) with ESMTP id A7B6320727
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 18:32:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ed6zJKUM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727340AbgCJScs (ORCPT
+        id S1727420AbgCJScx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 14:32:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35730 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726752AbgCJScs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 14:32:48 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41E2821D56;
-        Tue, 10 Mar 2020 18:32:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583865166;
-        bh=quuHdrlhT13p1QBQupcbdb0Ul/TP78y+7Gaad2Ei5vE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OPQmwnbpHnQiIRgGC5PMbqIMFl6cPmv72B+Ke7IYrG1drSiNR4kgQb2CKSlthAYTY
-         89F+NGrAAxewUNj1eS8YFJcKWynUs+gEHZhI1BXpRzk3EZvhLTNtqCZ14wEP+5Bcfn
-         FhYpeAyDwnx7d2UFvpJhAYJ7QF4wtax6bwybhem4=
-Date:   Tue, 10 Mar 2020 19:32:44 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Sladyn Nunes <sladynlinuxkernel@gmail.com>
-Cc:     rafael@kernel.org, linux-kernel@vger.kernel.org,
-        skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: Re: [PATCH] drivers: base: platform.c: Fix coding style issue.
-Message-ID: <20200310183244.GA3485635@kroah.com>
-References: <20200310181712.884-1-sladynlinuxkernel@gmail.com>
+        Tue, 10 Mar 2020 14:32:53 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:33126 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727071AbgCJScx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 14:32:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=BM1rOj2mhNiPAl7HQ9Dqr15pnyhMXu6TgEmfxY4G2dE=; b=ed6zJKUMN0NHTWgGMZZSTBEMDJ
+        ZDwYVpOOtBbWFiUHnmoG6GaShnCVBNtgLFdocdwwRDKj4qutRI2XnmiCFY3FvYu0H6LTim5ZMYG7l
+        er2Lg68TxUnu7dgmzliLVYHYuWZlDRVJZnXxTrNbeyTmFNxMT/4eKfoklcs5lYKYFagBDGM3D1DXQ
+        Mfob/seec8sdaZisq4mZffAyZUetOdUKq7p7SqhAx2aZ6sX/rk12t8fIAlAmkmzXB/Fu5MVzj1oNr
+        3IDqAJiLb2d029n6cYMi7pHsO0hMT85id6WaFxFPrLWgXPuuRoplFfqkZd8EvysaP2+Sgd06AOwkD
+        QGZb4vxQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jBjgJ-0005Yb-SK; Tue, 10 Mar 2020 18:32:43 +0000
+Date:   Tue, 10 Mar 2020 11:32:43 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     John Garry <john.garry@huawei.com>
+Cc:     axboe@kernel.dk, jejb@linux.ibm.com, martin.petersen@oracle.com,
+        hare@suse.de, ming.lei@redhat.com, bvanassche@acm.org,
+        hch@infradead.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        esc.storagedev@microsemi.com, chenxiang66@hisilicon.com,
+        Hannes Reinecke <hare@suse.com>
+Subject: Re: [PATCH RFC v2 02/24] scsi: allocate separate queue for reserved
+ commands
+Message-ID: <20200310183243.GA14549@infradead.org>
+References: <1583857550-12049-1-git-send-email-john.garry@huawei.com>
+ <1583857550-12049-3-git-send-email-john.garry@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200310181712.884-1-sladynlinuxkernel@gmail.com>
+In-Reply-To: <1583857550-12049-3-git-send-email-john.garry@huawei.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 10, 2020 at 11:47:12PM +0530, Sladyn Nunes wrote:
-> Fixed whitespace and coding style issues in the
-> document.
+On Wed, Mar 11, 2020 at 12:25:28AM +0800, John Garry wrote:
+> From: Hannes Reinecke <hare@suse.com>
 > 
-> Signed-off-by: Sladyn Nunes <sladynlinuxkernel@gmail.com>
-> ---
->  drivers/base/platform.c | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-> index 7fa654f1288b..0da339e14437 100644
-> --- a/drivers/base/platform.c
-> +++ b/drivers/base/platform.c
-> @@ -552,7 +552,8 @@ int platform_device_add(struct platform_device *pdev)
->  		if (p) {
->  			ret = insert_resource(p, r);
->  			if (ret) {
-> -				dev_err(&pdev->dev, "failed to claim resource %d: %pR\n", i, r);
-> +				dev_err(&pdev->dev, "failed to claim resource %d: %pR\n",
-> +						 i, r);
->  				goto failed;
->  			}
->  		}
-> @@ -573,6 +574,7 @@ int platform_device_add(struct platform_device *pdev)
->  
->  	while (i--) {
->  		struct resource *r = &pdev->resource[i];
-> +
->  		if (r->parent)
->  			release_resource(r);
->  	}
-> @@ -604,6 +606,7 @@ void platform_device_del(struct platform_device *pdev)
->  
->  		for (i = 0; i < pdev->num_resources; i++) {
->  			struct resource *r = &pdev->resource[i];
-> +
->  			if (r->parent)
->  				release_resource(r);
->  		}
-> @@ -997,7 +1000,7 @@ static ssize_t modalias_show(struct device *dev, struct device_attribute *a,
->  	if (len != -ENODEV)
->  		return len;
->  
-> -	len = acpi_device_modalias(dev, buf, PAGE_SIZE -1);
-> +	len = acpi_device_modalias(dev, buf, PAGE_SIZE - 1);
->  	if (len != -ENODEV)
->  		return len;
->  
-> -- 
-> 2.18.0
-> 
+> Allocate a separate 'reserved_cmd_q' for sending reserved commands.
 
-Hi,
-
-This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
-a patch that has triggered this response.  He used to manually respond
-to these common problems, but in order to save his sanity (he kept
-writing the same thing over and over, yet to different people), I was
-created.  Hopefully you will not take offence and will fix the problem
-in your patch and resubmit it so that it can be accepted into the Linux
-kernel tree.
-
-You are receiving this message because of the following common error(s)
-as indicated below:
-
-- Your patch did many different things all at once, making it difficult
-  to review.  All Linux kernel patches need to only do one thing at a
-  time.  If you need to do multiple things (such as clean up all coding
-  style issues in a file/driver), do it in a sequence of patches, each
-  one doing only one thing.  This will make it easier to review the
-  patches to ensure that they are correct, and to help alleviate any
-  merge issues that larger patches can cause.
-
-If you wish to discuss this problem further, or you have questions about
-how to resolve this issue, please feel free to respond to this email and
-Greg will reply once he has dug out from the pending patches received
-from other developers.
-
-thanks,
-
-greg k-h's patch email bot
+Why?  Reserved command specifically are not in any way tied to queues.
