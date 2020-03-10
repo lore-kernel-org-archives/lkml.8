@@ -4,79 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-11.8 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7E49C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 18:33:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EC2BC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 18:34:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8DCE20727
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 18:33:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E65B222D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 18:34:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727522AbgCJSdy (ORCPT
+        id S1727545AbgCJSd7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 14:33:54 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:52835 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726520AbgCJSdx (ORCPT
+        Tue, 10 Mar 2020 14:33:59 -0400
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:17757 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726520AbgCJSd7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 14:33:53 -0400
+        Tue, 10 Mar 2020 14:33:59 -0400
 X-Originating-IP: 91.224.148.103
 Received: from localhost.localdomain (unknown [91.224.148.103])
         (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 2DDEC20004;
-        Tue, 10 Mar 2020 18:33:51 +0000 (UTC)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 556C5240009;
+        Tue, 10 Mar 2020 18:33:57 +0000 (UTC)
 From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-mtd@lists.infradead.org
-Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Richard Weinberger <richard@nod.at>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mtd: rawnand: denali: deassert write protect pin
-Date:   Tue, 10 Mar 2020 19:33:51 +0100
-Message-Id: <20200310183351.20087-1-miquel.raynal@bootlin.com>
+To:     Christophe Kerello <christophe.kerello@st.com>,
+        miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com
+Cc:     linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com
+Subject: Re: mtd: rawnand: free the nand_device object
+Date:   Tue, 10 Mar 2020 19:33:56 +0100
+Message-Id: <20200310183356.20149-1-miquel.raynal@bootlin.com>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200127123934.11847-1-yamada.masahiro@socionext.com>
+In-Reply-To: <1579767768-32295-1-git-send-email-christophe.kerello@st.com>
 References: 
 MIME-Version: 1.0
 X-linux-mtd-patch-notification: thanks
-X-linux-mtd-patch-commit: 9afbe7c0140f663586edb6e823b616bd7076c00a
+X-linux-mtd-patch-commit: 009264605cdf1b12962c3a46f75818d05452e890
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-01-27 at 12:39:34 UTC, Masahiro Yamada wrote:
-> If the write protect signal from this IP is connected to the NAND
-> device, this IP can handle the WP# pin via the WRITE_PROTECT
-> register.
+On Thu, 2020-01-23 at 08:22:48 UTC, Christophe Kerello wrote:
+> This patch releases the resources allocated in nanddev_init function.
 > 
-> The Denali NAND Flash Memory Controller User's Guide describes
-> this register like follows:
-> 
->   When the controller is in reset, the WP# pin is always asserted
->   to the device. Once the reset is removed, the WP# is de-asserted.
->   The software will then have to come and program this bit to
->   assert/de-assert the same.
-> 
->     1 - Write protect de-assert
->     0 - Write protect assert
-> 
-> The default value is 1, so the write protect is de-asserted after
-> the reset is removed. The driver can write to the device unless
-> someone has explicitly cleared register before booting the kernel.
-> 
-> The boot ROM of some UniPhier SoCs (LD4, Pro4, sLD8, Pro5) is the
-> case; the boot ROM clears the WRITE_PROTECT register when the system
-> is booting from the NAND device, so the NAND device becomes read-only.
-> 
-> Set it to 1 in the driver in order to allow the write access to the
-> device.
-> 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> Fixes: a7ab085d7c16 ("mtd: rawnand: Initialize the nand_device object")
+> Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
 
 Applied to https://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git nand/next, thanks.
 
