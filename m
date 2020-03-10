@@ -2,520 +2,153 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8A75C18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 10:10:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C3B4C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 10:11:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C310222D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 10:10:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69F01222D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 10:11:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="ksPszvzi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726539AbgCJKK4 (ORCPT
+        id S1726582AbgCJKK6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 06:10:56 -0400
-Received: from mga05.intel.com ([192.55.52.43]:53433 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726437AbgCJKKw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 06:10:52 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Mar 2020 03:10:51 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,536,1574150400"; 
-   d="scan'208";a="288992361"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by FMSMGA003.fm.intel.com with ESMTP; 10 Mar 2020 03:10:48 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jBbqd-008Qzl-0B; Tue, 10 Mar 2020 12:10:51 +0200
-Date:   Tue, 10 Mar 2020 12:10:50 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Tobias Schramm <t.schramm@manjaro.org>
-Cc:     Sebastian Reichel <sre@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] power: supply: add CellWise cw2015 fuel gauge
- driver
-Message-ID: <20200310101050.GG1922688@smile.fi.intel.com>
-References: <20200309160346.2203680-1-t.schramm@manjaro.org>
- <20200309160346.2203680-3-t.schramm@manjaro.org>
+        Tue, 10 Mar 2020 06:10:58 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:42711 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726199AbgCJKKx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 06:10:53 -0400
+X-UUID: 34719fa14c37412c9cc979f9dea59a1f-20200310
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=a9EBRq1NN/wbj7E+tzJXbC0ZXvmXx8HMCccIA8ONyLc=;
+        b=ksPszvzikMIpUz/vunEAiKSC5Kzpc2bmpeq08pD3BuAF3j8jCtYbfR2Vfu2rp/3bBb6ciO3E7A83tgxxDLXP6JjJaXas7SmRAEL/HBxxCJWNt9yIcK0wsq7IiqqPTbFaSKXGJP83rQOG09gvEybkkl7Hp02ltTYeU+fiiso91OE=;
+X-UUID: 34719fa14c37412c9cc979f9dea59a1f-20200310
+Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
+        (envelope-from <hsin-hsiung.wang@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 922481140; Tue, 10 Mar 2020 18:10:46 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 10 Mar 2020 18:06:19 +0800
+Received: from mtksdaap41.mediatek.inc (172.21.77.4) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 10 Mar 2020 18:07:59 +0800
+From:   Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+CC:     Mark Rutland <mark.rutland@arm.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Eddie Huang <eddie.huang@mediatek.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>,
+        Frank Wunderlich <frank-w@public-files.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Richard Fontana <rfontana@redhat.com>,
+        Josef Friedl <josef.friedl@speed.at>,
+        Ran Bi <ran.bi@mediatek.com>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>,
+        <linux-rtc@vger.kernel.org>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        <srv_heupstream@mediatek.com>
+Subject: [PATCH v9 4/5] rtc: mt6397: Add support for the MediaTek MT6358 RTC
+Date:   Tue, 10 Mar 2020 18:10:39 +0800
+Message-ID: <1583835040-19157-5-git-send-email-hsin-hsiung.wang@mediatek.com>
+X-Mailer: git-send-email 2.6.4
+In-Reply-To: <1583835040-19157-1-git-send-email-hsin-hsiung.wang@mediatek.com>
+References: <1583835040-19157-1-git-send-email-hsin-hsiung.wang@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200309160346.2203680-3-t.schramm@manjaro.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain
+X-TM-SNTS-SMTP: CB323D5109DFD0B68FB40BAC4FE3119C2060C7528207A66DFE4B545D726C57412000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 09, 2020 at 05:03:46PM +0100, Tobias Schramm wrote:
-> This patch adds a driver for the CellWise cw2015 fuel gauge.
-> 
-> The CellWise cw2015 is a shuntless, single-cell Li-Ion fuel gauge used
-> in the pine64 Pinebook Pro laptop and some Raspberry Pi UPS HATs.
-
-...
-
->  F:	arch/powerpc/oprofile/*cell*
->  F:	arch/powerpc/platforms/cell/
->  
-> +CELLWISE CW2015 BATTERY DRIVER
-> +M:	Tobias Schrammm <t.schramm@manjaro.org>
-> +S:	Maintained
-> +F:	drivers/power/supply/cw2015_battery.c
-> +F:	Documentation/devicetree/bindings/power/supply/cw2015_battery.yaml
-> +
->  CEPH COMMON CODE (LIBCEPH)
->  M:	Ilya Dryomov <idryomov@gmail.com>
->  M:	Jeff Layton <jlayton@kernel.org>
-
-Run parse-mainteiners.pl and fix ordering issue in above.
-
-...
-
-> + * Authors: xuhuicong <xhc@rock-chips.com>
-> + * Authors: Tobias Schramm <tobias@t-sys.eu>
-
-> + *
-
-Redundant line.
-
-...
-
-> +#include <linux/delay.h>
-> +#include <linux/init.h>
-> +#include <linux/i2c.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-
-> +#include <linux/of_gpio.h>
-
-I think you need gpio/consumer.h.
-
-> +#include <linux/platform_device.h>
-> +#include <linux/power_supply.h>
-> +#include <linux/slab.h>
-> +#include <linux/timekeeping.h>
-> +#include <linux/workqueue.h>
-> +#include <linux/regmap.h>
-
-Perhaps keep above sorted?
-
-...
-
-> +#define CW2015_READ_TRIES		30
-> +#define CW2015_RESET_TRIES		5
-> +
-> +#define CW2015_REG_VERSION		0x0
-> +#define CW2015_REG_VCELL		0x2
-> +#define CW2015_REG_SOC			0x4
-> +#define CW2015_REG_RRT_ALERT		0x6
-> +#define CW2015_REG_CONFIG		0x8
-> +#define CW2015_REG_MODE			0xA
-> +#define CW2015_REG_BATINFO		0x10
-
-Use same width for all register offsets:
-	0x08
-etc.
-
-> +#define CW2015_MODE_SLEEP_MASK		(0x3<<6)
-> +#define CW2015_MODE_SLEEP		(0x3<<6)
-> +#define CW2015_MODE_NORMAL		(0x0<<6)
-> +#define CW2015_MODE_QUICK_START		(0x3<<4)
-> +#define CW2015_MODE_RESTART		(0xf<<0)
-> +
-> +#define CW2015_CONFIG_UPDATE_FLG	(0x01<<1)
-> +#define CW2015_ATHD(x)			((x)<<3)
-> +#define CW2015_MASK_ATHD		(0x1f<<3)
-> +#define CW2015_MASK_SOC			(0x1fff)
-
-GENMASK() and somebody missed a lot of white spaces above.
-
-> +#define CW2015_BATTERY_UP_MAX_CHANGE		(420 * 1000)
-> +#define CW2015_BATTERY_DOWN_MAX_CHANGE		(120 * 1000)
-> +#define CW2015_BATTERY_DOWN_CHANGE		60
-> +#define CW2015_BATTERY_DOWN_MIN_CHANGE_RUN	30
-> +#define CW2015_BATTERY_DOWN_MIN_CHANGE_SLEEP	1800
-> +#define CW2015_BATTERY_JUMP_TO_ZERO		(30 * 1000)
-> +#define CW2015_BATTERY_CAPACITY_ERROR		(40 * 1000)
-> +#define CW2015_BATTERY_CHARGING_ZERO		(1800 * 1000)
-
-What these multiplications about? We have time units in time.h (or time64.h).
-Moreover is a good tone to use units in the name of definitions. And try to
-shorten them, they are already quite long.
-
-> +#define CW2015_DEFAULT_MONITOR_MS		8000
-
-8 seconds? Any comments about this?
-
-...
-
-> +struct cw_battery {
-> +	struct i2c_client *client;
-
-Do you need this? Perhaps you can keep struct device from which you can easily
-retrive the client.
-
-> +};
-
-...
-
-> +#define PREFIX "cellwise,"
-
-We have pr_fmt() / dev_fmt() for this.
-
-> +#define cw_dbg(cw_bat, ...) dev_dbg(&(cw_bat)->client->dev, __VA_ARGS__)
-> +#define cw_info(cw_bat, ...) dev_info(&(cw_bat)->client->dev, __VA_ARGS__)
-> +#define cw_warn(cw_bat, ...) dev_warn(&(cw_bat)->client->dev, __VA_ARGS__)
-> +#define cw_err(cw_bat, ...) dev_err(&(cw_bat)->client->dev, __VA_ARGS__)
-
-No, please don't. It doesn't bring any value and makes this small driver harder to read.
-If you need shorten lines, simple use temporary variable.
-
-...
-
-> +static int cw_read(struct cw_battery *cw_bat, u8 reg, u8 *val)
-> +{
-> +	u32 tmp;
-> +	int ret;
-> +
-> +	ret = regmap_read(cw_bat->regmap, reg, &tmp);
-> +	*val = tmp;
-> +	return ret;
-> +}
-> +
-> +static int cw_write(struct cw_battery *cw_bat, u8 reg, const u8 val)
-> +{
-> +	return regmap_write(cw_bat->regmap, reg, val);
-> +}
-
-This two has no value. Why?
-
-...
-
-> +static int cw_read_word(struct cw_battery *cw_bat, u8 reg, u16 *val)
-> +{
-> +	u8 reg_val[2];
-> +	int ret;
-> +
-> +	ret = regmap_raw_read(cw_bat->regmap, reg, reg_val, 2);
-> +	*val = (reg_val[0] << 8) + reg_val[1];
-> +	return ret;
-> +}
-
-NIH BE type of readings? Can REGMAP_ENDIAN_BIG help?
-
-> +static int cw_read_bulk(struct cw_battery *cw_bat, u8 reg, u8 *buf, size_t len)
-> +{
-> +	return regmap_raw_read(cw_bat->regmap, reg, buf, len);
-> +}
-
-No value.
-
-> +static int cw_write_bulk(struct cw_battery *cw_bat, u8 reg, u8 const *buf,
-> +				size_t len)
-> +{
-> +	return regmap_raw_write(cw_bat->regmap, reg, buf, len);
-> +}
-
-Ditto.
-
-> +int cw_update_config_info(struct cw_battery *cw_bat)
-> +{
-> +	int ret;
-> +	u8 reg_val;
-> +	u8 reset_val;
-> +
-> +	if (!cw_bat->bat_config_info) {
-> +		cw_err(cw_bat,
-> +			"No battery config info provided, can't update flash contents");
-> +		return -EINVAL;
-> +	}
-> +
-> +	/* make sure gauge is not in sleep mode */
-> +	ret = cw_read(cw_bat, CW2015_REG_MODE, &reg_val);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	reset_val = reg_val;
-> +	if ((reg_val & CW2015_MODE_SLEEP_MASK) == CW2015_MODE_SLEEP) {
-> +		cw_err(cw_bat,
-> +			"Device is in sleep mode, can't update battery info");
-> +		return -EINVAL;
-> +	}
-> +
-> +	/* write new battery info */
-> +	ret = cw_write_bulk(cw_bat, CW2015_REG_BATINFO,
-> +				cw_bat->bat_config_info,
-> +				CW2015_SIZE_BATINFO);
-
-> +
-
-Redundant line.
-
-> +	if (ret < 0)
-> +		return ret;
-
-All above comparison (and a lot below) are against negative return code, have
-you checked if positive is ever possible (AFAIR no, they are not possible).
-
-> +	reg_val |= CW2015_CONFIG_UPDATE_FLG;	/* set UPDATE_FLAG */
-> +	reg_val &= ~CW2015_MASK_ATHD;	/* clear alert level */
-> +	reg_val |= CW2015_ATHD(cw_bat->alert_level);	/* set alert level */
-
-All comments can be replaced with one on top of three
-
-	/* Update alert level */
-
-> +	ret = cw_write(cw_bat, CW2015_REG_CONFIG, reg_val);
-> +	if (ret < 0)
-> +		return ret;
-> +
-
-> +	/* reset */
-
-Useless.
-
-> +	reset_val &= ~(CW2015_MODE_RESTART);
-
-Too many parentheses.
-
-Note all my comments should be applied to all similar places in the code, even
-if I didn't comment them explicitly.
-
-> +	reg_val = reset_val | CW2015_MODE_RESTART;
-> +	ret = cw_write(cw_bat, CW2015_REG_MODE, reg_val);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	msleep(20);
-> +	ret = cw_write(cw_bat, CW2015_REG_MODE, reset_val);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	cw_dbg(cw_bat, "Battery config updated");
-> +
-> +	return 0;
-> +}
-
-...
-
-I didn't review some parts because of style issues. Please, fix all of them and
-send v2.
-
-...
-
-> +	msleep(20);
-
-
-This big delay has to be explained.
-
-...
-
-> +	} else if (charging_5_loop != 0) {
-
-Useless conditional.
-
-> +		charging_5_loop = 0;
-> +	}
-
-...
-
-> +	voltage = avg * 312 / 1024;
-
-All calculations like that better to be explained (like: "Data sheet provides
-a formula to normalize raw value ... bla bla bla").
-
-...
-
-> +	else if (cw_bat->capacity != cw_capacity) {
-> +		cw_bat->capacity = cw_capacity;
-
-> +	else if (cw_bat->voltage != ret)
-> +		cw_bat->voltage = ret;
-
-Too many useless conditionals.
-
-...
-
-> +			// calculate remaining capacity
-
-> +			// estimate current based on time to empty (in minutes)
-
-You need to choose one comment style over the code.
-
-...
-
-> +#ifdef CONFIG_OF
-
-You didn't have of.h in the inclusion block, why do you have this?
-
-Hint: you can easily drop this dependency by using fwnode / device property
-API.
-
-> +static int cw2015_parse_dt(struct cw_battery *cw_bat)
-> +{
-> +	struct device *dev = &cw_bat->client->dev;
-> +	struct device_node *node = dev->of_node;
-> +	struct property *prop;
-> +	int length;
-> +	u32 value;
-> +	int ret;
-> +
-> +	if (!node)
-> +		return -ENODEV;
-> +
-
-> +	prop = of_find_property(node, PREFIX"bat-config-info", &length);
-
-No, no, please always spell explicitly name of nodes / properties / etc.
-
-> +	if (prop) {
-> +		if (length != CW2015_SIZE_BATINFO) {
-> +			cw_err(cw_bat, "bat-config-info must be %d bytes",
-> +				CW2015_SIZE_BATINFO);
-> +			return -EINVAL;
-> +		}
-> +
-> +		cw_bat->bat_config_info =
-> +			devm_kzalloc(dev, CW2015_SIZE_BATINFO, GFP_KERNEL);
-> +		if (!cw_bat->bat_config_info) {
-> +			cw_err(cw_bat,
-> +				"Failed to allocate memory for battery config info");
-> +			return -ENOMEM;
-> +		}
-> +
-> +		ret = of_property_read_u8_array(node, PREFIX"bat-config-info",
-> +						 cw_bat->bat_config_info,
-> +						 CW2015_SIZE_BATINFO);
-> +		if (ret < 0)
-> +			return ret;
-> +	} else
-> +		cw_warn(cw_bat,
-> +			"No bat-config-info found, rolling with current flash contents");
-> +
-> +	cw_bat->monitor_sec = CW2015_DEFAULT_MONITOR_MS;
-> +
-> +	ret = of_property_read_u32(node, PREFIX"monitor-interval-ms", &value);
-> +	if (ret >= 0) {
-> +		cw_dbg(cw_bat, "Overriding default monitor-interval with %u ms",
-> +			value);
-> +		cw_bat->monitor_sec = value;
-> +	}
-> +
-> +	return 0;
-> +}
-> +#else
-> +static int cw2015_parse_dt(struct cw_battery *cw_bat)
-> +{
-> +	return -ENODEV;
-> +}
-> +#endif
-
-...
-
-> +static const struct regmap_range regmap_ranges_wr_yes[] = {
-> +	regmap_reg_range(CW2015_REG_RRT_ALERT, CW2015_REG_CONFIG),
-> +	regmap_reg_range(CW2015_REG_MODE, CW2015_REG_MODE),
-
-> +	regmap_reg_range(CW2015_REG_BATINFO, CW2015_REG_BATINFO +
-> +				CW2015_SIZE_BATINFO - 1),
-
-Much better to split differently, i.e.
-
-	regmap_reg_range(CW2015_REG_BATINFO,
-			 CW2015_REG_BATINFO + CW2015_SIZE_BATINFO - 1),
-
-> +};
-
-...
-
-> +	cw_dbg(cw_bat, "cw2015/cw2013 driver probe success");
-
-Noise.
-
-...
-
-> +#ifdef CONFIG_PM
-
-Can be replaced by __maybe_unused attribute to the below functions.
-
-> +static int cw_bat_suspend(struct device *dev)
-> +{
-> +	struct i2c_client *client = to_i2c_client(dev);
-> +	struct cw_battery *cw_bat = i2c_get_clientdata(client);
-> +
-> +	ktime_get_boottime_ts64(&cw_bat->suspend_time_before);
-> +	cancel_delayed_work_sync(&cw_bat->battery_delay_work);
-> +	return 0;
-> +}
-> +
-> +static int cw_bat_resume(struct device *dev)
-> +{
-> +	struct i2c_client *client = to_i2c_client(dev);
-> +	struct cw_battery *cw_bat = i2c_get_clientdata(client);
-> +
-> +	cw_bat->suspend_resume_mark = 1;
-> +	ktime_get_boottime_ts64(&cw_bat->after);
-> +	cw_bat->after = timespec64_sub(cw_bat->after,
-> +				     cw_bat->suspend_time_before);
-> +	queue_delayed_work(cw_bat->battery_workqueue,
-> +			   &cw_bat->battery_delay_work, msecs_to_jiffies(2));
-> +	return 0;
-> +}
-> +
-
-> +static const struct dev_pm_ops cw_bat_pm_ops = {
-> +	.suspend  = cw_bat_suspend,
-> +	.resume   = cw_bat_resume,
-> +};
-
-Use proper helper macro from pm.h instead of above.
-
-> +#endif
-
-...
-
-> +	cw_dbg(cw_bat, "Removing device");
-
-Noise.
-
-> +	cancel_delayed_work(&cw_bat->battery_delay_work);
-
-Are you sure you have no scheduled work after that?
-
-...
-
-> +static const struct of_device_id cw2015_of_match[] = {
-> +	{ .compatible = PREFIX"cw2015" },
-
-> +	{ },
-
-No need to have comma for terminator line.
-
-> +};
-
-...
-
-> +#ifdef CONFIG_PM
-> +		.pm = &cw_bat_pm_ops,
-> +#endif
-
-Drop this ifdefery and use proper helper macro above.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+RnJvbTogUmFuIEJpIDxyYW4uYmlAbWVkaWF0ZWsuY29tPg0KDQpUaGlzIGFkZCBzdXBwb3J0IGZv
+ciB0aGUgTWVkaWFUZWsgTVQ2MzU4IFJUQy4gRHJpdmVyIHVzaW5nDQpjb21wYXRpYmxlIGRhdGEg
+dG8gc3RvcmUgZGlmZmVyZW50IFJUQ19XUlRHUiBhZGRyZXNzIG9mZnNldC4NClRoaXMgcmVwbGFj
+ZSBSVENfV1JUR1IgdG8gUlRDX1dSVEdSX01UNjMyMyBpbiBtdDYzMjMtcG93ZXJvZmYNCmRyaXZl
+ciB3aGljaCBvbmx5IG5lZWRlZCBieSBhcm12NyBDUFUgd2l0aG91dCBBVEYuDQoNClNpZ25lZC1v
+ZmYtYnk6IFJhbiBCaSA8cmFuLmJpQG1lZGlhdGVrLmNvbT4NClNpZ25lZC1vZmYtYnk6IEhzaW4t
+SHNpdW5nIFdhbmcgPGhzaW4taHNpdW5nLndhbmdAbWVkaWF0ZWsuY29tPg0KLS0tDQogZHJpdmVy
+cy9wb3dlci9yZXNldC9tdDYzMjMtcG93ZXJvZmYuYyB8ICAyICstDQogZHJpdmVycy9ydGMvcnRj
+LW10NjM5Ny5jICAgICAgICAgICAgICB8IDI0ICsrKysrKysrKysrKysrKystLS0tLS0tLQ0KIGlu
+Y2x1ZGUvbGludXgvbWZkL210NjM5Ny9ydGMuaCAgICAgICAgfCAxNyArKysrKysrKysrKysrKysr
+LQ0KIDMgZmlsZXMgY2hhbmdlZCwgMzMgaW5zZXJ0aW9ucygrKSwgMTAgZGVsZXRpb25zKC0pDQoN
+CmRpZmYgLS1naXQgYS9kcml2ZXJzL3Bvd2VyL3Jlc2V0L210NjMyMy1wb3dlcm9mZi5jIGIvZHJp
+dmVycy9wb3dlci9yZXNldC9tdDYzMjMtcG93ZXJvZmYuYw0KaW5kZXggMWNhZjQzZC4uMDUzMjgw
+MyAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvcG93ZXIvcmVzZXQvbXQ2MzIzLXBvd2Vyb2ZmLmMNCisr
+KyBiL2RyaXZlcnMvcG93ZXIvcmVzZXQvbXQ2MzIzLXBvd2Vyb2ZmLmMNCkBAIC0zMCw3ICszMCw3
+IEBAIHN0YXRpYyB2b2lkIG10NjMyM19kb19wd3JvZmYodm9pZCkNCiAJaW50IHJldDsNCiANCiAJ
+cmVnbWFwX3dyaXRlKHB3cmMtPnJlZ21hcCwgcHdyYy0+YmFzZSArIFJUQ19CQlBVLCBSVENfQkJQ
+VV9LRVkpOw0KLQlyZWdtYXBfd3JpdGUocHdyYy0+cmVnbWFwLCBwd3JjLT5iYXNlICsgUlRDX1dS
+VEdSLCAxKTsNCisJcmVnbWFwX3dyaXRlKHB3cmMtPnJlZ21hcCwgcHdyYy0+YmFzZSArIFJUQ19X
+UlRHUl9NVDYzMjMsIDEpOw0KIA0KIAlyZXQgPSByZWdtYXBfcmVhZF9wb2xsX3RpbWVvdXQocHdy
+Yy0+cmVnbWFwLA0KIAkJCQkJcHdyYy0+YmFzZSArIFJUQ19CQlBVLCB2YWwsDQpkaWZmIC0tZ2l0
+IGEvZHJpdmVycy9ydGMvcnRjLW10NjM5Ny5jIGIvZHJpdmVycy9ydGMvcnRjLW10NjM5Ny5jDQpp
+bmRleCBjZGEyMzhkLi5iYzU3N2VmIDEwMDY0NA0KLS0tIGEvZHJpdmVycy9ydGMvcnRjLW10NjM5
+Ny5jDQorKysgYi9kcml2ZXJzL3J0Yy9ydGMtbXQ2Mzk3LmMNCkBAIC05LDE4ICs5LDMwIEBADQog
+I2luY2x1ZGUgPGxpbnV4L21mZC9tdDYzOTcvY29yZS5oPg0KICNpbmNsdWRlIDxsaW51eC9tb2R1
+bGUuaD4NCiAjaW5jbHVkZSA8bGludXgvbXV0ZXguaD4NCisjaW5jbHVkZSA8bGludXgvb2ZfZGV2
+aWNlLmg+DQogI2luY2x1ZGUgPGxpbnV4L3BsYXRmb3JtX2RldmljZS5oPg0KICNpbmNsdWRlIDxs
+aW51eC9yZWdtYXAuaD4NCiAjaW5jbHVkZSA8bGludXgvcnRjLmg+DQogI2luY2x1ZGUgPGxpbnV4
+L21mZC9tdDYzOTcvcnRjLmg+DQogI2luY2x1ZGUgPGxpbnV4L21vZF9kZXZpY2V0YWJsZS5oPg0K
+IA0KK3N0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIG10NjM5N19ydGNfb2ZfbWF0Y2hb
+XSA9IHsNCisJeyAuY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDYzMjMtcnRjIiwNCisJCS5kYXRh
+ID0gKHZvaWQgKikmbXQ2Mzk3X3J0Y19kYXRhLCB9LA0KKwl7IC5jb21wYXRpYmxlID0gIm1lZGlh
+dGVrLG10NjM1OC1ydGMiLA0KKwkJLmRhdGEgPSAodm9pZCAqKSZtdDYzNThfcnRjX2RhdGEsIH0s
+DQorCXsgLmNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ2Mzk3LXJ0YyIsDQorCQkuZGF0YSA9ICh2
+b2lkICopJm10NjM5N19ydGNfZGF0YSwgfSwNCisJe30NCit9Ow0KK01PRFVMRV9ERVZJQ0VfVEFC
+TEUob2YsIG10NjM5N19ydGNfb2ZfbWF0Y2gpOw0KKw0KIHN0YXRpYyBpbnQgbXRrX3J0Y193cml0
+ZV90cmlnZ2VyKHN0cnVjdCBtdDYzOTdfcnRjICpydGMpDQogew0KIAlpbnQgcmV0Ow0KIAl1MzIg
+ZGF0YTsNCiANCi0JcmV0ID0gcmVnbWFwX3dyaXRlKHJ0Yy0+cmVnbWFwLCBydGMtPmFkZHJfYmFz
+ZSArIFJUQ19XUlRHUiwgMSk7DQorCXJldCA9IHJlZ21hcF93cml0ZShydGMtPnJlZ21hcCwgcnRj
+LT5hZGRyX2Jhc2UgKyBydGMtPmRhdGEtPndydGdyLCAxKTsNCiAJaWYgKHJldCA8IDApDQogCQly
+ZXR1cm4gcmV0Ow0KIA0KQEAgLTI2OSw2ICsyODEsOSBAQCBzdGF0aWMgaW50IG10a19ydGNfcHJv
+YmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCiAJcmVzID0gcGxhdGZvcm1fZ2V0X3Jl
+c291cmNlKHBkZXYsIElPUkVTT1VSQ0VfTUVNLCAwKTsNCiAJcnRjLT5hZGRyX2Jhc2UgPSByZXMt
+PnN0YXJ0Ow0KIA0KKwlydGMtPmRhdGEgPSAoc3RydWN0IG10a19ydGNfZGF0YSAqKQ0KKwkJCW9m
+X2RldmljZV9nZXRfbWF0Y2hfZGF0YSgmcGRldi0+ZGV2KTsNCisNCiAJcnRjLT5pcnEgPSBwbGF0
+Zm9ybV9nZXRfaXJxKHBkZXYsIDApOw0KIAlpZiAocnRjLT5pcnEgPCAwKQ0KIAkJcmV0dXJuIHJ0
+Yy0+aXJxOw0KQEAgLTMyNSwxMyArMzQwLDYgQEAgc3RhdGljIGludCBtdDYzOTdfcnRjX3Jlc3Vt
+ZShzdHJ1Y3QgZGV2aWNlICpkZXYpDQogc3RhdGljIFNJTVBMRV9ERVZfUE1fT1BTKG10NjM5N19w
+bV9vcHMsIG10NjM5N19ydGNfc3VzcGVuZCwNCiAJCQltdDYzOTdfcnRjX3Jlc3VtZSk7DQogDQot
+c3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgbXQ2Mzk3X3J0Y19vZl9tYXRjaFtdID0g
+ew0KLQl7IC5jb21wYXRpYmxlID0gIm1lZGlhdGVrLG10NjMyMy1ydGMiLCB9LA0KLQl7IC5jb21w
+YXRpYmxlID0gIm1lZGlhdGVrLG10NjM5Ny1ydGMiLCB9LA0KLQl7IH0NCi19Ow0KLU1PRFVMRV9E
+RVZJQ0VfVEFCTEUob2YsIG10NjM5N19ydGNfb2ZfbWF0Y2gpOw0KLQ0KIHN0YXRpYyBzdHJ1Y3Qg
+cGxhdGZvcm1fZHJpdmVyIG10a19ydGNfZHJpdmVyID0gew0KIAkuZHJpdmVyID0gew0KIAkJLm5h
+bWUgPSAibXQ2Mzk3LXJ0YyIsDQpkaWZmIC0tZ2l0IGEvaW5jbHVkZS9saW51eC9tZmQvbXQ2Mzk3
+L3J0Yy5oIGIvaW5jbHVkZS9saW51eC9tZmQvbXQ2Mzk3L3J0Yy5oDQppbmRleCA3ZGZiNjNiLi4z
+ZGM0OGU4IDEwMDY0NA0KLS0tIGEvaW5jbHVkZS9saW51eC9tZmQvbXQ2Mzk3L3J0Yy5oDQorKysg
+Yi9pbmNsdWRlL2xpbnV4L21mZC9tdDYzOTcvcnRjLmgNCkBAIC0xOCw3ICsxOCw5IEBADQogI2Rl
+ZmluZSBSVENfQkJQVV9DQlVTWSAgICAgICAgIEJJVCg2KQ0KICNkZWZpbmUgUlRDX0JCUFVfS0VZ
+ICAgICAgICAgICAgKDB4NDMgPDwgOCkNCiANCi0jZGVmaW5lIFJUQ19XUlRHUiAgICAgICAgICAg
+ICAgMHgwMDNjDQorI2RlZmluZSBSVENfV1JUR1JfTVQ2MzU4ICAgICAgIDB4M2ENCisjZGVmaW5l
+IFJUQ19XUlRHUl9NVDYzOTcgICAgICAgMHgzYw0KKyNkZWZpbmUgUlRDX1dSVEdSX01UNjMyMyAg
+ICAgICBSVENfV1JUR1JfTVQ2Mzk3DQogDQogI2RlZmluZSBSVENfSVJRX1NUQSAgICAgICAgICAg
+IDB4MDAwMg0KICNkZWZpbmUgUlRDX0lSUV9TVEFfQUwgICAgICAgICBCSVQoMCkNCkBAIC02NSw2
+ICs2NywxMCBAQA0KICNkZWZpbmUgTVRLX1JUQ19QT0xMX0RFTEFZX1VTICAxMA0KICNkZWZpbmUg
+TVRLX1JUQ19QT0xMX1RJTUVPVVQgICAoamlmZmllc190b191c2VjcyhIWikpDQogDQorc3RydWN0
+IG10a19ydGNfZGF0YSB7DQorCXUzMgkJCXdydGdyOw0KK307DQorDQogc3RydWN0IG10NjM5N19y
+dGMgew0KIAlzdHJ1Y3QgZGV2aWNlICAgICAgICAgICAqZGV2Ow0KIAlzdHJ1Y3QgcnRjX2Rldmlj
+ZSAgICAgICAqcnRjX2RldjsNCkBAIC03NCw2ICs4MCwxNSBAQCBzdHJ1Y3QgbXQ2Mzk3X3J0YyB7
+DQogCXN0cnVjdCByZWdtYXAgICAgICAgICAgICpyZWdtYXA7DQogCWludCAgICAgICAgICAgICAg
+ICAgICAgIGlycTsNCiAJdTMyICAgICAgICAgICAgICAgICAgICAgYWRkcl9iYXNlOw0KKwljb25z
+dCBzdHJ1Y3QgbXRrX3J0Y19kYXRhICpkYXRhOw0KK307DQorDQorc3RhdGljIGNvbnN0IHN0cnVj
+dCBtdGtfcnRjX2RhdGEgbXQ2MzU4X3J0Y19kYXRhID0gew0KKwkud3J0Z3IgPSBSVENfV1JUR1Jf
+TVQ2MzU4LA0KK307DQorDQorc3RhdGljIGNvbnN0IHN0cnVjdCBtdGtfcnRjX2RhdGEgbXQ2Mzk3
+X3J0Y19kYXRhID0gew0KKwkud3J0Z3IgPSBSVENfV1JUR1JfTVQ2Mzk3LA0KIH07DQogDQogI2Vu
+ZGlmIC8qIF9MSU5VWF9NRkRfTVQ2Mzk3X1JUQ19IXyAqLw0KLS0gDQoyLjYuNA0K
 
