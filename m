@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A59EC18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:00:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39F73C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:00:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C969820674
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:00:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F9DA20674
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:00:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583845231;
-	bh=KWUWdMBADgn5gMykUcybBQ4xBivDbrrAUduc1Xak4GE=;
+	s=default; t=1583845234;
+	bh=drD9BmDnYOiF+wounImhcJd5qTAl34ML2BjUO+0KUXM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DKHb490W0i26OnhrEqFeZWMs6YfWQ0Tbx7+/UO55TBOla7u7gPiEozSkJi/bNTfGB
-	 CsLwVBLCxFNVmqGWBRuJ0uIkjNvvEv4tREKvkqDetSV8gszxmaWqhTHazTB+kKhq8Y
-	 lH7gfvYeCAlJcmvR1RuFpqGXnkgZYWDAlPCWHs34=
+	b=q9kGoZRauEuJznUlYXXScQzJPGiCH9SWAfu4zEEpoUb3FHhvii08MhoGZQL/blA7F
+	 p+70y4PpftAj73u9DEcZ2Ib1VYLI9QoWgMsgPoTT3RNYzGJ/1WvJmHQ57c4rM+n+We
+	 KxMMkNTnaQ4s4aEdS59ncyaowhgZQWkXMxSXzTdo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730137AbgCJNAb (ORCPT
+        id S1727901AbgCJNAd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:00:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41212 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:00:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41266 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730129AbgCJNA1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:00:27 -0400
+        id S1729982AbgCJNAa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:00:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8321E20674;
-        Tue, 10 Mar 2020 13:00:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E5D5D20674;
+        Tue, 10 Mar 2020 13:00:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845226;
-        bh=KWUWdMBADgn5gMykUcybBQ4xBivDbrrAUduc1Xak4GE=;
+        s=default; t=1583845229;
+        bh=drD9BmDnYOiF+wounImhcJd5qTAl34ML2BjUO+0KUXM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2VEdeM0gMEcRcbnAq3wmoXs/FFFUsbAoLCgztiyNUTOiIgwf3/SDhPpSYoZlyixk5
-         ZAsTjj5HnES1ksWcOmYJPLaHmODHAOzpFKh18DiWTbBvB6WDWHeXUN7Pt6EgBFA4Ug
-         QGhxPJQmy5sQlBoCfukKaTaQjhmrDWmSEfiW/ko4=
+        b=mjbjyBniByoBiz9VXCMCKQm9/r2LEmLafsCrVC+GtHtx+FSzp6VE6hLnhDDv9Gl38
+         KDU3tL4KogncDh/qeIU31vlHOaDbtMTT4TSgvB2bLIT798SW6fKPRs//5+hMCeUV7T
+         njDkDLkhc6+3QfV9vb6dW8QO+JkCAZEUF3+lNc7Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Niklas Schnelle <schnelle@linux.ibm.com>,
-        Pierre Morel <pmorel@linux.ibm.com>,
+        stable@vger.kernel.org,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>
-Subject: [PATCH 5.5 106/189] s390/pci: Fix unexpected write combine on resource
-Date:   Tue, 10 Mar 2020 13:39:03 +0100
-Message-Id: <20200310123650.411911992@linuxfoundation.org>
+Subject: [PATCH 5.5 107/189] s390/mm: fix panic in gup_fast on large pud
+Date:   Tue, 10 Mar 2020 13:39:04 +0100
+Message-Id: <20200310123650.508914716@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123639.608886314@linuxfoundation.org>
 References: <20200310123639.608886314@linuxfoundation.org>
@@ -60,50 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Niklas Schnelle <schnelle@linux.ibm.com>
+From: Gerald Schaefer <gerald.schaefer@de.ibm.com>
 
-commit df057c914a9c219ac8b8ed22caf7da2f80c1fe26 upstream.
+commit 582b4e55403e053d8a48ff687a05174da9cc3fb0 upstream.
 
-In the initial MIO support introduced in
+On s390 there currently is no implementation of pud_write(). That was ok
+as long as we had our own implementation of get_user_pages_fast() which
+checked for pud protection by testing the bit directly w/o using
+pud_write(). The other callers of pud_write() are not reachable on s390.
 
-commit 71ba41c9b1d9 ("s390/pci: provide support for MIO instructions")
+After commit 1a42010cdc26 ("s390/mm: convert to the generic
+get_user_pages_fast code") we use the generic get_user_pages_fast(), which
+does call pud_write() in pud_access_permitted() for FOLL_WRITE access on
+a large pud. Without an s390 specific pud_write(), the generic version is
+called, which contains a BUG() statement to remind us that we don't have a
+proper implementation. This results in a kernel panic.
 
-zpci_map_resource() and zpci_setup_resources() default to using the
-mio_wb address as the resource's start address. This means users of the
-mapping, which includes most drivers, will get write combining on PCI
-Stores. This may lead to problems when drivers expect write through
-behavior when not using an explicit ioremap_wc().
+Fix this by providing an implementation of pud_write().
 
-Cc: stable@vger.kernel.org
-Fixes: 71ba41c9b1d9 ("s390/pci: provide support for MIO instructions")
-Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
-Reviewed-by: Pierre Morel <pmorel@linux.ibm.com>
+Cc: <stable@vger.kernel.org> # 5.2+
+Fixes: 1a42010cdc26 ("s390/mm: convert to the generic get_user_pages_fast code")
+Signed-off-by: Gerald Schaefer <gerald.schaefer@de.ibm.com>
+Reviewed-by: Heiko Carstens <heiko.carstens@de.ibm.com>
 Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/s390/pci/pci.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/s390/include/asm/pgtable.h |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/arch/s390/pci/pci.c
-+++ b/arch/s390/pci/pci.c
-@@ -424,7 +424,7 @@ static void zpci_map_resources(struct pc
+--- a/arch/s390/include/asm/pgtable.h
++++ b/arch/s390/include/asm/pgtable.h
+@@ -750,6 +750,12 @@ static inline int pmd_write(pmd_t pmd)
+ 	return (pmd_val(pmd) & _SEGMENT_ENTRY_WRITE) != 0;
+ }
  
- 		if (zpci_use_mio(zdev))
- 			pdev->resource[i].start =
--				(resource_size_t __force) zdev->bars[i].mio_wb;
-+				(resource_size_t __force) zdev->bars[i].mio_wt;
- 		else
- 			pdev->resource[i].start = (resource_size_t __force)
- 				pci_iomap_range_fh(pdev, i, 0, 0);
-@@ -531,7 +531,7 @@ static int zpci_setup_bus_resources(stru
- 			flags |= IORESOURCE_MEM_64;
- 
- 		if (zpci_use_mio(zdev))
--			addr = (unsigned long) zdev->bars[i].mio_wb;
-+			addr = (unsigned long) zdev->bars[i].mio_wt;
- 		else
- 			addr = ZPCI_ADDR(entry);
- 		size = 1UL << zdev->bars[i].size;
++#define pud_write pud_write
++static inline int pud_write(pud_t pud)
++{
++	return (pud_val(pud) & _REGION3_ENTRY_WRITE) != 0;
++}
++
+ static inline int pmd_dirty(pmd_t pmd)
+ {
+ 	return (pmd_val(pmd) & _SEGMENT_ENTRY_DIRTY) != 0;
 
 
