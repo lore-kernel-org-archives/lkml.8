@@ -2,287 +2,124 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D33CC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:16:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FF18C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:17:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4903F2467D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:16:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Xk4Nropd"
+	by mail.kernel.org (Postfix) with ESMTP id 3CF1324686
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:17:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726385AbgCJMQw (ORCPT
+        id S1726438AbgCJMRy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:16:52 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:38547 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726211AbgCJMQv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:16:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583842609;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=HBJ5h02t1XBacqVRLa8/tjxigZnxj6mvBCIXpcgjcyM=;
-        b=Xk4Nropd6SrIORZlGe1xwsYrG3lBkGODNsyrk4/9dc2C6TuGZ/DTjbNusfgvyhRb1H2gAd
-        rQkk5YZ/cyH1hMY6XNK69oP+5hLZ/1Y1p3Kyu0OikoSQuv1t3PCNXJmjQl9yBA7uYxXvv0
-        vozSAqc2/xPKU8g0NiyfIDnriMDZeFg=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-232-u-hHExN9Mw2NSW2A7qvvbw-1; Tue, 10 Mar 2020 08:16:48 -0400
-X-MC-Unique: u-hHExN9Mw2NSW2A7qvvbw-1
-Received: by mail-qt1-f198.google.com with SMTP id f25so8955074qtp.12
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 05:16:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=HBJ5h02t1XBacqVRLa8/tjxigZnxj6mvBCIXpcgjcyM=;
-        b=TaGr3yW1NyDD0ZqSB6JaiWOo+Fyp7oUPojuxq2HSQKM96ygjnDAbMK9NQctK/yppz2
-         jcU1q42MuWN+2nZLhZohrntxIq51A8e5YgRPG84tTo/R3vibPeWr+gMbvtu4Z0TIxjYX
-         adTxP5+8HJD3kRMR4tlh/7NVQSQ0M/qSjeAryzKB5bux3B9CC0oNztDKNGYn6tx4jyZP
-         zNow9rzgnYpZTk34+rr8FkPJT+OF9PMskWIFpqAllkCHhhE8UnlaBk2BWXoNXDisWXjV
-         O23zs72Hiidw4PsQuOvOIQ1Vs+6RH5LgH7kbpEQgfGNgG0qKq5E3eTKB7sADLmyY0mnj
-         c1HA==
-X-Gm-Message-State: ANhLgQ3TixtCYio/1rWe/THNwq3D3gKDJi8MDVE9mVt0WP4f224EDAnK
-        g5HtdLZFQH/KdpwILh+HMGQrKmBdcXQPFsYT+0lfqg6YQqFxLIv26CteXjP1KqcRBy/qIa4QcJx
-        YA2LFlmHLdhfgL6R/ujoKwv0k
-X-Received: by 2002:ac8:4e91:: with SMTP id 17mr19204533qtp.133.1583842605220;
-        Tue, 10 Mar 2020 05:16:45 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vsTFMO2DVmVDOKBX1ZKtKCIPsKMKeNIFpQSDDWYB39XUebWYbZ7eXcfC4GZXS3KFds1h10ZRw==
-X-Received: by 2002:ac8:4e91:: with SMTP id 17mr19204480qtp.133.1583842604637;
-        Tue, 10 Mar 2020 05:16:44 -0700 (PDT)
-Received: from redhat.com (bzq-79-178-2-19.red.bezeqint.net. [79.178.2.19])
-        by smtp.gmail.com with ESMTPSA id d22sm4226347qte.93.2020.03.10.05.16.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Mar 2020 05:16:43 -0700 (PDT)
-Date:   Tue, 10 Mar 2020 08:16:38 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Anup Patel <anup.patel@wdc.com>
-Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Anup Patel <anup@brainfault.org>, linux-kernel@vger.kernel.org,
-        Atish Patra <atish.patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        linux-riscv@lists.infradead.org
-Subject: Re: [PATCH] RISC-V: Only select essential drivers for SOC_VIRT config
-Message-ID: <20200310081558-mutt-send-email-mst@kernel.org>
-References: <20200310115925.126174-1-anup.patel@wdc.com>
+        Tue, 10 Mar 2020 08:17:54 -0400
+Received: from foss.arm.com ([217.140.110.172]:34848 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726211AbgCJMRy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:17:54 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1B1ED30E;
+        Tue, 10 Mar 2020 05:17:53 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 593743F67D;
+        Tue, 10 Mar 2020 05:17:52 -0700 (PDT)
+Date:   Tue, 10 Mar 2020 12:17:47 +0000
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Theodore Ts'o <tytso@mit.edu>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: build warning after merge of the random tree
+Message-ID: <20200310121747.GA49602@lakrids.cambridge.arm.com>
+References: <20200302144452.6a7c4907@canb.auug.org.au>
+ <20200306155348.7bdc9622@canb.auug.org.au>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200310115925.126174-1-anup.patel@wdc.com>
+In-Reply-To: <20200306155348.7bdc9622@canb.auug.org.au>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 10, 2020 at 05:29:25PM +0530, Anup Patel wrote:
-> The kconfig select causes build failues for SOC_VIRT config becaus
-> we are selecting lot of VIRTIO drivers without selecting all required
-> dependencies.
+On Fri, Mar 06, 2020 at 03:53:48PM +1100, Stephen Rothwell wrote:
+> Hi all,
 > 
-> Better approach is to only select essential drivers from SOC_VIRT
-> config option and enable required VIRTIO drivers using defconfigs.
+> On Mon, 2 Mar 2020 14:44:52 +1100 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+> >
+> > After merging the random tree, today's linux-next build (x86_64
+> > allnoconfig) produced this warning:
+> > 
+> > drivers/char/random.c:820:13: warning: 'crng_initialize_secondary' defined but not used [-Wunused-function]
+> >   820 | static void crng_initialize_secondary(struct crng_state *crng)
+> >       |             ^~~~~~~~~~~~~~~~~~~~~~~~~
+> > 
+> > Introduced by commit
+> > 
+> >   5cbe0f13b51a ("random: split primary/secondary crng init paths")
 > 
-> Fixes: 759bdc168181 ("RISC-V: Add kconfig option for QEMU virt machine")
-> Signed-off-by: Anup Patel <anup.patel@wdc.com>
+> I am still getting this warning.
 
-Yea makes sense.
+Sorry, this is my bad.
 
-Acked-by: Michael S. Tsirkin <mst@redhat.com>
+We only call crng_initialize_secondary() in do_numa_crng_init(), which
+is only built for CONFIG_NUMA. We can either drop both
+crng_initialize_secondary() and crng_init_try_arch() under the
+CONFIG_NUMA ifdef, or add __maybe_unused to crng_initialize_secondary().
 
-> ---
->  arch/riscv/Kconfig.socs           | 14 --------------
->  arch/riscv/configs/defconfig      | 16 +++++++++++++++-
->  arch/riscv/configs/rv32_defconfig | 16 +++++++++++++++-
->  3 files changed, 30 insertions(+), 16 deletions(-)
-> 
-> diff --git a/arch/riscv/Kconfig.socs b/arch/riscv/Kconfig.socs
-> index 3078b2de0b2d..a131174a0a77 100644
-> --- a/arch/riscv/Kconfig.socs
-> +++ b/arch/riscv/Kconfig.socs
-> @@ -12,20 +12,6 @@ config SOC_SIFIVE
->  
->  config SOC_VIRT
->         bool "QEMU Virt Machine"
-> -       select VIRTIO_PCI
-> -       select VIRTIO_BALLOON
-> -       select VIRTIO_MMIO
-> -       select VIRTIO_CONSOLE
-> -       select VIRTIO_NET
-> -       select NET_9P_VIRTIO
-> -       select VIRTIO_BLK
-> -       select SCSI_VIRTIO
-> -       select DRM_VIRTIO_GPU
-> -       select HW_RANDOM_VIRTIO
-> -       select RPMSG_CHAR
-> -       select RPMSG_VIRTIO
-> -       select CRYPTO_DEV_VIRTIO
-> -       select VIRTIO_INPUT
->         select POWER_RESET_SYSCON
->         select POWER_RESET_SYSCON_POWEROFF
->         select GOLDFISH
-> diff --git a/arch/riscv/configs/defconfig b/arch/riscv/configs/defconfig
-> index c8f084203067..2557c5372a25 100644
-> --- a/arch/riscv/configs/defconfig
-> +++ b/arch/riscv/configs/defconfig
-> @@ -31,6 +31,7 @@ CONFIG_IP_PNP_BOOTP=y
->  CONFIG_IP_PNP_RARP=y
->  CONFIG_NETLINK_DIAG=y
->  CONFIG_NET_9P=y
-> +CONFIG_NET_9P_VIRTIO=y
->  CONFIG_PCI=y
->  CONFIG_PCIEPORTBUS=y
->  CONFIG_PCI_HOST_GENERIC=y
-> @@ -38,12 +39,15 @@ CONFIG_PCIE_XILINX=y
->  CONFIG_DEVTMPFS=y
->  CONFIG_DEVTMPFS_MOUNT=y
->  CONFIG_BLK_DEV_LOOP=y
-> +CONFIG_VIRTIO_BLK=y
->  CONFIG_BLK_DEV_SD=y
->  CONFIG_BLK_DEV_SR=y
-> +CONFIG_SCSI_VIRTIO=y
->  CONFIG_ATA=y
->  CONFIG_SATA_AHCI=y
->  CONFIG_SATA_AHCI_PLATFORM=y
->  CONFIG_NETDEVICES=y
-> +CONFIG_VIRTIO_NET=y
->  CONFIG_MACB=y
->  CONFIG_E1000E=y
->  CONFIG_R8169=y
-> @@ -54,13 +58,16 @@ CONFIG_SERIAL_8250_CONSOLE=y
->  CONFIG_SERIAL_OF_PLATFORM=y
->  CONFIG_SERIAL_EARLYCON_RISCV_SBI=y
->  CONFIG_HVC_RISCV_SBI=y
-> +CONFIG_VIRTIO_CONSOLE=y
->  CONFIG_HW_RANDOM=y
-> +CONFIG_HW_RANDOM_VIRTIO=y
->  CONFIG_SPI=y
->  CONFIG_SPI_SIFIVE=y
->  # CONFIG_PTP_1588_CLOCK is not set
->  CONFIG_POWER_RESET=y
->  CONFIG_DRM=y
->  CONFIG_DRM_RADEON=y
-> +CONFIG_DRM_VIRTIO_GPU=y
->  CONFIG_FRAMEBUFFER_CONSOLE=y
->  CONFIG_USB=y
->  CONFIG_USB_XHCI_HCD=y
-> @@ -74,6 +81,12 @@ CONFIG_USB_UAS=y
->  CONFIG_MMC=y
->  CONFIG_MMC_SPI=y
->  CONFIG_RTC_CLASS=y
-> +CONFIG_VIRTIO_PCI=y
-> +CONFIG_VIRTIO_BALLOON=y
-> +CONFIG_VIRTIO_INPUT=y
-> +CONFIG_VIRTIO_MMIO=y
-> +CONFIG_RPMSG_CHAR=y
-> +CONFIG_RPMSG_VIRTIO=y
->  CONFIG_EXT4_FS=y
->  CONFIG_EXT4_FS_POSIX_ACL=y
->  CONFIG_AUTOFS4_FS=y
-> @@ -88,16 +101,17 @@ CONFIG_NFS_V4_2=y
->  CONFIG_ROOT_NFS=y
->  CONFIG_9P_FS=y
->  CONFIG_CRYPTO_USER_API_HASH=y
-> +CONFIG_CRYPTO_DEV_VIRTIO=y
->  CONFIG_PRINTK_TIME=y
->  CONFIG_DEBUG_FS=y
->  CONFIG_DEBUG_PAGEALLOC=y
-> +CONFIG_SCHED_STACK_END_CHECK=y
->  CONFIG_DEBUG_VM=y
->  CONFIG_DEBUG_VM_PGFLAGS=y
->  CONFIG_DEBUG_MEMORY_INIT=y
->  CONFIG_DEBUG_PER_CPU_MAPS=y
->  CONFIG_SOFTLOCKUP_DETECTOR=y
->  CONFIG_WQ_WATCHDOG=y
-> -CONFIG_SCHED_STACK_END_CHECK=y
->  CONFIG_DEBUG_TIMEKEEPING=y
->  CONFIG_DEBUG_RT_MUTEXES=y
->  CONFIG_DEBUG_SPINLOCK=y
-> diff --git a/arch/riscv/configs/rv32_defconfig b/arch/riscv/configs/rv32_defconfig
-> index a844920a261f..0292879a9690 100644
-> --- a/arch/riscv/configs/rv32_defconfig
-> +++ b/arch/riscv/configs/rv32_defconfig
-> @@ -31,6 +31,7 @@ CONFIG_IP_PNP_BOOTP=y
->  CONFIG_IP_PNP_RARP=y
->  CONFIG_NETLINK_DIAG=y
->  CONFIG_NET_9P=y
-> +CONFIG_NET_9P_VIRTIO=y
->  CONFIG_PCI=y
->  CONFIG_PCIEPORTBUS=y
->  CONFIG_PCI_HOST_GENERIC=y
-> @@ -38,12 +39,15 @@ CONFIG_PCIE_XILINX=y
->  CONFIG_DEVTMPFS=y
->  CONFIG_DEVTMPFS_MOUNT=y
->  CONFIG_BLK_DEV_LOOP=y
-> +CONFIG_VIRTIO_BLK=y
->  CONFIG_BLK_DEV_SD=y
->  CONFIG_BLK_DEV_SR=y
-> +CONFIG_SCSI_VIRTIO=y
->  CONFIG_ATA=y
->  CONFIG_SATA_AHCI=y
->  CONFIG_SATA_AHCI_PLATFORM=y
->  CONFIG_NETDEVICES=y
-> +CONFIG_VIRTIO_NET=y
->  CONFIG_MACB=y
->  CONFIG_E1000E=y
->  CONFIG_R8169=y
-> @@ -54,11 +58,14 @@ CONFIG_SERIAL_8250_CONSOLE=y
->  CONFIG_SERIAL_OF_PLATFORM=y
->  CONFIG_SERIAL_EARLYCON_RISCV_SBI=y
->  CONFIG_HVC_RISCV_SBI=y
-> +CONFIG_VIRTIO_CONSOLE=y
->  CONFIG_HW_RANDOM=y
-> +CONFIG_HW_RANDOM_VIRTIO=y
->  # CONFIG_PTP_1588_CLOCK is not set
->  CONFIG_POWER_RESET=y
->  CONFIG_DRM=y
->  CONFIG_DRM_RADEON=y
-> +CONFIG_DRM_VIRTIO_GPU=y
->  CONFIG_FRAMEBUFFER_CONSOLE=y
->  CONFIG_USB=y
->  CONFIG_USB_XHCI_HCD=y
-> @@ -70,6 +77,12 @@ CONFIG_USB_OHCI_HCD_PLATFORM=y
->  CONFIG_USB_STORAGE=y
->  CONFIG_USB_UAS=y
->  CONFIG_RTC_CLASS=y
-> +CONFIG_VIRTIO_PCI=y
-> +CONFIG_VIRTIO_BALLOON=y
-> +CONFIG_VIRTIO_INPUT=y
-> +CONFIG_VIRTIO_MMIO=y
-> +CONFIG_RPMSG_CHAR=y
-> +CONFIG_RPMSG_VIRTIO=y
->  CONFIG_EXT4_FS=y
->  CONFIG_EXT4_FS_POSIX_ACL=y
->  CONFIG_AUTOFS4_FS=y
-> @@ -84,16 +97,17 @@ CONFIG_NFS_V4_2=y
->  CONFIG_ROOT_NFS=y
->  CONFIG_9P_FS=y
->  CONFIG_CRYPTO_USER_API_HASH=y
-> +CONFIG_CRYPTO_DEV_VIRTIO=y
->  CONFIG_PRINTK_TIME=y
->  CONFIG_DEBUG_FS=y
->  CONFIG_DEBUG_PAGEALLOC=y
-> +CONFIG_SCHED_STACK_END_CHECK=y
->  CONFIG_DEBUG_VM=y
->  CONFIG_DEBUG_VM_PGFLAGS=y
->  CONFIG_DEBUG_MEMORY_INIT=y
->  CONFIG_DEBUG_PER_CPU_MAPS=y
->  CONFIG_SOFTLOCKUP_DETECTOR=y
->  CONFIG_WQ_WATCHDOG=y
-> -CONFIG_SCHED_STACK_END_CHECK=y
->  CONFIG_DEBUG_TIMEKEEPING=y
->  CONFIG_DEBUG_RT_MUTEXES=y
->  CONFIG_DEBUG_SPINLOCK=y
-> -- 
-> 2.17.1
-> 
-> 
+Ted, does the below look ok to you? Or would you prefer moving things
+under the ifdeffery?
+
+Thanks,
+Mark.
+
+---->8----
+From 6c3a35cd562d53066e11f5f8a6c3a6f63701d3ed Mon Sep 17 00:00:00 2001
+From: Mark Rutland <mark.rutland@arm.com>
+Date: Tue, 10 Mar 2020 12:09:12 +0000
+Subject: [PATCH] random: avoid warnings for !CONFIG_NUMA builds
+
+As crng_initialize_secondary() is only called by do_numa_crng_init(),
+and the latter is under ifdeffery for CONFIG_NUMA, when CONFIG_NUMA is
+not selected the compiler will warn that the former is unused:
+
+| drivers/char/random.c:820:13: warning: 'crng_initialize_secondary' defined but not used [-Wunused-function]
+|   820 | static void crng_initialize_secondary(struct crng_state *crng)
+|       |             ^~~~~~~~~~~~~~~~~~~~~~~~~
+
+Stephen reports that this happens for x86_64 noallconfig builds.
+
+We could move crng_initialize_secondary() and crng_init_try_arch() under
+the CONFIG_NUMA ifdeffery, but this has the unfortunate property of
+separating them from crng_initialize_primary() and
+crng_init_try_arch_early() respectively. Instead, let's mark
+crng_initialize_secondary() as __maybe_unused.
+
+Fixes: 5cbe0f13b51a ("random: split primary/secondary crng init paths")
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+Cc: Theodore Ts'o <tytso@mit.edu>
+---
+ drivers/char/random.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/char/random.c b/drivers/char/random.c
+index f43f65c2195d..0d10e31fd342 100644
+--- a/drivers/char/random.c
++++ b/drivers/char/random.c
+@@ -817,7 +817,7 @@ static bool __init crng_init_try_arch_early(struct crng_state *crng)
+ 	return arch_init;
+ }
+ 
+-static void crng_initialize_secondary(struct crng_state *crng)
++static void __maybe_unused crng_initialize_secondary(struct crng_state *crng)
+ {
+ 	memcpy(&crng->state[0], "expand 32-byte k", 16);
+ 	_get_random_bytes(&crng->state[4], sizeof(__u32) * 12);
+-- 
+2.11.0
 
