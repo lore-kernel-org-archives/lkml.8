@@ -2,265 +2,212 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3E6BC18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:43:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A8A2C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:44:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 758F920663
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:43:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3DDB20663
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:44:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="eHf9WnjY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726467AbgCJUns (ORCPT
+        id S1727082AbgCJUoM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 16:43:48 -0400
-Received: from mga05.intel.com ([192.55.52.43]:36264 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726271AbgCJUns (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 16:43:48 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Mar 2020 13:43:47 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,538,1574150400"; 
-   d="scan'208";a="236174271"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga008.jf.intel.com with ESMTP; 10 Mar 2020 13:43:46 -0700
-Received: from [10.7.201.16] (skuppusw-desk.jf.intel.com [10.7.201.16])
-        by linux.intel.com (Postfix) with ESMTP id 7F4AE58010D;
-        Tue, 10 Mar 2020 13:43:46 -0700 (PDT)
-Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [PATCH v17 09/12] PCI/AER: Allow clearing Error Status Register
- in FF mode
-To:     Austin.Bolen@dell.com, helgaas@kernel.org
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com
-References: <20200310193257.GA170043@google.com>
- <38277b0f6c2e4c5d88e741b7354c72d1@AUSX13MPC107.AMER.DELL.COM>
-From:   Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Organization: Intel
-Message-ID: <8289f9b3-b9eb-6a80-1271-3db9aeef5161@linux.intel.com>
-Date:   Tue, 10 Mar 2020 13:41:22 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 10 Mar 2020 16:44:12 -0400
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:52544 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726273AbgCJUoM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 16:44:12 -0400
+Received: by mail-pj1-f67.google.com with SMTP id f15so922714pjq.2
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 13:44:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=099TGIbMGOF3GLWL/lcf16vXSWx45mM4eXf6iexqK48=;
+        b=eHf9WnjYVqdE3DUP7usldr/Zn8V1+Arq8UsrYtew5+29RS2x609pIGI1hnVIsnD1a7
+         Xw7DIDoceUaWSr8wHASF9JD5ass2A0tQ6Fz8HXxuf2yNUsJvmiWSpk2Sp3FUBjBm7vzs
+         U0PMba7d6qyGRdRQBOV5q7h2Qx2RgU6AzQn3I=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=099TGIbMGOF3GLWL/lcf16vXSWx45mM4eXf6iexqK48=;
+        b=dSzkJt1aIxCA1K5WiDwDee8fyLXH2ib1sffbuEvXwMwKjgo71plxiXBrs+Qyx1bfka
+         iSmdqTN9/pzM9Ycd32D5U6Zaye+bsBDEWW+58rEMSZe/314kUGblKktl3Io09GkJ4wwG
+         47BZN3jbU2wGnwhNuMo9yo5E+v/s2O7x4QDZMf2P1XDfRp4XQjg0olaEG3OfimhviNRL
+         yYE6DHqdZnVP7mFsnmgYINgE4otY/jfQsO8vSbqYF4K9cOF5BdvFAgQHC1MdtrZ6kmB5
+         r0Ew430bREpDydbMt0wz6TH+x1IrFEdnMw6U6rCaD9HSiDy3UZoiWyMEd/Yo7EdWVIXg
+         HqNg==
+X-Gm-Message-State: ANhLgQ0BMkpZtNigkf0j4OlLmESnOE1QH5gAA4xs88sb7NtzAPSgMgXc
+        2RujER1p/I7izDxzUNzmTMHZgA==
+X-Google-Smtp-Source: ADFU+vueXlCI7IpLmS/tzrctbYyGFJWCavdSXGaTgdpbGe7iJ4PA/I36iG3t3Co2w1uOjvrwaTysEw==
+X-Received: by 2002:a17:902:ac83:: with SMTP id h3mr22299518plr.86.1583873050871;
+        Tue, 10 Mar 2020 13:44:10 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id w206sm6074394pfc.54.2020.03.10.13.44.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Mar 2020 13:44:10 -0700 (PDT)
+Date:   Tue, 10 Mar 2020 13:44:09 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Andrei Vagin <avagin@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Yuyang Du <duyuyang@gmail.com>,
+        David Hildenbrand <david@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        David Howells <dhowells@redhat.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christian Kellner <christian@kellner.me>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>
+Subject: Re: [PATCH v2 4/5] exec: Move exec_mmap right after de_thread in
+ flush_old_exec
+Message-ID: <202003101337.AC1A30576@keescook>
+References: <87v9nlii0b.fsf@x220.int.ebiederm.org>
+ <AM6PR03MB5170609D44967E044FD1BE40E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87a74xi4kz.fsf@x220.int.ebiederm.org>
+ <AM6PR03MB51705AA3009B4986BB6EF92FE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87r1y8dqqz.fsf@x220.int.ebiederm.org>
+ <AM6PR03MB517053AED7DC89F7C0704B7DE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <AM6PR03MB51703B44170EAB4626C9B2CAE4E20@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87tv32cxmf.fsf_-_@x220.int.ebiederm.org>
+ <87v9ne5y4y.fsf_-_@x220.int.ebiederm.org>
+ <875zfe5xzb.fsf_-_@x220.int.ebiederm.org>
 MIME-Version: 1.0
-In-Reply-To: <38277b0f6c2e4c5d88e741b7354c72d1@AUSX13MPC107.AMER.DELL.COM>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <875zfe5xzb.fsf_-_@x220.int.ebiederm.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Sun, Mar 08, 2020 at 04:38:00PM -0500, Eric W. Biederman wrote:
+> 
+> I have read through the code in exec_mmap and I do not see anything
+> that depends on sighand or the sighand lock, or on signals in anyway
+> so this should be safe.
+> 
+> This rearrangement of code has two siginficant benefits.  It makes
+> the determination of passing the point of no return by testing bprm->mm
+> accurate.  All failures prior to that point in flush_old_exec are
+> either truly recoverable or they are fatal.
 
-On 3/10/20 1:06 PM, Austin.Bolen@dell.com wrote:
-> On 3/10/2020 2:33 PM, Bjorn Helgaas wrote:
->> [EXTERNAL EMAIL]
->>
->> On Tue, Mar 10, 2020 at 06:14:20PM +0000, Austin.Bolen@dell.com wrote:
->>> On 3/9/2020 11:28 PM, Kuppuswamy, Sathyanarayanan wrote:
->>>> On 3/9/2020 7:40 PM, Bjorn Helgaas wrote:
->>>>> [+cc Austin, tentative Linux patches on this git branch:
->>>>> https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/tree/drivers/pci/pcie?h=review/edr]
->>>>>
->>>>> On Tue, Mar 03, 2020 at 06:36:32PM -0800, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
->>>>>> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->>>>>>
->>>>>> As per PCI firmware specification r3.2 System Firmware Intermediary
->>>>>> (SFI) _OSC and DPC Updates ECR
->>>>>> (https://members.pcisig.com/wg/PCI-SIG/document/13563), sec titled "DPC
->>>>>> Event Handling Implementation Note", page 10, Error Disconnect Recover
->>>>>> (EDR) support allows OS to handle error recovery and clearing Error
->>>>>> Registers even in FF mode. So create new API pci_aer_raw_clear_status()
->>>>>> which allows clearing AER registers without FF mode checks.
->>>>> I see that this ECR was released as an ECN a few days ago:
->>>>> https://members.pcisig.com/wg/PCI-SIG/document/14076
->>>>> Regrettably the title in the PDF still says "ECR" (the rendered title
->>>>> *page* says "ENGINEERING CHANGE NOTIFICATION", but some metadata
->>>>> buried in the file says "ECR - SFI _OSC Support and DPC Updates".
->>> I'll see if PCI-SIG can update the metadata and repost.
->> If that's possible, it would be nice to update the metadata for the
->> "Downstream Port Containment related Enhancements" ECN as well.  That
->> one currently says "ECR - CardBus Header Proposal", which means that's
->> what's in the window title bar and icons in the panel.
-> Sure, I'll check.
->
->>>>> Anyway, I think I see the note you refer to (now on page 12):
->>>>>
->>>>>       IMPLEMENTATION NOTE
->>>>>       DPC Event Handling
->>>>>
->>>>>       The flow chart below documents the behavior when firmware maintains
->>>>>       control of AER and DPC and grants control of PCIe Hot-Plug to the
->>>>>       operating system.
->>>>>
->>>>>       ...
->>>>>
->>>>>       Capture and clear device AER status. OS may choose to offline
->>>>>       devices3, either via SW (not load driver) or HW (power down device,
->>>>>       disable Link5,6,7). Otherwise process _HPX, complete device
->>>>>       enumeration, load drivers
->>>>>
->>>>> This clearly suggests that the OS should clear device AER status.
->>>>> However, according to the intro text, firmware has retained control of
->>>>> AER, so what gives the OS the right to clear AER status?
->>>>>
->>>>> The Downstream Port Containment Related Enhancements ECN (sec 4.5.1,
->>>>> table 4-6) contains an exception that allows the OS to read/write
->>>>> DPC registers during recovery.  But
->>>>>
->>>>>       - that is for *DPC* registers, not for AER registers, and
->>>>>
->>>>>       - that exception only applies between OS receipt of the EDR
->>>>>         notification and OS release of DPC by clearing the DPC Trigger
->>>>>         Status bit.
->>>>>
->>>>> The flowchart in the SFI ECN shows the OS releasing DPC before
->>>>> clearing AER status:
->>>>>
->>>>>       - Receive EDR notification
->>>>>
->>>>>       - Cleanup - Notify and unload child drivers below Port
->>>>>
->>>>>       - Bring Port out of DPC, clear port error status, assign bus numbers
->>>>>         to child devices.
->>>>>
->>>>>         I assume this box includes clearing DPC error status and clearing
->>>>>         Trigger Status?  They seem to be out of order in the box.
->>> OS clears the DPC Trigger Status bit which will bring port below it out
->>> of containment. Then OS will clear the "port" error status bits (i.e.,
->>> the AER and DPC status bits in the root port or downstream port that
->>> triggered containment). I don't think it would hurt to do this two steps
->>> in reverse order but don't think it is necessary. Note that error status
->>> bits for devices below the port in containment are cleared later after
->>> f/w has a chance to log them.
->> Maybe I'm misreading the DPC enhancements ECN.  I think it says the OS
->> can read/write DPC registers until it clears the DPC Trigger Status.
->> If the OS clears Trigger Status first, my understanding is that we're
->> now out of the EDR notification processing window and the OS is not
->> permitted to write DPC registers.
->>
->> If it's OK for the OS to clear Trigger Status before clearing DPC
->> error status, what is the event that determines when the OS may no
->> longer read/write the DPC registers?
-> I think there are a few different registers to consider... DPC Control,
-> DPC Status, various AER registers, and the RP PIO registers. At this
-> point in the flow, the firmware has already had a chance to read all of
-> them and so it really doesn't matter the order the OS does those two
-> things. The firmware isn't going to get notified again until _OST so by
-> then both operation will be done and system firmware will have no idea
-> which order the OS did them in, nor will it care.  But since the
-> existing normative text specifies and order, I would just follow that.
-I think the correct order is to clear the port error status *before clearing
-the DPC status trigger*.
+Agreed. Though I see a use of "current", which maybe you want to
+parameterize to a "me" argument in acct_arg_size(). (Though looking at
+the callers, perhaps there is no benefit?)
 
-Please check the following spec reference (change to 4.5.1 Table 4-6)
+> 
+> Futher this consolidates all of the possible indefinite waits for
+> userspace together at the top of flush_old_exec.  The possible wait
+> for a ptracer on PTRACE_EVENT_EXIT, the possible wait for a page fault
+> to be resolved in clear_child_tid, and the possible wait for a page
+> fault in exit_robust_list.
+> 
+> This consolidation allows the creation of a mutex to replace
+> cred_guard_mutex that is not held of possible indefinite userspace
+> waits.  Which will allow removing deadlock scenarios from the kernel.
+> 
+> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+> ---
+>  fs/exec.c | 24 ++++++++++++------------
+>  1 file changed, 12 insertions(+), 12 deletions(-)
+> 
+> diff --git a/fs/exec.c b/fs/exec.c
+> index 215d86f77b63..d820a7272a76 100644
+> --- a/fs/exec.c
+> +++ b/fs/exec.c
+> @@ -1272,18 +1272,6 @@ int flush_old_exec(struct linux_binprm * bprm)
+>  	if (retval)
+>  		goto out;
+>  
+> -#ifdef CONFIG_POSIX_TIMERS
+> -	exit_itimers(me->signal);
+> -	flush_itimer_signals();
+> -#endif
 
-the OS is permitted to read or write DPC Control and Status registers of a
-port while processing an Error Disconnect Recover notification from firmware
-on that port. Error Disconnect Recover notification processing begins 
-with the
-Error Disconnect Recover notify from Firmware, and *ends when the OS 
-releases
-DPC by clearing the DPC Trigger Status bit*.Firmware can read DPC Trigger
-Status bit to determine the ownership of DPC Control and Status 
-registers. Firmware
-is not permitted to write to DPC Control and Status registers if DPC 
-Trigger Status is
-set i.e. the link is in DPC state. *Outside of the Error Disconnect 
-Recover notification
-processing window, the OS is not permitted to modify DPC Control or 
-Status registers*;
-only firmware is allowed to.
+I think this comment:
 
-Since the EDR processing window ends with clearing DPC Trigger status 
-bit, OS needs to
-clear DPC and AER registers before it ends.
+/*
+ * This is called by do_exit or de_thread, only when there are no more
+ * references to the shared signal_struct.
+ */
+void exit_itimers(struct signal_struct *sig)
 
-Austin,
+Refers to there being other threads, yes? Not that the signal table is
+private yet?
 
-I think the order needs to be reversed in the implementation note.
->
->>>>>       - Evaluate _OST
->>>>>
->>>>>       - Capture and clear device AER status.
->>>>>
->>>>>         This seems suspect to me.  Where does it say the OS is
->>>>>         allowed to write AER status when firmware retains control
->>>>>         of AER?
->>>>>
->>>>> This patch series does things in this order:
->>>>>
->>>>>       - Receive EDR notification (edr_handle_event(), edr.c)
->>>>>
->>>>>       - Read, log, and clear DPC error regs (dpc_process_error(),
->>>>>         dpc.c).
->>>>>
->>>>>         This also clears AER uncorrectable error status when the
->>>>>         relevant HEST entries do not have the FIRMWARE_FIRST bit
->>>>>         set.  I think this is incorrect: the test should be based
->>>>>         the _OSC negotiation for AER ownership, not on the HEST
->>>>>         entries.  But this problem pre-dates this patch series.
->>>>>
->>>>>       - Clear AER status (pci_aer_raw_clear_status(), aer.c).
->>>>>
->>>>>         This is at least inside the EDR recovery window, but again,
->>>>>         I don't see where it says the OS is allowed to write the
->>>>>         AER status.
->>>> Implementation note is the only reference we have regarding
->>>> clearing the AER registers.
->>>>
->>>> But since the spec says both DPC and AER needs to be always
->>>> controlled together by the either OS or firmware, and when
->>>> firmware relinquishes control over DPC registers in EDR
->>>> notification window, we can assume that we also have control over
->>>> AER registers.
->>>>
->>>> But I agree that is not explicitly spelled out any where outside
->>>> the implementation note.
->> This is all quite unsatisfying since implementation notes are not
->> normative.  I would far rather reference actual spec text.
-> Yes, the change I mention below would be to add normative text.
->
->>>> Austin,
->>>>
->>>> May be ECN (section 4.5.1, table 4-6) needs to be updated to add
->>>> this clarification.
->>> Sure we can update to section 4.5.1, table 4-6 to indicate when OS
->>> can clear the AER status bits. It will just follow what's done in
->>> the implementation note so I think it's acceptable to follow
->>> implementation guidance for now.
->> There are no events after the "clear device AER status" box.  That
->> seems to mean the OS can write the AER status registers at any time.
->> But the whole implementation note assumes firmware maintains control
->> of AER.
->>
-> In this model the OS doesn't own DPC or AER but the model allows OS to
-> touch both DPC and AER registers at certain times.  I would view
-> ownership in this case as who is the primary owner and not who is the
-> sole entity allowed to access the registers.
->
-> For the normative text describing when OS clears the AER bits following
-> the informative flow chart, it could say that OS clears AER as soon as
-> possible after OST returns and before OS processes _HPX and loading
-> drivers.  Open to other suggestions as well.
-I think its better to have another handshake between OS and
-firmware to avoid unnecessary races.
->
->>>>>       - Attempt recovery (pcie_do_recovery(), err.c)
->>>>>
->>>>>       - Clear DPC Trigger Status (dpc_reset_link(), dpc.c)
->>>>>
->>>>>       - Evaluate _OST (acpi_send_edr_status(), edr.c)
->>>>>
->>>>> What am I missing?
+> -
+> -	/*
+> -	 * Make the signal table private.
+> -	 */
+> -	retval = unshare_sighand(me);
+> -	if (retval)
+> -		goto out;
+> -
+>  	/*
+>  	 * Must be called _before_ exec_mmap() as bprm->mm is
+>  	 * not visibile until then. This also enables the update
+> @@ -1307,6 +1295,18 @@ int flush_old_exec(struct linux_binprm * bprm)
+>  	 */
+>  	bprm->mm = NULL;
+>  
+> +#ifdef CONFIG_POSIX_TIMERS
+> +	exit_itimers(me->signal);
+> +	flush_itimer_signals();
+> +#endif
+
+I've mostly convinced myself that there are no "side-effects" from having
+these timers expire as the mm is going away. I think some kind of comment
+of that intent should be explicitly stated here above the timer work.
+
+Beyond that:
+
+Reviewed-by: Kees Cook <keescook@chromium.org>
+
+-Kees
+
+> +
+> +	/*
+> +	 * Make the signal table private.
+> +	 */
+> +	retval = unshare_sighand(me);
+> +	if (retval)
+> +		goto out;
+> +
+>  	set_fs(USER_DS);
+>  	me->flags &= ~(PF_RANDOMIZE | PF_FORKNOEXEC | PF_KTHREAD |
+>  					PF_NOFREEZE | PF_NO_SETAFFINITY);
+> -- 
+> 2.25.0
+> 
 
 -- 
-Sathyanarayanan Kuppuswamy
-Linux kernel developer
-
+Kees Cook
