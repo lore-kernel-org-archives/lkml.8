@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8633EC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:55:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19036C18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:55:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 591312253D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:55:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFC1E2467D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:55:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583844945;
-	bh=ag3c6GVTu3Y1a+XFsrgA2806COetS2Xnz2jc0AH61aw=;
+	s=default; t=1583844950;
+	bh=XEXZZ3AeeRBg3Un5BwVmquNRa4spPwv3uB1xz132X1Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gMrX76fhAqqwsh5PO2glq2SxMiADQApvvupmavVqvcQ61uPWmPvaaIc18nRA4Z48g
-	 zCxkLJiwh+mbVnTOezUQ2QGi09YS9YEjaHJCi5OJ6JcXgWTpuiZjYepWpG3RwVvsc8
-	 /4Nzil7cDR4W5jKwy9SgYex4ZTlnDbNnqmLl46fM=
+	b=PInJuHSTi7O0rqae8RLSv25yMnoz/Fy6H0lSMf5axzuV416RpMOQ4a7hVeeJXwB90
+	 YUGBbCpdPkZXi7+u3IAIYNhb/Gp8ydDUmYzHVDWkoV6xnKgh+fVAhu9ia/ZZ/3RCg1
+	 1hMfHczOgHM2iuFH4yqiT8V0fyygMpigKtRuK2ow=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729320AbgCJMzo (ORCPT
+        id S1729568AbgCJMzt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:55:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34510 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:55:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729552AbgCJMzi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:55:38 -0400
+        id S1728220AbgCJMzm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:55:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB16820674;
-        Tue, 10 Mar 2020 12:55:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9BCA22253D;
+        Tue, 10 Mar 2020 12:55:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844938;
-        bh=ag3c6GVTu3Y1a+XFsrgA2806COetS2Xnz2jc0AH61aw=;
+        s=default; t=1583844942;
+        bh=XEXZZ3AeeRBg3Un5BwVmquNRa4spPwv3uB1xz132X1Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ytDr+7GQqjJF7FWGjLDZ7kIbNdsqcdmB+yeEOp6dpBckzRGuhKexRHcNHzppbs5W8
-         NxGOPGSUsqgfD3r+3Or5HpjlbhYXxTtB/+GNC4emZlzr51xBGjLmz3LVE40NgfNpNq
-         WRleMCV1XaFJgZ060jg9GzGr+FpUR1Xlm5xcNxQQ=
+        b=u0Jjc5XqDaPhUbCZYHDvu1A5KpZ7/5MPaedSluOAP30xHgvXqLQTRnGz0Q79ubVe4
+         q2ZofHJzWDmr8cDjT06zTlQ/6LOYznBHurIX8lUs2dn9mo6VFINC1VAozLKf8xEe/b
+         PsW6hWm4BBStZaAQ870GNFnl3iiGdNjqzp62TaS0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Suman Anna <s-anna@ti.com>,
-        Tony Lindgren <tony@atomide.com>
-Subject: [PATCH 5.4 156/168] ARM: dts: dra7xx-clocks: Fixup IPU1 mux clock parent source
-Date:   Tue, 10 Mar 2020 13:40:02 +0100
-Message-Id: <20200310123651.318646878@linuxfoundation.org>
+        stable@vger.kernel.org, Sanchayan Maity <maitysanchayan@gmail.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Johan Hovold <johan@kernel.org>,
+        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+Subject: [PATCH 5.4 157/168] ARM: dts: imx6dl-colibri-eval-v3: fix sram compatible properties
+Date:   Tue, 10 Mar 2020 13:40:03 +0100
+Message-Id: <20200310123651.426820011@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123635.322799692@linuxfoundation.org>
 References: <20200310123635.322799692@linuxfoundation.org>
@@ -59,59 +62,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suman Anna <s-anna@ti.com>
+From: Johan Hovold <johan@kernel.org>
 
-commit 78722d37b2b4cf9178295e2aa5510880e6135fd7 upstream.
+commit bcbf53a0dab50980867476994f6079c1ec5bb3a3 upstream.
 
-The IPU1 functional clock is the output of a mux clock (represented
-by ipu1_gfclk_mux previously) and the clock source for this has been
-updated to be sourced from dpll_core_h22x2_ck in commit 39879c7d963e
-("ARM: dts: dra7xx-clocks: Source IPU1 functional clock from CORE DPLL").
-ipu1_gfclk_mux is an obsolete clock now with the clkctrl conversion,
-and this clock source parenting is lost during the new clkctrl layout
-conversion.
+The sram-node compatible properties have mistakingly combined the
+model-specific string with the generic "mtd-ram" string.
 
-Remove this stale clock and fix up the clock source for this mux
-clock using the latest equivalent clkctrl clock. This restores the
-previous logic and ensures that the IPU1 continues to run at the
-same frequency of IPU2 and independent of the ABE DPLL.
+Note that neither "cy7c1019dv33-10zsxi, mtd-ram" or
+"cy7c1019dv33-10zsxi" are used by any in-kernel driver and they are
+not present in any binding.
 
-Fixes: b5f8ffbb6fad ("ARM: dts: dra7: convert to use new clkctrl layout")
-Signed-off-by: Suman Anna <s-anna@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+The physmap driver will however bind to platform devices that specify
+"mtd-ram".
+
+Fixes: fc48e76489fd ("ARM: dts: imx6: Add support for Toradex Colibri iMX6 module")
+Cc: Sanchayan Maity <maitysanchayan@gmail.com>
+Cc: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Reviewed-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/boot/dts/dra7xx-clocks.dtsi |   12 ++----------
- 1 file changed, 2 insertions(+), 10 deletions(-)
+ arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/arch/arm/boot/dts/dra7xx-clocks.dtsi
-+++ b/arch/arm/boot/dts/dra7xx-clocks.dtsi
-@@ -796,16 +796,6 @@
- 		clock-div = <1>;
- 	};
+--- a/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts
++++ b/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts
+@@ -236,7 +236,7 @@
  
--	ipu1_gfclk_mux: ipu1_gfclk_mux@520 {
--		#clock-cells = <0>;
--		compatible = "ti,mux-clock";
--		clocks = <&dpll_abe_m2x2_ck>, <&dpll_core_h22x2_ck>;
--		ti,bit-shift = <24>;
--		reg = <0x0520>;
--		assigned-clocks = <&ipu1_gfclk_mux>;
--		assigned-clock-parents = <&dpll_core_h22x2_ck>;
--	};
--
- 	dummy_ck: dummy_ck {
- 		#clock-cells = <0>;
- 		compatible = "fixed-clock";
-@@ -1564,6 +1554,8 @@
- 			compatible = "ti,clkctrl";
- 			reg = <0x20 0x4>;
- 			#clock-cells = <2>;
-+			assigned-clocks = <&ipu1_clkctrl DRA7_IPU1_MMU_IPU1_CLKCTRL 24>;
-+			assigned-clock-parents = <&dpll_core_h22x2_ck>;
- 		};
+ 	/* SRAM on Colibri nEXT_CS0 */
+ 	sram@0,0 {
+-		compatible = "cypress,cy7c1019dv33-10zsxi, mtd-ram";
++		compatible = "cypress,cy7c1019dv33-10zsxi", "mtd-ram";
+ 		reg = <0 0 0x00010000>;
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+@@ -247,7 +247,7 @@
  
- 		ipu_clkctrl: ipu-clkctrl@50 {
+ 	/* SRAM on Colibri nEXT_CS1 */
+ 	sram@1,0 {
+-		compatible = "cypress,cy7c1019dv33-10zsxi, mtd-ram";
++		compatible = "cypress,cy7c1019dv33-10zsxi", "mtd-ram";
+ 		reg = <1 0 0x00010000>;
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
 
 
