@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6B9CC18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:04:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47C6FC18E5C
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:04:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DC0920409
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:04:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11E5820409
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:04:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583845486;
-	bh=zWETaLoF3P9WxIFHo1I7CF9gPRCLgj9bgSHy5PC6HSk=;
+	s=default; t=1583845488;
+	bh=+hi5aN+D6JGLzjvA6/P2ENZRj0ICH3a32s1Tw3e6BL8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EH//Pz+dqXU5R7d+gM607+fumnrigK1P3IjkMet65urMhxzyROwidO0X43zd/JiuP
-	 I0hUzX1wSbuAftmvF+V00DAUxtLl1U4HLUK3OVS4ATXMnu+P+nGtuo1Co4eRdR3RGj
-	 AczKVeLK6CZvit/NDufcnLtsF+DFYNz0Xq0aMXsg=
+	b=vtga2JDPQ5vFh9pMqpFv4LmDX60xQeUVOy2tGx4BqxWylaR+X3G93m0p7UbfYrRDE
+	 HQUvGTbpiISdbBZOea3nrcGvV2Kv97m39xkn4MUeJdOGfpjFCKJ4bFsREq4JmOhUO6
+	 ECRIoNENWNshN69NGg+ZEROeKVsDWQcLZtGJG87c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730766AbgCJNEp (ORCPT
+        id S1730749AbgCJNEk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:04:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49842 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:04:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49738 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730751AbgCJNEl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:04:41 -0400
+        id S1728343AbgCJNEg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:04:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B07020409;
-        Tue, 10 Mar 2020 13:04:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 10E9320409;
+        Tue, 10 Mar 2020 13:04:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845480;
-        bh=zWETaLoF3P9WxIFHo1I7CF9gPRCLgj9bgSHy5PC6HSk=;
+        s=default; t=1583845475;
+        bh=+hi5aN+D6JGLzjvA6/P2ENZRj0ICH3a32s1Tw3e6BL8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aWqHTqsGrMpy12MppnIuHqafCqPMkNkRRULXzpf4WYg7xJ+mf5TEAH2J1lgAaZq/P
-         2fhouWpQtQyfiG9rtYyCDYWJ5/tMLC1WOefZOKgliKMLBMeBM/xOwsNO+z/Uqnp4Qw
-         dwNiIoxICKyyWP4DKQiJbIiKsNzHL540H5IZiU1o=
+        b=QWD+heYmwSRDClvzv57XA6YrCEWv8PcxPwfbX0GmD7iWd46ugJ0+gHkXL62+spcRl
+         qYIhQXvVoL9ML7fH25ekEi2zrsL6cqL3r8YxH4Tj+VsecHYtvaaWxCHMHRsAYO39JD
+         1IYE0TaJa5k6QYD1B1fcf3NVXhgQ9fff2qwmYwDg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Leonard Crestez <leonard.crestez@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>
-Subject: [PATCH 5.5 156/189] firmware: imx: scu-pd: Align imx sc msg structs to 4
-Date:   Tue, 10 Mar 2020 13:39:53 +0100
-Message-Id: <20200310123655.737757975@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+cb0c054eabfba4342146@syzkaller.appspotmail.com,
+        Bernard Metzler <bmt@zurich.ibm.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Subject: [PATCH 5.5 164/189] RDMA/iwcm: Fix iwcm work deallocation
+Date:   Tue, 10 Mar 2020 13:40:01 +0100
+Message-Id: <20200310123656.595378514@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123639.608886314@linuxfoundation.org>
 References: <20200310123639.608886314@linuxfoundation.org>
@@ -59,36 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leonard Crestez <leonard.crestez@nxp.com>
+From: Bernard Metzler <bmt@zurich.ibm.com>
 
-commit 7c1a1c814ccc858633c761951c2546041202b24e upstream.
+commit 810dbc69087b08fd53e1cdd6c709f385bc2921ad upstream.
 
-The imx SC api strongly assumes that messages are composed out of
-4-bytes words but some of our message structs have odd sizeofs.
+The dealloc_work_entries() function must update the work_free_list pointer
+while freeing its entries, since potentially called again on same list. A
+second iteration of the work list caused system crash. This happens, if
+work allocation fails during cma_iw_listen() and free_cm_id() tries to
+free the list again during cleanup.
 
-This produces many oopses with CONFIG_KASAN=y.
-
-Fix by marking with __aligned(4).
-
-Fixes: c800cd7824bd ("firmware: imx: add SCU power domain driver")
-Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Fixes: 922a8e9fb2e0 ("RDMA: iWARP Connection Manager.")
+Link: https://lore.kernel.org/r/20200302181614.17042-1-bmt@zurich.ibm.com
+Reported-by: syzbot+cb0c054eabfba4342146@syzkaller.appspotmail.com
+Signed-off-by: Bernard Metzler <bmt@zurich.ibm.com>
+Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/firmware/imx/scu-pd.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/infiniband/core/iwcm.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/firmware/imx/scu-pd.c
-+++ b/drivers/firmware/imx/scu-pd.c
-@@ -61,7 +61,7 @@ struct imx_sc_msg_req_set_resource_power
- 	struct imx_sc_rpc_msg hdr;
- 	u16 resource;
- 	u8 mode;
--} __packed;
-+} __packed __aligned(4);
+--- a/drivers/infiniband/core/iwcm.c
++++ b/drivers/infiniband/core/iwcm.c
+@@ -159,8 +159,10 @@ static void dealloc_work_entries(struct
+ {
+ 	struct list_head *e, *tmp;
  
- #define IMX_SCU_PD_NAME_SIZE 20
- struct imx_sc_pm_domain {
+-	list_for_each_safe(e, tmp, &cm_id_priv->work_free_list)
++	list_for_each_safe(e, tmp, &cm_id_priv->work_free_list) {
++		list_del(e);
+ 		kfree(list_entry(e, struct iwcm_work, free_list));
++	}
+ }
+ 
+ static int alloc_work_entries(struct iwcm_id_private *cm_id_priv, int count)
 
 
