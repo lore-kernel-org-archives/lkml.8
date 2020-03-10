@@ -2,114 +2,97 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F528C18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:07:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7674AC18E7A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:07:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D4B124691
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:07:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=hartkopp.net header.i=@hartkopp.net header.b="URt7zzUn"
+	by mail.kernel.org (Postfix) with ESMTP id 3CBB424691
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:07:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583845646;
+	bh=j/cTGtyx0i2W8prlaQJxrHhlNQJqNPuJz2rSwBTjyBw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=I1/YIR+R8lnOi4GPQUUG86tFeWq9YjG19DQxXZ6P1PcIhq1M3//8gSZt479l1nl4c
+	 dow+SBtVdFcm/ZPILmMyI55xNG60zldzFsWP7ERCqRfqyHlRCy/M4zf/1g0JX2qyE8
+	 7Qb4whxllW9NXFFGYHERfFVfbaKdKSIwNYVa51fo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730962AbgCJNHV (ORCPT
+        id S1730969AbgCJNHZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:07:21 -0400
-Received: from mo4-p01-ob.smtp.rzone.de ([81.169.146.166]:23931 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730920AbgCJNHO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:07:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1583845632;
-        s=strato-dkim-0002; d=hartkopp.net;
-        h=In-Reply-To:Date:Message-ID:From:References:To:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=6R1RKm2q+lEZhuVelK1a77+oRAAsa1Xp6grAc/+xsXE=;
-        b=URt7zzUnEnTvofORtuRgOgsWVLD++cxyB1eUte9R8PgJvMMdtcvxgwHUCFCa9LImKO
-        51t5J47ocVi6hlmyIrNuQthH+E2HtNSyJCIp7tzvLs2W3GwEjiW0uga6aUMkWfzdEWaW
-        z99GXggdOYGskCGrR92Gr5TYR2wdKJZfT+H1VQifAJy30uq+Fu/GmWhfB68Ipu4DSjOP
-        kqUxb5ljm/um1iOBa35XmzcaHv5sEO0Ny6KbT86vsWax36ja1+6OGPMt28hmpDzmGCOK
-        u6zayrTUprrHAVuH4WkGFyzAWAGUGZcQqJilbqpDLcEm43kfqMWd650XMsPZRqWwyuxs
-        qhaw==
-X-RZG-AUTH: ":P2MHfkW8eP4Mre39l357AZT/I7AY/7nT2yrDxb8mjG14FZxedJy6qgO1o3PMaViOoLMJVch5lEq7"
-X-RZG-CLASS-ID: mo00
-Received: from [192.168.1.177]
-        by smtp.strato.de (RZmta 46.2.0 DYNA|AUTH)
-        with ESMTPSA id e0a4ffw2AD78XAp
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Tue, 10 Mar 2020 14:07:08 +0100 (CET)
-Subject: Re: [PATCH] net: slcan, slip -- no need for goto when if () will do
-To:     Pavel Machek <pavel@ucw.cz>, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, linux-can@vger.kernel.org,
-        yangerkun@huawei.com, davem@davemloft.net, mkl@pengutronix.de,
-        wg@grandegger.com
-References: <20200309223323.GA1634@duo.ucw.cz>
-From:   Oliver Hartkopp <socketcan@hartkopp.net>
-Message-ID: <0d9a5f11-1dc9-03ad-cecb-af38ad421c95@hartkopp.net>
-Date:   Tue, 10 Mar 2020 14:07:03 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 10 Mar 2020 09:07:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53110 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728988AbgCJNHW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:07:22 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A0A3220873;
+        Tue, 10 Mar 2020 13:07:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583845641;
+        bh=j/cTGtyx0i2W8prlaQJxrHhlNQJqNPuJz2rSwBTjyBw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=EsMTXbkUhqJNU3ubbqn60Nhf+WAlAZUHudrn3XVZMD1GnHm9qbSP7OfApenDE50eM
+         Mgh2wuzIKLLtGglD7lzeLODzmP82C/VUnhJe+7epgRpHfP+r0Dc0U+3+hSt4/gEpJN
+         /O+l/zDD+SI0de845HTDGbGhqq1tFf6pQLM2Mr0s=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, David Laight <David.Laight@ACULAB.COM>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Thor Thayer <thor.thayer@linux.intel.com>,
+        Wolfram Sang <wsa@the-dreams.de>
+Subject: [PATCH 4.14 046/126] i2c: altera: Fix potential integer overflow
+Date:   Tue, 10 Mar 2020 13:41:07 +0100
+Message-Id: <20200310124207.229610173@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200310124203.704193207@linuxfoundation.org>
+References: <20200310124203.704193207@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20200309223323.GA1634@duo.ucw.cz>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Gustavo A. R. Silva <gustavo@embeddedor.com>
+
+commit 54498e8070e19e74498a72c7331348143e7e1f8c upstream.
+
+Factor out 100 from the equation and do 32-bit arithmetic (3 * clk_mhz / 10)
+instead of 64-bit.
+
+Notice that clk_mhz is MHz, so the multiplication will never wrap 32 bits
+and there is no need for div_u64().
+
+Addresses-Coverity: 1458369 ("Unintentional integer overflow")
+Fixes: 0560ad576268 ("i2c: altera: Add Altera I2C Controller driver")
+Suggested-by: David Laight <David.Laight@ACULAB.COM>
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Reviewed-by: Thor Thayer <thor.thayer@linux.intel.com>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/i2c/busses/i2c-altera.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/drivers/i2c/busses/i2c-altera.c
++++ b/drivers/i2c/busses/i2c-altera.c
+@@ -182,7 +182,7 @@ static void altr_i2c_init(struct altr_i2
+ 	/* SCL Low Time */
+ 	writel(t_low, idev->base + ALTR_I2C_SCL_LOW);
+ 	/* SDA Hold Time, 300ns */
+-	writel(div_u64(300 * clk_mhz, 1000), idev->base + ALTR_I2C_SDA_HOLD);
++	writel(3 * clk_mhz / 10, idev->base + ALTR_I2C_SDA_HOLD);
+ 
+ 	/* Mask all master interrupt bits */
+ 	altr_i2c_int_enable(idev, ALTR_I2C_ALL_IRQ, false);
 
 
-On 09/03/2020 23.33, Pavel Machek wrote:
-> 
-> No need to play with gotos to jump over single statement.
-> 
-> Signed-off-by: Pavel Machek <pavel@ucw.cz>
-> 
-> diff --git a/drivers/net/can/slcan.c b/drivers/net/can/slcan.c
-> index 2f5c287eac95..686d853fc249 100644
-> --- a/drivers/net/can/slcan.c
-> +++ b/drivers/net/can/slcan.c
-> @@ -348,11 +348,8 @@ static void slcan_write_wakeup(struct tty_struct *tty)
->   
->   	rcu_read_lock();
->   	sl = rcu_dereference(tty->disc_data);
-> -	if (!sl)
-> -		goto out;
-> -
-> -	schedule_work(&sl->tx_work);
-> -out:
-> +	if (sl)
-> +		schedule_work(&sl->tx_work);
->   	rcu_read_unlock();
->   }
-
-Haha. Yes, that looks indeed much better ...
-
-Acked-by: Oliver Hartkopp <socketcan@hartkopp.net>
-
->   
-> diff --git a/drivers/net/slip/slip.c b/drivers/net/slip/slip.c
-> index babb01888b78..f81fb0b13a94 100644
-> --- a/drivers/net/slip/slip.c
-> +++ b/drivers/net/slip/slip.c
-> @@ -456,11 +456,8 @@ static void slip_write_wakeup(struct tty_struct *tty)
->   
->   	rcu_read_lock();
->   	sl = rcu_dereference(tty->disc_data);
-> -	if (!sl)
-> -		goto out;
-> -
-> -	schedule_work(&sl->tx_work);
-> -out:
-> +	if (sl)
-> +		schedule_work(&sl->tx_work);
->   	rcu_read_unlock();
->   }
->   
-> 
