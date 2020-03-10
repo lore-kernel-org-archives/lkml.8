@@ -2,139 +2,147 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC179C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 21:27:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0BE7C18E5C
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 21:27:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90677222C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 21:27:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HziVMxK2"
+	by mail.kernel.org (Postfix) with ESMTP id 849D224649
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 21:27:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727550AbgCJV1U (ORCPT
+        id S1727661AbgCJV1b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 17:27:20 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:55880 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726265AbgCJV1U (ORCPT
+        Tue, 10 Mar 2020 17:27:31 -0400
+Received: from out01.mta.xmission.com ([166.70.13.231]:40600 "EHLO
+        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726265AbgCJV1a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 17:27:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583875638;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=elF36Gh6wAO43EXQWi3veY++EdOPHWUl7a5YAiXhFTQ=;
-        b=HziVMxK2D5RJcYF0bqBbXWQ4EDx1t0YTx09F0AKtSze4CAM39HvESxL4VhtXPm8gIjJ2yC
-        Xzk353m2CIwXQXo10qBUNwzvgSvQ5ZikWL/laAXQnJA+KfgXFfq1NbNIPZMiop6NKdJNBY
-        k5h56Vg36nn4E+oElzwpeqAx7ehH/TM=
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
- [209.85.160.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-60-wVchelQ2Odm8hnwS7-Er4A-1; Tue, 10 Mar 2020 17:27:16 -0400
-X-MC-Unique: wVchelQ2Odm8hnwS7-Er4A-1
-Received: by mail-qt1-f197.google.com with SMTP id r16so10086466qtt.13
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 14:27:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=elF36Gh6wAO43EXQWi3veY++EdOPHWUl7a5YAiXhFTQ=;
-        b=ViCeCPtM0QDX4H4Mns0B7pzDqd7HfGm8+cJs/lPEwO30cZm4BJ80qRoHypFMC7S4zX
-         4Xa00XT75kSvKjjAuV6MAHhPCQEp0ILB10wgLoez4lk+5nHH5nY6ezWR9O4oIehUy2AO
-         6Nrm/ujpRCw6nULl/ZmuW/+GOeud0F0/mwMcl3ZTHy32TnJmutLTP9C/MbkhbS+p/jTs
-         UE7hB9yBQpZGmdE/iVk/KgMqk+z8JLHrCGpvlsGiXgtWW7axG769g+TcBtw434TQRF+W
-         YJKQzWa0moPTHE2m5VyGFNYWfKouqLzlBW1h0G3u1S0XBvh/AszgM0v7lI4Aa6JCDHui
-         qTRQ==
-X-Gm-Message-State: ANhLgQ1tlOpXVVOvkryBS3a8JxlPkShVnwusLCJD0GJO5XOza6+iOIfd
-        Ht130Fx/LoTyX2JRgBQCs4d/MxejsOkjxbesoppXtPDmgP/suRf7XCg9FkZ5ITX1hcAfNnK2B7K
-        BWTPUaEl4LxHN4k5287Adod+A
-X-Received: by 2002:a37:40d2:: with SMTP id n201mr21535558qka.211.1583875636357;
-        Tue, 10 Mar 2020 14:27:16 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vtXf2G2CIG42koICoLhPiploL8mRnMRgCVqT/plH2Fo1ASYnuHMzPvSDT2uyk6rvt8fR12jmg==
-X-Received: by 2002:a37:40d2:: with SMTP id n201mr21535545qka.211.1583875636149;
-        Tue, 10 Mar 2020 14:27:16 -0700 (PDT)
-Received: from redhat.com (bzq-79-178-2-19.red.bezeqint.net. [79.178.2.19])
-        by smtp.gmail.com with ESMTPSA id x51sm3774837qtj.82.2020.03.10.14.27.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Mar 2020 14:27:14 -0700 (PDT)
-Date:   Tue, 10 Mar 2020 17:27:09 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Vivek Goyal <vgoyal@redhat.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, virtio-fs@redhat.com, miklos@szeredi.hu,
-        stefanha@redhat.com, dgilbert@redhat.com,
-        Sebastien Boeuf <sebastien.boeuf@intel.com>,
-        kbuild test robot <lkp@intel.com>
-Subject: Re: [PATCH 04/20] virtio: Implement get_shm_region for PCI transport
-Message-ID: <20200310172603-mutt-send-email-mst@kernel.org>
-References: <20200304165845.3081-1-vgoyal@redhat.com>
- <20200304165845.3081-5-vgoyal@redhat.com>
- <20200310071043-mutt-send-email-mst@kernel.org>
- <20200310184720.GD38440@redhat.com>
+        Tue, 10 Mar 2020 17:27:30 -0400
+Received: from in01.mta.xmission.com ([166.70.13.51])
+        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jBmPQ-0008Ng-W8; Tue, 10 Mar 2020 15:27:29 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jBmPQ-0003ht-8O; Tue, 10 Mar 2020 15:27:28 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Bernd Edlinger <bernd.edlinger@hotmail.de>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Andrei Vagin <avagin@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Peter Zijlstra \(Intel\)" <peterz@infradead.org>,
+        Yuyang Du <duyuyang@gmail.com>,
+        David Hildenbrand <david@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        David Howells <dhowells@redhat.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christian Kellner <christian@kellner.me>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        "linux-doc\@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel\@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-mm\@kvack.org" <linux-mm@kvack.org>,
+        "stable\@vger.kernel.org" <stable@vger.kernel.org>,
+        "linux-api\@vger.kernel.org" <linux-api@vger.kernel.org>
+References: <AM6PR03MB5170EB4427BF5C67EE98FF09E4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <87v9ne5y4y.fsf_-_@x220.int.ebiederm.org>
+        <87zhcq4jdj.fsf_-_@x220.int.ebiederm.org>
+        <AM6PR03MB5170BC58D90BAD80CDEF3F8BE4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <878sk94eay.fsf@x220.int.ebiederm.org>
+        <AM6PR03MB517086003BD2C32E199690A3E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <87r1y12yc7.fsf@x220.int.ebiederm.org>
+        <87k13t2xpd.fsf@x220.int.ebiederm.org>
+        <87d09l2x5n.fsf@x220.int.ebiederm.org>
+        <AM6PR03MB5170F0F9DC18F5EA77C9A857E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <871rq12vxu.fsf@x220.int.ebiederm.org>
+        <AM6PR03MB5170DF45E3245F55B95CCD91E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <877dzt1fnf.fsf@x220.int.ebiederm.org>
+        <AM6PR03MB51701C6F60699F99C5C67E0BE4FF0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <875zfcxlwy.fsf@x220.int.ebiederm.org>
+        <AM6PR03MB5170BD2476E35068E182EFA4E4FF0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <874kuwvxkz.fsf@x220.int.ebiederm.org>
+        <AM6PR03MB5170A29F8D885147F1A3981EE4FF0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+Date:   Tue, 10 Mar 2020 16:25:09 -0500
+In-Reply-To: <AM6PR03MB5170A29F8D885147F1A3981EE4FF0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        (Bernd Edlinger's message of "Tue, 10 Mar 2020 21:19:05 +0100")
+Message-ID: <878sk7q4wa.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200310184720.GD38440@redhat.com>
+Content-Type: text/plain
+X-XM-SPF: eid=1jBmPQ-0003ht-8O;;;mid=<878sk7q4wa.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1+R1YozAbyKQHiEXFA7wXLQCvRAwXr7aX0=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH 3/4] proc: io_accounting: Use new infrastructure to fix deadlocks in execve
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 10, 2020 at 02:47:20PM -0400, Vivek Goyal wrote:
-> On Tue, Mar 10, 2020 at 07:12:25AM -0400, Michael S. Tsirkin wrote:
-> [..]
-> > > +static bool vp_get_shm_region(struct virtio_device *vdev,
-> > > +			      struct virtio_shm_region *region, u8 id)
-> > > +{
-> > > +	struct virtio_pci_device *vp_dev = to_vp_device(vdev);
-> > > +	struct pci_dev *pci_dev = vp_dev->pci_dev;
-> > > +	u8 bar;
-> > > +	u64 offset, len;
-> > > +	phys_addr_t phys_addr;
-> > > +	size_t bar_len;
-> > > +	int ret;
-> > > +
-> > > +	if (!virtio_pci_find_shm_cap(pci_dev, id, &bar, &offset, &len)) {
-> > > +		return false;
-> > > +	}
-> > > +
-> > > +	ret = pci_request_region(pci_dev, bar, "virtio-pci-shm");
-> > > +	if (ret < 0) {
-> > > +		dev_err(&pci_dev->dev, "%s: failed to request BAR\n",
-> > > +			__func__);
-> > > +		return false;
-> > > +	}
-> > > +
-> > > +	phys_addr = pci_resource_start(pci_dev, bar);
-> > > +	bar_len = pci_resource_len(pci_dev, bar);
-> > > +
-> > > +        if (offset + len > bar_len) {
-> > > +                dev_err(&pci_dev->dev,
-> > > +                        "%s: bar shorter than cap offset+len\n",
-> > > +                        __func__);
-> > > +                return false;
-> > > +        }
-> > > +
-> > 
-> > Something wrong with indentation here.
-> 
-> Will fix all indentation related issues in this patch.
-> 
-> > Also as long as you are validating things, it's worth checking
-> > offset + len does not overflow.
-> 
-> Something like addition of following lines?
-> 
-> +       if ((offset + len) < offset) {
-> +               dev_err(&pci_dev->dev, "%s: cap offset+len overflow detected\n",
-> +                       __func__);
-> +               return false;
-> +       }
-> 
-> Vivek
+Bernd Edlinger <bernd.edlinger@hotmail.de> writes:
 
-That should do it.
+> On 3/10/20 8:06 PM, Eric W. Biederman wrote:
+>> Bernd Edlinger <bernd.edlinger@hotmail.de> writes:
+>> 
+>>> This changes do_io_accounting to use the new exec_update_mutex
+>>> instead of cred_guard_mutex.
+>>>
+>>> This fixes possible deadlocks when the trace is accessing
+>>> /proc/$pid/io for instance.
+>>>
+>>> This should be safe, as the credentials are only used for reading.
+>> 
+>> This is an improvement.
+>> 
+>> We probably want to do this just as an incremental step in making things
+>> better but perhaps I am blind but I am not finding the reason for
+>> guarding this with the cred_guard_mutex to be at all persuasive.
+>> 
+>> I think moving the ptrace_may_access check down to after the
+>> unlock_task_sighand would be just as effective at addressing the
+>> concerns raised in the original commit.  I think the task_lock provides
+>> all of the barrier we need to make it safe to move the ptrace_may_access
+>> checks safe.
+>> 
+>> The reason I say this is I don't see exec changing ->ioac.  Just
+>> performing some I/O which would update the io accounting statistics.
+>> 
+>
+> Maybe the suid executable is starting up and doing io or not,
+> and what the program does immediately at startup is a secret,
+> that we want to keep secret but evil eve want to find out.
+> eve is using /proc/alice/io to do that.
+>
+> It is a bit constructed, but seems like a security concern.
+> when we keep the exec_update_mutex while collecting the data, we
+> cannot see any io of the new process when the new credentials
+> don't allow that.
 
+Jann Horn has convinced me we should just convert these to the
+exec_change_mutex today.  Because while not 100% correct in theory, the
+only really interesting case is exec.  So the code does something
+interesting and worth while, and mostly correct.  The last thing I want
+to do is to cause an unnecessary regression.
+
+Eric
