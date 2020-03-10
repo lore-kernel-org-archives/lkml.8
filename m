@@ -2,172 +2,164 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DD2BC18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 08:46:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9034C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 08:47:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9DF624681
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 08:46:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583829970;
-	bh=yOU5XSpTx9mJzELikwfgtMA+vAyIiX2UP+pyfvCztS4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=NHOabp3biwpbGNhXxHZ1z5i1sU7XoZtD+xu/xJeUefUuqREb9isZ0CpDf0mRPvZrY
-	 KU7DwBeS2dtJRD8hFDamIYuXwkhLXpMHJ95cYigOeaFhJ7va2l6u5K8YYyb+SyTSmc
-	 GKf+/oC5axHbkgKOJ01L5112dXtiManAo7DuIQAY=
+	by mail.kernel.org (Postfix) with ESMTP id AE0C72051A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 08:47:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726646AbgCJIqJ (ORCPT
+        id S1726582AbgCJIra (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 04:46:09 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:45624 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726389AbgCJIqI (ORCPT
+        Tue, 10 Mar 2020 04:47:30 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:38077 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726389AbgCJIra (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 04:46:08 -0400
-Received: by mail-oi1-f195.google.com with SMTP id v19so13023372oic.12;
-        Tue, 10 Mar 2020 01:46:08 -0700 (PDT)
+        Tue, 10 Mar 2020 04:47:30 -0400
+Received: by mail-ot1-f65.google.com with SMTP id i14so12389317otp.5;
+        Tue, 10 Mar 2020 01:47:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=A8GV2HuSqXBx4DrwJWUZYgLB27q46+xOcdSszllMiCI=;
-        b=DGv3qAG1QgxxigCW9HuiJuOeSKZYMK6T34h194WrqL+gsB3Q5ld+HHou2A1Zz4+z9J
-         uImch6vMK9FyIYY6Ya6L6S+dZ3UVU+gHIDiCzSAnqvHr0K9mO06W3WsyCgB6Y4p8nTDu
-         S0gQ6FJlEBGNzwbv8HaS/ECUZKn9Bc8TkT8vsw7quDD7gQnUMsTdsxmZ5QLVEkVQPPsP
-         cNwuTHFjk+q1bscL27o6Sw0oCgTra+pEoKiLHvUSGPOY6B3+j1kejR1HynCfJ7dFWqUG
-         A7o84tvVLQIVaBcUz1WVnFJzrMlP6eRIB7wUL6vMmtk27391Hi3mct10W7Q8DMnXs3Hz
-         rX0g==
-X-Gm-Message-State: ANhLgQ33OkQs4zM74hAMkqDUvDyvjxqwbvfeHTKosMsfrxiAMGUG0yA9
-        mCSr6xKIM3EPUrvEvlUgL2aXk19EAobyQ++mJEU=
-X-Google-Smtp-Source: ADFU+vttQqetvNaCij6CJgxOr6ZhOH0rw6dT6OZELsXWp4+In7/oAlCGDZCXVnl7OX4oCGpGQHis/ArFx874qPoc7Zk=
-X-Received: by 2002:aca:df0b:: with SMTP id w11mr352964oig.68.1583829968022;
- Tue, 10 Mar 2020 01:46:08 -0700 (PDT)
+        bh=boOApZIKCOv83J2w3ZeGrsmLMsYMcv80baJK+BIb6gY=;
+        b=PrqyokW3eqeHEHJSNtkFm3gg5WvwC77Avr8OrS0JALnN81S5J4uZoVqIK+ChI7zRKN
+         HpJeIrN5szGAfd7TDcaWtus2vFHM/uxd2/AF5yzMOJ/p7fnLSBxw6MtmIgCZCvjhVevi
+         /EQGRLl3AGmKKqloWU/jh4G27WGhlDNI6P3cxwgcy99ht+QrJqgUVHRCsst7MjM/sG7D
+         g8WLKkshgylOCVgdILH4K6UUhjxv+xP/+c75sIHZ504SFRRj2GuSLkU1kUZnnOrTY0Eq
+         rJ+MtrVBWJNmKOMz5ZLsqWP79vmn0r9CeqgTPBNReunI5SgyoovRVzcFhB3pq4ZFkWz+
+         kEKA==
+X-Gm-Message-State: ANhLgQ3PAdm1gJJ550rQs4UtbBC2Sy6jfCGng/CNCSqA1+VAmufIgyuO
+        XG7ZIeg/NRpMICZJyL8bnpVGbiCznwllo8pXAkE=
+X-Google-Smtp-Source: ADFU+vty+TpRY4Ac1mTTlnhKuNFwJ1A6bGkpI8IVtjqbOXVyaswgRUMHHcn54Y1V4g21JKdrGDCvoZTaA2BR/9GgTms=
+X-Received: by 2002:a9d:8d0:: with SMTP id 74mr3528400otf.39.1583830047801;
+ Tue, 10 Mar 2020 01:47:27 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200305013509.GF5972@shao2-debian> <951b0986-bb35-d9a5-1639-0a8cdb3dcd04@intel.com>
- <cbe4887c-d54a-c4aa-e4bf-981b5fcc291d@intel.com> <CAJZ5v0g2vzYQ04GyrpubLx2+B0O4SDbqoTDCvhnSyaj1j1xswA@mail.gmail.com>
- <87zhcuyxce.fsf@yhuang-dev.intel.com> <CAJZ5v0g3f1Rf0HFLH+hWkbW6q0_E1RjhX2AeUxa_DHfJRQj7Qw@mail.gmail.com>
- <87imjez5rl.fsf@yhuang-dev.intel.com>
-In-Reply-To: <87imjez5rl.fsf@yhuang-dev.intel.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 10 Mar 2020 09:45:57 +0100
-Message-ID: <CAJZ5v0hdAnN-mu8b9g19cM8AqYGXDbs1qVxLu-qE-3P6fP1=XA@mail.gmail.com>
-Subject: Re: [LKP] Re: [cpufreq] 909c0e9cc1: fwq.fwq.med 210.0% improvement
-To:     "Huang, Ying" <ying.huang@intel.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Rong Chen <rong.a.chen@intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "open list:ACPI COMPONENT ARCHITECTURE (ACPICA)" <devel@acpica.org>,
-        Linux PM <linux-pm@vger.kernel.org>, lkp@lists.01.org,
-        Andi Kleen <andi.kleen@intel.com>
+References: <20200305103228.9686-1-zhang.lyra@gmail.com> <CAMuHMdVyy3v24zBxJFe5hYdnzdj80dvE2Z9GO4=AC1N8fD64pw@mail.gmail.com>
+ <CAAfSe-spu2oNmfEYt+WQvRQy1bCC0e1MFjbUyBAFzghd5XNBfw@mail.gmail.com>
+ <CAMuHMdV1qQZF-kAwbcxhHQZZ9hs0dG-OTZ2NcB25Jtra6ii5iA@mail.gmail.com>
+ <20200310041903.GA260998@google.com> <20200310042739.GB260998@google.com>
+In-Reply-To: <20200310042739.GB260998@google.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 10 Mar 2020 09:47:16 +0100
+Message-ID: <CAMuHMdXRPBwFo2zAb99gMLP_+KaTHZ261fLYa+cbG6DEH_EP_g@mail.gmail.com>
+Subject: Re: [PATCH 1/2] arm64: change ARCH_SPRD Kconfig to tristate
+To:     Sandeep Patil <sspatil@android.com>
+Cc:     Chunyan Zhang <zhang.lyra@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Jiri Slaby <jslaby@suse.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        saravanak@google.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 9, 2020 at 2:17 AM Huang, Ying <ying.huang@intel.com> wrote:
->
-> "Rafael J. Wysocki" <rafael@kernel.org> writes:
->
-> > On Fri, Mar 6, 2020 at 4:29 AM Huang, Ying <ying.huang@intel.com> wrote:
-> >>
-> >> Hi, Rafael,
-> >>
-> >> "Rafael J. Wysocki" <rafael@kernel.org> writes:
-> >>
-> >> > On Thu, Mar 5, 2020 at 9:18 AM Rong Chen <rong.a.chen@intel.com> wrote:
-> >> >>
-> >> >>
-> >> >>
-> >> >> On 3/5/20 3:50 PM, Rafael J. Wysocki wrote:
-> >> >> > On 3/5/2020 2:35 AM, kernel test robot wrote:
-> >> >> >> Greeting,
-> >> >> >>
-> >> >> >> FYI, we noticed a 210.0% improvement of fwq.fwq.med due to commit:
-> >> >> >
-> >> >> > Well, that sounds impressive. :-)
-> >> >> >
-> >> >> >
-> >> >> >>
-> >> >> >> commit: 909c0e9cc11ba39fa5a660583b25c2431cf54deb ("cpufreq:
-> >> >> >> intel_pstate: Use passive mode by default without HWP")
-> >> >> >> https://git.kernel.org/cgit/linux/kernel/git/rafael/linux-pm.git
-> >> >> >> intel_pstate-passive
-> >> >> >>
-> >> >> >> in testcase: fwq
-> >> >> >> on test machine: 16 threads Intel(R) Xeon(R) CPU D-1541 @ 2.10GHz
-> >> >> >> with 48G memory
-> >> >> >> with following parameters:
-> >> >> >>
-> >> >> >>     nr_task: 100%
-> >> >> >>     samples: 100000ss
-> >> >> >>     iterations: 18x
-> >> >> >>     cpufreq_governor: powersave
-> >> >> >
-> >> >> > The governor should be schedutil, though, unless it is explicitly set
-> >> >> > to powersave in the test environment.
-> >> >> >
-> >> >> > Is that the case?
-> >> >> >
-> >> >> >
-> >> >>
-> >> >> Hi Rafael,
-> >> >>
-> >> >> Yes, we set to powersave for this test.
-> >> >
-> >> > I wonder why this is done?  Is there any particular technical reason
-> >> > for doing that?
-> >>
-> >> fwq is a noise benchmark to measure the hardware and software noise
-> >> level.  More information could be found in the following document.
-> >>
-> >> https://asc.llnl.gov/sequoia/benchmarks/FTQ_summary_v1.1.pdf
-> >>
-> >> In 0day, to measure the noise introduced by power management, we will
-> >> run fwq with the performance and powersave governors.  Do you think this
-> >> is reasonable?  Or we should use some other governors?
+Hi Sandeep,
+
+On Tue, Mar 10, 2020 at 5:27 AM Sandeep Patil <sspatil@android.com> wrote:
+> On Mon, Mar 09, 2020 at 09:19:03PM -0700, Sandeep Patil wrote:
+> > On Mon, Mar 09, 2020 at 11:32:06AM +0100, Geert Uytterhoeven wrote:
+> > > On Mon, Mar 9, 2020 at 9:32 AM Chunyan Zhang <zhang.lyra@gmail.com> wrote:
+> > > > On Mon, 9 Mar 2020 at 16:03, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > > > > On Thu, Mar 5, 2020 at 11:33 AM Chunyan Zhang <zhang.lyra@gmail.com> wrote:
+> > > > > > From: Chunyan Zhang <chunyan.zhang@unisoc.com>
+> > > > > >
+> > > > > > The default value of Kconfig for almost all sprd drivers are the same with
+> > > > > > ARCH_SPRD, making these drivers built as modules as default would be easier
+> > > > > > if we can set ARCH_SPRD as 'm', so this patch change ARCH_SPRD to tristate.
+> > > > > >
+> > > > > > Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
+> > > > >
+> > > > > Can you actually boot a kernel on a Spreadtrum platform when all platform
+> > > > > and driver support is modular?
+> > > >
+> > > > Yes, even if all drivers are modular.
+> > >
+> > > Cool. No hard dependencies on e.g. regulators that are turned off when
+> > > unused?
+> > >
+> > > > But I hope serial can be builtin, then I can have a console to see
+> > > > kernel output before loading modules.
+> > >
+> > > No dependency on the clock driver?
+> > > Oh, I see you have a hack in the serial driver, to assume default
+> > > values when the serial port's parent clock is not found.  That may
+> > > limit use of the other serial ports, depending on the actual serial
+> > > hardware.
+> > > And on Sharkl64, the serial port's clock is a fixed-clock anyway, so
+> > > you don't even need the hack.
+> > >
+> > > But in general you cannot rely on that, especially if your SoC has clock
+> > > and/or power domains.
+
+So I gave it a try on my platform (R-Car), with just the serial driver
+builtin.  I can see the kernel booting using earlycon.
+However, the serial driver is never probed, as the pin control driver is
+missing. And after that, it would need the clock domain (power domain
+and clock drivers), and more serial clock inputs (clock driver, again).
+Fortunately DMA is optional (dmac driver, and optional iommu driver).
+
+I guess core platform-specific drivers can be loaded from the initramfs,
+after which the serial driver would be probed, finally.  If the
+initramfs includes a storage driver, anything else can be loaded from
+e.g. eMMC.
+
+> > > > Also, this's what Google GKI [1] asked :)
+
+> > > > [1] https://arstechnica.com/gadgets/2019/11/google-outlines-plans-for-mainline-linux-kernel-support-in-android/
+> > >
+> > > Let's see how having everything modular works out on an SoC where all
+> > > hardware is part of a clock and power domain.
 > >
-> > I think that the schedutil governor should be tested too if present.
-> >
-> > Also note that for the intel_pstate driver "powersave" may mean
-> > different things depending on the current operation mode of the
-> > driver.  If scaling_driver is "intel_pstate", then "powersave" is the
-> > driver's built-in algorithm.  If scaling_driver is "intel_cpufreq",
-> > though, "powersave" means running at the minimum frequency all the
-> > time.
->
-> Thanks for your guidance.  We will test schedutil governor in the future
-> too.
->
-> As for powersave, should we stop testing it?
+> > I'm curious, are there any problems that we should be aware of? We know about
+> > the regulator sync state and consumer-supplier dependencies. [1]
 
-You cannot stop testing it, because it is the default governor
-algorithm for intel_pstate working in the active mode.
+Care must be taken, as probe deferral behaves differently after
+late_initcall time (see driver_deferred_probe_check_state_continue),
+which may cause issues with "optional" components like DMA controllers
+and IOMMUs.  Unused clocks and power domains are not turned off,
+unlike for the builtin case.
 
->  Or just pay attention to the possible issue you pointed out?
+On some SoCs, even the interrupt controller (GIC) may be part of a clock
+and/or power domain, while the GIC driver is not aware of that.
+For the clock, that is handled by CLK_IS_CRITICAL in the clock driver.
+For power domains, that is not handled explicitly on Renesas SoCs, as
+the GIC is always in the same power domain as other devices that are
+Runtime PM-aware.  But if those devices would have modular drivers, that
+power domain could still be turned off.
 
-Yes, please!
+So on a modern ARM system, I assume a generic kernel with no
+vendor-specific drivers builtin can indeed work.
+On older systems, without an ARM architectured timer, you will need at
+least the platform-specific timer driver (and the clock driver) builtin.
+Assumed the timer's power domain has been powered up by the firmware.
 
-Basically, I would recommend to test the following configurations by default:
+> (oops, forgot to paste the link to presentation)
+> 1. https://linuxplumbersconf.org/event/4/contributions/402/attachments/320/544/Solving_issues_associated_with_modules_and_supplier-consumer_dependencies.pdf
 
-(1) scaling_driver = intel_pstate + scaling_governor = powersave
+Thanks, hadn't seen that presentation.
+It matches my understanding.
 
-(2) scaling_driver = intel_cpufreq + scaling_governor = schedutil
+Gr{oetje,eeting}s,
 
-The other ones are kind of less interesting.
+                        Geert
 
-[Note that in order to switch over from intel_pstate to intel_cpufreq,
-you need to write "passive" into
-/sys/devices/system/cpu/intel_pstate/status and if that write fails,
-configuration (2) is not available and may be skipped.]
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-> Should we add ondemand governor?
-
-Not necessarily, maybe as a reference only if you have spare cycles.
-
-Thanks!
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
