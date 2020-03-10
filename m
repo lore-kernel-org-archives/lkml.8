@@ -2,90 +2,86 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 704A8C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:53:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4447C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:58:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4702E2467D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:53:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E97E2467D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:58:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="udOKNhXx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726382AbgCJJxO convert rfc822-to-8bit (ORCPT
+        id S1726293AbgCJJ6N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 05:53:14 -0400
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:39323 "EHLO
-        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726199AbgCJJxN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 05:53:13 -0400
-X-Originating-IP: 90.89.41.158
-Received: from xps13 (lfbn-tou-1-1473-158.w90-89.abo.wanadoo.fr [90.89.41.158])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 9661B1C0012;
-        Tue, 10 Mar 2020 09:53:08 +0000 (UTC)
-Date:   Tue, 10 Mar 2020 10:53:08 +0100
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Heiko Stuebner <heiko@sntech.de>
-Cc:     hjc@rock-chips.com, dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        christoph.muellner@theobroma-systems.com,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-Subject: Re: [PATCH] drm/rockchip: rgb: don't count non-existent devices
- when determining subdrivers
-Message-ID: <20200310105308.1c5fadf9@xps13>
-In-Reply-To: <20200121224828.4070067-1-heiko@sntech.de>
-References: <20200121224828.4070067-1-heiko@sntech.de>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 10 Mar 2020 05:58:13 -0400
+Received: from ozlabs.org ([203.11.71.1]:55609 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726199AbgCJJ6N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 05:58:13 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48c9Wk4XJFz9s3x;
+        Tue, 10 Mar 2020 20:58:10 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1583834290;
+        bh=8X7d3J1ukIh3vjbI9RrtgL16s47wvAmjl1ql+quGmXQ=;
+        h=Date:From:To:Cc:Subject:From;
+        b=udOKNhXxjba/VMBfXdICI537rBt9htUba1FYZHAxxIwI6tNHy+eCyAFj2c0vPREQ7
+         69VkNGcOM/W899cTShCEvo+rZA8d8L5sIxM5OEYhkEURfhtZLbWPAcvSfAYvvjeyt4
+         0cEV14dQqkyeq7uyX8qALfkx4DGq/t/avt2RroqVM1FASwGco5ruT8xMIS+FknbkjF
+         alu+ZSL7EOKsRRkNmIWyhlmk/VBFTKDeC2lc2cZuhZ1UQ//HkQyjFCUg+YU+O18v7j
+         R932V0D4VlCu9+4EnUUwelFS0/CmgDNJXP5l5OUPR+Fs/IewYv1tR1BNK+jeyE+SXs
+         F8Oy2+Wz38Uag==
+Date:   Tue, 10 Mar 2020 20:58:09 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Jaegeuk Kim <jaegeuk@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: Signed-off-by missing for commit in the f2fs tree
+Message-ID: <20200310205809.415bd0a2@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: multipart/signed; boundary="Sig_/spKnK_0b=BebA+q5dFcymG_";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Heiko,
+--Sig_/spKnK_0b=BebA+q5dFcymG_
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Heiko Stuebner <heiko@sntech.de> wrote on Tue, 21 Jan 2020 23:48:28
-+0100:
+Hi all,
 
-> From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-> 
-> rockchip_drm_endpoint_is_subdriver() may also return error codes.
-> For example if the target-node is in the disabled state, so no
-> platform-device is getting created for it.
-> 
-> In that case current code would count that as external rgb device,
-> which in turn would make probing the rockchip-drm device fail.
-> 
-> So only count the target as rgb device if the function actually
-> returns 0.
-> 
-> Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-> ---
->  drivers/gpu/drm/rockchip/rockchip_rgb.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/rockchip/rockchip_rgb.c b/drivers/gpu/drm/rockchip/rockchip_rgb.c
-> index ae730275a34f..79a7e60633e0 100644
-> --- a/drivers/gpu/drm/rockchip/rockchip_rgb.c
-> +++ b/drivers/gpu/drm/rockchip/rockchip_rgb.c
-> @@ -98,7 +98,8 @@ struct rockchip_rgb *rockchip_rgb_init(struct device *dev,
->  		if (of_property_read_u32(endpoint, "reg", &endpoint_id))
->  			endpoint_id = 0;
->  
-> -		if (rockchip_drm_endpoint_is_subdriver(endpoint) > 0)
-> +		/* if subdriver (> 0) or error case (< 0), ignore entry */
-> +		if (rockchip_drm_endpoint_is_subdriver(endpoint) != 0)
->  			continue;
->  
->  		child_count++;
+Commit
 
-Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
+  11150f0f3096 ("f2fs: fix reboot timeout crash observed with Andorid R")
 
-Thanks,
-Miquèl
+is missing a Signed-off-by from its committer.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/spKnK_0b=BebA+q5dFcymG_
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5nZLEACgkQAVBC80lX
+0GylYQf+MQYYRNIq4pr6yCg3eMU9hGNsR18R/OWuiQoKgXYUYs6zN91Q7h9aK6Qu
+N1XQcL41/xOKpFi37u8A5ngEdr7FzrUYzGr8EAHMQL3Vq/6WHX77/wloolpAkSXQ
+yeG001fiAc/ILlwlp0TUR9oB6wd001zs53040aUxE/LulaXT32Q9SlI+VK5B2HGn
+dWL3aD26KhpAzmuWEflFgvvGRh10SuEVGTK3PHQuCs/Ww1+v+H5t80LadTc3sQ2/
+K/gHlbiE/VxGwXoboZndnPcR1JjPs7SYjg2sqEYvovgr+nrtEVqZ4nAnXOQSzG5S
+GbGO/IOhJYTp/mbD6+Y7/4Skq1vvoQ==
+=wL76
+-----END PGP SIGNATURE-----
+
+--Sig_/spKnK_0b=BebA+q5dFcymG_--
