@@ -2,92 +2,109 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC1E7C18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 16:32:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A3DAC18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 16:32:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C648021D7E
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 16:32:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583857961;
-	bh=/2iPAON56KiKp4VwG3w8X0u28X5Zi54HWAvPebGYCEc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=l1CJIgPu/uhdCz3sy53Bi6j/KGfjtMuC7P+ROEonvopDfaJoAIql5a6X0yoI0n92w
-	 qogLGEClozwlFTLH6orHqoF9bnYU6g/SOSrfkOvk51gSvTONXNWBQxs2QtHliyy++I
-	 Db8oM6xC7oRJlhZ9Tw+VFCdTdd1a8Vur+a0/Vk6c=
+	by mail.kernel.org (Postfix) with ESMTP id 43319222C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 16:32:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="f9d7nMDE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726385AbgCJQcl (ORCPT
+        id S1727569AbgCJQcp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 12:32:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46786 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727007AbgCJQck (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 12:32:40 -0400
-Received: from localhost (unknown [104.132.1.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 89DBD20848;
-        Tue, 10 Mar 2020 16:32:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583857959;
-        bh=/2iPAON56KiKp4VwG3w8X0u28X5Zi54HWAvPebGYCEc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Rb36kZ2IbhnZyB3p1V4V9GfgNg6bejDxx1CE6wjMZfT6YUH/psCRAb2RrJkPjMgH2
-         Go0BJJKKyZ5lTjS5QhXBu42kon1eWwEY210z/9Ec+pBRGEjfzfyFtu+GiWsT6Os2CD
-         XunWcletPjGcSg/F8kGYtouEaW6O5e0gn8UznE8s=
-Date:   Tue, 10 Mar 2020 09:32:39 -0700
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, chao@kernel.org
-Subject: Re: [PATCH 2/5] f2fs: force compressed data into warm area
-Message-ID: <20200310163239.GC240315@google.com>
-References: <20200310125009.12966-1-yuchao0@huawei.com>
- <20200310125009.12966-2-yuchao0@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200310125009.12966-2-yuchao0@huawei.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+        Tue, 10 Mar 2020 12:32:45 -0400
+Received: from mail-pf1-f201.google.com ([209.85.210.201]:35974 "EHLO
+        mail-pf1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727407AbgCJQco (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 12:32:44 -0400
+Received: by mail-pf1-f201.google.com with SMTP id h125so3171489pfg.3
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 09:32:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=orSnkR0b0kEaczXYpxz6sH2e+X0g5twrn8pQx+WIZsU=;
+        b=f9d7nMDELRVltXLuc+w/x0sA9qcoRpITVlGtCZMS3SIPIR4GcWsOQof7Ev82kZrUii
+         yH3Z0EpkdC9MD2e2RMoP4DIxM/2rLW21qeBviJy2WyMN1ZrMJs0Bhjx49QLTzoJNBTgU
+         4DMR+vHmZuhQ5UxOTBoN5opUtIVAkohIuqimV4s5pO8ct8XofVo/Jq4E51k5/JCWKCg/
+         9Xdi9jFPKgNrJJHhPKJRGbDvxBibwI2RwjxjoxPElmsRuV+ytDt3a1OncyBBUIt6mv7u
+         nnMwGE+x2qN37Zue0ZsnAEUNJ6aiIz2zNk6x/lDi8UuFo+udFUd6vGTP/HhRoUoJ4q9R
+         XdxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=orSnkR0b0kEaczXYpxz6sH2e+X0g5twrn8pQx+WIZsU=;
+        b=pHk5tsybvL+JkF17AGiClKFP9QY+3a1WpSFNzDXsORt2779X3zCRao8EGP3/TrRuqq
+         d/iVMblXuyd7yG+Da1g90vM2wQbhoOfhf/aakpEbmYGB9/gfN4b/5wNMkUS0Vnpp+Vgt
+         b2ySOOz/3eaLyz4NZ3hbtu5MUpYAwVVjAEnrJUIIbYLZipWrAzLmm3igIxZKPOocfTUY
+         uadaImGQpwz4O+NeVJ2QLKegoEqoyLAUmkBlk9pvSThjNbGkDaP8HxmR3Tmjb5v0uXTw
+         dl2kyIOhLijCkwDeQHh+Aholk5EJKxdlMh6AOnM838tejJqyHUdKK+v9JbtEhqQvuFhS
+         E5Ow==
+X-Gm-Message-State: ANhLgQ1GqqoWw/MuiJlhuszWj/K1sLajx6ZchTuyv1R+1hTJEvHOEqAt
+        tA/x2z+yrLNZWm1Kvno/TP/ieicZ3SeVlg==
+X-Google-Smtp-Source: ADFU+vsk/MhKLnMEl6XXM0gmfMX/+yVoxQ1mlYcZ9OVXE+KVATINDkuf9BSlNbBWf92pBgHmMAtRTSSReTRc3A==
+X-Received: by 2002:a17:90a:be0c:: with SMTP id a12mr2651608pjs.26.1583857963999;
+ Tue, 10 Mar 2020 09:32:43 -0700 (PDT)
+Date:   Tue, 10 Mar 2020 09:31:50 -0700
+Message-Id: <20200310093101.1.Iaa45f22c4b2bb1828e88211b2d28c24d6ddd50a7@changeid>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
+Subject: [PATCH] Bluetooth: mgmt: add mgmt_cmd_status in add_advertising
+From:   Manish Mandlik <mmandlik@google.com>
+To:     marcel@holtmann.org
+Cc:     Alain Michaud <alainm@chromium.org>,
+        linux-bluetooth@vger.kernel.org,
+        Miao-chen Chou <mcchou@chromium.org>,
+        Joseph Hwang <josephsih@chromium.org>,
+        Yoni Shavit <yshavit@chromium.org>,
+        Manish Mandlik <mmandlik@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jakub Kicinski <kuba@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/10, Chao Yu wrote:
-> Generally, data shows better continuity in warm data area as its
-> default allocation direction is right, in order to enhance
-> sequential read/write performance of compress inode, let's force
-> compress data into warm area.
+From: Joseph Hwang <josephsih@chromium.org>
 
-Not quite sure tho, compressed blocks are logically cold, no?
+From: Joseph Hwang <josephsih@chromium.org>
 
-> 
-> Signed-off-by: Chao Yu <yuchao0@huawei.com>
-> ---
->  fs/f2fs/segment.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-> index 601d67e72c50..ab1bc750712a 100644
-> --- a/fs/f2fs/segment.c
-> +++ b/fs/f2fs/segment.c
-> @@ -3037,9 +3037,10 @@ static int __get_segment_type_6(struct f2fs_io_info *fio)
->  	if (fio->type == DATA) {
->  		struct inode *inode = fio->page->mapping->host;
->  
-> -		if (is_cold_data(fio->page) || file_is_cold(inode) ||
-> -				f2fs_compressed_file(inode))
-> +		if (is_cold_data(fio->page) || file_is_cold(inode))
->  			return CURSEG_COLD_DATA;
-> +		if (f2fs_compressed_file(inode))
-> +			return CURSEG_WARM_DATA;
->  		if (file_is_hot(inode) ||
->  				is_inode_flag_set(inode, FI_HOT_DATA) ||
->  				f2fs_is_atomic_file(inode) ||
-> -- 
-> 2.18.0.rc1
+If an error occurs during request building in add_advertising(),
+remember to send MGMT_STATUS_FAILED command status back to bluetoothd.
+
+Signed-off-by: Joseph Hwang <josephsih@chromium.org>
+Signed-off-by: Manish Mandlik <mmandlik@google.com>
+---
+
+ net/bluetooth/mgmt.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/net/bluetooth/mgmt.c b/net/bluetooth/mgmt.c
+index 1002c657768a0..2398f57b7dc3c 100644
+--- a/net/bluetooth/mgmt.c
++++ b/net/bluetooth/mgmt.c
+@@ -6747,8 +6747,11 @@ static int add_advertising(struct sock *sk, struct hci_dev *hdev,
+ 	if (!err)
+ 		err = hci_req_run(&req, add_advertising_complete);
+ 
+-	if (err < 0)
++	if (err < 0) {
++		err = mgmt_cmd_status(sk, hdev->id, MGMT_OP_ADD_ADVERTISING,
++				      MGMT_STATUS_FAILED);
+ 		mgmt_pending_remove(cmd);
++	}
+ 
+ unlock:
+ 	hci_dev_unlock(hdev);
+-- 
+2.25.1.481.gfbce0eb801-goog
+
