@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEFB1C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:18:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70084C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:18:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5789222D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:18:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A1C220873
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:18:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583846318;
-	bh=E3EhBWcEq5pdHu/iHbfF2I3g5wRmXGkx1phYs45uAU4=;
+	s=default; t=1583846323;
+	bh=MjftV02fkHbcXmGv+eBttb48zfa/BdDIjySLYODfq0E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W20AjPwOkuqntbdU0BFgbouN366kJxJlROe3UH7FaRng4jmU9DUpNb17XnxEUYBUH
-	 Vwh+x8gOzp56y0r+MH42tG2qG/xK1eNvQ0EGm0p5NCNROsDL5RTYLRZD5ERCeZfbSP
-	 hvEyucZmqmTJbVAx/Hy14gYD5ASnwsyOdqrQsuNQ=
+	b=IWs40Zk/CnOSznoZl4A7eGsd4WCGCdHwwe9nXl2VhtGeqcjRrOdh1FBMtLn8kiXmT
+	 vq7khecgTItoUAEZV2+ojHNpK0ONV5aVXQ9/Y36qYWGrsXhAgMwuk1YL1geSfjWLQV
+	 MposVj88mwX09x4s4oEdNjThb/X0dW8LK3pfh9Cw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731536AbgCJNSh (ORCPT
+        id S1730838AbgCJNKU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:18:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59974 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:10:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59598 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730650AbgCJNKd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:10:33 -0400
+        id S1731313AbgCJNKR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:10:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A4CE208E4;
-        Tue, 10 Mar 2020 13:10:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CFD462468C;
+        Tue, 10 Mar 2020 13:10:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845833;
-        bh=E3EhBWcEq5pdHu/iHbfF2I3g5wRmXGkx1phYs45uAU4=;
+        s=default; t=1583845816;
+        bh=MjftV02fkHbcXmGv+eBttb48zfa/BdDIjySLYODfq0E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J40CDwX8gRCnZd6EZvSBFuSEDMgXkfHnO6ghnNOYEEpygZLqufH6O1BzOoUoa4FjN
-         TFWXP2pBAMhumzJppPpM1CDZjQnRkyYE8qL5AaNtN39u50DsjVSvRupV2VeGq0lJS6
-         zZbB23wkXRYSNVaXi7e69v2LcF1eqU9dF5tgaLY0=
+        b=jeSQRKbX1xr0cKzZCSseKo0o/kx2h9mw7zmXjOZUyuBFRBNdG94od/QuzGNmQ7C4X
+         w7mzNHM4q2aCmoOdcfQAHxFWgQZKGaQFnkLeoImlF5XTeHTlaPt26sVYOYIKAap2Hx
+         ztXdFlCrkdIx5G1clk6EE+u0bSxhIzuPvGKDd/bI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        stable@vger.kernel.org, Dragos Tarcatu <dragos_tarcatu@mentor.com>,
         Mark Brown <broonie@kernel.org>
-Subject: [PATCH 4.14 116/126] ASoC: dapm: Correct DAPM handling of active widgets during shutdown
-Date:   Tue, 10 Mar 2020 13:42:17 +0100
-Message-Id: <20200310124210.912557251@linuxfoundation.org>
+Subject: [PATCH 4.14 111/126] ASoC: topology: Fix memleak in soc_tplg_link_elems_load()
+Date:   Tue, 10 Mar 2020 13:42:12 +0100
+Message-Id: <20200310124210.649737497@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310124203.704193207@linuxfoundation.org>
 References: <20200310124203.704193207@linuxfoundation.org>
@@ -60,43 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
+From: Dragos Tarcatu <dragos_tarcatu@mentor.com>
 
-commit 9b3193089e77d3b59b045146ff1c770dd899acb1 upstream.
+commit 2b2d5c4db732c027a14987cfccf767dac1b45170 upstream.
 
-commit c2caa4da46a4 ("ASoC: Fix widget powerdown on shutdown") added a
-set of the power state during snd_soc_dapm_shutdown to ensure the
-widgets powered off. However, when commit 39eb5fd13dff
-("ASoC: dapm: Delay w->power update until the changes are written")
-added the new_power member of the widget structure, to differentiate
-between the current power state and the target power state, it did not
-update the shutdown to use the new_power member.
+If soc_tplg_link_config() fails, _link needs to be freed in case of
+topology ABI version mismatch. However the current code is returning
+directly and ends up leaking memory in this case.
+This patch fixes that.
 
-As new_power has not updated it will be left in the state set by the
-last DAPM sequence, ie. 1 for active widgets. So as the DAPM sequence
-for the shutdown proceeds it will turn the widgets on (despite them
-already being on) rather than turning them off.
-
-Fixes: 39eb5fd13dff ("ASoC: dapm: Delay w->power update until the changes are written")
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Link: https://lore.kernel.org/r/20200228153145.21013-1-ckeepax@opensource.cirrus.com
+Fixes: 593d9e52f9bb ("ASoC: topology: Add support to configure existing physical DAI links")
+Signed-off-by: Dragos Tarcatu <dragos_tarcatu@mentor.com>
+Link: https://lore.kernel.org/r/20200207185325.22320-2-dragos_tarcatu@mentor.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/soc-dapm.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/soc-topology.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/sound/soc/soc-dapm.c
-+++ b/sound/soc/soc-dapm.c
-@@ -4481,7 +4481,7 @@ static void soc_dapm_shutdown_dapm(struc
- 			continue;
- 		if (w->power) {
- 			dapm_seq_insert(w, &down_list, false);
--			w->power = 0;
-+			w->new_power = 0;
- 			powerdown = 1;
+--- a/sound/soc/soc-topology.c
++++ b/sound/soc/soc-topology.c
+@@ -2177,8 +2177,11 @@ static int soc_tplg_link_elems_load(stru
  		}
- 	}
+ 
+ 		ret = soc_tplg_link_config(tplg, _link);
+-		if (ret < 0)
++		if (ret < 0) {
++			if (!abi_match)
++				kfree(_link);
+ 			return ret;
++		}
+ 
+ 		/* offset by version-specific struct size and
+ 		 * real priv data size
 
 
