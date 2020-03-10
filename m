@@ -2,191 +2,137 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CADEC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 00:10:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E068CC10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 00:18:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AB7824655
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 00:10:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3CC624655
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 00:18:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MIynxTGD"
+	dkim=pass (2048-bit key) header.d=anarazel.de header.i=@anarazel.de header.b="hCLjptm8";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="hR1CHx7s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727518AbgCJAKF (ORCPT
+        id S1727511AbgCJAS1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 20:10:05 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:34124 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726937AbgCJAKE (ORCPT
+        Mon, 9 Mar 2020 20:18:27 -0400
+Received: from new4-smtp.messagingengine.com ([66.111.4.230]:39277 "EHLO
+        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726937AbgCJAS0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 20:10:04 -0400
-Received: by mail-lf1-f66.google.com with SMTP id i19so3392327lfl.1
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 17:10:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Qgrrl/PIS4y9k8c+4r54kiLV+rLBtZ0nrsWDLZmeMn4=;
-        b=MIynxTGDbmrJlCOvfmOik94Q8oGE0PsOjavcV+1d61XGYkRoLB1qrCJIi8VIhezGuR
-         sMIhJZjGAfnmbCB/ldF9KkgTjYgL9aHpUWFKOH7MjRLCAakxN1pw5bsnfSC/v0H8kKsL
-         zNhp/U/O8wx+lJ60wHTqEajE8uSFkfo4bulvlBhsjHmJOMQr7qLMz/wtXhQaWK2DgKs7
-         ULYhtHP6mxfbf0vk1XeDO61EfEW/SECdbsUMxFJZIGLTTUBQBLPP8o3g+RGbJpNkkqAx
-         RpL4g4roKcNrreA2utPOR8gust4fdB8coMyE/9t3o5dg3Xntr0bpe/Zfbrz50BSMk/yW
-         RTAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Qgrrl/PIS4y9k8c+4r54kiLV+rLBtZ0nrsWDLZmeMn4=;
-        b=eCLHTbK+NbjchXQFjd691D/02nvCTTiPAlz/+uWwBtX6gMPCpyW89wUyIsngIpbXPX
-         x+AkNH92xVXC2L7E492Pe0RieszNypMr1q/SIB1TgFz+m28rXEgB9WyYiw9uTO2yzQqE
-         y+7LbpS9GoseTj7fX5V2uMy3yh7sD9b3zxT35oSd5N60KiVRq7EhoprgObG9Vl3T9NNK
-         Z0zC4XCqgXdVNXnyhNwbBHNuaHlkyVA+4enX3yDxIFTiR+GhFaeDH3SsuxmY8GCC2HHd
-         yLQlTIcC7ICSIbdG/XnbuHDCcLtGZ8ULR7Xgxy8hkHmGWPnm4qyX6pVQx9quD8iucaHg
-         IJ/w==
-X-Gm-Message-State: ANhLgQ03ZuqJ4vgxTzmyFv5irxHxz+z0vh4fmkn+w0UpaGTE9xhCRPQg
-        8TYCRGqpksope1/MUp+XnJUFFYuvT1iFHWR1PKJjvw==
-X-Google-Smtp-Source: ADFU+vt32UZtqnvEuXoVRdT8OyeT2tec9wmF5Ooht3N0fo2TBipeo6oX7FEFlDeeQ7mewl8OPgZY6Eb6w2C2DpYd0jY=
-X-Received: by 2002:a05:6512:512:: with SMTP id o18mr10503227lfb.122.1583799000954;
- Mon, 09 Mar 2020 17:10:00 -0700 (PDT)
+        Mon, 9 Mar 2020 20:18:26 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 35D6B2B17;
+        Mon,  9 Mar 2020 20:18:25 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Mon, 09 Mar 2020 20:18:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=anarazel.de; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=y2GQYGvf1VdVHeGmvE5sDqwzusj
+        gACWrEd8rXJZj1/8=; b=hCLjptm8wkq6KP7tCx7x9OtPNkX0eMvm5L8o2L97Wdo
+        y7vZrsFkN2f4S8Xv4R8dqRogUS/9W/QJ66jTev5Aoip48Jo0P4gB73pf4vehqIPK
+        JjNTp8MWQ1ArZcM945bWyUlu9TnTT7vRowJNgZw7oaWVz+6Ro+kUV+BvaTb/Axir
+        Rd6auBHkdyebUJ4UZ8DYveKmdHVSu6fdUbPx5wy2rYk0qCyFwSg38WMAwVPUg5Ku
+        GA4lOOXpIKxaAK22UekVw8FFJzKTa6OzjJ9Oxk/T3qcyaA35MUgwyxYjd1ZtgS6K
+        i5h6lcNjdPFhMmGhYyeM8m3cEHGO/5NZU3TbC7SzNdw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=y2GQYG
+        vf1VdVHeGmvE5sDqwzusjgACWrEd8rXJZj1/8=; b=hR1CHx7sGSLI0tfsHsnts5
+        3Hmffp3/lf5X5mVKSJZiHGvay1HEsa/lAhINcfhikONaFnXvPMdWcLXqeI65qu98
+        5IGZzvzrZLQ9rEQZTkcsAFr2dIvY4csYaQValDPkpQpiqkp6DIy7g6XepjoptqAM
+        TAM4ZHUlxf1IYp29XvsF7D7DaBJDJkw0kAtUKVLfY/O4E08dDeL6j/ykjMW5rpWe
+        5XcWL8In/VDf8l+3tnGbBDB8uwSj9B1NPqbn3/lNK7AcsnmcVtwEgK191sA2Nh4G
+        LIeRxCXeQnoCNpMDjJXnTOClDNOcp3XeJNhqoSjyqGciCTV5p+IuLeAxePrsi5bg
+        ==
+X-ME-Sender: <xms:z9xmXj9MdiMQxb3sWpQ0zpHMFqyrXHaQEw8NK1xMORNkzGXW3ZRTzQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrudduledgudelucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeetnhgurhgv
+    shcuhfhrvghunhguuceorghnughrvghssegrnhgrrhgriigvlhdruggvqeenucfkphepie
+    ejrdduiedtrddvudejrddvhedtnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghm
+    pehmrghilhhfrhhomheprghnughrvghssegrnhgrrhgriigvlhdruggv
+X-ME-Proxy: <xmx:z9xmXg-FyPlg1L30wL5k3gQsDNd-t7jy7bKj8Kt6liqh63q9EbY7mw>
+    <xmx:z9xmXuF-0sjXCm1U5Zku5J7ltPA7_BmZzh1YdA3oUYFbwW4JBHao7g>
+    <xmx:z9xmXicuLoixXJ2XZ_721dkzztz4dN0Kp240Oq1ekOXjgrpEZlsUkw>
+    <xmx:0dxmXho2KzunPEg77nJRP3TUrcGMSb00ReWWFfVGCGI3mSgfDxoD0Q>
+Received: from intern.anarazel.de (c-67-160-217-250.hsd1.ca.comcast.net [67.160.217.250])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 007C43061856;
+        Mon,  9 Mar 2020 20:18:23 -0400 (EDT)
+Date:   Mon, 9 Mar 2020 17:18:21 -0700
+From:   Andres Freund <andres@anarazel.de>
+To:     Jeff Layton <jlayton@redhat.com>
+Cc:     David Howells <dhowells@redhat.com>, torvalds@linux-foundation.org,
+        viro@zeniv.linux.org.uk, Theodore Ts'o <tytso@mit.edu>,
+        Stefan Metzmacher <metze@samba.org>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        linux-ext4@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        linux-nfs@vger.kernel.org, linux-api@vger.kernel.org,
+        raven@themaw.net, mszeredi@redhat.com, christian@brauner.io,
+        jannh@google.com, darrick.wong@oracle.com, kzak@redhat.com,
+        linux-fsdevel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 00/14] VFS: Filesystem information [ver #18]
+Message-ID: <20200310001821.vb7qwfhnq67rsknn@alap3.anarazel.de>
+References: <158376244589.344135.12925590041630631412.stgit@warthog.procyon.org.uk>
+ <2d31e2658e5f6651dc7d9908c4c12b6ba461fc88.camel@redhat.com>
+ <20200309192240.nqf5bxylptw7mdm3@alap3.anarazel.de>
+ <32c384ac3adf0cf924d3071a13af7edffe53cc2b.camel@redhat.com>
 MIME-Version: 1.0
-References: <20200305012338.219746-1-rajatja@google.com> <20200305012338.219746-3-rajatja@google.com>
- <87o8tbnnqa.fsf@intel.com> <CACK8Z6HRB9q1KeborGr7V-0Qp0AApHV6gBTkc6xD5NokH8gr0w@mail.gmail.com>
- <87tv31om53.fsf@intel.com> <CACK8Z6HFOpsfhHo=y9Qj_NSdiCGBHsvchZ335mU1BQ5CYQq1VQ@mail.gmail.com>
-In-Reply-To: <CACK8Z6HFOpsfhHo=y9Qj_NSdiCGBHsvchZ335mU1BQ5CYQq1VQ@mail.gmail.com>
-From:   Rajat Jain <rajatja@google.com>
-Date:   Mon, 9 Mar 2020 17:09:23 -0700
-Message-ID: <CACK8Z6FW3p6h1pfW2kPxiwBoDDcK3R76Aoxa-17P+MpU+w20hw@mail.gmail.com>
-Subject: Re: [PATCH v6 2/3] drm/i915: Lookup and attach ACPI device node for connectors
-To:     Jani Nikula <jani.nikula@linux.intel.com>
-Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Imre Deak <imre.deak@intel.com>,
-        =?UTF-8?Q?Jos=C3=A9_Roberto_de_Souza?= <jose.souza@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        intel-gfx@lists.freedesktop.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mat King <mathewk@google.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jonathan Corbet <corbet@lwn.net>, Pavel Machek <pavel@denx.de>,
-        Sean Paul <seanpaul@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Mark Pearson <mpearson@lenovo.com>,
-        Nitin Joshi1 <njoshi1@lenovo.com>,
-        Sugumaran Lacshiminarayanan <slacshiminar@lenovo.com>,
-        Tomoki Maruichi <maruichit@lenovo.com>,
-        Rajat Jain <rajatxjain@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <32c384ac3adf0cf924d3071a13af7edffe53cc2b.camel@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 6, 2020 at 5:38 PM Rajat Jain <rajatja@google.com> wrote:
->
-> On Fri, Mar 6, 2020 at 1:42 AM Jani Nikula <jani.nikula@linux.intel.com> wrote:
-> >
-> > On Thu, 05 Mar 2020, Rajat Jain <rajatja@google.com> wrote:
-> > > On Thu, Mar 5, 2020 at 1:41 AM Jani Nikula <jani.nikula@linux.intel.com> wrote:
-> > >>
-> > >> On Wed, 04 Mar 2020, Rajat Jain <rajatja@google.com> wrote:
-> > >> 1) See if we can postpone creating and attaching properties to connector
-> > >> ->late_register hook. (I didn't have the time to look into it yet, at
-> > >> all.)
-> > >
-> > > Apparently not. The drm core doesn't like to add properties in
-> > > late_register() callback. I just tried it and get this warning:
-> >
-> > I kind of had a feeling this would be the case, thanks for checking.
->
-> Thinking about it again, it looks like there is a difference in
-> creating a property and attaching a property. I'm wondering if drm
-> would let me (unconditionally) create a property before registering,
-> and attach it in late_register() only in case a privacy screen is
-> detected. (If not present, I can destroy the property in
-> late_register()). If this approach sound more promising, I can try it
-> out.
+Hi,
 
-I tried out this approach, and it worked. The new patchset is posted at:
+On 2020-03-09 18:49:31 -0400, Jeff Layton wrote:
+> On Mon, 2020-03-09 at 12:22 -0700, Andres Freund wrote:
+> > On 2020-03-09 13:50:59 -0400, Jeff Layton wrote:
+> > > I sent a patch a few weeks ago to make syncfs() return errors when there
+> > > have been writeback errors on the superblock. It's not merged yet, but
+> > > once we have something like that in place, we could expose info from the
+> > > errseq_t to userland using this interface.
+> >
+> > I'm still a bit worried about the details of errseq_t being exposed to
+> > userland. Partially because it seems to restrict further evolution of
+> > errseq_t, and partially because it will likely up with userland trying
+> > to understand it (it's e.g. just too attractive to report a count of
+> > errors etc).
+>
+> Trying to interpret the counter field won't really tell you anything.
+> The counter is not incremented unless someone has queried the value
+> since it was last checked. A single increment could represent a single
+> writeback error or 10000 identical ones.
 
-https://patchwork.freedesktop.org/series/74473/#rev1
+Oh, right.  A zero errseq would still indicate something, but that's
+probably fine.
 
-Thanks!
 
-Rajat
+> > Is there a reason to not instead report a 64bit counter instead of the
+> > cookie? In contrast to the struct file case we'd only have the space
+> > overhead once per superblock, rather than once per #files * #fd. And it
+> > seems that the maintenance of that counter could be done without
+> > widespread changes, e.g. instead/in addition to your change:
 
->
-> >
-> > >> 2) Provide a way to populate connector->acpi_device_id and
-> > >> connector->acpi_handle on a per-connector basis. At least the device id
-> > >> remains constant for the lifetime of the drm_device
-> > >
-> > > Are you confirming that the connector->acpi_device_id remains constant
-> > > for the lifetime of the drm_device, as calculated in
-> > > intel_acpi_device_id_update()?  Even in the face of external displays
-> > > (monitors) being connected and disconnected during the lifetime of the
-> > > system? If so, then I think we can have a solution.
-> >
-> > First I thought so. Alas it does not hold for DP MST, where you can have
-> > connectors added and removed dynamically. I think we could ensure they
-> > stay the same for all other connectors though. I'm pretty sure this is
-> > already the case; they get added/removed after all others.
-> >
-> > Another thought, from the ACPI perspective, I'm not sure the dynamically
-> > added/removed DP MST connectors should even have acpi handles. But
-> > again, tying all this together with ACPI stuff is not something I am an
-> > expert on.
->
-> I propose that we:
->
-> 1) Maintain a display_index[] array within the drm_dev, and increment
-> as connectors are added.
-> 2) Initialize connector->acpi_device_id and and connector->acpi_handle
-> while registering (one time per connector).
-> 3) Remove the code to update acpi_device_id on every resume.
->
-> It doesn't look like anyone on the DP MST side has cared for ACPI so
-> far, so I doubt if we can do anything that might break MST currently.
-> In other words, the above should not make things any worse for MST, if
-> not better. For connectors other than MST, this should allow them to
-> get ACPI handle and play with it, if they need.
->
-> WDYT?
->
-> Thanks,
->
-> Rajat
->
-> >
-> > >> (why do we keep
-> > >> updating it at every resume?!) but can we be sure ->acpi_handle does
-> > >> too? (I don't really know my way around ACPI.)
-> > >
-> > > I don't understand why this was being updated on every resume in that
-> > > case (this existed even before my patchset). I believe we do not need
-> > > it. Yes, the ->acpi_handle will not change if the ->acpi_device_id
-> > > does not change. I believe the way forward should then be to populate
-> > > connector->acpi_device_id and connector->acpi_handle ONE TIME at the
-> > > time of connector init (and not update it on every resume). Does this
-> > > sound ok?
-> >
-> > If a DP MST connector gets removed, should the other ACPI display
-> > indexes after that shift, or remain the same? I really don't know.
-> >
-> > BR,
-> > Jani.
-> >
-> > --
-> > Jani Nikula, Intel Open Source Graphics Center
+> What problem would moving to a 64-bit counter solve? I get the concern
+> about people trying to get a counter out of the cookie field, but giving
+> people an explicit 64-bit counter seems even more open to
+> misinterpretation.
+
+Well, you could get an actual error count out of it? I was thinking that
+that value would get incremented every time mapping_set_error() is
+called, which should make it a meaningful count?
+
+Greetings,
+
+Andres Freund
