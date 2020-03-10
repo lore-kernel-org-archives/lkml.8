@@ -2,133 +2,189 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67859C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 19:06:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 811ABC18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 19:09:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 436DA215A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 19:06:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D41020727
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 19:09:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727314AbgCJTGM (ORCPT
+        id S1727126AbgCJTI7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 15:06:12 -0400
-Received: from mga12.intel.com ([192.55.52.136]:20000 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726403AbgCJTGL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 15:06:11 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Mar 2020 12:06:11 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,538,1574150400"; 
-   d="scan'208";a="289126101"
-Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
-  by FMSMGA003.fm.intel.com with SMTP; 10 Mar 2020 12:06:05 -0700
-Received: by stinkbox (sSMTP sendmail emulation); Tue, 10 Mar 2020 21:06:04 +0200
-Date:   Tue, 10 Mar 2020 21:06:04 +0200
-From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
-To:     Lyude Paul <lyude@redhat.com>
-Cc:     intel-gfx@lists.freedesktop.org,
-        Manasi Navare <manasi.d.navare@intel.com>,
-        "Lee, Shawn C" <shawn.c.lee@intel.com>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        =?iso-8859-1?Q?Jos=E9?= Roberto de Souza 
-        <jose.souza@intel.com>, Chris Wilson <chris@chris-wilson.co.uk>,
-        Lucas De Marchi <lucas.demarchi@intel.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] drm/i915/mst: Hookup DRM DP MST
- late_register/early_unregister callbacks
-Message-ID: <20200310190604.GP13686@intel.com>
-References: <20200310185417.1588984-1-lyude@redhat.com>
+        Tue, 10 Mar 2020 15:08:59 -0400
+Received: from out02.mta.xmission.com ([166.70.13.232]:43668 "EHLO
+        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726403AbgCJTI7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 15:08:59 -0400
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jBkFN-0001yX-6z; Tue, 10 Mar 2020 13:08:57 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jBkFL-0004Uf-I6; Tue, 10 Mar 2020 13:08:57 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Bernd Edlinger <bernd.edlinger@hotmail.de>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Andrei Vagin <avagin@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Peter Zijlstra \(Intel\)" <peterz@infradead.org>,
+        Yuyang Du <duyuyang@gmail.com>,
+        David Hildenbrand <david@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        David Howells <dhowells@redhat.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christian Kellner <christian@kellner.me>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        "linux-doc\@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel\@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-mm\@kvack.org" <linux-mm@kvack.org>,
+        "stable\@vger.kernel.org" <stable@vger.kernel.org>,
+        "linux-api\@vger.kernel.org" <linux-api@vger.kernel.org>
+References: <AM6PR03MB5170EB4427BF5C67EE98FF09E4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <AM6PR03MB51703B44170EAB4626C9B2CAE4E20@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <87tv32cxmf.fsf_-_@x220.int.ebiederm.org>
+        <87v9ne5y4y.fsf_-_@x220.int.ebiederm.org>
+        <87zhcq4jdj.fsf_-_@x220.int.ebiederm.org>
+        <AM6PR03MB5170BC58D90BAD80CDEF3F8BE4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <878sk94eay.fsf@x220.int.ebiederm.org>
+        <AM6PR03MB517086003BD2C32E199690A3E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <87r1y12yc7.fsf@x220.int.ebiederm.org>
+        <87k13t2xpd.fsf@x220.int.ebiederm.org>
+        <87d09l2x5n.fsf@x220.int.ebiederm.org>
+        <AM6PR03MB5170F0F9DC18F5EA77C9A857E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <871rq12vxu.fsf@x220.int.ebiederm.org>
+        <AM6PR03MB5170DF45E3245F55B95CCD91E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <877dzt1fnf.fsf@x220.int.ebiederm.org>
+        <AM6PR03MB51701C6F60699F99C5C67E0BE4FF0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <875zfcxlwy.fsf@x220.int.ebiederm.org>
+        <AM6PR03MB5170BD2476E35068E182EFA4E4FF0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+Date:   Tue, 10 Mar 2020 14:06:36 -0500
+In-Reply-To: <AM6PR03MB5170BD2476E35068E182EFA4E4FF0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        (Bernd Edlinger's message of "Tue, 10 Mar 2020 18:45:47 +0100")
+Message-ID: <874kuwvxkz.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200310185417.1588984-1-lyude@redhat.com>
-X-Patchwork-Hint: comment
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-XM-SPF: eid=1jBkFL-0004Uf-I6;;;mid=<874kuwvxkz.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX18WbrkloOri1g4xv59aV91UgTyj+0r0tb4=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH 3/4] proc: io_accounting: Use new infrastructure to fix deadlocks in execve
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 10, 2020 at 02:54:16PM -0400, Lyude Paul wrote:
-> i915 can enable aux device nodes for DP MST by calling
-> drm_dp_mst_connector_late_register()/drm_dp_mst_connector_early_unregister(),
-> so let's hook that up.
-> 
-> Changes since v1:
-> * Call intel_connector_register/unregister() from
->   intel_dp_mst_connector_late_register/unregister() so we don't lose
->   error injection - Ville Syrjälä
-> 
-> Cc: Ville Syrjälä <ville.syrjala@linux.intel.com>
-> Cc: Manasi Navare <manasi.d.navare@intel.com>
-> Cc: "Lee, Shawn C" <shawn.c.lee@intel.com>
-> Signed-off-by: Lyude Paul <lyude@redhat.com>
+Bernd Edlinger <bernd.edlinger@hotmail.de> writes:
+
+> This changes do_io_accounting to use the new exec_update_mutex
+> instead of cred_guard_mutex.
+>
+> This fixes possible deadlocks when the trace is accessing
+> /proc/$pid/io for instance.
+>
+> This should be safe, as the credentials are only used for reading.
+
+This is an improvement.
+
+We probably want to do this just as an incremental step in making things
+better but perhaps I am blind but I am not finding the reason for
+guarding this with the cred_guard_mutex to be at all persuasive.
+
+I think moving the ptrace_may_access check down to after the
+unlock_task_sighand would be just as effective at addressing the
+concerns raised in the original commit.  I think the task_lock provides
+all of the barrier we need to make it safe to move the ptrace_may_access
+checks safe.
+
+The reason I say this is I don't see exec changing ->ioac.  Just
+performing some I/O which would update the io accounting statistics.
+
+Can anyone see if I am wrong?
+
+Eric
+
+
+commit 293eb1e7772b25a93647c798c7b89bf26c2da2e0
+Author: Vasiliy Kulikov <segoon@openwall.com>
+Date:   Tue Jul 26 16:08:38 2011 -0700
+
+    proc: fix a race in do_io_accounting()
+    
+    If an inode's mode permits opening /proc/PID/io and the resulting file
+    descriptor is kept across execve() of a setuid or similar binary, the
+    ptrace_may_access() check tries to prevent using this fd against the
+    task with escalated privileges.
+    
+    Unfortunately, there is a race in the check against execve().  If
+    execve() is processed after the ptrace check, but before the actual io
+    information gathering, io statistics will be gathered from the
+    privileged process.  At least in theory this might lead to gathering
+    sensible information (like ssh/ftp password length) that wouldn't be
+    available otherwise.
+    
+    Holding task->signal->cred_guard_mutex while gathering the io
+    information should protect against the race.
+    
+    The order of locking is similar to the one inside of ptrace_attach():
+    first goes cred_guard_mutex, then lock_task_sighand().
+    
+    Signed-off-by: Vasiliy Kulikov <segoon@openwall.com>
+    Cc: Al Viro <viro@zeniv.linux.org.uk>
+    Cc: <stable@kernel.org>
+    Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+    Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+
+
+
+> Signed-off-by: Bernd Edlinger <bernd.edlinger@hotmail.de>
 > ---
->  drivers/gpu/drm/i915/display/intel_dp_mst.c | 28 +++++++++++++++++++--
->  1 file changed, 26 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/i915/display/intel_dp_mst.c b/drivers/gpu/drm/i915/display/intel_dp_mst.c
-> index d53978ed3c12..9311c10f5b1b 100644
-> --- a/drivers/gpu/drm/i915/display/intel_dp_mst.c
-> +++ b/drivers/gpu/drm/i915/display/intel_dp_mst.c
-> @@ -548,12 +548,36 @@ static int intel_dp_mst_get_ddc_modes(struct drm_connector *connector)
->  	return ret;
->  }
+>  fs/proc/base.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/fs/proc/base.c b/fs/proc/base.c
+> index 4fdfe4f..529d0c6 100644
+> --- a/fs/proc/base.c
+> +++ b/fs/proc/base.c
+> @@ -2770,7 +2770,7 @@ static int do_io_accounting(struct task_struct *task, struct seq_file *m, int wh
+>  	unsigned long flags;
+>  	int result;
 >  
-> +static int
-> +intel_dp_mst_connector_late_register(struct drm_connector *connector)
-> +{
-> +	struct intel_connector *intel_connector = to_intel_connector(connector);
-> +	int ret;
-> +
-> +	ret = drm_dp_mst_connector_late_register(connector,
-> +						 intel_connector->port);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	return intel_connector_register(connector);
-
-Don't we have to undo the damage if this fails?
-
-> +}
-> +
-> +static void
-> +intel_dp_mst_connector_early_unregister(struct drm_connector *connector)
-> +{
-> +	struct intel_connector *intel_connector = to_intel_connector(connector);
-> +
-> +	intel_connector_unregister(connector);
-> +	drm_dp_mst_connector_early_unregister(connector,
-> +					      intel_connector->port);
-> +}
-> +
->  static const struct drm_connector_funcs intel_dp_mst_connector_funcs = {
->  	.fill_modes = drm_helper_probe_single_connector_modes,
->  	.atomic_get_property = intel_digital_connector_atomic_get_property,
->  	.atomic_set_property = intel_digital_connector_atomic_set_property,
-> -	.late_register = intel_connector_register,
-> -	.early_unregister = intel_connector_unregister,
-> +	.late_register = intel_dp_mst_connector_late_register,
-> +	.early_unregister = intel_dp_mst_connector_early_unregister,
->  	.destroy = intel_connector_destroy,
->  	.atomic_destroy_state = drm_atomic_helper_connector_destroy_state,
->  	.atomic_duplicate_state = intel_digital_connector_duplicate_state,
-> -- 
-> 2.24.1
-
--- 
-Ville Syrjälä
-Intel
+> -	result = mutex_lock_killable(&task->signal->cred_guard_mutex);
+> +	result = mutex_lock_killable(&task->signal->exec_update_mutex);
+>  	if (result)
+>  		return result;
+>  
+> @@ -2806,7 +2806,7 @@ static int do_io_accounting(struct task_struct *task, struct seq_file *m, int wh
+>  	result = 0;
+>  
+>  out_unlock:
+> -	mutex_unlock(&task->signal->cred_guard_mutex);
+> +	mutex_unlock(&task->signal->exec_update_mutex);
+>  	return result;
+>  }
