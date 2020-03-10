@@ -2,55 +2,51 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C91B7C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:07:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE1B9C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:07:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FA7A24692
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:07:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83D3C20409
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:07:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583845652;
-	bh=oDh7SuUHFtSuw4pwi8W77mLorLw1uIiStk6IAmt32qA=;
+	s=default; t=1583845656;
+	bh=fnXm3qDkRK1lu7mkXv0447f3x/i6cp9+WO2pKJCp1i8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r4K0nCD2XqqWzNGwW5m+tBca8WpUetyKHAPloS9teGJbq7bF+nGd65a6sl0jpF5Ig
-	 IfwWbRcAzAh0vhHbrk7SgvmQpAwmQDqNwGoUrl0xF+uK0wjAfBZRPgHs6cFrT4WVaa
-	 Ioks31mlOlXRRRVt8R21r98pbbJhLvxgxbTM4188=
+	b=QMBA9BJBCLikXW5I9/cWKHFkv2/6nNTSz3FQIERdrguewWJkJVOsTqK3LhCnhK5z4
+	 596xdZw2O3ktHASk9UdVKJJ5z3uQhpgPFMToGYALuHVk8wtFyYm/iQYhI5VtCqP3YN
+	 9BYSAkrv+9lTmMFsU+Zbe/4LnikM/JhC+AYP+/l8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730708AbgCJNHb (ORCPT
+        id S1730992AbgCJNHe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:07:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53290 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:07:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53378 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730976AbgCJNH2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:07:28 -0400
+        id S1730982AbgCJNHb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:07:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA8BB20409;
-        Tue, 10 Mar 2020 13:07:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 972E424691;
+        Tue, 10 Mar 2020 13:07:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845647;
-        bh=oDh7SuUHFtSuw4pwi8W77mLorLw1uIiStk6IAmt32qA=;
+        s=default; t=1583845650;
+        bh=fnXm3qDkRK1lu7mkXv0447f3x/i6cp9+WO2pKJCp1i8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iXgsUsRZzIST9oC5TWGUGFp3t83kj7rqQ22E0mDibXr8e/vVTv9vjYa4n/WrIpVyJ
-         UXjGIsLwSESHB4IsvnvGisZtHHoAldDoS3hCFJG8D8PzL1Gx7CNRvln8hVFFszrVHF
-         YMLIYyVccCgclkKXvCdaQkunpsE5wA66HmlkmqcM=
+        b=OkdonGSnCfn9m+TcxZ4oBIfkW2xW/J+Ls3+Z/A452ynQzq1Msl1uNla+hYbLpVgR8
+         ug7O7BvbpCIxEvsj7Mn+HKjSBeHEccwVMfslIfzHNNYk7NzLN96rUxlv5uXEEGvw2k
+         XFsGLQZ21Stzi1aGFt6D/ywvcwaQZJ0KswPjVKLk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kristian Evensen <kristian.evensen@gmail.com>,
-        Aleksander Morgado <aleksander@aleksander.es>,
-        =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 012/126] qmi_wwan: unconditionally reject 2 ep interfaces
-Date:   Tue, 10 Mar 2020 13:40:33 +0100
-Message-Id: <20200310124204.841886268@linuxfoundation.org>
+        stable@vger.kernel.org, Tina Zhang <tina.zhang@intel.com>,
+        Zhenyu Wang <zhenyuw@linux.intel.com>
+Subject: [PATCH 4.14 048/126] drm/i915/gvt: Separate display reset from ALL_ENGINES reset
+Date:   Tue, 10 Mar 2020 13:41:09 +0100
+Message-Id: <20200310124207.338007254@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310124203.704193207@linuxfoundation.org>
 References: <20200310124203.704193207@linuxfoundation.org>
@@ -63,132 +59,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bjørn Mork <bjorn@mork.no>
+From: Tina Zhang <tina.zhang@intel.com>
 
-[ Upstream commit 00516d13d4cfa56ce39da144db2dbf08b09b9357 ]
+commit 3eb55e6f753a379e293395de8d5f3be28351a7f8 upstream.
 
-We have been using the fact that the QMI and DIAG functions
-usually are the only ones with class/subclass/protocol being
-ff/ff/ff on Quectel modems. This has allowed us to match the
-QMI function without knowing the exact interface number,
-which can vary depending on firmware configuration.
+ALL_ENGINES reset doesn't clobber display with the current gvt-g
+supported platforms. Thus ALL_ENGINES reset shouldn't reset the
+display engine registers emulated by gvt-g.
 
-The ability to silently reject the DIAG function, which is
-usually handled by the option driver, is important for this
-method to work.  This is done based on the knowledge that it
-has exactly 2 bulk endpoints.  QMI function control interfaces
-will have either 3 or 1 endpoint. This rule is universal so
-the quirk condition can be removed.
+This fixes guest warning like
 
-The fixed layouts known from the Gobi1k and Gobi2k modems
-have been gradually replaced by more dynamic layouts, and
-many vendors now use configurable layouts without changing
-device IDs.  Renaming the class/subclass/protocol matching
-macro makes it more obvious that this is now not Quectel
-specific anymore.
+[ 14.622026] [drm] Initialized i915 1.6.0 20200114 for 0000:00:03.0 on minor 0
+[ 14.967917] fbcon: i915drmfb (fb0) is primary device
+[ 25.100188] [drm:drm_atomic_helper_wait_for_dependencies [drm_kms_helper]] E RROR [CRTC:51:pipe A] flip_done timed out
+[ 25.100860] -----------[ cut here ]-----------
+[ 25.100861] pll on state mismatch (expected 0, found 1)
+[ 25.101024] WARNING: CPU: 1 PID: 30 at drivers/gpu/drm/i915/display/intel_dis play.c:14382 verify_single_dpll_state.isra.115+0x28f/0x320 [i915]
+[ 25.101025] Modules linked in: intel_rapl_msr intel_rapl_common kvm_intel kvm irqbypass crct10dif_pclmul crc32_pclmul ghash_clmulni_intel i915 aesni_intel cr ypto_simd cryptd glue_helper cec rc_core video drm_kms_helper joydev drm input_l eds i2c_algo_bit serio_raw fb_sys_fops syscopyarea sysfillrect sysimgblt mac_hid qemu_fw_cfg sch_fq_codel parport_pc ppdev lp parport ip_tables x_tables autofs4 e1000 psmouse i2c_piix4 pata_acpi floppy
+[ 25.101052] CPU: 1 PID: 30 Comm: kworker/u4:1 Not tainted 5.5.0+ #1
+[ 25.101053] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1 .12.1-0-ga5cab58 04/01/2014
+[ 25.101055] Workqueue: events_unbound async_run_entry_fn
+[ 25.101092] RIP: 0010:verify_single_dpll_state.isra.115+0x28f/0x320 [i915]
+[ 25.101093] Code: e0 d9 ff e9 a3 fe ff ff 80 3d e9 c2 11 00 00 44 89 f6 48 c7 c7 c0 9d 88 c0 75 3b e8 eb df d9 ff e9 c7 fe ff ff e8 d1 e0 ae c4 <0f> 0b e9 7a fe ff ff 80 3d c0 c2 11 00 00 8d 71 41 89 c2 48 c7 c7
+[ 25.101093] RSP: 0018:ffffb1de80107878 EFLAGS: 00010286
+[ 25.101094] RAX: 0000000000000000 RBX: ffffb1de80107884 RCX: 0000000000000007
+[ 25.101095] RDX: 0000000000000000 RSI: 0000000000000002 RDI: ffff94fdfdd19740
+[ 25.101095] RBP: ffffb1de80107938 R08: 0000000d6bfdc7b4 R09: 000000000000002b
+[ 25.101096] R10: ffff94fdf82dc000 R11: 0000000000000225 R12: 00000000000001f8
+[ 25.101096] R13: ffff94fdb3ca6a90 R14: ffff94fdb3ca0000 R15: 0000000000000000
+[ 25.101097] FS: 0000000000000000(0000) GS:ffff94fdfdd00000(0000) knlGS:00000 00000000000
+[ 25.101098] CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[ 25.101098] CR2: 00007fbc3e2be9c8 CR3: 000000003339a003 CR4: 0000000000360ee0
+[ 25.101101] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[ 25.101101] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[ 25.101102] Call Trace:
+[ 25.101139] intel_atomic_commit_tail+0xde4/0x1520 [i915]
+[ 25.101141] ? flush_workqueue_prep_pwqs+0xfa/0x130
+[ 25.101142] ? flush_workqueue+0x198/0x3c0
+[ 25.101174] intel_atomic_commit+0x2ad/0x320 [i915]
+[ 25.101209] drm_atomic_commit+0x4a/0x50 [drm]
+[ 25.101220] drm_client_modeset_commit_atomic+0x1c4/0x200 [drm]
+[ 25.101231] drm_client_modeset_commit_force+0x47/0x170 [drm]
+[ 25.101250] drm_fb_helper_restore_fbdev_mode_unlocked+0x4e/0xa0 [drm_kms_hel per]
+[ 25.101255] drm_fb_helper_set_par+0x2d/0x60 [drm_kms_helper]
+[ 25.101287] intel_fbdev_set_par+0x1a/0x40 [i915]
+[ 25.101289] ? con_is_visible+0x2e/0x60
+[ 25.101290] fbcon_init+0x378/0x600
+[ 25.101292] visual_init+0xd5/0x130
+[ 25.101296] do_bind_con_driver+0x217/0x430
+[ 25.101297] do_take_over_console+0x7d/0x1b0
+[ 25.101298] do_fbcon_takeover+0x5c/0xb0
+[ 25.101299] fbcon_fb_registered+0x199/0x1a0
+[ 25.101301] register_framebuffer+0x22c/0x330
+[ 25.101306] __drm_fb_helper_initial_config_and_unlock+0x31a/0x520 [drm_kms_h elper]
+[ 25.101311] drm_fb_helper_initial_config+0x35/0x40 [drm_kms_helper]
+[ 25.101341] intel_fbdev_initial_config+0x18/0x30 [i915]
+[ 25.101342] async_run_entry_fn+0x3c/0x150
+[ 25.101343] process_one_work+0x1fd/0x3f0
+[ 25.101344] worker_thread+0x34/0x410
+[ 25.101346] kthread+0x121/0x140
+[ 25.101346] ? process_one_work+0x3f0/0x3f0
+[ 25.101347] ? kthread_park+0x90/0x90
+[ 25.101350] ret_from_fork+0x35/0x40
+[ 25.101351] --[ end trace b5b47d44cd998ba1 ]--
 
-Cc: Kristian Evensen <kristian.evensen@gmail.com>
-Cc: Aleksander Morgado <aleksander@aleksander.es>
-Signed-off-by: Bjørn Mork <bjorn@mork.no>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 6294b61ba769 ("drm/i915/gvt: add missing display part reset for vGPU reset")
+Signed-off-by: Tina Zhang <tina.zhang@intel.com>
+Reviewed-by: Zhenyu Wang <zhenyuw@linux.intel.com>
+Signed-off-by: Zhenyu Wang <zhenyuw@linux.intel.com>
+Link: http://patchwork.freedesktop.org/patch/msgid/20200221023234.28635-1-tina.zhang@intel.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/usb/qmi_wwan.c | 42 ++++++++++++++------------------------
- 1 file changed, 15 insertions(+), 27 deletions(-)
+ drivers/gpu/drm/i915/gvt/vgpu.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
-index 08215a9f61454..189715438328f 100644
---- a/drivers/net/usb/qmi_wwan.c
-+++ b/drivers/net/usb/qmi_wwan.c
-@@ -63,7 +63,6 @@ enum qmi_wwan_flags {
+--- a/drivers/gpu/drm/i915/gvt/vgpu.c
++++ b/drivers/gpu/drm/i915/gvt/vgpu.c
+@@ -513,9 +513,9 @@ void intel_gvt_reset_vgpu_locked(struct
  
- enum qmi_wwan_quirks {
- 	QMI_WWAN_QUIRK_DTR = 1 << 0,	/* needs "set DTR" request */
--	QMI_WWAN_QUIRK_QUECTEL_DYNCFG = 1 << 1,	/* check num. endpoints */
- };
+ 		intel_vgpu_reset_mmio(vgpu, dmlr);
+ 		populate_pvinfo_page(vgpu);
+-		intel_vgpu_reset_display(vgpu);
  
- struct qmimux_hdr {
-@@ -853,16 +852,6 @@ static const struct driver_info	qmi_wwan_info_quirk_dtr = {
- 	.data           = QMI_WWAN_QUIRK_DTR,
- };
- 
--static const struct driver_info	qmi_wwan_info_quirk_quectel_dyncfg = {
--	.description	= "WWAN/QMI device",
--	.flags		= FLAG_WWAN | FLAG_SEND_ZLP,
--	.bind		= qmi_wwan_bind,
--	.unbind		= qmi_wwan_unbind,
--	.manage_power	= qmi_wwan_manage_power,
--	.rx_fixup       = qmi_wwan_rx_fixup,
--	.data           = QMI_WWAN_QUIRK_DTR | QMI_WWAN_QUIRK_QUECTEL_DYNCFG,
--};
--
- #define HUAWEI_VENDOR_ID	0x12D1
- 
- /* map QMI/wwan function by a fixed interface number */
-@@ -883,14 +872,18 @@ static const struct driver_info	qmi_wwan_info_quirk_quectel_dyncfg = {
- #define QMI_GOBI_DEVICE(vend, prod) \
- 	QMI_FIXED_INTF(vend, prod, 0)
- 
--/* Quectel does not use fixed interface numbers on at least some of their
-- * devices. We need to check the number of endpoints to ensure that we bind to
-- * the correct interface.
-+/* Many devices have QMI and DIAG functions which are distinguishable
-+ * from other vendor specific functions by class, subclass and
-+ * protocol all being 0xff. The DIAG function has exactly 2 endpoints
-+ * and is silently rejected when probed.
-+ *
-+ * This makes it possible to match dynamically numbered QMI functions
-+ * as seen on e.g. many Quectel modems.
-  */
--#define QMI_QUIRK_QUECTEL_DYNCFG(vend, prod) \
-+#define QMI_MATCH_FF_FF_FF(vend, prod) \
- 	USB_DEVICE_AND_INTERFACE_INFO(vend, prod, USB_CLASS_VENDOR_SPEC, \
- 				      USB_SUBCLASS_VENDOR_SPEC, 0xff), \
--	.driver_info = (unsigned long)&qmi_wwan_info_quirk_quectel_dyncfg
-+	.driver_info = (unsigned long)&qmi_wwan_info_quirk_dtr
- 
- static const struct usb_device_id products[] = {
- 	/* 1. CDC ECM like devices match on the control interface */
-@@ -996,10 +989,10 @@ static const struct usb_device_id products[] = {
- 		USB_DEVICE_AND_INTERFACE_INFO(0x03f0, 0x581d, USB_CLASS_VENDOR_SPEC, 1, 7),
- 		.driver_info = (unsigned long)&qmi_wwan_info,
- 	},
--	{QMI_QUIRK_QUECTEL_DYNCFG(0x2c7c, 0x0125)},	/* Quectel EC25, EC20 R2.0  Mini PCIe */
--	{QMI_QUIRK_QUECTEL_DYNCFG(0x2c7c, 0x0306)},	/* Quectel EP06/EG06/EM06 */
--	{QMI_QUIRK_QUECTEL_DYNCFG(0x2c7c, 0x0512)},	/* Quectel EG12/EM12 */
--	{QMI_QUIRK_QUECTEL_DYNCFG(0x2c7c, 0x0800)},	/* Quectel RM500Q-GL */
-+	{QMI_MATCH_FF_FF_FF(0x2c7c, 0x0125)},	/* Quectel EC25, EC20 R2.0  Mini PCIe */
-+	{QMI_MATCH_FF_FF_FF(0x2c7c, 0x0306)},	/* Quectel EP06/EG06/EM06 */
-+	{QMI_MATCH_FF_FF_FF(0x2c7c, 0x0512)},	/* Quectel EG12/EM12 */
-+	{QMI_MATCH_FF_FF_FF(0x2c7c, 0x0800)},	/* Quectel RM500Q-GL */
- 
- 	/* 3. Combined interface devices matching on interface number */
- 	{QMI_FIXED_INTF(0x0408, 0xea42, 4)},	/* Yota / Megafon M100-1 */
-@@ -1379,7 +1372,6 @@ static int qmi_wwan_probe(struct usb_interface *intf,
- {
- 	struct usb_device_id *id = (struct usb_device_id *)prod;
- 	struct usb_interface_descriptor *desc = &intf->cur_altsetting->desc;
--	const struct driver_info *info;
- 
- 	/* Workaround to enable dynamic IDs.  This disables usbnet
- 	 * blacklisting functionality.  Which, if required, can be
-@@ -1415,12 +1407,8 @@ static int qmi_wwan_probe(struct usb_interface *intf,
- 	 * different. Ignore the current interface if the number of endpoints
- 	 * equals the number for the diag interface (two).
- 	 */
--	info = (void *)id->driver_info;
--
--	if (info->data & QMI_WWAN_QUIRK_QUECTEL_DYNCFG) {
--		if (desc->bNumEndpoints == 2)
--			return -ENODEV;
--	}
-+	if (desc->bNumEndpoints == 2)
-+		return -ENODEV;
- 
- 	return usbnet_probe(intf, id);
- }
--- 
-2.20.1
-
+ 		if (dmlr) {
++			intel_vgpu_reset_display(vgpu);
+ 			intel_vgpu_reset_cfg_space(vgpu);
+ 			/* only reset the failsafe mode when dmlr reset */
+ 			vgpu->failsafe = false;
 
 
