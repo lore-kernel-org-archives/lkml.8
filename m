@@ -2,102 +2,71 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MALFORMED_FREEMAIL,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B656CC10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 06:48:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81C8FC18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 06:52:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A4AA24655
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 06:48:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gtiotwLo"
+	by mail.kernel.org (Postfix) with ESMTP id 5BB682467C
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 06:52:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583823130;
+	bh=Oz3P5ayW5l9oGHl/hWJeil6IyaDGi7XQ8iU+vqSxfec=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XrAyqeNtQW6TPzYf1NenmJMGVaS1o6YsigHGExw2I073dRC1tlsykbPBIA9fDgQfY
+	 7Loy2KRFm1ZpPSJFMeyKYkEgsv7I10kQp5j+h1fE4bKcfZ+bjbls86SBfvB8ARE9Kb
+	 l5aDBYrzIuk5bHGhfhKGCshwVdhkn0e8OH7xf4q8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726273AbgCJGsv (ORCPT
+        id S1726269AbgCJGwJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 02:48:51 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:37252 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725919AbgCJGsu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 02:48:50 -0400
-Received: by mail-ed1-f65.google.com with SMTP id b23so6931866edx.4;
-        Mon, 09 Mar 2020 23:48:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=0u5iRMi6e4nX2w7kF0dC+JMM932v3kVJ1e2J7tVdKIQ=;
-        b=gtiotwLoSufBZBUWX2dcLwMbsjpmDgqr3iHtOqNUF4aai33R6GNPvaRKcSi3eE/rov
-         rTKZYFnBPF/+rWZdA1/PNXHOBWLS/NlKjrRWDlRw9F2TNzJ0JoceoMOM89vpib6AgZ60
-         QRBYsxrcO2ZO6aAcv64h4IQpI4r5BhqO/LSzEkB7SyrtiDp7RaJ5oWaxN/gzmddjqCzq
-         llsCD/9qTzQ2rGSf2iq43yxZWRiyebjJ/tz0RMyIZEIzQqlnxaBNQXkp++Aa0+dZjStd
-         zac2rIKHswbbrIpPYxnVPgp8Lv0SRjmeHVdnvdkG/rAkJTxu+i1V1Rpi9H8i5+YcSG6Q
-         3Ygw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=0u5iRMi6e4nX2w7kF0dC+JMM932v3kVJ1e2J7tVdKIQ=;
-        b=UbXQjHsNK/D5tCbr4inuaipc4MtEDXMo2hoC3gi8BMpMTCNa33rqloFs9MvFbgExik
-         h31F2Ut8zeCAVu/SzvdkZnQ6WFFJkm48afnHXENCFNmXQIIAtQDBd8WboZz8RmdCwGmT
-         CX8YYiDhgpYr2OFepHtJKCg2u43HXQ37aqKpu4lXYX6BPDEQlFws2Qj7kMb4PVBlezVu
-         yBJuk0hm9I+scmwql/RFG7v7A+esFdUVSiDru1g53BBGw0DLFDx26TmwUa2Jqlnymern
-         Apz1eIxSAULD1tafMeWP8AUAjslP+CUkJHxY7jzfMYtdbTkRS1A4//B3WeC5ok97R6yZ
-         mbVw==
-X-Gm-Message-State: ANhLgQ3tSBOd1KNYKZ1GfQzPIEDwDP2sHfWlfae3FB7AXOnCJ0GL3gzo
-        elVqt3ii3e2X49rcq2Yb2nc=
-X-Google-Smtp-Source: ADFU+vuE6XSn9RDSDLCaLJELrTnGl6XaoofUPaXqsbj93WYS5wEyiNUMzfn1/zrYbyrCxRJDYY8swg==
-X-Received: by 2002:a17:906:680c:: with SMTP id k12mr6610870ejr.237.1583822928797;
-        Mon, 09 Mar 2020 23:48:48 -0700 (PDT)
-Received: from felia ([2001:16b8:2d3d:f300:b903:a662:c2f7:f5c9])
-        by smtp.gmail.com with ESMTPSA id o88sm3991240eda.41.2020.03.09.23.48.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Mar 2020 23:48:47 -0700 (PDT)
-From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-X-Google-Original-From: Lukas Bulwahn <lukas@gmail.com>
-Date:   Tue, 10 Mar 2020 07:48:40 +0100 (CET)
-X-X-Sender: lukas@felia
-To:     Joe Perches <joe@perches.com>
-cc:     Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <groeck@google.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Julius Werner <jwerner@chromium.org>,
-        kernel-janitors@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH RFC] MAINTAINERS: include GOOGLE FIRMWARE entry
-In-Reply-To: <69ed8a468b3e4776d277292a2e4b2f9b3c266f23.camel@perches.com>
-Message-ID: <alpine.DEB.2.21.2003100745590.2788@felia>
-References: <20200308195116.12836-1-lukas.bulwahn@gmail.com> <CABXOdTcrxoBCz24Ap=YJYZnr+oLAmaR10xZ9ar2mYbE1=RAoug@mail.gmail.com> <5129f7dbd8506cc9fd5a8f76dc993d789566af6c.camel@perches.com> <alpine.DEB.2.21.2003090702440.3325@felia> <20200309070534.GA4093795@kroah.com>
- <alpine.DEB.2.21.2003092035300.2953@felia> <69ed8a468b3e4776d277292a2e4b2f9b3c266f23.camel@perches.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Tue, 10 Mar 2020 02:52:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57694 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725919AbgCJGwJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 02:52:09 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 217EA24673;
+        Tue, 10 Mar 2020 06:52:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583823128;
+        bh=Oz3P5ayW5l9oGHl/hWJeil6IyaDGi7XQ8iU+vqSxfec=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=QGpOT9Y9V7egRs3bW8RQvwHK9bxrH+TJr/yXLHbzLRtQxJ9AFoq1zkzqGOrJJ6/PY
+         Fccl9NRAqz01Q5o3lfpQHXuc3PkD1+cSWdSlapwG02U5gf1LBOztTep4y0Q/DYR2QW
+         G6FfMOI3e0VNbSh4hysi1lzdcp32KirkOHavwxuI=
+Date:   Tue, 10 Mar 2020 07:52:06 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Pavel Machek <pavel@denx.de>
+Cc:     corbet@lwn.net, linux-doc@vger.kernel.org,
+        kernel list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] devices.txt: document minor for rfkill
+Message-ID: <20200310065206.GA1967668@kroah.com>
+References: <20200309223332.GB1634@duo.ucw.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200309223332.GB1634@duo.ucw.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On Mon, 9 Mar 2020, Joe Perches wrote:
-
-> On Mon, 2020-03-09 at 22:03 +0100, Lukas Bulwahn wrote:
-> > I am starting with the "bigger" clustered files in drivers, and then try 
-> > > > to look at files in include and Documentation/ABI/.
+On Mon, Mar 09, 2020 at 11:33:32PM +0100, Pavel Machek wrote:
+> Rfkill is using	minor 242, document that.
 > 
-> If you want to spend the time tracking stuff down,
-> it may be best to to
-> start with include/
->
+> Signed-off-by: Pavel Machek <pavel@denx.de>
+> Fixes: 8670b2b8b029a6650d133486be9d2ace146fd29a
 
-Thanks for the guidance. I will do that, and we will see if others 
-appreciate that or not.
+Please use the proper format as described in
+Documentation/process/submitting-patches.rst for the Fixes: tag.
 
+Can you do that and resend?
 
-Lukas
+thanks,
+
+greg k-h
