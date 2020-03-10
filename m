@@ -2,48 +2,49 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11BECC10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:15:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1935BC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:15:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBBD9208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:15:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF10E208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:15:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727856AbgCJWPY (ORCPT
+        id S1727868AbgCJWP0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 18:15:24 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:47272 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727815AbgCJWPT (ORCPT
+        Tue, 10 Mar 2020 18:15:26 -0400
+Received: from mail-il1-f197.google.com ([209.85.166.197]:44285 "EHLO
+        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727693AbgCJWPT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 10 Mar 2020 18:15:19 -0400
-Received: by mail-io1-f70.google.com with SMTP id w21so72196iod.14
+Received: by mail-il1-f197.google.com with SMTP id h87so10912011ild.11
         for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 15:15:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=p9Z10uZr2dUftOQEwj/f8j0GgUMs/WLna+BjnNkGBVU=;
-        b=gswvWyKuks1H6QROpMtGCnZsEiWu5AjROAHI86b82FOHKdWyG2TmrwLqV7YPMKLsPj
-         FY0y1Z7ua99wzPnB0AErIUqFignAe3TlxyG8wxv4RrlQA6RwTDW3z6c/Ov5xC22SHVCJ
-         fUFP8fx98y5oGUDEyKHsI3Z0JXPQ7tCUc0S92E7Phc4eRJ2GtXNjz21ClpNmRwARoysl
-         3Sa20K5PiWFAh33rLlPFESFYZSr3hFO7bqKA9Tmrc71Nl7RQSBwlDbq+/bea9gPheYbe
-         XIymYOwZdu0t/rhp8TnLhO8+2ahuUe+lvBLFaNrdtUKoCemfz7UFRVOOep245Ez46/Qv
-         LSSQ==
-X-Gm-Message-State: ANhLgQ0Yzpstnz6ZGxqKgBhrDaaY52FPzJwcM0Q9CLFioyR4yPGgD5FV
-        U0g7we66i1Qje0g0Gk6GNnF2noh8MzumEzi2LD99V74eEvk8
-X-Google-Smtp-Source: ADFU+vsxsQZdpI/bjmW6FBVZ/hLlGOzNVlor54L+Ax5iFbdOzl+uyF9q3oHAjdk7lsfklf9+rDxKSWAqA8IMj0L9pNgb7HknZPTo
+        bh=kPM91QY7Ml+jxCuO6ZR8UApkRRn2EWFumZ9mWiN6s9w=;
+        b=bWBj/fbaerSoAUvI9D8BJ+aBFB53WO6c0q7FQJxdFlUPzsyQ70J3EwBSJLWKapphus
+         y+SHaYop9Y0EGagBAZFE+eiTKC0KW6eXBIKiCv4Qu0M2I/JkUXisB/4QW1v9S64eV22b
+         cChFhptVhQrwy10c6kgWk2sZRmy595qZnoJibgHT0Ju6mDKPeowkMbgCTS/OV0Yj3TI9
+         7a1IxdgG3WohYpKRHZMZaLudZjQOXjcgo+e7lwnmzuKYY3S0PToJ1HOiHGO9YdMORi/l
+         NJgHP85Se5tEAVHSYaD3KEyVazm6RxmC67Q8TJxByvMvdt0IwlMe0f5BGrs8WdJuT0cv
+         79xQ==
+X-Gm-Message-State: ANhLgQ1XAz5Xtd9ooRJw6sTK3pE70Lp0M/dvBBqNaVmjWuje4zFMYmE2
+        /DJMJ3HO0s+Zy2JgXftMloKbEn1PRI0Pp805AuQHxD+vElIP
+X-Google-Smtp-Source: ADFU+vsxJYEZJVjoKeIB4IF+GP5IxL8I7rEUnCKgf/6E3e8cHb3NNhVPY3HP9q19+l9Eo+ZMEsEnAhij8GzZ6r0xZA64s9X/Epuk
 MIME-Version: 1.0
-X-Received: by 2002:a02:3b24:: with SMTP id c36mr296767jaa.23.1583878517117;
+X-Received: by 2002:a5e:8c0d:: with SMTP id n13mr203569ioj.138.1583878517423;
  Tue, 10 Mar 2020 15:15:17 -0700 (PDT)
 Date:   Tue, 10 Mar 2020 15:15:17 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000061573105a08774c2@google.com>
-Subject: WARNING: ODEBUG bug in route4_change
-From:   syzbot <syzbot+f9b32aaacd60305d9687@syzkaller.appspotmail.com>
+Message-ID: <0000000000006601b005a08774fd@google.com>
+Subject: general protection fault in tcf_action_destroy (2)
+From:   syzbot <syzbot+92a80fff3b3af6c4464e@syzkaller.appspotmail.com>
 To:     davem@davemloft.net, jhs@mojatatu.com, jiri@resnulli.us,
         kuba@kernel.org, linux-kernel@vger.kernel.org,
         netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
@@ -58,55 +59,42 @@ Hello,
 
 syzbot found the following crash on:
 
-HEAD commit:    2c523b34 Linux 5.6-rc5
+HEAD commit:    30bb5572 Merge tag 'ktest-v5.6' of git://git.kernel.org/pu..
 git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=12a150b1e00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=16849c39e00000
 kernel config:  https://syzkaller.appspot.com/x/.config?x=c2e311dba9a02ba9
-dashboard link: https://syzkaller.appspot.com/bug?extid=f9b32aaacd60305d9687
+dashboard link: https://syzkaller.appspot.com/bug?extid=92a80fff3b3af6c4464e
 compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=172ae81de00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16ffee2de00000
-
-Bisection is inconclusive: the bug happens on the oldest tested release.
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=14132075e00000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=16132075e00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=12132075e00000
+userspace arch: i386
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13faf439e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16956ddde00000
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+f9b32aaacd60305d9687@syzkaller.appspotmail.com
+Reported-by: syzbot+92a80fff3b3af6c4464e@syzkaller.appspotmail.com
 
-------------[ cut here ]------------
-ODEBUG: activate active (active state 1) object type: rcu_head hint: 0x0
-WARNING: CPU: 1 PID: 9831 at lib/debugobjects.c:485 debug_print_object+0x160/0x250 lib/debugobjects.c:485
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 1 PID: 9831 Comm: syz-executor043 Not tainted 5.6.0-rc5-syzkaller #0
+batman_adv: batadv0: Interface activated: batadv_slave_1
+general protection fault, probably for non-canonical address 0xdffffc0000000000: 0000 [#1] PREEMPT SMP KASAN
+KASAN: null-ptr-deref in range [0x0000000000000000-0x0000000000000007]
+CPU: 1 PID: 9664 Comm: syz-executor420 Not tainted 5.6.0-rc5-syzkaller #0
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:tcf_action_destroy+0x6a/0x150 net/sched/act_api.c:720
+Code: 47 fb 83 c5 01 bf 20 00 00 00 48 83 c3 08 89 ee e8 8b 95 47 fb 83 fd 20 0f 84 ae 00 00 00 e8 0d 94 47 fb 48 89 d8 48 c1 e8 03 <42> 80 3c 28 00 0f 85 ae 00 00 00 4c 8b 3b 4d 85 ff 0f 84 8b 00 00
+RSP: 0018:ffffc90001d37018 EFLAGS: 00010247
+RAX: 0000000000000000 RBX: 0000000000000004 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff862a7f63 RDI: 0000000000000004
+RBP: 0000000000000000 R08: ffff8880a66c6080 R09: ffffed1015ce7074
+R10: ffffed1015ce7073 R11: ffff8880ae73839b R12: 0000000000000000
+R13: dffffc0000000000 R14: 0000000000000001 R15: 0000000000000000
+FS:  0000000000000000(0000) GS:ffff8880ae700000(0063) knlGS:0000000008c74840
+CS:  0010 DS: 002b ES: 002b CR0: 0000000080050033
+CR2: 0000000020000280 CR3: 000000009a35b000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x188/0x20d lib/dump_stack.c:118
- panic+0x2e3/0x75c kernel/panic.c:221
- __warn.cold+0x2f/0x35 kernel/panic.c:582
- report_bug+0x27b/0x2f0 lib/bug.c:195
- fixup_bug arch/x86/kernel/traps.c:174 [inline]
- fixup_bug arch/x86/kernel/traps.c:169 [inline]
- do_error_trap+0x12b/0x220 arch/x86/kernel/traps.c:267
- do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:286
- invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
-RIP: 0010:debug_print_object+0x160/0x250 lib/debugobjects.c:485
-Code: dd c0 f3 51 88 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 bf 00 00 00 48 8b 14 dd c0 f3 51 88 48 c7 c7 20 e9 51 88 e8 78 d9 b1 fd <0f> 0b 83 05 0b b7 d3 06 01 48 83 c4 20 5b 5d 41 5c 41 5d c3 48 89
-RSP: 0018:ffffc90002137178 EFLAGS: 00010282
-RAX: 0000000000000000 RBX: 0000000000000003 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffffffff815bf4f1 RDI: fffff52000426e21
-RBP: 0000000000000001 R08: ffff888098cbc100 R09: ffffed1015ce6659
-R10: ffffed1015ce6658 R11: ffff8880ae7332c7 R12: ffffffff897acba0
-R13: 0000000000000000 R14: dffffc0000000000 R15: 1ffff92000426e3c
- debug_object_activate+0x346/0x470 lib/debugobjects.c:652
- debug_rcu_head_queue kernel/rcu/rcu.h:176 [inline]
- __call_rcu kernel/rcu/tree.c:2597 [inline]
- call_rcu+0x2c/0x690 kernel/rcu/tree.c:2683
- queue_rcu_work+0x82/0xa0 kernel/workqueue.c:1742
- route4_change+0x19e8/0x2250 net/sched/cls_route.c:550
+ tcf_exts_destroy+0x42/0xc0 net/sched/cls_api.c:3001
+ tcf_exts_change+0xf4/0x150 net/sched/cls_api.c:3059
+ tcindex_set_parms+0xed8/0x1a00 net/sched/cls_tcindex.c:456
+ tcindex_change+0x203/0x2e0 net/sched/cls_tcindex.c:518
  tc_new_tfilter+0xa59/0x20b0 net/sched/cls_api.c:2103
  rtnetlink_rcv_msg+0x810/0xad0 net/core/rtnetlink.c:5427
  netlink_rcv_skb+0x15a/0x410 net/netlink/af_netlink.c:2478
@@ -118,18 +106,24 @@ R13: 0000000000000000 R14: dffffc0000000000 R15: 1ffff92000426e3c
  ____sys_sendmsg+0x6b9/0x7d0 net/socket.c:2343
  ___sys_sendmsg+0x100/0x170 net/socket.c:2397
  __sys_sendmsg+0xec/0x1b0 net/socket.c:2430
- do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x446709
-Code: e8 1c ba 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 ab 0e fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ff3a3e0dd98 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 00000000006dbc68 RCX: 0000000000446709
-RDX: 0000000000000000 RSI: 0000000020000280 RDI: 0000000000000003
-RBP: 00000000006dbc60 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006dbc6c
-R13: 0000000000000005 R14: 00a3a20740000000 R15: 0507002400000038
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
+ do_syscall_32_irqs_on arch/x86/entry/common.c:337 [inline]
+ do_fast_syscall_32+0x270/0xe8f arch/x86/entry/common.c:408
+ entry_SYSENTER_compat+0x70/0x7f arch/x86/entry/entry_64_compat.S:139
+Modules linked in:
+---[ end trace fac06a3fde273f0e ]---
+RIP: 0010:tcf_action_destroy+0x6a/0x150 net/sched/act_api.c:720
+Code: 47 fb 83 c5 01 bf 20 00 00 00 48 83 c3 08 89 ee e8 8b 95 47 fb 83 fd 20 0f 84 ae 00 00 00 e8 0d 94 47 fb 48 89 d8 48 c1 e8 03 <42> 80 3c 28 00 0f 85 ae 00 00 00 4c 8b 3b 4d 85 ff 0f 84 8b 00 00
+RSP: 0018:ffffc90001d37018 EFLAGS: 00010247
+RAX: 0000000000000000 RBX: 0000000000000004 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff862a7f63 RDI: 0000000000000004
+RBP: 0000000000000000 R08: ffff8880a66c6080 R09: ffffed1015ce7074
+R10: ffffed1015ce7073 R11: ffff8880ae73839b R12: 0000000000000000
+R13: dffffc0000000000 R14: 0000000000000001 R15: 0000000000000000
+FS:  0000000000000000(0000) GS:ffff8880ae700000(0063) knlGS:0000000008c74840
+CS:  0010 DS: 002b ES: 002b CR0: 0000000080050033
+CR2: 0000000020000280 CR3: 000000009a35b000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
 
 ---
@@ -139,6 +133,5 @@ syzbot engineers can be reached at syzkaller@googlegroups.com.
 
 syzbot will keep track of this bug report. See:
 https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
 syzbot can test patches for this bug, for details see:
 https://goo.gl/tpsmEJ#testing-patches
