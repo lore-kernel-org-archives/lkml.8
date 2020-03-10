@@ -2,180 +2,102 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6800C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 23:11:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0C1FC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 23:16:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E6492071B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 23:11:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583881912;
-	bh=2qdlEvb5EXV0t0VAqTHH8cvtHpa+0nPjGHJ6OsHno6I=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=TxBvduP8caUrnnvDAsQ/IiNisFxAxMNLh4OVbYGrfe80EkqFkziV66z40Lb4z7LSY
-	 TekEao5Lnrd5k/ZymTzGCkgQKkD2CTekqCsdXPn6JzkSRP7nuVETBp/aWWuteZZsp7
-	 Fa7Gj/z1rNL/4j1zoOzFFae8yO38PgMxen0pWBTk=
+	by mail.kernel.org (Postfix) with ESMTP id 4FED32071B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 23:16:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="m1sTUdtz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727835AbgCJXLv (ORCPT
+        id S1727725AbgCJXQw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 19:11:51 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:40769 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726463AbgCJXLu (ORCPT
+        Tue, 10 Mar 2020 19:16:52 -0400
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:38948 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726380AbgCJXQv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 19:11:50 -0400
-Received: by mail-il1-f196.google.com with SMTP id g6so223472ilc.7
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 16:11:50 -0700 (PDT)
+        Tue, 10 Mar 2020 19:16:51 -0400
+Received: by mail-pj1-f67.google.com with SMTP id d8so1097825pje.4
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 16:16:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=7EYAI63zd18SBq8FB4fUfNf0NU8spud30w3445VcWaM=;
-        b=SOuRvF3fvTblm9CeWolyerj2zGaD3saqUhIuWhjObHc3jGGTBh/v+0w6d+z78Y503p
-         QYu4SglBDGCKdB5ZGG73RSsATC3wnkZEXsCFmLvix43Fa+fpdLPCVWYl5b4EXLJk1Q3Y
-         ew0AE4RdaYLyWgeuhoV35GaoA5m2bPOwMHDj8=
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zXg9Gj7QTUwpYvOhGlvMrbNF6i7eg/pUYIjVoM9j78w=;
+        b=m1sTUdtz0IBH4T58S0Qp8F887lOMFeQ6E3LwhmSyto0/XicAZGMKH/OdcvxBS/gioj
+         hpdgTy+8k2waNEDrL7V93U+BcQrXkOtW7w1AYTphgWutJGFtTIY3zpT15dtk3Y+co1p9
+         dCqpvzXMboOTnI8q3DAmcjPcZiP2ChNuhzxOw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=7EYAI63zd18SBq8FB4fUfNf0NU8spud30w3445VcWaM=;
-        b=JtjQ0eQY4jquxAuj7FVY8iPP/EFyk6ZS6c3IhbFRmwonypFg6PKkufP4oMyCvaKXV3
-         AX/PhDX/s7WDtGHwEANXfCuQsztyeDPzPIMT1hk0iw6Z5BMdO0NkZQl5uIPQA9y0PZLO
-         z/fGCdEqHA5vLOulssSh2vC6qZriEDwArwBPjCcxx1CZ2laCl5hLY0UBq7rkG0bFRWJP
-         YNCS135gvAv+lv73qKl+WguI//g6WVQffZXdsFPzrAtVHlUuwQKwHB6je3pkHsMgDebO
-         pWHiaEXMMRZzzUdamML/HQZcStKrzI1in3fIzPMRNveCFoFsYAteaNWpe6WkGh6W9lu1
-         VOAw==
-X-Gm-Message-State: ANhLgQ1k5SMYlcDUlgmFDnAv0fOq77SylTJvrVyimA4kgUVBVVIltxC0
-        OgwUym4pTuW/994ZDdp8iomimQ==
-X-Google-Smtp-Source: ADFU+vuKjc/Vi167HrNsokZgPEQVficFdi3AwhXRn8+hgEKbKqkwlsSrlMStlkPyqiz7BfLaie+1fw==
-X-Received: by 2002:a92:5c5c:: with SMTP id q89mr382168ilb.195.1583881909799;
-        Tue, 10 Mar 2020 16:11:49 -0700 (PDT)
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id z14sm8703570iln.17.2020.03.10.16.11.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Mar 2020 16:11:49 -0700 (PDT)
-Subject: Re: [PATCH v2 2/4] selftests: Fix seccomp to support relocatable
- build (O=objdir)
-To:     Kees Cook <keescook@chromium.org>
-Cc:     shuah@kernel.org, luto@amacapital.net, wad@chromium.org,
-        daniel@iogearbox.net, kafai@fb.com, yhs@fb.com, andriin@fb.com,
-        gregkh@linuxfoundation.org, tglx@linutronix.de,
-        khilman@baylibre.com, mpe@ellerman.id.au,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        "skh >> Shuah Khan" <skhan@linuxfoundation.org>
-References: <20200305003627.31900-1-skhan@linuxfoundation.org>
- <202003041815.B8C73DEC@keescook>
- <f4cf1527-4565-9f08-a8a2-9f51022eac63@linuxfoundation.org>
- <202003050937.BA14B70DEB@keescook>
-From:   Shuah Khan <skhan@linuxfoundation.org>
-Message-ID: <d125a38f-50aa-dbf1-0fcf-59d4ad4a1441@linuxfoundation.org>
-Date:   Tue, 10 Mar 2020 17:11:47 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        bh=zXg9Gj7QTUwpYvOhGlvMrbNF6i7eg/pUYIjVoM9j78w=;
+        b=N6nJCQ9UCN/+sl58qG2vSoQizC+IFcQ/Vq2Gy5iS2jS58kCALx77XP61pTsFQF5JC3
+         djeN9a51247222e7G09fEgml2PRooLezF/Fbsk84kf/hcJy9MjL1n+qhyefJ9Jrv3+LH
+         NTkCzFgf0P7nY3Z9V6dsVpbm+KBTQ0w0+IpD0JIq5Pn15DpAIxoDeOk/znAseOQ6X4Vh
+         IwBqMRPoGN3jbysu6deh5Y/6S/QWDkMVuUbWsLqvVygslfHa4ZWIXnokK4T31XhLqRbN
+         sfTULcM7vz9E/ImCqW0bvRVGUukeaA9qm5MQiss9C6r7v+Mp7dduSheQwca+fT7Zz2MO
+         W9Fw==
+X-Gm-Message-State: ANhLgQ1OlB/8iHEb/erM8uYSupy8fg24RG+pVY+KYY+vomSXjNHvtYPR
+        NTVsy4jLSB+dZAewPa+RzeRvDA==
+X-Google-Smtp-Source: ADFU+vua2DRqzHPDCg1h0WaWa5jUQRYxfdS9IEm3qlPlei+YNlP5TOn8cJF3gz2OQRyZ5zwlg/XAUQ==
+X-Received: by 2002:a17:90b:438d:: with SMTP id in13mr333664pjb.114.1583882210644;
+        Tue, 10 Mar 2020 16:16:50 -0700 (PDT)
+Received: from evgreen2.mtv.corp.google.com ([2620:15c:202:201:ffda:7716:9afc:1301])
+        by smtp.gmail.com with ESMTPSA id 15sm43071797pfp.125.2020.03.10.16.16.49
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 10 Mar 2020 16:16:50 -0700 (PDT)
+From:   Evan Green <evgreen@chromium.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Evan Green <evgreen@chromium.org>, Andy Gross <agross@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] arm64: dts: sc7180: Include interconnect definitions
+Date:   Tue, 10 Mar 2020 16:16:29 -0700
+Message-Id: <20200310161502.1.Ia2884ed3c8826f52fbd5dcfa7a376a2fac4f31e6@changeid>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-In-Reply-To: <202003050937.BA14B70DEB@keescook>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/5/20 10:42 AM, Kees Cook wrote:
-> On Thu, Mar 05, 2020 at 09:41:34AM -0700, Shuah Khan wrote:
->> On 3/4/20 7:20 PM, Kees Cook wrote:
->>> Instead of the TEST_CUSTOM_PROGS+all dance, you can just add an explicit
->>> dependency, with the final seccomp/Makefile looking like this:
->>>
->>>
->>> # SPDX-License-Identifier: GPL-2.0
->>> CFLAGS += -Wl,-no-as-needed -Wall
->>> LDFLAGS += -lpthread
->>>
->>> TEST_GEN_PROGS := seccomp_bpf seccomp_benchmark
->>>
->>
->> TEST_CUSTOM_PROGS is for differentiating test programs that
->> can't use lib.mk generic rules. It is appropriate to use
->> for seccomp_bpf
-> 
-> I don't follow? This suggested Makefile works for me (i.e. it can use
-> the lib.mk generic rules since CFLAGS and LDFLAGS can be customized
-> first, and it just adds an additional dependency).
-> 
+Re-introduce the include of the sc7180 interconnect node name
+definitions. Though this was part of v5 of the interconnect provider
+series [1], it was dropped because the DT changes went through a
+different tree than the header. Re-add that now.
 
-Yeah. TEST_CUSTOM_PROGS isn't really needed for this custom case.
-I can refine it and get rid of the dependency.
+Interconnect clients being introduced can reference this patch as a
+dependency, rather than racing each other to add the include.
 
->>> include ../lib.mk
->>>
->>> # Additional dependencies
->>> $(OUTPUT)/seccomp_bpf: ../kselftest_harness.h
-> 
-> BTW, I see a lot of other targets that use kselftest_harness.h appear to
-> be missing this Makefile dependency, but that's a different problem. :)
-> 
->>> (Though this fails in the same way as above when run from the top-level
->>> directory.)
->>>
->>
->> I didn't see this because I have been the same directory I used
->> for relocated cross-build kernel. :(
->>
->> Thanks for testing this. I know the problem here. all is a dependency
->> for install step and $(OUTPUT) is referencing the objdir before it
->> gets created. It is a Makefile/lib.mk problem to fix.
->>
+[1] https://patchwork.kernel.org/patch/11417989/
 
-I was way off with my analysis. :(
+Signed-off-by: Evan Green <evgreen@chromium.org>
+---
 
->> I will do a separate patch for this. This will show up in any test
->> that is using $(OUTPUT) to relocate objects mainly the ones that
->> require custom build rule like seeccomp.
-> 
-> Okay, cool. It looked to me like it lost track of the top level source
-> directory (i.e. "make: entering $output" ... "can't find
-> ../other/files")
-> 
+ arch/arm64/boot/dts/qcom/sc7180.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-Odd that you would have empty objdir in the cross-compile case.
-
-In the cross-compile case, you would have cross-built kernel first in
-the object directory. Your objdir won't be empty.
-
-This is no different from kselftest build dependency on kernel build
-even when srcdir=objdir
-
-So for cross-build case, the following  is the workflow to build kernel
-first and then the tests:
-
-make O=/../objdir ARCH=arm64 HOSTCC=gcc CROSS_COMPILE=aarch64-linux-gnu- 
-defconfig
-
-make O=/../objdir ARCH=arm64 HOSTCC=gcc CROSS_COMPILE=aarch64-linux-gnu- all
-
-make kselftest-install O=/../objdir ARCH=arm64 HOSTCC=gcc 
-CROSS_COMPILE=aarch64-linux-gnu- TARGETS=seccomp
-
-You can isolate a single test when you are do native build:
-
-make kselftest-install O=/../objdir TARGETS=seccomp
-
-The above won't fail even if objdir doesn't exist and/or empty.
-
-thanks,
--- Shuah
-
-
-
-
-
-
+diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+index 89ba01246f95b..eb5a527da685a 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+@@ -10,6 +10,7 @@
+ #include <dt-bindings/clock/qcom,gpucc-sc7180.h>
+ #include <dt-bindings/clock/qcom,rpmh.h>
+ #include <dt-bindings/clock/qcom,videocc-sc7180.h>
++#include <dt-bindings/interconnect/qcom,sc7180.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/phy/phy-qcom-qusb2.h>
+ #include <dt-bindings/power/qcom-aoss-qmp.h>
+-- 
+2.24.1
 
