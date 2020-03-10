@@ -2,124 +2,117 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAD_ENC_HEADER,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_ADSP_DISCARD,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C192C10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:40:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E17CC10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:41:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11B5321D56
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:40:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b="ZTdTsBQq";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="QyL8Hee7"
+	by mail.kernel.org (Postfix) with ESMTP id DDF2C20663
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:41:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726545AbgCJUkP (ORCPT
+        id S1726820AbgCJUlT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 16:40:15 -0400
-Received: from wout5-smtp.messagingengine.com ([64.147.123.21]:50569 "EHLO
-        wout5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726100AbgCJUkP (ORCPT
+        Tue, 10 Mar 2020 16:41:19 -0400
+Received: from shelob.oktetlabs.ru ([91.220.146.113]:48909 "EHLO
+        shelob.oktetlabs.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726395AbgCJUlT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 16:40:15 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.west.internal (Postfix) with ESMTP id 57C2A930;
-        Tue, 10 Mar 2020 16:40:14 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Tue, 10 Mar 2020 16:40:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dxuuu.xyz; h=
-        content-transfer-encoding:content-type:in-reply-to:date:cc
-        :subject:from:to:message-id; s=fm2; bh=8WvbRILYPoYcT8dxosBEiC8oW
-        xw+zHTO76bbxckt8n8=; b=ZTdTsBQqnGlN82GljZ7ESrmeyYE+fTjgey4UhMzpJ
-        3N4fMDtH9kyzIGOx7nzUYnSKc7bXucBB8PkuCIq/jwR/fFicp7c1o20WDkFIcL9O
-        qax6PFx9BpgRnJgmLcC8T9bfhHyanrIqjCaHZAExqUaNRYiWoM1YLg7Fytzh+FHT
-        Y6rUSTgvbrsCTnuGM/vOM5f+6Jh3xYQ4l5fgxQ2ce1bA5XdPxMStWzD+/zZmv/UK
-        JHOd23JYCyC3yqwNz+MOXJczPOceZyk93e+7MhjWeQgKmGa1GgwmPVUvO8/54BES
-        dhXMJPlxelF1uvg4t1fYU2ypuDHhXw8HTQhoLXEf377Hw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=8WvbRI
-        LYPoYcT8dxosBEiC8oWxw+zHTO76bbxckt8n8=; b=QyL8Hee7vDR49szK/qplbo
-        DJgRHYUR7BLgBMCqGnNi/yEhTbWK1F/Vxm27DH6xOSTGZ9qBEYoxCcjOJBJaUTVg
-        IzNoXjRmOi2WsGj3pKFybI4t6AVpxuCwTA85KAhFFKkCjPn8FR7m6RJmz6swNKJd
-        mZgUS1XKDKNK5osuEmg/WeawvyjNGbZqYw0g5qvhMTJxVf0ueop8qfBJn0R6SQTw
-        bg8QbkSCePE+YAZx2Vwa+EGoz0OGTG3XFVhgh+t+czA922S9NdxdeJUdnJ5HLRBS
-        V0EPPoRtMjQSK1DhY2HRuRwCvbPtjdLtdJ6mVYZzbVwpnGz2lSsu0i8pnxw8JthQ
-        ==
-X-ME-Sender: <xms:KvtnXgFs-_XVzzMRlvmy1bjTd8Lla2kFeC7DUQIbNVvJSGexithkWg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedruddvtddgudefvdcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enfghrlhcuvffnffculdejtddmnecujfgurhepgfgtjgffuffhvffksehtqhertddttdej
-    necuhfhrohhmpedfffgrnhhivghlucgiuhdfuceougiguhesugiguhhuuhdrgiihiieqne
-    cukfhppeduieefrdduudegrddufedvrddunecuvehluhhsthgvrhfuihiivgeptdenucfr
-    rghrrghmpehmrghilhhfrhhomhepugiguhesugiguhhuuhdrgiihii
-X-ME-Proxy: <xmx:KvtnXqg1JUtLw_VLSVuqYV3WOOUqv8S4lG7JM09lmiqoSj7eM4ZdKw>
-    <xmx:KvtnXqmyp3gH0CR7g6EK0Ti3JvUPxdsA1viCZgxZm6lFmRPCoqi7_g>
-    <xmx:KvtnXrdrAshGVQBQe2kkLgNqmg4Ply9P_uKFW9j724oGFheM6DHJZQ>
-    <xmx:LftnXnH0hzH8R6XDCjjPQMaFcDr7LXFchhul-4VbrlK0_CZq_AcIjg>
-Received: from localhost (unknown [163.114.132.1])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 42A4E328005E;
-        Tue, 10 Mar 2020 16:40:09 -0400 (EDT)
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Originaldate: Tue Mar 10, 2020 at 12:40 PM
-Originalfrom: "Shakeel Butt" <shakeelb@google.com>
-Original: =?utf-8?q?Hi_Daniel,
- =0D=0A=0D=0AOn_Thu,_Mar_5,_2020_at_1:16_PM_Daniel_Xu_?=
- =?utf-8?q?<dxu@dxuuu.xyz>_wrote:=0D=0A>=0D=0A>_It's_not_really_necessary_?=
- =?utf-8?q?to_have_contiguous_physical_memory_for_xattr=0D=0A>_values._We_?=
- =?utf-8?q?no_longer_need_to_worry_about_higher_order_allocations=0D=0A>_f?=
- =?utf-8?q?ailing_with_kvmalloc,_especially_because_the_xattr_size_limit_i?=
- =?utf-8?q?s_at=0D=0A>_64K.=0D=0A>=0D=0A>_Signed-off-by:_Daniel_Xu_<dxu@dx?=
- =?utf-8?q?uuu.xyz>=0D=0A=0D=0AThe_patch_looks_fine_to_me._However_the_com?=
- =?utf-8?q?mit_message_is_too_cryptic=0D=0Ai.e._hard_to_get_the_motivation?=
- =?utf-8?q?_behind_the_change.=0D=0A?=
-In-Reply-To: <CALvZod62gypsxCYOpGsR6SWwp7roh8eEEKvZ8WNFtjB0bH=okg@mail.gmail.com>
-Date:   Tue, 10 Mar 2020 13:40:08 -0700
-Cc:     "Cgroups" <cgroups@vger.kernel.org>, "Tejun Heo" <tj@kernel.org>,
-        "Li Zefan" <lizefan@huawei.com>,
-        "Johannes Weiner" <hannes@cmpxchg.org>,
-        "LKML" <linux-kernel@vger.kernel.org>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Kernel Team" <kernel-team@fb.com>
-Subject: Re: [PATCH v2 1/4] kernfs: kvmalloc xattr value instead of kmalloc
-From:   "Daniel Xu" <dxu@dxuuu.xyz>
-To:     "Shakeel Butt" <shakeelb@google.com>
-Message-Id: <C17G1V88F2XD.EQFO8E8QX1YO@dlxu-fedora-R90QNFJV>
+        Tue, 10 Mar 2020 16:41:19 -0400
+Received: by shelob.oktetlabs.ru (Postfix, from userid 122)
+        id 74E5C7F5AC; Tue, 10 Mar 2020 23:33:39 +0300 (MSK)
+Received: from varda.oktetlabs.ru (varda.oktetlabs.ru [192.168.37.38])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by shelob.oktetlabs.ru (Postfix) with ESMTPS id 8B5F37F594;
+        Tue, 10 Mar 2020 23:33:26 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 shelob.oktetlabs.ru 8B5F37F594
+Authentication-Results: shelob.oktetlabs.ru/8B5F37F594; dkim=none;
+        dkim-atps=neutral
+Received: from mkshevetskiy by varda.oktetlabs.ru with local (Exim 4.92)
+        (envelope-from <mkshevetskiy@varda.oktetlabs.ru>)
+        id 1jBlZ8-001inJ-AD; Tue, 10 Mar 2020 23:33:26 +0300
+From:   Mikhail Kshevetskiy <mikhail.kshevetskiy@oktetlabs.ru>
+To:     miquel.raynal@bootlin.com, richard@nod.at
+Cc:     linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Mikhail Kshevetskiy <mikhail.kshevetskiy@oktetlabs.ru>
+Subject: [PATCH 2/2] mtd: spinand: fix bad block marker writing
+Date:   Tue, 10 Mar 2020 23:32:24 +0300
+Message-Id: <20200310203224.410198-2-mikhail.kshevetskiy@oktetlabs.ru>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200310203224.410198-1-mikhail.kshevetskiy@oktetlabs.ru>
+References: <20200310203224.410198-1-mikhail.kshevetskiy@oktetlabs.ru>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Shakeel,
+In spinand_markbad() we use spinand->oobbuf as a bad block marker, fill
+it with zeroes and issue spinand_write_page() operation:
 
-On Tue Mar 10, 2020 at 12:40 PM, Shakeel Butt wrote:
-> Hi Daniel,
->
->=20
-> On Thu, Mar 5, 2020 at 1:16 PM Daniel Xu <dxu@dxuuu.xyz> wrote:
-> >
-> > It's not really necessary to have contiguous physical memory for xattr
-> > values. We no longer need to worry about higher order allocations
-> > failing with kvmalloc, especially because the xattr size limit is at
-> > 64K.
-> >
-> > Signed-off-by: Daniel Xu <dxu@dxuuu.xyz>
->
->=20
-> The patch looks fine to me. However the commit message is too cryptic
-> i.e. hard to get the motivation behind the change.
->
+        struct nand_page_io_req req = {
+                .pos = *pos,
+                .ooboffs = 0,
+                .ooblen = 2,
+                .oobbuf.out = spinand->oobbuf,
+        };
+        ...
+        memset(spinand->oobbuf, 0, 2);
+        return spinand_write_page(spinand, &req);
 
-Thanks for taking a look. The real reason I did it was because Tejun
-said so :).
+spinand_write_page() will call spinand_write_to_cache_op() at some
+moment. In spinand_write_to_cache_op() we have:
 
-Tejun, is there a larger reason?
+        nbytes = nanddev_page_size(nand) + nanddev_per_page_oobsize(nand);
+        memset(spinand->databuf, 0xff, nbytes);
 
+This will fill spinand->databuf with 0xff, but spinand->oobbuf is the
+part of spinand->databuf (see spinand_init()):
 
-Thanks,
-Daniel
+        spinand->oobbuf = spinand->databuf + nanddev_page_size(nand);
+
+As result bad block marker will be overwrited by 0xff values, hence
+bad block will NOT be marked.
+
+A separate buffer for bad block marker used to fix this issue.
+
+Signed-off-by: Mikhail Kshevetskiy <mikhail.kshevetskiy@oktetlabs.ru>
+---
+ drivers/mtd/nand/spi/core.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/mtd/nand/spi/core.c b/drivers/mtd/nand/spi/core.c
+index bb4eac400b0f..d1355773d484 100644
+--- a/drivers/mtd/nand/spi/core.c
++++ b/drivers/mtd/nand/spi/core.c
+@@ -603,11 +603,12 @@ static int spinand_mtd_block_isbad(struct mtd_info *mtd, loff_t offs)
+ static int spinand_markbad(struct nand_device *nand, const struct nand_pos *pos)
+ {
+ 	struct spinand_device *spinand = nand_to_spinand(nand);
++	char bad_block_marker[2] = {0, 0};
+ 	struct nand_page_io_req req = {
+ 		.pos = *pos,
+ 		.ooboffs = 0,
+-		.ooblen = 2,
+-		.oobbuf.out = spinand->oobbuf,
++		.ooblen = sizeof(bad_block_marker),
++		.oobbuf.out = bad_block_marker,
+ 	};
+ 	int ret;
+ 	u8 status;
+@@ -630,7 +631,6 @@ static int spinand_markbad(struct nand_device *nand, const struct nand_pos *pos)
+ 	if (ret)
+ 		return ret;
+ 
+-	memset(spinand->oobbuf, 0, 2);
+ 	return spinand_write_page(spinand, &req);
+ }
+ 
+-- 
+2.25.0
+
