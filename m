@@ -2,197 +2,113 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5778EC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 18:22:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94E29C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 18:22:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E29E20727
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 18:22:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mcd1ru1k"
+	by mail.kernel.org (Postfix) with ESMTP id 6D98F208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 18:22:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727137AbgCJSWA (ORCPT
+        id S1727250AbgCJSWZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 14:22:00 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:32859 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726315AbgCJSWA (ORCPT
+        Tue, 10 Mar 2020 14:22:25 -0400
+Received: from shelob.surriel.com ([96.67.55.147]:50150 "EHLO
+        shelob.surriel.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726752AbgCJSWZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 14:22:00 -0400
-Received: by mail-lj1-f195.google.com with SMTP id f13so15332774ljp.0
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 11:21:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=7vZbJT1c2zdJKrBYgeBuzI6/cPzDdz4bNcW0b9KW6sQ=;
-        b=mcd1ru1k/rA5QbVMjAethD5PDxsMYc5kUarILozIBZgDfX8IH55NQSbome9iM1kiQE
-         xNLkzeSPnpWTLCrAk19vSNFDoUhDb7qrqPmihZNp/rSzIxzhSHrvz/4lWeviAonUe6zW
-         M2Cmu/DYteUI+nppQxs2GG6ewJ+XeG9dtq+g43EN/EeeGzYrdG255RNBz1sjPzFaAhR6
-         SGUiJ/I3vg308mIlqW41diRlTo8CDHnFRslH4rTGn9yH113XMOR4JmA6z5hOpRJsb6KK
-         0SOoP4JZskCjJDXQLNVIt7Bpf2gJmYrAcqmztynHCLSFjtmOpnaiL00eo3DG9ntGUObh
-         T5ww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=7vZbJT1c2zdJKrBYgeBuzI6/cPzDdz4bNcW0b9KW6sQ=;
-        b=EO21CYa9RosNNf/LO2sXhM0+TXBqmptIUwTa4ZwlzVt9wN/Doi0MXtlqX+zHOGm8wa
-         I9kKVgIRHQRN/pQx0potuQ6IKHKOt/UsO4mwOeNdYnoIFOfbQYU//ehYQPZR4mpqbedE
-         t8fQWRMiTgUyrAFhHhXTwU0jKS+sNpXhBBqcgj5BhyD8pf7CpXNqQu6UpJrnvX70eHOs
-         TeO0EgXIFk4bYnAYkHmwYYL1hNo6Y+YcH/nFEbiHeBqth02cDEp8XBThsEaZo4r1pobq
-         sijlUb+p0yU/M/p4hPQLnBKdY2u4ASqKhtQZ56SnRmYu/vDubUxJKAyI2SWl8W4gd7/y
-         X6Gw==
-X-Gm-Message-State: ANhLgQ1Za31IbOjht5gnUwmu/FWWfCOfBS39BWYgwTRAEz7fyxQfMYu5
-        /gYQRuJROqRhUFidXDEId51giQlnO/OFPteMvOL5pA==
-X-Google-Smtp-Source: ADFU+vv9eNtvt1X+rjAfWW2hJ3ArS5kACXlRbrqsh6vYPLgHYjFJ5LJH1QmPWo7sfbutJJHVIdNAn5ArR1my6OH2xwo=
-X-Received: by 2002:a2e:9dc8:: with SMTP id x8mr12983976ljj.38.1583864518516;
- Tue, 10 Mar 2020 11:21:58 -0700 (PDT)
+        Tue, 10 Mar 2020 14:22:25 -0400
+Received: from imladris.surriel.com ([96.67.55.152])
+        by shelob.surriel.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.92.3)
+        (envelope-from <riel@shelob.surriel.com>)
+        id 1jBjWD-0007pX-Th; Tue, 10 Mar 2020 14:22:17 -0400
+Message-ID: <833c188c0c1b9b0b842973952907bdabed774122.camel@surriel.com>
+Subject: Re: [PATCH v2] mm: hugetlb: optionally allocate gigantic hugepages
+ using cma
+From:   Rik van Riel <riel@surriel.com>
+To:     Roman Gushchin <guro@fb.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>, linux-mm@kvack.org,
+        kernel-team@fb.com, linux-kernel@vger.kernel.org
+Date:   Tue, 10 Mar 2020 14:22:17 -0400
+In-Reply-To: <20200310180558.GD85000@carbon.dhcp.thefacebook.com>
+References: <20200310002524.2291595-1-guro@fb.com>
+         <5cfa9031-fc15-2bcc-adb9-9779285ef0f7@oracle.com>
+         <20200310180558.GD85000@carbon.dhcp.thefacebook.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-D94rFl3rXI1Y1H51/0DC"
+User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
 MIME-Version: 1.0
-References: <20200310123606.543939933@linuxfoundation.org>
-In-Reply-To: <20200310123606.543939933@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Tue, 10 Mar 2020 23:51:43 +0530
-Message-ID: <CA+G9fYtC6A64M_kuP-_L597ovD+NPuJ6PUcdpkcCW7hYt4=OmA@mail.gmail.com>
-Subject: Re: [PATCH 4.9 00/88] 4.9.216-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 10 Mar 2020 at 18:15, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 4.9.216 release.
-> There are 88 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Thu, 12 Mar 2020 12:34:10 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.9.216-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.9.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+--=-D94rFl3rXI1Y1H51/0DC
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Summary
-------------------------------------------------------------------------
+On Tue, 2020-03-10 at 11:05 -0700, Roman Gushchin wrote:
+> On Tue, Mar 10, 2020 at 10:27:01AM -0700, Mike Kravetz wrote:
+> >=20
+> > > +	for_each_node_state(nid, N_ONLINE) {
+> > > +		unsigned long min_pfn =3D 0, max_pfn =3D 0;
+> > > +
+> > > +		for_each_mem_pfn_range(i, nid, &start_pfn, &end_pfn,
+> > > NULL) {
+> > > +			if (!min_pfn)
+> > > +				min_pfn =3D start_pfn;
+> > > +			max_pfn =3D end_pfn;
+> > > +		}
+> > > +
+> > > +		res =3D cma_declare_contiguous(PFN_PHYS(min_pfn), size,
+> > > +					     PFN_PHYS(max_pfn), (1UL <<
+> > > 30),
+> >=20
+> > The alignment is hard coded for x86 gigantic page size.  If this
+> > supports
+> > more architectures or becomes arch independent we will need to
+> > determine
+> > what this alignment should be.  Perhaps an arch specific call back
+> > to get
+> > the alignment for gigantic pages.  That will require a little
+> > thought as
+> > some arch's support multiple gigantic page sizes.
+>=20
+> Good point!
+> Should we take the biggest possible size as a reference?
+> Or the smallest (larger than MAX_ORDER)?
 
-kernel: 4.9.216-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.9.y
-git commit: 823586b24f3634fefd5b5e83293920023c6f008c
-git describe: v4.9.215-89-g823586b24f36
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.9-oe/bui=
-ld/v4.9.215-89-g823586b24f36
+I would say biggest.
 
-No regressions (compared to build v4.9.215)
-
-No fixes (compared to build v4.9.215)
-
-Ran 19814 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c - arm64
-- hi6220-hikey - arm64
-- i386
-- juno-r2 - arm64
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* install-android-platform-tools-r2800
-* kselftest
-* kvm-unit-tests
-* libhugetlbfs
-* linux-log-parser
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-crypto-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* network-basic-tests
-* ltp-cap_bounds-kasan-tests
-* ltp-commands-kasan-tests
-* ltp-containers-kasan-tests
-* ltp-cpuhotplug-kasan-tests
-* ltp-crypto-kasan-tests
-* ltp-dio-kasan-tests
-* ltp-fcntl-locktests-kasan-tests
-* ltp-filecaps-kasan-tests
-* ltp-fs-kasan-tests
-* ltp-fs_bind-kasan-tests
-* ltp-fs_perms_simple-kasan-tests
-* ltp-fsx-kasan-tests
-* ltp-hugetlb-kasan-tests
-* ltp-io-kasan-tests
-* ltp-ipc-kasan-tests
-* ltp-math-kasan-tests
-* ltp-mm-kasan-tests
-* ltp-nptl-kasan-tests
-* ltp-pty-kasan-tests
-* ltp-securebits-kasan-tests
-* ltp-syscalls-kasan-tests
-* ltp-open-posix-tests
-* ltp-cve-kasan-tests
-* ltp-sched-kasan-tests
+You can always allocate multiple smaller gigantic pages
+inside the space reserved for one ginormous one.
 
 --=20
-Linaro LKFT
-https://lkft.linaro.org
+All Rights Reversed.
+
+--=-D94rFl3rXI1Y1H51/0DC
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEKR73pCCtJ5Xj3yADznnekoTE3oMFAl5n2tkACgkQznnekoTE
+3oN+Owf/Sy6WliqWQnAbEHq56M8WlOqyAKoXZupvl2NMopJY6+FsMKMtOezaF0+s
+7jli5AA4QEwoCAcLAWsfwZa5lmnrCs918KI8pnQ+6xFFDh7bg9j+iyxvS87SUseM
+jOiAjAdjHIODLlz5Q7lHktmtO68cU8QDcKjbBtobntk+LS7oGA+FwucdRaZ/hLyI
++Rn43qwaod6UxqZCkoNblYlxJhosQfF7bZ99Gkmh+K09lEmgylK0fObIpPIfKI4q
+sYBTMe7qUzdsfqAOFmF5xzRZX2q0mwOCdTZhjpZ68MjRpHsvKstrlh4UqfAgd7D+
+uDn75ec2IPpFAR/8DTp06Kl6a1+q2g==
+=tGVb
+-----END PGP SIGNATURE-----
+
+--=-D94rFl3rXI1Y1H51/0DC--
+
