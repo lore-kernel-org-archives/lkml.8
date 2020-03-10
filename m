@@ -2,95 +2,102 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3FA5C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:22:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FCF6C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:22:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A30D0222D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:22:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD7DB222D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:22:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583846542;
-	bh=FaMTD2na3NDedgKSwXsZVOGx7i/nxquek6psyjDM3Lo=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
-	b=wr21bG6lAcIdA/n38QUPWT34kJCzP1zPu0B7+isgbmwrnqCwBbUJVs/RTZ+uoxJns
-	 wHeiXjdE0x42nGjUvPAtOPF6T8CogujIGG+M2YuqZoTf2UPlIiUN4eFzEZ5K8/mD6J
-	 H8MbiHuzddw8VEFsVIykqsIyySyRDSASSxHrYJUA=
+	s=default; t=1583846550;
+	bh=vpZhIUp+F3EInqF6s0EGWeJU4WQkBICg3jGrpxrEyvw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=pjNtoqqIijA47AMpY3vEEM+9kjzL0LqhZfZAv7AXMoRjpY7tiyB7YK+Yj8TqXbSYJ
+	 KArmkF1QLUXJXKRhZArFF38AVzwgXboa/d95zwFd7Ki+68DO2vZLX4EIKqdPzc8jco
+	 WXgNFJ845bfFA+E08z5a6VfbLFipKS/FXWRFcnoY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731050AbgCJNWV (ORCPT
+        id S1730321AbgCJNWa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:22:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47952 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:22:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42540 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730239AbgCJNWT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:22:19 -0400
-Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
+        id S1730254AbgCJNBW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:01:22 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 53E39208E4;
-        Tue, 10 Mar 2020 13:22:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 201BC2467D;
+        Tue, 10 Mar 2020 13:01:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583846539;
-        bh=FaMTD2na3NDedgKSwXsZVOGx7i/nxquek6psyjDM3Lo=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=nOHUzyv8eb4NIsmREF9QILrzXXWOx92nJ+aS2RDg1Dv7jNtzGLBsZOeyveMA7AQVV
-         Cq8vn5QKZbw+kqb6EA5V7asq10eKRxLNL69aHKd+KpzRG/coxJDSXCz2f2nx0TCNRr
-         L6a5/PaJXVH3SRWycAiQbGPnBxTmEZsULi5zIptM=
-Date:   Tue, 10 Mar 2020 14:22:16 +0100 (CET)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     =?ISO-8859-15?Q?Filipe_La=EDns?= <lains@archlinux.org>
-cc:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Nestor Lopez Casado <nlopezcasad@logitech.com>
-Subject: Re: [PATCH] HID: logitech-dj: add support for the static device in
- the Powerplay mat/receiver
-In-Reply-To: <5a93677bd6238a9d7928e4fd16a8915faeb5f19e.camel@archlinux.org>
-Message-ID: <nycvar.YFH.7.76.2003101301280.19500@cbobk.fhfr.pm>
-References: <20200115201811.3271284-1-lains@archlinux.org>  <nycvar.YFH.7.76.2002121449191.3144@cbobk.fhfr.pm> <5a93677bd6238a9d7928e4fd16a8915faeb5f19e.camel@archlinux.org>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        s=default; t=1583845281;
+        bh=vpZhIUp+F3EInqF6s0EGWeJU4WQkBICg3jGrpxrEyvw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=COe2dfPUh7gNhcGGnxd1aPbW4luXvFzoNNlj7+cKTKRr3Ojs2EYo/jetn8iexC7T0
+         KYpgdeluWk/2FQJspUuEeivEfFrzeCvM3fhWXwHHX6qqxazIGfecIYVR6E3nkfJPG1
+         /JyI3/EOJTgEu9goVDeC+wTY21dDysm036Kck+M4=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Jonas Gorski <jonas.gorski@gmail.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 5.5 128/189] spi: bcm63xx-hsspi: Really keep pll clk enabled
+Date:   Tue, 10 Mar 2020 13:39:25 +0100
+Message-Id: <20200310123652.720548105@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200310123639.608886314@linuxfoundation.org>
+References: <20200310123639.608886314@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 12 Feb 2020, Filipe Laíns wrote:
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-> > > +	/* custom receiver device (eg. powerplay) */
-> > > +	if (hidpp_report->device_index == 7) {
-> > > +		workitem.reports_supported |= HIDPP;
-> > > +	}
-> > > +
-> > 
-> > I guess we can't do anything else than to trust Logitech that they will 
-> > not assign conflicting device_index ID in the future to something that 
-> > will not be HID++, right?
-> > 
-> > Or is this properly documented somewhere?
-> > 
-> > Thanks,
-> 
-> 
-> CCing Nestor
-> 
-> Yes, we need to trust Logitech on this. There's isn't anything
-> documented regarding this AFAIK.
-> 
-> Even if Logitech released a device with index 7 that didn't support
-> HID++, it wouldn't be that big of an issue. We would just end up with a
-> hidraw node which would export a vendor page report descriptor but the
-> device wouldn't actually reply to anything.
+commit 51bddd4501bc414b8b1e8f4d096b4a5304068169 upstream.
 
-Given the silence from Nestor, I guess we can just apply this for 5.7; 
-pushing to for-5.7/logitech branch.
+The purpose of commit 0fd85869c2a9 ("spi/bcm63xx-hsspi: keep pll clk enabled")
+was to keep the pll clk enabled through the lifetime of the device.
 
-Thanks,
+In order to do that, some 'clk_prepare_enable()'/'clk_disable_unprepare()'
+calls have been added in the error handling path of the probe function, in
+the remove function and in the suspend and resume functions.
 
--- 
-Jiri Kosina
-SUSE Labs
+However, a 'clk_disable_unprepare()' call has been unfortunately left in
+the probe function. So the commit seems to be more or less a no-op.
+
+Axe it now, so that the pll clk is left enabled through the lifetime of
+the device, as described in the commit.
+
+Fixes: 0fd85869c2a9 ("spi/bcm63xx-hsspi: keep pll clk enabled")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Acked-by: Jonas Gorski <jonas.gorski@gmail.com>
+Link: https://lore.kernel.org/r/20200228213838.7124-1-christophe.jaillet@wanadoo.fr
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/spi/spi-bcm63xx-hsspi.c |    1 -
+ 1 file changed, 1 deletion(-)
+
+--- a/drivers/spi/spi-bcm63xx-hsspi.c
++++ b/drivers/spi/spi-bcm63xx-hsspi.c
+@@ -366,7 +366,6 @@ static int bcm63xx_hsspi_probe(struct pl
+ 			goto out_disable_clk;
+ 
+ 		rate = clk_get_rate(pll_clk);
+-		clk_disable_unprepare(pll_clk);
+ 		if (!rate) {
+ 			ret = -EINVAL;
+ 			goto out_disable_pll_clk;
+
 
