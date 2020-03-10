@@ -2,227 +2,620 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=FORGED_MUA_MOZILLA,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6593EC18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 15:17:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17EEDC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 15:17:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4216F20727
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 15:17:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB3E520727
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 15:17:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EywTX/GB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727059AbgCJPRc (ORCPT
+        id S1727600AbgCJPRf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 11:17:32 -0400
-Received: from mail-oln040092071019.outbound.protection.outlook.com ([40.92.71.19]:33099
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726283AbgCJPRb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 11:17:31 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DT83+kwv9a1Vq8572rSuao9T3PzrxiAKOr5mG17eFemn8jzHvvboLDjCMli4RU0aAXFZg7Br3WvyJvBBaVXtmDIkDmP+IZvk1YaOD1rHdPBav4+O5xL/M4DW3oBhIVlajkRhu51fD1QwdYW6QbcH3O6tKotm+qsFkUFoWTF2zBI3V7v70DvEISKd4jc6fuG1vmrs5PXhsKyz+xbPOK2MLzHoZl6RW1o1HR0Fid3fqYkLTYS3eFrOzCZq5sGQWUOU+NKV+sOArQe8yFndwTb4+jkJ6gsJIlTzlvzu78GGg6sWMqjbQnq4Yhw5cNKbuMSQyIAq/xfZq1leq4a2TWgEGw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7MERsL12ctMhu/N6mOV36IeX7WrSbnsrDvcLG/CgAcM=;
- b=k0kIsu9sFIO/sZAviAQGqyJU0ilpecEEo0mWQabNnhFjnLRnpArGNlqg7vKXHQan1KtJw9daN/amXRYIVWpvV5VTjrvVRy3v14C+Z6qVXVmj9FuebqOvd0doXWU0/2XYzSmO+RH1wLQ9Bsqb9q2Khi8xrmNnowko10IerUT9akdEP+8oV+urenPcO2QSm6C62wVSjH6SOvuVMsvL15mc3pEHMOJW7nUrVcy1ww6dG+LmyL+f3lA7tihvToEO+oWk6ZDsQ1proSDseWpWSyM3pTgDeW9cmPwcUxB08MV+W0EHVM02+pSAIZSBx3HTGQKCTIydMkwUA39wMY6tU/fq9Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hotmail.de; dmarc=pass action=none header.from=hotmail.de;
- dkim=pass header.d=hotmail.de; arc=none
-Received: from VE1EUR03FT009.eop-EUR03.prod.protection.outlook.com
- (2a01:111:e400:7e09::36) by
- VE1EUR03HT218.eop-EUR03.prod.protection.outlook.com (2a01:111:e400:7e09::394)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.11; Tue, 10 Mar
- 2020 15:17:27 +0000
-Received: from AM6PR03MB5170.eurprd03.prod.outlook.com (10.152.18.59) by
- VE1EUR03FT009.mail.protection.outlook.com (10.152.18.92) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2793.11 via Frontend Transport; Tue, 10 Mar 2020 15:17:27 +0000
-X-IncomingTopHeaderMarker: OriginalChecksum:4ABB00EC27A7E899A622942F93AAC0B5D7405984177B6CBE182C36D6D85FC71D;UpperCasedChecksum:ED1AEF8E26893324273C4B6F6273B37170CD7EA0D4FB7E0E77F27A89EAE9FD5E;SizeAsReceived:10277;Count:50
-Received: from AM6PR03MB5170.eurprd03.prod.outlook.com
- ([fe80::1956:d274:cab3:b4dd]) by AM6PR03MB5170.eurprd03.prod.outlook.com
- ([fe80::1956:d274:cab3:b4dd%6]) with mapi id 15.20.2793.013; Tue, 10 Mar 2020
- 15:17:27 +0000
-Subject: Re: [PATCH 1/4] exec: Fix a deadlock in ptrace
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Andrei Vagin <avagin@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Yuyang Du <duyuyang@gmail.com>,
-        David Hildenbrand <david@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        David Howells <dhowells@redhat.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christian Kellner <christian@kellner.me>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>
-References: <AM6PR03MB5170EB4427BF5C67EE98FF09E4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <AM6PR03MB51703B44170EAB4626C9B2CAE4E20@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <87tv32cxmf.fsf_-_@x220.int.ebiederm.org>
- <87v9ne5y4y.fsf_-_@x220.int.ebiederm.org>
- <87zhcq4jdj.fsf_-_@x220.int.ebiederm.org>
- <AM6PR03MB5170BC58D90BAD80CDEF3F8BE4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <878sk94eay.fsf@x220.int.ebiederm.org>
- <AM6PR03MB517086003BD2C32E199690A3E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <87r1y12yc7.fsf@x220.int.ebiederm.org> <87k13t2xpd.fsf@x220.int.ebiederm.org>
- <87d09l2x5n.fsf@x220.int.ebiederm.org>
- <AM6PR03MB5170F0F9DC18F5EA77C9A857E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <871rq12vxu.fsf@x220.int.ebiederm.org>
- <AM6PR03MB5170DF45E3245F55B95CCD91E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <877dzt1fnf.fsf@x220.int.ebiederm.org>
- <AM6PR03MB517033EAD25BED15CC84E17DE4FF0@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <87d09kxmxl.fsf@x220.int.ebiederm.org>
-From:   Bernd Edlinger <bernd.edlinger@hotmail.de>
-Message-ID: <AM6PR03MB517090B728A0F6E982C9C920E4FF0@AM6PR03MB5170.eurprd03.prod.outlook.com>
-Date:   Tue, 10 Mar 2020 16:17:24 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-In-Reply-To: <87d09kxmxl.fsf@x220.int.ebiederm.org>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: AM4PR07CA0020.eurprd07.prod.outlook.com
- (2603:10a6:205:1::33) To AM6PR03MB5170.eurprd03.prod.outlook.com
- (2603:10a6:20b:ca::23)
-X-Microsoft-Original-Message-ID: <782f7067-518a-4979-64ae-6027f3e17ce2@hotmail.de>
+        Tue, 10 Mar 2020 11:17:35 -0400
+Received: from mail-qv1-f67.google.com ([209.85.219.67]:38739 "EHLO
+        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726283AbgCJPRf (ORCPT
+        <rfc822;Linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 11:17:35 -0400
+Received: by mail-qv1-f67.google.com with SMTP id p60so4233594qva.5
+        for <Linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 08:17:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=c7uovnrm5wYrMyuF4zZgJtDW3JCucz08at3C7VTyyoI=;
+        b=EywTX/GBxZJ5wUQXeSg91SeT6t1UZo/lCQYO2DPoLLMPURwFJwGJmUuw1SMNJ2YraJ
+         Ac7jKyosMqr5vEZfzyYnLNcQwp9QsPXwLIUvZREyso1hG/3iue/eOxT69+oOJs5bu9mj
+         0AdEh2c+bNtEEFv9IXD3kd9fUSgm+ORu2oVp+8vHyzLH2PK4FUMApWcf7bU1+yITQ+1z
+         keW9qD8j4CKLnUNRnxm8pf9Kb/OQEcohrKR+6p14By+S0YWcyvx1EIYrUeduCTBcanBf
+         Xwn7wHKORa2QG7zhI2oHK4/kY8YwQ6S6rkBowcsIb7uMNKhET9OuvpSbMwjDaYU04x/a
+         iZaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=c7uovnrm5wYrMyuF4zZgJtDW3JCucz08at3C7VTyyoI=;
+        b=QiU7Szs1m9Fl5tV9NsoY5/KDCXwy4FdvBvAdC4WzCjZYXps/OOXlvYeHV2VFmTIIeP
+         hHkQ6WRyDrk0jOEFrQHrq7EdP7UyCTtOe05Rf5frdA1uJcWqPJZP9Z/ol6kEjkC9EJoj
+         g+OBiNZqia3rWeZ7d93lRGnI4TLe5lbPYIv9bOwc/tQwF+yKm6sPEfwL7dwT8INMojZx
+         30dW6do5STqL4y3MuisMRR4M8gIxIhCXJ4d+UDLgNUXvg4lQOSnuMPKZh/a4lkFnGDMs
+         b0y/jDB+pVIQl3mCFDxfLI+durc1+LqMrD/D1EoJSQCeVL79kx4zuwZyj7/RpfxXZpHt
+         2NQQ==
+X-Gm-Message-State: ANhLgQ24x17HtLICpSxnA6qlUzAyPlMGX7YwaIFVv/NGimA0gy4tRK9x
+        MM99VU5JI/huyA/RWoj2W1jzlSM22ow=
+X-Google-Smtp-Source: ADFU+vuo2pQFh/+XDp7i2INOQHuRyoHDQkoEaJuPs9/Fo0K+SxgTHAolZoExHTdQjhXcPnbdClbkPg==
+X-Received: by 2002:a0c:f5c8:: with SMTP id q8mr15314378qvm.106.1583853452080;
+        Tue, 10 Mar 2020 08:17:32 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.37.151])
+        by smtp.gmail.com with ESMTPSA id x3sm21243qkn.37.2020.03.10.08.17.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Mar 2020 08:17:31 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id DA25940009; Tue, 10 Mar 2020 12:17:28 -0300 (-03)
+Date:   Tue, 10 Mar 2020 12:17:28 -0300
+To:     Jin Yao <yao.jin@linux.intel.com>
+Cc:     jolsa@kernel.org, peterz@infradead.org, mingo@redhat.com,
+        alexander.shishkin@linux.intel.com, Linux-kernel@vger.kernel.org,
+        ak@linux.intel.com, kan.liang@intel.com, yao.jin@intel.com
+Subject: Re: [PATCH v1 08/14] perf util: Add new block info functions for top
+ N hot blocks comparison
+Message-ID: <20200310151728.GI15931@kernel.org>
+References: <20200310070245.16314-1-yao.jin@linux.intel.com>
+ <20200310070245.16314-9-yao.jin@linux.intel.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [192.168.1.101] (92.77.140.102) by AM4PR07CA0020.eurprd07.prod.outlook.com (2603:10a6:205:1::33) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.6 via Frontend Transport; Tue, 10 Mar 2020 15:17:25 +0000
-X-Microsoft-Original-Message-ID: <782f7067-518a-4979-64ae-6027f3e17ce2@hotmail.de>
-X-TMN:  [Z3lgAUqy4nucF3x8Z/b2WnzlOwmiw+VC]
-X-MS-PublicTrafficType: Email
-X-IncomingHeaderCount: 50
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-Correlation-Id: dd300894-40f9-430f-0808-08d7c5062475
-X-MS-TrafficTypeDiagnostic: VE1EUR03HT218:
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: +6qWBWJOP1x9rrV2MrYaCF5/02/aHcK94Y2nQWTSx+x8klWi8SpBN+mLW2CGqp1dRg92LgGFgvFKBECHvTP2ccGnhyfr+NJ/WFIMXS5BMWT21fmg+m01JijgCz9r4/Zt6qN5Gp9XIaBmkY+wSd9zLWIlwSNV2VvzaJCUA0udtl8txGGhQLqI1iTLlIkZVAD4jj81I+bqyUNKCw/9w44gqx/FNebVbi2yCQ9Y/lVFcTw=
-X-MS-Exchange-AntiSpam-MessageData: mHipqRo6hS60olGOUYG9i2a6ZJYV6ymKNPegcyfCBaKKiWHYB1JJyc3RULEkWbU1SavTZn2gcfro8yyaCVZXjIzzdloK9OWnR/4wCITZdNtbbpRFV2PhsW2uf3eEBCHdRSqs8mX9Hq4OLeSkFQa9/g==
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: dd300894-40f9-430f-0808-08d7c5062475
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Mar 2020 15:17:27.3816
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1EUR03HT218
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200310070245.16314-9-yao.jin@linux.intel.com>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/10/20 4:13 PM, Eric W. Biederman wrote:
-> Bernd Edlinger <bernd.edlinger@hotmail.de> writes:
+Em Tue, Mar 10, 2020 at 03:02:39PM +0800, Jin Yao escreveu:
+> It's also useful to figure out the top N hottest blocks from old perf
+> data file and figure out the top N hottest blocks from new perf data file,
+> and then compare them for the cycles diff. It can let us easily know
+> how many cycles are moved from one block to another block.
 > 
->> This fixes a deadlock in the tracer when tracing a multi-threaded
->> application that calls execve while more than one thread are running.
->>
->> I observed that when running strace on the gcc test suite, it always
->> blocks after a while, when expect calls execve, because other threads
->> have to be terminated.  They send ptrace events, but the strace is no
->> longer able to respond, since it is blocked in vm_access.
->>
->> The deadlock is always happening when strace needs to access the
->> tracees process mmap, while another thread in the tracee starts to
->> execve a child process, but that cannot continue until the
->> PTRACE_EVENT_EXIT is handled and the WIFEXITED event is received:
+> This patch adds new helper functions and data structures for the block
+> comparison.
 > 
-> Overall this looks good.  Mind if I change the subject to:
-> "exec: Fix a deadlock in strace" ?
+> And it also updates the existing perf-diff to be compatible with
+> the new interface.
+> 
+> Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+> ---
+>  tools/perf/builtin-diff.c    |  45 +-----
+>  tools/perf/util/block-info.c | 305 ++++++++++++++++++++++++++++++++++-
+>  tools/perf/util/block-info.h |  32 +++-
+>  tools/perf/util/srclist.h    |   9 ++
+>  4 files changed, 345 insertions(+), 46 deletions(-)
+> 
+> diff --git a/tools/perf/builtin-diff.c b/tools/perf/builtin-diff.c
+> index 9c801b9bc5bb..dcbc9bba4e61 100644
+> --- a/tools/perf/builtin-diff.c
+> +++ b/tools/perf/builtin-diff.c
+> @@ -598,27 +598,6 @@ static void init_block_hist(struct block_hist *bh)
+>  	bh->valid = true;
+>  }
+>  
+> -static struct hist_entry *get_block_pair(struct hist_entry *he,
+> -					 struct hists *hists_pair)
+> -{
+> -	struct rb_root_cached *root = hists_pair->entries_in;
+> -	struct rb_node *next = rb_first_cached(root);
+> -	int64_t cmp;
+> -
+> -	while (next != NULL) {
+> -		struct hist_entry *he_pair = rb_entry(next, struct hist_entry,
+> -						      rb_node_in);
+> -
+> -		next = rb_next(&he_pair->rb_node_in);
+> -
+> -		cmp = __block_info__cmp(he_pair, he);
+> -		if (!cmp)
+> -			return he_pair;
+> -	}
+> -
+> -	return NULL;
+> -}
+> -
+>  static void init_spark_values(unsigned long *svals, int num)
+>  {
+>  	for (int i = 0; i < num; i++)
+> @@ -665,26 +644,6 @@ static void compute_cycles_diff(struct hist_entry *he,
+>  	}
+>  }
+>  
+> -static void block_hists_match(struct hists *hists_base,
+> -			      struct hists *hists_pair)
+> -{
+> -	struct rb_root_cached *root = hists_base->entries_in;
+> -	struct rb_node *next = rb_first_cached(root);
+> -
+> -	while (next != NULL) {
+> -		struct hist_entry *he = rb_entry(next, struct hist_entry,
+> -						 rb_node_in);
+> -		struct hist_entry *pair = get_block_pair(he, hists_pair);
+> -
+> -		next = rb_next(&he->rb_node_in);
+> -
+> -		if (pair) {
+> -			hist_entry__add_pair(pair, he);
+> -			compute_cycles_diff(he, pair);
+> -		}
+> -	}
+> -}
+> -
+>  static void hists__precompute(struct hists *hists)
+>  {
+>  	struct rb_root_cached *root;
+> @@ -737,7 +696,9 @@ static void hists__precompute(struct hists *hists)
+>  
+>  				if (bh->valid && pair_bh->valid) {
+>  					block_hists_match(&bh->block_hists,
+> -							  &pair_bh->block_hists);
+> +							  &pair_bh->block_hists,
+> +							  NULL,
+> +							  compute_cycles_diff);
+>  					hists__output_resort(&pair_bh->block_hists,
+>  							     NULL);
+>  				}
+> diff --git a/tools/perf/util/block-info.c b/tools/perf/util/block-info.c
+> index 423ec69bda6c..247c87b8df56 100644
+> --- a/tools/perf/util/block-info.c
+> +++ b/tools/perf/util/block-info.c
+> @@ -12,6 +12,7 @@
+>  #include "evlist.h"
+>  #include "hist.h"
+>  #include "ui/browsers/hists.h"
+> +#include "debug.h"
+>  
+>  static struct block_header_column {
+>  	const char *name;
+> @@ -50,10 +51,24 @@ struct block_info *block_info__get(struct block_info *bi)
+>  	return bi;
+>  }
+>  
+> +static void free_block_line(struct block_line **bl)
+
+static void block_line__zdelete(struct block_line **bl)
+
+> +{
+> +	if ((*bl)->start_file)
+> +		free((*bl)->start_file);
+> +
+> +	if ((*bl)->end_file)
+> +		free((*bl)->end_file);
+> +
+> +	zfree(bl);
+> +}
+> +
+>  void block_info__put(struct block_info *bi)
+
+Correct naming, cool.
+
+>  {
+> -	if (bi && refcount_dec_and_test(&bi->refcnt))
+> +	if (bi && refcount_dec_and_test(&bi->refcnt)) {
+> +		if (bi->line)
+> +			free_block_line(&bi->line);
+>  		free(bi);
+> +	}
+>  }
+>  
+>  struct block_info *block_info__new(void)
+> @@ -65,7 +80,8 @@ struct block_info *block_info__new(void)
+>  	return bi;
+>  }
+>  
+> -int64_t __block_info__cmp(struct hist_entry *left, struct hist_entry *right)
+> +int64_t __block_info__cmp(struct hist_entry *left, struct hist_entry *right,
+> +			  struct srclist *src_list __maybe_unused)
+>  {
+>  	struct block_info *bi_l = left->block_info;
+>  	struct block_info *bi_r = right->block_info;
+> @@ -93,7 +109,7 @@ int64_t __block_info__cmp(struct hist_entry *left, struct hist_entry *right)
+>  int64_t block_info__cmp(struct perf_hpp_fmt *fmt __maybe_unused,
+>  			struct hist_entry *left, struct hist_entry *right)
+>  {
+> -	return __block_info__cmp(left, right);
+> +	return __block_info__cmp(left, right, NULL);
+>  }
+>  
+>  static void init_block_info(struct block_info *bi, struct symbol *sym,
+> @@ -446,8 +462,10 @@ struct block_report *block_info__create_report(struct evlist *evlist,
+>  	evlist__for_each_entry(evlist, pos) {
+>  		struct hists *hists = evsel__hists(pos);
+>  
+> +		hists__output_resort(hists, NULL);
+>  		process_block_report(hists, &block_reports[i], total_cycles,
+>  				     block_hpps, nr_hpps);
+> +		block_reports[i].evsel_idx = pos->idx;
+>  		i++;
+>  	}
+>  
+> @@ -496,3 +514,284 @@ float block_info__total_cycles_percent(struct hist_entry *he)
+>  
+>  	return 0.0;
+>  }
+> +
+> +struct block_report *block_info__get_report(struct block_report *reps,
+> +					    int nr_reps, int evsel_idx)
+> +{
+> +	for (int i = 0; i < nr_reps; i++) {
+> +		if (reps[i].evsel_idx == evsel_idx)
+> +			return &reps[i];
+> +	}
+> +
+> +	return NULL;
+> +}
+> +
+> +static char *move_to_relpath(char *path, const char *dir)
+> +{
+> +	const char *d = dir, *end = dir + strlen(dir);
+> +	char *s;
+> +
+> +	/* skip '.' and '/' */
+> +	while ((d != end) && ((*d == '.') || (*d == '/')))
+> +		d++;
+> +
+> +	if (d == end)
+> +		return NULL;
+> +
+> +	s = strstr(path, d);
+> +	if (!s)
+> +		return NULL;
+> +
+> +	s += strlen(d);
+> +
+> +	while (*s == '/' && *s != 0)
+> +		s++;
+> +
+> +	if (*s == 0)
+> +		return NULL;
+> +
+> +	return s;
+> +}
+> +
+> +static int block_addr2line(struct hist_entry *he, const char *dir)
+> +{
+> +	struct block_info *bi = he->block_info;
+> +	struct block_line *bl;
+> +
+> +	if (!he->ms.map || !he->ms.map->dso)
+> +		return -1;
+> +
+> +	bl = zalloc(sizeof(*bl));
+> +	if (!bl)
+> +		return -1;
+> +
+> +	symbol_conf.disable_add2line_warn = true;
+> +	bl->start_file = get_srcline_split(he->ms.map->dso,
+> +					   map__rip_2objdump(he->ms.map,
+> +							     bi->sym->start + bi->start),
+> +					   &bl->start_nr);
+> +	if (!bl->start_file)
+> +		goto err;
+> +
+> +	if (dir)
+> +		bl->start_rel = move_to_relpath(bl->start_file, dir);
+> +
+> +	bl->end_file = get_srcline_split(he->ms.map->dso,
+> +					 map__rip_2objdump(he->ms.map,
+> +							   bi->sym->start + bi->end),
+> +					 &bl->end_nr);
+> +	if (!bl->end_file)
+> +		goto err;
+> +
+> +	if (dir)
+> +		bl->end_rel = move_to_relpath(bl->end_file, dir);
+> +
+> +	bi->line = bl;
+> +	return 0;
+> +
+> +err:
+> +	free_block_line(&bl);
+> +	return -1;
+> +}
+> +
+> +int block_hists_addr2line(struct hists *hists, const char *dir)
+> +{
+> +	struct rb_root_cached *root = hists->entries_in;
+> +	struct rb_node *next = rb_first_cached(root);
+> +
+> +	while (next != NULL) {
+> +		struct hist_entry *he = rb_entry(next, struct hist_entry,
+> +						 rb_node_in);
+> +
+> +		if (!he)
+> +			break;
+> +
+> +		block_addr2line(he, dir);
+> +		next = rb_next(&he->rb_node_in);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +bool block_same_srcfiles(struct block_line *bl_a, struct block_line *bl_b)
+> +{
+> +	if (!bl_a->start_file || !bl_a->end_file ||
+> +	    !bl_b->start_file || !bl_b->end_file) {
+> +		return false;
+> +	}
+> +
+> +	if (!strcmp(bl_a->start_file, bl_b->start_file) &&
+> +	    !strcmp(bl_a->end_file, bl_b->end_file) &&
+> +	    !strcmp(bl_a->start_file, bl_a->end_file)) {
+> +		return true;
+> +	}
+> +
+> +	if (!bl_a->start_rel || !bl_a->end_rel ||
+> +	    !bl_b->start_rel || !bl_b->end_rel) {
+> +		return false;
+> +	}
+> +
+> +	if (!strcmp(bl_a->start_rel, bl_b->start_rel) &&
+> +	    !strcmp(bl_a->end_rel, bl_b->end_rel) &&
+> +	    !strcmp(bl_a->start_rel, bl_a->end_rel)) {
+> +		return true;
+> +	}
+> +
+> +	return false;
+> +}
+> +
+> +void block_line_dump(struct block_info *bi, const char *str)
+> +{
+> +	if (bi && bi->line) {
+> +		pr_debug("%s: %s:%d -> %s:%d\n",
+> +			 str,
+> +			 bi->line->start_file,
+> +			 bi->line->start_nr,
+> +			 bi->line->end_file,
+> +			 bi->line->end_nr);
+> +	}
+> +}
+> +
+> +static bool block_line_matched(struct src_node *node,
+> +			       int start_nr_a, int end_nr_a,
+> +			       int start_nr_b, int end_nr_b,
+> +			       bool *changed)
+> +{
+> +	int i, j, start_a, end_a, start_b, changed_nr = 0;
+> +	struct line_pair *lp;
+> +
+> +	*changed = false;
+> +
+> +	if (abs(end_nr_a - start_nr_a) !=
+> +	    abs(end_nr_b - start_nr_b)) {
+> +		return false;
+> +	}
+> +
+> +	i = start_a = (start_nr_a < end_nr_a) ? start_nr_a : end_nr_a;
+> +	end_a = (end_nr_a > start_nr_a) ? end_nr_a : start_nr_a;
+> +
+> +	j = start_b = (start_nr_b < end_nr_b) ? start_nr_b : end_nr_b;
+> +
+> +	while (i <= end_a) {
+> +		lp = srclist__line_pair(node, i);
+> +		if (!lp)
+> +			return false;
+> +
+> +		if (lp->b_nr != j)
+> +			changed_nr++;
+> +
+> +		i++; j++;
+> +	}
+> +
+> +	if ((i == end_a + 1) && (changed_nr == 0))
+> +		return true;
+> +
+> +	/*
+> +	 * At least one line is unchanged in this block,
+> +	 * we think this block is changed (not a new block).
+> +	 */
+> +	if (changed_nr < end_a - start_a + 1)
+> +		*changed = true;
+> +
+> +	return false;
+> +}
+> +
+> +bool block_srclist_matched(struct srclist *slist, char *rel_path,
+> +			   int start_nr_a, int end_nr_a,
+> +			   int start_nr_b, int end_nr_b,
+> +			   bool *changed)
+> +{
+> +	struct src_node *node;
+> +	bool ret;
+> +
+> +	*changed = false;
+> +
+> +	node = srclist__find(slist, rel_path, true);
+> +	if (!node)
+> +		return false;
+> +
+> +	ret = block_line_matched(node, start_nr_a, end_nr_a,
+> +				 start_nr_b, end_nr_b, changed);
+> +
+> +	if (ret) {
+> +		pr_debug("block MATCHED (a vs. b)\t\t%s: (%d-%d) vs. (%d-%d)\n",
+> +			 node->info.rel_path,
+> +			 start_nr_a, end_nr_a,
+> +			 start_nr_b, end_nr_b);
+> +	} else if (*changed) {
+> +		pr_debug("block CHANGED (a vs. b)\t\t%s: (%d-%d) vs. (%d-%d)\n",
+> +			 node->info.rel_path,
+> +			 start_nr_a, end_nr_a,
+> +			 start_nr_b, end_nr_b);
+> +	} else {
+> +		pr_debug("block UNMATCHED (a vs. b)\t%s: (%d-%d) vs. (%d-%d)\n",
+> +			 node->info.rel_path,
+> +			 start_nr_a, end_nr_a,
+> +			 start_nr_b, end_nr_b);
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static struct hist_entry *get_block_pair(struct hist_entry *he,
+> +					 struct hists *hists_pair,
+> +					 struct srclist *src_list)
+> +{
+> +	struct rb_root_cached *root = hists_pair->entries_in;
+> +	struct rb_node *next = rb_first_cached(root);
+> +	int64_t cmp;
+> +
+> +	while (next != NULL) {
+> +		struct hist_entry *he_pair = rb_entry(next, struct hist_entry,
+> +						      rb_node_in);
+> +
+> +		next = rb_next(&he_pair->rb_node_in);
+> +
+> +		cmp = __block_info__cmp(he_pair, he, src_list);
+> +		if (!cmp)
+> +			return he_pair;
+> +	}
+> +
+> +	return NULL;
+> +}
+> +
+> +void block_hists_match(struct hists *hists_base,
+> +		       struct hists *hists_pair,
+> +		       struct srclist *src_list,
+> +		       void (*func)(struct hist_entry *,
+> +				    struct hist_entry *))
+> +{
+> +	struct rb_root_cached *root = hists_base->entries_in;
+> +	struct rb_node *next = rb_first_cached(root);
+> +
+> +	while (next != NULL) {
+> +		struct hist_entry *he = rb_entry(next, struct hist_entry,
+> +						 rb_node_in);
+> +		struct hist_entry *pair = get_block_pair(he, hists_pair,
+> +							 src_list);
+> +
+> +		next = rb_next(&he->rb_node_in);
+> +
+> +		if (pair) {
+> +			hist_entry__add_pair(pair, he);
+> +
+> +			if (func)
+> +				(*func)(he, pair);
+> +		}
+> +	}
+> +}
+> +
+> +int block_info__match_report(struct block_report *rep_base,
+> +			     struct block_report *rep_pair,
+> +			     struct srclist *src_list,
+> +			     void (*func)(struct hist_entry *,
+> +					  struct hist_entry *))
+> +{
+> +	struct block_hist *bh_base = &rep_base->hist;
+> +	struct block_hist *bh_pair = &rep_pair->hist;
+> +
+> +	block_hists_match(&bh_base->block_hists, &bh_pair->block_hists,
+> +			  src_list, func);
+> +
+> +	return 0;
+> +}
+> diff --git a/tools/perf/util/block-info.h b/tools/perf/util/block-info.h
+> index 42e9dcc4cf0a..458bd998089d 100644
+> --- a/tools/perf/util/block-info.h
+> +++ b/tools/perf/util/block-info.h
+> @@ -20,6 +20,8 @@ struct block_info {
+>  	int			num;
+>  	int			num_aggr;
+>  	refcount_t		refcnt;
+> +	struct block_line	*line;
+> +	bool			srcline_matched;
+>  };
+>  
+>  struct block_fmt {
+> @@ -46,6 +48,7 @@ struct block_report {
+>  	u64			cycles;
+>  	struct block_fmt	fmts[PERF_HPP_REPORT__BLOCK_MAX_INDEX];
+>  	int			nr_fmts;
+> +	int			evsel_idx;
+>  };
+>  
+>  struct block_hist;
+> @@ -62,7 +65,8 @@ static inline void __block_info__zput(struct block_info **bi)
+>  
+>  #define block_info__zput(bi) __block_info__zput(&bi)
+>  
+> -int64_t __block_info__cmp(struct hist_entry *left, struct hist_entry *right);
+> +int64_t __block_info__cmp(struct hist_entry *left, struct hist_entry *right,
+> +			  struct srclist *src_list __maybe_unused);
+>  
+>  int64_t block_info__cmp(struct perf_hpp_fmt *fmt __maybe_unused,
+>  			struct hist_entry *left, struct hist_entry *right);
+> @@ -83,4 +87,30 @@ int report__browse_block_hists(struct block_hist *bh, float min_percent,
+>  
+>  float block_info__total_cycles_percent(struct hist_entry *he);
+>  
+> +struct block_report *block_info__get_report(struct block_report *reps,
+> +					    int nr_reps, int evsel_idx);
+> +
+> +int block_hists_addr2line(struct hists *hists, const char *dir);
+> +
+> +void block_line_dump(struct block_info *bi, const char *str);
+> +
+> +bool block_same_srcfiles(struct block_line *bl_a, struct block_line *bl_b);
+> +
+> +bool block_srclist_matched(struct srclist *slist, char *rel_path,
+> +			   int start_nr_a, int end_nr_a,
+> +			   int start_nr_b, int end_nr_b,
+> +			   bool *changed);
+> +
+> +void block_hists_match(struct hists *hists_base,
+> +		       struct hists *hists_pair,
+> +		       struct srclist *src_list,
+> +		       void (*func)(struct hist_entry *,
+> +				    struct hist_entry *));
+> +
+> +int block_info__match_report(struct block_report *rep_base,
+> +			     struct block_report *rep_pair,
+> +			     struct srclist *src_list,
+> +			     void (*func)(struct hist_entry *,
+> +					  struct hist_entry *));
+> +
+>  #endif /* __PERF_BLOCK_H */
+> diff --git a/tools/perf/util/srclist.h b/tools/perf/util/srclist.h
+> index f25b0de91a13..46866d5c51d7 100644
+> --- a/tools/perf/util/srclist.h
+> +++ b/tools/perf/util/srclist.h
+> @@ -33,6 +33,15 @@ struct srclist {
+>  	const char *after_dir;
+>  };
+>  
+> +struct block_line {
+> +	char *start_file;
+> +	char *end_file;
+> +	char *start_rel;
+> +	char *end_rel;
+> +	unsigned int start_nr;
+> +	unsigned int end_nr;
+> +};
+> +
+>  struct srclist *srclist__new(const char *before_dir, const char *after_dir);
+>  void srclist__delete(struct srclist *slist);
+>  
+> -- 
+> 2.17.1
 > 
 
-Sure, go ahead.
+-- 
 
-Thanks
-Bernd.
-
-> Eric
-> 
-> 
->>
->> strace          D    0 30614  30584 0x00000000
->> Call Trace:
->> __schedule+0x3ce/0x6e0
->> schedule+0x5c/0xd0
->> schedule_preempt_disabled+0x15/0x20
->> __mutex_lock.isra.13+0x1ec/0x520
->> __mutex_lock_killable_slowpath+0x13/0x20
->> mutex_lock_killable+0x28/0x30
->> mm_access+0x27/0xa0
->> process_vm_rw_core.isra.3+0xff/0x550
->> process_vm_rw+0xdd/0xf0
->> __x64_sys_process_vm_readv+0x31/0x40
->> do_syscall_64+0x64/0x220
->> entry_SYSCALL_64_after_hwframe+0x44/0xa9
->>
->> expect          D    0 31933  30876 0x80004003
->> Call Trace:
->> __schedule+0x3ce/0x6e0
->> schedule+0x5c/0xd0
->> flush_old_exec+0xc4/0x770
->> load_elf_binary+0x35a/0x16c0
->> search_binary_handler+0x97/0x1d0
->> __do_execve_file.isra.40+0x5d4/0x8a0
->> __x64_sys_execve+0x49/0x60
->> do_syscall_64+0x64/0x220
->> entry_SYSCALL_64_after_hwframe+0x44/0xa9
->>
->> This changes mm_access to use the new exec_update_mutex
->> instead of cred_guard_mutex.
->>
->> This patch is based on the following patch by Eric W. Biederman:
->> "[PATCH 0/5] Infrastructure to allow fixing exec deadlocks"
->> Link: https://lore.kernel.org/lkml/87v9ne5y4y.fsf_-_@x220.int.ebiederm.org/
->>
->> Signed-off-by: Bernd Edlinger <bernd.edlinger@hotmail.de>
->> ---
->>  kernel/fork.c | 4 ++--
->>  1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/kernel/fork.c b/kernel/fork.c
->> index c12595a..5720ff3 100644
->> --- a/kernel/fork.c
->> +++ b/kernel/fork.c
->> @@ -1224,7 +1224,7 @@ struct mm_struct *mm_access(struct task_struct *task, unsigned int mode)
->>  	struct mm_struct *mm;
->>  	int err;
->>  
->> -	err =  mutex_lock_killable(&task->signal->cred_guard_mutex);
->> +	err =  mutex_lock_killable(&task->signal->exec_update_mutex);
->>  	if (err)
->>  		return ERR_PTR(err);
->>  
->> @@ -1234,7 +1234,7 @@ struct mm_struct *mm_access(struct task_struct *task, unsigned int mode)
->>  		mmput(mm);
->>  		mm = ERR_PTR(-EACCES);
->>  	}
->> -	mutex_unlock(&task->signal->cred_guard_mutex);
->> +	mutex_unlock(&task->signal->exec_update_mutex);
->>  
->>  	return mm;
->>  }
+- Arnaldo
