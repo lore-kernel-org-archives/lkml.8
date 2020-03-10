@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA535C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:43:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87308C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:43:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9033924695
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:43:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BD6B24691
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:43:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583844214;
-	bh=h164Xjzn/dkMEGOI+0GxP0JTKXYX9H1FF30K9z6chWM=;
+	s=default; t=1583844216;
+	bh=m2VMjPdP7Tghk64h+YiyaAAmIOugxKZ/W6szpaKD2Vs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l+c4n9JxJUzC04z+yYBXMI5hHme8P6d4VmW3vi51BHN4m51RUbtMCOj8Vs/ZIA3Nq
-	 j6693jAgOPNvTBxHn9h+CLJ3VzxIWNRbQnfoOKVH4Xm0CoXVO52+rpYlq5JfA/c7pq
-	 LngnZ0Huj8kvsYKarVcuL/CS7S6Ls2lyxEP3MsOU=
+	b=vZD2kzMNeRSzPrwjB47hDHADlcvirvkpQCSzYE7YCm1pmRfYMLzEHj18IGlJ0FhsA
+	 EbGlQ9uHYo94lNVUL5kZwMEQXVigWL17LC0F+8E6e+RQAV4NqoZrmQqKnV91FP0C+c
+	 uAj1x18ZspU0AVDT4qtSS2Ju5JPiIk3ittSNA/3U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727601AbgCJMnd (ORCPT
+        id S1727607AbgCJMnf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:43:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43872 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:43:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43930 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727592AbgCJMna (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:43:30 -0400
+        id S1727179AbgCJMnd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:43:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A81D924693;
-        Tue, 10 Mar 2020 12:43:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3636524698;
+        Tue, 10 Mar 2020 12:43:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844210;
-        bh=h164Xjzn/dkMEGOI+0GxP0JTKXYX9H1FF30K9z6chWM=;
+        s=default; t=1583844212;
+        bh=m2VMjPdP7Tghk64h+YiyaAAmIOugxKZ/W6szpaKD2Vs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TUkR3ROik+e2RqwP5p0aL9rSQYcXA9GZ8NeI+4nxK5BIQ17h/rhNFoLbOOqWYaOYj
-         3rRYwvL28C/gorDyhxAWRW3RrtwiLkvmE15z1RhmZ31fzr1m/pMamdvCBILJDM64u/
-         rdPIbdKfpSONGXMu8lzCkgHimsQo7eNYig9Due9E=
+        b=uNr16ZuoFShLfzvR91k5X/HVf1cuuuOKHevgS/cM/i4SijfaAOqhqLSMsIMJVsOha
+         HKe0XypeJxpycFbIOwnFP13yJfglRrf5tW+JxeX1PDvUmZXF+NXEmy/1k2Uj+GsGkx
+         RroaNGYeyNvsYSf2t4rGQs/P9bU4Is7oR33F5DC0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>
-Subject: [PATCH 4.4 54/72] usb: core: port: do error out if usb_autopm_get_interface() fails
-Date:   Tue, 10 Mar 2020 13:39:07 +0100
-Message-Id: <20200310123614.652917590@linuxfoundation.org>
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        yangerkun <yangerkun@huawei.com>
+Subject: [PATCH 4.4 72/72] crypto: algif_skcipher - use ZERO_OR_NULL_PTR in skcipher_recvmsg_async
+Date:   Tue, 10 Mar 2020 13:39:25 +0100
+Message-Id: <20200310123619.498408311@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123601.053680753@linuxfoundation.org>
 References: <20200310123601.053680753@linuxfoundation.org>
@@ -59,62 +59,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eugeniu Rosca <erosca@de.adit-jv.com>
+From: yangerkun <yangerkun@huawei.com>
 
-commit 1f8b39bc99a31759e97a0428a5c3f64802c1e61d upstream.
+Nowdays, we trigger a oops:
+...
+kasan: GPF could be caused by NULL-ptr deref or user memory accessgeneral protection fault: 0000 [#1] SMP KASAN
+...
+Call Trace:
+ [<ffffffff81a26fb1>] skcipher_recvmsg_async+0x3f1/0x1400 x86/../crypto/algif_skcipher.c:543
+ [<ffffffff81a28053>] skcipher_recvmsg+0x93/0x7f0 x86/../crypto/algif_skcipher.c:723
+ [<ffffffff823e43a4>] sock_recvmsg_nosec x86/../net/socket.c:702 [inline]
+ [<ffffffff823e43a4>] sock_recvmsg x86/../net/socket.c:710 [inline]
+ [<ffffffff823e43a4>] sock_recvmsg+0x94/0xc0 x86/../net/socket.c:705
+ [<ffffffff823e464b>] sock_read_iter+0x27b/0x3a0 x86/../net/socket.c:787
+ [<ffffffff817f479b>] aio_run_iocb+0x21b/0x7a0 x86/../fs/aio.c:1520
+ [<ffffffff817f57c9>] io_submit_one x86/../fs/aio.c:1630 [inline]
+ [<ffffffff817f57c9>] do_io_submit+0x6b9/0x10b0 x86/../fs/aio.c:1688
+ [<ffffffff817f902d>] SYSC_io_submit x86/../fs/aio.c:1713 [inline]
+ [<ffffffff817f902d>] SyS_io_submit+0x2d/0x40 x86/../fs/aio.c:1710
+ [<ffffffff828b33c3>] tracesys_phase2+0x90/0x95
 
-Reviewing a fresh portion of coverity defects in USB core
-(specifically CID 1458999), Alan Stern noted below in [1]:
+In skcipher_recvmsg_async, we use '!sreq->tsg' to determine does we
+calloc fail. However, kcalloc may return ZERO_SIZE_PTR, and with this,
+the latter sg_init_table will trigger the bug. Fix it be use ZERO_OF_NULL_PTR.
 
-On Tue, Feb 25, 2020 at 02:39:23PM -0500, Alan Stern wrote:
- > A revised search finds line 997 in drivers/usb/core/hub.c and lines
- > 216, 269 in drivers/usb/core/port.c.  (I didn't try looking in any
- > other directories.)  AFAICT all three of these should check the
- > return value, although a error message in the kernel log probably
- > isn't needed.
+This function was introduced with ' commit a596999b7ddf ("crypto:
+algif - change algif_skcipher to be asynchronous")', and has been removed
+with 'commit e870456d8e7c ("crypto: algif_skcipher - overhaul memory
+management")'.
 
-Factor out the usb_port_runtime_{resume,suspend}() changes into a
-standalone patch to allow conflict-free porting on top of stable v3.9+.
-
-[1] https://lore.kernel.org/lkml/Pine.LNX.4.44L0.2002251419120.1485-100000@iolanthe.rowland.org
-
-Fixes: 971fcd492cebf5 ("usb: add runtime pm support for usb port device")
-Cc: stable@vger.kernel.org # v3.9+
-Suggested-by: Alan Stern <stern@rowland.harvard.edu>
-Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
-Link: https://lore.kernel.org/r/20200226175036.14946-3-erosca@de.adit-jv.com
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: yangerkun <yangerkun@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/usb/core/port.c |   10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ crypto/algif_skcipher.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/usb/core/port.c
-+++ b/drivers/usb/core/port.c
-@@ -98,7 +98,10 @@ static int usb_port_runtime_resume(struc
- 	if (!port_dev->is_superspeed && peer)
- 		pm_runtime_get_sync(&peer->dev);
- 
--	usb_autopm_get_interface(intf);
-+	retval = usb_autopm_get_interface(intf);
-+	if (retval < 0)
-+		return retval;
-+
- 	retval = usb_hub_set_port_power(hdev, hub, port1, true);
- 	msleep(hub_power_on_good_delay(hub));
- 	if (udev && !retval) {
-@@ -151,7 +154,10 @@ static int usb_port_runtime_suspend(stru
- 	if (usb_port_block_power_off)
- 		return -EBUSY;
- 
--	usb_autopm_get_interface(intf);
-+	retval = usb_autopm_get_interface(intf);
-+	if (retval < 0)
-+		return retval;
-+
- 	retval = usb_hub_set_port_power(hdev, hub, port1, false);
- 	usb_clear_port_feature(hdev, port1, USB_PORT_FEAT_C_CONNECTION);
- 	if (!port_dev->is_superspeed)
+v1->v2:
+update the commit message
+
+--- a/crypto/algif_skcipher.c
++++ b/crypto/algif_skcipher.c
+@@ -538,7 +538,7 @@ static int skcipher_recvmsg_async(struct
+ 	lock_sock(sk);
+ 	tx_nents = skcipher_all_sg_nents(ctx);
+ 	sreq->tsg = kcalloc(tx_nents, sizeof(*sg), GFP_KERNEL);
+-	if (unlikely(!sreq->tsg))
++	if (unlikely(ZERO_OR_NULL_PTR(sreq->tsg)))
+ 		goto unlock;
+ 	sg_init_table(sreq->tsg, tx_nents);
+ 	memcpy(iv, ctx->iv, ivsize);
 
 
