@@ -2,187 +2,136 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=FORGED_MUA_MOZILLA,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5773EC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:22:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46310C18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:23:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D3C1208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:22:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1793208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:23:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="CCPOukw7";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="TXYISwqM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726546AbgCJUWv (ORCPT
+        id S1726715AbgCJUXs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 16:22:51 -0400
-Received: from mail-oln040092064048.outbound.protection.outlook.com ([40.92.64.48]:13873
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726271AbgCJUWv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 16:22:51 -0400
+        Tue, 10 Mar 2020 16:23:48 -0400
+Received: from esa4.hgst.iphmx.com ([216.71.154.42]:24341 "EHLO
+        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726273AbgCJUXs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 16:23:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1583871828; x=1615407828;
+  h=from:to:cc:subject:date:message-id:references:
+   content-transfer-encoding:mime-version;
+  bh=u9I9YCeiIV4rcTXBUllhcWIBPGnSQFP6N+zLSEYoNww=;
+  b=CCPOukw74q/XDJCSDbRTJ7CXILxXAJ0WUa6icazLdIk01R7Dz3ANje1n
+   tpUaMe/QjZeI57OIe0zB40VDsGk2IciUK6vpcJ2JRh4vKX77FFbN3I85t
+   LLjGTfGcTGi4Q04MqV87LHII2ybHapI1JlKNHBHD8h9QOs/XDbZuREENE
+   0WGT6c43HO6xwvxQib6RtBEWNC6tAR0ZP+MVPeZLu6PTkHHNlaZ2EvE2F
+   RMMoecAy8v6iDSmgU2G3m3hq5nvhoG5g/bB85wP5WG1xw9d1NAccDxPeC
+   b9y/LQB0lCLWYHeI+HF7KdMt17KiyzFin3e0xLra/9H+0rbH2A24E5s5b
+   g==;
+IronPort-SDR: J7i4q+sGwEa6YQKOCfERKQTr0WN/9OVBwYhqohpuiGgv75gM75ZnAyoVB6AdTjV7BDNt2IM6dM
+ tlvGf3EgtNF3XM/8uZYX8x07WMZxwNA1d7isU+dBeIlNXAeAcjVvI4PjPLqkpJCD7D96zLwqjG
+ tfyUah98wAzvolLOkZcbi0/MIZw7M5h/hNWMK16eeU+fMk6zIdNoZ+ZHp5vg1dZyXlknmgMGDY
+ KQBmjF0WK4XS4mVBYbyjHA3HYVH+oK3cgJSywx0q2B3rQpICk3he2umpNCll+CyYwL4Np6226e
+ IqE=
+X-IronPort-AV: E=Sophos;i="5.70,538,1574092800"; 
+   d="scan'208";a="132094204"
+Received: from mail-mw2nam12lp2049.outbound.protection.outlook.com (HELO NAM12-MW2-obe.outbound.protection.outlook.com) ([104.47.66.49])
+  by ob1.hgst.iphmx.com with ESMTP; 11 Mar 2020 04:23:47 +0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fyy9rVWfIi0ZLcOh9NP/2Ybi87RgWVxqCAtHekZYcw/EpIRXxsK4Vx/ZyuBpwv6Cg/Et1fZakQZLPVHn6mNVE2vNixNQreP6Oe4Ja5YIaA4NtK7XtmL/1+i4EIcSVcF4ohNszp00VViA5NScEYCIhZNA/maWDABc0bMctHgH1qNTLjo24MogI02wOdPwDb4Q7YaJJlMeLGw6kIYz+7jV59ZdfIKEgIeWr+IZmlDr/LUO9XVHLNV0G3LlDMJdclbvo7tCQto8nRDo5+/v6lvhfazi25vwVPjyyTsrVYBGJrPb6yBbnaa6tRyiucTeTZNs1B47WMGgx2qEkur9HDMM5Q==
+ b=R8KKx3GHTo+etECO4PrIBvjz2VNRN94qIyRfa6F5VQHzOjuycW+/X2ZRRyuZc4N/DywuNmo1pfjLSQzOlx99o+cZ/32d4hf3gb6SfOj1PpbEF7W6pVgJDBMGYFZHuPmolRpXBRTqAN/DPni2qIZ5nISUn9FgIvjHSCrjIxOdBP+8O8BaCipRKr/VbcYCliT99jD2OFx18IOd+J0UWIJibofFeeA73NobbE8y1TwdZWFgqdJMYwR1oKx12RB3KglfusBA21I7TYOVaFoUOBV71XpEEbl0t9vK6mu4STsIYIGv8j5mJo38Z7AKeWQ30T9rKzeb6nVrFoLnARGUZbINBw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mcXB5XtDW/edbdTpwusVzq1L82skS1gFXqVS9psypK0=;
- b=c3O6kSTUW3rwRjrFu3HMlDxTTrOOlrF5NJX63RX37YMyfK03e+k9+xYxcYz2QSxQ0jrUJ+THmuhnS9np2Xu9peqnBrzo7Xww8RAMYUIXBEsxb1Pjn8u/EXEVsOhWV9N9JSV1wPDSjiqMN9zq1qQAJru+h+4haEXzdXnuELB1DM4bs4aYn5L12OKRrVoTShdB6Kdu7tPS92svuB8V9HJztNw3NBqrhFvc44brLI+4JOe8e5BChe9OEi5m8wms7EGRe9J5mqqzWPOdfAEBVmTZz/Fbk5FJk18J4ru/M6O6hkqlJsIFWbD3EXCRVcTx+6fOHpL1CI2INaXpXUMKm6NwEA==
+ bh=u9I9YCeiIV4rcTXBUllhcWIBPGnSQFP6N+zLSEYoNww=;
+ b=NYCfVZDHWnvG+/T6eMdOMRwtyTsGJI2Dn088fce3bXxmsitLu6htWqQFRxYd9eaSx2oyAZsLji4J/J10Inc3hrNbTh+vrSlehjUt36PlcNVRkY2GAUI+c9gDRWTTNordopYsvqb3A6jBD0PSFVGD1HRZU+sB7RA33jsQ9dJZjvWTE1WjdkLacifL/Qs+0gAW7pU2JKUpodmx1dtPFKV/JthGYgJwOwF+R9np99Mqy0ovL0k74QM4Tpm5buSHZMFTTtVympVh/uTAq/S6uyvjr55zGqUX/Qv0zNqleAz+wihGTGfprlYzceZG0GjQ8SfuaGuhV9GTeZAs0SwTqm/yNQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hotmail.de; dmarc=pass action=none header.from=hotmail.de;
- dkim=pass header.d=hotmail.de; arc=none
-Received: from VE1EUR01FT006.eop-EUR01.prod.protection.outlook.com
- (2a01:111:e400:7e19::35) by
- VE1EUR01HT071.eop-EUR01.prod.protection.outlook.com (2a01:111:e400:7e19::152)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.11; Tue, 10 Mar
- 2020 20:22:44 +0000
-Received: from AM6PR03MB5170.eurprd03.prod.outlook.com (10.152.2.60) by
- VE1EUR01FT006.mail.protection.outlook.com (10.152.2.127) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2793.11 via Frontend Transport; Tue, 10 Mar 2020 20:22:44 +0000
-X-IncomingTopHeaderMarker: OriginalChecksum:3CE61C4B30ED919C1D3E3EDD324DF5C05B73CCFB3F236699179013E6DD687BDC;UpperCasedChecksum:AEDC134E5B3D3B2925787B5CF20DB733AC0D6676C08BC3BB6EF68BC4ACE0E56D;SizeAsReceived:11076;Count:50
-Received: from AM6PR03MB5170.eurprd03.prod.outlook.com
- ([fe80::1956:d274:cab3:b4dd]) by AM6PR03MB5170.eurprd03.prod.outlook.com
- ([fe80::1956:d274:cab3:b4dd%6]) with mapi id 15.20.2793.013; Tue, 10 Mar 2020
- 20:22:43 +0000
-Subject: Re: [PATCH] pidfd: Stop taking cred_guard_mutex
-To:     Jann Horn <jannh@google.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Kees Cook <keescook@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Andrei Vagin <avagin@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Yuyang Du <duyuyang@gmail.com>,
-        David Hildenbrand <david@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        David Howells <dhowells@redhat.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christian Kellner <christian@kellner.me>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=u9I9YCeiIV4rcTXBUllhcWIBPGnSQFP6N+zLSEYoNww=;
+ b=TXYISwqMj/yj2LUSQCwxz2ZZjvzWLRFhZRwS3Y+iUMxRfevqbHAt7DekoHxIByzg0N+i9ddHHVi0ieWBdyiaDldPKHEpC1pmLbw7tJjoYCmWDSfBWXRZIGMMLrN2+PPblnoUtvsD75bWepQTmkWY54dCNqstEH20RFLGyTnuw64=
+Received: from BYAPR04MB5749.namprd04.prod.outlook.com (2603:10b6:a03:106::21)
+ by BYAPR04MB6120.namprd04.prod.outlook.com (2603:10b6:a03:f0::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.17; Tue, 10 Mar
+ 2020 20:23:46 +0000
+Received: from BYAPR04MB5749.namprd04.prod.outlook.com
+ ([fe80::fdf8:bd6f:b33d:c2df]) by BYAPR04MB5749.namprd04.prod.outlook.com
+ ([fe80::fdf8:bd6f:b33d:c2df%3]) with mapi id 15.20.2793.013; Tue, 10 Mar 2020
+ 20:23:46 +0000
+From:   Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
+To:     Martijn Coenen <maco@android.com>,
+        "axboe@kernel.dk" <axboe@kernel.dk>, "hch@lst.de" <hch@lst.de>
+CC:     "bvanassche@acm.org" <bvanassche@acm.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Sargun Dhillon <sargun@sargun.me>
-References: <87r1y8dqqz.fsf@x220.int.ebiederm.org>
- <AM6PR03MB517053AED7DC89F7C0704B7DE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <AM6PR03MB51703B44170EAB4626C9B2CAE4E20@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <87tv32cxmf.fsf_-_@x220.int.ebiederm.org>
- <87v9ne5y4y.fsf_-_@x220.int.ebiederm.org>
- <87eeu25y14.fsf_-_@x220.int.ebiederm.org>
- <20200309195909.h2lv5uawce5wgryx@wittgenstein>
- <877dztz415.fsf@x220.int.ebiederm.org>
- <20200309201729.yk5sd26v4bz4gtou@wittgenstein>
- <87k13txnig.fsf@x220.int.ebiederm.org>
- <20200310085540.pztaty2mj62xt2nm@wittgenstein>
- <87wo7svy96.fsf_-_@x220.int.ebiederm.org>
- <CAG48ez2cUZMVOAXfHPNjKjYsMSaWkjUjOCHo0KYZ+oXQUW4viA@mail.gmail.com>
- <87k13sui1p.fsf@x220.int.ebiederm.org>
- <CAG48ez2vRgaEVJ=Rs8gn6HkGO6syL8MpSOUq7BNN+OUE1uYxCA@mail.gmail.com>
- <CAG48ez1LjW1xAGe-5tNtstCWxG2bkiHaQUMOcJNjx=z-2Wc2Jw@mail.gmail.com>
-From:   Bernd Edlinger <bernd.edlinger@hotmail.de>
-Message-ID: <AM6PR03MB5170AF454A8A9C37891B12B2E4FF0@AM6PR03MB5170.eurprd03.prod.outlook.com>
-Date:   Tue, 10 Mar 2020 21:22:41 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-In-Reply-To: <CAG48ez1LjW1xAGe-5tNtstCWxG2bkiHaQUMOcJNjx=z-2Wc2Jw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+        "kernel-team@android.com" <kernel-team@android.com>
+Subject: Re: [PATCH] loop: Only change blocksize when needed.
+Thread-Topic: [PATCH] loop: Only change blocksize when needed.
+Thread-Index: AQHV9t4ymHRqJ4/teUKyMDsr4sOQ9A==
+Date:   Tue, 10 Mar 2020 20:23:46 +0000
+Message-ID: <BYAPR04MB5749104A80045EB0BD3EB28886FF0@BYAPR04MB5749.namprd04.prod.outlook.com>
+References: <20200310131230.106427-1-maco@android.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: AM0PR0202CA0033.eurprd02.prod.outlook.com
- (2603:10a6:208:1::46) To AM6PR03MB5170.eurprd03.prod.outlook.com
- (2603:10a6:20b:ca::23)
-X-Microsoft-Original-Message-ID: <7fec923a-0c06-b3c6-4d1c-8ffb3519eb0b@hotmail.de>
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Chaitanya.Kulkarni@wdc.com; 
+x-originating-ip: [199.255.45.62]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 2be410b3-0094-4cf8-49e2-08d7c530ef86
+x-ms-traffictypediagnostic: BYAPR04MB6120:
+x-microsoft-antispam-prvs: <BYAPR04MB612044EF1FB924ECAB8B12F286FF0@BYAPR04MB6120.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:3968;
+x-forefront-prvs: 033857D0BD
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(376002)(366004)(136003)(39860400002)(396003)(199004)(189003)(55016002)(54906003)(4744005)(4326008)(52536014)(76116006)(66446008)(66476007)(66556008)(316002)(9686003)(64756008)(66946007)(478600001)(8936002)(71200400001)(110136005)(7696005)(2906002)(6506007)(53546011)(33656002)(8676002)(186003)(26005)(81156014)(86362001)(81166006)(5660300002);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR04MB6120;H:BYAPR04MB5749.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: IH7LxusKRNqyXHG0sd/l7Ow9FwsDg2Xj6qx/HwNEEAhrDxpUvMorv15uWakmYeLrE3MgZqLzBzNgs9sOjtf3g0jnXcj0qu1MiVeqliuJBmA3kgVy+sD9gQrJCa7PuGCl0g6FIbDJqHLoGcj5qOBra7N1JCHo+ut9ALnTOpqlXV7mX3iffOV0dEa68Bdu6YMhEdp4iFheJ75IcMFOQ/3p+9qll9LNP053TrhEdSfROm4T8FuG9qfAcK+vCO+A+K/YujV+lazxfXFgikAjWpNr0dewUXeXWeZdT5mcItYfbsw7LzRaHD38NIAAM27qlXhucaXhUvzyYfAhVqC8nmeaz4bBAAMkkVo54KhLQ9De5Iud/0NVXDpR2+pJQxzqrzGwyySlagGzuwAXjIsrjxqtwZxROp6ZmcKUIAXcwe6dvHSbSffKZCtnCZF90YqvrGyg
+x-ms-exchange-antispam-messagedata: i6QkPO+R3ctdlcAT3PY9abjhBLirqt7PhxZp9LBPQGVPib9SKg5FQU78hLLVbHRtP8KHJHqIGfNzGmYYpHXYjxoLb4rix5g2H+7+WTX6EVa5Rwx7c2/QHHJO38vN7hILEdoymUr9n+H8wDEU7mqS9A==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [192.168.1.101] (92.77.140.102) by AM0PR0202CA0033.eurprd02.prod.outlook.com (2603:10a6:208:1::46) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.16 via Frontend Transport; Tue, 10 Mar 2020 20:22:41 +0000
-X-Microsoft-Original-Message-ID: <7fec923a-0c06-b3c6-4d1c-8ffb3519eb0b@hotmail.de>
-X-TMN:  [aY89ty6Xt9qP2QHF2IaNBexmBBz8dkRA]
-X-MS-PublicTrafficType: Email
-X-IncomingHeaderCount: 50
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-Correlation-Id: 13e8903e-ea6c-4526-8199-08d7c530c98e
-X-MS-TrafficTypeDiagnostic: VE1EUR01HT071:
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: QkxE4mMk6tSDP+UWD5iUrYlrTJ3Aeue0iIsK0QsbJikWLq6nnBzlcQg0c/llesJ24sM93h45h5LMTPmqO7IP3Q+Z7pw3Dp18QWaz4FM+0fyn1kw0FB9TtxuI8NxD6Qtz9GrWfAK3mW8BhXxlAy9S6CSWYlJYKOpAT5qbBLIFPdKVAHMVCkmVH1gfu7qAH5nE
-X-MS-Exchange-AntiSpam-MessageData: 1DCOQLrn/aCJKAHLqkDJxKluroCpBT5TS5sYnA87kM+ObmAi+rYw8oDyKMmreKgDYrqsTgvUmOBySYjxyZSna52y01KtUgSRp62aayhGWHbzyJoR7ZzM4jHY0UjyTLDdDYJe8OKXCONrB6HDW7xweA==
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 13e8903e-ea6c-4526-8199-08d7c530c98e
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Mar 2020 20:22:42.9684
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2be410b3-0094-4cf8-49e2-08d7c530ef86
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Mar 2020 20:23:46.2562
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1EUR01HT071
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: vx5FirXtyoc/iMG5nxLepQPjG9fMYW+rNOp/yanEOfc530U0KDabCVNzdgFvI+ZWP/4EnxMPhY6GStKwXbi/qK5x1rlurTNxlJXcDrnaOpw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR04MB6120
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/10/20 9:10 PM, Jann Horn wrote:
-> On Tue, Mar 10, 2020 at 9:00 PM Jann Horn <jannh@google.com> wrote:
->> On Tue, Mar 10, 2020 at 8:29 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
->>> Jann Horn <jannh@google.com> writes:
->>>> On Tue, Mar 10, 2020 at 7:54 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
->>>>> During exec some file descriptors are closed and the files struct is
->>>>> unshared.  But all of that can happen at other times and it has the
->>>>> same protections during exec as at ordinary times.  So stop taking the
->>>>> cred_guard_mutex as it is useless.
->>>>>
->>>>> Furthermore he cred_guard_mutex is a bad idea because it is deadlock
->>>>> prone, as it is held in serveral while waiting possibly indefinitely
->>>>> for userspace to do something.
-> [...]
->>>> If you make this change, then if this races with execution of a setuid
->>>> program that afterwards e.g. opens a unix domain socket, an attacker
->>>> will be able to steal that socket and inject messages into
->>>> communication with things like DBus. procfs currently has the same
->>>> race, and that still needs to be fixed, but at least procfs doesn't
->>>> let you open things like sockets because they don't have a working
->>>> ->open handler, and it enforces the normal permission check for
->>>> opening files.
->>>
->>> It isn't only exec that can change credentials.  Do we need a lock for
->>> changing credentials?
-> [...]
->>> If we need a lock around credential change let's design and build that.
->>> Having a mismatch between what a lock is designed to do, and what
->>> people use it for can only result in other bugs as people get confused.
->>
->> Hmm... what benefits do we get from making it a separate lock? I guess
->> it would allow us to make it a per-task lock instead of a
->> signal_struct-wide one? That might be helpful...
-> 
-> But actually, isn't the core purpose of the cred_guard_mutex to guard
-> against concurrent credential changes anyway? That's what almost
-> everyone uses it for, and it's in the name...
-> 
-
-The main reason d'etre of exec_update_mutex is to get a consitent
-view of task->mm and task credentials.
-
-The reason why you want the cred_guard_mutex, is that some action
-is changing the resulting credentials that the execve is about
-to install, and that is the data flow in the opposite direction.
-
-
-Bernd.
+Logically this is a right thing to do, but I wonder how much speedup=0A=
+you are getting with these improvements ?=0A=
+It will be great if you have some numbers so we all know the speedup.=0A=
+=0A=
+Irrespective of that, this looks good to me.=0A=
+=0A=
+Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>=0A=
+=0A=
+On 03/10/2020 06:17 AM, Martijn Coenen wrote:=0A=
+> Return early in loop_set_block_size() if the requested block size is=0A=
+> identical to the one we already have; this avoids expensive calls to=0A=
+> freeze the block queue.=0A=
+>=0A=
+> Signed-off-by: Martijn Coenen<maco@android.com>=0A=
+=0A=
