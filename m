@@ -4,49 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 749D5C18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:05:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC9D8C18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:05:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4140920409
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:05:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91D972468C
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:05:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583845527;
-	bh=ChoXbZiZ4xRWHDCDYxKjjQMyaZm6alpKJH4NtUZrkDQ=;
+	s=default; t=1583845532;
+	bh=u1tL22Oa8Lt3kR4tVCpS9TqfnburU/QugzCbNdKVgIw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kf5ToV5YInTitKy+pp5e69W1WcY1932qndKBWLLYTl09ZzZXjX44erVnPY/0QV4dB
-	 4/LLLtRaw0EmLkiioYxq4bgT9vZ4vQxdCvvGam+CZDUamOrJ6FfKKl3YsClCR90PXp
-	 wUYEK5Nx7gQM1lkkLcbUspWcVW3LrKdi/w5MMtxs=
+	b=byFTOeXT7nIEB/eGLPUvvs3OhBlcRxm180No+Mca9zafbmU+hi/9BL+DsqKImPEAE
+	 beIpGBCTxdcTYcnqoLTg+vaz74+GnmqIhOQaxZxFjzlCS3I7V/0mWKCNEZOna2WfAw
+	 Z+qBc85FuL25SNvLDj3VSFD68KhNLirq7zeHk98k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729994AbgCJNF0 (ORCPT
+        id S1730441AbgCJNCi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:05:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47000 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:02:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45688 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730490AbgCJNCz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:02:55 -0400
+        id S1730423AbgCJNCd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:02:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A165B2468C;
-        Tue, 10 Mar 2020 13:02:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 14C432468D;
+        Tue, 10 Mar 2020 13:02:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845375;
-        bh=ChoXbZiZ4xRWHDCDYxKjjQMyaZm6alpKJH4NtUZrkDQ=;
+        s=default; t=1583845353;
+        bh=u1tL22Oa8Lt3kR4tVCpS9TqfnburU/QugzCbNdKVgIw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0cs7wc2xjszZiyB2p7xHEw3OGZ+cQTmEdegxaCJRzcpO2QQMWdO8AuvZcNpUF+e40
-         /9xUl5/i7djStYysDDP1xlHpUX4qkIGMtkrSBNXW5OczLGYFdjsa1SopMKGXzC1kdk
-         JDV8UA0NXMMr7UrO5EqmZ8Jxj1hcFomvHh35rfFo=
+        b=SvvCMq7W91hJjJpDq3wcXF2waw0SFMOCdh5doLUdcTot8dhKjjni8p66G3apjfVBd
+         JCAcJmL06Q6MuEmtt/ekGj8YOMBjaNP/f9NDS62HU8YynDs7vcfahc1+hnHe3iT6Y7
+         8Pn5f4B9hIr8IAZ5S+lgzOvfVyw3h8eldGJcZPkE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mikulas Patocka <mpatocka@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 5.5 121/189] dm cache: fix a crash due to incorrect work item cancelling
-Date:   Tue, 10 Mar 2020 13:39:18 +0100
-Message-Id: <20200310123652.005567020@linuxfoundation.org>
+        stable@vger.kernel.org, Marcel Partap <mpartap@gmx.net>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Michael Scott <hashcode0f@gmail.com>,
+        NeKit <nekit1000@gmail.com>, Pavel Machek <pavel@ucw.cz>,
+        Sebastian Reichel <sre@kernel.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH 5.5 151/189] phy: mapphone-mdm6600: Fix timeouts by adding wake-up handling
+Date:   Tue, 10 Mar 2020 13:39:48 +0100
+Message-Id: <20200310123655.153465134@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123639.608886314@linuxfoundation.org>
 References: <20200310123639.608886314@linuxfoundation.org>
@@ -59,51 +64,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mikulas Patocka <mpatocka@redhat.com>
+From: Tony Lindgren <tony@atomide.com>
 
-commit 7cdf6a0aae1cccf5167f3f04ecddcf648b78e289 upstream.
+commit be4e3c737eebd75815633f4b8fd766defaf0f1fc upstream.
 
-The crash can be reproduced by running the lvm2 testsuite test
-lvconvert-thin-external-cache.sh for several minutes, e.g.:
-  while :; do make check T=shell/lvconvert-thin-external-cache.sh; done
+We have an interrupt handler for the wake-up GPIO pin, but we're missing
+the code to wake-up the system. This can cause timeouts receiving data
+for the UART that shares the wake-up GPIO pin with the USB PHY.
 
-The crash happens in this call chain:
-do_waker -> policy_tick -> smq_tick -> end_hotspot_period -> clear_bitset
--> memset -> __memset -- which accesses an invalid pointer in the vmalloc
-area.
+All we need to do is just wake the system and kick the autosuspend
+timeout to fix the issue.
 
-The work entry on the workqueue is executed even after the bitmap was
-freed. The problem is that cancel_delayed_work doesn't wait for the
-running work item to finish, so the work item can continue running and
-re-submitting itself even after cache_postsuspend. In order to make sure
-that the work item won't be running, we must use cancel_delayed_work_sync.
-
-Also, change flush_workqueue to drain_workqueue, so that if some work item
-submits itself or another work item, we are properly waiting for both of
-them.
-
-Fixes: c6b4fcbad044 ("dm: add cache target")
-Cc: stable@vger.kernel.org # v3.9
-Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Fixes: 5d1ebbda0318 ("phy: mapphone-mdm6600: Add USB PHY driver for MDM6600 on Droid 4")
+Cc: Marcel Partap <mpartap@gmx.net>
+Cc: Merlijn Wajer <merlijn@wizzup.org>
+Cc: Michael Scott <hashcode0f@gmail.com>
+Cc: NeKit <nekit1000@gmail.com>
+Cc: Pavel Machek <pavel@ucw.cz>
+Cc: Sebastian Reichel <sre@kernel.org>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/dm-cache-target.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/phy/motorola/phy-mapphone-mdm6600.c |   18 ++++++++++++++++--
+ 1 file changed, 16 insertions(+), 2 deletions(-)
 
---- a/drivers/md/dm-cache-target.c
-+++ b/drivers/md/dm-cache-target.c
-@@ -2846,8 +2846,8 @@ static void cache_postsuspend(struct dm_
- 	prevent_background_work(cache);
- 	BUG_ON(atomic_read(&cache->nr_io_migrations));
+--- a/drivers/phy/motorola/phy-mapphone-mdm6600.c
++++ b/drivers/phy/motorola/phy-mapphone-mdm6600.c
+@@ -243,10 +243,24 @@ static irqreturn_t phy_mdm6600_wakeirq_t
+ {
+ 	struct phy_mdm6600 *ddata = data;
+ 	struct gpio_desc *mode_gpio1;
++	int error, wakeup;
  
--	cancel_delayed_work(&cache->waker);
--	flush_workqueue(cache->wq);
-+	cancel_delayed_work_sync(&cache->waker);
-+	drain_workqueue(cache->wq);
- 	WARN_ON(cache->tracker.in_flight);
+ 	mode_gpio1 = ddata->mode_gpios->desc[PHY_MDM6600_MODE1];
+-	dev_dbg(ddata->dev, "OOB wake on mode_gpio1: %i\n",
+-		gpiod_get_value(mode_gpio1));
++	wakeup = gpiod_get_value(mode_gpio1);
++	if (!wakeup)
++		return IRQ_NONE;
++
++	dev_dbg(ddata->dev, "OOB wake on mode_gpio1: %i\n", wakeup);
++	error = pm_runtime_get_sync(ddata->dev);
++	if (error < 0) {
++		pm_runtime_put_noidle(ddata->dev);
++
++		return IRQ_NONE;
++	}
++
++	/* Just wake-up and kick the autosuspend timer */
++	pm_runtime_mark_last_busy(ddata->dev);
++	pm_runtime_put_autosuspend(ddata->dev);
  
- 	/*
+ 	return IRQ_HANDLED;
+ }
 
 
