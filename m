@@ -4,48 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9247C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:18:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16582C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:19:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 839FC24680
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:18:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC1F820409
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:19:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583846338;
-	bh=R0xtEeO5tk6dzUgcr5epTAnksL+QGHKhE/f2CIOORsI=;
+	s=default; t=1583846347;
+	bh=hP7QB49/EqfVLxCeySXGAPy+WtwNAdFQlnAJKdDcWTc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UrAofowZz58hmea1FQ0W30dDCLGtoNSKGuMfUnsBmTajYHpBU9iiyTzJ6g8w3BQzl
-	 yDDAtWPwh3nzr+T+aUvpe77GL+DrqtfcwEOtCy9+rq8tS9tqC+lcrlVpkYmTPnJmJh
-	 UVOO5/hBK35GNsBGXxZc43pbeD21G+Pjouodrzgs=
+	b=MuuORDiXQ1Pgz2ICToKAk6Pa8tUi2vWkNVPGKySChV8cz5TQ3yTAO7x4LA+8cmajd
+	 qplUX5y17RKpTZ0Wy1SIuvdAzDQzi2gZq/pK24QzuTgg5h0gTG0sbQvrFfJkiM1eoy
+	 Gp9pyRYQpEJB4/kp+VxzFeUcOeorQ3nKKAzOSN9s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729746AbgCJNJx (ORCPT
+        id S1731263AbgCJNJn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:09:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57132 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:09:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56914 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729711AbgCJNJu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:09:50 -0400
+        id S1731256AbgCJNJm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:09:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D131B20873;
-        Tue, 10 Mar 2020 13:09:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B5EF20873;
+        Tue, 10 Mar 2020 13:09:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845790;
-        bh=R0xtEeO5tk6dzUgcr5epTAnksL+QGHKhE/f2CIOORsI=;
+        s=default; t=1583845781;
+        bh=hP7QB49/EqfVLxCeySXGAPy+WtwNAdFQlnAJKdDcWTc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cM2H8PEMp2yFZ4krHMFIrScadh4O304bmXmqUtVF4xCCEjfH5M16RFnxB9ctRdr7c
-         fc4WiKP5DgIkWZbKdndPgtI2KvOdcrg461IR3b9Ah/4bAOqOTBEnd4fEC8sZrrUibB
-         My8UDrt71LYc4xl0lYrULx+uHxdaxLU4AODQZ0cw=
+        b=ndRsMaqII4iENyzZEGPxppW/sjOCBfjZ+GfDOUkAN+teFfsW2qjiDexlnI+rXwl4l
+         Unxx//BXyMa7DFl3iRujDgGX4wr/r6iETPo90CyTWpHJiBHH1UwUTYwYeCNieLzI34
+         Bw+nVGOgTiscoGTXcnkqhdm2q/X1LoeTylunZxoo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jay Dolan <jay.dolan@accesio.com>
-Subject: [PATCH 4.14 102/126] serial: 8250_exar: add support for ACCES cards
-Date:   Tue, 10 Mar 2020 13:42:03 +0100
-Message-Id: <20200310124210.177934557@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Hannes Frederic Sowa <hannes@stressinduktion.org>,
+        Eric Dumazet <edumazet@google.com>,
+        Jason Wang <jasowang@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Tommi Rantala <tommi.t.rantala@nokia.com>
+Subject: [PATCH 4.14 059/126] tuntap: correctly set SOCKWQ_ASYNC_NOSPACE
+Date:   Tue, 10 Mar 2020 13:41:20 +0100
+Message-Id: <20200310124207.925139999@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310124203.704193207@linuxfoundation.org>
 References: <20200310124203.704193207@linuxfoundation.org>
@@ -58,76 +63,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jay Dolan <jay.dolan@accesio.com>
+From: Jason Wang <jasowang@redhat.com>
 
-commit 10c5ccc3c6d32f3d7d6c07de1d3f0f4b52f3e3ab upstream.
+commit 2f3ab6221e4c87960347d65c7cab9bd917d1f637 upstream.
 
-Add ACCES VIDs and PIDs that use the Exar chips
+When link is down, writes to the device might fail with
+-EIO. Userspace needs an indication when the status is resolved.  As a
+fix, tun_net_open() attempts to wake up writers - but that is only
+effective if SOCKWQ_ASYNC_NOSPACE has been set in the past. This is
+not the case of vhost_net which only poll for EPOLLOUT after it meets
+errors during sendmsg().
 
-Signed-off-by: Jay Dolan <jay.dolan@accesio.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200305140504.22237-1-jay.dolan@accesio.com
+This patch fixes this by making sure SOCKWQ_ASYNC_NOSPACE is set when
+socket is not writable or device is down to guarantee EPOLLOUT will be
+raised in either tun_chr_poll() or tun_sock_write_space() after device
+is up.
+
+Cc: Hannes Frederic Sowa <hannes@stressinduktion.org>
+Cc: Eric Dumazet <edumazet@google.com>
+Fixes: 1bd4978a88ac2 ("tun: honor IFF_UP in tun_get_user()")
+Signed-off-by: Jason Wang <jasowang@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Tommi Rantala <tommi.t.rantala@nokia.com>
 
 ---
- drivers/tty/serial/8250/8250_exar.c |   33 +++++++++++++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
+ drivers/net/tun.c |   19 +++++++++++++++----
+ 1 file changed, 15 insertions(+), 4 deletions(-)
 
---- a/drivers/tty/serial/8250/8250_exar.c
-+++ b/drivers/tty/serial/8250/8250_exar.c
-@@ -27,6 +27,14 @@
+--- a/drivers/net/tun.c
++++ b/drivers/net/tun.c
+@@ -1134,6 +1134,13 @@ static void tun_net_init(struct net_devi
+ 	dev->max_mtu = MAX_MTU - dev->hard_header_len;
+ }
  
- #include "8250.h"
++static bool tun_sock_writeable(struct tun_struct *tun, struct tun_file *tfile)
++{
++	struct sock *sk = tfile->socket.sk;
++
++	return (tun->dev->flags & IFF_UP) && sock_writeable(sk);
++}
++
+ /* Character device part */
  
-+#define PCI_DEVICE_ID_ACCES_COM_2S		0x1052
-+#define PCI_DEVICE_ID_ACCES_COM_4S		0x105d
-+#define PCI_DEVICE_ID_ACCES_COM_8S		0x106c
-+#define PCI_DEVICE_ID_ACCES_COM232_8		0x10a8
-+#define PCI_DEVICE_ID_ACCES_COM_2SM		0x10d2
-+#define PCI_DEVICE_ID_ACCES_COM_4SM		0x10db
-+#define PCI_DEVICE_ID_ACCES_COM_8SM		0x10ea
-+
- #define PCI_DEVICE_ID_COMMTECH_4224PCI335	0x0002
- #define PCI_DEVICE_ID_COMMTECH_4222PCI335	0x0004
- #define PCI_DEVICE_ID_COMMTECH_2324PCI335	0x000a
-@@ -562,6 +570,22 @@ static int __maybe_unused exar_resume(st
+ /* Poll */
+@@ -1156,10 +1163,14 @@ static unsigned int tun_chr_poll(struct
+ 	if (!skb_array_empty(&tfile->tx_array))
+ 		mask |= POLLIN | POLLRDNORM;
  
- static SIMPLE_DEV_PM_OPS(exar_pci_pm, exar_suspend, exar_resume);
+-	if (tun->dev->flags & IFF_UP &&
+-	    (sock_writeable(sk) ||
+-	     (!test_and_set_bit(SOCKWQ_ASYNC_NOSPACE, &sk->sk_socket->flags) &&
+-	      sock_writeable(sk))))
++	/* Make sure SOCKWQ_ASYNC_NOSPACE is set if not writable to
++	 * guarantee EPOLLOUT to be raised by either here or
++	 * tun_sock_write_space(). Then process could get notification
++	 * after it writes to a down device and meets -EIO.
++	 */
++	if (tun_sock_writeable(tun, tfile) ||
++	    (!test_and_set_bit(SOCKWQ_ASYNC_NOSPACE, &sk->sk_socket->flags) &&
++	     tun_sock_writeable(tun, tfile)))
+ 		mask |= POLLOUT | POLLWRNORM;
  
-+static const struct exar8250_board acces_com_2x = {
-+	.num_ports	= 2,
-+	.setup		= pci_xr17c154_setup,
-+};
-+
-+static const struct exar8250_board acces_com_4x = {
-+	.num_ports	= 4,
-+	.setup		= pci_xr17c154_setup,
-+};
-+
-+static const struct exar8250_board acces_com_8x = {
-+	.num_ports	= 8,
-+	.setup		= pci_xr17c154_setup,
-+};
-+
-+
- static const struct exar8250_board pbn_fastcom335_2 = {
- 	.num_ports	= 2,
- 	.setup		= pci_fastcom335_setup,
-@@ -632,6 +656,15 @@ static const struct exar8250_board pbn_e
- 	}
- 
- static const struct pci_device_id exar_pci_tbl[] = {
-+	EXAR_DEVICE(ACCESSIO, ACCES_COM_2S, acces_com_2x),
-+	EXAR_DEVICE(ACCESSIO, ACCES_COM_4S, acces_com_4x),
-+	EXAR_DEVICE(ACCESSIO, ACCES_COM_8S, acces_com_8x),
-+	EXAR_DEVICE(ACCESSIO, ACCES_COM232_8, acces_com_8x),
-+	EXAR_DEVICE(ACCESSIO, ACCES_COM_2SM, acces_com_2x),
-+	EXAR_DEVICE(ACCESSIO, ACCES_COM_4SM, acces_com_4x),
-+	EXAR_DEVICE(ACCESSIO, ACCES_COM_8SM, acces_com_8x),
-+
-+
- 	CONNECT_DEVICE(XR17C152, UART_2_232, pbn_connect),
- 	CONNECT_DEVICE(XR17C154, UART_4_232, pbn_connect),
- 	CONNECT_DEVICE(XR17C158, UART_8_232, pbn_connect),
+ 	if (tun->dev->reg_state != NETREG_REGISTERED)
 
 
