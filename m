@@ -2,216 +2,247 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 787A0C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:43:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDC22C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:47:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 592312465A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:43:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AD4624681
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:47:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oJTgBwjl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726385AbgCJJnt (ORCPT
+        id S1726451AbgCJJrf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 05:43:49 -0400
-Received: from mga02.intel.com ([134.134.136.20]:49543 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726195AbgCJJnt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 05:43:49 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Mar 2020 02:43:48 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,536,1574150400"; 
-   d="scan'208";a="231264562"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.141])
-  by orsmga007.jf.intel.com with ESMTP; 10 Mar 2020 02:43:46 -0700
-Date:   Tue, 10 Mar 2020 17:41:43 +0800
-From:   Xu Yilun <yilun.xu@intel.com>
-To:     Wu Hao <hao.wu@intel.com>
-Cc:     mdf@kernel.org, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Luwei Kang <luwei.kang@intel.com>
-Subject: Re: [PATCH 2/7] fpga: dfl: pci: add irq info for feature devices
-  enumeration
-Message-ID: <20200310094143.GB30868@yilunxu-OptiPlex-7050>
-References: <1583749790-10837-1-git-send-email-yilun.xu@intel.com>
- <1583749790-10837-3-git-send-email-yilun.xu@intel.com>
- <20200310024626.GB11861@hao-dev>
+        Tue, 10 Mar 2020 05:47:35 -0400
+Received: from mail-ua1-f65.google.com ([209.85.222.65]:34100 "EHLO
+        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726268AbgCJJre (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 05:47:34 -0400
+Received: by mail-ua1-f65.google.com with SMTP id g21so2029296uaj.1
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 02:47:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1GrBhJ3sYPhTyFLJxdqpea0j+CXCkiyKV2bVrjt+fe0=;
+        b=oJTgBwjlZwRJ40I3EYTtU3V2CtDXLkXbVX0zNTIUAWGdSymXvoHp/4+gJoexFOdg6l
+         rX5jEvtoDF4tmpvKf478/Rujy5k3qOSVGzPcuhNUb0IKmwhppoqaHXpWP2ou0mmJL5y7
+         ueVO+mHG+8Frz6KixBcLoY+n4MN+FIMdvroYbz3b7UdjQ7BkmggeB2xA2OApNlB2qugy
+         MNLxG3UFYaXwjttQXJHRtlqP43CF6E8fr+CqCoEnsVzLKqHJtANf7xnEz9Y7Nt2oS1Xf
+         qPfnVgjVH/S0g1hySeblK3z8UYrMBgawPinuQLKZrNUfot1Zrq/0YOEk1gxbVXj1B3Qh
+         5YTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1GrBhJ3sYPhTyFLJxdqpea0j+CXCkiyKV2bVrjt+fe0=;
+        b=PmovgR1VzuThwswl3fqnuZ8rv53AZJXSng/GXF6aEw0zAeI3JhRTFGFTCMRQIFEep3
+         0YBRgQBmsqVZVP7FuJNkqned+t4gmEB3N4hn62JQnlrrnLLB1LGF1CDZf2AQF1qw8y8S
+         mwE/5F0xTVrY6XGrwo4NPiUfp9fw78efoJ6Xbunl4qLHCATypmAeveNMm8Iz9jd8xV+b
+         p4kU3gGmBlUkALJPOCMKYLCutF4zAmcnZl9gxYvojhpdhqmz0AwvtLANCpwvzZf1ZA32
+         lfmVueonvneqNRXBnCP5Ihn85+h1xNogRcD6Kki9xm/YrvRyppNRVGlyMoXGpWVgnhBk
+         zrJA==
+X-Gm-Message-State: ANhLgQ3QPzPA015UgvaDbsxNUqlKzVSbTtyLr1GjfUvREJtcqgbeTZEM
+        QUAoGn6kE3+d6bK6ogJUCZWhsHnCEE3e3w8cpB6low==
+X-Google-Smtp-Source: ADFU+vvtoiJgc8TJGK+oS5jVJmCejClnjhMmcnQ6XUIDSORdD/dv+QYgmtUJ5E16LLL1sVIbA/QMWiwUDmsyFCk1WXw=
+X-Received: by 2002:ab0:7802:: with SMTP id x2mr11627770uaq.100.1583833652861;
+ Tue, 10 Mar 2020 02:47:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200310024626.GB11861@hao-dev>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <CA+G9fYuqAQfhzF2BzHr7vMHx68bo8-jT+ob_F3eHQ3=oFjgYdg@mail.gmail.com>
+ <CAPDyKFokE6x0mn+v5B9=so-SyrdTn0JBU8Mrp3Zdu6kSaCie2g@mail.gmail.com>
+ <0963b60f-15e7-4bc6-10df-6fc8003e4d42@nvidia.com> <CAPDyKFq5NoeHEBK3sv3yOSD2+pm9FueH1gaTyPq0j7GLfa6vnA@mail.gmail.com>
+ <34fd84d7-387b-b6f3-7fb3-aa490909e205@ti.com> <CAPDyKFrrO4noYqdxWL9Y8Nx75LopbDudKGMotkGbGcAF1oq==w@mail.gmail.com>
+ <5e9b5646-bd48-e55b-54ee-1c2c41fc9218@nvidia.com> <CAPDyKFqpNo_4OePBR1KnJNO=kR8XEqbcsEd=icSceSdDH+Rk1Q@mail.gmail.com>
+ <757853cf-987e-f6b6-9259-b4560a031692@nvidia.com> <d12fe142-7e72-ab58-33ab-17817e35096f@nvidia.com>
+ <c216f131-6f83-c9c9-9d17-8d44ec06972d@nvidia.com> <87ad7586-9569-4276-044a-adb64e84ca15@nvidia.com>
+ <a0962e0b-0f1d-9f32-f6e9-92f69f93167f@nvidia.com> <57ddddc2-3ee8-d867-bba0-0dd9929ba37d@nvidia.com>
+ <CAPDyKFqZSd9E3+16yFsmpee2JsbRJ-DGThxx7NJHu6UE00Xi1Q@mail.gmail.com>
+ <26ee7225-9483-4664-c2d7-b5cefeadcd4b@nvidia.com> <CAPDyKFqwVQDEnPNi33mc9ycTxpaT1cRLejbR3Ja4c8dha4gFRw@mail.gmail.com>
+ <0301bbd5-8d4d-4a77-42c7-8a1391c2d60a@nvidia.com>
+In-Reply-To: <0301bbd5-8d4d-4a77-42c7-8a1391c2d60a@nvidia.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Tue, 10 Mar 2020 10:46:55 +0100
+Message-ID: <CAPDyKFp93H0=ttazofW9NMBtL5VnjB4PdkwN0FDCtWR0pMHrPA@mail.gmail.com>
+Subject: Re: LKFT: arm x15: mmc1: cache flush error -110
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc:     Jon Hunter <jonathanh@nvidia.com>,
+        Bitan Biswas <bbiswas@nvidia.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        Alexei Starovoitov <ast@kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        lkft-triage@lists.linaro.org,
+        open list <linux-kernel@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        John Stultz <john.stultz@linaro.org>,
+        Faiz Abbas <faiz_abbas@ti.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Kishon <kishon@ti.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 10, 2020 at 10:46:26AM +0800, Wu Hao wrote:
-> Hi Yilun
-> 
-> Some comments inline. : )
-> 
-> On Mon, Mar 09, 2020 at 06:29:45PM +0800, Xu Yilun wrote:
-> > Some DFL FPGA PCIe cards (e.g. Intel FPGA Programmable Acceleration
-> > Card) support MSI-X based interrupts. This patch allows PCIe driver
-> > to prepare and pass interrupt resources to DFL via enumeration API.
-> > These interrupt resources could then be assigned to actual features
-> > which use them.
-> > 
-> > Signed-off-by: Luwei Kang <luwei.kang@intel.com>
-> > Signed-off-by: Wu Hao <hao.wu@intel.com>
-> > Signed-off-by: Xu Yilun <yilun.xu@intel.com>
-> > ---
-> >  drivers/fpga/dfl-pci.c | 66 ++++++++++++++++++++++++++++++++++++++++++++++----
-> >  1 file changed, 61 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/drivers/fpga/dfl-pci.c b/drivers/fpga/dfl-pci.c
-> > index 5387550..a3370e5 100644
-> > --- a/drivers/fpga/dfl-pci.c
-> > +++ b/drivers/fpga/dfl-pci.c
-> > @@ -80,8 +80,23 @@ static void cci_remove_feature_devs(struct pci_dev *pcidev)
-> >  	dfl_fpga_feature_devs_remove(drvdata->cdev);
-> >  }
-> >  
-> > +static int *cci_pci_create_irq_table(struct pci_dev *pcidev, unsigned int nvec)
-> > +{
-> > +	int *table, i;
-> > +
-> > +	table = kcalloc(nvec, sizeof(int), GFP_KERNEL);
-> 
-> Maybe devm_ version is better?
+On Mon, 9 Mar 2020 at 18:33, Sowjanya Komatineni <skomatineni@nvidia.com> wrote:
+>
+>
+> On 3/6/20 3:14 AM, Ulf Hansson wrote:
+> > External email: Use caution opening links or attachments
+> >
+> >
+> > [...]
+> >
+> >>>>>>>>>>> Actually we always use R1B with CMD6 as per spec.
+> >>>>>>>>>> I fully agree that R1B is preferable, but it's not against the
+> >>>>>>>>>> spec to
+> >>>>>>>>>> send CMD13 to poll for busy.
+> >>>>>>>>>>
+> >>>>>>>>>> Moreover, we need to cope with the scenario when the host has
+> >>>>>>>>>> specified a maximum timeout that isn't sufficiently long enough for
+> >>>>>>>>>> the requested operation. Do you have another proposal for how to
+> >>>>>>>>>> manage this, but disabling MMC_RSP_BUSY?
+> >>>>>>>>>>
+> >>>>>>>>>> Let's assume you driver would get a R1B for the CMD6 (we force it),
+> >>>>>>>>>> then what timeout would the driver be using if we would set
+> >>>>>>>>>> cmd.busy_timeout to 30ms?
+> >>>>>>>>>>
+> >>>> Sorry didn't understood clearly. Are you asking with 30s timeout, whats
+> >>>> the data timeout counter used?
+> >>> Yes. It seems like it will pick the maximum, which is 11s?
+> >> yes
+> > Okay, thanks!
+> >
+> >>>> Because of above mentioned issue on our host where CMD interrupt happens
+> >>>> after busy state, poll for busy returns right away as not busy.
+> >>> I see.
+> >>>
+> >>>> So issuing CMD13 after CMD6-R1 followed by busy poll should be working.
+> >>>> But weird that with small delay of 1ms or debug print before CMD13 it
+> >>>> doesn't timeout and works all the time.
+> >>> I have digested the information you provided in these emails. Let me
+> >>> summarize it, to see if I have understood correctly.
+> >>>
+> >>> 1.
+> >>> Your controller can't distinguish between R1 and R1B because of a
+> >>> limitation in the HW. So, in both cases you need to wait for the card
+> >>> to stop signal busy, before the controller can give an IRQ to notify
+> >>> that the R1 response has been received. Correct?
+> >>>
+> >>> In this context, I am wondering if sdhci_send_command(), really
+> >>> conforms to these requirements. For example, depending on if the CMD6
+> >>> has MMC_RSP_BUSY or not, it may pick either SDHCI_CMD_RESP_SHORT or
+> >>> SDHCI_CMD_RESP_SHORT_BUSY.
+> >>>
+> >>> Does this work as expected for your case?
+> >> Design team re-verified internally and bug where HW waits for busy state
+> >> before IRQ is only for R1B and R1 is spec compliant.
+> >>
+> >> So, with R1, CMD complete is generated after response received.
+> > Okay.
+> >
+> > So, the issue we see for CMD6 with R1, is a software problem that we
+> > should be able to fix.
+> >
+> >> With R1B, CMD complete and xfer complete both are generated after
+> >> response received + device busy (max timeout of 11s)
+> >> DATA timeout interrupt will be asserted incase if HW busy detection fails.
+> >>
+> >> With R1B we may see DATA Timeout if operation takes more than max busy
+> >> timeout of 11s.
+> > Okay, I see.
+> >
+> >>> 2.
+> >>> Assuming my interpretation of the above is somewhat correct. Then you
+> >>> always need to set a busy timeout for R1/R1B responses in the
+> >>> controller. The maximum timeout seems to be 11s long. Obviously, this
+> >>> isn't enough for all cases, such as cache flushing and erase, for
+> >>> example. So, what can we do to support a longer timeouts than 11s?
+> >>> Would it be possible to disable the HW timeout, if the requested
+> >>> timeout is longer than 11s and use a SW timeout instead?
+> >>>
+> >>> Kind regards
+> >>> Uffe
+> >> For erase long operations we have register bit to enable for infinite
+> >> busy wait mode where host controller would be monitoring until card is busy.
+> > Alright, that sounds great!
+> >
+> >> But so far for emmc devices we used on our platforms, we haven't seen
+> >> cache flush taking more than 11s.
+> > I understand that 11s is probably fine to use, for most cases.
+> >
+> > However, it's not spec compliant, as for some operations there are
+> > simply no timeout specified. BKOPS, cache flush, sanitize are cases
+> > like this - and then 11s is definitely not sufficient.
+> >
+> >> Will get back on possibility of disabling HW timeout and using SW timeout..
+> > Thanks!
+> >
+> > I would like to get the regression fixed asap, but I also would like
+> > to avoid reverting patches, unless really necessary. May I propose the
+> > following two options.
+> >
+> > 1. Find out why polling with ->card_busy() or CMD13, for a CMD6 with
+> > an R1 response doesn't work - and then fix that behaviour.
+> >
+> > 2. Set the mmc->max_busy_timeout to zero for sdhci-tegra, which makes
+> > the core to always use R1B for CMD6 (and erase). This also means that
+> > when the cmd->busy_timeout becomes longer than 11s, sdhci-tegra must
+> > disable the HW busy timeout and just wait "forever".
+> >
+> > If you decide for 2, you can add the software timeout support on top,
+> > but make that can be considered as a next step of an improvement,
+> > rather than needed as fix. Note that, I believe there are some support
+> > for software timeout already in the sdhci core, maybe you need to
+> > tweak it a bit for your case, I don't know.
+> >
+> > Kind regards
+> > Uffe
+>
+> Hi Uffe
+>
+> Will go with 2nd option and will send patches out when ready.
 
-This table will be freed right after dfl_fpga_enum_info_add_irq(). Maybe
-don't need devm_ version.
+Okay, good.
 
-> 
-> > +	if (!table)
-> > +		return NULL;
-> > +
-> > +	for (i = 0; i < nvec; i++)
-> 
-> i should be unsigned int as well?
+>
+> BTW, Tegra host also supports SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK for
+> data timeout based on host clock when using finite mode (HW busy
+> detection based on DATA TIMEOUT count value when cmd operation timeout
+> is < 11s for tegra host).
+>
+> So, looks like we cant set host max_busy_timeout to 0 for Tegra host to
+> force R1B during SWITCH and SLEEP_AWAKE.
+>
+> So, was thinking to introduce host capability MMC_CAP2_LONG_WAIT_HW_BUSY
+> which can be used for hosts supporting long or infinite HW busy wait
+> detection and will update mmc and mmc_ops drivers to not allow convert
+> R1B to R1B for hosts with this capability during SLEEP_AWAKE and SWITCH.
 
-Yes I should change it.
+That seems reasonable, it becomes probably both easier and clearer by
+adding a new host cap.
 
-> 
-> > +		table[i] = pci_irq_vector(pcidev, i);
-> > +
-> > +	return table;
-> > +}
-> > +
-> >  /* enumerate feature devices under pci device */
-> > -static int cci_enumerate_feature_devs(struct pci_dev *pcidev)
-> > +static int cci_enumerate_feature_devs(struct pci_dev *pcidev,
-> > +				      unsigned int nvec)
-> >  {
-> >  	struct cci_drvdata *drvdata = pci_get_drvdata(pcidev);
-> >  	struct dfl_fpga_enum_info *info;
-> > @@ -89,6 +104,7 @@ static int cci_enumerate_feature_devs(struct pci_dev *pcidev)
-> >  	resource_size_t start, len;
-> >  	int port_num, bar, i, ret = 0;
-> >  	void __iomem *base;
-> > +	int *irq_table;
-> >  	u32 offset;
-> >  	u64 v;
-> >  
-> > @@ -97,6 +113,18 @@ static int cci_enumerate_feature_devs(struct pci_dev *pcidev)
-> >  	if (!info)
-> >  		return -ENOMEM;
-> >  
-> > +	/* add irq info for enumeration if really needed */
-> > +	if (nvec) {
-> > +		irq_table = cci_pci_create_irq_table(pcidev, nvec);
-> > +		if (irq_table) {
-> > +			dfl_fpga_enum_info_add_irq(info, nvec, irq_table);
-> > +			kfree(irq_table);
-> > +		} else {
-> > +			ret = -ENOMEM;
-> > +			goto enum_info_free_exit;
-> > +		}
-> > +	}
-> > +
-> >  	/* start to find Device Feature List from Bar 0 */
-> >  	base = cci_pci_ioremap_bar(pcidev, 0);
-> >  	if (!base) {
-> > @@ -173,6 +201,28 @@ static int cci_enumerate_feature_devs(struct pci_dev *pcidev)
-> >  	return ret;
-> >  }
-> >  
-> > +static int cci_pci_alloc_irq(struct pci_dev *pcidev)
-> > +{
-> > +	int nvec = pci_msix_vec_count(pcidev);
-> > +	int ret;
-> > +
-> > +	if (nvec <= 0) {
-> > +		dev_dbg(&pcidev->dev, "fpga interrupt not supported\n");
-> > +		return 0;
-> > +	}
-> > +
-> > +	ret = pci_alloc_irq_vectors(pcidev, nvec, nvec, PCI_IRQ_MSIX);
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> > +	return nvec;
-> > +}
-> > +
-> > +static void cci_pci_free_irq(struct pci_dev *pcidev)
-> > +{
-> > +	pci_free_irq_vectors(pcidev);
-> > +}
-> > +
-> >  static
-> >  int cci_pci_probe(struct pci_dev *pcidev, const struct pci_device_id *pcidevid)
-> >  {
-> > @@ -210,14 +260,19 @@ int cci_pci_probe(struct pci_dev *pcidev, const struct pci_device_id *pcidevid)
-> >  		goto disable_error_report_exit;
-> >  	}
-> >  
-> > -	ret = cci_enumerate_feature_devs(pcidev);
-> > -	if (ret) {
-> > -		dev_err(&pcidev->dev, "enumeration failure %d.\n", ret);
-> > +	ret = cci_pci_alloc_irq(pcidev);
-> > +	if (ret < 0) {
-> > +		dev_err(&pcidev->dev, "Fail to alloc irq %d.\n", ret);
-> 
-> we prepare mmio resources in side cci_enumerate_feature_devs.
-> 
-> maybe we could put irq resources code in side cce_enumerate_feature_devs too?
+In any case, let me help out and cook a patch for this for the core
+part (I leave the sdhci change to you). It may be a bit tricky,
+especially since I have currently queued a bunch of new changes for
+v5.7, that enables more users of mmc_poll_for_busy() in the core.
+Maybe I need to temporarily drop them, so we can fix these problems
+first. I will check.
 
-Yes I will try to change it in patch v2.
+Probably, I would also name the cap MMC_CAP_HW_NEED_RSP_BUSY, as that
+seems to be describing the common problem we have for sdhci
+omap/tegra.
 
-Thanks for your quick response.
+Finally, it seems like MMC_CAP_WAIT_WHILE_BUSY should be set for
+sdhci- tegra, so while at it, perhaps you can cook a patch for that as
+well.
 
-> 
-> 
-> Thanks
-> Hao
-> 
-> >  		goto disable_error_report_exit;
-> >  	}
-> >  
-> > -	return ret;
-> > +	ret = cci_enumerate_feature_devs(pcidev, (unsigned int)ret);
-> > +	if (!ret)
-> > +		return ret;
-> > +
-> > +	dev_err(&pcidev->dev, "enumeration failure %d.\n", ret);
-> >  
-> > +	cci_pci_free_irq(pcidev);
-> >  disable_error_report_exit:
-> >  	pci_disable_pcie_error_reporting(pcidev);
-> >  	return ret;
-> > @@ -263,6 +318,7 @@ static void cci_pci_remove(struct pci_dev *pcidev)
-> >  		cci_pci_sriov_configure(pcidev, 0);
-> >  
-> >  	cci_remove_feature_devs(pcidev);
-> > +	cci_pci_free_irq(pcidev);
-> >  	pci_disable_pcie_error_reporting(pcidev);
-> >  }
-> >  
-> > -- 
-> > 2.7.4
+Kind regards
+Uffe
