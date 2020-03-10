@@ -2,170 +2,81 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDF72C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:47:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B5A9C10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:48:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96D1E222D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:47:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="YyHoh/0X"
+	by mail.kernel.org (Postfix) with ESMTP id 59D8A222D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:48:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727771AbgCJWrE (ORCPT
+        id S1727816AbgCJWsD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 18:47:04 -0400
-Received: from gateway33.websitewelcome.com ([192.185.146.85]:48909 "EHLO
-        gateway33.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726380AbgCJWrD (ORCPT
+        Tue, 10 Mar 2020 18:48:03 -0400
+Received: from mail-il1-f198.google.com ([209.85.166.198]:34367 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726293AbgCJWsD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 18:47:03 -0400
-Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
-        by gateway33.websitewelcome.com (Postfix) with ESMTP id 7A73A16E365
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 17:47:01 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id BnePjdyRMXVkQBnePjwhva; Tue, 10 Mar 2020 17:47:01 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=UsqxYLWLXKnLJ3c6VQJ3e9hzgKr1x3F1ADDL6grOKPI=; b=YyHoh/0Xsgyn9+zhrEj6JxNffD
-        w4WINQIvgYuo4flUxZBn27eoCLBP7zzbeYoUCGixjj3yEQKSPzxx76ADlLnV+P9n92JxZBVpotxIU
-        yizrAm9JHIyu9TLEBDA5BOcEAwXOxXgYvfUpLzqzemQlqP29s7U5R/jfnjZ/9lPLFS6fn5N9+KPuN
-        l2TxrizmjM3gMEaZBc8qotaCLcDaJL7068ex0/q3n1TyzWJcjrEK8i48Kt3R5Gp3x1cneEdKGrfsa
-        7m3XLpM12wmulBkUvmDlwP3avZw/pN8viBdo5y6XyeMBH6XBrGP+fj5DYKWz0KZOSa8HTsVjk9br8
-        7PbUvx/A==;
-Received: from 187-162-252-62.static.axtel.net ([187.162.252.62]:47200 helo=[192.168.0.140])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1jBneO-002f2q-V7; Tue, 10 Mar 2020 17:47:01 -0500
-Subject: Re: [PATCH][next] zd1211rw/zd_usb.h: Replace zero-length array with
- flexible-array member
-To:     Joe Perches <joe@perches.com>,
-        Jes Sorensen <jes.sorensen@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>
-Cc:     Daniel Drake <dsd@gentoo.org>, Ulrich Kunitz <kune@deine-taler.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>
-References: <20200305111216.GA24982@embeddedor>
- <87k13yq2jo.fsf@kamboji.qca.qualcomm.com>
- <256881484c5db07e47c611a56550642a6f6bd8e9.camel@perches.com>
- <87blpapyu5.fsf@kamboji.qca.qualcomm.com>
- <1bb7270f-545b-23ca-aa27-5b3c52fba1be@embeddedor.com>
- <87r1y0nwip.fsf@kamboji.qca.qualcomm.com>
- <48ff1333-0a14-36d8-9565-a7f13a06c974@embeddedor.com>
- <021d1125-3ffd-39ef-395a-b796c527bde4@gmail.com>
- <fb3395d7-e932-10ac-1feb-ab2ceb63424e@embeddedor.com>
- <937b0b529509ec1641453ef7c13f38e2d7cc813e.camel@perches.com>
- <c2aa4d8d-1c39-1903-2b49-382f2143e181@embeddedor.com>
- <8b6213e51131deacbdac29a8d9c088ae49933724.camel@perches.com>
- <e65fd08d-984f-0bdc-5fbf-6abceacf819a@gmail.com>
- <ac0ab948aabd201360d9330c206dd72df14847ae.camel@perches.com>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <75c0c37a-82bf-507e-d6ea-89cd56add8a7@embeddedor.com>
-Date:   Tue, 10 Mar 2020 17:46:59 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 10 Mar 2020 18:48:03 -0400
+Received: by mail-il1-f198.google.com with SMTP id l13so51212ils.1
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 15:48:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=q5ZfIbP9gSY9pdPHS/kIAKtPmXSbcAcSEV6rs0Snm+0=;
+        b=cNk9ZUOlL1y7OrQocgJ39ckOK8ZB/hUTKCddF3bXeexr7w4wcpbXWRnUKJUV2xmlGw
+         prsr/A8ezAFj/yYCaZ+J4anSUfeOYMagimvcRPhEEjzHZfXhVaaDyE29GpPhYXG3mAxt
+         WsttPG0tPS/9+wmFaFxmIOee2Qt/66t2w1VLTYVnKF5R6nR8AQ8SAXeQ9Xfob37+ph3s
+         hnhdjtk/5Li59HRoBOAExvIaIVeuHUUIFk3mMprNd5XwywpqwpK6T6F6C341gDCrr/nt
+         WIdltwP53GU/j3dOgdFgoDiC2QbBdfp82293zR66kU1ld0IOfbVCGOYSs77MqfPa+t8R
+         cAVw==
+X-Gm-Message-State: ANhLgQ3z886mSZKjhdHBejJogK4k9KCkkatrEDzb7NMqGUW/KcgmmPk6
+        yrDqzh0Dy26C2diFPRM3HbxvsKrk9GBjyYJzsmOz49KeOcxX
+X-Google-Smtp-Source: ADFU+vsUpjaOtAr4hhw0rq5N3kQz/0hNMAgmfm1xXX732YmORbP3PrSO7VAQ4OKpFhJHkvH5+C6ASJ2eFbWOuCz4cHIHD8swbAza
 MIME-Version: 1.0
-In-Reply-To: <ac0ab948aabd201360d9330c206dd72df14847ae.camel@perches.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.252.62
-X-Source-L: No
-X-Exim-ID: 1jBneO-002f2q-V7
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-252-62.static.axtel.net ([192.168.0.140]) [187.162.252.62]:47200
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 56
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+X-Received: by 2002:a6b:7c04:: with SMTP id m4mr298568iok.208.1583880482351;
+ Tue, 10 Mar 2020 15:48:02 -0700 (PDT)
+Date:   Tue, 10 Mar 2020 15:48:02 -0700
+In-Reply-To: <0000000000006601b005a08774fd@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000846f6905a087e9b8@google.com>
+Subject: Re: general protection fault in tcf_action_destroy (2)
+From:   syzbot <syzbot+92a80fff3b3af6c4464e@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, jhs@mojatatu.com, jiri@resnulli.us,
+        kuba@kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        xiyou.wangcong@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+syzbot has bisected this bug to:
 
+commit 599be01ee567b61f4471ee8078870847d0a11e8e
+Author: Cong Wang <xiyou.wangcong@gmail.com>
+Date:   Mon Feb 3 05:14:35 2020 +0000
 
-On 3/10/20 5:41 PM, Joe Perches wrote:
-> On Tue, 2020-03-10 at 18:33 -0400, Jes Sorensen wrote:
->> Again, the changes are not harmful to the code, but add no value.
-> 
-> That argument asserts that style consistency is value-free.
-> I generally disagree with that argument.
-> 
+    net_sched: fix an OOB access in cls_tcindex
 
-If this is a matter of style, then I have already proved (this is in
-the changelog text) that the [] style is better than the [0] style:
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=170df5c3e00000
+start commit:   30bb5572 Merge tag 'ktest-v5.6' of git://git.kernel.org/pu..
+git tree:       upstream
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=148df5c3e00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=108df5c3e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=c2e311dba9a02ba9
+dashboard link: https://syzkaller.appspot.com/bug?extid=92a80fff3b3af6c4464e
+userspace arch: i386
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13faf439e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16956ddde00000
 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=76497732932f15e7323dc805e8ea8dc11bb587cf
+Reported-by: syzbot+92a80fff3b3af6c4464e@syzkaller.appspotmail.com
+Fixes: 599be01ee567 ("net_sched: fix an OOB access in cls_tcindex")
 
-> But then again, it's likely we will have to agree to disagree.
-> 
-
-That's a healthy thing. :)
-
-Thanks
---
-Gustavo
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
