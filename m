@@ -2,283 +2,109 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C348DC18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 08:12:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69A39C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 08:15:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 929652253D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 08:12:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AA4B2253D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 08:15:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726437AbgCJIMr (ORCPT
+        id S1726443AbgCJIP1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 04:12:47 -0400
-Received: from zimbra2.kalray.eu ([92.103.151.219]:50818 "EHLO
-        zimbra2.kalray.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725919AbgCJIMq (ORCPT
+        Tue, 10 Mar 2020 04:15:27 -0400
+Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:42330 "EHLO
+        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725919AbgCJIP0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 04:12:46 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra2.kalray.eu (Postfix) with ESMTP id 10EAA27E0589;
-        Tue, 10 Mar 2020 09:12:45 +0100 (CET)
-Received: from zimbra2.kalray.eu ([127.0.0.1])
-        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id suHw1Lkpx2r5; Tue, 10 Mar 2020 09:12:44 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra2.kalray.eu (Postfix) with ESMTP id 53AB727E05D7;
-        Tue, 10 Mar 2020 09:12:44 +0100 (CET)
-X-Virus-Scanned: amavisd-new at zimbra2.kalray.eu
-Received: from zimbra2.kalray.eu ([127.0.0.1])
-        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id nSuIx9HZ4Lhp; Tue, 10 Mar 2020 09:12:44 +0100 (CET)
-Received: from zimbra2.kalray.eu (localhost [127.0.0.1])
-        by zimbra2.kalray.eu (Postfix) with ESMTP id 35E2027E0589;
-        Tue, 10 Mar 2020 09:12:44 +0100 (CET)
-Date:   Tue, 10 Mar 2020 09:12:44 +0100 (CET)
-From:   =?utf-8?Q?Cl=C3=A9ment?= Leger <cleger@kalrayinc.com>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        linux-remoteproc <linux-remoteproc@vger.kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Andy Gross <agross@kernel.org>,
-        Patrice Chotard <patrice.chotard@st.com>,
-        linux-doc <linux-doc@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
-        Loic PALLARDY <loic.pallardy@st.com>, s-anna <s-anna@ti.com>
-Message-ID: <1569234651.9042535.1583827964044.JavaMail.zimbra@kalray.eu>
-In-Reply-To: <20200309235710.GE14744@builder>
-References: <20200210162209.23149-1-cleger@kalray.eu> <20200302093902.27849-1-cleger@kalray.eu> <20200302093902.27849-9-cleger@kalray.eu> <20200309203223.GE1399@xps15> <20200309235710.GE14744@builder>
-Subject: Re: [PATCH v5 8/8] remoteproc: Adapt coredump to generate correct
- elf type
+        Tue, 10 Mar 2020 04:15:26 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R771e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04452;MF=yun.wang@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0TsC7ibe_1583828119;
+Received: from testdeMacBook-Pro.local(mailfrom:yun.wang@linux.alibaba.com fp:SMTPD_---0TsC7ibe_1583828119)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 10 Mar 2020 16:15:20 +0800
+Subject: Re: [RFC PATCH] sched: fix the nonsense shares when load of cfs_rq is
+ too, small
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     Ben Segall <bsegall@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mel Gorman <mgorman@suse.de>,
+        "open list:SCHEDULER" <linux-kernel@vger.kernel.org>
+References: <44fa1cee-08db-e4ab-e5ab-08d6fbd421d7@linux.alibaba.com>
+ <20200303195245.GF2596@hirez.programming.kicks-ass.net>
+ <xm26o8tc3qkv.fsf@bsegall-linux.svl.corp.google.com>
+ <1180c6cd-ff61-2c9f-d689-ffe58f8c5a68@linux.alibaba.com>
+ <xm267dzx47k9.fsf@bsegall-linux.svl.corp.google.com>
+ <CAKfTPtDKTp_G1VNgAXnh=_yLS_T6YkipOsQQ52tBRp-m612JEw@mail.gmail.com>
+ <49a4dd4a-e7b6-5182-150d-16fff2d101cf@linux.alibaba.com>
+ <CAKfTPtCviqkifAieSQT2bT0TsDirkEzSW8kn8Kb9uws9q-+E_A@mail.gmail.com>
+From:   =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
+Message-ID: <f2bd581e-3dc5-2630-7ba9-2241f2ea3360@linux.alibaba.com>
+Date:   Tue, 10 Mar 2020 16:15:19 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:68.0)
+ Gecko/20100101 Thunderbird/68.4.2
 MIME-Version: 1.0
+In-Reply-To: <CAKfTPtCviqkifAieSQT2bT0TsDirkEzSW8kn8Kb9uws9q-+E_A@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [192.168.40.202]
-X-Mailer: Zimbra 8.8.15_GA_3895 (ZimbraWebClient - GC75 (Linux)/8.8.15_GA_3895)
-Thread-Topic: remoteproc: Adapt coredump to generate correct elf type
-Thread-Index: aSfVDzvI7FHWKtYkTa2dk6v5khxkEA==
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bjorn,
 
------ On 10 Mar, 2020, at 00:57, Bjorn Andersson bjorn.andersson@linaro.org wrote:
 
-> On Mon 09 Mar 13:32 PDT 2020, Mathieu Poirier wrote:
+On 2020/3/10 下午3:57, Vincent Guittot wrote:
+[snip]
+>>> That being said, having a min of 2 for scale_load_down will enable us
+>>> to have the tg->load_avg != 0 so a tg_weight != 0 and each sched group
+>>> will not have the full shares. But it will make those group completely
+>>> fair anyway.
+>>> The best solution would be not to scale down the weight but that's a
+>>> bigger change
+>>
+>> Does that means a changing for all those 'load.weight' related
+>> calculation, to reserve the scaled weight?
 > 
->> On Mon, Mar 02, 2020 at 10:39:02AM +0100, Clement Leger wrote:
->> > Now that remoteproc can load an elf64, coredump elf class should be
->> > the same as the loaded elf class. In order to do that, add a
->> > elf_class field to rproc with default values. If an elf is loaded
->> > successfully, this field will be updated with the loaded elf class.
->> > Then, the coredump core code has been modified to use the generic elf
->> > macro in order to create an elf file with correct class.
->> > 
->> > Signed-off-by: Clement Leger <cleger@kalray.eu>
->> > ---
->> >  drivers/remoteproc/remoteproc_core.c       | 67 ++++++++++++++++--------------
->> >  drivers/remoteproc/remoteproc_elf_loader.c |  3 ++
->> >  include/linux/remoteproc.h                 |  1 +
->> >  3 files changed, 39 insertions(+), 32 deletions(-)
->> > 
->> > diff --git a/drivers/remoteproc/remoteproc_core.c
->> > b/drivers/remoteproc/remoteproc_core.c
->> > index b932a64a2be2..f923355aa3f9 100644
->> > --- a/drivers/remoteproc/remoteproc_core.c
->> > +++ b/drivers/remoteproc/remoteproc_core.c
->> > @@ -38,6 +38,7 @@
->> >  #include <linux/platform_device.h>
->> >  
->> >  #include "remoteproc_internal.h"
->> > +#include "remoteproc_elf_helpers.h"
->> >  
->> >  #define HIGH_BITS_MASK 0xFFFFFFFF00000000ULL
->> >  
->> > @@ -1566,20 +1567,21 @@ EXPORT_SYMBOL(rproc_coredump_add_custom_segment);
->> >  static void rproc_coredump(struct rproc *rproc)
->> >  {
->> >  	struct rproc_dump_segment *segment;
->> > -	struct elf32_phdr *phdr;
->> > -	struct elf32_hdr *ehdr;
->> > +	void *phdr;
->> > +	void *ehdr;
->> >  	size_t data_size;
->> >  	size_t offset;
->> >  	void *data;
->> >  	void *ptr;
->> > +	u8 class = rproc->elf_class;
->> >  	int phnum = 0;
->> >  
->> >  	if (list_empty(&rproc->dump_segments))
->> >  		return;
->> >  
->> > -	data_size = sizeof(*ehdr);
->> > +	data_size = elf_size_of_hdr(class);
->> >  	list_for_each_entry(segment, &rproc->dump_segments, node) {
->> > -		data_size += sizeof(*phdr) + segment->size;
->> > +		data_size += elf_size_of_phdr(class) + segment->size;
->> >  
->> >  		phnum++;
->> >  	}
->> > @@ -1590,33 +1592,33 @@ static void rproc_coredump(struct rproc *rproc)
->> >  
->> >  	ehdr = data;
->> >  
->> > -	memset(ehdr, 0, sizeof(*ehdr));
->> > -	memcpy(ehdr->e_ident, ELFMAG, SELFMAG);
->> > -	ehdr->e_ident[EI_CLASS] = ELFCLASS32;
->> > -	ehdr->e_ident[EI_DATA] = ELFDATA2LSB;
->> > -	ehdr->e_ident[EI_VERSION] = EV_CURRENT;
->> > -	ehdr->e_ident[EI_OSABI] = ELFOSABI_NONE;
->> > -	ehdr->e_type = ET_CORE;
->> > -	ehdr->e_machine = EM_NONE;
->> > -	ehdr->e_version = EV_CURRENT;
->> > -	ehdr->e_entry = rproc->bootaddr;
->> > -	ehdr->e_phoff = sizeof(*ehdr);
->> > -	ehdr->e_ehsize = sizeof(*ehdr);
->> > -	ehdr->e_phentsize = sizeof(*phdr);
->> > -	ehdr->e_phnum = phnum;
->> > -
->> > -	phdr = data + ehdr->e_phoff;
->> > -	offset = ehdr->e_phoff + sizeof(*phdr) * ehdr->e_phnum;
->> > +	memset(ehdr, 0, elf_size_of_hdr(class));
->> > +	/* e_ident field is common for both elf32 and elf64 */
->> > +	elf_hdr_init_ident(ehdr, class);
->> > +
->> > +	elf_hdr_set_e_type(class, ehdr, ET_CORE);
->> > +	elf_hdr_set_e_machine(class, ehdr, EM_NONE);
->> > +	elf_hdr_set_e_version(class, ehdr, EV_CURRENT);
->> > +	elf_hdr_set_e_entry(class, ehdr, rproc->bootaddr);
->> > +	elf_hdr_set_e_phoff(class, ehdr, elf_size_of_hdr(class));
->> > +	elf_hdr_set_e_ehsize(class, ehdr, elf_size_of_hdr(class));
->> > +	elf_hdr_set_e_phentsize(class, ehdr, elf_size_of_phdr(class));
->> > +	elf_hdr_set_e_phnum(class, ehdr, phnum);
->> > +
->> > +	phdr = data + elf_hdr_get_e_phoff(class, ehdr);
->> > +	offset = elf_hdr_get_e_phoff(class, ehdr);
->> > +	offset += elf_size_of_phdr(class) * elf_hdr_get_e_phnum(class, ehdr);
->> > +
->> >  	list_for_each_entry(segment, &rproc->dump_segments, node) {
->> > -		memset(phdr, 0, sizeof(*phdr));
->> > -		phdr->p_type = PT_LOAD;
->> > -		phdr->p_offset = offset;
->> > -		phdr->p_vaddr = segment->da;
->> > -		phdr->p_paddr = segment->da;
->> > -		phdr->p_filesz = segment->size;
->> > -		phdr->p_memsz = segment->size;
->> > -		phdr->p_flags = PF_R | PF_W | PF_X;
->> > -		phdr->p_align = 0;
->> > +		memset(phdr, 0, elf_size_of_phdr(class));
->> > +		elf_phdr_set_p_type(class, phdr, PT_LOAD);
->> > +		elf_phdr_set_p_offset(class, phdr, offset);
->> > +		elf_phdr_set_p_vaddr(class, phdr, segment->da);
->> > +		elf_phdr_set_p_paddr(class, phdr, segment->da);
->> > +		elf_phdr_set_p_filesz(class, phdr, segment->size);
->> > +		elf_phdr_set_p_memsz(class, phdr, segment->size);
->> > +		elf_phdr_set_p_flags(class, phdr, PF_R | PF_W | PF_X);
->> > +		elf_phdr_set_p_align(class, phdr, 0);
->> >  
->> >  		if (segment->dump) {
->> >  			segment->dump(rproc, segment, data + offset);
->> > @@ -1632,8 +1634,8 @@ static void rproc_coredump(struct rproc *rproc)
->> >  			}
->> >  		}
->> >  
->> > -		offset += phdr->p_filesz;
->> > -		phdr++;
->> > +		offset += elf_phdr_get_p_filesz(class, phdr);
->> > +		phdr += elf_size_of_phdr(class);
->> >  	}
->> >  
->> >  	dev_coredumpv(&rproc->dev, data, data_size, GFP_KERNEL);
->> > @@ -2031,6 +2033,7 @@ struct rproc *rproc_alloc(struct device *dev, const char
->> > *name,
->> >  	rproc->name = name;
->> >  	rproc->priv = &rproc[1];
->> >  	rproc->auto_boot = true;
->> > +	rproc->elf_class = ELFCLASS32;
->> 
->> I would initialise this to ELFCLASSNONE to make sure that if a platform driver
->> overwrites rproc_elf_load_segments or doesn't provide one, we don't falsely
->> deduce the elf type.  It goes without saying that if elf_class == ELFCLASSNONE,
->> a coredump is not generated.
->> 
+> yes, to make sure that calculation still fit in the variable
 > 
-> I like the idea of making the choice explicit, perhaps even more
-> explicit than the assumption that the coredumps should be of the same
-> type as the ELF loaded. Note that it's different consumers of the two
-> ELF files.
+>>
+>> I suppose u64 is capable for 'cfs_rq.load' to reserve the scaled up load,
+>> changing all those places could be annoying but still fine.
 > 
->> Unless you think this is a seriously bad idea or Bjorn over rules me,
+> it's fine but the max number of runnable tasks at the max priority on
+> a cfs_rq  will decrease from around 4 billion to "only" 4 Million.
+> 
+>>
+>> However, I'm not quite sure about the benefit, how much more precision
+>> we'll gain and does that really matters? better to have some testing to
+>> demonstrate it.
+> 
+> it will ensure a better fairness in a larger range of share value. I
+> agree that we can wonder if it's worth the effort for those low share
+> values. Wouldbe interesting to knwo who use such low value and for
+> which purpose
 
-Ok, I tried to do the equivalent of what was existing (ie elf32 by default).
-But IMHO, letting the driver choose the elf type is a better idea.
+AFAIK, the k8s stuff will use share 2 for the Best Effort type of Pods,
+but that's just because they want them run only when there are no other
+Pods want running, won't dealing with multiple shares under 1024 and
+desire good precision I suppose.
 
->> 
->> Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
->> 
-> 
-> Not sure if it count as "over ruling", I accept your suggestion but used
-> your R-b to merge the patch as is, no need to hold this up any longer.
-> 
-> Clement, can you please follow up with a patch implementing this (don't
-> forget that the qcom drivers doesn't use rproc_elf_load_segments())
+Regards,
+Michael Wang
 
-I was going to send a v7, please tell me if you want to hold it a bit more.
-If not, I will address the remaining comments in next commits.
-
-> 
-> Thanks Clement and thanks for the reviews Mathieu.
 > 
 > Regards,
-> Bjorn
-> 
->> Thanks,
->> Mathieu
->> 
->> >  
->> >  	device_initialize(&rproc->dev);
->> >  	rproc->dev.parent = dev;
->> > diff --git a/drivers/remoteproc/remoteproc_elf_loader.c
->> > b/drivers/remoteproc/remoteproc_elf_loader.c
->> > index 4869fb7d8fe4..16e2c496fd45 100644
->> > --- a/drivers/remoteproc/remoteproc_elf_loader.c
->> > +++ b/drivers/remoteproc/remoteproc_elf_loader.c
->> > @@ -248,6 +248,9 @@ int rproc_elf_load_segments(struct rproc *rproc, const
->> > struct firmware *fw)
->> >  			memset(ptr + filesz, 0, memsz - filesz);
->> >  	}
->> >  
->> > +	if (ret == 0)
->> > +		rproc->elf_class = class;
->> > +
->> >  	return ret;
->> >  }
->> >  EXPORT_SYMBOL(rproc_elf_load_segments);
->> > diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
->> > index 1683d6c386a6..ed127b2d35ca 100644
->> > --- a/include/linux/remoteproc.h
->> > +++ b/include/linux/remoteproc.h
->> > @@ -514,6 +514,7 @@ struct rproc {
->> >  	bool auto_boot;
->> >  	struct list_head dump_segments;
->> >  	int nb_vdev;
->> > +	u8 elf_class;
->> >  };
->> >  
->> >  /**
->> > --
->> > 2.15.0.276.g89ea799
+> Vincent
+>>
+>> Regards,
+>> Michael Wang
+>>
+>>
+>>>
