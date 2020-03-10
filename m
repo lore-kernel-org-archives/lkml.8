@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CC1EC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:45:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 570AAC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:45:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8D2B2468D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:45:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D4FB2468E
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:45:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583844352;
-	bh=tga0kAfL5khGIFnbNDBvYt+Mr60/b3AfqOf26I9Xtjo=;
+	s=default; t=1583844359;
+	bh=f/KoOrQ5UNbB+ZWe5oWIk6h2JcUqzFq1wESw4mwP/J4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KXcNnipFTR+CheCF4eKQzTdIz6OcrifNdukz7E1oXXlQ27mwvs7j/Dv1tJ4fIMuu3
-	 0kF/5ozVfgc72MQ2QoeN/QMpg1+UlLDlJqT3rSdbMPz5wn7bq9Lyhb+ozfdUnFQ0eO
-	 kbh3PsRtH+ZOENmsJRhWuY9V28ulz5uV8A15Y9YY=
+	b=TnVw0qZ+VlLYCinyFdYOizT1Mw7Z2LdtYZdV1dTWK12LITR7kF5qMClUlIHYkjm60
+	 Ka22NnhwLBXR+LISO689MMvc8M1QP7ent+fUTEUcUqdc9AJxbAUazdn5Wi2elt3cnX
+	 8/J8lv24ALeXAEdOQgAr3UKxZpDS9Hpsa4WacWr4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727289AbgCJMpu (ORCPT
+        id S1727485AbgCJMp5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:45:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48550 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:45:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48810 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726861AbgCJMpq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:45:46 -0400
+        id S1727361AbgCJMpy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:45:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 884BA2469C;
-        Tue, 10 Mar 2020 12:45:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5DA652468C;
+        Tue, 10 Mar 2020 12:45:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844346;
-        bh=tga0kAfL5khGIFnbNDBvYt+Mr60/b3AfqOf26I9Xtjo=;
+        s=default; t=1583844353;
+        bh=f/KoOrQ5UNbB+ZWe5oWIk6h2JcUqzFq1wESw4mwP/J4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KLT9z/AWgz5hsakzWrKLje01wxKTPyz3lKy3zgfXvRhldDM8PUupZvtQPc1JUYB3i
-         yA5Ws8FKSQUliylKRVEAP0JptAdV2/oxq2fXoH9c+bNyLPipd6lJi9eRursH5DvAwm
-         ZEyXqJrmboePQqzhG5j2+rxyfVEfPLe6y+D0w14U=
+        b=vSQi+yGvlo2wyUU/is2hfz1hZkyMiY17dQOXmzSyJ7a+7Ssj3qhtxl56AY8eO1SCB
+         v36wxpFv+UbJ2V6U7CsRslZXBe7/12+LJ+VkvE6psHoWkA1ZZ6163EjuJBRjoc8wp5
+         9IYXdNWsqIeHvaj3zFJsVz7AO1AY4MYQ3Rm1S36M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wei Yang <richardw.yang@linux.intel.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.9 48/88] mm/huge_memory.c: use head to check huge zero page
-Date:   Tue, 10 Mar 2020 13:38:56 +0100
-Message-Id: <20200310123617.993328962@linuxfoundation.org>
+        stable@vger.kernel.org, Johan Korsnes <jkorsnes@cisco.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Armando Visconti <armando.visconti@st.com>,
+        Jiri Kosina <jkosina@suse.cz>
+Subject: [PATCH 4.9 33/88] HID: core: increase HID report buffer size to 8KiB
+Date:   Tue, 10 Mar 2020 13:38:41 +0100
+Message-Id: <20200310123613.993998210@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123606.543939933@linuxfoundation.org>
 References: <20200310123606.543939933@linuxfoundation.org>
@@ -61,36 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Yang <richardw.yang@linux.intel.com>
+From: Johan Korsnes <jkorsnes@cisco.com>
 
-commit cb829624867b5ab10bc6a7036d183b1b82bfe9f8 upstream.
+commit 84a4062632462c4320704fcdf8e99e89e94c0aba upstream.
 
-The page could be a tail page, if this is the case, this BUG_ON will
-never be triggered.
+We have a HID touch device that reports its opens and shorts test
+results in HID buffers of size 8184 bytes. The maximum size of the HID
+buffer is currently set to 4096 bytes, causing probe of this device to
+fail. With this patch we increase the maximum size of the HID buffer to
+8192 bytes, making device probe and acquisition of said buffers succeed.
 
-Link: http://lkml.kernel.org/r/20200110032610.26499-1-richardw.yang@linux.intel.com
-Fixes: e9b61f19858a ("thp: reintroduce split_huge_page()")
-
-Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
-Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Johan Korsnes <jkorsnes@cisco.com>
+Cc: Alan Stern <stern@rowland.harvard.edu>
+Cc: Armando Visconti <armando.visconti@st.com>
+Cc: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/huge_memory.c |    2 +-
+ include/linux/hid.h |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -2095,7 +2095,7 @@ int split_huge_page_to_list(struct page
- 	unsigned long flags;
- 	pgoff_t end;
+--- a/include/linux/hid.h
++++ b/include/linux/hid.h
+@@ -453,7 +453,7 @@ struct hid_report_enum {
+ };
  
--	VM_BUG_ON_PAGE(is_huge_zero_page(page), page);
-+	VM_BUG_ON_PAGE(is_huge_zero_page(head), head);
- 	VM_BUG_ON_PAGE(!PageLocked(page), page);
- 	VM_BUG_ON_PAGE(!PageSwapBacked(page), page);
- 	VM_BUG_ON_PAGE(!PageCompound(page), page);
+ #define HID_MIN_BUFFER_SIZE	64		/* make sure there is at least a packet size of space */
+-#define HID_MAX_BUFFER_SIZE	4096		/* 4kb */
++#define HID_MAX_BUFFER_SIZE	8192		/* 8kb */
+ #define HID_CONTROL_FIFO_SIZE	256		/* to init devices with >100 reports */
+ #define HID_OUTPUT_FIFO_SIZE	64
+ 
 
 
