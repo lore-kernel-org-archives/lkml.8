@@ -2,384 +2,238 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26AAAC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:35:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0F92C18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:35:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1E5B222D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:35:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 678132467F
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:35:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="PbD6Wlos"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726410AbgCJJff (ORCPT
+        id S1726497AbgCJJfq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 05:35:35 -0400
-Received: from foss.arm.com ([217.140.110.172]:33244 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726202AbgCJJff (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 05:35:35 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 16D0630E;
-        Tue, 10 Mar 2020 02:35:34 -0700 (PDT)
-Received: from donnerap.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CA19C3F67D;
-        Tue, 10 Mar 2020 02:35:32 -0700 (PDT)
-Date:   Tue, 10 Mar 2020 09:35:29 +0000
-From:   Andre Przywara <andre.przywara@arm.com>
-To:     Robert Hancock <hancock@sedsystems.ca>
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>,
-        Michal Simek <michal.simek@xilinx.com>, netdev@vger.kernel.org,
-        rmk+kernel@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v2 12/14] net: axienet: Upgrade descriptors to hold
- 64-bit addresses
-Message-ID: <20200310093529.043bc0a7@donnerap.cambridge.arm.com>
-In-Reply-To: <a0cab814-4c93-a59c-55cb-3c5f17c1bcde@sedsystems.ca>
-References: <20200309181851.190164-1-andre.przywara@arm.com>
-        <20200309181851.190164-13-andre.przywara@arm.com>
-        <a0cab814-4c93-a59c-55cb-3c5f17c1bcde@sedsystems.ca>
-Organization: ARM
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
+        Tue, 10 Mar 2020 05:35:46 -0400
+Received: from mail-db8eur05on2069.outbound.protection.outlook.com ([40.107.20.69]:21852
+        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726202AbgCJJfq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 05:35:46 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=XzVfako77uqb1HuH4c9OE2wEthMx73zeu5g63jyn9wptzvrqOPYvPTTR7R8K/SxdVC3qFQ173uX9SMjT4d8aTWzvkazehYFKt5GW4IB8SWGriWOqEPMq/FgQwgm8KqqHINfSuuBYJIGOKFyHOxh06jCY43VQy79fDGudJhmJEhUcJOKn3YQEg8QejKdGkstcTBHqQ6BRzaZdFtmPb0mA6P7WzXkNP8T+lBSprfk+YkUO4yHNbei/gHFInG5IUr3DkFU3yB08sMYyTSjQiDFpZMaRaX1BsEe1NWYdEpQnnSB8+qFURJMVzcls1kerkei60F8oaJ8xPxjYR9xo/ZEVSA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KhmorSx/erpe5aXotBne0VkfIw2hsIV92G/Vp0qZ7mY=;
+ b=g3k2uYaSHN0uVfwg0+KhNCye6CZ+CixXTi5o9LVdScobAnVtTwkUVXS1aKwMe7dqPe4mNU0g2by7pVLFw4BlyQUhvARX5TKnydincq9OQVHkfj8NuEoJiT1593VfTIbwwotFlvHn9r7aQ7YjpDEFSPG1HLMo9a3AhjlUOm4yZOtJoSsV5l9H5ulMLzkrbawbkvzgkQSNMUjt+B2qp3jsyQ5vyvXd3aXQNZKDGePDnGrbYy9mO7CNbNkoAeVHFiiN1oVHPTLUFSNTeRLVdMIJrx959xi1QfHhGAh+j1rOQrbmIdY8/4PKRUdnJWAab/8lwAm9AekkYcsppKy8wgRgoQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KhmorSx/erpe5aXotBne0VkfIw2hsIV92G/Vp0qZ7mY=;
+ b=PbD6WlosiKl+UUZYcAD/V5p4E0tBTOlQ1t2SuHhgNTeZIr+v0PGTw5pt6riW21p/+tnwCDNVNk0XhJ/xMZMdKDN5kgj4DCKzFjAXLTORnsrIl8SPV0H1jYzYpus4Bt+S9Zi1GKOJWi0QI41QDCGCxlt4mBN0w7y3mkluLpdxMYc=
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (20.179.232.15) by
+ VE1PR04MB6431.eurprd04.prod.outlook.com (10.255.118.77) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2793.17; Tue, 10 Mar 2020 09:35:40 +0000
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::490:6caa:24b:4a31]) by VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::490:6caa:24b:4a31%6]) with mapi id 15.20.2793.013; Tue, 10 Mar 2020
+ 09:35:40 +0000
+From:   Robin Gong <yibin.gong@nxp.com>
+To:     Sascha Hauer <s.hauer@pengutronix.de>
+CC:     "vkoul@kernel.org" <vkoul@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        "martin.fuzzey@flowbird.group" <martin.fuzzey@flowbird.group>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: RE: [RESEND v6  09/13] dmaengine: imx-sdma: remove ERR009165 on
+ i.mx6ul
+Thread-Topic: [RESEND v6  09/13] dmaengine: imx-sdma: remove ERR009165 on
+ i.mx6ul
+Thread-Index: AQHV9oxi9deJ9GVPPUGUNCzRt8EnOKhBfB+AgAAGp2CAAAyGgIAAAbGQ
+Date:   Tue, 10 Mar 2020 09:35:40 +0000
+Message-ID: <VE1PR04MB66388CC09E1D3AD956AF94CC89FF0@VE1PR04MB6638.eurprd04.prod.outlook.com>
+References: <1583839922-22699-1-git-send-email-yibin.gong@nxp.com>
+ <1583839922-22699-10-git-send-email-yibin.gong@nxp.com>
+ <20200310081925.GT3335@pengutronix.de>
+ <VE1PR04MB6638029458AFDE3005C6E4A489FF0@VE1PR04MB6638.eurprd04.prod.outlook.com>
+ <20200310092803.GW3335@pengutronix.de>
+In-Reply-To: <20200310092803.GW3335@pengutronix.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yibin.gong@nxp.com; 
+x-originating-ip: [92.121.68.129]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 7a6f9f2d-f2c2-4102-3b37-08d7c4d665d6
+x-ms-traffictypediagnostic: VE1PR04MB6431:|VE1PR04MB6431:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VE1PR04MB6431589F9F6366F3B1E7C19C89FF0@VE1PR04MB6431.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1079;
+x-forefront-prvs: 033857D0BD
+x-forefront-antispam-report: SFV:NSPM;SFS:(10001)(10009020)(4636009)(346002)(376002)(136003)(39860400002)(366004)(396003)(189003)(199004)(478600001)(9686003)(45080400002)(64756008)(86362001)(76116006)(4326008)(66476007)(66946007)(2906002)(66446008)(8676002)(66556008)(6506007)(7696005)(71200400001)(186003)(966005)(55016002)(5660300002)(7416002)(6916009)(33656002)(54906003)(52536014)(26005)(81166006)(8936002)(81156014)(316002);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6431;H:VE1PR04MB6638.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: I/IoROG8ussx14TNZJWgEVQyY5sPhGvIszFcks272q3oc/KYud2MRgqmgrRKq8ZK2Yl/Xe8s03nBMA/TuZYhDRPfnD4OlWWhKzoWj/CyJfSjM0H78HrJcwkp91yXs/uL7Amb/fmGZos5bjyK+/dy+HtgUbFvil85NeebEc3txD8knpHatv32WY9UVQ69/HDWEn/wMwSFCD481sm3wRDZ0+v5KrPy04Vne4BN1pLR36ZiZGiV3VjZcuBi5H0zAMfNCOT9m8QSOURGpuAt9wpQifWXD2dEc6MWi5OduX248CfRo7fzKXa95jlDwarW5szEuWBKFaX4pwY2rjouK1TztE90iqLo/OGTIU1ZgM/r4arRsnOYQqD+k3PlkvsOXrIRkYu6BxmmDzn8fQ6rPUpJ5UZeACCeGzUgkYB3EyQNXV7R/okJi8Z0no6Basj9kUrTCkFBFnYTZeDOZmYTI85JtLBFmyyI8RyC0w4DESXRJN/2LFOF0zox4CtP5lk+BRNvXqeGTeEu9JPFdZtWul9KYbn/KuGOGbf5WK7qye3+bdaBb7ofXoXoTU6kACfzklzWEVl4PqRj6t1577w9bGp1S8mjfE6WSLNWmt3keKVtYYiUsJvI7MR/3mRKzdCOV0Z1
+x-ms-exchange-antispam-messagedata: bMScxs1Cgus6uuyAIHEirnPBEXR661geVuDPjxVffYjq9jfqOBNLYELkaqxUAFLyBAuncgowdXADKRssxma5iSm8tTaHfv3HIepSDr3uE9VAZjP4jE+0/HlYDIFJz1oz+uu+HkKEIDlaE8uFgJiQVQ==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7a6f9f2d-f2c2-4102-3b37-08d7c4d665d6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Mar 2020 09:35:40.5029
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 96pBSrYFQ3XRdbaFrrQo2lit20MsizORAz0paNEEugM7tbz6ja07rgwxXDZVGpQ4CYKZQfSIapYCEBCqcDEziQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6431
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 9 Mar 2020 12:46:25 -0600
-Robert Hancock <hancock@sedsystems.ca> wrote:
-
-Hi,
-
-> On 2020-03-09 12:18 p.m., Andre Przywara wrote:
-> > Newer revisions of the AXI DMA IP (>= v7.1) support 64-bit addresses,
-> > both for the descriptors itself, as well as for the buffers they are
-> > pointing to.
-> > This is realised by adding "MSB" words for the next and phys pointer
-> > right behind the existing address word, now named "LSB". These MSB words
-> > live in formerly reserved areas of the descriptor.
-> > 
-> > If the hardware supports it, write both words when setting an address.
-> > The buffer address is handled by two wrapper functions, the two
-> > occasions where we set the next pointers are open coded.
-> > 
-> > For now this is guarded by a flag which we don't set yet.
-> > 
-> > Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-> > ---
-> >  drivers/net/ethernet/xilinx/xilinx_axienet.h  |   9 +-
-> >  .../net/ethernet/xilinx/xilinx_axienet_main.c | 113 ++++++++++++------
-> >  2 files changed, 83 insertions(+), 39 deletions(-)
-> > 
-> > diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet.h b/drivers/net/ethernet/xilinx/xilinx_axienet.h
-> > index fb7450ca5c53..84c4c3655516 100644
-> > --- a/drivers/net/ethernet/xilinx/xilinx_axienet.h
-> > +++ b/drivers/net/ethernet/xilinx/xilinx_axienet.h
-> > @@ -328,6 +328,7 @@
-> >  #define XAE_FEATURE_PARTIAL_TX_CSUM	(1 << 1)
-> >  #define XAE_FEATURE_FULL_RX_CSUM	(1 << 2)
-> >  #define XAE_FEATURE_FULL_TX_CSUM	(1 << 3)
-> > +#define XAE_FEATURE_DMA_64BIT		(1 << 4)
-> >  
-> >  #define XAE_NO_CSUM_OFFLOAD		0
-> >  
-> > @@ -340,9 +341,9 @@
-> >  /**
-> >   * struct axidma_bd - Axi Dma buffer descriptor layout
-> >   * @next:         MM2S/S2MM Next Descriptor Pointer
-> > - * @reserved1:    Reserved and not used
-> > + * @next_msb:     MM2S/S2MM Next Descriptor Pointer (high 32 bits)
-> >   * @phys:         MM2S/S2MM Buffer Address
-> > - * @reserved2:    Reserved and not used
-> > + * @phys_msb:     MM2S/S2MM Buffer Address (high 32 bits)
-> >   * @reserved3:    Reserved and not used
-> >   * @reserved4:    Reserved and not used
-> >   * @cntrl:        MM2S/S2MM Control value
-> > @@ -355,9 +356,9 @@
-> >   */
-> >  struct axidma_bd {
-> >  	u32 next;	/* Physical address of next buffer descriptor */
-> > -	u32 reserved1;
-> > +	u32 next_msb;	/* high 32 bits for IP >= v7.1, reserved on older IP */
-> >  	u32 phys;
-> > -	u32 reserved2;
-> > +	u32 phys_msb;	/* for IP >= v7.1, reserved for older IP */
-> >  	u32 reserved3;
-> >  	u32 reserved4;
-> >  	u32 cntrl;
-> > diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-> > index ea44ef4cf288..edee0666d52c 100644
-> > --- a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-> > +++ b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-> > @@ -153,6 +153,25 @@ static void axienet_dma_out_addr(struct axienet_local *lp, off_t reg,
-> >  	axienet_dma_out32(lp, reg, lower_32_bits(addr));
-> >  }
-> >  
-> > +static void desc_set_phys_addr(struct axienet_local *lp, dma_addr_t addr,
-> > +			       struct axidma_bd *desc)
-> > +{
-> > +	desc->phys = lower_32_bits(addr);
-> > +	if (lp->features & XAE_FEATURE_DMA_64BIT)
-> > +		desc->phys_msb = upper_32_bits(addr);
-> > +}
-> > +
-> > +static dma_addr_t desc_get_phys_addr(struct axienet_local *lp,
-> > +				     struct axidma_bd *desc)
-> > +{
-> > +	dma_addr_t ret = desc->phys;
-> > +
-> > +	if (lp->features & XAE_FEATURE_DMA_64BIT)
-> > +		ret |= (dma_addr_t)desc->phys_msb << 32;  
-> 
-> Does this compile/work properly on a 32-bit kernel? If dma_addr_t was a
-> 32-bit type, I would expect that left-shifting by 32 bits may not do
-> what you want. Not sure if there is an inverse to lower_32_bits and
-> upper_32_bits macros?
-
-Ah, good point. I compile-tested on 32-bit, but only with ARM32+LPAE, which makes dma_addr_t 64-bit as well.
-
-I couldn't find any suitable macro in kernel.h, but will try << 16 << 16.
-
-Thanks for spotting this (six hours before the build bot)!
-
-Cheers,
-Andre
-
-> 
-> > +
-> > +	return ret;
-> > +}
-> > +
-> >  /**
-> >   * axienet_dma_bd_release - Release buffer descriptor rings
-> >   * @ndev:	Pointer to the net_device structure
-> > @@ -176,6 +195,8 @@ static void axienet_dma_bd_release(struct net_device *ndev)
-> >  		return;
-> >  
-> >  	for (i = 0; i < lp->rx_bd_num; i++) {
-> > +		dma_addr_t phys;
-> > +
-> >  		/* A NULL skb means this descriptor has not been initialised
-> >  		 * at all.
-> >  		 */
-> > @@ -188,9 +209,11 @@ static void axienet_dma_bd_release(struct net_device *ndev)
-> >  		 * descriptor size, after it had been successfully allocated.
-> >  		 * So a non-zero value in there means we need to unmap it.
-> >  		 */
-> > -		if (lp->rx_bd_v[i].cntrl)
-> > -			dma_unmap_single(ndev->dev.parent, lp->rx_bd_v[i].phys,
-> > +		if (lp->rx_bd_v[i].cntrl) {
-> > +			phys = desc_get_phys_addr(lp, &lp->rx_bd_v[i]);
-> > +			dma_unmap_single(ndev->dev.parent, phys,
-> >  					 lp->max_frm_size, DMA_FROM_DEVICE);
-> > +		}
-> >  	}
-> >  
-> >  	dma_free_coherent(ndev->dev.parent,
-> > @@ -235,29 +258,36 @@ static int axienet_dma_bd_init(struct net_device *ndev)
-> >  		goto out;
-> >  
-> >  	for (i = 0; i < lp->tx_bd_num; i++) {
-> > -		lp->tx_bd_v[i].next = lp->tx_bd_p +
-> > -				      sizeof(*lp->tx_bd_v) *
-> > -				      ((i + 1) % lp->tx_bd_num);
-> > +		dma_addr_t addr = lp->tx_bd_p +
-> > +				  sizeof(*lp->tx_bd_v) *
-> > +				  ((i + 1) % lp->tx_bd_num);
-> > +
-> > +		lp->tx_bd_v[i].next = lower_32_bits(addr);
-> > +		if (lp->features & XAE_FEATURE_DMA_64BIT)
-> > +			lp->tx_bd_v[i].next_msb = upper_32_bits(addr);
-> >  	}
-> >  
-> >  	for (i = 0; i < lp->rx_bd_num; i++) {
-> > -		lp->rx_bd_v[i].next = lp->rx_bd_p +
-> > -				      sizeof(*lp->rx_bd_v) *
-> > -				      ((i + 1) % lp->rx_bd_num);
-> > +		dma_addr_t addr;
-> > +
-> > +		addr = lp->rx_bd_p + sizeof(*lp->rx_bd_v) *
-> > +			((i + 1) % lp->rx_bd_num);
-> > +		lp->rx_bd_v[i].next = lower_32_bits(addr);
-> > +		if (lp->features & XAE_FEATURE_DMA_64BIT)
-> > +			lp->rx_bd_v[i].next_msb = upper_32_bits(addr);
-> >  
-> >  		skb = netdev_alloc_skb_ip_align(ndev, lp->max_frm_size);
-> >  		if (!skb)
-> >  			goto out;
-> >  
-> >  		lp->rx_bd_v[i].skb = skb;
-> > -		lp->rx_bd_v[i].phys = dma_map_single(ndev->dev.parent,
-> > -						     skb->data,
-> > -						     lp->max_frm_size,
-> > -						     DMA_FROM_DEVICE);
-> > -		if (dma_mapping_error(ndev->dev.parent, lp->rx_bd_v[i].phys)) {
-> > +		addr = dma_map_single(ndev->dev.parent, skb->data,
-> > +				      lp->max_frm_size, DMA_FROM_DEVICE);
-> > +		if (dma_mapping_error(ndev->dev.parent, addr)) {
-> >  			netdev_err(ndev, "DMA mapping error\n");
-> >  			goto out;
-> >  		}
-> > +		desc_set_phys_addr(lp, addr, &lp->rx_bd_v[i]);
-> >  
-> >  		lp->rx_bd_v[i].cntrl = lp->max_frm_size;
-> >  	}
-> > @@ -573,6 +603,7 @@ static int axienet_free_tx_chain(struct net_device *ndev, u32 first_bd,
-> >  	struct axienet_local *lp = netdev_priv(ndev);
-> >  	int max_bds = (nr_bds != -1) ? nr_bds : lp->tx_bd_num;
-> >  	struct axidma_bd *cur_p;
-> > +	dma_addr_t phys;
-> >  	unsigned int status;
-> >  	int i;
-> >  
-> > @@ -586,9 +617,10 @@ static int axienet_free_tx_chain(struct net_device *ndev, u32 first_bd,
-> >  		if (nr_bds == -1 && !(status & XAXIDMA_BD_STS_COMPLETE_MASK))
-> >  			break;
-> >  
-> > -		dma_unmap_single(ndev->dev.parent, cur_p->phys,
-> > -				(cur_p->cntrl & XAXIDMA_BD_CTRL_LENGTH_MASK),
-> > -				DMA_TO_DEVICE);
-> > +		phys = desc_get_phys_addr(lp, cur_p);
-> > +		dma_unmap_single(ndev->dev.parent, phys,
-> > +				 (cur_p->cntrl & XAXIDMA_BD_CTRL_LENGTH_MASK),
-> > +				 DMA_TO_DEVICE);
-> >  
-> >  		if (cur_p->skb && (status & XAXIDMA_BD_STS_COMPLETE_MASK))
-> >  			dev_consume_skb_irq(cur_p->skb);
-> > @@ -684,7 +716,7 @@ axienet_start_xmit(struct sk_buff *skb, struct net_device *ndev)
-> >  	u32 csum_start_off;
-> >  	u32 csum_index_off;
-> >  	skb_frag_t *frag;
-> > -	dma_addr_t tail_p;
-> > +	dma_addr_t tail_p, phys;
-> >  	struct axienet_local *lp = netdev_priv(ndev);
-> >  	struct axidma_bd *cur_p;
-> >  	u32 orig_tail_ptr = lp->tx_bd_tail;
-> > @@ -723,14 +755,15 @@ axienet_start_xmit(struct sk_buff *skb, struct net_device *ndev)
-> >  		cur_p->app0 |= 2; /* Tx Full Checksum Offload Enabled */
-> >  	}
-> >  
-> > -	cur_p->phys = dma_map_single(ndev->dev.parent, skb->data,
-> > -				     skb_headlen(skb), DMA_TO_DEVICE);
-> > -	if (unlikely(dma_mapping_error(ndev->dev.parent, cur_p->phys))) {
-> > +	phys = dma_map_single(ndev->dev.parent, skb->data,
-> > +			      skb_headlen(skb), DMA_TO_DEVICE);
-> > +	if (unlikely(dma_mapping_error(ndev->dev.parent, phys))) {
-> >  		if (net_ratelimit())
-> >  			netdev_err(ndev, "TX DMA mapping error\n");
-> >  		ndev->stats.tx_dropped++;
-> >  		return NETDEV_TX_OK;
-> >  	}
-> > +	desc_set_phys_addr(lp, phys, cur_p);
-> >  	cur_p->cntrl = skb_headlen(skb) | XAXIDMA_BD_CTRL_TXSOF_MASK;
-> >  
-> >  	for (ii = 0; ii < num_frag; ii++) {
-> > @@ -738,11 +771,11 @@ axienet_start_xmit(struct sk_buff *skb, struct net_device *ndev)
-> >  			lp->tx_bd_tail = 0;
-> >  		cur_p = &lp->tx_bd_v[lp->tx_bd_tail];
-> >  		frag = &skb_shinfo(skb)->frags[ii];
-> > -		cur_p->phys = dma_map_single(ndev->dev.parent,
-> > -					     skb_frag_address(frag),
-> > -					     skb_frag_size(frag),
-> > -					     DMA_TO_DEVICE);
-> > -		if (unlikely(dma_mapping_error(ndev->dev.parent, cur_p->phys))) {
-> > +		phys = dma_map_single(ndev->dev.parent,
-> > +				      skb_frag_address(frag),
-> > +				      skb_frag_size(frag),
-> > +				      DMA_TO_DEVICE);
-> > +		if (unlikely(dma_mapping_error(ndev->dev.parent, phys))) {
-> >  			if (net_ratelimit())
-> >  				netdev_err(ndev, "TX DMA mapping error\n");
-> >  			ndev->stats.tx_dropped++;
-> > @@ -752,6 +785,7 @@ axienet_start_xmit(struct sk_buff *skb, struct net_device *ndev)
-> >  
-> >  			return NETDEV_TX_OK;
-> >  		}
-> > +		desc_set_phys_addr(lp, phys, cur_p);
-> >  		cur_p->cntrl = skb_frag_size(frag);
-> >  	}
-> >  
-> > @@ -790,10 +824,12 @@ static void axienet_recv(struct net_device *ndev)
-> >  	cur_p = &lp->rx_bd_v[lp->rx_bd_ci];
-> >  
-> >  	while ((cur_p->status & XAXIDMA_BD_STS_COMPLETE_MASK)) {
-> > +		dma_addr_t phys;
-> > +
-> >  		tail_p = lp->rx_bd_p + sizeof(*lp->rx_bd_v) * lp->rx_bd_ci;
-> >  
-> > -		dma_unmap_single(ndev->dev.parent, cur_p->phys,
-> > -				 lp->max_frm_size,
-> > +		phys = desc_get_phys_addr(lp, cur_p);
-> > +		dma_unmap_single(ndev->dev.parent, phys, lp->max_frm_size,
-> >  				 DMA_FROM_DEVICE);
-> >  
-> >  		skb = cur_p->skb;
-> > @@ -829,15 +865,16 @@ static void axienet_recv(struct net_device *ndev)
-> >  		if (!new_skb)
-> >  			return;
-> >  
-> > -		cur_p->phys = dma_map_single(ndev->dev.parent, new_skb->data,
-> > -					     lp->max_frm_size,
-> > -					     DMA_FROM_DEVICE);
-> > -		if (unlikely(dma_mapping_error(ndev->dev.parent, cur_p->phys))) {
-> > +		phys = dma_map_single(ndev->dev.parent, new_skb->data,
-> > +				      lp->max_frm_size,
-> > +				      DMA_FROM_DEVICE);
-> > +		if (unlikely(dma_mapping_error(ndev->dev.parent, phys))) {
-> >  			if (net_ratelimit())
-> >  				netdev_err(ndev, "RX DMA mapping error\n");
-> >  			dev_kfree_skb(new_skb);
-> >  			return;
-> >  		}
-> > +		desc_set_phys_addr(lp, phys, cur_p);
-> >  
-> >  		cur_p->cntrl = lp->max_frm_size;
-> >  		cur_p->status = 0;
-> > @@ -882,7 +919,8 @@ static irqreturn_t axienet_tx_irq(int irq, void *_ndev)
-> >  		return IRQ_NONE;
-> >  	if (status & XAXIDMA_IRQ_ERROR_MASK) {
-> >  		dev_err(&ndev->dev, "DMA Tx error 0x%x\n", status);
-> > -		dev_err(&ndev->dev, "Current BD is at: 0x%x\n",
-> > +		dev_err(&ndev->dev, "Current BD is at: 0x%x%08x\n",
-> > +			(lp->tx_bd_v[lp->tx_bd_ci]).phys_msb,
-> >  			(lp->tx_bd_v[lp->tx_bd_ci]).phys);
-> >  
-> >  		cr = axienet_dma_in32(lp, XAXIDMA_TX_CR_OFFSET);
-> > @@ -931,7 +969,8 @@ static irqreturn_t axienet_rx_irq(int irq, void *_ndev)
-> >  		return IRQ_NONE;
-> >  	if (status & XAXIDMA_IRQ_ERROR_MASK) {
-> >  		dev_err(&ndev->dev, "DMA Rx error 0x%x\n", status);
-> > -		dev_err(&ndev->dev, "Current BD is at: 0x%x\n",
-> > +		dev_err(&ndev->dev, "Current BD is at: 0x%x%08x\n",
-> > +			(lp->rx_bd_v[lp->rx_bd_ci]).phys_msb,
-> >  			(lp->rx_bd_v[lp->rx_bd_ci]).phys);
-> >  
-> >  		cr = axienet_dma_in32(lp, XAXIDMA_TX_CR_OFFSET);
-> > @@ -1633,14 +1672,18 @@ static void axienet_dma_err_handler(struct work_struct *work)
-> >  
-> >  	for (i = 0; i < lp->tx_bd_num; i++) {
-> >  		cur_p = &lp->tx_bd_v[i];
-> > -		if (cur_p->cntrl)
-> > -			dma_unmap_single(ndev->dev.parent, cur_p->phys,
-> > +		if (cur_p->cntrl) {
-> > +			dma_addr_t addr = desc_get_phys_addr(lp, cur_p);
-> > +
-> > +			dma_unmap_single(ndev->dev.parent, addr,
-> >  					 (cur_p->cntrl &
-> >  					  XAXIDMA_BD_CTRL_LENGTH_MASK),
-> >  					 DMA_TO_DEVICE);
-> > +		}
-> >  		if (cur_p->skb)
-> >  			dev_kfree_skb_irq(cur_p->skb);
-> >  		cur_p->phys = 0;
-> > +		cur_p->phys_msb = 0;
-> >  		cur_p->cntrl = 0;
-> >  		cur_p->status = 0;
-> >  		cur_p->app0 = 0;
-> >   
-> 
-
+On 2020/03/10 Sascha Hauer <s.hauer@pengutronix.de> wrote:
+> On Tue, Mar 10, 2020 at 08:59:03AM +0000, Robin Gong wrote:
+> > On 2020/03/10 Sascha Hauer <s.hauer@pengutronix.de> wrote:
+> > > On Tue, Mar 10, 2020 at 07:31:58PM +0800, Robin Gong wrote:
+> > > > ECSPI issue fixed from i.mx6ul at hardware level, no need
+> > > > ERR009165 anymore on those chips such as i.mx8mq. Add i.mx6sx from
+> > > > where i.mx6ul source.
+> > > >
+> > > > Signed-off-by: Robin Gong <yibin.gong@nxp.com>
+> > > > Acked-by: Vinod Koul <vkoul@kernel.org>
+> > > > ---
+> > > >  drivers/dma/imx-sdma.c | 51
+> > > > +++++++++++++++++++++++++++++++++++++++++++++++++-
+> > > >  1 file changed, 50 insertions(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c index
+> > > > 56288d8..5ae7237 100644
+> > > > --- a/drivers/dma/imx-sdma.c
+> > > > +++ b/drivers/dma/imx-sdma.c
+> > > > @@ -419,6 +419,13 @@ struct sdma_driver_data {
+> > > >  	int num_events;
+> > > >  	struct sdma_script_start_addrs	*script_addrs;
+> > > >  	bool check_ratio;
+> > > > +	/*
+> > > > +	 * ecspi ERR009165 fixed should be done in sdma script
+> > > > +	 * and it has been fixed in soc from i.mx6ul.
+> > > > +	 * please get more information from the below link:
+> > > > +	 *
+> > > https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fw=
+w
+> > > w.nx
+> p.com%2Fdocs%2Fen%2Ferrata%2FIMX6DQCE.pdf&amp;data=3D02%7C01%7Cyi
+> > >
+> bin.gong%40nxp.com%7C91d42046e6894501d48508d7c4cbcae2%7C686ea1d3
+> > >
+> bc2b4c6fa92cd99c5c301635%7C0%7C1%7C637194251876090170&amp;sdata=3D
+> > > T6LA4xz9CUFlNpnyjHSThEQb8i1rhbY9e1nUyxIGD5Q%3D&amp;reserved=3D0
+> > > > +	 */
+> > > > +	bool ecspi_fixed;
+> > > >  };
+> > > >
+> > > >  struct sdma_engine {
+> > > > @@ -539,6 +546,31 @@ static struct sdma_driver_data sdma_imx6q =3D =
+{
+> > > >  	.script_addrs =3D &sdma_script_imx6q,  };
+> > > >
+> > > > +static struct sdma_script_start_addrs sdma_script_imx6sx =3D {
+> > > > +	.ap_2_ap_addr =3D 642,
+> > > > +	.uart_2_mcu_addr =3D 817,
+> > > > +	.mcu_2_app_addr =3D 747,
+> > > > +	.uartsh_2_mcu_addr =3D 1032,
+> > > > +	.mcu_2_shp_addr =3D 960,
+> > > > +	.app_2_mcu_addr =3D 683,
+> > > > +	.shp_2_mcu_addr =3D 891,
+> > > > +	.spdif_2_mcu_addr =3D 1100,
+> > > > +	.mcu_2_spdif_addr =3D 1134,
+> > > > +};
+> > > > +
+> > > > +static struct sdma_driver_data sdma_imx6sx =3D {
+> > > > +	.chnenbl0 =3D SDMA_CHNENBL0_IMX35,
+> > > > +	.num_events =3D 48,
+> > > > +	.script_addrs =3D &sdma_script_imx6sx, };
+> > > > +
+> > > > +static struct sdma_driver_data sdma_imx6ul =3D {
+> > > > +	.chnenbl0 =3D SDMA_CHNENBL0_IMX35,
+> > > > +	.num_events =3D 48,
+> > > > +	.script_addrs =3D &sdma_script_imx6sx,
+> > > > +	.ecspi_fixed =3D true,
+> > > > +};
+> > > > +
+> > > >  static struct sdma_script_start_addrs sdma_script_imx7d =3D {
+> > > >  	.ap_2_ap_addr =3D 644,
+> > > >  	.uart_2_mcu_addr =3D 819,
+> > > > @@ -584,9 +616,15 @@ static const struct platform_device_id
+> > > sdma_devtypes[] =3D {
+> > > >  		.name =3D "imx6q-sdma",
+> > > >  		.driver_data =3D (unsigned long)&sdma_imx6q,
+> > > >  	}, {
+> > > > +		.name =3D "imx6sx-sdma",
+> > > > +		.driver_data =3D (unsigned long)&sdma_imx6sx,
+> > > > +	}, {
+> > >
+> > > Now the i.MX6sx uses a new sdma_script_start_addrs entry which is
+> > > the same as the i.MX6q one we used before with one exception: it
+> > > lacks the per_2_per_addr =3D 6331 entry. This is only used for
+> > > IMX_DMATYPE_ASRC and
+> > Totally same script for i.mx6 chips whatever i.MX6sx, i.MX6q or i.MX6ul=
+.
+>=20
+> When it's the same then use it.
+>=20
+> > > IMX_DMATYPE_ASRC_SP, both are entirely unused in the mainline
+> > > kernel. So why must the i.MX6sx changed here and what has this to do =
+with
+> ECSPI?
+> > i.MX6ul is based on i.MX6sx, so adding i.MX6sx could keep good shape on=
+ our
+> i.MX family evolution.
+>=20
+> My point is that there is no difference between i.MX6q and i.MX6sx here, =
+so do
+> not artificially introduce i.MX6sx support when all you do is copying the=
+ i.MX6q
+> support.
+Okay, will remove i.MX6sx now.
+> --
+> Pengutronix e.K.                           |
+> |
+> Steuerwalder Str. 21                       |
+> https://eur01.safelinks.protection.outlook.com/?url=3Dhttp%3A%2F%2Fwww.pe
+> ngutronix.de%2F&amp;data=3D02%7C01%7Cyibin.gong%40nxp.com%7C02af95d
+> 81bf745b7b2cc08d7c4d55ed2%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0
+> %7C0%7C637194293001547060&amp;sdata=3DcN13LuC6Bgs1m9W6oKc2q03j5rf
+> KvsMbonpd1JALA%2Fk%3D&amp;reserved=3D0  |
+> 31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0
+> |
+> Amtsgericht Hildesheim, HRA 2686           | Fax:
+> +49-5121-206917-5555 |
