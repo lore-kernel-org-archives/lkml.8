@@ -2,86 +2,85 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD83DC10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 19:40:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E5FEC10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 19:41:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 721AA21655
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 19:40:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mUx0pRt/"
+	by mail.kernel.org (Postfix) with ESMTP id 5041E21D7E
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 19:41:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727450AbgCJTkN (ORCPT
+        id S1727146AbgCJTlt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 15:40:13 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:34438 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726604AbgCJTkN (ORCPT
+        Tue, 10 Mar 2020 15:41:49 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:50040 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726604AbgCJTls (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 15:40:13 -0400
-Received: by mail-ot1-f66.google.com with SMTP id j16so14413964otl.1
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 12:40:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=N85h88yMkj8nihjHQm5ShxaRV163FX/geAkJs+oMDoE=;
-        b=mUx0pRt/ifhXaLLeig29B1PZojnEWlfUQmKs76Nv0uFBrXGkEImVFyRuM2RtPAKYrz
-         uPUV4AhgKlcGGM7ci4cny3Acn0RSgANJXvKZITpusUovp8NJpyby6fv/3pgN944NKPq6
-         pJjTuD4ANLUt7oKFFpCa08kjySsiLipzgsaqgw7opqvek6pA9YKQnGP7YkUhsVPUIiSX
-         o7LWuk7IzswFmykdgtRgW7/wO6m7C46+nxa4JsJelT9+sTJsO1RctClvfYZPGwnaiTnJ
-         pq/+MnDJRWsufhQ6WmqOk76NLBvNv6ock80strcOjO9LaH6gs9P9EpEJ2+2zwW5q/c5T
-         4fLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=N85h88yMkj8nihjHQm5ShxaRV163FX/geAkJs+oMDoE=;
-        b=ltBbSAk0RD6HgDxguPNM3ET56tXAPbh0qFgtC9aejMV3BXSVgJdtr3W5879UsNlZdG
-         Q+GlU/649nmCaOKuO/IZu0Ue34YWpXProHVXKW/gY+wVtEXSqO5UFureVo0WKcE3jUbV
-         rMS9QTXR+L7P5SFlYXCTqTDfmRS/mL0r5VePeMR/xXZ3cUbVSr4A1AQaJytTXZqW6fK8
-         CRE5y5QUm8EysVswFQB89XokxMmDbD9wLNTZKlSvgphxCp7rg7hx43xuDA2DCtsLBPPc
-         kRTFDMNfp58TaYjwvTthGxZoXNRJehFtFKx+4BQwoo5RLsruIKQJGFcbCqSWKt5Knqb3
-         YSXA==
-X-Gm-Message-State: ANhLgQ0RVBnWmmc/d91jcSIN/pXrGuR9UpSy+9zmw3j3gx8FJgAWqh1v
-        F1dmtWpXZGPTPVdxs3sg5pgLFc3CBFISf8ndICWAHg==
-X-Google-Smtp-Source: ADFU+vs0zB2x5mBN2LwbkIDxT21vlEEjsbVqcu9F3uySYfW9yc+09RTDg6Cp1/uTjxNDWK7+b9Cpnh8eqEwsATpjqZ4=
-X-Received: by 2002:a05:6830:118c:: with SMTP id u12mr17223086otq.124.1583869211573;
- Tue, 10 Mar 2020 12:40:11 -0700 (PDT)
+        Tue, 10 Mar 2020 15:41:48 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 686A329196A;
+        Tue, 10 Mar 2020 19:41:46 +0000 (GMT)
+Date:   Tue, 10 Mar 2020 20:41:42 +0100
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Mason Yang <masonccyang@mxic.com.tw>
+Cc:     miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
+        frieder.schrempf@kontron.de, tglx@linutronix.de, stefan@agner.ch,
+        juliensu@mxic.com.tw, allison@lohutok.net,
+        linux-kernel@vger.kernel.org, bbrezillon@kernel.org,
+        rfontana@redhat.com, linux-mtd@lists.infradead.org,
+        yuehaibing@huawei.com, s.hauer@pengutronix.de
+Subject: Re: [PATCH v3 3/4] mtd: rawnand: Add support manufacturer specific
+ suspend/resume operation
+Message-ID: <20200310204142.540fc7c4@collabora.com>
+In-Reply-To: <20200310203930.2b8c0cfb@collabora.com>
+References: <1583220084-10890-1-git-send-email-masonccyang@mxic.com.tw>
+        <1583220084-10890-4-git-send-email-masonccyang@mxic.com.tw>
+        <20200310203930.2b8c0cfb@collabora.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-References: <20200305211632.15369-1-dxu@dxuuu.xyz> <20200305211632.15369-2-dxu@dxuuu.xyz>
-In-Reply-To: <20200305211632.15369-2-dxu@dxuuu.xyz>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Tue, 10 Mar 2020 12:40:00 -0700
-Message-ID: <CALvZod62gypsxCYOpGsR6SWwp7roh8eEEKvZ8WNFtjB0bH=okg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/4] kernfs: kvmalloc xattr value instead of kmalloc
-To:     Daniel Xu <dxu@dxuuu.xyz>
-Cc:     Cgroups <cgroups@vger.kernel.org>, Tejun Heo <tj@kernel.org>,
-        Li Zefan <lizefan@huawei.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kernel Team <kernel-team@fb.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Daniel,
+On Tue, 10 Mar 2020 20:39:30 +0100
+Boris Brezillon <boris.brezillon@collabora.com> wrote:
 
-On Thu, Mar 5, 2020 at 1:16 PM Daniel Xu <dxu@dxuuu.xyz> wrote:
->
-> It's not really necessary to have contiguous physical memory for xattr
-> values. We no longer need to worry about higher order allocations
-> failing with kvmalloc, especially because the xattr size limit is at
-> 64K.
->
-> Signed-off-by: Daniel Xu <dxu@dxuuu.xyz>
+> On Tue,  3 Mar 2020 15:21:23 +0800
+> Mason Yang <masonccyang@mxic.com.tw> wrote:
+> 
+> > Patch nand_suspend() & nand_resume() for manufacturer specific
+> > suspend/resume operation.
+> > 
+> > Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
+> > Reported-by: kbuild test robot <lkp@intel.com>
+> > Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> > ---
+> >  drivers/mtd/nand/raw/nand_base.c | 11 ++++++++---
+> >  include/linux/mtd/rawnand.h      |  4 ++++
+> >  2 files changed, 12 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/drivers/mtd/nand/raw/nand_base.c b/drivers/mtd/nand/raw/nand_base.c
+> > index 769be81..b44e460 100644
+> > --- a/drivers/mtd/nand/raw/nand_base.c
+> > +++ b/drivers/mtd/nand/raw/nand_base.c
+> > @@ -4327,7 +4327,9 @@ static int nand_suspend(struct mtd_info *mtd)
+> >  	struct nand_chip *chip = mtd_to_nand(mtd);
+> >  
+> >  	mutex_lock(&chip->lock);
+> > -	chip->suspended = 1;
+> > +	if (chip->_suspend)
+> > +		if (!chip->_suspend(chip))
+> > +			chip->suspended = 1;
 
-The patch looks fine to me. However the commit message is too cryptic
-i.e. hard to get the motivation behind the change.
+Shouldn't you propagate the error to the caller if chip->_suspend()
+fails?
