@@ -2,69 +2,105 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9C99C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 11:06:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1044AC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 11:07:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C38602468C
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 11:06:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBF562467F
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 11:07:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CfGgBJTw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726535AbgCJLGx (ORCPT
+        id S1726571AbgCJLHI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 07:06:53 -0400
-Received: from relmlor1.renesas.com ([210.160.252.171]:25631 "EHLO
-        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726325AbgCJLGw (ORCPT
+        Tue, 10 Mar 2020 07:07:08 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:53876 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726283AbgCJLHH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 07:06:52 -0400
-X-IronPort-AV: E=Sophos;i="5.70,536,1574089200"; 
-   d="scan'208";a="41493406"
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie5.idc.renesas.com with ESMTP; 10 Mar 2020 20:06:51 +0900
-Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 18F06420C2EB;
-        Tue, 10 Mar 2020 20:06:49 +0900 (JST)
-From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Niklas <niklas.soderlund@ragnatech.se>
-Cc:     linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Lad Prabhakar <prabhakar.csengg@gmail.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v2 3/3] media: rcar-vin: rcar-csi2: Add support for MEDIA_BUS_FMT_SRGGB8_1X8 format
-Date:   Tue, 10 Mar 2020 11:06:04 +0000
-Message-Id: <1583838364-12932-4-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1583838364-12932-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <1583838364-12932-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Tue, 10 Mar 2020 07:07:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583838426;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=7zCZMOF0iZCujbjrI3iIoDQ/fo/iLP3cIKGJWZDv6zQ=;
+        b=CfGgBJTwUno6u1RdSOVZB4FYet+Q9mhOk+KhETYT2gFYQCsW7YmEZLULMzbLGYblT8WQ0H
+        9uXHcuEM7XhCRv4/dUnPqTFe7Zdide48Q3eIA5ftDES5EHdDmlGMIJQv+1Uh4ySyHg9nnM
+        Sdg1GERWqD65bxz5upDi+rDeXlmfqBA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-209-THButNQSMGKrblN1X-wo4A-1; Tue, 10 Mar 2020 07:07:03 -0400
+X-MC-Unique: THButNQSMGKrblN1X-wo4A-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 84F6118B5FA7;
+        Tue, 10 Mar 2020 11:07:02 +0000 (UTC)
+Received: from localhost (unknown [10.36.118.73])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id EE82310013A1;
+        Tue, 10 Mar 2020 11:06:56 +0000 (UTC)
+Date:   Tue, 10 Mar 2020 11:06:55 +0000
+From:   Stefan Hajnoczi <stefanha@redhat.com>
+To:     Vivek Goyal <vgoyal@redhat.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvdimm@lists.01.org, virtio-fs@redhat.com, miklos@szeredi.hu,
+        dgilbert@redhat.com, mst@redhat.com,
+        Sebastien Boeuf <sebastien.boeuf@intel.com>
+Subject: Re: [PATCH 05/20] virtio: Implement get_shm_region for MMIO transport
+Message-ID: <20200310110655.GJ140737@stefanha-x1.localdomain>
+References: <20200304165845.3081-1-vgoyal@redhat.com>
+ <20200304165845.3081-6-vgoyal@redhat.com>
+MIME-Version: 1.0
+In-Reply-To: <20200304165845.3081-6-vgoyal@redhat.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="u3bvv0EcKsvvYeex"
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds support for MEDIA_BUS_FMT_SRGGB8_1X8 format for CSI2
-input.
+--u3bvv0EcKsvvYeex
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
----
- drivers/media/platform/rcar-vin/rcar-csi2.c | 1 +
- 1 file changed, 1 insertion(+)
+On Wed, Mar 04, 2020 at 11:58:30AM -0500, Vivek Goyal wrote:
+> From: Sebastien Boeuf <sebastien.boeuf@intel.com>
+>=20
+> On MMIO a new set of registers is defined for finding SHM
+> regions.  Add their definitions and use them to find the region.
+>=20
+> Signed-off-by: Sebastien Boeuf <sebastien.boeuf@intel.com>
+> ---
+>  drivers/virtio/virtio_mmio.c     | 32 ++++++++++++++++++++++++++++++++
+>  include/uapi/linux/virtio_mmio.h | 11 +++++++++++
+>  2 files changed, 43 insertions(+)
 
-diff --git a/drivers/media/platform/rcar-vin/rcar-csi2.c b/drivers/media/platform/rcar-vin/rcar-csi2.c
-index 39e1639..b030ef6 100644
---- a/drivers/media/platform/rcar-vin/rcar-csi2.c
-+++ b/drivers/media/platform/rcar-vin/rcar-csi2.c
-@@ -320,6 +320,7 @@ static const struct rcar_csi2_format rcar_csi2_formats[] = {
- 	{ .code = MEDIA_BUS_FMT_YUYV8_1X16,	.datatype = 0x1e, .bpp = 16 },
- 	{ .code = MEDIA_BUS_FMT_UYVY8_2X8,	.datatype = 0x1e, .bpp = 16 },
- 	{ .code = MEDIA_BUS_FMT_YUYV10_2X10,	.datatype = 0x1e, .bpp = 20 },
-+	{ .code = MEDIA_BUS_FMT_SRGGB8_1X8,     .datatype = 0x2a, .bpp = 8 },
- };
- 
- static const struct rcar_csi2_format *rcsi2_code_to_fmt(unsigned int code)
--- 
-2.7.4
+Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
+
+--u3bvv0EcKsvvYeex
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl5ndM8ACgkQnKSrs4Gr
+c8gfygf/do+109aKXm9VFkU/rXC9UEr+hExsP6Lzua5HVq/12kOWyPb6RjeIZfZ/
+xpL0jvNcMM2IS72Be3/GddkueGUiN1E44GmjU2+TrXGAh1VzudsId2PJeJfJRsEH
+m0WNtnsEQBdeGy5ojXq05pq5yhcq1A7BafE2Fe+mHTDkbB8J/6YtAUzUCIA7Y3m7
+2tm9Ju4ERd2cN1Cb9zDCx9eof+ypmPTqaEBF6MYNRuUVhUHhY52ChiWr213rZ2l/
+teAcVQZxULQjwnERMuqN/9yupwr7mfZxA3ippJYhHfiAjHks/dA5cIz0xy9jv9/5
+kdzLUFXkRegnZVe+HatFmqKOSWXIoA==
+=/ks7
+-----END PGP SIGNATURE-----
+
+--u3bvv0EcKsvvYeex--
 
