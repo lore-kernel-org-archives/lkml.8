@@ -2,152 +2,155 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54474C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 01:21:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 088D7C10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 01:25:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18DC824649
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 01:21:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD9B024655
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 01:25:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="g/iv7CpG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jvlcjXMj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726402AbgCJBVF (ORCPT
+        id S1726335AbgCJBZt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 21:21:05 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:32797 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726202AbgCJBVF (ORCPT
+        Mon, 9 Mar 2020 21:25:49 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:39141 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726121AbgCJBZs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 21:21:05 -0400
-Received: by mail-pl1-f195.google.com with SMTP id ay11so4743870plb.0
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 18:21:04 -0700 (PDT)
+        Mon, 9 Mar 2020 21:25:48 -0400
+Received: by mail-ot1-f67.google.com with SMTP id a9so5423329otl.6;
+        Mon, 09 Mar 2020 18:25:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=content-transfer-encoding:mime-version:subject:from:in-reply-to:cc
-         :date:message-id:references:to;
-        bh=mrUxxgNRy+5E4bEZVXAZNOiHka9AVVm3vCKbU9l6fA4=;
-        b=g/iv7CpG8/DiYA4NA/mKsrAq67vf66xkLwrtr0OnzjXecbrlOk01TyaasjqzOJ/cy6
-         jkjE+yfOHqhIEodGUnCwDH2I67yhqD/opVoCRpcoVgu+agPVZLyJsNAcnfduPxpLnSIY
-         FWAJ7VcA1vbAbasZjJHBV3szxpyaw/IjVhpRpaZZAzmlolgnoqTrx5PFTbyFCLsWL/hh
-         e+FHgrtXApyn35w6Vpk1Rs7+FEhw6F26iHRoXV7X8YTvuouFOniMH3ge0MiWbLs+nVG7
-         4yVzA5v9uxjBTgJSNciJkl25N5hFus4/aSfLvMtEJHuvytjNWQXk1EtEGjXwJI8TsJ8b
-         Lf5w==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=cmN98IWbXYyX8O2K4XgYM3Py4nvl6j5+94LDp5dV7Vg=;
+        b=jvlcjXMjPstzI1Okjh/O3QUZAvEZ/Kfyu5rZtN85X3RDxZIoT+I3FhiQfszFnUr3PB
+         rjmvnd3BYoxcsbifr59TRJioEiue9ZjkbeBNvPZfMCho+uGrn0i70dBK7SeX80CSg08J
+         qZudc2nOaAdJa6DnlqPdlb0Fw9gRC0AvYtjXPYqHfy/pjB90OkMLJddiXIHwolBk6BCY
+         0fQra8IBoVitfNhdkmYs5L0+NUEwn79eHP1V+OUpTDiHzQ0aRNZ3zjxjdrEQsRiJyeN7
+         QDz9KkAQqZ5cxRTxp7yd2Uy1kiTtNbYk4I3/6/QL5n60RlOwHHJEnxEsrwCywKRVZCDQ
+         gefw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:mime-version:subject
-         :from:in-reply-to:cc:date:message-id:references:to;
-        bh=mrUxxgNRy+5E4bEZVXAZNOiHka9AVVm3vCKbU9l6fA4=;
-        b=NmJvOuTUqQaWSCX80MuW6wnnBI2gzADQdeAf1tdnMK65a+XrDmQGA3i4RASh7zn9Xc
-         z6WrdKtl6EK8z5osWsiBEdqiNbaUTASws5u2ZfD8AvWJXMMf/YsNPEg6FSfJ2n1uoCZZ
-         wVsn7jXFvRmXXq40lZQP4fQAS6sx2PuoYLrAGabMQte8aD6dpqQ/HkzZCo7U3NUj0Lci
-         T+5xKkeNjx9U/S4efhpUaoAVBILaneHUXkBBBiJZFK+HRpqPlEArUjo/1ZBGas3ejtoj
-         yn/HZ+Ziq6QMpoG2TjEq6UzrAR4sb0ZODgnYUWimD/5d5q0Mm0z1+4DghFh2uN9WmChA
-         F1CQ==
-X-Gm-Message-State: ANhLgQ3Tv1fwkVbhuG8PGiemGiHjdslM6ScrPDULVqnG6RSWz7SvA2KG
-        GJG7d0gkp7adI8jJLY83lD4wBg==
-X-Google-Smtp-Source: ADFU+vsv4okX8I4n8qmcxoYDTnfJmLGi0d3Bk5liMiDsLRDCvsApNaCvlR6NOzyOKkYBsF2RXUSNlQ==
-X-Received: by 2002:a17:902:8a8f:: with SMTP id p15mr14339433plo.45.1583803264156;
-        Mon, 09 Mar 2020 18:21:04 -0700 (PDT)
-Received: from ?IPv6:2600:1010:b047:6b2c:4878:83f4:4223:51c6? ([2600:1010:b047:6b2c:4878:83f4:4223:51c6])
-        by smtp.gmail.com with ESMTPSA id 17sm14250924pfu.166.2020.03.09.18.21.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Mar 2020 18:21:03 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Mime-Version: 1.0 (1.0)
-Subject: Re: [RFC PATCH v9 01/27] Documentation/x86: Add CET description
-From:   Andy Lutomirski <luto@amacapital.net>
-In-Reply-To: <CAMe9rOpJjaro_qK6kghGNuSHDaP_MjVaZMbok2kbuBD48VmvXg@mail.gmail.com>
-Cc:     Dave Hansen <dave.hansen@intel.com>,
-        Yu-cheng Yu <yu-cheng.yu@intel.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>, x86-patch-review@intel.com
-Date:   Mon, 9 Mar 2020 18:21:01 -0700
-Message-Id: <E7E7A2AE-500A-4817-B00A-BE419E89C6F9@amacapital.net>
-References: <CAMe9rOpJjaro_qK6kghGNuSHDaP_MjVaZMbok2kbuBD48VmvXg@mail.gmail.com>
-To:     "H.J. Lu" <hjl.tools@gmail.com>
-X-Mailer: iPhone Mail (17D50)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=cmN98IWbXYyX8O2K4XgYM3Py4nvl6j5+94LDp5dV7Vg=;
+        b=pGcVz32P31Uxg6h5kl4mGcT144Le69mboQt8ivJIWR5guJiHD7zt/434XIP0QXS8Z7
+         Y0zx2JZIeC23w1ezrE62MaN5mK2RLuomAkE/N7qtxvdnimLplj8SHT3J3l1BFtC9jdJf
+         fQAf0yps/UEIILa4gXk11s1T23rPzc2S7KSxgUdmoZKpsMtLzUlT2lPEMVh4lge2tW1z
+         +pMFQyYLaaMESVbICgfA2/b2IwZ7pADSBUs1cUL5u9RjMsvkGoBT1PO72LRTHfePxFt2
+         AtwEbMuBTzz9uTlZIc05zedwOP1U9QFWnOzgyi6+/rAe0rsZeS1XdmpWhY2npPKF6rbO
+         5Ehw==
+X-Gm-Message-State: ANhLgQ0cpewjBQyxtqvNLKEi9E25Gn6BOr+Xt6lchJnqx2OtyHGdMc7e
+        DgR5fmEFcOYJzagh0ZBu65XigpEa
+X-Google-Smtp-Source: ADFU+vsxGNApGisVXD3NVMh8XI7wrg8LefHd5C3x98L4l2FQ2Gua3VLLXwZCRmR0sWFzd+7I9aIcXA==
+X-Received: by 2002:a9d:3de4:: with SMTP id l91mr15681122otc.35.1583803547733;
+        Mon, 09 Mar 2020 18:25:47 -0700 (PDT)
+Received: from ubuntu-m2-xlarge-x86 ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id e15sm3769314oie.3.2020.03.09.18.25.47
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 09 Mar 2020 18:25:47 -0700 (PDT)
+Date:   Mon, 9 Mar 2020 18:25:45 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        stable <stable@vger.kernel.org>
+Subject: Re: [PATCH] kbuild: Disable -Wpointer-to-enum-cast
+Message-ID: <20200310012545.GA16822@ubuntu-m2-xlarge-x86>
+References: <20200308073400.23398-1-natechancellor@gmail.com>
+ <CAK7LNARcTHpd8fzrAhFVB_AR7NoBgenX64de0eS2uN8g0by9PQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK7LNARcTHpd8fzrAhFVB_AR7NoBgenX64de0eS2uN8g0by9PQ@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I am baffled by this discussion.
+On Mon, Mar 09, 2020 at 11:11:05AM +0900, Masahiro Yamada wrote:
+> Hi Nathan,
+> 
+> On Sun, Mar 8, 2020 at 4:34 PM Nathan Chancellor
+> <natechancellor@gmail.com> wrote:
+> >
+> > Clang's -Wpointer-to-int-cast deviates from GCC in that it warns when
+> > casting to enums. The kernel does this in certain places, such as device
+> > tree matches to set the version of the device being used, which allows
+> > the kernel to avoid using a gigantic union.
+> >
+> > https://elixir.bootlin.com/linux/v5.5.8/source/drivers/ata/ahci_brcm.c#L428
+> > https://elixir.bootlin.com/linux/v5.5.8/source/drivers/ata/ahci_brcm.c#L402
+> > https://elixir.bootlin.com/linux/v5.5.8/source/include/linux/mod_devicetable.h#L264
+> >
+> > To avoid a ton of false positive warnings, disable this particular part
+> > of the warning, which has been split off into a separate diagnostic so
+> > that the entire warning does not need to be turned off for clang.
+> >
+> > Cc: stable@vger.kernel.org
+> > Link: https://github.com/ClangBuiltLinux/linux/issues/887
+> > Link: https://github.com/llvm/llvm-project/commit/2a41b31fcdfcb67ab7038fc2ffb606fd50b83a84
+> > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> > ---
+> >  Makefile | 4 ++++
+> >  1 file changed, 4 insertions(+)
+> >
+> > diff --git a/Makefile b/Makefile
+> > index 86035d866f2c..90e56d5657c9 100644
+> > --- a/Makefile
+> > +++ b/Makefile
+> > @@ -748,6 +748,10 @@ KBUILD_CFLAGS += -Wno-tautological-compare
+> >  # source of a reference will be _MergedGlobals and not on of the whitelisted names.
+> >  # See modpost pattern 2
+> >  KBUILD_CFLAGS += -mno-global-merge
+> > +# clang's -Wpointer-to-int-cast warns when casting to enums, which does not match GCC.
+> > +# Disable that part of the warning because it is very noisy across the kernel and does
+> > +# not point out any real bugs.
+> > +KBUILD_CFLAGS += $(call cc-disable-warning, pointer-to-enum-cast)
+> >  else
+> 
+> 
+> 
+> I'd rather want to fix all the call-sites (97 drivers?)
+> instead of having -Wno-pointer-to-enum-cast forever.
 
->> On Mar 9, 2020, at 5:09 PM, H.J. Lu <hjl.tools@gmail.com> wrote:
->>=20
->> =EF=BB=BFOn Mon, Mar 9, 2020 at 4:59 PM Andy Lutomirski <luto@amacapital.=
-net> wrote:
->=20
->>>> .
->> This could presumably have been fixed by having libpcre or sljit
->> disable IBT before calling into JIT code or by running the JIT code in
->> another thread.  In the other direction, a non-CET libpcre build could
->> build IBT-capable JITted code and enable JIT (by syscall if we allow
->> that or by creating a thread?) when calling it.  And IBT has this
->=20
-> This is not how thread in user space works.
+Yes, there are 97 unique warnings across my builds, which are mainly
+arm, arm64, and x86_64 defconfig/allmodconfig/allyesconfig:
 
-void create_cet_thread(void (*func)(), unsigned int cet_flags);
+https://github.com/ClangBuiltLinux/linux/issues/887#issuecomment-587938406
 
-I could implement this using clone() if the kernel provides the requisite su=
-pport. Sure, creating threads behind libc=E2=80=99s back like this is perilo=
-us, but it can be done.
+> If it is tedious to fix them all for now, can we add it
+> into scripts/Makefile.extrawarn so that this is disabled
+> by default, but shows up with W=1 builds?
 
->=20
->> fancy legacy bitmap to allow non-instrumented code to run with IBT on,
->> although SHSTK doesn't have hardware support for a similar feature.
->=20
-> All these changes are called CET enabing.
+Sure, I can send v2 to do that but I think that sending 97 patches just
+casting the small values (usually less than twenty) to unsigned long
+then to the enum is rather frivolous. I audited at least ten to fifteen
+of these call sites when creating the clang patch and they are all
+basically false positives.
 
-What does that mean?  If program A loads library B, and library B very caref=
-ully loads CET-mismatched code, program A may be blissfully unaware.
+I believe Nick discussed this with some other developers off list, maybe
+he has some other feedback to give. I'll wait to send a v2 until
+tomorrow in case anyone else has further comments.
 
->=20
->> So, sure, the glibc-linked ELF ecosystem needs some degree of CET
->> coordination, but it is absolutely not the case that a process MUST
->> have all CET or no CET.  Let's please support the complicated cases in
->> the kernel and the ABI too.  If glibc wants to make it annoying to do
->> complicated things, so be it.  People work behind glibc's back all the
->> time.
->=20
-> CET is no different from NX in this regard.
+> (When we fix most of them, we will be able to
+> make it a real warning.)
+> 
+> 
+> What do you think?
+> 
+> Thanks.
 
-NX is in the page tables, and CET, mostly, is not.  Also, we seriously flubb=
-ed READ_IMPLIES_EXEC and made it affect far more mappings than ever should h=
-ave been affected.
-
-If a legacy program (non-NX-aware) loads a newer library, and the library op=
-ens a device node and mmaps it PROT_READ, it gets RX.  This is not a good de=
-sign. In fact, it=E2=80=99s actively problematic.
-
-Let us please not take Linux=E2=80=99s NX legacy support as an example of go=
-od design.=
+Cheers,
+Nathan
