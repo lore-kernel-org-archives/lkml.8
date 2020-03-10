@@ -2,360 +2,114 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3C31C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:17:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B279C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:17:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B757E20873
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:17:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4616F208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:17:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583846278;
+	bh=Uvu0WyXXGIrdFGCDU96MKnZBJOtUvwGuyAPktazVLOM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=TqETPzVmAfe+MtLFMsNLpZngGc9jzZ7Is6ih4Z9zLYo5w2hddKN59BHCiyebZhd8n
+	 on1rJoXlrwXeK5dCtUuLsVKntDDkGVsc/lt5vy6VXbaD0s2y0ewInEzqYyuvZM+0Hk
+	 /v/OC3MqwHWIZH+vrCr4obxcsmUBYIwXa5pq/eZg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731670AbgCJNRv (ORCPT
+        id S1731217AbgCJNLa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:17:51 -0400
-Received: from relmlor2.renesas.com ([210.160.252.172]:48830 "EHLO
-        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731440AbgCJNRl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:17:41 -0400
-X-IronPort-AV: E=Sophos;i="5.70,537,1574089200"; 
-   d="scan'208";a="41284254"
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie6.idc.renesas.com with ESMTP; 10 Mar 2020 22:17:40 +0900
-Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 542CB4290414;
-        Tue, 10 Mar 2020 22:17:38 +0900 (JST)
-From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lad Prabhakar <prabhakar.csengg@gmail.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v4 2/3] media: i2c: imx219: Add support for RAW8 bit bayer format
-Date:   Tue, 10 Mar 2020 13:17:08 +0000
-Message-Id: <1583846229-6799-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1583846229-6799-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <1583846229-6799-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Tue, 10 Mar 2020 09:11:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32852 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731412AbgCJNLY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:11:24 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD27724649;
+        Tue, 10 Mar 2020 13:11:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583845883;
+        bh=Uvu0WyXXGIrdFGCDU96MKnZBJOtUvwGuyAPktazVLOM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=17ME2voKTVwqDBCMaosX54iGK1238FysZqbfCvU4WGV9CyCeGzktiwEJa5gUkhbuM
+         rageMFZPdZabS0uEFEGylRAQqal4WZAwgcbV0vvhr7uTC4Sh0AB7EtX5MIH7EYASqh
+         yuq5LNGbj53/i/zgkMpnOzOy9yxH/AJMD+OryGDg=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Yazen Ghannam <yazen.ghannam@amd.com>,
+        Borislav Petkov <bp@suse.de>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Robert Richter <rrichter@marvell.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 01/86] EDAC/amd64: Set grain per DIMM
+Date:   Tue, 10 Mar 2020 13:44:25 +0100
+Message-Id: <20200310124530.890506153@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200310124530.808338541@linuxfoundation.org>
+References: <20200310124530.808338541@linuxfoundation.org>
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-IMX219 sensor is capable for RAW8/RAW10 modes. This commit adds support
-for RAW8 bayer format.
+From: Yazen Ghannam <yazen.ghannam@amd.com>
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+[ Upstream commit 466503d6b1b33be46ab87c6090f0ade6c6011cbc ]
+
+The following commit introduced a warning on error reports without a
+non-zero grain value.
+
+  3724ace582d9 ("EDAC/mc: Fix grain_bits calculation")
+
+The amd64_edac_mod module does not provide a value, so the warning will
+be given on the first reported memory error.
+
+Set the grain per DIMM to cacheline size (64 bytes). This is the current
+recommendation.
+
+Fixes: 3724ace582d9 ("EDAC/mc: Fix grain_bits calculation")
+Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>
+Cc: James Morse <james.morse@arm.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: Robert Richter <rrichter@marvell.com>
+Cc: Tony Luck <tony.luck@intel.com>
+Link: https://lkml.kernel.org/r/20191022203448.13962-7-Yazen.Ghannam@amd.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/i2c/imx219.c | 148 +++++++++++++++++++++++++++++++++++----------
- 1 file changed, 116 insertions(+), 32 deletions(-)
+ drivers/edac/amd64_edac.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/media/i2c/imx219.c b/drivers/media/i2c/imx219.c
-index 16010ca..3207487 100644
---- a/drivers/media/i2c/imx219.c
-+++ b/drivers/media/i2c/imx219.c
-@@ -168,15 +168,12 @@ static const struct imx219_reg mode_3280x2464_regs[] = {
- 	{0x0171, 0x01},
- 	{0x0174, 0x00},
- 	{0x0175, 0x00},
--	{0x018c, 0x0a},
--	{0x018d, 0x0a},
- 	{0x0301, 0x05},
- 	{0x0303, 0x01},
- 	{0x0304, 0x03},
- 	{0x0305, 0x03},
- 	{0x0306, 0x00},
- 	{0x0307, 0x39},
--	{0x0309, 0x0a},
- 	{0x030b, 0x01},
- 	{0x030c, 0x00},
- 	{0x030d, 0x72},
-@@ -230,15 +227,12 @@ static const struct imx219_reg mode_1920_1080_regs[] = {
- 	{0x0171, 0x01},
- 	{0x0174, 0x00},
- 	{0x0175, 0x00},
--	{0x018c, 0x0a},
--	{0x018d, 0x0a},
- 	{0x0301, 0x05},
- 	{0x0303, 0x01},
- 	{0x0304, 0x03},
- 	{0x0305, 0x03},
- 	{0x0306, 0x00},
- 	{0x0307, 0x39},
--	{0x0309, 0x0a},
- 	{0x030b, 0x01},
- 	{0x030c, 0x00},
- 	{0x030d, 0x72},
-@@ -290,15 +284,12 @@ static const struct imx219_reg mode_1640_1232_regs[] = {
- 	{0x0171, 0x01},
- 	{0x0174, 0x01},
- 	{0x0175, 0x01},
--	{0x018c, 0x0a},
--	{0x018d, 0x0a},
- 	{0x0301, 0x05},
- 	{0x0303, 0x01},
- 	{0x0304, 0x03},
- 	{0x0305, 0x03},
- 	{0x0306, 0x00},
- 	{0x0307, 0x39},
--	{0x0309, 0x0a},
- 	{0x030b, 0x01},
- 	{0x030c, 0x00},
- 	{0x030d, 0x72},
-@@ -322,6 +313,18 @@ static const struct imx219_reg mode_1640_1232_regs[] = {
- 	{0x0163, 0x78},
- };
- 
-+static const struct imx219_reg raw8_framefmt_regs[] = {
-+	{0x018c, 0x08},
-+	{0x018d, 0x08},
-+	{0x0309, 0x08},
-+};
-+
-+static const struct imx219_reg raw10_framefmt_regs[] = {
-+	{0x018c, 0x0a},
-+	{0x018d, 0x0a},
-+	{0x0309, 0x0a},
-+};
-+
- static const char * const imx219_test_pattern_menu[] = {
- 	"Disabled",
- 	"Color Bars",
-@@ -349,6 +352,27 @@ static const char * const imx219_supply_name[] = {
- #define IMX219_NUM_SUPPLIES ARRAY_SIZE(imx219_supply_name)
- 
- /*
-+ * The supported formats.
-+ * This table MUST contain 4 entries per format, to cover the various flip
-+ * combinations in the order
-+ * - no flip
-+ * - h flip
-+ * - v flip
-+ * - h&v flips
-+ */
-+static const u32 codes[] = {
-+	MEDIA_BUS_FMT_SRGGB10_1X10,
-+	MEDIA_BUS_FMT_SGRBG10_1X10,
-+	MEDIA_BUS_FMT_SGBRG10_1X10,
-+	MEDIA_BUS_FMT_SBGGR10_1X10,
-+
-+	MEDIA_BUS_FMT_SRGGB8_1X8,
-+	MEDIA_BUS_FMT_SGRBG8_1X8,
-+	MEDIA_BUS_FMT_SGBRG8_1X8,
-+	MEDIA_BUS_FMT_SBGGR8_1X8,
-+};
-+
-+/*
-  * Initialisation delay between XCLR low->high and the moment when the sensor
-  * can start capture (i.e. can leave software stanby) must be not less than:
-  *   t4 + max(t5, t6 + <time to initialize the sensor register over I2C>)
-@@ -413,6 +437,8 @@ struct imx219 {
- 	struct v4l2_subdev sd;
- 	struct media_pad pad;
- 
-+	struct v4l2_mbus_framefmt fmt;
-+
- 	struct clk *xclk; /* system clock to IMX219 */
- 	u32 xclk_freq;
- 
-@@ -519,19 +545,40 @@ static int imx219_write_regs(struct imx219 *imx219,
- }
- 
- /* Get bayer order based on flip setting. */
--static u32 imx219_get_format_code(struct imx219 *imx219)
-+static u32 imx219_get_format_code(struct imx219 *imx219, u32 code)
- {
--	/*
--	 * Only one bayer order is supported.
--	 * It depends on the flip settings.
--	 */
--	static const u32 codes[2][2] = {
--		{ MEDIA_BUS_FMT_SRGGB10_1X10, MEDIA_BUS_FMT_SGRBG10_1X10, },
--		{ MEDIA_BUS_FMT_SGBRG10_1X10, MEDIA_BUS_FMT_SBGGR10_1X10, },
--	};
-+	unsigned int i;
- 
- 	lockdep_assert_held(&imx219->mutex);
--	return codes[imx219->vflip->val][imx219->hflip->val];
-+
-+	for (i = 0; i < ARRAY_SIZE(codes); i++)
-+		if (codes[i] == code)
-+			break;
-+
-+	if (i >= ARRAY_SIZE(codes))
-+		i = 0;
-+
-+	i = (i & ~3) | (imx219->vflip->val ? 2 : 0) |
-+	    (imx219->hflip->val ? 1 : 0);
-+
-+	return codes[i];
-+}
-+
-+static void imx219_set_default_format(struct imx219 *imx219)
-+{
-+	struct v4l2_mbus_framefmt *fmt;
-+
-+	fmt = &imx219->fmt;
-+	fmt->code = MEDIA_BUS_FMT_SRGGB10_1X10;
-+	fmt->colorspace = V4L2_COLORSPACE_SRGB;
-+	fmt->ycbcr_enc = V4L2_MAP_YCBCR_ENC_DEFAULT(fmt->colorspace);
-+	fmt->quantization = V4L2_MAP_QUANTIZATION_DEFAULT(true,
-+							  fmt->colorspace,
-+							  fmt->ycbcr_enc);
-+	fmt->xfer_func = V4L2_MAP_XFER_FUNC_DEFAULT(fmt->colorspace);
-+	fmt->width = supported_modes[0].width;
-+	fmt->height = supported_modes[0].height;
-+	fmt->field = V4L2_FIELD_NONE;
- }
- 
- static int imx219_open(struct v4l2_subdev *sd, struct v4l2_subdev_fh *fh)
-@@ -545,7 +592,8 @@ static int imx219_open(struct v4l2_subdev *sd, struct v4l2_subdev_fh *fh)
- 	/* Initialize try_fmt */
- 	try_fmt->width = supported_modes[0].width;
- 	try_fmt->height = supported_modes[0].height;
--	try_fmt->code = imx219_get_format_code(imx219);
-+	try_fmt->code = imx219_get_format_code(imx219,
-+					       MEDIA_BUS_FMT_SRGGB10_1X10);
- 	try_fmt->field = V4L2_FIELD_NONE;
- 
- 	mutex_unlock(&imx219->mutex);
-@@ -648,14 +696,10 @@ static int imx219_enum_mbus_code(struct v4l2_subdev *sd,
- {
- 	struct imx219 *imx219 = to_imx219(sd);
- 
--	/*
--	 * Only one bayer order is supported (though it depends on the flip
--	 * settings)
--	 */
--	if (code->index > 0)
-+	if (code->index >= (ARRAY_SIZE(codes) / 4))
- 		return -EINVAL;
- 
--	code->code = imx219_get_format_code(imx219);
-+	code->code = imx219_get_format_code(imx219, codes[code->index * 4]);
- 
- 	return 0;
- }
-@@ -669,7 +713,7 @@ static int imx219_enum_frame_size(struct v4l2_subdev *sd,
- 	if (fse->index >= ARRAY_SIZE(supported_modes))
- 		return -EINVAL;
- 
--	if (fse->code != imx219_get_format_code(imx219))
-+	if (fse->code != imx219_get_format_code(imx219, imx219->fmt.code))
- 		return -EINVAL;
- 
- 	fse->min_width = supported_modes[fse->index].width;
-@@ -696,9 +740,7 @@ static void imx219_update_pad_format(struct imx219 *imx219,
- {
- 	fmt->format.width = mode->width;
- 	fmt->format.height = mode->height;
--	fmt->format.code = imx219_get_format_code(imx219);
- 	fmt->format.field = V4L2_FIELD_NONE;
--
- 	imx219_reset_colorspace(&fmt->format);
- }
- 
-@@ -710,10 +752,12 @@ static int __imx219_get_pad_format(struct imx219 *imx219,
- 		struct v4l2_mbus_framefmt *try_fmt =
- 			v4l2_subdev_get_try_format(&imx219->sd, cfg, fmt->pad);
- 		/* update the code which could change due to vflip or hflip: */
--		try_fmt->code = imx219_get_format_code(imx219);
-+		try_fmt->code = imx219_get_format_code(imx219, try_fmt->code);
- 		fmt->format = *try_fmt;
- 	} else {
- 		imx219_update_pad_format(imx219, imx219->mode, fmt);
-+		fmt->format.code = imx219_get_format_code(imx219,
-+							  imx219->fmt.code);
+diff --git a/drivers/edac/amd64_edac.c b/drivers/edac/amd64_edac.c
+index 94265e4385146..05d6f9c86ac38 100644
+--- a/drivers/edac/amd64_edac.c
++++ b/drivers/edac/amd64_edac.c
+@@ -2863,6 +2863,7 @@ static int init_csrows(struct mem_ctl_info *mci)
+ 			dimm = csrow->channels[j]->dimm;
+ 			dimm->mtype = pvt->dram_type;
+ 			dimm->edac_mode = edac_mode;
++			dimm->grain = 64;
+ 		}
  	}
  
- 	return 0;
-@@ -741,11 +785,18 @@ static int imx219_set_pad_format(struct v4l2_subdev *sd,
- 	const struct imx219_mode *mode;
- 	struct v4l2_mbus_framefmt *framefmt;
- 	int exposure_max, exposure_def, hblank;
-+	unsigned int i;
- 
- 	mutex_lock(&imx219->mutex);
- 
-+	for (i = 0; i < ARRAY_SIZE(codes); i++)
-+		if (codes[i] == fmt->format.code)
-+			break;
-+	if (i >= ARRAY_SIZE(codes))
-+		i = 0;
-+
- 	/* Bayer order varies with flips */
--	fmt->format.code = imx219_get_format_code(imx219);
-+	fmt->format.code = imx219_get_format_code(imx219, codes[i]);
- 
- 	mode = v4l2_find_nearest_size(supported_modes,
- 				      ARRAY_SIZE(supported_modes),
-@@ -755,7 +806,9 @@ static int imx219_set_pad_format(struct v4l2_subdev *sd,
- 	if (fmt->which == V4L2_SUBDEV_FORMAT_TRY) {
- 		framefmt = v4l2_subdev_get_try_format(sd, cfg, fmt->pad);
- 		*framefmt = fmt->format;
--	} else if (imx219->mode != mode) {
-+	} else if (imx219->mode != mode ||
-+		   imx219->fmt.code != fmt->format.code) {
-+		imx219->fmt = fmt->format;
- 		imx219->mode = mode;
- 		/* Update limits and set FPS to default */
- 		__v4l2_ctrl_modify_range(imx219->vblank, IMX219_VBLANK_MIN,
-@@ -786,6 +839,27 @@ static int imx219_set_pad_format(struct v4l2_subdev *sd,
- 	return 0;
- }
- 
-+static int imx219_set_framefmt(struct imx219 *imx219)
-+{
-+	switch (imx219->fmt.code) {
-+	case MEDIA_BUS_FMT_SRGGB8_1X8:
-+	case MEDIA_BUS_FMT_SGRBG8_1X8:
-+	case MEDIA_BUS_FMT_SGBRG8_1X8:
-+	case MEDIA_BUS_FMT_SBGGR8_1X8:
-+		return imx219_write_regs(imx219, raw8_framefmt_regs,
-+					ARRAY_SIZE(raw8_framefmt_regs));
-+
-+	case MEDIA_BUS_FMT_SRGGB10_1X10:
-+	case MEDIA_BUS_FMT_SGRBG10_1X10:
-+	case MEDIA_BUS_FMT_SGBRG10_1X10:
-+	case MEDIA_BUS_FMT_SBGGR10_1X10:
-+		return imx219_write_regs(imx219, raw10_framefmt_regs,
-+					ARRAY_SIZE(raw10_framefmt_regs));
-+	}
-+
-+	return -EINVAL;
-+}
-+
- static int imx219_start_streaming(struct imx219 *imx219)
- {
- 	struct i2c_client *client = v4l2_get_subdevdata(&imx219->sd);
-@@ -800,6 +874,13 @@ static int imx219_start_streaming(struct imx219 *imx219)
- 		return ret;
- 	}
- 
-+	ret = imx219_set_framefmt(imx219);
-+	if (ret) {
-+		dev_err(&client->dev, "%s failed to set frame format: %d\n",
-+			__func__, ret);
-+		return ret;
-+	}
-+
- 	/* Apply customized values from user */
- 	ret =  __v4l2_ctrl_handler_setup(imx219->sd.ctrl_handler);
- 	if (ret)
-@@ -1253,6 +1334,9 @@ static int imx219_probe(struct i2c_client *client)
- 	/* Initialize source pad */
- 	imx219->pad.flags = MEDIA_PAD_FL_SOURCE;
- 
-+	/* Initialize default format */
-+	imx219_set_default_format(imx219);
-+
- 	ret = media_entity_pads_init(&imx219->sd.entity, 1, &imx219->pad);
- 	if (ret) {
- 		dev_err(dev, "failed to init entity pads: %d\n", ret);
 -- 
-2.7.4
+2.20.1
+
+
 
