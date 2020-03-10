@@ -2,188 +2,218 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61D13C10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:30:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 161A3C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:30:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 100F221D56
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:30:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="Nno4lGeg";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="OBobrhSM"
+	by mail.kernel.org (Postfix) with ESMTP id BE42121927
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:30:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727334AbgCJUaC (ORCPT
+        id S1727486AbgCJUaT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 16:30:02 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:63298 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726268AbgCJUaB (ORCPT
+        Tue, 10 Mar 2020 16:30:19 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:37684 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726268AbgCJUaT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 16:30:01 -0400
-Received: from pps.filterd (m0109332.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02AKP5x7026875;
-        Tue, 10 Mar 2020 13:29:51 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
- subject : message-id : references : content-type : in-reply-to :
- mime-version; s=facebook; bh=NqQz4qjXiPmv6o5hFfR6UWqc49oHdMLaE7YfivyLh1w=;
- b=Nno4lGegLqEqK8PAD3NbILCI0vebVW7Qxvgkoc9iEdrwn+jOXSHuAf4hjNd2+igd625S
- Uf6JYDqESZ6tm0YNrO2+du3Pr2kkLr7NAteH1TDNwORNzKZqhhpBMnN5CZYqAMzUNdsS
- PVOjosfKewVFN94m3jYZhIyluTpEkVQWPQY= 
-Received: from mail.thefacebook.com ([163.114.132.120])
-        by mx0a-00082601.pphosted.com with ESMTP id 2yp25fmnc8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Tue, 10 Mar 2020 13:29:51 -0700
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (100.104.98.9) by
- o365-in.thefacebook.com (100.104.94.199) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1847.3; Tue, 10 Mar 2020 13:29:49 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OtvVbFx3m03rnUdnev3J2Hd3buj8ivnhStgwBUVAQnmDaIXjEijmiuc+Y1cT3ldFpNtcqvyfmHnyCxP1BSNtUkBEi0PCTF/p676vXbbi5z0Sg0XzahpS2W+R+q4WHIJShz3driKemDFR1TmHXiQaTO5E9Pcm+vdIRWlMKRNp7H9D6G4oZ+nZyV6N6DKST1EegeWjJ4DzJ2pIxby9tnw21wNWslGvM81HwqPxenSrNgbtAlS7z/Dv0uuhXPW97DIJBqNJUe1dc9w83Cm8EaZfHwBTA9wUslnn/PBaIe9UW9juWPAIdHfMgoE1JRKvNidKUO6Ml+zik19DW+OesascIA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NqQz4qjXiPmv6o5hFfR6UWqc49oHdMLaE7YfivyLh1w=;
- b=EmQboETqoGscIN1woMuwujv3G6D4xh5dRok+idtcBOAcI8BsZMTdcQ8/vsEH/v3WfmEAan2mzdCUbjYycExQM1bSsgvnrD7HE9I+F35fHI5f4QiQuf9DYsgX3rGB3Fu7O6FepU2IcGzOH32SBQXG1o6UNgF71RVNTtNaOSG+LguxQEBnNqk8cMuxFMX844D/5NFeyTYJPTIXB+PcRJEtF+Oh6KRuMvh21Uo0CAx6nbPR8ggWwdmzchN03yBnsep1+eU/kSh8yw4jC5n3EjPgIVHwO+gAelvQNiBsi3mPhyKDfbpVyLxrG5EWNIkH3QtuKx10JGSkuov6Ap2bFSMHaQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NqQz4qjXiPmv6o5hFfR6UWqc49oHdMLaE7YfivyLh1w=;
- b=OBobrhSMaZ+rhf7BHSMGyRZJunP7Ig5+vM+09M35AFrKbu35fe4ME1A94pTB9v8zPKMIZnjU8RiDm/wyTE9ZyqzZ2Hbq4PKVSYUx/Xw8iUyPGbTRwmsDszCiMYusN+IGBiv0cqs+EbT+wR9x0Fmk/c1Nik5X8ftIQ7JBPogEIOI=
-Received: from MWHPR15MB1661.namprd15.prod.outlook.com (2603:10b6:300:124::23)
- by MWHPR15MB1728.namprd15.prod.outlook.com (2603:10b6:301:54::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.15; Tue, 10 Mar
- 2020 20:29:47 +0000
-Received: from MWHPR15MB1661.namprd15.prod.outlook.com
- ([fe80::f930:6bf2:6d2:93ef]) by MWHPR15MB1661.namprd15.prod.outlook.com
- ([fe80::f930:6bf2:6d2:93ef%8]) with mapi id 15.20.2793.013; Tue, 10 Mar 2020
- 20:29:47 +0000
-Date:   Tue, 10 Mar 2020 13:29:44 -0700
-From:   Roman Gushchin <guro@fb.com>
-To:     Rik van Riel <riel@surriel.com>
-CC:     Mike Kravetz <mike.kravetz@oracle.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>, <linux-mm@kvack.org>,
-        <kernel-team@fb.com>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] mm: hugetlb: optionally allocate gigantic hugepages
- using cma
-Message-ID: <20200310202944.GB96999@carbon.dhcp.thefacebook.com>
-References: <20200310002524.2291595-1-guro@fb.com>
- <5cfa9031-fc15-2bcc-adb9-9779285ef0f7@oracle.com>
- <20200310180558.GD85000@carbon.dhcp.thefacebook.com>
- <4b78a8a9-7b5a-eb62-acaa-2677e615bea1@oracle.com>
- <20200310191906.GA96999@carbon.dhcp.thefacebook.com>
- <20200310193622.GC8447@dhcp22.suse.cz>
- <43e2e8443288260aa305f39ba566f81bf065d010.camel@surriel.com>
- <57494a9c-5c24-20b6-0bda-dac8bbb6f731@oracle.com>
- <4147bc1d429a4336dcb45a6cb2657d082f35ab25.camel@surriel.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4147bc1d429a4336dcb45a6cb2657d082f35ab25.camel@surriel.com>
-X-ClientProxiedBy: MWHPR1401CA0020.namprd14.prod.outlook.com
- (2603:10b6:301:4b::30) To MWHPR15MB1661.namprd15.prod.outlook.com
- (2603:10b6:300:124::23)
+        Tue, 10 Mar 2020 16:30:19 -0400
+Received: by mail-oi1-f195.google.com with SMTP id w13so4848452oih.4
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 13:30:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tF7x8Aibti92fovkYnnZZKnXJErpPthfEAyaWN2U91o=;
+        b=Psa9WKpp66ETP8MqfX4UidDoqaygrr2Vrkc1OfqApI+egYfQrNgMSWQwcy/q7h3FIh
+         /OkvLpGpp7hde/V1JpoHzp2Xn47XXBDIa99UkCFX9YooQlUEq7Yvego/bShaKDuBRxDn
+         eVpEVFlmEXjccmUbTinOQfI0JD8y+xgQ8OgA6lfCL1RYADX4xHk1WKBCpVLE8G97jvic
+         ZjcNqpOiJwwVDHCmZ5nejvCmH95C/VHJ7j1LPxIOCaEku2e3++qK+497iXcGrV6C1DmO
+         Poxl6pZG8+Ey1HDj5rDQsHbH2Nttm8qv4lm/cbSRar2ZE4HEKDLIsvZ8m1oVRoWOm4Tm
+         8e8g==
+X-Gm-Message-State: ANhLgQ3eJOyQ89mjTC4TpP8K0ZK/KKntVD/hlKJOUyklSuj8GWjFXp+G
+        QZZ1ExRu1q1WFUHDIpBsbKONnn24
+X-Google-Smtp-Source: ADFU+vsPdhCOSnJOSud1NtyHNBXdVF+e5Z9MUXSG9vigWwzHoZFo2/t6gON7gEuFYwPuvYt1rZKSfg==
+X-Received: by 2002:a05:6808:a9c:: with SMTP id q28mr2627245oij.34.1583872214420;
+        Tue, 10 Mar 2020 13:30:14 -0700 (PDT)
+Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com. [209.85.167.180])
+        by smtp.gmail.com with ESMTPSA id b26sm14120090oti.3.2020.03.10.13.30.13
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Mar 2020 13:30:14 -0700 (PDT)
+Received: by mail-oi1-f180.google.com with SMTP id i1so15293680oie.8
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 13:30:13 -0700 (PDT)
+X-Received: by 2002:aca:c488:: with SMTP id u130mr2551679oif.154.1583872211277;
+ Tue, 10 Mar 2020 13:30:11 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from carbon.dhcp.thefacebook.com (2620:10d:c090:400::5:7ca7) by MWHPR1401CA0020.namprd14.prod.outlook.com (2603:10b6:301:4b::30) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.17 via Frontend Transport; Tue, 10 Mar 2020 20:29:46 +0000
-X-Originating-IP: [2620:10d:c090:400::5:7ca7]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: a8a7121c-260d-4cd4-05c6-08d7c531c6ba
-X-MS-TrafficTypeDiagnostic: MWHPR15MB1728:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <MWHPR15MB172883660669A6626B5F4B8DBEFF0@MWHPR15MB1728.namprd15.prod.outlook.com>
-X-FB-Source: Internal
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-Forefront-PRVS: 033857D0BD
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(346002)(39860400002)(136003)(376002)(366004)(396003)(189003)(199004)(86362001)(53546011)(8676002)(4326008)(33656002)(6506007)(81156014)(1076003)(478600001)(54906003)(9686003)(66946007)(66556008)(66476007)(81166006)(55016002)(5660300002)(316002)(6916009)(8936002)(186003)(16526019)(52116002)(7696005)(2906002);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1728;H:MWHPR15MB1661.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-Received-SPF: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: IxjYN5g4S80yErq8nHQnafZfx/Ta8fmd9c2y4MjSS1S8e0JiM/BpX3hwZIGE32ZLBiE9t4E2UTJTsDqttImGhMeStIDnO02zDqL7mvQ+MdoFX4Xby59IVw8aj3sKq2rMfqetNGOI/n74uTC2ab9MGPTcvBQgBDgtQwYKcFM/1m3r/ZLCZ/B9uP1UqruP0GPX7ENfAkAWU6elOn9M6QDCP4Ay6TUT8hFIoaRknv3s7CFzsZqIdl9wwQCxCbMcjonFIh7HuBNeiKg6I67dEmU9GaikVBlKIVP3r41ieKwrgWc1KJBtVrpDQxqU6ZAnpx8rI2nmNOEOU1JiJ3w3UxknbN2MBaSpeA4kXHkWhWAH3Jg0Yodvk/w0yRUCe00hXcq7vmzy23R2RD33fCAWk2cNOAnqsODnVfBZn30ZSI+d3RvS0erRJiHf7e99fIYZJlEn
-X-MS-Exchange-AntiSpam-MessageData: S2PmuGkbAWu3OXdEUMVCXSt91ofK0XwZVu+iZX75Uj0o3kWF1hRo/3cps6bMqmsndmxxAYVQPkQCyTk0xtCK5vn6ZiAOuBWam1QNSLG5gDoQ7wKyZxg4p3FUnZW8EYNGucCTlF+x+xcXGwwqRupVGMuC7y2jJDJcPizQ7Mb6GtVs5B/ODt3ErIf/U31Pb6DV
-X-MS-Exchange-CrossTenant-Network-Message-Id: a8a7121c-260d-4cd4-05c6-08d7c531c6ba
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Mar 2020 20:29:47.7062
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: gUAB4AOUBNFem9H6gyCFrs06Oztbo7A7YUev4wM0g9IfDtCpNCyuw15znxIiZCuj
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1728
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-10_13:2020-03-10,2020-03-10 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- phishscore=0 malwarescore=0 suspectscore=1 clxscore=1015 spamscore=0
- mlxscore=0 lowpriorityscore=0 impostorscore=0 bulkscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003100120
-X-FB-Internal: deliver
+References: <20200310120719.2480-1-laurentiu.tudor@nxp.com>
+In-Reply-To: <20200310120719.2480-1-laurentiu.tudor@nxp.com>
+From:   Li Yang <leoyang.li@nxp.com>
+Date:   Tue, 10 Mar 2020 15:30:00 -0500
+X-Gmail-Original-Message-ID: <CADRPPNT4diVa3gYv=t174=vmZZ3qRX2QmtXto9hLEnjQvv5SwQ@mail.gmail.com>
+Message-ID: <CADRPPNT4diVa3gYv=t174=vmZZ3qRX2QmtXto9hLEnjQvv5SwQ@mail.gmail.com>
+Subject: Re: [PATCH] soc: fsl: dpio: register dpio irq handlers after dpio create
+To:     Laurentiu Tudor <laurentiu.tudor@nxp.com>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Roy Pledge <Roy.Pledge@nxp.com>,
+        Youri Querry <youri.querry_1@nxp.com>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        Grigore Popescu <grigore.popescu@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 10, 2020 at 04:15:18PM -0400, Rik van Riel wrote:
-> On Tue, 2020-03-10 at 13:11 -0700, Mike Kravetz wrote:
-> > On 3/10/20 12:46 PM, Rik van Riel wrote:
-> > > 
-> > > How would that work for architectures that have multiple
-> > > possible hugetlbfs gigantic page sizes, where the admin
-> > > can allocate different numbers of differently sized pages
-> > > after bootup?
-> > 
-> > For hugetlb page reservations at boot today, pairs specifying size
-> > and
-> > quantity are put on the command line.  For example,
-> > hugepagesz=2M hugepages=512 hugepagesz=1G hugepages=64
-> > 
-> > We could do something similiar for CMA.
-> > hugepagesz=512M hugepages_cma=256 hugepagesz=1G hugepages_cma=64
-> > 
-> > That would make things much more complicated (implies separate CMA
-> > reservations per size) and may be overkill for the first
-> > implementation.
-> > 
-> > Perhaps we limit CMA reservations to one gigantic huge page
-> > size.  The
-> > architectures would need to define the default and there could be a
-> > command line option to override.  Something like,
-> > default_cmapagesz=  analogous to today's default_hugepagesz=.  Then
-> > hugepages_cma= is only associated with that default gigantic huge
-> > page
-> > size.
-> > 
-> > The more I think about it, the more I like limiting CMA reservations
-> > to
-> > only one gigantic huge page size (per arch).
-> 
-> Why, though?
-> 
-> The cma_alloc function can return allocations of different
-> sizes at the same time.
-> 
-> There is no limitation in the underlying code that would stop
-> a user from allocating hugepages of different sizes through
-> sysfs.
-> 
-> Allowing the system administrator to allocate a little extra
-> memory for the CMA pool could also allow us to work around
-> initial issues of compaction/migration failing to move some
-> of the pages, while we play whack-a-mole with the last corner
-> cases.
+On Tue, Mar 10, 2020 at 7:09 AM Laurentiu Tudor <laurentiu.tudor@nxp.com> wrote:
+>
+> From: Grigore Popescu <grigore.popescu@nxp.com>
+>
+> The dpio irqs must be registered when you can actually
+> receive interrupts, ie when the dpios are created.
+> Kernel goes through NULL pointer dereference errors
+> followed by kernel panic [1] because the dpio irqs are
+> enabled before the dpio is created.
+>
+> [1]
+> Unable to handle kernel NULL pointer dereference at virtual address 0040
+> fsl_mc_dpio dpio.14: probed
+> fsl_mc_dpio dpio.13: Adding to iommu group 11
+>   ISV = 0, ISS = 0x00000004
+> Unable to handle kernel NULL pointer dereference at virtual address 0040
+> Mem abort info:
+>   ESR = 0x96000004
+>   EC = 0x25: DABT (current EL), IL = 32 bits
+>   SET = 0, FnV = 0
+>   EA = 0, S1PTW = 0
+> Data abort info:
+>   ISV = 0, ISS = 0x00000004
+>   CM = 0, WnR = 0
+> [0000000000000040] user address but active_mm is swapper
+> Internal error: Oops: 96000004 [#1] PREEMPT SMP
+> Modules linked in:
+> CPU: 2 PID: 151 Comm: kworker/2:1 Not tainted 5.6.0-rc4-next-20200304 #1
+> Hardware name: NXP Layerscape LX2160ARDB (DT)
+> Workqueue: events deferred_probe_work_func
+> pstate: 00000085 (nzcv daIf -PAN -UAO)
+> pc : dpaa2_io_irq+0x18/0xe0
+> lr : dpio_irq_handler+0x1c/0x28
+> sp : ffff800010013e20
+> x29: ffff800010013e20 x28: ffff0026d9b4c140
+> x27: ffffa1d38a142018 x26: ffff0026d2953400
+> x25: ffffa1d38a142018 x24: ffffa1d38a7ba1d8
+> x23: ffff800010013f24 x22: 0000000000000000
+> x21: 0000000000000072 x20: ffff0026d2953400
+> x19: ffff0026d2a68b80 x18: 0000000000000001
+> x17: 000000002fb37f3d x16: 0000000035eafadd
+> x15: ffff0026d9b4c5b8 x14: ffffffffffffffff
+> x13: ff00000000000000 x12: 0000000000000038
+> x11: 0101010101010101 x10: 0000000000000040
+> x9 : ffffa1d388db11e4 x8 : ffffa1d38a7e40f0
+> x7 : ffff0026da414f38 x6 : 0000000000000000
+> x5 : ffff0026da414d80 x4 : ffff5e5353d0c000
+> x3 : ffff800010013f60 x2 : ffffa1d388db11c8
+> x1 : ffff0026d2a67c00 x0 : 0000000000000000
+> Call trace:
+>  dpaa2_io_irq+0x18/0xe0
+>  dpio_irq_handler+0x1c/0x28
+>  __handle_irq_event_percpu+0x78/0x2c0
+>  handle_irq_event_percpu+0x38/0x90
+>  handle_irq_event+0x4c/0xd0
+>  handle_fasteoi_irq+0xbc/0x168
+>  generic_handle_irq+0x2c/0x40
+>  __handle_domain_irq+0x68/0xc0
+>  gic_handle_irq+0x64/0x150
+>  el1_irq+0xb8/0x180
+>  _raw_spin_unlock_irqrestore+0x14/0x48
+>  irq_set_affinity_hint+0x6c/0xa0
+>  dpaa2_dpio_probe+0x2a4/0x518
+>  fsl_mc_driver_probe+0x28/0x70
+>  really_probe+0xdc/0x320
+>  driver_probe_device+0x5c/0xf0
+>  __device_attach_driver+0x88/0xc0
+>  bus_for_each_drv+0x7c/0xc8
+>  __device_attach+0xe4/0x140
+>  device_initial_probe+0x18/0x20
+>  bus_probe_device+0x98/0xa0
+>  device_add+0x41c/0x758
+>  fsl_mc_device_add+0x184/0x530
+>  dprc_scan_objects+0x280/0x370
+>  dprc_probe+0x124/0x3b0
+>  fsl_mc_driver_probe+0x28/0x70
+>  really_probe+0xdc/0x320
+>  driver_probe_device+0x5c/0xf0
+>  __device_attach_driver+0x88/0xc0
+>  bus_for_each_drv+0x7c/0xc8
+>  __device_attach+0xe4/0x140
+>  device_initial_probe+0x18/0x20
+>  bus_probe_device+0x98/0xa0
+>  deferred_probe_work_func+0x74/0xa8
+>  process_one_work+0x1c8/0x470
+>  worker_thread+0x1f8/0x428
+>  kthread+0x124/0x128
+>  ret_from_fork+0x10/0x18
+> Code: a9bc7bfd 910003fd a9025bf5 a90363f7 (f9402015)
+> ---[ end trace 38298e1a29e7a570 ]---
+> Kernel panic - not syncing: Fatal exception in interrupt
+> SMP: stopping secondary CPUs
+> Mem abort info:
+>   ESR = 0x96000004
+>   CM = 0, WnR = 0
+>   EC = 0x25: DABT (current EL), IL = 32 bits
+> [0000000000000040] user address but active_mm is swapper
+>   SET = 0, FnV = 0
+>   EA = 0, S1PTW = 0
+> Data abort info:
+>   ISV = 0, ISS = 0x00000004
+>   CM = 0, WnR = 0
+> [0000000000000040] user address but active_mm is swapper
+> SMP: failed to stop secondary CPUs 0-2
+> Kernel Offset: 0x21d378600000 from 0xffff800010000000
+> PHYS_OFFSET: 0xffffe92180000000
+> CPU features: 0x10002,21806008
+> Memory Limit: none
+> ---[ end Kernel panic - not syncing: Fatal exception in interrupt ]---
+>
+> Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+> Signed-off-by: Grigore Popescu <grigore.popescu@nxp.com>
 
-I agree. Because the cma area can be effectively used by userspace
-applications even without allocating gigantic pages, there is no
-need to be very greedy on setting the cma size (unlike allocating
-1 GB pages on boot, where every unused page is a wasted 1 GB).
+Applied for fix.  Thanks.  Does this fix apply to stable kernels?
 
-
+> ---
+>  drivers/soc/fsl/dpio/dpio-driver.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/soc/fsl/dpio/dpio-driver.c b/drivers/soc/fsl/dpio/dpio-driver.c
+> index 70014ecce2a7..7b642c330977 100644
+> --- a/drivers/soc/fsl/dpio/dpio-driver.c
+> +++ b/drivers/soc/fsl/dpio/dpio-driver.c
+> @@ -233,10 +233,6 @@ static int dpaa2_dpio_probe(struct fsl_mc_device *dpio_dev)
+>                 goto err_allocate_irqs;
+>         }
+>
+> -       err = register_dpio_irq_handlers(dpio_dev, desc.cpu);
+> -       if (err)
+> -               goto err_register_dpio_irq;
+> -
+>         priv->io = dpaa2_io_create(&desc, dev);
+>         if (!priv->io) {
+>                 dev_err(dev, "dpaa2_io_create failed\n");
+> @@ -244,6 +240,10 @@ static int dpaa2_dpio_probe(struct fsl_mc_device *dpio_dev)
+>                 goto err_dpaa2_io_create;
+>         }
+>
+> +       err = register_dpio_irq_handlers(dpio_dev, desc.cpu);
+> +       if (err)
+> +               goto err_register_dpio_irq;
+> +
+>         dev_info(dev, "probed\n");
+>         dev_dbg(dev, "   receives_notifications = %d\n",
+>                 desc.receives_notifications);
+> --
+> 2.17.1
+>
