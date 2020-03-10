@@ -2,130 +2,132 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D35FC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 02:32:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C44DC10F25
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 02:35:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 322CE2465A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 02:32:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 338AC20728
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 02:35:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uxXytDB3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726757AbgCJCcn (ORCPT
+        id S1726736AbgCJCfr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 22:32:43 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:55576 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726450AbgCJCcm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 22:32:42 -0400
-Received: from [10.130.0.70] (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9AxJuoc_GZe9QYZAA--.37S3;
-        Tue, 10 Mar 2020 10:32:04 +0800 (CST)
-Subject: =?UTF-8?Q?Re:_=e5=9b=9e=e5=a4=8d:[PATCH_1/6]_PCI:_Add_Loongson_vend?=
- =?UTF-8?Q?or_ID_and_7A1000_device_IDs?=
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-References: <1583742206-29163-1-git-send-email-yangtiezhu@loongson.cn>
- <1583742206-29163-2-git-send-email-yangtiezhu@loongson.cn>
- <170be7ca00e.133ea84fa2305.7803335422925759322@flygoat.com>
-Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        linux-mips <linux-mips@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        linux-ide <linux-ide@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Xuefeng Li <lixuefeng@loongson.cn>
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <2ba6de2e-7880-d322-a0f6-5cea2647ea50@loongson.cn>
-Date:   Tue, 10 Mar 2020 10:31:56 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+        Mon, 9 Mar 2020 22:35:47 -0400
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:40351 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726533AbgCJCfq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 22:35:46 -0400
+Received: by mail-pj1-f66.google.com with SMTP id gv19so771917pjb.5;
+        Mon, 09 Mar 2020 19:35:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=weiT/gNMaT98DNcrVoArqN1n8qFeWFcO2aQcNrwiOqg=;
+        b=uxXytDB3DRQOxrf6pVlKVlOQH0reGS/RA0mfsP2HFwvi0wllV2YKlIc6k7vHehz7/6
+         1gSRXObd3WUwmpYBMiflWSSOTPFZOZZCUH+FjuKa+U+MOv7noMKdyhzJ7cgnqveEIaPG
+         ZwZEEjoQnFIR57tphVcc4UE9MLyQXd9qUVxMAFIvEDNZxhoe4atpBb6WTV2MF83yvv6P
+         q2kGNu3xBAMQUZZ6Uvn0abfyYWgqJcYOM9L1O8G5J2ntuY/u6b/TP7Ldg9mX8kOBPGla
+         Z6lKmLItIFm1rieh7LRe7UUUtOkuw78CLJ0he6t8cSeTDIlxFR91rsQSt/iBxwOagnY+
+         qPoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=weiT/gNMaT98DNcrVoArqN1n8qFeWFcO2aQcNrwiOqg=;
+        b=N8TjHBpJouKWMTnDIxAi38aoWzWwxraZuDuckX4wadhOHGHXx0/JeVGpz5xdrqjrvS
+         p4Ffl08wYt19p3jnmiAeoFdKvlXxuYDJOXypsYbUWE8q+G+HAJaQzGlCbCBRC2iq37Wu
+         JI/X36aIUSXF8M7w9JFV8ONN2UEtvLpVWIJ48/N/rfOPUAQWSqg44ji5oWy3wG54HTdy
+         hKkQ/IBWpogh2PpUj6w+d2TKkDFnQIG/GGZrqoPZOYVlsTnNFfMkoaNk0NmDwvA30+SC
+         oYY9nhqcyhkf9UJo80EgYC+Oi9W4/I5Fk9aSDyyoHhRzYhGzbFRXApDVLj2F17+I6crE
+         36Kw==
+X-Gm-Message-State: ANhLgQ3ofyctJ/qgxSlCCC0vdlpo9wtTj8YnqvxtPymUALgyhQhFT8/2
+        pmmcymHxKreK2Id4Z5mAJkM=
+X-Google-Smtp-Source: ADFU+vuZFLuZ7dndLbqKaQsp8rEK6RvoNsgepHsiTu02j9X4XFtDo/9FRU6R4aQmSDiH3nLE2/pjvg==
+X-Received: by 2002:a17:90a:2ec7:: with SMTP id h7mr2487827pjs.107.1583807745548;
+        Mon, 09 Mar 2020 19:35:45 -0700 (PDT)
+Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
+        by smtp.gmail.com with ESMTPSA id u11sm816627pjn.2.2020.03.09.19.35.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Mar 2020 19:35:44 -0700 (PDT)
+From:   Chuhong Yuan <hslester96@gmail.com>
+Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH v3] video: fbdev: vesafb: add missed release_region
+Date:   Tue, 10 Mar 2020 10:35:36 +0800
+Message-Id: <20200310023536.13622-1-hslester96@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <170be7ca00e.133ea84fa2305.7803335422925759322@flygoat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQAAf9AxJuoc_GZe9QYZAA--.37S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7CF18Cw45KrWrZFW5WFyrCrg_yoW8uF4Dpr
-        10vFs3KFs7trWfZ3Z2qrn8GrZ3JFs8tw1UuFya9r45JFn3Xw18GrnFyr45CrW2qrsxX3yx
-        Zr1qk3y3CwnxtwUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUB014x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-        6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr
-        1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv
-        7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r
-        1j6r4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
-        n2kIc2xKxwCYjI0SjxkI62AI1cAE67vIY487MxkIecxEwVAFwVW8JwCF04k20xvY0x0EwI
-        xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
-        Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
-        IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k2
-        6cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x
-        0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjfUF3kuDUUUU
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/09/2020 04:50 PM, Jiaxun Yang wrote:
->   ---- 在 星期一, 2020-03-09 16:23:21 Tiezhu Yang <yangtiezhu@loongson.cn> 撰写 ----
->   > Add the Loongson vendor ID and 7A1000 device IDs to pci_ids.h
->   > to be used by the controller driver in the future.
->   >
->   > The Loongson IDs can be found at the following link:
->   > https://git.kernel.org/pub/scm/utils/pciutils/pciutils.git/tree/pci.ids
->   >
->   > Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
->   > ---
->   >  include/linux/pci_ids.h | 18 ++++++++++++++++++
->   >  1 file changed, 18 insertions(+)
->   >
->   > diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
->   > index 352c0d7..0125ab4 100644
->   > --- a/include/linux/pci_ids.h
->   > +++ b/include/linux/pci_ids.h
->   > @@ -3113,4 +3113,22 @@
->   >
->   >  #define PCI_VENDOR_ID_NCUBE        0x10ff
->   >
->   > +#define PCI_VENDOR_ID_LOONGSON            0x0014
->   > +#define PCI_DEVICE_ID_LOONGSON_7A1000_HT    0x7a00
->   > +#define PCI_DEVICE_ID_LOONGSON_7A1000_APB    0x7a02
->   > +#define PCI_DEVICE_ID_LOONGSON_7A1000_GMAC    0x7a03
->   > +#define PCI_DEVICE_ID_LOONGSON_7A1000_OTG    0x7a04
->   > +#define PCI_DEVICE_ID_LOONGSON_7A1000_DC    0x7a06
->   > +#define PCI_DEVICE_ID_LOONGSON_7A1000_HDA    0x7a07
->   > +#define PCI_DEVICE_ID_LOONGSON_7A1000_SATA    0x7a08
->   > +#define PCI_DEVICE_ID_LOONGSON_7A1000_PCIE_X1    0x7a09
->   > +#define PCI_DEVICE_ID_LOONGSON_7A1000_SPI    0x7a0b
->   > +#define PCI_DEVICE_ID_LOONGSON_7A1000_LPC    0x7a0c
->   > +#define PCI_DEVICE_ID_LOONGSON_7A1000_DMA    0x7a0f
->   > +#define PCI_DEVICE_ID_LOONGSON_7A1000_EHCI    0x7a14
->   > +#define PCI_DEVICE_ID_LOONGSON_7A1000_GPU    0x7a15
->   > +#define PCI_DEVICE_ID_LOONGSON_7A1000_PCIE_X4    0x7a19
->   > +#define PCI_DEVICE_ID_LOONGSON_7A1000_OHCI    0x7a24
->   > +#define PCI_DEVICE_ID_LOONGSON_7A1000_PCIE_X8    0x7a29
->
-> Devices IDs are unlikely to be reused by mutiple subsystems, so probably we don't need
-> to add them here?
+The driver forgets to free the I/O region in remove and probe
+failure.
+Add the missed calls to fix it.
 
-Hi Jiaxun,
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+---
+Changes in v3:
+  - Revise the commit message.
+  - Add an error handler to suit the "goto error" before request_region().
+  - Revise the order of operations in remove.
+  
+ drivers/video/fbdev/vesafb.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-I think it is better to define the device IDs in pci_ids.h,
-otherwise it seems a little disorganized.
-
-Thanks,
-
-Tiezhu Yang
-
->   
->> +
->   >  #endif /* _LINUX_PCI_IDS_H */
->   > --
->   > 2.1.0
->   >
->   >
+diff --git a/drivers/video/fbdev/vesafb.c b/drivers/video/fbdev/vesafb.c
+index a1fe24ea869b..c7bc9ace47d4 100644
+--- a/drivers/video/fbdev/vesafb.c
++++ b/drivers/video/fbdev/vesafb.c
+@@ -439,7 +439,7 @@ static int vesafb_probe(struct platform_device *dev)
+ 		       "vesafb: abort, cannot ioremap video memory 0x%x @ 0x%lx\n",
+ 			vesafb_fix.smem_len, vesafb_fix.smem_start);
+ 		err = -EIO;
+-		goto err;
++		goto err_release_region;
+ 	}
+ 
+ 	printk(KERN_INFO "vesafb: framebuffer at 0x%lx, mapped to 0x%p, "
+@@ -458,15 +458,17 @@ static int vesafb_probe(struct platform_device *dev)
+ 
+ 	if (fb_alloc_cmap(&info->cmap, 256, 0) < 0) {
+ 		err = -ENOMEM;
+-		goto err;
++		goto err_release_region;
+ 	}
+ 	if (register_framebuffer(info)<0) {
+ 		err = -EINVAL;
+ 		fb_dealloc_cmap(&info->cmap);
+-		goto err;
++		goto err_release_region;
+ 	}
+ 	fb_info(info, "%s frame buffer device\n", info->fix.id);
+ 	return 0;
++err_release_region:
++	release_region(0x3c0, 32);
+ err:
+ 	arch_phys_wc_del(par->wc_cookie);
+ 	if (info->screen_base)
+@@ -481,6 +483,7 @@ static int vesafb_remove(struct platform_device *pdev)
+ 	struct fb_info *info = platform_get_drvdata(pdev);
+ 
+ 	unregister_framebuffer(info);
++	release_region(0x3c0, 32);
+ 	framebuffer_release(info);
+ 
+ 	return 0;
+-- 
+2.25.1
 
