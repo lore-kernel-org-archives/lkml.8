@@ -2,518 +2,264 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=FORGED_MUA_MOZILLA,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39D8FC3F2D0
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:44:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB93EC1975A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:44:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E87DB24677
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:44:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583847866;
-	bh=4+B04di+ImH/vlBfTaF8o7ROuooQlaTXMKeOjYPvbZ0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BCKh6Yj09YaicfRpFukNgO4Y4AA00MrJrDLbA7Q9r+KChx0o3/7DLZAk7yICW6t3Z
-	 3Y/4s5EyAK52w6Mzu5hnfASuWsrG0j1YjOOOINENeEFZqvsalqxzP5CmmhUllYqaAK
-	 2aAkIxHKIMYXgNmQkKRhDhrd+holL+zX8A9vSUY0=
+	by mail.kernel.org (Postfix) with ESMTP id A53DB24685
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:44:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728005AbgCJNoT (ORCPT
+        id S1728030AbgCJNoW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:44:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37690 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727212AbgCJNnT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:43:19 -0400
-Received: from mail.kernel.org (ip5f5ad4e9.dynamic.kabel-deutschland.de [95.90.212.233])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3E5A524698;
-        Tue, 10 Mar 2020 13:43:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583847797;
-        bh=4+B04di+ImH/vlBfTaF8o7ROuooQlaTXMKeOjYPvbZ0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PwxnEus2d9/cMGC/4JgEr/oWPLzoLtervaJbceu9L7sYfaOSbfa+x9OgTfblGt8eZ
-         eou0oiv6FFgYrrDlb0F35iJAZrIJxrfOvwf4p8U6Xe1r8K4bR/hdcWOgOE1as1YBlN
-         jVc9t306Er9RoSxfGoy2NrBIr2oNo+eh4ybXTcxE=
-Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
-        (envelope-from <mchehab@kernel.org>)
-        id 1jBfAB-0005wG-DF; Tue, 10 Mar 2020 14:43:15 +0100
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        linux-media@vger.kernel.org
-Subject: [PATCH v2 14/22] media: docs: split uAPI info from omap3isp.rst
-Date:   Tue, 10 Mar 2020 14:43:05 +0100
-Message-Id: <86b6cdeb47344b5833d5e4515ce4ec1b2e82d9c5.1583847556.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <cover.1583847556.git.mchehab+huawei@kernel.org>
-References: <cover.1583847556.git.mchehab+huawei@kernel.org>
+        Tue, 10 Mar 2020 09:44:22 -0400
+Received: from mail-oln040092064070.outbound.protection.outlook.com ([40.92.64.70]:44472
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726353AbgCJNoM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:44:12 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=DFhvp+Oo45MXHFV30ls6zqT7/546uqQptqKa+nZwGSFJbMbVs39WFCMR3R4+ZWtEAPmWz9sSFvBXcMZn0AT/yyLwW7fPZQV+dlBtynTVIP92g9Hxt3mC4Y7u2NXWrtqaQir7P0PO6wu+IfzH74keqMDowVxzqJzGSOSOpRA4Y/yvMjGVDbcIe0c/AV7POZGdy2re8ydZbI3rSxPq3OGoFEZpY8V32jOHuEcebdKL9+fn6muJ4RtebV5KSddLfS3ZYy7sGlR5cf/TgMsECc/ZUOX/9DVPFWSgsNP4byzCIhuIDwYFNrCk1fJ5RpqAF1VSV3aclDIfckMkv36j+4KKmw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qOZY463IAaXjiQVx7MRIl6eponpktQjQKIZPtfN8f0A=;
+ b=cXWMpRR2CIXaZtvc0JBPdHMXIE7pdrMYY7W6C6JhFuzZdWpCjYoZepNahB2O+2VlSpx7pZ8TpRWAX05N85gT+L3sGVRt84yudbYdNT19apQzmZQHE+m2+vU1c4h71IFqhLRfscPzzvMwXdo3uXFUzNJ9HKE3rlGSHTYKnNs2zepozadCv+p3vXZ2r6CNhjqmwqgL5W2V/jrQyZmIUUfDqGyzUf6hePedfauhxZm6L9VUO569ZrrcRTc86IQnCh6na7FRhuWCEXoqN7FDcU5tXdGO0pb82xbZNwolU6vIRRo/4SBWAo5T+HgEzLtKz2Pw4pQKGZSZiQb11/Ybt1F1fQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=hotmail.de; dmarc=pass action=none header.from=hotmail.de;
+ dkim=pass header.d=hotmail.de; arc=none
+Received: from HE1EUR01FT023.eop-EUR01.prod.protection.outlook.com
+ (2a01:111:e400:7e18::37) by
+ HE1EUR01HT005.eop-EUR01.prod.protection.outlook.com (2a01:111:e400:7e18::492)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.11; Tue, 10 Mar
+ 2020 13:44:03 +0000
+Received: from AM6PR03MB5170.eurprd03.prod.outlook.com (10.152.0.52) by
+ HE1EUR01FT023.mail.protection.outlook.com (10.152.0.162) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2793.11 via Frontend Transport; Tue, 10 Mar 2020 13:44:03 +0000
+X-IncomingTopHeaderMarker: OriginalChecksum:2534592BB12048E38E56F803EF8B67E0599C52D4D49AF5C559ECF8080DBF5FF9;UpperCasedChecksum:01EBD96ECEB138968F5094E9AB20D61588959F6B6FFED1F4D775C0A1AC968775;SizeAsReceived:10294;Count:50
+Received: from AM6PR03MB5170.eurprd03.prod.outlook.com
+ ([fe80::1956:d274:cab3:b4dd]) by AM6PR03MB5170.eurprd03.prod.outlook.com
+ ([fe80::1956:d274:cab3:b4dd%6]) with mapi id 15.20.2793.013; Tue, 10 Mar 2020
+ 13:44:03 +0000
+From:   Bernd Edlinger <bernd.edlinger@hotmail.de>
+Subject: [PATCH 2/4] selftests/ptrace: add test cases for dead-locks
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Andrei Vagin <avagin@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Yuyang Du <duyuyang@gmail.com>,
+        David Hildenbrand <david@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        David Howells <dhowells@redhat.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christian Kellner <christian@kellner.me>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>
+References: <AM6PR03MB5170EB4427BF5C67EE98FF09E4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87r1y8dqqz.fsf@x220.int.ebiederm.org>
+ <AM6PR03MB517053AED7DC89F7C0704B7DE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <AM6PR03MB51703B44170EAB4626C9B2CAE4E20@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87tv32cxmf.fsf_-_@x220.int.ebiederm.org>
+ <87v9ne5y4y.fsf_-_@x220.int.ebiederm.org>
+ <87zhcq4jdj.fsf_-_@x220.int.ebiederm.org>
+ <AM6PR03MB5170BC58D90BAD80CDEF3F8BE4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <878sk94eay.fsf@x220.int.ebiederm.org>
+ <AM6PR03MB517086003BD2C32E199690A3E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87r1y12yc7.fsf@x220.int.ebiederm.org> <87k13t2xpd.fsf@x220.int.ebiederm.org>
+ <87d09l2x5n.fsf@x220.int.ebiederm.org>
+ <AM6PR03MB5170F0F9DC18F5EA77C9A857E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <871rq12vxu.fsf@x220.int.ebiederm.org>
+ <AM6PR03MB5170DF45E3245F55B95CCD91E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <877dzt1fnf.fsf@x220.int.ebiederm.org>
+Message-ID: <AM6PR03MB51703199741A2C27A78980FFE4FF0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+Date:   Tue, 10 Mar 2020 14:44:01 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+In-Reply-To: <877dzt1fnf.fsf@x220.int.ebiederm.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: AM0PR06CA0084.eurprd06.prod.outlook.com
+ (2603:10a6:208:fa::25) To AM6PR03MB5170.eurprd03.prod.outlook.com
+ (2603:10a6:20b:ca::23)
+X-Microsoft-Original-Message-ID: <fbd7c68e-4094-2f9b-fbb0-5f43a706128d@hotmail.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [192.168.1.101] (92.77.140.102) by AM0PR06CA0084.eurprd06.prod.outlook.com (2603:10a6:208:fa::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.16 via Frontend Transport; Tue, 10 Mar 2020 13:44:01 +0000
+X-Microsoft-Original-Message-ID: <fbd7c68e-4094-2f9b-fbb0-5f43a706128d@hotmail.de>
+X-TMN:  [mbH5VsuP3pnDx5S83zh5PLwQRoDsVQ4R]
+X-MS-PublicTrafficType: Email
+X-IncomingHeaderCount: 50
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-Correlation-Id: f77651f4-c28d-44e1-771b-08d7c4f91823
+X-MS-TrafficTypeDiagnostic: HE1EUR01HT005:
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: e3lk3mxrLBIqFPpGQyawO5+/E2DepRJw7nqU8+HOzUUV1tJZ5vXQ4OQxytSOH1PYS4u0VTkVrm3Ma/vPULqTzVD0oeY1W0nn/ROspV4OKXXw5aQI5BMO+LwqI3IQK7rlJjz9hgWJC0ShTt8eB+l4D4m3YnjZoNchxqx6NCl9ExDqRv035keCQeu5ZtRBYiEI
+X-MS-Exchange-AntiSpam-MessageData: UD3Fct7HirAC7qOQjBjLnzGmOlwPO0C65kL3A1S8q+1f/GsK7MYg9HzUCHCkqI7sA+dMLnxcfKeES/ctFXneRsd1eCglzjw2FOhCdSEakOwSEYWbIuQP8ojNt0stkZgqAozUAM0tip7VaTqslbmwYw==
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f77651f4-c28d-44e1-771b-08d7c4f91823
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Mar 2020 13:44:03.1660
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1EUR01HT005
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This file contains both driver develompent documentation and
-userspace API.
+This adds test cases for ptrace deadlocks.
 
-Split on two, as they're usually read by different audiences.
+Additionally fixes a compile problem in get_syscall_info.c,
+observed with gcc-4.8.4:
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+get_syscall_info.c: In function 'get_syscall_info':
+get_syscall_info.c:93:3: error: 'for' loop initial declarations are only
+                                 allowed in C99 mode
+   for (unsigned int i = 0; i < ARRAY_SIZE(args); ++i) {
+   ^
+get_syscall_info.c:93:3: note: use option -std=c99 or -std=gnu99 to compile
+                               your code
+
+Signed-off-by: Bernd Edlinger <bernd.edlinger@hotmail.de>
 ---
- Documentation/media/v4l-drivers/index.rst     |   1 +
- .../media/v4l-drivers/omap3isp-uapi.rst       | 208 ++++++++++++++++++
- Documentation/media/v4l-drivers/omap3isp.rst  | 196 +----------------
- 3 files changed, 211 insertions(+), 194 deletions(-)
- create mode 100644 Documentation/media/v4l-drivers/omap3isp-uapi.rst
+ tools/testing/selftests/ptrace/Makefile   |  4 +-
+ tools/testing/selftests/ptrace/vmaccess.c | 86 +++++++++++++++++++++++++++++++
+ 2 files changed, 88 insertions(+), 2 deletions(-)
+ create mode 100644 tools/testing/selftests/ptrace/vmaccess.c
 
-diff --git a/Documentation/media/v4l-drivers/index.rst b/Documentation/media/v4l-drivers/index.rst
-index 6fdfd9a41913..364c65ea86fb 100644
---- a/Documentation/media/v4l-drivers/index.rst
-+++ b/Documentation/media/v4l-drivers/index.rst
-@@ -76,3 +76,4 @@ For more details see the file COPYING in the source distribution of Linux.
+diff --git a/tools/testing/selftests/ptrace/Makefile b/tools/testing/selftests/ptrace/Makefile
+index c0b7f89..2f1f532 100644
+--- a/tools/testing/selftests/ptrace/Makefile
++++ b/tools/testing/selftests/ptrace/Makefile
+@@ -1,6 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+-CFLAGS += -iquote../../../../include/uapi -Wall
++CFLAGS += -std=c99 -pthread -iquote../../../../include/uapi -Wall
  
- 	cx2341x-uapi
- 	meye-uapi
-+	omap3isp-uapi
-diff --git a/Documentation/media/v4l-drivers/omap3isp-uapi.rst b/Documentation/media/v4l-drivers/omap3isp-uapi.rst
+-TEST_GEN_PROGS := get_syscall_info peeksiginfo
++TEST_GEN_PROGS := get_syscall_info peeksiginfo vmaccess
+ 
+ include ../lib.mk
+diff --git a/tools/testing/selftests/ptrace/vmaccess.c b/tools/testing/selftests/ptrace/vmaccess.c
 new file mode 100644
-index 000000000000..5f966a874a3c
+index 0000000..4db327b
 --- /dev/null
-+++ b/Documentation/media/v4l-drivers/omap3isp-uapi.rst
-@@ -0,0 +1,208 @@
-+.. SPDX-License-Identifier: GPL-2.0
++++ b/tools/testing/selftests/ptrace/vmaccess.c
+@@ -0,0 +1,86 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * Copyright (c) 2020 Bernd Edlinger <bernd.edlinger@hotmail.de>
++ * All rights reserved.
++ *
++ * Check whether /proc/$pid/mem can be accessed without causing deadlocks
++ * when de_thread is blocked with ->cred_guard_mutex held.
++ */
 +
-+.. include:: <isonum.txt>
++#include "../kselftest_harness.h"
++#include <stdio.h>
++#include <fcntl.h>
++#include <pthread.h>
++#include <signal.h>
++#include <unistd.h>
++#include <sys/ptrace.h>
 +
-+OMAP 3 Image Signal Processor (ISP) driver
-+==========================================
++static void *thread(void *arg)
++{
++	ptrace(PTRACE_TRACEME, 0, 0L, 0L);
++	return NULL;
++}
 +
-+Copyright |copy| 2010 Nokia Corporation
++TEST(vmaccess)
++{
++	int f, pid = fork();
++	char mm[64];
 +
-+Copyright |copy| 2009 Texas Instruments, Inc.
++	if (!pid) {
++		pthread_t pt;
 +
-+Contacts: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-+Sakari Ailus <sakari.ailus@iki.fi>, David Cohen <dacohen@gmail.com>
++		pthread_create(&pt, NULL, thread, NULL);
++		pthread_join(pt, NULL);
++		execlp("true", "true", NULL);
++	}
 +
++	sleep(1);
++	sprintf(mm, "/proc/%d/mem", pid);
++	f = open(mm, O_RDONLY);
++	ASSERT_GE(f, 0);
++	close(f);
++	f = kill(pid, SIGCONT);
++	ASSERT_EQ(f, 0);
++}
 +
-+Events
-+------
++TEST(attach)
++{
++	int s, k, pid = fork();
 +
-+The OMAP 3 ISP driver does support the V4L2 event interface on CCDC and
-+statistics (AEWB, AF and histogram) subdevs.
++	if (!pid) {
++		pthread_t pt;
 +
-+The CCDC subdev produces V4L2_EVENT_FRAME_SYNC type event on HS_VS
-+interrupt which is used to signal frame start. Earlier version of this
-+driver used V4L2_EVENT_OMAP3ISP_HS_VS for this purpose. The event is
-+triggered exactly when the reception of the first line of the frame starts
-+in the CCDC module. The event can be subscribed on the CCDC subdev.
++		pthread_create(&pt, NULL, thread, NULL);
++		pthread_join(pt, NULL);
++		execlp("sleep", "sleep", "2", NULL);
++	}
 +
-+(When using parallel interface one must pay account to correct configuration
-+of the VS signal polarity. This is automatically correct when using the serial
-+receivers.)
++	sleep(1);
++	k = ptrace(PTRACE_ATTACH, pid, 0L, 0L);
++	ASSERT_EQ(errno, EAGAIN);
++	ASSERT_EQ(k, -1);
++	k = waitpid(-1, &s, WNOHANG);
++	ASSERT_NE(k, -1);
++	ASSERT_NE(k, 0);
++	ASSERT_NE(k, pid);
++	ASSERT_EQ(WIFEXITED(s), 1);
++	ASSERT_EQ(WEXITSTATUS(s), 0);
++	sleep(1);
++	k = ptrace(PTRACE_ATTACH, pid, 0L, 0L);
++	ASSERT_EQ(k, 0);
++	k = waitpid(-1, &s, 0);
++	ASSERT_EQ(k, pid);
++	ASSERT_EQ(WIFSTOPPED(s), 1);
++	ASSERT_EQ(WSTOPSIG(s), SIGSTOP);
++	k = ptrace(PTRACE_DETACH, pid, 0L, 0L);
++	ASSERT_EQ(k, 0);
++	k = waitpid(-1, &s, 0);
++	ASSERT_EQ(k, pid);
++	ASSERT_EQ(WIFEXITED(s), 1);
++	ASSERT_EQ(WEXITSTATUS(s), 0);
++	k = waitpid(-1, NULL, 0);
++	ASSERT_EQ(k, -1);
++	ASSERT_EQ(errno, ECHILD);
++}
 +
-+Each of the statistics subdevs is able to produce events. An event is
-+generated whenever a statistics buffer can be dequeued by a user space
-+application using the VIDIOC_OMAP3ISP_STAT_REQ IOCTL. The events available
-+are:
-+
-+- V4L2_EVENT_OMAP3ISP_AEWB
-+- V4L2_EVENT_OMAP3ISP_AF
-+- V4L2_EVENT_OMAP3ISP_HIST
-+
-+The type of the event data is struct omap3isp_stat_event_status for these
-+ioctls. If there is an error calculating the statistics, there will be an
-+event as usual, but no related statistics buffer. In this case
-+omap3isp_stat_event_status.buf_err is set to non-zero.
-+
-+
-+Private IOCTLs
-+--------------
-+
-+The OMAP 3 ISP driver supports standard V4L2 IOCTLs and controls where
-+possible and practical. Much of the functions provided by the ISP, however,
-+does not fall under the standard IOCTLs --- gamma tables and configuration of
-+statistics collection are examples of such.
-+
-+In general, there is a private ioctl for configuring each of the blocks
-+containing hardware-dependent functions.
-+
-+The following private IOCTLs are supported:
-+
-+- VIDIOC_OMAP3ISP_CCDC_CFG
-+- VIDIOC_OMAP3ISP_PRV_CFG
-+- VIDIOC_OMAP3ISP_AEWB_CFG
-+- VIDIOC_OMAP3ISP_HIST_CFG
-+- VIDIOC_OMAP3ISP_AF_CFG
-+- VIDIOC_OMAP3ISP_STAT_REQ
-+- VIDIOC_OMAP3ISP_STAT_EN
-+
-+The parameter structures used by these ioctls are described in
-+include/linux/omap3isp.h. The detailed functions of the ISP itself related to
-+a given ISP block is described in the Technical Reference Manuals (TRMs) ---
-+see the end of the document for those.
-+
-+While it is possible to use the ISP driver without any use of these private
-+IOCTLs it is not possible to obtain optimal image quality this way. The AEWB,
-+AF and histogram modules cannot be used without configuring them using the
-+appropriate private IOCTLs.
-+
-+
-+CCDC and preview block IOCTLs
-+-----------------------------
-+
-+The VIDIOC_OMAP3ISP_CCDC_CFG and VIDIOC_OMAP3ISP_PRV_CFG IOCTLs are used to
-+configure, enable and disable functions in the CCDC and preview blocks,
-+respectively. Both IOCTLs control several functions in the blocks they
-+control. VIDIOC_OMAP3ISP_CCDC_CFG IOCTL accepts a pointer to struct
-+omap3isp_ccdc_update_config as its argument. Similarly VIDIOC_OMAP3ISP_PRV_CFG
-+accepts a pointer to struct omap3isp_prev_update_config. The definition of
-+both structures is available in [#]_.
-+
-+The update field in the structures tells whether to update the configuration
-+for the specific function and the flag tells whether to enable or disable the
-+function.
-+
-+The update and flag bit masks accept the following values. Each separate
-+functions in the CCDC and preview blocks is associated with a flag (either
-+disable or enable; part of the flag field in the structure) and a pointer to
-+configuration data for the function.
-+
-+Valid values for the update and flag fields are listed here for
-+VIDIOC_OMAP3ISP_CCDC_CFG. Values may be or'ed to configure more than one
-+function in the same IOCTL call.
-+
-+- OMAP3ISP_CCDC_ALAW
-+- OMAP3ISP_CCDC_LPF
-+- OMAP3ISP_CCDC_BLCLAMP
-+- OMAP3ISP_CCDC_BCOMP
-+- OMAP3ISP_CCDC_FPC
-+- OMAP3ISP_CCDC_CULL
-+- OMAP3ISP_CCDC_CONFIG_LSC
-+- OMAP3ISP_CCDC_TBL_LSC
-+
-+The corresponding values for the VIDIOC_OMAP3ISP_PRV_CFG are here:
-+
-+- OMAP3ISP_PREV_LUMAENH
-+- OMAP3ISP_PREV_INVALAW
-+- OMAP3ISP_PREV_HRZ_MED
-+- OMAP3ISP_PREV_CFA
-+- OMAP3ISP_PREV_CHROMA_SUPP
-+- OMAP3ISP_PREV_WB
-+- OMAP3ISP_PREV_BLKADJ
-+- OMAP3ISP_PREV_RGB2RGB
-+- OMAP3ISP_PREV_COLOR_CONV
-+- OMAP3ISP_PREV_YC_LIMIT
-+- OMAP3ISP_PREV_DEFECT_COR
-+- OMAP3ISP_PREV_GAMMABYPASS
-+- OMAP3ISP_PREV_DRK_FRM_CAPTURE
-+- OMAP3ISP_PREV_DRK_FRM_SUBTRACT
-+- OMAP3ISP_PREV_LENS_SHADING
-+- OMAP3ISP_PREV_NF
-+- OMAP3ISP_PREV_GAMMA
-+
-+The associated configuration pointer for the function may not be NULL when
-+enabling the function. When disabling a function the configuration pointer is
-+ignored.
-+
-+
-+Statistic blocks IOCTLs
-+-----------------------
-+
-+The statistics subdevs do offer more dynamic configuration options than the
-+other subdevs. They can be enabled, disable and reconfigured when the pipeline
-+is in streaming state.
-+
-+The statistics blocks always get the input image data from the CCDC (as the
-+histogram memory read isn't implemented). The statistics are dequeueable by
-+the user from the statistics subdev nodes using private IOCTLs.
-+
-+The private IOCTLs offered by the AEWB, AF and histogram subdevs are heavily
-+reflected by the register level interface offered by the ISP hardware. There
-+are aspects that are purely related to the driver implementation and these are
-+discussed next.
-+
-+VIDIOC_OMAP3ISP_STAT_EN
-+-----------------------
-+
-+This private IOCTL enables/disables a statistic module. If this request is
-+done before streaming, it will take effect as soon as the pipeline starts to
-+stream.  If the pipeline is already streaming, it will take effect as soon as
-+the CCDC becomes idle.
-+
-+VIDIOC_OMAP3ISP_AEWB_CFG, VIDIOC_OMAP3ISP_HIST_CFG and VIDIOC_OMAP3ISP_AF_CFG
-+-----------------------------------------------------------------------------
-+
-+Those IOCTLs are used to configure the modules. They require user applications
-+to have an in-depth knowledge of the hardware. Most of the fields explanation
-+can be found on OMAP's TRMs. The two following fields common to all the above
-+configure private IOCTLs require explanation for better understanding as they
-+are not part of the TRM.
-+
-+omap3isp_[h3a_af/h3a_aewb/hist]\_config.buf_size:
-+
-+The modules handle their buffers internally. The necessary buffer size for the
-+module's data output depends on the requested configuration. Although the
-+driver supports reconfiguration while streaming, it does not support a
-+reconfiguration which requires bigger buffer size than what is already
-+internally allocated if the module is enabled. It will return -EBUSY on this
-+case. In order to avoid such condition, either disable/reconfigure/enable the
-+module or request the necessary buffer size during the first configuration
-+while the module is disabled.
-+
-+The internal buffer size allocation considers the requested configuration's
-+minimum buffer size and the value set on buf_size field. If buf_size field is
-+out of [minimum, maximum] buffer size range, it's clamped to fit in there.
-+The driver then selects the biggest value. The corrected buf_size value is
-+written back to user application.
-+
-+omap3isp_[h3a_af/h3a_aewb/hist]\_config.config_counter:
-+
-+As the configuration doesn't take effect synchronously to the request, the
-+driver must provide a way to track this information to provide more accurate
-+data. After a configuration is requested, the config_counter returned to user
-+space application will be an unique value associated to that request. When
-+user application receives an event for buffer availability or when a new
-+buffer is requested, this config_counter is used to match a buffer data and a
-+configuration.
-+
-+VIDIOC_OMAP3ISP_STAT_REQ
-+------------------------
-+
-+Send to user space the oldest data available in the internal buffer queue and
-+discards such buffer afterwards. The field omap3isp_stat_data.frame_number
-+matches with the video buffer's field_count.
-+
-+
-+References
-+----------
-+
-+.. [#] include/linux/omap3isp.h
-diff --git a/Documentation/media/v4l-drivers/omap3isp.rst b/Documentation/media/v4l-drivers/omap3isp.rst
-index 8974c444e3a1..bc447bbec7ce 100644
---- a/Documentation/media/v4l-drivers/omap3isp.rst
-+++ b/Documentation/media/v4l-drivers/omap3isp.rst
-@@ -49,7 +49,7 @@ interface to userspace.
- - OMAP3 ISP histogram
- 
- Each possible link in the ISP is modelled by a link in the Media controller
--interface. For an example program see [#f2]_.
-+interface. For an example program see [#]_.
- 
- 
- Controlling the OMAP 3 ISP
-@@ -68,196 +68,6 @@ Autoidle does have issues with some ISP blocks on the 3430, at least.
- Autoidle is only enabled on 3630 when the omap3isp module parameter autoidle
- is non-zero.
- 
--
--Events
--------
--
--The OMAP 3 ISP driver does support the V4L2 event interface on CCDC and
--statistics (AEWB, AF and histogram) subdevs.
--
--The CCDC subdev produces V4L2_EVENT_FRAME_SYNC type event on HS_VS
--interrupt which is used to signal frame start. Earlier version of this
--driver used V4L2_EVENT_OMAP3ISP_HS_VS for this purpose. The event is
--triggered exactly when the reception of the first line of the frame starts
--in the CCDC module. The event can be subscribed on the CCDC subdev.
--
--(When using parallel interface one must pay account to correct configuration
--of the VS signal polarity. This is automatically correct when using the serial
--receivers.)
--
--Each of the statistics subdevs is able to produce events. An event is
--generated whenever a statistics buffer can be dequeued by a user space
--application using the VIDIOC_OMAP3ISP_STAT_REQ IOCTL. The events available
--are:
--
--- V4L2_EVENT_OMAP3ISP_AEWB
--- V4L2_EVENT_OMAP3ISP_AF
--- V4L2_EVENT_OMAP3ISP_HIST
--
--The type of the event data is struct omap3isp_stat_event_status for these
--ioctls. If there is an error calculating the statistics, there will be an
--event as usual, but no related statistics buffer. In this case
--omap3isp_stat_event_status.buf_err is set to non-zero.
--
--
--Private IOCTLs
----------------
--
--The OMAP 3 ISP driver supports standard V4L2 IOCTLs and controls where
--possible and practical. Much of the functions provided by the ISP, however,
--does not fall under the standard IOCTLs --- gamma tables and configuration of
--statistics collection are examples of such.
--
--In general, there is a private ioctl for configuring each of the blocks
--containing hardware-dependent functions.
--
--The following private IOCTLs are supported:
--
--- VIDIOC_OMAP3ISP_CCDC_CFG
--- VIDIOC_OMAP3ISP_PRV_CFG
--- VIDIOC_OMAP3ISP_AEWB_CFG
--- VIDIOC_OMAP3ISP_HIST_CFG
--- VIDIOC_OMAP3ISP_AF_CFG
--- VIDIOC_OMAP3ISP_STAT_REQ
--- VIDIOC_OMAP3ISP_STAT_EN
--
--The parameter structures used by these ioctls are described in
--include/linux/omap3isp.h. The detailed functions of the ISP itself related to
--a given ISP block is described in the Technical Reference Manuals (TRMs) ---
--see the end of the document for those.
--
--While it is possible to use the ISP driver without any use of these private
--IOCTLs it is not possible to obtain optimal image quality this way. The AEWB,
--AF and histogram modules cannot be used without configuring them using the
--appropriate private IOCTLs.
--
--
--CCDC and preview block IOCTLs
-------------------------------
--
--The VIDIOC_OMAP3ISP_CCDC_CFG and VIDIOC_OMAP3ISP_PRV_CFG IOCTLs are used to
--configure, enable and disable functions in the CCDC and preview blocks,
--respectively. Both IOCTLs control several functions in the blocks they
--control. VIDIOC_OMAP3ISP_CCDC_CFG IOCTL accepts a pointer to struct
--omap3isp_ccdc_update_config as its argument. Similarly VIDIOC_OMAP3ISP_PRV_CFG
--accepts a pointer to struct omap3isp_prev_update_config. The definition of
--both structures is available in [#f1]_.
--
--The update field in the structures tells whether to update the configuration
--for the specific function and the flag tells whether to enable or disable the
--function.
--
--The update and flag bit masks accept the following values. Each separate
--functions in the CCDC and preview blocks is associated with a flag (either
--disable or enable; part of the flag field in the structure) and a pointer to
--configuration data for the function.
--
--Valid values for the update and flag fields are listed here for
--VIDIOC_OMAP3ISP_CCDC_CFG. Values may be or'ed to configure more than one
--function in the same IOCTL call.
--
--- OMAP3ISP_CCDC_ALAW
--- OMAP3ISP_CCDC_LPF
--- OMAP3ISP_CCDC_BLCLAMP
--- OMAP3ISP_CCDC_BCOMP
--- OMAP3ISP_CCDC_FPC
--- OMAP3ISP_CCDC_CULL
--- OMAP3ISP_CCDC_CONFIG_LSC
--- OMAP3ISP_CCDC_TBL_LSC
--
--The corresponding values for the VIDIOC_OMAP3ISP_PRV_CFG are here:
--
--- OMAP3ISP_PREV_LUMAENH
--- OMAP3ISP_PREV_INVALAW
--- OMAP3ISP_PREV_HRZ_MED
--- OMAP3ISP_PREV_CFA
--- OMAP3ISP_PREV_CHROMA_SUPP
--- OMAP3ISP_PREV_WB
--- OMAP3ISP_PREV_BLKADJ
--- OMAP3ISP_PREV_RGB2RGB
--- OMAP3ISP_PREV_COLOR_CONV
--- OMAP3ISP_PREV_YC_LIMIT
--- OMAP3ISP_PREV_DEFECT_COR
--- OMAP3ISP_PREV_GAMMABYPASS
--- OMAP3ISP_PREV_DRK_FRM_CAPTURE
--- OMAP3ISP_PREV_DRK_FRM_SUBTRACT
--- OMAP3ISP_PREV_LENS_SHADING
--- OMAP3ISP_PREV_NF
--- OMAP3ISP_PREV_GAMMA
--
--The associated configuration pointer for the function may not be NULL when
--enabling the function. When disabling a function the configuration pointer is
--ignored.
--
--
--Statistic blocks IOCTLs
-------------------------
--
--The statistics subdevs do offer more dynamic configuration options than the
--other subdevs. They can be enabled, disable and reconfigured when the pipeline
--is in streaming state.
--
--The statistics blocks always get the input image data from the CCDC (as the
--histogram memory read isn't implemented). The statistics are dequeueable by
--the user from the statistics subdev nodes using private IOCTLs.
--
--The private IOCTLs offered by the AEWB, AF and histogram subdevs are heavily
--reflected by the register level interface offered by the ISP hardware. There
--are aspects that are purely related to the driver implementation and these are
--discussed next.
--
--VIDIOC_OMAP3ISP_STAT_EN
-------------------------
--
--This private IOCTL enables/disables a statistic module. If this request is
--done before streaming, it will take effect as soon as the pipeline starts to
--stream.  If the pipeline is already streaming, it will take effect as soon as
--the CCDC becomes idle.
--
--VIDIOC_OMAP3ISP_AEWB_CFG, VIDIOC_OMAP3ISP_HIST_CFG and VIDIOC_OMAP3ISP_AF_CFG
-------------------------------------------------------------------------------
--
--Those IOCTLs are used to configure the modules. They require user applications
--to have an in-depth knowledge of the hardware. Most of the fields explanation
--can be found on OMAP's TRMs. The two following fields common to all the above
--configure private IOCTLs require explanation for better understanding as they
--are not part of the TRM.
--
--omap3isp_[h3a_af/h3a_aewb/hist]\_config.buf_size:
--
--The modules handle their buffers internally. The necessary buffer size for the
--module's data output depends on the requested configuration. Although the
--driver supports reconfiguration while streaming, it does not support a
--reconfiguration which requires bigger buffer size than what is already
--internally allocated if the module is enabled. It will return -EBUSY on this
--case. In order to avoid such condition, either disable/reconfigure/enable the
--module or request the necessary buffer size during the first configuration
--while the module is disabled.
--
--The internal buffer size allocation considers the requested configuration's
--minimum buffer size and the value set on buf_size field. If buf_size field is
--out of [minimum, maximum] buffer size range, it's clamped to fit in there.
--The driver then selects the biggest value. The corrected buf_size value is
--written back to user application.
--
--omap3isp_[h3a_af/h3a_aewb/hist]\_config.config_counter:
--
--As the configuration doesn't take effect synchronously to the request, the
--driver must provide a way to track this information to provide more accurate
--data. After a configuration is requested, the config_counter returned to user
--space application will be an unique value associated to that request. When
--user application receives an event for buffer availability or when a new
--buffer is requested, this config_counter is used to match a buffer data and a
--configuration.
--
--VIDIOC_OMAP3ISP_STAT_REQ
--------------------------
--
--Send to user space the oldest data available in the internal buffer queue and
--discards such buffer afterwards. The field omap3isp_stat_data.frame_number
--matches with the video buffer's field_count.
--
--
- Technical reference manuals (TRMs) and other documentation
- ----------------------------------------------------------
- 
-@@ -279,6 +89,4 @@ DM 3730 TRM:
- References
- ----------
- 
--.. [#f1] include/linux/omap3isp.h
--
--.. [#f2] http://git.ideasonboard.org/?p=media-ctl.git;a=summary
-+.. [#] http://git.ideasonboard.org/?p=media-ctl.git;a=summary
++TEST_HARNESS_MAIN
 -- 
-2.24.1
-
+1.9.1
