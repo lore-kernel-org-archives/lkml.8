@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87308C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:43:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C461FC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:43:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BD6B24691
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:43:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9394924691
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:43:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583844216;
-	bh=m2VMjPdP7Tghk64h+YiyaAAmIOugxKZ/W6szpaKD2Vs=;
+	s=default; t=1583844223;
+	bh=IgMhr+s23m20C4QHcv2T4ZhIUQEtTP3Vf34vc+Z0J2g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vZD2kzMNeRSzPrwjB47hDHADlcvirvkpQCSzYE7YCm1pmRfYMLzEHj18IGlJ0FhsA
-	 EbGlQ9uHYo94lNVUL5kZwMEQXVigWL17LC0F+8E6e+RQAV4NqoZrmQqKnV91FP0C+c
-	 uAj1x18ZspU0AVDT4qtSS2Ju5JPiIk3ittSNA/3U=
+	b=054wnLuAqu3Yf2QZoTBcju/Pim7kjtDDTppcsfdv9gfmz7Sm+SqzqHzR+VGVD6fN1
+	 8KU98tCxrI/xby9/pDgh1CAvEaqVNj65dZyCBOVhudyCPqd89ACdYhg2e00momiDEn
+	 u4mXQdcfMuZv/gB4hCOdobAe6NDYVwGAkSz3GdDU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727607AbgCJMnf (ORCPT
+        id S1727641AbgCJMnm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:43:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43930 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:43:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44104 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727179AbgCJMnd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:43:33 -0400
+        id S1726830AbgCJMnl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:43:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3636524698;
-        Tue, 10 Mar 2020 12:43:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C34E24691;
+        Tue, 10 Mar 2020 12:43:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844212;
-        bh=m2VMjPdP7Tghk64h+YiyaAAmIOugxKZ/W6szpaKD2Vs=;
+        s=default; t=1583844220;
+        bh=IgMhr+s23m20C4QHcv2T4ZhIUQEtTP3Vf34vc+Z0J2g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uNr16ZuoFShLfzvR91k5X/HVf1cuuuOKHevgS/cM/i4SijfaAOqhqLSMsIMJVsOha
-         HKe0XypeJxpycFbIOwnFP13yJfglRrf5tW+JxeX1PDvUmZXF+NXEmy/1k2Uj+GsGkx
-         RroaNGYeyNvsYSf2t4rGQs/P9bU4Is7oR33F5DC0=
+        b=zUPhx8VAo5RiaIB8EKyueDsXDnLFmIv+9+Wde/D0/xmpm66xqoFH4VGvhmnIv77jk
+         VcCt99A7BzdC1r7DZWFaq2bdWffHayO3uCp6dgG2FOshtbjq/8VeqgwkHzUdzWMpY+
+         U1z8uX4ar7Iy034B+LlMXa2Ne2vd8ZD1ej+HyTYM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        yangerkun <yangerkun@huawei.com>
-Subject: [PATCH 4.4 72/72] crypto: algif_skcipher - use ZERO_OR_NULL_PTR in skcipher_recvmsg_async
-Date:   Tue, 10 Mar 2020 13:39:25 +0100
-Message-Id: <20200310123619.498408311@linuxfoundation.org>
+        stable@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>,
+        syzbot+59997e8d5cbdc486e6f6@syzkaller.appspotmail.com
+Subject: [PATCH 4.4 57/72] vt: selection, close sel_buffer race
+Date:   Tue, 10 Mar 2020 13:39:10 +0100
+Message-Id: <20200310123615.458313786@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123601.053680753@linuxfoundation.org>
 References: <20200310123601.053680753@linuxfoundation.org>
@@ -59,55 +59,144 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: yangerkun <yangerkun@huawei.com>
+From: Jiri Slaby <jslaby@suse.cz>
 
-Nowdays, we trigger a oops:
-...
-kasan: GPF could be caused by NULL-ptr deref or user memory accessgeneral protection fault: 0000 [#1] SMP KASAN
-...
+commit 07e6124a1a46b4b5a9b3cacc0c306b50da87abf5 upstream.
+
+syzkaller reported this UAF:
+BUG: KASAN: use-after-free in n_tty_receive_buf_common+0x2481/0x2940 drivers/tty/n_tty.c:1741
+Read of size 1 at addr ffff8880089e40e9 by task syz-executor.1/13184
+
+CPU: 0 PID: 13184 Comm: syz-executor.1 Not tainted 5.4.7 #1
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
 Call Trace:
- [<ffffffff81a26fb1>] skcipher_recvmsg_async+0x3f1/0x1400 x86/../crypto/algif_skcipher.c:543
- [<ffffffff81a28053>] skcipher_recvmsg+0x93/0x7f0 x86/../crypto/algif_skcipher.c:723
- [<ffffffff823e43a4>] sock_recvmsg_nosec x86/../net/socket.c:702 [inline]
- [<ffffffff823e43a4>] sock_recvmsg x86/../net/socket.c:710 [inline]
- [<ffffffff823e43a4>] sock_recvmsg+0x94/0xc0 x86/../net/socket.c:705
- [<ffffffff823e464b>] sock_read_iter+0x27b/0x3a0 x86/../net/socket.c:787
- [<ffffffff817f479b>] aio_run_iocb+0x21b/0x7a0 x86/../fs/aio.c:1520
- [<ffffffff817f57c9>] io_submit_one x86/../fs/aio.c:1630 [inline]
- [<ffffffff817f57c9>] do_io_submit+0x6b9/0x10b0 x86/../fs/aio.c:1688
- [<ffffffff817f902d>] SYSC_io_submit x86/../fs/aio.c:1713 [inline]
- [<ffffffff817f902d>] SyS_io_submit+0x2d/0x40 x86/../fs/aio.c:1710
- [<ffffffff828b33c3>] tracesys_phase2+0x90/0x95
+...
+ kasan_report+0xe/0x20 mm/kasan/common.c:634
+ n_tty_receive_buf_common+0x2481/0x2940 drivers/tty/n_tty.c:1741
+ tty_ldisc_receive_buf+0xac/0x190 drivers/tty/tty_buffer.c:461
+ paste_selection+0x297/0x400 drivers/tty/vt/selection.c:372
+ tioclinux+0x20d/0x4e0 drivers/tty/vt/vt.c:3044
+ vt_ioctl+0x1bcf/0x28d0 drivers/tty/vt/vt_ioctl.c:364
+ tty_ioctl+0x525/0x15a0 drivers/tty/tty_io.c:2657
+ vfs_ioctl fs/ioctl.c:47 [inline]
 
-In skcipher_recvmsg_async, we use '!sreq->tsg' to determine does we
-calloc fail. However, kcalloc may return ZERO_SIZE_PTR, and with this,
-the latter sg_init_table will trigger the bug. Fix it be use ZERO_OF_NULL_PTR.
+It is due to a race between parallel paste_selection (TIOCL_PASTESEL)
+and set_selection_user (TIOCL_SETSEL) invocations. One uses sel_buffer,
+while the other frees it and reallocates a new one for another
+selection. Add a mutex to close this race.
 
-This function was introduced with ' commit a596999b7ddf ("crypto:
-algif - change algif_skcipher to be asynchronous")', and has been removed
-with 'commit e870456d8e7c ("crypto: algif_skcipher - overhaul memory
-management")'.
+The mutex takes care properly of sel_buffer and sel_buffer_lth only. The
+other selection global variables (like sel_start, sel_end, and sel_cons)
+are protected only in set_selection_user. The other functions need quite
+some more work to close the races of the variables there. This is going
+to happen later.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: yangerkun <yangerkun@huawei.com>
+This likely fixes (I am unsure as there is no reproducer provided) bug
+206361 too. It was marked as CVE-2020-8648.
+
+Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+Reported-by: syzbot+59997e8d5cbdc486e6f6@syzkaller.appspotmail.com
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200210081131.23572-2-jslaby@suse.cz
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- crypto/algif_skcipher.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/tty/vt/selection.c |   21 +++++++++++++++------
+ 1 file changed, 15 insertions(+), 6 deletions(-)
 
-v1->v2:
-update the commit message
-
---- a/crypto/algif_skcipher.c
-+++ b/crypto/algif_skcipher.c
-@@ -538,7 +538,7 @@ static int skcipher_recvmsg_async(struct
- 	lock_sock(sk);
- 	tx_nents = skcipher_all_sg_nents(ctx);
- 	sreq->tsg = kcalloc(tx_nents, sizeof(*sg), GFP_KERNEL);
--	if (unlikely(!sreq->tsg))
-+	if (unlikely(ZERO_OR_NULL_PTR(sreq->tsg)))
- 		goto unlock;
- 	sg_init_table(sreq->tsg, tx_nents);
- 	memcpy(iv, ctx->iv, ivsize);
+--- a/drivers/tty/vt/selection.c
++++ b/drivers/tty/vt/selection.c
+@@ -13,6 +13,7 @@
+ #include <linux/tty.h>
+ #include <linux/sched.h>
+ #include <linux/mm.h>
++#include <linux/mutex.h>
+ #include <linux/slab.h>
+ #include <linux/types.h>
+ 
+@@ -40,6 +41,7 @@ static volatile int sel_start = -1; 	/*
+ static int sel_end;
+ static int sel_buffer_lth;
+ static char *sel_buffer;
++static DEFINE_MUTEX(sel_lock);
+ 
+ /* clear_selection, highlight and highlight_pointer can be called
+    from interrupt (via scrollback/front) */
+@@ -163,7 +165,7 @@ int set_selection(const struct tiocl_sel
+ 	char *bp, *obp;
+ 	int i, ps, pe, multiplier;
+ 	u16 c;
+-	int mode;
++	int mode, ret = 0;
+ 
+ 	poke_blanked_console();
+ 
+@@ -203,6 +205,7 @@ int set_selection(const struct tiocl_sel
+ 		pe = tmp;
+ 	}
+ 
++	mutex_lock(&sel_lock);
+ 	if (sel_cons != vc_cons[fg_console].d) {
+ 		clear_selection();
+ 		sel_cons = vc_cons[fg_console].d;
+@@ -248,9 +251,10 @@ int set_selection(const struct tiocl_sel
+ 			break;
+ 		case TIOCL_SELPOINTER:
+ 			highlight_pointer(pe);
+-			return 0;
++			goto unlock;
+ 		default:
+-			return -EINVAL;
++			ret = -EINVAL;
++			goto unlock;
+ 	}
+ 
+ 	/* remove the pointer */
+@@ -272,7 +276,7 @@ int set_selection(const struct tiocl_sel
+ 	else if (new_sel_start == sel_start)
+ 	{
+ 		if (new_sel_end == sel_end)	/* no action required */
+-			return 0;
++			goto unlock;
+ 		else if (new_sel_end > sel_end)	/* extend to right */
+ 			highlight(sel_end + 2, new_sel_end);
+ 		else				/* contract from right */
+@@ -299,7 +303,8 @@ int set_selection(const struct tiocl_sel
+ 	if (!bp) {
+ 		printk(KERN_WARNING "selection: kmalloc() failed\n");
+ 		clear_selection();
+-		return -ENOMEM;
++		ret = -ENOMEM;
++		goto unlock;
+ 	}
+ 	kfree(sel_buffer);
+ 	sel_buffer = bp;
+@@ -324,7 +329,9 @@ int set_selection(const struct tiocl_sel
+ 		}
+ 	}
+ 	sel_buffer_lth = bp - sel_buffer;
+-	return 0;
++unlock:
++	mutex_unlock(&sel_lock);
++	return ret;
+ }
+ 
+ /* Insert the contents of the selection buffer into the
+@@ -350,6 +357,7 @@ int paste_selection(struct tty_struct *t
+ 	tty_buffer_lock_exclusive(&vc->port);
+ 
+ 	add_wait_queue(&vc->paste_wait, &wait);
++	mutex_lock(&sel_lock);
+ 	while (sel_buffer && sel_buffer_lth > pasted) {
+ 		set_current_state(TASK_INTERRUPTIBLE);
+ 		if (test_bit(TTY_THROTTLED, &tty->flags)) {
+@@ -362,6 +370,7 @@ int paste_selection(struct tty_struct *t
+ 					      count);
+ 		pasted += count;
+ 	}
++	mutex_unlock(&sel_lock);
+ 	remove_wait_queue(&vc->paste_wait, &wait);
+ 	__set_current_state(TASK_RUNNING);
+ 
 
 
