@@ -1,103 +1,240 @@
-Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <linux-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
-Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32776C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:01:12 +0000 (UTC)
-Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B66D720738
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:01:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583949672;
-	bh=9nTjFE1vVABrZv1mHgxXyCyxJwZrRpgnr6mb49Nwy04=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ELqRO5w8DpR7cu5M66W02S/hixWbtTKdEoKZC5IU/hXSZ2FN4c5jilLoaCDqhW4TN
-	 Q81gMnFLYpnGxIfdA8WvNxqZQAo1qzSSY1v0kS9inLuR+baOYfLbYsPQdQV4aztMjA
-	 C/Nt2Zy29yGCiqMMl5gWTwZSj9Lh3k/B2DGM7AzM=
-Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730701AbgCKSBL (ORCPT
-        <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 14:01:11 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:43387 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730468AbgCKSBK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 14:01:10 -0400
-Received: by mail-pf1-f195.google.com with SMTP id c144so1753931pfb.10;
-        Wed, 11 Mar 2020 11:01:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4rbFCslqjgH4sXZwXRxajxY2P/fkCA2L0OS7xWGtM24=;
-        b=gEBaAL1S79UPP4QUiKP2Fi8zuRAbPMoOO44U4NArFUQrk9iyjBNphW8J+WOGy5UUz2
-         /zyMIuEPLwLXK82aBe7LVi3564xY/MrR0CKArKWmwlh+ipou1AMILeOYU2Y5GDsnNWh9
-         K5emTXokFSQ+FzIgp9e3N68iiVX50fbpviPtVQ2BkIdeJ2970TbHl/8G3vyte6NE3LYa
-         i1D4U0o6jNZOVI5KKQ4cB3FQ7xgwVIzxkq6Kqey8Rw3ioabICTXSFL/+tnE5LIS9AGHc
-         M7aniFuRKCtDCAvowATGCK8nZgyPXN/90Zko5w71s7x/DL/Bea4eUB/zyhdWGBwQoI/M
-         AV3Q==
-X-Gm-Message-State: ANhLgQ07O9LW/6KbhYJo4Qbrsdnlad5yDUUfqs2MLg1v4jmq0nIoQ2a1
-        GqzSqenoDf4W9S+7xuwlesAuw5ArxUw=
-X-Google-Smtp-Source: ADFU+vv3iN5bf6Nx81FXMawuf3VzC8L33BaYvuVyxtyYoRAzzmsqgFyyXWtfhSheMAx7NV680qGZ1Q==
-X-Received: by 2002:a63:6202:: with SMTP id w2mr3994411pgb.154.1583949669546;
-        Wed, 11 Mar 2020 11:01:09 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id w190sm1323524pfc.219.2020.03.11.11.01.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Mar 2020 11:01:08 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id D91F14028E; Wed, 11 Mar 2020 18:01:07 +0000 (UTC)
-Date:   Wed, 11 Mar 2020 18:01:07 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, stable@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jeff Vander Stoep <jeffv@google.com>,
-        Jessica Yu <jeyu@kernel.org>
-Subject: Re: [PATCH] kmod: make request_module() return an error when
- autoloading is disabled
-Message-ID: <20200311180107.GO11244@42.do-not-panic.com>
-References: <20200310223731.126894-1-ebiggers@kernel.org>
- <202003111026.2BBE41C@keescook>
- <20200311174134.GB20006@gmail.com>
+X-Spam-Status: No, score=-3.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MENTIONS_GIT_HOSTING,RDNS_NONE,SPF_HELO_NONE,SPF_NONE autolearn=no
+	autolearn_force=no version=3.4.0
+Received: from mga05.intel.com ([192.55.52.43]:36264 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726271AbgCJUns (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 16:43:48 -0400
+Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: Re: [PATCH v17 09/12] PCI/AER: Allow clearing Error Status Register
+ in FF mode
+To: Austin.Bolen@dell.com, helgaas@kernel.org
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com
+References: <20200310193257.GA170043@google.com>
+ <38277b0f6c2e4c5d88e741b7354c72d1@AUSX13MPC107.AMER.DELL.COM>
+From: Kuppuswamy Sathyanarayanan
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Message-ID: <8289f9b3-b9eb-6a80-1271-3db9aeef5161@linux.intel.com>
+Date: Tue, 10 Mar 2020 13:41:22 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200311174134.GB20006@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <38277b0f6c2e4c5d88e741b7354c72d1@AUSX13MPC107.AMER.DELL.COM>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
-X-Mailing-List: linux-kernel@vger.kernel.org
+Message-ID: <20200310204122.sgUoKVHZJjfKM78iVBdwNAbQ1q6AMCEIit1AL1PybEI@z>
 
-On Wed, Mar 11, 2020 at 10:41:34AM -0700, Eric Biggers wrote:
-> On Wed, Mar 11, 2020 at 10:28:07AM -0700, Kees Cook wrote:
-> > On Tue, Mar 10, 2020 at 03:37:31PM -0700, Eric Biggers wrote:
-> > > From: Eric Biggers <ebiggers@google.com>
-> > > 
-> > > It's long been possible to disable kernel module autoloading completely
-> > > by setting /proc/sys/kernel/modprobe to the empty string.  This can be
-> > 
-> > Hunh. I've never seen that before. :) I've always used;
-> > 
-> > echo 1 > /proc/sys/kernel/modules_disabled
-> > 
-> > Regardless,
-> > 
-> > Reviewed-by: Kees Cook <keescook@chromium.org>
-> > 
-> 
-> modules_disabled is different because it disables *all* module loading, not just
-> autoloading.
+Hi,
 
-Clarifying this on your patch would be useful, otherwise its lost
-tribal knowledge.
+On 3/10/20 1:06 PM, Austin.Bolen@dell.com wrote:
+> On 3/10/2020 2:33 PM, Bjorn Helgaas wrote:
+>> [EXTERNAL EMAIL]
+>>
+>> On Tue, Mar 10, 2020 at 06:14:20PM +0000, Austin.Bolen@dell.com wrote:
+>>> On 3/9/2020 11:28 PM, Kuppuswamy, Sathyanarayanan wrote:
+>>>> On 3/9/2020 7:40 PM, Bjorn Helgaas wrote:
+>>>>> [+cc Austin, tentative Linux patches on this git branch:
+>>>>> https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/tree/drivers/pci/pcie?h=review/edr]
+>>>>>
+>>>>> On Tue, Mar 03, 2020 at 06:36:32PM -0800, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+>>>>>> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+>>>>>>
+>>>>>> As per PCI firmware specification r3.2 System Firmware Intermediary
+>>>>>> (SFI) _OSC and DPC Updates ECR
+>>>>>> (https://members.pcisig.com/wg/PCI-SIG/document/13563), sec titled "DPC
+>>>>>> Event Handling Implementation Note", page 10, Error Disconnect Recover
+>>>>>> (EDR) support allows OS to handle error recovery and clearing Error
+>>>>>> Registers even in FF mode. So create new API pci_aer_raw_clear_status()
+>>>>>> which allows clearing AER registers without FF mode checks.
+>>>>> I see that this ECR was released as an ECN a few days ago:
+>>>>> https://members.pcisig.com/wg/PCI-SIG/document/14076
+>>>>> Regrettably the title in the PDF still says "ECR" (the rendered title
+>>>>> *page* says "ENGINEERING CHANGE NOTIFICATION", but some metadata
+>>>>> buried in the file says "ECR - SFI _OSC Support and DPC Updates".
+>>> I'll see if PCI-SIG can update the metadata and repost.
+>> If that's possible, it would be nice to update the metadata for the
+>> "Downstream Port Containment related Enhancements" ECN as well.  That
+>> one currently says "ECR - CardBus Header Proposal", which means that's
+>> what's in the window title bar and icons in the panel.
+> Sure, I'll check.
+>
+>>>>> Anyway, I think I see the note you refer to (now on page 12):
+>>>>>
+>>>>>       IMPLEMENTATION NOTE
+>>>>>       DPC Event Handling
+>>>>>
+>>>>>       The flow chart below documents the behavior when firmware maintains
+>>>>>       control of AER and DPC and grants control of PCIe Hot-Plug to the
+>>>>>       operating system.
+>>>>>
+>>>>>       ...
+>>>>>
+>>>>>       Capture and clear device AER status. OS may choose to offline
+>>>>>       devices3, either via SW (not load driver) or HW (power down device,
+>>>>>       disable Link5,6,7). Otherwise process _HPX, complete device
+>>>>>       enumeration, load drivers
+>>>>>
+>>>>> This clearly suggests that the OS should clear device AER status.
+>>>>> However, according to the intro text, firmware has retained control of
+>>>>> AER, so what gives the OS the right to clear AER status?
+>>>>>
+>>>>> The Downstream Port Containment Related Enhancements ECN (sec 4.5.1,
+>>>>> table 4-6) contains an exception that allows the OS to read/write
+>>>>> DPC registers during recovery.  But
+>>>>>
+>>>>>       - that is for *DPC* registers, not for AER registers, and
+>>>>>
+>>>>>       - that exception only applies between OS receipt of the EDR
+>>>>>         notification and OS release of DPC by clearing the DPC Trigger
+>>>>>         Status bit.
+>>>>>
+>>>>> The flowchart in the SFI ECN shows the OS releasing DPC before
+>>>>> clearing AER status:
+>>>>>
+>>>>>       - Receive EDR notification
+>>>>>
+>>>>>       - Cleanup - Notify and unload child drivers below Port
+>>>>>
+>>>>>       - Bring Port out of DPC, clear port error status, assign bus numbers
+>>>>>         to child devices.
+>>>>>
+>>>>>         I assume this box includes clearing DPC error status and clearing
+>>>>>         Trigger Status?  They seem to be out of order in the box.
+>>> OS clears the DPC Trigger Status bit which will bring port below it out
+>>> of containment. Then OS will clear the "port" error status bits (i.e.,
+>>> the AER and DPC status bits in the root port or downstream port that
+>>> triggered containment). I don't think it would hurt to do this two steps
+>>> in reverse order but don't think it is necessary. Note that error status
+>>> bits for devices below the port in containment are cleared later after
+>>> f/w has a chance to log them.
+>> Maybe I'm misreading the DPC enhancements ECN.  I think it says the OS
+>> can read/write DPC registers until it clears the DPC Trigger Status.
+>> If the OS clears Trigger Status first, my understanding is that we're
+>> now out of the EDR notification processing window and the OS is not
+>> permitted to write DPC registers.
+>>
+>> If it's OK for the OS to clear Trigger Status before clearing DPC
+>> error status, what is the event that determines when the OS may no
+>> longer read/write the DPC registers?
+> I think there are a few different registers to consider... DPC Control,
+> DPC Status, various AER registers, and the RP PIO registers. At this
+> point in the flow, the firmware has already had a chance to read all of
+> them and so it really doesn't matter the order the OS does those two
+> things. The firmware isn't going to get notified again until _OST so by
+> then both operation will be done and system firmware will have no idea
+> which order the OS did them in, nor will it care.  But since the
+> existing normative text specifies and order, I would just follow that.
+I think the correct order is to clear the port error status *before clearing
+the DPC status trigger*.
 
- LUis
+Please check the following spec reference (change to 4.5.1 Table 4-6)
+
+the OS is permitted to read or write DPC Control and Status registers of a
+port while processing an Error Disconnect Recover notification from firmware
+on that port. Error Disconnect Recover notification processing begins 
+with the
+Error Disconnect Recover notify from Firmware, and *ends when the OS 
+releases
+DPC by clearing the DPC Trigger Status bit*.Firmware can read DPC Trigger
+Status bit to determine the ownership of DPC Control and Status 
+registers. Firmware
+is not permitted to write to DPC Control and Status registers if DPC 
+Trigger Status is
+set i.e. the link is in DPC state. *Outside of the Error Disconnect 
+Recover notification
+processing window, the OS is not permitted to modify DPC Control or 
+Status registers*;
+only firmware is allowed to.
+
+Since the EDR processing window ends with clearing DPC Trigger status 
+bit, OS needs to
+clear DPC and AER registers before it ends.
+
+Austin,
+
+I think the order needs to be reversed in the implementation note.
+>
+>>>>>       - Evaluate _OST
+>>>>>
+>>>>>       - Capture and clear device AER status.
+>>>>>
+>>>>>         This seems suspect to me.  Where does it say the OS is
+>>>>>         allowed to write AER status when firmware retains control
+>>>>>         of AER?
+>>>>>
+>>>>> This patch series does things in this order:
+>>>>>
+>>>>>       - Receive EDR notification (edr_handle_event(), edr.c)
+>>>>>
+>>>>>       - Read, log, and clear DPC error regs (dpc_process_error(),
+>>>>>         dpc.c).
+>>>>>
+>>>>>         This also clears AER uncorrectable error status when the
+>>>>>         relevant HEST entries do not have the FIRMWARE_FIRST bit
+>>>>>         set.  I think this is incorrect: the test should be based
+>>>>>         the _OSC negotiation for AER ownership, not on the HEST
+>>>>>         entries.  But this problem pre-dates this patch series.
+>>>>>
+>>>>>       - Clear AER status (pci_aer_raw_clear_status(), aer.c).
+>>>>>
+>>>>>         This is at least inside the EDR recovery window, but again,
+>>>>>         I don't see where it says the OS is allowed to write the
+>>>>>         AER status.
+>>>> Implementation note is the only reference we have regarding
+>>>> clearing the AER registers.
+>>>>
+>>>> But since the spec says both DPC and AER needs to be always
+>>>> controlled together by the either OS or firmware, and when
+>>>> firmware relinquishes control over DPC registers in EDR
+>>>> notification window, we can assume that we also have control over
+>>>> AER registers.
+>>>>
+>>>> But I agree that is not explicitly spelled out any where outside
+>>>> the implementation note.
+>> This is all quite unsatisfying since implementation notes are not
+>> normative.  I would far rather reference actual spec text.
+> Yes, the change I mention below would be to add normative text.
+>
+>>>> Austin,
+>>>>
+>>>> May be ECN (section 4.5.1, table 4-6) needs to be updated to add
+>>>> this clarification.
+>>> Sure we can update to section 4.5.1, table 4-6 to indicate when OS
+>>> can clear the AER status bits. It will just follow what's done in
+>>> the implementation note so I think it's acceptable to follow
+>>> implementation guidance for now.
+>> There are no events after the "clear device AER status" box.  That
+>> seems to mean the OS can write the AER status registers at any time.
+>> But the whole implementation note assumes firmware maintains control
+>> of AER.
+>>
+> In this model the OS doesn't own DPC or AER but the model allows OS to
+> touch both DPC and AER registers at certain times.  I would view
+> ownership in this case as who is the primary owner and not who is the
+> sole entity allowed to access the registers.
+>
+> For the normative text describing when OS clears the AER bits following
+> the informative flow chart, it could say that OS clears AER as soon as
+> possible after OST returns and before OS processes _HPX and loading
+> drivers.  Open to other suggestions as well.
+I think its better to have another handshake between OS and
+firmware to avoid unnecessary races.
+>
+>>>>>       - Attempt recovery (pcie_do_recovery(), err.c)
+>>>>>
+>>>>>       - Clear DPC Trigger Status (dpc_reset_link(), dpc.c)
+>>>>>
+>>>>>       - Evaluate _OST (acpi_send_edr_status(), edr.c)
+>>>>>
+>>>>> What am I missing?
+
+-- 
+Sathyanarayanan Kuppuswamy
+Linux kernel developer
+
