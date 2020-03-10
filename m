@@ -2,56 +2,55 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3BF0C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:55:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7993C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:55:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BF3C2253D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:55:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88F102467D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:55:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583844949;
-	bh=LC9GSII5BStF8uKOWa5lCdxNMasH/snaaFuoURKQtP4=;
+	s=default; t=1583844954;
+	bh=cG8xBS3xZCfN0tOEGRJjaUOF0nL+MWt/juF0Qz+0BpE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1KVMToPaiXxHBDoArcv0CMYgtE7+f2+b9NpO2E7qrEx8FguCMerspwlZ01H5m4m7G
-	 5XDcAmd7EqZFRkS5uKSmV/rtC1gZYDIbtUYrZicqSqtidBH5cvX159kYcs5vH651Ig
-	 KeF54qfQppM6eYtkybOztV0p5PWIr/xxrFvCppeU=
+	b=ySgQ4SVe97kSC+LhHd+eom1ANC1Mc9OveuD1ok/kglPz3iiuQ51xTBIl+7FrttjFE
+	 FhT4Q0muatEs1U20fBX28S/Mff8I+rMqVc1ItEdpBlePkVIMU5++Sq+svtYd/kIDOo
+	 86Pbr5CsXC16XyCI5utoZ+UG0RPh+/5tMlF4YUSs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729558AbgCJMzs (ORCPT
+        id S1729575AbgCJMzx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:55:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34624 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:55:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34762 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728069AbgCJMzp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:55:45 -0400
+        id S1728220AbgCJMzu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:55:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19B1D20674;
-        Tue, 10 Mar 2020 12:55:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D488D2253D;
+        Tue, 10 Mar 2020 12:55:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844944;
-        bh=LC9GSII5BStF8uKOWa5lCdxNMasH/snaaFuoURKQtP4=;
+        s=default; t=1583844950;
+        bh=cG8xBS3xZCfN0tOEGRJjaUOF0nL+MWt/juF0Qz+0BpE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OH5HpFtLp4Uq156L94BHlpbuJTK1BBsafRLYOC/68nP+vMulEcCZN5bfw/qkcY8qf
-         AbLtnrwNHYguM0sMfc9FsZmc2DZS4ZVJeUkEF/DZwNs1C5uJ7S9qL+zaU0p4iZNNMU
-         xSxA1abXjhQ2gJMDBY7/gKc0tQlq3B5FpBtv1ya0=
+        b=kqabZE1NnLamplFubAhUFA4hNklOA31GpqgYio8roEpeD+UojpbLdMqxS0pYdhrG7
+         s8KRttYAC0hUtlvkGpRhmGVZnoMPbKy1d7yREkyhuV3BkGcmOOi8+JV07qgNjT/ZqF
+         5TmNpPxQX5T1bmVLiNWkzVvPKShpe9z5CDKJJzXQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+2e80962bedd9559fe0b3@syzkaller.appspotmail.com,
-        Bernard Metzler <bmt@zurich.ibm.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 5.4 148/168] RDMA/siw: Fix failure handling during device creation
-Date:   Tue, 10 Mar 2020 13:39:54 +0100
-Message-Id: <20200310123650.499113937@linuxfoundation.org>
+        stable@vger.kernel.org, Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 010/189] netfilter: hashlimit: do not use indirect calls during gc
+Date:   Tue, 10 Mar 2020 13:37:27 +0100
+Message-Id: <20200310123640.583088063@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200310123635.322799692@linuxfoundation.org>
-References: <20200310123635.322799692@linuxfoundation.org>
+In-Reply-To: <20200310123639.608886314@linuxfoundation.org>
+References: <20200310123639.608886314@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,47 +60,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bernard Metzler <bmt@zurich.ibm.com>
+From: Florian Westphal <fw@strlen.de>
 
-commit 12e5eef0f4d8087ea7b559f6630be08ffea2d851 upstream.
+[ Upstream commit 28b3a4270c0fc064557e409111f2a678e64b6fa7 ]
 
-A failing call to ib_device_set_netdev() during device creation caused
-system crash due to xa_destroy of uninitialized xarray hit by device
-deallocation. Fixed by moving xarray initialization before potential
-device deallocation.
+no need, just use a simple boolean to indicate we want to reap all
+entries.
 
-Fixes: bdcf26bf9b3a ("rdma/siw: network and RDMA core interface")
-Link: https://lore.kernel.org/r/20200302155814.9896-1-bmt@zurich.ibm.com
-Reported-by: syzbot+2e80962bedd9559fe0b3@syzkaller.appspotmail.com
-Signed-off-by: Bernard Metzler <bmt@zurich.ibm.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/sw/siw/siw_main.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ net/netfilter/xt_hashlimit.c | 22 ++++------------------
+ 1 file changed, 4 insertions(+), 18 deletions(-)
 
---- a/drivers/infiniband/sw/siw/siw_main.c
-+++ b/drivers/infiniband/sw/siw/siw_main.c
-@@ -379,6 +379,9 @@ static struct siw_device *siw_device_cre
- 	base_dev->dev.dma_ops = &dma_virt_ops;
- 	base_dev->num_comp_vectors = num_possible_cpus();
+diff --git a/net/netfilter/xt_hashlimit.c b/net/netfilter/xt_hashlimit.c
+index 1b68a131083c2..7a2c4b8408c49 100644
+--- a/net/netfilter/xt_hashlimit.c
++++ b/net/netfilter/xt_hashlimit.c
+@@ -358,21 +358,7 @@ static int htable_create(struct net *net, struct hashlimit_cfg3 *cfg,
+ 	return 0;
+ }
  
-+	xa_init_flags(&sdev->qp_xa, XA_FLAGS_ALLOC1);
-+	xa_init_flags(&sdev->mem_xa, XA_FLAGS_ALLOC1);
-+
- 	ib_set_device_ops(base_dev, &siw_device_ops);
- 	rv = ib_device_set_netdev(base_dev, netdev, 1);
- 	if (rv)
-@@ -406,9 +409,6 @@ static struct siw_device *siw_device_cre
- 	sdev->attrs.max_srq_wr = SIW_MAX_SRQ_WR;
- 	sdev->attrs.max_srq_sge = SIW_MAX_SGE;
- 
--	xa_init_flags(&sdev->qp_xa, XA_FLAGS_ALLOC1);
--	xa_init_flags(&sdev->mem_xa, XA_FLAGS_ALLOC1);
+-static bool select_all(const struct xt_hashlimit_htable *ht,
+-		       const struct dsthash_ent *he)
+-{
+-	return true;
+-}
 -
- 	INIT_LIST_HEAD(&sdev->cep_list);
- 	INIT_LIST_HEAD(&sdev->qp_list);
+-static bool select_gc(const struct xt_hashlimit_htable *ht,
+-		      const struct dsthash_ent *he)
+-{
+-	return time_after_eq(jiffies, he->expires);
+-}
+-
+-static void htable_selective_cleanup(struct xt_hashlimit_htable *ht,
+-			bool (*select)(const struct xt_hashlimit_htable *ht,
+-				      const struct dsthash_ent *he))
++static void htable_selective_cleanup(struct xt_hashlimit_htable *ht, bool select_all)
+ {
+ 	unsigned int i;
  
+@@ -382,7 +368,7 @@ static void htable_selective_cleanup(struct xt_hashlimit_htable *ht,
+ 
+ 		spin_lock_bh(&ht->lock);
+ 		hlist_for_each_entry_safe(dh, n, &ht->hash[i], node) {
+-			if ((*select)(ht, dh))
++			if (time_after_eq(jiffies, dh->expires) || select_all)
+ 				dsthash_free(ht, dh);
+ 		}
+ 		spin_unlock_bh(&ht->lock);
+@@ -396,7 +382,7 @@ static void htable_gc(struct work_struct *work)
+ 
+ 	ht = container_of(work, struct xt_hashlimit_htable, gc_work.work);
+ 
+-	htable_selective_cleanup(ht, select_gc);
++	htable_selective_cleanup(ht, false);
+ 
+ 	queue_delayed_work(system_power_efficient_wq,
+ 			   &ht->gc_work, msecs_to_jiffies(ht->cfg.gc_interval));
+@@ -420,7 +406,7 @@ static void htable_destroy(struct xt_hashlimit_htable *hinfo)
+ {
+ 	cancel_delayed_work_sync(&hinfo->gc_work);
+ 	htable_remove_proc_entry(hinfo);
+-	htable_selective_cleanup(hinfo, select_all);
++	htable_selective_cleanup(hinfo, true);
+ 	kfree(hinfo->name);
+ 	vfree(hinfo);
+ }
+-- 
+2.20.1
+
 
 
