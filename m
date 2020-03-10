@@ -2,142 +2,76 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 473FAC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:24:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04BE7C18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:24:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 084CC222C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:24:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583879054;
-	bh=iccim/BkgKBZPpO3db15oYp/nGuyqgqOuvUnq2bkmEI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TIrATtw+Tn3vR6LuPrhKch9iBBExK3wiKBUuUYnLqezs/cvHjlMbbpAR6DZt/p0P+
-	 V1T8tO5KdZcM9S8rqulZBzb0ktL/eYusHxJ1HWf+GrsTZzS27Nv38UerFboAKBokt5
-	 18uGElBUmHCKx3I+JWSN3Y4S9QkHaEl4IRWrnQ0s=
+	by mail.kernel.org (Postfix) with ESMTP id C9B372071B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:24:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727699AbgCJWYM (ORCPT
+        id S1727790AbgCJWYT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 18:24:12 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:41068 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726315AbgCJWYM (ORCPT
+        Tue, 10 Mar 2020 18:24:19 -0400
+Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:8935 "EHLO
+        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726315AbgCJWYT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 18:24:12 -0400
-Received: by mail-pl1-f193.google.com with SMTP id t14so89181plr.8;
-        Tue, 10 Mar 2020 15:24:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=VHQdCYc7HG4lQiYGqYUT5UP51+C0gUPiE/s2rIkKRtU=;
-        b=KkWPHp8FUpWnyRN0umq7ZqUU6jx3hk5cpOiUL4uPzrawKLv6TEL2yRPitkww/xZ7ya
-         XOqwqFZQsUEJKkK9U20KiQTHiu14dxVnrL5+EOQzVZSz7hs4StJIAXm3kZxcD9RmNGNM
-         emB5EPlE9QfM63BvIiGnpUSAhQrvLunoPAx/lobQa872nLgOuNWUbPUy+Q5Jjhwr/p5n
-         D/xRRguId/b38RtD6CE8iZYcd4wFGQHNxmkw98D+feGYjCGUmbc1CZf558wu+g47zvNu
-         NfS+KuzM9qvdrLwUlx4Vu+cZ9QOUraHCYo+HIc/IDhoNFUxm2SmtLEbSOIvA5KAuaFR/
-         fPuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=VHQdCYc7HG4lQiYGqYUT5UP51+C0gUPiE/s2rIkKRtU=;
-        b=rwdOuIxuxPQbCRUre7Qm9GCkAlKPVl/ogjRPU0EeOh0idB8C6x6J6rZZaznijHWvU5
-         7d4o5/ks17ws98hjEs8ZCXCafU68G6N9jm3eB4PYIpgZl9X4fvaqDRz4dJVArvcmf/rh
-         8uBbYdWXtKFOjDuOJgJy5wOouW5UxrspldTKKj3yB0B9D/7cDeHX0G3FTC+R+mXGoMqM
-         rhnOldC9e4RopfErI6ZZwDCPEWU6ffU/zHGIq8q4AshokearX9AJhH9qa8G2O3VTb7qp
-         x0O8vl15AaEa1KbpjoxlTMiexjHbiqbUdvI+H0ThrJ5ijGyqMnPIKKMXwd4BkD9kczBq
-         UWmg==
-X-Gm-Message-State: ANhLgQ1RfoYukXk9TfxVou9d9P40CT6vxxunOJgrM0yG7oAzfNszv0b5
-        dqcpplyAsxQPfvpQ+Zb5lvc=
-X-Google-Smtp-Source: ADFU+vscvd0WY2fsGo8nNRttNgBNSpAdv2WUgdhACEYKmMYI3pA4z6251Yz9qfEoSYIvhhu71/jlYg==
-X-Received: by 2002:a17:90a:2ec7:: with SMTP id h7mr138998pjs.107.1583879051429;
-        Tue, 10 Mar 2020 15:24:11 -0700 (PDT)
-Received: from google.com ([2620:15c:211:1:3e01:2939:5992:52da])
-        by smtp.gmail.com with ESMTPSA id 139sm25480434pfy.70.2020.03.10.15.24.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Mar 2020 15:24:10 -0700 (PDT)
-Date:   Tue, 10 Mar 2020 15:24:08 -0700
-From:   Minchan Kim <minchan@kernel.org>
-To:     Vlastimil Babka <vbabka@suse.cz>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, linux-api@vger.kernel.org,
-        oleksandr@redhat.com, Suren Baghdasaryan <surenb@google.com>,
-        Tim Murray <timmurray@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        John Dias <joaodias@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Jann Horn <jannh@google.com>,
-        alexander.h.duyck@linux.intel.com, sj38.park@gmail.com
-Subject: Re: [PATCH v7 3/7] mm: check fatal signal pending of target process
-Message-ID: <20200310222408.GC72963@google.com>
-References: <20200302193630.68771-1-minchan@kernel.org>
- <20200302193630.68771-4-minchan@kernel.org>
- <2f3a9530-483d-0861-3844-bc12d212dd93@suse.cz>
+        Tue, 10 Mar 2020 18:24:19 -0400
+Received: from unknown (HELO ironmsg-SD-alpha.qualcomm.com) ([10.53.140.30])
+  by alexa-out-sd-02.qualcomm.com with ESMTP; 10 Mar 2020 15:24:18 -0700
+Received: from gurus-linux.qualcomm.com ([10.46.162.81])
+  by ironmsg-SD-alpha.qualcomm.com with ESMTP; 10 Mar 2020 15:24:18 -0700
+Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
+        id 50F004A2B; Tue, 10 Mar 2020 15:24:18 -0700 (PDT)
+Date:   Tue, 10 Mar 2020 15:24:18 -0700
+From:   Guru Das Srinagesh <gurus@codeaurora.org>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
+        linux-kernel@vger.kernel.org, Kamil Debski <kamil@wypas.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, linux-hwmon@vger.kernel.org
+Subject: Re: [PATCH v7 03/13] hwmon: pwm-fan: Use 64-bit division macros for
+ period and duty cycle
+Message-ID: <20200310222418.GA8053@codeaurora.org>
+References: <cover.1583782035.git.gurus@codeaurora.org>
+ <b503833e0f58bd6dd9fe84d866124e7c457e099e.1583782035.git.gurus@codeaurora.org>
+ <20200309214822.GA19773@roeck-us.net>
+ <20200310120814.4kjxmii3c7zxw55y@pengutronix.de>
+ <bd6c7679-9569-2cf1-1664-61bf368d82dd@roeck-us.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2f3a9530-483d-0861-3844-bc12d212dd93@suse.cz>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <bd6c7679-9569-2cf1-1664-61bf368d82dd@roeck-us.net>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 06, 2020 at 11:22:07AM +0100, Vlastimil Babka wrote:
-> On 3/2/20 8:36 PM, Minchan Kim wrote:
-> > Bail out to prevent unnecessary CPU overhead if target process has
-> > pending fatal signal during (MADV_COLD|MADV_PAGEOUT) operation.
-> > 
-> > Reviewed-by: Suren Baghdasaryan <surenb@google.com>
-> > Signed-off-by: Minchan Kim <minchan@kernel.org>
-> 
-> Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
-> 
-> Nit below:
-> 
-> > ---
-> >  mm/madvise.c | 29 +++++++++++++++++++++--------
-> >  1 file changed, 21 insertions(+), 8 deletions(-)
-> > 
-> > diff --git a/mm/madvise.c b/mm/madvise.c
-> > index 349473fc6683..6543f2bfc3d8 100644
-> > --- a/mm/madvise.c
-> > +++ b/mm/madvise.c
-> > @@ -36,6 +36,7 @@
-> >  struct madvise_walk_private {
-> >  	struct mmu_gather *tlb;
-> >  	bool pageout;
-> > +	struct task_struct *target_task;
-> >  };
-> >  
-> >  /*
-> > @@ -316,6 +317,10 @@ static int madvise_cold_or_pageout_pte_range(pmd_t *pmd,
-> >  	if (fatal_signal_pending(current))
-> >  		return -EINTR;
-> >  
-> > +	if (private->target_task &&
-> > +			fatal_signal_pending(private->target_task))
-> > +		return -EINTR;
-> 
-> With madvise(2) private->target_task will be current, thus current will be
-> tested twice. Not wrong, but maybe add a "private->target_task != current"
-> condition?
+On Tue, Mar 10, 2020 at 08:05:58AM -0700, Guenter Roeck wrote:
+> I don't see support in the LED subsystem to utilize the PWM framework directly
+> for blinking. Plus, you say yourself that it isn't a _real_ use case, just a
+> theoretic one.
 
-It was in old series but removed because reviewer(IIRC, suren) wanted it.
-I am not strong preference either way. Since you said it's nit and
-considering other reviewer wanted to remove it, I will not change
-further.
+An example use case is a mobile phone OEM that wishes to set a period of
+5 seconds or more for, say, a low battery slow blinking indication - currently
+this is not possible. The PWM framework not having direct support for
+blinking should not be a concern if the PWM peripheral being controlled
+supports it via register writes.
 
-Thanks!
+> Either case, the reason / use case for this series should be explained
+> in the summary patch. That is what it is for. That case is not made.
+
+Will upload a new patchset adding more details in the summary patch.
+
+Thank you.
+
+Guru Das.
