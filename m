@@ -2,122 +2,243 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C720AC18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 10:12:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCE77C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 10:12:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA83920637
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 10:12:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A124020637
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 10:12:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="QkQQOGv4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726331AbgCJKMc (ORCPT
+        id S1726391AbgCJKMx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 06:12:32 -0400
-Received: from sauhun.de ([88.99.104.3]:46998 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726199AbgCJKMc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 06:12:32 -0400
-Received: from localhost (p54B33196.dip0.t-ipconnect.de [84.179.49.150])
-        by pokefinder.org (Postfix) with ESMTPSA id 321342C1EB6;
-        Tue, 10 Mar 2020 11:12:30 +0100 (CET)
-Date:   Tue, 10 Mar 2020 11:12:29 +0100
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Eric Anholt <eric@anholt.net>, dri-devel@lists.freedesktop.org,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        Tim Gover <tim.gover@raspberrypi.com>,
-        Phil Elwell <phil@raspberrypi.com>,
-        Kamal Dasu <kdasu.kdev@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        linux-i2c@vger.kernel.org
-Subject: Re: [PATCH 03/89] i2c: brcmstb: Support BCM2711 HDMI BSC controllers
-Message-ID: <20200310101229.GM1987@ninjato>
-References: <cover.6c896ace9a5a7840e9cec008b553cbb004ca1f91.1582533919.git-series.maxime@cerno.tech>
- <1ed75ec6dc9310afd768c0bbfd8e73268e8cdfa9.1582533919.git-series.maxime@cerno.tech>
+        Tue, 10 Mar 2020 06:12:53 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:34568 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726199AbgCJKMw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 06:12:52 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02AA3F4k122852;
+        Tue, 10 Mar 2020 10:12:13 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=NwLOWRFWQiueXZ/T6wZO3RExAUeDO7RuhVslA14vlsk=;
+ b=QkQQOGv4U93m2QsiTciyW+ErarTpoVly3OH1jPzWGzqjD93Ud6BHype5gf4znBd+idDB
+ vqna0kz2S9HsnUYSyEAu5SHD+qpUwv62Y055WNWZUFUaNmhvq7i2Z6DoSyISdnjie4Ta
+ seB9IjwHmEo8/0HZ1FmGpjeLFomrT1RK/lMi0TYxZkNynQSE4KnR8pGUArvQRFwmbfSQ
+ TdeUC4WfZsM+pAR+fS2jQD1qKaJSIwz6gr/vY5jlcrNfbnqlzPbhSwEsiEU2p/8pO1TR
+ AzufH7bOtSpf/zi6rG/Qsm5p0ewJGMWYJnW6D+AX2G6H9oLD69xczTJEOXLI8u29mHiE Pg== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2yp7hm10k7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 10 Mar 2020 10:12:13 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02AAC5R6037831;
+        Tue, 10 Mar 2020 10:12:12 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 2yp8rh91mt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 10 Mar 2020 10:12:12 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 02AACATf013288;
+        Tue, 10 Mar 2020 10:12:10 GMT
+Received: from [192.168.8.5] (/213.41.92.70)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 10 Mar 2020 03:12:09 -0700
+Subject: Re: [patch part-II V2 01/13] context_tracking: Ensure that the
+ critical path cannot be instrumented
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        Brian Gerst <brgerst@gmail.com>,
+        Juergen Gross <jgross@suse.com>,
+        Frederic Weisbecker <frederic@kernel.org>
+References: <20200308222359.370649591@linutronix.de>
+ <20200308222609.017810037@linutronix.de>
+From:   Alexandre Chartre <alexandre.chartre@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <ca03a66a-a632-e646-ed3d-d350f78f7d79@oracle.com>
+Date:   Tue, 10 Mar 2020 11:12:12 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="bPrm2PuLP7ysUh6c"
-Content-Disposition: inline
-In-Reply-To: <1ed75ec6dc9310afd768c0bbfd8e73268e8cdfa9.1582533919.git-series.maxime@cerno.tech>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200308222609.017810037@linutronix.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9555 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 phishscore=0 mlxscore=0
+ spamscore=0 malwarescore=0 bulkscore=0 adultscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2003100068
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9555 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0
+ priorityscore=1501 clxscore=1011 mlxscore=0 impostorscore=0
+ mlxlogscore=999 suspectscore=0 phishscore=0 malwarescore=0 adultscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003100068
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---bPrm2PuLP7ysUh6c
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 3/8/20 11:24 PM, Thomas Gleixner wrote:
+> context tracking lacks a few protection mechanisms against instrumentation:
+> 
+>   - While the core functions are marked NOKPROBE they lack protection
+>     against function tracing which is required as the function entry/exit
+>     points can be utilized by BPF.
+> 
+>   - static functions invoked from the protected functions need to be marked
+>     as well as they can be instrumented otherwise.
+> 
+>   - using plain inline allows the compiler to emit traceable and probable
+>     functions.
+> 
+> Fix this by adding the missing notrace/NOKPROBE annotations and converting
+> the plain inlines to __always_inline.
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> ---
+>   include/linux/context_tracking.h       |   14 +++++++-------
+>   include/linux/context_tracking_state.h |    6 +++---
+>   kernel/context_tracking.c              |    9 +++++----
+>   3 files changed, 15 insertions(+), 14 deletions(-)
 
-On Mon, Feb 24, 2020 at 10:06:05AM +0100, Maxime Ripard wrote:
-> The HDMI blocks in the BCM2771 have an i2c controller to retrieve the
-> EDID. This block is split into two parts, the BSC and the AUTO_I2C,
-> lying in two separate register areas.
->=20
-> The AUTO_I2C block has a mailbox-like interface and will take away the
-> BSC control from the CPU if enabled. However, the BSC is the actually
-> the same controller than the one supported by the brcmstb driver, and
-> the AUTO_I2C doesn't really bring any immediate benefit.
->=20
-> Let's use the BSC then, but let's also tie the AUTO_I2C registers with a
-> separate compatible so that we can enable AUTO_I2C if needed in the
-> future.
->=20
-> The AUTO_I2C is enabled by default at boot though, so we first need to
-> release the BSC from the AUTO_I2C control.
->=20
-> Cc: Kamal Dasu <kdasu.kdev@gmail.com>
-> Cc: Florian Fainelli <f.fainelli@gmail.com>
-> Cc: Wolfram Sang <wsa@the-dreams.de>
-> Cc: bcm-kernel-feedback-list@broadcom.com
-> Cc: linux-i2c@vger.kernel.org
-> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+Reviewed-by: Alexandre Chartre <alexandre.chartre@oracle.com>
 
-Fixed the acked-by and applied to for-next, thanks!
+alex.
 
-FYI, cppcheck rightfully warned about this in the driver:
-
-drivers/i2c/busses/i2c-brcmstb.c:319:7: warning: Condition 'CMD_RD' is alwa=
-ys true [knownConditionTrueFalse]
- if ((CMD_RD || CMD_WR) &&
-      ^
-drivers/i2c/busses/i2c-brcmstb.c:319:17: warning: Condition 'CMD_WR' is alw=
-ays false [knownConditionTrueFalse]
- if ((CMD_RD || CMD_WR) &&
-                ^
-drivers/i2c/busses/i2c-brcmstb.c:464:0: warning: Variable 'len' is assigned=
- a value that is never used. [unreadVariable]
- int len =3D 0;
-
-Not related to this patch, but maybe one of you is interested...
-
-
---bPrm2PuLP7ysUh6c
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl5naAkACgkQFA3kzBSg
-Kba2JQ/9HdPkWxyj7kgAVp3iCcUbIkAtwDpmrhGYLSr9AUHb+mlfe6sB92mog9+X
-P3ETy/m7Gs6cwIBqlhmQuR4E0S89dDTnC1zFk+sAyQvOp1deyoTW+P3xteUyiR9W
-9Y72Z2nhdTS1LouythkJled4kCfJ1PF3lst9/o1umYF5Q68akoWIGRq20MMBz80K
-eEXbI5+ZfvbIfzsuD220A3v3IH+KNI9rGx8Yj7ze+B/iwmTVQd7NnEkRQdD2eAxW
-yfQK9TTn+fhJWUOEJ5PvYmkYd2zfEjQQdOIdqi93nqE4w9dZ43P1YcrlPQBGqv0c
-TRXyls9o1HK2iw7ISd0tZgQBAytHuaxzST+RFHjCI8tvhU48AzplJLcc1BcXixI8
-9tAcRvbud+1WeOLk43q6jA+mIuV19/E88iJt2oqGMoUWOxnalSgg9vvkYS5MumZY
-XenAGha5oYmvszOd9tU/cDkktv+RdMNVzpOBa2gG8uiOyaEZfGLp1vaCBra7TJLw
-BZg8EzpWi6iea304u43d8P9NLfuIlNmZFTcZ7sO7UPpy9fuwaeHXRPwmIj8DmGrW
-o/TNxAnkSIOhRE/f/JnhOHHJ+BM9kuSydjAr0NHi0nnBUNTQw5J9YsPWGUSUEKHP
-IatOEa4v1/N5hUB+jP9YLWGUiBYU3bpuHEF70XNtg6jQVYyCj6c=
-=Dx35
------END PGP SIGNATURE-----
-
---bPrm2PuLP7ysUh6c--
+> --- a/include/linux/context_tracking.h
+> +++ b/include/linux/context_tracking.h
+> @@ -20,32 +20,32 @@ extern void context_tracking_exit(enum c
+>   extern void context_tracking_user_enter(void);
+>   extern void context_tracking_user_exit(void);
+>   
+> -static inline void user_enter(void)
+> +static __always_inline void user_enter(void)
+>   {
+>   	if (context_tracking_enabled())
+>   		context_tracking_enter(CONTEXT_USER);
+>   
+>   }
+> -static inline void user_exit(void)
+> +static __always_inline void user_exit(void)
+>   {
+>   	if (context_tracking_enabled())
+>   		context_tracking_exit(CONTEXT_USER);
+>   }
+>   
+>   /* Called with interrupts disabled.  */
+> -static inline void user_enter_irqoff(void)
+> +static __always_inline void user_enter_irqoff(void)
+>   {
+>   	if (context_tracking_enabled())
+>   		__context_tracking_enter(CONTEXT_USER);
+>   
+>   }
+> -static inline void user_exit_irqoff(void)
+> +static __always_inline void user_exit_irqoff(void)
+>   {
+>   	if (context_tracking_enabled())
+>   		__context_tracking_exit(CONTEXT_USER);
+>   }
+>   
+> -static inline enum ctx_state exception_enter(void)
+> +static __always_inline enum ctx_state exception_enter(void)
+>   {
+>   	enum ctx_state prev_ctx;
+>   
+> @@ -59,7 +59,7 @@ static inline enum ctx_state exception_e
+>   	return prev_ctx;
+>   }
+>   
+> -static inline void exception_exit(enum ctx_state prev_ctx)
+> +static __always_inline void exception_exit(enum ctx_state prev_ctx)
+>   {
+>   	if (context_tracking_enabled()) {
+>   		if (prev_ctx != CONTEXT_KERNEL)
+> @@ -75,7 +75,7 @@ static inline void exception_exit(enum c
+>    * is enabled.  If context tracking is disabled, returns
+>    * CONTEXT_DISABLED.  This should be used primarily for debugging.
+>    */
+> -static inline enum ctx_state ct_state(void)
+> +static __always_inline enum ctx_state ct_state(void)
+>   {
+>   	return context_tracking_enabled() ?
+>   		this_cpu_read(context_tracking.state) : CONTEXT_DISABLED;
+> --- a/include/linux/context_tracking_state.h
+> +++ b/include/linux/context_tracking_state.h
+> @@ -26,12 +26,12 @@ struct context_tracking {
+>   extern struct static_key_false context_tracking_key;
+>   DECLARE_PER_CPU(struct context_tracking, context_tracking);
+>   
+> -static inline bool context_tracking_enabled(void)
+> +static __always_inline bool context_tracking_enabled(void)
+>   {
+>   	return static_branch_unlikely(&context_tracking_key);
+>   }
+>   
+> -static inline bool context_tracking_enabled_cpu(int cpu)
+> +static __always_inline bool context_tracking_enabled_cpu(int cpu)
+>   {
+>   	return context_tracking_enabled() && per_cpu(context_tracking.active, cpu);
+>   }
+> @@ -41,7 +41,7 @@ static inline bool context_tracking_enab
+>   	return context_tracking_enabled() && __this_cpu_read(context_tracking.active);
+>   }
+>   
+> -static inline bool context_tracking_in_user(void)
+> +static __always_inline bool context_tracking_in_user(void)
+>   {
+>   	return __this_cpu_read(context_tracking.state) == CONTEXT_USER;
+>   }
+> --- a/kernel/context_tracking.c
+> +++ b/kernel/context_tracking.c
+> @@ -31,7 +31,7 @@ EXPORT_SYMBOL_GPL(context_tracking_key);
+>   DEFINE_PER_CPU(struct context_tracking, context_tracking);
+>   EXPORT_SYMBOL_GPL(context_tracking);
+>   
+> -static bool context_tracking_recursion_enter(void)
+> +static notrace bool context_tracking_recursion_enter(void)
+>   {
+>   	int recursion;
+>   
+> @@ -44,8 +44,9 @@ static bool context_tracking_recursion_e
+>   
+>   	return false;
+>   }
+> +NOKPROBE_SYMBOL(context_tracking_recursion_enter);
+>   
+> -static void context_tracking_recursion_exit(void)
+> +static __always_inline void context_tracking_recursion_exit(void)
+>   {
+>   	__this_cpu_dec(context_tracking.recursion);
+>   }
+> @@ -59,7 +60,7 @@ static void context_tracking_recursion_e
+>    * instructions to execute won't use any RCU read side critical section
+>    * because this function sets RCU in extended quiescent state.
+>    */
+> -void __context_tracking_enter(enum ctx_state state)
+> +void notrace __context_tracking_enter(enum ctx_state state)
+>   {
+>   	/* Kernel threads aren't supposed to go to userspace */
+>   	WARN_ON_ONCE(!current->mm);
+> @@ -142,7 +143,7 @@ NOKPROBE_SYMBOL(context_tracking_user_en
+>    * This call supports re-entrancy. This way it can be called from any exception
+>    * handler without needing to know if we came from userspace or not.
+>    */
+> -void __context_tracking_exit(enum ctx_state state)
+> +void notrace __context_tracking_exit(enum ctx_state state)
+>   {
+>   	if (!context_tracking_recursion_enter())
+>   		return;
+> 
