@@ -2,134 +2,138 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CDAEC18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:15:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56363C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:17:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F93522525
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:15:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C3C9208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:17:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727842AbgCJWPX (ORCPT
+        id S1727704AbgCJWRa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 18:15:23 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:38427 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727820AbgCJWPU (ORCPT
+        Tue, 10 Mar 2020 18:17:30 -0400
+Received: from smtprelay0079.hostedemail.com ([216.40.44.79]:35170 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726283AbgCJWR3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 18:15:20 -0400
-Received: by mail-io1-f72.google.com with SMTP id x2so89737iog.5
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 15:15:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=XwSC3MbibdHjebc+VGMl0nkJts274Y/XDwLyneFu6mk=;
-        b=NnEGRpl1nUhAMUhEbyxU8k84jIf0O9AhOxCfmpRumaoVjhx1vCx6yDFHNtfolD2mSn
-         +S3vi9gp+buwEt6QQaRTL1iqIU39hRM+s8e714IdxhE4mktrKGDUFGHrXB+BVWIEbg8a
-         eGBt6iE0ZsC/A3bfdzEWWhHUdCgZ+mcUg3xgC+UOySuabnHriYnbs1AEvtyvRogJirWp
-         PMzULg+8NeyuWMr1ls2XmGOT0suRPNbtcN8rYoH9PzRfVU/aMgGmmhqknX/Yg2J6IzEt
-         8n3hHiWGuz/T4m/5kjWmJPUdRRzJ5LUtu1Ko3tHSKXnRboEYCK8kM5eTtN6uK6eHejLb
-         nw+g==
-X-Gm-Message-State: ANhLgQ1HOYNIjCHF2DQtSzs/dRQ3ib2MnhmPOackHZSiT4QQNyZ2tym5
-        yQNeRaF6aBhNIymhV+XkGqPv4Y0+1grNzMk0WXn6vEEb832y
-X-Google-Smtp-Source: ADFU+vv6ZN70tvOfUP0eFBlVowXEeuFKOydoGdOxRek97JbwclNxOPEVBmLDt9gXhEuXMZuirstirK6k/Vpilcm/t5m7h8FCiOtu
+        Tue, 10 Mar 2020 18:17:29 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay06.hostedemail.com (Postfix) with ESMTP id 6609018224D99;
+        Tue, 10 Mar 2020 22:17:28 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: event05_5e115b0cde81b
+X-Filterd-Recvd-Size: 4412
+Received: from XPS-9350.home (unknown [47.151.143.254])
+        (Authenticated sender: joe@perches.com)
+        by omf02.hostedemail.com (Postfix) with ESMTPA;
+        Tue, 10 Mar 2020 22:17:26 +0000 (UTC)
+Message-ID: <937b0b529509ec1641453ef7c13f38e2d7cc813e.camel@perches.com>
+Subject: Re: [PATCH][next] zd1211rw/zd_usb.h: Replace zero-length array with
+ flexible-array member
+From:   Joe Perches <joe@perches.com>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Jes Sorensen <jes.sorensen@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Cc:     Daniel Drake <dsd@gentoo.org>, Ulrich Kunitz <kune@deine-taler.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Tue, 10 Mar 2020 15:15:44 -0700
+In-Reply-To: <fb3395d7-e932-10ac-1feb-ab2ceb63424e@embeddedor.com>
+References: <20200305111216.GA24982@embeddedor>
+         <87k13yq2jo.fsf@kamboji.qca.qualcomm.com>
+         <256881484c5db07e47c611a56550642a6f6bd8e9.camel@perches.com>
+         <87blpapyu5.fsf@kamboji.qca.qualcomm.com>
+         <1bb7270f-545b-23ca-aa27-5b3c52fba1be@embeddedor.com>
+         <87r1y0nwip.fsf@kamboji.qca.qualcomm.com>
+         <48ff1333-0a14-36d8-9565-a7f13a06c974@embeddedor.com>
+         <021d1125-3ffd-39ef-395a-b796c527bde4@gmail.com>
+         <fb3395d7-e932-10ac-1feb-ab2ceb63424e@embeddedor.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-X-Received: by 2002:a92:589a:: with SMTP id z26mr228050ilf.19.1583878517647;
- Tue, 10 Mar 2020 15:15:17 -0700 (PDT)
-Date:   Tue, 10 Mar 2020 15:15:17 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000696eaf05a0877436@google.com>
-Subject: WARNING: refcount bug in __tcf_action_put
-From:   syzbot <syzbot+91aff155f11242aeafbe@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, jhs@mojatatu.com, jiri@resnulli.us,
-        kuba@kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        xiyou.wangcong@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Tue, 2020-03-10 at 17:13 -0500, Gustavo A. R. Silva wrote:
+> 
+> On 3/10/20 5:07 PM, Jes Sorensen wrote:
+> > On 3/10/20 5:52 PM, Gustavo A. R. Silva wrote:
+> > > 
+> > > On 3/10/20 8:56 AM, Kalle Valo wrote:
+> > > > + jes
+> > > > 
+> > > > "Gustavo A. R. Silva" <gustavo@embeddedor.com> writes:
+> > > > > > I wrote in a confusing way, my question above was about the actual patch
+> > > > > > and not the the title. For example, Jes didn't like this style change:
+> > > > > > 
+> > > > > > https://patchwork.kernel.org/patch/11402315/
+> > > > > > 
+> > > > > 
+> > > > > It doesn't seem that that comment adds a lot to the conversation. The only
+> > > > > thing that it says is literally "fix the compiler". By the way, more than
+> > > > > a hundred patches have already been applied to linux-next[1] and he seems
+> > > > > to be the only person that has commented such a thing.
+> > > > 
+> > > > But I also asked who prefers this format in that thread, you should not
+> > > > ignore questions from two maintainers (me and Jes).
+> > > > 
+> > > 
+> > > I'm sorry. I thought the changelog text had already the proper information.
+> > > In the changelog text I'm quoting the GCC documentation below:
+> > > 
+> > > "The preferred mechanism to declare variable-length types like struct line
+> > > above is the ISO C99 flexible array member..." [1]
+> > > 
+> > > I'm also including a link to the following KSPP open issue:
+> > > 
+> > > https://github.com/KSPP/linux/issues/21
+> > > 
+> > > The issue above mentions the following:
+> > > 
+> > > "Both cases (0-byte and 1-byte arrays) pose confusion for things like sizeof(),
+> > > CONFIG_FORTIFY_SOURCE."
+> > > 
+> > > sizeof(flexible-array-member) triggers a warning because flexible array members have
+> > > incomplete type[1]. There are some instances of code in which the sizeof operator
+> > > is being incorrectly/erroneously applied to zero-length arrays and the result is zero.
+> > > Such instances may be hiding some bugs. So, the idea is also to get completely rid
+> > > of those sorts of issues.
+> > 
+> > As I stated in my previous answer, this seems more code churn than an
+> > actual fix. If this is a real problem, shouldn't the work be put into
+> > fixing the compiler to handle foo[0] instead? It seems that is where the
+> > real value would be.
+> > 
+> 
+> Yeah. But, unfortunately, I'm not a compiler guy, so I'm not able to fix the
+> compiler as you suggest. And I honestly don't see what is so annoying/disturbing
+> about applying a patch that removes the 0 from foo[0] when it brings benefit
+> to the whole codebase.
 
-syzbot found the following crash on:
+As far as I can tell, it doesn't actually make a difference as
+all the compilers produce the same object code with either form.
 
-HEAD commit:    2c523b34 Linux 5.6-rc5
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=17ae6ee3e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=c2e311dba9a02ba9
-dashboard link: https://syzkaller.appspot.com/bug?extid=91aff155f11242aeafbe
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-userspace arch: i386
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12220af9e00000
+There may be some compiler warning by clang through.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+91aff155f11242aeafbe@syzkaller.appspotmail.com
+Does any version of gcc produce a warning on 
 
-------------[ cut here ]------------
-refcount_t: underflow; use-after-free.
-WARNING: CPU: 0 PID: 9857 at lib/refcount.c:87 refcount_dec_not_one lib/refcount.c:87 [inline]
-WARNING: CPU: 0 PID: 9857 at lib/refcount.c:87 refcount_dec_not_one+0x1be/0x1e0 lib/refcount.c:74
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 0 PID: 9857 Comm: syz-executor.0 Not tainted 5.6.0-rc5-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x188/0x20d lib/dump_stack.c:118
- panic+0x2e3/0x75c kernel/panic.c:221
- __warn.cold+0x2f/0x35 kernel/panic.c:582
- report_bug+0x27b/0x2f0 lib/bug.c:195
- fixup_bug arch/x86/kernel/traps.c:174 [inline]
- fixup_bug arch/x86/kernel/traps.c:169 [inline]
- do_error_trap+0x12b/0x220 arch/x86/kernel/traps.c:267
- do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:286
- invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
-RIP: 0010:refcount_dec_not_one lib/refcount.c:87 [inline]
-RIP: 0010:refcount_dec_not_one+0x1be/0x1e0 lib/refcount.c:74
-Code: 1d d5 68 d2 06 31 ff 89 de e8 2e 52 e3 fd 84 db 75 82 e8 f5 50 e3 fd 48 c7 c7 00 aa 51 88 c6 05 b5 68 d2 06 01 e8 8a 63 b5 fd <0f> 0b e9 63 ff ff ff 48 89 ef e8 93 0e 20 fe e9 be fe ff ff e8 b9
-RSP: 0018:ffffc90002346f08 EFLAGS: 00010286
-RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffffffff815bf4f1 RDI: fffff52000468dd3
-RBP: ffff88809722641c R08: ffff8880989e4040 R09: ffffed1015cc6659
-R10: ffffed1015cc6658 R11: ffff8880ae6332c7 R12: 00000000ffffffff
-R13: ffffc90002346f30 R14: 1ffff92000468de2 R15: ffff888097226400
- refcount_dec_and_mutex_lock+0x1c/0xe0 lib/refcount.c:115
- __tcf_action_put+0x3f/0x130 net/sched/act_api.c:129
- __tcf_idr_release net/sched/act_api.c:165 [inline]
- __tcf_idr_release+0x52/0xe0 net/sched/act_api.c:145
- tcf_action_destroy+0xc6/0x150 net/sched/act_api.c:724
- tcf_exts_destroy+0x42/0xc0 net/sched/cls_api.c:3001
- tcf_exts_change+0xf4/0x150 net/sched/cls_api.c:3059
- tcindex_set_parms+0xed8/0x1a00 net/sched/cls_tcindex.c:456
- tcindex_change+0x203/0x2e0 net/sched/cls_tcindex.c:518
- tc_new_tfilter+0xa59/0x20b0 net/sched/cls_api.c:2103
- rtnetlink_rcv_msg+0x810/0xad0 net/core/rtnetlink.c:5427
- netlink_rcv_skb+0x15a/0x410 net/netlink/af_netlink.c:2478
- netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
- netlink_unicast+0x537/0x740 net/netlink/af_netlink.c:1329
- netlink_sendmsg+0x882/0xe10 net/netlink/af_netlink.c:1918
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg+0xcf/0x120 net/socket.c:672
- ____sys_sendmsg+0x6b9/0x7d0 net/socket.c:2343
- ___sys_sendmsg+0x100/0x170 net/socket.c:2397
- __sys_sendmsg+0xec/0x1b0 net/socket.c:2430
- do_syscall_32_irqs_on arch/x86/entry/common.c:337 [inline]
- do_fast_syscall_32+0x270/0xe8f arch/x86/entry/common.c:408
- entry_SYSENTER_compat+0x70/0x7f arch/x86/entry/entry_64_compat.S:139
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
+	struct foo {
+		...
+		type bar[0];
+	};
+
+but not
+
+	struct foo {
+		...
+		type bar[];
+	};
 
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
