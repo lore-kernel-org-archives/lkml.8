@@ -2,113 +2,221 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE44FC18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:31:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC2B5C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:31:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8ECAD24683
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:31:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8947924685
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:31:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="TOjtSYE3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726594AbgCJJbk (ORCPT
+        id S1726616AbgCJJbo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 05:31:40 -0400
-Received: from sauhun.de ([88.99.104.3]:46550 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726446AbgCJJbk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 05:31:40 -0400
-Received: from localhost (p54B33196.dip0.t-ipconnect.de [84.179.49.150])
-        by pokefinder.org (Postfix) with ESMTPSA id 4D28D2C1EB6;
-        Tue, 10 Mar 2020 10:31:37 +0100 (CET)
-Date:   Tue, 10 Mar 2020 10:31:36 +0100
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Jean Delvare <jdelvare@suse.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Martin Volf <martin.volf.42@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        linux-i2c@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] i2c: i801: Do not add ICH_RES_IO_SMI for the
- iTCO_wdt device
-Message-ID: <20200310093136.GE1987@ninjato>
-References: <20200226132122.62805-1-mika.westerberg@linux.intel.com>
- <20200226132122.62805-4-mika.westerberg@linux.intel.com>
+        Tue, 10 Mar 2020 05:31:44 -0400
+Received: from mail-eopbgr70078.outbound.protection.outlook.com ([40.107.7.78]:31042
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726385AbgCJJbn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 05:31:43 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=UpRTBiieydHbW8BimJ7/4Ca+j5Pc04APHJR4siL2ZS3mY9nptqsnmV4A6TNqpKqKZlhezlsRXoDhuQ4FvJORCVvrXMaBKVH+DBhSKwcfESgct9nDKsh7WJwXLWUzCfqKll3VJpO5+yN9yp9ygWFF2mCLv7NaYrtqRaphgwOrBylVIU2EsNsRU+lYbWfC6QeP5y1SnSglAkvZ1u4e6QzvVNJeyGqd3w//IAp9ix9TU9B8o3xX0suFpMahl1bUiTzXoPCUoGvah1HMQxUxmhelU+1XLYlxoEgwrIR2t+x2Kf9x1IVujdV6YwioW+TZFlif+RTDIMAA6lRmqf9I46YeLA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qudwH86z586/MxZy7/A1xHkou7Tzld5MD85MzGvha4g=;
+ b=I/Rlg8S116bNqaoAroSWY9IuuWf7WVjqrMVcbwJ1VQ1jh7QJkTBzVCtfAtpXdweiXX9YZoCy+WKdRSilnstiLnM3jEI8tNj2weflldlQA9pbypkQRV/ragmPzWfQqwZTmQPG4IBh7oI7LGfEwTis25HwmsC6Rn3Vjdi44Ko3VoYP080lQXrkncbf0Nmp89tP/ix2O+cgq5Ow0FBqZR3rjyWljEk9uiQoYqqGEDmDZ5kgJVE3Tl/q1Pp/+TpOI9O5sb2kObFw8O4vGyauZRbEg/tHUK0Bkt3mdq/yYRZIHWfOOfhCH/qnwtJd8cO+CxMNxFqfouDazsCd7/ZFI4x/zA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qudwH86z586/MxZy7/A1xHkou7Tzld5MD85MzGvha4g=;
+ b=TOjtSYE3rAKPs6J9IJPVUEmW/+bhVkizeHSkp1MqFbZws/aGtA1OxDgy0+pDUOGUYpdcgbC2tRLVNFhwpLOg/aPMNFkDthb6kyXuW8DJzsDcl5lGO62xIJZM86aIhmWGDCMTyiQzVub1749QoyIQQIJp42jILZsAtqeqJqk0knE=
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (20.179.232.15) by
+ VE1PR04MB6431.eurprd04.prod.outlook.com (10.255.118.77) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2793.17; Tue, 10 Mar 2020 09:31:37 +0000
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::490:6caa:24b:4a31]) by VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::490:6caa:24b:4a31%6]) with mapi id 15.20.2793.013; Tue, 10 Mar 2020
+ 09:31:37 +0000
+From:   Robin Gong <yibin.gong@nxp.com>
+To:     Sascha Hauer <s.hauer@pengutronix.de>
+CC:     "vkoul@kernel.org" <vkoul@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        "martin.fuzzey@flowbird.group" <martin.fuzzey@flowbird.group>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: RE: [RESEND v6  07/13] spi: imx: remove ERR009165 workaround on
+ i.mx6ul
+Thread-Topic: [RESEND v6  07/13] spi: imx: remove ERR009165 workaround on
+ i.mx6ul
+Thread-Index: AQHV9oxbuHZ2XTzKaki/DoqL8Pfb26hBd3KAgAAG/XCAABAqgIAAAQ5A
+Date:   Tue, 10 Mar 2020 09:31:37 +0000
+Message-ID: <VE1PR04MB663827D58A6AA3BE3E0AE3B189FF0@VE1PR04MB6638.eurprd04.prod.outlook.com>
+References: <1583839922-22699-1-git-send-email-yibin.gong@nxp.com>
+ <1583839922-22699-8-git-send-email-yibin.gong@nxp.com>
+ <20200310080240.GS3335@pengutronix.de>
+ <VE1PR04MB66384342F94C7B789C980F7A89FF0@VE1PR04MB6638.eurprd04.prod.outlook.com>
+ <20200310092533.GV3335@pengutronix.de>
+In-Reply-To: <20200310092533.GV3335@pengutronix.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yibin.gong@nxp.com; 
+x-originating-ip: [92.121.68.129]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 9c77e820-bd7b-4514-cbbc-08d7c4d5d4ef
+x-ms-traffictypediagnostic: VE1PR04MB6431:|VE1PR04MB6431:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VE1PR04MB64314C9ED2A985BB570B1B4189FF0@VE1PR04MB6431.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:873;
+x-forefront-prvs: 033857D0BD
+x-forefront-antispam-report: SFV:NSPM;SFS:(10001)(10009020)(4636009)(39860400002)(396003)(366004)(346002)(136003)(376002)(199004)(189003)(55016002)(186003)(966005)(5660300002)(81166006)(8936002)(26005)(81156014)(316002)(7416002)(52536014)(6916009)(33656002)(54906003)(2906002)(66476007)(66946007)(66446008)(8676002)(66556008)(76116006)(9686003)(45080400002)(478600001)(4326008)(64756008)(86362001)(7696005)(71200400001)(6506007);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6431;H:VE1PR04MB6638.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: TJgnaMq16FTIfeQr+D5F/8YYJAebg1nif13BCrrozOHNdChd4WN1089gX4+FG3vJXI/xsxsBfYzx252L5TxRKbYAmQYrPfg/CTJmWPbbiw+7YSyAjKjErvUqul4NemaRcA3vCiEP9YONppRPbWk1iYsQhygYZbJmsDlvwQcyjtjTxLvUn7oDvyA7QpZrhD0cGK/PRCaDYNJt1jDlV+HL/AajO2y4c0l8WkwXL6NF7EHELV20pMhSqqWGTrV7rlk0CrgV+5FzW8+MUrnyFdVw3/QqvlN0vAnGoT+DYCFHE0DXmywA4dqr6zmUZ+nU31VhDYmRXNKq975YqdoT1+MC4IpmO6XfAKSrL8dbmuVXoAjKO0aApSLfwAiVGpyUVzbx16d9yCsyPX4xEsD+5prvmy7IXWvkrE/hK+AEIBXNXANia+Divw8I0p+HJ4ONbQtMWzZQ7ItC1xV/XKT9DpRmG2ABuGpkD6LkQsGSpHX65d0cxfbhN11h7jfvNhObrR2XRjZ16cHazgAuI+d0yppkIMnQSYU4Xnxd2LyWARMDh6pa4t9abHjllvqBuNmXv3gr/T2jUy0B7G7hU3/i39tYKwwkZYL7n+Ifivz6WEZELYcs0JBOPVCcPU2rjasCZViL
+x-ms-exchange-antispam-messagedata: DraJV7E0PGbViq/RMX5ctEcb9osvg5JJgw8e+6MExk2W8TxOQSreOYu46BtLB+tpQ8NK4ddSmg5R8lfVzMBqipxanpjwqYoB4UIcR+EnsjkZLvY9MtyOcuHEo1K5BtJwMloYr5DnEmXkbSbMYBG++Q==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="G6nVm6DDWH/FONJq"
-Content-Disposition: inline
-In-Reply-To: <20200226132122.62805-4-mika.westerberg@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9c77e820-bd7b-4514-cbbc-08d7c4d5d4ef
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Mar 2020 09:31:37.4448
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: LcJ3oOZ1NdGxpOB0vsxxE3wJAUNO4PZcM6gPf+lMY4FbhoFtX3kEwVk0L9b+PSlrfnYMSMn0jQ2fcD4uPXqOug==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6431
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---G6nVm6DDWH/FONJq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Feb 26, 2020 at 04:21:22PM +0300, Mika Westerberg wrote:
-> Martin noticed that nct6775 driver does not load properly on his system
-> in v5.4+ kernels. The issue was bisected to commit b84398d6d7f9 ("i2c:
-> i801: Use iTCO version 6 in Cannon Lake PCH and beyond") but it is
-> likely not the culprit because the faulty code has been in the driver
-> already since commit 9424693035a5 ("i2c: i801: Create iTCO device on
-> newer Intel PCHs"). So more likely some commit that added PCI IDs of
-> recent chipsets made the driver to create the iTCO_wdt device on Martins
-> system.
+On 2020/03/10 Sascha Hauer <s.hauer@pengutronix.de> wrote:
+> On Tue, Mar 10, 2020 at 08:43:10AM +0000, Robin Gong wrote:
+> > On 2020/03/10 Sascha Hauer <s.hauer@pengutronix.de> wrote:
+> > > On Tue, Mar 10, 2020 at 07:31:56PM +0800, Robin Gong wrote:
+> > > > ERR009165 fixed on i.mx6ul/6ull/6sll. All other i.mx6/7 and
+> > > > i.mx8m/8mm still need this errata. Please refer to nxp official
+> > > > errata document from
+> > > https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fw=
+w
+> > > w.nx
+> > >
+> p.com%2F&amp;data=3D02%7C01%7Cyibin.gong%40nxp.com%7Cf73bfc11a68c4
+> > >
+> 2f5f6d308d7c4c96efa%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C1%7C
+> > >
+> 637194241755109112&amp;sdata=3DxzIUP8qZkrlDXX0yjTcUNZB6zDrevTdHFg1o4
+> > > PZZd8E%3D&amp;reserved=3D0 .
+> > > >
+> > > > For removing workaround on those chips. Add new i.mx6ul type.
+> > > >
+> > > > Signed-off-by: Robin Gong <yibin.gong@nxp.com>
+> > > > Acked-by: Mark Brown <broonie@kernel.org>
+> > > > ---
+> > > >  drivers/spi/spi-imx.c | 50
+> > > > +++++++++++++++++++++++++++++++++++++++++++++-----
+> > > >  1 file changed, 45 insertions(+), 5 deletions(-)
+> > > >
+> > > > diff --git a/drivers/spi/spi-imx.c b/drivers/spi/spi-imx.c index
+> > > > 842a86e..f7ee2ec 100644
+> > > > --- a/drivers/spi/spi-imx.c
+> > > > +++ b/drivers/spi/spi-imx.c
+> > > > @@ -57,6 +57,7 @@ enum spi_imx_devtype {
+> > > >  	IMX35_CSPI,	/* CSPI on all i.mx except above */
+> > > >  	IMX51_ECSPI,	/* ECSPI on i.mx51 */
+> > > >  	IMX53_ECSPI,	/* ECSPI on i.mx53 and later */
+> > > > +	IMX6UL_ECSPI,	/* ERR009165 fix from i.mx6ul */
+> > > >  };
+> > > >
+> > > >  struct spi_imx_data;
+> > > > @@ -75,6 +76,11 @@ struct spi_imx_devtype_data {
+> > > >  	bool has_slavemode;
+> > > >  	unsigned int fifo_size;
+> > > >  	bool dynamic_burst;
+> > > > +	/*
+> > > > +	 * ERR009165 fixed or not:
+> > > > +	 *
+> > > https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fw=
+w
+> > > w.nx
+> p.com%2Fdocs%2Fen%2Ferrata%2FIMX6DQCE.pdf&amp;data=3D02%7C01%7Cyi
+> > >
+> bin.gong%40nxp.com%7Cf73bfc11a68c42f5f6d308d7c4c96efa%7C686ea1d3bc
+> > >
+> 2b4c6fa92cd99c5c301635%7C0%7C1%7C637194241755109112&amp;sdata=3Dm
+> > >
+> uw4HL5nMDjREJwVd885Wrxka0moMaaZ%2BhJgsAgY3eo%3D&amp;reserved=3D
+> > > 0
+> > > > +	 */
+> > > > +	bool tx_glitch_fixed;
+> > > >  	enum spi_imx_devtype devtype;
+> > > >  };
+> > > >
+> > > > @@ -128,7 +134,8 @@ static inline int is_imx35_cspi(struct
+> > > > spi_imx_data *d)
+> > > >
+> > > >  static inline int is_imx51_ecspi(struct spi_imx_data *d)  {
+> > > > -	return d->devtype_data->devtype =3D=3D IMX51_ECSPI;
+> > > > +	return d->devtype_data->devtype =3D=3D IMX51_ECSPI ||
+> > > > +	       d->devtype_data->devtype =3D=3D IMX6UL_ECSPI;
+> > > >  }
+> > >
+> > > Erm, no. A i.MX51 ECSPI is a i.MX51 ECSPI and not a i.MX6UL ECSPI.
+> > > If you want to handle them equally somewhere then explicitly test
+> > > for i.MX6ul *and*
+> > > i.MX51 there.
+> > But all i.mx6 chips including i.MX53 ECSPI are almost same as i.MX51 EC=
+SPI,
+> and ERR00915 is fixed from i.mx6ul....
 >=20
-> The issue was debugged to be PCI configuration access to the PMC device
-> that is not present. This returns all 1's when read and this caused the
-> iTCO_wdt driver to accidentally request resourses used by nct6775.
+> You introduce .devtype =3D IMX6UL_ECSPI in this series, so apparently it =
+is *not*
+> the same as IMX51_ECSPI, then please also don't introduce a function whic=
+h
+> claims they are the same.
+Okay, I'll add is_imx6ul_ecspi explicitly.
 >=20
-> It turns out that the SMI resource is only required for some ancient
-> systems, not the ones supported by this driver. For this reason do not
-> populate the SMI resource at all and drop all the related code. The
-> driver now always populates the main I/O resource and only in case of SPT
-> (Intel Sunrisepoint) compatible devices it adds another resource for the
-> NO_REBOOT bit. These two resources are of different types so
-> platform_get_resource() used by the iTCO_wdt driver continues to find
-> the both resources at index 0.
+> Sascha
 >=20
-> Link: https://lore.kernel.org/linux-hwmon/CAM1AHpQ4196tyD=3DHhBu-2donSsuo=
-gabkfP03v1YF26Q7_BgvgA@mail.gmail.com/
-> Fixes: 9424693035a5 ("i2c: i801: Create iTCO device on newer Intel PCHs")
-> Reported-by: Martin Volf <martin.volf.42@gmail.com>
-> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-
-I added a comment saying that the whole series is needed for a complete
-fix. Dunno if there is a better way to express such dependencies for
-stable.
-
-Applied to for-current, thanks!
-
-
---G6nVm6DDWH/FONJq
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl5nXngACgkQFA3kzBSg
-KbZU4w/8DWEsX3sB25IkWCiHMd+k6Xdt9pibradFLjnIPS2iR7fCa2RdyBkB3pQj
-Woql9oxCJX7yrncKky7XaFYalUhAcSiFg/Li8gDQ+p+ilszMrU4bS+9nYCl+MAel
-RXxSmIv7gbdiTewYewssmh8ttNeDkbx96EoIxcyIKMPMNHOITfkcsDihwWTI+grg
-00GwjQafODS2Iyuoy9vZW0dgbBWMXfeZWG2Yk7nQS5QI5Mb4N4s6KwN7aVS6EJCz
-VsHrvzmyyRLd8//LhOGbV2JGsHIwkrp9j5snGRWumXYqWZKpaboXMf1G0xx1ZbU4
-M8qn1R/LaiJa6Lmk+J8Xv/eVEeBBNY4C3ljGw0n8Yut2dmGWUxLZ7Bu5QXM1wUeg
-etlA+NmfABg83PhtLQyImtrmvBuQ/SQGHoA7MZB9wDqBdg3E+mK9fjAGFKXmfED0
-Hjhh+xZrg61RS3oP68SPqcWJVXi2S5BYNzL3132ub5iYuhmdeu9ZXhI34ImwCob9
-ZKxG14azyq/LIPf5IV3aZ3hu+B2kmb9EbL8FWMP5sjk+gI72WdF+Ff84h5OOPyi7
-nyzBUTJDJtacPraxurwQ9elA9cNVjo0iawcTUM/bhD2S/ucfDezKtKEOD0WO/5rQ
-tx7qPcWlol8eGOaFT3SbuJtW2gbNoeHrI3UkpSxHqxg/II5FWJQ=
-=0FFd
------END PGP SIGNATURE-----
-
---G6nVm6DDWH/FONJq--
+> --
+> Pengutronix e.K.                           |
+> |
+> Steuerwalder Str. 21                       |
+> https://eur01.safelinks.protection.outlook.com/?url=3Dhttp%3A%2F%2Fwww.pe
+> ngutronix.de%2F&amp;data=3D02%7C01%7Cyibin.gong%40nxp.com%7Ca10f3fdc
+> 28084c1fe89a08d7c4d50531%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7
+> C0%7C637194291506592966&amp;sdata=3DaqMqER0j0fVbAiKqM1tzBuEVlhiVcVL
+> GnrSRhJvhDk8%3D&amp;reserved=3D0  |
+> 31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0
+> |
+> Amtsgericht Hildesheim, HRA 2686           | Fax:
+> +49-5121-206917-5555 |
