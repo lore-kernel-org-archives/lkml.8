@@ -2,105 +2,72 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1044AC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 11:07:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6669C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 11:08:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBF562467F
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 11:07:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E8B12467F
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 11:08:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CfGgBJTw"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="ZySw3lnm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726571AbgCJLHI (ORCPT
+        id S1726378AbgCJLIA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 07:07:08 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:53876 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726283AbgCJLHH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 07:07:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583838426;
+        Tue, 10 Mar 2020 07:08:00 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:50750 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726186AbgCJLIA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 07:08:00 -0400
+Received: from zn.tnic (p200300EC2F09B4000CCA2EEF87DC47A5.dip0.t-ipconnect.de [IPv6:2003:ec:2f09:b400:cca:2eef:87dc:47a5])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id BF4E61EC0273;
+        Tue, 10 Mar 2020 12:07:58 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1583838478;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=7zCZMOF0iZCujbjrI3iIoDQ/fo/iLP3cIKGJWZDv6zQ=;
-        b=CfGgBJTwUno6u1RdSOVZB4FYet+Q9mhOk+KhETYT2gFYQCsW7YmEZLULMzbLGYblT8WQ0H
-        9uXHcuEM7XhCRv4/dUnPqTFe7Zdide48Q3eIA5ftDES5EHdDmlGMIJQv+1Uh4ySyHg9nnM
-        Sdg1GERWqD65bxz5upDi+rDeXlmfqBA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-209-THButNQSMGKrblN1X-wo4A-1; Tue, 10 Mar 2020 07:07:03 -0400
-X-MC-Unique: THButNQSMGKrblN1X-wo4A-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 84F6118B5FA7;
-        Tue, 10 Mar 2020 11:07:02 +0000 (UTC)
-Received: from localhost (unknown [10.36.118.73])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id EE82310013A1;
-        Tue, 10 Mar 2020 11:06:56 +0000 (UTC)
-Date:   Tue, 10 Mar 2020 11:06:55 +0000
-From:   Stefan Hajnoczi <stefanha@redhat.com>
-To:     Vivek Goyal <vgoyal@redhat.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, virtio-fs@redhat.com, miklos@szeredi.hu,
-        dgilbert@redhat.com, mst@redhat.com,
-        Sebastien Boeuf <sebastien.boeuf@intel.com>
-Subject: Re: [PATCH 05/20] virtio: Implement get_shm_region for MMIO transport
-Message-ID: <20200310110655.GJ140737@stefanha-x1.localdomain>
-References: <20200304165845.3081-1-vgoyal@redhat.com>
- <20200304165845.3081-6-vgoyal@redhat.com>
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=NLbmp6bW9B7OsLKSubj4LOvRjmIgDRbX4DKrnaThSj8=;
+        b=ZySw3lnmctyl8oeUPZzrtCq2JhRmON6AyovzV9gGKlp/OcXDigwH4UHCnrBhGlH2irE8X4
+        xSyRiOjcRh+tVgmMKAymn84+KtNuTQbtU6cbUCvsdccF+vDv7ub/vDUqPBuR/fKEtW+jyF
+        bWeBJYlq8dTciyrngPgDuBLU8ccMjbU=
+Date:   Tue, 10 Mar 2020 12:08:02 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Alexandre Chartre <alexandre.chartre@oracle.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Brian Gerst <brgerst@gmail.com>,
+        Juergen Gross <jgross@suse.com>,
+        Frederic Weisbecker <frederic@kernel.org>
+Subject: Re: [patch part-II V2 08/13] tracing: Provide lockdep less
+ trace_hardirqs_on/off() variants
+Message-ID: <20200310110802.GC29372@zn.tnic>
+References: <20200308222359.370649591@linutronix.de>
+ <20200308222609.731890049@linutronix.de>
+ <07a50582-1c2f-7f45-c7dd-5ff9c2ff3052@oracle.com>
 MIME-Version: 1.0
-In-Reply-To: <20200304165845.3081-6-vgoyal@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="u3bvv0EcKsvvYeex"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+In-Reply-To: <07a50582-1c2f-7f45-c7dd-5ff9c2ff3052@oracle.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---u3bvv0EcKsvvYeex
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Tue, Mar 10, 2020 at 11:55:57AM +0100, Alexandre Chartre wrote:
+> Shouldn't trace_hardirqs_on() be updated to call __trace_hardirqs_on()? It's the same
+> code except for the lockdep call.
 
-On Wed, Mar 04, 2020 at 11:58:30AM -0500, Vivek Goyal wrote:
-> From: Sebastien Boeuf <sebastien.boeuf@intel.com>
->=20
-> On MMIO a new set of registers is defined for finding SHM
-> regions.  Add their definitions and use them to find the region.
->=20
-> Signed-off-by: Sebastien Boeuf <sebastien.boeuf@intel.com>
-> ---
->  drivers/virtio/virtio_mmio.c     | 32 ++++++++++++++++++++++++++++++++
->  include/uapi/linux/virtio_mmio.h | 11 +++++++++++
->  2 files changed, 43 insertions(+)
+Fell into that one too initially. Look again. :)
 
-Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
+-- 
+Regards/Gruss,
+    Boris.
 
---u3bvv0EcKsvvYeex
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl5ndM8ACgkQnKSrs4Gr
-c8gfygf/do+109aKXm9VFkU/rXC9UEr+hExsP6Lzua5HVq/12kOWyPb6RjeIZfZ/
-xpL0jvNcMM2IS72Be3/GddkueGUiN1E44GmjU2+TrXGAh1VzudsId2PJeJfJRsEH
-m0WNtnsEQBdeGy5ojXq05pq5yhcq1A7BafE2Fe+mHTDkbB8J/6YtAUzUCIA7Y3m7
-2tm9Ju4ERd2cN1Cb9zDCx9eof+ypmPTqaEBF6MYNRuUVhUHhY52ChiWr213rZ2l/
-teAcVQZxULQjwnERMuqN/9yupwr7mfZxA3ippJYhHfiAjHks/dA5cIz0xy9jv9/5
-kdzLUFXkRegnZVe+HatFmqKOSWXIoA==
-=/ks7
------END PGP SIGNATURE-----
-
---u3bvv0EcKsvvYeex--
-
+https://people.kernel.org/tglx/notes-about-netiquette
