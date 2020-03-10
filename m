@@ -2,403 +2,158 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C60D8C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 11:09:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AE0EC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 11:10:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90C942467F
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 11:09:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E9BF2467F
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 11:10:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=pascalroeleven.nl header.i=@pascalroeleven.nl header.b="F7Bb0Wxc"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="KimsQRUi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726426AbgCJLJs (ORCPT
+        id S1726462AbgCJLKD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 07:09:48 -0400
-Received: from web0081.zxcs.nl ([185.104.29.10]:44336 "EHLO web0081.zxcs.nl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725937AbgCJLJs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 07:09:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=pascalroeleven.nl; s=x; h=Content-Transfer-Encoding:MIME-Version:References
-        :In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=L3GvXNnEXmuJVoup/eLsmOX5KMTithZdS4oNLFrbqXQ=; b=F7Bb0Wxcv1WS3CXnoWaNr9niQl
-        BR+WHbdHHKQ5hZO7wNiYeqDLKkrHfX9HXY64zP42l7fa112c8NXDw9JHhNIU0MYtd35XNalL5wLlV
-        8/2pEEhrBZSERBZZd0oyJGYJhnMsTz/vkreQVac0CloHXHVquk3IwnYzvpIwPL/xqpVoXnO0dzIJg
-        qXQVtoMig7FYxiNXjDDphlvnGIMRlOyVwbt9pVjtSVhkrFwnWzGC8Z72YGwMtNW+HZeIeAaS63PUT
-        9pjuVK2qyuaUE4QIHriRJyUW3o2hPXo4BXlfHD8yF1zrRz+IqAVqBggx1nt9sPLE3G5tGWzAUf8yt
-        5ukKJuGw==;
-Received: from ip565b1bc7.direct-adsl.nl ([86.91.27.199]:35430 helo=localhost.localdomain)
-        by web0081.zxcs.nl with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92.3)
-        (envelope-from <dev@pascalroeleven.nl>)
-        id 1jBc84-0017It-Hj; Tue, 10 Mar 2020 11:28:52 +0100
-From:   Pascal Roeleven <dev@pascalroeleven.nl>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     linux-sunxi@googlegroups.com,
-        Pascal Roeleven <dev@pascalroeleven.nl>
-Subject: [PATCH 2/2] ARM: dts: sun4i: Add support for Topwise A721 tablet
-Date:   Tue, 10 Mar 2020 11:27:24 +0100
-Message-Id: <20200310102725.14591-3-dev@pascalroeleven.nl>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200310102725.14591-1-dev@pascalroeleven.nl>
-References: <20200310102725.14591-1-dev@pascalroeleven.nl>
+        Tue, 10 Mar 2020 07:10:03 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:27962 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725937AbgCJLKC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 07:10:02 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1583838602; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: References: Cc: To:
+ Subject: From: Sender; bh=Va3n/cJLbQfqQGCh5nSi8Ti3b5OUaE9Hu4OHUP+lYJM=;
+ b=KimsQRUiktGsQdHQsRjyaCHai52dO+qLPfWPbI61D1MsYw9/eclKpOTSZSpVWQ+fc87RtqH/
+ yIM6+DYwRBTJcWElH8n5R28chscqdTYAEeMS+ISnm4sjQqWnCQRxIjl2kBklwhQQxapoChF2
+ ezIzrguYgpJn5tBF2H6V3V3SNP8=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e67757a.7f87c5cede30-smtp-out-n03;
+ Tue, 10 Mar 2020 11:09:46 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 29253C432C2; Tue, 10 Mar 2020 11:09:46 +0000 (UTC)
+Received: from [192.168.1.2] (unknown [183.83.137.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mkshah)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 78BEEC433CB;
+        Tue, 10 Mar 2020 11:09:41 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 78BEEC433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
+From:   Maulik Shah <mkshah@codeaurora.org>
+Subject: Re: [PATCH v13 3/5] soc: qcom: rpmh: Invalidate SLEEP and WAKE TCSes
+ before flushing new data
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Stephen Boyd <swboyd@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Evan Green <evgreen@chromium.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Lina Iyer <ilina@codeaurora.org>, lsrao@codeaurora.org
+References: <1583746236-13325-1-git-send-email-mkshah@codeaurora.org>
+ <1583746236-13325-4-git-send-email-mkshah@codeaurora.org>
+ <CAD=FV=Xkqquyk907zAE-v7_QK_dOSmn1ooTzuXxP5Fckmhaw+Q@mail.gmail.com>
+Message-ID: <ba1d108d-8baa-a09e-2678-497acb6d9e9c@codeaurora.org>
+Date:   Tue, 10 Mar 2020 16:39:38 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Authenticated-Id: dev@pascalroeleven.nl
+In-Reply-To: <CAD=FV=Xkqquyk907zAE-v7_QK_dOSmn1ooTzuXxP5Fckmhaw+Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Topwise A721/LY-F1 tablet is a tablet sold around 2012 under
-different brands. The mainboard mentions A721 clearly, so this tablet
-is best known under this name.
 
-Signed-off-by: Pascal Roeleven <dev@pascalroeleven.nl>
----
- arch/arm/boot/dts/Makefile                   |   3 +-
- arch/arm/boot/dts/sun4i-a10-topwise-a721.dts | 302 +++++++++++++++++++
- 2 files changed, 304 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/boot/dts/sun4i-a10-topwise-a721.dts
+On 3/10/2020 5:12 AM, Doug Anderson wrote:
+> Hi,
+>
+> On Mon, Mar 9, 2020 at 2:31 AM Maulik Shah <mkshah@codeaurora.org> wrote:
+>> TCSes have previously programmed data when rpmh_flush is called.
+>> This can cause old data to trigger along with newly flushed.
+>>
+>> Fix this by cleaning SLEEP and WAKE TCSes before new data is flushed.
+>>
+>> With this there is no need to invoke rpmh_rsc_invalidate() call from
+>> rpmh_invalidate().
+>>
+>> Simplify rpmh_invalidate() by moving invalidate_batch() inside.
+>>
+>> Fixes: 600513dfeef3 ("drivers: qcom: rpmh: cache sleep/wake state requests")
+>> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+>> ---
+>>  drivers/soc/qcom/rpmh.c | 36 +++++++++++++++---------------------
+>>  1 file changed, 15 insertions(+), 21 deletions(-)
+>>
+>> diff --git a/drivers/soc/qcom/rpmh.c b/drivers/soc/qcom/rpmh.c
+>> index 03630ae..5bed8f4 100644
+>> --- a/drivers/soc/qcom/rpmh.c
+>> +++ b/drivers/soc/qcom/rpmh.c
+>> @@ -317,19 +317,6 @@ static int flush_batch(struct rpmh_ctrlr *ctrlr)
+>>         return ret;
+>>  }
+>>
+>> -static void invalidate_batch(struct rpmh_ctrlr *ctrlr)
+>> -{
+>> -       struct batch_cache_req *req, *tmp;
+>> -       unsigned long flags;
+>> -
+>> -       spin_lock_irqsave(&ctrlr->cache_lock, flags);
+>> -       list_for_each_entry_safe(req, tmp, &ctrlr->batch_cache, list)
+>> -               kfree(req);
+>> -       INIT_LIST_HEAD(&ctrlr->batch_cache);
+>> -       ctrlr->dirty = true;
+>> -       spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
+>> -}
+>> -
+>>  /**
+>>   * rpmh_write_batch: Write multiple sets of RPMH commands and wait for the
+>>   * batch to finish.
+>> @@ -467,6 +454,11 @@ int rpmh_flush(struct rpmh_ctrlr *ctrlr)
+>>                 return 0;
+>>         }
+>>
+>> +       /* Invalidate the TCSes first to avoid stale data */
+>> +       do {
+>> +               ret = rpmh_rsc_invalidate(ctrlr_to_drv(ctrlr));
+>> +       } while (ret == -EAGAIN);
+>> +
+> You forgot to actually check the return value.
+>
+> if (ret)
+>   return ret;
+Done.
+>
+>>         /* First flush the cached batch requests */
+>>         ret = flush_batch(ctrlr);
+>>         if (ret)
+>> @@ -503,19 +495,21 @@ int rpmh_flush(struct rpmh_ctrlr *ctrlr)
+>>   *
+>>   * @dev: The device making the request
+>>   *
+>> - * Invalidate the sleep and active values in the TCS blocks.
+>> + * Invalidate the sleep and wake values in batch_cache.
+> Thanks for updating this.  It was on my todo list.  Can you also
+> update the function description, which still says "Invalidate all
+> sleep and active sets sets."  While you're at it, remove the double
+> "sets".
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 78f144e33..6e6141e00 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -1040,7 +1040,8 @@ dtb-$(CONFIG_MACH_SUN4I) += \
- 	sun4i-a10-olinuxino-lime.dtb \
- 	sun4i-a10-pcduino.dtb \
- 	sun4i-a10-pcduino2.dtb \
--	sun4i-a10-pov-protab2-ips9.dtb
-+	sun4i-a10-pov-protab2-ips9.dtb \
-+	sun4i-a10-topwise-a721.dtb
- dtb-$(CONFIG_MACH_SUN5I) += \
- 	sun5i-a10s-auxtek-t003.dtb \
- 	sun5i-a10s-auxtek-t004.dtb \
-diff --git a/arch/arm/boot/dts/sun4i-a10-topwise-a721.dts b/arch/arm/boot/dts/sun4i-a10-topwise-a721.dts
-new file mode 100644
-index 000000000..ff43c9c12
---- /dev/null
-+++ b/arch/arm/boot/dts/sun4i-a10-topwise-a721.dts
-@@ -0,0 +1,302 @@
-+/*
-+ * Copyright 2020 Pascal Roeleven <dev@pascalroeleven.nl>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+#include "sun4i-a10.dtsi"
-+#include "sunxi-common-regulators.dtsi"
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/pwm/pwm.h>
-+
-+/ {
-+	model = "Topwise A721";
-+	compatible = "topwise,a721", "allwinner,sun4i-a10";
-+
-+	aliases {
-+		serial0 = &uart0;
-+	};
-+
-+	backlight: backlight {
-+		compatible = "pwm-backlight";
-+		pwms = <&pwm 0 100000 PWM_POLARITY_INVERTED>;
-+		power-supply = <&reg_vbat>;
-+		enable-gpios = <&pio 7 7 GPIO_ACTIVE_HIGH>; /* PH7 */
-+		brightness-levels = <0 30 40 50 60 70 80 90 100>;
-+		default-brightness-level = <8>;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	panel: panel {
-+		compatible = "starry,kr070pe2t";
-+		backlight = <&backlight>;
-+		power-supply = <&reg_lcd_power>;
-+
-+		port {
-+			panel_input: endpoint {
-+				remote-endpoint = <&tcon0_out_panel>;
-+			};
-+		};
-+	};
-+
-+	reg_lcd_power: reg-lcd-power {
-+		compatible = "regulator-fixed";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&lcd_power_pin>;
-+		regulator-name = "reg-lcd-power";
-+		gpio = <&pio 7 8 GPIO_ACTIVE_HIGH>; /* PH8 */
-+		enable-active-high;
-+	};
-+
-+	reg_vbat: reg-vbat {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vbat";
-+		regulator-min-microvolt = <3700000>;
-+		regulator-max-microvolt = <3700000>;
-+	};
-+
-+};
-+
-+&codec {
-+	status = "okay";
-+};
-+
-+&cpu0 {
-+	cpu-supply = <&reg_dcdc2>;
-+};
-+
-+&de {
-+	status = "okay";
-+};
-+
-+&ehci0 {
-+	status = "okay";
-+};
-+
-+&ehci1 {
-+	status = "okay";
-+};
-+
-+&i2c0 {
-+	status = "okay";
-+
-+	axp209: pmic@34 {
-+		reg = <0x34>;
-+		interrupts = <0>;
-+	};
-+};
-+
-+#include "axp209.dtsi"
-+
-+&ac_power_supply {
-+	status = "okay";
-+};
-+
-+&battery_power_supply {
-+	status = "okay";
-+};
-+
-+&i2c1 {
-+	status = "okay";
-+
-+	mma7660: accelerometer@4c {
-+		compatible = "fsl,mma7660";
-+		reg = <0x4c>;
-+	};
-+};
-+
-+&i2c2 {
-+	status = "okay";
-+
-+	ft5406ee8: touchscreen@38 {
-+		compatible = "edt,edt-ft5406";
-+		reg = <0x38>;
-+		interrupt-parent = <&pio>;
-+		interrupts = <7 21 IRQ_TYPE_EDGE_FALLING>;
-+		touchscreen-size-x = <800>;
-+		touchscreen-size-y = <480>;
-+		vcc-supply = <&reg_vcc3v3>;
-+	};
-+};
-+
-+&lradc {
-+	vref-supply = <&reg_ldo2>;
-+	status = "okay";
-+
-+	button-vol-down {
-+		label = "Volume Down";
-+		linux,code = <KEY_VOLUMEDOWN>;
-+		channel = <0>;
-+		voltage = <761904>;
-+	};
-+
-+	button-vol-up {
-+		label = "Volume Up";
-+		linux,code = <KEY_VOLUMEUP>;
-+		channel = <0>;
-+		voltage = <571428>;
-+	};
-+};
-+
-+&mmc0 {
-+	vmmc-supply = <&reg_vcc3v3>;
-+	bus-width = <4>;
-+	cd-gpios = <&pio 7 1 GPIO_ACTIVE_LOW>; /* PH01 */
-+	status = "okay";
-+};
-+
-+&ohci0 {
-+	status = "okay";
-+};
-+
-+&ohci1 {
-+	status = "okay";
-+};
-+
-+&otg_sram {
-+	status = "okay";
-+};
-+
-+&pio {
-+	vcc-pb-supply = <&reg_vcc3v3>;
-+	vcc-pf-supply = <&reg_vcc3v3>;
-+	vcc-ph-supply = <&reg_vcc3v3>;
-+
-+	lcd_power_pin: lcd-power-pin {
-+		pins = "PH8";
-+		function = "gpio_out";
-+		bias-pull-up;
-+	};
-+
-+	usb0_id_detect_pin: usb0-id-detect-pin {
-+		pins = "PH4";
-+		function = "gpio_in";
-+		bias-pull-up;
-+	};
-+
-+	usb0_vbus_detect_pin: usb0-vbus-detect-pin {
-+		pins = "PH5";
-+		function = "gpio_in";
-+		bias-pull-down;
-+	};
-+};
-+
-+&pwm {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pwm0_pin>;
-+	status = "okay";
-+};
-+
-+&reg_dcdc2 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <1000000>;
-+	regulator-max-microvolt = <1400000>;
-+	regulator-name = "vdd-cpu";
-+};
-+
-+&reg_dcdc3 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <1250000>;
-+	regulator-max-microvolt = <1250000>;
-+	regulator-name = "vdd-int-dll";
-+};
-+
-+
-+&reg_ldo1 {
-+	regulator-name = "vdd-rtc";
-+};
-+
-+&reg_ldo2 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <3000000>;
-+	regulator-max-microvolt = <3000000>;
-+	regulator-name = "avcc";
-+};
-+
-+&reg_usb0_vbus {
-+	status = "okay";
-+};
-+
-+&reg_usb1_vbus {
-+	status = "okay";
-+};
-+
-+&reg_usb2_vbus {
-+	status = "okay";
-+};
-+
-+&tcon0_out {
-+	tcon0_out_panel: endpoint@0 {
-+		reg = <0>;
-+		remote-endpoint = <&panel_input>;
-+	};
-+};
-+
-+&uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_pb_pins>;
-+	status = "okay";
-+};
-+
-+&usb_otg {
-+	dr_mode = "otg";
-+	status = "okay";
-+};
-+
-+&usb_power_supply {
-+	status = "okay";
-+};
-+
-+&usbphy {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&usb0_id_detect_pin>, <&usb0_vbus_detect_pin>;
-+	usb0_id_det-gpios = <&pio 7 4 GPIO_ACTIVE_HIGH>; /* PH4 */
-+	usb0_vbus_det-gpios = <&pio 7 5 GPIO_ACTIVE_HIGH>; /* PH5 */
-+	usb0_vbus-supply = <&reg_usb0_vbus>;
-+	usb1_vbus-supply = <&reg_usb1_vbus>;
-+	usb2_vbus-supply = <&reg_usb2_vbus>;
-+	status = "okay";
-+};
+Done.
+
+Thanks,
+Maulik
+
 -- 
-2.20.1
-
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
