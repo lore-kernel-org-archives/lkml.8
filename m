@@ -3,98 +3,119 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F42EC3F2D0
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 11:54:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71283C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 11:54:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6763024686
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 11:54:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46F4C2464B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 11:54:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g0JP3FUA"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="iLBCfvHB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726491AbgCJLy0 (ORCPT
+        id S1726501AbgCJLyi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 07:54:26 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:54672 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726224AbgCJLy0 (ORCPT
+        Tue, 10 Mar 2020 07:54:38 -0400
+Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:16519 "EHLO
+        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726224AbgCJLyh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 07:54:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583841264;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=8ZrT3AGCzTG+Qy7MOUd23n+FQWkwGC2qeOIFrLWjTqo=;
-        b=g0JP3FUAORsSYol2Ql+cDkfMsaNhG56ahuvjcRw0mbcWWvjaijVX5AZjq19uNlNCGbwGk4
-        6Zmc2+Gi4CDRwOpEiwYJjarujdJIRR2W5ifArubb6xFlUkpuqQWsboSwMUzf8DXkAQ6PJX
-        RzLoVRP7vjxIyWSkz1fODAY5zTvPp+g=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-181-vglXSBiuN_2Pq7iSbeCokA-1; Tue, 10 Mar 2020 07:54:23 -0400
-X-MC-Unique: vglXSBiuN_2Pq7iSbeCokA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CCD56100F287;
+        Tue, 10 Mar 2020 07:54:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1583841276; x=1615377276;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   mime-version;
+  bh=gezZ4d843S2nTlbh9azi04SsH51yHFiHn28vQPiIVl4=;
+  b=iLBCfvHBtVhpDKdq4uiSHcPnA5jG5Y+JxnGWCTJF4UWUnP7IM6b7DfJe
+   4cCs2oyAIbGgq/4S00A5GznbsGhUbRmiZ00Xo0msYWmK8xXIjqgtrPyVr
+   fNrXKjM5eTxWDUu2V1EUfJlDYdgKfLN0HjRhLfEr2xhs824dwx6xGmeeR
+   o=;
+IronPort-SDR: H53N5QpDKI5MamzQr6yc0Yjhy9NaBhIYeKmGDRzv8TSaaHLlS9BjzeKh3xxENRdj94wrjCuZnU
+ LXACy6IFyMvA==
+X-IronPort-AV: E=Sophos;i="5.70,536,1574121600"; 
+   d="scan'208";a="20840160"
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-1a-807d4a99.us-east-1.amazon.com) ([10.43.8.2])
+  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 10 Mar 2020 11:54:23 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1a-807d4a99.us-east-1.amazon.com (Postfix) with ESMTPS id C4AFEA2B10;
         Tue, 10 Mar 2020 11:54:21 +0000 (UTC)
-Received: from t480s.redhat.com (unknown [10.36.118.8])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 48CB95C28D;
-        Tue, 10 Mar 2020 11:54:12 +0000 (UTC)
-From:   David Hildenbrand <david@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     virtualization@lists.linux-foundation.org,
-        Luiz Capitulino <lcapitulino@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH v1] MAINTAINERS: Add myself as virtio-balloon co-maintainer
-Date:   Tue, 10 Mar 2020 12:54:11 +0100
-Message-Id: <20200310115411.12760-1-david@redhat.com>
+Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1236.3; Tue, 10 Mar 2020 11:54:21 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.160.16) by
+ EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 10 Mar 2020 11:54:09 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+CC:     SeongJae Park <sjpark@amazon.com>, <akpm@linux-foundation.org>,
+        "SeongJae Park" <sjpark@amazon.de>, <aarcange@redhat.com>,
+        <yang.shi@linux.alibaba.com>, <acme@kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
+        <brendan.d.gregg@gmail.com>, <brendanhiggins@google.com>,
+        <cai@lca.pw>, <colin.king@canonical.com>, <corbet@lwn.net>,
+        <dwmw@amazon.com>, <jolsa@redhat.com>, <kirill@shutemov.name>,
+        <mark.rutland@arm.com>, <mgorman@suse.de>, <minchan@kernel.org>,
+        <mingo@redhat.com>, <namhyung@kernel.org>, <peterz@infradead.org>,
+        <rdunlap@infradead.org>, <rientjes@google.com>,
+        <rostedt@goodmis.org>, <shuah@kernel.org>, <sj38.park@gmail.com>,
+        <vbabka@suse.cz>, <vdavydov.dev@gmail.com>, <linux-mm@kvack.org>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: Re: [PATCH v6 04/14] mm/damon: Apply dynamic memory mapping changes
+Date:   Tue, 10 Mar 2020 12:53:55 +0100
+Message-ID: <20200310115355.23840-1-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200310090026.00005ea9@Huawei.com> (raw)
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-Originating-IP: [10.43.160.16]
+X-ClientProxiedBy: EX13D15UWB004.ant.amazon.com (10.43.161.61) To
+ EX13D31EUA001.ant.amazon.com (10.43.165.15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As suggested by Michael, let's add me as co-maintainer of virtio-balloon.
-While at it, also add "include/linux/balloon_compaction.h" to the file
-list.
+On Tue, 10 Mar 2020 09:00:26 +0000 Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
 
-Cc: Michael S. Tsirkin <mst@redhat.com>
-Cc: Jason Wang <jasowang@redhat.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
- MAINTAINERS | 9 +++++++++
- 1 file changed, 9 insertions(+)
+> On Mon, 24 Feb 2020 13:30:37 +0100
+> SeongJae Park <sjpark@amazon.com> wrote:
+> 
+> > From: SeongJae Park <sjpark@amazon.de>
+> > 
+> > Only a number of parts in the virtual address space of the processes is
+> > mapped to physical memory and accessed.  Thus, tracking the unmapped
+> > address regions is just wasteful.  However, tracking every memory
+> > mapping change might incur an overhead.  For the reason, DAMON applies
+> > the dynamic memory mapping changes to the tracking regions only for each
+> > of a user-specified time interval (``regions update interval``).
+> > 
+> > Signed-off-by: SeongJae Park <sjpark@amazon.de>
+> Trivial inline. Otherwise makes sense to me.
+> 
+[...]
+> > +static void damon_apply_three_regions(struct damon_ctx *ctx,
+> > +		struct damon_task *t, struct region bregions[3])
+> > +{
+> > +	struct damon_region *r, *next;
+> > +	unsigned int i = 0;
+> > +
+> > +	/* Remove regions which isn't in the three big regions now */
+> > +	damon_for_each_region_safe(r, next, t) {
+> > +		for (i = 0; i < 3; i++) {
+> > +			if (damon_intersect(r, &bregions[i]))
+> > +				break;
+> > +		}
+> > +		if (i == 3)
+> > +			damon_destroy_region(r);
+> > +	}
+> > +
+> > +	/* Adjust intersecting regions to fit with the threee big regions */
+> 
+> three
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index c555f4be8c4e..da9f53a05d0e 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -17800,6 +17800,15 @@ F:	drivers/block/virtio_blk.c
- F:	include/linux/virtio*.h
- F:	include/uapi/linux/virtio_*.h
- F:	drivers/crypto/virtio/
-+
-+VIRTIO BALLOON
-+M:	"Michael S. Tsirkin" <mst@redhat.com>
-+M:	David Hildenbrand <david@redhat.com>
-+L:	virtualization@lists.linux-foundation.org
-+S:	Maintained
-+F:	drivers/virtio/virtio_balloon.c
-+F:	include/uapi/linux/virtio_balloon.h
-+F:	include/linux/balloon_compaction.h
- F:	mm/balloon_compaction.c
-=20
- VIRTIO BLOCK AND SCSI DRIVERS
---=20
-2.24.1
+Good eye!  Thanks for finding :)
 
+[...]
