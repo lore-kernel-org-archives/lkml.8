@@ -2,136 +2,173 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 548FBC10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 06:22:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7A99C10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 06:30:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20F3F24677
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 06:22:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9E032464B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 06:30:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="ZiSo9QH6"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jqLnVSvq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726420AbgCJGWR (ORCPT
+        id S1726252AbgCJGaP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 02:22:17 -0400
-Received: from mail-eopbgr760040.outbound.protection.outlook.com ([40.107.76.40]:21949
-        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726252AbgCJGWQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 02:22:16 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nekpuUfqisksp2Vu8x6Erk8IgWIi942plJsIlgtXzIePHMLN+cGg6ti0oROpQI+zOkw3v8jb3CkjRBLoX8Cp/C3Fh8BLPM9dBBRQsxVy23Amtxw56YCAF4/S0J3/Z1nUCS6w3fE1OZanawn25mRs9juv2b+uqgahL9SXDMg24V5l1p9Is61TB6V6tn9Q2dfKI6aBs8N/sirGUZgpyoPJoxQ0GoZNGzKy22xBN+gsoc11BL1PdT6PprTv16k5OQxyPolKhp/SQyj5VDVsV1T7hubPrXP6kmN9cO5tXKx/iNNZASDVqWPQHBqkY9UhAr6jNGDLRyM/1/7f16e/pNy/3g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HT13jeaCEWBW0udbzXSdtBT1dGkZwcuskeb8J3nR3vc=;
- b=GyblzebvPXlGQ7lZa9Vt7e64jZpD+E2oapAuqOrpGNRpajH1JWXSfE7ymigUyJvkSwswmCalewp9C5r7EyjUX9KH0e9FjNaFO53rkdYKttPFi+kovnb/8hyn874Ny2sTmFiaM3BbhXxj7pvsT1u/84wjlCzqMC6VL8NFacKEXwFBcngkIxbN7uoilwytboKwpOWRWYbx9MegUFZ/GEDsJYmP62Fei7q85MpJMMjr1yJimJZ2c6xQMkObueMUwzcnKeEj/aJwqYUFxdfpyhVgyjRnVUPlpXH38yCW6dwpJmsK+7bU51zI3VvGd9nrkzzmfCxGuDal0mDsGnR3D60ENQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+        Tue, 10 Mar 2020 02:30:15 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:38184 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725919AbgCJGaP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 02:30:15 -0400
+Received: by mail-qk1-f196.google.com with SMTP id h14so5756260qke.5
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 23:30:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HT13jeaCEWBW0udbzXSdtBT1dGkZwcuskeb8J3nR3vc=;
- b=ZiSo9QH6stB8V8hRI+nB34LIj4mGmYWi5x+b9dBLEGHch9/PP1c/O8acqfj3WuzWzx+hGBvt1x5zJP9dKFOp2/MJyaQ8sdGorEw+o24Iv8ruiXv836cQ3Pr68rg7JHjc1Kl4gXF/uNyxjeu5P6EUtBC3Ue/NWtzuZWEYMXASWs0=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Rijo-john.Thomas@amd.com; 
-Received: from CY4PR12MB1925.namprd12.prod.outlook.com (2603:10b6:903:120::7)
- by CY4PR12MB1590.namprd12.prod.outlook.com (2603:10b6:910:a::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.17; Tue, 10 Mar
- 2020 06:22:12 +0000
-Received: from CY4PR12MB1925.namprd12.prod.outlook.com
- ([fe80::ccd2:2608:7a9:6ae7]) by CY4PR12MB1925.namprd12.prod.outlook.com
- ([fe80::ccd2:2608:7a9:6ae7%10]) with mapi id 15.20.2793.013; Tue, 10 Mar 2020
- 06:22:12 +0000
-Subject: Re: [PATCH] tee: amdtee: out of bounds read in find_session()
-To:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Jens Wiklander <jens.wiklander@linaro.org>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Devaraj Rangasamy <Devaraj.Rangasamy@amd.com>,
-        tee-dev@lists.linaro.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-References: <20200227161954.fo7pbbgomdjkraxq@kili.mountain>
-From:   Rijo Thomas <Rijo-john.Thomas@amd.com>
-Message-ID: <0840f77c-6ebd-eafd-6fa5-bc1c2b90f580@amd.com>
-Date:   Tue, 10 Mar 2020 11:52:01 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-In-Reply-To: <20200227161954.fo7pbbgomdjkraxq@kili.mountain>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MA1PR0101CA0020.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a00:21::30) To CY4PR12MB1925.namprd12.prod.outlook.com
- (2603:10b6:903:120::7)
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Gvwbq8vKuqwlRVNXqh+0cFkyyH5WIkQBCTcGi/pa5dM=;
+        b=jqLnVSvqq4c3HcH7I/vZjiAkEMkWkP8oWYPONi7tkPXhrk5903q7rn8seEDmI6Nsnz
+         lWd2BD1e5R0yJETlLT1Qz7YHdek0VbGjwsGGx71PsbnhsTd2Gpl2q3E82pbLXAJ+FqBw
+         XJnRr+6qUdRyKNsKeAXkHJOHzAXWs4D91JiMDfCqEungBDQTOtcUl2ZwnoRiY4uM4pKZ
+         Noe4RfhILbzf+3idisQRNxCOXyuRIHvYWAgiUIbZN3ntLX+eCZA2M4y4+6BX5J/MRO2y
+         lZBtb3iERs2C9LRn6CUcbEeJpL1GMKgrDp2v0KSB4So+7BI+Y0RnPHYcx/2ZmoXul0G1
+         jrFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Gvwbq8vKuqwlRVNXqh+0cFkyyH5WIkQBCTcGi/pa5dM=;
+        b=lXKqteVgt1is9YpW7q6DZYmDGtgNfTtTUHwfUeOpOdA9SRLS7dOmTikVmAOEj+F6g3
+         wFuDOp2Xo6Q869va++XJdQuj4XmjS3rbv9WtwpsvkMgSOxytlTuIuu7fxu1fZvxygD+Z
+         vL4nnfhmMoac72z11XWAVf+dfqGZduSQxvSxCOwbgdb7cKEoEiE66AM3j9rhnZ13YhJq
+         /xy05HU8CtjT07ZObDaCIz1+lm4PT4jWUIXIwksJzugWtvRKmFIZZRetljuCwvxncbfq
+         3tCjGD01eIBHb5lqb45kdS0836i3QTJ7KTGA+x5p9fUIzb2dzi5CG/c8L1Rtdn4Bu+RG
+         V9jg==
+X-Gm-Message-State: ANhLgQ1eG1OY5Qr7XB+Or+MOn6hEyfZbjdFu7eGqjrYF3pjKB5oDXVbW
+        gC/DyYnZZVfMzWmDSzaPHJ2E/SPGYiX0jj/y91XvfA==
+X-Google-Smtp-Source: ADFU+vtT3mCr0iCe/Hyq0ynpYLyaKYYOq+A2Mha2dKDRMoggzgUwyCu+6lL5ogXPAtsnUWqm1DODRwfLE3APFeRTNUU=
+X-Received: by 2002:ae9:e003:: with SMTP id m3mr18920202qkk.250.1583821813342;
+ Mon, 09 Mar 2020 23:30:13 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [10.138.129.230] (165.204.156.251) by MA1PR0101CA0020.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:21::30) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.15 via Frontend Transport; Tue, 10 Mar 2020 06:22:09 +0000
-X-Originating-IP: [165.204.156.251]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 5eb2f6bd-51ef-4fa7-2e49-08d7c4bb5e6d
-X-MS-TrafficTypeDiagnostic: CY4PR12MB1590:|CY4PR12MB1590:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <CY4PR12MB1590E43304C77D267FB1C2BECFFF0@CY4PR12MB1590.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:3826;
-X-Forefront-PRVS: 033857D0BD
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(366004)(396003)(346002)(39860400002)(376002)(199004)(189003)(110136005)(6486002)(16576012)(8936002)(52116002)(66556008)(66476007)(2906002)(478600001)(66946007)(53546011)(26005)(54906003)(81166006)(5660300002)(186003)(81156014)(8676002)(16526019)(956004)(31686004)(86362001)(31696002)(316002)(2616005)(6666004)(36756003)(4326008);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR12MB1590;H:CY4PR12MB1925.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 69D2CV0q7VtxymaDvw9klmSVx9wch+ExAKX1AriXWypI6CTMouKXv0xeOAPc7Sw7yhPswmkYDm2L36FvARRXocODQj8LW487Ogk0moNQE+LSTfghrvX0rOAK/6xyS9ajuyFpNWE/tXjJ5lW3Z0K2/zIRkdTpVtJdZvT98/AocQdVqMmASaXgHI+S+1MewWxf4UazM1ONTsk2/NepNxXQvdlVeplWGKfgRAn1gPBsSRpn+8qWTaHxIA3hTMUiF1lYGFcpeX3BoIjLvZWowXYghsdYbUVXtfBZ9Q0BFdeXEfF8a1Db9MbTFCz3+qkXqqqcCTLX/GdzKA/XrHbI4Zb2qLWxwmb2EvGcClBd1wjw66s/YatJRbM2l3v67iWB3eShEbjl7W4Wva7k+jQV4sHWriDAjTLms8JOY9DNnazxIQAHgjUtHdmbwWsHHZeaD8DH
-X-MS-Exchange-AntiSpam-MessageData: FaiqGbCKcqwls5v8GMDdsKeRjo+6Lm6ooNtpA6kquur1vVWTGtEykqCxwG7Jc3gIW3oUj90ohMYWLxpalW+SGzALXVsmjeal31AsSzbsaMeMqz1hQd/eDL7Y07O0Ua8lGXnFx60/MUnlZ6UFkQI3cw==
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5eb2f6bd-51ef-4fa7-2e49-08d7c4bb5e6d
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Mar 2020 06:22:12.0265
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: t5SpG4YCjx7hPnhjbPFE8pT2Ej70i2I5oPvQUncu9GD4CbMGeymZES0qCAsYswznN0GAsdRNf0CU8U7K/Gieyw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR12MB1590
+References: <20200307135822.3894-1-penguin-kernel@I-love.SAKURA.ne.jp>
+ <6f2e27de-c820-7de3-447d-cd9f7c650add@suse.com> <20200308065258.GE3983392@kroah.com>
+ <3e9f47f7-a6c1-7cec-a84f-e621ae5426be@suse.com>
+In-Reply-To: <3e9f47f7-a6c1-7cec-a84f-e621ae5426be@suse.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Tue, 10 Mar 2020 07:30:01 +0100
+Message-ID: <CACT4Y+a6KExbggs4mg8pvoD554PcDqQNW4sM15X-tc=YONCzYw@mail.gmail.com>
+Subject: Re: [PATCH v2] Add kernel config option for fuzz testing.
+To:     Jiri Slaby <jslaby@suse.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Matthew Garrett <mjg59@google.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Mar 9, 2020 at 4:39 PM Jiri Slaby <jslaby@suse.com> wrote:
+>
+> On 08. 03. 20, 7:52, Greg Kroah-Hartman wrote:
+> > On Sat, Mar 07, 2020 at 05:28:22PM +0100, Jiri Slaby wrote:
+> >> On 07. 03. 20, 14:58, Tetsuo Handa wrote:
+> >>> While syzkaller is finding many bugs, sometimes syzkaller examines
+> >>> stupid operations. Currently we prevent syzkaller from examining
+> >>> stupid operations by blacklisting syscall arguments and/or disabling
+> >>> whole functionality using existing kernel config options, but it is
+> >>> a whack-a-mole approach. We need cooperation from kernel side [1].
+> >>>
+> >>> This patch introduces a kernel config option which allows disabling
+> >>> only specific operations. This kernel config option should be enabled
+> >>> only when building kernels for fuzz testing.
+> >>>
+> >>> We discussed possibility of disabling specific operations at run-time
+> >>> using some lockdown mechanism [2], but conclusion seems that build-time
+> >>> control (i.e. kernel config option) fits better for this purpose.
+> >>> Since patches for users of this kernel config option will want a lot of
+> >>> explanation [3], this patch provides only kernel config option for them.
+> >>>
+> >>> [1] https://github.com/google/syzkaller/issues/1622
+> >>> [2] https://lkml.kernel.org/r/CACdnJutc7OQeoor6WLTh8as10da_CN=crs79v3Fp0mJTaO=+yw@mail.gmail.com
+> >>> [3] https://lkml.kernel.org/r/20191216163155.GB2258618@kroah.com
+> >>>
+> >>> Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+> >>> Cc: Dmitry Vyukov <dvyukov@google.com>
+> >>> ---
+> >>>  lib/Kconfig.debug | 10 ++++++++++
+> >>>  1 file changed, 10 insertions(+)
+> >>>
+> >>> Changes since v1:
+> >>>   Drop users of this kernel config option.
+> >>>   Update patch description.
+> >>>
+> >>> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+> >>> index 53e786e0a604..e360090e24c5 100644
+> >>> --- a/lib/Kconfig.debug
+> >>> +++ b/lib/Kconfig.debug
+> >>> @@ -2208,4 +2208,14 @@ config HYPERV_TESTING
+> >>>
+> >>>  endmenu # "Kernel Testing and Coverage"
+> >>>
+> >>> +config KERNEL_BUILT_FOR_FUZZ_TESTING
+> >>> +       bool "Build kernel for fuzz testing"
+> >>
+> >> If we really want to go this way, I wouldn't limit it for fuzz testing
+> >> only. Static analyzers, symbolic executors, formal verifiers, etc. --
+> >> all of them should avoid the paths.
+> >
+> > No, anything that just evaluates the code should be fine, we want static
+> > analyzers to be processing those code paths.  Just not to run them as
+> > root on a live system.
+>
+> Even static analyzers generate real-world counter-examples in .c. They
+> are ran dynamically to check if the issue is real or if it's only a
+> shortcoming of static analysis. Klee is one of those and I used to run
+> it on the kernel some time ago. Throwing such generated input results in
+> the same weird behavior as using fuzzy testing, while it's still not
+> fuzzy testing, but accurate testing.
 
-On 27/02/20 9:49 pm, Dan Carpenter wrote:
-> The "index" is a user provided value from 0-USHRT_MAX.  If it's over
-> TEE_NUM_SESSIONS (31) then it results in an out of bounds read when we
-> call test_bit(index, sess->sess_mask).
-> 
-> Fixes: 757cc3e9ff1d ("tee: add AMD-TEE driver")
-> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 
-Acked-by: Rijo Thomas <Rijo-john.Thomas@amd.com>
+I am all for naming/framing this as a more generic option (good it at
+least does not have SYZ in the name :)).
 
-Thanks,
-Rijo
+Re making it a single config vs a set of fine-grained configs. I think
+making it fine-grained is a proper way to do it, but the point Tetsuo
+raised is very real and painful as well -- when a kernel developer
+adds another option, they will not go and update configs on all
+external testing systems. This problem is also common for "enable all
+boot tests that can run on this kernel", or "configure a 'standard'
+debug build". Currently doing these things require all of expertise,
+sacred knowledge, checking all configs one-by-one as well as checking
+every new kernel patch and that needs to be done by everybody doing
+any kernel testing.
+I wonder if this can be solved by doing fine-grained configs, but also
+adding some umbrella uber-config that will select all of the
+individual options. Config system allows this, right? With "select" or
+"default if" clauses. What would be better: have the umbrella option
+select all individual, or all individual default to y if umbrella is
+selected?
 
-> ---
->  drivers/tee/amdtee/core.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/drivers/tee/amdtee/core.c b/drivers/tee/amdtee/core.c
-> index 6370bb55f512..dbc238c7c263 100644
-> --- a/drivers/tee/amdtee/core.c
-> +++ b/drivers/tee/amdtee/core.c
-> @@ -139,6 +139,9 @@ static struct amdtee_session *find_session(struct amdtee_context_data *ctxdata,
->  	u32 index = get_session_index(session);
->  	struct amdtee_session *sess;
->  
-> +	if (index >= TEE_NUM_SESSIONS)
-> +		return NULL;
-> +
->  	list_for_each_entry(sess, &ctxdata->sess_list, list_node)
->  		if (ta_handle == sess->ta_handle &&
->  		    test_bit(index, sess->sess_mask))
-> 
+FTR, some of the things we would like to disable are collected here:
+https://github.com/google/syzkaller/issues/1622
+
+Steve, I am not sure if by lockdown you mean the existing lockdown
+mechanism, or just something similar in nature. As Tetsuo pointed, the
+possibility of using the existing lockdown mechanism for this was
+discussed here (and rejected):
+https://lore.kernel.org/lkml/CACdnJutc7OQeoor6WLTh8as10da_CN=crs79v3Fp0mJTaO=+yw@mail.gmail.com/
