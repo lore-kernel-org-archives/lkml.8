@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C9A8C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:27:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E34AC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:27:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6681124649
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:27:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4380B24693
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:27:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583846846;
-	bh=+hi5aN+D6JGLzjvA6/P2ENZRj0ICH3a32s1Tw3e6BL8=;
+	s=default; t=1583846856;
+	bh=Gi8TD+6W9+yKdNB018nsuFUxsWYt6po2L8iD2RX6/rc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=btTU21PvAkwu3J/o2h8zqQNtWJSG8XeuS2RjBPfU6fkCqTDs/rMe0xGq1ZZ1p/tTt
-	 noiCymyrDQ3QgDggjECtx6lw4pqDnqTgsnQPFBKiH9tqEdjc2w2SaQXFy09GhkOop8
-	 AHSGDop5K2HykvrZ58ImEtsw829DqFNaok8vKPIw=
+	b=vBpD9d68H72v7O4lAWV1PepoHOlwXZyyJpkvu1vTeYDGe/aM/z8d4M20146oxQGJ/
+	 Gj1AejKc46zeqxpn7ymh7UVn4qBxuy+JcExtJJQPho3p9QVmD66UC2mytqeULIMTTu
+	 cDTJz6k48LWhshxcHy9h924nrXIfjCwTeobBajwc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729449AbgCJN1Z (ORCPT
+        id S1729685AbgCJN1f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:27:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33436 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:27:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32880 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727775AbgCJMyu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:54:50 -0400
+        id S1729087AbgCJMy3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:54:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B04CC2253D;
-        Tue, 10 Mar 2020 12:54:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F2CB20674;
+        Tue, 10 Mar 2020 12:54:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844890;
-        bh=+hi5aN+D6JGLzjvA6/P2ENZRj0ICH3a32s1Tw3e6BL8=;
+        s=default; t=1583844868;
+        bh=Gi8TD+6W9+yKdNB018nsuFUxsWYt6po2L8iD2RX6/rc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RJ4qh8O4j679l4zU76/Q8I9PxlKeoauAawMhkv4BNKnM0Wi1D/57aVO7GlmkHzfMS
-         /0RSoWp4QI0U9xKXkx//oEOADzj8ubLR2rYaraq98lBpLCfAXLvPD5G+/shG/Pao5Q
-         eNiLPsw+6mS+3GDoP7pUH8o4mNFA51sVyQrBp7Gc=
+        b=LD1dFgrq4tVrCUWuO0Bmj6s2rWpbwjhb52uu53i2EFUMC7ZVeF9MzPP8jzxOetE7a
+         hlRy3n/nwOcSXL1pYlpq6nDXdtmOQq3W09NG6czgYbUW/jFAWjRZ074NXWFV6jlcgL
+         1F+crthHVlwZyQIZdWJWKOji21ej3SIAqjcNzqBk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+cb0c054eabfba4342146@syzkaller.appspotmail.com,
-        Bernard Metzler <bmt@zurich.ibm.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 5.4 149/168] RDMA/iwcm: Fix iwcm work deallocation
-Date:   Tue, 10 Mar 2020 13:39:55 +0100
-Message-Id: <20200310123650.587995345@linuxfoundation.org>
+        stable@vger.kernel.org, Hou Tao <houtao1@huawei.com>,
+        Mike Snitzer <snitzer@redhat.com>
+Subject: [PATCH 5.4 111/168] dm: fix congested_fn for request-based device
+Date:   Tue, 10 Mar 2020 13:39:17 +0100
+Message-Id: <20200310123646.632245161@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123635.322799692@linuxfoundation.org>
 References: <20200310123635.322799692@linuxfoundation.org>
@@ -61,41 +59,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bernard Metzler <bmt@zurich.ibm.com>
+From: Hou Tao <houtao1@huawei.com>
 
-commit 810dbc69087b08fd53e1cdd6c709f385bc2921ad upstream.
+commit 974f51e8633f0f3f33e8f86bbb5ae66758aa63c7 upstream.
 
-The dealloc_work_entries() function must update the work_free_list pointer
-while freeing its entries, since potentially called again on same list. A
-second iteration of the work list caused system crash. This happens, if
-work allocation fails during cma_iw_listen() and free_cm_id() tries to
-free the list again during cleanup.
+We neither assign congested_fn for requested-based blk-mq device nor
+implement it correctly. So fix both.
 
-Fixes: 922a8e9fb2e0 ("RDMA: iWARP Connection Manager.")
-Link: https://lore.kernel.org/r/20200302181614.17042-1-bmt@zurich.ibm.com
-Reported-by: syzbot+cb0c054eabfba4342146@syzkaller.appspotmail.com
-Signed-off-by: Bernard Metzler <bmt@zurich.ibm.com>
-Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Also, remove incorrect comment from dm_init_normal_md_queue and rename
+it to dm_init_congested_fn.
+
+Fixes: 4aa9c692e052 ("bdi: separate out congested state into a separate struct")
+Cc: stable@vger.kernel.org
+Signed-off-by: Hou Tao <houtao1@huawei.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/core/iwcm.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/md/dm.c |   21 ++++++++++-----------
+ 1 file changed, 10 insertions(+), 11 deletions(-)
 
---- a/drivers/infiniband/core/iwcm.c
-+++ b/drivers/infiniband/core/iwcm.c
-@@ -159,8 +159,10 @@ static void dealloc_work_entries(struct
+--- a/drivers/md/dm.c
++++ b/drivers/md/dm.c
+@@ -1809,7 +1809,8 @@ static int dm_any_congested(void *conges
+ 			 * With request-based DM we only need to check the
+ 			 * top-level queue for congestion.
+ 			 */
+-			r = md->queue->backing_dev_info->wb.state & bdi_bits;
++			struct backing_dev_info *bdi = md->queue->backing_dev_info;
++			r = bdi->wb.congested->state & bdi_bits;
+ 		} else {
+ 			map = dm_get_live_table_fast(md);
+ 			if (map)
+@@ -1875,15 +1876,6 @@ static const struct dax_operations dm_da
+ 
+ static void dm_wq_work(struct work_struct *work);
+ 
+-static void dm_init_normal_md_queue(struct mapped_device *md)
+-{
+-	/*
+-	 * Initialize aspects of queue that aren't relevant for blk-mq
+-	 */
+-	md->queue->backing_dev_info->congested_data = md;
+-	md->queue->backing_dev_info->congested_fn = dm_any_congested;
+-}
+-
+ static void cleanup_mapped_device(struct mapped_device *md)
  {
- 	struct list_head *e, *tmp;
- 
--	list_for_each_safe(e, tmp, &cm_id_priv->work_free_list)
-+	list_for_each_safe(e, tmp, &cm_id_priv->work_free_list) {
-+		list_del(e);
- 		kfree(list_entry(e, struct iwcm_work, free_list));
-+	}
+ 	if (md->wq)
+@@ -2270,6 +2262,12 @@ struct queue_limits *dm_get_queue_limits
  }
+ EXPORT_SYMBOL_GPL(dm_get_queue_limits);
  
- static int alloc_work_entries(struct iwcm_id_private *cm_id_priv, int count)
++static void dm_init_congested_fn(struct mapped_device *md)
++{
++	md->queue->backing_dev_info->congested_data = md;
++	md->queue->backing_dev_info->congested_fn = dm_any_congested;
++}
++
+ /*
+  * Setup the DM device's queue based on md's type
+  */
+@@ -2286,11 +2284,12 @@ int dm_setup_md_queue(struct mapped_devi
+ 			DMERR("Cannot initialize queue for request-based dm-mq mapped device");
+ 			return r;
+ 		}
++		dm_init_congested_fn(md);
+ 		break;
+ 	case DM_TYPE_BIO_BASED:
+ 	case DM_TYPE_DAX_BIO_BASED:
+ 	case DM_TYPE_NVME_BIO_BASED:
+-		dm_init_normal_md_queue(md);
++		dm_init_congested_fn(md);
+ 		break;
+ 	case DM_TYPE_NONE:
+ 		WARN_ON_ONCE(true);
 
 
