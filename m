@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47856C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:41:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D677FC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:41:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BC7A2469E
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:41:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB1C824698
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:41:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583844091;
-	bh=uOxiZGB6cB8mzQhBTuIRU4Z3aQ39w41B7Hx6Zi24a34=;
+	s=default; t=1583844095;
+	bh=lH07DyGfCpn7Umrw/EPCa6h0VuEhaCMiaDb8h6et0cI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yJ6ZP3lgIyK4n3LMaIxDCR/cll32mPERnga4ZzT4O2K0R22uoaYk3ReUNdbcHfH1f
-	 e3b4oh1gSag86dlMTGjMGpRLpGkRzRrpLAyTX7qkyayRFi0nR1w7lQ291vySrvLb1K
-	 nXPCydcP18bLE+SoeFDGNNZyNYyW3zkbfbnWTTl8=
+	b=aI86B75Ljz1LkCdjWhSccnCfzwBCuxSL3osZw55OiLq4rMJS4w4XxbS8SwxBKCmmQ
+	 c5wIwvENBF3LH27EQuKZjYpm0I+3gGuSDAzIY1++OS8uILc7bc0zXAQF1uGEjiWn4y
+	 dPTVnS5GNdzYTSLC0BeASAubgELdlYOAYiS9DvTI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726958AbgCJMl3 (ORCPT
+        id S1727001AbgCJMle (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:41:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40924 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:41:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41112 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726837AbgCJMl2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:41:28 -0400
+        id S1726977AbgCJMlc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:41:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B2D624698;
-        Tue, 10 Mar 2020 12:41:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 12CEF24691;
+        Tue, 10 Mar 2020 12:41:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844086;
-        bh=uOxiZGB6cB8mzQhBTuIRU4Z3aQ39w41B7Hx6Zi24a34=;
+        s=default; t=1583844091;
+        bh=lH07DyGfCpn7Umrw/EPCa6h0VuEhaCMiaDb8h6et0cI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UWHvDJYZzQk/ShEHfdMrqfAgzTWQR/WjcNVZghvQXM2g72dac2YUc35IzTLDQiEwm
-         cVkAM9Jk3p8XaQDSFQ3YUupipzdzqWl5Vbclxp4XOspI/j8xO25N5VuHQ26daDSOEd
-         aUN8HgtRNe58TEMfkvqjBYPgUACteQ4vSlvvdsXA=
+        b=wBwn9OFPyBs6B9hZQNcxyKvYkihzXqFAObiGESqF3o1/57u6A94hk4sLVMLnEPCdG
+         Q3wT4fs9bAcwsSCK2csb+fuJU7r4JvsWsOAHgDY7OTDY6cLBd3YNPFBwnZLoNaAC9u
+         VL2MMoMNcCv/DeV55p5sSL2DOYkc/CDA5kGOq1fo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH 4.4 26/72] ecryptfs: Fix up bad backport of fe2e082f5da5b4a0a92ae32978f81507ef37ec66
-Date:   Tue, 10 Mar 2020 13:38:39 +0100
-Message-Id: <20200310123608.241254542@linuxfoundation.org>
+        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
+        Richard Guy Briggs <rgb@redhat.com>,
+        "Erhard F." <erhard_f@mailbox.org>,
+        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 28/72] net: netlink: cap max groups which will be considered in netlink_bind()
+Date:   Tue, 10 Mar 2020 13:38:41 +0100
+Message-Id: <20200310123608.604232620@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123601.053680753@linuxfoundation.org>
 References: <20200310123601.053680753@linuxfoundation.org>
@@ -59,79 +62,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
 
-When doing the 4.9 merge into certain Android trees, I noticed a warning
-from Android's deprecated GCC 4.9.4, which causes a build failure in
-those trees due to basically -Werror:
+commit 3a20773beeeeadec41477a5ba872175b778ff752 upstream.
 
-fs/ecryptfs/keystore.c: In function 'ecryptfs_parse_packet_set':
-fs/ecryptfs/keystore.c:1357:2: warning: 'auth_tok_list_item' may be used
-uninitialized in this function [-Wmaybe-uninitialized]
-  memset(auth_tok_list_item, 0,
-  ^
-fs/ecryptfs/keystore.c:1260:38: note: 'auth_tok_list_item' was declared
-here
-  struct ecryptfs_auth_tok_list_item *auth_tok_list_item;
-                                      ^
+Since nl_groups is a u32 we can't bind more groups via ->bind
+(netlink_bind) call, but netlink has supported more groups via
+setsockopt() for a long time and thus nlk->ngroups could be over 32.
+Recently I added support for per-vlan notifications and increased the
+groups to 33 for NETLINK_ROUTE which exposed an old bug in the
+netlink_bind() code causing out-of-bounds access on archs where unsigned
+long is 32 bits via test_bit() on a local variable. Fix this by capping the
+maximum groups in netlink_bind() to BITS_PER_TYPE(u32), effectively
+capping them at 32 which is the minimum of allocated groups and the
+maximum groups which can be bound via netlink_bind().
 
-GCC 9.2.0 was not able to pick up this warning when I tested it.
-
-Turns out that Clang warns as well when -Wuninitialized is used, which
-is not the case in older stable trees at the moment (but shows value in
-potentially backporting the various warning fixes currently in upstream
-to get more coverage).
-
-fs/ecryptfs/keystore.c:1284:6: warning: variable 'auth_tok_list_item' is
-used uninitialized whenever 'if' condition is true
-[-Wsometimes-uninitialized]
-        if (data[(*packet_size)++] != ECRYPTFS_TAG_1_PACKET_TYPE) {
-            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-fs/ecryptfs/keystore.c:1360:4: note: uninitialized use occurs here
-                        auth_tok_list_item);
-                        ^~~~~~~~~~~~~~~~~~
-fs/ecryptfs/keystore.c:1284:2: note: remove the 'if' if its condition is
-always false
-        if (data[(*packet_size)++] != ECRYPTFS_TAG_1_PACKET_TYPE) {
-        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-fs/ecryptfs/keystore.c:1260:56: note: initialize the variable
-'auth_tok_list_item' to silence this warning
-        struct ecryptfs_auth_tok_list_item *auth_tok_list_item;
-                                                              ^
-                                                               = NULL
-1 warning generated.
-
-Somehow, commit fe2e082f5da5 ("ecryptfs: fix a memory leak bug in
-parse_tag_1_packet()") upstream was not applied in the correct if block
-in 4.4.215, 4.9.215, and 4.14.172, which will indeed lead to use of
-uninitialized memory. Fix it up by undoing the bad backport in those
-trees then reapplying the patch in the proper location.
-
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+CC: Christophe Leroy <christophe.leroy@c-s.fr>
+CC: Richard Guy Briggs <rgb@redhat.com>
+Fixes: 4f520900522f ("netlink: have netlink per-protocol bind function return an error code.")
+Reported-by: Erhard F. <erhard_f@mailbox.org>
+Signed-off-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- fs/ecryptfs/keystore.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/fs/ecryptfs/keystore.c
-+++ b/fs/ecryptfs/keystore.c
-@@ -1280,7 +1280,7 @@ parse_tag_1_packet(struct ecryptfs_crypt
- 		printk(KERN_ERR "Enter w/ first byte != 0x%.2x\n",
- 		       ECRYPTFS_TAG_1_PACKET_TYPE);
- 		rc = -EINVAL;
--		goto out_free;
-+		goto out;
+---
+ net/netlink/af_netlink.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+--- a/net/netlink/af_netlink.c
++++ b/net/netlink/af_netlink.c
+@@ -1003,7 +1003,8 @@ static int netlink_bind(struct socket *s
+ 	if (nlk->netlink_bind && groups) {
+ 		int group;
+ 
+-		for (group = 0; group < nlk->ngroups; group++) {
++		/* nl_groups is a u32, so cap the maximum groups we can bind */
++		for (group = 0; group < BITS_PER_TYPE(u32); group++) {
+ 			if (!test_bit(group, &groups))
+ 				continue;
+ 			err = nlk->netlink_bind(net, group + 1);
+@@ -1022,7 +1023,7 @@ static int netlink_bind(struct socket *s
+ 			netlink_insert(sk, nladdr->nl_pid) :
+ 			netlink_autobind(sock);
+ 		if (err) {
+-			netlink_undo_bind(nlk->ngroups, groups, sk);
++			netlink_undo_bind(BITS_PER_TYPE(u32), groups, sk);
+ 			return err;
+ 		}
  	}
- 	/* Released: wipe_auth_tok_list called in ecryptfs_parse_packet_set or
- 	 * at end of function upon failure */
-@@ -1330,7 +1330,7 @@ parse_tag_1_packet(struct ecryptfs_crypt
- 		printk(KERN_WARNING "Tag 1 packet contains key larger "
- 		       "than ECRYPTFS_MAX_ENCRYPTED_KEY_BYTES");
- 		rc = -EINVAL;
--		goto out;
-+		goto out_free;
- 	}
- 	memcpy((*new_auth_tok)->session_key.encrypted_key,
- 	       &data[(*packet_size)], (body_size - (ECRYPTFS_SIG_SIZE + 2)));
 
 
