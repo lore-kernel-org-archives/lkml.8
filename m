@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2A7EC18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:46:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C026AC18E5C
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:46:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A5CE24694
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:46:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94A3D2468D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:46:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583844382;
-	bh=OHeUxoWl7PYvP4RNxPRj0SEgouS4L+rb+7tOc67OhaM=;
+	s=default; t=1583844384;
+	bh=JWZ9FwWt1KKnILBTWu7vLkJhY59MMHT8tRRn+QvVnhs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qjKxng0OpoOqfjRCIKZE68T6ngQNbczCpnn/cROskRd4ba5leXfSu7+vXO73HNGBE
-	 gtGvg455QKAeaKH0g0aC38sq4QkmN8rk/RaQdIWCt1VycgGN2uQt0fLkiw7pD7oKHB
-	 rWa3/PH16Mvr+EJHL40dohNrHx4f/0DKYup06vRg=
+	b=ohgnt8lYRg3VUOH135KiLV6g4unffXybQl4Ubxd1hmMFVKBjyAQdd3QEVKSw6cjXf
+	 lXbmEN5iHSv43LxkLzB3jOJGkTRp1jwhqI2QT5jX4fma0uP537/lKrNWrGtLix/NDG
+	 JwhKM29meOcmpgak0T5ahdWvp9p2sjiyK2E83dYI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728000AbgCJMqV (ORCPT
+        id S1727806AbgCJMqX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:46:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49318 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:46:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49452 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727779AbgCJMqN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:46:13 -0400
+        id S1727754AbgCJMqT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:46:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5DDA920674;
-        Tue, 10 Mar 2020 12:46:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B43F24691;
+        Tue, 10 Mar 2020 12:46:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844372;
-        bh=OHeUxoWl7PYvP4RNxPRj0SEgouS4L+rb+7tOc67OhaM=;
+        s=default; t=1583844378;
+        bh=JWZ9FwWt1KKnILBTWu7vLkJhY59MMHT8tRRn+QvVnhs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qM3DNuNURVIBwXRIOd+O+w69dX91xKOvjVNLow0wb0YJOPBGByHYKB/g1iq4JiKy0
-         4iM4fhjaUfopTOtJ7TxpyiTeoecqC3gVtrFsuDJlgdIxkUaErsm2hxjoSR3yEV+FVw
-         p8UfEHe2QtkQI0+k8Chz0v3hpaQUIl5LMi/MlUh0=
+        b=uH2fII6pr++Wlg+cDHuN06vfXZk4Zjzx+8F6Lvm9W4aMkqinvdr7AoMCKSvt9FeSP
+         GFF9ASOjJdOrWD3EABgTBEBZyuE5juPC7PCvpS4QLT8pdIwe5EDDZbknkxXowteMhY
+         ljyePNL+LPGCQCXcCUyc7rufNwcBFBRM3KRstqDs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -47,9 +47,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Lukas Wunner <lukas@wunner.de>, Petr Stetiar <ynezz@true.cz>,
         YueHaibing <yuehaibing@huawei.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 57/88] net: ks8851-ml: Remove 8-bit bus accessors
-Date:   Tue, 10 Mar 2020 13:39:05 +0100
-Message-Id: <20200310123620.673846137@linuxfoundation.org>
+Subject: [PATCH 4.9 59/88] net: ks8851-ml: Fix 16-bit IO operation
+Date:   Tue, 10 Mar 2020 13:39:07 +0100
+Message-Id: <20200310123621.219492584@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123606.543939933@linuxfoundation.org>
 References: <20200310123606.543939933@linuxfoundation.org>
@@ -64,26 +64,13 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Marek Vasut <marex@denx.de>
 
-[ Upstream commit 69233bba6543a37755158ca3382765387b8078df ]
+[ Upstream commit 58292104832fef6cb4a89f736012c0e0724c3442 ]
 
-This driver is mixing 8-bit and 16-bit bus accessors for reasons unknown,
-however the speculation is that this was some sort of attempt to support
-the 8-bit bus mode.
-
-As per the KS8851-16MLL documentation, all two registers accessed via the
-8-bit accessors are internally 16-bit registers, so reading them using
-16-bit accessors is fine. The KS_CCR read can be converted to 16-bit read
-outright, as it is already a concatenation of two 8-bit reads of that
-register. The KS_RXQCR accesses are 8-bit only, however writing the top
-8 bits of the register is OK as well, since the driver caches the entire
-16-bit register value anyway.
-
-Finally, the driver is not used by any hardware in the kernel right now.
-The only hardware available to me is one with 16-bit bus, so I have no
-way to test the 8-bit bus mode, however it is unlikely this ever really
-worked anyway. If the 8-bit bus mode is ever required, it can be easily
-added by adjusting the 16-bit accessors to do 2 consecutive accesses,
-which is how this should have been done from the beginning.
+The Micrel KSZ8851-16MLLI datasheet DS00002357B page 12 states that
+BE[3:0] signals are active high. This contradicts the measurements
+of the behavior of the actual chip, where these signals behave as
+active low. For example, to read the CIDER register, the bus must
+expose 0xc0c0 during the address phase, which means BE[3:0]=4'b1100.
 
 Signed-off-by: Marek Vasut <marex@denx.de>
 Cc: David S. Miller <davem@davemloft.net>
@@ -93,105 +80,31 @@ Cc: YueHaibing <yuehaibing@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/micrel/ks8851_mll.c | 45 +++---------------------
- 1 file changed, 5 insertions(+), 40 deletions(-)
+ drivers/net/ethernet/micrel/ks8851_mll.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/net/ethernet/micrel/ks8851_mll.c b/drivers/net/ethernet/micrel/ks8851_mll.c
-index 8dc1f0277117d..721f851674531 100644
+index 20356976b9772..d94e151cff12b 100644
 --- a/drivers/net/ethernet/micrel/ks8851_mll.c
 +++ b/drivers/net/ethernet/micrel/ks8851_mll.c
-@@ -474,24 +474,6 @@ static int msg_enable;
-  * chip is busy transferring packet data (RX/TX FIFO accesses).
-  */
+@@ -484,7 +484,7 @@ static int msg_enable;
  
--/**
-- * ks_rdreg8 - read 8 bit register from device
-- * @ks	  : The chip information
-- * @offset: The register address
-- *
-- * Read a 8bit register from the chip, returning the result
-- */
--static u8 ks_rdreg8(struct ks_net *ks, int offset)
--{
--	u16 data;
--	u8 shift_bit = offset & 0x03;
--	u8 shift_data = (offset & 1) << 3;
--	ks->cmd_reg_cache = (u16) offset | (u16)(BE0 << shift_bit);
--	iowrite16(ks->cmd_reg_cache, ks->hw_addr_cmd);
--	data  = ioread16(ks->hw_addr);
--	return (u8)(data >> shift_data);
--}
--
- /**
-  * ks_rdreg16 - read 16 bit register from device
-  * @ks	  : The chip information
-@@ -507,22 +489,6 @@ static u16 ks_rdreg16(struct ks_net *ks, int offset)
+ static u16 ks_rdreg16(struct ks_net *ks, int offset)
+ {
+-	ks->cmd_reg_cache = (u16)offset | ((BE1 | BE0) << (offset & 0x02));
++	ks->cmd_reg_cache = (u16)offset | ((BE3 | BE2) >> (offset & 0x02));
+ 	iowrite16(ks->cmd_reg_cache, ks->hw_addr_cmd);
  	return ioread16(ks->hw_addr);
  }
+@@ -499,7 +499,7 @@ static u16 ks_rdreg16(struct ks_net *ks, int offset)
  
--/**
-- * ks_wrreg8 - write 8bit register value to chip
-- * @ks: The chip information
-- * @offset: The register address
-- * @value: The value to write
-- *
-- */
--static void ks_wrreg8(struct ks_net *ks, int offset, u8 value)
--{
--	u8  shift_bit = (offset & 0x03);
--	u16 value_write = (u16)(value << ((offset & 1) << 3));
--	ks->cmd_reg_cache = (u16)offset | (BE0 << shift_bit);
--	iowrite16(ks->cmd_reg_cache, ks->hw_addr_cmd);
--	iowrite16(value_write, ks->hw_addr);
--}
--
- /**
-  * ks_wrreg16 - write 16bit register value to chip
-  * @ks: The chip information
-@@ -642,8 +608,7 @@ static void ks_read_config(struct ks_net *ks)
- 	u16 reg_data = 0;
- 
- 	/* Regardless of bus width, 8 bit read should always work.*/
--	reg_data = ks_rdreg8(ks, KS_CCR) & 0x00FF;
--	reg_data |= ks_rdreg8(ks, KS_CCR+1) << 8;
-+	reg_data = ks_rdreg16(ks, KS_CCR);
- 
- 	/* addr/data bus are multiplexed */
- 	ks->sharedbus = (reg_data & CCR_SHARED) == CCR_SHARED;
-@@ -747,7 +712,7 @@ static inline void ks_read_qmu(struct ks_net *ks, u16 *buf, u32 len)
- 
- 	/* 1. set sudo DMA mode */
- 	ks_wrreg16(ks, KS_RXFDPR, RXFDPR_RXFPAI);
--	ks_wrreg8(ks, KS_RXQCR, (ks->rc_rxqcr | RXQCR_SDA) & 0xff);
-+	ks_wrreg16(ks, KS_RXQCR, ks->rc_rxqcr | RXQCR_SDA);
- 
- 	/* 2. read prepend data */
- 	/**
-@@ -764,7 +729,7 @@ static inline void ks_read_qmu(struct ks_net *ks, u16 *buf, u32 len)
- 	ks_inblk(ks, buf, ALIGN(len, 4));
- 
- 	/* 4. reset sudo DMA Mode */
--	ks_wrreg8(ks, KS_RXQCR, ks->rc_rxqcr);
-+	ks_wrreg16(ks, KS_RXQCR, ks->rc_rxqcr);
+ static void ks_wrreg16(struct ks_net *ks, int offset, u16 value)
+ {
+-	ks->cmd_reg_cache = (u16)offset | ((BE1 | BE0) << (offset & 0x02));
++	ks->cmd_reg_cache = (u16)offset | ((BE3 | BE2) >> (offset & 0x02));
+ 	iowrite16(ks->cmd_reg_cache, ks->hw_addr_cmd);
+ 	iowrite16(value, ks->hw_addr);
  }
- 
- /**
-@@ -997,13 +962,13 @@ static void ks_write_qmu(struct ks_net *ks, u8 *pdata, u16 len)
- 	ks->txh.txw[1] = cpu_to_le16(len);
- 
- 	/* 1. set sudo-DMA mode */
--	ks_wrreg8(ks, KS_RXQCR, (ks->rc_rxqcr | RXQCR_SDA) & 0xff);
-+	ks_wrreg16(ks, KS_RXQCR, ks->rc_rxqcr | RXQCR_SDA);
- 	/* 2. write status/lenth info */
- 	ks_outblk(ks, ks->txh.txw, 4);
- 	/* 3. write pkt data */
- 	ks_outblk(ks, (u16 *)pdata, ALIGN(len, 4));
- 	/* 4. reset sudo-DMA mode */
--	ks_wrreg8(ks, KS_RXQCR, ks->rc_rxqcr);
-+	ks_wrreg16(ks, KS_RXQCR, ks->rc_rxqcr);
- 	/* 5. Enqueue Tx(move the pkt from TX buffer into TXQ) */
- 	ks_wrreg16(ks, KS_TXQCR, TXQCR_METFE);
- 	/* 6. wait until TXQCR_METFE is auto-cleared */
 -- 
 2.20.1
 
