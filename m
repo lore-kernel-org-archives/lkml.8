@@ -2,218 +2,154 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 161A3C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:30:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDB89C10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:30:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE42121927
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:30:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8539421D56
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:30:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="IrBzzs8j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727486AbgCJUaT (ORCPT
+        id S1727517AbgCJUab (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 16:30:19 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:37684 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726268AbgCJUaT (ORCPT
+        Tue, 10 Mar 2020 16:30:31 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:50790 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726268AbgCJUab (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 16:30:19 -0400
-Received: by mail-oi1-f195.google.com with SMTP id w13so4848452oih.4
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 13:30:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tF7x8Aibti92fovkYnnZZKnXJErpPthfEAyaWN2U91o=;
-        b=Psa9WKpp66ETP8MqfX4UidDoqaygrr2Vrkc1OfqApI+egYfQrNgMSWQwcy/q7h3FIh
-         /OkvLpGpp7hde/V1JpoHzp2Xn47XXBDIa99UkCFX9YooQlUEq7Yvego/bShaKDuBRxDn
-         eVpEVFlmEXjccmUbTinOQfI0JD8y+xgQ8OgA6lfCL1RYADX4xHk1WKBCpVLE8G97jvic
-         ZjcNqpOiJwwVDHCmZ5nejvCmH95C/VHJ7j1LPxIOCaEku2e3++qK+497iXcGrV6C1DmO
-         Poxl6pZG8+Ey1HDj5rDQsHbH2Nttm8qv4lm/cbSRar2ZE4HEKDLIsvZ8m1oVRoWOm4Tm
-         8e8g==
-X-Gm-Message-State: ANhLgQ3eJOyQ89mjTC4TpP8K0ZK/KKntVD/hlKJOUyklSuj8GWjFXp+G
-        QZZ1ExRu1q1WFUHDIpBsbKONnn24
-X-Google-Smtp-Source: ADFU+vsPdhCOSnJOSud1NtyHNBXdVF+e5Z9MUXSG9vigWwzHoZFo2/t6gON7gEuFYwPuvYt1rZKSfg==
-X-Received: by 2002:a05:6808:a9c:: with SMTP id q28mr2627245oij.34.1583872214420;
-        Tue, 10 Mar 2020 13:30:14 -0700 (PDT)
-Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com. [209.85.167.180])
-        by smtp.gmail.com with ESMTPSA id b26sm14120090oti.3.2020.03.10.13.30.13
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Mar 2020 13:30:14 -0700 (PDT)
-Received: by mail-oi1-f180.google.com with SMTP id i1so15293680oie.8
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 13:30:13 -0700 (PDT)
-X-Received: by 2002:aca:c488:: with SMTP id u130mr2551679oif.154.1583872211277;
- Tue, 10 Mar 2020 13:30:11 -0700 (PDT)
+        Tue, 10 Mar 2020 16:30:31 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02AKORGc030331;
+        Tue, 10 Mar 2020 20:29:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=DrfQ0lB3dy1nzGMLhPPmHwa4L9kAgVtVba/L2Jsmdtc=;
+ b=IrBzzs8ja+WkDjS+PadjAa5HAdZ3GsdJGKbZCYkN1OoGMkd0kgfBsitjBZ/ck3u5D173
+ k0vq02Aj9PBql4kCUc6rToEluwe5qGpJGMz5pWGbNzpMSMgYyOAPl9VfZXW+OeIuqTvK
+ liX7D0xXUuRXeqWd9uQrrbaoG66Tu0JWwdBw36e7L4wSgseiPZjIx5hP1fmW6+V0ISw0
+ 5ZkkabdSSa4KlLSj9bJMEVNF9Xw63sQXlq58sM3rgpGMj3MMwiw5OFVbifaBHv1B/HhS
+ zLGMkXuKPMNklG/CfAzjc8eDqTmvnUL2jG52ru+/Tlz6MID0P4n0pnGOAfo++noVr2h6 XQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2ym31ufx1w-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 10 Mar 2020 20:29:44 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02AKTa8r061306;
+        Tue, 10 Mar 2020 20:29:43 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 2yp8ptredq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 10 Mar 2020 20:29:43 +0000
+Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 02AKTCb8021082;
+        Tue, 10 Mar 2020 20:29:12 GMT
+Received: from [192.168.1.206] (/71.63.128.209)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 10 Mar 2020 13:29:12 -0700
+Subject: Re: [PATCH v2] mm: hugetlb: optionally allocate gigantic hugepages
+ using cma
+To:     Rik van Riel <riel@surriel.com>, Michal Hocko <mhocko@kernel.org>,
+        Roman Gushchin <guro@fb.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>, linux-mm@kvack.org,
+        kernel-team@fb.com, linux-kernel@vger.kernel.org
+References: <20200310002524.2291595-1-guro@fb.com>
+ <5cfa9031-fc15-2bcc-adb9-9779285ef0f7@oracle.com>
+ <20200310180558.GD85000@carbon.dhcp.thefacebook.com>
+ <4b78a8a9-7b5a-eb62-acaa-2677e615bea1@oracle.com>
+ <20200310191906.GA96999@carbon.dhcp.thefacebook.com>
+ <20200310193622.GC8447@dhcp22.suse.cz>
+ <43e2e8443288260aa305f39ba566f81bf065d010.camel@surriel.com>
+ <57494a9c-5c24-20b6-0bda-dac8bbb6f731@oracle.com>
+ <4147bc1d429a4336dcb45a6cb2657d082f35ab25.camel@surriel.com>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <c20a0d81-341f-caac-0e47-f8753fbb6dbe@oracle.com>
+Date:   Tue, 10 Mar 2020 13:29:09 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <20200310120719.2480-1-laurentiu.tudor@nxp.com>
-In-Reply-To: <20200310120719.2480-1-laurentiu.tudor@nxp.com>
-From:   Li Yang <leoyang.li@nxp.com>
-Date:   Tue, 10 Mar 2020 15:30:00 -0500
-X-Gmail-Original-Message-ID: <CADRPPNT4diVa3gYv=t174=vmZZ3qRX2QmtXto9hLEnjQvv5SwQ@mail.gmail.com>
-Message-ID: <CADRPPNT4diVa3gYv=t174=vmZZ3qRX2QmtXto9hLEnjQvv5SwQ@mail.gmail.com>
-Subject: Re: [PATCH] soc: fsl: dpio: register dpio irq handlers after dpio create
-To:     Laurentiu Tudor <laurentiu.tudor@nxp.com>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Roy Pledge <Roy.Pledge@nxp.com>,
-        Youri Querry <youri.querry_1@nxp.com>,
-        Ioana Ciornei <ioana.ciornei@nxp.com>,
-        Grigore Popescu <grigore.popescu@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <4147bc1d429a4336dcb45a6cb2657d082f35ab25.camel@surriel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9556 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 malwarescore=0
+ mlxlogscore=999 bulkscore=0 suspectscore=0 mlxscore=0 spamscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003100119
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9556 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 lowpriorityscore=0
+ spamscore=0 priorityscore=1501 impostorscore=0 bulkscore=0 suspectscore=0
+ phishscore=0 mlxlogscore=999 mlxscore=0 malwarescore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2003100118
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 10, 2020 at 7:09 AM Laurentiu Tudor <laurentiu.tudor@nxp.com> wrote:
->
-> From: Grigore Popescu <grigore.popescu@nxp.com>
->
-> The dpio irqs must be registered when you can actually
-> receive interrupts, ie when the dpios are created.
-> Kernel goes through NULL pointer dereference errors
-> followed by kernel panic [1] because the dpio irqs are
-> enabled before the dpio is created.
->
-> [1]
-> Unable to handle kernel NULL pointer dereference at virtual address 0040
-> fsl_mc_dpio dpio.14: probed
-> fsl_mc_dpio dpio.13: Adding to iommu group 11
->   ISV = 0, ISS = 0x00000004
-> Unable to handle kernel NULL pointer dereference at virtual address 0040
-> Mem abort info:
->   ESR = 0x96000004
->   EC = 0x25: DABT (current EL), IL = 32 bits
->   SET = 0, FnV = 0
->   EA = 0, S1PTW = 0
-> Data abort info:
->   ISV = 0, ISS = 0x00000004
->   CM = 0, WnR = 0
-> [0000000000000040] user address but active_mm is swapper
-> Internal error: Oops: 96000004 [#1] PREEMPT SMP
-> Modules linked in:
-> CPU: 2 PID: 151 Comm: kworker/2:1 Not tainted 5.6.0-rc4-next-20200304 #1
-> Hardware name: NXP Layerscape LX2160ARDB (DT)
-> Workqueue: events deferred_probe_work_func
-> pstate: 00000085 (nzcv daIf -PAN -UAO)
-> pc : dpaa2_io_irq+0x18/0xe0
-> lr : dpio_irq_handler+0x1c/0x28
-> sp : ffff800010013e20
-> x29: ffff800010013e20 x28: ffff0026d9b4c140
-> x27: ffffa1d38a142018 x26: ffff0026d2953400
-> x25: ffffa1d38a142018 x24: ffffa1d38a7ba1d8
-> x23: ffff800010013f24 x22: 0000000000000000
-> x21: 0000000000000072 x20: ffff0026d2953400
-> x19: ffff0026d2a68b80 x18: 0000000000000001
-> x17: 000000002fb37f3d x16: 0000000035eafadd
-> x15: ffff0026d9b4c5b8 x14: ffffffffffffffff
-> x13: ff00000000000000 x12: 0000000000000038
-> x11: 0101010101010101 x10: 0000000000000040
-> x9 : ffffa1d388db11e4 x8 : ffffa1d38a7e40f0
-> x7 : ffff0026da414f38 x6 : 0000000000000000
-> x5 : ffff0026da414d80 x4 : ffff5e5353d0c000
-> x3 : ffff800010013f60 x2 : ffffa1d388db11c8
-> x1 : ffff0026d2a67c00 x0 : 0000000000000000
-> Call trace:
->  dpaa2_io_irq+0x18/0xe0
->  dpio_irq_handler+0x1c/0x28
->  __handle_irq_event_percpu+0x78/0x2c0
->  handle_irq_event_percpu+0x38/0x90
->  handle_irq_event+0x4c/0xd0
->  handle_fasteoi_irq+0xbc/0x168
->  generic_handle_irq+0x2c/0x40
->  __handle_domain_irq+0x68/0xc0
->  gic_handle_irq+0x64/0x150
->  el1_irq+0xb8/0x180
->  _raw_spin_unlock_irqrestore+0x14/0x48
->  irq_set_affinity_hint+0x6c/0xa0
->  dpaa2_dpio_probe+0x2a4/0x518
->  fsl_mc_driver_probe+0x28/0x70
->  really_probe+0xdc/0x320
->  driver_probe_device+0x5c/0xf0
->  __device_attach_driver+0x88/0xc0
->  bus_for_each_drv+0x7c/0xc8
->  __device_attach+0xe4/0x140
->  device_initial_probe+0x18/0x20
->  bus_probe_device+0x98/0xa0
->  device_add+0x41c/0x758
->  fsl_mc_device_add+0x184/0x530
->  dprc_scan_objects+0x280/0x370
->  dprc_probe+0x124/0x3b0
->  fsl_mc_driver_probe+0x28/0x70
->  really_probe+0xdc/0x320
->  driver_probe_device+0x5c/0xf0
->  __device_attach_driver+0x88/0xc0
->  bus_for_each_drv+0x7c/0xc8
->  __device_attach+0xe4/0x140
->  device_initial_probe+0x18/0x20
->  bus_probe_device+0x98/0xa0
->  deferred_probe_work_func+0x74/0xa8
->  process_one_work+0x1c8/0x470
->  worker_thread+0x1f8/0x428
->  kthread+0x124/0x128
->  ret_from_fork+0x10/0x18
-> Code: a9bc7bfd 910003fd a9025bf5 a90363f7 (f9402015)
-> ---[ end trace 38298e1a29e7a570 ]---
-> Kernel panic - not syncing: Fatal exception in interrupt
-> SMP: stopping secondary CPUs
-> Mem abort info:
->   ESR = 0x96000004
->   CM = 0, WnR = 0
->   EC = 0x25: DABT (current EL), IL = 32 bits
-> [0000000000000040] user address but active_mm is swapper
->   SET = 0, FnV = 0
->   EA = 0, S1PTW = 0
-> Data abort info:
->   ISV = 0, ISS = 0x00000004
->   CM = 0, WnR = 0
-> [0000000000000040] user address but active_mm is swapper
-> SMP: failed to stop secondary CPUs 0-2
-> Kernel Offset: 0x21d378600000 from 0xffff800010000000
-> PHYS_OFFSET: 0xffffe92180000000
-> CPU features: 0x10002,21806008
-> Memory Limit: none
-> ---[ end Kernel panic - not syncing: Fatal exception in interrupt ]---
->
-> Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
-> Signed-off-by: Grigore Popescu <grigore.popescu@nxp.com>
+On 3/10/20 1:15 PM, Rik van Riel wrote:
+> On Tue, 2020-03-10 at 13:11 -0700, Mike Kravetz wrote:
+>> On 3/10/20 12:46 PM, Rik van Riel wrote:
+>>>
+>>> How would that work for architectures that have multiple
+>>> possible hugetlbfs gigantic page sizes, where the admin
+>>> can allocate different numbers of differently sized pages
+>>> after bootup?
+>>
+>> For hugetlb page reservations at boot today, pairs specifying size
+>> and
+>> quantity are put on the command line.  For example,
+>> hugepagesz=2M hugepages=512 hugepagesz=1G hugepages=64
+>>
+>> We could do something similiar for CMA.
+>> hugepagesz=512M hugepages_cma=256 hugepagesz=1G hugepages_cma=64
+>>
+>> That would make things much more complicated (implies separate CMA
+>> reservations per size) and may be overkill for the first
+>> implementation.
+>>
+>> Perhaps we limit CMA reservations to one gigantic huge page
+>> size.  The
+>> architectures would need to define the default and there could be a
+>> command line option to override.  Something like,
+>> default_cmapagesz=  analogous to today's default_hugepagesz=.  Then
+>> hugepages_cma= is only associated with that default gigantic huge
+>> page
+>> size.
+>>
+>> The more I think about it, the more I like limiting CMA reservations
+>> to
+>> only one gigantic huge page size (per arch).
+> 
+> Why, though?
+> 
+> The cma_alloc function can return allocations of different
+> sizes at the same time.
+> 
+> There is no limitation in the underlying code that would stop
+> a user from allocating hugepages of different sizes through
+> sysfs.
 
-Applied for fix.  Thanks.  Does this fix apply to stable kernels?
+True, there is no technical reason.
 
-> ---
->  drivers/soc/fsl/dpio/dpio-driver.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/soc/fsl/dpio/dpio-driver.c b/drivers/soc/fsl/dpio/dpio-driver.c
-> index 70014ecce2a7..7b642c330977 100644
-> --- a/drivers/soc/fsl/dpio/dpio-driver.c
-> +++ b/drivers/soc/fsl/dpio/dpio-driver.c
-> @@ -233,10 +233,6 @@ static int dpaa2_dpio_probe(struct fsl_mc_device *dpio_dev)
->                 goto err_allocate_irqs;
->         }
->
-> -       err = register_dpio_irq_handlers(dpio_dev, desc.cpu);
-> -       if (err)
-> -               goto err_register_dpio_irq;
-> -
->         priv->io = dpaa2_io_create(&desc, dev);
->         if (!priv->io) {
->                 dev_err(dev, "dpaa2_io_create failed\n");
-> @@ -244,6 +240,10 @@ static int dpaa2_dpio_probe(struct fsl_mc_device *dpio_dev)
->                 goto err_dpaa2_io_create;
->         }
->
-> +       err = register_dpio_irq_handlers(dpio_dev, desc.cpu);
-> +       if (err)
-> +               goto err_register_dpio_irq;
-> +
->         dev_info(dev, "probed\n");
->         dev_dbg(dev, "   receives_notifications = %d\n",
->                 desc.receives_notifications);
-> --
-> 2.17.1
->
+I was only trying to simplify the setup and answer the outstanding questions.
+- What alignment to use for reservations?
+- What is minimum size of reservations?
+
+If only one gigantic page size is supported, the answer is simple.  In any
+case, I think input from arch specific code will be needed.
+-- 
+Mike Kravetz
+
+> Allowing the system administrator to allocate a little extra
+> memory for the CMA pool could also allow us to work around
+> initial issues of compaction/migration failing to move some
+> of the pages, while we play whack-a-mole with the last corner
+> cases.
