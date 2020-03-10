@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC86BC18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:20:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2AEAC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:20:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C435B20873
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:20:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE3CF20409
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:20:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583846440;
-	bh=8bO6GO8E6i/3MSac76iNpHF7RHMSIu3EktKoxlFkfTo=;
+	s=default; t=1583846444;
+	bh=xRxiI4t2Qr/gZNDM7gl9OWbxuB94b6WvyIqXb8uJ7v0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0Qckhu0iTLSoOVWbJiCCnYNbtK/PtuUWYdKkwMI8eJYgNLxdVOzPDQ1wBewoI/gN3
-	 kfp8EF0JhbyhTt7skZzEk1WN64zi3NAR3T/87xWMhtFhd8k9X8hiORWnRn+iCyM9Fv
-	 e5Kv5eYqMt5s/GSUB15UV9bkAGqC8/E6tgkegoX8=
+	b=lu5P6wDBB+g1dNeOk/fj0e7nvRdkLLf9swDyMGnqpeomWOIihYqXPt8G53fDSuTWU
+	 5SyXxJgKdfJTxx3QYMz33g+jJQ551RopS+eKtZQ72c4f4OT1qFnzTfqjD9XnHM3RjJ
+	 14ZDQCXKp3Qdqz/RqFFA5a1JUkp6UurJIZ6uvKOk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730610AbgCJNHF (ORCPT
+        id S1729835AbgCJNUn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:07:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52620 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:20:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52700 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730901AbgCJNG7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:06:59 -0400
+        id S1730688AbgCJNHE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:07:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A20492468D;
-        Tue, 10 Mar 2020 13:06:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9BBE4208E4;
+        Tue, 10 Mar 2020 13:07:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845619;
-        bh=8bO6GO8E6i/3MSac76iNpHF7RHMSIu3EktKoxlFkfTo=;
+        s=default; t=1583845624;
+        bh=xRxiI4t2Qr/gZNDM7gl9OWbxuB94b6WvyIqXb8uJ7v0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YgezkV1c13KQBdUKmLgehlTaoDC82iSLgpVkfGwl/JVH2tsDwIYPm6gQqXOzQS3IX
-         l/9p0IlKGGfuuyo+g8ZYuA8D9ziFrLoB9zyVAfevZOv1vhx2mcCIqS1Xxx4l1mlYCg
-         WichjsMkP+OcyFOcNLLLpPag9snjAxHtsTNew1N8=
+        b=snBbgZPVZmUcPmzbh2quGcG2TqzXEDMJhs7eiunFtG7ynhH85du2kpAy0Rtx8MwLU
+         AXA0pDzd1MsTSrxz0LJB0IsDjw2+WaDcbJXopREbJu3oZZqPrilBzv6UF58SuDE4Mm
+         MjSyntJIRHi1WFTRm5Ucy83CW0Wpp05pCbnABNPk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jan Kiszka <jan.kiszka@web.de>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Oliver Upton <oupton@google.com>
-Subject: [PATCH 4.14 038/126] KVM: VMX: check descriptor table exits on instruction emulation
-Date:   Tue, 10 Mar 2020 13:40:59 +0100
-Message-Id: <20200310124206.797741032@linuxfoundation.org>
+        stable@vger.kernel.org, Johan Korsnes <jkorsnes@cisco.com>,
+        Armando Visconti <armando.visconti@st.com>,
+        Jiri Kosina <jkosina@suse.cz>,
+        Alan Stern <stern@rowland.harvard.edu>
+Subject: [PATCH 4.14 040/126] HID: core: fix off-by-one memset in hid_report_raw_event()
+Date:   Tue, 10 Mar 2020 13:41:01 +0100
+Message-Id: <20200310124206.910690493@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310124203.704193207@linuxfoundation.org>
 References: <20200310124203.704193207@linuxfoundation.org>
@@ -61,61 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Upton <oupton@google.com>
+From: Johan Korsnes <jkorsnes@cisco.com>
 
-commit 86f7e90ce840aa1db407d3ea6e9b3a52b2ce923c upstream.
+commit 5ebdffd25098898aff1249ae2f7dbfddd76d8f8f upstream.
 
-KVM emulates UMIP on hardware that doesn't support it by setting the
-'descriptor table exiting' VM-execution control and performing
-instruction emulation. When running nested, this emulation is broken as
-KVM refuses to emulate L2 instructions by default.
+In case a report is greater than HID_MAX_BUFFER_SIZE, it is truncated,
+but the report-number byte is not correctly handled. This results in a
+off-by-one in the following memset, causing a kernel Oops and ensuing
+system crash.
 
-Correct this regression by allowing the emulation of descriptor table
-instructions if L1 hasn't requested 'descriptor table exiting'.
+Note: With commit 8ec321e96e05 ("HID: Fix slab-out-of-bounds read in
+hid_field_extract") I no longer hit the kernel Oops as we instead fail
+"controlled" at probe if there is a report too long in the HID
+report-descriptor. hid_report_raw_event() is an exported symbol, so
+presumabely we cannot always rely on this being the case.
 
-Fixes: 07721feee46b ("KVM: nVMX: Don't emulate instructions in guest mode")
-Reported-by: Jan Kiszka <jan.kiszka@web.de>
-Cc: stable@vger.kernel.org
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Jim Mattson <jmattson@google.com>
-Signed-off-by: Oliver Upton <oupton@google.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Fixes: 966922f26c7f ("HID: fix a crash in hid_report_raw_event()
+                     function.")
+Signed-off-by: Johan Korsnes <jkorsnes@cisco.com>
+Cc: Armando Visconti <armando.visconti@st.com>
+Cc: Jiri Kosina <jkosina@suse.cz>
+Cc: Alan Stern <stern@rowland.harvard.edu>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/vmx.c |   15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ drivers/hid/hid-core.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/arch/x86/kvm/vmx.c
-+++ b/arch/x86/kvm/vmx.c
-@@ -12370,6 +12370,7 @@ static int vmx_check_intercept_io(struct
- 	else
- 		intercept = nested_vmx_check_io_bitmaps(vcpu, port, size);
+--- a/drivers/hid/hid-core.c
++++ b/drivers/hid/hid-core.c
+@@ -1567,7 +1567,9 @@ int hid_report_raw_event(struct hid_devi
  
-+	/* FIXME: produce nested vmexit and return X86EMUL_INTERCEPTED.  */
- 	return intercept ? X86EMUL_UNHANDLEABLE : X86EMUL_CONTINUE;
- }
+ 	rsize = ((report->size - 1) >> 3) + 1;
  
-@@ -12399,6 +12400,20 @@ static int vmx_check_intercept(struct kv
- 	case x86_intercept_outs:
- 		return vmx_check_intercept_io(vcpu, info);
+-	if (rsize > HID_MAX_BUFFER_SIZE)
++	if (report_enum->numbered && rsize >= HID_MAX_BUFFER_SIZE)
++		rsize = HID_MAX_BUFFER_SIZE - 1;
++	else if (rsize > HID_MAX_BUFFER_SIZE)
+ 		rsize = HID_MAX_BUFFER_SIZE;
  
-+	case x86_intercept_lgdt:
-+	case x86_intercept_lidt:
-+	case x86_intercept_lldt:
-+	case x86_intercept_ltr:
-+	case x86_intercept_sgdt:
-+	case x86_intercept_sidt:
-+	case x86_intercept_sldt:
-+	case x86_intercept_str:
-+		if (!nested_cpu_has2(vmcs12, SECONDARY_EXEC_DESC))
-+			return X86EMUL_CONTINUE;
-+
-+		/* FIXME: produce nested vmexit and return X86EMUL_INTERCEPTED.  */
-+		break;
-+
- 	/* TODO: check more intercepts... */
- 	default:
- 		break;
+ 	if (csize < rsize) {
 
 
