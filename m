@@ -2,98 +2,196 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BF94C18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:36:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50874C10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:37:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44BA1208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:36:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4C0121927
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:37:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="cMUkKlSm"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="oF3wtI6l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727710AbgCJWgt (ORCPT
+        id S1727815AbgCJWg7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 18:36:49 -0400
-Received: from ozlabs.org ([203.11.71.1]:58541 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726293AbgCJWgs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 18:36:48 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48cVM10TXCz9sPR;
-        Wed, 11 Mar 2020 09:36:44 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1583879806;
-        bh=CLv7hGFjlbOC8UF3UvUUq0ZMzr5+UfHAttKthpqwaOA=;
-        h=Date:From:To:Cc:Subject:From;
-        b=cMUkKlSmmUhuIdJCuXMEWa+Am3RqCLFahJ8Lpv2IWRdilU/87/+/EHG2mGPLD+hh+
-         WDQcNuCnqStPu9B4eKjL63ilPLbd4mPcuu+cmwgdbajJP35QSHU9C/62Qcvskf+Yk6
-         UbB5DoHmYaCOQQRCcBMtq+Dwluw+CJvw6b1BlNnHOgmt2rF/vHzGm6mVHiudj1CaKJ
-         JKwmh19wOpenkYK6p0gdTFax1gl9dYowph/E3CmW0iHBT2pcWUAQkW7KLpGY1tWhPE
-         +NmT/kGJXXgUM4g+aTrqSoYt0FkMCCjMM2cp9qdRPsKXsADM25QDaI2folPCR/NgWd
-         n8Pbi4J+vVxRw==
-Date:   Wed, 11 Mar 2020 09:36:38 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>
-Subject: linux-next: Fixes tag needs some work in the iommu tree
-Message-ID: <20200311093638.3b442a3d@canb.auug.org.au>
+        Tue, 10 Mar 2020 18:36:59 -0400
+Received: from gateway20.websitewelcome.com ([192.185.48.38]:15077 "EHLO
+        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726293AbgCJWg7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 18:36:59 -0400
+Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
+        by gateway20.websitewelcome.com (Postfix) with ESMTP id 3020D400D4E09
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 16:21:40 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id BnUPjwqeyRP4zBnUPjJ7Pu; Tue, 10 Mar 2020 17:36:41 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=KG9npqDNvNL0nWJrwiRj2aZsbizoObHAFhshQC8xR7E=; b=oF3wtI6lPK8UukLiMJlIl/3Eim
+        bKHuKTiCJqjzMoVHaDxamp4upOrqlftJ/IUUuXkMi81AR0DGINbJJeGQaiD/f+1xp4jEztI9jI1aJ
+        EJJDmD91lJVdxlYTC1u2jv3dnm1gul+v/ub8LG9clYGsitVrvxzCFSWrKwVng7MXumjh8FfFSQ4cd
+        9NPIn6a2DNz9u1sl0kbLw0rohvm/9REAt5RcWMVNw5T96erwgbye6s05yRFgQO5j6nqtpXUpgdc9P
+        9d56K5vzEybiVKe6T3GzcfVY7BLN+JBZUaH0JtcnoEpUVhAr2MArEjlfNW8ZMveHZhID4X+VOsJfZ
+        Lv3++6hw==;
+Received: from 187-162-252-62.static.axtel.net ([187.162.252.62]:47142 helo=[192.168.0.140])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1jBnUO-002aEt-Nl; Tue, 10 Mar 2020 17:36:40 -0500
+Subject: Re: [PATCH][next] zd1211rw/zd_usb.h: Replace zero-length array with
+ flexible-array member
+To:     Jes Sorensen <jes.sorensen@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Cc:     Joe Perches <joe@perches.com>, Ulrich Kunitz <kune@deine-taler.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>
+References: <20200305111216.GA24982@embeddedor>
+ <87k13yq2jo.fsf@kamboji.qca.qualcomm.com>
+ <256881484c5db07e47c611a56550642a6f6bd8e9.camel@perches.com>
+ <87blpapyu5.fsf@kamboji.qca.qualcomm.com>
+ <1bb7270f-545b-23ca-aa27-5b3c52fba1be@embeddedor.com>
+ <87r1y0nwip.fsf@kamboji.qca.qualcomm.com>
+ <48ff1333-0a14-36d8-9565-a7f13a06c974@embeddedor.com>
+ <021d1125-3ffd-39ef-395a-b796c527bde4@gmail.com>
+ <fb3395d7-e932-10ac-1feb-ab2ceb63424e@embeddedor.com>
+ <361da904-5adf-eb0c-e937-c5d2f69ac8be@gmail.com>
+ <e4cfda6c-37f0-3c28-f50b-32200a67d856@embeddedor.com>
+ <9700b2c9-1029-60b0-c5d2-684bdcede354@gmail.com>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Message-ID: <948ec681-c4ee-3479-8d8b-5aa1e358ec04@embeddedor.com>
+Date:   Tue, 10 Mar 2020 17:36:39 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/H8NPKyaDKE3Y1MrDmm5zvzX";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <9700b2c9-1029-60b0-c5d2-684bdcede354@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.162.252.62
+X-Source-L: No
+X-Exim-ID: 1jBnUO-002aEt-Nl
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 187-162-252-62.static.axtel.net ([192.168.0.140]) [187.162.252.62]:47142
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 46
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/H8NPKyaDKE3Y1MrDmm5zvzX
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
 
-In commit
+On 3/10/20 5:34 PM, Jes Sorensen wrote:
+> On 3/10/20 6:31 PM, Gustavo A. R. Silva wrote:
+>>
+>>
+>> On 3/10/20 5:20 PM, Jes Sorensen wrote:
+>>> On 3/10/20 6:13 PM, Gustavo A. R. Silva wrote:
+>>>>
+>>>>
+>>>> On 3/10/20 5:07 PM, Jes Sorensen wrote:
+>>>>> As I stated in my previous answer, this seems more code churn than an
+>>>>> actual fix. If this is a real problem, shouldn't the work be put into
+>>>>> fixing the compiler to handle foo[0] instead? It seems that is where the
+>>>>> real value would be.
+>>>>
+>>>> Yeah. But, unfortunately, I'm not a compiler guy, so I'm not able to fix the
+>>>> compiler as you suggest. And I honestly don't see what is so annoying/disturbing
+>>>> about applying a patch that removes the 0 from foo[0] when it brings benefit
+>>>> to the whole codebase.
+>>>
+>>> My point is that it adds what seems like unnecessary churn, which is not
+>>> a benefit, and it doesn't improve the generated code.
+>>>
+>>
+>> As an example of one of the benefits of this is that the compiler won't trigger
+>> a warning in the following case:
+>>
+>> struct boo {
+>> 	int stuff;
+>> 	struct foo array[0];
+>> 	int morestuff;
+>> };
+>>
+>> The result of the code above is an undefined behavior.
+>>
+>> On the other hand in the case below, the compiles does trigger a warning:
+>>
+>> struct boo {
+>> 	int stuff;
+>> 	struct foo array[];
+>> 	int morestuff;
+>> };
+> 
+> Right, this just underlines my prior argument, that this should be fixed
+> in the compiler.
+> 
 
-  57744190bf30 ("iommu/vt-d: dmar: replace WARN_TAINT with pr_warn + add_ta=
-int")
+In the meantime it's not at all harmful to do something about it in the codebase.
 
-Fixes tag
-
-  Fixes: fd0c8894893c ("intel-iommu: Set a more specific taint flag for inv=
-alid BI
-
-has these problem(s):
-
-  - Subject has leading but no trailing parentheses
-  - Subject has leading but no trailing quotes
-
-Please do not truncate Fixes tag lines.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/H8NPKyaDKE3Y1MrDmm5zvzX
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5oFnYACgkQAVBC80lX
-0GyELAf/XWOlUEiepjVfgfYIM37l2gBqC02UDPSigZnCoKrX1VwQp5mRxwWqCTU6
-6AWdfIovRfc135uPCT904DfU/sBng+JqHFFkd6TAQ53k2mPQ+g7VPP8cAV039Peg
-JpNhFU71i5otiYw8rIVN2HkshxbSlI1DO8FJ9Dpfokp/dXdB0f5a+xQ2VWUr5SFI
-K3wEo1FYJaSsrFaq6yV690ARDmOMMjLmALq/0BWKRgILDYR1rXZ3Tom5bmML83nO
-tKV/MpM6TbSRr/44cc5pYvZTs86EURt/pKLd7ZlW2KKm2k+zFTYKz3FiIeoMrWeF
-Jb8IK7iCt2CqCyr6z7EZ4ssDQYi5yA==
-=5eaz
------END PGP SIGNATURE-----
-
---Sig_/H8NPKyaDKE3Y1MrDmm5zvzX--
+Thanks
+--
+Gustavo
