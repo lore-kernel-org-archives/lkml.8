@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13F20C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:19:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFEF8C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:19:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D693620873
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:19:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B187620873
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:19:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583846363;
-	bh=sd3a7H0pWwvY+u5/WATbfuFmteSNC/5unf0og6H8u0g=;
+	s=default; t=1583846365;
+	bh=TZNA2TVM3aGgVsvEbNQ6ouxAgPJTw+ElW2D2JSSBOgM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xMpXMp8P9yYFQjtB3XIm/UQ9vjzqqfMZOAlC+whaOnQzOF6hg2iTVroyCVsvGoQOO
-	 QxfMsCddLZ4pt/6L5cf3PTPn82syTAFcCv0FCDlYDQkVMThmq+7zkfZ2b0GtylGj38
-	 +NnUlaG81Lk/hka54WIbM1uF2wvKZYlJJhzx56iM=
+	b=FuK5rYHzrKwfpf4gYCsP1q1LhN6sL7jtCNlPHXrTFOfdUmbbwaCX9aEtiIcYVqEOP
+	 RhOyqTMKj9NJqI3t5qKTJWlB1tHjUxkuI5jV33iIlV48Z+TjTdllCsjEJ46Tlp0177
+	 YnAN62wNXfzOr75pZ6W5d+axFl/z1TZlMo5+Xd44=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729241AbgCJNTW (ORCPT
+        id S1730464AbgCJNTY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:19:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56042 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:19:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55894 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730231AbgCJNJG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:09:06 -0400
+        id S1731175AbgCJNI6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:08:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4EBD2468D;
-        Tue, 10 Mar 2020 13:09:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B24B2468D;
+        Tue, 10 Mar 2020 13:08:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845746;
-        bh=sd3a7H0pWwvY+u5/WATbfuFmteSNC/5unf0og6H8u0g=;
+        s=default; t=1583845738;
+        bh=TZNA2TVM3aGgVsvEbNQ6ouxAgPJTw+ElW2D2JSSBOgM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=keJzoQ9Coo9tIgKF5kRNs6dvPTJK0vssE+vuqNc9/uyzogaNJ8WbPtMPFsmGnTpyY
-         mFxTSSRAz41U+zWxBNLGcZhEQPUcsNT+iu6AhH7ac125Zymy6NV3LlrZRaocpB2GZ2
-         bP+uqe2QEqTbFu1ky++RFhTo1I2JKrp2D+tu6Q6s=
+        b=C6kN9QoR3STgdZDk8Vbsp34etHp3o6GmY9SNiY178JX3BHuj9s0sxbLRZwvnvYfTE
+         NszwPo5g7DGNL3DB+cwRektvd6HGRG2uO40fFUHaAa8s3oaG4svpyqPKpO1xLTXUei
+         owHQUOM8qwWtU2KCHs9QzT9R5Z+3TUkv996g3xk4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marek Vasut <marex@denx.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Lukas Wunner <lukas@wunner.de>, Petr Stetiar <ynezz@true.cz>,
-        YueHaibing <yuehaibing@huawei.com>,
+        stable@vger.kernel.org, Harigovindan P <harigovi@codeaurora.org>,
+        Rob Clark <robdclark@chromium.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 084/126] net: ks8851-ml: Fix 16-bit IO operation
-Date:   Tue, 10 Mar 2020 13:41:45 +0100
-Message-Id: <20200310124209.237341214@linuxfoundation.org>
+Subject: [PATCH 4.14 081/126] drm/msm/dsi: save pll state before dsi host is powered off
+Date:   Tue, 10 Mar 2020 13:41:42 +0100
+Message-Id: <20200310124209.079904695@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310124203.704193207@linuxfoundation.org>
 References: <20200310124203.704193207@linuxfoundation.org>
@@ -62,49 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Vasut <marex@denx.de>
+From: Harigovindan P <harigovi@codeaurora.org>
 
-[ Upstream commit 58292104832fef6cb4a89f736012c0e0724c3442 ]
+[ Upstream commit a1028dcfd0dd97884072288d0c8ed7f30399b528 ]
 
-The Micrel KSZ8851-16MLLI datasheet DS00002357B page 12 states that
-BE[3:0] signals are active high. This contradicts the measurements
-of the behavior of the actual chip, where these signals behave as
-active low. For example, to read the CIDER register, the bus must
-expose 0xc0c0 during the address phase, which means BE[3:0]=4'b1100.
+Save pll state before dsi host is powered off. Without this change
+some register values gets resetted.
 
-Signed-off-by: Marek Vasut <marex@denx.de>
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Lukas Wunner <lukas@wunner.de>
-Cc: Petr Stetiar <ynezz@true.cz>
-Cc: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
+Signed-off-by: Rob Clark <robdclark@chromium.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/micrel/ks8851_mll.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/msm/dsi/dsi_manager.c | 5 +++++
+ drivers/gpu/drm/msm/dsi/phy/dsi_phy.c | 4 ----
+ 2 files changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/micrel/ks8851_mll.c b/drivers/net/ethernet/micrel/ks8851_mll.c
-index fb5f4055e1592..799154d7c0470 100644
---- a/drivers/net/ethernet/micrel/ks8851_mll.c
-+++ b/drivers/net/ethernet/micrel/ks8851_mll.c
-@@ -484,7 +484,7 @@ static int msg_enable;
+diff --git a/drivers/gpu/drm/msm/dsi/dsi_manager.c b/drivers/gpu/drm/msm/dsi/dsi_manager.c
+index 7d46399a39b4d..9fbfa9f94e6ce 100644
+--- a/drivers/gpu/drm/msm/dsi/dsi_manager.c
++++ b/drivers/gpu/drm/msm/dsi/dsi_manager.c
+@@ -543,6 +543,7 @@ static void dsi_mgr_bridge_post_disable(struct drm_bridge *bridge)
+ 	struct msm_dsi *msm_dsi1 = dsi_mgr_get_dsi(DSI_1);
+ 	struct mipi_dsi_host *host = msm_dsi->host;
+ 	struct drm_panel *panel = msm_dsi->panel;
++	struct msm_dsi_pll *src_pll;
+ 	bool is_dual_dsi = IS_DUAL_DSI();
+ 	int ret;
  
- static u16 ks_rdreg16(struct ks_net *ks, int offset)
- {
--	ks->cmd_reg_cache = (u16)offset | ((BE1 | BE0) << (offset & 0x02));
-+	ks->cmd_reg_cache = (u16)offset | ((BE3 | BE2) >> (offset & 0x02));
- 	iowrite16(ks->cmd_reg_cache, ks->hw_addr_cmd);
- 	return ioread16(ks->hw_addr);
- }
-@@ -499,7 +499,7 @@ static u16 ks_rdreg16(struct ks_net *ks, int offset)
+@@ -583,6 +584,10 @@ static void dsi_mgr_bridge_post_disable(struct drm_bridge *bridge)
+ 								id, ret);
+ 	}
  
- static void ks_wrreg16(struct ks_net *ks, int offset, u16 value)
- {
--	ks->cmd_reg_cache = (u16)offset | ((BE1 | BE0) << (offset & 0x02));
-+	ks->cmd_reg_cache = (u16)offset | ((BE3 | BE2) >> (offset & 0x02));
- 	iowrite16(ks->cmd_reg_cache, ks->hw_addr_cmd);
- 	iowrite16(value, ks->hw_addr);
- }
++	/* Save PLL status if it is a clock source */
++	src_pll = msm_dsi_phy_get_pll(msm_dsi->phy);
++	msm_dsi_pll_save_state(src_pll);
++
+ 	ret = msm_dsi_host_power_off(host);
+ 	if (ret)
+ 		pr_err("%s: host %d power off failed,%d\n", __func__, id, ret);
+diff --git a/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c b/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c
+index 7c9bf91bc22b6..c0a7fa56d9a74 100644
+--- a/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c
++++ b/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c
+@@ -613,10 +613,6 @@ void msm_dsi_phy_disable(struct msm_dsi_phy *phy)
+ 	if (!phy || !phy->cfg->ops.disable)
+ 		return;
+ 
+-	/* Save PLL status if it is a clock source */
+-	if (phy->usecase != MSM_DSI_PHY_SLAVE)
+-		msm_dsi_pll_save_state(phy->pll);
+-
+ 	phy->cfg->ops.disable(phy);
+ 
+ 	dsi_phy_regulator_disable(phy);
 -- 
 2.20.1
 
