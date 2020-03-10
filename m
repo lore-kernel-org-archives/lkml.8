@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D76FDC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:52:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF51EC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:52:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB5FF2253D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:52:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 828B024692
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:52:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583844759;
-	bh=XPExVX+NeIUl2R55apBwnico2ulYceEzp7TEklADt1E=;
+	s=default; t=1583844764;
+	bh=wGtPODP5oRTLsKphsGUQeHu6ALiA2GFwsmRudaHXPGw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2qT6rc6lxQarMo4+O0OJv5VaLPpr4QEmo36DFiAreGfgpRRvOai2TKG/vBIhSs9dF
-	 XqJDpdtw3/OLqT87wZoxcQ+0jJfvTYTMCLig7DNfUV1Rov0tHOe6/rrjYFiQOIoCW5
-	 Yt48bbhCwFrUUpSFRoylBJfenmMbBn9DJKmFjTkQ=
+	b=FeD/ndU3HGISZr7L09v63r4rc24XkMXBI2Qng7+bE4BBBUeP79NTnSbHgsd0W6rjN
+	 dIkaSj24OIXPIhHpOBR8q2oOeJJ5xpK0k3CqlkYXjQLS+VXToQHT/ql5JhQk32t3GG
+	 SLaKy0UMuVxVqsy6qcf2H27gIpD76QpSZu3bVFkk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728188AbgCJMwi (ORCPT
+        id S1727945AbgCJMwn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:52:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58264 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:52:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58340 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727965AbgCJMwe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:52:34 -0400
+        id S1728124AbgCJMwi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:52:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B240C2253D;
-        Tue, 10 Mar 2020 12:52:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A114220674;
+        Tue, 10 Mar 2020 12:52:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844754;
-        bh=XPExVX+NeIUl2R55apBwnico2ulYceEzp7TEklADt1E=;
+        s=default; t=1583844757;
+        bh=wGtPODP5oRTLsKphsGUQeHu6ALiA2GFwsmRudaHXPGw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Fv1PY7iyjrwxyAX7HprZg63tEZQobKFL8mLKRMKHRLN8hFHM7TIv3LBc+XWvzMtUk
-         wyrMPKiUY25yB+mOmPVIbvnWOvOI34WD9gkJtIS/uTf+8+kU7cudyswEjJ1uI7gnS9
-         Gy8+jhuHGODN+JeC7QYTCV7CfdNoQHkb/fVgDYNw=
+        b=zws0UIjBoYNLI8u6xREAKJ4QOaqvAtCD/vLo6I31oDMyZdnop4Nx7711l85Y1O88Z
+         7mpBQxSMozlfQwv4UtGXU5hRpOevyxALJ13+LVNW4Pzbpvr06BUTo4qqqHhQIXnwQ+
+         CSDKa8kVxpcNKzkBL7qJqutcdVknnH/ba8dxd8e4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Heinz Mauelshagen <heinzm@redhat.com>,
-        Mikulas Patocka <mpatocka@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 5.4 105/168] dm integrity: fix a deadlock due to offloading to an incorrect workqueue
-Date:   Tue, 10 Mar 2020 13:39:11 +0100
-Message-Id: <20200310123646.003565626@linuxfoundation.org>
+        stable@vger.kernel.org, Peter Chen <peter.chen@nxp.com>
+Subject: [PATCH 5.4 070/168] usb: cdns3: gadget: toggle cycle bit before reset endpoint
+Date:   Tue, 10 Mar 2020 13:38:36 +0100
+Message-Id: <20200310123642.341409857@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123635.322799692@linuxfoundation.org>
 References: <20200310123635.322799692@linuxfoundation.org>
@@ -60,113 +58,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mikulas Patocka <mpatocka@redhat.com>
+From: Peter Chen <peter.chen@nxp.com>
 
-commit 53770f0ec5fd417429775ba006bc4abe14002335 upstream.
+commit 4bf2dd65135a2d7fe202f7c10d65b51bcf645ac6 upstream.
 
-If we need to perform synchronous I/O in dm_integrity_map_continue(),
-we must make sure that we are not in the map function - in order to
-avoid the deadlock due to bio queuing in generic_make_request. To
-avoid the deadlock, we offload the request to metadata_wq.
+If there are TRBs pending during reset endpoint operation, the
+DMA will advance after reset operation, but it isn't expected,
+since the data is not yet available (For OUT, the data is not
+yet available). After the data is ready, there won't be any
+interrupt since the EP_TRADDR already points to next TRB entry
+and doorbell is not set.
 
-However, metadata_wq also processes metadata updates for write requests.
-If there are too many requests that get offloaded to metadata_wq at the
-beginning of dm_integrity_map_continue, the workqueue metadata_wq
-becomes clogged and the system is incapable of processing any metadata
-updates.
+To fix it, it toggles cycle bit before reset operation, and restores
+it after reset, it could avoid unexpected DMA advance due to
+cycle bit is for software during the endpoint reset operation.
 
-This causes a deadlock because all the requests that need to do metadata
-updates wait for metadata_wq to proceed and metadata_wq waits inside
-wait_and_add_new_range until some existing request releases its range
-lock (which doesn't happen because the range lock is released after
-metadata update).
-
-In order to fix the deadlock, we create a new workqueue offload_wq and
-offload requests to it - so that processing of offload_wq is independent
-from processing of metadata_wq.
-
-Fixes: 7eada909bfd7 ("dm: add integrity target")
-Cc: stable@vger.kernel.org # v4.12+
-Reported-by: Heinz Mauelshagen <heinzm@redhat.com>
-Tested-by: Heinz Mauelshagen <heinzm@redhat.com>
-Signed-off-by: Heinz Mauelshagen <heinzm@redhat.com>
-Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Fixes: 7733f6c32e36 ("usb: cdns3: Add Cadence USB3 DRD Driver")
+Signed-off-by: Peter Chen <peter.chen@nxp.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200219141455.23257-3-peter.chen@nxp.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/dm-integrity.c |   19 +++++++++++++++----
- 1 file changed, 15 insertions(+), 4 deletions(-)
+ drivers/usb/cdns3/gadget.c |   17 ++++++++++++++---
+ 1 file changed, 14 insertions(+), 3 deletions(-)
 
---- a/drivers/md/dm-integrity.c
-+++ b/drivers/md/dm-integrity.c
-@@ -210,6 +210,7 @@ struct dm_integrity_c {
- 	struct list_head wait_list;
- 	wait_queue_head_t endio_wait;
- 	struct workqueue_struct *wait_wq;
-+	struct workqueue_struct *offload_wq;
+--- a/drivers/usb/cdns3/gadget.c
++++ b/drivers/usb/cdns3/gadget.c
+@@ -2152,11 +2152,21 @@ int __cdns3_gadget_ep_clear_halt(struct
+ {
+ 	struct cdns3_device *priv_dev = priv_ep->cdns3_dev;
+ 	struct usb_request *request;
++	struct cdns3_request *priv_req;
++	struct cdns3_trb *trb = NULL;
+ 	int ret;
+ 	int val;
  
- 	unsigned char commit_seq;
- 	commit_id_t commit_ids[N_COMMIT_IDS];
-@@ -1434,7 +1435,7 @@ static void dec_in_flight(struct dm_inte
- 			dio->range.logical_sector += dio->range.n_sectors;
- 			bio_advance(bio, dio->range.n_sectors << SECTOR_SHIFT);
- 			INIT_WORK(&dio->work, integrity_bio_wait);
--			queue_work(ic->wait_wq, &dio->work);
-+			queue_work(ic->offload_wq, &dio->work);
- 			return;
- 		}
- 		do_endio_flush(ic, dio);
-@@ -1860,7 +1861,7 @@ static void dm_integrity_map_continue(st
+ 	trace_cdns3_halt(priv_ep, 0, 0);
  
- 	if (need_sync_io && from_map) {
- 		INIT_WORK(&dio->work, integrity_bio_wait);
--		queue_work(ic->metadata_wq, &dio->work);
-+		queue_work(ic->offload_wq, &dio->work);
- 		return;
- 	}
- 
-@@ -2496,7 +2497,7 @@ static void bitmap_block_work(struct wor
- 				    dio->range.n_sectors, BITMAP_OP_TEST_ALL_SET)) {
- 			remove_range(ic, &dio->range);
- 			INIT_WORK(&dio->work, integrity_bio_wait);
--			queue_work(ic->wait_wq, &dio->work);
-+			queue_work(ic->offload_wq, &dio->work);
- 		} else {
- 			block_bitmap_op(ic, ic->journal, dio->range.logical_sector,
- 					dio->range.n_sectors, BITMAP_OP_SET);
-@@ -2519,7 +2520,7 @@ static void bitmap_block_work(struct wor
- 
- 		remove_range(ic, &dio->range);
- 		INIT_WORK(&dio->work, integrity_bio_wait);
--		queue_work(ic->wait_wq, &dio->work);
-+		queue_work(ic->offload_wq, &dio->work);
- 	}
- 
- 	queue_delayed_work(ic->commit_wq, &ic->bitmap_flush_work, ic->bitmap_flush_interval);
-@@ -3825,6 +3826,14 @@ static int dm_integrity_ctr(struct dm_ta
- 		goto bad;
- 	}
- 
-+	ic->offload_wq = alloc_workqueue("dm-integrity-offload", WQ_MEM_RECLAIM,
-+					  METADATA_WORKQUEUE_MAX_ACTIVE);
-+	if (!ic->offload_wq) {
-+		ti->error = "Cannot allocate workqueue";
-+		r = -ENOMEM;
-+		goto bad;
++	request = cdns3_next_request(&priv_ep->pending_req_list);
++	if (request) {
++		priv_req = to_cdns3_request(request);
++		trb = priv_req->trb;
++		if (trb)
++			trb->control = trb->control ^ TRB_CYCLE;
 +	}
 +
- 	ic->commit_wq = alloc_workqueue("dm-integrity-commit", WQ_MEM_RECLAIM, 1);
- 	if (!ic->commit_wq) {
- 		ti->error = "Cannot allocate workqueue";
-@@ -4129,6 +4138,8 @@ static void dm_integrity_dtr(struct dm_t
- 		destroy_workqueue(ic->metadata_wq);
- 	if (ic->wait_wq)
- 		destroy_workqueue(ic->wait_wq);
-+	if (ic->offload_wq)
-+		destroy_workqueue(ic->offload_wq);
- 	if (ic->commit_wq)
- 		destroy_workqueue(ic->commit_wq);
- 	if (ic->writer_wq)
+ 	writel(EP_CMD_CSTALL | EP_CMD_EPRST, &priv_dev->regs->ep_cmd);
+ 
+ 	/* wait for EPRST cleared */
+@@ -2167,10 +2177,11 @@ int __cdns3_gadget_ep_clear_halt(struct
+ 
+ 	priv_ep->flags &= ~(EP_STALLED | EP_STALL_PENDING);
+ 
+-	request = cdns3_next_request(&priv_ep->pending_req_list);
+-
+-	if (request)
++	if (request) {
++		if (trb)
++			trb->control = trb->control ^ TRB_CYCLE;
+ 		cdns3_rearm_transfer(priv_ep, 1);
++	}
+ 
+ 	cdns3_start_all_request(priv_dev, priv_ep);
+ 	return ret;
 
 
