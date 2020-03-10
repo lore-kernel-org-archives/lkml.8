@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D63AAC18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:18:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEFB1C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:18:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F45E222D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:18:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5789222D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:18:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583846313;
-	bh=dJeKi+R32ZhJSaKkqRgirh033mtVSJyG7ZWIYC80IkU=;
+	s=default; t=1583846318;
+	bh=E3EhBWcEq5pdHu/iHbfF2I3g5wRmXGkx1phYs45uAU4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oLhDd24VOlMmfqVHIpgUkt1w0GCASOKSgNf1ucpT6lsN6Q99xCbxF75txrgEiXvl/
-	 +G1o5wkRRo/pPpIZJMnL65Rsu1rN/jpkJivcA4wjwdgXWX7qTWTLfzbcIV3ZaM55Lp
-	 Ql8VR7bR+WW6f2zKlTxDiSNyiWe+wPBUIXJExyjI=
+	b=W20AjPwOkuqntbdU0BFgbouN366kJxJlROe3UH7FaRng4jmU9DUpNb17XnxEUYBUH
+	 Vwh+x8gOzp56y0r+MH42tG2qG/xK1eNvQ0EGm0p5NCNROsDL5RTYLRZD5ERCeZfbSP
+	 hvEyucZmqmTJbVAx/Hy14gYD5ASnwsyOdqrQsuNQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731343AbgCJNKm (ORCPT
+        id S1731536AbgCJNSh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:10:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60022 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:18:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59974 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730821AbgCJNKg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:10:36 -0400
+        id S1730650AbgCJNKd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:10:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 055432468D;
-        Tue, 10 Mar 2020 13:10:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A4CE208E4;
+        Tue, 10 Mar 2020 13:10:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845835;
-        bh=dJeKi+R32ZhJSaKkqRgirh033mtVSJyG7ZWIYC80IkU=;
+        s=default; t=1583845833;
+        bh=E3EhBWcEq5pdHu/iHbfF2I3g5wRmXGkx1phYs45uAU4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZUOuUexbqCQWq5bVdYVFpC/0p8s8peCc3/qEWqvPevTH9nOaRT9TCp+KVflPor55b
-         9ujBvPLZopLELXLSXrfRNkuHRLIzGaheRvjL+x3pLXaYndk5OY4xw2h1utbqa74yJP
-         FHU4wUP6jbwB1ZNAaExRkkyGhEXZ+ns797Ag9gTI=
+        b=J40CDwX8gRCnZd6EZvSBFuSEDMgXkfHnO6ghnNOYEEpygZLqufH6O1BzOoUoa4FjN
+         TFWXP2pBAMhumzJppPpM1CDZjQnRkyYE8qL5AaNtN39u50DsjVSvRupV2VeGq0lJS6
+         zZbB23wkXRYSNVaXi7e69v2LcF1eqU9dF5tgaLY0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+cb0c054eabfba4342146@syzkaller.appspotmail.com,
-        Bernard Metzler <bmt@zurich.ibm.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 4.14 117/126] RDMA/iwcm: Fix iwcm work deallocation
-Date:   Tue, 10 Mar 2020 13:42:18 +0100
-Message-Id: <20200310124210.964531891@linuxfoundation.org>
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 4.14 116/126] ASoC: dapm: Correct DAPM handling of active widgets during shutdown
+Date:   Tue, 10 Mar 2020 13:42:17 +0100
+Message-Id: <20200310124210.912557251@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310124203.704193207@linuxfoundation.org>
 References: <20200310124203.704193207@linuxfoundation.org>
@@ -61,41 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bernard Metzler <bmt@zurich.ibm.com>
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
 
-commit 810dbc69087b08fd53e1cdd6c709f385bc2921ad upstream.
+commit 9b3193089e77d3b59b045146ff1c770dd899acb1 upstream.
 
-The dealloc_work_entries() function must update the work_free_list pointer
-while freeing its entries, since potentially called again on same list. A
-second iteration of the work list caused system crash. This happens, if
-work allocation fails during cma_iw_listen() and free_cm_id() tries to
-free the list again during cleanup.
+commit c2caa4da46a4 ("ASoC: Fix widget powerdown on shutdown") added a
+set of the power state during snd_soc_dapm_shutdown to ensure the
+widgets powered off. However, when commit 39eb5fd13dff
+("ASoC: dapm: Delay w->power update until the changes are written")
+added the new_power member of the widget structure, to differentiate
+between the current power state and the target power state, it did not
+update the shutdown to use the new_power member.
 
-Fixes: 922a8e9fb2e0 ("RDMA: iWARP Connection Manager.")
-Link: https://lore.kernel.org/r/20200302181614.17042-1-bmt@zurich.ibm.com
-Reported-by: syzbot+cb0c054eabfba4342146@syzkaller.appspotmail.com
-Signed-off-by: Bernard Metzler <bmt@zurich.ibm.com>
-Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+As new_power has not updated it will be left in the state set by the
+last DAPM sequence, ie. 1 for active widgets. So as the DAPM sequence
+for the shutdown proceeds it will turn the widgets on (despite them
+already being on) rather than turning them off.
+
+Fixes: 39eb5fd13dff ("ASoC: dapm: Delay w->power update until the changes are written")
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Link: https://lore.kernel.org/r/20200228153145.21013-1-ckeepax@opensource.cirrus.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/core/iwcm.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ sound/soc/soc-dapm.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/infiniband/core/iwcm.c
-+++ b/drivers/infiniband/core/iwcm.c
-@@ -158,8 +158,10 @@ static void dealloc_work_entries(struct
- {
- 	struct list_head *e, *tmp;
- 
--	list_for_each_safe(e, tmp, &cm_id_priv->work_free_list)
-+	list_for_each_safe(e, tmp, &cm_id_priv->work_free_list) {
-+		list_del(e);
- 		kfree(list_entry(e, struct iwcm_work, free_list));
-+	}
- }
- 
- static int alloc_work_entries(struct iwcm_id_private *cm_id_priv, int count)
+--- a/sound/soc/soc-dapm.c
++++ b/sound/soc/soc-dapm.c
+@@ -4481,7 +4481,7 @@ static void soc_dapm_shutdown_dapm(struc
+ 			continue;
+ 		if (w->power) {
+ 			dapm_seq_insert(w, &down_list, false);
+-			w->power = 0;
++			w->new_power = 0;
+ 			powerdown = 1;
+ 		}
+ 	}
 
 
