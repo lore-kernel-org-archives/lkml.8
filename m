@@ -2,264 +2,330 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=FORGED_MUA_MOZILLA,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB93EC1975A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:44:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE85CC2BB57
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:44:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A53DB24685
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:44:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3F4524684
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:44:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583847855;
+	bh=E8QkjHVkzOcpMzAbxGJQTzkpHIqmt5HiFJokGy90umg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=DUZV+K096cG7dM31kggGs+b7v0vcusIRwwC3YXkrEFSYDfiTrNjl1CzniWNxsrtgK
+	 fC4dP/UFa58s1rU1iTGlm0pk6l2NrsMEyJdJPLFSQkDEdO7t28hy0zB9TX24B8vr7k
+	 i5ggEwmRtT/ZihTms0AYCgXcGb/i00zzZRVugyfQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728030AbgCJNoW (ORCPT
+        id S1727917AbgCJNoN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:44:22 -0400
-Received: from mail-oln040092064070.outbound.protection.outlook.com ([40.92.64.70]:44472
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726353AbgCJNoM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:44:12 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DFhvp+Oo45MXHFV30ls6zqT7/546uqQptqKa+nZwGSFJbMbVs39WFCMR3R4+ZWtEAPmWz9sSFvBXcMZn0AT/yyLwW7fPZQV+dlBtynTVIP92g9Hxt3mC4Y7u2NXWrtqaQir7P0PO6wu+IfzH74keqMDowVxzqJzGSOSOpRA4Y/yvMjGVDbcIe0c/AV7POZGdy2re8ydZbI3rSxPq3OGoFEZpY8V32jOHuEcebdKL9+fn6muJ4RtebV5KSddLfS3ZYy7sGlR5cf/TgMsECc/ZUOX/9DVPFWSgsNP4byzCIhuIDwYFNrCk1fJ5RpqAF1VSV3aclDIfckMkv36j+4KKmw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qOZY463IAaXjiQVx7MRIl6eponpktQjQKIZPtfN8f0A=;
- b=cXWMpRR2CIXaZtvc0JBPdHMXIE7pdrMYY7W6C6JhFuzZdWpCjYoZepNahB2O+2VlSpx7pZ8TpRWAX05N85gT+L3sGVRt84yudbYdNT19apQzmZQHE+m2+vU1c4h71IFqhLRfscPzzvMwXdo3uXFUzNJ9HKE3rlGSHTYKnNs2zepozadCv+p3vXZ2r6CNhjqmwqgL5W2V/jrQyZmIUUfDqGyzUf6hePedfauhxZm6L9VUO569ZrrcRTc86IQnCh6na7FRhuWCEXoqN7FDcU5tXdGO0pb82xbZNwolU6vIRRo/4SBWAo5T+HgEzLtKz2Pw4pQKGZSZiQb11/Ybt1F1fQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hotmail.de; dmarc=pass action=none header.from=hotmail.de;
- dkim=pass header.d=hotmail.de; arc=none
-Received: from HE1EUR01FT023.eop-EUR01.prod.protection.outlook.com
- (2a01:111:e400:7e18::37) by
- HE1EUR01HT005.eop-EUR01.prod.protection.outlook.com (2a01:111:e400:7e18::492)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.11; Tue, 10 Mar
- 2020 13:44:03 +0000
-Received: from AM6PR03MB5170.eurprd03.prod.outlook.com (10.152.0.52) by
- HE1EUR01FT023.mail.protection.outlook.com (10.152.0.162) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2793.11 via Frontend Transport; Tue, 10 Mar 2020 13:44:03 +0000
-X-IncomingTopHeaderMarker: OriginalChecksum:2534592BB12048E38E56F803EF8B67E0599C52D4D49AF5C559ECF8080DBF5FF9;UpperCasedChecksum:01EBD96ECEB138968F5094E9AB20D61588959F6B6FFED1F4D775C0A1AC968775;SizeAsReceived:10294;Count:50
-Received: from AM6PR03MB5170.eurprd03.prod.outlook.com
- ([fe80::1956:d274:cab3:b4dd]) by AM6PR03MB5170.eurprd03.prod.outlook.com
- ([fe80::1956:d274:cab3:b4dd%6]) with mapi id 15.20.2793.013; Tue, 10 Mar 2020
- 13:44:03 +0000
-From:   Bernd Edlinger <bernd.edlinger@hotmail.de>
-Subject: [PATCH 2/4] selftests/ptrace: add test cases for dead-locks
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Andrei Vagin <avagin@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Yuyang Du <duyuyang@gmail.com>,
-        David Hildenbrand <david@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        David Howells <dhowells@redhat.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christian Kellner <christian@kellner.me>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>
-References: <AM6PR03MB5170EB4427BF5C67EE98FF09E4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <87r1y8dqqz.fsf@x220.int.ebiederm.org>
- <AM6PR03MB517053AED7DC89F7C0704B7DE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <AM6PR03MB51703B44170EAB4626C9B2CAE4E20@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <87tv32cxmf.fsf_-_@x220.int.ebiederm.org>
- <87v9ne5y4y.fsf_-_@x220.int.ebiederm.org>
- <87zhcq4jdj.fsf_-_@x220.int.ebiederm.org>
- <AM6PR03MB5170BC58D90BAD80CDEF3F8BE4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <878sk94eay.fsf@x220.int.ebiederm.org>
- <AM6PR03MB517086003BD2C32E199690A3E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <87r1y12yc7.fsf@x220.int.ebiederm.org> <87k13t2xpd.fsf@x220.int.ebiederm.org>
- <87d09l2x5n.fsf@x220.int.ebiederm.org>
- <AM6PR03MB5170F0F9DC18F5EA77C9A857E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <871rq12vxu.fsf@x220.int.ebiederm.org>
- <AM6PR03MB5170DF45E3245F55B95CCD91E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <877dzt1fnf.fsf@x220.int.ebiederm.org>
-Message-ID: <AM6PR03MB51703199741A2C27A78980FFE4FF0@AM6PR03MB5170.eurprd03.prod.outlook.com>
-Date:   Tue, 10 Mar 2020 14:44:01 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-In-Reply-To: <877dzt1fnf.fsf@x220.int.ebiederm.org>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: AM0PR06CA0084.eurprd06.prod.outlook.com
- (2603:10a6:208:fa::25) To AM6PR03MB5170.eurprd03.prod.outlook.com
- (2603:10a6:20b:ca::23)
-X-Microsoft-Original-Message-ID: <fbd7c68e-4094-2f9b-fbb0-5f43a706128d@hotmail.de>
+        Tue, 10 Mar 2020 09:44:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37590 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727206AbgCJNnT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:43:19 -0400
+Received: from mail.kernel.org (ip5f5ad4e9.dynamic.kabel-deutschland.de [95.90.212.233])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 68419246AA;
+        Tue, 10 Mar 2020 13:43:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583847797;
+        bh=E8QkjHVkzOcpMzAbxGJQTzkpHIqmt5HiFJokGy90umg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=1fsorBq9m4u8TSGUhgE7YDg4bocLSDsZCkOBBLiKF7xc0o4IUXDlUrth4mwUpCTB7
+         nwDVR3Og3/3jap8Yq4/BNLay6ifrDiRXwDqSDHFVH5RR7pMJl14Xs8sjkriSZqjYu2
+         zIIQSbKzlahHqKg2MDkaNZiXku9SpxfJCKf3GJlY=
+Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
+        (envelope-from <mchehab@kernel.org>)
+        id 1jBfAB-0005wK-EA; Tue, 10 Mar 2020 14:43:15 +0100
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        linux-media@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v2 15/22] media: docs: split uAPI info from imx.rst
+Date:   Tue, 10 Mar 2020 14:43:06 +0100
+Message-Id: <da5a18aa27c564cdb4fa6f84026be1c72c1a877c.1583847556.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <cover.1583847556.git.mchehab+huawei@kernel.org>
+References: <cover.1583847556.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [192.168.1.101] (92.77.140.102) by AM0PR06CA0084.eurprd06.prod.outlook.com (2603:10a6:208:fa::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.16 via Frontend Transport; Tue, 10 Mar 2020 13:44:01 +0000
-X-Microsoft-Original-Message-ID: <fbd7c68e-4094-2f9b-fbb0-5f43a706128d@hotmail.de>
-X-TMN:  [mbH5VsuP3pnDx5S83zh5PLwQRoDsVQ4R]
-X-MS-PublicTrafficType: Email
-X-IncomingHeaderCount: 50
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-Correlation-Id: f77651f4-c28d-44e1-771b-08d7c4f91823
-X-MS-TrafficTypeDiagnostic: HE1EUR01HT005:
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: e3lk3mxrLBIqFPpGQyawO5+/E2DepRJw7nqU8+HOzUUV1tJZ5vXQ4OQxytSOH1PYS4u0VTkVrm3Ma/vPULqTzVD0oeY1W0nn/ROspV4OKXXw5aQI5BMO+LwqI3IQK7rlJjz9hgWJC0ShTt8eB+l4D4m3YnjZoNchxqx6NCl9ExDqRv035keCQeu5ZtRBYiEI
-X-MS-Exchange-AntiSpam-MessageData: UD3Fct7HirAC7qOQjBjLnzGmOlwPO0C65kL3A1S8q+1f/GsK7MYg9HzUCHCkqI7sA+dMLnxcfKeES/ctFXneRsd1eCglzjw2FOhCdSEakOwSEYWbIuQP8ojNt0stkZgqAozUAM0tip7VaTqslbmwYw==
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f77651f4-c28d-44e1-771b-08d7c4f91823
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Mar 2020 13:44:03.1660
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1EUR01HT005
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds test cases for ptrace deadlocks.
+This file contains both driver develompent documentation and
+userspace API.
 
-Additionally fixes a compile problem in get_syscall_info.c,
-observed with gcc-4.8.4:
+Split on two, as they're usually read by different audiences.
 
-get_syscall_info.c: In function 'get_syscall_info':
-get_syscall_info.c:93:3: error: 'for' loop initial declarations are only
-                                 allowed in C99 mode
-   for (unsigned int i = 0; i < ARRAY_SIZE(args); ++i) {
-   ^
-get_syscall_info.c:93:3: note: use option -std=c99 or -std=gnu99 to compile
-                               your code
-
-Signed-off-by: Bernd Edlinger <bernd.edlinger@hotmail.de>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- tools/testing/selftests/ptrace/Makefile   |  4 +-
- tools/testing/selftests/ptrace/vmaccess.c | 86 +++++++++++++++++++++++++++++++
- 2 files changed, 88 insertions(+), 2 deletions(-)
- create mode 100644 tools/testing/selftests/ptrace/vmaccess.c
+ Documentation/media/v4l-drivers/imx-uapi.rst | 125 +++++++++++++++++++
+ Documentation/media/v4l-drivers/imx.rst      |  88 +------------
+ Documentation/media/v4l-drivers/index.rst    |   1 +
+ 3 files changed, 128 insertions(+), 86 deletions(-)
+ create mode 100644 Documentation/media/v4l-drivers/imx-uapi.rst
 
-diff --git a/tools/testing/selftests/ptrace/Makefile b/tools/testing/selftests/ptrace/Makefile
-index c0b7f89..2f1f532 100644
---- a/tools/testing/selftests/ptrace/Makefile
-+++ b/tools/testing/selftests/ptrace/Makefile
-@@ -1,6 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0-only
--CFLAGS += -iquote../../../../include/uapi -Wall
-+CFLAGS += -std=c99 -pthread -iquote../../../../include/uapi -Wall
- 
--TEST_GEN_PROGS := get_syscall_info peeksiginfo
-+TEST_GEN_PROGS := get_syscall_info peeksiginfo vmaccess
- 
- include ../lib.mk
-diff --git a/tools/testing/selftests/ptrace/vmaccess.c b/tools/testing/selftests/ptrace/vmaccess.c
+diff --git a/Documentation/media/v4l-drivers/imx-uapi.rst b/Documentation/media/v4l-drivers/imx-uapi.rst
 new file mode 100644
-index 0000000..4db327b
+index 000000000000..8d47712dea9f
 --- /dev/null
-+++ b/tools/testing/selftests/ptrace/vmaccess.c
-@@ -0,0 +1,86 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Copyright (c) 2020 Bernd Edlinger <bernd.edlinger@hotmail.de>
-+ * All rights reserved.
-+ *
-+ * Check whether /proc/$pid/mem can be accessed without causing deadlocks
-+ * when de_thread is blocked with ->cred_guard_mutex held.
-+ */
++++ b/Documentation/media/v4l-drivers/imx-uapi.rst
+@@ -0,0 +1,125 @@
++.. SPDX-License-Identifier: GPL-2.0
 +
-+#include "../kselftest_harness.h"
-+#include <stdio.h>
-+#include <fcntl.h>
-+#include <pthread.h>
-+#include <signal.h>
-+#include <unistd.h>
-+#include <sys/ptrace.h>
++=========================
++i.MX Video Capture Driver
++=========================
 +
-+static void *thread(void *arg)
-+{
-+	ptrace(PTRACE_TRACEME, 0, 0L, 0L);
-+	return NULL;
-+}
++Events
++======
 +
-+TEST(vmaccess)
-+{
-+	int f, pid = fork();
-+	char mm[64];
++.. _imx_api_ipuX_csiY:
 +
-+	if (!pid) {
-+		pthread_t pt;
++ipuX_csiY
++---------
 +
-+		pthread_create(&pt, NULL, thread, NULL);
-+		pthread_join(pt, NULL);
-+		execlp("true", "true", NULL);
-+	}
++This subdev can generate the following event when enabling the second
++IDMAC source pad:
 +
-+	sleep(1);
-+	sprintf(mm, "/proc/%d/mem", pid);
-+	f = open(mm, O_RDONLY);
-+	ASSERT_GE(f, 0);
-+	close(f);
-+	f = kill(pid, SIGCONT);
-+	ASSERT_EQ(f, 0);
-+}
++- V4L2_EVENT_IMX_FRAME_INTERVAL_ERROR
 +
-+TEST(attach)
-+{
-+	int s, k, pid = fork();
++The user application can subscribe to this event from the ipuX_csiY
++subdev node. This event is generated by the Frame Interval Monitor
++(see below for more on the FIM).
 +
-+	if (!pid) {
-+		pthread_t pt;
++Controls
++========
 +
-+		pthread_create(&pt, NULL, thread, NULL);
-+		pthread_join(pt, NULL);
-+		execlp("sleep", "sleep", "2", NULL);
-+	}
++.. _imx_api_FIM:
 +
-+	sleep(1);
-+	k = ptrace(PTRACE_ATTACH, pid, 0L, 0L);
-+	ASSERT_EQ(errno, EAGAIN);
-+	ASSERT_EQ(k, -1);
-+	k = waitpid(-1, &s, WNOHANG);
-+	ASSERT_NE(k, -1);
-+	ASSERT_NE(k, 0);
-+	ASSERT_NE(k, pid);
-+	ASSERT_EQ(WIFEXITED(s), 1);
-+	ASSERT_EQ(WEXITSTATUS(s), 0);
-+	sleep(1);
-+	k = ptrace(PTRACE_ATTACH, pid, 0L, 0L);
-+	ASSERT_EQ(k, 0);
-+	k = waitpid(-1, &s, 0);
-+	ASSERT_EQ(k, pid);
-+	ASSERT_EQ(WIFSTOPPED(s), 1);
-+	ASSERT_EQ(WSTOPSIG(s), SIGSTOP);
-+	k = ptrace(PTRACE_DETACH, pid, 0L, 0L);
-+	ASSERT_EQ(k, 0);
-+	k = waitpid(-1, &s, 0);
-+	ASSERT_EQ(k, pid);
-+	ASSERT_EQ(WIFEXITED(s), 1);
-+	ASSERT_EQ(WEXITSTATUS(s), 0);
-+	k = waitpid(-1, NULL, 0);
-+	ASSERT_EQ(k, -1);
-+	ASSERT_EQ(errno, ECHILD);
-+}
++Frame Interval Monitor in ipuX_csiY
++-----------------------------------
 +
-+TEST_HARNESS_MAIN
++The adv718x decoders can occasionally send corrupt fields during
++NTSC/PAL signal re-sync (too little or too many video lines). When
++this happens, the IPU triggers a mechanism to re-establish vertical
++sync by adding 1 dummy line every frame, which causes a rolling effect
++from image to image, and can last a long time before a stable image is
++recovered. Or sometimes the mechanism doesn't work at all, causing a
++permanent split image (one frame contains lines from two consecutive
++captured images).
++
++From experiment it was found that during image rolling, the frame
++intervals (elapsed time between two EOF's) drop below the nominal
++value for the current standard, by about one frame time (60 usec),
++and remain at that value until rolling stops.
++
++While the reason for this observation isn't known (the IPU dummy
++line mechanism should show an increase in the intervals by 1 line
++time every frame, not a fixed value), we can use it to detect the
++corrupt fields using a frame interval monitor. If the FIM detects a
++bad frame interval, the ipuX_csiY subdev will send the event
++V4L2_EVENT_IMX_FRAME_INTERVAL_ERROR. Userland can register with
++the FIM event notification on the ipuX_csiY subdev device node.
++Userland can issue a streaming restart when this event is received
++to correct the rolling/split image.
++
++The ipuX_csiY subdev includes custom controls to tweak some dials for
++FIM. If one of these controls is changed during streaming, the FIM will
++be reset and will continue at the new settings.
++
++- V4L2_CID_IMX_FIM_ENABLE
++
++Enable/disable the FIM.
++
++- V4L2_CID_IMX_FIM_NUM
++
++How many frame interval measurements to average before comparing against
++the nominal frame interval reported by the sensor. This can reduce noise
++caused by interrupt latency.
++
++- V4L2_CID_IMX_FIM_TOLERANCE_MIN
++
++If the averaged intervals fall outside nominal by this amount, in
++microseconds, the V4L2_EVENT_IMX_FRAME_INTERVAL_ERROR event is sent.
++
++- V4L2_CID_IMX_FIM_TOLERANCE_MAX
++
++If any intervals are higher than this value, those samples are
++discarded and do not enter into the average. This can be used to
++discard really high interval errors that might be due to interrupt
++latency from high system load.
++
++- V4L2_CID_IMX_FIM_NUM_SKIP
++
++How many frames to skip after a FIM reset or stream restart before
++FIM begins to average intervals.
++
++- V4L2_CID_IMX_FIM_ICAP_CHANNEL / V4L2_CID_IMX_FIM_ICAP_EDGE
++
++These controls will configure an input capture channel as the method
++for measuring frame intervals. This is superior to the default method
++of measuring frame intervals via EOF interrupt, since it is not subject
++to uncertainty errors introduced by interrupt latency.
++
++Input capture requires hardware support. A VSYNC signal must be routed
++to one of the i.MX6 input capture channel pads.
++
++V4L2_CID_IMX_FIM_ICAP_CHANNEL configures which i.MX6 input capture
++channel to use. This must be 0 or 1.
++
++V4L2_CID_IMX_FIM_ICAP_EDGE configures which signal edge will trigger
++input capture events. By default the input capture method is disabled
++with a value of IRQ_TYPE_NONE. Set this control to IRQ_TYPE_EDGE_RISING,
++IRQ_TYPE_EDGE_FALLING, or IRQ_TYPE_EDGE_BOTH to enable input capture,
++triggered on the given signal edge(s).
++
++When input capture is disabled, frame intervals will be measured via
++EOF interrupt.
++
++
++File list
++---------
++
++drivers/staging/media/imx/
++include/media/imx.h
++include/linux/imx-media.h
++
++
++Authors
++-------
++
++- Steve Longerbeam <steve_longerbeam@mentor.com>
++- Philipp Zabel <kernel@pengutronix.de>
++- Russell King <linux@armlinux.org.uk>
++
++Copyright (C) 2012-2017 Mentor Graphics Inc.
+diff --git a/Documentation/media/v4l-drivers/imx.rst b/Documentation/media/v4l-drivers/imx.rst
+index 1246573c1019..3182951c7651 100644
+--- a/Documentation/media/v4l-drivers/imx.rst
++++ b/Documentation/media/v4l-drivers/imx.rst
+@@ -191,14 +191,7 @@ or unqualified interlaced). The capture interface will enforce the same
+ field order as the source pad field order (interlaced-bt if source pad
+ is seq-bt, interlaced-tb if source pad is seq-tb).
+ 
+-This subdev can generate the following event when enabling the second
+-IDMAC source pad:
+-
+-- V4L2_EVENT_IMX_FRAME_INTERVAL_ERROR
+-
+-The user application can subscribe to this event from the ipuX_csiY
+-subdev node. This event is generated by the Frame Interval Monitor
+-(see below for more on the FIM).
++For events produced by ipuX_csiY, see ref:`imx_api_ipuX_csiY`.
+ 
+ Cropping in ipuX_csiY
+ ---------------------
+@@ -247,84 +240,7 @@ rate by half at the IDMAC output source pad:
+ Frame Interval Monitor in ipuX_csiY
+ -----------------------------------
+ 
+-The adv718x decoders can occasionally send corrupt fields during
+-NTSC/PAL signal re-sync (too little or too many video lines). When
+-this happens, the IPU triggers a mechanism to re-establish vertical
+-sync by adding 1 dummy line every frame, which causes a rolling effect
+-from image to image, and can last a long time before a stable image is
+-recovered. Or sometimes the mechanism doesn't work at all, causing a
+-permanent split image (one frame contains lines from two consecutive
+-captured images).
+-
+-From experiment it was found that during image rolling, the frame
+-intervals (elapsed time between two EOF's) drop below the nominal
+-value for the current standard, by about one frame time (60 usec),
+-and remain at that value until rolling stops.
+-
+-While the reason for this observation isn't known (the IPU dummy
+-line mechanism should show an increase in the intervals by 1 line
+-time every frame, not a fixed value), we can use it to detect the
+-corrupt fields using a frame interval monitor. If the FIM detects a
+-bad frame interval, the ipuX_csiY subdev will send the event
+-V4L2_EVENT_IMX_FRAME_INTERVAL_ERROR. Userland can register with
+-the FIM event notification on the ipuX_csiY subdev device node.
+-Userland can issue a streaming restart when this event is received
+-to correct the rolling/split image.
+-
+-The ipuX_csiY subdev includes custom controls to tweak some dials for
+-FIM. If one of these controls is changed during streaming, the FIM will
+-be reset and will continue at the new settings.
+-
+-- V4L2_CID_IMX_FIM_ENABLE
+-
+-Enable/disable the FIM.
+-
+-- V4L2_CID_IMX_FIM_NUM
+-
+-How many frame interval measurements to average before comparing against
+-the nominal frame interval reported by the sensor. This can reduce noise
+-caused by interrupt latency.
+-
+-- V4L2_CID_IMX_FIM_TOLERANCE_MIN
+-
+-If the averaged intervals fall outside nominal by this amount, in
+-microseconds, the V4L2_EVENT_IMX_FRAME_INTERVAL_ERROR event is sent.
+-
+-- V4L2_CID_IMX_FIM_TOLERANCE_MAX
+-
+-If any intervals are higher than this value, those samples are
+-discarded and do not enter into the average. This can be used to
+-discard really high interval errors that might be due to interrupt
+-latency from high system load.
+-
+-- V4L2_CID_IMX_FIM_NUM_SKIP
+-
+-How many frames to skip after a FIM reset or stream restart before
+-FIM begins to average intervals.
+-
+-- V4L2_CID_IMX_FIM_ICAP_CHANNEL
+-- V4L2_CID_IMX_FIM_ICAP_EDGE
+-
+-These controls will configure an input capture channel as the method
+-for measuring frame intervals. This is superior to the default method
+-of measuring frame intervals via EOF interrupt, since it is not subject
+-to uncertainty errors introduced by interrupt latency.
+-
+-Input capture requires hardware support. A VSYNC signal must be routed
+-to one of the i.MX6 input capture channel pads.
+-
+-V4L2_CID_IMX_FIM_ICAP_CHANNEL configures which i.MX6 input capture
+-channel to use. This must be 0 or 1.
+-
+-V4L2_CID_IMX_FIM_ICAP_EDGE configures which signal edge will trigger
+-input capture events. By default the input capture method is disabled
+-with a value of IRQ_TYPE_NONE. Set this control to IRQ_TYPE_EDGE_RISING,
+-IRQ_TYPE_EDGE_FALLING, or IRQ_TYPE_EDGE_BOTH to enable input capture,
+-triggered on the given signal edge(s).
+-
+-When input capture is disabled, frame intervals will be measured via
+-EOF interrupt.
+-
++See ref:`imx_api_FIM`.
+ 
+ ipuX_vdic
+ ---------
+diff --git a/Documentation/media/v4l-drivers/index.rst b/Documentation/media/v4l-drivers/index.rst
+index 364c65ea86fb..67665a8abe02 100644
+--- a/Documentation/media/v4l-drivers/index.rst
++++ b/Documentation/media/v4l-drivers/index.rst
+@@ -75,5 +75,6 @@ For more details see the file COPYING in the source distribution of Linux.
+ 	vimc-devel
+ 
+ 	cx2341x-uapi
++	imx-uapi
+ 	meye-uapi
+ 	omap3isp-uapi
 -- 
-1.9.1
+2.24.1
+
