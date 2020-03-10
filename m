@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA56DC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:01:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A49A5C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:01:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C5472468E
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:01:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BF372468F
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:01:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583845274;
-	bh=z/WV8EeiNvfcjX/k2GwivHrgnCgeVcM9x9Mjv+VytKY=;
+	s=default; t=1583845279;
+	bh=TgijbQx+j8pF/MwcM2OHeiCApkANqraS0PDS4F8Ts9o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Xhkn5qfLFr5GR0+Og7N6zmuH2xKhobYxYAazxydNjNKHIO7I/dOsH4P/HJvzesYIh
-	 rrGsJjvoMSDaQIXttllo1PWTFBU8Xp9eM5VgBxrA9H1jrUmwmQLMMkdhl8t9A3QVYC
-	 V9P1g3eTxsKpd8qxZEU37Coo5V+ycvgqp9KYZHkg=
+	b=xx9jrgkA6k0D/IkBkSJI3I/V/pQKASuivLppi8fAZU5pAB0B3xtrpDXMOuVDLZtW8
+	 fM3ta4KOzx9zSNoXlEJENF2zUiDwgN8bB8ZM3s1mw8HbLxhGNaZAitfnoiIrhjWgVg
+	 lDeqWe9QCmoiZdlFzqyNmAc12g8ilqm5937LuZw0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730235AbgCJNBN (ORCPT
+        id S1730251AbgCJNBS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:01:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42216 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:01:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42338 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729942AbgCJNBI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:01:08 -0400
+        id S1729942AbgCJNBO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:01:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 298C32468D;
-        Tue, 10 Mar 2020 13:01:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3CADE2467D;
+        Tue, 10 Mar 2020 13:01:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845267;
-        bh=z/WV8EeiNvfcjX/k2GwivHrgnCgeVcM9x9Mjv+VytKY=;
+        s=default; t=1583845273;
+        bh=TgijbQx+j8pF/MwcM2OHeiCApkANqraS0PDS4F8Ts9o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wnwbThmszC96akfGFnMUiQuxtLhnecfYKunImLoEhNh9Mfsv2WpKY/wjRXmrt2RT5
-         LA1LJ8XQ3PN9oST/JPc35OUTkCia8MCBW3ou6x9b3jljvK5gjS3+7f/j2W7JaBZnhb
-         PoVCFnu+JJakUrzYbUM6mQsfPBKhYfKcir3Yb8k0=
+        b=LDki9ND7dXtOm30Lvozyc047LzdDAHIXDctTkLoTJbjy1yks6UPtded3fLPEOEnoV
+         Yi/xHcTD0yech74t/dz9xp2s8zfyWkWOsthoOHh/ecfa8sObatxYwYqNniNtNak18n
+         TiV622CaefpRVWFWG2nbGneIhlKkz7lsCkQSOOEw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Frieder Schrempf <frieder.schrempf@kontron.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH 5.5 115/189] dmaengine: imx-sdma: Fix the event id check to include RX event for UART6
-Date:   Tue, 10 Mar 2020 13:39:12 +0100
-Message-Id: <20200310123651.380916853@linuxfoundation.org>
+        stable@vger.kernel.org, Hou Tao <houtao1@huawei.com>,
+        Mike Snitzer <snitzer@redhat.com>
+Subject: [PATCH 5.5 125/189] dm: fix congested_fn for request-based device
+Date:   Tue, 10 Mar 2020 13:39:22 +0100
+Message-Id: <20200310123652.402156432@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123639.608886314@linuxfoundation.org>
 References: <20200310123639.608886314@linuxfoundation.org>
@@ -61,45 +59,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Frieder Schrempf <frieder.schrempf@kontron.de>
+From: Hou Tao <houtao1@huawei.com>
 
-commit 25962e1a7f1d522f1b57ead2f266fab570042a70 upstream.
+commit 974f51e8633f0f3f33e8f86bbb5ae66758aa63c7 upstream.
 
-On i.MX6UL/ULL and i.MX6SX the DMA event id for the RX channel of
-UART6 is '0'. To fix the broken DMA support for UART6, we change
-the check for event_id0 to include '0' as a valid id.
+We neither assign congested_fn for requested-based blk-mq device nor
+implement it correctly. So fix both.
 
-Fixes: 1ec1e82f2510 ("dmaengine: Add Freescale i.MX SDMA support")
-Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
+Also, remove incorrect comment from dm_init_normal_md_queue and rename
+it to dm_init_congested_fn.
+
+Fixes: 4aa9c692e052 ("bdi: separate out congested state into a separate struct")
 Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200225082139.7646-1-frieder.schrempf@kontron.de
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Hou Tao <houtao1@huawei.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/dma/imx-sdma.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/md/dm.c |   21 ++++++++++-----------
+ 1 file changed, 10 insertions(+), 11 deletions(-)
 
---- a/drivers/dma/imx-sdma.c
-+++ b/drivers/dma/imx-sdma.c
-@@ -1328,7 +1328,7 @@ static void sdma_free_chan_resources(str
+--- a/drivers/md/dm.c
++++ b/drivers/md/dm.c
+@@ -1788,7 +1788,8 @@ static int dm_any_congested(void *conges
+ 			 * With request-based DM we only need to check the
+ 			 * top-level queue for congestion.
+ 			 */
+-			r = md->queue->backing_dev_info->wb.state & bdi_bits;
++			struct backing_dev_info *bdi = md->queue->backing_dev_info;
++			r = bdi->wb.congested->state & bdi_bits;
+ 		} else {
+ 			map = dm_get_live_table_fast(md);
+ 			if (map)
+@@ -1854,15 +1855,6 @@ static const struct dax_operations dm_da
  
- 	sdma_channel_synchronize(chan);
+ static void dm_wq_work(struct work_struct *work);
  
--	if (sdmac->event_id0)
-+	if (sdmac->event_id0 >= 0)
- 		sdma_event_disable(sdmac, sdmac->event_id0);
- 	if (sdmac->event_id1)
- 		sdma_event_disable(sdmac, sdmac->event_id1);
-@@ -1629,7 +1629,7 @@ static int sdma_config(struct dma_chan *
- 	memcpy(&sdmac->slave_config, dmaengine_cfg, sizeof(*dmaengine_cfg));
+-static void dm_init_normal_md_queue(struct mapped_device *md)
+-{
+-	/*
+-	 * Initialize aspects of queue that aren't relevant for blk-mq
+-	 */
+-	md->queue->backing_dev_info->congested_data = md;
+-	md->queue->backing_dev_info->congested_fn = dm_any_congested;
+-}
+-
+ static void cleanup_mapped_device(struct mapped_device *md)
+ {
+ 	if (md->wq)
+@@ -2249,6 +2241,12 @@ struct queue_limits *dm_get_queue_limits
+ }
+ EXPORT_SYMBOL_GPL(dm_get_queue_limits);
  
- 	/* Set ENBLn earlier to make sure dma request triggered after that */
--	if (sdmac->event_id0) {
-+	if (sdmac->event_id0 >= 0) {
- 		if (sdmac->event_id0 >= sdmac->sdma->drvdata->num_events)
- 			return -EINVAL;
- 		sdma_event_enable(sdmac, sdmac->event_id0);
++static void dm_init_congested_fn(struct mapped_device *md)
++{
++	md->queue->backing_dev_info->congested_data = md;
++	md->queue->backing_dev_info->congested_fn = dm_any_congested;
++}
++
+ /*
+  * Setup the DM device's queue based on md's type
+  */
+@@ -2265,11 +2263,12 @@ int dm_setup_md_queue(struct mapped_devi
+ 			DMERR("Cannot initialize queue for request-based dm-mq mapped device");
+ 			return r;
+ 		}
++		dm_init_congested_fn(md);
+ 		break;
+ 	case DM_TYPE_BIO_BASED:
+ 	case DM_TYPE_DAX_BIO_BASED:
+ 	case DM_TYPE_NVME_BIO_BASED:
+-		dm_init_normal_md_queue(md);
++		dm_init_congested_fn(md);
+ 		break;
+ 	case DM_TYPE_NONE:
+ 		WARN_ON_ONCE(true);
 
 
