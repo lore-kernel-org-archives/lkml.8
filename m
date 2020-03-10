@@ -2,139 +2,332 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EA4CC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 07:05:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D887DC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 07:09:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24DF72468A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 07:05:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E52C24677
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 07:09:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="goK7G1wv"
+	dkim=pass (2048-bit key) header.d=atishpatra.org header.i=@atishpatra.org header.b="YLuE6SI3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726423AbgCJHFe (ORCPT
+        id S1726268AbgCJHJC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 03:05:34 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:59288 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726156AbgCJHFe (ORCPT
+        Tue, 10 Mar 2020 03:09:02 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:46382 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725919AbgCJHJC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 03:05:34 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02A75O6Q020066;
-        Tue, 10 Mar 2020 02:05:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1583823924;
-        bh=HXSncGp7iCXQUqa3Y4kMAHAsnOMNjDVmmPi3JxHsHAw=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=goK7G1wvD66F881UeJL6Zj/tCmMn5TFWn2FERNEOuxPQbYmj7rLM14pDbEjM/t8fA
-         b4ePIpPM2qlZUORjfKE+VsPTcnJrciuDNJBhClHTmQm76lzzhU9SH+JDrBZXUBFWWE
-         II6Zj/MQKecUvReh7auhoaLC+/LBwDMH0t6kUAag=
-Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02A75OnI096753
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 10 Mar 2020 02:05:24 -0500
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 10
- Mar 2020 02:05:23 -0500
-Received: from localhost.localdomain (10.64.41.19) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 10 Mar 2020 02:05:23 -0500
-Received: from [10.24.69.20] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by localhost.localdomain (8.15.2/8.15.2) with ESMTP id 02A75K9T071982;
-        Tue, 10 Mar 2020 02:05:21 -0500
-Subject: Re: [PATCH v2 4/6] pwm: omap-dmtimer: Fix pwm disabling sequence
-To:     Tony Lindgren <tony@atomide.com>
-CC:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
-        Sekhar Nori <nsekhar@ti.com>, Vignesh R <vigneshr@ti.com>,
-        Sebastian Reichel <sre@kernel.org>
-References: <20200228095651.32464-1-lokeshvutla@ti.com>
- <20200228095651.32464-5-lokeshvutla@ti.com>
- <20200306181443.GJ37466@atomide.com>
- <9129d4fe-a17e-2fa6-764c-6a746fa5096d@ti.com>
- <20200309180123.GP37466@atomide.com>
-From:   Lokesh Vutla <lokeshvutla@ti.com>
-Message-ID: <666dbb7a-db98-d16a-ee73-27d353d2a317@ti.com>
-Date:   Tue, 10 Mar 2020 12:34:26 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Tue, 10 Mar 2020 03:09:02 -0400
+Received: by mail-wr1-f66.google.com with SMTP id n15so14332911wrw.13
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 00:08:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=atishpatra.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tTCoR/CCNaXq1FOvzXwAgeXX2l2MsSCD9apFaZmeBWM=;
+        b=YLuE6SI3gxQyzQVjsUjvP8gTTJJ1WcGl5C6N6SeNI2r8E7WOAnFx4SoSbsb5C5gqXY
+         Er9Y5eIqAdrQm0Dsc+GN9pUzArPlxjfLbJ+eK7IjrKq8i2oBBEyV9K31sFgvKTq9UiRY
+         9sZ5KeSrGUdz10VndnUpGD2nHxR5IeFVLH/aNc44o/cLv57N8FxD8fXjXJZ+3CgG9fD8
+         TYOfTi2jon61UBv+wwNJL40ZJjMpoy+Iar11lQdmk3IXCG+jnmsX/rpjqqx15BEk9Mcy
+         FQiNfsuyVV5EuEoCZ4R3NH6TzzfAGq3OqVH9bCf4xDJpzG8atQ0PJ6bawgMSMRqcJ9Ny
+         fplQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tTCoR/CCNaXq1FOvzXwAgeXX2l2MsSCD9apFaZmeBWM=;
+        b=AjFuBr0swnQpsqDUofW1OPnpwPlGoUawGXDsAwxUTfvBFbkLES4C+2PiIZYn+5V4Ci
+         Ik+2cx8twGskRHddUA2V6elsjeXz902q9ethfWu5kJmLMDlUuAqJgFGDcLxLB0f7TUms
+         PNv4oeRBKER0gDbR/w4Vh/nyPDBj53QPNgVUnJ28/KQypD9veaIrWF5CKSoOQHwTr7wQ
+         0hHtPHcEaj4Dtj5tFdz/1khFXl9FoEEWGQ07vdNkRn+5tFqP+ZLaBlq9xnj2C8h5ePrh
+         l75lA8CD//0h2aE+JQsGler5LlycdjhO1zO5zO1inveZqOn4u9iPBR3Xy6nXhmd6Fj1S
+         vEQw==
+X-Gm-Message-State: ANhLgQ1zvUE+0iuv5US/j/DxkQWHGMh9xtRUzAKj/yHPTxGPHdby6uyQ
+        RVlkGNGZfsp5w4ka9171Ad/n5DTzIwIY4gWyPBWl
+X-Google-Smtp-Source: ADFU+vs1apM0VoS4vrkx/AlvsxaJjXfeemK1n2070pj//svyZs06PXbNZkxvZNk2TF6v3cekKagzYvO9h0mSol0kzrI=
+X-Received: by 2002:a5d:522c:: with SMTP id i12mr5999547wra.176.1583824139112;
+ Tue, 10 Mar 2020 00:08:59 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200309180123.GP37466@atomide.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200226011037.7179-1-atish.patra@wdc.com> <20200226011037.7179-6-atish.patra@wdc.com>
+ <CAKv+Gu_iAzQ6et13aACarqns8-xzQ+YSqj+m3mVGGy=ny8GJBg@mail.gmail.com>
+ <26172d39fdb5ecd951ade0a89566c010f6166a03.camel@wdc.com> <CAKv+Gu8i93gM0dMqzbhvNbqsgd9dHCMGzX7E47uusrUvv6xRJA@mail.gmail.com>
+ <46e9873e288134f638cd8726a2c15c9ca63860ce.camel@wdc.com> <CAKv+Gu_2dCj74VvCMRQ9yFgBtJRENasBbEV0bwcfqLQwuaj0=A@mail.gmail.com>
+In-Reply-To: <CAKv+Gu_2dCj74VvCMRQ9yFgBtJRENasBbEV0bwcfqLQwuaj0=A@mail.gmail.com>
+From:   Atish Patra <atishp@atishpatra.org>
+Date:   Tue, 10 Mar 2020 00:08:48 -0700
+Message-ID: <CAOnJCU+zBgYo0ez2ExiAbGttwpVq302vGrZJ3Y9g+S=SHTMuiw@mail.gmail.com>
+Subject: Re: [RFC PATCH 5/5] RISC-V: Add EFI stub support.
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     Atish Patra <Atish.Patra@wdc.com>,
+        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+        "abner.chang@hpe.com" <abner.chang@hpe.com>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "daniel.schaefer@hpe.com" <daniel.schaefer@hpe.com>,
+        Anup Patel <Anup.Patel@wdc.com>,
+        "palmer@dabbelt.com" <palmer@dabbelt.com>,
+        "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>,
+        "agraf@csgraf.de" <agraf@csgraf.de>,
+        "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
+        "leif@nuviainc.com" <leif@nuviainc.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tony,
+On Thu, Feb 27, 2020 at 10:57 PM Ard Biesheuvel <ardb@kernel.org> wrote:
+>
+> On Fri, 28 Feb 2020 at 02:05, Atish Patra <Atish.Patra@wdc.com> wrote:
+> >
+> > On Thu, 2020-02-27 at 20:59 +0100, Ard Biesheuvel wrote:
+> > > On Thu, 27 Feb 2020 at 20:53, Atish Patra <Atish.Patra@wdc.com>
+> > > wrote:
+> > > > On Wed, 2020-02-26 at 08:28 +0100, Ard Biesheuvel wrote:
+> > > > > On Wed, 26 Feb 2020 at 02:10, Atish Patra <atish.patra@wdc.com>
+> > > > > wrote:
+> > > > > > Add a RISC-V architecture specific stub code that actually
+> > > > > > copies
+> > > > > > the
+> > > > > > actual kernel image to a valid address and jump to it after
+> > > > > > boot
+> > > > > > services
+> > > > > > are terminated. Enable UEFI related kernel configs as well for
+> > > > > > RISC-V.
+> > > > > >
+> > > > > > Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> > > > > > ---
+> > > > > >  arch/riscv/Kconfig                        |  20 ++++
+> > > > > >  arch/riscv/Makefile                       |   1 +
+> > > > > >  arch/riscv/configs/defconfig              |   1 +
+> > > > > >  drivers/firmware/efi/libstub/Makefile     |   8 ++
+> > > > > >  drivers/firmware/efi/libstub/riscv-stub.c | 135
+> > > > > > ++++++++++++++++++++++
+> > > > > >  5 files changed, 165 insertions(+)
+> > > > > >  create mode 100644 drivers/firmware/efi/libstub/riscv-stub.c
+> > > > > >
+> > > > > > diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+> > > > > > index 42c122170cfd..68b1d565e51d 100644
+> > > > > > --- a/arch/riscv/Kconfig
+> > > > > > +++ b/arch/riscv/Kconfig
+> > > > > > @@ -372,10 +372,30 @@ config CMDLINE_FORCE
+> > > > > >
+> > > > > >  endchoice
+> > > > > >
+> > > > > > +config EFI_STUB
+> > > > > > +       bool
+> > > > > > +
+> > > > > > +config EFI
+> > > > > > +       bool "UEFI runtime support"
+> > > > > > +       depends on OF
+> > > > > > +       select LIBFDT
+> > > > > > +       select UCS2_STRING
+> > > > > > +       select EFI_PARAMS_FROM_FDT
+> > > > > > +       select EFI_STUB
+> > > > > > +       select EFI_GENERIC_ARCH_STUB
+> > > > > > +       default y
+> > > > > > +       help
+> > > > > > +         This option provides support for runtime services
+> > > > > > provided
+> > > > > > +         by UEFI firmware (such as non-volatile variables,
+> > > > > > realtime
+> > > > > > +          clock, and platform reset). A UEFI stub is also
+> > > > > > provided
+> > > > > > to
+> > > > > > +         allow the kernel to be booted as an EFI application.
+> > > > > > This
+> > > > > > +         is only useful on systems that have UEFI firmware.
+> > > > > > +
+> > > > > >  endmenu
+> > > > > >
+> > > > > >  menu "Power management options"
+> > > > > >
+> > > > > >  source "kernel/power/Kconfig"
+> > > > > > +source "drivers/firmware/Kconfig"
+> > > > > >
+> > > > > >  endmenu
+> > > > > > diff --git a/arch/riscv/Makefile b/arch/riscv/Makefile
+> > > > > > index b9009a2fbaf5..0afaa89ba9ad 100644
+> > > > > > --- a/arch/riscv/Makefile
+> > > > > > +++ b/arch/riscv/Makefile
+> > > > > > @@ -78,6 +78,7 @@ head-y := arch/riscv/kernel/head.o
+> > > > > >  core-y += arch/riscv/
+> > > > > >
+> > > > > >  libs-y += arch/riscv/lib/
+> > > > > > +core-$(CONFIG_EFI_STUB) +=
+> > > > > > $(objtree)/drivers/firmware/efi/libstub/lib.a
+> > > > > >
+> > > > > >  PHONY += vdso_install
+> > > > > >  vdso_install:
+> > > > > > diff --git a/arch/riscv/configs/defconfig
+> > > > > > b/arch/riscv/configs/defconfig
+> > > > > > index e2ff95cb3390..0a5d3578f51e 100644
+> > > > > > --- a/arch/riscv/configs/defconfig
+> > > > > > +++ b/arch/riscv/configs/defconfig
+> > > > > > @@ -125,3 +125,4 @@ CONFIG_DEBUG_BLOCK_EXT_DEVT=y
+> > > > > >  # CONFIG_FTRACE is not set
+> > > > > >  # CONFIG_RUNTIME_TESTING_MENU is not set
+> > > > > >  CONFIG_MEMTEST=y
+> > > > > > +CONFIG_EFI=y
+> > > > > > diff --git a/drivers/firmware/efi/libstub/Makefile
+> > > > > > b/drivers/firmware/efi/libstub/Makefile
+> > > > > > index 2c5b76787126..38facb61745b 100644
+> > > > > > --- a/drivers/firmware/efi/libstub/Makefile
+> > > > > > +++ b/drivers/firmware/efi/libstub/Makefile
+> > > > > > @@ -21,6 +21,8 @@ cflags-$(CONFIG_ARM64)                :=
+> > > > > > $(subst
+> > > > > > $(CC_FLAGS_FTRACE),,$(KBUILD_CFLAGS)) \
+> > > > > >  cflags-$(CONFIG_ARM)           := $(subst
+> > > > > > $(CC_FLAGS_FTRACE),,$(KBUILD_CFLAGS)) \
+> > > > > >                                    -fno-builtin -fpic \
+> > > > > >                                    $(call cc-option,-mno-
+> > > > > > single-
+> > > > > > pic-base)
+> > > > > > +cflags-$(CONFIG_RISCV)         := $(subst
+> > > > > > $(CC_FLAGS_FTRACE),,$(KBUILD_CFLAGS)) \
+> > > > > > +                                  -fpic
+> > > > > >
+> > > > > >  cflags-$(CONFIG_EFI_GENERIC_ARCH_STUB) +=
+> > > > > > -I$(srctree)/scripts/dtc/libfdt
+> > > > > >
+> > > > > > @@ -55,6 +57,7 @@ lib-
+> > > > > > $(CONFIG_EFI_GENERIC_ARCH_STUB)           +=
+> > > > > > efi-stub.o fdt.o string.o \
+> > > > > >  lib-$(CONFIG_ARM)              += arm32-stub.o
+> > > > > >  lib-$(CONFIG_ARM64)            += arm64-stub.o
+> > > > > >  lib-$(CONFIG_X86)              += x86-stub.o
+> > > > > > +lib-$(CONFIG_RISCV)            += riscv-stub.o
+> > > > > >  CFLAGS_arm32-stub.o            := -DTEXT_OFFSET=$(TEXT_OFFSET)
+> > > > > >  CFLAGS_arm64-stub.o            := -DTEXT_OFFSET=$(TEXT_OFFSET)
+> > > > > >
+> > > > > > @@ -79,6 +82,11 @@ STUBCOPY_FLAGS-$(CONFIG_ARM64)       += --
+> > > > > > prefix-alloc-sections=.init \
+> > > > > >                                    --prefix-symbols=__efistub_
+> > > > > >  STUBCOPY_RELOC-$(CONFIG_ARM64) := R_AARCH64_ABS
+> > > > > >
+> > > > > > +STUBCOPY_FLAGS-$(CONFIG_RISCV) += --prefix-alloc-
+> > > > > > sections=.init \
+> > > > > > +                                  --prefix-symbols=__efistub_
+> > > > > > +STUBCOPY_RELOC-$(CONFIG_RISCV) := R_RISCV_HI20
+> > > > > > +
+> > > > > > +
+> > > > > >  $(obj)/%.stub.o: $(obj)/%.o FORCE
+> > > > > >         $(call if_changed,stubcopy)
+> > > > > >
+> > > > > > diff --git a/drivers/firmware/efi/libstub/riscv-stub.c
+> > > > > > b/drivers/firmware/efi/libstub/riscv-stub.c
+> > > > > > new file mode 100644
+> > > > > > index 000000000000..3935b29ea93a
+> > > > > > --- /dev/null
+> > > > > > +++ b/drivers/firmware/efi/libstub/riscv-stub.c
+> > > > > > @@ -0,0 +1,135 @@
+> > > > > > +// SPDX-License-Identifier: GPL-2.0
+> > > > > > +/*
+> > > > > > + * Copyright (C) 2013, 2014 Linaro Ltd;  <roy.franz@linaro.org
+> > > > > > >
+> > > > > > + * Copyright (C) 2020 Western Digital Corporation or its
+> > > > > > affiliates.
+> > > > > > + *
+> > > > > > + * This file implements the EFI boot stub for the RISC-V
+> > > > > > kernel.
+> > > > > > + * Adapted from ARM64 version at
+> > > > > > drivers/firmware/efi/libstub/arm64-stub.c.
+> > > > > > + */
+> > > > > > +
+> > > > > > +#include <linux/efi.h>
+> > > > > > +#include <linux/libfdt.h>
+> > > > > > +#include <linux/libfdt_env.h>
+> > > > > > +#include <asm/efi.h>
+> > > > > > +#include <asm/sections.h>
+> > > > > > +
+> > > > > > +#include "efistub.h"
+> > > > > > +/*
+> > > > > > + * RISCV requires the kernel image to placed TEXT_OFFSET bytes
+> > > > > > beyond a 2 MB
+> > > > > > + * aligned base for 64 bit and 4MB for 32 bit.
+> > > > > > + */
+> > > > > > +#if IS_ENABLED(CONFIG_64BIT)
+> > > > >
+> > > > > You can use #ifdef here
+> > > > >
+> > > >
+> > > > ok.
+> > > >
+> > > > > > +#define MIN_KIMG_ALIGN SZ_2M
+> > > > > > +#else
+> > > > > > +#define MIN_KIMG_ALIGN SZ_4M
+> > > > > > +#endif
+> > > > > > +/*
+> > > > > > + * TEXT_OFFSET ensures that we don't overwrite the firmware
+> > > > > > that
+> > > > > > probably sits
+> > > > > > + * at the beginning of the DRAM.
+> > > > > > + */
+> > > > >
+> > > > > Ugh. Really? On an EFI system, that memory should be reserved in
+> > > > > some
+> > > > > way, we shouldn't be able to stomp on it like that.
+> > > > >
+> > > >
+> > > > Currently, we reserve the initial 128KB for run time firmware(only
+> > > > openSBI for now, EDK2 later) by using PMP (physical memory
+> > > > protection).
+> > > > Any acess to that region from supervisor mode (i.e. U-Boot) will
+> > > > result
+> > > > in a fault.
+> > > >
+> > > > Is it mandatory for UEFI to reserve the beginning of the DRAM ?
+> > > >
+> > >
+> > > It is mandatory to describe which memory is usable and which memory
+> > > is
+> > > reserved. If this memory is not usable, you either describe it as
+> > > reserved, or not describe it at all. Describing it as usable memory,
+> > > allocating it for the kernel but with a hidden agreement that it is
+> > > reserved is highly likely to cause problems down the road.
+> > >
+> >
+> > I completely agree with you on this. We have been talking to have a
+> > booting guide and memory map document for RISC-V Linux to document all
+> > the idiosyncries of RISC-V. But that has not happend until now.
+> > Once, the ordered booting patches are merged, I will try to take a stab
+> > at it.
+> >
+> > Other than that, do we need to describe it somewhere in U-boot wrt to
+> > UEFI so that it doesn't allocate memory from that region ?
+> >
+>
+> It is an idiosyncrasy that the firmware should hide from the OS.
+>
+> What if GRUB comes along and attempts to allocate that memory? Do we
+> also have to teach it that the first 128 KB memory of free memory are
+> magic and should not be touched?
+>
+> So the answer is to mark it as reserved. This way, no UEFI tools,
+> bootloaders etc will ever try to use it.
 
-[...snip...]
+Sounds good to me. We are currently discussing the best approach to
+provide reserved memory
+information to U-Boot/EDK2. The idea is to U-Boot/EDK2 may have to
+update the DT with
+reserved-memory node so that Linux is aware of the reservation as well.
 
->>>>  
->>>> +	/*
->>>> +	 * Disable auto reload so that the current cycle gets completed and
->>>> +	 * then the counter stops.
->>>> +	 */
->>>>  	mutex_lock(&omap->mutex);
->>>> -	omap->pdata->stop(omap->dm_timer);
->>>> +	omap->pdata->set_pwm(omap->dm_timer,
->>>> +			     pwm_get_polarity(pwm) == PWM_POLARITY_INVERSED,
->>>> +			     true, OMAP_TIMER_TRIGGER_OVERFLOW_AND_COMPARE,
->>>> +			     false);
->>>> +
->>>>  	mutex_unlock(&omap->mutex);
->>>>  }
->>>
->>> I'm seeing an issue with this patch where after use something is
->>> left on and power consumption stays higher by about 30 mW after
->>> use.
->>
->> Interesting...What is the PWM period and duty cycle in the test case?
->> Can you dump the following registers before and after disabling:
->> - TLDR
->> - TMAR
->> - TCLR
-> 
-> Here's the state dumped before and after in omap_dm_timer_set_pwm():
-> 
-> omap_timer 4803e000.timer: XXX set_pwm before: tldr: fffffeb8 tmar: fffffffe tclr: 00000040
-> omap_timer 4803e000.timer: XXX set_pwm after: tldr: fffffeb8 tmar: fffffffe tclr: 00001842
-> omap_timer 4013e000.timer: XXX set_pwm before: tldr: fffffeb8 tmar: fffffffe tclr: 00000040
-> omap_timer 4013e000.timer: XXX set_pwm after: tldr: fffffeb8 tmar: fffffffe tclr: 00001842
-> omap_timer 4013e000.timer: XXX set_pwm before: tldr: fffffeb8 tmar: fffffffe tclr: 00001843
-> omap_timer 4013e000.timer: XXX set_pwm after: tldr: fffffeb8 tmar: fffffffe tclr: 00001841
-> omap_timer 4803e000.timer: XXX set_pwm before: tldr: fffffeb8 tmar: fffffffe tclr: 00001843
-> omap_timer 4803e000.timer: XXX set_pwm after: tldr: fffffeb8 tmar: fffffffe tclr: 00001841
-> 
+Then, in the stub, you can
+> tweak the existing code to cheat a bit, and make the TEXT_OFFSET
+> window overlap the 128 KB reserved window at the bottom of memory.
+> Doing that in the stub is fine - this is part of the kernel so it can
+> know about crazy RISC-V rules.
 
-Looking at the registers:
-period = 327 *(1000/clk_freq in MHz) ns
-duty_cycle =  perioid.
+I am bit confused here. Why does EFI stub need to overlap the reserved memory.
+I thought EFI stub just needs to parse the DT to find out the reserved
+memory region to make sure
+that it doesn't try to access/overwrite that region.
 
-I did simulate this behavior on BeagleBoneBlack on timer7. PWM is going down
-after disabling.
-
-> So looks like the start bit is still enabled after use?
-
-Right, that is expected. The start bit gets disabled automatically once the pwm
-period completes. This is because auto reload bit is off. That's the main idea
-of this patch so that PWM period is completed after disabling, else PWM is
-stopped abruptly.
-
-Not sure why it is not happening in your case. If you think it is not needed, I
-can drop this patch and add a limitation saying that PWM gets disabled
-immediately without completing the current cycle.
-
-Thanks and regards,
-Lokesh
+-- 
+Regards,
+Atish
