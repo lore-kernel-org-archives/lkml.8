@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E34AC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:27:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D80BC18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:27:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4380B24693
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:27:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E95CD24693
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:27:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583846856;
-	bh=Gi8TD+6W9+yKdNB018nsuFUxsWYt6po2L8iD2RX6/rc=;
+	s=default; t=1583846858;
+	bh=8xImSQShcvrejIy+ZNtedyF7rEQ2BnsEBHRCR7wJwXE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vBpD9d68H72v7O4lAWV1PepoHOlwXZyyJpkvu1vTeYDGe/aM/z8d4M20146oxQGJ/
-	 Gj1AejKc46zeqxpn7ymh7UVn4qBxuy+JcExtJJQPho3p9QVmD66UC2mytqeULIMTTu
-	 cDTJz6k48LWhshxcHy9h924nrXIfjCwTeobBajwc=
+	b=RjVvSl6YtOv2MgxBuwwQdBlDVinseyQ/9wU/cCqb4zDcGOujwBC23KPI85DpP8n1a
+	 iAfeF+YCuBqspvrlxR93WbP+gG2IhxNJXgY3w6ZRd2k0kGwXcOc9+P1uc0LY5FJO0p
+	 5KnEbSfHUMd3NjjomIKnBbOzzVvIvajb5zN4bEQQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729685AbgCJN1f (ORCPT
+        id S1729363AbgCJMy2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:27:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32880 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:54:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60946 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729087AbgCJMy3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:54:29 -0400
+        id S1729351AbgCJMyX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:54:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F2CB20674;
-        Tue, 10 Mar 2020 12:54:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E2712469A;
+        Tue, 10 Mar 2020 12:54:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844868;
-        bh=Gi8TD+6W9+yKdNB018nsuFUxsWYt6po2L8iD2RX6/rc=;
+        s=default; t=1583844862;
+        bh=8xImSQShcvrejIy+ZNtedyF7rEQ2BnsEBHRCR7wJwXE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LD1dFgrq4tVrCUWuO0Bmj6s2rWpbwjhb52uu53i2EFUMC7ZVeF9MzPP8jzxOetE7a
-         hlRy3n/nwOcSXL1pYlpq6nDXdtmOQq3W09NG6czgYbUW/jFAWjRZ074NXWFV6jlcgL
-         1F+crthHVlwZyQIZdWJWKOji21ej3SIAqjcNzqBk=
+        b=xL3Zx5BbeD4TKw8jJ/Q8HDlW3TtjSEFJv2o7t0Yp0KSCapoMECXN9vcqKSkhybTlo
+         1c40zG2h50a4ziCvwiUQdOAfEh0UQgRF0SGEyVq2gwKO7g7Wu/IgqWfP4TV+e4lnGi
+         NAkGYnJh4QdigiB/Vwq7WZqtColeYvl8O8DJpYFs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hou Tao <houtao1@huawei.com>,
-        Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 5.4 111/168] dm: fix congested_fn for request-based device
-Date:   Tue, 10 Mar 2020 13:39:17 +0100
-Message-Id: <20200310123646.632245161@linuxfoundation.org>
+        stable@vger.kernel.org, Parav Pandit <parav@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Subject: [PATCH 5.4 145/168] Revert "RDMA/cma: Simplify rdma_resolve_addr() error flow"
+Date:   Tue, 10 Mar 2020 13:39:51 +0100
+Message-Id: <20200310123650.195163057@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123635.322799692@linuxfoundation.org>
 References: <20200310123635.322799692@linuxfoundation.org>
@@ -59,80 +60,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hou Tao <houtao1@huawei.com>
+From: Parav Pandit <parav@mellanox.com>
 
-commit 974f51e8633f0f3f33e8f86bbb5ae66758aa63c7 upstream.
+commit e4103312d7b7afb8a3a7a842a33ef2b1856b2c0f upstream.
 
-We neither assign congested_fn for requested-based blk-mq device nor
-implement it correctly. So fix both.
+This reverts commit 219d2e9dfda9431b808c28d5efc74b404b95b638.
 
-Also, remove incorrect comment from dm_init_normal_md_queue and rename
-it to dm_init_congested_fn.
+The call chain below requires the cm_id_priv's destination address to be
+setup before performing rdma_bind_addr(). Otherwise source port allocation
+fails as cma_port_is_unique() no longer sees the correct tuple to allow
+duplicate users of the source port.
 
-Fixes: 4aa9c692e052 ("bdi: separate out congested state into a separate struct")
-Cc: stable@vger.kernel.org
-Signed-off-by: Hou Tao <houtao1@huawei.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+rdma_resolve_addr()
+  cma_bind_addr()
+    rdma_bind_addr()
+      cma_get_port()
+        cma_alloc_any_port()
+          cma_port_is_unique() <- compared with zero daddr
+
+This can result in false failures to connect, particularly if the source
+port range is restricted.
+
+Fixes: 219d2e9dfda9 ("RDMA/cma: Simplify rdma_resolve_addr() error flow")
+Link: https://lore.kernel.org/r/20200212072635.682689-4-leon@kernel.org
+Signed-off-by: Parav Pandit <parav@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/dm.c |   21 ++++++++++-----------
- 1 file changed, 10 insertions(+), 11 deletions(-)
+ drivers/infiniband/core/cma.c |   15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
 
---- a/drivers/md/dm.c
-+++ b/drivers/md/dm.c
-@@ -1809,7 +1809,8 @@ static int dm_any_congested(void *conges
- 			 * With request-based DM we only need to check the
- 			 * top-level queue for congestion.
- 			 */
--			r = md->queue->backing_dev_info->wb.state & bdi_bits;
-+			struct backing_dev_info *bdi = md->queue->backing_dev_info;
-+			r = bdi->wb.congested->state & bdi_bits;
- 		} else {
- 			map = dm_get_live_table_fast(md);
- 			if (map)
-@@ -1875,15 +1876,6 @@ static const struct dax_operations dm_da
+--- a/drivers/infiniband/core/cma.c
++++ b/drivers/infiniband/core/cma.c
+@@ -3155,19 +3155,26 @@ int rdma_resolve_addr(struct rdma_cm_id
+ 	int ret;
  
- static void dm_wq_work(struct work_struct *work);
+ 	id_priv = container_of(id, struct rdma_id_private, id);
++	memcpy(cma_dst_addr(id_priv), dst_addr, rdma_addr_size(dst_addr));
+ 	if (id_priv->state == RDMA_CM_IDLE) {
+ 		ret = cma_bind_addr(id, src_addr, dst_addr);
+-		if (ret)
++		if (ret) {
++			memset(cma_dst_addr(id_priv), 0,
++			       rdma_addr_size(dst_addr));
+ 			return ret;
++		}
+ 	}
  
--static void dm_init_normal_md_queue(struct mapped_device *md)
--{
--	/*
--	 * Initialize aspects of queue that aren't relevant for blk-mq
--	 */
--	md->queue->backing_dev_info->congested_data = md;
--	md->queue->backing_dev_info->congested_fn = dm_any_congested;
--}
--
- static void cleanup_mapped_device(struct mapped_device *md)
- {
- 	if (md->wq)
-@@ -2270,6 +2262,12 @@ struct queue_limits *dm_get_queue_limits
- }
- EXPORT_SYMBOL_GPL(dm_get_queue_limits);
+-	if (cma_family(id_priv) != dst_addr->sa_family)
++	if (cma_family(id_priv) != dst_addr->sa_family) {
++		memset(cma_dst_addr(id_priv), 0, rdma_addr_size(dst_addr));
+ 		return -EINVAL;
++	}
  
-+static void dm_init_congested_fn(struct mapped_device *md)
-+{
-+	md->queue->backing_dev_info->congested_data = md;
-+	md->queue->backing_dev_info->congested_fn = dm_any_congested;
-+}
-+
- /*
-  * Setup the DM device's queue based on md's type
-  */
-@@ -2286,11 +2284,12 @@ int dm_setup_md_queue(struct mapped_devi
- 			DMERR("Cannot initialize queue for request-based dm-mq mapped device");
- 			return r;
- 		}
-+		dm_init_congested_fn(md);
- 		break;
- 	case DM_TYPE_BIO_BASED:
- 	case DM_TYPE_DAX_BIO_BASED:
- 	case DM_TYPE_NVME_BIO_BASED:
--		dm_init_normal_md_queue(md);
-+		dm_init_congested_fn(md);
- 		break;
- 	case DM_TYPE_NONE:
- 		WARN_ON_ONCE(true);
+-	if (!cma_comp_exch(id_priv, RDMA_CM_ADDR_BOUND, RDMA_CM_ADDR_QUERY))
++	if (!cma_comp_exch(id_priv, RDMA_CM_ADDR_BOUND, RDMA_CM_ADDR_QUERY)) {
++		memset(cma_dst_addr(id_priv), 0, rdma_addr_size(dst_addr));
+ 		return -EINVAL;
++	}
+ 
+-	memcpy(cma_dst_addr(id_priv), dst_addr, rdma_addr_size(dst_addr));
+ 	if (cma_any_addr(dst_addr)) {
+ 		ret = cma_resolve_loopback(id_priv);
+ 	} else {
 
 
