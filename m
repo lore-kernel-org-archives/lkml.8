@@ -2,85 +2,111 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE82FC18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 14:13:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69E02C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 14:16:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 957B820674
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 14:13:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="VUMeVtRy"
+	by mail.kernel.org (Postfix) with ESMTP id 43DDE205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 14:16:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727399AbgCJOND (ORCPT
+        id S1726810AbgCJOQr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 10:13:03 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:41329 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726591AbgCJOND (ORCPT
+        Tue, 10 Mar 2020 10:16:47 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:34176 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726353AbgCJOQq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 10:13:03 -0400
-Received: by mail-io1-f66.google.com with SMTP id m25so12853977ioo.8
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 07:13:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OYU1wxb/ge5DirIWwK28AnywpJQY3e/U9vYLjiccLeo=;
-        b=VUMeVtRyDXOmmJAxS6+A2yYelERcpsMobnU+K+HXqAre31LWH5Ybg9m1IevwykOAC8
-         LuhKNNqsEpPoC+7agcvG1rpEStM2V2YpmRpy+BjS+BXwOrIaMeNotiWCXzqWdLczA50g
-         BSV6AlSgpI8eO6i/dsioSkintiC6wBXLVK/So=
+        Tue, 10 Mar 2020 10:16:46 -0400
+Received: by mail-ot1-f66.google.com with SMTP id j16so13286011otl.1;
+        Tue, 10 Mar 2020 07:16:46 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=OYU1wxb/ge5DirIWwK28AnywpJQY3e/U9vYLjiccLeo=;
-        b=Oqgwkpg55si1Q6pPzfA8yNfrKElrXa3/u/bkEqz1iQ/5wTZxnaZtdg518jv4R29MUv
-         zPyfBpKev0VshVMvtocmp1fjlv/GcI+nGzWgWuVBQ9LURFv1UIc/yqpWY/w3k1V1BeKD
-         sNfgyAefJfYyKXvSXLi5eQfeG0tBPI3gAYAHo6rGBfdtgLYZMrMp7PZ8scuu6LOzC2os
-         YFZqkrSyBxlww8Iptfi07k8MFcLRAQaI3KjgQsdO6ZcdGrzo6mPiweywo11geGWLvcw9
-         i3o6tZ3rIrJlUTFm7BtA3MMAotY/CN+WihosN2oW7UKM76c9xxaHZZwW9EA/q7lEUxmF
-         mSuw==
-X-Gm-Message-State: ANhLgQ05PwdV7twJtQp9mZxsDHM1EV0r+zN1MjAQa+tI+FIkdT2jooPR
-        xZv4ebQboINZvWjanpSmdiKRTp0YidF4Wk7G1B1fCQ==
-X-Google-Smtp-Source: ADFU+vt4UJTT+vs/UI2ECs5CVHI9EXdfAc9QZZ6Sp885Ay5Ze3oaL6r9lcZCZ0eNm46t4uWRe96k4C0dQKTFbWt2E9E=
-X-Received: by 2002:a5d:934d:: with SMTP id i13mr17966092ioo.154.1583849582112;
- Tue, 10 Mar 2020 07:13:02 -0700 (PDT)
+        bh=p/R9hkm0Zw7z7yv8pl2WS6JNAIj1jxXZxWTXciFoU7c=;
+        b=UsfFOY0jNkUHnio8nrI47GaJmA0lRNVHw2ueoWyUI8B3w+81gbfzH0l4lM2Yye8TW8
+         8gxxhSeVB4r2Xbi1tJrBdHnQ2R4uv9OM+4GRhKQX08a7+eJOq6ieVW0v/4n9VZB7JUhJ
+         JU6k2eH2tFUV/NyEQk8zXoPVKF1DGwxl55vyhjOk5x4f3uEa2etVcBAPhj2NV2esH8KO
+         0IACDIthaPkrdWy5hjmCdHjPvOwqGX8TEzHnLWdSS3iSaAJ/HKlrUC+cuEmUUBSQqKlQ
+         yE14/IJg2oa1O4F3KNV9ILBqo056xbTGsmiS8gihlOVcGYbGEl8mhnnXJ5StFadt9Wy0
+         0z3A==
+X-Gm-Message-State: ANhLgQ2iD0j6QX2Y0qMRoMpV7q/c0c5AiONc7zviWOsv0Zi7PaPkgidu
+        u8LeXRGEcqTNGPU/4cAi3M0ctZ9ms+SSWbfc8O4=
+X-Google-Smtp-Source: ADFU+vvZTqfdR5CugMRRTAerKcghOgx+guP2EJeK1CA6udD0T6lcZulG/Kqqj5o+tL7B7i7MpR6gacmzSsc9JzHRJjo=
+X-Received: by 2002:a9d:5c0c:: with SMTP id o12mr17093578otk.145.1583849805778;
+ Tue, 10 Mar 2020 07:16:45 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200304165845.3081-1-vgoyal@redhat.com> <20200304165845.3081-8-vgoyal@redhat.com>
-In-Reply-To: <20200304165845.3081-8-vgoyal@redhat.com>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Tue, 10 Mar 2020 15:12:51 +0100
-Message-ID: <CAJfpeguxR2mR53BHEaSQUq2dN6mUVQHMVCoECrCX1F6x38M-0A@mail.gmail.com>
-Subject: Re: [PATCH 07/20] fuse: Get rid of no_mount_options
-To:     Vivek Goyal <vgoyal@redhat.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, virtio-fs@redhat.com,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>
+References: <20200220233454.31514-1-f.fainelli@gmail.com> <20200223.205911.1667092059432885700.davem@davemloft.net>
+In-Reply-To: <20200223.205911.1667092059432885700.davem@davemloft.net>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 10 Mar 2020 15:16:34 +0100
+Message-ID: <CAMuHMdWuP1_3vqOpf7KEimLLTKiWpWku9fUAdP3CCR6WbHyQdg@mail.gmail.com>
+Subject: Re: [PATCH net] net: phy: Avoid multiple suspends
+To:     David Miller <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>
+Cc:     netdev <netdev@vger.kernel.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>, B38611@freescale.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 4, 2020 at 5:59 PM Vivek Goyal <vgoyal@redhat.com> wrote:
->
-> This option was introduced so that for virtio_fs we don't show any mounts
-> options fuse_show_options(). Because we don't offer any of these options
-> to be controlled by mounter.
->
-> Very soon we are planning to introduce option "dax" which mounter should
-> be able to specify. And no_mount_options does not work anymore. What
-> we need is a per mount option specific flag so that fileystem can
-> specify which options to show.
->
-> Add few such flags to control the behavior in more fine grained manner
-> and get rid of no_mount_options.
->
-> Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
+Hi Florian, David,
 
-Reviewed-by: Miklos Szeredi <mszeredi@redhat.com>
+On Mon, Feb 24, 2020 at 5:59 AM David Miller <davem@davemloft.net> wrote:
+> From: Florian Fainelli <f.fainelli@gmail.com>
+> Date: Thu, 20 Feb 2020 15:34:53 -0800
+>
+> > It is currently possible for a PHY device to be suspended as part of a
+> > network device driver's suspend call while it is still being attached to
+> > that net_device, either via phy_suspend() or implicitly via phy_stop().
+> >
+> > Later on, when the MDIO bus controller get suspended, we would attempt
+> > to suspend again the PHY because it is still attached to a network
+> > device.
+> >
+> > This is both a waste of time and creates an opportunity for improper
+> > clock/power management bugs to creep in.
+> >
+> > Fixes: 803dd9c77ac3 ("net: phy: avoid suspending twice a PHY")
+> > Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+>
+> Applied, and queued up for -stable, thanks Florian.
+
+This patch causes a regression on r8a73a4/ape6evm and sh73a0/kzm9g.
+After resume from s2ram, Ethernet no longer works:
+
+        PM: suspend exit
+        nfs: server aaa.bbb.ccc.ddd not responding, still trying
+        ...
+
+Reverting commit 503ba7c6961034ff ("net: phy: Avoid multiple suspends")
+fixes the issue.
+
+On both boards, an SMSC LAN9220 is connected to a power-managed local
+bus.
+
+I added some debug code to check when the clock driving the local bus
+is stopped and started, but I see no difference before/after.  Hence I
+suspect the Ethernet chip is no longer reinitialized after resume.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
