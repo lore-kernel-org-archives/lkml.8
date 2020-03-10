@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDB4CC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:00:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 112FDC18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:00:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A61F020674
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:00:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDCD52468C
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:00:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583845217;
-	bh=L3YiocDpEzYv1QW8WI6JYlW/c5kgKuS3/yf2buhgVc4=;
+	s=default; t=1583845220;
+	bh=EjNqq4Ctz4Zrpw1BWt1t9ekVbDfoR5ccplhyY852WnI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lfsl8cO/OAuEQwN856OQ8JlcMXUcThv7ArxRzrJdgcAyaIrzoT9+QTLLxUrEY/CJa
-	 gQdPbGSk0VzgROLZD3UAkP4krnX68BLXSPH92u2kAoQFQHjQOqhBFibw/6o23y4Su1
-	 TWMHa7e2QBxwX2k68zRc3D2xTN4M7k23udE6jYQs=
+	b=OsBF1hmFZP/QO8H+Eqg66jX65EUnXIuIofl5XTNoeyrYWtqAkHDMJVzWOMLqNDBRD
+	 AJCSHc/v6uWLxdesy03dCeFobKzLNddTtpoTauvY1gsmBc8e7bJDV2BCgNxw1AxcyV
+	 GeUikDc8Bu0qQ9vHcShIqTyvwZf/oISq+T+eas7c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729500AbgCJNAQ (ORCPT
+        id S1730109AbgCJNAT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:00:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40910 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:00:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40974 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730096AbgCJNAN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:00:13 -0400
+        id S1730102AbgCJNAQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:00:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 40FAB2468C;
-        Tue, 10 Mar 2020 13:00:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C07CD2253D;
+        Tue, 10 Mar 2020 13:00:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845212;
-        bh=L3YiocDpEzYv1QW8WI6JYlW/c5kgKuS3/yf2buhgVc4=;
+        s=default; t=1583845215;
+        bh=EjNqq4Ctz4Zrpw1BWt1t9ekVbDfoR5ccplhyY852WnI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wSCngUBXQt0kzzQkA8cexqga8rMlx2zPYtf1XdfRqw8GZuuPBpV8OErZRVqCQ3nNO
-         6mL9UL1AoJDhjk9hvYxfqCzPwbFWCVCC1TVvT5jpRLFuUxCDBxeXymhMp3ebkQK79p
-         qFDAMRc9kr0tBDAs+D/daeJ5NzkD7sKYZNMjLFF8=
+        b=PdKkaQNP100uSTxZWW93l8ryzMCj6QQetKUuBnNKaACwMnNpE2yETYv1LTzLMcPTM
+         Jg1pO5d8jQETl8P1mz2yj/s5RJWAOlL0loMr7j3k7in9o000t8yLOXnn8G4es3Vfj4
+         hjGs4a+3qZ7Zun/pgeJW/mwME8tQVmZOGvLeYglQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Tan Xiaojun <tanxiaojun@huawei.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Wei Li <liwei391@huawei.com>
-Subject: [PATCH 5.5 102/189] perf arm-spe: Fix endless record after being terminated
-Date:   Tue, 10 Mar 2020 13:38:59 +0100
-Message-Id: <20200310123650.013021076@linuxfoundation.org>
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>
+Subject: [PATCH 5.5 076/189] usb: core: hub: do error out if usb_autopm_get_interface() fails
+Date:   Tue, 10 Mar 2020 13:38:33 +0100
+Message-Id: <20200310123647.289613964@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123639.608886314@linuxfoundation.org>
 References: <20200310123639.608886314@linuxfoundation.org>
@@ -62,47 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adrian Hunter <adrian.hunter@intel.com>
+From: Eugeniu Rosca <erosca@de.adit-jv.com>
 
-commit d6bc34c5ec18c3544c4b0d85963768dfbcd24184 upstream.
+commit 60e3f6e4ac5b0fda43dad01c32e09409ec710045 upstream.
 
-In __cmd_record(), when receiving SIGINT(ctrl + c), a 'done' flag will
-be set and the event list will be disabled by evlist__disable() once.
+Reviewing a fresh portion of coverity defects in USB core
+(specifically CID 1458999), Alan Stern noted below in [1]:
 
-While in auxtrace_record.read_finish(), the related events will be
-enabled again, if they are continuous, the recording seems to be
-endless.
+On Tue, Feb 25, 2020 at 02:39:23PM -0500, Alan Stern wrote:
+ > A revised search finds line 997 in drivers/usb/core/hub.c and lines
+ > 216, 269 in drivers/usb/core/port.c.  (I didn't try looking in any
+ > other directories.)  AFAICT all three of these should check the
+ > return value, although a error message in the kernel log probably
+ > isn't needed.
 
-If the event is disabled, don't enable it again here.
+Factor out the usb_remove_device() change into a standalone patch to
+allow conflict-free integration on top of the earliest stable branches.
 
-Based-on-patch-by: Wei Li <liwei391@huawei.com>
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Tan Xiaojun <tanxiaojun@huawei.com>
-Cc: stable@vger.kernel.org # 5.4+
-Link: http://lore.kernel.org/lkml/20200214132654.20395-5-adrian.hunter@intel.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+[1] https://lore.kernel.org/lkml/Pine.LNX.4.44L0.2002251419120.1485-100000@iolanthe.rowland.org
+
+Fixes: 253e05724f9230 ("USB: add a "remove hardware" sysfs attribute")
+Cc: stable@vger.kernel.org # v2.6.33+
+Suggested-by: Alan Stern <stern@rowland.harvard.edu>
+Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
+Link: https://lore.kernel.org/r/20200226175036.14946-2-erosca@de.adit-jv.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/perf/arch/arm64/util/arm-spe.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/usb/core/hub.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/tools/perf/arch/arm64/util/arm-spe.c
-+++ b/tools/perf/arch/arm64/util/arm-spe.c
-@@ -165,9 +165,12 @@ static int arm_spe_read_finish(struct au
- 	struct evsel *evsel;
+--- a/drivers/usb/core/hub.c
++++ b/drivers/usb/core/hub.c
+@@ -988,13 +988,17 @@ int usb_remove_device(struct usb_device
+ {
+ 	struct usb_hub *hub;
+ 	struct usb_interface *intf;
++	int ret;
  
- 	evlist__for_each_entry(sper->evlist, evsel) {
--		if (evsel->core.attr.type == sper->arm_spe_pmu->type)
-+		if (evsel->core.attr.type == sper->arm_spe_pmu->type) {
-+			if (evsel->disabled)
-+				return 0;
- 			return perf_evlist__enable_event_idx(sper->evlist,
- 							     evsel, idx);
-+		}
- 	}
- 	return -EINVAL;
- }
+ 	if (!udev->parent)	/* Can't remove a root hub */
+ 		return -EINVAL;
+ 	hub = usb_hub_to_struct_hub(udev->parent);
+ 	intf = to_usb_interface(hub->intfdev);
+ 
+-	usb_autopm_get_interface(intf);
++	ret = usb_autopm_get_interface(intf);
++	if (ret < 0)
++		return ret;
++
+ 	set_bit(udev->portnum, hub->removed_bits);
+ 	hub_port_logical_disconnect(hub, udev->portnum);
+ 	usb_autopm_put_interface(intf);
 
 
