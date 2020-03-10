@@ -2,233 +2,159 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A090C10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 05:43:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41AA8C10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 05:43:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B0912464B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 05:43:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 159D224673
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 05:43:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gChH3PS1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726402AbgCJFnR (ORCPT
+        id S1726436AbgCJFnU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 01:43:17 -0400
-Received: from mga12.intel.com ([192.55.52.136]:25055 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726156AbgCJFnR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 01:43:17 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Mar 2020 22:43:16 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,535,1574150400"; 
-   d="scan'208";a="288911548"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by FMSMGA003.fm.intel.com with ESMTP; 09 Mar 2020 22:43:15 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jBXfe-000Ang-L7; Tue, 10 Mar 2020 13:43:14 +0800
-Date:   Tue, 10 Mar 2020 13:42:54 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:locking/urgent] BUILD SUCCESS
- 8d67743653dce5a0e7aa500fcccb237cde7ad88e
-Message-ID: <5e6728de.x3WK2IefAE6hjUpc%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Tue, 10 Mar 2020 01:43:20 -0400
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:53638 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726156AbgCJFnU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 01:43:20 -0400
+Received: by mail-pj1-f67.google.com with SMTP id l36so926642pjb.3
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 22:43:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=F25Z6JOMg3VYYeS0Ph17/tK9FAZWHrNbdM4PzCWFQu8=;
+        b=gChH3PS1Ahx4kjgjmib1NgIky08oV7TsTD369DupZ3qTEaWaIL8bL1V8Yqy85SlZSx
+         XofjzRdyK/ZgT7pbeM6FhDwzyoJF6CscxXa6XE5ga8eAHHj4GJfQx6cwKFUsw0rkwLKY
+         tU6+oauZM8ktgjO8lnrklWew6Uvm/VcrQZ8FPyGVSEOvFPaH4H0n2drzFthrm5ft+3RZ
+         VxWP43OKxBolA4Utm1IMjeC5oaWOrU5xrQ9t1l08MrygvCGrIkmX3wmgP1cLRHmHmYz0
+         jJ8jR3Evj+msL9T0efnedWvBGv7WjgLOaHKfMJOcg/Gv0OHKdLamLVq3/Cl6WkS11r05
+         J1ig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=F25Z6JOMg3VYYeS0Ph17/tK9FAZWHrNbdM4PzCWFQu8=;
+        b=Bsz1bFHt2qU9ulRog+dyudmVLcbhVTZbyPCSSyUjEBFqTBLfh6T3uSt7DwUHWU9GK1
+         8a1eLie9DEkCQYec8aeYj/mQ+NpiYThxlxNSddhLl8afNVkOmqEqgCsbyguigCnggIeo
+         NBje/9rL6/HKJilcTJszWquaBsp67dSWp27biCppfpLNURf2q7LgBt5WRRYqYEAFx4wi
+         qDAPTY+QG3q2jymZRIvZmWkJj4C5nntLH+EjUmTshstqA5Pf0MmoHaWZjCmO5qYKHn9K
+         ikh/dJlC/TDORHk0+UAOK8ZET1pOMA33YVfucQe3vd57iRUOXmFv1PSVkTfI5BsI1PR1
+         wjLQ==
+X-Gm-Message-State: ANhLgQ2TySgDVkJS++gC9asCQz1iOfskuHDC+zXsfbpc9IoCtmMYblm0
+        yvgkf8NrD4LNhMsICERLLbfxxFMEaKjAMkLs
+X-Google-Smtp-Source: ADFU+vsXDgkhbqbgEl4Jn5PjWcUx6mjmhk+iK35QWzx5tHigdCQgJMA6OZ+XlXSIjbrH2oaJMWgY/Q==
+X-Received: by 2002:a17:90b:19c3:: with SMTP id nm3mr1367661pjb.149.1583818998924;
+        Mon, 09 Mar 2020 22:43:18 -0700 (PDT)
+Received: from leoy-ThinkPad-X240s ([2400:8902::f03c:91ff:fe3f:32da])
+        by smtp.gmail.com with ESMTPSA id t142sm37183481pgb.31.2020.03.09.22.43.10
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 09 Mar 2020 22:43:18 -0700 (PDT)
+Date:   Tue, 10 Mar 2020 13:43:05 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Robert Walker <robert.walker@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Coresight ML <coresight@lists.linaro.org>
+Subject: Re: [PATCH v5 0/5] perf cs-etm: Fix synthesizing instruction samples
+Message-ID: <20200310054305.GA21545@leoy-ThinkPad-X240s>
+References: <20200219021811.20067-1-leo.yan@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20200219021811.20067-1-leo.yan@linaro.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  locking/urgent
-branch HEAD: 8d67743653dce5a0e7aa500fcccb237cde7ad88e  futex: Unbreak futex hashing
+Hi Arnaldo,
 
-elapsed time: 483m
+On Wed, Feb 19, 2020 at 10:18:06AM +0800, Leo Yan wrote:
+> This patch series is to address issues for synthesizing instruction
+> samples, especially when the instruction sample period is small enough,
+> the current logic cannot synthesize multiple instruction samples within
+> one instruction range packet.
+> 
+> Patch 0001 is to swap packets for instruction samples, so this allow
+> option '--itrace=iNNN' can work well.
+> 
+> Patch 0002 avoids to reset the last branches for every instruction
+> sample; if reset the last branches for every time generating sample, the
+> later samples in the same range packet cannot use the last branches
+> anymore.
+> 
+> Patch 0003 is the fixing for handling different instruction periods,
+> especially for small sample period.
+> 
+> Patch 0004 is an optimization for copying last branches; it only copies
+> last branches once if the instruction samples share the same last
+> branches.
+> 
+> Patch 0005 is a minor fix for unsigned variable comparison to zero.
+> 
+> This patch set has been rebased on the latest perf/core branch; and
+> verified on Juno board with below commands:
+> 
+>   # perf script --itrace=i2
+>   # perf script --itrace=i2il16
+>   # perf inject --itrace=i2il16 -i perf.data -o perf.data.new
+>   # perf inject --itrace=i100il16 -i perf.data -o perf.data.new
 
-configs tested: 170
-configs skipped: 0
+Could you pick up this patch set?  I confirmed this patch set can
+cleanly apply on top of the latest mainline kernel (5.6-rc5).
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Or if you want me to resend this patch set, please feel free let me
+know.  Thanks!
 
-arm                              allmodconfig
-arm                               allnoconfig
-arm                              allyesconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm64                            allyesconfig
-arm                         at91_dt_defconfig
-arm                           efm32_defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                        multi_v7_defconfig
-arm                        shmobile_defconfig
-arm                           sunxi_defconfig
-arm64                               defconfig
-sparc                            allyesconfig
-ia64                                defconfig
-powerpc                             defconfig
-i386                              allnoconfig
-sparc                               defconfig
-ia64                              allnoconfig
-i386                             alldefconfig
-i386                             allyesconfig
-i386                                defconfig
-ia64                             alldefconfig
-ia64                             allmodconfig
-ia64                             allyesconfig
-c6x                              allyesconfig
-c6x                        evmc6678_defconfig
-nios2                         10m50_defconfig
-nios2                         3c120_defconfig
-openrisc                    or1ksim_defconfig
-openrisc                 simple_smp_defconfig
-xtensa                       common_defconfig
-xtensa                          iss_defconfig
-alpha                               defconfig
-csky                                defconfig
-nds32                             allnoconfig
-nds32                               defconfig
-h8300                       h8s-sim_defconfig
-h8300                     edosk2674_defconfig
-m68k                       m5475evb_defconfig
-m68k                             allmodconfig
-h8300                    h8300h-sim_defconfig
-m68k                           sun3_defconfig
-m68k                          multi_defconfig
-arc                              allyesconfig
-arc                                 defconfig
-microblaze                      mmu_defconfig
-microblaze                    nommu_defconfig
-powerpc                           allnoconfig
-powerpc                       ppc64_defconfig
-powerpc                          rhel-kconfig
-mips                           32r2_defconfig
-mips                         64r6el_defconfig
-mips                             allmodconfig
-mips                              allnoconfig
-mips                             allyesconfig
-mips                      fuloong2e_defconfig
-mips                      malta_kvm_defconfig
-parisc                            allnoconfig
-parisc                           allyesconfig
-parisc                generic-32bit_defconfig
-parisc                generic-64bit_defconfig
-alpha                randconfig-a001-20200309
-m68k                 randconfig-a001-20200309
-mips                 randconfig-a001-20200309
-nds32                randconfig-a001-20200309
-parisc               randconfig-a001-20200309
-riscv                randconfig-a001-20200309
-c6x                  randconfig-a001-20200309
-h8300                randconfig-a001-20200309
-microblaze           randconfig-a001-20200309
-nios2                randconfig-a001-20200309
-sparc64              randconfig-a001-20200309
-csky                 randconfig-a001-20200309
-openrisc             randconfig-a001-20200309
-s390                 randconfig-a001-20200309
-sh                   randconfig-a001-20200309
-xtensa               randconfig-a001-20200309
-x86_64               randconfig-b001-20200309
-x86_64               randconfig-b002-20200309
-x86_64               randconfig-b003-20200309
-i386                 randconfig-b001-20200309
-i386                 randconfig-b002-20200309
-i386                 randconfig-b003-20200309
-x86_64               randconfig-b001-20200310
-x86_64               randconfig-b002-20200310
-x86_64               randconfig-b003-20200310
-i386                 randconfig-b001-20200310
-i386                 randconfig-b002-20200310
-i386                 randconfig-b003-20200310
-x86_64               randconfig-c001-20200309
-x86_64               randconfig-c002-20200309
-x86_64               randconfig-c003-20200309
-i386                 randconfig-c001-20200309
-i386                 randconfig-c002-20200309
-i386                 randconfig-c003-20200309
-x86_64               randconfig-d001-20200309
-x86_64               randconfig-d002-20200309
-x86_64               randconfig-d003-20200309
-i386                 randconfig-d001-20200309
-i386                 randconfig-d002-20200309
-i386                 randconfig-d003-20200309
-x86_64               randconfig-d001-20200310
-x86_64               randconfig-d002-20200310
-x86_64               randconfig-d003-20200310
-i386                 randconfig-d001-20200310
-i386                 randconfig-d002-20200310
-i386                 randconfig-d003-20200310
-x86_64               randconfig-f001-20200309
-x86_64               randconfig-f002-20200309
-x86_64               randconfig-f003-20200309
-i386                 randconfig-f001-20200309
-i386                 randconfig-f002-20200309
-i386                 randconfig-f003-20200309
-x86_64               randconfig-g001-20200310
-x86_64               randconfig-g002-20200310
-x86_64               randconfig-g003-20200310
-i386                 randconfig-g001-20200310
-i386                 randconfig-g002-20200310
-i386                 randconfig-g003-20200310
-x86_64               randconfig-g001-20200309
-x86_64               randconfig-g002-20200309
-x86_64               randconfig-g003-20200309
-i386                 randconfig-g001-20200309
-i386                 randconfig-g002-20200309
-i386                 randconfig-g003-20200309
-x86_64               randconfig-h001-20200310
-x86_64               randconfig-h002-20200310
-x86_64               randconfig-h003-20200310
-i386                 randconfig-h001-20200310
-i386                 randconfig-h002-20200310
-i386                 randconfig-h003-20200310
-x86_64               randconfig-h001-20200309
-x86_64               randconfig-h002-20200309
-x86_64               randconfig-h003-20200309
-i386                 randconfig-h001-20200309
-i386                 randconfig-h002-20200309
-i386                 randconfig-h003-20200309
-riscv                            allmodconfig
-riscv                             allnoconfig
-riscv                            allyesconfig
-riscv                               defconfig
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-s390                             alldefconfig
-s390                             allmodconfig
-s390                              allnoconfig
-s390                             allyesconfig
-s390                          debug_defconfig
-s390                                defconfig
-s390                       zfcpdump_defconfig
-sh                               allmodconfig
-sh                                allnoconfig
-sh                          rsk7269_defconfig
-sh                  sh7785lcr_32bit_defconfig
-sh                            titan_defconfig
-sparc64                          allmodconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                             defconfig
-um                                  defconfig
-um                             i386_defconfig
-um                           x86_64_defconfig
-x86_64                              fedora-25
-x86_64                                  kexec
-x86_64                                    lkp
-x86_64                                   rhel
-x86_64                         rhel-7.2-clear
-x86_64                               rhel-7.6
+Leo
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+> Changes from v4:
+> * Added Mike's review tag for patch 03;
+> * Added Mathieu's review tags for all patches.
+> 
+> Changes from v3:
+> * Refactored patch 0001 with new function cs_etm__packet_swap() (Mike);
+> * Refined instruction sample generation flow with single while loop,
+>   which completely uses Mike's suggestions (Mike);
+> * Added Mike's review tags for patch 01/02/04/05.
+> 
+> Changes from v2:
+> * Added patch 0001 which is to fix swapping packets for instruction
+>   samples;
+> * Refined minor commit logs and comments;
+> * Rebased on the latest perf/core branch.
+> 
+> Changes from v1:
+> * Rebased patch set on perf/core branch with latest commit 9fec3cd5fa4a
+>   ("perf map: Check if the map still has some refcounts on exit").
+> 
+> 
+> Leo Yan (5):
+>   perf cs-etm: Swap packets for instruction samples
+>   perf cs-etm: Continuously record last branch
+>   perf cs-etm: Correct synthesizing instruction samples
+>   perf cs-etm: Optimize copying last branches
+>   perf cs-etm: Fix unsigned variable comparison to zero
+> 
+>  tools/perf/util/cs-etm.c | 157 +++++++++++++++++++++++++++------------
+>  1 file changed, 111 insertions(+), 46 deletions(-)
+> 
+> -- 
+> 2.17.1
+> 
