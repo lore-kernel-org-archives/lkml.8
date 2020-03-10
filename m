@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC1EDC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:05:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 749D5C18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:05:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA3AF20409
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:05:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4140920409
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:05:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583845522;
-	bh=RdwNiBrqBMF96enX3Y8lOCJkGzpZXUYtdAP1pkP1rzc=;
+	s=default; t=1583845527;
+	bh=ChoXbZiZ4xRWHDCDYxKjjQMyaZm6alpKJH4NtUZrkDQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=COKV44JMQTrb5w3gSjVwMuVjtitDASMv2AEfmzAP+XCPTOQRWXuTXcGLfl40tRs+K
-	 pOAxM+u5gibI7A0qSQD6bDQ2XOnj2V+iV3XzOWArbPP10XqyUe5HYxQjixDyxGouGQ
-	 /UXUXS4ZXrqLFNmHU62F1vq7OW+37hzIAS4zd5tc=
+	b=kf5ToV5YInTitKy+pp5e69W1WcY1932qndKBWLLYTl09ZzZXjX44erVnPY/0QV4dB
+	 4/LLLtRaw0EmLkiioYxq4bgT9vZ4vQxdCvvGam+CZDUamOrJ6FfKKl3YsClCR90PXp
+	 wUYEK5Nx7gQM1lkkLcbUspWcVW3LrKdi/w5MMtxs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730517AbgCJNDF (ORCPT
+        id S1729994AbgCJNF0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:03:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47402 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:05:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47000 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730484AbgCJNDD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:03:03 -0400
+        id S1730490AbgCJNCz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:02:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EFBA5208E4;
-        Tue, 10 Mar 2020 13:03:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A165B2468C;
+        Tue, 10 Mar 2020 13:02:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845381;
-        bh=RdwNiBrqBMF96enX3Y8lOCJkGzpZXUYtdAP1pkP1rzc=;
+        s=default; t=1583845375;
+        bh=ChoXbZiZ4xRWHDCDYxKjjQMyaZm6alpKJH4NtUZrkDQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2leDbx/ynhHvVpQdD+dBsGFyhnctcnQw341hguZDRlZqijtnnbew/4VbCjYkByC66
-         Q5UwsiLu6brl0ph5mrN9DcBSlF5xYnJ5TVwtdTSzkO2dYRFao9/gkEC2BqcXSp/jru
-         1+djM6c/cFd3UTbtEqNet7QCi5IgoLvne6uJPmRY=
+        b=0cs7wc2xjszZiyB2p7xHEw3OGZ+cQTmEdegxaCJRzcpO2QQMWdO8AuvZcNpUF+e40
+         /9xUl5/i7djStYysDDP1xlHpUX4qkIGMtkrSBNXW5OczLGYFdjsa1SopMKGXzC1kdk
+         JDV8UA0NXMMr7UrO5EqmZ8Jxj1hcFomvHh35rfFo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Mikulas Patocka <mpatocka@redhat.com>,
         Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 5.5 123/189] dm writecache: verify watermark during resume
-Date:   Tue, 10 Mar 2020 13:39:20 +0100
-Message-Id: <20200310123652.214755538@linuxfoundation.org>
+Subject: [PATCH 5.5 121/189] dm cache: fix a crash due to incorrect work item cancelling
+Date:   Tue, 10 Mar 2020 13:39:18 +0100
+Message-Id: <20200310123652.005567020@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123639.608886314@linuxfoundation.org>
 References: <20200310123639.608886314@linuxfoundation.org>
@@ -61,55 +61,49 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Mikulas Patocka <mpatocka@redhat.com>
 
-commit 41c526c5af46d4c4dab7f72c99000b7fac0b9702 upstream.
+commit 7cdf6a0aae1cccf5167f3f04ecddcf648b78e289 upstream.
 
-Verify the watermark upon resume - so that if the target is reloaded
-with lower watermark, it will start the cleanup process immediately.
+The crash can be reproduced by running the lvm2 testsuite test
+lvconvert-thin-external-cache.sh for several minutes, e.g.:
+  while :; do make check T=shell/lvconvert-thin-external-cache.sh; done
 
-Fixes: 48debafe4f2f ("dm: add writecache target")
-Cc: stable@vger.kernel.org # 4.18+
+The crash happens in this call chain:
+do_waker -> policy_tick -> smq_tick -> end_hotspot_period -> clear_bitset
+-> memset -> __memset -- which accesses an invalid pointer in the vmalloc
+area.
+
+The work entry on the workqueue is executed even after the bitmap was
+freed. The problem is that cancel_delayed_work doesn't wait for the
+running work item to finish, so the work item can continue running and
+re-submitting itself even after cache_postsuspend. In order to make sure
+that the work item won't be running, we must use cancel_delayed_work_sync.
+
+Also, change flush_workqueue to drain_workqueue, so that if some work item
+submits itself or another work item, we are properly waiting for both of
+them.
+
+Fixes: c6b4fcbad044 ("dm: add cache target")
+Cc: stable@vger.kernel.org # v3.9
 Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
 Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/dm-writecache.c |   12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ drivers/md/dm-cache-target.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/md/dm-writecache.c
-+++ b/drivers/md/dm-writecache.c
-@@ -625,6 +625,12 @@ static void writecache_add_to_freelist(s
- 	wc->freelist_size++;
- }
+--- a/drivers/md/dm-cache-target.c
++++ b/drivers/md/dm-cache-target.c
+@@ -2846,8 +2846,8 @@ static void cache_postsuspend(struct dm_
+ 	prevent_background_work(cache);
+ 	BUG_ON(atomic_read(&cache->nr_io_migrations));
  
-+static inline void writecache_verify_watermark(struct dm_writecache *wc)
-+{
-+	if (unlikely(wc->freelist_size + wc->writeback_size <= wc->freelist_high_watermark))
-+		queue_work(wc->writeback_wq, &wc->writeback_work);
-+}
-+
- static struct wc_entry *writecache_pop_from_freelist(struct dm_writecache *wc)
- {
- 	struct wc_entry *e;
-@@ -646,8 +652,8 @@ static struct wc_entry *writecache_pop_f
- 		list_del(&e->lru);
- 	}
- 	wc->freelist_size--;
--	if (unlikely(wc->freelist_size + wc->writeback_size <= wc->freelist_high_watermark))
--		queue_work(wc->writeback_wq, &wc->writeback_work);
-+
-+	writecache_verify_watermark(wc);
+-	cancel_delayed_work(&cache->waker);
+-	flush_workqueue(cache->wq);
++	cancel_delayed_work_sync(&cache->waker);
++	drain_workqueue(cache->wq);
+ 	WARN_ON(cache->tracker.in_flight);
  
- 	return e;
- }
-@@ -961,6 +967,8 @@ erase_this:
- 		writecache_commit_flushed(wc, false);
- 	}
- 
-+	writecache_verify_watermark(wc);
-+
- 	wc_unlock(wc);
- }
- 
+ 	/*
 
 
