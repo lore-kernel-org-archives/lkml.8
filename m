@@ -2,102 +2,114 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26261C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 18:37:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF046C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 18:37:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF2F92253D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 18:37:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583865443;
-	bh=+0HMIHE3jSF5dmyYb8XfgCI7ir87aGn9tZXShMVDsc8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LRyaU6p/k0rTdvvscg5NxoYbDSOYw5MjhU8jdqdaV6aCuucqMJ7X4gXNumN3By/MZ
-	 wX7J0oO9gaZWExdB3w1AW6u3gq+4wop10jfLHOpIdyf4LFlXYE+arwCyGkOApCejjb
-	 7PbgI08Tc4Z6wEZWpDM5k1e9oZoFVVcoysw+Nt1g=
+	by mail.kernel.org (Postfix) with ESMTP id 93DC321D7E
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 18:37:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="U5fVceVW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727361AbgCJShW (ORCPT
+        id S1727384AbgCJShd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 14:37:22 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:33081 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726283AbgCJShV (ORCPT
+        Tue, 10 Mar 2020 14:37:33 -0400
+Received: from mail.efficios.com ([167.114.26.124]:47974 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726283AbgCJShd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 14:37:21 -0400
-Received: by mail-ot1-f66.google.com with SMTP id g15so8079933otr.0;
-        Tue, 10 Mar 2020 11:37:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=bStnjeILIp+VzZ8fMwpW/+qgm3aAxexeon2+1WxP6aA=;
-        b=cPgY/hTX7SyVzlva3Nvrk4dmifk1MSYggTrG7YuxXDvQDR6wyedcuwqUcy6C1eVz2c
-         S6d2nIMHDmSjUSoot2/gsW+xC5XjLqnYY5nD1axphBfZY7CJ7IVAE1bHLDOMIs5qEt3v
-         4nnZmgzt+KV2IPH1vjxdx/zNJpro1k8A8X1LXKZk1e17BH5MHnrIwJXlR9MMrYVw7wGf
-         JkqbHV46Yye47uo3xGNWCSyrobQYB2Uq15MKmBgAs9HaMWkGxzexZunzfc5VK7TwpQZz
-         PLMLRBp/BOzxU9A1kgR2sEwBk5JfN8jEM7JPWCb50UKJ4eHDCDUNEYpCe+nkBJfIIzhV
-         2ErQ==
-X-Gm-Message-State: ANhLgQ1VnusP3yB2knLpIbFmhj94cgdsz2+7tJqwymqIKur6SJ9SlxfA
-        Pcd6/sCQpTZNS8QZ8T3GUQ==
-X-Google-Smtp-Source: ADFU+vt/iDfLkvwbRfBp4buxNH8xW5VjVGdVTyzfuNPZHlx1nw1+bw3O8O703thxs0CVWYudGmKyJg==
-X-Received: by 2002:a9d:7591:: with SMTP id s17mr6765112otk.60.1583865440549;
-        Tue, 10 Mar 2020 11:37:20 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id m134sm1843499oig.14.2020.03.10.11.37.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Mar 2020 11:37:20 -0700 (PDT)
-Received: (nullmailer pid 24429 invoked by uid 1000);
-        Tue, 10 Mar 2020 18:37:19 -0000
-Date:   Tue, 10 Mar 2020 13:37:19 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCH v4 1/5] dt-bindings: remoteproc: Add Qualcomm PIL info
- binding
-Message-ID: <20200310183719.GA23977@bogus>
-References: <20200310063338.3344582-1-bjorn.andersson@linaro.org>
- <20200310063338.3344582-2-bjorn.andersson@linaro.org>
+        Tue, 10 Mar 2020 14:37:33 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id DF614271C70;
+        Tue, 10 Mar 2020 14:37:31 -0400 (EDT)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id WL9bLm33BooY; Tue, 10 Mar 2020 14:37:31 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 9B3F5271C6F;
+        Tue, 10 Mar 2020 14:37:31 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 9B3F5271C6F
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1583865451;
+        bh=eGfri0G7sERwSsFs3uQxZh1dlaIB473RbVMXTjRjpWc=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=U5fVceVWhYgkU8T16mIH+UH3OBkxJwgWGEA/ErWPNfnmgzYR3hmU7RepWNJ7+nfKF
+         txdSd3Rplj70f3UW1FCyrozTF63nIPJqBdox5B2deElQh3yBqUEmJh+NF1whXww13i
+         wN4OudPQiuWAu3rKG+jep6SAgWE/tkQO5T7JPKixDPkvXKCqfLpXHWvxdjXvAyU/uK
+         M6YEjxpq9th1W/2SlFz5mx+NEyjGIswryWgIk7cLCm+92fT4J9ovHqqtvSlhUdJh68
+         WxGEWciwob+FaVAjfSL0KXYCHtXPr4to8AgUk9JDiHS0ThLf/MvyBzhQKmep3/iLTg
+         d81cAvEwhOSAw==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id EirE6v3bsrvy; Tue, 10 Mar 2020 14:37:31 -0400 (EDT)
+Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
+        by mail.efficios.com (Postfix) with ESMTP id 8E892271B6C;
+        Tue, 10 Mar 2020 14:37:31 -0400 (EDT)
+Date:   Tue, 10 Mar 2020 14:37:31 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        paulmck <paulmck@kernel.org>,
+        "Joel Fernandes, Google" <joel@joelfernandes.org>,
+        Frederic Weisbecker <frederic@kernel.org>
+Message-ID: <799177238.23913.1583865451495.JavaMail.zimbra@efficios.com>
+In-Reply-To: <87d09k5aet.fsf@nanos.tec.linutronix.de>
+References: <87mu8p797b.fsf@nanos.tec.linutronix.de> <1403546357.21810.1583779060302.JavaMail.zimbra@efficios.com> <871rq171ca.fsf@nanos.tec.linutronix.de> <1489283504.23399.1583852595008.JavaMail.zimbra@efficios.com> <87imjc5f6a.fsf@nanos.tec.linutronix.de> <1666704263.23816.1583862003925.JavaMail.zimbra@efficios.com> <87d09k5aet.fsf@nanos.tec.linutronix.de>
+Subject: Re: Instrumentation and RCU
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200310063338.3344582-2-bjorn.andersson@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.26.124]
+X-Mailer: Zimbra 8.8.15_GA_3901 (ZimbraWebClient - FF73 (Linux)/8.8.15_GA_3895)
+Thread-Topic: Instrumentation and RCU
+Thread-Index: 06r5HuF/850lcpCTrawcQQsFC9RdIA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon,  9 Mar 2020 23:33:34 -0700, Bjorn Andersson wrote:
-> Add a devicetree binding for the Qualcomm peripheral image loader
-> relocation information region found in the IMEM.
-> 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
-> 
-> Change since v3:
-> - Fixed spelling mistakes pointed out by Mathieu
-> - Fixed description as requested by Stephen
-> - Specify unit address in example
-> - Add missing ranges in example
-> 
->  .../bindings/remoteproc/qcom,pil-info.yaml    | 44 +++++++++++++++++++
->  1 file changed, 44 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/remoteproc/qcom,pil-info.yaml
-> 
+----- On Mar 10, 2020, at 2:31 PM, Thomas Gleixner tglx@linutronix.de wrote:
 
-My bot found errors running 'make dt_binding_check' on your patch:
+> Mathieu Desnoyers <mathieu.desnoyers@efficios.com> writes:
+>> ----- On Mar 10, 2020, at 12:48 PM, Thomas Gleixner tglx@linutronix.de wrote:
+>>> How do you "fix" that when you can't reach the tracepoint because you
+>>> trip over a breakpoint and then while trying to fixup that stuff you hit
+>>> another one?
+>>
+>> I may still be missing something, but if the fixup code (AFAIU the code
+>> performing
+>> the out-of-line single-stepping of the original instruction) belongs to a
+>> section
+>> hidden from instrumentation, it should not be an issue.
+> 
+> Sure, but what guarantees that on the way there is nothing which might
+> call into instrumentable code? Nothing, really.
+> 
+> That's why I want the explicit sections which can be analyzed by
+> tools. Humans (including me) are really bad at it was demonstrated
+> several times.
 
-Documentation/devicetree/bindings/remoteproc/qcom,pil-info.example.dts:24.11-44: Warning (ranges_format): /example-0/imem@146bf000:ranges: "ranges" property has invalid length (16 bytes) (parent #address-cells == 1, child #address-cells == 1, #size-cells == 1)
+AFAIU, my in_tracer flag proposal complements yours.
 
-See https://patchwork.ozlabs.org/patch/1251981
-Please check and re-submit.
+The explicit sections thingy is required for early/late entry/exit code,
+but does nothing to prevent "explicitly marked" safe-to-instrument kernel
+code from triggering infinite recursion.
+
+My flag proposal handles that second issue.
+
+Thanks,
+
+Mathieu
+
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
