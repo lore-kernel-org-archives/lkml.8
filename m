@@ -2,123 +2,126 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48093C10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:36:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2002FC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:37:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11774222C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:36:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFA7321655
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:37:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GC7pvPcx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727112AbgCJUgU (ORCPT
+        id S1727211AbgCJUhD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 16:36:20 -0400
-Received: from mga01.intel.com ([192.55.52.88]:59441 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726265AbgCJUgT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 16:36:19 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Mar 2020 13:36:19 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,538,1574150400"; 
-   d="scan'208";a="441428430"
-Received: from yyu32-desk.sc.intel.com ([143.183.136.146])
-  by fmsmga005.fm.intel.com with ESMTP; 10 Mar 2020 13:36:19 -0700
-Message-ID: <e62e968c0980b091d7b263401ddd10162773678f.camel@intel.com>
-Subject: Re: [PATCH v2 8/8] x86/fpu/xstate: Restore supervisor xstates for
- __fpu__restore_sig()
-From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Rik van Riel <riel@surriel.com>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Date:   Tue, 10 Mar 2020 13:36:19 -0700
-In-Reply-To: <20200306205039.GA5337@cz.tnic>
-References: <6f91699c91f9ea0f527e80ed3ea2999444a8d2d1.camel@intel.com>
-         <20200228172202.GD25261@zn.tnic>
-         <9a283ad42da140d73de680b1975da142e62e016e.camel@intel.com>
-         <20200228183131.GE25261@zn.tnic>
-         <7c6560b067436e2ec52121bba6bff64833e28d8d.camel@intel.com>
-         <20200228214742.GF25261@zn.tnic>
-         <c8da950a64db495088f0abe3932a489a84e4da97.camel@intel.com>
-         <20200229143644.GA1129@zn.tnic>
-         <6778d141a3cdbbe51cdeb3a8efb9c34e0951f6c6.camel@intel.com>
-         <53e795ffbc029de316985476fd61845b7a9e824f.camel@intel.com>
-         <20200306205039.GA5337@cz.tnic>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        Tue, 10 Mar 2020 16:37:03 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:42350 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726265AbgCJUhD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 16:37:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=cEt03edld4dNyjhWQ3Ma6jD46zPXd8681h8y9DHX8+Y=; b=GC7pvPcxSOHsD1Xf89+jZCY0T7
+        QaNbGK7YFpR6JkKn5nYbwAKQ5Fd0C6fQat5/s/30L9TsNBaiMk3D1c0zNCrjeJERglsUB9MHwclUN
+        wvBR2sRvtRnkuYTKLWsjTXqc1tsn1uUV6p0g3G3LNiavi/u6xfK3DmFPrDZcnIR7jxU5nQf6oScTu
+        X4hgdyiWGSPsRm+4YZLX2wzAr4YxlWLW+COWuGKaJqIp6r9bREKnRw3ocMf37fkXFvmCQf1X7PrqF
+        sXnQfLM6e4MZIHDY+1JnClGloc1sv44ygF3J95HHg4VEQHb0l5vdlzlk9LlUbnJIOuryKjrFn4nNu
+        z/usJQvg==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jBlcV-00034o-Om; Tue, 10 Mar 2020 20:36:55 +0000
+Subject: Re: linux-next: Tree for Mar 10 (mtd/spi-nor/)
+To:     John Garry <john.garry@huawei.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc:     linux-mtd@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Joe Perches <joe@perches.com>, Mark Brown <broonie@kernel.org>
+References: <20200310201923.24e34363@canb.auug.org.au>
+ <43df5279-7d91-020d-1632-9b3528f4feee@infradead.org>
+ <f9d33b09-fe9f-2c26-96dc-b2eaa53c614b@huawei.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <aa3b19cd-e043-e5ea-5d77-38b53bda2e60@infradead.org>
+Date:   Tue, 10 Mar 2020 13:36:54 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <f9d33b09-fe9f-2c26-96dc-b2eaa53c614b@huawei.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-03-06 at 21:50 +0100, Borislav Petkov wrote:
-> On Wed, Mar 04, 2020 at 10:18:46AM -0800, Yu-cheng Yu wrote:
-> > There is another way to keep this patch...
-> > 
-> > if (xfeatures_mask_supervisor()) {
-> > 	fpu->state.xsave.xfeatures &= xfeatures_mask_supervisor();
+On 3/10/20 10:14 AM, John Garry wrote:
+> +
 > 
-> Is the subsequent XSAVE in copy_user_to_fpregs_zeroing() going to
-> restore the user bits in XSTATE_BV you just cleared?
+> On 10/03/2020 14:37, Randy Dunlap wrote:
+>> On 3/10/20 2:19 AM, Stephen Rothwell wrote:
+>>> Hi all,
+>>>
+>>> Changes since 20200306:
+>>>
+>>> Removed tree: nfc-next (abanboned)
+>>
+>>                                doned
+>>
+>>
+>> on i386:
+>>
+>> WARNING: unmet direct dependencies detected for MTD_SPI_NOR
 > 
-> Sorry, it looks like it would but the SDM text is abysmal.
+> Uh, so kbuild honors a "select" of a config option which has unmet dependencies:
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/kbuild/kconfig-language.rst?h=v5.6-rc5#n143
 
-I checked and this won't work.
+Yes.
+
+> So this looks introduced by:
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/drivers/spi/Kconfig?h=next-20200310&id=e14572c52546c16e159c4c1814984843a119e823
+> 
+>>    Depends on [m]: MTD [=m] && SPI_MASTER [=y] >    Selected by [y]:
+>>    - SPI_HISI_SFC_V3XX [=y] && SPI [=y] && SPI_MASTER [=y] && (ARM64 && ACPI [=y] || COMPILE_TEST [=y]) && HAS_IOMEM [=y]
+
+Would it be acceptable to move the Kconfig entry for this:
+
+config SPI_HISI_SFC_V3XX
+	tristate "HiSilicon SPI-NOR Flash Controller for Hi16XX chipsets"
+	depends on (ARM64 && ACPI) || COMPILE_TEST
+	depends on HAS_IOMEM
+	select MTD_SPI_NOR
+
+into drivers/mtd/spi-nor/Kconfig, say after this one:
+
+config SPI_HISI_SFC
+	tristate "Hisilicon FMC SPI-NOR Flash Controller(SFC)"
+	depends on ARCH_HISI || COMPILE_TEST
+	depends on HAS_IOMEM
+
+and drop the "select MTD_SPI_NOR" because when it's in drivers/mtd/spi-nor/Kconfig,
+it will depend on MTD_SPI_NOR.
 
 
+>> ERROR: "spi_nor_scan" [drivers/mtd/spi-nor/intel-spi.ko] undefined!
+>> ERROR: "spi_nor_scan" [drivers/mtd/spi-nor/mtk-quadspi.ko] undefined!
+>> ERROR: "spi_nor_scan" [drivers/mtd/spi-nor/hisi-sfc.ko] undefined!
+>> ERROR: "spi_nor_scan" [drivers/mtd/spi-nor/aspeed-smc.ko] undefined!
+>>
+>>
+>> Full randconfig file is attached.
+>>
 
-Earlier you wrote:
 
-  53973 / (3*60 + 35) =~ 251 XSAVES invocations per second!
-
-I would argue that the kernel does much more than that for context
-switches.
-
-These are from:
-  perf record -a make -j32 bzImage
-
-# Samples: 11M of event 'cycles'
-# Event count (approx.): 7610600069602
-#
-# Overhead  Symbol
-     2.19%  [.] ht_lookup_with_hash
-     1.74%  [.] _int_malloc
-     1.46%  [.] _cpp_lex_token
-     1.46%  [.] ggc_internal_alloc
-     1.10%  [.] cpp_get_token_with_location
-     1.10%  [.] malloc
-     1.05%  [.] _int_free
-     0.71%  [.] elf_read
-     0.70%  [.] ggc_internal_cleared_alloc
-     0.69%  [.] htab_find_slot
-     0.69%  [.] c_lex_with_flags
-     0.61%  [.] get_combined_adhoc_loc
-     0.57%  [.] linemap_position_for_column
-[...]
-     0.00%  [.] 0x0000000000bad020
-     0.00%  [.] 0x0000000000b4952b
-     0.00%  [k] __fpu__restore_sig
-
-Here, __fpu__restore_sig() actually takes very little percentage.
-Consider this and later maintenance, I think copy_xregs_to_kernel() is at
-least not worse than saving each state separately.
-
-Yu-cheng
-
+-- 
+~Randy
 
