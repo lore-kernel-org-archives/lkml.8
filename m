@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8D22C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:42:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ED4FC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:42:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AADC246A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:42:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C9CC24693
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:42:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583844129;
-	bh=fDTZIh0QAPJhX0BNuW3OzCePooS19bFXcLaXv94bxaw=;
+	s=default; t=1583844133;
+	bh=sOAGFuQmdWeLvsjXjqeTg71nvzmjKCDHQHCRceyd3eA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uw21/1NH4IrULKc8fhxNQkmWkByN669PVbbfe69zEoKNQlUBUu/W6wsDIsgr5x0Pa
-	 Wyn+pxGu/MoBZFRj7vTFk7kqmqUbnnO8txb2EtPdRSIc3iCxQr+hIzH5UoZBDxFTs0
-	 vQ1X8qMeFS8CjSpbgnIlJ8npo/siq+p1fXcfQ1SQ=
+	b=CbfeoctWWfJe7KjYMTq5Zg3QsCd6C/uh8COLeu46JRFeanHjJmTliCBP+R8J0M0XF
+	 /KTxfbxo8ztiBJMqCwiSDRlH8IR+QjC01ptrcY68splW9+mIOJQKZiCleOHz3TNhvS
+	 66IXLrKOCgs8FWe7Kr5MlRqmz5OMqwFudaU7pbt4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727258AbgCJMmI (ORCPT
+        id S1727272AbgCJMmM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:42:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41888 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:42:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41936 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727226AbgCJMmE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:42:04 -0400
+        id S1727241AbgCJMmG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:42:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 42D1624691;
-        Tue, 10 Mar 2020 12:42:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C78E624686;
+        Tue, 10 Mar 2020 12:42:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844123;
-        bh=fDTZIh0QAPJhX0BNuW3OzCePooS19bFXcLaXv94bxaw=;
+        s=default; t=1583844126;
+        bh=sOAGFuQmdWeLvsjXjqeTg71nvzmjKCDHQHCRceyd3eA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zWp5RthA+IRBtKamQCWqFKuw2KRx84tLFdiMcgittv1n41+YHQ8uL3DafvcOflFxZ
-         eXYCbgKoaUMrP9w8yLTvzlFZVNtlN4fhv/DJ5f1b2JWP6ggwUCxy6ZoaqI/h/Ig7N8
-         nbQxvZW9+c6iFR0ms8sZy5HOqeIr/fQzEpwfepGw=
+        b=hwfVoCWzBNL/BAKV1RA1w3/8Ugoy86OyqatWBsrMXchRxBDj56Xv5mdNl2/A49dns
+         2cNgnEUwtEeBb0IcJfffptt7qtf8IGRF9WqFtobShwhJN4P+j3NVqnIkEqJPM8DZlg
+         OxJucODUNr7hDzyVj6+NYQtJIDzIWsSpYfQovN08=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+399c44bf1f43b8747403@syzkaller.appspotmail.com,
-        syzbot+e4b12d8d202701f08b6d@syzkaller.appspotmail.com,
-        Paul Moore <paul@paul-moore.com>,
+        stable@vger.kernel.org, Chuanhong Guo <gch981213@gmail.com>,
+        Daniel Golle <daniel@makrotopia.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 39/72] audit: always check the netlink payload length in audit_receive_msg()
-Date:   Tue, 10 Mar 2020 13:38:52 +0100
-Message-Id: <20200310123611.306534518@linuxfoundation.org>
+Subject: [PATCH 4.4 40/72] serial: ar933x_uart: set UART_CS_{RX,TX}_READY_ORIDE
+Date:   Tue, 10 Mar 2020 13:38:53 +0100
+Message-Id: <20200310123611.483812673@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123601.053680753@linuxfoundation.org>
 References: <20200310123601.053680753@linuxfoundation.org>
@@ -62,151 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Moore <paul@paul-moore.com>
+From: Daniel Golle <daniel@makrotopia.org>
 
-[ Upstream commit 756125289285f6e55a03861bf4b6257aa3d19a93 ]
+[ Upstream commit 87c5cbf71ecbb9e289d60a2df22eb686c70bf196 ]
 
-This patch ensures that we always check the netlink payload length
-in audit_receive_msg() before we take any action on the payload
-itself.
+On AR934x this UART is usually not initialized by the bootloader
+as it is only used as a secondary serial port while the primary
+UART is a newly introduced NS16550-compatible.
+In order to make use of the ar933x-uart on AR934x without RTS/CTS
+hardware flow control, one needs to set the
+UART_CS_{RX,TX}_READY_ORIDE bits as other than on AR933x where this
+UART is used as primary/console, the bootloader on AR934x typically
+doesn't set those bits.
+Setting them explicitely on AR933x should not do any harm, so just
+set them unconditionally.
 
-Cc: stable@vger.kernel.org
-Reported-by: syzbot+399c44bf1f43b8747403@syzkaller.appspotmail.com
-Reported-by: syzbot+e4b12d8d202701f08b6d@syzkaller.appspotmail.com
-Signed-off-by: Paul Moore <paul@paul-moore.com>
+Tested-by: Chuanhong Guo <gch981213@gmail.com>
+Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+Link: https://lore.kernel.org/r/20200207095335.GA179836@makrotopia.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/audit.c | 40 +++++++++++++++++++++-------------------
- 1 file changed, 21 insertions(+), 19 deletions(-)
+ drivers/tty/serial/ar933x_uart.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/kernel/audit.c b/kernel/audit.c
-index bdf0cf463815e..84c445db5fe1e 100644
---- a/kernel/audit.c
-+++ b/kernel/audit.c
-@@ -753,13 +753,11 @@ static void audit_log_feature_change(int which, u32 old_feature, u32 new_feature
- 	audit_log_end(ab);
- }
+diff --git a/drivers/tty/serial/ar933x_uart.c b/drivers/tty/serial/ar933x_uart.c
+index 1519d2ca7705f..40194791cde0b 100644
+--- a/drivers/tty/serial/ar933x_uart.c
++++ b/drivers/tty/serial/ar933x_uart.c
+@@ -294,6 +294,10 @@ static void ar933x_uart_set_termios(struct uart_port *port,
+ 	ar933x_uart_rmw_set(up, AR933X_UART_CS_REG,
+ 			    AR933X_UART_CS_HOST_INT_EN);
  
--static int audit_set_feature(struct sk_buff *skb)
-+static int audit_set_feature(struct audit_features *uaf)
- {
--	struct audit_features *uaf;
- 	int i;
- 
- 	BUILD_BUG_ON(AUDIT_LAST_FEATURE + 1 > ARRAY_SIZE(audit_feature_names));
--	uaf = nlmsg_data(nlmsg_hdr(skb));
- 
- 	/* if there is ever a version 2 we should handle that here */
- 
-@@ -815,6 +813,7 @@ static int audit_receive_msg(struct sk_buff *skb, struct nlmsghdr *nlh)
- {
- 	u32			seq;
- 	void			*data;
-+	int			data_len;
- 	int			err;
- 	struct audit_buffer	*ab;
- 	u16			msg_type = nlh->nlmsg_type;
-@@ -838,6 +837,7 @@ static int audit_receive_msg(struct sk_buff *skb, struct nlmsghdr *nlh)
- 	}
- 	seq  = nlh->nlmsg_seq;
- 	data = nlmsg_data(nlh);
-+	data_len = nlmsg_len(nlh);
- 
- 	switch (msg_type) {
- 	case AUDIT_GET: {
-@@ -859,7 +859,7 @@ static int audit_receive_msg(struct sk_buff *skb, struct nlmsghdr *nlh)
- 		struct audit_status	s;
- 		memset(&s, 0, sizeof(s));
- 		/* guard against past and future API changes */
--		memcpy(&s, data, min_t(size_t, sizeof(s), nlmsg_len(nlh)));
-+		memcpy(&s, data, min_t(size_t, sizeof(s), data_len));
- 		if (s.mask & AUDIT_STATUS_ENABLED) {
- 			err = audit_set_enabled(s.enabled);
- 			if (err < 0)
-@@ -908,7 +908,9 @@ static int audit_receive_msg(struct sk_buff *skb, struct nlmsghdr *nlh)
- 			return err;
- 		break;
- 	case AUDIT_SET_FEATURE:
--		err = audit_set_feature(skb);
-+		if (data_len < sizeof(struct audit_features))
-+			return -EINVAL;
-+		err = audit_set_feature(data);
- 		if (err)
- 			return err;
- 		break;
-@@ -920,6 +922,8 @@ static int audit_receive_msg(struct sk_buff *skb, struct nlmsghdr *nlh)
- 
- 		err = audit_filter_user(msg_type);
- 		if (err == 1) { /* match or error */
-+			char *str = data;
++	/* enable RX and TX ready overide */
++	ar933x_uart_rmw_set(up, AR933X_UART_CS_REG,
++		AR933X_UART_CS_TX_READY_ORIDE | AR933X_UART_CS_RX_READY_ORIDE);
 +
- 			err = 0;
- 			if (msg_type == AUDIT_USER_TTY) {
- 				err = tty_audit_push_current();
-@@ -928,19 +932,17 @@ static int audit_receive_msg(struct sk_buff *skb, struct nlmsghdr *nlh)
- 			}
- 			mutex_unlock(&audit_cmd_mutex);
- 			audit_log_common_recv_msg(&ab, msg_type);
--			if (msg_type != AUDIT_USER_TTY)
-+			if (msg_type != AUDIT_USER_TTY) {
-+				/* ensure NULL termination */
-+				str[data_len - 1] = '\0';
- 				audit_log_format(ab, " msg='%.*s'",
- 						 AUDIT_MESSAGE_TEXT_MAX,
--						 (char *)data);
--			else {
--				int size;
--
-+						 str);
-+			} else {
- 				audit_log_format(ab, " data=");
--				size = nlmsg_len(nlh);
--				if (size > 0 &&
--				    ((unsigned char *)data)[size - 1] == '\0')
--					size--;
--				audit_log_n_untrustedstring(ab, data, size);
-+				if (data_len > 0 && str[data_len - 1] == '\0')
-+					data_len--;
-+				audit_log_n_untrustedstring(ab, str, data_len);
- 			}
- 			audit_set_portid(ab, NETLINK_CB(skb).portid);
- 			audit_log_end(ab);
-@@ -949,7 +951,7 @@ static int audit_receive_msg(struct sk_buff *skb, struct nlmsghdr *nlh)
- 		break;
- 	case AUDIT_ADD_RULE:
- 	case AUDIT_DEL_RULE:
--		if (nlmsg_len(nlh) < sizeof(struct audit_rule_data))
-+		if (data_len < sizeof(struct audit_rule_data))
- 			return -EINVAL;
- 		if (audit_enabled == AUDIT_LOCKED) {
- 			audit_log_common_recv_msg(&ab, AUDIT_CONFIG_CHANGE);
-@@ -958,7 +960,7 @@ static int audit_receive_msg(struct sk_buff *skb, struct nlmsghdr *nlh)
- 			return -EPERM;
- 		}
- 		err = audit_rule_change(msg_type, NETLINK_CB(skb).portid,
--					   seq, data, nlmsg_len(nlh));
-+					   seq, data, data_len);
- 		break;
- 	case AUDIT_LIST_RULES:
- 		err = audit_list_rules_send(skb, seq);
-@@ -972,7 +974,7 @@ static int audit_receive_msg(struct sk_buff *skb, struct nlmsghdr *nlh)
- 	case AUDIT_MAKE_EQUIV: {
- 		void *bufp = data;
- 		u32 sizes[2];
--		size_t msglen = nlmsg_len(nlh);
-+		size_t msglen = data_len;
- 		char *old, *new;
+ 	/* reenable the UART */
+ 	ar933x_uart_rmw(up, AR933X_UART_CS_REG,
+ 			AR933X_UART_CS_IF_MODE_M << AR933X_UART_CS_IF_MODE_S,
+@@ -426,6 +430,10 @@ static int ar933x_uart_startup(struct uart_port *port)
+ 	ar933x_uart_rmw_set(up, AR933X_UART_CS_REG,
+ 			    AR933X_UART_CS_HOST_INT_EN);
  
- 		err = -EINVAL;
-@@ -1049,7 +1051,7 @@ static int audit_receive_msg(struct sk_buff *skb, struct nlmsghdr *nlh)
- 
- 		memset(&s, 0, sizeof(s));
- 		/* guard against past and future API changes */
--		memcpy(&s, data, min_t(size_t, sizeof(s), nlmsg_len(nlh)));
-+		memcpy(&s, data, min_t(size_t, sizeof(s), data_len));
- 		/* check if new data is valid */
- 		if ((s.enabled != 0 && s.enabled != 1) ||
- 		    (s.log_passwd != 0 && s.log_passwd != 1))
++	/* enable RX and TX ready overide */
++	ar933x_uart_rmw_set(up, AR933X_UART_CS_REG,
++		AR933X_UART_CS_TX_READY_ORIDE | AR933X_UART_CS_RX_READY_ORIDE);
++
+ 	/* Enable RX interrupts */
+ 	up->ier = AR933X_UART_INT_RX_VALID;
+ 	ar933x_uart_write(up, AR933X_UART_INT_EN_REG, up->ier);
 -- 
 2.20.1
 
