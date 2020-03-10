@@ -2,189 +2,74 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA405C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:53:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4BD5C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:53:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A22862468F
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:53:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583844798;
-	bh=Z6SzoYpOFURwKBVmc69AbfErpqPGTUr+P5WMVNwatcg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IRv8QKGrK8WCYlC4xzZo9TXoHsVMK/tM8mzbh4ccd3+0lybQ+66zGIhNDvktoED9z
-	 IAYnVhKDlfO4ftF3bjoh6rgQbOtLdMKEJhRuJ98IIkbvvanwUe1/ZAOHY86oRVzAgO
-	 rbbUW23oWe6+sqB/QpdmI5XUkWaaivuBmQW5Edig=
+	by mail.kernel.org (Postfix) with ESMTP id 821AB2253D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:53:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728949AbgCJMxR (ORCPT
+        id S1729171AbgCJMxT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:53:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59080 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:53:19 -0400
+Received: from mx2.suse.de ([195.135.220.15]:42758 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728719AbgCJMxN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:53:13 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA68A24694;
-        Tue, 10 Mar 2020 12:53:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844792;
-        bh=Z6SzoYpOFURwKBVmc69AbfErpqPGTUr+P5WMVNwatcg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j9UBRszGXhTn0Mr9l0/JboFEmWXFg8+lAK6S/9RKT0Vb+apMY/xRHs/t8TeFZw+38
-         1ewn6ua4pW+zVoF0xh2penpVTlSZXqzc3L3xb8udAOlhwEv/kGBjW7jFCreX+8wlHM
-         TkYan+J2dJRNUnqN3itWBKQz1H1LoKamMNO3Ytvs=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
-        Cezary Rojewski <cezary.rojewski@intel.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 5.4 121/168] ASoC: intel: skl: Fix possible buffer overflow in debug outputs
-Date:   Tue, 10 Mar 2020 13:39:27 +0100
-Message-Id: <20200310123647.683251983@linuxfoundation.org>
+        id S1729139AbgCJMxM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:53:12 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id DF3D2B149;
+        Tue, 10 Mar 2020 12:53:10 +0000 (UTC)
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     linux-kernel@vger.kernel.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     linux-usb@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org,
+        tim.gover@raspberrypi.org, linux-pci@vger.kernel.org,
+        wahrenst@gmx.net, sergei.shtylyov@cogentembedded.com
+Subject: [PATCH v5 1/4] soc: bcm2835: Sync xHCI reset firmware property with downstream
+Date:   Tue, 10 Mar 2020 13:52:39 +0100
+Message-Id: <20200310125243.25805-2-nsaenzjulienne@suse.de>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200310123635.322799692@linuxfoundation.org>
-References: <20200310123635.322799692@linuxfoundation.org>
-User-Agent: quilt/0.66
+In-Reply-To: <20200310125243.25805-1-nsaenzjulienne@suse.de>
+References: <20200310125243.25805-1-nsaenzjulienne@suse.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+The property is needed in order to trigger VL805's firmware load. Note
+that there is a gap between the property introduced and the previous
+one. This is also the case downstream.
 
-commit 549cd0ba04dcfe340c349cd983bd440480fae8ee upstream.
-
-The debugfs output of intel skl driver writes strings with multiple
-snprintf() calls with the fixed size.  This was supposed to avoid the
-buffer overflow but actually it still would, because snprintf()
-returns the expected size to be output, not the actual output size.
-
-Fix it by replacing snprintf() calls with scnprintf().
-
-Fixes: d14700a01f91 ("ASoC: Intel: Skylake: Debugfs facility to dump module config")
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Acked-by: Cezary Rojewski <cezary.rojewski@intel.com>
-Link: https://lore.kernel.org/r/20200218111737.14193-3-tiwai@suse.de
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- sound/soc/intel/skylake/skl-debug.c |   28 ++++++++++++++--------------
- 1 file changed, 14 insertions(+), 14 deletions(-)
+ include/soc/bcm2835/raspberrypi-firmware.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/sound/soc/intel/skylake/skl-debug.c
-+++ b/sound/soc/intel/skylake/skl-debug.c
-@@ -35,7 +35,7 @@ static ssize_t skl_print_pins(struct skl
- 	ssize_t ret = 0;
+diff --git a/include/soc/bcm2835/raspberrypi-firmware.h b/include/soc/bcm2835/raspberrypi-firmware.h
+index 7800e12ee042..cc9cdbc66403 100644
+--- a/include/soc/bcm2835/raspberrypi-firmware.h
++++ b/include/soc/bcm2835/raspberrypi-firmware.h
+@@ -90,7 +90,7 @@ enum rpi_firmware_property_tag {
+ 	RPI_FIRMWARE_SET_PERIPH_REG =                         0x00038045,
+ 	RPI_FIRMWARE_GET_POE_HAT_VAL =                        0x00030049,
+ 	RPI_FIRMWARE_SET_POE_HAT_VAL =                        0x00030050,
+-
++	RPI_FIRMWARE_NOTIFY_XHCI_RESET =                      0x00030058,
  
- 	for (i = 0; i < max_pin; i++) {
--		ret += snprintf(buf + size, MOD_BUF - size,
-+		ret += scnprintf(buf + size, MOD_BUF - size,
- 				"%s %d\n\tModule %d\n\tInstance %d\n\t"
- 				"In-used %s\n\tType %s\n"
- 				"\tState %d\n\tIndex %d\n",
-@@ -53,7 +53,7 @@ static ssize_t skl_print_pins(struct skl
- static ssize_t skl_print_fmt(struct skl_module_fmt *fmt, char *buf,
- 					ssize_t size, bool direction)
- {
--	return snprintf(buf + size, MOD_BUF - size,
-+	return scnprintf(buf + size, MOD_BUF - size,
- 			"%s\n\tCh %d\n\tFreq %d\n\tBit depth %d\n\t"
- 			"Valid bit depth %d\n\tCh config %#x\n\tInterleaving %d\n\t"
- 			"Sample Type %d\n\tCh Map %#x\n",
-@@ -77,16 +77,16 @@ static ssize_t module_read(struct file *
- 	if (!buf)
- 		return -ENOMEM;
- 
--	ret = snprintf(buf, MOD_BUF, "Module:\n\tUUID %pUL\n\tModule id %d\n"
-+	ret = scnprintf(buf, MOD_BUF, "Module:\n\tUUID %pUL\n\tModule id %d\n"
- 			"\tInstance id %d\n\tPvt_id %d\n", mconfig->guid,
- 			mconfig->id.module_id, mconfig->id.instance_id,
- 			mconfig->id.pvt_id);
- 
--	ret += snprintf(buf + ret, MOD_BUF - ret,
-+	ret += scnprintf(buf + ret, MOD_BUF - ret,
- 			"Resources:\n\tCPC %#x\n\tIBS %#x\n\tOBS %#x\t\n",
- 			res->cpc, res->ibs, res->obs);
- 
--	ret += snprintf(buf + ret, MOD_BUF - ret,
-+	ret += scnprintf(buf + ret, MOD_BUF - ret,
- 			"Module data:\n\tCore %d\n\tIn queue %d\n\t"
- 			"Out queue %d\n\tType %s\n",
- 			mconfig->core_id, mconfig->max_in_queue,
-@@ -96,38 +96,38 @@ static ssize_t module_read(struct file *
- 	ret += skl_print_fmt(mconfig->in_fmt, buf, ret, true);
- 	ret += skl_print_fmt(mconfig->out_fmt, buf, ret, false);
- 
--	ret += snprintf(buf + ret, MOD_BUF - ret,
-+	ret += scnprintf(buf + ret, MOD_BUF - ret,
- 			"Fixup:\n\tParams %#x\n\tConverter %#x\n",
- 			mconfig->params_fixup, mconfig->converter);
- 
--	ret += snprintf(buf + ret, MOD_BUF - ret,
-+	ret += scnprintf(buf + ret, MOD_BUF - ret,
- 			"Module Gateway:\n\tType %#x\n\tVbus %#x\n\tHW conn %#x\n\tSlot %#x\n",
- 			mconfig->dev_type, mconfig->vbus_id,
- 			mconfig->hw_conn_type, mconfig->time_slot);
- 
--	ret += snprintf(buf + ret, MOD_BUF - ret,
-+	ret += scnprintf(buf + ret, MOD_BUF - ret,
- 			"Pipeline:\n\tID %d\n\tPriority %d\n\tConn Type %d\n\t"
- 			"Pages %#x\n", mconfig->pipe->ppl_id,
- 			mconfig->pipe->pipe_priority, mconfig->pipe->conn_type,
- 			mconfig->pipe->memory_pages);
- 
--	ret += snprintf(buf + ret, MOD_BUF - ret,
-+	ret += scnprintf(buf + ret, MOD_BUF - ret,
- 			"\tParams:\n\t\tHost DMA %d\n\t\tLink DMA %d\n",
- 			mconfig->pipe->p_params->host_dma_id,
- 			mconfig->pipe->p_params->link_dma_id);
- 
--	ret += snprintf(buf + ret, MOD_BUF - ret,
-+	ret += scnprintf(buf + ret, MOD_BUF - ret,
- 			"\tPCM params:\n\t\tCh %d\n\t\tFreq %d\n\t\tFormat %d\n",
- 			mconfig->pipe->p_params->ch,
- 			mconfig->pipe->p_params->s_freq,
- 			mconfig->pipe->p_params->s_fmt);
- 
--	ret += snprintf(buf + ret, MOD_BUF - ret,
-+	ret += scnprintf(buf + ret, MOD_BUF - ret,
- 			"\tLink %#x\n\tStream %#x\n",
- 			mconfig->pipe->p_params->linktype,
- 			mconfig->pipe->p_params->stream);
- 
--	ret += snprintf(buf + ret, MOD_BUF - ret,
-+	ret += scnprintf(buf + ret, MOD_BUF - ret,
- 			"\tState %d\n\tPassthru %s\n",
- 			mconfig->pipe->state,
- 			mconfig->pipe->passthru ? "true" : "false");
-@@ -137,7 +137,7 @@ static ssize_t module_read(struct file *
- 	ret += skl_print_pins(mconfig->m_out_pin, buf,
- 			mconfig->max_out_queue, ret, false);
- 
--	ret += snprintf(buf + ret, MOD_BUF - ret,
-+	ret += scnprintf(buf + ret, MOD_BUF - ret,
- 			"Other:\n\tDomain %d\n\tHomogeneous Input %s\n\t"
- 			"Homogeneous Output %s\n\tIn Queue Mask %d\n\t"
- 			"Out Queue Mask %d\n\tDMA ID %d\n\tMem Pages %d\n\t"
-@@ -193,7 +193,7 @@ static ssize_t fw_softreg_read(struct fi
- 		__ioread32_copy(d->fw_read_buff, fw_reg_addr, w0_stat_sz >> 2);
- 
- 	for (offset = 0; offset < FW_REG_SIZE; offset += 16) {
--		ret += snprintf(tmp + ret, FW_REG_BUF - ret, "%#.4x: ", offset);
-+		ret += scnprintf(tmp + ret, FW_REG_BUF - ret, "%#.4x: ", offset);
- 		hex_dump_to_buffer(d->fw_read_buff + offset, 16, 16, 4,
- 				   tmp + ret, FW_REG_BUF - ret, 0);
- 		ret += strlen(tmp + ret);
-
+ 	/* Dispmanx TAGS */
+ 	RPI_FIRMWARE_FRAMEBUFFER_ALLOCATE =                   0x00040001,
+-- 
+2.25.1
 
