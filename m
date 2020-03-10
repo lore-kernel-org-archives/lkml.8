@@ -2,152 +2,128 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 685BCC10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 23:17:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 922A6C10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 23:19:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D6FF2071B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 23:17:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B0EC2071B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 23:19:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ePT3ybQq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727796AbgCJXQz (ORCPT
+        id S1727752AbgCJXTE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 19:16:55 -0400
-Received: from 17.mo5.mail-out.ovh.net ([46.105.56.132]:33569 "EHLO
-        17.mo5.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727752AbgCJXQy (ORCPT
+        Tue, 10 Mar 2020 19:19:04 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:42655 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726402AbgCJXTD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 19:16:54 -0400
-Received: from player759.ha.ovh.net (unknown [10.110.208.202])
-        by mo5.mail-out.ovh.net (Postfix) with ESMTP id A0BAF270FEE
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 22:57:18 +0100 (CET)
-Received: from sk2.org (82-65-25-201.subs.proxad.net [82.65.25.201])
-        (Authenticated sender: steve@sk2.org)
-        by player759.ha.ovh.net (Postfix) with ESMTPSA id 5878B104D32F2;
-        Tue, 10 Mar 2020 21:57:05 +0000 (UTC)
-Date:   Tue, 10 Mar 2020 22:57:02 +0100
-From:   Stephen Kitt <steve@sk2.org>
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>, bpf <bpf@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] docs: sysctl/kernel: document BPF entries
-Message-ID: <20200310225702.2da4519c@heffalump.sk2.org>
-In-Reply-To: <CAADnVQJ0EephJiY8F5KJFbYPBg2=hTHOi3WOUtVFE=qgoVbSuA@mail.gmail.com>
-References: <20200309180350.21075-1-steve@sk2.org>
-        <CAADnVQJ0EephJiY8F5KJFbYPBg2=hTHOi3WOUtVFE=qgoVbSuA@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 10 Mar 2020 19:19:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583882342;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=z5sLqw2q00TFWFE2+/xEamSW6/qGE1IWWYINTtiDzeQ=;
+        b=ePT3ybQq7KlGmqxO6iw8fnPh7diSygkqL+zDJkDzSfoSPeRrt0z1uZYL9GJmmcxMWAgUIJ
+        bupMJEySk8dAf3qr+64zujsrYvGLpXGQ9rp6XYpGlIe8jtiYzdF5PjXzbscA/f6zq/oXu9
+        TuBg8tgx7poj6sxgV2q6pz6Ffz1K80w=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-183-d5Mcj0jsPY6nLI6SLsnx4A-1; Tue, 10 Mar 2020 19:18:58 -0400
+X-MC-Unique: d5Mcj0jsPY6nLI6SLsnx4A-1
+Received: by mail-ed1-f69.google.com with SMTP id y35so196404ede.4
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 16:18:58 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=z5sLqw2q00TFWFE2+/xEamSW6/qGE1IWWYINTtiDzeQ=;
+        b=gm/UUwTjllxqKE9Y+UMdxIbDfwIb7rM+EfVnI7yAb44dW0K1VpeTkSgbCCfuq5NDjC
+         Af9rJH0ghKhNdhV2Se9siD4/rd7iWxWKer9c/TW9QQiH3/2XUjNyLpnps50PbRx5oK6W
+         tEmdkk0oYmkUQ5OIgZEd4VC6a4MDtzKjnY3ThmxRIB2l7OJt1XptY3j+yeiaRLdwChXp
+         tjNZrdqBo2dY0w06d0R2IzqNla/aHKi3auxD0C8bmnnpJcAjn0tTKXdufbUOmCN2IFyo
+         Se2Xe/B5qfWxVMFsTbsQamhs7sGQzxE5WbEaBdl9SJb48n/IC7gpL+vxM+3HEHtlse7E
+         pvzQ==
+X-Gm-Message-State: ANhLgQ1F1wqreo4FldhAW/URD+mBbjluBSJuAhbV/N3JwhHBX1znMvKx
+        A9c4z3pkBmb+NVCsVJkXQw+y/LjW9jwm/rh3xa6Sv2fOwc0vASf4GqQTXoqYixTaCIh7j+ZigmK
+        e+IhLY6H2U9qjDNkhAY9pbnvlKnZzxHPbUnOmoVtL
+X-Received: by 2002:a17:907:262a:: with SMTP id aq10mr12415669ejc.377.1583882337422;
+        Tue, 10 Mar 2020 16:18:57 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vstjHqiZOF0xElis+31S7G0gY2aH73JLw/AluJvKeWmdJcJyHfoWoeERc+w0Ht0pyWZgseKXsqtbLAkFkQLxyM=
+X-Received: by 2002:a17:907:262a:: with SMTP id aq10mr12415648ejc.377.1583882337100;
+ Tue, 10 Mar 2020 16:18:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
- boundary="Sig_/O4H7GWQKOH1ilLfxU.Pj.YK"; protocol="application/pgp-signature"
-X-Ovh-Tracer-Id: 954200173656165741
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedugedruddvtddgudegiecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvuffkjghfofggtgesghdtreerredtvdenucfhrhhomhepufhtvghphhgvnhcumfhithhtuceoshhtvghvvgesshhkvddrohhrgheqnecukfhppedtrddtrddtrddtpdekvddrieehrddvhedrvddtudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphdqohhuthdphhgvlhhopehplhgrhigvrhejheelrdhhrgdrohhvhhdrnhgvthdpihhnvghtpedtrddtrddtrddtpdhmrghilhhfrhhomhepshhtvghvvgesshhkvddrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+References: <20200310223516.102758-1-mcroce@redhat.com> <d473061b-688f-f4a6-c0e8-61c22b8a2b10@cloud.ionos.com>
+In-Reply-To: <d473061b-688f-f4a6-c0e8-61c22b8a2b10@cloud.ionos.com>
+From:   Matteo Croce <mcroce@redhat.com>
+Date:   Wed, 11 Mar 2020 00:18:21 +0100
+Message-ID: <CAGnkfhwjXN_T09MsD1e6P95gUqxCbWL7BcOLSy16_QOZsZKbgQ@mail.gmail.com>
+Subject: Re: [PATCH v2] block: refactor duplicated macros
+To:     Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+Cc:     linux-block@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-bcache@vger.kernel.org,
+        linux-raid <linux-raid@vger.kernel.org>,
+        linux-mmc@vger.kernel.org,
+        xen-devel <xen-devel@lists.xenproject.org>,
+        linux-scsi <linux-scsi@vger.kernel.org>,
+        linux-nfs@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Song Liu <song@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/O4H7GWQKOH1ilLfxU.Pj.YK
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Wed, Mar 11, 2020 at 12:10 AM Guoqing Jiang
+<guoqing.jiang@cloud.ionos.com> wrote:
+>
+>
+>
+> On 3/10/20 11:35 PM, Matteo Croce wrote:
+> > +++ b/drivers/md/raid1.c
+> > @@ -2129,7 +2129,7 @@ static void process_checks(struct r1bio *r1_bio)
+> >       int vcnt;
+> >
+> >       /* Fix variable parts of all bios */
+> > -     vcnt = (r1_bio->sectors + PAGE_SIZE / 512 - 1) >> (PAGE_SHIFT - 9);
+> > +     vcnt = (r1_bio->sectors + PAGE_SECTORS - 1) >> (PAGE_SHIFT - 9);
+>
+> Maybe replace "PAGE_SHIFT - 9" with "PAGE_SECTORS_SHIFT" too.
+>
+> Thanks,
+> Guoqing
+>
 
-On Tue, 10 Mar 2020 10:47:15 -0700, Alexei Starovoitov
-<alexei.starovoitov@gmail.com> wrote:
+Wow, there are a lot of them!
 
-> On Mon, Mar 9, 2020 at 11:05 AM Stephen Kitt <steve@sk2.org> wrote:
-> >
-> > Based on the implementation in kernel/bpf/syscall.c,
-> > kernel/bpf/trampoline.c, include/linux/filter.h, and the documentation
-> > in bpftool-prog.rst.
-> >
-> > The section style doesn't match the surrounding sections; it matches
-> > the style of the reworked kernel.rst queued up in docs-next.
-> >
-> > Signed-off-by: Stephen Kitt <steve@sk2.org>
-> > ---
-> >
-> > Notes:
-> >     Changes since v1:
-> >     - rebased on bpf-next instead of docs-next.
-> >
-> >  Documentation/admin-guide/sysctl/kernel.rst | 24 +++++++++++++++++++++
-> >  1 file changed, 24 insertions(+)
-> >
-> > diff --git a/Documentation/admin-guide/sysctl/kernel.rst
-> > b/Documentation/admin-guide/sysctl/kernel.rst index
-> > def074807cee..eea7afd509ac 100644 ---
-> > a/Documentation/admin-guide/sysctl/kernel.rst +++
-> > b/Documentation/admin-guide/sysctl/kernel.rst @@ -174,6 +174,20 @@ See
-> > the type_of_loader and ext_loader_ver fields in
-> > Documentation/x86/boot.rst for additional information.
-> >
-> >
-> > +bpf_stats_enabled
-> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > +
-> > +Controls whether the kernel should collect statistics on BPF programs
-> > +(total time spent running, number of times run...). Enabling
-> > +statistics causes a slight reduction in performance on each program
-> > +run. The statistics can be seen using ``bpftool``.
-> > +
-> > +=3D =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > +0 Don't collect statistics (default).
-> > +1 Collect statistics.
-> > +=3D =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > +
-> > +
-> >  cap_last_cap:
-> >  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> >
-> > @@ -1123,6 +1137,16 @@ NMI switch that most IA32 servers have fires
-> > unknown NMI up, for example.  If a system hangs up, try pressing the NMI
-> > switch.
-> >
-> >
-> > +unprivileged_bpf_disabled
-> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D
-> > +
-> > +Writing 1 to this entry will disabled unprivileged calls to ``bpf()``;=
- =20
->=20
-> same typo as was pointed out earlier.
+$ git grep -c 'PAGE_SHIFT - 9'
+arch/ia64/include/asm/pgtable.h:2
+block/blk-settings.c:2
+block/partition-generic.c:1
+drivers/md/dm-table.c:1
+drivers/md/raid1.c:1
+drivers/md/raid10.c:1
+drivers/md/raid5-cache.c:5
+drivers/md/raid5.h:1
+drivers/nvme/host/fc.c:1
+drivers/nvme/target/loop.c:1
+fs/erofs/internal.h:1
+fs/ext2/dir.c:1
+fs/libfs.c:1
+fs/nilfs2/dir.c:1
+mm/page_io.c:2
+mm/swapfile.c:6
 
-Oh dear, sorry about that, v3 is on its way :-(.
+-- 
+Matteo Croce
+per aspera ad upstream
 
-Regards,
-
-Stephen
-
---Sig_/O4H7GWQKOH1ilLfxU.Pj.YK
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEEnPVX/hPLkMoq7x0ggNMC9Yhtg5wFAl5oDS4ACgkQgNMC9Yht
-g5wY9hAAk12F/rXYyveXRZ0+57xIPIGL2rBRZOEF8WxN8lEbpREk35+vufvy4p0l
-cxnAPh/aIcZA9dkxZOA1prAK+B6Q2tIvCKXLWOhr5WW3C31hEDfPfbqr9PvPp9DJ
-m1JorpMHFdiwYOymrTBg+Xgm8I/4F6InRlnHchNAMw/kronscoCFC7sh6yJiXRrr
-gyEV7tA5IQm4rGzCwxOIyU3IqeKvNOyeh41aor4YcjL7Y3l+WB7XV2XieVP7zX1Z
-OwvrFGWKJGz+rj3A4i5JLZchFfnwuA3jVS80QbyfpMNuS/ICWGoDCYw3K5mqvwce
-00Ur1+UCAH41PIT8If0yF7/hDzyr/X8ZHcdvjoObOqTJ33rjxJWEnezzlXqNUwiz
-qhmVNaJ3TUmSkGpMlu0ATEzoj0yvgeuXtoq9DjrXaZ+BKWsMgnUaE3+7jMlbuUIJ
-hMD/0Fk+d8x4dTUUIyIkHvSFrJq5TEtWYsTlIWpP0KvLLf3Uf+11/Ve4vtPsHsVC
-qyOMa9arCvV82yjRzvR2m74+ld1zBk7lH0r+X6mLnX4iJd6MNLY79UCUZ0ACTWME
-xQQ7kENBvARy+UHwkwNpv4ybd1P+1I6hZu+NKvV+ZWkXvqGsr71v0N1nEgbd+ZSV
-kadnjSZlyoMP546no7de7kvl2iAqB1UDeD2L26W5zHCRjprStlA=
-=6Whk
------END PGP SIGNATURE-----
-
---Sig_/O4H7GWQKOH1ilLfxU.Pj.YK--
