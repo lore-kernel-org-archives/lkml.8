@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 815E9C18E5C
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:41:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C3ADC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:41:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 547EC246A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:41:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D34F7246A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:41:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583844109;
-	bh=TtPVw9B+lbDiUyUsy+nb7x90oko5644fx7SkOVULfOs=;
+	s=default; t=1583844115;
+	bh=B5ZE7AgNmdSiNTWO1RE0tumqqZ5Z6rnGJgHazaelaaM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vEzjbNDIt/Xx+oNrPOb14OCLR0i2mtTRzVvLv1+1q7JSRH8ncOmKbHUyKb/8FH0ma
-	 QMxCOwaTg6U1xAKqcEMAThElccSV+iUOr/7Lj5zo89qYLr99HmmCy/5zlZpQmmXhjm
-	 QRFYQ3CoPeqJdNqTdvZTY3ZHxB7noO0xAPHnYDWM=
+	b=SJlDwBWqCx77hlFTSUeP4ua/h0luf+mKWbBcbh2/lHqYpmwz2n3tPfUWAFTLrGjNM
+	 /T3uvDwyM2mi1Gu21utrORlNB838wTERP7+pHMoQDp1LXDmPKphfyPL49H5Ch7fTyV
+	 WsUkwuEd5mOpZuQiDjMe9K2Jnxt06n8rlKiNkasI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727104AbgCJMls (ORCPT
+        id S1727175AbgCJMly (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:41:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41406 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:41:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41476 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726420AbgCJMlq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:41:46 -0400
+        id S1727111AbgCJMlt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:41:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 699BA24698;
-        Tue, 10 Mar 2020 12:41:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD36924691;
+        Tue, 10 Mar 2020 12:41:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844105;
-        bh=TtPVw9B+lbDiUyUsy+nb7x90oko5644fx7SkOVULfOs=;
+        s=default; t=1583844108;
+        bh=B5ZE7AgNmdSiNTWO1RE0tumqqZ5Z6rnGJgHazaelaaM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J0ClrTZAUxshiQ372AdQL7+0odpxmKC8jRcx7JkaUFSno+rQmsg8VMGTp+4KizgMH
-         9W6FmYln7UGjqnKidOZ58pu/f/Au7Wx4nrPl/lE8G6CUTiTph94QqOP+Bh5iOBCfnl
-         TJmpFi7H8tKoL3/ia2WeytQTA2QsHNH6kdFUGjKY=
+        b=UefQvhVbh6dXE66/1QSUsyEXWjiOnatA5nSQpJdwsEla3EEDdc+aT0/7QPrrdXcUW
+         9uECqS5d+kNA8V79/dpP7hyanSRbw76rxkalFuc2Z0wRaz24J1FuIncD3TcoMALF7e
+         GbI1hSRNTfQY0W/xOqwMD88CpQYek8ZyKJtCqIec=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,10 +46,11 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Jann Horn <jannh@google.com>, stable@kernel.org,
         Linus Torvalds <torvalds@linux-foundation.org>,
         "Srivatsa S. Bhat (VMware)" <srivatsa@csail.mit.edu>,
-        Ajay Kaher <akaher@vmware.com>
-Subject: [PATCH 4.4 32/72] mm: make page ref count overflow check tighter and more explicit
-Date:   Tue, 10 Mar 2020 13:38:45 +0100
-Message-Id: <20200310123609.246382874@linuxfoundation.org>
+        Ajay Kaher <akaher@vmware.com>,
+        Vlastimil Babka <vbabka@suse.cz>
+Subject: [PATCH 4.4 33/72] mm: add try_get_page() helper function
+Date:   Tue, 10 Mar 2020 13:38:46 +0100
+Message-Id: <20200310123609.462100804@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123601.053680753@linuxfoundation.org>
 References: <20200310123601.053680753@linuxfoundation.org>
@@ -64,77 +65,98 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Linus Torvalds <torvalds@linux-foundation.org>
 
-commit f958d7b528b1b40c44cfda5eabe2d82760d868c3 upsteam.
+commit 88b1a17dfc3ed7728316478fae0f5ad508f50397 upsteam.
 
-We have a VM_BUG_ON() to check that the page reference count doesn't
-underflow (or get close to overflow) by checking the sign of the count.
+This is the same as the traditional 'get_page()' function, but instead
+of unconditionally incrementing the reference count of the page, it only
+does so if the count was "safe".  It returns whether the reference count
+was incremented (and is marked __must_check, since the caller obviously
+has to be aware of it).
 
-That's all fine, but we actually want to allow people to use a "get page
-ref unless it's already very high" helper function, and we want that one
-to use the sign of the page ref (without triggering this VM_BUG_ON).
+Also like 'get_page()', you can't use this function unless you already
+had a reference to the page.  The intent is that you can use this
+exactly like get_page(), but in situations where you want to limit the
+maximum reference count.
 
-Change the VM_BUG_ON to only check for small underflows (or _very_ close
-to overflowing), and ignore overflows which have strayed into negative
-territory.
+The code currently does an unconditional WARN_ON_ONCE() if we ever hit
+the reference count issues (either zero or negative), as a notification
+that the conditional non-increment actually happened.
+
+NOTE! The count access for the "safety" check is inherently racy, but
+that doesn't matter since the buffer we use is basically half the range
+of the reference count (ie we look at the sign of the count).
 
 Acked-by: Matthew Wilcox <willy@infradead.org>
 Cc: Jann Horn <jannh@google.com>
 Cc: stable@kernel.org
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 [ 4.4.y backport notes:
-  Ajay: Open-coded atomic refcount access due to missing
-  page_ref_count() helper in 4.4.y
-  Srivatsa: Added overflow check to get_page_foll() and related code. ]
+  Srivatsa:
+  - Adapted try_get_page() to match the get_page()
+    implementation in 4.4.y, except for the refcount check.
+  - Added try_get_page_foll() which will be needed
+    in a subsequent patch. ]
 Signed-off-by: Srivatsa S. Bhat (VMware) <srivatsa@csail.mit.edu>
 Signed-off-by: Ajay Kaher <akaher@vmware.com>
+Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/linux/mm.h |    6 +++++-
- mm/internal.h      |    5 +++--
- 2 files changed, 8 insertions(+), 3 deletions(-)
+ include/linux/mm.h |   12 ++++++++++++
+ mm/internal.h      |   23 +++++++++++++++++++++++
+ 2 files changed, 35 insertions(+)
 
 --- a/include/linux/mm.h
 +++ b/include/linux/mm.h
-@@ -488,6 +488,10 @@ static inline void get_huge_page_tail(st
- 
- extern bool __get_page_tail(struct page *page);
- 
-+/* 127: arbitrary random number, small enough to assemble well */
-+#define page_ref_zero_or_close_to_overflow(page) \
-+	((unsigned int) atomic_read(&page->_count) + 127u <= 127u)
-+
- static inline void get_page(struct page *page)
- {
- 	if (unlikely(PageTail(page)))
-@@ -497,7 +501,7 @@ static inline void get_page(struct page
- 	 * Getting a normal page or the head of a compound page
- 	 * requires to already have an elevated page->_count.
- 	 */
--	VM_BUG_ON_PAGE(atomic_read(&page->_count) <= 0, page);
-+	VM_BUG_ON_PAGE(page_ref_zero_or_close_to_overflow(page), page);
+@@ -505,6 +505,18 @@ static inline void get_page(struct page
  	atomic_inc(&page->_count);
  }
  
++static inline __must_check bool try_get_page(struct page *page)
++{
++	if (unlikely(PageTail(page)))
++		if (likely(__get_page_tail(page)))
++			return true;
++
++	if (WARN_ON_ONCE(atomic_read(&page->_count) <= 0))
++		return false;
++	atomic_inc(&page->_count);
++	return true;
++}
++
+ static inline struct page *virt_to_head_page(const void *x)
+ {
+ 	struct page *page = virt_to_page(x);
 --- a/mm/internal.h
 +++ b/mm/internal.h
-@@ -81,7 +81,8 @@ static inline void __get_page_tail_foll(
- 	 * speculative page access (like in
- 	 * page_cache_get_speculative()) on tail pages.
- 	 */
--	VM_BUG_ON_PAGE(atomic_read(&compound_head(page)->_count) <= 0, page);
-+	VM_BUG_ON_PAGE(page_ref_zero_or_close_to_overflow(compound_head(page)),
-+		       page);
- 	if (get_page_head)
- 		atomic_inc(&compound_head(page)->_count);
- 	get_huge_page_tail(page);
-@@ -106,7 +107,7 @@ static inline void get_page_foll(struct
- 		 * Getting a normal page or the head of a compound page
- 		 * requires to already have an elevated page->_count.
- 		 */
--		VM_BUG_ON_PAGE(atomic_read(&page->_count) <= 0, page);
-+		VM_BUG_ON_PAGE(page_ref_zero_or_close_to_overflow(page), page);
- 		atomic_inc(&page->_count);
+@@ -112,6 +112,29 @@ static inline void get_page_foll(struct
  	}
  }
+ 
++static inline __must_check bool try_get_page_foll(struct page *page)
++{
++	if (unlikely(PageTail(page))) {
++		if (WARN_ON_ONCE(atomic_read(&compound_head(page)->_count) <= 0))
++			return false;
++		/*
++		 * This is safe only because
++		 * __split_huge_page_refcount() can't run under
++		 * get_page_foll() because we hold the proper PT lock.
++		 */
++		__get_page_tail_foll(page, true);
++	} else {
++		/*
++		 * Getting a normal page or the head of a compound page
++		 * requires to already have an elevated page->_count.
++		 */
++		if (WARN_ON_ONCE(atomic_read(&page->_count) <= 0))
++			return false;
++		atomic_inc(&page->_count);
++	}
++	return true;
++}
++
+ extern unsigned long highest_memmap_pfn;
+ 
+ /*
 
 
