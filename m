@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED03DC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:00:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E697C18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:00:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC5CE20674
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:00:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6098B20409
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:00:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583845246;
-	bh=YdL6srul3R7Y6m6aFXkHfEa6dkbwy5CkfR5vAKHotE8=;
+	s=default; t=1583845249;
+	bh=tWIk8AwSY/0NBQXlgC+ZuTX6afc1+pa/Job7hLICDa4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Fnl3A8/grj0fTe1Bv7IibYXrepbEkuD43oFzBHE+eZ8/nNGhZ7NXHZ8NDRVDP9f1i
-	 qz+xRiRtAEOYKfq5dhvP66nfTJMCgPS2up9fg4IT8/SuXTUzCGCFwGq96dSKI0AbWK
-	 cfY5OCPFuYus6zs/PAjfWfo5yOPAYXNjG97oqsrY=
+	b=o62n76LOZuYPLSPqHRXH9b2fxR7dyYn8o29V1p9SVbKW94KHb43yu82CQAqADYLz6
+	 TEir6Zp0mTB1lHtADfkHzpiVxHBx1nGFs7E4HwznRShbPC8iw2pUGCFroGPpH+6g23
+	 6AmBoyL2eTSrEIglJfREuaxEGbbY4l2fGk8EBkO4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730172AbgCJNAo (ORCPT
+        id S1730024AbgCJNAs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:00:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41510 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:00:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41578 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729899AbgCJNAk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:00:40 -0400
+        id S1729018AbgCJNAn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:00:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC8522253D;
-        Tue, 10 Mar 2020 13:00:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 409472468D;
+        Tue, 10 Mar 2020 13:00:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845240;
-        bh=YdL6srul3R7Y6m6aFXkHfEa6dkbwy5CkfR5vAKHotE8=;
+        s=default; t=1583845242;
+        bh=tWIk8AwSY/0NBQXlgC+ZuTX6afc1+pa/Job7hLICDa4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oos0ro4ZlyuWezXCc/+QPI63x3HtM9Ca1Pdj1A750tJAiVXkfakTNiFzZF7xbN3h4
-         eA+W4Tk3dRIgMNlNZfZ7H5MTURECYftfuo2RJ8o0Tory/H651WeocXhWV/7LRbrBq9
-         1nu46cO3CezLZVj0y5ihYSx73zAggG827fqEleDc=
+        b=AHVjH5Oqca4jhYCE+VYzPq3ld05QN1G8PK2Ni6/h3r9CPLSu1bw2fm9S8/V7/3AWV
+         SHc9Qhwqn4HPP5amdBQQjlS++jURSQnjX0vOBSxGEXbpBvm9NYZu5BMtTiO4PAoAHo
+         7SzJLI6+Ghm7DNO/XkJcFPegUQfF42zNbnKpITAM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Gerd Hoffmann <kraxel@redhat.com>,
-        Gurchetan Singh <gurchetansingh@chromium.org>,
-        Guillaume Gardet <Guillaume.Gardet@arm.com>
-Subject: [PATCH 5.5 111/189] drm/shmem: add support for per object caching flags.
-Date:   Tue, 10 Mar 2020 13:39:08 +0100
-Message-Id: <20200310123650.922870835@linuxfoundation.org>
+        stable@vger.kernel.org, Feifei Xu <Feifei.Xu@amd.com>,
+        Monk Liu <monk.liu@amd.com>, "Tianci.Yin" <tianci.yin@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: [PATCH 5.5 112/189] drm/amdgpu: disable 3D pipe 1 on Navi1x
+Date:   Tue, 10 Mar 2020 13:39:09 +0100
+Message-Id: <20200310123651.038850283@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123639.608886314@linuxfoundation.org>
 References: <20200310123639.608886314@linuxfoundation.org>
@@ -60,72 +60,162 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gerd Hoffmann <kraxel@redhat.com>
+From: Tianci.Yin <tianci.yin@amd.com>
 
-commit 1cad629257e76025bcbf490c58de550fb67d4d0e upstream.
+commit 194bcf35bce4a236059816bc41b3db9c9c92a1bb upstream.
 
-Add map_cached bool to drm_gem_shmem_object, to request cached mappings
-on a per-object base.  Check the flag before adding writecombine to
-pgprot bits.
+[why]
+CP firmware decide to skip setting the state for 3D pipe 1 for Navi1x as there
+is no use case.
 
+[how]
+Disable 3D pipe 1 on Navi1x.
+
+Reviewed-by: Feifei Xu <Feifei.Xu@amd.com>
+Reviewed-by: Monk Liu <monk.liu@amd.com>
+Signed-off-by: Tianci.Yin <tianci.yin@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Cc: stable@vger.kernel.org
-Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
-Reviewed-by: Gurchetan Singh <gurchetansingh@chromium.org>
-Tested-by: Guillaume Gardet <Guillaume.Gardet@arm.com>
-Link: http://patchwork.freedesktop.org/patch/msgid/20200226154752.24328-2-kraxel@redhat.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/drm_gem_shmem_helper.c |   15 +++++++++++----
- include/drm/drm_gem_shmem_helper.h     |    5 +++++
- 2 files changed, 16 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c |   95 +++++++++++++++++----------------
+ 1 file changed, 50 insertions(+), 45 deletions(-)
 
---- a/drivers/gpu/drm/drm_gem_shmem_helper.c
-+++ b/drivers/gpu/drm/drm_gem_shmem_helper.c
-@@ -254,11 +254,16 @@ static void *drm_gem_shmem_vmap_locked(s
- 	if (ret)
- 		goto err_zero_use;
+--- a/drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c
+@@ -54,7 +54,7 @@
+  * In bring-up phase, it just used primary ring so set gfx ring number as 1 at
+  * first.
+  */
+-#define GFX10_NUM_GFX_RINGS	2
++#define GFX10_NUM_GFX_RINGS_NV1X	1
+ #define GFX10_MEC_HPD_SIZE	2048
  
--	if (obj->import_attach)
-+	if (obj->import_attach) {
- 		shmem->vaddr = dma_buf_vmap(obj->import_attach->dmabuf);
--	else
-+	} else {
-+		pgprot_t prot = PAGE_KERNEL;
-+
-+		if (!shmem->map_cached)
-+			prot = pgprot_writecombine(prot);
- 		shmem->vaddr = vmap(shmem->pages, obj->size >> PAGE_SHIFT,
--				    VM_MAP, pgprot_writecombine(PAGE_KERNEL));
-+				    VM_MAP, prot);
+ #define F32_CE_PROGRAM_RAM_SIZE		65536
+@@ -1286,7 +1286,7 @@ static int gfx_v10_0_sw_init(void *handl
+ 	case CHIP_NAVI14:
+ 	case CHIP_NAVI12:
+ 		adev->gfx.me.num_me = 1;
+-		adev->gfx.me.num_pipe_per_me = 2;
++		adev->gfx.me.num_pipe_per_me = 1;
+ 		adev->gfx.me.num_queue_per_pipe = 1;
+ 		adev->gfx.mec.num_mec = 2;
+ 		adev->gfx.mec.num_pipe_per_mec = 4;
+@@ -2692,18 +2692,20 @@ static int gfx_v10_0_cp_gfx_start(struct
+ 	amdgpu_ring_commit(ring);
+ 
+ 	/* submit cs packet to copy state 0 to next available state */
+-	ring = &adev->gfx.gfx_ring[1];
+-	r = amdgpu_ring_alloc(ring, 2);
+-	if (r) {
+-		DRM_ERROR("amdgpu: cp failed to lock ring (%d).\n", r);
+-		return r;
+-	}
+-
+-	amdgpu_ring_write(ring, PACKET3(PACKET3_CLEAR_STATE, 0));
+-	amdgpu_ring_write(ring, 0);
++	if (adev->gfx.num_gfx_rings > 1) {
++		/* maximum supported gfx ring is 2 */
++		ring = &adev->gfx.gfx_ring[1];
++		r = amdgpu_ring_alloc(ring, 2);
++		if (r) {
++			DRM_ERROR("amdgpu: cp failed to lock ring (%d).\n", r);
++			return r;
++		}
+ 
+-	amdgpu_ring_commit(ring);
++		amdgpu_ring_write(ring, PACKET3(PACKET3_CLEAR_STATE, 0));
++		amdgpu_ring_write(ring, 0);
+ 
++		amdgpu_ring_commit(ring);
 +	}
+ 	return 0;
+ }
  
- 	if (!shmem->vaddr) {
- 		DRM_DEBUG_KMS("Failed to vmap pages\n");
-@@ -537,7 +542,9 @@ int drm_gem_shmem_mmap(struct drm_gem_ob
- 	}
+@@ -2800,39 +2802,41 @@ static int gfx_v10_0_cp_gfx_resume(struc
+ 	mutex_unlock(&adev->srbm_mutex);
  
- 	vma->vm_flags |= VM_MIXEDMAP | VM_DONTEXPAND;
--	vma->vm_page_prot = pgprot_writecombine(vm_get_page_prot(vma->vm_flags));
-+	vma->vm_page_prot = vm_get_page_prot(vma->vm_flags);
-+	if (!shmem->map_cached)
-+		vma->vm_page_prot = pgprot_writecombine(vma->vm_page_prot);
- 	vma->vm_page_prot = pgprot_decrypted(vma->vm_page_prot);
- 	vma->vm_ops = &drm_gem_shmem_vm_ops;
- 
---- a/include/drm/drm_gem_shmem_helper.h
-+++ b/include/drm/drm_gem_shmem_helper.h
-@@ -96,6 +96,11 @@ struct drm_gem_shmem_object {
- 	 * The address are un-mapped when the count reaches zero.
- 	 */
- 	unsigned int vmap_use_count;
+ 	/* Init gfx ring 1 for pipe 1 */
+-	mutex_lock(&adev->srbm_mutex);
+-	gfx_v10_0_cp_gfx_switch_pipe(adev, PIPE_ID1);
+-	ring = &adev->gfx.gfx_ring[1];
+-	rb_bufsz = order_base_2(ring->ring_size / 8);
+-	tmp = REG_SET_FIELD(0, CP_RB1_CNTL, RB_BUFSZ, rb_bufsz);
+-	tmp = REG_SET_FIELD(tmp, CP_RB1_CNTL, RB_BLKSZ, rb_bufsz - 2);
+-	WREG32_SOC15(GC, 0, mmCP_RB1_CNTL, tmp);
+-	/* Initialize the ring buffer's write pointers */
+-	ring->wptr = 0;
+-	WREG32_SOC15(GC, 0, mmCP_RB1_WPTR, lower_32_bits(ring->wptr));
+-	WREG32_SOC15(GC, 0, mmCP_RB1_WPTR_HI, upper_32_bits(ring->wptr));
+-	/* Set the wb address wether it's enabled or not */
+-	rptr_addr = adev->wb.gpu_addr + (ring->rptr_offs * 4);
+-	WREG32_SOC15(GC, 0, mmCP_RB1_RPTR_ADDR, lower_32_bits(rptr_addr));
+-	WREG32_SOC15(GC, 0, mmCP_RB1_RPTR_ADDR_HI, upper_32_bits(rptr_addr) &
+-		CP_RB1_RPTR_ADDR_HI__RB_RPTR_ADDR_HI_MASK);
+-	wptr_gpu_addr = adev->wb.gpu_addr + (ring->wptr_offs * 4);
+-	WREG32_SOC15(GC, 0, mmCP_RB_WPTR_POLL_ADDR_LO,
+-		lower_32_bits(wptr_gpu_addr));
+-	WREG32_SOC15(GC, 0, mmCP_RB_WPTR_POLL_ADDR_HI,
+-		upper_32_bits(wptr_gpu_addr));
+-
+-	mdelay(1);
+-	WREG32_SOC15(GC, 0, mmCP_RB1_CNTL, tmp);
+-
+-	rb_addr = ring->gpu_addr >> 8;
+-	WREG32_SOC15(GC, 0, mmCP_RB1_BASE, rb_addr);
+-	WREG32_SOC15(GC, 0, mmCP_RB1_BASE_HI, upper_32_bits(rb_addr));
+-	WREG32_SOC15(GC, 0, mmCP_RB1_ACTIVE, 1);
+-
+-	gfx_v10_0_cp_gfx_set_doorbell(adev, ring);
+-	mutex_unlock(&adev->srbm_mutex);
++	if (adev->gfx.num_gfx_rings > 1) {
++		mutex_lock(&adev->srbm_mutex);
++		gfx_v10_0_cp_gfx_switch_pipe(adev, PIPE_ID1);
++		/* maximum supported gfx ring is 2 */
++		ring = &adev->gfx.gfx_ring[1];
++		rb_bufsz = order_base_2(ring->ring_size / 8);
++		tmp = REG_SET_FIELD(0, CP_RB1_CNTL, RB_BUFSZ, rb_bufsz);
++		tmp = REG_SET_FIELD(tmp, CP_RB1_CNTL, RB_BLKSZ, rb_bufsz - 2);
++		WREG32_SOC15(GC, 0, mmCP_RB1_CNTL, tmp);
++		/* Initialize the ring buffer's write pointers */
++		ring->wptr = 0;
++		WREG32_SOC15(GC, 0, mmCP_RB1_WPTR, lower_32_bits(ring->wptr));
++		WREG32_SOC15(GC, 0, mmCP_RB1_WPTR_HI, upper_32_bits(ring->wptr));
++		/* Set the wb address wether it's enabled or not */
++		rptr_addr = adev->wb.gpu_addr + (ring->rptr_offs * 4);
++		WREG32_SOC15(GC, 0, mmCP_RB1_RPTR_ADDR, lower_32_bits(rptr_addr));
++		WREG32_SOC15(GC, 0, mmCP_RB1_RPTR_ADDR_HI, upper_32_bits(rptr_addr) &
++			     CP_RB1_RPTR_ADDR_HI__RB_RPTR_ADDR_HI_MASK);
++		wptr_gpu_addr = adev->wb.gpu_addr + (ring->wptr_offs * 4);
++		WREG32_SOC15(GC, 0, mmCP_RB_WPTR_POLL_ADDR_LO,
++			     lower_32_bits(wptr_gpu_addr));
++		WREG32_SOC15(GC, 0, mmCP_RB_WPTR_POLL_ADDR_HI,
++			     upper_32_bits(wptr_gpu_addr));
 +
-+	/**
-+	 * @map_cached: map object cached (instead of using writecombine).
-+	 */
-+	bool map_cached;
- };
++		mdelay(1);
++		WREG32_SOC15(GC, 0, mmCP_RB1_CNTL, tmp);
++
++		rb_addr = ring->gpu_addr >> 8;
++		WREG32_SOC15(GC, 0, mmCP_RB1_BASE, rb_addr);
++		WREG32_SOC15(GC, 0, mmCP_RB1_BASE_HI, upper_32_bits(rb_addr));
++		WREG32_SOC15(GC, 0, mmCP_RB1_ACTIVE, 1);
  
- #define to_drm_gem_shmem_obj(obj) \
++		gfx_v10_0_cp_gfx_set_doorbell(adev, ring);
++		mutex_unlock(&adev->srbm_mutex);
++	}
+ 	/* Switch to pipe 0 */
+ 	mutex_lock(&adev->srbm_mutex);
+ 	gfx_v10_0_cp_gfx_switch_pipe(adev, PIPE_ID0);
+@@ -3952,7 +3956,8 @@ static int gfx_v10_0_early_init(void *ha
+ {
+ 	struct amdgpu_device *adev = (struct amdgpu_device *)handle;
+ 
+-	adev->gfx.num_gfx_rings = GFX10_NUM_GFX_RINGS;
++	adev->gfx.num_gfx_rings = GFX10_NUM_GFX_RINGS_NV1X;
++
+ 	adev->gfx.num_compute_rings = AMDGPU_MAX_COMPUTE_RINGS;
+ 
+ 	gfx_v10_0_set_kiq_pm4_funcs(adev);
 
 
