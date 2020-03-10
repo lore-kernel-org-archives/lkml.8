@@ -2,174 +2,82 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6C71C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 11:49:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85C9BC18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 11:50:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CF1E208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 11:49:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="pn+TzBdv"
+	by mail.kernel.org (Postfix) with ESMTP id 5B9C3208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 11:50:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726445AbgCJLtV (ORCPT
+        id S1726464AbgCJLuP convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 07:49:21 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:11680 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726273AbgCJLtV (ORCPT
+        Tue, 10 Mar 2020 07:50:15 -0400
+Received: from mail.fireflyinternet.com ([109.228.58.192]:53369 "EHLO
+        fireflyinternet.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726211AbgCJLuP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 07:49:21 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1583840960; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=ytwZnEE2sp99z3FM2TWftEtWMZ7MKAuabGTh4qoB0Po=; b=pn+TzBdvrulyiz1gpZATSPD1JIjiykLL814KW3H2lE+H80ZN++1g75OSBqMVL9nIA5Wv+rLb
- pEqGV35qbatUyAu9p46Rg7rYBAUZkNXTIYz8FUQw7hL25ROgtWhgUycSlL8B+05MviidRLLy
- he5nxhN4H5g4b0ccAMZmQBCUAv8=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e677eb8.7f6638039928-smtp-out-n03;
- Tue, 10 Mar 2020 11:49:12 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 382E1C43637; Tue, 10 Mar 2020 11:49:11 +0000 (UTC)
-Received: from [192.168.1.2] (unknown [183.83.137.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 69210C433D2;
-        Tue, 10 Mar 2020 11:49:07 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 69210C433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-Subject: Re: [PATCH v13 0/4] Invoke rpmh_flush for non OSI targets
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Stephen Boyd <swboyd@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Evan Green <evgreen@chromium.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>, lsrao@codeaurora.org
-References: <1583746236-13325-1-git-send-email-mkshah@codeaurora.org>
- <CAD=FV=WBCaRhnMenyxg3-j2G2xgB9jebhe2pyh=6pzrq=JCbMg@mail.gmail.com>
-From:   Maulik Shah <mkshah@codeaurora.org>
-Message-ID: <f6890db3-6e6f-3f9e-103b-b606316e8b8f@codeaurora.org>
-Date:   Tue, 10 Mar 2020 17:19:05 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 10 Mar 2020 07:50:15 -0400
+X-Default-Received-SPF: pass (skip=forwardok (res=PASS)) x-ip-name=78.156.65.138;
+Received: from localhost (unverified [78.156.65.138]) 
+        by fireflyinternet.com (Firefly Internet (M1)) with ESMTP (TLS) id 20507742-1500050 
+        for multiple; Tue, 10 Mar 2020 11:50:09 +0000
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <CAD=FV=WBCaRhnMenyxg3-j2G2xgB9jebhe2pyh=6pzrq=JCbMg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <2e936d8fd2c445beb08e6dd3ee1f3891@AcuMS.aculab.com>
+References: <20200310092119.14965-1-chris@chris-wilson.co.uk> <2e936d8fd2c445beb08e6dd3ee1f3891@AcuMS.aculab.com>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        David Laight <David.Laight@ACULAB.COM>
+Subject: RE: [PATCH] list: Prevent compiler reloads inside 'safe' list iteration
+From:   Chris Wilson <chris@chris-wilson.co.uk>
+Cc:     "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Message-ID: <158384100886.16414.15741589015363013386@build.alporthouse.com>
+User-Agent: alot/0.8.1
+Date:   Tue, 10 Mar 2020 11:50:08 +0000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Quoting David Laight (2020-03-10 11:36:41)
+> From: Chris Wilson
+> > Sent: 10 March 2020 09:21
+> > Instruct the compiler to read the next element in the list iteration
+> > once, and that it is not allowed to reload the value from the stale
+> > element later. This is important as during the course of the safe
+> > iteration, the stale element may be poisoned (unbeknownst to the
+> > compiler).
+> 
+> Eh?
+> I thought any function call will stop the compiler being allowed
+> to reload the value.
+> The 'safe' loop iterators are only 'safe' against called
+> code removing the current item from the list.
+> 
+> > This helps prevent kcsan warnings over 'unsafe' conduct in releasing the
+> > list elements during list_for_each_entry_safe() and friends.
+> 
+> Sounds like kcsan is buggy ????
 
-On 3/10/2020 5:12 AM, Doug Anderson wrote:
-> Hi,
->
-> On Mon, Mar 9, 2020 at 2:31 AM Maulik Shah <mkshah@codeaurora.org> wrote:
->> Changes in v13:
->> - Address Stephen's comment to maintain COMPILE_TEST
->> - Address Doug's comments and add new APIs for start and end transaction
->>
->> Changes in v12:
->> - Kconfig change to remove COMPILE_TEST was dropped in v11, reinclude it.
->>
->> Changes in v11:
->> - Address Doug's comments on change 2 and 3
->> - Include change to invalidate TCSes before flush from [4]
->>
->> Changes in v10:
->> - Address Evan's comments to update commit message on change 2
->> - Add Evan's Reviewed by on change 2
->> - Remove comment from rpmh_flush() related to last CPU invoking it
->> - Rebase all changes on top of next-20200302
->>
->> Changes in v9:
->> - Keep rpmh_flush() to invoke from within cache_lock
->> - Remove comments related to only last cpu invoking rpmh_flush()
->>
->> Changes in v8:
->> - Address Stephen's comments on changes 2 and 3
->> - Add Reviewed by from Stephen on change 1
->>
->> Changes in v7:
->> - Address Srinivas's comments to update commit text
->> - Add Reviewed by from Srinivas
->>
->> Changes in v6:
->> - Drop 1 & 2 changes from v5 as they already landed in maintainer tree
->> - Drop 3 & 4 changes from v5 as no user at present for power domain in rsc
->> - Rename subject to appropriate since power domain changes are dropped
->> - Rebase other changes on top of next-20200221
->>
->> Changes in v5:
->> - Add Rob's Acked by on dt-bindings change
->> - Drop firmware psci change
->> - Update cpuidle stats in dtsi to follow PC mode
->> - Include change to update dirty flag when data is updated from [4]
->> - Add change to invoke rpmh_flush when caches are dirty
->>
->> Changes in v4:
->> - Add change to allow hierarchical topology in PC mode
->> - Drop hierarchical domain idle states converter from v3
->> - Address Merge sc7180 dtsi change to add low power modes
->>
->> Changes in v3:
->> - Address Rob's comment on dt property value
->> - Address Stephen's comments on rpmh-rsc driver change
->> - Include sc7180 cpuidle low power mode changes from [1]
->> - Include hierarchical domain idle states converter change from [2]
->>
->> Changes in v2:
->> - Add Stephen's Reviewed-By to the first three patches
->> - Addressed Stephen's comments on fourth patch
->> - Include changes to connect rpmh domain to cpuidle and genpds
->>
->> Resource State Coordinator (RSC) is responsible for powering off/lowering
->> the requirements from CPU subsystem for the associated hardware like buses,
->> clocks, and regulators when all CPUs and cluster is powered down.
->>
->> RSC power domain uses last-man activities provided by genpd framework based
->> on Ulf Hansoon's patch series[3], when the cluster of CPUs enter deepest
->> idle states. As a part of domain poweroff, RSC can lower resource state
->> requirements by flushing the cached sleep and wake state votes for various
->> resources.
->>
->> [1] https://patchwork.kernel.org/patch/11218965
->> [2] https://patchwork.kernel.org/patch/10941671
->> [3] https://patchwork.kernel.org/project/linux-arm-msm/list/?series=222355
->> [4] https://patchwork.kernel.org/project/linux-arm-msm/list/?series=236503
->>
->> Maulik Shah (3):
->>   arm64: dts: qcom: sc7180: Add cpuidle low power states
->>   soc: qcom: rpmh: Update dirty flag only when data changes
->>   soc: qcom: rpmh: Invoke rpmh_flush for dirty caches
->>
->>  arch/arm64/boot/dts/qcom/sc7180.dtsi | 78 ++++++++++++++++++++++++++++++++++++
->>  drivers/soc/qcom/rpmh.c              | 27 ++++++++++---
->>  2 files changed, 100 insertions(+), 5 deletions(-)
-> Did you happen to get a chance to test your patch against my cleanup /
-> documentation patch?  AKA:
->
-> https://lore.kernel.org/r/20200306235951.214678-1-dianders@chromium.org
->
-> -Doug
-Hi Doug,
+The warning kcsan gave made sense (a strange case where the emptying the
+list from inside the safe iterator would allow that list to be taken
+under a global mutex and have one extra request added to it. The
+list_for_each_entry_safe() should be ok in this scenario, so long as the
+next element is read before this element is dropped, and the compiler is
+instructed not to reload the element. kcsan is a little more insistent
+on having that annotation :)
 
-Not yet. i will update on your patches.
+In this instance I would say it was a false positive from kcsan, but I
+can see why it would complain and suspect that given a sufficiently
+aggressive compiler, we may be caught out by a late reload of the next
+element.
 
-Thanks,
-Maulik
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+That's my conjecture, but I leave it to the lkmm experts to decide :)
+-Chris
