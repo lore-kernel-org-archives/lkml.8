@@ -2,241 +2,115 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=FORGED_MUA_MOZILLA,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 982DFC18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:19:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E472C18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:19:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 489EA21655
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:19:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3C1721655
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:19:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FTRhK5wR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727368AbgCJUTR (ORCPT
+        id S1726692AbgCJUTu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 16:19:17 -0400
-Received: from mail-oln040092067053.outbound.protection.outlook.com ([40.92.67.53]:36576
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726307AbgCJUTQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 16:19:16 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lqYxXKvU9RcP8ga3wxe5uZ3FZxUk8mfE+NkPSBz5gOiRJUZPZKpVK4qMgPzq+mENd091MXb/wL1TB+Nb7BcCcH796zZr32OnJOp65cPE7TEseW6y0Puh6e2xCtDHhHTfM0bRRkA7AcdFBFfe8cJn3BfdMbyyqiNQh3GPRi2l0nUWwjgwwZmap2pkQQs/tXGCIk0Img/6tfPrF5YZWywV8uQgPg7XtjRboZdFaPVyqjGQTggapsjCV0fJbmcdcDNltMuanl1eLvI1/SEystMRwp6K5O3vc8XTd3khSdrMC7f/Qhr1KkOKXqTi4N6H9tVh+a8lk7/mRLoiz+85f76rlA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sGTpibA2a98iI3qOX4Bb+HeQu924Dp/7t2trJCixwwI=;
- b=Onleiu9ZIhQWQnh4DdczOvCbIv7wGX9KOg4pxFEE9/nZWqxpf5O/UjTFVz+/qe6wfSz447kXQ9TQEK9xKkLE3ISOIMu2gA1ooD+AeQ3W9Kq3sbfDcsbAUfW0QhF5ZEQtb0H57ZPjH0PRwyxV0RhHmUcSNyeiZ/9P63tzFemHWM1nHAhCHoC6rbRgKaJ8vKFt1eZHX0F1/MunRw5OoIutjimr9sIrhGnW1G4oA1oqADGKBkKmLG9CL99jlUqqMt95zIpzTzjrpCshthwX59nVzHo34vX5aquz/O70UkKD+kGj81+iyN9GR+Z1lfGHQdrceDu+E9clnD6lCBvUGz8d4g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hotmail.de; dmarc=pass action=none header.from=hotmail.de;
- dkim=pass header.d=hotmail.de; arc=none
-Received: from VE1EUR02FT050.eop-EUR02.prod.protection.outlook.com
- (2a01:111:e400:7e1e::3a) by
- VE1EUR02HT154.eop-EUR02.prod.protection.outlook.com (2a01:111:e400:7e1e::465)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.11; Tue, 10 Mar
- 2020 20:19:08 +0000
-Received: from AM6PR03MB5170.eurprd03.prod.outlook.com (10.152.12.60) by
- VE1EUR02FT050.mail.protection.outlook.com (10.152.13.198) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2793.11 via Frontend Transport; Tue, 10 Mar 2020 20:19:08 +0000
-X-IncomingTopHeaderMarker: OriginalChecksum:75B335AEC4F75D550E70D40E707B41863791464A4A2614DBBC8A7B9717E018FE;UpperCasedChecksum:CE690AD99C8ED899E3E9D7241EB9D336ED60526E2927906538A433033B031CDC;SizeAsReceived:10324;Count:50
-Received: from AM6PR03MB5170.eurprd03.prod.outlook.com
- ([fe80::1956:d274:cab3:b4dd]) by AM6PR03MB5170.eurprd03.prod.outlook.com
- ([fe80::1956:d274:cab3:b4dd%6]) with mapi id 15.20.2793.013; Tue, 10 Mar 2020
- 20:19:08 +0000
-Subject: Re: [PATCH 3/4] proc: io_accounting: Use new infrastructure to fix
- deadlocks in execve
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Andrei Vagin <avagin@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Yuyang Du <duyuyang@gmail.com>,
-        David Hildenbrand <david@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        David Howells <dhowells@redhat.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christian Kellner <christian@kellner.me>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>
-References: <AM6PR03MB5170EB4427BF5C67EE98FF09E4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <87v9ne5y4y.fsf_-_@x220.int.ebiederm.org>
- <87zhcq4jdj.fsf_-_@x220.int.ebiederm.org>
- <AM6PR03MB5170BC58D90BAD80CDEF3F8BE4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <878sk94eay.fsf@x220.int.ebiederm.org>
- <AM6PR03MB517086003BD2C32E199690A3E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <87r1y12yc7.fsf@x220.int.ebiederm.org> <87k13t2xpd.fsf@x220.int.ebiederm.org>
- <87d09l2x5n.fsf@x220.int.ebiederm.org>
- <AM6PR03MB5170F0F9DC18F5EA77C9A857E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <871rq12vxu.fsf@x220.int.ebiederm.org>
- <AM6PR03MB5170DF45E3245F55B95CCD91E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <877dzt1fnf.fsf@x220.int.ebiederm.org>
- <AM6PR03MB51701C6F60699F99C5C67E0BE4FF0@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <875zfcxlwy.fsf@x220.int.ebiederm.org>
- <AM6PR03MB5170BD2476E35068E182EFA4E4FF0@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <874kuwvxkz.fsf@x220.int.ebiederm.org>
-From:   Bernd Edlinger <bernd.edlinger@hotmail.de>
-Message-ID: <AM6PR03MB5170A29F8D885147F1A3981EE4FF0@AM6PR03MB5170.eurprd03.prod.outlook.com>
-Date:   Tue, 10 Mar 2020 21:19:05 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-In-Reply-To: <874kuwvxkz.fsf@x220.int.ebiederm.org>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: AM3PR07CA0119.eurprd07.prod.outlook.com
- (2603:10a6:207:7::29) To AM6PR03MB5170.eurprd03.prod.outlook.com
- (2603:10a6:20b:ca::23)
-X-Microsoft-Original-Message-ID: <ac2d76d8-edba-3964-592f-8ed02083acd4@hotmail.de>
+        Tue, 10 Mar 2020 16:19:50 -0400
+Received: from mail-lf1-f53.google.com ([209.85.167.53]:45932 "EHLO
+        mail-lf1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726268AbgCJUTt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 16:19:49 -0400
+Received: by mail-lf1-f53.google.com with SMTP id b13so12013038lfb.12
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 13:19:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Ph0vbxjhiVWxt5rg3nkX2vAEthsG0dcjm7RlaAwg098=;
+        b=FTRhK5wRW+NRGmaoV4Ks4Odxss3oisU/sts3+fM0oGm2ippT+eDkr1IaNE6RESk+lr
+         uP42CT/VBEM8RxZzRhXu7OdoPtl5ghIZEFU0Sv2IQsJ3dsb3HDE68bjkrG/0JEnJJzf0
+         h6OdM2SCHqYO8CccNpImf0UM6jUH0ewQIPYtbBJzBYWqxTlfX+DXwC0GZqRBGhDFShoh
+         XCfYyNmsQDQ3gC5kkVw7Uuas1zPz/IW24F0I0iX7Q/Ik/pIlrdUPuv0Qa8NVg21pd4QD
+         oVdancEdjuYHMTQh2nox/OksTwzF4NxKTaM0bkelHD5AejJfdXyGtde0aTBYJcvQlxAN
+         WqKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ph0vbxjhiVWxt5rg3nkX2vAEthsG0dcjm7RlaAwg098=;
+        b=lZO5HNySNoa4M9KBOLwVKIyjif9Gq8rUyd9zs1NWlvDxIPOId1WU0TOvavowUW/X1S
+         jKKnqpxuY8gFB4Q6Xm/J7eBNDzPEhl6ugYJeMSewfg0Cd036Hiex+Y/nEs7ILt1lzjgM
+         Gcp+ayrtTxk4ZpG7J1yVygxVb2sl3NoGbpovZ6G/fDqMxSvxaVPONfPWqDLQK+xJUSvh
+         GIRO9giUx4DJq3y2ibD2oGFEuG8qPmRo2azfkxTK1An2WIMd426LDwfr+3vR53s1txBn
+         qmwhnb4Vbbq0qCmjaPtOkdp0hfuCfgDQ6Y2SlxQfMpvTRIJcslVux2JW1kvPDYdYm09+
+         9VoQ==
+X-Gm-Message-State: ANhLgQ0KBhBxO/yw/gve7GbJXaj+J9nI6iGL/FUFCWnLPJIQL6Uui8TW
+        6gxrMFLilB4PdVH+jFkr15ZLkYQo+s0vJSepjTzPfQ==
+X-Google-Smtp-Source: ADFU+vtmwZqppStJchtpo+FXaK2zYi5y4NF4w2GV6ag8hGufCvRmr98qaLuzObauOhshhDxAZdF9relJA+CJ5k6OMUc=
+X-Received: by 2002:a05:6512:68a:: with SMTP id t10mr13869220lfe.126.1583871586843;
+ Tue, 10 Mar 2020 13:19:46 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [192.168.1.101] (92.77.140.102) by AM3PR07CA0119.eurprd07.prod.outlook.com (2603:10a6:207:7::29) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.9 via Frontend Transport; Tue, 10 Mar 2020 20:19:06 +0000
-X-Microsoft-Original-Message-ID: <ac2d76d8-edba-3964-592f-8ed02083acd4@hotmail.de>
-X-TMN:  [7GqCFKberJhfiFLUY52XgHIF43KNN/eT]
-X-MS-PublicTrafficType: Email
-X-IncomingHeaderCount: 50
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-Correlation-Id: c1016142-1b55-42fb-9b87-08d7c5304979
-X-MS-TrafficTypeDiagnostic: VE1EUR02HT154:
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: phXLvVK2FVM1J0DFhowlYEqkAiwImwdQEN+TkWGH1bzRyDdh6I6xPTLd+ATlfTJomMJgSU0oHyBDbuE+SenREnvY4Vs2Rmq+sLC1Q7RRlpN9qEkrr2XbggfDV1uyt6MVCV5kj3XgNFVCvVgmDIpkBLvtDXjLOhQSNaQRoE8Of81QgKn97CgGj596RXB7GpQv
-X-MS-Exchange-AntiSpam-MessageData: b9bxU13hHcjdDEK8dPbjocds0/ot4nU4Q2RLgeophtFuTbHQ1uz1FWLp9uXXNjmvYB6AZhmszKIubYpm9akws/mzIupuhDhXWovqRb5dLawECmaxmuq2hI8eXBvbt8r+gUFAnu1BryErbd64vUpNyA==
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c1016142-1b55-42fb-9b87-08d7c5304979
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Mar 2020 20:19:08.0961
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1EUR02HT154
+References: <CAG48ez0G3JkMq61gUmyQAaCq=_TwHbi1XKzWRooxZkv08PQKuw@mail.gmail.com>
+ <20200310184814.GA8447@dhcp22.suse.cz>
+In-Reply-To: <20200310184814.GA8447@dhcp22.suse.cz>
+From:   Daniel Colascione <dancol@google.com>
+Date:   Tue, 10 Mar 2020 13:19:09 -0700
+Message-ID: <CAKOZueua_v8jHCpmEtTB6f3i9e2YnmX4mqdYVWhV4E=Z-n+zRQ@mail.gmail.com>
+Subject: Re: interaction of MADV_PAGEOUT with CoW anonymous mappings?
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Jann Horn <jannh@google.com>, Minchan Kim <minchan@kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/10/20 8:06 PM, Eric W. Biederman wrote:
-> Bernd Edlinger <bernd.edlinger@hotmail.de> writes:
-> 
->> This changes do_io_accounting to use the new exec_update_mutex
->> instead of cred_guard_mutex.
->>
->> This fixes possible deadlocks when the trace is accessing
->> /proc/$pid/io for instance.
->>
->> This should be safe, as the credentials are only used for reading.
-> 
-> This is an improvement.
-> 
-> We probably want to do this just as an incremental step in making things
-> better but perhaps I am blind but I am not finding the reason for
-> guarding this with the cred_guard_mutex to be at all persuasive.
-> 
-> I think moving the ptrace_may_access check down to after the
-> unlock_task_sighand would be just as effective at addressing the
-> concerns raised in the original commit.  I think the task_lock provides
-> all of the barrier we need to make it safe to move the ptrace_may_access
-> checks safe.
-> 
-> The reason I say this is I don't see exec changing ->ioac.  Just
-> performing some I/O which would update the io accounting statistics.
-> 
+On Tue, Mar 10, 2020 at 11:48 AM Michal Hocko <mhocko@kernel.org> wrote:
+>
+> On Tue 10-03-20 19:08:28, Jann Horn wrote:
+> > Hi!
+> >
+> > >From looking at the source code, it looks to me as if using
+> > MADV_PAGEOUT on a CoW anonymous mapping will page out the page if
+> > possible, even if other processes still have the same page mapped. Is
+> > that correct?
+> >
+> > If so, that's probably bad in environments where many processes (with
+> > different privileges) are forked from a single zygote process (like
+> > Android and Chrome), I think? If you accidentally call it on a CoW
+> > anonymous mapping with shared pages, you'll degrade the performance of
+> > other processes. And if an attacker does it intentionally, they could
+> > use that to aid with exploiting race conditions or weird
+> > microarchitectural stuff (e.g. the new https://lviattack.eu/lvi.pdf
+> > talks about "the assumption that attackers can provoke page faults or
+> > microcode assists for (arbitrary) load operations in the victim
+> > domain").
+> >
+> > Should madvise_cold_or_pageout_pte_range() maybe refuse to operate on
+> > pages with mapcount>1, or something like that? Or does it already do
+> > that, and I just missed the check?
+>
+> I have brought up side channel attacks earlier [1] but only in the
+> context of shared page cache pages. I didn't really consider shared
+> anonymous pages to be a real problem. I was under impression that CoW
+> pages shouldn't be a real problem because any security sensible
+> applications shouldn't allow untrusted code to be forked and CoW
+> anything really important. I believe we have made this assumption
+> in other places - IIRC on gup with FOLL_FORCE but I admit I have
+> very happily forgot most details.
 
-Maybe the suid executable is starting up and doing io or not,
-and what the program does immediately at startup is a secret,
-that we want to keep secret but evil eve want to find out.
-eve is using /proc/alice/io to do that.
-
-It is a bit constructed, but seems like a security concern.
-when we keep the exec_update_mutex while collecting the data, we
-cannot see any io of the new process when the new credentials
-don't allow that.
-
-
-Bernd.
-
-> Can anyone see if I am wrong?
-> 
-> Eric
-> 
-> 
-> commit 293eb1e7772b25a93647c798c7b89bf26c2da2e0
-> Author: Vasiliy Kulikov <segoon@openwall.com>
-> Date:   Tue Jul 26 16:08:38 2011 -0700
-> 
->     proc: fix a race in do_io_accounting()
->     
->     If an inode's mode permits opening /proc/PID/io and the resulting file
->     descriptor is kept across execve() of a setuid or similar binary, the
->     ptrace_may_access() check tries to prevent using this fd against the
->     task with escalated privileges.
->     
->     Unfortunately, there is a race in the check against execve().  If
->     execve() is processed after the ptrace check, but before the actual io
->     information gathering, io statistics will be gathered from the
->     privileged process.  At least in theory this might lead to gathering
->     sensible information (like ssh/ftp password length) that wouldn't be
->     available otherwise.
->     
->     Holding task->signal->cred_guard_mutex while gathering the io
->     information should protect against the race.
->     
->     The order of locking is similar to the one inside of ptrace_attach():
->     first goes cred_guard_mutex, then lock_task_sighand().
->     
->     Signed-off-by: Vasiliy Kulikov <segoon@openwall.com>
->     Cc: Al Viro <viro@zeniv.linux.org.uk>
->     Cc: <stable@kernel.org>
->     Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
->     Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-> 
-> 
-> 
->> Signed-off-by: Bernd Edlinger <bernd.edlinger@hotmail.de>
->> ---
->>  fs/proc/base.c | 4 ++--
->>  1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/fs/proc/base.c b/fs/proc/base.c
->> index 4fdfe4f..529d0c6 100644
->> --- a/fs/proc/base.c
->> +++ b/fs/proc/base.c
->> @@ -2770,7 +2770,7 @@ static int do_io_accounting(struct task_struct *task, struct seq_file *m, int wh
->>  	unsigned long flags;
->>  	int result;
->>  
->> -	result = mutex_lock_killable(&task->signal->cred_guard_mutex);
->> +	result = mutex_lock_killable(&task->signal->exec_update_mutex);
->>  	if (result)
->>  		return result;
->>  
->> @@ -2806,7 +2806,7 @@ static int do_io_accounting(struct task_struct *task, struct seq_file *m, int wh
->>  	result = 0;
->>  
->>  out_unlock:
->> -	mutex_unlock(&task->signal->cred_guard_mutex);
->> +	mutex_unlock(&task->signal->exec_update_mutex);
->>  	return result;
->>  }
+I'm more worried about the performance implications. Consider
+libc.so's data section: that's a COW mapping, and we COW it during
+zygote initialization as we load and relocate libc.so. Child processes
+shouldn't be dirtying and re-COWing those relocated pages. If I
+understand Jann's message correctly, MADV_PAGEOUT would force the
+pages corresponding to the libc.so data segment out to zram just
+because we MADV_PAGEOUT-ed a single process that happened to use libc.
+We should leave those pages in memory, IMHO.
