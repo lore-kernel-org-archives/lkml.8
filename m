@@ -2,53 +2,53 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55B02C2BB8B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:41:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93F63C2BB8C
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:41:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A783246A7
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:41:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 583B724695
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:41:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583844074;
-	bh=yF4Ztizqe6OAY18YyV2d1eE+3ZkYoQOuvreLCSvwfoU=;
+	s=default; t=1583844079;
+	bh=e6XfKFCo3E/geqxtJL5UjdGZZn5PajSr++jGszYg4WU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GbhBgEU4fAR8NCUOcnCgG7o4TPYo8cWZJd0SiOQw70TXIBHnHXaagxImO0Ot3sUsX
-	 KO1FOsbEgvgr5sxudqO5CSvcSz6zC0B+d/Kc69gbcVcjXpBSCyO6YdIwvluAUqJ2nM
-	 gJithilx+a9Bv/Aq55i417MiUFR1ki72Ho9chiNc=
+	b=rilAVeOdyG7F6Phwy3vy9dFOFbD1xW4+3s/jt2jCImDJPRqfonez0DayKCGkSS00k
+	 PlTK9hxduN2R22kMqJ3SMARB7mzt1S/293IlwaVCZehY4PomUWaQTJgxxjn2ljtdHC
+	 q5J8/ELDRTdWrzHyNzxbLfxt97m0DOOt0e3fU+qE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726756AbgCJMlM (ORCPT
+        id S1726841AbgCJMlS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:41:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40352 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:41:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40536 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726702AbgCJMlI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:41:08 -0400
+        id S1726776AbgCJMlP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:41:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 62E12246A1;
-        Tue, 10 Mar 2020 12:41:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D54AD24695;
+        Tue, 10 Mar 2020 12:41:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844067;
-        bh=yF4Ztizqe6OAY18YyV2d1eE+3ZkYoQOuvreLCSvwfoU=;
+        s=default; t=1583844075;
+        bh=e6XfKFCo3E/geqxtJL5UjdGZZn5PajSr++jGszYg4WU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZcA0SyximazwgIlRN0jKVSHjgfmq8+RrHYZOsnVzsLM2R6XwM/kIVVTT05VHMHmhU
-         IuFm73ipSqIliCR1cTuU8GzCOopttSK+OOyPBfLErR4vEDHJgwlmdBFYCzKeDu8kPE
-         QIjPJB7KACnWaxv6XwW0hAZX4nkbwbbUgR+jBPUU=
+        b=B1O8m6Tqf9w1P3iK6AT2Y0wbw3T4c9YBvW5JpApbCHYCf7SDqDFTdE6bbJRXaNeqR
+         q1uEMreS39TL2vzelA0mI4Za8PPoJGKjHDj3oMpMxLooC8UgUlOdtLRKeIwdm4CG9i
+         Z4YyXv7oRqu+iI1rraDGrUEsy+baPVxkQgtzmEQU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 09/72] cfg80211: add missing policy for NL80211_ATTR_STATUS_CODE
-Date:   Tue, 10 Mar 2020 13:38:22 +0100
-Message-Id: <20200310123603.945548066@linuxfoundation.org>
+        stable@vger.kernel.org, Johan Korsnes <jkorsnes@cisco.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Armando Visconti <armando.visconti@st.com>,
+        Jiri Kosina <jkosina@suse.cz>
+Subject: [PATCH 4.4 22/72] HID: core: increase HID report buffer size to 8KiB
+Date:   Tue, 10 Mar 2020 13:38:35 +0100
+Message-Id: <20200310123607.383998649@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123601.053680753@linuxfoundation.org>
 References: <20200310123601.053680753@linuxfoundation.org>
@@ -61,36 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
+From: Johan Korsnes <jkorsnes@cisco.com>
 
-[ Upstream commit ea75080110a4c1fa011b0a73cb8f42227143ee3e ]
+commit 84a4062632462c4320704fcdf8e99e89e94c0aba upstream.
 
-The nl80211_policy is missing for NL80211_ATTR_STATUS_CODE attribute.
-As a result, for strictly validated commands, it's assumed to not be
-supported.
+We have a HID touch device that reports its opens and shorts test
+results in HID buffers of size 8184 bytes. The maximum size of the HID
+buffer is currently set to 4096 bytes, causing probe of this device to
+fail. With this patch we increase the maximum size of the HID buffer to
+8192 bytes, making device probe and acquisition of said buffers succeed.
 
-Signed-off-by: Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
-Link: https://lore.kernel.org/r/20200213131608.10541-2-sergey.matyukevich.os@quantenna.com
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Johan Korsnes <jkorsnes@cisco.com>
+Cc: Alan Stern <stern@rowland.harvard.edu>
+Cc: Armando Visconti <armando.visconti@st.com>
+Cc: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- net/wireless/nl80211.c | 1 +
- 1 file changed, 1 insertion(+)
+ include/linux/hid.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/wireless/nl80211.c b/net/wireless/nl80211.c
-index fd0bf278067ef..4b30e91106d07 100644
---- a/net/wireless/nl80211.c
-+++ b/net/wireless/nl80211.c
-@@ -330,6 +330,7 @@ static const struct nla_policy nl80211_policy[NUM_NL80211_ATTR] = {
- 	[NL80211_ATTR_CONTROL_PORT_ETHERTYPE] = { .type = NLA_U16 },
- 	[NL80211_ATTR_CONTROL_PORT_NO_ENCRYPT] = { .type = NLA_FLAG },
- 	[NL80211_ATTR_PRIVACY] = { .type = NLA_FLAG },
-+	[NL80211_ATTR_STATUS_CODE] = { .type = NLA_U16 },
- 	[NL80211_ATTR_CIPHER_SUITE_GROUP] = { .type = NLA_U32 },
- 	[NL80211_ATTR_WPA_VERSIONS] = { .type = NLA_U32 },
- 	[NL80211_ATTR_PID] = { .type = NLA_U32 },
--- 
-2.20.1
-
+--- a/include/linux/hid.h
++++ b/include/linux/hid.h
+@@ -451,7 +451,7 @@ struct hid_report_enum {
+ };
+ 
+ #define HID_MIN_BUFFER_SIZE	64		/* make sure there is at least a packet size of space */
+-#define HID_MAX_BUFFER_SIZE	4096		/* 4kb */
++#define HID_MAX_BUFFER_SIZE	8192		/* 8kb */
+ #define HID_CONTROL_FIFO_SIZE	256		/* to init devices with >100 reports */
+ #define HID_OUTPUT_FIFO_SIZE	64
+ 
 
 
