@@ -8,63 +8,62 @@ X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 727C9C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 14:30:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9129DC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 14:31:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4956A20637
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 14:30:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 642B520828
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 14:31:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CoFNk7HH"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KttrUyVN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727463AbgCJOat (ORCPT
+        id S1727493AbgCJObB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 10:30:49 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:44350 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726252AbgCJOat (ORCPT
+        Tue, 10 Mar 2020 10:31:01 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:41387 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726252AbgCJObB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 10:30:49 -0400
-Received: by mail-pl1-f195.google.com with SMTP id d9so5489015plo.11;
-        Tue, 10 Mar 2020 07:30:48 -0700 (PDT)
+        Tue, 10 Mar 2020 10:31:01 -0400
+Received: by mail-pg1-f196.google.com with SMTP id b1so6373256pgm.8;
+        Tue, 10 Mar 2020 07:30:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=ge7gDpcBGRttSD8WjUIEGB/IfPhV68NKF/ex9fXuV1k=;
-        b=CoFNk7HHJ27bS8Sau2w7fDpQELoK3pr1joAA4rGVBfG5Pm0v8QxK3gvrRv31TMJgBw
-         /CCO4x6Zsc+Of+XbBzOwSfE7m1Sxr4AKwGylYBTm8IAkBbFMbk7JAamCR/yEbd2trE7T
-         ZB4gaC5uh/i04xNu0v5Ipync9hCnJUA093+tfr9ocBI/54M6JwTgwD/rLyyfGf25JEz2
-         6mhMR3QILXYjsvcCSoUdGHBFZ3n01gLbiOIyaQvtohNjsTXC47ZHWkh/TucOuWvDJzoq
-         G/Wcnk5S+SeD4OiYuFpNFMeNtZYnrAN0/fiJWGGuuDfvlHAM+YL+0/6r96Z2X7HtH+xo
-         G/pA==
+        bh=MacYADCTD8qyc7WRcNZs8kAJcizBx9dQZtfdy9R4RNE=;
+        b=KttrUyVNMJm4tVYsndEJewihA/Fnj3N2ZrjYXIrDKeGl8u/WNjT48KZrE5gagQlRGw
+         NsMbdCIkZCKNQ9PqKTuT6DOghaGLkm6UW7HV2ruq5QGTJfIBEw1k3T8+NDHpBWC2FvGm
+         GFuEtFUCuPXElbvO+Bt8GVG9txDegpQ7HBGqNL86qPmCGmC8/pmKM2VCCtl9gcZlEaKF
+         Sqk7gHJNqdfImZj4Tnq8kPoqYQtJOzyS+KFCV1P9sXrSEsYdNSJzBUxzbwJYwT9iFFq+
+         +HCsss44iRlGKPmrcylrkKGSpHUyGX4EKEPerBxQ8IrBOqRHSih0RLo1b1i5TRsWs+LX
+         erIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=ge7gDpcBGRttSD8WjUIEGB/IfPhV68NKF/ex9fXuV1k=;
-        b=SWc+ny+TEzkz6dVQIGR/2SF6zPW7daQHOHGWufBnRY7dqdv46fh0Y9X/WSbqOT8Z0e
-         bI0qmnzL05/dCP+3gGtbtpiYECk0Uo4ZFl+K3u+n+Pr6pYr7XdycGNnMbi3s2gLYYh/Z
-         rWEORg0JbMzuceFSkQ5vgkhZOT8xPolHem5j3sfQGdRy6/1TS/mwtsIGxbIAA8xGwcHA
-         FkE3HY1FbJnXzRBlq2z72RmUMTLmLT2/ujbmUUyA8Srqlc0dMBz9VM3VvgcV1vxanlTc
-         UM2IGwH19jLUTtAwmPk+5DrbAqFmt4DXmSDYW5vwgh2xsLqmKVsWgBJzqVxfDf/opa/n
-         IL2A==
-X-Gm-Message-State: ANhLgQ1rXWxiDg/iFXJkpK0lr3C1i7PMu34vMPS0u6WPkIPe1OlpGKxS
-        ejg62fDl5PBxMQFHMA9aEoojJWOLIi0=
-X-Google-Smtp-Source: ADFU+vstmImOUNgoCcrT7uEN6qpq42UEh1S0ApYVVlp2WgbIzWYZKiUJyohS5+dKEhJO2dENy6CcRA==
-X-Received: by 2002:a17:902:9a4c:: with SMTP id x12mr19846817plv.297.1583850647173;
-        Tue, 10 Mar 2020 07:30:47 -0700 (PDT)
+        bh=MacYADCTD8qyc7WRcNZs8kAJcizBx9dQZtfdy9R4RNE=;
+        b=Bz5kwrHwjuR55luBQackEX5I3B5GiPL0rI0kFbxyqmxuFvgp8dox9AzH4Jk0uhgYTp
+         du/0u1AbjehQ7aQYALJZ8tP5pJDpg+KRuZNONDqsXTcMwEaVJBzc9GCK7thy63/uDXnA
+         CO4Fa0+281WZ/8vh4y4En74SsOfkUHzM1NQmz/JJPS28JM0gTQKOFDlJO4+txZlGN5pO
+         XYRc4qU/PvOhSc5CmsMj6cFqaCDhIB86p7K8hMDFFYzU93avh6QyXttIRu8yveCMBUUz
+         MO0lPD0gHuowVYL5odfDrKuCWriEDQuwwoQpxLSbSrx17Cazd1bCJ+j7bNKUWMv3zhbJ
+         AMRw==
+X-Gm-Message-State: ANhLgQ0j2mUC3obSsoic7JituRflQSHZWNRNMRmee1EwWphYFt142p86
+        XO/bRecYr78HMgZ8OwgBeLg=
+X-Google-Smtp-Source: ADFU+vtOz7EqaVGESIcXkflwV06RHK6js+BsrPdEsZ/CtPuy/i+I8NN2JdKWWajI6r7UnUNzTZwOCQ==
+X-Received: by 2002:aa7:9af8:: with SMTP id y24mr6740721pfp.91.1583850658299;
+        Tue, 10 Mar 2020 07:30:58 -0700 (PDT)
 Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.gmail.com with ESMTPSA id l11sm2419160pjy.44.2020.03.10.07.30.43
+        by smtp.gmail.com with ESMTPSA id j21sm2537919pji.13.2020.03.10.07.30.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Mar 2020 07:30:46 -0700 (PDT)
+        Tue, 10 Mar 2020 07:30:57 -0700 (PDT)
 From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Kristoffer Ericson <kristoffer.ericson@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
         dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
         linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH v2] fbdev: s1d13xxxfb: add missed unregister_framebuffer in remove
-Date:   Tue, 10 Mar 2020 22:30:33 +0800
-Message-Id: <20200310143033.5098-1-hslester96@gmail.com>
+Subject: [PATCH v3] video: fbdev: arcfb: add missed free_irq and fix the order of request_irq
+Date:   Tue, 10 Mar 2020 22:30:50 +0800
+Message-Id: <20200310143050.5154-1-hslester96@gmail.com>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -74,63 +73,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver calls register_framebuffer() in probe but does not call
-unregister_framebuffer() in remove.
-Rename current remove to __s1d13xxxfb_remove() for error handler.
-Then add a new remove to call unregister_framebuffer().
+The driver forgets to free irq in remove which is requested in
+probe.
+Add the missed call to fix it.
+Also, the position of request_irq() in probe should be put before
+register_framebuffer().
 
 Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 ---
-Changes in v2:
-  - Rename the existing remove and add a new one to ensure the correctness
-    of error handler in probe.
+Changes in v3:
+  - Add missed variable par in remove.
 
- drivers/video/fbdev/s1d13xxxfb.c | 17 ++++++++++++++---
- 1 file changed, 14 insertions(+), 3 deletions(-)
+ drivers/video/fbdev/arcfb.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/video/fbdev/s1d13xxxfb.c b/drivers/video/fbdev/s1d13xxxfb.c
-index 8048499e398d..bafea3d09bba 100644
---- a/drivers/video/fbdev/s1d13xxxfb.c
-+++ b/drivers/video/fbdev/s1d13xxxfb.c
-@@ -721,9 +721,8 @@ static void s1d13xxxfb_fetch_hw_state(struct fb_info *info)
- 		xres, yres, xres_virtual, yres_virtual, is_color, is_dual, is_tft);
- }
+diff --git a/drivers/video/fbdev/arcfb.c b/drivers/video/fbdev/arcfb.c
+index 314ab82e01c0..9a720c14056c 100644
+--- a/drivers/video/fbdev/arcfb.c
++++ b/drivers/video/fbdev/arcfb.c
+@@ -544,10 +544,6 @@ static int arcfb_probe(struct platform_device *dev)
+ 	par->cslut[1] = 0x06;
+ 	info->flags = FBINFO_FLAG_DEFAULT;
+ 	spin_lock_init(&par->lock);
+-	retval = register_framebuffer(info);
+-	if (retval < 0)
+-		goto err1;
+-	platform_set_drvdata(dev, info);
+ 	if (irq) {
+ 		par->irq = irq;
+ 		if (request_irq(par->irq, &arcfb_interrupt, IRQF_SHARED,
+@@ -558,6 +554,10 @@ static int arcfb_probe(struct platform_device *dev)
+ 			goto err1;
+ 		}
+ 	}
++	retval = register_framebuffer(info);
++	if (retval < 0)
++		goto err1;
++	platform_set_drvdata(dev, info);
+ 	fb_info(info, "Arc frame buffer device, using %dK of video memory\n",
+ 		videomemorysize >> 10);
  
--
- static int
--s1d13xxxfb_remove(struct platform_device *pdev)
-+__s1d13xxxfb_remove(struct platform_device *pdev)
+@@ -590,9 +590,12 @@ static int arcfb_probe(struct platform_device *dev)
+ static int arcfb_remove(struct platform_device *dev)
  {
- 	struct fb_info *info = platform_get_drvdata(pdev);
- 	struct s1d13xxxfb_par *par = NULL;
-@@ -752,6 +751,18 @@ s1d13xxxfb_remove(struct platform_device *pdev)
- 	return 0;
- }
+ 	struct fb_info *info = platform_get_drvdata(dev);
++	struct arcfb_par *par = info->par;
  
-+static int
-+s1d13xxxfb_remove(struct platform_device *pdev)
-+{
-+	struct fb_info *info = platform_get_drvdata(pdev);
-+
-+	if (info)
-+		unregister_framebuffer(info);
-+
-+	return __s1d13xxxfb_remove(pdev);
-+}
-+
-+
- static int s1d13xxxfb_probe(struct platform_device *pdev)
- {
- 	struct s1d13xxxfb_par *default_par;
-@@ -895,7 +906,7 @@ static int s1d13xxxfb_probe(struct platform_device *pdev)
- 	return 0;
- 
- bail:
--	s1d13xxxfb_remove(pdev);
-+	__s1d13xxxfb_remove(pdev);
- 	return ret;
- 
- }
+ 	if (info) {
+ 		unregister_framebuffer(info);
++		if (irq)
++			free_irq(par->irq, info);
+ 		vfree((void __force *)info->screen_base);
+ 		framebuffer_release(info);
+ 	}
 -- 
 2.25.1
 
