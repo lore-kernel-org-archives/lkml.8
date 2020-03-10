@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70FACC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:11:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 444DDC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:11:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42D6B24649
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:11:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AF3D24649
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:11:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583845867;
-	bh=22IC65lRb6RwhaXCNj3PkpIhp56hep89oFwc1Ves1Eg=;
+	s=default; t=1583845871;
+	bh=OMMfU8VwxTyBRXDkWMx9E+Qlm6INuNVdIMsvg51r7yw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S6L4wJJJXf28l+apabLKp6ETV+np9Zfp7CvivoBFSHM3lGHjh5FPan0UlfyOFcgZl
-	 vUrkVjMn5Zvm9I63eW8SOtQ5woG2DKtMWy8LRydErpmSII1Z2knRByDs4FJlcSynzB
-	 Rsf002ejOwovI08TsDMpiPmrdDy4PB4OZPwODmbA=
+	b=NfP0ztPJ8dpmchi/UvRdmKBZvjcq+YjQOfcky6rX7NzAzqHEySK0mzw2RiKwhLJjo
+	 AcWzlkNe1X7ideUzKMqX865XvGvPMSO+LJ338gxk7XVsI0+ISaELFL8MeFyB2LsEIq
+	 0ixbt8NJa9Od4HqF8VQ2SiAjQ2yxZich5bsmKEVE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731369AbgCJNLF (ORCPT
+        id S1731384AbgCJNLK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:11:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60410 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:11:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60696 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731345AbgCJNKy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:10:54 -0400
+        id S1729584AbgCJNLI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:11:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 37ED1208E4;
-        Tue, 10 Mar 2020 13:10:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 34D12208E4;
+        Tue, 10 Mar 2020 13:11:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845853;
-        bh=22IC65lRb6RwhaXCNj3PkpIhp56hep89oFwc1Ves1Eg=;
+        s=default; t=1583845866;
+        bh=OMMfU8VwxTyBRXDkWMx9E+Qlm6INuNVdIMsvg51r7yw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZzRmYYcT/YtNaIVUvOAA9yXwBUTEAXPLjuDa8PH8X/65iKM9q3qT1HoiXIriGYMiV
-         hR4Nuks4ZkNi6n39xSc+z2f3ylanHyClsxVCfMcvE1Aar3P80vGI9r08WbF2N/uVJl
-         6fDQhUvzFbe+dLmvJNgErVsyo/fY6lqw82enlydk=
+        b=hTMYlu/IaBYR/1zSqI958lhxoKu02TlKqrguCS0uYHlDKLtXLtMvEgcMdVwYT3u/n
+         KZbGbtdtV/h2HhAcDDNAvDA9GHuKdlfBRluEjTI/a4FugNnQwF5tE5ydWknHJjFWKC
+         fso3yiAlfMrYhRHjPTiXADx8NT29X9wjmrjfVr8s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH 4.14 123/126] dmaengine: coh901318: Fix a double lock bug in dma_tc_handle()
-Date:   Tue, 10 Mar 2020 13:42:24 +0100
-Message-Id: <20200310124211.275943638@linuxfoundation.org>
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Zhang Xiaoxu <zhangxiaoxu5@huawei.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>
+Subject: [PATCH 4.14 097/126] vgacon: Fix a UAF in vgacon_invert_region
+Date:   Tue, 10 Mar 2020 13:41:58 +0100
+Message-Id: <20200310124209.916002973@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310124203.704193207@linuxfoundation.org>
 References: <20200310124203.704193207@linuxfoundation.org>
@@ -59,41 +60,130 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
 
-commit 36d5d22090d13fd3a7a8c9663a711cbe6970aac8 upstream.
+commit 513dc792d6060d5ef572e43852683097a8420f56 upstream.
 
-The caller is already holding the lock so this will deadlock.
+When syzkaller tests, there is a UAF:
+  BUG: KASan: use after free in vgacon_invert_region+0x9d/0x110 at addr
+    ffff880000100000
+  Read of size 2 by task syz-executor.1/16489
+  page:ffffea0000004000 count:0 mapcount:-127 mapping:          (null)
+  index:0x0
+  page flags: 0xfffff00000000()
+  page dumped because: kasan: bad access detected
+  CPU: 1 PID: 16489 Comm: syz-executor.1 Not tainted
+  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
+  rel-1.9.3-0-ge2fc41e-prebuilt.qemu-project.org 04/01/2014
+  Call Trace:
+    [<ffffffffb119f309>] dump_stack+0x1e/0x20
+    [<ffffffffb04af957>] kasan_report+0x577/0x950
+    [<ffffffffb04ae652>] __asan_load2+0x62/0x80
+    [<ffffffffb090f26d>] vgacon_invert_region+0x9d/0x110
+    [<ffffffffb0a39d95>] invert_screen+0xe5/0x470
+    [<ffffffffb0a21dcb>] set_selection+0x44b/0x12f0
+    [<ffffffffb0a3bfae>] tioclinux+0xee/0x490
+    [<ffffffffb0a1d114>] vt_ioctl+0xff4/0x2670
+    [<ffffffffb0a0089a>] tty_ioctl+0x46a/0x1a10
+    [<ffffffffb052db3d>] do_vfs_ioctl+0x5bd/0xc40
+    [<ffffffffb052e2f2>] SyS_ioctl+0x132/0x170
+    [<ffffffffb11c9b1b>] system_call_fastpath+0x22/0x27
+    Memory state around the buggy address:
+     ffff8800000fff00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+     00 00
+     ffff8800000fff80: 00 00 00 00 00 00 00 00 00 00 00 00 00
+     00 00 00
+    >ffff880000100000: ff ff ff ff ff ff ff ff ff ff ff ff ff
+     ff ff ff
 
-Fixes: 0b58828c923e ("DMAENGINE: COH 901 318 remove irq counting")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Link: https://lore.kernel.org/r/20200217144050.3i4ymbytogod4ijn@kili.mountain
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+It can be reproduce in the linux mainline by the program:
+  #include <stdio.h>
+  #include <stdlib.h>
+  #include <unistd.h>
+  #include <fcntl.h>
+  #include <sys/types.h>
+  #include <sys/stat.h>
+  #include <sys/ioctl.h>
+  #include <linux/vt.h>
+
+  struct tiocl_selection {
+    unsigned short xs;      /* X start */
+    unsigned short ys;      /* Y start */
+    unsigned short xe;      /* X end */
+    unsigned short ye;      /* Y end */
+    unsigned short sel_mode; /* selection mode */
+  };
+
+  #define TIOCL_SETSEL    2
+  struct tiocl {
+    unsigned char type;
+    unsigned char pad;
+    struct tiocl_selection sel;
+  };
+
+  int main()
+  {
+    int fd = 0;
+    const char *dev = "/dev/char/4:1";
+
+    struct vt_consize v = {0};
+    struct tiocl tioc = {0};
+
+    fd = open(dev, O_RDWR, 0);
+
+    v.v_rows = 3346;
+    ioctl(fd, VT_RESIZEX, &v);
+
+    tioc.type = TIOCL_SETSEL;
+    ioctl(fd, TIOCLINUX, &tioc);
+
+    return 0;
+  }
+
+When resize the screen, update the 'vc->vc_size_row' to the new_row_size,
+but when 'set_origin' in 'vgacon_set_origin', vgacon use 'vga_vram_base'
+for 'vc_origin' and 'vc_visible_origin', not 'vc_screenbuf'. It maybe
+smaller than 'vc_screenbuf'. When TIOCLINUX, use the new_row_size to calc
+the offset, it maybe larger than the vga_vram_size in vgacon driver, then
+bad access.
+Also, if set an larger screenbuf firstly, then set an more larger
+screenbuf, when copy old_origin to new_origin, a bad access may happen.
+
+So, If the screen size larger than vga_vram, resize screen should be
+failed. This alse fix CVE-2020-8649 and CVE-2020-8647.
+
+Linus pointed out that overflow checking seems absent. We're saved by
+the existing bounds checks in vc_do_resize() with rather strict
+limits:
+
+	if (cols > VC_RESIZE_MAXCOL || lines > VC_RESIZE_MAXROW)
+		return -EINVAL;
+
+Fixes: 0aec4867dca14 ("[PATCH] SVGATextMode fix")
+Reference: CVE-2020-8647 and CVE-2020-8649
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
+[danvet: augment commit message to point out overflow safety]
+Cc: stable@vger.kernel.org
+Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200304022429.37738-1-zhangxiaoxu5@huawei.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/dma/coh901318.c |    4 ----
- 1 file changed, 4 deletions(-)
+ drivers/video/console/vgacon.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/dma/coh901318.c
-+++ b/drivers/dma/coh901318.c
-@@ -1944,8 +1944,6 @@ static void dma_tc_handle(struct coh9013
- 		return;
- 	}
- 
--	spin_lock(&cohc->lock);
--
- 	/*
- 	 * When we reach this point, at least one queue item
- 	 * should have been moved over from cohc->queue to
-@@ -1966,8 +1964,6 @@ static void dma_tc_handle(struct coh9013
- 	if (coh901318_queue_start(cohc) == NULL)
- 		cohc->busy = 0;
- 
--	spin_unlock(&cohc->lock);
--
- 	/*
- 	 * This tasklet will remove items from cohc->active
- 	 * and thus terminates them.
+--- a/drivers/video/console/vgacon.c
++++ b/drivers/video/console/vgacon.c
+@@ -1309,6 +1309,9 @@ static int vgacon_font_get(struct vc_dat
+ static int vgacon_resize(struct vc_data *c, unsigned int width,
+ 			 unsigned int height, unsigned int user)
+ {
++	if ((width << 1) * height > vga_vram_size)
++		return -EINVAL;
++
+ 	if (width % 2 || width > screen_info.orig_video_cols ||
+ 	    height > (screen_info.orig_video_lines * vga_default_font_height)/
+ 	    c->vc_font.height)
 
 
