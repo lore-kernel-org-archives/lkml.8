@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CFB7C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:34:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66C47C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:34:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 040CB24680
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:34:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4134220675
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:34:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583847252;
-	bh=8s8DBSqUOltJgEED9SjPTDc6I5xmXdRblgUSwev7NtY=;
+	s=default; t=1583847260;
+	bh=xl9wnhembeDGjI5M84bf2op9bwgLmvBsjfk6ygNAZLc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jlS9EIbXalCCv1LuT3860apESazdhxK1KPJzAcZm90N9fvVN1JWYuKTL8bLSVJL9p
-	 +dMmOR3MG/umdTn/OSIXONt6MVrwkkr86Ok6emAHRZ3/1ijNBG4mr2SalzeP0JPlHk
-	 +Ixd8nWlnw39L+yTpPETbdX4zq5cg8TJ8VylHzhA=
+	b=skbvyw257EdtXFHcGk1cOYc4LyJYrXnDP/lPJujGUcYYhoxpWevyH632+KnIDETGh
+	 UNmvFRrPu2loJP6GhlTIG27hA9vCgbY6yzDVuHEoMoTXlXCe+IFexBVc/+a5qLne6Y
+	 IvFsKP9ePtEuHV8YVCnNc0XYnM+kknUFV+XZatWo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727850AbgCJNeK (ORCPT
+        id S1728097AbgCJNeT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:34:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50628 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:34:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50366 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728121AbgCJMrB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:47:01 -0400
+        id S1727770AbgCJMqs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:46:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4201320674;
-        Tue, 10 Mar 2020 12:47:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B5E5E20674;
+        Tue, 10 Mar 2020 12:46:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844420;
-        bh=8s8DBSqUOltJgEED9SjPTDc6I5xmXdRblgUSwev7NtY=;
+        s=default; t=1583844408;
+        bh=xl9wnhembeDGjI5M84bf2op9bwgLmvBsjfk6ygNAZLc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BVufDDDvg5atJ7ie6qDQpVJHKac4ptC918R4Pe15GnRX/kroDwz5slbFEGOsQKGA6
-         Y2uvK22mAYP7g3nqNzAh+hiGE6sj8oRPOwOx+Yr4euN+302MojEEzDXqy4y/YKCDGk
-         aN9BVQIkmCKpv67vZofakynVh0d+BkEE5NRWl4vg=
+        b=Noc3yvZryMFfY7BlwPlH8B1Sjel82msnfrGwnD35gps/VFB33HL2gCQBWjSQkADwj
+         J7a4UYE360YSj+5nBYe1xo5oEYC0igyZsYeTV37po2Bj6E6bqQ9ZKsi7J/DBbibNiL
+         iP2+JKWn1WeCiMXkvTVYmQe6ZkvWgvMH2Q6WkU0w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH 4.9 37/88] ecryptfs: Fix up bad backport of fe2e082f5da5b4a0a92ae32978f81507ef37ec66
-Date:   Tue, 10 Mar 2020 13:38:45 +0100
-Message-Id: <20200310123614.968953798@linuxfoundation.org>
+        syzbot+9d82b8de2992579da5d0@syzkaller.appspotmail.com,
+        Andrew Morton <akpm@linux-foundation.org>,
+        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.9 69/88] fat: fix uninit-memory access for partial initialized inode
+Date:   Tue, 10 Mar 2020 13:39:17 +0100
+Message-Id: <20200310123623.092076720@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123606.543939933@linuxfoundation.org>
 References: <20200310123606.543939933@linuxfoundation.org>
@@ -59,79 +62,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
 
-When doing the 4.9 merge into certain Android trees, I noticed a warning
-from Android's deprecated GCC 4.9.4, which causes a build failure in
-those trees due to basically -Werror:
+commit bc87302a093f0eab45cd4e250c2021299f712ec6 upstream.
 
-fs/ecryptfs/keystore.c: In function 'ecryptfs_parse_packet_set':
-fs/ecryptfs/keystore.c:1357:2: warning: 'auth_tok_list_item' may be used
-uninitialized in this function [-Wmaybe-uninitialized]
-  memset(auth_tok_list_item, 0,
-  ^
-fs/ecryptfs/keystore.c:1260:38: note: 'auth_tok_list_item' was declared
-here
-  struct ecryptfs_auth_tok_list_item *auth_tok_list_item;
-                                      ^
+When get an error in the middle of reading an inode, some fields in the
+inode might be still not initialized.  And then the evict_inode path may
+access those fields via iput().
 
-GCC 9.2.0 was not able to pick up this warning when I tested it.
+To fix, this makes sure that inode fields are initialized.
 
-Turns out that Clang warns as well when -Wuninitialized is used, which
-is not the case in older stable trees at the moment (but shows value in
-potentially backporting the various warning fixes currently in upstream
-to get more coverage).
-
-fs/ecryptfs/keystore.c:1284:6: warning: variable 'auth_tok_list_item' is
-used uninitialized whenever 'if' condition is true
-[-Wsometimes-uninitialized]
-        if (data[(*packet_size)++] != ECRYPTFS_TAG_1_PACKET_TYPE) {
-            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-fs/ecryptfs/keystore.c:1360:4: note: uninitialized use occurs here
-                        auth_tok_list_item);
-                        ^~~~~~~~~~~~~~~~~~
-fs/ecryptfs/keystore.c:1284:2: note: remove the 'if' if its condition is
-always false
-        if (data[(*packet_size)++] != ECRYPTFS_TAG_1_PACKET_TYPE) {
-        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-fs/ecryptfs/keystore.c:1260:56: note: initialize the variable
-'auth_tok_list_item' to silence this warning
-        struct ecryptfs_auth_tok_list_item *auth_tok_list_item;
-                                                              ^
-                                                               = NULL
-1 warning generated.
-
-Somehow, commit fe2e082f5da5 ("ecryptfs: fix a memory leak bug in
-parse_tag_1_packet()") upstream was not applied in the correct if block
-in 4.4.215, 4.9.215, and 4.14.172, which will indeed lead to use of
-uninitialized memory. Fix it up by undoing the bad backport in those
-trees then reapplying the patch in the proper location.
-
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Reported-by: syzbot+9d82b8de2992579da5d0@syzkaller.appspotmail.com
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r/871rqnreqx.fsf@mail.parknet.co.jp
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- fs/ecryptfs/keystore.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/fs/ecryptfs/keystore.c
-+++ b/fs/ecryptfs/keystore.c
-@@ -1285,7 +1285,7 @@ parse_tag_1_packet(struct ecryptfs_crypt
- 		printk(KERN_ERR "Enter w/ first byte != 0x%.2x\n",
- 		       ECRYPTFS_TAG_1_PACKET_TYPE);
- 		rc = -EINVAL;
--		goto out_free;
-+		goto out;
- 	}
- 	/* Released: wipe_auth_tok_list called in ecryptfs_parse_packet_set or
- 	 * at end of function upon failure */
-@@ -1335,7 +1335,7 @@ parse_tag_1_packet(struct ecryptfs_crypt
- 		printk(KERN_WARNING "Tag 1 packet contains key larger "
- 		       "than ECRYPTFS_MAX_ENCRYPTED_KEY_BYTES");
- 		rc = -EINVAL;
--		goto out;
-+		goto out_free;
- 	}
- 	memcpy((*new_auth_tok)->session_key.encrypted_key,
- 	       &data[(*packet_size)], (body_size - (ECRYPTFS_SIG_SIZE + 2)));
+---
+ fs/fat/inode.c |   19 +++++++------------
+ 1 file changed, 7 insertions(+), 12 deletions(-)
+
+--- a/fs/fat/inode.c
++++ b/fs/fat/inode.c
+@@ -736,6 +736,13 @@ static struct inode *fat_alloc_inode(str
+ 		return NULL;
+ 
+ 	init_rwsem(&ei->truncate_lock);
++	/* Zeroing to allow iput() even if partial initialized inode. */
++	ei->mmu_private = 0;
++	ei->i_start = 0;
++	ei->i_logstart = 0;
++	ei->i_attrs = 0;
++	ei->i_pos = 0;
++
+ 	return &ei->vfs_inode;
+ }
+ 
+@@ -1366,16 +1373,6 @@ out:
+ 	return 0;
+ }
+ 
+-static void fat_dummy_inode_init(struct inode *inode)
+-{
+-	/* Initialize this dummy inode to work as no-op. */
+-	MSDOS_I(inode)->mmu_private = 0;
+-	MSDOS_I(inode)->i_start = 0;
+-	MSDOS_I(inode)->i_logstart = 0;
+-	MSDOS_I(inode)->i_attrs = 0;
+-	MSDOS_I(inode)->i_pos = 0;
+-}
+-
+ static int fat_read_root(struct inode *inode)
+ {
+ 	struct msdos_sb_info *sbi = MSDOS_SB(inode->i_sb);
+@@ -1820,13 +1817,11 @@ int fat_fill_super(struct super_block *s
+ 	fat_inode = new_inode(sb);
+ 	if (!fat_inode)
+ 		goto out_fail;
+-	fat_dummy_inode_init(fat_inode);
+ 	sbi->fat_inode = fat_inode;
+ 
+ 	fsinfo_inode = new_inode(sb);
+ 	if (!fsinfo_inode)
+ 		goto out_fail;
+-	fat_dummy_inode_init(fsinfo_inode);
+ 	fsinfo_inode->i_ino = MSDOS_FSINFO_INO;
+ 	sbi->fsinfo_inode = fsinfo_inode;
+ 	insert_inode_hash(fsinfo_inode);
 
 
