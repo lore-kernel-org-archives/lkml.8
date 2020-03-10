@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECD4DC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:48:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58A20C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:49:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA66A2468F
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:48:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D32824696
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:49:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583844538;
-	bh=vdPWqwM8jUfwo/9fJbnupY41joHAc4CvxZmUStOdG/M=;
+	s=default; t=1583844544;
+	bh=kTAVCmjkgt4yY7w8vHGxKTKF51LOERhUSmEEkoSYfzw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JLCCeLlY3RiQ5ZOS2Z/tgbnRyCmneJiy+u2sIVDIM2II91EEu6OW8S9cPRzqU+830
-	 s0/b8c33Avy6wqcQhxDy5IUKg4i7L5vbDSmVqM3WTTex6RmeMW1p8XTeFW15jNRlRE
-	 3t605COYqkCIV668pWj7TvnIT8vhb0iMHu68UQTo=
+	b=2LgDUK07uw7PWHDyAXwRHH6UIiXtVmY8FrnuD3O+mrMgf3xOBufUMdiKWf7R36G2Y
+	 vpOlVSrwqLoCuepHmTWJphhYANJLqlQ0mKZEPo7q8leRR2KSxL8tv770suzWAyXW6n
+	 HZEE0y40yCvVaYdl5uD8BOvduZYhPaOoQiBETyAw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728385AbgCJMs5 (ORCPT
+        id S1727432AbgCJMtC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:48:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53164 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:49:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53288 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728117AbgCJMsw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:48:52 -0400
+        id S1728117AbgCJMs7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:48:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B2F7920674;
-        Tue, 10 Mar 2020 12:48:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E4BD62468E;
+        Tue, 10 Mar 2020 12:48:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844532;
-        bh=vdPWqwM8jUfwo/9fJbnupY41joHAc4CvxZmUStOdG/M=;
+        s=default; t=1583844538;
+        bh=kTAVCmjkgt4yY7w8vHGxKTKF51LOERhUSmEEkoSYfzw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H4iVT+l5BJ1yLcXMwj1HXPIrFLER7lBiD3COLjCvmgHRl+ENnKnJYoXAW5XIccZnw
-         TVQ9kltw95wpJKhOkjt5X/7eRB//RD8udiLU5Ncis+Zbmr2rmbhQu6KGNYxU4Zv0oY
-         xM607cWm5N8APlYEcOkkrmsTjHE4JkQwjijFdkbU=
+        b=jeDKGThuMaitai2e7XvdbKkYlLTm9c7kD7JzDYSf0hi/A8X7RWbmyqXHD6rIL+/Nw
+         c7u2AQcV1cEY7H1HYYAltRZQttmhpX6JL/wXaN5kR5oKHBUWIdPcvwcfiSVObJw41l
+         So1ujvtMWb44vl6q5ttkg2DGaTCC9lFc++WSB1yI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Theodore Tso <tytso@mit.edu>,
+        Mike Snitzer <snitzer@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 005/168] net: dsa: bcm_sf2: Forcibly configure IMP port for 1Gb/sec
-Date:   Tue, 10 Mar 2020 13:37:31 +0100
-Message-Id: <20200310123635.791405046@linuxfoundation.org>
+Subject: [PATCH 5.4 007/168] dm thin metadata: fix lockdep complaint
+Date:   Tue, 10 Mar 2020 13:37:33 +0100
+Message-Id: <20200310123636.537069124@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123635.322799692@linuxfoundation.org>
 References: <20200310123635.322799692@linuxfoundation.org>
@@ -61,39 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Theodore Ts'o <tytso@mit.edu>
 
-[ Upstream commit 98c5f7d44fef309e692c24c6d71131ee0f0871fb ]
+[ Upstream commit 3918e0667bbac99400b44fa5aef3f8be2eeada4a ]
 
-We are still experiencing some packet loss with the existing advanced
-congestion buffering (ACB) settings with the IMP port configured for
-2Gb/sec, so revert to conservative link speeds that do not produce
-packet loss until this is resolved.
+[ 3934.173244] ======================================================
+[ 3934.179572] WARNING: possible circular locking dependency detected
+[ 3934.185884] 5.4.21-xfstests #1 Not tainted
+[ 3934.190151] ------------------------------------------------------
+[ 3934.196673] dmsetup/8897 is trying to acquire lock:
+[ 3934.201688] ffffffffbce82b18 (shrinker_rwsem){++++}, at: unregister_shrinker+0x22/0x80
+[ 3934.210268]
+               but task is already holding lock:
+[ 3934.216489] ffff92a10cc5e1d0 (&pmd->root_lock){++++}, at: dm_pool_metadata_close+0xba/0x120
+[ 3934.225083]
+               which lock already depends on the new lock.
 
-Fixes: 8f1880cbe8d0 ("net: dsa: bcm_sf2: Configure IMP port for 2Gb/sec")
-Fixes: de34d7084edd ("net: dsa: bcm_sf2: Only 7278 supports 2Gb/sec IMP port")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+[ 3934.564165] Chain exists of:
+                 shrinker_rwsem --> &journal->j_checkpoint_mutex --> &pmd->root_lock
+
+For a more detailed lockdep report, please see:
+
+	https://lore.kernel.org/r/20200220234519.GA620489@mit.edu
+
+We shouldn't need to hold the lock while are just tearing down and
+freeing the whole metadata pool structure.
+
+Fixes: 44d8ebf436399a4 ("dm thin metadata: use pool locking at end of dm_pool_metadata_close")
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/dsa/bcm_sf2.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/md/dm-thin-metadata.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/dsa/bcm_sf2.c b/drivers/net/dsa/bcm_sf2.c
-index fecd5e674e04c..46dc913da852d 100644
---- a/drivers/net/dsa/bcm_sf2.c
-+++ b/drivers/net/dsa/bcm_sf2.c
-@@ -69,8 +69,7 @@ static void bcm_sf2_imp_setup(struct dsa_switch *ds, int port)
- 		/* Force link status for IMP port */
- 		reg = core_readl(priv, offset);
- 		reg |= (MII_SW_OR | LINK_STS);
--		if (priv->type == BCM7278_DEVICE_ID)
--			reg |= GMII_SPEED_UP_2G;
-+		reg &= ~GMII_SPEED_UP_2G;
- 		core_writel(priv, reg, offset);
+diff --git a/drivers/md/dm-thin-metadata.c b/drivers/md/dm-thin-metadata.c
+index 8bb723f1a569a..4cd8868f80040 100644
+--- a/drivers/md/dm-thin-metadata.c
++++ b/drivers/md/dm-thin-metadata.c
+@@ -960,9 +960,9 @@ int dm_pool_metadata_close(struct dm_pool_metadata *pmd)
+ 			DMWARN("%s: __commit_transaction() failed, error = %d",
+ 			       __func__, r);
+ 	}
++	pmd_write_unlock(pmd);
+ 	if (!pmd->fail_io)
+ 		__destroy_persistent_data_objects(pmd);
+-	pmd_write_unlock(pmd);
  
- 		/* Enable Broadcast, Multicast, Unicast forwarding to IMP port */
+ 	kfree(pmd);
+ 	return 0;
 -- 
 2.20.1
 
