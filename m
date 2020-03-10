@@ -2,109 +2,119 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8757C10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:14:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 122CBC3F2D0
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:14:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57C6F208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:14:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF5CD222D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:14:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583878475;
-	bh=+pSRM1EQCR8DzrH/QVX9aPyJfG2OaNF+PzXLVYU+79Y=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=p5myJHSQjUhO4iB9tPJd2BPn33shJt1/nhdLRbwzOV9xmCBe6yZYpbjVs2AXpoHX1
-	 G3PwyG43zLFd8t/5TMaCdey6MLNnX1/eZWBAHVPGcDsq67x2zYZWWaa6ygGSTbjAq+
-	 OKMKML9H8EMPztueHtWyFoPSDR4+NOn3+ZRUhclU=
+	s=default; t=1583878485;
+	bh=HloSqHaVdLpu24DbJWrvzi8gYutv5amVll4sXduTcok=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WoPcHIrUV2fH0+RYfKNhEJYZbCS/XHXrcFz9QGe9btgc2hrfBP0ox0mYpNGsu9KET
+	 wt3Tn1nEiWFGitEkAyKICGnJts0wQozTCwdQdErNMP+Nw8+h+WnyAxSVDkFsD2RFkF
+	 ezY0YUhozqb+NhM/3NxVzRoDDQ57+0em41ww+v8A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727737AbgCJWOe (ORCPT
+        id S1727767AbgCJWOo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 18:14:34 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:35617 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727717AbgCJWOd (ORCPT
+        Tue, 10 Mar 2020 18:14:44 -0400
+Received: from mail-pj1-f49.google.com ([209.85.216.49]:54891 "EHLO
+        mail-pj1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726293AbgCJWOo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 18:14:33 -0400
-Received: by mail-lj1-f193.google.com with SMTP id u12so74510ljo.2
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 15:14:32 -0700 (PDT)
+        Tue, 10 Mar 2020 18:14:44 -0400
+Received: by mail-pj1-f49.google.com with SMTP id np16so1012791pjb.4
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 15:14:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=A0DJ1QWaOzdShQUNy+Xq2LWv3cgxACTM1sGjd/lAyrQ=;
-        b=PE12SCsWX0jtdXlLC7s8SBu/WbwEPg5yee5goR2A9E7eXbONG+zY2j3g8MU5gMY4cI
-         gpQVYpf4gr8akr8301HuU4d0RZVExceNqTnoiuhQMQQ+S4LimrjudwbtXD7qVESq+I3Y
-         YunNWg0f3xQ13/vVv6+VaMcob/DyVA/vCVF3c=
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=qC8GAUuR4P3Ihh/wBkWywJtv6lirNyfGJk8EnvJshE8=;
+        b=jZvVnCBeMjLVo4/ypI5WH9f5cD9fa7eRyo8ChnGZP7Dy3c4fuAfswYtWukOMt2pPlG
+         nkm6sguxpkwMfvNGcU1Qy4zQqYY5SfWaD4wNcelQ1Bp9Zk5CEf4AU6vGZtS8u84BUrNR
+         8cxGzN4+e3V618fVyF8mri1OxOKhkWOdPNJll5Yt+fCR/e/HX833UB1L7nbfvO1RoO5O
+         +9ggd/8ngqGTlbUrgQdPpGf0Lu5XxEhbLcSX9D34glSy2kywmCkAHkrzlu8QxzUharIN
+         EeyUkwy1W7f0siKUmpsWZaQ1kuJGS2qHbGNcTsqBcGsg8ndO5DyTSC2qM1DWfTlrh2lT
+         Qwkw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=A0DJ1QWaOzdShQUNy+Xq2LWv3cgxACTM1sGjd/lAyrQ=;
-        b=BE5d2bUNwSQ1hehghrBv/ihTCErLNcOW7Sd7LpuhjJ9/107jcBElkKTq7aezXVhKOH
-         YCfj3q56bcz7KZlcB3i0synjatsSRQDaqEGxFfexD22/FUCzxn3TlD2DF5MVGnldJBZo
-         fz2wWJTWRrHFp/ykG/vTjfRcIkdPc3tiBwjeZHo8tOa/VKFXuEJuzNoKWlhhpoRO18p8
-         UEDH39OhW9dyVdSunyOoHuNoDduUbB+UyeE5NtF3CK6ZJSSKoFeGF7C7paGsbZ+rnvK0
-         HJOnfSD1yxsq0+bzuR2ITgQWVhwFnFACcmIbr5jyuKIDsfqUxrZCcdfMue8aD6pPnnMx
-         033A==
-X-Gm-Message-State: ANhLgQ1USqWZzHaSSyuTId5jG1/OJ72PKQjL5pA3q9GCuCCfpSC1CuQl
-        wLFfgglFAvZ/+BXwTEPX+PgIiqWeFCs=
-X-Google-Smtp-Source: ADFU+vuCJCX5n1VGTuDHVWtN8O+2TK+JtHYYqxvWcs3mcbzRm3kdyVxqkPUtOowS5Y+9vFA+tM02ig==
-X-Received: by 2002:a2e:b018:: with SMTP id y24mr201976ljk.146.1583878471061;
-        Tue, 10 Mar 2020 15:14:31 -0700 (PDT)
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com. [209.85.167.46])
-        by smtp.gmail.com with ESMTPSA id o13sm1519155lfg.90.2020.03.10.15.14.30
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Mar 2020 15:14:30 -0700 (PDT)
-Received: by mail-lf1-f46.google.com with SMTP id x22so12293786lff.5
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 15:14:30 -0700 (PDT)
-X-Received: by 2002:ac2:5986:: with SMTP id w6mr161806lfn.30.1583878469474;
- Tue, 10 Mar 2020 15:14:29 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=qC8GAUuR4P3Ihh/wBkWywJtv6lirNyfGJk8EnvJshE8=;
+        b=nsy80g51nHLiY94+DyIVZJgb4tGAy1YYMJlALG7GIb2FzumdV/1P0SM6mv7aSo3CAf
+         88QRrCIkYIq0thU8PtQeosFkib895iRaEoKoFJ1fdsO9pksZ6TMnUNQwR0963Ycd103Q
+         a3XaS3e53/k79dbgd+TVKOYy+e5coeYkeWadGZ+TmLymlLJfXt1uZkqU17Owwu/PH14t
+         nqe//CBllAY7+n8Eciozzrv4dAxUuWUxMJZibbQfKqCr1OVnePMnBuDLe+AJjdGxsJQh
+         LSR8lj0swECPDCQT9nbCS307aig5V8Xo7d3Y4NkfbmkJtEw0rkmXMqC6JBEo+U8ETvOi
+         HpzA==
+X-Gm-Message-State: ANhLgQ1mYCwlnv18JGmzFHb6ullkG/YtnhUZqm21vwHcULXdLJ6zT7C9
+        0L75pCF7wVUXIAAPB14CjHE=
+X-Google-Smtp-Source: ADFU+vsFhYKBd/NsJnYeB5XON8zxOKT2DjZ1OPEyMz++H2Emj/2WjXteH/gy00smlkpGZjZg2BpfGQ==
+X-Received: by 2002:a17:902:db83:: with SMTP id m3mr117436pld.166.1583878483130;
+        Tue, 10 Mar 2020 15:14:43 -0700 (PDT)
+Received: from google.com ([2620:15c:211:1:3e01:2939:5992:52da])
+        by smtp.gmail.com with ESMTPSA id o2sm42464515pfh.26.2020.03.10.15.14.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Mar 2020 15:14:41 -0700 (PDT)
+Date:   Tue, 10 Mar 2020 15:14:40 -0700
+From:   Minchan Kim <minchan@kernel.org>
+To:     Jann Horn <jannh@google.com>
+Cc:     Michal Hocko <mhocko@suse.com>, Linux-MM <linux-mm@kvack.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Daniel Colascione <dancol@google.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Subject: Re: interaction of MADV_PAGEOUT with CoW anonymous mappings?
+Message-ID: <20200310221440.GA72963@google.com>
+References: <CAG48ez0G3JkMq61gUmyQAaCq=_TwHbi1XKzWRooxZkv08PQKuw@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200310144107.GC79873@mtj.duckdns.org>
-In-Reply-To: <20200310144107.GC79873@mtj.duckdns.org>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 10 Mar 2020 15:14:13 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wi=5p6s_BmPAg5EF8Joe5d-6iAjQq6-Le7+xf5Gq-ZTfw@mail.gmail.com>
-Message-ID: <CAHk-=wi=5p6s_BmPAg5EF8Joe5d-6iAjQq6-Le7+xf5Gq-ZTfw@mail.gmail.com>
-Subject: Re: [GIT PULL] cgroup fixes for v5.6-rc5
-To:     Tejun Heo <tj@kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Cgroups <cgroups@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAG48ez0G3JkMq61gUmyQAaCq=_TwHbi1XKzWRooxZkv08PQKuw@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 10, 2020 at 7:41 AM Tejun Heo <tj@kernel.org> wrote:
->
-> * Empty release_agent handling fix.
+Hi Jann,
 
-Pulled. However, I gagged a bit when I saw the code:
+On Tue, Mar 10, 2020 at 07:08:28PM +0100, Jann Horn wrote:
+> Hi!
+> 
+> From looking at the source code, it looks to me as if using
+> MADV_PAGEOUT on a CoW anonymous mapping will page out the page if
+> possible, even if other processes still have the same page mapped. Is
+> that correct?
+> 
+> If so, that's probably bad in environments where many processes (with
+> different privileges) are forked from a single zygote process (like
+> Android and Chrome), I think? If you accidentally call it on a CoW
+> anonymous mapping with shared pages, you'll degrade the performance of
+> other processes. And if an attacker does it intentionally, they could
+> use that to aid with exploiting race conditions or weird
+> microarchitectural stuff (e.g. the new https://lviattack.eu/lvi.pdf
+> talks about "the assumption that attackers can provoke page faults or
+> microcode assists for (arbitrary) load operations in the victim
+> domain").
+> 
+> Should madvise_cold_or_pageout_pte_range() maybe refuse to operate on
+> pages with mapcount>1, or something like that? Or does it already do
+> that, and I just missed the check?
 
-        if (!pathbuf || !agentbuf || !strlen(agentbuf))
+Originally, patchset had the mapcount check to filer out shared page
+due to performance concern, not security stuff. However, the code
+was removed because reviewer asked me "let the shared pages rely on
+general LRU" because shared pages would have higher chance to be
+touched compared to private pages so naturally, they will keep in
+the memory. It did make sense for me.
 
-yeah, I really hope that the compiler is smart enough to just optimize
-that, but we shouldn't assume that the compiler is that smart.
+I am not familiar with the security stuff but if it's really vulnerable
+and everyone agree on that, it's easy to add mapcount check there.
 
-The proper way to test for "empty string" is to just check the first
-character for NUL:
-
-        if (!pathbuf || !agentbuf || !*agentbuf)
-
-which doesn't require the compiler to have a pattern for "oh, I can
-test for a zero strlen without actually calling strlen".
-
-Also, wouldn't it be nice to test for the empty string before you even
-bother to kstrdup() it? Even before you
-
-Finally, shouldn't we technically hold the release_agent_path_lock
-while looking at it?
-
-Small details, and I've taken the pull, but the lack of locking does
-seem to be an actual (if perhaps fairly theoretical) bug, no?
-
-                 Linus
+Thanks.
