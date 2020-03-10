@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 429C1C10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 19:49:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9638BC18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 19:49:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0C7C208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 19:49:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D03C208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 19:49:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rhryD9cR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EV6ESjvM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727416AbgCJTtf (ORCPT
+        id S1727577AbgCJTtm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 15:49:35 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:40790 "EHLO
+        Tue, 10 Mar 2020 15:49:42 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:42870 "EHLO
         mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726545AbgCJTte (ORCPT
+        with ESMTP id S1726545AbgCJTtl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 15:49:34 -0400
-Received: by mail-pg1-f195.google.com with SMTP id t24so6781003pgj.7;
-        Tue, 10 Mar 2020 12:49:33 -0700 (PDT)
+        Tue, 10 Mar 2020 15:49:41 -0400
+Received: by mail-pg1-f195.google.com with SMTP id h8so6775247pgs.9;
+        Tue, 10 Mar 2020 12:49:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=BlRRGob7J72IN5GyJz6pdMyom8cMcGq7qyRKyuALUpg=;
-        b=rhryD9cRP9JWGlYM8BmlNtISu5pjR9nG0ynqwsbi6rIQ85sDJW03idDEW23s+vAirS
-         WMX7E0seO5cpkiDSidLDDQJ/p/IdhM6inTTy9NNR6PHYvav6Jl5Ewuosa+e7jVL54r8p
-         N3TT6tp9tBm9wlWi/XGfiWkyyUSYqm4nyzeYzEKfybMl6Fy/hV40g5/UwrTfg2fHW3Qx
-         XoTkiIPQ7RVeP2dpTVuzBRhxGGtBR7QEZZAEPQ5B6Dsz9UfDSQS+m7PrF7/NajedMuOO
-         XEIFHu0sY/dWoqSsCr1cY8IDT79KmBbVkAeJZqVMGSjVA9RaKBeHxaonyE0DH7vbFFhc
-         bo/g==
+        bh=emQ/yaW/q4/ovb1N6uLBO7edbmwlmGSYTgLz5DT87lA=;
+        b=EV6ESjvMWVAvTDBujuWToM6fGI3hSCL2aCgcuSqMgAc8yycZzHOC7OHaPIsAiB713o
+         O/Y0aZQJKvNIJjiF8siDeNtT636r09VfJU6Yd9CiAe5EJ170hoiWEXi/Z1DxnPZt4MGI
+         L9me3kaVwfNRlFe6A8UuV3qHHJhTgGd3YObjOhAgOOu50a39FWrGcYTIZttalqZq8fmk
+         OwXkGP/mgJVMvjpBc4asDsjBUXVyND9oa+PcwKfJpfYg+477WFUjU2uCAIGagz8wJuna
+         YCy2P6DTgxZT6a6ZJ6/gMl5DTJniwhkupAh/Vu4DcgpjvcickHR23AVoJW9WbVGUWGRj
+         BxYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=BlRRGob7J72IN5GyJz6pdMyom8cMcGq7qyRKyuALUpg=;
-        b=JmWQaSAkOJuyaxmAFNeeYfEryEcy3dTqHp1hRiiyPh2XIcu0QhYxl+k5h5k3qUnXso
-         uEvJFJ4HTUyrV5EC/AnBV/CCJisL4vO1qEToSpMlD3QfdaOB/YEYYYr16S2i1ReqPvZ8
-         F2mTW6Bnof5ZoxUybLkHfkLH0LS2CAcv7K0J+TyaRt/8Q2awhpWBPtS+0CwZtD5ZzQ55
-         VehxljqRPz4SkxKDR9UElvtOkZembf+94RzO6lPgItnC599Bo5Qyvvda2//T2MqroRtt
-         imYMyLl1Onzl3EFWF55rMSeZ1Ulva8wvKcR4vbUqfJLX1QveBKBFF+ywl/L5BMCK2tdJ
-         ShOA==
-X-Gm-Message-State: ANhLgQ2IhxOGRi3Z5KU1V6zpXy67uIKPw1/rwzSI3Pbr6bt/hHhf7cuq
-        3iYm3sA8J7UM/uGC5v60bI6RY2Yt
-X-Google-Smtp-Source: ADFU+vtmfAWTjZEtzSy0EMp+kn2zIUsbV2u8IvW/1uuQblViS/0RtEbYS8Ss0AIaLMQ1+5H/3oUNAQ==
-X-Received: by 2002:a63:fe58:: with SMTP id x24mr19572503pgj.170.1583869773118;
-        Tue, 10 Mar 2020 12:49:33 -0700 (PDT)
+        bh=emQ/yaW/q4/ovb1N6uLBO7edbmwlmGSYTgLz5DT87lA=;
+        b=HYAwhsUBdDfc3Mid7DuihZYq16FDU7JRQKj/Kce4i8X9xf7dw6R/Yw4thJ3m1KlNHx
+         1N5qaunKlWL5eHMb6/Ggav7VhYVqTROWPoDkE6lE8TWC87N5gu6O+6xcbn/Nd4lxtWUC
+         l+ntN9josktTRRR4PbBOn/wLa8+MjDRQzn0uD4ZrNiG44SppldtAcQMnk8HKn8C7eqHI
+         2enSZykPbazimU/JhvmOLMhHT3Hu4bHvRs1VDzawG58oGs7LHW7CxX4AGch1xhc9h7VJ
+         sT7xEQLF5HQj18cgLIS0yN9jb6i3f7vxp4JnWPs3RdmtavRhC0U9U/wZUrJGsyJ5bRN3
+         vlag==
+X-Gm-Message-State: ANhLgQ3YESKSlsjOxZ4MUIsaqSHwxeyepQR75gkogotWRsgOhyA4E3KD
+        2pOzJBcvT7MUT4l0qVpxpRCNuqZI
+X-Google-Smtp-Source: ADFU+vtDBYANFwpiHqzazrotjATDf0coh4Fl5OzSUKLN06VFFAld3h6QHUGXG0wvNEoqt2bc+hC5wg==
+X-Received: by 2002:a62:3086:: with SMTP id w128mr2539561pfw.63.1583869778145;
+        Tue, 10 Mar 2020 12:49:38 -0700 (PDT)
 Received: from localhost.localdomain ([45.114.62.228])
-        by smtp.gmail.com with ESMTPSA id d19sm3784490pfd.82.2020.03.10.12.49.28
+        by smtp.gmail.com with ESMTPSA id d19sm3784490pfd.82.2020.03.10.12.49.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Mar 2020 12:49:32 -0700 (PDT)
+        Tue, 10 Mar 2020 12:49:37 -0700 (PDT)
 From:   Anand Moon <linux.amoon@gmail.com>
 To:     linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
@@ -72,9 +72,9 @@ Cc:     Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>,
         Chanwoo Choi <cw00.choi@samsung.com>,
         Michael Turquette <mturquette@baylibre.com>,
         Stephen Boyd <sboyd@kernel.org>
-Subject: [PATCHv3 2/5] ARM: dts: exynos: Add missing usbdrd3 suspend clk
-Date:   Tue, 10 Mar 2020 19:48:51 +0000
-Message-Id: <20200310194854.831-3-linux.amoon@gmail.com>
+Subject: [PATCHv3 3/5] ARM: dts: exynos: Add FSYS power domain to Exynos542x USB nodes
+Date:   Tue, 10 Mar 2020 19:48:52 +0000
+Message-Id: <20200310194854.831-4-linux.amoon@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310194854.831-1-linux.amoon@gmail.com>
 References: <20200310194854.831-1-linux.amoon@gmail.com>
@@ -85,93 +85,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add new compatible strings for USBDRD3 for adding missing
-suspend clk, exynos5422 usbdrd3 support two clk USBD300 and
-SCLK_USBD300, so add missing suspemd_clk for Exynos542x DWC3 nodes.
+Add a power domain FSYS for USB 3.0 and USB 2.0 and pdma nodes present
+on Exynos542x/5800 SoCs.
 
 Signed-off-by: Anand Moon <linux.amoon@gmail.com>
 ---
-fix the commit message
+New patch in this series.
 ---
- arch/arm/boot/dts/exynos5410.dtsi | 8 ++++----
- arch/arm/boot/dts/exynos5420.dtsi | 8 ++++----
- arch/arm/boot/dts/exynos54xx.dtsi | 4 ++--
- 3 files changed, 10 insertions(+), 10 deletions(-)
+ arch/arm/boot/dts/exynos5420.dtsi | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/arch/arm/boot/dts/exynos5410.dtsi b/arch/arm/boot/dts/exynos5410.dtsi
-index 2eab80bf5f3a..19845dcd528f 100644
---- a/arch/arm/boot/dts/exynos5410.dtsi
-+++ b/arch/arm/boot/dts/exynos5410.dtsi
-@@ -396,8 +396,8 @@ &trng {
- };
- 
- &usbdrd3_0 {
--	clocks = <&clock CLK_USBD300>;
--	clock-names = "usbdrd30";
-+	clocks = <&clock CLK_USBD300>, <&clock CLK_SCLK_USBD300>;
-+	clock-names = "usbdrd30", "usbdrd30_susp_clk";
- };
- 
- &usbdrd_phy0 {
-@@ -407,8 +407,8 @@ &usbdrd_phy0 {
- };
- 
- &usbdrd3_1 {
--	clocks = <&clock CLK_USBD301>;
--	clock-names = "usbdrd30";
-+	clocks = <&clock CLK_USBD301>, <&clock CLK_SCLK_USBD301>;
-+	clock-names = "usbdrd30", "usbdrd30_susp_clk";
- };
- 
- &usbdrd_dwc3_1 {
 diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
-index b672080e7469..bd505256a223 100644
+index bd505256a223..4046b669b105 100644
 --- a/arch/arm/boot/dts/exynos5420.dtsi
 +++ b/arch/arm/boot/dts/exynos5420.dtsi
-@@ -1372,8 +1372,8 @@ &trng {
- };
+@@ -396,6 +396,13 @@ msc_pd: power-domain@10044120 {
+ 			label = "MSC";
+ 		};
  
++		fsys_pd: power-domain@10044140 {
++			compatible = "samsung,exynos4210-pd";
++			reg = <0x10044140 0x20>;
++			#power-domain-cells = <0>;
++			label = "FSYS";
++		};
++
+ 		pinctrl_0: pinctrl@13400000 {
+ 			compatible = "samsung,exynos5420-pinctrl";
+ 			reg = <0x13400000 0x1000>;
+@@ -461,6 +468,7 @@ pdma0: pdma@121a0000 {
+ 				#dma-cells = <1>;
+ 				#dma-channels = <8>;
+ 				#dma-requests = <32>;
++				power-domains = <&fsys_pd>;
+ 			};
+ 
+ 			pdma1: pdma@121b0000 {
+@@ -472,6 +480,7 @@ pdma1: pdma@121b0000 {
+ 				#dma-cells = <1>;
+ 				#dma-channels = <8>;
+ 				#dma-requests = <32>;
++				power-domains = <&fsys_pd>;
+ 			};
+ 
+ 			mdma0: mdma@10800000 {
+@@ -1374,17 +1383,20 @@ &trng {
  &usbdrd3_0 {
--	clocks = <&clock CLK_USBD300>;
--	clock-names = "usbdrd30";
-+	clocks = <&clock CLK_USBD300>, <&clock CLK_SCLK_USBD300>;
-+	clock-names = "usbdrd30", "usbdrd30_susp_clk";
+ 	clocks = <&clock CLK_USBD300>, <&clock CLK_SCLK_USBD300>;
+ 	clock-names = "usbdrd30", "usbdrd30_susp_clk";
++	power-domains = <&fsys_pd>;
  };
  
  &usbdrd_phy0 {
-@@ -1383,8 +1383,8 @@ &usbdrd_phy0 {
+ 	clocks = <&clock CLK_USBD300>, <&clock CLK_SCLK_USBPHY300>;
+ 	clock-names = "phy", "ref";
+ 	samsung,pmu-syscon = <&pmu_system_controller>;
++	power-domains = <&fsys_pd>;
  };
  
  &usbdrd3_1 {
--	clocks = <&clock CLK_USBD301>;
--	clock-names = "usbdrd30";
-+	clocks = <&clock CLK_USBD301>, <&clock CLK_SCLK_USBD301>;
-+	clock-names = "usbdrd30", "usbdrd30_susp_clk";
+ 	clocks = <&clock CLK_USBD301>, <&clock CLK_SCLK_USBD301>;
+ 	clock-names = "usbdrd30", "usbdrd30_susp_clk";
++	power-domains = <&fsys_pd>;
  };
  
  &usbdrd_dwc3_1 {
-diff --git a/arch/arm/boot/dts/exynos54xx.dtsi b/arch/arm/boot/dts/exynos54xx.dtsi
-index 8aa5117e58ce..0aac6255de5d 100644
---- a/arch/arm/boot/dts/exynos54xx.dtsi
-+++ b/arch/arm/boot/dts/exynos54xx.dtsi
-@@ -143,7 +143,7 @@ hsi2c_7: i2c@12cd0000 {
- 		};
+@@ -1395,16 +1407,19 @@ &usbdrd_phy1 {
+ 	clocks = <&clock CLK_USBD301>, <&clock CLK_SCLK_USBPHY301>;
+ 	clock-names = "phy", "ref";
+ 	samsung,pmu-syscon = <&pmu_system_controller>;
++	power-domains = <&fsys_pd>;
+ };
  
- 		usbdrd3_0: usb3-0 {
--			compatible = "samsung,exynos5250-dwusb3";
-+			compatible = "samsung,exynos5420-dwusb3";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			ranges;
-@@ -165,7 +165,7 @@ usbdrd_phy0: phy@12100000 {
- 		};
+ &usbhost1 {
+ 	clocks = <&clock CLK_USBH20>;
+ 	clock-names = "usbhost";
++	power-domains = <&fsys_pd>;
+ };
  
- 		usbdrd3_1: usb3-1 {
--			compatible = "samsung,exynos5250-dwusb3";
-+			compatible = "samsung,exynos5420-dwusb3";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			ranges;
+ &usbhost2 {
+ 	clocks = <&clock CLK_USBH20>;
+ 	clock-names = "usbhost";
++	power-domains = <&fsys_pd>;
+ };
+ 
+ &usb2_phy {
+@@ -1412,6 +1427,7 @@ &usb2_phy {
+ 	clock-names = "phy", "ref";
+ 	samsung,sysreg-phandle = <&sysreg_system_controller>;
+ 	samsung,pmureg-phandle = <&pmu_system_controller>;
++	power-domains = <&fsys_pd>;
+ };
+ 
+ &watchdog {
 -- 
 2.25.1
 
