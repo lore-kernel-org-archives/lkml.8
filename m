@@ -2,142 +2,118 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86B37C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 18:54:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 055B6C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 18:54:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F492208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 18:54:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XuYlaXcj"
+	by mail.kernel.org (Postfix) with ESMTP id D1BD720637
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 18:54:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727198AbgCJSye (ORCPT
+        id S1727289AbgCJSyk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 14:54:34 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:21614 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726315AbgCJSyd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 14:54:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583866472;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=tfWAqDJSy2TS3rSjSPeoUBDDQXeAXUxi8vtSix20tLo=;
-        b=XuYlaXcjDe2vduMp2NFc6aGUDLmpDzmrKahWcaQQxh78sBN+uT4uf2QTMKLAQRO04AmaY4
-        9MSmsosxLr2tWWcIAIYeUJzK8WrQRqK6P8oqm6n7CMrunlBnhf7NQv2Z1dIfnpBPM8d0Ae
-        KjVOon3AXkiUvcqHFaWAgFh7zTvwrDI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-149-fDJ7kBknPIC-hVHXFnedTQ-1; Tue, 10 Mar 2020 14:54:30 -0400
-X-MC-Unique: fDJ7kBknPIC-hVHXFnedTQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 273B618C35A0;
-        Tue, 10 Mar 2020 18:54:28 +0000 (UTC)
-Received: from Ruby.bss.redhat.com (dhcp-10-20-1-196.bss.redhat.com [10.20.1.196])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7A6E673865;
-        Tue, 10 Mar 2020 18:54:26 +0000 (UTC)
-From:   Lyude Paul <lyude@redhat.com>
-To:     intel-gfx@lists.freedesktop.org
-Cc:     =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
-        <ville.syrjala@linux.intel.com>,
-        Manasi Navare <manasi.d.navare@intel.com>,
-        "Lee, Shawn C" <shawn.c.lee@intel.com>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        =?UTF-8?q?Jos=C3=A9=20Roberto=20de=20Souza?= <jose.souza@intel.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Lucas De Marchi <lucas.demarchi@intel.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] drm/i915/mst: Hookup DRM DP MST late_register/early_unregister callbacks
-Date:   Tue, 10 Mar 2020 14:54:16 -0400
-Message-Id: <20200310185417.1588984-1-lyude@redhat.com>
+        Tue, 10 Mar 2020 14:54:40 -0400
+Received: from mail.manjaro.org ([176.9.38.148]:49396 "EHLO mail.manjaro.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726315AbgCJSyk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 14:54:40 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.manjaro.org (Postfix) with ESMTP id DC9CC38C78F8;
+        Tue, 10 Mar 2020 19:54:38 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at manjaro.org
+Received: from mail.manjaro.org ([127.0.0.1])
+        by localhost (manjaro.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id wnU8nTtUDQIQ; Tue, 10 Mar 2020 19:54:36 +0100 (CET)
+Subject: Re: [PATCH v2 2/2] power: supply: add CellWise cw2015 fuel gauge
+ driver
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Tobias Schramm <t.schramm@manjaro.org>
+Cc:     Sebastian Reichel <sre@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200309160346.2203680-1-t.schramm@manjaro.org>
+ <20200309160346.2203680-3-t.schramm@manjaro.org>
+ <20200310101050.GG1922688@smile.fi.intel.com>
+From:   Tobias Schramm <t.schramm@manjaro.org>
+Message-ID: <eb732216-dd19-f18d-9ace-e14c7e8de991@manjaro.org>
+Date:   Tue, 10 Mar 2020 19:55:42 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200310101050.GG1922688@smile.fi.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US-large
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-i915 can enable aux device nodes for DP MST by calling
-drm_dp_mst_connector_late_register()/drm_dp_mst_connector_early_unregiste=
-r(),
-so let's hook that up.
+Hi Andy,
 
-Changes since v1:
-* Call intel_connector_register/unregister() from
-  intel_dp_mst_connector_late_register/unregister() so we don't lose
-  error injection - Ville Syrj=C3=A4l=C3=A4
+thanks for your review. Please find my comments inline.
 
-Cc: Ville Syrj=C3=A4l=C3=A4 <ville.syrjala@linux.intel.com>
-Cc: Manasi Navare <manasi.d.navare@intel.com>
-Cc: "Lee, Shawn C" <shawn.c.lee@intel.com>
-Signed-off-by: Lyude Paul <lyude@redhat.com>
----
- drivers/gpu/drm/i915/display/intel_dp_mst.c | 28 +++++++++++++++++++--
- 1 file changed, 26 insertions(+), 2 deletions(-)
+>> +#define CW2015_DEFAULT_MONITOR_MS		8000
+> 
+> 8 seconds? Any comments about this?
+>
+Default suggested by CellWise Android example code. I'll add a comment
+explaining that.
 
-diff --git a/drivers/gpu/drm/i915/display/intel_dp_mst.c b/drivers/gpu/dr=
-m/i915/display/intel_dp_mst.c
-index d53978ed3c12..9311c10f5b1b 100644
---- a/drivers/gpu/drm/i915/display/intel_dp_mst.c
-+++ b/drivers/gpu/drm/i915/display/intel_dp_mst.c
-@@ -548,12 +548,36 @@ static int intel_dp_mst_get_ddc_modes(struct drm_co=
-nnector *connector)
- 	return ret;
- }
-=20
-+static int
-+intel_dp_mst_connector_late_register(struct drm_connector *connector)
-+{
-+	struct intel_connector *intel_connector =3D to_intel_connector(connecto=
-r);
-+	int ret;
-+
-+	ret =3D drm_dp_mst_connector_late_register(connector,
-+						 intel_connector->port);
-+	if (ret < 0)
-+		return ret;
-+
-+	return intel_connector_register(connector);
-+}
-+
-+static void
-+intel_dp_mst_connector_early_unregister(struct drm_connector *connector)
-+{
-+	struct intel_connector *intel_connector =3D to_intel_connector(connecto=
-r);
-+
-+	intel_connector_unregister(connector);
-+	drm_dp_mst_connector_early_unregister(connector,
-+					      intel_connector->port);
-+}
-+
- static const struct drm_connector_funcs intel_dp_mst_connector_funcs =3D=
- {
- 	.fill_modes =3D drm_helper_probe_single_connector_modes,
- 	.atomic_get_property =3D intel_digital_connector_atomic_get_property,
- 	.atomic_set_property =3D intel_digital_connector_atomic_set_property,
--	.late_register =3D intel_connector_register,
--	.early_unregister =3D intel_connector_unregister,
-+	.late_register =3D intel_dp_mst_connector_late_register,
-+	.early_unregister =3D intel_dp_mst_connector_early_unregister,
- 	.destroy =3D intel_connector_destroy,
- 	.atomic_destroy_state =3D drm_atomic_helper_connector_destroy_state,
- 	.atomic_duplicate_state =3D intel_digital_connector_duplicate_state,
---=20
-2.24.1
+>> +static int cw_read(struct cw_battery *cw_bat, u8 reg, u8 *val)
+>> +{
+>> +	u32 tmp;
+>> +	int ret;
+>> +
+>> +	ret = regmap_read(cw_bat->regmap, reg, &tmp);
+>> +	*val = tmp;
+>> +	return ret;
+>> +}
+>> +
+[ ... ]
+>
+> This two has no value. Why?
+>
+This helper translates the memory write size. An u8 * is passed in while
+regmap_read takes an unsigned int *. I'll drop it and just use an
+unsigned int in the first place though.
 
+>> +static int cw_read_word(struct cw_battery *cw_bat, u8 reg, u16 *val)
+>> +{
+>> +	u8 reg_val[2];
+>> +	int ret;
+>> +
+>> +	ret = regmap_raw_read(cw_bat->regmap, reg, reg_val, 2);
+>> +	*val = (reg_val[0] << 8) + reg_val[1];
+>> +	return ret;
+>> +}
+> 
+> NIH BE type of readings? Can REGMAP_ENDIAN_BIG help?
+
+Not really, or can it? Registers on the cw2015 are a wild mix of single
+bytes and words. There does not seem to be a per register override for
+reg_/val_bits.
+
+> 
+> I didn't review some parts because of style issues. Please, fix all of them and
+> send v2.
+> 
+I'll fix all style issues I find.
+
+>> +	cancel_delayed_work(&cw_bat->battery_delay_work);
+> 
+> Are you sure you have no scheduled work after that?
+> 
+
+Will replace that with cancel_delayed_work_sync.
+
+
+Best Regards,
+
+Tobias
