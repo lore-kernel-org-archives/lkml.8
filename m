@@ -2,75 +2,138 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 353BFC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 14:10:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DB70C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 14:10:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B0A42464B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 14:10:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1545E2464B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 14:10:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="IMSgfzJY"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="MDrcOUiI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727034AbgCJOKP (ORCPT
+        id S1727095AbgCJOKa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 10:10:15 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:40902 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726426AbgCJOKP (ORCPT
+        Tue, 10 Mar 2020 10:10:30 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:53560 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726273AbgCJOK3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 10:10:15 -0400
-Received: by mail-il1-f193.google.com with SMTP id g6so12103362ilc.7
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 07:10:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4Dq64x4DjoKFCRaWP0RmVXxQ/yypMvRHHigI32DgfmA=;
-        b=IMSgfzJYgymp5J//NAnPuXmv+ttIDEmyfzo3Bl/xD5bXo890r/Y+o2KMqeTHJlcpRr
-         LHhWPmBfOOouLuWuT3Uj7HRvFT2ydIXCkZaFwsKzywxSWuEKNBetWQvDVoULEZEDm03p
-         tRMUsriMnv8JkVwffZVVKi89BSYtpcGRODjq8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4Dq64x4DjoKFCRaWP0RmVXxQ/yypMvRHHigI32DgfmA=;
-        b=ObiMkRQqb5cq77cKWG1fUJHaGE8Sr1r4kGJ2cmcbzKmP7rlNOztvc8PYIEpv1cgSgI
-         FK123hCRtCRkQURdeL2MlWzeq8XsQgZDFwk+Y79HJcGwCTe0GoUOI11nLtNshr5AgOh7
-         Fo8T9ZUCzH3dik86ruaXqya9/eitahEURTogY3ZiK4kEfsMgxSYC18N4hKwPzDGImV5V
-         D1jUgsuiUIUrN4wJkmMSRK7DDdKJ418C0jw7J2FZhWZXfPKiAU55FFm3SwGMPCDqsgym
-         iCSMZqS5bJ9VW5aVIgJtfugfmPCmk2wnF3CK35UeWeldtYG7mZLVOLVUHSbaU6g/QodU
-         nHjw==
-X-Gm-Message-State: ANhLgQ1fNT4BQGLwBpbUBytrxPJvuHBltmbHlp65dB0YVk5kIFbqUNtW
-        dCRflkwR1QqdU0LoGYogiTZYwgOM9ogrjAMaBMLMrA==
-X-Google-Smtp-Source: ADFU+vtA2bBrA3QBgj3ZymF37VCxe3Znyz4vcji09X2nGjZ9/L3vfB4trInJdMsBR57HttHenvzZDwFXg1DyS7Avj/4=
-X-Received: by 2002:a92:aa87:: with SMTP id p7mr12249562ill.63.1583849414997;
- Tue, 10 Mar 2020 07:10:14 -0700 (PDT)
+        Tue, 10 Mar 2020 10:10:29 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02AE2ua7163526;
+        Tue, 10 Mar 2020 14:09:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=f29kP8EPy7TnjRocNsizivmDPXvx0hQFJ7+kQQ00MJY=;
+ b=MDrcOUiIxgR2aP56KbUWNhU9Qz63YugyfQz0f4D+L4J5BgcALxcxPNjQp83UYyM4mrZu
+ kBN3gdIxcKmxAXxjTEnt4RCuVg2FtszCoVKfj+PSQghtv6U64NL0177Huh4sUsHnRVTe
+ PiIky+9d6mCfARnsnyzifDF0mmGUrrnKAnbrYGefxBGrheYayJGYf5GnOHkHu1VzX7BJ
+ MhaQodsDKSbQeQ3VRdZD6INSZolvpul5qsdn5FyYb4f8lgiXNQr6yfPFA3UHpzczlhFY
+ 5hZiL6CJifg2s8aaimLW+FfHCb0hkNzAx64WmcfHOZ0EWKM22hAGNzm5jlYOe9BUsFbJ 2w== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2ym31udrqb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 10 Mar 2020 14:09:30 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02AE3fKQ085607;
+        Tue, 10 Mar 2020 14:09:30 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 2yp8rj3676-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 10 Mar 2020 14:09:30 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 02AE9SZH032502;
+        Tue, 10 Mar 2020 14:09:28 GMT
+Received: from [192.168.8.5] (/213.41.92.70)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 10 Mar 2020 07:09:28 -0700
+Subject: Re: [patch part-II V2 13/13] x86/entry/common: Split irq tracing in
+ prepare_exit_to_usermode()
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        Brian Gerst <brgerst@gmail.com>,
+        Juergen Gross <jgross@suse.com>,
+        Frederic Weisbecker <frederic@kernel.org>
+References: <20200308222359.370649591@linutronix.de>
+ <20200308222610.245444311@linutronix.de>
+From:   Alexandre Chartre <alexandre.chartre@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <d01a2ab6-db0f-cc0e-83e1-a60d95cde8e9@oracle.com>
+Date:   Tue, 10 Mar 2020 15:09:31 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.0
 MIME-Version: 1.0
-References: <20200304165845.3081-1-vgoyal@redhat.com> <20200304165845.3081-7-vgoyal@redhat.com>
-In-Reply-To: <20200304165845.3081-7-vgoyal@redhat.com>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Tue, 10 Mar 2020 15:10:04 +0100
-Message-ID: <CAJfpegvKRt6eaZHzs3e70y_c6j5q30jAir6k-hOWevWiQUOVKw@mail.gmail.com>
-Subject: Re: [PATCH 06/20] virtiofs: Provide a helper function for virtqueue initialization
-To:     Vivek Goyal <vgoyal@redhat.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, virtio-fs@redhat.com,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200308222610.245444311@linutronix.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9555 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 phishscore=0 mlxscore=0
+ spamscore=0 malwarescore=0 bulkscore=0 adultscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2003100095
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9555 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 lowpriorityscore=0
+ spamscore=0 priorityscore=1501 impostorscore=0 bulkscore=0 suspectscore=0
+ phishscore=0 mlxlogscore=999 mlxscore=0 malwarescore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2003100095
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 4, 2020 at 5:59 PM Vivek Goyal <vgoyal@redhat.com> wrote:
->
-> This reduces code duplication and make it little easier to read code.
->
-> Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
 
-Reviewed-by: Miklos Szeredi <mszeredi@redhat.com>
+On 3/8/20 11:24 PM, Thomas Gleixner wrote:
+> As in entry from user mode, lockdep and tracing have different
+> requirements. lockdep needs to know about the interrupts off state accross
+> the call to user_enter_irqsoff() but tracing is unsafe after the call.
+
+typo: user_enter_irqoff() (no 's' between 'irq' and 'off').
+
+> 
+> Split it up and tell the tracer that interrupts are going to be enabled
+> before calling user_enter_irqsoff() and tell lockdep afterwards.
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> ---
+>   arch/x86/entry/common.c |   12 +++++++++++-
+>   1 file changed, 11 insertions(+), 1 deletion(-)
+> 
+> --- a/arch/x86/entry/common.c
+> +++ b/arch/x86/entry/common.c
+> @@ -251,9 +251,19 @@ static noinline void __prepare_exit_to_u
+>   {
+>   	__prepare_exit_to_usermode(regs);
+>   
+> +	/*
+> +	 * Return to user space enables interrupts. Tell the tracer before
+> +	 * invoking user_enter_irqsoff() which switches to CONTEXT_USER and
+
+Same typo here: user_enter_irqoff()
+
+> +	 * RCU to rcuidle state. Lockdep still needs to keep the irqs
+> +	 * disabled state.
+> +	 */
+> +	__trace_hardirqs_on();
+> +
+>   	user_enter_irqoff();
+>   	mds_user_clear_cpu_buffers();
+> -	trace_hardirqs_on();
+> +
+> +	/* All done. Tell lockdep as well. */
+> +	lockdep_hardirqs_on(CALLER_ADDR0);
+>   }
+>   NOKPROBE_SYMBOL(prepare_exit_to_usermode);
+>   
+> 
+
+Reviewed-by: Alexandre Chartre <alexandre.chartre@oracle.com>
+
+alex.
