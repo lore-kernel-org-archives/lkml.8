@@ -2,174 +2,132 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23D1FC10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:07:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBBF9C10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:10:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6751222C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:07:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAB24208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:10:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583878066;
-	bh=DHAN0I29DwoZWN2Wh3iFT+l4WD2xdxIe3omBWt1StEY=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=jGn3SV4B9IU6L1PWWtTS+/nsmzqD/oeZMuuc5YCcBIgg8/v3ZOx3pB7d4fTDQzYbZ
-	 MSecQ3Mq9RBUwScAOOeexBkA1SYhyV+mnkQ/kE9ULRsKnIASoWTCitIFIVmdE3W5n5
-	 +r3EWXpA3YwxR+I1+JaZFLcjeTN/Tkm8VNcCvwnM=
+	s=default; t=1583878226;
+	bh=F0BxWcAdg+jzZoMPuYTqzOZa/pAmdK2n3a5vPe5eqzA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TF3eHODnXurIM4H4si1ZRHvPMbMh6uLcqAY+kTzsQyocdcRgDfo9hybNsx9dZH0eD
+	 zBoj1DRC60oU8njS/JNlcTbwUg2oVXMoGcc/78HweB6LLWKpEJR3aLoZUXN7Kganfz
+	 j8NAzVTtHTAlMhCRfQPcsGlirsXP96fFcIFB31Z4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727751AbgCJWHq (ORCPT
+        id S1727520AbgCJWKZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 18:07:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49602 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726273AbgCJWHp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 18:07:45 -0400
-Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C0A97208E4;
-        Tue, 10 Mar 2020 22:07:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583878064;
-        bh=DHAN0I29DwoZWN2Wh3iFT+l4WD2xdxIe3omBWt1StEY=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=YoJuo5ROOds6vuSyTs8LNVz977cmPul0DuRXUS8pdyBbgJ24BMedhZfWEKZCSx2J+
-         +OL+gkt7Qh9P6FOrO2ZKnYxkbeKhpvc8t6JNc6TXO1zrOi9gKv/dUyqccnYLWbhmc7
-         KVM2aE2pMO+6epG9zL6VU2ofDpVqQe/3t80b9sII=
-Message-ID: <0066a9f150a55c13fcc750f6e657deae4ebdef97.camel@kernel.org>
-Subject: Re: [locks] 6d390e4b5d: will-it-scale.per_process_ops -96.6%
- regression
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        NeilBrown <neilb@suse.de>
-Cc:     yangerkun <yangerkun@huawei.com>,
-        kernel test robot <rong.a.chen@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org,
-        Bruce Fields <bfields@fieldses.org>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Date:   Tue, 10 Mar 2020 18:07:42 -0400
-In-Reply-To: <CAHk-=wg8N4fDRC3M21QJokoU+TQrdnv7HqoaFW-Z-ZT8z_Bi7Q@mail.gmail.com>
-References: <20200308140314.GQ5972@shao2-debian>
-         <e3783d060c778cb41b77380ad3e278133b52f57e.camel@kernel.org>
-         <CAHk-=whGK712fPqmQ3FSHxqe3Aqny4bEeWEvfaytLeLV2+ijCQ@mail.gmail.com>
-         <34355c4fe6c3968b1f619c60d5ff2ca11a313096.camel@kernel.org>
-         <1bfba96b4bf0d3ca9a18a2bced3ef3a2a7b44dad.camel@kernel.org>
-         <87blp5urwq.fsf@notabene.neil.brown.name>
-         <41c83d34ae4c166f48e7969b2b71e43a0f69028d.camel@kernel.org>
-         <ed73fb5d-ddd5-fefd-67ae-2d786e68544a@huawei.com>
-         <923487db2c9396c79f8e8dd4f846b2b1762635c8.camel@kernel.org>
-         <36c58a6d07b67aac751fca27a4938dc1759d9267.camel@kernel.org>
-         <878sk7vs8q.fsf@notabene.neil.brown.name>
-         <c4ef31a663fbf7a3de349696e9f00f2f5c4ec89a.camel@kernel.org>
-         <875zfbvrbm.fsf@notabene.neil.brown.name>
-         <CAHk-=wg8N4fDRC3M21QJokoU+TQrdnv7HqoaFW-Z-ZT8z_Bi7Q@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        Tue, 10 Mar 2020 18:10:25 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:37314 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726283AbgCJWKZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 18:10:25 -0400
+Received: by mail-wr1-f65.google.com with SMTP id 6so44791wre.4
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 15:10:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=fzoPcCcArgslJEjFGamnoESKQ6n8NlkNe0nFrWqr2Us=;
+        b=cJCwkPhxrn2JzXJECusEf3OqsyJ5rNGQA6cpjaTxCGO+Dl99VU4C6/XmEGmgm04ago
+         8e6eP6r3y96NUSPTeVyj4OCfTxwMEzLxalNMKY+reFxW/Wl63H0VydLJLGU+V/uChQJx
+         lyUtRchbuVXYqTqFrzFBh+rFIAMi22XjH7J6tJvM8YmfcG9l4xUQ1AHfr5Rg602Y6ZE1
+         FOyU/t+VEpMltW3EXKan2nvACVh7/w+oCACDjFp8InuW/SMJJ14IR7Uuze6otlPzL6iN
+         T3gLRbfk0CmE7cEUPqhxLATtPyG7ItfQkuO8U1TJFSidi9B1QytZYz65bhzC33vcf2m8
+         24Uw==
+X-Gm-Message-State: ANhLgQ2CPFG+vFqD/n82w3Hie0nIn3REvkvwphzR21PiOdqxt414jBV4
+        giljdaifAILqWHp21xhRQfiEHvwtrCI=
+X-Google-Smtp-Source: ADFU+vuz7Kl5/dFfUzD4Yt/LB7B4aNfvbc25VgZibMXjn6QBDhlwhZtu3Pi6nHtgw2nFnnWEkb0Jcw==
+X-Received: by 2002:adf:aa04:: with SMTP id p4mr13601wrd.238.1583878221819;
+        Tue, 10 Mar 2020 15:10:21 -0700 (PDT)
+Received: from localhost (ip-37-188-253-35.eurotel.cz. [37.188.253.35])
+        by smtp.gmail.com with ESMTPSA id q5sm21114106wrc.68.2020.03.10.15.10.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Mar 2020 15:10:21 -0700 (PDT)
+Date:   Tue, 10 Mar 2020 23:10:19 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     David Rientjes <rientjes@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: Re: [patch] mm, oom: prevent soft lockup on memcg oom for UP systems
+Message-ID: <20200310221019.GE8447@dhcp22.suse.cz>
+References: <alpine.DEB.2.21.2003101438510.161160@chino.kir.corp.google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.2003101438510.161160@chino.kir.corp.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-03-10 at 14:47 -0700, Linus Torvalds wrote:
-> On Tue, Mar 10, 2020 at 2:22 PM NeilBrown <neilb@suse.de> wrote:
-> > A compiler barrier() is probably justified.  Memory barriers delay reads
-> > and expedite writes so they cannot be needed.
+On Tue 10-03-20 14:39:48, David Rientjes wrote:
+> When a process is oom killed as a result of memcg limits and the victim
+> is waiting to exit, nothing ends up actually yielding the processor back
+> to the victim on UP systems with preemption disabled.  Instead, the
+> charging process simply loops in memcg reclaim and eventually soft
+> lockups.
 > 
-> That's not at all guaranteed. Weakly ordered memory things can
-> actually have odd orderings, and not just "writes delayed, reads done
-> early". Reads may be delayed too by cache misses, and memory barriers
-> can thus expedite reads as well (by forcing the missing read to happen
-> before later non-missing ones).
+> Memory cgroup out of memory: Killed process 808 (repro) total-vm:41944kB, anon-rss:35344kB, file-rss:504kB, shmem-rss:0kB, UID:0 pgtables:108kB oom_score_adj:0
+> watchdog: BUG: soft lockup - CPU#0 stuck for 23s! [repro:806]
+> CPU: 0 PID: 806 Comm: repro Not tainted 5.6.0-rc5+ #136
+> RIP: 0010:shrink_lruvec+0x4e9/0xa40
+> ...
+> Call Trace:
+>  shrink_node+0x40d/0x7d0
+>  do_try_to_free_pages+0x13f/0x470
+>  try_to_free_mem_cgroup_pages+0x16d/0x230
+>  try_charge+0x247/0xac0
+>  mem_cgroup_try_charge+0x10a/0x220
+>  mem_cgroup_try_charge_delay+0x1e/0x40
+>  handle_mm_fault+0xdf2/0x15f0
+>  do_user_addr_fault+0x21f/0x420
+>  page_fault+0x2f/0x40
 > 
-> So don't assume that a memory barrier would only delay reads and
-> expedite writes. Quite the reverse: assume that there is no ordering
-> at all unless you impose one with a memory barrier (*).
+> Make sure that something ends up actually yielding the processor back to
+> the victim to allow for memory freeing.  Most appropriate place appears to
+> be shrink_node_memcgs() where the iteration of all decendant memcgs could
+> be particularly lengthy.
+
+There is a cond_resched in shrink_lruvec and another one in
+shrink_page_list. Why doesn't any of them hit? Is it because there are
+no pages on the LRU list? Because rss data suggests there should be
+enough pages to go that path. Or maybe it is shrink_slab path that takes
+too long?
+
+The patch itself makes sense to me but I would like to see more
+explanation on how that happens.
+
+Thanks.
+
+> Cc: Vlastimil Babka <vbabka@suse.cz>
+> Cc: Michal Hocko <mhocko@kernel.org>
+> Cc: stable@vger.kernel.org
+> Signed-off-by: David Rientjes <rientjes@google.com>
+> ---
+>  mm/vmscan.c | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
->              Linus
-> 
-> (*) it's a bit more complex than that, in that we do assume that
-> control dependencies end up gating writes, for example, but those
-> kinds of implicit ordering things should *not* be what you depend on
-> in the code unless you're doing some seriously subtle memory ordering
-> work and comment on it extensively.
+> diff --git a/mm/vmscan.c b/mm/vmscan.c
+> --- a/mm/vmscan.c
+> +++ b/mm/vmscan.c
+> @@ -2637,6 +2637,8 @@ static void shrink_node_memcgs(pg_data_t *pgdat, struct scan_control *sc)
+>  		unsigned long reclaimed;
+>  		unsigned long scanned;
+>  
+> +		cond_resched();
+> +
+>  		switch (mem_cgroup_protected(target_memcg, memcg)) {
+>  		case MEMCG_PROT_MIN:
+>  			/*
 
-Good point. I too prefer code that's understandable by mere mortals.
-
-Given that, and the fact that Neil pointed out that yangerkun's latest
-patch would reintroduce the original race, I'm leaning back toward the
-patch Neil sent yesterday. It relies solely on spinlocks, and so doesn't
-have the subtle memory-ordering requirements of the others.
-
-I did some cursory testing with it and it seems to fix the performance
-regression. If you guys are OK with this patch, and Neil can send an
-updated changelog, I'll get it into -next and we can get this sorted
-out.
-
-Thanks,
-
--------------------8<-------------------
-
-[PATCH] locks: reintroduce locks_delete_block shortcut
----
- fs/locks.c | 29 ++++++++++++++++++++++++++++-
- 1 file changed, 28 insertions(+), 1 deletion(-)
-
-diff --git a/fs/locks.c b/fs/locks.c
-index 426b55d333d5..8aa04d5ac8b3 100644
---- a/fs/locks.c
-+++ b/fs/locks.c
-@@ -735,11 +735,13 @@ static void __locks_wake_up_blocks(struct file_lock *blocker)
- 
- 		waiter = list_first_entry(&blocker->fl_blocked_requests,
- 					  struct file_lock, fl_blocked_member);
-+		spin_lock(&waiter->fl_wait.lock);
- 		__locks_delete_block(waiter);
- 		if (waiter->fl_lmops && waiter->fl_lmops->lm_notify)
- 			waiter->fl_lmops->lm_notify(waiter);
- 		else
--			wake_up(&waiter->fl_wait);
-+			wake_up_locked(&waiter->fl_wait);
-+		spin_unlock(&waiter->fl_wait.lock);
- 	}
- }
- 
-@@ -753,6 +755,31 @@ int locks_delete_block(struct file_lock *waiter)
- {
- 	int status = -ENOENT;
- 
-+	/*
-+	 * If fl_blocker is NULL, it won't be set again as this thread
-+	 * "owns" the lock and is the only one that might try to claim
-+	 * the lock.  So it is safe to test fl_blocker locklessly.
-+	 * Also if fl_blocker is NULL, this waiter is not listed on
-+	 * fl_blocked_requests for some lock, so no other request can
-+	 * be added to the list of fl_blocked_requests for this
-+	 * request.  So if fl_blocker is NULL, it is safe to
-+	 * locklessly check if fl_blocked_requests is empty.  If both
-+	 * of these checks succeed, there is no need to take the lock.
-+	 * However, some other thread might have only *just* set
-+	 * fl_blocker to NULL and it about to send a wakeup on
-+	 * fl_wait, so we mustn't return too soon or we might free waiter
-+	 * before that wakeup can be sent.  So take the fl_wait.lock
-+	 * to serialize with the wakeup in __locks_wake_up_blocks().
-+	 */
-+	if (waiter->fl_blocker == NULL) {
-+		spin_lock(&waiter->fl_wait.lock);
-+		if (waiter->fl_blocker == NULL &&
-+		    list_empty(&waiter->fl_blocked_requests)) {
-+			spin_unlock(&waiter->fl_wait.lock);
-+			return status;
-+		}
-+		spin_unlock(&waiter->fl_wait.lock);
-+	}
- 	spin_lock(&blocked_lock_lock);
- 	if (waiter->fl_blocker)
- 		status = 0;
 -- 
-2.24.1
-
-
+Michal Hocko
+SUSE Labs
