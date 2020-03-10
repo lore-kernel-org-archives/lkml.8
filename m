@@ -2,158 +2,174 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6765C10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 19:36:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E822C18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 19:37:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C0F9208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 19:36:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="bKu+K1g/"
+	by mail.kernel.org (Postfix) with ESMTP id F350E208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 19:37:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583869045;
+	bh=llRqB7vOBH+w/xCHH1Y5KTae7g8J7o9qsA6xQHqX0y4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=NqqZHmaOVRimAGVnxLv8V+J97ZAqBUojMNw5S3+voPUA/LemBO6L8N/PcoG5ivtVl
+	 /AW5h4KZUZOTJC+FZDzw+5JLsZfgyMvnDnCb/2kdieYv5ue4V8jwT9Y6NVUs6LKeRX
+	 O5UpU0OCeu4av+7+C0dgAdyV34/81d5rj7iIFoTw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727460AbgCJTg6 (ORCPT
+        id S1727489AbgCJThY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 15:36:58 -0400
-Received: from gateway24.websitewelcome.com ([192.185.51.202]:47887 "EHLO
-        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727138AbgCJTg6 (ORCPT
+        Tue, 10 Mar 2020 15:37:24 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:42116 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726899AbgCJThX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 15:36:58 -0400
-Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
-        by gateway24.websitewelcome.com (Postfix) with ESMTP id E658674D37
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 14:36:56 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id BkgSjUvGfSl8qBkgSj5uEr; Tue, 10 Mar 2020 14:36:56 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=PoDUEKrfLvefyoroJeKBXR5BL0DzfZ5bKXNQlE95UNc=; b=bKu+K1g/o5HJKFOivWMfRnHe7A
-        EamwnojjRE4V9uUp2TM/1kKgfs4nVPVD5bPJk1O9yjyUX34EztPce2OgcZVx6az+XITco74xT0Kfk
-        V61fQBZ9kYdAa52tvYIBMCesco/hwz6q9SFDnEdVXuLjLD8c0q76a+CEWPe/R6a7k1gIjf66TmgS/
-        lGM9LGByq1zAkoNCspex8yzOmwxehaUMqmZ94jQvUTUy14ekKB4rjNW7ClMAzuo9GvCnnEZ/X4o72
-        2RZ0VgS81U17NUAJdk/aOF/RGNr6lN7INjTzZch+MpNDncFWykVTdgJYUw7ZmNCO4J8dGOYWtHmMq
-        hn/3MClw==;
-Received: from cablelink20-167.telefonia.intercable.net ([201.172.20.167]:42626 helo=[192.168.1.39])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1jBkgR-00121I-OJ; Tue, 10 Mar 2020 14:36:56 -0500
-Subject: Re: [PATCH] mtd: rawnand: Replace zero-length array with
- flexible-array member
-To:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Liang Yang <liang.yang@amlogic.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Xiaolei Li <xiaolei.li@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>
-Cc:     linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linux-mtd@lists.infradead.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20200310183112.18567-1-miquel.raynal@bootlin.com>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <1fd2eebe-761b-1b65-e1b7-672be39a3e69@embeddedor.com>
-Date:   Tue, 10 Mar 2020 14:36:51 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 10 Mar 2020 15:37:23 -0400
+Received: by mail-ot1-f68.google.com with SMTP id 66so14355725otd.9;
+        Tue, 10 Mar 2020 12:37:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=GiGH+kf0e9zr45mlrfM5b4we/G65q5yAgOGauiL01s8=;
+        b=orJ7y28PBh3tnG+gW30KFDbE8+U/WQYpKyD84eAJSVugVPRz9AflrpOk4FJnskML++
+         rFBA9VvsimnBkXlypLnlQXB2YrX48/z22Y31z+95jnhum/QWApIOqUwNCKERD4eA9iYI
+         OISu2YT8xKb46QhQ/3bl303nWr3BNgFFODVvCid6VaUnY5Nnr4RoTaGgkr9FOLfJV5U2
+         E3iOTAsJ7RdfBkiEB6Ypoo7INbvCDXzlAj9ZygESzkOLH0ofHs+XyhBYNX94zB1RaOCP
+         RnRoEdtQ2aqK0UbOv8LA/TWUS37r2MFE1xmuDMSWC/Et+8KGy5BpLcBimzhwvkOsIRBp
+         9SDw==
+X-Gm-Message-State: ANhLgQ1AT8IGt2skk8oEBWm0pXI4zJVa7hPjz0EfyaYdCMf/WyTYR+pP
+        0E/9dDp5Lo3+VbeKYf9blNIfZ+U=
+X-Google-Smtp-Source: ADFU+vv5Ufou1gAlKDX6XtyEl/Yqxyi6/Ef2fceOO2APym87C2PtkEFkU+SgtAU4IcyOIenAnsywvQ==
+X-Received: by 2002:a05:6830:1581:: with SMTP id i1mr4949574otr.349.1583869042434;
+        Tue, 10 Mar 2020 12:37:22 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id v2sm3574361oiv.41.2020.03.10.12.37.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Mar 2020 12:37:21 -0700 (PDT)
+Received: (nullmailer pid 30746 invoked by uid 1000);
+        Tue, 10 Mar 2020 19:37:21 -0000
+Date:   Tue, 10 Mar 2020 14:37:21 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Tero Kristo <t-kristo@ti.com>
+Cc:     wim@linux-watchdog.org, linux@roeck-us.net,
+        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCHv2 1/4] dt-bindings: watchdog: Add support for TI K3 RTI
+ watchdog
+Message-ID: <20200310193721.GA24150@bogus>
+References: <20200302200426.6492-1-t-kristo@ti.com>
+ <20200302200426.6492-2-t-kristo@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <20200310183112.18567-1-miquel.raynal@bootlin.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.172.20.167
-X-Source-L: No
-X-Exim-ID: 1jBkgR-00121I-OJ
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: cablelink20-167.telefonia.intercable.net ([192.168.1.39]) [201.172.20.167]:42626
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 11
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200302200426.6492-2-t-kristo@ti.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 3/10/20 1:31 PM, Miquel Raynal wrote:
-
->>
->> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
->> [2] https://github.com/KSPP/linux/issues/21
->> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
->>
->> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
->> Acked-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+On Mon, Mar 02, 2020 at 10:04:23PM +0200, Tero Kristo wrote:
+> TI K3 SoCs contain an RTI (Real Time Interrupt) module which can be
+> used to implement a windowed watchdog functionality. Windowed watchdog
+> will generate an error if it is petted outside the time window, either
+> too early or too late.
 > 
-> Applied to https://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git nand/next, thanks.
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+> ---
+>  .../bindings/watchdog/ti,rti-wdt.yaml         | 52 +++++++++++++++++++
+>  1 file changed, 52 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/watchdog/ti,rti-wdt.yaml
 > 
+> diff --git a/Documentation/devicetree/bindings/watchdog/ti,rti-wdt.yaml b/Documentation/devicetree/bindings/watchdog/ti,rti-wdt.yaml
+> new file mode 100644
+> index 000000000000..3813f59fb6c3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/watchdog/ti,rti-wdt.yaml
+> @@ -0,0 +1,52 @@
+> +# SPDX-License-Identifier: GPL-2.0
 
-Thanks, Miquel.
---
-Gustavo
+Dual license new bindings please:
+
+(GPL-2.0-only OR BSD-2-Clause)
+
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/watchdog/ti,rti-wdt.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Texas Instruments K3 SoC Watchdog Timer
+> +
+> +maintainers:
+> +  - Tero Kristo <t-kristo@ti.com>
+> +
+> +description: |+
+
+You can drop '|+' as there's no formatting to preserve.
+
+> +  The TI K3 SoC watchdog timer is implemented via the RTI (Real Time
+> +  Interrupt) IP module. This timer adds a support for windowed watchdog
+> +  mode, which will signal an error if it is pinged outside the watchdog
+> +  time window, meaning either too early or too late. The error signal
+> +  generated can be routed to either interrupt a safety controller or
+> +  to directly reset the SoC.
+> +
+
+Reference the common watchdog.yaml schema.
+
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - ti,rti-wdt
+
+Should be SoC specific possibly with a fallback.
+
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +
+> +examples:
+> +  - |
+> +    /*
+> +     * RTI WDT in main domain on J721e SoC. Assigned clocks are used to
+> +     * select the source clock for the watchdog, forcing it to tick with
+> +     * a 32kHz clock in this case.
+> +     */
+> +    #include <dt-bindings/soc/ti,sci_pm_domain.h>
+> +
+> +    main_rti0: rti@2200000 {
+
+watchdog@...
+
+> +        compatible = "ti,rti-wdt";
+> +        reg = <0x0 0x2200000 0x0 0x100>;
+> +        clocks = <&k3_clks 252 1>;
+> +        power-domains = <&k3_pds 252 TI_SCI_PD_EXCLUSIVE>;
+
+Not documented.
+
+> +        assigned-clocks = <&k3_clks 252 1>;
+> +        assigned-clock-parents = <&k3_clks 252 5>;
+
+Not documented.
+
+> +    };
+> -- 
+> 2.17.1
+> 
+> --
+> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
