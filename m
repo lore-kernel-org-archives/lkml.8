@@ -2,130 +2,147 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23179C18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 21:05:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7909DC10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 21:05:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECC37215A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 21:05:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C70E215A4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 21:05:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nio365.onmicrosoft.com header.i=@nio365.onmicrosoft.com header.b="MslspAua"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727234AbgCJVFK (ORCPT
+        id S1727508AbgCJVFZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 17:05:10 -0400
-Received: from out02.mta.xmission.com ([166.70.13.232]:52914 "EHLO
-        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726100AbgCJVFJ (ORCPT
+        Tue, 10 Mar 2020 17:05:25 -0400
+Received: from mx0b-00010702.pphosted.com ([148.163.158.57]:13554 "EHLO
+        mx0b-00010702.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726100AbgCJVFY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 17:05:09 -0400
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jBm3o-0007Ja-5Z; Tue, 10 Mar 2020 15:05:08 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jBm3n-0008Ca-EI; Tue, 10 Mar 2020 15:05:08 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Andrei Vagin <avagin@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Peter Zijlstra \(Intel\)" <peterz@infradead.org>,
-        Yuyang Du <duyuyang@gmail.com>,
-        David Hildenbrand <david@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        David Howells <dhowells@redhat.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christian Kellner <christian@kellner.me>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        "linux-doc\@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel\@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-mm\@kvack.org" <linux-mm@kvack.org>,
-        "stable\@vger.kernel.org" <stable@vger.kernel.org>,
-        "linux-api\@vger.kernel.org" <linux-api@vger.kernel.org>
-References: <87v9ne5y4y.fsf_-_@x220.int.ebiederm.org>
-        <87zhcq4jdj.fsf_-_@x220.int.ebiederm.org>
-        <AM6PR03MB5170BC58D90BAD80CDEF3F8BE4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <878sk94eay.fsf@x220.int.ebiederm.org>
-        <AM6PR03MB517086003BD2C32E199690A3E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <87r1y12yc7.fsf@x220.int.ebiederm.org>
-        <87k13t2xpd.fsf@x220.int.ebiederm.org>
-        <87d09l2x5n.fsf@x220.int.ebiederm.org>
-        <AM6PR03MB5170F0F9DC18F5EA77C9A857E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <871rq12vxu.fsf@x220.int.ebiederm.org>
-        <202003101352.28BE3BEB4@keescook>
-Date:   Tue, 10 Mar 2020 16:02:48 -0500
-In-Reply-To: <202003101352.28BE3BEB4@keescook> (Kees Cook's message of "Tue,
-        10 Mar 2020 13:55:54 -0700")
-Message-ID: <87a74nsz2f.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
-MIME-Version: 1.0
+        Tue, 10 Mar 2020 17:05:24 -0400
+X-Greylist: delayed 367 seconds by postgrey-1.27 at vger.kernel.org; Tue, 10 Mar 2020 17:05:23 EDT
+Received: from pps.filterd (m0098779.ppops.net [127.0.0.1])
+        by mx0b-00010702.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02AKgVT8017617;
+        Tue, 10 Mar 2020 15:59:13 -0500
+Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11lp2172.outbound.protection.outlook.com [104.47.56.172])
+        by mx0b-00010702.pphosted.com with ESMTP id 2ymaad0neg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 10 Mar 2020 15:59:13 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=caTnoc5qUIufZVfV1OA1KPS1jPhtPHquiosTeg7dznjcc7tD9eMTl6egqr/+fAkkUFjm0q8NTUx+YV6TB6DVy/ardtAbHxBAUesbPFqPWhmQ5kppaP+fLB4mrh9oOWKDe5QAJY/UCCAJ93pdQbPokddCiR0GoVQWVZtgeCBnRXaSfKSKrN4F6AFyCr3XSFaYXkl7bVGGuFq8M4bzFZsjuGcGttIny/MEckS/W29tZw09MqUy22Wj58/ZMaJ3yj1j5LlfpP0GIOhUr+q1JltUZdqaxqertY0ga/ok0h0Uct0wYgRRqN53bM/r8zOr6GH4Wd7y47CvhcaZ96juRUfriw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RFtDHkts/BbPpVbU01c2WbAWbry+EPbgFUzIR7PrHcI=;
+ b=B1Pf8eUcRuA/wJb13tYScAh/5Mw7IjoNBsPD8ufBOEFtXYl/GMnOPUCmSBJ7+d1RjeGPJwxrKbpl74fSl+YuxQQ4I2MpBJN+U5fclOCYSdQMZq8hK6CTNj7o16vLf37ar7naIhjOI5afiSFbFcgageaEQHoUhRPV5JK6nCDgNtSslH995mXQnUeSzKlwh6qLmqCRv46VLJj6Og/vE2H+bT7l07R5xlg8G1DwSZrH6F+w0A0pXgomi4c2dyRL8BwMqm42ooE8s9v7XSYZyU3NeY8xfVD3iB51qxu2n/8pDkqOp1Lhw5YDJiamW/xczR843Q3LzCZKR5+F5l2K/tkEIA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=ni.com; dmarc=pass action=none header.from=ni.com; dkim=pass
+ header.d=ni.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=nio365.onmicrosoft.com; s=selector2-nio365-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RFtDHkts/BbPpVbU01c2WbAWbry+EPbgFUzIR7PrHcI=;
+ b=MslspAuaBqQ6QVE0E6QcHLATFurg49eQHonr8QFrS5hwh280wjPg/AaOcy6vRR/HvLkCVKUl6I5QWF6slle1IL/rClwMfH3ahb5xwDxjvwEH13i5b2rpS57JkNJz3+Dkuo4d45L1m04L7CJWkID9WA/QJ9Yh+Dd2PVsRxhfc2gg=
+Received: from DM6PR04MB4553.namprd04.prod.outlook.com (2603:10b6:5:21::29) by
+ DM6PR04MB4875.namprd04.prod.outlook.com (2603:10b6:5:11::29) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2793.18; Tue, 10 Mar 2020 20:59:10 +0000
+Received: from DM6PR04MB4553.namprd04.prod.outlook.com
+ ([fe80::bcf1:ec5e:65f8:8fbb]) by DM6PR04MB4553.namprd04.prod.outlook.com
+ ([fe80::bcf1:ec5e:65f8:8fbb%7]) with mapi id 15.20.2793.013; Tue, 10 Mar 2020
+ 20:59:10 +0000
+From:   Michael Auchter <michael.auchter@ni.com>
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Michael Auchter <michael.auchter@ni.com>,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] misc: eeprom: at24: fix regulator underflow
+Date:   Tue, 10 Mar 2020 15:58:40 -0500
+Message-Id: <20200310205841.123084-1-michael.auchter@ni.com>
+X-Mailer: git-send-email 2.24.1
+Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-XM-SPF: eid=1jBm3n-0008Ca-EI;;;mid=<87a74nsz2f.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX18PTvqUqvFHzaS8aRXcjAAB8aMmbAjVv+4=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH v2 5/5] exec: Add a exec_update_mutex to replace cred_guard_mutex
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+X-ClientProxiedBy: DM5PR10CA0024.namprd10.prod.outlook.com (2603:10b6:4:2::34)
+ To DM6PR04MB4553.namprd04.prod.outlook.com (2603:10b6:5:21::29)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from amon.ni.corp.natinst.com (130.164.62.202) by DM5PR10CA0024.namprd10.prod.outlook.com (2603:10b6:4:2::34) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.16 via Frontend Transport; Tue, 10 Mar 2020 20:59:09 +0000
+X-Mailer: git-send-email 2.24.1
+X-Originating-IP: [130.164.62.202]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 6449a2c7-6cb6-435f-8b75-08d7c535e138
+X-MS-TrafficTypeDiagnostic: DM6PR04MB4875:|DM6PR04MB4875:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM6PR04MB48756521C219C1D3FDAAA57887FF0@DM6PR04MB4875.namprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:1169;
+X-Forefront-PRVS: 033857D0BD
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(136003)(396003)(39850400004)(366004)(376002)(199004)(189003)(478600001)(6486002)(66556008)(8936002)(66476007)(81166006)(81156014)(6666004)(26005)(8676002)(52116002)(86362001)(1076003)(2616005)(2906002)(44832011)(5660300002)(956004)(16526019)(6512007)(4326008)(36756003)(186003)(6506007)(110136005)(316002)(66946007);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR04MB4875;H:DM6PR04MB4553.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+Received-SPF: None (protection.outlook.com: ni.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 6G32o0clnvIz8aLJidoK5cforw4Txa3Xv/rWlJV8RvBgfDZHVU7WnPw346oVysvAw+8URhYgHGV/ziy+v+EvK2R6bm6gDajz9GM7+VNsuVoVdhrHolDK2C8vaGe3VOaNRTeGLcfLmLcOCa/zCJD/DSOw70LDL5hFd4sMOuOL1BR4U7wSjImN0ugaiVT3z9oZKyjxmLDKBtojr6U3FvoQ22Rnaf6oXJx6R9e8OrM+SdMgK/pjdOLDG2rn5TL/ibcror6EGECMMU7uE3ENwgQXyO4gT9NlQgz00Zosf5JARtuo1J7ixWXCvivmh5jrdmPoyk52uAfDmR2z5Klw/nhJcbSYWjGEr9BvFw0bz2CZegIS3DoIq5uZ34VXx6IYy88N2Fmxff2iRPhuBgQI7vbl6rHejcePolrlfC4d6JrfCNLhnrmy6f1VxMt26hd4J2qG
+X-MS-Exchange-AntiSpam-MessageData: cmg9EDcLn2o3vGObhTfvwLG4e2oufBUdHahXypE63UhWkE4eBy6ZMHdX/LhGsk4QArT1t9rBE9DVHrIuh3f/ADwy1UQ9rOOmiwgn7B0zPUpJqH7Fhde4bcGe6nhDXkucavRlv4Aq+ogn/3EG6gcrtQ==
+X-OriginatorOrg: ni.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6449a2c7-6cb6-435f-8b75-08d7c535e138
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Mar 2020 20:59:10.0581
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 87ba1f9a-44cd-43a6-b008-6fdb45a5204e
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: kXE0xmnfLIPHin+YhOpX6jQa/Bey9PLZHigaCe5vYEEPBisywnYbwl1sHGS4GNTd9sUpFCLhrOl2nkbd+kG/jQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR04MB4875
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-10_13:2020-03-10,2020-03-10 signatures=0
+X-Proofpoint-Spam-Details: rule=inbound_policy_notspam policy=inbound_policy score=30 phishscore=0
+ clxscore=1011 spamscore=0 suspectscore=0 impostorscore=0
+ priorityscore=1501 adultscore=0 lowpriorityscore=0 mlxscore=0 bulkscore=0
+ malwarescore=0 mlxlogscore=650 classifier=spam adjust=30 reason=mlx
+ scancount=1 engine=8.12.0-2001150001 definitions=main-2003100123
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kees Cook <keescook@chromium.org> writes:
+The at24 driver attempts to read a byte from the device to validate that
+it's actually present, and if not, disables the vcc regulator and
+returns -ENODEV. However, between the read and the error handling path,
+pm_runtime_idle() is called and invokes the driver's suspend callback,
+which also disables the vcc regulator. This leads to an underflow of the
+regulator enable count if the EEPROM is not present.
 
-> On Mon, Mar 09, 2020 at 02:02:37PM -0500, Eric W. Biederman wrote:
->>     exec: Add exec_update_mutex to replace cred_guard_mutex
->>     
->>     The cred_guard_mutex is problematic as it is held over possibly
->>     indefinite waits for userspace.  The possilbe indefinite waits for
->>     userspace that I have identified are: The cred_guard_mutex is held in
->>     PTRACE_EVENT_EXIT waiting for the tracer.  The cred_guard_mutex is
->>     held over "put_user(0, tsk->clear_child_tid)" in exit_mm().  The
->>     cred_guard_mutex is held over "get_user(futex_offset, ...")  in
->>     exit_robust_list.  The cred_guard_mutex held over copy_strings.
->
-> I suspect you're not trying to make a comprehensive list here, but do
-> you want to mention seccomp too (since it's yet another weird case).
+Move the pm_runtime_suspend() call to be after the error handling path
+to resolve this.
 
-I was calling out all of the places I have found so far where
-cred_guard_mutex is held over waiting for userspace to maybe do
-something.  Those places are what cause our deadlocks.
+Signed-off-by: Michael Auchter <michael.auchter@ni.com>
+---
+ drivers/misc/eeprom/at24.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
->> [...]
->>     Holding a mutex over any of those possibly indefinite waits for
->>     userspace does not appear necessary.  Add exec_update_mutex that will
->>     just cover updating the process during exec where the permissions and
->>     the objects pointed to by the task struct may be out of sync.
->
-> Should the specific resources be pointed out here? creds, mm, ... ?
->
-> But otherwise, yup, looks sane:
+diff --git a/drivers/misc/eeprom/at24.c b/drivers/misc/eeprom/at24.c
+index 031eb64549af..282c9ef68ed2 100644
+--- a/drivers/misc/eeprom/at24.c
++++ b/drivers/misc/eeprom/at24.c
+@@ -712,13 +712,14 @@ static int at24_probe(struct i2c_client *client)
+ 	 * chip is functional.
+ 	 */
+ 	err = at24_read(at24, 0, &test_byte, 1);
+-	pm_runtime_idle(dev);
+ 	if (err) {
+ 		pm_runtime_disable(dev);
+ 		regulator_disable(at24->vcc_reg);
+ 		return -ENODEV;
+ 	}
+ 
++	pm_runtime_idle(dev);
++
+ 	if (writable)
+ 		dev_info(dev, "%u byte %s EEPROM, writable, %u bytes/write\n",
+ 			 byte_len, client->name, at24->write_max);
+-- 
+2.24.1
 
-Probably not.  The design is if exec changes it we will hold the
-cred_guard_mutex over it, so things are semi-atomic.
-
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-
-Eric
