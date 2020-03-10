@@ -2,145 +2,111 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BED26C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:20:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF9CBC10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:20:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BF36222C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:20:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583878815;
-	bh=ouP1NFbchhX5ebhDoeQYHhEGSpE9J2S6A04ue8Kskz8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=uzf41/177SdX0rDD0oZmwmyGH56JGUMMLjzYHmonsoIR1KXvKfE9MiOGFjKmw7Qnc
-	 h+6i2vyRaTZc2SARyPmDANvO0v36cRVbHE8XAumFdi3VSJk0juxC4aMVqnDEEH5hxN
-	 l4xa1Xfunj5kJG5OOG7LHebBhSmOJHrDDFnsh/Xg=
+	by mail.kernel.org (Postfix) with ESMTP id B5BAF222C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:20:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jf/Q/zMH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727820AbgCJWUO (ORCPT
+        id S1727845AbgCJWUY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 18:20:14 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:45394 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726283AbgCJWUO (ORCPT
+        Tue, 10 Mar 2020 18:20:24 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:35253 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726283AbgCJWUY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 18:20:14 -0400
-Received: by mail-pl1-f193.google.com with SMTP id b22so76843pls.12;
-        Tue, 10 Mar 2020 15:20:12 -0700 (PDT)
+        Tue, 10 Mar 2020 18:20:24 -0400
+Received: by mail-qk1-f194.google.com with SMTP id d8so232985qka.2;
+        Tue, 10 Mar 2020 15:20:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=LlDN/MK7CrxZu9xb4dnw85pho74h/DS1WZaWMDoSgwE=;
-        b=IaoscK++5rxK6qZ2/FHYQ6nlJ6PK373ITCG+4MIjR6b15wJKYDBiHrpkrvwKiIrzcy
-         jd5i7Tv56A+3iwRKTMn7g4jblcSKBPJAYEjpnozxVOHgKcOKJx/DlXW9wYRd2TX+XL/o
-         0BmjZ50iKsYDbGKlkUjW+mFNLLGW6XhVuroGLEdD8AcZeoPyL91qMUPU9wsCx2un4I6L
-         GkT4zzZusm6zZNGr2OzV0wj5DP0+7TQA8mBCz5RyLzlCpax2XlXZ3uP7e6jad6JYwEtq
-         njH+ZWG7B2AdxVjsWtt/FwvOS8HppVFclHmEo0912X0l1K1MDKr9Y6ho8dkyYIvxnX6d
-         90Tg==
+        h=from:subject:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=NEpWOdVoi/iDtTT5Bsmm6f/B1M2omplWiBwyNHZRkjI=;
+        b=Jf/Q/zMHy+/L1gSUu+KICKyM/xmYJDxJ/IbQ320PnkWOU0159X1Aky8hQAVWPT5Iag
+         lNxYCngL3V54655yZwv5ANH+Ye+upLo5I/HO/d2S4OoqS+I21E01Aw0z9vydNtwJcrUd
+         2n63OYFANiT3HNOVGC7Bc+n52vQCG64gBoomIGidOz8seOO5IVKTwt+mk0IenaszTApg
+         WdbNM22CJhIhvLJnfvmgJeDWQ6DjU3H+2q2MeSzo/kBWAWj/j2TQMkRfTcf/s25hfOL2
+         gBgEJ3icckH86dBWOa/CGyaKUijdtO0i6feJs/s7ppZebqRSKiFJsmdjjDQU9Uxf0WwX
+         sBCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=LlDN/MK7CrxZu9xb4dnw85pho74h/DS1WZaWMDoSgwE=;
-        b=Qdp//UsjJKj4ypX2jdnBwK4K792cytA+D41F+Z7GXhpr7yzx2K3Cd/xje7rS2kEKcn
-         Byp4RP1Jm/NeYHbQYITo6ZxLRvdYoVSJp7qu/qTO9Djoi5BwjpJewdUWBP4C+A2wXc6h
-         ep23QgmuZv2yI6lJQvP7gQ0YdnCkLibpvlTmqO0HOv0Z0qKP2LiPm+xe01DdBPcHIBuA
-         6oCH6ZhzCyYvJjk0DCqYOF2vbZQbjXHarsXz6YBz5K8CimO8mbjvW/DkLQNfiEride+K
-         1VCJpfkFBXiSfNe4gfJNstMx/sI8IJlXVmC3jsRtlyhUaoRt0bw1Udr5elEwrENg6Gxs
-         WdKg==
-X-Gm-Message-State: ANhLgQ2FYdD0zi/1vLoEK7jWyuKDHJENINLIxq1XzbRJ53W3TIZ6yfGP
-        kG9wQ88qPh/duv4yAnSJ/QQ=
-X-Google-Smtp-Source: ADFU+vvk7+aqoNwobpRPQ+qRO3uj21tL5kgPUV7bKpFjuK4mVlX7rv3TJgflg2/ize2FmWV5IX7W0g==
-X-Received: by 2002:a17:902:528:: with SMTP id 37mr123615plf.322.1583878811879;
-        Tue, 10 Mar 2020 15:20:11 -0700 (PDT)
-Received: from google.com ([2620:15c:211:1:3e01:2939:5992:52da])
-        by smtp.gmail.com with ESMTPSA id h24sm7528231pfn.49.2020.03.10.15.20.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Mar 2020 15:20:10 -0700 (PDT)
-Date:   Tue, 10 Mar 2020 15:20:08 -0700
-From:   Minchan Kim <minchan@kernel.org>
-To:     Vlastimil Babka <vbabka@suse.cz>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, linux-api@vger.kernel.org,
-        oleksandr@redhat.com, Suren Baghdasaryan <surenb@google.com>,
-        Tim Murray <timmurray@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        John Dias <joaodias@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Jann Horn <jannh@google.com>,
-        alexander.h.duyck@linux.intel.com, sj38.park@gmail.com
-Subject: Re: [PATCH v7 2/7] mm: introduce external memory hinting API
-Message-ID: <20200310222008.GB72963@google.com>
-References: <20200302193630.68771-1-minchan@kernel.org>
- <20200302193630.68771-3-minchan@kernel.org>
- <bc3f6bd5-f032-bcf5-a09f-556ab785c587@suse.cz>
+        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=NEpWOdVoi/iDtTT5Bsmm6f/B1M2omplWiBwyNHZRkjI=;
+        b=Ipoohm0V4YfqU4UonYykrRgipm68y04JrubxVQoe3bnQio7s62kH4+JC6T2VCxMaYd
+         lnptPRhR86XJcbn66rXJAdQflh8VtjYUWFkA77coiZYPkSmK7oOXJgrKi7WETnmS/5n6
+         ABVefWdbEqOomOh4axA/Y8fQGtMIxdkIqfAXuwVYixuBheiGNOwuX/Hp21co6fgspXiP
+         FXc0lkhkpZIYfyZ983MOB7OuBDHFW8i7IkU7Jvy2z7f4qYkmxIOlXpb78ncQrfBdD4Oq
+         YZMxnUySyz7CzQmYMsNT6y4fIk3yJn5lpJwewXJjkPdWurZnMn85gXiNAFfejCJqDcNk
+         Tgng==
+X-Gm-Message-State: ANhLgQ2X7OPFkXnTqXS3UQVjihthoCD4Zr3InsS3tJEikOfPOhaRXMtH
+        gC7N11vmp/AfjLQxvQ4vGgUrka4g6Is=
+X-Google-Smtp-Source: ADFU+vu5osNvBMkK/6mmAyOzwJOslfa0QZFZDJ9P4Ra92MuBL0vU9KuWTYyPACu33MxlkJH9/IY2gw==
+X-Received: by 2002:a37:66c9:: with SMTP id a192mr109147qkc.10.1583878822402;
+        Tue, 10 Mar 2020 15:20:22 -0700 (PDT)
+Received: from ?IPv6:2620:10d:c0a8:11d1::111b? ([2620:10d:c091:480::fee])
+        by smtp.gmail.com with ESMTPSA id g3sm9305059qke.89.2020.03.10.15.20.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Mar 2020 15:20:21 -0700 (PDT)
+From:   Jes Sorensen <jes.sorensen@gmail.com>
+X-Google-Original-From: Jes Sorensen <Jes.Sorensen@gmail.com>
+Subject: Re: [PATCH][next] zd1211rw/zd_usb.h: Replace zero-length array with
+ flexible-array member
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Cc:     Joe Perches <joe@perches.com>, Daniel Drake <dsd@gentoo.org>,
+        Ulrich Kunitz <kune@deine-taler.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200305111216.GA24982@embeddedor>
+ <87k13yq2jo.fsf@kamboji.qca.qualcomm.com>
+ <256881484c5db07e47c611a56550642a6f6bd8e9.camel@perches.com>
+ <87blpapyu5.fsf@kamboji.qca.qualcomm.com>
+ <1bb7270f-545b-23ca-aa27-5b3c52fba1be@embeddedor.com>
+ <87r1y0nwip.fsf@kamboji.qca.qualcomm.com>
+ <48ff1333-0a14-36d8-9565-a7f13a06c974@embeddedor.com>
+ <021d1125-3ffd-39ef-395a-b796c527bde4@gmail.com>
+ <fb3395d7-e932-10ac-1feb-ab2ceb63424e@embeddedor.com>
+Message-ID: <361da904-5adf-eb0c-e937-c5d2f69ac8be@gmail.com>
+Date:   Tue, 10 Mar 2020 18:20:20 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <bc3f6bd5-f032-bcf5-a09f-556ab785c587@suse.cz>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <fb3395d7-e932-10ac-1feb-ab2ceb63424e@embeddedor.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 05, 2020 at 07:15:10PM +0100, Vlastimil Babka wrote:
-> On 3/2/20 8:36 PM, Minchan Kim wrote:
-> > There is usecase that System Management Software(SMS) want to give
-> > a memory hint like MADV_[COLD|PAGEEOUT] to other processes and
-> > in the case of Android, it is the ActivityManagerService.
-> > 
-> > It's similar in spirit to madvise(MADV_WONTNEED), but the information
+On 3/10/20 6:13 PM, Gustavo A. R. Silva wrote:
 > 
-> You mean MADV_DONTNEED?
+> 
+> On 3/10/20 5:07 PM, Jes Sorensen wrote:
+>> As I stated in my previous answer, this seems more code churn than an
+>> actual fix. If this is a real problem, shouldn't the work be put into
+>> fixing the compiler to handle foo[0] instead? It seems that is where the
+>> real value would be.
+> 
+> Yeah. But, unfortunately, I'm not a compiler guy, so I'm not able to fix the
+> compiler as you suggest. And I honestly don't see what is so annoying/disturbing
+> about applying a patch that removes the 0 from foo[0] when it brings benefit
+> to the whole codebase.
 
-Mean to DONT_NEED's future version.
+My point is that it adds what seems like unnecessary churn, which is not
+a benefit, and it doesn't improve the generated code.
 
-> 
-> > required to make the reclaim decision is not known to the app.
-> 
-> This seems to be mixing up the differences between MADV_DONTNEED and
-> COLD/PAGEOUT and self-imposed vs external memory hints?
-
-Sorry, I don't understand what you want here.
-
-> 
-> > Instead,
-> > it is known to the centralized userspace daemon(ActivityManagerService),
-> > and that daemon must be able to initiate reclaim on its own without
-> > any app involvement.
-> > 
-> > To solve the issue, this patch introduces a new syscall process_madvise(2).
-> > It uses pidfd of an external process to give the hint.
-> > 
-> >  int process_madvise(int pidfd, void *addr, size_t length, int advise,
-> > 			unsigned long flag);
-> 
-> It's more common to call the argument 'flags' not 'flag'? The code seems to call
-> it flags. Also in line with madvise(2), the 'advise' argument should rather be
-> 'advice'. This is more important for the manpage, but let's be consistent.
-
-Yub, I will send the patch along with your comment in previous patch.
-
-> 
-> ...
-> 
-> > 
-> > Reviewed-by: Suren Baghdasaryan <surenb@google.com>
-> > Signed-off-by: Minchan Kim <minchan@kernel.org>
-> 
-> For the core parts,
-> Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
-
-Thanks for the review!
+Best regards,
+Jes
