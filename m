@@ -2,69 +2,101 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8516EC18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 17:13:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11349C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 17:14:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 665202146E
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 17:13:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD6F82146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 17:14:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583860447;
+	bh=o0q9VpNdhVGqOnm1WVJorPJ2VBsqPoVuT+wH+fscnfA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Knl/h4vLeq5WWVhp6dSCYBgP7LkqdgiR/+b8Cl2Yhm8tDRq7gBJevgT+Zy43zm1w/
+	 Ct8g7Ermcds7JN5akwQRAaS0zM1WoYrblLjBJxcClhJ+YRj4I641X/U2Po+1KacUXl
+	 zAOLtmhzXujtYUmGY8Tm/V9M5zpWRu7VjoNEVMwA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726847AbgCJRNl (ORCPT
+        id S1726913AbgCJROG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 13:13:41 -0400
-Received: from ms.lwn.net ([45.79.88.28]:44020 "EHLO ms.lwn.net"
+        Tue, 10 Mar 2020 13:14:06 -0400
+Received: from foss.arm.com ([217.140.110.172]:39758 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726380AbgCJRNl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 13:13:41 -0400
-Received: from lwn.net (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id BF1852E4;
-        Tue, 10 Mar 2020 17:13:40 +0000 (UTC)
-Date:   Tue, 10 Mar 2020 11:13:39 -0600
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Jonathan =?UTF-8?B?TmV1c2Now6RmZXI=?= <j.neuschaefer@gmx.net>
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] docs: admin-guide: binfmt-misc: Improve the title
-Message-ID: <20200310111339.2c5e3152@lwn.net>
-In-Reply-To: <20200308210935.7273-1-j.neuschaefer@gmx.net>
-References: <20200308210935.7273-1-j.neuschaefer@gmx.net>
-Organization: LWN.net
+        id S1726295AbgCJROG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 13:14:06 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0A8EC1FB;
+        Tue, 10 Mar 2020 10:14:06 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 76BCF3F67D;
+        Tue, 10 Mar 2020 10:14:05 -0700 (PDT)
+Date:   Tue, 10 Mar 2020 17:14:03 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Michael Walle <michael@walle.cc>
+Cc:     Vladimir Oltean <olteanv@gmail.com>, linux-spi@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>, linux-media@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>
+Subject: Re: [PATCH] spi: spi-fsl-dspi: fix DMA mapping
+Message-ID: <20200310171403.GL4106@sirena.org.uk>
+References: <20200310073313.21277-1-michael@walle.cc>
+ <4beb5200a76f2d817be7276444543de4@walle.cc>
+ <ea6ffa30ddc2459d07935e5e61a41172@walle.cc>
+ <CA+h21hqMoPhbq8YG0UeV1kP0iXApYsJvb9MZjPGX54dm2U-KnQ@mail.gmail.com>
+ <76923af394f334337a3cac125c270087@walle.cc>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="sCNd3Ivk/oijKKf1"
+Content-Disposition: inline
+In-Reply-To: <76923af394f334337a3cac125c270087@walle.cc>
+X-Cookie: In space, no one can hear you fart.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun,  8 Mar 2020 22:09:34 +0100
-Jonathan Neuschäfer <j.neuschaefer@gmx.net> wrote:
 
-> Trim the title a bit, since it's relatively long. Add `binfmt_misc` to
-> make it easier to search for the feature by its common name.
-> 
-> Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
-> ---
->  Documentation/admin-guide/binfmt-misc.rst | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/admin-guide/binfmt-misc.rst b/Documentation/admin-guide/binfmt-misc.rst
-> index bcdfbe39976e..82aab71ca783 100644
-> --- a/Documentation/admin-guide/binfmt-misc.rst
-> +++ b/Documentation/admin-guide/binfmt-misc.rst
-> @@ -1,5 +1,5 @@
-> -Kernel Support for miscellaneous (your favourite) Binary Formats v1.1
-> -=====================================================================
-> +Kernel Support for miscellaneous Binary Formats (binfmt_misc)
-> +=============================================================
-> 
->  This Kernel feature allows you to invoke almost (for restrictions see below)
->  every program by simply typing its name in the shell.
+--sCNd3Ivk/oijKKf1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Applied, thanks.
+On Tue, Mar 10, 2020 at 03:12:45PM +0100, Michael Walle wrote:
+> Am 2020-03-10 14:02, schrieb Vladimir Oltean:
 
-jon
+> > I'm testing LS1028A with IOMMU_DEFAULT_PASSTHROUGH=y and I didn't have
+> > time to change my setup now. I've also sent a v3 to my patch series
+> > which is going to conflict with this one, sorry.
+
+> No worries, its easy enough to rebase.
+
+> > I would have picked
+> > your patch up with my series but I didn't have the right environment
+> > to test it.
+
+> I'll resend a v2 once your series is working.
+
+Since it looks like your series might need another spin anyway I'm
+thinking it's sensible to apply this now and you rebase instead?  Cuts
+down on the number of pending patches if nothing else (unless the
+testing stuff gets sorted out of course).
+
+--sCNd3Ivk/oijKKf1
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5nytsACgkQJNaLcl1U
+h9CFXAf9Fs1LfShbPgNXymA2EJASuKmlCDxY/9JGibPArY1h+qg7eMbJsbijndm2
+iXclHhId06fmvFubASnkilFQmkiJRa8xQ9f0nc5bAU0im4gKeMaO95GzMzoyrCa4
+SPLpHEjJLWqD/aW9ewH7Hr5Q9Z45QvmGW/43go97TgXv5CTwwZzcEuLDSabSFUaR
+mVvqUpQGy+dnRCebK5XVt31+n5SSJ8ma6c8e6QcO8qRbJzf5Nq4hxg1eH+vYNAkR
+vQGIiF3wL9aMu9JbLmTFSPe/yj+WSGr9jDNPT6NgbR54XxwCzFVjAQx21Nj7xVIe
++PQK4vngYCQTN36fg6XPznpD7EeEYA==
+=+Mos
+-----END PGP SIGNATURE-----
+
+--sCNd3Ivk/oijKKf1--
