@@ -2,112 +2,114 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C64AC18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:07:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F528C18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:07:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F8C324692
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:07:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583845641;
-	bh=L4GuVXoTq7O5uw5g59v/PoU95cHmnlV73fAbYuaKBlw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IiyAHySwVlsfKU4E0PC7mPZQJ1YPeClWwYCq0PVc8GUg7/DQWYGs8sPRdJn/vmHXj
-	 bXhq3zc8I25Q+six52zzywZ0vDA/gOxl5ir5I7F6uOT7pT4y1ftNN3zluVIOuVKcyw
-	 RDyknmhITqHlRSi4fu34yvmVOkMUalWVL5qSRINs=
+	by mail.kernel.org (Postfix) with ESMTP id 7D4B124691
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:07:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=hartkopp.net header.i=@hartkopp.net header.b="URt7zzUn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730953AbgCJNHU (ORCPT
+        id S1730962AbgCJNHV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:07:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52898 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730651AbgCJNHM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:07:12 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC12820873;
-        Tue, 10 Mar 2020 13:07:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845632;
-        bh=L4GuVXoTq7O5uw5g59v/PoU95cHmnlV73fAbYuaKBlw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s37TyZgQ7e3LdAwtaQs59tWIRbmqf+mBgo2+z73TsRIKb5BhWWJtSW42Ow+6b6FMS
-         uqJiwRXaS58hr3c6ZepEjwd5UJI37Fswb4RfYv5Rmw7x6JBNQCGAp/N38l7iFY/WJ0
-         h+628HN28YC8yxHCK4uSVavTRtI/Q+ipmy/dcxbo=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, John Stultz <john.stultz@linaro.org>,
-        Orson Zhai <orson.unisoc@gmail.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>
-Subject: [PATCH 4.14 043/126] Revert "PM / devfreq: Modify the device name as devfreq(X) for sysfs"
-Date:   Tue, 10 Mar 2020 13:41:04 +0100
-Message-Id: <20200310124207.071001442@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200310124203.704193207@linuxfoundation.org>
-References: <20200310124203.704193207@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 10 Mar 2020 09:07:21 -0400
+Received: from mo4-p01-ob.smtp.rzone.de ([81.169.146.166]:23931 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730920AbgCJNHO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:07:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1583845632;
+        s=strato-dkim-0002; d=hartkopp.net;
+        h=In-Reply-To:Date:Message-ID:From:References:To:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=6R1RKm2q+lEZhuVelK1a77+oRAAsa1Xp6grAc/+xsXE=;
+        b=URt7zzUnEnTvofORtuRgOgsWVLD++cxyB1eUte9R8PgJvMMdtcvxgwHUCFCa9LImKO
+        51t5J47ocVi6hlmyIrNuQthH+E2HtNSyJCIp7tzvLs2W3GwEjiW0uga6aUMkWfzdEWaW
+        z99GXggdOYGskCGrR92Gr5TYR2wdKJZfT+H1VQifAJy30uq+Fu/GmWhfB68Ipu4DSjOP
+        kqUxb5ljm/um1iOBa35XmzcaHv5sEO0Ny6KbT86vsWax36ja1+6OGPMt28hmpDzmGCOK
+        u6zayrTUprrHAVuH4WkGFyzAWAGUGZcQqJilbqpDLcEm43kfqMWd650XMsPZRqWwyuxs
+        qhaw==
+X-RZG-AUTH: ":P2MHfkW8eP4Mre39l357AZT/I7AY/7nT2yrDxb8mjG14FZxedJy6qgO1o3PMaViOoLMJVch5lEq7"
+X-RZG-CLASS-ID: mo00
+Received: from [192.168.1.177]
+        by smtp.strato.de (RZmta 46.2.0 DYNA|AUTH)
+        with ESMTPSA id e0a4ffw2AD78XAp
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Tue, 10 Mar 2020 14:07:08 +0100 (CET)
+Subject: Re: [PATCH] net: slcan, slip -- no need for goto when if () will do
+To:     Pavel Machek <pavel@ucw.cz>, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, linux-can@vger.kernel.org,
+        yangerkun@huawei.com, davem@davemloft.net, mkl@pengutronix.de,
+        wg@grandegger.com
+References: <20200309223323.GA1634@duo.ucw.cz>
+From:   Oliver Hartkopp <socketcan@hartkopp.net>
+Message-ID: <0d9a5f11-1dc9-03ad-cecb-af38ad421c95@hartkopp.net>
+Date:   Tue, 10 Mar 2020 14:07:03 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200309223323.GA1634@duo.ucw.cz>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Orson Zhai <orson.unisoc@gmail.com>
-
-commit 66d0e797bf095d407479c89952d42b1d96ef0a7f upstream.
-
-This reverts commit 4585fbcb5331fc910b7e553ad3efd0dd7b320d14.
-
-The name changing as devfreq(X) breaks some user space applications,
-such as Android HAL from Unisoc and Hikey [1].
-The device name will be changed unexpectly after every boot depending
-on module init sequence. It will make trouble to setup some system
-configuration like selinux for Android.
-
-So we'd like to revert it back to old naming rule before any better
-way being found.
-
-[1] https://lkml.org/lkml/2018/5/8/1042
-
-Cc: John Stultz <john.stultz@linaro.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org
-Signed-off-by: Orson Zhai <orson.unisoc@gmail.com>
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/devfreq/devfreq.c |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
-
---- a/drivers/devfreq/devfreq.c
-+++ b/drivers/devfreq/devfreq.c
-@@ -513,7 +513,6 @@ struct devfreq *devfreq_add_device(struc
- {
- 	struct devfreq *devfreq;
- 	struct devfreq_governor *governor;
--	static atomic_t devfreq_no = ATOMIC_INIT(-1);
- 	int err = 0;
- 
- 	if (!dev || !profile || !governor_name) {
-@@ -556,8 +555,7 @@ struct devfreq *devfreq_add_device(struc
- 		mutex_lock(&devfreq->lock);
- 	}
- 
--	dev_set_name(&devfreq->dev, "devfreq%d",
--				atomic_inc_return(&devfreq_no));
-+	dev_set_name(&devfreq->dev, "%s", dev_name(dev));
- 	err = device_register(&devfreq->dev);
- 	if (err) {
- 		mutex_unlock(&devfreq->lock);
 
 
+On 09/03/2020 23.33, Pavel Machek wrote:
+> 
+> No need to play with gotos to jump over single statement.
+> 
+> Signed-off-by: Pavel Machek <pavel@ucw.cz>
+> 
+> diff --git a/drivers/net/can/slcan.c b/drivers/net/can/slcan.c
+> index 2f5c287eac95..686d853fc249 100644
+> --- a/drivers/net/can/slcan.c
+> +++ b/drivers/net/can/slcan.c
+> @@ -348,11 +348,8 @@ static void slcan_write_wakeup(struct tty_struct *tty)
+>   
+>   	rcu_read_lock();
+>   	sl = rcu_dereference(tty->disc_data);
+> -	if (!sl)
+> -		goto out;
+> -
+> -	schedule_work(&sl->tx_work);
+> -out:
+> +	if (sl)
+> +		schedule_work(&sl->tx_work);
+>   	rcu_read_unlock();
+>   }
+
+Haha. Yes, that looks indeed much better ...
+
+Acked-by: Oliver Hartkopp <socketcan@hartkopp.net>
+
+>   
+> diff --git a/drivers/net/slip/slip.c b/drivers/net/slip/slip.c
+> index babb01888b78..f81fb0b13a94 100644
+> --- a/drivers/net/slip/slip.c
+> +++ b/drivers/net/slip/slip.c
+> @@ -456,11 +456,8 @@ static void slip_write_wakeup(struct tty_struct *tty)
+>   
+>   	rcu_read_lock();
+>   	sl = rcu_dereference(tty->disc_data);
+> -	if (!sl)
+> -		goto out;
+> -
+> -	schedule_work(&sl->tx_work);
+> -out:
+> +	if (sl)
+> +		schedule_work(&sl->tx_work);
+>   	rcu_read_unlock();
+>   }
+>   
+> 
