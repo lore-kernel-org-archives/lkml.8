@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D6B1C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:51:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D70A2C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:51:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 032E22468E
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:51:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4B2620674
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:51:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583844678;
-	bh=zHbdShaZV+XM7ds1MbyGEf0M0GeteJZlB32nh7R+jx8=;
+	s=default; t=1583844683;
+	bh=ZYVkyMqGgYhlO0BtJ+tooypGJCOKVDmmHomUeIHmEeM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mx7xwW7uyKdUtzw26NzSuTAIyu9WqTH1NlmmTFtB8yXHt+rm6r3R9IoceVCYm1Rfl
-	 ZTTDzqpypiuzxdWz5Yk3GSnLxvBZiuZY4rNnMtysdqEOJk07GJh0Lsposq7tutKE5H
-	 IuPiS8NwGVsAMQYvMqnSXQ6MV30BR1gtbzEIQY6Y=
+	b=ZcwInzorNqHC05goNEgeMZO6VoB095GoYYh8JAdXfI0bHmDYNrW2qPmWzLcGxJ05O
+	 FePCwXAjl1wahT/oalIaWFWX1j1VJ3Hie8f0MPgJXLRgUP2neZ8KGfripF8a2fqB8r
+	 Ime94+cPT9P2q2/k8WeEKuM2pd13RwReTI5u7Bpk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728869AbgCJMvR (ORCPT
+        id S1728890AbgCJMvW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:51:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56264 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:51:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56418 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728337AbgCJMvO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:51:14 -0400
+        id S1728876AbgCJMvT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:51:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E8B52468E;
-        Tue, 10 Mar 2020 12:51:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE13C2468E;
+        Tue, 10 Mar 2020 12:51:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844674;
-        bh=zHbdShaZV+XM7ds1MbyGEf0M0GeteJZlB32nh7R+jx8=;
+        s=default; t=1583844679;
+        bh=ZYVkyMqGgYhlO0BtJ+tooypGJCOKVDmmHomUeIHmEeM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=baE8aQMT1CoBH76vViC/X3G61ISE4xzMcFXBcvZ9Nrggmdcu6RSL3j1yyU5/8gjcZ
-         IimCXAQkdgrTVkVvL+7HkXUxdcKvSCRz2pTft/1QGc/mcWw9ocoafsJZlj/5N8IBf3
-         xY+P9PrWzEqzlsuaYmZ+QC+PiW+iBgiJZoHA60cc=
+        b=shFgYCOdhGau/PygsCNjPOM6II+peN8OUG4FNKQnWPvejVs8RtcGcfrxi34qr84B8
+         Bs9OFKW27Mqs2iR7kaAxzcumJDnPVv0NIJH2koAbi+D2choB6hdwqE3m5e49diJW4T
+         OLiS8Lc2tr1j7NKxscBPYCHLdoS3o7HV05CV2xf0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+9d82b8de2992579da5d0@syzkaller.appspotmail.com,
-        Andrew Morton <akpm@linux-foundation.org>,
-        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.4 078/168] fat: fix uninit-memory access for partial initialized inode
-Date:   Tue, 10 Mar 2020 13:38:44 +0100
-Message-Id: <20200310123643.187715152@linuxfoundation.org>
+        stable@vger.kernel.org, Ley Foon Tan <ley.foon.tan@intel.com>,
+        Dinh Nguyen <dinguyen@kernel.org>
+Subject: [PATCH 5.4 080/168] arm64: dts: socfpga: agilex: Fix gmac compatible
+Date:   Tue, 10 Mar 2020 13:38:46 +0100
+Message-Id: <20200310123643.391916006@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123635.322799692@linuxfoundation.org>
 References: <20200310123635.322799692@linuxfoundation.org>
@@ -62,74 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+From: Ley Foon Tan <ley.foon.tan@intel.com>
 
-commit bc87302a093f0eab45cd4e250c2021299f712ec6 upstream.
+commit 8c867387160e89c9ffd12459f38e56844312a7a7 upstream.
 
-When get an error in the middle of reading an inode, some fields in the
-inode might be still not initialized.  And then the evict_inode path may
-access those fields via iput().
+Fix gmac compatible string to "altr,socfpga-stmmac-a10-s10". Gmac for
+Agilex should use same compatible as Stratix 10.
 
-To fix, this makes sure that inode fields are initialized.
-
-Reported-by: syzbot+9d82b8de2992579da5d0@syzkaller.appspotmail.com
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
-Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/871rqnreqx.fsf@mail.parknet.co.jp
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 4b36daf9ada3 ("arm64: dts: agilex: Add initial support for Intel's Agilex SoCFPGA")
+Cc: stable@vger.kernel.org
+Signed-off-by: Ley Foon Tan <ley.foon.tan@intel.com>
+Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/fat/inode.c |   19 +++++++------------
- 1 file changed, 7 insertions(+), 12 deletions(-)
+ arch/arm64/boot/dts/intel/socfpga_agilex.dtsi |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/fs/fat/inode.c
-+++ b/fs/fat/inode.c
-@@ -749,6 +749,13 @@ static struct inode *fat_alloc_inode(str
- 		return NULL;
+--- a/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi
++++ b/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi
+@@ -82,7 +82,7 @@
+ 		ranges = <0 0 0 0xffffffff>;
  
- 	init_rwsem(&ei->truncate_lock);
-+	/* Zeroing to allow iput() even if partial initialized inode. */
-+	ei->mmu_private = 0;
-+	ei->i_start = 0;
-+	ei->i_logstart = 0;
-+	ei->i_attrs = 0;
-+	ei->i_pos = 0;
-+
- 	return &ei->vfs_inode;
- }
+ 		gmac0: ethernet@ff800000 {
+-			compatible = "altr,socfpga-stmmac", "snps,dwmac-3.74a", "snps,dwmac";
++			compatible = "altr,socfpga-stmmac-a10-s10", "snps,dwmac-3.74a", "snps,dwmac";
+ 			reg = <0xff800000 0x2000>;
+ 			interrupts = <0 90 4>;
+ 			interrupt-names = "macirq";
+@@ -97,7 +97,7 @@
+ 		};
  
-@@ -1373,16 +1380,6 @@ out:
- 	return 0;
- }
+ 		gmac1: ethernet@ff802000 {
+-			compatible = "altr,socfpga-stmmac", "snps,dwmac-3.74a", "snps,dwmac";
++			compatible = "altr,socfpga-stmmac-a10-s10", "snps,dwmac-3.74a", "snps,dwmac";
+ 			reg = <0xff802000 0x2000>;
+ 			interrupts = <0 91 4>;
+ 			interrupt-names = "macirq";
+@@ -112,7 +112,7 @@
+ 		};
  
--static void fat_dummy_inode_init(struct inode *inode)
--{
--	/* Initialize this dummy inode to work as no-op. */
--	MSDOS_I(inode)->mmu_private = 0;
--	MSDOS_I(inode)->i_start = 0;
--	MSDOS_I(inode)->i_logstart = 0;
--	MSDOS_I(inode)->i_attrs = 0;
--	MSDOS_I(inode)->i_pos = 0;
--}
--
- static int fat_read_root(struct inode *inode)
- {
- 	struct msdos_sb_info *sbi = MSDOS_SB(inode->i_sb);
-@@ -1843,13 +1840,11 @@ int fat_fill_super(struct super_block *s
- 	fat_inode = new_inode(sb);
- 	if (!fat_inode)
- 		goto out_fail;
--	fat_dummy_inode_init(fat_inode);
- 	sbi->fat_inode = fat_inode;
- 
- 	fsinfo_inode = new_inode(sb);
- 	if (!fsinfo_inode)
- 		goto out_fail;
--	fat_dummy_inode_init(fsinfo_inode);
- 	fsinfo_inode->i_ino = MSDOS_FSINFO_INO;
- 	sbi->fsinfo_inode = fsinfo_inode;
- 	insert_inode_hash(fsinfo_inode);
+ 		gmac2: ethernet@ff804000 {
+-			compatible = "altr,socfpga-stmmac", "snps,dwmac-3.74a", "snps,dwmac";
++			compatible = "altr,socfpga-stmmac-a10-s10", "snps,dwmac-3.74a", "snps,dwmac";
+ 			reg = <0xff804000 0x2000>;
+ 			interrupts = <0 92 4>;
+ 			interrupt-names = "macirq";
 
 
