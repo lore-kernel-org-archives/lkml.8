@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EF11C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:18:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89992C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:18:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24461208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:18:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53F31208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:18:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583846305;
-	bh=ZEuXr2Lt9z5Yd+2+diKOFZq9QOTwXmgaie6wa6bpRME=;
+	s=default; t=1583846310;
+	bh=Xsc8LvYZIeFd8bE6v1ZDxoI41P161LSVCjfpgOa/g1I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oktU9M7SSAf+OWip/1xgJgiKDf3FC6XdUjDTGOy4IqdTwwAVGK7F+xy6VWNwlZXvz
-	 T9nd43tbjZBPqs9ThGU7lmwH09TguEyUs8gjfL3Hwum9YWPXWdps9kPDeKv3Xx0g4k
-	 mQXPPEJGOKiLngKlUNXpmYTPVJbolUSONLEMpSfE=
+	b=R9QaROFWZI+DN/gPk9B0B8rXzqn9PX011ZBEEzPoyU8eNLE0qqwiL4ahZGLy7OxLb
+	 Op7yeybG/d8vgD4oOTG6SSfWi9OQsuYIagfRRiQrymOGwvPz9QDTWCHPqtYUsPeedu
+	 0BS5KbEsK3Rp4c3L2MvmtdC/JLrTM2D5qabxvhHY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731742AbgCJNSY (ORCPT
+        id S1731753AbgCJNS3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:18:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60506 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:18:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60232 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731352AbgCJNLA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:11:00 -0400
+        id S1729098AbgCJNKq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:10:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 926C9208E4;
-        Tue, 10 Mar 2020 13:10:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B78320409;
+        Tue, 10 Mar 2020 13:10:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845859;
-        bh=ZEuXr2Lt9z5Yd+2+diKOFZq9QOTwXmgaie6wa6bpRME=;
+        s=default; t=1583845845;
+        bh=Xsc8LvYZIeFd8bE6v1ZDxoI41P161LSVCjfpgOa/g1I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xMbIkXbfQb40sySJRV01Dsc4VHuAD0Z8WNolxlgWm3CIYgKBLyqzVi8RPYeIB1bxh
-         WFEDhWrmq4AjfO/qtT3AzvH9brlgRde4hoV3CFdc/Fl4aDsqjFlJq9hUFOHXCYih3b
-         SZ5RnWgjZ9O2BXS7X+UOnCzhMwRgH2135JEW4lw0=
+        b=bdJHVHWMB5jexepJW7SAcUFcxB6QgGgADwo9CMiq9WshJYvjjcUSz+soOWENXB8Yz
+         +yzPDX+kWV/JQX9MISsZS7+FavBId0eLSoC7+5HOAzw01Cet4dblSOgmy1zHHmuas6
+         Kdl5iKi/UEhJ1XZmYa8QW4XxVKO6lbcKAQAbpsjY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Heinz Mauelshagen <heinzm@redhat.com>,
-        Mikulas Patocka <mpatocka@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 4.14 125/126] dm integrity: fix a deadlock due to offloading to an incorrect workqueue
-Date:   Tue, 10 Mar 2020 13:42:26 +0100
-Message-Id: <20200310124211.378654195@linuxfoundation.org>
+        stable@vger.kernel.org, Sanchayan Maity <maitysanchayan@gmail.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Johan Hovold <johan@kernel.org>,
+        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+Subject: [PATCH 4.14 121/126] ARM: dts: imx6dl-colibri-eval-v3: fix sram compatible properties
+Date:   Tue, 10 Mar 2020 13:42:22 +0100
+Message-Id: <20200310124211.171806692@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310124203.704193207@linuxfoundation.org>
 References: <20200310124203.704193207@linuxfoundation.org>
@@ -60,95 +62,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mikulas Patocka <mpatocka@redhat.com>
+From: Johan Hovold <johan@kernel.org>
 
-commit 53770f0ec5fd417429775ba006bc4abe14002335 upstream.
+commit bcbf53a0dab50980867476994f6079c1ec5bb3a3 upstream.
 
-If we need to perform synchronous I/O in dm_integrity_map_continue(),
-we must make sure that we are not in the map function - in order to
-avoid the deadlock due to bio queuing in generic_make_request. To
-avoid the deadlock, we offload the request to metadata_wq.
+The sram-node compatible properties have mistakingly combined the
+model-specific string with the generic "mtd-ram" string.
 
-However, metadata_wq also processes metadata updates for write requests.
-If there are too many requests that get offloaded to metadata_wq at the
-beginning of dm_integrity_map_continue, the workqueue metadata_wq
-becomes clogged and the system is incapable of processing any metadata
-updates.
+Note that neither "cy7c1019dv33-10zsxi, mtd-ram" or
+"cy7c1019dv33-10zsxi" are used by any in-kernel driver and they are
+not present in any binding.
 
-This causes a deadlock because all the requests that need to do metadata
-updates wait for metadata_wq to proceed and metadata_wq waits inside
-wait_and_add_new_range until some existing request releases its range
-lock (which doesn't happen because the range lock is released after
-metadata update).
+The physmap driver will however bind to platform devices that specify
+"mtd-ram".
 
-In order to fix the deadlock, we create a new workqueue offload_wq and
-offload requests to it - so that processing of offload_wq is independent
-from processing of metadata_wq.
-
-Fixes: 7eada909bfd7 ("dm: add integrity target")
-Cc: stable@vger.kernel.org # v4.12+
-Reported-by: Heinz Mauelshagen <heinzm@redhat.com>
-Tested-by: Heinz Mauelshagen <heinzm@redhat.com>
-Signed-off-by: Heinz Mauelshagen <heinzm@redhat.com>
-Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Fixes: fc48e76489fd ("ARM: dts: imx6: Add support for Toradex Colibri iMX6 module")
+Cc: Sanchayan Maity <maitysanchayan@gmail.com>
+Cc: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Reviewed-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/dm-integrity.c |   15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/md/dm-integrity.c
-+++ b/drivers/md/dm-integrity.c
-@@ -187,6 +187,7 @@ struct dm_integrity_c {
- 	struct rb_root in_progress;
- 	wait_queue_head_t endio_wait;
- 	struct workqueue_struct *wait_wq;
-+	struct workqueue_struct *offload_wq;
+--- a/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts
++++ b/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts
+@@ -231,7 +231,7 @@
  
- 	unsigned char commit_seq;
- 	commit_id_t commit_ids[N_COMMIT_IDS];
-@@ -1157,7 +1158,7 @@ static void dec_in_flight(struct dm_inte
- 			dio->range.logical_sector += dio->range.n_sectors;
- 			bio_advance(bio, dio->range.n_sectors << SECTOR_SHIFT);
- 			INIT_WORK(&dio->work, integrity_bio_wait);
--			queue_work(ic->wait_wq, &dio->work);
-+			queue_work(ic->offload_wq, &dio->work);
- 			return;
- 		}
- 		do_endio_flush(ic, dio);
-@@ -1577,7 +1578,7 @@ static void dm_integrity_map_continue(st
+ 	/* SRAM on Colibri nEXT_CS0 */
+ 	sram@0,0 {
+-		compatible = "cypress,cy7c1019dv33-10zsxi, mtd-ram";
++		compatible = "cypress,cy7c1019dv33-10zsxi", "mtd-ram";
+ 		reg = <0 0 0x00010000>;
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+@@ -242,7 +242,7 @@
  
- 	if (need_sync_io && from_map) {
- 		INIT_WORK(&dio->work, integrity_bio_wait);
--		queue_work(ic->metadata_wq, &dio->work);
-+		queue_work(ic->offload_wq, &dio->work);
- 		return;
- 	}
- 
-@@ -3005,6 +3006,14 @@ static int dm_integrity_ctr(struct dm_ta
- 		goto bad;
- 	}
- 
-+	ic->offload_wq = alloc_workqueue("dm-integrity-offload", WQ_MEM_RECLAIM,
-+					  METADATA_WORKQUEUE_MAX_ACTIVE);
-+	if (!ic->offload_wq) {
-+		ti->error = "Cannot allocate workqueue";
-+		r = -ENOMEM;
-+		goto bad;
-+	}
-+
- 	ic->commit_wq = alloc_workqueue("dm-integrity-commit", WQ_MEM_RECLAIM, 1);
- 	if (!ic->commit_wq) {
- 		ti->error = "Cannot allocate workqueue";
-@@ -3189,6 +3198,8 @@ static void dm_integrity_dtr(struct dm_t
- 		destroy_workqueue(ic->metadata_wq);
- 	if (ic->wait_wq)
- 		destroy_workqueue(ic->wait_wq);
-+	if (ic->offload_wq)
-+		destroy_workqueue(ic->offload_wq);
- 	if (ic->commit_wq)
- 		destroy_workqueue(ic->commit_wq);
- 	if (ic->writer_wq)
+ 	/* SRAM on Colibri nEXT_CS1 */
+ 	sram@1,0 {
+-		compatible = "cypress,cy7c1019dv33-10zsxi, mtd-ram";
++		compatible = "cypress,cy7c1019dv33-10zsxi", "mtd-ram";
+ 		reg = <1 0 0x00010000>;
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
 
 
