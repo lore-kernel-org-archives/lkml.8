@@ -2,130 +2,220 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6D12C10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 01:12:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FEBBC10F25
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 01:13:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2C3824649
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 01:12:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E52924649
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 01:13:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FnqUNKxy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726284AbgCJBMu (ORCPT
+        id S1726444AbgCJBNG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 21:12:50 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:44614 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726115AbgCJBMt (ORCPT
+        Mon, 9 Mar 2020 21:13:06 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:40422 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726121AbgCJBNF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 21:12:49 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 438CD80307C5;
-        Tue, 10 Mar 2020 01:12:48 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id VPQJE74fpZjG; Tue, 10 Mar 2020 04:12:47 +0300 (MSK)
-Date:   Tue, 10 Mar 2020 04:11:57 +0300
-From:   Sergey Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
-        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 0/2] mfd: Add Baikal-T1 SoC Boot Controller driver
-References: <20200306130528.9973-1-Sergey.Semin@baikalelectronics.ru>
+        Mon, 9 Mar 2020 21:13:05 -0400
+Received: by mail-pl1-f194.google.com with SMTP id h11so1539118plk.7
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 18:13:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Jct0oODSWCAbtgp27/MonFQJl4SIunMaftksi2S2Lhk=;
+        b=FnqUNKxy9VpjYePPEw/UjvCcMoUU9z5I9nAMcanQud9Fm17B8L/jtOGwn/2LV9ck/E
+         PH0GDOLFEOYfVCd7vzAn1r46n1C9Ih9r0sN0gzqopzpXcBF9cKL9+z10ZrNgdHdpEaYy
+         1D/WuR7MObErwia9QrdNRAI2qFf78/k12fh0HVQttfKtuPNJhgYLvomSB6R5313jmZlO
+         BhybgiY/vVLAoW9nA1RnTVTx2aSqO7/LuCOENwWee9nB0O0dDO7v3sOX7nlG9Yr+CS2Y
+         flGezL007ClN7JX1nmh7UsovWGaJ//IIqS324WxwiXohmP0fgA1iLWWjLf38HfalPtvr
+         5oVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Jct0oODSWCAbtgp27/MonFQJl4SIunMaftksi2S2Lhk=;
+        b=q7EF4IgCzsn4fD5dyKEl+FWzySEHPp8x3BYFVmNZ1hoErFHE3qI++PJMRnjZ+cABwd
+         SrQji8sH15CgHKPpuoVDVcO4oAd7k1ZxaLyJ1T3vFk/pTOJ+lUCmqxHO7GLjPUojl2Vm
+         AUYxUId7qnHPOEKk1oyQudUK42t0DAK9HoDtislC4VQTjZe1rluA6kjmMb7jC93APQnY
+         qKmkQ14u01HHkjm2ltyA+tp+n6T1dOOq4TB6qFlNa3N7UR6LmuNEGuAVf5kXJHvCeplf
+         PZ8guNwE1ZlN50V91ypObBGx5MyKx4aqog7bmt8yaBlujDoZ+8fu38AcL3Pr7CeIG4aQ
+         W/pA==
+X-Gm-Message-State: ANhLgQ1Qg7adfqrfz0b3Z3iNK5CJA+3zyjaeFdK8MXO63UoWQLLIriZL
+        CNv9yT0XsmCTZhsOmr6cBQMvWY3m22wj/lCnM9WEZQ==
+X-Google-Smtp-Source: ADFU+vuvy+aVBypOSJ8MDKrWWN/VcYfntO0uRTt3cKWBFTEBl/T4ffJ0PBm7PrQl9DIV2mLIjDPGRaqx7AOGUI2rDo4=
+X-Received: by 2002:a17:90a:1f8d:: with SMTP id x13mr2151099pja.27.1583802784082;
+ Mon, 09 Mar 2020 18:13:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200306130528.9973-1-Sergey.Semin@baikalelectronics.ru>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
-Message-Id: <20200310011248.438CD80307C5@mail.baikalelectronics.ru>
+References: <1583719058-23370-1-git-send-email-Anson.Huang@nxp.com> <202003100849.SzJTb5rj%lkp@intel.com>
+In-Reply-To: <202003100849.SzJTb5rj%lkp@intel.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Mon, 9 Mar 2020 18:12:53 -0700
+Message-ID: <CAKwvOdmnQiEe8TxNGSqKrBY_WL_Tsxu6NJ=1iAmaaqeM3a2bAQ@mail.gmail.com>
+Subject: Re: [PATCH] gpio: mxs: add COMPILE_TEST support for GPIO_MXS
+To:     Anson Huang <Anson.Huang@nxp.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Masahiro Yamada <masahiroy@kernel.org>
+Cc:     kbuild-all@lists.01.org,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        bgolaszewski@baylibre.com, linux-gpio@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        NXP Linux Team <Linux-imx@nxp.com>,
+        kbuild test robot <lkp@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 06, 2020 at 04:05:26PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
-> From: Serge Semin <fancer.lancer@gmail.com>
-> 
-> Baikal-T1 Boot Controller is an IP block embedded into the SoC and responsible
-> for the chip proper pre-initialization and further booting up from selected
-> memory mapped device. From the Linux kernel point of view it's just a multi-
-> functional device, which exports three physically mapped ROMs and a single SPI
-> controller interface.
-> 
-> Baikal-T1 can boot either from an external SPI-flash or from an embedded into
-> it firmware. So when the bootup from the SPI-flash is selected the flash memory
-> can be accessed either directly via the embedded into the Boot Controller DW
-> APB SSI controller registers or via a physically mapped ROM (which is just an
-> FSM IP-core interacting with the DW APB SSI controller by itself). Since both
-> of these interfaces are using the same SPI interface they can't be utilized
-> simultaneously. Instead the Boot Controller provides the access switching
-> functionality by means of the control register flag. That's why we need the
-> Boot Controller MFD driver provided by this patchset - in order to multiplex the
-> access to the DW APB SSI controller and SPI interface from two different
-> subsystems.
-> 
-> After this patchset is integrated into the kernel we'll submit two more
-> patchsets with physically mapped ROMs (due to some peculiarities we can't have
-> the already available in the kernel mtd-rom drivers) and SPI controller
-> (similarly the available in the kernel DW APB SSI driver isn't suitable for
-> our version of the SPI controller) drivers will be submitted for integration
-> into the mainline Linux kernel.
-> 
-> This patchset is rebased and tested on the mainline Linux kernel 5.6-rc4:
-> commit 98d54f81e36b ("Linux 5.6-rc4").
-> 
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Cc: Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>
-> Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
-> Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
-> Cc: Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>
-> Cc: Vadim Vlasov <V.Vlasov@baikalelectronics.ru>
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: Paul Burton <paulburton@kernel.org>
-> Cc: Ralf Baechle <ralf@linux-mips.org>
-> Cc: Lee Jones <lee.jones@linaro.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> 
-> Serge Semin (2):
->   dt-bindings: mfd: Add Baikal-T1 Boot Controller bindings
->   mfd: Add Baikal-T1 Boot Controller driver
-> 
->  .../bindings/mfd/be,bt1-boot-ctl.yaml         |  89 +++++
->  drivers/mfd/Kconfig                           |  13 +
->  drivers/mfd/Makefile                          |   1 +
->  drivers/mfd/bt1-boot-ctl.c                    | 345 ++++++++++++++++++
->  include/linux/mfd/bt1-boot-ctl.h              |  46 +++
->  5 files changed, 494 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/be,bt1-boot-ctl.yaml
->  create mode 100644 drivers/mfd/bt1-boot-ctl.c
->  create mode 100644 include/linux/mfd/bt1-boot-ctl.h
-> 
-> -- 
-> 2.25.1
-> 
+Nevermind this report, we're currently discussing what best to do in this case.
 
-Folks,
+On Mon, Mar 9, 2020 at 5:57 PM kbuild test robot <lkp@intel.com> wrote:
+>
+> Hi Anson,
+>
+> Thank you for the patch! Perhaps something to improve:
+>
+> [auto build test WARNING on gpio/for-next]
+> [also build test WARNING on v5.6-rc5]
+> [if your patch is applied to the wrong git tree, please drop us a note to help
+> improve the system. BTW, we also suggest to use '--base' option to specify the
+> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+>
+> url:    https://github.com/0day-ci/linux/commits/Anson-Huang/gpio-mxs-add-COMPILE_TEST-support-for-GPIO_MXS/20200309-104254
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git for-next
+> config: x86_64-allyesconfig (attached as .config)
+> compiler: clang version 11.0.0 (git://gitmirror/llvm_project 073dbaae39724ea860b5957fe47ecc1c2a84b197)
+> reproduce:
+>         # FIXME the reproduce steps for clang is not ready yet
+>
+> If you fix the issue, kindly add following tag
+> Reported-by: kbuild test robot <lkp@intel.com>
+>
+> All warnings (new ones prefixed by >>):
+>
+> >> drivers/gpio/gpio-mxs.c:293:16: warning: cast to smaller integer type 'enum mxs_gpio_id' from 'const void *' [-Wvoid-pointer-to-enum-cast]
+>            port->devid = (enum mxs_gpio_id)of_device_get_match_data(&pdev->dev);
+>                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>    1 warning generated.
+>
+> vim +293 drivers/gpio/gpio-mxs.c
+>
+> 4052d45e800ce3 drivers/gpio/gpio-mxs.c  Shawn Guo           2012-05-04  276
+> 3836309d93462b drivers/gpio/gpio-mxs.c  Bill Pemberton      2012-11-19  277  static int mxs_gpio_probe(struct platform_device *pdev)
+> fba311fcf09873 arch/arm/mach-mxs/gpio.c Shawn Guo           2010-12-18  278  {
+> 4052d45e800ce3 drivers/gpio/gpio-mxs.c  Shawn Guo           2012-05-04  279     struct device_node *np = pdev->dev.of_node;
+> 4052d45e800ce3 drivers/gpio/gpio-mxs.c  Shawn Guo           2012-05-04  280     struct device_node *parent;
+> 8d7cf8370d5fb7 drivers/gpio/gpio-mxs.c  Shawn Guo           2011-06-06  281     static void __iomem *base;
+> 8d7cf8370d5fb7 drivers/gpio/gpio-mxs.c  Shawn Guo           2011-06-06  282     struct mxs_gpio_port *port;
+> 0b76c5412146c1 drivers/gpio/gpio-mxs.c  Shawn Guo           2012-08-20  283     int irq_base;
+> 498c17cf6a9353 drivers/gpio/gpio-mxs.c  Shawn Guo           2011-06-07  284     int err;
+> 8d7cf8370d5fb7 drivers/gpio/gpio-mxs.c  Shawn Guo           2011-06-06  285
+> 940a4f7b51f7ad drivers/gpio/gpio-mxs.c  Shawn Guo           2012-05-04  286     port = devm_kzalloc(&pdev->dev, sizeof(*port), GFP_KERNEL);
+> 8d7cf8370d5fb7 drivers/gpio/gpio-mxs.c  Shawn Guo           2011-06-06  287     if (!port)
+> 8d7cf8370d5fb7 drivers/gpio/gpio-mxs.c  Shawn Guo           2011-06-06  288             return -ENOMEM;
+> 8d7cf8370d5fb7 drivers/gpio/gpio-mxs.c  Shawn Guo           2011-06-06  289
+> 4052d45e800ce3 drivers/gpio/gpio-mxs.c  Shawn Guo           2012-05-04  290     port->id = of_alias_get_id(np, "gpio");
+> 4052d45e800ce3 drivers/gpio/gpio-mxs.c  Shawn Guo           2012-05-04  291     if (port->id < 0)
+> 4052d45e800ce3 drivers/gpio/gpio-mxs.c  Shawn Guo           2012-05-04  292             return port->id;
+> 1f2d357b9ebef5 drivers/gpio/gpio-mxs.c  Thierry Reding      2018-04-30 @293     port->devid = (enum mxs_gpio_id)of_device_get_match_data(&pdev->dev);
+> 5751d3dcf43e24 drivers/gpio/gpio-mxs.c  Bartosz Golaszewski 2017-08-09  294     port->dev = &pdev->dev;
+> 940a4f7b51f7ad drivers/gpio/gpio-mxs.c  Shawn Guo           2012-05-04  295     port->irq = platform_get_irq(pdev, 0);
+> 940a4f7b51f7ad drivers/gpio/gpio-mxs.c  Shawn Guo           2012-05-04  296     if (port->irq < 0)
+> 940a4f7b51f7ad drivers/gpio/gpio-mxs.c  Shawn Guo           2012-05-04  297             return port->irq;
+> 940a4f7b51f7ad drivers/gpio/gpio-mxs.c  Shawn Guo           2012-05-04  298
+> 8d7cf8370d5fb7 drivers/gpio/gpio-mxs.c  Shawn Guo           2011-06-06  299     /*
+> 8d7cf8370d5fb7 drivers/gpio/gpio-mxs.c  Shawn Guo           2011-06-06  300      * map memory region only once, as all the gpio ports
+> 8d7cf8370d5fb7 drivers/gpio/gpio-mxs.c  Shawn Guo           2011-06-06  301      * share the same one
+> 8d7cf8370d5fb7 drivers/gpio/gpio-mxs.c  Shawn Guo           2011-06-06  302      */
+> 8d7cf8370d5fb7 drivers/gpio/gpio-mxs.c  Shawn Guo           2011-06-06  303     if (!base) {
+> 4052d45e800ce3 drivers/gpio/gpio-mxs.c  Shawn Guo           2012-05-04  304             parent = of_get_parent(np);
+> 4052d45e800ce3 drivers/gpio/gpio-mxs.c  Shawn Guo           2012-05-04  305             base = of_iomap(parent, 0);
+> 4052d45e800ce3 drivers/gpio/gpio-mxs.c  Shawn Guo           2012-05-04  306             of_node_put(parent);
+> 641d03422a59b1 drivers/gpio/gpio-mxs.c  Thierry Reding      2013-01-21  307             if (!base)
+> 641d03422a59b1 drivers/gpio/gpio-mxs.c  Thierry Reding      2013-01-21  308                     return -EADDRNOTAVAIL;
+> 8d7cf8370d5fb7 drivers/gpio/gpio-mxs.c  Shawn Guo           2011-06-06  309     }
+> 8d7cf8370d5fb7 drivers/gpio/gpio-mxs.c  Shawn Guo           2011-06-06  310     port->base = base;
+> fba311fcf09873 arch/arm/mach-mxs/gpio.c Shawn Guo           2010-12-18  311
+> f08ea3cc94eeaf drivers/gpio/gpio-mxs.c  Sascha Hauer        2016-10-21  312     /* initially disable the interrupts */
+> f08ea3cc94eeaf drivers/gpio/gpio-mxs.c  Sascha Hauer        2016-10-21  313     writel(0, port->base + PINCTRL_PIN2IRQ(port));
+> 164387d2b4ae20 drivers/gpio/gpio-mxs.c  Shawn Guo           2012-05-03  314     writel(0, port->base + PINCTRL_IRQEN(port));
+> fba311fcf09873 arch/arm/mach-mxs/gpio.c Shawn Guo           2010-12-18  315
+> fba311fcf09873 arch/arm/mach-mxs/gpio.c Shawn Guo           2010-12-18  316     /* clear address has to be used to clear IRQSTAT bits */
+> 164387d2b4ae20 drivers/gpio/gpio-mxs.c  Shawn Guo           2012-05-03  317     writel(~0U, port->base + PINCTRL_IRQSTAT(port) + MXS_CLR);
+> fba311fcf09873 arch/arm/mach-mxs/gpio.c Shawn Guo           2010-12-18  318
+> 8514b5439c90f0 drivers/gpio/gpio-mxs.c  Bartosz Golaszewski 2017-03-04  319     irq_base = devm_irq_alloc_descs(&pdev->dev, -1, 0, 32, numa_node_id());
+> 44df08198bc98d drivers/gpio/gpio-mxs.c  Arvind Yadav        2016-10-05  320     if (irq_base < 0) {
+> 44df08198bc98d drivers/gpio/gpio-mxs.c  Arvind Yadav        2016-10-05  321             err = irq_base;
+> 44df08198bc98d drivers/gpio/gpio-mxs.c  Arvind Yadav        2016-10-05  322             goto out_iounmap;
+> 44df08198bc98d drivers/gpio/gpio-mxs.c  Arvind Yadav        2016-10-05  323     }
+> 0b76c5412146c1 drivers/gpio/gpio-mxs.c  Shawn Guo           2012-08-20  324
+> 0b76c5412146c1 drivers/gpio/gpio-mxs.c  Shawn Guo           2012-08-20  325     port->domain = irq_domain_add_legacy(np, 32, irq_base, 0,
+> 0b76c5412146c1 drivers/gpio/gpio-mxs.c  Shawn Guo           2012-08-20  326                                          &irq_domain_simple_ops, NULL);
+> 0b76c5412146c1 drivers/gpio/gpio-mxs.c  Shawn Guo           2012-08-20  327     if (!port->domain) {
+> 0b76c5412146c1 drivers/gpio/gpio-mxs.c  Shawn Guo           2012-08-20  328             err = -ENODEV;
+> 8514b5439c90f0 drivers/gpio/gpio-mxs.c  Bartosz Golaszewski 2017-03-04  329             goto out_iounmap;
+> 0b76c5412146c1 drivers/gpio/gpio-mxs.c  Shawn Guo           2012-08-20  330     }
+> 0b76c5412146c1 drivers/gpio/gpio-mxs.c  Shawn Guo           2012-08-20  331
+> 498c17cf6a9353 drivers/gpio/gpio-mxs.c  Shawn Guo           2011-06-07  332     /* gpio-mxs can be a generic irq chip */
+> 1bbc557d976b4e drivers/gpio/gpio-mxs.c  Peng Fan            2015-08-23  333     err = mxs_gpio_init_gc(port, irq_base);
+> 1bbc557d976b4e drivers/gpio/gpio-mxs.c  Peng Fan            2015-08-23  334     if (err < 0)
+> 1bbc557d976b4e drivers/gpio/gpio-mxs.c  Peng Fan            2015-08-23  335             goto out_irqdomain_remove;
+> fba311fcf09873 arch/arm/mach-mxs/gpio.c Shawn Guo           2010-12-18  336
+> fba311fcf09873 arch/arm/mach-mxs/gpio.c Shawn Guo           2010-12-18  337     /* setup one handler for each entry */
+> a44735f421b447 drivers/gpio/gpio-mxs.c  Russell King        2015-06-16  338     irq_set_chained_handler_and_data(port->irq, mxs_gpio_irq_handler,
+> a44735f421b447 drivers/gpio/gpio-mxs.c  Russell King        2015-06-16  339                                      port);
+> fba311fcf09873 arch/arm/mach-mxs/gpio.c Shawn Guo           2010-12-18  340
+> 0f4630f3720e7e drivers/gpio/gpio-mxs.c  Linus Walleij       2015-12-04  341     err = bgpio_init(&port->gc, &pdev->dev, 4,
+> 164387d2b4ae20 drivers/gpio/gpio-mxs.c  Shawn Guo           2012-05-03  342                      port->base + PINCTRL_DIN(port),
+> 90dae4ebf03063 drivers/gpio/gpio-mxs.c  Maxime Ripard       2013-04-29  343                      port->base + PINCTRL_DOUT(port) + MXS_SET,
+> 90dae4ebf03063 drivers/gpio/gpio-mxs.c  Maxime Ripard       2013-04-29  344                      port->base + PINCTRL_DOUT(port) + MXS_CLR,
+> 84a442b9a16ee6 drivers/gpio/gpio-mxs.c  Linus Torvalds      2012-05-26  345                      port->base + PINCTRL_DOE(port), NULL, 0);
+> 8d7cf8370d5fb7 drivers/gpio/gpio-mxs.c  Shawn Guo           2011-06-06  346     if (err)
+> 0f4630f3720e7e drivers/gpio/gpio-mxs.c  Linus Walleij       2015-12-04  347             goto out_irqdomain_remove;
+> fba311fcf09873 arch/arm/mach-mxs/gpio.c Shawn Guo           2010-12-18  348
+> 0f4630f3720e7e drivers/gpio/gpio-mxs.c  Linus Walleij       2015-12-04  349     port->gc.to_irq = mxs_gpio_to_irq;
+> 0f4630f3720e7e drivers/gpio/gpio-mxs.c  Linus Walleij       2015-12-04  350     port->gc.get_direction = mxs_gpio_get_direction;
+> 0f4630f3720e7e drivers/gpio/gpio-mxs.c  Linus Walleij       2015-12-04  351     port->gc.base = port->id * 32;
+> 06f88a8ae9085e drivers/gpio/gpio-mxs.c  Shawn Guo           2011-06-06  352
+> 0f4630f3720e7e drivers/gpio/gpio-mxs.c  Linus Walleij       2015-12-04  353     err = gpiochip_add_data(&port->gc, port);
+> 0b76c5412146c1 drivers/gpio/gpio-mxs.c  Shawn Guo           2012-08-20  354     if (err)
+> 0f4630f3720e7e drivers/gpio/gpio-mxs.c  Linus Walleij       2015-12-04  355             goto out_irqdomain_remove;
+> fba311fcf09873 arch/arm/mach-mxs/gpio.c Shawn Guo           2010-12-18  356
+> 940a4f7b51f7ad drivers/gpio/gpio-mxs.c  Shawn Guo           2012-05-04  357     return 0;
+> 0b76c5412146c1 drivers/gpio/gpio-mxs.c  Shawn Guo           2012-08-20  358
+> 1bbc557d976b4e drivers/gpio/gpio-mxs.c  Peng Fan            2015-08-23  359  out_irqdomain_remove:
+> 1bbc557d976b4e drivers/gpio/gpio-mxs.c  Peng Fan            2015-08-23  360     irq_domain_remove(port->domain);
+> 44df08198bc98d drivers/gpio/gpio-mxs.c  Arvind Yadav        2016-10-05  361  out_iounmap:
+> 44df08198bc98d drivers/gpio/gpio-mxs.c  Arvind Yadav        2016-10-05  362     iounmap(port->base);
+> 0b76c5412146c1 drivers/gpio/gpio-mxs.c  Shawn Guo           2012-08-20  363     return err;
+> 940a4f7b51f7ad drivers/gpio/gpio-mxs.c  Shawn Guo           2012-05-04  364  }
+> 940a4f7b51f7ad drivers/gpio/gpio-mxs.c  Shawn Guo           2012-05-04  365
+>
+> :::::: The code at line 293 was first introduced by commit
+> :::::: 1f2d357b9ebef5c7ca7e7ee07234c08ac057c386 gpio: mxs: Use of_device_get_match_data()
+>
+> :::::: TO: Thierry Reding <treding@nvidia.com>
+> :::::: CC: Linus Walleij <linus.walleij@linaro.org>
+>
+> ---
+> 0-DAY CI Kernel Test Service, Intel Corporation
+> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+>
+> --
+> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/202003100849.SzJTb5rj%25lkp%40intel.com.
 
-It appears our corporate email server changes the Message-Id field of 
-messages passing through it. Due to that the emails threading gets to be
-broken. I'll resubmit the properly structured v2 patchset as soon as our system
-administrator fixes the problem. Sorry for the inconvenience caused by it.
 
-Regards,
--Sergey
+
+-- 
+Thanks,
+~Nick Desaulniers
