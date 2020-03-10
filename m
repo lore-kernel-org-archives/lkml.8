@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6119C18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:04:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6157C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:04:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC39924698
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:04:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B943B2468C
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:04:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583845458;
-	bh=Tlc5YS3+8KndyfAjvy6wh7tQSWeuCETS8v9kycmGc48=;
+	s=default; t=1583845460;
+	bh=C8JapEoOUIN4r0cBd+3vAgQBPCVeIqxcY2yj8qwgDYk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Sx5S4kSrZTuw5XKO10Uw9hwDaPhwSoLG4jtCQxhuiCV2Vc1HEwZQ5i63T9c6MKSrz
-	 NaKrCpfR8scqX95COfZITbXKkmB3RwfZBGNqrx3Kf2WbZ//iwvIYIElkHHO7EDE4cs
-	 3x6eyJAywLHK9PeKt9NT6mZTFVHEZotRV5krb1yc=
+	b=nhdhkO2cIhJrDbpRiThpp8LLa7K7ub8SAcSBZM4wgQFrnUrCf5mWrE4uKAeJFBPAq
+	 xHNofcurk1FWo0LLiUyPhBW6ZR5t+hKZ8mtgafpfNk7wgrIn3W1ZaWUjlkkp0cegb0
+	 9hYth/QDIiJ05T09f2bliD67GxZn+BKW9TjvVmYQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729252AbgCJNEN (ORCPT
+        id S1728729AbgCJNET (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:04:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49136 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:04:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49242 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729133AbgCJNEJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:04:09 -0400
+        id S1729456AbgCJNEQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:04:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A67A24697;
-        Tue, 10 Mar 2020 13:04:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D63E24693;
+        Tue, 10 Mar 2020 13:04:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845448;
-        bh=Tlc5YS3+8KndyfAjvy6wh7tQSWeuCETS8v9kycmGc48=;
+        s=default; t=1583845455;
+        bh=C8JapEoOUIN4r0cBd+3vAgQBPCVeIqxcY2yj8qwgDYk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JDAQYcozc+ncMQ0LGEgNtX5FJXHKiG3nsMlzqbRRyyCV/fpaetbnDgWoX2PL+ZYv1
-         NvKxYT8TQOOO7OVNQbK6s3klpOMy8i4cpB1SLZHRYQU5rd6z/iC59CX6hukKvS8Q03
-         DsjVTBzLFLbFGOqZTossADlmdJIp52mjiDZPaT3Y=
+        b=JCySiBjglU0Md/dYRQwPTJ1aeoxzFx9UUJbcVdIij9FmZOvdg/QgDYIW3YcuQRHYI
+         a1RRMlUUQQQ/Xsyou6uYrzqjpDyuHD199rG8G+KOf76wkElZeoq5rj8KgzYp8IV0zZ
+         6nPqin5JLbP+t24fbMYXjMHzY/RTynbrdda8QPic=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Parav Pandit <parav@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 5.5 159/189] Revert "RDMA/cma: Simplify rdma_resolve_addr() error flow"
-Date:   Tue, 10 Mar 2020 13:39:56 +0100
-Message-Id: <20200310123656.099694465@linuxfoundation.org>
+        stable@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>, linux-efi@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH 5.5 187/189] efi/x86: Handle by-ref arguments covering multiple pages in mixed mode
+Date:   Tue, 10 Mar 2020 13:40:24 +0100
+Message-Id: <20200310123658.336363020@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123639.608886314@linuxfoundation.org>
 References: <20200310123639.608886314@linuxfoundation.org>
@@ -60,70 +60,137 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Parav Pandit <parav@mellanox.com>
+From: Ard Biesheuvel <ardb@kernel.org>
 
-commit e4103312d7b7afb8a3a7a842a33ef2b1856b2c0f upstream.
+commit 8319e9d5ad98ffccd19f35664382c73cea216193 upstream.
 
-This reverts commit 219d2e9dfda9431b808c28d5efc74b404b95b638.
+The mixed mode runtime wrappers are fragile when it comes to how the
+memory referred to by its pointer arguments are laid out in memory, due
+to the fact that it translates these addresses to physical addresses that
+the runtime services can dereference when running in 1:1 mode. Since
+vmalloc'ed pages (including the vmap'ed stack) are not contiguous in the
+physical address space, this scheme only works if the referenced memory
+objects do not cross page boundaries.
 
-The call chain below requires the cm_id_priv's destination address to be
-setup before performing rdma_bind_addr(). Otherwise source port allocation
-fails as cma_port_is_unique() no longer sees the correct tuple to allow
-duplicate users of the source port.
+Currently, the mixed mode runtime service wrappers require that all by-ref
+arguments that live in the vmalloc space have a size that is a power of 2,
+and are aligned to that same value. While this is a sensible way to
+construct an object that is guaranteed not to cross a page boundary, it is
+overly strict when it comes to checking whether a given object violates
+this requirement, as we can simply take the physical address of the first
+and the last byte, and verify that they point into the same physical page.
 
-rdma_resolve_addr()
-  cma_bind_addr()
-    rdma_bind_addr()
-      cma_get_port()
-        cma_alloc_any_port()
-          cma_port_is_unique() <- compared with zero daddr
+When this check fails, we emit a WARN(), but then simply proceed with the
+call, which could cause data corruption if the next physical page belongs
+to a mapping that is entirely unrelated.
 
-This can result in false failures to connect, particularly if the source
-port range is restricted.
+Given that with vmap'ed stacks, this condition is much more likely to
+trigger, let's relax the condition a bit, but fail the runtime service
+call if it does trigger.
 
-Fixes: 219d2e9dfda9 ("RDMA/cma: Simplify rdma_resolve_addr() error flow")
-Link: https://lore.kernel.org/r/20200212072635.682689-4-leon@kernel.org
-Signed-off-by: Parav Pandit <parav@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Fixes: f6697df36bdf0bf7 ("x86/efi: Prevent mixed mode boot corruption with CONFIG_VMAP_STACK=y")
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: linux-efi@vger.kernel.org
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/r/20200221084849.26878-4-ardb@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/core/cma.c |   15 +++++++++++----
- 1 file changed, 11 insertions(+), 4 deletions(-)
+ arch/x86/platform/efi/efi_64.c |   45 +++++++++++++++++++++++------------------
+ 1 file changed, 26 insertions(+), 19 deletions(-)
 
---- a/drivers/infiniband/core/cma.c
-+++ b/drivers/infiniband/core/cma.c
-@@ -3182,19 +3182,26 @@ int rdma_resolve_addr(struct rdma_cm_id
- 	int ret;
+--- a/arch/x86/platform/efi/efi_64.c
++++ b/arch/x86/platform/efi/efi_64.c
+@@ -316,7 +316,7 @@ void efi_sync_low_kernel_mappings(void)
+ static inline phys_addr_t
+ virt_to_phys_or_null_size(void *va, unsigned long size)
+ {
+-	bool bad_size;
++	phys_addr_t pa;
  
- 	id_priv = container_of(id, struct rdma_id_private, id);
-+	memcpy(cma_dst_addr(id_priv), dst_addr, rdma_addr_size(dst_addr));
- 	if (id_priv->state == RDMA_CM_IDLE) {
- 		ret = cma_bind_addr(id, src_addr, dst_addr);
--		if (ret)
-+		if (ret) {
-+			memset(cma_dst_addr(id_priv), 0,
-+			       rdma_addr_size(dst_addr));
- 			return ret;
-+		}
- 	}
+ 	if (!va)
+ 		return 0;
+@@ -324,16 +324,13 @@ virt_to_phys_or_null_size(void *va, unsi
+ 	if (virt_addr_valid(va))
+ 		return virt_to_phys(va);
  
--	if (cma_family(id_priv) != dst_addr->sa_family)
-+	if (cma_family(id_priv) != dst_addr->sa_family) {
-+		memset(cma_dst_addr(id_priv), 0, rdma_addr_size(dst_addr));
- 		return -EINVAL;
-+	}
+-	/*
+-	 * A fully aligned variable on the stack is guaranteed not to
+-	 * cross a page bounary. Try to catch strings on the stack by
+-	 * checking that 'size' is a power of two.
+-	 */
+-	bad_size = size > PAGE_SIZE || !is_power_of_2(size);
++	pa = slow_virt_to_phys(va);
  
--	if (!cma_comp_exch(id_priv, RDMA_CM_ADDR_BOUND, RDMA_CM_ADDR_QUERY))
-+	if (!cma_comp_exch(id_priv, RDMA_CM_ADDR_BOUND, RDMA_CM_ADDR_QUERY)) {
-+		memset(cma_dst_addr(id_priv), 0, rdma_addr_size(dst_addr));
- 		return -EINVAL;
-+	}
+-	WARN_ON(!IS_ALIGNED((unsigned long)va, size) || bad_size);
++	/* check if the object crosses a page boundary */
++	if (WARN_ON((pa ^ (pa + size - 1)) & PAGE_MASK))
++		return 0;
  
--	memcpy(cma_dst_addr(id_priv), dst_addr, rdma_addr_size(dst_addr));
- 	if (cma_any_addr(dst_addr)) {
- 		ret = cma_resolve_loopback(id_priv);
- 	} else {
+-	return slow_virt_to_phys(va);
++	return pa;
+ }
+ 
+ #define virt_to_phys_or_null(addr)				\
+@@ -808,8 +805,11 @@ efi_thunk_get_variable(efi_char16_t *nam
+ 	phys_attr = virt_to_phys_or_null(attr);
+ 	phys_data = virt_to_phys_or_null_size(data, *data_size);
+ 
+-	status = efi_thunk(get_variable, phys_name, phys_vendor,
+-			   phys_attr, phys_data_size, phys_data);
++	if (!phys_name || (data && !phys_data))
++		status = EFI_INVALID_PARAMETER;
++	else
++		status = efi_thunk(get_variable, phys_name, phys_vendor,
++				   phys_attr, phys_data_size, phys_data);
+ 
+ 	spin_unlock_irqrestore(&efi_runtime_lock, flags);
+ 
+@@ -834,9 +834,11 @@ efi_thunk_set_variable(efi_char16_t *nam
+ 	phys_vendor = virt_to_phys_or_null(vnd);
+ 	phys_data = virt_to_phys_or_null_size(data, data_size);
+ 
+-	/* If data_size is > sizeof(u32) we've got problems */
+-	status = efi_thunk(set_variable, phys_name, phys_vendor,
+-			   attr, data_size, phys_data);
++	if (!phys_name || !phys_data)
++		status = EFI_INVALID_PARAMETER;
++	else
++		status = efi_thunk(set_variable, phys_name, phys_vendor,
++				   attr, data_size, phys_data);
+ 
+ 	spin_unlock_irqrestore(&efi_runtime_lock, flags);
+ 
+@@ -863,9 +865,11 @@ efi_thunk_set_variable_nonblocking(efi_c
+ 	phys_vendor = virt_to_phys_or_null(vnd);
+ 	phys_data = virt_to_phys_or_null_size(data, data_size);
+ 
+-	/* If data_size is > sizeof(u32) we've got problems */
+-	status = efi_thunk(set_variable, phys_name, phys_vendor,
+-			   attr, data_size, phys_data);
++	if (!phys_name || !phys_data)
++		status = EFI_INVALID_PARAMETER;
++	else
++		status = efi_thunk(set_variable, phys_name, phys_vendor,
++				   attr, data_size, phys_data);
+ 
+ 	spin_unlock_irqrestore(&efi_runtime_lock, flags);
+ 
+@@ -891,8 +895,11 @@ efi_thunk_get_next_variable(unsigned lon
+ 	phys_vendor = virt_to_phys_or_null(vnd);
+ 	phys_name = virt_to_phys_or_null_size(name, *name_size);
+ 
+-	status = efi_thunk(get_next_variable, phys_name_size,
+-			   phys_name, phys_vendor);
++	if (!phys_name)
++		status = EFI_INVALID_PARAMETER;
++	else
++		status = efi_thunk(get_next_variable, phys_name_size,
++				   phys_name, phys_vendor);
+ 
+ 	spin_unlock_irqrestore(&efi_runtime_lock, flags);
+ 
 
 
