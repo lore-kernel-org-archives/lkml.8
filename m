@@ -2,167 +2,137 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95F20C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 08:02:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F230C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 08:03:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72C512467C
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 08:02:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EE8C24673
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 08:03:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726436AbgCJIC4 (ORCPT
+        id S1726466AbgCJIDL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 04:02:56 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:36921 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726295AbgCJIC4 (ORCPT
+        Tue, 10 Mar 2020 04:03:11 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:32796 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726295AbgCJIDK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 04:02:56 -0400
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <sha@pengutronix.de>)
-        id 1jBZqd-0003q9-DC; Tue, 10 Mar 2020 09:02:43 +0100
-Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <sha@pengutronix.de>)
-        id 1jBZqb-000205-1H; Tue, 10 Mar 2020 09:02:41 +0100
-Date:   Tue, 10 Mar 2020 09:02:41 +0100
-From:   Sascha Hauer <s.hauer@pengutronix.de>
-To:     Robin Gong <yibin.gong@nxp.com>
-Cc:     vkoul@kernel.org, shawnguo@kernel.org,
-        u.kleine-koenig@pengutronix.de, broonie@kernel.org,
-        robh+dt@kernel.org, festevam@gmail.com, dan.j.williams@intel.com,
-        mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com,
-        l.stach@pengutronix.de, martin.fuzzey@flowbird.group,
-        kernel@pengutronix.de, linux-spi@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-imx@nxp.com, dmaengine@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [RESEND v6  07/13] spi: imx: remove ERR009165 workaround on
- i.mx6ul
-Message-ID: <20200310080240.GS3335@pengutronix.de>
-References: <1583839922-22699-1-git-send-email-yibin.gong@nxp.com>
- <1583839922-22699-8-git-send-email-yibin.gong@nxp.com>
+        Tue, 10 Mar 2020 04:03:10 -0400
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jBZqq-0008RV-Ab; Tue, 10 Mar 2020 09:02:56 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 93AD4104084; Tue, 10 Mar 2020 09:02:55 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        paulmck <paulmck@kernel.org>,
+        "Joel Fernandes\, Google" <joel@joelfernandes.org>,
+        Frederic Weisbecker <frederic@kernel.org>, bpf@vger.kernel.org
+Subject: Re: Instrumentation and RCU
+In-Reply-To: <20200310014043.4dbagqbr2wsbuarm@ast-mbp>
+References: <87mu8p797b.fsf@nanos.tec.linutronix.de> <1403546357.21810.1583779060302.JavaMail.zimbra@efficios.com> <20200310014043.4dbagqbr2wsbuarm@ast-mbp>
+Date:   Tue, 10 Mar 2020 09:02:55 +0100
+Message-ID: <87v9nc63io.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1583839922-22699-8-git-send-email-yibin.gong@nxp.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 08:40:21 up 19 days, 15:10, 46 users,  load average: 0.37, 0.19,
- 0.18
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: sha@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 10, 2020 at 07:31:56PM +0800, Robin Gong wrote:
-> ERR009165 fixed on i.mx6ul/6ull/6sll. All other i.mx6/7 and
-> i.mx8m/8mm still need this errata. Please refer to nxp official
-> errata document from https://www.nxp.com/ .
-> 
-> For removing workaround on those chips. Add new i.mx6ul type.
-> 
-> Signed-off-by: Robin Gong <yibin.gong@nxp.com>
-> Acked-by: Mark Brown <broonie@kernel.org>
-> ---
->  drivers/spi/spi-imx.c | 50 +++++++++++++++++++++++++++++++++++++++++++++-----
->  1 file changed, 45 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/spi/spi-imx.c b/drivers/spi/spi-imx.c
-> index 842a86e..f7ee2ec 100644
-> --- a/drivers/spi/spi-imx.c
-> +++ b/drivers/spi/spi-imx.c
-> @@ -57,6 +57,7 @@ enum spi_imx_devtype {
->  	IMX35_CSPI,	/* CSPI on all i.mx except above */
->  	IMX51_ECSPI,	/* ECSPI on i.mx51 */
->  	IMX53_ECSPI,	/* ECSPI on i.mx53 and later */
-> +	IMX6UL_ECSPI,	/* ERR009165 fix from i.mx6ul */
->  };
->  
->  struct spi_imx_data;
-> @@ -75,6 +76,11 @@ struct spi_imx_devtype_data {
->  	bool has_slavemode;
->  	unsigned int fifo_size;
->  	bool dynamic_burst;
-> +	/*
-> +	 * ERR009165 fixed or not:
-> +	 * https://www.nxp.com/docs/en/errata/IMX6DQCE.pdf
-> +	 */
-> +	bool tx_glitch_fixed;
->  	enum spi_imx_devtype devtype;
->  };
->  
-> @@ -128,7 +134,8 @@ static inline int is_imx35_cspi(struct spi_imx_data *d)
->  
->  static inline int is_imx51_ecspi(struct spi_imx_data *d)
->  {
-> -	return d->devtype_data->devtype == IMX51_ECSPI;
-> +	return d->devtype_data->devtype == IMX51_ECSPI ||
-> +	       d->devtype_data->devtype == IMX6UL_ECSPI;
->  }
+Alexei Starovoitov <alexei.starovoitov@gmail.com> writes:
+> In general I'm sceptical that .text annotations will work. Let's say all of
+> idle is a red zone. But a ton of normal functions are called when idle. So
+> objtool will go and mark them as red zone too.
 
-Erm, no. A i.MX51 ECSPI is a i.MX51 ECSPI and not a i.MX6UL ECSPI. If
-you want to handle them equally somewhere then explicitly test for
-i.MX6ul *and* i.MX51 there.
+No. If you carefully read what I proposed its:
 
->  
->  static inline int is_imx53_ecspi(struct spi_imx_data *d)
-> @@ -585,9 +592,16 @@ static int mx51_ecspi_prepare_transfer(struct spi_imx_data *spi_imx,
->  	ctrl |= mx51_ecspi_clkdiv(spi_imx, t->speed_hz, &clk);
->  	spi_imx->spi_bus_clk = clk;
->  
-> -	/* ERR009165: work in XHC mode as PIO */
-> -	if (spi_imx->usedma)
-> -		ctrl &= ~MX51_ECSPI_CTRL_SMC;
-> +	/*
-> +	 * ERR009165: work in XHC mode instead of SMC as PIO on the chips
-> +	 * before i.mx6ul.
-> +	 */
-> +	if (spi_imx->usedma) {
-> +		if (spi_imx->devtype_data->tx_glitch_fixed)
-> +			ctrl |= MX51_ECSPI_CTRL_SMC;
-> +		else
-> +			ctrl &= ~MX51_ECSPI_CTRL_SMC;
-> +	}
+noinst foo()
+{
+        protected_work();
+        
+        instr_begin();
 
-Changed again, but the PIO case still not honoured. This should look
-like
-	if (spi_imx->usedma && spi_imx->devtype_data->tx_glitch_fixed)
-		ctrl |= MX51_ECSPI_CTRL_SMC;
-	else
-		ctrl &= ~MX51_ECSPI_CTRL_SMC;
+        invoke_otherstuff();
 
->  
->  	writel(ctrl, spi_imx->base + MX51_ECSPI_CTRL);
->  
-> @@ -615,6 +629,8 @@ static void mx51_setup_wml(struct spi_imx_data *spi_imx)
->  {
->  	u32 tx_wml = 0;
->  
-> +	if (spi_imx->devtype_data->tx_glitch_fixed)
-> +		tx_wml = spi_imx->wml;
+        instr_end();
 
-That explains the variable introduced in the last patch, ok.
+        moar_protected_work();
 
-I have the impression that splitting up 06/13 and 07/13 into two patches
-doesn't make it easier to review.
+}
 
-Sascha
+objtool will not mark anything. It will check that invocations out of
+the protected section are marked as safe, i.e. inside a
+instr_begin/end() pair.
+
+So if you fail to mark protected_work() as noinstr then it will
+complain. If you forget to put instr_begin/end() around the safe area it
+will complain about invoke_otherstuff().
+
+So it's a very targeted approach. objtool is there to verify that it's
+consistent nothing else.
+
+> This way large percent of the
+> kernel will be off limits for tracers. Which is imo not a good trade off. I
+> think addressing 1 and 2 with explicit notrace/nokprobe annotations will cover
+> all practical cases where people can shot themselves in a foot with a
+> tracer.
+
+That's simply wishful thinking. The discussions in the last weeks have
+clearly demonstrated that this is not the case. People were truly
+convinced that e.g. probing rcu_idle_exit() is safe, but it was
+not. Read the thread how long this went on.
+
+> I realize that there will be forever whack-a-mole game and these
+> annotations will never reach 100%. I think it's a fine trade
+> off. Security is never 100% either.  Tracing is never going to be 100%
+> safe too.
+
+I disagree. Whack a mole games are horrible and have a guaranteed
+high failure rate. Otherwise we would not discuss this at all.
+
+And no, it's not a fine trade off.
+
+If we can have technical means to prevent the wreckage, then not using
+them for handwaving reasons is just violating the only sane engineering
+principle:
+
+        Correctness first
+
+I spent the last 20 years mopping up the violations of this principle.
+
+We have to stop the "features first, performance first" and "good
+enough" mentality if we want to master the ever increasing complexity of
+hardware and software in the long run.
+
+From my experience of cleaning up stuff, I can tell you, that
+correctness first neither hurts performance nor does it prevent
+features, except those which are wrong to begin with.
+
+As quite some people do not care about or even willfully ignore
+"correctness first", we have to force them to adhere by technical means,
+which spares us to mop up the mess they'd create otherwise.
+
+And even for those who deeply care tooling support is a great help to
+prevent the accidental slip up. I wish I could have spared chasing call
+chains manually and then figure out two days later that I missed
+something.
+
+Thanks,
+
+        tglx
 
 
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
