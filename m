@@ -2,173 +2,80 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20E9BC18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 19:29:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EACB9C18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 19:30:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E64E420873
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 19:29:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD85A21D7E
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 19:30:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="aK5PVE29"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727464AbgCJT3z (ORCPT
+        id S1727495AbgCJT37 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 15:29:55 -0400
-Received: from out02.mta.xmission.com ([166.70.13.232]:54394 "EHLO
-        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726545AbgCJT3z (ORCPT
+        Tue, 10 Mar 2020 15:29:59 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:45929 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727311AbgCJT3z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 10 Mar 2020 15:29:55 -0400
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jBkZc-0005OS-FU; Tue, 10 Mar 2020 13:29:52 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jBkZZ-0002Nd-K3; Tue, 10 Mar 2020 13:29:52 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Jann Horn <jannh@google.com>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        Kees Cook <keescook@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Andrei Vagin <avagin@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Peter Zijlstra \(Intel\)" <peterz@infradead.org>,
-        Yuyang Du <duyuyang@gmail.com>,
-        David Hildenbrand <david@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        David Howells <dhowells@redhat.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christian Kellner <christian@kellner.me>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        "linux-doc\@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel\@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-mm\@kvack.org" <linux-mm@kvack.org>,
-        "stable\@vger.kernel.org" <stable@vger.kernel.org>,
-        "linux-api\@vger.kernel.org" <linux-api@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Sargun Dhillon <sargun@sargun.me>
-References: <87r1y8dqqz.fsf@x220.int.ebiederm.org>
-        <AM6PR03MB517053AED7DC89F7C0704B7DE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <AM6PR03MB51703B44170EAB4626C9B2CAE4E20@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <87tv32cxmf.fsf_-_@x220.int.ebiederm.org>
-        <87v9ne5y4y.fsf_-_@x220.int.ebiederm.org>
-        <87eeu25y14.fsf_-_@x220.int.ebiederm.org>
-        <20200309195909.h2lv5uawce5wgryx@wittgenstein>
-        <877dztz415.fsf@x220.int.ebiederm.org>
-        <20200309201729.yk5sd26v4bz4gtou@wittgenstein>
-        <87k13txnig.fsf@x220.int.ebiederm.org>
-        <20200310085540.pztaty2mj62xt2nm@wittgenstein>
-        <87wo7svy96.fsf_-_@x220.int.ebiederm.org>
-        <CAG48ez2cUZMVOAXfHPNjKjYsMSaWkjUjOCHo0KYZ+oXQUW4viA@mail.gmail.com>
-Date:   Tue, 10 Mar 2020 14:27:30 -0500
-In-Reply-To: <CAG48ez2cUZMVOAXfHPNjKjYsMSaWkjUjOCHo0KYZ+oXQUW4viA@mail.gmail.com>
-        (Jann Horn's message of "Tue, 10 Mar 2020 20:16:47 +0100")
-Message-ID: <87k13sui1p.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+Received: by mail-io1-f65.google.com with SMTP id w9so14009228iob.12
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 12:29:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=O+5kKx2vjd+32qtXdrToSkdcaTFfCoL0XwTHvIf1Udg=;
+        b=aK5PVE29ZcX0JiUctdQKR6J4V8Ui1eAIPqRanRd0A6P1wY0Olma3AwHhrD2PySTEY1
+         kZXXW4WCwVRDmSdrzbH44gRLv2dG0A/Uo2FsE583gbPAcJns18ZxYKCVeIw3hoRvR9nW
+         X63aa+sKmNAHbQ4QA3pDh67PTQqXiIq2fbgVc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=O+5kKx2vjd+32qtXdrToSkdcaTFfCoL0XwTHvIf1Udg=;
+        b=eobogGv9RlvHuXlJBfY/cTPgGRYlPNqs5FatbJZ66qwV0EkBPtnYc8o8hPuoqDIbxW
+         92D+RWS/8Okxcss7SGgbWOLoooJwcuH1R3Ek4bTtfgK+CxQG72CYPhWXp2daTDAtCN4s
+         qXVEa+ADEgpGDWKAQY4YebS2HFQqsl1IOthBQMML8pytusHNhJS8Zqc4yVldeqigyif4
+         wlsS2QpG9ch2DALuvZsExj17hS5wxCBBw4lRpKgyDtJEa5G3Lv4XEyLUy5CpiZVIEmH3
+         KygJ4CZXuLBYI4LZ5+1eHX3w54aIWZ5CwCUkbWKE9o4xXQg4EFNkvRPe6en2A6G25Scg
+         fhJg==
+X-Gm-Message-State: ANhLgQ0dHVShHm7b3Q91IYDBE6NNSRt9KEkS57cc8fY7uTwyx2AJJG2e
+        4pe6NxTmc16m0BCzmL6cjTdcgDHjzkaDVL/7btzX9Q==
+X-Google-Smtp-Source: ADFU+vtsHIE3juf6VloEHRQ+IFMzK3xP4NZGmqU4UP+Nis9eHwUR1TaPlSRS7pe1JGlIhD+fR0kBGJFzXYHNxz1Bts4=
+X-Received: by 2002:a02:7a07:: with SMTP id a7mr12556058jac.77.1583868594718;
+ Tue, 10 Mar 2020 12:29:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jBkZZ-0002Nd-K3;;;mid=<87k13sui1p.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX19Z1jtSmtmPbttkGJihPVv1nviFC/pSEI0=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH] pidfd: Stop taking cred_guard_mutex
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+References: <20200304165845.3081-1-vgoyal@redhat.com> <20200304165845.3081-11-vgoyal@redhat.com>
+In-Reply-To: <20200304165845.3081-11-vgoyal@redhat.com>
+From:   Miklos Szeredi <miklos@szeredi.hu>
+Date:   Tue, 10 Mar 2020 20:29:43 +0100
+Message-ID: <CAJfpegshzZB=e3npbY3h9VOLMwAgLtQ3PJSC8AupF_d3FW9few@mail.gmail.com>
+Subject: Re: [PATCH 10/20] fuse,virtiofs: Keep a list of free dax memory ranges
+To:     Vivek Goyal <vgoyal@redhat.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvdimm@lists.01.org, virtio-fs@redhat.com,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Peng Tao <tao.peng@linux.alibaba.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jann Horn <jannh@google.com> writes:
-
-> On Tue, Mar 10, 2020 at 7:54 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
->> During exec some file descriptors are closed and the files struct is
->> unshared.  But all of that can happen at other times and it has the
->> same protections during exec as at ordinary times.  So stop taking the
->> cred_guard_mutex as it is useless.
->>
->> Furthermore he cred_guard_mutex is a bad idea because it is deadlock
->> prone, as it is held in serveral while waiting possibly indefinitely
->> for userspace to do something.
+On Wed, Mar 4, 2020 at 5:59 PM Vivek Goyal <vgoyal@redhat.com> wrote:
 >
-> Please don't. Just use the new exec_update_mutex like everywhere else.
+> Divide the dax memory range into fixed size ranges (2MB for now) and put
+> them in a list. This will track free ranges. Once an inode requires a
+> free range, we will take one from here and put it in interval-tree
+> of ranges assigned to inode.
 >
->> Cc: Sargun Dhillon <sargun@sargun.me>
->> Cc: Christian Brauner <christian.brauner@ubuntu.com>
->> Cc: Arnd Bergmann <arnd@arndb.de>
->> Fixes: 8649c322f75c ("pid: Implement pidfd_getfd syscall")
->> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
->> ---
->>  kernel/pid.c | 6 ------
->>  1 file changed, 6 deletions(-)
->>
->> Christian if you don't have any objections I will take this one through
->> my tree.
->>
->> I tried to figure out why this code path takes the cred_guard_mutex and
->> the archive on lore.kernel.org was not helpful in finding that part of
->> the conversation.
->
-> That was my suggestion.
->
->> diff --git a/kernel/pid.c b/kernel/pid.c
->> index 60820e72634c..53646d5616d2 100644
->> --- a/kernel/pid.c
->> +++ b/kernel/pid.c
->> @@ -577,17 +577,11 @@ static struct file *__pidfd_fget(struct task_struct *task, int fd)
->>         struct file *file;
->>         int ret;
->>
->> -       ret = mutex_lock_killable(&task->signal->cred_guard_mutex);
->> -       if (ret)
->> -               return ERR_PTR(ret);
->> -
->>         if (ptrace_may_access(task, PTRACE_MODE_ATTACH_REALCREDS))
->>                 file = fget_task(task, fd);
->>         else
->>                 file = ERR_PTR(-EPERM);
->>
->> -       mutex_unlock(&task->signal->cred_guard_mutex);
->> -
->>         return file ?: ERR_PTR(-EBADF);
->>  }
->
-> If you make this change, then if this races with execution of a setuid
-> program that afterwards e.g. opens a unix domain socket, an attacker
-> will be able to steal that socket and inject messages into
-> communication with things like DBus. procfs currently has the same
-> race, and that still needs to be fixed, but at least procfs doesn't
-> let you open things like sockets because they don't have a working
-> ->open handler, and it enforces the normal permission check for
-> opening files.
+> Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
+> Signed-off-by: Peng Tao <tao.peng@linux.alibaba.com>
 
-It isn't only exec that can change credentials.  Do we need a lock for
-changing credentials?
-
-Wouldn't it be sufficient to simply test ptrace_may_access after
-we get a copy of the file?
-
-If we need a lock around credential change let's design and build that.
-Having a mismatch between what a lock is designed to do, and what
-people use it for can only result in other bugs as people get confused.
-
-Eric
+Reviewed-by: Miklos Szeredi <mszeredi@redhat.com>
