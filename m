@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF0F5C18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:36:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A053C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:36:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9E8E2468D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:36:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4237024677
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:36:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583847381;
-	bh=xTqSnR399JVMFNmpt5zBo18NEw/dj/k7g0k+HzivNv8=;
+	s=default; t=1583847385;
+	bh=oKBiYwoPDh1EbtQU3J1/l+Dl4A914nTfJRjp2mZn0oo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IbambTe6sfw9HltuR9tul7qAmv1Kvi2JCIOBRo9jOlS42sCHJNr+tq5tMfKnXbA8M
-	 gWgfBGes+C8W24JKyITQdTj7X84U1Y/M5GpVGDqFhEB1CzNHbIpiA55RKp4rpU16v1
-	 VzT5hqRNyHerAYYlohMT8dpMc2ofIxxIMn9O8ttU=
+	b=JCGjhvGQnSDSOor41KUp4w2WTaxxl/5I5NugoPpseJg5oVCq74o63kfpYrV2AXrWi
+	 LY3BUJz9mhhvjBrpj1y3GssKtmM6/gbeGYlR2jpOQVRvhkZH8301bxVL3Tv0iyTmR9
+	 yHWzv8Ofly+35QE2rxrSjZQmm9DJquEACEkMxxZo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727498AbgCJMnF (ORCPT
+        id S1727471AbgCJMnA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:43:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43246 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:43:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43196 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727473AbgCJMnB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:43:01 -0400
+        id S1727456AbgCJMm6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:42:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5836A24686;
-        Tue, 10 Mar 2020 12:43:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C99A224691;
+        Tue, 10 Mar 2020 12:42:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844180;
-        bh=xTqSnR399JVMFNmpt5zBo18NEw/dj/k7g0k+HzivNv8=;
+        s=default; t=1583844178;
+        bh=oKBiYwoPDh1EbtQU3J1/l+Dl4A914nTfJRjp2mZn0oo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o5+cY8S0bMLHfMRjl1uBIo6hLg7uVFmr1/ZYZzP3LSZaykqFHYSITg7mQQ0qXTKeX
-         WoaKLT0GKyxN9KJjfCurDh3uOCtlR/RGbue2zPUaSGh0/K30y3UcJZasS0jrx97Qb+
-         1EZ4Wzskwuh+cUD6JRuRnHVMzKXPh91Q1CF4y5zA=
+        b=hLjyTZUdoE4IrUDbAyoJiH1h8IXXZSwygzGqvppWYcSravrpsusNlj53Ems/pMP/I
+         YAm2iWytKTCdz12VptBRcmhPT2Bgwyxe8E8rVFgwb9pQR8VPHmAI7UbYoLOJ01UWS+
+         LirCFYedItDLlt/nTHPivaECWnPEvPI/nsQo+5Go=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>
-Subject: [PATCH 4.4 53/72] usb: core: hub: do error out if usb_autopm_get_interface() fails
-Date:   Tue, 10 Mar 2020 13:39:06 +0100
-Message-Id: <20200310123614.358200850@linuxfoundation.org>
+        stable@vger.kernel.org, Jethro Beekman <jethro@fortanix.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 12/72] net: fib_rules: Correctly set table field when table number exceeds 8 bits
+Date:   Tue, 10 Mar 2020 13:38:25 +0100
+Message-Id: <20200310123604.656709747@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123601.053680753@linuxfoundation.org>
 References: <20200310123601.053680753@linuxfoundation.org>
@@ -59,57 +59,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eugeniu Rosca <erosca@de.adit-jv.com>
+From: Jethro Beekman <jethro@fortanix.com>
 
-commit 60e3f6e4ac5b0fda43dad01c32e09409ec710045 upstream.
+[ Upstream commit 540e585a79e9d643ede077b73bcc7aa2d7b4d919 ]
 
-Reviewing a fresh portion of coverity defects in USB core
-(specifically CID 1458999), Alan Stern noted below in [1]:
+In 709772e6e06564ed94ba740de70185ac3d792773, RT_TABLE_COMPAT was added to
+allow legacy software to deal with routing table numbers >= 256, but the
+same change to FIB rule queries was overlooked.
 
-On Tue, Feb 25, 2020 at 02:39:23PM -0500, Alan Stern wrote:
- > A revised search finds line 997 in drivers/usb/core/hub.c and lines
- > 216, 269 in drivers/usb/core/port.c.  (I didn't try looking in any
- > other directories.)  AFAICT all three of these should check the
- > return value, although a error message in the kernel log probably
- > isn't needed.
-
-Factor out the usb_remove_device() change into a standalone patch to
-allow conflict-free integration on top of the earliest stable branches.
-
-[1] https://lore.kernel.org/lkml/Pine.LNX.4.44L0.2002251419120.1485-100000@iolanthe.rowland.org
-
-Fixes: 253e05724f9230 ("USB: add a "remove hardware" sysfs attribute")
-Cc: stable@vger.kernel.org # v2.6.33+
-Suggested-by: Alan Stern <stern@rowland.harvard.edu>
-Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
-Link: https://lore.kernel.org/r/20200226175036.14946-2-erosca@de.adit-jv.com
+Signed-off-by: Jethro Beekman <jethro@fortanix.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/usb/core/hub.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ net/core/fib_rules.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/usb/core/hub.c
-+++ b/drivers/usb/core/hub.c
-@@ -938,13 +938,17 @@ int usb_remove_device(struct usb_device
- {
- 	struct usb_hub *hub;
- 	struct usb_interface *intf;
-+	int ret;
+--- a/net/core/fib_rules.c
++++ b/net/core/fib_rules.c
+@@ -570,7 +570,7 @@ static int fib_nl_fill_rule(struct sk_bu
  
- 	if (!udev->parent)	/* Can't remove a root hub */
- 		return -EINVAL;
- 	hub = usb_hub_to_struct_hub(udev->parent);
- 	intf = to_usb_interface(hub->intfdev);
- 
--	usb_autopm_get_interface(intf);
-+	ret = usb_autopm_get_interface(intf);
-+	if (ret < 0)
-+		return ret;
-+
- 	set_bit(udev->portnum, hub->removed_bits);
- 	hub_port_logical_disconnect(hub, udev->portnum);
- 	usb_autopm_put_interface(intf);
+ 	frh = nlmsg_data(nlh);
+ 	frh->family = ops->family;
+-	frh->table = rule->table;
++	frh->table = rule->table < 256 ? rule->table : RT_TABLE_COMPAT;
+ 	if (nla_put_u32(skb, FRA_TABLE, rule->table))
+ 		goto nla_put_failure;
+ 	if (nla_put_u32(skb, FRA_SUPPRESS_PREFIXLEN, rule->suppress_prefixlen))
 
 
