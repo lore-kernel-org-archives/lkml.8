@@ -2,51 +2,51 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4506FC18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:53:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3FBFC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:53:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E6062468F
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:53:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98D8D2468E
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:53:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583844831;
-	bh=ou0pUy4CoM4F8qZ8BHE3fnxE7lJC8hn0wClkbo6cd38=;
+	s=default; t=1583844834;
+	bh=giPWIFLQhTb6fRSCPcpAHBBR+/snKGVAA2zAzJK+Kp0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y/ePoHrydTp9zCGlmpenDrsLGTIbZgKdbVbwP4LJhKeuY3Ugnv9C5lyXmSc5SyCrB
-	 8YBlv3limDN0xsa+duKczNOcr93C1VSrvX+9adYQ1HSUJ6SDYgWM7iqH96blRyAdTW
-	 FabYtAXwJpOLZVebgTZPDnAtv4l4QAQ8SoqGb4Zs=
+	b=Xg5VifGGuRUlp8LL0MA/kGw3TrK7x8kbQZz0PKabmewts6BCtGasK0gGDu3Yex03r
+	 pyqo8LH5a6Fo1Aiu39DsvOVb+Em7yNthg2kZwH4ovNLDOma7NXPWh2fBJ1/6hYYahg
+	 GBArQbmKUCbcC2S5dYR7ZghCnXLb5T2LsdQSokzc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729265AbgCJMxu (ORCPT
+        id S1728238AbgCJMxx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:53:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60060 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:53:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60126 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729253AbgCJMxr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:53:47 -0400
+        id S1729264AbgCJMxu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:53:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE83924696;
-        Tue, 10 Mar 2020 12:53:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B14524697;
+        Tue, 10 Mar 2020 12:53:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844827;
-        bh=ou0pUy4CoM4F8qZ8BHE3fnxE7lJC8hn0wClkbo6cd38=;
+        s=default; t=1583844829;
+        bh=giPWIFLQhTb6fRSCPcpAHBBR+/snKGVAA2zAzJK+Kp0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ximayNdVQZu6KS6KNNWroWGbRFZgwR71w+Ys2Fld2QJxbwAvFccmYpBsbhB//CdSo
-         yHOeOOs/voIYwxrmhCvokLVnlVRR7HFeKowWUI70/QVxU/OYpLpd6/40RxQ4cYrZIG
-         H15AFjmFuyyuW/stIMCZGq3i3Dlk+SiEJxf2YqmM=
+        b=G6Ga7n90UgAfWedMSCYIoDqeZ66fXaNAgJ1crlD4W4YuP2gr580JcHN6gXan+LGFa
+         qeqI5b83+EpJNGQrFn9Ztanrfw+GcXr978QK860XjCauGpWLzf/WR6ymjxWiLiWlAm
+         LnPmKbVMAcgwRLmvGJJobFTIGOFodi/yEwgm6MWs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Maxime Ripard <mripard@kernel.org>,
         Jernej Skrabec <jernej.skrabec@siol.net>
-Subject: [PATCH 5.4 133/168] drm/sun4i: Fix DE2 VI layer format support
-Date:   Tue, 10 Mar 2020 13:39:39 +0100
-Message-Id: <20200310123648.983579135@linuxfoundation.org>
+Subject: [PATCH 5.4 134/168] drm/sun4i: de2/de3: Remove unsupported VI layer formats
+Date:   Tue, 10 Mar 2020 13:39:40 +0100
+Message-Id: <20200310123649.070610186@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123635.322799692@linuxfoundation.org>
 References: <20200310123635.322799692@linuxfoundation.org>
@@ -61,166 +61,63 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jernej Skrabec <jernej.skrabec@siol.net>
 
-commit 20896ef137340e9426cf322606f764452f5eb960 upstream.
+commit a4769905f0ae32cae4f096f646ab03b8b4794c74 upstream.
 
-DE2 VI layer doesn't support blending which means alpha channel is
-ignored. Replace all formats with alpha with "don't care" (X) channel.
+YUV444 and YVU444 are planar formats, but HW format RGB888 is packed.
+This means that those two mappings were never correct. Remove them.
 
-Fixes: 7480ba4d7571 ("drm/sun4i: Add support for DE2 VI planes")
+Fixes: 60a3dcf96aa8 ("drm/sun4i: Add DE2 definitions for YUV formats")
 Acked-by: Maxime Ripard <mripard@kernel.org>
 Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200224173901.174016-4-jernej.skrabec@siol.net
+Link: https://patchwork.freedesktop.org/patch/msgid/20200224173901.174016-2-jernej.skrabec@siol.net
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/sun4i/sun8i_mixer.c    |   56 +++++++++++++++++++++++++++++++++
- drivers/gpu/drm/sun4i/sun8i_vi_layer.c |   22 ++++++------
- 2 files changed, 67 insertions(+), 11 deletions(-)
+ drivers/gpu/drm/sun4i/sun8i_mixer.c    |   12 ------------
+ drivers/gpu/drm/sun4i/sun8i_vi_layer.c |    2 --
+ 2 files changed, 14 deletions(-)
 
 --- a/drivers/gpu/drm/sun4i/sun8i_mixer.c
 +++ b/drivers/gpu/drm/sun4i/sun8i_mixer.c
-@@ -107,46 +107,102 @@ static const struct de2_fmt_info de2_for
- 		.csc = SUN8I_CSC_MODE_OFF,
+@@ -277,12 +277,6 @@ static const struct de2_fmt_info de2_for
+ 		.csc = SUN8I_CSC_MODE_YUV2RGB,
  	},
  	{
-+		/* for DE2 VI layer which ignores alpha */
-+		.drm_fmt = DRM_FORMAT_XRGB4444,
-+		.de2_fmt = SUN8I_MIXER_FBFMT_ARGB4444,
-+		.rgb = true,
-+		.csc = SUN8I_CSC_MODE_OFF,
-+	},
-+	{
- 		.drm_fmt = DRM_FORMAT_ABGR4444,
- 		.de2_fmt = SUN8I_MIXER_FBFMT_ABGR4444,
- 		.rgb = true,
- 		.csc = SUN8I_CSC_MODE_OFF,
+-		.drm_fmt = DRM_FORMAT_YUV444,
+-		.de2_fmt = SUN8I_MIXER_FBFMT_RGB888,
+-		.rgb = true,
+-		.csc = SUN8I_CSC_MODE_YUV2RGB,
+-	},
+-	{
+ 		.drm_fmt = DRM_FORMAT_YUV422,
+ 		.de2_fmt = SUN8I_MIXER_FBFMT_YUV422,
+ 		.rgb = false,
+@@ -301,12 +295,6 @@ static const struct de2_fmt_info de2_for
+ 		.csc = SUN8I_CSC_MODE_YUV2RGB,
  	},
  	{
-+		/* for DE2 VI layer which ignores alpha */
-+		.drm_fmt = DRM_FORMAT_XBGR4444,
-+		.de2_fmt = SUN8I_MIXER_FBFMT_ABGR4444,
-+		.rgb = true,
-+		.csc = SUN8I_CSC_MODE_OFF,
-+	},
-+	{
- 		.drm_fmt = DRM_FORMAT_RGBA4444,
- 		.de2_fmt = SUN8I_MIXER_FBFMT_RGBA4444,
- 		.rgb = true,
- 		.csc = SUN8I_CSC_MODE_OFF,
- 	},
- 	{
-+		/* for DE2 VI layer which ignores alpha */
-+		.drm_fmt = DRM_FORMAT_RGBX4444,
-+		.de2_fmt = SUN8I_MIXER_FBFMT_RGBA4444,
-+		.rgb = true,
-+		.csc = SUN8I_CSC_MODE_OFF,
-+	},
-+	{
- 		.drm_fmt = DRM_FORMAT_BGRA4444,
- 		.de2_fmt = SUN8I_MIXER_FBFMT_BGRA4444,
- 		.rgb = true,
- 		.csc = SUN8I_CSC_MODE_OFF,
- 	},
- 	{
-+		/* for DE2 VI layer which ignores alpha */
-+		.drm_fmt = DRM_FORMAT_BGRX4444,
-+		.de2_fmt = SUN8I_MIXER_FBFMT_BGRA4444,
-+		.rgb = true,
-+		.csc = SUN8I_CSC_MODE_OFF,
-+	},
-+	{
- 		.drm_fmt = DRM_FORMAT_ARGB1555,
- 		.de2_fmt = SUN8I_MIXER_FBFMT_ARGB1555,
- 		.rgb = true,
- 		.csc = SUN8I_CSC_MODE_OFF,
- 	},
- 	{
-+		/* for DE2 VI layer which ignores alpha */
-+		.drm_fmt = DRM_FORMAT_XRGB1555,
-+		.de2_fmt = SUN8I_MIXER_FBFMT_ARGB1555,
-+		.rgb = true,
-+		.csc = SUN8I_CSC_MODE_OFF,
-+	},
-+	{
- 		.drm_fmt = DRM_FORMAT_ABGR1555,
- 		.de2_fmt = SUN8I_MIXER_FBFMT_ABGR1555,
- 		.rgb = true,
- 		.csc = SUN8I_CSC_MODE_OFF,
- 	},
- 	{
-+		/* for DE2 VI layer which ignores alpha */
-+		.drm_fmt = DRM_FORMAT_XBGR1555,
-+		.de2_fmt = SUN8I_MIXER_FBFMT_ABGR1555,
-+		.rgb = true,
-+		.csc = SUN8I_CSC_MODE_OFF,
-+	},
-+	{
- 		.drm_fmt = DRM_FORMAT_RGBA5551,
- 		.de2_fmt = SUN8I_MIXER_FBFMT_RGBA5551,
- 		.rgb = true,
- 		.csc = SUN8I_CSC_MODE_OFF,
- 	},
- 	{
-+		/* for DE2 VI layer which ignores alpha */
-+		.drm_fmt = DRM_FORMAT_RGBX5551,
-+		.de2_fmt = SUN8I_MIXER_FBFMT_RGBA5551,
-+		.rgb = true,
-+		.csc = SUN8I_CSC_MODE_OFF,
-+	},
-+	{
- 		.drm_fmt = DRM_FORMAT_BGRA5551,
- 		.de2_fmt = SUN8I_MIXER_FBFMT_BGRA5551,
- 		.rgb = true,
- 		.csc = SUN8I_CSC_MODE_OFF,
-+	},
-+	{
-+		/* for DE2 VI layer which ignores alpha */
-+		.drm_fmt = DRM_FORMAT_BGRX5551,
-+		.de2_fmt = SUN8I_MIXER_FBFMT_BGRA5551,
-+		.rgb = true,
-+		.csc = SUN8I_CSC_MODE_OFF,
- 	},
- 	{
- 		.drm_fmt = DRM_FORMAT_ARGB2101010,
+-		.drm_fmt = DRM_FORMAT_YVU444,
+-		.de2_fmt = SUN8I_MIXER_FBFMT_RGB888,
+-		.rgb = true,
+-		.csc = SUN8I_CSC_MODE_YVU2RGB,
+-	},
+-	{
+ 		.drm_fmt = DRM_FORMAT_YVU422,
+ 		.de2_fmt = SUN8I_MIXER_FBFMT_YUV422,
+ 		.rgb = false,
 --- a/drivers/gpu/drm/sun4i/sun8i_vi_layer.c
 +++ b/drivers/gpu/drm/sun4i/sun8i_vi_layer.c
-@@ -398,26 +398,26 @@ static const struct drm_plane_funcs sun8
+@@ -431,11 +431,9 @@ static const u32 sun8i_vi_layer_formats[
+ 	DRM_FORMAT_YUV411,
+ 	DRM_FORMAT_YUV420,
+ 	DRM_FORMAT_YUV422,
+-	DRM_FORMAT_YUV444,
+ 	DRM_FORMAT_YVU411,
+ 	DRM_FORMAT_YVU420,
+ 	DRM_FORMAT_YVU422,
+-	DRM_FORMAT_YVU444,
  };
  
- /*
-- * While all RGB formats are supported, VI planes don't support
-- * alpha blending, so there is no point having formats with alpha
-- * channel if their opaque analog exist.
-+ * While DE2 VI layer supports same RGB formats as UI layer, alpha
-+ * channel is ignored. This structure lists all unique variants
-+ * where alpha channel is replaced with "don't care" (X) channel.
-  */
- static const u32 sun8i_vi_layer_formats[] = {
--	DRM_FORMAT_ABGR1555,
--	DRM_FORMAT_ABGR4444,
--	DRM_FORMAT_ARGB1555,
--	DRM_FORMAT_ARGB4444,
- 	DRM_FORMAT_BGR565,
- 	DRM_FORMAT_BGR888,
--	DRM_FORMAT_BGRA5551,
--	DRM_FORMAT_BGRA4444,
-+	DRM_FORMAT_BGRX4444,
-+	DRM_FORMAT_BGRX5551,
- 	DRM_FORMAT_BGRX8888,
- 	DRM_FORMAT_RGB565,
- 	DRM_FORMAT_RGB888,
--	DRM_FORMAT_RGBA4444,
--	DRM_FORMAT_RGBA5551,
-+	DRM_FORMAT_RGBX4444,
-+	DRM_FORMAT_RGBX5551,
- 	DRM_FORMAT_RGBX8888,
-+	DRM_FORMAT_XBGR1555,
-+	DRM_FORMAT_XBGR4444,
- 	DRM_FORMAT_XBGR8888,
-+	DRM_FORMAT_XRGB1555,
-+	DRM_FORMAT_XRGB4444,
- 	DRM_FORMAT_XRGB8888,
- 
- 	DRM_FORMAT_NV16,
+ static const u32 sun8i_vi_layer_de3_formats[] = {
 
 
