@@ -2,387 +2,109 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3AEBC10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 01:52:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A65A4C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 01:58:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93EE024649
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 01:52:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 844B224649
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 01:58:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726715AbgCJBw6 (ORCPT
+        id S1726501AbgCJB6R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 21:52:58 -0400
-Received: from mga01.intel.com ([192.55.52.88]:44228 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726620AbgCJBw6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 21:52:58 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Mar 2020 18:52:57 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,535,1574150400"; 
-   d="scan'208";a="242155459"
-Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
-  by orsmga003.jf.intel.com with ESMTP; 09 Mar 2020 18:52:51 -0700
-From:   "Ramuthevar,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-To:     linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        broonie@kernel.org, vigneshr@ti.com, robh+dt@kernel.org
-Cc:     devicetree@vger.kernel.org, boris.brezillon@free-electrons.com,
-        simon.k.r.goldschmidt@gmail.com, dinguyen@kernel.org,
-        tien.fong.chee@intel.com, marex@denx.de,
-        linux-mtd@lists.infradead.org, dwmw2@infradead.org, richard@nod.at,
-        computersforpeace@gmail.com, cyrille.pitchen@atmel.com,
-        david.oberhollenzer@sigma-star.at, miquel.raynal@bootlin.com,
-        tudor.ambarus@gmail.com, cheol.yong.kim@intel.com,
-        qi-ming.wu@intel.com,
-        Ramuthevar Vadivel Murugan 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Subject: [PATCH v12 4/4] spi: cadence-quadspi: Add qspi support for Intel LGM SoC
-Date:   Tue, 10 Mar 2020 09:52:13 +0800
-Message-Id: <20200310015213.1734-5-vadivel.muruganx.ramuthevar@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200310015213.1734-1-vadivel.muruganx.ramuthevar@linux.intel.com>
-References: <20200310015213.1734-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+        Mon, 9 Mar 2020 21:58:17 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:40915 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726156AbgCJB6R (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 21:58:17 -0400
+Received: by mail-pl1-f193.google.com with SMTP id h11so1584064plk.7;
+        Mon, 09 Mar 2020 18:58:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=qyOPcviTsbfhQO/ypGIatzcQW1kAEltFF4Vqey2P0bg=;
+        b=aeEntUjxGHpxhYs1XpiPMjMYsgANMakFborTO9EJO1tPc6ym2zySzrwmjdC3AVcYPH
+         U6Eo92U9nynWOap9haRqL5tJNyIOahJUkmMG7mVSsfB8JPIl3Xghu9at12178xJTIfHj
+         vDRb0pOXDdBdqAXNvw3CRQQiXZpGVoo7aVS/7HJDKTGnJXjbJIUOJZkB2H81lphU78cI
+         bT7ZMrgPxeR3SnrKHrOGuLQimAuuJjges+kOu8ddWTmW6TCY6IMelnrlF5wycU4Jbsjr
+         BrTab00F3ESPNWFKT+ysHHnOK9QmQ/++pmeEXDL1MvY1tUE8vUF3xrCsvNPJ4WR6rcCj
+         UzJg==
+X-Gm-Message-State: ANhLgQ3P/c4j2XozQTBKd78uHaHoUQcjzchUPzznl4AUUhNHPCDivuUv
+        ng2c00X706R3pocYOEL8xhnsXvts
+X-Google-Smtp-Source: ADFU+vuzWuOCJtoLOOSx428DH3AEJzg/4yPkxNbaruhxw9/Mi4eYWCI4hq1L/gO7jIXpRrhGcfXzsw==
+X-Received: by 2002:a17:90b:3885:: with SMTP id mu5mr2189336pjb.25.1583805493868;
+        Mon, 09 Mar 2020 18:58:13 -0700 (PDT)
+Received: from ?IPv6:2601:647:4000:d7:c0e4:71da:7a83:2357? ([2601:647:4000:d7:c0e4:71da:7a83:2357])
+        by smtp.gmail.com with ESMTPSA id r64sm748524pjb.15.2020.03.09.18.58.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 09 Mar 2020 18:58:13 -0700 (PDT)
+Subject: Re: [PATCH v3 1/1] scsi: ufs: fix LRB pointer incorrect
+ initialization issue
+To:     huobean@gmail.com, alim.akhtar@samsung.com, avri.altman@wdc.com,
+        asutoshd@codeaurora.org, jejb@linux.ibm.com,
+        martin.petersen@oracle.com, stanley.chu@mediatek.com,
+        beanhuo@micron.com, tomas.winkler@intel.com, cang@codeaurora.org
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200309161057.9897-1-beanhuo@micron.com>
+ <20200309161057.9897-2-beanhuo@micron.com>
+From:   Bart Van Assche <bvanassche@acm.org>
+Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
+ mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
+ LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
+ fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
+ AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
+ 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
+ AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
+ igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
+ Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
+ jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
+ macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
+ CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
+ RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
+ PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
+ eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
+ lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
+ T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
+ ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
+ CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
+ oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
+ //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
+ mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
+ goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
+Message-ID: <ede4addf-73c7-e5f8-5143-91eb0cd3eb9b@acm.org>
+Date:   Mon, 9 Mar 2020 18:58:11 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+MIME-Version: 1.0
+In-Reply-To: <20200309161057.9897-2-beanhuo@micron.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+On 2020-03-09 09:10, huobean@gmail.com wrote:
+> @@ -4834,6 +4829,7 @@ static void __ufshcd_transfer_req_compl(struct ufs_hba *hba,
+>  			continue;
+>  		cmd = blk_mq_rq_to_pdu(req);
+>  		lrbp = scsi_cmd_priv(cmd);
+> +		ufshcd_init_lrb(hba, lrbp, index);
+>  		if (ufshcd_is_scsi(req)) {
+>  			ufshcd_add_command_trace(hba, req, "complete");
+>  			result = ufshcd_transfer_rsp_status(hba, lrbp);
 
-Add support for the Cadence QSPI controller. This controller support
-on the Intel Lightning Mountain(LGM), TI and Altera SoC's.
+This ufshcd_init_lrb() call looks incorrect to me. I think that
+ufshcd_init_lrb() should only be called before a request is submitted to
+the UFS controller and also that ufshcd_init_lrb() should not be called
+from the completion path.
 
-Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
----
- drivers/spi/spi-cadence-quadspi.c | 137 ++++++++++++++++++++++++++++++--------
- 1 file changed, 111 insertions(+), 26 deletions(-)
+Thanks,
 
-diff --git a/drivers/spi/spi-cadence-quadspi.c b/drivers/spi/spi-cadence-quadspi.c
-index 7b52e109036e..3afe0aac8447 100644
---- a/drivers/spi/spi-cadence-quadspi.c
-+++ b/drivers/spi/spi-cadence-quadspi.c
-@@ -1,11 +1,11 @@
- // SPDX-License-Identifier: GPL-2.0-only
--/*
-- * Driver for Cadence QSPI Controller
-- *
-- * Copyright Altera Corporation (C) 2012-2014. All rights reserved.
-- * Copyright Intel Corporation (C) 2019-2020. All rights reserved.
-- * Copyright (C) 2020 Texas Instruments Incorporated - http://www.ti.com
-- */
-+//
-+// Driver for Cadence QSPI Controller
-+//
-+// Copyright Altera Corporation (C) 2012-2014. All rights reserved.
-+// Copyright Intel Corporation (C) 2019-2020. All rights reserved.
-+// Copyright (C) 2020 Texas Instruments Incorporated - http://www.ti.com
-+//
- #include <linux/clk.h>
- #include <linux/completion.h>
- #include <linux/delay.h>
-@@ -35,6 +35,7 @@
- /* Quirks */
- #define CQSPI_NEEDS_WR_DELAY		BIT(0)
- #define CQSPI_DISABLE_DAC_MODE		BIT(1)
-+#define CQSPI_NEEDS_ADDR_SWAP		BIT(1)
- 
- /* Capabilities*/
- #define CQSPI_SUPPORTS_OCTAL		BIT(0)
-@@ -76,6 +77,8 @@ struct cqspi_st {
- 	unsigned long		master_ref_clk_hz;
- 	u32			fifo_depth;
- 	u32			fifo_width;
-+	u32			bus_num;
-+	u32			num_chipselect;
- 	bool			rclk_en;
- 	u32			trigger_address;
- 	u32			wr_delay;
-@@ -132,6 +135,9 @@ struct cqspi_driver_platdata {
- #define CQSPI_REG_WR_INSTR_OPCODE_LSB		0
- #define CQSPI_REG_WR_INSTR_TYPE_ADDR_LSB	12
- #define CQSPI_REG_WR_INSTR_TYPE_DATA_LSB	16
-+#define CQSPI_REG_WR_INSTR_TYPE_ADDR_MASK	3
-+#define CQSPI_REG_WR_INSTR_TYPE_DATA_MASK	3
-+#define CQSPI_REG_WR_INSTR_TYPE_WEL_DIS_POS	8
- 
- #define CQSPI_REG_DELAY				0x0C
- #define CQSPI_REG_DELAY_TSLCH_LSB		0
-@@ -262,25 +268,43 @@ static u32 cqspi_get_rd_sram_level(struct cqspi_st *cqspi)
- 	return reg & CQSPI_REG_SDRAMLEVEL_RD_MASK;
- }
- 
--static irqreturn_t cqspi_irq_handler(int this_irq, void *dev)
-+static irqreturn_t cqspi_irq_handler(int irq, void *dev_id)
- {
--	struct cqspi_st *cqspi = dev;
-+	struct cqspi_st *cqspi = dev_id;
- 	unsigned int irq_status;
- 
-+	if (readl(cqspi->iobase + CQSPI_REG_IRQSTATUS) == 0)
-+		return IRQ_NONE;
-+
- 	/* Read interrupt status */
- 	irq_status = readl(cqspi->iobase + CQSPI_REG_IRQSTATUS);
--
- 	/* Clear interrupt */
- 	writel(irq_status, cqspi->iobase + CQSPI_REG_IRQSTATUS);
--
- 	irq_status &= CQSPI_IRQ_MASK_RD | CQSPI_IRQ_MASK_WR;
- 
--	if (irq_status)
--		complete(&cqspi->transfer_complete);
-+	complete(&cqspi->transfer_complete);
- 
- 	return IRQ_HANDLED;
- }
- 
-+static u32 cqspi_cmd2addr(const struct spi_mem_op *op)
-+{
-+	const u8 *addrbuf = (u8 *)&op->addr.val;
-+	unsigned int addr = 0;
-+	int i;
-+
-+	/* Invalid address return zero. */
-+	if (op->addr.nbytes > 4)
-+		return 0;
-+
-+	for (i = 0; i < op->addr.nbytes; i++) {
-+		addr = addr << 8;
-+		addr |= addrbuf[i];
-+	}
-+
-+	return addr;
-+}
-+
- static unsigned int cqspi_calc_rdreg(struct cqspi_flash_pdata *f_pdata)
- {
- 	u32 rdreg = 0;
-@@ -352,11 +376,14 @@ static int cqspi_exec_flash_cmd(struct cqspi_st *cqspi, unsigned int reg)
- static int cqspi_command_read(struct cqspi_flash_pdata *f_pdata,
- 			      const struct spi_mem_op *op)
- {
-+	const struct cqspi_driver_platdata *ddata;
- 	struct cqspi_st *cqspi = f_pdata->cqspi;
-+	struct device *dev = &cqspi->pdev->dev;
- 	void __iomem *reg_base = cqspi->iobase;
- 	u8 *rxbuf = op->data.buf.in;
- 	u8 opcode = op->cmd.opcode;
- 	size_t n_rx = op->data.nbytes;
-+	unsigned int addr_value;
- 	unsigned int rdreg;
- 	unsigned int reg;
- 	size_t read_len;
-@@ -376,6 +403,16 @@ static int cqspi_command_read(struct cqspi_flash_pdata *f_pdata,
- 
- 	reg |= (0x1 << CQSPI_REG_CMDCTRL_RD_EN_LSB);
- 
-+	ddata  = of_device_get_match_data(dev);
-+	if ((ddata->quirks & CQSPI_NEEDS_ADDR_SWAP) & op->addr.nbytes) {
-+		reg |= BIT(CQSPI_REG_CMDCTRL_ADDR_EN_LSB);
-+		reg |= ((op->addr.nbytes - 1) & CQSPI_REG_CMDCTRL_ADD_BYTES_MASK)
-+			<< CQSPI_REG_CMDCTRL_ADD_BYTES_LSB;
-+		addr_value = cqspi_cmd2addr(op);
-+
-+		writel(addr_value, reg_base + CQSPI_REG_CMDADDRESS);
-+	}
-+
- 	/* 0 means 1 byte. */
- 	reg |= (((n_rx - 1) & CQSPI_REG_CMDCTRL_RD_BYTES_MASK)
- 		<< CQSPI_REG_CMDCTRL_RD_BYTES_LSB);
-@@ -424,7 +461,7 @@ static int cqspi_command_write(struct cqspi_flash_pdata *f_pdata,
- 	if (op->addr.nbytes) {
- 		reg |= (0x1 << CQSPI_REG_CMDCTRL_ADDR_EN_LSB);
- 		reg |= ((op->addr.nbytes - 1) & CQSPI_REG_CMDCTRL_ADD_BYTES_MASK)
--		<< CQSPI_REG_CMDCTRL_ADD_BYTES_LSB;
-+			<< CQSPI_REG_CMDCTRL_ADD_BYTES_LSB;
- 
- 		writel(op->addr.val, reg_base + CQSPI_REG_CMDADDRESS);
- 	}
-@@ -453,10 +490,20 @@ static int cqspi_command_write(struct cqspi_flash_pdata *f_pdata,
- static int cqspi_read_setup(struct cqspi_flash_pdata *f_pdata,
- 			    const struct spi_mem_op *op)
- {
-+	const struct cqspi_driver_platdata *ddata;
- 	struct cqspi_st *cqspi = f_pdata->cqspi;
- 	void __iomem *reg_base = cqspi->iobase;
-+	struct device *dev = &cqspi->pdev->dev;
-+	unsigned int reg, addr_value;
- 	unsigned int dummy_clk = 0;
--	unsigned int reg;
-+
-+	ddata  = of_device_get_match_data(dev);
-+	if ((ddata->quirks & CQSPI_NEEDS_ADDR_SWAP) & op->addr.nbytes) {
-+		addr_value = cqspi_cmd2addr(op);
-+		writel(addr_value, reg_base + CQSPI_REG_INDIRECTRDSTARTADDR);
-+		reg |= (op->data.buswidth & CQSPI_REG_RD_INSTR_TYPE_DATA_MASK)
-+			<< CQSPI_REG_RD_INSTR_TYPE_DATA_LSB;
-+	}
- 
- 	reg = op->cmd.opcode << CQSPI_REG_RD_INSTR_OPCODE_LSB;
- 	reg |= cqspi_calc_rdreg(f_pdata);
-@@ -468,7 +515,7 @@ static int cqspi_read_setup(struct cqspi_flash_pdata *f_pdata,
- 
- 	if (dummy_clk / 8)
- 		reg |= (dummy_clk & CQSPI_REG_RD_INSTR_DUMMY_MASK)
--		       << CQSPI_REG_RD_INSTR_DUMMY_LSB;
-+			<< CQSPI_REG_RD_INSTR_DUMMY_LSB;
- 
- 	writel(reg, reg_base + CQSPI_REG_RD_INSTR);
- 
-@@ -508,7 +555,7 @@ static int cqspi_indirect_read_execute(struct cqspi_flash_pdata *f_pdata,
- 
- 	while (remaining > 0) {
- 		if (!wait_for_completion_timeout(&cqspi->transfer_complete,
--						 msecs_to_jiffies(CQSPI_READ_TIMEOUT_MS)))
-+				msecs_to_jiffies(CQSPI_READ_TIMEOUT_MS)))
- 			ret = -ETIMEDOUT;
- 
- 		bytes_to_read = cqspi_get_rd_sram_level(cqspi);
-@@ -575,9 +622,12 @@ static int cqspi_indirect_read_execute(struct cqspi_flash_pdata *f_pdata,
- static int cqspi_write_setup(struct cqspi_flash_pdata *f_pdata,
- 			     const struct spi_mem_op *op)
- {
--	unsigned int reg;
-+	const struct cqspi_driver_platdata *ddata;
- 	struct cqspi_st *cqspi = f_pdata->cqspi;
-+	struct device *dev = &cqspi->pdev->dev;
- 	void __iomem *reg_base = cqspi->iobase;
-+	const u8 *txbuf = &op->cmd.opcode;
-+	unsigned int reg;
- 
- 	/* Set opcode. */
- 	reg = op->cmd.opcode << CQSPI_REG_WR_INSTR_OPCODE_LSB;
-@@ -585,6 +635,24 @@ static int cqspi_write_setup(struct cqspi_flash_pdata *f_pdata,
- 	reg = cqspi_calc_rdreg(f_pdata);
- 	writel(reg, reg_base + CQSPI_REG_RD_INSTR);
- 
-+	ddata  = of_device_get_match_data(dev);
-+	if (ddata->quirks & CQSPI_NEEDS_ADDR_SWAP) {
-+		/* Set opcode. */
-+		reg = txbuf[0] << CQSPI_REG_WR_INSTR_OPCODE_LSB;
-+		reg |= BIT(CQSPI_REG_WR_INSTR_TYPE_WEL_DIS_POS);
-+		/* Configure the mode for address */
-+		reg |= (op->addr.buswidth & CQSPI_REG_WR_INSTR_TYPE_ADDR_MASK)
-+			<< CQSPI_REG_WR_INSTR_TYPE_ADDR_LSB;
-+
-+		/* Configure the mode for data */
-+		reg |= (op->data.buswidth & CQSPI_REG_WR_INSTR_TYPE_DATA_MASK)
-+			<< CQSPI_REG_WR_INSTR_TYPE_DATA_LSB;
-+		writel(reg, reg_base + CQSPI_REG_WR_INSTR);
-+		/* Setup write address. */
-+		reg = cqspi_cmd2addr(op);
-+		writel(reg, reg_base + CQSPI_REG_INDIRECTWRSTARTADDR);
-+	}
-+
- 	reg = readl(reg_base + CQSPI_REG_SIZE);
- 	reg &= ~CQSPI_REG_SIZE_ADDRESS_MASK;
- 	reg |= (op->addr.nbytes - 1);
-@@ -644,7 +712,7 @@ static int cqspi_indirect_write_execute(struct cqspi_flash_pdata *f_pdata,
- 		}
- 
- 		if (!wait_for_completion_timeout(&cqspi->transfer_complete,
--						 msecs_to_jiffies(CQSPI_TIMEOUT_MS))) {
-+					msecs_to_jiffies(CQSPI_TIMEOUT_MS))) {
- 			dev_err(dev, "Indirect write timeout\n");
- 			ret = -ETIMEDOUT;
- 			goto failwr;
-@@ -903,7 +971,7 @@ static int cqspi_direct_read_execute(struct cqspi_flash_pdata *f_pdata,
- 				     u_char *buf, loff_t from, size_t len)
- {
- 	struct cqspi_st *cqspi = f_pdata->cqspi;
--	struct device *dev = &cqspi->pdev->dev;
-+	struct device *dev = cqspi->rx_chan->device->dev;
- 	enum dma_ctrl_flags flags = DMA_CTRL_ACK | DMA_PREP_INTERRUPT;
- 	dma_addr_t dma_src = (dma_addr_t)cqspi->mmap_phys_base + from;
- 	int ret = 0;
-@@ -1053,6 +1121,8 @@ static int cqspi_of_get_pdata(struct cqspi_st *cqspi)
- 	struct device *dev = &cqspi->pdev->dev;
- 	struct device_node *np = dev->of_node;
- 
-+	cqspi->is_decoded_cs = of_property_read_bool(np, "cdns,is-decoded-cs");
-+
- 	if (of_property_read_u32(np, "cdns,fifo-depth", &cqspi->fifo_depth)) {
- 		dev_err(dev, "couldn't determine fifo-depth\n");
- 		return -ENXIO;
-@@ -1098,10 +1168,6 @@ static void cqspi_controller_init(struct cqspi_st *cqspi)
- 	writel(cqspi->fifo_depth * cqspi->fifo_width / 8,
- 	       cqspi->iobase + CQSPI_REG_INDIRECTWRWATERMARK);
- 
--	/*
--	 * Disable Direct Access Controller and Auto polling when not
--	 * supported.
--	 */
- 	if (!cqspi->use_dac_mode) {
- 		u32 reg;
- 
-@@ -1128,7 +1194,7 @@ static int cqspi_request_mmap_dma(struct cqspi_st *cqspi)
- 	if (IS_ERR(cqspi->rx_chan)) {
- 		int ret = PTR_ERR(cqspi->rx_chan);
- 
--		if (ret == -EPROBE_DEFER)
-+		if (ret != -EPROBE_DEFER)
- 			dev_err(&cqspi->pdev->dev, "No Rx DMA available\n");
- 		cqspi->rx_chan = NULL;
- 
-@@ -1273,6 +1339,11 @@ static int cqspi_probe(struct platform_device *pdev)
- 
- 	cqspi->master_ref_clk_hz = clk_get_rate(cqspi->clk);
- 	ddata  = of_device_get_match_data(dev);
-+	if (!ddata) {
-+		dev_err(dev, "Could not retrieve QSPI caps\n");
-+		goto probe_reset_failed;
-+	}
-+
- 	if (ddata) {
- 		if (ddata->quirks & CQSPI_NEEDS_WR_DELAY)
- 			cqspi->wr_delay = 5 * DIV_ROUND_UP(NSEC_PER_SEC,
-@@ -1281,9 +1352,15 @@ static int cqspi_probe(struct platform_device *pdev)
- 			master->mode_bits |= SPI_RX_OCTAL;
- 		if (!(ddata->quirks & CQSPI_DISABLE_DAC_MODE))
- 			cqspi->use_dac_mode = true;
-+		if (ddata->quirks & CQSPI_NEEDS_ADDR_SWAP) {
-+			master->bus_num = 0;
-+			master->num_chipselect = 2;
-+			master->mode_bits = SPI_CS_HIGH | SPI_CPOL | SPI_CPHA |
-+						SPI_TX_QUAD;
-+		}
- 	}
- 
--	ret = devm_request_irq(dev, irq, cqspi_irq_handler, 0,
-+	ret = devm_request_irq(dev, irq, cqspi_irq_handler, IRQF_SHARED,
- 			       pdev->name, cqspi);
- 	if (ret) {
- 		dev_err(dev, "Cannot request IRQ.\n");
-@@ -1381,6 +1458,10 @@ static const struct cqspi_driver_platdata am654_ospi = {
- 	.quirks = CQSPI_NEEDS_WR_DELAY,
- };
- 
-+static const struct cqspi_driver_platdata intel_lgm_qspi = {
-+	.quirks = CQSPI_NEEDS_ADDR_SWAP,
-+};
-+
- static const struct of_device_id cqspi_dt_ids[] = {
- 	{
- 		.compatible = "cdns,qspi-nor",
-@@ -1394,6 +1475,10 @@ static const struct of_device_id cqspi_dt_ids[] = {
- 		.compatible = "ti,am654-ospi",
- 		.data = &am654_ospi,
- 	},
-+	{
-+		.compatible = "intel,lgm-qspi",
-+		.data = &intel_lgm_qspi,
-+	},
- 	{ /* end of table */ }
- };
- 
--- 
-2.11.0
-
+Bart.
