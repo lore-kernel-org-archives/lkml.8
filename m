@@ -2,152 +2,293 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BB39C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:41:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07E8FC18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:42:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06A3C20663
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:41:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3B4E20675
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:42:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="I5UdkSdO"
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="PPadzhCj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726952AbgCJNlN (ORCPT
+        id S1727014AbgCJNm2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:41:13 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:21320 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726508AbgCJNlM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:41:12 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02ADY8mq001091;
-        Tue, 10 Mar 2020 14:41:06 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=YPtuuFjlaHziSVTLb4nw/9PbtG4QP/ffI4njO2jnjD8=;
- b=I5UdkSdOwCgWH3Rzmqs9i2C8T7h4EKPpvut6bFS9SW2YGY0mjZ8Pk1GJaWICb4RxtGbR
- Csrtkv3FAJRf3brmvnxlFt8c/8Se4zVzx/e60b7xZaJLM/ZpfQRHS8eH3T/AiBdSSVd6
- 1iEAfI4smKR5rDxma6zqF+uRhbUZLw8uIroiiy/dqGWDG14r1wCuzrYYKZ0hWILAtJC1
- D+vC9rsD4MARWDbi9V2hcJPZuQoIiyYNAPAVRk+UKpG/XGgjW66FRvpEdrbIpUBNdYwY
- FbERozYkgnamxG2CZl0bVisYft/73xP+da27ZVpnpJEhcMRVurZ0VosxEc32itNak7SM 1A== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2ym1mguvd1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 10 Mar 2020 14:41:06 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id E0836100038;
-        Tue, 10 Mar 2020 14:41:01 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id CAC172B2B65;
-        Tue, 10 Mar 2020 14:41:01 +0100 (CET)
-Received: from lmecxl0889.lme.st.com (10.75.127.44) by SFHDAG3NODE1.st.com
- (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 10 Mar
- 2020 14:41:00 +0100
-Subject: Re: [PATCH v4 1/4] remoteproc: Traverse rproc_list under RCU read
- lock
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Ohad Ben-Cohen <ohad@wizery.com>
-CC:     <linux-arm-msm@vger.kernel.org>,
-        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>
-References: <20200310063817.3344712-1-bjorn.andersson@linaro.org>
- <20200310063817.3344712-2-bjorn.andersson@linaro.org>
-From:   Arnaud POULIQUEN <arnaud.pouliquen@st.com>
-Message-ID: <87a14705-186d-01a4-e8a5-1844dab4ea14@st.com>
-Date:   Tue, 10 Mar 2020 14:41:00 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <20200310063817.3344712-2-bjorn.andersson@linaro.org>
-Content-Type: text/plain; charset="utf-8"
+        Tue, 10 Mar 2020 09:42:28 -0400
+Received: from mail-eopbgr1400127.outbound.protection.outlook.com ([40.107.140.127]:42677
+        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726269AbgCJNm2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:42:28 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VBgZmaKayxoSxm0qpLHUtLBEMsQZ702nEvCVcMw7DsUelceh5KbbHe3dr5sqLLaDlceFT/bVrkSf2wna1R1ZSVnwvfMi63gsjHP2A8xIKn35P5HVD7GoPwoThXU90WEcK4zh/GxRGNCK+vwrsmxh4Z+AfiG1Kg4fN1310Wan7AInGIIUK6jPmzT/PQSZ3KkNuWxpw5LMs3mJLZxbcb228SJ7IRhIKyq7zl5k7TTI5xsxXjP1CFd/Vb5wyfMhsUfxXCPml/AlT6pE2u8Jm61QXzymO7iUxl0T91NMsxEJQbShj1itUKgz7Ohcrtahyqs5Thq4U7d2JEXj2g5ej5uIzw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pabJzcK1Gnsm++spuq7DNClEvSj2MlMVVuyUFtCS8nc=;
+ b=k0Burw40Yvmph0zoISl2Rz5Co4qlgpEDXiigvAA7vRrak0XVooM6VO4/7E+XoOkvmUuc75FdRIqV2RSkEvqLI0B2GqqnJ9r76k/s5cCGSLyhs9wxl1HthKmG30U0NhFxBCf3EspaUv+n8srcOnhAo5Zv5Uee7Lnr69nNTfJVVJNUokLo9dqkeRPrUIirvE96O57zNcFPjZCsxz14alqSiTfBg6Bo7SCeyrnMHcIsUswgu+31jJjJjg03XYw4O36mQxpjBaDki4nuZcU4a/BDDLcJg5QL9Aab8Kc1hx/ZYH+sThO7KWng72e+Ld3dG2ErGsJPxIZ/K0J9qMY0c0adCA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
+ header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pabJzcK1Gnsm++spuq7DNClEvSj2MlMVVuyUFtCS8nc=;
+ b=PPadzhCjPi01NZRAiGdcxFejdlfh1RvE5PuoQw4Ut6FetYrdWdxMzSEh8RPlY7yMUfxWKaTRqigxWojGt4tSnLX02nmrhs1Tb6Fcbqc68QnyXsmpCHgWjVrkKqXIeXBr1Ya+KYDg+gw9EOa0kEQ+cgisPDBv0Qh+k3kKlfL1AKI=
+Received: from OSBPR01MB3590.jpnprd01.prod.outlook.com (20.178.97.80) by
+ OSBPR01MB2982.jpnprd01.prod.outlook.com (52.134.252.86) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2772.18; Tue, 10 Mar 2020 13:42:20 +0000
+Received: from OSBPR01MB3590.jpnprd01.prod.outlook.com
+ ([fe80::6df0:eb47:a259:b94b]) by OSBPR01MB3590.jpnprd01.prod.outlook.com
+ ([fe80::6df0:eb47:a259:b94b%7]) with mapi id 15.20.2793.018; Tue, 10 Mar 2020
+ 13:42:20 +0000
+From:   Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Niklas <niklas.soderlund@ragnatech.se>
+CC:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Lad Prabhakar <prabhakar.csengg@gmail.com>
+Subject: RE: [PATCH v2 2/3] media: rcar-vin: Add support for
+ MEDIA_BUS_FMT_SRGGB8_1X8 format
+Thread-Topic: [PATCH v2 2/3] media: rcar-vin: Add support for
+ MEDIA_BUS_FMT_SRGGB8_1X8 format
+Thread-Index: AQHV9sv/PTXFo4VdTUW4ogtsZKzv3qhBxiGAgAAM1rA=
+Date:   Tue, 10 Mar 2020 13:42:20 +0000
+Message-ID: <OSBPR01MB35905FFB621C2F4222692832AAFF0@OSBPR01MB3590.jpnprd01.prod.outlook.com>
+References: <1583838364-12932-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1583838364-12932-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200310124605.GO2975348@oden.dyn.berto.se>
+In-Reply-To: <20200310124605.GO2975348@oden.dyn.berto.se>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.44]
-X-ClientProxiedBy: SFHDAG6NODE2.st.com (10.75.127.17) To SFHDAG3NODE1.st.com
- (10.75.127.7)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-10_07:2020-03-10,2020-03-10 signatures=0
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=prabhakar.mahadev-lad.rj@bp.renesas.com; 
+x-originating-ip: [193.141.220.21]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 75ffa818-3d03-4aae-7a8a-08d7c4f8db0c
+x-ms-traffictypediagnostic: OSBPR01MB2982:
+x-microsoft-antispam-prvs: <OSBPR01MB2982C1BCAEE99251913870E3AAFF0@OSBPR01MB2982.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 033857D0BD
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(396003)(346002)(366004)(39860400002)(136003)(189003)(199004)(76116006)(86362001)(64756008)(8936002)(66476007)(66556008)(66946007)(6506007)(53546011)(186003)(5660300002)(26005)(52536014)(66446008)(2906002)(81156014)(66574012)(54906003)(8676002)(81166006)(316002)(33656002)(9686003)(4326008)(55016002)(71200400001)(7696005)(6916009)(478600001);DIR:OUT;SFP:1102;SCL:1;SRVR:OSBPR01MB2982;H:OSBPR01MB3590.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
+received-spf: None (protection.outlook.com: bp.renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: zw2KL7LSxWQQSnv5NieZsSt9O3/Slfrh9RndMkGp7WxTTJM1lNJYTfIYzXmAPyiVw0wWkYAxYBuFzgjcuMoLywMzjx9l9px+6rbInMCg8FoG0QIemVfr+kWMFJqDFZo5F9IAmd40P+cFQDxuQ9br7/vdW9+HHL8TQ0AfyYx7TmBDGOC91CBcVAz/kPE9koon7px7K2SROyIffQOnXGmrFVCshQBbkHN9zCG9VN9KC3o3s+3vQSNcInZPDaLb1grwU/efsgENO8MpBM37XYJw5MzdnCc3YPvWC946uykiSvlYDRAN3IGoBLoHyY9retft1IWmxGUZUe+FFmU0K4KWIOsjD/wvvPaRhE0SSsutVPgKPy7bIV+FjOfxgb9thq8CP4qWngGqMTIFjSvg+BByE5Yx18D8eW9gWyf5AuaiDc+RoAe6pvYwra2jWnIWjxbl
+x-ms-exchange-antispam-messagedata: ndzVIp4NRuS6sZgKsvC/wqnGGpWXtxktOjxxm9mn3BaO1yzdv1moQxLFV6iP77j0Ta43Nlyj6Wa0GTnRj1raYOJMhCVEnxPL3yyjHX/xzKeUY4sDidfIHOVKpbiFHNmCfcdbYM8lPJP1QCJBanxd3Q==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: bp.renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 75ffa818-3d03-4aae-7a8a-08d7c4f8db0c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Mar 2020 13:42:20.0946
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: +kZMrRH2XrgXq9SntP7rSZ4Mx5xwiJyTC42gPTgVL5MsyWzV18CKhXd6nsCLiIeeQ5C6oB9YggxfrH19zLt3NRnWGFyYfM3+ZvOzNLeuGrUyqh5zupV7n4RBSmpgwKG6
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSBPR01MB2982
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bjorn,
+Hi Niklas,
+
+Thank for the review.
+
+> -----Original Message-----
+> From: Niklas <niklas.soderlund@ragnatech.se>
+> Sent: 10 March 2020 12:46
+> To: Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>; linux-
+> media@vger.kernel.org; linux-renesas-soc@vger.kernel.org; linux-
+> kernel@vger.kernel.org; Lad Prabhakar <prabhakar.csengg@gmail.com>
+> Subject: Re: [PATCH v2 2/3] media: rcar-vin: Add support for
+> MEDIA_BUS_FMT_SRGGB8_1X8 format
+>
+> Hi Lad,
+>
+> Thanks for your work.
+>
+> On 2020-03-10 11:06:03 +0000, Lad Prabhakar wrote:
+> > Add support for MEDIA_BUS_FMT_SRGGB8_1X8 format in rcar-vin by
+> setting
+> > format type to RAW8 in VNMC register and appropriately setting the
+> > bpp, bytesperline to enable V4L2_PIX_FMT_SRGGB8.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-
+> lad.rj@bp.renesas.com>
+> > ---
+> >  drivers/media/platform/rcar-vin/rcar-core.c |  1 +
+> > drivers/media/platform/rcar-vin/rcar-dma.c  |  9 ++++++++-
+> > drivers/media/platform/rcar-vin/rcar-v4l2.c | 13 ++++++++++++-
+> >  3 files changed, 21 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/media/platform/rcar-vin/rcar-core.c
+> > b/drivers/media/platform/rcar-vin/rcar-core.c
+> > index 7440c89..76daf2f 100644
+> > --- a/drivers/media/platform/rcar-vin/rcar-core.c
+> > +++ b/drivers/media/platform/rcar-vin/rcar-core.c
+> > @@ -469,6 +469,7 @@ static int rvin_parallel_subdevice_attach(struct
+> rvin_dev *vin,
+> >  case MEDIA_BUS_FMT_UYVY8_2X8:
+> >  case MEDIA_BUS_FMT_UYVY10_2X10:
+> >  case MEDIA_BUS_FMT_RGB888_1X24:
+> > +case MEDIA_BUS_FMT_SRGGB8_1X8:
+> >  vin->mbus_code =3D code.code;
+> >  vin_dbg(vin, "Found media bus format for %s: %d\n",
+> >  subdev->name, vin->mbus_code);
+> > diff --git a/drivers/media/platform/rcar-vin/rcar-dma.c
+> > b/drivers/media/platform/rcar-vin/rcar-dma.c
+> > index 1a30cd0..1c1fafa 100644
+> > --- a/drivers/media/platform/rcar-vin/rcar-dma.c
+> > +++ b/drivers/media/platform/rcar-vin/rcar-dma.c
+> > @@ -85,6 +85,7 @@
+> >  #define VNMC_INF_YUV8_BT601(1 << 16)
+> >  #define VNMC_INF_YUV10_BT656(2 << 16)
+> >  #define VNMC_INF_YUV10_BT601(3 << 16)
+> > +#define VNMC_INF_RAW8(4 << 16)
+> >  #define VNMC_INF_YUV16(5 << 16)
+> >  #define VNMC_INF_RGB888(6 << 16)
+> >  #define VNMC_VUP(1 << 10)
+> > @@ -587,7 +588,6 @@ void rvin_crop_scale_comp(struct rvin_dev *vin)
+> >  rvin_write(vin, vin->crop.top, VNSLPRC_REG);
+> >  rvin_write(vin, vin->crop.top + vin->crop.height - 1, VNELPRC_REG);
+> >
+> > -
+> >  /* TODO: Add support for the UDS scaler. */
+> >  if (vin->info->model !=3D RCAR_GEN3)
+> >  rvin_crop_scale_comp_gen2(vin);
+> > @@ -676,6 +676,9 @@ static int rvin_setup(struct rvin_dev *vin)
+> >
+> >  input_is_yuv =3D true;
+> >  break;
+> > +case MEDIA_BUS_FMT_SRGGB8_1X8:
+> > +vnmc |=3D VNMC_INF_RAW8;
+> > +break;
+> >  default:
+> >  break;
+> >  }
+> > @@ -737,6 +740,9 @@ static int rvin_setup(struct rvin_dev *vin)
+> >  case V4L2_PIX_FMT_ABGR32:
+> >  dmr =3D VNDMR_A8BIT(vin->alpha) | VNDMR_EXRGB |
+> VNDMR_DTMD_ARGB;
+> >  break;
+> > +case V4L2_PIX_FMT_SRGGB8:
+> > +dmr =3D 0;
+> > +break;
+> >  default:
+> >  vin_err(vin, "Invalid pixelformat (0x%x)\n",
+> >  vin->format.pixelformat);
+> > @@ -1110,6 +1116,7 @@ static int rvin_mc_validate_format(struct
+> rvin_dev *vin, struct v4l2_subdev *sd,
+> >  case MEDIA_BUS_FMT_UYVY8_2X8:
+> >  case MEDIA_BUS_FMT_UYVY10_2X10:
+> >  case MEDIA_BUS_FMT_RGB888_1X24:
+> > +case MEDIA_BUS_FMT_SRGGB8_1X8:
+> >  vin->mbus_code =3D fmt.format.code;
+> >  break;
+> >  default:
+> > diff --git a/drivers/media/platform/rcar-vin/rcar-v4l2.c
+> > b/drivers/media/platform/rcar-vin/rcar-v4l2.c
+> > index 5151a3c..4698099 100644
+> > --- a/drivers/media/platform/rcar-vin/rcar-v4l2.c
+> > +++ b/drivers/media/platform/rcar-vin/rcar-v4l2.c
+> > @@ -66,6 +66,10 @@ static const struct rvin_video_format rvin_formats[]
+> =3D {
+> >  .fourcc=3D V4L2_PIX_FMT_ABGR32,
+> >  .bpp=3D 4,
+> >  },
+> > +{
+> > +.fourcc=3D V4L2_PIX_FMT_SRGGB8,
+> > +.bpp=3D 2,
+>
+> This does not look right, is not bytes-per-pixel 1 for a SRGGB8?
+>
+I guessed the bpp's were picked from VnIS table as I result I did the same.
+
+> > +},
+> >  };
+> >
+> >  const struct rvin_video_format *rvin_format_from_pixel(struct
+> > rvin_dev *vin, @@ -102,6 +106,7 @@ static u32
+> > rvin_format_bytesperline(struct rvin_dev *vin,  {
+> >  const struct rvin_video_format *fmt;
+> >  u32 align;
+> > +u8 div;
+> >
+> >  fmt =3D rvin_format_from_pixel(vin, pix->pixelformat);
+> >
+> > @@ -112,16 +117,22 @@ static u32 rvin_format_bytesperline(struct
+> rvin_dev *vin,
+> >  case V4L2_PIX_FMT_NV12:
+> >  case V4L2_PIX_FMT_NV16:
+> >  align =3D 0x20;
+> > +div =3D 1;
+> > +break;
+> > +case V4L2_PIX_FMT_SRGGB8:
+> > +align =3D 0x10;
+> > +div =3D 2;
+>
+> Yes this does not look right at all, I think you should set bpp to 1 and =
+drop the
+> div handling here.
+>
+If I set bpp as 1 and drop the div VNIS_REG will be wrongly configured in
+rvin_crop_scale_comp() and the image captured will be wrong.
+
+For example for 640x480:
+
+With the current patch bpp =3D 2:
+bytesperline =3D 640
+image size =3D 307200
+stride =3D 320
+
+And with bpp =3D 1 and div removed
+bytesperline =3D 640
+image size =3D 307200
+stride =3D 640
+
+Cheers,
+--Prabhakar
+
+> >  break;
+> >  default:
+> >  align =3D 0x10;
+> > +div =3D 1;
+> >  break;
+> >  }
+> >
+> >  if (V4L2_FIELD_IS_SEQUENTIAL(pix->field))
+> >  align =3D 0x80;
+> >
+> > -return ALIGN(pix->width, align) * fmt->bpp;
+> > +return ALIGN(pix->width / div, align) * fmt->bpp;
+> >  }
+> >
+> >  static u32 rvin_format_sizeimage(struct v4l2_pix_format *pix)
+> > --
+> > 2.7.4
+> >
+>
+> --
+> Regards,
+> Niklas S=F6derlund
 
 
-On 3/10/20 7:38 AM, Bjorn Andersson wrote:
-> In order to be able to traverse the mostly read-only rproc_list without
-> locking during panic migrate traversal to be done under rcu_read_lock().
-> 
-> Mutual exclusion for modifications of the list continues to be handled
-> by the rproc_list_mutex and a synchronization point is added before
-> releasing objects that are popped from the list.
-> 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
-> 
-> Change v3:
-> - New patch
-> 
->  drivers/remoteproc/remoteproc_core.c | 13 ++++++++-----
->  1 file changed, 8 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-> index 097f33e4f1f3..f0a77c30c6b1 100644
-> --- a/drivers/remoteproc/remoteproc_core.c
-> +++ b/drivers/remoteproc/remoteproc_core.c
-> @@ -1854,8 +1854,8 @@ struct rproc *rproc_get_by_phandle(phandle phandle)
->  	if (!np)
->  		return NULL;
->  
-> -	mutex_lock(&rproc_list_mutex);
-> -	list_for_each_entry(r, &rproc_list, node) {
-> +	rcu_read_lock();
-> +	list_for_each_entry_rcu(r, &rproc_list, node) {
->  		if (r->dev.parent && r->dev.parent->of_node == np) {
->  			/* prevent underlying implementation from being removed */
->  			if (!try_module_get(r->dev.parent->driver->owner)) {
-> @@ -1868,7 +1868,7 @@ struct rproc *rproc_get_by_phandle(phandle phandle)
->  			break;
->  		}
->  	}
-> -	mutex_unlock(&rproc_list_mutex);
-> +	rcu_read_unlock();
->  
->  	of_node_put(np);
->  
-> @@ -1925,7 +1925,7 @@ int rproc_add(struct rproc *rproc)
->  
->  	/* expose to rproc_get_by_phandle users */
->  	mutex_lock(&rproc_list_mutex);
-> -	list_add(&rproc->node, &rproc_list);
-> +	list_add_rcu(&rproc->node, &rproc_list);
->  	mutex_unlock(&rproc_list_mutex);
->  
->  	return 0;
-> @@ -2140,9 +2140,12 @@ int rproc_del(struct rproc *rproc)
->  
->  	/* the rproc is downref'ed as soon as it's removed from the klist */
->  	mutex_lock(&rproc_list_mutex);
-> -	list_del(&rproc->node);
-> +	list_del_rcu(&rproc->node);
->  	mutex_unlock(&rproc_list_mutex);
-i'm not familiar with rcu but as rproc_panic_handler can be called in interrupt context, 
-does mutex should be replaced by a spinlock?
-
-Regards,
-Arnaud
->  
-> +	/* Ensure that no readers of rproc_list are still active */
-> +	synchronize_rcu();
-> +
->  	device_del(&rproc->dev);
->  
->  	return 0;
-> 
+Renesas Electronics Europe GmbH, Geschaeftsfuehrer/President: Carsten Jauch=
+, Sitz der Gesellschaft/Registered office: Duesseldorf, Arcadiastrasse 10, =
+40472 Duesseldorf, Germany, Handelsregister/Commercial Register: Duesseldor=
+f, HRB 3708 USt-IDNr./Tax identification no.: DE 119353406 WEEE-Reg.-Nr./WE=
+EE reg. no.: DE 14978647
