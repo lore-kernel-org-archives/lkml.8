@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9306C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:51:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCA41C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:51:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8116D2253D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:51:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A24382253D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:51:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583844695;
-	bh=l4RFUPXPw3XERjAZoBxTDw4cHLH4bUhQehVVwAMxNJk=;
+	s=default; t=1583844700;
+	bh=evF/NFjY1s7IY6EJgZeQWXpsFLeu01Fl+Ck86HHRJlk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LD+KjV8jJZ2IvhFlbWK4GbMnh0na6BZvXamloq5Xk5Nr1a5ArUHrdnNsriHx6OBvW
-	 UQC93lrHrBJfZGP5ZBzI1XMl90DatzSWQ7xkh9uJkUBpKPZWEohdI58MX2p9bYPaHk
-	 eu4dZCpMUruceLswaQf1pjuOQ0LumEsmxQ3li814=
+	b=wZQv3YytxFXTWofur6Az40fJIqA4MOd9Ho0XDUbotrBZqHreLMWukCuGJmSIjNFad
+	 kme0wKqZgIN5pTUlTy7CbX3vzENUfiZZfZNUPrdrQSdqF9Sv8gbGoACfhE+2kmwRTE
+	 dsJPI9aGhIebQCKExgmvh4V5g06LuCPptoqV4sgI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728506AbgCJMve (ORCPT
+        id S1728945AbgCJMvj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:51:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56604 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:51:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56662 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728903AbgCJMv3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:51:29 -0400
+        id S1728928AbgCJMvf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:51:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F22772468E;
-        Tue, 10 Mar 2020 12:51:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 626492468E;
+        Tue, 10 Mar 2020 12:51:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844688;
-        bh=l4RFUPXPw3XERjAZoBxTDw4cHLH4bUhQehVVwAMxNJk=;
+        s=default; t=1583844693;
+        bh=evF/NFjY1s7IY6EJgZeQWXpsFLeu01Fl+Ck86HHRJlk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GVlRKl99bq1bx/gQERWdy0OhVSd8SfFYetqOYIdX9Qqa5AmMX3AcAyLUXErZGMofP
-         I4pMuIJCiolLNqKGcFjVvjTd0E372OjRjNyujmITDxdRIOMyaBHLQitFBHO5HBcAfn
-         erfPiSm86oNgi3ZXXTPw61XNC1OiiThr1z+7Enqs=
+        b=IFSXgezohemDqhZFFUuCuNcJzFTJ6IASo9JCba8YmiRRkQN/BxTUafxTGl+k6VgbT
+         h+Cj3mUZaLQjer+x2EfRPLLq7o971EMn2sOkmO+zYjN+Yz7ZpWo4S5buTMYH25NHbO
+         WqykEn7mQqRLCpxuaHtwt4dvdMYyEFY8myoLwQFk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Walle <michael@walle.cc>
-Subject: [PATCH 5.4 083/168] tty: serial: fsl_lpuart: free IDs allocated by IDA
-Date:   Tue, 10 Mar 2020 13:38:49 +0100
-Message-Id: <20200310123643.681777502@linuxfoundation.org>
+        stable@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>,
+        syzbot+59997e8d5cbdc486e6f6@syzkaller.appspotmail.com
+Subject: [PATCH 5.4 085/168] vt: selection, close sel_buffer race
+Date:   Tue, 10 Mar 2020 13:38:51 +0100
+Message-Id: <20200310123643.893829738@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123635.322799692@linuxfoundation.org>
 References: <20200310123635.322799692@linuxfoundation.org>
@@ -58,108 +59,154 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Walle <michael@walle.cc>
+From: Jiri Slaby <jslaby@suse.cz>
 
-commit 2b2e71fe657510a6f71aa16ef0309fa6bc20ab3d upstream.
+commit 07e6124a1a46b4b5a9b3cacc0c306b50da87abf5 upstream.
 
-Since commit 3bc3206e1c0f ("serial: fsl_lpuart: Remove the alias node
-dependence") the port line number can also be allocated by IDA, but in
-case of an error the ID will no be removed again. More importantly, any
-ID will be freed in remove(), even if it wasn't allocated but instead
-fetched by of_alias_get_id(). If it was not allocated by IDA there will
-be a warning:
-  WARN(1, "ida_free called for id=%d which is not allocated.\n", id);
+syzkaller reported this UAF:
+BUG: KASAN: use-after-free in n_tty_receive_buf_common+0x2481/0x2940 drivers/tty/n_tty.c:1741
+Read of size 1 at addr ffff8880089e40e9 by task syz-executor.1/13184
 
-Move the ID allocation more to the end of the probe() so that we still
-can use plain return in the first error cases.
+CPU: 0 PID: 13184 Comm: syz-executor.1 Not tainted 5.4.7 #1
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
+Call Trace:
+...
+ kasan_report+0xe/0x20 mm/kasan/common.c:634
+ n_tty_receive_buf_common+0x2481/0x2940 drivers/tty/n_tty.c:1741
+ tty_ldisc_receive_buf+0xac/0x190 drivers/tty/tty_buffer.c:461
+ paste_selection+0x297/0x400 drivers/tty/vt/selection.c:372
+ tioclinux+0x20d/0x4e0 drivers/tty/vt/vt.c:3044
+ vt_ioctl+0x1bcf/0x28d0 drivers/tty/vt/vt_ioctl.c:364
+ tty_ioctl+0x525/0x15a0 drivers/tty/tty_io.c:2657
+ vfs_ioctl fs/ioctl.c:47 [inline]
 
-Fixes: 3bc3206e1c0f ("serial: fsl_lpuart: Remove the alias node dependence")
-Signed-off-by: Michael Walle <michael@walle.cc>
+It is due to a race between parallel paste_selection (TIOCL_PASTESEL)
+and set_selection_user (TIOCL_SETSEL) invocations. One uses sel_buffer,
+while the other frees it and reallocates a new one for another
+selection. Add a mutex to close this race.
+
+The mutex takes care properly of sel_buffer and sel_buffer_lth only. The
+other selection global variables (like sel_start, sel_end, and sel_cons)
+are protected only in set_selection_user. The other functions need quite
+some more work to close the races of the variables there. This is going
+to happen later.
+
+This likely fixes (I am unsure as there is no reproducer provided) bug
+206361 too. It was marked as CVE-2020-8648.
+
+Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+Reported-by: syzbot+59997e8d5cbdc486e6f6@syzkaller.appspotmail.com
 Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200303174306.6015-3-michael@walle.cc
+Link: https://lore.kernel.org/r/20200210081131.23572-2-jslaby@suse.cz
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/serial/fsl_lpuart.c |   39 ++++++++++++++++++++++++---------------
- 1 file changed, 24 insertions(+), 15 deletions(-)
+ drivers/tty/vt/selection.c |   23 +++++++++++++++++------
+ 1 file changed, 17 insertions(+), 6 deletions(-)
 
---- a/drivers/tty/serial/fsl_lpuart.c
-+++ b/drivers/tty/serial/fsl_lpuart.c
-@@ -268,6 +268,7 @@ struct lpuart_port {
- 	int			rx_dma_rng_buf_len;
- 	unsigned int		dma_tx_nents;
- 	wait_queue_head_t	dma_wait;
-+	bool			id_allocated;
- };
+--- a/drivers/tty/vt/selection.c
++++ b/drivers/tty/vt/selection.c
+@@ -16,6 +16,7 @@
+ #include <linux/tty.h>
+ #include <linux/sched.h>
+ #include <linux/mm.h>
++#include <linux/mutex.h>
+ #include <linux/slab.h>
+ #include <linux/types.h>
  
- struct lpuart_soc_data {
-@@ -2382,19 +2383,6 @@ static int lpuart_probe(struct platform_
- 	if (!sport)
- 		return -ENOMEM;
+@@ -45,6 +46,7 @@ static volatile int sel_start = -1; 	/*
+ static int sel_end;
+ static int sel_buffer_lth;
+ static char *sel_buffer;
++static DEFINE_MUTEX(sel_lock);
  
--	ret = of_alias_get_id(np, "serial");
--	if (ret < 0) {
--		ret = ida_simple_get(&fsl_lpuart_ida, 0, UART_NR, GFP_KERNEL);
--		if (ret < 0) {
--			dev_err(&pdev->dev, "port line is full, add device failed\n");
--			return ret;
--		}
--	}
--	if (ret >= ARRAY_SIZE(lpuart_ports)) {
--		dev_err(&pdev->dev, "serial%d out of range\n", ret);
--		return -EINVAL;
--	}
--	sport->port.line = ret;
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	sport->port.membase = devm_ioremap_resource(&pdev->dev, res);
- 	if (IS_ERR(sport->port.membase))
-@@ -2435,9 +2423,25 @@ static int lpuart_probe(struct platform_
- 		}
+ /* clear_selection, highlight and highlight_pointer can be called
+    from interrupt (via scrollback/front) */
+@@ -186,7 +188,7 @@ int set_selection_kernel(struct tiocl_se
+ 	char *bp, *obp;
+ 	int i, ps, pe, multiplier;
+ 	u32 c;
+-	int mode;
++	int mode, ret = 0;
+ 
+ 	poke_blanked_console();
+ 
+@@ -212,6 +214,7 @@ int set_selection_kernel(struct tiocl_se
+ 	if (ps > pe)	/* make sel_start <= sel_end */
+ 		swap(ps, pe);
+ 
++	mutex_lock(&sel_lock);
+ 	if (sel_cons != vc_cons[fg_console].d) {
+ 		clear_selection();
+ 		sel_cons = vc_cons[fg_console].d;
+@@ -257,9 +260,10 @@ int set_selection_kernel(struct tiocl_se
+ 			break;
+ 		case TIOCL_SELPOINTER:
+ 			highlight_pointer(pe);
+-			return 0;
++			goto unlock;
+ 		default:
+-			return -EINVAL;
++			ret = -EINVAL;
++			goto unlock;
  	}
  
-+	ret = of_alias_get_id(np, "serial");
-+	if (ret < 0) {
-+		ret = ida_simple_get(&fsl_lpuart_ida, 0, UART_NR, GFP_KERNEL);
-+		if (ret < 0) {
-+			dev_err(&pdev->dev, "port line is full, add device failed\n");
-+			return ret;
-+		}
-+		sport->id_allocated = true;
-+	}
-+	if (ret >= ARRAY_SIZE(lpuart_ports)) {
-+		dev_err(&pdev->dev, "serial%d out of range\n", ret);
-+		ret = -EINVAL;
-+		goto failed_out_of_range;
-+	}
-+	sport->port.line = ret;
-+
- 	ret = lpuart_enable_clks(sport);
- 	if (ret)
--		return ret;
-+		goto failed_clock_enable;
- 	sport->port.uartclk = lpuart_get_baud_clk_rate(sport);
- 
- 	lpuart_ports[sport->port.line] = sport;
-@@ -2487,6 +2491,10 @@ static int lpuart_probe(struct platform_
- failed_attach_port:
- failed_irq_request:
- 	lpuart_disable_clks(sport);
-+failed_clock_enable:
-+failed_out_of_range:
-+	if (sport->id_allocated)
-+		ida_simple_remove(&fsl_lpuart_ida, sport->port.line);
- 	return ret;
+ 	/* remove the pointer */
+@@ -281,7 +285,7 @@ int set_selection_kernel(struct tiocl_se
+ 	else if (new_sel_start == sel_start)
+ 	{
+ 		if (new_sel_end == sel_end)	/* no action required */
+-			return 0;
++			goto unlock;
+ 		else if (new_sel_end > sel_end)	/* extend to right */
+ 			highlight(sel_end + 2, new_sel_end);
+ 		else				/* contract from right */
+@@ -309,7 +313,8 @@ int set_selection_kernel(struct tiocl_se
+ 	if (!bp) {
+ 		printk(KERN_WARNING "selection: kmalloc() failed\n");
+ 		clear_selection();
+-		return -ENOMEM;
++		ret = -ENOMEM;
++		goto unlock;
+ 	}
+ 	kfree(sel_buffer);
+ 	sel_buffer = bp;
+@@ -334,7 +339,9 @@ int set_selection_kernel(struct tiocl_se
+ 		}
+ 	}
+ 	sel_buffer_lth = bp - sel_buffer;
+-	return 0;
++unlock:
++	mutex_unlock(&sel_lock);
++	return ret;
  }
+ EXPORT_SYMBOL_GPL(set_selection_kernel);
  
-@@ -2496,7 +2504,8 @@ static int lpuart_remove(struct platform
+@@ -364,6 +371,7 @@ int paste_selection(struct tty_struct *t
+ 	tty_buffer_lock_exclusive(&vc->port);
  
- 	uart_remove_one_port(&lpuart_reg, &sport->port);
- 
--	ida_simple_remove(&fsl_lpuart_ida, sport->port.line);
-+	if (sport->id_allocated)
-+		ida_simple_remove(&fsl_lpuart_ida, sport->port.line);
- 
- 	lpuart_disable_clks(sport);
+ 	add_wait_queue(&vc->paste_wait, &wait);
++	mutex_lock(&sel_lock);
+ 	while (sel_buffer && sel_buffer_lth > pasted) {
+ 		set_current_state(TASK_INTERRUPTIBLE);
+ 		if (signal_pending(current)) {
+@@ -371,7 +379,9 @@ int paste_selection(struct tty_struct *t
+ 			break;
+ 		}
+ 		if (tty_throttled(tty)) {
++			mutex_unlock(&sel_lock);
+ 			schedule();
++			mutex_lock(&sel_lock);
+ 			continue;
+ 		}
+ 		__set_current_state(TASK_RUNNING);
+@@ -380,6 +390,7 @@ int paste_selection(struct tty_struct *t
+ 					      count);
+ 		pasted += count;
+ 	}
++	mutex_unlock(&sel_lock);
+ 	remove_wait_queue(&vc->paste_wait, &wait);
+ 	__set_current_state(TASK_RUNNING);
  
 
 
