@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4232BC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:04:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C39DEC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:04:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FD7F20409
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:04:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9552C24691
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:04:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583845466;
-	bh=vEJRaIWZP1JrsXk0SSZIMme2Ea/tPhjTX/5WV+l20Vs=;
+	s=default; t=1583845469;
+	bh=xRhV0k9AqO15f4wKJVzzTDzA3Lp3pMFSeHWN4a1CynY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fB9/U+EFJ0rZWX12W3B+QVME7fTlGm2gg07eakXhNx97nOUP7lao5lz6d3YepRN1e
-	 O1di3e+Iha6zGxw+4I7PGPEHPfhICcgGnewhIRrrP0twZAcYlzDXRop8qXJolJk4cZ
-	 jBckTv2hDM2DZ6vCyIvhAFHMZiAI/6syug9f/BD4=
+	b=PyaMQwMddMPooMoAUomdbm7azdY9bNfGAR4r3Xay47+1d+uLUM95OpD9U5YFomv+C
+	 YGsm4WVkNabicW5OkFDjK6VMQjUI2P9l45WIAgoIeOWGrNVUvordQL3UOFUX9AiRwK
+	 TZvUjV3+Vn8VNpERUkfQsUILTinjltq9IQ2YIHHQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730723AbgCJNEZ (ORCPT
+        id S1728862AbgCJNE2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:04:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49314 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:04:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49474 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729287AbgCJNES (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:04:18 -0400
+        id S1727689AbgCJNEY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:04:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3113F24695;
-        Tue, 10 Mar 2020 13:04:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7FF0824693;
+        Tue, 10 Mar 2020 13:04:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845457;
-        bh=vEJRaIWZP1JrsXk0SSZIMme2Ea/tPhjTX/5WV+l20Vs=;
+        s=default; t=1583845464;
+        bh=xRhV0k9AqO15f4wKJVzzTDzA3Lp3pMFSeHWN4a1CynY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DPnghW//FNQbkzXYPb/o+76QpJcXrQKAiKT/JH65oZVMGPEO/Li764EJI+DZXNjn0
-         PvtiZTp90WQgOXk3mJdsmNV/KnYrNgFVeolt4PbhM0cn5UATuNw63kUOukySlz/o8q
-         twUxij0lKsB4Wih9DyQKoNbfgQB4lUDmg7t06mN0=
+        b=nopw6OzZPBxSn3h+hJnNpV4vz+JsRUwUOs/JWOcyr3+x94a+OmIQOh5RlwKx4ZyuQ
+         LXmGX5LI3HzIQEYO+JaWyhMA5lD2VUIQRLWM5cuDv8aR45wjB8dhzwX0nNGBqJGMua
+         SVfdzeYIm5NkLVRITsfc32z7RypdcwIrEUJiMLFI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>, linux-efi@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 5.5 188/189] efi: READ_ONCE rng seed size before munmap
-Date:   Tue, 10 Mar 2020 13:40:25 +0100
-Message-Id: <20200310123658.428463192@linuxfoundation.org>
+        stable@vger.kernel.org, Max Gurtovoy <maxg@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Subject: [PATCH 5.5 160/189] RDMA/rw: Fix error flow during RDMA context initialization
+Date:   Tue, 10 Mar 2020 13:39:57 +0100
+Message-Id: <20200310123656.201010709@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123639.608886314@linuxfoundation.org>
 References: <20200310123639.608886314@linuxfoundation.org>
@@ -61,50 +61,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason A. Donenfeld <Jason@zx2c4.com>
+From: Max Gurtovoy <maxg@mellanox.com>
 
-commit be36f9e7517e17810ec369626a128d7948942259 upstream.
+commit 6affca140cbea01f497c4f4e16f1e2be7f74bd04 upstream.
 
-This function is consistent with using size instead of seed->size
-(except for one place that this patch fixes), but it reads seed->size
-without using READ_ONCE, which means the compiler might still do
-something unwanted. So, this commit simply adds the READ_ONCE
-wrapper.
+In case the SGL was mapped for P2P DMA operation, we must unmap it using
+pci_p2pdma_unmap_sg during the error unwind of rdma_rw_ctx_init()
 
-Fixes: 636259880a7e ("efi: Add support for seeding the RNG from a UEFI ...")
-Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: linux-efi@vger.kernel.org
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/r/20200217123354.21140-1-Jason@zx2c4.com
-Link: https://lore.kernel.org/r/20200221084849.26878-5-ardb@kernel.org
+Fixes: 7f73eac3a713 ("PCI/P2PDMA: Introduce pci_p2pdma_unmap_sg()")
+Link: https://lore.kernel.org/r/20200220100819.41860-1-maxg@mellanox.com
+Signed-off-by: Max Gurtovoy <maxg@mellanox.com>
+Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
+Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/firmware/efi/efi.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/infiniband/core/rw.c |   31 ++++++++++++++++++++-----------
+ 1 file changed, 20 insertions(+), 11 deletions(-)
 
---- a/drivers/firmware/efi/efi.c
-+++ b/drivers/firmware/efi/efi.c
-@@ -552,7 +552,7 @@ int __init efi_config_parse_tables(void
+--- a/drivers/infiniband/core/rw.c
++++ b/drivers/infiniband/core/rw.c
+@@ -273,6 +273,23 @@ static int rdma_rw_init_single_wr(struct
+ 	return 1;
+ }
  
- 		seed = early_memremap(efi.rng_seed, sizeof(*seed));
- 		if (seed != NULL) {
--			size = seed->size;
-+			size = READ_ONCE(seed->size);
- 			early_memunmap(seed, sizeof(*seed));
- 		} else {
- 			pr_err("Could not map UEFI random seed!\n");
-@@ -562,7 +562,7 @@ int __init efi_config_parse_tables(void
- 					      sizeof(*seed) + size);
- 			if (seed != NULL) {
- 				pr_notice("seeding entropy pool\n");
--				add_bootloader_randomness(seed->bits, seed->size);
-+				add_bootloader_randomness(seed->bits, size);
- 				early_memunmap(seed, sizeof(*seed) + size);
- 			} else {
- 				pr_err("Could not map UEFI random seed!\n");
++static void rdma_rw_unmap_sg(struct ib_device *dev, struct scatterlist *sg,
++			     u32 sg_cnt, enum dma_data_direction dir)
++{
++	if (is_pci_p2pdma_page(sg_page(sg)))
++		pci_p2pdma_unmap_sg(dev->dma_device, sg, sg_cnt, dir);
++	else
++		ib_dma_unmap_sg(dev, sg, sg_cnt, dir);
++}
++
++static int rdma_rw_map_sg(struct ib_device *dev, struct scatterlist *sg,
++			  u32 sg_cnt, enum dma_data_direction dir)
++{
++	if (is_pci_p2pdma_page(sg_page(sg)))
++		return pci_p2pdma_map_sg(dev->dma_device, sg, sg_cnt, dir);
++	return ib_dma_map_sg(dev, sg, sg_cnt, dir);
++}
++
+ /**
+  * rdma_rw_ctx_init - initialize a RDMA READ/WRITE context
+  * @ctx:	context to initialize
+@@ -295,11 +312,7 @@ int rdma_rw_ctx_init(struct rdma_rw_ctx
+ 	struct ib_device *dev = qp->pd->device;
+ 	int ret;
+ 
+-	if (is_pci_p2pdma_page(sg_page(sg)))
+-		ret = pci_p2pdma_map_sg(dev->dma_device, sg, sg_cnt, dir);
+-	else
+-		ret = ib_dma_map_sg(dev, sg, sg_cnt, dir);
+-
++	ret = rdma_rw_map_sg(dev, sg, sg_cnt, dir);
+ 	if (!ret)
+ 		return -ENOMEM;
+ 	sg_cnt = ret;
+@@ -338,7 +351,7 @@ int rdma_rw_ctx_init(struct rdma_rw_ctx
+ 	return ret;
+ 
+ out_unmap_sg:
+-	ib_dma_unmap_sg(dev, sg, sg_cnt, dir);
++	rdma_rw_unmap_sg(dev, sg, sg_cnt, dir);
+ 	return ret;
+ }
+ EXPORT_SYMBOL(rdma_rw_ctx_init);
+@@ -588,11 +601,7 @@ void rdma_rw_ctx_destroy(struct rdma_rw_
+ 		break;
+ 	}
+ 
+-	if (is_pci_p2pdma_page(sg_page(sg)))
+-		pci_p2pdma_unmap_sg(qp->pd->device->dma_device, sg,
+-				    sg_cnt, dir);
+-	else
+-		ib_dma_unmap_sg(qp->pd->device, sg, sg_cnt, dir);
++	rdma_rw_unmap_sg(qp->pd->device, sg, sg_cnt, dir);
+ }
+ EXPORT_SYMBOL(rdma_rw_ctx_destroy);
+ 
 
 
