@@ -2,175 +2,174 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E59DBC18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 15:55:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39686C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 15:55:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD19620578
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 15:55:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BE79215A4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 15:55:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726659AbgCJPzQ (ORCPT
+        id S1726777AbgCJPzS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 11:55:16 -0400
-Received: from mail-il1-f198.google.com ([209.85.166.198]:56043 "EHLO
-        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726480AbgCJPzP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 11:55:15 -0400
-Received: by mail-il1-f198.google.com with SMTP id p7so10134979ilr.22
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 08:55:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=hfYTmFBUkj/aSmF7eDTw4L8JGcK+jo9iAAdS7lmp/P4=;
-        b=PrOqF1tB71ioggPQk4RSrj+bNaZxVAe+MdnT+6rCXT6r+g/+oWRtqpqXo4ehcJhOgs
-         nzje5ZQ2mB5x1dHzYnR7dcB3kxRhTyNiexSz8dqPM4l999bMQ7V/oKaQ/bdMuh+QB5Oy
-         HETZsStwYD5bKMQmSf34LYZ8/pXDWd1orJa4T06ehFTWLIxA4Urt6jIEaej/HFO4vkWC
-         W3Bh9c4AEV3kZvZrKDLs0XG7fsUcOCGWksPtli1LLHH9rG+C+ZJbCP8SIPm1TZWbRnIN
-         T0DUcv0PUGfoA8CZotq7aIJ6NvxMVRXfZ040N36bKyLvEbSLEZvBEyGrNQJkiLrw6Ni4
-         u3Hw==
-X-Gm-Message-State: ANhLgQ0wIw8v2eNWoFfZxX0ZGiURIPIhMy++Uu89x2tT5Z50Couagiel
-        SoYXQOo0ruPFR0WXH2cbJZ5YnayJMjo9M36KuTAWICnPL1kn
-X-Google-Smtp-Source: ADFU+vtz6Cs7cd1vZftsLF+QYyCNMfxK6cInkd9CJ0phSyyysB1E7J7LSMbEsoUq3oywLDSov4QpZz6r4Qf+9630a68/ON9/SOSW
+        Tue, 10 Mar 2020 11:55:18 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2542 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726480AbgCJPzR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 11:55:17 -0400
+Received: from lhreml706-cah.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id 8A3E3C6E21A78A430E07;
+        Tue, 10 Mar 2020 15:55:13 +0000 (GMT)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ lhreml706-cah.china.huawei.com (10.201.108.47) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Tue, 10 Mar 2020 15:55:13 +0000
+Received: from localhost (10.202.226.57) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Tue, 10 Mar
+ 2020 15:55:12 +0000
+Date:   Tue, 10 Mar 2020 15:55:10 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     SeongJae Park <sjpark@amazon.com>
+CC:     <akpm@linux-foundation.org>, SeongJae Park <sjpark@amazon.de>,
+        <aarcange@redhat.com>, <yang.shi@linux.alibaba.com>,
+        <acme@kernel.org>, <alexander.shishkin@linux.intel.com>,
+        <amit@kernel.org>, <brendan.d.gregg@gmail.com>,
+        <brendanhiggins@google.com>, <cai@lca.pw>,
+        <colin.king@canonical.com>, <corbet@lwn.net>, <dwmw@amazon.com>,
+        <jolsa@redhat.com>, <kirill@shutemov.name>, <mark.rutland@arm.com>,
+        <mgorman@suse.de>, <minchan@kernel.org>, <mingo@redhat.com>,
+        <namhyung@kernel.org>, <peterz@infradead.org>,
+        <rdunlap@infradead.org>, <rientjes@google.com>,
+        <rostedt@goodmis.org>, <shuah@kernel.org>, <sj38.park@gmail.com>,
+        <vbabka@suse.cz>, <vdavydov.dev@gmail.com>, <linux-mm@kvack.org>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v6 02/14] mm/damon: Implement region based sampling
+Message-ID: <20200310155510.000025d2@Huawei.com>
+In-Reply-To: <20200310115233.23246-1-sjpark@amazon.com>
+References: <20200310085721.00000a0f@Huawei.com>
+        <20200310115233.23246-1-sjpark@amazon.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-X-Received: by 2002:a6b:fb01:: with SMTP id h1mr18251940iog.16.1583855714812;
- Tue, 10 Mar 2020 08:55:14 -0700 (PDT)
-Date:   Tue, 10 Mar 2020 08:55:14 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000041c6c205a08225dc@google.com>
-Subject: KASAN: slab-out-of-bounds Read in cgroup_file_notify
-From:   syzbot <syzbot+cac0c4e204952cf449b1@syzkaller.appspotmail.com>
-To:     akpm@linux-foundation.org, almasrymina@google.com, andriin@fb.com,
-        ast@kernel.org, bpf@vger.kernel.org, cgroups@vger.kernel.org,
-        christian@brauner.io, daniel@iogearbox.net, hannes@cmpxchg.org,
-        kafai@fb.com, linux-kernel@vger.kernel.org, lizefan@huawei.com,
-        netdev@vger.kernel.org, sfr@canb.auug.org.au,
-        songliubraving@fb.com, syzkaller-bugs@googlegroups.com,
-        tj@kernel.org, yhs@fb.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.57]
+X-ClientProxiedBy: lhreml715-chm.china.huawei.com (10.201.108.66) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Tue, 10 Mar 2020 12:52:33 +0100
+SeongJae Park <sjpark@amazon.com> wrote:
 
-syzbot found the following crash on:
+> Added replies to your every comment in line below.  I agree to your whole
+> opinions, will apply those in next spin! :)
+> 
 
-HEAD commit:    c99b17ac Add linux-next specific files for 20200225
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=1610d70de00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=6b7ebe4bd0931c45
-dashboard link: https://syzkaller.appspot.com/bug?extid=cac0c4e204952cf449b1
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1242e1fde00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1110d70de00000
+One additional question inline that came to mind.  Using a single statistic
+to monitor huge page and normal page hits is going to give us problems
+I think.
 
-The bug was bisected to:
+Perhaps I'm missing something?
 
-commit 6863de00e5400b534cd4e3869ffbc8f94da41dfc
-Author: Mina Almasry <almasrymina@google.com>
-Date:   Thu Feb 20 03:55:30 2020 +0000
+> > > +/*
+> > > + * Check whether the given region has accessed since the last check  
+> > 
+> > Should also make clear that this sets us up for the next access check at
+> > a different memory address it the region.
+> > 
+> > Given the lack of connection between activities perhaps just split this into
+> > two functions that are always called next to each other.  
+> 
+> Will make the description more clearer as suggested.
+> 
+> Also, I found that I'm not clearing *pte and *pmd before going 'mkold', thanks
+> to this comment.  Will fix it, either.
+> 
+> >   
+> > > + *
+> > > + * mm	'mm_struct' for the given virtual address space
+> > > + * r	the region to be checked
+> > > + */
+> > > +static void kdamond_check_access(struct damon_ctx *ctx,
+> > > +			struct mm_struct *mm, struct damon_region *r)
+> > > +{
+> > > +	pte_t *pte = NULL;
+> > > +	pmd_t *pmd = NULL;
+> > > +	spinlock_t *ptl;
+> > > +
+> > > +	if (follow_pte_pmd(mm, r->sampling_addr, NULL, &pte, &pmd, &ptl))
+> > > +		goto mkold;
+> > > +
+> > > +	/* Read the page table access bit of the page */
+> > > +	if (pte && pte_young(*pte))
+> > > +		r->nr_accesses++;
+> > > +#ifdef CONFIG_TRANSPARENT_HUGEPAGE  
+> > 
+> > Is it worth having this protection?  Seems likely to have only a very small
+> > influence on performance and makes it a little harder to reason about the code.  
+> 
+> It was necessary for addressing 'implicit declaration' problem of 'pmd_young()'
+> and 'pmd_mkold()' for build of DAMON on several architectures including User
+> Mode Linux.
+> 
+> Will modularize the code for better readability.
+> 
+> >   
+> > > +	else if (pmd && pmd_young(*pmd))
+> > > +		r->nr_accesses++;
 
-    hugetlb_cgroup: add accounting for shared mappings
+So we increment a region count by one if we have an access in a huge page, or
+in a normal page.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=12a17f0de00000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=11a17f0de00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=16a17f0de00000
+If we get a region that has a mixture of the two, this seems likely to give a
+bad approximation.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+cac0c4e204952cf449b1@syzkaller.appspotmail.com
-Fixes: 6863de00e540 ("hugetlb_cgroup: add accounting for shared mappings")
+Assume the region is accessed 'evenly' but each " 4k page" is only hit 10% of the time
+(where a hit is in one check period)
 
-==================================================================
-BUG: KASAN: slab-out-of-bounds in cgroup_file_notify+0x16a/0x1b0 kernel/cgroup/cgroup.c:4084
-Read of size 8 at addr ffff88821b77c4c8 by task syz-executor540/9589
+If our address in a page, then we'll hit 10% of the time, but if it is in a 2M
+huge page then we'll hit a much higher percentage of the time.
+1 - (0.9^512) ~= 1
 
-CPU: 0 PID: 9589 Comm: syz-executor540 Not tainted 5.6.0-rc3-next-20200225-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x197/0x210 lib/dump_stack.c:118
- print_address_description.constprop.0.cold+0xd4/0x30b mm/kasan/report.c:374
- __kasan_report.cold+0x1b/0x32 mm/kasan/report.c:506
- kasan_report+0x12/0x20 mm/kasan/common.c:641
- __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:135
- cgroup_file_notify+0x16a/0x1b0 kernel/cgroup/cgroup.c:4084
- hugetlb_event mm/hugetlb_cgroup.c:224 [inline]
- __hugetlb_cgroup_charge_cgroup+0x88c/0xf10 mm/hugetlb_cgroup.c:262
- hugetlb_cgroup_charge_cgroup_rsvd+0x2b/0x40 mm/hugetlb_cgroup.c:286
- hugetlb_reserve_pages+0x2c2/0xce0 mm/hugetlb.c:4891
- hugetlb_file_setup+0x26a/0x671 fs/hugetlbfs/inode.c:1423
- newseg+0x4a3/0xf40 ipc/shm.c:652
- ipcget_new ipc/util.c:344 [inline]
- ipcget+0x105/0xd40 ipc/util.c:643
- ksys_shmget ipc/shm.c:742 [inline]
- __do_sys_shmget ipc/shm.c:747 [inline]
- __se_sys_shmget ipc/shm.c:745 [inline]
- __x64_sys_shmget+0x146/0x1d0 ipc/shm.c:745
- do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:295
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x440119
-Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ffd5e1db3e8 EFLAGS: 00000246 ORIG_RAX: 000000000000001d
-RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 0000000000440119
-RDX: 0000000000004800 RSI: fffffffffeffffff RDI: 0000000000000000
-RBP: 00000000006ca018 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000020ffc000 R11: 0000000000000246 R12: 00000000004019a0
-R13: 0000000000401a30 R14: 0000000000000000 R15: 0000000000000000
+Should we look to somehow account for this?
 
-Allocated by task 0:
- save_stack+0x23/0x90 mm/kasan/common.c:72
- set_track mm/kasan/common.c:80 [inline]
- __kasan_kmalloc mm/kasan/common.c:515 [inline]
- __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:488
- kasan_kmalloc+0x9/0x10 mm/kasan/common.c:529
- kmem_cache_alloc_trace+0x158/0x790 mm/slab.c:3551
- kmalloc include/linux/slab.h:555 [inline]
- kzalloc include/linux/slab.h:669 [inline]
- hugetlb_cgroup_css_alloc+0x4f/0x320 mm/hugetlb_cgroup.c:138
- cgroup_init_subsys+0x1d9/0x4a7 kernel/cgroup/cgroup.c:5582
- cgroup_init+0x34a/0xa4c kernel/cgroup/cgroup.c:5708
- start_kernel+0xe2d/0xe8f init/main.c:987
- x86_64_start_reservations+0x29/0x2b arch/x86/kernel/head64.c:490
- x86_64_start_kernel+0x77/0x7b arch/x86/kernel/head64.c:471
- secondary_startup_64+0xa4/0xb0 arch/x86/kernel/head_64.S:242
-
-Freed by task 0:
-(stack is not available)
-
-The buggy address belongs to the object at ffff88821b77c000
- which belongs to the cache kmalloc-2k of size 2048
-The buggy address is located 1224 bytes inside of
- 2048-byte region [ffff88821b77c000, ffff88821b77c800)
-The buggy address belongs to the page:
-page:ffffea00086ddf00 refcount:1 mapcount:0 mapping:000000005a8512d0 index:0x0
-flags: 0x57ffe0000000200(slab)
-raw: 057ffe0000000200 ffffea00086dde48 ffffea00086ddf88 ffff8880aa400e00
-raw: 0000000000000000 ffff88821b77c000 0000000100000001 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff88821b77c380: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
- ffff88821b77c400: 00 00 00 00 00 00 00 00 00 00 fc fc fc fc fc fc
->ffff88821b77c480: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-                                              ^
- ffff88821b77c500: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
- ffff88821b77c580: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-==================================================================
+> > > +#endif	/* CONFIG_TRANSPARENT_HUGEPAGE */
+> > > +
+> > > +	spin_unlock(ptl);
+> > > +
+> > > +mkold:
+> > > +	/* mkold next target */
+> > > +	r->sampling_addr = damon_rand(ctx, r->vm_start, r->vm_end);
+> > > +
+> > > +	if (follow_pte_pmd(mm, r->sampling_addr, NULL, &pte, &pmd, &ptl))
+> > > +		return;
+> > > +
+> > > +	if (pte) {
+> > > +		if (pte_young(*pte)) {
+> > > +			clear_page_idle(pte_page(*pte));
+> > > +			set_page_young(pte_page(*pte));
+> > > +		}
+> > > +		*pte = pte_mkold(*pte);
+> > > +	}
+> > > +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
+> > > +	else if (pmd) {
+> > > +		if (pmd_young(*pmd)) {
+> > > +			clear_page_idle(pmd_page(*pmd));
+> > > +			set_page_young(pmd_page(*pmd));
+> > > +		}
+> > > +		*pmd = pmd_mkold(*pmd);
+> > > +	}
+> > > +#endif
+> > > +
+> > > +	spin_unlock(ptl);
+> > > +}
+> > > +
 
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
