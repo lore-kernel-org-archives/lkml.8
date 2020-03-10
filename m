@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFEF8C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:19:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85756C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:19:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B187620873
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:19:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A6B720409
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:19:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583846365;
-	bh=TZNA2TVM3aGgVsvEbNQ6ouxAgPJTw+ElW2D2JSSBOgM=;
+	s=default; t=1583846373;
+	bh=jWDCjtYXgCN/oYeyT1eU+DWTqGu7bZ3vvAUPWIQIHwI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FuK5rYHzrKwfpf4gYCsP1q1LhN6sL7jtCNlPHXrTFOfdUmbbwaCX9aEtiIcYVqEOP
-	 RhOyqTMKj9NJqI3t5qKTJWlB1tHjUxkuI5jV33iIlV48Z+TjTdllCsjEJ46Tlp0177
-	 YnAN62wNXfzOr75pZ6W5d+axFl/z1TZlMo5+Xd44=
+	b=EW3xkz8DEECELPcmSyb5DUxPOASpPUUwgnyrsaRIsB3Pmvz0iRwMvQm+J83Rjoq6c
+	 2gNxzEK2E03rZJv4GYzTxiwu464obhPgmqBRdmP5U5EhpTxhSQ/GlcU7IHNzryAXoz
+	 IHcvezN1KD/v3cGGis8BRhcXdvMMKKNFB6Agd+gE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730464AbgCJNTY (ORCPT
+        id S1731151AbgCJNIq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:19:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55894 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:08:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55302 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731175AbgCJNI6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:08:58 -0400
+        id S1730085AbgCJNIk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:08:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B24B2468D;
-        Tue, 10 Mar 2020 13:08:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 710D3208E4;
+        Tue, 10 Mar 2020 13:08:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845738;
-        bh=TZNA2TVM3aGgVsvEbNQ6ouxAgPJTw+ElW2D2JSSBOgM=;
+        s=default; t=1583845718;
+        bh=jWDCjtYXgCN/oYeyT1eU+DWTqGu7bZ3vvAUPWIQIHwI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C6kN9QoR3STgdZDk8Vbsp34etHp3o6GmY9SNiY178JX3BHuj9s0sxbLRZwvnvYfTE
-         NszwPo5g7DGNL3DB+cwRektvd6HGRG2uO40fFUHaAa8s3oaG4svpyqPKpO1xLTXUei
-         owHQUOM8qwWtU2KCHs9QzT9R5Z+3TUkv996g3xk4=
+        b=qZHzxcFiFawQ5v0b7qzMqynm2XhiSyirZUzZH2XY598FCIpB177aLKQPFjZs6cVok
+         AwFH/25tZoLKpxSwNPi7Je2OGJlJAV9POy0UNyxMkaJWHJBs19Ny2ACPKtpdy4m8a1
+         8YAm1K5IeZvfrJop+uRAeoHbNjMrAPwPZCPApuO4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Harigovindan P <harigovi@codeaurora.org>,
-        Rob Clark <robdclark@chromium.org>,
+        stable@vger.kernel.org,
+        Yauheni Kaliuta <yauheni.kaliuta@redhat.com>,
+        Jiri Benc <jbenc@redhat.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 081/126] drm/msm/dsi: save pll state before dsi host is powered off
-Date:   Tue, 10 Mar 2020 13:41:42 +0100
-Message-Id: <20200310124209.079904695@linuxfoundation.org>
+Subject: [PATCH 4.14 075/126] selftests: fix too long argument
+Date:   Tue, 10 Mar 2020 13:41:36 +0100
+Message-Id: <20200310124208.765852221@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310124203.704193207@linuxfoundation.org>
 References: <20200310124203.704193207@linuxfoundation.org>
@@ -60,59 +62,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Harigovindan P <harigovi@codeaurora.org>
+From: Jiri Benc <jbenc@redhat.com>
 
-[ Upstream commit a1028dcfd0dd97884072288d0c8ed7f30399b528 ]
+[ Upstream commit c363eb48ada5cf732b3f489fab799fc881097842 ]
 
-Save pll state before dsi host is powered off. Without this change
-some register values gets resetted.
+With some shells, the command construed for install of bpf selftests becomes
+too large due to long list of files:
 
-Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
-Signed-off-by: Rob Clark <robdclark@chromium.org>
+make[1]: execvp: /bin/sh: Argument list too long
+make[1]: *** [../lib.mk:73: install] Error 127
+
+Currently, each of the file lists is replicated three times in the command:
+in the shell 'if' condition, in the 'echo' and in the 'rsync'. Reduce that
+by one instance by using make conditionals and separate the echo and rsync
+into two shell commands. (One would be inclined to just remove the '@' at
+the beginning of the rsync command and let 'make' echo it by itself;
+unfortunately, it appears that the '@' in the front of mkdir silences output
+also for the following commands.)
+
+Also, separate handling of each of the lists to its own shell command.
+
+The semantics of the makefile is unchanged before and after the patch. The
+ability of individual test directories to override INSTALL_RULE is retained.
+
+Reported-by: Yauheni Kaliuta <yauheni.kaliuta@redhat.com>
+Tested-by: Yauheni Kaliuta <yauheni.kaliuta@redhat.com>
+Signed-off-by: Jiri Benc <jbenc@redhat.com>
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/msm/dsi/dsi_manager.c | 5 +++++
- drivers/gpu/drm/msm/dsi/phy/dsi_phy.c | 4 ----
- 2 files changed, 5 insertions(+), 4 deletions(-)
+ tools/testing/selftests/lib.mk | 23 +++++++++++++----------
+ 1 file changed, 13 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/dsi/dsi_manager.c b/drivers/gpu/drm/msm/dsi/dsi_manager.c
-index 7d46399a39b4d..9fbfa9f94e6ce 100644
---- a/drivers/gpu/drm/msm/dsi/dsi_manager.c
-+++ b/drivers/gpu/drm/msm/dsi/dsi_manager.c
-@@ -543,6 +543,7 @@ static void dsi_mgr_bridge_post_disable(struct drm_bridge *bridge)
- 	struct msm_dsi *msm_dsi1 = dsi_mgr_get_dsi(DSI_1);
- 	struct mipi_dsi_host *host = msm_dsi->host;
- 	struct drm_panel *panel = msm_dsi->panel;
-+	struct msm_dsi_pll *src_pll;
- 	bool is_dual_dsi = IS_DUAL_DSI();
- 	int ret;
+diff --git a/tools/testing/selftests/lib.mk b/tools/testing/selftests/lib.mk
+index 5bef05d6ba393..c9be64dc681d2 100644
+--- a/tools/testing/selftests/lib.mk
++++ b/tools/testing/selftests/lib.mk
+@@ -54,17 +54,20 @@ else
+ 	$(call RUN_TESTS, $(TEST_GEN_PROGS) $(TEST_CUSTOM_PROGS) $(TEST_PROGS))
+ endif
  
-@@ -583,6 +584,10 @@ static void dsi_mgr_bridge_post_disable(struct drm_bridge *bridge)
- 								id, ret);
- 	}
- 
-+	/* Save PLL status if it is a clock source */
-+	src_pll = msm_dsi_phy_get_pll(msm_dsi->phy);
-+	msm_dsi_pll_save_state(src_pll);
++define INSTALL_SINGLE_RULE
++	$(if $(INSTALL_LIST),@mkdir -p $(INSTALL_PATH))
++	$(if $(INSTALL_LIST),@echo rsync -a $(INSTALL_LIST) $(INSTALL_PATH)/)
++	$(if $(INSTALL_LIST),@rsync -a $(INSTALL_LIST) $(INSTALL_PATH)/)
++endef
 +
- 	ret = msm_dsi_host_power_off(host);
- 	if (ret)
- 		pr_err("%s: host %d power off failed,%d\n", __func__, id, ret);
-diff --git a/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c b/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c
-index 7c9bf91bc22b6..c0a7fa56d9a74 100644
---- a/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c
-+++ b/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c
-@@ -613,10 +613,6 @@ void msm_dsi_phy_disable(struct msm_dsi_phy *phy)
- 	if (!phy || !phy->cfg->ops.disable)
- 		return;
+ define INSTALL_RULE
+-	@if [ "X$(TEST_PROGS)$(TEST_PROGS_EXTENDED)$(TEST_FILES)" != "X" ]; then					\
+-		mkdir -p ${INSTALL_PATH};										\
+-		echo "rsync -a $(TEST_PROGS) $(TEST_PROGS_EXTENDED) $(TEST_FILES) $(INSTALL_PATH)/";	\
+-		rsync -a $(TEST_PROGS) $(TEST_PROGS_EXTENDED) $(TEST_FILES) $(INSTALL_PATH)/;		\
+-	fi
+-	@if [ "X$(TEST_GEN_PROGS)$(TEST_CUSTOM_PROGS)$(TEST_GEN_PROGS_EXTENDED)$(TEST_GEN_FILES)" != "X" ]; then					\
+-		mkdir -p ${INSTALL_PATH};										\
+-		echo "rsync -a $(TEST_GEN_PROGS) $(TEST_CUSTOM_PROGS) $(TEST_GEN_PROGS_EXTENDED) $(TEST_GEN_FILES) $(INSTALL_PATH)/";	\
+-		rsync -a $(TEST_GEN_PROGS) $(TEST_CUSTOM_PROGS) $(TEST_GEN_PROGS_EXTENDED) $(TEST_GEN_FILES) $(INSTALL_PATH)/;		\
+-	fi
++	$(eval INSTALL_LIST = $(TEST_PROGS)) $(INSTALL_SINGLE_RULE)
++	$(eval INSTALL_LIST = $(TEST_PROGS_EXTENDED)) $(INSTALL_SINGLE_RULE)
++	$(eval INSTALL_LIST = $(TEST_FILES)) $(INSTALL_SINGLE_RULE)
++	$(eval INSTALL_LIST = $(TEST_GEN_PROGS)) $(INSTALL_SINGLE_RULE)
++	$(eval INSTALL_LIST = $(TEST_CUSTOM_PROGS)) $(INSTALL_SINGLE_RULE)
++	$(eval INSTALL_LIST = $(TEST_GEN_PROGS_EXTENDED)) $(INSTALL_SINGLE_RULE)
++	$(eval INSTALL_LIST = $(TEST_GEN_FILES)) $(INSTALL_SINGLE_RULE)
+ endef
  
--	/* Save PLL status if it is a clock source */
--	if (phy->usecase != MSM_DSI_PHY_SLAVE)
--		msm_dsi_pll_save_state(phy->pll);
--
- 	phy->cfg->ops.disable(phy);
- 
- 	dsi_phy_regulator_disable(phy);
+ install: all
 -- 
 2.20.1
 
