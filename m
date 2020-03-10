@@ -2,199 +2,140 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D29EBC18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 21:56:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E18CC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 21:56:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92F0121927
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 21:56:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2955121927
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 21:56:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Yik2d1Og"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e1hs7hUW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727567AbgCJV4j (ORCPT
+        id S1727665AbgCJV44 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 17:56:39 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:11542 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726271AbgCJV4j (ORCPT
+        Tue, 10 Mar 2020 17:56:56 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:34240 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726271AbgCJV4z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 17:56:39 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e680cbb0000>; Tue, 10 Mar 2020 14:55:07 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 10 Mar 2020 14:56:38 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 10 Mar 2020 14:56:38 -0700
-Received: from [10.2.175.232] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 10 Mar
- 2020 21:56:37 +0000
-Subject: Re: LKFT: arm x15: mmc1: cache flush error -110
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-CC:     Jon Hunter <jonathanh@nvidia.com>,
-        Bitan Biswas <bbiswas@nvidia.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        Alexei Starovoitov <ast@kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        <lkft-triage@lists.linaro.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        John Stultz <john.stultz@linaro.org>,
-        Faiz Abbas <faiz_abbas@ti.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Kishon <kishon@ti.com>
-References: <CA+G9fYuqAQfhzF2BzHr7vMHx68bo8-jT+ob_F3eHQ3=oFjgYdg@mail.gmail.com>
- <5e9b5646-bd48-e55b-54ee-1c2c41fc9218@nvidia.com>
- <CAPDyKFqpNo_4OePBR1KnJNO=kR8XEqbcsEd=icSceSdDH+Rk1Q@mail.gmail.com>
- <757853cf-987e-f6b6-9259-b4560a031692@nvidia.com>
- <d12fe142-7e72-ab58-33ab-17817e35096f@nvidia.com>
- <c216f131-6f83-c9c9-9d17-8d44ec06972d@nvidia.com>
- <87ad7586-9569-4276-044a-adb64e84ca15@nvidia.com>
- <a0962e0b-0f1d-9f32-f6e9-92f69f93167f@nvidia.com>
- <57ddddc2-3ee8-d867-bba0-0dd9929ba37d@nvidia.com>
- <CAPDyKFqZSd9E3+16yFsmpee2JsbRJ-DGThxx7NJHu6UE00Xi1Q@mail.gmail.com>
- <26ee7225-9483-4664-c2d7-b5cefeadcd4b@nvidia.com>
- <CAPDyKFqwVQDEnPNi33mc9ycTxpaT1cRLejbR3Ja4c8dha4gFRw@mail.gmail.com>
- <0301bbd5-8d4d-4a77-42c7-8a1391c2d60a@nvidia.com>
- <CAPDyKFp93H0=ttazofW9NMBtL5VnjB4PdkwN0FDCtWR0pMHrPA@mail.gmail.com>
- <f01b5533-124a-d978-a90a-9c9c6235fb65@nvidia.com>
- <CAPDyKFqJjsuHect-azQKO8cCoq5JJQrZ=eShsdLHq97NXgXnuQ@mail.gmail.com>
- <227d9f08-582e-fd79-e1dc-7695bddd162d@nvidia.com>
-Message-ID: <2456654f-2724-0b6d-8936-afa05f345344@nvidia.com>
-Date:   Tue, 10 Mar 2020 14:59:17 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 10 Mar 2020 17:56:55 -0400
+Received: by mail-pg1-f196.google.com with SMTP id t3so42608pgn.1;
+        Tue, 10 Mar 2020 14:56:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=EUgdI5mcMtImG/LqTz4Gpy3bEyNZFkSkMU6F3srqIow=;
+        b=e1hs7hUWyABS5E33ztEMaXOBWT3VWy4AfGj7XXVl8XruezGFMTP5XEzor+uYZd5TO3
+         7mfNrF4/ZDiEgnCtWkyZdGSZdlbM2COgwmuqE4KZs/5boAP90+8ism6BuIJhNpQk7IB2
+         XQfdy6fkH+i7cxScEpZetiAdRM+cwk0zH4qZEEQCQIthPnPYET6lm0qhrS9gXy7DsbGS
+         yUswI8WAyp8ntREGub2ObFqc/1/ZkicN7Ejv5X6SbU2NVl1jIKIwgWue4fqIB6wq0Dg3
+         NfSgBYDe7P2p2Ug5ZZeSEiROT4i/xyKMOk+U0ginbI7I/83PXKVeVD3js84RwjnURRBj
+         4MDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=EUgdI5mcMtImG/LqTz4Gpy3bEyNZFkSkMU6F3srqIow=;
+        b=Ql/NDCxPIgQ+gSxMfD3gTMIe1XPtTJe1psIMjBBAzwzepFCmpSQiYeqst8lHAw7YR6
+         OB3a/lctWgcBWfRqjUy/3ir7kg9MsrwGuL3R8er8iw2eLOpjFTT0+F+Ha+jYCtJ8WMRm
+         m6UD0uLJD7dXFhPvylGBUhCvw6P5fZSFA3RmHEKt/LMwRDzL8k70StQDUFCu/VJsPXYN
+         h7+AHc+Dg9fjjM6ru8bPNOnJZzE3vOUiHSTqNGGoCKbMRvCCGlA79z+rbNU8pZA/p18T
+         43/bgKBAE9R/5RojV9ZXNE/5t9dtkmEdf00hZqXFOYQiADmalnLVTFJ2qqTK0jyEL8M8
+         3PRA==
+X-Gm-Message-State: ANhLgQ33tBQ5XHBW4MENTY6kyeW7ol2szaOBUkwmwBlTaKY4tshKD5Kh
+        TVGSQEKDJmq1gO+afUWQ83CELB3A
+X-Google-Smtp-Source: ADFU+vt6Wrvw+Sx2PMwaS+LFwq8c1ctMrywi9D3F824+DlSXLvQFig/5vglM64xoDsHoAcTNQEV/xw==
+X-Received: by 2002:a62:be0d:: with SMTP id l13mr23839402pff.217.1583877413541;
+        Tue, 10 Mar 2020 14:56:53 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id e18sm3251648pjt.41.2020.03.10.14.56.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Mar 2020 14:56:52 -0700 (PDT)
+Subject: Re: [PATCH 4.4 00/72] 4.4.216-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+References: <20200310123601.053680753@linuxfoundation.org>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <464fa845-7e49-c1a6-2511-0b18d81be888@roeck-us.net>
+Date:   Tue, 10 Mar 2020 14:56:51 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <227d9f08-582e-fd79-e1dc-7695bddd162d@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20200310123601.053680753@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1583877307; bh=4ydBhXoolqNBdP0wSohINyRuG6rrsfzD39lc3ukllCU=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=Yik2d1OgyNcAXPt7QdRZz1LBsFuGCRloFWsErN15gJjteNaCpVKe9ZtW1ywvjYSzS
-         F/OVYh3HVeyK1kbx+xIkBIGwxNWeO3FV/pkh0LI51lJhj/Rqw3FbXGCAFs6vLse+Ht
-         EZlR1TUv2wpybyfQ/u2uZvzKK5flVqA0kC78SC2etIp1uMlTBpmnEUB5FlbL/JCuIL
-         s/xadKbRVFKw8PJ33Ni+L8R0abXhxh5y2tCZ4pdLBTokZHNL+yINtKHTQiHbjRopRd
-         vHcrgwlrFd9O0fnyx0L7IZDe/nrJZOxTaU+CqeMObF2WQwRHP8egX+rrZh+v+JCmSM
-         02kCF+ZyzMuQQ==
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 3/10/20 5:38 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.4.216 release.
+> There are 72 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Thu, 12 Mar 2020 12:34:10 +0000.
+> Anything received after that time might be too late.
+> 
 
-On 3/10/20 10:27 AM, Sowjanya Komatineni wrote:
->
-> On 3/10/20 10:09 AM, Ulf Hansson wrote:
->> External email: Use caution opening links or attachments
->>
->>
->> [...]
->>
->>>>>> I would like to get the regression fixed asap, but I also would like
->>>>>> to avoid reverting patches, unless really necessary. May I 
->>>>>> propose the
->>>>>> following two options.
->>>>>>
->>>>>> 1. Find out why polling with ->card_busy() or CMD13, for a CMD6 with
->>>>>> an R1 response doesn't work - and then fix that behaviour.
->>>>>>
->>>>>> 2. Set the mmc->max_busy_timeout to zero for sdhci-tegra, which 
->>>>>> makes
->>>>>> the core to always use R1B for CMD6 (and erase). This also means 
->>>>>> that
->>>>>> when the cmd->busy_timeout becomes longer than 11s, sdhci-tegra must
->>>>>> disable the HW busy timeout and just wait "forever".
->>>>>>
->>>>>> If you decide for 2, you can add the software timeout support on 
->>>>>> top,
->>>>>> but make that can be considered as a next step of an improvement,
->>>>>> rather than needed as fix. Note that, I believe there are some 
->>>>>> support
->>>>>> for software timeout already in the sdhci core, maybe you need to
->>>>>> tweak it a bit for your case, I don't know.
->>>>>>
->>>>>> Kind regards
->>>>>> Uffe
->>>>> Hi Uffe
->>>>>
->>>>> Will go with 2nd option and will send patches out when ready.
->>>> Okay, good.
->>>>
->>>>> BTW, Tegra host also supports SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK for
->>>>> data timeout based on host clock when using finite mode (HW busy
->>>>> detection based on DATA TIMEOUT count value when cmd operation 
->>>>> timeout
->>>>> is < 11s for tegra host).
->>>>>
->>>>> So, looks like we cant set host max_busy_timeout to 0 for Tegra 
->>>>> host to
->>>>> force R1B during SWITCH and SLEEP_AWAKE.
->>>>>
->>>>> So, was thinking to introduce host capability 
->>>>> MMC_CAP2_LONG_WAIT_HW_BUSY
->>>>> which can be used for hosts supporting long or infinite HW busy wait
->>>>> detection and will update mmc and mmc_ops drivers to not allow 
->>>>> convert
->>>>> R1B to R1B for hosts with this capability during SLEEP_AWAKE and 
->>>>> SWITCH.
->>>> That seems reasonable, it becomes probably both easier and clearer by
->>>> adding a new host cap.
->>>>
->>>> In any case, let me help out and cook a patch for this for the core
->>>> part (I leave the sdhci change to you). It may be a bit tricky,
->>>> especially since I have currently queued a bunch of new changes for
->>>> v5.7, that enables more users of mmc_poll_for_busy() in the core.
->>>> Maybe I need to temporarily drop them, so we can fix these problems
->>>> first. I will check.
->>>>
->>>> Probably, I would also name the cap MMC_CAP_HW_NEED_RSP_BUSY, as that
->>>> seems to be describing the common problem we have for sdhci
->>>> omap/tegra.
->>>>
->>>> Finally, it seems like MMC_CAP_WAIT_WHILE_BUSY should be set for
->>>> sdhci- tegra, so while at it, perhaps you can cook a patch for that as
->>>> well.
->>>>
->>>> Kind regards
->>>> Uffe
->>> OK, I sent v1 yesterday. Please ignore them then.
->> Oh, I haven't seen them. In any case, I am ignoring them.
->>
->>> Will send out patches only for HW busy wait modes program based on cmd
->>> timeout and WAIT_WHILE_BUSY enabled.
->> Great, thanks!
->>
->> Please help test the series I just posted as well, if you have the
->> time ofcourse.
->>
->> Kind regards
->> Uffe
->
-> Sure,
->
-> Thanks
->
-> Sowjanya
+Build results:
+	total: 170 pass: 170 fail: 0
+Qemu test results:
+	total: 335 pass: 335 fail: 0
 
-
-mmc_sleep() also needs update to force R1B when host sets capability 
-MMC_CAP_NEED_RSP_BUSY
-
-
+Guenter
