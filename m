@@ -2,141 +2,138 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F139BC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 11:32:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B32FC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 11:33:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C46E124684
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 11:32:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583839926;
-	bh=d9N6Gce4VbPrb9WCFzhtQKiZPVyau9sCRNVtOM++vOU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=iF+XWGd/W6t8EeNvXu/pMQgv6Le4kYzeJsHT+ScK5m4HH6lw+ilIdA90ITLmRKsNG
-	 hmEGncZ3/ckhc80gbZBYPdpmH06usl1mksavva64wq6P+TMUVb7OheH1hRfgg6UCtn
-	 FR5OFyF53vBP3fbj0B+c4yL4hq9UikY0TYn0pZ+A=
+	by mail.kernel.org (Postfix) with ESMTP id 55F5324684
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 11:33:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726414AbgCJLcF (ORCPT
+        id S1726385AbgCJLdV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 07:32:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34982 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726205AbgCJLcF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 07:32:05 -0400
-Received: from linux-8ccs.fritz.box (p5B2812F9.dip0.t-ipconnect.de [91.40.18.249])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D04ED24681;
-        Tue, 10 Mar 2020 11:32:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583839924;
-        bh=d9N6Gce4VbPrb9WCFzhtQKiZPVyau9sCRNVtOM++vOU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=zej+Xx83tfvYCe5hxjS66GJFZ5o3pt4nB4URqcZ8Ns67wwXx4eyfmY+aTB3xDh1s6
-         bzZWtVxznpTtYWLQoF+yB8DgyzkIkG2jVn+nYpAyvkS9jq1Vo5Rv2U5PlWbH5Un/Va
-         LhP0gIvPSGz01oppJrl1uR64sTFkSxXEUk4zjoCU=
-Date:   Tue, 10 Mar 2020 12:32:00 +0100
-From:   Jessica Yu <jeyu@kernel.org>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Matthias Maennich <maennich@google.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        lkp@01.org
-Subject: Re: [PATCH v3 1/2] modpost: rework and consolidate logging interface
-Message-ID: <20200310113158.GA4865@linux-8ccs.fritz.box>
-References: <20200306160206.5609-1-jeyu@kernel.org>
- <CAK7LNARZ4VgaCa_TiDBG-99amBGTTXTQMs9LsK3nO4k+y-5KDQ@mail.gmail.com>
- <20200309095914.GA18870@linux-8ccs.fritz.box>
- <CAK7LNARf9CzZ8dcK5O5vxUoncpDdpzSZctd0YuKeWyfDG_cdwA@mail.gmail.com>
- <20200309103935.GB18870@linux-8ccs.fritz.box>
- <CAK7LNARpJ-FAvCUEH9rrNCiqx5LwRHmWospvRnT-ERQoEGjK-Q@mail.gmail.com>
- <20200309105812.GC18870@linux-8ccs.fritz.box>
- <CAK7LNAQqMGSkX4Coe+f49SbXT_jkG_Mm4XZ3EJei0_K7SEaLhg@mail.gmail.com>
+        Tue, 10 Mar 2020 07:33:21 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2541 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725937AbgCJLdU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 07:33:20 -0400
+Received: from lhreml706-cah.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id E8C052F534DAE641E791;
+        Tue, 10 Mar 2020 11:33:18 +0000 (GMT)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ lhreml706-cah.china.huawei.com (10.201.108.47) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Tue, 10 Mar 2020 11:33:18 +0000
+Received: from [127.0.0.1] (10.202.226.45) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5; Tue, 10 Mar
+ 2020 11:33:18 +0000
+Subject: Re: [PATCH] irqchip/gic-v3-its: Balance initial LPI affinity across
+ CPUs
+To:     Thomas Gleixner <tglx@linutronix.de>, Marc Zyngier <maz@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        "Ming Lei" <ming.lei@redhat.com>,
+        "chenxiang (M)" <chenxiang66@hisilicon.com>
+References: <20200119190554.1002-1-maz@kernel.org>
+ <5d04d904-d7ea-04ea-ac3b-8cdc90074a92@huawei.com>
+ <afb60c5f9a176470449a83126db326a9@kernel.org>
+ <83eb55b0-2f2d-3335-85cf-6d7ed379b3c7@huawei.com>
+ <7dc37b35d8ec6c78e75969d8c6c2d2e9@kernel.org>
+ <87h80q2aoc.fsf@nanos.tec.linutronix.de>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <e65af3fd-e7c8-bd9b-75ff-f2d990338221@huawei.com>
+Date:   Tue, 10 Mar 2020 11:33:17 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <CAK7LNAQqMGSkX4Coe+f49SbXT_jkG_Mm4XZ3EJei0_K7SEaLhg@mail.gmail.com>
-X-OS:   Linux linux-8ccs 5.5.0-lp150.12.61-default x86_64
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <87h80q2aoc.fsf@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.45]
+X-ClientProxiedBy: lhreml706-chm.china.huawei.com (10.201.108.55) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+++ Masahiro Yamada [09/03/20 20:03 +0900]:
->On Mon, Mar 9, 2020 at 7:58 PM Jessica Yu <jeyu@kernel.org> wrote:
+On 20/01/2020 19:24, Thomas Gleixner wrote:
+> Marc,
+> 
+> Marc Zyngier <maz@kernel.org> writes:
+>> We're stuck between a rock and a hard place here:
 >>
->> +++ Masahiro Yamada [09/03/20 19:49 +0900]:
->> >On Mon, Mar 9, 2020 at 7:39 PM Jessica Yu <jeyu@kernel.org> wrote:
->> >>
->> >> Ah, sorry, I mean the kbuild 0-day bot errors. I am just realizing
->> >> the 0-day bot emails are not CC'd to lkml. Here is the error I got
->> >> from the bot:
->> >>
->> >> ---
->> >>
->> >> I love your patch! Yet something to improve:
->> >>
->> >> [auto build test ERROR on linus/master]
->> >> [also build test ERROR on v5.6-rc4 next-20200306]
->> >> [if your patch is applied to the wrong git tree, please drop us a note to help
->> >> improve the system. BTW, we also suggest to use '--base' option to specify the
->> >> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
->> >>
->> >> url:    https://github.com/0day-ci/linux/commits/Jessica-Yu/modpost-rework-and-consolidate-logging-interface/20200307-052346
->> >> base:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 30fe0d07fd7b27d41d9b31a224052cc4e910947a
->> >> config: sh-randconfig-a001-20200306 (attached as .config)
->> >> compiler: sh4-linux-gcc (GCC) 7.5.0
->> >> reproduce:
->> >>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->> >>         chmod +x ~/bin/make.cross
->> >>         # save the attached .config to linux build tree
->> >>         GCC_VERSION=7.5.0 make.cross ARCH=sh
->> >>
->> >> If you fix the issue, kindly add following tag
->> >> Reported-by: kbuild test robot <lkp@intel.com>
->> >>
->> >> All errors (new ones prefixed by >>):
->> >>
->> >> >> ERROR: modpost: "adc_single" [arch/sh/boards/mach-hp6xx/hp6xx_apm.ko] undefined!
->> >
->> >
->> >Indeed, this one is odd.
->> >I have no idea...
+>> (1) We place all interrupts on the least loaded CPU that matches
+>>       the affinity -> results in performance issues on some funky
+>>       HW (like D05's SAS controller).
 >>
->> I've pushed the patches to a branch to let the kbuild bot run through its
->> build tests again, and if I have extra time today I will try to
->> reproduce this and let you know the results.
+>> (2) We place managed interrupts on the least loaded CPU that matches
+>>       the affinity -> we have artificial load on NUMA boundaries, and
+>>       reduced spread of overlapping managed interrupts.
 >>
->> Thanks,
+>> (3) We don't account for non-managed LPIs, and we run the risk of
+>>       unpredictable performance because we don't really know where
+>>       the *other* interrupts are.
 >>
->> Jessica
->
->
->Ah, Now I see.
->
->
->Because you added "modpost:" prefix.
->
->
->
->The previous error message:
->
->ERROR: "adc_single" [arch/sh/boards/mach-hp6xx/hp6xx_apm.ko] undefined!
->
->
->The new error message:
->
->ERROR: modpost: "adc_single" [arch/sh/boards/mach-hp6xx/hp6xx_apm.ko] undefined!
->
->
->
->So, the bot assumed it was a new error.
+>> My personal preference would be to go for (1), as in my original post.
+>> I find (3) the least appealing, because we don't track things anymore.
+>> (2) feels like "the least of all evils", as it is a decent performance
+>> gain, seems to give predictable performance, and doesn't regress lesser
+>> systems...
+>>
+>> I'm definitely open to suggestions here.
+> 
+> The way x86 does it and that's mostly ok except for some really broken
+> setups is:
+> 
+> 1) Non-managed interrupts:
+> 
+>     If the interrupt is bound to a node, then we try to find a target
+> 
+>       I)  in the intersection of affinity mask and node mask.
+> 
+>       II) in the nodemask itself
+> 
+>           Yes we ignore affinity mask there because that's pretty much
+>           the same as if the given affinity does not contain an online
+>           CPU.
+> 
+>       If all of that fails then we try the nodeless mode
+> 
+>     If the interrupt is not bound to a node, then we try to find a target
+> 
+>       I)  in the intersection of affinity mask and online mask.
+> 
+>       II) in the onlinemask itself
+> 
+>    Each step searches for the CPU in the searched mask which has the
+>    least number of total interrupts assigned.
+> 
+> 2) Managed interrupts
+> 
+>    For managed interrupts we just search in the intersection of assigned
+>    mask and online CPUs for the CPU with the least number of managed
+>    interrupts.
+> 
+>    If no CPU is online then the interrupt is shutdown anyway, so no
+>    fallback required.
+> 
+> Don't know whether that's something you can map to ARM64, but I assume
+> the principle of trying to enforce NUMA locality plus balancing the
+> number of interrupts makes sense in general.
+> 
 
-Nice catch! Hm, I suppose we need to let the LKP folks know about the
-change in error message. CC'd LKP mailing list.
+Hi Marc,
 
-Jessica
+I was wondering if there is anything we can do to progress this patch?
+
+Apart from being a good change in itself, I need to do some SMMU testing 
+for nextgen product development and I would like to include this patch, 
+most preferably from mainline.
+
+Cheers,
+John
