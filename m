@@ -2,129 +2,129 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15D39C10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:15:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36ADAC3F2D0
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:16:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8A2D222C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:15:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2007215A4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:16:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="J4M0uyN8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727317AbgCJUPX (ORCPT
+        id S1727556AbgCJUQd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 16:15:23 -0400
-Received: from shelob.surriel.com ([96.67.55.147]:50416 "EHLO
-        shelob.surriel.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726545AbgCJUPX (ORCPT
+        Tue, 10 Mar 2020 16:16:33 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:40647 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726545AbgCJUQc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 16:15:23 -0400
-Received: from imladris.surriel.com ([96.67.55.152])
-        by shelob.surriel.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.92.3)
-        (envelope-from <riel@shelob.surriel.com>)
-        id 1jBlHa-0001Mz-JN; Tue, 10 Mar 2020 16:15:18 -0400
-Message-ID: <4147bc1d429a4336dcb45a6cb2657d082f35ab25.camel@surriel.com>
-Subject: Re: [PATCH v2] mm: hugetlb: optionally allocate gigantic hugepages
- using cma
-From:   Rik van Riel <riel@surriel.com>
-To:     Mike Kravetz <mike.kravetz@oracle.com>,
-        Michal Hocko <mhocko@kernel.org>, Roman Gushchin <guro@fb.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>, linux-mm@kvack.org,
-        kernel-team@fb.com, linux-kernel@vger.kernel.org
-Date:   Tue, 10 Mar 2020 16:15:18 -0400
-In-Reply-To: <57494a9c-5c24-20b6-0bda-dac8bbb6f731@oracle.com>
-References: <20200310002524.2291595-1-guro@fb.com>
-         <5cfa9031-fc15-2bcc-adb9-9779285ef0f7@oracle.com>
-         <20200310180558.GD85000@carbon.dhcp.thefacebook.com>
-         <4b78a8a9-7b5a-eb62-acaa-2677e615bea1@oracle.com>
-         <20200310191906.GA96999@carbon.dhcp.thefacebook.com>
-         <20200310193622.GC8447@dhcp22.suse.cz>
-         <43e2e8443288260aa305f39ba566f81bf065d010.camel@surriel.com>
-         <57494a9c-5c24-20b6-0bda-dac8bbb6f731@oracle.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-C3ENaGOY3Fk1eu6XYAt6"
-User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
+        Tue, 10 Mar 2020 16:16:32 -0400
+Received: by mail-pf1-f196.google.com with SMTP id l184so7014034pfl.7
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 13:16:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=DUOjVP5Gbs/kqvClABR44FE8+xg+AgbM19bKNtAY6RM=;
+        b=J4M0uyN8yr+WE91/EnStnaXtqW7/nhowSFEP7427vQyPhmyVseK/RtuSzWChg/C9Hr
+         zZ+zMYnkWIePFvXZqr08Bgtu6LZxyciu3wJk6FDiKEN2gAr2hr9x1d1z8YndRb7xny59
+         LIF8JAG0apaOV2Wrk6HcAMaxdWObISAFLKEGM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=DUOjVP5Gbs/kqvClABR44FE8+xg+AgbM19bKNtAY6RM=;
+        b=oFEgB+8VS/eIWpeWvoF2+FpNk0iMZb97jNrq4I5/ygFHbGKxPlsIUspc+6gcKUjfrC
+         uKOilmgFji8klPNhCOcm24qG9lSYvq9We6J9i14Pw9UfMkJyOySsTmapvQPFNKA/alHI
+         XMAL7THYzW3koBQZek5WIU37/L9tthtUFSTbazziS71t7bEwMnqxgDDmGKI8JRkAJa/j
+         PinpKpLEk9BWxLrxtXzVnwnUqSGzGIFolOnWqqWguN/+fN2gGX7sfKENze9OsvLxdL2T
+         PERAO77K36qysv+30yKdE/dVimXGHVuJXY3KSQ9FIZyN3hv+ulYL+IFMeByYgr2XnGYF
+         7SKw==
+X-Gm-Message-State: ANhLgQ3EyGfUI+oRBOdnJosQsDgN2b1x/A7LP6FNkcB6dho+N6f7DhJR
+        aX8qhUhYP8/rfnxU29XpeAW29w==
+X-Google-Smtp-Source: ADFU+vsvmkmyViYLeWPBKmK8uPBvLdmLN608raLFS0mCOwqgEfnZb/AeMfnBRwxnwZ3Ngq2HL/ZZcg==
+X-Received: by 2002:a63:2882:: with SMTP id o124mr6655825pgo.390.1583871391628;
+        Tue, 10 Mar 2020 13:16:31 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id n9sm45162722pfq.160.2020.03.10.13.16.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Mar 2020 13:16:30 -0700 (PDT)
+Date:   Tue, 10 Mar 2020 13:16:29 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Andrei Vagin <avagin@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Yuyang Du <duyuyang@gmail.com>,
+        David Hildenbrand <david@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        David Howells <dhowells@redhat.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christian Kellner <christian@kellner.me>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>
+Subject: Re: [PATCH v2 3/5] exec: Move cleanup of posix timers on exec out of
+ de_thread
+Message-ID: <202003101313.CF8CBDC582@keescook>
+References: <87r1y8dqqz.fsf@x220.int.ebiederm.org>
+ <AM6PR03MB517053AED7DC89F7C0704B7DE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <AM6PR03MB51703B44170EAB4626C9B2CAE4E20@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87tv32cxmf.fsf_-_@x220.int.ebiederm.org>
+ <87v9ne5y4y.fsf_-_@x220.int.ebiederm.org>
+ <87eeu25y14.fsf_-_@x220.int.ebiederm.org>
+ <20200309195909.h2lv5uawce5wgryx@wittgenstein>
+ <877dztz415.fsf@x220.int.ebiederm.org>
+ <20200309201729.yk5sd26v4bz4gtou@wittgenstein>
+ <87k13txnig.fsf@x220.int.ebiederm.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87k13txnig.fsf@x220.int.ebiederm.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Mar 09, 2020 at 03:48:55PM -0500, Eric W. Biederman wrote:
+> And I completely agree that we should at least rename tsk to me.
+> Just for clarity.
 
---=-C3ENaGOY3Fk1eu6XYAt6
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+I think it wouldn't hurt to add comments to spell it out explicitly
+in each of the tsk->me functions, something like:
 
-On Tue, 2020-03-10 at 13:11 -0700, Mike Kravetz wrote:
-> On 3/10/20 12:46 PM, Rik van Riel wrote:
-> >=20
-> > How would that work for architectures that have multiple
-> > possible hugetlbfs gigantic page sizes, where the admin
-> > can allocate different numbers of differently sized pages
-> > after bootup?
->=20
-> For hugetlb page reservations at boot today, pairs specifying size
-> and
-> quantity are put on the command line.  For example,
-> hugepagesz=3D2M hugepages=3D512 hugepagesz=3D1G hugepages=3D64
->=20
-> We could do something similiar for CMA.
-> hugepagesz=3D512M hugepages_cma=3D256 hugepagesz=3D1G hugepages_cma=3D64
->=20
-> That would make things much more complicated (implies separate CMA
-> reservations per size) and may be overkill for the first
-> implementation.
->=20
-> Perhaps we limit CMA reservations to one gigantic huge page
-> size.  The
-> architectures would need to define the default and there could be a
-> command line option to override.  Something like,
-> default_cmapagesz=3D  analogous to today's default_hugepagesz=3D.  Then
-> hugepages_cma=3D is only associated with that default gigantic huge
-> page
-> size.
->=20
-> The more I think about it, the more I like limiting CMA reservations
-> to
-> only one gigantic huge page size (per arch).
+/*
+ * The "me" task_struct argument here must only ever refer to "current",
+ * but it gets passed in to avoid re-calculating "current" in each helper.
+ */
 
-Why, though?
+I've found that the exec code in its entirety would be better off with
+more comments. :) Usually that's the bulk of what I find myself adding
+when I make changes in this area. ;)
 
-The cma_alloc function can return allocations of different
-sizes at the same time.
+-Kees
 
-There is no limitation in the underlying code that would stop
-a user from allocating hugepages of different sizes through
-sysfs.
-
-Allowing the system administrator to allocate a little extra
-memory for the CMA pool could also allow us to work around
-initial issues of compaction/migration failing to move some
-of the pages, while we play whack-a-mole with the last corner
-cases.
-
---=20
-All Rights Reversed.
-
---=-C3ENaGOY3Fk1eu6XYAt6
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEKR73pCCtJ5Xj3yADznnekoTE3oMFAl5n9VYACgkQznnekoTE
-3oN42ggAnLgkVOVgm54Qtqfu1IihZSXHTfyMBPLFs4nCFUBBMpzt+QZJkCYXzGZW
-kUnRyYQcTPalw5uwdKeL97uWxvARnR04kx6qA7cvocvEC8Xw4EYPPH0RPKXXHG1f
-qRa9bpR+TvYckp/FmYiWME2oMD3S0wxXdXEUOsgnooOxCHJ7SScSdcx+06MgbVDh
-49qboipysfbgTzuKFXmto/TxKWS/8LyRWaeAVwBnDyHn8XYfhsI9xa7xBsvnxAjI
-qacZRHqa+DcV8//wOPAp0YZ6fD86FQI42Dzqmm0l3N+k8wtXITh6SRdKo7ODUGQc
-h+B3ysCd32l+vOsITPwcvgiHRhbU7g==
-=IuCs
------END PGP SIGNATURE-----
-
---=-C3ENaGOY3Fk1eu6XYAt6--
-
+-- 
+Kees Cook
