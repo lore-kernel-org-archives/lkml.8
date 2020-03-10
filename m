@@ -2,72 +2,144 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 186F4C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:30:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A513C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:31:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECE1E2071B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:30:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D33CA2467D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:31:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583847061;
+	bh=qbf21E2IavgVSLI2y2C0+80T2s+pZGUkJ98c2nWXwj0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=yf0/UZHvedxZvIpUGk3RNve/wi9u/XdoycMsnJsyhZM2ssmi9BjX+obl+Zdm0HaVj
+	 5VQWG3QZjoPpL0Iw9ZjY9FH2QzKcEm8CYmYOpvCvHI/phyFusGfwVBntSKy2rBK+pi
+	 hr6RfcOxj5gBX1sctF3tvt1QNpD18cmJrMfz0bv0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729033AbgCJNaq (ORCPT
+        id S1729172AbgCJNbA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:30:46 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:35340 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728370AbgCJMuZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:50:25 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id AC8165B52D5AA9F7CE93;
-        Tue, 10 Mar 2020 20:50:21 +0800 (CST)
-Received: from szvp000203569.huawei.com (10.120.216.130) by
- DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
- 14.3.487.0; Tue, 10 Mar 2020 20:50:13 +0800
-From:   Chao Yu <yuchao0@huawei.com>
-To:     <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
-        Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH 3/5] f2fs: fix to account compressed inode correctly
-Date:   Tue, 10 Mar 2020 20:50:07 +0800
-Message-ID: <20200310125009.12966-3-yuchao0@huawei.com>
-X-Mailer: git-send-email 2.18.0.rc1
-In-Reply-To: <20200310125009.12966-1-yuchao0@huawei.com>
-References: <20200310125009.12966-1-yuchao0@huawei.com>
+        Tue, 10 Mar 2020 09:31:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54968 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728271AbgCJMuV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:50:21 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 689D02468D;
+        Tue, 10 Mar 2020 12:50:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583844620;
+        bh=qbf21E2IavgVSLI2y2C0+80T2s+pZGUkJ98c2nWXwj0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=s6NSao1tRWylG7d5+vQfG5NLoX/yNwwnV8sAZJ1ffRQMc7XApikaUXpP6bU9Mo0Gu
+         BI/CfFvSt/xTPGinDrqQF2Xh17IZ8WTGQy3W6ArFoIo2E+NZo2ltAx2mfNj1wxGQCg
+         wr0YwTsDjmpYrV3NaQaXjxbRq/PPNvPXIRNkcVoE=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Leonard Crestez <leonard.crestez@nxp.com>,
+        Peng Fan <peng.fan@nxp.com>,
+        ": Oleksij Rempel" <o.rempel@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>
+Subject: [PATCH 5.4 057/168] firmware: imx: scu: Ensure sequential TX
+Date:   Tue, 10 Mar 2020 13:38:23 +0100
+Message-Id: <20200310123641.102643598@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200310123635.322799692@linuxfoundation.org>
+References: <20200310123635.322799692@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.120.216.130]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-stat_inc_compr_inode() needs to check FI_COMPRESSED_FILE flag, so
-in f2fs_disable_compressed_file(), we should call stat_dec_compr_inode()
-before clearing FI_COMPRESSED_FILE flag.
+From: Leonard Crestez <leonard.crestez@nxp.com>
 
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
+commit 26d0fba29c96241de8a9d16f045b1de49875884c upstream.
+
+SCU requires that all messages words are written sequentially but linux MU
+driver implements multiple independent channels for each register so ordering
+between different channels must be ensured by SCU API interface.
+
+Wait for tx_done before every send to ensure that no queueing happens at the
+mailbox channel level.
+
+Fixes: edbee095fafb ("firmware: imx: add SCU firmware driver support")
+Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
+Cc: <stable@vger.kernel.org>
+Reviewed-by: Peng Fan <peng.fan@nxp.com>
+Reviewed-by:: Oleksij Rempel <o.rempel@pengutronix.de>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- fs/f2fs/f2fs.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/firmware/imx/imx-scu.c |   27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index bc45f738e3e0..5ba6c2382c32 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -3858,8 +3858,8 @@ static inline u64 f2fs_disable_compressed_file(struct inode *inode)
- 		return fi->i_compr_blocks;
+--- a/drivers/firmware/imx/imx-scu.c
++++ b/drivers/firmware/imx/imx-scu.c
+@@ -29,6 +29,7 @@ struct imx_sc_chan {
+ 	struct mbox_client cl;
+ 	struct mbox_chan *ch;
+ 	int idx;
++	struct completion tx_done;
+ };
  
- 	fi->i_flags &= ~F2FS_COMPR_FL;
--	clear_inode_flag(inode, FI_COMPRESSED_FILE);
- 	stat_dec_compr_inode(inode);
-+	clear_inode_flag(inode, FI_COMPRESSED_FILE);
- 	return 0;
+ struct imx_sc_ipc {
+@@ -100,6 +101,14 @@ int imx_scu_get_handle(struct imx_sc_ipc
  }
+ EXPORT_SYMBOL(imx_scu_get_handle);
  
--- 
-2.18.0.rc1
++/* Callback called when the word of a message is ack-ed, eg read by SCU */
++static void imx_scu_tx_done(struct mbox_client *cl, void *mssg, int r)
++{
++	struct imx_sc_chan *sc_chan = container_of(cl, struct imx_sc_chan, cl);
++
++	complete(&sc_chan->tx_done);
++}
++
+ static void imx_scu_rx_callback(struct mbox_client *c, void *msg)
+ {
+ 	struct imx_sc_chan *sc_chan = container_of(c, struct imx_sc_chan, cl);
+@@ -143,6 +152,19 @@ static int imx_scu_ipc_write(struct imx_
+ 
+ 	for (i = 0; i < hdr->size; i++) {
+ 		sc_chan = &sc_ipc->chans[i % 4];
++
++		/*
++		 * SCU requires that all messages words are written
++		 * sequentially but linux MU driver implements multiple
++		 * independent channels for each register so ordering between
++		 * different channels must be ensured by SCU API interface.
++		 *
++		 * Wait for tx_done before every send to ensure that no
++		 * queueing happens at the mailbox channel level.
++		 */
++		wait_for_completion(&sc_chan->tx_done);
++		reinit_completion(&sc_chan->tx_done);
++
+ 		ret = mbox_send_message(sc_chan->ch, &data[i]);
+ 		if (ret < 0)
+ 			return ret;
+@@ -225,6 +247,11 @@ static int imx_scu_probe(struct platform
+ 		cl->knows_txdone = true;
+ 		cl->rx_callback = imx_scu_rx_callback;
+ 
++		/* Initial tx_done completion as "done" */
++		cl->tx_done = imx_scu_tx_done;
++		init_completion(&sc_chan->tx_done);
++		complete(&sc_chan->tx_done);
++
+ 		sc_chan->sc_ipc = sc_ipc;
+ 		sc_chan->idx = i % 4;
+ 		sc_chan->ch = mbox_request_channel_byname(cl, chan_name);
+
 
