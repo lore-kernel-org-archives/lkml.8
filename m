@@ -2,180 +2,156 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10A99C18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:28:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73F93C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:28:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E189D2051A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:28:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58DF42051A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:28:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726462AbgCJJ2V (ORCPT
+        id S1726498AbgCJJ2l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 05:28:21 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:37155 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726252AbgCJJ2V (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 05:28:21 -0400
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <sha@pengutronix.de>)
-        id 1jBbBE-0006N3-GD; Tue, 10 Mar 2020 10:28:04 +0100
-Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <sha@pengutronix.de>)
-        id 1jBbBE-0006Yx-0M; Tue, 10 Mar 2020 10:28:04 +0100
-Date:   Tue, 10 Mar 2020 10:28:03 +0100
-From:   Sascha Hauer <s.hauer@pengutronix.de>
-To:     Robin Gong <yibin.gong@nxp.com>
-Cc:     "vkoul@kernel.org" <vkoul@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-        "martin.fuzzey@flowbird.group" <martin.fuzzey@flowbird.group>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: Re: [RESEND v6  09/13] dmaengine: imx-sdma: remove ERR009165 on
- i.mx6ul
-Message-ID: <20200310092803.GW3335@pengutronix.de>
-References: <1583839922-22699-1-git-send-email-yibin.gong@nxp.com>
- <1583839922-22699-10-git-send-email-yibin.gong@nxp.com>
- <20200310081925.GT3335@pengutronix.de>
- <VE1PR04MB6638029458AFDE3005C6E4A489FF0@VE1PR04MB6638.eurprd04.prod.outlook.com>
+        Tue, 10 Mar 2020 05:28:41 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:34386 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726252AbgCJJ2k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 05:28:40 -0400
+Received: from [10.130.0.70] (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Axf+i4XWdeRCAZAA--.7S3;
+        Tue, 10 Mar 2020 17:28:25 +0800 (CST)
+Subject: =?UTF-8?Q?Re:_=e5=9b=9e=e5=a4=8d:[PATCH_1/6]_PCI:_Add_Loongson_vend?=
+ =?UTF-8?Q?or_ID_and_7A1000_device_IDs?=
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+References: <1583742206-29163-1-git-send-email-yangtiezhu@loongson.cn>
+ <1583742206-29163-2-git-send-email-yangtiezhu@loongson.cn>
+ <170be7ca00e.133ea84fa2305.7803335422925759322@flygoat.com>
+ <2ba6de2e-7880-d322-a0f6-5cea2647ea50@loongson.cn>
+ <7262AFE6-B850-4F34-A79F-2B59341C9B88@flygoat.com>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        linux-mips <linux-mips@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        linux-ide <linux-ide@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Xuefeng Li <lixuefeng@loongson.cn>
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <f718993e-4b76-0af6-14a9-a8f71fb35243@loongson.cn>
+Date:   Tue, 10 Mar 2020 17:28:22 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <VE1PR04MB6638029458AFDE3005C6E4A489FF0@VE1PR04MB6638.eurprd04.prod.outlook.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 10:25:44 up 19 days, 16:56, 51 users,  load average: 0.30, 0.15,
- 0.14
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: sha@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <7262AFE6-B850-4F34-A79F-2B59341C9B88@flygoat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: AQAAf9Axf+i4XWdeRCAZAA--.7S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxWw48uFWfWw4xArW3Zw15XFb_yoW5WF1rpr
+        1jvFs5tFs7Jry7J3Z7twn8GrZayan8tryUWFySgr4UXFnIqw18GrnFyr4Y9rWIqrs3Xry7
+        Zr1qk3y3Crnxt37anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUU9F14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+        6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+        CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+        2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJV
+        W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka
+        0xkIwI1lc7I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7x
+        kEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E
+        67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCw
+        CI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E
+        3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcS
+        sGvfC2KfnxnUUI43ZEXa7VUb0D73UUUUU==
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 10, 2020 at 08:59:03AM +0000, Robin Gong wrote:
-> On 2020/03/10 Sascha Hauer <s.hauer@pengutronix.de> wrote: 
-> > On Tue, Mar 10, 2020 at 07:31:58PM +0800, Robin Gong wrote:
-> > > ECSPI issue fixed from i.mx6ul at hardware level, no need
-> > > ERR009165 anymore on those chips such as i.mx8mq. Add i.mx6sx from
-> > > where i.mx6ul source.
-> > >
-> > > Signed-off-by: Robin Gong <yibin.gong@nxp.com>
-> > > Acked-by: Vinod Koul <vkoul@kernel.org>
-> > > ---
-> > >  drivers/dma/imx-sdma.c | 51
-> > > +++++++++++++++++++++++++++++++++++++++++++++++++-
-> > >  1 file changed, 50 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c index
-> > > 56288d8..5ae7237 100644
-> > > --- a/drivers/dma/imx-sdma.c
-> > > +++ b/drivers/dma/imx-sdma.c
-> > > @@ -419,6 +419,13 @@ struct sdma_driver_data {
-> > >  	int num_events;
-> > >  	struct sdma_script_start_addrs	*script_addrs;
-> > >  	bool check_ratio;
-> > > +	/*
-> > > +	 * ecspi ERR009165 fixed should be done in sdma script
-> > > +	 * and it has been fixed in soc from i.mx6ul.
-> > > +	 * please get more information from the below link:
-> > > +	 *
-> > https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fwww.nx
-> > p.com%2Fdocs%2Fen%2Ferrata%2FIMX6DQCE.pdf&amp;data=02%7C01%7Cyi
-> > bin.gong%40nxp.com%7C91d42046e6894501d48508d7c4cbcae2%7C686ea1d3
-> > bc2b4c6fa92cd99c5c301635%7C0%7C1%7C637194251876090170&amp;sdata=
-> > T6LA4xz9CUFlNpnyjHSThEQb8i1rhbY9e1nUyxIGD5Q%3D&amp;reserved=0
-> > > +	 */
-> > > +	bool ecspi_fixed;
-> > >  };
-> > >
-> > >  struct sdma_engine {
-> > > @@ -539,6 +546,31 @@ static struct sdma_driver_data sdma_imx6q = {
-> > >  	.script_addrs = &sdma_script_imx6q,
-> > >  };
-> > >
-> > > +static struct sdma_script_start_addrs sdma_script_imx6sx = {
-> > > +	.ap_2_ap_addr = 642,
-> > > +	.uart_2_mcu_addr = 817,
-> > > +	.mcu_2_app_addr = 747,
-> > > +	.uartsh_2_mcu_addr = 1032,
-> > > +	.mcu_2_shp_addr = 960,
-> > > +	.app_2_mcu_addr = 683,
-> > > +	.shp_2_mcu_addr = 891,
-> > > +	.spdif_2_mcu_addr = 1100,
-> > > +	.mcu_2_spdif_addr = 1134,
-> > > +};
-> > > +
-> > > +static struct sdma_driver_data sdma_imx6sx = {
-> > > +	.chnenbl0 = SDMA_CHNENBL0_IMX35,
-> > > +	.num_events = 48,
-> > > +	.script_addrs = &sdma_script_imx6sx, };
-> > > +
-> > > +static struct sdma_driver_data sdma_imx6ul = {
-> > > +	.chnenbl0 = SDMA_CHNENBL0_IMX35,
-> > > +	.num_events = 48,
-> > > +	.script_addrs = &sdma_script_imx6sx,
-> > > +	.ecspi_fixed = true,
-> > > +};
-> > > +
-> > >  static struct sdma_script_start_addrs sdma_script_imx7d = {
-> > >  	.ap_2_ap_addr = 644,
-> > >  	.uart_2_mcu_addr = 819,
-> > > @@ -584,9 +616,15 @@ static const struct platform_device_id
-> > sdma_devtypes[] = {
-> > >  		.name = "imx6q-sdma",
-> > >  		.driver_data = (unsigned long)&sdma_imx6q,
-> > >  	}, {
-> > > +		.name = "imx6sx-sdma",
-> > > +		.driver_data = (unsigned long)&sdma_imx6sx,
-> > > +	}, {
-> > 
-> > Now the i.MX6sx uses a new sdma_script_start_addrs entry which is the same
-> > as the i.MX6q one we used before with one exception: it lacks the
-> > per_2_per_addr = 6331 entry. This is only used for IMX_DMATYPE_ASRC and
-> Totally same script for i.mx6 chips whatever i.MX6sx, i.MX6q or i.MX6ul. 
+On 03/10/2020 10:37 AM, Jiaxun Yang wrote:
+>
+> 于 2020年3月10日 GMT+08:00 上午10:31:56, Tiezhu Yang <yangtiezhu@loongson.cn> 写到:
+>> On 03/09/2020 04:50 PM, Jiaxun Yang wrote:
+>>>    ---- 在 星期一, 2020-03-09 16:23:21 Tiezhu Yang
+>> <yangtiezhu@loongson.cn> 撰写 ----
+>>>    > Add the Loongson vendor ID and 7A1000 device IDs to pci_ids.h
+>>>    > to be used by the controller driver in the future.
+>>>    >
+>>>    > The Loongson IDs can be found at the following link:
+>>>    >
+>> https://git.kernel.org/pub/scm/utils/pciutils/pciutils.git/tree/pci.ids
+>>>    >
+>>>    > Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+>>>    > ---
+>>>    >  include/linux/pci_ids.h | 18 ++++++++++++++++++
+>>>    >  1 file changed, 18 insertions(+)
+>>>    >
+>>>    > diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+>>>    > index 352c0d7..0125ab4 100644
+>>>    > --- a/include/linux/pci_ids.h
+>>>    > +++ b/include/linux/pci_ids.h
+>>>    > @@ -3113,4 +3113,22 @@
+>>>    >
+>>>    >  #define PCI_VENDOR_ID_NCUBE        0x10ff
+>>>    >
+>>>    > +#define PCI_VENDOR_ID_LOONGSON            0x0014
+>>>    > +#define PCI_DEVICE_ID_LOONGSON_7A1000_HT    0x7a00
+>>>    > +#define PCI_DEVICE_ID_LOONGSON_7A1000_APB    0x7a02
+>>>    > +#define PCI_DEVICE_ID_LOONGSON_7A1000_GMAC    0x7a03
+>>>    > +#define PCI_DEVICE_ID_LOONGSON_7A1000_OTG    0x7a04
+>>>    > +#define PCI_DEVICE_ID_LOONGSON_7A1000_DC    0x7a06
+>>>    > +#define PCI_DEVICE_ID_LOONGSON_7A1000_HDA    0x7a07
+>>>    > +#define PCI_DEVICE_ID_LOONGSON_7A1000_SATA    0x7a08
+>>>    > +#define PCI_DEVICE_ID_LOONGSON_7A1000_PCIE_X1    0x7a09
+>>>    > +#define PCI_DEVICE_ID_LOONGSON_7A1000_SPI    0x7a0b
+>>>    > +#define PCI_DEVICE_ID_LOONGSON_7A1000_LPC    0x7a0c
+>>>    > +#define PCI_DEVICE_ID_LOONGSON_7A1000_DMA    0x7a0f
+>>>    > +#define PCI_DEVICE_ID_LOONGSON_7A1000_EHCI    0x7a14
+>>>    > +#define PCI_DEVICE_ID_LOONGSON_7A1000_GPU    0x7a15
+>>>    > +#define PCI_DEVICE_ID_LOONGSON_7A1000_PCIE_X4    0x7a19
+>>>    > +#define PCI_DEVICE_ID_LOONGSON_7A1000_OHCI    0x7a24
+>>>    > +#define PCI_DEVICE_ID_LOONGSON_7A1000_PCIE_X8    0x7a29
+>>>
+>>> Devices IDs are unlikely to be reused by mutiple subsystems, so
+>> probably we don't need
+>>> to add them here?
+>> Hi Jiaxun,
+>>
+>> I think it is better to define the device IDs in pci_ids.h,
+>> otherwise it seems a little disorganized.
+> Please read the comment at the start of this file.
+> New entries should be added only if they're shared by multiple drivers.
+>
+> That's the rule.
+>
+> And probably you can split these two patches into a new series
+> as they're likely to be accepted.
 
-When it's the same then use it.
+OK, that makes sense.
 
-> > IMX_DMATYPE_ASRC_SP, both are entirely unused in the mainline kernel. So
-> > why must the i.MX6sx changed here and what has this to do with ECSPI?
-> i.MX6ul is based on i.MX6sx, so adding i.MX6sx could keep good shape on our i.MX family evolution.
+Let me split the two patches 1/6 and 2/6 into a new series,
+the first patch only adds the Loongson vendor ID to pci_ids.h.
 
-My point is that there is no difference between i.MX6q and i.MX6sx here,
-so do not artificially introduce i.MX6sx support when all you do is
-copying the i.MX6q support.
+Thanks,
 
-Sascha
+Tiezhu Yang
 
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+>
+> Thanks.
+>
+>> Thanks,
+>>
+>> Tiezhu Yang
+>>
+>>>    
+>>>> +
+>>>    >  #endif /* _LINUX_PCI_IDS_H */
+>>>    > --
+>>>    > 2.1.0
+>>>    >
+>>>    >
+
