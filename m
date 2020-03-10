@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72DD7C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:02:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED918C18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:02:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 457F02468C
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:02:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA2012468C
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:02:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583845366;
-	bh=9nZfuTeIzEFSEll9ZfYd1I9uPouRhsLUnRpC+SEEuSY=;
+	s=default; t=1583845369;
+	bh=CLL7T+YiC1fWFLnmvzohg0ZeFuSTWM7U9KxIUt33uq8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z2gYwo8mQlK3Z/RIYbA+QwI4XrElRCt9Gj5j7FRd7oqgkBnd6YOQx5UdLqcHO4vY0
-	 I5pmmIUVEbFciSsCcWoo81c8LUb/ndJyRfz6GjsLBsVifHGD45/OqJhA7WOLwvqaqz
-	 cFI/Emn5EQzBAkAPya2j0q3x7z8e+x7QmX0HZFTM=
+	b=ID3TbxUL7mmIYPkoUDVChtmLOzrMzFePPkxeT/dLB2y4RQIdQqipQhb3HXSh8rBYh
+	 RE/PodiOdH4q8O2D405HewSar1PwZyKYZ4BfzRdl8lZ5qHzTkca7qy0HDzUQMIjwMW
+	 nSFCRNlof8RtYb2gBzJa7C0UKE7y2owxY92ZIxfg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730054AbgCJNCp (ORCPT
+        id S1730473AbgCJNCs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:02:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46202 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:02:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46338 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730458AbgCJNCm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:02:42 -0400
+        id S1730464AbgCJNCq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:02:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A05624691;
-        Tue, 10 Mar 2020 13:02:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 10DC4208E4;
+        Tue, 10 Mar 2020 13:02:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845362;
-        bh=9nZfuTeIzEFSEll9ZfYd1I9uPouRhsLUnRpC+SEEuSY=;
+        s=default; t=1583845364;
+        bh=CLL7T+YiC1fWFLnmvzohg0ZeFuSTWM7U9KxIUt33uq8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CePHyTrkJWF8kwWDoQvrB3l7+Tohn++di4J5U8LSklfKCVjzDTuU7BLHzd1uQPP0z
-         jl8q7AXayxMM8h2l86UdUQxgvT1Nz4HNDLNF7Ct23ZtjVUAjCdxyNdYWrCNsK+s35C
-         kK7/aGFQlzu9hd97Tn7FVw7kvTdx8Sf2sLkfsLa4=
+        b=VE0JTBrqkMoLhQBSKwlpAZhbd5aX5rOuHUC/YJv2KHM92HDqkDfyffJaT0/4SNk2Z
+         bSeycA3EE9qaVudDifv09PFBfr7+jO5oA3PrOSKIhxyl7OaozEWLF5dZ3OTrCb9uFk
+         YV4SqjchxDfDfYGdYDsfT6qyIWjVCJL2UGsb+Qwo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mikulas Patocka <mpatocka@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 5.5 118/189] dm integrity: fix recalculation when moving from journal mode to bitmap mode
-Date:   Tue, 10 Mar 2020 13:39:15 +0100
-Message-Id: <20200310123651.677058895@linuxfoundation.org>
+        stable@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>
+Subject: [PATCH 5.5 154/189] arm64: dts: imx8qxp-mek: Remove unexisting Ethernet PHY
+Date:   Tue, 10 Mar 2020 13:39:51 +0100
+Message-Id: <20200310123655.479386222@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123639.608886314@linuxfoundation.org>
 References: <20200310123639.608886314@linuxfoundation.org>
@@ -59,55 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mikulas Patocka <mpatocka@redhat.com>
+From: Fabio Estevam <festevam@gmail.com>
 
-commit d5bdf66108419cdb39da361b58ded661c29ff66e upstream.
+commit 26c4b4758fce8f0ae744335e1762213be29db441 upstream.
 
-If we resume a device in bitmap mode and the on-disk format is in journal
-mode, we must recalculate anything above ic->sb->recalc_sector. Otherwise,
-there would be non-recalculated blocks which would cause I/O errors.
+There is only on Ethernet port and one Ethernet PHY on imx8qxp-mek.
 
-Fixes: 468dfca38b1a ("dm integrity: add a bitmap mode")
-Cc: stable@vger.kernel.org # v5.2+
-Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Remove the unexisting ethphy1 port.
+
+This fixes a run-time warning:
+
+mdio_bus 5b040000.ethernet-1: MDIO device at address 1 is missing.
+
+Fixes: fdea904e85e1 ("arm64: dts: imx: add imx8qxp mek support")
+Signed-off-by: Fabio Estevam <festevam@gmail.com>
+Reviewed-by: Leonard Crestez <leonard.crestez@nxp.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/dm-integrity.c |   17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
+ arch/arm64/boot/dts/freescale/imx8qxp-mek.dts |    5 -----
+ 1 file changed, 5 deletions(-)
 
---- a/drivers/md/dm-integrity.c
-+++ b/drivers/md/dm-integrity.c
-@@ -2888,17 +2888,24 @@ static void dm_integrity_resume(struct d
- 	} else {
- 		replay_journal(ic);
- 		if (ic->mode == 'B') {
--			int mode;
- 			ic->sb->flags |= cpu_to_le32(SB_FLAG_DIRTY_BITMAP);
- 			ic->sb->log2_blocks_per_bitmap_bit = ic->log2_blocks_per_bitmap_bit;
- 			r = sync_rw_sb(ic, REQ_OP_WRITE, REQ_FUA);
- 			if (unlikely(r))
- 				dm_integrity_io_error(ic, "writing superblock", r);
+--- a/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts
++++ b/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts
+@@ -52,11 +52,6 @@
+ 			compatible = "ethernet-phy-ieee802.3-c22";
+ 			reg = <0>;
+ 		};
+-
+-		ethphy1: ethernet-phy@1 {
+-			compatible = "ethernet-phy-ieee802.3-c22";
+-			reg = <1>;
+-		};
+ 	};
+ };
  
--			mode = ic->recalculate_flag ? BITMAP_OP_SET : BITMAP_OP_CLEAR;
--			block_bitmap_op(ic, ic->journal, 0, ic->provided_data_sectors, mode);
--			block_bitmap_op(ic, ic->recalc_bitmap, 0, ic->provided_data_sectors, mode);
--			block_bitmap_op(ic, ic->may_write_bitmap, 0, ic->provided_data_sectors, mode);
-+			block_bitmap_op(ic, ic->journal, 0, ic->provided_data_sectors, BITMAP_OP_CLEAR);
-+			block_bitmap_op(ic, ic->recalc_bitmap, 0, ic->provided_data_sectors, BITMAP_OP_CLEAR);
-+			block_bitmap_op(ic, ic->may_write_bitmap, 0, ic->provided_data_sectors, BITMAP_OP_CLEAR);
-+			if (ic->sb->flags & cpu_to_le32(SB_FLAG_RECALCULATING) &&
-+			    le64_to_cpu(ic->sb->recalc_sector) < ic->provided_data_sectors) {
-+				block_bitmap_op(ic, ic->journal, le64_to_cpu(ic->sb->recalc_sector),
-+						ic->provided_data_sectors - le64_to_cpu(ic->sb->recalc_sector), BITMAP_OP_SET);
-+				block_bitmap_op(ic, ic->recalc_bitmap, le64_to_cpu(ic->sb->recalc_sector),
-+						ic->provided_data_sectors - le64_to_cpu(ic->sb->recalc_sector), BITMAP_OP_SET);
-+				block_bitmap_op(ic, ic->may_write_bitmap, le64_to_cpu(ic->sb->recalc_sector),
-+						ic->provided_data_sectors - le64_to_cpu(ic->sb->recalc_sector), BITMAP_OP_SET);
-+			}
- 			rw_journal_sectors(ic, REQ_OP_WRITE, REQ_FUA | REQ_SYNC, 0,
- 					   ic->n_bitmap_blocks * (BITMAP_BLOCK_SIZE >> SECTOR_SHIFT), NULL);
- 		}
 
 
