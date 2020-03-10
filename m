@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FFDEC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:09:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 958E6C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:09:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EC2420873
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:09:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E3BE20409
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:09:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583845766;
-	bh=k/uQaZHXXI7Ysr/preRwxOzBTr6fmxMKb5Bur9+uSzE=;
+	s=default; t=1583845770;
+	bh=vibtNkzu+UW2iDC7wS0BDKkSNKIaUydY/xWS25jW1RA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GApL59raHJea+LNQJwyMs+wsyV7yaJa80ZbNWts1OdW5eoliUj3CFj605Es8rFACY
-	 IOCiHXjIgMq+xYz2xhR3oZTlIc+UBAKcF/DeS+MAW/lsLDNfepTLiDrlsXK4Q1SRMT
-	 iO8S/7L7Eq9O5dSUMp8/qshKVj7Y10q2tTGsNNBk=
+	b=AzGX+kvKqYJLXTpDb+sRIlVcQLyL4oz0pTze4U77LxHjqZoxS5G05XqVQxhh7qRHf
+	 Ca1niuKnqHzIr7hr9jqjechC9zOrLJeCUbrH7paFRiURUHWtPGVqwzOUULoCuNdmV6
+	 eWIF8J36HvaN7x5lNTcaw0mT8OIT7TOU8KkTc+7I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731233AbgCJNJZ (ORCPT
+        id S1731247AbgCJNJ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:09:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56422 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:09:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56554 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730718AbgCJNJW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:09:22 -0400
+        id S1731235AbgCJNJ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:09:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B1DD020409;
-        Tue, 10 Mar 2020 13:09:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2480920873;
+        Tue, 10 Mar 2020 13:09:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845762;
-        bh=k/uQaZHXXI7Ysr/preRwxOzBTr6fmxMKb5Bur9+uSzE=;
+        s=default; t=1583845767;
+        bh=vibtNkzu+UW2iDC7wS0BDKkSNKIaUydY/xWS25jW1RA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=muM+2hEOKuHdfH0Ef2OZwVudkwVaT/cKYwXQqmzgq0uiosapAcu8giWRDMW5GqMez
-         b1hCwqyMXkOTNgaqwoOklkdB9GLELTRInmfKbJ75URCKEYCZe9oJpfRuUWkF2p9jJL
-         cZFmjrYiHs16vq/1uOym+ya/YxArEZ9+cxFR7gNQ=
+        b=IJJW+lFdG4x/rBSuAHsxCmfjuGX3bKZSUIpuEvDZvVKqOga5cIwnImaTgOpt1s71I
+         Zt0AZlAfbDfAojufzsh9Blop4ndReN7ThysIK30gW+6gLFo8MwkVeKRd8QAQV4oaZz
+         UisERgZhYBSyPksBgQICYiHKNrDsWdQ8wQ89UEKA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sameeh Jubran <sameehj@amazon.com>,
-        Saeed Bshara <saeedb@amazon.com>,
-        Arthur Kiyanovski <akiyano@amazon.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 054/126] net: ena: make ena rxfh support ETH_RSS_HASH_NO_CHANGE
-Date:   Tue, 10 Mar 2020 13:41:15 +0100
-Message-Id: <20200310124207.657666506@linuxfoundation.org>
+        stable@vger.kernel.org, Ronnie Sahlberg <lsahlber@redhat.com>,
+        Steve French <stfrench@microsoft.com>,
+        Pavel Shilovsky <pshilov@microsoft.com>,
+        Aurelien Aptel <aaptel@suse.com>
+Subject: [PATCH 4.14 091/126] cifs: dont leak -EAGAIN for stat() during reconnect
+Date:   Tue, 10 Mar 2020 13:41:52 +0100
+Message-Id: <20200310124209.598044303@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310124203.704193207@linuxfoundation.org>
 References: <20200310124203.704193207@linuxfoundation.org>
@@ -61,72 +61,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arthur Kiyanovski <akiyano@amazon.com>
+From: Ronnie Sahlberg <lsahlber@redhat.com>
 
-commit 470793a78ce344bd53d31e0c2d537f71ba957547 upstream.
+commit fc513fac56e1b626ae48a74d7551d9c35c50129e upstream.
 
-As the name suggests ETH_RSS_HASH_NO_CHANGE is received upon changing
-the key or indirection table using ethtool while keeping the same hash
-function.
+If from cifs_revalidate_dentry_attr() the SMB2/QUERY_INFO call fails with an
+error, such as STATUS_SESSION_EXPIRED, causing the session to be reconnected
+it is possible we will leak -EAGAIN back to the application even for
+system calls such as stat() where this is not a valid error.
 
-Also add a function for retrieving the current hash function from
-the ena-com layer.
+Fix this by re-trying the operation from within cifs_revalidate_dentry_attr()
+if cifs_get_inode_info*() returns -EAGAIN.
 
-Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
-Signed-off-by: Sameeh Jubran <sameehj@amazon.com>
-Signed-off-by: Saeed Bshara <saeedb@amazon.com>
-Signed-off-by: Arthur Kiyanovski <akiyano@amazon.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+This fixes stat() and possibly also other system calls that uses
+cifs_revalidate_dentry*().
+
+Signed-off-by: Ronnie Sahlberg <lsahlber@redhat.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
+Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
+Reviewed-by: Aurelien Aptel <aaptel@suse.com>
+CC: Stable <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/amazon/ena/ena_com.c     |    5 +++++
- drivers/net/ethernet/amazon/ena/ena_com.h     |    8 ++++++++
- drivers/net/ethernet/amazon/ena/ena_ethtool.c |    3 +++
- 3 files changed, 16 insertions(+)
+ fs/cifs/inode.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/amazon/ena/ena_com.c
-+++ b/drivers/net/ethernet/amazon/ena/ena_com.c
-@@ -861,6 +861,11 @@ static void ena_com_hash_key_fill_defaul
- 	hash_key->keys_num = sizeof(hash_key->key) / sizeof(u32);
+--- a/fs/cifs/inode.c
++++ b/fs/cifs/inode.c
+@@ -1998,6 +1998,7 @@ int cifs_revalidate_dentry_attr(struct d
+ 	struct inode *inode = d_inode(dentry);
+ 	struct super_block *sb = dentry->d_sb;
+ 	char *full_path = NULL;
++	int count = 0;
+ 
+ 	if (inode == NULL)
+ 		return -ENOENT;
+@@ -2019,15 +2020,18 @@ int cifs_revalidate_dentry_attr(struct d
+ 		 full_path, inode, inode->i_count.counter,
+ 		 dentry, cifs_get_time(dentry), jiffies);
+ 
++again:
+ 	if (cifs_sb_master_tcon(CIFS_SB(sb))->unix_ext)
+ 		rc = cifs_get_inode_info_unix(&inode, full_path, sb, xid);
+ 	else
+ 		rc = cifs_get_inode_info(&inode, full_path, NULL, sb,
+ 					 xid, NULL);
+-
++	if (rc == -EAGAIN && count++ < 10)
++		goto again;
+ out:
+ 	kfree(full_path);
+ 	free_xid(xid);
++
+ 	return rc;
  }
  
-+int ena_com_get_current_hash_function(struct ena_com_dev *ena_dev)
-+{
-+	return ena_dev->rss.hash_func;
-+}
-+
- static int ena_com_hash_key_allocate(struct ena_com_dev *ena_dev)
- {
- 	struct ena_rss *rss = &ena_dev->rss;
---- a/drivers/net/ethernet/amazon/ena/ena_com.h
-+++ b/drivers/net/ethernet/amazon/ena/ena_com.h
-@@ -632,6 +632,14 @@ int ena_com_rss_init(struct ena_com_dev
-  */
- void ena_com_rss_destroy(struct ena_com_dev *ena_dev);
- 
-+/* ena_com_get_current_hash_function - Get RSS hash function
-+ * @ena_dev: ENA communication layer struct
-+ *
-+ * Return the current hash function.
-+ * @return: 0 or one of the ena_admin_hash_functions values.
-+ */
-+int ena_com_get_current_hash_function(struct ena_com_dev *ena_dev);
-+
- /* ena_com_fill_hash_function - Fill RSS hash function
-  * @ena_dev: ENA communication layer struct
-  * @func: The hash function (Toeplitz or crc)
---- a/drivers/net/ethernet/amazon/ena/ena_ethtool.c
-+++ b/drivers/net/ethernet/amazon/ena/ena_ethtool.c
-@@ -748,6 +748,9 @@ static int ena_set_rxfh(struct net_devic
- 	}
- 
- 	switch (hfunc) {
-+	case ETH_RSS_HASH_NO_CHANGE:
-+		func = ena_com_get_current_hash_function(ena_dev);
-+		break;
- 	case ETH_RSS_HASH_TOP:
- 		func = ENA_ADMIN_TOEPLITZ;
- 		break;
 
 
