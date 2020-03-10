@@ -3,159 +3,163 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0078BC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 17:30:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45DA7C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 17:31:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8DD72146E
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 17:30:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F1D721927
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 17:31:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="foQBrWTh"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="SWfGYly6";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="PlYJH10J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726708AbgCJRaT (ORCPT
+        id S1726533AbgCJRbq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 13:30:19 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:45335 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726545AbgCJRaT (ORCPT
+        Tue, 10 Mar 2020 13:31:46 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:14778 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726271AbgCJRbq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 13:30:19 -0400
-Received: by mail-qk1-f193.google.com with SMTP id c145so7718645qke.12
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 10:30:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=nFJLzhWaardAj209J2djxfvD0M0AS7lKdB6B6SWHZls=;
-        b=foQBrWThN+yCBGBNZSwfyEbyDlaCMm5DA8KSAZ9GqbXE0/DfzA4E8icMH5iYvJvsHa
-         NDNsJioQ71Ts6+n4LL+sFvaZs5120wRO7CKBIljnRuRjxwLJZl3WNCI23ibbNzYVyMMF
-         BUg149LJkpWq8Sy0az8HA9DO8ubTly8Ivxqb5UVWSVw9EzFBPi5y5sijIK+l7tA7VT35
-         rLK3faWz2udvP0dIvOGhATNJjO/EuyeGoMEWApQ4RWiEclldpJwPpK/VVPFLzrwm8jcv
-         tvLL/TAy2UkRTBaywvz3BlK21NAw9HMp3hHnnV8bZkk0c5I0d6BzE6Z6c3Ae6UG2T+fs
-         U0Yw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=nFJLzhWaardAj209J2djxfvD0M0AS7lKdB6B6SWHZls=;
-        b=H4TT8T2A6rN3ZsFpuqZqlyGVUbMc083eclWcfM/Qztjf+lU+t9NbfQN2OJtFQIDkqA
-         CBBRXa9LBQocoHSDrtaKGbJYOOC1SAhtxw9R1ZRqoUyaqm2YQZqDCl6i9/qy7SPe/4VF
-         lX4vus05meM30U8pPHnQXUJ7uoTSxdj98yrTqpvEwhmo4B8fKfQDtb14pZ6+2jZOXoVU
-         WE1Kwui+kIvmsp7L83bI/4jOHHAAHnBzhZ6CuZW356WpgjoLJeT2RHMhoGOK1/bxtDA9
-         LnQkneeLdnkZhmCN15esd2Lr1M52gbdB1JScM89MLLbdf6lkRvs1h0iYbT/l6Po58hy8
-         yVOA==
-X-Gm-Message-State: ANhLgQ0lfRzBWVeHRsBnBVbjvh5/cBVQDY8Wb/1ezdfWZqG34XitAl9k
-        qKZgW8kz9k2usI7kiFRU68Y=
-X-Google-Smtp-Source: ADFU+vtsLhWD473LGlo6ncSc0lO+QdgbO80OJA8Bb7BImWRXU/K0WZl+HyIo3SNPsPXP11AWxbD+SA==
-X-Received: by 2002:a37:a6d4:: with SMTP id p203mr15055850qke.184.1583861415306;
-        Tue, 10 Mar 2020 10:30:15 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([190.15.121.82])
-        by smtp.gmail.com with ESMTPSA id v82sm24442483qka.51.2020.03.10.10.30.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Mar 2020 10:30:14 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 0006440009; Tue, 10 Mar 2020 14:30:09 -0300 (-03)
-Date:   Tue, 10 Mar 2020 14:30:09 -0300
-To:     "Liang, Kan" <kan.liang@linux.intel.com>
-Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        jolsa@redhat.com, peterz@infradead.org, mingo@redhat.com,
-        linux-kernel@vger.kernel.org, namhyung@kernel.org,
-        adrian.hunter@intel.com, mathieu.poirier@linaro.org,
-        ravi.bangoria@linux.ibm.com, alexey.budankov@linux.intel.com,
-        vitaly.slobodskoy@intel.com, pavel.gerasimov@intel.com,
-        mpe@ellerman.id.au, eranian@google.com, ak@linux.intel.com
-Subject: Re: [PATCH V2 1/9] perf pmu: Add support for PMU capabilities
-Message-ID: <20200310173009.GJ15931@kernel.org>
-References: <20200309174639.4594-1-kan.liang@linux.intel.com>
- <20200309174639.4594-2-kan.liang@linux.intel.com>
- <20200310130644.GC15931@kernel.org>
- <00ebb51d-0282-8181-7285-c60aec27566c@linux.intel.com>
- <20200310140421.GD15931@kernel.org>
- <fa4e32f0-1572-a9aa-e609-3cecaae7ef9e@linux.intel.com>
-MIME-Version: 1.0
+        Tue, 10 Mar 2020 13:31:46 -0400
+Received: from pps.filterd (m0109332.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02AHSrVA028655;
+        Tue, 10 Mar 2020 10:31:11 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
+ subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=facebook; bh=pRPhmot7wgKGObSaLKVIQ6pfR4Mfiky/UzT5Y7pbzmI=;
+ b=SWfGYly6JslCAW16c1RYwmXwDWpfyz5xs/lHlYsiDeNe7Wre3KBgAdvaH/Sc7GWTdse/
+ wAhbwJ6eHxOIvVIqBB5SpIKKZXmVwCEZUkc05pjrEjDIM6iAbX8WcSn95Yf4NNGTyY2G
+ k77uf6q/nrp3OHcaYAa/l0Z+6FMf8Fcycck= 
+Received: from mail.thefacebook.com ([163.114.132.120])
+        by mx0a-00082601.pphosted.com with ESMTP id 2yp25fkmqp-3
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Tue, 10 Mar 2020 10:31:11 -0700
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (100.104.98.9) by
+ o365-in.thefacebook.com (100.104.94.230) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1847.3; Tue, 10 Mar 2020 10:31:01 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=g6G84YT3ojmqTXUWMDoXLkFP0SDNadlbstmfDsSXnQ8i5s6HJE6bugz8c6V30JygqInVI5FQvYsv+j3T2H6N9mmAMXMcbdwxn2GWqf6LBSUnFk/y1jzfa2T69nrbhoN1r9vUpTEJpNgayOWqZuRaHVE6ow+1qPbcOKArt9M+efDpJqsLp4CyoOQWQDX0V/M4JrSp2Kjf9It+GAN/bP7JNgImntkAtVS3Lss15ni1jT6YJwTv1W3S9t+p1BqqiuT8eRFRSEltr6KEkY47XEUCIeXydIniPYyb68RBka2NlMBdZ1CTOncaDaQNirPLas/zIFhp0LYYQVXCz7T09vg3Lg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pRPhmot7wgKGObSaLKVIQ6pfR4Mfiky/UzT5Y7pbzmI=;
+ b=KSvMxiDXrpSBm8u7HgYOYpgJdDPlnm4kzduWE96MQMBc9QjJVfxqE2do+BoIG+plqRQcatHkPplwK17cI2llhV1UM3XAOSnvIWAfpMWSBNdmn44UURvnUgaDuJka7i8wwpXEmWQAFYjXN3GIGhNswSNdJ1YlBy6xmuBSmiQtgQ0uKCkvnlFNZwMhvqBH7yt4z1KIrTdxYVHIUNxMTRgKpd6GYNsuQFygdh1bNZwepI/MnK0J4Rpl8FKWodSZGvDA6lM+y2PViJwqPMgYRhLHV+x9WLZ0yed8IFsN4wA34VhX1On1IPDNgs1GAPQQfkejtb1tnRqegIv8M3LylmtgRA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pRPhmot7wgKGObSaLKVIQ6pfR4Mfiky/UzT5Y7pbzmI=;
+ b=PlYJH10JByAvhqbExmKWostmClapZl6EEBlNOr7WjxFgQjjGaX3X3FJ3nqGVvI5QYH92Oe5lT5pcXvxfVBJdjVpkFEf3t6pw9zFw7ZPijXgEMqOs2v6DWjmfDx740paB2BUwnwSbb/GE40OnqKhd3ta6GKsnDOj7vbu9wIDwS5w=
+Received: from MWHPR15MB1661.namprd15.prod.outlook.com (2603:10b6:300:124::23)
+ by MWHPR15MB1262.namprd15.prod.outlook.com (2603:10b6:320:25::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.17; Tue, 10 Mar
+ 2020 17:31:00 +0000
+Received: from MWHPR15MB1661.namprd15.prod.outlook.com
+ ([fe80::f930:6bf2:6d2:93ef]) by MWHPR15MB1661.namprd15.prod.outlook.com
+ ([fe80::f930:6bf2:6d2:93ef%8]) with mapi id 15.20.2793.013; Tue, 10 Mar 2020
+ 17:31:00 +0000
+Date:   Tue, 10 Mar 2020 10:30:56 -0700
+From:   Roman Gushchin <guro@fb.com>
+To:     Michal Hocko <mhocko@kernel.org>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>, <linux-mm@kvack.org>,
+        <kernel-team@fb.com>, <linux-kernel@vger.kernel.org>,
+        Rik van Riel <riel@surriel.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>
+Subject: Re: [PATCH v2] mm: hugetlb: optionally allocate gigantic hugepages
+ using cma
+Message-ID: <20200310173056.GB85000@carbon.dhcp.thefacebook.com>
+References: <20200310002524.2291595-1-guro@fb.com>
+ <20200310090121.GB8447@dhcp22.suse.cz>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <fa4e32f0-1572-a9aa-e609-3cecaae7ef9e@linux.intel.com>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <20200310090121.GB8447@dhcp22.suse.cz>
+X-ClientProxiedBy: MWHPR11CA0048.namprd11.prod.outlook.com
+ (2603:10b6:300:115::34) To MWHPR15MB1661.namprd15.prod.outlook.com
+ (2603:10b6:300:124::23)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from carbon.dhcp.thefacebook.com (2620:10d:c090:400::5:2b00) by MWHPR11CA0048.namprd11.prod.outlook.com (2603:10b6:300:115::34) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.16 via Frontend Transport; Tue, 10 Mar 2020 17:30:59 +0000
+X-Originating-IP: [2620:10d:c090:400::5:2b00]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 28cc14df-ba6b-4964-ca76-08d7c518cc72
+X-MS-TrafficTypeDiagnostic: MWHPR15MB1262:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <MWHPR15MB1262F30506FBB90368CA401BBEFF0@MWHPR15MB1262.namprd15.prod.outlook.com>
+X-FB-Source: Internal
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-Forefront-PRVS: 033857D0BD
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(136003)(366004)(346002)(376002)(39860400002)(396003)(189003)(199004)(33656002)(6916009)(7696005)(52116002)(6506007)(81156014)(4326008)(8936002)(6666004)(81166006)(8676002)(478600001)(54906003)(9686003)(1076003)(86362001)(66946007)(5660300002)(55016002)(66556008)(2906002)(66476007)(186003)(16526019)(316002);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1262;H:MWHPR15MB1661.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+Received-SPF: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: S7kf2fzoVmpaD5CMO+HPozaQi3mxLLLJoqhoSB5dkWdSsBKCyYpNrPattywVJcyZgP8Gco8/yyEp8bsIPCGlA3IveCiy360Td5OuV1UBldSWRVA7ICU9s1NzyeI6zRkW/tCZ/+zPQGKZA70a/3yrLt2Jt3YrQHrEnWkJbSzTkLaX9pwzsmynsOTjdMKc0p/pN3Z3GFjEyECJTkEkpl8V7bYWIY/Hl+B5DBGeNiDsjN866K9NPcrqa1Rjgy4DHFZ4o/cJrxfAgzLeiZIIhzcuvKdvjgDwPJJwA8QiO5Z0Afg4/2hS0TmxA63wSPG1XlhFXver/+w+RV1AZPn+92BQTcNUdSNC8wp5g0eV6ckpsQc9OYw/7fyVrrvOR8hm39vnvRLyCiUAt5g4/KBWbrO0rGbwpZmK0+ZsALqx/GSutfAxzVCFH3KEnfHXJowRA5nA
+X-MS-Exchange-AntiSpam-MessageData: gq/C/MnaguDM5gQ+r/RgVru5E66emqvPNApUz4c7DKKMVJbYfomVtmtpiu7fdcsycUu3ZdIAfeN1ovE/tbsy8qWAOIj6WUvEf0juc5e+1n/Jst5WnvPG+k5tBYuVhTeS5Sh5039RIYm2DZJSRgrw1GEzD3XcuerJSgs/6zKrMnlutxVMJSuzYzuotJtUu/pp
+X-MS-Exchange-CrossTenant-Network-Message-Id: 28cc14df-ba6b-4964-ca76-08d7c518cc72
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Mar 2020 17:31:00.0144
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: PvM76g3LMZAvWIxZ4kHTGSmtQ6DLLa/dsLkd9lkXaeX3RhcLFioJRjqQjz5C7iab
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1262
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-10_12:2020-03-10,2020-03-10 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ phishscore=0 malwarescore=0 suspectscore=1 clxscore=1015 spamscore=0
+ mlxscore=0 lowpriorityscore=0 impostorscore=0 bulkscore=0 mlxlogscore=963
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003100106
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, Mar 10, 2020 at 12:54:05PM -0400, Liang, Kan escreveu:
+On Tue, Mar 10, 2020 at 10:01:21AM +0100, Michal Hocko wrote:
+> On Mon 09-03-20 17:25:24, Roman Gushchin wrote:
+> [...]
+> > 2) Run-time allocations of gigantic hugepages are performed using the
+> >    cma allocator and the dedicated cma area
 > 
+> [...]
+> > @@ -1237,6 +1246,23 @@ static struct page *alloc_gigantic_page(struct hstate *h, gfp_t gfp_mask,
+> >  {
+> >  	unsigned long nr_pages = 1UL << huge_page_order(h);
+> >  
+> > +	if (IS_ENABLED(CONFIG_CMA) && hugetlb_cma[0]) {
+> > +		struct page *page;
+> > +		int nid;
+> > +
+> > +		for_each_node_mask(nid, *nodemask) {
+> > +			if (!hugetlb_cma[nid])
+> > +				break;
+> > +
+> > +			page = cma_alloc(hugetlb_cma[nid], nr_pages,
+> > +					 huge_page_order(h), true);
+> > +			if (page)
+> > +				return page;
+> > +		}
+> > +
+> > +		return NULL;
 > 
-> On 3/10/2020 10:04 AM, Arnaldo Carvalho de Melo wrote:
-> > Em Tue, Mar 10, 2020 at 09:53:24AM -0400, Liang, Kan escreveu:
-> > > On 3/10/2020 9:06 AM, Arnaldo Carvalho de Melo wrote:
-> > > > Em Mon, Mar 09, 2020 at 10:46:31AM -0700, kan.liang@linux.intel.com escreveu:
-> > > > > +static int perf_pmu__new_caps(struct list_head *list, char *name, char *value)
-> > > > > +{
-> > > > > +	struct perf_pmu_caps *caps;
-> > > > > +
-> > > > > +	caps = zalloc(sizeof(*caps));
-> > > > > +	if (!caps)
-> > > > > +		return -ENOMEM;
-> > 
-> > > > So here you check if zalloc fails and returns a proper error
-> > 
-> > > > > +	caps->name = strdup(name);
-> > > > > +	caps->value = strndup(value, strlen(value) - 1);
-> > 
-> > > > But then you don't check strdup()?
-> > > Right, I should check strdup(), otherwise the capability information may be
-> > > incomplete. I will fix it in V3.
-> > 
-> > Thanks, overall just consider making the patches smaller if possible,
-> > with prep patches paving the way for more complex changes so that
-> > reviewing becomes easier, for instance:
-> > 
-> >    perf machine: Refine the function for LBR call stack reconstruction
-> > 
-> > Seems to do too many things at once. It was unfortunate, for instance,
-> > that the pre-existing code had that
-> > 
-> > resolve_lbr_callchain_sample()
-> > {
-> > 	/* LBR only affects the user callchain */
-> > 	if (i != chain_nr) {
-> > 		body of the function, long
-> > 		....
-> > 		return err;
-> > 	}
-> > 
-> > 	return 0;
-> > }
-> > 
-> > One of the things you did in this patch was to the more sensible:
-> > 
-> > 	/* LBR only affects the user callchain */
-> > 	if (i == chain_nr)
-> > 		return 0;
-> > 
-> > 	body of the function
-> > 	...
-> > 	return err;
-> > 
-> > So if you had a prep patch at this point just removing that silly
-> > indent, then we would see that that is just removing the indent, the
-> > next patch wouldn't have that check for user callchains, would be
-> > smaller, I think that would help reduce the patch sizes.
+> Is there any strong reason why the alloaction annot fallback to non-CMA
+> allocator when the cma is depleted?
 
-> > Then if you just moved to a separate function the (callchain_param.order
-> > == ORDER_CALLEE) part, the patch would again be smaller, etc.
- 
-> > This helps reviewing and usually helps us later, with bisection, when
-> > some bug is introduced,
- 
-> Sure, I will go through all patches and see what I can do to reduce the size
-> of patches in V3.
+The reason is that that gigantic pages allocated using cma require
+a special handling on releasing. It's solvable by using an additional
+page flag, but because the current code is usually not working except
+a short time just after the system start, I don't think it's worth it.
 
-Thanks a lot for considering my suggestions!
+But I do not have a strong opinion here.
 
-- Arnaldo
+Thanks!
