@@ -2,138 +2,103 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86965C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 14:31:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B213C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 14:32:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6136D20637
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 14:31:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 655B521927
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 14:32:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583850690;
-	bh=7dxdgkV5YUtvF1qH4AuaNTcIVtkYOCHvnp6vEhHeaco=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=ANH7zz15K785S0/4ZpCnhNQymHeY+IqtWZVrFtfDRaT0O8wAaEB3tTQKilaT82ESA
-	 GooU8eLnOU/ofagAt6CnVI1YQ+B9xUjizgdYLoXGCnteTueZd9CDsnnxvRbYgshTJl
-	 ClF7xrBcL9V5YuxeIYw6ZarLdTKhsZWA7S6ir7sc=
+	s=default; t=1583850765;
+	bh=IIeGbkbGEKcI1F91jMKQzXNSe7HNScRGiPXihi7FdKw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LY6tXk6oSOU2tnq9RnPSFKbbNxLHp71YVpgmHuplTdyUp/Qx66LcV8ObCcV8Lu+9Q
+	 5Ee+WbcHyUJ5/SH4Ji2f4KOs0I7iJ79o9mk26ouSE1g6GWTsDdoMSN+0ryfE+X3wEM
+	 mYBbeZuryGNtog5DW11a+DGuKC95xO/xEHibJqNo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727595AbgCJOb3 (ORCPT
+        id S1726872AbgCJOco (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 10:31:29 -0400
-Received: from foss.arm.com ([217.140.110.172]:37838 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726695AbgCJOb2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 10:31:28 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4497E30E;
-        Tue, 10 Mar 2020 07:31:28 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BDF483F6CF;
-        Tue, 10 Mar 2020 07:31:27 -0700 (PDT)
-Date:   Tue, 10 Mar 2020 14:31:26 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Eddie James <eajames@linux.ibm.com>
-Cc:     andrew@aj.id.au, andy.shevchenko@gmail.com, broonie@kernel.org,
-        devicetree@vger.kernel.org, joel@jms.id.au,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>, robh+dt@kernel.org
-Subject: Applied "dt-bindings: fsi: Add FSI2SPI bindings" to the spi tree
-In-Reply-To:  <20200306194118.18581-2-eajames@linux.ibm.com>
-Message-Id:  <applied-20200306194118.18581-2-eajames@linux.ibm.com>
-X-Patchwork-Hint: ignore
+        Tue, 10 Mar 2020 10:32:44 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:50664 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726451AbgCJOco (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 10:32:44 -0400
+Received: by mail-wm1-f66.google.com with SMTP id a5so1667186wmb.0
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 07:32:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Q5TkgCSJdwvYSMqqN/4rtYOLkn//sQSzstKXiDNR02g=;
+        b=hNvYrdrAktgVYgU3a+nWmbsmWbhYuZPhLHiWeY3X5stE0O6gjzu8Yu9twr2UIv+lRt
+         ExDYALrgVrRLubi9CStw1Brlz4KKPIYQUIaSIATlXwZ0FNxP+bGO4J8hktOsK/6chm2N
+         VWOSnBUOnuHU/57tvfpYzr6R8o84vR57OD40aK67nB22fCwGeRcLH+tQRMUqZCp7+3Yk
+         m6SXK7rJX0JP5Wlvo4EwDi6Uw/CXVj0idVAWx2bw5PLQbb1zjIctGXGq3dewJRp6s+jv
+         nUOPz89RouGq7edxWWLlYXSaJhw3lWUqC8jEVm+tdjRlOqwglTMl3BVrHo85E3hfGRHe
+         3iJw==
+X-Gm-Message-State: ANhLgQ0d3dCIVf/iZ/vdC49WN70/RJ5iBbVJYEwG4S6CmWxSsve6PmFH
+        1goBFbqjZnyY/dTUmaF2Ios=
+X-Google-Smtp-Source: ADFU+vuNKevf40tKVPjkPKOpQIvUIXlmjSA+y00/NpTFU/LhFzwGVderdrxqDgSvuYVNPRGi5UznWw==
+X-Received: by 2002:a1c:6745:: with SMTP id b66mr2482540wmc.30.1583850762615;
+        Tue, 10 Mar 2020 07:32:42 -0700 (PDT)
+Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
+        by smtp.gmail.com with ESMTPSA id z11sm4243298wmd.47.2020.03.10.07.32.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Mar 2020 07:32:41 -0700 (PDT)
+Date:   Tue, 10 Mar 2020 15:32:40 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Baoquan He <bhe@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org, x86@kernel.org
+Subject: Re: [PATCH] x86/mm: Remove the redundant conditional check
+Message-ID: <20200310143240.GL8447@dhcp22.suse.cz>
+References: <20200308013511.12792-1-bhe@redhat.com>
+ <20200310101044.GE8447@dhcp22.suse.cz>
+ <20200310142341.GG27711@MiWiFi-R3L-srv>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200310142341.GG27711@MiWiFi-R3L-srv>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+On Tue 10-03-20 22:23:41, Baoquan He wrote:
+> On 03/10/20 at 11:10am, Michal Hocko wrote:
+> > On Sun 08-03-20 09:35:11, Baoquan He wrote:
+> > > In commit f70029bbaacbfa8f0 ("mm, memory_hotplug: drop CONFIG_MOVABLE_NODE"),
+> > > the dependency on CONFIG_MOVABLE_NODE was removed for N_MEMORY, so the
+> > > conditional check in paging_init() doesn't make any sense any more.
+> > > Remove it.
+> > 
+> > Please expand more. I would really have to refresh the intention of the
+> > code but from a quick look at the code CONFIG_HIGHMEM still makes
+> > N_MEMORY != N_NORMAL_MEMORY. So what what does this change mean for that
+> > config?
+> 
+> Thanks for looking into this. I was trying to explain that
+> CONFIG_MOVABLE_NODE made N_MEMORY have chance to take different enum
+> value.
+>  
+> Do you think the below saying is OK to you?
+>  
+> ~~~
+> In commit f70029bbaacb ("mm, memory_hotplug: drop CONFIG_MOVABLE_NODE"),
+> the dependency on CONFIG_MOVABLE_NODE was removed for N_MEMORY.  Before
+> commit f70029bbaacb, CONFIG_HIGHMEM && !CONFIG_MOVABLE_NODE could make
+> (N_MEMORY == N_NORMAL_MEMORY) be true. After commit f70029bbaacb, N_MEMORY
+> doesn't have any chance to be equal to N_NORMAL_MEMORY. So the  conditional
+> check in paging_init() doesn't make any sense any more. Let's remove it.
 
-   dt-bindings: fsi: Add FSI2SPI bindings
+Yes this describes the matter much better. I have obviously misread the
+code when looking at it this morning. Being explicit in the changelog
+would have helped at least me. Thanks!
 
-has been applied to the spi tree at
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From 1e7479df0168339a98acb680fc56b804b96acb18 Mon Sep 17 00:00:00 2001
-From: Eddie James <eajames@linux.ibm.com>
-Date: Fri, 6 Mar 2020 13:41:17 -0600
-Subject: [PATCH] dt-bindings: fsi: Add FSI2SPI bindings
-
-Add documentation for the FSI2SPI CFAM engine, which provides access to
-a number of SPI controllers.
-
-Signed-off-by: Eddie James <eajames@linux.ibm.com>
-Link: https://lore.kernel.org/r/20200306194118.18581-2-eajames@linux.ibm.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- .../devicetree/bindings/fsi/ibm,fsi2spi.yaml  | 36 +++++++++++++++++++
- 1 file changed, 36 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/fsi/ibm,fsi2spi.yaml
-
-diff --git a/Documentation/devicetree/bindings/fsi/ibm,fsi2spi.yaml b/Documentation/devicetree/bindings/fsi/ibm,fsi2spi.yaml
-new file mode 100644
-index 000000000000..893d81e54caa
---- /dev/null
-+++ b/Documentation/devicetree/bindings/fsi/ibm,fsi2spi.yaml
-@@ -0,0 +1,36 @@
-+# SPDX-License-Identifier: (GPL-2.0-or-later)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/fsi/ibm,fsi2spi.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: IBM FSI-attached SPI controllers
-+
-+maintainers:
-+ - Eddie James <eajames@linux.ibm.com>
-+
-+description: |
-+  This binding describes an FSI CFAM engine called the FSI2SPI. Therefore this
-+  node will always be a child of an FSI CFAM node; see fsi.txt for details on
-+  FSI slave and CFAM nodes. This FSI2SPI engine provides access to a number of
-+  SPI controllers.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - ibm,fsi2spi
-+
-+  reg:
-+    items:
-+      - description: FSI slave address
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    fsi2spi@1c00 {
-+        compatible = "ibm,fsi2spi";
-+        reg = <0x1c00 0x400>;
-+    };
 -- 
-2.20.1
-
+Michal Hocko
+SUSE Labs
