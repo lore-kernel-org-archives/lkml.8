@@ -2,101 +2,109 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C9F5C10F25
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 01:06:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1D38C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 01:06:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44B7D24649
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 01:06:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C73424655
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 01:06:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726402AbgCJBGg (ORCPT
+        id S1726464AbgCJBGz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 21:06:36 -0400
-Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:59064 "EHLO
-        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726115AbgCJBGg (ORCPT
+        Mon, 9 Mar 2020 21:06:55 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:44568 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726115AbgCJBGz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 21:06:36 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R211e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=joseph.qi@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0Ts9yW7e_1583802391;
-Received: from JosephdeMacBook-Pro.local(mailfrom:joseph.qi@linux.alibaba.com fp:SMTPD_---0Ts9yW7e_1583802391)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 10 Mar 2020 09:06:32 +0800
-Subject: Re: [PATCH][next] ocfs2: cluster: Replace zero-length array with
- flexible-array member
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     ocfs2-devel@oss.oracle.com, linux-kernel@vger.kernel.org
-References: <20200309201907.GA8005@embeddedor>
-From:   Joseph Qi <joseph.qi@linux.alibaba.com>
-Message-ID: <3509c78c-4387-f248-ee66-6218c1264fcf@linux.alibaba.com>
-Date:   Tue, 10 Mar 2020 09:06:31 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:68.0)
- Gecko/20100101 Thunderbird/68.5.0
+        Mon, 9 Mar 2020 21:06:55 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 9DE7380307C5;
+        Tue, 10 Mar 2020 01:06:53 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 7s97QYij5BRW; Tue, 10 Mar 2020 04:06:53 +0300 (MSK)
+Date:   Tue, 10 Mar 2020 04:06:03 +0300
+From:   Sergey Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Jiri Slaby <jslaby@suse.com>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 18/22] tty: mips_ejtag_fdc: Mark expected switch
+ fall-through
+References: <20200306124705.6595-1-Sergey.Semin@baikalelectronics.ru>
+ <20200306124913.151A68030792@mail.baikalelectronics.ru>
+ <20200309161243.D5D5180307C7@mail.baikalelectronics.ru>
 MIME-Version: 1.0
-In-Reply-To: <20200309201907.GA8005@embeddedor>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200309161243.D5D5180307C7@mail.baikalelectronics.ru>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Message-Id: <20200310010653.9DE7380307C5@mail.baikalelectronics.ru>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Mar 09, 2020 at 05:12:40PM +0100, Jiri Slaby wrote:
+> On 06. 03. 20, 13:47, Sergey.Semin@baikalelectronics.ru wrote:
+> > From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > 
+> > Mark mips_ejtag_fdc_encode() methods switch-case-4 as expecting to
+> > fall through.
+> > 
+> > This patch fixes the following warning:
+> > 
+> > drivers/tty/mips_ejtag_fdc.c: In function ‘mips_ejtag_fdc_encode’:
+> > drivers/tty/mips_ejtag_fdc.c:245:13: warning: this statement may fall through [-Wimplicit-fallthrough=]
+> >    word.word &= 0x00ffffff;
+> >    ~~~~~~~~~~^~~~~~~~~~~~~
+> > drivers/tty/mips_ejtag_fdc.c:246:2: note: here
+> >   case 3:
+> >   ^~~~
+> > 
+> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> > Cc: Paul Burton <paulburton@kernel.org>
+> > Cc: Ralf Baechle <ralf@linux-mips.org>
+> > ---
+> >  drivers/tty/mips_ejtag_fdc.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/drivers/tty/mips_ejtag_fdc.c b/drivers/tty/mips_ejtag_fdc.c
+> > index 620d8488b83e..21e76a2ec182 100644
+> > --- a/drivers/tty/mips_ejtag_fdc.c
+> > +++ b/drivers/tty/mips_ejtag_fdc.c
+> > @@ -243,6 +243,7 @@ static struct fdc_word mips_ejtag_fdc_encode(const char **ptrs,
+> >  		/* Fall back to a 3 byte encoding */
+> >  		word.bytes = 3;
+> >  		word.word &= 0x00ffffff;
+> > +		/* Fall through */
+> 
+> We now have "fallthrough;", so I believe you should use that instead of
+> comments.
+> 
 
+Hello Jiri,
 
-On 2020/3/10 04:19, Gustavo A. R. Silva wrote:
-> The current codebase makes use of the zero-length array language
-> extension to the C90 standard, but the preferred mechanism to declare
-> variable-length types such as these ones is a flexible array member[1][2],
-> introduced in C99:
-> 
-> struct foo {
->         int stuff;
->         struct boo array[];
-> };
-> 
-> By making use of the mechanism above, we will get a compiler warning
-> in case the flexible array does not occur last in the structure, which
-> will help us prevent some kind of undefined behavior bugs from being
-> inadvertently introduced[3] to the codebase from now on.
-> 
-> Also, notice that, dynamic memory allocations won't be affected by
-> this change:
-> 
-> "Flexible array members have incomplete type, and so the sizeof operator
-> may not be applied. As a quirk of the original implementation of
-> zero-length arrays, sizeof evaluates to zero."[1]
-> 
-> This issue was found with the help of Coccinelle.
-> 
-> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> [2] https://github.com/KSPP/linux/issues/21
-> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Thanks for the comment. I didn't know about that new macro. Since Greg
+already pulled this patch in his tty-next branch, I won't send an
+update in the next patchset revision. But I'll certainly remember that
+there is a specific macro to fix the fallthrough warning in the kernel
+and will use it next time I find the same problem someplace else.
 
-Acked-by: Joseph Qi <joseph.qi@linux.alibaba.com>
-> ---
->  fs/ocfs2/cluster/tcp.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/fs/ocfs2/cluster/tcp.h b/fs/ocfs2/cluster/tcp.h
-> index de87cbffd175..736338f45c59 100644
-> --- a/fs/ocfs2/cluster/tcp.h
-> +++ b/fs/ocfs2/cluster/tcp.h
-> @@ -32,7 +32,7 @@ struct o2net_msg
->  	__be32 status;
->  	__be32 key;
->  	__be32 msg_num;
-> -	__u8  buf[0];
-> +	__u8  buf[];
->  };
->  
->  typedef int (o2net_msg_handler_func)(struct o2net_msg *msg, u32 len, void *data,
-> 
+Regards,
+-Sergey
+
+> thanks,
+> -- 
+> js
+> suse labs
