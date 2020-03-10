@@ -2,84 +2,385 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14636C18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 11:37:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67915C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 11:39:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E668324681
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 11:37:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E3DF24655
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 11:39:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KiZsMKxE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726445AbgCJLhI (ORCPT
+        id S1726353AbgCJLjP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 07:37:08 -0400
-Received: from sauhun.de ([88.99.104.3]:47772 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725937AbgCJLhI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 07:37:08 -0400
-Received: from localhost (p54B33196.dip0.t-ipconnect.de [84.179.49.150])
-        by pokefinder.org (Postfix) with ESMTPSA id 8CA752C1EB6;
-        Tue, 10 Mar 2020 12:37:06 +0100 (CET)
-Date:   Tue, 10 Mar 2020 12:37:06 +0100
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] i2c: tegra: Make timeout error more informative
-Message-ID: <20200310113706.GW1987@ninjato>
-References: <20200302173512.2743-1-digetx@gmail.com>
+        Tue, 10 Mar 2020 07:39:15 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:36321 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726252AbgCJLjO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 07:39:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583840352;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=jYyaTcgwaf+Ab6kZAkjqe1I6QREcj9m2tO6nfw5ZQhs=;
+        b=KiZsMKxEEjSp59Y9S16aVl+ujCzy0n8rPBorbsDwkwB/OxKCV5A2ilNAdGVecepgvVTbCW
+        Qj2AMDyA6YRESFuXrsXaeTyMWqcDqS6AAyo7udgD6rDyVkg6H/33oIpxOFrYKK2wJWMVIz
+        dJOBD1ijUEqdrs2Eda3SQ+meFc6CINo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-425-VDq5mprMPNyVsFVBJ2MGbg-1; Tue, 10 Mar 2020 07:39:09 -0400
+X-MC-Unique: VDq5mprMPNyVsFVBJ2MGbg-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B9E7D8017CC;
+        Tue, 10 Mar 2020 11:39:06 +0000 (UTC)
+Received: from t480s.redhat.com (unknown [10.36.118.8])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C25295D9CA;
+        Tue, 10 Mar 2020 11:38:55 +0000 (UTC)
+From:   David Hildenbrand <david@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, virtualization@lists.linux-foundation.org,
+        Jason Wang <jasowang@redhat.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        David Hildenbrand <david@redhat.com>,
+        Tyler Sanderson <tysand@google.com>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Wei Wang <wei.w.wang@intel.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        David Rientjes <rientjes@google.com>,
+        Nadav Amit <namit@vmware.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [PATCH v3] virtio-balloon: Switch back to OOM handler for VIRTIO_BALLOON_F_DEFLATE_ON_OOM
+Date:   Tue, 10 Mar 2020 12:38:54 +0100
+Message-Id: <20200310113854.11515-1-david@redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="AFjAQ8ujNJnIGHaX"
-Content-Disposition: inline
-In-Reply-To: <20200302173512.2743-1-digetx@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Commit 71994620bb25 ("virtio_balloon: replace oom notifier with shrinker"=
+)
+changed the behavior when deflation happens automatically. Instead of
+deflating when called by the OOM handler, the shrinker is used.
 
---AFjAQ8ujNJnIGHaX
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+However, the balloon is not simply some other slab cache that should be
+shrunk when under memory pressure. The shrinker does not have a concept o=
+f
+priorities yet, so this behavior cannot be configured. Eventually once
+that is in place, we might want to switch back after doing proper
+testing.
 
-On Mon, Mar 02, 2020 at 08:35:12PM +0300, Dmitry Osipenko wrote:
-> The I2C timeout error message doesn't tell us what exactly failed and some
-> I2C client drivers do not clarify the error either. Adding WARN_ON_ONCE()
-> results in a stacktrace being dumped into KMSG, which is very useful for
-> debugging purposes.
+There was a report that this results in undesired side effects when
+inflating the balloon to shrink the page cache. [1]
+	"When inflating the balloon against page cache (i.e. no free memory
+	 remains) vmscan.c will both shrink page cache, but also invoke the
+	 shrinkers -- including the balloon's shrinker. So the balloon
+	 driver allocates memory which requires reclaim, vmscan gets this
+	 memory by shrinking the balloon, and then the driver adds the
+	 memory back to the balloon. Basically a busy no-op."
 
-This is good for debugging, in deed, yet not good in the generic case.
-Timeouts are not an exception on the I2C bus (think of an EEPROM which
-is busy during an erase cycle), so it shouldn't be printed at all.
+The name "deflate on OOM" makes it pretty clear when deflation should
+happen - after other approaches to reclaim memory failed, not while
+reclaiming. This allows to minimize the footprint of a guest - memory
+will only be taken out of the balloon when really needed.
 
-This prinout should rather be dropped or at least be dev_dbg.
+Keep using the shrinker for VIRTIO_BALLOON_F_FREE_PAGE_HINT, because
+this has no such side effects. Always register the shrinker with
+VIRTIO_BALLOON_F_FREE_PAGE_HINT now. We are always allowed to reuse free
+pages that are still to be processed by the guest. The hypervisor takes
+care of identifying and resolving possible races between processing a
+hinting request and the guest reusing a page.
 
+In contrast to pre commit 71994620bb25 ("virtio_balloon: replace oom
+notifier with shrinker"), don't add a moodule parameter to configure the
+number of pages to deflate on OOM. Can be re-added if really needed.
+Also, pay attention that leak_balloon() returns the number of 4k pages -
+convert it properly in virtio_balloon_oom_notify().
 
---AFjAQ8ujNJnIGHaX
-Content-Type: application/pgp-signature; name="signature.asc"
+Testing done by Tyler for future reference:
+  Test setup: VM with 16 CPU, 64GB RAM. Running Debian 10. We have a 42
+  GB file full of random bytes that we continually cat to /dev/null.
+  This fills the page cache as the file is read. Meanwhile we trigger
+  the balloon to inflate, with a target size of 53 GB. This setup causes
+  the balloon inflation to pressure the page cache as the page cache is
+  also trying to grow. Afterwards we shrink the balloon back to zero (so
+  total deflate =3D total inflate).
 
------BEGIN PGP SIGNATURE-----
+  Without patch (kernel 4.19.0-5):
+  Inflation never reaches the target until we stop the "cat file >
+  /dev/null" process. Total inflation time was 542 seconds. The longest
+  period that made no net forward progress was 315 seconds (see attached
+  graph).
+  Result of "grep balloon /proc/vmstat" after the test:
+  balloon_inflate 154828377
+  balloon_deflate 154828377
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl5ne+EACgkQFA3kzBSg
-KbZV0Q//T4qO5EWJYaUa32aqo+HXKBPF6IH+vqrC9SoFXkMtY1nFqCLRkNHJzG3Z
-oweohZqW2IQf4rZNyxVoGWAiO+5yy+iGupJ1ozQPJR1tH/o/Cm4Rer2Ns9e696Gy
-0mL0G47UpwVrWtfSPBwye3L99CbVeEXECc1gLLna0Bl+rsL6cPjuP0U7kj1FbeDK
-hRVlBTnn1WtWIYpfACCXAqiaytWG16Yph86GyohwFUEmevq3w4/1+1c3gRsofiwo
-NDBa15hEQIAEnSR5oTdtY2meBxNAAirNPg6Nu/W3G/SEZ0qMxORwXHrwY5z9h8QV
-OvlhaVcSZ+ncQu/wGxJcq1ZOt+w4dU+LCswo8jO8t9IwJ5jfqyqSGiFd8OMnMHPP
-UKUna18m5usqF8pUWBo9ltutcTr4iRbdzw/Ot1vd6l+Bnp+ATA824k6r8gnwAP61
-xHKgYoie2c75bTDKCmyTtmMgNfc5M9Sr2mVl9JN1FRINlzw/Lu+IBwRdoS4X/xOB
-cGMKssftAS1O8L6ZRGtfPP7giCjDOvUcnE+gLUp5H8+aP4+rPABvrnn5JRMByeAM
-tKEW/R+fm9RXVlFDyF7oPTpWeSfEhZjz6NPK0ceT37lZYj0Nw9UvwKe2NueziVf/
-6XIUjaUl+HIGJNCqZcs+uh32fr6b+mIamsJeuivlE8262uhlSIs=
-=sNpK
------END PGP SIGNATURE-----
+  With patch (kernel 5.6.0-rc4+):
+  Total inflation duration was 63 seconds. No deflate-queue activity
+  occurs when pressuring the page-cache.
+  Result of "grep balloon /proc/vmstat" after the test:
+  balloon_inflate 12968539
+  balloon_deflate 12968539
 
---AFjAQ8ujNJnIGHaX--
+  Conclusion: This patch fixes the issue. In the test it reduced
+  inflate/deflate activity by 12x, and reduced inflation time by 8.6x.
+  But more importantly, if we hadn't killed the "grep balloon
+  /proc/vmstat" process then, without the patch, the inflation process
+  would never reach the target.
+
+[1] https://www.spinics.net/lists/linux-virtualization/msg40863.html
+
+Reported-by: Tyler Sanderson <tysand@google.com>
+Tested-by: Tyler Sanderson <tysand@google.com>
+Fixes: 71994620bb25 ("virtio_balloon: replace oom notifier with shrinker"=
+)
+Cc: Michael S. Tsirkin <mst@redhat.com>
+Cc: Wei Wang <wei.w.wang@intel.com>
+Cc: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Cc: David Rientjes <rientjes@google.com>
+Cc: Nadav Amit <namit@vmware.com>
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: David Hildenbrand <david@redhat.com>
+---
+
+v2 -> v3:
+- Use vb->vdev instead of vdev in all feature checks. We'll clean the
+  other ones up later.
+- Add one empty line virtballoon_probe() to make it look consistent.
+- Drop one unrelated added line in virtballoon_remove()
+
+v1 -> v2:
+- Rebase on top of linux-next (free page reporting)
+- Clarified some parts in the patch description and added testing
+  instructions/results
+- Added Fixes: and Tested-by:
+
+As this patch is based on free page reporting, MST suggested to take this
+via Andrew's tree.
+
+---
+ drivers/virtio/virtio_balloon.c | 103 +++++++++++++++-----------------
+ 1 file changed, 47 insertions(+), 56 deletions(-)
+
+diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_ball=
+oon.c
+index 8511d258dbb4..b0f15dc779c6 100644
+--- a/drivers/virtio/virtio_balloon.c
++++ b/drivers/virtio/virtio_balloon.c
+@@ -14,6 +14,7 @@
+ #include <linux/slab.h>
+ #include <linux/module.h>
+ #include <linux/balloon_compaction.h>
++#include <linux/oom.h>
+ #include <linux/wait.h>
+ #include <linux/mm.h>
+ #include <linux/mount.h>
+@@ -28,7 +29,9 @@
+  */
+ #define VIRTIO_BALLOON_PAGES_PER_PAGE (unsigned)(PAGE_SIZE >> VIRTIO_BAL=
+LOON_PFN_SHIFT)
+ #define VIRTIO_BALLOON_ARRAY_PFNS_MAX 256
+-#define VIRTBALLOON_OOM_NOTIFY_PRIORITY 80
++/* Maximum number of (4k) pages to deflate on OOM notifications. */
++#define VIRTIO_BALLOON_OOM_NR_PAGES 256
++#define VIRTIO_BALLOON_OOM_NOTIFY_PRIORITY 80
+=20
+ #define VIRTIO_BALLOON_FREE_PAGE_ALLOC_FLAG (__GFP_NORETRY | __GFP_NOWAR=
+N | \
+ 					     __GFP_NOMEMALLOC)
+@@ -114,9 +117,12 @@ struct virtio_balloon {
+ 	/* Memory statistics */
+ 	struct virtio_balloon_stat stats[VIRTIO_BALLOON_S_NR];
+=20
+-	/* To register a shrinker to shrink memory upon memory pressure */
++	/* Shrinker to return free pages - VIRTIO_BALLOON_F_FREE_PAGE_HINT */
+ 	struct shrinker shrinker;
+=20
++	/* OOM notifier to deflate on OOM - VIRTIO_BALLOON_F_DEFLATE_ON_OOM */
++	struct notifier_block oom_nb;
++
+ 	/* Free page reporting device */
+ 	struct virtqueue *reporting_vq;
+ 	struct page_reporting_dev_info pr_dev_info;
+@@ -830,50 +836,13 @@ static unsigned long shrink_free_pages(struct virti=
+o_balloon *vb,
+ 	return blocks_freed * VIRTIO_BALLOON_HINT_BLOCK_PAGES;
+ }
+=20
+-static unsigned long leak_balloon_pages(struct virtio_balloon *vb,
+-                                          unsigned long pages_to_free)
+-{
+-	return leak_balloon(vb, pages_to_free * VIRTIO_BALLOON_PAGES_PER_PAGE) =
+/
+-		VIRTIO_BALLOON_PAGES_PER_PAGE;
+-}
+-
+-static unsigned long shrink_balloon_pages(struct virtio_balloon *vb,
+-					  unsigned long pages_to_free)
+-{
+-	unsigned long pages_freed =3D 0;
+-
+-	/*
+-	 * One invocation of leak_balloon can deflate at most
+-	 * VIRTIO_BALLOON_ARRAY_PFNS_MAX balloon pages, so we call it
+-	 * multiple times to deflate pages till reaching pages_to_free.
+-	 */
+-	while (vb->num_pages && pages_freed < pages_to_free)
+-		pages_freed +=3D leak_balloon_pages(vb,
+-						  pages_to_free - pages_freed);
+-
+-	update_balloon_size(vb);
+-
+-	return pages_freed;
+-}
+-
+ static unsigned long virtio_balloon_shrinker_scan(struct shrinker *shrin=
+ker,
+ 						  struct shrink_control *sc)
+ {
+-	unsigned long pages_to_free, pages_freed =3D 0;
+ 	struct virtio_balloon *vb =3D container_of(shrinker,
+ 					struct virtio_balloon, shrinker);
+=20
+-	pages_to_free =3D sc->nr_to_scan;
+-
+-	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_FREE_PAGE_HINT))
+-		pages_freed =3D shrink_free_pages(vb, pages_to_free);
+-
+-	if (pages_freed >=3D pages_to_free)
+-		return pages_freed;
+-
+-	pages_freed +=3D shrink_balloon_pages(vb, pages_to_free - pages_freed);
+-
+-	return pages_freed;
++	return shrink_free_pages(vb, sc->nr_to_scan);
+ }
+=20
+ static unsigned long virtio_balloon_shrinker_count(struct shrinker *shri=
+nker,
+@@ -881,12 +850,22 @@ static unsigned long virtio_balloon_shrinker_count(=
+struct shrinker *shrinker,
+ {
+ 	struct virtio_balloon *vb =3D container_of(shrinker,
+ 					struct virtio_balloon, shrinker);
+-	unsigned long count;
+=20
+-	count =3D vb->num_pages / VIRTIO_BALLOON_PAGES_PER_PAGE;
+-	count +=3D vb->num_free_page_blocks * VIRTIO_BALLOON_HINT_BLOCK_PAGES;
++	return vb->num_free_page_blocks * VIRTIO_BALLOON_HINT_BLOCK_PAGES;
++}
++
++static int virtio_balloon_oom_notify(struct notifier_block *nb,
++				     unsigned long dummy, void *parm)
++{
++	struct virtio_balloon *vb =3D container_of(nb,
++						 struct virtio_balloon, oom_nb);
++	unsigned long *freed =3D parm;
++
++	*freed +=3D leak_balloon(vb, VIRTIO_BALLOON_OOM_NR_PAGES) /
++		  VIRTIO_BALLOON_PAGES_PER_PAGE;
++	update_balloon_size(vb);
+=20
+-	return count;
++	return NOTIFY_OK;
+ }
+=20
+ static void virtio_balloon_unregister_shrinker(struct virtio_balloon *vb=
+)
+@@ -971,7 +950,23 @@ static int virtballoon_probe(struct virtio_device *v=
+dev)
+ 						  VIRTIO_BALLOON_CMD_ID_STOP);
+ 		spin_lock_init(&vb->free_page_list_lock);
+ 		INIT_LIST_HEAD(&vb->free_page_list);
++		/*
++		 * We're allowed to reuse any free pages, even if they are
++		 * still to be processed by the host.
++		 */
++		err =3D virtio_balloon_register_shrinker(vb);
++		if (err)
++			goto out_del_balloon_wq;
++	}
++
++	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_DEFLATE_ON_OOM)) {
++		vb->oom_nb.notifier_call =3D virtio_balloon_oom_notify;
++		vb->oom_nb.priority =3D VIRTIO_BALLOON_OOM_NOTIFY_PRIORITY;
++		err =3D register_oom_notifier(&vb->oom_nb);
++		if (err < 0)
++			goto out_unregister_shrinker;
+ 	}
++
+ 	if (virtio_has_feature(vdev, VIRTIO_BALLOON_F_PAGE_POISON)) {
+ 		/* Start with poison val of 0 representing general init */
+ 		__u32 poison_val =3D 0;
+@@ -986,15 +981,6 @@ static int virtballoon_probe(struct virtio_device *v=
+dev)
+ 		virtio_cwrite(vb->vdev, struct virtio_balloon_config,
+ 			      poison_val, &poison_val);
+ 	}
+-	/*
+-	 * We continue to use VIRTIO_BALLOON_F_DEFLATE_ON_OOM to decide if a
+-	 * shrinker needs to be registered to relieve memory pressure.
+-	 */
+-	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_DEFLATE_ON_OOM)) {
+-		err =3D virtio_balloon_register_shrinker(vb);
+-		if (err)
+-			goto out_del_balloon_wq;
+-	}
+=20
+ 	vb->pr_dev_info.report =3D virtballoon_free_page_report;
+ 	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_REPORTING)) {
+@@ -1003,12 +989,12 @@ static int virtballoon_probe(struct virtio_device =
+*vdev)
+ 		capacity =3D virtqueue_get_vring_size(vb->reporting_vq);
+ 		if (capacity < PAGE_REPORTING_CAPACITY) {
+ 			err =3D -ENOSPC;
+-			goto out_unregister_shrinker;
++			goto out_unregister_oom;
+ 		}
+=20
+ 		err =3D page_reporting_register(&vb->pr_dev_info);
+ 		if (err)
+-			goto out_unregister_shrinker;
++			goto out_unregister_oom;
+ 	}
+=20
+ 	virtio_device_ready(vdev);
+@@ -1017,8 +1003,11 @@ static int virtballoon_probe(struct virtio_device =
+*vdev)
+ 		virtballoon_changed(vdev);
+ 	return 0;
+=20
+-out_unregister_shrinker:
++out_unregister_oom:
+ 	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_DEFLATE_ON_OOM))
++		unregister_oom_notifier(&vb->oom_nb);
++out_unregister_shrinker:
++	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_FREE_PAGE_HINT))
+ 		virtio_balloon_unregister_shrinker(vb);
+ out_del_balloon_wq:
+ 	if (virtio_has_feature(vdev, VIRTIO_BALLOON_F_FREE_PAGE_HINT))
+@@ -1061,6 +1050,8 @@ static void virtballoon_remove(struct virtio_device=
+ *vdev)
+ 	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_REPORTING))
+ 		page_reporting_unregister(&vb->pr_dev_info);
+ 	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_DEFLATE_ON_OOM))
++		unregister_oom_notifier(&vb->oom_nb);
++	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_FREE_PAGE_HINT))
+ 		virtio_balloon_unregister_shrinker(vb);
+ 	spin_lock_irq(&vb->stop_update_lock);
+ 	vb->stop_update =3D true;
+--=20
+2.24.1
+
