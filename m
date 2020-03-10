@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDCBDC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:03:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11577C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:03:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 978DD20409
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:03:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD1922468C
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:03:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583845427;
-	bh=7NRmezi1vA7WMk2yR8WRvB8DC2NMDVyQdd4/HrxFIMc=;
+	s=default; t=1583845429;
+	bh=iBM1w65UJFTOJRont15HkGQodYMg2ICLaa+vsjpa610=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RyH3rdmaHSteOg8IBfEjC9TFdlZamtAB8PKQv5kx4WuvCjOzLYojK+oyYqb5bh1Bp
-	 YEXYlHRZfcE6j6zhm7QSYTSDSkZXuDlLdSIS0oxxB5HERPFooeoZASz2FbF8yMQFU3
-	 r6067WDzYAwo7hIJ11rY43GaaZtxY9DtKuBxvjZE=
+	b=xR54Yshey3+0RE+gFxswkJ8dT3SLuUenE8Bc0PD6U1rBLDaL49Aq4Rwrg/zVVc15k
+	 27QubJ/Uj7vl728kpuK/Mtau3TXcrsUT/ZGvJ2zXdC//36DAmhN6skPWvVv23IZ6CH
+	 Vz8SOVJ+xCcxD58e0XhkL0jYqKkvAWF6VqtC6goc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730648AbgCJNDq (ORCPT
+        id S1730654AbgCJNDs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:03:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48568 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:03:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48614 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728676AbgCJNDo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:03:44 -0400
+        id S1730647AbgCJNDq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:03:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 268722468D;
-        Tue, 10 Mar 2020 13:03:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F4F62468C;
+        Tue, 10 Mar 2020 13:03:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845423;
-        bh=7NRmezi1vA7WMk2yR8WRvB8DC2NMDVyQdd4/HrxFIMc=;
+        s=default; t=1583845426;
+        bh=iBM1w65UJFTOJRont15HkGQodYMg2ICLaa+vsjpa610=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z8gd0lAV6kvYdNBAdUMmMjogrMi/eOpEApF3lpD9H/6N9uoRZcuBxGmUJH+bFnVXm
-         Xz9E3dv8LinLh29iGTkzH4AJ9bzZmNd2MR3tXYztJGPwu0hRGAqRKzXjoC+3L3Ia2z
-         hWTNhoTsQZfAG8xCC6d7X3F/hopKaTs2wtutCQQc=
+        b=zSJgjPLN2mvL5JPEw6BzNP7XImgxvmxW1x/Tm79JOoUTNdQmF/zUI/2iAjGR/qvTR
+         735WEW4pDqie0U4fW0EgHqdRfiPMmzmJ2m0ntr7/bsbIaK/6r4X+7AZ+xUVHD91WJD
+         UYaaU9CadwD1yMRWNWwblF12zzsNnnFE/vfeIobQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 5.5 177/189] hwmon: (adt7462) Fix an error return in ADT7462_REG_VOLT()
-Date:   Tue, 10 Mar 2020 13:40:14 +0100
-Message-Id: <20200310123657.585510280@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+b2098bc44728a4efb3e9@syzkaller.appspotmail.com,
+        Greg Hackmann <ghackmann@google.com>,
+        Chenbo Feng <fengc@google.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Cong Wang <xiyou.wangcong@gmail.com>
+Subject: [PATCH 5.5 178/189] dma-buf: free dmabuf->name in dma_buf_release()
+Date:   Tue, 10 Mar 2020 13:40:15 +0100
+Message-Id: <20200310123657.656141301@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123639.608886314@linuxfoundation.org>
 References: <20200310123639.608886314@linuxfoundation.org>
@@ -60,36 +63,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Cong Wang <xiyou.wangcong@gmail.com>
 
-commit 44f2f882909fedfc3a56e4b90026910456019743 upstream.
+commit d1f37226431f5d9657aa144a40f2383adbcf27e1 upstream.
 
-This is only called from adt7462_update_device().  The caller expects it
-to return zero on error.  I fixed a similar issue earlier in commit
-a4bf06d58f21 ("hwmon: (adt7462) ADT7462_REG_VOLT_MAX() should return 0")
-but I missed this one.
+dma-buf name can be set via DMA_BUF_SET_NAME ioctl, but once set
+it never gets freed.
 
-Fixes: c0b4e3ab0c76 ("adt7462: new hwmon driver")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-Link: https://lore.kernel.org/r/20200303101608.kqjwfcazu2ylhi2a@kili.mountain
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Free it in dma_buf_release().
+
+Fixes: bb2bb9030425 ("dma-buf: add DMA_BUF_SET_NAME ioctls")
+Reported-by: syzbot+b2098bc44728a4efb3e9@syzkaller.appspotmail.com
+Cc: Greg Hackmann <ghackmann@google.com>
+Cc: Chenbo Feng <fengc@google.com>
+Cc: Sumit Semwal <sumit.semwal@linaro.org>
+Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+Acked-by: Chenbo Feng <fengc@google.com>
+Signed-off-by: Sumit Semwal <sumit.semwal@linaro.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20191227063204.5813-1-xiyou.wangcong@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hwmon/adt7462.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/dma-buf/dma-buf.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/hwmon/adt7462.c
-+++ b/drivers/hwmon/adt7462.c
-@@ -413,7 +413,7 @@ static int ADT7462_REG_VOLT(struct adt74
- 			return 0x95;
- 		break;
- 	}
--	return -ENODEV;
-+	return 0;
- }
+--- a/drivers/dma-buf/dma-buf.c
++++ b/drivers/dma-buf/dma-buf.c
+@@ -108,6 +108,7 @@ static int dma_buf_release(struct inode
+ 		dma_resv_fini(dmabuf->resv);
  
- /* Provide labels for sysfs */
+ 	module_put(dmabuf->owner);
++	kfree(dmabuf->name);
+ 	kfree(dmabuf);
+ 	return 0;
+ }
 
 
