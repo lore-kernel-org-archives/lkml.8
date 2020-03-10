@@ -2,501 +2,159 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3E61C10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 05:41:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D4F5C10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 05:41:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3AB72464B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 05:41:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B88D2464B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 05:41:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HpTP/XkF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726268AbgCJFk7 (ORCPT
+        id S1726316AbgCJFl1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 01:40:59 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:52549 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726156AbgCJFk7 (ORCPT
+        Tue, 10 Mar 2020 01:41:27 -0400
+Received: from mail-qv1-f67.google.com ([209.85.219.67]:36591 "EHLO
+        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726156AbgCJFl1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 01:40:59 -0400
-Received: from [192.168.0.12] (127.19.86.79.rev.sfr.net [79.86.19.127])
-        (Authenticated sender: alex@ghiti.fr)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 221B2240004;
-        Tue, 10 Mar 2020 05:40:54 +0000 (UTC)
-From:   Alex Ghiti <alex@ghiti.fr>
-Subject: Re: [PATCH v2 1/2] riscv: Add support to dump the kernel page tables
-To:     Zong Li <zong.li@sifive.com>, paul.walmsley@sifive.com,
-        palmer@dabbelt.com, aou@eecs.berkeley.edu,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20200210083515.10864-1-zong.li@sifive.com>
- <20200210083515.10864-2-zong.li@sifive.com>
-Message-ID: <c7c798a2-b45c-7b06-5232-f268a9ae8eb9@ghiti.fr>
-Date:   Tue, 10 Mar 2020 01:40:54 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Tue, 10 Mar 2020 01:41:27 -0400
+Received: by mail-qv1-f67.google.com with SMTP id r15so5554736qve.3
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 22:41:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=oJBIG/51r747h3DabsgMtgPriYpa81i3DgY6izBzsN4=;
+        b=HpTP/XkFTb9fryvXSS1GfNQfQLZr0nUjTP+5JU7zZ8CoXYdCbf3EO5kYJzcMkLC+62
+         NF8YyCcuUmiFgoxkzvYNkPJPfbwgmnQ/EIv//KHZ40qFdpVAP/LTdGBv/Efl5bWhmzVo
+         xlQ9mh34miQbNyYrSQWQ2DJmpwFphd5Gwgie2Vtcid3J6jNySpWfecoTQSGvkGry/B7i
+         Wi9FW5M1VFJaaRxMd1OkAOeyXrIBnSLimxLEE+/ab66tEdd31dCvlOvBTjlGr39tI1St
+         5KMLezJ8iPtW28dubhK3Ga3WZ8bq4cvNPebTLmVOXBxWhrUvVRnSDcWAzY5cxZsgAuog
+         LMiw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=oJBIG/51r747h3DabsgMtgPriYpa81i3DgY6izBzsN4=;
+        b=jTn1qzhoC7eI2HajWBitFIadDnDqIlojfIec96wtDKD6AldbDNy8YvqsvLu1mBwyZj
+         NIhDpw9TQWiZGPFOKrnxhWiI0hlm+snCll7S6JhUY7gCprhu4tCz6MWQiysYMGgjo3+m
+         hll6jfAvXt5ForggovAjsujA6ByVQaQOh2YX/506px0jWDfZCrt5dmNIsb5PSragPlYg
+         r87z+XZO22x68gS2Huf1YV7YzzmJduCNOiGVabmXiquRf1vUkyHzZqubHYc6pWAwaWvR
+         UjGMKUBHV5yq3zcMLd6fHbayrODXfe/4pFXUrnE0AwhDsVBDU/RN7Bi1dp8U2M+lAW/6
+         +kyQ==
+X-Gm-Message-State: ANhLgQ3AeKqowbRrRHsLLe7vUVcXcNcWKk2zJd4a+2+13gyyKv60GjUe
+        slsWv2L0JR1rZcAYYWUmV0keZ38cfypLzUbjgjnzDA==
+X-Google-Smtp-Source: ADFU+vu+k5Sw/N/fJfra4eE1vCQYLvVB24EmDGWKXn6sN5IAPUFbQJVURUJhqJ7BfC5FPcdFSi4aGL/bg3d/gOQgdf8=
+X-Received: by 2002:a0c:f892:: with SMTP id u18mr17789908qvn.159.1583818885034;
+ Mon, 09 Mar 2020 22:41:25 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200210083515.10864-2-zong.li@sifive.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <000000000000ff323f05a053100c@google.com> <CALCETrV7JcVt3ejMbHxTs4-CFmKjcmSbW2eMmmMZUM7dg2mBuA@mail.gmail.com>
+ <87eeu28zzl.fsf@nanos.tec.linutronix.de> <CACT4Y+YX72sz2LsqQOTQ=TdDK_f7zURjA9j9VyYwj7GgLrajkQ@mail.gmail.com>
+ <20200309182608.GC1073@sol.localdomain>
+In-Reply-To: <20200309182608.GC1073@sol.localdomain>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Tue, 10 Mar 2020 06:41:13 +0100
+Message-ID: <CACT4Y+ZpN1_HyVyb8Ux9CwpCMT0JBmEP=hJVyCYKfjz9p+p6VA@mail.gmail.com>
+Subject: Re: general protection fault in syscall_return_slowpath
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrew Lutomirski <luto@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, X86 ML <x86@kernel.org>,
+        Jann Horn <jannh@google.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Zong,
+On Mon, Mar 9, 2020 at 7:26 PM Eric Biggers <ebiggers@kernel.org> wrote:
+>
+> On Mon, Mar 09, 2020 at 09:34:25AM +0100, 'Dmitry Vyukov' via syzkaller-bugs wrote:
+> >
+> > I see the repro opens /dev/fb0, so this may be related to the exact
+> > type of framebuffer on the machine. That's what Jann tried to figure
+> > out.
+> >
+> > There is a plenty of open bugs on dashboard related to fb/tty, just
+> > doing a quick grep based on titles:
+> >
+> > https://syzkaller.appspot.com/upstream
+> > BUG: unable to handle kernel paging request in
+> > drm_fb_helper_dirty_work 7 4d20h 90d
+> > BUG: unable to handle kernel paging request in vga16fb_imageblit 1 74d 73d
+> > divide error in fbcon_switch C cause 141 3d15h 96d
+> > general protection fault in fbcon_cursor C cause 12 13h48m 87d
+> > general protection fault in fbcon_fb_blanked 3 88d 90d
+> > general protection fault in fbcon_invert_region 1 49d 48d
+> > general protection fault in fbcon_modechanged 3 89d 90d
+> > INFO: task hung in do_fb_ioctl 6 36d 57d
+> > INFO: task hung in fb_compat_ioctl 1 87d 87d
+> > INFO: task hung in fb_open C cause 171 1h06m 96d
+> > INFO: task hung in fb_release C cause 23 2d12h 77d
+> > INFO: task hung in release_tty 3 6d16h 62d
+> > INFO: task hung in tty_ldisc_hangup C cause 15 17d 92d
+> > INFO: trying to register non-static key in hci_uart_tty_receive (2) 1 103d 99d
+> > KASAN: global-out-of-bounds Read in fbcon_get_font C cause 19 7d06h 90d
+> > KASAN: global-out-of-bounds Read in fb_pad_aligned_buffer C cause 5 4d22h 92d
+> > KASAN: global-out-of-bounds Read in vga16fb_imageblit C cause 225 1d11h 96d
+> > KASAN: slab-out-of-bounds Read in fbcon_get_font C cause 42 5d04h 96d
+> > KASAN: slab-out-of-bounds Read in fb_pad_aligned_buffer 4 9d00h 48d
+> > KASAN: slab-out-of-bounds Write in fbcon_scroll 1 75d 73d
+> > KASAN: use-after-free Read in fbcon_cursor syz cause 3 41d 84d
+> > KASAN: use-after-free Read in fb_mode_is_equal syz cause 70 5h49m 92d
+> > KASAN: use-after-free Read in tty_open C cause 7 42d 96d
+> > KASAN: use-after-free Write in release_tty C cause 544 4h01m 96d
+> > KASAN: vmalloc-out-of-bounds Read in drm_fb_helper_dirty_work 1 80d 80d
+> > KASAN: vmalloc-out-of-bounds Write in drm_fb_helper_dirty_work 2 64d 76d
+> > KCSAN: data-race in echo_char / n_tty_receive_buf_common 11 21d 125d
+> > KMSAN: kernel-infoleak in tty_compat_ioctl C 81 2h17m 14d
+> > memory leak in tty_init_dev C 3 121d 192d
+> > possible deadlock in n_tty_receive_buf_common C cause 585 1h18m 23d
+> > possible deadlock in tty_port_close_start C cause 4 9d18h 25d
+> > WARNING in dlfb_submit_urb/usb_submit_urb C 190 8d23h 251d
+> >
+> > So if you don't see something obvious here, it may be not worth
+> > spending more time until these, more obvious ones are fixed. This may
+> > be a previous silent memory corruption that wasn't caught by KASAN.
+>
+> Yesterday I was looking at a similar bug
+> "general protection fault in do_con_write"
+> (https://syzkaller.appspot.com/bug?id=f82ab89451323208e343f4a8632014ef12b1252d).
+>
+> It has a simple single-threaded reproducer at
+> https://syzkaller.appspot.com/text?tag=ReproC&x=169c4c81e00000 that just:
+>
+>         1. Calls FBIOPUT_VSCREENINFO on /dev/fb0
+>         2. Opens /dev/tty20 and writes something to it
+>
+> Presumably, to reproduce this you at least need some graphics hardware with a
+> corresponding framebuffer driver (to get /dev/fb0), as well as
+> CONFIG_FRAMEBUFFER_CONSOLE=y (so that the virtual console /dev/tty20 uses a
+> framebuffer console and not something else like a VGA text mode console).
+>
+> However, when I tried to reproduce this locally in QEMU with the same kconfig
+> (https://syzkaller.appspot.com/text?tag=KernelConfig&x=31018567b8f0fc70) and
+> with graphics enabled (-vga std), it didn't work.
+>
+> I then tried to reproduce on a Google Compute Engine VM with the exact same
+> kconfig, and it worked.  I think the framebuffer driver in use was vga16fb.c.
+> It's odd because the same driver seems to be used in the QEMU case, and in both
+> cases the virtual consoles were bound to the framebuffer console.
+>
+> I need to double-check all this though.
+>
+> And yes, probably many of the above bugs have the same cause.
 
-On 2/10/20 3:35 AM, Zong Li wrote:
-> In a similar manner to arm64, x86, powerpc, etc., it can traverse all
-> page tables, and dump the page table layout with the memory types and
-> permissions.
-> 
-> Add a debugfs file at /sys/kernel/debug/kernel_page_tables to export
-> the page table layout to userspace.
-> 
-> Changes in v2:
-> - Remove #ifdef CONFIG_PTDUMP_CORE in header. Suggested by Steven Price.
-> 
-> Signed-off-by: Zong Li <zong.li@sifive.com>
-> ---
->   arch/riscv/Kconfig               |   1 +
->   arch/riscv/include/asm/pgtable.h |  10 +
->   arch/riscv/include/asm/ptdump.h  |  11 ++
->   arch/riscv/mm/Makefile           |   1 +
->   arch/riscv/mm/ptdump.c           | 317 +++++++++++++++++++++++++++++++
->   5 files changed, 340 insertions(+)
->   create mode 100644 arch/riscv/include/asm/ptdump.h
->   create mode 100644 arch/riscv/mm/ptdump.c
-> 
-> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> index 73f029eae0cc..6e81da55b5e4 100644
-> --- a/arch/riscv/Kconfig
-> +++ b/arch/riscv/Kconfig
-> @@ -29,6 +29,7 @@ config RISCV
->   	select GENERIC_SMP_IDLE_THREAD
->   	select GENERIC_ATOMIC64 if !64BIT
->   	select GENERIC_IOREMAP
-> +	select GENERIC_PTDUMP
->   	select HAVE_ARCH_AUDITSYSCALL
->   	select HAVE_ARCH_SECCOMP_FILTER
->   	select HAVE_ASM_MODVERSIONS
-> diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
-> index e43041519edd..ac353e44f80c 100644
-> --- a/arch/riscv/include/asm/pgtable.h
-> +++ b/arch/riscv/include/asm/pgtable.h
-> @@ -444,6 +444,16 @@ static inline int ptep_clear_flush_young(struct vm_area_struct *vma,
->   #endif
->   #define FIXADDR_START    (FIXADDR_TOP - FIXADDR_SIZE)
->   
-> +/*
-> + * In the RV64 Linux scheme, we give the user half of the virtual-address space
-> + * and give the kernel the other (upper) half.
-> + */
-> +#ifdef CONFIG_64BIT
-> +#define KERN_VIRT_START	(-(BIT(CONFIG_VA_BITS)) + TASK_SIZE) > +#else
-> +#define KERN_VIRT_START	FIXADDR_START
-> +#endif
-> +
->   /*
->    * Task size is 0x4000000000 for RV64 or 0x9fc00000 for RV32.
->    * Note that PGDIR_SIZE must evenly divide TASK_SIZE.
-> diff --git a/arch/riscv/include/asm/ptdump.h b/arch/riscv/include/asm/ptdump.h
-> new file mode 100644
-> index 000000000000..e29af7191909
-> --- /dev/null
-> +++ b/arch/riscv/include/asm/ptdump.h
-> @@ -0,0 +1,11 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright (C) 2019 SiFive
-> + */
-> +
-> +#ifndef _ASM_RISCV_PTDUMP_H
-> +#define _ASM_RISCV_PTDUMP_H
-> +
-> +void ptdump_check_wx(void);
-> +
-> +#endif /* _ASM_RISCV_PTDUMP_H */
-> diff --git a/arch/riscv/mm/Makefile b/arch/riscv/mm/Makefile
-> index 50b7af58c566..814e16a8d68a 100644
-> --- a/arch/riscv/mm/Makefile
-> +++ b/arch/riscv/mm/Makefile
-> @@ -15,6 +15,7 @@ ifeq ($(CONFIG_MMU),y)
->   obj-$(CONFIG_SMP) += tlbflush.o
->   endif
->   obj-$(CONFIG_HUGETLB_PAGE) += hugetlbpage.o
-> +obj-$(CONFIG_PTDUMP_CORE) += ptdump.o
->   obj-$(CONFIG_KASAN)   += kasan_init.o
->   
->   ifdef CONFIG_KASAN
-> diff --git a/arch/riscv/mm/ptdump.c b/arch/riscv/mm/ptdump.c
-> new file mode 100644
-> index 000000000000..9a67e723fff7
-> --- /dev/null
-> +++ b/arch/riscv/mm/ptdump.c
-> @@ -0,0 +1,317 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Copyright (C) 2019 SiFive
-> + */
-> +
-> +#include <linux/init.h>
-> +#include <linux/debugfs.h>
-> +#include <linux/seq_file.h>
-> +#include <linux/ptdump.h>
-> +
-> +#include <asm/ptdump.h>
-> +#include <asm/pgtable.h>
-> +#include <asm/kasan.h>
-> +
-> +#define pt_dump_seq_printf(m, fmt, args...)	\
-> +({						\
-> +	if (m)					\
-> +		seq_printf(m, fmt, ##args);	\
-> +})
-> +
-> +#define pt_dump_seq_puts(m, fmt)	\
-> +({					\
-> +	if (m)				\
-> +		seq_printf(m, fmt);	\
-> +})
-> +
-> +/*
-> + * The page dumper groups page table entries of the same type into a single
-> + * description. It uses pg_state to track the range information while
-> + * iterating over the pte entries. When the continuity is broken it then
-> + * dumps out a description of the range.
-> + */
-> +struct pg_state {
-> +	struct ptdump_state ptdump;
-> +	struct seq_file *seq;
-> +	const struct addr_marker *marker;
-> +	unsigned long start_address;
-> +	unsigned long start_pa;
-> +	unsigned long last_pa;
-> +	int level;
-> +	u64 current_prot;
-> +	bool check_wx;
-> +	unsigned long wx_pages;
-> +};
-> +
-> +/* Address marker */
-> +struct addr_marker {
-> +	unsigned long start_address;
-> +	const char *name;
-> +};
-> +
-> +static struct addr_marker address_markers[] = {
-> +#ifdef CONFIG_KASAN
-> +	{KASAN_SHADOW_START,	"Kasan shadow start"},
-> +	{KASAN_SHADOW_END,	"Kasan shadow end"},
-> +#endif
-> +	{FIXADDR_START,		"Fixmap start"},
-> +	{FIXADDR_TOP,		"Fixmap end"},
-> +	{PCI_IO_START,		"PCI I/O start"},
-> +	{PCI_IO_END,		"PCI I/O end"},
-> +#ifdef CONFIG_SPARSEMEM_VMEMMAP
-> +	{VMEMMAP_START,		"vmemmap start"},
-> +	{VMEMMAP_END,		"vmemmap end"},
-> +#endif
-> +	{VMALLOC_START,		"vmalloc() area"},
-> +	{VMALLOC_END,		"vmalloc() end"},
-> +	{PAGE_OFFSET,		"Linear mapping"},
-> +	{-1, NULL},
-> +};
-> +
-> +/* Page Table Entry */
-> +struct prot_bits {
-> +	u64 mask;
-> +	u64 val;
-> +	const char *set;
-> +	const char *clear;
-> +};
-> +
-> +static const struct prot_bits pte_bits[] = {
-> +	{
-> +		.mask = _PAGE_SOFT,
-> +		.val = _PAGE_SOFT,
-> +		.set = "RSW",
-> +		.clear = "   ",
-> +	}, {
-> +		.mask = _PAGE_DIRTY,
-> +		.val = _PAGE_DIRTY,
-> +		.set = "D",
-> +		.clear = ".",
-> +	}, {
-> +		.mask = _PAGE_ACCESSED,
-> +		.val = _PAGE_ACCESSED,
-> +		.set = "A",
-> +		.clear = ".",
-> +	}, {
-> +		.mask = _PAGE_GLOBAL,
-> +		.val = _PAGE_GLOBAL,
-> +		.set = "G",
-> +		.clear = ".",
-> +	}, {
-> +		.mask = _PAGE_USER,
-> +		.val = _PAGE_USER,
-> +		.set = "U",
-> +		.clear = ".",
-> +	}, {
-> +		.mask = _PAGE_EXEC,
-> +		.val = _PAGE_EXEC,
-> +		.set = "X",
-> +		.clear = ".",
-> +	}, {
-> +		.mask = _PAGE_WRITE,
-> +		.val = _PAGE_WRITE,
-> +		.set = "W",
-> +		.clear = ".",
-> +	}, {
-> +		.mask = _PAGE_READ,
-> +		.val = _PAGE_READ,
-> +		.set = "R",
-> +		.clear = ".",
-> +	}, {
-> +		.mask = _PAGE_PRESENT,
-> +		.val = _PAGE_PRESENT,
-> +		.set = "V",
-> +		.clear = ".",
-> +	}
-> +};
-> +
-> +/* Page Level */
-> +struct pg_level {
-> +	const char *name;
-> +	u64 mask;
-> +};
-> +
-> +static struct pg_level pg_level[] = {
-> +	{ /* pgd */
-> +		.name = "PGD",
-> +	}, { /* p4d */
-> +		.name = (CONFIG_PGTABLE_LEVELS > 4) ? "P4D" : "PGD",
-> +	}, { /* pud */
-> +		.name = (CONFIG_PGTABLE_LEVELS > 3) ? "PUD" : "PGD",
-> +	}, { /* pmd */
-> +		.name = (CONFIG_PGTABLE_LEVELS > 2) ? "PMD" : "PGD",
-> +	}, { /* pte */
-> +		.name = "PTE",
-> +	},
-> +};
-> +
-> +static void dump_prot(struct pg_state *st)
-> +{
-> +	unsigned int i;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(pte_bits); i++) {
-> +		const char *s;
-> +
-> +		if ((st->current_prot & pte_bits[i].mask) == pte_bits[i].val)
-> +			s = pte_bits[i].set;
-> +		else
-> +			s = pte_bits[i].clear;
-> +
-> +		if (s)
-> +			pt_dump_seq_printf(st->seq, " %s", s);
-> +	}
-> +}
-> +
-> +#ifdef CONFIG_64BIT
-> +#define ADDR_FORMAT	"0x%016lx"
-> +#else
-> +#define ADDR_FORMAT	"0x%08lx"
-> +#endif
-> +static void dump_addr(struct pg_state *st, unsigned long addr)
-> +{
-> +	static const char units[] = "KMGTPE";
-> +	const char *unit = units;
-> +	unsigned long delta;
-> +
-> +	pt_dump_seq_printf(st->seq, ADDR_FORMAT "-" ADDR_FORMAT "   ",
-> +			   st->start_address, addr);
-> +
-> +	pt_dump_seq_printf(st->seq, " " ADDR_FORMAT " ", st->start_pa);
-> +	delta = (addr - st->start_address) >> 10;
-> +
-> +	while (!(delta & 1023) && unit[1]) {
-> +		delta >>= 10;
-> +		unit++;
-> +	}
-> +
-> +	pt_dump_seq_printf(st->seq, "%9lu%c %s", delta, *unit,
-> +			   pg_level[st->level].name);
-> +}
-> +
-> +static void note_prot_wx(struct pg_state *st, unsigned long addr)
-> +{
-> +	if (!st->check_wx)
-> +		return;
-> +
-> +	if ((st->current_prot & (_PAGE_WRITE | _PAGE_EXEC)) !=
-> +	    (_PAGE_WRITE | _PAGE_EXEC))
-> +		return;
-> +
-> +	WARN_ONCE(1, "riscv/mm: Found insecure W+X mapping at address %p/%pS\n",
-> +		  (void *)st->start_address, (void *)st->start_address);
-> +
-> +	st->wx_pages += (addr - st->start_address) / PAGE_SIZE;
-> +}
-> +
-> +static void note_page(struct ptdump_state *pt_st, unsigned long addr,
-> +		      int level, unsigned long val)
-> +{
-> +	struct pg_state *st = container_of(pt_st, struct pg_state, ptdump);
-> +	u64 pa = PFN_PHYS(pte_pfn(__pte(val)));
-> +	u64 prot = 0;
-> +
-> +	if (level >= 0)
-> +		prot = val & pg_level[level].mask;
-> +
-> +	if (st->level == -1) {
-> +		st->level = level;
-> +		st->current_prot = prot;
-> +		st->start_address = addr;
-> +		st->start_pa = pa;
-> +		st->last_pa = pa;
-> +		pt_dump_seq_printf(st->seq, "---[ %s ]---\n", st->marker->name);
-> +	} else if (prot != st->current_prot ||
-> +		   level != st->level || addr >= st->marker[1].start_address) {
-> +		if (st->current_prot) {
-> +			note_prot_wx(st, addr);
-> +			dump_addr(st, addr);
-> +			dump_prot(st);
-> +			pt_dump_seq_puts(st->seq, "\n");
-> +		}
-> +
-> +		while (addr >= st->marker[1].start_address) {
-> +			st->marker++;
-> +			pt_dump_seq_printf(st->seq, "---[ %s ]---\n",
-> +					   st->marker->name);
-> +		}
-> +
-> +		st->start_address = addr;
-> +		st->start_pa = pa;
-> +		st->last_pa = pa;
-> +		st->current_prot = prot;
-> +		st->level = level;
-> +	} else {
-> +		st->last_pa = pa;
-> +	}
-> +}
-> +
-> +static void ptdump_walk(struct seq_file *s)
-> +{
-> +	struct pg_state st = {
-> +		.seq = s,
-> +		.marker = address_markers,
-> +		.level = -1,
-> +		.ptdump = {
-> +			.note_page = note_page,
-> +			.range = (struct ptdump_range[]) {
-> +				{KERN_VIRT_START, ULONG_MAX},
-> +				{0, 0}
-> +			}
-> +		}
-> +	};
-> +
-> +	ptdump_walk_pgd(&st.ptdump, &init_mm, NULL);
-> +}
-> +
-> +void ptdump_check_wx(void)
-> +{
-> +	struct pg_state st = {
-> +		.seq = NULL,
-> +		.marker = (struct addr_marker[]) {
-> +			{0, NULL},
-> +			{-1, NULL},
-> +		},
-> +		.level = -1,
-> +		.check_wx = true,
-> +		.ptdump = {
-> +			.note_page = note_page,
-> +			.range = (struct ptdump_range[]) {
-> +				{KERN_VIRT_START, ULONG_MAX},
-> +				{0, 0}
-> +			}
-> +		}
-> +	};
-> +
-> +	ptdump_walk_pgd(&st.ptdump, &init_mm, NULL);
-> +
-> +	if (st.wx_pages)
-> +		pr_warn("Checked W+X mappings: FAILED, %lu W+X pages found\n",
-
-"FAILED" should be lowercase like "passed" below (or the other way around).
-
-> +			st.wx_pages);
-> +	else
-> +		pr_info("Checked W+X mappings: passed, no W+X pages found\n");
-> +}
-> +
-> +static int ptdump_show(struct seq_file *m, void *v)
-> +{
-> +	ptdump_walk(m);
-> +
-> +	return 0;
-> +}
-> +
-> +DEFINE_SHOW_ATTRIBUTE(ptdump);
-> +
-> +static int ptdump_init(void)
-> +{
-> +	unsigned int i, j;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(pg_level); i++)
-> +		for (j = 0; j < ARRAY_SIZE(pte_bits); j++)
-> +			pg_level[i].mask |= pte_bits[j].mask;
-> +
-> +	debugfs_create_file("kernel_page_tables", 0400, NULL, NULL,
-> +			    &ptdump_fops);
-> +
-> +	return 0;
-> +}
-> +
-> +device_initcall(ptdump_init);
-> 
-
-Other than the small comment above, I have tested it on my sv48 series 
-(I had to do some small changes to adapt it, but nothing significant):
-
----[ Fixmap start ]---
-0xffff9dfffef00000-0xffff9dffff000000    0x0000000082200000         1M 
-PTE     D A . . . W R V
----[ Fixmap end ]---
----[ PCI I/O start ]---
----[ PCI I/O end ]---
----[ vmalloc() area ]---
-0xffffa00000000000-0xffffa00004000000    0x000000000c000000        64M 
-PTE     D A . . . W R V
-0xffffa00004001000-0xffffa00004002000    0x0000000010008000         4K 
-PTE     D A . . . W R V
-0xffffa00004003000-0xffffa00004004000    0x0000000010007000         4K 
-PTE     D A . . . W R V
-0xffffa00004005000-0xffffa00004006000    0x0000000010006000         4K 
-PTE     D A . . . W R V
-0xffffa00004011000-0xffffa00004012000    0x0000000010000000         4K 
-PTE     D A . . . W R V
-0xffffa0000401c000-0xffffa0000401f000    0x00000007af979000        12K 
-PTE     D A . . . W R V
-0xffffbffffffbb000-0xffffbffffffbe000    0x00000007b030e000        12K 
-PTE     D A . . . W R V
-0xffffbffffffcc000-0xffffbffffffcf000    0x00000007b0311000        12K 
-PTE     D A . . . W R V
-0xffffbffffffdd000-0xffffbffffffe0000    0x00000007b0314000        12K 
-PTE     D A . . . W R V
-0xffffbffffffee000-0xffffbfffffff1000    0x00000007b0317000        12K 
-PTE     D A . . . W R V
----[ vmalloc() end ]---
----[ Linear mapping ]---
-0xffffc00000000000-0xffffc00752e00000    0x0000000080200000     29998M 
-PMD     D A . . X W R V
-
-You can then add:
-
-Tested-by: Alexandre Ghiti <alex@ghiti.fr>
-
-Thanks,
-
-Alex
+Interesting. If you manage to reproduce it (or at least figure out
+"the closest" video driver), it would be useful to mention at:
+https://github.com/google/syzkaller/blob/master/docs/syzbot.md#crash-does-not-reproduce
+Currently we don't specify any -vga flag at all.
