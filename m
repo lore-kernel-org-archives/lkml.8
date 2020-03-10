@@ -2,93 +2,255 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECF0CC18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 16:50:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33411C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 16:54:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCD8921927
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 16:50:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1B2420873
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 16:54:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727097AbgCJQuY (ORCPT
+        id S1726968AbgCJQyK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 12:50:24 -0400
-Received: from smtprelay0075.hostedemail.com ([216.40.44.75]:58653 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726307AbgCJQuY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 12:50:24 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 53E711802DEEB;
-        Tue, 10 Mar 2020 16:50:23 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: list44_3299c48c4159
-X-Filterd-Recvd-Size: 2580
-Received: from XPS-9350.home (unknown [47.151.143.254])
-        (Authenticated sender: joe@perches.com)
-        by omf19.hostedemail.com (Postfix) with ESMTPA;
-        Tue, 10 Mar 2020 16:50:21 +0000 (UTC)
-Message-ID: <0fdd3a89033ce3d6e7ab6b12eddefc343ac43729.camel@perches.com>
-Subject: Re: [PATCH] kbuild: Disable -Wpointer-to-enum-cast
-From:   Joe Perches <joe@perches.com>
-To:     Masahiro Yamada <masahiroy@kernel.org>,
-        David Laight <David.Laight@aculab.com>
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        stable <stable@vger.kernel.org>
-Date:   Tue, 10 Mar 2020 09:48:40 -0700
-In-Reply-To: <CAK7LNARMsO0AeO8-kH4czMuW0Y_=dN+ZhtXNdRE7CWGvU2PNvA@mail.gmail.com>
-References: <20200308073400.23398-1-natechancellor@gmail.com>
-         <CAK7LNARcTHpd8fzrAhFVB_AR7NoBgenX64de0eS2uN8g0by9PQ@mail.gmail.com>
-         <20200310012545.GA16822@ubuntu-m2-xlarge-x86>
-         <c2a687d065c1463d8eea9947687b3b05@AcuMS.aculab.com>
-         <CAK7LNARMsO0AeO8-kH4czMuW0Y_=dN+ZhtXNdRE7CWGvU2PNvA@mail.gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Tue, 10 Mar 2020 12:54:10 -0400
+Received: from mga09.intel.com ([134.134.136.24]:39029 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726837AbgCJQyK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 12:54:10 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Mar 2020 09:54:09 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,537,1574150400"; 
+   d="scan'208";a="234406247"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga007.fm.intel.com with ESMTP; 10 Mar 2020 09:54:08 -0700
+Received: from [10.251.24.33] (kliang2-mobl.ccr.corp.intel.com [10.251.24.33])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id 666A85804A0;
+        Tue, 10 Mar 2020 09:54:07 -0700 (PDT)
+Subject: Re: [PATCH V2 1/9] perf pmu: Add support for PMU capabilities
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     jolsa@redhat.com, peterz@infradead.org, mingo@redhat.com,
+        linux-kernel@vger.kernel.org, namhyung@kernel.org,
+        adrian.hunter@intel.com, mathieu.poirier@linaro.org,
+        ravi.bangoria@linux.ibm.com, alexey.budankov@linux.intel.com,
+        vitaly.slobodskoy@intel.com, pavel.gerasimov@intel.com,
+        mpe@ellerman.id.au, eranian@google.com, ak@linux.intel.com
+References: <20200309174639.4594-1-kan.liang@linux.intel.com>
+ <20200309174639.4594-2-kan.liang@linux.intel.com>
+ <20200310130644.GC15931@kernel.org>
+ <00ebb51d-0282-8181-7285-c60aec27566c@linux.intel.com>
+ <20200310140421.GD15931@kernel.org>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+Message-ID: <fa4e32f0-1572-a9aa-e609-3cecaae7ef9e@linux.intel.com>
+Date:   Tue, 10 Mar 2020 12:54:05 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
+In-Reply-To: <20200310140421.GD15931@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-03-11 at 00:30 +0900, Masahiro Yamada wrote:
-> On Tue, Mar 10, 2020 at 8:31 PM David Laight <David.Laight@aculab.com> wrote:
-> > From: Nathan Chancellor
-> > > Sent: 10 March 2020 01:26
-> > ...
-> > > Sure, I can send v2 to do that but I think that sending 97 patches just
-> > > casting the small values (usually less than twenty) to unsigned long
-> > > then to the enum is rather frivolous. I audited at least ten to fifteen
-> > > of these call sites when creating the clang patch and they are all
-> > > basically false positives.
-> > 
-> > Such casts just make the code hard to read.
-> > If misused casts can hide horrid bugs.
-> > IMHO sprinkling the code with casts just to remove
-> > compiler warnings will bite back one day.
-> > 
+
+
+On 3/10/2020 10:04 AM, Arnaldo Carvalho de Melo wrote:
+> Em Tue, Mar 10, 2020 at 09:53:24AM -0400, Liang, Kan escreveu:
+>> On 3/10/2020 9:06 AM, Arnaldo Carvalho de Melo wrote:
+>>> Em Mon, Mar 09, 2020 at 10:46:31AM -0700, kan.liang@linux.intel.com escreveu:
+>>>> +static int perf_pmu__new_caps(struct list_head *list, char *name, char *value)
+>>>> +{
+>>>> +	struct perf_pmu_caps *caps;
+>>>> +
+>>>> +	caps = zalloc(sizeof(*caps));
+>>>> +	if (!caps)
+>>>> +		return -ENOMEM;
 > 
-> I agree that too much casts make the code hard to read,
-> but irrespective of this patch, there is no difference
-> in the fact that we need a cast to convert
-> (const void *) to a non-pointer value.
+>>> So here you check if zalloc fails and returns a proper error
 > 
-> The difference is whether we use
-> (uintptr_t) or (enum foo).
+>>>> +	caps->name = strdup(name);
+>>>> +	caps->value = strndup(value, strlen(value) - 1);
+> 
+>>> But then you don't check strdup()?
+>   
+>> Right, I should check strdup(), otherwise the capability information may be
+>> incomplete. I will fix it in V3.
+> 
+> Thanks, overall just consider making the patches smaller if possible,
+> with prep patches paving the way for more complex changes so that
+> reviewing becomes easier, for instance:
+> 
+>    perf machine: Refine the function for LBR call stack reconstruction
+> 
+> Seems to do too many things at once. It was unfortunate, for instance,
+> that the pre-existing code had that
+> 
+> resolve_lbr_callchain_sample()
+> {
+> 	/* LBR only affects the user callchain */
+> 	if (i != chain_nr) {
+> 		body of the function, long
+> 		....
+> 		return err;
+> 	}
+> 
+> 	return 0;
+> }
+> 
+> One of the things you did in this patch was to the more sensible:
+> 
+> 	/* LBR only affects the user callchain */
+> 	if (i == chain_nr)
+> 		return 0;
+> 
+> 	body of the function
+> 	...
+> 	return err;
+> 
+> So if you had a prep patch at this point just removing that silly
+> indent, then we would see that that is just removing the indent, the
+> next patch wouldn't have that check for user callchains, would be
+> smaller, I think that would help reduce the patch sizes.
+> 
+> Then if you just moved to a separate function the (callchain_param.order
+> == ORDER_CALLEE) part, the patch would again be smaller, etc.
+> 
+> This helps reviewing and usually helps us later, with bisection, when
+> some bug is introduced,
 
-or hide it altogether in a macro like cast_to
 
-#define cast_to(type, val)	\
-	etc...
-
-where cast_to could do the appropriate
-intermediate cast if type is an enum
-and sizeof(tupeof val) is larger than int
+Sure, I will go through all patches and see what I can do to reduce the 
+size of patches in V3.
 
 
+Thanks,
+Kan
+
+> 
+> Regards,
+> 
+> - Arnaldo
+> 
+>> Thanks,
+>> Kan
+>>
+>>>
+>>>> +	list_add_tail(&caps->list, list);
+>>>> +	return 0;
+>>>> +}
+>>>> +
+>>>> +/*
+>>>> + * Reading/parsing the given pmu capabilities, which should be located at:
+>>>> + * /sys/bus/event_source/devices/<dev>/caps as sysfs group attributes.
+>>>> + * Return the number of capabilities
+>>>> + */
+>>>> +int perf_pmu__caps_parse(struct perf_pmu *pmu)
+>>>> +{
+>>>> +	struct stat st;
+>>>> +	char caps_path[PATH_MAX];
+>>>> +	const char *sysfs = sysfs__mountpoint();
+>>>> +	DIR *caps_dir;
+>>>> +	struct dirent *evt_ent;
+>>>> +	int nr_caps = 0;
+>>>> +
+>>>> +	if (!sysfs)
+>>>> +		return -1;
+>>>> +
+>>>> +	snprintf(caps_path, PATH_MAX,
+>>>> +		 "%s" EVENT_SOURCE_DEVICE_PATH "%s/caps", sysfs, pmu->name);
+>>>> +
+>>>> +	if (stat(caps_path, &st) < 0)
+>>>> +		return 0;	/* no error if caps does not exist */
+>>>> +
+>>>> +	caps_dir = opendir(caps_path);
+>>>> +	if (!caps_dir)
+>>>> +		return -EINVAL;
+>>>> +
+>>>> +	while ((evt_ent = readdir(caps_dir)) != NULL) {
+>>>> +		char path[PATH_MAX + NAME_MAX + 1];
+>>>> +		char *name = evt_ent->d_name;
+>>>> +		char value[128];
+>>>> +		FILE *file;
+>>>> +
+>>>> +		if (!strcmp(name, ".") || !strcmp(name, ".."))
+>>>> +			continue;
+>>>> +
+>>>> +		snprintf(path, sizeof(path), "%s/%s", caps_path, name);
+>>>> +
+>>>> +		file = fopen(path, "r");
+>>>> +		if (!file)
+>>>> +			break;
+>>>> +
+>>>> +		if (!fgets(value, sizeof(value), file) ||
+>>>> +		    (perf_pmu__new_caps(&pmu->caps, name, value) < 0)) {
+>>>> +			fclose(file);
+>>>> +			break;
+>>>> +		}
+>>>> +
+>>>> +		nr_caps++;
+>>>> +		fclose(file);
+>>>> +	}
+>>>> +
+>>>> +	closedir(caps_dir);
+>>>> +
+>>>> +	return nr_caps;
+>>>> +}
+>>>> +
+>>>> +struct perf_pmu_caps *perf_pmu__scan_caps(struct perf_pmu *pmu,
+>>>> +					  struct perf_pmu_caps *caps)
+>>>> +{
+>>>> +	if (!pmu)
+>>>> +		return NULL;
+>>>> +
+>>>> +	if (!caps)
+>>>> +		caps = list_prepare_entry(caps, &pmu->caps, list);
+>>>> +
+>>>> +	list_for_each_entry_continue(caps, &pmu->caps, list)
+>>>> +		return caps;
+>>>> +
+>>>> +	return NULL;
+>>>> +}
+>>>> diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
+>>>> index 6737e3d5d568..a228e27ae462 100644
+>>>> --- a/tools/perf/util/pmu.h
+>>>> +++ b/tools/perf/util/pmu.h
+>>>> @@ -21,6 +21,12 @@ enum {
+>>>>    struct perf_event_attr;
+>>>> +struct perf_pmu_caps {
+>>>> +	char *name;
+>>>> +	char *value;
+>>>> +	struct list_head list;
+>>>> +};
+>>>> +
+>>>>    struct perf_pmu {
+>>>>    	char *name;
+>>>>    	__u32 type;
+>>>> @@ -32,6 +38,7 @@ struct perf_pmu {
+>>>>    	struct perf_cpu_map *cpus;
+>>>>    	struct list_head format;  /* HEAD struct perf_pmu_format -> list */
+>>>>    	struct list_head aliases; /* HEAD struct perf_pmu_alias -> list */
+>>>> +	struct list_head caps;    /* HEAD struct perf_pmu_caps -> list */
+>>>>    	struct list_head list;    /* ELEM */
+>>>>    };
+>>>> @@ -102,4 +109,9 @@ struct pmu_events_map *perf_pmu__find_map(struct perf_pmu *pmu);
+>>>>    int perf_pmu__convert_scale(const char *scale, char **end, double *sval);
+>>>> +int perf_pmu__caps_parse(struct perf_pmu *pmu);
+>>>> +
+>>>> +struct perf_pmu_caps *perf_pmu__scan_caps(struct perf_pmu *pmu,
+>>>> +					  struct perf_pmu_caps *caps);
+>>>> +
+>>>>    #endif /* __PMU_H */
+>>>> -- 
+>>>> 2.17.1
+>>>>
+>>>
+> 
