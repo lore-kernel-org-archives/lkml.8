@@ -2,165 +2,138 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E697EC10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:55:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9D17C10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:56:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3C89227BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:55:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94D22215A4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:56:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="i9w8VsHi"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HoWjp37P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727597AbgCJUzm (ORCPT
+        id S1727469AbgCJUz7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 16:55:42 -0400
-Received: from mail-dm6nam10on2078.outbound.protection.outlook.com ([40.107.93.78]:6092
-        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727496AbgCJUzl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 16:55:41 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IYnlnLapU9noPEjK/9RWf2/74LAjnfElUDyTFaB/MQ8LbkD3nlsKG6o1Tn/2XRyLYPafPanickeEtAMvJoNhfCaMUaq8QXr27ZoWA+TxDEYuURs/sxHs6cmME4bQGrW1k9xZAvhBe/A/J1AiswHosv5Zzprei6m6SVpSsclW+H0Rag8krN+uz47dWnFzpKDLt5UUbSu4RpOJyvarEJm/jCYZXF/X0YUTQbzha1ylY529avf4s4zq+3LwLoDZw2RlhxtBZOF0KiM+D6+GBXwY0QkqiSBH/e1e0/JQwTwTPvsxzHEh13XG5Xb6DK655gRMg+hsqfYt2Korn423BlGc8g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/NH075+zFNvlnqWVy1IhzqbRw6HT0o832CSe1PdyReY=;
- b=VaTMqCOnzzMUfzXs98Cvk2oL9fbWWAGWn6C/yyd/jPZR/67X0eeal0C9qYsfB8BDhOzx6L/oU2h/Q2I/0hd7ENvlfviUg7KorlsTDPINzzEn+EdBU6pYPxYMe6MaqO0fYce4C9LXO9N9ClL1rJj8qhu+d+AEYW3JEwajDfXW9T88PmqvH8e15dgvb6FYo6gKv5WyDgv4aG65neltx2fYFysoe04YkWPld6A0SnEPdYy4MXobzAIq91kIot+IxhZ0HDwWl7SUAREpieaMlfL5NTAb0MPVMu2QbqXvebYJlwWoZ48YZl+DVhxSBI/ibE5tFw7IQHJXCDNyZ3CMssXE8A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+        Tue, 10 Mar 2020 16:55:59 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:44945 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727496AbgCJUz5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 16:55:57 -0400
+Received: by mail-pf1-f195.google.com with SMTP id b72so17975pfb.11
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 13:55:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/NH075+zFNvlnqWVy1IhzqbRw6HT0o832CSe1PdyReY=;
- b=i9w8VsHiXELW3mPIWphmjfif5d6ANPF+jHbCxnujy0MfPXw3NsHxY4mtfvYBj6YUW+V+MSBETU57DlYsvmOFoeRr7hjCnwrdgJnK6Mol/MLdJkr1MRz4eATUVuDf9cHwiQm36IPPsvhZ/stkw2BtSI+C9f/qWgoMotQzEZBxTC0=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Sanju.Mehta@amd.com; 
-Received: from MN2PR12MB3455.namprd12.prod.outlook.com (2603:10b6:208:d0::22)
- by MN2PR12MB4031.namprd12.prod.outlook.com (2603:10b6:208:16e::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.15; Tue, 10 Mar
- 2020 20:55:39 +0000
-Received: from MN2PR12MB3455.namprd12.prod.outlook.com
- ([fe80::f19a:d981:717:3cb6]) by MN2PR12MB3455.namprd12.prod.outlook.com
- ([fe80::f19a:d981:717:3cb6%2]) with mapi id 15.20.2793.013; Tue, 10 Mar 2020
- 20:55:39 +0000
-From:   Sanjay R Mehta <sanju.mehta@amd.com>
-To:     jdmason@kudzu.us, dave.jiang@intel.com, allenbh@gmail.com,
-        arindam.nath@amd.com, logang@deltatee.com, Shyam-sundar.S-k@amd.com
-Cc:     linux-ntb@googlegroups.com, linux-kernel@vger.kernel.org,
-        Sanjay R Mehta <sanju.mehta@amd.com>
-Subject: [PATCH v2 5/5] ntb: hw: remove the code that sets the DMA mask
-Date:   Tue, 10 Mar 2020 15:54:54 -0500
-Message-Id: <1583873694-19151-6-git-send-email-sanju.mehta@amd.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1583873694-19151-1-git-send-email-sanju.mehta@amd.com>
-References: <1583873694-19151-1-git-send-email-sanju.mehta@amd.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MA1PR0101CA0038.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a00:22::24) To MN2PR12MB3455.namprd12.prod.outlook.com
- (2603:10b6:208:d0::22)
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=XCee8pfoSpfKAyMHOiluaFP5r2d1cxa5sV/2QbU588A=;
+        b=HoWjp37PtFeniqj35yD1VTg9ADYkej22MfwMB13TIeFC7foF85mFkueDcopx5DNEc6
+         Gnjfy52P9IdsdWJrxkP6VvsqgV7Ue9g2VZYhaEy0A6IxGTIL6JYTjbsqPyWEMiArT+m7
+         INOy2/C/ssYCuaWafqLRtBe62wmczU69h1pvQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=XCee8pfoSpfKAyMHOiluaFP5r2d1cxa5sV/2QbU588A=;
+        b=oKUTDr+dN15UUg2P4oJR5/7xxx/hxDCq/JqxH+7akR7RXtXiUJpsgW9A8f/YZfqsNq
+         yqi1u39Qni7tK1XPNCuv1ATfM1+sPYmJ5f+5LSeGvsVe77/x/kavfgHauf3Zc5huRl4P
+         mnu3zTZWK6Iavz/2Sy7hvD88qtIaKdGaeuWhrm418IkV4LWbIRLQwMOC9EWZxQt37FK+
+         L1Y6ZfF5EheHncZxWrSpEjDa9dKKLeZkSy9GR8k+U6MJ9zIjg5WSmwaw0ub45+Y1kjQz
+         Kpguziwbt0k6DmoPp/DmGEhgKKRHk+kfATstJBZRtoyPoWXUi8X/Uz96wZkL4PRRtQb4
+         KzfQ==
+X-Gm-Message-State: ANhLgQ3qeCF1govuFfM66YOPTvmATuQ6cBuKIWawwGxbXCmfFH494LhQ
+        1IlWfJGscBMaEOwkjEVz4hIOVg==
+X-Google-Smtp-Source: ADFU+vv4dCRRSTIODLKjbWRTG/zSV8gZAQ/i5OlKX+nEWRlVelr9/0GQ269GPVKo38XW0ci648ABSw==
+X-Received: by 2002:a63:450b:: with SMTP id s11mr22416425pga.45.1583873756120;
+        Tue, 10 Mar 2020 13:55:56 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id w138sm5130844pff.145.2020.03.10.13.55.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Mar 2020 13:55:55 -0700 (PDT)
+Date:   Tue, 10 Mar 2020 13:55:54 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Andrei Vagin <avagin@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Yuyang Du <duyuyang@gmail.com>,
+        David Hildenbrand <david@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        David Howells <dhowells@redhat.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christian Kellner <christian@kellner.me>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>
+Subject: Re: [PATCH v2 5/5] exec: Add a exec_update_mutex to replace
+ cred_guard_mutex
+Message-ID: <202003101352.28BE3BEB4@keescook>
+References: <87v9ne5y4y.fsf_-_@x220.int.ebiederm.org>
+ <87zhcq4jdj.fsf_-_@x220.int.ebiederm.org>
+ <AM6PR03MB5170BC58D90BAD80CDEF3F8BE4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <878sk94eay.fsf@x220.int.ebiederm.org>
+ <AM6PR03MB517086003BD2C32E199690A3E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87r1y12yc7.fsf@x220.int.ebiederm.org>
+ <87k13t2xpd.fsf@x220.int.ebiederm.org>
+ <87d09l2x5n.fsf@x220.int.ebiederm.org>
+ <AM6PR03MB5170F0F9DC18F5EA77C9A857E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <871rq12vxu.fsf@x220.int.ebiederm.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from sanjuamdntb2.amd.com (165.204.156.251) by MA1PR0101CA0038.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:22::24) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2793.14 via Frontend Transport; Tue, 10 Mar 2020 20:55:36 +0000
-X-Mailer: git-send-email 2.7.4
-X-Originating-IP: [165.204.156.251]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: e056d8b7-da72-45a9-5d0b-08d7c53563b4
-X-MS-TrafficTypeDiagnostic: MN2PR12MB4031:|MN2PR12MB4031:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <MN2PR12MB4031BC4DD1FAEBE837F83A39E5FF0@MN2PR12MB4031.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:3276;
-X-Forefront-PRVS: 033857D0BD
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(366004)(39860400002)(376002)(136003)(346002)(199004)(189003)(86362001)(316002)(66946007)(6636002)(8936002)(956004)(8676002)(5660300002)(81166006)(66476007)(66556008)(52116002)(7696005)(2616005)(4326008)(478600001)(6666004)(6486002)(2906002)(81156014)(26005)(36756003)(16526019)(186003);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR12MB4031;H:MN2PR12MB3455.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 5Psv0qwJXY1m3r+5g6js0LtU+d+WTjLEDu42Pp9w9oUX2cq9omnLQ4PFh/UTXOhEqWjE3NxoZ5bZsubj878LnQrFnClfOztVcJv9LzrmYA4TuNQhxsjKDvGxEw2IP/yUvWUMLTwL9SDdR2JX+bWGv2kjGfNdkZBF8+JKhGSpozP7M64A3STFnxE5+FZlQFXavCoRBs7RuPAXEMgFaHLEfBKmLbcoSDk0daXI4JL9u4FYp8A+RbwhiyTA7psmo8Z2fw7xFpEixTFAbegX8OBs9ymSy7qmo6/s8ULFKy29+UmpIAIThoIhmgA/+8bTC4ljENDPiaoNjTxQnPs86jiJ2+LDL8NU6mfy1WY+j4Vkf0sXC4E18Bnx6Xh0JSuQvOMkR2tSeZVkugjpX7huUrttfuaSSLRJlN6uksLTwGUoV6bYQjS6m0Xo4I1hXb44V+aY
-X-MS-Exchange-AntiSpam-MessageData: P1W37DlnuRM+XKiDl9mvcBsIDmU4Imx//VH45ibVk8XRiMQa3hZgbluURwV/8V6J5CCNeTtftSWPjMUYuiA+9fw9MODdJvr3rKE6St3GKSStwUW1Q+d0uLtx+YvaCiK3jnP+ysS9q6zl3KuCEXa6Ng==
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e056d8b7-da72-45a9-5d0b-08d7c53563b4
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Mar 2020 20:55:39.4436
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: JJWy9a4mFivTx5w8wziyhYAaoBwb8vgecIoZyo+qWdCxEYXUrWWYo6LH7DTGm2I82fYeYAF+meyp9XZp4gbPAQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4031
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <871rq12vxu.fsf@x220.int.ebiederm.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Logan Gunthorpe <logang@deltatee.com>
+On Mon, Mar 09, 2020 at 02:02:37PM -0500, Eric W. Biederman wrote:
+>     exec: Add exec_update_mutex to replace cred_guard_mutex
+>     
+>     The cred_guard_mutex is problematic as it is held over possibly
+>     indefinite waits for userspace.  The possilbe indefinite waits for
+>     userspace that I have identified are: The cred_guard_mutex is held in
+>     PTRACE_EVENT_EXIT waiting for the tracer.  The cred_guard_mutex is
+>     held over "put_user(0, tsk->clear_child_tid)" in exit_mm().  The
+>     cred_guard_mutex is held over "get_user(futex_offset, ...")  in
+>     exit_robust_list.  The cred_guard_mutex held over copy_strings.
 
-This patch removes the code that sets the DMA mask as it no longer
-makes sense to do this.
+I suspect you're not trying to make a comprehensive list here, but do
+you want to mention seccomp too (since it's yet another weird case).
 
-Fixes: 7f46c8b3a552 ("NTB: ntb_tool: Add full multi-port NTB API support")
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-Tested-by: Alexander Fomichev <fomichev.ru@gmail.com>
-Signed-off-by: Sanjay R Mehta <sanju.mehta@amd.com>
----
- drivers/ntb/hw/amd/ntb_hw_amd.c    | 4 ----
- drivers/ntb/hw/idt/ntb_hw_idt.c    | 6 ------
- drivers/ntb/hw/intel/ntb_hw_gen1.c | 4 ----
- 3 files changed, 14 deletions(-)
+> [...]
+>     Holding a mutex over any of those possibly indefinite waits for
+>     userspace does not appear necessary.  Add exec_update_mutex that will
+>     just cover updating the process during exec where the permissions and
+>     the objects pointed to by the task struct may be out of sync.
 
-diff --git a/drivers/ntb/hw/amd/ntb_hw_amd.c b/drivers/ntb/hw/amd/ntb_hw_amd.c
-index e52b300..a3ae59a 100644
---- a/drivers/ntb/hw/amd/ntb_hw_amd.c
-+++ b/drivers/ntb/hw/amd/ntb_hw_amd.c
-@@ -1020,10 +1020,6 @@ static int amd_ntb_init_pci(struct amd_ntb_dev *ndev,
- 			goto err_dma_mask;
- 		dev_warn(&pdev->dev, "Cannot DMA consistent highmem\n");
- 	}
--	rc = dma_coerce_mask_and_coherent(&ndev->ntb.dev,
--					  dma_get_mask(&pdev->dev));
--	if (rc)
--		goto err_dma_mask;
- 
- 	ndev->self_mmio = pci_iomap(pdev, 0, 0);
- 	if (!ndev->self_mmio) {
-diff --git a/drivers/ntb/hw/idt/ntb_hw_idt.c b/drivers/ntb/hw/idt/ntb_hw_idt.c
-index dcf2346..a86600d 100644
---- a/drivers/ntb/hw/idt/ntb_hw_idt.c
-+++ b/drivers/ntb/hw/idt/ntb_hw_idt.c
-@@ -2660,12 +2660,6 @@ static int idt_init_pci(struct idt_ntb_dev *ndev)
- 		dev_warn(&pdev->dev,
- 			"Cannot set consistent DMA highmem bit mask\n");
- 	}
--	ret = dma_coerce_mask_and_coherent(&ndev->ntb.dev,
--					   dma_get_mask(&pdev->dev));
--	if (ret != 0) {
--		dev_err(&pdev->dev, "Failed to set NTB device DMA bit mask\n");
--		return ret;
--	}
- 
- 	/*
- 	 * Enable the device advanced error reporting. It's not critical to
-diff --git a/drivers/ntb/hw/intel/ntb_hw_gen1.c b/drivers/ntb/hw/intel/ntb_hw_gen1.c
-index bb57ec2..e053012 100644
---- a/drivers/ntb/hw/intel/ntb_hw_gen1.c
-+++ b/drivers/ntb/hw/intel/ntb_hw_gen1.c
-@@ -1783,10 +1783,6 @@ static int intel_ntb_init_pci(struct intel_ntb_dev *ndev, struct pci_dev *pdev)
- 			goto err_dma_mask;
- 		dev_warn(&pdev->dev, "Cannot DMA consistent highmem\n");
- 	}
--	rc = dma_coerce_mask_and_coherent(&ndev->ntb.dev,
--					  dma_get_mask(&pdev->dev));
--	if (rc)
--		goto err_dma_mask;
- 
- 	ndev->self_mmio = pci_iomap(pdev, 0, 0);
- 	if (!ndev->self_mmio) {
+Should the specific resources be pointed out here? creds, mm, ... ?
+
+But otherwise, yup, looks sane:
+
+Reviewed-by: Kees Cook <keescook@chromium.org>
+
 -- 
-2.7.4
-
+Kees Cook
