@@ -2,211 +2,116 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 902B5C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 10:44:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A913C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 10:46:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B8062071B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 10:44:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F5AB21D7E
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 10:46:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="UcdMYQAO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726283AbgCJKow (ORCPT
+        id S1726331AbgCJKqT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 06:44:52 -0400
-Received: from mga01.intel.com ([192.55.52.88]:10392 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726170AbgCJKow (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 06:44:52 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Mar 2020 03:44:51 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,536,1574150400"; 
-   d="scan'208";a="415149407"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.167]) ([10.237.72.167])
-  by orsmga005.jf.intel.com with ESMTP; 10 Mar 2020 03:44:49 -0700
-Subject: Re: [PATCH] mmc: mmc: Fix the timing for clock changing in mmc
-To:     Ulf Hansson <ulf.hansson@linaro.org>,
-        "Seo, Kyungmin" <kyungmin.seo@intel.com>
-Cc:     Chaotian Jing <chaotian.jing@mediatek.com>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200212024220.GA32111@seokyung-mobl1>
- <CAPDyKFr9H2XcgCk9AmHgJfHC+PySh66KxegMJ4yb4aqKSVt3kg@mail.gmail.com>
- <BYAPR11MB269638142E2BF2C6E108B40A9CE20@BYAPR11MB2696.namprd11.prod.outlook.com>
- <CAPDyKFr=hE6diZmaVy-os3rFScHe+8OphBS+edkVGK+Z-J_=HA@mail.gmail.com>
- <BYAPR11MB2696D160D6F5B7C98E0503E79CFF0@BYAPR11MB2696.namprd11.prod.outlook.com>
- <CAPDyKFqqDWMsHEb493p__FNzYaEzE6Ry0bkd-2ng7cdM886zjw@mail.gmail.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <5f3b8cb9-5e55-ee47-46e5-af019d6328b6@intel.com>
-Date:   Tue, 10 Mar 2020 12:44:04 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 10 Mar 2020 06:46:19 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:56310 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725937AbgCJKqS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 06:46:18 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02AAcoWR081573;
+        Tue, 10 Mar 2020 10:46:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=1RisN3S7KM3q/8X60PBMjhXZIbFkHsb770PygEikLQM=;
+ b=UcdMYQAOyUZiSFKHzyk6WZHOZfZ1jSJpCZgDUTkHTIamr9/HJdnodla4sGz/3TYPExfx
+ faKxU3h/FFJmqGEpHlcpUSRWQgvw65E9LLe4YbutcmO242GFBednrEi9NP84ysSOwL5a
+ oK++BuqCkNrNbKVSSnieI427QoDr5+8PY4wD6W0Fzjzsb4DlDan9MLKKdSY6gUWT/JK4
+ D3dmWGD5VxLFW5btxzgSau3LqJD3zTw7G8jBcTSP4+JJt80DGUPFTPVfTibpxnCT6BnL
+ B2pPLaFVSJpofP+dBatFF/utz8UfGK/AGyS3w7PyddyhQ3NEC/3Y0gF5LAVSTlUIi6YR Zw== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 2ym3jqmsva-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 10 Mar 2020 10:46:10 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02AAcQYm069503;
+        Tue, 10 Mar 2020 10:46:10 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 2yp8nry2uf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 10 Mar 2020 10:46:09 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 02AAk8Rs026312;
+        Tue, 10 Mar 2020 10:46:08 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 10 Mar 2020 03:46:08 -0700
+Date:   Tue, 10 Mar 2020 13:46:01 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Cc:     linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
+        Todd Kjos <tkjos@android.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
+        Martijn Coenen <maco@android.com>, surenb@google.com,
+        Christian Brauner <christian@brauner.io>
+Subject: Re: [RFC] ashmem: Fix ashmem shrinker nr_to_scan
+Message-ID: <20200310104601.GB11561@kadam>
+References: <20200306011930.99378-1-joel@joelfernandes.org>
 MIME-Version: 1.0
-In-Reply-To: <CAPDyKFqqDWMsHEb493p__FNzYaEzE6Ry0bkd-2ng7cdM886zjw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200306011930.99378-1-joel@joelfernandes.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9555 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxscore=0 phishscore=0
+ spamscore=0 malwarescore=0 adultscore=0 suspectscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2003100071
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9555 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 clxscore=1011
+ priorityscore=1501 mlxscore=0 phishscore=0 mlxlogscore=999 impostorscore=0
+ bulkscore=0 spamscore=0 suspectscore=0 lowpriorityscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2003100071
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/03/20 11:05 am, Ulf Hansson wrote:
-> On Tue, 10 Mar 2020 at 05:28, Seo, Kyungmin <kyungmin.seo@intel.com> wrote:
->>
->> I read the link and patch of Chaotian Jing.
->> I also point out what Chaotian said.
->> Most host controllers have DLL tuning values for each mode. When host controller is set as HS400 mode with 50MHz clock, host controller uses DLL value which is tuned with 200MHz clock.
->>
->> If DLL value in HS400 mode doesn't have the pass range in HS mode, command transfer failing may fail.
->> In order to make robust sdhci driver, I think the patch needs to be considered.
+On Thu, Mar 05, 2020 at 08:19:30PM -0500, Joel Fernandes (Google) wrote:
+> nr_to_scan is the number of pages to be freed however ashmem doesn't
+> discount nr_to_scan correctly as it frees ranges. It should be
+> discounting them by pages than by ranges. Correct the issue.
 > 
-> I have, but I am not picking it up in its current form.
+> Cc: surenb@google.com
+> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> ---
+>  drivers/staging/android/ashmem.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 > 
->> Of course, CMD6 with HS400 mode and 200MHz clock should not cause any problem because it's correct configuration.
-> 
-> Yes, but not for all cases, as I said in my reply in those email-threads.
-> 
-> What I had in mind, is that I I think we should inform
-> mmc_hs400_to_hs200() about under what situation it's getting called.
-> Depending on that, we should either decrease the clock rate before or
-> after we send the CMD6.
-> 
-> Would that work for your case?
+> diff --git a/drivers/staging/android/ashmem.c b/drivers/staging/android/ashmem.c
+> index 5891d0744a760..cb525ea6db98a 100644
+> --- a/drivers/staging/android/ashmem.c
+> +++ b/drivers/staging/android/ashmem.c
+> @@ -458,6 +458,8 @@ ashmem_shrink_scan(struct shrinker *shrink, struct shrink_control *sc)
+>  		lru_del(range);
+>  
+>  		freed += range_size(range);
+> +		sc->nr_to_scan -=  range_size(range);
+                                 ^^
+Two space characters.
 
-Ulf, would you consider a new call back e.g.
+In the old code we didn't *really* have to worry about sc->nr_to_scan
+dropping to negative, but now we do.  ->nr_to_scan is unsigned so it
+would be a high positive value now so it's maybe a forever loop?  I'm
+too lazy to verify...
 
-diff --git a/drivers/mmc/core/mmc.c b/drivers/mmc/core/mmc.c
-index c2abd417a84a..1bc18fe2632f 100644
---- a/drivers/mmc/core/mmc.c
-+++ b/drivers/mmc/core/mmc.c
-@@ -1237,7 +1237,10 @@ int mmc_hs400_to_hs200(struct mmc_card *card)
- 
- 	/* Reduce frequency to HS */
- 	max_dtr = card->ext_csd.hs_max_dtr;
--	mmc_set_clock(host, max_dtr);
-+	if (host->ops->hs400_to_hs200_prep)
-+		host->ops->hs400_to_hs200_prep(host, max_dtr);
-+	else
-+		mmc_set_clock(host, max_dtr);
- 
- 	/* Switch HS400 to HS DDR */
- 	val = EXT_CSD_TIMING_HS;
-
-
-> 
-> Kind regards
-> Uffe
-> 
->>
->> Thanks
->>
->> -----Original Message-----
->> From: Ulf Hansson <ulf.hansson@linaro.org>
->> Sent: Friday, March 6, 2020 12:18 AM
->> To: Seo, Kyungmin <kyungmin.seo@intel.com>; Hunter, Adrian <adrian.hunter@intel.com>; Chaotian Jing <chaotian.jing@mediatek.com>
->> Cc: linux-mmc@vger.kernel.org; Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
->> Subject: Re: [PATCH] mmc: mmc: Fix the timing for clock changing in mmc
->>
->> + Adrian, Chaotian
->>
->> On Thu, 5 Mar 2020 at 09:57, Seo, Kyungmin <kyungmin.seo@intel.com> wrote:
->>>
->>> The mmc_hs400_to_hs200 function is called only in HS400 mode.
->>> I saw the clock change from 200MHz to 52MHz via oscilloscope on real platform.
->>>
->>> I think CMD6 is sent in HS400 mode with 200MHz clock, but it's not.
->>> First CMD6 in mmc_hs400_to_hs200 function is sent with 52MHz clock.
->>
->> I had a vague memory that we have discussed a similar problem as your are pointing out on the mailing list already. And I was right.
->>
->> Please read up on the below references, [1], [2] for the earlier discussions. I suggested a solution for Chaotian to try, but it seems like he never managed to give it a go, as I don't recall new patch being posted.
->>
->> Perhaps you can pick up were Chaotian left and see if you can implement the suggested solution(s). My main concern is breaking other host drivers, as that seems quite likely to happen, if we aren't careful about this.
->>
->> Kind regards
->> Uffe
->>
->> [1]
->> https://lore.kernel.org/linux-mmc/1548921212-5219-1-git-send-email-chaotian.jing@mediatek.com/
->> [2]
->> https://lore.kernel.org/linux-mmc/CAPDyKFquyyXx1MqNLVXuFxcEDB9nKzN8LGGNUP2yxoVMQrWiUg@mail.gmail.com/
->>
->>
->>
->>>
->>> Thanks
->>> KM
->>>
->>> -----Original Message-----
->>> From: Ulf Hansson <ulf.hansson@linaro.org>
->>> Sent: Wednesday, March 4, 2020 8:09 PM
->>> To: Seo, Kyungmin <kyungmin.seo@intel.com>
->>> Cc: linux-mmc@vger.kernel.org; Linux Kernel Mailing List
->>> <linux-kernel@vger.kernel.org>
->>> Subject: Re: [PATCH] mmc: mmc: Fix the timing for clock changing in
->>> mmc
->>>
->>> On Wed, 12 Feb 2020 at 03:40, Kyungmin Seo <kyungmin.seo@intel.com> wrote:
->>>>
->>>> The clock has to be changed after sending CMD6 for HS mode selection
->>>> in
->>>> mmc_hs400_to_hs200() function.
->>>>
->>>> The JEDEC 5.0 and 5.1 said that "High-speed" mode selection has to
->>>> enable the the high speed mode timing in the Device, before chaning
->>>> the clock frequency to a frequency between 26MHz and 52MHz.
->>>
->>> I think that is based upon the assumption that you are using a lower frequency to start with.
->>>
->>> For example, assume that you are running with 400KHz during card initialization, then you want to send the CMD6 to switch to HS mode and that should be done, before updating the clock rate.
->>>
->>> mmc_hs400_to_hs200() goes the opposite direction, so I think the current code looks correct to me.
->>>
->>> Kind regards
->>> Uffe
->>>
->>>>
->>>> Signed-off-by: Kyungmin Seo <kyungmin.seo@intel.com>
->>>> ---
->>>>  drivers/mmc/core/mmc.c | 8 ++++----
->>>>  1 file changed, 4 insertions(+), 4 deletions(-)
->>>>
->>>> diff --git a/drivers/mmc/core/mmc.c b/drivers/mmc/core/mmc.c index
->>>> 3486bc7fbb64..98640b51c73e 100644
->>>> --- a/drivers/mmc/core/mmc.c
->>>> +++ b/drivers/mmc/core/mmc.c
->>>> @@ -1196,10 +1196,6 @@ int mmc_hs400_to_hs200(struct mmc_card *card)
->>>>         int err;
->>>>         u8 val;
->>>>
->>>> -       /* Reduce frequency to HS */
->>>> -       max_dtr = card->ext_csd.hs_max_dtr;
->>>> -       mmc_set_clock(host, max_dtr);
->>>> -
->>>>         /* Switch HS400 to HS DDR */
->>>>         val = EXT_CSD_TIMING_HS;
->>>>         err = __mmc_switch(card, EXT_CSD_CMD_SET_NORMAL,
->>>> EXT_CSD_HS_TIMING, @@ -1210,6 +1206,10 @@ int
->>>> mmc_hs400_to_hs200(struct mmc_card *card)
->>>>
->>>>         mmc_set_timing(host, MMC_TIMING_MMC_DDR52);
->>>>
->>>> +       /* Reduce frequency to HS */
->>>> +       max_dtr = card->ext_csd.hs_max_dtr;
->>>> +       mmc_set_clock(host, max_dtr);
->>>> +
->>>>         err = mmc_switch_status(card);
->>>>         if (err)
->>>>                 goto out_err;
->>>> --
->>>> 2.17.1
->>>>
-
+regards,
+dan carpenter
