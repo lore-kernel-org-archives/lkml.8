@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 950E5C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:09:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6E66C18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:09:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B2BD20873
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:09:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90A9A2468D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:09:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583845785;
-	bh=3Y1XYXfkWamaOXHpkOn5oCvQthVNR5JtEBNATDMRc5A=;
+	s=default; t=1583845787;
+	bh=8s8DBSqUOltJgEED9SjPTDc6I5xmXdRblgUSwev7NtY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GySyFIdA7AIP8jaA2LOf65Z1Ee/HuxYIyTf6QcxWyfgLW/s1bNHyIbSFPsZ+Cr5Up
-	 qrUFH+cJr6hbPCZQoZ2mBS/EGE1L4zGlgcAPvK/sEoM3i1e8ZRd3CHNNNppnjsLYvP
-	 bRLVgQ0oVt6E0kyJvQ36HUeMyMsGMJ+4ULJtWPYM=
+	b=iL1he4qdhy7X6e6+z0s083oOeBRRrISz6vxbC/t0EoWcQf0PCchrq+RP2St2gcTEC
+	 fJiYgxwXq506WbYp7hp5JG3c6DX/Nvr1cP+np5I4J2zFQvyOJi44j5f2O1MFMsyeKQ
+	 HOt/2BA9ab1CdS+J4v1Yt7FO1baMZmjhaurSinzw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730437AbgCJNJo (ORCPT
+        id S1731276AbgCJNJq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:09:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56858 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:09:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56974 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730889AbgCJNJl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:09:41 -0400
+        id S1730454AbgCJNJo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:09:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 99FAC24698;
-        Tue, 10 Mar 2020 13:09:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB47624693;
+        Tue, 10 Mar 2020 13:09:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845779;
-        bh=3Y1XYXfkWamaOXHpkOn5oCvQthVNR5JtEBNATDMRc5A=;
+        s=default; t=1583845784;
+        bh=8s8DBSqUOltJgEED9SjPTDc6I5xmXdRblgUSwev7NtY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X/WcUSEDadsiAR6Z/L4seinA7HiNXAD/YDyn7LtSZXhszafaNesI45aWaLjX04iO6
-         oNohS40XVQogjc9aqASMZweVFcXHKvDJDSoqOkLr0X5igsEtx43TeNRVxsTW1UCavr
-         DmERGwb/YRZRlgAOMPcRjaHoECOxCQ3ynE6prTd0=
+        b=IoeQ4aqxfos7l4tGMKc+RDqxrwVIKi+malvxPCYumiENca7e+XNEJs6ZJTgsvytl/
+         3e2+8wKWHDliMO4693Fe4XcqeZ+R2jtkqWfvBSegCVGL+9Iydo/4+urC6E1ZVeebNz
+         IXEQhYpQ58MHDZkC6d4ZVTRCRz0FdoXpZySAfnig=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jim Mattson <jmattson@google.com>,
-        Andrew Honig <ahonig@google.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.14 058/126] KVM: Check for a bad hva before dropping into the ghc slow path
-Date:   Tue, 10 Mar 2020 13:41:19 +0100
-Message-Id: <20200310124207.872563697@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH 4.14 050/126] ecryptfs: Fix up bad backport of fe2e082f5da5b4a0a92ae32978f81507ef37ec66
+Date:   Tue, 10 Mar 2020 13:41:11 +0100
+Message-Id: <20200310124207.443510250@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310124203.704193207@linuxfoundation.org>
 References: <20200310124203.704193207@linuxfoundation.org>
@@ -61,77 +59,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-commit fcfbc617547fc6d9552cb6c1c563b6a90ee98085 upstream.
+When doing the 4.9 merge into certain Android trees, I noticed a warning
+from Android's deprecated GCC 4.9.4, which causes a build failure in
+those trees due to basically -Werror:
 
-When reading/writing using the guest/host cache, check for a bad hva
-before checking for a NULL memslot, which triggers the slow path for
-handing cross-page accesses.  Because the memslot is nullified on error
-by __kvm_gfn_to_hva_cache_init(), if the bad hva is encountered after
-crossing into a new page, then the kvm_{read,write}_guest() slow path
-could potentially write/access the first chunk prior to detecting the
-bad hva.
+fs/ecryptfs/keystore.c: In function 'ecryptfs_parse_packet_set':
+fs/ecryptfs/keystore.c:1357:2: warning: 'auth_tok_list_item' may be used
+uninitialized in this function [-Wmaybe-uninitialized]
+  memset(auth_tok_list_item, 0,
+  ^
+fs/ecryptfs/keystore.c:1260:38: note: 'auth_tok_list_item' was declared
+here
+  struct ecryptfs_auth_tok_list_item *auth_tok_list_item;
+                                      ^
 
-Arguably, performing a partial access is semantically correct from an
-architectural perspective, but that behavior is certainly not intended.
-In the original implementation, memslot was not explicitly nullified
-and therefore the partial access behavior varied based on whether the
-memslot itself was null, or if the hva was simply bad.  The current
-behavior was introduced as a seemingly unintentional side effect in
-commit f1b9dd5eb86c ("kvm: Disallow wraparound in
-kvm_gfn_to_hva_cache_init"), which justified the change with "since some
-callers don't check the return code from this function, it sit seems
-prudent to clear ghc->memslot in the event of an error".
+GCC 9.2.0 was not able to pick up this warning when I tested it.
 
-Regardless of intent, the partial access is dependent on _not_ checking
-the result of the cache initialization, which is arguably a bug in its
-own right, at best simply weird.
+Turns out that Clang warns as well when -Wuninitialized is used, which
+is not the case in older stable trees at the moment (but shows value in
+potentially backporting the various warning fixes currently in upstream
+to get more coverage).
 
-Fixes: 8f964525a121 ("KVM: Allow cross page reads and writes from cached translations.")
-Cc: Jim Mattson <jmattson@google.com>
-Cc: Andrew Honig <ahonig@google.com>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+fs/ecryptfs/keystore.c:1284:6: warning: variable 'auth_tok_list_item' is
+used uninitialized whenever 'if' condition is true
+[-Wsometimes-uninitialized]
+        if (data[(*packet_size)++] != ECRYPTFS_TAG_1_PACKET_TYPE) {
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+fs/ecryptfs/keystore.c:1360:4: note: uninitialized use occurs here
+                        auth_tok_list_item);
+                        ^~~~~~~~~~~~~~~~~~
+fs/ecryptfs/keystore.c:1284:2: note: remove the 'if' if its condition is
+always false
+        if (data[(*packet_size)++] != ECRYPTFS_TAG_1_PACKET_TYPE) {
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+fs/ecryptfs/keystore.c:1260:56: note: initialize the variable
+'auth_tok_list_item' to silence this warning
+        struct ecryptfs_auth_tok_list_item *auth_tok_list_item;
+                                                              ^
+                                                               = NULL
+1 warning generated.
+
+Somehow, commit fe2e082f5da5 ("ecryptfs: fix a memory leak bug in
+parse_tag_1_packet()") upstream was not applied in the correct if block
+in 4.4.215, 4.9.215, and 4.14.172, which will indeed lead to use of
+uninitialized memory. Fix it up by undoing the bad backport in those
+trees then reapplying the patch in the proper location.
+
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- virt/kvm/kvm_main.c |   12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ fs/ecryptfs/keystore.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -2027,12 +2027,12 @@ int kvm_write_guest_offset_cached(struct
- 	if (slots->generation != ghc->generation)
- 		__kvm_gfn_to_hva_cache_init(slots, ghc, ghc->gpa, ghc->len);
- 
--	if (unlikely(!ghc->memslot))
--		return kvm_write_guest(kvm, gpa, data, len);
--
- 	if (kvm_is_error_hva(ghc->hva))
- 		return -EFAULT;
- 
-+	if (unlikely(!ghc->memslot))
-+		return kvm_write_guest(kvm, gpa, data, len);
-+
- 	r = __copy_to_user((void __user *)ghc->hva + offset, data, len);
- 	if (r)
- 		return -EFAULT;
-@@ -2060,12 +2060,12 @@ int kvm_read_guest_cached(struct kvm *kv
- 	if (slots->generation != ghc->generation)
- 		__kvm_gfn_to_hva_cache_init(slots, ghc, ghc->gpa, ghc->len);
- 
--	if (unlikely(!ghc->memslot))
--		return kvm_read_guest(kvm, ghc->gpa, data, len);
--
- 	if (kvm_is_error_hva(ghc->hva))
- 		return -EFAULT;
- 
-+	if (unlikely(!ghc->memslot))
-+		return kvm_read_guest(kvm, ghc->gpa, data, len);
-+
- 	r = __copy_from_user(data, (void __user *)ghc->hva, len);
- 	if (r)
- 		return -EFAULT;
+--- a/fs/ecryptfs/keystore.c
++++ b/fs/ecryptfs/keystore.c
+@@ -1285,7 +1285,7 @@ parse_tag_1_packet(struct ecryptfs_crypt
+ 		printk(KERN_ERR "Enter w/ first byte != 0x%.2x\n",
+ 		       ECRYPTFS_TAG_1_PACKET_TYPE);
+ 		rc = -EINVAL;
+-		goto out_free;
++		goto out;
+ 	}
+ 	/* Released: wipe_auth_tok_list called in ecryptfs_parse_packet_set or
+ 	 * at end of function upon failure */
+@@ -1335,7 +1335,7 @@ parse_tag_1_packet(struct ecryptfs_crypt
+ 		printk(KERN_WARNING "Tag 1 packet contains key larger "
+ 		       "than ECRYPTFS_MAX_ENCRYPTED_KEY_BYTES");
+ 		rc = -EINVAL;
+-		goto out;
++		goto out_free;
+ 	}
+ 	memcpy((*new_auth_tok)->session_key.encrypted_key,
+ 	       &data[(*packet_size)], (body_size - (ECRYPTFS_SIG_SIZE + 2)));
 
 
