@@ -2,234 +2,112 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0E11C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:49:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B46F7C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:50:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C23AB2467D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:49:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 882872467D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:50:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583833817;
+	bh=Zu/l5fryMW6NbrP4kqlO7eEbl7l/EtuRNKW9VU2dTOo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=FPrl/EgKgiierRS/nQVrlXy6XQrqn0iVaCyYIjNUJKq5TPrJVAkSRFtoAknKi+G4m
+	 uHKl02hr1exbh78slvC93udDEcKHKaaH3IJ/2+CeHv0W0Ml+uu0McnD340pik3HWh6
+	 4K765W+fZgIkEtt4i5nNHe55E2wuqW/CMSTCAb2U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726469AbgCJJtu (ORCPT
+        id S1726477AbgCJJuQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 05:49:50 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:33126 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726211AbgCJJtu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 05:49:50 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jBbW9-0003Hx-L0; Tue, 10 Mar 2020 10:49:41 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 3B7871C21F0;
-        Tue, 10 Mar 2020 10:49:41 +0100 (CET)
-Date:   Tue, 10 Mar 2020 09:49:40 -0000
-From:   "tip-bot2 for Tony Luck" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: ras/core] x86/mce/dev-mcelog: Dynamically allocate space for
- machine check records
-Cc:     Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@suse.de>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200218184408.GA23048@agluck-desk2.amr.corp.intel.com>
-References: <20200218184408.GA23048@agluck-desk2.amr.corp.intel.com>
+        Tue, 10 Mar 2020 05:50:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33542 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726211AbgCJJuQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 05:50:16 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C6692467D;
+        Tue, 10 Mar 2020 09:50:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583833814;
+        bh=Zu/l5fryMW6NbrP4kqlO7eEbl7l/EtuRNKW9VU2dTOo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=cZWYPiukgKFacUoodHREbVxDOxigTZzXF4VAOl5wFscRpq7DlS/TVQ+3rNtlWREUO
+         k9voy+NeQzCD8D7fAS8va/5qrZZx51k4Ql7uH6EKgkhgbEVgg7BpbxykGGLjxlJ1sQ
+         VJMVJ5RXrlc76ZTnuWPjJlVWNSm5bCJXnsdFV5Og=
+Date:   Tue, 10 Mar 2020 10:50:11 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Malcolm Priestley <tvboxspy@gmail.com>
+Cc:     Oscar Carter <oscar.carter@gmx.com>, devel@driverdev.osuosl.org,
+        Colin Ian King <colin.king@canonical.com>,
+        Forest Bond <forest@alittletooquiet.net>,
+        Gabriela Bittencourt <gabrielabittencourt00@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging: vt6656: Use BIT_ULL() macro instead of bit
+ shift operation
+Message-ID: <20200310095011.GC2516963@kroah.com>
+References: <20200307104929.7710-1-oscar.carter@gmx.com>
+ <20200308065538.GF3983392@kroah.com>
+ <20200308161047.GA3285@ubuntu>
+ <561bc968-f88c-40e3-f53c-5c03f74f75ea@gmail.com>
 MIME-Version: 1.0
-Message-ID: <158383378084.28353.4530898474579093158.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <561bc968-f88c-40e3-f53c-5c03f74f75ea@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the ras/core branch of tip:
+On Sun, Mar 08, 2020 at 07:22:07PM +0000, Malcolm Priestley wrote:
+> >>>   */
+> >>>  #undef __NO_VERSION__
+> >>>
+> >>> +#include <linux/bits.h>
+> >>>  #include <linux/etherdevice.h>
+> >>>  #include <linux/file.h>
+> >>>  #include "device.h"
+> >>> @@ -802,8 +803,7 @@ static u64 vnt_prepare_multicast(struct ieee80211_hw *hw,
+> >>>
+> >>>  	netdev_hw_addr_list_for_each(ha, mc_list) {
+> >>>  		bit_nr = ether_crc(ETH_ALEN, ha->addr) >> 26;
+> >>> -
+> >>> -		mc_filter |= 1ULL << (bit_nr & 0x3f);
+> >>> +		mc_filter |= BIT_ULL(bit_nr);
+> >>
+> >> Are you sure this does the same thing?  You are not masking off bit_nr
+> >> anymore, why not?
+> > 
+> > My reasons are exposed below:
+> > 
+> > The ether_crc function returns an u32 type (unsigned of 32 bits). Then the right
+> > shift operand discards the 26 lsb bits (the bits shifted off the right side are
+> > discarded). The 6 msb bits of the u32 returned by the ether_crc function are
+> > positioned in bit 5 to bit 0 of the variable bit_nr. Due to the right shift
+> > happens over an unsigned type, the 26 new bits added on the left side will be 0.
+> > 
+> > In summary, after the right bit shift operation we obtain in the variable bit_nr
+> > (unsigned of 32 bits) the value represented by the 6 msb bits of the value
+> > returned by the ether_crc function. So, only the 6 lsb bits of the variable
+> > bit_nr are important. The 26 msb bits of this variable are 0.
+> > 
+> > In this situation, the "and" operation with the mask 0x3f (mask of 6 lsb bits)
+> > is unnecessary due to its purpose is to reset (set to 0 value) the 26 msb bits
+> > that are yet 0.
+> 
+> The mask is only there out of legacy originally it was 31(0x1f) and the
+> bit_nr spread across two mc_filter u32 arrays.
+> 
+> The mask is not needed now it is u64.
+> 
+> The patch is fine.
 
-Commit-ID:     d8ecca4043f2d9d89daab7915eca8c2ec6254d0f
-Gitweb:        https://git.kernel.org/tip/d8ecca4043f2d9d89daab7915eca8c2ec6254d0f
-Author:        Tony Luck <tony.luck@intel.com>
-AuthorDate:    Tue, 18 Feb 2020 10:44:08 -08:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Tue, 10 Mar 2020 10:25:14 +01:00
+Ok, then the changelog needs to be fixed up to explain all of this and
+resent.
 
-x86/mce/dev-mcelog: Dynamically allocate space for machine check records
+thanks,
 
-We have had a hard coded limit of 32 machine check records since the
-dawn of time.  But as numbers of cores increase, it is possible for
-more than 32 errors to be reported before a user process reads from
-/dev/mcelog. In this case the additional errors are lost.
-
-Keep 32 as the minimum. But tune the maximum value up based on the
-number of processors.
-
-Signed-off-by: Tony Luck <tony.luck@intel.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Link: https://lkml.kernel.org/r/20200218184408.GA23048@agluck-desk2.amr.corp.intel.com
----
- arch/x86/include/asm/mce.h           |  6 +--
- arch/x86/kernel/cpu/mce/dev-mcelog.c | 47 +++++++++++++++------------
- 2 files changed, 30 insertions(+), 23 deletions(-)
-
-diff --git a/arch/x86/include/asm/mce.h b/arch/x86/include/asm/mce.h
-index 4359b95..9d5b099 100644
---- a/arch/x86/include/asm/mce.h
-+++ b/arch/x86/include/asm/mce.h
-@@ -102,7 +102,7 @@
- 
- #define MCE_OVERFLOW 0		/* bit 0 in flags means overflow */
- 
--#define MCE_LOG_LEN 32
-+#define MCE_LOG_MIN_LEN 32U
- #define MCE_LOG_SIGNATURE	"MACHINECHECK"
- 
- /* AMD Scalable MCA */
-@@ -135,11 +135,11 @@
-  */
- struct mce_log_buffer {
- 	char signature[12]; /* "MACHINECHECK" */
--	unsigned len;	    /* = MCE_LOG_LEN */
-+	unsigned len;	    /* = elements in .mce_entry[] */
- 	unsigned next;
- 	unsigned flags;
- 	unsigned recordlen;	/* length of struct mce */
--	struct mce entry[MCE_LOG_LEN];
-+	struct mce entry[];
- };
- 
- enum mce_notifier_prios {
-diff --git a/arch/x86/kernel/cpu/mce/dev-mcelog.c b/arch/x86/kernel/cpu/mce/dev-mcelog.c
-index 7c8958d..d089567 100644
---- a/arch/x86/kernel/cpu/mce/dev-mcelog.c
-+++ b/arch/x86/kernel/cpu/mce/dev-mcelog.c
-@@ -29,11 +29,7 @@ static char *mce_helper_argv[2] = { mce_helper, NULL };
-  * separate MCEs from kernel messages to avoid bogus bug reports.
-  */
- 
--static struct mce_log_buffer mcelog = {
--	.signature	= MCE_LOG_SIGNATURE,
--	.len		= MCE_LOG_LEN,
--	.recordlen	= sizeof(struct mce),
--};
-+static struct mce_log_buffer *mcelog;
- 
- static DECLARE_WAIT_QUEUE_HEAD(mce_chrdev_wait);
- 
-@@ -45,21 +41,21 @@ static int dev_mce_log(struct notifier_block *nb, unsigned long val,
- 
- 	mutex_lock(&mce_chrdev_read_mutex);
- 
--	entry = mcelog.next;
-+	entry = mcelog->next;
- 
- 	/*
- 	 * When the buffer fills up discard new entries. Assume that the
- 	 * earlier errors are the more interesting ones:
- 	 */
--	if (entry >= MCE_LOG_LEN) {
--		set_bit(MCE_OVERFLOW, (unsigned long *)&mcelog.flags);
-+	if (entry >= mcelog->len) {
-+		set_bit(MCE_OVERFLOW, (unsigned long *)&mcelog->flags);
- 		goto unlock;
- 	}
- 
--	mcelog.next = entry + 1;
-+	mcelog->next = entry + 1;
- 
--	memcpy(mcelog.entry + entry, mce, sizeof(struct mce));
--	mcelog.entry[entry].finished = 1;
-+	memcpy(mcelog->entry + entry, mce, sizeof(struct mce));
-+	mcelog->entry[entry].finished = 1;
- 
- 	/* wake processes polling /dev/mcelog */
- 	wake_up_interruptible(&mce_chrdev_wait);
-@@ -214,21 +210,21 @@ static ssize_t mce_chrdev_read(struct file *filp, char __user *ubuf,
- 
- 	/* Only supports full reads right now */
- 	err = -EINVAL;
--	if (*off != 0 || usize < MCE_LOG_LEN*sizeof(struct mce))
-+	if (*off != 0 || usize < mcelog->len * sizeof(struct mce))
- 		goto out;
- 
--	next = mcelog.next;
-+	next = mcelog->next;
- 	err = 0;
- 
- 	for (i = 0; i < next; i++) {
--		struct mce *m = &mcelog.entry[i];
-+		struct mce *m = &mcelog->entry[i];
- 
- 		err |= copy_to_user(buf, m, sizeof(*m));
- 		buf += sizeof(*m);
- 	}
- 
--	memset(mcelog.entry, 0, next * sizeof(struct mce));
--	mcelog.next = 0;
-+	memset(mcelog->entry, 0, next * sizeof(struct mce));
-+	mcelog->next = 0;
- 
- 	if (err)
- 		err = -EFAULT;
-@@ -242,7 +238,7 @@ out:
- static __poll_t mce_chrdev_poll(struct file *file, poll_table *wait)
- {
- 	poll_wait(file, &mce_chrdev_wait, wait);
--	if (READ_ONCE(mcelog.next))
-+	if (READ_ONCE(mcelog->next))
- 		return EPOLLIN | EPOLLRDNORM;
- 	if (!mce_apei_read_done && apei_check_mce())
- 		return EPOLLIN | EPOLLRDNORM;
-@@ -261,13 +257,13 @@ static long mce_chrdev_ioctl(struct file *f, unsigned int cmd,
- 	case MCE_GET_RECORD_LEN:
- 		return put_user(sizeof(struct mce), p);
- 	case MCE_GET_LOG_LEN:
--		return put_user(MCE_LOG_LEN, p);
-+		return put_user(mcelog->len, p);
- 	case MCE_GETCLEAR_FLAGS: {
- 		unsigned flags;
- 
- 		do {
--			flags = mcelog.flags;
--		} while (cmpxchg(&mcelog.flags, flags, 0) != flags);
-+			flags = mcelog->flags;
-+		} while (cmpxchg(&mcelog->flags, flags, 0) != flags);
- 
- 		return put_user(flags, p);
- 	}
-@@ -339,8 +335,18 @@ static struct miscdevice mce_chrdev_device = {
- 
- static __init int dev_mcelog_init_device(void)
- {
-+	int mce_log_len;
- 	int err;
- 
-+	mce_log_len = max(MCE_LOG_MIN_LEN, num_online_cpus());
-+	mcelog = kzalloc(sizeof(*mcelog) + mce_log_len * sizeof(struct mce), GFP_KERNEL);
-+	if (!mcelog)
-+		return -ENOMEM;
-+
-+	strncpy(mcelog->signature, MCE_LOG_SIGNATURE, sizeof(mcelog->signature));
-+	mcelog->len = mce_log_len;
-+	mcelog->recordlen = sizeof(struct mce);
-+
- 	/* register character device /dev/mcelog */
- 	err = misc_register(&mce_chrdev_device);
- 	if (err) {
-@@ -350,6 +356,7 @@ static __init int dev_mcelog_init_device(void)
- 		else
- 			pr_err("Unable to init device /dev/mcelog (rc: %d)\n", err);
- 
-+		kfree(mcelog);
- 		return err;
- 	}
- 
+greg k-h
