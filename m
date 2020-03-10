@@ -4,50 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC011C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:27:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93FD7C18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:27:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82C2420675
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:27:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BA3820675
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:27:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583846871;
-	bh=keBkMP94BtWq1g3ImFu3VctsUJmVS3ofMC1A7jzoSuA=;
+	s=default; t=1583846875;
+	bh=AVzm+BISmI/wJXjIKEQkgYUROhyHeNW4UtDhWxsdGk0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fK5j9LE7S6+9RWkpwcMKxkZ7wHgf/d4B2pQfAP6vt4MRDUq5+mr7nrJi7TU27IdOW
-	 e+OZoIChJP2pDMjdKq/UdTS9rTlYrplyjDNlN4AtXphFTMc/m7NB0tzKOasUPxsAKF
-	 OOlhZGi9Ir9U6AkILFNAZjp8+XhsyZ0N635UP7yk=
+	b=Y5x6RqbmJcIC6cqD0ajo/PDupWv0yEdZ3LYEekfEmODRdyI7/1JKtvZITQYR5ZfEY
+	 tPbN2UXTy2BslI1FiR5qulcae3Tv0Gay6TixnWBYjcvQT6YcSpkoe92cDRwUqwi9GR
+	 8vsUhOcp7uMiV1iKEFeT5E3eHAETtqZruas/6Tfg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729642AbgCJN1u (ORCPT
+        id S1729244AbgCJMxq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:27:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60244 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:53:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59842 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728865AbgCJMxz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:53:55 -0400
+        id S1729235AbgCJMxm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:53:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E9AE2468F;
-        Tue, 10 Mar 2020 12:53:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A6A9920674;
+        Tue, 10 Mar 2020 12:53:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844835;
-        bh=keBkMP94BtWq1g3ImFu3VctsUJmVS3ofMC1A7jzoSuA=;
+        s=default; t=1583844822;
+        bh=AVzm+BISmI/wJXjIKEQkgYUROhyHeNW4UtDhWxsdGk0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gPwsNXILNJD0y+ZS+FrL/MCQKDBc828mZlK3figWd5zX0joMg0v97SuTj1gj5B+68
-         HBoXhpRUk5QSaYShHonRBYqUwTA+SjanzntsuWyiBR36CSlblltorldGCoTA/FQPX/
-         cFWVX4J9Eem1Zktl/KorSMKMOE+NOtxV8citkDlw=
+        b=p1NLp69p1pR9Y69BJm3Vj4RQ9AZGbbwA9K9rA4cGmdxMgqvpesx/5FW1EBj4hQgso
+         jsnAltn6ABCs3PuxhRNhHomUXMimBOn1klze5ZhWnwRjXXkf9KsGiMnP8pLKB1Br3c
+         iK8NMJunI+m5RZrPx8GyQxp7uhwXnW0ZLPnfxME0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Jani Nikula <jani.nikula@intel.com>
-Subject: [PATCH 5.4 136/168] drm/i915/selftests: Fix return in assert_mmap_offset()
-Date:   Tue, 10 Mar 2020 13:39:42 +0100
-Message-Id: <20200310123649.267599238@linuxfoundation.org>
+        stable@vger.kernel.org, Xinliang Liu <xinliang.liu@linaro.org>,
+        Rongrong Zou <zourongrong@gmail.com>,
+        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
+        Chen Feng <puck.chen@hisilicon.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        John Stultz <john.stultz@linaro.org>
+Subject: [PATCH 5.4 131/168] drm: kirin: Revert "Fix for hikey620 display offset problem"
+Date:   Tue, 10 Mar 2020 13:39:37 +0100
+Message-Id: <20200310123648.764344482@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123635.322799692@linuxfoundation.org>
 References: <20200310123635.322799692@linuxfoundation.org>
@@ -60,37 +66,112 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: John Stultz <john.stultz@linaro.org>
 
-commit f4aaa44e8b20f7e0d4ea68d3bca4968b6ae5aaff upstream.
+commit 1b79cfd99ff5127e6a143767b51694a527b3ea38 upstream.
 
-The assert_mmap_offset() returns type bool so if we return an error
-pointer that is "return true;" or success.  If we have an error, then
-we should return false.
+This reverts commit ff57c6513820efe945b61863cf4a51b79f18b592.
 
-Fixes: 3d81d589d6e3 ("drm/i915: Test exhaustion of the mmap space")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200228141413.qfjf4abr323drlo4@kili.mountain
-(cherry picked from commit efbf928824820f2738f41271934f6ec2c6ebd587)
-Signed-off-by: Jani Nikula <jani.nikula@intel.com>
+With the commit ff57c6513820 ("drm: kirin: Fix for hikey620
+display offset problem") we added support for handling LDI
+overflows by resetting the hardware.
+
+However, its been observed that when we do hit the LDI overflow
+condition, the irq seems to be screaming, and we do nothing but
+stream:
+  [drm:ade_irq_handler [kirin_drm]] *ERROR* LDI underflow!
+over and over to the screen
+
+I've tried a few appraoches to avoid this, but none has yet
+been successful and the cure here is worse then the original
+disease, so revert this for now.
+
+Cc: Xinliang Liu <xinliang.liu@linaro.org>
+Cc: Rongrong Zou <zourongrong@gmail.com>
+Cc: Xinwei Kong <kong.kongxinwei@hisilicon.com>
+Cc: Chen Feng <puck.chen@hisilicon.com>
+Cc: Sam Ravnborg <sam@ravnborg.org>
+Cc: David Airlie <airlied@linux.ie>
+Cc: Daniel Vetter <daniel@ffwll.ch>
+Cc: dri-devel <dri-devel@lists.freedesktop.org>
+Fixes: ff57c6513820 ("drm: kirin: Fix for hikey620 display offset problem")
+Signed-off-by: John Stultz <john.stultz@linaro.org>
+Acked-by: Xinliang Liu <xinliang.liu@linaro.org>
+Signed-off-by: Xinliang Liu <xinliang.liu@linaro.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200303163228.52741-1-john.stultz@linaro.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/i915/gem/selftests/i915_gem_mman.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/hisilicon/kirin/kirin_ade_reg.h |    1 -
+ drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c |   20 --------------------
+ 2 files changed, 21 deletions(-)
 
---- a/drivers/gpu/drm/i915/gem/selftests/i915_gem_mman.c
-+++ b/drivers/gpu/drm/i915/gem/selftests/i915_gem_mman.c
-@@ -375,7 +375,7 @@ static bool assert_mmap_offset(struct dr
+--- a/drivers/gpu/drm/hisilicon/kirin/kirin_ade_reg.h
++++ b/drivers/gpu/drm/hisilicon/kirin/kirin_ade_reg.h
+@@ -83,7 +83,6 @@
+ #define VSIZE_OFST			20
+ #define LDI_INT_EN			0x741C
+ #define FRAME_END_INT_EN_OFST		1
+-#define UNDERFLOW_INT_EN_OFST		2
+ #define LDI_CTRL			0x7420
+ #define BPP_OFST			3
+ #define DATA_GATE_EN			BIT(2)
+--- a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
++++ b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
+@@ -46,7 +46,6 @@ struct ade_hw_ctx {
+ 	struct clk *media_noc_clk;
+ 	struct clk *ade_pix_clk;
+ 	struct reset_control *reset;
+-	struct work_struct display_reset_wq;
+ 	bool power_on;
+ 	int irq;
  
- 	obj = i915_gem_object_create_internal(i915, size);
- 	if (IS_ERR(obj))
--		return PTR_ERR(obj);
-+		return false;
+@@ -136,7 +135,6 @@ static void ade_init(struct ade_hw_ctx *
+ 	 */
+ 	ade_update_bits(base + ADE_CTRL, FRM_END_START_OFST,
+ 			FRM_END_START_MASK, REG_EFFECTIVE_IN_ADEEN_FRMEND);
+-	ade_update_bits(base + LDI_INT_EN, UNDERFLOW_INT_EN_OFST, MASK(1), 1);
+ }
  
- 	err = create_mmap_offset(obj);
- 	i915_gem_object_put(obj);
+ static bool ade_crtc_mode_fixup(struct drm_crtc *crtc,
+@@ -304,17 +302,6 @@ static void ade_crtc_disable_vblank(stru
+ 			MASK(1), 0);
+ }
+ 
+-static void drm_underflow_wq(struct work_struct *work)
+-{
+-	struct ade_hw_ctx *ctx = container_of(work, struct ade_hw_ctx,
+-					      display_reset_wq);
+-	struct drm_device *drm_dev = ctx->crtc->dev;
+-	struct drm_atomic_state *state;
+-
+-	state = drm_atomic_helper_suspend(drm_dev);
+-	drm_atomic_helper_resume(drm_dev, state);
+-}
+-
+ static irqreturn_t ade_irq_handler(int irq, void *data)
+ {
+ 	struct ade_hw_ctx *ctx = data;
+@@ -331,12 +318,6 @@ static irqreturn_t ade_irq_handler(int i
+ 				MASK(1), 1);
+ 		drm_crtc_handle_vblank(crtc);
+ 	}
+-	if (status & BIT(UNDERFLOW_INT_EN_OFST)) {
+-		ade_update_bits(base + LDI_INT_CLR, UNDERFLOW_INT_EN_OFST,
+-				MASK(1), 1);
+-		DRM_ERROR("LDI underflow!");
+-		schedule_work(&ctx->display_reset_wq);
+-	}
+ 
+ 	return IRQ_HANDLED;
+ }
+@@ -919,7 +900,6 @@ static void *ade_hw_ctx_alloc(struct pla
+ 	if (ret)
+ 		return ERR_PTR(-EIO);
+ 
+-	INIT_WORK(&ctx->display_reset_wq, drm_underflow_wq);
+ 	ctx->crtc = crtc;
+ 
+ 	return ctx;
 
 
