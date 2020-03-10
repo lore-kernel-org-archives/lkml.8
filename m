@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3250EC18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:47:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B7D3C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:47:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08C272468D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:47:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50F7A24691
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:47:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583844465;
-	bh=jQRkvTTSvmorzupsnApKvUN8T93chrRBwJoSMoNe3Ko=;
+	s=default; t=1583844468;
+	bh=pJimwfwzubgUYkW98CcnwR1xUdPLJwn+qDLHOQG1VGY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KWC9cO3YQC6I1AaTHJVlk+DUwnUo/1RfGJC5BvMcSLKEfEZrzaJcIG5wRbKQHnX4J
-	 4kYws2IK8R80fmg2lOI0VqW5gsX4BLMDgkH28CNOptZ4SK4dJJB9e5rPzF7KOz4tU6
-	 mRzXpgiQJxUiogIIAvul7/Iw58rbm9/Brsc555cA=
+	b=PWEj3x9Oki85i9DqMnei2HuiEklTsxisNWO1wSbYpcafTnxHbcUI69mfTkglbFO6v
+	 HixBc6/tZzuolv169voGYHjVm8V0ko0FSsoDPqoEm1D9YUE+1D/hiH/zUt2gNX88Bw
+	 5TO47sxo88EfujkFYVi9SA4JgsD1TPU9ewIOwP3U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727860AbgCJMro (ORCPT
+        id S1726623AbgCJMrq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:47:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51528 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:47:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51462 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727514AbgCJMrl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:47:41 -0400
+        id S1727590AbgCJMri (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:47:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 48DBE24691;
-        Tue, 10 Mar 2020 12:47:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CBA0524696;
+        Tue, 10 Mar 2020 12:47:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844460;
-        bh=jQRkvTTSvmorzupsnApKvUN8T93chrRBwJoSMoNe3Ko=;
+        s=default; t=1583844458;
+        bh=pJimwfwzubgUYkW98CcnwR1xUdPLJwn+qDLHOQG1VGY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b7RA0e6EUqNU3DOs/WQVlcuDp0ZcA3asNUgDna81o2vJXUieJNAHs8wwIfCdd0DXG
-         bZaSfIVKiiFkwoAUXVveermmI95oRlOg2qOePclu3en8PoNIPoczFi5cspmIl/ea65
-         0eTpaMNjfLeo94HgpFZ6AjhrRoPA/DQ8K5OAC/Eo=
+        b=fZeMXetDXvJ4nf0Ix1wra7u8pFnp/uIt3r4a9aVsZtZP5Z2a+jYO6N2sfP0EMN0pU
+         Bt+JKQ2cdg80U+wAblqKxgUWAwcK745lLQ7GnF/8tjeywmFcdtx7EYX+3a0iMrdMFz
+         npCl1GRjo+Srmtg53cuDA0R0/NA0UIjrPauT7BrY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH 4.9 75/88] dmaengine: tegra-apb: Fix use-after-free
-Date:   Tue, 10 Mar 2020 13:39:23 +0100
-Message-Id: <20200310123623.917173559@linuxfoundation.org>
+        stable@vger.kernel.org, Jacob Keller <jacob.e.keller@intel.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Borislav Petkov <bp@suse.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>
+Subject: [PATCH 4.9 74/88] x86/pkeys: Manually set X86_FEATURE_OSPKE to preserve existing changes
+Date:   Tue, 10 Mar 2020 13:39:22 +0100
+Message-Id: <20200310123623.723656199@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123606.543939933@linuxfoundation.org>
 References: <20200310123606.543939933@linuxfoundation.org>
@@ -60,62 +61,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Osipenko <digetx@gmail.com>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-commit 94788af4ed039476ff3527b0e6a12c1dc42cb022 upstream.
+commit 735a6dd02222d8d070c7bb748f25895239ca8c92 upstream.
 
-I was doing some experiments with I2C and noticed that Tegra APB DMA
-driver crashes sometime after I2C DMA transfer termination. The crash
-happens because tegra_dma_terminate_all() bails out immediately if pending
-list is empty, and thus, it doesn't release the half-completed descriptors
-which are getting re-used before ISR tasklet kicks-in.
+Explicitly set X86_FEATURE_OSPKE via set_cpu_cap() instead of calling
+get_cpu_cap() to pull the feature bit from CPUID after enabling CR4.PKE.
+Invoking get_cpu_cap() effectively wipes out any {set,clear}_cpu_cap()
+changes that were made between this_cpu->c_init() and setup_pku(), as
+all non-synthetic feature words are reinitialized from the CPU's CPUID
+values.
 
- tegra-i2c 7000c400.i2c: DMA transfer timeout
- elants_i2c 0-0010: elants_i2c_irq: failed to read data: -110
- ------------[ cut here ]------------
- WARNING: CPU: 0 PID: 142 at lib/list_debug.c:45 __list_del_entry_valid+0x45/0xac
- list_del corruption, ddbaac44->next is LIST_POISON1 (00000100)
- Modules linked in:
- CPU: 0 PID: 142 Comm: kworker/0:2 Not tainted 5.5.0-rc2-next-20191220-00175-gc3605715758d-dirty #538
- Hardware name: NVIDIA Tegra SoC (Flattened Device Tree)
- Workqueue: events_freezable_power_ thermal_zone_device_check
- [<c010e5c5>] (unwind_backtrace) from [<c010a1c5>] (show_stack+0x11/0x14)
- [<c010a1c5>] (show_stack) from [<c0973925>] (dump_stack+0x85/0x94)
- [<c0973925>] (dump_stack) from [<c011f529>] (__warn+0xc1/0xc4)
- [<c011f529>] (__warn) from [<c011f7e9>] (warn_slowpath_fmt+0x61/0x78)
- [<c011f7e9>] (warn_slowpath_fmt) from [<c042497d>] (__list_del_entry_valid+0x45/0xac)
- [<c042497d>] (__list_del_entry_valid) from [<c047a87f>] (tegra_dma_tasklet+0x5b/0x154)
- [<c047a87f>] (tegra_dma_tasklet) from [<c0124799>] (tasklet_action_common.constprop.0+0x41/0x7c)
- [<c0124799>] (tasklet_action_common.constprop.0) from [<c01022ab>] (__do_softirq+0xd3/0x2a8)
- [<c01022ab>] (__do_softirq) from [<c0124683>] (irq_exit+0x7b/0x98)
- [<c0124683>] (irq_exit) from [<c0168c19>] (__handle_domain_irq+0x45/0x80)
- [<c0168c19>] (__handle_domain_irq) from [<c043e429>] (gic_handle_irq+0x45/0x7c)
- [<c043e429>] (gic_handle_irq) from [<c0101aa5>] (__irq_svc+0x65/0x94)
- Exception stack(0xde2ebb90 to 0xde2ebbd8)
+Blasting away capability updates manifests most visibility when running
+on a VMX capable CPU, but with VMX disabled by BIOS.  To indicate that
+VMX is disabled, init_ia32_feat_ctl() clears X86_FEATURE_VMX, using
+clear_cpu_cap() instead of setup_clear_cpu_cap() so that KVM can report
+which CPU is misconfigured (KVM needs to probe every CPU anyways).
+Restoring X86_FEATURE_VMX from CPUID causes KVM to think VMX is enabled,
+ultimately leading to an unexpected #GP when KVM attempts to do VMXON.
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-Acked-by: Jon Hunter <jonathanh@nvidia.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200209163356.6439-2-digetx@gmail.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Arguably, init_ia32_feat_ctl() should use setup_clear_cpu_cap() and let
+KVM figure out a different way to report the misconfigured CPU, but VMX
+is not the only feature bit that is affected, i.e. there is precedent
+that tweaking feature bits via {set,clear}_cpu_cap() after ->c_init()
+is expected to work.  Most notably, x86_init_rdrand()'s clearing of
+X86_FEATURE_RDRAND when RDRAND malfunctions is also overwritten.
+
+Fixes: 0697694564c8 ("x86/mm/pkeys: Actually enable Memory Protection Keys in the CPU")
+Reported-by: Jacob Keller <jacob.e.keller@intel.com>
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
+Tested-by: Jacob Keller <jacob.e.keller@intel.com>
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/20200226231615.13664-1-sean.j.christopherson@intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/dma/tegra20-apb-dma.c |    4 ----
- 1 file changed, 4 deletions(-)
+ arch/x86/kernel/cpu/common.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/dma/tegra20-apb-dma.c
-+++ b/drivers/dma/tegra20-apb-dma.c
-@@ -755,10 +755,6 @@ static int tegra_dma_terminate_all(struc
- 	bool was_busy;
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -388,7 +388,7 @@ static __always_inline void setup_pku(st
+ 	 * cpuid bit to be set.  We need to ensure that we
+ 	 * update that bit in this CPU's "cpu_info".
+ 	 */
+-	get_cpu_cap(c);
++	set_cpu_cap(c, X86_FEATURE_OSPKE);
+ }
  
- 	spin_lock_irqsave(&tdc->lock, flags);
--	if (list_empty(&tdc->pending_sg_req)) {
--		spin_unlock_irqrestore(&tdc->lock, flags);
--		return 0;
--	}
- 
- 	if (!tdc->busy)
- 		goto skip_dma_stop;
+ #ifdef CONFIG_X86_INTEL_MEMORY_PROTECTION_KEYS
 
 
