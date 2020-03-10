@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7523CC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:06:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1E54C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:06:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46C3D2468D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:06:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78FFF2071B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:06:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583845604;
-	bh=XvpgVEZcTBXlGEW1+OoMZPzzlwMiuEY5782FmmRHtAA=;
+	s=default; t=1583845608;
+	bh=sM82G4kYr9KdBjXCKP43/pRLLLrB+mJe9ieCgn41Mwo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GLD2xkNcw4xo6a068apE8dkLp+AFJV5VPL5L23NIXZVOZvbVZur+zOfGKa17N55xN
-	 cXlQ82I+EmklKqNtaz+SUoFqcrthqPEa7ygzTYkkSqhfj1K7Wmyl34NUG1L6BECt9B
-	 798eDGadtvBTaFYUe+AMVEVyFDZM+aCnsQLZoZ8E=
+	b=sjZQats5V0mHxjs+PF3fZdgQGV/37otAT1i5lymcxcS69Qc4eKulbhxEqbH/VL/Fz
+	 0bu4cya1AC0/mDSRZ25miwWRNw4RtJi2tf+qalCiKdbp5+IMceDdkiqutVV7JOnS3p
+	 Dou24SKa+mHvOL+7JA5Zr6Bzq5NjSjAR6nJX5gFk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730510AbgCJNGm (ORCPT
+        id S1729121AbgCJNGr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:06:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52236 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:06:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52290 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730426AbgCJNGh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:06:37 -0400
+        id S1730876AbgCJNGk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:06:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A65820409;
-        Tue, 10 Mar 2020 13:06:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B64D12071B;
+        Tue, 10 Mar 2020 13:06:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845596;
-        bh=XvpgVEZcTBXlGEW1+OoMZPzzlwMiuEY5782FmmRHtAA=;
+        s=default; t=1583845600;
+        bh=sM82G4kYr9KdBjXCKP43/pRLLLrB+mJe9ieCgn41Mwo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RACrcRD1NcY+l3qWBf0NgufoTwRKsJNUxghfNjHpdZtClo0bbvKZir2K0C4aBDxVu
-         z6w2CqpdoBoiTmov+wkRmZ8KzAKrM+ngDmK5OnDczzBqf95tvNobtykv0PMqPT/o2f
-         lCzGzazC9loCjyjQfyXw+D1hABgM2IpyKQj4tTXM=
+        b=DSf/og521zLFJrm1E9vC0NcZyPa4fGl1vybz046VvxxIOX3l5UTaEm8ob+hLrTyRW
+         ml9sJ8ow8he4/dCKXPf0o3yuhyDVi+hOn38k/+Ur/2cB7Td7KMY7d37Qs+Hg5OPYrU
+         +BZaDcq/97f/kHMXS/J12ubjk0BdUAUXvYyH3Mwg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ariel Elior <ariel.elior@marvell.com>,
-        Michal Kalderon <michal.kalderon@marvell.com>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Jason Baron <jbaron@akamai.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 032/126] qede: Fix race between rdma destroy workqueue and link change event
-Date:   Tue, 10 Mar 2020 13:40:53 +0100
-Message-Id: <20200310124206.474412924@linuxfoundation.org>
+Subject: [PATCH 4.14 033/126] net: sched: correct flower port blocking
+Date:   Tue, 10 Mar 2020 13:40:54 +0100
+Message-Id: <20200310124206.526633885@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310124203.704193207@linuxfoundation.org>
 References: <20200310124203.704193207@linuxfoundation.org>
@@ -60,106 +61,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michal Kalderon <michal.kalderon@marvell.com>
+From: Jason Baron <jbaron@akamai.com>
 
-[ Upstream commit af6565adb02d3129d3fae4d9d5da945abaf4417a ]
+[ Upstream commit 8a9093c79863b58cc2f9874d7ae788f0d622a596 ]
 
-If an event is added while the rdma workqueue is being destroyed
-it could lead to several races, list corruption, null pointer
-dereference during queue_work or init_queue.
-This fixes the race between the two flows which can occur during
-shutdown.
+tc flower rules that are based on src or dst port blocking are sometimes
+ineffective due to uninitialized stack data. __skb_flow_dissect() extracts
+ports from the skb for tc flower to match against. However, the port
+dissection is not done when when the FLOW_DIS_IS_FRAGMENT bit is set in
+key_control->flags. All callers of __skb_flow_dissect(), zero-out the
+key_control field except for fl_classify() as used by the flower
+classifier. Thus, the FLOW_DIS_IS_FRAGMENT may be set on entry to
+__skb_flow_dissect(), since key_control is allocated on the stack
+and may not be initialized.
 
-A kref object and a completion object are added to the rdma_dev
-structure, these are initialized before the workqueue is created.
-The refcnt is used to indicate work is being added to the
-workqueue and ensures the cleanup flow won't start while we're in
-the middle of adding the event.
-Once the work is added, the refcnt is decreased and the cleanup flow
-is safe to run.
+Since key_basic and key_control are present for all flow keys, let's
+make sure they are initialized.
 
-Fixes: cee9fbd8e2e ("qede: Add qedr framework")
-Signed-off-by: Ariel Elior <ariel.elior@marvell.com>
-Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
+Fixes: 62230715fd24 ("flow_dissector: do not dissect l4 ports for fragments")
+Co-developed-by: Eric Dumazet <edumazet@google.com>
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Acked-by: Cong Wang <xiyou.wangcong@gmail.com>
+Signed-off-by: Jason Baron <jbaron@akamai.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/qlogic/qede/qede.h      |    2 +
- drivers/net/ethernet/qlogic/qede/qede_rdma.c |   29 ++++++++++++++++++++++++++-
- 2 files changed, 30 insertions(+), 1 deletion(-)
+ include/net/flow_dissector.h |    9 +++++++++
+ net/sched/cls_flower.c       |    1 +
+ 2 files changed, 10 insertions(+)
 
---- a/drivers/net/ethernet/qlogic/qede/qede.h
-+++ b/drivers/net/ethernet/qlogic/qede/qede.h
-@@ -156,6 +156,8 @@ struct qede_rdma_dev {
- 	struct list_head entry;
- 	struct list_head rdma_event_list;
- 	struct workqueue_struct *rdma_wq;
-+	struct kref refcnt;
-+	struct completion event_comp;
- };
+--- a/include/net/flow_dissector.h
++++ b/include/net/flow_dissector.h
+@@ -5,6 +5,7 @@
+ #include <linux/types.h>
+ #include <linux/in6.h>
+ #include <linux/siphash.h>
++#include <linux/string.h>
+ #include <uapi/linux/if_ether.h>
  
- struct qede_ptp;
---- a/drivers/net/ethernet/qlogic/qede/qede_rdma.c
-+++ b/drivers/net/ethernet/qlogic/qede/qede_rdma.c
-@@ -57,6 +57,9 @@ static void _qede_rdma_dev_add(struct qe
- static int qede_rdma_create_wq(struct qede_dev *edev)
- {
- 	INIT_LIST_HEAD(&edev->rdma_info.rdma_event_list);
-+	kref_init(&edev->rdma_info.refcnt);
-+	init_completion(&edev->rdma_info.event_comp);
-+
- 	edev->rdma_info.rdma_wq = create_singlethread_workqueue("rdma_wq");
- 	if (!edev->rdma_info.rdma_wq) {
- 		DP_NOTICE(edev, "qedr: Could not create workqueue\n");
-@@ -81,8 +84,23 @@ static void qede_rdma_cleanup_event(stru
- 	}
+ /**
+@@ -282,4 +283,12 @@ static inline void *skb_flow_dissector_t
+ 	return ((char *)target_container) + flow_dissector->offset[key_id];
  }
  
-+static void qede_rdma_complete_event(struct kref *ref)
++static inline void
++flow_dissector_init_keys(struct flow_dissector_key_control *key_control,
++			 struct flow_dissector_key_basic *key_basic)
 +{
-+	struct qede_rdma_dev *rdma_dev =
-+		container_of(ref, struct qede_rdma_dev, refcnt);
-+
-+	/* no more events will be added after this */
-+	complete(&rdma_dev->event_comp);
++	memset(key_control, 0, sizeof(*key_control));
++	memset(key_basic, 0, sizeof(*key_basic));
 +}
 +
- static void qede_rdma_destroy_wq(struct qede_dev *edev)
- {
-+	/* Avoid race with add_event flow, make sure it finishes before
-+	 * we start accessing the list and cleaning up the work
-+	 */
-+	kref_put(&edev->rdma_info.refcnt, qede_rdma_complete_event);
-+	wait_for_completion(&edev->rdma_info.event_comp);
-+
- 	qede_rdma_cleanup_event(edev);
- 	destroy_workqueue(edev->rdma_info.rdma_wq);
- }
-@@ -287,15 +305,24 @@ static void qede_rdma_add_event(struct q
- 	if (!edev->rdma_info.qedr_dev)
- 		return;
+ #endif
+--- a/net/sched/cls_flower.c
++++ b/net/sched/cls_flower.c
+@@ -160,6 +160,7 @@ static int fl_classify(struct sk_buff *s
+ 	if (!atomic_read(&head->ht.nelems))
+ 		return -1;
  
-+	/* We don't want the cleanup flow to start while we're allocating and
-+	 * scheduling the work
-+	 */
-+	if (!kref_get_unless_zero(&edev->rdma_info.refcnt))
-+		return; /* already being destroyed */
-+
- 	event_node = qede_rdma_get_free_event_node(edev);
- 	if (!event_node)
--		return;
-+		goto out;
++	flow_dissector_init_keys(&skb_key.control, &skb_key.basic);
+ 	fl_clear_masked_range(&skb_key, &head->mask);
  
- 	event_node->event = event;
- 	event_node->ptr = edev;
- 
- 	INIT_WORK(&event_node->work, qede_rdma_handle_event);
- 	queue_work(edev->rdma_info.rdma_wq, &event_node->work);
-+
-+out:
-+	kref_put(&edev->rdma_info.refcnt, qede_rdma_complete_event);
- }
- 
- void qede_rdma_dev_event_open(struct qede_dev *edev)
+ 	info = skb_tunnel_info(skb);
 
 
