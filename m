@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C884C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:34:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A897BC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:34:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB92720675
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:34:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75D6320675
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:34:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583847279;
-	bh=ABU12IfNmFeJk/drjZr/gSCCysZwfcqqTJ7L/m1fD/w=;
+	s=default; t=1583847283;
+	bh=TmISeBl+z/riu5zI1Aow+4OtmrTWBLBSDho4zHJx+0g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=etpGDE0EWw+VU8ImbuNO2MI8T+VpP1PhrnKbQ1oX4iCm27tDVioiC4s4Zj0xYay4R
-	 haBrrDbiYNbWdzybOAs/WVMK8x56J1RmoV8PElqmPnCWJ0OSkLjz7KrxFPQWjTRHA1
-	 qA3g07sKJ+JTcE4CFYsODLJo/R+DXv5miCU05QEY=
+	b=gDAZWkHngTzUrC7oXWHW1SmfEMfxFyt8drHdw11nR/S9gHgxYzQpiYquxChtyHyc3
+	 xGE+x3TghVOAKX+L/dvIRtPIl1MKUNYShKJJ1Adn59b1hzYihvhyIWRjB1EgeeETT+
+	 BEeU46izapfBjWDRoRULwY2IGiv7BLh/NWwMNsCw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727990AbgCJMqT (ORCPT
+        id S1726731AbgCJMqI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:46:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49376 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:46:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49012 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727955AbgCJMqQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:46:16 -0400
+        id S1727722AbgCJMqG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:46:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 97D272467D;
-        Tue, 10 Mar 2020 12:46:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 270B224696;
+        Tue, 10 Mar 2020 12:46:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844376;
-        bh=ABU12IfNmFeJk/drjZr/gSCCysZwfcqqTJ7L/m1fD/w=;
+        s=default; t=1583844365;
+        bh=TmISeBl+z/riu5zI1Aow+4OtmrTWBLBSDho4zHJx+0g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J075e1ouZUv/KtbI5rWaOKa/qkEDgnc446Jh+5NeguJJfe7UPNWHkCZtaK2joQhcy
-         NTKvnj1ywvlLrE8P45fxVv9ItlE0sr1UeNXc/iJoeEt97VHpR+MO5rR9iWcdY3x29c
-         TB5Pj2ljiXubFoUleSGHjXkEsV8KZrlhEEZeF4Bs=
+        b=vB5LMzaAiR8/queMPFHGeq+B+5eQt+nr4BmAvYG7s7eRD9D4Ts9077ucBUrfgxJlT
+         0QudpRm5UUs64zfajwN++ZD9tb0AyOb0SloILk+DfgoPsWnMopW0WZg7gk0VJ6vJbl
+         XdEm0jSC4anL6I3N20hGtBcEd7Z+WvPdsk4invlM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marek Vasut <marex@denx.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Lukas Wunner <lukas@wunner.de>, Petr Stetiar <ynezz@true.cz>,
-        YueHaibing <yuehaibing@huawei.com>,
+        stable@vger.kernel.org, Sergey Organov <sorganov@gmail.com>,
+        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
+        Felipe Balbi <balbi@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 58/88] net: ks8851-ml: Fix 16-bit data access
-Date:   Tue, 10 Mar 2020 13:39:06 +0100
-Message-Id: <20200310123620.969868245@linuxfoundation.org>
+Subject: [PATCH 4.9 54/88] usb: gadget: serial: fix Tx stall after buffer overflow
+Date:   Tue, 10 Mar 2020 13:39:02 +0100
+Message-Id: <20200310123619.619783130@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123606.543939933@linuxfoundation.org>
 References: <20200310123606.543939933@linuxfoundation.org>
@@ -62,46 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Vasut <marex@denx.de>
+From: Sergey Organov <sorganov@gmail.com>
 
-[ Upstream commit edacb098ea9c31589276152f09b4439052c0f2b1 ]
+[ Upstream commit e4bfded56cf39b8d02733c1e6ef546b97961e18a ]
 
-The packet data written to and read from Micrel KSZ8851-16MLLI must be
-byte-swapped in 16-bit mode, add this byte-swapping.
+Symptom: application opens /dev/ttyGS0 and starts sending (writing) to
+it while either USB cable is not connected, or nobody listens on the
+other side of the cable. If driver circular buffer overflows before
+connection is established, no data will be written to the USB layer
+until/unless /dev/ttyGS0 is closed and re-opened again by the
+application (the latter besides having no means of being notified about
+the event of establishing of the connection.)
 
-Signed-off-by: Marek Vasut <marex@denx.de>
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Lukas Wunner <lukas@wunner.de>
-Cc: Petr Stetiar <ynezz@true.cz>
-Cc: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fix: on open and/or connect, kick Tx to flush circular buffer data to
+USB layer.
+
+Signed-off-by: Sergey Organov <sorganov@gmail.com>
+Reviewed-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/micrel/ks8851_mll.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/usb/gadget/function/u_serial.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/micrel/ks8851_mll.c b/drivers/net/ethernet/micrel/ks8851_mll.c
-index 721f851674531..20356976b9772 100644
---- a/drivers/net/ethernet/micrel/ks8851_mll.c
-+++ b/drivers/net/ethernet/micrel/ks8851_mll.c
-@@ -515,7 +515,7 @@ static inline void ks_inblk(struct ks_net *ks, u16 *wptr, u32 len)
- {
- 	len >>= 1;
- 	while (len--)
--		*wptr++ = (u16)ioread16(ks->hw_addr);
-+		*wptr++ = be16_to_cpu(ioread16(ks->hw_addr));
- }
+diff --git a/drivers/usb/gadget/function/u_serial.c b/drivers/usb/gadget/function/u_serial.c
+index 510a54f889635..5d7d0f2e80a5e 100644
+--- a/drivers/usb/gadget/function/u_serial.c
++++ b/drivers/usb/gadget/function/u_serial.c
+@@ -715,8 +715,10 @@ static int gs_start_io(struct gs_port *port)
+ 	port->n_read = 0;
+ 	started = gs_start_rx(port);
  
- /**
-@@ -529,7 +529,7 @@ static inline void ks_outblk(struct ks_net *ks, u16 *wptr, u32 len)
- {
- 	len >>= 1;
- 	while (len--)
--		iowrite16(*wptr++, ks->hw_addr);
-+		iowrite16(cpu_to_be16(*wptr++), ks->hw_addr);
- }
- 
- static void ks_disable_int(struct ks_net *ks)
+-	/* unblock any pending writes into our circular buffer */
+ 	if (started) {
++		gs_start_tx(port);
++		/* Unblock any pending writes into our circular buffer, in case
++		 * we didn't in gs_start_tx() */
+ 		tty_wakeup(port->port.tty);
+ 	} else {
+ 		gs_free_requests(ep, head, &port->read_allocated);
 -- 
 2.20.1
 
