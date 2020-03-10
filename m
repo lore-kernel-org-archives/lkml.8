@@ -5,51 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E14CDC18E5C
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:59:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA427C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:59:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E35E2468D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:59:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9142624699
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:59:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583845144;
-	bh=Xvrs5Tl05cV7m4ac4tT9EVzboSu3Qc+AUWzumDZp8DI=;
+	s=default; t=1583845147;
+	bh=iOTOzWvnEBWJ2lYE1qrTSa8s9PYi2HDkCLTTQGhOrkc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j4C1KzLjWWOZ2sZ01JH/iIIA0cJVrN0N7m14g4eMLj0ShCyj5nFrQSbPo6i6I+Isx
-	 mR4wW9X83WVxOkLrIWw8isrm3AAtTpOtBnYBliYh7QGrHPVb5rUipE1FUlJqOB+g4s
-	 NyyRVEJtUo6QOIKkjzDSvYY4t3hjL7TwglAUquss=
+	b=AyfkGzDMtdtJJXz7455+vfAkxXNdsF/KM2VU71JI6OGE7FXnw0sN4+LVHVPK2kkEj
+	 aMTpsH/hGJLkOOqfu5OrA9nihZK6UGOg97q9u3Qsrf6PQ5/yKMh1nYStn4j6YYjicy
+	 6KJ8ozHDr63/0S6+X3B4s22XyS7kd2LjP3rlaKYE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729680AbgCJM7D (ORCPT
+        id S1729992AbgCJM7G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:59:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39276 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:59:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39326 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729764AbgCJM67 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:58:59 -0400
+        id S1729982AbgCJM7C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:59:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D059C2468F;
-        Tue, 10 Mar 2020 12:58:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 53A4920674;
+        Tue, 10 Mar 2020 12:59:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845139;
-        bh=Xvrs5Tl05cV7m4ac4tT9EVzboSu3Qc+AUWzumDZp8DI=;
+        s=default; t=1583845141;
+        bh=iOTOzWvnEBWJ2lYE1qrTSa8s9PYi2HDkCLTTQGhOrkc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V9DVSuiWCFzMEkEHgsVDBCURtfEOxLaUOhu6b5iGgKEHkdSOZNRMB/XF2/ST0aPNy
-         wcRT6jZ5AdT2BQXQQzc/hNVyrllaZ8QO9PyKLlumtOUq2IXcHFYMSIMd4WWm3nAjKB
-         ORbGyPCzJRgmRGpfVekStVOaUbPZtYH+SIVE4br0=
+        b=gbPhe1/niYKJnYb0PGQwTfmNL4O0mGaIxk97drDMTGCI1z9LC8rtvGgRDkyf6Fp8R
+         FO5Bg0bPawj4OUadb8jQTFIJWGSL5IlDpNNzHFfYyxiALFU3SGTzJ0NwvfNJTXim4Y
+         1OERPWgd1p2QY3pzBcsrXWJoE8y4EVN8yVCPy9C4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Cornelia Huck <cohuck@redhat.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Vasily Averin <vvs@virtuozzo.com>,
+        stable@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 038/189] s390/cio: cio_ignore_proc_seq_next should increase position index
-Date:   Tue, 10 Mar 2020 13:37:55 +0100
-Message-Id: <20200310123643.334202771@linuxfoundation.org>
+Subject: [PATCH 5.5 039/189] s390: make install not depend on vmlinux
+Date:   Tue, 10 Mar 2020 13:37:56 +0100
+Message-Id: <20200310123643.432948299@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123639.608886314@linuxfoundation.org>
 References: <20200310123639.608886314@linuxfoundation.org>
@@ -62,47 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Averin <vvs@virtuozzo.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
 
-[ Upstream commit 8b101a5e14f2161869636ff9cb4907b7749dc0c2 ]
+[ Upstream commit 94e90f727f7424d827256023cace829cad6896f4 ]
 
-if seq_file .next fuction does not change position index,
-read after some lseek can generate unexpected output.
+For the same reason as commit 19514fc665ff ("arm, kbuild: make "make
+install" not depend on vmlinux"), the install targets should never
+trigger the rebuild of the kernel.
 
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=206283
-Link: https://lore.kernel.org/r/d44c53a7-9bc1-15c7-6d4a-0c10cb9dffce@virtuozzo.com
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
-Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+The variable, CONFIGURE, is not set by anyone. Remove it as well.
+
+Link: https://lkml.kernel.org/r/20200216144829.27023-1-masahiroy@kernel.org
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/cio/blacklist.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ arch/s390/Makefile      | 2 +-
+ arch/s390/boot/Makefile | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/s390/cio/blacklist.c b/drivers/s390/cio/blacklist.c
-index 2a3f874a21d54..9cebff8e8d740 100644
---- a/drivers/s390/cio/blacklist.c
-+++ b/drivers/s390/cio/blacklist.c
-@@ -303,8 +303,10 @@ static void *
- cio_ignore_proc_seq_next(struct seq_file *s, void *it, loff_t *offset)
- {
- 	struct ccwdev_iter *iter;
-+	loff_t p = *offset;
+diff --git a/arch/s390/Makefile b/arch/s390/Makefile
+index e0e3a465bbfd6..8dfa2cf1f05c7 100644
+--- a/arch/s390/Makefile
++++ b/arch/s390/Makefile
+@@ -146,7 +146,7 @@ all: bzImage
+ #KBUILD_IMAGE is necessary for packaging targets like rpm-pkg, deb-pkg...
+ KBUILD_IMAGE	:= $(boot)/bzImage
  
--	if (*offset >= (__MAX_SUBCHANNEL + 1) * (__MAX_SSID + 1))
-+	(*offset)++;
-+	if (p >= (__MAX_SUBCHANNEL + 1) * (__MAX_SSID + 1))
- 		return NULL;
- 	iter = it;
- 	if (iter->devno == __MAX_SUBCHANNEL) {
-@@ -314,7 +316,6 @@ cio_ignore_proc_seq_next(struct seq_file *s, void *it, loff_t *offset)
- 			return NULL;
- 	} else
- 		iter->devno++;
--	(*offset)++;
- 	return iter;
- }
+-install: vmlinux
++install:
+ 	$(Q)$(MAKE) $(build)=$(boot) $@
+ 
+ bzImage: vmlinux
+diff --git a/arch/s390/boot/Makefile b/arch/s390/boot/Makefile
+index e2c47d3a1c891..0ff9261c915e3 100644
+--- a/arch/s390/boot/Makefile
++++ b/arch/s390/boot/Makefile
+@@ -70,7 +70,7 @@ $(obj)/compressed/vmlinux: $(obj)/startup.a FORCE
+ $(obj)/startup.a: $(OBJECTS) FORCE
+ 	$(call if_changed,ar)
+ 
+-install: $(CONFIGURE) $(obj)/bzImage
++install:
+ 	sh -x  $(srctree)/$(obj)/install.sh $(KERNELRELEASE) $(obj)/bzImage \
+ 	      System.map "$(INSTALL_PATH)"
  
 -- 
 2.20.1
