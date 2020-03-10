@@ -2,204 +2,116 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A35F6C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 17:39:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53E22C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 17:39:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 872F921D7E
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 17:39:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FB4B21D7E
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 17:39:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583861997;
+	bh=6FjAu21bPwSRBdA1VQ4xafI+DYfCjDLEQqCnSzn84jQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0heTOLug5piQXKsPwFKhnbLVVjes5okXxGgH3PtLmZHeEfAPrADXxi87ahhm/chjF
+	 UkmewPWmTUs9gfoVg10yqHWyrnot3zdvJkZO4KmXOM3vVqfhE5ji7D/avPAxIS5V/n
+	 y3c5fgR511qQUMz+SY686IUd2oV+16rXCrF4YWfA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726591AbgCJRjn (ORCPT
+        id S1726720AbgCJRjz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 13:39:43 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2544 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726271AbgCJRjn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 13:39:43 -0400
-Received: from LHREML712-CAH.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id D88EA615F023B609DD86;
-        Tue, 10 Mar 2020 17:39:40 +0000 (GMT)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- LHREML712-CAH.china.huawei.com (10.201.108.35) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Tue, 10 Mar 2020 17:39:40 +0000
-Received: from localhost (10.202.226.57) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Tue, 10 Mar
- 2020 17:39:40 +0000
-Date:   Tue, 10 Mar 2020 17:39:38 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     SeongJae Park <sjpark@amazon.com>
-CC:     <akpm@linux-foundation.org>, SeongJae Park <sjpark@amazon.de>,
-        <aarcange@redhat.com>, <yang.shi@linux.alibaba.com>,
-        <acme@kernel.org>, <alexander.shishkin@linux.intel.com>,
-        <amit@kernel.org>, <brendan.d.gregg@gmail.com>,
-        <brendanhiggins@google.com>, <cai@lca.pw>,
-        <colin.king@canonical.com>, <corbet@lwn.net>, <dwmw@amazon.com>,
-        <jolsa@redhat.com>, <kirill@shutemov.name>, <mark.rutland@arm.com>,
-        <mgorman@suse.de>, <minchan@kernel.org>, <mingo@redhat.com>,
-        <namhyung@kernel.org>, <peterz@infradead.org>,
-        <rdunlap@infradead.org>, <rientjes@google.com>,
-        <rostedt@goodmis.org>, <shuah@kernel.org>, <sj38.park@gmail.com>,
-        <vbabka@suse.cz>, <vdavydov.dev@gmail.com>, <linux-mm@kvack.org>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v6 02/14] mm/damon: Implement region based sampling
-Message-ID: <20200310173938.00002af4@Huawei.com>
-In-Reply-To: <20200310162240.27935-1-sjpark@amazon.com>
-References: <20200310155510.000025d2@Huawei.com>
-        <20200310162240.27935-1-sjpark@amazon.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Tue, 10 Mar 2020 13:39:55 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:39146 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726271AbgCJRjz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 13:39:55 -0400
+Received: by mail-wm1-f65.google.com with SMTP id f7so2353978wml.4
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 10:39:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=mi8lNzzOnKeYsD5u8ot6xkdW2xJgJMBQyDw8ffSdpAY=;
+        b=Sc8YqEzgMyj+9jAsW15y1MGX58durmfcxD7UvIbvirQp5d8n5sG+HNF6C0AZUxbkOV
+         3wYkSq6Vwge5XaosiqlTBk6g3a8EVykouLyxduyDMTw6tj/eFCtTL+sU1U1zEdhbfiip
+         3I6Hb9ETeb2KLZOQ2Dy6n2GbY7k8iKgquPnVU7IdV0AOistFAiOUkscPhMXGLucXQnrE
+         9LqB6GZfG2QoMsgYG4V5u1YGaVTJa3k3ppfaV/CHx6FHJPtQRBIAwlz6m51RaSG5RhtL
+         Lci+HHs6gPfV9P/z3mrPg0Y5u7vozma5lRjc04S9GdDjkTjtsXsvH7ROaWd9W6XODFbu
+         HiKg==
+X-Gm-Message-State: ANhLgQ1tRQLrb02EuK0tFAGvYNgJEZ8c8xW5uGTpgKaDcDEJRO9bWyQm
+        6P1W4bXYeswyHvfIWgIyrGA=
+X-Google-Smtp-Source: ADFU+vteQx+Y6fhAAgT08Ei8v41vQmEuC4dL/8yPoVzAOVAO9xUONQ+PcE5PlmBE3Trjkl7MyKgqQQ==
+X-Received: by 2002:a1c:9c4c:: with SMTP id f73mr3048235wme.125.1583861993519;
+        Tue, 10 Mar 2020 10:39:53 -0700 (PDT)
+Received: from localhost (ip-37-188-253-35.eurotel.cz. [37.188.253.35])
+        by smtp.gmail.com with ESMTPSA id q6sm4893875wmj.6.2020.03.10.10.39.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Mar 2020 10:39:52 -0700 (PDT)
+Date:   Tue, 10 Mar 2020 18:39:51 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>, linux-mm@kvack.org,
+        kernel-team@fb.com, linux-kernel@vger.kernel.org,
+        Rik van Riel <riel@surriel.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>
+Subject: Re: [PATCH v2] mm: hugetlb: optionally allocate gigantic hugepages
+ using cma
+Message-ID: <20200310173951.GX8447@dhcp22.suse.cz>
+References: <20200310002524.2291595-1-guro@fb.com>
+ <20200310090121.GB8447@dhcp22.suse.cz>
+ <20200310173056.GB85000@carbon.dhcp.thefacebook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.57]
-X-ClientProxiedBy: lhreml715-chm.china.huawei.com (10.201.108.66) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200310173056.GB85000@carbon.dhcp.thefacebook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 10 Mar 2020 17:22:40 +0100
-SeongJae Park <sjpark@amazon.com> wrote:
+On Tue 10-03-20 10:30:56, Roman Gushchin wrote:
+> On Tue, Mar 10, 2020 at 10:01:21AM +0100, Michal Hocko wrote:
+> > On Mon 09-03-20 17:25:24, Roman Gushchin wrote:
+> > [...]
+> > > 2) Run-time allocations of gigantic hugepages are performed using the
+> > >    cma allocator and the dedicated cma area
+> > 
+> > [...]
+> > > @@ -1237,6 +1246,23 @@ static struct page *alloc_gigantic_page(struct hstate *h, gfp_t gfp_mask,
+> > >  {
+> > >  	unsigned long nr_pages = 1UL << huge_page_order(h);
+> > >  
+> > > +	if (IS_ENABLED(CONFIG_CMA) && hugetlb_cma[0]) {
+> > > +		struct page *page;
+> > > +		int nid;
+> > > +
+> > > +		for_each_node_mask(nid, *nodemask) {
+> > > +			if (!hugetlb_cma[nid])
+> > > +				break;
+> > > +
+> > > +			page = cma_alloc(hugetlb_cma[nid], nr_pages,
+> > > +					 huge_page_order(h), true);
+> > > +			if (page)
+> > > +				return page;
+> > > +		}
+> > > +
+> > > +		return NULL;
+> > 
+> > Is there any strong reason why the alloaction annot fallback to non-CMA
+> > allocator when the cma is depleted?
+> 
+> The reason is that that gigantic pages allocated using cma require
+> a special handling on releasing. It's solvable by using an additional
+> page flag, but because the current code is usually not working except
+> a short time just after the system start, I don't think it's worth it.
 
-> On Tue, 10 Mar 2020 15:55:10 +0000 Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
-> 
-> > On Tue, 10 Mar 2020 12:52:33 +0100
-> > SeongJae Park <sjpark@amazon.com> wrote:
-> >   
-> > > Added replies to your every comment in line below.  I agree to your whole
-> > > opinions, will apply those in next spin! :)
-> > >   
-> > 
-> > One additional question inline that came to mind.  Using a single statistic
-> > to monitor huge page and normal page hits is going to give us problems
-> > I think.  
-> 
-> Ah, you're right!!!  This is indeed a critical bug!
-> 
-> > 
-> > Perhaps I'm missing something?
-> >   
-> > > > > +/*
-> > > > > + * Check whether the given region has accessed since the last check    
-> > > > 
-> > > > Should also make clear that this sets us up for the next access check at
-> > > > a different memory address it the region.
-> > > > 
-> > > > Given the lack of connection between activities perhaps just split this into
-> > > > two functions that are always called next to each other.    
-> > > 
-> > > Will make the description more clearer as suggested.
-> > > 
-> > > Also, I found that I'm not clearing *pte and *pmd before going 'mkold', thanks
-> > > to this comment.  Will fix it, either.
-> > >   
-> > > >     
-> > > > > + *
-> > > > > + * mm	'mm_struct' for the given virtual address space
-> > > > > + * r	the region to be checked
-> > > > > + */
-> > > > > +static void kdamond_check_access(struct damon_ctx *ctx,
-> > > > > +			struct mm_struct *mm, struct damon_region *r)
-> > > > > +{
-> > > > > +	pte_t *pte = NULL;
-> > > > > +	pmd_t *pmd = NULL;
-> > > > > +	spinlock_t *ptl;
-> > > > > +
-> > > > > +	if (follow_pte_pmd(mm, r->sampling_addr, NULL, &pte, &pmd, &ptl))
-> > > > > +		goto mkold;
-> > > > > +
-> > > > > +	/* Read the page table access bit of the page */
-> > > > > +	if (pte && pte_young(*pte))
-> > > > > +		r->nr_accesses++;
-> > > > > +#ifdef CONFIG_TRANSPARENT_HUGEPAGE    
-> > > > 
-> > > > Is it worth having this protection?  Seems likely to have only a very small
-> > > > influence on performance and makes it a little harder to reason about the code.    
-> > > 
-> > > It was necessary for addressing 'implicit declaration' problem of 'pmd_young()'
-> > > and 'pmd_mkold()' for build of DAMON on several architectures including User
-> > > Mode Linux.
-> > > 
-> > > Will modularize the code for better readability.
-> > >   
-> > > >     
-> > > > > +	else if (pmd && pmd_young(*pmd))
-> > > > > +		r->nr_accesses++;  
-> > 
-> > So we increment a region count by one if we have an access in a huge page, or
-> > in a normal page.
-> > 
-> > If we get a region that has a mixture of the two, this seems likely to give a
-> > bad approximation.
-> > 
-> > Assume the region is accessed 'evenly' but each " 4k page" is only hit 10% of the time
-> > (where a hit is in one check period)
-> > 
-> > If our address in a page, then we'll hit 10% of the time, but if it is in a 2M
-> > huge page then we'll hit a much higher percentage of the time.
-> > 1 - (0.9^512) ~= 1
-> > 
-> > Should we look to somehow account for this?  
-> 
-> Yes, this is really critical bug and we should fix this!  Thank you so much for
-> finding this!
-> 
-> >   
-> > > > > +#endif	/* CONFIG_TRANSPARENT_HUGEPAGE */
-> > > > > +
-> > > > > +	spin_unlock(ptl);
-> > > > > +
-> > > > > +mkold:
-> > > > > +	/* mkold next target */
-> > > > > +	r->sampling_addr = damon_rand(ctx, r->vm_start, r->vm_end);
-> > > > > +
-> > > > > +	if (follow_pte_pmd(mm, r->sampling_addr, NULL, &pte, &pmd, &ptl))
-> > > > > +		return;
-> > > > > +
-> > > > > +	if (pte) {
-> > > > > +		if (pte_young(*pte)) {
-> > > > > +			clear_page_idle(pte_page(*pte));
-> > > > > +			set_page_young(pte_page(*pte));
-> > > > > +		}
-> > > > > +		*pte = pte_mkold(*pte);
-> > > > > +	}
-> > > > > +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
-> > > > > +	else if (pmd) {
-> > > > > +		if (pmd_young(*pmd)) {
-> > > > > +			clear_page_idle(pmd_page(*pmd));
-> > > > > +			set_page_young(pmd_page(*pmd));
-> > > > > +		}
-> > > > > +		*pmd = pmd_mkold(*pmd);
-> > > > > +	}  
-> 
-> This is also very problematic if several regions are backed by a single huge
-> page, as only one region in the huge page will be checked as accessed.
-> 
-> Will address these problems in next spin!
+I am not deeply familiar with the cma much TBH but cma_release seems to
+be documented to return false if the area doesn't belong to the area so
+the free patch can try cma_release and fallback to the regular free, no?
 
-Good point.  There is little point in ever having multiple regions including
-a single huge page.  Would it be possible to tweak the region splitting algorithm
-to not do this?
-
-Jonathan
-
-> 
-> 
-> Thanks,
-> SeongJae Park
-> 
-> > > > > +#endif
-> > > > > +
-> > > > > +	spin_unlock(ptl);
-> > > > > +}
-> > > > > +  
-> > 
-> >   
-
-
+-- 
+Michal Hocko
+SUSE Labs
