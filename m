@@ -2,94 +2,74 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9009C18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 15:47:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8281DC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 15:48:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4B21215A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 15:47:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583855271;
-	bh=fxXBC6mLqLhF630XcKwvNoA3xYL1Mgjsv4/cnzDW8FE=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=1H8Qsrp8rbBMNcYSI+w31V6Vmrk0bmWM1oAiHBOsZB4Fyc1kBtlyTZXJq0xmcSdVx
-	 WYpu7qAa0meadNKPKTcAuaKk2yIncJQR4M0qy07M5/v7+80asGsj5cf973unZGGvQV
-	 3gg1pr84vQu+v6S8qjCq6zJhnrWqhAuiPYntmgys=
+	by mail.kernel.org (Postfix) with ESMTP id 688EF20866
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 15:48:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726830AbgCJPru (ORCPT
+        id S1726646AbgCJPsd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 11:47:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58010 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 11:48:33 -0400
+Received: from muru.com ([72.249.23.125]:59512 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726467AbgCJPru (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 11:47:50 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5C0320866;
-        Tue, 10 Mar 2020 15:47:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583855269;
-        bh=fxXBC6mLqLhF630XcKwvNoA3xYL1Mgjsv4/cnzDW8FE=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=t6BwwWyfltp0cLV9XE4wIgEp201EDrtvpsCABAtdCg+fbpp7EdL6PG2iWnkxtPkQd
-         Ik604FbqVyTy4wadVmpZAsXt2e7bm7XDJ3DIRBnb1ZhLVa1qlnYu0lMu71TBYTjzys
-         EuahFLGqKgSz2Vm3dRqAs7NvA4Js9NZR3HqrOCFE=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id ACDAD35226CF; Tue, 10 Mar 2020 08:47:49 -0700 (PDT)
-Date:   Tue, 10 Mar 2020 08:47:49 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     David Laight <David.Laight@ACULAB.COM>
-Cc:     'Marco Elver' <elver@google.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH] list: Prevent compiler reloads inside 'safe' list
- iteration
-Message-ID: <20200310154749.GZ2935@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200310092119.14965-1-chris@chris-wilson.co.uk>
- <2e936d8fd2c445beb08e6dd3ee1f3891@AcuMS.aculab.com>
- <158384100886.16414.15741589015363013386@build.alporthouse.com>
- <723d527a4ad349b78bf11d52eba97c0e@AcuMS.aculab.com>
- <20200310125031.GY2935@paulmck-ThinkPad-P72>
- <CANpmjNNT3HY7i9TywX0cAFqBtx2J3qOGOUG5nHzxAZ4bk_qgtg@mail.gmail.com>
- <77ff4da6b0a7448c947af6de4fb43cdb@AcuMS.aculab.com>
+        id S1726477AbgCJPsd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 11:48:33 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 64DAF810A;
+        Tue, 10 Mar 2020 15:49:18 +0000 (UTC)
+Date:   Tue, 10 Mar 2020 08:48:29 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Tero Kristo <t-kristo@ti.com>
+Cc:     Roger Quadros <rogerq@ti.com>, hch@lst.de, robin.murphy@arm.com,
+        robh+dt@kernel.org, nm@ti.com, nsekhar@ti.com,
+        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ARM: dts: dra7: Add bus_dma_limit for L3 bus
+Message-ID: <20200310154829.GS37466@atomide.com>
+References: <20200310115309.31354-1-rogerq@ti.com>
+ <e7df4db7-6fe1-cfa4-841b-ddd395864bb8@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <77ff4da6b0a7448c947af6de4fb43cdb@AcuMS.aculab.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <e7df4db7-6fe1-cfa4-841b-ddd395864bb8@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 10, 2020 at 03:05:57PM +0000, David Laight wrote:
-> From: Marco Elver
-> > Sent: 10 March 2020 14:10
-> ...
-> > FWIW, for writes we're already being quite generous, in that plain
-> > aligned writes up to word-size are assumed to be "atomic" with the
-> > default (conservative) config, i.e. marking such writes is optional.
-> > Although, that's a generous assumption that is not always guaranteed
-> > to hold (https://lore.kernel.org/lkml/20190821103200.kpufwtviqhpbuv2n@willie-the-truck/).
+* Tero Kristo <t-kristo@ti.com> [200310 14:46]:
+> On 10/03/2020 13:53, Roger Quadros wrote:
+> > The L3 interconnect can access only 32-bits of address.
+> > Add the dma-ranges property to reflect this limit.
+> > 
+> > This will ensure that no device under L3 is
+> > given > 32-bit address for DMA.
+> > 
+> > Issue was observed only with SATA on DRA7-EVM with 4GB RAM
+> > and CONFIG_ARM_LPAE enabled. This is because the controller
+> > can perform 64-bit DMA and was setting the dma_mask to 64-bit.
+> > 
+> > Setting the correct bus_dma_limit fixes the issue.
 > 
-> Remind me to start writing everything in assembler.
+> This seems kind of messy to modify almost every DT node because of this....
+> Are you sure this is the only way to get it done? No way to modify the sata
+> node only which is impacted somehow?
+> 
+> Also, what if you just pass 0xffffffff to the dma-ranges property? That
+> would avoid modifying every node I guess.
 
-Been there, done that.  :-/
+Also, I think these interconnects are not limited to 32-bit access.
+So yeah I too would prefer a top level dma-ranges property assuming
+that works.
 
-> That and to mark all structure members 'volatile'.
+I guess there dma-ranges should not be 0xffffffff though if
+limited to 2GB :)
 
-Indeed.  READ_ONCE() and WRITE_ONCE() get this same effect, but without
-pessimizing non-concurrent accesses to those same members.  Plus KCSAN
-knows about READ_ONCE(), WRITE_ONCE(), and also volatile members.
+Regards,
 
-							Thanx, Paul
+Tony
