@@ -2,110 +2,96 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4404BC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:23:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB148C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:26:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FE542464B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:23:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A10B624655
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:26:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NRk29ZvL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726391AbgCJMXi (ORCPT
+        id S1726436AbgCJM0Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:23:38 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:54890 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726211AbgCJMXh (ORCPT
+        Tue, 10 Mar 2020 08:26:25 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:38675 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726271AbgCJM0Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:23:37 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-134-nZB81PfeP52EGTki-0E5KQ-1; Tue, 10 Mar 2020 12:23:34 +0000
-X-MC-Unique: nZB81PfeP52EGTki-0E5KQ-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Tue, 10 Mar 2020 12:23:34 +0000
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Tue, 10 Mar 2020 12:23:34 +0000
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Chris Wilson' <chris@chris-wilson.co.uk>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: RE: [PATCH] list: Prevent compiler reloads inside 'safe' list
- iteration
-Thread-Topic: [PATCH] list: Prevent compiler reloads inside 'safe' list
- iteration
-Thread-Index: AQHV9r1KBrT+D4Vo2U+Op9v/Nv0od6hBsdzwgAAEwQCAAAWYAA==
-Date:   Tue, 10 Mar 2020 12:23:34 +0000
-Message-ID: <723d527a4ad349b78bf11d52eba97c0e@AcuMS.aculab.com>
-References: <20200310092119.14965-1-chris@chris-wilson.co.uk>
- <2e936d8fd2c445beb08e6dd3ee1f3891@AcuMS.aculab.com>
- <158384100886.16414.15741589015363013386@build.alporthouse.com>
-In-Reply-To: <158384100886.16414.15741589015363013386@build.alporthouse.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
-MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+        Tue, 10 Mar 2020 08:26:25 -0400
+Received: by mail-pf1-f196.google.com with SMTP id z5so1525330pfn.5;
+        Tue, 10 Mar 2020 05:26:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=aqG1gpI3UojXGpXKG8hweJC7Y4rK/8MUyRGkcr9E4Og=;
+        b=NRk29ZvL9dXRWhydPFZ1MNK8u+VK026HEZdZ6QJrhG6+YwgQJuM7hPfBqK43y29Z/P
+         hWjhYn+xQYQ139crRXlL6FVPYINBUyzwkWupHkYDkopCT25pfhSL/C+lh7wspGkpamcO
+         HygLSE48s954ZazP/AOdt6BNis2UE2+oCV+23F2KC92SOkyyT8Z46DyqmlybGYQQPnoL
+         o3dP2LYSOlpEKs3G44b5dpHRWF0F4ZCaQHnnfQGsQqsZOFhA/MfKa2yp1KNWo5I5zPa4
+         0HoLFM9+y1dGU69VBRHAS+ULujVS+3wcyH+yKDkDERtzTPYeMQZcwWxvGf1bYoGtNIn6
+         ONnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=aqG1gpI3UojXGpXKG8hweJC7Y4rK/8MUyRGkcr9E4Og=;
+        b=N+wQX3okNNEuTp5Cxo0wlLd5vmslArqxxOip7ljl2j/vNWNs1xSDDWd+9aMQ69DFwt
+         A8V9uBkq9XU9DqrfZ1NNBR9ewZtL622ZfjXZ3wXsw98ZR1XyenobfwkCEfhDut6QY3zs
+         2c8WSehBJhyu+jprfeMdRs7j2Iums85xob3MQ7rEg7WDcbkBgjwqJgBzk4Of9MF3HvWJ
+         nzHHSNPVcyv+oY7Vm/CNIvn85rcZsfYB6w7wvsyNetRQZ5UtkzOo10XK2OtGaAnwxyCX
+         XY37tR8bAFvyQnv8EBeCE04wWKCju8l9RF/Xe2hPXHgXkdZ0r0a/py1ScG68jgnO8g1V
+         s5aA==
+X-Gm-Message-State: ANhLgQ0wIVvjGslZr1PWQaf3B+rucsJ620Ff7DxBYWfSPXW7SZ81FetW
+        E9DF2zyoCjTsxYbDpoIpbfY=
+X-Google-Smtp-Source: ADFU+vsGROcltLUCt7lKgq5KZYHU57Q1LyZzFESKeWrFihj5+bJ1r/nBxQ+urASpaa7ZFtj7UtrrtA==
+X-Received: by 2002:a63:5864:: with SMTP id i36mr21841664pgm.426.1583843183996;
+        Tue, 10 Mar 2020 05:26:23 -0700 (PDT)
+Received: from localhost.localdomain ([149.129.63.152])
+        by smtp.gmail.com with ESMTPSA id w11sm47557396pfn.4.2020.03.10.05.26.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Mar 2020 05:26:22 -0700 (PDT)
+From:   Jianhui Zhao <zhaojh329@gmail.com>
+To:     herbert@gondor.apana.org.au
+Cc:     davem@davemloft.net, nicolas.ferre@microchip.com,
+        alexandre.belloni@bootlin.com, ludovic.desroches@microchip.com,
+        linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Jianhui Zhao <zhaojh329@gmail.com>
+Subject: [PATCH v2] crypto: atmel-i2c - Fix wakeup fail
+Date:   Tue, 10 Mar 2020 20:25:51 +0800
+Message-Id: <20200310122551.27831-1-zhaojh329@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogQ2hyaXMgV2lsc29uDQo+IFNlbnQ6IDEwIE1hcmNoIDIwMjAgMTE6NTANCj4gDQo+IFF1
-b3RpbmcgRGF2aWQgTGFpZ2h0ICgyMDIwLTAzLTEwIDExOjM2OjQxKQ0KPiA+IEZyb206IENocmlz
-IFdpbHNvbg0KPiA+ID4gU2VudDogMTAgTWFyY2ggMjAyMCAwOToyMQ0KPiA+ID4gSW5zdHJ1Y3Qg
-dGhlIGNvbXBpbGVyIHRvIHJlYWQgdGhlIG5leHQgZWxlbWVudCBpbiB0aGUgbGlzdCBpdGVyYXRp
-b24NCj4gPiA+IG9uY2UsIGFuZCB0aGF0IGl0IGlzIG5vdCBhbGxvd2VkIHRvIHJlbG9hZCB0aGUg
-dmFsdWUgZnJvbSB0aGUgc3RhbGUNCj4gPiA+IGVsZW1lbnQgbGF0ZXIuIFRoaXMgaXMgaW1wb3J0
-YW50IGFzIGR1cmluZyB0aGUgY291cnNlIG9mIHRoZSBzYWZlDQo+ID4gPiBpdGVyYXRpb24sIHRo
-ZSBzdGFsZSBlbGVtZW50IG1heSBiZSBwb2lzb25lZCAodW5iZWtub3duc3QgdG8gdGhlDQo+ID4g
-PiBjb21waWxlcikuDQo+ID4NCj4gPiBFaD8NCj4gPiBJIHRob3VnaHQgYW55IGZ1bmN0aW9uIGNh
-bGwgd2lsbCBzdG9wIHRoZSBjb21waWxlciBiZWluZyBhbGxvd2VkDQo+ID4gdG8gcmVsb2FkIHRo
-ZSB2YWx1ZS4NCj4gPiBUaGUgJ3NhZmUnIGxvb3AgaXRlcmF0b3JzIGFyZSBvbmx5ICdzYWZlJyBh
-Z2FpbnN0IGNhbGxlZA0KPiA+IGNvZGUgcmVtb3ZpbmcgdGhlIGN1cnJlbnQgaXRlbSBmcm9tIHRo
-ZSBsaXN0Lg0KPiA+DQo+ID4gPiBUaGlzIGhlbHBzIHByZXZlbnQga2NzYW4gd2FybmluZ3Mgb3Zl
-ciAndW5zYWZlJyBjb25kdWN0IGluIHJlbGVhc2luZyB0aGUNCj4gPiA+IGxpc3QgZWxlbWVudHMg
-ZHVyaW5nIGxpc3RfZm9yX2VhY2hfZW50cnlfc2FmZSgpIGFuZCBmcmllbmRzLg0KPiA+DQo+ID4g
-U291bmRzIGxpa2Uga2NzYW4gaXMgYnVnZ3kgPz8/Pw0KPiANCj4gVGhlIHdhcm5pbmcga2NzYW4g
-Z2F2ZSBtYWRlIHNlbnNlIChhIHN0cmFuZ2UgY2FzZSB3aGVyZSB0aGUgZW1wdHlpbmcgdGhlDQo+
-IGxpc3QgZnJvbSBpbnNpZGUgdGhlIHNhZmUgaXRlcmF0b3Igd291bGQgYWxsb3cgdGhhdCBsaXN0
-IHRvIGJlIHRha2VuDQo+IHVuZGVyIGEgZ2xvYmFsIG11dGV4IGFuZCBoYXZlIG9uZSBleHRyYSBy
-ZXF1ZXN0IGFkZGVkIHRvIGl0LiBUaGUNCj4gbGlzdF9mb3JfZWFjaF9lbnRyeV9zYWZlKCkgc2hv
-dWxkIGJlIG9rIGluIHRoaXMgc2NlbmFyaW8sIHNvIGxvbmcgYXMgdGhlDQo+IG5leHQgZWxlbWVu
-dCBpcyByZWFkIGJlZm9yZSB0aGlzIGVsZW1lbnQgaXMgZHJvcHBlZCwgYW5kIHRoZSBjb21waWxl
-ciBpcw0KPiBpbnN0cnVjdGVkIG5vdCB0byByZWxvYWQgdGhlIGVsZW1lbnQuDQoNCk5vcm1hbGx5
-IHRoZSBsb29wIGl0ZXJhdGlvbiBjb2RlIGhhcyB0byBob2xkIHRoZSBtdXRleC4NCkkgZ3Vlc3Mg
-aXQgY2FuIGJlIHJlbGVhc2VkIGluc2lkZSB0aGUgbG9vcCBwcm92aWRlZCBubyBvdGhlcg0KY29k
-ZSBjYW4gZXZlciBkZWxldGUgZW50cmllcy4NCg0KPiBrY3NhbiBpcyBhIGxpdHRsZSBtb3JlIGlu
-c2lzdGVudCBvbiBoYXZpbmcgdGhhdCBhbm5vdGF0aW9uIDopDQo+IA0KPiBJbiB0aGlzIGluc3Rh
-bmNlIEkgd291bGQgc2F5IGl0IHdhcyBhIGZhbHNlIHBvc2l0aXZlIGZyb20ga2NzYW4sIGJ1dCBJ
-DQo+IGNhbiBzZWUgd2h5IGl0IHdvdWxkIGNvbXBsYWluIGFuZCBzdXNwZWN0IHRoYXQgZ2l2ZW4g
-YSBzdWZmaWNpZW50bHkNCj4gYWdncmVzc2l2ZSBjb21waWxlciwgd2UgbWF5IGJlIGNhdWdodCBv
-dXQgYnkgYSBsYXRlIHJlbG9hZCBvZiB0aGUgbmV4dA0KPiBlbGVtZW50Lg0KDQpJZiB5b3UgaGF2
-ZToNCglmb3IgKDsgcDsgcCA9IG5leHQpIHsNCgkJbmV4dCA9IHAtPm5leHQ7DQoJCWV4dGVybmFs
-X2Z1bmN0aW9uX2NhbGwodm9pZCk7DQoJfQ0KdGhlIGNvbXBpbGVyIG11c3QgYXNzdW1lIHRoYXQg
-dGhlIGZ1bmN0aW9uIGNhbGwNCmNhbiBjaGFuZ2UgJ3AtPm5leHQnIGFuZCByZWFkIGl0IGJlZm9y
-ZSB0aGUgY2FsbC4NCg0KSXMgdGhpcyBhIGxpc3Qgd2l0aCBzdHJhbmdlIGxvY2tpbmcgcnVsZXM/
-DQpUaGUgb25seSBkZWxldGVzIGFyZSBmcm9tIHdpdGhpbiB0aGUgbG9vcC4NCkFkZHMgYW5kIGRl
-bGV0ZXMgYXJlIGxvY2tlZC4NClRoZSBsaXN0IHRyYXZlcnNhbCBpc24ndCBsb2NrZWQuDQoNCkkg
-c3VzcGVjdCBrY3NhbiBibGVhdHMgYmVjYXVzZSBpdCBkb2Vzbid0IGFzc3VtZSB0aGUgY29tcGls
-ZXINCndpbGwgdXNlIGEgc2luZ2xlIGluc3RydWN0aW9uL21lbW9yeSBvcGVyYXRpb24gdG8gcmVh
-ZCBwLT5uZXh0Lg0KVGhhdCBpcyBqdXN0IHN0dXBpZC4NCg0KCURhdmlkDQoNCg0KDQoJCQ0KDQot
-DQpSZWdpc3RlcmVkIEFkZHJlc3MgTGFrZXNpZGUsIEJyYW1sZXkgUm9hZCwgTW91bnQgRmFybSwg
-TWlsdG9uIEtleW5lcywgTUsxIDFQVCwgVUsNClJlZ2lzdHJhdGlvbiBObzogMTM5NzM4NiAoV2Fs
-ZXMpDQo=
+The wake token cannot be sent without ignoring the nack for the
+device address
+
+Signed-off-by: Jianhui Zhao <zhaojh329@gmail.com>
+---
+ drivers/crypto/atmel-i2c.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/crypto/atmel-i2c.c b/drivers/crypto/atmel-i2c.c
+index 1d3355913b40..e8e8281e027d 100644
+--- a/drivers/crypto/atmel-i2c.c
++++ b/drivers/crypto/atmel-i2c.c
+@@ -176,7 +176,8 @@ static int atmel_i2c_wakeup(struct i2c_client *client)
+ 	 * device is idle, asleep or during waking up. Don't check for error
+ 	 * when waking up the device.
+ 	 */
+-	i2c_master_send(client, i2c_priv->wake_token, i2c_priv->wake_token_sz);
++	i2c_transfer_buffer_flags(client, i2c_priv->wake_token,
++				i2c_priv->wake_token_sz, I2C_M_IGNORE_NAK);
+ 
+ 	/*
+ 	 * Wait to wake the device. Typical execution times for ecdh and genkey
+-- 
+2.17.1
 
