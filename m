@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4134C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:55:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 938B0C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:55:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7234B24694
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:55:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 692A224694
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:55:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583844929;
-	bh=kcMAhrmYVfHyP3SFva/+apQupWoPVqUiqfIfT353oAU=;
+	s=default; t=1583844933;
+	bh=Rfaf0UuygPgpO1jfho2w1TZXl6bHsbmNn7hutTOKgwI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V+DTch/uslvRENr912qIINHmnLnnQ8aqg+CjJ+1niYF/udnD6XzmPQZG1yx6UBwVv
-	 OWkGs+FiP7TN1qcHJiMpcx4ioeU7ju4v8kcekqxzFJz/0p546lf/K/KIbwb70fAqCj
-	 DYYlYwfuFcAT1GGl8UW0VsWH0BQdQ5+C5ZuVKVdw=
+	b=yMSWmTVfGyZ5vvay893dYTyD1XOD79Nlh55B9u5TQnFI0Pu6383F8Q+7ZiXoAbERC
+	 RVQdgyoIwdEU8B2IQl37MhN9LJQLf6jmGy8UVwhEU8dFceSlUsC+HLJmDFCZPkY50k
+	 ADnTxPn78nNaIjFO1YCaGxR3/GvufsBxicEfIzPQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729512AbgCJMz2 (ORCPT
+        id S1729525AbgCJMzb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:55:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34170 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:55:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34246 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729502AbgCJMz0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:55:26 -0400
+        id S1729132AbgCJMz2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:55:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13EE824693;
-        Tue, 10 Mar 2020 12:55:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 954ED24696;
+        Tue, 10 Mar 2020 12:55:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844925;
-        bh=kcMAhrmYVfHyP3SFva/+apQupWoPVqUiqfIfT353oAU=;
+        s=default; t=1583844928;
+        bh=Rfaf0UuygPgpO1jfho2w1TZXl6bHsbmNn7hutTOKgwI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fnwhMj9P7iLnt2xt/gJ1uqLfckbS7SiHllHrHqQ/CSwo4Gnl/8C6W33BSTrPS/Uwm
-         3ihOZWAJ6ltav7Kn5OBs83U00jfNTpf9NX4NQwa+fXXqUL8ymZhHyM3NVh/mn5z1vy
-         W4NWCe3fnbFMiNmfWzc1myo432ByDRDCrJ3Hslv0=
+        b=XVP2nCXlPqXh7EdzMGWOeyIRNNxwV50plEOlsQbAp3r1/tiLZceyWbPC9dVL6UWou
+         u0sVENGjTzDBtZczd9iUaHNXFRyZqnHrVfqYu3wViR7PGTXUctRnQkj9YPhyCIyUP/
+         pzKCOG3VOHZaxgeyAMhvfr11Fh0tFLjCfQvn4tK0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Fabrice Gasnier <fabrice.gasnier@st.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 5.4 151/168] regulator: stm32-vrefbuf: fix a possible overshoot when re-enabling
-Date:   Tue, 10 Mar 2020 13:39:57 +0100
-Message-Id: <20200310123650.795161928@linuxfoundation.org>
+        stable@vger.kernel.org, Jason Gunthorpe <jgg@mellanox.com>
+Subject: [PATCH 5.4 152/168] RMDA/cm: Fix missing ib_cm_destroy_id() in ib_cm_insert_listen()
+Date:   Tue, 10 Mar 2020 13:39:58 +0100
+Message-Id: <20200310123650.898847851@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123635.322799692@linuxfoundation.org>
 References: <20200310123635.322799692@linuxfoundation.org>
@@ -59,47 +58,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
+From: Jason Gunthorpe <jgg@mellanox.com>
 
-commit 02fbabd5f4ed182d2c616e49309f5a3efd9ec671 upstream.
+commit c14dfddbd869bf0c2bafb7ef260c41d9cebbcfec upstream.
 
-There maybe an overshoot, when disabling, then re-enabling vrefbuf
-too quickly. VREFBUF is used by ADC/DAC on some boards. When re-enabling
-too quickly, an overshoot on the reference voltage make the conversions
-inaccurate for a short period of time.
-- Don't put the VREFBUF in HiZ when disabling, to force an active
-discharge.
-- Enforce a 1ms OFF/ON delay
+The algorithm pre-allocates a cm_id since allocation cannot be done while
+holding the cm.lock spinlock, however it doesn't free it on one error
+path, leading to a memory leak.
 
-Fixes: 0cdbf481e927 ("regulator: Add support for stm32-vrefbuf")
-
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-Message-Id: <1583312132-20932-1-git-send-email-fabrice.gasnier@st.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 067b171b8679 ("IB/cm: Share listening CM IDs")
+Link: https://lore.kernel.org/r/20200221152023.GA8680@ziepe.ca
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/regulator/stm32-vrefbuf.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/infiniband/core/cm.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/regulator/stm32-vrefbuf.c
-+++ b/drivers/regulator/stm32-vrefbuf.c
-@@ -88,7 +88,7 @@ static int stm32_vrefbuf_disable(struct
- 	}
- 
- 	val = readl_relaxed(priv->base + STM32_VREFBUF_CSR);
--	val = (val & ~STM32_ENVR) | STM32_HIZ;
-+	val &= ~STM32_ENVR;
- 	writel_relaxed(val, priv->base + STM32_VREFBUF_CSR);
- 
- 	pm_runtime_mark_last_busy(priv->dev);
-@@ -175,6 +175,7 @@ static const struct regulator_desc stm32
- 	.volt_table = stm32_vrefbuf_voltages,
- 	.n_voltages = ARRAY_SIZE(stm32_vrefbuf_voltages),
- 	.ops = &stm32_vrefbuf_volt_ops,
-+	.off_on_delay = 1000,
- 	.type = REGULATOR_VOLTAGE,
- 	.owner = THIS_MODULE,
- };
+--- a/drivers/infiniband/core/cm.c
++++ b/drivers/infiniband/core/cm.c
+@@ -1228,6 +1228,7 @@ struct ib_cm_id *ib_cm_insert_listen(str
+ 			/* Sharing an ib_cm_id with different handlers is not
+ 			 * supported */
+ 			spin_unlock_irqrestore(&cm.lock, flags);
++			ib_destroy_cm_id(cm_id);
+ 			return ERR_PTR(-EINVAL);
+ 		}
+ 		atomic_inc(&cm_id_priv->refcount);
 
 
