@@ -4,507 +4,209 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8133C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 10:42:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 902B5C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 10:44:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C6B12071B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 10:42:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B8062071B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 10:44:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726410AbgCJKmn (ORCPT
+        id S1726283AbgCJKow (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 06:42:43 -0400
-Received: from mga12.intel.com ([192.55.52.136]:44089 "EHLO mga12.intel.com"
+        Tue, 10 Mar 2020 06:44:52 -0400
+Received: from mga01.intel.com ([192.55.52.88]:10392 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726100AbgCJKmn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 06:42:43 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
+        id S1726170AbgCJKow (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 06:44:52 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Mar 2020 03:42:41 -0700
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Mar 2020 03:44:51 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,536,1574150400"; 
-   d="scan'208";a="276904607"
-Received: from hao-dev.bj.intel.com (HELO localhost) ([10.238.157.65])
-  by fmsmga002.fm.intel.com with ESMTP; 10 Mar 2020 03:42:39 -0700
-Date:   Tue, 10 Mar 2020 18:21:43 +0800
-From:   Wu Hao <hao.wu@intel.com>
-To:     Xu Yilun <yilun.xu@intel.com>
-Cc:     mdf@kernel.org, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Luwei Kang <luwei.kang@intel.com>
-Subject: Re: [PATCH 1/7] fpga: dfl: parse interrupt info for feature devices
- on enumeration
-Message-ID: <20200310102143.GA28396@hao-dev>
-References: <1583749790-10837-1-git-send-email-yilun.xu@intel.com>
- <1583749790-10837-2-git-send-email-yilun.xu@intel.com>
- <20200310022649.GA11861@hao-dev>
- <20200310092531.GA30868@yilunxu-OptiPlex-7050>
+   d="scan'208";a="415149407"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.167]) ([10.237.72.167])
+  by orsmga005.jf.intel.com with ESMTP; 10 Mar 2020 03:44:49 -0700
+Subject: Re: [PATCH] mmc: mmc: Fix the timing for clock changing in mmc
+To:     Ulf Hansson <ulf.hansson@linaro.org>,
+        "Seo, Kyungmin" <kyungmin.seo@intel.com>
+Cc:     Chaotian Jing <chaotian.jing@mediatek.com>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200212024220.GA32111@seokyung-mobl1>
+ <CAPDyKFr9H2XcgCk9AmHgJfHC+PySh66KxegMJ4yb4aqKSVt3kg@mail.gmail.com>
+ <BYAPR11MB269638142E2BF2C6E108B40A9CE20@BYAPR11MB2696.namprd11.prod.outlook.com>
+ <CAPDyKFr=hE6diZmaVy-os3rFScHe+8OphBS+edkVGK+Z-J_=HA@mail.gmail.com>
+ <BYAPR11MB2696D160D6F5B7C98E0503E79CFF0@BYAPR11MB2696.namprd11.prod.outlook.com>
+ <CAPDyKFqqDWMsHEb493p__FNzYaEzE6Ry0bkd-2ng7cdM886zjw@mail.gmail.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <5f3b8cb9-5e55-ee47-46e5-af019d6328b6@intel.com>
+Date:   Tue, 10 Mar 2020 12:44:04 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200310092531.GA30868@yilunxu-OptiPlex-7050>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <CAPDyKFqqDWMsHEb493p__FNzYaEzE6Ry0bkd-2ng7cdM886zjw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 10, 2020 at 05:25:31PM +0800, Xu Yilun wrote:
-> On Tue, Mar 10, 2020 at 10:26:49AM +0800, Wu Hao wrote:
-> > Hi Yilun
-> > 
-> > Some comments inline.
-> > 
-> > On Mon, Mar 09, 2020 at 06:29:44PM +0800, Xu Yilun wrote:
-> > > DFL based FPGA devices could support interrupts for different purposes,
-> > > but current DFL framework only supports feature device enumeration with
-> > > given MMIO resources information via common DFL headers. This patch
-> > > introduces one new API dfl_fpga_enum_info_add_irq for low level bus
-> > > drivers (e.g. PCIe device driver) to pass its interrupt resources
-> > > information to DFL framework for enumeration, and also adds interrupt
-> > > enumeration code in framework to parse and assign interrupt resources
-> > > for enumerated feature devices and their own sub features.
-> > > 
-> > > With this patch, DFL framework enumerates interrupt resources for core
-> > > features, including PORT Error Reporting, FME (FPGA Management Engine)
-> > > Error Reporting and also AFU User Interrupts.
-> > > 
-> > > Signed-off-by: Luwei Kang <luwei.kang@intel.com>
-> > > Signed-off-by: Wu Hao <hao.wu@intel.com>
-> > > Signed-off-by: Xu Yilun <yilun.xu@intel.com>
-> > > ---
-> > >  drivers/fpga/dfl.c | 140 +++++++++++++++++++++++++++++++++++++++++++++++++++--
-> > >  drivers/fpga/dfl.h |  40 +++++++++++++++
-> > >  2 files changed, 176 insertions(+), 4 deletions(-)
-> > > 
-> > > diff --git a/drivers/fpga/dfl.c b/drivers/fpga/dfl.c
-> > > index 9909948..493822d 100644
-> > > --- a/drivers/fpga/dfl.c
-> > > +++ b/drivers/fpga/dfl.c
-> > > @@ -11,6 +11,7 @@
-> > >   *   Xiao Guangrong <guangrong.xiao@linux.intel.com>
-> > >   */
-> > >  #include <linux/module.h>
-> > > +#include <asm/irq.h>
-> > >  
-> > >  #include "dfl.h"
-> > >  
-> > > @@ -421,6 +422,9 @@ EXPORT_SYMBOL_GPL(dfl_fpga_dev_ops_unregister);
-> > >   *
-> > >   * @dev: device to enumerate.
-> > >   * @cdev: the container device for all feature devices.
-> > > + * @nr_irqs: number of irqs for all feature devices.
-> > > + * @irq_table: Linux IRQ numbers for all irqs, indexed by local irq index of
-> > > + *	       this device.
-> > >   * @feature_dev: current feature device.
-> > >   * @ioaddr: header register region address of feature device in enumeration.
-> > >   * @sub_features: a sub features linked list for feature device in enumeration.
-> > > @@ -429,6 +433,9 @@ EXPORT_SYMBOL_GPL(dfl_fpga_dev_ops_unregister);
-> > >  struct build_feature_devs_info {
-> > >  	struct device *dev;
-> > >  	struct dfl_fpga_cdev *cdev;
-> > > +	unsigned int nr_irqs;
-> > > +	int *irq_table;
-> > > +
-> > >  	struct platform_device *feature_dev;
-> > >  	void __iomem *ioaddr;
-> > >  	struct list_head sub_features;
-> > > @@ -442,12 +449,16 @@ struct build_feature_devs_info {
-> > >   * @mmio_res: mmio resource of this sub feature.
-> > >   * @ioaddr: mapped base address of mmio resource.
-> > >   * @node: node in sub_features linked list.
-> > > + * @irq_base: start of irq index in this sub feature.
-> > > + * @nr_irqs: number of irqs of this sub feature.
-> > >   */
-> > >  struct dfl_feature_info {
-> > >  	u64 fid;
-> > >  	struct resource mmio_res;
-> > >  	void __iomem *ioaddr;
-> > >  	struct list_head node;
-> > > +	unsigned int irq_base;
-> > > +	unsigned int nr_irqs;
-> > >  };
-> > >  
-> > >  static void dfl_fpga_cdev_add_port_dev(struct dfl_fpga_cdev *cdev,
-> > > @@ -520,6 +531,8 @@ static int build_info_commit_dev(struct build_feature_devs_info *binfo)
-> > >  	/* fill features and resource information for feature dev */
-> > >  	list_for_each_entry_safe(finfo, p, &binfo->sub_features, node) {
-> > >  		struct dfl_feature *feature = &pdata->features[index];
-> > > +		struct dfl_feature_irq_ctx *ctx;
-> > > +		int i, virq;
-> > >  
-> > >  		/* save resource information for each feature */
-> > >  		feature->id = finfo->fid;
-> > > @@ -527,6 +540,24 @@ static int build_info_commit_dev(struct build_feature_devs_info *binfo)
-> > >  		feature->ioaddr = finfo->ioaddr;
-> > >  		fdev->resource[index++] = finfo->mmio_res;
-> > >  
-> > > +		if (finfo->nr_irqs) {
-> > > +			ctx = devm_kcalloc(binfo->dev, finfo->nr_irqs,
-> > > +					   sizeof(*ctx), GFP_KERNEL);
-> > > +			if (!ctx)
-> > > +				return -ENOMEM;
-> > > +
-> > > +			for (i = 0; i < finfo->nr_irqs; i++) {
-> > > +				virq = binfo->irq_table[finfo->irq_base + i];
-> > 
-> > Looks like it checks the irq_table input in commit_dev which is the last step
-> > of enumeration. I feel that maybe it's better to check the input earlier, e.g.
-> > in dfl_fpga_enum_info_add_irq() function below.
+On 10/03/20 11:05 am, Ulf Hansson wrote:
+> On Tue, 10 Mar 2020 at 05:28, Seo, Kyungmin <kyungmin.seo@intel.com> wrote:
+>>
+>> I read the link and patch of Chaotian Jing.
+>> I also point out what Chaotian said.
+>> Most host controllers have DLL tuning values for each mode. When host controller is set as HS400 mode with 50MHz clock, host controller uses DLL value which is tuned with 200MHz clock.
+>>
+>> If DLL value in HS400 mode doesn't have the pass range in HS mode, command transfer failing may fail.
+>> In order to make robust sdhci driver, I think the patch needs to be considered.
 > 
-> Yes the check could be done earlier. But maybe too early checking in
-> dfl_fpga_enum_info_add_irq(). I think dfl should allow holes in
-> irq_table. We make sure sub features get valid irq numbers for
-> each of its irq line, that should be enough.
+> I have, but I am not picking it up in its current form.
+> 
+>> Of course, CMD6 with HS400 mode and 200MHz clock should not cause any problem because it's correct configuration.
+> 
+> Yes, but not for all cases, as I said in my reply in those email-threads.
+> 
+> What I had in mind, is that I I think we should inform
+> mmc_hs400_to_hs200() about under what situation it's getting called.
+> Depending on that, we should either decrease the clock rate before or
+> after we send the CMD6.
+> 
+> Would that work for your case?
 
-Ok. Understand that it's possible that table may have holes. A multiple function
-device may only want to hand part of its irq resources to DFL.
+Ulf, would you consider a new call back e.g.
+
+diff --git a/drivers/mmc/core/mmc.c b/drivers/mmc/core/mmc.c
+index c2abd417a84a..1bc18fe2632f 100644
+--- a/drivers/mmc/core/mmc.c
++++ b/drivers/mmc/core/mmc.c
+@@ -1237,7 +1237,10 @@ int mmc_hs400_to_hs200(struct mmc_card *card)
+ 
+ 	/* Reduce frequency to HS */
+ 	max_dtr = card->ext_csd.hs_max_dtr;
+-	mmc_set_clock(host, max_dtr);
++	if (host->ops->hs400_to_hs200_prep)
++		host->ops->hs400_to_hs200_prep(host, max_dtr);
++	else
++		mmc_set_clock(host, max_dtr);
+ 
+ 	/* Switch HS400 to HS DDR */
+ 	val = EXT_CSD_TIMING_HS;
+
 
 > 
-> So maybe do this check in parse_feature_irqs() is better?
+> Kind regards
+> Uffe
+> 
+>>
+>> Thanks
+>>
+>> -----Original Message-----
+>> From: Ulf Hansson <ulf.hansson@linaro.org>
+>> Sent: Friday, March 6, 2020 12:18 AM
+>> To: Seo, Kyungmin <kyungmin.seo@intel.com>; Hunter, Adrian <adrian.hunter@intel.com>; Chaotian Jing <chaotian.jing@mediatek.com>
+>> Cc: linux-mmc@vger.kernel.org; Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+>> Subject: Re: [PATCH] mmc: mmc: Fix the timing for clock changing in mmc
+>>
+>> + Adrian, Chaotian
+>>
+>> On Thu, 5 Mar 2020 at 09:57, Seo, Kyungmin <kyungmin.seo@intel.com> wrote:
+>>>
+>>> The mmc_hs400_to_hs200 function is called only in HS400 mode.
+>>> I saw the clock change from 200MHz to 52MHz via oscilloscope on real platform.
+>>>
+>>> I think CMD6 is sent in HS400 mode with 200MHz clock, but it's not.
+>>> First CMD6 in mmc_hs400_to_hs200 function is sent with 52MHz clock.
+>>
+>> I had a vague memory that we have discussed a similar problem as your are pointing out on the mailing list already. And I was right.
+>>
+>> Please read up on the below references, [1], [2] for the earlier discussions. I suggested a solution for Chaotian to try, but it seems like he never managed to give it a go, as I don't recall new patch being posted.
+>>
+>> Perhaps you can pick up were Chaotian left and see if you can implement the suggested solution(s). My main concern is breaking other host drivers, as that seems quite likely to happen, if we aren't careful about this.
+>>
+>> Kind regards
+>> Uffe
+>>
+>> [1]
+>> https://lore.kernel.org/linux-mmc/1548921212-5219-1-git-send-email-chaotian.jing@mediatek.com/
+>> [2]
+>> https://lore.kernel.org/linux-mmc/CAPDyKFquyyXx1MqNLVXuFxcEDB9nKzN8LGGNUP2yxoVMQrWiUg@mail.gmail.com/
+>>
+>>
+>>
+>>>
+>>> Thanks
+>>> KM
+>>>
+>>> -----Original Message-----
+>>> From: Ulf Hansson <ulf.hansson@linaro.org>
+>>> Sent: Wednesday, March 4, 2020 8:09 PM
+>>> To: Seo, Kyungmin <kyungmin.seo@intel.com>
+>>> Cc: linux-mmc@vger.kernel.org; Linux Kernel Mailing List
+>>> <linux-kernel@vger.kernel.org>
+>>> Subject: Re: [PATCH] mmc: mmc: Fix the timing for clock changing in
+>>> mmc
+>>>
+>>> On Wed, 12 Feb 2020 at 03:40, Kyungmin Seo <kyungmin.seo@intel.com> wrote:
+>>>>
+>>>> The clock has to be changed after sending CMD6 for HS mode selection
+>>>> in
+>>>> mmc_hs400_to_hs200() function.
+>>>>
+>>>> The JEDEC 5.0 and 5.1 said that "High-speed" mode selection has to
+>>>> enable the the high speed mode timing in the Device, before chaning
+>>>> the clock frequency to a frequency between 26MHz and 52MHz.
+>>>
+>>> I think that is based upon the assumption that you are using a lower frequency to start with.
+>>>
+>>> For example, assume that you are running with 400KHz during card initialization, then you want to send the CMD6 to switch to HS mode and that should be done, before updating the clock rate.
+>>>
+>>> mmc_hs400_to_hs200() goes the opposite direction, so I think the current code looks correct to me.
+>>>
+>>> Kind regards
+>>> Uffe
+>>>
+>>>>
+>>>> Signed-off-by: Kyungmin Seo <kyungmin.seo@intel.com>
+>>>> ---
+>>>>  drivers/mmc/core/mmc.c | 8 ++++----
+>>>>  1 file changed, 4 insertions(+), 4 deletions(-)
+>>>>
+>>>> diff --git a/drivers/mmc/core/mmc.c b/drivers/mmc/core/mmc.c index
+>>>> 3486bc7fbb64..98640b51c73e 100644
+>>>> --- a/drivers/mmc/core/mmc.c
+>>>> +++ b/drivers/mmc/core/mmc.c
+>>>> @@ -1196,10 +1196,6 @@ int mmc_hs400_to_hs200(struct mmc_card *card)
+>>>>         int err;
+>>>>         u8 val;
+>>>>
+>>>> -       /* Reduce frequency to HS */
+>>>> -       max_dtr = card->ext_csd.hs_max_dtr;
+>>>> -       mmc_set_clock(host, max_dtr);
+>>>> -
+>>>>         /* Switch HS400 to HS DDR */
+>>>>         val = EXT_CSD_TIMING_HS;
+>>>>         err = __mmc_switch(card, EXT_CSD_CMD_SET_NORMAL,
+>>>> EXT_CSD_HS_TIMING, @@ -1210,6 +1206,10 @@ int
+>>>> mmc_hs400_to_hs200(struct mmc_card *card)
+>>>>
+>>>>         mmc_set_timing(host, MMC_TIMING_MMC_DDR52);
+>>>>
+>>>> +       /* Reduce frequency to HS */
+>>>> +       max_dtr = card->ext_csd.hs_max_dtr;
+>>>> +       mmc_set_clock(host, max_dtr);
+>>>> +
+>>>>         err = mmc_switch_status(card);
+>>>>         if (err)
+>>>>                 goto out_err;
+>>>> --
+>>>> 2.17.1
+>>>>
 
-Yes. Sounds better.
-
-> 
-> > 
-> > BTW: why it's named as virq? any specific meaning?
-> 
-> I'm just trying to indicate it's a linux irq number, not a hardware
-> local irq number. I see the name also used as linux irq number in other
-> drivers.
-> 
-> > 
-> > > +				if (virq < 0 || virq > NR_IRQS)
-> > > +					return -EINVAL;
-> > > +
-> > > +				ctx[i].irq = virq;
-> > > +			}
-> > > +
-> > > +			feature->irq_ctx = ctx;
-> > > +			feature->nr_irqs = finfo->nr_irqs;
-> > > +		}
-> > > +
-> > >  		list_del(&finfo->node);
-> > >  		kfree(finfo);
-> > >  	}
-> > > @@ -648,7 +679,8 @@ static u64 feature_id(void __iomem *start)
-> > >  static int
-> > >  create_feature_instance(struct build_feature_devs_info *binfo,
-> > >  			struct dfl_fpga_enum_dfl *dfl, resource_size_t ofst,
-> > > -			resource_size_t size, u64 fid)
-> > > +			resource_size_t size, u64 fid, unsigned int irq_base,
-> > > +			unsigned int nr_irqs)
-> > >  {
-> > >  	struct dfl_feature_info *finfo;
-> > >  
-> > > @@ -667,6 +699,8 @@ create_feature_instance(struct build_feature_devs_info *binfo,
-> > >  	finfo->mmio_res.start = dfl->start + ofst;
-> > >  	finfo->mmio_res.end = finfo->mmio_res.start + size - 1;
-> > >  	finfo->mmio_res.flags = IORESOURCE_MEM;
-> > > +	finfo->irq_base = irq_base;
-> > > +	finfo->nr_irqs = nr_irqs;
-> > >  	finfo->ioaddr = dfl->ioaddr + ofst;
-> > >  
-> > >  	list_add_tail(&finfo->node, &binfo->sub_features);
-> > > @@ -684,7 +718,8 @@ static int parse_feature_port_afu(struct build_feature_devs_info *binfo,
-> > >  
-> > >  	WARN_ON(!size);
-> > >  
-> > > -	return create_feature_instance(binfo, dfl, ofst, size, FEATURE_ID_AFU);
-> > > +	return create_feature_instance(binfo, dfl, ofst, size, FEATURE_ID_AFU,
-> > > +				       0, 0);
-> > >  }
-> > >  
-> > >  static int parse_feature_afu(struct build_feature_devs_info *binfo,
-> > > @@ -724,7 +759,7 @@ static int parse_feature_fiu(struct build_feature_devs_info *binfo,
-> > >  	if (ret)
-> > >  		return ret;
-> > >  
-> > > -	ret = create_feature_instance(binfo, dfl, ofst, 0, 0);
-> > > +	ret = create_feature_instance(binfo, dfl, ofst, 0, 0, 0, 0);
-> > >  	if (ret)
-> > >  		return ret;
-> > >  	/*
-> > > @@ -742,17 +777,72 @@ static int parse_feature_fiu(struct build_feature_devs_info *binfo,
-> > >  	return ret;
-> > >  }
-> > >  
-> > > +static void parse_feature_irqs(struct build_feature_devs_info *binfo,
-> > > +			       struct dfl_fpga_enum_dfl *dfl,
-> > > +			       resource_size_t ofst,
-> > > +			       unsigned int *irq_base, unsigned int *nr_irqs)
-> > > +{
-> > > +	u64 id, v;
-> > > +
-> > > +	/*
-> > > +	 * Ideally DFL framework should only read info from DFL header, but
-> > > +	 * current version DFL only provides mmio resources information for
-> > > +	 * each feature in DFL Header, no field for interrupt resources.
-> > > +	 * Some interrupt resources information are provided by specific
-> > > +	 * mmio registers of each components(e.g. different private features)
-> > > +	 * which supports interrupt. So in order to parse and assign irq
-> > > +	 * resources to different components, DFL framework has to look into
-> > > +	 * specific capability registers of these core private features.
-> > > +	 *
-> > > +	 * Once future DFL version supports generic interrupt resources
-> > > +	 * information in common DFL headers, below code could be replaced by
-> > > +	 * some generic interrupt parsing code.
-> > 
-> > Per my understanding, even later version hardware uses common DFL Header Field
-> > for interrupt resources enumeration, but we still keep this quirk for old
-> > version hardware, right?
-> 
-> Yes, later version hardware will introduce the common DFL description of
-> interrupt, which should override these quirks. But to be compatible to
-> old version hardware, driver should fallback to these quirks for these 3
-> sub feature if common interrupt description is not provided.
-
-So please update above comments, below code is still needed later, and
-won't be replaced. Thanks!
-
-Hao
-
-> 
-> > 
-> > > +	 */
-> > > +
-> > > +	id = feature_id((dfl->ioaddr + ofst));
-> > > +
-> > > +	if (id == PORT_FEATURE_ID_UINT) {
-> > > +		v = readq(dfl->ioaddr + ofst + PORT_UINT_CAP);
-> > > +		*irq_base = FIELD_GET(PORT_UINT_CAP_FST_VECT, v);
-> > > +		*nr_irqs = FIELD_GET(PORT_UINT_CAP_INT_NUM, v);
-> > > +	} else if (id == PORT_FEATURE_ID_ERROR) {
-> > > +		v = readq(dfl->ioaddr + ofst + PORT_ERROR_CAP);
-> > > +		*irq_base = FIELD_GET(PORT_ERROR_CAP_INT_VECT, v);
-> > > +		*nr_irqs = FIELD_GET(PORT_ERROR_CAP_SUPP_INT, v);
-> > > +	} else if (id == FME_FEATURE_ID_GLOBAL_ERR) {
-> > > +		v = readq(dfl->ioaddr + ofst + FME_ERROR_CAP);
-> > > +		*irq_base = FIELD_GET(FME_ERROR_CAP_INT_VECT, v);
-> > > +		*nr_irqs = FIELD_GET(FME_ERROR_CAP_SUPP_INT, v);
-> > > +	} else {
-> > > +		return;
-> > > +	}
-> > > +
-> > > +	dev_dbg(binfo->dev, "feature: 0x%llx, nr_irqs: %u, irq_base: %u\n",
-> > > +		(unsigned long long)id, *nr_irqs, *irq_base);
-> > > +
-> > > +	if (*irq_base + *nr_irqs > binfo->nr_irqs) {
-> > > +		*irq_base = 0;
-> > > +		*nr_irqs = 0;
-> > > +		dev_err(binfo->dev, "Inconsistent interrupt number on HW\n");
-> > 
-> > Maybe you want to print feature id as well in this error case.
-> 
-> OK. Print feature_id should be helpful when we hit the error.
-> 
-> > 
-> > > +	}
-> > > +}
-> > > +
-> > >  static int parse_feature_private(struct build_feature_devs_info *binfo,
-> > >  				 struct dfl_fpga_enum_dfl *dfl,
-> > >  				 resource_size_t ofst)
-> > >  {
-> > > +	unsigned int irq_base = 0, nr_irqs = 0;
-> > > +
-> > >  	if (!binfo->feature_dev) {
-> > >  		dev_err(binfo->dev, "the private feature %llx does not belong to any AFU.\n",
-> > >  			(unsigned long long)feature_id(dfl->ioaddr + ofst));
-> > >  		return -EINVAL;
-> > >  	}
-> > >  
-> > > -	return create_feature_instance(binfo, dfl, ofst, 0, 0);
-> > > +	parse_feature_irqs(binfo, dfl, ofst, &irq_base, &nr_irqs);
-> > > +
-> > > +	return create_feature_instance(binfo, dfl, ofst, 0, 0, irq_base,
-> > > +				       nr_irqs);
-> > >  }
-> > >  
-> > >  /**
-> > > @@ -853,6 +943,10 @@ void dfl_fpga_enum_info_free(struct dfl_fpga_enum_info *info)
-> > >  		devm_kfree(dev, dfl);
-> > >  	}
-> > >  
-> > > +	/* remove irq table */
-> > > +	if (info->irq_table)
-> > > +		devm_kfree(dev, info->irq_table);
-> > > +
-> > >  	devm_kfree(dev, info);
-> > >  	put_device(dev);
-> > >  }
-> > > @@ -892,6 +986,40 @@ int dfl_fpga_enum_info_add_dfl(struct dfl_fpga_enum_info *info,
-> > >  }
-> > >  EXPORT_SYMBOL_GPL(dfl_fpga_enum_info_add_dfl);
-> > >  
-> > > +/**
-> > > + * dfl_fpga_enum_info_add_irq - add irq table to enum info
-> > > + *
-> > > + * @info: ptr to dfl_fpga_enum_info
-> > > + * @nr_irqs: number of irqs for all feature devices.
-> > 
-> > It's better to say, number of irqs of the dfl fpga device to be enumerated.
-> > This function needs to be used before enumerate API.
-> 
-> Yes, I'll change it.
-> 
-> > 
-> > > + * @irq_table: Linux IRQ numbers for all irqs, indexed by local irq index of
-> > > + *	       this device.
-> > > + *
-> > > + * One FPGA device may have several interrupts. This function adds irq
-> > > + * information of all feature devices to enumeration info for next step
-> > 
-> > Same here.
-> 
-> Yes.
-> 
-> > 
-> > > + * enumeration.
-> > > + *
-> > > + * Return: 0 on success, negative error code otherwise.
-> > > + */
-> > > +int dfl_fpga_enum_info_add_irq(struct dfl_fpga_enum_info *info,
-> > > +			       unsigned int nr_irqs, int *irq_table)
-> > > +{
-> > > +	if (!nr_irqs)
-> > > +		return -EINVAL;
-> > > +
-> > 
-> > Looks like currently it only allows add irq table once, so please document
-> > this as it doesn't support users adding multiple irq tables.
-> 
-> Sure.
-> 
-> > 
-> > Thanks
-> > Hao
-> > 
-> > > +	if (info->irq_table)
-> > > +		return -EEXIST;
-> > > +
-> > > +	info->irq_table = devm_kmemdup(info->dev, irq_table,
-> > > +				       sizeof(int) * nr_irqs, GFP_KERNEL);
-> > > +	if (!info->irq_table)
-> > > +		return -ENOMEM;
-> > > +
-> > > +	info->nr_irqs = nr_irqs;
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +EXPORT_SYMBOL_GPL(dfl_fpga_enum_info_add_irq);
-> > > +
-> > >  static int remove_feature_dev(struct device *dev, void *data)
-> > >  {
-> > >  	struct platform_device *pdev = to_platform_device(dev);
-> > > @@ -959,6 +1087,10 @@ dfl_fpga_feature_devs_enumerate(struct dfl_fpga_enum_info *info)
-> > >  	binfo->dev = info->dev;
-> > >  	binfo->cdev = cdev;
-> > >  
-> > > +	binfo->nr_irqs = info->nr_irqs;
-> > > +	if (info->nr_irqs)
-> > > +		binfo->irq_table = info->irq_table;
-> > > +
-> > >  	/*
-> > >  	 * start enumeration for all feature devices based on Device Feature
-> > >  	 * Lists.
-> > > diff --git a/drivers/fpga/dfl.h b/drivers/fpga/dfl.h
-> > > index 4a9a33c..6a498cd 100644
-> > > --- a/drivers/fpga/dfl.h
-> > > +++ b/drivers/fpga/dfl.h
-> > > @@ -112,6 +112,13 @@
-> > >  #define FME_PORT_OFST_ACC_VF	1
-> > >  #define FME_PORT_OFST_IMP	BIT_ULL(60)
-> > >  
-> > > +/* FME Error Capability Register */
-> > > +#define FME_ERROR_CAP		0x70
-> > > +
-> > > +/* FME Error Capability Register Bitfield */
-> > > +#define FME_ERROR_CAP_SUPP_INT	BIT_ULL(0)		/* Interrupt Support */
-> > > +#define FME_ERROR_CAP_INT_VECT	GENMASK_ULL(12, 1)	/* Interrupt vector */
-> > > +
-> > >  /* PORT Header Register Set */
-> > >  #define PORT_HDR_DFH		DFH
-> > >  #define PORT_HDR_GUID_L		GUID_L
-> > > @@ -145,6 +152,20 @@
-> > >  #define PORT_STS_PWR_STATE_AP2	2			/* 90% throttling */
-> > >  #define PORT_STS_PWR_STATE_AP6	6			/* 100% throttling */
-> > >  
-> > > +/* Port Error Capability Register */
-> > > +#define PORT_ERROR_CAP		0x38
-> > > +
-> > > +/* Port Error Capability Register Bitfield */
-> > > +#define PORT_ERROR_CAP_SUPP_INT	BIT_ULL(0)		/* Interrupt Support */
-> > > +#define PORT_ERROR_CAP_INT_VECT	GENMASK_ULL(12, 1)	/* Interrupt vector */
-> > > +
-> > > +/* Port Uint Capability Register */
-> > > +#define PORT_UINT_CAP		0x8
-> > > +
-> > > +/* Port Uint Capability Register Bitfield */
-> > > +#define PORT_UINT_CAP_INT_NUM	GENMASK_ULL(11, 0)	/* Interrupts num */
-> > > +#define PORT_UINT_CAP_FST_VECT	GENMASK_ULL(23, 12)	/* First Vector */
-> > > +
-> > >  /**
-> > >   * struct dfl_fpga_port_ops - port ops
-> > >   *
-> > > @@ -189,6 +210,15 @@ struct dfl_feature_driver {
-> > >  };
-> > >  
-> > >  /**
-> > > + * struct dfl_feature_irq_ctx - dfl private feature interrupt context
-> > > + *
-> > > + * @irq: Linux IRQ number of this interrupt.
-> > > + */
-> > > +struct dfl_feature_irq_ctx {
-> > > +	int irq;
-> > > +};
-> > > +
-> > > +/**
-> > >   * struct dfl_feature - sub feature of the feature devices
-> > >   *
-> > >   * @id: sub feature id.
-> > > @@ -196,12 +226,16 @@ struct dfl_feature_driver {
-> > >   *		    this index is used to find its mmio resource from the
-> > >   *		    feature dev (platform device)'s reources.
-> > >   * @ioaddr: mapped mmio resource address.
-> > > + * @irq_ctx: interrupt context list.
-> > > + * @nr_irqs: number of interrupt contexts.
-> > >   * @ops: ops of this sub feature.
-> > >   */
-> > >  struct dfl_feature {
-> > >  	u64 id;
-> > >  	int resource_index;
-> > >  	void __iomem *ioaddr;
-> > > +	struct dfl_feature_irq_ctx *irq_ctx;
-> > > +	unsigned int nr_irqs;
-> > >  	const struct dfl_feature_ops *ops;
-> > >  };
-> > >  
-> > > @@ -388,10 +422,14 @@ static inline u8 dfl_feature_revision(void __iomem *base)
-> > >   *
-> > >   * @dev: parent device.
-> > >   * @dfls: list of device feature lists.
-> > > + * @nr_irqs: number of irqs for all feature devices.
-> > > + * @irq_table: Linux IRQ numbers for all irqs, indexed by hw irq numbers.
-> > >   */
-> > >  struct dfl_fpga_enum_info {
-> > >  	struct device *dev;
-> > >  	struct list_head dfls;
-> > > +	unsigned int nr_irqs;
-> > > +	int *irq_table;
-> > >  };
-> > >  
-> > >  /**
-> > > @@ -415,6 +453,8 @@ struct dfl_fpga_enum_info *dfl_fpga_enum_info_alloc(struct device *dev);
-> > >  int dfl_fpga_enum_info_add_dfl(struct dfl_fpga_enum_info *info,
-> > >  			       resource_size_t start, resource_size_t len,
-> > >  			       void __iomem *ioaddr);
-> > > +int dfl_fpga_enum_info_add_irq(struct dfl_fpga_enum_info *info,
-> > > +			       unsigned int nr_irqs, int *irq_table);
-> > >  void dfl_fpga_enum_info_free(struct dfl_fpga_enum_info *info);
-> > >  
-> > >  /**
-> > > -- 
-> > > 2.7.4
