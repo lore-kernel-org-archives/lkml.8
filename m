@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F10EFC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:00:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36660C18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:00:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C45D624649
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:00:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F255E24693
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:00:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583845253;
-	bh=bvcVhcGROHodvDqr337Qgj7U7rQY8iGqxJ8DVU2cvOs=;
+	s=default; t=1583845256;
+	bh=N0oeHqaNHMwHKF0xJfnEyQKeRl69pwS6XSWHxDsDKos=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d8mHILxpN1pfkRM3bE7t1LGfvzZJ9/NqPrWfMRrxRYYuOxWGI11jXOA4DffcyL6o1
-	 UDy07NZ2igzql4zD6v8RR08co/up1aOPXgcv1q3LBMev3Lv1YibJz6K7NQCxvyFMQu
-	 YtGZZE4yOAxxi/gkgLCInnRdVhDa2PcOf7kqUSJs=
+	b=hBOiNnQ2CfqrevhQZ2Q8AhV2VSfhIjk9bmdeeuRlWrEpmAuH3Nk/cXUBZoNHTrzJt
+	 wCod/zLygWnhC/0X/HwZGw0lFKaDwF0l9PJVBOitEsX9aYVbibPZ/dxQ4tu3VYsxw6
+	 aXGSynXugvnO0wTzpUsxFx8RJt+QB/1Lgdr/6ox0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730196AbgCJNAw (ORCPT
+        id S1730190AbgCJNAv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:00:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41644 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:00:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41712 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730174AbgCJNAq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:00:46 -0400
+        id S1728197AbgCJNAt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:00:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A0E2E2253D;
-        Tue, 10 Mar 2020 13:00:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 31ECD20674;
+        Tue, 10 Mar 2020 13:00:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845246;
-        bh=bvcVhcGROHodvDqr337Qgj7U7rQY8iGqxJ8DVU2cvOs=;
+        s=default; t=1583845248;
+        bh=N0oeHqaNHMwHKF0xJfnEyQKeRl69pwS6XSWHxDsDKos=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Bh678ByyndCIKcvgHTacOCm1gYHJjW0LPYCzlFfACWNd+pAc4xyg95JyyY7kR3rRU
-         01AiVs690FmG7Hl8zROAf6HVEygWg0r448KAdg97i6AtGzWFCsOF/Ey4r9NJG20dZj
-         4QgN9clqOAhYmKqhwXkYG5xK11+8MvdAUAMka6WE=
+        b=tazTQIDXxWrrRawA0OEKM6VwdaF9iRuT3bNr0b0UeDjTUy4XoWhEd2CyExuJ2mrxl
+         FH3TGkHofAfaSQjbXEECq29/1KInhPYbQzp4OLcBGyrTmHJuZ9aM17bZWqDPpq6zn6
+         DuUKBdrMAqOHTkabJWe0PMSP3b3AhqqsK3px4V9Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>
-Subject: [PATCH 5.5 077/189] usb: core: port: do error out if usb_autopm_get_interface() fails
-Date:   Tue, 10 Mar 2020 13:38:34 +0100
-Message-Id: <20200310123647.386448402@linuxfoundation.org>
+        stable@vger.kernel.org, Prike Liang <Prike.Liang@amd.com>,
+        Evan Quan <evan.quan@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: [PATCH 5.5 113/189] drm/amd/powerplay: fix pre-check condition for setting clock range
+Date:   Tue, 10 Mar 2020 13:39:10 +0100
+Message-Id: <20200310123651.170961721@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123639.608886314@linuxfoundation.org>
 References: <20200310123639.608886314@linuxfoundation.org>
@@ -59,62 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eugeniu Rosca <erosca@de.adit-jv.com>
+From: Prike Liang <Prike.Liang@amd.com>
 
-commit 1f8b39bc99a31759e97a0428a5c3f64802c1e61d upstream.
+commit 80381d40c9bf5218db06a7d7246c5478c95987ee upstream.
 
-Reviewing a fresh portion of coverity defects in USB core
-(specifically CID 1458999), Alan Stern noted below in [1]:
+This fix will handle some MP1 FW issue like as mclk dpm table in renoir has a reverse
+dpm clock layout and a zero frequency dpm level as following case.
 
-On Tue, Feb 25, 2020 at 02:39:23PM -0500, Alan Stern wrote:
- > A revised search finds line 997 in drivers/usb/core/hub.c and lines
- > 216, 269 in drivers/usb/core/port.c.  (I didn't try looking in any
- > other directories.)  AFAICT all three of these should check the
- > return value, although a error message in the kernel log probably
- > isn't needed.
+cat pp_dpm_mclk
+0: 1200Mhz
+1: 1200Mhz
+2: 800Mhz
+3: 0Mhz
 
-Factor out the usb_port_runtime_{resume,suspend}() changes into a
-standalone patch to allow conflict-free porting on top of stable v3.9+.
-
-[1] https://lore.kernel.org/lkml/Pine.LNX.4.44L0.2002251419120.1485-100000@iolanthe.rowland.org
-
-Fixes: 971fcd492cebf5 ("usb: add runtime pm support for usb port device")
-Cc: stable@vger.kernel.org # v3.9+
-Suggested-by: Alan Stern <stern@rowland.harvard.edu>
-Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
-Link: https://lore.kernel.org/r/20200226175036.14946-3-erosca@de.adit-jv.com
+Signed-off-by: Prike Liang <Prike.Liang@amd.com>
+Reviewed-by: Evan Quan <evan.quan@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/core/port.c |   10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/amd/powerplay/amdgpu_smu.c |    2 +-
+ drivers/gpu/drm/amd/powerplay/smu_v12_0.c  |    3 ---
+ 2 files changed, 1 insertion(+), 4 deletions(-)
 
---- a/drivers/usb/core/port.c
-+++ b/drivers/usb/core/port.c
-@@ -213,7 +213,10 @@ static int usb_port_runtime_resume(struc
- 	if (!port_dev->is_superspeed && peer)
- 		pm_runtime_get_sync(&peer->dev);
+--- a/drivers/gpu/drm/amd/powerplay/amdgpu_smu.c
++++ b/drivers/gpu/drm/amd/powerplay/amdgpu_smu.c
+@@ -222,7 +222,7 @@ int smu_set_soft_freq_range(struct smu_c
+ {
+ 	int ret = 0;
  
--	usb_autopm_get_interface(intf);
-+	retval = usb_autopm_get_interface(intf);
-+	if (retval < 0)
-+		return retval;
-+
- 	retval = usb_hub_set_port_power(hdev, hub, port1, true);
- 	msleep(hub_power_on_good_delay(hub));
- 	if (udev && !retval) {
-@@ -266,7 +269,10 @@ static int usb_port_runtime_suspend(stru
- 	if (usb_port_block_power_off)
- 		return -EBUSY;
+-	if (min <= 0 && max <= 0)
++	if (min < 0 && max < 0)
+ 		return -EINVAL;
  
--	usb_autopm_get_interface(intf);
-+	retval = usb_autopm_get_interface(intf);
-+	if (retval < 0)
-+		return retval;
-+
- 	retval = usb_hub_set_port_power(hdev, hub, port1, false);
- 	usb_clear_port_feature(hdev, port1, USB_PORT_FEAT_C_CONNECTION);
- 	if (!port_dev->is_superspeed)
+ 	if (!smu_clk_dpm_is_enabled(smu, clk_type))
+--- a/drivers/gpu/drm/amd/powerplay/smu_v12_0.c
++++ b/drivers/gpu/drm/amd/powerplay/smu_v12_0.c
+@@ -373,9 +373,6 @@ int smu_v12_0_set_soft_freq_limited_rang
+ {
+ 	int ret = 0;
+ 
+-	if (max < min)
+-		return -EINVAL;
+-
+ 	switch (clk_type) {
+ 	case SMU_GFXCLK:
+ 	case SMU_SCLK:
 
 
