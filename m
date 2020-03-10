@@ -2,103 +2,217 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DDF3C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:46:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEFA7C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:46:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1918F2468F
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:46:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583844376;
-	bh=zBcaWmOWFsefY4orvoW3vKI4XM4VDFpW+rPtM3jGBuE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bOk42t1EKqB3/+X+1vPtf/s3hEdsXms7dBxQD+IKNgVbpO6zbONgqI7K9OpnGN8U1
-	 aPEKbGmL8gFNAAPstRXr9F/0UlX9pLBiqJ+ZqLnBgYvdFMwTCdBAVXabrCDqoweadW
-	 QqtL/cqMcMUVg8gNd0DAC9XbyjZTWMHdimW6r1jw=
+	by mail.kernel.org (Postfix) with ESMTP id 8BF7F24695
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:46:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="gBX0hj2b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727982AbgCJMqP (ORCPT
+        id S1727974AbgCJMqN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:46:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49126 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727955AbgCJMqL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:46:11 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E04AE24695;
-        Tue, 10 Mar 2020 12:46:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844370;
-        bh=zBcaWmOWFsefY4orvoW3vKI4XM4VDFpW+rPtM3jGBuE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SFh5vt9eFZ7P1uKUv4ExmMKi9FEzHKaZgH9eJrvgmJVHy7oRyXWz266UHMZ/7D/CW
-         7AP0lO577hyvrIyfQ4zHq0AetRQLFghgVwecFr2d+NjPhyoj1oINDH09NdLyMw5KT/
-         acQe4TgUwaRdswcKmrQi+2MXSFzn5lfTtgLcQBfs=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Harigovindan P <harigovi@codeaurora.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 56/88] drm/msm/dsi: save pll state before dsi host is powered off
-Date:   Tue, 10 Mar 2020 13:39:04 +0100
-Message-Id: <20200310123620.058490663@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200310123606.543939933@linuxfoundation.org>
-References: <20200310123606.543939933@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 10 Mar 2020 08:46:13 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:39536 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727850AbgCJMqJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:46:09 -0400
+Received: by mail-lf1-f66.google.com with SMTP id j15so10769521lfk.6
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 05:46:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=gSh1O1Tg9hbTntXDCgjlVsmaZkd6pHTV1/gOIcuwgPA=;
+        b=gBX0hj2bXSbp6ZWoSSKmNdJnfp75xbmMV8MJPUiA15XORwlHFEVauBYND86NTZjePe
+         uMWEWtNNrphpDgivuZbFv64ouBIlSFLbilwZbzkEP4+lDXLRNVdOZh9CE+xD6jNOsJs7
+         toYBQQeNbDyh4fT09xiiQnN2fGYbuj9I7YeeZ536wtMuCh3jByrjO/NZ2X6yvXnsl4I5
+         jP3Jkw15A01benfiwwOLuORcAQmA0ZahHiP+CzcIdgMutm6kPKvVXtUk5uWkHhlkysD3
+         HaWjZQxlfG15VjJEWCWUawaTHG3hlxHiVaAekhkAs5lBFFdLYGW8HUSTtVx+qQ9cpyrV
+         G31Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=gSh1O1Tg9hbTntXDCgjlVsmaZkd6pHTV1/gOIcuwgPA=;
+        b=mhMyg0d8iBJLDdv9XvBRy7YVuILjMByOqVxV5poqcFgUVW/VbtD+5NyWtJvPfSS3YE
+         rkg2lbiZJi+TRfrU+7OAhkEskTI4YhxID8DV88QsZMg8L7fieIp/+6hzK3uZut8Tq/l0
+         ScN8uW0odRLl5UI8JcXAu0Tk5vFxdTyJMc8QIE9/ZAyrRehBkCHhzCJiVXm2UD/dKDuU
+         dZ0fIqfFhtQYlhZQo97411bgFSgdqEft6iEFE8n5ggdetFFrSwjDpdnSs6bEWTE5WT80
+         ipxOF36/MWoUq7Nv79GDU5tLdW98w3vEinZKAMii97ObqupsNdYouJvPvR42ekSzRbDs
+         YWLQ==
+X-Gm-Message-State: ANhLgQ17PoWJ4whCDVpikb77/yNaHXiKD4+zW3Di2/e6LLvDZO8WJh1H
+        zfe8TQuT8HDCQyR8mOoERd7mgQ==
+X-Google-Smtp-Source: ADFU+vujsGPeuu/uOOnds8ODD/USMbLgA+oa2eE0LaLi60lfZcm8MGkkOgN13EGJlp/DwCPZ7b32NQ==
+X-Received: by 2002:a19:ac42:: with SMTP id r2mr8254913lfc.38.1583844366775;
+        Tue, 10 Mar 2020 05:46:06 -0700 (PDT)
+Received: from localhost (h-200-138.A463.priv.bahnhof.se. [176.10.200.138])
+        by smtp.gmail.com with ESMTPSA id c22sm3508834lfm.25.2020.03.10.05.46.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Mar 2020 05:46:05 -0700 (PDT)
+Date:   Tue, 10 Mar 2020 13:46:05 +0100
+From:   Niklas <niklas.soderlund@ragnatech.se>
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Lad Prabhakar <prabhakar.csengg@gmail.com>
+Subject: Re: [PATCH v2 2/3] media: rcar-vin: Add support for
+ MEDIA_BUS_FMT_SRGGB8_1X8 format
+Message-ID: <20200310124605.GO2975348@oden.dyn.berto.se>
+References: <1583838364-12932-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1583838364-12932-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <1583838364-12932-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Harigovindan P <harigovi@codeaurora.org>
+Hi Lad,
 
-[ Upstream commit a1028dcfd0dd97884072288d0c8ed7f30399b528 ]
+Thanks for your work.
 
-Save pll state before dsi host is powered off. Without this change
-some register values gets resetted.
+On 2020-03-10 11:06:03 +0000, Lad Prabhakar wrote:
+> Add support for MEDIA_BUS_FMT_SRGGB8_1X8 format in rcar-vin by setting
+> format type to RAW8 in VNMC register and appropriately setting the
+> bpp, bytesperline to enable V4L2_PIX_FMT_SRGGB8.
+> 
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> ---
+>  drivers/media/platform/rcar-vin/rcar-core.c |  1 +
+>  drivers/media/platform/rcar-vin/rcar-dma.c  |  9 ++++++++-
+>  drivers/media/platform/rcar-vin/rcar-v4l2.c | 13 ++++++++++++-
+>  3 files changed, 21 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/media/platform/rcar-vin/rcar-core.c b/drivers/media/platform/rcar-vin/rcar-core.c
+> index 7440c89..76daf2f 100644
+> --- a/drivers/media/platform/rcar-vin/rcar-core.c
+> +++ b/drivers/media/platform/rcar-vin/rcar-core.c
+> @@ -469,6 +469,7 @@ static int rvin_parallel_subdevice_attach(struct rvin_dev *vin,
+>  		case MEDIA_BUS_FMT_UYVY8_2X8:
+>  		case MEDIA_BUS_FMT_UYVY10_2X10:
+>  		case MEDIA_BUS_FMT_RGB888_1X24:
+> +		case MEDIA_BUS_FMT_SRGGB8_1X8:
+>  			vin->mbus_code = code.code;
+>  			vin_dbg(vin, "Found media bus format for %s: %d\n",
+>  				subdev->name, vin->mbus_code);
+> diff --git a/drivers/media/platform/rcar-vin/rcar-dma.c b/drivers/media/platform/rcar-vin/rcar-dma.c
+> index 1a30cd0..1c1fafa 100644
+> --- a/drivers/media/platform/rcar-vin/rcar-dma.c
+> +++ b/drivers/media/platform/rcar-vin/rcar-dma.c
+> @@ -85,6 +85,7 @@
+>  #define VNMC_INF_YUV8_BT601	(1 << 16)
+>  #define VNMC_INF_YUV10_BT656	(2 << 16)
+>  #define VNMC_INF_YUV10_BT601	(3 << 16)
+> +#define VNMC_INF_RAW8		(4 << 16)
+>  #define VNMC_INF_YUV16		(5 << 16)
+>  #define VNMC_INF_RGB888		(6 << 16)
+>  #define VNMC_VUP		(1 << 10)
+> @@ -587,7 +588,6 @@ void rvin_crop_scale_comp(struct rvin_dev *vin)
+>  	rvin_write(vin, vin->crop.top, VNSLPRC_REG);
+>  	rvin_write(vin, vin->crop.top + vin->crop.height - 1, VNELPRC_REG);
+>  
+> -
+>  	/* TODO: Add support for the UDS scaler. */
+>  	if (vin->info->model != RCAR_GEN3)
+>  		rvin_crop_scale_comp_gen2(vin);
+> @@ -676,6 +676,9 @@ static int rvin_setup(struct rvin_dev *vin)
+>  
+>  		input_is_yuv = true;
+>  		break;
+> +	case MEDIA_BUS_FMT_SRGGB8_1X8:
+> +		vnmc |= VNMC_INF_RAW8;
+> +		break;
+>  	default:
+>  		break;
+>  	}
+> @@ -737,6 +740,9 @@ static int rvin_setup(struct rvin_dev *vin)
+>  	case V4L2_PIX_FMT_ABGR32:
+>  		dmr = VNDMR_A8BIT(vin->alpha) | VNDMR_EXRGB | VNDMR_DTMD_ARGB;
+>  		break;
+> +	case V4L2_PIX_FMT_SRGGB8:
+> +		dmr = 0;
+> +		break;
+>  	default:
+>  		vin_err(vin, "Invalid pixelformat (0x%x)\n",
+>  			vin->format.pixelformat);
+> @@ -1110,6 +1116,7 @@ static int rvin_mc_validate_format(struct rvin_dev *vin, struct v4l2_subdev *sd,
+>  	case MEDIA_BUS_FMT_UYVY8_2X8:
+>  	case MEDIA_BUS_FMT_UYVY10_2X10:
+>  	case MEDIA_BUS_FMT_RGB888_1X24:
+> +	case MEDIA_BUS_FMT_SRGGB8_1X8:
+>  		vin->mbus_code = fmt.format.code;
+>  		break;
+>  	default:
+> diff --git a/drivers/media/platform/rcar-vin/rcar-v4l2.c b/drivers/media/platform/rcar-vin/rcar-v4l2.c
+> index 5151a3c..4698099 100644
+> --- a/drivers/media/platform/rcar-vin/rcar-v4l2.c
+> +++ b/drivers/media/platform/rcar-vin/rcar-v4l2.c
+> @@ -66,6 +66,10 @@ static const struct rvin_video_format rvin_formats[] = {
+>  		.fourcc			= V4L2_PIX_FMT_ABGR32,
+>  		.bpp			= 4,
+>  	},
+> +	{
+> +		.fourcc			= V4L2_PIX_FMT_SRGGB8,
+> +		.bpp			= 2,
 
-Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
-Signed-off-by: Rob Clark <robdclark@chromium.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/gpu/drm/msm/dsi/dsi_manager.c | 5 +++++
- 1 file changed, 5 insertions(+)
+This does not look right, is not bytes-per-pixel 1 for a SRGGB8?
 
-diff --git a/drivers/gpu/drm/msm/dsi/dsi_manager.c b/drivers/gpu/drm/msm/dsi/dsi_manager.c
-index 10d49d43c17eb..d46b9e75a8473 100644
---- a/drivers/gpu/drm/msm/dsi/dsi_manager.c
-+++ b/drivers/gpu/drm/msm/dsi/dsi_manager.c
-@@ -438,6 +438,7 @@ static void dsi_mgr_bridge_post_disable(struct drm_bridge *bridge)
- 	struct msm_dsi *msm_dsi1 = dsi_mgr_get_dsi(DSI_1);
- 	struct mipi_dsi_host *host = msm_dsi->host;
- 	struct drm_panel *panel = msm_dsi->panel;
-+	struct msm_dsi_pll *src_pll;
- 	bool is_dual_dsi = IS_DUAL_DSI();
- 	int ret;
- 
-@@ -471,6 +472,10 @@ static void dsi_mgr_bridge_post_disable(struct drm_bridge *bridge)
- 								id, ret);
- 	}
- 
-+	/* Save PLL status if it is a clock source */
-+	src_pll = msm_dsi_phy_get_pll(msm_dsi->phy);
-+	msm_dsi_pll_save_state(src_pll);
-+
- 	ret = msm_dsi_host_power_off(host);
- 	if (ret)
- 		pr_err("%s: host %d power off failed,%d\n", __func__, id, ret);
+> +	},
+>  };
+>  
+>  const struct rvin_video_format *rvin_format_from_pixel(struct rvin_dev *vin,
+> @@ -102,6 +106,7 @@ static u32 rvin_format_bytesperline(struct rvin_dev *vin,
+>  {
+>  	const struct rvin_video_format *fmt;
+>  	u32 align;
+> +	u8 div;
+>  
+>  	fmt = rvin_format_from_pixel(vin, pix->pixelformat);
+>  
+> @@ -112,16 +117,22 @@ static u32 rvin_format_bytesperline(struct rvin_dev *vin,
+>  	case V4L2_PIX_FMT_NV12:
+>  	case V4L2_PIX_FMT_NV16:
+>  		align = 0x20;
+> +		div = 1;
+> +		break;
+> +	case V4L2_PIX_FMT_SRGGB8:
+> +		align = 0x10;
+> +		div = 2;
+
+Yes this does not look right at all, I think you should set bpp to 1 and 
+drop the div handling here.
+
+>  		break;
+>  	default:
+>  		align = 0x10;
+> +		div = 1;
+>  		break;
+>  	}
+>  
+>  	if (V4L2_FIELD_IS_SEQUENTIAL(pix->field))
+>  		align = 0x80;
+>  
+> -	return ALIGN(pix->width, align) * fmt->bpp;
+> +	return ALIGN(pix->width / div, align) * fmt->bpp;
+>  }
+>  
+>  static u32 rvin_format_sizeimage(struct v4l2_pix_format *pix)
+> -- 
+> 2.7.4
+> 
+
 -- 
-2.20.1
-
-
-
+Regards,
+Niklas Söderlund
