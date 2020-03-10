@@ -5,49 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63A5DC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:56:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDBB3C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:56:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 383EF20674
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:56:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B31AF2253D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:56:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583844985;
-	bh=3Bx8udfb9FnxnWAt+F7PsFFjq1j/IIjT9fNxerbjN54=;
+	s=default; t=1583844987;
+	bh=Oy+lx+C1FH8Pn1YwPuWLa0OFRoIc6I4rO1gKpk1oFWc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c0h37lc4ydZazXszQwLqQQIAyAvgMmYm9ubjhCiFRnvKaiUX4K9CMl/2Dx8rvNrYu
-	 Cv8YB4U661gdatE93dCSVt6eN6v+MPpnzGLgJFsrumlfIvfqAX3l/CxxczzQC3IL8Z
-	 W4ptw3mt2AfQp74j4zYhd1UY0HK+yLVIjKJtTrJY=
+	b=lRQRDzcMlbKSn7onfmG0H/euqFoGTGJhb6H7gJkgZ+aAL26ifyWwwKuA22BhN0N5Y
+	 8L1GUYqZKz4ISKpMZEtpH9JYvi1XcqCMe74E9r7yNDHUgF5Chxu4N9DZEA7SBCGYtO
+	 TF1mfKClC7PmI5M3xZELBQ8HeXHdVLhUOY/jG/4c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729649AbgCJM4Y (ORCPT
+        id S1729192AbgCJM40 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:56:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35442 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:56:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35506 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728676AbgCJM4R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:56:17 -0400
+        id S1729261AbgCJM4U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:56:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ECFD02468D;
-        Tue, 10 Mar 2020 12:56:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C68892467D;
+        Tue, 10 Mar 2020 12:56:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844976;
-        bh=3Bx8udfb9FnxnWAt+F7PsFFjq1j/IIjT9fNxerbjN54=;
+        s=default; t=1583844980;
+        bh=Oy+lx+C1FH8Pn1YwPuWLa0OFRoIc6I4rO1gKpk1oFWc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OUGFOuAl/o0Z72K0rLd2CZTH6FIOVOQ3DTTVN381XF9+VfXvtS9gNS1JQaOE6PveS
-         dDG/zFsVY4qWtxy1sTPVkvZde/Ek4im0vBP5U9vPNkNav/FBvgOIuygNTE/px7+Msp
-         H7L+M628p4q5kszm+A1Bbv0BdKyjcapiwhAiiJ/Q=
+        b=na+Rq8+/eyAWggfa7xxue71HNP4iD7822iQDQnOvn2kstjzeCCWan62KQ6bEZ7cOz
+         ikjy8zBOTMKuSQQkHBnb3RWqgNxcZbG/1v3M9qIVoi0CCvhXgITXrlSAm8E9PoAxOK
+         fSq8DzxJMb+ruA5tkhlG30j3ChPMRTbMnRVJ2UYs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tomer Tayar <ttayar@habana.ai>,
-        Oded Gabbay <oded.gabbay@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 019/189] habanalabs: halt the engines before hard-reset
-Date:   Tue, 10 Mar 2020 13:37:36 +0100
-Message-Id: <20200310123641.419495641@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Oleksandr Natalenko <oleksandr@natalenko.name>,
+        Chris Evich <cevich@redhat.com>,
+        Paolo Valente <paolo.valente@linaro.org>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 002/189] block, bfq: get a ref to a group when adding it to a service tree
+Date:   Tue, 10 Mar 2020 13:37:19 +0100
+Message-Id: <20200310123639.841517948@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123639.608886314@linuxfoundation.org>
 References: <20200310123639.608886314@linuxfoundation.org>
@@ -60,141 +62,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oded Gabbay <oded.gabbay@gmail.com>
+From: Paolo Valente <paolo.valente@linaro.org>
 
-[ Upstream commit 908087ffbe896c100ed73d5f0ce11a5b7264af4a ]
+[ Upstream commit db37a34c563bf4692b36990ae89005c031385e52 ]
 
-The driver must halt the engines before doing hard-reset, otherwise the
-device can go into undefined state. There is a place where the driver
-didn't do that and this patch fixes it.
+BFQ schedules generic entities, which may represent either bfq_queues
+or groups of bfq_queues. When an entity is inserted into a service
+tree, a reference must be taken, to make sure that the entity does not
+disappear while still referred in the tree. Unfortunately, such a
+reference is mistakenly taken only if the entity represents a
+bfq_queue. This commit takes a reference also in case the entity
+represents a group.
 
-Reviewed-by: Tomer Tayar <ttayar@habana.ai>
-Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
+Tested-by: Oleksandr Natalenko <oleksandr@natalenko.name>
+Tested-by: Chris Evich <cevich@redhat.com>
+Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/misc/habanalabs/device.c    |  1 +
- drivers/misc/habanalabs/goya/goya.c | 42 +++++++++++++++++++++++++++++
- 2 files changed, 43 insertions(+)
+ block/bfq-cgroup.c  |  2 +-
+ block/bfq-iosched.h |  1 +
+ block/bfq-wf2q.c    | 12 ++++++++++--
+ 3 files changed, 12 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/misc/habanalabs/device.c b/drivers/misc/habanalabs/device.c
-index b155e95490761..166883b647252 100644
---- a/drivers/misc/habanalabs/device.c
-+++ b/drivers/misc/habanalabs/device.c
-@@ -1189,6 +1189,7 @@ int hl_device_init(struct hl_device *hdev, struct class *hclass)
- 	if (hdev->asic_funcs->get_hw_state(hdev) == HL_DEVICE_HW_STATE_DIRTY) {
- 		dev_info(hdev->dev,
- 			"H/W state is dirty, must reset before initializing\n");
-+		hdev->asic_funcs->halt_engines(hdev, true);
- 		hdev->asic_funcs->hw_fini(hdev, true);
- 	}
- 
-diff --git a/drivers/misc/habanalabs/goya/goya.c b/drivers/misc/habanalabs/goya/goya.c
-index 7344e8a222ae5..f24fe909b88d8 100644
---- a/drivers/misc/habanalabs/goya/goya.c
-+++ b/drivers/misc/habanalabs/goya/goya.c
-@@ -895,6 +895,11 @@ void goya_init_dma_qmans(struct hl_device *hdev)
-  */
- static void goya_disable_external_queues(struct hl_device *hdev)
- {
-+	struct goya_device *goya = hdev->asic_specific;
-+
-+	if (!(goya->hw_cap_initialized & HW_CAP_DMA))
-+		return;
-+
- 	WREG32(mmDMA_QM_0_GLBL_CFG0, 0);
- 	WREG32(mmDMA_QM_1_GLBL_CFG0, 0);
- 	WREG32(mmDMA_QM_2_GLBL_CFG0, 0);
-@@ -956,6 +961,11 @@ static int goya_stop_external_queues(struct hl_device *hdev)
- {
- 	int rc, retval = 0;
- 
-+	struct goya_device *goya = hdev->asic_specific;
-+
-+	if (!(goya->hw_cap_initialized & HW_CAP_DMA))
-+		return retval;
-+
- 	rc = goya_stop_queue(hdev,
- 			mmDMA_QM_0_GLBL_CFG1,
- 			mmDMA_QM_0_CP_STS,
-@@ -1744,9 +1754,18 @@ void goya_init_tpc_qmans(struct hl_device *hdev)
-  */
- static void goya_disable_internal_queues(struct hl_device *hdev)
- {
-+	struct goya_device *goya = hdev->asic_specific;
-+
-+	if (!(goya->hw_cap_initialized & HW_CAP_MME))
-+		goto disable_tpc;
-+
- 	WREG32(mmMME_QM_GLBL_CFG0, 0);
- 	WREG32(mmMME_CMDQ_GLBL_CFG0, 0);
- 
-+disable_tpc:
-+	if (!(goya->hw_cap_initialized & HW_CAP_TPC))
-+		return;
-+
- 	WREG32(mmTPC0_QM_GLBL_CFG0, 0);
- 	WREG32(mmTPC0_CMDQ_GLBL_CFG0, 0);
- 
-@@ -1782,8 +1801,12 @@ static void goya_disable_internal_queues(struct hl_device *hdev)
-  */
- static int goya_stop_internal_queues(struct hl_device *hdev)
- {
-+	struct goya_device *goya = hdev->asic_specific;
- 	int rc, retval = 0;
- 
-+	if (!(goya->hw_cap_initialized & HW_CAP_MME))
-+		goto stop_tpc;
-+
- 	/*
- 	 * Each queue (QMAN) is a separate H/W logic. That means that each
- 	 * QMAN can be stopped independently and failure to stop one does NOT
-@@ -1810,6 +1833,10 @@ static int goya_stop_internal_queues(struct hl_device *hdev)
- 		retval = -EIO;
- 	}
- 
-+stop_tpc:
-+	if (!(goya->hw_cap_initialized & HW_CAP_TPC))
-+		return retval;
-+
- 	rc = goya_stop_queue(hdev,
- 			mmTPC0_QM_GLBL_CFG1,
- 			mmTPC0_QM_CP_STS,
-@@ -1975,6 +2002,11 @@ static int goya_stop_internal_queues(struct hl_device *hdev)
- 
- static void goya_dma_stall(struct hl_device *hdev)
- {
-+	struct goya_device *goya = hdev->asic_specific;
-+
-+	if (!(goya->hw_cap_initialized & HW_CAP_DMA))
-+		return;
-+
- 	WREG32(mmDMA_QM_0_GLBL_CFG1, 1 << DMA_QM_0_GLBL_CFG1_DMA_STOP_SHIFT);
- 	WREG32(mmDMA_QM_1_GLBL_CFG1, 1 << DMA_QM_1_GLBL_CFG1_DMA_STOP_SHIFT);
- 	WREG32(mmDMA_QM_2_GLBL_CFG1, 1 << DMA_QM_2_GLBL_CFG1_DMA_STOP_SHIFT);
-@@ -1984,6 +2016,11 @@ static void goya_dma_stall(struct hl_device *hdev)
- 
- static void goya_tpc_stall(struct hl_device *hdev)
- {
-+	struct goya_device *goya = hdev->asic_specific;
-+
-+	if (!(goya->hw_cap_initialized & HW_CAP_TPC))
-+		return;
-+
- 	WREG32(mmTPC0_CFG_TPC_STALL, 1 << TPC0_CFG_TPC_STALL_V_SHIFT);
- 	WREG32(mmTPC1_CFG_TPC_STALL, 1 << TPC1_CFG_TPC_STALL_V_SHIFT);
- 	WREG32(mmTPC2_CFG_TPC_STALL, 1 << TPC2_CFG_TPC_STALL_V_SHIFT);
-@@ -1996,6 +2033,11 @@ static void goya_tpc_stall(struct hl_device *hdev)
- 
- static void goya_mme_stall(struct hl_device *hdev)
- {
-+	struct goya_device *goya = hdev->asic_specific;
-+
-+	if (!(goya->hw_cap_initialized & HW_CAP_MME))
-+		return;
-+
- 	WREG32(mmMME_STALL, 0xFFFFFFFF);
+diff --git a/block/bfq-cgroup.c b/block/bfq-cgroup.c
+index e1419edde2ec5..e7919e76a27c2 100644
+--- a/block/bfq-cgroup.c
++++ b/block/bfq-cgroup.c
+@@ -332,7 +332,7 @@ static void bfqg_put(struct bfq_group *bfqg)
+ 		kfree(bfqg);
  }
  
+-static void bfqg_and_blkg_get(struct bfq_group *bfqg)
++void bfqg_and_blkg_get(struct bfq_group *bfqg)
+ {
+ 	/* see comments in bfq_bic_update_cgroup for why refcounting bfqg */
+ 	bfqg_get(bfqg);
+diff --git a/block/bfq-iosched.h b/block/bfq-iosched.h
+index 8526f20c53bc1..144bc544be568 100644
+--- a/block/bfq-iosched.h
++++ b/block/bfq-iosched.h
+@@ -984,6 +984,7 @@ struct bfq_group *bfq_find_set_group(struct bfq_data *bfqd,
+ struct blkcg_gq *bfqg_to_blkg(struct bfq_group *bfqg);
+ struct bfq_group *bfqq_group(struct bfq_queue *bfqq);
+ struct bfq_group *bfq_create_group_hierarchy(struct bfq_data *bfqd, int node);
++void bfqg_and_blkg_get(struct bfq_group *bfqg);
+ void bfqg_and_blkg_put(struct bfq_group *bfqg);
+ 
+ #ifdef CONFIG_BFQ_GROUP_IOSCHED
+diff --git a/block/bfq-wf2q.c b/block/bfq-wf2q.c
+index 05f0bf4a1144d..44079147e396e 100644
+--- a/block/bfq-wf2q.c
++++ b/block/bfq-wf2q.c
+@@ -536,7 +536,9 @@ static void bfq_get_entity(struct bfq_entity *entity)
+ 		bfqq->ref++;
+ 		bfq_log_bfqq(bfqq->bfqd, bfqq, "get_entity: %p %d",
+ 			     bfqq, bfqq->ref);
+-	}
++	} else
++		bfqg_and_blkg_get(container_of(entity, struct bfq_group,
++					       entity));
+ }
+ 
+ /**
+@@ -650,8 +652,14 @@ static void bfq_forget_entity(struct bfq_service_tree *st,
+ 
+ 	entity->on_st = false;
+ 	st->wsum -= entity->weight;
+-	if (bfqq && !is_in_service)
++	if (is_in_service)
++		return;
++
++	if (bfqq)
+ 		bfq_put_queue(bfqq);
++	else
++		bfqg_and_blkg_put(container_of(entity, struct bfq_group,
++					       entity));
+ }
+ 
+ /**
 -- 
 2.20.1
 
