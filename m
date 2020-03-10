@@ -4,117 +4,214 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 142C4C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:42:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 787A0C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:43:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC3C92465A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:42:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 592312465A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:43:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726462AbgCJJmD (ORCPT
+        id S1726385AbgCJJnt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 05:42:03 -0400
-Received: from sauhun.de ([88.99.104.3]:46710 "EHLO pokefinder.org"
+        Tue, 10 Mar 2020 05:43:49 -0400
+Received: from mga02.intel.com ([134.134.136.20]:49543 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726202AbgCJJmC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 05:42:02 -0400
-Received: from localhost (p54B33196.dip0.t-ipconnect.de [84.179.49.150])
-        by pokefinder.org (Postfix) with ESMTPSA id 6125C2C1EB6;
-        Tue, 10 Mar 2020 10:42:00 +0100 (CET)
-Date:   Tue, 10 Mar 2020 10:42:00 +0100
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-i2c@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Girish Mahadevan <girishm@codeaurora.org>,
-        Dilip Kota <dkota@codeaurora.org>,
-        Alok Chauhan <alokc@codeaurora.org>,
-        Douglas Anderson <dianders@chromium.org>
-Subject: Re: [PATCH 1/3] i2c: qcom-geni: Let firmware specify irq trigger
- flags
-Message-ID: <20200310094159.GG1987@ninjato>
-References: <20200204193152.124980-1-swboyd@chromium.org>
- <20200204193152.124980-2-swboyd@chromium.org>
+        id S1726195AbgCJJnt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 05:43:49 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Mar 2020 02:43:48 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,536,1574150400"; 
+   d="scan'208";a="231264562"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.141])
+  by orsmga007.jf.intel.com with ESMTP; 10 Mar 2020 02:43:46 -0700
+Date:   Tue, 10 Mar 2020 17:41:43 +0800
+From:   Xu Yilun <yilun.xu@intel.com>
+To:     Wu Hao <hao.wu@intel.com>
+Cc:     mdf@kernel.org, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Luwei Kang <luwei.kang@intel.com>
+Subject: Re: [PATCH 2/7] fpga: dfl: pci: add irq info for feature devices
+  enumeration
+Message-ID: <20200310094143.GB30868@yilunxu-OptiPlex-7050>
+References: <1583749790-10837-1-git-send-email-yilun.xu@intel.com>
+ <1583749790-10837-3-git-send-email-yilun.xu@intel.com>
+ <20200310024626.GB11861@hao-dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="JbKQpFqZXJ2T76Sg"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200204193152.124980-2-swboyd@chromium.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200310024626.GB11861@hao-dev>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Mar 10, 2020 at 10:46:26AM +0800, Wu Hao wrote:
+> Hi Yilun
+> 
+> Some comments inline. : )
+> 
+> On Mon, Mar 09, 2020 at 06:29:45PM +0800, Xu Yilun wrote:
+> > Some DFL FPGA PCIe cards (e.g. Intel FPGA Programmable Acceleration
+> > Card) support MSI-X based interrupts. This patch allows PCIe driver
+> > to prepare and pass interrupt resources to DFL via enumeration API.
+> > These interrupt resources could then be assigned to actual features
+> > which use them.
+> > 
+> > Signed-off-by: Luwei Kang <luwei.kang@intel.com>
+> > Signed-off-by: Wu Hao <hao.wu@intel.com>
+> > Signed-off-by: Xu Yilun <yilun.xu@intel.com>
+> > ---
+> >  drivers/fpga/dfl-pci.c | 66 ++++++++++++++++++++++++++++++++++++++++++++++----
+> >  1 file changed, 61 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/drivers/fpga/dfl-pci.c b/drivers/fpga/dfl-pci.c
+> > index 5387550..a3370e5 100644
+> > --- a/drivers/fpga/dfl-pci.c
+> > +++ b/drivers/fpga/dfl-pci.c
+> > @@ -80,8 +80,23 @@ static void cci_remove_feature_devs(struct pci_dev *pcidev)
+> >  	dfl_fpga_feature_devs_remove(drvdata->cdev);
+> >  }
+> >  
+> > +static int *cci_pci_create_irq_table(struct pci_dev *pcidev, unsigned int nvec)
+> > +{
+> > +	int *table, i;
+> > +
+> > +	table = kcalloc(nvec, sizeof(int), GFP_KERNEL);
+> 
+> Maybe devm_ version is better?
 
---JbKQpFqZXJ2T76Sg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This table will be freed right after dfl_fpga_enum_info_add_irq(). Maybe
+don't need devm_ version.
 
-On Tue, Feb 04, 2020 at 11:31:50AM -0800, Stephen Boyd wrote:
-> We don't need to force IRQF_TRIGGER_HIGH here as the DT or ACPI tables
-> should take care of this for us. Just use 0 instead so that we use the
-> flags from the firmware. Also, remove specify dev_name() for the irq
-> name so that we can get better information in /proc/interrupts about
-> which device is generating interrupts.
->=20
-> Cc: Girish Mahadevan <girishm@codeaurora.org>
-> Cc: Dilip Kota <dkota@codeaurora.org>
-> Cc: Alok Chauhan <alokc@codeaurora.org>
-> Cc: Douglas Anderson <dianders@chromium.org>
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> 
+> > +	if (!table)
+> > +		return NULL;
+> > +
+> > +	for (i = 0; i < nvec; i++)
+> 
+> i should be unsigned int as well?
 
-All patches look good, but this one doesn't build because dev is defined
-in the next patch only. I also can't apply patch 2 before 1, so please
-rebase and resend.
+Yes I should change it.
 
-> ---
->  drivers/i2c/busses/i2c-qcom-geni.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/i2c/busses/i2c-qcom-geni.c b/drivers/i2c/busses/i2c-=
-qcom-geni.c
-> index 17abf60c94ae..3e13b54ce3f8 100644
-> --- a/drivers/i2c/busses/i2c-qcom-geni.c
-> +++ b/drivers/i2c/busses/i2c-qcom-geni.c
-> @@ -549,8 +549,8 @@ static int geni_i2c_probe(struct platform_device *pde=
-v)
->  	init_completion(&gi2c->done);
->  	spin_lock_init(&gi2c->lock);
->  	platform_set_drvdata(pdev, gi2c);
-> -	ret =3D devm_request_irq(&pdev->dev, gi2c->irq, geni_i2c_irq,
-> -			       IRQF_TRIGGER_HIGH, "i2c_geni", gi2c);
-> +	ret =3D devm_request_irq(dev, gi2c->irq, geni_i2c_irq, 0,
-> +			       dev_name(&pdev->dev), gi2c);
->  	if (ret) {
->  		dev_err(&pdev->dev, "Request_irq failed:%d: err:%d\n",
->  			gi2c->irq, ret);
-> --=20
-> Sent by a computer, using git, on the internet
->=20
+> 
+> > +		table[i] = pci_irq_vector(pcidev, i);
+> > +
+> > +	return table;
+> > +}
+> > +
+> >  /* enumerate feature devices under pci device */
+> > -static int cci_enumerate_feature_devs(struct pci_dev *pcidev)
+> > +static int cci_enumerate_feature_devs(struct pci_dev *pcidev,
+> > +				      unsigned int nvec)
+> >  {
+> >  	struct cci_drvdata *drvdata = pci_get_drvdata(pcidev);
+> >  	struct dfl_fpga_enum_info *info;
+> > @@ -89,6 +104,7 @@ static int cci_enumerate_feature_devs(struct pci_dev *pcidev)
+> >  	resource_size_t start, len;
+> >  	int port_num, bar, i, ret = 0;
+> >  	void __iomem *base;
+> > +	int *irq_table;
+> >  	u32 offset;
+> >  	u64 v;
+> >  
+> > @@ -97,6 +113,18 @@ static int cci_enumerate_feature_devs(struct pci_dev *pcidev)
+> >  	if (!info)
+> >  		return -ENOMEM;
+> >  
+> > +	/* add irq info for enumeration if really needed */
+> > +	if (nvec) {
+> > +		irq_table = cci_pci_create_irq_table(pcidev, nvec);
+> > +		if (irq_table) {
+> > +			dfl_fpga_enum_info_add_irq(info, nvec, irq_table);
+> > +			kfree(irq_table);
+> > +		} else {
+> > +			ret = -ENOMEM;
+> > +			goto enum_info_free_exit;
+> > +		}
+> > +	}
+> > +
+> >  	/* start to find Device Feature List from Bar 0 */
+> >  	base = cci_pci_ioremap_bar(pcidev, 0);
+> >  	if (!base) {
+> > @@ -173,6 +201,28 @@ static int cci_enumerate_feature_devs(struct pci_dev *pcidev)
+> >  	return ret;
+> >  }
+> >  
+> > +static int cci_pci_alloc_irq(struct pci_dev *pcidev)
+> > +{
+> > +	int nvec = pci_msix_vec_count(pcidev);
+> > +	int ret;
+> > +
+> > +	if (nvec <= 0) {
+> > +		dev_dbg(&pcidev->dev, "fpga interrupt not supported\n");
+> > +		return 0;
+> > +	}
+> > +
+> > +	ret = pci_alloc_irq_vectors(pcidev, nvec, nvec, PCI_IRQ_MSIX);
+> > +	if (ret < 0)
+> > +		return ret;
+> > +
+> > +	return nvec;
+> > +}
+> > +
+> > +static void cci_pci_free_irq(struct pci_dev *pcidev)
+> > +{
+> > +	pci_free_irq_vectors(pcidev);
+> > +}
+> > +
+> >  static
+> >  int cci_pci_probe(struct pci_dev *pcidev, const struct pci_device_id *pcidevid)
+> >  {
+> > @@ -210,14 +260,19 @@ int cci_pci_probe(struct pci_dev *pcidev, const struct pci_device_id *pcidevid)
+> >  		goto disable_error_report_exit;
+> >  	}
+> >  
+> > -	ret = cci_enumerate_feature_devs(pcidev);
+> > -	if (ret) {
+> > -		dev_err(&pcidev->dev, "enumeration failure %d.\n", ret);
+> > +	ret = cci_pci_alloc_irq(pcidev);
+> > +	if (ret < 0) {
+> > +		dev_err(&pcidev->dev, "Fail to alloc irq %d.\n", ret);
+> 
+> we prepare mmio resources in side cci_enumerate_feature_devs.
+> 
+> maybe we could put irq resources code in side cce_enumerate_feature_devs too?
 
---JbKQpFqZXJ2T76Sg
-Content-Type: application/pgp-signature; name="signature.asc"
+Yes I will try to change it in patch v2.
 
------BEGIN PGP SIGNATURE-----
+Thanks for your quick response.
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl5nYOQACgkQFA3kzBSg
-KbaZ1Q//bEqT5U1ii86pzp09TaBI3QzrPc5uzlHnrBieB7gZ0pkytJrO1PSXyfXk
-kozWfv5urS2U0jj2jnRAD30N7jPTxmUw/2OUTM+pXWVAg1/gMEPJ61VDMfEpl8JX
-oLSbsw3nGVWHdcdI5RvjECqBYie4V969Qy++vo4CE3+Ojcf2LhEDT3rXMoM3sLt2
-YYF+VhArh5D68UwJ+0XeP2A2XZNc08qFN+bpPcHr/vDpzfgkq5L5Es9NATAvUUww
-fNrq8qywVHlC9ylepuaqKBN/4YZVlwMSkiNZyKLhWkoWbINtnSadpHGd1oQ63J6P
-f0FTch18NjURIJchZaAeSpPsPQCAG9yl3TV0AZBv4MlzSvgOT2C+lezzDwT0oSG5
-/ZnXHr/yNNeXxYOU2Ya3cQ32Uoo3g7hICuKnOiBDR1TNPnY/ymfeeKdZAMyqcgxj
-+sSs9OMf4l97luaFdoDuA0MzqdVV7ZY/n0tpsR6Zqpuz2ATW4PFc0zmaci3Kp1QZ
-2Mfma5Zn5iUl12EjS1zS/VmFcFO5cAfBPWSBymeRFZ6fhP5sSdqSgaVsDP6eq0dS
-uWlLsjNPv9XI8na981XdbD5Wggdolxzpkyn48vgbLr/PBcrKfak9eUKevqRH/M5V
-EIDZe9RakIgD2VIvm+n+L3RzhS+FZ4fU0oOdhOdgCxjoilB6tKk=
-=T8mr
------END PGP SIGNATURE-----
-
---JbKQpFqZXJ2T76Sg--
+> 
+> 
+> Thanks
+> Hao
+> 
+> >  		goto disable_error_report_exit;
+> >  	}
+> >  
+> > -	return ret;
+> > +	ret = cci_enumerate_feature_devs(pcidev, (unsigned int)ret);
+> > +	if (!ret)
+> > +		return ret;
+> > +
+> > +	dev_err(&pcidev->dev, "enumeration failure %d.\n", ret);
+> >  
+> > +	cci_pci_free_irq(pcidev);
+> >  disable_error_report_exit:
+> >  	pci_disable_pcie_error_reporting(pcidev);
+> >  	return ret;
+> > @@ -263,6 +318,7 @@ static void cci_pci_remove(struct pci_dev *pcidev)
+> >  		cci_pci_sriov_configure(pcidev, 0);
+> >  
+> >  	cci_remove_feature_devs(pcidev);
+> > +	cci_pci_free_irq(pcidev);
+> >  	pci_disable_pcie_error_reporting(pcidev);
+> >  }
+> >  
+> > -- 
+> > 2.7.4
