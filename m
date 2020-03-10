@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 137B8C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:48:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D41BC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:48:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1F1520674
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:48:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 535EB2468E
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:48:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583844526;
-	bh=poU2yKYx8uqXY9anobZDWyRSFMcqkk2DwmXd8rSwxoc=;
+	s=default; t=1583844532;
+	bh=VhzaO8yRe3wCynyv0rVSufOA69/1pZfzMzeM23xUXA4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KZLchXOgA/fYAT95fXwHBleLGykx/2GOgSOmD5rB+HSwTQW7O3KsiOH7yHBMK3nlT
-	 ijs/YGGrRtf68N88CCeFsxggSkgE2MSiDZgRjfidheGqDGmvkb4KaC1xe1t15NR9ei
-	 EEgm7g0HVlkoxlQPobVqnrDW/axJCb6U2V8jTk1Q=
+	b=xv+ISiC4fywt8nxvizCugXfNi5yzZjCuzUtCd4ZOUrV7+XqGAEUbLhVJduyYWJ6ft
+	 1k3YBUJk/SnpLtScL3J63ZTkAoVOYXziKcmoIhX3uzVIESS6Mec7razv9PKoF9kEuH
+	 PvirUZP2iqeeWRC9i8xWnC8apQkyZSQEtSYk8f78=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727911AbgCJMsp (ORCPT
+        id S1728372AbgCJMsv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:48:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52912 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:48:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53038 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728117AbgCJMsl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:48:41 -0400
+        id S1728117AbgCJMsq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:48:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE0132467D;
-        Tue, 10 Mar 2020 12:48:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C49FC2468E;
+        Tue, 10 Mar 2020 12:48:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844521;
-        bh=poU2yKYx8uqXY9anobZDWyRSFMcqkk2DwmXd8rSwxoc=;
+        s=default; t=1583844526;
+        bh=VhzaO8yRe3wCynyv0rVSufOA69/1pZfzMzeM23xUXA4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aV+iZC7bGu2FXxfCyR+MwWI1dyaNoOu7xa96qgstkYFgIMPzacyUbd8eYGxb/CEEU
-         Kq1c3c96fQBIYTE0yDqI5aFlVJrj/iDUYluhmDJ2uxnQgmjdw3ckJIRFYZswJJC7QU
-         mwb6IOAq0el05Vxop7LDBk6YNNNEH2Ve4A/xs9Z8=
+        b=metSDhQuiF6sd1gBQNzMf+blnX4KsKYrE4ES8SnWTt4/dUVIISQkEHj3qF8b1N18y
+         Dzo6M2Dptq7Eej0tzZuizQj5hYVmR15ShnfhVYegNRSRxfum0FDSuVXKPw9Fx+cmuk
+         G7DMKu05800Cx7SdgFdEko1CWJg/hu0T3ivsFCRQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Brian Masney <masneyb@onstation.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 022/168] drm/msm/mdp5: rate limit pp done timeout warnings
-Date:   Tue, 10 Mar 2020 13:37:48 +0100
-Message-Id: <20200310123637.891054313@linuxfoundation.org>
+        stable@vger.kernel.org, Patrick Dung <patdung100@gmail.com>,
+        Oleksandr Natalenko <oleksandr@natalenko.name>,
+        Paolo Valente <paolo.valente@linaro.org>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 003/168] block, bfq: do not insert oom queue into position tree
+Date:   Tue, 10 Mar 2020 13:37:29 +0100
+Message-Id: <20200310123635.620435587@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123635.322799692@linuxfoundation.org>
 References: <20200310123635.322799692@linuxfoundation.org>
@@ -60,35 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brian Masney <masneyb@onstation.org>
+From: Paolo Valente <paolo.valente@linaro.org>
 
-[ Upstream commit ef8c9809acb0805c991bba8bdd4749fc46d44a98 ]
+[ Upstream commit 32c59e3a9a5a0b180dd015755d6d18ca31e55935 ]
 
-Add rate limiting of the 'pp done time out' warnings since these
-warnings can quickly fill the dmesg buffer.
+BFQ maintains an ordered list, implemented with an RB tree, of
+head-request positions of non-empty bfq_queues. This position tree,
+inherited from CFQ, is used to find bfq_queues that contain I/O close
+to each other. BFQ merges these bfq_queues into a single shared queue,
+if this boosts throughput on the device at hand.
 
-Signed-off-by: Brian Masney <masneyb@onstation.org>
-Signed-off-by: Rob Clark <robdclark@chromium.org>
+There is however a special-purpose bfq_queue that does not participate
+in queue merging, the oom bfq_queue. Yet, also this bfq_queue could be
+wrongly added to the position tree. So bfqq_find_close() could return
+the oom bfq_queue, which is a source of further troubles in an
+out-of-memory situation. This commit prevents the oom bfq_queue from
+being inserted into the position tree.
+
+Tested-by: Patrick Dung <patdung100@gmail.com>
+Tested-by: Oleksandr Natalenko <oleksandr@natalenko.name>
+Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ block/bfq-iosched.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c
-index eb0b4b7dc7cc7..03c6d6157e4d0 100644
---- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c
-+++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c
-@@ -1112,8 +1112,8 @@ static void mdp5_crtc_wait_for_pp_done(struct drm_crtc *crtc)
- 	ret = wait_for_completion_timeout(&mdp5_crtc->pp_completion,
- 						msecs_to_jiffies(50));
- 	if (ret == 0)
--		dev_warn(dev->dev, "pp done time out, lm=%d\n",
--			 mdp5_cstate->pipeline.mixer->lm);
-+		dev_warn_ratelimited(dev->dev, "pp done time out, lm=%d\n",
-+				     mdp5_cstate->pipeline.mixer->lm);
- }
+diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
+index 5498d05b873d3..955daa29303a8 100644
+--- a/block/bfq-iosched.c
++++ b/block/bfq-iosched.c
+@@ -614,6 +614,10 @@ bfq_pos_tree_add_move(struct bfq_data *bfqd, struct bfq_queue *bfqq)
+ 		bfqq->pos_root = NULL;
+ 	}
  
- static void mdp5_crtc_wait_for_flush_done(struct drm_crtc *crtc)
++	/* oom_bfqq does not participate in queue merging */
++	if (bfqq == &bfqd->oom_bfqq)
++		return;
++
+ 	/*
+ 	 * bfqq cannot be merged any longer (see comments in
+ 	 * bfq_setup_cooperator): no point in adding bfqq into the
 -- 
 2.20.1
 
