@@ -2,236 +2,197 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF4D5C10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 05:56:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A428C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 06:01:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BEC92071B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 05:56:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C845222D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 06:01:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="O9brKjw0"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="PMi5wCUe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726268AbgCJF45 (ORCPT
+        id S1726265AbgCJGBG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 01:56:57 -0400
-Received: from mail-eopbgr60052.outbound.protection.outlook.com ([40.107.6.52]:28067
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        Tue, 10 Mar 2020 02:01:06 -0400
+Received: from mail-am6eur05on2056.outbound.protection.outlook.com ([40.107.22.56]:15809
+        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726100AbgCJF45 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 01:56:57 -0400
+        id S1726100AbgCJGBF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 02:01:05 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=McaAmuj7Q0QvIbGaPH7s/ASgjyLrGh/RFI3BCCpNt7kbR6/wZ8Puk1laiCqTlIExFV8E2bq2Yey4oNQUNrUlQ+uTGbh5KreOzDPp6lr6jMHLigIy2b96aH+MTzx2GYqjd/ZnRA31UflDI5yfaGP//FI4tn/tdxEjyqStO/87MgD18QMTVNq0lCCh62Ud3mvZ0WDmf1UfU3WAbBWTf0/Jwe7HEM1/Sjaons/8Qqh8oHnsnLIQiR4BgeCTu6W6nVmPOFTRvAERfcrD2HJKS3fXghjcCcFOzJKMXv8jr24Vyxze4QdR6eiqZT3PhgCkZ/89CLzW/5BEb28tFn2yeoygGQ==
+ b=c3D9Opg6ZxDpQq8+JU3Q/pa2LquxV/iFHJlEARneDPsBMUWe6DvttT4VvWsvn6hxK/IsodzdsY5XWEJX5YqMuue2oM1iNmmo7280jCcmNtli16Uxi1qAWu9kYuNiY2S6tCCt8fsGhfmRu7Fg9Ux2jwzUYxcXXqCUGbpmhAGLqxkf/rSo+cX1n/NcbICX1y7yBiHKEOzaIsn5j4643wCHj3+tYJMDxbxSWqDMPxAAiyzRA/fcqdsIFBlBy82YqNfJTl1XkRD9M5NWZeioHWLaLpq/dmFqLctpTcQPzHuVvZ8QMhjYGQiSnEAgoz7jD4ZDUi3BIKukkucT85Kyl6e41A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kcMgt5+FjbuSQIGgmIgrW9oVTFecoVxza5focuKAM3o=;
- b=QpcPCiHVu22TDb8OBHi+00HPw/jqSIzJaq8tO7GgB5Q2LSiteUIjGja3MaJYHTq8XhjYFM4Q9bGpb0aHRrk3rQ1JZcnsS3zCyX89cn15B1a0VEYzbSgZeJarBqUE2NjeEMypkyB8/VvjiIKJ9SKglCkjbFwExFTiTSGDuiOjRelzHhs0ctD16usScJto/6bhK/0Bsqw4/F4dW5ajemvvfIhp5AdavMWGAec3prNjTUC9NoQLuVu2duDwJ3TVXSUkE55RDP/v82X/4g8pMnXJAJ6sD+Y1b+UzAEd1oTY3lvrPbr6OIlNIOEUKC2erF62BuBKeMAaIHlKmaFx4p2cg6g==
+ bh=zYgUH84EV/H1jZfAkXTTP0wcJi6u/aAHuDuw67RUFaU=;
+ b=IMduxB2ahp+IB0n5CeOXEJWvV6DeFWx0qE+cgEKFNpecLdzhxrXdNXs9U7pVXXbbLXAEUyD9TK0BwXJmo3xw8abtEnibB1fCdm0g1ATp1MFDQlcq5PqStfcPk4luIeve0xcwLUKLzdSZF3npB7HE1tbyvEqLWoA6U1sn53tirn55+3OU2l8Tvtvd6xHOMxX7nIevontTHgCnxTLw0FveasBJYWhPw51hB58EqLLGhuAgja99SvWnWwb189aEQxJi0MwbUdYb9OTUt8tR74UgHOUBEZ2Nz2KWjbJoiaxa21cPvg/w1aHtNuZ0XDmut1T+4JBGtxZrsSyts0iZzkG7Hw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kcMgt5+FjbuSQIGgmIgrW9oVTFecoVxza5focuKAM3o=;
- b=O9brKjw0t6sDXcO0hiFt2lc4WoVo6p4aK2bRUWTob5N2OlpSfDbJYwjQpMeSiCtgxZkHoZjs/P+Gm2BgteJvBHz+fThVHeCz5S7I3xl5YUIeCtvzCoVeVUPs9jRCLNTLoI17Jorv/EQTkh8zImJXgYu7bnTh2zqTABw1QDm1/4U=
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
- AM0PR04MB5443.eurprd04.prod.outlook.com (20.178.114.161) with Microsoft SMTP
+ bh=zYgUH84EV/H1jZfAkXTTP0wcJi6u/aAHuDuw67RUFaU=;
+ b=PMi5wCUeFy4E2i7IEZEMRPVi/kbPXLrRUaLH1gszkgZwtM6cyirAjKTAZjXnbGz+XPzGwetMGeI6kXKeUQ60ktmTzsg0+xdFEhUGDJMdRD+d3DlM3vzEl3/JCnx8aHJaRaf4TcSQVrGcwXKFy9GcZTfb1CZBfFTujxLOBciPI3k=
+Received: from DB7PR04MB4618.eurprd04.prod.outlook.com (52.135.139.151) by
+ DB7PR04MB5241.eurprd04.prod.outlook.com (20.176.235.80) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2793.17; Tue, 10 Mar 2020 05:56:53 +0000
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::548f:4941:d4eb:4c11]) by AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::548f:4941:d4eb:4c11%6]) with mapi id 15.20.2793.013; Tue, 10 Mar 2020
- 05:56:53 +0000
-From:   Peng Fan <peng.fan@nxp.com>
+ 15.20.2793.17; Tue, 10 Mar 2020 06:01:00 +0000
+Received: from DB7PR04MB4618.eurprd04.prod.outlook.com
+ ([fe80::e449:ea49:c382:9788]) by DB7PR04MB4618.eurprd04.prod.outlook.com
+ ([fe80::e449:ea49:c382:9788%5]) with mapi id 15.20.2793.013; Tue, 10 Mar 2020
+ 06:01:00 +0000
+From:   Joakim Zhang <qiangqing.zhang@nxp.com>
 To:     Shawn Guo <shawnguo@kernel.org>
-CC:     "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+CC:     "mturquette@baylibre.com" <mturquette@baylibre.com>,
         "sboyd@kernel.org" <sboyd@kernel.org>,
         "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
         "kernel@pengutronix.de" <kernel@pengutronix.de>,
         "festevam@gmail.com" <festevam@gmail.com>,
         dl-linux-imx <linux-imx@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
         "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Abel Vesa <abel.vesa@nxp.com>
-Subject: RE: [PATCH v2 01/14] dt-bindings: fsl: add i.MX7ULP PMC binding doc
-Thread-Topic: [PATCH v2 01/14] dt-bindings: fsl: add i.MX7ULP PMC binding doc
-Thread-Index: AQHV5vtwRU1Nn7bH00qi32AibjM/SahBcXEAgAABWCA=
-Date:   Tue, 10 Mar 2020 05:56:53 +0000
-Message-ID: <AM0PR04MB4481C57A58B8FEC9DAC8C4A288FF0@AM0PR04MB4481.eurprd04.prod.outlook.com>
-References: <1582099197-20327-1-git-send-email-peng.fan@nxp.com>
- <1582099197-20327-2-git-send-email-peng.fan@nxp.com>
- <20200310054945.GE15729@dragon>
-In-Reply-To: <20200310054945.GE15729@dragon>
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 4/7] clk: imx: imx8qxp: Enable SCU and LPCG clocks for I2C
+ in CM40 SS
+Thread-Topic: [PATCH 4/7] clk: imx: imx8qxp: Enable SCU and LPCG clocks for
+ I2C in CM40 SS
+Thread-Index: AQHV5UISyiPjRNDMvU+8VXedgRd3jahBUhWAgAAkkCA=
+Date:   Tue, 10 Mar 2020 06:01:00 +0000
+Message-ID: <DB7PR04MB4618D6977A04CFC892B48CA3E6FF0@DB7PR04MB4618.eurprd04.prod.outlook.com>
+References: <1581909561-12058-1-git-send-email-qiangqing.zhang@nxp.com>
+ <1581909561-12058-5-git-send-email-qiangqing.zhang@nxp.com>
+ <20200310034506.GC15729@dragon>
+In-Reply-To: <20200310034506.GC15729@dragon>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
 authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peng.fan@nxp.com; 
-x-originating-ip: [119.31.174.68]
+ smtp.mailfrom=qiangqing.zhang@nxp.com; 
+x-originating-ip: [222.93.243.135]
 x-ms-publictraffictype: Email
 x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 51ea4389-a3db-495d-5594-08d7c4b7d53f
-x-ms-traffictypediagnostic: AM0PR04MB5443:|AM0PR04MB5443:
+x-ms-office365-filtering-correlation-id: f45e9b2b-7fa8-49d2-369d-08d7c4b868e3
+x-ms-traffictypediagnostic: DB7PR04MB5241:|DB7PR04MB5241:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR04MB5443E46A8D7318EC492E16AA88FF0@AM0PR04MB5443.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-microsoft-antispam-prvs: <DB7PR04MB5241549356C20AF1497E5E71E6FF0@DB7PR04MB5241.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1186;
 x-forefront-prvs: 033857D0BD
-x-forefront-antispam-report: SFV:NSPM;SFS:(10001)(10009020)(4636009)(376002)(136003)(346002)(39860400002)(396003)(366004)(189003)(199004)(45080400002)(4326008)(478600001)(86362001)(66446008)(2906002)(66556008)(66476007)(64756008)(76116006)(8676002)(66946007)(71200400001)(7696005)(6506007)(9686003)(44832011)(55016002)(52536014)(186003)(54906003)(8936002)(33656002)(6916009)(26005)(7416002)(5660300002)(316002)(81166006)(81156014);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB5443;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(376002)(136003)(396003)(346002)(366004)(199004)(189003)(478600001)(86362001)(81156014)(66556008)(81166006)(54906003)(9686003)(8936002)(8676002)(66446008)(66476007)(76116006)(55016002)(66946007)(7416002)(316002)(64756008)(6916009)(52536014)(2906002)(186003)(7696005)(33656002)(5660300002)(26005)(4326008)(6506007)(71200400001)(53546011)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR04MB5241;H:DB7PR04MB4618.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
 received-spf: None (protection.outlook.com: nxp.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: QYv6osvwjJxva0ImmwlD0T3fj6nhGDrJney/zyJEFYBcIY5//HjU9qHTmPQjnllk1e+at6d02JAtb7XFmI+TNXav7+YxH1+9Tc8sW927OBEGPODedZ6CUz3IF1Q2bOiQI0L0nfb+JrEkEEBycdPtQbaGB/g5Nj3MPDW12C8z/Zj0RgOE0ZNQgTL1/QR2xCGqOysNeQVUBZvQinv1BC24KB4eKqfBUnOYktHw5KtDrjaF8hgkFP0NCt4zoKDp8Euu+glP5nEmzwQtQt3hv6DtZ5+3Ny7gd7O0wGV+Tp0EVIFrcAYmY8cwp4q3g8pYl6rzL8y+wLdizrKxl5FWmk5Y6AHu7hYabFKB2GzPUtGAHyucJ2AsGX1OgeQvarLT/IVHJ4ouJYogTYax5K91I+WafCH034SYIk/n75Lk8R9rsHPK7Ynshf+PPJIJ89T9v8Q6T0AJhG46Hld2FY07IJyEvDY5RdsSB1YMj7TjWFPIzyfOq0V0OzHic44W/pmNRQ+T6IWsYSsSfJdUGjl6gYWDhL/iRBsa7ttSR73e5DrwJfDCqpfCYUY67hin4ApB+SZEczcOHWLmT2ZLZ2LQny7+WcNIpqbfnahgbhbuc0Kl2ehdXTVWPC/AhcdksAdYi+EP
-x-ms-exchange-antispam-messagedata: 0Ed2x27prJ4CVOffXEAJ8zzOHPnAeTSokKb4RuxTkQxWe9YzScIHBe2KzQJs1mLSkKF2jIVw1w2OxpyMisdZfRYqy6ZKdf0hvxx2sFWrKylFz/tP6z/5VWPREMbWbx3iKuWvQ11B0z+UpHS0dSYjZQ==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+x-microsoft-antispam-message-info: 5kFsXP/iJWdhALARi0ByP4XVhmr8g+VpCNQV2gXgmY5hT86DwNd5WNpSv2ILzmj8ZqfBjz6hoUvqm1wu56SH06ASNhA0uBd8w5g2mXf2tH8re6TSiz+NdvShm0/ebFYLBX6UoteaWIOQzCfIBAMNhNxcOyyiAuAuc/RI3Q5LEk0iYEIL+izW1vF/ajBdUdbH/QGm+IojzDm7q/qfxGxhVLOk6GWc1dL5WnaY6iYAW7wvve1wEMghFLKyfMHRiVK5ojipr6wtMsRo+hvC96AizAKhpTPerQDzkyZcrhZ0wBOb7+sZ8kZV1T9UeciIMX+EDT4YLaROVDaG7EKipYievGZrpBxyXiD1DND1G4bYUb/2MeeyQREk55tY+gNq8svZH28H9lmXNCxIFi3yGLsRpeqP8IJLmLtwiGKRT1xe7tJrPkBpsUIkEBHDNL/3kuwxIYSyzBXda47wmUS8I4NUNFqXFKb66+HQct1YiE2rGkyhs1qwDPsY8vVSeM8Ln96G
+x-ms-exchange-antispam-messagedata: u1ZMbcFHaf0zhTGoahtC1zjCmXdX8j37/vWtHPsnjXQ4GT22NhzoT9tgBl++uZlkPsLlddkbohY+AGFBPCwzNOBe2x8sYcqRxFj3eCu6h2m9xnbwqAjQpg+nrJYcONdL1zpcWHQkpyG7+5bTj2iI+w==
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 51ea4389-a3db-495d-5594-08d7c4b7d53f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Mar 2020 05:56:53.0882
+X-MS-Exchange-CrossTenant-Network-Message-Id: f45e9b2b-7fa8-49d2-369d-08d7c4b868e3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Mar 2020 06:01:00.6933
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Cv7RKoMc+Rgib1cIBRCggFKARx3Qnv+x5N/b7PgfMB1OlIrqgOz5wHkk69M4uBd2xyslGR0sYBbBizcAy5Mpsw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5443
+X-MS-Exchange-CrossTenant-userprincipalname: LNyiyk43tKzCvUOyzwGtgLbCh1X8ohHUEUciQDlK85pCSeug7ZO0tjnMXNjDgU7FX94adIdIkMmKyX83lTNOeQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB5241
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-> Subject: Re: [PATCH v2 01/14] dt-bindings: fsl: add i.MX7ULP PMC binding =
-doc
->=20
-> On Wed, Feb 19, 2020 at 03:59:44PM +0800, peng.fan@nxp.com wrote:
-> > From: Peng Fan <peng.fan@nxp.com>
-> >
-> > Add i.MX7ULP Power Management Controller binding doc
-> >
-> > Signed-off-by: Peng Fan <peng.fan@nxp.com>
->=20
-> This is a new binding, and I would like get an ACK from Rob on it.
-
-Rob,
-
-Would you help Ack if you are fine with this patch?
-
->=20
-> > ---
-> >  .../bindings/arm/freescale/imx7ulp_pmc.yaml        | 32
-> ++++++++++++++++++++++
-> >  1 file changed, 32 insertions(+)
-> >  create mode 100644
-> > Documentation/devicetree/bindings/arm/freescale/imx7ulp_pmc.yaml
-> >
-> > diff --git
-> > a/Documentation/devicetree/bindings/arm/freescale/imx7ulp_pmc.yaml
-> > b/Documentation/devicetree/bindings/arm/freescale/imx7ulp_pmc.yaml
-> > new file mode 100644
-> > index 000000000000..992a5ea29d39
-> > --- /dev/null
-> > +++
-> b/Documentation/devicetree/bindings/arm/freescale/imx7ulp_pmc.yaml
-> > @@ -0,0 +1,32 @@
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +%YAML 1.2
-> > +---
-> > +$id:
-> > +https://eur01.safelinks.protection.outlook.com/?url=3Dhttp%3A%2F%2Fdev=
-i
-> >
-> +cetree.org%2Fschemas%2Fbindings%2Farm%2Ffreescale%2Fimx7ulp_pmc.y
-> aml%
-> >
-> +23&amp;data=3D02%7C01%7Cpeng.fan%40nxp.com%7Cc1a27bc0347845099
-> 80908d7c4
-> >
-> +b6dbe3%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C63719416
-> 196456308
-> >
-> +7&amp;sdata=3DEJausMj4W3mpgP%2BGdKpHpyTmZY4ipbxyUAurDVTKj5A%3
-> D&amp;rese
-> > +rved=3D0
-> > +$schema:
-> > +https://eur01.safelinks.protection.outlook.com/?url=3Dhttp%3A%2F%2Fdev=
-i
-> >
-> +cetree.org%2Fmeta-schemas%2Fcore.yaml%23&amp;data=3D02%7C01%7Cpe
-> ng.fan%
-> >
-> +40nxp.com%7Cc1a27bc034784509980908d7c4b6dbe3%7C686ea1d3bc2b4c
-> 6fa92cd9
-> >
-> +9c5c301635%7C0%7C0%7C637194161964563087&amp;sdata=3D2UJYpLt69cd
-> NiA%2BGA
-> > +CI%2Bdqme0BFkqx%2FLrdt1fm3TzlM%3D&amp;reserved=3D0
-> > +
-> > +title: i.MX7ULP Power Management Controller(PMC) Device Tree Bindings
-> > +
-> > +maintainers:
-> > +  - Peng Fan <peng.fan@nxp.com>
-> > +
-> > +properties:
-> > +  compatible:
-> > +    items:
-> > +      - enum:
-> > +          - fsl,imx7ulp-pmc0
-> > +          - fsl,imx7ulp-pmc1
->=20
-> We usually do not encode number suffix in the compatible string.  Do they
-> really have different programming model?
-
-The register layout is different and some has different name/meaning.
-And pmc0 is used by M4, pmc1 is used by Linux.
-
-A brief intro about pmc0/1.
-The PMC 0 has the following features:
- a high-power (HP) and a low-power (LP) Core Regulator;
- a high-power (HP) and a low-power (LP) Array Regulator;
- a high-power (HP) and a low-power (LP) 1.2V Low Voltage Detector (LVD)
-monitor (in regulator input);
- a high-power (HP) 1.8V High Voltage Detector (HVD) monitor (in regulator
-supply);
- a bandgap;
- a forward back bias (FBB) and a reverse back bias (RBB) regulator.
- a temperature sensor.
-The PMC 1 has the following features:
- a high-power (HP) and a low-power (LP) Linear LDO regulator;
- a set of power switches;
- a high-power (HP) and a low-power (LP) Low Voltage Detector (LVD) monitor;
- a high-power (HP) 1.2V High Voltage Detector (HVD) monitor;
- configurable LVD/HVD sense point between regulator supply and regulator ou=
-tput;
- a forward back bias (FBB) and a reverse back bias (RBB) regulator.
-
-Thanks,
-Peng.
->=20
-> Shawn
->=20
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +
-> > +examples:
-> > +  - |
-> > +    pmc0: pmc0@410a1000 {
-> > +        compatible =3D "fsl,imx7ulp-pmc0";
-> > +        reg =3D <0x410a1000 0x1000>;
-> > +    };
-> > +...
-> > --
-> > 2.16.4
-> >
+DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFNoYXduIEd1byA8c2hhd25n
+dW9Aa2VybmVsLm9yZz4NCj4gU2VudDogMjAyMMTqM9TCMTDI1SAxMTo0NQ0KPiBUbzogSm9ha2lt
+IFpoYW5nIDxxaWFuZ3FpbmcuemhhbmdAbnhwLmNvbT4NCj4gQ2M6IG10dXJxdWV0dGVAYmF5bGli
+cmUuY29tOyBzYm95ZEBrZXJuZWwub3JnOyByb2JoK2R0QGtlcm5lbC5vcmc7DQo+IG1hcmsucnV0
+bGFuZEBhcm0uY29tOyBzLmhhdWVyQHBlbmd1dHJvbml4LmRlOyBrZXJuZWxAcGVuZ3V0cm9uaXgu
+ZGU7DQo+IGZlc3RldmFtQGdtYWlsLmNvbTsgZGwtbGludXgtaW14IDxsaW51eC1pbXhAbnhwLmNv
+bT47IEFuc29uIEh1YW5nDQo+IDxhbnNvbi5odWFuZ0BueHAuY29tPjsgTGVvbmFyZCBDcmVzdGV6
+IDxsZW9uYXJkLmNyZXN0ZXpAbnhwLmNvbT47DQo+IERhbmllbCBCYWx1dGEgPGRhbmllbC5iYWx1
+dGFAbnhwLmNvbT47IEFpc2hlbmcgRG9uZw0KPiA8YWlzaGVuZy5kb25nQG54cC5jb20+OyBQZW5n
+IEZhbiA8cGVuZy5mYW5AbnhwLmNvbT47IEFuZHkgRHVhbg0KPiA8ZnVnYW5nLmR1YW5AbnhwLmNv
+bT47IGxpbnV4LWNsa0B2Z2VyLmtlcm5lbC5vcmc7DQo+IGRldmljZXRyZWVAdmdlci5rZXJuZWwu
+b3JnOyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7DQo+IGxpbnV4LWtlcm5l
+bEB2Z2VyLmtlcm5lbC5vcmcNCj4gU3ViamVjdDogUmU6IFtQQVRDSCA0LzddIGNsazogaW14OiBp
+bXg4cXhwOiBFbmFibGUgU0NVIGFuZCBMUENHIGNsb2NrcyBmb3IgSTJDDQo+IGluIENNNDAgU1MN
+Cj4gDQo+IE9uIE1vbiwgRmViIDE3LCAyMDIwIGF0IDExOjE5OjE4QU0gKzA4MDAsIEpvYWtpbSBa
+aGFuZyB3cm90ZToNCj4gPiBFbmFibGUgU0NVIGFuZCBMUENHIGNsb2NrcyBmb3IgSTJDIGluIENN
+NDAgU1MuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBKb2FraW0gWmhhbmcgPHFpYW5ncWluZy56
+aGFuZ0BueHAuY29tPg0KPiANCj4gU28geW91IGRlY2lkZWQgdG8gc3RvcCB3YWl0aW5nIGZvciBB
+aXNoZW5nJ3MgbmV3IGlteDhxeHAgY2xvY2sgZHJpdmVyPw0KSGkgU2hhd24sDQoNClBsZWFzZSBp
+Z25vcmUgYWxsIGNsb2NrIGFuZCBkdHMgcGF0Y2hlcywgSSB3aWxsIHNlbmQgb3V0IGFnYWluIGFm
+dGVyIEFpc2hlbmcncyBuZXcgaW14OHF4cCBjbG9jayBkcml2ZXIuIFRoYW5rcy4NCg0KQmVzdCBS
+ZWdhcmRzLA0KSm9ha2ltIFpoYW5nDQo+IFNoYXduDQo+IA0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJz
+L2Nsay9pbXgvY2xrLWlteDhxeHAtbHBjZy5jIHwgMTIgKysrKysrKysrKysrDQo+ID4gZHJpdmVy
+cy9jbGsvaW14L2Nsay1pbXg4cXhwLWxwY2cuaCB8ICAzICsrKw0KPiA+ICBkcml2ZXJzL2Nsay9p
+bXgvY2xrLWlteDhxeHAuYyAgICAgIHwgIDQgKysrKw0KPiA+ICAzIGZpbGVzIGNoYW5nZWQsIDE5
+IGluc2VydGlvbnMoKykNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2Nsay9pbXgvY2xr
+LWlteDhxeHAtbHBjZy5jDQo+ID4gYi9kcml2ZXJzL2Nsay9pbXgvY2xrLWlteDhxeHAtbHBjZy5j
+DQo+ID4gaW5kZXggMDRjOGVlMzVlMTRjLi43OTU5MDllY2ZiYTYgMTAwNjQ0DQo+ID4gLS0tIGEv
+ZHJpdmVycy9jbGsvaW14L2Nsay1pbXg4cXhwLWxwY2cuYw0KPiA+ICsrKyBiL2RyaXZlcnMvY2xr
+L2lteC9jbGstaW14OHF4cC1scGNnLmMNCj4gPiBAQCAtMTUxLDYgKzE1MSwxNyBAQCBzdGF0aWMg
+Y29uc3Qgc3RydWN0IGlteDhxeHBfbHBjZ19kYXRhDQo+IGlteDhxeHBfbHBjZ19sc2lvW10gPSB7
+DQo+ID4gIAl7IElNWF9MU0lPX0xQQ0dfUFdNNl9JUEdfTVNUUl9DTEssICJwd202X2xwY2dfaXBn
+X21zdHJfY2xrIiwNCj4gPiAicHdtNl9jbGsiLCAwLCBMU0lPX1BXTV82X0xQQ0csIDI0LCAwLCB9
+LCAgfTsNCj4gPg0KPiA+ICtzdGF0aWMgY29uc3Qgc3RydWN0IGlteDhxeHBfbHBjZ19kYXRhIGlt
+eDhxeHBfbHBjZ19jbTQwW10gPSB7DQo+ID4gKwl7IElNWF9DTTQwX0xQQ0dfSTJDX0NMSywgImNt
+NDBfbHBjZ19pMmNfY2xrIiwgImNtNDBfaTJjX2NsayIsIDAsDQo+IENNNDBfSTJDX0xQQ0csIDAs
+IDAsIH0sDQo+ID4gKwl7IElNWF9DTTQwX0xQQ0dfSTJDX0lQR19DTEssICJjbTQwX2xwY2dfaTJj
+X2lwZ19jbGsiLA0KPiA+ICsiY200MF9pcGdfY2xrX3Jvb3QiLCAwLCBDTTQwX0kyQ19MUENHLCAx
+NiwgMCwgfSwgfTsNCj4gPiArDQo+ID4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgaW14OHF4cF9zc19s
+cGNnIGlteDhxeHBfc3NfY200MCA9IHsNCj4gPiArCS5scGNnID0gaW14OHF4cF9scGNnX2NtNDAs
+DQo+ID4gKwkubnVtX2xwY2cgPSBBUlJBWV9TSVpFKGlteDhxeHBfbHBjZ19jbTQwKSwNCj4gPiAr
+CS5udW1fbWF4ID0gSU1YX0NNNDBfTFBDR19DTEtfRU5ELA0KPiA+ICt9Ow0KPiA+ICsNCj4gPiAg
+c3RhdGljIGNvbnN0IHN0cnVjdCBpbXg4cXhwX3NzX2xwY2cgaW14OHF4cF9zc19sc2lvID0gew0K
+PiA+ICAJLmxwY2cgPSBpbXg4cXhwX2xwY2dfbHNpbywNCj4gPiAgCS5udW1fbHBjZyA9IEFSUkFZ
+X1NJWkUoaW14OHF4cF9scGNnX2xzaW8pLCBAQCAtMjE5LDYgKzIzMCw3IEBADQo+ID4gc3RhdGlj
+IGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgaW14OHF4cF9scGNnX21hdGNoW10gPSB7DQo+ID4g
+IAl7IC5jb21wYXRpYmxlID0gImZzbCxpbXg4cXhwLWxwY2ctYWRtYSIsICZpbXg4cXhwX3NzX2Fk
+bWEsIH0sDQo+ID4gIAl7IC5jb21wYXRpYmxlID0gImZzbCxpbXg4cXhwLWxwY2ctY29ubiIsICZp
+bXg4cXhwX3NzX2Nvbm4sIH0sDQo+ID4gIAl7IC5jb21wYXRpYmxlID0gImZzbCxpbXg4cXhwLWxw
+Y2ctbHNpbyIsICZpbXg4cXhwX3NzX2xzaW8sIH0sDQo+ID4gKwl7IC5jb21wYXRpYmxlID0gImZz
+bCxpbXg4cXhwLWxwY2ctY200MCIsICZpbXg4cXhwX3NzX2NtNDAsIH0sDQo+ID4gIAl7IC8qIHNl
+bnRpbmVsICovIH0NCj4gPiAgfTsNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2Nsay9p
+bXgvY2xrLWlteDhxeHAtbHBjZy5oDQo+ID4gYi9kcml2ZXJzL2Nsay9pbXgvY2xrLWlteDhxeHAt
+bHBjZy5oDQo+ID4gaW5kZXggMmEzN2NlNTdjNTAwLi4yOGNhNzMwZGQxMzUgMTAwNjQ0DQo+ID4g
+LS0tIGEvZHJpdmVycy9jbGsvaW14L2Nsay1pbXg4cXhwLWxwY2cuaA0KPiA+ICsrKyBiL2RyaXZl
+cnMvY2xrL2lteC9jbGstaW14OHF4cC1scGNnLmgNCj4gPiBAQCAtOTksNCArOTksNyBAQA0KPiA+
+ICAjZGVmaW5lIEFETUFfRkxFWENBTl8xX0xQQ0cJCTB4MWNlMDAwMA0KPiA+ICAjZGVmaW5lIEFE
+TUFfRkxFWENBTl8yX0xQQ0cJCTB4MWNmMDAwMA0KPiA+DQo+ID4gKy8qIENNNDAgU1MgKi8NCj4g
+PiArI2RlZmluZSBDTTQwX0kyQ19MUENHCQkJMHg2MDAwMA0KPiA+ICsNCj4gPiAgI2VuZGlmIC8q
+IF9JTVg4UVhQX0xQQ0dfSCAqLw0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2Nsay9pbXgvY2xr
+LWlteDhxeHAuYw0KPiA+IGIvZHJpdmVycy9jbGsvaW14L2Nsay1pbXg4cXhwLmMgaW5kZXggNWUy
+OTAzZWZjNDg4Li5kMDUxMDczZmYwNDINCj4gPiAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL2Ns
+ay9pbXgvY2xrLWlteDhxeHAuYw0KPiA+ICsrKyBiL2RyaXZlcnMvY2xrL2lteC9jbGstaW14OHF4
+cC5jDQo+ID4gQEAgLTUzLDYgKzUzLDcgQEAgc3RhdGljIGludCBpbXg4cXhwX2Nsa19wcm9iZShz
+dHJ1Y3QgcGxhdGZvcm1fZGV2aWNlDQo+ICpwZGV2KQ0KPiA+ICAJY2xrc1tJTVhfSFNJT19QRVJf
+Q0xLXQkJPSBjbGtfaHdfcmVnaXN0ZXJfZml4ZWRfcmF0ZShOVUxMLA0KPiAiaHNpb19wZXJfY2xr
+X3Jvb3QiLCBOVUxMLCAwLCAxMzMzMzMzMzMpOw0KPiA+ICAJY2xrc1tJTVhfTFNJT19NRU1fQ0xL
+XQkJPSBjbGtfaHdfcmVnaXN0ZXJfZml4ZWRfcmF0ZShOVUxMLA0KPiAibHNpb19tZW1fY2xrX3Jv
+b3QiLCBOVUxMLCAwLCAyMDAwMDAwMDApOw0KPiA+ICAJY2xrc1tJTVhfTFNJT19CVVNfQ0xLXQkJ
+PSBjbGtfaHdfcmVnaXN0ZXJfZml4ZWRfcmF0ZShOVUxMLA0KPiAibHNpb19idXNfY2xrX3Jvb3Qi
+LCBOVUxMLCAwLCAxMDAwMDAwMDApOw0KPiA+ICsJY2xrc1tJTVhfQ000MF9JUEdfQ0xLXQkJPSBj
+bGtfaHdfcmVnaXN0ZXJfZml4ZWRfcmF0ZShOVUxMLA0KPiAiY200MF9pcGdfY2xrX3Jvb3QiLCBO
+VUxMLCAwLCAxMzIwMDAwMDApOw0KPiA+DQo+ID4gIAkvKiBBUk0gY29yZSAqLw0KPiA+ICAJY2xr
+c1tJTVhfQTM1X0NMS10JCT0gaW14X2Nsa19zY3UoImEzNV9jbGsiLCBJTVhfU0NfUl9BMzUsDQo+
+IElNWF9TQ19QTV9DTEtfQ1BVKTsNCj4gPiBAQCAtMTI4LDYgKzEyOSw5IEBAIHN0YXRpYyBpbnQg
+aW14OHF4cF9jbGtfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZQ0KPiAqcGRldikNCj4gPiAg
+CWNsa3NbSU1YX0dQVTBfQ09SRV9DTEtdCQk9IGlteF9jbGtfc2N1KCJncHVfY29yZTBfY2xrIiwN
+Cj4gSU1YX1NDX1JfR1BVXzBfUElEMCwgSU1YX1NDX1BNX0NMS19QRVIpOw0KPiA+ICAJY2xrc1tJ
+TVhfR1BVMF9TSEFERVJfQ0xLXQk9IGlteF9jbGtfc2N1KCJncHVfc2hhZGVyMF9jbGsiLA0KPiBJ
+TVhfU0NfUl9HUFVfMF9QSUQwLCBJTVhfU0NfUE1fQ0xLX01JU0MpOw0KPiA+DQo+ID4gKwkvKiBD
+TTQwIFNTICovDQo+ID4gKwljbGtzW0lNWF9DTTQwX0kyQ19DTEtdCQk9IGlteF9jbGtfc2N1KCJj
+bTQwX2kyY19jbGsiLA0KPiBJTVhfU0NfUl9NNF8wX0kyQywgSU1YX1NDX1BNX0NMS19QRVIpOw0K
+PiA+ICsNCj4gPiAgCWZvciAoaSA9IDA7IGkgPCBjbGtfZGF0YS0+bnVtOyBpKyspIHsNCj4gPiAg
+CQlpZiAoSVNfRVJSKGNsa3NbaV0pKQ0KPiA+ICAJCQlwcl93YXJuKCJpLk1YIGNsayAldTogcmVn
+aXN0ZXIgZmFpbGVkIHdpdGggJWxkXG4iLA0KPiA+IC0tDQo+ID4gMi4xNy4xDQo+ID4NCg==
