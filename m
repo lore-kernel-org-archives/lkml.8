@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03B45C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:09:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D2BAC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:09:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7B2820873
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:09:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74AC9208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:09:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583845754;
-	bh=24cJr1a4LEBnlJsk7G8uqP4mLM4GSe5dTT5rRoG/lGY=;
+	s=default; t=1583845758;
+	bh=Xvrs5Tl05cV7m4ac4tT9EVzboSu3Qc+AUWzumDZp8DI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rM1boEGcQPmv30MxDDF9bU+OTzQ9rJcka3xD0lwIC6L12SiCP5M9JDngemgeixQcK
-	 rTlKraNsbJ6bjsTD8V/UBOp+hcLO3T7IW90PoT7ThvuHp6tBPhE2R8RwV4N/VZXIwh
-	 7KEAtra9x+j2A5pQf59G3zXz9oiL4r81p/sky16k=
+	b=lg/MYvxdgo/GAqGA0ag32Kaa/CmWc3ruqrARgPg86qxMIrPgkWoVl2yYvMp9YURr7
+	 9lDj1wuFBmjiz+Y+axBumapUiPYdH2lgnBko8If5P9QtAwbgK4OVkKtzq1MKmXFs/n
+	 NeQYUxqGQ0NQqsylnSS6zLpfNC6gnckrzgb2NrME=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731202AbgCJNJJ (ORCPT
+        id S1731211AbgCJNJQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:09:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55994 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:09:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56178 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730374AbgCJNJD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:09:03 -0400
+        id S1730409AbgCJNJO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:09:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0FCB92071B;
-        Tue, 10 Mar 2020 13:09:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B6D1A24691;
+        Tue, 10 Mar 2020 13:09:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845743;
-        bh=24cJr1a4LEBnlJsk7G8uqP4mLM4GSe5dTT5rRoG/lGY=;
+        s=default; t=1583845752;
+        bh=Xvrs5Tl05cV7m4ac4tT9EVzboSu3Qc+AUWzumDZp8DI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tTUx+HE8IokocNshn0hdp/tctvbTTGHaTM3HguXFjOg83JLuGXvmOxgw+ZO63HbdF
-         jg1suT+dPE1yFJviw8gcMH8ONs/fRuX8AUn9eI2m9TYwlk99aHaldWGT8tZXWGWvq1
-         bJuoqBcOdWsBOEc6iUVTwtaajD2iZjur/XC8/Csk=
+        b=FHzfxGAK8PnCQujyCh620E3E3anjaQli1+al0HrLu0fIqiXN+kUikk0Uwa7cYM3F8
+         VK97zcxfArYrN+EFF1T+Ck0fQrxevHZVREEsbX71PEh5d03044kMQqCMiYb+F2Fgul
+         I4pMn4V8LRFMzxixg2tGASkUJiAwfgcC80So1Lfw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marek Vasut <marex@denx.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Lukas Wunner <lukas@wunner.de>, Petr Stetiar <ynezz@true.cz>,
-        YueHaibing <yuehaibing@huawei.com>,
+        stable@vger.kernel.org, Cornelia Huck <cohuck@redhat.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Vasily Averin <vvs@virtuozzo.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 083/126] net: ks8851-ml: Fix 16-bit data access
-Date:   Tue, 10 Mar 2020 13:41:44 +0100
-Message-Id: <20200310124209.184681604@linuxfoundation.org>
+Subject: [PATCH 4.14 086/126] s390/cio: cio_ignore_proc_seq_next should increase position index
+Date:   Tue, 10 Mar 2020 13:41:47 +0100
+Message-Id: <20200310124209.340499132@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310124203.704193207@linuxfoundation.org>
 References: <20200310124203.704193207@linuxfoundation.org>
@@ -62,46 +62,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Vasut <marex@denx.de>
+From: Vasily Averin <vvs@virtuozzo.com>
 
-[ Upstream commit edacb098ea9c31589276152f09b4439052c0f2b1 ]
+[ Upstream commit 8b101a5e14f2161869636ff9cb4907b7749dc0c2 ]
 
-The packet data written to and read from Micrel KSZ8851-16MLLI must be
-byte-swapped in 16-bit mode, add this byte-swapping.
+if seq_file .next fuction does not change position index,
+read after some lseek can generate unexpected output.
 
-Signed-off-by: Marek Vasut <marex@denx.de>
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Lukas Wunner <lukas@wunner.de>
-Cc: Petr Stetiar <ynezz@true.cz>
-Cc: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=206283
+Link: https://lore.kernel.org/r/d44c53a7-9bc1-15c7-6d4a-0c10cb9dffce@virtuozzo.com
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/micrel/ks8851_mll.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/s390/cio/blacklist.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/micrel/ks8851_mll.c b/drivers/net/ethernet/micrel/ks8851_mll.c
-index 77d059d7f8c55..fb5f4055e1592 100644
---- a/drivers/net/ethernet/micrel/ks8851_mll.c
-+++ b/drivers/net/ethernet/micrel/ks8851_mll.c
-@@ -515,7 +515,7 @@ static inline void ks_inblk(struct ks_net *ks, u16 *wptr, u32 len)
+diff --git a/drivers/s390/cio/blacklist.c b/drivers/s390/cio/blacklist.c
+index 2a3f874a21d54..9cebff8e8d740 100644
+--- a/drivers/s390/cio/blacklist.c
++++ b/drivers/s390/cio/blacklist.c
+@@ -303,8 +303,10 @@ static void *
+ cio_ignore_proc_seq_next(struct seq_file *s, void *it, loff_t *offset)
  {
- 	len >>= 1;
- 	while (len--)
--		*wptr++ = (u16)ioread16(ks->hw_addr);
-+		*wptr++ = be16_to_cpu(ioread16(ks->hw_addr));
+ 	struct ccwdev_iter *iter;
++	loff_t p = *offset;
+ 
+-	if (*offset >= (__MAX_SUBCHANNEL + 1) * (__MAX_SSID + 1))
++	(*offset)++;
++	if (p >= (__MAX_SUBCHANNEL + 1) * (__MAX_SSID + 1))
+ 		return NULL;
+ 	iter = it;
+ 	if (iter->devno == __MAX_SUBCHANNEL) {
+@@ -314,7 +316,6 @@ cio_ignore_proc_seq_next(struct seq_file *s, void *it, loff_t *offset)
+ 			return NULL;
+ 	} else
+ 		iter->devno++;
+-	(*offset)++;
+ 	return iter;
  }
  
- /**
-@@ -529,7 +529,7 @@ static inline void ks_outblk(struct ks_net *ks, u16 *wptr, u32 len)
- {
- 	len >>= 1;
- 	while (len--)
--		iowrite16(*wptr++, ks->hw_addr);
-+		iowrite16(cpu_to_be16(*wptr++), ks->hw_addr);
- }
- 
- static void ks_disable_int(struct ks_net *ks)
 -- 
 2.20.1
 
