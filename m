@@ -2,132 +2,84 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C45F7C10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 04:47:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 440D5C10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 05:00:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 979D92465A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 04:47:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="j3E9quZB"
+	by mail.kernel.org (Postfix) with ESMTP id 082A92467C
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 05:00:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583816420;
+	bh=ya8O2zyJgfZBNwFRjsm8EyOQyaUn/3HHCvdB3j2dOKc=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=jOVh/i3W0gbXjjMw4BTzzV14AfbvEUQkOJg0+/NqtyIsVQmOOy2oe23mkPbEadKw/
+	 NmSjL033p7TLxQkBEBpn+EsPIbXjDW08yXg/pwWlPQrZn3GpBhmKrucRM0jiqD8FV5
+	 noOzcZk3uc3ysQoIxUgAu9/PWBqJmBh3s8nLdNOo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726202AbgCJErA (ORCPT
+        id S1726199AbgCJFAL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 00:47:00 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:56465 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725947AbgCJEq7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 00:46:59 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48c2cb63Dkz9sRN;
-        Tue, 10 Mar 2020 15:46:52 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1583815616;
-        bh=uZVru08ZcwV3CJvUrWNv3wJ5KlB6+idQYNsw8XOiMX8=;
-        h=Date:From:To:Cc:Subject:From;
-        b=j3E9quZB6a/4mO6ssCf/I2vy1BEeYj6G5ISbUtnnguqcmO1/+FI9JbFFZRuL+Zmqd
-         zVfhhO6vos9LcHgTO6DGB7v5ZaniYQXyt+YirFzYuxpfXgcegkAXxu0A08s6NoZVdH
-         ejGtthWxk/cT1ylD2MOwdlmu3Rv3eliCOT4nt6SSJ3zL12s6ALpx0uPugLU2cr/pCG
-         SQhf7yZTSMfr3p/TLXzPV96FSPBQQJ8f1zDcRg1XVC8HNIeOmhIeLK+Hc690bDUSWE
-         VSjGVQ6j2j/7/yqEfEzlX2xGjUz4BDOCaUkRugrteNlRjNhP6lnShXhY+5YzVant8y
-         phXjpUCcN7Auw==
-Date:   Tue, 10 Mar 2020 15:46:51 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Christian Brauner <christian@brauner.io>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Corey Minyard <cminyard@mvista.com>
-Subject: linux-next: manual merge of the userns tree with the pidfd-fixes
- tree
-Message-ID: <20200310154651.27cf84f4@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/f0rP32LNCnRWHOpHRwg.9UW";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        Tue, 10 Mar 2020 01:00:11 -0400
+Received: from conuserg-07.nifty.com ([210.131.2.74]:33188 "EHLO
+        conuserg-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725947AbgCJFAL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 01:00:11 -0400
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-07.nifty.com with ESMTP id 02A4xSXQ010738;
+        Tue, 10 Mar 2020 13:59:29 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com 02A4xSXQ010738
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1583816369;
+        bh=V6MhCPzjyKlx9lFI4EBhh1DtSQKPQCjwx9TAcmzmA5E=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Jo4bm24Zn25X3SKmyeDj3RYsUO9ClF0P0Bvr0nXCsRXVeMD8Fcfk6iFSeivYWfMfu
+         la1nsDkUo3N7AVNZFJbdNMfjoUkBZOIRinOCQhRYqzHbpHeLFTBYgw/m2Ib7ZoOx7a
+         5ODvwlIhVCnWYwylgpv8vAdaiKHN8GJVZbHFf62/nyLQMw2FZ/8AtpGn0n7v6iIGMD
+         ozr96AMkn45SKLE4E1gwxAMpz9B4alJrpaFrcp/FBMuxax/e3RyVE3UofmuCy9XJWY
+         KM3/ND98Wb+gpntv1LVkB4XR93QbE7QwutRrd+UkLHKTD72F3+NgHyCs4c3jULB6iK
+         xUMiQTh0hIyaA==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <masahiroy@kernel.org>
+To:     Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>,
+        linux-xtensa@linux-xtensa.org
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] xtensa: remove meaningless export ccflags-y
+Date:   Tue, 10 Mar 2020 13:59:25 +0900
+Message-Id: <20200310045925.25396-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/f0rP32LNCnRWHOpHRwg.9UW
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+arch/xtensa/boot/Makefile does not define ccflags-y at all.
 
-Hi all,
+Please do not export ccflags-y because it is meant to be effective
+only in the current Makefile.
 
-Today's linux-next merge of the userns tree got a conflict in:
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+---
 
-  kernel/pid.c
+ arch/xtensa/boot/Makefile | 1 -
+ 1 file changed, 1 deletion(-)
 
-between commits:
+diff --git a/arch/xtensa/boot/Makefile b/arch/xtensa/boot/Makefile
+index efb91bfda2b4..1a14d38d9b33 100644
+--- a/arch/xtensa/boot/Makefile
++++ b/arch/xtensa/boot/Makefile
+@@ -14,7 +14,6 @@ HOSTFLAGS	+= -Iarch/$(ARCH)/boot/include
+ 
+ BIG_ENDIAN	:= $(shell echo __XTENSA_EB__ | $(CC) -E - | grep -v "\#")
+ 
+-export ccflags-y
+ export BIG_ENDIAN
+ 
+ subdir-y	:= lib
+-- 
+2.17.1
 
-  b26ebfe12f34 ("pid: Fix error return value in some cases")
-  8deb24dcb89c ("pid: make ENOMEM return value more obvious")
-
-from the pidfd-fixes tree and commit:
-
-  69879c01a0c3 ("proc: Remove the now unnecessary internal mount of proc")
-
-from the userns tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc kernel/pid.c
-index be43122eb876,60820e72634c..000000000000
---- a/kernel/pid.c
-+++ b/kernel/pid.c
-@@@ -247,21 -244,6 +244,16 @@@ struct pid *alloc_pid(struct pid_namesp
-  		tmp =3D tmp->parent;
-  	}
- =20
- +	/*
- +	 * ENOMEM is not the most obvious choice especially for the case
- +	 * where the child subreaper has already exited and the pid
- +	 * namespace denies the creation of any new processes. But ENOMEM
- +	 * is what we have exposed to userspace for a long time and it is
- +	 * documented behavior for pid namespaces. So we can't easily
- +	 * change it even if there were an error code better suited.
- +	 */
- +	retval =3D -ENOMEM;
- +
-- 	if (unlikely(is_child_reaper(pid))) {
-- 		if (pid_ns_prepare_proc(ns))
-- 			goto out_free;
-- 	}
--=20
-  	get_pid_ns(ns);
-  	refcount_set(&pid->count, 1);
-  	for (type =3D 0; type < PIDTYPE_MAX; ++type)
-
---Sig_/f0rP32LNCnRWHOpHRwg.9UW
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5nG7sACgkQAVBC80lX
-0GyY2Qf/QkFdktb8LvpWJPTtCQA0ov3TmxgllsLj8CsccNlidAj4QPHQ5ywWXZ5g
-fQbXiT4eV29TXyTxf5cGR70Fw6lMkjQYpRyM29Ns6qcvKb9A96I7FNAe5I3sb10T
-j8Z1ZCCVCLa+ii8tyGEmUvefHL/3E+JO5PpvoJ9YWTasPTmdSq9Fw1xMp4wjbcc5
-Dt4HV4k27k+6D5c76Tw5Eo3rxEqHe1cTlAslRjMrLxiREPjsgQx4K/BDkpk5LmZd
-wmTig00SnBadnDsJcOC1P3xbd7FZjmED9v/Cz0+JuRcII9+IMaz+3wpcfofog3Ji
-5CCpZzTZt9DbruTmdBUCFu7vXrwjFg==
-=YKmT
------END PGP SIGNATURE-----
-
---Sig_/f0rP32LNCnRWHOpHRwg.9UW--
