@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C4C4C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:58:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59CBEC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:58:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 601402467D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:58:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26DA02468F
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:58:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583845081;
-	bh=F4Lhoeop5jyc/HLHpAGZSESF9WLzwH4clZlIidY28eo=;
+	s=default; t=1583845084;
+	bh=zC3Y1C8HwIOEPRo15lvjJ/967zThZkg6I7D9cZHzu88=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pzVb0QSKzpUBBvCVKhp5T0+S28N7nQuY+zt/Q5WUJt3gwdZ25bkqTn1cQYIoLhk2o
-	 u2PD/fyJKBdLDSFXM08mVEzwGHM0Q2zKcSiafs11gDdKDDut3f5QjcVtZWUFJbjQ+A
-	 hG2XV8pKVH8EZrAgWM4sdcHEGPXqpjUEDM/2oyrw=
+	b=HxoGuhVFGX12nSJrlYEpfYiKXrOaHIfygC8c58alnVwmQrQmhe7uUAyv1RaMr3yV1
+	 tslFR0rMq2H/E3lvEbVbj/TkVygF5Zg8J617semu1ID/lJAnplZqRGyMyex6YxhB0P
+	 PKn/04sWtGSswd5toye/Mt5N3vnJyCuIxIJuvu6o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729855AbgCJM57 (ORCPT
+        id S1727517AbgCJM6D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:57:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37784 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:58:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37842 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729842AbgCJM54 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:57:56 -0400
+        id S1729856AbgCJM57 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:57:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 53A912468E;
-        Tue, 10 Mar 2020 12:57:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D81DE2467D;
+        Tue, 10 Mar 2020 12:57:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845075;
-        bh=F4Lhoeop5jyc/HLHpAGZSESF9WLzwH4clZlIidY28eo=;
+        s=default; t=1583845078;
+        bh=zC3Y1C8HwIOEPRo15lvjJ/967zThZkg6I7D9cZHzu88=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b+WQ9Ih4AzhlXTwZqrmDRaoSKphhcOrQ5ESb/sDIpIBBkSFwjAadmVF1oDU4kJ0hI
-         mbWFP2tKj8Usp4nHJrEAG/2XtKuMBY5i4kU28G3XesODIxJAP7AW6Bs/D1bHEWW5YZ
-         N2+3gvETL5PWrpxGdrgUASqQrZKe7DeLLIdc1cVo=
+        b=yaZnmyVlz44gjCsT8YdOd93M9yq0SnC6d2wbcsQ3LW+IXKUEiFOrmYjHnZqWhondS
+         9Bj/2ONMdnPYrEpYSl/hYKvFEk41cR2Evx1U9XyFO/f+Eyflq4GDCN4wpVL12GL2ei
+         KF/HCGLAwrB5La9HtKPdXxmNk8cy0vaNqdDuwjjY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Guo Ren <guoren@linux.alibaba.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 053/189] csky/smp: Fixup boot failed when CONFIG_SMP
-Date:   Tue, 10 Mar 2020 13:38:10 +0100
-Message-Id: <20200310123644.900655536@linuxfoundation.org>
+Subject: [PATCH 5.5 054/189] csky: Fixup ftrace modify panic
+Date:   Tue, 10 Mar 2020 13:38:11 +0100
+Message-Id: <20200310123645.006298768@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123639.608886314@linuxfoundation.org>
 References: <20200310123639.608886314@linuxfoundation.org>
@@ -61,30 +61,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Guo Ren <guoren@linux.alibaba.com>
 
-[ Upstream commit c9492737b25ca32679ba3163609d938c9abfd508 ]
+[ Upstream commit 359ae00d12589c31cf103894d0f32588d523ca83 ]
 
-If we use a non-ipi-support interrupt controller, it will cause panic here.
-We should let cpu up and work with CONFIG_SMP, when we use a non-ipi intc.
+During ftrace init, linux will replace all function prologues
+(call_mcout) with nops, but it need flush_dcache and
+invalidate_icache to make it work. So flush_cache functions
+couldn't be nested called by ftrace framework.
 
 Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/csky/kernel/smp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/csky/mm/Makefile | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/csky/kernel/smp.c b/arch/csky/kernel/smp.c
-index b753d382e4cef..0bb0954d55709 100644
---- a/arch/csky/kernel/smp.c
-+++ b/arch/csky/kernel/smp.c
-@@ -120,7 +120,7 @@ void __init setup_smp_ipi(void)
- 	int rc;
+diff --git a/arch/csky/mm/Makefile b/arch/csky/mm/Makefile
+index c94ef64810986..efb7ebab342b3 100644
+--- a/arch/csky/mm/Makefile
++++ b/arch/csky/mm/Makefile
+@@ -1,8 +1,10 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ ifeq ($(CONFIG_CPU_HAS_CACHEV2),y)
+ obj-y +=			cachev2.o
++CFLAGS_REMOVE_cachev2.o = $(CC_FLAGS_FTRACE)
+ else
+ obj-y +=			cachev1.o
++CFLAGS_REMOVE_cachev1.o = $(CC_FLAGS_FTRACE)
+ endif
  
- 	if (ipi_irq == 0)
--		panic("%s IRQ mapping failed\n", __func__);
-+		return;
- 
- 	rc = request_percpu_irq(ipi_irq, handle_ipi, "IPI Interrupt",
- 				&ipi_dummy_dev);
+ obj-y +=			dma-mapping.o
 -- 
 2.20.1
 
