@@ -2,118 +2,112 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49773C18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 15:52:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67009C18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 15:54:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F41021D56
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 15:52:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E6CF20578
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 15:54:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fnr9nH/1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726677AbgCJPwr (ORCPT
+        id S1726702AbgCJPyC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 11:52:47 -0400
-Received: from muru.com ([72.249.23.125]:59528 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726426AbgCJPwq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 11:52:46 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 3ED81810A;
-        Tue, 10 Mar 2020 15:53:31 +0000 (UTC)
-Date:   Tue, 10 Mar 2020 08:52:42 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Lokesh Vutla <lokeshvutla@ti.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-        Sekhar Nori <nsekhar@ti.com>, Vignesh R <vigneshr@ti.com>,
-        Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH v2 4/6] pwm: omap-dmtimer: Fix pwm disabling sequence
-Message-ID: <20200310155242.GT37466@atomide.com>
-References: <20200228095651.32464-1-lokeshvutla@ti.com>
- <20200228095651.32464-5-lokeshvutla@ti.com>
- <20200306181443.GJ37466@atomide.com>
- <9129d4fe-a17e-2fa6-764c-6a746fa5096d@ti.com>
- <20200309180123.GP37466@atomide.com>
- <666dbb7a-db98-d16a-ee73-27d353d2a317@ti.com>
+        Tue, 10 Mar 2020 11:54:02 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:32864 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726426AbgCJPyB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 11:54:01 -0400
+Received: by mail-pf1-f196.google.com with SMTP id n7so6679576pfn.0;
+        Tue, 10 Mar 2020 08:54:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=hyrZhGrQSEDWXCf6l1K0WVVemgS8j81vIr9KuEMeNkw=;
+        b=Fnr9nH/1FiSHsgd5I4mASsBjBOAmLtnO9KW8gGJGjtqZ0Ies0iCUFa54FNxkQwMVH8
+         9vozAHc88+mmTFfl0t8MJbh6NYELuNIstZCIwR9xp2lvT0U4DIVD5U27Y45Zt/3JjwLp
+         i/18FPdI/yaUtIiZixGoY4EEBOXox38OvshHlJjNP4TwhQ9IIG0YaTz1gix2tUH36g1P
+         xWot2m6eSJJfsRB6nnLF9GibDnWJba71embpqUTI+7dT02Sn8uD3GrKVmiJPgqcVFssa
+         veqYq0kbeFu/nR8R5BxDg/vflmaADT6Bu4YfAKLhdKQ2e4nuvhxraukxO+555BkJCzpB
+         MpIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=hyrZhGrQSEDWXCf6l1K0WVVemgS8j81vIr9KuEMeNkw=;
+        b=VW055u7mpMrVnyvy3pcO/XLWYg4W6n1SVa52KnW5CzToW2siIvtNuGf7fjgEq3vC7k
+         U70YWN5nHimDkzLPTxZ1Wo7mS1MkKcbVtpaJsEmMbvl+ymyLfwKf0W7BEKUBpwfUnVV1
+         f3xq58TBFbq9XrtGdGIJJcdNezk/VZkOM0jwPffC9Elc8jnmtVOg5JmW//KGHEKmx0gc
+         yJBf/gH0KrGztuE6mNfn/fZ/9qIKWWikruOH6Whj7HPL7aOJf++w4ep9tEWrXRqrTLy1
+         8DUEvk5b+3wLYNmdL2oH+GtsJ2NQVTguyXVknbeH/fWRANlvy6wswzSx/DzIWChdtkJ7
+         0+xQ==
+X-Gm-Message-State: ANhLgQ2DsXUD/1WtDHvLC0yZBxGWu5ZJEkmYyEU3CdSYWZPEJyAM3XBx
+        bxsF2SwlwOy7WpPzTByfE19ued3b
+X-Google-Smtp-Source: ADFU+vsR8/enDWMRGI9zYCByh8vYrAJV/k0ZVXaSFoQmagS/wnBOwBl7rNs8nV0VXWjtxaN1jPTAdQ==
+X-Received: by 2002:a63:7783:: with SMTP id s125mr21230881pgc.214.1583855639885;
+        Tue, 10 Mar 2020 08:53:59 -0700 (PDT)
+Received: from [192.168.86.235] (c-73-241-150-58.hsd1.ca.comcast.net. [73.241.150.58])
+        by smtp.gmail.com with ESMTPSA id z17sm36944540pfk.110.2020.03.10.08.53.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Mar 2020 08:53:58 -0700 (PDT)
+Subject: Re: [PATCH v4 2/2] net: memcg: late association of sock to memcg
+To:     Shakeel Butt <shakeelb@google.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Roman Gushchin <guro@fb.com>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Greg Thelen <gthelen@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        netdev@vger.kernel.org, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200310051606.33121-1-shakeelb@google.com>
+ <20200310051606.33121-2-shakeelb@google.com>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <652106b3-975d-b8bc-ca27-682c0c8d8aa3@gmail.com>
+Date:   Tue, 10 Mar 2020 08:53:56 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <666dbb7a-db98-d16a-ee73-27d353d2a317@ti.com>
+In-Reply-To: <20200310051606.33121-2-shakeelb@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Lokesh Vutla <lokeshvutla@ti.com> [200310 07:06]:
-> Hi Tony,
-> 
-> [...snip...]
-> 
-> >>>>  
-> >>>> +	/*
-> >>>> +	 * Disable auto reload so that the current cycle gets completed and
-> >>>> +	 * then the counter stops.
-> >>>> +	 */
-> >>>>  	mutex_lock(&omap->mutex);
-> >>>> -	omap->pdata->stop(omap->dm_timer);
-> >>>> +	omap->pdata->set_pwm(omap->dm_timer,
-> >>>> +			     pwm_get_polarity(pwm) == PWM_POLARITY_INVERSED,
-> >>>> +			     true, OMAP_TIMER_TRIGGER_OVERFLOW_AND_COMPARE,
-> >>>> +			     false);
-> >>>> +
-> >>>>  	mutex_unlock(&omap->mutex);
-> >>>>  }
-> >>>
-> >>> I'm seeing an issue with this patch where after use something is
-> >>> left on and power consumption stays higher by about 30 mW after
-> >>> use.
-> >>
-> >> Interesting...What is the PWM period and duty cycle in the test case?
-> >> Can you dump the following registers before and after disabling:
-> >> - TLDR
-> >> - TMAR
-> >> - TCLR
-> > 
-> > Here's the state dumped before and after in omap_dm_timer_set_pwm():
-> > 
-> > omap_timer 4803e000.timer: XXX set_pwm before: tldr: fffffeb8 tmar: fffffffe tclr: 00000040
-> > omap_timer 4803e000.timer: XXX set_pwm after: tldr: fffffeb8 tmar: fffffffe tclr: 00001842
-> > omap_timer 4013e000.timer: XXX set_pwm before: tldr: fffffeb8 tmar: fffffffe tclr: 00000040
-> > omap_timer 4013e000.timer: XXX set_pwm after: tldr: fffffeb8 tmar: fffffffe tclr: 00001842
-> > omap_timer 4013e000.timer: XXX set_pwm before: tldr: fffffeb8 tmar: fffffffe tclr: 00001843
-> > omap_timer 4013e000.timer: XXX set_pwm after: tldr: fffffeb8 tmar: fffffffe tclr: 00001841
-> > omap_timer 4803e000.timer: XXX set_pwm before: tldr: fffffeb8 tmar: fffffffe tclr: 00001843
-> > omap_timer 4803e000.timer: XXX set_pwm after: tldr: fffffeb8 tmar: fffffffe tclr: 00001841
-> > 
-> 
-> Looking at the registers:
-> period = 327 *(1000/clk_freq in MHz) ns
-> duty_cycle =  perioid.
-> 
-> I did simulate this behavior on BeagleBoneBlack on timer7. PWM is going down
-> after disabling.
-> 
-> > So looks like the start bit is still enabled after use?
-> 
-> Right, that is expected. The start bit gets disabled automatically once the pwm
-> period completes. This is because auto reload bit is off. That's the main idea
-> of this patch so that PWM period is completed after disabling, else PWM is
-> stopped abruptly.
 
-OK
 
-> Not sure why it is not happening in your case. If you think it is not needed, I
-> can drop this patch and add a limitation saying that PWM gets disabled
-> immediately without completing the current cycle.
+On 3/9/20 10:16 PM, Shakeel Butt wrote:
+> If a TCP socket is allocated in IRQ context or cloned from unassociated
+> (i.e. not associated to a memcg) in IRQ context then it will remain
+> unassociated for its whole life. Almost half of the TCPs created on the
+> system are created in IRQ context, so, memory used by such sockets will
+> not be accounted by the memcg.
+> 
+> This issue is more widespread in cgroup v1 where network memory
+> accounting is opt-in but it can happen in cgroup v2 if the source socket
+> for the cloning was created in root memcg.
+> 
+> To fix the issue, just do the association of the sockets at the accept()
+> time in the process context and then force charge the memory buffer
+> already used and reserved by the socket.
+> 
+> Signed-off-by: Shakeel Butt <shakeelb@google.com>
 
-Could it be that we now have the cpu_pm notifier restore something
-invalid after exiting idle that restarts the counter?
+Reviewed-by: Eric Dumazet <edumazet@google.com>
 
-Regards,
+Thanks !
 
-Tony
