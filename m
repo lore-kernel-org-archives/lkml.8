@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0F01C18E5C
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:01:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCCACC18E7A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:01:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C404C2467D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:01:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE6EA24649
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:01:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583845312;
-	bh=+0bE9AnUUnBHfZymFLJ6v1yRQIvnXg2wN7XdV/kmGbg=;
+	s=default; t=1583845314;
+	bh=r066dt6Ij9pfjakkwrpGOU10oacfiQWN2fwGMx1QBds=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dQOUaZ74vlr7iME74RlEr1pftoklDBJaBOcaRT3TuFS46/LZA4EyUhv5g5BVdP+eh
-	 tlffaKGWygdw7BhW7ltnQOz3nCeq0xc7MNtKp4Hmht3vWV54rTy7QJSTPXTCqr657m
-	 LR3SHbBQ/pktw99LdgBpVUREXxKNl6K5JpOts7aE=
+	b=CtZP8o2XmZitFHx+Kg1dshC/7gnHq6iWR/d1NndsFeldtsXQYUJShgznvZOfj9Vu3
+	 qQZa0FihPvdQOFsr7JJRXLqzco9aJFyoEfGHx2ROLu9jXnAjswm9+RcyhXcur8alvK
+	 SPcGUjk+xNbHLXXkIBjD0POTXGBc7iz7SUAPL4E8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727340AbgCJNBv (ORCPT
+        id S1730341AbgCJNBw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:01:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43198 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:01:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43374 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730301AbgCJNBq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:01:46 -0400
+        id S1730320AbgCJNBu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:01:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 304F0208E4;
-        Tue, 10 Mar 2020 13:01:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3081A208E4;
+        Tue, 10 Mar 2020 13:01:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845304;
-        bh=+0bE9AnUUnBHfZymFLJ6v1yRQIvnXg2wN7XdV/kmGbg=;
+        s=default; t=1583845309;
+        bh=r066dt6Ij9pfjakkwrpGOU10oacfiQWN2fwGMx1QBds=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b0iMold1YFumqyma99OboESNyiShIpMo1x0hwcrPzXIatPh/cMvHC24r0My5pqTwn
-         27GbR1vIRCwAUCT+LavsUwxDRw6COXLLHYhCWiNOsTihHWj2xKxcPU1jbrtdO7XF0f
-         eu/9mE+iyPs02Ny5T683vMALRuxLGfrYSBwLx3OA=
+        b=V1nfBawjzJcTEpEvn/bh3SmgmKqxutNA3/0NXEqf4h/V4EoNQgiqkY37PBi9l7rAv
+         Q3YBeCYqRceaW4I264QS6/+GBNSL98iR2BCa1LQdodraACAQtUR5KdclbSsuM+SBz5
+         dFYz6b1Jzy4bPIbJu0yGw8fXYUnPPPaqCqS9KTxs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= 
+        <amadeuszx.slawinski@linux.intel.com>,
         Cezary Rojewski <cezary.rojewski@intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
         Mark Brown <broonie@kernel.org>
-Subject: [PATCH 5.5 135/189] ASoC: pcm: Fix possible buffer overflow in dpcm state sysfs output
-Date:   Tue, 10 Mar 2020 13:39:32 +0100
-Message-Id: <20200310123653.473786798@linuxfoundation.org>
+Subject: [PATCH 5.5 137/189] ASoC: Intel: Skylake: Fix available clock counter incrementation
+Date:   Tue, 10 Mar 2020 13:39:34 +0100
+Message-Id: <20200310123653.662843187@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123639.608886314@linuxfoundation.org>
 References: <20200310123639.608886314@linuxfoundation.org>
@@ -60,84 +63,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
 
-commit 6c89ffea60aa3b2a33ae7987de1e84bfb89e4c9e upstream.
+commit 8308a09e87d2cb51adb186dc7d5a5c1913fb0758 upstream.
 
-dpcm_show_state() invokes multiple snprintf() calls to concatenate
-formatted strings on the fixed size buffer.  The usage of snprintf()
-is supposed for avoiding the buffer overflow, but it doesn't work as
-expected because snprintf() doesn't return the actual output size but
-the size to be written.
+Incrementation of avail_clk_cnt was incorrectly moved to error path. Put
+it back to success path.
 
-Fix this bug by replacing all snprintf() calls with scnprintf()
-calls.
-
-Fixes: f86dcef87b77 ("ASoC: dpcm: Add debugFS support for DPCM")
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Acked-by: Cezary Rojewski <cezary.rojewski@intel.com>
-Link: https://lore.kernel.org/r/20200218111737.14193-4-tiwai@suse.de
+Fixes: 6ee927f2f01466 ('ASoC: Intel: Skylake: Fix NULL ptr dereference when unloading clk dev')
+Signed-off-by: Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
+Reviewed-by: Cezary Rojewski <cezary.rojewski@intel.com>
+Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Link: https://lore.kernel.org/r/20200224125202.13784-1-amadeuszx.slawinski@linux.intel.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/soc-pcm.c |   16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ sound/soc/intel/skylake/skl-ssp-clk.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/sound/soc/soc-pcm.c
-+++ b/sound/soc/soc-pcm.c
-@@ -3192,16 +3192,16 @@ static ssize_t dpcm_show_state(struct sn
- 	unsigned long flags;
+--- a/sound/soc/intel/skylake/skl-ssp-clk.c
++++ b/sound/soc/intel/skylake/skl-ssp-clk.c
+@@ -384,9 +384,11 @@ static int skl_clk_dev_probe(struct plat
+ 				&clks[i], clk_pdata, i);
  
- 	/* FE state */
--	offset += snprintf(buf + offset, size - offset,
-+	offset += scnprintf(buf + offset, size - offset,
- 			"[%s - %s]\n", fe->dai_link->name,
- 			stream ? "Capture" : "Playback");
- 
--	offset += snprintf(buf + offset, size - offset, "State: %s\n",
-+	offset += scnprintf(buf + offset, size - offset, "State: %s\n",
- 	                dpcm_state_string(fe->dpcm[stream].state));
- 
- 	if ((fe->dpcm[stream].state >= SND_SOC_DPCM_STATE_HW_PARAMS) &&
- 	    (fe->dpcm[stream].state <= SND_SOC_DPCM_STATE_STOP))
--		offset += snprintf(buf + offset, size - offset,
-+		offset += scnprintf(buf + offset, size - offset,
- 				"Hardware Params: "
- 				"Format = %s, Channels = %d, Rate = %d\n",
- 				snd_pcm_format_name(params_format(params)),
-@@ -3209,10 +3209,10 @@ static ssize_t dpcm_show_state(struct sn
- 				params_rate(params));
- 
- 	/* BEs state */
--	offset += snprintf(buf + offset, size - offset, "Backends:\n");
-+	offset += scnprintf(buf + offset, size - offset, "Backends:\n");
- 
- 	if (list_empty(&fe->dpcm[stream].be_clients)) {
--		offset += snprintf(buf + offset, size - offset,
-+		offset += scnprintf(buf + offset, size - offset,
- 				" No active DSP links\n");
- 		goto out;
+ 		if (IS_ERR(data->clk[data->avail_clk_cnt])) {
+-			ret = PTR_ERR(data->clk[data->avail_clk_cnt++]);
++			ret = PTR_ERR(data->clk[data->avail_clk_cnt]);
+ 			goto err_unreg_skl_clk;
+ 		}
++
++		data->avail_clk_cnt++;
  	}
-@@ -3222,16 +3222,16 @@ static ssize_t dpcm_show_state(struct sn
- 		struct snd_soc_pcm_runtime *be = dpcm->be;
- 		params = &dpcm->hw_params;
  
--		offset += snprintf(buf + offset, size - offset,
-+		offset += scnprintf(buf + offset, size - offset,
- 				"- %s\n", be->dai_link->name);
- 
--		offset += snprintf(buf + offset, size - offset,
-+		offset += scnprintf(buf + offset, size - offset,
- 				"   State: %s\n",
- 				dpcm_state_string(be->dpcm[stream].state));
- 
- 		if ((be->dpcm[stream].state >= SND_SOC_DPCM_STATE_HW_PARAMS) &&
- 		    (be->dpcm[stream].state <= SND_SOC_DPCM_STATE_STOP))
--			offset += snprintf(buf + offset, size - offset,
-+			offset += scnprintf(buf + offset, size - offset,
- 				"   Hardware Params: "
- 				"Format = %s, Channels = %d, Rate = %d\n",
- 				snd_pcm_format_name(params_format(params)),
+ 	platform_set_drvdata(pdev, data);
 
 
