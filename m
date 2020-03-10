@@ -2,114 +2,128 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A2DDC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 10:17:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A53BAC18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 10:19:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F21B20727
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 10:17:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="rTixhLAF"
+	by mail.kernel.org (Postfix) with ESMTP id 85E1320727
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 10:19:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726325AbgCJKRR (ORCPT
+        id S1726307AbgCJKTf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 06:17:17 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:39326 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726197AbgCJKRQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 06:17:16 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02AA3Hwr122950;
-        Tue, 10 Mar 2020 10:16:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=7sCznqIL6gIPYAX8P2LFWxeyh1Nnbv7oFLHeKxsEIUc=;
- b=rTixhLAFAddEj2YNGfA06aCY7S2MRrjbXLm3YjhuIoA2imsFhZoVPyGNsfX4KNkfCWR5
- eUKVWQ2EevX1KxHtEisZrI1NptToWsvF3rm+zC7/RsRpIz0Gtt0BFrqGU2vQHEXwWctb
- gUUx7PDL6ldj7jz+3CNHnnnriNnni7ewP/Y+I1EfbhumbazQGkpmz2yvku6iFXrSpjLO
- eS4AybV6OauleVRsWx/Wb9YKKsvwbihyQDMv3UwuUj+OXD7jHDUQN5kHdAYJUYs+YCoE
- JJgk/ZU+pKj1XK5ncEb572bCSZ6xRKJBfa390Q5ZYRLy/LHMbrcInwZoOyBCwdVwzoz+ Xg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2yp7hm11de-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 10 Mar 2020 10:16:47 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02AADDMk001761;
-        Tue, 10 Mar 2020 10:16:47 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 2yp8qmj2hk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 10 Mar 2020 10:16:46 +0000
-Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 02AAGjLG015441;
-        Tue, 10 Mar 2020 10:16:45 GMT
-Received: from [192.168.8.5] (/213.41.92.70)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 10 Mar 2020 03:16:44 -0700
-Subject: Re: [patch part-II V2 03/13] x86/entry/32: Remove unused label
- restore_nocheck
-To:     Thomas Gleixner <tglx@linutronix.de>,
+        Tue, 10 Mar 2020 06:19:35 -0400
+Received: from ns.iliad.fr ([212.27.33.1]:60832 "EHLO ns.iliad.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726164AbgCJKTe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 06:19:34 -0400
+Received: from ns.iliad.fr (localhost [127.0.0.1])
+        by ns.iliad.fr (Postfix) with ESMTP id 3851D20020;
+        Tue, 10 Mar 2020 11:19:33 +0100 (CET)
+Received: from [192.168.108.51] (freebox.vlq16.iliad.fr [213.36.7.13])
+        by ns.iliad.fr (Postfix) with ESMTP id 23F5C1FF7A;
+        Tue, 10 Mar 2020 11:19:33 +0100 (CET)
+Subject: [PATCH v5 1/2] devres: Provide new helper for devm functions
+From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
+To:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rafael Wysocki <rjw@rjwysocki.net>,
+        Suzuki Poulose <suzuki.poulose@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-clk <linux-clk@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
         LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        Brian Gerst <brgerst@gmail.com>,
-        Juergen Gross <jgross@suse.com>,
-        Frederic Weisbecker <frederic@kernel.org>
-References: <20200308222359.370649591@linutronix.de>
- <20200308222609.219366430@linutronix.de>
-From:   Alexandre Chartre <alexandre.chartre@oracle.com>
-Organization: Oracle Corporation
-Message-ID: <cecbe5ac-f2ad-beb8-b724-aae8fa00f501@oracle.com>
-Date:   Tue, 10 Mar 2020 11:16:47 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.0
+References: <e8221bff-3e2a-7607-c5c8-abcf9cebb1b5@free.fr>
+Message-ID: <0b5c5f40-9118-1b87-6cf4-928107ccd20e@free.fr>
+Date:   Tue, 10 Mar 2020 11:15:10 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200308222609.219366430@linutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <e8221bff-3e2a-7607-c5c8-abcf9cebb1b5@free.fr>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9555 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 malwarescore=0 mlxscore=0
- adultscore=0 suspectscore=0 bulkscore=0 spamscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2003100068
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9555 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0
- priorityscore=1501 clxscore=1015 mlxscore=0 impostorscore=0
- mlxlogscore=999 suspectscore=0 phishscore=0 malwarescore=0 adultscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003100068
+X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Tue Mar 10 11:19:33 2020 +0100 (CET)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Provide a simple wrapper for devres_alloc / devres_add.
 
-On 3/8/20 11:24 PM, Thomas Gleixner wrote:
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> ---
->   arch/x86/entry/entry_32.S |    2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
+Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ drivers/base/devres.c  | 28 ++++++++++++++++++++++++++++
+ include/linux/device.h |  3 +++
+ 2 files changed, 31 insertions(+)
 
-Reviewed-by: Alexandre Chartre <alexandre.chartre@oracle.com>
-
-alex.
-
-> 
-> --- a/arch/x86/entry/entry_32.S
-> +++ b/arch/x86/entry/entry_32.S
-> @@ -1091,7 +1091,7 @@ SYM_FUNC_START(entry_INT80_32)
->   	TRACE_IRQS_IRET
->   	SWITCH_TO_ENTRY_STACK
->   	CHECK_AND_APPLY_ESPFIX
-> -.Lrestore_nocheck:
-> +
->   	/* Switch back to user CR3 */
->   	SWITCH_TO_USER_CR3 scratch_reg=%eax
->   
-> 
+diff --git a/drivers/base/devres.c b/drivers/base/devres.c
+index 0bbb328bd17f..b4c18c105f39 100644
+--- a/drivers/base/devres.c
++++ b/drivers/base/devres.c
+@@ -685,6 +685,34 @@ int devres_release_group(struct device *dev, void *id)
+ }
+ EXPORT_SYMBOL_GPL(devres_release_group);
+ 
++/**
++ * devm_add - allocate and register new device resource
++ * @dev: device to add resource to
++ * @func: resource release function
++ * @arg: resource data
++ * @size: resource data size
++ *
++ * Simple wrapper for devres_alloc / devres_add.
++ * Releases the resource if the allocation failed.
++ *
++ * RETURNS:
++ * 0 on success, -ENOMEM otherwise.
++ */
++int devm_add(struct device *dev, dr_release_t func, void *arg, size_t size)
++{
++	void *data = devres_alloc(func, size, GFP_KERNEL);
++
++	if (!data) {
++		func(dev, arg);
++		return -ENOMEM;
++	}
++
++	memcpy(data, arg, size);
++	devres_add(dev, data);
++	return 0;
++}
++EXPORT_SYMBOL_GPL(devm_add);
++
+ /*
+  * Custom devres actions allow inserting a simple function call
+  * into the teadown sequence.
+diff --git a/include/linux/device.h b/include/linux/device.h
+index 0cd7c647c16c..55be3be9b276 100644
+--- a/include/linux/device.h
++++ b/include/linux/device.h
+@@ -247,6 +247,9 @@ void __iomem *devm_of_iomap(struct device *dev,
+ 			    struct device_node *node, int index,
+ 			    resource_size_t *size);
+ 
++int devm_add(struct device *dev, dr_release_t func, void *arg, size_t size);
++#define devm_vadd(dev, func, type, args...) \
++	devm_add(dev, func, &(struct type){args}, sizeof(struct type))
+ /* allows to add/remove a custom action to devres stack */
+ int devm_add_action(struct device *dev, void (*action)(void *), void *data);
+ void devm_remove_action(struct device *dev, void (*action)(void *), void *data);
+-- 
+2.17.1
