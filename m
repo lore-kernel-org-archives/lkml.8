@@ -2,40 +2,54 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6B0FC18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:21:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 760AFC18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:25:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A778208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:21:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5087E2467F
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:25:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583832352;
+	bh=PSPfwum5/x4dNcsftF0CHx3K9wHY9pRGc4cv27myCYc=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=F+92FWxR6/AIwKfMdMjn6lV8I686hJDwZ7jqUNf2Ai8JG0si8pBlZccVjTEJmWjXB
+	 8mrcfYHzLkKFPq4p7APCaRjc6I6o9UErHm4uoOYY27eHXYFGJ+5aNhjqYmx8m/9EmS
+	 J3yiDBTsschi71E4SoT+OSwYln330j4tUqx2UHm4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726369AbgCJJV1 (ORCPT
+        id S1726295AbgCJJZv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 05:21:27 -0400
-Received: from mail.fireflyinternet.com ([109.228.58.192]:49462 "EHLO
-        fireflyinternet.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726202AbgCJJV1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 05:21:27 -0400
-X-Default-Received-SPF: pass (skip=forwardok (res=PASS)) x-ip-name=78.156.65.138;
-Received: from build.alporthouse.com (unverified [78.156.65.138]) 
-        by fireflyinternet.com (Firefly Internet (M1)) with ESMTP id 20505102-1500050 
-        for multiple; Tue, 10 Mar 2020 09:21:20 +0000
-From:   Chris Wilson <chris@chris-wilson.co.uk>
-To:     linux-kernel@vger.kernel.org
-Cc:     intel-gfx@lists.freedesktop.org,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>, stable@vger.kernel.org
-Subject: [PATCH] list: Prevent compiler reloads inside 'safe' list iteration
-Date:   Tue, 10 Mar 2020 09:21:19 +0000
-Message-Id: <20200310092119.14965-1-chris@chris-wilson.co.uk>
-X-Mailer: git-send-email 2.20.1
+        Tue, 10 Mar 2020 05:25:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56908 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726202AbgCJJZu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 05:25:50 -0400
+Received: from localhost (unknown [193.47.165.251])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 80C612051A;
+        Tue, 10 Mar 2020 09:25:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583832350;
+        bh=PSPfwum5/x4dNcsftF0CHx3K9wHY9pRGc4cv27myCYc=;
+        h=From:To:Cc:Subject:Date:From;
+        b=1TSF8fsOWygZ83JJvs6lWxRcq2lcTdrNNpU3RwnzrXuXF0l0SHHWY0eLpwIhSvuLe
+         9avHWLhDV7S9XZ1AHPoX4bCAIDiacRh7TKu67cR49sU6LTImXm/QJGy5AJ4yzbJm9c
+         dun0j/dQIVGbcU9ueaI9DN6egBODRv4gYe8GaJU0=
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Cc:     Leon Romanovsky <leonro@mellanox.com>,
+        Daniel Jurgens <danielj@mellanox.com>,
+        Haggai Eran <haggaie@mellanox.com>,
+        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+        Sean Hefty <sean.hefty@intel.com>
+Subject: [PATCH rdma-next 00/15] Fix locking around cm_id.state in the ib_cm
+Date:   Tue, 10 Mar 2020 11:25:30 +0200
+Message-Id: <20200310092545.251365-1-leon@kernel.org>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -43,129 +57,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Instruct the compiler to read the next element in the list iteration
-once, and that it is not allowed to reload the value from the stale
-element later. This is important as during the course of the safe
-iteration, the stale element may be poisoned (unbeknownst to the
-compiler).
+From: Leon Romanovsky <leonro@mellanox.com>
 
-This helps prevent kcsan warnings over 'unsafe' conduct in releasing the
-list elements during list_for_each_entry_safe() and friends.
+From Jason:
 
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: Randy Dunlap <rdunlap@infradead.org>
-Cc: stable@vger.kernel.org
----
- include/linux/list.h | 50 +++++++++++++++++++++++++++++++-------------
- 1 file changed, 36 insertions(+), 14 deletions(-)
+cm_id.state is a non-atomic value that must always be read and written
+under lock, or while the thread has the only pointer to the cm_id.
 
-diff --git a/include/linux/list.h b/include/linux/list.h
-index 884216db3246..c4d215d02259 100644
---- a/include/linux/list.h
-+++ b/include/linux/list.h
-@@ -536,6 +536,17 @@ static inline void list_splice_tail_init(struct list_head *list,
- #define list_next_entry(pos, member) \
- 	list_entry((pos)->member.next, typeof(*(pos)), member)
- 
-+/**
-+ * list_next_entry_safe - get the next element in list [once]
-+ * @pos:	the type * to cursor
-+ * @member:	the name of the list_head within the struct.
-+ *
-+ * Like list_next_entry() but prevents the compiler from reloading the
-+ * next element.
-+ */
-+#define list_next_entry_safe(pos, member) \
-+	list_entry(READ_ONCE((pos)->member.next), typeof(*(pos)), member)
-+
- /**
-  * list_prev_entry - get the prev element in list
-  * @pos:	the type * to cursor
-@@ -544,6 +555,17 @@ static inline void list_splice_tail_init(struct list_head *list,
- #define list_prev_entry(pos, member) \
- 	list_entry((pos)->member.prev, typeof(*(pos)), member)
- 
-+/**
-+ * list_prev_entry_safe - get the prev element in list [once]
-+ * @pos:	the type * to cursor
-+ * @member:	the name of the list_head within the struct.
-+ *
-+ * Like list_prev_entry() but prevents the compiler from reloading the
-+ * previous element.
-+ */
-+#define list_prev_entry_safe(pos, member) \
-+	list_entry(READ_ONCE((pos)->member.prev), typeof(*(pos)), member)
-+
- /**
-  * list_for_each	-	iterate over a list
-  * @pos:	the &struct list_head to use as a loop cursor.
-@@ -686,9 +708,9 @@ static inline void list_splice_tail_init(struct list_head *list,
-  */
- #define list_for_each_entry_safe(pos, n, head, member)			\
- 	for (pos = list_first_entry(head, typeof(*pos), member),	\
--		n = list_next_entry(pos, member);			\
-+		n = list_next_entry_safe(pos, member);			\
- 	     &pos->member != (head); 					\
--	     pos = n, n = list_next_entry(n, member))
-+	     pos = n, n = list_next_entry_safe(n, member))
- 
- /**
-  * list_for_each_entry_safe_continue - continue list iteration safe against removal
-@@ -700,11 +722,11 @@ static inline void list_splice_tail_init(struct list_head *list,
-  * Iterate over list of given type, continuing after current point,
-  * safe against removal of list entry.
-  */
--#define list_for_each_entry_safe_continue(pos, n, head, member) 		\
--	for (pos = list_next_entry(pos, member), 				\
--		n = list_next_entry(pos, member);				\
--	     &pos->member != (head);						\
--	     pos = n, n = list_next_entry(n, member))
-+#define list_for_each_entry_safe_continue(pos, n, head, member) 	\
-+	for (pos = list_next_entry(pos, member), 			\
-+		n = list_next_entry_safe(pos, member);			\
-+	     &pos->member != (head);					\
-+	     pos = n, n = list_next_entry_safe(n, member))
- 
- /**
-  * list_for_each_entry_safe_from - iterate over list from current point safe against removal
-@@ -716,10 +738,10 @@ static inline void list_splice_tail_init(struct list_head *list,
-  * Iterate over list of given type from current point, safe against
-  * removal of list entry.
-  */
--#define list_for_each_entry_safe_from(pos, n, head, member) 			\
--	for (n = list_next_entry(pos, member);					\
--	     &pos->member != (head);						\
--	     pos = n, n = list_next_entry(n, member))
-+#define list_for_each_entry_safe_from(pos, n, head, member) 		\
-+	for (n = list_next_entry_safe(pos, member);			\
-+	     &pos->member != (head);					\
-+	     pos = n, n = list_next_entry_safe(n, member))
- 
- /**
-  * list_for_each_entry_safe_reverse - iterate backwards over list safe against removal
-@@ -733,9 +755,9 @@ static inline void list_splice_tail_init(struct list_head *list,
-  */
- #define list_for_each_entry_safe_reverse(pos, n, head, member)		\
- 	for (pos = list_last_entry(head, typeof(*pos), member),		\
--		n = list_prev_entry(pos, member);			\
-+		n = list_prev_entry_safe(pos, member);			\
- 	     &pos->member != (head); 					\
--	     pos = n, n = list_prev_entry(n, member))
-+	     pos = n, n = list_prev_entry_safe(n, member))
- 
- /**
-  * list_safe_reset_next - reset a stale list_for_each_entry_safe loop
-@@ -750,7 +772,7 @@ static inline void list_splice_tail_init(struct list_head *list,
-  * completing the current iteration of the loop body.
-  */
- #define list_safe_reset_next(pos, n, member)				\
--	n = list_next_entry(pos, member)
-+	n = list_next_entry_safe(pos, member)
- 
- /*
-  * Double linked lists with a single pointer list head.
--- 
-2.20.1
+Critically, during MAD handling the cm_id.state is used to control when
+MAD handlers can run, and in turn what data they can touch. Without
+locking, an assignment to state can immediately allow concurrent MAD
+handlers to execute, potentially creating a mess.
+
+Several of these cases only risk load/store tearing, but create very
+confusing code. For instance changing the state from IB_CM_IDLE to
+IB_CM_LISTEN doesn't allow any MAD handlers to run in either state, but a
+superficial audit would suggest that it is not locked properly.
+
+This loose methodology has allowed two bugs to creep in. After creating an
+ID the code did not lock the state transition, apparently mistakenly
+assuming that the new ID could not be used concurrently. However, the ID
+is immediately placed in the xarray and so a carefully crafted network
+sequence could trigger races with the unlocked stores.
+
+The main solution to many of these problems is to use the xarray to create
+a two stage add - the first reserves the ID and the second publishes the
+pointer. The second stage is either omitted entirely or moved after the
+newly created ID is setup.
+
+Where it is trivial to do so other places directly put the state
+manipulation under lock, or add an assertion that it is, in fact, under
+lock.
+
+This also removes a number of places where the state is being read under
+lock, then the lock dropped, reacquired and state tested again.
+
+There remain other issues related to missing locking on cm_id data.
+
+Thanks
+
+------------------------------------------------------------------------
+It is based on rdma-next + rdma-rc patch c14dfddbd869
+("RMDA/cm: Fix missing ib_cm_destroy_id() in ib_cm_insert_listen()")
+
+Jason Gunthorpe (15):
+  RDMA/cm: Fix ordering of xa_alloc_cyclic() in ib_create_cm_id()
+  RDMA/cm: Fix checking for allowed duplicate listens
+  RDMA/cm: Remove a race freeing timewait_info
+  RDMA/cm: Make the destroy_id flow more robust
+  RDMA/cm: Simplify establishing a listen cm_id
+  RDMA/cm: Read id.state under lock when doing pr_debug()
+  RDMA/cm: Make it clear that there is no concurrency in
+    cm_sidr_req_handler()
+  RDMA/cm: Make it clearer how concurrency works in cm_req_handler()
+  RDMA/cm: Add missing locking around id.state in cm_dup_req_handler
+  RDMA/cm: Add some lockdep assertions for cm_id_priv->lock
+  RDMA/cm: Allow ib_send_cm_dreq() to be done under lock
+  RDMA/cm: Allow ib_send_cm_drep() to be done under lock
+  RDMA/cm: Allow ib_send_cm_rej() to be done under lock
+  RDMA/cm: Allow ib_send_cm_sidr_rep() to be done under lock
+  RDMA/cm: Make sure the cm_id is in the IB_CM_IDLE state in destroy
+
+ drivers/infiniband/core/cm.c | 732 ++++++++++++++++++++---------------
+ 1 file changed, 420 insertions(+), 312 deletions(-)
+
+--
+2.24.1
 
