@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5DF1C18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:15:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD442C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:15:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9572F208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:15:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9219C208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:15:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583846100;
-	bh=WpjhtepsHcS+tj0gWRcVw2itJKBHW95e/0vrZBov4tM=;
+	s=default; t=1583846103;
+	bh=u5+Vg2yfAlzpgILsxMkOEolNoK2PS64jZe6xICgGDfI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qW99wBbhDHCFLYm22+p0DT3ApO3llteOhZOwKhqESfhNupslY2eUouE4h9GlGEoMQ
-	 Uma9HQffiGhVqwNcPDqOpn11FFo8Td6cGh63oTj35IN7dVN4qy7INEZBt9hRAzEsxa
-	 ASP9HLR26bKSPBORaEksUDRx7Xuq2HXrrsKZ+Yh8=
+	b=WydnQk3A9wwmEuu3FEbIH96l1AozlCkhMYMii2SKE/BtznPNPHUXZWzfzQhAiBRq7
+	 9pF7vtXpHbUX3ZUeaIP81vhawJ5rRJoDBVaJvayx9quI4qmbADYbeH0Xb7XRLhEXRN
+	 ZyW9ZrF2dKiowC/PITR7rldfnpsOyPmSKDYsrNcI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731964AbgCJNO7 (ORCPT
+        id S1731971AbgCJNPC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:14:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39110 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:15:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39212 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728182AbgCJNO5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:14:57 -0400
+        id S1731956AbgCJNO6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:14:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E9E724691;
-        Tue, 10 Mar 2020 13:14:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B6A47208E4;
+        Tue, 10 Mar 2020 13:14:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583846095;
-        bh=WpjhtepsHcS+tj0gWRcVw2itJKBHW95e/0vrZBov4tM=;
+        s=default; t=1583846098;
+        bh=u5+Vg2yfAlzpgILsxMkOEolNoK2PS64jZe6xICgGDfI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WHyGa6rO5f/T+PC9Y4PqAVqdE0c3P0W3DlB/C/82GNs+xFtXDV6tplYc6SnyhlEdI
-         YmdQoO3dtLE/N6zqt+6Wzx4qDf4115R89HLKRJuUeSBb1LleY5z48C8AN3090GTBXI
-         4OJLWK4HBDDuTKedGTl8iGni1BOfE1M8lvt6YaZg=
+        b=SLrJJPese5Ry0URLKJ/xF/gkFwoHVJ2nXQuA5QVMVziqFiSt+4r8prwWqrIIEd5Z6
+         T5KPSeaOB2wTUw7Vjzg3L19I1avqsX7ICLHB1S0BDaKs579rZxgVgDszJKgnsEpcTk
+         gFm/L1fbUg5lcmdC1ajjoC85aOIiJpnPgI5WgPS0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Maxime Ripard <mripard@kernel.org>,
-        Jernej Skrabec <jernej.skrabec@siol.net>
-Subject: [PATCH 4.19 68/86] drm/sun4i: Fix DE2 VI layer format support
-Date:   Tue, 10 Mar 2020 13:45:32 +0100
-Message-Id: <20200310124534.451678532@linuxfoundation.org>
+        stable@vger.kernel.org, Deepak Ukey <deepak.ukey@microchip.com>,
+        Viswas G <Viswas.G@microchip.com>,
+        Jack Wang <jinpu.wang@cloud.ionos.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.19 86/86] scsi: pm80xx: Fixed kernel panic during error recovery for SATA drive
+Date:   Tue, 10 Mar 2020 13:45:50 +0100
+Message-Id: <20200310124535.513334751@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310124530.808338541@linuxfoundation.org>
 References: <20200310124530.808338541@linuxfoundation.org>
@@ -59,168 +61,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jernej Skrabec <jernej.skrabec@siol.net>
+From: Deepak Ukey <deepak.ukey@microchip.com>
 
-commit 20896ef137340e9426cf322606f764452f5eb960 upstream.
+commit 196ba6629cf95e51403337235d09742fcdc3febd upstream.
 
-DE2 VI layer doesn't support blending which means alpha channel is
-ignored. Replace all formats with alpha with "don't care" (X) channel.
+Disabling the SATA drive interface cause kernel panic. When the drive
+Interface is disabled, device should be deregistered after aborting all
+pending I/Os. Also changed the port recovery timeout to 10000 ms for
+PM8006 controller.
 
-Fixes: 7480ba4d7571 ("drm/sun4i: Add support for DE2 VI planes")
-Acked-by: Maxime Ripard <mripard@kernel.org>
-Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200224173901.174016-4-jernej.skrabec@siol.net
+Signed-off-by: Deepak Ukey <deepak.ukey@microchip.com>
+Signed-off-by: Viswas G <Viswas.G@microchip.com>
+Reviewed-by: Jack Wang <jinpu.wang@cloud.ionos.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/sun4i/sun8i_mixer.c    |   56 +++++++++++++++++++++++++++++++++
- drivers/gpu/drm/sun4i/sun8i_vi_layer.c |   22 ++++++------
- 2 files changed, 67 insertions(+), 11 deletions(-)
+ drivers/scsi/pm8001/pm8001_sas.c |    6 +++++-
+ drivers/scsi/pm8001/pm80xx_hwi.c |    2 +-
+ drivers/scsi/pm8001/pm80xx_hwi.h |    2 ++
+ 3 files changed, 8 insertions(+), 2 deletions(-)
 
---- a/drivers/gpu/drm/sun4i/sun8i_mixer.c
-+++ b/drivers/gpu/drm/sun4i/sun8i_mixer.c
-@@ -111,46 +111,102 @@ static const struct de2_fmt_info de2_for
- 		.csc = SUN8I_CSC_MODE_OFF,
- 	},
- 	{
-+		/* for DE2 VI layer which ignores alpha */
-+		.drm_fmt = DRM_FORMAT_XRGB4444,
-+		.de2_fmt = SUN8I_MIXER_FBFMT_ARGB4444,
-+		.rgb = true,
-+		.csc = SUN8I_CSC_MODE_OFF,
-+	},
-+	{
- 		.drm_fmt = DRM_FORMAT_ABGR4444,
- 		.de2_fmt = SUN8I_MIXER_FBFMT_ABGR4444,
- 		.rgb = true,
- 		.csc = SUN8I_CSC_MODE_OFF,
- 	},
- 	{
-+		/* for DE2 VI layer which ignores alpha */
-+		.drm_fmt = DRM_FORMAT_XBGR4444,
-+		.de2_fmt = SUN8I_MIXER_FBFMT_ABGR4444,
-+		.rgb = true,
-+		.csc = SUN8I_CSC_MODE_OFF,
-+	},
-+	{
- 		.drm_fmt = DRM_FORMAT_RGBA4444,
- 		.de2_fmt = SUN8I_MIXER_FBFMT_RGBA4444,
- 		.rgb = true,
- 		.csc = SUN8I_CSC_MODE_OFF,
- 	},
- 	{
-+		/* for DE2 VI layer which ignores alpha */
-+		.drm_fmt = DRM_FORMAT_RGBX4444,
-+		.de2_fmt = SUN8I_MIXER_FBFMT_RGBA4444,
-+		.rgb = true,
-+		.csc = SUN8I_CSC_MODE_OFF,
-+	},
-+	{
- 		.drm_fmt = DRM_FORMAT_BGRA4444,
- 		.de2_fmt = SUN8I_MIXER_FBFMT_BGRA4444,
- 		.rgb = true,
- 		.csc = SUN8I_CSC_MODE_OFF,
- 	},
- 	{
-+		/* for DE2 VI layer which ignores alpha */
-+		.drm_fmt = DRM_FORMAT_BGRX4444,
-+		.de2_fmt = SUN8I_MIXER_FBFMT_BGRA4444,
-+		.rgb = true,
-+		.csc = SUN8I_CSC_MODE_OFF,
-+	},
-+	{
- 		.drm_fmt = DRM_FORMAT_ARGB1555,
- 		.de2_fmt = SUN8I_MIXER_FBFMT_ARGB1555,
- 		.rgb = true,
- 		.csc = SUN8I_CSC_MODE_OFF,
- 	},
- 	{
-+		/* for DE2 VI layer which ignores alpha */
-+		.drm_fmt = DRM_FORMAT_XRGB1555,
-+		.de2_fmt = SUN8I_MIXER_FBFMT_ARGB1555,
-+		.rgb = true,
-+		.csc = SUN8I_CSC_MODE_OFF,
-+	},
-+	{
- 		.drm_fmt = DRM_FORMAT_ABGR1555,
- 		.de2_fmt = SUN8I_MIXER_FBFMT_ABGR1555,
- 		.rgb = true,
- 		.csc = SUN8I_CSC_MODE_OFF,
- 	},
- 	{
-+		/* for DE2 VI layer which ignores alpha */
-+		.drm_fmt = DRM_FORMAT_XBGR1555,
-+		.de2_fmt = SUN8I_MIXER_FBFMT_ABGR1555,
-+		.rgb = true,
-+		.csc = SUN8I_CSC_MODE_OFF,
-+	},
-+	{
- 		.drm_fmt = DRM_FORMAT_RGBA5551,
- 		.de2_fmt = SUN8I_MIXER_FBFMT_RGBA5551,
- 		.rgb = true,
- 		.csc = SUN8I_CSC_MODE_OFF,
- 	},
- 	{
-+		/* for DE2 VI layer which ignores alpha */
-+		.drm_fmt = DRM_FORMAT_RGBX5551,
-+		.de2_fmt = SUN8I_MIXER_FBFMT_RGBA5551,
-+		.rgb = true,
-+		.csc = SUN8I_CSC_MODE_OFF,
-+	},
-+	{
- 		.drm_fmt = DRM_FORMAT_BGRA5551,
- 		.de2_fmt = SUN8I_MIXER_FBFMT_BGRA5551,
- 		.rgb = true,
- 		.csc = SUN8I_CSC_MODE_OFF,
-+	},
-+	{
-+		/* for DE2 VI layer which ignores alpha */
-+		.drm_fmt = DRM_FORMAT_BGRX5551,
-+		.de2_fmt = SUN8I_MIXER_FBFMT_BGRA5551,
-+		.rgb = true,
-+		.csc = SUN8I_CSC_MODE_OFF,
- 	},
- 	{
- 		.drm_fmt = DRM_FORMAT_UYVY,
---- a/drivers/gpu/drm/sun4i/sun8i_vi_layer.c
-+++ b/drivers/gpu/drm/sun4i/sun8i_vi_layer.c
-@@ -330,26 +330,26 @@ static const struct drm_plane_funcs sun8
- };
+--- a/drivers/scsi/pm8001/pm8001_sas.c
++++ b/drivers/scsi/pm8001/pm8001_sas.c
+@@ -866,6 +866,8 @@ static void pm8001_dev_gone_notify(struc
+ 			spin_unlock_irqrestore(&pm8001_ha->lock, flags);
+ 			pm8001_exec_internal_task_abort(pm8001_ha, pm8001_dev ,
+ 				dev, 1, 0);
++			while (pm8001_dev->running_req)
++				msleep(20);
+ 			spin_lock_irqsave(&pm8001_ha->lock, flags);
+ 		}
+ 		PM8001_CHIP_DISP->dereg_dev_req(pm8001_ha, device_id);
+@@ -1238,8 +1240,10 @@ int pm8001_abort_task(struct sas_task *t
+ 			PM8001_MSG_DBG(pm8001_ha,
+ 				pm8001_printk("Waiting for Port reset\n"));
+ 			wait_for_completion(&completion_reset);
+-			if (phy->port_reset_status)
++			if (phy->port_reset_status) {
++				pm8001_dev_gone_notify(dev);
+ 				goto out;
++			}
  
- /*
-- * While all RGB formats are supported, VI planes don't support
-- * alpha blending, so there is no point having formats with alpha
-- * channel if their opaque analog exist.
-+ * While DE2 VI layer supports same RGB formats as UI layer, alpha
-+ * channel is ignored. This structure lists all unique variants
-+ * where alpha channel is replaced with "don't care" (X) channel.
-  */
- static const u32 sun8i_vi_layer_formats[] = {
--	DRM_FORMAT_ABGR1555,
--	DRM_FORMAT_ABGR4444,
--	DRM_FORMAT_ARGB1555,
--	DRM_FORMAT_ARGB4444,
- 	DRM_FORMAT_BGR565,
- 	DRM_FORMAT_BGR888,
--	DRM_FORMAT_BGRA5551,
--	DRM_FORMAT_BGRA4444,
-+	DRM_FORMAT_BGRX4444,
-+	DRM_FORMAT_BGRX5551,
- 	DRM_FORMAT_BGRX8888,
- 	DRM_FORMAT_RGB565,
- 	DRM_FORMAT_RGB888,
--	DRM_FORMAT_RGBA4444,
--	DRM_FORMAT_RGBA5551,
-+	DRM_FORMAT_RGBX4444,
-+	DRM_FORMAT_RGBX5551,
- 	DRM_FORMAT_RGBX8888,
-+	DRM_FORMAT_XBGR1555,
-+	DRM_FORMAT_XBGR4444,
- 	DRM_FORMAT_XBGR8888,
-+	DRM_FORMAT_XRGB1555,
-+	DRM_FORMAT_XRGB4444,
- 	DRM_FORMAT_XRGB8888,
+ 			/*
+ 			 * 4. SATA Abort ALL
+--- a/drivers/scsi/pm8001/pm80xx_hwi.c
++++ b/drivers/scsi/pm8001/pm80xx_hwi.c
+@@ -604,7 +604,7 @@ static void update_main_config_table(str
+ 		pm8001_ha->main_cfg_tbl.pm80xx_tbl.port_recovery_timer &=
+ 					0x0000ffff;
+ 		pm8001_ha->main_cfg_tbl.pm80xx_tbl.port_recovery_timer |=
+-					0x140000;
++					CHIP_8006_PORT_RECOVERY_TIMEOUT;
+ 	}
+ 	pm8001_mw32(address, MAIN_PORT_RECOVERY_TIMER,
+ 			pm8001_ha->main_cfg_tbl.pm80xx_tbl.port_recovery_timer);
+--- a/drivers/scsi/pm8001/pm80xx_hwi.h
++++ b/drivers/scsi/pm8001/pm80xx_hwi.h
+@@ -228,6 +228,8 @@
+ #define SAS_MAX_AIP                     0x200000
+ #define IT_NEXUS_TIMEOUT       0x7D0
+ #define PORT_RECOVERY_TIMEOUT  ((IT_NEXUS_TIMEOUT/100) + 30)
++/* Port recovery timeout, 10000 ms for PM8006 controller */
++#define CHIP_8006_PORT_RECOVERY_TIMEOUT 0x640000
  
- 	DRM_FORMAT_NV16,
+ #ifdef __LITTLE_ENDIAN_BITFIELD
+ struct sas_identify_frame_local {
 
 
