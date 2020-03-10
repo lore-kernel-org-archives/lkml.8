@@ -7,21 +7,21 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC2A9C18E5C
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:13:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E56D6C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:13:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF58424681
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:13:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6B3E2467F
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:13:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726872AbgCJJNV (ORCPT
+        id S1726893AbgCJJN0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 05:13:21 -0400
-Received: from 8bytes.org ([81.169.241.247]:50500 "EHLO theia.8bytes.org"
+        Tue, 10 Mar 2020 05:13:26 -0400
+Received: from 8bytes.org ([81.169.241.247]:50518 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726461AbgCJJMg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 05:12:36 -0400
+        id S1726443AbgCJJMf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 05:12:35 -0400
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id CD11C768; Tue, 10 Mar 2020 10:12:32 +0100 (CET)
+        id 6C468608; Tue, 10 Mar 2020 10:12:32 +0100 (CET)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     iommu@lists.linux-foundation.org
 Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
@@ -40,9 +40,9 @@ Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
         Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 06/15] iommu: Move iommu_fwspec to struct dev_iommu
-Date:   Tue, 10 Mar 2020 10:12:20 +0100
-Message-Id: <20200310091229.29830-7-joro@8bytes.org>
+Subject: [PATCH 04/15] iommu/tegra-gart: Remove direct access of dev->iommu_fwspec
+Date:   Tue, 10 Mar 2020 10:12:18 +0100
+Message-Id: <20200310091229.29830-5-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200310091229.29830-1-joro@8bytes.org>
 References: <20200310091229.29830-1-joro@8bytes.org>
@@ -53,85 +53,27 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Move the iommu_fwspec pointer in struct device into struct dev_iommu.
-This is a step in the effort to reduce the iommu related pointers in
-struct device to one.
+Use the accessor functions instead of directly dereferencing
+dev->iommu_fwspec.
 
-Tested-by: Will Deacon <will@kernel.org> # arm-smmu
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- drivers/iommu/iommu.c  |  3 +++
- include/linux/device.h |  1 -
- include/linux/iommu.h  | 12 ++++++++----
- 3 files changed, 11 insertions(+), 5 deletions(-)
+ drivers/iommu/tegra-gart.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-index beac2ef063dd..826a67ba247f 100644
---- a/drivers/iommu/iommu.c
-+++ b/drivers/iommu/iommu.c
-@@ -2405,6 +2405,9 @@ int iommu_fwspec_init(struct device *dev, struct fwnode_handle *iommu_fwnode,
- 	if (fwspec)
- 		return ops == fwspec->ops ? 0 : -EINVAL;
- 
-+	if (!dev_iommu_get(dev))
-+		return -ENOMEM;
-+
- 	fwspec = kzalloc(sizeof(*fwspec), GFP_KERNEL);
- 	if (!fwspec)
- 		return -ENOMEM;
-diff --git a/include/linux/device.h b/include/linux/device.h
-index 405a8f11bec1..ca29c39a6480 100644
---- a/include/linux/device.h
-+++ b/include/linux/device.h
-@@ -613,7 +613,6 @@ struct device {
- 
- 	void	(*release)(struct device *dev);
- 	struct iommu_group	*iommu_group;
--	struct iommu_fwspec	*iommu_fwspec;
- 	struct dev_iommu	*iommu;
- 
- 	bool			offline_disabled:1;
-diff --git a/include/linux/iommu.h b/include/linux/iommu.h
-index 1c9fa5c1174b..f5edc21a644d 100644
---- a/include/linux/iommu.h
-+++ b/include/linux/iommu.h
-@@ -368,14 +368,15 @@ struct iommu_fault_param {
-  * struct dev_iommu - Collection of per-device IOMMU data
-  *
-  * @fault_param: IOMMU detected device fault reporting data
-+ * @fwspec:	 IOMMU fwspec data
-  *
-  * TODO: migrate other per device data pointers under iommu_dev_data, e.g.
-  *	struct iommu_group	*iommu_group;
-- *	struct iommu_fwspec	*iommu_fwspec;
-  */
- struct dev_iommu {
- 	struct mutex lock;
--	struct iommu_fault_param *fault_param;
-+	struct iommu_fault_param	*fault_param;
-+	struct iommu_fwspec		*fwspec;
- };
- 
- int  iommu_device_register(struct iommu_device *iommu);
-@@ -614,13 +615,16 @@ const struct iommu_ops *iommu_ops_from_fwnode(struct fwnode_handle *fwnode);
- 
- static inline struct iommu_fwspec *dev_iommu_fwspec_get(struct device *dev)
+diff --git a/drivers/iommu/tegra-gart.c b/drivers/iommu/tegra-gart.c
+index 3fb7ba72507d..db6559e8336f 100644
+--- a/drivers/iommu/tegra-gart.c
++++ b/drivers/iommu/tegra-gart.c
+@@ -247,7 +247,7 @@ static int gart_iommu_add_device(struct device *dev)
  {
--	return dev->iommu_fwspec;
-+	if (dev->iommu)
-+		return dev->iommu->fwspec;
-+	else
-+		return NULL;
- }
+ 	struct iommu_group *group;
  
- static inline void dev_iommu_fwspec_set(struct device *dev,
- 					struct iommu_fwspec *fwspec)
- {
--	dev->iommu_fwspec = fwspec;
-+	dev->iommu->fwspec = fwspec;
- }
+-	if (!dev->iommu_fwspec)
++	if (!dev_iommu_fwspec_get(dev))
+ 		return -ENODEV;
  
- int iommu_probe_device(struct device *dev);
+ 	group = iommu_group_get_for_dev(dev);
 -- 
 2.17.1
 
