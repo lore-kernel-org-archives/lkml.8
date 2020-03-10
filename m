@@ -2,147 +2,130 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10E5DC10F25
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 02:32:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D35FC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 02:32:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E69BB20728
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 02:32:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 322CE2465A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 02:32:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726729AbgCJCcE (ORCPT
+        id S1726757AbgCJCcn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 22:32:04 -0400
-Received: from foss.arm.com ([217.140.110.172]:59254 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726464AbgCJCcD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 22:32:03 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C538730E;
-        Mon,  9 Mar 2020 19:32:02 -0700 (PDT)
-Received: from [10.163.1.203] (unknown [10.163.1.203])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E46843F67D;
-        Mon,  9 Mar 2020 19:31:53 -0700 (PDT)
-Subject: Re: [PATCH V15] mm/debug: Add tests validating architecture page
- table helpers
-To:     Christophe Leroy <christophe.leroy@c-s.fr>, Qian Cai <cai@lca.pw>
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        linux-snps-arc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-riscv@lists.infradead.org, x86@kernel.org,
-        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <61250cdc-f80b-2e50-5168-2ec67ec6f1e6@arm.com>
- <CEEAD95E-D468-4C58-A65B-7E8AED91168A@lca.pw>
- <a45834bc-e6f2-ac21-de9e-1aff67d12797@arm.com>
- <c40d907a-b64b-ae0d-e58f-33dddf0e8edc@c-s.fr>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <2d950d8c-4b23-741e-591f-e22e857c0755@arm.com>
-Date:   Tue, 10 Mar 2020 08:01:51 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Mon, 9 Mar 2020 22:32:43 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:55576 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726450AbgCJCcm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 22:32:42 -0400
+Received: from [10.130.0.70] (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9AxJuoc_GZe9QYZAA--.37S3;
+        Tue, 10 Mar 2020 10:32:04 +0800 (CST)
+Subject: =?UTF-8?Q?Re:_=e5=9b=9e=e5=a4=8d:[PATCH_1/6]_PCI:_Add_Loongson_vend?=
+ =?UTF-8?Q?or_ID_and_7A1000_device_IDs?=
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+References: <1583742206-29163-1-git-send-email-yangtiezhu@loongson.cn>
+ <1583742206-29163-2-git-send-email-yangtiezhu@loongson.cn>
+ <170be7ca00e.133ea84fa2305.7803335422925759322@flygoat.com>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        linux-mips <linux-mips@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        linux-ide <linux-ide@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Xuefeng Li <lixuefeng@loongson.cn>
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <2ba6de2e-7880-d322-a0f6-5cea2647ea50@loongson.cn>
+Date:   Tue, 10 Mar 2020 10:31:56 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 MIME-Version: 1.0
-In-Reply-To: <c40d907a-b64b-ae0d-e58f-33dddf0e8edc@c-s.fr>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <170be7ca00e.133ea84fa2305.7803335422925759322@flygoat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: AQAAf9AxJuoc_GZe9QYZAA--.37S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7CF18Cw45KrWrZFW5WFyrCrg_yoW8uF4Dpr
+        10vFs3KFs7trWfZ3Z2qrn8GrZ3JFs8tw1UuFya9r45JFn3Xw18GrnFyr45CrW2qrsxX3yx
+        Zr1qk3y3CwnxtwUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUB014x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+        6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr
+        1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv
+        7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r
+        1j6r4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
+        n2kIc2xKxwCYjI0SjxkI62AI1cAE67vIY487MxkIecxEwVAFwVW8JwCF04k20xvY0x0EwI
+        xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
+        Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
+        IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k2
+        6cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x
+        0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjfUF3kuDUUUU
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 03/09/2020 04:50 PM, Jiaxun Yang wrote:
+>   ---- 在 星期一, 2020-03-09 16:23:21 Tiezhu Yang <yangtiezhu@loongson.cn> 撰写 ----
+>   > Add the Loongson vendor ID and 7A1000 device IDs to pci_ids.h
+>   > to be used by the controller driver in the future.
+>   >
+>   > The Loongson IDs can be found at the following link:
+>   > https://git.kernel.org/pub/scm/utils/pciutils/pciutils.git/tree/pci.ids
+>   >
+>   > Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+>   > ---
+>   >  include/linux/pci_ids.h | 18 ++++++++++++++++++
+>   >  1 file changed, 18 insertions(+)
+>   >
+>   > diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+>   > index 352c0d7..0125ab4 100644
+>   > --- a/include/linux/pci_ids.h
+>   > +++ b/include/linux/pci_ids.h
+>   > @@ -3113,4 +3113,22 @@
+>   >
+>   >  #define PCI_VENDOR_ID_NCUBE        0x10ff
+>   >
+>   > +#define PCI_VENDOR_ID_LOONGSON            0x0014
+>   > +#define PCI_DEVICE_ID_LOONGSON_7A1000_HT    0x7a00
+>   > +#define PCI_DEVICE_ID_LOONGSON_7A1000_APB    0x7a02
+>   > +#define PCI_DEVICE_ID_LOONGSON_7A1000_GMAC    0x7a03
+>   > +#define PCI_DEVICE_ID_LOONGSON_7A1000_OTG    0x7a04
+>   > +#define PCI_DEVICE_ID_LOONGSON_7A1000_DC    0x7a06
+>   > +#define PCI_DEVICE_ID_LOONGSON_7A1000_HDA    0x7a07
+>   > +#define PCI_DEVICE_ID_LOONGSON_7A1000_SATA    0x7a08
+>   > +#define PCI_DEVICE_ID_LOONGSON_7A1000_PCIE_X1    0x7a09
+>   > +#define PCI_DEVICE_ID_LOONGSON_7A1000_SPI    0x7a0b
+>   > +#define PCI_DEVICE_ID_LOONGSON_7A1000_LPC    0x7a0c
+>   > +#define PCI_DEVICE_ID_LOONGSON_7A1000_DMA    0x7a0f
+>   > +#define PCI_DEVICE_ID_LOONGSON_7A1000_EHCI    0x7a14
+>   > +#define PCI_DEVICE_ID_LOONGSON_7A1000_GPU    0x7a15
+>   > +#define PCI_DEVICE_ID_LOONGSON_7A1000_PCIE_X4    0x7a19
+>   > +#define PCI_DEVICE_ID_LOONGSON_7A1000_OHCI    0x7a24
+>   > +#define PCI_DEVICE_ID_LOONGSON_7A1000_PCIE_X8    0x7a29
+>
+> Devices IDs are unlikely to be reused by mutiple subsystems, so probably we don't need
+> to add them here?
 
+Hi Jiaxun,
 
-On 03/07/2020 12:35 PM, Christophe Leroy wrote:
-> 
-> 
-> Le 07/03/2020 à 01:56, Anshuman Khandual a écrit :
->>
->>
->> On 03/07/2020 06:04 AM, Qian Cai wrote:
->>>
->>>
->>>> On Mar 6, 2020, at 7:03 PM, Anshuman Khandual <Anshuman.Khandual@arm.com> wrote:
->>>>
->>>> Hmm, set_pte_at() function is not preferred here for these tests. The idea
->>>> is to avoid or atleast minimize TLB/cache flushes triggered from these sort
->>>> of 'static' tests. set_pte_at() is platform provided and could/might trigger
->>>> these flushes or some other platform specific synchronization stuff. Just
->>>
->>> Why is that important for this debugging option?
->>
->> Primarily reason is to avoid TLB/cache flush instructions on the system
->> during these tests that only involve transforming different page table
->> level entries through helpers. Unless really necessary, why should it
->> emit any TLB/cache flush instructions ?
-> 
-> What's the problem with thoses flushes ?
-> 
->>
->>>
->>>> wondering is there specific reason with respect to the soft lock up problem
->>>> making it necessary to use set_pte_at() rather than a simple WRITE_ONCE() ?
->>>
->>> Looks at the s390 version of set_pte_at(), it has this comment,
->>> vmaddr);
->>>
->>> /*
->>>   * Certain architectures need to do special things when PTEs
->>>   * within a page table are directly modified.  Thus, the following
->>>   * hook is made available.
->>>   */
->>>
->>> I can only guess that powerpc  could be the same here.
->>
->> This comment is present in multiple platforms while defining set_pte_at().
->> Is not 'barrier()' here alone good enough ? Else what exactly set_pte_at()
->> does as compared to WRITE_ONCE() that avoids the soft lock up, just trying
->> to understand.
->>
-> 
-> 
-> Argh ! I didn't realise that you were writing directly into the page tables. When it works, that's only by chance I guess.
-> 
-> To properly set the page table entries, set_pte_at() has to be used:
-> - On powerpc 8xx, with 16k pages, the page table entry must be copied four times. set_pte_at() does it, WRITE_ONCE() doesn't.
-> - On powerpc book3s/32 (hash MMU), the flag _PAGE_HASHPTE must be preserved among writes. set_pte_at() preserves it, WRITE_ONCE() doesn't.
-> 
-> set_pte_at() also does a few other mandatory things, like calling pte_mkpte()
-> 
-> So, the WRITE_ONCE() must definitely become a set_pte_at()
+I think it is better to define the device IDs in pci_ids.h,
+otherwise it seems a little disorganized.
 
-Sure, will do. These are part of the clear tests that populates a given
-entry with a non zero value before clearing and testing it with pxx_none().
-In that context, WRITE_ONCE() seemed sufficient. But pte_clear() might be
-closely tied with proper page table entry update and hence a preceding
-set_pte_at() will be better.
+Thanks,
 
-There are still more WRITE_ONCE() for other page table levels during these
-clear tests. set_pmd_at() and set_pud_at() are defined on platforms that
-support (and enable) THP and PUD based THP respectively. Hence they could
-not be used for clear tests as remaining helpers pmd_clear(), pud_clear(),
-p4d_clear() and pgd_clear() still need to be validated with or without
-THP support and enablement. We should just leave all other WRITE_ONCE()
-instances unchanged. Please correct me if I am missing something here.
+Tiezhu Yang
 
-> 
-> Christophe
-> 
+>   
+>> +
+>   >  #endif /* _LINUX_PCI_IDS_H */
+>   > --
+>   > 2.1.0
+>   >
+>   >
+
