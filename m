@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79704C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:15:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92F6AC18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:15:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F6FB208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:15:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C144208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:15:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583846126;
-	bh=CoD98Bo+ro5MOQj+ifjN5T4EteboXKPXi3D4jGprWWE=;
+	s=default; t=1583846128;
+	bh=11lTqkhPdykb/T5b6KrUOa+oT9IU1Yv8PZKOza1sqoc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0D2MY5cbvfGwMrEBg3aB1cLntRK7tN9bows5Erf0WA2a+6PCNMX/U5FUXbQZANdzn
-	 4Z0WdnLzHC4P+3mwelRvP8FNkepJdmR2WxNCnyrLGpcrBnaYe9sLJ5jyjALA7zRq9U
-	 9MQbHzu1aleBW8X3oTqvxEzu2284OD2/mFrgjEh4=
+	b=Thb0n7tkwF6pqHnJ60IKJ16FOh/5yLQ0VBtSgslfpt3tqi2n2uOHemlH4rZcwUQo7
+	 aQzPn7HW9+rC4a9BUyEgjYnHA9F4FabFyMMfgNOUi7AQ+2jYruzDKQJ4W1bwmD5r5K
+	 ugh4oTgcrQnycm57x6eBgdkT/rBR8f7/BJcU7HV8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731147AbgCJNPY (ORCPT
+        id S1731626AbgCJNPW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:15:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39966 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:15:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39890 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732022AbgCJNPV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:15:21 -0400
+        id S1732019AbgCJNPR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:15:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A391208E4;
-        Tue, 10 Mar 2020 13:15:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A2194208E4;
+        Tue, 10 Mar 2020 13:15:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583846120;
-        bh=CoD98Bo+ro5MOQj+ifjN5T4EteboXKPXi3D4jGprWWE=;
+        s=default; t=1583846117;
+        bh=11lTqkhPdykb/T5b6KrUOa+oT9IU1Yv8PZKOza1sqoc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KXyAnlKtrbCKd0dyNV4SDUIEKg+mj3p7w8BObbbAs3SSR8F39vAE3GGNI80HUABJR
-         4aPPWsQ4Vb3KNeBg5Z+fJgl0qP6413a6xRBsOR8qUSvGugESXcTFDZrqyOI5E1U2P3
-         wxn4DPTRH9gn+px4sWwHyUWRj9dq42d51vIyREX0=
+        b=vpxf/lb7Q5PG1SylzQBuWfkQbvgRoEWeSmw8ejne2TQjNH+uCWWYUj2ks23FzvXKZ
+         fhI6pz/9vbO0zAhTsso7hfAdhQlAoNM4+GNrtjuZ30NY4nVCemlwX7h+gqpD5DCI1y
+         Ieus3o7ULJAXIA0SLS0Civx+Vymcd96Il0kwzCMo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Matthias Reichl <hias@horus.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 4.19 66/86] ASoC: pcm512x: Fix unbalanced regulator enable call in probe error path
-Date:   Tue, 10 Mar 2020 13:45:30 +0100
-Message-Id: <20200310124534.347153999@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Subject: [PATCH 4.19 75/86] IB/hfi1, qib: Ensure RCU is locked when accessing list
+Date:   Tue, 10 Mar 2020 13:45:39 +0100
+Message-Id: <20200310124534.815634089@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310124530.808338541@linuxfoundation.org>
 References: <20200310124530.808338541@linuxfoundation.org>
@@ -60,47 +61,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthias Reichl <hias@horus.com>
+From: Dennis Dalessandro <dennis.dalessandro@intel.com>
 
-commit ac0a68997935c4acb92eaae5ad8982e0bb432d56 upstream.
+commit 817a68a6584aa08e323c64283fec5ded7be84759 upstream.
 
-When we get a clock error during probe we have to call
-regulator_bulk_disable before bailing out, otherwise we trigger
-a warning in regulator_put.
+The packet handling function, specifically the iteration of the qp list
+for mad packet processing misses locking RCU before running through the
+list. Not only is this incorrect, but the list_for_each_entry_rcu() call
+can not be called with a conditional check for lock dependency. Remedy
+this by invoking the rcu lock and unlock around the critical section.
 
-Fix this by using "goto err" like in the error cases above.
+This brings MAD packet processing in line with what is done for non-MAD
+packets.
 
-Fixes: 5a3af1293194d ("ASoC: pcm512x: Add PCM512x driver")
-Signed-off-by: Matthias Reichl <hias@horus.com>
-Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://lore.kernel.org/r/20200220202956.29233-1-hias@horus.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 7724105686e7 ("IB/hfi1: add driver files")
+Link: https://lore.kernel.org/r/20200225195445.140896.41873.stgit@awfm-01.aw.intel.com
+Reviewed-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/codecs/pcm512x.c |    8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/infiniband/hw/hfi1/verbs.c    |    4 +++-
+ drivers/infiniband/hw/qib/qib_verbs.c |    2 ++
+ 2 files changed, 5 insertions(+), 1 deletion(-)
 
---- a/sound/soc/codecs/pcm512x.c
-+++ b/sound/soc/codecs/pcm512x.c
-@@ -1437,13 +1437,15 @@ int pcm512x_probe(struct device *dev, st
- 	}
- 
- 	pcm512x->sclk = devm_clk_get(dev, NULL);
--	if (PTR_ERR(pcm512x->sclk) == -EPROBE_DEFER)
--		return -EPROBE_DEFER;
-+	if (PTR_ERR(pcm512x->sclk) == -EPROBE_DEFER) {
-+		ret = -EPROBE_DEFER;
-+		goto err;
-+	}
- 	if (!IS_ERR(pcm512x->sclk)) {
- 		ret = clk_prepare_enable(pcm512x->sclk);
- 		if (ret != 0) {
- 			dev_err(dev, "Failed to enable SCLK: %d\n", ret);
--			return ret;
-+			goto err;
+--- a/drivers/infiniband/hw/hfi1/verbs.c
++++ b/drivers/infiniband/hw/hfi1/verbs.c
+@@ -595,10 +595,11 @@ static inline void hfi1_handle_packet(st
+ 				       opa_get_lid(packet->dlid, 9B));
+ 		if (!mcast)
+ 			goto drop;
++		rcu_read_lock();
+ 		list_for_each_entry_rcu(p, &mcast->qp_list, list) {
+ 			packet->qp = p->qp;
+ 			if (hfi1_do_pkey_check(packet))
+-				goto drop;
++				goto unlock_drop;
+ 			spin_lock_irqsave(&packet->qp->r_lock, flags);
+ 			packet_handler = qp_ok(packet);
+ 			if (likely(packet_handler))
+@@ -607,6 +608,7 @@ static inline void hfi1_handle_packet(st
+ 				ibp->rvp.n_pkt_drops++;
+ 			spin_unlock_irqrestore(&packet->qp->r_lock, flags);
  		}
- 	}
- 
++		rcu_read_unlock();
+ 		/*
+ 		 * Notify rvt_multicast_detach() if it is waiting for us
+ 		 * to finish.
+--- a/drivers/infiniband/hw/qib/qib_verbs.c
++++ b/drivers/infiniband/hw/qib/qib_verbs.c
+@@ -360,8 +360,10 @@ void qib_ib_rcv(struct qib_ctxtdata *rcd
+ 		if (mcast == NULL)
+ 			goto drop;
+ 		this_cpu_inc(ibp->pmastats->n_multicast_rcv);
++		rcu_read_lock();
+ 		list_for_each_entry_rcu(p, &mcast->qp_list, list)
+ 			qib_qp_rcv(rcd, hdr, 1, data, tlen, p->qp);
++		rcu_read_unlock();
+ 		/*
+ 		 * Notify rvt_multicast_detach() if it is waiting for us
+ 		 * to finish.
 
 
