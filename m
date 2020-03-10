@@ -2,131 +2,98 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ABF2C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 18:31:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44EB3C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 18:31:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D43820727
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 18:31:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UentoJdJ"
+	by mail.kernel.org (Postfix) with ESMTP id 1A73F208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 18:31:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583865086;
+	bh=KzEEBxuqORSag8YJEE1VdQTCHLnudqoIKvkv7V+Qmms=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=AVZXOfkOVgCuOO6cG8Z23m2YyBClvBb81llq5saR9vw9zfAY1PfxnLioEbn96pf3s
+	 qChVNP2pG2dlZif/T07uYrDRRjyWNP7KTVBcj00MFB/RI1ZJqV3SBPwt98fFc749qk
+	 /y4Py+KHheL/cpqMfQtVmbVYyHj3kmOIBvfb6ObA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727514AbgCJSbW (ORCPT
+        id S1727533AbgCJSbY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 14:31:22 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:42311 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726998AbgCJSbV (ORCPT
+        Tue, 10 Mar 2020 14:31:24 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:45256 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726998AbgCJSbX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 14:31:21 -0400
-Received: by mail-ot1-f67.google.com with SMTP id 66so14145050otd.9;
-        Tue, 10 Mar 2020 11:31:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7jfISf3OEyvEx0oLvSI1273sxi5HaeHIy5eXl6CUYSk=;
-        b=UentoJdJ5VZTR83/ZDu/HfKaS1HpoOPI7RSJ5ng4nDGd6z+It18K+I5lb69vMdjwZB
-         RAlTIyIAqPckJXVCAcHAWLsYR18MRy/aeNKfIDm2nWuBxTwmxlTjBytrqu1q6vdccnX4
-         3ZqnwYu1DBkRUI0vM7MVfVJSAPlNI7Z1QHc1VLCuUFeYfo5/ePMR/LO3bbpn0X6DS6WT
-         CloXkMQVj47l8Bbl2rY57GwdvhxrHWHSzyAf0sF08hC0yHqlD7s9EKtqOSnnzGsgb6Wo
-         h66sSAyU4R9se6wV+0bGaqba/HhjK24MiN/HTcWHgeDxPZI44/ep+ktlyI2PG6ewb/I7
-         wXWw==
+        Tue, 10 Mar 2020 14:31:23 -0400
+Received: by mail-ot1-f66.google.com with SMTP id f21so14126283otp.12;
+        Tue, 10 Mar 2020 11:31:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7jfISf3OEyvEx0oLvSI1273sxi5HaeHIy5eXl6CUYSk=;
-        b=mzhMJftzzb7qx7tRLQYspSXC9UpDVbwh/DkEQpsWfite5jqa6Z1lySamGg69DZrx3e
-         XrJl4p0HQ4kZLZ1vvwKsYh/osW/LFg3XTLspYwCDHIZRDvgE7ny70px6026c0hhjRQjo
-         peJ6FcTbXb07oVV0pN9rlAY7xvfGtg4piZVNzZwRc6/j7YQgNwXywutElm9M5CqdVA9N
-         8CrIJAef6w7CHe875IZQhnPSs7WXCpSf89C4rroxeFIKpISw+4mLNgrMU5nRXwn/S8VV
-         J9oKYiVa97NmYu/cU+QkpVEgZtM4MEaeiCZxxvJqoTPzr8+JATPuUY3546evMLLbbjDr
-         oEcA==
-X-Gm-Message-State: ANhLgQ0y1Ve8/KQFaS4WSnnREVgMM6vJD/SFFiP86tO9vJG7wA5aJ3aZ
-        7S+qPhXA6Vn/2kxKji4RJFVutoqh4IuTdRRgmuc=
-X-Google-Smtp-Source: ADFU+vtLCDX3KJyCLZbj2vhkUc2Ppo+C8h1OD95k0wYeGtls5yyv4Hrsbmya39rogJUAvqAiID5smIyai2nRPF5neOw=
-X-Received: by 2002:a9d:4702:: with SMTP id a2mr17569197otf.319.1583865079547;
- Tue, 10 Mar 2020 11:31:19 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=kE8zJYod7DGw/iirznrwm04icms4ZonrW+m7De0Huos=;
+        b=tSgqnoILJO40vmXhVI6xPFpcIjeTu1NY8MVBWwOp0dkkpGIJOvxcGOq5562QZFwxmo
+         iHTpES6+SthX0zWQ/ZtVgiGk+gfBrmRAQ4TMS/nmgr5WnacdREt3KJ8CeHVVR5r3b+gy
+         vvLAiiPd1bD+2h3s/kcAPfnmjCDEDO28tX+dcdv0XUSb8zqAKw147h2S7Osa3HXlNm9A
+         DZGkNmuLBEiay6H1WkIpffoll1j7NQb2PCcsZFKZI8vKz360HjsGmNI6C0LtMVqLPkJn
+         Gt7Gb9xWujor6y21VtgYTPYqWUlAL5qSG2At9DWA0+y/eBGvFEVVU6VYbuJNlZI14sRM
+         XjQw==
+X-Gm-Message-State: ANhLgQ3eb1sugpOt6TN+1R3xeLOzuqrA+B7SyYTVbUE3+JONbfRhyW57
+        Q9/wihhIrSbURoOOEe5LNg==
+X-Google-Smtp-Source: ADFU+vs6BXU2RhaGOMkzDNdE03Xyflh1TY7gz7r9610og46G77Jwujiyd6QdA37f1IfNWYINzkfbHg==
+X-Received: by 2002:a9d:21b4:: with SMTP id s49mr17315918otb.294.1583865080731;
+        Tue, 10 Mar 2020 11:31:20 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id e206sm4490498oia.24.2020.03.10.11.31.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Mar 2020 11:31:19 -0700 (PDT)
+Received: (nullmailer pid 14370 invoked by uid 1000);
+        Tue, 10 Mar 2020 18:31:18 -0000
+Date:   Tue, 10 Mar 2020 13:31:18 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Kiran Gunda <kgunda@codeaurora.org>
+Cc:     bjorn.andersson@linaro.org, jingoohan1@gmail.com,
+        lee.jones@linaro.org, b.zolnierkie@samsung.com,
+        dri-devel@lists.freedesktop.org, daniel.thompson@linaro.org,
+        jacek.anaszewski@gmail.com, pavel@ucw.cz, robh+dt@kernel.org,
+        mark.rutland@arm.com, linux-leds@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Dan Murphy <dmurphy@ti.com>, linux-arm-msm@vger.kernel.org,
+        Kiran Gunda <kgunda@codeaurora.org>
+Subject: Re: [PATCH V3 1/4] backlight: qcom-wled: convert the wled bindings
+ to .yaml format
+Message-ID: <20200310183118.GA13818@bogus>
+References: <1583760362-26978-1-git-send-email-kgunda@codeaurora.org>
+ <1583760362-26978-2-git-send-email-kgunda@codeaurora.org>
 MIME-Version: 1.0
-References: <000000000000490abd05a05fa060@google.com>
-In-Reply-To: <000000000000490abd05a05fa060@google.com>
-From:   Cong Wang <xiyou.wangcong@gmail.com>
-Date:   Tue, 10 Mar 2020 11:31:06 -0700
-Message-ID: <CAM_iQpXrLCmQGXr8C9iw0+QxsP6DtQqoRqG18aegPhpjcpXdhQ@mail.gmail.com>
-Subject: Re: KASAN: slab-out-of-bounds Write in tcindex_set_parms
-To:     syzbot <syzbot+c72da7b9ed57cde6fca2@syzkaller.appspotmail.com>
-Cc:     David Miller <davem@davemloft.net>,
-        Jamal Hadi Salim <jhs@mojatatu.com>,
-        Jiri Pirko <jiri@resnulli.us>,
-        Jakub Kicinski <kuba@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1583760362-26978-2-git-send-email-kgunda@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 8, 2020 at 3:44 PM syzbot
-<syzbot+c72da7b9ed57cde6fca2@syzkaller.appspotmail.com> wrote:
->
-> Hello,
->
-> syzbot found the following crash on:
->
-> HEAD commit:    425c075d Merge branch 'tun-debug'
-> git tree:       net-next
-> console output: https://syzkaller.appspot.com/x/log.txt?x=134d2ae3e00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=598678fc6e800071
-> dashboard link: https://syzkaller.appspot.com/bug?extid=c72da7b9ed57cde6fca2
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=122ed70de00000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=116689fde00000
->
-> The bug was bisected to:
->
-> commit 599be01ee567b61f4471ee8078870847d0a11e8e
-> Author: Cong Wang <xiyou.wangcong@gmail.com>
-> Date:   Mon Feb 3 05:14:35 2020 +0000
->
->     net_sched: fix an OOB access in cls_tcindex
->
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=150a7d53e00000
-> final crash:    https://syzkaller.appspot.com/x/report.txt?x=170a7d53e00000
-> console output: https://syzkaller.appspot.com/x/log.txt?x=130a7d53e00000
->
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+c72da7b9ed57cde6fca2@syzkaller.appspotmail.com
-> Fixes: 599be01ee567 ("net_sched: fix an OOB access in cls_tcindex")
->
-> IPVS: ftp: loaded support on port[0] = 21
-> ==================================================================
-> BUG: KASAN: slab-out-of-bounds in tcindex_set_parms+0x17fd/0x1a00 net/sched/cls_tcindex.c:455
-> Write of size 16 at addr ffff8880a219e6b8 by task syz-executor508/9705
->
-> CPU: 1 PID: 9705 Comm: syz-executor508 Not tainted 5.6.0-rc3-syzkaller #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> Call Trace:
->  __dump_stack lib/dump_stack.c:77 [inline]
->  dump_stack+0x188/0x20d lib/dump_stack.c:118
->  print_address_description.constprop.0.cold+0xd3/0x315 mm/kasan/report.c:374
->  __kasan_report.cold+0x1a/0x32 mm/kasan/report.c:506
->  kasan_report+0xe/0x20 mm/kasan/common.c:641
->  tcindex_set_parms+0x17fd/0x1a00 net/sched/cls_tcindex.c:455
+On Mon,  9 Mar 2020 18:55:59 +0530, Kiran Gunda wrote:
+> Convert the qcom-wled bindings from .txt to .yaml format.
+> 
+> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
+> ---
+>  .../bindings/leds/backlight/qcom-wled.txt          | 154 -----------------
+>  .../bindings/leds/backlight/qcom-wled.yaml         | 184 +++++++++++++++++++++
+>  2 files changed, 184 insertions(+), 154 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt
+>  create mode 100644 Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml
+> 
 
+My bot found errors running 'make dt_binding_check' on your patch:
 
-I think we probably don't check the boundary of 'handle' properly.
+Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml: $id: relative path/filename doesn't match actual path or filename
+	expected: http://devicetree.org/schemas/leds/backlight/qcom-wled.yaml#
 
-397         if (cp->perfect || valid_perfect_hash(cp))
-398                 if (handle >= cp->alloc_hash)
-399                         goto errout_alloc;
-
-I will think more about it.
-
-Thanks.
+See https://patchwork.ozlabs.org/patch/1251567
+Please check and re-submit.
