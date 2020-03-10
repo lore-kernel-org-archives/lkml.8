@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97251C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:21:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9FF8C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:21:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 704F1208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:21:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4B30208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:21:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583846483;
-	bh=Pv0mYHJqRQPBcqFiSkeRze6rrtkqGvVxOzr/xV44Gyo=;
+	s=default; t=1583846489;
+	bh=m65JZ9mK93qhBxdLSAzmYWdLfohdHHV76K5hV4I/JvQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ixBEp6Dw55m8E5PVq4YW5pAZ1muII0kGJmQ2TRmzLPne6Ohlo01QrcnZOcw3dsgmr
-	 Agik+ssDFp+93YtuT5O/BOtSFkKQwPucGukD/SmS1ynnmCzaHusWMywPhaGYhy81LK
-	 cum+dG2qA0vLsWA7V5PAuuRQIZnIc8b5qcEDsjdg=
+	b=2Sj358XA3Xc+WcntyMTP58hDpQ6W4A3Y/cJkzajWyAD+wU55TQuNFxkfqtX559f5L
+	 j8DI1X/oJwK3RB8GdO8brIkrPA5O/6OK7UAQSvBfq2BDiXNKoC6Th20rSBcE7QMawl
+	 HBjo6BiADndTwmqeYY6vX+FmHaxKfCl/rs2YBlHw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730812AbgCJNGP (ORCPT
+        id S1731156AbgCJNV2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:06:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51368 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:21:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730784AbgCJNF7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:05:59 -0400
+        id S1730805AbgCJNGK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:06:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 33A8D24693;
-        Tue, 10 Mar 2020 13:05:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B14424692;
+        Tue, 10 Mar 2020 13:06:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845558;
-        bh=Pv0mYHJqRQPBcqFiSkeRze6rrtkqGvVxOzr/xV44Gyo=;
+        s=default; t=1583845569;
+        bh=m65JZ9mK93qhBxdLSAzmYWdLfohdHHV76K5hV4I/JvQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i/5HNlaFTT8YOcyf5eXrHLXb+JsiOEbOF9uxEWCbPE9BaXPRUKmsJbXV4V51RYJs+
-         XzaIh6WEBazSeOZP08n6858olJ5gYZbH6ZgcUKuDMkk/PrGGYde475gZ8gWpWn0qs8
-         fwthQiZc93qi6CkaZsLFj0KknyKK4n8m4KSBhTr4=
+        b=Jv+EDDl81zj/Tf0EA8XWR0Bh2PZJqXmtms8L80DZ9nQNyz/PU+qvlqNeJzinUSQwH
+         eF08WppkLV8b9nR1B/cYLsyrGvzKG0GFozjoZrU83xdgmYp4Q69koapNwHWTCmLFSO
+         TcSjIxrZFz6khgqEA6RygfTERagtuCbNtJ4QN21Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sameeh Jubran <sameehj@amazon.com>,
-        Arthur Kiyanovski <akiyano@amazon.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org,
+        Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>,
+        Johannes Berg <johannes.berg@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 019/126] net: ena: fix incorrectly saving queue numbers when setting RSS indirection table
-Date:   Tue, 10 Mar 2020 13:40:40 +0100
-Message-Id: <20200310124205.558701617@linuxfoundation.org>
+Subject: [PATCH 4.14 023/126] cfg80211: add missing policy for NL80211_ATTR_STATUS_CODE
+Date:   Tue, 10 Mar 2020 13:40:44 +0100
+Message-Id: <20200310124205.972893839@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310124203.704193207@linuxfoundation.org>
 References: <20200310124203.704193207@linuxfoundation.org>
@@ -61,94 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arthur Kiyanovski <akiyano@amazon.com>
+From: Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
 
-[ Upstream commit 92569fd27f5cb0ccbdf7c7d70044b690e89a0277 ]
+[ Upstream commit ea75080110a4c1fa011b0a73cb8f42227143ee3e ]
 
-The indirection table has the indices of the Rx queues. When we store it
-during set indirection operation, we convert the indices to our internal
-representation of the indices.
+The nl80211_policy is missing for NL80211_ATTR_STATUS_CODE attribute.
+As a result, for strictly validated commands, it's assumed to not be
+supported.
 
-Our internal representation of the indices is: even indices for Tx and
-uneven indices for Rx, where every Tx/Rx pair are in a consecutive order
-starting from 0. For example if the driver has 3 queues (3 for Tx and 3
-for Rx) then the indices are as follows:
-0  1  2  3  4  5
-Tx Rx Tx Rx Tx Rx
-
-The BUG:
-The issue is that when we satisfy a get request for the indirection
-table, we don't convert the indices back to the original representation.
-
-The FIX:
-Simply apply the inverse function for the indices of the indirection
-table after we set it.
-
-Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
-Signed-off-by: Sameeh Jubran <sameehj@amazon.com>
-Signed-off-by: Arthur Kiyanovski <akiyano@amazon.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
+Link: https://lore.kernel.org/r/20200213131608.10541-2-sergey.matyukevich.os@quantenna.com
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/amazon/ena/ena_ethtool.c | 24 ++++++++++++++++++-
- drivers/net/ethernet/amazon/ena/ena_netdev.h  |  2 ++
- 2 files changed, 25 insertions(+), 1 deletion(-)
+ net/wireless/nl80211.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/amazon/ena/ena_ethtool.c b/drivers/net/ethernet/amazon/ena/ena_ethtool.c
-index 7ca7bade1c090..9601ddc274274 100644
---- a/drivers/net/ethernet/amazon/ena/ena_ethtool.c
-+++ b/drivers/net/ethernet/amazon/ena/ena_ethtool.c
-@@ -648,6 +648,28 @@ static u32 ena_get_rxfh_key_size(struct net_device *netdev)
- 	return ENA_HASH_KEY_SIZE;
- }
- 
-+static int ena_indirection_table_get(struct ena_adapter *adapter, u32 *indir)
-+{
-+	struct ena_com_dev *ena_dev = adapter->ena_dev;
-+	int i, rc;
-+
-+	if (!indir)
-+		return 0;
-+
-+	rc = ena_com_indirect_table_get(ena_dev, indir);
-+	if (rc)
-+		return rc;
-+
-+	/* Our internal representation of the indices is: even indices
-+	 * for Tx and uneven indices for Rx. We need to convert the Rx
-+	 * indices to be consecutive
-+	 */
-+	for (i = 0; i < ENA_RX_RSS_TABLE_SIZE; i++)
-+		indir[i] = ENA_IO_RXQ_IDX_TO_COMBINED_IDX(indir[i]);
-+
-+	return rc;
-+}
-+
- static int ena_get_rxfh(struct net_device *netdev, u32 *indir, u8 *key,
- 			u8 *hfunc)
- {
-@@ -656,7 +678,7 @@ static int ena_get_rxfh(struct net_device *netdev, u32 *indir, u8 *key,
- 	u8 func;
- 	int rc;
- 
--	rc = ena_com_indirect_table_get(adapter->ena_dev, indir);
-+	rc = ena_indirection_table_get(adapter, indir);
- 	if (rc)
- 		return rc;
- 
-diff --git a/drivers/net/ethernet/amazon/ena/ena_netdev.h b/drivers/net/ethernet/amazon/ena/ena_netdev.h
-index 3404376c28ca3..5a72267b858b1 100644
---- a/drivers/net/ethernet/amazon/ena/ena_netdev.h
-+++ b/drivers/net/ethernet/amazon/ena/ena_netdev.h
-@@ -113,6 +113,8 @@
- 
- #define ENA_IO_TXQ_IDX(q)	(2 * (q))
- #define ENA_IO_RXQ_IDX(q)	(2 * (q) + 1)
-+#define ENA_IO_TXQ_IDX_TO_COMBINED_IDX(q)	((q) / 2)
-+#define ENA_IO_RXQ_IDX_TO_COMBINED_IDX(q)	(((q) - 1) / 2)
- 
- #define ENA_MGMNT_IRQ_IDX		0
- #define ENA_IO_IRQ_FIRST_IDX		1
+diff --git a/net/wireless/nl80211.c b/net/wireless/nl80211.c
+index df8c5312f26ad..b248578aeb7bc 100644
+--- a/net/wireless/nl80211.c
++++ b/net/wireless/nl80211.c
+@@ -321,6 +321,7 @@ static const struct nla_policy nl80211_policy[NUM_NL80211_ATTR] = {
+ 	[NL80211_ATTR_CONTROL_PORT_ETHERTYPE] = { .type = NLA_U16 },
+ 	[NL80211_ATTR_CONTROL_PORT_NO_ENCRYPT] = { .type = NLA_FLAG },
+ 	[NL80211_ATTR_PRIVACY] = { .type = NLA_FLAG },
++	[NL80211_ATTR_STATUS_CODE] = { .type = NLA_U16 },
+ 	[NL80211_ATTR_CIPHER_SUITE_GROUP] = { .type = NLA_U32 },
+ 	[NL80211_ATTR_WPA_VERSIONS] = { .type = NLA_U32 },
+ 	[NL80211_ATTR_PID] = { .type = NLA_U32 },
 -- 
 2.20.1
 
