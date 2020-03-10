@@ -2,165 +2,87 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A84E4C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 16:54:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 745F9C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 16:55:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D02B21D56
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 16:54:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31EC921D7E
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 16:55:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583859284;
-	bh=XQQa0PLtN8swMBCXZL8OPpBHL06E8seSbXfVlS1Sc9Q=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=1Q7CmzBwb8pnY4EREiSAm7w37iW6zOyoTzooXHqErGVDKYNUKUUNGLh6SleAIQatI
-	 Av/GotYt8iW+BEXdrDlgoNk8EjgSRR+PuPwTQjSIi4uAJpgWkCZbyv436v//MtisgU
-	 3WM2qyOebAIO8y4nZmUuKShlxwpEU6JL5b3A4wDA=
+	s=default; t=1583859357;
+	bh=wEA89Y/i/pO8iZvIjVQ2KZgLccQomkZh1pTDz1tPk10=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=SmtJmSfxwPPDFDepSU6XS0/LsnazY2eGQAOr/4l+P5L4qmZDqGS0Y1SS8j3STErCi
+	 gDkYZMVo3d1O6SviFQgknUEMD2tUOuj8GL3Ee9sNjFrQ9aAT4U5wDpHE8LF7nECRtE
+	 I4ZKWIkzsXNN6OX5OQXA2Atx7Y+JW9Fjrggg2ed4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727073AbgCJQyn (ORCPT
+        id S1727050AbgCJQz4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 12:54:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53074 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 12:55:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53572 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726477AbgCJQym (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 12:54:42 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        id S1726655AbgCJQzz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 12:55:55 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 97F9420873;
-        Tue, 10 Mar 2020 16:54:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D545D20675;
+        Tue, 10 Mar 2020 16:55:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583859281;
-        bh=XQQa0PLtN8swMBCXZL8OPpBHL06E8seSbXfVlS1Sc9Q=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=RKDipRUKJ4U3391gbaAHXUKR1S+8mTtl+uFLWAbWba+gU8n0RpHJr/1SIjXTSIhU0
-         Bm4OOqSdpTzZJBCaQMFaWl3ktQZzcHMcTH4BR+B5EdFhtKMFQlMlFubU0T+tj3F3ss
-         zeD4uis+T1/Zbf8eS4tKJtPq20m+lfLf5kPScK94=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 7617F35229CC; Tue, 10 Mar 2020 09:54:41 -0700 (PDT)
-Date:   Tue, 10 Mar 2020 09:54:41 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        "Joel Fernandes, Google" <joel@joelfernandes.org>,
-        Frederic Weisbecker <frederic@kernel.org>, bpf@vger.kernel.org
-Subject: Re: Instrumentation and RCU
-Message-ID: <20200310165441.GE2935@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <87mu8p797b.fsf@nanos.tec.linutronix.de>
- <1403546357.21810.1583779060302.JavaMail.zimbra@efficios.com>
- <20200310014043.4dbagqbr2wsbuarm@ast-mbp>
+        s=default; t=1583859355;
+        bh=wEA89Y/i/pO8iZvIjVQ2KZgLccQomkZh1pTDz1tPk10=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=hBDwhUDd+fMu377Urjwihg9jdUAvnykBi8q26nDuu+satceJEKD2oR7Kaxb1pOWcK
+         zeM/NP4W/WGiB+HmRoWCfkKatpkhJxjBY1KjekUqVVFqC4kc96357ZW8hduVuBJlJN
+         +S5elPBe+rPefLS9lk+jTRVnyAtRji/9UQ9KHYbU=
+Date:   Tue, 10 Mar 2020 17:55:52 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Borislav Petkov <bp@suse.de>
+Cc:     Thomas Voegtle <tv@lio96.de>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, "H.J. Lu" <hjl.tools@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.9 62/88] x86/boot/compressed: Dont declare
+ __force_order in kaslr_64.c
+Message-ID: <20200310165552.GA3468294@kroah.com>
+References: <20200310123606.543939933@linuxfoundation.org>
+ <20200310123621.868809541@linuxfoundation.org>
+ <alpine.LSU.2.21.2003101522120.20206@er-systems.de>
+ <20200310150845.GA16975@zn.tnic>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200310014043.4dbagqbr2wsbuarm@ast-mbp>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200310150845.GA16975@zn.tnic>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 09, 2020 at 06:40:45PM -0700, Alexei Starovoitov wrote:
-> On Mon, Mar 09, 2020 at 02:37:40PM -0400, Mathieu Desnoyers wrote:
-> > > 
-> > >    But what's relevant is the tracer overhead which is e.g. inflicted
-> > >    with todays trace_hardirqs_off/on() implementation because that
-> > >    unconditionally uses the rcuidle variant with the scru/rcu_irq dance
-> > >    around every tracepoint.
+On Tue, Mar 10, 2020 at 04:08:45PM +0100, Borislav Petkov wrote:
+> On Tue, Mar 10, 2020 at 03:33:57PM +0100, Thomas Voegtle wrote:
+> > This ends up for me in:
 > > 
-> > I think one of the big issues here is that most of the uses of
-> > trace_hardirqs_off() are from sites which already have RCU watching,
-> > so we are doing heavy-weight operations for nothing.
-> 
-> I think kernel/trace/trace_preemptirq.c created too many problems for the
-> kernel without providing tangible benefits. My understanding no one is using it
-> in production. It's a tool to understand how kernel works. And such debugging
-> tool can and should be removed.
-> 
-> One of Thomas's patches mentioned that bpf can be invoked from hardirq and
-> preempt tracers. This connection doesn't exist in a direct way, but
-> theoretically it's possible. There is no practical use though and I would be
-> happy to blacklist such bpf usage at a minimum.
-> 
-> > We could use the approach proposed by Peterz's and Steven's patches to basically
-> > do a lightweight "is_rcu_watching()" check for rcuidle tracepoint, and only enable
-> > RCU for those cases. We could then simply go back on using regular RCU like so:
+> > arch/x86/boot/compressed/pagetable.o: In function
+> > `initialize_identity_maps':
+> > pagetable.c:(.text+0x309): undefined reference to `__force_order'
+> > arch/x86/boot/compressed/pagetable.o: In function `finalize_identity_maps':
+> > pagetable.c:(.text+0x41a): undefined reference to `__force_order'
 > > 
-> > #define __DO_TRACE(tp, proto, args, cond, rcuidle)                      \
-> >         do {                                                            \
-> >                 struct tracepoint_func *it_func_ptr;                    \
-> >                 void *it_func;                                          \
-> >                 void *__data;                                           \
-> >                 bool exit_rcu = false;                                  \
-> >                                                                         \
-> >                 if (!(cond))                                            \
-> >                         return;                                         \
-> >                                                                         \
-> >                 if (rcuidle && !rcu_is_watching()) {                    \
-> >                         rcu_irq_enter_irqson();                         \
-> >                         exit_rcu = true;                                \
-> >                 }                                                       \
-> >                 preempt_disable_notrace();                              \
-> >                 it_func_ptr = rcu_dereference_raw((tp)->funcs);         \
-> >                 if (it_func_ptr) {                                      \
-> >                         do {                                            \
-> >                                 it_func = (it_func_ptr)->func;          \
-> >                                 __data = (it_func_ptr)->data;           \
-> >                                 ((void(*)(proto))(it_func))(args);      \
-> >                         } while ((++it_func_ptr)->func);                \
-> >                 }                                                       \
-> >                 preempt_enable_notrace();                               \
-> >                 if (exit_rcu)                                           \
-> >                         rcu_irq_exit_irqson();                          \
-> >         } while (0)
+> > 
+> > pgtable_64.c doesn't exist in v4.9 for x86.
+> > 
+> > So I guess it's not correct to remove __force_order from pagetable.c?
 > 
-> I think it's a fine approach interim.
+> Yes, the second __force_order thing was added by
 > 
-> Long term sounds like Paul is going to provide sleepable and low overhead
-> rcu_read_lock_for_tracers() that will include bpf.
+> 08529078d8d9 ("x86/boot/compressed/64: Detect and handle 5-level paging at boot-time")
+> 
+> which is 4.14.
+> 
+> Greg, pls drop this patch from the 4.9 lineup.
 
-It now builds without errors, so the obvious problems are taken care of...
+Now dropped, thanks.
 
-Working on the less-obvious errors as rcutorture encounters them.
-
-> My understanding that this new rcu flavor won't have "idle" issues,
-> so rcu_is_watching() checks will not be necessary.
-
-True.  However, if the from-idle code invokes other code relying on
-vanilla RCU, such checks are still required.  But I must let others
-weigh in on this.
-
-> And if we remove trace_preemptirq.c the only thing left will be Thomas's points
-> 1 (low level entry) and 2 (breakpoints) that can be addressed without
-> creating fancy .text annotations and teach objtool about it.
-
-And the intent is to cover these cases as well.  Of course, we all know
-which road is paved with good intentions.  ;-)
-
-> In the mean time I've benchmarked srcu for sleepable bpf and it's quite heavy.
-> srcu_read_lock+unlock roughly adds 10x execution cost to trivial bpf prog.
-> I'm proceeding with it anyway, but really hoping that
-> rcu_read_lock_for_tracers() will materialize soon.
-
-OK, 10x is a bit on the painful side!
-
-							Thanx, Paul
-
-> In general I'm sceptical that .text annotations will work. Let's say all of
-> idle is a red zone. But a ton of normal functions are called when idle. So
-> objtool will go and mark them as red zone too. This way large percent of the
-> kernel will be off limits for tracers. Which is imo not a good trade off. I
-> think addressing 1 and 2 with explicit notrace/nokprobe annotations will cover
-> all practical cases where people can shot themselves in a foot with a tracer. I
-> realize that there will be forever whack-a-mole game and these annotations will
-> never reach 100%. I think it's a fine trade off. Security is never 100% either.
-> Tracing is never going to be 100% safe too.
+greg k-h
