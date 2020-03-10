@@ -2,224 +2,224 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55F58C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 17:27:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1C6EC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 17:29:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C0BB2146E
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 17:27:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583861279;
-	bh=etd2RAuoX9TSRMZgA+S2nVEr4Gkcu8K2bN8hk5b+bds=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=us3bu5cacJFkbXBLbtZ6ApC4yDELHsNI0t4dsiETdY6UrmsJnvkN18dfVMhAmw4U6
-	 CKCS4ifD09WS0SzC0AhB1yS+/KPIWZ1l80MiFOWgQeJ268cIglRSS/qNIy2GP7dJwB
-	 q4pakfz2M8AV7/WNbX+6exqJYSnEEKfjBERtB33U=
+	by mail.kernel.org (Postfix) with ESMTP id 6732D2146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 17:29:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="K7W5xBae"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726859AbgCJR16 (ORCPT
+        id S1726633AbgCJR3P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 13:27:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36408 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 13:29:15 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:9049 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726271AbgCJR15 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 13:27:57 -0400
-Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D7C221927;
-        Tue, 10 Mar 2020 17:27:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583861277;
-        bh=etd2RAuoX9TSRMZgA+S2nVEr4Gkcu8K2bN8hk5b+bds=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=ZB5x0FuQ2gdj5DJFXUT11LRtHSdD5LSaeDVhUIMIfctSJJnhJ04uiQTDWES41uE9V
-         Is+Jz9XXOND4txKG0HKSdJFfemSyaOV1bXRW+1L2w2dB4PKCRD0FIRA/wXTHwqqNI7
-         N5XXZ3w3sxJ1vtr+LacNmLljqb/my3VcSt46r2y8=
-Message-ID: <36c58a6d07b67aac751fca27a4938dc1759d9267.camel@kernel.org>
-Subject: Re: [locks] 6d390e4b5d: will-it-scale.per_process_ops -96.6%
- regression
-From:   Jeff Layton <jlayton@kernel.org>
-To:     yangerkun <yangerkun@huawei.com>, NeilBrown <neilb@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     kernel test robot <rong.a.chen@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org,
-        Bruce Fields <bfields@fieldses.org>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Date:   Tue, 10 Mar 2020 13:27:55 -0400
-In-Reply-To: <923487db2c9396c79f8e8dd4f846b2b1762635c8.camel@kernel.org>
-References: <20200308140314.GQ5972@shao2-debian>
-         <e3783d060c778cb41b77380ad3e278133b52f57e.camel@kernel.org>
-         <CAHk-=whGK712fPqmQ3FSHxqe3Aqny4bEeWEvfaytLeLV2+ijCQ@mail.gmail.com>
-         <34355c4fe6c3968b1f619c60d5ff2ca11a313096.camel@kernel.org>
-         <1bfba96b4bf0d3ca9a18a2bced3ef3a2a7b44dad.camel@kernel.org>
-         <87blp5urwq.fsf@notabene.neil.brown.name>
-         <41c83d34ae4c166f48e7969b2b71e43a0f69028d.camel@kernel.org>
-         <ed73fb5d-ddd5-fefd-67ae-2d786e68544a@huawei.com>
-         <923487db2c9396c79f8e8dd4f846b2b1762635c8.camel@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        id S1726271AbgCJR3P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 13:29:15 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 48cMX73ZVLz9tyJT;
+        Tue, 10 Mar 2020 18:29:11 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=K7W5xBae; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id HkzUNqv0j9FF; Tue, 10 Mar 2020 18:29:11 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 48cMX72XnSz9tyJR;
+        Tue, 10 Mar 2020 18:29:11 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1583861351; bh=wQFGA5yOUDCLiaQWRK43yJsCfrQxWMeWcX1p+cg+rY4=;
+        h=From:Subject:To:Cc:Date:From;
+        b=K7W5xBaeaIen39k2xESJ1+k6eHbVqFRJTEU7UDmC1DbQ6SfocM6JVkjExmj9AQ0BW
+         NKf/34uzOhgNo892c0yk3qRsO1n7i5QsyRdvTvwgdfosU8COLT7PvPdzOo+YhEOpXV
+         76GgtOL4hjDvTgkZIqyf1bAXCKAxBmewclpnYVeM=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 17E978B874;
+        Tue, 10 Mar 2020 18:29:13 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id vYZ3gXVSD6nz; Tue, 10 Mar 2020 18:29:12 +0100 (CET)
+Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id B49AE8B756;
+        Tue, 10 Mar 2020 18:29:12 +0100 (CET)
+Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id 6DC86654D9; Tue, 10 Mar 2020 17:29:12 +0000 (UTC)
+Message-Id: <c4d6c18a7f8d9d3b899bc492f55fbc40ef38896a.1583861325.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH v3] powerpc/32s: reorder Linux PTE bits to better match Hash
+ PTE bits.
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Tue, 10 Mar 2020 17:29:12 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-03-10 at 08:52 -0400, Jeff Layton wrote:
+Reorder Linux PTE bits to (almost) match Hash PTE bits.
 
-[snip]
+RW Kernel : PP = 00
+RO Kernel : PP = 00
+RW User   : PP = 01
+RO User   : PP = 11
 
-> On Tue, 2020-03-10 at 11:24 +0800, yangerkun wrote:
-> > > 
-> > Something others. I think there is no need to call locks_delete_block 
-> > for all case in function like flock_lock_inode_wait. What we should do 
-> > as the patch '16306a61d3b7 ("fs/locks: always delete_block after 
-> > waiting.")' describes is that we need call locks_delete_block not only 
-> > for error equal to -ERESTARTSYS(please point out if I am wrong). And 
-> > this patch may fix the regression too since simple lock that success or 
-> > unlock will not try to acquire blocked_lock_lock.
-> > 
-> > 
-> 
-> Nice! This looks like it would work too, and it's a simpler fix.
-> 
-> I'd be inclined to add a WARN_ON_ONCE(fl->fl_blocker) after the if
-> statements to make sure we never exit with one still queued. Also, I
-> think we can do a similar optimization in __break_lease.
-> 
-> There are some other callers of locks_delete_block:
-> 
-> cifs_posix_lock_set: already only calls it in these cases
-> 
-> nlmsvc_unlink_block: I think we need to call this in most cases, and
-> they're not going to be high-performance codepaths in general
-> 
-> nfsd4 callback handling: Several calls here, most need to always be
-> called. find_blocked_lock could be reworked to take the
-> blocked_lock_lock only once (I'll do that in a separate patch).
-> 
-> How about something like this (
-> 
-> ----------------------8<---------------------
-> 
-> From: yangerkun <yangerkun@huawei.com>
-> 
-> [PATCH] filelock: fix regression in unlock performance
-> 
-> '6d390e4b5d48 ("locks: fix a potential use-after-free problem when
-> wakeup a waiter")' introduces a regression since we will acquire
-> blocked_lock_lock every time locks_delete_block is called.
-> 
-> In many cases we can just avoid calling locks_delete_block at all,
-> when we know that the wait was awoken by the condition becoming true.
-> Change several callers of locks_delete_block to only call it when
-> waking up due to signal or other error condition.
-> 
-> [ jlayton: add similar optimization to __break_lease, reword changelog,
-> 	   add WARN_ON_ONCE calls ]
-> 
-> Fixes: 16306a61d3b7 ("fs/locks: always delete_block after waiting.")
-> Fixes: 6d390e4b5d48 ("locks: fix a potential use-after-free problem when wakeup a waiter")
-> Signed-off-by: yangerkun <yangerkun@huawei.com>
-> Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> ---
->  fs/locks.c | 29 ++++++++++++++++++++++-------
->  1 file changed, 22 insertions(+), 7 deletions(-)
-> 
-> diff --git a/fs/locks.c b/fs/locks.c
-> index 426b55d333d5..b88a5b11c464 100644
-> --- a/fs/locks.c
-> +++ b/fs/locks.c
-> @@ -1354,7 +1354,10 @@ static int posix_lock_inode_wait(struct inode *inode, struct file_lock *fl)
->  		if (error)
->  			break;
->  	}
-> -	locks_delete_block(fl);
-> +	if (error)
-> +		locks_delete_block(fl);
-> +	WARN_ON_ONCE(fl->fl_blocker);
-> +
->  	return error;
->  }
->  
-> @@ -1447,7 +1450,9 @@ int locks_mandatory_area(struct inode *inode, struct file *filp, loff_t start,
->  
->  		break;
->  	}
-> -	locks_delete_block(&fl);
-> +	if (error)
-> +		locks_delete_block(&fl);
-> +	WARN_ON_ONCE(fl.fl_blocker);
->  
->  	return error;
->  }
-> @@ -1638,23 +1643,28 @@ int __break_lease(struct inode *inode, unsigned int mode, unsigned int type)
->  
->  	locks_dispose_list(&dispose);
->  	error = wait_event_interruptible_timeout(new_fl->fl_wait,
-> -						!new_fl->fl_blocker, break_time);
-> +						 !new_fl->fl_blocker,
-> +						 break_time);
->  
->  	percpu_down_read(&file_rwsem);
->  	spin_lock(&ctx->flc_lock);
->  	trace_break_lease_unblock(inode, new_fl);
-> -	locks_delete_block(new_fl);
->  	if (error >= 0) {
->  		/*
->  		 * Wait for the next conflicting lease that has not been
->  		 * broken yet
->  		 */
-> -		if (error == 0)
-> +		if (error == 0) {
-> +			locks_delete_block(new_fl);
->  			time_out_leases(inode, &dispose);
-> +		}
->  		if (any_leases_conflict(inode, new_fl))
->  			goto restart;
->  		error = 0;
-> +	} else {
-> +		locks_delete_block(new_fl);
->  	}
-> +	WARN_ON_ONCE(fl->fl_blocker);
->  out:
->  	spin_unlock(&ctx->flc_lock);
->  	percpu_up_read(&file_rwsem);
-> @@ -2126,7 +2136,10 @@ static int flock_lock_inode_wait(struct inode *inode, struct file_lock *fl)
->  		if (error)
->  			break;
->  	}
-> -	locks_delete_block(fl);
-> +	if (error)
-> +		locks_delete_block(fl);
-> +	WARN_ON_ONCE(fl->fl_blocker);
-> +
->  	return error;
->  }
->  
-> @@ -2403,7 +2416,9 @@ static int do_lock_file_wait(struct file *filp, unsigned int cmd,
->  		if (error)
->  			break;
->  	}
-> -	locks_delete_block(fl);
-> +	if (error)
-> +		locks_delete_block(fl);
-> +	WARN_ON_ONCE(fl->fl_blocker);
->  
->  	return error;
->  }
+So naturally, we should have
+_PAGE_USER = 0x001
+_PAGE_RW   = 0x002
 
-I've gone ahead and added the above patch to linux-next. Linus, Neil,
-are you ok with this one? I think this is probably the simplest
-approach.
+Today 0x001 and 0x002 and _PAGE_PRESENT and _PAGE_HASHPTE which
+both are software only bits.
 
-Assuming so and that this tests out OK, I'll a PR in a few days, after
-it has had a bit of soak time in next.
+Switch _PAGE_USER and _PAGE_PRESET
+Switch _PAGE_RW and _PAGE_HASHPTE
 
-Thanks for the effort everyone! 
+This allows to remove a few insns.
+
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+---
+v3: rebased on today's powerpc/merge
+
+v2: rebased on today's powerpc/merge
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+---
+ arch/powerpc/include/asm/book3s/32/hash.h |  8 ++++----
+ arch/powerpc/kernel/head_32.S             |  9 +++------
+ arch/powerpc/mm/book3s32/hash_low.S       | 14 ++++++--------
+ 3 files changed, 13 insertions(+), 18 deletions(-)
+
+diff --git a/arch/powerpc/include/asm/book3s/32/hash.h b/arch/powerpc/include/asm/book3s/32/hash.h
+index 2a0a467d2985..34a7215ae81e 100644
+--- a/arch/powerpc/include/asm/book3s/32/hash.h
++++ b/arch/powerpc/include/asm/book3s/32/hash.h
+@@ -17,9 +17,9 @@
+  * updating the accessed and modified bits in the page table tree.
+  */
+ 
+-#define _PAGE_PRESENT	0x001	/* software: pte contains a translation */
+-#define _PAGE_HASHPTE	0x002	/* hash_page has made an HPTE for this pte */
+-#define _PAGE_USER	0x004	/* usermode access allowed */
++#define _PAGE_USER	0x001	/* usermode access allowed */
++#define _PAGE_RW	0x002	/* software: user write access allowed */
++#define _PAGE_PRESENT	0x004	/* software: pte contains a translation */
+ #define _PAGE_GUARDED	0x008	/* G: prohibit speculative access */
+ #define _PAGE_COHERENT	0x010	/* M: enforce memory coherence (SMP systems) */
+ #define _PAGE_NO_CACHE	0x020	/* I: cache inhibit */
+@@ -27,7 +27,7 @@
+ #define _PAGE_DIRTY	0x080	/* C: page changed */
+ #define _PAGE_ACCESSED	0x100	/* R: page referenced */
+ #define _PAGE_EXEC	0x200	/* software: exec allowed */
+-#define _PAGE_RW	0x400	/* software: user write access allowed */
++#define _PAGE_HASHPTE	0x400	/* hash_page has made an HPTE for this pte */
+ #define _PAGE_SPECIAL	0x800	/* software: Special page */
+ 
+ #ifdef CONFIG_PTE_64BIT
+diff --git a/arch/powerpc/kernel/head_32.S b/arch/powerpc/kernel/head_32.S
+index 97c887950c3c..daaa153950c2 100644
+--- a/arch/powerpc/kernel/head_32.S
++++ b/arch/powerpc/kernel/head_32.S
+@@ -348,7 +348,7 @@ BEGIN_MMU_FTR_SECTION
+ 	andis.	r0, r5, (DSISR_BAD_FAULT_32S | DSISR_DABRMATCH)@h
+ #endif
+ 	bne	handle_page_fault_tramp_2	/* if not, try to put a PTE */
+-	rlwinm	r3, r5, 32 - 15, 21, 21		/* DSISR_STORE -> _PAGE_RW */
++	rlwinm	r3, r5, 32 - 24, 30, 30		/* DSISR_STORE -> _PAGE_RW */
+ 	bl	hash_page
+ 	b	handle_page_fault_tramp_1
+ FTR_SECTION_ELSE
+@@ -497,7 +497,6 @@ InstructionTLBMiss:
+ 	andc.	r1,r1,r0		/* check access & ~permission */
+ 	bne-	InstructionAddressInvalid /* return if access not permitted */
+ 	/* Convert linux-style PTE to low word of PPC-style PTE */
+-	rlwimi	r0,r0,32-2,31,31	/* _PAGE_USER -> PP lsb */
+ 	ori	r1, r1, 0xe06		/* clear out reserved bits */
+ 	andc	r1, r0, r1		/* PP = user? 1 : 0 */
+ BEGIN_FTR_SECTION
+@@ -565,9 +564,8 @@ DataLoadTLBMiss:
+ 	 * we would need to update the pte atomically with lwarx/stwcx.
+ 	 */
+ 	/* Convert linux-style PTE to low word of PPC-style PTE */
+-	rlwinm	r1,r0,32-9,30,30	/* _PAGE_RW -> PP msb */
+-	rlwimi	r0,r0,32-1,30,30	/* _PAGE_USER -> PP msb */
+-	rlwimi	r0,r0,32-1,31,31	/* _PAGE_USER -> PP lsb */
++	rlwinm	r1,r0,0,30,30		/* _PAGE_RW -> PP msb */
++	rlwimi	r0,r0,1,30,30		/* _PAGE_USER -> PP msb */
+ 	ori	r1,r1,0xe04		/* clear out reserved bits */
+ 	andc	r1,r0,r1		/* PP = user? rw? 1: 3: 0 */
+ BEGIN_FTR_SECTION
+@@ -645,7 +643,6 @@ DataStoreTLBMiss:
+ 	 * we would need to update the pte atomically with lwarx/stwcx.
+ 	 */
+ 	/* Convert linux-style PTE to low word of PPC-style PTE */
+-	rlwimi	r0,r0,32-2,31,31	/* _PAGE_USER -> PP lsb */
+ 	li	r1,0xe06		/* clear out reserved bits & PP msb */
+ 	andc	r1,r0,r1		/* PP = user? 1: 0 */
+ BEGIN_FTR_SECTION
+diff --git a/arch/powerpc/mm/book3s32/hash_low.S b/arch/powerpc/mm/book3s32/hash_low.S
+index 877d880890fe..6d236080cb1a 100644
+--- a/arch/powerpc/mm/book3s32/hash_low.S
++++ b/arch/powerpc/mm/book3s32/hash_low.S
+@@ -35,7 +35,7 @@ mmu_hash_lock:
+ /*
+  * Load a PTE into the hash table, if possible.
+  * The address is in r4, and r3 contains an access flag:
+- * _PAGE_RW (0x400) if a write.
++ * _PAGE_RW (0x002) if a write.
+  * r9 contains the SRR1 value, from which we use the MSR_PR bit.
+  * SPRG_THREAD contains the physical address of the current task's thread.
+  *
+@@ -69,7 +69,7 @@ _GLOBAL(hash_page)
+ 	blt+	112f			/* assume user more likely */
+ 	lis	r5, (swapper_pg_dir - PAGE_OFFSET)@ha	/* if kernel address, use */
+ 	addi	r5 ,r5 ,(swapper_pg_dir - PAGE_OFFSET)@l	/* kernel page table */
+-	rlwimi	r3,r9,32-12,29,29	/* MSR_PR -> _PAGE_USER */
++	rlwimi	r3,r9,32-14,31,31	/* MSR_PR -> _PAGE_USER */
+ 112:
+ #ifndef CONFIG_PTE_64BIT
+ 	rlwimi	r5,r4,12,20,29		/* insert top 10 bits of address */
+@@ -94,7 +94,7 @@ _GLOBAL(hash_page)
+ #else
+ 	rlwimi	r8,r4,23,20,28		/* compute pte address */
+ #endif
+-	rlwinm	r0,r3,32-3,24,24	/* _PAGE_RW access -> _PAGE_DIRTY */
++	rlwinm	r0,r3,6,24,24		/* _PAGE_RW access -> _PAGE_DIRTY */
+ 	ori	r0,r0,_PAGE_ACCESSED|_PAGE_HASHPTE
+ 
+ 	/*
+@@ -310,11 +310,9 @@ Hash_msk = (((1 << Hash_bits) - 1) * 64)
+ 
+ _GLOBAL(create_hpte)
+ 	/* Convert linux-style PTE (r5) to low word of PPC-style PTE (r8) */
+-	rlwinm	r8,r5,32-9,30,30	/* _PAGE_RW -> PP msb */
+ 	rlwinm	r0,r5,32-6,30,30	/* _PAGE_DIRTY -> PP msb */
+-	and	r8,r8,r0		/* writable if _RW & _DIRTY */
+-	rlwimi	r5,r5,32-1,30,30	/* _PAGE_USER -> PP msb */
+-	rlwimi	r5,r5,32-2,31,31	/* _PAGE_USER -> PP lsb */
++	and	r8,r5,r0		/* writable if _RW & _DIRTY */
++	rlwimi	r5,r5,1,30,30		/* _PAGE_USER -> PP msb */
+ 	ori	r8,r8,0xe04		/* clear out reserved bits */
+ 	andc	r8,r5,r8		/* PP = user? (rw&dirty? 1: 3): 0 */
+ BEGIN_FTR_SECTION
+@@ -566,7 +564,7 @@ _GLOBAL(flush_hash_pages)
+ 33:	lwarx	r8,0,r5			/* fetch the pte flags word */
+ 	andi.	r0,r8,_PAGE_HASHPTE
+ 	beq	8f			/* done if HASHPTE is already clear */
+-	rlwinm	r8,r8,0,31,29		/* clear HASHPTE bit */
++	rlwinm	r8,r8,0,~_PAGE_HASHPTE	/* clear HASHPTE bit */
+ 	stwcx.	r8,0,r5			/* update the pte */
+ 	bne-	33b
+ 
 -- 
-Jeff Layton <jlayton@kernel.org>
+2.25.0
 
