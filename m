@@ -2,449 +2,232 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1599C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 15:02:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42A15C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 15:03:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD66120675
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 15:02:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B11F20675
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 15:03:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mw1LbFv5"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="hdnZxgJ+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727532AbgCJPCE (ORCPT
+        id S1727613AbgCJPDS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 11:02:04 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:52155 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726469AbgCJPCE (ORCPT
+        Tue, 10 Mar 2020 11:03:18 -0400
+Received: from mail.efficios.com ([167.114.26.124]:51774 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726295AbgCJPDR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 11:02:04 -0400
-Received: by mail-wm1-f67.google.com with SMTP id a132so1781404wme.1
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 08:02:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=IaIYth7Hd1C5u5nYWSUZLucEHaUbRnTCuCm39j2vevM=;
-        b=mw1LbFv5tRbM3znPBo3adyte7mMzMaTXUWt9Ln2C2E/7FjL230rSGQHldDknwh0Idj
-         93I2c+gjx0gWZyBQd21MMv5dU2DevxSxuSY5T3J5TDBocrTEkE/FFMBwUHaZBnatCHlr
-         n8gBLY6pfSE8BF3Fyad/Z9HPL5GwItMb2ADWqeHBNm3gQlE2m4BV/JdFFas3Ncetn3pP
-         nKpsX9Z7k/WQnyZ3zruUkD4jDJp/AUICiXyrfrPIqCunh5DD5jvGBgqYjLN4wiODojLl
-         2g8VgGKnISJ/Dv1DBAmfEXG0pFsDYovtub0XrFXQ9ROtMkCprNCaW6rbGmseZCgp3/OI
-         yv3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=IaIYth7Hd1C5u5nYWSUZLucEHaUbRnTCuCm39j2vevM=;
-        b=SiJvzT4t6HcJ9vfgVxYDFbfOmK/6e1PAy6afnRjm/ckZYmJ+/89MrkIxvxMG0tDzZx
-         x6j/wQJMQ5BLJpRKFFqaZ/lBNTY/xMexZUUq1CIkobmbwbNpoW33XhBExU6JrVZ20Lm2
-         GHESufT++OUd9KdvvD281g1In8m8kvCXCl12NMqXJW5Z4F8itT+CGtqw2nM9p/SoI5cg
-         3Lj4xWWAGHJLoIqgCgDTjsde0dV5y7xG/Wbzvl2yIz3p44uNggkq+jxCEI5NrEDgsu10
-         RhRsZadj4aifIkKyjkNFyzH3M9yJhP4d6hUVdvWF/8GqSQbgzecCk8neGhHhcWE74KYN
-         SePw==
-X-Gm-Message-State: ANhLgQ0U93SXlJCDjZslwph0VU11OKOQUv+11ZUnPSn3NhngzqiEI59b
-        8yxt7+JZ5cRXfWc34vDvvn62Wg==
-X-Google-Smtp-Source: ADFU+vu0RissKh5eU8m5fHIHGtILroJxbSvPbut5GPdZ6ydWrg4rk2h3Yse864mwSu9bvLU4KCLXtQ==
-X-Received: by 2002:a7b:c0cf:: with SMTP id s15mr2705664wmh.106.1583852521526;
-        Tue, 10 Mar 2020 08:02:01 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id a186sm4454652wmh.33.2020.03.10.08.02.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Mar 2020 08:02:00 -0700 (PDT)
-Date:   Tue, 10 Mar 2020 15:01:59 +0000
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Kiran Gunda <kgunda@codeaurora.org>
-Cc:     bjorn.andersson@linaro.org, jingoohan1@gmail.com,
-        lee.jones@linaro.org, b.zolnierkie@samsung.com,
-        dri-devel@lists.freedesktop.org, jacek.anaszewski@gmail.com,
-        pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Dan Murphy <dmurphy@ti.com>,
-        linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH V3 1/4] backlight: qcom-wled: convert the wled bindings
- to .yaml format
-Message-ID: <20200310150159.vg2k44zn57me6wzk@holly.lan>
-References: <1583760362-26978-1-git-send-email-kgunda@codeaurora.org>
- <1583760362-26978-2-git-send-email-kgunda@codeaurora.org>
+        Tue, 10 Mar 2020 11:03:17 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id CBB212703B2;
+        Tue, 10 Mar 2020 11:03:15 -0400 (EDT)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id gdOHo5P8aAL2; Tue, 10 Mar 2020 11:03:15 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 3E5122703B1;
+        Tue, 10 Mar 2020 11:03:15 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 3E5122703B1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1583852595;
+        bh=0dlIWC/Uel9bUWnObZ4STLaOrPOFsJD6lnPz6Zv3Cn4=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=hdnZxgJ+I3BKZRulYLNXDQ7lBM7XwiU3wbaSXn7JHZhSfNxaWaYetJbOyEC4qmozP
+         MCIlj3KPIpyN5ucm3/to39ovCO49GqMOskotbF9bB2oePhDgYLc5Ak/m4Ifz2krXzV
+         sphhL4g7yN8mRetNm+hba3LY2yTKLZ8v385eikyLLZkGThp5PPAjAR7hADdiXtgSlw
+         UGj87m77AiqXv7XWpyo671EhM8GJ1WLL80S4amOWeFIFbhjwPEztSXJLygHOgzzgyD
+         0RfqNI27eBBnc7zxUHNvRiIVkAf3pNlHMkKAa1i/c+myVYFLDnkNQ+fdqXmTR0UJ3B
+         9WfBe3+SXm++Q==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id 2V2z5rhnD5pm; Tue, 10 Mar 2020 11:03:15 -0400 (EDT)
+Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
+        by mail.efficios.com (Postfix) with ESMTP id 23E612703B0;
+        Tue, 10 Mar 2020 11:03:15 -0400 (EDT)
+Date:   Tue, 10 Mar 2020 11:03:15 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        paulmck <paulmck@kernel.org>,
+        "Joel Fernandes, Google" <joel@joelfernandes.org>,
+        Frederic Weisbecker <frederic@kernel.org>
+Message-ID: <1489283504.23399.1583852595008.JavaMail.zimbra@efficios.com>
+In-Reply-To: <871rq171ca.fsf@nanos.tec.linutronix.de>
+References: <87mu8p797b.fsf@nanos.tec.linutronix.de> <1403546357.21810.1583779060302.JavaMail.zimbra@efficios.com> <871rq171ca.fsf@nanos.tec.linutronix.de>
+Subject: Re: Instrumentation and RCU
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1583760362-26978-2-git-send-email-kgunda@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.26.124]
+X-Mailer: Zimbra 8.8.15_GA_3901 (ZimbraWebClient - FF73 (Linux)/8.8.15_GA_3895)
+Thread-Topic: Instrumentation and RCU
+Thread-Index: lfQf50G3B2kkQCcrHRiRh26RBEBatA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 09, 2020 at 06:55:59PM +0530, Kiran Gunda wrote:
-> Convert the qcom-wled bindings from .txt to .yaml format.
+----- On Mar 9, 2020, at 3:52 PM, Thomas Gleixner tglx@linutronix.de wrote:
+
+> Mathieu Desnoyers <mathieu.desnoyers@efficios.com> writes:
+>> ----- On Mar 9, 2020, at 1:02 PM, Thomas Gleixner tglx@linutronix.de wrote:
+[...]
 > 
-> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
-
-Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
-
-
-> ---
->  .../bindings/leds/backlight/qcom-wled.txt          | 154 -----------------
->  .../bindings/leds/backlight/qcom-wled.yaml         | 184 +++++++++++++++++++++
->  2 files changed, 184 insertions(+), 154 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt
->  create mode 100644 Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml
+>>> #3) RCU idle
+>>>    are really more than questionable. For 99.9999% of instrumentation
+>>>    users it's absolutely irrelevant whether this traces the interrupt
+>>>    disabled time of user_exit_irqsoff() or rcu_irq_enter() or not.
+>>> 
+>>>    But what's relevant is the tracer overhead which is e.g. inflicted
+>>>    with todays trace_hardirqs_off/on() implementation because that
+>>>    unconditionally uses the rcuidle variant with the scru/rcu_irq dance
+>>>    around every tracepoint.
+>>
+>> I think one of the big issues here is that most of the uses of
+>> trace_hardirqs_off() are from sites which already have RCU watching,
+>> so we are doing heavy-weight operations for nothing.
 > 
-> diff --git a/Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt b/Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt
-> deleted file mode 100644
-> index c06863b..0000000
-> --- a/Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt
-> +++ /dev/null
-> @@ -1,154 +0,0 @@
-> -Binding for Qualcomm Technologies, Inc. WLED driver
-> -
-> -WLED (White Light Emitting Diode) driver is used for controlling display
-> -backlight that is part of PMIC on Qualcomm Technologies, Inc. reference
-> -platforms. The PMIC is connected to the host processor via SPMI bus.
-> -
-> -- compatible
-> -	Usage:        required
-> -	Value type:   <string>
-> -	Definition:   should be one of:
-> -			"qcom,pm8941-wled"
-> -			"qcom,pmi8998-wled"
-> -			"qcom,pm660l-wled"
-> -
-> -- reg
-> -	Usage:        required
-> -	Value type:   <prop encoded array>
-> -	Definition:   Base address of the WLED modules.
-> -
-> -- default-brightness
-> -	Usage:        optional
-> -	Value type:   <u32>
-> -	Definition:   brightness value on boot, value from: 0-4095.
-> -		      Default: 2048
-> -
-> -- label
-> -	Usage:        required
-> -	Value type:   <string>
-> -	Definition:   The name of the backlight device
-> -
-> -- qcom,cs-out
-> -	Usage:        optional
-> -	Value type:   <bool>
-> -	Definition:   enable current sink output.
-> -		      This property is supported only for PM8941.
-> -
-> -- qcom,cabc
-> -	Usage:        optional
-> -	Value type:   <bool>
-> -	Definition:   enable content adaptive backlight control.
-> -
-> -- qcom,ext-gen
-> -	Usage:        optional
-> -	Value type:   <bool>
-> -	Definition:   use externally generated modulator signal to dim.
-> -		      This property is supported only for PM8941.
-> -
-> -- qcom,current-limit
-> -	Usage:        optional
-> -	Value type:   <u32>
-> -	Definition:   mA; per-string current limit; value from 0 to 25 with
-> -		      1 mA step. Default 20 mA.
-> -		      This property is supported only for pm8941.
-> -
-> -- qcom,current-limit-microamp
-> -	Usage:        optional
-> -	Value type:   <u32>
-> -	Definition:   uA; per-string current limit; value from 0 to 30000 with
-> -		      2500 uA step. Default 25 mA.
-> -
-> -- qcom,current-boost-limit
-> -	Usage:        optional
-> -	Value type:   <u32>
-> -	Definition:   mA; boost current limit.
-> -		      For pm8941: one of: 105, 385, 525, 805, 980, 1260, 1400,
-> -		      1680. Default: 805 mA.
-> -		      For pmi8998: one of: 105, 280, 450, 620, 970, 1150, 1300,
-> -		      1500. Default: 970 mA.
-> -
-> -- qcom,switching-freq
-> -	Usage:        optional
-> -	Value type:   <u32>
-> -	 Definition:   kHz; switching frequency; one of: 600, 640, 685, 738,
-> -		       800, 872, 960, 1066, 1200, 1371, 1600, 1920, 2400, 3200,
-> -		       4800, 9600.
-> -		       Default: for pm8941: 1600 kHz
-> -				for pmi8998: 800 kHz
-> -
-> -- qcom,ovp
-> -	Usage:        optional
-> -	Value type:   <u32>
-> -	Definition:   V; Over-voltage protection limit; one of:
-> -		      27, 29, 32, 35. Default: 29V
-> -		      This property is supported only for PM8941.
-> -
-> -- qcom,ovp-millivolt
-> -	Usage:        optional
-> -	Value type:   <u32>
-> -	Definition:   mV; Over-voltage protection limit;
-> -		      For pmi8998: one of 18100, 19600, 29600, 31100.
-> -		      Default 29600 mV.
-> -		      If this property is not specified for PM8941, it
-> -		      falls back to "qcom,ovp" property.
-> -
-> -- qcom,num-strings
-> -	Usage:        optional
-> -	Value type:   <u32>
-> -	Definition:   #; number of led strings attached;
-> -		      value: For PM8941 from 1 to 3. Default: 2
-> -			     For PMI8998 from 1 to 4.
-> -
-> -- interrupts
-> -	Usage:        optional
-> -	Value type:   <prop encoded array>
-> -	Definition:   Interrupts associated with WLED. This should be
-> -		      "short" and "ovp" interrupts. Interrupts can be
-> -		      specified as per the encoding listed under
-> -		      Documentation/devicetree/bindings/spmi/
-> -		      qcom,spmi-pmic-arb.txt.
-> -
-> -- interrupt-names
-> -	Usage:        optional
-> -	Value type:   <string>
-> -	Definition:   Interrupt names associated with the interrupts.
-> -		      Must be "short" and "ovp". The short circuit detection
-> -		      is not supported for PM8941.
-> -
-> -- qcom,enabled-strings
-> -	Usage:        optional
-> -	Value tyoe:   <u32 array>
-> -	Definition:   Array of the WLED strings numbered from 0 to 3. Each
-> -		      string of leds are operated individually. Specify the
-> -		      list of strings used by the device. Any combination of
-> -		      led strings can be used.
-> -
-> -- qcom,external-pfet
-> -	Usage:        optional
-> -	Value type:   <bool>
-> -	Definition:   Specify if external PFET control for short circuit
-> -		      protection is used. This property is supported only
-> -		      for PMI8998.
-> -
-> -- qcom,auto-string-detection
-> -	Usage:        optional
-> -	Value type:   <bool>
-> -	Definition:   Enables auto-detection of the WLED string configuration.
-> -		      This feature is not supported for PM8941.
-> -
-> -
-> -Example:
-> -
-> -pm8941-wled@d800 {
-> -	compatible = "qcom,pm8941-wled";
-> -	reg = <0xd800>;
-> -	label = "backlight";
-> -
-> -	qcom,cs-out;
-> -	qcom,current-limit = <20>;
-> -	qcom,current-boost-limit = <805>;
-> -	qcom,switching-freq = <1600>;
-> -	qcom,ovp = <29>;
-> -	qcom,num-strings = <2>;
-> -	qcom,enabled-strings = <0 1>;
-> -};
-> diff --git a/Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml b/Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml
-> new file mode 100644
-> index 0000000..d334f81
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml
-> @@ -0,0 +1,184 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/bindings/leds/backlight/qcom-wled.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Binding for Qualcomm Technologies, Inc. WLED driver
-> +
-> +maintainers:
-> +  - Lee Jones <lee.jones@linaro.org>
-> +
-> +description: |
-> +  WLED (White Light Emitting Diode) driver is used for controlling display
-> +  backlight that is part of PMIC on Qualcomm Technologies, Inc. reference
-> +  platforms. The PMIC is connected to the host processor via SPMI bus.
-> +
-> +properties:
-> +  compatible :
-> +    enum:
-> +       - qcom,pm8941-wled
-> +       - qcom,pmi8998-wled
-> +       - qcom,pm660l-wled
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  default-brightness:
-> +    maxItems: 1
-> +    description:
-> +      brightness value on boot, value from 0-4095.
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +        default: 2048
-> +
-> +  label:
-> +    maxItems: 1
-> +    description:
-> +      The name of the backlight device.
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/string
-> +
-> +  qcom,cs-out:
-> +    description:
-> +      enable current sink output.
-> +      This property is supported only for PM8941.
-> +    type: boolean
-> +
-> +  qcom,cabc:
-> +    description:
-> +      enable content adaptive backlight control.
-> +    type: boolean
-> +
-> +  qcom,ext-gen:
-> +    description:
-> +      use externally generated modulator signal to dim.
-> +      This property is supported only for PM8941.
-> +    type: boolean
-> +
-> +  qcom,current-limit:
-> +    maxItems: 1
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +    description:
-> +      mA; per-string current limit; value from 0 to 25 with
-> +      1 mA step. This property is supported only for pm8941.
-> +    default: 20
-> +
-> +  qcom,current-limit-microamp:
-> +    maxItems: 1
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +    description:
-> +      uA; per-string current limit; value from 0 to 30000 with
-> +      2500 uA step.
-> +    default: 25
-> +
-> +  qcom,current-boost-limit:
-> +    maxItems: 1
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +    description:
-> +      mA; boost current limit.
-> +      For pm8941 one of 105, 385, 525, 805, 980, 1260, 1400, 1680.
-> +      Default, 805 mA.
-> +      For pmi8998 one of 105, 280, 450, 620, 970, 1150, 1300,
-> +      1500. Default 970 mA.
-> +
-> +  qcom,switching-freq:
-> +    maxItems: 1
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +    description:
-> +      kHz; switching frequency; one of 600, 640, 685, 738,
-> +      800, 872, 960, 1066, 1200, 1371, 1600, 1920, 2400, 3200,
-> +      4800, 9600.
-> +      Default for pm8941 1600 kHz
-> +               for pmi8998 800 kHz
-> +
-> +  qcom,ovp:
-> +    maxItems: 1
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +    description:
-> +      V; Over-voltage protection limit; one of 27, 29, 32, 35. Default 29V
-> +      This property is supported only for PM8941.
-> +
-> +  qcom,ovp-millivolt:
-> +    maxItems: 1
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +    description:
-> +      mV; Over-voltage protection limit;
-> +      For pmi8998 one of 18100, 19600, 29600, 31100.
-> +      Default 29600 mV.
-> +      If this property is not specified for PM8941, it
-> +      falls back to "qcom,ovp" property.
-> +
-> +  qcom,num-strings:
-> +    maxItems: 1
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +    description:
-> +      number of led strings attached;
-> +      value for PM8941 from 1 to 3. Default 2
-> +      For PMI8998 from 1 to 4.
-> +
-> +  interrupts:
-> +    maxItems: 2
-> +    description:
-> +      Interrupts associated with WLED. This should be
-> +      "short" and "ovp" interrupts. Interrupts can be
-> +      specified as per the encoding listed under
-> +      Documentation/devicetree/bindings/spmi/
-> +      qcom,spmi-pmic-arb.txt.
-> +
-> +  interrupt-names:
-> +    description:
-> +      Interrupt names associated with the interrupts.
-> +      Must be "short" and "ovp". The short circuit detection
-> +      is not supported for PM8941.
-> +
-> +  qcom,enabled-strings:
-> +    maxItems: 1
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32-array
-> +    description:
-> +      Array of the WLED strings numbered from 0 to 3. Each
-> +      string of leds are operated individually. Specify the
-> +      list of strings used by the device. Any combination of
-> +      led strings can be used.
-> +
-> +  qcom,external-pfet:
-> +    description:
-> +      Specify if external PFET control for short circuit
-> +      protection is used. This property is supported only
-> +      for PMI8998.
-> +    type: boolean
-> +
-> +  qcom,auto-string-detection:
-> +    description:
-> +      Enables auto-detection of the WLED string configuration.
-> +      This feature is not supported for PM8941.
-> +    type: boolean
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - label
-> +
-> +examples:
-> +  - |
-> +    pm8941-wled@d800 {
-> +        compatible = "qcom,pm8941-wled";
-> +        reg = <0xd800 0x100>;
-> +        label = "backlight";
-> +
-> +        qcom,cs-out;
-> +        qcom,current-limit = <20>;
-> +        qcom,current-boost-limit = <805>;
-> +        qcom,switching-freq = <1600>;
-> +        qcom,ovp = <29>;
-> +        qcom,num-strings = <2>;
-> +        qcom,enabled-strings = <0 1>;
-> +     };
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
->  a Linux Foundation Collaborative Project
+> That and in some places in the entry code we do the heavy weight
+> operations to cover 100 instructions which turn on RCU anyway. That does
+> not make any sense at all.
+> 
+>> I strongly suspect that most of the overhead we've been trying to avoid when
+>> introducing use of SRCU in rcuidle tracepoints was actually caused by callsites
+>> which use rcuidle tracepoints while having RCU watching, just because there is a
+>> handful of callsites which don't have RCU watching. This is confirmed
+>> by the commit message of commit e6753f23d9 "tracepoint: Make rcuidle
+>> tracepoint callers use SRCU":
+>>
+>>    "In recent tests with IRQ on/off tracepoints, a large performance
+>>     overhead ~10% is noticed when running hackbench. This is root caused to
+>>     calls to rcu_irq_enter_irqson and rcu_irq_exit_irqson from the
+>>     tracepoint code. Following a long discussion on the list [1] about this,
+>>     we concluded that srcu is a better alternative for use during rcu idle.
+>>     Although it does involve extra barriers, its lighter than the sched-rcu
+>>     version which has to do additional RCU calls to notify RCU idle about
+>>     entry into RCU sections.
+>> [...]
+>>     Test: Tested idle and preempt/irq tracepoints."
+> 
+> In a quick test I did with a invalid syscall number with profiling the
+> trace_hardirqs_off() is pretty prominent and goes down by roughly a
+> factor of 2 when I move it past enter_from_user_mode() and use just the
+> non RCU idle variant.
+
+I think one issue here is that trace_hardirqs_off() is now shared between
+lockdep and tracing. For lockdep, we have the following comment:
+
+        /*
+         * IRQ from user mode.
+         *
+         * We need to tell lockdep that IRQs are off.  We can't do this until
+         * we fix gsbase, and we should do it before enter_from_user_mode
+         * (which can take locks).  Since TRACE_IRQS_OFF is idempotent,
+         * the simplest way to handle it is to just call it twice if
+         * we enter from user mode.  There's no reason to optimize this since
+         * TRACE_IRQS_OFF is a no-op if lockdep is off.
+         */
+        TRACE_IRQS_OFF
+
+        CALL_enter_from_user_mode
+
+1:
+        ENTER_IRQ_STACK old_rsp=%rdi save_ret=1
+        /* We entered an interrupt context - irqs are off: */
+        TRACE_IRQS_OFF
+
+which seems to imply that lockdep requires TRACE_IRQS_OFF to be performed
+_before_ entering from usermode. I don't expect this to be useful at all for
+other tracers though. I think this should be replaced by a new e.g.
+LOCKDEP_ENTER_FROM_USER_MODE or such which would call into lockdep without
+calling other tracers.
+
+> 
+>> So I think we could go back to plain RCU for rcuidle tracepoints if we do
+>> the cheaper "rcu_is_watching()" check rather than invoking
+>> rcu_irq_{enter,exit}_irqson() unconditionally.
+> 
+> Haven't tried that yet for the overall usage of trace_hardirqs_off(),
+> but yes, it's going to be a measurable difference.
+
+Ideally we should do both: change the TRACE_IRQS_OFF prior entering from usermode
+for a lockdep-specific call, which would remove the frequent case which requires
+temporarily enabling RCU, *and* change tracepoints to use rcu_is_watching(),
+temporarily enable RCU, and use standard RCU for rcuidle cases.
+
+> 
+>>>    Even if the tracepoint sits in the ASM code it just covers about ~20
+>>>    low level ASM instructions more. The tracer invocation, which is
+>>>    even done twice when coming from user space on x86 (the second call
+>>>    is optimized in the tracer C-code), costs definitely way more
+>>>    cycles. When you take the scru/rcu_irq dance into account it's a
+>>>    complete disaster performance wise.
+>>
+>> Part of the issue here is the current overhead of SRCU read-side lock,
+>> which contains memory barriers. The other part of the issue is the fact that
+>> rcu_irq_{enter,exit}_irqson() contains an atomic_add_return atomic instruction.
+>>
+>> We could use the approach proposed by Peterz's and Steven's patches to basically
+>> do a lightweight "is_rcu_watching()" check for rcuidle tracepoint, and only
+>> enable
+>> RCU for those cases. We could then simply go back on using regular RCU
+>> like so:
+> 
+> Right, but that still does the whole rcu_irq dance especially in the
+> entry code just to trace 50 or 100 instructions which are turning on RCU
+> anyway.
+
+Agreed. Would changing this to a lockdep-specific call as I suggest above
+solve this ?
+
+> 
+>>> #4 Protecting call chains
+[...]
+> 
+>> In addition to splitting tracing code into a separate section, which I think
+>> makes sense, I can think of another alternative way to provide call chains
+>> protection: adding a "in_tracing" flag somewhere alongside each kernel stack.
+>> Each thread and interrupt stack would have its own flag. However, trap handlers
+>> should share the "in_tracing" flag with the context which triggers the trap.
+>>
+>> If a tracer recurses, or if a tracer attempts to trace another tracer, the
+>> instrumentation would break the recursion chain by preventing instrumentation
+>> from firing. If we end up caring about tracers tracing other tracers, we could
+>> have one distinct flag per tracer and let each tracer break the recursion chain.
+>>
+>> Having this flag per kernel stack rather than per CPU or per thread would
+>> allow tracing of nested interrupt handlers (and NMIs), but would break
+>> call chains both within the same stack or going through a trap. I think
+>> it could be a nice complementary safety net to handle mishaps in a non-fatal
+>> way.
+> 
+> That works as long as none of this uses breakpoint based patching to
+> dynamically disable/enable stuff.
+
+I'm clearly missing something here. I was expecting the "in_tracing" flag trick
+to be able to fix the breakpoint recursion issue. What is the problem I'm missing
+here ?
+
+An additional point about splitting core code into separate non-instrumentable
+sections: The part I'm concerned about is instrumentation of trap handlers.
+_That_ will likely need to remain shared between the kernel and the tracers.
+This is where I think the "in_tracing" flag approach would help us solve the
+recursion issue without losing that important instrumentation coverage.
+
+Thanks,
+
+Mathieu
+
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
