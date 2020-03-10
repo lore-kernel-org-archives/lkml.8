@@ -2,112 +2,152 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 264B7C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:41:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BB39C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:41:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E19EE20663
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:41:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06A3C20663
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:41:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="I5UdkSdO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726797AbgCJNlC (ORCPT
+        id S1726952AbgCJNlN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:41:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35940 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726508AbgCJNlB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:41:01 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4DF57205F4;
-        Tue, 10 Mar 2020 13:41:00 +0000 (UTC)
-Date:   Tue, 10 Mar 2020 09:40:58 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Brian Gerst <brgerst@gmail.com>,
-        Juergen Gross <jgross@suse.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>
-Subject: Re: [patch part-II V2 09/13] x86/entry/common: Split hardirq
- tracing into lockdep and ftrace parts
-Message-ID: <20200310094058.1239cf2f@gandalf.local.home>
-In-Reply-To: <20200310112045.GD29372@zn.tnic>
-References: <20200308222359.370649591@linutronix.de>
-        <20200308222609.825111830@linutronix.de>
-        <20200310112045.GD29372@zn.tnic>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 10 Mar 2020 09:41:13 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:21320 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726508AbgCJNlM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:41:12 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02ADY8mq001091;
+        Tue, 10 Mar 2020 14:41:06 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=YPtuuFjlaHziSVTLb4nw/9PbtG4QP/ffI4njO2jnjD8=;
+ b=I5UdkSdOwCgWH3Rzmqs9i2C8T7h4EKPpvut6bFS9SW2YGY0mjZ8Pk1GJaWICb4RxtGbR
+ Csrtkv3FAJRf3brmvnxlFt8c/8Se4zVzx/e60b7xZaJLM/ZpfQRHS8eH3T/AiBdSSVd6
+ 1iEAfI4smKR5rDxma6zqF+uRhbUZLw8uIroiiy/dqGWDG14r1wCuzrYYKZ0hWILAtJC1
+ D+vC9rsD4MARWDbi9V2hcJPZuQoIiyYNAPAVRk+UKpG/XGgjW66FRvpEdrbIpUBNdYwY
+ FbERozYkgnamxG2CZl0bVisYft/73xP+da27ZVpnpJEhcMRVurZ0VosxEc32itNak7SM 1A== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2ym1mguvd1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 10 Mar 2020 14:41:06 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id E0836100038;
+        Tue, 10 Mar 2020 14:41:01 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id CAC172B2B65;
+        Tue, 10 Mar 2020 14:41:01 +0100 (CET)
+Received: from lmecxl0889.lme.st.com (10.75.127.44) by SFHDAG3NODE1.st.com
+ (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 10 Mar
+ 2020 14:41:00 +0100
+Subject: Re: [PATCH v4 1/4] remoteproc: Traverse rproc_list under RCU read
+ lock
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Ohad Ben-Cohen <ohad@wizery.com>
+CC:     <linux-arm-msm@vger.kernel.org>,
+        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>
+References: <20200310063817.3344712-1-bjorn.andersson@linaro.org>
+ <20200310063817.3344712-2-bjorn.andersson@linaro.org>
+From:   Arnaud POULIQUEN <arnaud.pouliquen@st.com>
+Message-ID: <87a14705-186d-01a4-e8a5-1844dab4ea14@st.com>
+Date:   Tue, 10 Mar 2020 14:41:00 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200310063817.3344712-2-bjorn.andersson@linaro.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.44]
+X-ClientProxiedBy: SFHDAG6NODE2.st.com (10.75.127.17) To SFHDAG3NODE1.st.com
+ (10.75.127.7)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-10_07:2020-03-10,2020-03-10 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 10 Mar 2020 12:20:45 +0100
-Borislav Petkov <bp@alien8.de> wrote:
+Hi Bjorn,
 
-> > +
-> > +	/*
-> > +	 * Tell the tracer about the irq state as well before enabling
-> > +	 * interrupts.
-> > +	 */
-> > +	__trace_hardirqs_off();  
+
+On 3/10/20 7:38 AM, Bjorn Andersson wrote:
+> In order to be able to traverse the mostly read-only rproc_list without
+> locking during panic migrate traversal to be done under rcu_read_lock().
 > 
-> I wonder if those "__" variants should be named something else to
-> denote better the difference between __trace_hardirqs_{on,off} and
-> trace_hardirqs_{on,off}. Latter does the _rcuidle variant and lockdep
-> annotation but
+> Mutual exclusion for modifications of the list continues to be handled
+> by the rproc_list_mutex and a synchronization point is added before
+> releasing objects that are popped from the list.
 > 
-> 	trace_hardirqs_{on,off}_rcuidle_lockdep()
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
 > 
-> sounds yuck.
+> Change v3:
+> - New patch
 > 
-> Maybe lockdep_trace_hardirqs_{on,off}()...
+>  drivers/remoteproc/remoteproc_core.c | 13 ++++++++-----
+>  1 file changed, 8 insertions(+), 5 deletions(-)
 > 
-> Blergh, I can't think of a good name ATM.
+> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
+> index 097f33e4f1f3..f0a77c30c6b1 100644
+> --- a/drivers/remoteproc/remoteproc_core.c
+> +++ b/drivers/remoteproc/remoteproc_core.c
+> @@ -1854,8 +1854,8 @@ struct rproc *rproc_get_by_phandle(phandle phandle)
+>  	if (!np)
+>  		return NULL;
+>  
+> -	mutex_lock(&rproc_list_mutex);
+> -	list_for_each_entry(r, &rproc_list, node) {
+> +	rcu_read_lock();
+> +	list_for_each_entry_rcu(r, &rproc_list, node) {
+>  		if (r->dev.parent && r->dev.parent->of_node == np) {
+>  			/* prevent underlying implementation from being removed */
+>  			if (!try_module_get(r->dev.parent->driver->owner)) {
+> @@ -1868,7 +1868,7 @@ struct rproc *rproc_get_by_phandle(phandle phandle)
+>  			break;
+>  		}
+>  	}
+> -	mutex_unlock(&rproc_list_mutex);
+> +	rcu_read_unlock();
+>  
+>  	of_node_put(np);
+>  
+> @@ -1925,7 +1925,7 @@ int rproc_add(struct rproc *rproc)
+>  
+>  	/* expose to rproc_get_by_phandle users */
+>  	mutex_lock(&rproc_list_mutex);
+> -	list_add(&rproc->node, &rproc_list);
+> +	list_add_rcu(&rproc->node, &rproc_list);
+>  	mutex_unlock(&rproc_list_mutex);
+>  
+>  	return 0;
+> @@ -2140,9 +2140,12 @@ int rproc_del(struct rproc *rproc)
+>  
+>  	/* the rproc is downref'ed as soon as it's removed from the klist */
+>  	mutex_lock(&rproc_list_mutex);
+> -	list_del(&rproc->node);
+> +	list_del_rcu(&rproc->node);
+>  	mutex_unlock(&rproc_list_mutex);
+i'm not familiar with rcu but as rproc_panic_handler can be called in interrupt context, 
+does mutex should be replaced by a spinlock?
 
-Kernel developers are not good at naming ;-) This is one of the original
-pieces of code that came in with the original addition of tracing, where we
-had the "Ingo notation" of something like:
-
-  trace() {
-	[..]
-	_trace();
-	[..]
-  }
-
-  _trace() {
-	[..]
-	__trace();
-	[..]
-  }
-
-  __trace() {
-	[..]
-	___trace();
-	[..]
-  }
-
-  ___trace() {
-	[..]
-	____trace();
-	[..]
-  }
-
-  ____trace() {
-	[..]
-	_____trace();
-	[..]
-  }
-
-  _____trace() {
-	[..]
-  }
-
--- Steve
+Regards,
+Arnaud
+>  
+> +	/* Ensure that no readers of rproc_list are still active */
+> +	synchronize_rcu();
+> +
+>  	device_del(&rproc->dev);
+>  
+>  	return 0;
+> 
