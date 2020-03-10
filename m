@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8EF0C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:59:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E09E5C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:59:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A033424694
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:59:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACE4424694
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:59:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583845184;
-	bh=JU/E6Hyc3lT/mzdd3OXkf1eaDqIKOPhrJqDCJo67chE=;
+	s=default; t=1583845187;
+	bh=evF/NFjY1s7IY6EJgZeQWXpsFLeu01Fl+Ck86HHRJlk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VcYC6v6ws646qFtg1sRjtIyHqS3juocnujxyRHX7R8h1lR6CLsaUHPq/FZR+vOSR6
-	 7kXWarENDb/BO6LzEbw3u67lzhJv+75wW1JLy2PVh9etJxJ8NJwgLeFpYSa2QhEVxl
-	 PpIa0KU6eZ2oiNMxFqV8RpwblJYtQ/N2kUrDP9gU=
+	b=nRblkEYaCuuR4HdQH5Xe6lqTj17dlAWU8rHi9S7RNN0TvVaybfBqSPaAY94w2kksT
+	 I8HlEsEJOcg1elRs85ZQMCxMX1jjREZFQVgw/88tTnnBCz9BFfEcv5vK3UsOED7UYA
+	 xcpkwqLWksxmgHLJw0NgFC0z+AmjTkSLpaIxAZ88=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730049AbgCJM7n (ORCPT
+        id S1729766AbgCJM7q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:59:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40174 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:59:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40270 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727001AbgCJM7j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:59:39 -0400
+        id S1730042AbgCJM7o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:59:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8590520674;
-        Tue, 10 Mar 2020 12:59:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 273D420674;
+        Tue, 10 Mar 2020 12:59:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845179;
-        bh=JU/E6Hyc3lT/mzdd3OXkf1eaDqIKOPhrJqDCJo67chE=;
+        s=default; t=1583845182;
+        bh=evF/NFjY1s7IY6EJgZeQWXpsFLeu01Fl+Ck86HHRJlk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Bss3sntZ3MR+AEM0Jd9VMSkyTuR6avggC0iMUR2wJeLqZ26KXpSZb+FJQdkvwgTFL
-         HIxfVupD4cfBwDVgYjI3+M64RwhIwzOPGSBmPiR/56IXZ3dyDQG6HeLbJgESvrCAXs
-         86HJF13nqDDx8uFP4qWjK7SCiu4qcQe5J0UE/Z7U=
+        b=LksuDc7JVaWw8kCYDsCaqf46kBPtYOElUtutIv9HQCab9CAegGLs4FNXlHj6x5goE
+         RknBHhtJBlyl9Dx0RWQuEkFE95KKNoAsKz1ZhvW4/pCRjI+Scr5jUUXRaLgm5vm0A9
+         rsMpbYiyyFvIcGRMQrCxh66lgRaDngeRk6QmMG5M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Ronald=20Tschal=C3=A4r?= <ronald@innovation.ch>
-Subject: [PATCH 5.5 091/189] serdev: Fix detection of UART devices on Apple machines.
-Date:   Tue, 10 Mar 2020 13:38:48 +0100
-Message-Id: <20200310123648.924250076@linuxfoundation.org>
+        stable@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>,
+        syzbot+59997e8d5cbdc486e6f6@syzkaller.appspotmail.com
+Subject: [PATCH 5.5 092/189] vt: selection, close sel_buffer race
+Date:   Tue, 10 Mar 2020 13:38:49 +0100
+Message-Id: <20200310123649.013301315@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123639.608886314@linuxfoundation.org>
 References: <20200310123639.608886314@linuxfoundation.org>
@@ -59,56 +59,154 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ronald Tschalär <ronald@innovation.ch>
+From: Jiri Slaby <jslaby@suse.cz>
 
-commit 35d4670aaec7206b5ef19c842ca33076bde562e4 upstream.
+commit 07e6124a1a46b4b5a9b3cacc0c306b50da87abf5 upstream.
 
-On Apple devices the _CRS method returns an empty resource template, and
-the resource settings are instead provided by the _DSM method. But
-commit 33364d63c75d6182fa369cea80315cf1bb0ee38e (serdev: Add ACPI
-devices by ResourceSource field) changed the search for serdev devices
-to require valid, non-empty resource template, thereby breaking Apple
-devices and causing bluetooth devices to not be found.
+syzkaller reported this UAF:
+BUG: KASAN: use-after-free in n_tty_receive_buf_common+0x2481/0x2940 drivers/tty/n_tty.c:1741
+Read of size 1 at addr ffff8880089e40e9 by task syz-executor.1/13184
 
-This expands the check so that if we don't find a valid template, and
-we're on an Apple machine, then just check for the device being an
-immediate child of the controller and having a "baud" property.
+CPU: 0 PID: 13184 Comm: syz-executor.1 Not tainted 5.4.7 #1
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
+Call Trace:
+...
+ kasan_report+0xe/0x20 mm/kasan/common.c:634
+ n_tty_receive_buf_common+0x2481/0x2940 drivers/tty/n_tty.c:1741
+ tty_ldisc_receive_buf+0xac/0x190 drivers/tty/tty_buffer.c:461
+ paste_selection+0x297/0x400 drivers/tty/vt/selection.c:372
+ tioclinux+0x20d/0x4e0 drivers/tty/vt/vt.c:3044
+ vt_ioctl+0x1bcf/0x28d0 drivers/tty/vt/vt_ioctl.c:364
+ tty_ioctl+0x525/0x15a0 drivers/tty/tty_io.c:2657
+ vfs_ioctl fs/ioctl.c:47 [inline]
 
-Cc: <stable@vger.kernel.org> # 5.5
-Fixes: 33364d63c75d ("serdev: Add ACPI devices by ResourceSource field")
-Signed-off-by: Ronald Tschalär <ronald@innovation.ch>
-Link: https://lore.kernel.org/r/20200211194723.486217-1-ronald@innovation.ch
+It is due to a race between parallel paste_selection (TIOCL_PASTESEL)
+and set_selection_user (TIOCL_SETSEL) invocations. One uses sel_buffer,
+while the other frees it and reallocates a new one for another
+selection. Add a mutex to close this race.
+
+The mutex takes care properly of sel_buffer and sel_buffer_lth only. The
+other selection global variables (like sel_start, sel_end, and sel_cons)
+are protected only in set_selection_user. The other functions need quite
+some more work to close the races of the variables there. This is going
+to happen later.
+
+This likely fixes (I am unsure as there is no reproducer provided) bug
+206361 too. It was marked as CVE-2020-8648.
+
+Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+Reported-by: syzbot+59997e8d5cbdc486e6f6@syzkaller.appspotmail.com
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200210081131.23572-2-jslaby@suse.cz
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/serdev/core.c |   10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/tty/vt/selection.c |   23 +++++++++++++++++------
+ 1 file changed, 17 insertions(+), 6 deletions(-)
 
---- a/drivers/tty/serdev/core.c
-+++ b/drivers/tty/serdev/core.c
-@@ -18,6 +18,7 @@
+--- a/drivers/tty/vt/selection.c
++++ b/drivers/tty/vt/selection.c
+@@ -16,6 +16,7 @@
+ #include <linux/tty.h>
  #include <linux/sched.h>
- #include <linux/serdev.h>
+ #include <linux/mm.h>
++#include <linux/mutex.h>
  #include <linux/slab.h>
-+#include <linux/platform_data/x86/apple.h>
+ #include <linux/types.h>
  
- static bool is_registered;
- static DEFINE_IDA(ctrl_ida);
-@@ -630,6 +631,15 @@ static int acpi_serdev_check_resources(s
- 	if (ret)
- 		return ret;
+@@ -45,6 +46,7 @@ static volatile int sel_start = -1; 	/*
+ static int sel_end;
+ static int sel_buffer_lth;
+ static char *sel_buffer;
++static DEFINE_MUTEX(sel_lock);
  
-+	/*
-+	 * Apple machines provide an empty resource template, so on those
-+	 * machines just look for immediate children with a "baud" property
-+	 * (from the _DSM method) instead.
-+	 */
-+	if (!lookup.controller_handle && x86_apple_machine &&
-+	    !acpi_dev_get_property(adev, "baud", ACPI_TYPE_BUFFER, NULL))
-+		acpi_get_parent(adev->handle, &lookup.controller_handle);
-+
- 	/* Make sure controller and ResourceSource handle match */
- 	if (ACPI_HANDLE(ctrl->dev.parent) != lookup.controller_handle)
- 		return -ENODEV;
+ /* clear_selection, highlight and highlight_pointer can be called
+    from interrupt (via scrollback/front) */
+@@ -186,7 +188,7 @@ int set_selection_kernel(struct tiocl_se
+ 	char *bp, *obp;
+ 	int i, ps, pe, multiplier;
+ 	u32 c;
+-	int mode;
++	int mode, ret = 0;
+ 
+ 	poke_blanked_console();
+ 
+@@ -212,6 +214,7 @@ int set_selection_kernel(struct tiocl_se
+ 	if (ps > pe)	/* make sel_start <= sel_end */
+ 		swap(ps, pe);
+ 
++	mutex_lock(&sel_lock);
+ 	if (sel_cons != vc_cons[fg_console].d) {
+ 		clear_selection();
+ 		sel_cons = vc_cons[fg_console].d;
+@@ -257,9 +260,10 @@ int set_selection_kernel(struct tiocl_se
+ 			break;
+ 		case TIOCL_SELPOINTER:
+ 			highlight_pointer(pe);
+-			return 0;
++			goto unlock;
+ 		default:
+-			return -EINVAL;
++			ret = -EINVAL;
++			goto unlock;
+ 	}
+ 
+ 	/* remove the pointer */
+@@ -281,7 +285,7 @@ int set_selection_kernel(struct tiocl_se
+ 	else if (new_sel_start == sel_start)
+ 	{
+ 		if (new_sel_end == sel_end)	/* no action required */
+-			return 0;
++			goto unlock;
+ 		else if (new_sel_end > sel_end)	/* extend to right */
+ 			highlight(sel_end + 2, new_sel_end);
+ 		else				/* contract from right */
+@@ -309,7 +313,8 @@ int set_selection_kernel(struct tiocl_se
+ 	if (!bp) {
+ 		printk(KERN_WARNING "selection: kmalloc() failed\n");
+ 		clear_selection();
+-		return -ENOMEM;
++		ret = -ENOMEM;
++		goto unlock;
+ 	}
+ 	kfree(sel_buffer);
+ 	sel_buffer = bp;
+@@ -334,7 +339,9 @@ int set_selection_kernel(struct tiocl_se
+ 		}
+ 	}
+ 	sel_buffer_lth = bp - sel_buffer;
+-	return 0;
++unlock:
++	mutex_unlock(&sel_lock);
++	return ret;
+ }
+ EXPORT_SYMBOL_GPL(set_selection_kernel);
+ 
+@@ -364,6 +371,7 @@ int paste_selection(struct tty_struct *t
+ 	tty_buffer_lock_exclusive(&vc->port);
+ 
+ 	add_wait_queue(&vc->paste_wait, &wait);
++	mutex_lock(&sel_lock);
+ 	while (sel_buffer && sel_buffer_lth > pasted) {
+ 		set_current_state(TASK_INTERRUPTIBLE);
+ 		if (signal_pending(current)) {
+@@ -371,7 +379,9 @@ int paste_selection(struct tty_struct *t
+ 			break;
+ 		}
+ 		if (tty_throttled(tty)) {
++			mutex_unlock(&sel_lock);
+ 			schedule();
++			mutex_lock(&sel_lock);
+ 			continue;
+ 		}
+ 		__set_current_state(TASK_RUNNING);
+@@ -380,6 +390,7 @@ int paste_selection(struct tty_struct *t
+ 					      count);
+ 		pasted += count;
+ 	}
++	mutex_unlock(&sel_lock);
+ 	remove_wait_queue(&vc->paste_wait, &wait);
+ 	__set_current_state(TASK_RUNNING);
+ 
 
 
