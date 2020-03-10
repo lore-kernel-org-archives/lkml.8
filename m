@@ -2,53 +2,51 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7981FC18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:12:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61516C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:12:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48E4520409
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:12:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FAF92468D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:12:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583845950;
-	bh=/oieK3WjFdfK5bWzACAMf3QvziVCdoKD5yWwZLuPJ7c=;
+	s=default; t=1583845954;
+	bh=HUpdXOEvuS6k6iZSZ6orfacw3M5jNQiR+vC+w4n68F4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hODHiQiLHVcUSTDBGbxoBTcE8xwti4twR0SRVPox8lH814uHKgU5m5sIl/Wizro4Q
-	 6gGN3140ngE8vFtQWh1XGyXqxa67V7AYZwjxGAsAR3E4jWyEVjdeUBs2Nh0u4Q0u9i
-	 6NzLg6nu2Hwa155UQKHyewN2Sb9i9Bb7/sSC2C6k=
+	b=KbotFoDdvAx5rZvonViIv9FCt4ubm2ozST1ALkfaARisa0gRjZ7pQInQilMH0FRro
+	 FMkcbX9edxM8Yj2/sDc83nL3OHeA0mmvhTmSs5lu8Y+lX9uA0f33SHQeZ/wxeiL8WT
+	 jk+SOKqLeho2U1ihLhoagAr46zFhNnTOf8En5xmA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731170AbgCJNM3 (ORCPT
+        id S1731575AbgCJNMc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:12:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34582 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:12:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34722 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731558AbgCJNMX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:12:23 -0400
+        id S1731404AbgCJNM3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:12:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5333A2467D;
-        Tue, 10 Mar 2020 13:12:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8EA972468F;
+        Tue, 10 Mar 2020 13:12:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845942;
-        bh=/oieK3WjFdfK5bWzACAMf3QvziVCdoKD5yWwZLuPJ7c=;
+        s=default; t=1583845949;
+        bh=HUpdXOEvuS6k6iZSZ6orfacw3M5jNQiR+vC+w4n68F4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LoUDE41tWD28ObFhhq0D0L72GT3NrbNhxKERsk0UDab9u8CPSPDgu9zz54RD/K+VQ
-         opnV2cXzFrGMklv0pmjsmBpz1sIrq0tOVSA02+9uAu54VcVjgU03Q6kOgUtrqdKjwb
-         2oBt4NomMYmWRbkSvCPlui3704DmI71BTJ3Nu+p4=
+        b=jXSHXWAmnejZ3x60Jk2DIr2uvqj7K6hnsd4BLxkvigPr3PAFA0fdbvLBFYxZV5M4i
+         Uz2XxOFvODUCiMci/MTjaSF/ex7r9FHz4yEU1LL7ivX1iTBbP+KCkP/ifywJ3qH7lu
+         pXoA3ck/tu03HwEt+BodsKRO8+qkCXuPx0KJWdjg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marco Felsch <m.felsch@pengutronix.de>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 23/86] watchdog: da9062: do not ping the hw during stop()
-Date:   Tue, 10 Mar 2020 13:44:47 +0100
-Message-Id: <20200310124532.033672877@linuxfoundation.org>
+        stable@vger.kernel.org, Christian Lachner <gladiac@gmail.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.19 33/86] ALSA: hda/realtek - Fix silent output on Gigabyte X570 Aorus Master
+Date:   Tue, 10 Mar 2020 13:44:57 +0100
+Message-Id: <20200310124532.565842222@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310124530.808338541@linuxfoundation.org>
 References: <20200310124530.808338541@linuxfoundation.org>
@@ -61,51 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marco Felsch <m.felsch@pengutronix.de>
+From: Christian Lachner <gladiac@gmail.com>
 
-[ Upstream commit e9a0e65eda3f78d0b04ec6136c591c000cbc3b76 ]
+commit 0d45e86d2267d5bdf7bbb631499788da1c27ceb2 upstream.
 
-The da9062 hw has a minimum ping cool down phase of at least 200ms. The
-driver takes that into account by setting the min_hw_heartbeat_ms to
-300ms and the core guarantees that the hw limit is observed for the
-ping() calls. But the core can't guarantee the required minimum ping
-cool down phase if a stop() command is send immediately after the ping()
-command. So it is not allowed to ping the watchdog within the stop()
-command as the driver does. Remove the ping can be done without doubts
-because the watchdog gets disabled anyway and a (re)start resets the
-watchdog counter too.
+The Gigabyte X570 Aorus Master motherboard with ALC1220 codec
+requires a similar workaround for Clevo laptops to enforce the
+DAC/mixer connection path. Set up a quirk entry for that.
 
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Link: https://lore.kernel.org/r/20200120091729.16256-1-m.felsch@pengutronix.de
-[groeck: Updated description]
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=205275
+Signed-off-by: Christian Lachner <gladiac@gmail.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200223092416.15016-2-gladiac@gmail.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/watchdog/da9062_wdt.c | 7 -------
- 1 file changed, 7 deletions(-)
+ sound/pci/hda/patch_realtek.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/watchdog/da9062_wdt.c b/drivers/watchdog/da9062_wdt.c
-index fe169d8e1fb2f..7f0a8e6352860 100644
---- a/drivers/watchdog/da9062_wdt.c
-+++ b/drivers/watchdog/da9062_wdt.c
-@@ -99,13 +99,6 @@ static int da9062_wdt_stop(struct watchdog_device *wdd)
- 	struct da9062_watchdog *wdt = watchdog_get_drvdata(wdd);
- 	int ret;
- 
--	ret = da9062_reset_watchdog_timer(wdt);
--	if (ret) {
--		dev_err(wdt->hw->dev, "Failed to ping the watchdog (err = %d)\n",
--			ret);
--		return ret;
--	}
--
- 	ret = regmap_update_bits(wdt->hw->regmap,
- 				 DA9062AA_CONTROL_D,
- 				 DA9062AA_TWDSCALE_MASK,
--- 
-2.20.1
-
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -2442,6 +2442,7 @@ static const struct snd_pci_quirk alc882
+ 	SND_PCI_QUIRK(0x1071, 0x8258, "Evesham Voyaeger", ALC882_FIXUP_EAPD),
+ 	SND_PCI_QUIRK(0x1458, 0xa002, "Gigabyte EP45-DS3/Z87X-UD3H", ALC889_FIXUP_FRONT_HP_NO_PRESENCE),
+ 	SND_PCI_QUIRK(0x1458, 0xa0b8, "Gigabyte AZ370-Gaming", ALC1220_FIXUP_GB_DUAL_CODECS),
++	SND_PCI_QUIRK(0x1458, 0xa0cd, "Gigabyte X570 Aorus Master", ALC1220_FIXUP_CLEVO_P950),
+ 	SND_PCI_QUIRK(0x1462, 0x1228, "MSI-GP63", ALC1220_FIXUP_CLEVO_P950),
+ 	SND_PCI_QUIRK(0x1462, 0x1276, "MSI-GL73", ALC1220_FIXUP_CLEVO_P950),
+ 	SND_PCI_QUIRK(0x1462, 0x1293, "MSI-GP65", ALC1220_FIXUP_CLEVO_P950),
 
 
