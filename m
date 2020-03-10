@@ -2,119 +2,187 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 122CBC3F2D0
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:14:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6348CC10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:15:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF5CD222D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:14:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583878485;
-	bh=HloSqHaVdLpu24DbJWrvzi8gYutv5amVll4sXduTcok=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WoPcHIrUV2fH0+RYfKNhEJYZbCS/XHXrcFz9QGe9btgc2hrfBP0ox0mYpNGsu9KET
-	 wt3Tn1nEiWFGitEkAyKICGnJts0wQozTCwdQdErNMP+Nw8+h+WnyAxSVDkFsD2RFkF
-	 ezY0YUhozqb+NhM/3NxVzRoDDQ57+0em41ww+v8A=
+	by mail.kernel.org (Postfix) with ESMTP id 07A1A208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:15:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727767AbgCJWOo (ORCPT
+        id S1727813AbgCJWPS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 18:14:44 -0400
-Received: from mail-pj1-f49.google.com ([209.85.216.49]:54891 "EHLO
-        mail-pj1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726293AbgCJWOo (ORCPT
+        Tue, 10 Mar 2020 18:15:18 -0400
+Received: from mail-il1-f200.google.com ([209.85.166.200]:50523 "EHLO
+        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727693AbgCJWPR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 18:14:44 -0400
-Received: by mail-pj1-f49.google.com with SMTP id np16so1012791pjb.4
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 15:14:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=qC8GAUuR4P3Ihh/wBkWywJtv6lirNyfGJk8EnvJshE8=;
-        b=jZvVnCBeMjLVo4/ypI5WH9f5cD9fa7eRyo8ChnGZP7Dy3c4fuAfswYtWukOMt2pPlG
-         nkm6sguxpkwMfvNGcU1Qy4zQqYY5SfWaD4wNcelQ1Bp9Zk5CEf4AU6vGZtS8u84BUrNR
-         8cxGzN4+e3V618fVyF8mri1OxOKhkWOdPNJll5Yt+fCR/e/HX833UB1L7nbfvO1RoO5O
-         +9ggd/8ngqGTlbUrgQdPpGf0Lu5XxEhbLcSX9D34glSy2kywmCkAHkrzlu8QxzUharIN
-         EeyUkwy1W7f0siKUmpsWZaQ1kuJGS2qHbGNcTsqBcGsg8ndO5DyTSC2qM1DWfTlrh2lT
-         Qwkw==
+        Tue, 10 Mar 2020 18:15:17 -0400
+Received: by mail-il1-f200.google.com with SMTP id z12so10890828ilh.17
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 15:15:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=qC8GAUuR4P3Ihh/wBkWywJtv6lirNyfGJk8EnvJshE8=;
-        b=nsy80g51nHLiY94+DyIVZJgb4tGAy1YYMJlALG7GIb2FzumdV/1P0SM6mv7aSo3CAf
-         88QRrCIkYIq0thU8PtQeosFkib895iRaEoKoFJ1fdsO9pksZ6TMnUNQwR0963Ycd103Q
-         a3XaS3e53/k79dbgd+TVKOYy+e5coeYkeWadGZ+TmLymlLJfXt1uZkqU17Owwu/PH14t
-         nqe//CBllAY7+n8Eciozzrv4dAxUuWUxMJZibbQfKqCr1OVnePMnBuDLe+AJjdGxsJQh
-         LSR8lj0swECPDCQT9nbCS307aig5V8Xo7d3Y4NkfbmkJtEw0rkmXMqC6JBEo+U8ETvOi
-         HpzA==
-X-Gm-Message-State: ANhLgQ1mYCwlnv18JGmzFHb6ullkG/YtnhUZqm21vwHcULXdLJ6zT7C9
-        0L75pCF7wVUXIAAPB14CjHE=
-X-Google-Smtp-Source: ADFU+vsFhYKBd/NsJnYeB5XON8zxOKT2DjZ1OPEyMz++H2Emj/2WjXteH/gy00smlkpGZjZg2BpfGQ==
-X-Received: by 2002:a17:902:db83:: with SMTP id m3mr117436pld.166.1583878483130;
-        Tue, 10 Mar 2020 15:14:43 -0700 (PDT)
-Received: from google.com ([2620:15c:211:1:3e01:2939:5992:52da])
-        by smtp.gmail.com with ESMTPSA id o2sm42464515pfh.26.2020.03.10.15.14.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Mar 2020 15:14:41 -0700 (PDT)
-Date:   Tue, 10 Mar 2020 15:14:40 -0700
-From:   Minchan Kim <minchan@kernel.org>
-To:     Jann Horn <jannh@google.com>
-Cc:     Michal Hocko <mhocko@suse.com>, Linux-MM <linux-mm@kvack.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Daniel Colascione <dancol@google.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Subject: Re: interaction of MADV_PAGEOUT with CoW anonymous mappings?
-Message-ID: <20200310221440.GA72963@google.com>
-References: <CAG48ez0G3JkMq61gUmyQAaCq=_TwHbi1XKzWRooxZkv08PQKuw@mail.gmail.com>
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=84Qll/dlvjLD8CKSDBpk24SgnTCJ2Jz6eCDGbYrKR6M=;
+        b=lVWFYcnD1o4Dkg566GoQEapG85kSmEpFescw+d9orXgLMQM4+JADe+53cJn6mNEB9x
+         uSFxUnp/G5TYwdzRw7v601jP2zy4NFFLUWLPUrBMs9e2VS9AU/BU/JnyMjJarYEj33HK
+         fvZ5JstbpeD6thW6YfAzusKq1y9VNlyjKLvyU5K8aPm67L48tYbEdUhhedvC7UzVSI8H
+         PmP+TiE1ypKA3EPFrq/hg5A/82KLYIJXb/tIKiWFf24x9u4I8p8nBAIvCxiGuyrY6gJp
+         A0OCsBi9ksllzLbWKkI9MMm9EBnn8L4auDRayVbixguFzYSAeWIC8DEMCZksxFI9N8p/
+         Yp1Q==
+X-Gm-Message-State: ANhLgQ0MJhZN+wpB2SbiswEfDIuevrnG4CR1GXrWcbPcsCPN3QQxD7C2
+        QF7g+Pfg5oaiVoTAt482+4RnA4/V7y/fp8Bps9/WU71lwjyU
+X-Google-Smtp-Source: ADFU+vuYOs9m+t/8m6YXsqaahK0LT1iDnXctxC8s0+uVCmTvZEB7HBEuRmjFGwYUuu3HdpWapyz+TgHH1fAI8lMe09pqO20GxIVP
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAG48ez0G3JkMq61gUmyQAaCq=_TwHbi1XKzWRooxZkv08PQKuw@mail.gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+X-Received: by 2002:a05:6e02:ea8:: with SMTP id u8mr264198ilj.0.1583878516849;
+ Tue, 10 Mar 2020 15:15:16 -0700 (PDT)
+Date:   Tue, 10 Mar 2020 15:15:16 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000005d435905a0877414@google.com>
+Subject: KASAN: use-after-free Write in tcindex_set_parms
+From:   syzbot <syzbot+e5db00b3987d59130da5@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, jhs@mojatatu.com, jiri@resnulli.us,
+        kuba@kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        xiyou.wangcong@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jann,
+Hello,
 
-On Tue, Mar 10, 2020 at 07:08:28PM +0100, Jann Horn wrote:
-> Hi!
-> 
-> From looking at the source code, it looks to me as if using
-> MADV_PAGEOUT on a CoW anonymous mapping will page out the page if
-> possible, even if other processes still have the same page mapped. Is
-> that correct?
-> 
-> If so, that's probably bad in environments where many processes (with
-> different privileges) are forked from a single zygote process (like
-> Android and Chrome), I think? If you accidentally call it on a CoW
-> anonymous mapping with shared pages, you'll degrade the performance of
-> other processes. And if an attacker does it intentionally, they could
-> use that to aid with exploiting race conditions or weird
-> microarchitectural stuff (e.g. the new https://lviattack.eu/lvi.pdf
-> talks about "the assumption that attackers can provoke page faults or
-> microcode assists for (arbitrary) load operations in the victim
-> domain").
-> 
-> Should madvise_cold_or_pageout_pte_range() maybe refuse to operate on
-> pages with mapcount>1, or something like that? Or does it already do
-> that, and I just missed the check?
+syzbot found the following crash on:
 
-Originally, patchset had the mapcount check to filer out shared page
-due to performance concern, not security stuff. However, the code
-was removed because reviewer asked me "let the shared pages rely on
-general LRU" because shared pages would have higher chance to be
-touched compared to private pages so naturally, they will keep in
-the memory. It did make sense for me.
+HEAD commit:    30bb5572 Merge tag 'ktest-v5.6' of git://git.kernel.org/pu..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=15bae581e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=c2e311dba9a02ba9
+dashboard link: https://syzkaller.appspot.com/bug?extid=e5db00b3987d59130da5
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11fe8219e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=129e5439e00000
 
-I am not familiar with the security stuff but if it's really vulnerable
-and everyone agree on that, it's easy to add mapcount check there.
+The bug was bisected to:
 
-Thanks.
+commit 599be01ee567b61f4471ee8078870847d0a11e8e
+Author: Cong Wang <xiyou.wangcong@gmail.com>
+Date:   Mon Feb 3 05:14:35 2020 +0000
+
+    net_sched: fix an OOB access in cls_tcindex
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=141c1dfde00000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=161c1dfde00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=121c1dfde00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+e5db00b3987d59130da5@syzkaller.appspotmail.com
+Fixes: 599be01ee567 ("net_sched: fix an OOB access in cls_tcindex")
+
+IPVS: ftp: loaded support on port[0] = 21
+==================================================================
+BUG: KASAN: use-after-free in tcindex_set_parms+0x17fd/0x1a00 net/sched/cls_tcindex.c:455
+Write of size 16 at addr ffff8880a86d28b8 by task syz-executor352/9506
+
+CPU: 0 PID: 9506 Comm: syz-executor352 Not tainted 5.6.0-rc5-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x188/0x20d lib/dump_stack.c:118
+ print_address_description.constprop.0.cold+0xd3/0x315 mm/kasan/report.c:374
+ __kasan_report.cold+0x1a/0x32 mm/kasan/report.c:506
+ kasan_report+0xe/0x20 mm/kasan/common.c:641
+ tcindex_set_parms+0x17fd/0x1a00 net/sched/cls_tcindex.c:455
+ tcindex_change+0x203/0x2e0 net/sched/cls_tcindex.c:518
+ tc_new_tfilter+0xa59/0x20b0 net/sched/cls_api.c:2103
+ rtnetlink_rcv_msg+0x810/0xad0 net/core/rtnetlink.c:5427
+ netlink_rcv_skb+0x15a/0x410 net/netlink/af_netlink.c:2478
+ netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
+ netlink_unicast+0x537/0x740 net/netlink/af_netlink.c:1329
+ netlink_sendmsg+0x882/0xe10 net/netlink/af_netlink.c:1918
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg+0xcf/0x120 net/socket.c:672
+ ____sys_sendmsg+0x6b9/0x7d0 net/socket.c:2343
+ ___sys_sendmsg+0x100/0x170 net/socket.c:2397
+ __sys_sendmsg+0xec/0x1b0 net/socket.c:2430
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x440eb9
+Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b 10 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffc66658278 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 00000000004a2690 RCX: 0000000000440eb9
+RDX: 0000000000000000 RSI: 00000000200001c0 RDI: 0000000000000003
+RBP: 00000000004a2690 R08: 0000000120080522 R09: 0000000120080522
+R10: 0000000120080522 R11: 0000000000000246 R12: 00000000004023c0
+R13: 0000000000402450 R14: 0000000000000000 R15: 0000000000000000
+
+Allocated by task 1:
+ save_stack+0x1b/0x80 mm/kasan/common.c:72
+ set_track mm/kasan/common.c:80 [inline]
+ __kasan_kmalloc mm/kasan/common.c:515 [inline]
+ __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:488
+ kmem_cache_alloc_trace+0x153/0x7d0 mm/slab.c:3551
+ kmalloc include/linux/slab.h:555 [inline]
+ kzalloc include/linux/slab.h:669 [inline]
+ call_usermodehelper_setup+0x98/0x300 kernel/umh.c:386
+ kobject_uevent_env+0xcfb/0x11f0 lib/kobject_uevent.c:613
+ kernel_add_sysfs_param kernel/params.c:797 [inline]
+ param_sysfs_builtin kernel/params.c:832 [inline]
+ param_sysfs_init+0x3c5/0x430 kernel/params.c:953
+ do_one_initcall+0x10a/0x7d0 init/main.c:1152
+ do_initcall_level init/main.c:1225 [inline]
+ do_initcalls init/main.c:1241 [inline]
+ do_basic_setup init/main.c:1261 [inline]
+ kernel_init_freeable+0x501/0x5ae init/main.c:1445
+ kernel_init+0xd/0x1bb init/main.c:1352
+ ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+
+Freed by task 562:
+ save_stack+0x1b/0x80 mm/kasan/common.c:72
+ set_track mm/kasan/common.c:80 [inline]
+ kasan_set_free_info mm/kasan/common.c:337 [inline]
+ __kasan_slab_free+0xf7/0x140 mm/kasan/common.c:476
+ __cache_free mm/slab.c:3426 [inline]
+ kfree+0x109/0x2b0 mm/slab.c:3757
+ call_usermodehelper_freeinfo kernel/umh.c:48 [inline]
+ umh_complete kernel/umh.c:62 [inline]
+ umh_complete+0x81/0x90 kernel/umh.c:51
+ call_usermodehelper_exec_async+0x459/0x710 kernel/umh.c:122
+ ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+
+The buggy address belongs to the object at ffff8880a86d2800
+ which belongs to the cache kmalloc-192 of size 192
+The buggy address is located 184 bytes inside of
+ 192-byte region [ffff8880a86d2800, ffff8880a86d28c0)
+The buggy address belongs to the page:
+page:ffffea0002a1b480 refcount:1 mapcount:0 mapping:ffff8880aa000000 index:0x0
+flags: 0xfffe0000000200(slab)
+raw: 00fffe0000000200 ffffea00028da348 ffff8880aa001148 ffff8880aa000000
+raw: 0000000000000000 ffff8880a86d2000 0000000100000010 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff8880a86d2780: 00 fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ ffff8880a86d2800: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff8880a86d2880: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+                                        ^
+ ffff8880a86d2900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff8880a86d2980: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+==================================================================
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
