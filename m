@@ -2,177 +2,104 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 507AAC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:18:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C13BBC10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:19:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E64BD215A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:18:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 718AA215A4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:19:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="i6PwcH1Y"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BKsR9ZNX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726582AbgCJUSA (ORCPT
+        id S1726851AbgCJUTF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 16:18:00 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:33865 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726436AbgCJUSA (ORCPT
+        Tue, 10 Mar 2020 16:19:05 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:27712 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726265AbgCJUTF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 16:18:00 -0400
-Received: by mail-pg1-f193.google.com with SMTP id t3so6819264pgn.1
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 13:17:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=RKigTXtTZ1YImDJinI4wU2TyC7WQeMLqFQfSK2SiClo=;
-        b=i6PwcH1Y6dzAld5+0ItdFH0DNwVNQDvVoI3rFkpU5glNp7p1gPAzHwUVGup1Aj6YPT
-         mm52T1lUrybAlYpwBILDBxSuJksLBuWK9y1KWBhigTnvRKG8n9iDhSzGEkU4ueiYuSvY
-         EiCKda6MTerB6wqJNRGHCZxbLU3xNZ5OT1LFY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=RKigTXtTZ1YImDJinI4wU2TyC7WQeMLqFQfSK2SiClo=;
-        b=Bm4H2toIR7yIFOCmofnk3e/odUv0j1SsVmYv/wcY2o4Sr4msNX5euyWOFcyYgKGgXG
-         sM6Jr6XfTJ8rprCpxvHXJMJvdLohJ2QpVQrqKfx4gdgHz818vjVRb6lVd9Ocg9k3mFzb
-         CzpKpsjHvkwOnUBVHXgai5QE3oPpYkJJtZ3uELZZYhA7cc9cKqJUtI6pTQgNZB8aRnLB
-         x2QOx4Xk20+77WnOfBZ+DYanoOq2/qCQPmh81CRq0KpTPdQwChH/4agYwRf9lOO2bFUS
-         +bjwx3/JgCXQ0XPXxWyDAFsgT7LWIbO7wgGEDoDAdb2c5q5f9pC9JPXkfux7TMXCN8LW
-         FAJQ==
-X-Gm-Message-State: ANhLgQ2OmtNL/josvurvG4g7nSdjRWGgfBxgt86NmbCzi9zYZWMhbVfD
-        2t+Qu8sjsiMYpaQy1aYk+N/Qjg==
-X-Google-Smtp-Source: ADFU+vt2t4dqM/StQkYgOOR3czOMhuaGQySe+8w6u+0IAx0TkUIOlTLogaEjfIx9xPXJuWMsrEQx6g==
-X-Received: by 2002:a65:5383:: with SMTP id x3mr22185221pgq.279.1583871478687;
-        Tue, 10 Mar 2020 13:17:58 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id 199sm51876404pfv.81.2020.03.10.13.17.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Mar 2020 13:17:57 -0700 (PDT)
-Date:   Tue, 10 Mar 2020 13:17:56 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Andrei Vagin <avagin@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Yuyang Du <duyuyang@gmail.com>,
-        David Hildenbrand <david@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        David Howells <dhowells@redhat.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christian Kellner <christian@kellner.me>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>
-Subject: Re: [PATCH v2 1/5] exec: Only compute current once in flush_old_exec
-Message-ID: <202003101317.20BD018D9@keescook>
-References: <87v9nlii0b.fsf@x220.int.ebiederm.org>
- <AM6PR03MB5170609D44967E044FD1BE40E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <87a74xi4kz.fsf@x220.int.ebiederm.org>
- <AM6PR03MB51705AA3009B4986BB6EF92FE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <87r1y8dqqz.fsf@x220.int.ebiederm.org>
- <AM6PR03MB517053AED7DC89F7C0704B7DE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <AM6PR03MB51703B44170EAB4626C9B2CAE4E20@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <87tv32cxmf.fsf_-_@x220.int.ebiederm.org>
- <87v9ne5y4y.fsf_-_@x220.int.ebiederm.org>
- <87pndm5y3l.fsf_-_@x220.int.ebiederm.org>
+        Tue, 10 Mar 2020 16:19:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583871543;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=pgP1T+wGC2P5ovvcZBFXxUKVKB4+9CKMKrqQw1DXEe0=;
+        b=BKsR9ZNX3wvCd3PGbVTUSbbf2aE9VqrXxIImU8lFXwXpgrF9OIN4ZcoufBSy1/W7C6B94I
+        xRJC5DwP6atLFjmOz6hlEzs+W5vu+wKHjJo/iaRWxNlyro+r+Ksd6t3y+SITIBPx6+DOw2
+        +2GSgn7MWPR3QlM4eNDyqc/LgpIi+eA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-294-0yXbyAw7NhyCLXKNwJvhag-1; Tue, 10 Mar 2020 16:18:56 -0400
+X-MC-Unique: 0yXbyAw7NhyCLXKNwJvhag-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 28F77107ACC4;
+        Tue, 10 Mar 2020 20:18:55 +0000 (UTC)
+Received: from napanee.usersys.redhat.com (dhcp-17-195.bos.redhat.com [10.18.17.195])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C86837388F;
+        Tue, 10 Mar 2020 20:18:54 +0000 (UTC)
+Received: by napanee.usersys.redhat.com (Postfix, from userid 1000)
+        id 2EE9DC0E48; Tue, 10 Mar 2020 16:18:54 -0400 (EDT)
+Date:   Tue, 10 Mar 2020 16:18:54 -0400
+From:   Aristeu Rozanski <aris@redhat.com>
+To:     Robert Richter <rrichter@marvell.com>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        James Morse <james.morse@arm.com>, linux-edac@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 00/11] EDAC/ghes: Cleanup, rework and improvement of
+ memory reporting
+Message-ID: <20200310201854.etpclthuj577lpds@redhat.com>
+References: <20200306151318.17422-1-rrichter@marvell.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87pndm5y3l.fsf_-_@x220.int.ebiederm.org>
+In-Reply-To: <20200306151318.17422-1-rrichter@marvell.com>
+User-Agent: NeoMutt/20191207
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 08, 2020 at 04:35:26PM -0500, Eric W. Biederman wrote:
+On Fri, Mar 06, 2020 at 04:13:07PM +0100, Robert Richter wrote:
+> This series contains a significant cleanup and rework of the ghes
+> driver and improves the memory reporting as follows:
 > 
-> Make it clear that current only needs to be computed once in
-> flush_old_exec.  This may have some efficiency improvements and it
-> makes the code easier to change.
+>  * fix of DIMM label in error reports (patch #2),
 > 
-> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
-
-modulo my suggestion of adding more comments (it could even be kerndoc!)
-that explicitly states that "me" should always be "current", yup, looks
-good:
-
-Reviewed-by: Kees Cook <keescook@chromium.org>
-
--Kees
-
-> ---
->  fs/exec.c | 9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
+>  * creation of multiple memory controllers to group DIMMs depending on
+>    the physical memory array (patches #9-#11). This should reflect the
+>    memory topology of a system in sysfs. Esp. multi-node systems show
+>    up with one memory controller per node now.
 > 
-> diff --git a/fs/exec.c b/fs/exec.c
-> index db17be51b112..c3f34791f2f0 100644
-> --- a/fs/exec.c
-> +++ b/fs/exec.c
-> @@ -1260,13 +1260,14 @@ void __set_task_comm(struct task_struct *tsk, const char *buf, bool exec)
->   */
->  int flush_old_exec(struct linux_binprm * bprm)
->  {
-> +	struct task_struct *me = current;
->  	int retval;
->  
->  	/*
->  	 * Make sure we have a private signal table and that
->  	 * we are unassociated from the previous thread group.
->  	 */
-> -	retval = de_thread(current);
-> +	retval = de_thread(me);
->  	if (retval)
->  		goto out;
->  
-> @@ -1294,10 +1295,10 @@ int flush_old_exec(struct linux_binprm * bprm)
->  	bprm->mm = NULL;
->  
->  	set_fs(USER_DS);
-> -	current->flags &= ~(PF_RANDOMIZE | PF_FORKNOEXEC | PF_KTHREAD |
-> +	me->flags &= ~(PF_RANDOMIZE | PF_FORKNOEXEC | PF_KTHREAD |
->  					PF_NOFREEZE | PF_NO_SETAFFINITY);
->  	flush_thread();
-> -	current->personality &= ~bprm->per_clear;
-> +	me->personality &= ~bprm->per_clear;
->  
->  	/*
->  	 * We have to apply CLOEXEC before we change whether the process is
-> @@ -1305,7 +1306,7 @@ int flush_old_exec(struct linux_binprm * bprm)
->  	 * trying to access the should-be-closed file descriptors of a process
->  	 * undergoing exec(2).
->  	 */
-> -	do_close_on_exec(current->files);
-> +	do_close_on_exec(me->files);
->  	return 0;
->  
->  out:
-> -- 
-> 2.25.0
+> The changes base on the remaining patches that are a general cleanup
+> and rework:
 > 
+>  * small change to edac_mc, not really dependent on the rest of the
+>    series (patch #1),
+> 
+>  * general cleanup and rework of the ghes driver (patches #3-#8).
+> 
+> The implementation of multiple memory controllers bases on the
+> suggestion from James (see patch #11), thank you James for your
+> valuable input here. The patches are created newly from scratch and
+> obsolete the GHES part of my previous postings a while ago that have
+> not been accepted upstream:
+> 
+>  https://lore.kernel.org/patchwork/cover/1093488/
+> 
+> Tested on a Marvell/Cavium ThunderX2 Sabre (dual socket) system.
+
+Acked-by: Aristeu Rozanski <aris@redhat.com>
 
 -- 
-Kees Cook
+Aristeu
+
