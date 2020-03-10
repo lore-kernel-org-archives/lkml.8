@@ -2,107 +2,134 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E13CC18E5C
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 18:36:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 518DCC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 18:36:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0DEB20727
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 18:36:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583865380;
-	bh=2x9OjP/cL989J/BJIl8ZTmdrXYn701P4JDMdpwdKyKc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KOdTsXLZXZN25KgTSwoXT+AIlQHC4RFSII1cSHjP5ALQyRxF3kxVbjqLpSbYldAJ5
-	 PWsPXyu5dMo3+NpzLEVgdcnILqk1fyqEqeIWykAFS34MExmuhjCq2UAsyh0l87SgTI
-	 zJFkhjjEulRA6VhAGt0fKsgMTme99T4YW/qFJbdQ=
+	by mail.kernel.org (Postfix) with ESMTP id 28CDF21D7E
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 18:36:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727232AbgCJSgT (ORCPT
+        id S1727291AbgCJSg5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 14:36:19 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:43907 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726391AbgCJSgS (ORCPT
+        Tue, 10 Mar 2020 14:36:57 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:53921 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726283AbgCJSg5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 14:36:18 -0400
-Received: by mail-ot1-f67.google.com with SMTP id a6so6273685otb.10;
-        Tue, 10 Mar 2020 11:36:18 -0700 (PDT)
+        Tue, 10 Mar 2020 14:36:57 -0400
+Received: from mail-wr1-f72.google.com ([209.85.221.72])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <gpiccoli@canonical.com>)
+        id 1jBjkM-0006GP-MW
+        for linux-kernel@vger.kernel.org; Tue, 10 Mar 2020 18:36:54 +0000
+Received: by mail-wr1-f72.google.com with SMTP id c16so6316343wrt.2
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 11:36:54 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=RWBhtEAElv+woAI0B9coW/qcWUrLc+hN8tGBRRi9/8s=;
-        b=KzL0Cc2cTGGSj3qjzAhUSqEeOnk1ivJqba8748Famn+YIdUawiC4uLcDT8KRVyX+yU
-         VIfN/IwTtsE+dI5olqNVHQtGDoHaHYccQzJRAocYrYMaLo7ackvUWyLgo03YQ9lSaXn7
-         nHzTV/rgesOuXcdFD+B8SYhC+7agbbalbonCjqK1AMOf4Cg/Svy4mAUueLZka/RtBcGd
-         xCtbMhY7r9SBBIU8Ie/1KecLDLpidggoNbCSsFSqe38YbXQ37w1J4yQKsPS2AKIfNxxy
-         9cxWRZ0pDd0TGaH0Riw3feG7n9RbFGURqi2/n1yYmkOUfGy6AULzBx/9g6ybgaNDWLLX
-         PAhw==
-X-Gm-Message-State: ANhLgQ1EfaAk3JlXxz0t9etC6zcpWIp34e9UibQhYUSmBqNpYEHeJsX/
-        pMkq57nDmsj1dfWc3Tm0fg==
-X-Google-Smtp-Source: ADFU+vu0ICotI3P1yky6B20yPZmLQBQBsrF3y63sWlL0hNI6+A8JD+ItyEEvuVkvK6xbWwo2T/IxBA==
-X-Received: by 2002:a9d:6e90:: with SMTP id a16mr5846143otr.72.1583865377661;
-        Tue, 10 Mar 2020 11:36:17 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id c12sm4551332oic.27.2020.03.10.11.36.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Mar 2020 11:36:16 -0700 (PDT)
-Received: (nullmailer pid 22533 invoked by uid 1000);
-        Tue, 10 Mar 2020 18:36:16 -0000
-Date:   Tue, 10 Mar 2020 13:36:16 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Dinh Nguyen <dinguyen@kernel.org>
-Cc:     linux-clk@vger.kernel.org, dinguyen@kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        sboyd@kernel.org, mturquette@baylibre.com, robh+dt@kernel.org,
-        mark.rutland@arm.com
-Subject: Re: [PATCHv2 2/3] dt-bindings: documentation: add clock bindings
- information for Agilex
-Message-ID: <20200310183616.GA20350@bogus>
-References: <20200309171653.27630-1-dinguyen@kernel.org>
- <20200309171653.27630-3-dinguyen@kernel.org>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=M+NOQNpvhvH3Mta8jMCkiQEkAzDoTgoDN+MCQM8KMJk=;
+        b=DjK4kvN8hGxKDI2uJa5SYhOdA3Cw5aIXsF1e37Tf7HlUVGVlcMcEW1D22nwqjiGKw4
+         3uOSIh48pP11pB3rqeZPCj4xSsMT6gRSbYRHvPqkglblsvy3VSsJqtMthQMDHAckE1Nn
+         i0Xhg9j6ejpfhN/bPmfsiQ1o0XR7XuNd0STW/dUOfgC4ScxEtlU/WYkHXTtCRIr+WyPr
+         ECiiJu3oPlqng02hgLaE+Wm51bOn0iMjaXuzmuiSoFJYkJl2p3fGQ/g7UXPqShooZfuY
+         DWEi4hfT3E3k96e4dJYPgIG0tLDJifls9Jbu72Vqukhl1BI/85SUNGt47XuOFbpNw5DG
+         UWqw==
+X-Gm-Message-State: ANhLgQ04r1zmA+G7Bz1eAkhQq2/IfoTkS3WIjLIEWwRR0BCTSIF3MrLo
+        yRAYZaS1t1vbULrwvjmFmVhlydjEGh4k0LTNo0T5M0IM21MoqYVF6Q1XQBJKryw1eCXTB4AFoJK
+        L9SbXsiEql2F+qQUeCmy+l6akGabHbcU5pIUO7+LKVw==
+X-Received: by 2002:adf:de10:: with SMTP id b16mr27529287wrm.145.1583865414207;
+        Tue, 10 Mar 2020 11:36:54 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vsCf8pVbjwUxH536PBWlDZKzwrtesqkq2+TuE8mRLhskWkQRt8m4pbkZ9wA7tWmh7D1Hfn+dg==
+X-Received: by 2002:adf:de10:: with SMTP id b16mr27529263wrm.145.1583865413988;
+        Tue, 10 Mar 2020 11:36:53 -0700 (PDT)
+Received: from localhost (189-47-87-73.dsl.telesp.net.br. [189.47.87.73])
+        by smtp.gmail.com with ESMTPSA id h18sm4816377wmm.6.2020.03.10.11.36.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 10 Mar 2020 11:36:52 -0700 (PDT)
+From:   "Guilherme G. Piccoli" <gpiccoli@canonical.com>
+To:     linux-doc@vger.kernel.org
+Cc:     corbet@lwn.net, linux-kernel@vger.kernel.org, swood@redhat.com,
+        mcgrof@kernel.org, keescook@chromium.org, yzaikin@google.com,
+        mingo@kernel.org, gpiccoli@canonical.com, kernel@gpiccoli.net
+Subject: [PATCH v2] Documentation: Better document the softlockup_panic sysctl
+Date:   Tue, 10 Mar 2020 15:36:49 -0300
+Message-Id: <20200310183649.23163-1-gpiccoli@canonical.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200309171653.27630-3-dinguyen@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon,  9 Mar 2020 12:16:52 -0500, Dinh Nguyen wrote:
-> Document the Agilex clock bindings, and add the clock header file. The
-> clock header is an enumeration of all the different clocks on the Agilex
-> platform.
-> 
-> Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
-> ---
-> v2: convert original document to YAML
-> ---
->  .../bindings/clock/intc,agilex.yaml           | 79 +++++++++++++++++++
->  include/dt-bindings/clock/agilex-clock.h      | 70 ++++++++++++++++
->  2 files changed, 149 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/intc,agilex.yaml
->  create mode 100644 include/dt-bindings/clock/agilex-clock.h
-> 
+Commit 9c44bc03fff4 ("softlockup: allow panic on lockup") added the
+softlockup_panic sysctl, but didn't add information about it to the file
+Documentation/admin-guide/sysctl/kernel.rst (which in that time certainly
+wasn't rst and had other name!).
 
-My bot found errors running 'make dt_binding_check' on your patch:
+This patch just adds the respective documentation and references it from
+the corresponding entry in Documentation/admin-guide/kernel-parameters.txt.
 
-Documentation/devicetree/bindings/clock/intc,agilex.yaml:  while scanning a block scalar
-  in "<unicode string>", line 36, column 5
-found a tab character where an indentation space is expected
-  in "<unicode string>", line 37, column 1
-Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/clock/intc,agilex.example.dts' failed
-make[1]: *** [Documentation/devicetree/bindings/clock/intc,agilex.example.dts] Error 1
-make[1]: *** Waiting for unfinished jobs....
-warning: no schema found in file: Documentation/devicetree/bindings/clock/intc,agilex.yaml
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/clock/intc,agilex.yaml: ignoring, error parsing file
-Makefile:1262: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
+This patch was strongly based on Scott Wood's commit d22881dc13b6
+("Documentation: Better document the hardlockup_panic sysctl").
 
-See https://patchwork.ozlabs.org/patch/1251669
-Please check and re-submit.
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Guilherme G. Piccoli <gpiccoli@canonical.com>
+---
+ Documentation/admin-guide/kernel-parameters.txt |  8 ++++----
+ Documentation/admin-guide/sysctl/kernel.rst     | 14 ++++++++++++++
+ 2 files changed, 18 insertions(+), 4 deletions(-)
+
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 04615690e69e..b24fb0d11955 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -4578,10 +4578,10 @@
+ 			Format: <integer>
+ 
+ 			A nonzero value instructs the soft-lockup detector
+-			to panic the machine when a soft-lockup occurs. This
+-			is also controlled by CONFIG_BOOTPARAM_SOFTLOCKUP_PANIC
+-			which is the respective build-time switch to that
+-			functionality.
++			to panic the machine when a soft-lockup occurs. It is
++			also controlled by the kernel.softlockup_panic sysctl
++			and CONFIG_BOOTPARAM_SOFTLOCKUP_PANIC, which is the
++			respective build-time switch to that functionality.
+ 
+ 	softlockup_all_cpu_backtrace=
+ 			[KNL] Should the soft-lockup detector generate
+diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
+index 1c48ab4bfe30..335696d3360d 100644
+--- a/Documentation/admin-guide/sysctl/kernel.rst
++++ b/Documentation/admin-guide/sysctl/kernel.rst
+@@ -1036,6 +1036,20 @@ NMI.
+ = ============================================
+ 
+ 
++softlockup_panic
++=================
++
++This parameter can be used to control whether the kernel panics
++when a soft lockup is detected.
++
++= ============================================
++0 Don't panic on soft lockup.
++1 Panic on soft lockup.
++= ============================================
++
++This can also be set using the softlockup_panic kernel parameter.
++
++
+ soft_watchdog
+ =============
+ 
+-- 
+2.25.1
+
