@@ -3,52 +3,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,LOTS_OF_MONEY,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30A52C18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:50:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3109C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:50:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F174B20674
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:50:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6F5224694
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:50:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583844654;
-	bh=3VYHnFW9xuaaqOe/hIphKKB4MipCxChBwxd5IRK5Rbs=;
+	s=default; t=1583844655;
+	bh=eoNayO3uiDva1CrJ3Fk5TV4cI6wo6Xy7e7/LDxK2Xuo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PkL/Y291dub/CySb13Nn+92UUFiy99qAs3Ucc6jUaa11Db2oTyclOGsj2QV29gxoy
-	 xbsjHJTw9F7SGPYMkW69veXqGikxuIa9WHcl1LFTy59GAvjKnF3qSN4psiwcXgYvyx
-	 pXHmK8z8pgXplBz5Spi87AQYXzd6uYtCU/pZodcY=
+	b=E3Fg1N4b6Mfu/3l9qgtZJG4CtkibYQw15CMvLYxRgx6VVYjKFu1axZB6HwTmvvTmK
+	 zPrR/CeFyjMy6646vKyr3c/1S5HNilbYMIondjrhyqH9qAqQWNYH0Do6RgilhZFgTn
+	 XRmZB55uE3BbzUH3In+dVvPVl3EEkXPs3Jwl9CQQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728723AbgCJMuw (ORCPT
+        id S1727979AbgCJMuy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:50:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55668 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:50:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55744 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728205AbgCJMuu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:50:50 -0400
+        id S1728725AbgCJMux (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:50:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC1BF20674;
-        Tue, 10 Mar 2020 12:50:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 593D420674;
+        Tue, 10 Mar 2020 12:50:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844650;
-        bh=3VYHnFW9xuaaqOe/hIphKKB4MipCxChBwxd5IRK5Rbs=;
+        s=default; t=1583844652;
+        bh=eoNayO3uiDva1CrJ3Fk5TV4cI6wo6Xy7e7/LDxK2Xuo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OoWAmsknIGq4TZyPajh4VfXlsD69a0L0zSPTIW5IGb+GmQe9mY02EQNq8Emjxq9Kg
-         1TW3IOodR4o9fnJCdNOfHy7QFjZrmuGpqEWUvs3ab3svl/stxR/nPW3JrmtGX/yO4M
-         ZfhQXLdg5w3yCSYkXy2HmHh0HjOw4ajiF4DtQhZ8=
+        b=tMXWyZ5Oyzjp0T65V9QiNoYzYjd9rXum1jE77AL76oFrYj7i/YhqogsSQO66xwpYz
+         16oAj0/J6DgNQacryPlp3ZVZwQzveZIWdYz9nuUOLejDCfTOlcLs+/HRdf3sDzMGcU
+         /4AeMOwlYeEl8998qVITQTB2yrz4gBYUUKbnZwx4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Hangbin Liu <liuhangbin@gmail.com>,
-        Petr Machata <pmachata@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 029/168] selftests: forwarding: use proto icmp for {gretap, ip6gretap}_mac testing
-Date:   Tue, 10 Mar 2020 13:37:55 +0100
-Message-Id: <20200310123638.543414246@linuxfoundation.org>
+Subject: [PATCH 5.4 030/168] selftests: forwarding: vxlan_bridge_1d: fix tos value
+Date:   Tue, 10 Mar 2020 13:37:56 +0100
+Message-Id: <20200310123638.631592521@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123635.322799692@linuxfoundation.org>
 References: <20200310123635.322799692@linuxfoundation.org>
@@ -63,114 +62,39 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Hangbin Liu <liuhangbin@gmail.com>
 
-[ Upstream commit e8023b030ce1748930e2dc76353a262fe47d4745 ]
+[ Upstream commit 4e867c9a50ff1a07ed0b86c3b1c8bc773933d728 ]
 
-For tc ip_proto filter, when we extract the flow via __skb_flow_dissect()
-without flag FLOW_DISSECTOR_F_STOP_AT_ENCAP, we will continue extract to
-the inner proto.
+After commit 71130f29979c ("vxlan: fix tos value before xmit") we start
+strict vxlan xmit tos value by RT_TOS(), which limits the tos value less
+than 0x1E. With current value 0x40 the test will failed with "v1: Expected
+to capture 10 packets, got 0". So let's choose a smaller tos value for
+testing.
 
-So for GRE + ICMP messages, we should not track GRE proto, but inner ICMP
-proto.
-
-For test mirror_gre.sh, it may make user confused if we capture ICMP
-message on $h3(since the flow is GRE message). So I move the capture
-dev to h3-gt{4,6}, and only capture ICMP message.
-
-Before the fix:
-]# ./mirror_gre.sh
-TEST: ingress mirror to gretap (skip_hw)                            [ OK ]
-TEST: egress mirror to gretap (skip_hw)                             [ OK ]
-TEST: ingress mirror to ip6gretap (skip_hw)                         [ OK ]
-TEST: egress mirror to ip6gretap (skip_hw)                          [ OK ]
-TEST: ingress mirror to gretap: envelope MAC (skip_hw)              [FAIL]
- Expected to capture 10 packets, got 0.
-TEST: egress mirror to gretap: envelope MAC (skip_hw)               [FAIL]
- Expected to capture 10 packets, got 0.
-TEST: ingress mirror to ip6gretap: envelope MAC (skip_hw)           [FAIL]
- Expected to capture 10 packets, got 0.
-TEST: egress mirror to ip6gretap: envelope MAC (skip_hw)            [FAIL]
- Expected to capture 10 packets, got 0.
-TEST: two simultaneously configured mirrors (skip_hw)               [ OK ]
-WARN: Could not test offloaded functionality
-
-After fix:
-]# ./mirror_gre.sh
-TEST: ingress mirror to gretap (skip_hw)                            [ OK ]
-TEST: egress mirror to gretap (skip_hw)                             [ OK ]
-TEST: ingress mirror to ip6gretap (skip_hw)                         [ OK ]
-TEST: egress mirror to ip6gretap (skip_hw)                          [ OK ]
-TEST: ingress mirror to gretap: envelope MAC (skip_hw)              [ OK ]
-TEST: egress mirror to gretap: envelope MAC (skip_hw)               [ OK ]
-TEST: ingress mirror to ip6gretap: envelope MAC (skip_hw)           [ OK ]
-TEST: egress mirror to ip6gretap: envelope MAC (skip_hw)            [ OK ]
-TEST: two simultaneously configured mirrors (skip_hw)               [ OK ]
-WARN: Could not test offloaded functionality
-
-Fixes: ba8d39871a10 ("selftests: forwarding: Add test for mirror to gretap")
+Fixes: d417ecf533fe ("selftests: forwarding: vxlan_bridge_1d: Add a TOS test")
 Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
-Reviewed-by: Petr Machata <pmachata@gmail.com>
-Tested-by: Petr Machata <pmachata@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../selftests/net/forwarding/mirror_gre.sh    | 25 ++++++++++---------
- 1 file changed, 13 insertions(+), 12 deletions(-)
+ tools/testing/selftests/net/forwarding/vxlan_bridge_1d.sh | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/tools/testing/selftests/net/forwarding/mirror_gre.sh b/tools/testing/selftests/net/forwarding/mirror_gre.sh
-index e6fd7a18c655f..0266443601bc0 100755
---- a/tools/testing/selftests/net/forwarding/mirror_gre.sh
-+++ b/tools/testing/selftests/net/forwarding/mirror_gre.sh
-@@ -63,22 +63,23 @@ test_span_gre_mac()
- {
- 	local tundev=$1; shift
- 	local direction=$1; shift
--	local prot=$1; shift
- 	local what=$1; shift
- 
--	local swp3mac=$(mac_get $swp3)
--	local h3mac=$(mac_get $h3)
-+	case "$direction" in
-+	ingress) local src_mac=$(mac_get $h1); local dst_mac=$(mac_get $h2)
-+		;;
-+	egress) local src_mac=$(mac_get $h2); local dst_mac=$(mac_get $h1)
-+		;;
-+	esac
- 
+diff --git a/tools/testing/selftests/net/forwarding/vxlan_bridge_1d.sh b/tools/testing/selftests/net/forwarding/vxlan_bridge_1d.sh
+index bb10e33690b25..353613fc19475 100755
+--- a/tools/testing/selftests/net/forwarding/vxlan_bridge_1d.sh
++++ b/tools/testing/selftests/net/forwarding/vxlan_bridge_1d.sh
+@@ -516,9 +516,9 @@ test_tos()
  	RET=0
  
- 	mirror_install $swp1 $direction $tundev "matchall $tcflags"
--	tc filter add dev $h3 ingress pref 77 prot $prot \
--		flower ip_proto 0x2f src_mac $swp3mac dst_mac $h3mac \
--		action pass
-+	icmp_capture_install h3-${tundev} "src_mac $src_mac dst_mac $dst_mac"
+ 	tc filter add dev v1 egress pref 77 prot ip \
+-		flower ip_tos 0x40 action pass
+-	vxlan_ping_test $h1 192.0.2.3 "-Q 0x40" v1 egress 77 10
+-	vxlan_ping_test $h1 192.0.2.3 "-Q 0x30" v1 egress 77 0
++		flower ip_tos 0x11 action pass
++	vxlan_ping_test $h1 192.0.2.3 "-Q 0x11" v1 egress 77 10
++	vxlan_ping_test $h1 192.0.2.3 "-Q 0x12" v1 egress 77 0
+ 	tc filter del dev v1 egress pref 77 prot ip
  
--	mirror_test v$h1 192.0.2.1 192.0.2.2 $h3 77 10
-+	mirror_test v$h1 192.0.2.1 192.0.2.2 h3-${tundev} 100 10
- 
--	tc filter del dev $h3 ingress pref 77
-+	icmp_capture_uninstall h3-${tundev}
- 	mirror_uninstall $swp1 $direction
- 
- 	log_test "$direction $what: envelope MAC ($tcflags)"
-@@ -120,14 +121,14 @@ test_ip6gretap()
- 
- test_gretap_mac()
- {
--	test_span_gre_mac gt4 ingress ip "mirror to gretap"
--	test_span_gre_mac gt4 egress ip "mirror to gretap"
-+	test_span_gre_mac gt4 ingress "mirror to gretap"
-+	test_span_gre_mac gt4 egress "mirror to gretap"
- }
- 
- test_ip6gretap_mac()
- {
--	test_span_gre_mac gt6 ingress ipv6 "mirror to ip6gretap"
--	test_span_gre_mac gt6 egress ipv6 "mirror to ip6gretap"
-+	test_span_gre_mac gt6 ingress "mirror to ip6gretap"
-+	test_span_gre_mac gt6 egress "mirror to ip6gretap"
- }
- 
- test_all()
+ 	log_test "VXLAN: envelope TOS inheritance"
 -- 
 2.20.1
 
