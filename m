@@ -2,90 +2,105 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B6EAC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 21:43:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BFB3C10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 21:45:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B558D222C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 21:43:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F910222C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 21:45:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583876614;
-	bh=OuOkQAABcm6HfBhMLAevaswagiOawJeFqfuwGewSJ+I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xh/u9Dtp5MFrxK627yoKPS3xES9LQE1lAoYcSi1GzutFMEP3fyYEewpZzZ4eLOOJq
-	 3N7cVRS9MoUighHTT2nC57ctvJ+1vPPPTbGAqyvy8y+DQ9tkbByTErS2hXantOFm/W
-	 gqNXoNHj+jccsLLHzG+cbJ39XM5kpWyp//k/fxW8=
+	s=default; t=1583876701;
+	bh=TSDq+N2Xq2WKyqJ3qt/mNkLFgoX8wRRyVlS3iwmICTU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=aNpQin/Y5k+FOayVc3p9LH8vMb4ENU1SpI9ekVgkSvG0dkQE3j79eI77CpWtDJWav
+	 iPienvS+dqatHMry6u2ufM5zcVmlsd1fpIt39yoT/2l1sn/Ibm+BoPSVUXdkHzSJxO
+	 S2Zk0oPkRiHAbKiYiEHxw7J3ymclNfwE+tSgzuzQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727689AbgCJVnd (ORCPT
+        id S1727539AbgCJVpA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 17:43:33 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:45649 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726307AbgCJVnc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 17:43:32 -0400
-Received: by mail-oi1-f193.google.com with SMTP id v19so15520230oic.12;
-        Tue, 10 Mar 2020 14:43:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=PmuqO8QVdRKURofONAFY/I+OMxAbc3hBwN/Zd0CaDzU=;
-        b=c+uXonxk2Ez5Lw4iAGk6VNFbyanHa9c6Y7kG9/TAQbCOWnb8nUtrwd3wj6WIY+0Rdi
-         BYooHeKxmVe52L0HlJzx0I0urTuVKb6gpP3YxiFTVbNPvnTdiTrmSnTR4dN9wXHTSzBa
-         mi3rUdu9g5oa8ULMoYO66mzzSpxjByzQ9fUFxRnPcoo5mfWEKgDjN/uKnDSZScQPrxu8
-         AEfUcAZIp4Os3KwbInJwX+C6cAtC3AQ06WGs0ZRtpJTrRgWwexo4OULr0h35VQpqqEho
-         dphPP4hZ84cT41zpRPvTCk6Zf0n5qPY/Tn0UXLYltHJlRMIDOr74vAtErFwemvh1BesW
-         dnZg==
-X-Gm-Message-State: ANhLgQ24Pn3lu25ROaUkdEtvoRcHVvPb7WmNYPCfj1HrhPgh+YzgAdRn
-        YYUT6heylaEAOwRqIt3HNzXWInQ=
-X-Google-Smtp-Source: ADFU+vtT6bnvhh1nOi/1f++kPH4ke/6PZMUyuI2Kqv0ia/Rowt5QY+hspcXTJL9XomXyZ3ZdZS3aDQ==
-X-Received: by 2002:a05:6808:1cf:: with SMTP id x15mr2826049oic.44.1583876609873;
-        Tue, 10 Mar 2020 14:43:29 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id f84sm4686869oib.32.2020.03.10.14.43.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Mar 2020 14:43:29 -0700 (PDT)
-Received: (nullmailer pid 21483 invoked by uid 1000);
-        Tue, 10 Mar 2020 21:43:28 -0000
-Date:   Tue, 10 Mar 2020 16:43:28 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Sandipan Patra <spatra@nvidia.com>
-Cc:     treding@nvidia.com, robh+dt@kernel.org,
-        u.kleine-koenig@pengutronix.de, jonathanh@nvidia.com,
-        bbasu@nvidia.com, ldewangan@nvidia.com, linux-pwm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Sandipan Patra <spatra@nvidia.com>
-Subject: Re: [PATCH] pwm: tegra: Add support for Tegra194
-Message-ID: <20200310214328.GA21450@bogus>
-References: <1583407653-30059-1-git-send-email-spatra@nvidia.com>
+        Tue, 10 Mar 2020 17:45:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39240 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726307AbgCJVo7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 17:44:59 -0400
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A1EB6222C4;
+        Tue, 10 Mar 2020 21:44:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583876699;
+        bh=TSDq+N2Xq2WKyqJ3qt/mNkLFgoX8wRRyVlS3iwmICTU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=kTqCUIINSdaOLvEUJkpfj+zxHUv2VmENXtessPZ2QSqtxfYpAq5PyMDLChRa7IqcF
+         zWCZ64h7LizTEN6hwinBZyENwh9IZK7iYBqRcrgcRP0RKjvTgQ/FST6PwoOO1O5bEI
+         SvcOgw+uYfTECt4ylGFXYIPw1avWaRF9zQ/eMPqo=
+Received: by mail-lf1-f45.google.com with SMTP id g4so5916467lfh.2;
+        Tue, 10 Mar 2020 14:44:58 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ24Tqg97JtRVTaZ6bI/MIqDQKpbJFQlcIFyzA1baEnH0H2dGIOl
+        WW/GiqKhgFTEzUb1UKC6ImPuWSXbA2SLAGLNjp0=
+X-Google-Smtp-Source: ADFU+vu7nX+XEEO/nQ4AW+W27Xd+L1WjEIY+gqS5q+5ZjLYcsx7c8VbunkpXowlwAg3B+R3iP2amsdG/f5u9tW/5B/c=
+X-Received: by 2002:ac2:4116:: with SMTP id b22mr90742lfi.172.1583876696820;
+ Tue, 10 Mar 2020 14:44:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1583407653-30059-1-git-send-email-spatra@nvidia.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200226221804.GA8564@embeddedor>
+In-Reply-To: <20200226221804.GA8564@embeddedor>
+From:   Song Liu <song@kernel.org>
+Date:   Tue, 10 Mar 2020 14:44:45 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW7tP3qfiY_kppSBBPXtNs27uGKcTsR9mZGULtQSCaNbQg@mail.gmail.com>
+Message-ID: <CAPhsuW7tP3qfiY_kppSBBPXtNs27uGKcTsR9mZGULtQSCaNbQg@mail.gmail.com>
+Subject: Re: [PATCH][next] md: Replace zero-length array with flexible-array member
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Alasdair Kergon <agk@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-raid <linux-raid@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 5 Mar 2020 16:57:33 +0530, Sandipan Patra wrote:
-> Tegra194 has multiple PWM controllers with each having only one output.
-> 
-> Also the maxmimum frequency is higher than earlier SoCs.
-> 
-> Add support for Tegra194 and specify the number of PWM outputs and
-> maximum supported frequency using device tree match data.
-> 
-> Signed-off-by: Sandipan Patra <spatra@nvidia.com>
-> ---
->  Documentation/devicetree/bindings/pwm/nvidia,tegra20-pwm.txt | 1 +
->  drivers/pwm/pwm-tegra.c                                      | 6 ++++++
->  2 files changed, 7 insertions(+)
-> 
+On Wed, Feb 26, 2020 at 2:16 PM Gustavo A. R. Silva
+<gustavo@embeddedor.com> wrote:
+>
+> The current codebase makes use of the zero-length array language
+> extension to the C90 standard, but the preferred mechanism to declare
+> variable-length types such as these ones is a flexible array member[1][2],
+> introduced in C99:
+>
+> struct foo {
+>         int stuff;
+>         struct boo array[];
+> };
+>
+> By making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> inadvertently introduced[3] to the codebase from now on.
+>
+> Also, notice that, dynamic memory allocations won't be affected by
+> this change:
+>
+> "Flexible array members have incomplete type, and so the sizeof operator
+> may not be applied. As a quirk of the original implementation of
+> zero-length arrays, sizeof evaluates to zero."[1]
+>
+> This issue was found with the help of Coccinelle.
+>
+> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [2] https://github.com/KSPP/linux/issues/21
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+>
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-Acked-by: Rob Herring <robh@kernel.org>
+For md part: Acked-by: Song Liu <song@kernel.org>
+
+Alasdair and Mike, would you like to route the patch via dm tree?
+
+Thanks,
+Song
