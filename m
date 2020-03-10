@@ -5,49 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80674C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:56:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9783C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:56:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57A142468D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:56:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF89320674
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:56:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583845002;
-	bh=AFLhECNdQynG25OAfG50zgqOns9HClcAwKK6FJTao+o=;
+	s=default; t=1583845004;
+	bh=m3/5GV8iND6nq+ZvNW2PfXvQ5eZR+5DVF27T+hS7AB4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UrNlzsE1TxR9gfKhN6ocKn6g46zUiwO7BNwElioHKjnt2aVDbX+VX/mL2ddT+WijF
-	 iDuv07NIFzFV9E2dGxar4qH7pBSCtCixfb2fDBNLv4MOdOV/9iMDFSpC9KGz39Z8zJ
-	 wUl3iRzODWG9S40j6A7oHtDki2I0K17Y6PgOsqTE=
+	b=y3gUiyspfD9jY0Wh/MUHKs+wacEAW+2zmgaNjJg2xJ3LbjHTaoaFoOYkkuScCnHim
+	 VBdsDV7C16WEZCgEv/7F4/pKF9dkRQuZb5stLkZ6cBTr3KSLTtCNvpQT7/+s9xJCrK
+	 XiOH9M04AkFSq6WoP6b+QbIcYF0fVEzy+ZxuEp+4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727764AbgCJM4l (ORCPT
+        id S1729688AbgCJM4o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:56:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35830 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:56:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35928 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729443AbgCJM4f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:56:35 -0400
+        id S1729679AbgCJM4k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:56:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F98D24693;
-        Tue, 10 Mar 2020 12:56:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 720502253D;
+        Tue, 10 Mar 2020 12:56:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844995;
-        bh=AFLhECNdQynG25OAfG50zgqOns9HClcAwKK6FJTao+o=;
+        s=default; t=1583844999;
+        bh=m3/5GV8iND6nq+ZvNW2PfXvQ5eZR+5DVF27T+hS7AB4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ayANvTYH70Rrd2G/HCIyOcSWsF/95H6VJ7hMN7Oh9qcpz5Vjn6kP5EnvpgWLed7h1
-         7Te9CK3rSBMO2+vNKtmuAEu0CRD5H4svhFLmDaUM3cLjlnJgQCx/0JUS+mclxi0DJO
-         8bYMjkuBK8J+EAWqb4x+0s3mKVzKbTEV58LjJCJA=
+        b=IXNnV23yvM3CpKE5oONvXoPc0Igp6vKBcZYyak83U4yX60Pip0W1Hk1wulao6ODke
+         t0ZRyV59ddePB2ke8DL5ilZJcmPiyPDdDs2rDSz3dMmA661+6/6PAB5VfjTA7pP+WD
+         HcPerxoTZR2ouEN6VeLKHCwdutEZ2l/BD9WbpbBs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stephan Gerhold <stephan@gerhold.net>,
-        Maxime Ripard <maxime@cerno.tech>,
+        stable@vger.kernel.org, Tomas Henzl <thenzl@redhat.com>,
+        Sumit Saxena <sumit.saxena@broadcom.com>,
+        Lee Duncan <lduncan@suse.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 024/189] drm/modes: Make sure to parse valid rotation value from cmdline
-Date:   Tue, 10 Mar 2020 13:37:41 +0100
-Message-Id: <20200310123641.916422220@linuxfoundation.org>
+Subject: [PATCH 5.5 026/189] scsi: megaraid_sas: silence a warning
+Date:   Tue, 10 Mar 2020 13:37:43 +0100
+Message-Id: <20200310123642.090587718@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123639.608886314@linuxfoundation.org>
 References: <20200310123639.608886314@linuxfoundation.org>
@@ -60,101 +62,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephan Gerhold <stephan@gerhold.net>
+From: Tomas Henzl <thenzl@redhat.com>
 
-[ Upstream commit e6980a727154b793adb218fbc7b4d6af52a7e364 ]
+[ Upstream commit 0e99b2c625da181aebf1a3d13493e3f7a5057a9c ]
 
-A rotation value should have exactly one rotation angle.
-At the moment there is no validation for this when parsing video=
-parameters from the command line. This causes problems later on
-when we try to combine the command line rotation with the panel
-orientation.
+Add a flag to DMA memory allocation to silence a warning.
 
-To make sure that we generate a valid rotation value:
-  - Set DRM_MODE_ROTATE_0 by default (if no rotate= option is set)
-  - Validate that there is exactly one rotation angle set
-    (i.e. specifying the rotate= option multiple times is invalid)
+This driver allocates DMA memory for IO frames. This allocation may exceed
+MAX_ORDER pages for few megaraid_sas controllers (controllers with very
+high queue depth). Consequently, the driver has logic to keep reducing the
+controller queue depth until the DMA memory allocation succeeds.
 
-Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200117153429.54700-2-stephan@gerhold.net
+On impacted megaraid_sas controllers there would be multiple DMA allocation
+failures until driver settled on an allocation that fit. These failed DMA
+allocation requests caused stack traces in system logs. These were not
+harmful and this patch silences those warnings/stack traces.
+
+[mkp: clarified commit desc]
+
+Link: https://lore.kernel.org/r/20200204152413.7107-1-thenzl@redhat.com
+Signed-off-by: Tomas Henzl <thenzl@redhat.com>
+Acked-by: Sumit Saxena <sumit.saxena@broadcom.com>
+Reviewed-by: Lee Duncan <lduncan@suse.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/drm_modes.c                       |  7 +++++++
- drivers/gpu/drm/selftests/drm_cmdline_selftests.h |  1 +
- .../gpu/drm/selftests/test-drm_cmdline_parser.c   | 15 +++++++++++++--
- 3 files changed, 21 insertions(+), 2 deletions(-)
+ drivers/scsi/megaraid/megaraid_sas_fusion.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/drm_modes.c b/drivers/gpu/drm/drm_modes.c
-index 88232698d7a00..3fd35e6b9d535 100644
---- a/drivers/gpu/drm/drm_modes.c
-+++ b/drivers/gpu/drm/drm_modes.c
-@@ -1672,6 +1672,13 @@ static int drm_mode_parse_cmdline_options(char *str, size_t len,
- 		}
- 	}
+diff --git a/drivers/scsi/megaraid/megaraid_sas_fusion.c b/drivers/scsi/megaraid/megaraid_sas_fusion.c
+index 46bc062d873ef..d868388018053 100644
+--- a/drivers/scsi/megaraid/megaraid_sas_fusion.c
++++ b/drivers/scsi/megaraid/megaraid_sas_fusion.c
+@@ -594,7 +594,8 @@ megasas_alloc_request_fusion(struct megasas_instance *instance)
  
-+	if (!(rotation & DRM_MODE_ROTATE_MASK))
-+		rotation |= DRM_MODE_ROTATE_0;
-+
-+	/* Make sure there is exactly one rotation defined */
-+	if (!is_power_of_2(rotation & DRM_MODE_ROTATE_MASK))
-+		return -EINVAL;
-+
- 	mode->rotation_reflection = rotation;
+ 	fusion->io_request_frames =
+ 			dma_pool_alloc(fusion->io_request_frames_pool,
+-				GFP_KERNEL, &fusion->io_request_frames_phys);
++				GFP_KERNEL | __GFP_NOWARN,
++				&fusion->io_request_frames_phys);
+ 	if (!fusion->io_request_frames) {
+ 		if (instance->max_fw_cmds >= (MEGASAS_REDUCE_QD_COUNT * 2)) {
+ 			instance->max_fw_cmds -= MEGASAS_REDUCE_QD_COUNT;
+@@ -632,7 +633,7 @@ megasas_alloc_request_fusion(struct megasas_instance *instance)
  
- 	return 0;
-diff --git a/drivers/gpu/drm/selftests/drm_cmdline_selftests.h b/drivers/gpu/drm/selftests/drm_cmdline_selftests.h
-index 6d61a0eb5d64f..84e6bc050bf2c 100644
---- a/drivers/gpu/drm/selftests/drm_cmdline_selftests.h
-+++ b/drivers/gpu/drm/selftests/drm_cmdline_selftests.h
-@@ -53,6 +53,7 @@ cmdline_test(drm_cmdline_test_rotate_0)
- cmdline_test(drm_cmdline_test_rotate_90)
- cmdline_test(drm_cmdline_test_rotate_180)
- cmdline_test(drm_cmdline_test_rotate_270)
-+cmdline_test(drm_cmdline_test_rotate_multiple)
- cmdline_test(drm_cmdline_test_rotate_invalid_val)
- cmdline_test(drm_cmdline_test_rotate_truncated)
- cmdline_test(drm_cmdline_test_hmirror)
-diff --git a/drivers/gpu/drm/selftests/test-drm_cmdline_parser.c b/drivers/gpu/drm/selftests/test-drm_cmdline_parser.c
-index 013de9d27c35d..035f86c5d6482 100644
---- a/drivers/gpu/drm/selftests/test-drm_cmdline_parser.c
-+++ b/drivers/gpu/drm/selftests/test-drm_cmdline_parser.c
-@@ -856,6 +856,17 @@ static int drm_cmdline_test_rotate_270(void *ignored)
- 	return 0;
- }
+ 		fusion->io_request_frames =
+ 			dma_pool_alloc(fusion->io_request_frames_pool,
+-				       GFP_KERNEL,
++				       GFP_KERNEL | __GFP_NOWARN,
+ 				       &fusion->io_request_frames_phys);
  
-+static int drm_cmdline_test_rotate_multiple(void *ignored)
-+{
-+	struct drm_cmdline_mode mode = { };
-+
-+	FAIL_ON(drm_mode_parse_command_line_for_connector("720x480,rotate=0,rotate=90",
-+							  &no_connector,
-+							  &mode));
-+
-+	return 0;
-+}
-+
- static int drm_cmdline_test_rotate_invalid_val(void *ignored)
- {
- 	struct drm_cmdline_mode mode = { };
-@@ -888,7 +899,7 @@ static int drm_cmdline_test_hmirror(void *ignored)
- 	FAIL_ON(!mode.specified);
- 	FAIL_ON(mode.xres != 720);
- 	FAIL_ON(mode.yres != 480);
--	FAIL_ON(mode.rotation_reflection != DRM_MODE_REFLECT_X);
-+	FAIL_ON(mode.rotation_reflection != (DRM_MODE_ROTATE_0 | DRM_MODE_REFLECT_X));
- 
- 	FAIL_ON(mode.refresh_specified);
- 
-@@ -913,7 +924,7 @@ static int drm_cmdline_test_vmirror(void *ignored)
- 	FAIL_ON(!mode.specified);
- 	FAIL_ON(mode.xres != 720);
- 	FAIL_ON(mode.yres != 480);
--	FAIL_ON(mode.rotation_reflection != DRM_MODE_REFLECT_Y);
-+	FAIL_ON(mode.rotation_reflection != (DRM_MODE_ROTATE_0 | DRM_MODE_REFLECT_Y));
- 
- 	FAIL_ON(mode.refresh_specified);
- 
+ 		if (!fusion->io_request_frames) {
 -- 
 2.20.1
 
