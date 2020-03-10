@@ -2,124 +2,110 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACEBFC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:19:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4404BC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:23:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E27A24686
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:19:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fnjJ1AQo"
+	by mail.kernel.org (Postfix) with ESMTP id 1FE542464B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:23:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726482AbgCJMTk (ORCPT
+        id S1726391AbgCJMXi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:19:40 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:41643 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726353AbgCJMTj (ORCPT
+        Tue, 10 Mar 2020 08:23:38 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:54890 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726211AbgCJMXh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:19:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583842779;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=qoDjVfCyMen1kfloMIClESpphvSaHWNU06cu9u+0VdQ=;
-        b=fnjJ1AQo8M5QnNa78TOKPkii+JObvP34iBTB8JlpZf74BsSQgK0AthuDPB5/08OVoLIJrs
-        9+WxURBlogdWwFtny/HAgYwvbPvO9sH0fhLhvG/gxBRa41XkNW+k0EwGtAKEd++CkLmXG5
-        tIeYOBloeLkMifUfHNzwA4TqsagDRL8=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-272-c_ZpUR1nNjG1U5vkIJeQ6A-1; Tue, 10 Mar 2020 08:19:37 -0400
-X-MC-Unique: c_ZpUR1nNjG1U5vkIJeQ6A-1
-Received: by mail-qt1-f198.google.com with SMTP id j35so8979625qte.19
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 05:19:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=qoDjVfCyMen1kfloMIClESpphvSaHWNU06cu9u+0VdQ=;
-        b=OcCp3OoAaqpPbeKjifVjuy+sMZJ41cuZgN580lv0eDgm+zqN0F7TJe8MnP2WMD9m8h
-         +UZQ3P2RVS3w7kwKCdaD2MeqhVrIs1bg+KzB+hATJaUZfQsPwGWqbmsZS0fm+qSME4bK
-         d8I9JNfIHXB90TA0b/euNC6Ghi+kB5Z1kZHAwb9857iALMJOjw8345beLpIlVDASvzYk
-         /ANt+Y4yNUT90CBxk2LKF282mAfwCztT7oliLWMV2O8qgbCW7WE0H+h5bplt/aPWAxl7
-         03H6BeunwQWmGteN6luYjmnvCN2SwPXFFM5So62jb8phqkk5RnlEslP6pIjroW2OB4vR
-         lcRQ==
-X-Gm-Message-State: ANhLgQ2wb873CEcl8/1xxV1gtpFxky0EFbagfhuld01jhgpuHeFS6LDd
-        yjvMcH6wlR7AVxuMgL+rJzrQa6RwaA3JgzgxiSulWdgAm7N0iR9qCmbqvKsqK/XUtWAQ/xKesGR
-        WQY3vF8hhBsM423aQ9ZKw+dHF
-X-Received: by 2002:a0c:c783:: with SMTP id k3mr18816400qvj.241.1583842776749;
-        Tue, 10 Mar 2020 05:19:36 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vu02wK5j5HqaBUlUP94aV2l+2NXRf1hgehYJ+CaAbsYTYbQKE4jxeirYry6aBbd1OWhTAdxvw==
-X-Received: by 2002:a0c:c783:: with SMTP id k3mr18816387qvj.241.1583842776557;
-        Tue, 10 Mar 2020 05:19:36 -0700 (PDT)
-Received: from redhat.com (bzq-79-178-2-19.red.bezeqint.net. [79.178.2.19])
-        by smtp.gmail.com with ESMTPSA id f13sm10035959qte.53.2020.03.10.05.19.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Mar 2020 05:19:35 -0700 (PDT)
-Date:   Tue, 10 Mar 2020 08:19:31 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Luiz Capitulino <lcapitulino@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v1] MAINTAINERS: Add myself as virtio-balloon
- co-maintainer
-Message-ID: <20200310081850-mutt-send-email-mst@kernel.org>
-References: <20200310115411.12760-1-david@redhat.com>
+        Tue, 10 Mar 2020 08:23:37 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-134-nZB81PfeP52EGTki-0E5KQ-1; Tue, 10 Mar 2020 12:23:34 +0000
+X-MC-Unique: nZB81PfeP52EGTki-0E5KQ-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Tue, 10 Mar 2020 12:23:34 +0000
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Tue, 10 Mar 2020 12:23:34 +0000
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Chris Wilson' <chris@chris-wilson.co.uk>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: RE: [PATCH] list: Prevent compiler reloads inside 'safe' list
+ iteration
+Thread-Topic: [PATCH] list: Prevent compiler reloads inside 'safe' list
+ iteration
+Thread-Index: AQHV9r1KBrT+D4Vo2U+Op9v/Nv0od6hBsdzwgAAEwQCAAAWYAA==
+Date:   Tue, 10 Mar 2020 12:23:34 +0000
+Message-ID: <723d527a4ad349b78bf11d52eba97c0e@AcuMS.aculab.com>
+References: <20200310092119.14965-1-chris@chris-wilson.co.uk>
+ <2e936d8fd2c445beb08e6dd3ee1f3891@AcuMS.aculab.com>
+ <158384100886.16414.15741589015363013386@build.alporthouse.com>
+In-Reply-To: <158384100886.16414.15741589015363013386@build.alporthouse.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200310115411.12760-1-david@redhat.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 10, 2020 at 12:54:11PM +0100, David Hildenbrand wrote:
-> As suggested by Michael, let's add me as co-maintainer of virtio-balloon.
-> While at it, also add "include/linux/balloon_compaction.h" to the file
-> list.
-> 
-> Cc: Michael S. Tsirkin <mst@redhat.com>
-> Cc: Jason Wang <jasowang@redhat.com>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: David Hildenbrand <david@redhat.com>
-
-Yea I don't think Jason actually has time to look at balloon patches.
-Thanks for helping out!
-I'll queue this.
-
-> ---
->  MAINTAINERS | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index c555f4be8c4e..da9f53a05d0e 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -17800,6 +17800,15 @@ F:	drivers/block/virtio_blk.c
->  F:	include/linux/virtio*.h
->  F:	include/uapi/linux/virtio_*.h
->  F:	drivers/crypto/virtio/
-> +
-> +VIRTIO BALLOON
-> +M:	"Michael S. Tsirkin" <mst@redhat.com>
-> +M:	David Hildenbrand <david@redhat.com>
-> +L:	virtualization@lists.linux-foundation.org
-> +S:	Maintained
-> +F:	drivers/virtio/virtio_balloon.c
-> +F:	include/uapi/linux/virtio_balloon.h
-> +F:	include/linux/balloon_compaction.h
->  F:	mm/balloon_compaction.c
->  
->  VIRTIO BLOCK AND SCSI DRIVERS
-> -- 
-> 2.24.1
+RnJvbTogQ2hyaXMgV2lsc29uDQo+IFNlbnQ6IDEwIE1hcmNoIDIwMjAgMTE6NTANCj4gDQo+IFF1
+b3RpbmcgRGF2aWQgTGFpZ2h0ICgyMDIwLTAzLTEwIDExOjM2OjQxKQ0KPiA+IEZyb206IENocmlz
+IFdpbHNvbg0KPiA+ID4gU2VudDogMTAgTWFyY2ggMjAyMCAwOToyMQ0KPiA+ID4gSW5zdHJ1Y3Qg
+dGhlIGNvbXBpbGVyIHRvIHJlYWQgdGhlIG5leHQgZWxlbWVudCBpbiB0aGUgbGlzdCBpdGVyYXRp
+b24NCj4gPiA+IG9uY2UsIGFuZCB0aGF0IGl0IGlzIG5vdCBhbGxvd2VkIHRvIHJlbG9hZCB0aGUg
+dmFsdWUgZnJvbSB0aGUgc3RhbGUNCj4gPiA+IGVsZW1lbnQgbGF0ZXIuIFRoaXMgaXMgaW1wb3J0
+YW50IGFzIGR1cmluZyB0aGUgY291cnNlIG9mIHRoZSBzYWZlDQo+ID4gPiBpdGVyYXRpb24sIHRo
+ZSBzdGFsZSBlbGVtZW50IG1heSBiZSBwb2lzb25lZCAodW5iZWtub3duc3QgdG8gdGhlDQo+ID4g
+PiBjb21waWxlcikuDQo+ID4NCj4gPiBFaD8NCj4gPiBJIHRob3VnaHQgYW55IGZ1bmN0aW9uIGNh
+bGwgd2lsbCBzdG9wIHRoZSBjb21waWxlciBiZWluZyBhbGxvd2VkDQo+ID4gdG8gcmVsb2FkIHRo
+ZSB2YWx1ZS4NCj4gPiBUaGUgJ3NhZmUnIGxvb3AgaXRlcmF0b3JzIGFyZSBvbmx5ICdzYWZlJyBh
+Z2FpbnN0IGNhbGxlZA0KPiA+IGNvZGUgcmVtb3ZpbmcgdGhlIGN1cnJlbnQgaXRlbSBmcm9tIHRo
+ZSBsaXN0Lg0KPiA+DQo+ID4gPiBUaGlzIGhlbHBzIHByZXZlbnQga2NzYW4gd2FybmluZ3Mgb3Zl
+ciAndW5zYWZlJyBjb25kdWN0IGluIHJlbGVhc2luZyB0aGUNCj4gPiA+IGxpc3QgZWxlbWVudHMg
+ZHVyaW5nIGxpc3RfZm9yX2VhY2hfZW50cnlfc2FmZSgpIGFuZCBmcmllbmRzLg0KPiA+DQo+ID4g
+U291bmRzIGxpa2Uga2NzYW4gaXMgYnVnZ3kgPz8/Pw0KPiANCj4gVGhlIHdhcm5pbmcga2NzYW4g
+Z2F2ZSBtYWRlIHNlbnNlIChhIHN0cmFuZ2UgY2FzZSB3aGVyZSB0aGUgZW1wdHlpbmcgdGhlDQo+
+IGxpc3QgZnJvbSBpbnNpZGUgdGhlIHNhZmUgaXRlcmF0b3Igd291bGQgYWxsb3cgdGhhdCBsaXN0
+IHRvIGJlIHRha2VuDQo+IHVuZGVyIGEgZ2xvYmFsIG11dGV4IGFuZCBoYXZlIG9uZSBleHRyYSBy
+ZXF1ZXN0IGFkZGVkIHRvIGl0LiBUaGUNCj4gbGlzdF9mb3JfZWFjaF9lbnRyeV9zYWZlKCkgc2hv
+dWxkIGJlIG9rIGluIHRoaXMgc2NlbmFyaW8sIHNvIGxvbmcgYXMgdGhlDQo+IG5leHQgZWxlbWVu
+dCBpcyByZWFkIGJlZm9yZSB0aGlzIGVsZW1lbnQgaXMgZHJvcHBlZCwgYW5kIHRoZSBjb21waWxl
+ciBpcw0KPiBpbnN0cnVjdGVkIG5vdCB0byByZWxvYWQgdGhlIGVsZW1lbnQuDQoNCk5vcm1hbGx5
+IHRoZSBsb29wIGl0ZXJhdGlvbiBjb2RlIGhhcyB0byBob2xkIHRoZSBtdXRleC4NCkkgZ3Vlc3Mg
+aXQgY2FuIGJlIHJlbGVhc2VkIGluc2lkZSB0aGUgbG9vcCBwcm92aWRlZCBubyBvdGhlcg0KY29k
+ZSBjYW4gZXZlciBkZWxldGUgZW50cmllcy4NCg0KPiBrY3NhbiBpcyBhIGxpdHRsZSBtb3JlIGlu
+c2lzdGVudCBvbiBoYXZpbmcgdGhhdCBhbm5vdGF0aW9uIDopDQo+IA0KPiBJbiB0aGlzIGluc3Rh
+bmNlIEkgd291bGQgc2F5IGl0IHdhcyBhIGZhbHNlIHBvc2l0aXZlIGZyb20ga2NzYW4sIGJ1dCBJ
+DQo+IGNhbiBzZWUgd2h5IGl0IHdvdWxkIGNvbXBsYWluIGFuZCBzdXNwZWN0IHRoYXQgZ2l2ZW4g
+YSBzdWZmaWNpZW50bHkNCj4gYWdncmVzc2l2ZSBjb21waWxlciwgd2UgbWF5IGJlIGNhdWdodCBv
+dXQgYnkgYSBsYXRlIHJlbG9hZCBvZiB0aGUgbmV4dA0KPiBlbGVtZW50Lg0KDQpJZiB5b3UgaGF2
+ZToNCglmb3IgKDsgcDsgcCA9IG5leHQpIHsNCgkJbmV4dCA9IHAtPm5leHQ7DQoJCWV4dGVybmFs
+X2Z1bmN0aW9uX2NhbGwodm9pZCk7DQoJfQ0KdGhlIGNvbXBpbGVyIG11c3QgYXNzdW1lIHRoYXQg
+dGhlIGZ1bmN0aW9uIGNhbGwNCmNhbiBjaGFuZ2UgJ3AtPm5leHQnIGFuZCByZWFkIGl0IGJlZm9y
+ZSB0aGUgY2FsbC4NCg0KSXMgdGhpcyBhIGxpc3Qgd2l0aCBzdHJhbmdlIGxvY2tpbmcgcnVsZXM/
+DQpUaGUgb25seSBkZWxldGVzIGFyZSBmcm9tIHdpdGhpbiB0aGUgbG9vcC4NCkFkZHMgYW5kIGRl
+bGV0ZXMgYXJlIGxvY2tlZC4NClRoZSBsaXN0IHRyYXZlcnNhbCBpc24ndCBsb2NrZWQuDQoNCkkg
+c3VzcGVjdCBrY3NhbiBibGVhdHMgYmVjYXVzZSBpdCBkb2Vzbid0IGFzc3VtZSB0aGUgY29tcGls
+ZXINCndpbGwgdXNlIGEgc2luZ2xlIGluc3RydWN0aW9uL21lbW9yeSBvcGVyYXRpb24gdG8gcmVh
+ZCBwLT5uZXh0Lg0KVGhhdCBpcyBqdXN0IHN0dXBpZC4NCg0KCURhdmlkDQoNCg0KDQoJCQ0KDQot
+DQpSZWdpc3RlcmVkIEFkZHJlc3MgTGFrZXNpZGUsIEJyYW1sZXkgUm9hZCwgTW91bnQgRmFybSwg
+TWlsdG9uIEtleW5lcywgTUsxIDFQVCwgVUsNClJlZ2lzdHJhdGlvbiBObzogMTM5NzM4NiAoV2Fs
+ZXMpDQo=
 
