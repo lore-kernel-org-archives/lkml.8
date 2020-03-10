@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA69AC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:56:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17D43C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:56:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F9D52468D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:56:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA3732467D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:56:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583844972;
-	bh=IL3/wicU8vS8fr/u2xEEigJhcMcCof++SwVTStaXe0s=;
+	s=default; t=1583844977;
+	bh=XPgDphCG7o8+2DsQtg+A8h+zRYGpfJPdC/2PvdX86VQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XuUF8xTRMtRrSqFVgrkPoHRai2jGmNzPU4cVo1Yr4aWsxsw5XE7DSbe8Rw8UNgvC9
-	 EY/Pn9ddnHvjN38cvVQaJNAavbYJhNRI7sCN17DR628+H+qvQZ9mjmiSNu2SObX7C3
-	 /nN8VUvaB7jlXnznIxAKrKbLSv3drR2cLFOFShqY=
+	b=db9FZfuNl05LtZRR2DVSzYpc6shv5SYSZDdnCg9J9AD1MVn2+6WViD8TKEAldmSok
+	 MA5/5arhYN3Xf8ez6TS59rUK9c+3PnYSqXzbUCjDIpt7mHtV1n6vqpNv4Ps+BxV0Wh
+	 7iblXCjbIGMvdGU/lNIjjtTfhXTayaoetZEZBo1w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728716AbgCJM4L (ORCPT
+        id S1727510AbgCJM4Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:56:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35156 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:56:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35318 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729197AbgCJM4E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:56:04 -0400
+        id S1729635AbgCJM4K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:56:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB1522468D;
-        Tue, 10 Mar 2020 12:56:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C93A2253D;
+        Tue, 10 Mar 2020 12:56:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844963;
-        bh=IL3/wicU8vS8fr/u2xEEigJhcMcCof++SwVTStaXe0s=;
+        s=default; t=1583844969;
+        bh=XPgDphCG7o8+2DsQtg+A8h+zRYGpfJPdC/2PvdX86VQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p0UKacuSq0zP7556lgdf2RqjyHZtCMvCQtGGuTPqSqWOralsgzTBmfrnycQ/B9K+H
-         V3WSqZh0e8CbF49bnt47ZhFoVPf9jrTeaFamPma+e42y9207D82Qg6fPl1AyZVBEYr
-         iPmsmO8D5qc01vk6ROmqsdjMkUnNXOU7bE/58Ejw=
+        b=QUmx71KR5RVcm3rn9vds3EIaX8Z3O5xm+8tC39gyImLSavPoyNJ8hBdd6MwoBZ/Wt
+         JwsMGffOf95op3CTqmraz1zkVo2zc4n4MSCaP2NxmoOp974INtm/oNCoelqdCt5Jnv
+         laPQ18bLyW6jPNWNcOMzQTD8GOpTksjADSpGH6Uo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Yauheni Kaliuta <yauheni.kaliuta@redhat.com>,
-        Jiri Benc <jbenc@redhat.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
+        stable@vger.kernel.org, Michal Nazarewicz <mina86@mina86.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Felipe Balbi <balbi@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 015/189] selftests: fix too long argument
-Date:   Tue, 10 Mar 2020 13:37:32 +0100
-Message-Id: <20200310123641.063181436@linuxfoundation.org>
+Subject: [PATCH 5.5 017/189] usb: gadget: ffs: ffs_aio_cancel(): Save/restore IRQ flags
+Date:   Tue, 10 Mar 2020 13:37:34 +0100
+Message-Id: <20200310123641.244040601@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123639.608886314@linuxfoundation.org>
 References: <20200310123639.608886314@linuxfoundation.org>
@@ -62,73 +62,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Benc <jbenc@redhat.com>
+From: Lars-Peter Clausen <lars@metafoo.de>
 
-[ Upstream commit c363eb48ada5cf732b3f489fab799fc881097842 ]
+[ Upstream commit 43d565727a3a6fd24e37c7c2116475106af71806 ]
 
-With some shells, the command construed for install of bpf selftests becomes
-too large due to long list of files:
+ffs_aio_cancel() can be called from both interrupt and thread context. Make
+sure that the current IRQ state is saved and restored by using
+spin_{un,}lock_irq{save,restore}().
 
-make[1]: execvp: /bin/sh: Argument list too long
-make[1]: *** [../lib.mk:73: install] Error 127
+Otherwise undefined behavior might occur.
 
-Currently, each of the file lists is replicated three times in the command:
-in the shell 'if' condition, in the 'echo' and in the 'rsync'. Reduce that
-by one instance by using make conditionals and separate the echo and rsync
-into two shell commands. (One would be inclined to just remove the '@' at
-the beginning of the rsync command and let 'make' echo it by itself;
-unfortunately, it appears that the '@' in the front of mkdir silences output
-also for the following commands.)
-
-Also, separate handling of each of the lists to its own shell command.
-
-The semantics of the makefile is unchanged before and after the patch. The
-ability of individual test directories to override INSTALL_RULE is retained.
-
-Reported-by: Yauheni Kaliuta <yauheni.kaliuta@redhat.com>
-Tested-by: Yauheni Kaliuta <yauheni.kaliuta@redhat.com>
-Signed-off-by: Jiri Benc <jbenc@redhat.com>
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+Acked-by: Michal Nazarewicz <mina86@mina86.com>
+Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/lib.mk | 23 +++++++++++++----------
- 1 file changed, 13 insertions(+), 10 deletions(-)
+ drivers/usb/gadget/function/f_fs.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/selftests/lib.mk b/tools/testing/selftests/lib.mk
-index 1c8a1963d03f8..3ed0134a764d4 100644
---- a/tools/testing/selftests/lib.mk
-+++ b/tools/testing/selftests/lib.mk
-@@ -83,17 +83,20 @@ else
- 	$(call RUN_TESTS, $(TEST_GEN_PROGS) $(TEST_CUSTOM_PROGS) $(TEST_PROGS))
- endif
+diff --git a/drivers/usb/gadget/function/f_fs.c b/drivers/usb/gadget/function/f_fs.c
+index 6f8b67e617716..bdac92d3a8d0c 100644
+--- a/drivers/usb/gadget/function/f_fs.c
++++ b/drivers/usb/gadget/function/f_fs.c
+@@ -1162,18 +1162,19 @@ static int ffs_aio_cancel(struct kiocb *kiocb)
+ {
+ 	struct ffs_io_data *io_data = kiocb->private;
+ 	struct ffs_epfile *epfile = kiocb->ki_filp->private_data;
++	unsigned long flags;
+ 	int value;
  
-+define INSTALL_SINGLE_RULE
-+	$(if $(INSTALL_LIST),@mkdir -p $(INSTALL_PATH))
-+	$(if $(INSTALL_LIST),@echo rsync -a $(INSTALL_LIST) $(INSTALL_PATH)/)
-+	$(if $(INSTALL_LIST),@rsync -a $(INSTALL_LIST) $(INSTALL_PATH)/)
-+endef
-+
- define INSTALL_RULE
--	@if [ "X$(TEST_PROGS)$(TEST_PROGS_EXTENDED)$(TEST_FILES)" != "X" ]; then					\
--		mkdir -p ${INSTALL_PATH};										\
--		echo "rsync -a $(TEST_PROGS) $(TEST_PROGS_EXTENDED) $(TEST_FILES) $(INSTALL_PATH)/";	\
--		rsync -a $(TEST_PROGS) $(TEST_PROGS_EXTENDED) $(TEST_FILES) $(INSTALL_PATH)/;		\
--	fi
--	@if [ "X$(TEST_GEN_PROGS)$(TEST_CUSTOM_PROGS)$(TEST_GEN_PROGS_EXTENDED)$(TEST_GEN_FILES)" != "X" ]; then					\
--		mkdir -p ${INSTALL_PATH};										\
--		echo "rsync -a $(TEST_GEN_PROGS) $(TEST_CUSTOM_PROGS) $(TEST_GEN_PROGS_EXTENDED) $(TEST_GEN_FILES) $(INSTALL_PATH)/";	\
--		rsync -a $(TEST_GEN_PROGS) $(TEST_CUSTOM_PROGS) $(TEST_GEN_PROGS_EXTENDED) $(TEST_GEN_FILES) $(INSTALL_PATH)/;		\
--	fi
-+	$(eval INSTALL_LIST = $(TEST_PROGS)) $(INSTALL_SINGLE_RULE)
-+	$(eval INSTALL_LIST = $(TEST_PROGS_EXTENDED)) $(INSTALL_SINGLE_RULE)
-+	$(eval INSTALL_LIST = $(TEST_FILES)) $(INSTALL_SINGLE_RULE)
-+	$(eval INSTALL_LIST = $(TEST_GEN_PROGS)) $(INSTALL_SINGLE_RULE)
-+	$(eval INSTALL_LIST = $(TEST_CUSTOM_PROGS)) $(INSTALL_SINGLE_RULE)
-+	$(eval INSTALL_LIST = $(TEST_GEN_PROGS_EXTENDED)) $(INSTALL_SINGLE_RULE)
-+	$(eval INSTALL_LIST = $(TEST_GEN_FILES)) $(INSTALL_SINGLE_RULE)
- endef
+ 	ENTER();
  
- install: all
+-	spin_lock_irq(&epfile->ffs->eps_lock);
++	spin_lock_irqsave(&epfile->ffs->eps_lock, flags);
+ 
+ 	if (likely(io_data && io_data->ep && io_data->req))
+ 		value = usb_ep_dequeue(io_data->ep, io_data->req);
+ 	else
+ 		value = -EINVAL;
+ 
+-	spin_unlock_irq(&epfile->ffs->eps_lock);
++	spin_unlock_irqrestore(&epfile->ffs->eps_lock, flags);
+ 
+ 	return value;
+ }
 -- 
 2.20.1
 
