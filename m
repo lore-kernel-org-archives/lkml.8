@@ -2,202 +2,77 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28E24C10F25
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 03:07:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A09BC10F25
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 03:13:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05BF32467E
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 03:07:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDE912467E
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 03:13:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726382AbgCJDHk (ORCPT
+        id S1726385AbgCJDNh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 23:07:40 -0400
-Received: from mga02.intel.com ([134.134.136.20]:27605 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726170AbgCJDHk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 23:07:40 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Mar 2020 20:07:39 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,535,1574150400"; 
-   d="scan'208";a="234196802"
-Received: from hao-dev.bj.intel.com (HELO localhost) ([10.238.157.65])
-  by fmsmga007.fm.intel.com with ESMTP; 09 Mar 2020 20:07:37 -0700
-Date:   Tue, 10 Mar 2020 10:46:26 +0800
-From:   Wu Hao <hao.wu@intel.com>
-To:     Xu Yilun <yilun.xu@intel.com>
-Cc:     mdf@kernel.org, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Luwei Kang <luwei.kang@intel.com>
-Subject: Re: [PATCH 2/7] fpga: dfl: pci: add irq info for feature devices
- enumeration
-Message-ID: <20200310024626.GB11861@hao-dev>
-References: <1583749790-10837-1-git-send-email-yilun.xu@intel.com>
- <1583749790-10837-3-git-send-email-yilun.xu@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1583749790-10837-3-git-send-email-yilun.xu@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Mon, 9 Mar 2020 23:13:37 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:35216 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725845AbgCJDNh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 23:13:37 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 0603212199AD3;
+        Mon,  9 Mar 2020 20:13:35 -0700 (PDT)
+Date:   Mon, 09 Mar 2020 20:13:33 -0700 (PDT)
+Message-Id: <20200309.201333.1206993515171228717.davem@davemloft.net>
+To:     Jose.Abreu@synopsys.com
+Cc:     netdev@vger.kernel.org, Joao.Pinto@synopsys.com,
+        peppe.cavallaro@st.com, alexandre.torgue@st.com, kuba@kernel.org,
+        mcoquelin.stm32@gmail.com, linux@armlinux.org.uk, andrew@lunn.ch,
+        f.fainelli@gmail.com, hkallweit1@gmail.com,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next 0/8] net: Add support for Synopsys DesignWare
+ XPCS
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <cover.1583742615.git.Jose.Abreu@synopsys.com>
+References: <cover.1583742615.git.Jose.Abreu@synopsys.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 09 Mar 2020 20:13:36 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Yilun
+From: Jose Abreu <Jose.Abreu@synopsys.com>
+Date: Mon,  9 Mar 2020 09:36:19 +0100
 
-Some comments inline. : )
-
-On Mon, Mar 09, 2020 at 06:29:45PM +0800, Xu Yilun wrote:
-> Some DFL FPGA PCIe cards (e.g. Intel FPGA Programmable Acceleration
-> Card) support MSI-X based interrupts. This patch allows PCIe driver
-> to prepare and pass interrupt resources to DFL via enumeration API.
-> These interrupt resources could then be assigned to actual features
-> which use them.
+> This adds support for Synopsys DesignWare XPCS in net subsystem and
+> integrates it into stmmac.
 > 
-> Signed-off-by: Luwei Kang <luwei.kang@intel.com>
-> Signed-off-by: Wu Hao <hao.wu@intel.com>
-> Signed-off-by: Xu Yilun <yilun.xu@intel.com>
-> ---
->  drivers/fpga/dfl-pci.c | 66 ++++++++++++++++++++++++++++++++++++++++++++++----
->  1 file changed, 61 insertions(+), 5 deletions(-)
+> At 1/8, we start by removing the limitation of stmmac selftests that needed
+> a PHY to pass all the tests.
 > 
-> diff --git a/drivers/fpga/dfl-pci.c b/drivers/fpga/dfl-pci.c
-> index 5387550..a3370e5 100644
-> --- a/drivers/fpga/dfl-pci.c
-> +++ b/drivers/fpga/dfl-pci.c
-> @@ -80,8 +80,23 @@ static void cci_remove_feature_devs(struct pci_dev *pcidev)
->  	dfl_fpga_feature_devs_remove(drvdata->cdev);
->  }
->  
-> +static int *cci_pci_create_irq_table(struct pci_dev *pcidev, unsigned int nvec)
-> +{
-> +	int *table, i;
-> +
-> +	table = kcalloc(nvec, sizeof(int), GFP_KERNEL);
+> Then at 2/8 we use some helpers in stmmac so that some code can be
+> simplified.
+> 
+> At 3/8, we fallback to dev_fwnode() so that PCI based setups wich may
+> not have CONFIG_OF can still use FW node.
+> 
+> At 4/8, we adapt stmmac to the new PHYLINK changes as suggested by Russell
+> King.
+> 
+> We proceed by doing changes in PHYLINK in order to support XPCS: At 5/8 we
+> add some missing speeds that USXGMII supports and at 6/8 we check if
+> Autoneg is supported after initial parameters are validated.
+> 
+> Support for XPCS is finally introduced at 7/8, along with the usage of it
+> in stmmac driver at 8/8.
 
-Maybe devm_ version is better?
-
-> +	if (!table)
-> +		return NULL;
-> +
-> +	for (i = 0; i < nvec; i++)
-
-i should be unsigned int as well?
-
-> +		table[i] = pci_irq_vector(pcidev, i);
-> +
-> +	return table;
-> +}
-> +
->  /* enumerate feature devices under pci device */
-> -static int cci_enumerate_feature_devs(struct pci_dev *pcidev)
-> +static int cci_enumerate_feature_devs(struct pci_dev *pcidev,
-> +				      unsigned int nvec)
->  {
->  	struct cci_drvdata *drvdata = pci_get_drvdata(pcidev);
->  	struct dfl_fpga_enum_info *info;
-> @@ -89,6 +104,7 @@ static int cci_enumerate_feature_devs(struct pci_dev *pcidev)
->  	resource_size_t start, len;
->  	int port_num, bar, i, ret = 0;
->  	void __iomem *base;
-> +	int *irq_table;
->  	u32 offset;
->  	u64 v;
->  
-> @@ -97,6 +113,18 @@ static int cci_enumerate_feature_devs(struct pci_dev *pcidev)
->  	if (!info)
->  		return -ENOMEM;
->  
-> +	/* add irq info for enumeration if really needed */
-> +	if (nvec) {
-> +		irq_table = cci_pci_create_irq_table(pcidev, nvec);
-> +		if (irq_table) {
-> +			dfl_fpga_enum_info_add_irq(info, nvec, irq_table);
-> +			kfree(irq_table);
-> +		} else {
-> +			ret = -ENOMEM;
-> +			goto enum_info_free_exit;
-> +		}
-> +	}
-> +
->  	/* start to find Device Feature List from Bar 0 */
->  	base = cci_pci_ioremap_bar(pcidev, 0);
->  	if (!base) {
-> @@ -173,6 +201,28 @@ static int cci_enumerate_feature_devs(struct pci_dev *pcidev)
->  	return ret;
->  }
->  
-> +static int cci_pci_alloc_irq(struct pci_dev *pcidev)
-> +{
-> +	int nvec = pci_msix_vec_count(pcidev);
-> +	int ret;
-> +
-> +	if (nvec <= 0) {
-> +		dev_dbg(&pcidev->dev, "fpga interrupt not supported\n");
-> +		return 0;
-> +	}
-> +
-> +	ret = pci_alloc_irq_vectors(pcidev, nvec, nvec, PCI_IRQ_MSIX);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	return nvec;
-> +}
-> +
-> +static void cci_pci_free_irq(struct pci_dev *pcidev)
-> +{
-> +	pci_free_irq_vectors(pcidev);
-> +}
-> +
->  static
->  int cci_pci_probe(struct pci_dev *pcidev, const struct pci_device_id *pcidevid)
->  {
-> @@ -210,14 +260,19 @@ int cci_pci_probe(struct pci_dev *pcidev, const struct pci_device_id *pcidevid)
->  		goto disable_error_report_exit;
->  	}
->  
-> -	ret = cci_enumerate_feature_devs(pcidev);
-> -	if (ret) {
-> -		dev_err(&pcidev->dev, "enumeration failure %d.\n", ret);
-> +	ret = cci_pci_alloc_irq(pcidev);
-> +	if (ret < 0) {
-> +		dev_err(&pcidev->dev, "Fail to alloc irq %d.\n", ret);
-
-we prepare mmio resources in side cci_enumerate_feature_devs.
-
-maybe we could put irq resources code in side cce_enumerate_feature_devs too?
-
-
-Thanks
-Hao
-
->  		goto disable_error_report_exit;
->  	}
->  
-> -	return ret;
-> +	ret = cci_enumerate_feature_devs(pcidev, (unsigned int)ret);
-> +	if (!ret)
-> +		return ret;
-> +
-> +	dev_err(&pcidev->dev, "enumeration failure %d.\n", ret);
->  
-> +	cci_pci_free_irq(pcidev);
->  disable_error_report_exit:
->  	pci_disable_pcie_error_reporting(pcidev);
->  	return ret;
-> @@ -263,6 +318,7 @@ static void cci_pci_remove(struct pci_dev *pcidev)
->  		cci_pci_sriov_configure(pcidev, 0);
->  
->  	cci_remove_feature_devs(pcidev);
-> +	cci_pci_free_irq(pcidev);
->  	pci_disable_pcie_error_reporting(pcidev);
->  }
->  
-> -- 
-> 2.7.4
+Series applied, thank you.
