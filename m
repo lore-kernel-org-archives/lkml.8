@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65D9AC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:47:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACA3AC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:47:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3590D24696
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:47:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79AE324694
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:47:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583844450;
-	bh=22IC65lRb6RwhaXCNj3PkpIhp56hep89oFwc1Ves1Eg=;
+	s=default; t=1583844453;
+	bh=GcGwCFc1RjEHZpnJlH5faZ37FfzDFWFeL8W2sNXGAfc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HQGfCrH7pi4q7jE/6ovIgpI0mj4A/zjNDkuQGyes08ghZmeB+sc3OfEZ7K/wAuANM
-	 kmGUtd0NE35Eyi2aNigeiYgwlclj2JdOXm/Wc9YE4QC/yld3u36ZArzeoMGCjwVoyB
-	 ScG3ZBGUxLa/2fGiIv/qJLtrvFHpntKWtV4JYlgg=
+	b=XOxPaj4WyzFCrhTeKZHSvRsjYEbDzR87vXibe2abJhv8/oMxtJcHkhmNSh3GSI1cO
+	 HMmbCB/5vLao4hBHBpyhl872S/5xnGsIG6GMz+bZk57MWjGGZEtGUYmkb/QwtQ7cw1
+	 jM1M5w1vHsgFjFvvpxvPDSgAqkRMjzwR6yqtcxDg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727061AbgCJMr3 (ORCPT
+        id S1728189AbgCJMrc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:47:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51266 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:47:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51290 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728176AbgCJMr1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:47:27 -0400
+        id S1727838AbgCJMr3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:47:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DCFD824691;
-        Tue, 10 Mar 2020 12:47:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 040F924694;
+        Tue, 10 Mar 2020 12:47:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844446;
-        bh=22IC65lRb6RwhaXCNj3PkpIhp56hep89oFwc1Ves1Eg=;
+        s=default; t=1583844449;
+        bh=GcGwCFc1RjEHZpnJlH5faZ37FfzDFWFeL8W2sNXGAfc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JJb8UoOkAdufrrtVincHrTc8ITrxORw+noTotWDUGxs8u8GVAECqdyNs2uhSIZ7Oa
-         oEIShKXfzakSwjHDOUdzwhKo+FiStdmE4B1rrBhLbXoKYtcQMkDZ/Kruzx4sbI64TE
-         SIMILjm7dzd5sDa5k4K3Q2Y3UF+iWhpoO14W3Wvo=
+        b=do3smPTE41skiNXwOI7CoZqQw0asUcAUL0flnhOIEvo68hLwElCxWTI28BKli8s/J
+         H73ySJTI1EiyXzYvdkjqf7MMPHfPrGJjVFyNUxnLrX65Ca5F4KfAVHGlZuEWCsRN4P
+         qq/ZWakCTqeao+zsiDII/gzsikBYjuDHKf4gDL8c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH 4.9 85/88] dmaengine: coh901318: Fix a double lock bug in dma_tc_handle()
-Date:   Tue, 10 Mar 2020 13:39:33 +0100
-Message-Id: <20200310123625.059770813@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Desnes A. Nunes do Rosario" <desnesn@linux.ibm.com>,
+        Leonardo Bras <leonardo@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 4.9 86/88] powerpc: fix hardware PMU exception bug on PowerVM compatibility mode systems
+Date:   Tue, 10 Mar 2020 13:39:34 +0100
+Message-Id: <20200310123625.165541820@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123606.543939933@linuxfoundation.org>
 References: <20200310123606.543939933@linuxfoundation.org>
@@ -59,41 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Desnes A. Nunes do Rosario <desnesn@linux.ibm.com>
 
-commit 36d5d22090d13fd3a7a8c9663a711cbe6970aac8 upstream.
+commit fc37a1632d40c80c067eb1bc235139f5867a2667 upstream.
 
-The caller is already holding the lock so this will deadlock.
+PowerVM systems running compatibility mode on a few Power8 revisions are
+still vulnerable to the hardware defect that loses PMU exceptions arriving
+prior to a context switch.
 
-Fixes: 0b58828c923e ("DMAENGINE: COH 901 318 remove irq counting")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Link: https://lore.kernel.org/r/20200217144050.3i4ymbytogod4ijn@kili.mountain
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+The software fix for this issue is enabled through the CPU_FTR_PMAO_BUG
+cpu_feature bit, nevertheless this bit also needs to be set for PowerVM
+compatibility mode systems.
+
+Fixes: 68f2f0d431d9ea4 ("powerpc: Add a cpu feature CPU_FTR_PMAO_BUG")
+Signed-off-by: Desnes A. Nunes do Rosario <desnesn@linux.ibm.com>
+Reviewed-by: Leonardo Bras <leonardo@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200227134715.9715-1-desnesn@linux.ibm.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/dma/coh901318.c |    4 ----
- 1 file changed, 4 deletions(-)
+ arch/powerpc/kernel/cputable.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/dma/coh901318.c
-+++ b/drivers/dma/coh901318.c
-@@ -1944,8 +1944,6 @@ static void dma_tc_handle(struct coh9013
- 		return;
+--- a/arch/powerpc/kernel/cputable.c
++++ b/arch/powerpc/kernel/cputable.c
+@@ -2199,11 +2199,13 @@ static struct cpu_spec * __init setup_cp
+ 		 * oprofile_cpu_type already has a value, then we are
+ 		 * possibly overriding a real PVR with a logical one,
+ 		 * and, in that case, keep the current value for
+-		 * oprofile_cpu_type.
++		 * oprofile_cpu_type. Futhermore, let's ensure that the
++		 * fix for the PMAO bug is enabled on compatibility mode.
+ 		 */
+ 		if (old.oprofile_cpu_type != NULL) {
+ 			t->oprofile_cpu_type = old.oprofile_cpu_type;
+ 			t->oprofile_type = old.oprofile_type;
++			t->cpu_features |= old.cpu_features & CPU_FTR_PMAO_BUG;
+ 		}
  	}
  
--	spin_lock(&cohc->lock);
--
- 	/*
- 	 * When we reach this point, at least one queue item
- 	 * should have been moved over from cohc->queue to
-@@ -1966,8 +1964,6 @@ static void dma_tc_handle(struct coh9013
- 	if (coh901318_queue_start(cohc) == NULL)
- 		cohc->busy = 0;
- 
--	spin_unlock(&cohc->lock);
--
- 	/*
- 	 * This tasklet will remove items from cohc->active
- 	 * and thus terminates them.
 
 
