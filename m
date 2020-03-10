@@ -2,604 +2,251 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A8E6C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 06:17:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C29D8C10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 06:19:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B82E024673
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 06:17:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88E5224673
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 06:19:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HFkGluTF"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Ltly2d3V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726295AbgCJGRh (ORCPT
+        id S1726273AbgCJGT4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 02:17:37 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:35455 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726202AbgCJGRh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 02:17:37 -0400
-Received: by mail-pf1-f193.google.com with SMTP id u68so5287429pfb.2
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 23:17:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=xSBzT/Nb7gaIK9fzoLfEg/u0ShbVNm8kh2wotDP5Sks=;
-        b=HFkGluTFPPZ1qGwUfq4B6e/yS1E1m6SJFjdUCB2LZp9wxBLcuVqAOLTPKZ2Gokrehi
-         2gg8WwiPCkvAx5TyuDdvDxcXd2Vj1vm5sPGYlKYEuDO9Hhps64/mby+Q+SWSvPMqNCfT
-         sITZJakudN+5ZtM4Ljh7f7A7GqT6FKd0uLDsssVs3t2t+HlRwT0swpYtp7WKGLlMSpla
-         IGENN8iTcdtDxo+0kW2wR/B3Uso1/vshP17Vz/NZfJLbdf4pBkmhglsVGVLxdNavnGAd
-         qrJ+Max/AiVGxdY9TOkGCbd6vjPAYNEfEisD2XehDsUdFD2Oc0UkS6sAHdcpbD96VBvb
-         06Ng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xSBzT/Nb7gaIK9fzoLfEg/u0ShbVNm8kh2wotDP5Sks=;
-        b=ETnb0qHfqKv7jxxTcmtRXKXsTKLNrRa6ymKPc0z7fdUvw83adcb2UsUCf6zsfEixyr
-         Eyb/NmNOAAqgYua8Cm2grEv45dp4FmFawH12PDadVAfijr9PeOgN08sHXolWaTwMESh+
-         W5fq0u0zm0/36EB8LfrHfiKKmdbHrHqrVHUjow/OC184ZrPxTFHE7wuzhTJuPJrI7o3R
-         m2gCYHmOmsPQibecUDHxB/ORq2ZSF2rpFESRVlLnlZqsqiyWtGc+SoNE0dGjYmxLqAof
-         OD3SVPakTtemztu8TgTkfbQTPBfcmsuzKVoPU4tt2D66aPZzPt+NfhR1MNHNSH3Ftpa4
-         mO5w==
-X-Gm-Message-State: ANhLgQ30DWzDz0JCx0q6Kvn8OA2g14rUio5AfDQuO/PVoqQldGA1xpi1
-        5RCfT9e0QEzEGBNR/zPCvK4ZcA==
-X-Google-Smtp-Source: ADFU+vvf5ZWZHt/ybM5B96/HvojAnJSU4rVLuRTXuCkqSJc5kbZpVFsq46Eo0zxjJ09mRhjD1dPrVA==
-X-Received: by 2002:a62:1905:: with SMTP id 5mr19381313pfz.191.1583821054783;
-        Mon, 09 Mar 2020 23:17:34 -0700 (PDT)
-Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id c15sm1337897pja.30.2020.03.09.23.17.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Mar 2020 23:17:34 -0700 (PDT)
-Date:   Mon, 9 Mar 2020 23:17:31 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     linux-arm-msm@vger.kernel.org,
-        Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        psodagud@codeaurora.org, tsoni@codeaurora.org,
-        jshriram@codeaurora.org
-Subject: Re: [PATCH] arm64: dts: qcom: sm8250: Add sm8250 dts file
-Message-ID: <20200310061731.GF1098305@builder>
-References: <20200310050910.506854-1-vkoul@kernel.org>
+        Tue, 10 Mar 2020 02:19:56 -0400
+Received: from mail-db8eur05on2042.outbound.protection.outlook.com ([40.107.20.42]:30106
+        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725882AbgCJGT4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 02:19:56 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=IBC8Ht7hpkIenz0z8XUsI8Xrlv2lXFUp0CLvfCmnbE70hQGxQP9at9SO1R8T798k27WGIRbEygbp8Nvf0GWG6vPHxZKkU1Pv95NCa0vDGfYkLwSaiU6X1lLV1yXfomYVED0ab8w6KLLedNbsPquFq85AEV1n4/mu3DMoL7y4Iet346acI2Gkqil2aDwxULCkU1YLHmI69JtdMYLvbLNvQUNzzTMT6wifA4VCq9V4GmmLkI/hyOf8ehLfDT32I9JjbL+RYqbLcDFGHpxUAafQdGqgQLcS3th3YkCFkM05EB18ZwMS/qYD9bx2wD8f/cgqMxhvqHOZT0yyJx396ktNiQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fqsikgVHvOo/wu/NK1zTjOAGplS3MHEdJO1239z2xrc=;
+ b=aPpjbobAwy9KaI+q1TYkcxH3xy6cC2WrkpR71KCpCUaiU0NiSiAyup1yT2gMF2dLgDiymI1jSsnoKieP4xj1DJzqDqWVYw3WzEVJfMw8hNqU16I0AeqlXoN0bu71INqp4mBRbBPaZDeNbr7LZuXFuVx6Y7RBkkkpgwLP4T4ntv87SK7QkIbBhmk5y4/GIb0Nh+OMcOYu0kK/nHBH0l+I5ZLwzwUHlPfXsK6MfHDYCRj+gC5+m1Pe3Gq6+pT3oSrA3pqNI0Xd6aLPVmGFj03gW07U72oR/SOrwnBsBdHPTiDdFx5KJqrBjO/wWrNg1kf7cFZwblU9vOS5cKPiLHNDyw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fqsikgVHvOo/wu/NK1zTjOAGplS3MHEdJO1239z2xrc=;
+ b=Ltly2d3V4o3/Rz87Iyn29Y02ETy320P3S4b1WoP6aOUkfpiKpvvY7xGkwsZasv66LWk1aigICStkzUuAqQwj8crEmRu6EnFfcjkvv8eS/UNqJ0M6OFd0IvK/et82iKDEPl+FmX1m+CVCZSyQlHfkPCt8gbVwM4fLxn2CZUe+41c=
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
+ AM0PR04MB6132.eurprd04.prod.outlook.com (20.179.33.79) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2793.17; Tue, 10 Mar 2020 06:19:52 +0000
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::548f:4941:d4eb:4c11]) by AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::548f:4941:d4eb:4c11%6]) with mapi id 15.20.2793.013; Tue, 10 Mar 2020
+ 06:19:52 +0000
+From:   Peng Fan <peng.fan@nxp.com>
+To:     Shawn Guo <shawnguo@kernel.org>
+CC:     "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Abel Vesa <abel.vesa@nxp.com>
+Subject: RE: [PATCH v2 07/14] clk: imx7ulp: make it easy to change ARM core
+ clk
+Thread-Topic: [PATCH v2 07/14] clk: imx7ulp: make it easy to change ARM core
+ clk
+Thread-Index: AQHV5vt/fQalJGbC30maMwignaLHKKhBdxSAgAAAv/A=
+Date:   Tue, 10 Mar 2020 06:19:52 +0000
+Message-ID: <AM0PR04MB44813CDE69F5421F9708670A88FF0@AM0PR04MB4481.eurprd04.prod.outlook.com>
+References: <1582099197-20327-1-git-send-email-peng.fan@nxp.com>
+ <1582099197-20327-8-git-send-email-peng.fan@nxp.com>
+ <20200310060956.GJ15729@dragon>
+In-Reply-To: <20200310060956.GJ15729@dragon>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peng.fan@nxp.com; 
+x-originating-ip: [119.31.174.68]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 8a7e59cd-42f8-4dc5-21f8-08d7c4bb0b94
+x-ms-traffictypediagnostic: AM0PR04MB6132:|AM0PR04MB6132:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR04MB6132C3CB2236369EFCCB08F888FF0@AM0PR04MB6132.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 033857D0BD
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(376002)(346002)(39860400002)(366004)(396003)(199004)(189003)(478600001)(5660300002)(66946007)(54906003)(55016002)(76116006)(9686003)(2906002)(316002)(66446008)(66476007)(86362001)(186003)(64756008)(66556008)(26005)(44832011)(71200400001)(7696005)(33656002)(7416002)(52536014)(6506007)(6916009)(81166006)(81156014)(8936002)(8676002)(4326008)(966005)(42463001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB6132;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 3Ov7yjqhH4yMWxhxVMa0PjqoqYis9EYCAym56vD8A9zdcFhnZyMZoFy2zOgKnWK72I3w7pA1UB6W1R3SCbdjtWFxMp/gMHWjbp8+jaLSx9kTT33E976E1lU95a7hMilvHOXlxPyAsSgA5w9bD7goracCb/QcAen7+2nt+X7DAgTQZu4wFgtxNTS0u1/s4aU6oerR+Y43x36M+Qu+IfKua0pQzNMYAsodUM9LxAHBKw9rPa5yrARAvrQiS5iotdROctCb3hn9x/J5iJmtNMGjdTU82mpjF0nTZBO3Od6x65Oj3CBx2gwjHnANLniuxGuLa3dIUH0mfUqAJmLusM79vivobW/Q9rP/H0CGBaD2yZ6do6tH5Q2HbHe2A6FtTFyoAvCaTlTH8uf3arSH+TV/n2xT/s1vccD4H0IDzu/wR7UCIrKCnWe4oye7VB2pHHYMIGeqM2tyVFmrjvox/oWiR05dQLtbA8xgNFGJQ01kPyn8mxjYBn4VI4MMlKvWaaIsrGeHhyZ8k9T3HkT6V/ijMTpPbmVVsGsj7xH2EtD5smlFN5qZ744GEWSh9LrYxvPS
+x-ms-exchange-antispam-messagedata: XIIPueHwlmGRz8Xz8OPgmHd4abGxuWJ3YFS+iKYu7OaWGHWCc1fjKCn8XL3sqNs7ntDd6Yc9nwGKtAzbrXunK1/+Ay90M5W1dbinirYkyA/FLNPlrySuccxZJeXSMztWKWgnjhx1B28WJhaf5Na/RA==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200310050910.506854-1-vkoul@kernel.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8a7e59cd-42f8-4dc5-21f8-08d7c4bb0b94
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Mar 2020 06:19:52.7311
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: GRDqLGbNOp5HM5Df3XT4akZUgVN0TV0PCuqe5s2eTV/R+FORqrdY4eWTsJ/iZsbtKwoU6UoThClt2pzuzg+Z4A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6132
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 09 Mar 22:09 PDT 2020, Vinod Koul wrote:
+Hi Shawn,
 
-> From: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
-> 
-> Add sm8250 devicetree file for SM8250 SoC and SM8250 MTP platform.
-> This file adds the basic nodes like cpu, psci and other required
-> configuration for booting up to the serial console.
-> 
-> Signed-off-by: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
-> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> Subject: Re: [PATCH v2 07/14] clk: imx7ulp: make it easy to change ARM co=
+re
+> clk
+>=20
+> On Wed, Feb 19, 2020 at 03:59:50PM +0800, peng.fan@nxp.com wrote:
+> > From: Peng Fan <peng.fan@nxp.com>
+> >
+> > ARM clk could only source from divcore or hsrun_divcore.
+> >
+> > However when ARM core is running normaly, whether divcore or
+> > hwrun_divcore will finally source from SPLL_PFD0. However SPLL_PFD0 is
+> > marked with CLK_SET_GATE, so we need to disable SPLL_PFD0, when
+> > configure the rate. So add CORE and HSRUN_CORE virtual clk to make it
+> > easy to configure the clk using imx_clk_hw_cpu API.
+>=20
+> It sounds a bit hackish, so would like to hear an ACK from Stephen on it.
 
-Thanks for resending Vinod, applied.
+Same to i.MX7/8M SoCs, the cpu clk could not change on the fly,
+That's why we use a imx_clk_hw_cpu for i.MX7/8M cpu clock.
 
-Regards,
-Bjorn
+To i.MX7ULP, it is a bit different, cpu could sources from two clocks
+based on a SMC setting which is abstract as a mux in clk-imx7ulp.c.
 
-> ---
->  arch/arm64/boot/dts/qcom/Makefile       |   1 +
->  arch/arm64/boot/dts/qcom/sm8250-mtp.dts |  29 ++
->  arch/arm64/boot/dts/qcom/sm8250.dtsi    | 444 ++++++++++++++++++++++++
->  3 files changed, 474 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/qcom/sm8250-mtp.dts
->  create mode 100644 arch/arm64/boot/dts/qcom/sm8250.dtsi
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-> index 973c0f079659..c6014c0340ed 100644
-> --- a/arch/arm64/boot/dts/qcom/Makefile
-> +++ b/arch/arm64/boot/dts/qcom/Makefile
-> @@ -22,5 +22,6 @@ dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-db845c.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-mtp.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= sdm850-lenovo-yoga-c630.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= sm8150-mtp.dtb
-> +dtb-$(CONFIG_ARCH_QCOM)	+= sm8250-mtp.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= qcs404-evb-1000.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= qcs404-evb-4000.dtb
-> diff --git a/arch/arm64/boot/dts/qcom/sm8250-mtp.dts b/arch/arm64/boot/dts/qcom/sm8250-mtp.dts
-> new file mode 100644
-> index 000000000000..224d0f1ea6f9
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/qcom/sm8250-mtp.dts
-> @@ -0,0 +1,29 @@
-> +// SPDX-License-Identifier: BSD-3-Clause
-> +/*
-> + * Copyright (c) 2020, The Linux Foundation. All rights reserved.
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "sm8250.dtsi"
-> +
-> +/ {
-> +	model = "Qualcomm Technologies, Inc. SM8250 MTP";
-> +	compatible = "qcom,sm8250-mtp";
-> +
-> +	aliases {
-> +		serial0 = &uart2;
-> +	};
-> +
-> +	chosen {
-> +		stdout-path = "serial0:115200n8";
-> +	};
-> +};
-> +
-> +&qupv3_id_1 {
-> +	status = "okay";
-> +};
-> +
-> +&uart2 {
-> +	status = "okay";
-> +};
-> diff --git a/arch/arm64/boot/dts/qcom/sm8250.dtsi b/arch/arm64/boot/dts/qcom/sm8250.dtsi
-> new file mode 100644
-> index 000000000000..1373bc53dec9
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/qcom/sm8250.dtsi
-> @@ -0,0 +1,444 @@
-> +// SPDX-License-Identifier: BSD-3-Clause
-> +/*
-> + * Copyright (c) 2020, The Linux Foundation. All rights reserved.
-> + */
-> +
-> +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> +#include <dt-bindings/clock/qcom,rpmh.h>
-> +#include <dt-bindings/soc/qcom,rpmh-rsc.h>
-> +
-> +/ {
-> +	interrupt-parent = <&intc>;
-> +
-> +	#address-cells = <2>;
-> +	#size-cells = <2>;
-> +
-> +	chosen { };
-> +
-> +	clocks {
-> +		xo_board: xo-board {
-> +			compatible = "fixed-clock";
-> +			#clock-cells = <0>;
-> +			clock-frequency = <38400000>;
-> +			clock-output-names = "xo_board";
-> +		};
-> +
-> +		sleep_clk: sleep-clk {
-> +			compatible = "fixed-clock";
-> +			clock-frequency = <32000>;
-> +			#clock-cells = <1>;
-> +		};
-> +	};
-> +
-> +	cpus {
-> +		#address-cells = <2>;
-> +		#size-cells = <0>;
-> +
-> +		CPU0: cpu@0 {
-> +			device_type = "cpu";
-> +			compatible = "qcom,kryo485";
-> +			reg = <0x0 0x0>;
-> +			enable-method = "psci";
-> +			next-level-cache = <&L2_0>;
-> +			L2_0: l2-cache {
-> +			      compatible = "cache";
-> +			      next-level-cache = <&L3_0>;
-> +				L3_0: l3-cache {
-> +				      compatible = "cache";
-> +				};
-> +			};
-> +		};
-> +
-> +		CPU1: cpu@100 {
-> +			device_type = "cpu";
-> +			compatible = "qcom,kryo485";
-> +			reg = <0x0 0x100>;
-> +			enable-method = "psci";
-> +			next-level-cache = <&L2_100>;
-> +			L2_100: l2-cache {
-> +			      compatible = "cache";
-> +			      next-level-cache = <&L3_0>;
-> +			};
-> +		};
-> +
-> +		CPU2: cpu@200 {
-> +			device_type = "cpu";
-> +			compatible = "qcom,kryo485";
-> +			reg = <0x0 0x200>;
-> +			enable-method = "psci";
-> +			next-level-cache = <&L2_200>;
-> +			L2_200: l2-cache {
-> +			      compatible = "cache";
-> +			      next-level-cache = <&L3_0>;
-> +			};
-> +		};
-> +
-> +		CPU3: cpu@300 {
-> +			device_type = "cpu";
-> +			compatible = "qcom,kryo485";
-> +			reg = <0x0 0x300>;
-> +			enable-method = "psci";
-> +			next-level-cache = <&L2_300>;
-> +			L2_300: l2-cache {
-> +			      compatible = "cache";
-> +			      next-level-cache = <&L3_0>;
-> +			};
-> +		};
-> +
-> +		CPU4: cpu@400 {
-> +			device_type = "cpu";
-> +			compatible = "qcom,kryo485";
-> +			reg = <0x0 0x400>;
-> +			enable-method = "psci";
-> +			next-level-cache = <&L2_400>;
-> +			L2_400: l2-cache {
-> +			      compatible = "cache";
-> +			      next-level-cache = <&L3_0>;
-> +			};
-> +		};
-> +
-> +		CPU5: cpu@500 {
-> +			device_type = "cpu";
-> +			compatible = "qcom,kryo485";
-> +			reg = <0x0 0x500>;
-> +			enable-method = "psci";
-> +			next-level-cache = <&L2_500>;
-> +			L2_500: l2-cache {
-> +			      compatible = "cache";
-> +			      next-level-cache = <&L3_0>;
-> +			};
-> +
-> +		};
-> +
-> +		CPU6: cpu@600 {
-> +			device_type = "cpu";
-> +			compatible = "qcom,kryo485";
-> +			reg = <0x0 0x600>;
-> +			enable-method = "psci";
-> +			next-level-cache = <&L2_600>;
-> +			L2_600: l2-cache {
-> +			      compatible = "cache";
-> +			      next-level-cache = <&L3_0>;
-> +			};
-> +		};
-> +
-> +		CPU7: cpu@700 {
-> +			device_type = "cpu";
-> +			compatible = "qcom,kryo485";
-> +			reg = <0x0 0x700>;
-> +			enable-method = "psci";
-> +			next-level-cache = <&L2_700>;
-> +			L2_700: l2-cache {
-> +			      compatible = "cache";
-> +			      next-level-cache = <&L3_0>;
-> +			};
-> +		};
-> +	};
-> +
-> +	firmware {
-> +		scm: scm {
-> +			compatible = "qcom,scm";
-> +			#reset-cells = <1>;
-> +		};
-> +	};
-> +
-> +	tcsr_mutex: hwlock {
-> +		compatible = "qcom,tcsr-mutex";
-> +		syscon = <&tcsr_mutex_regs 0 0x1000>;
-> +		#hwlock-cells = <1>;
-> +	};
-> +
-> +	memory@80000000 {
-> +		device_type = "memory";
-> +		/* We expect the bootloader to fill in the size */
-> +		reg = <0x0 0x80000000 0x0 0x0>;
-> +	};
-> +
-> +	pmu {
-> +		compatible = "arm,armv8-pmuv3";
-> +		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_HIGH>;
-> +	};
-> +
-> +	psci {
-> +		compatible = "arm,psci-1.0";
-> +		method = "smc";
-> +	};
-> +
-> +	reserved-memory {
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges;
-> +
-> +		hyp_mem: memory@80000000 {
-> +			reg = <0x0 0x80000000 0x0 0x600000>;
-> +			no-map;
-> +		};
-> +
-> +		xbl_aop_mem: memory@80700000 {
-> +			reg = <0x0 0x80700000 0x0 0x160000>;
-> +			no-map;
-> +		};
-> +
-> +		cmd_db: memory@80860000 {
-> +			compatible = "qcom,cmd-db";
-> +			reg = <0x0 0x80860000 0x0 0x20000>;
-> +			no-map;
-> +		};
-> +
-> +		smem_mem: memory@80900000 {
-> +			reg = <0x0 0x80900000 0x0 0x200000>;
-> +			no-map;
-> +		};
-> +
-> +		removed_mem: memory@80b00000 {
-> +			reg = <0x0 0x80b00000 0x0 0x5300000>;
-> +			no-map;
-> +		};
-> +
-> +		camera_mem: memory@86200000 {
-> +			reg = <0x0 0x86200000 0x0 0x500000>;
-> +			no-map;
-> +		};
-> +
-> +		wlan_mem: memory@86700000 {
-> +			reg = <0x0 0x86700000 0x0 0x100000>;
-> +			no-map;
-> +		};
-> +
-> +		ipa_fw_mem: memory@86800000 {
-> +			reg = <0x0 0x86800000 0x0 0x10000>;
-> +			no-map;
-> +		};
-> +
-> +		ipa_gsi_mem: memory@86810000 {
-> +			reg = <0x0 0x86810000 0x0 0xa000>;
-> +			no-map;
-> +		};
-> +
-> +		gpu_mem: memory@8681a000 {
-> +			reg = <0x0 0x8681a000 0x0 0x2000>;
-> +			no-map;
-> +		};
-> +
-> +		npu_mem: memory@86900000 {
-> +			reg = <0x0 0x86900000 0x0 0x500000>;
-> +			no-map;
-> +		};
-> +
-> +		video_mem: memory@86e00000 {
-> +			reg = <0x0 0x86e00000 0x0 0x500000>;
-> +			no-map;
-> +		};
-> +
-> +		cvp_mem: memory@87300000 {
-> +			reg = <0x0 0x87300000 0x0 0x500000>;
-> +			no-map;
-> +		};
-> +
-> +		cdsp_mem: memory@87800000 {
-> +			reg = <0x0 0x87800000 0x0 0x1400000>;
-> +			no-map;
-> +		};
-> +
-> +		slpi_mem: memory@88c00000 {
-> +			reg = <0x0 0x88c00000 0x0 0x1500000>;
-> +			no-map;
-> +		};
-> +
-> +		adsp_mem: memory@8a100000 {
-> +			reg = <0x0 0x8a100000 0x0 0x1d00000>;
-> +			no-map;
-> +		};
-> +
-> +		spss_mem: memory@8be00000 {
-> +			reg = <0x0 0x8be00000 0x0 0x100000>;
-> +			no-map;
-> +		};
-> +
-> +		cdsp_secure_heap: memory@8bf00000 {
-> +			reg = <0x0 0x8bf00000 0x0 0x4600000>;
-> +			no-map;
-> +		};
-> +	};
-> +
-> +	smem: qcom,smem {
-> +		compatible = "qcom,smem";
-> +		memory-region = <&smem_mem>;
-> +		hwlocks = <&tcsr_mutex 3>;
-> +	};
-> +
-> +	soc: soc@0 {
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges = <0 0 0 0 0x10 0>;
-> +		dma-ranges = <0 0 0 0 0x10 0>;
-> +		compatible = "simple-bus";
-> +
-> +		gcc: clock-controller@100000 {
-> +			compatible = "qcom,gcc-sm8250";
-> +			reg = <0x0 0x00100000 0x0 0x1f0000>;
-> +			#clock-cells = <1>;
-> +			#reset-cells = <1>;
-> +			#power-domain-cells = <1>;
-> +			clock-names = "bi_tcxo", "sleep_clk";
-> +			clocks = <&rpmhcc RPMH_CXO_CLK>, <&sleep_clk>;
-> +		};
-> +
-> +		qupv3_id_1: geniqup@ac0000 {
-> +			compatible = "qcom,geni-se-qup";
-> +			reg = <0x0 0x00ac0000 0x0 0x6000>;
-> +			clock-names = "m-ahb", "s-ahb";
-> +			clocks = <&gcc 133>, <&gcc 134>;
-> +			#address-cells = <2>;
-> +			#size-cells = <2>;
-> +			ranges;
-> +			status = "disabled";
-> +
-> +			uart2: serial@a90000 {
-> +				compatible = "qcom,geni-debug-uart";
-> +				reg = <0x0 0x00a90000 0x0 0x4000>;
-> +				clock-names = "se";
-> +				clocks = <&gcc 113>;
-> +				interrupts = <GIC_SPI 357 IRQ_TYPE_LEVEL_HIGH>;
-> +				status = "disabled";
-> +			};
-> +		};
-> +
-> +		intc: interrupt-controller@17a00000 {
-> +			compatible = "arm,gic-v3";
-> +			#interrupt-cells = <3>;
-> +			interrupt-controller;
-> +			reg = <0x0 0x17a00000 0x0 0x10000>,     /* GICD */
-> +			      <0x0 0x17a60000 0x0 0x100000>;    /* GICR * 8 */
-> +			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
-> +		};
-> +
-> +		pdc: interrupt-controller@b220000 {
-> +			compatible = "qcom,sm8250-pdc";
-> +			reg = <0x0b220000 0x30000>, <0x17c000f0 0x60>;
-> +			qcom,pdc-ranges = <0 480 94>, <94 609 31>,
-> +					  <125 63 1>, <126 716 12>;
-> +			#interrupt-cells = <2>;
-> +			interrupt-parent = <&intc>;
-> +			interrupt-controller;
-> +		};
-> +
-> +		spmi: qcom,spmi@c440000 {
-> +			compatible = "qcom,spmi-pmic-arb";
-> +			reg = <0x0 0x0c440000 0x0 0x0001100>,
-> +			      <0x0 0x0c600000 0x0 0x2000000>,
-> +			      <0x0 0x0e600000 0x0 0x0100000>,
-> +			      <0x0 0x0e700000 0x0 0x00a0000>,
-> +			      <0x0 0x0c40a000 0x0 0x0026000>;
-> +			reg-names = "core", "chnls", "obsrvr", "intr", "cnfg";
-> +			interrupt-names = "periph_irq";
-> +			interrupts-extended = <&pdc 1 IRQ_TYPE_LEVEL_HIGH>;
-> +			qcom,ee = <0>;
-> +			qcom,channel = <0>;
-> +			#address-cells = <2>;
-> +			#size-cells = <0>;
-> +			interrupt-controller;
-> +			#interrupt-cells = <4>;
-> +		};
-> +
-> +		apps_rsc: rsc@18200000 {
-> +			label = "apps_rsc";
-> +			compatible = "qcom,rpmh-rsc";
-> +			reg = <0x0 0x18200000 0x0 0x10000>,
-> +				<0x0 0x18210000 0x0 0x10000>,
-> +				<0x0 0x18220000 0x0 0x10000>;
-> +			reg-names = "drv-0", "drv-1", "drv-2";
-> +			interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
-> +			qcom,tcs-offset = <0xd00>;
-> +			qcom,drv-id = <2>;
-> +			qcom,tcs-config = <ACTIVE_TCS  2>, <SLEEP_TCS   3>,
-> +					  <WAKE_TCS    3>, <CONTROL_TCS 1>;
-> +
-> +			rpmhcc: clock-controller {
-> +				compatible = "qcom,sm8250-rpmh-clk";
-> +				#clock-cells = <1>;
-> +				clock-names = "xo";
-> +				clocks = <&xo_board>;
-> +			};
-> +		};
-> +
-> +		tcsr_mutex_regs: syscon@1f40000 {
-> +			compatible = "syscon";
-> +			reg = <0x0 0x01f40000 0x0 0x40000>;
-> +		};
-> +
-> +		timer@17c20000 {
-> +			#address-cells = <2>;
-> +			#size-cells = <2>;
-> +			ranges;
-> +			compatible = "arm,armv7-timer-mem";
-> +			reg = <0x0 0x17c20000 0x0 0x1000>;
-> +			clock-frequency = <19200000>;
-> +
-> +			frame@17c21000 {
-> +				frame-number = <0>;
-> +				interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
-> +					     <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
-> +				reg = <0x0 0x17c21000 0x0 0x1000>,
-> +				      <0x0 0x17c22000 0x0 0x1000>;
-> +			};
-> +
-> +			frame@17c23000 {
-> +				frame-number = <1>;
-> +				interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
-> +				reg = <0x0 0x17c23000 0x0 0x1000>;
-> +				status = "disabled";
-> +			};
-> +
-> +			frame@17c25000 {
-> +				frame-number = <2>;
-> +				interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
-> +				reg = <0x0 0x17c25000 0x0 0x1000>;
-> +				status = "disabled";
-> +			};
-> +
-> +			frame@17c27000 {
-> +				frame-number = <3>;
-> +				interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
-> +				reg = <0x0 0x17c27000 0x0 0x1000>;
-> +				status = "disabled";
-> +			};
-> +
-> +			frame@17c29000 {
-> +				frame-number = <4>;
-> +				interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
-> +				reg = <0x0 0x17c29000 0x0 0x1000>;
-> +				status = "disabled";
-> +			};
-> +
-> +			frame@17c2b000 {
-> +				frame-number = <5>;
-> +				interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
-> +				reg = <0x0 0x17c2b000 0x0 0x1000>;
-> +				status = "disabled";
-> +			};
-> +
-> +			frame@17c2d000 {
-> +				frame-number = <6>;
-> +				interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
-> +				reg = <0x0 0x17c2d000 0x0 0x1000>;
-> +				status = "disabled";
-> +			};
-> +		};
-> +
-> +	};
-> +
-> +	timer {
-> +		compatible = "arm,armv8-timer";
-> +		interrupts = <GIC_PPI 13
-> +				(GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
-> +			     <GIC_PPI 14
-> +				(GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
-> +			     <GIC_PPI 11
-> +				(GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
-> +			     <GIC_PPI 12
-> +				(GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>;
-> +	};
-> +};
-> -- 
-> 2.24.1
-> 
+However we still could not change HSRUN_CORE or CORE clk
+on the fly whether the cpu sources form HSRUN_CORE or CORE clk.
+
+That's why I add virtual clk for HSRUN and CORE, same as i.MX7/8M.
+
+Stephen rejected my original patch to use a virtual clk for the final
+output which add imx_hw_clk_cpuv2,=20
+https://patchwork.kernel.org/patch/11364633/
+
+So I implement the method in this patch which is cleaner and
+simple. With this approach, it is easy to reuse cpufreq-dt driver,
+we no need a new clk driver and no need a new cpufreq driver
+for i.MX7ULP.
+
+Please consider this patch.
+
+Thanks,
+Peng.=20
+
+
+
+>=20
+> Shawn
+>=20
+> >
+> > Since CORE and HSRUN_CORE already marked with CLK_IS_CRITICAL, no
+> need
+> > to set ARM as CLK_IS_CRITICAL. And when set the rate of ARM clk,
+> > prograting it the parent with CLK_SET_RATE_PARENT will finally set the
+> > SPLL_PFD0 clk.
+> >
+> > Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> > ---
+> >  drivers/clk/imx/clk-imx7ulp.c             | 6 ++++--
+> >  include/dt-bindings/clock/imx7ulp-clock.h | 5 ++++-
+> >  2 files changed, 8 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/clk/imx/clk-imx7ulp.c
+> > b/drivers/clk/imx/clk-imx7ulp.c index 3710aa0dee9b..634c0b6636b0
+> > 100644
+> > --- a/drivers/clk/imx/clk-imx7ulp.c
+> > +++ b/drivers/clk/imx/clk-imx7ulp.c
+> > @@ -29,7 +29,7 @@ static const char * const ddr_sels[]		=3D
+> { "apll_pfd_sel", "dummy", "dummy", "dum
+> >  static const char * const nic_sels[]		=3D { "firc", "ddr_clk", };
+> >  static const char * const periph_plat_sels[]	=3D { "dummy", "nic1_bus_=
+clk",
+> "nic1_clk", "ddr_clk", "apll_pfd2", "apll_pfd1", "apll_pfd0", "upll", };
+> >  static const char * const periph_bus_sels[]	=3D { "dummy", "sosc_bus_c=
+lk",
+> "dummy", "firc_bus_clk", "rosc", "nic1_bus_clk", "nic1_clk", "spll_bus_cl=
+k", };
+> > -static const char * const arm_sels[]		=3D { "divcore", "dummy", "dummy=
+",
+> "hsrun_divcore", };
+> > +static const char * const arm_sels[]		=3D { "core", "dummy", "dummy",
+> "hsrun_core", };
+> >
+> >  /* used by sosc/sirc/firc/ddr/spll/apll dividers */  static const
+> > struct clk_div_table ulp_div_table[] =3D { @@ -121,7 +121,9 @@ static
+> > void __init imx7ulp_clk_scg1_init(struct device_node *np)
+> >  	hws[IMX7ULP_CLK_DDR_SEL]	=3D imx_clk_hw_mux_flags("ddr_sel",
+> base + 0x30, 24, 2, ddr_sels, ARRAY_SIZE(ddr_sels), CLK_SET_RATE_PARENT |
+> CLK_OPS_PARENT_ENABLE);
+> >
+> >  	hws[IMX7ULP_CLK_CORE_DIV]	=3D imx_clk_hw_divider_flags("divcore",
+> 	"scs_sel",  base + 0x14, 16, 4, CLK_SET_RATE_PARENT);
+> > +	hws[IMX7ULP_CLK_CORE]		=3D imx_clk_hw_cpu("core", "divcore",
+> hws[IMX7ULP_CLK_CORE_DIV]->clk, hws[IMX7ULP_CLK_SYS_SEL]->clk,
+> hws[IMX7ULP_CLK_SPLL_SEL]->clk, hws[IMX7ULP_CLK_FIRC]->clk);
+> >  	hws[IMX7ULP_CLK_HSRUN_CORE_DIV] =3D
+> > imx_clk_hw_divider_flags("hsrun_divcore", "hsrun_scs_sel", base +
+> > 0x1c, 16, 4, CLK_SET_RATE_PARENT);
+> > +	hws[IMX7ULP_CLK_HSRUN_CORE] =3D imx_clk_hw_cpu("hsrun_core",
+> > +"hsrun_divcore", hws[IMX7ULP_CLK_HSRUN_CORE_DIV]->clk,
+> > +hws[IMX7ULP_CLK_HSRUN_SYS_SEL]->clk,
+> hws[IMX7ULP_CLK_SPLL_SEL]->clk,
+> > +hws[IMX7ULP_CLK_FIRC]->clk);
+> >
+> >  	hws[IMX7ULP_CLK_DDR_DIV]	=3D imx_clk_hw_divider_gate("ddr_clk",
+> "ddr_sel", CLK_SET_RATE_PARENT | CLK_IS_CRITICAL, base + 0x30, 0, 3,
+> >  							       0, ulp_div_table, &imx_ccm_lock);
+> @@ -270,7 +272,7 @@
+> > static void __init imx7ulp_clk_smc1_init(struct device_node *np)
+> >  	base =3D of_iomap(np, 0);
+> >  	WARN_ON(!base);
+> >
+> > -	hws[IMX7ULP_CLK_ARM] =3D imx_clk_hw_mux_flags("arm", base + 0x10,
+> 8, 2, arm_sels, ARRAY_SIZE(arm_sels), CLK_IS_CRITICAL);
+> > +	hws[IMX7ULP_CLK_ARM] =3D imx_clk_hw_mux_flags("arm", base + 0x10,
+> 8,
+> > +2, arm_sels, ARRAY_SIZE(arm_sels), CLK_SET_RATE_PARENT);
+> >
+> >  	imx_check_clk_hws(hws, clk_data->num);
+> >
+> > diff --git a/include/dt-bindings/clock/imx7ulp-clock.h
+> > b/include/dt-bindings/clock/imx7ulp-clock.h
+> > index 38145bdcd975..b58370d146e2 100644
+> > --- a/include/dt-bindings/clock/imx7ulp-clock.h
+> > +++ b/include/dt-bindings/clock/imx7ulp-clock.h
+> > @@ -58,7 +58,10 @@
+> >  #define IMX7ULP_CLK_HSRUN_SYS_SEL	44
+> >  #define IMX7ULP_CLK_HSRUN_CORE_DIV	45
+> >
+> > -#define IMX7ULP_CLK_SCG1_END		46
+> > +#define IMX7ULP_CLK_CORE		46
+> > +#define IMX7ULP_CLK_HSRUN_CORE		47
+> > +
+> > +#define IMX7ULP_CLK_SCG1_END		48
+> >
+> >  /* PCC2 */
+> >  #define IMX7ULP_CLK_DMA1		0
+> > --
+> > 2.16.4
+> >
