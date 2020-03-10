@@ -5,376 +5,515 @@ X-Spam-Level:
 X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BA82C2BB8A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:44:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39D8FC3F2D0
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:44:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0C4824684
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:44:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E87DB24677
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:44:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583847858;
-	bh=Wco8Lrt6IWo3LhWvojV2+XjOxrfkIusfjVYlvpSsUeE=;
+	s=default; t=1583847866;
+	bh=4+B04di+ImH/vlBfTaF8o7ROuooQlaTXMKeOjYPvbZ0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cjuhfeBbIaB0aLikVy/gnDdE2TGxEx/nhLUEa3o6K7eAwInZxDSoSNOW17b75wg1r
-	 63unbfi2SY2kXngoeYVMyjM8t9wKPhbobQwd6XMmIZDJNnCpLhPcUXai0nOzJn2EVK
-	 PmCyAa26YmGpS3w2s7WHYIylByMmGEivPZbzTnO8=
+	b=BCKh6Yj09YaicfRpFukNgO4Y4AA00MrJrDLbA7Q9r+KChx0o3/7DLZAk7yICW6t3Z
+	 3Y/4s5EyAK52w6Mzu5hnfASuWsrG0j1YjOOOINENeEFZqvsalqxzP5CmmhUllYqaAK
+	 2aAkIxHKIMYXgNmQkKRhDhrd+holL+zX8A9vSUY0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727974AbgCJNoQ (ORCPT
+        id S1728005AbgCJNoT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:44:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37596 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:44:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37690 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727280AbgCJNnT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727212AbgCJNnT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 10 Mar 2020 09:43:19 -0400
 Received: from mail.kernel.org (ip5f5ad4e9.dynamic.kabel-deutschland.de [95.90.212.233])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 73417246AD;
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E5A524698;
         Tue, 10 Mar 2020 13:43:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1583847797;
-        bh=Wco8Lrt6IWo3LhWvojV2+XjOxrfkIusfjVYlvpSsUeE=;
+        bh=4+B04di+ImH/vlBfTaF8o7ROuooQlaTXMKeOjYPvbZ0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gIJJ/pizUq9t1HsweRGhncII2VfYDeQjW8zKo9gQGYreFl7/svIn87zakwUOJYE5S
-         dgClc6KJzz2NU8AIiP5Qi+T3NMY8HhV+Yg3kffTDGILJDCYPcR9MFzcYGA5DaC+gsj
-         xve/gXdeyF8SLGSr1vKKHYq6p+aCxkzvYJS1EeeU=
+        b=PwxnEus2d9/cMGC/4JgEr/oWPLzoLtervaJbceu9L7sYfaOSbfa+x9OgTfblGt8eZ
+         eou0oiv6FFgYrrDlb0F35iJAZrIJxrfOvwf4p8U6Xe1r8K4bR/hdcWOgOE1as1YBlN
+         jVc9t306Er9RoSxfGoy2NrBIr2oNo+eh4ybXTcxE=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jBfAB-0005wW-Hr; Tue, 10 Mar 2020 14:43:15 +0100
+        id 1jBfAB-0005wG-DF; Tue, 10 Mar 2020 14:43:15 +0100
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        linux-media@vger.kernel.org,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Harry Wei <harryxiyou@gmail.com>,
-        Alex Shi <alex.shi@linux.alibaba.com>
-Subject: [PATCH v2 17/22] media: docs: kAPI docs: move them to driver-api
-Date:   Tue, 10 Mar 2020 14:43:08 +0100
-Message-Id: <5bffe1ff2266f81062f37dde9c93f71ed17ae5fd.1583847557.git.mchehab+huawei@kernel.org>
+        linux-media@vger.kernel.org
+Subject: [PATCH v2 14/22] media: docs: split uAPI info from omap3isp.rst
+Date:   Tue, 10 Mar 2020 14:43:05 +0100
+Message-Id: <86b6cdeb47344b5833d5e4515ce4ec1b2e82d9c5.1583847556.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <cover.1583847556.git.mchehab+huawei@kernel.org>
 References: <cover.1583847556.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-All those documents describe the media driver API. So, move
-them to the right place within the Kernel documentation.
+This file contains both driver develompent documentation and
+userspace API.
+
+Split on two, as they're usually read by different audiences.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- .../{media/kapi => driver-api/media}/cec-core.rst    |  0
- .../{media/kapi => driver-api/media}/csi2.rst        |  0
- .../{media/kapi => driver-api/media}/dtv-ca.rst      |  0
- .../{media/kapi => driver-api/media}/dtv-common.rst  |  0
- .../{media/kapi => driver-api/media}/dtv-core.rst    |  0
- .../{media/kapi => driver-api/media}/dtv-demux.rst   |  0
- .../kapi => driver-api/media}/dtv-frontend.rst       |  0
- .../{media/kapi => driver-api/media}/dtv-net.rst     |  0
- .../media_kapi.rst => driver-api/media/index.rst}    | 12 ++++++------
- .../{media/kapi => driver-api/media}/mc-core.rst     |  0
- .../{media/kapi => driver-api/media}/rc-core.rst     |  0
- .../{media/kapi => driver-api/media}/v4l2-async.rst  |  0
- .../{media/kapi => driver-api/media}/v4l2-clocks.rst |  0
- .../{media/kapi => driver-api/media}/v4l2-common.rst |  0
- .../kapi => driver-api/media}/v4l2-controls.rst      |  0
- .../{media/kapi => driver-api/media}/v4l2-core.rst   |  0
- .../{media/kapi => driver-api/media}/v4l2-dev.rst    |  0
- .../{media/kapi => driver-api/media}/v4l2-device.rst |  0
- .../kapi => driver-api/media}/v4l2-dv-timings.rst    |  0
- .../{media/kapi => driver-api/media}/v4l2-event.rst  |  0
- .../{media/kapi => driver-api/media}/v4l2-fh.rst     |  0
- .../media}/v4l2-flash-led-class.rst                  |  0
- .../{media/kapi => driver-api/media}/v4l2-fwnode.rst |  0
- .../{media/kapi => driver-api/media}/v4l2-intro.rst  |  0
- .../{media/kapi => driver-api/media}/v4l2-mc.rst     |  0
- .../kapi => driver-api/media}/v4l2-mediabus.rst      |  0
- .../kapi => driver-api/media}/v4l2-mem2mem.rst       |  0
- .../{media/kapi => driver-api/media}/v4l2-rect.rst   |  0
- .../{media/kapi => driver-api/media}/v4l2-subdev.rst |  0
- .../{media/kapi => driver-api/media}/v4l2-tuner.rst  |  0
- .../kapi => driver-api/media}/v4l2-tveeprom.rst      |  0
- .../kapi => driver-api/media}/v4l2-videobuf.rst      |  0
- .../kapi => driver-api/media}/v4l2-videobuf2.rst     |  0
- Documentation/media/index.rst                        |  2 +-
- Documentation/media/v4l-drivers/max2175.rst          |  2 +-
- .../zh_CN/video4linux/v4l2-framework.txt             |  6 +++---
- MAINTAINERS                                          |  4 +++-
- 37 files changed, 14 insertions(+), 12 deletions(-)
- rename Documentation/{media/kapi => driver-api/media}/cec-core.rst (100%)
- rename Documentation/{media/kapi => driver-api/media}/csi2.rst (100%)
- rename Documentation/{media/kapi => driver-api/media}/dtv-ca.rst (100%)
- rename Documentation/{media/kapi => driver-api/media}/dtv-common.rst (100%)
- rename Documentation/{media/kapi => driver-api/media}/dtv-core.rst (100%)
- rename Documentation/{media/kapi => driver-api/media}/dtv-demux.rst (100%)
- rename Documentation/{media/kapi => driver-api/media}/dtv-frontend.rst (100%)
- rename Documentation/{media/kapi => driver-api/media}/dtv-net.rst (100%)
- rename Documentation/{media/media_kapi.rst => driver-api/media/index.rst} (89%)
- rename Documentation/{media/kapi => driver-api/media}/mc-core.rst (100%)
- rename Documentation/{media/kapi => driver-api/media}/rc-core.rst (100%)
- rename Documentation/{media/kapi => driver-api/media}/v4l2-async.rst (100%)
- rename Documentation/{media/kapi => driver-api/media}/v4l2-clocks.rst (100%)
- rename Documentation/{media/kapi => driver-api/media}/v4l2-common.rst (100%)
- rename Documentation/{media/kapi => driver-api/media}/v4l2-controls.rst (100%)
- rename Documentation/{media/kapi => driver-api/media}/v4l2-core.rst (100%)
- rename Documentation/{media/kapi => driver-api/media}/v4l2-dev.rst (100%)
- rename Documentation/{media/kapi => driver-api/media}/v4l2-device.rst (100%)
- rename Documentation/{media/kapi => driver-api/media}/v4l2-dv-timings.rst (100%)
- rename Documentation/{media/kapi => driver-api/media}/v4l2-event.rst (100%)
- rename Documentation/{media/kapi => driver-api/media}/v4l2-fh.rst (100%)
- rename Documentation/{media/kapi => driver-api/media}/v4l2-flash-led-class.rst (100%)
- rename Documentation/{media/kapi => driver-api/media}/v4l2-fwnode.rst (100%)
- rename Documentation/{media/kapi => driver-api/media}/v4l2-intro.rst (100%)
- rename Documentation/{media/kapi => driver-api/media}/v4l2-mc.rst (100%)
- rename Documentation/{media/kapi => driver-api/media}/v4l2-mediabus.rst (100%)
- rename Documentation/{media/kapi => driver-api/media}/v4l2-mem2mem.rst (100%)
- rename Documentation/{media/kapi => driver-api/media}/v4l2-rect.rst (100%)
- rename Documentation/{media/kapi => driver-api/media}/v4l2-subdev.rst (100%)
- rename Documentation/{media/kapi => driver-api/media}/v4l2-tuner.rst (100%)
- rename Documentation/{media/kapi => driver-api/media}/v4l2-tveeprom.rst (100%)
- rename Documentation/{media/kapi => driver-api/media}/v4l2-videobuf.rst (100%)
- rename Documentation/{media/kapi => driver-api/media}/v4l2-videobuf2.rst (100%)
+ Documentation/media/v4l-drivers/index.rst     |   1 +
+ .../media/v4l-drivers/omap3isp-uapi.rst       | 208 ++++++++++++++++++
+ Documentation/media/v4l-drivers/omap3isp.rst  | 196 +----------------
+ 3 files changed, 211 insertions(+), 194 deletions(-)
+ create mode 100644 Documentation/media/v4l-drivers/omap3isp-uapi.rst
 
-diff --git a/Documentation/media/kapi/cec-core.rst b/Documentation/driver-api/media/cec-core.rst
-similarity index 100%
-rename from Documentation/media/kapi/cec-core.rst
-rename to Documentation/driver-api/media/cec-core.rst
-diff --git a/Documentation/media/kapi/csi2.rst b/Documentation/driver-api/media/csi2.rst
-similarity index 100%
-rename from Documentation/media/kapi/csi2.rst
-rename to Documentation/driver-api/media/csi2.rst
-diff --git a/Documentation/media/kapi/dtv-ca.rst b/Documentation/driver-api/media/dtv-ca.rst
-similarity index 100%
-rename from Documentation/media/kapi/dtv-ca.rst
-rename to Documentation/driver-api/media/dtv-ca.rst
-diff --git a/Documentation/media/kapi/dtv-common.rst b/Documentation/driver-api/media/dtv-common.rst
-similarity index 100%
-rename from Documentation/media/kapi/dtv-common.rst
-rename to Documentation/driver-api/media/dtv-common.rst
-diff --git a/Documentation/media/kapi/dtv-core.rst b/Documentation/driver-api/media/dtv-core.rst
-similarity index 100%
-rename from Documentation/media/kapi/dtv-core.rst
-rename to Documentation/driver-api/media/dtv-core.rst
-diff --git a/Documentation/media/kapi/dtv-demux.rst b/Documentation/driver-api/media/dtv-demux.rst
-similarity index 100%
-rename from Documentation/media/kapi/dtv-demux.rst
-rename to Documentation/driver-api/media/dtv-demux.rst
-diff --git a/Documentation/media/kapi/dtv-frontend.rst b/Documentation/driver-api/media/dtv-frontend.rst
-similarity index 100%
-rename from Documentation/media/kapi/dtv-frontend.rst
-rename to Documentation/driver-api/media/dtv-frontend.rst
-diff --git a/Documentation/media/kapi/dtv-net.rst b/Documentation/driver-api/media/dtv-net.rst
-similarity index 100%
-rename from Documentation/media/kapi/dtv-net.rst
-rename to Documentation/driver-api/media/dtv-net.rst
-diff --git a/Documentation/media/media_kapi.rst b/Documentation/driver-api/media/index.rst
-similarity index 89%
-rename from Documentation/media/media_kapi.rst
-rename to Documentation/driver-api/media/index.rst
-index 1389998c90f7..d2842f300bbd 100644
---- a/Documentation/media/media_kapi.rst
-+++ b/Documentation/driver-api/media/index.rst
-@@ -30,9 +30,9 @@ For more details see the file COPYING in the source distribution of Linux.
-     :maxdepth: 5
-     :numbered:
+diff --git a/Documentation/media/v4l-drivers/index.rst b/Documentation/media/v4l-drivers/index.rst
+index 6fdfd9a41913..364c65ea86fb 100644
+--- a/Documentation/media/v4l-drivers/index.rst
++++ b/Documentation/media/v4l-drivers/index.rst
+@@ -76,3 +76,4 @@ For more details see the file COPYING in the source distribution of Linux.
  
--    kapi/v4l2-core
--    kapi/dtv-core
--    kapi/rc-core
--    kapi/mc-core
--    kapi/cec-core
--    kapi/csi2
-+    v4l2-core
-+    dtv-core
-+    rc-core
-+    mc-core
-+    cec-core
-+    csi2
-diff --git a/Documentation/media/kapi/mc-core.rst b/Documentation/driver-api/media/mc-core.rst
-similarity index 100%
-rename from Documentation/media/kapi/mc-core.rst
-rename to Documentation/driver-api/media/mc-core.rst
-diff --git a/Documentation/media/kapi/rc-core.rst b/Documentation/driver-api/media/rc-core.rst
-similarity index 100%
-rename from Documentation/media/kapi/rc-core.rst
-rename to Documentation/driver-api/media/rc-core.rst
-diff --git a/Documentation/media/kapi/v4l2-async.rst b/Documentation/driver-api/media/v4l2-async.rst
-similarity index 100%
-rename from Documentation/media/kapi/v4l2-async.rst
-rename to Documentation/driver-api/media/v4l2-async.rst
-diff --git a/Documentation/media/kapi/v4l2-clocks.rst b/Documentation/driver-api/media/v4l2-clocks.rst
-similarity index 100%
-rename from Documentation/media/kapi/v4l2-clocks.rst
-rename to Documentation/driver-api/media/v4l2-clocks.rst
-diff --git a/Documentation/media/kapi/v4l2-common.rst b/Documentation/driver-api/media/v4l2-common.rst
-similarity index 100%
-rename from Documentation/media/kapi/v4l2-common.rst
-rename to Documentation/driver-api/media/v4l2-common.rst
-diff --git a/Documentation/media/kapi/v4l2-controls.rst b/Documentation/driver-api/media/v4l2-controls.rst
-similarity index 100%
-rename from Documentation/media/kapi/v4l2-controls.rst
-rename to Documentation/driver-api/media/v4l2-controls.rst
-diff --git a/Documentation/media/kapi/v4l2-core.rst b/Documentation/driver-api/media/v4l2-core.rst
-similarity index 100%
-rename from Documentation/media/kapi/v4l2-core.rst
-rename to Documentation/driver-api/media/v4l2-core.rst
-diff --git a/Documentation/media/kapi/v4l2-dev.rst b/Documentation/driver-api/media/v4l2-dev.rst
-similarity index 100%
-rename from Documentation/media/kapi/v4l2-dev.rst
-rename to Documentation/driver-api/media/v4l2-dev.rst
-diff --git a/Documentation/media/kapi/v4l2-device.rst b/Documentation/driver-api/media/v4l2-device.rst
-similarity index 100%
-rename from Documentation/media/kapi/v4l2-device.rst
-rename to Documentation/driver-api/media/v4l2-device.rst
-diff --git a/Documentation/media/kapi/v4l2-dv-timings.rst b/Documentation/driver-api/media/v4l2-dv-timings.rst
-similarity index 100%
-rename from Documentation/media/kapi/v4l2-dv-timings.rst
-rename to Documentation/driver-api/media/v4l2-dv-timings.rst
-diff --git a/Documentation/media/kapi/v4l2-event.rst b/Documentation/driver-api/media/v4l2-event.rst
-similarity index 100%
-rename from Documentation/media/kapi/v4l2-event.rst
-rename to Documentation/driver-api/media/v4l2-event.rst
-diff --git a/Documentation/media/kapi/v4l2-fh.rst b/Documentation/driver-api/media/v4l2-fh.rst
-similarity index 100%
-rename from Documentation/media/kapi/v4l2-fh.rst
-rename to Documentation/driver-api/media/v4l2-fh.rst
-diff --git a/Documentation/media/kapi/v4l2-flash-led-class.rst b/Documentation/driver-api/media/v4l2-flash-led-class.rst
-similarity index 100%
-rename from Documentation/media/kapi/v4l2-flash-led-class.rst
-rename to Documentation/driver-api/media/v4l2-flash-led-class.rst
-diff --git a/Documentation/media/kapi/v4l2-fwnode.rst b/Documentation/driver-api/media/v4l2-fwnode.rst
-similarity index 100%
-rename from Documentation/media/kapi/v4l2-fwnode.rst
-rename to Documentation/driver-api/media/v4l2-fwnode.rst
-diff --git a/Documentation/media/kapi/v4l2-intro.rst b/Documentation/driver-api/media/v4l2-intro.rst
-similarity index 100%
-rename from Documentation/media/kapi/v4l2-intro.rst
-rename to Documentation/driver-api/media/v4l2-intro.rst
-diff --git a/Documentation/media/kapi/v4l2-mc.rst b/Documentation/driver-api/media/v4l2-mc.rst
-similarity index 100%
-rename from Documentation/media/kapi/v4l2-mc.rst
-rename to Documentation/driver-api/media/v4l2-mc.rst
-diff --git a/Documentation/media/kapi/v4l2-mediabus.rst b/Documentation/driver-api/media/v4l2-mediabus.rst
-similarity index 100%
-rename from Documentation/media/kapi/v4l2-mediabus.rst
-rename to Documentation/driver-api/media/v4l2-mediabus.rst
-diff --git a/Documentation/media/kapi/v4l2-mem2mem.rst b/Documentation/driver-api/media/v4l2-mem2mem.rst
-similarity index 100%
-rename from Documentation/media/kapi/v4l2-mem2mem.rst
-rename to Documentation/driver-api/media/v4l2-mem2mem.rst
-diff --git a/Documentation/media/kapi/v4l2-rect.rst b/Documentation/driver-api/media/v4l2-rect.rst
-similarity index 100%
-rename from Documentation/media/kapi/v4l2-rect.rst
-rename to Documentation/driver-api/media/v4l2-rect.rst
-diff --git a/Documentation/media/kapi/v4l2-subdev.rst b/Documentation/driver-api/media/v4l2-subdev.rst
-similarity index 100%
-rename from Documentation/media/kapi/v4l2-subdev.rst
-rename to Documentation/driver-api/media/v4l2-subdev.rst
-diff --git a/Documentation/media/kapi/v4l2-tuner.rst b/Documentation/driver-api/media/v4l2-tuner.rst
-similarity index 100%
-rename from Documentation/media/kapi/v4l2-tuner.rst
-rename to Documentation/driver-api/media/v4l2-tuner.rst
-diff --git a/Documentation/media/kapi/v4l2-tveeprom.rst b/Documentation/driver-api/media/v4l2-tveeprom.rst
-similarity index 100%
-rename from Documentation/media/kapi/v4l2-tveeprom.rst
-rename to Documentation/driver-api/media/v4l2-tveeprom.rst
-diff --git a/Documentation/media/kapi/v4l2-videobuf.rst b/Documentation/driver-api/media/v4l2-videobuf.rst
-similarity index 100%
-rename from Documentation/media/kapi/v4l2-videobuf.rst
-rename to Documentation/driver-api/media/v4l2-videobuf.rst
-diff --git a/Documentation/media/kapi/v4l2-videobuf2.rst b/Documentation/driver-api/media/v4l2-videobuf2.rst
-similarity index 100%
-rename from Documentation/media/kapi/v4l2-videobuf2.rst
-rename to Documentation/driver-api/media/v4l2-videobuf2.rst
-diff --git a/Documentation/media/index.rst b/Documentation/media/index.rst
-index 8118c2d001ff..308f6a396d1c 100644
---- a/Documentation/media/index.rst
-+++ b/Documentation/media/index.rst
-@@ -13,7 +13,7 @@ Linux Media Subsystem Documentation
-    :maxdepth: 2
+ 	cx2341x-uapi
+ 	meye-uapi
++	omap3isp-uapi
+diff --git a/Documentation/media/v4l-drivers/omap3isp-uapi.rst b/Documentation/media/v4l-drivers/omap3isp-uapi.rst
+new file mode 100644
+index 000000000000..5f966a874a3c
+--- /dev/null
++++ b/Documentation/media/v4l-drivers/omap3isp-uapi.rst
+@@ -0,0 +1,208 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++.. include:: <isonum.txt>
++
++OMAP 3 Image Signal Processor (ISP) driver
++==========================================
++
++Copyright |copy| 2010 Nokia Corporation
++
++Copyright |copy| 2009 Texas Instruments, Inc.
++
++Contacts: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
++Sakari Ailus <sakari.ailus@iki.fi>, David Cohen <dacohen@gmail.com>
++
++
++Events
++------
++
++The OMAP 3 ISP driver does support the V4L2 event interface on CCDC and
++statistics (AEWB, AF and histogram) subdevs.
++
++The CCDC subdev produces V4L2_EVENT_FRAME_SYNC type event on HS_VS
++interrupt which is used to signal frame start. Earlier version of this
++driver used V4L2_EVENT_OMAP3ISP_HS_VS for this purpose. The event is
++triggered exactly when the reception of the first line of the frame starts
++in the CCDC module. The event can be subscribed on the CCDC subdev.
++
++(When using parallel interface one must pay account to correct configuration
++of the VS signal polarity. This is automatically correct when using the serial
++receivers.)
++
++Each of the statistics subdevs is able to produce events. An event is
++generated whenever a statistics buffer can be dequeued by a user space
++application using the VIDIOC_OMAP3ISP_STAT_REQ IOCTL. The events available
++are:
++
++- V4L2_EVENT_OMAP3ISP_AEWB
++- V4L2_EVENT_OMAP3ISP_AF
++- V4L2_EVENT_OMAP3ISP_HIST
++
++The type of the event data is struct omap3isp_stat_event_status for these
++ioctls. If there is an error calculating the statistics, there will be an
++event as usual, but no related statistics buffer. In this case
++omap3isp_stat_event_status.buf_err is set to non-zero.
++
++
++Private IOCTLs
++--------------
++
++The OMAP 3 ISP driver supports standard V4L2 IOCTLs and controls where
++possible and practical. Much of the functions provided by the ISP, however,
++does not fall under the standard IOCTLs --- gamma tables and configuration of
++statistics collection are examples of such.
++
++In general, there is a private ioctl for configuring each of the blocks
++containing hardware-dependent functions.
++
++The following private IOCTLs are supported:
++
++- VIDIOC_OMAP3ISP_CCDC_CFG
++- VIDIOC_OMAP3ISP_PRV_CFG
++- VIDIOC_OMAP3ISP_AEWB_CFG
++- VIDIOC_OMAP3ISP_HIST_CFG
++- VIDIOC_OMAP3ISP_AF_CFG
++- VIDIOC_OMAP3ISP_STAT_REQ
++- VIDIOC_OMAP3ISP_STAT_EN
++
++The parameter structures used by these ioctls are described in
++include/linux/omap3isp.h. The detailed functions of the ISP itself related to
++a given ISP block is described in the Technical Reference Manuals (TRMs) ---
++see the end of the document for those.
++
++While it is possible to use the ISP driver without any use of these private
++IOCTLs it is not possible to obtain optimal image quality this way. The AEWB,
++AF and histogram modules cannot be used without configuring them using the
++appropriate private IOCTLs.
++
++
++CCDC and preview block IOCTLs
++-----------------------------
++
++The VIDIOC_OMAP3ISP_CCDC_CFG and VIDIOC_OMAP3ISP_PRV_CFG IOCTLs are used to
++configure, enable and disable functions in the CCDC and preview blocks,
++respectively. Both IOCTLs control several functions in the blocks they
++control. VIDIOC_OMAP3ISP_CCDC_CFG IOCTL accepts a pointer to struct
++omap3isp_ccdc_update_config as its argument. Similarly VIDIOC_OMAP3ISP_PRV_CFG
++accepts a pointer to struct omap3isp_prev_update_config. The definition of
++both structures is available in [#]_.
++
++The update field in the structures tells whether to update the configuration
++for the specific function and the flag tells whether to enable or disable the
++function.
++
++The update and flag bit masks accept the following values. Each separate
++functions in the CCDC and preview blocks is associated with a flag (either
++disable or enable; part of the flag field in the structure) and a pointer to
++configuration data for the function.
++
++Valid values for the update and flag fields are listed here for
++VIDIOC_OMAP3ISP_CCDC_CFG. Values may be or'ed to configure more than one
++function in the same IOCTL call.
++
++- OMAP3ISP_CCDC_ALAW
++- OMAP3ISP_CCDC_LPF
++- OMAP3ISP_CCDC_BLCLAMP
++- OMAP3ISP_CCDC_BCOMP
++- OMAP3ISP_CCDC_FPC
++- OMAP3ISP_CCDC_CULL
++- OMAP3ISP_CCDC_CONFIG_LSC
++- OMAP3ISP_CCDC_TBL_LSC
++
++The corresponding values for the VIDIOC_OMAP3ISP_PRV_CFG are here:
++
++- OMAP3ISP_PREV_LUMAENH
++- OMAP3ISP_PREV_INVALAW
++- OMAP3ISP_PREV_HRZ_MED
++- OMAP3ISP_PREV_CFA
++- OMAP3ISP_PREV_CHROMA_SUPP
++- OMAP3ISP_PREV_WB
++- OMAP3ISP_PREV_BLKADJ
++- OMAP3ISP_PREV_RGB2RGB
++- OMAP3ISP_PREV_COLOR_CONV
++- OMAP3ISP_PREV_YC_LIMIT
++- OMAP3ISP_PREV_DEFECT_COR
++- OMAP3ISP_PREV_GAMMABYPASS
++- OMAP3ISP_PREV_DRK_FRM_CAPTURE
++- OMAP3ISP_PREV_DRK_FRM_SUBTRACT
++- OMAP3ISP_PREV_LENS_SHADING
++- OMAP3ISP_PREV_NF
++- OMAP3ISP_PREV_GAMMA
++
++The associated configuration pointer for the function may not be NULL when
++enabling the function. When disabling a function the configuration pointer is
++ignored.
++
++
++Statistic blocks IOCTLs
++-----------------------
++
++The statistics subdevs do offer more dynamic configuration options than the
++other subdevs. They can be enabled, disable and reconfigured when the pipeline
++is in streaming state.
++
++The statistics blocks always get the input image data from the CCDC (as the
++histogram memory read isn't implemented). The statistics are dequeueable by
++the user from the statistics subdev nodes using private IOCTLs.
++
++The private IOCTLs offered by the AEWB, AF and histogram subdevs are heavily
++reflected by the register level interface offered by the ISP hardware. There
++are aspects that are purely related to the driver implementation and these are
++discussed next.
++
++VIDIOC_OMAP3ISP_STAT_EN
++-----------------------
++
++This private IOCTL enables/disables a statistic module. If this request is
++done before streaming, it will take effect as soon as the pipeline starts to
++stream.  If the pipeline is already streaming, it will take effect as soon as
++the CCDC becomes idle.
++
++VIDIOC_OMAP3ISP_AEWB_CFG, VIDIOC_OMAP3ISP_HIST_CFG and VIDIOC_OMAP3ISP_AF_CFG
++-----------------------------------------------------------------------------
++
++Those IOCTLs are used to configure the modules. They require user applications
++to have an in-depth knowledge of the hardware. Most of the fields explanation
++can be found on OMAP's TRMs. The two following fields common to all the above
++configure private IOCTLs require explanation for better understanding as they
++are not part of the TRM.
++
++omap3isp_[h3a_af/h3a_aewb/hist]\_config.buf_size:
++
++The modules handle their buffers internally. The necessary buffer size for the
++module's data output depends on the requested configuration. Although the
++driver supports reconfiguration while streaming, it does not support a
++reconfiguration which requires bigger buffer size than what is already
++internally allocated if the module is enabled. It will return -EBUSY on this
++case. In order to avoid such condition, either disable/reconfigure/enable the
++module or request the necessary buffer size during the first configuration
++while the module is disabled.
++
++The internal buffer size allocation considers the requested configuration's
++minimum buffer size and the value set on buf_size field. If buf_size field is
++out of [minimum, maximum] buffer size range, it's clamped to fit in there.
++The driver then selects the biggest value. The corrected buf_size value is
++written back to user application.
++
++omap3isp_[h3a_af/h3a_aewb/hist]\_config.config_counter:
++
++As the configuration doesn't take effect synchronously to the request, the
++driver must provide a way to track this information to provide more accurate
++data. After a configuration is requested, the config_counter returned to user
++space application will be an unique value associated to that request. When
++user application receives an event for buffer availability or when a new
++buffer is requested, this config_counter is used to match a buffer data and a
++configuration.
++
++VIDIOC_OMAP3ISP_STAT_REQ
++------------------------
++
++Send to user space the oldest data available in the internal buffer queue and
++discards such buffer afterwards. The field omap3isp_stat_data.frame_number
++matches with the video buffer's field_count.
++
++
++References
++----------
++
++.. [#] include/linux/omap3isp.h
+diff --git a/Documentation/media/v4l-drivers/omap3isp.rst b/Documentation/media/v4l-drivers/omap3isp.rst
+index 8974c444e3a1..bc447bbec7ce 100644
+--- a/Documentation/media/v4l-drivers/omap3isp.rst
++++ b/Documentation/media/v4l-drivers/omap3isp.rst
+@@ -49,7 +49,7 @@ interface to userspace.
+ - OMAP3 ISP histogram
  
-    ../userspace-api/media/index
--   media_kapi
-+   ../driver-api/media/index
-    dvb-drivers/index
-    v4l-drivers/index
-    cec-drivers/index
-diff --git a/Documentation/media/v4l-drivers/max2175.rst b/Documentation/media/v4l-drivers/max2175.rst
-index a5e35059d98d..35d3c4b41fc7 100644
---- a/Documentation/media/v4l-drivers/max2175.rst
-+++ b/Documentation/media/v4l-drivers/max2175.rst
-@@ -9,7 +9,7 @@ The MAX2175 driver implements the following driver-specific controls:
- -------------------------------
-     Enable/Disable I2S output of the tuner. This is a private control
-     that can be accessed only using the subdev interface.
--    Refer to Documentation/media/kapi/v4l2-controls.rst for more details.
-+    Refer to Documentation/driver-api/media/v4l2-controls.rst for more details.
+ Each possible link in the ISP is modelled by a link in the Media controller
+-interface. For an example program see [#f2]_.
++interface. For an example program see [#]_.
  
- .. flat-table::
-     :header-rows:  0
-diff --git a/Documentation/translations/zh_CN/video4linux/v4l2-framework.txt b/Documentation/translations/zh_CN/video4linux/v4l2-framework.txt
-index 9c39ee58ea50..4d2af480a112 100644
---- a/Documentation/translations/zh_CN/video4linux/v4l2-framework.txt
-+++ b/Documentation/translations/zh_CN/video4linux/v4l2-framework.txt
-@@ -1,4 +1,4 @@
--Chinese translated version of Documentation/media/media_kapi.rst
-+Chinese translated version of Documentation/driver-api/media/index.rst
  
- If you have any comment or update to the content, please contact the
- original document maintainer directly.  However, if you have a problem
-@@ -9,7 +9,7 @@ or if there is a problem with the translation.
- Maintainer: Mauro Carvalho Chehab <mchehab@kernel.org>
- Chinese maintainer: Fu Wei <tekkamanninja@gmail.com>
- ---------------------------------------------------------------------
--Documentation/media/media_kapi.rst 的中文翻译
-+Documentation/driver-api/media/index.rst 的中文翻译
+ Controlling the OMAP 3 ISP
+@@ -68,196 +68,6 @@ Autoidle does have issues with some ISP blocks on the 3430, at least.
+ Autoidle is only enabled on 3630 when the omap3isp module parameter autoidle
+ is non-zero.
  
- 如果想评论或更新本文的内容，请直接联系原文档的维护者。如果你使用英文
- 交流有困难的话，也可以向中文版维护者求助。如果本翻译更新不及时或者翻
-@@ -777,7 +777,7 @@ v4l2 核心 API 提供了一个处理视频缓冲的标准方法(称为“videob
- 线性 DMA(videobuf-dma-contig)以及大多用于 USB 设备的用 vmalloc
- 分配的缓冲(videobuf-vmalloc)。
+-
+-Events
+-------
+-
+-The OMAP 3 ISP driver does support the V4L2 event interface on CCDC and
+-statistics (AEWB, AF and histogram) subdevs.
+-
+-The CCDC subdev produces V4L2_EVENT_FRAME_SYNC type event on HS_VS
+-interrupt which is used to signal frame start. Earlier version of this
+-driver used V4L2_EVENT_OMAP3ISP_HS_VS for this purpose. The event is
+-triggered exactly when the reception of the first line of the frame starts
+-in the CCDC module. The event can be subscribed on the CCDC subdev.
+-
+-(When using parallel interface one must pay account to correct configuration
+-of the VS signal polarity. This is automatically correct when using the serial
+-receivers.)
+-
+-Each of the statistics subdevs is able to produce events. An event is
+-generated whenever a statistics buffer can be dequeued by a user space
+-application using the VIDIOC_OMAP3ISP_STAT_REQ IOCTL. The events available
+-are:
+-
+-- V4L2_EVENT_OMAP3ISP_AEWB
+-- V4L2_EVENT_OMAP3ISP_AF
+-- V4L2_EVENT_OMAP3ISP_HIST
+-
+-The type of the event data is struct omap3isp_stat_event_status for these
+-ioctls. If there is an error calculating the statistics, there will be an
+-event as usual, but no related statistics buffer. In this case
+-omap3isp_stat_event_status.buf_err is set to non-zero.
+-
+-
+-Private IOCTLs
+---------------
+-
+-The OMAP 3 ISP driver supports standard V4L2 IOCTLs and controls where
+-possible and practical. Much of the functions provided by the ISP, however,
+-does not fall under the standard IOCTLs --- gamma tables and configuration of
+-statistics collection are examples of such.
+-
+-In general, there is a private ioctl for configuring each of the blocks
+-containing hardware-dependent functions.
+-
+-The following private IOCTLs are supported:
+-
+-- VIDIOC_OMAP3ISP_CCDC_CFG
+-- VIDIOC_OMAP3ISP_PRV_CFG
+-- VIDIOC_OMAP3ISP_AEWB_CFG
+-- VIDIOC_OMAP3ISP_HIST_CFG
+-- VIDIOC_OMAP3ISP_AF_CFG
+-- VIDIOC_OMAP3ISP_STAT_REQ
+-- VIDIOC_OMAP3ISP_STAT_EN
+-
+-The parameter structures used by these ioctls are described in
+-include/linux/omap3isp.h. The detailed functions of the ISP itself related to
+-a given ISP block is described in the Technical Reference Manuals (TRMs) ---
+-see the end of the document for those.
+-
+-While it is possible to use the ISP driver without any use of these private
+-IOCTLs it is not possible to obtain optimal image quality this way. The AEWB,
+-AF and histogram modules cannot be used without configuring them using the
+-appropriate private IOCTLs.
+-
+-
+-CCDC and preview block IOCTLs
+------------------------------
+-
+-The VIDIOC_OMAP3ISP_CCDC_CFG and VIDIOC_OMAP3ISP_PRV_CFG IOCTLs are used to
+-configure, enable and disable functions in the CCDC and preview blocks,
+-respectively. Both IOCTLs control several functions in the blocks they
+-control. VIDIOC_OMAP3ISP_CCDC_CFG IOCTL accepts a pointer to struct
+-omap3isp_ccdc_update_config as its argument. Similarly VIDIOC_OMAP3ISP_PRV_CFG
+-accepts a pointer to struct omap3isp_prev_update_config. The definition of
+-both structures is available in [#f1]_.
+-
+-The update field in the structures tells whether to update the configuration
+-for the specific function and the flag tells whether to enable or disable the
+-function.
+-
+-The update and flag bit masks accept the following values. Each separate
+-functions in the CCDC and preview blocks is associated with a flag (either
+-disable or enable; part of the flag field in the structure) and a pointer to
+-configuration data for the function.
+-
+-Valid values for the update and flag fields are listed here for
+-VIDIOC_OMAP3ISP_CCDC_CFG. Values may be or'ed to configure more than one
+-function in the same IOCTL call.
+-
+-- OMAP3ISP_CCDC_ALAW
+-- OMAP3ISP_CCDC_LPF
+-- OMAP3ISP_CCDC_BLCLAMP
+-- OMAP3ISP_CCDC_BCOMP
+-- OMAP3ISP_CCDC_FPC
+-- OMAP3ISP_CCDC_CULL
+-- OMAP3ISP_CCDC_CONFIG_LSC
+-- OMAP3ISP_CCDC_TBL_LSC
+-
+-The corresponding values for the VIDIOC_OMAP3ISP_PRV_CFG are here:
+-
+-- OMAP3ISP_PREV_LUMAENH
+-- OMAP3ISP_PREV_INVALAW
+-- OMAP3ISP_PREV_HRZ_MED
+-- OMAP3ISP_PREV_CFA
+-- OMAP3ISP_PREV_CHROMA_SUPP
+-- OMAP3ISP_PREV_WB
+-- OMAP3ISP_PREV_BLKADJ
+-- OMAP3ISP_PREV_RGB2RGB
+-- OMAP3ISP_PREV_COLOR_CONV
+-- OMAP3ISP_PREV_YC_LIMIT
+-- OMAP3ISP_PREV_DEFECT_COR
+-- OMAP3ISP_PREV_GAMMABYPASS
+-- OMAP3ISP_PREV_DRK_FRM_CAPTURE
+-- OMAP3ISP_PREV_DRK_FRM_SUBTRACT
+-- OMAP3ISP_PREV_LENS_SHADING
+-- OMAP3ISP_PREV_NF
+-- OMAP3ISP_PREV_GAMMA
+-
+-The associated configuration pointer for the function may not be NULL when
+-enabling the function. When disabling a function the configuration pointer is
+-ignored.
+-
+-
+-Statistic blocks IOCTLs
+------------------------
+-
+-The statistics subdevs do offer more dynamic configuration options than the
+-other subdevs. They can be enabled, disable and reconfigured when the pipeline
+-is in streaming state.
+-
+-The statistics blocks always get the input image data from the CCDC (as the
+-histogram memory read isn't implemented). The statistics are dequeueable by
+-the user from the statistics subdev nodes using private IOCTLs.
+-
+-The private IOCTLs offered by the AEWB, AF and histogram subdevs are heavily
+-reflected by the register level interface offered by the ISP hardware. There
+-are aspects that are purely related to the driver implementation and these are
+-discussed next.
+-
+-VIDIOC_OMAP3ISP_STAT_EN
+------------------------
+-
+-This private IOCTL enables/disables a statistic module. If this request is
+-done before streaming, it will take effect as soon as the pipeline starts to
+-stream.  If the pipeline is already streaming, it will take effect as soon as
+-the CCDC becomes idle.
+-
+-VIDIOC_OMAP3ISP_AEWB_CFG, VIDIOC_OMAP3ISP_HIST_CFG and VIDIOC_OMAP3ISP_AF_CFG
+------------------------------------------------------------------------------
+-
+-Those IOCTLs are used to configure the modules. They require user applications
+-to have an in-depth knowledge of the hardware. Most of the fields explanation
+-can be found on OMAP's TRMs. The two following fields common to all the above
+-configure private IOCTLs require explanation for better understanding as they
+-are not part of the TRM.
+-
+-omap3isp_[h3a_af/h3a_aewb/hist]\_config.buf_size:
+-
+-The modules handle their buffers internally. The necessary buffer size for the
+-module's data output depends on the requested configuration. Although the
+-driver supports reconfiguration while streaming, it does not support a
+-reconfiguration which requires bigger buffer size than what is already
+-internally allocated if the module is enabled. It will return -EBUSY on this
+-case. In order to avoid such condition, either disable/reconfigure/enable the
+-module or request the necessary buffer size during the first configuration
+-while the module is disabled.
+-
+-The internal buffer size allocation considers the requested configuration's
+-minimum buffer size and the value set on buf_size field. If buf_size field is
+-out of [minimum, maximum] buffer size range, it's clamped to fit in there.
+-The driver then selects the biggest value. The corrected buf_size value is
+-written back to user application.
+-
+-omap3isp_[h3a_af/h3a_aewb/hist]\_config.config_counter:
+-
+-As the configuration doesn't take effect synchronously to the request, the
+-driver must provide a way to track this information to provide more accurate
+-data. After a configuration is requested, the config_counter returned to user
+-space application will be an unique value associated to that request. When
+-user application receives an event for buffer availability or when a new
+-buffer is requested, this config_counter is used to match a buffer data and a
+-configuration.
+-
+-VIDIOC_OMAP3ISP_STAT_REQ
+-------------------------
+-
+-Send to user space the oldest data available in the internal buffer queue and
+-discards such buffer afterwards. The field omap3isp_stat_data.frame_number
+-matches with the video buffer's field_count.
+-
+-
+ Technical reference manuals (TRMs) and other documentation
+ ----------------------------------------------------------
  
--请参阅 Documentation/media/kapi/v4l2-videobuf.rst，以获得更多关于 videobuf
-+请参阅 Documentation/driver-api/media/v4l2-videobuf.rst，以获得更多关于 videobuf
- 层的使用信息。
+@@ -279,6 +89,4 @@ DM 3730 TRM:
+ References
+ ----------
  
- v4l2_fh 结构体
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 0ce0a1c93961..b5af1feb5ba1 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -3853,7 +3853,7 @@ L:	linux-media@vger.kernel.org
- T:	git git://linuxtv.org/media_tree.git
- W:	http://linuxtv.org
- S:	Supported
--F:	Documentation/media/kapi/cec-core.rst
-+F:	Documentation/driver-api/media/cec-core.rst
- F:	Documentation/userspace-api/media/cec
- F:	drivers/media/cec/
- F:	drivers/media/rc/keymaps/rc-cec.c
-@@ -5109,6 +5109,7 @@ X:	Documentation/devicetree/
- X:	Documentation/i2c/
- X:	Documentation/media/
- X:	Documentation/userspace-api/media/
-+X:	Documentation/driver-api/media/
- X:	Documentation/power/
- X:	Documentation/spi/
- T:	git git://git.lwn.net/linux.git docs-next
-@@ -10489,6 +10490,7 @@ S:	Maintained
- F:	Documentation/devicetree/bindings/media/
- F:	Documentation/media/
- F:	Documentation/userspace-api/media/
-+F:	Documentation/driver-api/media/
- F:	drivers/media/
- F:	drivers/staging/media/
- F:	include/linux/platform_data/media/
+-.. [#f1] include/linux/omap3isp.h
+-
+-.. [#f2] http://git.ideasonboard.org/?p=media-ctl.git;a=summary
++.. [#] http://git.ideasonboard.org/?p=media-ctl.git;a=summary
 -- 
 2.24.1
 
