@@ -2,120 +2,130 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CD37C10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:31:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C165C10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:33:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A73E2051A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:31:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583879495;
-	bh=tEuIyD+rULeJqoBS7AOB6GQLX+7U3/XRKzvQ9EQgC7E=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=jW3Nz/RK7gt/YwiAU/9ufpjZx+vgvd3yYkwYexLBUz7MW61X1HI5p+kJGnSco3eF9
-	 fe5YkXlIDXLeE05zWC7kd2k6pwPwzS6m7yRJ1Jyz0Sbr89/53dQlvkAx+SucU+tX44
-	 vMnZs5HGTukjtoqd0K4K6oEJ+QtNJw9l/pPclvrc=
+	by mail.kernel.org (Postfix) with ESMTP id EEE642051A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:33:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="myVbfeZq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727738AbgCJWbd (ORCPT
+        id S1727791AbgCJWdR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 18:31:33 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:42546 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726325AbgCJWbd (ORCPT
+        Tue, 10 Mar 2020 18:33:17 -0400
+Received: from mail-qv1-f66.google.com ([209.85.219.66]:41368 "EHLO
+        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726273AbgCJWdQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 18:31:33 -0400
-Received: by mail-lf1-f66.google.com with SMTP id t21so12313966lfe.9
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 15:31:30 -0700 (PDT)
+        Tue, 10 Mar 2020 18:33:16 -0400
+Received: by mail-qv1-f66.google.com with SMTP id a10so2726762qvq.8;
+        Tue, 10 Mar 2020 15:33:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cRzFDMWVFAVW4g21VSZ2BZmn8vOI4KiazeKxqVX5u1M=;
-        b=U3r0UrKX6PpyZ4UFRD1frE5J1x+pHwGop7H4CtDm8VEhXvpGaQKTaPU7hqrv9eUVcg
-         sBiNBF7mZoDTWUjiPW3TYHFgpIRzw9h0sFKsRtexWHe9y0tSObM4tGw+sRYYPqfdFqY7
-         fQANRaStPwMQNZIfgu6bwlvlAR81omWYDfZks=
+        d=gmail.com; s=20161025;
+        h=from:subject:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=pVD18NhyaMMMqN+6KXGbkok/K5Bbuh2l+ajlQsVKc1M=;
+        b=myVbfeZqSBSRE4KNut7qxpYfnvp1NSfftn65Ow96DACw/EYE+TlpBYdCDFR/yyxTpe
+         cNUuWkdm/Y3wbV2NmyPdcVfZECuaOBerzOSgRgJ20D+JGVFAHBRT7aTTjbiVTX8Oe2d/
+         xmNf780sw/XnVVBtFGHnBv/VdJEbnkiYyUz/LDfHSwNAOiKocEc7UmTyIcUBYG8cpuDj
+         pgB+ZH3J7TTD0wYhUNzptKFKm0pVfDst5u5+OFV1D+5LTJjP9Pv2x8psoZ+OoW48u4ng
+         zjjrKozYxTJ9GyedRTl+W8+mpP2Da8yWkOH/gXowaUAO0oglN+GSmDrItwqS+cmbpSFF
+         3c6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cRzFDMWVFAVW4g21VSZ2BZmn8vOI4KiazeKxqVX5u1M=;
-        b=pqMsiy77+jNIDCCMlQa4kNOjNJLKFBPxT+ZBp0nhlbQ9f1j1qFh3ASZAVJzk81mX8w
-         8Rgaq1BcYxybpwO15x1p1R7rF8FcF/cPk+EJeAJChOZQt/aZK6phsOWblCY9UNaNd713
-         dzfM6B1eYegQOTWf/lMqOlBWSLdXN7PGVbOlckQzbxa/JQQ7zy7aPdUPiGNXWweRpAZt
-         ylOjqjXVU2IqRJgCPu1+6Rm2/SY4EPyJN6ecTGu+H21a2BehQ4DqRj1mGZli85vua4BS
-         RJg7z7cbIOoJOJVEmSaZwVfA2BQgi8IMdHbEJp89hfwm4jV8ThhrRxEmKkad+9Aoi2Ke
-         p20w==
-X-Gm-Message-State: ANhLgQ0fUn7oftyqtw0yDT8OvIybIG9Y1j7MuWpDnSkU5h7HzcqtN02F
-        a4TJ04NeVRD5u+v8GH2DduvCiuXGRBw=
-X-Google-Smtp-Source: ADFU+vtEHR6Fh0sVzKvwzFQkRlLJZdCqo622QRGvchQOxjEDTVL58+PKDgShURXKZ7sl0wX4Qis90g==
-X-Received: by 2002:ac2:4145:: with SMTP id c5mr172590lfi.71.1583879488525;
-        Tue, 10 Mar 2020 15:31:28 -0700 (PDT)
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com. [209.85.208.181])
-        by smtp.gmail.com with ESMTPSA id d4sm224010lfa.75.2020.03.10.15.31.26
-        for <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=pVD18NhyaMMMqN+6KXGbkok/K5Bbuh2l+ajlQsVKc1M=;
+        b=O7MtBQe7ZYB5mnSc21rfipoEX+GRUpLzgJNWxAXPRrS6ZZoX/ye55iUIr7HJRU5mVU
+         mlSau64Cc+a/KVdSGaFHhuw20+XTbRdC91dnnrWBErZPO9GC659LvtHck0+F0HHWr64J
+         ixi0kELxY8YYigWgC+zTIT0GNGNt69rx8NKqclDGkxwnVJBgi4ZsLTabWbafmkijqakh
+         HOfhb42bUfN55PWVVE9stnD5tTqV6X+uCbnAI3KpBjDEoB+4XYvKNhNEXS4Le6UEDPT3
+         E/UI5M+w6z998i3FKS0FMt7ICvwmoceZ+uuheuNRNp37PiZN+YbG6BJOI+Y7nIY6DtdR
+         3jBg==
+X-Gm-Message-State: ANhLgQ2SD5uf18yckITly7Tu/0KA0II/op3wZlrcBNpbDv0GuvLp2n+F
+        TRiO5orC8NmxoWEgp9ZVgxIoT6u3
+X-Google-Smtp-Source: ADFU+vuWNvKHn2C94d4ZgerU295hOZCYmRIIpW83R0v703S9f4A8inI/arQIndC8lcPhdFqTxn2PJw==
+X-Received: by 2002:a0c:c1cd:: with SMTP id v13mr376112qvh.77.1583879595132;
+        Tue, 10 Mar 2020 15:33:15 -0700 (PDT)
+Received: from ?IPv6:2620:10d:c0a8:11d1::111b? ([2620:10d:c091:480::fee])
+        by smtp.gmail.com with ESMTPSA id k11sm1957530qtu.70.2020.03.10.15.33.14
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Mar 2020 15:31:27 -0700 (PDT)
-Received: by mail-lj1-f181.google.com with SMTP id f13so126534ljp.0
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 15:31:26 -0700 (PDT)
-X-Received: by 2002:a2e:6819:: with SMTP id c25mr246698lja.16.1583879486442;
- Tue, 10 Mar 2020 15:31:26 -0700 (PDT)
+        Tue, 10 Mar 2020 15:33:14 -0700 (PDT)
+From:   Jes Sorensen <jes.sorensen@gmail.com>
+X-Google-Original-From: Jes Sorensen <Jes.Sorensen@gmail.com>
+Subject: Re: [PATCH][next] zd1211rw/zd_usb.h: Replace zero-length array with
+ flexible-array member
+To:     Joe Perches <joe@perches.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Cc:     Daniel Drake <dsd@gentoo.org>, Ulrich Kunitz <kune@deine-taler.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200305111216.GA24982@embeddedor>
+ <87k13yq2jo.fsf@kamboji.qca.qualcomm.com>
+ <256881484c5db07e47c611a56550642a6f6bd8e9.camel@perches.com>
+ <87blpapyu5.fsf@kamboji.qca.qualcomm.com>
+ <1bb7270f-545b-23ca-aa27-5b3c52fba1be@embeddedor.com>
+ <87r1y0nwip.fsf@kamboji.qca.qualcomm.com>
+ <48ff1333-0a14-36d8-9565-a7f13a06c974@embeddedor.com>
+ <021d1125-3ffd-39ef-395a-b796c527bde4@gmail.com>
+ <fb3395d7-e932-10ac-1feb-ab2ceb63424e@embeddedor.com>
+ <937b0b529509ec1641453ef7c13f38e2d7cc813e.camel@perches.com>
+ <c2aa4d8d-1c39-1903-2b49-382f2143e181@embeddedor.com>
+ <8b6213e51131deacbdac29a8d9c088ae49933724.camel@perches.com>
+Message-ID: <e65fd08d-984f-0bdc-5fbf-6abceacf819a@gmail.com>
+Date:   Tue, 10 Mar 2020 18:33:13 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <20200308140314.GQ5972@shao2-debian> <e3783d060c778cb41b77380ad3e278133b52f57e.camel@kernel.org>
- <CAHk-=whGK712fPqmQ3FSHxqe3Aqny4bEeWEvfaytLeLV2+ijCQ@mail.gmail.com>
- <34355c4fe6c3968b1f619c60d5ff2ca11a313096.camel@kernel.org>
- <1bfba96b4bf0d3ca9a18a2bced3ef3a2a7b44dad.camel@kernel.org>
- <87blp5urwq.fsf@notabene.neil.brown.name> <41c83d34ae4c166f48e7969b2b71e43a0f69028d.camel@kernel.org>
- <ed73fb5d-ddd5-fefd-67ae-2d786e68544a@huawei.com> <923487db2c9396c79f8e8dd4f846b2b1762635c8.camel@kernel.org>
- <36c58a6d07b67aac751fca27a4938dc1759d9267.camel@kernel.org>
- <878sk7vs8q.fsf@notabene.neil.brown.name> <c4ef31a663fbf7a3de349696e9f00f2f5c4ec89a.camel@kernel.org>
- <875zfbvrbm.fsf@notabene.neil.brown.name> <CAHk-=wg8N4fDRC3M21QJokoU+TQrdnv7HqoaFW-Z-ZT8z_Bi7Q@mail.gmail.com>
- <0066a9f150a55c13fcc750f6e657deae4ebdef97.camel@kernel.org>
-In-Reply-To: <0066a9f150a55c13fcc750f6e657deae4ebdef97.camel@kernel.org>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 10 Mar 2020 15:31:10 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whUgeZGcs5YAfZa07BYKNDCNO=xr4wT6JLATJTpX0bjGg@mail.gmail.com>
-Message-ID: <CAHk-=whUgeZGcs5YAfZa07BYKNDCNO=xr4wT6JLATJTpX0bjGg@mail.gmail.com>
-Subject: Re: [locks] 6d390e4b5d: will-it-scale.per_process_ops -96.6% regression
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     NeilBrown <neilb@suse.de>, yangerkun <yangerkun@huawei.com>,
-        kernel test robot <rong.a.chen@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org,
-        Bruce Fields <bfields@fieldses.org>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <8b6213e51131deacbdac29a8d9c088ae49933724.camel@perches.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 10, 2020 at 3:07 PM Jeff Layton <jlayton@kernel.org> wrote:
->
-> Given that, and the fact that Neil pointed out that yangerkun's latest
-> patch would reintroduce the original race, I'm leaning back toward the
-> patch Neil sent yesterday. It relies solely on spinlocks, and so doesn't
-> have the subtle memory-ordering requirements of the others.
+On 3/10/20 6:28 PM, Joe Perches wrote:
+> On Tue, 2020-03-10 at 17:21 -0500, Gustavo A. R. Silva wrote:
+>> On 3/10/20 5:15 PM, Joe Perches wrote:
+>>> As far as I can tell, it doesn't actually make a difference as
+>>> all the compilers produce the same object code with either form.
+>>>
+>>
+>> That's precisely why we can implement these changes, cleanly(the fact
+>> that the compiler produces the same object code). So, the resulting
+>> object code is not the point here.
+> 
+> You are making Jes' point.
+> 
+> There's nothing wrong with making changes just for consistent
+> style across the kernel.
+> 
+> This change is exactly that.
+> 
+> I have no objection to this patch.
+> 
+> Jes does, though Jes is not a maintainer of this file.
 
-It has subtle locking changes, though.
+I responded to this thread because my previous comments to files I
+maintain were ignored.
 
-It now calls the "->lm_notify()" callback with the wait queue spinlock held.
+This is a bulk change across the tree, so it affects a lot of places.
 
-is that ok? It's not obvious. Those functions take other spinlocks,
-and wake up other things. See for example nlmsvc_notify_blocked()..
-Yes, it was called under the blocked_lock_lock spinlock before too,
-but now there's an _additional_ spinlock, and it must not call
-"wake_up(&waiter->fl_wait))" in the callback, for example, because it
-already holds the lock on that wait queue.
+> I think "churn" arguments are overstated.
 
-Maybe that is never done. I don't know the callbacks.
+Again, the changes are not harmful to the code, but add no value. So far
+I haven't seen any good arguments for making these changes, and having
+this kind of churn is a nuisance for anyone hitting patch conflicts due
+to them.
 
-I was really hoping that the simple memory ordering of using that
-smp_store_release -> smp_load_acquire using fl_blocker would be
-sufficient. That's a particularly simple and efficient ordering.
-
-Oh well. If you want to go that spinlock way, it needs to document why
-it's safe to do a callback under it.
-
-                  Linus
+Jes
