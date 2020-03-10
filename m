@@ -2,149 +2,273 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9C70C18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 16:05:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 007EEC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 16:05:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCFA621D56
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 16:05:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA1E521D56
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 16:05:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HcJKtKV3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726822AbgCJQFK (ORCPT
+        id S1727024AbgCJQFY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 12:05:10 -0400
-Received: from mail-il1-f199.google.com ([209.85.166.199]:36746 "EHLO
-        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726514AbgCJQFK (ORCPT
+        Tue, 10 Mar 2020 12:05:24 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:32779 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726514AbgCJQFY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 12:05:10 -0400
-Received: by mail-il1-f199.google.com with SMTP id v14so10220298ilq.3
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 09:05:09 -0700 (PDT)
+        Tue, 10 Mar 2020 12:05:24 -0400
+Received: by mail-pf1-f195.google.com with SMTP id n7so6694667pfn.0
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 09:05:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=sLf7cjV6sKyJ3S2m+wChaUAMrLlKHv984iQszIo5XuY=;
+        b=HcJKtKV3OKjj6dhRPoQYRG/kvS0+vNnaxm8j8U4T+m9qfTsZmvxGf2+QCNc2SFMk+m
+         q9QatLbpA48uHbIkMybJqE4CQQlwl4c7w2p0YoC8aQ9KEJ35K615PWp7FamupISL5Ffh
+         Nr9DHNRl3duMZPUhQ2LZg5FwCcDrtWfM45ntY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=2tittrVpC8GmJL2+XcQBR4qTl4luAaKYdn6TyydRc6g=;
-        b=YYmr7qPBLJmsBW55Z2f82Xy8PiUYuv0k83PcjOQe2fhLI0w5FSRYubsoWVaHiGX8uR
-         jLASmDzDtpGa0iFpjQVSvUgHdcAPyrEuxBx7MORjv6oSRS39ciw3pkkcbq34Bam2GpPB
-         1dLqBc7RT+Jl6qxbNc8SxcZIi/1T6xKKUu0ZR3jr525MqNzPYKmWDNtq2RMTFcGdiIFp
-         F2s90zXtDrUSliikZPP81jbKxgpDus9JSNxUfpaPO5slwEAVHISsLTm1rsLGV+uqMLjK
-         Q4AebeO3XqvI36H3k8Ecq57zRStB6+rxmCV1J87uoPMRx9t6yOvUjop2BMzyZiK6RfbV
-         b5EA==
-X-Gm-Message-State: ANhLgQ3cnOah0m6TB35QvOQZQcgi+aDlHr8UowFDNgJIOwOPkWRBm694
-        /kF693sp/Q4lFuHUXxcj+JycLXtSjeWzDDsKhRvMKBp3LSDv
-X-Google-Smtp-Source: ADFU+vvalPW8+C0hK5qjtHfHmng8Gm6maxgOCCp1Ire8CqVz0g6gRZq31tr6L1PJ4yBkiPEqRIwYqqgSwz0Y7c89u8eVX/ScwsKR
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=sLf7cjV6sKyJ3S2m+wChaUAMrLlKHv984iQszIo5XuY=;
+        b=m3/uf20GQUMlR28daVzwgh55wqbLbel+JHbMzJXcSCpYY7dwqoRpa/nBCW1kwMof8u
+         TTYQ0ZZRInGalKeIDz/7zO8ZYIfNtzx3h9v5rhNRXsSRIb7HJzb7iw+NxVdnFXjVtF0z
+         xVLbcE25ZVgYHmA8MYIJQdCOkKEnMkWUXB3IpreuMwRCAcR6z9+pr1XioDehVvEuV9UN
+         DPC5b+w7AZ07sqj+kM0lfN9IHAbYYRNTrERhFDQNFehW8wrjbv9mmwDvNjpBggEGOjvO
+         ZFQDhj5J1QLw7GSFO2cefxUuuTQEH2QOPLuavGWEib/iAEaYN8nz4NA2/6bNZ25ConHo
+         XbPw==
+X-Gm-Message-State: ANhLgQ1nd2YtfXm/UV2WfmrR7DAS8k+t04p6ORPL4OUEEQhU1QfUhZ5e
+        dVNTfYvsIZtL2pskQccxyM5mRE6ShZM=
+X-Google-Smtp-Source: ADFU+vuXyYflO0g/EvFIzQokRR+IW62j+HNAi7eXxAMSobOsn1ELnJtq5DP4tFSNLj5MqXDtXL3yZw==
+X-Received: by 2002:a62:25c3:: with SMTP id l186mr22397268pfl.52.1583856322805;
+        Tue, 10 Mar 2020 09:05:22 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id j126sm41079485pfb.129.2020.03.10.09.05.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Mar 2020 09:05:21 -0700 (PDT)
+Date:   Tue, 10 Mar 2020 09:05:20 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     "Guilherme G. Piccoli" <gpiccoli@canonical.com>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-doc@vger.kernel.org, mcgrof@kernel.org, yzaikin@google.com,
+        tglx@linutronix.de, kernel@gpiccoli.net,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Subject: Re: [PATCH] kernel/hung_task.c: Introduce sysctl to print all traces
+ when a hung task is detected
+Message-ID: <202003100904.A4EBBD532@keescook>
+References: <20200310155650.17968-1-gpiccoli@canonical.com>
 MIME-Version: 1.0
-X-Received: by 2002:a92:4e:: with SMTP id 75mr20512712ila.276.1583856309487;
- Tue, 10 Mar 2020 09:05:09 -0700 (PDT)
-Date:   Tue, 10 Mar 2020 09:05:09 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000b3cfc805a0824881@google.com>
-Subject: WARNING in call_rcu
-From:   syzbot <syzbot+2f8c233f131943d6056d@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, jhs@mojatatu.com, jiri@resnulli.us,
-        kuba@kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        xiyou.wangcong@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200310155650.17968-1-gpiccoli@canonical.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Tue, Mar 10, 2020 at 12:56:50PM -0300, Guilherme G. Piccoli wrote:
+> Commit 401c636a0eeb ("kernel/hung_task.c: show all hung tasks before panic")
+> introduced a change in that we started to show all CPUs backtraces when a
+> hung task is detected _and_ the sysctl/kernel parameter "hung_task_panic"
+> is set. The idea is good, because usually when observing deadlocks (that
+> may lead to hung tasks), the culprit is another task holding a lock and
+> not necessarily the task detected as hung.
+> 
+> The problem with this approach is that dumping backtraces is a slightly
+> expensive task, specially printing that on console (and specially in many
+> CPU machines, as servers commonly found nowadays). So, users that plan to
+> collect a kdump to investigate the hung tasks and narrow down the deadlock
+> definitely don't need the CPUs backtrace on dmesg/console, which will delay
+> the panic and pollute the log (crash tool would easily grab all CPUs traces
+> with 'bt -a' command).
+> Also, there's the reciprocal scenario: some users may be interested in
+> seeing the CPUs backtraces but not have the system panic when a hung task
+> is detected. The current approach hence is almost as embedding a policy in
+> the kernel, by forcing the CPUs backtraces' dump (only) on hung_task_panic.
+> 
+> This patch decouples the panic event on hung task from the CPUs backtraces
+> dump, by creating (and documenting) a new sysctl/kernel parameter called
+> "hung_task_all_cpu_backtrace", analog to the approach taken on soft/hard
+> lockups, that have both a panic and an "all_cpu_backtrace" sysctl to allow
+> individual control. The new mechanism for dumping the CPUs backtraces on
+> hung task detection respects "hung_task_warnings" by not dumping the
+> traces in case there's no warnings left.
+> 
+> Cc: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+> Signed-off-by: Guilherme G. Piccoli <gpiccoli@canonical.com>
 
-syzbot found the following crash on:
+bikeshed: should hung_task_show_bt be renamed hung_task_show_all_bt ?
 
-HEAD commit:    63623fd4 Merge tag 'for-linus' of git://git.kernel.org/pub..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=17039f29e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=5d2e033af114153f
-dashboard link: https://syzkaller.appspot.com/bug?extid=2f8c233f131943d6056d
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=117bdfa1e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1472e1fde00000
+-Kees
 
-Bisection is inconclusive: the bug happens on the oldest tested release.
+> ---
+>  .../admin-guide/kernel-parameters.txt         |  6 ++++
+>  Documentation/admin-guide/sysctl/kernel.rst   | 15 ++++++++++
+>  include/linux/sched/sysctl.h                  |  7 +++++
+>  kernel/hung_task.c                            | 30 +++++++++++++++++--
+>  kernel/sysctl.c                               | 11 +++++++
+>  5 files changed, 67 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index adf77ead02c3..4c6595b5f6c8 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -1453,6 +1453,12 @@
+>  			x86-64 are 2M (when the CPU supports "pse") and 1G
+>  			(when the CPU supports the "pdpe1gb" cpuinfo flag).
+>  
+> +	hung_task_all_cpu_backtrace=
+> +			[KNL] Should kernel generates backtraces on all cpus
+> +			when a hung task is detected. Defaults to 0 and can
+> +			be controlled by hung_task_all_cpu_backtrace sysctl.
+> +			Format: <integer>
+> +
+>  	hung_task_panic=
+>  			[KNL] Should the hung task detector generate panics.
+>  			Format: <integer>
+> diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
+> index 95b2f3256323..218c717c1354 100644
+> --- a/Documentation/admin-guide/sysctl/kernel.rst
+> +++ b/Documentation/admin-guide/sysctl/kernel.rst
+> @@ -40,6 +40,7 @@ show up in /proc/sys/kernel:
+>  - hotplug
+>  - hardlockup_all_cpu_backtrace
+>  - hardlockup_panic
+> +- hung_task_all_cpu_backtrace
+>  - hung_task_panic
+>  - hung_task_check_count
+>  - hung_task_timeout_secs
+> @@ -339,6 +340,20 @@ Path for the hotplug policy agent.
+>  Default value is "/sbin/hotplug".
+>  
+>  
+> +hung_task_all_cpu_backtrace:
+> +================
+> +
+> +Determines if kernel should NMI all CPUs to dump their backtraces when
+> +a hung task is detected. This file shows up if CONFIG_DETECT_HUNG_TASK
+> +and CONFIG_SMP are enabled.
+> +
+> +0: Won't show all CPUs backtraces when a hung task is detected.
+> +This is the default behavior.
+> +
+> +1: Will NMI all CPUs and dump their backtraces when a hung task
+> +is detected.
+> +
+> +
+>  hung_task_panic:
+>  ================
+>  
+> diff --git a/include/linux/sched/sysctl.h b/include/linux/sched/sysctl.h
+> index d4f6215ee03f..8cd29440ec8a 100644
+> --- a/include/linux/sched/sysctl.h
+> +++ b/include/linux/sched/sysctl.h
+> @@ -7,6 +7,13 @@
+>  struct ctl_table;
+>  
+>  #ifdef CONFIG_DETECT_HUNG_TASK
+> +
+> +#ifdef CONFIG_SMP
+> +extern unsigned int sysctl_hung_task_all_cpu_backtrace;
+> +#else
+> +#define sysctl_hung_task_all_cpu_backtrace 0
+> +#endif /* CONFIG_SMP */
+> +
+>  extern int	     sysctl_hung_task_check_count;
+>  extern unsigned int  sysctl_hung_task_panic;
+>  extern unsigned long sysctl_hung_task_timeout_secs;
+> diff --git a/kernel/hung_task.c b/kernel/hung_task.c
+> index 14a625c16cb3..54152b26117e 100644
+> --- a/kernel/hung_task.c
+> +++ b/kernel/hung_task.c
+> @@ -53,9 +53,28 @@ int __read_mostly sysctl_hung_task_warnings = 10;
+>  static int __read_mostly did_panic;
+>  static bool hung_task_show_lock;
+>  static bool hung_task_call_panic;
+> +static bool hung_task_show_bt;
+>  
+>  static struct task_struct *watchdog_task;
+>  
+> +#ifdef CONFIG_SMP
+> +/*
+> + * Should we dump all CPUs backtraces in a hung task event?
+> + * Defaults to 0, can be changed either via cmdline or sysctl.
+> + */
+> +unsigned int __read_mostly sysctl_hung_task_all_cpu_backtrace;
+> +
+> +static int __init hung_task_backtrace_setup(char *str)
+> +{
+> +	int rc = kstrtouint(str, 0, &sysctl_hung_task_all_cpu_backtrace);
+> +
+> +	if (rc)
+> +		return rc;
+> +	return 1;
+> +}
+> +__setup("hung_task_all_cpu_backtrace=", hung_task_backtrace_setup);
+> +#endif /* CONFIG_SMP */
+> +
+>  /*
+>   * Should we panic (and reboot, if panic_timeout= is set) when a
+>   * hung task is detected:
+> @@ -137,6 +156,9 @@ static void check_hung_task(struct task_struct *t, unsigned long timeout)
+>  			" disables this message.\n");
+>  		sched_show_task(t);
+>  		hung_task_show_lock = true;
+> +
+> +		if (sysctl_hung_task_all_cpu_backtrace)
+> +			hung_task_show_bt = true;
+>  	}
+>  
+>  	touch_nmi_watchdog();
+> @@ -201,10 +223,14 @@ static void check_hung_uninterruptible_tasks(unsigned long timeout)
+>  	rcu_read_unlock();
+>  	if (hung_task_show_lock)
+>  		debug_show_all_locks();
+> -	if (hung_task_call_panic) {
+> +
+> +	if (hung_task_show_bt) {
+> +		hung_task_show_bt = false;
+>  		trigger_all_cpu_backtrace();
+> +	}
+> +
+> +	if (hung_task_call_panic)
+>  		panic("hung_task: blocked tasks");
+> -	}
+>  }
+>  
+>  static long hung_timeout_jiffies(unsigned long last_checked,
+> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+> index ad5b88a53c5a..238f268de486 100644
+> --- a/kernel/sysctl.c
+> +++ b/kernel/sysctl.c
+> @@ -1098,6 +1098,17 @@ static struct ctl_table kern_table[] = {
+>  	},
+>  #endif
+>  #ifdef CONFIG_DETECT_HUNG_TASK
+> +#ifdef CONFIG_SMP
+> +	{
+> +		.procname	= "hung_task_all_cpu_backtrace",
+> +		.data		= &sysctl_hung_task_all_cpu_backtrace,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec_minmax,
+> +		.extra1		= SYSCTL_ZERO,
+> +		.extra2		= SYSCTL_ONE,
+> +	},
+> +#endif /* CONFIG_SMP */
+>  	{
+>  		.procname	= "hung_task_panic",
+>  		.data		= &sysctl_hung_task_panic,
+> -- 
+> 2.25.1
+> 
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=155b9f29e00000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=175b9f29e00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=135b9f29e00000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+2f8c233f131943d6056d@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-ODEBUG: activate active (active state 1) object type: rcu_head hint: 0x0
-WARNING: CPU: 1 PID: 8979 at lib/debugobjects.c:488 debug_print_object lib/debugobjects.c:485 [inline]
-WARNING: CPU: 1 PID: 8979 at lib/debugobjects.c:488 debug_object_activate+0x5a8/0x6f0 lib/debugobjects.c:652
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 1 PID: 8979 Comm: syz-executor219 Not tainted 5.6.0-rc3-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1fb/0x318 lib/dump_stack.c:118
- panic+0x264/0x7a9 kernel/panic.c:221
- __warn+0x209/0x210 kernel/panic.c:582
- report_bug+0x1b6/0x2f0 lib/bug.c:195
- fixup_bug arch/x86/kernel/traps.c:174 [inline]
- do_error_trap+0xcf/0x1c0 arch/x86/kernel/traps.c:267
- do_invalid_op+0x36/0x40 arch/x86/kernel/traps.c:286
- invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
-RIP: 0010:debug_print_object lib/debugobjects.c:485 [inline]
-RIP: 0010:debug_object_activate+0x5a8/0x6f0 lib/debugobjects.c:652
-Code: 74 08 4c 89 f7 e8 d8 43 0f fe 4d 8b 06 48 c7 c7 13 ec f0 88 48 c7 c6 04 4f 06 89 4c 89 ea 89 d9 4d 89 e1 31 c0 e8 08 e0 a3 fd <0f> 0b 48 ba 00 00 00 00 00 fc ff df ff 05 da eb c4 05 48 8b 5d b8
-RSP: 0018:ffffc900020f73a8 EFLAGS: 00010246
-RAX: eb30c415fdb00600 RBX: 0000000000000001 RCX: ffff888095774280
-RDX: 0000000000000000 RSI: 0000000080000000 RDI: 0000000000000000
-RBP: ffffc900020f73f0 R08: ffffffff81601324 R09: ffffed1015d66618
-R10: ffffed1015d66618 R11: 0000000000000000 R12: 0000000000000000
-R13: ffffffff88f4c97a R14: ffffffff892d99a8 R15: ffff88809f5ecc98
- debug_rcu_head_queue kernel/rcu/rcu.h:176 [inline]
- __call_rcu kernel/rcu/tree.c:2597 [inline]
- call_rcu+0x3a/0x660 kernel/rcu/tree.c:2683
- queue_rcu_work+0x79/0x90 kernel/workqueue.c:1742
- tcf_queue_work+0xc9/0xe0 net/sched/cls_api.c:206
- route4_change+0x18e8/0x1d90 net/sched/cls_route.c:550
- tc_new_tfilter+0x1490/0x2f50 net/sched/cls_api.c:2103
- rtnetlink_rcv_msg+0x8fb/0xd40 net/core/rtnetlink.c:5427
- netlink_rcv_skb+0x19e/0x3e0 net/netlink/af_netlink.c:2478
- rtnetlink_rcv+0x1c/0x20 net/core/rtnetlink.c:5454
- netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
- netlink_unicast+0x766/0x920 net/netlink/af_netlink.c:1329
- netlink_sendmsg+0xa2b/0xd40 net/netlink/af_netlink.c:1918
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg net/socket.c:672 [inline]
- ____sys_sendmsg+0x4f7/0x7f0 net/socket.c:2343
- ___sys_sendmsg net/socket.c:2397 [inline]
- __sys_sendmsg+0x1ed/0x290 net/socket.c:2430
- __do_sys_sendmsg net/socket.c:2439 [inline]
- __se_sys_sendmsg net/socket.c:2437 [inline]
- __x64_sys_sendmsg+0x7f/0x90 net/socket.c:2437
- do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x446709
-Code: e8 1c ba 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 ab 0e fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f823766ed98 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 00000000006dbc68 RCX: 0000000000446709
-RDX: 0000000000000000 RSI: 0000000020000280 RDI: 0000000000000003
-RBP: 00000000006dbc60 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006dbc6c
-R13: 0000000000000005 R14: 00a3a20740000000 R15: 0507002400000038
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+-- 
+Kees Cook
