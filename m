@@ -5,51 +5,55 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56B2CC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:08:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25F3DC18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:08:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AA64208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:08:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E92712468C
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:08:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583845697;
-	bh=uO63lLgKNGEa1gcAMbAIudd+4HOZF9SxkJzvz6H0jRM=;
+	s=default; t=1583845702;
+	bh=RiM7Gw1HOciL75AAhmJLN4ia4saSHdIcFVGbKu0BK+8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1h2ONg4qpeFO0M8v/Hc7TZXNKD5OyltpNg3nAPkYf45t7xgTmDyMjwSf2ZwQY0/3O
-	 +9b1z+OPqdfuY8uwF1J6jA2xxpzJa8cxo/qLnrWVmRo5qfACt86D7OTb9x8JLzaSH3
-	 vQqxaAAHIZfOdNg5dbXKF/YU1aAka4rHWKfYPIRU=
+	b=vOfjZHHEI0CcVYlct4JHtdk0H9gyVjNJusmhSwjqqG/11f4q1zh75qphpZ5w0ha2n
+	 CzlpXcIhSU+4CPa6tVXaEif6tRPN4Bq8JFn33cLLZqE2RnbJKHO/NzwaRnhrzSMig3
+	 jwx7EzTZ7At5wE0tppy7tiYx0FfvcY76q8RaN7qY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731080AbgCJNIQ (ORCPT
+        id S1731098AbgCJNIU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:08:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54466 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:08:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54594 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730674AbgCJNIM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:08:12 -0400
+        id S1731081AbgCJNIR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:08:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ADE2120409;
-        Tue, 10 Mar 2020 13:08:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA45D20409;
+        Tue, 10 Mar 2020 13:08:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845691;
-        bh=uO63lLgKNGEa1gcAMbAIudd+4HOZF9SxkJzvz6H0jRM=;
+        s=default; t=1583845696;
+        bh=RiM7Gw1HOciL75AAhmJLN4ia4saSHdIcFVGbKu0BK+8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ckgXzBj5ojn6O4904JiyXs0sgugWG/u1SSUpVCEDsPDcJ67LUN5knnKUY3FFsC5L6
-         fUl6wRDwix1TrNtT6noo+dS/6qswUKHvhcqLlTcqF05aZanpeavKg1r3RbKhmH7DDw
-         ZyIvXB87T0fuIt+3VRslIMYiFTfmghUhF6pRscJM=
+        b=UucuxG+aJNKVAees4Q6ujNROmdeniCR0W9zCmVlMFUa4p2sIkODr099UK6AW1nIm6
+         Rk0Wwfb/LRl7HrzdiZ6f6JHaiMqCwRIZckemUUF/gFXrYfkygIHiRfuZlsV/QTq07T
+         YMKXFIgcQSjSRIGnKZn0QB9gcJxf4AFv+E+DqMfU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+399c44bf1f43b8747403@syzkaller.appspotmail.com,
-        syzbot+e4b12d8d202701f08b6d@syzkaller.appspotmail.com,
-        Paul Moore <paul@paul-moore.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 066/126] audit: always check the netlink payload length in audit_receive_msg()
-Date:   Tue, 10 Mar 2020 13:41:27 +0100
-Message-Id: <20200310124208.293178603@linuxfoundation.org>
+        stable@vger.kernel.org, Yazen Ghannam <yazen.ghannam@amd.com>,
+        Borislav Petkov <bp@suse.de>, "H. Peter Anvin" <hpa@zytor.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        linux-edac <linux-edac@vger.kernel.org>, Pu Wen <puwen@hygon.cn>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tony Luck <tony.luck@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        x86-ml <x86@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        Jack Wang <jinpu.wang@cloud.ionos.com>
+Subject: [PATCH 4.14 068/126] x86/mce: Handle varying MCA bank counts
+Date:   Tue, 10 Mar 2020 13:41:29 +0100
+Message-Id: <20200310124208.396971663@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310124203.704193207@linuxfoundation.org>
 References: <20200310124203.704193207@linuxfoundation.org>
@@ -62,150 +66,176 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Moore <paul@paul-moore.com>
+From: Yazen Ghannam <yazen.ghannam@amd.com>
 
-[ Upstream commit 756125289285f6e55a03861bf4b6257aa3d19a93 ]
+[ Upstream commit 006c077041dc73b9490fffc4c6af5befe0687110 ]
 
-This patch ensures that we always check the netlink payload length
-in audit_receive_msg() before we take any action on the payload
-itself.
+Linux reads MCG_CAP[Count] to find the number of MCA banks visible to a
+CPU. Currently, this number is the same for all CPUs and a warning is
+shown if there is a difference. The number of banks is overwritten with
+the MCG_CAP[Count] value of each following CPU that boots.
 
-Cc: stable@vger.kernel.org
-Reported-by: syzbot+399c44bf1f43b8747403@syzkaller.appspotmail.com
-Reported-by: syzbot+e4b12d8d202701f08b6d@syzkaller.appspotmail.com
-Signed-off-by: Paul Moore <paul@paul-moore.com>
+According to the Intel SDM and AMD APM, the MCG_CAP[Count] value gives
+the number of banks that are available to a "processor implementation".
+The AMD BKDGs/PPRs further clarify that this value is per core. This
+value has historically been the same for every core in the system, but
+that is not an architectural requirement.
+
+Future AMD systems may have different MCG_CAP[Count] values per core,
+so the assumption that all CPUs will have the same MCG_CAP[Count] value
+will no longer be valid.
+
+Also, the first CPU to boot will allocate the struct mce_banks[] array
+using the number of banks based on its MCG_CAP[Count] value. The machine
+check handler and other functions use the global number of banks to
+iterate and index into the mce_banks[] array. So it's possible to use an
+out-of-bounds index on an asymmetric system where a following CPU sees a
+MCG_CAP[Count] value greater than its predecessors.
+
+Thus, allocate the mce_banks[] array to the maximum number of banks.
+This will avoid the potential out-of-bounds index since the value of
+mca_cfg.banks is capped to MAX_NR_BANKS.
+
+Set the value of mca_cfg.banks equal to the max of the previous value
+and the value for the current CPU. This way mca_cfg.banks will always
+represent the max number of banks detected on any CPU in the system.
+
+This will ensure that all CPUs will access all the banks that are
+visible to them. A CPU that can access fewer than the max number of
+banks will find the registers of the extra banks to be read-as-zero.
+
+Furthermore, print the resulting number of MCA banks in use. Do this in
+mcheck_late_init() so that the final value is printed after all CPUs
+have been initialized.
+
+Finally, get bank count from target CPU when doing injection with mce-inject
+module.
+
+ [ bp: Remove out-of-bounds example, passify and cleanup commit message. ]
+
+Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: linux-edac <linux-edac@vger.kernel.org>
+Cc: Pu Wen <puwen@hygon.cn>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: Vishal Verma <vishal.l.verma@intel.com>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20180727214009.78289-1-Yazen.Ghannam@amd.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+[jwang: cherry-pick to fix boot warning in
+arch/x86/kernel/cpu/mcheck/mce.c:1549 in epyc rome server]
+Signed-off-by: Jack Wang <jinpu.wang@cloud.ionos.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/audit.c | 40 +++++++++++++++++++++-------------------
- 1 file changed, 21 insertions(+), 19 deletions(-)
+ arch/x86/kernel/cpu/mcheck/mce-inject.c | 14 +++++++-------
+ arch/x86/kernel/cpu/mcheck/mce.c        | 22 +++++++---------------
+ 2 files changed, 14 insertions(+), 22 deletions(-)
 
-diff --git a/kernel/audit.c b/kernel/audit.c
-index d301276bca584..b21a8910f7652 100644
---- a/kernel/audit.c
-+++ b/kernel/audit.c
-@@ -1067,13 +1067,11 @@ static void audit_log_feature_change(int which, u32 old_feature, u32 new_feature
- 	audit_log_end(ab);
- }
+diff --git a/arch/x86/kernel/cpu/mcheck/mce-inject.c b/arch/x86/kernel/cpu/mcheck/mce-inject.c
+index f12141ba9a76d..e57b59762f9f5 100644
+--- a/arch/x86/kernel/cpu/mcheck/mce-inject.c
++++ b/arch/x86/kernel/cpu/mcheck/mce-inject.c
+@@ -46,8 +46,6 @@
+ static struct mce i_mce;
+ static struct dentry *dfs_inj;
  
--static int audit_set_feature(struct sk_buff *skb)
-+static int audit_set_feature(struct audit_features *uaf)
+-static u8 n_banks;
+-
+ #define MAX_FLAG_OPT_SIZE	4
+ #define NBCFG			0x44
+ 
+@@ -570,9 +568,15 @@ static void do_inject(void)
+ static int inj_bank_set(void *data, u64 val)
  {
--	struct audit_features *uaf;
+ 	struct mce *m = (struct mce *)data;
++	u8 n_banks;
++	u64 cap;
++
++	/* Get bank count on target CPU so we can handle non-uniform values. */
++	rdmsrl_on_cpu(m->extcpu, MSR_IA32_MCG_CAP, &cap);
++	n_banks = cap & MCG_BANKCNT_MASK;
+ 
+ 	if (val >= n_banks) {
+-		pr_err("Non-existent MCE bank: %llu\n", val);
++		pr_err("MCA bank %llu non-existent on CPU%d\n", val, m->extcpu);
+ 		return -EINVAL;
+ 	}
+ 
+@@ -665,10 +669,6 @@ static struct dfs_node {
+ static int __init debugfs_init(void)
+ {
+ 	unsigned int i;
+-	u64 cap;
+-
+-	rdmsrl(MSR_IA32_MCG_CAP, cap);
+-	n_banks = cap & MCG_BANKCNT_MASK;
+ 
+ 	dfs_inj = debugfs_create_dir("mce-inject", NULL);
+ 	if (!dfs_inj)
+diff --git a/arch/x86/kernel/cpu/mcheck/mce.c b/arch/x86/kernel/cpu/mcheck/mce.c
+index 0b0e44f853931..95c09db1bba21 100644
+--- a/arch/x86/kernel/cpu/mcheck/mce.c
++++ b/arch/x86/kernel/cpu/mcheck/mce.c
+@@ -1499,13 +1499,12 @@ EXPORT_SYMBOL_GPL(mce_notify_irq);
+ static int __mcheck_cpu_mce_banks_init(void)
+ {
  	int i;
+-	u8 num_banks = mca_cfg.banks;
  
- 	BUILD_BUG_ON(AUDIT_LAST_FEATURE + 1 > ARRAY_SIZE(audit_feature_names));
--	uaf = nlmsg_data(nlmsg_hdr(skb));
+-	mce_banks = kzalloc(num_banks * sizeof(struct mce_bank), GFP_KERNEL);
++	mce_banks = kcalloc(MAX_NR_BANKS, sizeof(struct mce_bank), GFP_KERNEL);
+ 	if (!mce_banks)
+ 		return -ENOMEM;
  
- 	/* if there is ever a version 2 we should handle that here */
+-	for (i = 0; i < num_banks; i++) {
++	for (i = 0; i < MAX_NR_BANKS; i++) {
+ 		struct mce_bank *b = &mce_banks[i];
  
-@@ -1141,6 +1139,7 @@ static int audit_receive_msg(struct sk_buff *skb, struct nlmsghdr *nlh)
+ 		b->ctl = -1ULL;
+@@ -1519,28 +1518,19 @@ static int __mcheck_cpu_mce_banks_init(void)
+  */
+ static int __mcheck_cpu_cap_init(void)
  {
- 	u32			seq;
- 	void			*data;
-+	int			data_len;
- 	int			err;
- 	struct audit_buffer	*ab;
- 	u16			msg_type = nlh->nlmsg_type;
-@@ -1154,6 +1153,7 @@ static int audit_receive_msg(struct sk_buff *skb, struct nlmsghdr *nlh)
+-	unsigned b;
+ 	u64 cap;
++	u8 b;
  
- 	seq  = nlh->nlmsg_seq;
- 	data = nlmsg_data(nlh);
-+	data_len = nlmsg_len(nlh);
+ 	rdmsrl(MSR_IA32_MCG_CAP, cap);
  
- 	switch (msg_type) {
- 	case AUDIT_GET: {
-@@ -1177,7 +1177,7 @@ static int audit_receive_msg(struct sk_buff *skb, struct nlmsghdr *nlh)
- 		struct audit_status	s;
- 		memset(&s, 0, sizeof(s));
- 		/* guard against past and future API changes */
--		memcpy(&s, data, min_t(size_t, sizeof(s), nlmsg_len(nlh)));
-+		memcpy(&s, data, min_t(size_t, sizeof(s), data_len));
- 		if (s.mask & AUDIT_STATUS_ENABLED) {
- 			err = audit_set_enabled(s.enabled);
- 			if (err < 0)
-@@ -1281,7 +1281,9 @@ static int audit_receive_msg(struct sk_buff *skb, struct nlmsghdr *nlh)
- 			return err;
- 		break;
- 	case AUDIT_SET_FEATURE:
--		err = audit_set_feature(skb);
-+		if (data_len < sizeof(struct audit_features))
-+			return -EINVAL;
-+		err = audit_set_feature(data);
+ 	b = cap & MCG_BANKCNT_MASK;
+-	if (!mca_cfg.banks)
+-		pr_info("CPU supports %d MCE banks\n", b);
+-
+-	if (b > MAX_NR_BANKS) {
+-		pr_warn("Using only %u machine check banks out of %u\n",
+-			MAX_NR_BANKS, b);
++	if (WARN_ON_ONCE(b > MAX_NR_BANKS))
+ 		b = MAX_NR_BANKS;
+-	}
+ 
+-	/* Don't support asymmetric configurations today */
+-	WARN_ON(mca_cfg.banks != 0 && b != mca_cfg.banks);
+-	mca_cfg.banks = b;
++	mca_cfg.banks = max(mca_cfg.banks, b);
+ 
+ 	if (!mce_banks) {
+ 		int err = __mcheck_cpu_mce_banks_init();
+-
  		if (err)
  			return err;
- 		break;
-@@ -1293,6 +1295,8 @@ static int audit_receive_msg(struct sk_buff *skb, struct nlmsghdr *nlh)
+ 	}
+@@ -2470,6 +2460,8 @@ EXPORT_SYMBOL_GPL(mcsafe_key);
  
- 		err = audit_filter(msg_type, AUDIT_FILTER_USER);
- 		if (err == 1) { /* match or error */
-+			char *str = data;
+ static int __init mcheck_late_init(void)
+ {
++	pr_info("Using %d MCE banks\n", mca_cfg.banks);
 +
- 			err = 0;
- 			if (msg_type == AUDIT_USER_TTY) {
- 				err = tty_audit_push();
-@@ -1300,26 +1304,24 @@ static int audit_receive_msg(struct sk_buff *skb, struct nlmsghdr *nlh)
- 					break;
- 			}
- 			audit_log_common_recv_msg(&ab, msg_type);
--			if (msg_type != AUDIT_USER_TTY)
-+			if (msg_type != AUDIT_USER_TTY) {
-+				/* ensure NULL termination */
-+				str[data_len - 1] = '\0';
- 				audit_log_format(ab, " msg='%.*s'",
- 						 AUDIT_MESSAGE_TEXT_MAX,
--						 (char *)data);
--			else {
--				int size;
--
-+						 str);
-+			} else {
- 				audit_log_format(ab, " data=");
--				size = nlmsg_len(nlh);
--				if (size > 0 &&
--				    ((unsigned char *)data)[size - 1] == '\0')
--					size--;
--				audit_log_n_untrustedstring(ab, data, size);
-+				if (data_len > 0 && str[data_len - 1] == '\0')
-+					data_len--;
-+				audit_log_n_untrustedstring(ab, str, data_len);
- 			}
- 			audit_log_end(ab);
- 		}
- 		break;
- 	case AUDIT_ADD_RULE:
- 	case AUDIT_DEL_RULE:
--		if (nlmsg_len(nlh) < sizeof(struct audit_rule_data))
-+		if (data_len < sizeof(struct audit_rule_data))
- 			return -EINVAL;
- 		if (audit_enabled == AUDIT_LOCKED) {
- 			audit_log_common_recv_msg(&ab, AUDIT_CONFIG_CHANGE);
-@@ -1327,7 +1329,7 @@ static int audit_receive_msg(struct sk_buff *skb, struct nlmsghdr *nlh)
- 			audit_log_end(ab);
- 			return -EPERM;
- 		}
--		err = audit_rule_change(msg_type, seq, data, nlmsg_len(nlh));
-+		err = audit_rule_change(msg_type, seq, data, data_len);
- 		break;
- 	case AUDIT_LIST_RULES:
- 		err = audit_list_rules_send(skb, seq);
-@@ -1341,7 +1343,7 @@ static int audit_receive_msg(struct sk_buff *skb, struct nlmsghdr *nlh)
- 	case AUDIT_MAKE_EQUIV: {
- 		void *bufp = data;
- 		u32 sizes[2];
--		size_t msglen = nlmsg_len(nlh);
-+		size_t msglen = data_len;
- 		char *old, *new;
+ 	if (mca_cfg.recovery)
+ 		static_branch_inc(&mcsafe_key);
  
- 		err = -EINVAL;
-@@ -1417,7 +1419,7 @@ static int audit_receive_msg(struct sk_buff *skb, struct nlmsghdr *nlh)
- 
- 		memset(&s, 0, sizeof(s));
- 		/* guard against past and future API changes */
--		memcpy(&s, data, min_t(size_t, sizeof(s), nlmsg_len(nlh)));
-+		memcpy(&s, data, min_t(size_t, sizeof(s), data_len));
- 		/* check if new data is valid */
- 		if ((s.enabled != 0 && s.enabled != 1) ||
- 		    (s.log_passwd != 0 && s.log_passwd != 1))
 -- 
 2.20.1
 
