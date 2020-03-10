@@ -2,87 +2,141 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD96AC10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:11:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B9BBC10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:11:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7849A215A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:11:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="GOqnAI/T"
+	by mail.kernel.org (Postfix) with ESMTP id 4C77C215A4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:11:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727570AbgCJULv (ORCPT
+        id S1727599AbgCJUL6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 16:11:51 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:46062 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726604AbgCJULv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 16:11:51 -0400
-Received: by mail-il1-f196.google.com with SMTP id p1so9216255ils.12
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 13:11:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=XCqf40GUhK/TZ0i/ss/XymrIME6RYC2/9jBGUr6tadQ=;
-        b=GOqnAI/TKiv7VDWSuouVJiN3pz8paQm95zjfldi79U6wK9ec8bwf4xR4P1qPu4JIMc
-         78OByHxZQi/jjjg5QHMxvA3GsdCzeEPiaABuF5agJawfOVAoZ75RFd3czGTiqQr9icvG
-         SfxX8Qjr7xDOl1C9UIXvcptcvDxZrpwDMbbwbXJcsno8q1eeUJQBIzBAZCsiiPcL3zjT
-         VCkAhjwbpYfylNlY++pQqZgc9ClwQ/cgR5cYBo9QiqtNTrpqQj8ta7uhovNxGwV/GBwE
-         ub+/LrnXLK4TFPfPu1JcSVKcrqQ9tGmrCas3YkxxquYmNIRC1iVG4v4THRgi+URcoDK7
-         gakA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=XCqf40GUhK/TZ0i/ss/XymrIME6RYC2/9jBGUr6tadQ=;
-        b=Iw7wZJxVRKX4/i2mqlSSLMs+H+TgvR3WL41Rr8a3M0rKvGEfuSBxgUnXDsNbbCr1/h
-         o4dZIbf/VB7d8VO2EpgTu0PuWt4ifX6hcZq4CCo4KJmx8/uBTpdFC6If5hQgVQDZ220m
-         +GcD4kxc5QzBiaNK6nu6e4GX0JSpijrZdNG6OhBqs/mXFAEf89TEPTC7K3V3y/NVeGCX
-         7sKaaRBkTfnz3ehnaNf/DuG41z8JKJnhlw9C8HdUX3fIbRW6O5xQmHwJ8DwE0a645rrN
-         Dv5xlUZNQTD415Fi0Lb5GZ2o1b5GVLS0MGpwcbQ7KXcVgx6BCoPUl5ahRtqFf52E9IzU
-         IZtg==
-X-Gm-Message-State: ANhLgQ0OPvhw44Fcmmk42bWSzGaTuNNp2hSJL9TJ54V5tNxu+yMb0+cK
-        7rJhbsQc61yYtI22sSVcPST63YHnGIPyfg==
-X-Google-Smtp-Source: ADFU+vv8bm/Ll9GDrFmKUaFxorGsol1kTk+OiVKDb35jovd/4Q9fWSF6bR62R/8r9sLXtLSdp8Wsqg==
-X-Received: by 2002:a92:111:: with SMTP id 17mr20596998ilb.158.1583871110589;
-        Tue, 10 Mar 2020 13:11:50 -0700 (PDT)
-Received: from [192.168.1.159] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id t24sm3887552ill.63.2020.03.10.13.11.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Mar 2020 13:11:47 -0700 (PDT)
-Subject: Re: [PATCH] loop: Only freeze block queue when needed.
-To:     Martijn Coenen <maco@android.com>, hch@lst.de
-Cc:     bvanassche@acm.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@android.com
-References: <20200310130654.92205-1-maco@android.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <bd6af0cd-24b9-4c46-01fd-aa78f7714350@kernel.dk>
-Date:   Tue, 10 Mar 2020 14:11:46 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 10 Mar 2020 16:11:58 -0400
+Received: from mga14.intel.com ([192.55.52.115]:51705 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726604AbgCJUL6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 16:11:58 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Mar 2020 13:11:57 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,538,1574150400"; 
+   d="scan'208";a="353700766"
+Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
+  by fmsmga001.fm.intel.com with SMTP; 10 Mar 2020 13:11:52 -0700
+Received: by stinkbox (sSMTP sendmail emulation); Tue, 10 Mar 2020 22:11:51 +0200
+Date:   Tue, 10 Mar 2020 22:11:51 +0200
+From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
+To:     Lyude Paul <lyude@redhat.com>
+Cc:     intel-gfx@lists.freedesktop.org,
+        Manasi Navare <manasi.d.navare@intel.com>,
+        "Lee, Shawn C" <shawn.c.lee@intel.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        =?iso-8859-1?Q?Jos=E9?= Roberto de Souza 
+        <jose.souza@intel.com>, Chris Wilson <chris@chris-wilson.co.uk>,
+        Lucas De Marchi <lucas.demarchi@intel.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] drm/i915/mst: Hookup DRM DP MST
+ late_register/early_unregister callbacks
+Message-ID: <20200310201151.GS13686@intel.com>
+References: <20200310185417.1588984-1-lyude@redhat.com>
+ <20200310195122.1590925-1-lyude@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200310130654.92205-1-maco@android.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200310195122.1590925-1-lyude@redhat.com>
+X-Patchwork-Hint: comment
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/10/20 7:06 AM, Martijn Coenen wrote:
-> __loop_update_dio() can be called as a part of loop_set_fd(), when the
-> block queue is not yet up and running; avoid freezing the block queue in
-> that case, since that is an expensive operation.
+On Tue, Mar 10, 2020 at 03:51:21PM -0400, Lyude Paul wrote:
+> i915 can enable aux device nodes for DP MST by calling
+> drm_dp_mst_connector_late_register()/drm_dp_mst_connector_early_unregister(),
+> so let's hook that up.
+> 
+> Changes since v1:
+> * Call intel_connector_register/unregister() from
+>   intel_dp_mst_connector_late_register/unregister() so we don't lose
+>   error injection - Ville Syrjälä
+> Changes since v2:
+> * Don't forget to clean up if intel_connector_register() fails - Ville
+> 
+> Cc: Ville Syrjälä <ville.syrjala@linux.intel.com>
+> Cc: Manasi Navare <manasi.d.navare@intel.com>
+> Cc: "Lee, Shawn C" <shawn.c.lee@intel.com>
+> Signed-off-by: Lyude Paul <lyude@redhat.com>
 
-Applied, thanks.
+Reviewed-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
+
+> ---
+>  drivers/gpu/drm/i915/display/intel_dp_mst.c | 33 +++++++++++++++++++--
+>  1 file changed, 31 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/i915/display/intel_dp_mst.c b/drivers/gpu/drm/i915/display/intel_dp_mst.c
+> index d53978ed3c12..e08caca658c6 100644
+> --- a/drivers/gpu/drm/i915/display/intel_dp_mst.c
+> +++ b/drivers/gpu/drm/i915/display/intel_dp_mst.c
+> @@ -548,12 +548,41 @@ static int intel_dp_mst_get_ddc_modes(struct drm_connector *connector)
+>  	return ret;
+>  }
+>  
+> +static int
+> +intel_dp_mst_connector_late_register(struct drm_connector *connector)
+> +{
+> +	struct intel_connector *intel_connector = to_intel_connector(connector);
+> +	int ret;
+> +
+> +	ret = drm_dp_mst_connector_late_register(connector,
+> +						 intel_connector->port);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	ret = intel_connector_register(connector);
+> +	if (ret < 0)
+> +		drm_dp_mst_connector_early_unregister(connector,
+> +						      intel_connector->port);
+> +
+> +	return ret;
+> +}
+> +
+> +static void
+> +intel_dp_mst_connector_early_unregister(struct drm_connector *connector)
+> +{
+> +	struct intel_connector *intel_connector = to_intel_connector(connector);
+> +
+> +	intel_connector_unregister(connector);
+> +	drm_dp_mst_connector_early_unregister(connector,
+> +					      intel_connector->port);
+> +}
+> +
+>  static const struct drm_connector_funcs intel_dp_mst_connector_funcs = {
+>  	.fill_modes = drm_helper_probe_single_connector_modes,
+>  	.atomic_get_property = intel_digital_connector_atomic_get_property,
+>  	.atomic_set_property = intel_digital_connector_atomic_set_property,
+> -	.late_register = intel_connector_register,
+> -	.early_unregister = intel_connector_unregister,
+> +	.late_register = intel_dp_mst_connector_late_register,
+> +	.early_unregister = intel_dp_mst_connector_early_unregister,
+>  	.destroy = intel_connector_destroy,
+>  	.atomic_destroy_state = drm_atomic_helper_connector_destroy_state,
+>  	.atomic_duplicate_state = intel_digital_connector_duplicate_state,
+> -- 
+> 2.24.1
 
 -- 
-Jens Axboe
-
+Ville Syrjälä
+Intel
