@@ -4,161 +4,117 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A0C7C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:31:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6B1CC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:33:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13D14227BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:31:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8854E21927
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:33:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XK1ouSvI"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LXzaQHj5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727138AbgCJUbU (ORCPT
+        id S1726414AbgCJUdh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 16:31:20 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:37241 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726467AbgCJUbU (ORCPT
+        Tue, 10 Mar 2020 16:33:37 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:30366 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726283AbgCJUdg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 16:31:20 -0400
-Received: by mail-pf1-f193.google.com with SMTP id p14so5198pfn.4
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 13:31:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=SXv613ohwLZhXYr9jit6ve5UEm0jQz5ZLBUY3A1Qh/4=;
-        b=XK1ouSvIn1SrXrpE2jB7fPZ97wuSynEPpj4HhSXMNSXZWl5ShAjfCYXT5irwpY6R5K
-         GhTb4r+GBtdXtwQ7AqZpQT4zG1MOZvavI8l7jKs0+HzwzxDheOxB6TKArYWjMCD7s5Ob
-         TsIYA2DD/9E+2ADf9dPVRUDESK4sdz6wOBd0k=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=SXv613ohwLZhXYr9jit6ve5UEm0jQz5ZLBUY3A1Qh/4=;
-        b=m/gW3E8LIeagIf9YdyHUCOWCCUiiPRE1ZGuayXM7mU083bCck741Vtqx5FPAorarGf
-         7Ou5ItfqpyUjODJPZyV52doMHPUkx8+a2zyPRGgjsw/XKW1t3MUQcxYYd65kfTxI+60t
-         oc28CBCFX+4fhnjq6m0xyC8iuj0NJRfkJ8LdAY0qbwtMEx/OxfrcE7yG6Ti72rM0OUGl
-         gP8PZw92CPkH2aFzia8GoYgJMoR4WCZkpjvmXYwF8dVC0WWEhJmvSVocaDneLbJgI5Eh
-         z2zk5qIOgdYoIaxDzhWWELo/mEEnS/qmejS+2nrj1y4KEoN8e72rspMied3DDzpPQ5pO
-         gamQ==
-X-Gm-Message-State: ANhLgQ0124wIQX6pHlb3vJth7Micmdrfhhn6y+xekI3xpp2SLQFm+W2N
-        vdVwTjEJ3onb7WDioGRfdzenwg==
-X-Google-Smtp-Source: ADFU+vui/SI7xY/RL6zB2m7oqlqxvwNncXDyzP64Ny/XUIARUXO4zMninrFbDKhmtcjQIv0QBej9OQ==
-X-Received: by 2002:a63:fc18:: with SMTP id j24mr21853810pgi.16.1583872279279;
-        Tue, 10 Mar 2020 13:31:19 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id d3sm2205705pfq.126.2020.03.10.13.31.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Mar 2020 13:31:18 -0700 (PDT)
-Date:   Tue, 10 Mar 2020 13:31:17 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Andrei Vagin <avagin@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Yuyang Du <duyuyang@gmail.com>,
-        David Hildenbrand <david@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        David Howells <dhowells@redhat.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christian Kellner <christian@kellner.me>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>
-Subject: Re: [PATCH v2 3/5] exec: Move cleanup of posix timers on exec out of
- de_thread
-Message-ID: <202003101329.08B332F@keescook>
-References: <87v9nlii0b.fsf@x220.int.ebiederm.org>
- <AM6PR03MB5170609D44967E044FD1BE40E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <87a74xi4kz.fsf@x220.int.ebiederm.org>
- <AM6PR03MB51705AA3009B4986BB6EF92FE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <87r1y8dqqz.fsf@x220.int.ebiederm.org>
- <AM6PR03MB517053AED7DC89F7C0704B7DE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <AM6PR03MB51703B44170EAB4626C9B2CAE4E20@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <87tv32cxmf.fsf_-_@x220.int.ebiederm.org>
- <87v9ne5y4y.fsf_-_@x220.int.ebiederm.org>
- <87eeu25y14.fsf_-_@x220.int.ebiederm.org>
+        Tue, 10 Mar 2020 16:33:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583872415;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=IuAk3iiyWjaaAHQcjrLbiVUBF9ti+LNH3LoLdVoeonk=;
+        b=LXzaQHj5j5Y6SOl7RB0xcm6Q9fyHEjR6dQwqOXSa0kLPhH3ZXskNkQD7urrLEO0PAcJWSO
+        O84t3oE1pIso/NEbXQ1GjbZZVQm2S7BGV3X8bHSZSrMnRW8uJht7wTymbDiYsPmaxL8UUX
+        Ut/M8+vHnheYuNgPjAiYfh1y3sC/v8I=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-436-KXglNHPLN0iwC4j7ViQC-w-1; Tue, 10 Mar 2020 16:33:31 -0400
+X-MC-Unique: KXglNHPLN0iwC4j7ViQC-w-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 41916184C80F;
+        Tue, 10 Mar 2020 20:33:30 +0000 (UTC)
+Received: from horse.redhat.com (unknown [10.18.25.210])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9A76C5D9CA;
+        Tue, 10 Mar 2020 20:33:22 +0000 (UTC)
+Received: by horse.redhat.com (Postfix, from userid 10451)
+        id 0E4F122021D; Tue, 10 Mar 2020 16:33:22 -0400 (EDT)
+Date:   Tue, 10 Mar 2020 16:33:21 -0400
+From:   Vivek Goyal <vgoyal@redhat.com>
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvdimm@lists.01.org, virtio-fs@redhat.com,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Peng Tao <tao.peng@linux.alibaba.com>
+Subject: Re: [PATCH 12/20] fuse: Introduce setupmapping/removemapping commands
+Message-ID: <20200310203321.GF38440@redhat.com>
+References: <20200304165845.3081-1-vgoyal@redhat.com>
+ <20200304165845.3081-13-vgoyal@redhat.com>
+ <CAJfpeguY8gDYVp_q3-W6JNA24zCry+SfWmEW2zuHLQLhmyUB3Q@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87eeu25y14.fsf_-_@x220.int.ebiederm.org>
+In-Reply-To: <CAJfpeguY8gDYVp_q3-W6JNA24zCry+SfWmEW2zuHLQLhmyUB3Q@mail.gmail.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 08, 2020 at 04:36:55PM -0500, Eric W. Biederman wrote:
+On Tue, Mar 10, 2020 at 08:49:49PM +0100, Miklos Szeredi wrote:
+> On Wed, Mar 4, 2020 at 5:59 PM Vivek Goyal <vgoyal@redhat.com> wrote:
+> >
+> > Introduce two new fuse commands to setup/remove memory mappings. This
+> > will be used to setup/tear down file mapping in dax window.
+> >
+> > Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
+> > Signed-off-by: Peng Tao <tao.peng@linux.alibaba.com>
+> > ---
+> >  include/uapi/linux/fuse.h | 37 +++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 37 insertions(+)
+> >
+> > diff --git a/include/uapi/linux/fuse.h b/include/uapi/linux/fuse.h
+> > index 5b85819e045f..62633555d547 100644
+> > --- a/include/uapi/linux/fuse.h
+> > +++ b/include/uapi/linux/fuse.h
+> > @@ -894,4 +894,41 @@ struct fuse_copy_file_range_in {
+> >         uint64_t        flags;
+> >  };
+> >
+> > +#define FUSE_SETUPMAPPING_ENTRIES 8
+> > +#define FUSE_SETUPMAPPING_FLAG_WRITE (1ull << 0)
+> > +struct fuse_setupmapping_in {
+> > +       /* An already open handle */
+> > +       uint64_t        fh;
+> > +       /* Offset into the file to start the mapping */
+> > +       uint64_t        foffset;
+> > +       /* Length of mapping required */
+> > +       uint64_t        len;
+> > +       /* Flags, FUSE_SETUPMAPPING_FLAG_* */
+> > +       uint64_t        flags;
+> > +       /* Offset in Memory Window */
+> > +       uint64_t        moffset;
+> > +};
+> > +
+> > +struct fuse_setupmapping_out {
+> > +       /* Offsets into the cache of mappings */
+> > +       uint64_t        coffset[FUSE_SETUPMAPPING_ENTRIES];
+> > +        /* Lengths of each mapping */
+> > +        uint64_t       len[FUSE_SETUPMAPPING_ENTRIES];
+> > +};
 > 
-> These functions have very little to do with de_thread move them out
-> of de_thread an into flush_old_exec proper so it can be more clearly
-> seen what flush_old_exec is doing.
-> 
-> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
-> ---
->  fs/exec.c | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/fs/exec.c b/fs/exec.c
-> index ff74b9a74d34..215d86f77b63 100644
-> --- a/fs/exec.c
-> +++ b/fs/exec.c
-> @@ -1189,11 +1189,6 @@ static int de_thread(struct task_struct *tsk)
->  	/* we have changed execution domain */
->  	tsk->exit_signal = SIGCHLD;
->  
-> -#ifdef CONFIG_POSIX_TIMERS
-> -	exit_itimers(sig);
-> -	flush_itimer_signals();
-> -#endif
-> -
->  	BUG_ON(!thread_group_leader(tsk));
->  	return 0;
->  
-> @@ -1277,6 +1272,11 @@ int flush_old_exec(struct linux_binprm * bprm)
->  	if (retval)
->  		goto out;
->  
-> +#ifdef CONFIG_POSIX_TIMERS
-> +	exit_itimers(me->signal);
-> +	flush_itimer_signals();
-> +#endif
-> +
+> fuse_setupmapping_out together with FUSE_SETUPMAPPING_ENTRIES seem to be unused.
 
-I twitch at seeing #ifdefs in .c instead of hidden in the .h declarations
-of these two functions, but as this is a copy/paste, I'll live. ;)
+This looks like leftover from the old code. I will get rid of it. Thanks.
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+Vivek
 
--Kees
-
->  	/*
->  	 * Make the signal table private.
->  	 */
-> -- 
-> 2.25.0
-> 
-
--- 
-Kees Cook
