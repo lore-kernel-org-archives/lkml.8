@@ -2,175 +2,323 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF56FC18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 15:06:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CD02C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 15:06:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 817DE21655
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 15:06:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cuR7C4Fs"
+	by mail.kernel.org (Postfix) with ESMTP id 44E1220873
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 15:06:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727905AbgCJPGF (ORCPT
+        id S1727743AbgCJPGj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 11:06:05 -0400
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:52379 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727884AbgCJPGE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 11:06:04 -0400
-Received: by mail-pj1-f67.google.com with SMTP id f15so528431pjq.2;
-        Tue, 10 Mar 2020 08:06:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=qQRzy6D3zZlNYzsyvEoz1P4kGm+5/Pm4DqOhCX31Gs8=;
-        b=cuR7C4FsrepPDRp8iI1vq9oXWn5Vgr8KEu+5LyKogGz3qwNVJNpFeh4ZjnwBzoGpJA
-         QJf51WS/RSEBNsoFxw9SgJh2OwCvVv1MlC4KeYxqsHzWuL4XJ8E9GnyQ/TyE20Kbnxeu
-         q1W5XaCcbCEdW4OOokq+00Wcm/udPygyR+7BaXGOUabnACGRMGAn5q1MiTZ5DFKH/jIm
-         57kIqUhLxL/oiRxurqyVZyliCcWXQ2RLDH0vWWlVp1I3nQ9uCutKu9edJhYl8X2QSbVq
-         0r06OfjUBM5mxMMmEyrUKElhgKbnFkY8/+g7tiQtF1Hs7hfKQ5abxN7PxukVy+iTB+vm
-         XdNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=qQRzy6D3zZlNYzsyvEoz1P4kGm+5/Pm4DqOhCX31Gs8=;
-        b=NtQGq+u3q1Wyf8JaU0bDWVYyHwjyPq2iTD3yTAZRaonXa2VqD8YYCQERm30VzuI1PK
-         JAwG76bAxcyLX1XTMvWVGT8GTjRdb70zY0CycIjBxWo5ntgl+Lpxxb5mVa5MLhmLycpq
-         b4us2uYSmJL8g75JlNzYeo8Jgc8ji+7A5FrVyNZhLxJZXuBruRLoDCCUlOM6ilfvh1Tk
-         ahmhSwgnn9IjhmbURbCViiG56Jt8R1QQg0jQoStzaCOEmIvpXEYBZCm87GrhBOevzO+M
-         4uGgab0txre/9UQaVTzM9J9V0YQ00slvDHDsTnM0mHWMjlshYWQdQw2EDRgI44D/Fc5C
-         a7cQ==
-X-Gm-Message-State: ANhLgQ3ch3nPx061nuqzcU0M1EYuJXehOnsdC3I0y2p4bj1Ybe+u3MAa
-        FkgMoXtVhic66LBaXPgVGd8PkciR
-X-Google-Smtp-Source: ADFU+vtOKDMZY/tneNYl+AL/VYFUNO5GDM7yUjqSUI1kuBMlnv0VBXqOav/IKPHAMrK9dfRn5lkAXw==
-X-Received: by 2002:a17:902:bd42:: with SMTP id b2mr21498150plx.34.1583852760978;
-        Tue, 10 Mar 2020 08:06:00 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id e9sm4225937pfl.179.2020.03.10.08.05.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Mar 2020 08:06:00 -0700 (PDT)
-Subject: Re: [PATCH v7 03/13] hwmon: pwm-fan: Use 64-bit division macros for
- period and duty cycle
-To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     Guru Das Srinagesh <gurus@codeaurora.org>,
-        linux-pwm@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        linux-kernel@vger.kernel.org, Kamil Debski <kamil@wypas.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, linux-hwmon@vger.kernel.org
-References: <cover.1583782035.git.gurus@codeaurora.org>
- <b503833e0f58bd6dd9fe84d866124e7c457e099e.1583782035.git.gurus@codeaurora.org>
- <20200309214822.GA19773@roeck-us.net>
- <20200310120814.4kjxmii3c7zxw55y@pengutronix.de>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <bd6c7679-9569-2cf1-1664-61bf368d82dd@roeck-us.net>
-Date:   Tue, 10 Mar 2020 08:05:58 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 10 Mar 2020 11:06:39 -0400
+Received: from mga12.intel.com ([192.55.52.136]:63162 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726271AbgCJPGi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 11:06:38 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Mar 2020 08:06:38 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,537,1574150400"; 
+   d="scan'208";a="276984234"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga002.fm.intel.com with ESMTP; 10 Mar 2020 08:06:38 -0700
+Date:   Tue, 10 Mar 2020 08:06:37 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Peter Xu <peterx@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Yan Zhao <yan.y.zhao@intel.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        Christophe de Dinechin <dinechin@redhat.com>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [PATCH v6 03/14] KVM: X86: Don't track dirty for
+ KVM_SET_[TSS_ADDR|IDENTITY_MAP_ADDR]
+Message-ID: <20200310150637.GB7600@linux.intel.com>
+References: <20200309214424.330363-1-peterx@redhat.com>
+ <20200309214424.330363-4-peterx@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200310120814.4kjxmii3c7zxw55y@pengutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200309214424.330363-4-peterx@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/10/20 5:08 AM, Uwe Kleine-König wrote:
-> Hello Guenter,
-> 
-> On Mon, Mar 09, 2020 at 02:48:22PM -0700, Guenter Roeck wrote:
->> On Mon, Mar 09, 2020 at 12:35:06PM -0700, Guru Das Srinagesh wrote:
->>> Because period and duty cycle are defined in the PWM framework structs
->>> as ints with units of nanoseconds, the maximum time duration that can be
->>> set is limited to ~2.147 seconds. Redefining them as u64 values will
->>> enable larger time durations to be set.
->>>
->>> As a first step, prepare drivers to handle the switch to u64 period and
->>> duty_cycle by replacing division operations involving pwm period and duty cycle
->>> with their 64-bit equivalents as appropriate. The actual switch to u64 period
->>> and duty_cycle follows as a separate patch.
->>>
->>> Where the dividend is 64-bit but the divisor is 32-bit, use *_ULL
->>> macros:
->>> - DIV_ROUND_UP_ULL
->>> - DIV_ROUND_CLOSEST_ULL
->>> - div_u64
->>>
->>> Where the divisor is 64-bit (dividend may be 32-bit or 64-bit), use
->>> DIV64_* macros:
->>> - DIV64_U64_ROUND_CLOSEST
->>> - div64_u64
->>
->> There is no explanation why this is necessary. What is the use case ?
->> It is hard to imagine a real-world use case with a duty cycle of more
->> than 2 seconds.
-> 
-> When my Laptop is in suspend there is an LED that blinks with a period
-> of approximately 5 seconds. (To be fair, the brightness is more a sinus
-> than a rectangle, but still.)
-> 
+On Mon, Mar 09, 2020 at 05:44:13PM -0400, Peter Xu wrote:
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index 40b1e6138cd5..fc638a164e03 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -3467,34 +3467,26 @@ static bool guest_state_valid(struct kvm_vcpu *vcpu)
+>  	return true;
+>  }
+>  
+> -static int init_rmode_tss(struct kvm *kvm)
+> +static int init_rmode_tss(struct kvm *kvm, void __user *ua)
+>  {
+> -	gfn_t fn;
+> +	const void *zero_page = (const void *) __va(page_to_phys(ZERO_PAGE(0)));
+>  	u16 data = 0;
 
-I don't see support in the LED subsystem to utilize the PWM framework directly
-for blinking. Plus, you say yourself that it isn't a _real_ use case, just a
-theoretic one.
+"data" doesn't need to be intialized to zero, it's set below before it's used.
 
-Either case, the reason / use case for this series should be explained
-in the summary patch. That is what it is for. That case is not made.
+>  	int idx, r;
 
-Guenter
+nit: I'd prefer to rename "idx" to "i" to make it more obvious it's a plain
+ole loop counter.  Reusing the srcu index made me do a double take :-)
+
+>  
+> -	idx = srcu_read_lock(&kvm->srcu);
+> -	fn = to_kvm_vmx(kvm)->tss_addr >> PAGE_SHIFT;
+> -	r = kvm_clear_guest_page(kvm, fn, 0, PAGE_SIZE);
+> -	if (r < 0)
+> -		goto out;
+> +	for (idx = 0; idx < 3; idx++) {
+> +		r = __copy_to_user(ua + PAGE_SIZE * idx, zero_page, PAGE_SIZE);
+> +		if (r)
+> +			return -EFAULT;
+> +	}
+
+Can this be done in a single __copy_to_user(), or do those helpers not like
+crossing page boundaries?
+
+> +
+>  	data = TSS_BASE_SIZE + TSS_REDIRECTION_SIZE;
+> -	r = kvm_write_guest_page(kvm, fn++, &data,
+> -			TSS_IOPB_BASE_OFFSET, sizeof(u16));
+> -	if (r < 0)
+> -		goto out;
+> -	r = kvm_clear_guest_page(kvm, fn++, 0, PAGE_SIZE);
+> -	if (r < 0)
+> -		goto out;
+> -	r = kvm_clear_guest_page(kvm, fn, 0, PAGE_SIZE);
+> -	if (r < 0)
+> -		goto out;
+> +	r = __copy_to_user(ua + TSS_IOPB_BASE_OFFSET, &data, sizeof(u16));
+> +	if (r)
+> +		return -EFAULT;
+> +
+>  	data = ~0;
+> -	r = kvm_write_guest_page(kvm, fn, &data,
+> -				 RMODE_TSS_SIZE - 2 * PAGE_SIZE - 1,
+> -				 sizeof(u8));
+> -out:
+> -	srcu_read_unlock(&kvm->srcu, idx);
+> +	r = __copy_to_user(ua + RMODE_TSS_SIZE - 1, &data, sizeof(u8));
+> +
+>  	return r;
+>  }
+>  
+> @@ -3503,6 +3495,7 @@ static int init_rmode_identity_map(struct kvm *kvm)
+>  	struct kvm_vmx *kvm_vmx = to_kvm_vmx(kvm);
+>  	int i, r = 0;
+>  	kvm_pfn_t identity_map_pfn;
+> +	void __user *uaddr;
+>  	u32 tmp;
+>  
+>  	/* Protect kvm_vmx->ept_identity_pagetable_done. */
+> @@ -3515,22 +3508,24 @@ static int init_rmode_identity_map(struct kvm *kvm)
+>  		kvm_vmx->ept_identity_map_addr = VMX_EPT_IDENTITY_PAGETABLE_ADDR;
+>  	identity_map_pfn = kvm_vmx->ept_identity_map_addr >> PAGE_SHIFT;
+>  
+> -	r = __x86_set_memory_region(kvm, IDENTITY_PAGETABLE_PRIVATE_MEMSLOT,
+> -				    kvm_vmx->ept_identity_map_addr, PAGE_SIZE);
+> -	if (r < 0)
+> +	uaddr = __x86_set_memory_region(kvm,
+> +					IDENTITY_PAGETABLE_PRIVATE_MEMSLOT,
+> +					kvm_vmx->ept_identity_map_addr,
+> +					PAGE_SIZE);
+> +	if (IS_ERR(uaddr)) {
+> +		r = PTR_ERR(uaddr);
+>  		goto out;
+> +	}
+>  
+> -	r = kvm_clear_guest_page(kvm, identity_map_pfn, 0, PAGE_SIZE);
+> -	if (r < 0)
+> -		goto out;
+>  	/* Set up identity-mapping pagetable for EPT in real mode */
+>  	for (i = 0; i < PT32_ENT_PER_PAGE; i++) {
+>  		tmp = (i << 22) + (_PAGE_PRESENT | _PAGE_RW | _PAGE_USER |
+>  			_PAGE_ACCESSED | _PAGE_DIRTY | _PAGE_PSE);
+> -		r = kvm_write_guest_page(kvm, identity_map_pfn,
+> -				&tmp, i * sizeof(tmp), sizeof(tmp));
+> -		if (r < 0)
+> +		r = __copy_to_user(uaddr + i * sizeof(tmp), &tmp, sizeof(tmp));
+> +		if (r) {
+> +			r = -EFAULT;
+>  			goto out;
+> +		}
+>  	}
+>  	kvm_vmx->ept_identity_pagetable_done = true;
+>  
+> @@ -3557,19 +3552,22 @@ static void seg_setup(int seg)
+>  static int alloc_apic_access_page(struct kvm *kvm)
+>  {
+>  	struct page *page;
+> -	int r = 0;
+> +	void __user *r;
+> +	int ret = 0;
+>  
+>  	mutex_lock(&kvm->slots_lock);
+>  	if (kvm->arch.apic_access_page_done)
+>  		goto out;
+>  	r = __x86_set_memory_region(kvm, APIC_ACCESS_PAGE_PRIVATE_MEMSLOT,
+>  				    APIC_DEFAULT_PHYS_BASE, PAGE_SIZE);
+> -	if (r)
+> +	if (IS_ERR(r)) {
+> +		ret = PTR_ERR(r);
+>  		goto out;
+> +	}
+>  
+>  	page = gfn_to_page(kvm, APIC_DEFAULT_PHYS_BASE >> PAGE_SHIFT);
+>  	if (is_error_page(page)) {
+> -		r = -EFAULT;
+> +		ret = -EFAULT;
+>  		goto out;
+>  	}
+>  
+> @@ -3581,7 +3579,7 @@ static int alloc_apic_access_page(struct kvm *kvm)
+>  	kvm->arch.apic_access_page_done = true;
+>  out:
+>  	mutex_unlock(&kvm->slots_lock);
+> -	return r;
+> +	return ret;
+>  }
+>  
+>  int allocate_vpid(void)
+> @@ -4503,7 +4501,7 @@ static int vmx_interrupt_allowed(struct kvm_vcpu *vcpu)
+>  
+>  static int vmx_set_tss_addr(struct kvm *kvm, unsigned int addr)
+>  {
+> -	int ret;
+> +	void __user *ret;
+>  
+>  	if (enable_unrestricted_guest)
+>  		return 0;
+> @@ -4513,10 +4511,12 @@ static int vmx_set_tss_addr(struct kvm *kvm, unsigned int addr)
+>  				      PAGE_SIZE * 3);
+>  	mutex_unlock(&kvm->slots_lock);
+>  
+> -	if (ret)
+> -		return ret;
+> +	if (IS_ERR(ret))
+> +		return PTR_ERR(ret);
+> +
+>  	to_kvm_vmx(kvm)->tss_addr = addr;
+> -	return init_rmode_tss(kvm);
+> +
+> +	return init_rmode_tss(kvm, ret);
+>  }
+>  
+>  static int vmx_set_identity_map_addr(struct kvm *kvm, u64 ident_addr)
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 5de200663f51..fe485d4ba6c7 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -9756,7 +9756,33 @@ void kvm_arch_sync_events(struct kvm *kvm)
+>  	kvm_free_pit(kvm);
+>  }
+>  
+> -int __x86_set_memory_region(struct kvm *kvm, int id, gpa_t gpa, u32 size)
+> +/**
+> + * __x86_set_memory_region: Setup KVM internal memory slot
+> + *
+> + * @kvm: the kvm pointer to the VM.
+> + * @id: the slot ID to setup.
+> + * @gpa: the GPA to install the slot (unused when @size == 0).
+> + * @size: the size of the slot. Set to zero to uninstall a slot.
+> + *
+> + * This function helps to setup a KVM internal memory slot.  Specify
+> + * @size > 0 to install a new slot, while @size == 0 to uninstall a
+> + * slot.  The return code can be one of the following:
+> + *
+> + *   - An error number if error happened, or,
+> + *   - For installation: the HVA of the newly mapped memory slot, or,
+> + *   - For uninstallation: zero if we successfully uninstall a slot.
+
+Maybe tweak this so the return it stands out?  And returning zero on
+uninstallation is no longer true in kvm/queue, at least not without further
+modifications (as is it'll return 0xdead000000000000 on 64-bit).  The
+0xdead shenanigans won't trigger IS_ERR(), so I think this can simply be:
+
+ * Returns:
+ *   hva:    on success
+ *   -errno: on error
+
+With the blurb below calling out that hva is bogus uninstallation.
+
+> + *
+> + * The caller should always use IS_ERR() to check the return value
+> + * before use.  NOTE: KVM internal memory slots are guaranteed and
+> + * won't change until the VM is destroyed. This is also true to the
+> + * returned HVA when installing a new memory slot.  The HVA can be
+> + * invalidated by either an errornous userspace program or a VM under
+> + * destruction, however as long as we use __copy_{to|from}_user()
+> + * properly upon the HVAs and handle the failure paths always then
+> + * we're safe.
+> + */
+> +void __user * __x86_set_memory_region(struct kvm *kvm, int id, gpa_t gpa,
+> +				      u32 size)
+>  {
+>  	int i, r;
+>  	unsigned long hva;
+> @@ -9765,12 +9791,12 @@ int __x86_set_memory_region(struct kvm *kvm, int id, gpa_t gpa, u32 size)
+>  
+>  	/* Called with kvm->slots_lock held.  */
+>  	if (WARN_ON(id >= KVM_MEM_SLOTS_NUM))
+> -		return -EINVAL;
+> +		return ERR_PTR(-EINVAL);
+>  
+>  	slot = id_to_memslot(slots, id);
+>  	if (size) {
+>  		if (slot->npages)
+> -			return -EEXIST;
+> +			return ERR_PTR(-EEXIST);
+>  
+>  		/*
+>  		 * MAP_SHARED to prevent internal slot pages from being moved
+> @@ -9779,10 +9805,10 @@ int __x86_set_memory_region(struct kvm *kvm, int id, gpa_t gpa, u32 size)
+>  		hva = vm_mmap(NULL, 0, size, PROT_READ | PROT_WRITE,
+>  			      MAP_SHARED | MAP_ANONYMOUS, 0);
+>  		if (IS_ERR((void *)hva))
+> -			return PTR_ERR((void *)hva);
+> +			return (void __user *)hva;
+>  	} else {
+>  		if (!slot->npages)
+> -			return 0;
+> +			return ERR_PTR(0);
+>  
+>  		hva = 0;
+>  	}
+> @@ -9798,13 +9824,13 @@ int __x86_set_memory_region(struct kvm *kvm, int id, gpa_t gpa, u32 size)
+>  		m.memory_size = size;
+>  		r = __kvm_set_memory_region(kvm, &m);
+>  		if (r < 0)
+> -			return r;
+> +			return ERR_PTR(r);
+>  	}
+>  
+>  	if (!size)
+>  		vm_munmap(old.userspace_addr, old.npages * PAGE_SIZE);
+>  
+> -	return 0;
+> +	return (void __user *)hva;
+>  }
+>  EXPORT_SYMBOL_GPL(__x86_set_memory_region);
+>  
+> -- 
+> 2.24.1
+> 
