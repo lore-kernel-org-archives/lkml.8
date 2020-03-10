@@ -4,53 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A00C9C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:25:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D26A1C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:25:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75E5E208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:25:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D464208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:25:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583846726;
-	bh=er7aEzAbdX4AhtA3Dai7AyRJbMyF3vwss5YL5afdx7E=;
+	s=default; t=1583846731;
+	bh=CRPQnmQX8v9UbMLLUzvOypGMEqyXfDIldQelCKqdbLI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KuSZCMvmqyHOHcIbVJ7FJw8gAsULFhHRODcVIr6O8dE+Oa5EyYbcUZuCw7iOLMi9C
-	 nppPmTpVKJkF/cchQAF2r6zBENCVHlmxwXJ+FweX2HxAEW003l+JtIVrSw8ow/r0hA
-	 ES1+zvFrdhYuIwREEgkrG1PBVNG7VfTjsASGRiio=
+	b=k7T3FgDR+CfDUtZM0yLAbJ4Lz4yzhP0vH1tE1fnBDOynFjciXmnKyg8SsL0C4Iwow
+	 FiqdxbRGUpG2ircNY4pRet8Uc/hspQ8CtUkv2S9v4uueckwwnOjnJFBOGg6pJcJ1Qr
+	 vuL213K/BTE9lLJPRyrt1R5xpdPYIklIsBivHkYs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729317AbgCJNZY (ORCPT
+        id S1728781AbgCJM5b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:25:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37212 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:57:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36980 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729444AbgCJM5f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:57:35 -0400
+        id S1728024AbgCJM50 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:57:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D35EE2253D;
-        Tue, 10 Mar 2020 12:57:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D02624694;
+        Tue, 10 Mar 2020 12:57:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845054;
-        bh=er7aEzAbdX4AhtA3Dai7AyRJbMyF3vwss5YL5afdx7E=;
+        s=default; t=1583845046;
+        bh=CRPQnmQX8v9UbMLLUzvOypGMEqyXfDIldQelCKqdbLI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jMMQkACorEMKaoauFGGm9y5XLrJwvvWPE7mjfA8+abSkDlbCWvrZ0y/be1b95OZpw
-         F4MGmpB1NTmAJbJ76JZpwiYah87YvkRxNg83z0L3TlgY4QOAW8HEMJ3cQl5ax5BiDI
-         1uLQsOwmBEibK1jWTvyXza47+66vAy0mhDUh9Q78=
+        b=CV3SRR7BQeCqVgfjuuz2dreSIny/ZhHY3K/cD8liXE652+V+slY9/Gd80KnQLk0b5
+         g51160eYfkVWEjpSre0dz5bdzrEOlPBQGDL2L0kWZ6cOZHJRDG+LkYf+ckR/OIR5tg
+         BFCrK522ksFDtu9vSqFuPUQNbZJiGT0OI0JtUwKQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Julian Wiedmann <jwi@linux.ibm.com>,
-        Alexandra Winter <wintera@linux.ibm.com>,
-        Benjamin Block <bblock@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Steffen Maier <maier@linux.ibm.com>
-Subject: [PATCH 5.5 046/189] s390/qdio: fill SL with absolute addresses
-Date:   Tue, 10 Mar 2020 13:38:03 +0100
-Message-Id: <20200310123644.122223419@linuxfoundation.org>
+        stable@vger.kernel.org, Jon Derrick <jonathan.derrick@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Shyjumon N <shyjumon.n@intel.com>,
+        Keith Busch <kbusch@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 043/189] nvme/pci: Add sleep quirk for Samsung and Toshiba drives
+Date:   Tue, 10 Mar 2020 13:38:00 +0100
+Message-Id: <20200310123643.822498031@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123639.608886314@linuxfoundation.org>
 References: <20200310123639.608886314@linuxfoundation.org>
@@ -63,110 +62,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Julian Wiedmann <jwi@linux.ibm.com>
+From: Shyjumon N <shyjumon.n@intel.com>
 
-[ Upstream commit e9091ffd6a0aaced111b5d6ead5eaab5cd7101bc ]
+[ Upstream commit 1fae37accfc5872af3905d4ba71dc6ab15829be7 ]
 
-As the comment says, sl->sbal holds an absolute address. qeth currently
-solves this through wild casting, while zfcp doesn't care.
+The Samsung SSD SM981/PM981 and Toshiba SSD KBG40ZNT256G on the Lenovo
+C640 platform experience runtime resume issues when the SSDs are kept in
+sleep/suspend mode for long time.
 
-Handle this properly in the code that actually builds the SL.
+This patch applies the 'Simple Suspend' quirk to these configurations.
+With this patch, the issue had not been observed in a 1+ day test.
 
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
-Reviewed-by: Alexandra Winter <wintera@linux.ibm.com>
-Reviewed-by: Steffen Maier <maier@linux.ibm.com> [for qdio]
-Reviewed-by: Benjamin Block <bblock@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Reviewed-by: Jon Derrick <jonathan.derrick@intel.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Shyjumon N <shyjumon.n@intel.com>
+Signed-off-by: Keith Busch <kbusch@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/include/asm/qdio.h      |  2 +-
- drivers/s390/cio/qdio_setup.c     |  3 ++-
- drivers/s390/net/qeth_core_main.c | 23 +++++++++++------------
- 3 files changed, 14 insertions(+), 14 deletions(-)
+ drivers/nvme/host/pci.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/arch/s390/include/asm/qdio.h b/arch/s390/include/asm/qdio.h
-index 71e3f0146cda0..7870cf8345334 100644
---- a/arch/s390/include/asm/qdio.h
-+++ b/arch/s390/include/asm/qdio.h
-@@ -227,7 +227,7 @@ struct qdio_buffer {
-  * @sbal: absolute SBAL address
-  */
- struct sl_element {
--	unsigned long sbal;
-+	u64 sbal;
- } __attribute__ ((packed));
- 
- /**
-diff --git a/drivers/s390/cio/qdio_setup.c b/drivers/s390/cio/qdio_setup.c
-index dc430bd86ade9..58eaac70dba7f 100644
---- a/drivers/s390/cio/qdio_setup.c
-+++ b/drivers/s390/cio/qdio_setup.c
-@@ -8,6 +8,7 @@
- #include <linux/kernel.h>
- #include <linux/slab.h>
- #include <linux/export.h>
-+#include <linux/io.h>
- #include <asm/qdio.h>
- 
- #include "cio.h"
-@@ -205,7 +206,7 @@ static void setup_storage_lists(struct qdio_q *q, struct qdio_irq *irq_ptr,
- 
- 	/* fill in sl */
- 	for (j = 0; j < QDIO_MAX_BUFFERS_PER_Q; j++)
--		q->sl->element[j].sbal = (unsigned long)q->sbal[j];
-+		q->sl->element[j].sbal = virt_to_phys(q->sbal[j]);
- }
- 
- static void setup_queues(struct qdio_irq *irq_ptr,
-diff --git a/drivers/s390/net/qeth_core_main.c b/drivers/s390/net/qeth_core_main.c
-index 10edfd6fc9302..4fd7b0ceb4ffd 100644
---- a/drivers/s390/net/qeth_core_main.c
-+++ b/drivers/s390/net/qeth_core_main.c
-@@ -4749,10 +4749,10 @@ static void qeth_qdio_establish_cq(struct qeth_card *card,
- 	if (card->options.cq == QETH_CQ_ENABLED) {
- 		int offset = QDIO_MAX_BUFFERS_PER_Q *
- 			     (card->qdio.no_in_queues - 1);
--		for (i = 0; i < QDIO_MAX_BUFFERS_PER_Q; ++i) {
--			in_sbal_ptrs[offset + i] = (struct qdio_buffer *)
--				virt_to_phys(card->qdio.c_q->bufs[i].buffer);
--		}
-+
-+		for (i = 0; i < QDIO_MAX_BUFFERS_PER_Q; i++)
-+			in_sbal_ptrs[offset + i] =
-+				card->qdio.c_q->bufs[i].buffer;
- 
- 		queue_start_poll[card->qdio.no_in_queues - 1] = NULL;
+diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+index bb5e13ad1aff2..ec4165e879163 100644
+--- a/drivers/nvme/host/pci.c
++++ b/drivers/nvme/host/pci.c
+@@ -2747,6 +2747,18 @@ static unsigned long check_vendor_combination_bug(struct pci_dev *pdev)
+ 		    (dmi_match(DMI_BOARD_NAME, "PRIME B350M-A") ||
+ 		     dmi_match(DMI_BOARD_NAME, "PRIME Z370-A")))
+ 			return NVME_QUIRK_NO_APST;
++	} else if ((pdev->vendor == 0x144d && (pdev->device == 0xa801 ||
++		    pdev->device == 0xa808 || pdev->device == 0xa809)) ||
++		   (pdev->vendor == 0x1e0f && pdev->device == 0x0001)) {
++		/*
++		 * Forcing to use host managed nvme power settings for
++		 * lowest idle power with quick resume latency on
++		 * Samsung and Toshiba SSDs based on suspend behavior
++		 * on Coffee Lake board for LENOVO C640
++		 */
++		if ((dmi_match(DMI_BOARD_VENDOR, "LENOVO")) &&
++		     dmi_match(DMI_BOARD_NAME, "LNVNB161216"))
++			return NVME_QUIRK_SIMPLE_SUSPEND;
  	}
-@@ -4786,10 +4786,9 @@ static int qeth_qdio_establish(struct qeth_card *card)
- 		rc = -ENOMEM;
- 		goto out_free_qib_param;
- 	}
--	for (i = 0; i < QDIO_MAX_BUFFERS_PER_Q; ++i) {
--		in_sbal_ptrs[i] = (struct qdio_buffer *)
--			virt_to_phys(card->qdio.in_q->bufs[i].buffer);
--	}
-+
-+	for (i = 0; i < QDIO_MAX_BUFFERS_PER_Q; i++)
-+		in_sbal_ptrs[i] = card->qdio.in_q->bufs[i].buffer;
  
- 	queue_start_poll = kcalloc(card->qdio.no_in_queues, sizeof(void *),
- 				   GFP_KERNEL);
-@@ -4810,11 +4809,11 @@ static int qeth_qdio_establish(struct qeth_card *card)
- 		rc = -ENOMEM;
- 		goto out_free_queue_start_poll;
- 	}
-+
- 	for (i = 0, k = 0; i < card->qdio.no_out_queues; ++i)
--		for (j = 0; j < QDIO_MAX_BUFFERS_PER_Q; ++j, ++k) {
--			out_sbal_ptrs[k] = (struct qdio_buffer *)virt_to_phys(
--				card->qdio.out_qs[i]->bufs[j]->buffer);
--		}
-+		for (j = 0; j < QDIO_MAX_BUFFERS_PER_Q; j++, k++)
-+			out_sbal_ptrs[k] =
-+				card->qdio.out_qs[i]->bufs[j]->buffer;
- 
- 	memset(&init_data, 0, sizeof(struct qdio_initialize));
- 	init_data.cdev                   = CARD_DDEV(card);
+ 	return 0;
 -- 
 2.20.1
 
