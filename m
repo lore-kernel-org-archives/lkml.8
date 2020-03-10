@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75474C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:42:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AC84C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:42:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BDA524693
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:42:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 018CF24691
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:42:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583844168;
-	bh=0yC6sXkVWtqG7e+QMEiQvk1PLyTDCmV8uQD29gvoQ4Q=;
+	s=default; t=1583844173;
+	bh=cZrAmHjCe8NP1D5OxQgTIDbVoTdCtdq5vWJnyUDPexQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TLQpLwmT5Hpv9iULCakLkp+HekrXvC5RUsBwD2i4XOR6vTLyikjuUOshDqSHQgDiT
-	 o5bysoPZA91D4PFl2I3d1WP25S9Y+LKdcRlRsw9r2GlQwKib//2Be5wi3ESpewcGK6
-	 6L4yQ/GqCv2Bv9N2yAgQiGVrglc/OhLhKuHAq7yQ=
+	b=n8gIN6MV7bKjPwT7YmM0wT3FTp/aYnYi3bW0wPEBrBkE7Yabd4i5EupBoB2CMM4hi
+	 EbOOmvDokig6aZM4YctC0MgFRl4VocFBrmOZhvuOcKNxxpKaJVymc/IeSYBfD2+hjZ
+	 VdyXoIp5NEhGnPtuqK59sckskRpF5lANi+1LESWM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727417AbgCJMmq (ORCPT
+        id S1727447AbgCJMmv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:42:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42840 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:42:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42910 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726705AbgCJMmm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:42:42 -0400
+        id S1726852AbgCJMms (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:42:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7833724691;
-        Tue, 10 Mar 2020 12:42:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C81A024691;
+        Tue, 10 Mar 2020 12:42:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844161;
-        bh=0yC6sXkVWtqG7e+QMEiQvk1PLyTDCmV8uQD29gvoQ4Q=;
+        s=default; t=1583844167;
+        bh=cZrAmHjCe8NP1D5OxQgTIDbVoTdCtdq5vWJnyUDPexQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RVfgnAaFN39llhNOYKqXtEFE9kyoSsxd29tuCfBdqMj7+xWaQ1YcRvmnP7+rFpVBb
-         2lZl+jENani0Cv+4Dcqva9esDbpuaXrduM81zTAEMRMHz/qBXaRmpRKuLABKadppLA
-         yAtC19ZqOt/HyIMmrUOesM7ryiiY8CNC+TwYOChg=
+        b=LavpQu43zPQA0xoNJxMEZ5lCpcBcN9vcBLUd/+wBOWy749RkiePPek4ba1e84Tyrq
+         2Ex8e5VsBBmYjUMoo/AoVs1LSH7GXPzIkCcJYcQH2fW3uGfk4pxKabxkNEyaFMJfgt
+         yTb0Mz9Phnx2tfHJ/yCUpfHbXsdT9bTsUPPBCS7U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hangbin Liu <liuhangbin@gmail.com>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        Xin Long <lucien.xin@gmail.com>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Jason Baron <jbaron@akamai.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 16/72] sctp: move the format error check out of __sctp_sf_do_9_1_abort
-Date:   Tue, 10 Mar 2020 13:38:29 +0100
-Message-Id: <20200310123605.668187910@linuxfoundation.org>
+Subject: [PATCH 4.4 18/72] net: sched: correct flower port blocking
+Date:   Tue, 10 Mar 2020 13:38:31 +0100
+Message-Id: <20200310123606.030775417@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123601.053680753@linuxfoundation.org>
 References: <20200310123601.053680753@linuxfoundation.org>
@@ -61,103 +61,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xin Long <lucien.xin@gmail.com>
+From: Jason Baron <jbaron@akamai.com>
 
-[ Upstream commit 245709ec8be89af46ea7ef0444c9c80913999d99 ]
+[ Upstream commit 8a9093c79863b58cc2f9874d7ae788f0d622a596 ]
 
-When T2 timer is to be stopped, the asoc should also be deleted,
-otherwise, there will be no chance to call sctp_association_free
-and the asoc could last in memory forever.
+tc flower rules that are based on src or dst port blocking are sometimes
+ineffective due to uninitialized stack data. __skb_flow_dissect() extracts
+ports from the skb for tc flower to match against. However, the port
+dissection is not done when when the FLOW_DIS_IS_FRAGMENT bit is set in
+key_control->flags. All callers of __skb_flow_dissect(), zero-out the
+key_control field except for fl_classify() as used by the flower
+classifier. Thus, the FLOW_DIS_IS_FRAGMENT may be set on entry to
+__skb_flow_dissect(), since key_control is allocated on the stack
+and may not be initialized.
 
-However, in sctp_sf_shutdown_sent_abort(), after adding the cmd
-SCTP_CMD_TIMER_STOP for T2 timer, it may return error due to the
-format error from __sctp_sf_do_9_1_abort() and miss adding
-SCTP_CMD_ASSOC_FAILED where the asoc will be deleted.
+Since key_basic and key_control are present for all flow keys, let's
+make sure they are initialized.
 
-This patch is to fix it by moving the format error check out of
-__sctp_sf_do_9_1_abort(), and do it before adding the cmd
-SCTP_CMD_TIMER_STOP for T2 timer.
-
-Thanks Hangbin for reporting this issue by the fuzz testing.
-
-v1->v2:
-  - improve the comment in the code as Marcelo's suggestion.
-
-Fixes: 96ca468b86b0 ("sctp: check invalid value of length parameter in error cause")
-Reported-by: Hangbin Liu <liuhangbin@gmail.com>
-Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Fixes: 62230715fd24 ("flow_dissector: do not dissect l4 ports for fragments")
+Co-developed-by: Eric Dumazet <edumazet@google.com>
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Acked-by: Cong Wang <xiyou.wangcong@gmail.com>
+Signed-off-by: Jason Baron <jbaron@akamai.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/sctp/sm_statefuns.c |   27 ++++++++++++++++++++-------
- 1 file changed, 20 insertions(+), 7 deletions(-)
+ include/net/flow_dissector.h |    9 +++++++++
+ net/sched/cls_flower.c       |    1 +
+ 2 files changed, 10 insertions(+)
 
---- a/net/sctp/sm_statefuns.c
-+++ b/net/sctp/sm_statefuns.c
-@@ -177,6 +177,16 @@ sctp_chunk_length_valid(struct sctp_chun
- 	return 1;
- }
+--- a/include/net/flow_dissector.h
++++ b/include/net/flow_dissector.h
+@@ -4,6 +4,7 @@
+ #include <linux/types.h>
+ #include <linux/in6.h>
+ #include <linux/siphash.h>
++#include <linux/string.h>
+ #include <uapi/linux/if_ether.h>
  
-+/* Check for format error in an ABORT chunk */
-+static inline bool sctp_err_chunk_valid(struct sctp_chunk *chunk)
+ /**
+@@ -185,4 +186,12 @@ static inline bool flow_keys_have_l4(str
+ 
+ u32 flow_hash_from_keys(struct flow_keys *keys);
+ 
++static inline void
++flow_dissector_init_keys(struct flow_dissector_key_control *key_control,
++			 struct flow_dissector_key_basic *key_basic)
 +{
-+	struct sctp_errhdr *err;
-+
-+	sctp_walk_errors(err, chunk->chunk_hdr);
-+
-+	return (void *)err == (void *)chunk->chunk_end;
++	memset(key_control, 0, sizeof(*key_control));
++	memset(key_basic, 0, sizeof(*key_basic));
 +}
 +
- /**********************************************************
-  * These are the state functions for handling chunk events.
-  **********************************************************/
-@@ -2159,6 +2169,9 @@ sctp_disposition_t sctp_sf_shutdown_pend
- 		    sctp_bind_addr_state(&asoc->base.bind_addr, &chunk->dest))
- 		return sctp_sf_discard_chunk(net, ep, asoc, type, arg, commands);
+ #endif
+--- a/net/sched/cls_flower.c
++++ b/net/sched/cls_flower.c
+@@ -127,6 +127,7 @@ static int fl_classify(struct sk_buff *s
+ 	struct fl_flow_key skb_key;
+ 	struct fl_flow_key skb_mkey;
  
-+	if (!sctp_err_chunk_valid(chunk))
-+		return sctp_sf_pdiscard(net, ep, asoc, type, arg, commands);
-+
- 	return __sctp_sf_do_9_1_abort(net, ep, asoc, type, arg, commands);
- }
- 
-@@ -2201,6 +2214,9 @@ sctp_disposition_t sctp_sf_shutdown_sent
- 		    sctp_bind_addr_state(&asoc->base.bind_addr, &chunk->dest))
- 		return sctp_sf_discard_chunk(net, ep, asoc, type, arg, commands);
- 
-+	if (!sctp_err_chunk_valid(chunk))
-+		return sctp_sf_pdiscard(net, ep, asoc, type, arg, commands);
-+
- 	/* Stop the T2-shutdown timer. */
- 	sctp_add_cmd_sf(commands, SCTP_CMD_TIMER_STOP,
- 			SCTP_TO(SCTP_EVENT_TIMEOUT_T2_SHUTDOWN));
-@@ -2466,6 +2482,9 @@ sctp_disposition_t sctp_sf_do_9_1_abort(
- 		    sctp_bind_addr_state(&asoc->base.bind_addr, &chunk->dest))
- 		return sctp_sf_discard_chunk(net, ep, asoc, type, arg, commands);
- 
-+	if (!sctp_err_chunk_valid(chunk))
-+		return sctp_sf_pdiscard(net, ep, asoc, type, arg, commands);
-+
- 	return __sctp_sf_do_9_1_abort(net, ep, asoc, type, arg, commands);
- }
- 
-@@ -2482,15 +2501,9 @@ static sctp_disposition_t __sctp_sf_do_9
- 
- 	/* See if we have an error cause code in the chunk.  */
- 	len = ntohs(chunk->chunk_hdr->length);
--	if (len >= sizeof(struct sctp_chunkhdr) + sizeof(struct sctp_errhdr)) {
--
--		sctp_errhdr_t *err;
--		sctp_walk_errors(err, chunk->chunk_hdr);
--		if ((void *)err != (void *)chunk->chunk_end)
--			return sctp_sf_pdiscard(net, ep, asoc, type, arg, commands);
- 
-+	if (len >= sizeof(struct sctp_chunkhdr) + sizeof(struct sctp_errhdr))
- 		error = ((sctp_errhdr_t *)chunk->skb->data)->cause;
--	}
- 
- 	sctp_add_cmd_sf(commands, SCTP_CMD_SET_SK_ERR, SCTP_ERROR(ECONNRESET));
- 	/* ASSOC_FAILED will DELETE_TCB. */
++	flow_dissector_init_keys(&skb_key.control, &skb_key.basic);
+ 	fl_clear_masked_range(&skb_key, &head->mask);
+ 	skb_key.indev_ifindex = skb->skb_iif;
+ 	/* skb_flow_dissect() does not set n_proto in case an unknown protocol,
 
 
