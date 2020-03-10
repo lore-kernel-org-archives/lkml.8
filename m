@@ -4,50 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DE37C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:29:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F22B4C3F2D0
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:30:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB72C2071B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:29:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C934E24693
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:30:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583846997;
-	bh=ynRe312WszRx85XR+tsK9DlAu8ik3gqbPyT1ZCXbYgY=;
+	s=default; t=1583847003;
+	bh=uUmpij+9W1OTILI+xOFyBliAfKE59rmj0bsOZV9Bvy8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t3mv5kD5P3SDaQg3CP/7IIR/aWgU1KwDlATPkGLg9xVmNUJP7h3Gz/5QDzBCnMsGE
-	 gLhJZDKhQr20kXa8FXNatCHcPFmjPc/cUd+ESJ2rPnYsJqX2xu40YXFlNIgq/r8BF2
-	 3GQK1GKwAaWlRT3uPYl5iqV7oyWQ4HhnkjR1gns0=
+	b=CgnLTujGfoabOEj++86PEg2+9gejepb+hMReOa+vkwzf0/8xBNsbaSEgEI/8yMaGQ
+	 bfLzbsIVBw8lvYQruZvBb7c9TAuEI0+O1OtNJwskBc+66eVT8A0L1rhjsKm4wUnRmQ
+	 VraTQouHxnwhhruJ9vDH3rh36e34UyLC6Xtojajc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728882AbgCJMvU (ORCPT
+        id S1728204AbgCJMvM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:51:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56340 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:51:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56174 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728337AbgCJMvR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:51:17 -0400
+        id S1728754AbgCJMvJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:51:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 36B0820674;
-        Tue, 10 Mar 2020 12:51:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8797B24699;
+        Tue, 10 Mar 2020 12:51:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844676;
-        bh=ynRe312WszRx85XR+tsK9DlAu8ik3gqbPyT1ZCXbYgY=;
+        s=default; t=1583844669;
+        bh=uUmpij+9W1OTILI+xOFyBliAfKE59rmj0bsOZV9Bvy8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lQrointjOMSsN94UnlHp0RzFglPXtj0CjVFndflOtWPTVdfsCWQ23d0tkiTVFSY4X
-         Db+NJhyFtfGb8z2Ko4DppSFxAeR3OX9pG3wehWD30oFdLIVj3hkDa/hqIos1viJ7p5
-         NGAcAZEfFkNe7nmn2vrVyhayrgtZKIB9NJrbPMdo=
+        b=1VjkGNPALm1MqB+98YF0Ij00B05GzU8bNZIU9f8mQUyDLXnqGJJ2Z4lpgcWTtTbbF
+         9JRVOFUi1RGYq0EBL271kJhYtvQKdKtoRleLmtRsb9oHtdYWj9X3CRPMP6QVDKVusZ
+         qpzQKnCn/0GC51bUt5THBp1vMEzDEpNAnJYOf54M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Johannes Thumshirn <johannes.thumshirn@wdc.com>,
-        Omar Sandoval <osandov@fb.com>, David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.4 079/168] btrfs: fix RAID direct I/O reads with alternate csums
-Date:   Tue, 10 Mar 2020 13:38:45 +0100
-Message-Id: <20200310123643.301496512@linuxfoundation.org>
+        stable@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+        "Huang, Ying" <ying.huang@intel.com>, Zi Yan <ziy@nvidia.com>,
+        William Kucharski <william.kucharski@oracle.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.4 076/168] mm: fix possible PMD dirty bit lost in set_pmd_migration_entry()
+Date:   Tue, 10 Mar 2020 13:38:42 +0100
+Message-Id: <20200310123642.991670395@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123635.322799692@linuxfoundation.org>
 References: <20200310123635.322799692@linuxfoundation.org>
@@ -60,58 +65,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Omar Sandoval <osandov@fb.com>
+From: Huang Ying <ying.huang@intel.com>
 
-commit e7a04894c766daa4248cb736efee93550f2d5872 upstream.
+commit 8a8683ad9ba48b4b52a57f013513d1635c1ca5c4 upstream.
 
-btrfs_lookup_and_bind_dio_csum() does pointer arithmetic which assumes
-32-bit checksums. If using a larger checksum, this leads to spurious
-failures when a direct I/O read crosses a stripe. This is easy
-to reproduce:
+In set_pmd_migration_entry(), pmdp_invalidate() is used to change PMD
+atomically.  But the PMD is read before that with an ordinary memory
+reading.  If the THP (transparent huge page) is written between the PMD
+reading and pmdp_invalidate(), the PMD dirty bit may be lost, and cause
+data corruption.  The race window is quite small, but still possible in
+theory, so need to be fixed.
 
-  # mkfs.btrfs -f --checksum blake2 -d raid0 /dev/vdc /dev/vdd
-  ...
-  # mount /dev/vdc /mnt
-  # cd /mnt
-  # dd if=/dev/urandom of=foo bs=1M count=1 status=none
-  # dd if=foo of=/dev/null bs=1M iflag=direct status=none
-  dd: error reading 'foo': Input/output error
-  # dmesg | tail -1
-  [  135.821568] BTRFS warning (device vdc): csum failed root 5 ino 257 off 421888 ...
+The race is fixed via using the return value of pmdp_invalidate() to get
+the original content of PMD, which is a read/modify/write atomic
+operation.  So no THP writing can occur in between.
 
-Fix it by using the actual checksum size.
+The race has been introduced when the THP migration support is added in
+the commit 616b8371539a ("mm: thp: enable thp migration in generic path").
+But this fix depends on the commit d52605d7cb30 ("mm: do not lose dirty
+and accessed bits in pmdp_invalidate()").  So it's easy to be backported
+after v4.16.  But the race window is really small, so it may be fine not
+to backport the fix at all.
 
-Fixes: 1e25a2e3ca0d ("btrfs: don't assume ordered sums to be 4 bytes")
-CC: stable@vger.kernel.org # 5.4+
-Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
-Signed-off-by: Omar Sandoval <osandov@fb.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
+Reviewed-by: Zi Yan <ziy@nvidia.com>
+Reviewed-by: William Kucharski <william.kucharski@oracle.com>
+Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Cc: <stable@vger.kernel.org>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: Andrea Arcangeli <aarcange@redhat.com>
+Link: http://lkml.kernel.org/r/20200220075220.2327056-1-ying.huang@intel.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/inode.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ mm/huge_memory.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/fs/btrfs/inode.c
-+++ b/fs/btrfs/inode.c
-@@ -8426,6 +8426,7 @@ static inline blk_status_t btrfs_lookup_
- {
- 	struct btrfs_io_bio *io_bio = btrfs_io_bio(bio);
- 	struct btrfs_io_bio *orig_io_bio = btrfs_io_bio(dip->orig_bio);
-+	u16 csum_size;
- 	blk_status_t ret;
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -3032,8 +3032,7 @@ void set_pmd_migration_entry(struct page
+ 		return;
  
- 	/*
-@@ -8445,7 +8446,8 @@ static inline blk_status_t btrfs_lookup_
- 
- 	file_offset -= dip->logical_offset;
- 	file_offset >>= inode->i_sb->s_blocksize_bits;
--	io_bio->csum = (u8 *)(((u32 *)orig_io_bio->csum) + file_offset);
-+	csum_size = btrfs_super_csum_size(btrfs_sb(inode->i_sb)->super_copy);
-+	io_bio->csum = orig_io_bio->csum + csum_size * file_offset;
- 
- 	return 0;
- }
+ 	flush_cache_range(vma, address, address + HPAGE_PMD_SIZE);
+-	pmdval = *pvmw->pmd;
+-	pmdp_invalidate(vma, address, pvmw->pmd);
++	pmdval = pmdp_invalidate(vma, address, pvmw->pmd);
+ 	if (pmd_dirty(pmdval))
+ 		set_page_dirty(page);
+ 	entry = make_migration_entry(page, pmd_write(pmdval));
 
 
