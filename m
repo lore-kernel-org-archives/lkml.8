@@ -2,136 +2,184 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E40DAC18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 15:15:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E298C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 15:16:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C82E421D56
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 15:15:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BBAE2465D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 15:16:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727413AbgCJPPM (ORCPT
+        id S1727527AbgCJPQI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 11:15:12 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:44121 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726415AbgCJPPM (ORCPT
+        Tue, 10 Mar 2020 11:16:08 -0400
+Received: from out01.mta.xmission.com ([166.70.13.231]:54422 "EHLO
+        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726283AbgCJPQH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 11:15:12 -0400
-Received: from mail-wm1-f71.google.com ([209.85.128.71])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <gpiccoli@canonical.com>)
-        id 1jBgb6-0006FP-UG
-        for linux-kernel@vger.kernel.org; Tue, 10 Mar 2020 15:15:09 +0000
-Received: by mail-wm1-f71.google.com with SMTP id p4so440335wmp.0
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 08:15:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=SX7toKZWodKfwjLUNVU3mZINSd3WdGinFSx6G9WeLDk=;
-        b=YFUqnfQkTGawzHADm/SqlcrnNotxxDSur/gXsIrRu447Kp9gDeWqYOBlTsjEy57xeI
-         +AVJ8p2Ze3ZilWu+SIswldS0PAfoo2vCdBEm60xTkS15Pa+7/6eMki/jHdPIlE+SkfDE
-         tXH2ONnFwtH7G5LNZY89hawYWIobfS3mlHZ4v4BHVWYY8SYYMZ2C/10PyiGLCD9zKr0I
-         y5WKcz3pgviQ3Yk6AKYkEzIXu7nNux58NOdwYQwe5Qage5m9pRfX3CpsfmruQOW4bUDL
-         yFvir5zC3tPX2AVpg/s4+Mo69JG5TXdSygtie+Dk/4olfpGEGMcmFa9O2f8nH9o0/pcr
-         JXcA==
-X-Gm-Message-State: ANhLgQ3cGdigqPulEiu0Gni/hHhmZnf/Kn/qflGFwVqcLzifcxFA66/L
-        jjI57GuYTQBVZXlh2PZ/RWRt6uoSHdy1R64vQ4xJQL3mJWC6n5cENg+mlXEg11qyKW9ZBXAmMb2
-        jxagTQVKw/A16BqTywtF6krgb/kxe0lsKJtV9Xhsn5A==
-X-Received: by 2002:adf:ef44:: with SMTP id c4mr12995063wrp.404.1583853308616;
-        Tue, 10 Mar 2020 08:15:08 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vtSJ6usylxaeEgKGV13gLvCQGlN13i7Aktoi9ePJtqB/19xsQe+qjKKiMWcO7JVdMeLevXEuQ==
-X-Received: by 2002:adf:ef44:: with SMTP id c4mr12995038wrp.404.1583853308339;
-        Tue, 10 Mar 2020 08:15:08 -0700 (PDT)
-Received: from localhost (189-47-87-73.dsl.telesp.net.br. [189.47.87.73])
-        by smtp.gmail.com with ESMTPSA id f9sm15143586wrc.71.2020.03.10.08.15.06
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 10 Mar 2020 08:15:07 -0700 (PDT)
-From:   "Guilherme G. Piccoli" <gpiccoli@canonical.com>
-To:     linux-doc@vger.kernel.org
-Cc:     corbet@lwn.net, linux-kernel@vger.kernel.org, swood@redhat.com,
-        mcgrof@kernel.org, keescook@chromium.org, yzaikin@google.com,
-        mingo@kernel.org, gpiccoli@canonical.com, kernel@gpiccoli.net
-Subject: [PATCH] Documentation: Better document the softlockup_panic sysctl
-Date:   Tue, 10 Mar 2020 12:15:03 -0300
-Message-Id: <20200310151503.11589-1-gpiccoli@canonical.com>
-X-Mailer: git-send-email 2.24.1
+        Tue, 10 Mar 2020 11:16:07 -0400
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jBgby-0004CF-1k; Tue, 10 Mar 2020 09:16:02 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jBgbx-0004Li-5P; Tue, 10 Mar 2020 09:16:01 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Bernd Edlinger <bernd.edlinger@hotmail.de>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Andrei Vagin <avagin@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Peter Zijlstra \(Intel\)" <peterz@infradead.org>,
+        Yuyang Du <duyuyang@gmail.com>,
+        David Hildenbrand <david@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        David Howells <dhowells@redhat.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christian Kellner <christian@kellner.me>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        "linux-doc\@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel\@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-mm\@kvack.org" <linux-mm@kvack.org>,
+        "stable\@vger.kernel.org" <stable@vger.kernel.org>,
+        "linux-api\@vger.kernel.org" <linux-api@vger.kernel.org>
+References: <AM6PR03MB5170EB4427BF5C67EE98FF09E4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <87r1y8dqqz.fsf@x220.int.ebiederm.org>
+        <AM6PR03MB517053AED7DC89F7C0704B7DE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <AM6PR03MB51703B44170EAB4626C9B2CAE4E20@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <87tv32cxmf.fsf_-_@x220.int.ebiederm.org>
+        <87v9ne5y4y.fsf_-_@x220.int.ebiederm.org>
+        <87zhcq4jdj.fsf_-_@x220.int.ebiederm.org>
+        <AM6PR03MB5170BC58D90BAD80CDEF3F8BE4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <878sk94eay.fsf@x220.int.ebiederm.org>
+        <AM6PR03MB517086003BD2C32E199690A3E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <87r1y12yc7.fsf@x220.int.ebiederm.org>
+        <87k13t2xpd.fsf@x220.int.ebiederm.org>
+        <87d09l2x5n.fsf@x220.int.ebiederm.org>
+        <AM6PR03MB5170F0F9DC18F5EA77C9A857E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <871rq12vxu.fsf@x220.int.ebiederm.org>
+        <AM6PR03MB5170DF45E3245F55B95CCD91E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <877dzt1fnf.fsf@x220.int.ebiederm.org>
+        <AM6PR03MB517033EAD25BED15CC84E17DE4FF0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+Date:   Tue, 10 Mar 2020 10:13:42 -0500
+In-Reply-To: <AM6PR03MB517033EAD25BED15CC84E17DE4FF0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        (Bernd Edlinger's message of "Tue, 10 Mar 2020 14:43:41 +0100")
+Message-ID: <87d09kxmxl.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-XM-SPF: eid=1jBgbx-0004Li-5P;;;mid=<87d09kxmxl.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1/eOO49tMC1vtWTUcFarj2ncADp1TyDOKs=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH 1/4] exec: Fix a deadlock in ptrace
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 9c44bc03fff4 ("softlockup: allow panic on lockup") added the
-softlockup_panic sysctl, but didn't add information about it to the file
-Documentation/admin-guide/sysctl/kernel.rst (which in that time certainly
-wasn't rst and had other name!).
+Bernd Edlinger <bernd.edlinger@hotmail.de> writes:
 
-This patch just adds the respective documentation and references it from
-the corresponding entry in Documentation/admin-guide/kernel-parameters.txt.
+> This fixes a deadlock in the tracer when tracing a multi-threaded
+> application that calls execve while more than one thread are running.
+>
+> I observed that when running strace on the gcc test suite, it always
+> blocks after a while, when expect calls execve, because other threads
+> have to be terminated.  They send ptrace events, but the strace is no
+> longer able to respond, since it is blocked in vm_access.
+>
+> The deadlock is always happening when strace needs to access the
+> tracees process mmap, while another thread in the tracee starts to
+> execve a child process, but that cannot continue until the
+> PTRACE_EVENT_EXIT is handled and the WIFEXITED event is received:
 
-This patch was strongly based on Scott Wood's commit d22881dc13b6
-("Documentation: Better document the hardlockup_panic sysctl").
+Overall this looks good.  Mind if I change the subject to:
+"exec: Fix a deadlock in strace" ?
 
-Signed-off-by: Guilherme G. Piccoli <gpiccoli@canonical.com>
----
- Documentation/admin-guide/kernel-parameters.txt |  6 +++---
- Documentation/admin-guide/sysctl/kernel.rst     | 13 +++++++++++++
- 2 files changed, 16 insertions(+), 3 deletions(-)
+Eric
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index c07815d230bc..adf77ead02c3 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -4515,9 +4515,9 @@
- 
- 			A nonzero value instructs the soft-lockup detector
- 			to panic the machine when a soft-lockup occurs. This
--			is also controlled by CONFIG_BOOTPARAM_SOFTLOCKUP_PANIC
--			which is the respective build-time switch to that
--			functionality.
-+			is also controlled by kernel.softlockup_panic sysctl
-+			and CONFIG_BOOTPARAM_SOFTLOCKUP_PANIC, which is the
-+			respective build-time switch to that functionality.
- 
- 	softlockup_all_cpu_backtrace=
- 			[KNL] Should the soft-lockup detector generate
-diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
-index def074807cee..95b2f3256323 100644
---- a/Documentation/admin-guide/sysctl/kernel.rst
-+++ b/Documentation/admin-guide/sysctl/kernel.rst
-@@ -95,6 +95,7 @@ show up in /proc/sys/kernel:
- - shmmax                      [ sysv ipc ]
- - shmmni
- - softlockup_all_cpu_backtrace
-+- softlockup_panic
- - soft_watchdog
- - stack_erasing
- - stop-a                      [ SPARC only ]
-@@ -1029,6 +1030,18 @@ NMI.
- 1: on detection capture more debug information.
- 
- 
-+softlockup_panic:
-+=================
-+
-+This parameter can be used to control whether the kernel panics when
-+a soft lockup is detected.
-+
-+0: don't panic on soft lockup
-+1: panic on soft lockup
-+
-+This can also be set using the softlockup_panic kernel parameter.
-+
-+
- soft_watchdog:
- ==============
- 
--- 
-2.24.1
 
+>
+> strace          D    0 30614  30584 0x00000000
+> Call Trace:
+> __schedule+0x3ce/0x6e0
+> schedule+0x5c/0xd0
+> schedule_preempt_disabled+0x15/0x20
+> __mutex_lock.isra.13+0x1ec/0x520
+> __mutex_lock_killable_slowpath+0x13/0x20
+> mutex_lock_killable+0x28/0x30
+> mm_access+0x27/0xa0
+> process_vm_rw_core.isra.3+0xff/0x550
+> process_vm_rw+0xdd/0xf0
+> __x64_sys_process_vm_readv+0x31/0x40
+> do_syscall_64+0x64/0x220
+> entry_SYSCALL_64_after_hwframe+0x44/0xa9
+>
+> expect          D    0 31933  30876 0x80004003
+> Call Trace:
+> __schedule+0x3ce/0x6e0
+> schedule+0x5c/0xd0
+> flush_old_exec+0xc4/0x770
+> load_elf_binary+0x35a/0x16c0
+> search_binary_handler+0x97/0x1d0
+> __do_execve_file.isra.40+0x5d4/0x8a0
+> __x64_sys_execve+0x49/0x60
+> do_syscall_64+0x64/0x220
+> entry_SYSCALL_64_after_hwframe+0x44/0xa9
+>
+> This changes mm_access to use the new exec_update_mutex
+> instead of cred_guard_mutex.
+>
+> This patch is based on the following patch by Eric W. Biederman:
+> "[PATCH 0/5] Infrastructure to allow fixing exec deadlocks"
+> Link: https://lore.kernel.org/lkml/87v9ne5y4y.fsf_-_@x220.int.ebiederm.org/
+>
+> Signed-off-by: Bernd Edlinger <bernd.edlinger@hotmail.de>
+> ---
+>  kernel/fork.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/kernel/fork.c b/kernel/fork.c
+> index c12595a..5720ff3 100644
+> --- a/kernel/fork.c
+> +++ b/kernel/fork.c
+> @@ -1224,7 +1224,7 @@ struct mm_struct *mm_access(struct task_struct *task, unsigned int mode)
+>  	struct mm_struct *mm;
+>  	int err;
+>  
+> -	err =  mutex_lock_killable(&task->signal->cred_guard_mutex);
+> +	err =  mutex_lock_killable(&task->signal->exec_update_mutex);
+>  	if (err)
+>  		return ERR_PTR(err);
+>  
+> @@ -1234,7 +1234,7 @@ struct mm_struct *mm_access(struct task_struct *task, unsigned int mode)
+>  		mmput(mm);
+>  		mm = ERR_PTR(-EACCES);
+>  	}
+> -	mutex_unlock(&task->signal->cred_guard_mutex);
+> +	mutex_unlock(&task->signal->exec_update_mutex);
+>  
+>  	return mm;
+>  }
