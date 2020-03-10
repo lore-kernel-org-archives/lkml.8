@@ -2,129 +2,237 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36ADAC3F2D0
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:16:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7315FC18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:17:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2007215A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:16:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="J4M0uyN8"
+	by mail.kernel.org (Postfix) with ESMTP id 329C0215A4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:17:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583871431;
+	bh=9kS4fll6kN31/YdZoAfwvgpKCt0IRqiPyB7uZLKuKj4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WsbMLlKPxe9ue49QnWA20Bxzh4xKlRN+Q1ELsl8mhQDONBJS/l1HZiWxq/K8lQcBs
+	 7xtrBrDqn1+bVLFXdmnmICxQ5pmTq2FbgeHY0iv+ycau4Ymduu81AiNvtxpjHnOsyh
+	 Q0eJ1enxJFLNxi4hSFJw7rqIzrCnsrf4njg4gelc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727556AbgCJUQd (ORCPT
+        id S1727417AbgCJURK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 16:16:33 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:40647 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726545AbgCJUQc (ORCPT
+        Tue, 10 Mar 2020 16:17:10 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:40370 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726100AbgCJURJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 16:16:32 -0400
-Received: by mail-pf1-f196.google.com with SMTP id l184so7014034pfl.7
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 13:16:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=DUOjVP5Gbs/kqvClABR44FE8+xg+AgbM19bKNtAY6RM=;
-        b=J4M0uyN8yr+WE91/EnStnaXtqW7/nhowSFEP7427vQyPhmyVseK/RtuSzWChg/C9Hr
-         zZ+zMYnkWIePFvXZqr08Bgtu6LZxyciu3wJk6FDiKEN2gAr2hr9x1d1z8YndRb7xny59
-         LIF8JAG0apaOV2Wrk6HcAMaxdWObISAFLKEGM=
+        Tue, 10 Mar 2020 16:17:09 -0400
+Received: by mail-oi1-f195.google.com with SMTP id y71so9900942oia.7;
+        Tue, 10 Mar 2020 13:17:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=DUOjVP5Gbs/kqvClABR44FE8+xg+AgbM19bKNtAY6RM=;
-        b=oFEgB+8VS/eIWpeWvoF2+FpNk0iMZb97jNrq4I5/ygFHbGKxPlsIUspc+6gcKUjfrC
-         uKOilmgFji8klPNhCOcm24qG9lSYvq9We6J9i14Pw9UfMkJyOySsTmapvQPFNKA/alHI
-         XMAL7THYzW3koBQZek5WIU37/L9tthtUFSTbazziS71t7bEwMnqxgDDmGKI8JRkAJa/j
-         PinpKpLEk9BWxLrxtXzVnwnUqSGzGIFolOnWqqWguN/+fN2gGX7sfKENze9OsvLxdL2T
-         PERAO77K36qysv+30yKdE/dVimXGHVuJXY3KSQ9FIZyN3hv+ulYL+IFMeByYgr2XnGYF
-         7SKw==
-X-Gm-Message-State: ANhLgQ3EyGfUI+oRBOdnJosQsDgN2b1x/A7LP6FNkcB6dho+N6f7DhJR
-        aX8qhUhYP8/rfnxU29XpeAW29w==
-X-Google-Smtp-Source: ADFU+vsvmkmyViYLeWPBKmK8uPBvLdmLN608raLFS0mCOwqgEfnZb/AeMfnBRwxnwZ3Ngq2HL/ZZcg==
-X-Received: by 2002:a63:2882:: with SMTP id o124mr6655825pgo.390.1583871391628;
-        Tue, 10 Mar 2020 13:16:31 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id n9sm45162722pfq.160.2020.03.10.13.16.30
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=TepfMU12ngaZGfWbNFvmwR9hVezQFj2Now5HdZrqyu4=;
+        b=MAlWxbQMNLWWC9P8QMAlwbnTXeUHr+B8wCFlherpg0AzyPeN+KOnhJlFLYMpkDPpOU
+         58T7gWcw9ypogPyHrBYXjZCain/0ZsoVdDVzemMyVMfvNjsoUFdk1ubHFad3oH+9DHyH
+         ahXD5IdaUIPjhGrST2jJMsq0SxbjBE6iibughMY8QBW9fOWvCldrHzReRZB5qypmXwyI
+         MSH14uSKsvs+Qg9s7gZjxfWkrVsQC0S617QkHwP6aRMvw6UxaOZDNwpF3gpD5+RkEKRI
+         d3v47nyrllbqkDHqMBY3V++WclDcrt77o/K/AP4PQ57IvE+GL2aZRRF1MD3mvdNjYnK+
+         wn3A==
+X-Gm-Message-State: ANhLgQ16CTog/bVzNBgs/vhXaMg1iSrYK/BM2Ifqu1c00UJC5nXpq1Sl
+        PyL6TFpezpsZOd0y0PktWw==
+X-Google-Smtp-Source: ADFU+vvZi3Wc3khoMI8YsXkDStp3Ap7La8yZEb6cDvR9LqlLDGYFEkbj63tHb9TF0rmn3zaaorK9tQ==
+X-Received: by 2002:aca:ac46:: with SMTP id v67mr2512370oie.62.1583871428243;
+        Tue, 10 Mar 2020 13:17:08 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id h6sm7762867otq.63.2020.03.10.13.17.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Mar 2020 13:16:30 -0700 (PDT)
-Date:   Tue, 10 Mar 2020 13:16:29 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Andrei Vagin <avagin@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Yuyang Du <duyuyang@gmail.com>,
-        David Hildenbrand <david@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        David Howells <dhowells@redhat.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christian Kellner <christian@kellner.me>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>
-Subject: Re: [PATCH v2 3/5] exec: Move cleanup of posix timers on exec out of
- de_thread
-Message-ID: <202003101313.CF8CBDC582@keescook>
-References: <87r1y8dqqz.fsf@x220.int.ebiederm.org>
- <AM6PR03MB517053AED7DC89F7C0704B7DE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <AM6PR03MB51703B44170EAB4626C9B2CAE4E20@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <87tv32cxmf.fsf_-_@x220.int.ebiederm.org>
- <87v9ne5y4y.fsf_-_@x220.int.ebiederm.org>
- <87eeu25y14.fsf_-_@x220.int.ebiederm.org>
- <20200309195909.h2lv5uawce5wgryx@wittgenstein>
- <877dztz415.fsf@x220.int.ebiederm.org>
- <20200309201729.yk5sd26v4bz4gtou@wittgenstein>
- <87k13txnig.fsf@x220.int.ebiederm.org>
+        Tue, 10 Mar 2020 13:17:07 -0700 (PDT)
+Received: (nullmailer pid 30625 invoked by uid 1000);
+        Tue, 10 Mar 2020 20:17:06 -0000
+Date:   Tue, 10 Mar 2020 15:17:06 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Mark Rutland <mark.rutland@arm.com>, od@zcrc.me,
+        =?utf-8?B?5ZGo55Cw5p2w?= <zhouyanjie@wanyeetech.com>,
+        linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] dt-bindings: rtc: Convert and update jz4740-rtc doc
+ to YAML
+Message-ID: <20200310201706.GA25562@bogus>
+References: <20200302213953.28834-1-paul@crapouillou.net>
+ <20200302213953.28834-3-paul@crapouillou.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87k13txnig.fsf@x220.int.ebiederm.org>
+In-Reply-To: <20200302213953.28834-3-paul@crapouillou.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 09, 2020 at 03:48:55PM -0500, Eric W. Biederman wrote:
-> And I completely agree that we should at least rename tsk to me.
-> Just for clarity.
+On Mon, Mar 02, 2020 at 06:39:53PM -0300, Paul Cercueil wrote:
+> Convert the jz4740-rtc doc to YAML, and update it to reflect the new
+> changes in the driver:
+> - More compatible strings are specified, with fallbacks if needed,
+> - The vendor-specific properties are now properly prefixed with the
+>   'ingenic,' prefix.
+> 
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> ---
+>  .../bindings/rtc/ingenic,jz4740-rtc.txt       | 37 --------
+>  .../devicetree/bindings/rtc/ingenic,rtc.yaml  | 87 +++++++++++++++++++
+>  2 files changed, 87 insertions(+), 37 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/rtc/ingenic,jz4740-rtc.txt
+>  create mode 100644 Documentation/devicetree/bindings/rtc/ingenic,rtc.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/rtc/ingenic,jz4740-rtc.txt b/Documentation/devicetree/bindings/rtc/ingenic,jz4740-rtc.txt
+> deleted file mode 100644
+> index 41c7ae18fd7b..000000000000
+> --- a/Documentation/devicetree/bindings/rtc/ingenic,jz4740-rtc.txt
+> +++ /dev/null
+> @@ -1,37 +0,0 @@
+> -JZ4740 and similar SoCs real-time clock driver
+> -
+> -Required properties:
+> -
+> -- compatible: One of:
+> -  - "ingenic,jz4740-rtc" - for use with the JZ4740 SoC
+> -  - "ingenic,jz4780-rtc" - for use with the JZ4780 SoC
+> -- reg: Address range of rtc register set
+> -- interrupts: IRQ number for the alarm interrupt
+> -- clocks: phandle to the "rtc" clock
+> -- clock-names: must be "rtc"
+> -
+> -Optional properties:
+> -- system-power-controller: To use this component as the
+> -  system power controller
+> -- reset-pin-assert-time-ms: Reset pin low-level assertion
+> -  time after wakeup (default 60ms; range 0-125ms if RTC clock
+> -  at 32 kHz)
+> -- min-wakeup-pin-assert-time-ms: Minimum wakeup pin assertion
+> -  time (default 100ms; range 0-2s if RTC clock at 32 kHz)
+> -
+> -Example:
+> -
+> -rtc@10003000 {
+> -	compatible = "ingenic,jz4740-rtc";
+> -	reg = <0x10003000 0x40>;
+> -
+> -	interrupt-parent = <&intc>;
+> -	interrupts = <32>;
+> -
+> -	clocks = <&rtc_clock>;
+> -	clock-names = "rtc";
+> -
+> -	system-power-controller;
+> -	reset-pin-assert-time-ms = <60>;
+> -	min-wakeup-pin-assert-time-ms = <100>;
+> -};
+> diff --git a/Documentation/devicetree/bindings/rtc/ingenic,rtc.yaml b/Documentation/devicetree/bindings/rtc/ingenic,rtc.yaml
+> new file mode 100644
+> index 000000000000..c18ed8ac263f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/rtc/ingenic,rtc.yaml
+> @@ -0,0 +1,87 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/rtc/ingenic,rtc.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Ingenic SoCs Real-Time Clock DT bindings
+> +
+> +maintainers:
+> +  - Paul Cercueil <paul@crapouillou.net>
+> +
+> +allOf:
+> +  - $ref: rtc.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - enum:
+> +        - ingenic,jz4740-rtc
+> +        - ingenic,jz4760-rtc
+> +      - items:
+> +        - const: ingenic,jz4725b-rtc
+> +        - const: ingenic,jz4740-rtc
+> +      - items:
+> +        - enum:
+> +          - ingenic,jz4770-rtc
+> +          - ingenic,jz4780-rtc
+> +        - const: ingenic,jz4760-rtc
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    const: rtc
+> +
+> +  system-power-controller:
+> +    description: |
+> +      Indicates that the RTC is responsible for powering OFF
+> +      the system.
+> +    type: boolean
+> +
+> +  ingenic,reset-pin-assert-time-ms:
+> +    description: |
+> +      Reset pin low-level assertion time after wakeup
+> +      (assuming RTC clock at 32 kHz)
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
 
-I think it wouldn't hurt to add comments to spell it out explicitly
-in each of the tsk->me functions, something like:
+You can drop this because standard units have a type already.
 
-/*
- * The "me" task_struct argument here must only ever refer to "current",
- * but it gets passed in to avoid re-calculating "current" in each helper.
- */
+> +      - minimum: 0
+> +      - maximum: 125
+> +      - default: 60
 
-I've found that the exec code in its entirety would be better off with
-more comments. :) Usually that's the bulk of what I find myself adding
-when I make changes in this area. ;)
+And then move all there out of allOf.
 
--Kees
-
--- 
-Kees Cook
+> +
+> +  ingenic,min-wakeup-pin-assert-time-ms:
+> +    description: |
+> +      Minimum wakeup pin assertion time
+> +      (assuming RTC clock at 32 kHz)
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +      - minimum: 0
+> +      - maximum: 2000
+> +      - default: 100
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - clocks
+> +  - clock-names
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/jz4740-cgu.h>
+> +    rtc_dev: rtc@10003000 {
+> +      compatible = "ingenic,jz4740-rtc";
+> +      reg = <0x10003000 0x40>;
+> +
+> +      interrupt-parent = <&intc>;
+> +      interrupts = <15>;
+> +
+> +      clocks = <&cgu JZ4740_CLK_RTC>;
+> +      clock-names = "rtc";
+> +    };
+> -- 
+> 2.25.1
+> 
