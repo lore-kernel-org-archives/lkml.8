@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9898FC18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:19:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13F20C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:19:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 664F820409
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:19:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D693620873
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:19:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583846355;
-	bh=vvd+ga9xtofA4LLzni39uzCH/EHz5pUxMLbMT7GfNUc=;
+	s=default; t=1583846363;
+	bh=sd3a7H0pWwvY+u5/WATbfuFmteSNC/5unf0og6H8u0g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mEgXbjIuGjttIKuWqvs08NCMVt7Va4mrcsQ0GE0jM3sGMV5sIv3c8KACPwscp/0cA
-	 MDuTZAv3yRTOmPEFH813kbb39uUzNQVQ/zajKqRGsOIpkDmVQPb+ZR0PwTFNC+U5HI
-	 ZC91IqgrDpcRwND49dCcWGeA2WxpicbH+BmYSZfM=
+	b=xMpXMp8P9yYFQjtB3XIm/UQ9vjzqqfMZOAlC+whaOnQzOF6hg2iTVroyCVsvGoQOO
+	 QxfMsCddLZ4pt/6L5cf3PTPn82syTAFcCv0FCDlYDQkVMThmq+7zkfZ2b0GtylGj38
+	 +NnUlaG81Lk/hka54WIbM1uF2wvKZYlJJhzx56iM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730850AbgCJNJY (ORCPT
+        id S1729241AbgCJNTW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:09:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56358 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:19:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56042 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730425AbgCJNJU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:09:20 -0400
+        id S1730231AbgCJNJG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:09:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31979208E4;
-        Tue, 10 Mar 2020 13:09:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B4EBD2468D;
+        Tue, 10 Mar 2020 13:09:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845759;
-        bh=vvd+ga9xtofA4LLzni39uzCH/EHz5pUxMLbMT7GfNUc=;
+        s=default; t=1583845746;
+        bh=sd3a7H0pWwvY+u5/WATbfuFmteSNC/5unf0og6H8u0g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i+yjpRYMvHIZfMP1DUxONJX0nj4Ev8evPMgPCWF/B0nXH5GfT2SlMmKeB6kDc7jXK
-         uVhFy5ecs0SugK0g1LZtfY9EDFJZF4YBTBwHbEFqPMwAQgMGEvXGZda+HgtfKA+esJ
-         TiSs3KNUGmJZyOo+sm2eFCC7MO3JuoAvL1qtUjtg=
+        b=keJzoQ9Coo9tIgKF5kRNs6dvPTJK0vssE+vuqNc9/uyzogaNJ8WbPtMPFsmGnTpyY
+         mFxTSSRAz41U+zWxBNLGcZhEQPUcsNT+iu6AhH7ac125Zymy6NV3LlrZRaocpB2GZ2
+         bP+uqe2QEqTbFu1ky++RFhTo1I2JKrp2D+tu6Q6s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        stable@vger.kernel.org, Marek Vasut <marex@denx.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Lukas Wunner <lukas@wunner.de>, Petr Stetiar <ynezz@true.cz>,
+        YueHaibing <yuehaibing@huawei.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 089/126] x86/xen: Distribute switch variables for initialization
-Date:   Tue, 10 Mar 2020 13:41:50 +0100
-Message-Id: <20200310124209.494850234@linuxfoundation.org>
+Subject: [PATCH 4.14 084/126] net: ks8851-ml: Fix 16-bit IO operation
+Date:   Tue, 10 Mar 2020 13:41:45 +0100
+Message-Id: <20200310124209.237341214@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310124203.704193207@linuxfoundation.org>
 References: <20200310124203.704193207@linuxfoundation.org>
@@ -61,64 +62,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+From: Marek Vasut <marex@denx.de>
 
-[ Upstream commit 9038ec99ceb94fb8d93ade5e236b2928f0792c7c ]
+[ Upstream commit 58292104832fef6cb4a89f736012c0e0724c3442 ]
 
-Variables declared in a switch statement before any case statements
-cannot be automatically initialized with compiler instrumentation (as
-they are not part of any execution flow). With GCC's proposed automatic
-stack variable initialization feature, this triggers a warning (and they
-don't get initialized). Clang's automatic stack variable initialization
-(via CONFIG_INIT_STACK_ALL=y) doesn't throw a warning, but it also
-doesn't initialize such variables[1]. Note that these warnings (or silent
-skipping) happen before the dead-store elimination optimization phase,
-so even when the automatic initializations are later elided in favor of
-direct initializations, the warnings remain.
+The Micrel KSZ8851-16MLLI datasheet DS00002357B page 12 states that
+BE[3:0] signals are active high. This contradicts the measurements
+of the behavior of the actual chip, where these signals behave as
+active low. For example, to read the CIDER register, the bus must
+expose 0xc0c0 during the address phase, which means BE[3:0]=4'b1100.
 
-To avoid these problems, move such variables into the "case" where
-they're used or lift them up into the main function body.
-
-arch/x86/xen/enlighten_pv.c: In function ‘xen_write_msr_safe’:
-arch/x86/xen/enlighten_pv.c:904:12: warning: statement will never be executed [-Wswitch-unreachable]
-  904 |   unsigned which;
-      |            ^~~~~
-
-[1] https://bugs.llvm.org/show_bug.cgi?id=44916
-
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Link: https://lore.kernel.org/r/20200220062318.69299-1-keescook@chromium.org
-Reviewed-by: Juergen Gross <jgross@suse.com>
-[boris: made @which an 'unsigned int']
-Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Signed-off-by: Marek Vasut <marex@denx.de>
+Cc: David S. Miller <davem@davemloft.net>
+Cc: Lukas Wunner <lukas@wunner.de>
+Cc: Petr Stetiar <ynezz@true.cz>
+Cc: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/xen/enlighten_pv.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/micrel/ks8851_mll.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/xen/enlighten_pv.c b/arch/x86/xen/enlighten_pv.c
-index f79a0cdc6b4e7..1f8175bf2a5e3 100644
---- a/arch/x86/xen/enlighten_pv.c
-+++ b/arch/x86/xen/enlighten_pv.c
-@@ -909,14 +909,15 @@ static u64 xen_read_msr_safe(unsigned int msr, int *err)
- static int xen_write_msr_safe(unsigned int msr, unsigned low, unsigned high)
+diff --git a/drivers/net/ethernet/micrel/ks8851_mll.c b/drivers/net/ethernet/micrel/ks8851_mll.c
+index fb5f4055e1592..799154d7c0470 100644
+--- a/drivers/net/ethernet/micrel/ks8851_mll.c
++++ b/drivers/net/ethernet/micrel/ks8851_mll.c
+@@ -484,7 +484,7 @@ static int msg_enable;
+ 
+ static u16 ks_rdreg16(struct ks_net *ks, int offset)
  {
- 	int ret;
-+#ifdef CONFIG_X86_64
-+	unsigned int which;
-+	u64 base;
-+#endif
+-	ks->cmd_reg_cache = (u16)offset | ((BE1 | BE0) << (offset & 0x02));
++	ks->cmd_reg_cache = (u16)offset | ((BE3 | BE2) >> (offset & 0x02));
+ 	iowrite16(ks->cmd_reg_cache, ks->hw_addr_cmd);
+ 	return ioread16(ks->hw_addr);
+ }
+@@ -499,7 +499,7 @@ static u16 ks_rdreg16(struct ks_net *ks, int offset)
  
- 	ret = 0;
- 
- 	switch (msr) {
- #ifdef CONFIG_X86_64
--		unsigned which;
--		u64 base;
--
- 	case MSR_FS_BASE:		which = SEGBASE_FS; goto set;
- 	case MSR_KERNEL_GS_BASE:	which = SEGBASE_GS_USER; goto set;
- 	case MSR_GS_BASE:		which = SEGBASE_GS_KERNEL; goto set;
+ static void ks_wrreg16(struct ks_net *ks, int offset, u16 value)
+ {
+-	ks->cmd_reg_cache = (u16)offset | ((BE1 | BE0) << (offset & 0x02));
++	ks->cmd_reg_cache = (u16)offset | ((BE3 | BE2) >> (offset & 0x02));
+ 	iowrite16(ks->cmd_reg_cache, ks->hw_addr_cmd);
+ 	iowrite16(value, ks->hw_addr);
+ }
 -- 
 2.20.1
 
