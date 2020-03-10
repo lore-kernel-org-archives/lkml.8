@@ -2,125 +2,116 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36037C18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:26:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AD1FC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:26:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F1D12071B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:26:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PL1RRnyU"
+	by mail.kernel.org (Postfix) with ESMTP id 515672071B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:26:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583846791;
+	bh=YKfdWWef2XAP+GCkkOxxFSr7TtbFVlNDiZybrdw5O7M=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=I4GICbBJ+agYaKt4p4rAPZ44SiHpDyv3dwrsyJBPOLJjzFcYuPupRuSpdjCwrGeF1
+	 l5FWQ9scYGBReqNG0r7MJLgD4U4YDmRqmOWIFTfWneipNXBb+ueuBaeIN9crjOadaG
+	 nBPEmjj7aW1dRzt5K7oEJFNMCRr+yIAayXVHj30o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728714AbgCJMz7 (ORCPT
+        id S1729856AbgCJN03 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:55:59 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:52102 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729577AbgCJMzy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:55:54 -0400
-Received: by mail-wm1-f67.google.com with SMTP id a132so1283751wme.1;
-        Tue, 10 Mar 2020 05:55:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=3v9UPmq+Vv3cSCddZuyv3HLidzutYMcEu/49JcrOcIE=;
-        b=PL1RRnyU8o1JjP4q4TIN9i5MglbS9kvc8FuTTvogHkYgVu1hjhA2kjZ/9gjjooSuTi
-         gbW0LOkqH3Q7tNZhBpMniHLELwYo/PQpgO65YKE0KCs2VZePhPhebSbZI7kqbapSvvoq
-         pbXONeKVT4dWeAulH2jxX2e0woTibV+rSCMFR8vZUi/V2bEPMUnLF6bjGCoM+L9nchwM
-         1FTKojKRH71p+gJj2d20yVvVXuJ9+tbtqg0JopB1c045k+lUnKT+w7UFoGD1WrIZHvcD
-         K9VTtt2L6/XbjrA6L/MvmsLHTlbgLKcfCMOiNjOBu6edzBLwk4FSLyE0H/lVWwLUVx7h
-         hytA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=3v9UPmq+Vv3cSCddZuyv3HLidzutYMcEu/49JcrOcIE=;
-        b=gTemCBAAMKRpxwfeuIDJ2CfpgeudlV+YuHJpnh55IMO4qujpTrZOUFs3BFLqJuF3Ur
-         IqtYmYMJRmszgRU7G5Z/Rz37vetIs5L66rXGVZKjbJq7WCycx5tvwDur9RNG5JsLD6z+
-         xMlnOdKwWn3QnTlP1IIQYSUNQBoOKCkE0WXx0tWKscak89ojgRRp8bxqL5/qEJktBbOL
-         0CxI1zB6rj4MlOLvOpwaM8sxzr3IM73mpnHIbuOPFymvxdGIugTPk59dfqZynB/iAGd9
-         7aTqDg7eXXAFtZR4Gy/Pk5b7eljBS2NQErO1ebYPzBPJoUXrLOPefM69ixx7ITuaTk66
-         em7w==
-X-Gm-Message-State: ANhLgQ2kZ8ORKnb1HtUXnpuf6jYgqZY8LMMSgZMhtycokuZn6yRcm3a3
-        YlgxFnsRW4RAUAUqUEPpsgs=
-X-Google-Smtp-Source: ADFU+vtJvj9IRuqR/RlXga3fZvDzZE/RQZkdUuZqMDXj7+/VqIfX7CJZ55FZ1+ndPPbFbBGcsyi49A==
-X-Received: by 2002:a1c:68c2:: with SMTP id d185mr2116200wmc.150.1583844951394;
-        Tue, 10 Mar 2020 05:55:51 -0700 (PDT)
-Received: from localhost.localdomain ([79.115.60.40])
-        by smtp.gmail.com with ESMTPSA id t81sm4018594wmb.15.2020.03.10.05.55.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Mar 2020 05:55:50 -0700 (PDT)
-From:   Vladimir Oltean <olteanv@gmail.com>
-To:     broonie@kernel.org
-Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        shawnguo@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, eha@deif.com, angelo@sysam.it,
-        andrew.smirnov@gmail.com, gustavo@embeddedor.com, weic@nvidia.com,
-        mhosny@nvidia.com, michael@walle.cc, peng.ma@nxp.com
-Subject: [PATCH v3 1/7] spi: spi-fsl-dspi: Don't access reserved fields in SPI_MCR
-Date:   Tue, 10 Mar 2020 14:55:36 +0200
-Message-Id: <20200310125542.5939-2-olteanv@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200310125542.5939-1-olteanv@gmail.com>
-References: <20200310125542.5939-1-olteanv@gmail.com>
+        Tue, 10 Mar 2020 09:26:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35014 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729593AbgCJMz6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:55:58 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A8BF2468E;
+        Tue, 10 Mar 2020 12:55:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583844957;
+        bh=YKfdWWef2XAP+GCkkOxxFSr7TtbFVlNDiZybrdw5O7M=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=F/jAYV/RXJDiDFOS2VTQ3ZuY9LikfB8FYkhwSTxuGCZvx5ygvNrtcgc45PufhaW0J
+         SmJ/SW5r8M+OdC+p+SlE/v1q4dM2wWk94XncGwzXVfqBYZ5P7cjJDl2xkb2/1mL5MB
+         N0aMpHfJCvuNjvKX6N1AGHo9r13snPkTwYFameXA=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Chuanhong Guo <gch981213@gmail.com>,
+        Daniel Golle <daniel@makrotopia.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 013/189] serial: ar933x_uart: set UART_CS_{RX,TX}_READY_ORIDE
+Date:   Tue, 10 Mar 2020 13:37:30 +0100
+Message-Id: <20200310123640.874790566@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200310123639.608886314@linuxfoundation.org>
+References: <20200310123639.608886314@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Oltean <vladimir.oltean@nxp.com>
+From: Daniel Golle <daniel@makrotopia.org>
 
-The SPI_MCR_PCSIS macro assumes that the controller has a number of chip
-select signals equal to 6. That is not always the case, but actually is
-described through the driver-specific "spi-num-chipselects" device tree
-binding. LS1028A for example only has 4 chip selects.
+[ Upstream commit 87c5cbf71ecbb9e289d60a2df22eb686c70bf196 ]
 
-Don't write to the upper bits of the PCSIS field, which are reserved in
-the reference manual.
+On AR934x this UART is usually not initialized by the bootloader
+as it is only used as a secondary serial port while the primary
+UART is a newly introduced NS16550-compatible.
+In order to make use of the ar933x-uart on AR934x without RTS/CTS
+hardware flow control, one needs to set the
+UART_CS_{RX,TX}_READY_ORIDE bits as other than on AR933x where this
+UART is used as primary/console, the bootloader on AR934x typically
+doesn't set those bits.
+Setting them explicitely on AR933x should not do any harm, so just
+set them unconditionally.
 
-Fixes: 349ad66c0ab0 ("spi:Add Freescale DSPI driver for Vybrid VF610 platform")
-Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+Tested-by: Chuanhong Guo <gch981213@gmail.com>
+Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+Link: https://lore.kernel.org/r/20200207095335.GA179836@makrotopia.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
-Changes in v3:
-None.
+ drivers/tty/serial/ar933x_uart.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-Changes in v2:
-Remove duplicate phrase in commit message.
-
- drivers/spi/spi-fsl-dspi.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
-index 0683a3fbd48c..0ce26c1cbf62 100644
---- a/drivers/spi/spi-fsl-dspi.c
-+++ b/drivers/spi/spi-fsl-dspi.c
-@@ -22,7 +22,7 @@
+diff --git a/drivers/tty/serial/ar933x_uart.c b/drivers/tty/serial/ar933x_uart.c
+index 3bdd56a1021b2..ea12f10610b64 100644
+--- a/drivers/tty/serial/ar933x_uart.c
++++ b/drivers/tty/serial/ar933x_uart.c
+@@ -286,6 +286,10 @@ static void ar933x_uart_set_termios(struct uart_port *port,
+ 	ar933x_uart_rmw_set(up, AR933X_UART_CS_REG,
+ 			    AR933X_UART_CS_HOST_INT_EN);
  
- #define SPI_MCR				0x00
- #define SPI_MCR_MASTER			BIT(31)
--#define SPI_MCR_PCSIS			(0x3F << 16)
-+#define SPI_MCR_PCSIS(x)		((x) << 16)
- #define SPI_MCR_CLR_TXF			BIT(11)
- #define SPI_MCR_CLR_RXF			BIT(10)
- #define SPI_MCR_XSPI			BIT(3)
-@@ -1197,7 +1197,10 @@ static const struct regmap_config dspi_xspi_regmap_config[] = {
- 
- static void dspi_init(struct fsl_dspi *dspi)
- {
--	unsigned int mcr = SPI_MCR_PCSIS;
-+	unsigned int mcr;
++	/* enable RX and TX ready overide */
++	ar933x_uart_rmw_set(up, AR933X_UART_CS_REG,
++		AR933X_UART_CS_TX_READY_ORIDE | AR933X_UART_CS_RX_READY_ORIDE);
 +
-+	/* Set idle states for all chip select signals to high */
-+	mcr = SPI_MCR_PCSIS(GENMASK(dspi->ctlr->num_chipselect - 1, 0));
+ 	/* reenable the UART */
+ 	ar933x_uart_rmw(up, AR933X_UART_CS_REG,
+ 			AR933X_UART_CS_IF_MODE_M << AR933X_UART_CS_IF_MODE_S,
+@@ -418,6 +422,10 @@ static int ar933x_uart_startup(struct uart_port *port)
+ 	ar933x_uart_rmw_set(up, AR933X_UART_CS_REG,
+ 			    AR933X_UART_CS_HOST_INT_EN);
  
- 	if (dspi->devtype_data->trans_mode == DSPI_XSPI_MODE)
- 		mcr |= SPI_MCR_XSPI;
++	/* enable RX and TX ready overide */
++	ar933x_uart_rmw_set(up, AR933X_UART_CS_REG,
++		AR933X_UART_CS_TX_READY_ORIDE | AR933X_UART_CS_RX_READY_ORIDE);
++
+ 	/* Enable RX interrupts */
+ 	up->ier = AR933X_UART_INT_RX_VALID;
+ 	ar933x_uart_write(up, AR933X_UART_INT_EN_REG, up->ier);
 -- 
-2.17.1
+2.20.1
+
+
 
