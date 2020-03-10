@@ -2,52 +2,53 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ED4FC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:42:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2BF2C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:42:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C9CC24693
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:42:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FA14246AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:42:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583844133;
-	bh=sOAGFuQmdWeLvsjXjqeTg71nvzmjKCDHQHCRceyd3eA=;
+	s=default; t=1583844137;
+	bh=Esomg4B0Q+sp4mv1ro05B9Kx8R2xCyYhuc4bhG0TRp0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CbfeoctWWfJe7KjYMTq5Zg3QsCd6C/uh8COLeu46JRFeanHjJmTliCBP+R8J0M0XF
-	 /KTxfbxo8ztiBJMqCwiSDRlH8IR+QjC01ptrcY68splW9+mIOJQKZiCleOHz3TNhvS
-	 66IXLrKOCgs8FWe7Kr5MlRqmz5OMqwFudaU7pbt4=
+	b=2N5V1Mm44eCrK+D+rk1iylv6sdEiHUQNlc2891pnb5W27LhzNXE+viCgluRPEmxtH
+	 AsV49n2KlJLVFSIRpbHSp+LT2C1ccStMmVpI0ZiNrEEhUsQ8zV3v7xchSK5VtSgOUC
+	 iICUOKn808PPrAS4fYwljv7QTNN3lrwsExM9hFTY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727272AbgCJMmM (ORCPT
+        id S1726620AbgCJMmQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:42:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41936 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:42:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42062 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727241AbgCJMmG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:42:06 -0400
+        id S1726481AbgCJMmM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:42:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C78E624686;
-        Tue, 10 Mar 2020 12:42:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2BE8B24693;
+        Tue, 10 Mar 2020 12:42:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844126;
-        bh=sOAGFuQmdWeLvsjXjqeTg71nvzmjKCDHQHCRceyd3eA=;
+        s=default; t=1583844131;
+        bh=Esomg4B0Q+sp4mv1ro05B9Kx8R2xCyYhuc4bhG0TRp0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hwfVoCWzBNL/BAKV1RA1w3/8Ugoy86OyqatWBsrMXchRxBDj56Xv5mdNl2/A49dns
-         2cNgnEUwtEeBb0IcJfffptt7qtf8IGRF9WqFtobShwhJN4P+j3NVqnIkEqJPM8DZlg
-         OxJucODUNr7hDzyVj6+NYQtJIDzIWsSpYfQovN08=
+        b=pdUO59ZMiaQUgeKzcpLsx3v0j/PShWNNOM2qbm4RdOkCVXp3KBSynRpeGwy+Y2sEJ
+         /5MT0eOBDKwdEWiX9BbXgqu0uyFzh8mgULM0QMcx5UEyTjcEeDD/rPFhoN2oYXQvCs
+         vAKKRc0XDm1EcQ4h03TlqcjSi9VWnIsXdhd/Stog=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuanhong Guo <gch981213@gmail.com>,
-        Daniel Golle <daniel@makrotopia.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 40/72] serial: ar933x_uart: set UART_CS_{RX,TX}_READY_ORIDE
-Date:   Tue, 10 Mar 2020 13:38:53 +0100
-Message-Id: <20200310123611.483812673@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Benjamin Poirier <bpoirier@cumulusnetworks.com>,
+        Michal Kubecek <mkubecek@suse.cz>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 15/72] ipv6: Fix route replacement with dev-only route
+Date:   Tue, 10 Mar 2020 13:38:28 +0100
+Message-Id: <20200310123605.319045287@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123601.053680753@linuxfoundation.org>
 References: <20200310123601.053680753@linuxfoundation.org>
@@ -60,58 +61,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Golle <daniel@makrotopia.org>
+From: Benjamin Poirier <bpoirier@cumulusnetworks.com>
 
-[ Upstream commit 87c5cbf71ecbb9e289d60a2df22eb686c70bf196 ]
+[ Upstream commit e404b8c7cfb31654c9024d497cec58a501501692 ]
 
-On AR934x this UART is usually not initialized by the bootloader
-as it is only used as a secondary serial port while the primary
-UART is a newly introduced NS16550-compatible.
-In order to make use of the ar933x-uart on AR934x without RTS/CTS
-hardware flow control, one needs to set the
-UART_CS_{RX,TX}_READY_ORIDE bits as other than on AR933x where this
-UART is used as primary/console, the bootloader on AR934x typically
-doesn't set those bits.
-Setting them explicitely on AR933x should not do any harm, so just
-set them unconditionally.
+After commit 27596472473a ("ipv6: fix ECMP route replacement") it is no
+longer possible to replace an ECMP-able route by a non ECMP-able route.
+For example,
+	ip route add 2001:db8::1/128 via fe80::1 dev dummy0
+	ip route replace 2001:db8::1/128 dev dummy0
+does not work as expected.
 
-Tested-by: Chuanhong Guo <gch981213@gmail.com>
-Signed-off-by: Daniel Golle <daniel@makrotopia.org>
-Link: https://lore.kernel.org/r/20200207095335.GA179836@makrotopia.org
+Tweak the replacement logic so that point 3 in the log of the above commit
+becomes:
+3. If the new route is not ECMP-able, and no matching non-ECMP-able route
+exists, replace matching ECMP-able route (if any) or add the new route.
+
+We can now summarize the entire replace semantics to:
+When doing a replace, prefer replacing a matching route of the same
+"ECMP-able-ness" as the replace argument. If there is no such candidate,
+fallback to the first route found.
+
+Fixes: 27596472473a ("ipv6: fix ECMP route replacement")
+Signed-off-by: Benjamin Poirier <bpoirier@cumulusnetworks.com>
+Reviewed-by: Michal Kubecek <mkubecek@suse.cz>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/ar933x_uart.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ net/ipv6/ip6_fib.c |    7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/tty/serial/ar933x_uart.c b/drivers/tty/serial/ar933x_uart.c
-index 1519d2ca7705f..40194791cde0b 100644
---- a/drivers/tty/serial/ar933x_uart.c
-+++ b/drivers/tty/serial/ar933x_uart.c
-@@ -294,6 +294,10 @@ static void ar933x_uart_set_termios(struct uart_port *port,
- 	ar933x_uart_rmw_set(up, AR933X_UART_CS_REG,
- 			    AR933X_UART_CS_HOST_INT_EN);
+--- a/net/ipv6/ip6_fib.c
++++ b/net/ipv6/ip6_fib.c
+@@ -780,8 +780,7 @@ static int fib6_add_rt2node(struct fib6_
+ 					found++;
+ 					break;
+ 				}
+-				if (rt_can_ecmp)
+-					fallback_ins = fallback_ins ?: ins;
++				fallback_ins = fallback_ins ?: ins;
+ 				goto next_iter;
+ 			}
  
-+	/* enable RX and TX ready overide */
-+	ar933x_uart_rmw_set(up, AR933X_UART_CS_REG,
-+		AR933X_UART_CS_TX_READY_ORIDE | AR933X_UART_CS_RX_READY_ORIDE);
-+
- 	/* reenable the UART */
- 	ar933x_uart_rmw(up, AR933X_UART_CS_REG,
- 			AR933X_UART_CS_IF_MODE_M << AR933X_UART_CS_IF_MODE_S,
-@@ -426,6 +430,10 @@ static int ar933x_uart_startup(struct uart_port *port)
- 	ar933x_uart_rmw_set(up, AR933X_UART_CS_REG,
- 			    AR933X_UART_CS_HOST_INT_EN);
+@@ -821,7 +820,9 @@ next_iter:
+ 	}
  
-+	/* enable RX and TX ready overide */
-+	ar933x_uart_rmw_set(up, AR933X_UART_CS_REG,
-+		AR933X_UART_CS_TX_READY_ORIDE | AR933X_UART_CS_RX_READY_ORIDE);
-+
- 	/* Enable RX interrupts */
- 	up->ier = AR933X_UART_INT_RX_VALID;
- 	ar933x_uart_write(up, AR933X_UART_INT_EN_REG, up->ier);
--- 
-2.20.1
-
+ 	if (fallback_ins && !found) {
+-		/* No ECMP-able route found, replace first non-ECMP one */
++		/* No matching route with same ecmp-able-ness found, replace
++		 * first matching route
++		 */
+ 		ins = fallback_ins;
+ 		iter = *ins;
+ 		found++;
 
 
