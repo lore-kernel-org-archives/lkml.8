@@ -2,130 +2,92 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C165C10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:33:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA7ABC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:33:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEE642051A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:33:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="myVbfeZq"
+	by mail.kernel.org (Postfix) with ESMTP id 875F02071B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:33:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727791AbgCJWdR (ORCPT
+        id S1727795AbgCJWdg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 18:33:17 -0400
-Received: from mail-qv1-f66.google.com ([209.85.219.66]:41368 "EHLO
-        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726273AbgCJWdQ (ORCPT
+        Tue, 10 Mar 2020 18:33:36 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:37540 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726273AbgCJWdg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 18:33:16 -0400
-Received: by mail-qv1-f66.google.com with SMTP id a10so2726762qvq.8;
-        Tue, 10 Mar 2020 15:33:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:subject:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=pVD18NhyaMMMqN+6KXGbkok/K5Bbuh2l+ajlQsVKc1M=;
-        b=myVbfeZqSBSRE4KNut7qxpYfnvp1NSfftn65Ow96DACw/EYE+TlpBYdCDFR/yyxTpe
-         cNUuWkdm/Y3wbV2NmyPdcVfZECuaOBerzOSgRgJ20D+JGVFAHBRT7aTTjbiVTX8Oe2d/
-         xmNf780sw/XnVVBtFGHnBv/VdJEbnkiYyUz/LDfHSwNAOiKocEc7UmTyIcUBYG8cpuDj
-         pgB+ZH3J7TTD0wYhUNzptKFKm0pVfDst5u5+OFV1D+5LTJjP9Pv2x8psoZ+OoW48u4ng
-         zjjrKozYxTJ9GyedRTl+W8+mpP2Da8yWkOH/gXowaUAO0oglN+GSmDrItwqS+cmbpSFF
-         3c6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=pVD18NhyaMMMqN+6KXGbkok/K5Bbuh2l+ajlQsVKc1M=;
-        b=O7MtBQe7ZYB5mnSc21rfipoEX+GRUpLzgJNWxAXPRrS6ZZoX/ye55iUIr7HJRU5mVU
-         mlSau64Cc+a/KVdSGaFHhuw20+XTbRdC91dnnrWBErZPO9GC659LvtHck0+F0HHWr64J
-         ixi0kELxY8YYigWgC+zTIT0GNGNt69rx8NKqclDGkxwnVJBgi4ZsLTabWbafmkijqakh
-         HOfhb42bUfN55PWVVE9stnD5tTqV6X+uCbnAI3KpBjDEoB+4XYvKNhNEXS4Le6UEDPT3
-         E/UI5M+w6z998i3FKS0FMt7ICvwmoceZ+uuheuNRNp37PiZN+YbG6BJOI+Y7nIY6DtdR
-         3jBg==
-X-Gm-Message-State: ANhLgQ2SD5uf18yckITly7Tu/0KA0II/op3wZlrcBNpbDv0GuvLp2n+F
-        TRiO5orC8NmxoWEgp9ZVgxIoT6u3
-X-Google-Smtp-Source: ADFU+vuWNvKHn2C94d4ZgerU295hOZCYmRIIpW83R0v703S9f4A8inI/arQIndC8lcPhdFqTxn2PJw==
-X-Received: by 2002:a0c:c1cd:: with SMTP id v13mr376112qvh.77.1583879595132;
-        Tue, 10 Mar 2020 15:33:15 -0700 (PDT)
-Received: from ?IPv6:2620:10d:c0a8:11d1::111b? ([2620:10d:c091:480::fee])
-        by smtp.gmail.com with ESMTPSA id k11sm1957530qtu.70.2020.03.10.15.33.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Mar 2020 15:33:14 -0700 (PDT)
-From:   Jes Sorensen <jes.sorensen@gmail.com>
-X-Google-Original-From: Jes Sorensen <Jes.Sorensen@gmail.com>
-Subject: Re: [PATCH][next] zd1211rw/zd_usb.h: Replace zero-length array with
- flexible-array member
-To:     Joe Perches <joe@perches.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Kalle Valo <kvalo@codeaurora.org>
-Cc:     Daniel Drake <dsd@gentoo.org>, Ulrich Kunitz <kune@deine-taler.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200305111216.GA24982@embeddedor>
- <87k13yq2jo.fsf@kamboji.qca.qualcomm.com>
- <256881484c5db07e47c611a56550642a6f6bd8e9.camel@perches.com>
- <87blpapyu5.fsf@kamboji.qca.qualcomm.com>
- <1bb7270f-545b-23ca-aa27-5b3c52fba1be@embeddedor.com>
- <87r1y0nwip.fsf@kamboji.qca.qualcomm.com>
- <48ff1333-0a14-36d8-9565-a7f13a06c974@embeddedor.com>
- <021d1125-3ffd-39ef-395a-b796c527bde4@gmail.com>
- <fb3395d7-e932-10ac-1feb-ab2ceb63424e@embeddedor.com>
- <937b0b529509ec1641453ef7c13f38e2d7cc813e.camel@perches.com>
- <c2aa4d8d-1c39-1903-2b49-382f2143e181@embeddedor.com>
- <8b6213e51131deacbdac29a8d9c088ae49933724.camel@perches.com>
-Message-ID: <e65fd08d-984f-0bdc-5fbf-6abceacf819a@gmail.com>
-Date:   Tue, 10 Mar 2020 18:33:13 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 10 Mar 2020 18:33:36 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 890D81C0317; Tue, 10 Mar 2020 23:33:34 +0100 (CET)
+Date:   Tue, 10 Mar 2020 23:33:33 +0100
+From:   Pavel Machek <pavel@denx.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Takashi Iwai <tiwai@suse.de>, Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 07/86] ALSA: hda: do not override bus codec_mask in
+ link_get()
+Message-ID: <20200310223333.GA7285@duo.ucw.cz>
+References: <20200310124530.808338541@linuxfoundation.org>
+ <20200310124531.200272158@linuxfoundation.org>
 MIME-Version: 1.0
-In-Reply-To: <8b6213e51131deacbdac29a8d9c088ae49933724.camel@perches.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="u3/rZRmxL6MmkK24"
+Content-Disposition: inline
+In-Reply-To: <20200310124531.200272158@linuxfoundation.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/10/20 6:28 PM, Joe Perches wrote:
-> On Tue, 2020-03-10 at 17:21 -0500, Gustavo A. R. Silva wrote:
->> On 3/10/20 5:15 PM, Joe Perches wrote:
->>> As far as I can tell, it doesn't actually make a difference as
->>> all the compilers produce the same object code with either form.
->>>
->>
->> That's precisely why we can implement these changes, cleanly(the fact
->> that the compiler produces the same object code). So, the resulting
->> object code is not the point here.
-> 
-> You are making Jes' point.
-> 
-> There's nothing wrong with making changes just for consistent
-> style across the kernel.
-> 
-> This change is exactly that.
-> 
-> I have no objection to this patch.
-> 
-> Jes does, though Jes is not a maintainer of this file.
 
-I responded to this thread because my previous comments to files I
-maintain were ignored.
+--u3/rZRmxL6MmkK24
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This is a bulk change across the tree, so it affects a lot of places.
+Hi!
 
-> I think "churn" arguments are overstated.
+> From: Kai Vehmanen <kai.vehmanen@linux.intel.com>
+>=20
+> [ Upstream commit 43bcb1c0507858cdc95e425017dcc33f8105df39 ]
+>=20
+> snd_hdac_ext_bus_link_get() does not work correctly in case
+> there are multiple codecs on the bus. It unconditionally
+> resets the bus->codec_mask value. As per documentation in
+> hdaudio.h and existing use in client code, this field should
+> be used to store bit flag of detected codecs on the bus.
+>=20
+> By overwriting value of the codec_mask, information on all
+> detected codecs is lost. No current user of hdac is impacted,
+> but use of bus->codec_mask is planned in future patches
+> for SOF.
 
-Again, the changes are not harmful to the code, but add no value. So far
-I haven't seen any good arguments for making these changes, and having
-this kind of churn is a nuisance for anyone hitting patch conflicts due
-to them.
+Given that no users are impacted, is this stable material?
 
-Jes
+Best regards,
+							Pavel
+						=09
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--u3/rZRmxL6MmkK24
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXmgVvQAKCRAw5/Bqldv6
+8oWFAJ92qQ1c7YfWPVxvOZkRZmzWz5OU1wCgjYBrJxV9v3BI8hXk5QYYPkgzwes=
+=qvAj
+-----END PGP SIGNATURE-----
+
+--u3/rZRmxL6MmkK24--
