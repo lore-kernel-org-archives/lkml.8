@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32C4AC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:51:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1E76C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:51:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 070242468F
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:51:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9677D20674
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:51:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583844660;
-	bh=oF0xEUGHLnM5+Uc5nUYYEJU5ATFGGvoruCj46yHPjcw=;
+	s=default; t=1583844667;
+	bh=AFLhECNdQynG25OAfG50zgqOns9HClcAwKK6FJTao+o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wJYG2kcxs7AfUqE6CkDXRTOfLVh7mXO4hZVgA8skTRiofef3ayBvCND59KPGQ6CT8
-	 VcDC81i1rOQpS4xjhmhZCtBcQfLCwWACcL7tM7Qa9Jhmb+0O2XlU3CUejV0d3amzVC
-	 XaSsrK+fHIhAF7S9Gdyqg2+duEe6rtcy3reD5np8=
+	b=g2iseD8eKymuqShRUEaG789pKLtesWz1UpoUeIzC0wFCLCw2iABZehngQpFT8dj/7
+	 zIPTtLvqquFkBbHjmbGfW1O8G4cn4Gn3lXathPF94Mugt7lq03EKXTbTASDzukUHGq
+	 1UvAbgltba9bS8gyMQhlyDnW4kMRP6dqRoVpfQAk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728743AbgCJMu7 (ORCPT
+        id S1728782AbgCJMvG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:50:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55842 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:51:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56036 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727368AbgCJMu5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:50:57 -0400
+        id S1728754AbgCJMvE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:51:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 317B124691;
-        Tue, 10 Mar 2020 12:50:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D3E4420674;
+        Tue, 10 Mar 2020 12:51:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844655;
-        bh=oF0xEUGHLnM5+Uc5nUYYEJU5ATFGGvoruCj46yHPjcw=;
+        s=default; t=1583844663;
+        bh=AFLhECNdQynG25OAfG50zgqOns9HClcAwKK6FJTao+o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ivhCgWId1p4w3JplCDw1VMefr8Hp2tLPAM+0IhofK7YXDKadljfiABxMxfulNqifp
-         pJaad7PVaDJ7A9Zv9ui5y5viXXx79IpJkMjr/S4kRgsf7DwafmYcUb/SojhZ4Ujhjb
-         hulLyZ+xXg7VqLpbtUDsxeVnbHkXUARNIaeWHN+I=
+        b=tcyO+Ifqxc8SWkXVx4TRYqp8XcgPjMIeWi5EQr3/jALIf993XdoUJpyfzo9baZ8XA
+         /oxEGpdhKAf/mPEV6crO/C0oApyJaFTI8jF24mW7OPZIhQYBh+vMco5vZovtzaWIHV
+         bpmKnkHi2UueY4UmCmvMRDE6Z3ytt2ZlfL9PpRGE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmitry Bogdanov <dbogdanov@marvell.com>,
-        Igor Russkikh <irusskikh@marvell.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Stephan Gerhold <stephan@gerhold.net>,
+        Maxime Ripard <maxime@cerno.tech>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 031/168] net: atlantic: check rpc result and wait for rpc address
-Date:   Tue, 10 Mar 2020 13:37:57 +0100
-Message-Id: <20200310123638.718323939@linuxfoundation.org>
+Subject: [PATCH 5.4 024/168] drm/modes: Make sure to parse valid rotation value from cmdline
+Date:   Tue, 10 Mar 2020 13:37:50 +0100
+Message-Id: <20200310123638.093106428@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123635.322799692@linuxfoundation.org>
 References: <20200310123635.322799692@linuxfoundation.org>
@@ -61,94 +60,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Igor Russkikh <irusskikh@marvell.com>
+From: Stephan Gerhold <stephan@gerhold.net>
 
-[ Upstream commit e7b5f97e6574dc4918e375d5f8d24ec31653cd6d ]
+[ Upstream commit e6980a727154b793adb218fbc7b4d6af52a7e364 ]
 
-Artificial HW reliability tests revealed a possible hangup in
-the driver. Normally, when device disappears from bus, all
-register reads returns 0xFFFFFFFF.
+A rotation value should have exactly one rotation angle.
+At the moment there is no validation for this when parsing video=
+parameters from the command line. This causes problems later on
+when we try to combine the command line rotation with the panel
+orientation.
 
-At remote procedure invocation towards FW there is a logic
-where result is compared with -1 in a loop.
-That caused an infinite loop if hardware due to some issues
-disappears from bus.
+To make sure that we generate a valid rotation value:
+  - Set DRM_MODE_ROTATE_0 by default (if no rotate= option is set)
+  - Validate that there is exactly one rotation angle set
+    (i.e. specifying the rotate= option multiple times is invalid)
 
-Add extra result checks to prevent this.
-
-Signed-off-by: Dmitry Bogdanov <dbogdanov@marvell.com>
-Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200117153429.54700-2-stephan@gerhold.net
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../aquantia/atlantic/hw_atl/hw_atl_utils.c   | 19 +++++++++++++++++--
- 1 file changed, 17 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/drm_modes.c                       |  7 +++++++
+ drivers/gpu/drm/selftests/drm_cmdline_selftests.h |  1 +
+ .../gpu/drm/selftests/test-drm_cmdline_parser.c   | 15 +++++++++++++--
+ 3 files changed, 21 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_utils.c b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_utils.c
-index 52646855495ed..873f9865f0d15 100644
---- a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_utils.c
-+++ b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_utils.c
-@@ -22,6 +22,7 @@
- #define HW_ATL_MIF_ADDR         0x0208U
- #define HW_ATL_MIF_VAL          0x020CU
+diff --git a/drivers/gpu/drm/drm_modes.c b/drivers/gpu/drm/drm_modes.c
+index 88232698d7a00..3fd35e6b9d535 100644
+--- a/drivers/gpu/drm/drm_modes.c
++++ b/drivers/gpu/drm/drm_modes.c
+@@ -1672,6 +1672,13 @@ static int drm_mode_parse_cmdline_options(char *str, size_t len,
+ 		}
+ 	}
  
-+#define HW_ATL_MPI_RPC_ADDR     0x0334U
- #define HW_ATL_RPC_CONTROL_ADR  0x0338U
- #define HW_ATL_RPC_STATE_ADR    0x033CU
- 
-@@ -48,15 +49,14 @@
- #define FORCE_FLASHLESS 0
- 
- static int hw_atl_utils_ver_match(u32 ver_expected, u32 ver_actual);
--
- static int hw_atl_utils_mpi_set_state(struct aq_hw_s *self,
- 				      enum hal_atl_utils_fw_state_e state);
--
- static u32 hw_atl_utils_get_mpi_mbox_tid(struct aq_hw_s *self);
- static u32 hw_atl_utils_mpi_get_state(struct aq_hw_s *self);
- static u32 hw_atl_utils_mif_cmd_get(struct aq_hw_s *self);
- static u32 hw_atl_utils_mif_addr_get(struct aq_hw_s *self);
- static u32 hw_atl_utils_rpc_state_get(struct aq_hw_s *self);
-+static u32 aq_fw1x_rpc_get(struct aq_hw_s *self);
- 
- int hw_atl_utils_initfw(struct aq_hw_s *self, const struct aq_fw_ops **fw_ops)
- {
-@@ -413,6 +413,10 @@ static int hw_atl_utils_init_ucp(struct aq_hw_s *self,
- 					self, self->mbox_addr,
- 					self->mbox_addr != 0U,
- 					1000U, 10000U);
-+	err = readx_poll_timeout_atomic(aq_fw1x_rpc_get, self,
-+					self->rpc_addr,
-+					self->rpc_addr != 0U,
-+					1000U, 100000U);
- 
- 	return err;
- }
-@@ -469,6 +473,12 @@ int hw_atl_utils_fw_rpc_wait(struct aq_hw_s *self,
- 						self, fw.val,
- 						sw.tid == fw.tid,
- 						1000U, 100000U);
-+		if (err < 0)
-+			goto err_exit;
++	if (!(rotation & DRM_MODE_ROTATE_MASK))
++		rotation |= DRM_MODE_ROTATE_0;
 +
-+		err = aq_hw_err_from_flags(self);
-+		if (err < 0)
-+			goto err_exit;
++	/* Make sure there is exactly one rotation defined */
++	if (!is_power_of_2(rotation & DRM_MODE_ROTATE_MASK))
++		return -EINVAL;
++
+ 	mode->rotation_reflection = rotation;
  
- 		if (fw.len == 0xFFFFU) {
- 			err = hw_atl_utils_fw_rpc_call(self, sw.len);
-@@ -950,6 +960,11 @@ static u32 hw_atl_utils_rpc_state_get(struct aq_hw_s *self)
- 	return aq_hw_read_reg(self, HW_ATL_RPC_STATE_ADR);
+ 	return 0;
+diff --git a/drivers/gpu/drm/selftests/drm_cmdline_selftests.h b/drivers/gpu/drm/selftests/drm_cmdline_selftests.h
+index 6d61a0eb5d64f..84e6bc050bf2c 100644
+--- a/drivers/gpu/drm/selftests/drm_cmdline_selftests.h
++++ b/drivers/gpu/drm/selftests/drm_cmdline_selftests.h
+@@ -53,6 +53,7 @@ cmdline_test(drm_cmdline_test_rotate_0)
+ cmdline_test(drm_cmdline_test_rotate_90)
+ cmdline_test(drm_cmdline_test_rotate_180)
+ cmdline_test(drm_cmdline_test_rotate_270)
++cmdline_test(drm_cmdline_test_rotate_multiple)
+ cmdline_test(drm_cmdline_test_rotate_invalid_val)
+ cmdline_test(drm_cmdline_test_rotate_truncated)
+ cmdline_test(drm_cmdline_test_hmirror)
+diff --git a/drivers/gpu/drm/selftests/test-drm_cmdline_parser.c b/drivers/gpu/drm/selftests/test-drm_cmdline_parser.c
+index 013de9d27c35d..035f86c5d6482 100644
+--- a/drivers/gpu/drm/selftests/test-drm_cmdline_parser.c
++++ b/drivers/gpu/drm/selftests/test-drm_cmdline_parser.c
+@@ -856,6 +856,17 @@ static int drm_cmdline_test_rotate_270(void *ignored)
+ 	return 0;
  }
  
-+static u32 aq_fw1x_rpc_get(struct aq_hw_s *self)
++static int drm_cmdline_test_rotate_multiple(void *ignored)
 +{
-+	return aq_hw_read_reg(self, HW_ATL_MPI_RPC_ADDR);
++	struct drm_cmdline_mode mode = { };
++
++	FAIL_ON(drm_mode_parse_command_line_for_connector("720x480,rotate=0,rotate=90",
++							  &no_connector,
++							  &mode));
++
++	return 0;
 +}
 +
- const struct aq_fw_ops aq_fw_1x_ops = {
- 	.init = hw_atl_utils_mpi_create,
- 	.deinit = hw_atl_fw1x_deinit,
+ static int drm_cmdline_test_rotate_invalid_val(void *ignored)
+ {
+ 	struct drm_cmdline_mode mode = { };
+@@ -888,7 +899,7 @@ static int drm_cmdline_test_hmirror(void *ignored)
+ 	FAIL_ON(!mode.specified);
+ 	FAIL_ON(mode.xres != 720);
+ 	FAIL_ON(mode.yres != 480);
+-	FAIL_ON(mode.rotation_reflection != DRM_MODE_REFLECT_X);
++	FAIL_ON(mode.rotation_reflection != (DRM_MODE_ROTATE_0 | DRM_MODE_REFLECT_X));
+ 
+ 	FAIL_ON(mode.refresh_specified);
+ 
+@@ -913,7 +924,7 @@ static int drm_cmdline_test_vmirror(void *ignored)
+ 	FAIL_ON(!mode.specified);
+ 	FAIL_ON(mode.xres != 720);
+ 	FAIL_ON(mode.yres != 480);
+-	FAIL_ON(mode.rotation_reflection != DRM_MODE_REFLECT_Y);
++	FAIL_ON(mode.rotation_reflection != (DRM_MODE_ROTATE_0 | DRM_MODE_REFLECT_Y));
+ 
+ 	FAIL_ON(mode.refresh_specified);
+ 
 -- 
 2.20.1
 
