@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39F73C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:00:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CFEAC18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:00:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F9DA20674
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:00:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 711812468E
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:00:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583845234;
-	bh=drD9BmDnYOiF+wounImhcJd5qTAl34ML2BjUO+0KUXM=;
+	s=default; t=1583845236;
+	bh=B9PFaMli9uM7nog+zc9NrAEfWprE6fi05I1j4+vXZ8U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q9kGoZRauEuJznUlYXXScQzJPGiCH9SWAfu4zEEpoUb3FHhvii08MhoGZQL/blA7F
-	 p+70y4PpftAj73u9DEcZ2Ib1VYLI9QoWgMsgPoTT3RNYzGJ/1WvJmHQ57c4rM+n+We
-	 KxMMkNTnaQ4s4aEdS59ncyaowhgZQWkXMxSXzTdo=
+	b=wHxzuFxeS0JAI4C8tjnZW0BUGWcfnLdSA3cbCyghLEK66pb8CmjrCqqor9ptRKLqY
+	 qxECa23HUOi8GC+7HnH4Dbj2JPB+kZchqLcl9szR7vKulOfUvO+HzUyKbHFrDG294g
+	 4mKLE6QF36oly15kGiKUEZKJ11WXuMfi1+mPCkC0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727901AbgCJNAd (ORCPT
+        id S1729872AbgCJNAf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:00:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41266 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:00:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41348 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729982AbgCJNAa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:00:30 -0400
+        id S1730147AbgCJNAd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:00:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E5D5D20674;
-        Tue, 10 Mar 2020 13:00:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F5F32468D;
+        Tue, 10 Mar 2020 13:00:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845229;
-        bh=drD9BmDnYOiF+wounImhcJd5qTAl34ML2BjUO+0KUXM=;
+        s=default; t=1583845232;
+        bh=B9PFaMli9uM7nog+zc9NrAEfWprE6fi05I1j4+vXZ8U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mjbjyBniByoBiz9VXCMCKQm9/r2LEmLafsCrVC+GtHtx+FSzp6VE6hLnhDDv9Gl38
-         KDU3tL4KogncDh/qeIU31vlHOaDbtMTT4TSgvB2bLIT798SW6fKPRs//5+hMCeUV7T
-         njDkDLkhc6+3QfV9vb6dW8QO+JkCAZEUF3+lNc7Y=
+        b=EyuiLthmImV3ug86h9fvjsKwucyM7N0ui18Ve8th86nTaYVrl0snK8aAOyiUv1yqp
+         kV6IYD+enhT0vsJfpl0+NiLmTiZqsREgtYC7cLBs1wX+6kPCq4znN3z54L0gWJDKe3
+         C9AffPC4/ir19bQWv253tfrHfFLDtm1Mlhe+hEZM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>
-Subject: [PATCH 5.5 107/189] s390/mm: fix panic in gup_fast on large pud
-Date:   Tue, 10 Mar 2020 13:39:04 +0100
-Message-Id: <20200310123650.508914716@linuxfoundation.org>
+        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
+        Christian Brauner <christian.brauner@ubuntu.com>
+Subject: [PATCH 5.5 108/189] selftests: pidfd: Add pidfd_fdinfo_test in .gitignore
+Date:   Tue, 10 Mar 2020 13:39:05 +0100
+Message-Id: <20200310123650.629562564@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123639.608886314@linuxfoundation.org>
 References: <20200310123639.608886314@linuxfoundation.org>
@@ -61,49 +59,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gerald Schaefer <gerald.schaefer@de.ibm.com>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-commit 582b4e55403e053d8a48ff687a05174da9cc3fb0 upstream.
+commit 186e28a18aeb0fec99cc586fda337e6b23190791 upstream.
 
-On s390 there currently is no implementation of pud_write(). That was ok
-as long as we had our own implementation of get_user_pages_fast() which
-checked for pud protection by testing the bit directly w/o using
-pud_write(). The other callers of pud_write() are not reachable on s390.
+The commit identified below added pidfd_fdinfo_test
+but failed to add it to .gitignore
 
-After commit 1a42010cdc26 ("s390/mm: convert to the generic
-get_user_pages_fast code") we use the generic get_user_pages_fast(), which
-does call pud_write() in pud_access_permitted() for FOLL_WRITE access on
-a large pud. Without an s390 specific pud_write(), the generic version is
-called, which contains a BUG() statement to remind us that we don't have a
-proper implementation. This results in a kernel panic.
-
-Fix this by providing an implementation of pud_write().
-
-Cc: <stable@vger.kernel.org> # 5.2+
-Fixes: 1a42010cdc26 ("s390/mm: convert to the generic get_user_pages_fast code")
-Signed-off-by: Gerald Schaefer <gerald.schaefer@de.ibm.com>
-Reviewed-by: Heiko Carstens <heiko.carstens@de.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Fixes: 2def297ec7fb ("pidfd: add tests for NSpid info in fdinfo")
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/966567c7dbaa26a06730d796354f8a086c0ee288.1582847778.git.christophe.leroy@c-s.fr
+Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/s390/include/asm/pgtable.h |    6 ++++++
- 1 file changed, 6 insertions(+)
+ tools/testing/selftests/pidfd/.gitignore |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/arch/s390/include/asm/pgtable.h
-+++ b/arch/s390/include/asm/pgtable.h
-@@ -750,6 +750,12 @@ static inline int pmd_write(pmd_t pmd)
- 	return (pmd_val(pmd) & _SEGMENT_ENTRY_WRITE) != 0;
- }
- 
-+#define pud_write pud_write
-+static inline int pud_write(pud_t pud)
-+{
-+	return (pud_val(pud) & _REGION3_ENTRY_WRITE) != 0;
-+}
-+
- static inline int pmd_dirty(pmd_t pmd)
- {
- 	return (pmd_val(pmd) & _SEGMENT_ENTRY_DIRTY) != 0;
+--- a/tools/testing/selftests/pidfd/.gitignore
++++ b/tools/testing/selftests/pidfd/.gitignore
+@@ -2,3 +2,4 @@ pidfd_open_test
+ pidfd_poll_test
+ pidfd_test
+ pidfd_wait
++pidfd_fdinfo_test
 
 
