@@ -2,144 +2,83 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2889C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:30:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33189C18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:30:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8E5E24694
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:30:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583847020;
-	bh=4nXPnykUsacARlS2dVosm+pERhdkOACkmujynfGKPDc=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=Q9zJ9ao+CTBdpcUyg1eXB1kS4GE7BUP4ozk7z+Ta+nS6urfUtto/QGlLLdisbJURD
-	 bhK/Rj3/RD/cwyxKSjbYqk/TaSl6JWDdR/dPyHAKwjXagP0HVONWFIRuWx2HdQ+aMv
-	 ou2NNXoee5RMdqRSdHVILQDNNIynFXvw7QFIdGKA=
+	by mail.kernel.org (Postfix) with ESMTP id 0C83E24680
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:30:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728659AbgCJMuk (ORCPT
+        id S1728658AbgCJMui (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:50:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55262 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728368AbgCJMuc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:50:32 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA3A12468D;
-        Tue, 10 Mar 2020 12:50:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844631;
-        bh=4nXPnykUsacARlS2dVosm+pERhdkOACkmujynfGKPDc=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=LxJaWEYOLamJTgK85rUm0S/gisC6gK1qb5rPeeF4ZttSvr+VX0xdaDonSnclURJVU
-         Oy2hFi/tprPB5V1gzSnp2yfjyegJUdbpT81qPOYJlhED/knyJfBTC/PU3PI7ZVMup4
-         dhN3oqm5xBXAa4kcjPbXcmCra5t10+x/VnV3oK6c=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 5558E35226CF; Tue, 10 Mar 2020 05:50:31 -0700 (PDT)
-Date:   Tue, 10 Mar 2020 05:50:31 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     David Laight <David.Laight@ACULAB.COM>
-Cc:     'Chris Wilson' <chris@chris-wilson.co.uk>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>, elver@google.com
-Subject: Re: [PATCH] list: Prevent compiler reloads inside 'safe' list
- iteration
-Message-ID: <20200310125031.GY2935@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200310092119.14965-1-chris@chris-wilson.co.uk>
- <2e936d8fd2c445beb08e6dd3ee1f3891@AcuMS.aculab.com>
- <158384100886.16414.15741589015363013386@build.alporthouse.com>
- <723d527a4ad349b78bf11d52eba97c0e@AcuMS.aculab.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <723d527a4ad349b78bf11d52eba97c0e@AcuMS.aculab.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Tue, 10 Mar 2020 08:50:38 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:36164 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728594AbgCJMub (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:50:31 -0400
+Received: from linux.localdomain (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxn9kBjWdeay0ZAA--.25S2;
+        Tue, 10 Mar 2020 20:50:10 +0800 (CST)
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+To:     Bjorn Helgaas <bhelgaas@google.com>, Jens Axboe <axboe@kernel.dk>
+Cc:     linux-pci@vger.kernel.org, linux-ide@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Xuefeng Li <lixuefeng@loongson.cn>
+Subject: [PATCH 1/2] PCI: Add Loongson vendor ID
+Date:   Tue, 10 Mar 2020 20:50:07 +0800
+Message-Id: <1583844608-30029-1-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID: AQAAf9Dxn9kBjWdeay0ZAA--.25S2
+X-Coremail-Antispam: 1UD129KBjvdXoW7XF43KF43XFWUuFykXryDtrb_yoW3XFc_C3
+        4fWF18Cr4rZr1UXw48XFy3JF1a934a9a17Wr95KrW3u3Wjyrs8X34xCr9Fq3Z3uanxCrn8
+        Jan2q34Iyw1UujkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbckFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
+        Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
+        0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
+        jxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr
+        1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkIecxEwVAFwVW5JwCF
+        04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r
+        18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vI
+        r41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr
+        1lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1UMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF
+        0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUID73UUUUU=
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 10, 2020 at 12:23:34PM +0000, David Laight wrote:
-> From: Chris Wilson
-> > Sent: 10 March 2020 11:50
-> > 
-> > Quoting David Laight (2020-03-10 11:36:41)
-> > > From: Chris Wilson
-> > > > Sent: 10 March 2020 09:21
-> > > > Instruct the compiler to read the next element in the list iteration
-> > > > once, and that it is not allowed to reload the value from the stale
-> > > > element later. This is important as during the course of the safe
-> > > > iteration, the stale element may be poisoned (unbeknownst to the
-> > > > compiler).
-> > >
-> > > Eh?
-> > > I thought any function call will stop the compiler being allowed
-> > > to reload the value.
-> > > The 'safe' loop iterators are only 'safe' against called
-> > > code removing the current item from the list.
-> > >
-> > > > This helps prevent kcsan warnings over 'unsafe' conduct in releasing the
-> > > > list elements during list_for_each_entry_safe() and friends.
-> > >
-> > > Sounds like kcsan is buggy ????
+Add the Loongson vendor ID to pci_ids.h to be used by the controller
+driver in the future.
 
-Adding Marco on CC for his thoughts.
+The Loongson vendor ID can be found at the following link:
+https://git.kernel.org/pub/scm/utils/pciutils/pciutils.git/tree/pci.ids
 
-> > The warning kcsan gave made sense (a strange case where the emptying the
-> > list from inside the safe iterator would allow that list to be taken
-> > under a global mutex and have one extra request added to it. The
-> > list_for_each_entry_safe() should be ok in this scenario, so long as the
-> > next element is read before this element is dropped, and the compiler is
-> > instructed not to reload the element.
-> 
-> Normally the loop iteration code has to hold the mutex.
-> I guess it can be released inside the loop provided no other
-> code can ever delete entries.
-> 
-> > kcsan is a little more insistent on having that annotation :)
-> > 
-> > In this instance I would say it was a false positive from kcsan, but I
-> > can see why it would complain and suspect that given a sufficiently
-> > aggressive compiler, we may be caught out by a late reload of the next
-> > element.
-> 
-> If you have:
-> 	for (; p; p = next) {
-> 		next = p->next;
-> 		external_function_call(void);
-> 	}
-> the compiler must assume that the function call
-> can change 'p->next' and read it before the call.
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ include/linux/pci_ids.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-That "must assume" is a statement of current compiler technology.
-Given the progress over the past forty years, I would not expect this
-restriction to hold forever.  Yes, we can and probably will get the
-compiler implementers to give us command-line flags to suppress global
-analysis.  But given the progress in compilers that I have seen over
-the past 4+ decades, I would expect that the day will come when we won't
-want to be using those command-line flags.
+diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+index 352c0d7..977e668 100644
+--- a/include/linux/pci_ids.h
++++ b/include/linux/pci_ids.h
+@@ -148,6 +148,8 @@
+ 
+ /* Vendors and devices.  Sort key: vendor first, device next. */
+ 
++#define PCI_VENDOR_ID_LOONGSON		0x0014
++
+ #define PCI_VENDOR_ID_TTTECH		0x0357
+ #define PCI_DEVICE_ID_TTTECH_MC322	0x000a
+ 
+-- 
+2.1.0
 
-But if you want to ignore KCSAN's warnings, you are free to do so.
-
-> Is this a list with strange locking rules?
-> The only deletes are from within the loop.
-> Adds and deletes are locked.
-> The list traversal isn't locked.
-> 
-> I suspect kcsan bleats because it doesn't assume the compiler
-> will use a single instruction/memory operation to read p->next.
-> That is just stupid.
-
-Heh!  If I am still around, I will ask you for your evaluation of the
-above statement in 40 years.  Actually, 10 years will likely suffice.  ;-)
-
-							Thanx, Paul
