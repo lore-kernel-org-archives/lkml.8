@@ -2,142 +2,85 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BBFEC10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 02:14:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C6DCC18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 02:15:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 530282146E
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 02:14:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L6Xq9iZG"
+	by mail.kernel.org (Postfix) with ESMTP id 656DB24676
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 02:15:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726558AbgCJCOM (ORCPT
+        id S1726882AbgCJCPb convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 22:14:12 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:40452 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726156AbgCJCOL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 22:14:11 -0400
-Received: by mail-ot1-f66.google.com with SMTP id x19so11712819otp.7;
-        Mon, 09 Mar 2020 19:14:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=gAewQcsa0gHih3wXpHAV80ssMemQtrtXXF853KTte9o=;
-        b=L6Xq9iZGLEa1l14/JrlBDJBkv6HSKObpOzYqkDvz6JQ3GsPAHMI1pWejPHQchkBx/J
-         7DYTfbBRiVRSC0rvWKTxzNI97bTlim0XdN1HVXIso9GWDDH9ZIEbUsirmgrK6cjDzCTV
-         Ge94uFgJxo8bbnbP094yO7yKys8bFQDoQAIyZXhbAPUTDKRJU0Y23zTDUcqdQo0643N+
-         scYHFsyP+aMiDWTUKAw8HAzoul6KYwMEnWVYDdb1HCxu9FCzTzNwuC4hfZJEYYtjNDbh
-         71T4jtmAKGVBmywAehooLNjMEYzMwT8EoZhKl4EpuxgMTAxYCKfHbzE3aG4uKl6iobk8
-         PSag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=gAewQcsa0gHih3wXpHAV80ssMemQtrtXXF853KTte9o=;
-        b=NJpAJIl4/3LAigf+NTv5OlBER404onshMb2msx/G6/soCyHUxeEd7FNNBd+0scmaHu
-         O8kgIH5FXcjOR/g5khOv20F7hLQfNfNOjIqP28IOjEgCLLU1AHC8IsWzeAzNb/84rvvN
-         k6fIexutaQ1BXY04iEw3BeK4+cg1lDk/Sy7UtHUlP4vcqZzcQxqbSSuCMnlokB+INtuk
-         4ACU4bdZT/DUSUqhAD4MXYhh6oYJAhlCyT+BPAZeh5D2wIHGt5yi90+clP11EI1Cp717
-         3rPqEtA0KRIDyBpiRewYby1WFYtMC8RYh4nefnr0nV4rj7b+npganhb2nPOiLrWZbZt5
-         MMDw==
-X-Gm-Message-State: ANhLgQ1fGTRcik6H2uc0bTnIQWzxDKbzH37aq/glYKdDroWw0ihclkzx
-        bAzA7yBbTwr/IMUlZe19/wNNVPIG+4O3KAgkSbc=
-X-Google-Smtp-Source: ADFU+vtaVVdLu4F7XALa/kOBsPcMpoxoqzHShyPAI8Uyv+DJuJS2VG1IYhdWG4KhM/G0WcnD+WqCE+VveBubEMUEXwI=
-X-Received: by 2002:a9d:19ef:: with SMTP id k102mr12179526otk.220.1583806450481;
- Mon, 09 Mar 2020 19:14:10 -0700 (PDT)
+        Mon, 9 Mar 2020 22:15:31 -0400
+Received: from szxga02-in.huawei.com ([45.249.212.188]:3474 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726749AbgCJCP0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 22:15:26 -0400
+Received: from DGGEMM403-HUB.china.huawei.com (unknown [172.30.72.55])
+        by Forcepoint Email with ESMTP id CFE5675DCFD32CF15548;
+        Tue, 10 Mar 2020 10:15:22 +0800 (CST)
+Received: from dggeme751-chm.china.huawei.com (10.3.19.97) by
+ DGGEMM403-HUB.china.huawei.com (10.3.20.211) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 10 Mar 2020 10:15:22 +0800
+Received: from dggeme753-chm.china.huawei.com (10.3.19.99) by
+ dggeme751-chm.china.huawei.com (10.3.19.97) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1713.5; Tue, 10 Mar 2020 10:15:22 +0800
+Received: from dggeme753-chm.china.huawei.com ([10.7.64.70]) by
+ dggeme753-chm.china.huawei.com ([10.7.64.70]) with mapi id 15.01.1713.004;
+ Tue, 10 Mar 2020 10:15:22 +0800
+From:   linmiaohe <linmiaohe@huawei.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+CC:     Paolo Bonzini <pbonzini@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Liran Alon <liran.alon@oracle.com>
+Subject: Re: [PATCH 1/6] KVM: nVMX: avoid NULL pointer dereference with
+ incorrect EVMCS GPAs
+Thread-Topic: [PATCH 1/6] KVM: nVMX: avoid NULL pointer dereference with
+ incorrect EVMCS GPAs
+Thread-Index: AdX2gYnHrRJm24gdykq2IZCf5t2hfg==
+Date:   Tue, 10 Mar 2020 02:15:22 +0000
+Message-ID: <35a2dd64f2024f4693737af24637a3d6@huawei.com>
+Accept-Language: en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.173.221.158]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-References: <CAMe9rOpJjaro_qK6kghGNuSHDaP_MjVaZMbok2kbuBD48VmvXg@mail.gmail.com>
- <E7E7A2AE-500A-4817-B00A-BE419E89C6F9@amacapital.net>
-In-Reply-To: <E7E7A2AE-500A-4817-B00A-BE419E89C6F9@amacapital.net>
-From:   "H.J. Lu" <hjl.tools@gmail.com>
-Date:   Mon, 9 Mar 2020 19:13:34 -0700
-Message-ID: <CAMe9rOoZazTpWcK1hr4d25z8Gv3yGbpn_48R1RHGfq-aDOJ0Eg@mail.gmail.com>
-Subject: Re: [RFC PATCH v9 01/27] Documentation/x86: Add CET description
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     Dave Hansen <dave.hansen@intel.com>,
-        Yu-cheng Yu <yu-cheng.yu@intel.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>, x86-patch-review@intel.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 9, 2020 at 6:21 PM Andy Lutomirski <luto@amacapital.net> wrote:
+Hi:
+Vitaly Kuznetsov <vkuznets@redhat.com> writes:
+>When an EVMCS enabled L1 guest on KVM will tries doing enlightened VMEnter with EVMCS GPA = 0 the host crashes because the
 >
-> I am baffled by this discussion.
+>evmcs_gpa != vmx->nested.hv_evmcs_vmptr
 >
-> >> On Mar 9, 2020, at 5:09 PM, H.J. Lu <hjl.tools@gmail.com> wrote:
-> >>
-> >> =EF=BB=BFOn Mon, Mar 9, 2020 at 4:59 PM Andy Lutomirski <luto@amacapit=
-al.net> wrote:
-> >
-> >>>> .
-> >> This could presumably have been fixed by having libpcre or sljit
-> >> disable IBT before calling into JIT code or by running the JIT code in
-> >> another thread.  In the other direction, a non-CET libpcre build could
-> >> build IBT-capable JITted code and enable JIT (by syscall if we allow
-> >> that or by creating a thread?) when calling it.  And IBT has this
-> >
-> > This is not how thread in user space works.
+>condition in nested_vmx_handle_enlightened_vmptrld() will evaluate to false (as nested.hv_evmcs_vmptr is zeroed after init). The crash will happen on vmx->nested.hv_evmcs pointer dereference.
 >
-> void create_cet_thread(void (*func)(), unsigned int cet_flags);
+>Another problematic EVMCS ptr value is '-1' but it only causes host crash after nested_release_evmcs() invocation. The problem is exactly the same as with '0', we mistakenly think that the EVMCS pointer hasn't changed and thus nested.hv_evmcs_vmptr is valid.
 >
-> I could implement this using clone() if the kernel provides the requisite=
- support. Sure, creating threads behind libc=E2=80=99s back like this is pe=
-rilous, but it can be done.
-
-Sure, this can live outside of libc with kernel support.
-
-> >
-> >> fancy legacy bitmap to allow non-instrumented code to run with IBT on,
-> >> although SHSTK doesn't have hardware support for a similar feature.
-> >
-> > All these changes are called CET enabing.
+>Resolve the issue by adding an additional !vmx->nested.hv_evmcs check to nested_vmx_handle_enlightened_vmptrld(), this way we will always be trying kvm_vcpu_map() when nested.hv_evmcs is NULL and this is supposed to catch all invalid EVMCS GPAs.
 >
-> What does that mean?  If program A loads library B, and library B very ca=
-refully loads CET-mismatched code, program A may be blissfully unaware.
+>Also, initialize hv_evmcs_vmptr to '0' in nested_release_evmcs() to be consistent with initialization where we don't currently set hv_evmcs_vmptr to '-1'.
+>
+>Cc: stable@vger.kernel.org
+>Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+>---
+> arch/x86/kvm/vmx/nested.c | 5 +++--
+> 1 file changed, 3 insertions(+), 2 deletions(-)
 
-Any source changes to make codes CET compatible is to enable CET.
+Good catch! Patch looks good for me. Thanks!
+Reviewed-by: Miaohe Lin <linmiaohe@huawei.com>
 
-Shadow stack can't be turned on or off arbitrarily.  ld.so checks it and
-makes sure that everything is consistent.  But this is entirely done in
-user space.  In the first phase, we want to make CET simple, not too
-complicated.
-
-
-H.J.
