@@ -2,139 +2,494 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD693C10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:12:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1E0FC18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:13:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92FA0215A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:12:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="dxZSN4Lo"
+	by mail.kernel.org (Postfix) with ESMTP id 75113215A4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:13:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583871237;
+	bh=e6QBBdmLL0bPzP6abAUC4vyQXBefzcwfedNDS+EB9kM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=tcu1llR7N5Kb+Z4DiAgKnzoC2b4McRtI/NKqUFVZwIDZYeRWm4feULV7jQ17sA2M/
+	 wzOB6fVnrC7XCNvv4N9092uno1LLGI6CPCpycYViFhFXwLtwhR5pGEPYzkL3a85RI6
+	 TM6jjCb7stFj4F9eEfY3ykEpR3lVxjBDkX7sAqn4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727628AbgCJUMO (ORCPT
+        id S1727479AbgCJUN4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 16:12:14 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:37802 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726604AbgCJUMO (ORCPT
+        Tue, 10 Mar 2020 16:13:56 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:33149 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726545AbgCJUN4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 16:12:14 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02AK4I1L113420;
-        Tue, 10 Mar 2020 20:11:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=tJ7/QJ5avADe6ht2Nb3+19M/jW4rdhvxqGYM2nNb6Eg=;
- b=dxZSN4LouyNMontPZsOrX4yRAc+wSxTmozaE9GnS9AYzmGI7AuULInMXEt13ZxefttCg
- nhxZwUa4wC08QwXQihw3EDmqgwaT/Je9j+BmPHZttV6xz+pKccPFV2RKWe1pLlqJr3fX
- mXLKPT1OJS+z6cZ0gu7mwSi0x2o/eomXvO78uHOY8gZc14d1VfnKENSG6GjZuK7lwNvr
- +C5dliKx6Uh8H2bUkU/luQ0k5Rue8ovgpC02FcxYy+Ao7qGxI5HLkCJ+GpMG6lhiAZeg
- +gdRLXawRX+L57hG0Hiutr4Wz/iD0J7axTtMi2VhXBCwTvf/DdogBBjF91CnqHATua96 2Q== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2yp7hm46ug-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 10 Mar 2020 20:11:58 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02AK7McP089367;
-        Tue, 10 Mar 2020 20:11:58 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 2yp8qqb2sc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 10 Mar 2020 20:11:57 +0000
-Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 02AKBso3011564;
-        Tue, 10 Mar 2020 20:11:54 GMT
-Received: from [192.168.1.206] (/71.63.128.209)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 10 Mar 2020 13:11:53 -0700
-Subject: Re: [PATCH v2] mm: hugetlb: optionally allocate gigantic hugepages
- using cma
-To:     Rik van Riel <riel@surriel.com>, Michal Hocko <mhocko@kernel.org>,
-        Roman Gushchin <guro@fb.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>, linux-mm@kvack.org,
-        kernel-team@fb.com, linux-kernel@vger.kernel.org
-References: <20200310002524.2291595-1-guro@fb.com>
- <5cfa9031-fc15-2bcc-adb9-9779285ef0f7@oracle.com>
- <20200310180558.GD85000@carbon.dhcp.thefacebook.com>
- <4b78a8a9-7b5a-eb62-acaa-2677e615bea1@oracle.com>
- <20200310191906.GA96999@carbon.dhcp.thefacebook.com>
- <20200310193622.GC8447@dhcp22.suse.cz>
- <43e2e8443288260aa305f39ba566f81bf065d010.camel@surriel.com>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <57494a9c-5c24-20b6-0bda-dac8bbb6f731@oracle.com>
-Date:   Tue, 10 Mar 2020 13:11:52 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 10 Mar 2020 16:13:56 -0400
+Received: by mail-ot1-f67.google.com with SMTP id g15so8388945otr.0;
+        Tue, 10 Mar 2020 13:13:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=Npzha+URNCMUvVufnAeaLU2EtIEQm+SEZnltN12bCwI=;
+        b=HCTxXDyOzNpvQ/l3SH7QQ2BtqeAjgi/45dPLLhOMty3mBZ3bJtY0hJVTxoSnyoaXUx
+         esxD5PEPv7wLFoqE0MDgQcGLj6Ujsg4PCIaTg0JXLPXr2kc3Veff35/MoR77nBFWW91Z
+         pBfJNh2cE3frvV7UFQG0lB3aTexb2jop46XLbNYiktdmx85+SXwgpOh39qcwOw8iR9ER
+         eBjXfHFnXyvTLE0mTgQ7DAlOJ/UkkbOapaksXifrMm1qca6uW8XWYc5Nai0B/e4Tqp8f
+         k1TGRkcQmG0DXzFk3VbdEqsp1y3PrqN7HH94ze18C1ioBzqfwbjeaMoBqk8pbo+xDFNX
+         azfg==
+X-Gm-Message-State: ANhLgQ0WySSz1BBQeIMnQ25AP/LZf/Fk3IndHI0MEZb7Z6vVvsx/zNYu
+        bkIEIgmg3bDsiDBtiWPlyw==
+X-Google-Smtp-Source: ADFU+vvYWAow+kdNjMGNxoLFx+QNcGSseuUvf13MUEAv6JRHE9TFQeDVyR3podF9Q7abz8BcY4eRVw==
+X-Received: by 2002:a9d:554a:: with SMTP id h10mr17459705oti.344.1583871233844;
+        Tue, 10 Mar 2020 13:13:53 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id r8sm3182898otp.7.2020.03.10.13.13.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Mar 2020 13:13:53 -0700 (PDT)
+Received: (nullmailer pid 25277 invoked by uid 1000);
+        Tue, 10 Mar 2020 20:13:52 -0000
+Date:   Tue, 10 Mar 2020 15:13:52 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        od@zcrc.me, =?utf-8?B?5ZGo55Cw5p2w?= <zhouyanjie@wanyeetech.com>
+Subject: Re: [PATCH v2] dt-bindings: timer: Convert ingenic,tcu.txt to YAML
+Message-ID: <20200310201352.GA28962@bogus>
+References: <20200302200551.19845-1-paul@crapouillou.net>
+ <1583247343.3.1@crapouillou.net>
 MIME-Version: 1.0
-In-Reply-To: <43e2e8443288260aa305f39ba566f81bf065d010.camel@surriel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9556 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 malwarescore=0 mlxscore=0
- adultscore=0 suspectscore=0 bulkscore=0 spamscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2003100118
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9556 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0
- priorityscore=1501 clxscore=1015 mlxscore=0 impostorscore=0
- mlxlogscore=999 suspectscore=0 phishscore=0 malwarescore=0 adultscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003100117
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1583247343.3.1@crapouillou.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/10/20 12:46 PM, Rik van Riel wrote:
-> On Tue, 2020-03-10 at 20:36 +0100, Michal Hocko wrote:
->> On Tue 10-03-20 12:19:06, Roman Gushchin wrote:
->> [...]
->>>> I found this out by testing code and specifying
->>>> hugetlb_cma=2M.  Messages
->>>> in log were:
->>>> 	kernel: hugetlb_cma: reserve 2097152, 1048576 per node
->>>> 	kernel: hugetlb_cma: successfully reserved 1048576 on node 0
->>>> 	kernel: hugetlb_cma: successfully reserved 1048576 on node 1
->>>> But, it really reserved 1GB per node.
->>>
->>> Good point! In the passed size is too small to cover a single huge
->>> page,
->>> we should probably print a warning and bail out.
->>
->> Or maybe you just want to make the interface the unit size rather
->> than
->> overall size oriented. E.g. I want 10G pages per each numa node.
+On Tue, Mar 03, 2020 at 11:55:43AM -0300, Paul Cercueil wrote:
+> @Rob:
 > 
-> How would that work for architectures that have multiple
-> possible hugetlbfs gigantic page sizes, where the admin
-> can allocate different numbers of differently sized pages
-> after bootup?
+> 
+> Le lun., mars 2, 2020 at 17:05, Paul Cercueil <paul@crapouillou.net> a écrit
+> :
+> > Convert the ingenic,tcu.txt file to YAML.
+> > 
+> > Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> > ---
+> > 
+> > @Daniel:
+> > 
+> > As for v1, if Rob acks it, please take this patch to your tree, since
+> > the .txt file was modified there. Going through your tree would avoid a
+> > merge conflict.
+> > 
+> > Thanks,
+> > -Paul
+> > 
+> > Changelog:
+> >     v2:	- Add missing 'reg' properties to child nodes
+> >     	- Removed 'additionalProperties: false' on child objects which
+> >     	  included external YAML
+> >     	- Add description of interrupts
+> >     	- Fix pattern regex
+> >     	- Add missing ingenic,jz4780-tcu compatible string (which requires
+> >     	  fallback to ingenic,jz4770-tcu)
+> >     	- Add 'select' to fix matching of schema
+> > 
+> >  .../devicetree/bindings/timer/ingenic,tcu.txt | 138 ---------
+> >  .../bindings/timer/ingenic,tcu.yaml           | 269 ++++++++++++++++++
+> >  2 files changed, 269 insertions(+), 138 deletions(-)
+> >  delete mode 100644
+> > Documentation/devicetree/bindings/timer/ingenic,tcu.txt
+> >  create mode 100644
+> > Documentation/devicetree/bindings/timer/ingenic,tcu.yaml
+> > 
+> > diff --git a/Documentation/devicetree/bindings/timer/ingenic,tcu.txt
+> > b/Documentation/devicetree/bindings/timer/ingenic,tcu.txt
+> > deleted file mode 100644
+> > index 91f704951845..000000000000
+> > --- a/Documentation/devicetree/bindings/timer/ingenic,tcu.txt
+> > +++ /dev/null
+> > @@ -1,138 +0,0 @@
+> > -Ingenic JZ47xx SoCs Timer/Counter Unit devicetree bindings
+> > -==========================================================
+> > -
+> > -For a description of the TCU hardware and drivers, have a look at
+> > -Documentation/mips/ingenic-tcu.rst.
+> > -
+> > -Required properties:
+> > -
+> > -- compatible: Must be one of:
+> > -  * ingenic,jz4740-tcu
+> > -  * ingenic,jz4725b-tcu
+> > -  * ingenic,jz4770-tcu
+> > -  * ingenic,x1000-tcu
+> > -  followed by "simple-mfd".
+> > -- reg: Should be the offset/length value corresponding to the TCU
+> > registers
+> > -- clocks: List of phandle & clock specifiers for clocks external to the
+> > TCU.
+> > -  The "pclk", "rtc" and "ext" clocks should be provided. The "tcu"
+> > clock
+> > -  should be provided if the SoC has it.
+> > -- clock-names: List of name strings for the external clocks.
+> > -- #clock-cells: Should be <1>;
+> > -  Clock consumers specify this argument to identify a clock. The valid
+> > values
+> > -  may be found in <dt-bindings/clock/ingenic,tcu.h>.
+> > -- interrupt-controller : Identifies the node as an interrupt controller
+> > -- #interrupt-cells : Specifies the number of cells needed to encode an
+> > -  interrupt source. The value should be 1.
+> > -- interrupts : Specifies the interrupt the controller is connected to.
+> > -
+> > -Optional properties:
+> > -
+> > -- ingenic,pwm-channels-mask: Bitmask of TCU channels reserved for PWM
+> > use.
+> > -  Default value is 0xfc.
+> > -
+> > -
+> > -Children nodes
+> > -==========================================================
+> > -
+> > -
+> > -PWM node:
+> > ----------
+> > -
+> > -Required properties:
+> > -
+> > -- compatible: Must be one of:
+> > -  * ingenic,jz4740-pwm
+> > -  * ingenic,jz4725b-pwm
+> > -- #pwm-cells: Should be 3. See ../pwm/pwm.yaml for a description of the
+> > cell
+> > -  format.
+> > -- clocks: List of phandle & clock specifiers for the TCU clocks.
+> > -- clock-names: List of name strings for the TCU clocks.
+> > -
+> > -
+> > -Watchdog node:
+> > ---------------
+> > -
+> > -Required properties:
+> > -
+> > -- compatible: Must be "ingenic,jz4740-watchdog"
+> > -- clocks: phandle to the WDT clock
+> > -- clock-names: should be "wdt"
+> > -
+> > -
+> > -OS Timer node:
+> > ----------
+> > -
+> > -Required properties:
+> > -
+> > -- compatible: Must be one of:
+> > -  * ingenic,jz4725b-ost
+> > -  * ingenic,jz4770-ost
+> > -- clocks: phandle to the OST clock
+> > -- clock-names: should be "ost"
+> > -- interrupts : Specifies the interrupt the OST is connected to.
+> > -
+> > -
+> > -Example
+> > -==========================================================
+> > -
+> > -#include <dt-bindings/clock/jz4770-cgu.h>
+> > -#include <dt-bindings/clock/ingenic,tcu.h>
+> > -
+> > -/ {
+> > -	tcu: timer@10002000 {
+> > -		compatible = "ingenic,jz4770-tcu", "simple-mfd";
+> > -		reg = <0x10002000 0x1000>;
+> > -		#address-cells = <1>;
+> > -		#size-cells = <1>;
+> > -		ranges = <0x0 0x10002000 0x1000>;
+> > -
+> > -		#clock-cells = <1>;
+> > -
+> > -		clocks = <&cgu JZ4770_CLK_RTC
+> > -			  &cgu JZ4770_CLK_EXT
+> > -			  &cgu JZ4770_CLK_PCLK>;
+> > -		clock-names = "rtc", "ext", "pclk";
+> > -
+> > -		interrupt-controller;
+> > -		#interrupt-cells = <1>;
+> > -
+> > -		interrupt-parent = <&intc>;
+> > -		interrupts = <27 26 25>;
+> > -
+> > -		watchdog: watchdog@0 {
+> > -			compatible = "ingenic,jz4740-watchdog";
+> > -			reg = <0x0 0xc>;
+> > -
+> > -			clocks = <&tcu TCU_CLK_WDT>;
+> > -			clock-names = "wdt";
+> > -		};
+> > -
+> > -		pwm: pwm@40 {
+> > -			compatible = "ingenic,jz4740-pwm";
+> > -			reg = <0x40 0x80>;
+> > -
+> > -			#pwm-cells = <3>;
+> > -
+> > -			clocks = <&tcu TCU_CLK_TIMER0
+> > -				  &tcu TCU_CLK_TIMER1
+> > -				  &tcu TCU_CLK_TIMER2
+> > -				  &tcu TCU_CLK_TIMER3
+> > -				  &tcu TCU_CLK_TIMER4
+> > -				  &tcu TCU_CLK_TIMER5
+> > -				  &tcu TCU_CLK_TIMER6
+> > -				  &tcu TCU_CLK_TIMER7>;
+> > -			clock-names = "timer0", "timer1", "timer2", "timer3",
+> > -				      "timer4", "timer5", "timer6", "timer7";
+> > -		};
+> > -
+> > -		ost: timer@e0 {
+> > -			compatible = "ingenic,jz4770-ost";
+> > -			reg = <0xe0 0x20>;
+> > -
+> > -			clocks = <&tcu TCU_CLK_OST>;
+> > -			clock-names = "ost";
+> > -
+> > -			interrupts = <15>;
+> > -		};
+> > -	};
+> > -};
+> > diff --git a/Documentation/devicetree/bindings/timer/ingenic,tcu.yaml
+> > b/Documentation/devicetree/bindings/timer/ingenic,tcu.yaml
+> > new file mode 100644
+> > index 000000000000..14b68c87319f
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/timer/ingenic,tcu.yaml
+> > @@ -0,0 +1,269 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/timer/ingenic,tcu.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Ingenic SoCs Timer/Counter Unit (TCU) devicetree bindings
+> > +
+> > +description: |
+> > +  For a description of the TCU hardware and drivers, have a look at
+> > +  Documentation/mips/ingenic-tcu.rst.
+> > +
+> > +maintainers:
+> > +  - Paul Cercueil <paul@crapouillou.net>
+> > +
+> > +select:
+> > +  properties:
+> > +    compatible:
+> > +      contains:
+> > +        enum:
+> > +          - ingenic,jz4740-tcu
+> > +          - ingenic,jz4725b-tcu
+> > +          - ingenic,jz4770-tcu
+> > +          - ingenic,jz4780-tcu
+> > +          - ingenic,x1000-tcu
+> > +  required:
+> > +    - compatible
+> > +
+> > +properties:
+> > +  $nodename:
+> > +    pattern: "^timer@[0-9a-f]+$"
+> > +
+> > +  "#address-cells":
+> > +    const: 1
+> > +
+> > +  "#size-cells":
+> > +    const: 1
+> > +
+> > +  "#clock-cells":
+> > +    const: 1
+> > +
+> > +  "#interrupt-cells":
+> > +    const: 1
+> > +
+> > +  interrupt-controller: true
+> > +
+> > +  ranges: true
+> > +
+> > +  compatible:
+> > +    oneOf:
+> > +      - items:
+> > +        - enum:
+> > +          - ingenic,jz4740-tcu
+> > +          - ingenic,jz4725b-tcu
+> > +          - ingenic,jz4770-tcu
+> > +          - ingenic,x1000-tcu
+> > +        - const: simple-mfd
+> > +      - items:
+> > +        - const: ingenic,jz4780-tcu
+> > +        - const: ingenic,jz4770-tcu
+> > +        - const: simple-mfd
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  clocks:
+> > +    items:
+> > +      - description: RTC clock
+> > +      - description: EXT clock
+> > +      - description: PCLK clock
+> > +      - description: TCU clock
+> > +    minItems: 3
+> > +
+> > +  clock-names:
+> > +    items:
+> > +      - const: rtc
+> > +      - const: ext
+> > +      - const: pclk
+> > +      - const: tcu
+> > +    minItems: 3
+> > +
+> > +  interrupts:
+> > +    items:
+> > +      - description: TCU0 interrupt
+> > +      - description: TCU1 interrupt
+> > +      - description: TCU2 interrupt
+> > +    minItems: 1
+> > +
+> > +  ingenic,pwm-channels-mask:
+> > +    description: Bitmask of TCU channels reserved for PWM use.
+> > +    allOf:
+> > +      - $ref: /schemas/types.yaml#/definitions/uint32
+> > +      - minimum: 0x00
+> > +      - maximum: 0xff
+> > +      - default: 0xfc
+> > +
+> > +patternProperties:
+> > +  "^watchdog@[a-f0-9]+$":
+> > +    type: object
+> > +    allOf: [ $ref: ../watchdog/watchdog.yaml# ]
+> > +    properties:
+> > +      compatible:
+> > +        oneOf:
+> > +          - enum:
+> > +            - ingenic,jz4740-watchdog
+> > +            - ingenic,jz4780-watchdog
+> > +          - items:
+> > +            - const: ingenic,jz4770-watchdog
+> > +            - const: ingenic,jz4740-watchdog
+> > +
+> > +      reg:
+> > +        maxItems: 1
+> > +
+> > +      clocks:
+> > +        maxItems: 1
+> > +
+> > +      clock-names:
+> > +        const: wdt
+> > +
+> > +    required:
+> > +      - compatible
+> > +      - reg
+> > +      - clocks
+> > +      - clock-names
+> > +
+> > +  "^pwm@[a-f0-9]+$":
+> > +    type: object
+> > +    allOf: [ $ref: ../pwm/pwm.yaml# ]
+> > +    properties:
+> > +      compatible:
+> > +        oneOf:
+> > +          - enum:
+> > +            - ingenic,jz4740-pwm
+> > +          - items:
+> > +            - enum:
+> > +              - ingenic,jz4770-pwm
+> > +              - ingenic,jz4780-pwm
+> > +            - const: ingenic,jz4740-pwm
+> > +
+> > +      reg:
+> > +        maxItems: 1
+> > +
+> > +      clocks:
+> > +        minItems: 6
+> > +        maxItems: 8
+> > +
+> > +      clock-names:
+> > +        items:
+> > +          - const: timer0
+> > +          - const: timer1
+> > +          - const: timer2
+> > +          - const: timer3
+> > +          - const: timer4
+> > +          - const: timer5
+> > +          - const: timer6
+> > +          - const: timer7
+> > +        minItems: 6
+> > +
+> > +    required:
+> > +      - compatible
+> > +      - reg
+> > +      - clocks
+> > +      - clock-names
+> > +
+> > +  "^timer@[a-f0-9]+$":
+> > +    type: object
+> > +    properties:
+> > +      compatible:
+> > +        oneOf:
+> > +          - enum:
+> > +            - ingenic,jz4725b-ost
+> > +            - ingenic,jz4770-ost
+> > +          - items:
+> > +            - const: ingenic,jz4780-ost
+> > +            - const: ingenic,jz4770-ost
+> > +
+> > +      reg:
+> > +        maxItems: 1
+> > +
+> > +      clocks:
+> > +        maxItems: 1
+> > +
+> > +      clock-names:
+> > +        const: ost
+> > +
+> > +      interrupts:
+> > +        maxItems: 1
+> > +
+> > +    required:
+> > +      - compatible
+> > +      - reg
+> > +      - clocks
+> > +      - clock-names
+> > +      - interrupts
+> > +
+> > +    additionalProperties: false
+> > +
+> > +required:
+> > +  - "#clock-cells"
+> > +  - "#interrupt-cells"
+> > +  - interrupt-controller
+> > +  - compatible
+> > +  - reg
+> > +  - clocks
+> > +  - clock-names
+> > +  - interrupts
+> > +
+> > +additionalProperties: false
+> 
+> Actually this prevents the 'assigned-clock' properties from being added. I
+> was expecting these to be always accepted, akin to the 'pinctrl-*'
+> properties.
+> 
+> Should I add entries for these here?
 
-For hugetlb page reservations at boot today, pairs specifying size and
-quantity are put on the command line.  For example,
-hugepagesz=2M hugepages=512 hugepagesz=1G hugepages=64
+Yes, I think so. The assigned-clocks properties are a lot less common 
+than pinctrl and I think it's good to define how many entries they have.
 
-We could do something similiar for CMA.
-hugepagesz=512M hugepages_cma=256 hugepagesz=1G hugepages_cma=64
+Otherwise, this looks fine.
 
-That would make things much more complicated (implies separate CMA
-reservations per size) and may be overkill for the first implementation.
-
-Perhaps we limit CMA reservations to one gigantic huge page size.  The
-architectures would need to define the default and there could be a
-command line option to override.  Something like,
-default_cmapagesz=  analogous to today's default_hugepagesz=.  Then
-hugepages_cma= is only associated with that default gigantic huge page
-size.
-
-The more I think about it, the more I like limiting CMA reservations to
-only one gigantic huge page size (per arch).
--- 
-Mike Kravetz
+Rob
