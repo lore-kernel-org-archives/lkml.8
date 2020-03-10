@@ -2,184 +2,214 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00B6EC18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 08:21:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9159C18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 08:26:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1F9224677
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 08:21:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="BrN7XZaQ"
+	by mail.kernel.org (Postfix) with ESMTP id A133224677
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 08:26:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726467AbgCJIVe (ORCPT
+        id S1726497AbgCJI0f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 04:21:34 -0400
-Received: from mail-eopbgr140043.outbound.protection.outlook.com ([40.107.14.43]:38574
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        Tue, 10 Mar 2020 04:26:35 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:11612 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725919AbgCJIVe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 04:21:34 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IPR/7ID7MuhlXr+KztCqZB9ydjY+yx1QmdMWedkXP7OCfdzBy1k5AlbAK2M3Y5Qllg1N/NOL5uqEIl9bl0nqTb8Qu6U/mptj5kP9W874ol2fAVwwIam8WTXqK/Utn3wc0KCC+OWvpK3nQOvFLyn2bsuTUIP8xVE7bmtjJYsi+PmcYyPjKRSHYfVI1jCaRu4xecI0lpCwy3FwTuz866Rl6jZlPFhX7agSA51j7OOp9PZUkI+B6UFPV58HUDXL64ljobaWOx/gPZq6OF9z2qziHuh7EGWrYTrVJWqMyAFXNhMnKf+84Yzz7vKMCb6f9VHtUGCjp4A9SJm0q8b29+GlLA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MO5L1ww3b2p/Kt5Iy+N0L1gkSZ78YxUZaclDf79TToU=;
- b=LLNga55F5tQWER39xe5v6CCJkJ9EYugA9Vb3zzxFU/gSBBM7F4T1u+ZLlV0gXiwqLZtMAsGiYU91ssFfmL4oTDOAI5WwvVlDF33G1OHYA+Mndm/PSxR6FlTGG1KkQODdBWmMZGR4t15tTeIcMHRvg2ygfoctKdkE0c6jznGG/xZ2/q/Dxnu+G/F7YugEOEg/RAnr29v2U6K0syVP4yjYUoBAQDbRo/bjfS5n0SlXc03KiYyJ77p/iZlD0sfjyu2g3983BWFsKxRZjhBX6Pq3tm4nRoH/xNr3VqFwJcFGa0oC6ti48eawu+3lziRadr+rOywWFWAlqEGVjrPlkKW6rA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MO5L1ww3b2p/Kt5Iy+N0L1gkSZ78YxUZaclDf79TToU=;
- b=BrN7XZaQAPRAkSfh7tl4/ncjkJOfq91agaVjl2d6cRTHteZgkEMBpZB9a8Aa6BVzboqSejlQfn6uqKvhZ5cw5y+AY9C4Hb1rarYArJqdMof8HZZiamxh8hadxbnWV25rZ8lS4lC9TjmFBwpP/TftQhwMEYaoCBTJC1TtQFmC+p8=
-Received: from AM6PR05MB5014.eurprd05.prod.outlook.com (20.177.33.13) by
- AM6PR05MB5473.eurprd05.prod.outlook.com (20.177.118.210) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2793.16; Tue, 10 Mar 2020 08:21:29 +0000
-Received: from AM6PR05MB5014.eurprd05.prod.outlook.com
- ([fe80::cbb:a034:c324:138b]) by AM6PR05MB5014.eurprd05.prod.outlook.com
- ([fe80::cbb:a034:c324:138b%6]) with mapi id 15.20.2793.013; Tue, 10 Mar 2020
- 08:21:29 +0000
-From:   Yanjun Zhu <yanjunz@mellanox.com>
-To:     Leon Romanovsky <leon@kernel.org>,
-        Jason Gunthorpe <jgg@mellanox.com>
-CC:     syzbot <syzbot+e11efb687f5ab7f01f3d@syzkaller.appspotmail.com>,
-        "dledford@redhat.com" <dledford@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        Moni Shoua <monis@mellanox.com>,
-        "syzkaller-bugs@googlegroups.com" <syzkaller-bugs@googlegroups.com>
-Subject: RE: KASAN: use-after-free Read in rxe_query_port
-Thread-Topic: KASAN: use-after-free Read in rxe_query_port
-Thread-Index: AQHV9jkJCU28FFAXfky+bua200OhVqhBcaYAgAAJUZA=
-Date:   Tue, 10 Mar 2020 08:21:29 +0000
-Message-ID: <AM6PR05MB50143279152CCAB54786D930D8FF0@AM6PR05MB5014.eurprd05.prod.outlook.com>
-References: <0000000000000c9e12059fc941ff@google.com>
- <20200309173451.GA15143@mellanox.com> <20200310073936.GF172334@unreal>
-In-Reply-To: <20200310073936.GF172334@unreal>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yanjunz@mellanox.com; 
-x-originating-ip: [118.201.220.138]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 2351a862-edee-495a-0eef-08d7c4cc0889
-x-ms-traffictypediagnostic: AM6PR05MB5473:|AM6PR05MB5473:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM6PR05MB547345437D3E60D4E150A13DD8FF0@AM6PR05MB5473.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 033857D0BD
-x-forefront-antispam-report: SFV:NSPM;SFS:(10001)(10009020)(4636009)(346002)(136003)(39860400002)(396003)(376002)(366004)(189003)(199004)(81166006)(8936002)(81156014)(54906003)(2906002)(8676002)(6636002)(110136005)(71200400001)(4326008)(186003)(26005)(33656002)(6506007)(86362001)(7696005)(52536014)(966005)(53546011)(76116006)(478600001)(66556008)(64756008)(66476007)(66446008)(316002)(5660300002)(55016002)(9686003)(66946007)(99710200001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR05MB5473;H:AM6PR05MB5014.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 1grKfgoK2M5AYjacnY2byxxKjjbgS1plCUqgdbII9+mnDFAyp6WkmfSQfHnhB2k8vx85tPM6o7KwgDHx86hHrhuwPhlloWOg29C3Bc4Xo4H2bP/9EkNwZCTkqWlbYBLJlQJhtbT30oTEKpkHW8b4cOtUe4nqYF7TO9jpcXjhDc/HV5tExMzQCyVmtRTZWqlj0sw2iuv2mbpv4haVS6KejKS9ChL7Q0/S8DFOWqaXjKQd8SzK2jebZ+XB8eoRDC8gTq8r/+oUH4kl20wSDLPc/1EFNTcUxrYuYj1nn1K8G17tNA7rhwOBYBMfB7S8r+cfTXkw7qk6p29gEoI/7vvBlibYCoIMUcciqh76nhcLIcdHgmM9GhA9JOT8twJ51aS113LghEIc5PXntVdU625VvXI7hY2wa+IbJIiEPA5sH/fd0JC71W6bEdAV/FgwmfnGRz1bpdXmJLasDlSPN7hYNIDAO2vJmoZLEjgr8QD3H4w1MLJ/6T6C1MeGhOzxeU6fUcqsMK4MkLewmLvtA1odiW14xi+75PQRQAZd0hIeq/P/Zz9YO1wFblNOzD1XhjspRN3x8y26ugPXAasQlEDu19uEcmg3g12SjtLsvYIdmmwrXOilf8h2dIWzsuhNMZgccmNHy8qVa69fqVP6SnEksg==
-x-ms-exchange-antispam-messagedata: nmkfxGpOEzRDEfvafZsiy8hpraDaoAsUUBKYPccYPXfgveufQUVlhCiUXgo5mogJnGzC3bMo7yrZzSqK5H/mLcZGLRy8QD7O3UnG3Ptck72G+wChGRwKwpwAGxUzUW+iAc+iJS9QF0vpgUohPaNepw==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1725919AbgCJI0f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 04:26:35 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id E5E52B5FFA0075FDFCFE;
+        Tue, 10 Mar 2020 16:26:25 +0800 (CST)
+Received: from [127.0.0.1] (10.173.221.230) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.487.0; Tue, 10 Mar 2020
+ 16:26:19 +0800
+Subject: Re: [RFC] KVM: arm64: support enabling dirty log graually in small
+ chunks
+To:     Marc Zyngier <maz@kernel.org>
+References: <20200309085727.1106-1-zhukeqian1@huawei.com>
+ <4b85699ec1d354cc73f5302560231f86@misterjones.org>
+CC:     <kvmarm@lists.cs.columbia.edu>, <kvm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        "Jay Zhou" <jianjay.zhou@huawei.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        "James Morse" <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>
+From:   zhukeqian <zhukeqian1@huawei.com>
+Message-ID: <64925c8b-af3d-beb5-bc9b-66ef1e47f92d@huawei.com>
+Date:   Tue, 10 Mar 2020 16:26:07 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2351a862-edee-495a-0eef-08d7c4cc0889
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Mar 2020 08:21:29.0657
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: nLNwtZmPzN1QPPkPKQKmNW1Fnc09gUSKEeeU1mNgnbWrRRutXekLGoYjA/4fJpZe9sbhCCP0ni4jYuPG0hQ/ZQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR05MB5473
+In-Reply-To: <4b85699ec1d354cc73f5302560231f86@misterjones.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.173.221.230]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Leon
+Hi Marc,
 
-Thanks. From the patch https://lore.kernel.org/netdev/20200306134518.84416-=
-1-kgraul@linux.ibm.com,
+On 2020/3/9 19:45, Marc Zyngier wrote:
+> Kegian,
+> 
+> In the future, please Cc me on  your KVM/arm64 patches, as well as
+> all the reviewers mentioned in the MAINTAINERS file.
+> 
+> On 2020-03-09 08:57, Keqian Zhu wrote:
+>> There is already support of enabling dirty log graually
+> 
+> gradually?
+> 
+Yeah, gradually. :)
+>> in small chunks for x86. This adds support for arm64.
+>>
+>> Under the Huawei Kunpeng 920 2.6GHz platform, I did some
+>> tests with a 128G linux VM and counted the time taken of
+> 
+> Linux
+Thanks.
+> 
+>> memory_global_dirty_log_start, here is the numbers:
+>>
+>> VM Size        Before    After optimization
+>> 128G           527ms     4ms
+> 
+> What does this benchmark do? Can you please provide a pointer to it?
+> 
+I will explain this in following text.
+>>
+>> Signed-off-by: Keqian Zhu <zhukeqian1@huawei.com>
+>> ---
+>> Cc: Jay Zhou <jianjay.zhou@huawei.com>
+>> Cc: Paolo Bonzini <pbonzini@redhat.com>
+>> Cc: Peter Xu <peterx@redhat.com>
+>> Cc: Sean Christopherson <sean.j.christopherson@intel.com>
+>> ---
+>>  Documentation/virt/kvm/api.rst    |  2 +-
+>>  arch/arm64/include/asm/kvm_host.h |  4 ++++
+>>  virt/kvm/arm/mmu.c                | 30 ++++++++++++++++++++++--------
+>>  3 files changed, 27 insertions(+), 9 deletions(-)
+>>
+>> diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
+>> index 0adef66585b1..89d4f2680af1 100644
+>> --- a/Documentation/virt/kvm/api.rst
+>> +++ b/Documentation/virt/kvm/api.rst
+>> @@ -5735,7 +5735,7 @@ will be initialized to 1 when created.  This
+>> also improves performance because
+>>  dirty logging can be enabled gradually in small chunks on the first call
+>>  to KVM_CLEAR_DIRTY_LOG.  KVM_DIRTY_LOG_INITIALLY_SET depends on
+>>  KVM_DIRTY_LOG_MANUAL_PROTECT_ENABLE (it is also only available on
+>> -x86 for now).
+>> +x86 and arm64 for now).
+> 
+> What is this based on? I can't find this in -next, and you provide no
+> context whatsoever.
+This is based on branch "queue" of git://git.kernel.org/pub/scm/virt/kvm/kvm.git
+> 
+> I assume this is related to this:
+> https://lore.kernel.org/kvm/20200227013227.1401-1-jianjay.zhou@huawei.com/
+> 
+Yes, you are right.
 
-@@ -240,6 +240,9 @@ static void smc_ib_port_event_work(struct work_struct *=
-work)
- 		work, struct smc_ib_device, port_event_work);
- 	u8 port_idx;
-=20
-+	if (list_empty(&smcibdev->list))
-+		return;
-+
- 	for_each_set_bit(port_idx, &smcibdev->port_event_mask, SMC_MAX_PORTS) {
- 		smc_ib_remember_port_attr(smcibdev, port_idx + 1);
- 		clear_bit(port_idx, &smcibdev->port_event_mask);
+The background is that in [https://patchwork.kernel.org/cover/10702447/], Paolo
+made an optimization for dirty log sync used by VM migration. Currently the dirty
+log sync logic is getting and clearing dirty log at the same time for each KVM
+memslot. This will lead to obvious problem for large guests.
 
-This block is try to check smcibdev->list to avoid ib_query_port after the =
-NIC is down.
-But smcibdev->list is used by spinlock when add and del.
-"
-...
-549         spin_lock(&smc_ib_devices.lock);
-550         list_add_tail(&smcibdev->list, &smc_ib_devices.list);
-551         spin_unlock(&smc_ib_devices.lock);
-...
+As described by Paolo, "First, and less important, it can take kvm->mmu_lock for
+an extended period of time.  Second, its user can actually see many false positives
+in some cases." There will be enough time for guests mark page dirty again between
+Qemu synchronizes dirty log and actually sends these page, so both guests and Qemu
+will suffer unnecessary overhead.
 
-579         spin_lock(&smc_ib_devices.lock);
-580         list_del_init(&smcibdev->list); /* remove from smc_ib_devices *=
-/
-581         spin_unlock(&smc_ib_devices.lock);
-...
-"
-So in the above block, is it necessary to protect  smcibdev->list when it i=
-s accessed?
-Please comment on it.
+Paolo introduced a new KVM ioctl. "The new KVM_CLEAR_DIRTY_LOG ioctl can operate
+on a 64-page granularity rather than requiring to sync a full memslot. This way
+the mmu_lock is taken for small amounts of time, and only a small amount of time
+will pass between write protection of pages and the sending of their content."
 
-Thanks a lot.
-Zhu Yanjun
+The changes made by Paolo have been merge to mainline kernel. And the userspace
+counterpart (Qemu) also has been updated.
 
------Original Message-----
-From: Leon Romanovsky <leon@kernel.org>=20
-Sent: Tuesday, March 10, 2020 3:40 PM
-To: Jason Gunthorpe <jgg@mellanox.com>
-Cc: syzbot <syzbot+e11efb687f5ab7f01f3d@syzkaller.appspotmail.com>; dledfor=
-d@redhat.com; linux-kernel@vger.kernel.org; linux-rdma@vger.kernel.org; Mon=
-i Shoua <monis@mellanox.com>; syzkaller-bugs@googlegroups.com; Yanjun Zhu <=
-yanjunz@mellanox.com>
-Subject: Re: KASAN: use-after-free Read in rxe_query_port
+After that, Jay Zhou declared an optimization about enable dirty log (The link you
+paste above) based on Paolo's work. When enabling dirty log, we dont need to write
+protect PTEs now. All PTEs will be write protected after first round RAM sending.
 
-On Mon, Mar 09, 2020 at 02:34:51PM -0300, Jason Gunthorpe wrote:
-> On Sun, Mar 01, 2020 at 03:20:12AM -0800, syzbot wrote:
-> > Hello,
-> >
-> > syzbot found the following crash on:
-> >
-> > HEAD commit:    f8788d86 Linux 5.6-rc3
-> > git tree:       upstream
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=3D132d3645e00=
-000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=3D9833e26bab3=
-55358
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=3De11efb687f5ab=
-7f01f3d
-> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> >
-> > Unfortunately, I don't have any reproducer for this crash yet.
-> >
-> > IMPORTANT: if you fix the bug, please add the following tag to the comm=
-it:
-> > Reported-by: syzbot+e11efb687f5ab7f01f3d@syzkaller.appspotmail.com
->
-> Yanjun, do you have some idea what this could be?
+> Is there a userspace counterpart to it?
+> 
+As this KVM/x86 related changes have not been merged to mainline kernel, some little
+modification is needed on mainline Qemu.
 
-See this fix in the net mailing list.
-https://lore.kernel.org/netdev/20200306134518.84416-1-kgraul@linux.ibm.com
+As I tested this patch on a 128GB RAM Linux VM with no huge pages, the time of enabling
+dirty log will decrease obviously.
 
-Thanks
+>>  KVM_CAP_MANUAL_DIRTY_LOG_PROTECT2 was previously available under the name
+>>  KVM_CAP_MANUAL_DIRTY_LOG_PROTECT, but the implementation had bugs that make
+>> diff --git a/arch/arm64/include/asm/kvm_host.h
+>> b/arch/arm64/include/asm/kvm_host.h
+>> index d87aa609d2b6..0deb2ac7d091 100644
+>> --- a/arch/arm64/include/asm/kvm_host.h
+>> +++ b/arch/arm64/include/asm/kvm_host.h
+>> @@ -16,6 +16,7 @@
+>>  #include <linux/jump_label.h>
+>>  #include <linux/kvm_types.h>
+>>  #include <linux/percpu.h>
+>> +#include <linux/kvm.h>
+>>  #include <asm/arch_gicv3.h>
+>>  #include <asm/barrier.h>
+>>  #include <asm/cpufeature.h>
+>> @@ -45,6 +46,9 @@
+>>  #define KVM_REQ_VCPU_RESET    KVM_ARCH_REQ(2)
+>>  #define KVM_REQ_RECORD_STEAL    KVM_ARCH_REQ(3)
+>>
+>> +#define KVM_DIRTY_LOG_MANUAL_CAPS   (KVM_DIRTY_LOG_MANUAL_PROTECT_ENABLE | \
+>> +                    KVM_DIRTY_LOG_INITIALLY_SET)
+>> +
+>>  DECLARE_STATIC_KEY_FALSE(userspace_irqchip_in_use);
+>>
+>>  extern unsigned int kvm_sve_max_vl;
+>> diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
+>> index e3b9ee268823..5c7ca84dec85 100644
+>> --- a/virt/kvm/arm/mmu.c
+>> +++ b/virt/kvm/arm/mmu.c
+>> @@ -1438,9 +1438,11 @@ static void stage2_wp_ptes(pmd_t *pmd,
+>> phys_addr_t addr, phys_addr_t end)
+>>   * @pud:    pointer to pud entry
+>>   * @addr:    range start address
+>>   * @end:    range end address
+>> + * @wp_ptes:    write protect ptes or not
+>>   */
+>>  static void stage2_wp_pmds(struct kvm *kvm, pud_t *pud,
+>> -               phys_addr_t addr, phys_addr_t end)
+>> +               phys_addr_t addr, phys_addr_t end,
+>> +               bool wp_ptes)
+> 
+> If you are going to pass extra parameters like this, make it at least
+> extensible (unsigned long flags, for example).
+> 
+OK, I will use flags in formal patch.
+>>  {
+>>      pmd_t *pmd;
+>>      phys_addr_t next;
+>> @@ -1453,7 +1455,7 @@ static void stage2_wp_pmds(struct kvm *kvm, pud_t *pud,
+>>              if (pmd_thp_or_huge(*pmd)) {
+>>                  if (!kvm_s2pmd_readonly(pmd))
+>>                      kvm_set_s2pmd_readonly(pmd);
+>> -            } else {
+>> +            } else if (wp_ptes) {
+>>                  stage2_wp_ptes(pmd, addr, next);
+>>              }
+>>          }
+[...]
 
->
-> Thanks,
-> Jason
+Thanks,
+keqian
+
