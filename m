@@ -2,155 +2,141 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2312BC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 08:39:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 757AFC18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 08:41:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5CDF2465A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 08:39:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FRgJa47J"
+	by mail.kernel.org (Postfix) with ESMTP id 4C6F42465A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 08:41:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583829680;
+	bh=BiMJEpMfh1Tx92bdI8JmSifYzqdu39C/bCNM7vQZeAY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zjeGtx38bGAS0Y+phChqF7Wjh2EsWHn6MH4hJB7qs9vHoY6f6QtDYHEhtFniJHe1a
+	 rtYgisU4KSGN4wzCVfKBEykZrHc1IRi7LD6oJPDIUg3HiOktAKPLtjfq4FWOdGgRhx
+	 qBlcYCkrjZReOru5pJAW0fYoA9R0dMG0tBfQlaWM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726480AbgCJIjb (ORCPT
+        id S1726491AbgCJIlT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 04:39:31 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:59213 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726220AbgCJIjb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 04:39:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583829569;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=NX+MYHE6aD0NZDRfyEDLzOd92QgSzj3gr8khxGBb+LI=;
-        b=FRgJa47JPc52rc/4WEHr0fsgbfzlBlcmnVakdPkCUL4W0lNG6kcJSSDpgQvrZ6UsRVkXVe
-        7xkFX2/tTXRMDsBZKm/U7VmZI/GVMfK+NhZnuWyM0XpQ1xbSfAo6b8CjeADuhdxs+MUgnj
-        UAZtq6UQvytwDuIPSn6WR1wjkXx/N9Y=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-331-Mi5Uk2HOONWQWA9Wfo-mfg-1; Tue, 10 Mar 2020 04:39:27 -0400
-X-MC-Unique: Mi5Uk2HOONWQWA9Wfo-mfg-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 10 Mar 2020 04:41:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55138 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726220AbgCJIlT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 04:41:19 -0400
+Received: from localhost (unknown [193.47.165.251])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 36321107ACC4;
-        Tue, 10 Mar 2020 08:39:26 +0000 (UTC)
-Received: from [10.36.118.8] (unknown [10.36.118.8])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2D49260BF3;
-        Tue, 10 Mar 2020 08:39:21 +0000 (UTC)
-Subject: Re: linux-next: manual merge of the akpm-current tree with the vhost
- tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>
-References: <20200310190205.7c152ef9@canb.auug.org.au>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <c7a2f5f7-6e30-cfbe-99b8-722be517ed20@redhat.com>
-Date:   Tue, 10 Mar 2020 09:39:21 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        by mail.kernel.org (Postfix) with ESMTPSA id 93B53208E4;
+        Tue, 10 Mar 2020 08:41:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583829678;
+        bh=BiMJEpMfh1Tx92bdI8JmSifYzqdu39C/bCNM7vQZeAY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lZGmVB06eBgUI923NR/mmloT75tx2ZjUyBAb1T9R3UvBhnslzyauj918ceaynRwNo
+         V9K7Q1zfcj1LSHLcl7iDKsbAWBay402z+V4Lc82iHRx227RezOGt6P7GbrGrSzdwyb
+         RzUihZekc3tBn1pGaTCnaerRuh5u8ndYwD6qz3+Y=
+Date:   Tue, 10 Mar 2020 10:41:15 +0200
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Yanjun Zhu <yanjunz@mellanox.com>
+Cc:     Jason Gunthorpe <jgg@mellanox.com>,
+        syzbot <syzbot+e11efb687f5ab7f01f3d@syzkaller.appspotmail.com>,
+        "dledford@redhat.com" <dledford@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        Moni Shoua <monis@mellanox.com>,
+        "syzkaller-bugs@googlegroups.com" <syzkaller-bugs@googlegroups.com>
+Subject: Re: KASAN: use-after-free Read in rxe_query_port
+Message-ID: <20200310084115.GB242734@unreal>
+References: <0000000000000c9e12059fc941ff@google.com>
+ <20200309173451.GA15143@mellanox.com>
+ <20200310073936.GF172334@unreal>
+ <AM6PR05MB50143279152CCAB54786D930D8FF0@AM6PR05MB5014.eurprd05.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <20200310190205.7c152ef9@canb.auug.org.au>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <AM6PR05MB50143279152CCAB54786D930D8FF0@AM6PR05MB5014.eurprd05.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10.03.20 09:02, Stephen Rothwell wrote:
-> Hi all,
->=20
-> Today's linux-next merge of the akpm-current tree got a conflict in:
->=20
->   drivers/virtio/virtio_balloon.c
->=20
-> between commit:
->=20
->   b5769cdc14fc ("virtio-balloon: Switch back to OOM handler for VIRTIO_=
-BALLOON_F_DEFLATE_ON_OOM")
->=20
-> from the vhost tree and commits:
->=20
->   b64c4d5bea98 ("virtio-balloon: pull page poisoning config out of free=
- page hinting")
->   80c03575431c ("virtio-balloon: add support for providing free page re=
-ports to host")
->=20
-> from the akpm-current tree.
->=20
-> I looked at the conflict for a while but could not easily see how to
-> reconcile it, so I decided to revert the vhost tree commit for today.
-> Some advice would be appreciated.
->=20
+On Tue, Mar 10, 2020 at 08:21:29AM +0000, Yanjun Zhu wrote:
+> Hi, Leon
+>
+> Thanks. From the patch https://lore.kernel.org/netdev/20200306134518.84416-1-kgraul@linux.ibm.com,
+>
+> @@ -240,6 +240,9 @@ static void smc_ib_port_event_work(struct work_struct *work)
+>  		work, struct smc_ib_device, port_event_work);
+>  	u8 port_idx;
+>
+> +	if (list_empty(&smcibdev->list))
+> +		return;
+> +
+>  	for_each_set_bit(port_idx, &smcibdev->port_event_mask, SMC_MAX_PORTS) {
+>  		smc_ib_remember_port_attr(smcibdev, port_idx + 1);
+>  		clear_bit(port_idx, &smcibdev->port_event_mask);
+>
+> This block is try to check smcibdev->list to avoid ib_query_port after the NIC is down.
+> But smcibdev->list is used by spinlock when add and del.
+> "
+> ...
+> 549         spin_lock(&smc_ib_devices.lock);
+> 550         list_add_tail(&smcibdev->list, &smc_ib_devices.list);
+> 551         spin_unlock(&smc_ib_devices.lock);
+> ...
+>
+> 579         spin_lock(&smc_ib_devices.lock);
+> 580         list_del_init(&smcibdev->list); /* remove from smc_ib_devices */
+> 581         spin_unlock(&smc_ib_devices.lock);
+> ...
+> "
+> So in the above block, is it necessary to protect  smcibdev->list when it is accessed?
+> Please comment on it.
 
-Yes, the free page reporting features are currently in Andrews tree and
-most probably won't go via the vhost tree due to the core-mm changes.
-Ideally, the VIRTIO_BALLOON_F_DEFLATE_ON_OOM fix would go in unchanged,
-because some people might be interested in backporting it (it's not a
-stable fix, though).
+It is worth to read whole thread and not first email only.
+https://lore.kernel.org/netdev/20200308150107.GC11496@unreal/
 
-I think rebasing any way round shouldn't be too hard.
+Thanks
 
-@Alex, Michael, what's your thought on this?
-
---=20
-Thanks,
-
-David / dhildenb
-
+>
+> Thanks a lot.
+> Zhu Yanjun
+>
+> -----Original Message-----
+> From: Leon Romanovsky <leon@kernel.org>
+> Sent: Tuesday, March 10, 2020 3:40 PM
+> To: Jason Gunthorpe <jgg@mellanox.com>
+> Cc: syzbot <syzbot+e11efb687f5ab7f01f3d@syzkaller.appspotmail.com>; dledford@redhat.com; linux-kernel@vger.kernel.org; linux-rdma@vger.kernel.org; Moni Shoua <monis@mellanox.com>; syzkaller-bugs@googlegroups.com; Yanjun Zhu <yanjunz@mellanox.com>
+> Subject: Re: KASAN: use-after-free Read in rxe_query_port
+>
+> On Mon, Mar 09, 2020 at 02:34:51PM -0300, Jason Gunthorpe wrote:
+> > On Sun, Mar 01, 2020 at 03:20:12AM -0800, syzbot wrote:
+> > > Hello,
+> > >
+> > > syzbot found the following crash on:
+> > >
+> > > HEAD commit:    f8788d86 Linux 5.6-rc3
+> > > git tree:       upstream
+> > > console output: https://syzkaller.appspot.com/x/log.txt?x=132d3645e00000
+> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=9833e26bab355358
+> > > dashboard link: https://syzkaller.appspot.com/bug?extid=e11efb687f5ab7f01f3d
+> > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > >
+> > > Unfortunately, I don't have any reproducer for this crash yet.
+> > >
+> > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > > Reported-by: syzbot+e11efb687f5ab7f01f3d@syzkaller.appspotmail.com
+> >
+> > Yanjun, do you have some idea what this could be?
+>
+> See this fix in the net mailing list.
+> https://lore.kernel.org/netdev/20200306134518.84416-1-kgraul@linux.ibm.com
+>
+> Thanks
+>
+> >
+> > Thanks,
+> > Jason
