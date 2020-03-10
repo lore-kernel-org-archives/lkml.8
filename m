@@ -2,226 +2,111 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9E1FC18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:29:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 221EAC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:30:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A489D222C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:29:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D467A21D56
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:30:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="aVfJW5cx"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Nu7DPCsG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726905AbgCJU32 (ORCPT
+        id S1727191AbgCJU37 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 16:29:28 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:40615 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726463AbgCJU32 (ORCPT
+        Tue, 10 Mar 2020 16:29:59 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:38392 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726307AbgCJU37 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 16:29:28 -0400
-Received: by mail-pf1-f195.google.com with SMTP id l184so7029468pfl.7
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 13:29:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=dsBrIU5gUV1pckyA8GSxROnnJLAsyLmC/ypr4CZES9w=;
-        b=aVfJW5cxRWyiGAhHyjizHuTpIP1CVGeiD5PpVOAX8E13XOV2zio+KZuEB352+Nm2aP
-         Llx5rft1lxfSQ6IyZMXJ54Wa89MxWC2kb8lpY1CeaItXOQO8e4J60iuFcsOvf/0Lj9YI
-         lmf6stuUg2ygsiOeBvjwo8agJiJGT80VmqQCo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=dsBrIU5gUV1pckyA8GSxROnnJLAsyLmC/ypr4CZES9w=;
-        b=DFr7KeA5836gPb+r4Y36rI5FDHSPPEzxI2zhiPEJcum7zWHDtZZqHipX/rL5oT+5D+
-         unjM3xeXcid5DQWuRu2KXH7WQrwtw4yWDtWjABZbnwIz0K+HxwzX630FHNBejFIJI7w/
-         X2G2hN5l71tXbgPLdNtfgr0zzfdupP2D0g0kMFCHUOSBjfBLtYWoX2n89PQo/I6gBLeI
-         kHttqm+p0j5IJFK9KGEYMgCqVWhZz24ARTkz3hHUorJxuA6ZYd/IG2oxzyzUKhGVHE6Q
-         16amvKkF2lILKVq7Rb5DVU0gmW6CLj2yZHRqnL2F3QfAiRl4WQTyA002J63O0LNzf7wi
-         xHpg==
-X-Gm-Message-State: ANhLgQ1KivAPij/aCWknefWjqUipQg84A8pApX/XqOaFSQ8n+3UKGEin
-        nY+mDSy37+HfQU81j7Y8wikaqg==
-X-Google-Smtp-Source: ADFU+vtvXImBX+SYYOzRy21wWe3GqfJUMiYo6Vi8Qk8uuP81efgz5a4jBX0nQr4DVT8wDqrCYZcPwg==
-X-Received: by 2002:a63:7f05:: with SMTP id a5mr22593983pgd.327.1583872166829;
-        Tue, 10 Mar 2020 13:29:26 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id f4sm13279103pfn.116.2020.03.10.13.29.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Mar 2020 13:29:25 -0700 (PDT)
-Date:   Tue, 10 Mar 2020 13:29:25 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Andrei Vagin <avagin@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Yuyang Du <duyuyang@gmail.com>,
-        David Hildenbrand <david@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        David Howells <dhowells@redhat.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christian Kellner <christian@kellner.me>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>
-Subject: Re: [PATCH v2 2/5] exec: Factor unshare_sighand out of de_thread and
- call it separately
-Message-ID: <202003101319.BAE7B535A@keescook>
-References: <87v9nlii0b.fsf@x220.int.ebiederm.org>
- <AM6PR03MB5170609D44967E044FD1BE40E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <87a74xi4kz.fsf@x220.int.ebiederm.org>
- <AM6PR03MB51705AA3009B4986BB6EF92FE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <87r1y8dqqz.fsf@x220.int.ebiederm.org>
- <AM6PR03MB517053AED7DC89F7C0704B7DE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <AM6PR03MB51703B44170EAB4626C9B2CAE4E20@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <87tv32cxmf.fsf_-_@x220.int.ebiederm.org>
- <87v9ne5y4y.fsf_-_@x220.int.ebiederm.org>
- <87k13u5y26.fsf_-_@x220.int.ebiederm.org>
+        Tue, 10 Mar 2020 16:29:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583872198;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=0k5j5BAO6+j561EWRZLgyRnG3Sw+2DCMIk63U5xiOW4=;
+        b=Nu7DPCsGkvNerfeeAtIqUYusdDVdROxNqplz7/tzu9m4o5FhQ8FJnADV8D256iOu/WJ7fK
+        UurcRsELkafDhnaUFYcznaxkd0bc5Zd5D1wZE1QAVfw3nWe0DlGhycVQqREKVfjgqb7Klz
+        A9b7Q2TMkiHF6GTauAJIOMcmgh/AoFk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-313-w0BHEEh_N8eJI055Y3zOFQ-1; Tue, 10 Mar 2020 16:29:56 -0400
+X-MC-Unique: w0BHEEh_N8eJI055Y3zOFQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 464561005514;
+        Tue, 10 Mar 2020 20:29:55 +0000 (UTC)
+Received: from horse.redhat.com (unknown [10.18.25.210])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id EA87A1001DC2;
+        Tue, 10 Mar 2020 20:29:46 +0000 (UTC)
+Received: by horse.redhat.com (Postfix, from userid 10451)
+        id 7345D22021D; Tue, 10 Mar 2020 16:29:46 -0400 (EDT)
+Date:   Tue, 10 Mar 2020 16:29:46 -0400
+From:   Vivek Goyal <vgoyal@redhat.com>
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvdimm@lists.01.org, virtio-fs@redhat.com, miklos@szeredi.hu,
+        stefanha@redhat.com, dgilbert@redhat.com, mst@redhat.com
+Subject: Re: [PATCH 02/20] dax: Create a range version of
+ dax_layout_busy_page()
+Message-ID: <20200310202946.GE38440@redhat.com>
+References: <20200304165845.3081-1-vgoyal@redhat.com>
+ <20200304165845.3081-3-vgoyal@redhat.com>
+ <20200310151906.GA670549@iweiny-DESK2.sc.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87k13u5y26.fsf_-_@x220.int.ebiederm.org>
+In-Reply-To: <20200310151906.GA670549@iweiny-DESK2.sc.intel.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 08, 2020 at 04:36:17PM -0500, Eric W. Biederman wrote:
+On Tue, Mar 10, 2020 at 08:19:07AM -0700, Ira Weiny wrote:
+> On Wed, Mar 04, 2020 at 11:58:27AM -0500, Vivek Goyal wrote:
+> >  
+> > +	/* If end == 0, all pages from start to till end of file */
+> > +	if (!end) {
+> > +		end_idx = ULONG_MAX;
+> > +		len = 0;
 > 
-> This makes the code clearer and makes it easier to implement a mutex
-> that is not taken over any locations that may block indefinitely waiting
-> for userspace.
+> I find this a bit odd to specify end == 0 for ULONG_MAX...
 > 
-> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
-> ---
->  fs/exec.c | 39 ++++++++++++++++++++++++++-------------
->  1 file changed, 26 insertions(+), 13 deletions(-)
+> >  }
+> > +EXPORT_SYMBOL_GPL(dax_layout_busy_page_range);
+> > +
+> > +/**
+> > + * dax_layout_busy_page - find first pinned page in @mapping
+> > + * @mapping: address space to scan for a page with ref count > 1
+> > + *
+> > + * DAX requires ZONE_DEVICE mapped pages. These pages are never
+> > + * 'onlined' to the page allocator so they are considered idle when
+> > + * page->count == 1. A filesystem uses this interface to determine if
+> > + * any page in the mapping is busy, i.e. for DMA, or other
+> > + * get_user_pages() usages.
+> > + *
+> > + * It is expected that the filesystem is holding locks to block the
+> > + * establishment of new mappings in this address_space. I.e. it expects
+> > + * to be able to run unmap_mapping_range() and subsequently not race
+> > + * mapping_mapped() becoming true.
+> > + */
+> > +struct page *dax_layout_busy_page(struct address_space *mapping)
+> > +{
+> > +	return dax_layout_busy_page_range(mapping, 0, 0);
 > 
-> diff --git a/fs/exec.c b/fs/exec.c
-> index c3f34791f2f0..ff74b9a74d34 100644
-> --- a/fs/exec.c
-> +++ b/fs/exec.c
-> @@ -1194,6 +1194,23 @@ static int de_thread(struct task_struct *tsk)
->  	flush_itimer_signals();
->  #endif
+> ... other functions I have seen specify ULONG_MAX here.  Which IMO makes this
+> call site more clear.
 
-Semi-related (existing behavior): in de_thread(), what keeps the thread
-group from changing? i.e.:
+I think I looked at unmap_mapping_range() where holelen=0 implies till the
+end of file and followed same pattern.
 
-        if (thread_group_empty(tsk))
-                goto no_thread_group;
+But I agree that LLONG_MAX (end is of type loff_t) is probably more
+intuitive. I will change it.
 
-        /*
-         * Kill all other threads in the thread group.
-         */
-        spin_lock_irq(lock);
-	... kill other threads under lock ...
+Vivek
 
-Why is the thread_group_emtpy() test not under lock?
-
->  
-> +	BUG_ON(!thread_group_leader(tsk));
-> +	return 0;
-> +
-> +killed:
-> +	/* protects against exit_notify() and __exit_signal() */
-
-I wonder if include/linux/sched/task.h's definition of tasklist_lock
-should explicitly gain note about group_exit_task and notify_count,
-or, alternatively, signal.h's section on these fields should gain a
-comment? tasklist_lock is unmentioned in signal.h... :(
-
-> +	read_lock(&tasklist_lock);
-> +	sig->group_exit_task = NULL;
-> +	sig->notify_count = 0;
-> +	read_unlock(&tasklist_lock);
-> +	return -EAGAIN;
-> +}
-> +
-> +
-> +static int unshare_sighand(struct task_struct *me)
-> +{
-> +	struct sighand_struct *oldsighand = me->sighand;
-> +
->  	if (refcount_read(&oldsighand->count) != 1) {
->  		struct sighand_struct *newsighand;
->  		/*
-> @@ -1210,23 +1227,13 @@ static int de_thread(struct task_struct *tsk)
->  
->  		write_lock_irq(&tasklist_lock);
->  		spin_lock(&oldsighand->siglock);
-> -		rcu_assign_pointer(tsk->sighand, newsighand);
-> +		rcu_assign_pointer(me->sighand, newsighand);
->  		spin_unlock(&oldsighand->siglock);
->  		write_unlock_irq(&tasklist_lock);
->  
->  		__cleanup_sighand(oldsighand);
->  	}
-> -
-> -	BUG_ON(!thread_group_leader(tsk));
->  	return 0;
-> -
-> -killed:
-> -	/* protects against exit_notify() and __exit_signal() */
-> -	read_lock(&tasklist_lock);
-> -	sig->group_exit_task = NULL;
-> -	sig->notify_count = 0;
-> -	read_unlock(&tasklist_lock);
-> -	return -EAGAIN;
->  }
->  
->  char *__get_task_comm(char *buf, size_t buf_size, struct task_struct *tsk)
-> @@ -1264,13 +1271,19 @@ int flush_old_exec(struct linux_binprm * bprm)
->  	int retval;
->  
->  	/*
-> -	 * Make sure we have a private signal table and that
-> -	 * we are unassociated from the previous thread group.
-> +	 * Make this the only thread in the thread group.
->  	 */
->  	retval = de_thread(me);
->  	if (retval)
->  		goto out;
->  
-> +	/*
-> +	 * Make the signal table private.
-> +	 */
-> +	retval = unshare_sighand(me);
-> +	if (retval)
-> +		goto out;
-> +
->  	/*
->  	 * Must be called _before_ exec_mmap() as bprm->mm is
->  	 * not visibile until then. This also enables the update
-> -- 
-> 2.25.0
-
-Otherwise, yes, sensible separation.
-
-Reviewed-by: Kees Cook <keescook@chromium.org>
-
--- 
-Kees Cook
