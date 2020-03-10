@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0CF6C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:58:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7F62C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:58:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEAAE2253D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:58:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A32AC24694
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:58:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583845112;
-	bh=T0KW9LhRfqGeqUX6Km1CbTFGh3EnAJFz/LNoIML+vzo=;
+	s=default; t=1583845117;
+	bh=SvLp9QeIlteRIJuHx2peXZJf994646fGWpEk41TPcgY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ze8HrHn3vdiv23sUKQM2m9vrl0Vtoc9BXnQ1Z9xp8VpXyiH3ekA0/43ZcBJ4ir8dG
-	 q+Tv9yeYPabJHHedhoxMkeXu770Mg+HvsJMgvnkSY2WLiI5fpPL7r9lgfNqgWFH6Jm
-	 Lx+X9wV1mReKeVZynFyCDQ3jlj9Zq9IUjjtnxGpk=
+	b=KMRzuWBQ4GafKK3rFTYBrQ6xU5os4Sd/LMjWUSC0Y+xR82PqeNdTC2iwPaE6UIylM
+	 nvskYODlC4Ocg/cU/lm6ho0KcMBqQ5RNDXwUz3V1abuXi5eY8rmzhsVWceinw5yQrw
+	 gwo90dAEHckEIghp0TyEsr9w/pBclfGNZrSq2Eyw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728920AbgCJM6b (ORCPT
+        id S1729796AbgCJM6f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:58:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38422 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:58:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38474 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727721AbgCJM61 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:58:27 -0400
+        id S1729915AbgCJM63 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:58:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 72A552467D;
-        Tue, 10 Mar 2020 12:58:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F237120674;
+        Tue, 10 Mar 2020 12:58:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845106;
-        bh=T0KW9LhRfqGeqUX6Km1CbTFGh3EnAJFz/LNoIML+vzo=;
+        s=default; t=1583845109;
+        bh=SvLp9QeIlteRIJuHx2peXZJf994646fGWpEk41TPcgY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rVQajL9OL/oLURImn2EzOEjoTFA0HR3f0jgsDLDB7ujJra6ayEVdCvxm/pHZyXRd9
-         ajxgShAk9HyfNXX51egYLR6sI7DKEYwcC6fFZ7U16PcIyq0VTb866DZa47NWFU9fCD
-         r+TrWHMW2lB5T6aNpoaiTKdQQsLTu+oNK9D5uFO4=
+        b=a6XIcfkAhJRyJxap/2Jzhg5gQC7V5r0zW4tFBXa9PZyIiHQr8CoKokVjQf462tiWp
+         /AxX9X49iX+oy1DFagiBr/FLQpABsHYpnf3jMFGBEJHBwgWg8k4sgH/k4FK7ycbhjP
+         U9GnOD65OHUTtyUoRSwsTeCBWI4ZVIDrEnmr9YPg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hui Wang <hui.wang@canonical.com>,
+        stable@vger.kernel.org, Christian Lachner <gladiac@gmail.com>,
         Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.5 063/189] ALSA: hda/realtek - Fix a regression for mute led on Lenovo Carbon X1
-Date:   Tue, 10 Mar 2020 13:38:20 +0100
-Message-Id: <20200310123645.968154152@linuxfoundation.org>
+Subject: [PATCH 5.5 064/189] ALSA: hda/realtek - Fix silent output on Gigabyte X570 Aorus Master
+Date:   Tue, 10 Mar 2020 13:38:21 +0100
+Message-Id: <20200310123646.059714635@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123639.608886314@linuxfoundation.org>
 References: <20200310123639.608886314@linuxfoundation.org>
@@ -59,34 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hui Wang <hui.wang@canonical.com>
+From: Christian Lachner <gladiac@gmail.com>
 
-commit c37c0ab029569a75fd180edb03d411e7a28a936f upstream.
+commit 0d45e86d2267d5bdf7bbb631499788da1c27ceb2 upstream.
 
-Need to chain the THINKPAD_ACPI, otherwise the mute led will not
-work.
+The Gigabyte X570 Aorus Master motherboard with ALC1220 codec
+requires a similar workaround for Clevo laptops to enforce the
+DAC/mixer connection path. Set up a quirk entry for that.
 
-Fixes: d2cd795c4ece ("ALSA: hda - fixup for the bass speaker on Lenovo Carbon X1 7th gen")
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=205275
+Signed-off-by: Christian Lachner <gladiac@gmail.com>
 Cc: <stable@vger.kernel.org>
-Signed-off-by: Hui Wang <hui.wang@canonical.com>
-Link: https://lore.kernel.org/r/20200219052306.24935-1-hui.wang@canonical.com
+Link: https://lore.kernel.org/r/20200223092416.15016-2-gladiac@gmail.com
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/patch_realtek.c |    2 ++
- 1 file changed, 2 insertions(+)
+ sound/pci/hda/patch_realtek.c |    1 +
+ 1 file changed, 1 insertion(+)
 
 --- a/sound/pci/hda/patch_realtek.c
 +++ b/sound/pci/hda/patch_realtek.c
-@@ -6684,6 +6684,8 @@ static const struct hda_fixup alc269_fix
- 	[ALC285_FIXUP_SPEAKER2_TO_DAC1] = {
- 		.type = HDA_FIXUP_FUNC,
- 		.v.func = alc285_fixup_speaker2_to_dac1,
-+		.chained = true,
-+		.chain_id = ALC269_FIXUP_THINKPAD_ACPI
- 	},
- 	[ALC256_FIXUP_DELL_INSPIRON_7559_SUBWOOFER] = {
- 		.type = HDA_FIXUP_PINS,
+@@ -2447,6 +2447,7 @@ static const struct snd_pci_quirk alc882
+ 	SND_PCI_QUIRK(0x1071, 0x8258, "Evesham Voyaeger", ALC882_FIXUP_EAPD),
+ 	SND_PCI_QUIRK(0x1458, 0xa002, "Gigabyte EP45-DS3/Z87X-UD3H", ALC889_FIXUP_FRONT_HP_NO_PRESENCE),
+ 	SND_PCI_QUIRK(0x1458, 0xa0b8, "Gigabyte AZ370-Gaming", ALC1220_FIXUP_GB_DUAL_CODECS),
++	SND_PCI_QUIRK(0x1458, 0xa0cd, "Gigabyte X570 Aorus Master", ALC1220_FIXUP_CLEVO_P950),
+ 	SND_PCI_QUIRK(0x1462, 0x1228, "MSI-GP63", ALC1220_FIXUP_CLEVO_P950),
+ 	SND_PCI_QUIRK(0x1462, 0x1276, "MSI-GL73", ALC1220_FIXUP_CLEVO_P950),
+ 	SND_PCI_QUIRK(0x1462, 0x1293, "MSI-GP65", ALC1220_FIXUP_CLEVO_P950),
 
 
