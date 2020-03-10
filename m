@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CF9BC18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:43:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3381C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:43:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E369F24691
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:43:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B982D24686
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:43:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583844195;
-	bh=IqGMc2yoiqWOduBli2xB3SuBmlzKyLKUBP5cF3Ys5+U=;
+	s=default; t=1583844199;
+	bh=xVHPfJwgpy+80zOCWhcXFojkR2XjvT3blf7cFg0/OCg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oPZs4xqcG67ZWDWH1C7F43ipfLqo9a4Si5ZJ6bhF0XhCaqc2V+chw8G9/VEMM7diw
-	 M8PEJmNBj3OSKQKSUatu44ydogzf8NZODnaphU3Mgj5UO21YmNIfzZbACqTczvN1zL
-	 duS8hdxIad0PCQzhBk7pl1Kq+uYRuU/X1AyOS9CY=
+	b=g3CyTfO/gNj8WJNE3NDm53HJhmeEF4U578eBbLFef48WVQjIa9oEL8seS5UWQyJ+l
+	 kiY4ILV91UMaS4iBGo7YRJk/2unYk5nSJT/20hH1YbN6GE8ZkNrWMv2Yrl+sM5hN+j
+	 6G9ThJCSEm4rVqQdczb77HFqndErlC/tRvslUoME=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727524AbgCJMnN (ORCPT
+        id S1727544AbgCJMnS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:43:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43414 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:43:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43554 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727513AbgCJMnJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:43:09 -0400
+        id S1727513AbgCJMnO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:43:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3E32424695;
-        Tue, 10 Mar 2020 12:43:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7541C24695;
+        Tue, 10 Mar 2020 12:43:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844188;
-        bh=IqGMc2yoiqWOduBli2xB3SuBmlzKyLKUBP5cF3Ys5+U=;
+        s=default; t=1583844193;
+        bh=xVHPfJwgpy+80zOCWhcXFojkR2XjvT3blf7cFg0/OCg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xv6Z0KxBiYv+gneI3p0pJmlGh5jp1lgyKUo/KQ9AaYGv22lOZ+t48CVjAQplus5u5
-         VF5ia5MQIpmU93kY4LhY70HHEYhbjxJ4nfK6jSkddcfP9CD3hV6+XueyoTK1v4CGkk
-         AJSsFKu9muoyECrTWZbOs+tRK9z0MS9bEB3ky3+I=
+        b=B3JbL3tvElCQbi5loQhUGTFb2oiGBgOYrEXep0qqalU49bnm0uxb5ZcwF5wi39f+R
+         XXJXT7w1B+RfYaKXB/0PtUTO18kVdvze90POLWD41AmF3664hKghBi2wIQWX/ALx2u
+         /uWFqvRLKk924QmYkPPMx2iuX1ai3tx8k2UYl81U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 4.4 64/72] ASoC: dapm: Correct DAPM handling of active widgets during shutdown
-Date:   Tue, 10 Mar 2020 13:39:17 +0100
-Message-Id: <20200310123617.398324103@linuxfoundation.org>
+        stable@vger.kernel.org, Jason Gunthorpe <jgg@mellanox.com>
+Subject: [PATCH 4.4 66/72] RMDA/cm: Fix missing ib_cm_destroy_id() in ib_cm_insert_listen()
+Date:   Tue, 10 Mar 2020 13:39:19 +0100
+Message-Id: <20200310123617.989713862@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123601.053680753@linuxfoundation.org>
 References: <20200310123601.053680753@linuxfoundation.org>
@@ -60,43 +58,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
+From: Jason Gunthorpe <jgg@mellanox.com>
 
-commit 9b3193089e77d3b59b045146ff1c770dd899acb1 upstream.
+commit c14dfddbd869bf0c2bafb7ef260c41d9cebbcfec upstream.
 
-commit c2caa4da46a4 ("ASoC: Fix widget powerdown on shutdown") added a
-set of the power state during snd_soc_dapm_shutdown to ensure the
-widgets powered off. However, when commit 39eb5fd13dff
-("ASoC: dapm: Delay w->power update until the changes are written")
-added the new_power member of the widget structure, to differentiate
-between the current power state and the target power state, it did not
-update the shutdown to use the new_power member.
+The algorithm pre-allocates a cm_id since allocation cannot be done while
+holding the cm.lock spinlock, however it doesn't free it on one error
+path, leading to a memory leak.
 
-As new_power has not updated it will be left in the state set by the
-last DAPM sequence, ie. 1 for active widgets. So as the DAPM sequence
-for the shutdown proceeds it will turn the widgets on (despite them
-already being on) rather than turning them off.
-
-Fixes: 39eb5fd13dff ("ASoC: dapm: Delay w->power update until the changes are written")
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Link: https://lore.kernel.org/r/20200228153145.21013-1-ckeepax@opensource.cirrus.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 067b171b8679 ("IB/cm: Share listening CM IDs")
+Link: https://lore.kernel.org/r/20200221152023.GA8680@ziepe.ca
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/soc-dapm.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/infiniband/core/cm.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/sound/soc/soc-dapm.c
-+++ b/sound/soc/soc-dapm.c
-@@ -4317,7 +4317,7 @@ static void soc_dapm_shutdown_dapm(struc
- 			continue;
- 		if (w->power) {
- 			dapm_seq_insert(w, &down_list, false);
--			w->power = 0;
-+			w->new_power = 0;
- 			powerdown = 1;
+--- a/drivers/infiniband/core/cm.c
++++ b/drivers/infiniband/core/cm.c
+@@ -1073,6 +1073,7 @@ struct ib_cm_id *ib_cm_insert_listen(str
+ 			/* Sharing an ib_cm_id with different handlers is not
+ 			 * supported */
+ 			spin_unlock_irqrestore(&cm.lock, flags);
++			ib_destroy_cm_id(cm_id);
+ 			return ERR_PTR(-EINVAL);
  		}
- 	}
+ 		atomic_inc(&cm_id_priv->refcount);
 
 
