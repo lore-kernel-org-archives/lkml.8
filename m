@@ -2,173 +2,72 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64890C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:17:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0069C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:17:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39370208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:17:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583846258;
-	bh=+BK5GPDYSYK5n4u4NS1P7kWtlPNC0MyG+cbrrFurppQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kiRnxsjdGOcKL0jbhGCjAenQaqMFrR+0cfQ9sH37x73fz66OcLf2XA759x3vLmd9/
-	 LB1dHlSbhdzn6cRE2nH+JyJ65Z/H6O7gryqBf1EQ7u/SQvU5/KqTxcD/dkzs0ARefd
-	 KnsuFuuu0J6ffr3vh0LEmX1qnfE2ca5+pdzmK6UI=
+	by mail.kernel.org (Postfix) with ESMTP id C2999222D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:17:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731427AbgCJNLc (ORCPT
+        id S1731457AbgCJNRk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:11:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32956 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731415AbgCJNL1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:11:27 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B92832468F;
-        Tue, 10 Mar 2020 13:11:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845886;
-        bh=+BK5GPDYSYK5n4u4NS1P7kWtlPNC0MyG+cbrrFurppQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EW9aHg0aBvp8n6ml8CfLcMelLNK7UuTu7GMTR7p2pj0Jwe2GcWgMZiXcQo2ZU2qkK
-         vKRzx3GguGHzkG6/68mrUo+V7vXhJ3sqMOj9Q/eDy1L/VPX2GVXUSZIqePDH/lU0Z9
-         GfN30ahUkugW6WudtkupzrR9Uj+94xVmkX075VSY=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jack Pham <jackp@codeaurora.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 10/86] usb: gadget: composite: Support more than 500mA MaxPower
-Date:   Tue, 10 Mar 2020 13:44:34 +0100
-Message-Id: <20200310124531.355543387@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200310124530.808338541@linuxfoundation.org>
-References: <20200310124530.808338541@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Tue, 10 Mar 2020 09:17:40 -0400
+Received: from relmlor2.renesas.com ([210.160.252.172]:48830 "EHLO
+        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731291AbgCJNRh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:17:37 -0400
+X-IronPort-AV: E=Sophos;i="5.70,537,1574089200"; 
+   d="scan'208";a="41284250"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie6.idc.renesas.com with ESMTP; 10 Mar 2020 22:17:35 +0900
+Received: from localhost.localdomain (unknown [10.226.36.204])
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 01B764290415;
+        Tue, 10 Mar 2020 22:17:33 +0900 (JST)
+From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lad Prabhakar <prabhakar.csengg@gmail.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v4 0/3] media: i2c: imx219: Feature enhancements
+Date:   Tue, 10 Mar 2020 13:17:06 +0000
+Message-Id: <1583846229-6799-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jack Pham <jackp@codeaurora.org>
+This patch series does the following:
+1: Makes sure the sensor is LP11 state on power up
+2: Adds support for RAW8
+3: Adds support for 640x480 resolution
 
-[ Upstream commit a2035411fa1d1206cea7d5dfe833e78481844a76 ]
+Changes for v4:
+1: Fixed review comments for patch 2/2 as request by Sakari.
 
-USB 3.x SuperSpeed peripherals can draw up to 900mA of VBUS power
-when in configured state. However, if a configuration wanting to
-take advantage of this is added with MaxPower greater than 500
-(currently possible if using a ConfigFS gadget) the composite
-driver fails to accommodate this for a couple reasons:
+Changes for v3:
+1: Only patch 3/3 was posted for review.
 
- - usb_gadget_vbus_draw() when called from set_config() and
-   composite_resume() will be passed the MaxPower value without
-   regard for the current connection speed, resulting in a
-   violation for USB 2.0 since the max is 500mA.
+Changes for v2:
+1: Dropped setting the format in probe to coax the sensor to enter LP11
+   state.
+2: Fixed switching between RAW8/RAW10 modes.
+3: Fixed fps setting for 640x480 and switched to auto mode.
 
- - the bMaxPower of the configuration descriptor would be
-   incorrectly encoded, again if the connection speed is only
-   at USB 2.0 or below, likely wrapping around U8_MAX since
-   the 2mA multiplier corresponds to a maximum of 510mA.
+Lad Prabhakar (3):
+  media: i2c: imx219: Fix power sequence
+  media: i2c: imx219: Add support for RAW8 bit bayer format
+  media: i2c: imx219: Add support for cropped 640x480 resolution
 
-Fix these by adding checks against the current gadget->speed
-when the c->MaxPower value is used (set_config() and
-composite_resume()) and appropriately limit based on whether
-it is currently at a low-/full-/high- or super-speed connection.
+ drivers/media/i2c/imx219.c | 235 ++++++++++++++++++++++++++++++++++++++-------
+ 1 file changed, 202 insertions(+), 33 deletions(-)
 
-Because 900 is not divisible by 8, with the round-up division
-currently used in encode_bMaxPower() a MaxPower of 900mA will
-result in an encoded value of 0x71. When a host stack (including
-Linux and Windows) enumerates this on a single port root hub, it
-reads this value back and decodes (multiplies by 8) to get 904mA
-which is strictly greater than 900mA that is typically budgeted
-for that port, causing it to reject the configuration. Instead,
-we should be using the round-down behavior of normal integral
-division so that 900 / 8 -> 0x70 or 896mA to stay within range.
-And we might as well change it for the high/full/low case as well
-for consistency.
-
-N.B. USB 3.2 Gen N x 2 allows for up to 1500mA but there doesn't
-seem to be any any peripheral controller supported by Linux that
-does two lane operation, so for now keeping the clamp at 900
-should be fine.
-
-Signed-off-by: Jack Pham <jackp@codeaurora.org>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/usb/gadget/composite.c | 24 ++++++++++++++++++------
- 1 file changed, 18 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/usb/gadget/composite.c b/drivers/usb/gadget/composite.c
-index fea7c7e0143f2..30aefd1adbadd 100644
---- a/drivers/usb/gadget/composite.c
-+++ b/drivers/usb/gadget/composite.c
-@@ -438,9 +438,13 @@ static u8 encode_bMaxPower(enum usb_device_speed speed,
- 	if (!val)
- 		return 0;
- 	if (speed < USB_SPEED_SUPER)
--		return DIV_ROUND_UP(val, 2);
-+		return min(val, 500U) / 2;
- 	else
--		return DIV_ROUND_UP(val, 8);
-+		/*
-+		 * USB 3.x supports up to 900mA, but since 900 isn't divisible
-+		 * by 8 the integral division will effectively cap to 896mA.
-+		 */
-+		return min(val, 900U) / 8;
- }
- 
- static int config_buf(struct usb_configuration *config,
-@@ -838,6 +842,10 @@ static int set_config(struct usb_composite_dev *cdev,
- 
- 	/* when we return, be sure our power usage is valid */
- 	power = c->MaxPower ? c->MaxPower : CONFIG_USB_GADGET_VBUS_DRAW;
-+	if (gadget->speed < USB_SPEED_SUPER)
-+		power = min(power, 500U);
-+	else
-+		power = min(power, 900U);
- done:
- 	usb_gadget_vbus_draw(gadget, power);
- 	if (result >= 0 && cdev->delayed_status)
-@@ -2264,7 +2272,7 @@ void composite_resume(struct usb_gadget *gadget)
- {
- 	struct usb_composite_dev	*cdev = get_gadget_data(gadget);
- 	struct usb_function		*f;
--	u16				maxpower;
-+	unsigned			maxpower;
- 
- 	/* REVISIT:  should we have config level
- 	 * suspend/resume callbacks?
-@@ -2278,10 +2286,14 @@ void composite_resume(struct usb_gadget *gadget)
- 				f->resume(f);
- 		}
- 
--		maxpower = cdev->config->MaxPower;
-+		maxpower = cdev->config->MaxPower ?
-+			cdev->config->MaxPower : CONFIG_USB_GADGET_VBUS_DRAW;
-+		if (gadget->speed < USB_SPEED_SUPER)
-+			maxpower = min(maxpower, 500U);
-+		else
-+			maxpower = min(maxpower, 900U);
- 
--		usb_gadget_vbus_draw(gadget, maxpower ?
--			maxpower : CONFIG_USB_GADGET_VBUS_DRAW);
-+		usb_gadget_vbus_draw(gadget, maxpower);
- 	}
- 
- 	cdev->suspended = 0;
 -- 
-2.20.1
-
-
+2.7.4
 
