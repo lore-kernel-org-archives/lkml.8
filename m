@@ -2,352 +2,153 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9312C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:18:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EF11C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:18:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B5E3208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:18:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24461208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:18:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583846298;
-	bh=RtIw+MhS0eOI/uvQaA8w4QZv4GI5m1lV7h8CgbbJ4UQ=;
-	h=In-Reply-To:References:From:Date:Subject:To:Cc:List-ID:From;
-	b=t8UXl9jBj4v6lDcqe1GXkUkdPeuFX5QgQN+gSMi8jYfmrg4n/xyXIdeuUfyZt0rg+
-	 gsc1DRI2EnFt159dhU52hlU7XyX3ERFLXXJG4rj4hvdV7hDgNj4KsAcW8K0JR7zMZf
-	 X6AzGsWMReASD/H6IoKaJut5XmRYbsQb99KtX75Q=
+	s=default; t=1583846305;
+	bh=ZEuXr2Lt9z5Yd+2+diKOFZq9QOTwXmgaie6wa6bpRME=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=oktU9M7SSAf+OWip/1xgJgiKDf3FC6XdUjDTGOy4IqdTwwAVGK7F+xy6VWNwlZXvz
+	 T9nd43tbjZBPqs9ThGU7lmwH09TguEyUs8gjfL3Hwum9YWPXWdps9kPDeKv3Xx0g4k
+	 mQXPPEJGOKiLngKlUNXpmYTPVJbolUSONLEMpSfE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731714AbgCJNSR (ORCPT
+        id S1731742AbgCJNSY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:18:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43816 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:18:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60506 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731417AbgCJNSL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:18:11 -0400
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1731352AbgCJNLA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:11:00 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC3A72469D
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 13:18:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 926C9208E4;
+        Tue, 10 Mar 2020 13:10:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583846290;
-        bh=RtIw+MhS0eOI/uvQaA8w4QZv4GI5m1lV7h8CgbbJ4UQ=;
-        h=In-Reply-To:References:From:Date:Subject:To:Cc:From;
-        b=u5T5Vd+wls0vW+9a7cr6pPz8OliFBhxVS3SoM2h8F3w9vUffrDqyu8KADwnKTm3n5
-         yFYzuvIJQMrMNYbtVNTPqdQ4cAGsCrU4I+Nw0TGOxlJQ8ja91kAdnPq06b+1YTeAju
-         MmX48zhjOL16KemXvmSOVB5JjTncyW86OZ7NTjzY=
-Received: by mail-wr1-f41.google.com with SMTP id v9so15804199wrf.10
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 06:18:09 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ3axnbUbrDEHDaPXURtVL18Me/AbUoJw7dB/uWnrxL3QTFcHq7l
-        PKY24ATHhX+CdBHgeuCEckS8HgCZoKUAJobBTHZDIg==
-X-Google-Smtp-Source: ADFU+vvo2CHGC8Yncy78bD07kAqcOjzeGnjRqPnZwsNO6yrkb9Z8I1ZOEpuf7Pxnic9cOZ4QgrG7bL5UHEn6y7/Nevs=
-X-Received: by 2002:adf:e881:: with SMTP id d1mr15425864wrm.262.1583846288203;
- Tue, 10 Mar 2020 06:18:08 -0700 (PDT)
+        s=default; t=1583845859;
+        bh=ZEuXr2Lt9z5Yd+2+diKOFZq9QOTwXmgaie6wa6bpRME=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=xMbIkXbfQb40sySJRV01Dsc4VHuAD0Z8WNolxlgWm3CIYgKBLyqzVi8RPYeIB1bxh
+         WFEDhWrmq4AjfO/qtT3AzvH9brlgRde4hoV3CFdc/Fl4aDsqjFlJq9hUFOHXCYih3b
+         SZ5RnWgjZ9O2BXS7X+UOnCzhMwRgH2135JEW4lw0=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Heinz Mauelshagen <heinzm@redhat.com>,
+        Mikulas Patocka <mpatocka@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>
+Subject: [PATCH 4.14 125/126] dm integrity: fix a deadlock due to offloading to an incorrect workqueue
+Date:   Tue, 10 Mar 2020 13:42:26 +0100
+Message-Id: <20200310124211.378654195@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200310124203.704193207@linuxfoundation.org>
+References: <20200310124203.704193207@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Received: by 2002:adf:ed51:0:0:0:0:0 with HTTP; Tue, 10 Mar 2020 06:18:06
- -0700 (PDT)
-In-Reply-To: <CAOnJCU+zBgYo0ez2ExiAbGttwpVq302vGrZJ3Y9g+S=SHTMuiw@mail.gmail.com>
-References: <20200226011037.7179-1-atish.patra@wdc.com> <20200226011037.7179-6-atish.patra@wdc.com>
- <CAKv+Gu_iAzQ6et13aACarqns8-xzQ+YSqj+m3mVGGy=ny8GJBg@mail.gmail.com>
- <26172d39fdb5ecd951ade0a89566c010f6166a03.camel@wdc.com> <CAKv+Gu8i93gM0dMqzbhvNbqsgd9dHCMGzX7E47uusrUvv6xRJA@mail.gmail.com>
- <46e9873e288134f638cd8726a2c15c9ca63860ce.camel@wdc.com> <CAKv+Gu_2dCj74VvCMRQ9yFgBtJRENasBbEV0bwcfqLQwuaj0=A@mail.gmail.com>
- <CAOnJCU+zBgYo0ez2ExiAbGttwpVq302vGrZJ3Y9g+S=SHTMuiw@mail.gmail.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Tue, 10 Mar 2020 09:18:06 -0400
-X-Gmail-Original-Message-ID: <CAKv+Gu_kPN3ZijU04JLtCYekF001fXf=dcHsZutNajUb7jmM8w@mail.gmail.com>
-Message-ID: <CAKv+Gu_kPN3ZijU04JLtCYekF001fXf=dcHsZutNajUb7jmM8w@mail.gmail.com>
-Subject: Re: [RFC PATCH 5/5] RISC-V: Add EFI stub support.
-To:     Atish Patra <atishp@atishpatra.org>
-Cc:     Atish Patra <Atish.Patra@wdc.com>,
-        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-        "abner.chang@hpe.com" <abner.chang@hpe.com>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "daniel.schaefer@hpe.com" <daniel.schaefer@hpe.com>,
-        Anup Patel <Anup.Patel@wdc.com>,
-        "palmer@dabbelt.com" <palmer@dabbelt.com>,
-        "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>,
-        "agraf@csgraf.de" <agraf@csgraf.de>,
-        "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
-        "leif@nuviainc.com" <leif@nuviainc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/03/2020, Atish Patra <atishp@atishpatra.org> wrote:
-> On Thu, Feb 27, 2020 at 10:57 PM Ard Biesheuvel <ardb@kernel.org> wrote:
->>
->> On Fri, 28 Feb 2020 at 02:05, Atish Patra <Atish.Patra@wdc.com> wrote:
->> >
->> > On Thu, 2020-02-27 at 20:59 +0100, Ard Biesheuvel wrote:
->> > > On Thu, 27 Feb 2020 at 20:53, Atish Patra <Atish.Patra@wdc.com>
->> > > wrote:
->> > > > On Wed, 2020-02-26 at 08:28 +0100, Ard Biesheuvel wrote:
->> > > > > On Wed, 26 Feb 2020 at 02:10, Atish Patra <atish.patra@wdc.com>
->> > > > > wrote:
->> > > > > > Add a RISC-V architecture specific stub code that actually
->> > > > > > copies
->> > > > > > the
->> > > > > > actual kernel image to a valid address and jump to it after
->> > > > > > boot
->> > > > > > services
->> > > > > > are terminated. Enable UEFI related kernel configs as well for
->> > > > > > RISC-V.
->> > > > > >
->> > > > > > Signed-off-by: Atish Patra <atish.patra@wdc.com>
->> > > > > > ---
->> > > > > >  arch/riscv/Kconfig                        |  20 ++++
->> > > > > >  arch/riscv/Makefile                       |   1 +
->> > > > > >  arch/riscv/configs/defconfig              |   1 +
->> > > > > >  drivers/firmware/efi/libstub/Makefile     |   8 ++
->> > > > > >  drivers/firmware/efi/libstub/riscv-stub.c | 135
->> > > > > > ++++++++++++++++++++++
->> > > > > >  5 files changed, 165 insertions(+)
->> > > > > >  create mode 100644 drivers/firmware/efi/libstub/riscv-stub.c
->> > > > > >
->> > > > > > diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
->> > > > > > index 42c122170cfd..68b1d565e51d 100644
->> > > > > > --- a/arch/riscv/Kconfig
->> > > > > > +++ b/arch/riscv/Kconfig
->> > > > > > @@ -372,10 +372,30 @@ config CMDLINE_FORCE
->> > > > > >
->> > > > > >  endchoice
->> > > > > >
->> > > > > > +config EFI_STUB
->> > > > > > +       bool
->> > > > > > +
->> > > > > > +config EFI
->> > > > > > +       bool "UEFI runtime support"
->> > > > > > +       depends on OF
->> > > > > > +       select LIBFDT
->> > > > > > +       select UCS2_STRING
->> > > > > > +       select EFI_PARAMS_FROM_FDT
->> > > > > > +       select EFI_STUB
->> > > > > > +       select EFI_GENERIC_ARCH_STUB
->> > > > > > +       default y
->> > > > > > +       help
->> > > > > > +         This option provides support for runtime services
->> > > > > > provided
->> > > > > > +         by UEFI firmware (such as non-volatile variables,
->> > > > > > realtime
->> > > > > > +          clock, and platform reset). A UEFI stub is also
->> > > > > > provided
->> > > > > > to
->> > > > > > +         allow the kernel to be booted as an EFI application.
->> > > > > > This
->> > > > > > +         is only useful on systems that have UEFI firmware.
->> > > > > > +
->> > > > > >  endmenu
->> > > > > >
->> > > > > >  menu "Power management options"
->> > > > > >
->> > > > > >  source "kernel/power/Kconfig"
->> > > > > > +source "drivers/firmware/Kconfig"
->> > > > > >
->> > > > > >  endmenu
->> > > > > > diff --git a/arch/riscv/Makefile b/arch/riscv/Makefile
->> > > > > > index b9009a2fbaf5..0afaa89ba9ad 100644
->> > > > > > --- a/arch/riscv/Makefile
->> > > > > > +++ b/arch/riscv/Makefile
->> > > > > > @@ -78,6 +78,7 @@ head-y :=3D arch/riscv/kernel/head.o
->> > > > > >  core-y +=3D arch/riscv/
->> > > > > >
->> > > > > >  libs-y +=3D arch/riscv/lib/
->> > > > > > +core-$(CONFIG_EFI_STUB) +=3D
->> > > > > > $(objtree)/drivers/firmware/efi/libstub/lib.a
->> > > > > >
->> > > > > >  PHONY +=3D vdso_install
->> > > > > >  vdso_install:
->> > > > > > diff --git a/arch/riscv/configs/defconfig
->> > > > > > b/arch/riscv/configs/defconfig
->> > > > > > index e2ff95cb3390..0a5d3578f51e 100644
->> > > > > > --- a/arch/riscv/configs/defconfig
->> > > > > > +++ b/arch/riscv/configs/defconfig
->> > > > > > @@ -125,3 +125,4 @@ CONFIG_DEBUG_BLOCK_EXT_DEVT=3Dy
->> > > > > >  # CONFIG_FTRACE is not set
->> > > > > >  # CONFIG_RUNTIME_TESTING_MENU is not set
->> > > > > >  CONFIG_MEMTEST=3Dy
->> > > > > > +CONFIG_EFI=3Dy
->> > > > > > diff --git a/drivers/firmware/efi/libstub/Makefile
->> > > > > > b/drivers/firmware/efi/libstub/Makefile
->> > > > > > index 2c5b76787126..38facb61745b 100644
->> > > > > > --- a/drivers/firmware/efi/libstub/Makefile
->> > > > > > +++ b/drivers/firmware/efi/libstub/Makefile
->> > > > > > @@ -21,6 +21,8 @@ cflags-$(CONFIG_ARM64)                :=3D
->> > > > > > $(subst
->> > > > > > $(CC_FLAGS_FTRACE),,$(KBUILD_CFLAGS)) \
->> > > > > >  cflags-$(CONFIG_ARM)           :=3D $(subst
->> > > > > > $(CC_FLAGS_FTRACE),,$(KBUILD_CFLAGS)) \
->> > > > > >                                    -fno-builtin -fpic \
->> > > > > >                                    $(call cc-option,-mno-
->> > > > > > single-
->> > > > > > pic-base)
->> > > > > > +cflags-$(CONFIG_RISCV)         :=3D $(subst
->> > > > > > $(CC_FLAGS_FTRACE),,$(KBUILD_CFLAGS)) \
->> > > > > > +                                  -fpic
->> > > > > >
->> > > > > >  cflags-$(CONFIG_EFI_GENERIC_ARCH_STUB) +=3D
->> > > > > > -I$(srctree)/scripts/dtc/libfdt
->> > > > > >
->> > > > > > @@ -55,6 +57,7 @@ lib-
->> > > > > > $(CONFIG_EFI_GENERIC_ARCH_STUB)           +=3D
->> > > > > > efi-stub.o fdt.o string.o \
->> > > > > >  lib-$(CONFIG_ARM)              +=3D arm32-stub.o
->> > > > > >  lib-$(CONFIG_ARM64)            +=3D arm64-stub.o
->> > > > > >  lib-$(CONFIG_X86)              +=3D x86-stub.o
->> > > > > > +lib-$(CONFIG_RISCV)            +=3D riscv-stub.o
->> > > > > >  CFLAGS_arm32-stub.o            :=3D -DTEXT_OFFSET=3D$(TEXT_OF=
-FSET)
->> > > > > >  CFLAGS_arm64-stub.o            :=3D -DTEXT_OFFSET=3D$(TEXT_OF=
-FSET)
->> > > > > >
->> > > > > > @@ -79,6 +82,11 @@ STUBCOPY_FLAGS-$(CONFIG_ARM64)       +=3D -=
--
->> > > > > > prefix-alloc-sections=3D.init \
->> > > > > >                                    --prefix-symbols=3D__efistu=
-b_
->> > > > > >  STUBCOPY_RELOC-$(CONFIG_ARM64) :=3D R_AARCH64_ABS
->> > > > > >
->> > > > > > +STUBCOPY_FLAGS-$(CONFIG_RISCV) +=3D --prefix-alloc-
->> > > > > > sections=3D.init \
->> > > > > > +                                  --prefix-symbols=3D__efistu=
-b_
->> > > > > > +STUBCOPY_RELOC-$(CONFIG_RISCV) :=3D R_RISCV_HI20
->> > > > > > +
->> > > > > > +
->> > > > > >  $(obj)/%.stub.o: $(obj)/%.o FORCE
->> > > > > >         $(call if_changed,stubcopy)
->> > > > > >
->> > > > > > diff --git a/drivers/firmware/efi/libstub/riscv-stub.c
->> > > > > > b/drivers/firmware/efi/libstub/riscv-stub.c
->> > > > > > new file mode 100644
->> > > > > > index 000000000000..3935b29ea93a
->> > > > > > --- /dev/null
->> > > > > > +++ b/drivers/firmware/efi/libstub/riscv-stub.c
->> > > > > > @@ -0,0 +1,135 @@
->> > > > > > +// SPDX-License-Identifier: GPL-2.0
->> > > > > > +/*
->> > > > > > + * Copyright (C) 2013, 2014 Linaro Ltd;  <roy.franz@linaro.or=
-g
->> > > > > > >
->> > > > > > + * Copyright (C) 2020 Western Digital Corporation or its
->> > > > > > affiliates.
->> > > > > > + *
->> > > > > > + * This file implements the EFI boot stub for the RISC-V
->> > > > > > kernel.
->> > > > > > + * Adapted from ARM64 version at
->> > > > > > drivers/firmware/efi/libstub/arm64-stub.c.
->> > > > > > + */
->> > > > > > +
->> > > > > > +#include <linux/efi.h>
->> > > > > > +#include <linux/libfdt.h>
->> > > > > > +#include <linux/libfdt_env.h>
->> > > > > > +#include <asm/efi.h>
->> > > > > > +#include <asm/sections.h>
->> > > > > > +
->> > > > > > +#include "efistub.h"
->> > > > > > +/*
->> > > > > > + * RISCV requires the kernel image to placed TEXT_OFFSET byte=
-s
->> > > > > > beyond a 2 MB
->> > > > > > + * aligned base for 64 bit and 4MB for 32 bit.
->> > > > > > + */
->> > > > > > +#if IS_ENABLED(CONFIG_64BIT)
->> > > > >
->> > > > > You can use #ifdef here
->> > > > >
->> > > >
->> > > > ok.
->> > > >
->> > > > > > +#define MIN_KIMG_ALIGN SZ_2M
->> > > > > > +#else
->> > > > > > +#define MIN_KIMG_ALIGN SZ_4M
->> > > > > > +#endif
->> > > > > > +/*
->> > > > > > + * TEXT_OFFSET ensures that we don't overwrite the firmware
->> > > > > > that
->> > > > > > probably sits
->> > > > > > + * at the beginning of the DRAM.
->> > > > > > + */
->> > > > >
->> > > > > Ugh. Really? On an EFI system, that memory should be reserved in
->> > > > > some
->> > > > > way, we shouldn't be able to stomp on it like that.
->> > > > >
->> > > >
->> > > > Currently, we reserve the initial 128KB for run time firmware(only
->> > > > openSBI for now, EDK2 later) by using PMP (physical memory
->> > > > protection).
->> > > > Any acess to that region from supervisor mode (i.e. U-Boot) will
->> > > > result
->> > > > in a fault.
->> > > >
->> > > > Is it mandatory for UEFI to reserve the beginning of the DRAM ?
->> > > >
->> > >
->> > > It is mandatory to describe which memory is usable and which memory
->> > > is
->> > > reserved. If this memory is not usable, you either describe it as
->> > > reserved, or not describe it at all. Describing it as usable memory,
->> > > allocating it for the kernel but with a hidden agreement that it is
->> > > reserved is highly likely to cause problems down the road.
->> > >
->> >
->> > I completely agree with you on this. We have been talking to have a
->> > booting guide and memory map document for RISC-V Linux to document all
->> > the idiosyncries of RISC-V. But that has not happend until now.
->> > Once, the ordered booting patches are merged, I will try to take a sta=
-b
->> > at it.
->> >
->> > Other than that, do we need to describe it somewhere in U-boot wrt to
->> > UEFI so that it doesn't allocate memory from that region ?
->> >
->>
->> It is an idiosyncrasy that the firmware should hide from the OS.
->>
->> What if GRUB comes along and attempts to allocate that memory? Do we
->> also have to teach it that the first 128 KB memory of free memory are
->> magic and should not be touched?
->>
->> So the answer is to mark it as reserved. This way, no UEFI tools,
->> bootloaders etc will ever try to use it.
->
-> Sounds good to me. We are currently discussing the best approach to
-> provide reserved memory
-> information to U-Boot/EDK2. The idea is to U-Boot/EDK2 may have to
-> update the DT with
-> reserved-memory node so that Linux is aware of the reservation as well.
->
+From: Mikulas Patocka <mpatocka@redhat.com>
 
-The efi stub disregards dt memory information entirely, so the
-reservation should be made in the efi memory map. For edk2, I don=E2=80=99t
-think there is any point in adding these reservations to the dt at
-all.
+commit 53770f0ec5fd417429775ba006bc4abe14002335 upstream.
+
+If we need to perform synchronous I/O in dm_integrity_map_continue(),
+we must make sure that we are not in the map function - in order to
+avoid the deadlock due to bio queuing in generic_make_request. To
+avoid the deadlock, we offload the request to metadata_wq.
+
+However, metadata_wq also processes metadata updates for write requests.
+If there are too many requests that get offloaded to metadata_wq at the
+beginning of dm_integrity_map_continue, the workqueue metadata_wq
+becomes clogged and the system is incapable of processing any metadata
+updates.
+
+This causes a deadlock because all the requests that need to do metadata
+updates wait for metadata_wq to proceed and metadata_wq waits inside
+wait_and_add_new_range until some existing request releases its range
+lock (which doesn't happen because the range lock is released after
+metadata update).
+
+In order to fix the deadlock, we create a new workqueue offload_wq and
+offload requests to it - so that processing of offload_wq is independent
+from processing of metadata_wq.
+
+Fixes: 7eada909bfd7 ("dm: add integrity target")
+Cc: stable@vger.kernel.org # v4.12+
+Reported-by: Heinz Mauelshagen <heinzm@redhat.com>
+Tested-by: Heinz Mauelshagen <heinzm@redhat.com>
+Signed-off-by: Heinz Mauelshagen <heinzm@redhat.com>
+Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/md/dm-integrity.c |   15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
+
+--- a/drivers/md/dm-integrity.c
++++ b/drivers/md/dm-integrity.c
+@@ -187,6 +187,7 @@ struct dm_integrity_c {
+ 	struct rb_root in_progress;
+ 	wait_queue_head_t endio_wait;
+ 	struct workqueue_struct *wait_wq;
++	struct workqueue_struct *offload_wq;
+ 
+ 	unsigned char commit_seq;
+ 	commit_id_t commit_ids[N_COMMIT_IDS];
+@@ -1157,7 +1158,7 @@ static void dec_in_flight(struct dm_inte
+ 			dio->range.logical_sector += dio->range.n_sectors;
+ 			bio_advance(bio, dio->range.n_sectors << SECTOR_SHIFT);
+ 			INIT_WORK(&dio->work, integrity_bio_wait);
+-			queue_work(ic->wait_wq, &dio->work);
++			queue_work(ic->offload_wq, &dio->work);
+ 			return;
+ 		}
+ 		do_endio_flush(ic, dio);
+@@ -1577,7 +1578,7 @@ static void dm_integrity_map_continue(st
+ 
+ 	if (need_sync_io && from_map) {
+ 		INIT_WORK(&dio->work, integrity_bio_wait);
+-		queue_work(ic->metadata_wq, &dio->work);
++		queue_work(ic->offload_wq, &dio->work);
+ 		return;
+ 	}
+ 
+@@ -3005,6 +3006,14 @@ static int dm_integrity_ctr(struct dm_ta
+ 		goto bad;
+ 	}
+ 
++	ic->offload_wq = alloc_workqueue("dm-integrity-offload", WQ_MEM_RECLAIM,
++					  METADATA_WORKQUEUE_MAX_ACTIVE);
++	if (!ic->offload_wq) {
++		ti->error = "Cannot allocate workqueue";
++		r = -ENOMEM;
++		goto bad;
++	}
++
+ 	ic->commit_wq = alloc_workqueue("dm-integrity-commit", WQ_MEM_RECLAIM, 1);
+ 	if (!ic->commit_wq) {
+ 		ti->error = "Cannot allocate workqueue";
+@@ -3189,6 +3198,8 @@ static void dm_integrity_dtr(struct dm_t
+ 		destroy_workqueue(ic->metadata_wq);
+ 	if (ic->wait_wq)
+ 		destroy_workqueue(ic->wait_wq);
++	if (ic->offload_wq)
++		destroy_workqueue(ic->offload_wq);
+ 	if (ic->commit_wq)
+ 		destroy_workqueue(ic->commit_wq);
+ 	if (ic->writer_wq)
 
 
-> Then, in the stub, you can
->> tweak the existing code to cheat a bit, and make the TEXT_OFFSET
->> window overlap the 128 KB reserved window at the bottom of memory.
->> Doing that in the stub is fine - this is part of the kernel so it can
->> know about crazy RISC-V rules.
->
-> I am bit confused here. Why does EFI stub need to overlap the reserved
-> memory.
-> I thought EFI stub just needs to parse the DT to find out the reserved
-> memory region to make sure
-> that it doesn't try to access/overwrite that region.
-
-The efi stub does not use dt memory information, since it has its own
-memory map. If some memory exists that may not be used for general
-allocation, you have to reserve it.
-
-Then, as an optimization, you may combine the stub=E2=80=99s knowledge abou=
-t
-riscv in particular, and decide to use an allocation at the bottom of
-memory that partially overlaps in a way that is known to be safe
