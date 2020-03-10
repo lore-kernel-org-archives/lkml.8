@@ -2,54 +2,52 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FB6EC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:59:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A420DC18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:59:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3262D2253D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:59:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DB532468D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:59:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583845165;
-	bh=1aCofeW059HYtRuj0hfyGP+MaSXdJA7L1wUbLBEx+CI=;
+	s=default; t=1583845166;
+	bh=b6GGZTOuGD4Z4VZmHbTlQCD+5uTvAchfnra/Zg+5ig4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oAh1jE2rCWpReq6GOLm0r2UFMMtkBkuwd9xqXZuBO8qa+6RuuuioDrCID+Ltqq0+3
-	 QwoXi5IZOeUWdPN8VWcYpIchfeeHzXhsKoBBl5RfhfV9grrZCksswOjVWy/5Zfiy3R
-	 ftdzjHlzsF1xnWN5/iHLM3nstAS6P6nqU6yWA0rk=
+	b=QY5FEakJwtzVr9eUhbIBEuz1joTYS6PBLviqs1P28qhQVXtlPRfhiQZjoXmBQqTDx
+	 nG379d4uvPNoqHOK/DQRg3z4qx+IBnaySJcAflHrftfYvH1a5sGpsrg27vYBzzj6SD
+	 zc/hVv/BskydcTQUjGdVwyUn/0FWv5ckb5IYC39k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728066AbgCJM7Y (ORCPT
+        id S1729720AbgCJM7Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:59:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39562 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:59:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39714 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729690AbgCJM7L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:59:11 -0400
+        id S1726632AbgCJM7T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:59:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 807A12467D;
-        Tue, 10 Mar 2020 12:59:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D17F2253D;
+        Tue, 10 Mar 2020 12:59:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845151;
-        bh=1aCofeW059HYtRuj0hfyGP+MaSXdJA7L1wUbLBEx+CI=;
+        s=default; t=1583845159;
+        bh=b6GGZTOuGD4Z4VZmHbTlQCD+5uTvAchfnra/Zg+5ig4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UvcudYpH3SSAvaIzhWSIAkk5TTJNFpIq9vNfXbfw7xMSdbIRtIgoEy9vIE3cqrXh4
-         CJWB2VyD4YwcS2zbk6xTSEjoDoTdpqMV0jxTtT0mgydLEXT4x4Efyd04tDLSxX9QnA
-         D1lvmPjGs11SSQH5arRim8pTW9BtaO6Vc0twqKCA=
+        b=zC3rqHUbiKJVrPnt7ija+2tFnNhbwitULJ24ryD5SSaAmWSVmJMSJu7fCYECivC5B
+         iPLwTTmqccpbB21ple/z4AU5PmL+gDcXovdNDk8uWcAvnsALn+5c+LkNqKdW0/9vQd
+         bg62aZVDDcSzQjL0UuE3xgkpwvx1qT97C+i47N1Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Egor Pomozov <epomozov@marvell.com>,
-        Igor Russkikh <irusskikh@marvell.com>,
-        Dmitry Bogdanov <dbogdanov@marvell.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 032/189] net: atlantic: ptp gpio adjustments
-Date:   Tue, 10 Mar 2020 13:37:49 +0100
-Message-Id: <20200310123642.713155502@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Johannes Thumshirn <johannes.thumshirn@wdc.com>,
+        Omar Sandoval <osandov@fb.com>, David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.5 084/189] btrfs: fix RAID direct I/O reads with alternate csums
+Date:   Tue, 10 Mar 2020 13:38:41 +0100
+Message-Id: <20200310123648.166936372@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123639.608886314@linuxfoundation.org>
 References: <20200310123639.608886314@linuxfoundation.org>
@@ -62,96 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Egor Pomozov <epomozov@marvell.com>
+From: Omar Sandoval <osandov@fb.com>
 
-[ Upstream commit f08a464c27ca0a4050333baa271504b27ce834b7 ]
+commit e7a04894c766daa4248cb736efee93550f2d5872 upstream.
 
-Clock adjustment data should be passed to FW as well, otherwise in some
-cases a drift was observed when using GPIO features.
+btrfs_lookup_and_bind_dio_csum() does pointer arithmetic which assumes
+32-bit checksums. If using a larger checksum, this leads to spurious
+failures when a direct I/O read crosses a stripe. This is easy
+to reproduce:
 
-Signed-off-by: Egor Pomozov <epomozov@marvell.com>
-Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
-Signed-off-by: Dmitry Bogdanov <dbogdanov@marvell.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+  # mkfs.btrfs -f --checksum blake2 -d raid0 /dev/vdc /dev/vdd
+  ...
+  # mount /dev/vdc /mnt
+  # cd /mnt
+  # dd if=/dev/urandom of=foo bs=1M count=1 status=none
+  # dd if=foo of=/dev/null bs=1M iflag=direct status=none
+  dd: error reading 'foo': Input/output error
+  # dmesg | tail -1
+  [  135.821568] BTRFS warning (device vdc): csum failed root 5 ino 257 off 421888 ...
+
+Fix it by using the actual checksum size.
+
+Fixes: 1e25a2e3ca0d ("btrfs: don't assume ordered sums to be 4 bytes")
+CC: stable@vger.kernel.org # 5.4+
+Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+Signed-off-by: Omar Sandoval <osandov@fb.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/ethernet/aquantia/atlantic/aq_hw.h       |  2 ++
- .../ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c    |  4 +++-
- .../aquantia/atlantic/hw_atl/hw_atl_utils_fw2x.c     | 12 ++++++++++++
- 3 files changed, 17 insertions(+), 1 deletion(-)
+ fs/btrfs/inode.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/aquantia/atlantic/aq_hw.h b/drivers/net/ethernet/aquantia/atlantic/aq_hw.h
-index cc70c606b6ef2..251767c31f7e5 100644
---- a/drivers/net/ethernet/aquantia/atlantic/aq_hw.h
-+++ b/drivers/net/ethernet/aquantia/atlantic/aq_hw.h
-@@ -337,6 +337,8 @@ struct aq_fw_ops {
- 
- 	void (*enable_ptp)(struct aq_hw_s *self, int enable);
- 
-+	void (*adjust_ptp)(struct aq_hw_s *self, uint64_t adj);
-+
- 	int (*set_eee_rate)(struct aq_hw_s *self, u32 speed);
- 
- 	int (*get_eee_rate)(struct aq_hw_s *self, u32 *rate,
-diff --git a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c
-index fce587aaba33d..d20d91cdece86 100644
---- a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c
-+++ b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c
-@@ -1165,6 +1165,8 @@ static int hw_atl_b0_adj_sys_clock(struct aq_hw_s *self, s64 delta)
+--- a/fs/btrfs/inode.c
++++ b/fs/btrfs/inode.c
+@@ -8444,6 +8444,7 @@ static inline blk_status_t btrfs_lookup_
  {
- 	self->ptp_clk_offset += delta;
+ 	struct btrfs_io_bio *io_bio = btrfs_io_bio(bio);
+ 	struct btrfs_io_bio *orig_io_bio = btrfs_io_bio(dip->orig_bio);
++	u16 csum_size;
+ 	blk_status_t ret;
  
-+	self->aq_fw_ops->adjust_ptp(self, self->ptp_clk_offset);
-+
+ 	/*
+@@ -8463,7 +8464,8 @@ static inline blk_status_t btrfs_lookup_
+ 
+ 	file_offset -= dip->logical_offset;
+ 	file_offset >>= inode->i_sb->s_blocksize_bits;
+-	io_bio->csum = (u8 *)(((u32 *)orig_io_bio->csum) + file_offset);
++	csum_size = btrfs_super_csum_size(btrfs_sb(inode->i_sb)->super_copy);
++	io_bio->csum = orig_io_bio->csum + csum_size * file_offset;
+ 
  	return 0;
  }
- 
-@@ -1215,7 +1217,7 @@ static int hw_atl_b0_gpio_pulse(struct aq_hw_s *self, u32 index,
- 	fwreq.ptp_gpio_ctrl.index = index;
- 	fwreq.ptp_gpio_ctrl.period = period;
- 	/* Apply time offset */
--	fwreq.ptp_gpio_ctrl.start = start - self->ptp_clk_offset;
-+	fwreq.ptp_gpio_ctrl.start = start;
- 
- 	size = sizeof(fwreq.msg_id) + sizeof(fwreq.ptp_gpio_ctrl);
- 	return self->aq_fw_ops->send_fw_request(self, &fwreq, size);
-diff --git a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_utils_fw2x.c b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_utils_fw2x.c
-index 97ebf849695fd..77a4ed64830fd 100644
---- a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_utils_fw2x.c
-+++ b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_utils_fw2x.c
-@@ -30,6 +30,9 @@
- #define HW_ATL_FW3X_EXT_CONTROL_ADDR     0x378
- #define HW_ATL_FW3X_EXT_STATE_ADDR       0x37c
- 
-+#define HW_ATL_FW3X_PTP_ADJ_LSW_ADDR	 0x50a0
-+#define HW_ATL_FW3X_PTP_ADJ_MSW_ADDR	 0x50a4
-+
- #define HW_ATL_FW2X_CAP_PAUSE            BIT(CAPS_HI_PAUSE)
- #define HW_ATL_FW2X_CAP_ASYM_PAUSE       BIT(CAPS_HI_ASYMMETRIC_PAUSE)
- #define HW_ATL_FW2X_CAP_SLEEP_PROXY      BIT(CAPS_HI_SLEEP_PROXY)
-@@ -475,6 +478,14 @@ static void aq_fw3x_enable_ptp(struct aq_hw_s *self, int enable)
- 	aq_hw_write_reg(self, HW_ATL_FW3X_EXT_CONTROL_ADDR, ptp_opts);
- }
- 
-+static void aq_fw3x_adjust_ptp(struct aq_hw_s *self, uint64_t adj)
-+{
-+	aq_hw_write_reg(self, HW_ATL_FW3X_PTP_ADJ_LSW_ADDR,
-+			(adj >>  0) & 0xffffffff);
-+	aq_hw_write_reg(self, HW_ATL_FW3X_PTP_ADJ_MSW_ADDR,
-+			(adj >> 32) & 0xffffffff);
-+}
-+
- static int aq_fw2x_led_control(struct aq_hw_s *self, u32 mode)
- {
- 	if (self->fw_ver_actual < HW_ATL_FW_VER_LED)
-@@ -633,4 +644,5 @@ const struct aq_fw_ops aq_fw_2x_ops = {
- 	.enable_ptp         = aq_fw3x_enable_ptp,
- 	.led_control        = aq_fw2x_led_control,
- 	.set_phyloopback    = aq_fw2x_set_phyloopback,
-+	.adjust_ptp         = aq_fw3x_adjust_ptp,
- };
--- 
-2.20.1
-
 
 
