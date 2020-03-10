@@ -2,194 +2,180 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A549FC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:31:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFAC2C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:31:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 795632467D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:31:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583847089;
-	bh=NkRFNdz3XKrMZQz4RVrE5BBAyFyLOqfqLt6eXCZ7G5A=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fHFsH+sNskvQFBLXfAkEq4bpWtNI7JZMMgTNpJXuEJPi87OPbNHS+9MkJkqH5RO/C
-	 +Q5gplgZNt0ogapvoPuMb/aKgicDbFwmqw3QUE8mOggWLNGovfPRqg0X8s934hFMba
-	 6SQbaNWVxoYgwvlq1cgjGaytK4ABrxFvdAG2BEUU=
+	by mail.kernel.org (Postfix) with ESMTP id 8B62320675
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:31:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sFvOVqT4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728243AbgCJMt3 (ORCPT
+        id S1729249AbgCJNbc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:49:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53812 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728462AbgCJMt1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:49:27 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C0A52468D;
-        Tue, 10 Mar 2020 12:49:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844565;
-        bh=NkRFNdz3XKrMZQz4RVrE5BBAyFyLOqfqLt6eXCZ7G5A=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Iif+OUp6PlezszacqxcoTN/CX4SEARG+aMhs804YAsUxcDVyZR2FOQ2pezX2qM46a
-         ygthkHNNJ3YcIROaxZZ2vyZWcL+54uV04g0rq3Yw2Rcqu9t3FzvgOR6txLD4eJzEnf
-         grwNSpw5pU6+ZErNm8U+Zw7Rc3MgmeaWqN/nSi5g=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Javier Martinez Canillas <javierm@redhat.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 039/168] efi: Only print errors about failing to get certs if EFI vars are found
-Date:   Tue, 10 Mar 2020 13:38:05 +0100
-Message-Id: <20200310123639.394289234@linuxfoundation.org>
+        Tue, 10 Mar 2020 09:31:32 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:33233 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726402AbgCJNba (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:31:30 -0400
+Received: by mail-wr1-f65.google.com with SMTP id a25so12092348wrd.0
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 06:31:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=n+AaYfOR1wnxBM1UyhiMJATpoI1M1VsyY4kmM1JkCJM=;
+        b=sFvOVqT4cituQqCiIE/3IQKTicsxfagkwyO34fOf7aQxw6F57CglO7DZUQFYKQk1fD
+         2/1/3kKeVnKiQa26Ed7Hb7MzQ7BgVK/iU2/H4C+AlTsSh0TgbYWRClRp/OSfyRzLTve3
+         2vCer/gGbmFEyolW1HyAEGmtCmby8joUH/dKC5j/OHIUBor8h8JayH6iFZBBvt7HOXkS
+         zC1LzLn+9TNfhjveh6CBKvfUtk/7vqlyl5fzd5JEHDadQ8goufiHv6JKPA6mv1su+1yI
+         nT8GQSnDXqZbsAL8JUDmR3nHFLatEYgWKNYiKFdf3w86EZW0WK/w5b1JWbo7Zh3QU3GP
+         pWJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=n+AaYfOR1wnxBM1UyhiMJATpoI1M1VsyY4kmM1JkCJM=;
+        b=eaMaoT5rcLz4UwIVQId02Ak1MnN27CXSLP7JRo0iW6WLvyN0K++M3E4RSXbh9DXbC3
+         MZ+SNPUSOVXLHGUfnyYipYySzAYQOnyM/bcKP/MCM3MihH3t0tWEfVfIfr0QiM9B1M+7
+         RLHG3bOJx1eWCWxnFbMvV1L4RKSL/F/fv9kEos0a+nD1mUIhrfOETGz8/7XBuEBZIinm
+         bXzEpEHjKR5fqA5Ms9MMJcMv4wVNYCIu3l87qiwNL3ABgcEZTHUvc4ilHl6WxuXvmqwI
+         8ivnPQ0E/UoJEXX20ZGyoj1ssjJ30aj4b8k5Hu1dVF5RFJ1wrzgdyn6Ek9W53JxEUdbD
+         gzCw==
+X-Gm-Message-State: ANhLgQ1zWGnlx8EObRSmYlT74E2Zeo0/WS4M8mjXdRLmaubj1bNaJq2W
+        KicaBRaXsmVMN9TrEsiHung=
+X-Google-Smtp-Source: ADFU+vtIMlTgA2JO19QReP8CAkx20BGfjqLewkecDbptY9AHHaVUrpZfIUTw0mEzQHyqaJ9AmhBAUA==
+X-Received: by 2002:adf:f70f:: with SMTP id r15mr27908592wrp.269.1583847087056;
+        Tue, 10 Mar 2020 06:31:27 -0700 (PDT)
+Received: from localhost.localdomain ([197.248.222.210])
+        by smtp.googlemail.com with ESMTPSA id o7sm14047141wrx.60.2020.03.10.06.31.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Mar 2020 06:31:25 -0700 (PDT)
+From:   Wambui Karuga <wambui.karugax@gmail.com>
+To:     airlied@linux.ie, daniel@ffwll.ch,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>
+Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        gregkh@linuxfoundation.org
+Subject: [PATCH v2 00/17] drm: subsytem-wide debugfs functions refactor
+Date:   Tue, 10 Mar 2020 16:31:04 +0300
+Message-Id: <20200310133121.27913-1-wambui.karugax@gmail.com>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200310123635.322799692@linuxfoundation.org>
-References: <20200310123635.322799692@linuxfoundation.org>
-User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Javier Martinez Canillas <javierm@redhat.com>
+This series includes work on various debugfs functions both in drm/core
+and across various drivers in the subsystem.
+Since commit 987d65d01356 (drm: debugfs: make drm_debugfs_create_files()
+never fail), drm_debugfs_create_files() does not fail and only returns
+zero. This series therefore removes the left over error handling and
+checks for its return value across drm drivers.
 
-[ Upstream commit 3be54d558c75562e42bc83d665df024bd79d399b ]
+As a result of these changes, most drm_debugfs functions are converted
+to return void in this series. This also enables the
+drm_driver, debugfs_init() hook to be changed to return void. 
 
-If CONFIG_LOAD_UEFI_KEYS is enabled, the kernel attempts to load the certs
-from the db, dbx and MokListRT EFI variables into the appropriate keyrings.
+v2: individual driver patches have been converted to have debugfs
+functions return 0 instead of void to prevent breaking individual driver
+builds.
+The last patch then converts the .debugfs_hook() and its users across
+all drivers to return void.
 
-But it just assumes that the variables will be present and prints an error
-if the certs can't be loaded, even when is possible that the variables may
-not exist. For example the MokListRT variable will only be present if shim
-is used.
+Wambui Karuga (17):
+  drm/tegra: remove checks for debugfs functions return value
+  drm/tilcdc: remove check for return value of debugfs functions.
+  drm/v3d: make v3d_debugfs_init() return 0
+  drm/vc4: remove check of return value of drm_debugfs functions
+  drm/arc: make arcgpu_debugfs_init() return 0.
+  drm/arm: make hdlcd_debugfs_init() return 0
+  drm/etnaviv: remove check for return value of
+    drm_debugfs_create_files()
+  drm/msm: remove checks for return value of drm_debugfs_create_files()
+  drm/sti: remove use of drm_debugfs functions as return values
+  drm/vram-helper: make drm_vram_mm_debugfs_init() return 0
+  drm/nouveau: make nouveau_drm_debugfs_init() return 0
+  drm/pl111: make pl111_debugfs_init return 0
+  drm/omap: remove checks for return value of drm_debugfs functions
+  drm/i915: have *_debugfs_init() functions return void.
+  drm: make various debugfs_init() functions return 0
+  drm/debugfs: remove checks for return value of drm_debugfs functions.
+  drm: convert .debugfs_init() hook to return void.
 
-So only print an error message about failing to get the certs list from an
-EFI variable if this is found. Otherwise these printed errors just pollute
-the kernel log ring buffer with confusing messages like the following:
+ drivers/gpu/drm/arc/arcpgu_drv.c              |  7 +--
+ drivers/gpu/drm/arm/hdlcd_drv.c               |  7 +--
+ drivers/gpu/drm/arm/malidp_drv.c              |  3 +-
+ drivers/gpu/drm/drm_atomic.c                  |  8 ++--
+ drivers/gpu/drm/drm_client.c                  |  8 ++--
+ drivers/gpu/drm/drm_crtc_internal.h           |  2 +-
+ drivers/gpu/drm/drm_debugfs.c                 | 45 +++++--------------
+ drivers/gpu/drm/drm_framebuffer.c             |  8 ++--
+ drivers/gpu/drm/drm_gem_vram_helper.c         | 14 ++----
+ drivers/gpu/drm/drm_internal.h                |  2 +-
+ drivers/gpu/drm/drm_mipi_dbi.c                |  6 +--
+ drivers/gpu/drm/etnaviv/etnaviv_drv.c         | 18 ++------
+ .../drm/i915/display/intel_display_debugfs.c  |  8 ++--
+ .../drm/i915/display/intel_display_debugfs.h  |  4 +-
+ drivers/gpu/drm/i915/i915_debugfs.c           |  8 ++--
+ drivers/gpu/drm/i915/i915_debugfs.h           |  4 +-
+ drivers/gpu/drm/msm/adreno/a5xx_debugfs.c     | 18 +++-----
+ drivers/gpu/drm/msm/adreno/a5xx_gpu.h         |  2 +-
+ drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c      | 14 ++----
+ drivers/gpu/drm/msm/msm_debugfs.c             | 23 +++-------
+ drivers/gpu/drm/msm/msm_debugfs.h             |  2 +-
+ drivers/gpu/drm/msm/msm_gpu.h                 |  2 +-
+ drivers/gpu/drm/nouveau/nouveau_debugfs.c     | 26 +++++------
+ drivers/gpu/drm/nouveau/nouveau_debugfs.h     |  8 ++--
+ drivers/gpu/drm/omapdrm/omap_debugfs.c        | 29 +++---------
+ drivers/gpu/drm/omapdrm/omap_drv.h            |  2 +-
+ drivers/gpu/drm/pl111/pl111_debugfs.c         |  8 ++--
+ drivers/gpu/drm/pl111/pl111_drm.h             |  2 +-
+ drivers/gpu/drm/qxl/qxl_debugfs.c             | 21 +++------
+ drivers/gpu/drm/qxl/qxl_drv.h                 | 13 +++---
+ drivers/gpu/drm/qxl/qxl_ttm.c                 |  6 +--
+ drivers/gpu/drm/sti/sti_compositor.c          |  6 +--
+ drivers/gpu/drm/sti/sti_compositor.h          |  4 +-
+ drivers/gpu/drm/sti/sti_crtc.c                |  2 +-
+ drivers/gpu/drm/sti/sti_cursor.c              | 14 +++---
+ drivers/gpu/drm/sti/sti_drv.c                 | 16 ++-----
+ drivers/gpu/drm/sti/sti_dvo.c                 | 13 +++---
+ drivers/gpu/drm/sti/sti_gdp.c                 |  7 +--
+ drivers/gpu/drm/sti/sti_hda.c                 | 13 +++---
+ drivers/gpu/drm/sti/sti_hdmi.c                | 13 +++---
+ drivers/gpu/drm/sti/sti_hqvdp.c               | 12 ++---
+ drivers/gpu/drm/sti/sti_mixer.c               | 10 ++---
+ drivers/gpu/drm/sti/sti_mixer.h               |  2 +-
+ drivers/gpu/drm/sti/sti_tvout.c               | 13 +++---
+ drivers/gpu/drm/sti/sti_vid.c                 |  8 ++--
+ drivers/gpu/drm/sti/sti_vid.h                 |  2 +-
+ drivers/gpu/drm/tegra/dc.c                    | 11 +----
+ drivers/gpu/drm/tegra/drm.c                   |  8 ++--
+ drivers/gpu/drm/tegra/dsi.c                   | 11 +----
+ drivers/gpu/drm/tegra/hdmi.c                  | 11 +----
+ drivers/gpu/drm/tegra/sor.c                   | 11 +----
+ drivers/gpu/drm/tilcdc/tilcdc_drv.c           | 17 ++-----
+ drivers/gpu/drm/v3d/v3d_debugfs.c             |  8 ++--
+ drivers/gpu/drm/v3d/v3d_drv.h                 |  2 +-
+ drivers/gpu/drm/vc4/vc4_debugfs.c             | 11 ++---
+ drivers/gpu/drm/vc4/vc4_drv.h                 |  2 +-
+ drivers/gpu/drm/virtio/virtgpu_debugfs.c      |  3 +-
+ drivers/gpu/drm/virtio/virtgpu_drv.h          |  2 +-
+ include/drm/drm_client.h                      |  2 +-
+ include/drm/drm_debugfs.h                     | 16 +++----
+ include/drm/drm_drv.h                         |  2 +-
+ include/drm/drm_gem_vram_helper.h             |  2 +-
+ include/drm/drm_mipi_dbi.h                    |  2 +-
+ 63 files changed, 204 insertions(+), 380 deletions(-)
 
-[    5.427251] Couldn't get size: 0x800000000000000e
-[    5.427261] MODSIGN: Couldn't get UEFI db list
-[    5.428012] Couldn't get size: 0x800000000000000e
-[    5.428023] Couldn't get UEFI MokListRT
-
-Reported-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Javier Martinez Canillas <javierm@redhat.com>
-Tested-by: Hans de Goede <hdegoede@redhat.com>
-Acked-by: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- security/integrity/platform_certs/load_uefi.c | 40 ++++++++++++-------
- 1 file changed, 26 insertions(+), 14 deletions(-)
-
-diff --git a/security/integrity/platform_certs/load_uefi.c b/security/integrity/platform_certs/load_uefi.c
-index 81b19c52832ba..020fc7a11ef0e 100644
---- a/security/integrity/platform_certs/load_uefi.c
-+++ b/security/integrity/platform_certs/load_uefi.c
-@@ -39,16 +39,18 @@ static __init bool uefi_check_ignore_db(void)
-  * Get a certificate list blob from the named EFI variable.
-  */
- static __init void *get_cert_list(efi_char16_t *name, efi_guid_t *guid,
--				  unsigned long *size)
-+				  unsigned long *size, efi_status_t *status)
- {
--	efi_status_t status;
- 	unsigned long lsize = 4;
- 	unsigned long tmpdb[4];
- 	void *db;
- 
--	status = efi.get_variable(name, guid, NULL, &lsize, &tmpdb);
--	if (status != EFI_BUFFER_TOO_SMALL) {
--		pr_err("Couldn't get size: 0x%lx\n", status);
-+	*status = efi.get_variable(name, guid, NULL, &lsize, &tmpdb);
-+	if (*status == EFI_NOT_FOUND)
-+		return NULL;
-+
-+	if (*status != EFI_BUFFER_TOO_SMALL) {
-+		pr_err("Couldn't get size: 0x%lx\n", *status);
- 		return NULL;
- 	}
- 
-@@ -56,10 +58,10 @@ static __init void *get_cert_list(efi_char16_t *name, efi_guid_t *guid,
- 	if (!db)
- 		return NULL;
- 
--	status = efi.get_variable(name, guid, NULL, &lsize, db);
--	if (status != EFI_SUCCESS) {
-+	*status = efi.get_variable(name, guid, NULL, &lsize, db);
-+	if (*status != EFI_SUCCESS) {
- 		kfree(db);
--		pr_err("Error reading db var: 0x%lx\n", status);
-+		pr_err("Error reading db var: 0x%lx\n", *status);
- 		return NULL;
- 	}
- 
-@@ -144,6 +146,7 @@ static int __init load_uefi_certs(void)
- 	efi_guid_t mok_var = EFI_SHIM_LOCK_GUID;
- 	void *db = NULL, *dbx = NULL, *mok = NULL;
- 	unsigned long dbsize = 0, dbxsize = 0, moksize = 0;
-+	efi_status_t status;
- 	int rc = 0;
- 
- 	if (!efi.get_variable)
-@@ -153,9 +156,12 @@ static int __init load_uefi_certs(void)
- 	 * an error if we can't get them.
- 	 */
- 	if (!uefi_check_ignore_db()) {
--		db = get_cert_list(L"db", &secure_var, &dbsize);
-+		db = get_cert_list(L"db", &secure_var, &dbsize, &status);
- 		if (!db) {
--			pr_err("MODSIGN: Couldn't get UEFI db list\n");
-+			if (status == EFI_NOT_FOUND)
-+				pr_debug("MODSIGN: db variable wasn't found\n");
-+			else
-+				pr_err("MODSIGN: Couldn't get UEFI db list\n");
- 		} else {
- 			rc = parse_efi_signature_list("UEFI:db",
- 					db, dbsize, get_handler_for_db);
-@@ -166,9 +172,12 @@ static int __init load_uefi_certs(void)
- 		}
- 	}
- 
--	mok = get_cert_list(L"MokListRT", &mok_var, &moksize);
-+	mok = get_cert_list(L"MokListRT", &mok_var, &moksize, &status);
- 	if (!mok) {
--		pr_info("Couldn't get UEFI MokListRT\n");
-+		if (status == EFI_NOT_FOUND)
-+			pr_debug("MokListRT variable wasn't found\n");
-+		else
-+			pr_info("Couldn't get UEFI MokListRT\n");
- 	} else {
- 		rc = parse_efi_signature_list("UEFI:MokListRT",
- 					      mok, moksize, get_handler_for_db);
-@@ -177,9 +186,12 @@ static int __init load_uefi_certs(void)
- 		kfree(mok);
- 	}
- 
--	dbx = get_cert_list(L"dbx", &secure_var, &dbxsize);
-+	dbx = get_cert_list(L"dbx", &secure_var, &dbxsize, &status);
- 	if (!dbx) {
--		pr_info("Couldn't get UEFI dbx list\n");
-+		if (status == EFI_NOT_FOUND)
-+			pr_debug("dbx variable wasn't found\n");
-+		else
-+			pr_info("Couldn't get UEFI dbx list\n");
- 	} else {
- 		rc = parse_efi_signature_list("UEFI:dbx",
- 					      dbx, dbxsize,
 -- 
-2.20.1
-
-
+2.25.1
 
