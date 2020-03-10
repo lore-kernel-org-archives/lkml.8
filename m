@@ -2,111 +2,193 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FDDAC18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 08:19:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4F3CC18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 08:19:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 170302467D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 08:19:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gsZYTU2A"
+	by mail.kernel.org (Postfix) with ESMTP id B74B72467D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 08:19:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726442AbgCJITJ (ORCPT
+        id S1726482AbgCJITz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 04:19:09 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:37264 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726220AbgCJITI (ORCPT
+        Tue, 10 Mar 2020 04:19:55 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:45781 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726220AbgCJITz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 04:19:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583828347;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=xbuHU0xN5Ght7n+PdULeJ6invpYq6mKCHrnk/0n8BPo=;
-        b=gsZYTU2AS8GZm83u22CBuU0QCzG3nmNn2J3PSMs6c8o/Rbp36fi1BpdNlyqAUpODy2Hkrp
-        Jk0ncKS2sm+cw4eo07yAh8tNADPVbKMeGlsqHbo3tiP8oqqW/jXxm7V9u4yyPsiq3NNMPA
-        9gJWc01Oh4zf8ub2WHA7yWoThO1gl4s=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-61-XomxSUiwOpeFJNb3HQ-B_A-1; Tue, 10 Mar 2020 04:19:05 -0400
-X-MC-Unique: XomxSUiwOpeFJNb3HQ-B_A-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8DA7D1405;
-        Tue, 10 Mar 2020 08:19:04 +0000 (UTC)
-Received: from kamzik.brq.redhat.com (unknown [10.43.2.160])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7167F28980;
-        Tue, 10 Mar 2020 08:18:49 +0000 (UTC)
-Date:   Tue, 10 Mar 2020 09:18:47 +0100
-From:   Andrew Jones <drjones@redhat.com>
-To:     Peter Xu <peterx@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Yan Zhao <yan.y.zhao@intel.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Christophe de Dinechin <dinechin@redhat.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: Re: [PATCH v6 12/14] KVM: selftests: Add dirty ring buffer test
-Message-ID: <20200310081847.42sx5oc3q6m3wsdj@kamzik.brq.redhat.com>
-References: <20200309214424.330363-1-peterx@redhat.com>
- <20200309222529.345699-1-peterx@redhat.com>
+        Tue, 10 Mar 2020 04:19:55 -0400
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1jBa6p-00069G-Gm; Tue, 10 Mar 2020 09:19:27 +0100
+Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1jBa6n-0002TP-9h; Tue, 10 Mar 2020 09:19:25 +0100
+Date:   Tue, 10 Mar 2020 09:19:25 +0100
+From:   Sascha Hauer <s.hauer@pengutronix.de>
+To:     Robin Gong <yibin.gong@nxp.com>
+Cc:     vkoul@kernel.org, shawnguo@kernel.org,
+        u.kleine-koenig@pengutronix.de, broonie@kernel.org,
+        robh+dt@kernel.org, festevam@gmail.com, dan.j.williams@intel.com,
+        mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com,
+        l.stach@pengutronix.de, martin.fuzzey@flowbird.group,
+        kernel@pengutronix.de, linux-spi@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-imx@nxp.com, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [RESEND v6  09/13] dmaengine: imx-sdma: remove ERR009165 on
+ i.mx6ul
+Message-ID: <20200310081925.GT3335@pengutronix.de>
+References: <1583839922-22699-1-git-send-email-yibin.gong@nxp.com>
+ <1583839922-22699-10-git-send-email-yibin.gong@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200309222529.345699-1-peterx@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+In-Reply-To: <1583839922-22699-10-git-send-email-yibin.gong@nxp.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 09:04:16 up 19 days, 15:34, 45 users,  load average: 0.11, 0.18,
+ 0.17
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: sha@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 09, 2020 at 06:25:29PM -0400, Peter Xu wrote:
-> +void *vcpu_map_dirty_ring(struct kvm_vm *vm, uint32_t vcpuid)
-> +{
-> +	struct vcpu *vcpu;
-> +	uint32_t size = vm->dirty_ring_size;
+On Tue, Mar 10, 2020 at 07:31:58PM +0800, Robin Gong wrote:
+> ECSPI issue fixed from i.mx6ul at hardware level, no need
+> ERR009165 anymore on those chips such as i.mx8mq. Add i.mx6sx
+> from where i.mx6ul source.
+> 
+> Signed-off-by: Robin Gong <yibin.gong@nxp.com>
+> Acked-by: Vinod Koul <vkoul@kernel.org>
+> ---
+>  drivers/dma/imx-sdma.c | 51 +++++++++++++++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 50 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
+> index 56288d8..5ae7237 100644
+> --- a/drivers/dma/imx-sdma.c
+> +++ b/drivers/dma/imx-sdma.c
+> @@ -419,6 +419,13 @@ struct sdma_driver_data {
+>  	int num_events;
+>  	struct sdma_script_start_addrs	*script_addrs;
+>  	bool check_ratio;
+> +	/*
+> +	 * ecspi ERR009165 fixed should be done in sdma script
+> +	 * and it has been fixed in soc from i.mx6ul.
+> +	 * please get more information from the below link:
+> +	 * https://www.nxp.com/docs/en/errata/IMX6DQCE.pdf
+> +	 */
+> +	bool ecspi_fixed;
+>  };
+>  
+>  struct sdma_engine {
+> @@ -539,6 +546,31 @@ static struct sdma_driver_data sdma_imx6q = {
+>  	.script_addrs = &sdma_script_imx6q,
+>  };
+>  
+> +static struct sdma_script_start_addrs sdma_script_imx6sx = {
+> +	.ap_2_ap_addr = 642,
+> +	.uart_2_mcu_addr = 817,
+> +	.mcu_2_app_addr = 747,
+> +	.uartsh_2_mcu_addr = 1032,
+> +	.mcu_2_shp_addr = 960,
+> +	.app_2_mcu_addr = 683,
+> +	.shp_2_mcu_addr = 891,
+> +	.spdif_2_mcu_addr = 1100,
+> +	.mcu_2_spdif_addr = 1134,
+> +};
 > +
-> +	TEST_ASSERT(size > 0, "Should enable dirty ring first");
+> +static struct sdma_driver_data sdma_imx6sx = {
+> +	.chnenbl0 = SDMA_CHNENBL0_IMX35,
+> +	.num_events = 48,
+> +	.script_addrs = &sdma_script_imx6sx,
+> +};
 > +
-> +	vcpu = vcpu_find(vm, vcpuid);
+> +static struct sdma_driver_data sdma_imx6ul = {
+> +	.chnenbl0 = SDMA_CHNENBL0_IMX35,
+> +	.num_events = 48,
+> +	.script_addrs = &sdma_script_imx6sx,
+> +	.ecspi_fixed = true,
+> +};
 > +
-> +	TEST_ASSERT(vcpu, "Cannot find vcpu %u", vcpuid);
-> +
-> +	if (!vcpu->dirty_gfns) {
-> +		void *addr;
-> +
-> +		addr = mmap(NULL, size, PROT_READ,
-> +			    MAP_PRIVATE, vcpu->fd,
-> +			    vm->page_size * KVM_DIRTY_LOG_PAGE_OFFSET);
-> +		TEST_ASSERT(addr == MAP_FAILED, "Dirty ring mapped private");
-> +
-> +		addr = mmap(NULL, size, PROT_READ | PROT_EXEC,
-> +			    MAP_PRIVATE, vcpu->fd,
-> +			    vm->page_size * KVM_DIRTY_LOG_PAGE_OFFSET);
-> +		TEST_ASSERT(addr == MAP_FAILED, "Dirty ring mapped exec");
-> +
-> +		addr = mmap(NULL, size, PROT_READ | PROT_WRITE,
-> +			    MAP_SHARED, vcpu->fd,
-> +			    vm->page_size * KVM_DIRTY_LOG_PAGE_OFFSET);
+>  static struct sdma_script_start_addrs sdma_script_imx7d = {
+>  	.ap_2_ap_addr = 644,
+>  	.uart_2_mcu_addr = 819,
+> @@ -584,9 +616,15 @@ static const struct platform_device_id sdma_devtypes[] = {
+>  		.name = "imx6q-sdma",
+>  		.driver_data = (unsigned long)&sdma_imx6q,
+>  	}, {
+> +		.name = "imx6sx-sdma",
+> +		.driver_data = (unsigned long)&sdma_imx6sx,
+> +	}, {
 
-No TEST_ASSERT for this mmap?
+Now the i.MX6sx uses a new sdma_script_start_addrs entry which is the same
+as the i.MX6q one we used before with one exception: it lacks the
+per_2_per_addr = 6331 entry. This is only used for IMX_DMATYPE_ASRC and
+IMX_DMATYPE_ASRC_SP, both are entirely unused in the mainline kernel. So
+why must the i.MX6sx changed here and what has this to do with ECSPI?
 
-> +
-> +		vcpu->dirty_gfns = addr;
-> +		vcpu->dirty_gfns_count = size / sizeof(struct kvm_dirty_gfn);
-> +	}
-> +
-> +	return vcpu->dirty_gfns;
-> +}
+Sascha
 
+>  		.name = "imx7d-sdma",
+>  		.driver_data = (unsigned long)&sdma_imx7d,
+>  	}, {
+> +		.name = "imx6ul-sdma",
+> +		.driver_data = (unsigned long)&sdma_imx6ul,
+> +	}, {
+>  		.name = "imx8mq-sdma",
+>  		.driver_data = (unsigned long)&sdma_imx8mq,
+>  	}, {
+> @@ -602,7 +640,9 @@ static const struct of_device_id sdma_dt_ids[] = {
+>  	{ .compatible = "fsl,imx35-sdma", .data = &sdma_imx35, },
+>  	{ .compatible = "fsl,imx31-sdma", .data = &sdma_imx31, },
+>  	{ .compatible = "fsl,imx25-sdma", .data = &sdma_imx25, },
+> +	{ .compatible = "fsl,imx6sx-sdma", .data = &sdma_imx6sx, },
+>  	{ .compatible = "fsl,imx7d-sdma", .data = &sdma_imx7d, },
+> +	{ .compatible = "fsl,imx6ul-sdma", .data = &sdma_imx6ul, },
+>  	{ .compatible = "fsl,imx8mq-sdma", .data = &sdma_imx8mq, },
+>  	{ /* sentinel */ }
+>  };
+> @@ -1169,8 +1209,17 @@ static int sdma_config_channel(struct dma_chan *chan)
+>  			if (sdmac->peripheral_type == IMX_DMATYPE_ASRC_SP ||
+>  			    sdmac->peripheral_type == IMX_DMATYPE_ASRC)
+>  				sdma_set_watermarklevel_for_p2p(sdmac);
+> -		} else
+> +		} else {
+> +			/*
+> +			 * ERR009165 fixed from i.mx6ul, no errata need,
+> +			 * set bit31 to let sdma script skip the errata.
+> +			 */
+> +			if (sdmac->peripheral_type == IMX_DMATYPE_CSPI &&
+> +			    sdmac->direction == DMA_MEM_TO_DEV &&
+> +			    sdmac->sdma->drvdata->ecspi_fixed)
+> +				__set_bit(31, &sdmac->watermark_level);
+>  			__set_bit(sdmac->event_id0, sdmac->event_mask);
+> +		}
+>  
+>  		/* Address */
+>  		sdmac->shp_addr = sdmac->per_address;
+> -- 
+> 2.7.4
+> 
+> 
+
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
