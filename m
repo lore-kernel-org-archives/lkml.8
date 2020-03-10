@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 227D0C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:11:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3800C18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:11:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E89C72468D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:11:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7707D2468D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:11:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583845862;
-	bh=1B9t7rQjrO0Jt8X1zDdLGlvPfzPAYiidaKZumUB+n0s=;
+	s=default; t=1583845863;
+	bh=gQWh7sVvH+z0XgXF4BmUO0G1rkaaDUhYsderlOQ/u0Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PfRbrfZ6x2KC+pjSTqKlD3Hc/C8wytYiEXKO7rKCueL/Q8uPV4JCqU1NyUZlJvBZ6
-	 sNWbBwkc6Ml5V6o+1L1Z7Oo0tO4mFuPbECzEMc9w3hUUWddwUQsvqi/44iHmIuLEGJ
-	 AZrx/m+g9KOHQMx7I58AuA/ebGv6ovDnx2Nonxb0=
+	b=mvxD5/KZV0XaFtzTrodBrbOlx52rTGwdEXgUnVpJOncatzje0Hl8d6MqQp9U6HN8W
+	 e5UgEkA8I+7VPKgJCFTVbWf3ZVMlpca18iAf/sn/YI3FoiPKn9cff5LQ0hkqIjidNL
+	 X0PF4RXfjgWfoUr0JqsN1cic6PT9YcE8zmowdfDY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730863AbgCJNLA (ORCPT
+        id S1729203AbgCJNLC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:11:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60296 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:11:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60330 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731357AbgCJNKt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:10:49 -0400
+        id S1731360AbgCJNKv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:10:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C17C520409;
-        Tue, 10 Mar 2020 13:10:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 406EB20409;
+        Tue, 10 Mar 2020 13:10:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845848;
-        bh=1B9t7rQjrO0Jt8X1zDdLGlvPfzPAYiidaKZumUB+n0s=;
+        s=default; t=1583845850;
+        bh=gQWh7sVvH+z0XgXF4BmUO0G1rkaaDUhYsderlOQ/u0Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CpYQYTcHavyTQXgMKpmnB8OwEgKa/NO6k7oujDUNM08Tc6J1MzhwBO7Oo4LItR/Ge
-         mkAk6h/FrOyTOlxkr2Xr3l/wOGM/1ssxL86S7WSFVw9FRw3sL6OOoYCVJZtwtBbMRg
-         VOY1ajpG774unb1y8ih2Xo+0Y0ynTXb+rCRBXcDo=
+        b=r6+u+bpNVbNLxwwtcCgJRxbjgme1yj6MjhRpuutOoVY4rAaY3gZ3cbEhPazazyjsL
+         GqfS2rpp3+3jGqoGjWRT2gjfcWpjNz00aiwULwPv2CwAkuQshq2u4CySFg6YolA2s8
+         0UjFK8alKm8usXfnWXLS7wNoHDhjWryU/jEv6gCU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>
-Subject: [PATCH 4.14 095/126] usb: core: hub: do error out if usb_autopm_get_interface() fails
-Date:   Tue, 10 Mar 2020 13:41:56 +0100
-Message-Id: <20200310124209.806407597@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 4.14 122/126] hwmon: (adt7462) Fix an error return in ADT7462_REG_VOLT()
+Date:   Tue, 10 Mar 2020 13:42:23 +0100
+Message-Id: <20200310124211.224345897@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310124203.704193207@linuxfoundation.org>
 References: <20200310124203.704193207@linuxfoundation.org>
@@ -59,57 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eugeniu Rosca <erosca@de.adit-jv.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-commit 60e3f6e4ac5b0fda43dad01c32e09409ec710045 upstream.
+commit 44f2f882909fedfc3a56e4b90026910456019743 upstream.
 
-Reviewing a fresh portion of coverity defects in USB core
-(specifically CID 1458999), Alan Stern noted below in [1]:
+This is only called from adt7462_update_device().  The caller expects it
+to return zero on error.  I fixed a similar issue earlier in commit
+a4bf06d58f21 ("hwmon: (adt7462) ADT7462_REG_VOLT_MAX() should return 0")
+but I missed this one.
 
-On Tue, Feb 25, 2020 at 02:39:23PM -0500, Alan Stern wrote:
- > A revised search finds line 997 in drivers/usb/core/hub.c and lines
- > 216, 269 in drivers/usb/core/port.c.  (I didn't try looking in any
- > other directories.)  AFAICT all three of these should check the
- > return value, although a error message in the kernel log probably
- > isn't needed.
-
-Factor out the usb_remove_device() change into a standalone patch to
-allow conflict-free integration on top of the earliest stable branches.
-
-[1] https://lore.kernel.org/lkml/Pine.LNX.4.44L0.2002251419120.1485-100000@iolanthe.rowland.org
-
-Fixes: 253e05724f9230 ("USB: add a "remove hardware" sysfs attribute")
-Cc: stable@vger.kernel.org # v2.6.33+
-Suggested-by: Alan Stern <stern@rowland.harvard.edu>
-Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
-Link: https://lore.kernel.org/r/20200226175036.14946-2-erosca@de.adit-jv.com
+Fixes: c0b4e3ab0c76 ("adt7462: new hwmon driver")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Link: https://lore.kernel.org/r/20200303101608.kqjwfcazu2ylhi2a@kili.mountain
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/core/hub.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/hwmon/adt7462.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/usb/core/hub.c
-+++ b/drivers/usb/core/hub.c
-@@ -958,13 +958,17 @@ int usb_remove_device(struct usb_device
- {
- 	struct usb_hub *hub;
- 	struct usb_interface *intf;
-+	int ret;
+--- a/drivers/hwmon/adt7462.c
++++ b/drivers/hwmon/adt7462.c
+@@ -426,7 +426,7 @@ static int ADT7462_REG_VOLT(struct adt74
+ 			return 0x95;
+ 		break;
+ 	}
+-	return -ENODEV;
++	return 0;
+ }
  
- 	if (!udev->parent)	/* Can't remove a root hub */
- 		return -EINVAL;
- 	hub = usb_hub_to_struct_hub(udev->parent);
- 	intf = to_usb_interface(hub->intfdev);
- 
--	usb_autopm_get_interface(intf);
-+	ret = usb_autopm_get_interface(intf);
-+	if (ret < 0)
-+		return ret;
-+
- 	set_bit(udev->portnum, hub->removed_bits);
- 	hub_port_logical_disconnect(hub, udev->portnum);
- 	usb_autopm_put_interface(intf);
+ /* Provide labels for sysfs */
 
 
