@@ -2,107 +2,129 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE81CC18E5A
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15D39C10DCE
 	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:15:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8537521655
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:15:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Hb9FDy9A"
+	by mail.kernel.org (Postfix) with ESMTP id B8A2D222C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:15:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727531AbgCJUPY (ORCPT
+        id S1727317AbgCJUPX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 16:15:24 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:34026 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727272AbgCJUPX (ORCPT
+        Tue, 10 Mar 2020 16:15:23 -0400
+Received: from shelob.surriel.com ([96.67.55.147]:50416 "EHLO
+        shelob.surriel.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726545AbgCJUPX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 10 Mar 2020 16:15:23 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02AKFIv9090192;
-        Tue, 10 Mar 2020 15:15:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1583871318;
-        bh=7NW06bwfj5FntAVsHPeONgq/hzdzS0WeL4eQPv/ypDo=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=Hb9FDy9AOTpR9RF7XWCZ0sPGYoNB66BI4mLMjVKZdeJn9IkyY50/dTQwZyfifn+QJ
-         qi9mPfl3ipmJIHBBDgrqKkrC9QvridbF7otnRE7qL+gAGxdYfeJkhyG/8fORUt+aPF
-         4DWemgFNLYbg6/8pyTMDRXGsgNIziDstjs8QugCc=
-Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02AKFIlk071817
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 10 Mar 2020 15:15:18 -0500
-Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 10
- Mar 2020 15:15:18 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 10 Mar 2020 15:15:18 -0500
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02AKFHvJ030430;
-        Tue, 10 Mar 2020 15:15:17 -0500
-Subject: Re: [PATCH v4 2/4] power_supply: Add additional health properties to
- the header
-To:     Sandeep Patil <sspatil@android.com>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>
-CC:     <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kernel-team@android.com>
-References: <20200116175039.1317-1-dmurphy@ti.com>
- <20200116175039.1317-3-dmurphy@ti.com>
- <20200117010658.iqs2zpwl6bsomkuo@earth.universe>
- <20200306235548.GA187098@google.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <6b947adc-a176-5fa0-1382-8b08ec3f8b09@ti.com>
-Date:   Tue, 10 Mar 2020 15:09:37 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+Received: from imladris.surriel.com ([96.67.55.152])
+        by shelob.surriel.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.92.3)
+        (envelope-from <riel@shelob.surriel.com>)
+        id 1jBlHa-0001Mz-JN; Tue, 10 Mar 2020 16:15:18 -0400
+Message-ID: <4147bc1d429a4336dcb45a6cb2657d082f35ab25.camel@surriel.com>
+Subject: Re: [PATCH v2] mm: hugetlb: optionally allocate gigantic hugepages
+ using cma
+From:   Rik van Riel <riel@surriel.com>
+To:     Mike Kravetz <mike.kravetz@oracle.com>,
+        Michal Hocko <mhocko@kernel.org>, Roman Gushchin <guro@fb.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>, linux-mm@kvack.org,
+        kernel-team@fb.com, linux-kernel@vger.kernel.org
+Date:   Tue, 10 Mar 2020 16:15:18 -0400
+In-Reply-To: <57494a9c-5c24-20b6-0bda-dac8bbb6f731@oracle.com>
+References: <20200310002524.2291595-1-guro@fb.com>
+         <5cfa9031-fc15-2bcc-adb9-9779285ef0f7@oracle.com>
+         <20200310180558.GD85000@carbon.dhcp.thefacebook.com>
+         <4b78a8a9-7b5a-eb62-acaa-2677e615bea1@oracle.com>
+         <20200310191906.GA96999@carbon.dhcp.thefacebook.com>
+         <20200310193622.GC8447@dhcp22.suse.cz>
+         <43e2e8443288260aa305f39ba566f81bf065d010.camel@surriel.com>
+         <57494a9c-5c24-20b6-0bda-dac8bbb6f731@oracle.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-C3ENaGOY3Fk1eu6XYAt6"
+User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
 MIME-Version: 1.0
-In-Reply-To: <20200306235548.GA187098@google.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello
 
-On 3/6/20 5:55 PM, Sandeep Patil wrote:
-> Hi Sebastian,
->
-> On Fri, Jan 17, 2020 at 02:06:58AM +0100, Sebastian Reichel wrote:
->> Hi,
->>
->> On Thu, Jan 16, 2020 at 11:50:37AM -0600, Dan Murphy wrote:
->>> Add HEALTH_WARM, HEALTH_COOL and HEALTH_HOT to the health enum.
->>>
->>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->>> ---
->> Looks good. But I will not merge it without a user and have comments
->> for the driver.
-> Android has been looking for these properties for a while now [1].
-> It was added[2] when we saw that the manufacturers were implementing these
-> properties in the driver. I didn't know the properties were absent upstream
-> until yesterday. Somebody pointed out in our ongoing effort to make sure
-> all core kernel changes that android depends on are present upstream.
->
-> I think those values are also propagated in application facing APIs in
-> Android (but I am not sure yet, let me know if that's something you want
-> to find out).
->
-> I wanted to chime in and present you a 'user' for this if that helps.
+--=-C3ENaGOY3Fk1eu6XYAt6
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-We have re-submitted the BQ25150/155 driver that would be the user and 
-we have 2 more for review that will use the new definitions
+On Tue, 2020-03-10 at 13:11 -0700, Mike Kravetz wrote:
+> On 3/10/20 12:46 PM, Rik van Riel wrote:
+> >=20
+> > How would that work for architectures that have multiple
+> > possible hugetlbfs gigantic page sizes, where the admin
+> > can allocate different numbers of differently sized pages
+> > after bootup?
+>=20
+> For hugetlb page reservations at boot today, pairs specifying size
+> and
+> quantity are put on the command line.  For example,
+> hugepagesz=3D2M hugepages=3D512 hugepagesz=3D1G hugepages=3D64
+>=20
+> We could do something similiar for CMA.
+> hugepagesz=3D512M hugepages_cma=3D256 hugepagesz=3D1G hugepages_cma=3D64
+>=20
+> That would make things much more complicated (implies separate CMA
+> reservations per size) and may be overkill for the first
+> implementation.
+>=20
+> Perhaps we limit CMA reservations to one gigantic huge page
+> size.  The
+> architectures would need to define the default and there could be a
+> command line option to override.  Something like,
+> default_cmapagesz=3D  analogous to today's default_hugepagesz=3D.  Then
+> hugepages_cma=3D is only associated with that default gigantic huge
+> page
+> size.
+>=20
+> The more I think about it, the more I like limiting CMA reservations
+> to
+> only one gigantic huge page size (per arch).
 
-Dan
+Why, though?
+
+The cma_alloc function can return allocations of different
+sizes at the same time.
+
+There is no limitation in the underlying code that would stop
+a user from allocating hugepages of different sizes through
+sysfs.
+
+Allowing the system administrator to allocate a little extra
+memory for the CMA pool could also allow us to work around
+initial issues of compaction/migration failing to move some
+of the pages, while we play whack-a-mole with the last corner
+cases.
+
+--=20
+All Rights Reversed.
+
+--=-C3ENaGOY3Fk1eu6XYAt6
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEKR73pCCtJ5Xj3yADznnekoTE3oMFAl5n9VYACgkQznnekoTE
+3oN42ggAnLgkVOVgm54Qtqfu1IihZSXHTfyMBPLFs4nCFUBBMpzt+QZJkCYXzGZW
+kUnRyYQcTPalw5uwdKeL97uWxvARnR04kx6qA7cvocvEC8Xw4EYPPH0RPKXXHG1f
+qRa9bpR+TvYckp/FmYiWME2oMD3S0wxXdXEUOsgnooOxCHJ7SScSdcx+06MgbVDh
+49qboipysfbgTzuKFXmto/TxKWS/8LyRWaeAVwBnDyHn8XYfhsI9xa7xBsvnxAjI
+qacZRHqa+DcV8//wOPAp0YZ6fD86FQI42Dzqmm0l3N+k8wtXITh6SRdKo7ODUGQc
+h+B3ysCd32l+vOsITPwcvgiHRhbU7g==
+=IuCs
+-----END PGP SIGNATURE-----
+
+--=-C3ENaGOY3Fk1eu6XYAt6--
 
