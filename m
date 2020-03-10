@@ -5,51 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 132FCC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:32:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 848DFC18E5C
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:32:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1E2420675
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:32:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E51620675
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:32:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583847171;
-	bh=m1bj2nosYZ8MFQjvjfH7oDSog1qvxQmq/5hcWMEBSgM=;
+	s=default; t=1583847174;
+	bh=F7HTiL+Ka9hsR6pb/OJoLfafwLysTmHqqcBwRpvJXuQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MBdYAkq5DMNGSayNBvTC5PHZbptXukVi6rNFDbGJESXs4hSUw0S4PObCwafPfSeDg
-	 7wCnP390lMzu3xaRrgvXmgoNAZE5gWQlCidVQeA7sxgqV3ZgEC8+3wjAAqh+S8528r
-	 Gre9Hgi0nsPP1e0/Np8SBdc1okNpuoG4rQTdjZik=
+	b=inSGiexuLM1XznWLmcInGyRMvo5KvGCqu6HhwnVIJWeNtsqjeYSUS41cOlM+FHrSD
+	 AHB3ejuU5j4l1rNTSR30Qs/wAu7DSLw7N4nySKecpEr0Oz2Vom/fS0Ri4o5g43Wmao
+	 J/HgFMAuy77ektj+jS4ySpF58Z3he8RyeKN9AcB0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728431AbgCJMtR (ORCPT
+        id S1728406AbgCJMtI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:49:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53554 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:49:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53360 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728421AbgCJMtL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:49:11 -0400
+        id S1728390AbgCJMtC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:49:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CDF1D24696;
-        Tue, 10 Mar 2020 12:49:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B68142467D;
+        Tue, 10 Mar 2020 12:49:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844551;
-        bh=m1bj2nosYZ8MFQjvjfH7oDSog1qvxQmq/5hcWMEBSgM=;
+        s=default; t=1583844541;
+        bh=F7HTiL+Ka9hsR6pb/OJoLfafwLysTmHqqcBwRpvJXuQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QRoRE/26qU+aWSJVkOdqbIYIpAvWVHf5SiwcrRAoAT5iig6tTX91V2RxqP5wQhEan
-         3RaIOzuMojqsW6/oBwnJcD23N+9dj6RweO2EOFGm2btOXZOaWQ7Ig+MIsC2A5yWVeu
-         NrZ7XyxH5ZDW1GY6quZKFcLSrKJikCMuj3PSUQNA=
+        b=VgOoU4uXhihFV/vzQEo1DvOFHW+EWWX5me4j6y3ymJpMZe4kJDE8/5wyUXrlCSdYF
+         nMmjTfXb2Kea1ANffbgnuioQk7V7ji1U+ml4A6smxaM1UK3vAMpY5TpU9SFkACL6WJ
+         HEbj3m+erwSl+TK9Zq5NtUJWPWBK5ag6laDGuJy0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marek Vasut <marex@denx.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Lukas Wunner <lukas@wunner.de>, Petr Stetiar <ynezz@true.cz>,
-        YueHaibing <yuehaibing@huawei.com>,
+        stable@vger.kernel.org, Maor Gottlieb <maorg@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 034/168] net: ks8851-ml: Fix 16-bit IO operation
-Date:   Tue, 10 Mar 2020 13:38:00 +0100
-Message-Id: <20200310123638.978739089@linuxfoundation.org>
+Subject: [PATCH 5.4 008/168] RDMA/core: Fix pkey and port assignment in get_new_pps
+Date:   Tue, 10 Mar 2020 13:37:34 +0100
+Message-Id: <20200310123636.674408305@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123635.322799692@linuxfoundation.org>
 References: <20200310123635.322799692@linuxfoundation.org>
@@ -62,49 +62,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Vasut <marex@denx.de>
+From: Maor Gottlieb <maorg@mellanox.com>
 
-[ Upstream commit 58292104832fef6cb4a89f736012c0e0724c3442 ]
+[ Upstream commit 801b67f3eaafd3f2ec8b65d93142d4ffedba85df ]
 
-The Micrel KSZ8851-16MLLI datasheet DS00002357B page 12 states that
-BE[3:0] signals are active high. This contradicts the measurements
-of the behavior of the actual chip, where these signals behave as
-active low. For example, to read the CIDER register, the bus must
-expose 0xc0c0 during the address phase, which means BE[3:0]=4'b1100.
+When port is part of the modify mask, then we should take it from the
+qp_attr and not from the old pps. Same for PKEY. Otherwise there are
+panics in some configurations:
 
-Signed-off-by: Marek Vasut <marex@denx.de>
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Lukas Wunner <lukas@wunner.de>
-Cc: Petr Stetiar <ynezz@true.cz>
-Cc: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+  RIP: 0010:get_pkey_idx_qp_list+0x50/0x80 [ib_core]
+  Code: c7 18 e8 13 04 30 ef 0f b6 43 06 48 69 c0 b8 00 00 00 48 03 85 a0 04 00 00 48 8b 50 20 48 8d 48 20 48 39 ca 74 1a 0f b7 73 04 <66> 39 72 10 75 08 eb 10 66 39 72 10 74 0a 48 8b 12 48 39 ca 75 f2
+  RSP: 0018:ffffafb3480932f0 EFLAGS: 00010203
+  RAX: ffff98059ababa10 RBX: ffff980d926e8cc0 RCX: ffff98059ababa30
+  RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff98059ababa28
+  RBP: ffff98059b940000 R08: 00000000000310c0 R09: ffff97fe47c07480
+  R10: 0000000000000036 R11: 0000000000000200 R12: 0000000000000071
+  R13: ffff98059b940000 R14: ffff980d87f948a0 R15: 0000000000000000
+  FS:  00007f88deb31740(0000) GS:ffff98059f600000(0000) knlGS:0000000000000000
+  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  CR2: 0000000000000010 CR3: 0000000853e26001 CR4: 00000000001606e0
+  Call Trace:
+   port_pkey_list_insert+0x3d/0x1b0 [ib_core]
+   ? kmem_cache_alloc_trace+0x215/0x220
+   ib_security_modify_qp+0x226/0x3a0 [ib_core]
+   _ib_modify_qp+0xcf/0x390 [ib_core]
+   ipoib_init_qp+0x7f/0x200 [ib_ipoib]
+   ? rvt_modify_port+0xd0/0xd0 [rdmavt]
+   ? ib_find_pkey+0x99/0xf0 [ib_core]
+   ipoib_ib_dev_open_default+0x1a/0x200 [ib_ipoib]
+   ipoib_ib_dev_open+0x96/0x130 [ib_ipoib]
+   ipoib_open+0x44/0x130 [ib_ipoib]
+   __dev_open+0xd1/0x160
+   __dev_change_flags+0x1ab/0x1f0
+   dev_change_flags+0x23/0x60
+   do_setlink+0x328/0xe30
+   ? __nla_validate_parse+0x54/0x900
+   __rtnl_newlink+0x54e/0x810
+   ? __alloc_pages_nodemask+0x17d/0x320
+   ? page_fault+0x30/0x50
+   ? _cond_resched+0x15/0x30
+   ? kmem_cache_alloc_trace+0x1c8/0x220
+   rtnl_newlink+0x43/0x60
+   rtnetlink_rcv_msg+0x28f/0x350
+   ? kmem_cache_alloc+0x1fb/0x200
+   ? _cond_resched+0x15/0x30
+   ? __kmalloc_node_track_caller+0x24d/0x2d0
+   ? rtnl_calcit.isra.31+0x120/0x120
+   netlink_rcv_skb+0xcb/0x100
+   netlink_unicast+0x1e0/0x340
+   netlink_sendmsg+0x317/0x480
+   ? __check_object_size+0x48/0x1d0
+   sock_sendmsg+0x65/0x80
+   ____sys_sendmsg+0x223/0x260
+   ? copy_msghdr_from_user+0xdc/0x140
+   ___sys_sendmsg+0x7c/0xc0
+   ? skb_dequeue+0x57/0x70
+   ? __inode_wait_for_writeback+0x75/0xe0
+   ? fsnotify_grab_connector+0x45/0x80
+   ? __dentry_kill+0x12c/0x180
+   __sys_sendmsg+0x58/0xa0
+   do_syscall_64+0x5b/0x200
+   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+  RIP: 0033:0x7f88de467f10
+
+Link: https://lore.kernel.org/r/20200227125728.100551-1-leon@kernel.org
+Cc: <stable@vger.kernel.org>
+Fixes: 1dd017882e01 ("RDMA/core: Fix protection fault in get_pkey_idx_qp_list")
+Signed-off-by: Maor Gottlieb <maorg@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Tested-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/micrel/ks8851_mll.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/infiniband/core/security.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/micrel/ks8851_mll.c b/drivers/net/ethernet/micrel/ks8851_mll.c
-index 5ae206ae5d2b3..1c9e70c8cc30f 100644
---- a/drivers/net/ethernet/micrel/ks8851_mll.c
-+++ b/drivers/net/ethernet/micrel/ks8851_mll.c
-@@ -166,7 +166,7 @@ static int msg_enable;
+diff --git a/drivers/infiniband/core/security.c b/drivers/infiniband/core/security.c
+index 2b4d80393bd0d..9e27ca18d3270 100644
+--- a/drivers/infiniband/core/security.c
++++ b/drivers/infiniband/core/security.c
+@@ -340,11 +340,15 @@ static struct ib_ports_pkeys *get_new_pps(const struct ib_qp *qp,
+ 		return NULL;
  
- static u16 ks_rdreg16(struct ks_net *ks, int offset)
- {
--	ks->cmd_reg_cache = (u16)offset | ((BE1 | BE0) << (offset & 0x02));
-+	ks->cmd_reg_cache = (u16)offset | ((BE3 | BE2) >> (offset & 0x02));
- 	iowrite16(ks->cmd_reg_cache, ks->hw_addr_cmd);
- 	return ioread16(ks->hw_addr);
- }
-@@ -181,7 +181,7 @@ static u16 ks_rdreg16(struct ks_net *ks, int offset)
+ 	if (qp_attr_mask & IB_QP_PORT)
+-		new_pps->main.port_num =
+-			(qp_pps) ? qp_pps->main.port_num : qp_attr->port_num;
++		new_pps->main.port_num = qp_attr->port_num;
++	else if (qp_pps)
++		new_pps->main.port_num = qp_pps->main.port_num;
++
+ 	if (qp_attr_mask & IB_QP_PKEY_INDEX)
+-		new_pps->main.pkey_index = (qp_pps) ? qp_pps->main.pkey_index :
+-						      qp_attr->pkey_index;
++		new_pps->main.pkey_index = qp_attr->pkey_index;
++	else if (qp_pps)
++		new_pps->main.pkey_index = qp_pps->main.pkey_index;
++
+ 	if ((qp_attr_mask & IB_QP_PKEY_INDEX) && (qp_attr_mask & IB_QP_PORT))
+ 		new_pps->main.state = IB_PORT_PKEY_VALID;
  
- static void ks_wrreg16(struct ks_net *ks, int offset, u16 value)
- {
--	ks->cmd_reg_cache = (u16)offset | ((BE1 | BE0) << (offset & 0x02));
-+	ks->cmd_reg_cache = (u16)offset | ((BE3 | BE2) >> (offset & 0x02));
- 	iowrite16(ks->cmd_reg_cache, ks->hw_addr_cmd);
- 	iowrite16(value, ks->hw_addr);
- }
 -- 
 2.20.1
 
