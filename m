@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF52AC18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:10:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26A97C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:10:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C4E42468D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:10:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA070208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:10:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583845840;
-	bh=zONuI80gsGahWrRGcfiy02MDNynaCVRJr9Gg28AWO9o=;
+	s=default; t=1583845847;
+	bh=NkR2de6IFRNIgkIZmQfug6+u2E9R2X7Xsz/OQEeC7Q4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pAL9pbI+1RuToe4h0XlYlPIIji51GGOHaFNAA9Eg1h6gcennGWn1G10j6OdObYV4U
-	 u6915S0yi0oN/emLaC1Fe3S6csaZ3KHZC+0VeeTuw+CnBvg06XUPPPUmAyR5q56CJP
-	 D8L9eWrMphD3Y8f9DsNvCj3CsrrV9mrUkxZNdAcc=
+	b=d+zDUpR1yVQTvLCf0x90csmjN+GlGNwyRHO/LN1jw44qudqkDFaUdTgRhebrfv28I
+	 9tkX6iF4erC/274crXJoRXU7TRF3dux/pg6WJohpRqh6npQw6GtJhHoXdlGEYotK0G
+	 VOGqFu0e1FruZzs0okqh6Pm0ax8AYnFCC/HXbP+g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731337AbgCJNKj (ORCPT
+        id S1731353AbgCJNKo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:10:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59900 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:10:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60088 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731326AbgCJNKb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:10:31 -0400
+        id S1731336AbgCJNKi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:10:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 111E92468D;
-        Tue, 10 Mar 2020 13:10:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C4EC208E4;
+        Tue, 10 Mar 2020 13:10:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845830;
-        bh=zONuI80gsGahWrRGcfiy02MDNynaCVRJr9Gg28AWO9o=;
+        s=default; t=1583845838;
+        bh=NkR2de6IFRNIgkIZmQfug6+u2E9R2X7Xsz/OQEeC7Q4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VmNKuKmS5xYyp48sEXZ9tC4b/mTUKzsqIo35VlIOnoXcYAPVlrNKgKPz84YCzwaLM
-         SChVd1lRqBC5bnoaSBctveBjVBxdYcMJhGZDfi218gmJbS5BcDFiOAfzqyPWpqkTdj
-         StIyGBodLtB3LSPsxQJ5xZQGyNGwpaDK79Qhk9vs=
+        b=ZOLMbWEYICVzow9YpNsWUHZJ3E/2ZWpOju8WEKDCXApyq5NeCL+yVUMgNG0FaqZGA
+         RHPuTfYfSd93s0V0f8L3ffd/YMx3Wjac5RefW3FpmRuiz+rW0FdfIlOLZPe2SeMld7
+         lilOpsmaSfBEjOrZ7K9aj4l2KXj7TCEYd4vpQ8po=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Matthias Reichl <hias@horus.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 4.14 115/126] ASoC: pcm512x: Fix unbalanced regulator enable call in probe error path
-Date:   Tue, 10 Mar 2020 13:42:16 +0100
-Message-Id: <20200310124210.860839901@linuxfoundation.org>
+        stable@vger.kernel.org, Jason Gunthorpe <jgg@mellanox.com>
+Subject: [PATCH 4.14 118/126] RMDA/cm: Fix missing ib_cm_destroy_id() in ib_cm_insert_listen()
+Date:   Tue, 10 Mar 2020 13:42:19 +0100
+Message-Id: <20200310124211.017095727@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310124203.704193207@linuxfoundation.org>
 References: <20200310124203.704193207@linuxfoundation.org>
@@ -60,47 +58,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthias Reichl <hias@horus.com>
+From: Jason Gunthorpe <jgg@mellanox.com>
 
-commit ac0a68997935c4acb92eaae5ad8982e0bb432d56 upstream.
+commit c14dfddbd869bf0c2bafb7ef260c41d9cebbcfec upstream.
 
-When we get a clock error during probe we have to call
-regulator_bulk_disable before bailing out, otherwise we trigger
-a warning in regulator_put.
+The algorithm pre-allocates a cm_id since allocation cannot be done while
+holding the cm.lock spinlock, however it doesn't free it on one error
+path, leading to a memory leak.
 
-Fix this by using "goto err" like in the error cases above.
-
-Fixes: 5a3af1293194d ("ASoC: pcm512x: Add PCM512x driver")
-Signed-off-by: Matthias Reichl <hias@horus.com>
-Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://lore.kernel.org/r/20200220202956.29233-1-hias@horus.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 067b171b8679 ("IB/cm: Share listening CM IDs")
+Link: https://lore.kernel.org/r/20200221152023.GA8680@ziepe.ca
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/codecs/pcm512x.c |    8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/infiniband/core/cm.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/sound/soc/codecs/pcm512x.c
-+++ b/sound/soc/codecs/pcm512x.c
-@@ -1438,13 +1438,15 @@ int pcm512x_probe(struct device *dev, st
- 	}
- 
- 	pcm512x->sclk = devm_clk_get(dev, NULL);
--	if (PTR_ERR(pcm512x->sclk) == -EPROBE_DEFER)
--		return -EPROBE_DEFER;
-+	if (PTR_ERR(pcm512x->sclk) == -EPROBE_DEFER) {
-+		ret = -EPROBE_DEFER;
-+		goto err;
-+	}
- 	if (!IS_ERR(pcm512x->sclk)) {
- 		ret = clk_prepare_enable(pcm512x->sclk);
- 		if (ret != 0) {
- 			dev_err(dev, "Failed to enable SCLK: %d\n", ret);
--			return ret;
-+			goto err;
+--- a/drivers/infiniband/core/cm.c
++++ b/drivers/infiniband/core/cm.c
+@@ -1143,6 +1143,7 @@ struct ib_cm_id *ib_cm_insert_listen(str
+ 			/* Sharing an ib_cm_id with different handlers is not
+ 			 * supported */
+ 			spin_unlock_irqrestore(&cm.lock, flags);
++			ib_destroy_cm_id(cm_id);
+ 			return ERR_PTR(-EINVAL);
  		}
- 	}
- 
+ 		atomic_inc(&cm_id_priv->refcount);
 
 
