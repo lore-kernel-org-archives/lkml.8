@@ -2,83 +2,72 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F3AAC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 17:34:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4EECC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 17:37:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A02921927
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 17:34:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9806320675
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 17:37:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FRwhm0cQ"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="ZQzkv1fu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726695AbgCJRey (ORCPT
+        id S1726514AbgCJRhV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 13:34:54 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:40047 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726271AbgCJRex (ORCPT
+        Tue, 10 Mar 2020 13:37:21 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:40793 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726415AbgCJRhU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 13:34:53 -0400
-Received: by mail-wm1-f67.google.com with SMTP id e26so2332440wme.5;
-        Tue, 10 Mar 2020 10:34:50 -0700 (PDT)
+        Tue, 10 Mar 2020 13:37:20 -0400
+Received: by mail-il1-f193.google.com with SMTP id g6so12781155ilc.7
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 10:37:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=U6f3jR5cofhDMdVNFUcl/FRQOrF4OSLHRtQNC4B+Oi8=;
-        b=FRwhm0cQNHyipxPDI9vIQUW+Ec4nDYaTBIWWghGssIv+piLK9CCWRNsmCdonsspBar
-         TQUL+1ZvHywmfRHRDVKop1lV8K3zYsIwJIwGmDHm/AHNNliuT4vZ3OWGXjEj8CLCYSU1
-         uol6oDtkYy7bjZtJwMiPIw2DBJzscJSMnqbrRt8kyqlSj5IskCbJ9vIPbL+epOinPonG
-         7L0c5p4qoLtiTxxe0/TJLpC0rFm/XEM0YKEnTb9gBdMZQc9E2NjgTSx8otgQ1In9jhh2
-         wbAMriOc/kdhrqm5KOow8GX04nL/rRFITYeNqK7w5qa7ShqbjcybCaQXmt+jJWevUREx
-         lxUg==
+        bh=h0+d0eT8j3D9V9+Zx4d1oKQcV5JrUFhrom1z+SABDyU=;
+        b=ZQzkv1fuhdNWzNE9ifob6BaqbjKkH+6SvNYg3ZHUJWbXFc2R8Q8yfRGE79wig81mbI
+         0L6uhUFunuYMloqncXL2v1cRg8PwRaoDMUUkmqkskmhVlcccgO/rb/5TFeFn2ieyc5di
+         GMfxh6/HBCaccjioU6QPT1B1Oy4FWfObqxttf4IAutbqt70EwJqnnf8T4sP+9JWxW3Qm
+         14tIcuh+2zL6Kpe8cY8/zRbLvSbNNgVKmVOvvOaU0sOywOSvdvs5y4xRyveDVIXeQyF3
+         YjtjBFeb/ixJD9zhNf+jqdwNwCa/IxhX3QLZchV+Tjwd5ReRp6IFEGUBic/dF9D2wy3w
+         008g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=U6f3jR5cofhDMdVNFUcl/FRQOrF4OSLHRtQNC4B+Oi8=;
-        b=RATFXw7FcKmmzMEFAXhu1Wx7KIWnQksQee7LRUoMfVGQ6SfyI8PPmYdA6wKJrQz4Z0
-         hfEq/gqJHccKniShUVix8TKgfnjat+9hCujGo5Zb+3CKoK57OSRQfLc1GWeC8wG7yEtF
-         M9ml8mDZOSXPUZP1ljx5Hz/kueehKcKbVupDhEbgfkO9Lyo2RU+7xT5Jp9XsOYdQrsKE
-         X6wtj5066PSfr0EKfSbqWa38lspF7qJy0WiheYVK20UqGcEvbrc3QWQvI+gVsOxn1vnS
-         T+oWcXD56dHmkNhSiHvRKsENIX4iMShexWXwzWrXm3k70OUnpu25xV9Ipi4tWbzkD5st
-         63rA==
-X-Gm-Message-State: ANhLgQ3EYbZPxq1CJaGVJCDivjJmDyAU7e1eNeigaY8We3pHbf8lzTxA
-        Nt+auG/cecSnKyBbDq9hh+hoLyKH
-X-Google-Smtp-Source: ADFU+vsAPK0nYeD04cv505gseGdDytwmYzl5sltN/lxQAFAJN28wspA6e3P36YN5s6TXRghOdx6EMA==
-X-Received: by 2002:a1c:68d5:: with SMTP id d204mr3144791wmc.15.1583861689764;
-        Tue, 10 Mar 2020 10:34:49 -0700 (PDT)
-Received: from ?IPv6:2003:ea:8f29:6000:6583:5434:4ad:491c? (p200300EA8F2960006583543404AD491C.dip0.t-ipconnect.de. [2003:ea:8f29:6000:6583:5434:4ad:491c])
-        by smtp.googlemail.com with ESMTPSA id g5sm293669wrr.57.2020.03.10.10.34.49
+        bh=h0+d0eT8j3D9V9+Zx4d1oKQcV5JrUFhrom1z+SABDyU=;
+        b=svGpr4JA/8EEIu3Rsr/Egvw2xWNgkMBqgvPKrS71XYxgtq2f/uQOdFLXqrUx2Q3nEW
+         CIOku/CT7/Idw28gr1mKOkM5ZUNe1Zwz+JQXa2oYPcyobPvEU/jpFUHVZcZ+ReeoIjlP
+         aMTd39eqiBPAyYFM1eV3CnNmJwkr9dIslJaINhcgXvQAZiTQpwS5k1/bQbDr1CplMe10
+         UA5aE9G2yeVSaExDcWsZwJO8GsGiVtiXsMS7TP5YKjsiv2XeNCYfXKRQ2fnIk9lfn8sW
+         KYkKFH5tLbrtlNIdAD6L/+eOBt+sUo6LC3Vgte+GvpI7hiZJGsejLLHWJHIerBmh/rvn
+         NTFQ==
+X-Gm-Message-State: ANhLgQ18tTiJ13dqkcGZWzXZ3kLcEyoU+lxcTvNgp0psJYjlirAahQR+
+        hMOezKySzx38udFYN26the2eKE2RiveSxw==
+X-Google-Smtp-Source: ADFU+vu4ZQEDYZQhLz6BySvD3vrhwTsXPiIoQaSW5wd/Cx6rry+V3kDO9EzE5KgAJKOXTnWygYgxBw==
+X-Received: by 2002:a92:3d42:: with SMTP id k63mr20711214ila.219.1583861839332;
+        Tue, 10 Mar 2020 10:37:19 -0700 (PDT)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id s82sm2523530ili.87.2020.03.10.10.37.18
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Mar 2020 10:34:49 -0700 (PDT)
-Subject: Re: [PATCH net] net: phy: Avoid multiple suspends
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        David Miller <davem@davemloft.net>
-Cc:     netdev <netdev@vger.kernel.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Russell King <linux@armlinux.org.uk>, B38611@freescale.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-References: <20200220233454.31514-1-f.fainelli@gmail.com>
- <20200223.205911.1667092059432885700.davem@davemloft.net>
- <CAMuHMdWuP1_3vqOpf7KEimLLTKiWpWku9fUAdP3CCR6WbHyQdg@mail.gmail.com>
- <c2a4edcb-dbf9-bc60-4399-3eaec9a20fe7@gmail.com>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Message-ID: <09a562d9-e4ac-1467-e362-931cde51443c@gmail.com>
-Date:   Tue, 10 Mar 2020 18:34:42 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 10 Mar 2020 10:37:18 -0700 (PDT)
+Subject: Re: [PATCH block/for-5.6-fixes] blk-iocost: fix incorrect vtime
+ comparison in iocg_is_idle()
+To:     Tejun Heo <tj@kernel.org>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200310170746.GD79873@mtj.duckdns.org>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <e3980b91-7a43-2493-48d0-081ef4158d2e@kernel.dk>
+Date:   Tue, 10 Mar 2020 11:37:18 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <c2a4edcb-dbf9-bc60-4399-3eaec9a20fe7@gmail.com>
+In-Reply-To: <20200310170746.GD79873@mtj.duckdns.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -87,70 +76,16 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10.03.2020 17:46, Florian Fainelli wrote:
-> On 3/10/20 7:16 AM, Geert Uytterhoeven wrote:
->> Hi Florian, David,
->>
->> On Mon, Feb 24, 2020 at 5:59 AM David Miller <davem@davemloft.net> wrote:
->>> From: Florian Fainelli <f.fainelli@gmail.com>
->>> Date: Thu, 20 Feb 2020 15:34:53 -0800
->>>
->>>> It is currently possible for a PHY device to be suspended as part of a
->>>> network device driver's suspend call while it is still being attached to
->>>> that net_device, either via phy_suspend() or implicitly via phy_stop().
->>>>
->>>> Later on, when the MDIO bus controller get suspended, we would attempt
->>>> to suspend again the PHY because it is still attached to a network
->>>> device.
->>>>
->>>> This is both a waste of time and creates an opportunity for improper
->>>> clock/power management bugs to creep in.
->>>>
->>>> Fixes: 803dd9c77ac3 ("net: phy: avoid suspending twice a PHY")
->>>> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
->>>
->>> Applied, and queued up for -stable, thanks Florian.
->>
->> This patch causes a regression on r8a73a4/ape6evm and sh73a0/kzm9g.
->> After resume from s2ram, Ethernet no longer works:
->>
->>         PM: suspend exit
->>         nfs: server aaa.bbb.ccc.ddd not responding, still trying
->>         ...
->>
->> Reverting commit 503ba7c6961034ff ("net: phy: Avoid multiple suspends")
->> fixes the issue.
->>
->> On both boards, an SMSC LAN9220 is connected to a power-managed local
->> bus.
->>
->> I added some debug code to check when the clock driving the local bus
->> is stopped and started, but I see no difference before/after.  Hence I
->> suspect the Ethernet chip is no longer reinitialized after resume.
-> 
-> Can you provide a complete log? Do you use the Generic PHY driver or a
-> specialized one? Do you have a way to dump the registers at the time of
-> failure and see if BMCR.PDOWN is still set somehow?
-> 
-Maybe reason for the misbehavior is that mdio_bus_phy_may_suspend() is
-checked also in mdio_bus_phy_resume(), what's not very logical based
-on the naming. The call to phy_resume() therefore may be skipped.
+On 3/10/20 11:07 AM, Tejun Heo wrote:
+> vtimes may wrap and time_before/after64() should be used to determine
+> whether a given vtime is before or after another. iocg_is_idle() was
+> incorrectly using plain "<" comparison do determine whether done_vtime
+> is before vtime. Here, the only thing we're interested in is whether
+> done_vtime matches vtime which indicates that there's nothing in
+> flight. Let's test for inequality instead.
 
+Applied, thanks.
 
-> Does the following help:
-> 
-> diff --git a/drivers/net/ethernet/smsc/smsc911x.c
-> b/drivers/net/ethernet/smsc/smsc911x.c
-> index 49a6a9167af4..df17190c76c0 100644
-> --- a/drivers/net/ethernet/smsc/smsc911x.c
-> +++ b/drivers/net/ethernet/smsc/smsc911x.c
-> @@ -2618,6 +2618,7 @@ static int smsc911x_resume(struct device *dev)
->         if (netif_running(ndev)) {
->                 netif_device_attach(ndev);
->                 netif_start_queue(ndev);
-> +               phy_resume(dev->phydev);
->         }
-> 
->         return 0;
-> 
+-- 
+Jens Axboe
 
