@@ -2,140 +2,102 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14D74C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:08:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E4CEC3F2D0
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:08:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7DF52467D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:08:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="ECuSEsL2"
+	by mail.kernel.org (Postfix) with ESMTP id 1E5782467D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:08:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726443AbgCJMIX (ORCPT
+        id S1726508AbgCJMIi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:08:23 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:33846 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726205AbgCJMIX (ORCPT
+        Tue, 10 Mar 2020 08:08:38 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:54059 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726205AbgCJMIh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:08:23 -0400
-Received: by mail-ed1-f67.google.com with SMTP id c21so16023816edt.1
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 05:08:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=He80gN+PoQea1vofurK2Qjmrv3YqUU2ZePh0yVQWrzo=;
-        b=ECuSEsL27iHjpyfwE91w5cyROG15xN7CwPE5WzLVq+sj0kE353k/mvmEQJT/gTE1nt
-         I9wmc+abYGuAKe8UJIodPzXXmwT8duHqR+ipOe3omJq8O0xyXEY4zp3+6PqzJ1Icy3RK
-         2Um6KnBw3jzqRmvFiKy2Gg5jpvKC3k9v/FSPuSXqv3f9ZCtwi1xWkGJrHfk5FOIcdbIe
-         GiAhWV9dl1ohcFNKcSeaEbcCfhdgmDl+HNIMHSgdQ+9biW6KXj0JaSXNzZt3tx/q1pLn
-         XvvbbiXSTQRafoR6bTRt6l7AqkBuGGLAxpe88nfgGsZZIaeCkb4aesjdpCEAWY6UA7Lk
-         CL0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=He80gN+PoQea1vofurK2Qjmrv3YqUU2ZePh0yVQWrzo=;
-        b=fIG6zHb1Qg82QrjL0OspuK6RhFQYUTTAUgLS2DWhW9r2LS0Afisx9WfWHCrA+c8KoR
-         IyogqZPzgHyah0DU2fQ5PecJqge09BZ0/xe1ohnbJFntGoXzC2+3zoRisNKsHcWQmy07
-         nPVOjx9GxZ6F1UU2skCKcQ8xMjVB8V3xSp/8gAUXMYk0Gk9+i4txrAZfRx7JiTuHw9MI
-         OsIkSlrxB2XGsNP76W/8ntx218sccFZGSEjwDDjK3vK8uTTWTNDJ9P+asChfcCO40Sva
-         Rb4+jPql5vLwPTlYc/eodpBT5IP9TlOL88sgVrKtGUmKbq+y4KBXywbVygakQyVI2TP8
-         t3FA==
-X-Gm-Message-State: ANhLgQ0OFLjhe1RWJYd+QatzkcQF4Bl1SBrhdSqLNIdDthxovIDgiETN
-        pmjgK7DzSlQDf9hExIyt++a6zpV8ZmnRAerC5PS6
-X-Google-Smtp-Source: ADFU+vu+XJ6RuvL6RFbYQ8x+3M18Y184Yr8DMbLsYkxeLPPLMtPjry1x82KS1y+J9d/vPeI9OncTJ5s/PsJnQLMQLWM=
-X-Received: by 2002:a17:906:7fc9:: with SMTP id r9mr18335708ejs.77.1583842101112;
- Tue, 10 Mar 2020 05:08:21 -0700 (PDT)
+        Tue, 10 Mar 2020 08:08:37 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jBdgG-0008Dd-VG; Tue, 10 Mar 2020 13:08:16 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jBdgE-00032B-AO; Tue, 10 Mar 2020 13:08:14 +0100
+Date:   Tue, 10 Mar 2020 13:08:14 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Guru Das Srinagesh <gurus@codeaurora.org>,
+        linux-pwm@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
+        linux-kernel@vger.kernel.org, Kamil Debski <kamil@wypas.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, linux-hwmon@vger.kernel.org
+Subject: Re: [PATCH v7 03/13] hwmon: pwm-fan: Use 64-bit division macros for
+ period and duty cycle
+Message-ID: <20200310120814.4kjxmii3c7zxw55y@pengutronix.de>
+References: <cover.1583782035.git.gurus@codeaurora.org>
+ <b503833e0f58bd6dd9fe84d866124e7c457e099e.1583782035.git.gurus@codeaurora.org>
+ <20200309214822.GA19773@roeck-us.net>
 MIME-Version: 1.0
-References: <e75e80e820f215d2311941e083580827f6c1dbb6.1582059594.git.rgb@redhat.com>
- <CAHC9VhTXFg_w8xJChPZZFY=HMpF722p-_NYy=06xjSkLFSCzbg@mail.gmail.com>
- <20200309203107.lzhshn6uzknhmosu@madcap2.tricolour.ca> <CAHC9VhS9o7wmBEfvF=+=cfUzvfcTs9Hu15KcLJjW+92KxBxQ3g@mail.gmail.com>
- <20200310005858.m4s23fl3huwevyp5@madcap2.tricolour.ca>
-In-Reply-To: <20200310005858.m4s23fl3huwevyp5@madcap2.tricolour.ca>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Tue, 10 Mar 2020 08:08:10 -0400
-Message-ID: <CAHC9VhSz1puQ5oQCnO5-Vq8GUsJh2BvbSmpoY_RqLLPQKd6udA@mail.gmail.com>
-Subject: Re: [PATCH ghak120] audit: trigger accompanying records when no rules present
-To:     Richard Guy Briggs <rgb@redhat.com>
-Cc:     Linux-Audit Mailing List <linux-audit@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>, sgrubb@redhat.com,
-        omosnace@redhat.com, Eric Paris <eparis@parisplace.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200309214822.GA19773@roeck-us.net>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 9, 2020 at 8:59 PM Richard Guy Briggs <rgb@redhat.com> wrote:
->
-> On 2020-03-09 19:55, Paul Moore wrote:
-> > On Mon, Mar 9, 2020 at 4:31 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > > On 2020-02-27 20:02, Paul Moore wrote:
-> > > > On Tue, Feb 18, 2020 at 4:01 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > > > >
-> > > > > When there are no audit rules registered, mandatory records (config,
-> > > > > etc.) are missing their accompanying records (syscall, proctitle, etc.).
-> > > > >
-> > > > > This is due to audit context dummy set on syscall entry based on absence
-> > > > > of rules that signals that no other records are to be printed.
-> > > > >
-> > > > > Clear the dummy bit in auditsc_set_stamp() when the first record of an
-> > > > > event is generated.
-> > > > >
-> > > > > Please see upstream github issue
-> > > > > https://github.com/linux-audit/audit-kernel/issues/120
-> > > > >
-> > > > > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> > > > > ---
-> > > > >  kernel/auditsc.c | 2 ++
-> > > > >  1 file changed, 2 insertions(+)
-> > > > >
-> > > > > diff --git a/kernel/auditsc.c b/kernel/auditsc.c
-> > > > > index 4effe01ebbe2..31195d122344 100644
-> > > > > --- a/kernel/auditsc.c
-> > > > > +++ b/kernel/auditsc.c
-> > > > > @@ -2176,6 +2176,8 @@ int auditsc_get_stamp(struct audit_context *ctx,
-> > > > >         t->tv_sec  = ctx->ctime.tv_sec;
-> > > > >         t->tv_nsec = ctx->ctime.tv_nsec;
-> > > > >         *serial    = ctx->serial;
-> > > > > +       if (ctx->dummy)
-> > > > > +               ctx->dummy = 0;
-> > > >
-> > > > Two comments:
-> > > >
-> > > > * Why even bother checking to see if ctx->dummy is true?  If it is
-> > > > true you set it to false/0; if it is already false you leave it alone.
-> > > > Either way ctx->dummy is going to be set to false when you are past
-> > > > these two lines, might as well just always set ctx->dummy to false/0.
-> > >
-> > > Ok, no problem.
-> > >
-> > > > * Why are you setting ->dummy to false in auditsc_get_stamp() and not
-> > > > someplace a bit more obvious like audit_log_start()?  Is it because
-> > > > auditsc_get_stamp() only gets called once per event?  I'm willing to
-> > > > take the "hit" of one extra assignment in audit_log_start() to keep
-> > > > this in a more obvious place and not buried in auditsc_get_stamp().
-> > >
-> > > It is because the context is only available when syscall logging is
-> > > enabled (which is on most platforms and hopefully eventually all) and
-> > > makes for cleaner code and lack of need to check existance of the
-> > > context.
-> >
-> > At the very least let's create some sort of accessor function for
-> > dummy then, hiding this in auditsc_get_stamp() seems very wrong to me.
->
-> Ok.  Anything else?
+Hello Guenter,
 
-I'm not sure how many more words we can spill over a two line patch :)
+On Mon, Mar 09, 2020 at 02:48:22PM -0700, Guenter Roeck wrote:
+> On Mon, Mar 09, 2020 at 12:35:06PM -0700, Guru Das Srinagesh wrote:
+> > Because period and duty cycle are defined in the PWM framework structs
+> > as ints with units of nanoseconds, the maximum time duration that can be
+> > set is limited to ~2.147 seconds. Redefining them as u64 values will
+> > enable larger time durations to be set.
+> > 
+> > As a first step, prepare drivers to handle the switch to u64 period and
+> > duty_cycle by replacing division operations involving pwm period and duty cycle
+> > with their 64-bit equivalents as appropriate. The actual switch to u64 period
+> > and duty_cycle follows as a separate patch.
+> > 
+> > Where the dividend is 64-bit but the divisor is 32-bit, use *_ULL
+> > macros:
+> > - DIV_ROUND_UP_ULL
+> > - DIV_ROUND_CLOSEST_ULL
+> > - div_u64
+> > 
+> > Where the divisor is 64-bit (dividend may be 32-bit or 64-bit), use
+> > DIV64_* macros:
+> > - DIV64_U64_ROUND_CLOSEST
+> > - div64_u64
+>
+> There is no explanation why this is necessary. What is the use case ?
+> It is hard to imagine a real-world use case with a duty cycle of more
+> than 2 seconds.
 
-Work up the v2, post it, and we can go from there.
+When my Laptop is in suspend there is an LED that blinks with a period
+of approximately 5 seconds. (To be fair, the brightness is more a sinus
+than a rectangle, but still.)
+
+Best regards
+Uwe
 
 -- 
-paul moore
-www.paul-moore.com
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
