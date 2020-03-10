@@ -2,302 +2,151 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D688C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 15:11:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 540BFC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 15:13:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F1DB20727
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 15:11:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BC7920727
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 15:13:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XS0O8AY0"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="JAzY+qKV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726650AbgCJPLX (ORCPT
+        id S1726926AbgCJPN3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 11:11:23 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:34403 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726426AbgCJPLW (ORCPT
-        <rfc822;Linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 11:11:22 -0400
-Received: by mail-qk1-f194.google.com with SMTP id f3so13055401qkh.1
-        for <Linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 08:11:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=oxhe0PrZsQFgyHVc2/WcQsqA5L+HXUdj6F8srto3/nk=;
-        b=XS0O8AY0crFTndkqZ7z6hAbD7uM5epqnvOiQB9sCrW96BfRTFwFFDAdz6sZ4ivpstO
-         T9AhQqr9Brw3aRj/fR6LtlujIAW36tzinurFqU+xKqt471lZVaOSZ8RA6NBW+0Bh3SXI
-         viASgeGXB/aytZgCfjcDLpumxmpG+g6+CR4a7FrbfY/PDqo7GpriCW4Y4Y6Rl9ShdDsa
-         YnDHldKvGAM4Qf+EWdv0eobbhGTmYhHcRCsacGBmsUBYIQnOoi9h53Ee8apajayiVYfS
-         +eG3oaEuVLQBsEo2YLn1vJtkJYE7q9Alh8jdOTU2ERKMBXX/5bc0MQslnyK11KZsEEdX
-         L+/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=oxhe0PrZsQFgyHVc2/WcQsqA5L+HXUdj6F8srto3/nk=;
-        b=kcsNaHpjuD85imhdds9P3XCQfZMoASjb+HWWZ7F0NVcLSUx+7kQgFe2FYV/+rncRRC
-         0J8mTIXN9ciUwPZBX01mFe9WWCWs/lVo9LIVL153h4OwWx5r79D993Zjckfy8uG1GZGx
-         K0/411Zny/lmEgoWL8rtCVhbNgL18PD3KsHTq2nA3PYwRN7MvBxH/mFY3qnfQupZNT2B
-         lK2mfPwKmSltLEN93ksmMhLabP2b1elNGNfozTpfChY4EIAd/w9q7un5f77/EB6Yjpxc
-         rQEdTdXbFaPhpH5he13jC1Eup0vGCVzvuIRcXIAunX22SP0YNnk4wBiJnaJDFVo0vfku
-         GK9w==
-X-Gm-Message-State: ANhLgQ0aX/isma2SyPJrcqQcZ8TegJD3snyJby9lmH5p7TI+ZIqCTaQK
-        kEYukwyC+CzZ/Aj7XqSMXhoDDNfJQGw=
-X-Google-Smtp-Source: ADFU+vsGpKlRQTdcBPX8nCMPLvbpchN/BGa5oo1CcMZlNDRjjB+W+fVn8X2F9xso/YAixzbwl079AA==
-X-Received: by 2002:a37:9d8f:: with SMTP id g137mr3912773qke.133.1583853080107;
-        Tue, 10 Mar 2020 08:11:20 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id r29sm2196146qkk.85.2020.03.10.08.11.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Mar 2020 08:11:19 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 6094F40009; Tue, 10 Mar 2020 12:11:17 -0300 (-03)
-Date:   Tue, 10 Mar 2020 12:11:17 -0300
-To:     Jin Yao <yao.jin@linux.intel.com>
-Cc:     jolsa@kernel.org, peterz@infradead.org, mingo@redhat.com,
-        alexander.shishkin@linux.intel.com, Linux-kernel@vger.kernel.org,
-        ak@linux.intel.com, kan.liang@intel.com, yao.jin@intel.com
-Subject: Re: [PATCH v1 02/14] perf util: Create streams for managing top N
- hottest callchains
-Message-ID: <20200310151117.GG15931@kernel.org>
-References: <20200310070245.16314-1-yao.jin@linux.intel.com>
- <20200310070245.16314-3-yao.jin@linux.intel.com>
+        Tue, 10 Mar 2020 11:13:29 -0400
+Received: from mail.efficios.com ([167.114.26.124]:54508 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726569AbgCJPN2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 11:13:28 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 9853B270688;
+        Tue, 10 Mar 2020 11:13:27 -0400 (EDT)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id hf4P-eZz5PEx; Tue, 10 Mar 2020 11:13:27 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 52E3C270687;
+        Tue, 10 Mar 2020 11:13:27 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 52E3C270687
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1583853207;
+        bh=ygq+xFbg0pKXixt2bJeuHEWZhMD2r571IYr4GTgCpgU=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=JAzY+qKV4tcyM6oiv5KLJhnUCKAdCm7zPJ1ChKBZq+CBtmB2WgvN1HBJDOZgwq8Jv
+         JFDTDiU3ZsqlLSKzFTDLjpi30J1Vq/rT4X3ozcoHsmtF4ubTJz69/DtRsq0qe9c+cj
+         CWSaO+xILU4LgW0ReTSetoaxbeJGM+lt/X6DYu71/F+Y2tj9OBwwXtVZ6hL3+SiRdY
+         Uqw83A/ufpdW6eybIkQpHH8ckB3btvzD3iIXdMY0LbejE7xWgFYPU1rhNdHFEf7/Ez
+         aSPX/mt3jpZVRLJ7z3CMOA//hgv7rqBCRQpFH2BtKFtJrGzA+TUcyU2GaNgULmAtX7
+         Euuf+wtCmrK4g==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id gvWh1kp4B_iU; Tue, 10 Mar 2020 11:13:27 -0400 (EDT)
+Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
+        by mail.efficios.com (Postfix) with ESMTP id 42DBC26FF73;
+        Tue, 10 Mar 2020 11:13:27 -0400 (EDT)
+Date:   Tue, 10 Mar 2020 11:13:27 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     paulmck <paulmck@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        "Joel Fernandes, Google" <joel@joelfernandes.org>,
+        Frederic Weisbecker <frederic@kernel.org>
+Message-ID: <379743142.23419.1583853207158.JavaMail.zimbra@efficios.com>
+In-Reply-To: <20200309204710.GU2935@paulmck-ThinkPad-P72>
+References: <87mu8p797b.fsf@nanos.tec.linutronix.de> <20200309204710.GU2935@paulmck-ThinkPad-P72>
+Subject: Re: Instrumentation and RCU
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200310070245.16314-3-yao.jin@linux.intel.com>
-X-Url:  http://acmel.wordpress.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.26.124]
+X-Mailer: Zimbra 8.8.15_GA_3901 (ZimbraWebClient - FF73 (Linux)/8.8.15_GA_3895)
+Thread-Topic: Instrumentation and RCU
+Thread-Index: 8i4frrb6x7CxCVijDFRccjHi4lqH1A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, Mar 10, 2020 at 03:02:33PM +0800, Jin Yao escreveu:
-> We think the stream is a callchain which is aggregated by the LBR
-> records from samples. By browsing the stream, we can understand
-> the code flow.
-> 
-> The struct callchain_node represents one callchain and we use the
-> callchain_node->hit to measure the hot level of this callchain.
-> Higher is hotter.
-> 
-> Since in perf data file, there may be many callchains so we just
-> need to focus on the top N hottest callchains. N is a user defined
-> parameter or just a predefined default value.
-> 
-> This patch saves the top N hottest callchains in 'struct stream_node'
-> type array, which is defined in a per event 'struct callchain_streams'.
-> 
-> So now we can get the per-event top N hottest callchains.
-> 
-> Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
-> ---
->  tools/perf/util/callchain.c | 125 ++++++++++++++++++++++++++++++++++++
->  tools/perf/util/callchain.h |  16 +++++
->  2 files changed, 141 insertions(+)
-> 
-> diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
-> index 818aa4efd386..d9c68a8e7619 100644
-> --- a/tools/perf/util/callchain.c
-> +++ b/tools/perf/util/callchain.c
-> @@ -31,6 +31,7 @@
->  #include "callchain.h"
->  #include "branch.h"
->  #include "symbol.h"
-> +#include "evlist.h"
->  #include "../perf.h"
->  
->  #define CALLCHAIN_PARAM_DEFAULT			\
-> @@ -1599,3 +1600,127 @@ void callchain_cursor_reset(struct callchain_cursor *cursor)
->  	for (node = cursor->first; node != NULL; node = node->next)
->  		map__zput(node->ms.map);
->  }
-> +
-> +static void free_evsel_streams(struct callchain_streams *callchain_streams,
-> +			       int nr_evsel)
-> +{
-> +	for (int i = 0; i < nr_evsel; i++) {
-> +		if (callchain_streams[i].streams)
-> +			free(callchain_streams[i].streams);
 
-free(NULL) is valid, so remove that extra check and use zfree() to reset
-that entry to NULL, i.e.:
 
-	for ()
-		zfree(&callchain_streams[i].streams);
+----- On Mar 9, 2020, at 4:47 PM, paulmck paulmck@kernel.org wrote:
+[...]
 
-> +	}
-> +
-> +	free(callchain_streams);
-> +}
-> +
-> +static struct callchain_streams *create_evsel_streams(int nr_evsel,
-> +						      int nr_streams_max)
-> +{
-> +	struct callchain_streams *callchain_streams;
-> +
-> +	callchain_streams = calloc(nr_evsel, sizeof(struct callchain_streams));
-
-calloc is the right thing here, as this is an array
-
-> +	if (!callchain_streams)
-> +		return NULL;
-> +
-> +	for (int i = 0; i < nr_evsel; i++) {
-> +		struct callchain_streams *s = &callchain_streams[i];
-> +
-> +		s->streams = calloc(nr_streams_max, sizeof(struct stream_node));
-> +		if (!s->streams)
-> +			goto err;
-> +
-> +		s->nr_streams_max = nr_streams_max;
-> +		s->evsel_idx = -1;
-> +	}
-> +
-> +	return callchain_streams;
-> +
-> +err:
-> +	free_evsel_streams(callchain_streams, nr_evsel);
-> +	return NULL;
-> +}
-> +
-> +/*
-> + * The cnodes with high hit number are hot callchains.
-> + */
-> +static void set_hot_cnode(struct callchain_streams *s,
-> +			  struct callchain_node *cnode)
-> +{
-> +	int i, idx = 0;
-> +	u64 hit;
-> +
-> +	if (s->nr_streams < s->nr_streams_max) {
-> +		i = s->nr_streams;
-> +		s->streams[i].cnode = cnode;
-> +		s->nr_streams++;
-> +		return;
-> +	}
-> +
-> +	/*
-> +	 * Since only a few number of hot streams, so only use simple
-> +	 * way to find the cnode with smallest hit number and replace.
-> +	 */
-> +	hit = (s->streams[0].cnode)->hit;
-> +	for (i = 1; i < s->nr_streams; i++) {
-> +		if ((s->streams[i].cnode)->hit < hit) {
-> +			hit = (s->streams[i].cnode)->hit;
-> +			idx = i;
-> +		}
-> +	}
-> +
-> +	if (cnode->hit > hit)
-> +		s->streams[idx].cnode = cnode;
-> +}
-> +
-> +static void update_hot_streams(struct hist_entry *he,
-> +			       struct callchain_streams *s)
-> +{
-> +	struct rb_root *root = &he->sorted_chain;
-> +	struct rb_node *rb_node = rb_first(root);
-> +	struct callchain_node *node;
-> +
-> +	while (rb_node) {
-> +		node = rb_entry(rb_node, struct callchain_node, rb_node);
-> +		set_hot_cnode(s, node);
-> +		rb_node = rb_next(rb_node);
-> +	}
-> +}
-> +
-> +static void get_hot_streams(struct hists *hists,
-> +			    struct callchain_streams *s)
-> +{
-> +	struct rb_node *next;
-> +
-> +	next = rb_first_cached(&hists->entries);
-> +	while (next) {
-> +		struct hist_entry *he;
-> +
-> +		he = rb_entry(next, struct hist_entry, rb_node);
-> +		update_hot_streams(he, s);
-> +		next = rb_next(&he->rb_node);
-> +	}
-> +}
-> +
-> +struct callchain_streams *callchain_evsel_streams_create(struct evlist *evlist,
-> +							 int nr_streams_max,
-> +							 int *nr_evsel_streams)
-> +{
-> +	int nr_evsel = evlist->core.nr_entries, i = 0;
-> +	struct callchain_streams *callchain_streams;
-> +	struct evsel *pos;
-> +
-> +	callchain_streams = create_evsel_streams(nr_evsel, nr_streams_max);
-> +	if (!callchain_streams)
-> +		return NULL;
-> +
-> +	evlist__for_each_entry(evlist, pos) {
-> +		struct hists *hists = evsel__hists(pos);
-> +
-> +		hists__output_resort(hists, NULL);
-> +		get_hot_streams(hists, &callchain_streams[i]);
-> +		callchain_streams[i].evsel_idx = pos->idx;
-> +		i++;
-> +	}
-> +
-> +	*nr_evsel_streams = nr_evsel;
-> +	return callchain_streams;
-> +}
-> diff --git a/tools/perf/util/callchain.h b/tools/perf/util/callchain.h
-> index 706bb7bbe1e1..5852990cdf60 100644
-> --- a/tools/perf/util/callchain.h
-> +++ b/tools/perf/util/callchain.h
-> @@ -13,6 +13,7 @@ struct ip_callchain;
->  struct map;
->  struct perf_sample;
->  struct thread;
-> +struct evlist;
->  
->  #define HELP_PAD "\t\t\t\t"
->  
-> @@ -159,6 +160,17 @@ struct callchain_cursor {
->  	struct callchain_cursor_node	*curr;
->  };
->  
-> +struct stream_node {
-> +	struct callchain_node	*cnode;
-> +};
-> +
-> +struct callchain_streams {
-> +	struct stream_node	*streams;
-> +	int			nr_streams_max;
-> +	int			nr_streams;
-> +	int			evsel_idx;
-> +};
-> +
->  extern __thread struct callchain_cursor callchain_cursor;
->  
->  static inline void callchain_init(struct callchain_root *root)
-> @@ -289,4 +301,8 @@ int callchain_branch_counts(struct callchain_root *root,
->  			    u64 *branch_count, u64 *predicted_count,
->  			    u64 *abort_count, u64 *cycles_count);
->  
-> +struct callchain_streams *callchain_evsel_streams_create(struct evlist *evlist,
-> +							 int nr_streams_max,
-> +							 int *nr_evsel_streams);
-> +
->  #endif	/* __PERF_CALLCHAIN_H */
-> -- 
-> 2.17.1
 > 
+> Suppose that we had a variant of RCU that had about the same read-side
+> overhead as Preempt-RCU, but which could be used from idle as well as
+> from CPUs in the process of coming online or going offline?  I have not
+> thought through the irq/NMI/exception entry/exit cases, but I don't see
+> why that would be problem.
+> 
+> This would have explicit critical-section entry/exit code, so it would
+> not be any help for trampolines.
+> 
+> Would such a variant of RCU help?
+> 
+> Yeah, I know.  Just what the kernel doesn't need, yet another variant
+> of RCU...
+
+Hi Paul,
+
+I think that before introducing yet another RCU flavor, it's important
+to take a step back and look at the tracer requirements first. If those
+end up being covered by currently available RCU flavors, then why add
+another ?
+
+I can start with a few use-cases I have in mind. Others should feel free
+to pitch in:
+
+Tracing callsite context:
+
+1) Thread context
+
+   1.1) Preemption enabled
+
+   One tracepoint in this category is syscall enter/exit. We should introduce
+   a variant of tracepoints relying on SRCU for this use-case so we can take
+   page faults when fetching userspace data.
+
+   1.2) Preemption disabled
+
+   Tree-RCU works fine.
+
+   1.3) IRQs disabled
+
+   Tree-RCU works fine.
+
+2) IRQ handler context
+
+   Tree-RCU works fine.
+
+3) NMI context
+
+   Tree-RCU works fine.
+
+4) cpuidle context (!rcu_is_watching())
+
+   - By all means, we should not have tracepoints requiring to temporarily enable
+     RCU in frequent code-paths. It appears that we should be able to remove the few
+     offenders we currently have (e.g. enter from usermode),
+   - For tracepoints which are infrequently called from !rcu_is_watching context, checking
+     whether RCU is watching and only enabling when needed should be fast enough.
+
+Are there other use-cases am I missing that would justify adding another flavor of RCU ?
+
+Thanks,
+
+Mathieu
 
 -- 
-
-- Arnaldo
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
