@@ -2,116 +2,187 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AD1FC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:26:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1617C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:26:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 515672071B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:26:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583846791;
-	bh=YKfdWWef2XAP+GCkkOxxFSr7TtbFVlNDiZybrdw5O7M=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=I4GICbBJ+agYaKt4p4rAPZ44SiHpDyv3dwrsyJBPOLJjzFcYuPupRuSpdjCwrGeF1
-	 l5FWQ9scYGBReqNG0r7MJLgD4U4YDmRqmOWIFTfWneipNXBb+ueuBaeIN9crjOadaG
-	 nBPEmjj7aW1dRzt5K7oEJFNMCRr+yIAayXVHj30o=
+	by mail.kernel.org (Postfix) with ESMTP id 9911F2071B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:26:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IzLPpzYR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729856AbgCJN03 (ORCPT
+        id S1730087AbgCJN0d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:26:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35014 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729593AbgCJMz6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:55:58 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5A8BF2468E;
-        Tue, 10 Mar 2020 12:55:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844957;
-        bh=YKfdWWef2XAP+GCkkOxxFSr7TtbFVlNDiZybrdw5O7M=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F/jAYV/RXJDiDFOS2VTQ3ZuY9LikfB8FYkhwSTxuGCZvx5ygvNrtcgc45PufhaW0J
-         SmJ/SW5r8M+OdC+p+SlE/v1q4dM2wWk94XncGwzXVfqBYZ5P7cjJDl2xkb2/1mL5MB
-         N0aMpHfJCvuNjvKX6N1AGHo9r13snPkTwYFameXA=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuanhong Guo <gch981213@gmail.com>,
-        Daniel Golle <daniel@makrotopia.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 013/189] serial: ar933x_uart: set UART_CS_{RX,TX}_READY_ORIDE
-Date:   Tue, 10 Mar 2020 13:37:30 +0100
-Message-Id: <20200310123640.874790566@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200310123639.608886314@linuxfoundation.org>
-References: <20200310123639.608886314@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Tue, 10 Mar 2020 09:26:33 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:39708 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729585AbgCJMzz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:55:55 -0400
+Received: by mail-wm1-f66.google.com with SMTP id f7so1219834wml.4;
+        Tue, 10 Mar 2020 05:55:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=Eye51bfkE9/qV/EV2Y4EKj2/U4peXuQX7hjQlFVP8Oc=;
+        b=IzLPpzYROiHhqizrer4yzVs+NhyJRM3OrGMd2nr3JMXkBFlCWpqBEM/NjgC35RRxOe
+         MKvG5Wbcxj7ZA7MHhamgUq5z/5VINRyPSXXqSQ38H0gWHkGmYgxPDXtLF8I4mcKep8dM
+         B6/6Y2/L+GVdt7/FJnfT4dsMGa3JLzuJdP/PN061yQ/CjiwJJ+yvxvrsMaYk2K915GKX
+         KUK0vgDduRS2th2VT1Yy/LDsY01alAYe2+9xh79JsEbbNay9FMKag4OGv/ZIJBNVJcEh
+         Y0/IBVoj4GI5cIWsPJ9zsgxsZhH5GGfiABFpYPsx7LnYiB2+miwt2g7n3tEz6XULc2VX
+         3hyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=Eye51bfkE9/qV/EV2Y4EKj2/U4peXuQX7hjQlFVP8Oc=;
+        b=hOOWBv/eeFHz7+MbA7Ac65xq7Rq9IaTf2DLbFq2NpOZgHwc974PgQHDBHGfe5SpDBb
+         hriQduIj5GOpalZmxzGLWrhPiYprN+YuB9O8oyjyMAd9U7X3p3F7hgok2LDQHcaSzL78
+         FizDiFOEP83qv1z5xXbSA1UqHjdE+doNryj0QPaLhxQZIQDcbBFtjwirsJgrEWPBr0Oe
+         YvQXX/BTgztr0/4Q9AGkJUXkp5wUwyWXLxsrHXdOiNXMpBM0H49HbYjfaDKkJCb8144O
+         gtnM922VDzoErHDmzCit2hiOdAR6BirV2ttnqjTOvLg3HMPjANh3iia5tANfsPFMCK0F
+         ZWbw==
+X-Gm-Message-State: ANhLgQ3pO3Yw5K+G9dmcrqv3hoxTU+KXraNoXU/u50x/rvvBu2BMB8Hy
+        wsKfMOefZnnk3XVVrWQ0H90=
+X-Google-Smtp-Source: ADFU+vvcibH0v44wC4R/rVbSFYvl3jAX8Vjyn9/Mv0Oj0BQz4tQHmJiyGvTC0W+B1mpgdTjTF9Mwbw==
+X-Received: by 2002:a1c:4c16:: with SMTP id z22mr1957163wmf.50.1583844954158;
+        Tue, 10 Mar 2020 05:55:54 -0700 (PDT)
+Received: from localhost.localdomain ([79.115.60.40])
+        by smtp.gmail.com with ESMTPSA id t81sm4018594wmb.15.2020.03.10.05.55.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Mar 2020 05:55:53 -0700 (PDT)
+From:   Vladimir Oltean <olteanv@gmail.com>
+To:     broonie@kernel.org
+Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        shawnguo@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, eha@deif.com, angelo@sysam.it,
+        andrew.smirnov@gmail.com, gustavo@embeddedor.com, weic@nvidia.com,
+        mhosny@nvidia.com, michael@walle.cc, peng.ma@nxp.com
+Subject: [PATCH v3 3/7] spi: spi-fsl-dspi: Fix little endian access to PUSHR CMD and TXDATA
+Date:   Tue, 10 Mar 2020 14:55:38 +0200
+Message-Id: <20200310125542.5939-4-olteanv@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200310125542.5939-1-olteanv@gmail.com>
+References: <20200310125542.5939-1-olteanv@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Golle <daniel@makrotopia.org>
+From: Vladimir Oltean <vladimir.oltean@nxp.com>
 
-[ Upstream commit 87c5cbf71ecbb9e289d60a2df22eb686c70bf196 ]
+In XSPI mode, the 32-bit PUSHR register can be written to separately:
+the higher 16 bits are for commands and the lower 16 bits are for data.
 
-On AR934x this UART is usually not initialized by the bootloader
-as it is only used as a secondary serial port while the primary
-UART is a newly introduced NS16550-compatible.
-In order to make use of the ar933x-uart on AR934x without RTS/CTS
-hardware flow control, one needs to set the
-UART_CS_{RX,TX}_READY_ORIDE bits as other than on AR933x where this
-UART is used as primary/console, the bootloader on AR934x typically
-doesn't set those bits.
-Setting them explicitely on AR933x should not do any harm, so just
-set them unconditionally.
+This has nicely been hacked around, by defining a second regmap with a
+width of 16 bits, and effectively splitting a 32-bit register into 2
+16-bit ones, from the perspective of this regmap_pushr.
 
-Tested-by: Chuanhong Guo <gch981213@gmail.com>
-Signed-off-by: Daniel Golle <daniel@makrotopia.org>
-Link: https://lore.kernel.org/r/20200207095335.GA179836@makrotopia.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+The problem is the assumption about the controller's endianness. If the
+controller is little endian (such as anything post-LS1046A), then the
+first 2 bytes, in the order imposed by memory layout, will actually hold
+the TXDATA, and the last 2 bytes will hold the CMD.
+
+So take the controller's endianness into account when performing split
+writes to PUSHR. The obvious and simple solution would have been to call
+regmap_get_val_endian(), but that is an internal regmap function and we
+don't want to change regmap just for this. Therefore, we just re-read
+the "big-endian" device tree property.
+
+Fixes: 58ba07ec79e6 ("spi: spi-fsl-dspi: Add support for XSPI mode registers")
+Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
 ---
- drivers/tty/serial/ar933x_uart.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Changes in v3:
+None.
 
-diff --git a/drivers/tty/serial/ar933x_uart.c b/drivers/tty/serial/ar933x_uart.c
-index 3bdd56a1021b2..ea12f10610b64 100644
---- a/drivers/tty/serial/ar933x_uart.c
-+++ b/drivers/tty/serial/ar933x_uart.c
-@@ -286,6 +286,10 @@ static void ar933x_uart_set_termios(struct uart_port *port,
- 	ar933x_uart_rmw_set(up, AR933X_UART_CS_REG,
- 			    AR933X_UART_CS_HOST_INT_EN);
+Changes in v2:
+Parse "big-endian" device tree bindings instead of taking the decision
+based on compatible SoC.
+
+ drivers/spi/spi-fsl-dspi.c | 26 ++++++++++++++++++++------
+ 1 file changed, 20 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
+index f2ba0731aebe..c59b68592283 100644
+--- a/drivers/spi/spi-fsl-dspi.c
++++ b/drivers/spi/spi-fsl-dspi.c
+@@ -103,10 +103,6 @@
+ #define SPI_FRAME_BITS(bits)		SPI_CTAR_FMSZ((bits) - 1)
+ #define SPI_FRAME_EBITS(bits)		SPI_CTARE_FMSZE(((bits) - 1) >> 4)
  
-+	/* enable RX and TX ready overide */
-+	ar933x_uart_rmw_set(up, AR933X_UART_CS_REG,
-+		AR933X_UART_CS_TX_READY_ORIDE | AR933X_UART_CS_RX_READY_ORIDE);
-+
- 	/* reenable the UART */
- 	ar933x_uart_rmw(up, AR933X_UART_CS_REG,
- 			AR933X_UART_CS_IF_MODE_M << AR933X_UART_CS_IF_MODE_S,
-@@ -418,6 +422,10 @@ static int ar933x_uart_startup(struct uart_port *port)
- 	ar933x_uart_rmw_set(up, AR933X_UART_CS_REG,
- 			    AR933X_UART_CS_HOST_INT_EN);
+-/* Register offsets for regmap_pushr */
+-#define PUSHR_CMD			0x0
+-#define PUSHR_TX			0x2
+-
+ #define DMA_COMPLETION_TIMEOUT		msecs_to_jiffies(3000)
  
-+	/* enable RX and TX ready overide */
-+	ar933x_uart_rmw_set(up, AR933X_UART_CS_REG,
-+		AR933X_UART_CS_TX_READY_ORIDE | AR933X_UART_CS_RX_READY_ORIDE);
+ struct chip_data {
+@@ -240,6 +236,13 @@ struct fsl_dspi {
+ 
+ 	int					words_in_flight;
+ 
++	/*
++	 * Offsets for CMD and TXDATA within SPI_PUSHR when accessed
++	 * individually (in XSPI mode)
++	 */
++	int					pushr_cmd;
++	int					pushr_tx;
 +
- 	/* Enable RX interrupts */
- 	up->ier = AR933X_UART_INT_RX_VALID;
- 	ar933x_uart_write(up, AR933X_UART_INT_EN_REG, up->ier);
+ 	void (*host_to_dev)(struct fsl_dspi *dspi, u32 *txdata);
+ 	void (*dev_to_host)(struct fsl_dspi *dspi, u32 rxdata);
+ };
+@@ -670,12 +673,12 @@ static void dspi_pushr_cmd_write(struct fsl_dspi *dspi, u16 cmd)
+ 	 */
+ 	if (dspi->len > dspi->oper_word_size)
+ 		cmd |= SPI_PUSHR_CMD_CONT;
+-	regmap_write(dspi->regmap_pushr, PUSHR_CMD, cmd);
++	regmap_write(dspi->regmap_pushr, dspi->pushr_cmd, cmd);
+ }
+ 
+ static void dspi_pushr_txdata_write(struct fsl_dspi *dspi, u16 txdata)
+ {
+-	regmap_write(dspi->regmap_pushr, PUSHR_TX, txdata);
++	regmap_write(dspi->regmap_pushr, dspi->pushr_tx, txdata);
+ }
+ 
+ static void dspi_xspi_write(struct fsl_dspi *dspi, int cnt, bool eoq)
+@@ -1269,6 +1272,7 @@ static int dspi_probe(struct platform_device *pdev)
+ 	struct fsl_dspi *dspi;
+ 	struct resource *res;
+ 	void __iomem *base;
++	bool big_endian;
+ 
+ 	ctlr = spi_alloc_master(&pdev->dev, sizeof(struct fsl_dspi));
+ 	if (!ctlr)
+@@ -1294,6 +1298,7 @@ static int dspi_probe(struct platform_device *pdev)
+ 
+ 		/* Only Coldfire uses platform data */
+ 		dspi->devtype_data = &devtype_data[MCF5441X];
++		big_endian = true;
+ 	} else {
+ 
+ 		ret = of_property_read_u32(np, "spi-num-chipselects", &cs_num);
+@@ -1315,6 +1320,15 @@ static int dspi_probe(struct platform_device *pdev)
+ 			ret = -EFAULT;
+ 			goto out_ctlr_put;
+ 		}
++
++		big_endian = of_device_is_big_endian(np);
++	}
++	if (big_endian) {
++		dspi->pushr_cmd = 0;
++		dspi->pushr_tx = 2;
++	} else {
++		dspi->pushr_cmd = 2;
++		dspi->pushr_tx = 0;
+ 	}
+ 
+ 	if (dspi->devtype_data->trans_mode == DSPI_XSPI_MODE)
 -- 
-2.20.1
-
-
+2.17.1
 
