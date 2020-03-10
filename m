@@ -2,105 +2,95 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA435C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:22:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3FA5C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:22:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3800222D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:22:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A30D0222D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:22:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583846537;
-	bh=nnwxZghy9qMMharnd6Mv2u5XeJJ/Ophsfiznx4exfvQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pmlQhq+ZR4zfH/Lrp31ZvAMb5Hf7cfnnV7iSMqXB7W4BcrT3d0BKKpu9sGBID7RO4
-	 /hPKr5avzdiHZaspVNSWcIFaqHlzANpfMIvvxKVexcki//Pa114sYLBTwu5Rmjmuab
-	 PqFs/VfC0d+dWSkwUzvaD4qyoKRsP9Y92H7ARKgQ=
+	s=default; t=1583846542;
+	bh=FaMTD2na3NDedgKSwXsZVOGx7i/nxquek6psyjDM3Lo=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=wr21bG6lAcIdA/n38QUPWT34kJCzP1zPu0B7+isgbmwrnqCwBbUJVs/RTZ+uoxJns
+	 wHeiXjdE0x42nGjUvPAtOPF6T8CogujIGG+M2YuqZoTf2UPlIiUN4eFzEZ5K8/mD6J
+	 H8MbiHuzddw8VEFsVIykqsIyySyRDSASSxHrYJUA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731040AbgCJNWQ (ORCPT
+        id S1731050AbgCJNWV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:22:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43278 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:22:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47952 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728369AbgCJNBr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:01:47 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1730239AbgCJNWT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:22:19 -0400
+Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A232920409;
-        Tue, 10 Mar 2020 13:01:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 53E39208E4;
+        Tue, 10 Mar 2020 13:22:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845307;
-        bh=nnwxZghy9qMMharnd6Mv2u5XeJJ/Ophsfiznx4exfvQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vSA+9VUgFKwOHZYgMN4ZMsXviynF9Zovz8AyMTfniYW518OPwjt5cb8f9pdhAvSPf
-         XEAZDwAhOdovckvjcrxe8LPnfrZ5D0e1i52JOjZeP13357yV18IfPc5QohSWkvHKks
-         lZ/UJ1dSVyyoPI974zLKGEdKEia8Fd2+/mE6mo9U=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Matthias Reichl <hias@horus.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 5.5 136/189] ASoC: pcm512x: Fix unbalanced regulator enable call in probe error path
-Date:   Tue, 10 Mar 2020 13:39:33 +0100
-Message-Id: <20200310123653.574149045@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200310123639.608886314@linuxfoundation.org>
-References: <20200310123639.608886314@linuxfoundation.org>
-User-Agent: quilt/0.66
+        s=default; t=1583846539;
+        bh=FaMTD2na3NDedgKSwXsZVOGx7i/nxquek6psyjDM3Lo=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=nOHUzyv8eb4NIsmREF9QILrzXXWOx92nJ+aS2RDg1Dv7jNtzGLBsZOeyveMA7AQVV
+         Cq8vn5QKZbw+kqb6EA5V7asq10eKRxLNL69aHKd+KpzRG/coxJDSXCz2f2nx0TCNRr
+         L6a5/PaJXVH3SRWycAiQbGPnBxTmEZsULi5zIptM=
+Date:   Tue, 10 Mar 2020 14:22:16 +0100 (CET)
+From:   Jiri Kosina <jikos@kernel.org>
+To:     =?ISO-8859-15?Q?Filipe_La=EDns?= <lains@archlinux.org>
+cc:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Nestor Lopez Casado <nlopezcasad@logitech.com>
+Subject: Re: [PATCH] HID: logitech-dj: add support for the static device in
+ the Powerplay mat/receiver
+In-Reply-To: <5a93677bd6238a9d7928e4fd16a8915faeb5f19e.camel@archlinux.org>
+Message-ID: <nycvar.YFH.7.76.2003101301280.19500@cbobk.fhfr.pm>
+References: <20200115201811.3271284-1-lains@archlinux.org>  <nycvar.YFH.7.76.2002121449191.3144@cbobk.fhfr.pm> <5a93677bd6238a9d7928e4fd16a8915faeb5f19e.camel@archlinux.org>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthias Reichl <hias@horus.com>
+On Wed, 12 Feb 2020, Filipe Laíns wrote:
 
-commit ac0a68997935c4acb92eaae5ad8982e0bb432d56 upstream.
+> > > +	/* custom receiver device (eg. powerplay) */
+> > > +	if (hidpp_report->device_index == 7) {
+> > > +		workitem.reports_supported |= HIDPP;
+> > > +	}
+> > > +
+> > 
+> > I guess we can't do anything else than to trust Logitech that they will 
+> > not assign conflicting device_index ID in the future to something that 
+> > will not be HID++, right?
+> > 
+> > Or is this properly documented somewhere?
+> > 
+> > Thanks,
+> 
+> 
+> CCing Nestor
+> 
+> Yes, we need to trust Logitech on this. There's isn't anything
+> documented regarding this AFAIK.
+> 
+> Even if Logitech released a device with index 7 that didn't support
+> HID++, it wouldn't be that big of an issue. We would just end up with a
+> hidraw node which would export a vendor page report descriptor but the
+> device wouldn't actually reply to anything.
 
-When we get a clock error during probe we have to call
-regulator_bulk_disable before bailing out, otherwise we trigger
-a warning in regulator_put.
+Given the silence from Nestor, I guess we can just apply this for 5.7; 
+pushing to for-5.7/logitech branch.
 
-Fix this by using "goto err" like in the error cases above.
+Thanks,
 
-Fixes: 5a3af1293194d ("ASoC: pcm512x: Add PCM512x driver")
-Signed-off-by: Matthias Reichl <hias@horus.com>
-Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://lore.kernel.org/r/20200220202956.29233-1-hias@horus.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- sound/soc/codecs/pcm512x.c |    8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
-
---- a/sound/soc/codecs/pcm512x.c
-+++ b/sound/soc/codecs/pcm512x.c
-@@ -1564,13 +1564,15 @@ int pcm512x_probe(struct device *dev, st
- 	}
- 
- 	pcm512x->sclk = devm_clk_get(dev, NULL);
--	if (PTR_ERR(pcm512x->sclk) == -EPROBE_DEFER)
--		return -EPROBE_DEFER;
-+	if (PTR_ERR(pcm512x->sclk) == -EPROBE_DEFER) {
-+		ret = -EPROBE_DEFER;
-+		goto err;
-+	}
- 	if (!IS_ERR(pcm512x->sclk)) {
- 		ret = clk_prepare_enable(pcm512x->sclk);
- 		if (ret != 0) {
- 			dev_err(dev, "Failed to enable SCLK: %d\n", ret);
--			return ret;
-+			goto err;
- 		}
- 	}
- 
-
+-- 
+Jiri Kosina
+SUSE Labs
 
