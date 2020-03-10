@@ -2,1366 +2,270 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE91FC18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 18:05:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4080EC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 18:06:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A998A21D56
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 18:05:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E360A20873
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 18:06:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="qZfxwvqR";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="XcMWqoxa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726776AbgCJSFi (ORCPT
+        id S1726891AbgCJSGQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 14:05:38 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:39404 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726403AbgCJSFh (ORCPT
+        Tue, 10 Mar 2020 14:06:16 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:24800 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726403AbgCJSGQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 14:05:37 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id CBD2D804E7;
-        Tue, 10 Mar 2020 19:05:27 +0100 (CET)
-Date:   Tue, 10 Mar 2020 19:05:26 +0100
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Krishna Manikandan <mkrishn@codeaurora.org>
-Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, seanpaul@chromium.org,
-        kalyan_t@codeaurora.org, hoegsberg@chromium.org
-Subject: Re: [v2] dt-bindings: msm: disp: add yaml schemas for DPU and DSI
- bindings
-Message-ID: <20200310180526.GA18563@ravnborg.org>
-References: <1583749366-23906-1-git-send-email-mkrishn@codeaurora.org>
-MIME-Version: 1.0
+        Tue, 10 Mar 2020 14:06:16 -0400
+Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02AHtTuA002400;
+        Tue, 10 Mar 2020 11:06:04 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
+ subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=facebook; bh=vLlCKE3WAr0m59sWXWJwXlaSx2AfJH0bQ/ywFOK39D0=;
+ b=qZfxwvqRzC+CnXET3TJjAvX8sGj483Nh4gVwS2KebOC9YJbkFeN8yj/hP1SDu5KGKuxo
+ 2wiE2PYzKEf4wZAlWP1Kb3z5SvJZuMjVT0gA2QZCaydVbRd6FKiDTG2JfMR05UpleBk7
+ 6Ga9AmuCtsFAXbVkY5e/yHrYOFIq27Uw3Ns= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 2ypfj4058f-2
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Tue, 10 Mar 2020 11:06:04 -0700
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.35.174) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1847.3; Tue, 10 Mar 2020 11:06:03 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Eh11QCxKhVBDlLQ09/YNyeo7wtotKZF1f9LNovOIsXFQwOlSS3LEizXo0jcbtJoY40Npf1+UhyckRe56SUnl43MXMGhAdDmVvbQr3DUMkKAYx3rEl5EHaV/Z+i84sFbY3GYeh7oc9F6MJ7Ip9Tka/xUJRG2Imn1poPu8eBzZ7eNMfzAAPZ0qNEZN/dRyq+cWuVZzFAsz/zDj810jzX24IVphQTcdYLWvpEkxoZSrFSbZZhOgs/7esV2Lx+kFRr5tM90Xrw3XU0/pOEydzdFyBgsZRQQkPgUsJ2k5yJmBltwvxTFkVvk4hq2HmmvCkdQDcb6CCUC6R3ENjTY2qCMBfg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vLlCKE3WAr0m59sWXWJwXlaSx2AfJH0bQ/ywFOK39D0=;
+ b=kmWuRh8VGFxDVMdWqdd+yPOTRPX/F8r09qI3V5VHGF4PUWb+t3Z5bfa21GKdIZ3B+KITWiUZlXUm4SbMsCTKXtoxoOdNVyaevty258YUBtksmynoj5rwBNZRETPs/Ni4jWB5upeA2/uUCCVc5yaT94qP1SgwW3NTmJchtUukGrzA10aUs4dIlzRpfqFdGfkShDNTIj7niUYMCdJ80kfvYI14gvnhhzfbpyqKaQzDEFwwAab4a5FVj4mNW7dGLyYXnPjOETSAC+oxEcPMbF3Fv9+g4gMVA9uhsazZcS6AETRjs3lZBWr9lJ8JR1Dn3d+MFdCQkzXjjhk4iCfa7X4LYA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vLlCKE3WAr0m59sWXWJwXlaSx2AfJH0bQ/ywFOK39D0=;
+ b=XcMWqoxaxwnonjl/NVMIoTVsmeHnklRo/uBISu/DfaLI24RUoIOQq2dZ6kxh6x4SQvL6YTqOv35R1hC6enwBGA+8Xe5Lpmp+0ATMbLERru0XZp0SAMb9zaZSaIVesslkyGQE+vd/OCSBguT2zmwoAOTDvCxgn3Rla70/DkGsG6Q=
+Received: from MWHPR15MB1661.namprd15.prod.outlook.com (2603:10b6:300:124::23)
+ by MWHPR15MB1519.namprd15.prod.outlook.com (2603:10b6:300:bc::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.17; Tue, 10 Mar
+ 2020 18:06:02 +0000
+Received: from MWHPR15MB1661.namprd15.prod.outlook.com
+ ([fe80::f930:6bf2:6d2:93ef]) by MWHPR15MB1661.namprd15.prod.outlook.com
+ ([fe80::f930:6bf2:6d2:93ef%8]) with mapi id 15.20.2793.013; Tue, 10 Mar 2020
+ 18:06:02 +0000
+Date:   Tue, 10 Mar 2020 11:05:58 -0700
+From:   Roman Gushchin <guro@fb.com>
+To:     Mike Kravetz <mike.kravetz@oracle.com>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>, <linux-mm@kvack.org>,
+        <kernel-team@fb.com>, <linux-kernel@vger.kernel.org>,
+        Rik van Riel <riel@surriel.com>
+Subject: Re: [PATCH v2] mm: hugetlb: optionally allocate gigantic hugepages
+ using cma
+Message-ID: <20200310180558.GD85000@carbon.dhcp.thefacebook.com>
+References: <20200310002524.2291595-1-guro@fb.com>
+ <5cfa9031-fc15-2bcc-adb9-9779285ef0f7@oracle.com>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1583749366-23906-1-git-send-email-mkrishn@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=XpTUx2N9 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=LpQP-O61AAAA:8
-        a=7gkXJVJtAAAA:8 a=gEfo2CItAAAA:8 a=e5mUnYsNAAAA:8 a=Dib_TpA4NKHVW2xGf8gA:9
-        a=5NAt8VykQKxQcw_2:21 a=8AQGWlaquUndrrgN:21 a=ls-QnYef6J-nXaro:21
-        a=CjuIK1q_8ugA:10 a=pioyyrs4ZptJ924tMmac:22 a=E9Po1WZjFZOl8hwRPBS3:22
-        a=sptkURWiP4Gy88Gu7hUp:22 a=Vxmtnl_E_bksehYqCbjh:22
+In-Reply-To: <5cfa9031-fc15-2bcc-adb9-9779285ef0f7@oracle.com>
+X-ClientProxiedBy: MWHPR10CA0063.namprd10.prod.outlook.com
+ (2603:10b6:300:2c::25) To MWHPR15MB1661.namprd15.prod.outlook.com
+ (2603:10b6:300:124::23)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from carbon.dhcp.thefacebook.com (2620:10d:c090:400::5:3d1f) by MWHPR10CA0063.namprd10.prod.outlook.com (2603:10b6:300:2c::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.16 via Frontend Transport; Tue, 10 Mar 2020 18:06:01 +0000
+X-Originating-IP: [2620:10d:c090:400::5:3d1f]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 5cd015d2-0769-4b12-afdc-08d7c51db176
+X-MS-TrafficTypeDiagnostic: MWHPR15MB1519:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <MWHPR15MB1519F07D67C7F6D18DBC2458BEFF0@MWHPR15MB1519.namprd15.prod.outlook.com>
+X-FB-Source: Internal
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-Forefront-PRVS: 033857D0BD
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(39860400002)(396003)(346002)(366004)(136003)(376002)(199004)(189003)(7696005)(8676002)(52116002)(33656002)(6506007)(8936002)(316002)(6666004)(1076003)(81156014)(5660300002)(2906002)(53546011)(81166006)(6916009)(55016002)(66476007)(66556008)(66946007)(4326008)(86362001)(16526019)(186003)(478600001)(9686003)(54906003);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1519;H:MWHPR15MB1661.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+Received-SPF: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: SEe9GgU8tGjnm+Qbj+72SP52fvPXb3fU8wHl8xzGERTrRJXbydO/o4QqIzQ7WqfEipcUl2l5uRmoEOWaUs5WzSFbLcI9nY6TYklis8xgpMh0FvYhMJs1Nu+SSaP5LDrNkw5bx5SqlbUvj6Mh1HnyeFME3xNNUQ3eqqAwyjNjrvEIWDE9cWmfnmRf4CTGbZd8Ifa73YuBXvGD8R7AIvL4HVnNe2Xpgaw2fpvSlCxgnzwUyH4TVt0gw3/A9fThlybFclhc0YocIK5MrEmRImHjjM6kxKd6Xq7t/DzDFopqOEJiBPC5D4wWzapT2FEMF/w3h8aoZlTGh0j8DJ2p/BOiVVUubaucQVMfhcSZ/AxkITf689dOL1k0meOAIogvvoVAJUEfV9Q2/EIrDBWJkdrfnzCbryfvxI78Gxia1F0xVzbWA6KpsNW0qARmCFs5RrE0
+X-MS-Exchange-AntiSpam-MessageData: 9Ltjg4BqroXgMSo8jw8HFm3ojFoXEqp1qbNSE+5d4UgnXoZkg7l0JXCA0SsBX9NuUYdIuCpMrMqEF1kVydx3Rk5St2mQYYtk9ZYSnDOrTbgqFyLfSEyd/J5Gmht8HmzP1ddAz19sMjedIJdDFD4fKbZsPO7e+oqSPyGlGoOK6bMbu3wSWqPP4on7Pl1Ij+0G
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5cd015d2-0769-4b12-afdc-08d7c51db176
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Mar 2020 18:06:02.1302
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: L9qA8PjYYwJu8Fyv/U0LihdeWgzosQ2rjC1ZeAQYgS90quZWqFpy7Cl8q2lkANhP
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1519
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-10_12:2020-03-10,2020-03-10 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 bulkscore=0 adultscore=0
+ priorityscore=1501 lowpriorityscore=0 mlxscore=0 spamscore=0
+ suspectscore=1 impostorscore=0 phishscore=0 clxscore=1015 mlxlogscore=999
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003100109
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Krishna
+On Tue, Mar 10, 2020 at 10:27:01AM -0700, Mike Kravetz wrote:
+> On 3/9/20 5:25 PM, Roman Gushchin wrote:
+> > Commit 944d9fec8d7a ("hugetlb: add support for gigantic page allocation
+> > at runtime") has added the run-time allocation of gigantic pages. However
+> > it actually works only at early stages of the system loading, when
+> > the majority of memory is free. After some time the memory gets
+> > fragmented by non-movable pages, so the chances to find a contiguous
+> > 1 GB block are getting close to zero. Even dropping caches manually
+> > doesn't help a lot.
+> > 
+> > At large scale rebooting servers in order to allocate gigantic hugepages
+> > is quite expensive and complex. At the same time keeping some constant
+> > percentage of memory in reserved hugepages even if the workload isn't
+> > using it is a big waste: not all workloads can benefit from using 1 GB
+> > pages.
+> > 
+> > The following solution can solve the problem:
+> > 1) On boot time a dedicated cma area* is reserved. The size is passed
+> >    as a kernel argument.
+> > 2) Run-time allocations of gigantic hugepages are performed using the
+> >    cma allocator and the dedicated cma area
+> > 
+> > In this case gigantic hugepages can be allocated successfully with a
+> > high probability, however the memory isn't completely wasted if nobody
+> > is using 1GB hugepages: it can be used for pagecache, anon memory,
+> > THPs, etc.
+> > 
+> > * On a multi-node machine a per-node cma area is allocated on each node.
+> >   Following gigantic hugetlb allocation are using the first available
+> >   numa node if the mask isn't specified by a user.
+> > 
+> > Usage:
+> > 1) configure the kernel to allocate a cma area for hugetlb allocations:
+> >    pass hugetlb_cma=10G as a kernel argument
+> > 
+> > 2) allocate hugetlb pages as usual, e.g.
+> >    echo 10 > /sys/kernel/mm/hugepages/hugepages-1048576kB/nr_hugepages
+> > 
+> > If the option isn't enabled or the allocation of the cma area failed,
+> > the current behavior of the system is preserved.
+> > 
+> > Only x86 is covered by this patch, but it's trivial to extend it to
+> > cover other architectures as well.
+> > 
+> > v2: fixed !CONFIG_CMA build, suggested by Andrew Morton
+> > 
+> > Signed-off-by: Roman Gushchin <guro@fb.com>
+> 
+> Thanks!  I really like this idea.
 
-On Mon, Mar 09, 2020 at 03:52:46PM +0530, Krishna Manikandan wrote:
-> MSM Mobile Display Subsytem(MDSS) encapsulates sub-blocks
-> like DPU display controller, DSI etc. Add YAML schema
-> for the device tree bindings for the same.
-> 
-> Signed-off-by: Krishna Manikandan <mkrishn@codeaurora.org>
-Looks good ow - thanks.
-Acked-by: Sam Ravnborg <sam@ravnborg.org>
+Thank you!
 
-But you should wait for a review by someone more fluent in this area
-too.
+> 
+> > ---
+> >  .../admin-guide/kernel-parameters.txt         |   7 ++
+> >  arch/x86/kernel/setup.c                       |   3 +
+> >  include/linux/hugetlb.h                       |   2 +
+> >  mm/hugetlb.c                                  | 115 ++++++++++++++++++
+> >  4 files changed, 127 insertions(+)
+> > 
+> <snip>
+> > diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+> > index a74262c71484..ceeb06ddfd41 100644
+> > --- a/arch/x86/kernel/setup.c
+> > +++ b/arch/x86/kernel/setup.c
+> > @@ -16,6 +16,7 @@
+> >  #include <linux/pci.h>
+> >  #include <linux/root_dev.h>
+> >  #include <linux/sfi.h>
+> > +#include <linux/hugetlb.h>
+> >  #include <linux/tboot.h>
+> >  #include <linux/usb/xhci-dbgp.h>
+> >  
+> > @@ -1158,6 +1159,8 @@ void __init setup_arch(char **cmdline_p)
+> >  	initmem_init();
+> >  	dma_contiguous_reserve(max_pfn_mapped << PAGE_SHIFT);
+> >  
+> > +	hugetlb_cma_reserve();
+> > +
+> 
+> I know this is called from arch specific code here to fit in with the timing
+> of CMA setup/reservation calls.  However, there really is nothing architecture
+> specific about this functionality.  It would be great IMO if we could make
+> this architecture independent.  However, I can not think of a straight forward
+> way to do this.
 
-	Sam
+I agree. Unfortunately I have no better idea than having an arch-dependent hook.
+
 > 
-> Changes in v2:
-> 	- Changed dpu to DPU (Sam Ravnborg)
-> 	- Fixed indentation issues (Sam Ravnborg)
-> 	- Added empty line between different properties (Sam Ravnborg)
-> 	- Replaced reference txt files with  their corresponding
-> 	  yaml files (Sam Ravnborg)
-> 	- Modified the file to use "|" only when it is
-> 	  necessary (Sam Ravnborg)
-> ---
->  .../bindings/display/msm/dpu-sc7180.yaml           | 261 +++++++++++++++
->  .../bindings/display/msm/dpu-sdm845.yaml           | 259 +++++++++++++++
->  .../bindings/display/msm/dsi-sc7180.yaml           | 362 +++++++++++++++++++++
->  .../bindings/display/msm/dsi-sdm845.yaml           | 362 +++++++++++++++++++++
->  4 files changed, 1244 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/msm/dpu-sc7180.yaml
->  create mode 100644 Documentation/devicetree/bindings/display/msm/dpu-sdm845.yaml
->  create mode 100644 Documentation/devicetree/bindings/display/msm/dsi-sc7180.yaml
->  create mode 100644 Documentation/devicetree/bindings/display/msm/dsi-sdm845.yaml
+> >  	/*
+> >  	 * Reserve memory for crash kernel after SRAT is parsed so that it
+> >  	 * won't consume hotpluggable memory.
+> <snip>
+> > diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+> <snip>
+> > +void __init hugetlb_cma_reserve(void)
+> > +{
+> > +	unsigned long totalpages = 0;
+> > +	unsigned long start_pfn, end_pfn;
+> > +	phys_addr_t size;
+> > +	int nid, i, res;
+> > +
+> > +	if (!hugetlb_cma_size && !hugetlb_cma_percent)
+> > +		return;
+> > +
+> > +	if (hugetlb_cma_percent) {
+> > +		for_each_mem_pfn_range(i, MAX_NUMNODES, &start_pfn, &end_pfn,
+> > +				       NULL)
+> > +			totalpages += end_pfn - start_pfn;
+> > +
+> > +		size = PAGE_SIZE * (hugetlb_cma_percent * 100 * totalpages) /
+> > +			10000UL;
+> > +	} else {
+> > +		size = hugetlb_cma_size;
+> > +	}
+> > +
+> > +	pr_info("hugetlb_cma: reserve %llu, %llu per node\n", size,
+> > +		size / nr_online_nodes);
+> > +
+> > +	size /= nr_online_nodes;
+> > +
+> > +	for_each_node_state(nid, N_ONLINE) {
+> > +		unsigned long min_pfn = 0, max_pfn = 0;
+> > +
+> > +		for_each_mem_pfn_range(i, nid, &start_pfn, &end_pfn, NULL) {
+> > +			if (!min_pfn)
+> > +				min_pfn = start_pfn;
+> > +			max_pfn = end_pfn;
+> > +		}
+> > +
+> > +		res = cma_declare_contiguous(PFN_PHYS(min_pfn), size,
+> > +					     PFN_PHYS(max_pfn), (1UL << 30),
 > 
-> diff --git a/Documentation/devicetree/bindings/display/msm/dpu-sc7180.yaml b/Documentation/devicetree/bindings/display/msm/dpu-sc7180.yaml
-> new file mode 100644
-> index 0000000..2a9efc5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/msm/dpu-sc7180.yaml
-> @@ -0,0 +1,261 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/msm/dpu-sc7180.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Description of Qualcomm Display DPU dt properties.
-> +
-> +maintainers:
-> +  - Krishna Manikandan <mkrishn@codeaurora.org>
-> +
-> +description: |
-> +  Device tree bindings for MSM Mobile Display Subsytem(MDSS) that encapsulates
-> +  sub-blocks like DPU display controller, DSI and DP interfaces etc. Device tree
-> +  bindings of MDSS and DPU are mentioned for SC7180 target.
-> +
-> +properties:
-> +  "mdss":
-> +    type: object
-> +    description: |
-> +      Node containing MDSS that encapsulated sub-blocks like DPU, DSI and DP
-> +      interfaces.
-> +
-> +    properties:
-> +     compatible:
-> +       items:
-> +         - const: qcom,sc7180-mdss
-> +
-> +     reg:
-> +       description: Physical base address and length of controller's registers.
-> +
-> +     reg-names:
-> +       description: |
-> +         Names for different register regions defined above. The required region
-> +         is mentioned below.
-> +       items:
-> +         - const: mdss
-> +
-> +     power-domains:
-> +       description: |
-> +         A power domain consumer specifier according to
-> +         Documentation/devicetree/bindings/power/power-domain.yaml.
-> +
-> +     clocks:
-> +       description: List of clock specifiers for clocks needed by the device.
-> +
-> +     clock-names:
-> +       description: |
-> +         Device clock names in the same order as mentioned in clocks property.
-> +         The required clocks are mentioned below.
-> +       items:
-> +         - const: iface
-> +         - const: bus
-> +         - const: ahb
-> +         - const: core
-> +
-> +     interrupts:
-> +       description: Interrupt signal from MDSS.
-> +
-> +     interrupt-controller:
-> +       description: Identifies the node as an interrupt controller.
-> +
-> +     "#interrupt-cells":
-> +       description: |
-> +         Specifies the number of cells needed to encode an interrupt source.
-> +       const: 1
-> +
-> +     iommus:
-> +       description: Phandle of iommu device node.
-> +
-> +     "#address-cells":
-> +       description: |
-> +         Indicate how many cells (32 bits values) are needed to form the base
-> +         address part in the reg property.
-> +
-> +     "#size-cells":
-> +       description: |
-> +         Indicate how many cells (32 bits values) are needed to specify the
-> +         size part in the reg property.
-> +
-> +     ranges:
-> +       description: |
-> +         Parent bus address space is the same as the child bus address space.
-> +
-> +     interconnects :
-> +       description: |
-> +         Interconnect path specifier for MDSS according to
-> +         Documentation/devicetree/bindings/interconnect/interconnect.txt.
-> +         Should be 2 paths corresponding to 2 AXI ports.
-> +
-> +     interconnect-names:
-> +       description: |
-> +         MDSS will have 2 port names to differentiate between the
-> +         2 interconnect paths defined with interconnect specifier.
-> +
-> +     properties:
-> +       description: |
-> +         The optional properties for MDSS are mentioned below.
-> +         assigned-clocks:
-> +           description: |
-> +             List of clock specifiers for clocks needing rate assignment.
-> +
-> +         assigned-clock-rates:
-> +           description: |
-> +             List of clock frequencies sorted in the same order as the
-> +             assigned-clocks property.
-> +
-> +     "mdp":
-> +       type: object
-> +       description: Node containing the properties of DPU.
-> +
-> +       properties:
-> +         compatible:
-> +           items:
-> +             - const: qcom,sc7180-dpu
-> +
-> +         reg:
-> +           description: |
-> +             Physical base address and length of controller's registers.
-> +
-> +         reg-names:
-> +           description: |
-> +             Register region names. The following regions are required.
-> +           items:
-> +             - const: mdp
-> +             - const: vbif
-> +
-> +         clocks:
-> +           description: |
-> +             List of clock specifiers for clocks needed by the device.
-> +
-> +         clock-names:
-> +           description: |
-> +             Device clock names, must be in same order as clocks property.
-> +             The following clocks are required. "bus" is an optional property
-> +             in sc7180 due to architecture change.
-> +           items:
-> +             - const: iface
-> +             - const: core
-> +             - const: vsync
-> +
-> +         interrupts:
-> +           description: Interrupt line from DPU to MDSS.
-> +
-> +         ports:
-> +           type: object
-> +           description: |
-> +             Contains the list of output ports from DPU device. These ports
-> +             connect to interfaces that are external to the DPU hardware,
-> +             such as DSI, DP etc. Each output port contains an endpoint that
-> +             describes how it is connected to an external interface. These
-> +             are described by the standard properties documented in files
-> +             mentioned below.
-> +
-> +             Documentation/devicetree/bindings/graph.txt
-> +             Documentation/devicetree/bindings/media/video-interfaces.txt
-> +
-> +           properties:
-> +             port0:
-> +               type: object
-> +               description: DPU_INTF1 (DSI1)
-> +             port1:
-> +               type: object
-> +               description: DPU_INTF2 (DSI2)
-> +
-> +         properties:
-> +           description: |
-> +             The optional properties for DPU are mentioned below.
-> +             assigned-clocks:
-> +               description: |
-> +                 List of clock specifiers for clocks needing rate assignment.
-> +
-> +             assigned-clock-rates:
-> +               description: |
-> +                 List of clock frequencies sorted in the same order as the
-> +                 assigned-clocks property.
-> +
-> +             clock-names:
-> +               description: |
-> +                 Optional device clocks, needed for accessing LUT blocks.
-> +               items:
-> +                 - const: rot
-> +                 - const: lut
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - reg-names
-> +  - power-domains
-> +  - clocks
-> +  - clock-names
-> +  - interrupts
-> +  - interrupt-controller
-> +  - iommus
-> +  - ports
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/qcom,dispcc-sc7180.h>
-> +    #include <dt-bindings/clock/qcom,gcc-sc7180.h>
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/interconnect/qcom,sdm845.h>
-> +    mdss: mdss@ae00000 {
-> +         compatible = "qcom,sc7180-mdss";
-> +         reg = <0xae00000 0x1000>;
-> +         reg-names = "mdss";
-> +         power-domains = <&clock_dispcc 0>;
-> +         clocks = <&gcc GCC_DISP_AHB_CLK>,
-> +                  <&gcc GCC_DISP_HF_AXI_CLK>,
-> +                  <&dispcc DISP_CC_MDSS_MDP_CLK>;
-> +         clock-names = "iface", "gcc_bus", "core";
-> +         assigned-clocks = <&dispcc DISP_CC_MDSS_MDP_CLK>;
-> +         assigned-clock-rates = <300000000>;
-> +
-> +         interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
-> +         interrupt-controller;
-> +         #interrupt-cells = <1>;
-> +
-> +         interconnects = <&mmss_noc MASTER_MDP0 &mc_virt SLAVE_EBI1>;
-> +
-> +         interconnect-names = "mdp0-mem";
-> +
-> +         iommus = <&apps_smmu 0x800 0x2>;
-> +
-> +         #address-cells = <2>;
-> +         #size-cells = <2>;
-> +
-> +         mdss_mdp: mdp@ae01000 {
-> +                   compatible = "qcom,sc7180-dpu";
-> +                   reg = <0 0x0ae01000 0 0x8f000>,
-> +                         <0 0x0aeb0000 0 0x2008>,
-> +                         <0 0x0af03000 0 0x16>;
-> +                   reg-names = "mdp", "vbif", "disp_cc";
-> +
-> +                   clocks = <&dispcc DISP_CC_MDSS_AHB_CLK>,
-> +                            <&dispcc DISP_CC_MDSS_ROT_CLK>,
-> +                            <&dispcc DISP_CC_MDSS_MDP_LUT_CLK>,
-> +                            <&dispcc DISP_CC_MDSS_MDP_CLK>,
-> +                            <&dispcc DISP_CC_MDSS_VSYNC_CLK>;
-> +                   clock-names = "iface", "rot", "lut", "core",
-> +                                                "vsync";
-> +                   assigned-clocks = <&dispcc DISP_CC_MDSS_MDP_CLK>,
-> +                                     <&dispcc DISP_CC_MDSS_VSYNC_CLK>;
-> +                   assigned-clock-rates = <300000000>, <19200000>;
-> +                   interrupt-parent = <&mdss>;
-> +                   interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
-> +
-> +                   ports {
-> +                           #address-cells = <1>;
-> +                           #size-cells = <0>;
-> +
-> +                           port@0 {
-> +                                   reg = <0>;
-> +                                   dpu_intf1_out: endpoint {
-> +                                                  remote-endpoint = <&dsi0_in>;
-> +                                   };
-> +                           };
-> +                   };
-> +         };
-> +    };
-> +...
-> diff --git a/Documentation/devicetree/bindings/display/msm/dpu-sdm845.yaml b/Documentation/devicetree/bindings/display/msm/dpu-sdm845.yaml
-> new file mode 100644
-> index 0000000..bb975938
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/msm/dpu-sdm845.yaml
-> @@ -0,0 +1,259 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/msm/dpu-sdm845.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Description of Qualcomm Display DPU dt properties.
-> +
-> +maintainers:
-> +  - Krishna Manikandan <mkrishn@codeaurora.org>
-> +
-> +description: |
-> +  Device tree bindings for MSM Mobile Display Subsytem(MDSS) that encapsulates
-> +  sub-blocks like DPU display controller, DSI and DP interfaces etc. Device tree
-> +  bindings of MDSS and DPU are mentioned for SDM845 target.
-> +
-> +properties:
-> +  "mdss":
-> +    type: object
-> +    description: |
-> +      Node containing MDSS that encapsulated sub-blocks like DPU, DSI and DP
-> +      interfaces.
-> +
-> +    properties:
-> +     compatible:
-> +       items:
-> +         - const: qcom,sdm845-mdss
-> +
-> +     reg:
-> +       description: Physical base address and length of controller's registers.
-> +
-> +     reg-names:
-> +       description: |
-> +         Names for different register regions defined above. The required region
-> +         is mentioned below.
-> +       items:
-> +         - const: mdss
-> +
-> +     power-domains:
-> +       description: |
-> +         A power domain consumer specifier according to
-> +         Documentation/devicetree/bindings/power/power-domain.yaml.
-> +
-> +     clocks:
-> +       description: List of clock specifiers for clocks needed by the device.
-> +
-> +     clock-names:
-> +       description: |
-> +         Device clock names in the same order as mentioned in clocks property.
-> +         The required clocks are mentioned below.
-> +       items:
-> +         - const: iface
-> +         - const: bus
-> +         - const: core
-> +
-> +     interrupts:
-> +       description: Interrupt signal from MDSS.
-> +
-> +     interrupt-controller:
-> +       description: Identifies the node as an interrupt controller.
-> +
-> +     "#interrupt-cells":
-> +       description: |
-> +         Specifies the number of cells needed to encode an interrupt source.
-> +       const: 1
-> +
-> +     iommus:
-> +       description: Phandle of iommu device node.
-> +
-> +     "#address-cells":
-> +       description: |
-> +         Indicate how many cells (32 bits values) are needed to form the base
-> +         address part in the reg property.
-> +
-> +     "#size-cells":
-> +       description: |
-> +         Indicate how many cells (32 bits values) are needed to specify the
-> +         size part in the reg property.
-> +
-> +     ranges:
-> +       description: |
-> +         Parent bus address space is the same as the child bus address space.
-> +
-> +     interconnects :
-> +       description: |
-> +         Interconnect path specifier for MDSS according to
-> +         Documentation/devicetree/bindings/interconnect/interconnect.txt.
-> +         Should be 2 paths corresponding to 2 AXI ports.
-> +
-> +     interconnect-names:
-> +       description: |
-> +         MDSS will have 2 port names to differentiate between the
-> +         2 interconnect paths defined with interconnect specifier.
-> +
-> +     properties:
-> +       description: |
-> +         The optional properties for MDSS are mentioned below.
-> +         assigned-clocks:
-> +           description: |
-> +             List of clock specifiers for clocks needing rate assignment.
-> +
-> +         assigned-clock-rates:
-> +           description: |
-> +             List of clock frequencies sorted in the same order as the
-> +             assigned-clocks property.
-> +
-> +     "mdp":
-> +       type: object
-> +       description: Node containing the properties of DPU.
-> +
-> +       properties:
-> +         compatible:
-> +           items:
-> +             - const: qcom,sc7180-dpu
-> +
-> +         reg:
-> +           description: |
-> +             Physical base address and length of controller's registers.
-> +
-> +         reg-names:
-> +           description: |
-> +             Register region names. The following regions are required.
-> +           items:
-> +             - const: mdp
-> +             - const: vbif
-> +
-> +         clocks:
-> +           description: |
-> +             List of clock specifiers for clocks needed by the device.
-> +
-> +         clock-names:
-> +           description: |
-> +             Device clock names, must be in same order as clocks property.
-> +             The following clocks are required.
-> +           items:
-> +             - const: bus
-> +             - const: iface
-> +             - const: core
-> +             - const: vsync
-> +
-> +         interrupts:
-> +           description: Interrupt line from DPU to MDSS.
-> +
-> +         ports:
-> +           type: object
-> +           description: |
-> +             Contains the list of output ports from DPU device. These ports
-> +             connect to interfaces that are external to the DPU hardware,
-> +             such as DSI, DP etc. Each output port contains an endpoint that
-> +             describes how it is connected to an external interface. These
-> +             are described by the standard properties documented in files
-> +             mentioned below.
-> +
-> +             Documentation/devicetree/bindings/graph.txt
-> +             Documentation/devicetree/bindings/media/video-interfaces.txt
-> +
-> +           properties:
-> +             port0:
-> +               type: object
-> +               description: DPU_INTF1 (DSI1)
-> +             port1:
-> +               type: object
-> +               description: DPU_INTF2 (DSI2)
-> +
-> +         properties:
-> +           description: |
-> +             The optional properties for DPU are mentioned below.
-> +             assigned-clocks:
-> +               description: |
-> +                 List of clock specifiers for clocks needing rate assignment.
-> +
-> +             assigned-clock-rates:
-> +               description: |
-> +                 List of clock frequencies sorted in the same order as the
-> +                 assigned-clocks property.
-> +
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - reg-names
-> +  - power-domains
-> +  - clocks
-> +  - clock-names
-> +  - interrupts
-> +  - interrupt-controller
-> +  - iommus
-> +  - ports
-> +
-> +examples:
-> +- |
-> +    #include <dt-bindings/clock/qcom,dispcc-sdm845.h>
-> +    #include <dt-bindings/clock/qcom,gcc-sdm845.h>
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    mdss: mdss@ae00000 {
-> +          compatible = "qcom,sdm845-mdss";
-> +          reg = <0 0x0ae00000 0 0x1000>;
-> +          reg-names = "mdss";
-> +          power-domains = <&dispcc MDSS_GDSC>;
-> +
-> +          clocks = <&gcc GCC_DISP_AHB_CLK>,
-> +                   <&gcc GCC_DISP_AXI_CLK>,
-> +                   <&dispcc DISP_CC_MDSS_MDP_CLK>;
-> +          clock-names = "iface", "bus", "core";
-> +
-> +          assigned-clocks = <&dispcc DISP_CC_MDSS_MDP_CLK>;
-> +          assigned-clock-rates = <300000000>;
-> +
-> +          interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
-> +          interrupt-controller;
-> +          #interrupt-cells = <1>;
-> +
-> +          iommus = <&apps_smmu 0x880 0x8>,
-> +                   <&apps_smmu 0xc80 0x8>;
-> +
-> +          #address-cells = <2>;
-> +          #size-cells = <2>;
-> +
-> +          mdss_mdp: mdp@ae01000 {
-> +                    compatible = "qcom,sdm845-dpu";
-> +                    reg = <0 0x0ae01000 0 0x8f000>,
-> +                          <0 0x0aeb0000 0 0x2008>;
-> +                    reg-names = "mdp", "vbif";
-> +
-> +                    clocks = <&dispcc DISP_CC_MDSS_AHB_CLK>,
-> +                             <&dispcc DISP_CC_MDSS_AXI_CLK>,
-> +                             <&dispcc DISP_CC_MDSS_MDP_CLK>,
-> +                             <&dispcc DISP_CC_MDSS_VSYNC_CLK>;
-> +                    clock-names = "iface", "bus", "core", "vsync";
-> +
-> +                    assigned-clocks = <&dispcc DISP_CC_MDSS_MDP_CLK>,
-> +                                      <&dispcc DISP_CC_MDSS_VSYNC_CLK>;
-> +                    assigned-clock-rates = <300000000>,
-> +                                           <19200000>;
-> +
-> +                    interrupt-parent = <&mdss>;
-> +                    interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
-> +
-> +                    ports {
-> +                           #address-cells = <1>;
-> +                           #size-cells = <0>;
-> +
-> +                           port@0 {
-> +                                   reg = <0>;
-> +                                   dpu_intf1_out: endpoint {
-> +                                                  remote-endpoint = <&dsi0_in>;
-> +                                   };
-> +                           };
-> +
-> +                           port@1 {
-> +                                   reg = <1>;
-> +                                   dpu_intf2_out: endpoint {
-> +                                                  remote-endpoint = <&dsi1_in>;
-> +                                   };
-> +                           };
-> +                    };
-> +          };
-> +    };
-> +...
-> diff --git a/Documentation/devicetree/bindings/display/msm/dsi-sc7180.yaml b/Documentation/devicetree/bindings/display/msm/dsi-sc7180.yaml
-> new file mode 100644
-> index 0000000..4727205
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/msm/dsi-sc7180.yaml
-> @@ -0,0 +1,362 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/msm/dsi-sc7180.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Description of Qualcomm Display DSI interface dt properties.
-> +
-> +maintainers:
-> +  - Krishna Manikandan <mkrishn@codeaurora.org>
-> +
-> +description: |
-> +  Device tree bindings for DSI controller and DSI PHY for SC7180 target.
-> +
-> +properties:
-> +  "dsi-controller":
-> +    type: object
-> +    description: Node containing the properties of DSI controller.
-> +
-> +    properties:
-> +      compatible:
-> +        items:
-> +          - const: qcom,mdss-dsi-ctrl
-> +
-> +      reg:
-> +        description: Physical base address and length of registers of controller.
-> +
-> +      reg-names:
-> +        description: |
-> +          Names for different register regions defined above. The required region
-> +          is mentioned below.
-> +        items:
-> +          - const: dsi_ctrl
-> +
-> +      clocks:
-> +        description: Phandles to device clocks.
-> +
-> +      clock-names:
-> +        description: |
-> +          Device clock names in the same order as mentioned in clocks property.
-> +          The required clocks are mentioned below. For DSIv2, we need an
-> +          additional clock "src" and for DSI6G v2.0 onwards we need
-> +          "byte_intf" clock.
-> +        items:
-> +          - const: iface
-> +          - const: bus
-> +          - const: byte
-> +          - const: pixel
-> +          - const: core
-> +
-> +      assigned-clocks:
-> +        description: Parents of "byte" and "pixel" for the given platform.
-> +
-> +      assigned-clock-parents:
-> +        description: |
-> +          The Byte clock and Pixel clock PLL outputs provided by a DSI PHY block.
-> +          Details on clock bindings are mentioned in
-> +          Documentation/devicetree/bindings/clock/clock-bindings.txt.
-> +
-> +      vdd-supply:
-> +        description: Phandle to vdd regulator device node.
-> +
-> +      vddio-supply:
-> +        description: Phandle to vdd-io regulator device node.
-> +
-> +      vdda-supply:
-> +        description: Phandle to vdda regulator device node.
-> +
-> +      phys:
-> +        description: Phandle to DSI PHY device node.
-> +
-> +      phy-names:
-> +        description: Name of the corresponding PHY device.
-> +
-> +      syscon-sfpb:
-> +        description: A phandle to mmss_sfpb syscon node (only for DSIv2).
-> +
-> +      ports:
-> +        description: |
-> +          Contains 2 DSI controller ports as child nodes. Each port contains
-> +          an endpoint subnode as defined in
-> +          Documentation/devicetree/bindings/graph.txt and
-> +          Documentation/devicetree/bindings/media/video-interfaces.txt.
-> +
-> +      properties:
-> +        description: |
-> +          The optional properties for DSI controller are mentioned below.
-> +
-> +          panel@0:
-> +            description: |
-> +              Node of panel connected to this DSI controller.
-> +              See files in Documentation/devicetree/bindings/display/panel/
-> +              for each supported panel.
-> +
-> +          qcom,dual-dsi-mode:
-> +            description: |
-> +              Boolean value indicating if the DSI controller is
-> +              driving a panel which needs 2 DSI links.
-> +
-> +          qcom,master-dsi:
-> +            description: |
-> +              Boolean value indicating if the DSI controller is driving
-> +              the master link of the 2-DSI panel.
-> +
-> +          qcom,sync-dual-dsi:
-> +            description: |
-> +              Boolean value indicating if the DSI controller is driving a
-> +              2-DSI panel whose 2 links need receive command simultaneously.
-> +
-> +          pinctrl-names:
-> +            description: The pin control state names; should contain "default"
-> +
-> +          pinctrl-0:
-> +            description: The default pinctrl state (active)
-> +
-> +          pinctrl-n:
-> +            description: The "sleep" pinctrl state
-> +
-> +          ports:
-> +            description: |
-> +              Contains DSI controller input and output ports as children, each
-> +              containing one endpoint subnode.
-> +
-> +          properties:
-> +            description: DSI Endpoint properties
-> +
-> +            remote-endpoint:
-> +              description: |
-> +                For port@0, set to phandle of the connected panel/bridge's
-> +                input endpoint. For port@1, set to the MDP interface output.
-> +                See Documentation/devicetree/bindings/graph.txt for
-> +                device graph info.
-> +
-> +            data-lanes:
-> +              description: |
-> +                This describes how the physical DSI data lanes are mapped
-> +                to the logical lanes on the given platform. The value contained in
-> +                index n describes what physical lane is mapped to the logical lane n
-> +                (DATAn, where n lies between 0 and 3). The clock lane position is fixed
-> +                and can't be changed. Hence, they aren't a part of the DT bindings. See
-> +                Documentation/devicetree/bindings/media/video-interfaces.txt for
-> +                more info on the data-lanes property.
-> +
-> +                For example:
-> +
-> +                data-lanes = <3 0 1 2>;
-> +
-> +                The above mapping describes that the logical data lane DATA0 is mapped
-> +                to the physical data lane DATA3, logical DATA1 to physical DATA0,
-> +                logic DATA2 to phys DATA1 and logic DATA3 to phys DATA2. There are
-> +                only a limited number of physical to logical mappings possible.
-> +              oneOf:
-> +                - const: <0 1 2 3>
-> +                - const: <1 2 3 0>
-> +                - const: <2 3 0 1>
-> +                - const: <3 0 1 2>
-> +                - const: <0 3 2 1>
-> +                - const: <1 0 3 2>
-> +                - const: <2 1 0 3>
-> +                - const: <3 2 1 0>
-> +
-> +          qcom,mdss-mdp-transfer-time-us:
-> +            description: |
-> +              Specifies the DSI transfer time for command mode
-> +              panels in microseconds. Driver uses this number to adjust
-> +              the clock rate according to the expected transfer time.
-> +              Increasing this value would slow down the mdp processing
-> +              and can result in slower performance.
-> +              Decreasing this value can speed up the mdp processing,
-> +              but this can also impact power consumption.
-> +              As a rule this time should not be higher than the time
-> +              that would be expected with the processing at the
-> +              DSI link rate since anyways this would be the maximum
-> +              transfer time that could be achieved.
-> +              If ping pong split is enabled, this time should not be higher
-> +              than two times the DSI link rate time.
-> +              If the property is not specified, then the default value is
-> +              14000 us. This is an optional property.
-> +
-> +  "dsi_phy":
-> +    type: object
-> +    description: Node containing the properties of DSI PHY
-> +
-> +    properties:
-> +      compatible:
-> +        oneOf:
-> +          - const: qcom,dsi-phy-28nm-hpm
-> +          - const: qcom,dsi-phy-28nm-lp
-> +          - const: qcom,dsi-phy-20nm
-> +          - const: qcom,dsi-phy-28nm-8960
-> +          - const: qcom,dsi-phy-14nm
-> +          - const: qcom,dsi-phy-10nm
-> +          - const: qcom,dsi-phy-10nm-8998
-> +
-> +      reg:
-> +        description: |
-> +          Physical base address and length of the registers of PLL, PHY. Some
-> +          revisions require the PHY regulator base address, whereas others
-> +          require the PHY lane base address. See below for each PHY revision.
-> +
-> +      reg-names:
-> +        description: Name of register regions.
-> +        oneOf:
-> +          - description: |
-> +              Following regions are required for DSI 28nm HPM/LP/8960 PHYs and
-> +              20nm PHY.
-> +            items:
-> +              - const: dsi_pll
-> +              - const: dsi_phy
-> +              - const: dsi_phy_regulator
-> +
-> +          - description: |
-> +              Following regions are required for DSI 14nm and 10nm PHYs:
-> +            items:
-> +              - const: dsi_pll
-> +              - const: dsi_phy
-> +              - const: dsi_phy_lane
-> +
-> +      clock-cells:
-> +        description: |
-> +          The DSI PHY block acts as a clock provider, creating
-> +          2 clocks: A byte clock (index 0), and a pixel clock (index 1).
-> +        const: 1
-> +
-> +      power-domains:
-> +        description: Should be <&mmcc MDSS_GDSC>.
-> +
-> +      clocks:
-> +        description: |
-> +          Phandles to device clocks. See
-> +          Documentation/devicetree/bindings/clock/clock-bindings.txt
-> +          for details on clock bindings.
-> +
-> +      clock-names:
-> +        description: |
-> +          The following clocks are required.
-> +          "iface"
-> +          "ref" (only required for new DTS files/entries)
-> +
-> +      vddio-supply:
-> +        description: |
-> +          Phandle to vdd-io regulator device node. Required for 28nm HPM/LP,
-> +          28nm 8960 PHYs and 20nm PHY.
-> +
-> +      vcca-supply:
-> +        description: |
-> +          Phandle to vcca regulator device node. Required for 20nm PHY and
-> +          10nm PHY.
-> +
-> +      vdds-supply:
-> +        description: |
-> +          Phandle to vdds regulator device node. Required for 10nm PHY.
-> +
-> +      properties:
-> +        description: |
-> +          The optional properties for DSI PHY are mentioned below.
-> +
-> +          qcom,dsi-phy-regulator-ldo-mode:
-> +            description: |
-> +              Boolean value indicating if the LDO mode PHY regulator is wanted.
-> +
-> +examples:
-> +  - |
-> +     #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +     #include <dt-bindings/clock/qcom,dispcc-sc7180.h>
-> +     #include <dt-bindings/clock/qcom,gcc-sc7180.h>
-> +
-> +     dsi0: dsi@fd922800 {
-> +           compatible = "qcom,mdss-dsi-ctrl";
-> +           qcom,dsi-host-index = <0>;
-> +           interrupt-parent = <&mdp>;
-> +           interrupts = <4 0>;
-> +           reg-names = "dsi_ctrl";
-> +           reg = <0xfd922800 0x200>;
-> +           power-domains = <&mmcc MDSS_GDSC>;
-> +
-> +           clocks = <&dispcc DISP_CC_MDSS_BYTE0_CLK>,
-> +                    <&dispcc DISP_CC_MDSS_BYTE0_INTF_CLK>,
-> +                    <&dispcc DISP_CC_MDSS_PCLK0_CLK>,
-> +                    <&dispcc DISP_CC_MDSS_ESC0_CLK>,
-> +                    <&dispcc DISP_CC_MDSS_AHB_CLK>,
-> +                    <&gcc GCC_DISP_HF_AXI_CLK>;
-> +           clock-names = "byte",
-> +                         "byte_intf",
-> +                         "pixel",
-> +                         "core",
-> +                         "iface",
-> +                         "bus";
-> +           assigned-clocks = <&dispcc DISP_CC_MDSS_BYTE0_CLK_SRC>,
-> +                             <&dispcc DISP_CC_MDSS_PCLK0_CLK_SRC>;
-> +           assigned-clock-parents = <&dsi_phy0 0>,
-> +                                    <&dsi_phy0 1>;
-> +
-> +           vdda-supply = <&pma8084_l2>;
-> +           vdd-supply = <&pma8084_l22>;
-> +           vddio-supply = <&pma8084_l12>;
-> +
-> +           phys = <&dsi_phy0>;
-> +           phy-names ="dsi-phy";
-> +
-> +           qcom,dual-dsi-mode;
-> +           qcom,master-dsi;
-> +           qcom,sync-dual-dsi;
-> +
-> +           qcom,mdss-mdp-transfer-time-us = <12000>;
-> +
-> +           pinctrl-names = "default", "sleep";
-> +           pinctrl-0 = <&dsi_active>;
-> +           pinctrl-1 = <&dsi_suspend>;
-> +
-> +           ports {
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +
-> +               port@0 {
-> +                      reg = <0>;
-> +                      dsi0_in: endpoint {
-> +                               remote-endpoint = <&mdp_intf1_out>;
-> +                      };
-> +               };
-> +
-> +               port@1 {
-> +                      reg = <1>;
-> +                      dsi0_out: endpoint {
-> +                                remote-endpoint = <&panel_in>;
-> +                                data-lanes = <0 1 2 3>;
-> +                      };
-> +               };
-> +           };
-> +
-> +           panel: panel@0 {
-> +                  compatible = "sharp,lq101r1sx01";
-> +                  link2 = <&secondary>;
-> +
-> +                  port {
-> +                       panel_in: endpoint {
-> +                                 remote-endpoint = <&dsi0_out>;
-> +                       };
-> +                  };
-> +           };
-> +     };
-> +
-> +     dsi_phy0: dsi-phy@fd922a00 {
-> +               compatible = "qcom,dsi-phy-28nm-hpm";
-> +               qcom,dsi-phy-index = <0>;
-> +               reg-names =
-> +                        "dsi_pll",
-> +                        "dsi_phy",
-> +                        "dsi_phy_regulator";
-> +               reg =   <0xfd922a00 0xd4>,
-> +                       <0xfd922b00 0x2b0>,
-> +                       <0xfd922d80 0x7b>;
-> +               clock-names = "iface";
-> +               clocks = <&dispcc DISP_CC_MDSS_AHB_CLK>;
-> +               #clock-cells = <1>;
-> +               #phy-cells = <0>;
-> +               vddio-supply = <&pma8084_l12>;
-> +
-> +               qcom,dsi-phy-regulator-ldo-mode;
-> +     };
-> +...
-> +
-> diff --git a/Documentation/devicetree/bindings/display/msm/dsi-sdm845.yaml b/Documentation/devicetree/bindings/display/msm/dsi-sdm845.yaml
-> new file mode 100644
-> index 0000000..e494a7f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/msm/dsi-sdm845.yaml
-> @@ -0,0 +1,362 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/msm/dsi-sdm845.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Description of Qualcomm Display DSI interface dt properties.
-> +
-> +maintainers:
-> +  - Krishna Manikandan <mkrishn@codeaurora.org>
-> +
-> +description: |
-> +  Device tree bindings for DSI controller and DSI PHY for SDM845 target.
-> +
-> +properties:
-> +  "dsi-controller":
-> +    type: object
-> +    description: Node containing the properties of DSI controller.
-> +
-> +    properties:
-> +      compatible:
-> +        items:
-> +          - const: qcom,mdss-dsi-ctrl
-> +
-> +      reg:
-> +        description: Physical base address and length of registers of controller.
-> +
-> +      reg-names:
-> +        description: |
-> +          Names for different register regions defined above. The required region
-> +          is mentioned below.
-> +        items:
-> +          - const: dsi_ctrl
-> +
-> +      clocks:
-> +        description: Phandles to device clocks.
-> +
-> +      clock-names:
-> +        description: |
-> +          Device clock names in the same order as mentioned in clocks property.
-> +          The required clocks are mentioned below. For DSIv2, we need an
-> +          additional clock "src" and for DSI6G v2.0 onwards we need
-> +          "byte_intf" clock.
-> +        items:
-> +          - const: iface
-> +          - const: bus
-> +          - const: byte
-> +          - const: pixel
-> +          - const: core
-> +
-> +      assigned-clocks:
-> +        description: Parents of "byte" and "pixel" for the given platform.
-> +
-> +      assigned-clock-parents:
-> +        description: |
-> +          The Byte clock and Pixel clock PLL outputs provided by a DSI PHY block.
-> +          Details on clock bindings are mentioned in
-> +          Documentation/devicetree/bindings/clock/clock-bindings.txt.
-> +
-> +      vdd-supply:
-> +        description: Phandle to vdd regulator device node.
-> +
-> +      vddio-supply:
-> +        description: Phandle to vdd-io regulator device node.
-> +
-> +      vdda-supply:
-> +        description: Phandle to vdda regulator device node.
-> +
-> +      phys:
-> +        description: Phandle to DSI PHY device node.
-> +
-> +      phy-names:
-> +        description: Name of the corresponding PHY device.
-> +
-> +      syscon-sfpb:
-> +        description: A phandle to mmss_sfpb syscon node (only for DSIv2).
-> +
-> +      ports:
-> +        description: |
-> +          Contains 2 DSI controller ports as child nodes. Each port contains
-> +          an endpoint subnode as defined in
-> +          Documentation/devicetree/bindings/graph.txt and
-> +          Documentation/devicetree/bindings/media/video-interfaces.txt.
-> +
-> +      properties:
-> +        description: |
-> +          The optional properties for DSI controller are mentioned below.
-> +
-> +          panel@0:
-> +            description: |
-> +              Node of panel connected to this DSI controller.
-> +              See files in Documentation/devicetree/bindings/display/panel/
-> +              for each supported panel.
-> +
-> +          qcom,dual-dsi-mode:
-> +            description: |
-> +              Boolean value indicating if the DSI controller is
-> +              driving a panel which needs 2 DSI links.
-> +
-> +          qcom,master-dsi:
-> +            description: |
-> +              Boolean value indicating if the DSI controller is driving
-> +              the master link of the 2-DSI panel.
-> +
-> +          qcom,sync-dual-dsi:
-> +            description: |
-> +              Boolean value indicating if the DSI controller is driving a
-> +              2-DSI panel whose 2 links need receive command simultaneously.
-> +
-> +          pinctrl-names:
-> +            description: The pin control state names; should contain "default"
-> +
-> +          pinctrl-0:
-> +            description: The default pinctrl state (active)
-> +
-> +          pinctrl-n:
-> +            description: The "sleep" pinctrl state
-> +
-> +          ports:
-> +            description: |
-> +              Contains DSI controller input and output ports as children, each
-> +              containing one endpoint subnode.
-> +
-> +          properties:
-> +            description: DSI Endpoint properties
-> +
-> +            remote-endpoint:
-> +              description: |
-> +                For port@0, set to phandle of the connected panel/bridge's
-> +                input endpoint. For port@1, set to the MDP interface output.
-> +                See Documentation/devicetree/bindings/graph.txt for
-> +                device graph info.
-> +
-> +            data-lanes:
-> +              description: |
-> +                This describes how the physical DSI data lanes are mapped
-> +                to the logical lanes on the given platform. The value contained in
-> +                index n describes what physical lane is mapped to the logical lane n
-> +                (DATAn, where n lies between 0 and 3). The clock lane position is fixed
-> +                and can't be changed. Hence, they aren't a part of the DT bindings. See
-> +                Documentation/devicetree/bindings/media/video-interfaces.txt for
-> +                more info on the data-lanes property.
-> +
-> +                For example:
-> +
-> +                data-lanes = <3 0 1 2>;
-> +
-> +                The above mapping describes that the logical data lane DATA0 is mapped
-> +                to the physical data lane DATA3, logical DATA1 to physical DATA0,
-> +                logic DATA2 to phys DATA1 and logic DATA3 to phys DATA2. There are
-> +                only a limited number of physical to logical mappings possible.
-> +              oneOf:
-> +                - const: <0 1 2 3>
-> +                - const: <1 2 3 0>
-> +                - const: <2 3 0 1>
-> +                - const: <3 0 1 2>
-> +                - const: <0 3 2 1>
-> +                - const: <1 0 3 2>
-> +                - const: <2 1 0 3>
-> +                - const: <3 2 1 0>
-> +
-> +          qcom,mdss-mdp-transfer-time-us:
-> +            description: |
-> +              Specifies the DSI transfer time for command mode
-> +              panels in microseconds. Driver uses this number to adjust
-> +              the clock rate according to the expected transfer time.
-> +              Increasing this value would slow down the mdp processing
-> +              and can result in slower performance.
-> +              Decreasing this value can speed up the mdp processing,
-> +              but this can also impact power consumption.
-> +              As a rule this time should not be higher than the time
-> +              that would be expected with the processing at the
-> +              DSI link rate since anyways this would be the maximum
-> +              transfer time that could be achieved.
-> +              If ping pong split is enabled, this time should not be higher
-> +              than two times the DSI link rate time.
-> +              If the property is not specified, then the default value is
-> +              14000 us. This is an optional property.
-> +
-> +  "dsi_phy":
-> +    type: object
-> +    description: Node containing the properties of DSI PHY
-> +
-> +    properties:
-> +      compatible:
-> +        oneOf:
-> +          - const: qcom,dsi-phy-28nm-hpm
-> +          - const: qcom,dsi-phy-28nm-lp
-> +          - const: qcom,dsi-phy-20nm
-> +          - const: qcom,dsi-phy-28nm-8960
-> +          - const: qcom,dsi-phy-14nm
-> +          - const: qcom,dsi-phy-10nm
-> +          - const: qcom,dsi-phy-10nm-8998
-> +
-> +      reg:
-> +        description: |
-> +          Physical base address and length of the registers of PLL, PHY. Some
-> +          revisions require the PHY regulator base address, whereas others
-> +          require the PHY lane base address. See below for each PHY revision.
-> +
-> +      reg-names:
-> +        description: Name of register regions.
-> +        oneOf:
-> +          - description: |
-> +              Following regions are required for DSI 28nm HPM/LP/8960 PHYs and
-> +              20nm PHY.
-> +            items:
-> +              - const: dsi_pll
-> +              - const: dsi_phy
-> +              - const: dsi_phy_regulator
-> +
-> +          - description: |
-> +              Following regions are required for DSI 14nm and 10nm PHYs:
-> +            items:
-> +              - const: dsi_pll
-> +              - const: dsi_phy
-> +              - const: dsi_phy_lane
-> +
-> +      clock-cells:
-> +        description: |
-> +          The DSI PHY block acts as a clock provider, creating
-> +          2 clocks: A byte clock (index 0), and a pixel clock (index 1).
-> +        const: 1
-> +
-> +      power-domains:
-> +        description: Should be <&mmcc MDSS_GDSC>.
-> +
-> +      clocks:
-> +        description: |
-> +          Phandles to device clocks. See
-> +          Documentation/devicetree/bindings/clock/clock-bindings.txt
-> +          for details on clock bindings.
-> +
-> +      clock-names:
-> +        description: |
-> +          The following clocks are required.
-> +          "iface"
-> +          "ref" (only required for new DTS files/entries)
-> +
-> +      vddio-supply:
-> +        description: |
-> +          Phandle to vdd-io regulator device node. Required for 28nm HPM/LP,
-> +          28nm 8960 PHYs and 20nm PHY.
-> +
-> +      vcca-supply:
-> +        description: |
-> +          Phandle to vcca regulator device node. Required for 20nm PHY and
-> +          10nm PHY.
-> +
-> +      vdds-supply:
-> +        description: |
-> +          Phandle to vdds regulator device node. Required for 10nm PHY.
-> +
-> +      properties:
-> +        description: |
-> +          The optional properties for DSI PHY are mentioned below.
-> +
-> +          qcom,dsi-phy-regulator-ldo-mode:
-> +            description: |
-> +              Boolean value indicating if the LDO mode PHY regulator is wanted.
-> +
-> +examples:
-> +  - |
-> +     #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +     #include <dt-bindings/clock/qcom,dispcc-sdm845.h>
-> +     #include <dt-bindings/clock/qcom,gcc-sdm845.h>
-> +
-> +     dsi0: dsi@fd922800 {
-> +           compatible = "qcom,mdss-dsi-ctrl";
-> +           qcom,dsi-host-index = <0>;
-> +           interrupt-parent = <&mdp>;
-> +           interrupts = <4 0>;
-> +           reg-names = "dsi_ctrl";
-> +           reg = <0xfd922800 0x200>;
-> +           power-domains = <&mmcc MDSS_GDSC>;
-> +
-> +           clocks = <&dispcc DISP_CC_MDSS_BYTE0_CLK>,
-> +                    <&dispcc DISP_CC_MDSS_BYTE0_INTF_CLK>,
-> +                    <&dispcc DISP_CC_MDSS_PCLK0_CLK>,
-> +                    <&dispcc DISP_CC_MDSS_ESC0_CLK>,
-> +                    <&dispcc DISP_CC_MDSS_AHB_CLK>,
-> +                    <&dispcc DISP_CC_MDSS_AXI_CLK>;
-> +           clock-names = "byte",
-> +                         "byte_intf",
-> +                         "pixel",
-> +                         "core",
-> +                         "iface",
-> +                         "bus";
-> +           assigned-clocks = <&dispcc DISP_CC_MDSS_BYTE0_CLK_SRC>,
-> +                             <&dispcc DISP_CC_MDSS_PCLK0_CLK_SRC>;
-> +           assigned-clock-parents = <&dsi_phy0 0>,
-> +                                    <&dsi_phy0 1>;
-> +
-> +           vdda-supply = <&pma8084_l2>;
-> +           vdd-supply = <&pma8084_l22>;
-> +           vddio-supply = <&pma8084_l12>;
-> +
-> +           phys = <&dsi_phy0>;
-> +           phy-names ="dsi-phy";
-> +
-> +           qcom,dual-dsi-mode;
-> +           qcom,master-dsi;
-> +           qcom,sync-dual-dsi;
-> +
-> +           qcom,mdss-mdp-transfer-time-us = <12000>;
-> +
-> +           pinctrl-names = "default", "sleep";
-> +           pinctrl-0 = <&dsi_active>;
-> +           pinctrl-1 = <&dsi_suspend>;
-> +
-> +           ports {
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +
-> +               port@0 {
-> +                      reg = <0>;
-> +                      dsi0_in: endpoint {
-> +                               remote-endpoint = <&mdp_intf1_out>;
-> +                      };
-> +               };
-> +
-> +               port@1 {
-> +                      reg = <1>;
-> +                      dsi0_out: endpoint {
-> +                                remote-endpoint = <&panel_in>;
-> +                                data-lanes = <0 1 2 3>;
-> +                      };
-> +               };
-> +           };
-> +
-> +           panel: panel@0 {
-> +                  compatible = "sharp,lq101r1sx01";
-> +                  link2 = <&secondary>;
-> +
-> +                  port {
-> +                       panel_in: endpoint {
-> +                                 remote-endpoint = <&dsi0_out>;
-> +                       };
-> +                  };
-> +           };
-> +     };
-> +
-> +     dsi_phy0: dsi-phy@fd922a00 {
-> +               compatible = "qcom,dsi-phy-28nm-hpm";
-> +               qcom,dsi-phy-index = <0>;
-> +               reg-names =
-> +                        "dsi_pll",
-> +                        "dsi_phy",
-> +                        "dsi_phy_regulator";
-> +               reg =   <0xfd922a00 0xd4>,
-> +                       <0xfd922b00 0x2b0>,
-> +                       <0xfd922d80 0x7b>;
-> +               clock-names = "iface";
-> +               clocks = <&dispcc DISP_CC_MDSS_AHB_CLK>;
-> +               #clock-cells = <1>;
-> +               #phy-cells = <0>;
-> +               vddio-supply = <&pma8084_l12>;
-> +
-> +               qcom,dsi-phy-regulator-ldo-mode;
-> +     };
-> +...
-> +
-> -- 
-> 1.9.1
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> The alignment is hard coded for x86 gigantic page size.  If this supports
+> more architectures or becomes arch independent we will need to determine
+> what this alignment should be.  Perhaps an arch specific call back to get
+> the alignment for gigantic pages.  That will require a little thought as
+> some arch's support multiple gigantic page sizes.
+
+Good point!
+Should we take the biggest possible size as a reference?
+Or the smallest (larger than MAX_ORDER)?
+
+Thanks!
