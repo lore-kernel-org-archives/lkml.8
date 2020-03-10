@@ -2,125 +2,157 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 760AFC18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:25:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06F63C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:25:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5087E2467F
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:25:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583832352;
-	bh=PSPfwum5/x4dNcsftF0CHx3K9wHY9pRGc4cv27myCYc=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=F+92FWxR6/AIwKfMdMjn6lV8I686hJDwZ7jqUNf2Ai8JG0si8pBlZccVjTEJmWjXB
-	 8mrcfYHzLkKFPq4p7APCaRjc6I6o9UErHm4uoOYY27eHXYFGJ+5aNhjqYmx8m/9EmS
-	 J3yiDBTsschi71E4SoT+OSwYln330j4tUqx2UHm4=
+	by mail.kernel.org (Postfix) with ESMTP id CF0412467F
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:25:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726295AbgCJJZv (ORCPT
+        id S1726410AbgCJJZz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 05:25:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56908 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726202AbgCJJZu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 05:25:50 -0400
-Received: from localhost (unknown [193.47.165.251])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 80C612051A;
-        Tue, 10 Mar 2020 09:25:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583832350;
-        bh=PSPfwum5/x4dNcsftF0CHx3K9wHY9pRGc4cv27myCYc=;
-        h=From:To:Cc:Subject:Date:From;
-        b=1TSF8fsOWygZ83JJvs6lWxRcq2lcTdrNNpU3RwnzrXuXF0l0SHHWY0eLpwIhSvuLe
-         9avHWLhDV7S9XZ1AHPoX4bCAIDiacRh7TKu67cR49sU6LTImXm/QJGy5AJ4yzbJm9c
-         dun0j/dQIVGbcU9ueaI9DN6egBODRv4gYe8GaJU0=
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Cc:     Leon Romanovsky <leonro@mellanox.com>,
-        Daniel Jurgens <danielj@mellanox.com>,
-        Haggai Eran <haggaie@mellanox.com>,
-        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-        Sean Hefty <sean.hefty@intel.com>
-Subject: [PATCH rdma-next 00/15] Fix locking around cm_id.state in the ib_cm
-Date:   Tue, 10 Mar 2020 11:25:30 +0200
-Message-Id: <20200310092545.251365-1-leon@kernel.org>
-X-Mailer: git-send-email 2.24.1
+        Tue, 10 Mar 2020 05:25:55 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:46013 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726316AbgCJJZx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 05:25:53 -0400
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1jBb8q-00066g-Ok; Tue, 10 Mar 2020 10:25:36 +0100
+Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1jBb8n-0006XS-8W; Tue, 10 Mar 2020 10:25:33 +0100
+Date:   Tue, 10 Mar 2020 10:25:33 +0100
+From:   Sascha Hauer <s.hauer@pengutronix.de>
+To:     Robin Gong <yibin.gong@nxp.com>
+Cc:     "vkoul@kernel.org" <vkoul@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        "martin.fuzzey@flowbird.group" <martin.fuzzey@flowbird.group>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: Re: [RESEND v6  07/13] spi: imx: remove ERR009165 workaround on
+ i.mx6ul
+Message-ID: <20200310092533.GV3335@pengutronix.de>
+References: <1583839922-22699-1-git-send-email-yibin.gong@nxp.com>
+ <1583839922-22699-8-git-send-email-yibin.gong@nxp.com>
+ <20200310080240.GS3335@pengutronix.de>
+ <VE1PR04MB66384342F94C7B789C980F7A89FF0@VE1PR04MB6638.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <VE1PR04MB66384342F94C7B789C980F7A89FF0@VE1PR04MB6638.eurprd04.prod.outlook.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 10:08:54 up 19 days, 16:39, 58 users,  load average: 0.05, 0.18,
+ 0.20
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: sha@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leon Romanovsky <leonro@mellanox.com>
+On Tue, Mar 10, 2020 at 08:43:10AM +0000, Robin Gong wrote:
+> On 2020/03/10 Sascha Hauer <s.hauer@pengutronix.de> wrote:
+> > On Tue, Mar 10, 2020 at 07:31:56PM +0800, Robin Gong wrote:
+> > > ERR009165 fixed on i.mx6ul/6ull/6sll. All other i.mx6/7 and i.mx8m/8mm
+> > > still need this errata. Please refer to nxp official errata document
+> > > from
+> > https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fwww.nx
+> > p.com%2F&amp;data=02%7C01%7Cyibin.gong%40nxp.com%7Cf73bfc11a68c4
+> > 2f5f6d308d7c4c96efa%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C1%7C
+> > 637194241755109112&amp;sdata=xzIUP8qZkrlDXX0yjTcUNZB6zDrevTdHFg1o4
+> > PZZd8E%3D&amp;reserved=0 .
+> > >
+> > > For removing workaround on those chips. Add new i.mx6ul type.
+> > >
+> > > Signed-off-by: Robin Gong <yibin.gong@nxp.com>
+> > > Acked-by: Mark Brown <broonie@kernel.org>
+> > > ---
+> > >  drivers/spi/spi-imx.c | 50
+> > > +++++++++++++++++++++++++++++++++++++++++++++-----
+> > >  1 file changed, 45 insertions(+), 5 deletions(-)
+> > >
+> > > diff --git a/drivers/spi/spi-imx.c b/drivers/spi/spi-imx.c index
+> > > 842a86e..f7ee2ec 100644
+> > > --- a/drivers/spi/spi-imx.c
+> > > +++ b/drivers/spi/spi-imx.c
+> > > @@ -57,6 +57,7 @@ enum spi_imx_devtype {
+> > >  	IMX35_CSPI,	/* CSPI on all i.mx except above */
+> > >  	IMX51_ECSPI,	/* ECSPI on i.mx51 */
+> > >  	IMX53_ECSPI,	/* ECSPI on i.mx53 and later */
+> > > +	IMX6UL_ECSPI,	/* ERR009165 fix from i.mx6ul */
+> > >  };
+> > >
+> > >  struct spi_imx_data;
+> > > @@ -75,6 +76,11 @@ struct spi_imx_devtype_data {
+> > >  	bool has_slavemode;
+> > >  	unsigned int fifo_size;
+> > >  	bool dynamic_burst;
+> > > +	/*
+> > > +	 * ERR009165 fixed or not:
+> > > +	 *
+> > https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fwww.nx
+> > p.com%2Fdocs%2Fen%2Ferrata%2FIMX6DQCE.pdf&amp;data=02%7C01%7Cyi
+> > bin.gong%40nxp.com%7Cf73bfc11a68c42f5f6d308d7c4c96efa%7C686ea1d3bc
+> > 2b4c6fa92cd99c5c301635%7C0%7C1%7C637194241755109112&amp;sdata=m
+> > uw4HL5nMDjREJwVd885Wrxka0moMaaZ%2BhJgsAgY3eo%3D&amp;reserved=
+> > 0
+> > > +	 */
+> > > +	bool tx_glitch_fixed;
+> > >  	enum spi_imx_devtype devtype;
+> > >  };
+> > >
+> > > @@ -128,7 +134,8 @@ static inline int is_imx35_cspi(struct
+> > > spi_imx_data *d)
+> > >
+> > >  static inline int is_imx51_ecspi(struct spi_imx_data *d)  {
+> > > -	return d->devtype_data->devtype == IMX51_ECSPI;
+> > > +	return d->devtype_data->devtype == IMX51_ECSPI ||
+> > > +	       d->devtype_data->devtype == IMX6UL_ECSPI;
+> > >  }
+> > 
+> > Erm, no. A i.MX51 ECSPI is a i.MX51 ECSPI and not a i.MX6UL ECSPI. If you want
+> > to handle them equally somewhere then explicitly test for i.MX6ul *and*
+> > i.MX51 there.
+> But all i.mx6 chips including i.MX53 ECSPI are almost same as i.MX51 ECSPI, and ERR00915 is fixed from i.mx6ul....
 
-From Jason:
+You introduce .devtype = IMX6UL_ECSPI in this series, so apparently it
+is *not* the same as IMX51_ECSPI, then please also don't introduce a
+function which claims they are the same.
 
-cm_id.state is a non-atomic value that must always be read and written
-under lock, or while the thread has the only pointer to the cm_id.
+Sascha
 
-Critically, during MAD handling the cm_id.state is used to control when
-MAD handlers can run, and in turn what data they can touch. Without
-locking, an assignment to state can immediately allow concurrent MAD
-handlers to execute, potentially creating a mess.
-
-Several of these cases only risk load/store tearing, but create very
-confusing code. For instance changing the state from IB_CM_IDLE to
-IB_CM_LISTEN doesn't allow any MAD handlers to run in either state, but a
-superficial audit would suggest that it is not locked properly.
-
-This loose methodology has allowed two bugs to creep in. After creating an
-ID the code did not lock the state transition, apparently mistakenly
-assuming that the new ID could not be used concurrently. However, the ID
-is immediately placed in the xarray and so a carefully crafted network
-sequence could trigger races with the unlocked stores.
-
-The main solution to many of these problems is to use the xarray to create
-a two stage add - the first reserves the ID and the second publishes the
-pointer. The second stage is either omitted entirely or moved after the
-newly created ID is setup.
-
-Where it is trivial to do so other places directly put the state
-manipulation under lock, or add an assertion that it is, in fact, under
-lock.
-
-This also removes a number of places where the state is being read under
-lock, then the lock dropped, reacquired and state tested again.
-
-There remain other issues related to missing locking on cm_id data.
-
-Thanks
-
-------------------------------------------------------------------------
-It is based on rdma-next + rdma-rc patch c14dfddbd869
-("RMDA/cm: Fix missing ib_cm_destroy_id() in ib_cm_insert_listen()")
-
-Jason Gunthorpe (15):
-  RDMA/cm: Fix ordering of xa_alloc_cyclic() in ib_create_cm_id()
-  RDMA/cm: Fix checking for allowed duplicate listens
-  RDMA/cm: Remove a race freeing timewait_info
-  RDMA/cm: Make the destroy_id flow more robust
-  RDMA/cm: Simplify establishing a listen cm_id
-  RDMA/cm: Read id.state under lock when doing pr_debug()
-  RDMA/cm: Make it clear that there is no concurrency in
-    cm_sidr_req_handler()
-  RDMA/cm: Make it clearer how concurrency works in cm_req_handler()
-  RDMA/cm: Add missing locking around id.state in cm_dup_req_handler
-  RDMA/cm: Add some lockdep assertions for cm_id_priv->lock
-  RDMA/cm: Allow ib_send_cm_dreq() to be done under lock
-  RDMA/cm: Allow ib_send_cm_drep() to be done under lock
-  RDMA/cm: Allow ib_send_cm_rej() to be done under lock
-  RDMA/cm: Allow ib_send_cm_sidr_rep() to be done under lock
-  RDMA/cm: Make sure the cm_id is in the IB_CM_IDLE state in destroy
-
- drivers/infiniband/core/cm.c | 732 ++++++++++++++++++++---------------
- 1 file changed, 420 insertions(+), 312 deletions(-)
-
---
-2.24.1
-
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
