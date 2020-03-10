@@ -2,220 +2,270 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FBFCC18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 11:12:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48210C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 11:12:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B7EB24692
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 11:12:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FC9624692
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 11:12:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YoxbAKWx"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PvlpXK+2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726415AbgCJLMZ (ORCPT
+        id S1726463AbgCJLMi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 07:12:25 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:41020 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726186AbgCJLMY (ORCPT
+        Tue, 10 Mar 2020 07:12:38 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:60332 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726315AbgCJLMh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 07:12:24 -0400
-Received: by mail-pg1-f196.google.com with SMTP id b1so6148826pgm.8;
-        Tue, 10 Mar 2020 04:12:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Da8jl6k22PBSRxknPYcTChU/8VxX5cVJ/2imS9NsIVQ=;
-        b=YoxbAKWxagmGU6FqVmCXQaJJXRScELlB+p+tAMWUIaQONESZSfKOFryLqNNGNxlcoo
-         15DI2jOjYKkQSrwcXJAKp0m4KcWEEYHO7fwSqMTSLavb0fGFboMTmXf3hNy3igK2XLqa
-         wlVLRcB79LuuMMF0kR5WXNdGr7GNWZcYQ+v4E8fKb4IIovZFF3Ui576TqBBRH30gCeYU
-         oit1I5fq7tJ7iYzR8HZJWTGf6pUOA6qiAmcNIn7O7xjYXXqBaIjAopCrMgg8KO0U06jc
-         p/2lwgOP3VfVokfq2ZaVDjqh5jg+opIiMMXWECGEa3SpH+CSpesImG5xv5yruzK4UeuP
-         HUZg==
+        Tue, 10 Mar 2020 07:12:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583838756;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=axpVG1V/qjT3loDwbt+JJkZn/lElqcRQbdYlgx1uCXo=;
+        b=PvlpXK+24/oGjZj5fUGVGK9+5ngiw+/cIcWCx3umuXuSsQmAvKuvJ+gbka2Sn0vik+kedz
+        kvNxhd38cP0jAqgxUunslIYBN1c2TfQqpr2zOcd5WuCcRNmxWKNdhHsRf041PC9aVxT4yb
+        1ggDMmtWD8ZWWdxvuQYFL7KksuiRyTo=
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
+ [209.85.222.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-426-DxQWG3cVPe6XtdrdgkkADw-1; Tue, 10 Mar 2020 07:12:33 -0400
+X-MC-Unique: DxQWG3cVPe6XtdrdgkkADw-1
+Received: by mail-qk1-f197.google.com with SMTP id l27so9494349qkl.0
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 04:12:33 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=Da8jl6k22PBSRxknPYcTChU/8VxX5cVJ/2imS9NsIVQ=;
-        b=d5cBXeE9+NlcNuQIwPdkg2+rh2bnqs+imraItPFTEb209lx0Plbpgfb1Lify+8b03u
-         7J7iLPtr/S632Cb1BbbVznusXSOEBtjvVbnOSsk5T1vcCVw4yVeuspuoG0th4shsh+F6
-         h+Mjo5zcw6sYKTdBZk8bVKc/S0KyH0icnzz5O6WrGGsfd4/AdQiWt1gsdjzUrcz/aRPL
-         4SPwEvRb2okur/78T936e2VT9e7m3NTY1fvcd7a2h1r5SkSmRgL+yjTJc93Eb2As0cMT
-         YNA9vsWAYavz/LxlWTakCJMpOipHCUtjbgoTdaM/lHHNhw8jbDtGOLmyVZTMz+WAP4Zw
-         GQ0g==
-X-Gm-Message-State: ANhLgQ0xQxsz6i0gFrX3+VO/qazB92uW5KNdEzjo7PyjIou3P5JRg6Rc
-        PqwIilhukp6jIDDXmbAiV20=
-X-Google-Smtp-Source: ADFU+vtqRaKgwvejuIJkNNqlwejAu59lTJxUaRMqNrFDCKq/zZCbtpGJWLXq7K3I2xMCpHhtQmQXEA==
-X-Received: by 2002:aa7:80d8:: with SMTP id a24mr1969pfn.140.1583838743980;
-        Tue, 10 Mar 2020 04:12:23 -0700 (PDT)
-Received: from Gentoo ([103.231.91.74])
-        by smtp.gmail.com with ESMTPSA id 64sm47798625pfd.48.2020.03.10.04.12.18
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 10 Mar 2020 04:12:23 -0700 (PDT)
-Date:   Tue, 10 Mar 2020 16:42:08 +0530
-From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
-To:     "Rantala, Tommi T. (Nokia - FI/Espoo)" <tommi.t.rantala@nokia.com>
-Cc:     "darrick.wong@oracle.com" <darrick.wong@oracle.com>,
-        "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "hch@lst.de" <hch@lst.de>
-Subject: Re: 5.5 XFS getdents regression?
-Message-ID: <20200310111205.GB3151@Gentoo>
-Mail-Followup-To: Bhaskar Chowdhury <unixbhaskar@gmail.com>,
-        "Rantala, Tommi T. (Nokia - FI/Espoo)" <tommi.t.rantala@nokia.com>,
-        "darrick.wong@oracle.com" <darrick.wong@oracle.com>,
-        "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "hch@lst.de" <hch@lst.de>
-References: <72c5fd8e9a23dde619f70f21b8100752ec63e1d2.camel@nokia.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=axpVG1V/qjT3loDwbt+JJkZn/lElqcRQbdYlgx1uCXo=;
+        b=sIH8TgUmU1G9E/KrFDHXF8EqsXUELkGmUq7PrcgvnnwgVLcaJaS5StSZA+lPPbIHJY
+         VtL5TUU7d3wlIv1SUzQTdofXwSZLifivGjHW+fSIm9T/OyRqNCipbE5zY8WdhN+YIvvV
+         akg58nHy6RRsOSGhml1Hny/QwPo+XuowMpSDl+lalhDC+8LdlcyAzX/GNUe6zssXGZRZ
+         5eTR20gDD1hOKjBcQgDpc+4wY/TK4RmiQMbmfmq8tr+azqqz13cng0wMeMHmUENpmnUq
+         5+rJbsTWN4Km34moq3/FkxZBZGviZwQ0quC/zwtnwHGv617b0eraaxYKaxtyzaIK/I3y
+         A2rA==
+X-Gm-Message-State: ANhLgQ2mRoU1oSti88JyUcRcn69dofwjLb+EuaX1s4vemrSxFg84Dslm
+        KaaLR1QcnClnusyaHQsM/UpNkUQYWrGkCFqi6GPQ6epAJUoch1GybJsnj3cycGvBgmRMjfqRhap
+        exuG1U00rlMeNcFfX8XKWJwii
+X-Received: by 2002:aed:2591:: with SMTP id x17mr6733469qtc.380.1583838752612;
+        Tue, 10 Mar 2020 04:12:32 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vutTgn6crJxCQfwGwj+7cZGf1ntMnVj+EoHAqemBucZaiqkgmtSkvFtwxvMhZzKEPjBUqZi+Q==
+X-Received: by 2002:aed:2591:: with SMTP id x17mr6733431qtc.380.1583838752300;
+        Tue, 10 Mar 2020 04:12:32 -0700 (PDT)
+Received: from redhat.com (bzq-79-178-2-19.red.bezeqint.net. [79.178.2.19])
+        by smtp.gmail.com with ESMTPSA id y5sm6737555qkb.123.2020.03.10.04.12.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Mar 2020 04:12:31 -0700 (PDT)
+Date:   Tue, 10 Mar 2020 07:12:25 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Vivek Goyal <vgoyal@redhat.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvdimm@lists.01.org, virtio-fs@redhat.com, miklos@szeredi.hu,
+        stefanha@redhat.com, dgilbert@redhat.com,
+        Sebastien Boeuf <sebastien.boeuf@intel.com>,
+        kbuild test robot <lkp@intel.com>
+Subject: Re: [PATCH 04/20] virtio: Implement get_shm_region for PCI transport
+Message-ID: <20200310071043-mutt-send-email-mst@kernel.org>
+References: <20200304165845.3081-1-vgoyal@redhat.com>
+ <20200304165845.3081-5-vgoyal@redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="jho1yZJdad60DJr+"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <72c5fd8e9a23dde619f70f21b8100752ec63e1d2.camel@nokia.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200304165845.3081-5-vgoyal@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Mar 04, 2020 at 11:58:29AM -0500, Vivek Goyal wrote:
+> From: Sebastien Boeuf <sebastien.boeuf@intel.com>
+> 
+> On PCI the shm regions are found using capability entries;
+> find a region by searching for the capability.
+> 
+> Signed-off-by: Sebastien Boeuf <sebastien.boeuf@intel.com>
+> Signed-off-by: Dr. David Alan Gilbert <dgilbert@redhat.com>
+> Signed-off-by: kbuild test robot <lkp@intel.com>
+> ---
+>  drivers/virtio/virtio_pci_modern.c | 107 +++++++++++++++++++++++++++++
+>  include/uapi/linux/virtio_pci.h    |  11 ++-
+>  2 files changed, 117 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/virtio/virtio_pci_modern.c b/drivers/virtio/virtio_pci_modern.c
+> index 7abcc50838b8..52f179411015 100644
+> --- a/drivers/virtio/virtio_pci_modern.c
+> +++ b/drivers/virtio/virtio_pci_modern.c
+> @@ -443,6 +443,111 @@ static void del_vq(struct virtio_pci_vq_info *info)
+>  	vring_del_virtqueue(vq);
+>  }
+>  
+> +static int virtio_pci_find_shm_cap(struct pci_dev *dev,
+> +                                   u8 required_id,
+> +                                   u8 *bar, u64 *offset, u64 *len)
+> +{
+> +	int pos;
+> +
+> +        for (pos = pci_find_capability(dev, PCI_CAP_ID_VNDR);
+> +             pos > 0;
+> +             pos = pci_find_next_capability(dev, pos, PCI_CAP_ID_VNDR)) {
+> +		u8 type, cap_len, id;
+> +                u32 tmp32;
+> +                u64 res_offset, res_length;
+> +
+> +		pci_read_config_byte(dev, pos + offsetof(struct virtio_pci_cap,
+> +                                                         cfg_type),
+> +                                     &type);
+> +                if (type != VIRTIO_PCI_CAP_SHARED_MEMORY_CFG)
+> +                        continue;
+> +
+> +		pci_read_config_byte(dev, pos + offsetof(struct virtio_pci_cap,
+> +                                                         cap_len),
+> +                                     &cap_len);
+> +		if (cap_len != sizeof(struct virtio_pci_cap64)) {
+> +		        printk(KERN_ERR "%s: shm cap with bad size offset: %d size: %d\n",
+> +                               __func__, pos, cap_len);
+> +                        continue;
+> +                }
+> +
+> +		pci_read_config_byte(dev, pos + offsetof(struct virtio_pci_cap,
+> +                                                         id),
+> +                                     &id);
+> +                if (id != required_id)
+> +                        continue;
+> +
+> +                /* Type, and ID match, looks good */
+> +                pci_read_config_byte(dev, pos + offsetof(struct virtio_pci_cap,
+> +                                                         bar),
+> +                                     bar);
+> +
+> +                /* Read the lower 32bit of length and offset */
+> +                pci_read_config_dword(dev, pos + offsetof(struct virtio_pci_cap, offset),
+> +                                      &tmp32);
+> +                res_offset = tmp32;
+> +                pci_read_config_dword(dev, pos + offsetof(struct virtio_pci_cap, length),
+> +                                      &tmp32);
+> +                res_length = tmp32;
+> +
+> +                /* and now the top half */
+> +                pci_read_config_dword(dev,
+> +                                      pos + offsetof(struct virtio_pci_cap64,
+> +                                                     offset_hi),
+> +                                      &tmp32);
+> +                res_offset |= ((u64)tmp32) << 32;
+> +                pci_read_config_dword(dev,
+> +                                      pos + offsetof(struct virtio_pci_cap64,
+> +                                                     length_hi),
+> +                                      &tmp32);
+> +                res_length |= ((u64)tmp32) << 32;
+> +
+> +                *offset = res_offset;
+> +                *len = res_length;
+> +
+> +                return pos;
+> +        }
+> +        return 0;
+> +}
+> +
+> +static bool vp_get_shm_region(struct virtio_device *vdev,
+> +			      struct virtio_shm_region *region, u8 id)
+> +{
+> +	struct virtio_pci_device *vp_dev = to_vp_device(vdev);
+> +	struct pci_dev *pci_dev = vp_dev->pci_dev;
+> +	u8 bar;
+> +	u64 offset, len;
+> +	phys_addr_t phys_addr;
+> +	size_t bar_len;
+> +	int ret;
+> +
+> +	if (!virtio_pci_find_shm_cap(pci_dev, id, &bar, &offset, &len)) {
+> +		return false;
+> +	}
+> +
+> +	ret = pci_request_region(pci_dev, bar, "virtio-pci-shm");
+> +	if (ret < 0) {
+> +		dev_err(&pci_dev->dev, "%s: failed to request BAR\n",
+> +			__func__);
+> +		return false;
+> +	}
+> +
+> +	phys_addr = pci_resource_start(pci_dev, bar);
+> +	bar_len = pci_resource_len(pci_dev, bar);
+> +
+> +        if (offset + len > bar_len) {
+> +                dev_err(&pci_dev->dev,
+> +                        "%s: bar shorter than cap offset+len\n",
+> +                        __func__);
+> +                return false;
+> +        }
+> +
 
---jho1yZJdad60DJr+
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Something wrong with indentation here.
+Also as long as you are validating things, it's worth checking
+offset + len does not overflow.
 
-On 08:45 Tue 10 Mar 2020, Rantala, Tommi T. (Nokia - FI/Espoo) wrote:
+> +	region->len = len;
+> +	region->addr = (u64) phys_addr + offset;
+> +
+> +	return true;
+> +}
+> +
+>  static const struct virtio_config_ops virtio_pci_config_nodev_ops = {
+>  	.get		= NULL,
+>  	.set		= NULL,
+> @@ -457,6 +562,7 @@ static const struct virtio_config_ops virtio_pci_config_nodev_ops = {
+>  	.bus_name	= vp_bus_name,
+>  	.set_vq_affinity = vp_set_vq_affinity,
+>  	.get_vq_affinity = vp_get_vq_affinity,
+> +	.get_shm_region  = vp_get_shm_region,
+>  };
+>  
+>  static const struct virtio_config_ops virtio_pci_config_ops = {
+> @@ -473,6 +579,7 @@ static const struct virtio_config_ops virtio_pci_config_ops = {
+>  	.bus_name	= vp_bus_name,
+>  	.set_vq_affinity = vp_set_vq_affinity,
+>  	.get_vq_affinity = vp_get_vq_affinity,
+> +	.get_shm_region  = vp_get_shm_region,
+>  };
+>  
+>  /**
+> diff --git a/include/uapi/linux/virtio_pci.h b/include/uapi/linux/virtio_pci.h
+> index 90007a1abcab..fe9f43680a1d 100644
+> --- a/include/uapi/linux/virtio_pci.h
+> +++ b/include/uapi/linux/virtio_pci.h
+> @@ -113,6 +113,8 @@
+>  #define VIRTIO_PCI_CAP_DEVICE_CFG	4
+>  /* PCI configuration access */
+>  #define VIRTIO_PCI_CAP_PCI_CFG		5
+> +/* Additional shared memory capability */
+> +#define VIRTIO_PCI_CAP_SHARED_MEMORY_CFG 8
+>  
+>  /* This is the PCI capability header: */
+>  struct virtio_pci_cap {
+> @@ -121,11 +123,18 @@ struct virtio_pci_cap {
+>  	__u8 cap_len;		/* Generic PCI field: capability length */
+>  	__u8 cfg_type;		/* Identifies the structure. */
+>  	__u8 bar;		/* Where to find it. */
+> -	__u8 padding[3];	/* Pad to full dword. */
+> +	__u8 id;		/* Multiple capabilities of the same type */
+> +	__u8 padding[2];	/* Pad to full dword. */
+>  	__le32 offset;		/* Offset within bar. */
+>  	__le32 length;		/* Length of the structure, in bytes. */
+>  };
+>  
+> +struct virtio_pci_cap64 {
+> +       struct virtio_pci_cap cap;
+> +       __le32 offset_hi;             /* Most sig 32 bits of offset */
+> +       __le32 length_hi;             /* Most sig 32 bits of length */
+> +};
+> +
+>  struct virtio_pci_notify_cap {
+>  	struct virtio_pci_cap cap;
+>  	__le32 notify_off_multiplier;	/* Multiplier for queue_notify_off. */
+> -- 
+> 2.20.1
 
-Okay, hang on! don't you think you should query at fedora mailing list
-instead here??
-
-Because you are running fedora kernel and I believe it is patched by
-their team. So, they might have much more concrete answer than to ask
-the file system developer here for the outcome.
-
-Kindly, provide the bug report to them fix your owes.
-
-~Bhaskar
-
-
-
-
->Hello,
->
->One of my GitLab CI jobs stopped working after upgrading server 5.4.18-
->100.fc30.x86_64 -> 5.5.7-100.fc30.x86_64.
->(tested 5.5.8-100.fc30.x86_64 too, no change)
->The server is fedora30 with XFS rootfs.
->The problem reproduces always, and takes only couple minutes to run.
->
->The CI job fails in the beginning when doing "git clean" in docker
->container, and failing to rmdir some directory:
->"warning: failed to remove=20
->.vendor/pkg/mod/golang.org/x/net@v0.0.0-20200114155413-6afb5195e5aa/intern
->al/socket: Directory not empty"
->
->Quick google search finds some other people reporting similar problems
->with 5.5.0:
->https://gitlab.com/gitlab-org/gitlab-runner/issues/3185
->
->
->Collected some data with strace, and it seems that getdents is not
->returning all entries:
->
->5.4 getdents64() returns 52+50+1+0 entries=20
->=3D> all files in directory are deleted and rmdir() is OK
->
->5.5 getdents64() returns 52+50+0+0 entries
->=3D> rmdir() fails with ENOTEMPTY
->
->
->Working 5.4 strace:
->10:00:12 getdents64(10<
->/builds/xyz/.vendor/pkg/mod/golang.org/x/net@v0.0.0-20200301022130-244492d=
-fa37a
->/internal/socket>, /* 52 entries */, 2048) =3D 2024 <0.000020>
->10:00:12 unlink("
->.vendor/pkg/mod/golang.org/x/net@v0.0.0-20200301022130-244492dfa37a/intern
->al/socket/cmsghdr.go") =3D 0 <0.000068>
->10:00:12 unlink("
->.vendor/pkg/mod/golang.org/x/net@v0.0.0-20200301022130-244492dfa37a/intern
->al/socket/cmsghdr_bsd.go") =3D 0 <0.000048>
->[...]
->10:00:12 getdents64(10<
->/builds/xyz/.vendor/pkg/mod/golang.org/x/net@v0.0.0-20200301022130-244492d=
-fa37a
->/internal/socket>, /* 50 entries */, 2048) =3D 2048 <0.000023>
->10:00:12 unlink("
->.vendor/pkg/mod/golang.org/x/net@v0.0.0-20200301022130-244492dfa37a/intern
->al/socket/sys_linux_386.s") =3D 0 <0.000062>
->[...]
->10:00:12 getdents64(10<
->/builds/xyz/.vendor/pkg/mod/golang.org/x/net@v0.0.0-20200301022130-244492d=
-fa37a
->/internal/socket>, /* 1 entries */, 2048) =3D 48 <0.000017>
->10:00:12 unlink("
->.vendor/pkg/mod/golang.org/x/net@v0.0.0-20200301022130-244492dfa37a/intern
->al/socket/zsys_solaris_amd64.go") =3D 0 <0.000039>
->10:00:12 getdents64(10<
->/builds/xyz/.vendor/pkg/mod/golang.org/x/net@v0.0.0-20200301022130-244492d=
-fa37a
->/internal/socket>, /* 0 entries */, 2048) =3D 0 <0.000015>
->10:00:12 rmdir("
->.vendor/pkg/mod/golang.org/x/net@v0.0.0-20200301022130-244492dfa37a/intern
->al/socket") =3D 0 <0.000055>
->
->
->Failing 5.5 strace:
->10:09:15 getdents64(10<
->/builds/xyz/.vendor/pkg/mod/golang.org/x/net@v0.0.0-20200301022130-244492d=
-fa37a
->/internal/socket>, /* 52 entries */, 2048) =3D 2024 <0.000031>
->10:09:15 unlink("
->.vendor/pkg/mod/golang.org/x/net@v0.0.0-20200301022130-244492dfa37a/intern
->al/socket/cmsghdr.go") =3D 0 <0.006174>
->[...]
->10:09:15 getdents64(10<
->/builds/xyz/.vendor/pkg/mod/golang.org/x/net@v0.0.0-20200301022130-244492d=
-fa37a
->/internal/socket>, /* 50 entries */, 2048) =3D 2048 <0.000034>
->10:09:15 unlink("
->.vendor/pkg/mod/golang.org/x/net@v0.0.0-20200301022130-244492dfa37a/intern
->al/socket/sys_linux_386.s") =3D 0 <0.000054>
->[...]
->10:09:16 getdents64(10<
->/builds/xyz/.vendor/pkg/mod/golang.org/x/net@v0.0.0-20200301022130-244492d=
-fa37a
->/internal/socket>, /* 0 entries */, 2048) =3D 0 <0.000020>
->10:09:16 rmdir("
->.vendor/pkg/mod/golang.org/x/net@v0.0.0-20200301022130-244492dfa37a/intern
->al/socket") =3D -1 ENOTEMPTY (Directory not empty) <0.000029>
->
->
->Any ideas what's going wrong here?
->
->-Tommi
->
-
---jho1yZJdad60DJr+
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEnwF+nWawchZUPOuwsjqdtxFLKRUFAl5ndf4ACgkQsjqdtxFL
-KRVpNggAr5qxaEzUzYPeIb17eIgDp/gcPbtaG0jiBH/H2YPbBIfflB10/+XJlFVY
-/flXQ8u/5sFk+Zwlcf3VpftmOG3dEgEDSmiQcLvlWQnvZmK8hL+XhjhOfCIpdCbQ
-H8mfbkKsbsIjlf3atYsDxSHARi7KlPMks82il/GlUDjp0pAxOHwscUEAkN/KB8/U
-QC28EoRIxG/HlPb8fPa6FXkoMBVi/WMF/zKQTYX+Je9hsRUZvfbmO1Yy2sqdayZD
-qzLALqsbh0eaW9lbZCjOFNfxsjspYPkA0MoEf8FmEG+has+ApZjtfVRFqMtcvbLJ
-Ae2qce5vNN6uu9ONZljAr541OlOjbA==
-=TU/r
------END PGP SIGNATURE-----
-
---jho1yZJdad60DJr+--
