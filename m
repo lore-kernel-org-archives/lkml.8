@@ -2,115 +2,156 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E472C18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:19:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27C84C10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:21:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3C1721655
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:19:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7560215A4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:21:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FTRhK5wR"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="sCh1p/sI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726692AbgCJUTu (ORCPT
+        id S1726461AbgCJUVL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 16:19:50 -0400
-Received: from mail-lf1-f53.google.com ([209.85.167.53]:45932 "EHLO
-        mail-lf1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726268AbgCJUTt (ORCPT
+        Tue, 10 Mar 2020 16:21:11 -0400
+Received: from mail.efficios.com ([167.114.26.124]:46260 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726268AbgCJUVL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 16:19:49 -0400
-Received: by mail-lf1-f53.google.com with SMTP id b13so12013038lfb.12
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 13:19:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ph0vbxjhiVWxt5rg3nkX2vAEthsG0dcjm7RlaAwg098=;
-        b=FTRhK5wRW+NRGmaoV4Ks4Odxss3oisU/sts3+fM0oGm2ippT+eDkr1IaNE6RESk+lr
-         uP42CT/VBEM8RxZzRhXu7OdoPtl5ghIZEFU0Sv2IQsJ3dsb3HDE68bjkrG/0JEnJJzf0
-         h6OdM2SCHqYO8CccNpImf0UM6jUH0ewQIPYtbBJzBYWqxTlfX+DXwC0GZqRBGhDFShoh
-         XCfYyNmsQDQ3gC5kkVw7Uuas1zPz/IW24F0I0iX7Q/Ik/pIlrdUPuv0Qa8NVg21pd4QD
-         oVdancEdjuYHMTQh2nox/OksTwzF4NxKTaM0bkelHD5AejJfdXyGtde0aTBYJcvQlxAN
-         WqKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ph0vbxjhiVWxt5rg3nkX2vAEthsG0dcjm7RlaAwg098=;
-        b=lZO5HNySNoa4M9KBOLwVKIyjif9Gq8rUyd9zs1NWlvDxIPOId1WU0TOvavowUW/X1S
-         jKKnqpxuY8gFB4Q6Xm/J7eBNDzPEhl6ugYJeMSewfg0Cd036Hiex+Y/nEs7ILt1lzjgM
-         Gcp+ayrtTxk4ZpG7J1yVygxVb2sl3NoGbpovZ6G/fDqMxSvxaVPONfPWqDLQK+xJUSvh
-         GIRO9giUx4DJq3y2ibD2oGFEuG8qPmRo2azfkxTK1An2WIMd426LDwfr+3vR53s1txBn
-         qmwhnb4Vbbq0qCmjaPtOkdp0hfuCfgDQ6Y2SlxQfMpvTRIJcslVux2JW1kvPDYdYm09+
-         9VoQ==
-X-Gm-Message-State: ANhLgQ0KBhBxO/yw/gve7GbJXaj+J9nI6iGL/FUFCWnLPJIQL6Uui8TW
-        6gxrMFLilB4PdVH+jFkr15ZLkYQo+s0vJSepjTzPfQ==
-X-Google-Smtp-Source: ADFU+vtmwZqppStJchtpo+FXaK2zYi5y4NF4w2GV6ag8hGufCvRmr98qaLuzObauOhshhDxAZdF9relJA+CJ5k6OMUc=
-X-Received: by 2002:a05:6512:68a:: with SMTP id t10mr13869220lfe.126.1583871586843;
- Tue, 10 Mar 2020 13:19:46 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAG48ez0G3JkMq61gUmyQAaCq=_TwHbi1XKzWRooxZkv08PQKuw@mail.gmail.com>
- <20200310184814.GA8447@dhcp22.suse.cz>
-In-Reply-To: <20200310184814.GA8447@dhcp22.suse.cz>
-From:   Daniel Colascione <dancol@google.com>
-Date:   Tue, 10 Mar 2020 13:19:09 -0700
-Message-ID: <CAKOZueua_v8jHCpmEtTB6f3i9e2YnmX4mqdYVWhV4E=Z-n+zRQ@mail.gmail.com>
-Subject: Re: interaction of MADV_PAGEOUT with CoW anonymous mappings?
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Jann Horn <jannh@google.com>, Minchan Kim <minchan@kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 10 Mar 2020 16:21:11 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id ACBBF272E37;
+        Tue, 10 Mar 2020 16:21:09 -0400 (EDT)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id 6QBRYl5TmVUS; Tue, 10 Mar 2020 16:21:07 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 6C256272E36;
+        Tue, 10 Mar 2020 16:21:07 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 6C256272E36
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1583871667;
+        bh=n360acFerpRQ3K2nmTTFfkxk9piJlk5016zKlRB/rOg=;
+        h=From:To:Date:Message-Id;
+        b=sCh1p/sIJsMNZ8qweim7YQUSfN1aA5wbiIaTnDUUZRASH1kV6/t+zFHdW+p5E5CmL
+         ciUbBnE96BEoLKLgyQzy8dVj7N2L2cxKyB+N8YkEwPtMLPtX8QUwdBG+GykctRn2P8
+         nwgQqDYeJRKVD9PsK+x4ps7n9vxhVXZCyR6/FnLqvP5wKi0pejWL1ARHHGOYlPX4vM
+         xUSmey1zaBKrW18x1Df6iv3+R7kXPKlAWSbMxwRdUhJGEcPJSkLariZRV31HYEqdTt
+         748Dr2fZNSUUuyAOpahf2nsvO3Og+BKlZ9bijkykt3rIuagdU0T/ka+hn4bbUdVKsd
+         795bkRb4oUJUg==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id 52sGQ0iV__2c; Tue, 10 Mar 2020 16:21:07 -0400 (EDT)
+Received: from localhost.localdomain (192-222-181-218.qc.cable.ebox.net [192.222.181.218])
+        by mail.efficios.com (Postfix) with ESMTPSA id E19A8272CE5;
+        Tue, 10 Mar 2020 16:21:06 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH] tracepoint: rcuidle: use rcu_is_watching() and tree-rcu
+Date:   Tue, 10 Mar 2020 16:20:54 -0400
+Message-Id: <20200310202054.5880-1-mathieu.desnoyers@efficios.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 10, 2020 at 11:48 AM Michal Hocko <mhocko@kernel.org> wrote:
->
-> On Tue 10-03-20 19:08:28, Jann Horn wrote:
-> > Hi!
-> >
-> > >From looking at the source code, it looks to me as if using
-> > MADV_PAGEOUT on a CoW anonymous mapping will page out the page if
-> > possible, even if other processes still have the same page mapped. Is
-> > that correct?
-> >
-> > If so, that's probably bad in environments where many processes (with
-> > different privileges) are forked from a single zygote process (like
-> > Android and Chrome), I think? If you accidentally call it on a CoW
-> > anonymous mapping with shared pages, you'll degrade the performance of
-> > other processes. And if an attacker does it intentionally, they could
-> > use that to aid with exploiting race conditions or weird
-> > microarchitectural stuff (e.g. the new https://lviattack.eu/lvi.pdf
-> > talks about "the assumption that attackers can provoke page faults or
-> > microcode assists for (arbitrary) load operations in the victim
-> > domain").
-> >
-> > Should madvise_cold_or_pageout_pte_range() maybe refuse to operate on
-> > pages with mapcount>1, or something like that? Or does it already do
-> > that, and I just missed the check?
->
-> I have brought up side channel attacks earlier [1] but only in the
-> context of shared page cache pages. I didn't really consider shared
-> anonymous pages to be a real problem. I was under impression that CoW
-> pages shouldn't be a real problem because any security sensible
-> applications shouldn't allow untrusted code to be forked and CoW
-> anything really important. I believe we have made this assumption
-> in other places - IIRC on gup with FOLL_FORCE but I admit I have
-> very happily forgot most details.
+commit e6753f23d961 ("tracepoint: Make rcuidle tracepoint callers use
+SRCU") aimed at improving performance of rcuidle tracepoints by using
+SRCU rather than temporarily enabling tree-rcu every time.
 
-I'm more worried about the performance implications. Consider
-libc.so's data section: that's a COW mapping, and we COW it during
-zygote initialization as we load and relocate libc.so. Child processes
-shouldn't be dirtying and re-COWing those relocated pages. If I
-understand Jann's message correctly, MADV_PAGEOUT would force the
-pages corresponding to the libc.so data segment out to zram just
-because we MADV_PAGEOUT-ed a single process that happened to use libc.
-We should leave those pages in memory, IMHO.
+commit 865e63b04e9b ("tracing: Add back in rcu_irq_enter/exit_irqson()
+for rcuidle tracepoints") adds back the high-overhead enabling of
+tree-rcu because perf expects RCU to be watching when called from
+rcuidle tracepoints.
+
+It turns out that by using "rcu_is_watching()" and conditionally
+calling the high-overhead rcu_irq_enter/exit_irqson(), the original
+motivation for using SRCU in the first place disappears.
+
+I suspect that the original benchmarks justifying the introduction
+of SRCU to handle rcuidle tracepoints was caused by preempt/irq
+tracepoints, which are typically invoked from contexts that have
+RCU watching.
+
+Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+CC: Thomas Gleixner <tglx@linutronix.de>
+CC: Steven Rostedt <rostedt@goodmis.org>
+CC: Joel Fernandes <joel@joelfernandes.org>
+CC: "Paul E. McKenney" <paulmck@kernel.org>
+CC: Peter Zijlstra <peterz@infradead.org>
+CC: Frederic Weisbecker <fweisbec@gmail.com>
+CC: Ingo Molnar <mingo@kernel.org>
+---
+ include/linux/tracepoint.h | 25 ++++++++++---------------
+ 1 file changed, 10 insertions(+), 15 deletions(-)
+
+diff --git a/include/linux/tracepoint.h b/include/linux/tracepoint.h
+index 1fb11daa5c53..8e0e94fee29a 100644
+--- a/include/linux/tracepoint.h
++++ b/include/linux/tracepoint.h
+@@ -165,25 +165,22 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
+ 		void *it_func;						\
+ 		void *__data;						\
+ 		int __maybe_unused __idx = 0;				\
++		bool __exit_rcu = false;				\
+ 									\
+ 		if (!(cond))						\
+ 			return;						\
+ 									\
+-		/* srcu can't be used from NMI */			\
+-		WARN_ON_ONCE(rcuidle && in_nmi());			\
+-									\
+-		/* keep srcu and sched-rcu usage consistent */		\
+-		preempt_disable_notrace();				\
+-									\
+ 		/*							\
+-		 * For rcuidle callers, use srcu since sched-rcu	\
+-		 * doesn't work from the idle path.			\
++		 * For rcuidle callers, temporarily enable RCU if	\
++		 * it is not currently watching.			\
+ 		 */							\
+-		if (rcuidle) {						\
+-			__idx = srcu_read_lock_notrace(&tracepoint_srcu);\
++		if (rcuidle && !rcu_is_watching()) {			\
+ 			rcu_irq_enter_irqson();				\
++			__exit_rcu = true;				\
+ 		}							\
+ 									\
++		preempt_disable_notrace();				\
++									\
+ 		it_func_ptr = rcu_dereference_raw((tp)->funcs);		\
+ 									\
+ 		if (it_func_ptr) {					\
+@@ -194,12 +191,10 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
+ 			} while ((++it_func_ptr)->func);		\
+ 		}							\
+ 									\
+-		if (rcuidle) {						\
+-			rcu_irq_exit_irqson();				\
+-			srcu_read_unlock_notrace(&tracepoint_srcu, __idx);\
+-		}							\
+-									\
+ 		preempt_enable_notrace();				\
++									\
++		if (__exit_rcu)						\
++			rcu_irq_exit_irqson();				\
+ 	} while (0)
+ 
+ #ifndef MODULE
+-- 
+2.17.1
+
