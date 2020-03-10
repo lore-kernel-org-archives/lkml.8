@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BE9BC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:36:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7159C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:36:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43E222467D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:36:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B36632467D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:36:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583847368;
-	bh=YEAAEVmqfnq3Wsv2Ga1ibSGZRSw0j1vQ21GUCM9M4y4=;
+	s=default; t=1583847372;
+	bh=OMmxkevDUNxaHHi6hTgeEqTy7B/zjT98vwhasWl1utg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tIYBvEfsameOuEFJDMGwfutAysZKVCcqfVQ0GC1ZkBqUm7f4SuYM/Wj8UXAFVzf3j
-	 BWJ4eH+4sqB6HWmalVfXIu/RKi7N3NWl0ajT012PDk851QAVxcdeQ+8r7dXnFuGKxV
-	 CWzeGgeaE5jTEHMYXy3TPlEvGzM34QDrnxG1ahZw=
+	b=wwr/fF3NiwrWOPWDCDKymk7ixfvtphc08TORNrS7YVSBijz9C+oOBIYig8o43xYGg
+	 CyWo3E0SnMQm8aEPpHJ6xpoWBHdpZzqxf7rY0DSfxFreunzDITtjzIR6QkFvHq20KV
+	 uMsQLw9TSVRXADD1vKV/a0CmHpQ1HzybUV9fdXZ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727554AbgCJMnV (ORCPT
+        id S1727536AbgCJMnQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:43:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43614 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:43:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43496 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727533AbgCJMnR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:43:17 -0400
+        id S1727063AbgCJMnM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:43:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED24E24686;
-        Tue, 10 Mar 2020 12:43:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 005B424691;
+        Tue, 10 Mar 2020 12:43:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844196;
-        bh=YEAAEVmqfnq3Wsv2Ga1ibSGZRSw0j1vQ21GUCM9M4y4=;
+        s=default; t=1583844191;
+        bh=OMmxkevDUNxaHHi6hTgeEqTy7B/zjT98vwhasWl1utg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DU+OA2XZyNNO1Lwd5M5eMntEdCleRxyGeFwYRnXyYzngAk3vka7GAFKYs8NdfLVnt
-         qmYaESLeHF8JAWIAAagjBbRHJEHTyuorQpcI3GpDMPRhQNW08MTBPCYRna+aKNWLoj
-         fAZjwm8Q0rNynUVFmc9w6q/9eWOCqf4QgEtz4mMo=
+        b=0w3e82rfEnuwP+c1Is1jEa/tTgynjyofzrglH+DthztRhV2rOcw/jfkXMgAUQMB5Q
+         ZpysTWRCcBYwF1hdNYjE0/mWLkyhkx/XfkAEIlweCJgWyETkDyryFhRfSa3oR88XTA
+         iQo0/k2f2JFV6U1hCvxPk7ufvyLgxp4FfwcxgKy0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lucas Stach <l.stach@pengutronix.de>,
-        Ahmad Fatoum <a.fatoum@pengutronix.de>,
-        Rouven Czerwinski <r.czerwinski@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>
-Subject: [PATCH 4.4 67/72] ARM: imx: build v7_cpu_resume() unconditionally
-Date:   Tue, 10 Mar 2020 13:39:20 +0100
-Message-Id: <20200310123618.211840823@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+cb0c054eabfba4342146@syzkaller.appspotmail.com,
+        Bernard Metzler <bmt@zurich.ibm.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Subject: [PATCH 4.4 65/72] RDMA/iwcm: Fix iwcm work deallocation
+Date:   Tue, 10 Mar 2020 13:39:18 +0100
+Message-Id: <20200310123617.779350871@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123601.053680753@linuxfoundation.org>
 References: <20200310123601.053680753@linuxfoundation.org>
@@ -61,119 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ahmad Fatoum <a.fatoum@pengutronix.de>
+From: Bernard Metzler <bmt@zurich.ibm.com>
 
-commit 512a928affd51c2dc631401e56ad5ee5d5dd68b6 upstream.
+commit 810dbc69087b08fd53e1cdd6c709f385bc2921ad upstream.
 
-This function is not only needed by the platform suspend code, but is also
-reused as the CPU resume function when the ARM cores can be powered down
-completely in deep idle, which is the case on i.MX6SX and i.MX6UL(L).
+The dealloc_work_entries() function must update the work_free_list pointer
+while freeing its entries, since potentially called again on same list. A
+second iteration of the work list caused system crash. This happens, if
+work allocation fails during cma_iw_listen() and free_cm_id() tries to
+free the list again during cleanup.
 
-Providing the static inline stub whenever CONFIG_SUSPEND is disabled means
-that those platforms will hang on resume from cpuidle if suspend is disabled.
-
-So there are two problems:
-
-  - The static inline stub masks the linker error
-  - The function is not available where needed
-
-Fix both by just building the function unconditionally, when
-CONFIG_SOC_IMX6 is enabled. The actual code is three instructions long,
-so it's arguably ok to just leave it in for all i.MX6 kernel configurations.
-
-Fixes: 05136f0897b5 ("ARM: imx: support arm power off in cpuidle for i.mx6sx")
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
-Signed-off-by: Rouven Czerwinski <r.czerwinski@pengutronix.de>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Fixes: 922a8e9fb2e0 ("RDMA: iWARP Connection Manager.")
+Link: https://lore.kernel.org/r/20200302181614.17042-1-bmt@zurich.ibm.com
+Reported-by: syzbot+cb0c054eabfba4342146@syzkaller.appspotmail.com
+Signed-off-by: Bernard Metzler <bmt@zurich.ibm.com>
+Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/mach-imx/Makefile       |    2 ++
- arch/arm/mach-imx/common.h       |    4 ++--
- arch/arm/mach-imx/resume-imx6.S  |   24 ++++++++++++++++++++++++
- arch/arm/mach-imx/suspend-imx6.S |   14 --------------
- 4 files changed, 28 insertions(+), 16 deletions(-)
+ drivers/infiniband/core/iwcm.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/arch/arm/mach-imx/Makefile
-+++ b/arch/arm/mach-imx/Makefile
-@@ -91,6 +91,8 @@ AFLAGS_suspend-imx6.o :=-Wa,-march=armv7
- obj-$(CONFIG_SOC_IMX6) += suspend-imx6.o
- obj-$(CONFIG_SOC_IMX53) += suspend-imx53.o
- endif
-+AFLAGS_resume-imx6.o :=-Wa,-march=armv7-a
-+obj-$(CONFIG_SOC_IMX6) += resume-imx6.o
- obj-$(CONFIG_SOC_IMX6) += pm-imx6.o
+--- a/drivers/infiniband/core/iwcm.c
++++ b/drivers/infiniband/core/iwcm.c
+@@ -125,8 +125,10 @@ static void dealloc_work_entries(struct
+ {
+ 	struct list_head *e, *tmp;
  
- obj-$(CONFIG_SOC_IMX50) += mach-imx50.o
---- a/arch/arm/mach-imx/common.h
-+++ b/arch/arm/mach-imx/common.h
-@@ -115,17 +115,17 @@ void imx_cpu_die(unsigned int cpu);
- int imx_cpu_kill(unsigned int cpu);
+-	list_for_each_safe(e, tmp, &cm_id_priv->work_free_list)
++	list_for_each_safe(e, tmp, &cm_id_priv->work_free_list) {
++		list_del(e);
+ 		kfree(list_entry(e, struct iwcm_work, free_list));
++	}
+ }
  
- #ifdef CONFIG_SUSPEND
--void v7_cpu_resume(void);
- void imx53_suspend(void __iomem *ocram_vbase);
- extern const u32 imx53_suspend_sz;
- void imx6_suspend(void __iomem *ocram_vbase);
- #else
--static inline void v7_cpu_resume(void) {}
- static inline void imx53_suspend(void __iomem *ocram_vbase) {}
- static const u32 imx53_suspend_sz;
- static inline void imx6_suspend(void __iomem *ocram_vbase) {}
- #endif
- 
-+void v7_cpu_resume(void);
-+
- void imx6_pm_ccm_init(const char *ccm_compat);
- void imx6q_pm_init(void);
- void imx6dl_pm_init(void);
---- /dev/null
-+++ b/arch/arm/mach-imx/resume-imx6.S
-@@ -0,0 +1,24 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later */
-+/*
-+ * Copyright 2014 Freescale Semiconductor, Inc.
-+ */
-+
-+#include <linux/linkage.h>
-+#include <asm/assembler.h>
-+#include <asm/asm-offsets.h>
-+#include <asm/hardware/cache-l2x0.h>
-+#include "hardware.h"
-+
-+/*
-+ * The following code must assume it is running from physical address
-+ * where absolute virtual addresses to the data section have to be
-+ * turned into relative ones.
-+ */
-+
-+ENTRY(v7_cpu_resume)
-+	bl	v7_invalidate_l1
-+#ifdef CONFIG_CACHE_L2X0
-+	bl	l2c310_early_resume
-+#endif
-+	b	cpu_resume
-+ENDPROC(v7_cpu_resume)
---- a/arch/arm/mach-imx/suspend-imx6.S
-+++ b/arch/arm/mach-imx/suspend-imx6.S
-@@ -333,17 +333,3 @@ resume:
- 
- 	ret	lr
- ENDPROC(imx6_suspend)
--
--/*
-- * The following code must assume it is running from physical address
-- * where absolute virtual addresses to the data section have to be
-- * turned into relative ones.
-- */
--
--ENTRY(v7_cpu_resume)
--	bl	v7_invalidate_l1
--#ifdef CONFIG_CACHE_L2X0
--	bl	l2c310_early_resume
--#endif
--	b	cpu_resume
--ENDPROC(v7_cpu_resume)
+ static int alloc_work_entries(struct iwcm_id_private *cm_id_priv, int count)
 
 
