@@ -2,142 +2,174 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41498C10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:07:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23D1FC10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:07:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0444A208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:07:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NYz2UQu7"
+	by mail.kernel.org (Postfix) with ESMTP id D6751222C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:07:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583878066;
+	bh=DHAN0I29DwoZWN2Wh3iFT+l4WD2xdxIe3omBWt1StEY=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=jGn3SV4B9IU6L1PWWtTS+/nsmzqD/oeZMuuc5YCcBIgg8/v3ZOx3pB7d4fTDQzYbZ
+	 MSecQ3Mq9RBUwScAOOeexBkA1SYhyV+mnkQ/kE9ULRsKnIASoWTCitIFIVmdE3W5n5
+	 +r3EWXpA3YwxR+I1+JaZFLcjeTN/Tkm8VNcCvwnM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727732AbgCJWHj (ORCPT
+        id S1727751AbgCJWHq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 18:07:39 -0400
-Received: from mail-qv1-f67.google.com ([209.85.219.67]:44692 "EHLO
-        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726273AbgCJWHi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 18:07:38 -0400
-Received: by mail-qv1-f67.google.com with SMTP id w5so1314833qvp.11;
-        Tue, 10 Mar 2020 15:07:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:subject:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=DVX/NygDH+L6gcoYYDbAxrFSNvPL5oh81CBY3wqWTvU=;
-        b=NYz2UQu7XSvjxa52nRTYafXoRz+xN747R7QOyzmZwXbPnLCzq6MKvdkiu6hqi1fzDi
-         tvyYqrYM/4riC0jDsKR1YCRifnxGVwMYD00AgfpLe0iY507NJVM5FsRpB1BkLz/NPP+h
-         KeT5fEcdsjb840KJS24l5/FG2zsTZXcB+6FnptljfW/2+tDhUPRbqMUHDPsCWDBEN/b/
-         GgwyEWAHjgMdNKPUsj6ZdF94F1AL84aXxYvHmpaSzm3RJn00h/Fw5uL21oH1SOnG9hsP
-         3uu1xTzUBDsD5ZHn5ebpqqc6CsHprNRXBYcopPkkn4Q0OdsV60fsvqAsaoVSSdCdws6/
-         7ihA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=DVX/NygDH+L6gcoYYDbAxrFSNvPL5oh81CBY3wqWTvU=;
-        b=XHSGfo78RMVuBCe/WwPeXzT6Vv6g6KA0bxbtXsjFW1uLsBOvH3FIP00XaaXpEbFWY0
-         CGOlifdVMx4iHFOJp5hBBpZn6m8UFx4Qy5MvrJ6iYr1y4S1NBlBmkNO9NnZWdtrKFykO
-         zvhBJtxsM1LIyQqYv4cMtOJz9+rgBehkLjVcGJQPRls7du65QoOS+AS56SmKFmMfTCJ1
-         BYt9LkIrGD3VTpYX4K1t1CqciOef25h8uxDQMaO5tTMy4E33aaR2FMbWHlmQbiucpFUy
-         JKc29bvNlXJJsMC+2RtdGoz0SIqZmDv14Mw2i5OwPgudrp1efSxp+4aUHy6Q4e47niCl
-         Jh4Q==
-X-Gm-Message-State: ANhLgQ0EDDGrPZX1BI5lOnNpBgEJk6ClFiMRDMDR0MqfcVDoajwUmma2
-        nPH2gJqVgGiVgjFitUblLYLa4uflKfU=
-X-Google-Smtp-Source: ADFU+vt7apntLrzSGvfPOuxqlPE1O4KvoiwDtAPiJmId4Yt+EuTbP0KVifGWS+Wp9+OaUrvib1f8YA==
-X-Received: by 2002:ad4:4f01:: with SMTP id fb1mr283987qvb.225.1583878057153;
-        Tue, 10 Mar 2020 15:07:37 -0700 (PDT)
-Received: from ?IPv6:2620:10d:c0a8:11d1::111b? ([2620:10d:c091:480::fee])
-        by smtp.gmail.com with ESMTPSA id x127sm3021341qke.135.2020.03.10.15.07.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Mar 2020 15:07:36 -0700 (PDT)
-From:   Jes Sorensen <jes.sorensen@gmail.com>
-X-Google-Original-From: Jes Sorensen <Jes.Sorensen@gmail.com>
-Subject: Re: [PATCH][next] zd1211rw/zd_usb.h: Replace zero-length array with
- flexible-array member
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Kalle Valo <kvalo@codeaurora.org>
-Cc:     Joe Perches <joe@perches.com>, Daniel Drake <dsd@gentoo.org>,
-        Ulrich Kunitz <kune@deine-taler.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200305111216.GA24982@embeddedor>
- <87k13yq2jo.fsf@kamboji.qca.qualcomm.com>
- <256881484c5db07e47c611a56550642a6f6bd8e9.camel@perches.com>
- <87blpapyu5.fsf@kamboji.qca.qualcomm.com>
- <1bb7270f-545b-23ca-aa27-5b3c52fba1be@embeddedor.com>
- <87r1y0nwip.fsf@kamboji.qca.qualcomm.com>
- <48ff1333-0a14-36d8-9565-a7f13a06c974@embeddedor.com>
-Message-ID: <021d1125-3ffd-39ef-395a-b796c527bde4@gmail.com>
-Date:   Tue, 10 Mar 2020 18:07:35 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 10 Mar 2020 18:07:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49602 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726273AbgCJWHp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 18:07:45 -0400
+Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C0A97208E4;
+        Tue, 10 Mar 2020 22:07:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583878064;
+        bh=DHAN0I29DwoZWN2Wh3iFT+l4WD2xdxIe3omBWt1StEY=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=YoJuo5ROOds6vuSyTs8LNVz977cmPul0DuRXUS8pdyBbgJ24BMedhZfWEKZCSx2J+
+         +OL+gkt7Qh9P6FOrO2ZKnYxkbeKhpvc8t6JNc6TXO1zrOi9gKv/dUyqccnYLWbhmc7
+         KVM2aE2pMO+6epG9zL6VU2ofDpVqQe/3t80b9sII=
+Message-ID: <0066a9f150a55c13fcc750f6e657deae4ebdef97.camel@kernel.org>
+Subject: Re: [locks] 6d390e4b5d: will-it-scale.per_process_ops -96.6%
+ regression
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        NeilBrown <neilb@suse.de>
+Cc:     yangerkun <yangerkun@huawei.com>,
+        kernel test robot <rong.a.chen@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org,
+        Bruce Fields <bfields@fieldses.org>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Date:   Tue, 10 Mar 2020 18:07:42 -0400
+In-Reply-To: <CAHk-=wg8N4fDRC3M21QJokoU+TQrdnv7HqoaFW-Z-ZT8z_Bi7Q@mail.gmail.com>
+References: <20200308140314.GQ5972@shao2-debian>
+         <e3783d060c778cb41b77380ad3e278133b52f57e.camel@kernel.org>
+         <CAHk-=whGK712fPqmQ3FSHxqe3Aqny4bEeWEvfaytLeLV2+ijCQ@mail.gmail.com>
+         <34355c4fe6c3968b1f619c60d5ff2ca11a313096.camel@kernel.org>
+         <1bfba96b4bf0d3ca9a18a2bced3ef3a2a7b44dad.camel@kernel.org>
+         <87blp5urwq.fsf@notabene.neil.brown.name>
+         <41c83d34ae4c166f48e7969b2b71e43a0f69028d.camel@kernel.org>
+         <ed73fb5d-ddd5-fefd-67ae-2d786e68544a@huawei.com>
+         <923487db2c9396c79f8e8dd4f846b2b1762635c8.camel@kernel.org>
+         <36c58a6d07b67aac751fca27a4938dc1759d9267.camel@kernel.org>
+         <878sk7vs8q.fsf@notabene.neil.brown.name>
+         <c4ef31a663fbf7a3de349696e9f00f2f5c4ec89a.camel@kernel.org>
+         <875zfbvrbm.fsf@notabene.neil.brown.name>
+         <CAHk-=wg8N4fDRC3M21QJokoU+TQrdnv7HqoaFW-Z-ZT8z_Bi7Q@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 MIME-Version: 1.0
-In-Reply-To: <48ff1333-0a14-36d8-9565-a7f13a06c974@embeddedor.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/10/20 5:52 PM, Gustavo A. R. Silva wrote:
+On Tue, 2020-03-10 at 14:47 -0700, Linus Torvalds wrote:
+> On Tue, Mar 10, 2020 at 2:22 PM NeilBrown <neilb@suse.de> wrote:
+> > A compiler barrier() is probably justified.  Memory barriers delay reads
+> > and expedite writes so they cannot be needed.
 > 
+> That's not at all guaranteed. Weakly ordered memory things can
+> actually have odd orderings, and not just "writes delayed, reads done
+> early". Reads may be delayed too by cache misses, and memory barriers
+> can thus expedite reads as well (by forcing the missing read to happen
+> before later non-missing ones).
 > 
-> On 3/10/20 8:56 AM, Kalle Valo wrote:
->> + jes
->>
->> "Gustavo A. R. Silva" <gustavo@embeddedor.com> writes:
->>>> I wrote in a confusing way, my question above was about the actual patch
->>>> and not the the title. For example, Jes didn't like this style change:
->>>>
->>>> https://patchwork.kernel.org/patch/11402315/
->>>>
->>>
->>> It doesn't seem that that comment adds a lot to the conversation. The only
->>> thing that it says is literally "fix the compiler". By the way, more than
->>> a hundred patches have already been applied to linux-next[1] and he seems
->>> to be the only person that has commented such a thing.
->>
->> But I also asked who prefers this format in that thread, you should not
->> ignore questions from two maintainers (me and Jes).
->>
+> So don't assume that a memory barrier would only delay reads and
+> expedite writes. Quite the reverse: assume that there is no ordering
+> at all unless you impose one with a memory barrier (*).
 > 
-> I'm sorry. I thought the changelog text had already the proper information.
-> In the changelog text I'm quoting the GCC documentation below:
+>              Linus
 > 
-> "The preferred mechanism to declare variable-length types like struct line
-> above is the ISO C99 flexible array member..." [1]
-> 
-> I'm also including a link to the following KSPP open issue:
-> 
-> https://github.com/KSPP/linux/issues/21
-> 
-> The issue above mentions the following:
-> 
-> "Both cases (0-byte and 1-byte arrays) pose confusion for things like sizeof(),
-> CONFIG_FORTIFY_SOURCE."
-> 
-> sizeof(flexible-array-member) triggers a warning because flexible array members have
-> incomplete type[1]. There are some instances of code in which the sizeof operator
-> is being incorrectly/erroneously applied to zero-length arrays and the result is zero.
-> Such instances may be hiding some bugs. So, the idea is also to get completely rid
-> of those sorts of issues.
+> (*) it's a bit more complex than that, in that we do assume that
+> control dependencies end up gating writes, for example, but those
+> kinds of implicit ordering things should *not* be what you depend on
+> in the code unless you're doing some seriously subtle memory ordering
+> work and comment on it extensively.
 
-As I stated in my previous answer, this seems more code churn than an
-actual fix. If this is a real problem, shouldn't the work be put into
-fixing the compiler to handle foo[0] instead? It seems that is where the
-real value would be.
+Good point. I too prefer code that's understandable by mere mortals.
+
+Given that, and the fact that Neil pointed out that yangerkun's latest
+patch would reintroduce the original race, I'm leaning back toward the
+patch Neil sent yesterday. It relies solely on spinlocks, and so doesn't
+have the subtle memory-ordering requirements of the others.
+
+I did some cursory testing with it and it seems to fix the performance
+regression. If you guys are OK with this patch, and Neil can send an
+updated changelog, I'll get it into -next and we can get this sorted
+out.
 
 Thanks,
-Jes
+
+-------------------8<-------------------
+
+[PATCH] locks: reintroduce locks_delete_block shortcut
+---
+ fs/locks.c | 29 ++++++++++++++++++++++++++++-
+ 1 file changed, 28 insertions(+), 1 deletion(-)
+
+diff --git a/fs/locks.c b/fs/locks.c
+index 426b55d333d5..8aa04d5ac8b3 100644
+--- a/fs/locks.c
++++ b/fs/locks.c
+@@ -735,11 +735,13 @@ static void __locks_wake_up_blocks(struct file_lock *blocker)
+ 
+ 		waiter = list_first_entry(&blocker->fl_blocked_requests,
+ 					  struct file_lock, fl_blocked_member);
++		spin_lock(&waiter->fl_wait.lock);
+ 		__locks_delete_block(waiter);
+ 		if (waiter->fl_lmops && waiter->fl_lmops->lm_notify)
+ 			waiter->fl_lmops->lm_notify(waiter);
+ 		else
+-			wake_up(&waiter->fl_wait);
++			wake_up_locked(&waiter->fl_wait);
++		spin_unlock(&waiter->fl_wait.lock);
+ 	}
+ }
+ 
+@@ -753,6 +755,31 @@ int locks_delete_block(struct file_lock *waiter)
+ {
+ 	int status = -ENOENT;
+ 
++	/*
++	 * If fl_blocker is NULL, it won't be set again as this thread
++	 * "owns" the lock and is the only one that might try to claim
++	 * the lock.  So it is safe to test fl_blocker locklessly.
++	 * Also if fl_blocker is NULL, this waiter is not listed on
++	 * fl_blocked_requests for some lock, so no other request can
++	 * be added to the list of fl_blocked_requests for this
++	 * request.  So if fl_blocker is NULL, it is safe to
++	 * locklessly check if fl_blocked_requests is empty.  If both
++	 * of these checks succeed, there is no need to take the lock.
++	 * However, some other thread might have only *just* set
++	 * fl_blocker to NULL and it about to send a wakeup on
++	 * fl_wait, so we mustn't return too soon or we might free waiter
++	 * before that wakeup can be sent.  So take the fl_wait.lock
++	 * to serialize with the wakeup in __locks_wake_up_blocks().
++	 */
++	if (waiter->fl_blocker == NULL) {
++		spin_lock(&waiter->fl_wait.lock);
++		if (waiter->fl_blocker == NULL &&
++		    list_empty(&waiter->fl_blocked_requests)) {
++			spin_unlock(&waiter->fl_wait.lock);
++			return status;
++		}
++		spin_unlock(&waiter->fl_wait.lock);
++	}
+ 	spin_lock(&blocked_lock_lock);
+ 	if (waiter->fl_blocker)
+ 		status = 0;
+-- 
+2.24.1
+
 
