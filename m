@@ -4,54 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44062C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:33:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94791C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:33:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18F2320675
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:33:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EA0424649
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:33:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583847207;
-	bh=YKfdWWef2XAP+GCkkOxxFSr7TtbFVlNDiZybrdw5O7M=;
+	s=default; t=1583847214;
+	bh=WDUi5d0G8h0tLb8V+7eC1VkZHiw/SHNdnjtGbH5DClc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gtRlL4/AhraG4t3O524ALptVgphWkJ6qUSbOCdAiV86O0dnJp3m0JjD3tTBMqO32F
-	 AgbDfH1Few8bFrCm5h3Fpji9NXDS81xRkFawvDoMAFXKhNZvh0mSavhjBew7MsYLNt
-	 TcAEoS+uanQRmIaejY+rfcXuJWBxizyP++QtQHTc=
+	b=IXbJmOyngghH44LiXB5S14nA2RcyTGxOBXUtF0ntUZDnCRjcH/AWqi3eL43B78XPj
+	 6C84zbQwnBFRpn3NRAkhNWilm4aVqIjVozYCoTKGriajLnzwTFVX4vuhQWsxtlvgPu
+	 IPMywXDNnKmnCwY6FknYTiIGrCWx4K1jCD1ZW4pI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728100AbgCJMsY (ORCPT
+        id S1728266AbgCJMsG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:48:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52336 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:48:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51998 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728297AbgCJMsR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:48:17 -0400
+        id S1728017AbgCJMsD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:48:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2806C2468D;
-        Tue, 10 Mar 2020 12:48:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3CE9B20674;
+        Tue, 10 Mar 2020 12:48:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844496;
-        bh=YKfdWWef2XAP+GCkkOxxFSr7TtbFVlNDiZybrdw5O7M=;
+        s=default; t=1583844481;
+        bh=WDUi5d0G8h0tLb8V+7eC1VkZHiw/SHNdnjtGbH5DClc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P2op+Ybp6Wdz+gNDbCgI64FaWX7nYWqhTC58bssCTV50pyoEdA/8yWQ6Dwg3w9nbo
-         +5pZqzuEEk/giNoIqSIrRBo1FiFgmQWYwW5XOoxqR0phh63PVVmr1GwH46L/ARNxFx
-         3NioFLtL7aV0XtFR5WHOjodBgTw9UZBdDsBnxkY0=
+        b=1dQdn5IuG8jqdla3qlcVPIHtQdljSlxXtxXArlLk8bYDnC6HGkyDxIxyTw3f32K4M
+         nwv6k46AE5bMekgxthoqhQm82us/J2LTvP6Y11/JVTG6juvgZtuaEtwE3uSpFw/wxb
+         nOa7H1yHUpCm7MZEwLy3tLteH+CK4YRJOjYaql1Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuanhong Guo <gch981213@gmail.com>,
-        Daniel Golle <daniel@makrotopia.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 014/168] serial: ar933x_uart: set UART_CS_{RX,TX}_READY_ORIDE
-Date:   Tue, 10 Mar 2020 13:37:40 +0100
-Message-Id: <20200310123637.149646464@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Oleksandr Natalenko <oleksandr@natalenko.name>,
+        Chris Evich <cevich@redhat.com>,
+        Paolo Valente <paolo.valente@linaro.org>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 001/168] block, bfq: get a ref to a group when adding it to a service tree
+Date:   Tue, 10 Mar 2020 13:37:27 +0100
+Message-Id: <20200310123635.438685308@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123635.322799692@linuxfoundation.org>
 References: <20200310123635.322799692@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -60,56 +64,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Golle <daniel@makrotopia.org>
+From: Paolo Valente <paolo.valente@linaro.org>
 
-[ Upstream commit 87c5cbf71ecbb9e289d60a2df22eb686c70bf196 ]
+[ Upstream commit db37a34c563bf4692b36990ae89005c031385e52 ]
 
-On AR934x this UART is usually not initialized by the bootloader
-as it is only used as a secondary serial port while the primary
-UART is a newly introduced NS16550-compatible.
-In order to make use of the ar933x-uart on AR934x without RTS/CTS
-hardware flow control, one needs to set the
-UART_CS_{RX,TX}_READY_ORIDE bits as other than on AR933x where this
-UART is used as primary/console, the bootloader on AR934x typically
-doesn't set those bits.
-Setting them explicitely on AR933x should not do any harm, so just
-set them unconditionally.
+BFQ schedules generic entities, which may represent either bfq_queues
+or groups of bfq_queues. When an entity is inserted into a service
+tree, a reference must be taken, to make sure that the entity does not
+disappear while still referred in the tree. Unfortunately, such a
+reference is mistakenly taken only if the entity represents a
+bfq_queue. This commit takes a reference also in case the entity
+represents a group.
 
-Tested-by: Chuanhong Guo <gch981213@gmail.com>
-Signed-off-by: Daniel Golle <daniel@makrotopia.org>
-Link: https://lore.kernel.org/r/20200207095335.GA179836@makrotopia.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Tested-by: Oleksandr Natalenko <oleksandr@natalenko.name>
+Tested-by: Chris Evich <cevich@redhat.com>
+Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/ar933x_uart.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ block/bfq-cgroup.c  |  2 +-
+ block/bfq-iosched.h |  1 +
+ block/bfq-wf2q.c    | 12 ++++++++++--
+ 3 files changed, 12 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/tty/serial/ar933x_uart.c b/drivers/tty/serial/ar933x_uart.c
-index 3bdd56a1021b2..ea12f10610b64 100644
---- a/drivers/tty/serial/ar933x_uart.c
-+++ b/drivers/tty/serial/ar933x_uart.c
-@@ -286,6 +286,10 @@ static void ar933x_uart_set_termios(struct uart_port *port,
- 	ar933x_uart_rmw_set(up, AR933X_UART_CS_REG,
- 			    AR933X_UART_CS_HOST_INT_EN);
+diff --git a/block/bfq-cgroup.c b/block/bfq-cgroup.c
+index 86a607cf19a10..0999d56bc4d19 100644
+--- a/block/bfq-cgroup.c
++++ b/block/bfq-cgroup.c
+@@ -332,7 +332,7 @@ static void bfqg_put(struct bfq_group *bfqg)
+ 		kfree(bfqg);
+ }
  
-+	/* enable RX and TX ready overide */
-+	ar933x_uart_rmw_set(up, AR933X_UART_CS_REG,
-+		AR933X_UART_CS_TX_READY_ORIDE | AR933X_UART_CS_RX_READY_ORIDE);
-+
- 	/* reenable the UART */
- 	ar933x_uart_rmw(up, AR933X_UART_CS_REG,
- 			AR933X_UART_CS_IF_MODE_M << AR933X_UART_CS_IF_MODE_S,
-@@ -418,6 +422,10 @@ static int ar933x_uart_startup(struct uart_port *port)
- 	ar933x_uart_rmw_set(up, AR933X_UART_CS_REG,
- 			    AR933X_UART_CS_HOST_INT_EN);
+-static void bfqg_and_blkg_get(struct bfq_group *bfqg)
++void bfqg_and_blkg_get(struct bfq_group *bfqg)
+ {
+ 	/* see comments in bfq_bic_update_cgroup for why refcounting bfqg */
+ 	bfqg_get(bfqg);
+diff --git a/block/bfq-iosched.h b/block/bfq-iosched.h
+index 5d1a519640f6a..e0e4a413d43a5 100644
+--- a/block/bfq-iosched.h
++++ b/block/bfq-iosched.h
+@@ -978,6 +978,7 @@ struct bfq_group *bfq_find_set_group(struct bfq_data *bfqd,
+ struct blkcg_gq *bfqg_to_blkg(struct bfq_group *bfqg);
+ struct bfq_group *bfqq_group(struct bfq_queue *bfqq);
+ struct bfq_group *bfq_create_group_hierarchy(struct bfq_data *bfqd, int node);
++void bfqg_and_blkg_get(struct bfq_group *bfqg);
+ void bfqg_and_blkg_put(struct bfq_group *bfqg);
  
-+	/* enable RX and TX ready overide */
-+	ar933x_uart_rmw_set(up, AR933X_UART_CS_REG,
-+		AR933X_UART_CS_TX_READY_ORIDE | AR933X_UART_CS_RX_READY_ORIDE);
+ #ifdef CONFIG_BFQ_GROUP_IOSCHED
+diff --git a/block/bfq-wf2q.c b/block/bfq-wf2q.c
+index 05f0bf4a1144d..44079147e396e 100644
+--- a/block/bfq-wf2q.c
++++ b/block/bfq-wf2q.c
+@@ -536,7 +536,9 @@ static void bfq_get_entity(struct bfq_entity *entity)
+ 		bfqq->ref++;
+ 		bfq_log_bfqq(bfqq->bfqd, bfqq, "get_entity: %p %d",
+ 			     bfqq, bfqq->ref);
+-	}
++	} else
++		bfqg_and_blkg_get(container_of(entity, struct bfq_group,
++					       entity));
+ }
+ 
+ /**
+@@ -650,8 +652,14 @@ static void bfq_forget_entity(struct bfq_service_tree *st,
+ 
+ 	entity->on_st = false;
+ 	st->wsum -= entity->weight;
+-	if (bfqq && !is_in_service)
++	if (is_in_service)
++		return;
 +
- 	/* Enable RX interrupts */
- 	up->ier = AR933X_UART_INT_RX_VALID;
- 	ar933x_uart_write(up, AR933X_UART_INT_EN_REG, up->ier);
++	if (bfqq)
+ 		bfq_put_queue(bfqq);
++	else
++		bfqg_and_blkg_put(container_of(entity, struct bfq_group,
++					       entity));
+ }
+ 
+ /**
 -- 
 2.20.1
 
