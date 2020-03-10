@@ -2,92 +2,79 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40E59C10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 19:47:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B07ABC18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 19:49:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E20F621D7E
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 19:47:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4ACFB208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 19:49:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TmhfD4+j"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="omQFDvmG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727462AbgCJTrf (ORCPT
+        id S1727470AbgCJTtN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 15:47:35 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:54672 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727272AbgCJTre (ORCPT
+        Tue, 10 Mar 2020 15:49:13 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:41937 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726545AbgCJTtM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 15:47:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583869653;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=iSuNQN7bkbnRo2jTjLcey0ERJ9aP7xPAWWvzSr4tTJ4=;
-        b=TmhfD4+jH5xrLyAPUR/Tu6+KQ4fTnwIi5RH4yuFZhhc1wR/ud/zC1S34NHvxIM0wyHCjPQ
-        VoIRTWReakLyV9iq9kkiIDWVZQet7cRRUhOPU1cBQeZDLoa/vPIu3RHKQFOofXx32vEHOe
-        wIE1Opzb+q18f9E/uLqW9MWH6bjNc6o=
-Received: from mail-yw1-f71.google.com (mail-yw1-f71.google.com
- [209.85.161.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-188-N7Y34cshNmGjyePHaF9UQw-1; Tue, 10 Mar 2020 15:47:31 -0400
-X-MC-Unique: N7Y34cshNmGjyePHaF9UQw-1
-Received: by mail-yw1-f71.google.com with SMTP id o79so22781916ywo.14
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 12:47:31 -0700 (PDT)
+        Tue, 10 Mar 2020 15:49:12 -0400
+Received: by mail-pl1-f193.google.com with SMTP id t14so5853696plr.8;
+        Tue, 10 Mar 2020 12:49:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jV1J0A0v5kI8D38QP7LZPmQe7Wa000FUtKtwbl8DovA=;
+        b=omQFDvmGHKXBdHPsEv5IagMxub/5iBhsEZmDaDrMaDmj83PBhBnWKghEHz1xDxVE/9
+         Qjv2aylL4IGJ68Vl7le/MblWPzJjGKCp3aXlLvHEMRVhZ46N73odzodpu6FpNAZv/Eck
+         PWZwGHXw1oX4PvVurLKthhe6L11KOstjo6vhjvntDQ+8Gvifd30uLLebpxa3Xu6LIF00
+         v6QEmjiLzkmfsaF+H8/+rrXtk9evm0g+0REDRbi2n8sMiayFE0k1YBnxCjz/4DZrjcsv
+         RbqS7ZddV8FUWKdJ/oFptjHk/VWRq8Lc3NVksZMv2fYCYNqf7OSAzMva6m/hpYKwwF7O
+         LfRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:organization:user-agent:mime-version
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=iSuNQN7bkbnRo2jTjLcey0ERJ9aP7xPAWWvzSr4tTJ4=;
-        b=YtJDIAds/abj9Kn0wfm5skOWHC6YXqa2xzyOY/nCPKQNe8IEMLToegQTeG3ldYr+bZ
-         7SqIaWOlV3MlhBXdy7f7meakKrlKwxSSMEBti5VnD6wTvC15QWa2OXbnj8YNecP2HeVt
-         aKaeES+ihag2YvczFdOCYNrGvFaOxmSDxZdp3axXvmQXdsWvEIJzmFkFGtTbA7b3iUS/
-         K7ll3nokqJrYLkqWtEdJlmkWTrQjl8LWfzHK0uUlm8PCfTKOmUDvJ5g2o0ZuWQED5leU
-         cmDYc6LPZLQxrWowz+nRsbsT+9K21rsPKYAcK03+eHnLymUtHufdqo5VGw6etipZSeTk
-         8dig==
-X-Gm-Message-State: ANhLgQ3GrMm00JCZ20o78niAstkn2WaWs+LEiyzFz+bRh6qxavLuRBZ8
-        nPsb8rBw0xGyvfz44QwoILQHMaq/qsmJV8nGTpEwMPap7gsNqm6SDKYZ1sEp9Z0f7wHF21NtvSs
-        y057MYkT6pZQCPOY1bRGThSkh
-X-Received: by 2002:a25:6b06:: with SMTP id g6mr23941423ybc.416.1583869651353;
-        Tue, 10 Mar 2020 12:47:31 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vt+gjt5dPcZNpRF0gGOOsUFCPRSfZuJFDt5ztKFhVFxuvZF6Q/wbM92HD0h6S4jndbT/LEJAQ==
-X-Received: by 2002:a25:6b06:: with SMTP id g6mr23941403ybc.416.1583869651122;
-        Tue, 10 Mar 2020 12:47:31 -0700 (PDT)
-Received: from dhcp-10-20-1-196.bss.redhat.com ([144.121.20.162])
-        by smtp.gmail.com with ESMTPSA id x126sm2883969ywx.90.2020.03.10.12.47.29
+        bh=jV1J0A0v5kI8D38QP7LZPmQe7Wa000FUtKtwbl8DovA=;
+        b=Kc8byvatzN6+6/xGaHPslJ1GiS9/BFeZbhEj6/udPO2aHz3rjU9V5kGsFqbmcZqdrn
+         89voG0S7O8nEr8cdFaU6MOsfXWJKcTI1IJcrJVswghRz6+wJMs+LjsJkyXTZHjzOCoYy
+         p/RIr3JzKL7lLF3SRXEiQw4KPwVmUBDrqSh3fAuaLXDP9S4NoIdkKicfH2GMW4kJnmLF
+         SAjnOIyyIpamtAKlS72KIYLlRdlhBI91NCZvTfI8W26Iynp73ZtbX52AM9kn/3zw5t0k
+         pSGeJOSskFGN1TnTj9NhaoY/7yZWiOs2bV2eX7qWMVIWQK1eYDEBhogf4bFldpdZVIqo
+         2uWQ==
+X-Gm-Message-State: ANhLgQ3r4YH4in1WvgrsvYBZlZ3OM9jXh9RSpzVglSoBRUZoJFsvVO9f
+        QVJhokpzt0+CzpnTRz0qnvASS0wO
+X-Google-Smtp-Source: ADFU+vtvXRamWjX5o9KmUQeFzpOaqpVccOT2iNJrsaFhgH3WFG/4Ot9KKwImz4WPKGmca+i1AEEBjw==
+X-Received: by 2002:a17:90a:2ec7:: with SMTP id h7mr3449555pjs.107.1583869749046;
+        Tue, 10 Mar 2020 12:49:09 -0700 (PDT)
+Received: from localhost.localdomain ([45.114.62.228])
+        by smtp.gmail.com with ESMTPSA id d19sm3784490pfd.82.2020.03.10.12.49.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Mar 2020 12:47:30 -0700 (PDT)
-Message-ID: <a6ef7b4c7e55aa81168e60473b412e6b7efc37b3.camel@redhat.com>
-Subject: Re: [PATCH v2] drm/i915/mst: Hookup DRM DP MST
- late_register/early_unregister callbacks
-From:   Lyude Paul <lyude@redhat.com>
-To:     Ville =?ISO-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
-Cc:     intel-gfx@lists.freedesktop.org,
-        Manasi Navare <manasi.d.navare@intel.com>,
-        "Lee, Shawn C" <shawn.c.lee@intel.com>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        =?ISO-8859-1?Q?Jos=E9?= Roberto de Souza 
-        <jose.souza@intel.com>, Chris Wilson <chris@chris-wilson.co.uk>,
-        Lucas De Marchi <lucas.demarchi@intel.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Date:   Tue, 10 Mar 2020 15:47:28 -0400
-In-Reply-To: <20200310190604.GP13686@intel.com>
-References: <20200310185417.1588984-1-lyude@redhat.com>
-         <20200310190604.GP13686@intel.com>
-Organization: Red Hat
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        Tue, 10 Mar 2020 12:49:08 -0700 (PDT)
+From:   Anand Moon <linux.amoon@gmail.com>
+To:     linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org
+Cc:     Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Tomasz Figa <tomasz.figa@gmail.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Subject: [PATCHv3 0/5] Add support for FSYS power domain and enable suspend clk for Exynos542x SoC 
+Date:   Tue, 10 Mar 2020 19:48:49 +0000
+Message-Id: <20200310194854.831-1-linux.amoon@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -95,83 +82,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-03-10 at 21:06 +0200, Ville Syrjälä wrote:
-> On Tue, Mar 10, 2020 at 02:54:16PM -0400, Lyude Paul wrote:
-> > i915 can enable aux device nodes for DP MST by calling
-> > drm_dp_mst_connector_late_register()/drm_dp_mst_connector_early_unregister
-> > (),
-> > so let's hook that up.
-> > 
-> > Changes since v1:
-> > * Call intel_connector_register/unregister() from
-> >   intel_dp_mst_connector_late_register/unregister() so we don't lose
-> >   error injection - Ville Syrjälä
-> > 
-> > Cc: Ville Syrjälä <ville.syrjala@linux.intel.com>
-> > Cc: Manasi Navare <manasi.d.navare@intel.com>
-> > Cc: "Lee, Shawn C" <shawn.c.lee@intel.com>
-> > Signed-off-by: Lyude Paul <lyude@redhat.com>
-> > ---
-> >  drivers/gpu/drm/i915/display/intel_dp_mst.c | 28 +++++++++++++++++++--
-> >  1 file changed, 26 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/gpu/drm/i915/display/intel_dp_mst.c
-> > b/drivers/gpu/drm/i915/display/intel_dp_mst.c
-> > index d53978ed3c12..9311c10f5b1b 100644
-> > --- a/drivers/gpu/drm/i915/display/intel_dp_mst.c
-> > +++ b/drivers/gpu/drm/i915/display/intel_dp_mst.c
-> > @@ -548,12 +548,36 @@ static int intel_dp_mst_get_ddc_modes(struct
-> > drm_connector *connector)
-> >  	return ret;
-> >  }
-> >  
-> > +static int
-> > +intel_dp_mst_connector_late_register(struct drm_connector *connector)
-> > +{
-> > +	struct intel_connector *intel_connector =
-> > to_intel_connector(connector);
-> > +	int ret;
-> > +
-> > +	ret = drm_dp_mst_connector_late_register(connector,
-> > +						 intel_connector->port);
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> > +	return intel_connector_register(connector);
-> 
-> Don't we have to undo the damage if this fails?
+Series build and tested on linux next-20200306.
 
-Yep, whoops. Will send out another respin with this fixed
+This patch series tries to enable FSYS power domain
+for USBDRD3, PDMA and USB2.0 devices.
+Some new patches is added to enable this feature.
 
-> 
-> > +}
-> > +
-> > +static void
-> > +intel_dp_mst_connector_early_unregister(struct drm_connector *connector)
-> > +{
-> > +	struct intel_connector *intel_connector =
-> > to_intel_connector(connector);
-> > +
-> > +	intel_connector_unregister(connector);
-> > +	drm_dp_mst_connector_early_unregister(connector,
-> > +					      intel_connector->port);
-> > +}
-> > +
-> >  static const struct drm_connector_funcs intel_dp_mst_connector_funcs = {
-> >  	.fill_modes = drm_helper_probe_single_connector_modes,
-> >  	.atomic_get_property = intel_digital_connector_atomic_get_property,
-> >  	.atomic_set_property = intel_digital_connector_atomic_set_property,
-> > -	.late_register = intel_connector_register,
-> > -	.early_unregister = intel_connector_unregister,
-> > +	.late_register = intel_dp_mst_connector_late_register,
-> > +	.early_unregister = intel_dp_mst_connector_early_unregister,
-> >  	.destroy = intel_connector_destroy,
-> >  	.atomic_destroy_state = drm_atomic_helper_connector_destroy_state,
-> >  	.atomic_duplicate_state = intel_digital_connector_duplicate_state,
-> > -- 
-> > 2.24.1
+Summary: 
+# powerdebug -d
+...
+
+FSYS:
+current_state: on
+active_time: 236786 ms
+total_idle_time: 1914 ms
+Idle States:
+             State            Time
+             S0               1914
+Devices:
+         /devices/platform/soc/10010000.clock-controller/exynos5-subcmu.6.auto
+         /devices/platform/soc/12130000.phy
+         /devices/platform/soc/12100000.phy
+         /devices/platform/soc/12500000.phy
+         /devices/platform/soc/soc:amba/121a0000.pdma
+         /devices/platform/soc/soc:amba/121b0000.pdma
+         /devices/platform/soc/12110000.usb
+         /devices/platform/soc/12120000.usb
+         /devices/platform/soc/soc:usb3-0
+         /devices/platform/soc/soc:usb3-1
+
+This patch series tries to enable suspend clk using
+exynos dwc3 driver, for this I have added new
+compatible string "samsung,exynos5420-dwusb3"
+so that we could add new suspend clk in addition
+to the core clk. exynos dwc3 driver will help
+enable/disable these clk.
+
+This series PatchV2.
+--Added the clk names for exynos5420 compatible.
+--Added missing support for Exyno5410 SoC suspend clock.
+--Update the commit message to support suspend clk usages.
+
+---
+Long time ago I tried to add suspend clk for dwc3 phy
+which was wrong appoch, see below.
+
+[0] https://lore.kernel.org/patchwork/patch/837635/
+[1] https://lore.kernel.org/patchwork/patch/837636/
+
+Previous changes V3 (It was send with wrong Patch version)
+[2] https://patchwork.kernel.org/cover/11373043/
+
+-Anand
+
+Anand Moon (5):
+  devicetree: bindings: exynos: Add new compatible for Exynos5420 dwc3
+    clocks support
+  ARM: dts: exynos: Add missing usbdrd3 suspend clk
+  ARM: dts: exynos: Add FSYS power domain to Exynos542x USB nodes
+  usb: dwc3: exynos: Add support for Exynos5422 suspend clk
+  clk: samsung: exynos542x: Move FSYS subsystem clocks to its sub-CMU
+
+ .../devicetree/bindings/usb/exynos-usb.txt    |  5 ++-
+ arch/arm/boot/dts/exynos5410.dtsi             |  8 ++--
+ arch/arm/boot/dts/exynos5420.dtsi             | 24 ++++++++--
+ arch/arm/boot/dts/exynos54xx.dtsi             |  4 +-
+ drivers/clk/samsung/clk-exynos5420.c          | 45 ++++++++++++++-----
+ drivers/usb/dwc3/dwc3-exynos.c                |  9 ++++
+ 6 files changed, 73 insertions(+), 22 deletions(-)
+
 -- 
-Cheers,
-	Lyude Paul (she/her)
-	Associate Software Engineer at Red Hat
+2.25.1
 
