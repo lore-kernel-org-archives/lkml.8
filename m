@@ -2,54 +2,60 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11BF2C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:43:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34B4BC18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:43:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCCAA20675
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:43:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D894920675
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:43:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583847823;
-	bh=haisXx7Fkzh8TLhrGRECQWNhHUxca5nMU7XrwHj6PW0=;
+	s=default; t=1583847835;
+	bh=5PlHhPzSK+0l2GtUGdprWuSb0TB3BTurH4keibjpyJM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gnz99c8inRSk47nt9tLCY/NJoRrcNwQCMjzTKrijXJ7JDi4C50tP/149tymgon5lX
-	 Jt19X3WFgq97jHJF3muPZZRqiQBBFOHbTeMqa73Q2MGN9Hi0yHs4Z1fVHCWe2Bcks8
-	 djusJO6zxTLOvyEJ74N1tS2lkCjHAR5AEzuBAJ0o=
+	b=DU7qNJ2odzylL0XRQhMm4xuFVvZ8yJIqMT0lZqQ8JZEmobuu0bP354NoJ5nYBkvdA
+	 Q3AWxXvr7CwqbEOJ4AKXs0rCm8nOmRCzLqSXDoZJ930+EtFdr8dIym017HqNMg16JL
+	 tkkb3CM1GOpvPt6YXCT65XZBmIU14aGASfSrFLFA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727524AbgCJNnX (ORCPT
+        id S1727794AbgCJNnx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:43:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37668 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:43:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37716 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726551AbgCJNnT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:43:19 -0400
+        id S1727304AbgCJNnU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:43:20 -0400
 Received: from mail.kernel.org (ip5f5ad4e9.dynamic.kabel-deutschland.de [95.90.212.233])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C51724697;
+        by mail.kernel.org (Postfix) with ESMTPSA id AF5B8246BB;
         Tue, 10 Mar 2020 13:43:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1583847797;
-        bh=haisXx7Fkzh8TLhrGRECQWNhHUxca5nMU7XrwHj6PW0=;
+        bh=5PlHhPzSK+0l2GtUGdprWuSb0TB3BTurH4keibjpyJM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ICPNSTIeCkHDIldBa3n2osVmMKjH5bg6XMYsBmK2xpbgtKA0xlD0EMXEhO9TDbn0g
-         y82k/9hT7Npalsq1NvHgr5wo2Ezhbqv8xkmeXbDGkynE2dTcoOJgUcCbsbfxm3oZ0K
-         QZfBb361OiPPkGpQPXTQzhvFKxFCgqgTGkdNk7Fo=
+        b=wmFV3lvweOaILFZqknun7j+8CoR8I/MGrnJJKsNcNuyiCJXCnUW2Y3yR2JpMjEELP
+         j24EIT55wol3D/NdfnIl6HHHWbB+X2LUaGATA4ZAn4Mh40hi/h9Dupt25XftTcXPfK
+         JuJtn6+0hYM26qlxxA3VBmMCdWbERLYKlfxXTGxM=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jBfAB-0005wB-CI; Tue, 10 Mar 2020 14:43:15 +0100
+        id 1jBfAB-0005wo-OR; Tue, 10 Mar 2020 14:43:15 +0100
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        linux-media@vger.kernel.org
-Subject: [PATCH v2 13/22] media: docs: split uAPI info from saa7134-devel.rst
-Date:   Tue, 10 Mar 2020 14:43:04 +0100
-Message-Id: <b29aa35ac3639d2f75344cdd2b32bb4a834fae11.1583847556.git.mchehab+huawei@kernel.org>
+        linux-media@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Ramesh Shanmugasundaram <rashanmu@gmail.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v2 21/22] media: docs: add an uAPI chapter for driver-specific stuff
+Date:   Tue, 10 Mar 2020 14:43:12 +0100
+Message-Id: <eb09422f4292b1462978abc02acf41e7630c698c.1583847557.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <cover.1583847556.git.mchehab+huawei@kernel.org>
 References: <cover.1583847556.git.mchehab+huawei@kernel.org>
@@ -60,169 +66,202 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This file contains both driver develompent documentation and
-userspace API.
-
-Split on two, as they're usually read by different audiences.
+There are some uAPI stuff that are driver-specific. Add them
+to the main media uAPI body.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- Documentation/media/v4l-drivers/index.rst     |  1 +
- .../media/v4l-drivers/saa7134-devel.rst       | 67 +++++++++++++++++++
- Documentation/media/v4l-drivers/saa7134.rst   | 54 ---------------
- 3 files changed, 68 insertions(+), 54 deletions(-)
- create mode 100644 Documentation/media/v4l-drivers/saa7134-devel.rst
+ Documentation/media/index.rst                              | 2 --
+ .../media/drivers}/cx2341x-uapi.rst                        | 0
+ .../media/drivers}/imx-uapi.rst                            | 0
+ .../v4l-drivers => userspace-api/media/drivers}/index.rst  | 7 +++----
+ .../media/drivers}/max2175.rst                             | 0
+ .../media/drivers}/meye-uapi.rst                           | 0
+ .../media/drivers}/omap3isp-uapi.rst                       | 0
+ .../media/drivers}/uvcvideo.rst                            | 0
+ Documentation/userspace-api/media/index.rst                | 2 ++
+ Documentation/userspace-api/media/v4l/dev-sliced-vbi.rst   | 2 +-
+ Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst  | 2 +-
+ Documentation/userspace-api/media/v4l/pixfmt-reserved.rst  | 2 +-
+ MAINTAINERS                                                | 4 ++--
+ drivers/media/i2c/max2175.c                                | 6 +++---
+ 14 files changed, 13 insertions(+), 14 deletions(-)
+ rename Documentation/{media/v4l-drivers => userspace-api/media/drivers}/cx2341x-uapi.rst (100%)
+ rename Documentation/{media/v4l-drivers => userspace-api/media/drivers}/imx-uapi.rst (100%)
+ rename Documentation/{media/v4l-drivers => userspace-api/media/drivers}/index.rst (97%)
+ rename Documentation/{media/v4l-drivers => userspace-api/media/drivers}/max2175.rst (100%)
+ rename Documentation/{media/v4l-drivers => userspace-api/media/drivers}/meye-uapi.rst (100%)
+ rename Documentation/{media/v4l-drivers => userspace-api/media/drivers}/omap3isp-uapi.rst (100%)
+ rename Documentation/{media/v4l-drivers => userspace-api/media/drivers}/uvcvideo.rst (100%)
 
-diff --git a/Documentation/media/v4l-drivers/index.rst b/Documentation/media/v4l-drivers/index.rst
-index adf72937b119..6fdfd9a41913 100644
+diff --git a/Documentation/media/index.rst b/Documentation/media/index.rst
+index a5cd600e0b04..e93fd88881af 100644
+--- a/Documentation/media/index.rst
++++ b/Documentation/media/index.rst
+@@ -15,8 +15,6 @@ Linux Media Subsystem Documentation
+    ../userspace-api/media/index
+    ../driver-api/media/index
+ 
+-   v4l-drivers/index
+-
+ .. only:: html and subproject
+ 
+    Indices
+diff --git a/Documentation/media/v4l-drivers/cx2341x-uapi.rst b/Documentation/userspace-api/media/drivers/cx2341x-uapi.rst
+similarity index 100%
+rename from Documentation/media/v4l-drivers/cx2341x-uapi.rst
+rename to Documentation/userspace-api/media/drivers/cx2341x-uapi.rst
+diff --git a/Documentation/media/v4l-drivers/imx-uapi.rst b/Documentation/userspace-api/media/drivers/imx-uapi.rst
+similarity index 100%
+rename from Documentation/media/v4l-drivers/imx-uapi.rst
+rename to Documentation/userspace-api/media/drivers/imx-uapi.rst
+diff --git a/Documentation/media/v4l-drivers/index.rst b/Documentation/userspace-api/media/drivers/index.rst
+similarity index 97%
+rename from Documentation/media/v4l-drivers/index.rst
+rename to Documentation/userspace-api/media/drivers/index.rst
+index ee7faff88a33..05a82f8c0c99 100644
 --- a/Documentation/media/v4l-drivers/index.rst
-+++ b/Documentation/media/v4l-drivers/index.rst
-@@ -71,6 +71,7 @@ For more details see the file COPYING in the source distribution of Linux.
- 	cx88-devel
- 	davinci-vpbe-devel
- 	fimc-devel
-+	saa7134-devel
- 	vimc-devel
++++ b/Documentation/userspace-api/media/drivers/index.rst
+@@ -2,7 +2,7 @@
  
+ .. include:: <isonum.txt>
+ 
+-.. _v4l-drivers:
++.. _v4l-drivers_uapi:
+ 
+ ################################################
+ Video4Linux (V4L)  driver-specific documentation
+@@ -31,10 +31,9 @@ For more details see the file COPYING in the source distribution of Linux.
+ 	:maxdepth: 5
+ 	:numbered:
+ 
+-	max2175
+-	uvcvideo
+-
  	cx2341x-uapi
-diff --git a/Documentation/media/v4l-drivers/saa7134-devel.rst b/Documentation/media/v4l-drivers/saa7134-devel.rst
-new file mode 100644
-index 000000000000..167fd729bc8c
---- /dev/null
-+++ b/Documentation/media/v4l-drivers/saa7134-devel.rst
-@@ -0,0 +1,67 @@
-+.. SPDX-License-Identifier: GPL-2.0
+ 	imx-uapi
++	max2175
+ 	meye-uapi
+ 	omap3isp-uapi
++	uvcvideo
+diff --git a/Documentation/media/v4l-drivers/max2175.rst b/Documentation/userspace-api/media/drivers/max2175.rst
+similarity index 100%
+rename from Documentation/media/v4l-drivers/max2175.rst
+rename to Documentation/userspace-api/media/drivers/max2175.rst
+diff --git a/Documentation/media/v4l-drivers/meye-uapi.rst b/Documentation/userspace-api/media/drivers/meye-uapi.rst
+similarity index 100%
+rename from Documentation/media/v4l-drivers/meye-uapi.rst
+rename to Documentation/userspace-api/media/drivers/meye-uapi.rst
+diff --git a/Documentation/media/v4l-drivers/omap3isp-uapi.rst b/Documentation/userspace-api/media/drivers/omap3isp-uapi.rst
+similarity index 100%
+rename from Documentation/media/v4l-drivers/omap3isp-uapi.rst
+rename to Documentation/userspace-api/media/drivers/omap3isp-uapi.rst
+diff --git a/Documentation/media/v4l-drivers/uvcvideo.rst b/Documentation/userspace-api/media/drivers/uvcvideo.rst
+similarity index 100%
+rename from Documentation/media/v4l-drivers/uvcvideo.rst
+rename to Documentation/userspace-api/media/drivers/uvcvideo.rst
+diff --git a/Documentation/userspace-api/media/index.rst b/Documentation/userspace-api/media/index.rst
+index 614310f82395..bcfdd1a5caa0 100644
+--- a/Documentation/userspace-api/media/index.rst
++++ b/Documentation/userspace-api/media/index.rst
+@@ -31,3 +31,5 @@ entitled "GNU Free Documentation License".
+     cec/cec-api
+     gen-errors
+     fdl-appendix
 +
-+The saa7134 driver
-+==================
-+
-+Author Gerd Hoffmann
-+
-+
-+Card Variations:
-+----------------
-+
-+Cards can use either of these two crystals (xtal):
-+
-+- 32.11 MHz -> .audio_clock=0x187de7
-+- 24.576MHz -> .audio_clock=0x200000 (xtal * .audio_clock = 51539600)
-+
-+Some details about 30/34/35:
-+
-+- saa7130 - low-price chip, doesn't have mute, that is why all those
-+  cards should have .mute field defined in their tuner structure.
-+
-+- saa7134 - usual chip
-+
-+- saa7133/35 - saa7135 is probably a marketing decision, since all those
-+  chips identifies itself as 33 on pci.
-+
-+LifeView GPIOs
-+--------------
-+
-+This section was authored by: Peter Missel <peter.missel@onlinehome.de>
-+
-+- LifeView FlyTV Platinum FM (LR214WF)
-+
-+    - GP27    MDT2005 PB4 pin 10
-+    - GP26    MDT2005 PB3 pin 9
-+    - GP25    MDT2005 PB2 pin 8
-+    - GP23    MDT2005 PB1 pin 7
-+    - GP22    MDT2005 PB0 pin 6
-+    - GP21    MDT2005 PB5 pin 11
-+    - GP20    MDT2005 PB6 pin 12
-+    - GP19    MDT2005 PB7 pin 13
-+    - nc      MDT2005 PA3 pin 2
-+    - Remote  MDT2005 PA2 pin 1
-+    - GP18    MDT2005 PA1 pin 18
-+    - nc      MDT2005 PA0 pin 17 strap low
-+    - GP17    Strap "GP7"=High
-+    - GP16    Strap "GP6"=High
-+
-+	- 0=Radio 1=TV
-+	- Drives SA630D ENCH1 and HEF4052 A1 pinsto do FM radio through
-+	  SIF input
-+
-+    - GP15    nc
-+    - GP14    nc
-+    - GP13    nc
-+    - GP12    Strap "GP5" = High
-+    - GP11    Strap "GP4" = High
-+    - GP10    Strap "GP3" = High
-+    - GP09    Strap "GP2" = Low
-+    - GP08    Strap "GP1" = Low
-+    - GP07.00 nc
-+
-+Credits
-+-------
-+
-+andrew.stevens@philips.com + werner.leeb@philips.com for providing
-+saa7134 hardware specs and sample board.
-diff --git a/Documentation/media/v4l-drivers/saa7134.rst b/Documentation/media/v4l-drivers/saa7134.rst
-index 15d06facdbc1..c84246dd81c0 100644
---- a/Documentation/media/v4l-drivers/saa7134.rst
-+++ b/Documentation/media/v4l-drivers/saa7134.rst
-@@ -54,60 +54,6 @@ Known Problems
-   default might not work for you depending on which version you have.
-   There is a tuner= insmod option to override the driver's default.
++    drivers/index
+diff --git a/Documentation/userspace-api/media/v4l/dev-sliced-vbi.rst b/Documentation/userspace-api/media/v4l/dev-sliced-vbi.rst
+index 751c6590e774..dd0b6646beb5 100644
+--- a/Documentation/userspace-api/media/v4l/dev-sliced-vbi.rst
++++ b/Documentation/userspace-api/media/v4l/dev-sliced-vbi.rst
+@@ -438,7 +438,7 @@ MPEG stream.
+ *Historical context*: This format specification originates from a
+ custom, embedded, sliced VBI data format used by the ``ivtv`` driver.
+ This format has already been informally specified in the kernel sources
+-in the file ``Documentation/media/v4l-drivers/cx2341x-uapi.rst`` . The
++in the file ``Documentation/userspace-api/media/drivers/cx2341x-uapi.rst`` . The
+ maximum size of the payload and other aspects of this format are driven
+ by the CX23415 MPEG decoder's capabilities and limitations with respect
+ to extracting, decoding, and displaying sliced VBI data embedded within
+diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+index f81016c97a0d..9b48338fb783 100644
+--- a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
++++ b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+@@ -116,7 +116,7 @@ enum v4l2_mpeg_stream_vbi_fmt -
+     * - ``V4L2_MPEG_STREAM_VBI_FMT_IVTV``
+       - VBI in private packets, IVTV format (documented in the kernel
+ 	sources in the file
+-	``Documentation/media/v4l-drivers/cx2341x-uapi.rst``)
++	``Documentation/userspace-api/media/drivers/cx2341x-uapi.rst``)
  
--Card Variations:
------------------
--
--Cards can use either of these two crystals (xtal):
--
--- 32.11 MHz -> .audio_clock=0x187de7
--- 24.576MHz -> .audio_clock=0x200000 (xtal * .audio_clock = 51539600)
--
--Some details about 30/34/35:
--
--- saa7130 - low-price chip, doesn't have mute, that is why all those
--  cards should have .mute field defined in their tuner structure.
--
--- saa7134 - usual chip
--
--- saa7133/35 - saa7135 is probably a marketing decision, since all those
--  chips identifies itself as 33 on pci.
--
--LifeView GPIOs
----------------
--
--This section was authored by: Peter Missel <peter.missel@onlinehome.de>
--
--- LifeView FlyTV Platinum FM (LR214WF)
--
--    - GP27    MDT2005 PB4 pin 10
--    - GP26    MDT2005 PB3 pin 9
--    - GP25    MDT2005 PB2 pin 8
--    - GP23    MDT2005 PB1 pin 7
--    - GP22    MDT2005 PB0 pin 6
--    - GP21    MDT2005 PB5 pin 11
--    - GP20    MDT2005 PB6 pin 12
--    - GP19    MDT2005 PB7 pin 13
--    - nc      MDT2005 PA3 pin 2
--    - Remote  MDT2005 PA2 pin 1
--    - GP18    MDT2005 PA1 pin 18
--    - nc      MDT2005 PA0 pin 17 strap low
--    - GP17    Strap "GP7"=High
--    - GP16    Strap "GP6"=High
--
--	- 0=Radio 1=TV
--	- Drives SA630D ENCH1 and HEF4052 A1 pinsto do FM radio through
--	  SIF input
--
--    - GP15    nc
--    - GP14    nc
--    - GP13    nc
--    - GP12    Strap "GP5" = High
--    - GP11    Strap "GP4" = High
--    - GP10    Strap "GP3" = High
--    - GP09    Strap "GP2" = Low
--    - GP08    Strap "GP1" = Low
--    - GP07.00 nc
--
- Credits
- -------
  
+ 
+diff --git a/Documentation/userspace-api/media/v4l/pixfmt-reserved.rst b/Documentation/userspace-api/media/v4l/pixfmt-reserved.rst
+index dbdcf6c9f072..59b9e7238f90 100644
+--- a/Documentation/userspace-api/media/v4l/pixfmt-reserved.rst
++++ b/Documentation/userspace-api/media/v4l/pixfmt-reserved.rst
+@@ -58,7 +58,7 @@ please make a proposal on the linux-media mailing list.
+       - YUV 4:2:0 format used by the IVTV driver.
+ 
+ 	The format is documented in the kernel sources in the file
+-	``Documentation/media/v4l-drivers/cx2341x-uapi.rst``
++	``Documentation/userspace-api/media/drivers/cx2341x-uapi.rst``
+     * .. _V4L2-PIX-FMT-CPIA1:
+ 
+       - ``V4L2_PIX_FMT_CPIA1``
+diff --git a/MAINTAINERS b/MAINTAINERS
+index cf4fd454e053..a883c2e53b86 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -10135,7 +10135,7 @@ L:	linux-media@vger.kernel.org
+ T:	git git://linuxtv.org/media_tree.git
+ S:	Maintained
+ F:	Documentation/devicetree/bindings/media/i2c/max2175.txt
+-F:	Documentation/media/v4l-drivers/max2175.rst
++F:	Documentation/userspace-api/media/drivers/max2175.rst
+ F:	drivers/media/i2c/max2175*
+ F:	include/uapi/linux/max2175.h
+ 
+@@ -11251,7 +11251,7 @@ F:	kernel/module.c
+ MOTION EYE VAIO PICTUREBOOK CAMERA DRIVER
+ W:	http://popies.net/meye/
+ S:	Orphan
+-F:	Documentation/media/v4l-drivers/meye*
++F:	Documentation/userspace-api/media/drivers/meye*
+ F:	drivers/media/pci/meye/
+ F:	include/uapi/linux/meye.h
+ 
+diff --git a/drivers/media/i2c/max2175.c b/drivers/media/i2c/max2175.c
+index 506a30e69ced..03b4ed3a61b8 100644
+--- a/drivers/media/i2c/max2175.c
++++ b/drivers/media/i2c/max2175.c
+@@ -1194,7 +1194,7 @@ static const struct v4l2_ctrl_ops max2175_ctrl_ops = {
+ 
+ /*
+  * I2S output enable/disable configuration. This is a private control.
+- * Refer to Documentation/media/v4l-drivers/max2175.rst for more details.
++ * Refer to Documentation/userspace-api/media/drivers/max2175.rst for more details.
+  */
+ static const struct v4l2_ctrl_config max2175_i2s_en = {
+ 	.ops = &max2175_ctrl_ops,
+@@ -1210,7 +1210,7 @@ static const struct v4l2_ctrl_config max2175_i2s_en = {
+ 
+ /*
+  * HSLS value control LO freq adjacent location configuration.
+- * Refer to Documentation/media/v4l-drivers/max2175.rst for more details.
++ * Refer to Documentation/userspace-api/media/drivers/max2175.rst for more details.
+  */
+ static const struct v4l2_ctrl_config max2175_hsls = {
+ 	.ops = &max2175_ctrl_ops,
+@@ -1226,7 +1226,7 @@ static const struct v4l2_ctrl_config max2175_hsls = {
+ /*
+  * Rx modes below are a set of preset configurations that decides the tuner's
+  * sck and sample rate of transmission. They are separate for EU & NA regions.
+- * Refer to Documentation/media/v4l-drivers/max2175.rst for more details.
++ * Refer to Documentation/userspace-api/media/drivers/max2175.rst for more details.
+  */
+ static const char * const max2175_ctrl_eu_rx_modes[] = {
+ 	[MAX2175_EU_FM_1_2]	= "EU FM 1.2",
 -- 
 2.24.1
 
