@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EB4BC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:35:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FBC2C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:35:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 146EE20675
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:35:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 062A024649
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:35:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583847310;
-	bh=b3a7LXAN/jY9XCOOcUPYLK2gXw1etQtmbR5yY1H325s=;
+	s=default; t=1583847323;
+	bh=sfBcGXRcQOZOoFxrn2GPLq76i/Oyp2K9kXMLiWQdk0U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mVbAlYKS2u/fLN63dSLN6XqgR0rBP1D3gABBITveJca5UOA/MUxrUGu3dol5acGH0
-	 G39xKhHhM+IDf3ETf7t7UNc12qw9T5tCGHdvhrPul6ys+/kgQdsy21op35n6aOfHl/
-	 iYkn6Qahp6I0+N1g25S0dW8O4XnuY9aoJCXoO5nk=
+	b=2P2B/ps1yX9gs05Zu/JCo6qj0hOjLVm8YAdv728Gbyx3lF41fOJ7RjkvJLc/TNq96
+	 UvcXZvYChHfpbPmzaTTFxzwMCWiQKUPKVgV7P4TXeFwRq7wlqJYn/zOLK2dS6EgBPl
+	 77aUVxGNo35wb+o7TW4fKNrYO3k7kX5RU8TM0hQ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728321AbgCJNfI (ORCPT
+        id S1727801AbgCJMop (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:35:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48058 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:44:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47036 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727902AbgCJMp0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:45:26 -0400
+        id S1727789AbgCJMom (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:44:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A8072246A3;
-        Tue, 10 Mar 2020 12:45:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E43CB24691;
+        Tue, 10 Mar 2020 12:44:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844326;
-        bh=b3a7LXAN/jY9XCOOcUPYLK2gXw1etQtmbR5yY1H325s=;
+        s=default; t=1583844281;
+        bh=sfBcGXRcQOZOoFxrn2GPLq76i/Oyp2K9kXMLiWQdk0U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ViSAN+YpLY8yUfVT8jn4pAQbOqPn/Y1QGZmUeJucIZVza2x4qCgomd39fQXxYXIFM
-         AJ54OcIOBfuAKOCoMa4ZJX6AaZY1ZfnY7ceX2lFZG5YK76hS+di5iPkjcfhI782HEE
-         yQzhmWMt3l1FG+UGrBxCGpGHQ10AJzGfRvcMrvZg=
+        b=2p5mZcqS8ScgBql3W59DDYaecu1exAqqRyn0rUMJczC4CmZ5fBVVPeGV9Xi9tuj1T
+         Yhlck6daJrfrEaoXtQge433UqLykwgPIMusO9pqxNyQyCg64HgI1Jowb/iPSwuVuez
+         EBVnpbSaoP6OIeMo1+It/9GMpo6MmofPv10B9aQ0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sameeh Jubran <sameehj@amazon.com>,
-        Saeed Bshara <saeedb@amazon.com>,
-        Arthur Kiyanovski <akiyano@amazon.com>,
+        stable@vger.kernel.org,
+        Benjamin Poirier <bpoirier@cumulusnetworks.com>,
+        Michal Kubecek <mkubecek@suse.cz>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 41/88] net: ena: make ena rxfh support ETH_RSS_HASH_NO_CHANGE
-Date:   Tue, 10 Mar 2020 13:38:49 +0100
-Message-Id: <20200310123615.977525680@linuxfoundation.org>
+Subject: [PATCH 4.9 24/88] ipv6: Fix route replacement with dev-only route
+Date:   Tue, 10 Mar 2020 13:38:32 +0100
+Message-Id: <20200310123611.873089710@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123606.543939933@linuxfoundation.org>
 References: <20200310123606.543939933@linuxfoundation.org>
@@ -61,72 +61,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arthur Kiyanovski <akiyano@amazon.com>
+From: Benjamin Poirier <bpoirier@cumulusnetworks.com>
 
-commit 470793a78ce344bd53d31e0c2d537f71ba957547 upstream.
+[ Upstream commit e404b8c7cfb31654c9024d497cec58a501501692 ]
 
-As the name suggests ETH_RSS_HASH_NO_CHANGE is received upon changing
-the key or indirection table using ethtool while keeping the same hash
-function.
+After commit 27596472473a ("ipv6: fix ECMP route replacement") it is no
+longer possible to replace an ECMP-able route by a non ECMP-able route.
+For example,
+	ip route add 2001:db8::1/128 via fe80::1 dev dummy0
+	ip route replace 2001:db8::1/128 dev dummy0
+does not work as expected.
 
-Also add a function for retrieving the current hash function from
-the ena-com layer.
+Tweak the replacement logic so that point 3 in the log of the above commit
+becomes:
+3. If the new route is not ECMP-able, and no matching non-ECMP-able route
+exists, replace matching ECMP-able route (if any) or add the new route.
 
-Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
-Signed-off-by: Sameeh Jubran <sameehj@amazon.com>
-Signed-off-by: Saeed Bshara <saeedb@amazon.com>
-Signed-off-by: Arthur Kiyanovski <akiyano@amazon.com>
+We can now summarize the entire replace semantics to:
+When doing a replace, prefer replacing a matching route of the same
+"ECMP-able-ness" as the replace argument. If there is no such candidate,
+fallback to the first route found.
+
+Fixes: 27596472473a ("ipv6: fix ECMP route replacement")
+Signed-off-by: Benjamin Poirier <bpoirier@cumulusnetworks.com>
+Reviewed-by: Michal Kubecek <mkubecek@suse.cz>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/net/ethernet/amazon/ena/ena_com.c     |    5 +++++
- drivers/net/ethernet/amazon/ena/ena_com.h     |    8 ++++++++
- drivers/net/ethernet/amazon/ena/ena_ethtool.c |    3 +++
- 3 files changed, 16 insertions(+)
+ net/ipv6/ip6_fib.c |    7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
---- a/drivers/net/ethernet/amazon/ena/ena_com.c
-+++ b/drivers/net/ethernet/amazon/ena/ena_com.c
-@@ -857,6 +857,11 @@ static void ena_com_hash_key_fill_defaul
- 	hash_key->keys_num = sizeof(hash_key->key) / sizeof(u32);
- }
+--- a/net/ipv6/ip6_fib.c
++++ b/net/ipv6/ip6_fib.c
+@@ -784,8 +784,7 @@ static int fib6_add_rt2node(struct fib6_
+ 					found++;
+ 					break;
+ 				}
+-				if (rt_can_ecmp)
+-					fallback_ins = fallback_ins ?: ins;
++				fallback_ins = fallback_ins ?: ins;
+ 				goto next_iter;
+ 			}
  
-+int ena_com_get_current_hash_function(struct ena_com_dev *ena_dev)
-+{
-+	return ena_dev->rss.hash_func;
-+}
-+
- static int ena_com_hash_key_allocate(struct ena_com_dev *ena_dev)
- {
- 	struct ena_rss *rss = &ena_dev->rss;
---- a/drivers/net/ethernet/amazon/ena/ena_com.h
-+++ b/drivers/net/ethernet/amazon/ena/ena_com.h
-@@ -623,6 +623,14 @@ int ena_com_rss_init(struct ena_com_dev
-  */
- void ena_com_rss_destroy(struct ena_com_dev *ena_dev);
- 
-+/* ena_com_get_current_hash_function - Get RSS hash function
-+ * @ena_dev: ENA communication layer struct
-+ *
-+ * Return the current hash function.
-+ * @return: 0 or one of the ena_admin_hash_functions values.
-+ */
-+int ena_com_get_current_hash_function(struct ena_com_dev *ena_dev);
-+
- /* ena_com_fill_hash_function - Fill RSS hash function
-  * @ena_dev: ENA communication layer struct
-  * @func: The hash function (Toeplitz or crc)
---- a/drivers/net/ethernet/amazon/ena/ena_ethtool.c
-+++ b/drivers/net/ethernet/amazon/ena/ena_ethtool.c
-@@ -751,6 +751,9 @@ static int ena_set_rxfh(struct net_devic
+@@ -825,7 +824,9 @@ next_iter:
  	}
  
- 	switch (hfunc) {
-+	case ETH_RSS_HASH_NO_CHANGE:
-+		func = ena_com_get_current_hash_function(ena_dev);
-+		break;
- 	case ETH_RSS_HASH_TOP:
- 		func = ENA_ADMIN_TOEPLITZ;
- 		break;
+ 	if (fallback_ins && !found) {
+-		/* No ECMP-able route found, replace first non-ECMP one */
++		/* No matching route with same ecmp-able-ness found, replace
++		 * first matching route
++		 */
+ 		ins = fallback_ins;
+ 		iter = *ins;
+ 		found++;
 
 
