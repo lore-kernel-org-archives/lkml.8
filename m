@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2765EC18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:14:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E4B5C18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:14:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F097D24649
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:14:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1297C2468F
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:14:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583846065;
-	bh=01vqzEujXKHssuCUVlsXbDWaqOD5kWQLC3pwL/QSWq0=;
+	s=default; t=1583846067;
+	bh=fERsDUe64ag3rRBlFOK8qlkJoh2Bnqtp8Cox5nzveJc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Fub30i+KEx13sNeAUVO3sq3o6vw1DGF9zjxM2Wgpy+iZr8L/CbYaxfl3SJU5qoDPk
-	 Iv4CHFhY1IdNFtFWu6jzraOR7tMvTIi2EWvCXER4Q2SU2Li4FJDiIIK3KgNBF7Jjw4
-	 8Sv6e85oAcelXouIYaEYoufW+5NLvO/WY8N1u9AY=
+	b=yH4n/N2Q9yeZw3vH3mdjTT6Ivcq3Dpqy/7s3Vh71BeJhPS5lr9O36SWvXUyew+VpN
+	 0gJv+qCZD45KBltsNkszJ2dZd3x2Kz2x84JWCCgn52iixKwj60NGKu1Gez/+Pki5I6
+	 RkTLjRlb825B21xlDOtCv7w+BOaR4Y9oGNNbDeCs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731648AbgCJNOX (ORCPT
+        id S1731874AbgCJNOZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:14:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38010 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:14:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38088 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731862AbgCJNOV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:14:21 -0400
+        id S1731867AbgCJNOY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:14:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A947F2468F;
-        Tue, 10 Mar 2020 13:14:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0851220409;
+        Tue, 10 Mar 2020 13:14:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583846060;
-        bh=01vqzEujXKHssuCUVlsXbDWaqOD5kWQLC3pwL/QSWq0=;
+        s=default; t=1583846063;
+        bh=fERsDUe64ag3rRBlFOK8qlkJoh2Bnqtp8Cox5nzveJc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vcOHB6892cjWr2AizDVYwTaDZsbstYpGzEdGQn5xrUH9yV4uNhTpcTjbqImzd3D2c
-         58e8qA8316OXtCex4kajpAK9SyimvrB3nb5WIPFS8p5wQJ7QHitnzjHiH4oqkK8YNW
-         sIwGXPGjNXkQe0ppNO21P4QWzVJFUj8FdRwnlHRs=
+        b=ujsVJtnfLqFiDKJzd8b/D/lP6PeiNx29dNs4zJWVFVZbAKWbE734YLsmtnqjU9q88
+         HEWWf5QC+WNMvpI6vlk9q/3mwSor2MYw2NQ/++B5rmB+chGsrSUr8gu3yqtDI3ZeMM
+         x0qRyK9RQHlclG5Gt+9hsdJ0EJtcpZB/HMUxbo4A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tim Harvey <tharvey@gateworks.com>,
-        Robert Jones <rjones@gateworks.com>,
+        stable@vger.kernel.org, Marek Vasut <marex@denx.de>,
         "David S. Miller" <davem@davemloft.net>,
+        Lukas Wunner <lukas@wunner.de>, Petr Stetiar <ynezz@true.cz>,
+        YueHaibing <yuehaibing@huawei.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 31/86] net: thunderx: workaround BGX TX Underflow issue
-Date:   Tue, 10 Mar 2020 13:44:55 +0100
-Message-Id: <20200310124532.461373297@linuxfoundation.org>
+Subject: [PATCH 4.19 22/86] net: ks8851-ml: Fix 16-bit IO operation
+Date:   Tue, 10 Mar 2020 13:44:46 +0100
+Message-Id: <20200310124531.980660280@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310124530.808338541@linuxfoundation.org>
 References: <20200310124530.808338541@linuxfoundation.org>
@@ -61,153 +62,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tim Harvey <tharvey@gateworks.com>
+From: Marek Vasut <marex@denx.de>
 
-[ Upstream commit 971617c3b761c876d686a2188220a33898c90e99 ]
+[ Upstream commit 58292104832fef6cb4a89f736012c0e0724c3442 ]
 
-While it is not yet understood why a TX underflow can easily occur
-for SGMII interfaces resulting in a TX wedge. It has been found that
-disabling/re-enabling the LMAC resolves the issue.
+The Micrel KSZ8851-16MLLI datasheet DS00002357B page 12 states that
+BE[3:0] signals are active high. This contradicts the measurements
+of the behavior of the actual chip, where these signals behave as
+active low. For example, to read the CIDER register, the bus must
+expose 0xc0c0 during the address phase, which means BE[3:0]=4'b1100.
 
-Signed-off-by: Tim Harvey <tharvey@gateworks.com>
-Reviewed-by: Robert Jones <rjones@gateworks.com>
+Signed-off-by: Marek Vasut <marex@denx.de>
+Cc: David S. Miller <davem@davemloft.net>
+Cc: Lukas Wunner <lukas@wunner.de>
+Cc: Petr Stetiar <ynezz@true.cz>
+Cc: YueHaibing <yuehaibing@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/ethernet/cavium/thunder/thunder_bgx.c | 62 ++++++++++++++++++-
- .../net/ethernet/cavium/thunder/thunder_bgx.h |  9 +++
- 2 files changed, 68 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/micrel/ks8851_mll.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/cavium/thunder/thunder_bgx.c b/drivers/net/ethernet/cavium/thunder/thunder_bgx.c
-index 8ae28f82aafdc..e5fc89813852c 100644
---- a/drivers/net/ethernet/cavium/thunder/thunder_bgx.c
-+++ b/drivers/net/ethernet/cavium/thunder/thunder_bgx.c
-@@ -413,10 +413,19 @@ void bgx_lmac_rx_tx_enable(int node, int bgx_idx, int lmacid, bool enable)
- 	lmac = &bgx->lmac[lmacid];
+diff --git a/drivers/net/ethernet/micrel/ks8851_mll.c b/drivers/net/ethernet/micrel/ks8851_mll.c
+index aff1619fb0e0e..9de59facec218 100644
+--- a/drivers/net/ethernet/micrel/ks8851_mll.c
++++ b/drivers/net/ethernet/micrel/ks8851_mll.c
+@@ -485,7 +485,7 @@ static int msg_enable;
  
- 	cfg = bgx_reg_read(bgx, lmacid, BGX_CMRX_CFG);
--	if (enable)
-+	if (enable) {
- 		cfg |= CMR_PKT_RX_EN | CMR_PKT_TX_EN;
--	else
-+
-+		/* enable TX FIFO Underflow interrupt */
-+		bgx_reg_modify(bgx, lmacid, BGX_GMP_GMI_TXX_INT_ENA_W1S,
-+			       GMI_TXX_INT_UNDFLW);
-+	} else {
- 		cfg &= ~(CMR_PKT_RX_EN | CMR_PKT_TX_EN);
-+
-+		/* Disable TX FIFO Underflow interrupt */
-+		bgx_reg_modify(bgx, lmacid, BGX_GMP_GMI_TXX_INT_ENA_W1C,
-+			       GMI_TXX_INT_UNDFLW);
-+	}
- 	bgx_reg_write(bgx, lmacid, BGX_CMRX_CFG, cfg);
- 
- 	if (bgx->is_rgx)
-@@ -1544,6 +1553,48 @@ static int bgx_init_phy(struct bgx *bgx)
- 	return bgx_init_of_phy(bgx);
- }
- 
-+static irqreturn_t bgx_intr_handler(int irq, void *data)
-+{
-+	struct bgx *bgx = (struct bgx *)data;
-+	u64 status, val;
-+	int lmac;
-+
-+	for (lmac = 0; lmac < bgx->lmac_count; lmac++) {
-+		status = bgx_reg_read(bgx, lmac, BGX_GMP_GMI_TXX_INT);
-+		if (status & GMI_TXX_INT_UNDFLW) {
-+			pci_err(bgx->pdev, "BGX%d lmac%d UNDFLW\n",
-+				bgx->bgx_id, lmac);
-+			val = bgx_reg_read(bgx, lmac, BGX_CMRX_CFG);
-+			val &= ~CMR_EN;
-+			bgx_reg_write(bgx, lmac, BGX_CMRX_CFG, val);
-+			val |= CMR_EN;
-+			bgx_reg_write(bgx, lmac, BGX_CMRX_CFG, val);
-+		}
-+		/* clear interrupts */
-+		bgx_reg_write(bgx, lmac, BGX_GMP_GMI_TXX_INT, status);
-+	}
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static void bgx_register_intr(struct pci_dev *pdev)
-+{
-+	struct bgx *bgx = pci_get_drvdata(pdev);
-+	int ret;
-+
-+	ret = pci_alloc_irq_vectors(pdev, BGX_LMAC_VEC_OFFSET,
-+				    BGX_LMAC_VEC_OFFSET, PCI_IRQ_ALL_TYPES);
-+	if (ret < 0) {
-+		pci_err(pdev, "Req for #%d msix vectors failed\n",
-+			BGX_LMAC_VEC_OFFSET);
-+		return;
-+	}
-+	ret = pci_request_irq(pdev, GMPX_GMI_TX_INT, bgx_intr_handler, NULL,
-+			      bgx, "BGX%d", bgx->bgx_id);
-+	if (ret)
-+		pci_free_irq(pdev, GMPX_GMI_TX_INT, bgx);
-+}
-+
- static int bgx_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ static u16 ks_rdreg16(struct ks_net *ks, int offset)
  {
- 	int err;
-@@ -1559,7 +1610,7 @@ static int bgx_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+-	ks->cmd_reg_cache = (u16)offset | ((BE1 | BE0) << (offset & 0x02));
++	ks->cmd_reg_cache = (u16)offset | ((BE3 | BE2) >> (offset & 0x02));
+ 	iowrite16(ks->cmd_reg_cache, ks->hw_addr_cmd);
+ 	return ioread16(ks->hw_addr);
+ }
+@@ -500,7 +500,7 @@ static u16 ks_rdreg16(struct ks_net *ks, int offset)
  
- 	pci_set_drvdata(pdev, bgx);
- 
--	err = pci_enable_device(pdev);
-+	err = pcim_enable_device(pdev);
- 	if (err) {
- 		dev_err(dev, "Failed to enable PCI device\n");
- 		pci_set_drvdata(pdev, NULL);
-@@ -1613,6 +1664,8 @@ static int bgx_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 
- 	bgx_init_hw(bgx);
- 
-+	bgx_register_intr(pdev);
-+
- 	/* Enable all LMACs */
- 	for (lmac = 0; lmac < bgx->lmac_count; lmac++) {
- 		err = bgx_lmac_enable(bgx, lmac);
-@@ -1629,6 +1682,7 @@ static int bgx_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 
- err_enable:
- 	bgx_vnic[bgx->bgx_id] = NULL;
-+	pci_free_irq(pdev, GMPX_GMI_TX_INT, bgx);
- err_release_regions:
- 	pci_release_regions(pdev);
- err_disable_device:
-@@ -1646,6 +1700,8 @@ static void bgx_remove(struct pci_dev *pdev)
- 	for (lmac = 0; lmac < bgx->lmac_count; lmac++)
- 		bgx_lmac_disable(bgx, lmac);
- 
-+	pci_free_irq(pdev, GMPX_GMI_TX_INT, bgx);
-+
- 	bgx_vnic[bgx->bgx_id] = NULL;
- 	pci_release_regions(pdev);
- 	pci_disable_device(pdev);
-diff --git a/drivers/net/ethernet/cavium/thunder/thunder_bgx.h b/drivers/net/ethernet/cavium/thunder/thunder_bgx.h
-index cbdd20b9ee6f1..ac0c89cd5c3d2 100644
---- a/drivers/net/ethernet/cavium/thunder/thunder_bgx.h
-+++ b/drivers/net/ethernet/cavium/thunder/thunder_bgx.h
-@@ -183,6 +183,15 @@
- #define BGX_GMP_GMI_TXX_BURST		0x38228
- #define BGX_GMP_GMI_TXX_MIN_PKT		0x38240
- #define BGX_GMP_GMI_TXX_SGMII_CTL	0x38300
-+#define BGX_GMP_GMI_TXX_INT		0x38500
-+#define BGX_GMP_GMI_TXX_INT_W1S		0x38508
-+#define BGX_GMP_GMI_TXX_INT_ENA_W1C	0x38510
-+#define BGX_GMP_GMI_TXX_INT_ENA_W1S	0x38518
-+#define  GMI_TXX_INT_PTP_LOST			BIT_ULL(4)
-+#define  GMI_TXX_INT_LATE_COL			BIT_ULL(3)
-+#define  GMI_TXX_INT_XSDEF			BIT_ULL(2)
-+#define  GMI_TXX_INT_XSCOL			BIT_ULL(1)
-+#define  GMI_TXX_INT_UNDFLW			BIT_ULL(0)
- 
- #define BGX_MSIX_VEC_0_29_ADDR		0x400000 /* +(0..29) << 4 */
- #define BGX_MSIX_VEC_0_29_CTL		0x400008
+ static void ks_wrreg16(struct ks_net *ks, int offset, u16 value)
+ {
+-	ks->cmd_reg_cache = (u16)offset | ((BE1 | BE0) << (offset & 0x02));
++	ks->cmd_reg_cache = (u16)offset | ((BE3 | BE2) >> (offset & 0x02));
+ 	iowrite16(ks->cmd_reg_cache, ks->hw_addr_cmd);
+ 	iowrite16(value, ks->hw_addr);
+ }
 -- 
 2.20.1
 
