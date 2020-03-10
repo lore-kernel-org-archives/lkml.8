@@ -4,49 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7658C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:44:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAB8EC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:44:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A48D024695
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:44:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CDC024695
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:44:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583844278;
-	bh=JnxO00KRWh6HTLd5dyxWlQssitdufeTK2bB+WzCikpc=;
+	s=default; t=1583844281;
+	bh=XAUzqqs/iFZqXjyiC3BTwxXkC+Ct1BC8ORsE7GURgB4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ksJPs4ml2FFM0gp6DRKuXric5uj540RvcAbNOojNoNmTRdFEJNBIoFh2QW5Yh7ozk
-	 PYu27mJjY1x7eZbAXEzIApppzXnrrpjoXaUFhsLjDC7k2gSb4oAZ8LdvGEBJMRkBDM
-	 GeFT2JtHnsAL/PpzZsFa2Dks6lFn10scMg9xq+eA=
+	b=JWnxXMC8sCxs1eDaC6cG9DFNBZsnLWrNB+z8DGGXW30mRC5X59bNah0fry64oVnAn
+	 im87vZ0Hous5oSKq7lFedYHtPZx8G963dfH4PgOitcDmWtVezcgOE0JQofD3Q/kURF
+	 oZDFhH5Z9Z1QY5IGr81ij92dy0xuXmurJeKwa9e4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727314AbgCJMog (ORCPT
+        id S1726477AbgCJMok (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:44:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46876 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:44:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46918 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727764AbgCJMod (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:44:33 -0400
+        id S1727774AbgCJMog (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:44:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E41AE246A6;
-        Tue, 10 Mar 2020 12:44:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 73A7E24691;
+        Tue, 10 Mar 2020 12:44:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844273;
-        bh=JnxO00KRWh6HTLd5dyxWlQssitdufeTK2bB+WzCikpc=;
+        s=default; t=1583844275;
+        bh=XAUzqqs/iFZqXjyiC3BTwxXkC+Ct1BC8ORsE7GURgB4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D3ChUM4ewLaHWfHAHX7C8LhZ5AlcNYFZ73caZ1j6uCeCWORE7kAYVFPutTTfN2dwg
-         Z8vUiVjUW3ZLdnFH78WaYf39uPuHc1/O2L6HmBdVu4lnsjoP7qy+LE9sQg1Kk0Ul0R
-         GFnLvAnW2m4SJLxU40bz8DXer+I0qEx8plzPWCPQ=
+        b=qCRJ696ly9YC8Ba3vleNZgMIV0zm3Nt9RInoaTLtQUhqVFZ45NsKYpiWOADc51oQm
+         RF3d9Jc7mkLawEYndsnz40PVIk1Q8oLBBy468E7ooPELduSKvw7oztaLPTB2iEDJvg
+         Az5Eyd+QsAkaVb40uHVqQIc2NfMNkhapqCWdDaPw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jethro Beekman <jethro@fortanix.com>,
+        stable@vger.kernel.org,
+        Arun Parameswaran <arun.parameswaran@broadcom.com>,
+        Scott Branden <scott.branden@broadcom.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 21/88] net: fib_rules: Correctly set table field when table number exceeds 8 bits
-Date:   Tue, 10 Mar 2020 13:38:29 +0100
-Message-Id: <20200310123611.276846968@linuxfoundation.org>
+Subject: [PATCH 4.9 22/88] net: phy: restore mdio regs in the iproc mdio driver
+Date:   Tue, 10 Mar 2020 13:38:30 +0100
+Message-Id: <20200310123611.443688839@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123606.543939933@linuxfoundation.org>
 References: <20200310123606.543939933@linuxfoundation.org>
@@ -59,31 +63,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jethro Beekman <jethro@fortanix.com>
+From: Arun Parameswaran <arun.parameswaran@broadcom.com>
 
-[ Upstream commit 540e585a79e9d643ede077b73bcc7aa2d7b4d919 ]
+commit 6f08e98d62799e53c89dbf2c9a49d77e20ca648c upstream.
 
-In 709772e6e06564ed94ba740de70185ac3d792773, RT_TABLE_COMPAT was added to
-allow legacy software to deal with routing table numbers >= 256, but the
-same change to FIB rule queries was overlooked.
+The mii management register in iproc mdio block
+does not have a retention register so it is lost on suspend.
+Save and restore value of register while resuming from suspend.
 
-Signed-off-by: Jethro Beekman <jethro@fortanix.com>
+Fixes: bb1a619735b4 ("net: phy: Initialize mdio clock at probe function")
+Signed-off-by: Arun Parameswaran <arun.parameswaran@broadcom.com>
+Signed-off-by: Scott Branden <scott.branden@broadcom.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/core/fib_rules.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/phy/mdio-bcm-iproc.c |   20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
---- a/net/core/fib_rules.c
-+++ b/net/core/fib_rules.c
-@@ -640,7 +640,7 @@ static int fib_nl_fill_rule(struct sk_bu
+--- a/drivers/net/phy/mdio-bcm-iproc.c
++++ b/drivers/net/phy/mdio-bcm-iproc.c
+@@ -188,6 +188,23 @@ static int iproc_mdio_remove(struct plat
+ 	return 0;
+ }
  
- 	frh = nlmsg_data(nlh);
- 	frh->family = ops->family;
--	frh->table = rule->table;
-+	frh->table = rule->table < 256 ? rule->table : RT_TABLE_COMPAT;
- 	if (nla_put_u32(skb, FRA_TABLE, rule->table))
- 		goto nla_put_failure;
- 	if (nla_put_u32(skb, FRA_SUPPRESS_PREFIXLEN, rule->suppress_prefixlen))
++#ifdef CONFIG_PM_SLEEP
++int iproc_mdio_resume(struct device *dev)
++{
++	struct platform_device *pdev = to_platform_device(dev);
++	struct iproc_mdio_priv *priv = platform_get_drvdata(pdev);
++
++	/* restore the mii clock configuration */
++	iproc_mdio_config_clk(priv->base);
++
++	return 0;
++}
++
++static const struct dev_pm_ops iproc_mdio_pm_ops = {
++	.resume = iproc_mdio_resume
++};
++#endif /* CONFIG_PM_SLEEP */
++
+ static const struct of_device_id iproc_mdio_of_match[] = {
+ 	{ .compatible = "brcm,iproc-mdio", },
+ 	{ /* sentinel */ },
+@@ -198,6 +215,9 @@ static struct platform_driver iproc_mdio
+ 	.driver = {
+ 		.name = "iproc-mdio",
+ 		.of_match_table = iproc_mdio_of_match,
++#ifdef CONFIG_PM_SLEEP
++		.pm = &iproc_mdio_pm_ops,
++#endif
+ 	},
+ 	.probe = iproc_mdio_probe,
+ 	.remove = iproc_mdio_remove,
 
 
