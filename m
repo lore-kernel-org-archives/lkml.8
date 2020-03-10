@@ -2,159 +2,233 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D4F5C10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 05:41:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A090C10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 05:43:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B88D2464B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 05:41:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HpTP/XkF"
+	by mail.kernel.org (Postfix) with ESMTP id 3B0912464B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 05:43:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726316AbgCJFl1 (ORCPT
+        id S1726402AbgCJFnR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 01:41:27 -0400
-Received: from mail-qv1-f67.google.com ([209.85.219.67]:36591 "EHLO
-        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726156AbgCJFl1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 01:41:27 -0400
-Received: by mail-qv1-f67.google.com with SMTP id r15so5554736qve.3
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 22:41:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oJBIG/51r747h3DabsgMtgPriYpa81i3DgY6izBzsN4=;
-        b=HpTP/XkFTb9fryvXSS1GfNQfQLZr0nUjTP+5JU7zZ8CoXYdCbf3EO5kYJzcMkLC+62
-         NF8YyCcuUmiFgoxkzvYNkPJPfbwgmnQ/EIv//KHZ40qFdpVAP/LTdGBv/Efl5bWhmzVo
-         xlQ9mh34miQbNyYrSQWQ2DJmpwFphd5Gwgie2Vtcid3J6jNySpWfecoTQSGvkGry/B7i
-         Wi9FW5M1VFJaaRxMd1OkAOeyXrIBnSLimxLEE+/ab66tEdd31dCvlOvBTjlGr39tI1St
-         5KMLezJ8iPtW28dubhK3Ga3WZ8bq4cvNPebTLmVOXBxWhrUvVRnSDcWAzY5cxZsgAuog
-         LMiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oJBIG/51r747h3DabsgMtgPriYpa81i3DgY6izBzsN4=;
-        b=jTn1qzhoC7eI2HajWBitFIadDnDqIlojfIec96wtDKD6AldbDNy8YvqsvLu1mBwyZj
-         NIhDpw9TQWiZGPFOKrnxhWiI0hlm+snCll7S6JhUY7gCprhu4tCz6MWQiysYMGgjo3+m
-         hll6jfAvXt5ForggovAjsujA6ByVQaQOh2YX/506px0jWDfZCrt5dmNIsb5PSragPlYg
-         r87z+XZO22x68gS2Huf1YV7YzzmJduCNOiGVabmXiquRf1vUkyHzZqubHYc6pWAwaWvR
-         UjGMKUBHV5yq3zcMLd6fHbayrODXfe/4pFXUrnE0AwhDsVBDU/RN7Bi1dp8U2M+lAW/6
-         +kyQ==
-X-Gm-Message-State: ANhLgQ3AeKqowbRrRHsLLe7vUVcXcNcWKk2zJd4a+2+13gyyKv60GjUe
-        slsWv2L0JR1rZcAYYWUmV0keZ38cfypLzUbjgjnzDA==
-X-Google-Smtp-Source: ADFU+vu+k5Sw/N/fJfra4eE1vCQYLvVB24EmDGWKXn6sN5IAPUFbQJVURUJhqJ7BfC5FPcdFSi4aGL/bg3d/gOQgdf8=
-X-Received: by 2002:a0c:f892:: with SMTP id u18mr17789908qvn.159.1583818885034;
- Mon, 09 Mar 2020 22:41:25 -0700 (PDT)
+        Tue, 10 Mar 2020 01:43:17 -0400
+Received: from mga12.intel.com ([192.55.52.136]:25055 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726156AbgCJFnR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 01:43:17 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Mar 2020 22:43:16 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,535,1574150400"; 
+   d="scan'208";a="288911548"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by FMSMGA003.fm.intel.com with ESMTP; 09 Mar 2020 22:43:15 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jBXfe-000Ang-L7; Tue, 10 Mar 2020 13:43:14 +0800
+Date:   Tue, 10 Mar 2020 13:42:54 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:locking/urgent] BUILD SUCCESS
+ 8d67743653dce5a0e7aa500fcccb237cde7ad88e
+Message-ID: <5e6728de.x3WK2IefAE6hjUpc%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-References: <000000000000ff323f05a053100c@google.com> <CALCETrV7JcVt3ejMbHxTs4-CFmKjcmSbW2eMmmMZUM7dg2mBuA@mail.gmail.com>
- <87eeu28zzl.fsf@nanos.tec.linutronix.de> <CACT4Y+YX72sz2LsqQOTQ=TdDK_f7zURjA9j9VyYwj7GgLrajkQ@mail.gmail.com>
- <20200309182608.GC1073@sol.localdomain>
-In-Reply-To: <20200309182608.GC1073@sol.localdomain>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Tue, 10 Mar 2020 06:41:13 +0100
-Message-ID: <CACT4Y+ZpN1_HyVyb8Ux9CwpCMT0JBmEP=hJVyCYKfjz9p+p6VA@mail.gmail.com>
-Subject: Re: general protection fault in syscall_return_slowpath
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Lutomirski <luto@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, X86 ML <x86@kernel.org>,
-        Jann Horn <jannh@google.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 9, 2020 at 7:26 PM Eric Biggers <ebiggers@kernel.org> wrote:
->
-> On Mon, Mar 09, 2020 at 09:34:25AM +0100, 'Dmitry Vyukov' via syzkaller-bugs wrote:
-> >
-> > I see the repro opens /dev/fb0, so this may be related to the exact
-> > type of framebuffer on the machine. That's what Jann tried to figure
-> > out.
-> >
-> > There is a plenty of open bugs on dashboard related to fb/tty, just
-> > doing a quick grep based on titles:
-> >
-> > https://syzkaller.appspot.com/upstream
-> > BUG: unable to handle kernel paging request in
-> > drm_fb_helper_dirty_work 7 4d20h 90d
-> > BUG: unable to handle kernel paging request in vga16fb_imageblit 1 74d 73d
-> > divide error in fbcon_switch C cause 141 3d15h 96d
-> > general protection fault in fbcon_cursor C cause 12 13h48m 87d
-> > general protection fault in fbcon_fb_blanked 3 88d 90d
-> > general protection fault in fbcon_invert_region 1 49d 48d
-> > general protection fault in fbcon_modechanged 3 89d 90d
-> > INFO: task hung in do_fb_ioctl 6 36d 57d
-> > INFO: task hung in fb_compat_ioctl 1 87d 87d
-> > INFO: task hung in fb_open C cause 171 1h06m 96d
-> > INFO: task hung in fb_release C cause 23 2d12h 77d
-> > INFO: task hung in release_tty 3 6d16h 62d
-> > INFO: task hung in tty_ldisc_hangup C cause 15 17d 92d
-> > INFO: trying to register non-static key in hci_uart_tty_receive (2) 1 103d 99d
-> > KASAN: global-out-of-bounds Read in fbcon_get_font C cause 19 7d06h 90d
-> > KASAN: global-out-of-bounds Read in fb_pad_aligned_buffer C cause 5 4d22h 92d
-> > KASAN: global-out-of-bounds Read in vga16fb_imageblit C cause 225 1d11h 96d
-> > KASAN: slab-out-of-bounds Read in fbcon_get_font C cause 42 5d04h 96d
-> > KASAN: slab-out-of-bounds Read in fb_pad_aligned_buffer 4 9d00h 48d
-> > KASAN: slab-out-of-bounds Write in fbcon_scroll 1 75d 73d
-> > KASAN: use-after-free Read in fbcon_cursor syz cause 3 41d 84d
-> > KASAN: use-after-free Read in fb_mode_is_equal syz cause 70 5h49m 92d
-> > KASAN: use-after-free Read in tty_open C cause 7 42d 96d
-> > KASAN: use-after-free Write in release_tty C cause 544 4h01m 96d
-> > KASAN: vmalloc-out-of-bounds Read in drm_fb_helper_dirty_work 1 80d 80d
-> > KASAN: vmalloc-out-of-bounds Write in drm_fb_helper_dirty_work 2 64d 76d
-> > KCSAN: data-race in echo_char / n_tty_receive_buf_common 11 21d 125d
-> > KMSAN: kernel-infoleak in tty_compat_ioctl C 81 2h17m 14d
-> > memory leak in tty_init_dev C 3 121d 192d
-> > possible deadlock in n_tty_receive_buf_common C cause 585 1h18m 23d
-> > possible deadlock in tty_port_close_start C cause 4 9d18h 25d
-> > WARNING in dlfb_submit_urb/usb_submit_urb C 190 8d23h 251d
-> >
-> > So if you don't see something obvious here, it may be not worth
-> > spending more time until these, more obvious ones are fixed. This may
-> > be a previous silent memory corruption that wasn't caught by KASAN.
->
-> Yesterday I was looking at a similar bug
-> "general protection fault in do_con_write"
-> (https://syzkaller.appspot.com/bug?id=f82ab89451323208e343f4a8632014ef12b1252d).
->
-> It has a simple single-threaded reproducer at
-> https://syzkaller.appspot.com/text?tag=ReproC&x=169c4c81e00000 that just:
->
->         1. Calls FBIOPUT_VSCREENINFO on /dev/fb0
->         2. Opens /dev/tty20 and writes something to it
->
-> Presumably, to reproduce this you at least need some graphics hardware with a
-> corresponding framebuffer driver (to get /dev/fb0), as well as
-> CONFIG_FRAMEBUFFER_CONSOLE=y (so that the virtual console /dev/tty20 uses a
-> framebuffer console and not something else like a VGA text mode console).
->
-> However, when I tried to reproduce this locally in QEMU with the same kconfig
-> (https://syzkaller.appspot.com/text?tag=KernelConfig&x=31018567b8f0fc70) and
-> with graphics enabled (-vga std), it didn't work.
->
-> I then tried to reproduce on a Google Compute Engine VM with the exact same
-> kconfig, and it worked.  I think the framebuffer driver in use was vga16fb.c.
-> It's odd because the same driver seems to be used in the QEMU case, and in both
-> cases the virtual consoles were bound to the framebuffer console.
->
-> I need to double-check all this though.
->
-> And yes, probably many of the above bugs have the same cause.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  locking/urgent
+branch HEAD: 8d67743653dce5a0e7aa500fcccb237cde7ad88e  futex: Unbreak futex hashing
 
-Interesting. If you manage to reproduce it (or at least figure out
-"the closest" video driver), it would be useful to mention at:
-https://github.com/google/syzkaller/blob/master/docs/syzbot.md#crash-does-not-reproduce
-Currently we don't specify any -vga flag at all.
+elapsed time: 483m
+
+configs tested: 170
+configs skipped: 0
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+arm                              allmodconfig
+arm                               allnoconfig
+arm                              allyesconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+arm64                            allyesconfig
+arm                         at91_dt_defconfig
+arm                           efm32_defconfig
+arm                          exynos_defconfig
+arm                        multi_v5_defconfig
+arm                        multi_v7_defconfig
+arm                        shmobile_defconfig
+arm                           sunxi_defconfig
+arm64                               defconfig
+sparc                            allyesconfig
+ia64                                defconfig
+powerpc                             defconfig
+i386                              allnoconfig
+sparc                               defconfig
+ia64                              allnoconfig
+i386                             alldefconfig
+i386                             allyesconfig
+i386                                defconfig
+ia64                             alldefconfig
+ia64                             allmodconfig
+ia64                             allyesconfig
+c6x                              allyesconfig
+c6x                        evmc6678_defconfig
+nios2                         10m50_defconfig
+nios2                         3c120_defconfig
+openrisc                    or1ksim_defconfig
+openrisc                 simple_smp_defconfig
+xtensa                       common_defconfig
+xtensa                          iss_defconfig
+alpha                               defconfig
+csky                                defconfig
+nds32                             allnoconfig
+nds32                               defconfig
+h8300                       h8s-sim_defconfig
+h8300                     edosk2674_defconfig
+m68k                       m5475evb_defconfig
+m68k                             allmodconfig
+h8300                    h8300h-sim_defconfig
+m68k                           sun3_defconfig
+m68k                          multi_defconfig
+arc                              allyesconfig
+arc                                 defconfig
+microblaze                      mmu_defconfig
+microblaze                    nommu_defconfig
+powerpc                           allnoconfig
+powerpc                       ppc64_defconfig
+powerpc                          rhel-kconfig
+mips                           32r2_defconfig
+mips                         64r6el_defconfig
+mips                             allmodconfig
+mips                              allnoconfig
+mips                             allyesconfig
+mips                      fuloong2e_defconfig
+mips                      malta_kvm_defconfig
+parisc                            allnoconfig
+parisc                           allyesconfig
+parisc                generic-32bit_defconfig
+parisc                generic-64bit_defconfig
+alpha                randconfig-a001-20200309
+m68k                 randconfig-a001-20200309
+mips                 randconfig-a001-20200309
+nds32                randconfig-a001-20200309
+parisc               randconfig-a001-20200309
+riscv                randconfig-a001-20200309
+c6x                  randconfig-a001-20200309
+h8300                randconfig-a001-20200309
+microblaze           randconfig-a001-20200309
+nios2                randconfig-a001-20200309
+sparc64              randconfig-a001-20200309
+csky                 randconfig-a001-20200309
+openrisc             randconfig-a001-20200309
+s390                 randconfig-a001-20200309
+sh                   randconfig-a001-20200309
+xtensa               randconfig-a001-20200309
+x86_64               randconfig-b001-20200309
+x86_64               randconfig-b002-20200309
+x86_64               randconfig-b003-20200309
+i386                 randconfig-b001-20200309
+i386                 randconfig-b002-20200309
+i386                 randconfig-b003-20200309
+x86_64               randconfig-b001-20200310
+x86_64               randconfig-b002-20200310
+x86_64               randconfig-b003-20200310
+i386                 randconfig-b001-20200310
+i386                 randconfig-b002-20200310
+i386                 randconfig-b003-20200310
+x86_64               randconfig-c001-20200309
+x86_64               randconfig-c002-20200309
+x86_64               randconfig-c003-20200309
+i386                 randconfig-c001-20200309
+i386                 randconfig-c002-20200309
+i386                 randconfig-c003-20200309
+x86_64               randconfig-d001-20200309
+x86_64               randconfig-d002-20200309
+x86_64               randconfig-d003-20200309
+i386                 randconfig-d001-20200309
+i386                 randconfig-d002-20200309
+i386                 randconfig-d003-20200309
+x86_64               randconfig-d001-20200310
+x86_64               randconfig-d002-20200310
+x86_64               randconfig-d003-20200310
+i386                 randconfig-d001-20200310
+i386                 randconfig-d002-20200310
+i386                 randconfig-d003-20200310
+x86_64               randconfig-f001-20200309
+x86_64               randconfig-f002-20200309
+x86_64               randconfig-f003-20200309
+i386                 randconfig-f001-20200309
+i386                 randconfig-f002-20200309
+i386                 randconfig-f003-20200309
+x86_64               randconfig-g001-20200310
+x86_64               randconfig-g002-20200310
+x86_64               randconfig-g003-20200310
+i386                 randconfig-g001-20200310
+i386                 randconfig-g002-20200310
+i386                 randconfig-g003-20200310
+x86_64               randconfig-g001-20200309
+x86_64               randconfig-g002-20200309
+x86_64               randconfig-g003-20200309
+i386                 randconfig-g001-20200309
+i386                 randconfig-g002-20200309
+i386                 randconfig-g003-20200309
+x86_64               randconfig-h001-20200310
+x86_64               randconfig-h002-20200310
+x86_64               randconfig-h003-20200310
+i386                 randconfig-h001-20200310
+i386                 randconfig-h002-20200310
+i386                 randconfig-h003-20200310
+x86_64               randconfig-h001-20200309
+x86_64               randconfig-h002-20200309
+x86_64               randconfig-h003-20200309
+i386                 randconfig-h001-20200309
+i386                 randconfig-h002-20200309
+i386                 randconfig-h003-20200309
+riscv                            allmodconfig
+riscv                             allnoconfig
+riscv                            allyesconfig
+riscv                               defconfig
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+s390                             alldefconfig
+s390                             allmodconfig
+s390                              allnoconfig
+s390                             allyesconfig
+s390                          debug_defconfig
+s390                                defconfig
+s390                       zfcpdump_defconfig
+sh                               allmodconfig
+sh                                allnoconfig
+sh                          rsk7269_defconfig
+sh                  sh7785lcr_32bit_defconfig
+sh                            titan_defconfig
+sparc64                          allmodconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                             defconfig
+um                                  defconfig
+um                             i386_defconfig
+um                           x86_64_defconfig
+x86_64                              fedora-25
+x86_64                                  kexec
+x86_64                                    lkp
+x86_64                                   rhel
+x86_64                         rhel-7.2-clear
+x86_64                               rhel-7.6
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
