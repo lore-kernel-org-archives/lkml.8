@@ -2,358 +2,157 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56537C18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 08:45:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1F20C18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 08:46:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 180112051A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 08:45:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583829951;
-	bh=lRnmDOOc33NWOfzeNm7vtSF2yxIqXaEVjr4LNUlhRPY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dU2eKwkqHVrq1mIcdAb/EWdkZFir5xNHyN9DChONRwq6R4sUVKupoqkGUco7xZPqS
-	 x0qPDObTRABNc3jcCRhGtoRd0QAlnJeu0cazuP/K7pVKzAJX5DKxsNPkzN4bLe7bin
-	 yK92fFbc8AKdoqBaMJ20wQRYkd+7LEPn93Af7ltw=
+	by mail.kernel.org (Postfix) with ESMTP id 6DB62208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 08:46:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nokia.onmicrosoft.com header.i=@nokia.onmicrosoft.com header.b="T+d5OGxT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726504AbgCJIpu (ORCPT
+        id S1726613AbgCJIqD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 04:45:50 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:34892 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726389AbgCJIpt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 04:45:49 -0400
-Received: by mail-wm1-f65.google.com with SMTP id m3so317388wmi.0
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 01:45:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Irapte2jMjBTf5tgiU8rGS0JL18ZdOQCDd6Y5nxOecc=;
-        b=ciamwfiO9I2t4HvS+6mDrHs9cKjsRDfPef/FSthRCjR3g/cxOJTaCZia8/NeKoKXGV
-         kZtiPp++HpvIXpHVvqzGxak4pq6wek541JBAl8LLuMAsoECkFZJpd3cSNHKWBentCiGL
-         wfnKsFncycpA+bQ6Wsh9SanwFi6qQRNDFISaH92Xf/F/oG/Becvi4JbA8D9wZJDdFnFj
-         ELyAnn9mmDE/k5FuwQTCvMix/1ceVvLHQ1WFlu9hrD+c8/vhASPK7lPM4yoImyDvmjhY
-         8wea4zAStLUyt7cd/Hs9oU7cMAKXvCk3UV7JLTCAm3iqNkRL2yJWDZ6gFOmt4UgD8GT5
-         Qfig==
-X-Gm-Message-State: ANhLgQ3gDfwUUMGGnPEIjnJUJ6IUInJdYJnui8Cmvct1MkHcoxkKQEMQ
-        VkhSYrBOlmZSX1yr6EUXNTE=
-X-Google-Smtp-Source: ADFU+vtXTNBR7lK8Ag9Lxs5wN9/TAgFNzpZ3ovJGPL7xKkc9q2dIuYlzN561ULfL95Mv+Y9AsEFZAQ==
-X-Received: by 2002:a7b:c944:: with SMTP id i4mr956259wml.77.1583829946756;
-        Tue, 10 Mar 2020 01:45:46 -0700 (PDT)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id s14sm53401881wrv.44.2020.03.10.01.45.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Mar 2020 01:45:45 -0700 (PDT)
-Date:   Tue, 10 Mar 2020 09:45:44 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>, linux-mm@kvack.org,
-        kernel-team@fb.com, linux-kernel@vger.kernel.org,
-        Rik van Riel <riel@surriel.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>
-Subject: Re: [PATCH v2] mm: hugetlb: optionally allocate gigantic hugepages
- using cma
-Message-ID: <20200310084544.GY8447@dhcp22.suse.cz>
-References: <20200310002524.2291595-1-guro@fb.com>
+        Tue, 10 Mar 2020 04:46:03 -0400
+Received: from mail-eopbgr70139.outbound.protection.outlook.com ([40.107.7.139]:9510
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726389AbgCJIqD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 04:46:03 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CXEuYowL3W294zit2UjXTiHOLvWJbIVJfvPqqIEpFDRFdtIl5RNPHjFzKml3+6T+GhyagUO3del5sibo+eVav/cP1qRO+KV38sZiRAo1YDe3uPWxS05SGjnLzwr99KsPire5t+BDeQ2aKqzmX8PTP3OYJJRcgMewHtEn+MOuqbZ/3znlUTkgUhE64aSUH1OON8flZTPIN8PfMNs98gBRqgljW5aTvTERgGnXjZ+Qiq5FjeNfuXYR1JTKmd3m10L1pZqCql0nGTGOmlM1nDDwYu3ny4ifM8B0NflpBVkqAhd3OQfyptNgzJYDZMN9nBKzhgc2aZXUWMN5tOxrKiwTkw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2IkS7XUdgiKnoSkgf/9Web2TVnQ0qLAiLcADE6Skdys=;
+ b=ZwbJ6znNB02eBe5dXTTimLGIjDX5CReTQjfI36aaVzQ0BKIu+GG+T8wj5jogPtDV8Re45AhTCoGB1gqtJnCj98eBwvrU8VRZCtzXkDH2msrcDs7flZb266/IdIHDOkk7mcoqC3hMI4UFUa6nxecyx9WvV0EOPjzAhe9QB2NwzgwHGZo53sZxAqIH1Ai3hCFBvnRNXUiWU/pGZB9f2eqffmHfSC7vfFH/LKZUqimZO/7C6VOpPLKyAe2cPr1STQi5byTvWGNL2KJ3rG1+p86cGXyxZGJSZMLx4JVDd64dKZvXVszq9vSjPtNIeAti6SJ6KWGm3r5im01EAsWtULjLUA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nokia.com; dmarc=pass action=none header.from=nokia.com;
+ dkim=pass header.d=nokia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nokia.onmicrosoft.com;
+ s=selector1-nokia-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2IkS7XUdgiKnoSkgf/9Web2TVnQ0qLAiLcADE6Skdys=;
+ b=T+d5OGxTAluCAjU9uW5IuzN5xWoc5mVgsGN/f4KHofQ+vQk/ov6Xo7mLHI8CCs6zThbW3Mh7qWBwf59511Zd0eEwwoR1BUbSp2nIGjB4f1hwaOV7OHak+vvoJSdtIJpMaBJDcRVT2TO52AYSci408jfjSAQAqiogV/RQWQbqq+w=
+Received: from HE1PR0702MB3675.eurprd07.prod.outlook.com (10.167.127.12) by
+ HE1PR0702MB3788.eurprd07.prod.outlook.com (52.133.5.25) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2814.9; Tue, 10 Mar 2020 08:45:58 +0000
+Received: from HE1PR0702MB3675.eurprd07.prod.outlook.com
+ ([fe80::2806:c34c:d469:8e87]) by HE1PR0702MB3675.eurprd07.prod.outlook.com
+ ([fe80::2806:c34c:d469:8e87%5]) with mapi id 15.20.2814.007; Tue, 10 Mar 2020
+ 08:45:58 +0000
+From:   "Rantala, Tommi T. (Nokia - FI/Espoo)" <tommi.t.rantala@nokia.com>
+To:     "darrick.wong@oracle.com" <darrick.wong@oracle.com>,
+        "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "hch@lst.de" <hch@lst.de>
+Subject: 5.5 XFS getdents regression?
+Thread-Topic: 5.5 XFS getdents regression?
+Thread-Index: AQHV9rhRbXPUS+vCVkG2reFy3jRV2w==
+Date:   Tue, 10 Mar 2020 08:45:58 +0000
+Message-ID: <72c5fd8e9a23dde619f70f21b8100752ec63e1d2.camel@nokia.com>
+Accept-Language: fi-FI, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=tommi.t.rantala@nokia.com; 
+x-originating-ip: [131.228.2.19]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 56673539-5c1c-4319-61c4-08d7c4cf7466
+x-ms-traffictypediagnostic: HE1PR0702MB3788:
+x-microsoft-antispam-prvs: <HE1PR0702MB3788DFD1F37347BED7250420B4FF0@HE1PR0702MB3788.eurprd07.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:569;
+x-forefront-prvs: 033857D0BD
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(39860400002)(136003)(376002)(366004)(396003)(199004)(189003)(76116006)(110136005)(26005)(2616005)(36756003)(186003)(316002)(8936002)(6486002)(66946007)(64756008)(66556008)(66446008)(81156014)(66476007)(81166006)(7116003)(6512007)(478600001)(2906002)(71200400001)(86362001)(966005)(8676002)(6506007)(5660300002)(4326008);DIR:OUT;SFP:1102;SCL:1;SRVR:HE1PR0702MB3788;H:HE1PR0702MB3675.eurprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nokia.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 2KedPC2wzCuOpXwa3951n1iu9vc/pa+qnm8itcZnxx/Rn5u8Mx2MSj1HwgMR4QGYvHxDCtC94bxatZLMQa77OR9Enaq8xWDwPwQbhQ8a7eWtcDz7M+45CHXS9NV5p1tCDaupY1KtfB/t/qicukL/fJVjOHfc1i0pvBD3YMfn3MUUNwLhQZ9sOY8vlR86C3U+XbQ8EDoerKaKLMPKR8r1tT/SmMmeaYoIq1dK3kRZnrkp9w5bq0Y4p3avjxjemJDRKKjoxSEFNiiTqgG4bMxXY7f8ysGnshqNsFhfGVWMHcG/p97Ls/1T/xcBXRlcEaSyRH/eO7GmqLrv8rMyTAL5QQjCHTSop2PB4cINBw4mj79QD0Nb/z9Y3rZhxS+4G2IEEqTP8hAKScS6mXjTrQe1HKoX1XkvCGoEPVITIqxlOdzq9+2cQKB6fLbWWLTyXKERrYch+hV4JoKb4x3onFhI2iECh99ZFU/1r70osR79oGlWsU24zBW92vhiI+5h+Bj/XIzjltsvJKFtocOv/eRN0A==
+x-ms-exchange-antispam-messagedata: /Mr9wwvKTzRqYxYjaMKek+VSu/RFYe8ILRPaY2ZEbAi+SMg8BtxTZUE2/82RbX9sz8bASH5NnsjqE7bl313rHdB3rCbF9IGrn8k4NGGqUXVa/Pv1MhpMptVVHkKIqoeTwlLdkMDejN2N9clhDHSp+A==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <D76916B7F7D1BC40B415BD6D729B8BFD@eurprd07.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200310002524.2291595-1-guro@fb.com>
+X-OriginatorOrg: nokia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 56673539-5c1c-4319-61c4-08d7c4cf7466
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Mar 2020 08:45:58.5286
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 5d471751-9675-428d-917b-70f44f9630b0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: JPPKi6wzrWtjDjsK2FQx7Ij9Tul4UOF1rn/Cpy8F/2YGPKIZIWPeXY91KVS32K9w4ZP1oUgKQQzYgOFR38J/k5DCHOrh5JxnbplCSslz+hQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR0702MB3788
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[Cc Mike as hugetlb maintainer and keeping the full context for his
-reference]
-
-On Mon 09-03-20 17:25:24, Roman Gushchin wrote:
-> Commit 944d9fec8d7a ("hugetlb: add support for gigantic page allocation
-> at runtime") has added the run-time allocation of gigantic pages. However
-> it actually works only at early stages of the system loading, when
-> the majority of memory is free. After some time the memory gets
-> fragmented by non-movable pages, so the chances to find a contiguous
-> 1 GB block are getting close to zero. Even dropping caches manually
-> doesn't help a lot.
-> 
-> At large scale rebooting servers in order to allocate gigantic hugepages
-> is quite expensive and complex. At the same time keeping some constant
-> percentage of memory in reserved hugepages even if the workload isn't
-> using it is a big waste: not all workloads can benefit from using 1 GB
-> pages.
-> 
-> The following solution can solve the problem:
-> 1) On boot time a dedicated cma area* is reserved. The size is passed
->    as a kernel argument.
-> 2) Run-time allocations of gigantic hugepages are performed using the
->    cma allocator and the dedicated cma area
-> 
-> In this case gigantic hugepages can be allocated successfully with a
-> high probability, however the memory isn't completely wasted if nobody
-> is using 1GB hugepages: it can be used for pagecache, anon memory,
-> THPs, etc.
-> 
-> * On a multi-node machine a per-node cma area is allocated on each node.
->   Following gigantic hugetlb allocation are using the first available
->   numa node if the mask isn't specified by a user.
-> 
-> Usage:
-> 1) configure the kernel to allocate a cma area for hugetlb allocations:
->    pass hugetlb_cma=10G as a kernel argument
-> 
-> 2) allocate hugetlb pages as usual, e.g.
->    echo 10 > /sys/kernel/mm/hugepages/hugepages-1048576kB/nr_hugepages
-> 
-> If the option isn't enabled or the allocation of the cma area failed,
-> the current behavior of the system is preserved.
-> 
-> Only x86 is covered by this patch, but it's trivial to extend it to
-> cover other architectures as well.
-
-Overall idea makes sense to me. I am worried about the configuration
-side of the thing. Not only I would stick with the absolute size for now
-for simplicity and because percentage usecase is not really explained
-anywhere. I am also worried about the resulting memory layout you will
-get when using the parameter.
-
-Let's scroll down to the setup code ...
-
-> v2: fixed !CONFIG_CMA build, suggested by Andrew Morton
-> 
-> Signed-off-by: Roman Gushchin <guro@fb.com>
-> ---
->  .../admin-guide/kernel-parameters.txt         |   7 ++
->  arch/x86/kernel/setup.c                       |   3 +
->  include/linux/hugetlb.h                       |   2 +
->  mm/hugetlb.c                                  | 115 ++++++++++++++++++
->  4 files changed, 127 insertions(+)
-> 
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index 0c9894247015..d3349ec1dbef 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -1452,6 +1452,13 @@
->  	hpet_mmap=	[X86, HPET_MMAP] Allow userspace to mmap HPET
->  			registers.  Default set by CONFIG_HPET_MMAP_DEFAULT.
->  
-> +	hugetlb_cma=	[x86-64] The size of a cma area used for allocation
-> +			of gigantic hugepages.
-> +			Format: nn[GTPE] | nn%
-> +
-> +			If enabled, boot-time allocation of gigantic hugepages
-> +			is skipped.
-> +
->  	hugepages=	[HW,X86-32,IA-64] HugeTLB pages to allocate at boot.
->  	hugepagesz=	[HW,IA-64,PPC,X86-64] The size of the HugeTLB pages.
->  			On x86-64 and powerpc, this option can be specified
-> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-> index a74262c71484..ceeb06ddfd41 100644
-> --- a/arch/x86/kernel/setup.c
-> +++ b/arch/x86/kernel/setup.c
-> @@ -16,6 +16,7 @@
->  #include <linux/pci.h>
->  #include <linux/root_dev.h>
->  #include <linux/sfi.h>
-> +#include <linux/hugetlb.h>
->  #include <linux/tboot.h>
->  #include <linux/usb/xhci-dbgp.h>
->  
-> @@ -1158,6 +1159,8 @@ void __init setup_arch(char **cmdline_p)
->  	initmem_init();
->  	dma_contiguous_reserve(max_pfn_mapped << PAGE_SHIFT);
->  
-> +	hugetlb_cma_reserve();
-> +
->  	/*
->  	 * Reserve memory for crash kernel after SRAT is parsed so that it
->  	 * won't consume hotpluggable memory.
-> diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
-> index 50480d16bd33..50050c981ab9 100644
-> --- a/include/linux/hugetlb.h
-> +++ b/include/linux/hugetlb.h
-> @@ -157,6 +157,8 @@ pte_t *huge_pmd_share(struct mm_struct *mm, unsigned long addr, pud_t *pud);
->  extern int sysctl_hugetlb_shm_group;
->  extern struct list_head huge_boot_pages;
->  
-> +extern void __init hugetlb_cma_reserve(void);
-> +
->  /* arch callbacks */
->  
->  pte_t *huge_pte_alloc(struct mm_struct *mm,
-> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-> index 7fb31750e670..c6f58bab879c 100644
-> --- a/mm/hugetlb.c
-> +++ b/mm/hugetlb.c
-> @@ -28,6 +28,7 @@
->  #include <linux/jhash.h>
->  #include <linux/numa.h>
->  #include <linux/llist.h>
-> +#include <linux/cma.h>
->  
->  #include <asm/page.h>
->  #include <asm/pgtable.h>
-> @@ -44,6 +45,9 @@
->  int hugetlb_max_hstate __read_mostly;
->  unsigned int default_hstate_idx;
->  struct hstate hstates[HUGE_MAX_HSTATE];
-> +
-> +static struct cma *hugetlb_cma[MAX_NUMNODES];
-> +
->  /*
->   * Minimum page order among possible hugepage sizes, set to a proper value
->   * at boot time.
-> @@ -1228,6 +1232,11 @@ static void destroy_compound_gigantic_page(struct page *page,
->  
->  static void free_gigantic_page(struct page *page, unsigned int order)
->  {
-> +	if (IS_ENABLED(CONFIG_CMA) && hugetlb_cma[0]) {
-> +		cma_release(hugetlb_cma[page_to_nid(page)], page, 1 << order);
-> +		return;
-> +	}
-> +
->  	free_contig_range(page_to_pfn(page), 1 << order);
->  }
->  
-> @@ -1237,6 +1246,23 @@ static struct page *alloc_gigantic_page(struct hstate *h, gfp_t gfp_mask,
->  {
->  	unsigned long nr_pages = 1UL << huge_page_order(h);
->  
-> +	if (IS_ENABLED(CONFIG_CMA) && hugetlb_cma[0]) {
-> +		struct page *page;
-> +		int nid;
-> +
-> +		for_each_node_mask(nid, *nodemask) {
-> +			if (!hugetlb_cma[nid])
-> +				break;
-> +
-> +			page = cma_alloc(hugetlb_cma[nid], nr_pages,
-> +					 huge_page_order(h), true);
-> +			if (page)
-> +				return page;
-> +		}
-> +
-> +		return NULL;
-> +	}
-> +
->  	return alloc_contig_pages(nr_pages, gfp_mask, nid, nodemask);
->  }
->  
-> @@ -2439,6 +2465,10 @@ static void __init hugetlb_hstate_alloc_pages(struct hstate *h)
->  
->  	for (i = 0; i < h->max_huge_pages; ++i) {
->  		if (hstate_is_gigantic(h)) {
-> +			if (IS_ENABLED(CONFIG_CMA) && hugetlb_cma[0]) {
-> +				pr_warn_once("HugeTLB: hugetlb_cma is enabled, skip boot time allocation\n");
-> +				break;
-> +			}
->  			if (!alloc_bootmem_huge_page(h))
->  				break;
->  		} else if (!alloc_pool_huge_page(h,
-> @@ -5372,3 +5402,88 @@ void move_hugetlb_state(struct page *oldpage, struct page *newpage, int reason)
->  		spin_unlock(&hugetlb_lock);
->  	}
->  }
-> +
-> +#ifdef CONFIG_CMA
-> +static unsigned long hugetlb_cma_size __initdata;
-> +static unsigned long hugetlb_cma_percent __initdata;
-> +
-> +static int __init cmdline_parse_hugetlb_cma(char *p)
-> +{
-> +	unsigned long long val;
-> +	char *endptr;
-> +
-> +	if (!p)
-> +		return -EINVAL;
-> +
-> +	/* Value may be a percentage of total memory, otherwise bytes */
-> +	val = simple_strtoull(p, &endptr, 0);
-> +	if (*endptr == '%')
-> +		hugetlb_cma_percent = clamp_t(unsigned long, val, 0, 100);
-> +	else
-> +		hugetlb_cma_size = memparse(p, &p);
-> +
-> +	return 0;
-> +}
-> +
-> +early_param("hugetlb_cma", cmdline_parse_hugetlb_cma);
-> +
-> +void __init hugetlb_cma_reserve(void)
-> +{
-> +	unsigned long totalpages = 0;
-> +	unsigned long start_pfn, end_pfn;
-> +	phys_addr_t size;
-> +	int nid, i, res;
-> +
-> +	if (!hugetlb_cma_size && !hugetlb_cma_percent)
-> +		return;
-> +
-> +	if (hugetlb_cma_percent) {
-> +		for_each_mem_pfn_range(i, MAX_NUMNODES, &start_pfn, &end_pfn,
-> +				       NULL)
-> +			totalpages += end_pfn - start_pfn;
-> +
-> +		size = PAGE_SIZE * (hugetlb_cma_percent * 100 * totalpages) /
-> +			10000UL;
-> +	} else {
-> +		size = hugetlb_cma_size;
-> +	}
-> +
-> +	pr_info("hugetlb_cma: reserve %llu, %llu per node\n", size,
-> +		size / nr_online_nodes);
-> +
-> +	size /= nr_online_nodes;
-> +
-> +	for_each_node_state(nid, N_ONLINE) {
-> +		unsigned long min_pfn = 0, max_pfn = 0;
-> +
-> +		for_each_mem_pfn_range(i, nid, &start_pfn, &end_pfn, NULL) {
-> +			if (!min_pfn)
-> +				min_pfn = start_pfn;
-> +			max_pfn = end_pfn;
-> +		}
-
-Do you want to compare the range to the size? But besides that, I
-believe this really needs to be much more careful. I believe you do not
-want to eat a considerable part of the kernel memory because the
-resulting configuration will really struggle (yeah all the low mem/high
-mem problems all over again).
-
-> +
-> +		res = cma_declare_contiguous(PFN_PHYS(min_pfn), size,
-> +					     PFN_PHYS(max_pfn), (1UL << 30),
-> +					     0, false,
-> +					     "hugetlb", &hugetlb_cma[nid]);
-> +		if (res) {
-> +			pr_warn("hugetlb_cma: reservation failed: err %d, node %d, [%llu, %llu)",
-> +				res, nid, PFN_PHYS(min_pfn), PFN_PHYS(max_pfn));
-> +
-> +			for (; nid >= 0; nid--)
-> +				hugetlb_cma[nid] = NULL;
-> +
-> +			break;
-> +		}
-> +
-> +		pr_info("hugetlb_cma: successfully reserved %llu on node %d\n",
-> +			size, nid);
-> +	}
-> +}
-> +
-> +#else /* CONFIG_CMA */
-> +void __init hugetlb_cma_reserve(void)
-> +{
-> +}
-> +
-> +#endif /* CONFIG_CMA */
-> -- 
-> 2.24.1
-
--- 
-Michal Hocko
-SUSE Labs
+SGVsbG8sDQoNCk9uZSBvZiBteSBHaXRMYWIgQ0kgam9icyBzdG9wcGVkIHdvcmtpbmcgYWZ0ZXIg
+dXBncmFkaW5nIHNlcnZlciA1LjQuMTgtDQoxMDAuZmMzMC54ODZfNjQgLT4gNS41LjctMTAwLmZj
+MzAueDg2XzY0Lg0KKHRlc3RlZCA1LjUuOC0xMDAuZmMzMC54ODZfNjQgdG9vLCBubyBjaGFuZ2Up
+DQpUaGUgc2VydmVyIGlzIGZlZG9yYTMwIHdpdGggWEZTIHJvb3Rmcy4NClRoZSBwcm9ibGVtIHJl
+cHJvZHVjZXMgYWx3YXlzLCBhbmQgdGFrZXMgb25seSBjb3VwbGUgbWludXRlcyB0byBydW4uDQoN
+ClRoZSBDSSBqb2IgZmFpbHMgaW4gdGhlIGJlZ2lubmluZyB3aGVuIGRvaW5nICJnaXQgY2xlYW4i
+IGluIGRvY2tlcg0KY29udGFpbmVyLCBhbmQgZmFpbGluZyB0byBybWRpciBzb21lIGRpcmVjdG9y
+eToNCiJ3YXJuaW5nOiBmYWlsZWQgdG8gcmVtb3ZlIA0KLnZlbmRvci9wa2cvbW9kL2dvbGFuZy5v
+cmcveC9uZXRAdjAuMC4wLTIwMjAwMTE0MTU1NDEzLTZhZmI1MTk1ZTVhYS9pbnRlcm4NCmFsL3Nv
+Y2tldDogRGlyZWN0b3J5IG5vdCBlbXB0eSINCg0KUXVpY2sgZ29vZ2xlIHNlYXJjaCBmaW5kcyBz
+b21lIG90aGVyIHBlb3BsZSByZXBvcnRpbmcgc2ltaWxhciBwcm9ibGVtcw0Kd2l0aCA1LjUuMDoN
+Cmh0dHBzOi8vZ2l0bGFiLmNvbS9naXRsYWItb3JnL2dpdGxhYi1ydW5uZXIvaXNzdWVzLzMxODUN
+Cg0KDQpDb2xsZWN0ZWQgc29tZSBkYXRhIHdpdGggc3RyYWNlLCBhbmQgaXQgc2VlbXMgdGhhdCBn
+ZXRkZW50cyBpcyBub3QNCnJldHVybmluZyBhbGwgZW50cmllczoNCg0KNS40IGdldGRlbnRzNjQo
+KSByZXR1cm5zIDUyKzUwKzErMCBlbnRyaWVzIA0KPT4gYWxsIGZpbGVzIGluIGRpcmVjdG9yeSBh
+cmUgZGVsZXRlZCBhbmQgcm1kaXIoKSBpcyBPSw0KDQo1LjUgZ2V0ZGVudHM2NCgpIHJldHVybnMg
+NTIrNTArMCswIGVudHJpZXMNCj0+IHJtZGlyKCkgZmFpbHMgd2l0aCBFTk9URU1QVFkNCg0KDQpX
+b3JraW5nIDUuNCBzdHJhY2U6DQoxMDowMDoxMiBnZXRkZW50czY0KDEwPA0KL2J1aWxkcy94eXov
+LnZlbmRvci9wa2cvbW9kL2dvbGFuZy5vcmcveC9uZXRAdjAuMC4wLTIwMjAwMzAxMDIyMTMwLTI0
+NDQ5MmRmYTM3YQ0KL2ludGVybmFsL3NvY2tldD4sIC8qIDUyIGVudHJpZXMgKi8sIDIwNDgpID0g
+MjAyNCA8MC4wMDAwMjA+DQoxMDowMDoxMiB1bmxpbmsoIg0KLnZlbmRvci9wa2cvbW9kL2dvbGFu
+Zy5vcmcveC9uZXRAdjAuMC4wLTIwMjAwMzAxMDIyMTMwLTI0NDQ5MmRmYTM3YS9pbnRlcm4NCmFs
+L3NvY2tldC9jbXNnaGRyLmdvIikgPSAwIDwwLjAwMDA2OD4NCjEwOjAwOjEyIHVubGluaygiDQou
+dmVuZG9yL3BrZy9tb2QvZ29sYW5nLm9yZy94L25ldEB2MC4wLjAtMjAyMDAzMDEwMjIxMzAtMjQ0
+NDkyZGZhMzdhL2ludGVybg0KYWwvc29ja2V0L2Ntc2doZHJfYnNkLmdvIikgPSAwIDwwLjAwMDA0
+OD4NClsuLi5dDQoxMDowMDoxMiBnZXRkZW50czY0KDEwPA0KL2J1aWxkcy94eXovLnZlbmRvci9w
+a2cvbW9kL2dvbGFuZy5vcmcveC9uZXRAdjAuMC4wLTIwMjAwMzAxMDIyMTMwLTI0NDQ5MmRmYTM3
+YQ0KL2ludGVybmFsL3NvY2tldD4sIC8qIDUwIGVudHJpZXMgKi8sIDIwNDgpID0gMjA0OCA8MC4w
+MDAwMjM+DQoxMDowMDoxMiB1bmxpbmsoIg0KLnZlbmRvci9wa2cvbW9kL2dvbGFuZy5vcmcveC9u
+ZXRAdjAuMC4wLTIwMjAwMzAxMDIyMTMwLTI0NDQ5MmRmYTM3YS9pbnRlcm4NCmFsL3NvY2tldC9z
+eXNfbGludXhfMzg2LnMiKSA9IDAgPDAuMDAwMDYyPg0KWy4uLl0NCjEwOjAwOjEyIGdldGRlbnRz
+NjQoMTA8DQovYnVpbGRzL3h5ei8udmVuZG9yL3BrZy9tb2QvZ29sYW5nLm9yZy94L25ldEB2MC4w
+LjAtMjAyMDAzMDEwMjIxMzAtMjQ0NDkyZGZhMzdhDQovaW50ZXJuYWwvc29ja2V0PiwgLyogMSBl
+bnRyaWVzICovLCAyMDQ4KSA9IDQ4IDwwLjAwMDAxNz4NCjEwOjAwOjEyIHVubGluaygiDQoudmVu
+ZG9yL3BrZy9tb2QvZ29sYW5nLm9yZy94L25ldEB2MC4wLjAtMjAyMDAzMDEwMjIxMzAtMjQ0NDky
+ZGZhMzdhL2ludGVybg0KYWwvc29ja2V0L3pzeXNfc29sYXJpc19hbWQ2NC5nbyIpID0gMCA8MC4w
+MDAwMzk+DQoxMDowMDoxMiBnZXRkZW50czY0KDEwPA0KL2J1aWxkcy94eXovLnZlbmRvci9wa2cv
+bW9kL2dvbGFuZy5vcmcveC9uZXRAdjAuMC4wLTIwMjAwMzAxMDIyMTMwLTI0NDQ5MmRmYTM3YQ0K
+L2ludGVybmFsL3NvY2tldD4sIC8qIDAgZW50cmllcyAqLywgMjA0OCkgPSAwIDwwLjAwMDAxNT4N
+CjEwOjAwOjEyIHJtZGlyKCINCi52ZW5kb3IvcGtnL21vZC9nb2xhbmcub3JnL3gvbmV0QHYwLjAu
+MC0yMDIwMDMwMTAyMjEzMC0yNDQ0OTJkZmEzN2EvaW50ZXJuDQphbC9zb2NrZXQiKSA9IDAgPDAu
+MDAwMDU1Pg0KDQoNCkZhaWxpbmcgNS41IHN0cmFjZToNCjEwOjA5OjE1IGdldGRlbnRzNjQoMTA8
+DQovYnVpbGRzL3h5ei8udmVuZG9yL3BrZy9tb2QvZ29sYW5nLm9yZy94L25ldEB2MC4wLjAtMjAy
+MDAzMDEwMjIxMzAtMjQ0NDkyZGZhMzdhDQovaW50ZXJuYWwvc29ja2V0PiwgLyogNTIgZW50cmll
+cyAqLywgMjA0OCkgPSAyMDI0IDwwLjAwMDAzMT4NCjEwOjA5OjE1IHVubGluaygiDQoudmVuZG9y
+L3BrZy9tb2QvZ29sYW5nLm9yZy94L25ldEB2MC4wLjAtMjAyMDAzMDEwMjIxMzAtMjQ0NDkyZGZh
+MzdhL2ludGVybg0KYWwvc29ja2V0L2Ntc2doZHIuZ28iKSA9IDAgPDAuMDA2MTc0Pg0KWy4uLl0N
+CjEwOjA5OjE1IGdldGRlbnRzNjQoMTA8DQovYnVpbGRzL3h5ei8udmVuZG9yL3BrZy9tb2QvZ29s
+YW5nLm9yZy94L25ldEB2MC4wLjAtMjAyMDAzMDEwMjIxMzAtMjQ0NDkyZGZhMzdhDQovaW50ZXJu
+YWwvc29ja2V0PiwgLyogNTAgZW50cmllcyAqLywgMjA0OCkgPSAyMDQ4IDwwLjAwMDAzND4NCjEw
+OjA5OjE1IHVubGluaygiDQoudmVuZG9yL3BrZy9tb2QvZ29sYW5nLm9yZy94L25ldEB2MC4wLjAt
+MjAyMDAzMDEwMjIxMzAtMjQ0NDkyZGZhMzdhL2ludGVybg0KYWwvc29ja2V0L3N5c19saW51eF8z
+ODYucyIpID0gMCA8MC4wMDAwNTQ+DQpbLi4uXQ0KMTA6MDk6MTYgZ2V0ZGVudHM2NCgxMDwNCi9i
+dWlsZHMveHl6Ly52ZW5kb3IvcGtnL21vZC9nb2xhbmcub3JnL3gvbmV0QHYwLjAuMC0yMDIwMDMw
+MTAyMjEzMC0yNDQ0OTJkZmEzN2ENCi9pbnRlcm5hbC9zb2NrZXQ+LCAvKiAwIGVudHJpZXMgKi8s
+IDIwNDgpID0gMCA8MC4wMDAwMjA+DQoxMDowOToxNiBybWRpcigiDQoudmVuZG9yL3BrZy9tb2Qv
+Z29sYW5nLm9yZy94L25ldEB2MC4wLjAtMjAyMDAzMDEwMjIxMzAtMjQ0NDkyZGZhMzdhL2ludGVy
+bg0KYWwvc29ja2V0IikgPSAtMSBFTk9URU1QVFkgKERpcmVjdG9yeSBub3QgZW1wdHkpIDwwLjAw
+MDAyOT4NCg0KDQpBbnkgaWRlYXMgd2hhdCdzIGdvaW5nIHdyb25nIGhlcmU/DQoNCi1Ub21taQ0K
+DQo=
