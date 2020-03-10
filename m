@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEEBEC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:08:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50865C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:08:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92F532468C
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:08:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21C3524691
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:08:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583845728;
-	bh=XyfNhyeu8A4tgYWzLYud2ewpbACq3730lnYX41eebGQ=;
+	s=default; t=1583845732;
+	bh=f+smNxhL2OfdgV7oDdGzlTppEvpqzeaeqjamekC+ckE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xyhObfFwmtqdyel1u8A32sd2723KvR3LPYlQdzQKNb14RSs/vyNgfHw3vR81diMik
-	 BhKp4k5y+sPB6FMhyVNxb6p4nssSWrHRRGu4FkVjgBsrQPxGCAX5Mzx1geE4FwGmyW
-	 cr4oOZ5K/HHTlbU3wp/okXbt+AuYnAHPhr1eYxBU=
+	b=Dvkpp/FyLor+zxaaK4mFjCX0X5kbw+MRz86bqYqnKMSCwBnSduUEpviYQM17/OlzK
+	 6iNU9L87mkshYvS6cmdi9BOStxHX8m3BvCJrYtr+JPd1oUbLslyCfsKIJHWub794ny
+	 4ts0NF4COyRKBPZWloxBtxoUAAOjy1wGWeRWU/BA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731161AbgCJNIr (ORCPT
+        id S1730383AbgCJNIv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:08:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55466 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:08:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55596 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731132AbgCJNIl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:08:41 -0400
+        id S1731155AbgCJNIr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:08:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E43082468D;
-        Tue, 10 Mar 2020 13:08:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9275824691;
+        Tue, 10 Mar 2020 13:08:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845721;
-        bh=XyfNhyeu8A4tgYWzLYud2ewpbACq3730lnYX41eebGQ=;
+        s=default; t=1583845727;
+        bh=f+smNxhL2OfdgV7oDdGzlTppEvpqzeaeqjamekC+ckE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0pBPWfpriOqQZiYUC5rP4uRA+zuFiiF7rCpo9hbdcJE1ZWm6TR5iZpfwvsXSJ5L6Y
-         78F3gFSbOdleBOnhPZKgMGjX8MtbnFopaW5/hXB5mK7h21DmfS+L9K/87h2oQVLWz8
-         7q870bmomjaIbQ81/Prq1IRXfgZLxqdXQESiRO+I=
+        b=vJM/SnMsP4sHisPCc9WwMj0uuNFLpNu3HbhKTxJyJNL+MQsqpUFwVWTyp/uEb3QA8
+         PHBV97Wly+1JyXCGeeQrI//IOQi8EGhSNdYzRdrEMtyYH03HO8jKYR4VlgM1nnsfYT
+         8P+/4zINia6YVPoKUHoGTBEmkV2rUN1u18ZV3P7Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jack Pham <jackp@codeaurora.org>,
+        stable@vger.kernel.org, Sergey Organov <sorganov@gmail.com>,
+        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
         Felipe Balbi <balbi@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 076/126] usb: gadget: composite: Support more than 500mA MaxPower
-Date:   Tue, 10 Mar 2020 13:41:37 +0100
-Message-Id: <20200310124208.817481862@linuxfoundation.org>
+Subject: [PATCH 4.14 078/126] usb: gadget: serial: fix Tx stall after buffer overflow
+Date:   Tue, 10 Mar 2020 13:41:39 +0100
+Message-Id: <20200310124208.924610546@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310124203.704193207@linuxfoundation.org>
 References: <20200310124203.704193207@linuxfoundation.org>
@@ -60,113 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jack Pham <jackp@codeaurora.org>
+From: Sergey Organov <sorganov@gmail.com>
 
-[ Upstream commit a2035411fa1d1206cea7d5dfe833e78481844a76 ]
+[ Upstream commit e4bfded56cf39b8d02733c1e6ef546b97961e18a ]
 
-USB 3.x SuperSpeed peripherals can draw up to 900mA of VBUS power
-when in configured state. However, if a configuration wanting to
-take advantage of this is added with MaxPower greater than 500
-(currently possible if using a ConfigFS gadget) the composite
-driver fails to accommodate this for a couple reasons:
+Symptom: application opens /dev/ttyGS0 and starts sending (writing) to
+it while either USB cable is not connected, or nobody listens on the
+other side of the cable. If driver circular buffer overflows before
+connection is established, no data will be written to the USB layer
+until/unless /dev/ttyGS0 is closed and re-opened again by the
+application (the latter besides having no means of being notified about
+the event of establishing of the connection.)
 
- - usb_gadget_vbus_draw() when called from set_config() and
-   composite_resume() will be passed the MaxPower value without
-   regard for the current connection speed, resulting in a
-   violation for USB 2.0 since the max is 500mA.
+Fix: on open and/or connect, kick Tx to flush circular buffer data to
+USB layer.
 
- - the bMaxPower of the configuration descriptor would be
-   incorrectly encoded, again if the connection speed is only
-   at USB 2.0 or below, likely wrapping around U8_MAX since
-   the 2mA multiplier corresponds to a maximum of 510mA.
-
-Fix these by adding checks against the current gadget->speed
-when the c->MaxPower value is used (set_config() and
-composite_resume()) and appropriately limit based on whether
-it is currently at a low-/full-/high- or super-speed connection.
-
-Because 900 is not divisible by 8, with the round-up division
-currently used in encode_bMaxPower() a MaxPower of 900mA will
-result in an encoded value of 0x71. When a host stack (including
-Linux and Windows) enumerates this on a single port root hub, it
-reads this value back and decodes (multiplies by 8) to get 904mA
-which is strictly greater than 900mA that is typically budgeted
-for that port, causing it to reject the configuration. Instead,
-we should be using the round-down behavior of normal integral
-division so that 900 / 8 -> 0x70 or 896mA to stay within range.
-And we might as well change it for the high/full/low case as well
-for consistency.
-
-N.B. USB 3.2 Gen N x 2 allows for up to 1500mA but there doesn't
-seem to be any any peripheral controller supported by Linux that
-does two lane operation, so for now keeping the clamp at 900
-should be fine.
-
-Signed-off-by: Jack Pham <jackp@codeaurora.org>
+Signed-off-by: Sergey Organov <sorganov@gmail.com>
+Reviewed-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
 Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/composite.c | 24 ++++++++++++++++++------
- 1 file changed, 18 insertions(+), 6 deletions(-)
+ drivers/usb/gadget/function/u_serial.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/usb/gadget/composite.c b/drivers/usb/gadget/composite.c
-index 6e30b177aa224..5a4cf779b2692 100644
---- a/drivers/usb/gadget/composite.c
-+++ b/drivers/usb/gadget/composite.c
-@@ -441,9 +441,13 @@ static u8 encode_bMaxPower(enum usb_device_speed speed,
- 	if (!val)
- 		return 0;
- 	if (speed < USB_SPEED_SUPER)
--		return DIV_ROUND_UP(val, 2);
-+		return min(val, 500U) / 2;
- 	else
--		return DIV_ROUND_UP(val, 8);
-+		/*
-+		 * USB 3.x supports up to 900mA, but since 900 isn't divisible
-+		 * by 8 the integral division will effectively cap to 896mA.
-+		 */
-+		return min(val, 900U) / 8;
- }
+diff --git a/drivers/usb/gadget/function/u_serial.c b/drivers/usb/gadget/function/u_serial.c
+index 520ace49f91d9..942d2977797d7 100644
+--- a/drivers/usb/gadget/function/u_serial.c
++++ b/drivers/usb/gadget/function/u_serial.c
+@@ -715,8 +715,10 @@ static int gs_start_io(struct gs_port *port)
+ 	port->n_read = 0;
+ 	started = gs_start_rx(port);
  
- static int config_buf(struct usb_configuration *config,
-@@ -841,6 +845,10 @@ static int set_config(struct usb_composite_dev *cdev,
- 
- 	/* when we return, be sure our power usage is valid */
- 	power = c->MaxPower ? c->MaxPower : CONFIG_USB_GADGET_VBUS_DRAW;
-+	if (gadget->speed < USB_SPEED_SUPER)
-+		power = min(power, 500U);
-+	else
-+		power = min(power, 900U);
- done:
- 	usb_gadget_vbus_draw(gadget, power);
- 	if (result >= 0 && cdev->delayed_status)
-@@ -2280,7 +2288,7 @@ void composite_resume(struct usb_gadget *gadget)
- {
- 	struct usb_composite_dev	*cdev = get_gadget_data(gadget);
- 	struct usb_function		*f;
--	u16				maxpower;
-+	unsigned			maxpower;
- 
- 	/* REVISIT:  should we have config level
- 	 * suspend/resume callbacks?
-@@ -2294,10 +2302,14 @@ void composite_resume(struct usb_gadget *gadget)
- 				f->resume(f);
- 		}
- 
--		maxpower = cdev->config->MaxPower;
-+		maxpower = cdev->config->MaxPower ?
-+			cdev->config->MaxPower : CONFIG_USB_GADGET_VBUS_DRAW;
-+		if (gadget->speed < USB_SPEED_SUPER)
-+			maxpower = min(maxpower, 500U);
-+		else
-+			maxpower = min(maxpower, 900U);
- 
--		usb_gadget_vbus_draw(gadget, maxpower ?
--			maxpower : CONFIG_USB_GADGET_VBUS_DRAW);
-+		usb_gadget_vbus_draw(gadget, maxpower);
- 	}
- 
- 	cdev->suspended = 0;
+-	/* unblock any pending writes into our circular buffer */
+ 	if (started) {
++		gs_start_tx(port);
++		/* Unblock any pending writes into our circular buffer, in case
++		 * we didn't in gs_start_tx() */
+ 		tty_wakeup(port->port.tty);
+ 	} else {
+ 		gs_free_requests(ep, head, &port->read_allocated);
 -- 
 2.20.1
 
