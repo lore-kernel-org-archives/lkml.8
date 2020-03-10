@@ -2,144 +2,101 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAD41C10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 21:21:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3553C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 21:22:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA5E5205F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 21:21:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pOgk4Qkw"
+	by mail.kernel.org (Postfix) with ESMTP id E46E9205F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 21:22:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727085AbgCJVV5 (ORCPT
+        id S1727573AbgCJVWC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 17:21:57 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:33499 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726268AbgCJVV5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 17:21:57 -0400
-Received: by mail-oi1-f194.google.com with SMTP id r7so2322655oij.0
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 14:21:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oY6WFiAwH2rmOxKrZEesTv/eerBgzcIy7in/R7N6oGw=;
-        b=pOgk4QkwNjE9ZThPducZNz2cmkLnWvaI876S1TRO4iGhWGNwO4xeyozO2pBQZo6EHF
-         JQVEDEVWKycwGwvq+HZjVgaoiUKdDnSZFrZA3DtKiH+v+ulH0tun5BKwOMc+uNb1uJfA
-         SbHMI+ZIkwaVlXaUUt1Ss8T/jVCb93A+dlsuGEixKa/dAv1ixesVDs/rMy4jPxBcEZk0
-         pXA9JVnE7wzJoz2NxA67UWnOWzmDD1yleEt3IDn4KHJkQIJ6hql2/4wnXR6n2kzDNJ9W
-         /0rF5K2Vrm64ePyg/3wD+fRy6CLlTHlgjrj9W25Drh1Cf20NS0r00PVjesUfgMcX5zgS
-         JOJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oY6WFiAwH2rmOxKrZEesTv/eerBgzcIy7in/R7N6oGw=;
-        b=ujz++LoEuwo5jT+q2WUeDjuJKHsO+8D90z33Y16EMQfMYx2fZkYhDmgZO1KKuwYufu
-         ReGk1SDWUQwK8R34xulsplbs8DAirLI0QIaopqBNNM40PkV6d9X+loKa649o5jbnfWVO
-         GO2Mymm1MSCRn57nsJP8aA3EftlcEEsfF0DXEQAn5lbkXbnObGmyFDxKPT2ptApUHAg4
-         Pi4NE3YlGWk86M8L0RjV2GF0Q1zqS8eL/oPTkzlvQ1GUr1EAMSs+kZ+WQqTWcGGD1cV1
-         RNpbpH0McRrhVaHysk/zJHpQMGQjwkvdgGZIdM05cRPHRMcx6HaBHP+FYGBd2hQoTs3a
-         AlHA==
-X-Gm-Message-State: ANhLgQ3pb44vWa5wEm9IyZ0UgXpkJAgoOYDFjd5ysbqWLoT+5EPs0Lug
-        QSFAe6MkAXjdnm+SRVLy0OUClkM81cOsZ+sTyuDcSQ==
-X-Google-Smtp-Source: ADFU+vse+bXb9qnaCZ0PIM2j5foMfZrUhK8BdULRDK7eOwjFVGLfjwEB0kwKfljmq3ftrHjmGdpyQbeI0qHB6H/6olE=
-X-Received: by 2002:aca:bac1:: with SMTP id k184mr2238915oif.157.1583875314976;
- Tue, 10 Mar 2020 14:21:54 -0700 (PDT)
+        Tue, 10 Mar 2020 17:22:02 -0400
+Received: from mx2.suse.de ([195.135.220.15]:56302 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726268AbgCJVWA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 17:22:00 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 9F294AFDF;
+        Tue, 10 Mar 2020 21:21:58 +0000 (UTC)
+From:   NeilBrown <neilb@suse.de>
+To:     Jeff Layton <jlayton@kernel.org>, yangerkun <yangerkun@huawei.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 11 Mar 2020 08:21:49 +1100
+Cc:     kernel test robot <rong.a.chen@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org,
+        Bruce Fields <bfields@fieldses.org>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Subject: Re: [locks] 6d390e4b5d: will-it-scale.per_process_ops -96.6% regression
+In-Reply-To: <c4ef31a663fbf7a3de349696e9f00f2f5c4ec89a.camel@kernel.org>
+References: <20200308140314.GQ5972@shao2-debian> <e3783d060c778cb41b77380ad3e278133b52f57e.camel@kernel.org> <CAHk-=whGK712fPqmQ3FSHxqe3Aqny4bEeWEvfaytLeLV2+ijCQ@mail.gmail.com> <34355c4fe6c3968b1f619c60d5ff2ca11a313096.camel@kernel.org> <1bfba96b4bf0d3ca9a18a2bced3ef3a2a7b44dad.camel@kernel.org> <87blp5urwq.fsf@notabene.neil.brown.name> <41c83d34ae4c166f48e7969b2b71e43a0f69028d.camel@kernel.org> <ed73fb5d-ddd5-fefd-67ae-2d786e68544a@huawei.com> <923487db2c9396c79f8e8dd4f846b2b1762635c8.camel@kernel.org> <36c58a6d07b67aac751fca27a4938dc1759d9267.camel@kernel.org> <878sk7vs8q.fsf@notabene.neil.brown.name> <c4ef31a663fbf7a3de349696e9f00f2f5c4ec89a.camel@kernel.org>
+Message-ID: <875zfbvrbm.fsf@notabene.neil.brown.name>
 MIME-Version: 1.0
-References: <AM6PR03MB5170EB4427BF5C67EE98FF09E4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <87k142lpfz.fsf@x220.int.ebiederm.org> <AM6PR03MB51704206634C009500A8080DE4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <875zfmloir.fsf@x220.int.ebiederm.org> <AM6PR03MB51707ABF20B6CBBECC34865FE4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <87v9nmjulm.fsf@x220.int.ebiederm.org> <AM6PR03MB5170B976E6387FDDAD59A118E4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <202003021531.C77EF10@keescook> <20200303085802.eqn6jbhwxtmz4j2x@wittgenstein>
- <AM6PR03MB5170285B336790D3450E2644E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <87v9nlii0b.fsf@x220.int.ebiederm.org> <AM6PR03MB5170609D44967E044FD1BE40E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <87a74xi4kz.fsf@x220.int.ebiederm.org> <AM6PR03MB51705AA3009B4986BB6EF92FE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <87r1y8dqqz.fsf@x220.int.ebiederm.org> <AM6PR03MB517053AED7DC89F7C0704B7DE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <AM6PR03MB51703B44170EAB4626C9B2CAE4E20@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <87tv32cxmf.fsf_-_@x220.int.ebiederm.org> <87v9ne5y4y.fsf_-_@x220.int.ebiederm.org>
- <87zhcq4jdj.fsf_-_@x220.int.ebiederm.org>
-In-Reply-To: <87zhcq4jdj.fsf_-_@x220.int.ebiederm.org>
-From:   Jann Horn <jannh@google.com>
-Date:   Tue, 10 Mar 2020 22:21:28 +0100
-Message-ID: <CAG48ez13XXWNRLrPFRHRsvPKSwSK1-6k+1F7QujWOJtVuk0QHg@mail.gmail.com>
-Subject: Re: [PATCH v2 5/5] exec: Add a exec_update_mutex to replace cred_guard_mutex
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Kees Cook <keescook@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Andrei Vagin <avagin@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Yuyang Du <duyuyang@gmail.com>,
-        David Hildenbrand <david@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        David Howells <dhowells@redhat.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christian Kellner <christian@kellner.me>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 8, 2020 at 10:41 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
-> The cred_guard_mutex is problematic.  The cred_guard_mutex is held
-> over the userspace accesses as the arguments from userspace are read.
-> The cred_guard_mutex is held of PTRACE_EVENT_EXIT as the the other
-> threads are killed.  The cred_guard_mutex is held over
-> "put_user(0, tsk->clear_child_tid)" in exit_mm().
->
-> Any of those can result in deadlock, as the cred_guard_mutex is held
-> over a possible indefinite userspace waits for userspace.
->
-> Add exec_update_mutex that is only held over exec updating process
-> with the new contents of exec, so that code that needs not to be
-> confused by exec changing the mm and the cred in ways that can not
-> happen during ordinary execution of a process.
->
-> The plan is to switch the users of cred_guard_mutex to
-> exec_udpate_mutex one by one.  This lets us move forward while still
-> being careful and not introducing any regressions.
-[...]
-> @@ -1034,6 +1035,11 @@ static int exec_mmap(struct mm_struct *mm)
->                         return -EINTR;
->                 }
->         }
-> +
-> +       ret = mutex_lock_killable(&tsk->signal->exec_update_mutex);
-> +       if (ret)
-> +               return ret;
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-We're already holding the old mmap_sem, and now nest the
-exec_update_mutex inside it; but then while still holding the
-exec_update_mutex, we do mmput(), which can e.g. end up in ksm_exit(),
-which can do down_write(&mm->mmap_sem) from __ksm_exit(). So I think
-at least lockdep will be unhappy, and I'm not sure whether it's an
-actual problem or not.
+On Tue, Mar 10 2020, Jeff Layton wrote:
+
+>> @@ -735,11 +723,13 @@ static void __locks_wake_up_blocks(struct file_loc=
+k *blocker)
+>>=20=20
+>>  		waiter =3D list_first_entry(&blocker->fl_blocked_requests,
+>>  					  struct file_lock, fl_blocked_member);
+>> -		__locks_delete_block(waiter);
+>> +		locks_delete_global_blocked(waiter);
+>> +		waiter->fl_blocker =3D NULL;
+>>  		if (waiter->fl_lmops && waiter->fl_lmops->lm_notify)
+>>  			waiter->fl_lmops->lm_notify(waiter);
+>>  		else
+>>  			wake_up(&waiter->fl_wait);
+>> +		list_del_init(&waiter->fl_blocked_member);
+>
+> Are you sure you don't need a memory barrier here? Could the
+> list_del_init be hoisted just above the if condition?
+>
+
+A compiler barrier() is probably justified.  Memory barriers delay reads
+and expedite writes so they cannot be needed.
+
+ 			wake_up(&waiter->fl_wait);
++		/* The list_del_init() must not be visible before the
++		 * wake_up completes, the the waiter can then be freed.
++		 */
++		barrier();
++		list_del_init(&waiter->fl_blocked_member);
+
+Thanks,
+NeilBrown
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl5oBO0ACgkQOeye3VZi
+gblwqQ/8DkoZJyjuip/ioeNV4RJRreBlvckVZvhMWegAEcWtiVd5cIxwwz8R4C/Q
+Wjqpyxw9g2jzlhbwNfjQwgQqVyWppGrzjhWlIDD5Js6nE8BKTBFtaWpcFsfZ6CX+
+xieFoX0DIVAqqqJZPY2GaJZ11PUtJMHmr+/nDz2IdQNEcZuu34V1z+kTFzYyXevm
+4lEy/8e5c16/lRID0fB4kk3RkcrM3DMnvONExpW2jqK0MrDMoTkxbLhhtMKONj0j
+qDYCe7sV7+h9dxGA5WFWxvbt6l4n6epnNa5pKqihLtFqi85jGTygbca3V8W8YDM6
+inrX9L+EduuK0VBP21sWc0k1YZTF3xCt+uVTLM/qROevkxivD6vWCB2XdAqNbnoj
+raxEz15GEoMqAUlaPQ73hpvMfeAaeXVEm9gsgp7LjzoyQzL7F6rk5xQ/ccRo4cK2
+zEoGnAt9kXQpobSfjnOELoFbzEFshSxzwQuEzmeh8fe7z84qjMVBl2kJOcL2XJ0N
+dv2jiyG46DPl1ALm9EAVv4qlcwmOe4vklq087STWgGbAJTlzj+Q6SayXyOAwdzK+
+RRxyvjEcPfS0xivpE2l0FkU/zjcg+A1HkSG94KPEP4xjLalfevU68H3BoSCfuGr2
+PueecWCIamfD9nVunUqyawXWxdPISUKNrgq1sqQ2J8exnpUqMIU=
+=ZHtk
+-----END PGP SIGNATURE-----
+--=-=-=--
