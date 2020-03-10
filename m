@@ -2,196 +2,214 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3D29C10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 19:33:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FD22C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 19:33:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A97EB20873
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 19:33:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="O7XNI6K/"
+	by mail.kernel.org (Postfix) with ESMTP id DB98522525
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 19:33:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583868783;
+	bh=svHYd0D7j94mbORR4v24c3DginNWgdH5YgabZSqKun8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=pjlcsLWOK6JL7jMercooHtTCpPUC7I+uhckUmU2P9TB9aKsNGlzwm6x3pgSf4fD00
+	 40bLGMxvivFIdIXSCHgXuNH7FZ/CJfjE35hV14IAgavDKfdd07nHDFRrBr915dTvbd
+	 LuUpkPXK/FJ9PlwPU7S+0aN9uDUKQBtLk9DIiC7w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727481AbgCJTc7 (ORCPT
+        id S1727519AbgCJTdB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 15:32:59 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:44462 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727445AbgCJTc6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 15:32:58 -0400
-Received: by mail-pf1-f194.google.com with SMTP id b72so3400252pfb.11
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 12:32:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=qMuGgR0+CRDM0BuHZ2Ae6KXyGRvF/Wi0RAPV3JkXST8=;
-        b=O7XNI6K/jach7eBMD0zokAVd37z8MwdLv7WqFDGJUXpzEHJv/6LF5IM1MssL5NHx69
-         sERBdH0/wvxJRbfXc8ZfBW6WmU/BI5HjmYU5Pwy6aJgYPsoC/QOCaZUUfklrPzeM+LmE
-         PliHwz3PwFW+ET0WFX++nrj0fUsGiY5wb79UMhnPsZ4NSU56/TwfJhVBhRED1eo7IZvY
-         tSQ6LFPA1n/cAURoK6zJWkEVSXYiL6y+KiwY8l+yxV5JDY+n10m2MA3KzHqx7bRV4sL6
-         CAx0URzemFt5ihkASDeSRezGbX69RIjNEsoJ9YZzp9qrBY5Pp5i1yewl1O6hD70yt0SH
-         wjTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=qMuGgR0+CRDM0BuHZ2Ae6KXyGRvF/Wi0RAPV3JkXST8=;
-        b=AB7i/9C9eOItbLwkcmGZANbFxzSMHWfJy61yL52F8ESvAL5h4iDNXu/tqxVZ1IShoG
-         mw79D3zBbf+/2G5L1WznnYX8tTLl5sMAVXdt7JO7pE2qB9zKxrdXOrXEM/++/Jqh9mCk
-         oAS/8jGu0id1kVhZvuPfmRI9HylAwqiYEMRjwQA/XTSCjwi7z4WA2V9DDqszYk9Kb8Ey
-         NEAzRjdSfRYwp0g1QCJflI0vQdCTdy3Qb+l2YdZBxUEoG8yqAZl0Z1mfPCLl9ZbXemXA
-         3NWXx4uAJLY/R87zka5t5BFSiv+cpIRsYg2AsYfuRsaSAwBHDylSJHq3f7y46qj33B9c
-         Tl2A==
-X-Gm-Message-State: ANhLgQ2ESTa4N8P6dqZYrmtdogGyvGc7BQfoxIu7K1qtzcze3Y6izX8j
-        FB5rQLC7orFPJNJ4BZGzbVH3xQ==
-X-Google-Smtp-Source: ADFU+vv+xHc+Rr1UGKn/v70xw8LFUA/EYdzRhMgcJY4xJ9NFuwzP6M5LicOfJuYbs5v5GixSEdrWVA==
-X-Received: by 2002:a63:7f09:: with SMTP id a9mr22043810pgd.375.1583868777114;
-        Tue, 10 Mar 2020 12:32:57 -0700 (PDT)
-Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id s18sm3003094pjp.24.2020.03.10.12.32.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Mar 2020 12:32:56 -0700 (PDT)
-Date:   Tue, 10 Mar 2020 12:32:53 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Cl?ment Leger <cleger@kalrayinc.com>
-Cc:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        linux-remoteproc <linux-remoteproc@vger.kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Andy Gross <agross@kernel.org>,
-        Patrice Chotard <patrice.chotard@st.com>,
-        linux-doc <linux-doc@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
-        Loic PALLARDY <loic.pallardy@st.com>, s-anna <s-anna@ti.com>
-Subject: Re: [PATCH v5 3/8] remoteproc: Use u64 type for boot_addr
-Message-ID: <20200310193253.GL264362@yoga>
-References: <20200210162209.23149-1-cleger@kalray.eu>
- <20200302093902.27849-1-cleger@kalray.eu>
- <20200302093902.27849-4-cleger@kalray.eu>
- <20200309195247.GC1399@xps15>
- <1297722115.9030349.1583827151221.JavaMail.zimbra@kalray.eu>
+        Tue, 10 Mar 2020 15:33:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60406 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727445AbgCJTdA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 15:33:00 -0400
+Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 276C922B48;
+        Tue, 10 Mar 2020 19:32:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583868779;
+        bh=svHYd0D7j94mbORR4v24c3DginNWgdH5YgabZSqKun8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=tnuVIpNlaJzyjGgFnmF+hBNDNWHMEJHntfb7OQmfPaXu2TiPTzCj2Ad5NgM18cvpc
+         GKUaave7l6QWqa70n3UfrF40u2hMw+lTBJTgMWRZIJH6udreg2mwdt5oTLTFKBpjJr
+         n0EQ0TfAIbT4rdQdiLDavrEqlSh2V3o+QRqXrX14=
+Date:   Tue, 10 Mar 2020 14:32:57 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Austin.Bolen@dell.com
+Cc:     sathyanarayanan.kuppuswamy@linux.intel.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com
+Subject: Re: [PATCH v17 09/12] PCI/AER: Allow clearing Error Status Register
+ in FF mode
+Message-ID: <20200310193257.GA170043@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1297722115.9030349.1583827151221.JavaMail.zimbra@kalray.eu>
+In-Reply-To: <0476c948e73f4c68a9bf221afccfcf7e@AUSX13MPC107.AMER.DELL.COM>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 10 Mar 00:59 PDT 2020, Cl?ment Leger wrote:
+On Tue, Mar 10, 2020 at 06:14:20PM +0000, Austin.Bolen@dell.com wrote:
+> On 3/9/2020 11:28 PM, Kuppuswamy, Sathyanarayanan wrote:
+> > On 3/9/2020 7:40 PM, Bjorn Helgaas wrote:
+> >> [+cc Austin, tentative Linux patches on this git branch:
+> >> https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/tree/drivers/pci/pcie?h=review/edr]
+> >>
+> >> On Tue, Mar 03, 2020 at 06:36:32PM -0800, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+> >>> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> >>>
+> >>> As per PCI firmware specification r3.2 System Firmware Intermediary
+> >>> (SFI) _OSC and DPC Updates ECR
+> >>> (https://members.pcisig.com/wg/PCI-SIG/document/13563), sec titled "DPC
+> >>> Event Handling Implementation Note", page 10, Error Disconnect Recover
+> >>> (EDR) support allows OS to handle error recovery and clearing Error
+> >>> Registers even in FF mode. So create new API pci_aer_raw_clear_status()
+> >>> which allows clearing AER registers without FF mode checks.
+> >>
+> >> I see that this ECR was released as an ECN a few days ago:
+> >> https://members.pcisig.com/wg/PCI-SIG/document/14076
+> >> Regrettably the title in the PDF still says "ECR" (the rendered title
+> >> *page* says "ENGINEERING CHANGE NOTIFICATION", but some metadata
+> >> buried in the file says "ECR - SFI _OSC Support and DPC Updates".
+> 
+> I'll see if PCI-SIG can update the metadata and repost.
 
+If that's possible, it would be nice to update the metadata for the
+"Downstream Port Containment related Enhancements" ECN as well.  That
+one currently says "ECR - CardBus Header Proposal", which means that's
+what's in the window title bar and icons in the panel.
+
+> >> Anyway, I think I see the note you refer to (now on page 12):
+> >>
+> >>     IMPLEMENTATION NOTE
+> >>     DPC Event Handling
+> >>
+> >>     The flow chart below documents the behavior when firmware maintains
+> >>     control of AER and DPC and grants control of PCIe Hot-Plug to the
+> >>     operating system.
+> >>
+> >>     ...
+> >>
+> >>     Capture and clear device AER status. OS may choose to offline
+> >>     devices3, either via SW (not load driver) or HW (power down device,
+> >>     disable Link5,6,7). Otherwise process _HPX, complete device
+> >>     enumeration, load drivers
+> >>
+> >> This clearly suggests that the OS should clear device AER status.
+> >> However, according to the intro text, firmware has retained control of
+> >> AER, so what gives the OS the right to clear AER status?
+> >>
+> >> The Downstream Port Containment Related Enhancements ECN (sec 4.5.1,
+> >> table 4-6) contains an exception that allows the OS to read/write
+> >> DPC registers during recovery.  But
+> >>
+> >>     - that is for *DPC* registers, not for AER registers, and
+> >>
+> >>     - that exception only applies between OS receipt of the EDR
+> >>       notification and OS release of DPC by clearing the DPC Trigger
+> >>       Status bit.
+> >>
+> >> The flowchart in the SFI ECN shows the OS releasing DPC before
+> >> clearing AER status:
+> >>
+> >>     - Receive EDR notification
+> >>
+> >>     - Cleanup - Notify and unload child drivers below Port
+> >>
+> >>     - Bring Port out of DPC, clear port error status, assign bus numbers
+> >>       to child devices.
+> >>
+> >>       I assume this box includes clearing DPC error status and clearing
+> >>       Trigger Status?  They seem to be out of order in the box.
 > 
-> 
-> ----- On 9 Mar, 2020, at 20:52, Mathieu Poirier mathieu.poirier@linaro.org wrote:
-> 
-> > On Mon, Mar 02, 2020 at 10:38:57AM +0100, Clement Leger wrote:
-> >> elf64 entry is defined as a u64. Since boot_addr is used to store the
-> >> elf entry point, change boot_addr type to u64 to support both elf32
-> >> and elf64. In the same time, fix users that were using this variable.
-> >> 
-> >> Signed-off-by: Clement Leger <cleger@kalray.eu>
-> >> ---
-> >>  drivers/remoteproc/remoteproc_elf_loader.c | 2 +-
-> >>  drivers/remoteproc/remoteproc_internal.h   | 2 +-
-> >>  drivers/remoteproc/st_remoteproc.c         | 2 +-
-> >>  include/linux/remoteproc.h                 | 4 ++--
-> >>  4 files changed, 5 insertions(+), 5 deletions(-)
-> >> 
-> >> diff --git a/drivers/remoteproc/remoteproc_elf_loader.c
-> >> b/drivers/remoteproc/remoteproc_elf_loader.c
-> >> index 606aae166eba..c2a9783cfb9a 100644
-> >> --- a/drivers/remoteproc/remoteproc_elf_loader.c
-> >> +++ b/drivers/remoteproc/remoteproc_elf_loader.c
-> >> @@ -102,7 +102,7 @@ EXPORT_SYMBOL(rproc_elf_sanity_check);
-> >>   * Note that the boot address is not a configurable property of all remote
-> >>   * processors. Some will always boot at a specific hard-coded address.
-> >>   */
-> >> -u32 rproc_elf_get_boot_addr(struct rproc *rproc, const struct firmware *fw)
-> >> +u64 rproc_elf_get_boot_addr(struct rproc *rproc, const struct firmware *fw)
-> >>  {
-> >>  	struct elf32_hdr *ehdr  = (struct elf32_hdr *)fw->data;
-> >>  
-> >> diff --git a/drivers/remoteproc/remoteproc_internal.h
-> >> b/drivers/remoteproc/remoteproc_internal.h
-> >> index 58580210575c..0deae5f237b8 100644
-> >> --- a/drivers/remoteproc/remoteproc_internal.h
-> >> +++ b/drivers/remoteproc/remoteproc_internal.h
-> >> @@ -55,7 +55,7 @@ phys_addr_t rproc_va_to_pa(void *cpu_addr);
-> >>  int rproc_trigger_recovery(struct rproc *rproc);
-> >>  
-> >>  int rproc_elf_sanity_check(struct rproc *rproc, const struct firmware *fw);
-> >> -u32 rproc_elf_get_boot_addr(struct rproc *rproc, const struct firmware *fw);
-> >> +u64 rproc_elf_get_boot_addr(struct rproc *rproc, const struct firmware *fw);
-> >>  int rproc_elf_load_segments(struct rproc *rproc, const struct firmware *fw);
-> >>  int rproc_elf_load_rsc_table(struct rproc *rproc, const struct firmware *fw);
-> >>  struct resource_table *rproc_elf_find_loaded_rsc_table(struct rproc *rproc,
+> OS clears the DPC Trigger Status bit which will bring port below it out 
+> of containment. Then OS will clear the "port" error status bits (i.e., 
+> the AER and DPC status bits in the root port or downstream port that 
+> triggered containment). I don't think it would hurt to do this two steps 
+> in reverse order but don't think it is necessary. Note that error status 
+> bits for devices below the port in containment are cleared later after 
+> f/w has a chance to log them.
+
+Maybe I'm misreading the DPC enhancements ECN.  I think it says the OS
+can read/write DPC registers until it clears the DPC Trigger Status.
+If the OS clears Trigger Status first, my understanding is that we're
+now out of the EDR notification processing window and the OS is not
+permitted to write DPC registers.
+
+If it's OK for the OS to clear Trigger Status before clearing DPC
+error status, what is the event that determines when the OS may no
+longer read/write the DPC registers?
+
+> >>     - Evaluate _OST
+> >>
+> >>     - Capture and clear device AER status.
+> >>
+> >>       This seems suspect to me.  Where does it say the OS is
+> >>       allowed to write AER status when firmware retains control
+> >>       of AER?
+> >>
+> >> This patch series does things in this order:
+> >>
+> >>     - Receive EDR notification (edr_handle_event(), edr.c)
+> >>
+> >>     - Read, log, and clear DPC error regs (dpc_process_error(),
+> >>       dpc.c).
+> >>
+> >>       This also clears AER uncorrectable error status when the
+> >>       relevant HEST entries do not have the FIRMWARE_FIRST bit
+> >>       set.  I think this is incorrect: the test should be based
+> >>       the _OSC negotiation for AER ownership, not on the HEST
+> >>       entries.  But this problem pre-dates this patch series.
+> >>
+> >>     - Clear AER status (pci_aer_raw_clear_status(), aer.c).
+> >>
+> >>       This is at least inside the EDR recovery window, but again,
+> >>       I don't see where it says the OS is allowed to write the
+> >>       AER status.
 > > 
-> > The return type of function rproc_get_boot_addr() should also be changed from
-> > u32 to u64.  Or perhaps this is intentional to make sure rproc->bootaddr never
-> > occupies more than 32bit?
-> 
-> No, this is a mistake clearly. I haven't been able to test with a 64 bit
-> boot address since our remote processors always boot in the 32 bits
-> space. But since the elf64 boot address is on 64 bitsn this was a logical
-> modification. I will fix that.
-> 
-
-Sorry, I forgot to reply to this one. I fixed it up while applying the
-patch.
-
-Thanks,
-Bjorn
-
+> > Implementation note is the only reference we have regarding
+> > clearing the AER registers.
 > > 
-> >> diff --git a/drivers/remoteproc/st_remoteproc.c
-> >> b/drivers/remoteproc/st_remoteproc.c
-> >> index ee13d23b43a9..a3268d95a50e 100644
-> >> --- a/drivers/remoteproc/st_remoteproc.c
-> >> +++ b/drivers/remoteproc/st_remoteproc.c
-> >> @@ -190,7 +190,7 @@ static int st_rproc_start(struct rproc *rproc)
-> >>  		}
-> >>  	}
-> >>  
-> >> -	dev_info(&rproc->dev, "Started from 0x%x\n", rproc->bootaddr);
-> >> +	dev_info(&rproc->dev, "Started from 0x%llx\n", rproc->bootaddr);
-> >>  
-> >>  	return 0;
-> >>  
-> >> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
-> >> index bee559330204..1683d6c386a6 100644
-> >> --- a/include/linux/remoteproc.h
-> >> +++ b/include/linux/remoteproc.h
-> >> @@ -382,7 +382,7 @@ struct rproc_ops {
-> >>  				struct rproc *rproc, const struct firmware *fw);
-> >>  	int (*load)(struct rproc *rproc, const struct firmware *fw);
-> >>  	int (*sanity_check)(struct rproc *rproc, const struct firmware *fw);
-> >> -	u32 (*get_boot_addr)(struct rproc *rproc, const struct firmware *fw);
-> >> +	u64 (*get_boot_addr)(struct rproc *rproc, const struct firmware *fw);
-> >>  };
-> >>  
-> >>  /**
-> >> @@ -498,7 +498,7 @@ struct rproc {
-> >>  	int num_traces;
-> >>  	struct list_head carveouts;
-> >>  	struct list_head mappings;
-> >> -	u32 bootaddr;
-> >> +	u64 bootaddr;
-> >>  	struct list_head rvdevs;
-> >>  	struct list_head subdevs;
-> >>  	struct idr notifyids;
-> >> --
-> >> 2.15.0.276.g89ea799
+> > But since the spec says both DPC and AER needs to be always
+> > controlled together by the either OS or firmware, and when
+> > firmware relinquishes control over DPC registers in EDR
+> > notification window, we can assume that we also have control over
+> > AER registers.
+> > 
+> > But I agree that is not explicitly spelled out any where outside
+> > the implementation note.
+
+This is all quite unsatisfying since implementation notes are not
+normative.  I would far rather reference actual spec text.
+
+> > Austin,
+> > 
+> > May be ECN (section 4.5.1, table 4-6) needs to be updated to add
+> > this clarification.
+> 
+> Sure we can update to section 4.5.1, table 4-6 to indicate when OS
+> can clear the AER status bits. It will just follow what's done in
+> the implementation note so I think it's acceptable to follow
+> implementation guidance for now.
+
+There are no events after the "clear device AER status" box.  That
+seems to mean the OS can write the AER status registers at any time.
+But the whole implementation note assumes firmware maintains control
+of AER.
+
+> >>     - Attempt recovery (pcie_do_recovery(), err.c)
+> >>
+> >>     - Clear DPC Trigger Status (dpc_reset_link(), dpc.c)
+> >>
+> >>     - Evaluate _OST (acpi_send_edr_status(), edr.c)
+> >>
+> >> What am I missing?
