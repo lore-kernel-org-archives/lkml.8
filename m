@@ -6,121 +6,122 @@ X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90A19C10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:47:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B5FCC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:49:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A95B205F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:47:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E956B205F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:49:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fMgZFq3z"
+	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="GyMd7mCl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727538AbgCJUr4 (ORCPT
+        id S1726464AbgCJUtk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 16:47:56 -0400
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:36238 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726307AbgCJUrz (ORCPT
+        Tue, 10 Mar 2020 16:49:40 -0400
+Received: from mx0b-00154904.pphosted.com ([148.163.137.20]:55272 "EHLO
+        mx0b-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726273AbgCJUtj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 16:47:55 -0400
-Received: by mail-pj1-f66.google.com with SMTP id l41so948194pjb.1
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 13:47:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=DUcwxxFRcgJR1d4ydhPOJt5zpra6K7hoDMr6GJuC66g=;
-        b=fMgZFq3zdtsmjgrmZ83y+dSJSkDsZ1RxXFLnaUXLAWftyCsRbpnOPIZELEJvQYB2uH
-         DCaJNkF/BmiZuR2IY7of7B5eWU3CYM1Bp+RKbcTdNqEPhwk3h5BL4rLBDUiAP20fc1Ps
-         c+5viBYTEXQxtAUajXiZWTdBthiDog7IGOpM4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=DUcwxxFRcgJR1d4ydhPOJt5zpra6K7hoDMr6GJuC66g=;
-        b=NJLcwLLV7C18IwRjHSjg0RNa/Gl/xTT6x31nVhGjoweU0ZjSD7T1W/D0Q7QmievMPL
-         +NdKjSviH7zUa3/rh7ple5WCjZUTaNYtQ3vh5+P8yazxOS/x6wRACEUtfabvOYXjMVHf
-         B6Ta+H3IXnHVyizUSWZ7wKAnQXRtzPJPZENTyuwOSzvunrjLuxo6ZHFb5Bc1FVL5xfzl
-         LIy6tkRVOzSnXxxVZa0x+wtA9hn99Ts6+aZwlok/SnMlmHZn5dwJuil/XHsgwBJZLjkL
-         R2T6bM66BgGzk0jcy+PWl16JMTNA7b+5+JPjjIMSDX6HkkC1QzsFoZQu8w0uiHgi7JBA
-         eTiQ==
-X-Gm-Message-State: ANhLgQ1//pBqIwxMZVorpvfzmLcAV1d7OeSrGmAEk3YhHknhWCLFeNue
-        +fCuUfxlQ/bNGkZJEuErnWYxgg==
-X-Google-Smtp-Source: ADFU+vudklcF8vh1bAtfnAiwP2o2XGlvb6JQXVwHa2R6IlMHlYTM2ZG1kz9TwCHN7BvEtMrMXaoTKg==
-X-Received: by 2002:a17:902:bf0b:: with SMTP id bi11mr10776957plb.245.1583873273478;
-        Tue, 10 Mar 2020 13:47:53 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id t6sm16907149pfb.172.2020.03.10.13.47.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Mar 2020 13:47:52 -0700 (PDT)
-Date:   Tue, 10 Mar 2020 13:47:51 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Andrei Vagin <avagin@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Yuyang Du <duyuyang@gmail.com>,
-        David Hildenbrand <david@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        David Howells <dhowells@redhat.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christian Kellner <christian@kellner.me>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>
-Subject: Re: [PATCH v2 4/5] exec: Move exec_mmap right after de_thread in
- flush_old_exec
-Message-ID: <202003101344.8777D43A44@keescook>
-References: <87v9nlii0b.fsf@x220.int.ebiederm.org>
- <AM6PR03MB5170609D44967E044FD1BE40E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <87a74xi4kz.fsf@x220.int.ebiederm.org>
- <AM6PR03MB51705AA3009B4986BB6EF92FE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <87r1y8dqqz.fsf@x220.int.ebiederm.org>
- <AM6PR03MB517053AED7DC89F7C0704B7DE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <AM6PR03MB51703B44170EAB4626C9B2CAE4E20@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <87tv32cxmf.fsf_-_@x220.int.ebiederm.org>
- <87v9ne5y4y.fsf_-_@x220.int.ebiederm.org>
- <875zfe5xzb.fsf_-_@x220.int.ebiederm.org>
+        Tue, 10 Mar 2020 16:49:39 -0400
+Received: from pps.filterd (m0170397.ppops.net [127.0.0.1])
+        by mx0b-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02AKgNFI013920;
+        Tue, 10 Mar 2020 16:49:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
+ subject : date : message-id : references : content-type :
+ content-transfer-encoding : mime-version; s=smtpout1;
+ bh=ci+/51ptKyE39a7YYyZ5UiDVa9nqAd5kk2CaifmmT6I=;
+ b=GyMd7mCl4EMgtWDmpKkHPcbrl6O8H5tvx7q388gUiQuhEuL2cD6D5wFHIAJQx8T3/Ccg
+ lLN/h7x7A0ZZFAnFhcAlxDNUkV+ivVgtAr9veqR5CivHHfRdllSNTUUBa/kgouHVw7In
+ 7UCjIPtegcEMqZH3taoosv2ElxfG9WV6sOIZq7j1Wz0bEtmnxhFr/DwHDJSSxylrCR+k
+ 2Lw1I2QtUOcqyAczdCjafBXN8CWjw95bGYFrY3tGIpb6oWHCPQPNk6mkAhdVUcrXaKMx
+ s+ZLaLfiUETSJpKJWwH3g4DXTp4OIr3jU+MCZYZUPz4E5Oi3/60HN9E9M6cbx4hQoQp0 BA== 
+Received: from mx0a-00154901.pphosted.com (mx0a-00154901.pphosted.com [67.231.149.39])
+        by mx0b-00154904.pphosted.com with ESMTP id 2ym5k1mfg6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 10 Mar 2020 16:49:38 -0400
+Received: from pps.filterd (m0133268.ppops.net [127.0.0.1])
+        by mx0a-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02AKkPBu121591;
+        Tue, 10 Mar 2020 16:49:37 -0400
+Received: from ausxippc101.us.dell.com (ausxippc101.us.dell.com [143.166.85.207])
+        by mx0a-00154901.pphosted.com with ESMTP id 2ym6qygxrf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 10 Mar 2020 16:49:37 -0400
+X-LoopCount0: from 10.166.132.129
+X-PREM-Routing: D-Outbound
+X-IronPort-AV: E=Sophos;i="5.60,346,1549951200"; 
+   d="scan'208";a="1366226772"
+From:   <Austin.Bolen@dell.com>
+To:     <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        <Austin.Bolen@dell.com>, <helgaas@kernel.org>
+CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <ashok.raj@intel.com>
+Subject: Re: [PATCH v17 09/12] PCI/AER: Allow clearing Error Status Register
+ in FF mode
+Thread-Topic: [PATCH v17 09/12] PCI/AER: Allow clearing Error Status Register
+ in FF mode
+Thread-Index: AQHV9oVCCTYsDGOZY0iqPe3akO+s+A==
+Date:   Tue, 10 Mar 2020 20:49:29 +0000
+Message-ID: <c1fb95450690466eb562f48666902cd2@AUSX13MPC107.AMER.DELL.COM>
+References: <20200310193257.GA170043@google.com>
+ <38277b0f6c2e4c5d88e741b7354c72d1@AUSX13MPC107.AMER.DELL.COM>
+ <8289f9b3-b9eb-6a80-1271-3db9aeef5161@linux.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [143.166.24.40]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <875zfe5xzb.fsf_-_@x220.int.ebiederm.org>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-10_13:2020-03-10,2020-03-10 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 spamscore=0
+ mlxscore=0 impostorscore=0 priorityscore=1501 bulkscore=0 clxscore=1015
+ malwarescore=0 lowpriorityscore=0 suspectscore=0 mlxlogscore=999
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003100123
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 lowpriorityscore=0
+ spamscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ priorityscore=1501 malwarescore=0 bulkscore=0 mlxscore=0 suspectscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003100122
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 08, 2020 at 04:38:00PM -0500, Eric W. Biederman wrote:
-> Futher this consolidates all of the possible indefinite waits for
-> userspace together at the top of flush_old_exec.  The possible wait
-> for a ptracer on PTRACE_EVENT_EXIT, the possible wait for a page fault
-> to be resolved in clear_child_tid, and the possible wait for a page
-> fault in exit_robust_list.
-
-I forgot to mention, just as a point of clarity, there are lots of
-other page faults possible, but they're _before_ flush_old_exec()
-(i.e. all the copy_strings() calls). Is it worth clarifying this to
-"before or at the top of flush_old_exec()" or do you mean something
-else? (And as always: perhaps expand flush_old_exec()'s comment to
-describe the newly intended state.)
-
--- 
-Kees Cook
+On 3/10/2020 3:44 PM, Kuppuswamy Sathyanarayanan wrote:=0A=
+> =0A=
+<snip>=0A=
+> =0A=
+> Please check the following spec reference (change to 4.5.1 Table 4-6)=0A=
+> =0A=
+> the OS is permitted to read or write DPC Control and Status registers of =
+a=0A=
+> port while processing an Error Disconnect Recover notification from firmw=
+are=0A=
+> on that port. Error Disconnect Recover notification processing begins=0A=
+> with the=0A=
+> Error Disconnect Recover notify from Firmware, and *ends when the OS=0A=
+> releases=0A=
+> DPC by clearing the DPC Trigger Status bit*.Firmware can read DPC Trigger=
+=0A=
+> Status bit to determine the ownership of DPC Control and Status=0A=
+> registers. Firmware=0A=
+> is not permitted to write to DPC Control and Status registers if DPC=0A=
+> Trigger Status is=0A=
+> set i.e. the link is in DPC state. *Outside of the Error Disconnect=0A=
+> Recover notification=0A=
+> processing window, the OS is not permitted to modify DPC Control or=0A=
+> Status registers*;=0A=
+> only firmware is allowed to.=0A=
+> =0A=
+> Since the EDR processing window ends with clearing DPC Trigger status=0A=
+> bit, OS needs to=0A=
+> clear DPC and AER registers before it ends.=0A=
+> =0A=
+> Austin,=0A=
+> =0A=
+> I think the order needs to be reversed in the implementation note.=0A=
+=0A=
+Agreed.=0A=
