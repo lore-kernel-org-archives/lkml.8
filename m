@@ -2,119 +2,114 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DB42C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 10:14:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BE00C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 10:15:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7524E24682
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 10:14:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=silabs.onmicrosoft.com header.i=@silabs.onmicrosoft.com header.b="ThuVeOkP"
+	by mail.kernel.org (Postfix) with ESMTP id 0D30D20637
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 10:15:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583835315;
+	bh=9wj8wSEjztLqFEkoRJslaM9uMMLN+gBR5yU0JDqK95c=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Pjo7yxavpvB4R9v1ZuioFYQTNBQVehqX+MAAefc8YSNK3SDLCR4lqFV9wq38Y67hI
+	 +KjdgrXz/PgHPlfsSbuzQaIV5ziWWoFUDdy/MAErvARJNK7LaYQRar8BUfO0nUIclb
+	 qXcHm3FMCx6j2TrZ2xDqJNkZV6bdD7ZwVo33Z9b8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbgCJKOj (ORCPT
+        id S1726676AbgCJKPN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 06:14:39 -0400
-Received: from mail-bn8nam12on2076.outbound.protection.outlook.com ([40.107.237.76]:6032
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726497AbgCJKOT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 06:14:19 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EIv1cIVskUl5DYxYG/LzDl4b86A7G45dxJ09rYOI4cYnfwHkLEbTBf3RrYz9XURKFENCP8EEhV3mPkaJlpImveorDr1MXjpo05oYIdlc8ZrOlrM8kCKbwKbA5WCWkHImfQtVJIvcleIB8jpFkCElsXOdT55J6FCGDEVA4TeP0WYq72m3zhVwPtVvnAlvPoA1KN3PxYSZbxyGU5LMs/QTLWYH9xR/q5uJ2FKtZZL+wAQ+Ye7bVP74PTyX9mLF8n7KbFzEPxAwpjlXchtdbq9+bfh7jAvI8USyMashjGpeg/1vY6L9XW64mR43k2IauM6szygbFAoEf05xwQ9uxSICqA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tEiXM4RgjoTsKZD+k+9ZSFAwwt/P0IZUfRj6U2E6o4Q=;
- b=iw+4VWjeec9jhdJk2oFQvpyHF9T/3P5tnEE6f2Jv9ugG57PCyKQNQq7D+cgDmmEFGM6aIy4K4ksjOAyUFKeR/g7z2+IqMc1LM2jpokS3qKLZUZHe2xU5I8ZPZqgqSG6e6vak9nEvpCo8LcWuoOluJ3lRGlnCniO6ISe4XfyIg7Qnr/SQtg1/qvT9hJY2GtIvGjPTP5fwNLvc9DfZCGH3/a/8VZyvQhTxvKeDSk+BMeJfSvgh5Y5x2tJ/gozQyP/Jav6G1KbtFTc8v3y11dV/penJqXzTfk7RVvVyDtVS8nnGWtYGSAgrkqkvzDQDef2p0YSdlYx5pkDO2QAuNsbymA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=silabs.com; dmarc=pass action=none header.from=silabs.com;
- dkim=pass header.d=silabs.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=silabs.onmicrosoft.com; s=selector2-silabs-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tEiXM4RgjoTsKZD+k+9ZSFAwwt/P0IZUfRj6U2E6o4Q=;
- b=ThuVeOkPrJkbwdU8uIM+QqI0gWXA/zlyHAGO7RfvhbuaCJxhi+t0kH+kHAUkFcgsHmM6LcuAk2yxwWyTzWjAJ9PxbU4Gz6HeizLAxG4laLvfMgn324AKQ3l0wf67qehT+KbaBVCxQy7lu0BzLA2HpI7WhrCnJ47Kobn9THSxHiY=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Jerome.Pouiller@silabs.com; 
-Received: from MN2PR11MB4063.namprd11.prod.outlook.com (2603:10b6:208:13f::22)
- by MN2PR11MB3615.namprd11.prod.outlook.com (2603:10b6:208:ec::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.17; Tue, 10 Mar
- 2020 10:14:17 +0000
-Received: from MN2PR11MB4063.namprd11.prod.outlook.com
- ([fe80::ade4:5702:1c8b:a2b3]) by MN2PR11MB4063.namprd11.prod.outlook.com
- ([fe80::ade4:5702:1c8b:a2b3%7]) with mapi id 15.20.2793.013; Tue, 10 Mar 2020
- 10:14:17 +0000
-From:   Jerome Pouiller <Jerome.Pouiller@silabs.com>
-To:     devel@driverdev.osuosl.org, linux-wireless@vger.kernel.org
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tue, 10 Mar 2020 06:15:13 -0400
+Received: from conuserg-09.nifty.com ([210.131.2.76]:28070 "EHLO
+        conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726258AbgCJKPN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 06:15:13 -0400
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-09.nifty.com with ESMTP id 02AACqfV019796;
+        Tue, 10 Mar 2020 19:12:53 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com 02AACqfV019796
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1583835174;
+        bh=c1hiVSalTfFe0k0/wchrmFhfrgNpWjBz7yfa9mrIes0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=czPo1Alz4v2bYy/O+q1ieUqOMyecpHvIpktuzimVqNuSLSW59yllVakJKLtmz+z40
+         yOKERYzt+YCkxIqs7mQdJHtYA7sxpB54U/94Lu6Mo2udosIOymxVX3ifGZajrk5YHV
+         y9DAzF3XmhsdprFlMsBZOZYKD/g4QyDUv93/1/G6o85FzesJ+32gw7hHJOJCzQJtvo
+         no/VAdi3c8JpC4+3UMLk+cs/orlJ6vaUxybrzWKG+621Sk5gmrtC6aHW5VyhWgqyDe
+         w8A5BZAf1opTQjUIxh3iIkI0Q8Zjfg7SN0VjCrsyIwDxed7S/2nGS8EIBzXedUTpet
+         y7zsLNw7eD/rA==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <masahiroy@kernel.org>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Ard Biesheuvel <ardb@kernel.org>, George Spelvin <lkml@sdf.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        David Howells <dhowells@redhat.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Pouiller?= 
-        <jerome.pouiller@silabs.com>
-Subject: [PATCH 3/5] staging: wfx: make warning about pending frame less scary
-Date:   Tue, 10 Mar 2020 11:13:54 +0100
-Message-Id: <20200310101356.182818-4-Jerome.Pouiller@silabs.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200310101356.182818-1-Jerome.Pouiller@silabs.com>
-References: <20200310101356.182818-1-Jerome.Pouiller@silabs.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
-X-ClientProxiedBy: PR0P264CA0180.FRAP264.PROD.OUTLOOK.COM
- (2603:10a6:100:1c::24) To MN2PR11MB4063.namprd11.prod.outlook.com
- (2603:10b6:208:13f::22)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from pc-42.silabs.com (37.71.187.125) by PR0P264CA0180.FRAP264.PROD.OUTLOOK.COM (2603:10a6:100:1c::24) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.14 via Frontend Transport; Tue, 10 Mar 2020 10:14:16 +0000
-X-Mailer: git-send-email 2.25.1
-X-Originating-IP: [37.71.187.125]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 9fd79580-3387-410e-0c68-08d7c4dbcabb
-X-MS-TrafficTypeDiagnostic: MN2PR11MB3615:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <MN2PR11MB3615337894BE9881A890B1B993FF0@MN2PR11MB3615.namprd11.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1388;
-X-Forefront-PRVS: 033857D0BD
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(39850400004)(136003)(366004)(376002)(396003)(346002)(189003)(199004)(6666004)(52116002)(5660300002)(2616005)(86362001)(316002)(956004)(36756003)(478600001)(4744005)(7696005)(8936002)(54906003)(4326008)(16526019)(186003)(26005)(6486002)(66574012)(66946007)(8676002)(1076003)(81166006)(2906002)(66476007)(81156014)(66556008)(107886003);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB3615;H:MN2PR11MB4063.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-Received-SPF: None (protection.outlook.com: silabs.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: rkrRkcAE+o1/t7wJPMHUS7dEDLjhzZxE4cjOdQGIxm8BEbA2odgf5BXeSM2gb5fiebY87NA4dW0JPuGe4REiPQ/0bG3cA0svvKMJsE1+R3C0SGigefTx2uPJeP0++FaFYAC+kedybAEU8cVIV1pU3jK39f9xZBJKz2cQpNk1InV9mtcJYtWx4VU25vlZvHoZ3lxnKu7h0sClOqLpG9NnIFbKP7u42Yc+QggrU7ko7C3thn2UsSua5VbrbF6+vtoN7VD21rob7qRTScnmn0NYWmyboywEg2JspY3vhzzYKgwBDugxJdIqdmrYcBClCAJt7w4zrrfUJy2t73A3JjokHRF1vlMsWmsJtW1SQq/6zSbzzWj9TSUXAvlw1syuiVAgwujwzfw0EwIG+5EfvaHX7EaGFaW5IW6QL6DA7JBUAj5pViTMi9gPdqqBo6wXhTlg
-X-MS-Exchange-AntiSpam-MessageData: vaYwbJg5rtL4XC+c0NXlDy+ulAubxhvYgZIbBfFkOPqU6DLpupEum58zwjBVhztFCOhDIyscgYPDtz4/oTXBf1jEPGD3CUgnrf5J0xSsz0Qwvmoe0AUsRTVfQ+ANsariWoPwIjresVLlPeN0FOYi4w==
-X-OriginatorOrg: silabs.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9fd79580-3387-410e-0c68-08d7c4dbcabb
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Mar 2020 10:14:17.6911
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 54dbd822-5231-4b20-944d-6f4abcd541fb
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 1TwqlqUI6I3J5hj1rqnvAY1chTiIVVgpBtc3F7+woAQzAHUbFMJ3629gYxK/9HnF4PRSsd+RoCVvnFdjkbSouw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB3615
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Patrick Bellasi <patrick.bellasi@arm.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 2/2] int128: fix __uint128_t compiler test in Kconfig
+Date:   Tue, 10 Mar 2020 19:12:50 +0900
+Message-Id: <20200310101250.22374-2-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200310101250.22374-1-masahiroy@kernel.org>
+References: <20200310101250.22374-1-masahiroy@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogSsOpcsO0bWUgUG91aWxsZXIgPGplcm9tZS5wb3VpbGxlckBzaWxhYnMuY29tPgoKUmVt
-b3Zpbmcgc3RhdGlvbiB3aGlsZSBzb21lIHRyYWZmaWMgaXMgaW4gcHJvZ3Jlc3MgbWF5IGhhcHBl
-bi4KClNpZ25lZC1vZmYtYnk6IErDqXLDtG1lIFBvdWlsbGVyIDxqZXJvbWUucG91aWxsZXJAc2ls
-YWJzLmNvbT4KLS0tCiBkcml2ZXJzL3N0YWdpbmcvd2Z4L3N0YS5jIHwgNCArKystCiAxIGZpbGUg
-Y2hhbmdlZCwgMyBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pCgpkaWZmIC0tZ2l0IGEvZHJp
-dmVycy9zdGFnaW5nL3dmeC9zdGEuYyBiL2RyaXZlcnMvc3RhZ2luZy93Zngvc3RhLmMKaW5kZXgg
-MDNkMGYyMjRmZmRiLi4wMTBlMTNiY2QzM2UgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvc3RhZ2luZy93
-Zngvc3RhLmMKKysrIGIvZHJpdmVycy9zdGFnaW5nL3dmeC9zdGEuYwpAQCAtNjA1LDcgKzYwNSw5
-IEBAIGludCB3Znhfc3RhX3JlbW92ZShzdHJ1Y3QgaWVlZTgwMjExX2h3ICpodywgc3RydWN0IGll
-ZWU4MDIxMV92aWYgKnZpZiwKIAlpbnQgaTsKIAogCWZvciAoaSA9IDA7IGkgPCBBUlJBWV9TSVpF
-KHN0YV9wcml2LT5idWZmZXJlZCk7IGkrKykKLQkJV0FSTihzdGFfcHJpdi0+YnVmZmVyZWRbaV0s
-ICJyZWxlYXNlIHN0YXRpb24gd2hpbGUgVHggaXMgaW4gcHJvZ3Jlc3MiKTsKKwkJaWYgKHN0YV9w
-cml2LT5idWZmZXJlZFtpXSkKKwkJCWRldl93YXJuKHd2aWYtPndkZXYtPmRldiwgInJlbGVhc2Ug
-c3RhdGlvbiB3aGlsZSAlZCBwZW5kaW5nIGZyYW1lIG9uIHF1ZXVlICVkIiwKKwkJCQkgc3RhX3By
-aXYtPmJ1ZmZlcmVkW2ldLCBpKTsKIAkvLyBGSVhNRTogc2VlIG5vdGUgaW4gd2Z4X3N0YV9hZGQo
-KQogCWlmICh2aWYtPnR5cGUgPT0gTkw4MDIxMV9JRlRZUEVfU1RBVElPTikKIAkJcmV0dXJuIDA7
-Ci0tIAoyLjI1LjEKCg==
+The support for __uint128_t is dependent on the target bit size.
+
+GCC that defaults to the 32-bit can still build the 64-bit kernel
+with -m64 flag passed.
+
+However, $(cc-option,-D__SIZEOF_INT128__=0) is evaluated against the
+default machine bit, which may not match to the kernel it is building.
+
+Theoretically, this could be evaluated separately for 64BIT/32BIT.
+
+  config CC_HAS_INT128
+          bool
+          default !$(cc-option,$(m64-flag) -D__SIZEOF_INT128__=0) if 64BIT
+          default !$(cc-option,$(m32-flag) -D__SIZEOF_INT128__=0)
+
+I simplified it more because the 32-bit compiler is unlikely to support
+__uint128_t.
+
+Fixes: c12d3362a74b ("int128: move __uint128_t compiler test to Kconfig")
+Reported-by: George Spelvin <lkml@sdf.org>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+---
+
+ init/Kconfig | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/init/Kconfig b/init/Kconfig
+index 20a6ac33761c..4f717bfdbfe2 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -767,8 +767,7 @@ config ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH
+ 	bool
+ 
+ config CC_HAS_INT128
+-	def_bool y
+-	depends on !$(cc-option,-D__SIZEOF_INT128__=0)
++	def_bool !$(cc-option,$(m64-flag) -D__SIZEOF_INT128__=0) && 64BIT
+ 
+ #
+ # For architectures that know their GCC __int128 support is sound
+-- 
+2.17.1
+
