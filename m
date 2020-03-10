@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7441CC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:49:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98C80C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:49:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 465352468E
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:49:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 604132468E
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:49:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583844568;
-	bh=I1vp/dVFTDkMuXFTV4A2BeZttnnjPVskMh8RwV7Gi6E=;
+	s=default; t=1583844572;
+	bh=UrxAyspyyacTQv+bvn17scVrUXsw8Wvec21zX9DJ9Dg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eSUhOQmWpN+Qmzg5r03RFvi4ZbHv9u9xuofrYpZbF0fcE7ke9TjwEIMZDZCor6Hnu
-	 wr9COu4Rg/FcI4paTRABi9oJrGDdGNuiym+LXHeGm+WmXXWp5RKAO5e3nRhwzg8v7Y
-	 NHHhsuxSgMnkpAyMVuSQtG2dSenTeQovdii9jKME=
+	b=vI33jeJjObNs1lR8240zJd5W9kBlxJFfkoyklif76HEZpeYvOFRHommi36tktoBXp
+	 jFxfcC6Kc/zFuBi48Qq7Z4sF9hmgLXsUWB7QCFUnweaWppUMPPNy6AQSgR539GfNtB
+	 t9hp56DSXU8fCRMkovWo5WnSPyeo85ubqns59tEA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727811AbgCJMt1 (ORCPT
+        id S1728473AbgCJMtb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:49:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53782 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:49:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53846 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728454AbgCJMtX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:49:23 -0400
+        id S1727865AbgCJMt2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:49:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9D2D2468E;
-        Tue, 10 Mar 2020 12:49:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D40A92467D;
+        Tue, 10 Mar 2020 12:49:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844563;
-        bh=I1vp/dVFTDkMuXFTV4A2BeZttnnjPVskMh8RwV7Gi6E=;
+        s=default; t=1583844568;
+        bh=UrxAyspyyacTQv+bvn17scVrUXsw8Wvec21zX9DJ9Dg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F5h2voBogi9hFjHxabrAMN57C+9uiRu+EMz9ERasdv7oMsX1iXNsRc6jjTsZo3SHX
-         5IpOKB9lVjYVsDt5Yy2q1U9KfueFv9V8BZhmvEWMkj22vlmEvQ/vXRDR8phSGi37mE
-         kUPgyxvdw21lpZlsJBm1gY9AFavbPKILM8zbFcBU=
+        b=Ro6bJQxRLdcD1PL85AxlMg/SeJgFWT7U3c3l7M4apFhPjDm+DVjmYv95q3GoosyTh
+         5uBpg8E1zApAYgDbBfSeeLF3reWXZW7c2KvEsvwKTBVb+ahfMwplKLWFzLRE8FKjL8
+         WjyeeHU89Deo5UcUk+qk2IvmX+tqqQChmCQP1/bI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
-        Vasily Gorbik <gor@linux.ibm.com>,
+        stable@vger.kernel.org, Hamdan Igbaria <hamdani@mellanox.com>,
+        Alex Vesker <valex@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 038/168] s390: make install not depend on vmlinux
-Date:   Tue, 10 Mar 2020 13:38:04 +0100
-Message-Id: <20200310123639.312818177@linuxfoundation.org>
+Subject: [PATCH 5.4 040/168] net/mlx5: DR, Fix matching on vport gvmi
+Date:   Tue, 10 Mar 2020 13:38:06 +0100
+Message-Id: <20200310123639.475255717@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123635.322799692@linuxfoundation.org>
 References: <20200310123635.322799692@linuxfoundation.org>
@@ -60,51 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <masahiroy@kernel.org>
+From: Hamdan Igbaria <hamdani@mellanox.com>
 
-[ Upstream commit 94e90f727f7424d827256023cace829cad6896f4 ]
+[ Upstream commit 52d214976d4f64504c1bbb52d47b46a5a3d5ee42 ]
 
-For the same reason as commit 19514fc665ff ("arm, kbuild: make "make
-install" not depend on vmlinux"), the install targets should never
-trigger the rebuild of the kernel.
+Set vport gvmi in the tag, only when source gvmi is set in the bit mask.
 
-The variable, CONFIGURE, is not set by anyone. Remove it as well.
-
-Link: https://lkml.kernel.org/r/20200216144829.27023-1-masahiroy@kernel.org
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Fixes: 26d688e3 ("net/mlx5: DR, Add Steering entry (STE) utilities")
+Signed-off-by: Hamdan Igbaria <hamdani@mellanox.com>
+Reviewed-by: Alex Vesker <valex@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/Makefile      | 2 +-
- arch/s390/boot/Makefile | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/steering/dr_ste.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/arch/s390/Makefile b/arch/s390/Makefile
-index 9ce1baeac2b25..2faaf456956a6 100644
---- a/arch/s390/Makefile
-+++ b/arch/s390/Makefile
-@@ -146,7 +146,7 @@ all: bzImage
- #KBUILD_IMAGE is necessary for packaging targets like rpm-pkg, deb-pkg...
- KBUILD_IMAGE	:= $(boot)/bzImage
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/steering/dr_ste.c b/drivers/net/ethernet/mellanox/mlx5/core/steering/dr_ste.c
+index 2739ed2a29111..841abe75652c9 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/steering/dr_ste.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/steering/dr_ste.c
+@@ -2257,7 +2257,9 @@ static int dr_ste_build_src_gvmi_qpn_tag(struct mlx5dr_match_param *value,
+ 	struct mlx5dr_cmd_vport_cap *vport_cap;
+ 	struct mlx5dr_domain *dmn = sb->dmn;
+ 	struct mlx5dr_cmd_caps *caps;
++	u8 *bit_mask = sb->bit_mask;
+ 	u8 *tag = hw_ste->tag;
++	bool source_gvmi_set;
  
--install: vmlinux
-+install:
- 	$(Q)$(MAKE) $(build)=$(boot) $@
+ 	DR_STE_SET_TAG(src_gvmi_qp, tag, source_qp, misc, source_sqn);
  
- bzImage: vmlinux
-diff --git a/arch/s390/boot/Makefile b/arch/s390/boot/Makefile
-index e2c47d3a1c891..0ff9261c915e3 100644
---- a/arch/s390/boot/Makefile
-+++ b/arch/s390/boot/Makefile
-@@ -70,7 +70,7 @@ $(obj)/compressed/vmlinux: $(obj)/startup.a FORCE
- $(obj)/startup.a: $(OBJECTS) FORCE
- 	$(call if_changed,ar)
+@@ -2278,7 +2280,8 @@ static int dr_ste_build_src_gvmi_qpn_tag(struct mlx5dr_match_param *value,
+ 	if (!vport_cap)
+ 		return -EINVAL;
  
--install: $(CONFIGURE) $(obj)/bzImage
-+install:
- 	sh -x  $(srctree)/$(obj)/install.sh $(KERNELRELEASE) $(obj)/bzImage \
- 	      System.map "$(INSTALL_PATH)"
+-	if (vport_cap->vport_gvmi)
++	source_gvmi_set = MLX5_GET(ste_src_gvmi_qp, bit_mask, source_gvmi);
++	if (vport_cap->vport_gvmi && source_gvmi_set)
+ 		MLX5_SET(ste_src_gvmi_qp, tag, source_gvmi, vport_cap->vport_gvmi);
  
+ 	misc->source_eswitch_owner_vhca_id = 0;
 -- 
 2.20.1
 
