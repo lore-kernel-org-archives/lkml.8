@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BFD5C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:08:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F4EDC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:08:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8BB920873
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:08:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FA832468D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:08:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583845715;
-	bh=MrfiEAOqo2c6soZtF49+uQY9CXJVEwSV5pTL7U/BZ5A=;
+	s=default; t=1583845720;
+	bh=a/S5nGQZLSk83xkWXDu61r6mGcJa5cWNkEOt3jJGtic=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q4MsHC8JWcyNxojVYXvK5+3XJmZv51NUKBrFD94HKb7P8g8JO7EFb3JAsmjr2RsBI
-	 FVIM3EY6f6Ihp+PX8HrXidPQxS4qw0Gr7LYkiMAjAcd7LE5ZyOrf16eVO41ngXKzY6
-	 zywba6Y2mvlj+xRjUT51UgZY6PN7S6RbbgSMmoDE=
+	b=L3K2Ho9LWwjC2Zu0Rp2Lvf1U4v4B9NopZPr/d9HSjFYY6R2t6WQzgDhXdGMRafs5y
+	 maxgRyf+Rb7faNVZeR3xheM9Gs66iXIgL7tDaQSYi/MInCGGLJXeSED8V33naU3vBm
+	 pk11wXJco/weRlybHoXrTl4/wtgWa1+8GyGH+htg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731125AbgCJNId (ORCPT
+        id S1730690AbgCJNIi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:08:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54962 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:08:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55092 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731117AbgCJNI2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:08:28 -0400
+        id S1731117AbgCJNIf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:08:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 705C220873;
-        Tue, 10 Mar 2020 13:08:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 706D120409;
+        Tue, 10 Mar 2020 13:08:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845707;
-        bh=MrfiEAOqo2c6soZtF49+uQY9CXJVEwSV5pTL7U/BZ5A=;
+        s=default; t=1583845713;
+        bh=a/S5nGQZLSk83xkWXDu61r6mGcJa5cWNkEOt3jJGtic=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pZna7l8blkqtdp0FkczbT8cDKa+KVs3mFCv4IRDAzfhQveroQcanfAR/qA6WkSRcf
-         HVNcm2NEHzwlIS7kbuT7IzAc6nz9QnO3eCeckDVm0Ga+FNelPnHBZmMkv7The77Q+v
-         n2y3F16G7hzc3/zIEODI8HgH8jw9ilwdosg+4PMA=
+        b=fyOTKiw1bWx8QKOnFx9YJq79ZkhV5htibtEcH+mQJ+WIjAY0fasP3VnsicJRpLK+R
+         bR5IEy2ksLQII1VDtULJDbbHhdUil0mAdcSLrik5rMAZKy1ULZdUSnGSQqYN3Mkam7
+         8y3WR3WHIunkHKrnWmZm5/+4FyDy49PkJ0X6fMQ4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Maor Gottlieb <maorg@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 071/126] RDMA/core: Fix pkey and port assignment in get_new_pps
-Date:   Tue, 10 Mar 2020 13:41:32 +0100
-Message-Id: <20200310124208.552135205@linuxfoundation.org>
+        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, bristot@redhat.com,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 073/126] kprobes: Fix optimize_kprobe()/unoptimize_kprobe() cancellation logic
+Date:   Tue, 10 Mar 2020 13:41:34 +0100
+Message-Id: <20200310124208.657258685@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310124203.704193207@linuxfoundation.org>
 References: <20200310124203.704193207@linuxfoundation.org>
@@ -62,105 +63,164 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maor Gottlieb <maorg@mellanox.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit 801b67f3eaafd3f2ec8b65d93142d4ffedba85df ]
+[ Upstream commit e4add247789e4ba5e08ad8256183ce2e211877d4 ]
 
-When port is part of the modify mask, then we should take it from the
-qp_attr and not from the old pps. Same for PKEY. Otherwise there are
-panics in some configurations:
+optimize_kprobe() and unoptimize_kprobe() cancels if a given kprobe
+is on the optimizing_list or unoptimizing_list already. However, since
+the following commit:
 
-  RIP: 0010:get_pkey_idx_qp_list+0x50/0x80 [ib_core]
-  Code: c7 18 e8 13 04 30 ef 0f b6 43 06 48 69 c0 b8 00 00 00 48 03 85 a0 04 00 00 48 8b 50 20 48 8d 48 20 48 39 ca 74 1a 0f b7 73 04 <66> 39 72 10 75 08 eb 10 66 39 72 10 74 0a 48 8b 12 48 39 ca 75 f2
-  RSP: 0018:ffffafb3480932f0 EFLAGS: 00010203
-  RAX: ffff98059ababa10 RBX: ffff980d926e8cc0 RCX: ffff98059ababa30
-  RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff98059ababa28
-  RBP: ffff98059b940000 R08: 00000000000310c0 R09: ffff97fe47c07480
-  R10: 0000000000000036 R11: 0000000000000200 R12: 0000000000000071
-  R13: ffff98059b940000 R14: ffff980d87f948a0 R15: 0000000000000000
-  FS:  00007f88deb31740(0000) GS:ffff98059f600000(0000) knlGS:0000000000000000
-  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  CR2: 0000000000000010 CR3: 0000000853e26001 CR4: 00000000001606e0
-  Call Trace:
-   port_pkey_list_insert+0x3d/0x1b0 [ib_core]
-   ? kmem_cache_alloc_trace+0x215/0x220
-   ib_security_modify_qp+0x226/0x3a0 [ib_core]
-   _ib_modify_qp+0xcf/0x390 [ib_core]
-   ipoib_init_qp+0x7f/0x200 [ib_ipoib]
-   ? rvt_modify_port+0xd0/0xd0 [rdmavt]
-   ? ib_find_pkey+0x99/0xf0 [ib_core]
-   ipoib_ib_dev_open_default+0x1a/0x200 [ib_ipoib]
-   ipoib_ib_dev_open+0x96/0x130 [ib_ipoib]
-   ipoib_open+0x44/0x130 [ib_ipoib]
-   __dev_open+0xd1/0x160
-   __dev_change_flags+0x1ab/0x1f0
-   dev_change_flags+0x23/0x60
-   do_setlink+0x328/0xe30
-   ? __nla_validate_parse+0x54/0x900
-   __rtnl_newlink+0x54e/0x810
-   ? __alloc_pages_nodemask+0x17d/0x320
-   ? page_fault+0x30/0x50
-   ? _cond_resched+0x15/0x30
-   ? kmem_cache_alloc_trace+0x1c8/0x220
-   rtnl_newlink+0x43/0x60
-   rtnetlink_rcv_msg+0x28f/0x350
-   ? kmem_cache_alloc+0x1fb/0x200
-   ? _cond_resched+0x15/0x30
-   ? __kmalloc_node_track_caller+0x24d/0x2d0
-   ? rtnl_calcit.isra.31+0x120/0x120
-   netlink_rcv_skb+0xcb/0x100
-   netlink_unicast+0x1e0/0x340
-   netlink_sendmsg+0x317/0x480
-   ? __check_object_size+0x48/0x1d0
-   sock_sendmsg+0x65/0x80
-   ____sys_sendmsg+0x223/0x260
-   ? copy_msghdr_from_user+0xdc/0x140
-   ___sys_sendmsg+0x7c/0xc0
-   ? skb_dequeue+0x57/0x70
-   ? __inode_wait_for_writeback+0x75/0xe0
-   ? fsnotify_grab_connector+0x45/0x80
-   ? __dentry_kill+0x12c/0x180
-   __sys_sendmsg+0x58/0xa0
-   do_syscall_64+0x5b/0x200
-   entry_SYSCALL_64_after_hwframe+0x44/0xa9
-  RIP: 0033:0x7f88de467f10
+  f66c0447cca1 ("kprobes: Set unoptimized flag after unoptimizing code")
 
-Link: https://lore.kernel.org/r/20200227125728.100551-1-leon@kernel.org
-Cc: <stable@vger.kernel.org>
-Fixes: 1dd017882e01 ("RDMA/core: Fix protection fault in get_pkey_idx_qp_list")
-Signed-off-by: Maor Gottlieb <maorg@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Tested-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+modified the update timing of the KPROBE_FLAG_OPTIMIZED, it doesn't
+work as expected anymore.
+
+The optimized_kprobe could be in the following states:
+
+- [optimizing]: Before inserting jump instruction
+  op.kp->flags has KPROBE_FLAG_OPTIMIZED and
+  op->list is not empty.
+
+- [optimized]: jump inserted
+  op.kp->flags has KPROBE_FLAG_OPTIMIZED and
+  op->list is empty.
+
+- [unoptimizing]: Before removing jump instruction (including unused
+  optprobe)
+  op.kp->flags has KPROBE_FLAG_OPTIMIZED and
+  op->list is not empty.
+
+- [unoptimized]: jump removed
+  op.kp->flags doesn't have KPROBE_FLAG_OPTIMIZED and
+  op->list is empty.
+
+Current code mis-expects [unoptimizing] state doesn't have
+KPROBE_FLAG_OPTIMIZED, and that can cause incorrect results.
+
+To fix this, introduce optprobe_queued_unopt() to distinguish [optimizing]
+and [unoptimizing] states and fixes the logic in optimize_kprobe() and
+unoptimize_kprobe().
+
+[ mingo: Cleaned up the changelog and the code a bit. ]
+
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: bristot@redhat.com
+Fixes: f66c0447cca1 ("kprobes: Set unoptimized flag after unoptimizing code")
+Link: https://lkml.kernel.org/r/157840814418.7181.13478003006386303481.stgit@devnote2
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/core/security.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ kernel/kprobes.c | 67 +++++++++++++++++++++++++++++++-----------------
+ 1 file changed, 43 insertions(+), 24 deletions(-)
 
-diff --git a/drivers/infiniband/core/security.c b/drivers/infiniband/core/security.c
-index 9b82766913294..61aff69e9f67b 100644
---- a/drivers/infiniband/core/security.c
-+++ b/drivers/infiniband/core/security.c
-@@ -339,11 +339,15 @@ static struct ib_ports_pkeys *get_new_pps(const struct ib_qp *qp,
- 		return NULL;
+diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+index 48bf93bbb22e2..66f1818d47620 100644
+--- a/kernel/kprobes.c
++++ b/kernel/kprobes.c
+@@ -625,6 +625,18 @@ void wait_for_kprobe_optimizer(void)
+ 	mutex_unlock(&kprobe_mutex);
+ }
  
- 	if (qp_attr_mask & IB_QP_PORT)
--		new_pps->main.port_num =
--			(qp_pps) ? qp_pps->main.port_num : qp_attr->port_num;
-+		new_pps->main.port_num = qp_attr->port_num;
-+	else if (qp_pps)
-+		new_pps->main.port_num = qp_pps->main.port_num;
++static bool optprobe_queued_unopt(struct optimized_kprobe *op)
++{
++	struct optimized_kprobe *_op;
 +
- 	if (qp_attr_mask & IB_QP_PKEY_INDEX)
--		new_pps->main.pkey_index = (qp_pps) ? qp_pps->main.pkey_index :
--						      qp_attr->pkey_index;
-+		new_pps->main.pkey_index = qp_attr->pkey_index;
-+	else if (qp_pps)
-+		new_pps->main.pkey_index = qp_pps->main.pkey_index;
++	list_for_each_entry(_op, &unoptimizing_list, list) {
++		if (op == _op)
++			return true;
++	}
 +
- 	if ((qp_attr_mask & IB_QP_PKEY_INDEX) && (qp_attr_mask & IB_QP_PORT))
- 		new_pps->main.state = IB_PORT_PKEY_VALID;
++	return false;
++}
++
+ /* Optimize kprobe if p is ready to be optimized */
+ static void optimize_kprobe(struct kprobe *p)
+ {
+@@ -646,17 +658,21 @@ static void optimize_kprobe(struct kprobe *p)
+ 		return;
  
+ 	/* Check if it is already optimized. */
+-	if (op->kp.flags & KPROBE_FLAG_OPTIMIZED)
++	if (op->kp.flags & KPROBE_FLAG_OPTIMIZED) {
++		if (optprobe_queued_unopt(op)) {
++			/* This is under unoptimizing. Just dequeue the probe */
++			list_del_init(&op->list);
++		}
+ 		return;
++	}
+ 	op->kp.flags |= KPROBE_FLAG_OPTIMIZED;
+ 
+-	if (!list_empty(&op->list))
+-		/* This is under unoptimizing. Just dequeue the probe */
+-		list_del_init(&op->list);
+-	else {
+-		list_add(&op->list, &optimizing_list);
+-		kick_kprobe_optimizer();
+-	}
++	/* On unoptimizing/optimizing_list, op must have OPTIMIZED flag */
++	if (WARN_ON_ONCE(!list_empty(&op->list)))
++		return;
++
++	list_add(&op->list, &optimizing_list);
++	kick_kprobe_optimizer();
+ }
+ 
+ /* Short cut to direct unoptimizing */
+@@ -678,30 +694,33 @@ static void unoptimize_kprobe(struct kprobe *p, bool force)
+ 		return; /* This is not an optprobe nor optimized */
+ 
+ 	op = container_of(p, struct optimized_kprobe, kp);
+-	if (!kprobe_optimized(p)) {
+-		/* Unoptimized or unoptimizing case */
+-		if (force && !list_empty(&op->list)) {
+-			/*
+-			 * Only if this is unoptimizing kprobe and forced,
+-			 * forcibly unoptimize it. (No need to unoptimize
+-			 * unoptimized kprobe again :)
+-			 */
+-			list_del_init(&op->list);
+-			force_unoptimize_kprobe(op);
+-		}
++	if (!kprobe_optimized(p))
+ 		return;
+-	}
+ 
+ 	if (!list_empty(&op->list)) {
+-		/* Dequeue from the optimization queue */
+-		list_del_init(&op->list);
++		if (optprobe_queued_unopt(op)) {
++			/* Queued in unoptimizing queue */
++			if (force) {
++				/*
++				 * Forcibly unoptimize the kprobe here, and queue it
++				 * in the freeing list for release afterwards.
++				 */
++				force_unoptimize_kprobe(op);
++				list_move(&op->list, &freeing_list);
++			}
++		} else {
++			/* Dequeue from the optimizing queue */
++			list_del_init(&op->list);
++			op->kp.flags &= ~KPROBE_FLAG_OPTIMIZED;
++		}
+ 		return;
+ 	}
++
+ 	/* Optimized kprobe case */
+-	if (force)
++	if (force) {
+ 		/* Forcibly update the code: this is a special case */
+ 		force_unoptimize_kprobe(op);
+-	else {
++	} else {
+ 		list_add(&op->list, &unoptimizing_list);
+ 		kick_kprobe_optimizer();
+ 	}
 -- 
 2.20.1
 
