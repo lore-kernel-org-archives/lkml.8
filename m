@@ -2,82 +2,89 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00C4CC10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 02:49:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F5DFC10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 02:51:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C69632465A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 02:49:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583808584;
-	bh=QIy1GEaOobmUoatTslwL2AQt3mEWOLC33c3RQwb3h8A=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=ROaoI7dUKMsUuj7r2gtE9VDMVxZE8QSc3ES7HONdZwsC7NweFn7pva+OAPh1uV/pQ
-	 V7I7uqWlgi/7YqlE5LeLuzuEUjnpFZ51zGhLa3xGRLZco6gSiX9n8LXNcRdGzLnUNH
-	 xuitM8MyoOmJddFOg5gqwDUFxq6KjcABYX9qvJms=
+	by mail.kernel.org (Postfix) with ESMTP id 426BB24671
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 02:51:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="I10mjx8D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726695AbgCJCtn (ORCPT
+        id S1726757AbgCJCvN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 22:49:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44712 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725845AbgCJCtn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 22:49:43 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 9 Mar 2020 22:51:13 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:51477 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726402AbgCJCvN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 22:51:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583808671;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=R6peiWc+YqZetn/lw3+wRj0vYCDROkZKsrBmpaORfr4=;
+        b=I10mjx8DOQjXevohny2+BbnqasunkNN3m3vb3LXsaS9ujbKPj+B6PVmwglCF5hKOF8HGeh
+        tVw0SFz41ZQ+zjSpzntxp5LosUAmxBXDp2FyB+Un5PnAy5BYQGK6HSAe583WGyMW5s35DR
+        cfn8YwIs2WyLHWkf+/et2DNvBKNE3GU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-184-DaKKvYlVNG2EElH1V4v2nw-1; Mon, 09 Mar 2020 22:51:08 -0400
+X-MC-Unique: DaKKvYlVNG2EElH1V4v2nw-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D2C92464B;
-        Tue, 10 Mar 2020 02:49:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583808583;
-        bh=QIy1GEaOobmUoatTslwL2AQt3mEWOLC33c3RQwb3h8A=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=IM/vdzSWmD0fJCRyJ/AR1Joj9fLeughx3E9yK8aSy6RIvdqAaoGQyZKGWvoT33x3f
-         86nU8Bd67pLExULqOqktfxDjwDVVMH9O/+o7IOIKjb0tZEOohZfBhg7/Jcpe8oUAIq
-         PLMSlrqVS49cfpPhntcCSHQb9jdH6fhUgKV5dyJg=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id E54A035226C7; Mon,  9 Mar 2020 19:49:42 -0700 (PDT)
-Date:   Mon, 9 Mar 2020 19:49:42 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: build warning after merge of the rcu tree
-Message-ID: <20200310024942.GX2935@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200310132709.3b5c6abe@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200310132709.3b5c6abe@canb.auug.org.au>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D0FC0800D48;
+        Tue, 10 Mar 2020 02:51:06 +0000 (UTC)
+Received: from localhost.localdomain (ovpn-116-124.gru2.redhat.com [10.97.116.124])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E31235C1C3;
+        Tue, 10 Mar 2020 02:51:02 +0000 (UTC)
+From:   Wainer dos Santos Moschetta <wainersm@redhat.com>
+To:     kvm@vger.kernel.org, pbonzini@redhat.com
+Cc:     linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        sean.j.christopherson@intel.com, shuah@kernel.org,
+        tglx@linutronix.de, thuth@redhat.com
+Subject: [PATCH v2 0/2] kvm: selftests: Introduce TEST_FAIL and convert
+Date:   Mon,  9 Mar 2020 23:50:57 -0300
+Message-Id: <20200310025059.9301-1-wainersm@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 10, 2020 at 01:27:09PM +1100, Stephen Rothwell wrote:
-> Hi all,
-> 
-> After merging the rcu tree, today's linux-next build (x86_64 allmodconfig)
-> produced this warning:
-> 
-> WARNING: "rcu_tasks_rude_wait_gp" [vmlinux] is a static EXPORT_SYMBOL_GPL
+Introduce the TEST_FAIL macro and change the tests/utilities
+to use it.
 
-Good catch, will fix, thank you!
+v1 -> v2:
+- Completed the conversion to TEST_FAIL.
 
-> Introduced by commit
-> 
->   cbd703932774 ("rcu-tasks: Add an RCU-tasks rude variant")
-> 
-> Why is all that code in a header file?  Do you intend to have those
-> functions defined in each C file that includes kernel/rcu/tasks.h?
+v1:
+- [RFC PATCH 0/1] kvm: selftests: Add TEST_FAIL macro
+  https://lore.kernel.org/kvm/20200305172532.9360-1-wainersm@redhat.com/
 
-Same setup as for tree_plugin.h, tree_exp.h, tree_stall.h, and so in
-in that same directory.  Plugins of various sorts.
+Wainer dos Santos Moschetta (2):
+  selftests: kvm: Introduce the TEST_FAIL macro
+  selftests: kvm: Uses TEST_FAIL in tests/utilities
 
-							Thanx, Paul
+ tools/testing/selftests/kvm/dirty_log_test.c  |  7 +++----
+ .../testing/selftests/kvm/include/test_util.h |  3 +++
+ .../selftests/kvm/lib/aarch64/processor.c     | 17 +++++++--------
+ .../testing/selftests/kvm/lib/aarch64/ucall.c |  2 +-
+ tools/testing/selftests/kvm/lib/io.c          | 12 +++++------
+ tools/testing/selftests/kvm/lib/kvm_util.c    | 21 ++++++++-----------
+ .../selftests/kvm/lib/x86_64/processor.c      |  5 ++---
+ .../kvm/x86_64/cr4_cpuid_sync_test.c          |  4 ++--
+ .../testing/selftests/kvm/x86_64/evmcs_test.c |  6 +++---
+ .../testing/selftests/kvm/x86_64/state_test.c |  6 +++---
+ .../selftests/kvm/x86_64/svm_vmcall_test.c    |  6 ++----
+ .../kvm/x86_64/vmx_close_while_nested_test.c  |  4 ++--
+ .../selftests/kvm/x86_64/vmx_dirty_log_test.c |  6 +++---
+ .../kvm/x86_64/vmx_tsc_adjust_test.c          |  4 ++--
+ 14 files changed, 49 insertions(+), 54 deletions(-)
+
+-- 
+2.17.2
+
