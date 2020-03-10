@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 680C7C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:18:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9247C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:18:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38EE420409
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:18:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 839FC24680
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:18:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583846334;
-	bh=jQRkvTTSvmorzupsnApKvUN8T93chrRBwJoSMoNe3Ko=;
+	s=default; t=1583846338;
+	bh=R0xtEeO5tk6dzUgcr5epTAnksL+QGHKhE/f2CIOORsI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lguN+tG33LTcHrtO8VVOcXh+TwTS+3BpnqfX/c6g491DlwMrj0u4a9ocIpyIfF3B5
-	 bPpIEu0zpjaYpG8U8tBL/KtyXpHn871xifz0AUNMW4QNBbVeBi/Vpld1gJtb7jsbAW
-	 ZDIPXic9W03sCP2E/QGiFy9y6yFKmCIhnkOmC2C0=
+	b=UrAofowZz58hmea1FQ0W30dDCLGtoNSKGuMfUnsBmTajYHpBU9iiyTzJ6g8w3BQzl
+	 yDDAtWPwh3nzr+T+aUvpe77GL+DrqtfcwEOtCy9+rq8tS9tqC+lcrlVpkYmTPnJmJh
+	 UVOO5/hBK35GNsBGXxZc43pbeD21G+Pjouodrzgs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731508AbgCJNSw (ORCPT
+        id S1729746AbgCJNJx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:18:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58568 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:09:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57132 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730618AbgCJNKG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:10:06 -0400
+        id S1729711AbgCJNJu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:09:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E982A246DE;
-        Tue, 10 Mar 2020 13:10:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D131B20873;
+        Tue, 10 Mar 2020 13:09:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845805;
-        bh=jQRkvTTSvmorzupsnApKvUN8T93chrRBwJoSMoNe3Ko=;
+        s=default; t=1583845790;
+        bh=R0xtEeO5tk6dzUgcr5epTAnksL+QGHKhE/f2CIOORsI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xqJbxuvuB5ocStvZuJ6x9B/wQyt8cxbJ8GhTjuQ7D3JwUse8Pjz6AaM427KfbS5HP
-         Box3fErghs9PDp8Sxq9M6yd5w75LEZZy3+CIytT9KMd9exal2tDkXe2mDZKmYHaMHB
-         m/Lu7F+a0tU4eMW6xOhYeVRrJ31ospJXIe8sts28=
+        b=cM2H8PEMp2yFZ4krHMFIrScadh4O304bmXmqUtVF4xCCEjfH5M16RFnxB9ctRdr7c
+         fc4WiKP5DgIkWZbKdndPgtI2KvOdcrg461IR3b9Ah/4bAOqOTBEnd4fEC8sZrrUibB
+         My8UDrt71LYc4xl0lYrULx+uHxdaxLU4AODQZ0cw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH 4.14 107/126] dmaengine: tegra-apb: Fix use-after-free
-Date:   Tue, 10 Mar 2020 13:42:08 +0100
-Message-Id: <20200310124210.438533035@linuxfoundation.org>
+        stable@vger.kernel.org, Jay Dolan <jay.dolan@accesio.com>
+Subject: [PATCH 4.14 102/126] serial: 8250_exar: add support for ACCES cards
+Date:   Tue, 10 Mar 2020 13:42:03 +0100
+Message-Id: <20200310124210.177934557@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310124203.704193207@linuxfoundation.org>
 References: <20200310124203.704193207@linuxfoundation.org>
@@ -60,62 +58,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Osipenko <digetx@gmail.com>
+From: Jay Dolan <jay.dolan@accesio.com>
 
-commit 94788af4ed039476ff3527b0e6a12c1dc42cb022 upstream.
+commit 10c5ccc3c6d32f3d7d6c07de1d3f0f4b52f3e3ab upstream.
 
-I was doing some experiments with I2C and noticed that Tegra APB DMA
-driver crashes sometime after I2C DMA transfer termination. The crash
-happens because tegra_dma_terminate_all() bails out immediately if pending
-list is empty, and thus, it doesn't release the half-completed descriptors
-which are getting re-used before ISR tasklet kicks-in.
+Add ACCES VIDs and PIDs that use the Exar chips
 
- tegra-i2c 7000c400.i2c: DMA transfer timeout
- elants_i2c 0-0010: elants_i2c_irq: failed to read data: -110
- ------------[ cut here ]------------
- WARNING: CPU: 0 PID: 142 at lib/list_debug.c:45 __list_del_entry_valid+0x45/0xac
- list_del corruption, ddbaac44->next is LIST_POISON1 (00000100)
- Modules linked in:
- CPU: 0 PID: 142 Comm: kworker/0:2 Not tainted 5.5.0-rc2-next-20191220-00175-gc3605715758d-dirty #538
- Hardware name: NVIDIA Tegra SoC (Flattened Device Tree)
- Workqueue: events_freezable_power_ thermal_zone_device_check
- [<c010e5c5>] (unwind_backtrace) from [<c010a1c5>] (show_stack+0x11/0x14)
- [<c010a1c5>] (show_stack) from [<c0973925>] (dump_stack+0x85/0x94)
- [<c0973925>] (dump_stack) from [<c011f529>] (__warn+0xc1/0xc4)
- [<c011f529>] (__warn) from [<c011f7e9>] (warn_slowpath_fmt+0x61/0x78)
- [<c011f7e9>] (warn_slowpath_fmt) from [<c042497d>] (__list_del_entry_valid+0x45/0xac)
- [<c042497d>] (__list_del_entry_valid) from [<c047a87f>] (tegra_dma_tasklet+0x5b/0x154)
- [<c047a87f>] (tegra_dma_tasklet) from [<c0124799>] (tasklet_action_common.constprop.0+0x41/0x7c)
- [<c0124799>] (tasklet_action_common.constprop.0) from [<c01022ab>] (__do_softirq+0xd3/0x2a8)
- [<c01022ab>] (__do_softirq) from [<c0124683>] (irq_exit+0x7b/0x98)
- [<c0124683>] (irq_exit) from [<c0168c19>] (__handle_domain_irq+0x45/0x80)
- [<c0168c19>] (__handle_domain_irq) from [<c043e429>] (gic_handle_irq+0x45/0x7c)
- [<c043e429>] (gic_handle_irq) from [<c0101aa5>] (__irq_svc+0x65/0x94)
- Exception stack(0xde2ebb90 to 0xde2ebbd8)
-
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-Acked-by: Jon Hunter <jonathanh@nvidia.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200209163356.6439-2-digetx@gmail.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Jay Dolan <jay.dolan@accesio.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200305140504.22237-1-jay.dolan@accesio.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/dma/tegra20-apb-dma.c |    4 ----
- 1 file changed, 4 deletions(-)
+ drivers/tty/serial/8250/8250_exar.c |   33 +++++++++++++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
 
---- a/drivers/dma/tegra20-apb-dma.c
-+++ b/drivers/dma/tegra20-apb-dma.c
-@@ -755,10 +755,6 @@ static int tegra_dma_terminate_all(struc
- 	bool was_busy;
+--- a/drivers/tty/serial/8250/8250_exar.c
++++ b/drivers/tty/serial/8250/8250_exar.c
+@@ -27,6 +27,14 @@
  
- 	spin_lock_irqsave(&tdc->lock, flags);
--	if (list_empty(&tdc->pending_sg_req)) {
--		spin_unlock_irqrestore(&tdc->lock, flags);
--		return 0;
--	}
+ #include "8250.h"
  
- 	if (!tdc->busy)
- 		goto skip_dma_stop;
++#define PCI_DEVICE_ID_ACCES_COM_2S		0x1052
++#define PCI_DEVICE_ID_ACCES_COM_4S		0x105d
++#define PCI_DEVICE_ID_ACCES_COM_8S		0x106c
++#define PCI_DEVICE_ID_ACCES_COM232_8		0x10a8
++#define PCI_DEVICE_ID_ACCES_COM_2SM		0x10d2
++#define PCI_DEVICE_ID_ACCES_COM_4SM		0x10db
++#define PCI_DEVICE_ID_ACCES_COM_8SM		0x10ea
++
+ #define PCI_DEVICE_ID_COMMTECH_4224PCI335	0x0002
+ #define PCI_DEVICE_ID_COMMTECH_4222PCI335	0x0004
+ #define PCI_DEVICE_ID_COMMTECH_2324PCI335	0x000a
+@@ -562,6 +570,22 @@ static int __maybe_unused exar_resume(st
+ 
+ static SIMPLE_DEV_PM_OPS(exar_pci_pm, exar_suspend, exar_resume);
+ 
++static const struct exar8250_board acces_com_2x = {
++	.num_ports	= 2,
++	.setup		= pci_xr17c154_setup,
++};
++
++static const struct exar8250_board acces_com_4x = {
++	.num_ports	= 4,
++	.setup		= pci_xr17c154_setup,
++};
++
++static const struct exar8250_board acces_com_8x = {
++	.num_ports	= 8,
++	.setup		= pci_xr17c154_setup,
++};
++
++
+ static const struct exar8250_board pbn_fastcom335_2 = {
+ 	.num_ports	= 2,
+ 	.setup		= pci_fastcom335_setup,
+@@ -632,6 +656,15 @@ static const struct exar8250_board pbn_e
+ 	}
+ 
+ static const struct pci_device_id exar_pci_tbl[] = {
++	EXAR_DEVICE(ACCESSIO, ACCES_COM_2S, acces_com_2x),
++	EXAR_DEVICE(ACCESSIO, ACCES_COM_4S, acces_com_4x),
++	EXAR_DEVICE(ACCESSIO, ACCES_COM_8S, acces_com_8x),
++	EXAR_DEVICE(ACCESSIO, ACCES_COM232_8, acces_com_8x),
++	EXAR_DEVICE(ACCESSIO, ACCES_COM_2SM, acces_com_2x),
++	EXAR_DEVICE(ACCESSIO, ACCES_COM_4SM, acces_com_4x),
++	EXAR_DEVICE(ACCESSIO, ACCES_COM_8SM, acces_com_8x),
++
++
+ 	CONNECT_DEVICE(XR17C152, UART_2_232, pbn_connect),
+ 	CONNECT_DEVICE(XR17C154, UART_4_232, pbn_connect),
+ 	CONNECT_DEVICE(XR17C158, UART_8_232, pbn_connect),
 
 
