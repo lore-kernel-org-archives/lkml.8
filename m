@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5B00C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:06:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96DF7C18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:06:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9D3624696
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:06:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67B45208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:06:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583845571;
-	bh=+XrCY285HQc7bIPS4L9LWgBFcENdvWmH4USlchC0yfY=;
+	s=default; t=1583845574;
+	bh=/l4ZPkeE0i6ZByZlmN83M820iYF0kgTGc+JH5BDsacg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gQ6TZRhoae8OvD71041slpZhiXzzdSlPY0hsIXewboJO0ntQ2T+rr+PO5XMgpEBZJ
-	 7/0PGW12E1E36ZbeBB7AfgAFrtRraLAe1yI6FlLBuw5AB2WWArR5JFUidioSa5iz98
-	 RoQAVEOalSakQeKW8rzmuTEZy18D2FlVJPkuEEY8=
+	b=KFMr0nBoFnj+9r78++PF5zJ8iEm5WlCAM9QwV5CGOQUfN8gnxQ5lw+NrnUgRLVTD0
+	 QYjy+MouOTAhdXbW72R6LtAFETj/F0KD2DEIf6985ekA3v3OC9dPZpdU3eGQ9hN+Wy
+	 BmxmfdXswM5JzzPQ5k2USzmfPRNbO9DjnbkGs+pA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730803AbgCJNGK (ORCPT
+        id S1730810AbgCJNGM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:06:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51276 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:06:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51310 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730773AbgCJNFy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:05:54 -0400
+        id S1730779AbgCJNF4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:05:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 993CD208E4;
-        Tue, 10 Mar 2020 13:05:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA4FC208E4;
+        Tue, 10 Mar 2020 13:05:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845553;
-        bh=+XrCY285HQc7bIPS4L9LWgBFcENdvWmH4USlchC0yfY=;
+        s=default; t=1583845556;
+        bh=/l4ZPkeE0i6ZByZlmN83M820iYF0kgTGc+JH5BDsacg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D0I2+Ava44muvMeVh53Br8qhmePlGbSGszmuvmGSsX7B/MCZHoEvsp7wHp+xJJK6C
-         PHxYhZvWRtZgfxx+g3f/vKUBiAeN26pVrMGIk39lNYvoI6muh5deGcGZbgssMdflSd
-         MocCjGWF2LBVLOLVp28xtQ9PhPXegFeU9vXUUemg=
+        b=Gk7EPQfatyfXFhzNT3MFIGwyh0B2FD0ZHfj0iiiWxL3lwFo9iwAEYmirZD8cTZKjB
+         vN57i32VF0nmjBPMwRL9VkqjJD7VFcP/I/FgHgonWcUWuTBHQ0b5On2U5Pcw5wJCfR
+         Q9/Y/PkME/6mv68OLqiuVfHWcMTDEioF1bwpFSas=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
+        stable@vger.kernel.org, Sameeh Jubran <sameehj@amazon.com>,
+        Arthur Kiyanovski <akiyano@amazon.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 009/126] mac80211: consider more elements in parsing CRC
-Date:   Tue, 10 Mar 2020 13:40:30 +0100
-Message-Id: <20200310124204.517394539@linuxfoundation.org>
+Subject: [PATCH 4.14 018/126] net: ena: rss: store hash function as values and not bits
+Date:   Tue, 10 Mar 2020 13:40:39 +0100
+Message-Id: <20200310124205.411960543@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310124203.704193207@linuxfoundation.org>
 References: <20200310124203.704193207@linuxfoundation.org>
@@ -60,66 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Berg <johannes.berg@intel.com>
+From: Arthur Kiyanovski <akiyano@amazon.com>
 
-[ Upstream commit a04564c99bb4a92f805a58e56b2d22cc4978f152 ]
+[ Upstream commit 4844470d472d660c26149ad764da2406adb13423 ]
 
-We only use the parsing CRC for checking if a beacon changed,
-and elements with an ID > 63 cannot be represented in the
-filter. Thus, like we did before with WMM and Cisco vendor
-elements, just statically add these forgotten items to the
-CRC:
- - WLAN_EID_VHT_OPERATION
- - WLAN_EID_OPMODE_NOTIF
+The device receives, stores and retrieves the hash function value as bits
+and not as their enum value.
 
-I guess that in most cases when VHT/HE operation change, the HT
-operation also changed, and so the change was picked up, but we
-did notice that pure operating mode notification changes were
-ignored.
+The bug:
+* In ena_com_set_hash_function() we set
+  cmd.u.flow_hash_func.selected_func to the bit value of rss->hash_func.
+ (1 << rss->hash_func)
+* In ena_com_get_hash_function() we retrieve the hash function and store
+  it's bit value in rss->hash_func. (Now the bit value of rss->hash_func
+  is stored in rss->hash_func instead of it's enum value)
 
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
-Link: https://lore.kernel.org/r/20200131111300.891737-22-luca@coelho.fi
-[restrict to VHT for the mac80211 branch]
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+The fix:
+This commit fixes the issue by converting the retrieved hash function
+values from the device to the matching enum value of the set bit using
+ffs(). ffs() finds the first set bit's index in a word. Since the function
+returns 1 for the LSB's index, we need to subtract 1 from the returned
+value (note that BIT(0) is 1).
+
+Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
+Signed-off-by: Sameeh Jubran <sameehj@amazon.com>
+Signed-off-by: Arthur Kiyanovski <akiyano@amazon.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/util.c | 18 ++++++++++++------
- 1 file changed, 12 insertions(+), 6 deletions(-)
+ drivers/net/ethernet/amazon/ena/ena_com.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/net/mac80211/util.c b/net/mac80211/util.c
-index 81f120466c38b..cd3cdd1a0b576 100644
---- a/net/mac80211/util.c
-+++ b/net/mac80211/util.c
-@@ -944,16 +944,22 @@ u32 ieee802_11_parse_elems_crc(const u8 *start, size_t len, bool action,
- 				elem_parse_failed = true;
- 			break;
- 		case WLAN_EID_VHT_OPERATION:
--			if (elen >= sizeof(struct ieee80211_vht_operation))
-+			if (elen >= sizeof(struct ieee80211_vht_operation)) {
- 				elems->vht_operation = (void *)pos;
--			else
--				elem_parse_failed = true;
-+				if (calc_crc)
-+					crc = crc32_be(crc, pos - 2, elen + 2);
-+				break;
-+			}
-+			elem_parse_failed = true;
- 			break;
- 		case WLAN_EID_OPMODE_NOTIF:
--			if (elen > 0)
-+			if (elen > 0) {
- 				elems->opmode_notif = pos;
--			else
--				elem_parse_failed = true;
-+				if (calc_crc)
-+					crc = crc32_be(crc, pos - 2, elen + 2);
-+				break;
-+			}
-+			elem_parse_failed = true;
- 			break;
- 		case WLAN_EID_MESH_ID:
- 			elems->mesh_id = pos;
+diff --git a/drivers/net/ethernet/amazon/ena/ena_com.c b/drivers/net/ethernet/amazon/ena/ena_com.c
+index c5df80f31005f..552db5399503f 100644
+--- a/drivers/net/ethernet/amazon/ena/ena_com.c
++++ b/drivers/net/ethernet/amazon/ena/ena_com.c
+@@ -2128,7 +2128,11 @@ int ena_com_get_hash_function(struct ena_com_dev *ena_dev,
+ 	if (unlikely(rc))
+ 		return rc;
+ 
+-	rss->hash_func = get_resp.u.flow_hash_func.selected_func;
++	/* ffs() returns 1 in case the lsb is set */
++	rss->hash_func = ffs(get_resp.u.flow_hash_func.selected_func);
++	if (rss->hash_func)
++		rss->hash_func--;
++
+ 	if (func)
+ 		*func = rss->hash_func;
+ 
 -- 
 2.20.1
 
