@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2CB8C18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:33:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44062C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:33:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE98420675
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:33:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18F2320675
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:33:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583847199;
-	bh=DJ7m9Kjn2gggjYhzhVkrVZAJu0ldu3G8qeweFwR+9ko=;
+	s=default; t=1583847207;
+	bh=YKfdWWef2XAP+GCkkOxxFSr7TtbFVlNDiZybrdw5O7M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oNoHhlVrFx4t6o35X3AkW4m7hh7GcIPP088AS25sjwNc2iAx9QAy8s1PfKlXX4Ng9
-	 pvx9O8wntB7RQpQAiw1w83qYmgoYSNvZnJIRn5DF3a99zx0nEOTIE6eCSvbHvs9YIP
-	 Xm1XT0hbMYTQoOPPVf95OBfPhRIBgRKDfOSW97mc=
+	b=gtRlL4/AhraG4t3O524ALptVgphWkJ6qUSbOCdAiV86O0dnJp3m0JjD3tTBMqO32F
+	 AgbDfH1Few8bFrCm5h3Fpji9NXDS81xRkFawvDoMAFXKhNZvh0mSavhjBew7MsYLNt
+	 TcAEoS+uanQRmIaejY+rfcXuJWBxizyP++QtQHTc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728535AbgCJNdT (ORCPT
+        id S1728100AbgCJMsY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:33:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52790 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:48:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52336 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727966AbgCJMsh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:48:37 -0400
+        id S1728297AbgCJMsR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:48:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E87E820674;
-        Tue, 10 Mar 2020 12:48:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2806C2468D;
+        Tue, 10 Mar 2020 12:48:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844516;
-        bh=DJ7m9Kjn2gggjYhzhVkrVZAJu0ldu3G8qeweFwR+9ko=;
+        s=default; t=1583844496;
+        bh=YKfdWWef2XAP+GCkkOxxFSr7TtbFVlNDiZybrdw5O7M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ugnQmeLha7POIPXHRLc753b4rP856nwUqCysIFx3iqR48HxYa6kO7ynDEET/+E7Td
-         5P6M2nRGGKeY7jAhKVv+Sph5aDk476r/A/w7L/gqAoTy4s1QO+8TFW1WYTrTsphijo
-         aqNSIVpQu95nKf4FVgIYgqw8ZGP0kxqw4HoVFrFk=
+        b=P2op+Ybp6Wdz+gNDbCgI64FaWX7nYWqhTC58bssCTV50pyoEdA/8yWQ6Dwg3w9nbo
+         +5pZqzuEEk/giNoIqSIrRBo1FiFgmQWYwW5XOoxqR0phh63PVVmr1GwH46L/ARNxFx
+         3NioFLtL7aV0XtFR5WHOjodBgTw9UZBdDsBnxkY0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Omer Shpigelman <oshpigelman@habana.ai>,
-        Oded Gabbay <oded.gabbay@gmail.com>,
+        stable@vger.kernel.org, Chuanhong Guo <gch981213@gmail.com>,
+        Daniel Golle <daniel@makrotopia.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 020/168] habanalabs: do not halt CoreSight during hard reset
-Date:   Tue, 10 Mar 2020 13:37:46 +0100
-Message-Id: <20200310123637.709270676@linuxfoundation.org>
+Subject: [PATCH 5.4 014/168] serial: ar933x_uart: set UART_CS_{RX,TX}_READY_ORIDE
+Date:   Tue, 10 Mar 2020 13:37:40 +0100
+Message-Id: <20200310123637.149646464@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123635.322799692@linuxfoundation.org>
 References: <20200310123635.322799692@linuxfoundation.org>
@@ -60,39 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Omer Shpigelman <oshpigelman@habana.ai>
+From: Daniel Golle <daniel@makrotopia.org>
 
-[ Upstream commit a37e47192dfa98f79a0cd5ab991c224b5980c982 ]
+[ Upstream commit 87c5cbf71ecbb9e289d60a2df22eb686c70bf196 ]
 
-During hard reset we must not write to the device.
-Hence avoid halting CoreSight during user context close if it is done
-during hard reset.
-In addition, we must not re-enable clock gating afterwards as it was
-deliberately disabled in the beginning of the hard reset flow.
+On AR934x this UART is usually not initialized by the bootloader
+as it is only used as a secondary serial port while the primary
+UART is a newly introduced NS16550-compatible.
+In order to make use of the ar933x-uart on AR934x without RTS/CTS
+hardware flow control, one needs to set the
+UART_CS_{RX,TX}_READY_ORIDE bits as other than on AR933x where this
+UART is used as primary/console, the bootloader on AR934x typically
+doesn't set those bits.
+Setting them explicitely on AR933x should not do any harm, so just
+set them unconditionally.
 
-Signed-off-by: Omer Shpigelman <oshpigelman@habana.ai>
-Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
-Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
+Tested-by: Chuanhong Guo <gch981213@gmail.com>
+Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+Link: https://lore.kernel.org/r/20200207095335.GA179836@makrotopia.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/misc/habanalabs/device.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/tty/serial/ar933x_uart.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/misc/habanalabs/device.c b/drivers/misc/habanalabs/device.c
-index eb9c07833a517..a7a4fed4d8995 100644
---- a/drivers/misc/habanalabs/device.c
-+++ b/drivers/misc/habanalabs/device.c
-@@ -600,7 +600,9 @@ int hl_device_set_debug_mode(struct hl_device *hdev, bool enable)
- 			goto out;
- 		}
+diff --git a/drivers/tty/serial/ar933x_uart.c b/drivers/tty/serial/ar933x_uart.c
+index 3bdd56a1021b2..ea12f10610b64 100644
+--- a/drivers/tty/serial/ar933x_uart.c
++++ b/drivers/tty/serial/ar933x_uart.c
+@@ -286,6 +286,10 @@ static void ar933x_uart_set_termios(struct uart_port *port,
+ 	ar933x_uart_rmw_set(up, AR933X_UART_CS_REG,
+ 			    AR933X_UART_CS_HOST_INT_EN);
  
--		hdev->asic_funcs->halt_coresight(hdev);
-+		if (!hdev->hard_reset_pending)
-+			hdev->asic_funcs->halt_coresight(hdev);
++	/* enable RX and TX ready overide */
++	ar933x_uart_rmw_set(up, AR933X_UART_CS_REG,
++		AR933X_UART_CS_TX_READY_ORIDE | AR933X_UART_CS_RX_READY_ORIDE);
 +
- 		hdev->in_debug = 0;
+ 	/* reenable the UART */
+ 	ar933x_uart_rmw(up, AR933X_UART_CS_REG,
+ 			AR933X_UART_CS_IF_MODE_M << AR933X_UART_CS_IF_MODE_S,
+@@ -418,6 +422,10 @@ static int ar933x_uart_startup(struct uart_port *port)
+ 	ar933x_uart_rmw_set(up, AR933X_UART_CS_REG,
+ 			    AR933X_UART_CS_HOST_INT_EN);
  
- 		goto out;
++	/* enable RX and TX ready overide */
++	ar933x_uart_rmw_set(up, AR933X_UART_CS_REG,
++		AR933X_UART_CS_TX_READY_ORIDE | AR933X_UART_CS_RX_READY_ORIDE);
++
+ 	/* Enable RX interrupts */
+ 	up->ier = AR933X_UART_INT_RX_VALID;
+ 	ar933x_uart_write(up, AR933X_UART_INT_EN_REG, up->ier);
 -- 
 2.20.1
 
