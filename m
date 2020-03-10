@@ -2,127 +2,147 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72CBAC10F25
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 02:30:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10E5DC10F25
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 02:32:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 427D620637
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 02:30:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E69BB20728
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 02:32:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726637AbgCJCaW convert rfc822-to-8bit (ORCPT
+        id S1726729AbgCJCcE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 22:30:22 -0400
-Received: from twhmllg4.macronix.com ([211.75.127.132]:14569 "EHLO
-        TWHMLLG4.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726450AbgCJCaV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 22:30:21 -0400
-Received: from twhfm1p2.macronix.com (twhfm1p2.macronix.com [172.17.20.92])
-        by TWHMLLG4.macronix.com with ESMTP id 02A2U9g6072289;
-        Tue, 10 Mar 2020 10:30:09 +0800 (GMT-8)
-        (envelope-from masonccyang@mxic.com.tw)
-Received: from MXML06C.mxic.com.tw (mxml06c.mxic.com.tw [172.17.14.55])
-        by Forcepoint Email with ESMTP id 337CDB3A3A355115CDAE;
-        Tue, 10 Mar 2020 10:30:09 +0800 (CST)
-In-Reply-To: <20200309141403.241e773e@xps13>
-References: <1583220084-10890-1-git-send-email-masonccyang@mxic.com.tw> <20200309141403.241e773e@xps13>
-To:     "Miquel Raynal" <miquel.raynal@bootlin.com>
-Cc:     allison@lohutok.net, bbrezillon@kernel.org,
-        frieder.schrempf@kontron.de, juliensu@mxic.com.tw,
-        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        rfontana@redhat.com, richard@nod.at, s.hauer@pengutronix.de,
-        stefan@agner.ch, tglx@linutronix.de, vigneshr@ti.com,
-        yuehaibing@huawei.com
-Subject: Re: [PATCH v3 0/4] mtd: rawnand: Add support Macronix Block Portection & Deep
- Power Down mode
+        Mon, 9 Mar 2020 22:32:04 -0400
+Received: from foss.arm.com ([217.140.110.172]:59254 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726464AbgCJCcD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 22:32:03 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C538730E;
+        Mon,  9 Mar 2020 19:32:02 -0700 (PDT)
+Received: from [10.163.1.203] (unknown [10.163.1.203])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E46843F67D;
+        Mon,  9 Mar 2020 19:31:53 -0700 (PDT)
+Subject: Re: [PATCH V15] mm/debug: Add tests validating architecture page
+ table helpers
+To:     Christophe Leroy <christophe.leroy@c-s.fr>, Qian Cai <cai@lca.pw>
+Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-riscv@lists.infradead.org, x86@kernel.org,
+        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <61250cdc-f80b-2e50-5168-2ec67ec6f1e6@arm.com>
+ <CEEAD95E-D468-4C58-A65B-7E8AED91168A@lca.pw>
+ <a45834bc-e6f2-ac21-de9e-1aff67d12797@arm.com>
+ <c40d907a-b64b-ae0d-e58f-33dddf0e8edc@c-s.fr>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <2d950d8c-4b23-741e-591f-e22e857c0755@arm.com>
+Date:   Tue, 10 Mar 2020 08:01:51 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-X-KeepSent: C31C83BB:5F8F8B14-48258527:000B6AF2;
- type=4; name=$KeepSent
-X-Mailer: Lotus Notes Release 8.5.3FP4 SHF90 June 10, 2013
-Message-ID: <OFC31C83BB.5F8F8B14-ON48258527.000B6AF2-48258527.000DBE12@mxic.com.tw>
-From:   masonccyang@mxic.com.tw
-Date:   Tue, 10 Mar 2020 10:30:09 +0800
-X-MIMETrack: Serialize by Router on MXML06C/TAIWAN/MXIC(Release 9.0.1FP10 HF265|July 25, 2018) at
- 2020/03/10 AM 10:30:09,
-        Serialize complete at 2020/03/10 AM 10:30:09
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 8BIT
-X-MAIL: TWHMLLG4.macronix.com 02A2U9g6072289
+In-Reply-To: <c40d907a-b64b-ae0d-e58f-33dddf0e8edc@c-s.fr>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-Hi Miquel,
+
+On 03/07/2020 12:35 PM, Christophe Leroy wrote:
+> 
+> 
+> Le 07/03/2020 à 01:56, Anshuman Khandual a écrit :
+>>
+>>
+>> On 03/07/2020 06:04 AM, Qian Cai wrote:
+>>>
+>>>
+>>>> On Mar 6, 2020, at 7:03 PM, Anshuman Khandual <Anshuman.Khandual@arm.com> wrote:
+>>>>
+>>>> Hmm, set_pte_at() function is not preferred here for these tests. The idea
+>>>> is to avoid or atleast minimize TLB/cache flushes triggered from these sort
+>>>> of 'static' tests. set_pte_at() is platform provided and could/might trigger
+>>>> these flushes or some other platform specific synchronization stuff. Just
+>>>
+>>> Why is that important for this debugging option?
+>>
+>> Primarily reason is to avoid TLB/cache flush instructions on the system
+>> during these tests that only involve transforming different page table
+>> level entries through helpers. Unless really necessary, why should it
+>> emit any TLB/cache flush instructions ?
+> 
+> What's the problem with thoses flushes ?
+> 
+>>
+>>>
+>>>> wondering is there specific reason with respect to the soft lock up problem
+>>>> making it necessary to use set_pte_at() rather than a simple WRITE_ONCE() ?
+>>>
+>>> Looks at the s390 version of set_pte_at(), it has this comment,
+>>> vmaddr);
+>>>
+>>> /*
+>>>   * Certain architectures need to do special things when PTEs
+>>>   * within a page table are directly modified.  Thus, the following
+>>>   * hook is made available.
+>>>   */
+>>>
+>>> I can only guess that powerpc  could be the same here.
+>>
+>> This comment is present in multiple platforms while defining set_pte_at().
+>> Is not 'barrier()' here alone good enough ? Else what exactly set_pte_at()
+>> does as compared to WRITE_ONCE() that avoids the soft lock up, just trying
+>> to understand.
+>>
+> 
+> 
+> Argh ! I didn't realise that you were writing directly into the page tables. When it works, that's only by chance I guess.
+> 
+> To properly set the page table entries, set_pte_at() has to be used:
+> - On powerpc 8xx, with 16k pages, the page table entry must be copied four times. set_pte_at() does it, WRITE_ONCE() doesn't.
+> - On powerpc book3s/32 (hash MMU), the flag _PAGE_HASHPTE must be preserved among writes. set_pte_at() preserves it, WRITE_ONCE() doesn't.
+> 
+> set_pte_at() also does a few other mandatory things, like calling pte_mkpte()
+> 
+> So, the WRITE_ONCE() must definitely become a set_pte_at()
+
+Sure, will do. These are part of the clear tests that populates a given
+entry with a non zero value before clearing and testing it with pxx_none().
+In that context, WRITE_ONCE() seemed sufficient. But pte_clear() might be
+closely tied with proper page table entry update and hence a preceding
+set_pte_at() will be better.
+
+There are still more WRITE_ONCE() for other page table levels during these
+clear tests. set_pmd_at() and set_pud_at() are defined on platforms that
+support (and enable) THP and PUD based THP respectively. Hence they could
+not be used for clear tests as remaining helpers pmd_clear(), pud_clear(),
+p4d_clear() and pgd_clear() still need to be validated with or without
+THP support and enablement. We should just leave all other WRITE_ONCE()
+instances unchanged. Please correct me if I am missing something here.
 
 > 
-> Mason Yang <masonccyang@mxic.com.tw> wrote on Tue,  3 Mar 2020 15:21:20
-> +0800:
+> Christophe
 > 
-> > Hi,
-> > 
-> > Changelog
-> > 
-> > v3:
-> > patch nand_lock_area/nand_unlock_area.
-> > fixed kbuidtest robot warnings and reviewer's comments.
-> 
-> I know it is painful for the contributor but I really need more details
-> in the changelog. This is something I care about because I can speed-up
-
-okay, more changelog as
-
-1. Patched the Kdoc for both lock_area/unlock_area and _suspend/_resume
-2. Created a helper to read default protected value (after device power 
-on)
-        for protection function detection.
-3. patched the prefix for Macronix deep power down command, 0xB9
-4. Patched the description of mxic_nand_resume() and add a small sleeping 
-delay.
-5. Created a helper for deep power down device part number detection.
-
-
-> my reviews when I know what I already acked or not. "fixing reviewer's
-> comments" is way too vague, I have absolutely no idea of what I told
-> you last time :) So please, for the next iterations, be more verbose in
-> these changelogs! (that's fine for this one, I'll check myself).
-> 
-> Cheers,
-> Miqu�l
-
-thanks for your time and review.
-Mason
-
-
-CONFIDENTIALITY NOTE:
-
-This e-mail and any attachments may contain confidential information 
-and/or personal data, which is protected by applicable laws. Please be 
-reminded that duplication, disclosure, distribution, or use of this e-mail 
-(and/or its attachments) or any part thereof is prohibited. If you receive 
-this e-mail in error, please notify us immediately and delete this mail as 
-well as its attachment(s) from your system. In addition, please be 
-informed that collection, processing, and/or use of personal data is 
-prohibited unless expressly permitted by personal data protection laws. 
-Thank you for your attention and cooperation.
-
-Macronix International Co., Ltd.
-
-=====================================================================
-
-
-
-============================================================================
-
-CONFIDENTIALITY NOTE:
-
-This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
-
-Macronix International Co., Ltd.
-
-=====================================================================
-
