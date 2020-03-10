@@ -2,57 +2,74 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DFBAC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:45:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9347C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:46:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60C5A24655
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:45:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583847935;
-	bh=Gb1IRoHX5zmIsy6mPei1A2ZN94UYuoYi38cNq7SdFPg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Yrwos3vxa4IlCHWOzFG4EmogyMDKh5hao/8EZ9UbWgiwRkkGUAxS92JnO8Gm26R7J
-	 pycnjqGK9TH4lxpAW6QvZlgS2XAa4Oo9gD+s+p498q61wtcJLKCSMaeAhcFKHXi2Jt
-	 ZdqPFs33yHP5Xhj8GDlB7G2v8/3MpxgScP251J/E=
+	by mail.kernel.org (Postfix) with ESMTP id 8F09420675
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:46:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="abZroker"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727803AbgCJNpe (ORCPT
+        id S1727412AbgCJNqL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:45:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37448 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726389AbgCJNnS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:43:18 -0400
-Received: from mail.kernel.org (ip5f5ad4e9.dynamic.kabel-deutschland.de [95.90.212.233])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0BB1924677;
-        Tue, 10 Mar 2020 13:43:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583847797;
-        bh=Gb1IRoHX5zmIsy6mPei1A2ZN94UYuoYi38cNq7SdFPg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xHqL9QbdbGE4+K/dXK2cP6mjK1pj8fTv0NPwdnqBh+mYPYXmLPrqdryqe+1lPRSqr
-         +SRA7ySC3Lkdhfy0VNQlQBdd2l2inX+TAnTtbz0z87dNrBzmvdmv+J5qJRiGmzAEi+
-         A1yXkwUN9vMmZ8FZcRFhI1a0neQx0GvBEDfha/Ws=
-Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
-        (envelope-from <mchehab@kernel.org>)
-        id 1jBfAB-0005vQ-0t; Tue, 10 Mar 2020 14:43:15 +0100
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        linux-media@vger.kernel.org
-Subject: [PATCH v2 03/22] media: docs: split cpia2.rst on two files
-Date:   Tue, 10 Mar 2020 14:42:54 +0100
-Message-Id: <7f013c412e20cec66bf605bfccddc7f90fe187cd.1583847556.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <cover.1583847556.git.mchehab+huawei@kernel.org>
-References: <cover.1583847556.git.mchehab+huawei@kernel.org>
+        Tue, 10 Mar 2020 09:46:11 -0400
+Received: from mail-wm1-f41.google.com ([209.85.128.41]:36104 "EHLO
+        mail-wm1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726650AbgCJNqK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:46:10 -0400
+Received: by mail-wm1-f41.google.com with SMTP id g62so1419770wme.1
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 06:46:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wD/rjwDaFSH4m0qLvYcsJe5uINdhvscpogJ3gh+ddBE=;
+        b=abZrokerv1XQs4CdYgMZDC/O5UauiH6mqKC2Rrdy1tv4xSXq1RKsr+iLSyaMu5QRrY
+         eNToWk64+vZzKd5eeIFecdjcgvg5U62vU7dexhWjTJGcM9vb+TmvA6P4A4xsOXQvW2fi
+         wb2/v2YN1HJGBWhNsaZaJsTHq9C+BIA4ID0FoIbZUuGmip1war0RJ9oU2O6ca/Eb8bnp
+         lKwQxo9FxcvxnukaM01tLAXT2mdTHQ+BWTwNmBjHEBFWXKM+WWrV9KQRZ9Gjn8GzG1NP
+         UzG8pjbwxIVQlVYsWb8vQaUL2aaeAjFaIZ9pL5L7SBi0tKFDOAG5ttq+QXKgWrlHYdsw
+         mQKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wD/rjwDaFSH4m0qLvYcsJe5uINdhvscpogJ3gh+ddBE=;
+        b=Cf5VqJa9EIiwizGuEH97ATNDXNSgaHqfou7bWHDqSp8MuNZSXTP6PB3mWAsQ+pcWHP
+         IUG2i9/1wMzGp0jl9s1EmL5evp4GoZgKNevWUcQHybN5cylluLSxUaMMY969fQxw/zUA
+         8C+K/JRSZnNjYCjQNrwb/D3wWDGLaGBXQk5b3G3h8VphzhTKDnrgqDwKn+KZa9BDBM9e
+         qZDwx2pBMMGBNfhtHXXptpr+voPumMbmn9GZ/jZjDaBSoof7o7gLVolVg+tHNOUvrrWl
+         doQZZGKYu1Rj/L5OcFlgKQ1XbpYYtY+R9viIWH7ZLdhirXVpJHPM/tkiKaIw1eoQXT/j
+         ZDhQ==
+X-Gm-Message-State: ANhLgQ12K7yxvI6kXFmMNQ9nNH7WDgOlA4Gl7iIgrEf763vzmSUmzxXu
+        tr/KQAZ4anudUcsO2SN3gibfrw==
+X-Google-Smtp-Source: ADFU+vsAqODaD7c54dhNVCiGo6mkHHmbHDjZbcCM9Ns8rtR6QHeWU2SEQUgGGnzoUNA8SRhX+nS2rA==
+X-Received: by 2002:a1c:f60d:: with SMTP id w13mr628899wmc.171.1583847967491;
+        Tue, 10 Mar 2020 06:46:07 -0700 (PDT)
+Received: from xps7590.local ([2a02:2450:102f:13b8:e50c:c780:9a1:8b61])
+        by smtp.gmail.com with ESMTPSA id d63sm4074009wmd.44.2020.03.10.06.46.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Mar 2020 06:46:06 -0700 (PDT)
+From:   Robert Foss <robert.foss@linaro.org>
+To:     ben.kao@intel.com, mchehab@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, matthias.bgg@gmail.com, davem@davemloft.net,
+        gregkh@linuxfoundation.org, Jonathan.Cameron@huawei.com,
+        andriy.shevchenko@linux.intel.com, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Dongchun Zhu <dongchun.zhu@mediatek.com>
+Cc:     Tomasz Figa <tfiga@chromium.org>,
+        Robert Foss <robert.foss@linaro.org>
+Subject: [v1 0/3] media: ov8856: Add sensor modes & devicetree support
+Date:   Tue, 10 Mar 2020 14:46:00 +0100
+Message-Id: <20200310134603.30260-1-robert.foss@linaro.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -60,144 +77,23 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to be able to better organize the subsystem, split the
-cpia2 information on two files: one user-facing and another one
-from Kernel development PoV.
+This adds devicetree support to the ov8856 driver.
+In order to to aid debugging and enable future sensor
+modes to be supported, module revision detection is also added.
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- Documentation/media/v4l-drivers/cpia2.rst     | 46 ---------------
- .../media/v4l-drivers/cpia2_devel.rst         | 56 +++++++++++++++++++
- Documentation/media/v4l-drivers/index.rst     |  2 +
- 3 files changed, 58 insertions(+), 46 deletions(-)
- create mode 100644 Documentation/media/v4l-drivers/cpia2_devel.rst
+Dongchun Zhu (1):
+  media: dt-bindings: ov8856: Document YAML bindings
 
-diff --git a/Documentation/media/v4l-drivers/cpia2.rst b/Documentation/media/v4l-drivers/cpia2.rst
-index a86baa1c83f1..6f4258aebbfe 100644
---- a/Documentation/media/v4l-drivers/cpia2.rst
-+++ b/Documentation/media/v4l-drivers/cpia2.rst
-@@ -147,49 +147,3 @@ We are providing a modified gqcam application to view the output. In
- order to avoid confusion, here it is called mview.  There is also the qx5view
- program which can also control the lights on the qx5 microscope. MJPEG Tools
- (http://mjpeg.sourceforge.net) can also be used to record from the camera.
--
--Notes to developers
--~~~~~~~~~~~~~~~~~~~
--
--   - This is a driver version stripped of the 2.4 back compatibility
--     and old MJPEG ioctl API. See cpia2.sf.net for 2.4 support.
--
--Programmer's overview of cpia2 driver
--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
--
--Cpia2 is the second generation video coprocessor from VLSI Vision Ltd (now a
--division of ST Microelectronics).  There are two versions.  The first is the
--STV0672, which is capable of up to 30 frames per second (fps) in frame sizes
--up to CIF, and 15 fps for VGA frames.  The STV0676 is an improved version,
--which can handle up to 30 fps VGA.  Both coprocessors can be attached to two
--CMOS sensors - the vvl6410 CIF sensor and the vvl6500 VGA sensor.  These will
--be referred to as the 410 and the 500 sensors, or the CIF and VGA sensors.
--
--The two chipsets operate almost identically.  The core is an 8051 processor,
--running two different versions of firmware.  The 672 runs the VP4 video
--processor code, the 676 runs VP5.  There are a few differences in register
--mappings for the two chips.  In these cases, the symbols defined in the
--header files are marked with VP4 or VP5 as part of the symbol name.
--
--The cameras appear externally as three sets of registers. Setting register
--values is the only way to control the camera.  Some settings are
--interdependant, such as the sequence required to power up the camera. I will
--try to make note of all of these cases.
--
--The register sets are called blocks.  Block 0 is the system block.  This
--section is always powered on when the camera is plugged in.  It contains
--registers that control housekeeping functions such as powering up the video
--processor.  The video processor is the VP block.  These registers control
--how the video from the sensor is processed.  Examples are timing registers,
--user mode (vga, qvga), scaling, cropping, framerates, and so on.  The last
--block is the video compressor (VC).  The video stream sent from the camera is
--compressed as Motion JPEG (JPEGA).  The VC controls all of the compression
--parameters.  Looking at the file cpia2_registers.h, you can get a full view
--of these registers and the possible values for most of them.
--
--One or more registers can be set or read by sending a usb control message to
--the camera.  There are three modes for this.  Block mode requests a number
--of contiguous registers.  Random mode reads or writes random registers with
--a tuple structure containing address/value pairs.  The repeat mode is only
--used by VP4 to load a firmware patch.  It contains a starting address and
--a sequence of bytes to be written into a gpio port.
-diff --git a/Documentation/media/v4l-drivers/cpia2_devel.rst b/Documentation/media/v4l-drivers/cpia2_devel.rst
-new file mode 100644
-index 000000000000..decaa4768c78
---- /dev/null
-+++ b/Documentation/media/v4l-drivers/cpia2_devel.rst
-@@ -0,0 +1,56 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+The cpia2 driver
-+================
-+
-+Authors: Peter Pregler <Peter_Pregler@email.com>,
-+Scott J. Bertin <scottbertin@yahoo.com>, and
-+Jarl Totland <Jarl.Totland@bdc.no> for the original cpia driver, which
-+this one was modelled from.
-+
-+
-+Notes to developers
-+~~~~~~~~~~~~~~~~~~~
-+
-+   - This is a driver version stripped of the 2.4 back compatibility
-+     and old MJPEG ioctl API. See cpia2.sf.net for 2.4 support.
-+
-+Programmer's overview of cpia2 driver
-+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-+
-+Cpia2 is the second generation video coprocessor from VLSI Vision Ltd (now a
-+division of ST Microelectronics).  There are two versions.  The first is the
-+STV0672, which is capable of up to 30 frames per second (fps) in frame sizes
-+up to CIF, and 15 fps for VGA frames.  The STV0676 is an improved version,
-+which can handle up to 30 fps VGA.  Both coprocessors can be attached to two
-+CMOS sensors - the vvl6410 CIF sensor and the vvl6500 VGA sensor.  These will
-+be referred to as the 410 and the 500 sensors, or the CIF and VGA sensors.
-+
-+The two chipsets operate almost identically.  The core is an 8051 processor,
-+running two different versions of firmware.  The 672 runs the VP4 video
-+processor code, the 676 runs VP5.  There are a few differences in register
-+mappings for the two chips.  In these cases, the symbols defined in the
-+header files are marked with VP4 or VP5 as part of the symbol name.
-+
-+The cameras appear externally as three sets of registers. Setting register
-+values is the only way to control the camera.  Some settings are
-+interdependant, such as the sequence required to power up the camera. I will
-+try to make note of all of these cases.
-+
-+The register sets are called blocks.  Block 0 is the system block.  This
-+section is always powered on when the camera is plugged in.  It contains
-+registers that control housekeeping functions such as powering up the video
-+processor.  The video processor is the VP block.  These registers control
-+how the video from the sensor is processed.  Examples are timing registers,
-+user mode (vga, qvga), scaling, cropping, framerates, and so on.  The last
-+block is the video compressor (VC).  The video stream sent from the camera is
-+compressed as Motion JPEG (JPEGA).  The VC controls all of the compression
-+parameters.  Looking at the file cpia2_registers.h, you can get a full view
-+of these registers and the possible values for most of them.
-+
-+One or more registers can be set or read by sending a usb control message to
-+the camera.  There are three modes for this.  Block mode requests a number
-+of contiguous registers.  Random mode reads or writes random registers with
-+a tuple structure containing address/value pairs.  The repeat mode is only
-+used by VP4 to load a firmware patch.  It contains a starting address and
-+a sequence of bytes to be written into a gpio port.
-diff --git a/Documentation/media/v4l-drivers/index.rst b/Documentation/media/v4l-drivers/index.rst
-index eca22b82de94..72fbb394f6a2 100644
---- a/Documentation/media/v4l-drivers/index.rst
-+++ b/Documentation/media/v4l-drivers/index.rst
-@@ -65,3 +65,5 @@ For more details see the file COPYING in the source distribution of Linux.
- 	vimc
- 	vivid
- 	zr364xx
-+
-+	cpia2_devel
+Robert Foss (2):
+  media: ov8856: Add devicetree support
+  media: ov8856: Implement sensor module revision identification
+
+ .../devicetree/bindings/media/i2c/ov8856.yaml | 129 +++++++++++++++
+ MAINTAINERS                                   |   1 +
+ drivers/media/i2c/ov8856.c                    | 153 +++++++++++++++++-
+ 3 files changed, 281 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/ov8856.yaml
+
 -- 
-2.24.1
+2.20.1
 
