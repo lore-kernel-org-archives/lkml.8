@@ -2,166 +2,313 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9232CC18E5C
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 19:17:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D80DC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 19:18:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 640B420727
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 19:17:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F08BC20727
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 19:18:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qnpTPsDr"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="X5aIYN6T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727366AbgCJTRQ (ORCPT
+        id S1727385AbgCJTSN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 15:17:16 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:36327 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727146AbgCJTRP (ORCPT
+        Tue, 10 Mar 2020 15:18:13 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:39254 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727138AbgCJTSM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 15:17:15 -0400
-Received: by mail-oi1-f196.google.com with SMTP id k18so2022620oib.3
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 12:17:14 -0700 (PDT)
+        Tue, 10 Mar 2020 15:18:12 -0400
+Received: by mail-il1-f195.google.com with SMTP id a14so9952591ilk.6
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 12:18:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TW/yj+hWXnFZH+cIOV6JEAyfHAcoNuoZqAljLHFkJp0=;
-        b=qnpTPsDrlbR61cP6qwOtvwRo6RX3RcguUv4e0B4EPRv3lMbVxx87PrzuIty/LAuNGA
-         1augL8bDQC+2Hgp+i4+8bOjr36RGS51J8cskswpHGlA6X6Tcgu5QhsxIBNt8a1DjhDkx
-         BflQMoX3sKZF6vKlpOp4Q97mWTc0WRVR8sXyHC1HD8HOM++D8ZkJC/DxWDBawgvB0eG0
-         c7CN/j7N/lduGOb8USG++EB+qLuRZ5ZmGvJgDndqyRfs2ncknuXH1XtvbZj9HyS3FKMN
-         yJpRs7vrTdLLLXQsmXyrmLPA/+5a86cpumsh0BJi7WdP9qmCX8c1nFHsp7pZZKTS/iA3
-         E1Fg==
+         :cc:content-transfer-encoding;
+        bh=G9Ot2Xjszp51gBGx58sDCr2xmlbyP0UP+3fOehYA85Y=;
+        b=X5aIYN6TebDU8ZPHAulU19T+56uXL0NNZOGsZ2yI255jZXTRhANUfEW0pdg3g6V4f+
+         RnNpsMdAMBPeInxTjr5X6L3xe1VwWcKooWjXm6sO0/UwBTnGiFVEotJjAGy4W7WC9EOh
+         X0/lmano+UjrwmxF4AyezAz3W3gJakMUwozQmF0xQ3xM1c979GC999/a6Vl0NNXX1X1+
+         5GXYRtQib/gJQ0A6rJo+nu72qwxWwjUKmAm/vqYPnGGveYzqNCE32bBXOtRmpLK6wre5
+         sXzh9F4Gz/wyWM8Y0MxqWuCUHQB0YLZWMbvqlconEwNe6FkfZNRrgaQE/mrA5B/z5Gsy
+         cSVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TW/yj+hWXnFZH+cIOV6JEAyfHAcoNuoZqAljLHFkJp0=;
-        b=tyYPKlwQhu27fY6vA+telfhP1Es7o6Kvy4s7Iai5qjbn4etM9XSP+BLJRYN4WyfA+b
-         2fQIAKJNd987NqkCl+fTS2zvwByQ2MTnWZG2hsgRnPodbzJjgPzQ25sVJvRVpyiePu5y
-         K9O1QsNkgEg5yhmNJeBUgrokFFjOtXPQQbdkAvJeZPnd0nqXhko3feGb/AIgHX9cKhSM
-         H++2ppIvcRR9XJEKJPyr+9UjHAaGxmib3AeL/iXIcJb1FkyXFCahqRSuxd1VmMm9U122
-         iXnAxBoqiVD7XgmYxdKTv6CRGDHfgMk2694LPk1sYCTeTLWdoFFgocSBbb+zgQ8f/Z+o
-         CT3g==
-X-Gm-Message-State: ANhLgQ0LhUWfi7byZvZov/w3ab16mbPnhpMX3BeYy8+KWnzGTmJ3Jd8t
-        idkr/lwP1WYh3DKiyGD7ZTMSE48/H+sD7jXCCCGBww==
-X-Google-Smtp-Source: ADFU+vsLvhXTBZ0tYPXPJFbFEFKJ1zpqw9g6M/LvL7QhBPk7VyK2ei/FKMF/yhX24G0+fYimQ7ZdrPegjHcj9wiKoYo=
-X-Received: by 2002:aca:bac1:: with SMTP id k184mr1869239oif.157.1583867833858;
- Tue, 10 Mar 2020 12:17:13 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=G9Ot2Xjszp51gBGx58sDCr2xmlbyP0UP+3fOehYA85Y=;
+        b=l5y0Avl3QYoc73dCbkZudgTewme9v5HRcvAub/TrqYxdjec8+sMhi1mKbly4MTYlYs
+         OjQ4Tt1rbvNXqG/ny/xYlQCvRlxeED4bOZ/CovGReGt0ebUFBsFt8PXBGDE/0R57URa/
+         2UNLQKtqmA0gtMjMnqpGiuOwtDuh2UdR5q5tWJXu5RL/3AUkerqQIVSrV1JPPbSAuCbM
+         m1XeNxdiBiqQo4D8TH8ZuJXWxkeAlPALa4MRf+O2kfJ1Rp8SfCFmhuTIEk0AbZcEY7cd
+         Q5Ri5BfT/yMIpbmdHCxTLBWOIcxhSlqq0aTzYLDluH60kRRKGzm5A5/uMdbzsgJ2G0//
+         DODQ==
+X-Gm-Message-State: ANhLgQ1KEJ7h3MCBCxb98nF/vsUznMGckEcYoWoCSWHr7TzUBfYdNZWx
+        Imkg7LXS6VOBDod0s7E1UWkgVjSKp0BjwBjKE+PDwQ==
+X-Google-Smtp-Source: ADFU+vuBl9jtZKrPN3uOSXR4Nv2qnd2K1O9u2s6kWhC90nd+WCfqnZMbV026ei3A9zreO8ZDOJ/03oYzKw2p+9VWrMk=
+X-Received: by 2002:a92:8586:: with SMTP id f128mr10567161ilh.50.1583867891455;
+ Tue, 10 Mar 2020 12:18:11 -0700 (PDT)
 MIME-Version: 1.0
-References: <87r1y8dqqz.fsf@x220.int.ebiederm.org> <AM6PR03MB517053AED7DC89F7C0704B7DE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <AM6PR03MB51703B44170EAB4626C9B2CAE4E20@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <87tv32cxmf.fsf_-_@x220.int.ebiederm.org> <87v9ne5y4y.fsf_-_@x220.int.ebiederm.org>
- <87eeu25y14.fsf_-_@x220.int.ebiederm.org> <20200309195909.h2lv5uawce5wgryx@wittgenstein>
- <877dztz415.fsf@x220.int.ebiederm.org> <20200309201729.yk5sd26v4bz4gtou@wittgenstein>
- <87k13txnig.fsf@x220.int.ebiederm.org> <20200310085540.pztaty2mj62xt2nm@wittgenstein>
- <87wo7svy96.fsf_-_@x220.int.ebiederm.org>
-In-Reply-To: <87wo7svy96.fsf_-_@x220.int.ebiederm.org>
-From:   Jann Horn <jannh@google.com>
-Date:   Tue, 10 Mar 2020 20:16:47 +0100
-Message-ID: <CAG48ez2cUZMVOAXfHPNjKjYsMSaWkjUjOCHo0KYZ+oXQUW4viA@mail.gmail.com>
-Subject: Re: [PATCH] pidfd: Stop taking cred_guard_mutex
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        Kees Cook <keescook@chromium.org>,
+References: <20200210162209.23149-1-cleger@kalray.eu> <20200302093902.27849-1-cleger@kalray.eu>
+ <20200302093902.27849-6-cleger@kalray.eu> <20200302231342.GE262924@yoga>
+ <482678048.7666348.1583222551942.JavaMail.zimbra@kalray.eu>
+ <20200310000005.GF14744@builder> <20200310152031.GA25781@xps15> <371773363.9138477.1583854699708.JavaMail.zimbra@kalray.eu>
+In-Reply-To: <371773363.9138477.1583854699708.JavaMail.zimbra@kalray.eu>
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+Date:   Tue, 10 Mar 2020 13:18:00 -0600
+Message-ID: <CANLsYkx8QhJTozKNpFXiVYGLPpbdBLLAh=arqANHL-xQKLwrew@mail.gmail.com>
+Subject: Re: [PATCH v5 5/8] remoteproc: Rename rproc_elf_sanity_check for elf32
+To:     =?UTF-8?Q?Cl=C3=A9ment_Leger?= <cleger@kalrayinc.com>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
         Jonathan Corbet <corbet@lwn.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Andrei Vagin <avagin@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Yuyang Du <duyuyang@gmail.com>,
-        David Hildenbrand <david@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        David Howells <dhowells@redhat.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christian Kellner <christian@kellner.me>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Sargun Dhillon <sargun@sargun.me>
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        linux-remoteproc <linux-remoteproc@vger.kernel.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Andy Gross <agross@kernel.org>,
+        Patrice Chotard <patrice.chotard@st.com>,
+        linux-doc <linux-doc@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
+        Loic PALLARDY <loic.pallardy@st.com>, s-anna <s-anna@ti.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 10, 2020 at 7:54 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
-> During exec some file descriptors are closed and the files struct is
-> unshared.  But all of that can happen at other times and it has the
-> same protections during exec as at ordinary times.  So stop taking the
-> cred_guard_mutex as it is useless.
+On Tue, 10 Mar 2020 at 09:38, Cl=C3=A9ment Leger <cleger@kalrayinc.com> wro=
+te:
 >
-> Furthermore he cred_guard_mutex is a bad idea because it is deadlock
-> prone, as it is held in serveral while waiting possibly indefinitely
-> for userspace to do something.
-
-Please don't. Just use the new exec_update_mutex like everywhere else.
-
-> Cc: Sargun Dhillon <sargun@sargun.me>
-> Cc: Christian Brauner <christian.brauner@ubuntu.com>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Fixes: 8649c322f75c ("pid: Implement pidfd_getfd syscall")
-> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
-> ---
->  kernel/pid.c | 6 ------
->  1 file changed, 6 deletions(-)
+> Hi Mathieu,
 >
-> Christian if you don't have any objections I will take this one through
-> my tree.
+> ----- On 10 Mar, 2020, at 16:20, Mathieu Poirier mathieu.poirier@linaro.o=
+rg wrote:
 >
-> I tried to figure out why this code path takes the cred_guard_mutex and
-> the archive on lore.kernel.org was not helpful in finding that part of
-> the conversation.
-
-That was my suggestion.
-
-> diff --git a/kernel/pid.c b/kernel/pid.c
-> index 60820e72634c..53646d5616d2 100644
-> --- a/kernel/pid.c
-> +++ b/kernel/pid.c
-> @@ -577,17 +577,11 @@ static struct file *__pidfd_fget(struct task_struct *task, int fd)
->         struct file *file;
->         int ret;
+> > On Mon, Mar 09, 2020 at 05:00:05PM -0700, Bjorn Andersson wrote:
+> >> On Tue 03 Mar 00:02 PST 2020, Cl?ment Leger wrote:
+> >>
+> >> > Hi Bjorn,
+> >> >
+> >> > ----- On 3 Mar, 2020, at 00:13, Bjorn Andersson bjorn.andersson@lina=
+ro.org
+> >> > wrote:
+> >> >
+> >> > > On Mon 02 Mar 01:38 PST 2020, Clement Leger wrote:
+> >> > >
+> >> > >> Since this function will be modified to support both elf32 and el=
+f64,
+> >> > >> rename the existing one to elf32 (which is the only supported for=
+mat
+> >> > >> at the moment). This will allow not to introduce possible side ef=
+fect
+> >> > >> when adding elf64 support (ie: all backends will still support on=
+ly
+> >> > >> elf32 if not requested explicitely using rproc_elf_sanity_check).
+> >> > >>
+> >> > >
+> >> > > Is there a reason for preventing ELF64 binaries be loaded?
+> >> >
+> >> > I decided to go this way to let driver maintainer decide if they wan=
+t
+> >> > to support elf64 to avoid problems with 64bits addresses/sizes which=
+ do
+> >> > not fit in their native type (size_t for instance). This is probably
+> >> > not going to happen and there are additionnal checks before calling
+> >> > rproc_da_to_va. And addresses should be filtered by rproc_da_to_va.
+> >> > So, actually it seems there is no reason to forbid supporting elf32/=
+64
+> >> > for all drivers.
+> >> >
+> >>
+> >> I was hoping to hear some additional feedback on this from others.
+> >
+> > I didn't follow up on this one because I agreed with your assesment and=
+ didn't
+> > think it was needed.
+> >
+> > Simply put I would rather see rproc_elf_sanity_check() gain support for=
+ elf64
+> > and let the platform code decide what to do with format they don't supp=
+ort
+> > rather than spinning a new function.
+> >
+> >>
+> >> I've merge the patch as is, but think it would be nice to clean this u=
+p
+> >> and just have the driver ignore if fed a 32 or 64-elf.
+> >
+> > It would be really nice to see this cleaned up in time for the coming m=
+erge
+> > window...
 >
-> -       ret = mutex_lock_killable(&task->signal->cred_guard_mutex);
-> -       if (ret)
-> -               return ERR_PTR(ret);
-> -
->         if (ptrace_may_access(task, PTRACE_MODE_ATTACH_REALCREDS))
->                 file = fget_task(task, fd);
->         else
->                 file = ERR_PTR(-EPERM);
->
-> -       mutex_unlock(&task->signal->cred_guard_mutex);
-> -
->         return file ?: ERR_PTR(-EBADF);
->  }
+> I could have sent a V7, but Bjorn was faster than my comment ;)
+> Bjorn, Is there any way to revert that or it's already pushed ?
+> I already have a clean V7.
 
-If you make this change, then if this races with execution of a setuid
-program that afterwards e.g. opens a unix domain socket, an attacker
-will be able to steal that socket and inject messages into
-communication with things like DBus. procfs currently has the same
-race, and that still needs to be fixed, but at least procfs doesn't
-let you open things like sockets because they don't have a working
-->open handler, and it enforces the normal permission check for opening files.
+Just send another patchset that applies on top of this one.
+
+>
+> Thanks,
+>
+> Cl=C3=A9ment
+>
+> >
+> > Thanks
+> > Mathieu
+> >
+> >>
+> >> Regards,
+> >> Bjorn
+> >>
+> >> > Regards,
+> >> >
+> >> > Cl=C3=A9ment
+> >> >
+> >> > >
+> >> > > Regards,
+> >> > > Bjorn
+> >> > >
+> >> > >> Signed-off-by: Clement Leger <cleger@kalray.eu>
+> >> > >> ---
+> >> > >>  drivers/remoteproc/remoteproc_core.c       | 2 +-
+> >> > >>  drivers/remoteproc/remoteproc_elf_loader.c | 6 +++---
+> >> > >>  drivers/remoteproc/remoteproc_internal.h   | 2 +-
+> >> > >>  drivers/remoteproc/st_remoteproc.c         | 2 +-
+> >> > >>  drivers/remoteproc/st_slim_rproc.c         | 2 +-
+> >> > >>  drivers/remoteproc/stm32_rproc.c           | 2 +-
+> >> > >>  6 files changed, 8 insertions(+), 8 deletions(-)
+> >> > >>
+> >> > >> diff --git a/drivers/remoteproc/remoteproc_core.c
+> >> > >> b/drivers/remoteproc/remoteproc_core.c
+> >> > >> index 4bfaf4a3c4a3..99f0b796fbc7 100644
+> >> > >> --- a/drivers/remoteproc/remoteproc_core.c
+> >> > >> +++ b/drivers/remoteproc/remoteproc_core.c
+> >> > >> @@ -2055,7 +2055,7 @@ struct rproc *rproc_alloc(struct device *de=
+v, const char
+> >> > >> *name,
+> >> > >>                 rproc->ops->load =3D rproc_elf_load_segments;
+> >> > >>                 rproc->ops->parse_fw =3D rproc_elf_load_rsc_table=
+;
+> >> > >>                 rproc->ops->find_loaded_rsc_table =3D rproc_elf_f=
+ind_loaded_rsc_table;
+> >> > >> -               rproc->ops->sanity_check =3D rproc_elf_sanity_che=
+ck;
+> >> > >> +               rproc->ops->sanity_check =3D rproc_elf32_sanity_c=
+heck;
+> >> > >>                 rproc->ops->get_boot_addr =3D rproc_elf_get_boot_=
+addr;
+> >> > >>         }
+> >> > >>
+> >> > >> diff --git a/drivers/remoteproc/remoteproc_elf_loader.c
+> >> > >> b/drivers/remoteproc/remoteproc_elf_loader.c
+> >> > >> index c2a9783cfb9a..5a67745f2638 100644
+> >> > >> --- a/drivers/remoteproc/remoteproc_elf_loader.c
+> >> > >> +++ b/drivers/remoteproc/remoteproc_elf_loader.c
+> >> > >> @@ -25,13 +25,13 @@
+> >> > >>  #include "remoteproc_internal.h"
+> >> > >>
+> >> > >>  /**
+> >> > >> - * rproc_elf_sanity_check() - Sanity Check ELF firmware image
+> >> > >> + * rproc_elf_sanity_check() - Sanity Check ELF32 firmware image
+> >> > >>   * @rproc: the remote processor handle
+> >> > >>   * @fw: the ELF firmware image
+> >> > >>   *
+> >> > >>   * Make sure this fw image is sane.
+> >> > >>   */
+> >> > >> -int rproc_elf_sanity_check(struct rproc *rproc, const struct fir=
+mware *fw)
+> >> > >> +int rproc_elf32_sanity_check(struct rproc *rproc, const struct f=
+irmware *fw)
+> >> > >>  {
+> >> > >>         const char *name =3D rproc->firmware;
+> >> > >>         struct device *dev =3D &rproc->dev;
+> >> > >> @@ -89,7 +89,7 @@ int rproc_elf_sanity_check(struct rproc *rproc,=
+ const struct
+> >> > >> firmware *fw)
+> >> > >>
+> >> > >>         return 0;
+> >> > >>  }
+> >> > >> -EXPORT_SYMBOL(rproc_elf_sanity_check);
+> >> > >> +EXPORT_SYMBOL(rproc_elf32_sanity_check);
+> >> > >>
+> >> > >>  /**
+> >> > >>   * rproc_elf_get_boot_addr() - Get rproc's boot address.
+> >> > >> diff --git a/drivers/remoteproc/remoteproc_internal.h
+> >> > >> b/drivers/remoteproc/remoteproc_internal.h
+> >> > >> index 0deae5f237b8..28639c588d58 100644
+> >> > >> --- a/drivers/remoteproc/remoteproc_internal.h
+> >> > >> +++ b/drivers/remoteproc/remoteproc_internal.h
+> >> > >> @@ -54,7 +54,7 @@ void *rproc_da_to_va(struct rproc *rproc, u64 d=
+a, size_t len);
+> >> > >>  phys_addr_t rproc_va_to_pa(void *cpu_addr);
+> >> > >>  int rproc_trigger_recovery(struct rproc *rproc);
+> >> > >>
+> >> > >> -int rproc_elf_sanity_check(struct rproc *rproc, const struct fir=
+mware *fw);
+> >> > >> +int rproc_elf32_sanity_check(struct rproc *rproc, const struct f=
+irmware *fw);
+> >> > >>  u64 rproc_elf_get_boot_addr(struct rproc *rproc, const struct fi=
+rmware *fw);
+> >> > >>  int rproc_elf_load_segments(struct rproc *rproc, const struct fi=
+rmware *fw);
+> >> > >>  int rproc_elf_load_rsc_table(struct rproc *rproc, const struct f=
+irmware *fw);
+> >> > >> diff --git a/drivers/remoteproc/st_remoteproc.c
+> >> > >> b/drivers/remoteproc/st_remoteproc.c
+> >> > >> index a3268d95a50e..a6cbfa452764 100644
+> >> > >> --- a/drivers/remoteproc/st_remoteproc.c
+> >> > >> +++ b/drivers/remoteproc/st_remoteproc.c
+> >> > >> @@ -233,7 +233,7 @@ static const struct rproc_ops st_rproc_ops =
+=3D {
+> >> > >>         .parse_fw               =3D st_rproc_parse_fw,
+> >> > >>         .load                   =3D rproc_elf_load_segments,
+> >> > >>         .find_loaded_rsc_table  =3D rproc_elf_find_loaded_rsc_tab=
+le,
+> >> > >> -       .sanity_check           =3D rproc_elf_sanity_check,
+> >> > >> +       .sanity_check           =3D rproc_elf32_sanity_check,
+> >> > >>         .get_boot_addr          =3D rproc_elf_get_boot_addr,
+> >> > >>  };
+> >> > >>
+> >> > >> diff --git a/drivers/remoteproc/st_slim_rproc.c
+> >> > >> b/drivers/remoteproc/st_slim_rproc.c
+> >> > >> index 09bcb4d8b9e0..3cca8b65a8db 100644
+> >> > >> --- a/drivers/remoteproc/st_slim_rproc.c
+> >> > >> +++ b/drivers/remoteproc/st_slim_rproc.c
+> >> > >> @@ -203,7 +203,7 @@ static const struct rproc_ops slim_rproc_ops =
+=3D {
+> >> > >>         .da_to_va       =3D slim_rproc_da_to_va,
+> >> > >>         .get_boot_addr  =3D rproc_elf_get_boot_addr,
+> >> > >>         .load           =3D rproc_elf_load_segments,
+> >> > >> -       .sanity_check   =3D rproc_elf_sanity_check,
+> >> > >> +       .sanity_check   =3D rproc_elf32_sanity_check,
+> >> > >>  };
+> >> > >>
+> >> > >>  /**
+> >> > >> diff --git a/drivers/remoteproc/stm32_rproc.c b/drivers/remotepro=
+c/stm32_rproc.c
+> >> > >> index a18f88044111..9a8b5f5e2572 100644
+> >> > >> --- a/drivers/remoteproc/stm32_rproc.c
+> >> > >> +++ b/drivers/remoteproc/stm32_rproc.c
+> >> > >> @@ -505,7 +505,7 @@ static struct rproc_ops st_rproc_ops =3D {
+> >> > >>         .load           =3D rproc_elf_load_segments,
+> >> > >>         .parse_fw       =3D stm32_rproc_parse_fw,
+> >> > >>         .find_loaded_rsc_table =3D rproc_elf_find_loaded_rsc_tabl=
+e,
+> >> > >> -       .sanity_check   =3D rproc_elf_sanity_check,
+> >> > >> +       .sanity_check   =3D rproc_elf32_sanity_check,
+> >> > >>         .get_boot_addr  =3D rproc_elf_get_boot_addr,
+> >> > >>  };
+> >> > >>
+> >> > >> --
+> > > > >> 2.15.0.276.g89ea799
