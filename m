@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9758FC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:18:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5476C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:18:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B41824649
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:18:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD64C24649
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:18:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583846293;
-	bh=aQyOo51tJXpfdWYbk8rtLOh1ur5fSsFP40lAEGRT9CI=;
+	s=default; t=1583846295;
+	bh=V8sW1L2DUH/z4U3zVXfsxDO+qGRwv2AuKWrOLPt7x/o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FH/lUPUBoACV9dzUDY2BnM3lHlQExKvoN8BNr77lOuyVJlmtQd1krfhW+NotFQe/N
-	 p3oF4us3XtgUSvdMS/0epyuWJNNCiwZmteq2Fou6f79HBcmw0f07VYwzfTGAqDdng7
-	 MaC7dj/1EdulfG6GQRGYx8Wjmdtc7+vF7v1SeKMA=
+	b=DR/d8BYa/7dxs5cKJcCv9PGbVRWVlHhQCMnUP8UpVFUTptq1UwzqvrGBGxSjFGkLe
+	 EdxOUbmbnMuwbnva/ePOf1TLbD//1nuwdfFzFBkF8aSF2xrkRb8y0VqCEqlmXoVTzS
+	 jnPxlunHCKutKMaYX+obJojSv6tmi3SFMjXtFW0M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731640AbgCJNSL (ORCPT
+        id S1729889AbgCJNSO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:18:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60674 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:18:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60578 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730870AbgCJNLE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:11:04 -0400
+        id S1730876AbgCJNLB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:11:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7BCAF24693;
-        Tue, 10 Mar 2020 13:11:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0FF5824649;
+        Tue, 10 Mar 2020 13:11:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845863;
-        bh=aQyOo51tJXpfdWYbk8rtLOh1ur5fSsFP40lAEGRT9CI=;
+        s=default; t=1583845861;
+        bh=V8sW1L2DUH/z4U3zVXfsxDO+qGRwv2AuKWrOLPt7x/o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tWxRblNqFYbY1mJbpdGFAgBYoAvet9VHj/d8nY+RMKdBob0MqABgItVQn1rqDxaEr
-         BB6NlnRsLfgMf/ynya33AE446X9zPBDV/tqyMgt3+fa26b1AD/StjLCIP1F2AuGTVj
-         Isona61LxW6+fJ86kuyE/S15fkzXW6qQIsWrPK8U=
+        b=JL80NatpWPhqgHQ9zrMcxQhl3OOBH0XKUitH23HtonbEsT9Qz8mLWCyxgKS7MDU3l
+         KlTEYBMfv9FxE34GvskJA+lgXu9Wt+FcVvJm109Dj3N793ZQNk/dXjm64r4DzMoi9w
+         /NezjrzbAEZ9D6BTmpPpWmVvYn/Yd78Dgsb98c6o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>
-Subject: [PATCH 4.14 096/126] usb: core: port: do error out if usb_autopm_get_interface() fails
-Date:   Tue, 10 Mar 2020 13:41:57 +0100
-Message-Id: <20200310124209.859014837@linuxfoundation.org>
+        stable@vger.kernel.org, Peter Chen <peter.chen@nxp.com>,
+        Jack Pham <jackp@codeaurora.org>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Macpaul Lin <macpaul.lin@mediatek.com>
+Subject: [PATCH 4.14 126/126] xhci: handle port status events for removed USB3 hcd
+Date:   Tue, 10 Mar 2020 13:42:27 +0100
+Message-Id: <20200310124211.430808842@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310124203.704193207@linuxfoundation.org>
 References: <20200310124203.704193207@linuxfoundation.org>
@@ -59,62 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eugeniu Rosca <erosca@de.adit-jv.com>
+From: Mathias Nyman <mathias.nyman@linux.intel.com>
 
-commit 1f8b39bc99a31759e97a0428a5c3f64802c1e61d upstream.
+commit 1245374e9b8340fc255fd51b2015173a83050d03 upstream.
 
-Reviewing a fresh portion of coverity defects in USB core
-(specifically CID 1458999), Alan Stern noted below in [1]:
+At xhci removal the USB3 hcd (shared_hcd) is removed before the primary
+USB2 hcd. Interrupts for port status changes may still occur for USB3
+ports after the shared_hcd is freed, causing  NULL pointer dereference.
 
-On Tue, Feb 25, 2020 at 02:39:23PM -0500, Alan Stern wrote:
- > A revised search finds line 997 in drivers/usb/core/hub.c and lines
- > 216, 269 in drivers/usb/core/port.c.  (I didn't try looking in any
- > other directories.)  AFAICT all three of these should check the
- > return value, although a error message in the kernel log probably
- > isn't needed.
+Check if xhci->shared_hcd is still valid before handing USB3 port events
 
-Factor out the usb_port_runtime_{resume,suspend}() changes into a
-standalone patch to allow conflict-free porting on top of stable v3.9+.
-
-[1] https://lore.kernel.org/lkml/Pine.LNX.4.44L0.2002251419120.1485-100000@iolanthe.rowland.org
-
-Fixes: 971fcd492cebf5 ("usb: add runtime pm support for usb port device")
-Cc: stable@vger.kernel.org # v3.9+
-Suggested-by: Alan Stern <stern@rowland.harvard.edu>
-Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
-Link: https://lore.kernel.org/r/20200226175036.14946-3-erosca@de.adit-jv.com
+Cc: <stable@vger.kernel.org>
+Reported-by: Peter Chen <peter.chen@nxp.com>
+Tested-by: Jack Pham <jackp@codeaurora.org>
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Cc: Macpaul Lin <macpaul.lin@mediatek.com>
+[redone for 4.14.y based on Mathias's comments]
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/core/port.c |   10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/usb/host/xhci-ring.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/drivers/usb/core/port.c
-+++ b/drivers/usb/core/port.c
-@@ -179,7 +179,10 @@ static int usb_port_runtime_resume(struc
- 	if (!port_dev->is_superspeed && peer)
- 		pm_runtime_get_sync(&peer->dev);
+--- a/drivers/usb/host/xhci-ring.c
++++ b/drivers/usb/host/xhci-ring.c
+@@ -1640,6 +1640,12 @@ static void handle_port_status(struct xh
+ 	if ((major_revision == 0x03) != (hcd->speed >= HCD_USB3))
+ 		hcd = xhci->shared_hcd;
  
--	usb_autopm_get_interface(intf);
-+	retval = usb_autopm_get_interface(intf);
-+	if (retval < 0)
-+		return retval;
++	if (!hcd) {
++		xhci_dbg(xhci, "No hcd found for port %u event\n", port_id);
++		bogus_port_status = true;
++		goto cleanup;
++	}
 +
- 	retval = usb_hub_set_port_power(hdev, hub, port1, true);
- 	msleep(hub_power_on_good_delay(hub));
- 	if (udev && !retval) {
-@@ -232,7 +235,10 @@ static int usb_port_runtime_suspend(stru
- 	if (usb_port_block_power_off)
- 		return -EBUSY;
- 
--	usb_autopm_get_interface(intf);
-+	retval = usb_autopm_get_interface(intf);
-+	if (retval < 0)
-+		return retval;
-+
- 	retval = usb_hub_set_port_power(hdev, hub, port1, false);
- 	usb_clear_port_feature(hdev, port1, USB_PORT_FEAT_C_CONNECTION);
- 	if (!port_dev->is_superspeed)
+ 	if (major_revision == 0) {
+ 		xhci_warn(xhci, "Event for port %u not in "
+ 				"Extended Capabilities, ignoring.\n",
 
 
