@@ -2,89 +2,98 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A65C1C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 18:08:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 672BEC18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 18:10:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D60C21D7E
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 18:08:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E7882146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 18:10:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lQaUMGOJ"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="vX+vq8Qt";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="0LGbYfQ1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726788AbgCJSI5 (ORCPT
+        id S1726712AbgCJSKJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 14:08:57 -0400
-Received: from mail-ot1-f54.google.com ([209.85.210.54]:35516 "EHLO
-        mail-ot1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726403AbgCJSI5 (ORCPT
+        Tue, 10 Mar 2020 14:10:09 -0400
+Received: from out3-smtp.messagingengine.com ([66.111.4.27]:54605 "EHLO
+        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726269AbgCJSKI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 14:08:57 -0400
-Received: by mail-ot1-f54.google.com with SMTP id k26so6841524otr.2
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 11:08:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=k0YINB0FGb2izRGDvx6dOeweQ26xeFfqgFiUly0T1/8=;
-        b=lQaUMGOJHO38pdQsfm+YF9Hjvz2ISFmJWQowjGrWwKTDNGxgjqUZxI/jaQVO6qbP2i
-         QGfCgEcg0A/QCP/Xp4BleRLam2x5ZJquwMYF4/BjOS7GXqND31C86ME1wB5TqaTq/4ij
-         i5puUFShLSbloXJW2J5vmtYmDY4VnQ+4Fon9DJRbCYhK8PvILBLE0rD8fgs/LyPw03zH
-         QaJUyAFf2mlBFSEGAJ6M6KnNuDcf/hFXMe2Zmbra0r0S+8mh7YruvWBXkqyAbp7OSaDE
-         taMlrywYmhVuq32hgVTtci472Ic4H0XCP1gZYWuZc1srQpgqEWN3X5+gip4OR3I29Btb
-         4mIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=k0YINB0FGb2izRGDvx6dOeweQ26xeFfqgFiUly0T1/8=;
-        b=lI8l/vmTQ2mtbwQGMb0rW4juS0DLtKlZpeQpbNk3+tBDqDU2M6DQX9VCfE4nAqqGc2
-         s22icfSWguDk0z4Mc7u5EY6t3CAXhIgkbmCAzfiqHu+uLDLqQMw0eV7Fvjn6gpx1k23D
-         bSl5NQ2eXuDJxqTBlQzR7zjTc5LPrWKFrmHY9J5SPNwDuiJf9rRdJS41ydaAGYGclLeW
-         SBbYHqDhoTEMbNVphScxbTtUPjH6B6cVHG9J8fCsC3EJ/x2z50/GnIv/B0I//ldjxxqD
-         2pU2V5iuHFhNWloyB/5UKMPquioOxMRZOkydO/KEp/X/PRPaRlBEGUVwVRfLSzI9qLHL
-         LRxQ==
-X-Gm-Message-State: ANhLgQ2mysOc4fjnPK/Lv10p6NBEZgLkch1QsxDiMANM7oNbTOQmSBFT
-        njMqVnciIpipUqkBTcY7nJ35i59Cq+xlHWaylcTk7ZS8p34=
-X-Google-Smtp-Source: ADFU+vuWAonvIQE1fvFkPfcoOs/5Bq1l3fPdVW7kVNiRepRS2lFM4d4PXrhb9txFaSDi9JANBW/6IZbgB78jYDhzrQE=
-X-Received: by 2002:a9d:5e8b:: with SMTP id f11mr18154276otl.110.1583863734919;
- Tue, 10 Mar 2020 11:08:54 -0700 (PDT)
+        Tue, 10 Mar 2020 14:10:08 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id 328B021B6A;
+        Tue, 10 Mar 2020 14:10:07 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Tue, 10 Mar 2020 14:10:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=SRt+6h/WZcgD+dTltRfTPOTYiLo
+        w8DtLgwozFTB/+oc=; b=vX+vq8QtTgWR3mMawoHQd6j2nLo7dUfFVqhyUVUG+rX
+        M/1LbMAR7c/l1V2e4EXXH/JOeQ9XG+vZh1rTpakd07ChzI60sbXGzqHb8jJFT0Qa
+        eI8WqWApgYjISQJ2EqfqELSa4SBhMQaMR0exYMNYk8E1s5Jm5mgjYzGmTqgUiI6M
+        l5v5Pzw7jHa3NNMJ/TgkzGJeIk+Pm/5Q2DGSwwlvnU/o+6MY242jgI3eMiGgk5Um
+        8JCidPckRX+I3fMBDor54sWUivAlMqDBMjeVr5FnLP7IQ/Luj+p+xTDTk9Re4tbh
+        IlWVFToLBGdSaVXtC5c8cu2y6PNyjN1gpatNoyrdunQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=SRt+6h
+        /WZcgD+dTltRfTPOTYiLow8DtLgwozFTB/+oc=; b=0LGbYfQ14FzuF/Rv8VEMhm
+        iGvLR+5HQ7402JxSGmQVDpLHd9ObHUQZyd5XI4niHMeP8IdnCZ5YOsDEJkXbNe98
+        h8l1+axoA4OCe2Ngy9XqpVjUbBA7YpBmwIqryGRw0SZ79fJJwLvsgunrLjSAXGG0
+        QsKOq8JvZRX1KNtaiQToUU+Z/MV2naiCRgQCR26dyeYc0yr4qmPGS4xpgH7C29yz
+        znxJQv2lJzvaA3Fuho89JB85PwNp+aNovL2z/QnKDLcARdFu7NJ8IWhRbmI3tJsk
+        3+MkUCR2qeiDf/wLDYNydqoAnTbjriBP9ILl+Giks9CEk1Fpd5uac5Ar1YonUF8w
+        ==
+X-ME-Sender: <xms:_tdnXsOsQ2mA9hmgDFPqCuYs25fk-JMG8pBjm8paz4oTGA5yw-5qeA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedruddvtddguddtvdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecunecujfgurhepfffhvffukfhfgggtuggjsehttd
+    ertddttddvnecuhfhrohhmpeforgigihhmvgcutfhiphgrrhguuceomhgrgihimhgvsegt
+    vghrnhhordhtvggthheqnecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrh
+    fuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhho
+    rdhtvggthh
+X-ME-Proxy: <xmx:_tdnXvo7v2kSvu7oGDiu8kaCvbytm33atHG-UxrEmKyeMxWhM329lw>
+    <xmx:_tdnXjuYIexMDgz57AjlVoFjPRhSgBjqAh2Fc9iksBckbx5bQIWwCA>
+    <xmx:_tdnXrTusp0U3H24pWAZfbWvkLlnN1fOFcvUySRDB7QG0K4NJR6H0w>
+    <xmx:_9dnXms0pgFeSe9rLJJnPv8rnkshn5jct2UsywzduMVS5MBN8pYYeA>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 504353280065;
+        Tue, 10 Mar 2020 14:10:06 -0400 (EDT)
+Date:   Tue, 10 Mar 2020 19:10:03 +0100
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Chen-Yu Tsai <wens@kernel.org>
+Cc:     Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/3] ARM: dts: sun8i: r40: fix SPI address and reorder
+ nodes
+Message-ID: <20200310181003.wgryf373em5zwlvb@gilmour.lan>
+References: <20200310174709.24174-1-wens@kernel.org>
 MIME-Version: 1.0
-From:   Jann Horn <jannh@google.com>
-Date:   Tue, 10 Mar 2020 19:08:28 +0100
-Message-ID: <CAG48ez0G3JkMq61gUmyQAaCq=_TwHbi1XKzWRooxZkv08PQKuw@mail.gmail.com>
-Subject: interaction of MADV_PAGEOUT with CoW anonymous mappings?
-To:     Minchan Kim <minchan@kernel.org>
-Cc:     Michal Hocko <mhocko@suse.com>, Linux-MM <linux-mm@kvack.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Daniel Colascione <dancol@google.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200310174709.24174-1-wens@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
+On Wed, Mar 11, 2020 at 01:47:06AM +0800, Chen-Yu Tsai wrote:
+> From: Chen-Yu Tsai <wens@csie.org>
+>
+> Hi,
+>
+> Here are some fixes for the R40 device tree for v5.6. The base addresses
+> for SPI2 and SPI3 were incorrect and are fixed. I also found some nodes
+> were not added in the proper order, possibly because git matched the
+> incorrect place when applying the patch. These are fixed as well.
+>
+> ChenYu
 
-From looking at the source code, it looks to me as if using
-MADV_PAGEOUT on a CoW anonymous mapping will page out the page if
-possible, even if other processes still have the same page mapped. Is
-that correct?
+Acked-by: Maxime Ripard <mripard@kernel.org>
 
-If so, that's probably bad in environments where many processes (with
-different privileges) are forked from a single zygote process (like
-Android and Chrome), I think? If you accidentally call it on a CoW
-anonymous mapping with shared pages, you'll degrade the performance of
-other processes. And if an attacker does it intentionally, they could
-use that to aid with exploiting race conditions or weird
-microarchitectural stuff (e.g. the new https://lviattack.eu/lvi.pdf
-talks about "the assumption that attackers can provoke page faults or
-microcode assists for (arbitrary) load operations in the victim
-domain").
-
-Should madvise_cold_or_pageout_pte_range() maybe refuse to operate on
-pages with mapcount>1, or something like that? Or does it already do
-that, and I just missed the check?
+Thanks!
+Maxime
