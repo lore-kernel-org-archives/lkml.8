@@ -2,104 +2,100 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C13BBC10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:19:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02DF4C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:19:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 718AA215A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:19:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BKsR9ZNX"
+	by mail.kernel.org (Postfix) with ESMTP id B112521655
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:19:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583871557;
+	bh=kH8DTv3FTEEvST7bpx5jAEBrtTfl+7II1OqQNYlD92w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=SSiXthyVq+6ECRdP9te61Dd0VMO1tnm3REOy7XZcQQSpCjRt5NHMaf7/bpm+SK4uq
+	 9g87YJzS1lbeHJg7XfFIotTaGI4EPAznxx7YGu8gG1xZ6Xnxbh0UPfevz9sQxpdCLd
+	 82EamSMQgPXo06DD7fCfPAAuTBFZCHsoAAW1cgDE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726851AbgCJUTF (ORCPT
+        id S1727171AbgCJUTQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 16:19:05 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:27712 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726265AbgCJUTF (ORCPT
+        Tue, 10 Mar 2020 16:19:16 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:33995 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726100AbgCJUTP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 16:19:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583871543;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=pgP1T+wGC2P5ovvcZBFXxUKVKB4+9CKMKrqQw1DXEe0=;
-        b=BKsR9ZNX3wvCd3PGbVTUSbbf2aE9VqrXxIImU8lFXwXpgrF9OIN4ZcoufBSy1/W7C6B94I
-        xRJC5DwP6atLFjmOz6hlEzs+W5vu+wKHjJo/iaRWxNlyro+r+Ksd6t3y+SITIBPx6+DOw2
-        +2GSgn7MWPR3QlM4eNDyqc/LgpIi+eA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-294-0yXbyAw7NhyCLXKNwJvhag-1; Tue, 10 Mar 2020 16:18:56 -0400
-X-MC-Unique: 0yXbyAw7NhyCLXKNwJvhag-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 28F77107ACC4;
-        Tue, 10 Mar 2020 20:18:55 +0000 (UTC)
-Received: from napanee.usersys.redhat.com (dhcp-17-195.bos.redhat.com [10.18.17.195])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C86837388F;
-        Tue, 10 Mar 2020 20:18:54 +0000 (UTC)
-Received: by napanee.usersys.redhat.com (Postfix, from userid 1000)
-        id 2EE9DC0E48; Tue, 10 Mar 2020 16:18:54 -0400 (EDT)
-Date:   Tue, 10 Mar 2020 16:18:54 -0400
-From:   Aristeu Rozanski <aris@redhat.com>
-To:     Robert Richter <rrichter@marvell.com>
-Cc:     Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        James Morse <james.morse@arm.com>, linux-edac@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 00/11] EDAC/ghes: Cleanup, rework and improvement of
- memory reporting
-Message-ID: <20200310201854.etpclthuj577lpds@redhat.com>
-References: <20200306151318.17422-1-rrichter@marvell.com>
+        Tue, 10 Mar 2020 16:19:15 -0400
+Received: by mail-oi1-f195.google.com with SMTP id g6so15317002oiy.1;
+        Tue, 10 Mar 2020 13:19:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=AFq1DdnvEPEiWUIBZ8XMuzd1FRD5fPx8e3pkYB6x7lA=;
+        b=eEZi5xsYYS+MEVVRmuKMdsQ9PSWiLL57+1rihYjAyQX5TAZN0jEHTaTPfMNEngdvvK
+         Z7qa6hqGBharr+zUBjBXpaOHfCbqv7dBMj0W+RKTaJzMYhLA6YbAizJ/G4bl3JT49NTJ
+         o1pKiaQTZv/Sk7Pdpwl27eObLkcdcpKRupwgn+eUOHiOfcL75Dh/RBwS/PAaGUJ6h+FS
+         isnLTtc3WUIdRM6u4y/agViVA3RKzRST9ozVxUZjzV4WpEEOc9WhLnehNX6v94eT0qGE
+         71LyNPdpKcjKBqfd8h6Yofmch9tctoToLgGGqyRJWKErCzQMVAK8Yl7Lyp3hawn+Fequ
+         Hj8g==
+X-Gm-Message-State: ANhLgQ2BbqhR6fLUV403cXS/aUDLxDXZFcaqOvZ4EshHL0zxBnTanK3/
+        r0l6n6z672X+g01c+wpzAg==
+X-Google-Smtp-Source: ADFU+vvvg/ETQnv8QslVQHIZ0sV61kxtcOyz2SY3bt9I0ZnGmiT8R7zO6pDr8Jh91tKE6yR0zXuznA==
+X-Received: by 2002:aca:600b:: with SMTP id u11mr2481775oib.6.1583871554816;
+        Tue, 10 Mar 2020 13:19:14 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id l1sm288460otp.76.2020.03.10.13.19.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Mar 2020 13:19:13 -0700 (PDT)
+Received: (nullmailer pid 2066 invoked by uid 1000);
+        Tue, 10 Mar 2020 20:19:12 -0000
+Date:   Tue, 10 Mar 2020 15:19:12 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Abel Vesa <abel.vesa@nxp.com>
+Cc:     Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Mike Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Anson Huang <anson.huang@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Peng Fan <peng.fan@nxp.com>, Jacky Bai <ping.bai@nxp.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-clk@vger.kernel.org
+Subject: Re: [RFC 10/11] reset: imx: Add audiomix reset controller support
+Message-ID: <20200310201912.GA31651@bogus>
+References: <1583226206-19758-1-git-send-email-abel.vesa@nxp.com>
+ <1583226206-19758-11-git-send-email-abel.vesa@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200306151318.17422-1-rrichter@marvell.com>
-User-Agent: NeoMutt/20191207
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+In-Reply-To: <1583226206-19758-11-git-send-email-abel.vesa@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 06, 2020 at 04:13:07PM +0100, Robert Richter wrote:
-> This series contains a significant cleanup and rework of the ghes
-> driver and improves the memory reporting as follows:
+On Tue, Mar 03, 2020 at 11:03:25AM +0200, Abel Vesa wrote:
+> The imx-mix MFD driver registers some devices, one of which, in case of
+> audiomix, maps correctly to a reset controller type. This driver registers
+> a reset controller for that. For now, only the EARC specific resets are added.
 > 
->  * fix of DIMM label in error reports (patch #2),
-> 
->  * creation of multiple memory controllers to group DIMMs depending on
->    the physical memory array (patches #9-#11). This should reflect the
->    memory topology of a system in sysfs. Esp. multi-node systems show
->    up with one memory controller per node now.
-> 
-> The changes base on the remaining patches that are a general cleanup
-> and rework:
-> 
->  * small change to edac_mc, not really dependent on the rest of the
->    series (patch #1),
-> 
->  * general cleanup and rework of the ghes driver (patches #3-#8).
-> 
-> The implementation of multiple memory controllers bases on the
-> suggestion from James (see patch #11), thank you James for your
-> valuable input here. The patches are created newly from scratch and
-> obsolete the GHES part of my previous postings a while ago that have
-> not been accepted upstream:
-> 
->  https://lore.kernel.org/patchwork/cover/1093488/
-> 
-> Tested on a Marvell/Cavium ThunderX2 Sabre (dual socket) system.
+> Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
+> Reviewed-by: Leonard Crestez <leonard.crestez@nxp.com>
+> ---
+>  drivers/reset/Kconfig                          |   7 ++
+>  drivers/reset/Makefile                         |   1 +
+>  drivers/reset/reset-imx-audiomix.c             | 122 +++++++++++++++++++++++++
+>  include/dt-bindings/reset/imx-audiomix-reset.h |  15 +++
 
-Acked-by: Aristeu Rozanski <aris@redhat.com>
+This should be in a binding patch which makes me wonder where is the 
+binding patch?
 
--- 
-Aristeu
-
+Rob
