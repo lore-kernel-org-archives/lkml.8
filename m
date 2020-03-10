@@ -2,53 +2,53 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32AF3C18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:09:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FFDEC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:09:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F37A520873
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:09:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EC2420873
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:09:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583845763;
-	bh=DTvAi7nyZ5pVZtpqgp5278khv2aoMnUfNo+fbEEUtWo=;
+	s=default; t=1583845766;
+	bh=k/uQaZHXXI7Ysr/preRwxOzBTr6fmxMKb5Bur9+uSzE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oM/4vmm2tyyeDhXDunmoKrcWj9p3lO1xu462ZlFeC0rF6pCkAC+cP2RlSSwsNBZ02
-	 hEV/sqq55tf2XXK3E1nAWysGnlf+C9t0VbQ8tk9mr1C8xgLCVI4JqsFhyJS6BZpvQF
-	 Nytc0rWWMqiBETPmE+t772UVV7bXcELZQ8kv9CJg=
+	b=GApL59raHJea+LNQJwyMs+wsyV7yaJa80ZbNWts1OdW5eoliUj3CFj605Es8rFACY
+	 IOCiHXjIgMq+xYz2xhR3oZTlIc+UBAKcF/DeS+MAW/lsLDNfepTLiDrlsXK4Q1SRMT
+	 iO8S/7L7Eq9O5dSUMp8/qshKVj7Y10q2tTGsNNBk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730844AbgCJNJV (ORCPT
+        id S1731233AbgCJNJZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:09:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56294 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:09:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56422 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731220AbgCJNJS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:09:18 -0400
+        id S1730718AbgCJNJW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:09:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ACB732071B;
-        Tue, 10 Mar 2020 13:09:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B1DD020409;
+        Tue, 10 Mar 2020 13:09:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845757;
-        bh=DTvAi7nyZ5pVZtpqgp5278khv2aoMnUfNo+fbEEUtWo=;
+        s=default; t=1583845762;
+        bh=k/uQaZHXXI7Ysr/preRwxOzBTr6fmxMKb5Bur9+uSzE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IYw60Kbc0kUr5hGYMhJhBnBJPoaauh9tDW8q3pgCQjj/Tff+cHcxmO0PO5QYRI0cz
-         yOREzSKuJk1YV5Jjx5Wn4imAnO8N4ea/lURmGAnwTIzjQaHHC+nYDWIt53OBscRdKb
-         2nGFQW5iKGafJPGooodjO/rvE8ymyJwtNnY7LZEM=
+        b=muM+2hEOKuHdfH0Ef2OZwVudkwVaT/cKYwXQqmzgq0uiosapAcu8giWRDMW5GqMez
+         b1hCwqyMXkOTNgaqwoOklkdB9GLELTRInmfKbJ75URCKEYCZe9oJpfRuUWkF2p9jJL
+         cZFmjrYiHs16vq/1uOym+ya/YxArEZ9+cxFR7gNQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Christoph Hellwig <hch@lst.de>,
-        Keith Busch <kbusch@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 088/126] nvme: Fix uninitialized-variable warning
-Date:   Tue, 10 Mar 2020 13:41:49 +0100
-Message-Id: <20200310124209.443583927@linuxfoundation.org>
+        stable@vger.kernel.org, Sameeh Jubran <sameehj@amazon.com>,
+        Saeed Bshara <saeedb@amazon.com>,
+        Arthur Kiyanovski <akiyano@amazon.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 054/126] net: ena: make ena rxfh support ETH_RSS_HASH_NO_CHANGE
+Date:   Tue, 10 Mar 2020 13:41:15 +0100
+Message-Id: <20200310124207.657666506@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310124203.704193207@linuxfoundation.org>
 References: <20200310124203.704193207@linuxfoundation.org>
@@ -61,38 +61,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Keith Busch <kbusch@kernel.org>
+From: Arthur Kiyanovski <akiyano@amazon.com>
 
-[ Upstream commit 15755854d53b4bbb0bb37a0fce66f0156cfc8a17 ]
+commit 470793a78ce344bd53d31e0c2d537f71ba957547 upstream.
 
-gcc may detect a false positive on nvme using an unintialized variable
-if setting features fails. Since this is not a fast path, explicitly
-initialize this variable to suppress the warning.
+As the name suggests ETH_RSS_HASH_NO_CHANGE is received upon changing
+the key or indirection table using ethtool while keeping the same hash
+function.
 
-Reported-by: Arnd Bergmann <arnd@arndb.de>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Keith Busch <kbusch@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Also add a function for retrieving the current hash function from
+the ena-com layer.
+
+Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
+Signed-off-by: Sameeh Jubran <sameehj@amazon.com>
+Signed-off-by: Saeed Bshara <saeedb@amazon.com>
+Signed-off-by: Arthur Kiyanovski <akiyano@amazon.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/nvme/host/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/amazon/ena/ena_com.c     |    5 +++++
+ drivers/net/ethernet/amazon/ena/ena_com.h     |    8 ++++++++
+ drivers/net/ethernet/amazon/ena/ena_ethtool.c |    3 +++
+ 3 files changed, 16 insertions(+)
 
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index f543b9932c830..a760c449f4a90 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -889,8 +889,8 @@ static struct nvme_id_ns *nvme_identify_ns(struct nvme_ctrl *ctrl,
- static int nvme_set_features(struct nvme_ctrl *dev, unsigned fid, unsigned dword11,
- 		      void *buffer, size_t buflen, u32 *result)
- {
-+	union nvme_result res = { 0 };
- 	struct nvme_command c;
--	union nvme_result res;
- 	int ret;
+--- a/drivers/net/ethernet/amazon/ena/ena_com.c
++++ b/drivers/net/ethernet/amazon/ena/ena_com.c
+@@ -861,6 +861,11 @@ static void ena_com_hash_key_fill_defaul
+ 	hash_key->keys_num = sizeof(hash_key->key) / sizeof(u32);
+ }
  
- 	memset(&c, 0, sizeof(c));
--- 
-2.20.1
-
++int ena_com_get_current_hash_function(struct ena_com_dev *ena_dev)
++{
++	return ena_dev->rss.hash_func;
++}
++
+ static int ena_com_hash_key_allocate(struct ena_com_dev *ena_dev)
+ {
+ 	struct ena_rss *rss = &ena_dev->rss;
+--- a/drivers/net/ethernet/amazon/ena/ena_com.h
++++ b/drivers/net/ethernet/amazon/ena/ena_com.h
+@@ -632,6 +632,14 @@ int ena_com_rss_init(struct ena_com_dev
+  */
+ void ena_com_rss_destroy(struct ena_com_dev *ena_dev);
+ 
++/* ena_com_get_current_hash_function - Get RSS hash function
++ * @ena_dev: ENA communication layer struct
++ *
++ * Return the current hash function.
++ * @return: 0 or one of the ena_admin_hash_functions values.
++ */
++int ena_com_get_current_hash_function(struct ena_com_dev *ena_dev);
++
+ /* ena_com_fill_hash_function - Fill RSS hash function
+  * @ena_dev: ENA communication layer struct
+  * @func: The hash function (Toeplitz or crc)
+--- a/drivers/net/ethernet/amazon/ena/ena_ethtool.c
++++ b/drivers/net/ethernet/amazon/ena/ena_ethtool.c
+@@ -748,6 +748,9 @@ static int ena_set_rxfh(struct net_devic
+ 	}
+ 
+ 	switch (hfunc) {
++	case ETH_RSS_HASH_NO_CHANGE:
++		func = ena_com_get_current_hash_function(ena_dev);
++		break;
+ 	case ETH_RSS_HASH_TOP:
+ 		func = ENA_ADMIN_TOEPLITZ;
+ 		break;
 
 
