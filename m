@@ -2,51 +2,54 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3FBFC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:53:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB8C0C18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:53:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98D8D2468E
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:53:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B04AA2468E
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:53:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583844834;
-	bh=giPWIFLQhTb6fRSCPcpAHBBR+/snKGVAA2zAzJK+Kp0=;
+	s=default; t=1583844838;
+	bh=4hrdHfoIQUhu4/00gDb8c5cMXC+cJiqw4UewioJaDP0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Xg5VifGGuRUlp8LL0MA/kGw3TrK7x8kbQZz0PKabmewts6BCtGasK0gGDu3Yex03r
-	 pyqo8LH5a6Fo1Aiu39DsvOVb+Em7yNthg2kZwH4ovNLDOma7NXPWh2fBJ1/6hYYahg
-	 GBArQbmKUCbcC2S5dYR7ZghCnXLb5T2LsdQSokzc=
+	b=sp1pVEYu3WpRGw0oEtDRQiNr1y+44Dlpr+U32lEtXPGU+Fkpg0u8FxLE1jKe4ZGlm
+	 u7rUbYnXQEpbu1x0lz3SUykCNI7CCc1YGyMH+9OfCW1Vv8c/wWLILJm9c/PNi3d0sW
+	 Gs9qTK4TQk84J/mPb4gtr0IhBeVmxvnZ0Si4wBFc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728238AbgCJMxx (ORCPT
+        id S1729283AbgCJMx5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:53:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60126 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:53:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60186 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729264AbgCJMxu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:53:50 -0400
+        id S1729271AbgCJMxw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:53:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B14524697;
-        Tue, 10 Mar 2020 12:53:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A721F24693;
+        Tue, 10 Mar 2020 12:53:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844829;
-        bh=giPWIFLQhTb6fRSCPcpAHBBR+/snKGVAA2zAzJK+Kp0=;
+        s=default; t=1583844832;
+        bh=4hrdHfoIQUhu4/00gDb8c5cMXC+cJiqw4UewioJaDP0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G6Ga7n90UgAfWedMSCYIoDqeZ66fXaNAgJ1crlD4W4YuP2gr580JcHN6gXan+LGFa
-         qeqI5b83+EpJNGQrFn9Ztanrfw+GcXr978QK860XjCauGpWLzf/WR6ymjxWiLiWlAm
-         LnPmKbVMAcgwRLmvGJJobFTIGOFodi/yEwgm6MWs=
+        b=DnfFL9zlBJ2rpxUkmeyOrZjzVJzinH28XQ0xVuwBA77JzKRk4Qjvpcrr8pn5/L3xk
+         NMrcbRgsYrBf96iLh2FBUshAgOcQw5b++6PCtK2SWRkc9oydVfa7j5dGdS/4ArnSHr
+         Yfi59Lqd2x2ekQMOUDKgF3g6Y4NnAssNmjFPsriQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Maxime Ripard <mripard@kernel.org>,
-        Jernej Skrabec <jernej.skrabec@siol.net>
-Subject: [PATCH 5.4 134/168] drm/sun4i: de2/de3: Remove unsupported VI layer formats
-Date:   Tue, 10 Mar 2020 13:39:40 +0100
-Message-Id: <20200310123649.070610186@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Stanislav Lisovskiy <stanislav.lisovskiy@intel.com>,
+        Matt Roper <matthew.d.roper@intel.com>,
+        Matt Atwood <matthew.s.atwood@intel.com>,
+        Jani Nikula <jani.nikula@intel.com>
+Subject: [PATCH 5.4 135/168] drm/i915: Program MBUS with rmw during initialization
+Date:   Tue, 10 Mar 2020 13:39:41 +0100
+Message-Id: <20200310123649.176075935@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123635.322799692@linuxfoundation.org>
 References: <20200310123635.322799692@linuxfoundation.org>
@@ -59,65 +62,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jernej Skrabec <jernej.skrabec@siol.net>
+From: Matt Roper <matthew.d.roper@intel.com>
 
-commit a4769905f0ae32cae4f096f646ab03b8b4794c74 upstream.
+commit c725161924f9a5872a3e53b73345a6026a5c170e upstream.
 
-YUV444 and YVU444 are planar formats, but HW format RGB888 is packed.
-This means that those two mappings were never correct. Remove them.
+It wasn't terribly clear from the bspec's wording, but after discussion
+with the hardware folks, it turns out that we need to preserve the
+pre-existing contents of the MBUS ABOX control register when
+initializing a few specific bits.
 
-Fixes: 60a3dcf96aa8 ("drm/sun4i: Add DE2 definitions for YUV formats")
-Acked-by: Maxime Ripard <mripard@kernel.org>
-Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200224173901.174016-2-jernej.skrabec@siol.net
+Bspec: 49213
+Bspec: 50096
+Fixes: 4cb4585e5a7f ("drm/i915/icl: initialize MBus during display init")
+Cc: Stanislav Lisovskiy <stanislav.lisovskiy@intel.com>
+Signed-off-by: Matt Roper <matthew.d.roper@intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200204011032.582737-1-matthew.d.roper@intel.com
+Reviewed-by: Matt Atwood <matthew.s.atwood@intel.com>
+(cherry picked from commit 837b63e6087838d0f1e612d448405419199d8033)
+Signed-off-by: Jani Nikula <jani.nikula@intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200228004320.127142-1-matthew.d.roper@intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/sun4i/sun8i_mixer.c    |   12 ------------
- drivers/gpu/drm/sun4i/sun8i_vi_layer.c |    2 --
- 2 files changed, 14 deletions(-)
+ drivers/gpu/drm/i915/display/intel_display_power.c |   16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
 
---- a/drivers/gpu/drm/sun4i/sun8i_mixer.c
-+++ b/drivers/gpu/drm/sun4i/sun8i_mixer.c
-@@ -277,12 +277,6 @@ static const struct de2_fmt_info de2_for
- 		.csc = SUN8I_CSC_MODE_YUV2RGB,
- 	},
- 	{
--		.drm_fmt = DRM_FORMAT_YUV444,
--		.de2_fmt = SUN8I_MIXER_FBFMT_RGB888,
--		.rgb = true,
--		.csc = SUN8I_CSC_MODE_YUV2RGB,
--	},
--	{
- 		.drm_fmt = DRM_FORMAT_YUV422,
- 		.de2_fmt = SUN8I_MIXER_FBFMT_YUV422,
- 		.rgb = false,
-@@ -301,12 +295,6 @@ static const struct de2_fmt_info de2_for
- 		.csc = SUN8I_CSC_MODE_YUV2RGB,
- 	},
- 	{
--		.drm_fmt = DRM_FORMAT_YVU444,
--		.de2_fmt = SUN8I_MIXER_FBFMT_RGB888,
--		.rgb = true,
--		.csc = SUN8I_CSC_MODE_YVU2RGB,
--	},
--	{
- 		.drm_fmt = DRM_FORMAT_YVU422,
- 		.de2_fmt = SUN8I_MIXER_FBFMT_YUV422,
- 		.rgb = false,
---- a/drivers/gpu/drm/sun4i/sun8i_vi_layer.c
-+++ b/drivers/gpu/drm/sun4i/sun8i_vi_layer.c
-@@ -431,11 +431,9 @@ static const u32 sun8i_vi_layer_formats[
- 	DRM_FORMAT_YUV411,
- 	DRM_FORMAT_YUV420,
- 	DRM_FORMAT_YUV422,
--	DRM_FORMAT_YUV444,
- 	DRM_FORMAT_YVU411,
- 	DRM_FORMAT_YVU420,
- 	DRM_FORMAT_YVU422,
--	DRM_FORMAT_YVU444,
- };
+--- a/drivers/gpu/drm/i915/display/intel_display_power.c
++++ b/drivers/gpu/drm/i915/display/intel_display_power.c
+@@ -4205,13 +4205,19 @@ static void icl_dbuf_disable(struct drm_
  
- static const u32 sun8i_vi_layer_de3_formats[] = {
+ static void icl_mbus_init(struct drm_i915_private *dev_priv)
+ {
+-	u32 val;
++	u32 mask, val;
+ 
+-	val = MBUS_ABOX_BT_CREDIT_POOL1(16) |
+-	      MBUS_ABOX_BT_CREDIT_POOL2(16) |
+-	      MBUS_ABOX_B_CREDIT(1) |
+-	      MBUS_ABOX_BW_CREDIT(1);
++	mask = MBUS_ABOX_BT_CREDIT_POOL1_MASK |
++		MBUS_ABOX_BT_CREDIT_POOL2_MASK |
++		MBUS_ABOX_B_CREDIT_MASK |
++		MBUS_ABOX_BW_CREDIT_MASK;
+ 
++	val = I915_READ(MBUS_ABOX_CTL);
++	val &= ~mask;
++	val |= MBUS_ABOX_BT_CREDIT_POOL1(16) |
++		MBUS_ABOX_BT_CREDIT_POOL2(16) |
++		MBUS_ABOX_B_CREDIT(1) |
++		MBUS_ABOX_BW_CREDIT(1);
+ 	I915_WRITE(MBUS_ABOX_CTL, val);
+ }
+ 
 
 
