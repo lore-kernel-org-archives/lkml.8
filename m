@@ -2,209 +2,131 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AECE5C18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 21:39:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E2F6C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 21:39:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D272222C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 21:39:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4874F222C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 21:39:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UlVfj8z2"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qow1Yly0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726426AbgCJVja (ORCPT
+        id S1727617AbgCJVjh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 17:39:30 -0400
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:34228 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726271AbgCJVj3 (ORCPT
+        Tue, 10 Mar 2020 17:39:37 -0400
+Received: from mail-ua1-f65.google.com ([209.85.222.65]:44800 "EHLO
+        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726604AbgCJVjg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 17:39:29 -0400
-Received: by mail-pj1-f67.google.com with SMTP id 39so688804pjo.1
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 14:39:28 -0700 (PDT)
+        Tue, 10 Mar 2020 17:39:36 -0400
+Received: by mail-ua1-f65.google.com with SMTP id a33so5253990uad.11
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 14:39:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=T26zcDKa3B8Ccgr/TpJ2S305/X5TIZGyLp36trF+POo=;
-        b=UlVfj8z2wr/WzpEmGcDaRfms4z9TbAXtAyU2y3qiTLBfcdR4vOgKpoytN1aXHGxzOq
-         XDk/3pE6KS2Cuzy3UvR8Vz6WuZtA0ZFyvoRuMhVkW0iPKzUh9kq0R2L1Shu1OAO9na5P
-         PoRYXmQ3PZgySKo8VTUGwwOFXBiIB0WPYHB3M1S0nZc7HpdTTVfunIENsKTmb2Mhk9sq
-         /UcWyEY/lAB+oPcM9CyTq/ynZq4mvpfEtvyGKzv+z+BQhi7GUik2pSeT0M8V5HmMaOza
-         0SlOk/LV5XNbZ2+nn7CVZIzefIKHhxkgt6HDH5i9dAM6RoigIbJuohA7/IN+mspaxwsO
-         FO4w==
+        bh=GdlXGBu011eILr6E7BKeOR6UiLq6Vdo/qhWhU5E0PbY=;
+        b=qow1Yly0Eo6wNCVCAXCutaqv7CgN7WaQcfi68e6dnzv9swNvIzu6OER4ZCvTlqsND0
+         v/wSUS0v8kJvwGnHBDvYrjU3aL1TVqj1p8lgA60b+qp0HENgTLb+f9Kd0py+Z1tnFnPu
+         4oj7QZuEgxniGPxwYyBRmG/Asfmc41HbYw9i+H5IuuLAVAcNxQN0lZE/LiC3uw6+w6SC
+         VytsXj/SMfOm5I3i8dxSxO3ukRTE9VzrnqduCBzKbYwFatcJezX15OG0D0I5/L6bBnoO
+         uaRDM/xM6Y1p1fLIouawRKNZadIjdXjfmkxW2UYmlOg5Y7++zGD7F/xYSx+5wsKlVUUr
+         GiFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=T26zcDKa3B8Ccgr/TpJ2S305/X5TIZGyLp36trF+POo=;
-        b=hjBIB63z5FylFTfC7LgUA+5Kv+OujDg1QMm882pj4i4x+cMZm4bayJD8cbNdciXNmz
-         IKOhmf+cKV5pkjQiZr9wMMpn7SmqbI0KHx0tjIPCiT3mlUYA196sBeG6cuerWnpmZz+r
-         1gTpU+hSCdVTmTAdiOdpH7N0v0YnG1IfPfO7sTDjeaZie1jyXq0krlVFZc4c9gRB6VY+
-         jYBbqBnq6h40DfukFx3L2ewzzJKdfhCW0r3kEp0iLuQtVoSBIyY+TSxdzj7BF/8X0e1T
-         sfTv92KufaOqnNUU9TKORfWRutLgPHRTESLLkwnt4q2bMA6ifI64XrazafKcnMbgTr4p
-         l2Hg==
-X-Gm-Message-State: ANhLgQ0RxpdV7SHJP9v73sTPHLWQ0fSKW30CKfSfI/HRaB/SBVPk/5O6
-        kVKTq4obmDw/04TXjQ/jCz/KFBqJ86Ne9FioDDkFyg==
-X-Google-Smtp-Source: ADFU+vsXRA51Z5R8J8QAlzU7dBAeXHMJIO1KbWRLfAi/7Y8ISrxHlkI7cP6T1ce42VyooMGph67CkOVhGhlLFCL8xJY=
-X-Received: by 2002:a17:90a:a587:: with SMTP id b7mr33452pjq.18.1583876367719;
- Tue, 10 Mar 2020 14:39:27 -0700 (PDT)
+        bh=GdlXGBu011eILr6E7BKeOR6UiLq6Vdo/qhWhU5E0PbY=;
+        b=lZL6xz/UrJC7cRjkqcyxG2K3GgC/K2bFoo2RI3Ofi3+YREVFEqGfHiwGsLqB5BRhcQ
+         o2oz9HZ6yPvxyuyMhYsYLvNGsCVHEUy2dK7y7hLpXfGWfhziR+az0YoyZGUshRM8HKqt
+         gSo21umMtxr75E7W2JiDgm6koEH5sU6eiAPIEIp6/HGtvc8f3KhUwcp+grAv48gEBchP
+         l2sYrPenQEmaLYQHGE74GAYq2cJ4QW5vIgMI7/A2Bh9o2+H4CFfbBUhoYct8+6gG1g/D
+         2JcHc3VcvWUuVvjPwYRyHK8+XG8tnRhpF9uQznHEX5m7uWvALJ0mvvo5p9MubwGXjYQg
+         sWZg==
+X-Gm-Message-State: ANhLgQ0mh/xgybNcGsiBqOOJcVaP32+oDYwAty1696G/ngjxNxK2BoNs
+        qbWCXn5CjnL7RZjt/1JkCl2ow2QWM6as9jBW8wDAAg==
+X-Google-Smtp-Source: ADFU+vvrCP8710FwovNQiq3TRDaasFyzXucpbPikePRLc6w5tbh734JpqREX6WUJxdQfuVbpX+V0ftICxermILFQWdA=
+X-Received: by 2002:ab0:2851:: with SMTP id c17mr13587156uaq.63.1583876374973;
+ Tue, 10 Mar 2020 14:39:34 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200227024301.217042-1-trishalfonso@google.com>
- <20200227024301.217042-2-trishalfonso@google.com> <alpine.LRH.2.20.2002271136160.12417@dhcp-10-175-190-15.vpn.oracle.com>
-In-Reply-To: <alpine.LRH.2.20.2002271136160.12417@dhcp-10-175-190-15.vpn.oracle.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Tue, 10 Mar 2020 14:39:16 -0700
-Message-ID: <CAFd5g44gVFyxwo4r=7gpPGdvPQoynfEjHhLfyC3_6uaU2oA0Lg@mail.gmail.com>
-Subject: Re: [RFC PATCH 2/2] KUnit: KASAN Integration
-To:     Alan Maguire <alan.maguire@oracle.com>
-Cc:     Patricia Alfonso <trishalfonso@google.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        David Gow <davidgow@google.com>,
-        Ingo Molnar <mingo@redhat.com>,
+References: <20200310185003.57344-1-irogers@google.com> <20200310195915.GA1676879@tassilo.jf.intel.com>
+In-Reply-To: <20200310195915.GA1676879@tassilo.jf.intel.com>
+From:   Stephane Eranian <eranian@google.com>
+Date:   Tue, 10 Mar 2020 14:39:23 -0700
+Message-ID: <CABPqkBRQo=bEOiCFGFjwcM8TZaXMFyaL7o1hcFd6Bc3w+LhJQA@mail.gmail.com>
+Subject: Re: [PATCH] perf tools: add support for lipfm4
+To:     Andi Kleen <ak@linux.intel.com>
+Cc:     Ian Rogers <irogers@google.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        KUnit Development <kunit-dev@googlegroups.com>
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Igor Lubashev <ilubashe@akamai.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Jiwei Sun <jiwei.sun@windriver.com>,
+        yuzhoujian <yuzhoujian@didichuxing.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        John Garry <john.garry@huawei.com>,
+        LKML <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 6:04 AM Alan Maguire <alan.maguire@oracle.com> wrote:
+On Tue, Mar 10, 2020 at 12:59 PM Andi Kleen <ak@linux.intel.com> wrote:
+>
+> On Tue, Mar 10, 2020 at 11:50:03AM -0700, Ian Rogers wrote:
+> > This patch links perf with the libpfm4 library.
+> > This library contains all the hardware event tables for all
+> > processors supported by perf_events. This is a helper library
+> > that help convert from a symbolic event name to the event
+> > encoding required by the underlying kernel interface. This
+> > library is open-source and available from: http://perfmon2.sf.net.
+>
+> For most CPUs the builtin perf JSON event support should make
+> this redundant.
+>
+We decided to post this patch to propose an alternative to the JSON
+file approach. It could be an option during the build.
+The libpfm4 library has been around for 15 years now. Therefore, it
+supports a lot of processors core and uncore and it  is very portable.
+The key value add I see is that this is a library that can be, and has
+been, used by tool developers directly in their apps. It can
+work with more than Linux perf_events interface. It is not tied to the
+interface. It has well defined and documented entry points.
+We do use libpfm4 extensively at Google in both the perf tool and
+applications. The PAPI toolkit also relies on this library.
 
-Sorry for the delay in reviews. I have been preoccupied by some Google
-internal stuff.
+I don't see this as competing with the JSON approach. It is just an
+option I'd like to offer to users especially those familiar
+with it in their apps.
 
-> On Wed, 26 Feb 2020, Patricia Alfonso wrote:
+> Perhaps you could list what CPUs it actually supports over
+> the existing JSON tables.
 >
-> > Integrate KASAN into KUnit testing framework.
+> If it's only a few it would be likely better to add
+> appropiate json files.
 >
-> This is a great idea! Some comments/suggestions below...
+> If it's a massive number it might be useful, although
+> JSON support would be better for those too.
 >
-> >  - Fail tests when KASAN reports an error that is not expected
-> >  - Use KUNIT_EXPECT_KASAN_FAIL to expect a KASAN error in KASAN tests
-> >  - KUnit struct added to current task to keep track of the current test
-> > from KASAN code
-> >  - Booleans representing if a KASAN report is expected and if a KASAN
-> >  report is found added to kunit struct
-> >  - This prints "line# has passed" or "line# has failed"
-> >
-> > Signed-off-by: Patricia Alfonso <trishalfonso@google.com>
-> > ---
-> > If anyone has any suggestions on how best to print the failure
-> > messages, please share!
-> >
-> > One issue I have found while testing this is the allocation fails in
-> > kmalloc_pagealloc_oob_right() sometimes, but not consistently. This
-> > does cause the test to fail on the KUnit side, as expected, but it
-> > seems to skip all the tests before this one because the output starts
-> > with this failure instead of with the first test, kmalloc_oob_right().
-> >
-> >  include/kunit/test.h                | 24 ++++++++++++++++++++++++
-> >  include/linux/sched.h               |  7 ++++++-
-> >  lib/kunit/test.c                    |  7 ++++++-
-> >  mm/kasan/report.c                   | 19 +++++++++++++++++++
-> >  tools/testing/kunit/kunit_kernel.py |  2 +-
-> >  5 files changed, 56 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/include/kunit/test.h b/include/kunit/test.h
-> > index 2dfb550c6723..2e388f8937f3 100644
-> > --- a/include/kunit/test.h
-> > +++ b/include/kunit/test.h
-> > @@ -21,6 +21,8 @@ struct kunit_resource;
-> >  typedef int (*kunit_resource_init_t)(struct kunit_resource *, void *);
-> >  typedef void (*kunit_resource_free_t)(struct kunit_resource *);
-> >
-> > +void kunit_set_failure(struct kunit *test);
-> > +
-> >  /**
-> >   * struct kunit_resource - represents a *test managed resource*
-> >   * @allocation: for the user to store arbitrary data.
-> > @@ -191,6 +193,9 @@ struct kunit {
-> >        * protect it with some type of lock.
-> >        */
-> >       struct list_head resources; /* Protected by lock. */
-> > +
-> > +     bool kasan_report_expected;
-> > +     bool kasan_report_found;
-> >  };
-> >
->
-> Is this needed here? You're testing something pretty
-> specific so it seems wrong to add to the generic
-> kunit resource unless there's a good reason. I see the
-> code around setting these values in mm/kasan/report.c,
-> but I wonder if we could do something more generic.
->
-> How about the concept of a static resource (assuming a
-> dynamically allocated one is out because it messes
-> with memory allocation tests)? Something like this:
->
-> #define kunit_add_static_resource(test, resource_ptr, resource_field)   \
->         do {                                                            \
->                 spin_lock(&test->lock);                                 \
->                 (resource_ptr)->resource_field.init = NULL;             \
->                 (resource_ptr)->resource_field.free = NULL;             \
->                 list_add_tail(&(resource_ptr)->resource_field,          \
->                               &test->resources);                        \
->                 spin_unlock(&test->lock);                               \
->         } while (0)
->
->
-> Within your kasan code you could then create a kasan-specific
-> structure that embends a kunit_resource, and contains the
-> values you need:
->
-> struct kasan_report_resource {
->         struct kunit_resource res;
->         bool kasan_report_expected;
->         bool kasan_report_found;
-> };
->
-> (One thing we'd need to do for such static resources is fix
-> kunit_resource_free() to check if there's a free() function,
-> and if not assume a static resource)
->
-> If you then create an init() function associated with your
-> kunit suite (which will be run for every case) it can do this:
->
-> int kunit_kasan_test_init(struct kunit *test)
-> {
->         kunit_add_static_resource(test, &my_kasan_report_resource, res);
->         ...
-> }
->
-> The above should also be used to initialize current->kasan_unit_test
-> instead of doing that in kunit_try_run_case().  With those
-> changes, you don't (I think) need to change anything in core
-> kunit (assuming support for static resources).
->
-> To retrieve the resource during tests or in kasan context, the
-> method seems to be to use kunit_resource_find(). However, that
-> requires a match function which seems a bit heavyweight for the
-> static case.  We should probably have a default "find by name"
-> or similar function here, and add an optional "name" field
-> to kunit resources to simplify things.  Anyway here you'd
-> use something like:
->
->         kasan_report_resource = kunit_resource_find(test, matchfn,
->                                                     NULL, matchdata);
->
->
-> Are there any barriers to taking this sort of approach (apart
-> from the support for static resources not being there yet)?
-
-This is a really interesting idea, Alan! I never imagined
-kunit_resources being used this way, and I like it. I saw you sent
-some patches to implement this stuff, so I will withhold further
-comments on that here.
+> -Andi
