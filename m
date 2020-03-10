@@ -2,76 +2,121 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D62DAC10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:06:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97615C10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:07:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB727222C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:06:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4603B208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:07:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vuq4Ru/c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727697AbgCJWGI (ORCPT
+        id S1727724AbgCJWHG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 18:06:08 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:51393 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726273AbgCJWGH (ORCPT
+        Tue, 10 Mar 2020 18:07:06 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:43475 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726273AbgCJWHF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 18:06:07 -0400
-Received: from fsav401.sakura.ne.jp (fsav401.sakura.ne.jp [133.242.250.100])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 02AM5mTW040841;
-        Wed, 11 Mar 2020 07:05:48 +0900 (JST)
-        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav401.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav401.sakura.ne.jp);
- Wed, 11 Mar 2020 07:05:48 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav401.sakura.ne.jp)
-Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 02AM5hsL040682
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-        Wed, 11 Mar 2020 07:05:48 +0900 (JST)
-        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Subject: Re: [patch] mm, oom: prevent soft lockup on memcg oom for UP systems
-To:     David Rientjes <rientjes@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Michal Hocko <mhocko@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org
-References: <alpine.DEB.2.21.2003101438510.161160@chino.kir.corp.google.com>
-From:   Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Message-ID: <0e5ca6ee-d460-db8e-aba2-79aa7a66fad1@I-love.SAKURA.ne.jp>
-Date:   Wed, 11 Mar 2020 07:05:40 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 10 Mar 2020 18:07:05 -0400
+Received: by mail-ot1-f67.google.com with SMTP id a6so6895544otb.10;
+        Tue, 10 Mar 2020 15:07:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Y38QgXkGtAvFVzU6lmPevVw9h1a8jj9S/o6E0neojR0=;
+        b=Vuq4Ru/chaBTV5bK5P9R6PTUUPO5c1Y4m16RmeyU8np+PbJx+gCZqNJWn2AxRzxyER
+         Rfyyx7Gi9fvGV/18TiBrakd3ULy4I+JSkmgPXhotljFq5uwdeBqhbr61mc/RKciXTKlR
+         +/BbWJmlTNrtUmlgbrsFAPJBAyzZLXL823MAMqBHIi3yAUQ+jxYZ+1vJYOx/ZJOgl7te
+         rMli4wtsR5MVpZUUDozqZqeq11Qi+SuBRqvFCqI2YOV88wNrJBMwhpWPjizubRDHIvgE
+         e5l64jjHxRXs2cJkhui+3NyviK++wVnF77rzttuFkNP48NONDjCdR6Gh9OYeDwYWweat
+         Bkag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Y38QgXkGtAvFVzU6lmPevVw9h1a8jj9S/o6E0neojR0=;
+        b=TulU7jqwLWB/C5LtmT4QvgIEQiXrJxzEklRq80EKavrCdlwR5JkD0TpMZNYT1n6aTo
+         hOOnUrWRCB84pQfMYrkG7IKHHy6lfewa5pnUKgbQM8tNzwj81lcnHxj4H3Texo9FXjY6
+         +WCrCP4igB+Dy7StS2IJblC+2QI7Z1JxG8av1kEVaS0H4PBbNWprUTp/DwrWsxzifIO0
+         edKL79peWNKd2ZSm14lAy+LWi4/ToHWXWpTCudmX5t/GDxoSrcZSgCeyxLjNgwVpp2sO
+         +O4tCmSS/SqeGko/I7RqXcYeETCHEASoEwsQutoiwZdVR0LfFXMNneC0ZyHzq7fVqQXy
+         9eQg==
+X-Gm-Message-State: ANhLgQ0zv0GSR4B9JLTrC1/V/1gEvHdjq0qRMy1yMI4V05uesk5jXoOv
+        G9+HYCw3ZmcHnC7biTfwh3g=
+X-Google-Smtp-Source: ADFU+vtgsOmS2yywudR+6sQc6SY06BcWaxpEyL9aLg300DTDPxUYArvV/9MuDr8Hwc2RAwrOyxCozQ==
+X-Received: by 2002:a05:6830:23a3:: with SMTP id m3mr7323386ots.265.1583878025091;
+        Tue, 10 Mar 2020 15:07:05 -0700 (PDT)
+Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id c12sm4733153oic.27.2020.03.10.15.07.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Mar 2020 15:07:04 -0700 (PDT)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Madalin Bucur <madalin.bucur@nxp.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH] dpaa_eth: Remove unnecessary boolean expression in dpaa_get_headroom
+Date:   Tue, 10 Mar 2020 15:06:54 -0700
+Message-Id: <20200310220654.1987-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.26.0.rc1
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.2003101438510.161160@chino.kir.corp.google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/03/11 6:39, David Rientjes wrote:
-> diff --git a/mm/vmscan.c b/mm/vmscan.c
-> --- a/mm/vmscan.c
-> +++ b/mm/vmscan.c
-> @@ -2637,6 +2637,8 @@ static void shrink_node_memcgs(pg_data_t *pgdat, struct scan_control *sc)
->  		unsigned long reclaimed;
->  		unsigned long scanned;
->  
-> +		cond_resched();
-> +
+Clang warns:
 
-Is this safe for CONFIG_PREEMPTION case? If current thread has realtime priority,
-can we guarantee that the OOM victim (well, the OOM reaper kernel thread rather
-than the OOM victim ?) gets scheduled?
+drivers/net/ethernet/freescale/dpaa/dpaa_eth.c:2860:9: warning:
+converting the result of '?:' with integer constants to a boolean always
+evaluates to 'true' [-Wtautological-constant-compare]
+        return DPAA_FD_DATA_ALIGNMENT ? ALIGN(headroom,
+               ^
+drivers/net/ethernet/freescale/dpaa/dpaa_eth.c:131:34: note: expanded
+from macro 'DPAA_FD_DATA_ALIGNMENT'
+\#define DPAA_FD_DATA_ALIGNMENT  (fman_has_errata_a050385() ? 64 : 16)
+                                 ^
+1 warning generated.
 
->  		switch (mem_cgroup_protected(target_memcg, memcg)) {
->  		case MEMCG_PROT_MIN:
->  			/*
-> 
+This was exposed by commit 3c68b8fffb48 ("dpaa_eth: FMan erratum A050385
+workaround") even though it appears to have been an issue since the
+introductory commit 9ad1a3749333 ("dpaa_eth: add support for DPAA
+Ethernet") since DPAA_FD_DATA_ALIGNMENT has never been able to be zero.
+
+Just replace the whole boolean expression with the true branch, as it is
+always been true.
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/928
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+---
+ drivers/net/ethernet/freescale/dpaa/dpaa_eth.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
+index 190e4478128a..46039d80bb43 100644
+--- a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
++++ b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
+@@ -2857,9 +2857,7 @@ static inline u16 dpaa_get_headroom(struct dpaa_buffer_layout *bl)
+ 	headroom = (u16)(bl->priv_data_size + DPAA_PARSE_RESULTS_SIZE +
+ 		DPAA_TIME_STAMP_SIZE + DPAA_HASH_RESULTS_SIZE);
+ 
+-	return DPAA_FD_DATA_ALIGNMENT ? ALIGN(headroom,
+-					      DPAA_FD_DATA_ALIGNMENT) :
+-					headroom;
++	return ALIGN(headroom, DPAA_FD_DATA_ALIGNMENT);
+ }
+ 
+ static int dpaa_eth_probe(struct platform_device *pdev)
+-- 
+2.26.0.rc1
+
