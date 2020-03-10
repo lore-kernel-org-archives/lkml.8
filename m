@@ -2,111 +2,97 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EB5CC18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:26:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F3EFC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:26:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6157D24680
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:26:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36F4224680
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:26:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mclrgEFb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MPjkwmXI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730139AbgCJN0n (ORCPT
+        id S1730224AbgCJN0s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:26:43 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:56185 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728863AbgCJMzw (ORCPT
+        Tue, 10 Mar 2020 09:26:48 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:33624 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728043AbgCJN0p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:55:52 -0400
-Received: by mail-wm1-f67.google.com with SMTP id 6so1269978wmi.5;
-        Tue, 10 Mar 2020 05:55:50 -0700 (PDT)
+        Tue, 10 Mar 2020 09:26:45 -0400
+Received: by mail-lj1-f194.google.com with SMTP id f13so14135714ljp.0;
+        Tue, 10 Mar 2020 06:26:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=ddx48D2gr10nMoG1C61HRni/V10Bu89hCsWOfewS3C4=;
-        b=mclrgEFbgjuY+WFqJ+yAnwLTrQAeGXiC0Khzlfy+mgVHM1ed2h7pdu01MundlIfUOz
-         lK1bvpqusxVftNGxvuDX8dIDOXjHVEUAr1+UmxkBK0E7cdjtLT09f9juyEOgCPeTGOHf
-         dri3R4BLs5m2VACYXYbpduXDXQgMT6RyF1IuKHtrf8s07k/VzpcRttYBlxrS7+0m4Cuc
-         0+emoIgUY+Hv9GEup174YOtN+nXnwG0164vMzM8KJi7UraKvZ5FLdiqPQtArsU3I4jbn
-         AFyhQro+tSKtFVMPm2Qb8M+V/t8W6TluhBMQ5bgRH5JUjWtmM3q3erHjcumkmQ7ct7GQ
-         200A==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=OFEfv78mqxElApVv1PrLdhetmsXCx++xAuLsijmT7RU=;
+        b=MPjkwmXIAf3FWyEgLP72VjHIRYpfGhG20UY8BhN66PsNpd4eGCduEIgthZsYBz4n9C
+         5H9OfqJmEgjp2Du2id90Wx5m8OyU9+TmYOjINHJkzc1MiJV6yIfrsGPCiafRVAOWGSuI
+         1Gs+jLcTEOpUsyfNPXJF25iNTJOrR8OVSF9/i3xeJiy8Y6D57slJhMk+tWGFtq3QujnP
+         mciLBxJjYSs+Px/jakxMHhE/edRBjYPhwpCEOW7gEDNifraZRlkCfEkeqfeNmacRF/kx
+         qhxV+c2mGxh8SBUwtPRh02MYUUi5QbY75MS43mhKGPjlYRn3XXCTvXwUoHI55oLqsOkD
+         bbfA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=ddx48D2gr10nMoG1C61HRni/V10Bu89hCsWOfewS3C4=;
-        b=kzU7Te13CnI92MbfifeH/92yu0hJ3Zogs3WNPfCwAO14zXHIksyGHc2tt2EXaJwA43
-         zqSJWylBwNl/MmTcyw5ABW7aaB89kNuT0HcDYyRXSH2qPaWBliSOKVGQaqzET4+beNtN
-         fNw7BKbvtmvVmjATbmg1ZdVAp3cFyApWwVlDWbE+J6EtIfHyNHbDZ5m+yW7K44437taa
-         +tmZxgrCQKgcvfUSxEr/3wlx2XRj6RxLb/+0lvZiekc8dnczLkF2q/Jnk2Crfe9SIx66
-         OMjHOKcFphHT3JrdtL24zJAzeGNC2rZmGMoET5SRLHK/LjoiGN4aysvN5dOI+XRTwvLW
-         A1Uw==
-X-Gm-Message-State: ANhLgQ3LYTQ02fT3qGDtxnZfMcqpWvRX6shRTQxnPzhIl3K5JkgGob3W
-        B4RHRNgkTK4txMruxz8gay0=
-X-Google-Smtp-Source: ADFU+vs/PIuMLTxZwNDZV1kMk1rEY1URgp5tFfXnru+tJtrPQsbTGmlA5/Sp7HQfDtoO2oX3XXcdlw==
-X-Received: by 2002:a1c:ac46:: with SMTP id v67mr1970418wme.153.1583844950007;
-        Tue, 10 Mar 2020 05:55:50 -0700 (PDT)
-Received: from localhost.localdomain ([79.115.60.40])
-        by smtp.gmail.com with ESMTPSA id t81sm4018594wmb.15.2020.03.10.05.55.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Mar 2020 05:55:49 -0700 (PDT)
-From:   Vladimir Oltean <olteanv@gmail.com>
-To:     broonie@kernel.org
-Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        shawnguo@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, eha@deif.com, angelo@sysam.it,
-        andrew.smirnov@gmail.com, gustavo@embeddedor.com, weic@nvidia.com,
-        mhosny@nvidia.com, michael@walle.cc, peng.ma@nxp.com
-Subject: [PATCH v3 0/7] NXP DSPI bugfixes and support for LS1028A
-Date:   Tue, 10 Mar 2020 14:55:35 +0200
-Message-Id: <20200310125542.5939-1-olteanv@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=OFEfv78mqxElApVv1PrLdhetmsXCx++xAuLsijmT7RU=;
+        b=WfPklX4tjngMs3psv/VlVntfAMWekYLHNpA3vkNHc9XyL575gYOpHI2v09EcxJfUbA
+         0K4UekBNGdr7Cp6HAP1u6I8aE9QiqlRk9Oquks2B8ID7IFaajf/nb8KaW8Ksv74bX7zC
+         qfMHFY6Es5WNoiVBqACJmngb35k6H3AXVWNTNbXM2UMoP/QW85Mj1fCHy3bBsGKJPWrV
+         WUKDrfTmFAEPj/u12YYMLHULHkfW2ViBIG9q1AxPIDzfsxgeHYlRc/Z1v/si7X/rDfdY
+         KlXaT13q9Hk58BMTcDXQe3lpsn5wEH/1poaQsmZDzUaqA5VMomALjM3o265RcRa6VNM5
+         d8lQ==
+X-Gm-Message-State: ANhLgQ2h63mwAj4hKZlTXL9dQRn43KDEr+hZdPvhAKHVKoGzjCob1HuW
+        owJPnt4KjiMw15rkYLT48K0MiP8n
+X-Google-Smtp-Source: ADFU+vs0D5hsfb7X1yf/tpe6lP/YNwM1B9Ae7W/yTvjMuZrOxV1xdmC8WTPJFzqs51fKWHW5jAXXMQ==
+X-Received: by 2002:a05:651c:114:: with SMTP id a20mr12995219ljb.122.1583846803027;
+        Tue, 10 Mar 2020 06:26:43 -0700 (PDT)
+Received: from [192.168.2.145] (94-29-39-224.dynamic.spd-mgts.ru. [94.29.39.224])
+        by smtp.googlemail.com with ESMTPSA id j24sm8742473lji.76.2020.03.10.06.26.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Mar 2020 06:26:42 -0700 (PDT)
+Subject: Re: [PATCH v1] i2c: tegra: Make timeout error more informative
+To:     Wolfram Sang <wsa@the-dreams.de>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200302173512.2743-1-digetx@gmail.com>
+ <20200310113706.GW1987@ninjato>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <017aad72-9872-a4aa-dc99-bd7d08c0db14@gmail.com>
+Date:   Tue, 10 Mar 2020 16:26:41 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+MIME-Version: 1.0
+In-Reply-To: <20200310113706.GW1987@ninjato>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Oltean <vladimir.oltean@nxp.com>
+10.03.2020 14:37, Wolfram Sang пишет:
+> On Mon, Mar 02, 2020 at 08:35:12PM +0300, Dmitry Osipenko wrote:
+>> The I2C timeout error message doesn't tell us what exactly failed and some
+>> I2C client drivers do not clarify the error either. Adding WARN_ON_ONCE()
+>> results in a stacktrace being dumped into KMSG, which is very useful for
+>> debugging purposes.
+> 
+> This is good for debugging, in deed, yet not good in the generic case.
+> Timeouts are not an exception on the I2C bus (think of an EEPROM which
+> is busy during an erase cycle), so it shouldn't be printed at all.
+> 
+> This prinout should rather be dropped or at least be dev_dbg.
 
-This series addresses a few issues that were missed during the previous
-series "[PATCH 00/12] TCFQ to XSPI migration for NXP DSPI driver", on
-SoCs other than LS1021A and LS1043A. DMA mode has been completely broken
-by that series, and XSPI mode never worked on little-endian controllers.
-
-Then it introduces support for the LS1028A chip, whose compatible has
-recently been documented here:
-
-https://lore.kernel.org/linux-devicetree/20200218171418.18297-1-michael@walle.cc/
-
-The device tree for the LS1028A SoC is extended with DMA channels
-definition, such that even though the default operating mode is XSPI,
-one can simply change DSPI_XSPI_MODE to DSPI_DMA_MODE in the
-devtype_data structure of the driver and use that instead.
-
-I don't expect the "fixes" patches to reach very far down the stable
-pipe, since there has been pretty heavy refactoring in this driver.
-
-For testing, benchmarking and debugging, the mikroBUS connector on the
-LS1028A-RDB is made available via spidev.
-
-Vladimir Oltean (7):
-  spi: spi-fsl-dspi: Don't access reserved fields in SPI_MCR
-  spi: spi-fsl-dspi: Avoid use-after-free in interrupt mode
-  spi: spi-fsl-dspi: Fix little endian access to PUSHR CMD and TXDATA
-  spi: spi-fsl-dspi: Fix bits-per-word acceleration in DMA mode
-  spi: spi-fsl-dspi: Add support for LS1028A
-  arm64: dts: ls1028a: Specify the DMA channels for the DSPI controllers
-  arm64: dts: ls1028a-rdb: Add a spidev node for the mikroBUS
-
- .../boot/dts/freescale/fsl-ls1028a-rdb.dts    |  14 ++
- .../arm64/boot/dts/freescale/fsl-ls1028a.dtsi |   6 +
- drivers/spi/spi-fsl-dspi.c                    | 188 +++++++++++-------
- 3 files changed, 134 insertions(+), 74 deletions(-)
-
--- 
-2.17.1
-
+Oh, well. I'll keep this debugging applied locally then, it's quite
+unfortunate when something fails silently :)
