@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92F6AC18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:15:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E58EFC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:15:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C144208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:15:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB3D124649
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:15:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583846128;
-	bh=11lTqkhPdykb/T5b6KrUOa+oT9IU1Yv8PZKOza1sqoc=;
+	s=default; t=1583846145;
+	bh=lkv2Wchpv0sGYM5Z9/Uir+YPw9inCOPJSRLo5mYEvjQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Thb0n7tkwF6pqHnJ60IKJ16FOh/5yLQ0VBtSgslfpt3tqi2n2uOHemlH4rZcwUQo7
-	 aQzPn7HW9+rC4a9BUyEgjYnHA9F4FabFyMMfgNOUi7AQ+2jYruzDKQJ4W1bwmD5r5K
-	 ugh4oTgcrQnycm57x6eBgdkT/rBR8f7/BJcU7HV8=
+	b=tPjmRUkMIMkrB74JZNbCxGETRBJyqODBFEzJrDd7UY3bTht/lR41P094QrGP5GHoV
+	 AhPgxjZItYfgMiczvIeCDZ6+KERjceadgb0hnamFJSl9DnER/AtBzuYoeEAG9H0rkB
+	 UYnWV1eJ+c7cbxui3J0/VgLK85kcvzx46ybY6cHw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731626AbgCJNPW (ORCPT
+        id S1727417AbgCJNPo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:15:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39890 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:15:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38860 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732019AbgCJNPR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:15:17 -0400
+        id S1731925AbgCJNOt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:14:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2194208E4;
-        Tue, 10 Mar 2020 13:15:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6200824649;
+        Tue, 10 Mar 2020 13:14:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583846117;
-        bh=11lTqkhPdykb/T5b6KrUOa+oT9IU1Yv8PZKOza1sqoc=;
+        s=default; t=1583846087;
+        bh=lkv2Wchpv0sGYM5Z9/Uir+YPw9inCOPJSRLo5mYEvjQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vpxf/lb7Q5PG1SylzQBuWfkQbvgRoEWeSmw8ejne2TQjNH+uCWWYUj2ks23FzvXKZ
-         fhI6pz/9vbO0zAhTsso7hfAdhQlAoNM4+GNrtjuZ30NY4nVCemlwX7h+gqpD5DCI1y
-         Ieus3o7ULJAXIA0SLS0Civx+Vymcd96Il0kwzCMo=
+        b=u6A6m17ObASaPW+8dPa4yF2rEoOBky+ralsExvi86NKmOutfxD7/1kXXbEfpQuJR9
+         jCM3r/x2SCURnvldCIW4BW/pZukfVYuB27SOFW77vKb8My+f1mDZtFg3Qdu00dL8PK
+         nYMCIMz36h7nqJbjpcRX+MFJ4nNZfc86WouqjipU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 4.19 75/86] IB/hfi1, qib: Ensure RCU is locked when accessing list
-Date:   Tue, 10 Mar 2020 13:45:39 +0100
-Message-Id: <20200310124534.815634089@linuxfoundation.org>
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>, linux-efi@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH 4.19 83/86] efi/x86: Align GUIDs to their size in the mixed mode runtime wrapper
+Date:   Tue, 10 Mar 2020 13:45:47 +0100
+Message-Id: <20200310124535.357041905@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310124530.808338541@linuxfoundation.org>
 References: <20200310124530.808338541@linuxfoundation.org>
@@ -61,66 +61,129 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dennis Dalessandro <dennis.dalessandro@intel.com>
+From: Ard Biesheuvel <ardb@kernel.org>
 
-commit 817a68a6584aa08e323c64283fec5ded7be84759 upstream.
+commit 63056e8b5ebf41d52170e9f5ba1fc83d1855278c upstream.
 
-The packet handling function, specifically the iteration of the qp list
-for mad packet processing misses locking RCU before running through the
-list. Not only is this incorrect, but the list_for_each_entry_rcu() call
-can not be called with a conditional check for lock dependency. Remedy
-this by invoking the rcu lock and unlock around the critical section.
+Hans reports that his mixed mode systems running v5.6-rc1 kernels hit
+the WARN_ON() in virt_to_phys_or_null_size(), caused by the fact that
+efi_guid_t objects on the vmap'ed stack happen to be misaligned with
+respect to their sizes. As a quick (i.e., backportable) fix, copy GUID
+pointer arguments to the local stack into a buffer that is naturally
+aligned to its size, so that it is guaranteed to cover only one
+physical page.
 
-This brings MAD packet processing in line with what is done for non-MAD
-packets.
+Note that on x86, we cannot rely on the stack pointer being aligned
+the way the compiler expects, so we need to allocate an 8-byte aligned
+buffer of sufficient size, and copy the GUID into that buffer at an
+offset that is aligned to 16 bytes.
 
-Fixes: 7724105686e7 ("IB/hfi1: add driver files")
-Link: https://lore.kernel.org/r/20200225195445.140896.41873.stgit@awfm-01.aw.intel.com
-Reviewed-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
-Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Fixes: f6697df36bdf0bf7 ("x86/efi: Prevent mixed mode boot corruption with CONFIG_VMAP_STACK=y")
+Reported-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Tested-by: Hans de Goede <hdegoede@redhat.com>
+Cc: linux-efi@vger.kernel.org
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/r/20200221084849.26878-2-ardb@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/hw/hfi1/verbs.c    |    4 +++-
- drivers/infiniband/hw/qib/qib_verbs.c |    2 ++
- 2 files changed, 5 insertions(+), 1 deletion(-)
+ arch/x86/platform/efi/efi_64.c |   25 +++++++++++++++++++++----
+ 1 file changed, 21 insertions(+), 4 deletions(-)
 
---- a/drivers/infiniband/hw/hfi1/verbs.c
-+++ b/drivers/infiniband/hw/hfi1/verbs.c
-@@ -595,10 +595,11 @@ static inline void hfi1_handle_packet(st
- 				       opa_get_lid(packet->dlid, 9B));
- 		if (!mcast)
- 			goto drop;
-+		rcu_read_lock();
- 		list_for_each_entry_rcu(p, &mcast->qp_list, list) {
- 			packet->qp = p->qp;
- 			if (hfi1_do_pkey_check(packet))
--				goto drop;
-+				goto unlock_drop;
- 			spin_lock_irqsave(&packet->qp->r_lock, flags);
- 			packet_handler = qp_ok(packet);
- 			if (likely(packet_handler))
-@@ -607,6 +608,7 @@ static inline void hfi1_handle_packet(st
- 				ibp->rvp.n_pkt_drops++;
- 			spin_unlock_irqrestore(&packet->qp->r_lock, flags);
- 		}
-+		rcu_read_unlock();
- 		/*
- 		 * Notify rvt_multicast_detach() if it is waiting for us
- 		 * to finish.
---- a/drivers/infiniband/hw/qib/qib_verbs.c
-+++ b/drivers/infiniband/hw/qib/qib_verbs.c
-@@ -360,8 +360,10 @@ void qib_ib_rcv(struct qib_ctxtdata *rcd
- 		if (mcast == NULL)
- 			goto drop;
- 		this_cpu_inc(ibp->pmastats->n_multicast_rcv);
-+		rcu_read_lock();
- 		list_for_each_entry_rcu(p, &mcast->qp_list, list)
- 			qib_qp_rcv(rcd, hdr, 1, data, tlen, p->qp);
-+		rcu_read_unlock();
- 		/*
- 		 * Notify rvt_multicast_detach() if it is waiting for us
- 		 * to finish.
+--- a/arch/x86/platform/efi/efi_64.c
++++ b/arch/x86/platform/efi/efi_64.c
+@@ -790,6 +790,8 @@ static efi_status_t
+ efi_thunk_get_variable(efi_char16_t *name, efi_guid_t *vendor,
+ 		       u32 *attr, unsigned long *data_size, void *data)
+ {
++	u8 buf[24] __aligned(8);
++	efi_guid_t *vnd = PTR_ALIGN((efi_guid_t *)buf, sizeof(*vnd));
+ 	efi_status_t status;
+ 	u32 phys_name, phys_vendor, phys_attr;
+ 	u32 phys_data_size, phys_data;
+@@ -797,8 +799,10 @@ efi_thunk_get_variable(efi_char16_t *nam
+ 
+ 	spin_lock_irqsave(&efi_runtime_lock, flags);
+ 
++	*vnd = *vendor;
++
+ 	phys_data_size = virt_to_phys_or_null(data_size);
+-	phys_vendor = virt_to_phys_or_null(vendor);
++	phys_vendor = virt_to_phys_or_null(vnd);
+ 	phys_name = virt_to_phys_or_null_size(name, efi_name_size(name));
+ 	phys_attr = virt_to_phys_or_null(attr);
+ 	phys_data = virt_to_phys_or_null_size(data, *data_size);
+@@ -815,14 +819,18 @@ static efi_status_t
+ efi_thunk_set_variable(efi_char16_t *name, efi_guid_t *vendor,
+ 		       u32 attr, unsigned long data_size, void *data)
+ {
++	u8 buf[24] __aligned(8);
++	efi_guid_t *vnd = PTR_ALIGN((efi_guid_t *)buf, sizeof(*vnd));
+ 	u32 phys_name, phys_vendor, phys_data;
+ 	efi_status_t status;
+ 	unsigned long flags;
+ 
+ 	spin_lock_irqsave(&efi_runtime_lock, flags);
+ 
++	*vnd = *vendor;
++
+ 	phys_name = virt_to_phys_or_null_size(name, efi_name_size(name));
+-	phys_vendor = virt_to_phys_or_null(vendor);
++	phys_vendor = virt_to_phys_or_null(vnd);
+ 	phys_data = virt_to_phys_or_null_size(data, data_size);
+ 
+ 	/* If data_size is > sizeof(u32) we've got problems */
+@@ -839,6 +847,8 @@ efi_thunk_set_variable_nonblocking(efi_c
+ 				   u32 attr, unsigned long data_size,
+ 				   void *data)
+ {
++	u8 buf[24] __aligned(8);
++	efi_guid_t *vnd = PTR_ALIGN((efi_guid_t *)buf, sizeof(*vnd));
+ 	u32 phys_name, phys_vendor, phys_data;
+ 	efi_status_t status;
+ 	unsigned long flags;
+@@ -846,8 +856,10 @@ efi_thunk_set_variable_nonblocking(efi_c
+ 	if (!spin_trylock_irqsave(&efi_runtime_lock, flags))
+ 		return EFI_NOT_READY;
+ 
++	*vnd = *vendor;
++
+ 	phys_name = virt_to_phys_or_null_size(name, efi_name_size(name));
+-	phys_vendor = virt_to_phys_or_null(vendor);
++	phys_vendor = virt_to_phys_or_null(vnd);
+ 	phys_data = virt_to_phys_or_null_size(data, data_size);
+ 
+ 	/* If data_size is > sizeof(u32) we've got problems */
+@@ -864,14 +876,18 @@ efi_thunk_get_next_variable(unsigned lon
+ 			    efi_char16_t *name,
+ 			    efi_guid_t *vendor)
+ {
++	u8 buf[24] __aligned(8);
++	efi_guid_t *vnd = PTR_ALIGN((efi_guid_t *)buf, sizeof(*vnd));
+ 	efi_status_t status;
+ 	u32 phys_name_size, phys_name, phys_vendor;
+ 	unsigned long flags;
+ 
+ 	spin_lock_irqsave(&efi_runtime_lock, flags);
+ 
++	*vnd = *vendor;
++
+ 	phys_name_size = virt_to_phys_or_null(name_size);
+-	phys_vendor = virt_to_phys_or_null(vendor);
++	phys_vendor = virt_to_phys_or_null(vnd);
+ 	phys_name = virt_to_phys_or_null_size(name, *name_size);
+ 
+ 	status = efi_thunk(get_next_variable, phys_name_size,
+@@ -879,6 +895,7 @@ efi_thunk_get_next_variable(unsigned lon
+ 
+ 	spin_unlock_irqrestore(&efi_runtime_lock, flags);
+ 
++	*vendor = *vnd;
+ 	return status;
+ }
+ 
 
 
