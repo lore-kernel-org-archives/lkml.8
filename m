@@ -2,98 +2,107 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 672BEC18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 18:10:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F83CC18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 18:11:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E7882146E
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 18:10:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03AB920637
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 18:11:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="vX+vq8Qt";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="0LGbYfQ1"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HLZpkhv2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726712AbgCJSKJ (ORCPT
+        id S1726960AbgCJSK7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 14:10:09 -0400
-Received: from out3-smtp.messagingengine.com ([66.111.4.27]:54605 "EHLO
-        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726269AbgCJSKI (ORCPT
+        Tue, 10 Mar 2020 14:10:59 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:44453 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726463AbgCJSK6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 14:10:08 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id 328B021B6A;
-        Tue, 10 Mar 2020 14:10:07 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Tue, 10 Mar 2020 14:10:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=SRt+6h/WZcgD+dTltRfTPOTYiLo
-        w8DtLgwozFTB/+oc=; b=vX+vq8QtTgWR3mMawoHQd6j2nLo7dUfFVqhyUVUG+rX
-        M/1LbMAR7c/l1V2e4EXXH/JOeQ9XG+vZh1rTpakd07ChzI60sbXGzqHb8jJFT0Qa
-        eI8WqWApgYjISQJ2EqfqELSa4SBhMQaMR0exYMNYk8E1s5Jm5mgjYzGmTqgUiI6M
-        l5v5Pzw7jHa3NNMJ/TgkzGJeIk+Pm/5Q2DGSwwlvnU/o+6MY242jgI3eMiGgk5Um
-        8JCidPckRX+I3fMBDor54sWUivAlMqDBMjeVr5FnLP7IQ/Luj+p+xTDTk9Re4tbh
-        IlWVFToLBGdSaVXtC5c8cu2y6PNyjN1gpatNoyrdunQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=SRt+6h
-        /WZcgD+dTltRfTPOTYiLow8DtLgwozFTB/+oc=; b=0LGbYfQ14FzuF/Rv8VEMhm
-        iGvLR+5HQ7402JxSGmQVDpLHd9ObHUQZyd5XI4niHMeP8IdnCZ5YOsDEJkXbNe98
-        h8l1+axoA4OCe2Ngy9XqpVjUbBA7YpBmwIqryGRw0SZ79fJJwLvsgunrLjSAXGG0
-        QsKOq8JvZRX1KNtaiQToUU+Z/MV2naiCRgQCR26dyeYc0yr4qmPGS4xpgH7C29yz
-        znxJQv2lJzvaA3Fuho89JB85PwNp+aNovL2z/QnKDLcARdFu7NJ8IWhRbmI3tJsk
-        3+MkUCR2qeiDf/wLDYNydqoAnTbjriBP9ILl+Giks9CEk1Fpd5uac5Ar1YonUF8w
-        ==
-X-ME-Sender: <xms:_tdnXsOsQ2mA9hmgDFPqCuYs25fk-JMG8pBjm8paz4oTGA5yw-5qeA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedruddvtddguddtvdcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecunecujfgurhepfffhvffukfhfgggtuggjsehttd
-    ertddttddvnecuhfhrohhmpeforgigihhmvgcutfhiphgrrhguuceomhgrgihimhgvsegt
-    vghrnhhordhtvggthheqnecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrh
-    fuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhho
-    rdhtvggthh
-X-ME-Proxy: <xmx:_tdnXvo7v2kSvu7oGDiu8kaCvbytm33atHG-UxrEmKyeMxWhM329lw>
-    <xmx:_tdnXjuYIexMDgz57AjlVoFjPRhSgBjqAh2Fc9iksBckbx5bQIWwCA>
-    <xmx:_tdnXrTusp0U3H24pWAZfbWvkLlnN1fOFcvUySRDB7QG0K4NJR6H0w>
-    <xmx:_9dnXms0pgFeSe9rLJJnPv8rnkshn5jct2UsywzduMVS5MBN8pYYeA>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 504353280065;
-        Tue, 10 Mar 2020 14:10:06 -0400 (EDT)
-Date:   Tue, 10 Mar 2020 19:10:03 +0100
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Chen-Yu Tsai <wens@kernel.org>
-Cc:     Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/3] ARM: dts: sun8i: r40: fix SPI address and reorder
- nodes
-Message-ID: <20200310181003.wgryf373em5zwlvb@gilmour.lan>
-References: <20200310174709.24174-1-wens@kernel.org>
+        Tue, 10 Mar 2020 14:10:58 -0400
+Received: by mail-pl1-f196.google.com with SMTP id d9so5742892plo.11
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 11:10:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=zsKib0GqynNKua7iAWBmqWACz2JHoCf4kZ0aZVNqsbQ=;
+        b=HLZpkhv24sgfXCUG4fX3MIo+Au43vnAfit8xW0HNvvMmiJukq0nlQHasooY+XayfsH
+         bPDPnsiOCYxI3bQG7B0B/K/8wZgxUxSAH4dukVWksxBstHWMBiG0AFIKs5cR34NvIry0
+         7XpgDvrSHWGOiZ1HYqWiFG8XWhw20Xr6INzc4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=zsKib0GqynNKua7iAWBmqWACz2JHoCf4kZ0aZVNqsbQ=;
+        b=KQEAxFSfQaD2ig9v6Lx0VrrwCqCkhhCfiHevyQfYy72aFQmQFm/7qsrTPYqDzFebGv
+         HGEcQwuyUfKi2Iul5XfSyC61ayxkm4B5kGytLA2SiJ5v1uDHFi7PmgBirOEz8IR/O7ds
+         rrvcpnJW+AorjLmf60NiQroZzDpiIiD7S+r7i6blzYcHnks00/R5WR8IRaMjHcfUFdC7
+         5FrajbXMQJVgfeTakw/iZbdbZwTFT0gdSWV4CevGZFyNLhM15AvxPKoX+4SpXPfbir0t
+         XMP7yXmS+ETwRBv7ARjVKN4UQTbyeFiEcEhBZ0AEcPcovYzjqgWe/YIkIKWpCUx68uEM
+         zq9g==
+X-Gm-Message-State: ANhLgQ11RWCwtGdKoTPxRD2cHYXEgJpEoiuFZbdw9nnzgDGbPe3u6+8x
+        4aovXOI2oqf76ULqRpZY+Z2bqA==
+X-Google-Smtp-Source: ADFU+vvi/bGVsNtmguU66YqisKjD03wxFAZstCH06FyZW30xgi/xqHri6gRo4LARgAX/p5XdWG7+gQ==
+X-Received: by 2002:a17:902:ab8f:: with SMTP id f15mr22089420plr.280.1583863857702;
+        Tue, 10 Mar 2020 11:10:57 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id e2sm14277262pgv.81.2020.03.10.11.10.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Mar 2020 11:10:57 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200310174709.24174-1-wens@kernel.org>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200310063338.3344582-4-bjorn.andersson@linaro.org>
+References: <20200310063338.3344582-1-bjorn.andersson@linaro.org> <20200310063338.3344582-4-bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v4 3/5] remoteproc: qcom: Update PIL relocation info on load
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 10 Mar 2020 11:10:56 -0700
+Message-ID: <158386385637.149997.10680456822295964075@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 01:47:06AM +0800, Chen-Yu Tsai wrote:
-> From: Chen-Yu Tsai <wens@csie.org>
->
-> Hi,
->
-> Here are some fixes for the R40 device tree for v5.6. The base addresses
-> for SPI2 and SPI3 were incorrect and are fixed. I also found some nodes
-> were not added in the proper order, possibly because git matched the
-> incorrect place when applying the patch. These are fixed as well.
->
-> ChenYu
+Quoting Bjorn Andersson (2020-03-09 23:33:36)
+> diff --git a/drivers/remoteproc/qcom_q6v5_adsp.c b/drivers/remoteproc/qco=
+m_q6v5_adsp.c
+> index e953886b2eb7..d5cdff942535 100644
+> --- a/drivers/remoteproc/qcom_q6v5_adsp.c
+> +++ b/drivers/remoteproc/qcom_q6v5_adsp.c
+> @@ -164,10 +166,18 @@ static int qcom_adsp_shutdown(struct qcom_adsp *ads=
+p)
+>  static int adsp_load(struct rproc *rproc, const struct firmware *fw)
+>  {
+>         struct qcom_adsp *adsp =3D (struct qcom_adsp *)rproc->priv;
+> +       int ret;
+> +
+> +       ret =3D qcom_mdt_load_no_init(adsp->dev, fw, rproc->firmware, 0,
+> +                                   adsp->mem_region, adsp->mem_phys,
+> +                                   adsp->mem_size, &adsp->mem_reloc);
+> +       if (ret)
+> +               return ret;
+> =20
+> -       return qcom_mdt_load_no_init(adsp->dev, fw, rproc->firmware, 0,
+> -                            adsp->mem_region, adsp->mem_phys, adsp->mem_=
+size,
+> -                            &adsp->mem_reloc);
+> +       /* Failures only affect post mortem debugging, so ignore return v=
+alue */
+> +       qcom_pil_info_store(adsp->info_name, adsp->mem_reloc, adsp->mem_s=
+ize);
 
-Acked-by: Maxime Ripard <mripard@kernel.org>
-
-Thanks!
-Maxime
+If the return value was void then the comment wouldn't be necessary and
+it would be self documenting as such. Can we do that?
