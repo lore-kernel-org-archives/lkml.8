@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDE8FC2BB58
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:44:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E41B5C1975A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:44:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE59420675
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:44:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9B4420675
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:44:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583847887;
-	bh=//FvkYJTvYKf9u3X9i55i0Czwblru6XHdyLbwPOvSyQ=;
+	s=default; t=1583847889;
+	bh=OPGYmieXKETcyEj5QfTyd0VUv6QXCI4OfGbmwHtuc8g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qpzwpoG9QUBhdP+uWe/gK/vSs70SAXerOn2MZPNX8SNJfpDJ18pbrY7sbLKJ1s45l
-	 9esUv/4NSA19FTsWsgxJHtH6twOqyr9MxEWeQFRPnATWK1Lbtc/Q0BHl48gkaQ4ZU4
-	 H2PI3DEqbP0HEIgZzjvTMgOtN8FZf0aFVNp0a/3w=
+	b=hA1XjFxkZWnGLWj0s99FIzyDWm1mSczr2CZn0to14rs8WP7UJdaDMghkSBKv6VrT1
+	 XMkrgmpOBQXlN/b9fySfWPTXCVtnmZCKSgfxZTqN/Z+vdtfEserez6VpPUsuWhMnyL
+	 8qZKZX0IvOk/uFtu//nzdsYlJbBgire0lFsOF3jw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728184AbgCJNoq (ORCPT
+        id S1728207AbgCJNos (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:44:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37588 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:44:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37698 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726998AbgCJNnT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727231AbgCJNnT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 10 Mar 2020 09:43:19 -0400
 Received: from mail.kernel.org (ip5f5ad4e9.dynamic.kabel-deutschland.de [95.90.212.233])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 11E772468C;
+        by mail.kernel.org (Postfix) with ESMTPSA id 8DE5C246B4;
         Tue, 10 Mar 2020 13:43:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1583847797;
-        bh=//FvkYJTvYKf9u3X9i55i0Czwblru6XHdyLbwPOvSyQ=;
+        bh=OPGYmieXKETcyEj5QfTyd0VUv6QXCI4OfGbmwHtuc8g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zcybpOb9GNIYdyAkHJKkFp9Z0Mck9tXZD77of8AB18CP3ggyoBf13pnuK0j/DyMcY
-         YgdDOBwzlxI4ZwsGmtMuSyY0SfLjGgB7cHahKyJmnTmVdzcjJcFOTFGHETKjiX4Mnu
-         PbCUYwOHE+N2aVpm21c9AnCVHJMoDhUD1umsofv8=
+        b=CLlCgW1Q8yWm9KWqJYC58YsnWKUiBdlfHL1hbcGw/RVrU4qf5e7t+1/IM/DtD+x9w
+         2OUXVxZvCX/FLVVZTdQXndK7UQZh1am2knD5GytB+l0XSUUjstz6I9BDypM5Y5c1G4
+         YDD1uUUjfS0VP5ecwdq1+zeSy0BuUkIx2eoB1LG8=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jBfAB-0005vn-6e; Tue, 10 Mar 2020 14:43:15 +0100
+        id 1jBfAB-0005wt-PU; Tue, 10 Mar 2020 14:43:15 +0100
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
         linux-media@vger.kernel.org
-Subject: [PATCH v2 08/22] media: docs: split development info from cx88.rst
-Date:   Tue, 10 Mar 2020 14:42:59 +0100
-Message-Id: <597a62027b5b9e65990fdcde83f6a4f7cf309f93.1583847556.git.mchehab+huawei@kernel.org>
+Subject: [PATCH v2 22/22] media: docs: get rid of Documentation/media/
+Date:   Tue, 10 Mar 2020 14:43:13 +0100
+Message-Id: <50b933ab1f2e42e6905c72be6bd53dc1c30621d3.1583847557.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <cover.1583847556.git.mchehab+huawei@kernel.org>
 References: <cover.1583847556.git.mchehab+huawei@kernel.org>
@@ -60,263 +60,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This file contains both	admin and development stuff. Split on
-two, as	they're	usually	read by	different audiences.
+Now that everything got moved, we can get rid of the
+old media directory.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- .../media/v4l-drivers/cx88-devel.rst          | 113 ++++++++++++++++++
- Documentation/media/v4l-drivers/cx88.rst      | 107 -----------------
- Documentation/media/v4l-drivers/index.rst     |   1 +
- 3 files changed, 114 insertions(+), 107 deletions(-)
- create mode 100644 Documentation/media/v4l-drivers/cx88-devel.rst
+ Documentation/driver-api/index.rst    |  1 +
+ Documentation/index.rst               |  1 -
+ Documentation/media/index.rst         | 23 -----------------------
+ Documentation/userspace-api/index.rst |  1 +
+ 4 files changed, 2 insertions(+), 24 deletions(-)
+ delete mode 100644 Documentation/media/index.rst
 
-diff --git a/Documentation/media/v4l-drivers/cx88-devel.rst b/Documentation/media/v4l-drivers/cx88-devel.rst
-new file mode 100644
-index 000000000000..cfe7c03f4930
---- /dev/null
-+++ b/Documentation/media/v4l-drivers/cx88-devel.rst
-@@ -0,0 +1,113 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+The cx88 driver
-+===============
-+
-+Author:  Gerd Hoffmann
-+
-+Documentation missing at the cx88 datasheet
-+-------------------------------------------
-+
-+MO_OUTPUT_FORMAT (0x310164)
-+
-+.. code-block:: none
-+
-+  Previous default from DScaler: 0x1c1f0008
-+  Digit 8: 31-28
-+  28: PREVREMOD = 1
-+
-+  Digit 7: 27-24 (0xc = 12 = b1100 )
-+  27: COMBALT = 1
-+  26: PAL_INV_PHASE
-+    (DScaler apparently set this to 1, resulted in sucky picture)
-+
-+  Digits 6,5: 23-16
-+  25-16: COMB_RANGE = 0x1f [default] (9 bits -> max 512)
-+
-+  Digit 4: 15-12
-+  15: DISIFX = 0
-+  14: INVCBF = 0
-+  13: DISADAPT = 0
-+  12: NARROWADAPT = 0
-+
-+  Digit 3: 11-8
-+  11: FORCE2H
-+  10: FORCEREMD
-+  9: NCHROMAEN
-+  8: NREMODEN
-+
-+  Digit 2: 7-4
-+  7-6: YCORE
-+  5-4: CCORE
-+
-+  Digit 1: 3-0
-+  3: RANGE = 1
-+  2: HACTEXT
-+  1: HSFMT
-+
-+0x47 is the sync byte for MPEG-2 transport stream packets.
-+Datasheet incorrectly states to use 47 decimal. 188 is the length.
-+All DVB compliant frontends output packets with this start code.
-+
-+Hauppauge WinTV cx88 IR information
-+-----------------------------------
-+
-+The controls for the mux are GPIO [0,1] for source, and GPIO 2 for muting.
-+
-+====== ======== =================================================
-+GPIO0  GPIO1
-+====== ======== =================================================
-+  0        0    TV Audio
-+  1        0    FM radio
-+  0        1    Line-In
-+  1        1    Mono tuner bypass or CD passthru (tuner specific)
-+====== ======== =================================================
-+
-+GPIO 16(I believe) is tied to the IR port (if present).
-+
-+
-+From the data sheet:
-+
-+- Register 24'h20004  PCI Interrupt Status
-+
-+ - bit [18]  IR_SMP_INT Set when 32 input samples have been collected over
-+ - gpio[16] pin into GP_SAMPLE register.
-+
-+What's missing from the data sheet:
-+
-+- Setup 4KHz sampling rate (roughly 2x oversampled; good enough for our RC5
-+  compat remote)
-+- set register 0x35C050 to  0xa80a80
-+- enable sampling
-+- set register 0x35C054 to 0x5
-+- enable the IRQ bit 18 in the interrupt mask register (and
-+  provide for a handler)
-+
-+GP_SAMPLE register is at 0x35C058
-+
-+Bits are then right shifted into the GP_SAMPLE register at the specified
-+rate; you get an interrupt when a full DWORD is received.
-+You need to recover the actual RC5 bits out of the (oversampled) IR sensor
-+bits. (Hint: look for the 0/1and 1/0 crossings of the RC5 bi-phase data)  An
-+actual raw RC5 code will span 2-3 DWORDS, depending on the actual alignment.
-+
-+I'm pretty sure when no IR signal is present the receiver is always in a
-+marking state(1); but stray light, etc can cause intermittent noise values
-+as well.  Remember, this is a free running sample of the IR receiver state
-+over time, so don't assume any sample starts at any particular place.
-+
-+Additional info
-+~~~~~~~~~~~~~~~
-+
-+This data sheet (google search) seems to have a lovely description of the
-+RC5 basics:
-+http://www.atmel.com/dyn/resources/prod_documents/doc2817.pdf
-+
-+This document has more data:
-+http://www.nenya.be/beor/electronics/rc5.htm
-+
-+This document has a  how to decode a bi-phase data stream:
-+http://www.ee.washington.edu/circuit_archive/text/ir_decode.txt
-+
-+This document has still more info:
-+http://www.xs4all.nl/~sbp/knowledge/ir/rc5.htm
-diff --git a/Documentation/media/v4l-drivers/cx88.rst b/Documentation/media/v4l-drivers/cx88.rst
-index 698c73ea2e36..e4badb18199d 100644
---- a/Documentation/media/v4l-drivers/cx88.rst
-+++ b/Documentation/media/v4l-drivers/cx88.rst
-@@ -56,110 +56,3 @@ the driver.  What to do then?
-        trial-and-error using the tuner=<n> insmod option.  If you
-        know which one the card has you can also have a look at the
-        list in CARDLIST.tuner
+diff --git a/Documentation/driver-api/index.rst b/Documentation/driver-api/index.rst
+index 0ebe205efd0c..92c2570277ac 100644
+--- a/Documentation/driver-api/index.rst
++++ b/Documentation/driver-api/index.rst
+@@ -62,6 +62,7 @@ available subsections can be seen below.
+    pinctl
+    gpio/index
+    md/index
++   media/index
+    misc_devices
+    nfc/index
+    dmaengine/index
+diff --git a/Documentation/index.rst b/Documentation/index.rst
+index e99d0bd2589d..7139190f1c01 100644
+--- a/Documentation/index.rst
++++ b/Documentation/index.rst
+@@ -108,7 +108,6 @@ needed).
+    isdn/index
+    infiniband/index
+    leds/index
+-   media/index
+    netlabel/index
+    networking/index
+    pcmcia/index
+diff --git a/Documentation/media/index.rst b/Documentation/media/index.rst
+deleted file mode 100644
+index e93fd88881af..000000000000
+--- a/Documentation/media/index.rst
++++ /dev/null
+@@ -1,23 +0,0 @@
+-.. SPDX-License-Identifier: GPL-2.0
 -
--Documentation missing at the cx88 datasheet
---------------------------------------------
+-Linux Media Subsystem Documentation
+-===================================
 -
--MO_OUTPUT_FORMAT (0x310164)
+-.. only:: html
 -
--.. code-block:: none
+-   .. class:: toc-title
 -
--  Previous default from DScaler: 0x1c1f0008
--  Digit 8: 31-28
--  28: PREVREMOD = 1
+-        Table of Contents
 -
--  Digit 7: 27-24 (0xc = 12 = b1100 )
--  27: COMBALT = 1
--  26: PAL_INV_PHASE
--    (DScaler apparently set this to 1, resulted in sucky picture)
+-.. toctree::
+-   :maxdepth: 2
 -
--  Digits 6,5: 23-16
--  25-16: COMB_RANGE = 0x1f [default] (9 bits -> max 512)
+-   ../userspace-api/media/index
+-   ../driver-api/media/index
 -
--  Digit 4: 15-12
--  15: DISIFX = 0
--  14: INVCBF = 0
--  13: DISADAPT = 0
--  12: NARROWADAPT = 0
+-.. only:: html and subproject
 -
--  Digit 3: 11-8
--  11: FORCE2H
--  10: FORCEREMD
--  9: NCHROMAEN
--  8: NREMODEN
+-   Indices
+-   =======
 -
--  Digit 2: 7-4
--  7-6: YCORE
--  5-4: CCORE
--
--  Digit 1: 3-0
--  3: RANGE = 1
--  2: HACTEXT
--  1: HSFMT
--
--0x47 is the sync byte for MPEG-2 transport stream packets.
--Datasheet incorrectly states to use 47 decimal. 188 is the length.
--All DVB compliant frontends output packets with this start code.
--
--Hauppauge WinTV cx88 IR information
-------------------------------------
--
--The controls for the mux are GPIO [0,1] for source, and GPIO 2 for muting.
--
--====== ======== =================================================
--GPIO0  GPIO1
--====== ======== =================================================
--  0        0    TV Audio
--  1        0    FM radio
--  0        1    Line-In
--  1        1    Mono tuner bypass or CD passthru (tuner specific)
--====== ======== =================================================
--
--GPIO 16(I believe) is tied to the IR port (if present).
--
--
--From the data sheet:
--
--- Register 24'h20004  PCI Interrupt Status
--
-- - bit [18]  IR_SMP_INT Set when 32 input samples have been collected over
-- - gpio[16] pin into GP_SAMPLE register.
--
--What's missing from the data sheet:
--
--- Setup 4KHz sampling rate (roughly 2x oversampled; good enough for our RC5
--  compat remote)
--- set register 0x35C050 to  0xa80a80
--- enable sampling
--- set register 0x35C054 to 0x5
--- enable the IRQ bit 18 in the interrupt mask register (and
--  provide for a handler)
--
--GP_SAMPLE register is at 0x35C058
--
--Bits are then right shifted into the GP_SAMPLE register at the specified
--rate; you get an interrupt when a full DWORD is received.
--You need to recover the actual RC5 bits out of the (oversampled) IR sensor
--bits. (Hint: look for the 0/1and 1/0 crossings of the RC5 bi-phase data)  An
--actual raw RC5 code will span 2-3 DWORDS, depending on the actual alignment.
--
--I'm pretty sure when no IR signal is present the receiver is always in a
--marking state(1); but stray light, etc can cause intermittent noise values
--as well.  Remember, this is a free running sample of the IR receiver state
--over time, so don't assume any sample starts at any particular place.
--
--Additional info
--~~~~~~~~~~~~~~~
--
--This data sheet (google search) seems to have a lovely description of the
--RC5 basics:
--http://www.atmel.com/dyn/resources/prod_documents/doc2817.pdf
--
--This document has more data:
--http://www.nenya.be/beor/electronics/rc5.htm
--
--This document has a  how to decode a bi-phase data stream:
--http://www.ee.washington.edu/circuit_archive/text/ir_decode.txt
--
--This document has still more info:
--http://www.xs4all.nl/~sbp/knowledge/ir/rc5.htm
-diff --git a/Documentation/media/v4l-drivers/index.rst b/Documentation/media/v4l-drivers/index.rst
-index 52d7c8d14ee7..dfc878c050da 100644
---- a/Documentation/media/v4l-drivers/index.rst
-+++ b/Documentation/media/v4l-drivers/index.rst
-@@ -68,6 +68,7 @@ For more details see the file COPYING in the source distribution of Linux.
+-   * :ref:`genindex`
+diff --git a/Documentation/userspace-api/index.rst b/Documentation/userspace-api/index.rst
+index e983488b48b1..69fc5167e648 100644
+--- a/Documentation/userspace-api/index.rst
++++ b/Documentation/userspace-api/index.rst
+@@ -22,6 +22,7 @@ place where this information is gathered.
+    spec_ctrl
+    accelerators/ocxl
+    ioctl/index
++   media/index
  
- 	bttv-devel
- 	cpia2_devel
-+	cx88-devel
- 	vimc-devel
+ .. only::  subproject and html
  
- 	meye-uapi
 -- 
 2.24.1
 
