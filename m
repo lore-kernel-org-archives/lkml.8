@@ -2,163 +2,124 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFDBFC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 07:41:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D7C9C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 07:43:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C50D24677
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 07:41:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28A9724677
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 07:43:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="h+Y7E99s"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="BhLncz8X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726390AbgCJHla (ORCPT
+        id S1726411AbgCJHni (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 03:41:30 -0400
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:32244 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726205AbgCJHla (ORCPT
+        Tue, 10 Mar 2020 03:43:38 -0400
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.50]:17834 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726202AbgCJHnh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 03:41:30 -0400
-Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
-  Tudor.Ambarus@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Tudor.Ambarus@microchip.com";
-  x-sender="Tudor.Ambarus@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
-  include:servers.mcsv.net include:mktomail.com
-  include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa3.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Tudor.Ambarus@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa3.microchip.iphmx.com; spf=Pass smtp.mailfrom=Tudor.Ambarus@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: iJdTnug9arpDX1SJTikIZyVhXjV07sIbkUMwnSzNSLgFI40HYO+kqs2zjL7pnvQVZfEtq+oDVq
- Af6qwpvcofdz1ZRuyoYWgPc6F/79jbtHdMgl0FPAwDQ7iQci2dFCQ6ZNnEEi4+fGvObpU+/UdM
- 3orQ99frzHMqCNLX/qm7Gjh/VsuRK6eY4lw7Esw6OZHufr5uMDNbJwnAYgnaVSC/YKYEOex/O1
- owuYUl+PcytMVwIwH5jM+LEw5e6f7fcVo+6KR5ZodUClRwUMMhYHwXhf1CKKM5b4rCr2E82+Ue
- ea8=
-X-IronPort-AV: E=Sophos;i="5.70,535,1574146800"; 
-   d="scan'208";a="69454650"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 10 Mar 2020 00:41:28 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 10 Mar 2020 00:41:24 -0700
-Received: from NAM04-CO1-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5 via Frontend
- Transport; Tue, 10 Mar 2020 00:41:24 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UxjJ4OXVc6+4bHYjIaIhl4P8UgI0hw5U+ZLXWhfwTpaOVEaiQYxFhdBq5gyA2v32RWY49h2/e6/OxLMt2UxzMIF9NgtXnUC/TpJNgdpol22XBZW31qCdBvr9Gf0DCkQrKLmYsQtW1My5adhh4EhCYssRFMy8WRVIp+Jj2Dh7mjuaZMiqFA7kzGJ9FI/BKWDX9HUJ1d3sNlKW7sCocLZN9ctw733yEk5vYtPEy3FqJLoe8+kNHN6/yGbFHuAakzcdX5+3FozKqAVYZCXl72SRyGET3RI/j/ibiqc8sQBRWQAHTAIjmrGY6q7GiQBgnWe4cryzr93LZiL5Yqy3FJPK6w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jE0CawRCXUSo0LXtr9OwRhxSC/uSBNYRJ5RCKOpapV4=;
- b=IJ2tltq0KhO5qlNtUijDqwbbZFWKxQ9Hk1qhsOmyMo/1XP9Qgi3EQz4c+jYm4+BeuNiG6BqwAFIZNa4OWAsuOEURrIBFIb2iT6nHifs0Kd6zplIFp14JvztXJxdHd6C1oSvEUs1xQB+lC7tcvydijrGiTJSggAk0HnZOQACVzhKB0d9/Ve+MZ3nH+P36vwI/ILoff74bF7yjeC047EVWUfKH4Mmii13xqr2z9gyWXNenCajbiFk77B8YcxjRYk7LctE1XrV3Vlo/gdqjWJ9ld+KJI3duYXBAvo4sZYP3qDJFQbnrkF1F2wt2wQnS+q8fKeIY1f1SHvZet4q8fE9Obg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jE0CawRCXUSo0LXtr9OwRhxSC/uSBNYRJ5RCKOpapV4=;
- b=h+Y7E99sNPo9nrob7MvUeL72ElHFeY5osRqZ7yp5N0NBYJtBBu83GvOmyJpMTLve3gfBPwP5hHD2zAubrp6JI152Nk9fnxyASqrSu1hVduOT9iR3FnQZRL2SaxGpev6aenwTCk4qMK58+T1yp0Ojqr+RgP7Gg72J384MKJX8KbI=
-Received: from MN2PR11MB4448.namprd11.prod.outlook.com (2603:10b6:208:193::29)
- by MN2PR11MB4600.namprd11.prod.outlook.com (2603:10b6:208:26e::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.17; Tue, 10 Mar
- 2020 07:41:26 +0000
-Received: from MN2PR11MB4448.namprd11.prod.outlook.com
- ([fe80::3c8f:7a55:cbd:adfb]) by MN2PR11MB4448.namprd11.prod.outlook.com
- ([fe80::3c8f:7a55:cbd:adfb%5]) with mapi id 15.20.2793.013; Tue, 10 Mar 2020
- 07:41:26 +0000
-From:   <Tudor.Ambarus@microchip.com>
-To:     <broonie@kernel.org>
-CC:     <gch981213@gmail.com>, <linux-mediatek@lists.infradead.org>,
-        <linux-spi@vger.kernel.org>, <linux-mtd@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <miquel.raynal@bootlin.com>,
-        <richard@nod.at>, <vigneshr@ti.com>, <robh+dt@kernel.org>,
-        <matthias.bgg@gmail.com>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 4/4] mtd: spi-nor: remove mtk-quadspi driver
-Thread-Topic: [PATCH v3 4/4] mtd: spi-nor: remove mtk-quadspi driver
-Thread-Index: AQHV9q9NZuWbRCDn2EGRyTtBWaWZXw==
-Date:   Tue, 10 Mar 2020 07:41:26 +0000
-Message-ID: <2471214.x7VzW1FXlQ@localhost.localdomain>
-References: <20200306085052.28258-1-gch981213@gmail.com>
- <20200306085052.28258-5-gch981213@gmail.com>
- <20200309121020.GD4101@sirena.org.uk>
-In-Reply-To: <20200309121020.GD4101@sirena.org.uk>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [94.177.32.156]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 72185611-e006-4c82-26d6-08d7c4c67056
-x-ms-traffictypediagnostic: MN2PR11MB4600:
-x-microsoft-antispam-prvs: <MN2PR11MB46004C074BECF2B36D91842CF0FF0@MN2PR11MB4600.namprd11.prod.outlook.com>
-x-bypassexternaltag: True
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 033857D0BD
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(136003)(376002)(346002)(396003)(39860400002)(189003)(199004)(6916009)(5660300002)(9686003)(26005)(91956017)(86362001)(186003)(6486002)(7416002)(76116006)(66556008)(64756008)(66946007)(6512007)(66446008)(4326008)(66476007)(4744005)(966005)(54906003)(2906002)(478600001)(316002)(81156014)(8676002)(6506007)(53546011)(81166006)(8936002)(71200400001)(39026012);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB4600;H:MN2PR11MB4448.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: aa6ia4kd0da6uwxZWkBMIoYXLbU5H439Kv57STuKKh4wgKhfdg13nswxOEq2J0ovCOViYHfGukb4j9iwD3n/4VNacTpa/0YcyirkCU8+Dom47foJFHzfIeBbAh/27Z+laM98J/debjVwg3jixmwQIBI5j7fFQERGA+jVS6uIz5bVtPS3LFF3hY4xqyEh2w2wbXbZSlNVRn7Igw8XR4HL/zRHX8wRBn47rrm9K8NWDagIQajtvat2M9GmKp6e/cBUWIDIxEPYHwzfSlvozNxGFvmCydBVUdQQ7CqI0lj902wFfm5EIdVECOej0+9CF68zu8qWFTM0C5OG6kimom0QHS8dSyeH5XQqx1eksYcQcCUIFpM5s/YgQt9mWHOg+kch3oEwqQnunN/bKYqpfGJw3ZJIN54Pxq5GqC/z1WzrDQOJrGpDfQ4juxd9DEBBiiLoRDmUPeuWnnjGYQQo+0I7HaEG1hDJq5+b4o2vGDQiyLx0w4dJ/xV3ZGxFgb9Bj00V
-x-ms-exchange-antispam-messagedata: jQT4xqvvYYmPFVoKATacNduTqlP4otenqyCb0WNHAh2kFotkbqTCEIChE2xIVGV5Pqs001P68CQRYL5dvlggcPB4JjH2AqSRAiWrwtNuXfkB7layFN6jKnXalJWH6Czxx2lu71F3ZUVrb8xmfquJsw==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <6A321634F4832945827FEDE57CD2E761@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Tue, 10 Mar 2020 03:43:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1583826213;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=Message-Id:Date:Subject:Cc:To:From:X-RZG-CLASS-ID:X-RZG-AUTH:From:
+        Subject:Sender;
+        bh=Dn5GFcmLByBrDK1f5aOSRQMAAq+2DgMtrNwOlwS3U+8=;
+        b=BhLncz8XHsOe7d4GMDYTVyOkQNuflkhiQuA2+zMdp9fUZrpd7iDJPvjSQhccNv66hv
+        2hOJU/6vJby1Bv8pi/0RkYSWRDBqfHkPckIylDAGq92kg50gJYXmO2+qRlmo0tjGZ5/E
+        Jkc9MuAa+1JcFDoYo/09H4QnogcmaMWQR85jcREViRqWZpcnW8U7wuec3+c2YXFfK5TH
+        jSWQqaklSCHGL4xUlyOm752PT/KhVEV9ldqOBZHMcE4iaduEuy9oRf0ZQVQpsYsuUtf5
+        6hphIE8gT8UOrKbKPj5U3l/RlBwzdlGGtfVclPfOBLXWgILmFZUbjM17JvtrkBeOauba
+        jeLQ==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1mfYzBGHXH4GJ9t5w=="
+X-RZG-CLASS-ID: mo00
+Received: from iMac.fritz.box
+        by smtp.strato.de (RZmta 46.2.0 DYNA|AUTH)
+        with ESMTPSA id y0a02cw2A7hJmUL
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Tue, 10 Mar 2020 08:43:19 +0100 (CET)
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+To:     Ville Syrjala <ville.syrjala@linux.intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+Cc:     Sam Ravnborg <sam@ravnborg.org>, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org,
+        "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: [PATCH] drm/panel-simple: Fix dotclock for Ortustech COM37H3M
+Date:   Tue, 10 Mar 2020 08:43:19 +0100
+Message-Id: <e63a0533ad5b5142373437ef758aedbdb716152d.1583826198.git.hns@goldelico.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 72185611-e006-4c82-26d6-08d7c4c67056
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Mar 2020 07:41:26.1818
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: wiMLjwuB7SkVmsP7b/xLrJl9RM0hqkFUbD8ltI+60eMDUlKLbbDhu7nsCEHfAXnA8D3YStDba3WWWeskVyaz3lvsPvNgNoJoGJjBvsdzyKM=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB4600
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Mark,
+The currently listed dotclock disagrees with the currently
+listed vrefresh rate. Change the dotclock to match the vrefresh.
 
-On Monday, March 9, 2020 2:10:20 PM EET Mark Brown wrote:
-> > This driver is superseded by the new spi-mtk-nor driver.
-> >=20
-> > Signed-off-by: Chuanhong Guo <gch981213@gmail.com>
->=20
-> Is this move OK from a MTD point of view - should I apply this when the
-> rest goes in?  The patch was in prior versions too and is obviously
-> straightforward.
+There are two variants of the COM37H3M panel.
+The older one's COM37H3M05DTC data sheet specifies:
 
-If you find the rest of the patches ok, this can go through the spi tree, f=
-eel=20
-free to add my
-Acked-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+                         MIN      TYP     MAX
+CLK frequency    fCLK     --       22.4    26.3 MHz (in VGA mode)
+VSYNC Frequency  fVSYNC   54       60      66   Hz
+VSYNC cycle time tv       --      650      --   H
+HSYNC frequency  fHSYNC   --       39.3    --   kHz
+HSYNC cycle time th       --      570      --   CLK
 
-There will be a conflict with the following patch https://
-patchwork.ozlabs.org/patch/1247791/, but nothing that we can't handle.
-I'll try to allocate time for reviewing the remaining patches in this set i=
-n=20
-the following days.
+The newer one's COM37H3M99DTC data sheet says:
 
-Cheers,
-ta
+                         MIN      TYP     MAX
+CLK frequency    fCLK     18       19.8    27   MHz
+VSYNC Frequency  fVSYNC   54       60      66   Hz
+VSYNC cycle time tv      646      650     700   H
+HSYNC frequency  fHSYNC  --        39.0    50.0 kHz
+HSYNC cycle time th      504      508     630   CLK
+
+So we choose a parameter set that lies within the specs
+of both variants. We start at .vrefresh = 60,
+choose .htotal = 570 and .vtotal = 650 and end up
+in a clock of 22.230 MHz.
+
+Reported-by: Ville Syrjala <ville.syrjala@linux.intel.com>
+Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+---
+ drivers/gpu/drm/panel/panel-simple.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index e14c14ac62b5..b4cb23d4898d 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -2390,15 +2390,15 @@ static const struct panel_desc ontat_yx700wv03 = {
+ };
+ 
+ static const struct drm_display_mode ortustech_com37h3m_mode  = {
+-	.clock = 22153,
++	.clock = 22230,
+ 	.hdisplay = 480,
+-	.hsync_start = 480 + 8,
+-	.hsync_end = 480 + 8 + 10,
+-	.htotal = 480 + 8 + 10 + 10,
++	.hsync_start = 480 + 40,
++	.hsync_end = 480 + 40 + 10,
++	.htotal = 480 + 40 + 10 + 40,
+ 	.vdisplay = 640,
+ 	.vsync_start = 640 + 4,
+-	.vsync_end = 640 + 4 + 3,
+-	.vtotal = 640 + 4 + 3 + 4,
++	.vsync_end = 640 + 4 + 2,
++	.vtotal = 640 + 4 + 2 + 4,
+ 	.vrefresh = 60,
+ 	.flags = DRM_MODE_FLAG_NVSYNC | DRM_MODE_FLAG_NHSYNC,
+ };
+-- 
+2.23.0
 
