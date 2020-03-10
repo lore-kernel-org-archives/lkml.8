@@ -2,77 +2,180 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 697BFC10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:59:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FB81C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 21:00:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30148222D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:59:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583873983;
-	bh=3sPIdnBr9v7RZA4nE5B3Yg3InvtEVR8cOXudgA35fbU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RrdGKggN/lOJYAvRvEe6+u0Wq+Y4pN3RRz3RtlXr58k0OPRiOreC/VRGCJNfR2awE
-	 5ol3vYAgIc7ouaCVi55R0CjT2mmupEPTdOPbvZTxfkRgo2y5OxOOJ2FREFfYnpaeyn
-	 Ne0pyB9XqwSo8JEVF2CthuvUvT4hIGUyKJHZHgCA=
+	by mail.kernel.org (Postfix) with ESMTP id 5BBEB222C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 21:00:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727574AbgCJU7m (ORCPT
+        id S1727612AbgCJVAC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 16:59:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36262 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726100AbgCJU7l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 16:59:41 -0400
-Received: from dhcp-10-100-145-180.wdl.wdc.com (unknown [199.255.45.60])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C536E215A4;
-        Tue, 10 Mar 2020 20:59:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583873981;
-        bh=3sPIdnBr9v7RZA4nE5B3Yg3InvtEVR8cOXudgA35fbU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=cVGBhmVTRQ3ln/30HZV9lX37+j5vxGkhfsG36xbMx/Gxyr2Lcev6OTDC/8GKSCRv8
-         pv+OFFEoUKZ/wdX8Q3HKOQlFYsYpAnWiRNBEmN+/1Qwj6DAxkpW49BAl8JjfgNg9TJ
-         RzcimG9dQxmBMRdxXfatt026qmRcFIfXkfxCVvDM=
-Date:   Tue, 10 Mar 2020 13:59:38 -0700
-From:   Keith Busch <kbusch@kernel.org>
-To:     Prabhath Sajeepa <psajeepa@purestorage.com>
-Cc:     axboe@fb.com, hch@lst.de, sagi@grimberg.me,
-        linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
-        roland@purestorage.com
-Subject: Re: [PATCH] nvme-rdma: Avoid double freeing of async event data
-Message-ID: <20200310205938.GE604509@dhcp-10-100-145-180.wdl.wdc.com>
-References: <1583788073-39681-1-git-send-email-psajeepa@purestorage.com>
+        Tue, 10 Mar 2020 17:00:02 -0400
+Received: from out02.mta.xmission.com ([166.70.13.232]:49438 "EHLO
+        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726100AbgCJVAB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 17:00:01 -0400
+Received: from in01.mta.xmission.com ([166.70.13.51])
+        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jBlym-00067f-DA; Tue, 10 Mar 2020 14:59:56 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jBlyk-0006E3-MQ; Tue, 10 Mar 2020 14:59:55 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Jann Horn <jannh@google.com>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        Kees Cook <keescook@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Andrei Vagin <avagin@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Peter Zijlstra \(Intel\)" <peterz@infradead.org>,
+        Yuyang Du <duyuyang@gmail.com>,
+        David Hildenbrand <david@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        David Howells <dhowells@redhat.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christian Kellner <christian@kellner.me>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        "linux-doc\@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel\@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-mm\@kvack.org" <linux-mm@kvack.org>,
+        "stable\@vger.kernel.org" <stable@vger.kernel.org>,
+        "linux-api\@vger.kernel.org" <linux-api@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Sargun Dhillon <sargun@sargun.me>
+References: <87r1y8dqqz.fsf@x220.int.ebiederm.org>
+        <AM6PR03MB517053AED7DC89F7C0704B7DE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <AM6PR03MB51703B44170EAB4626C9B2CAE4E20@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <87tv32cxmf.fsf_-_@x220.int.ebiederm.org>
+        <87v9ne5y4y.fsf_-_@x220.int.ebiederm.org>
+        <87eeu25y14.fsf_-_@x220.int.ebiederm.org>
+        <20200309195909.h2lv5uawce5wgryx@wittgenstein>
+        <877dztz415.fsf@x220.int.ebiederm.org>
+        <20200309201729.yk5sd26v4bz4gtou@wittgenstein>
+        <87k13txnig.fsf@x220.int.ebiederm.org>
+        <20200310085540.pztaty2mj62xt2nm@wittgenstein>
+        <87wo7svy96.fsf_-_@x220.int.ebiederm.org>
+        <CAG48ez2cUZMVOAXfHPNjKjYsMSaWkjUjOCHo0KYZ+oXQUW4viA@mail.gmail.com>
+        <87k13sui1p.fsf@x220.int.ebiederm.org>
+        <CAG48ez2vRgaEVJ=Rs8gn6HkGO6syL8MpSOUq7BNN+OUE1uYxCA@mail.gmail.com>
+        <CAG48ez1LjW1xAGe-5tNtstCWxG2bkiHaQUMOcJNjx=z-2Wc2Jw@mail.gmail.com>
+Date:   Tue, 10 Mar 2020 15:57:35 -0500
+In-Reply-To: <CAG48ez1LjW1xAGe-5tNtstCWxG2bkiHaQUMOcJNjx=z-2Wc2Jw@mail.gmail.com>
+        (Jann Horn's message of "Tue, 10 Mar 2020 21:10:59 +0100")
+Message-ID: <87lfo8rkqo.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1583788073-39681-1-git-send-email-psajeepa@purestorage.com>
+Content-Type: text/plain
+X-XM-SPF: eid=1jBlyk-0006E3-MQ;;;mid=<87lfo8rkqo.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1+legm72Gnu4YbUlNo0F2EELZNKSd0AFy8=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH] pidfd: Stop taking cred_guard_mutex
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 09, 2020 at 03:07:53PM -0600, Prabhath Sajeepa wrote:
-> The timeout of identify cmd, which is invoked as part of admin queue
-> creation, can result in freeing of async event data both in
-> nvme_rdma_timeout handler and error handling path of
-> nvme_rdma_configure_admin queue thus causing NULL pointer reference.
-> Call Trace:
->  ? nvme_rdma_setup_ctrl+0x223/0x800 [nvme_rdma]
->  nvme_rdma_create_ctrl+0x2ba/0x3f7 [nvme_rdma]
->  nvmf_dev_write+0xa54/0xcc6 [nvme_fabrics]
->  __vfs_write+0x1b/0x40
->  vfs_write+0xb2/0x1b0
->  ksys_write+0x61/0xd0
->  __x64_sys_write+0x1a/0x20
->  do_syscall_64+0x60/0x1e0
->  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> 
-> Signed-off-by: Prabhath Sajeepa <psajeepa@purestorage.com>
-> Reviewed-by: Roland Dreier <roland@purestorage.com>
+Jann Horn <jannh@google.com> writes:
 
-Thanks, applied to new branch for 5.6-rc6.
+> On Tue, Mar 10, 2020 at 9:00 PM Jann Horn <jannh@google.com> wrote:
+>> On Tue, Mar 10, 2020 at 8:29 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
+>> > Jann Horn <jannh@google.com> writes:
+>> > > On Tue, Mar 10, 2020 at 7:54 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
+>> > >> During exec some file descriptors are closed and the files struct is
+>> > >> unshared.  But all of that can happen at other times and it has the
+>> > >> same protections during exec as at ordinary times.  So stop taking the
+>> > >> cred_guard_mutex as it is useless.
+>> > >>
+>> > >> Furthermore he cred_guard_mutex is a bad idea because it is deadlock
+>> > >> prone, as it is held in serveral while waiting possibly indefinitely
+>> > >> for userspace to do something.
+> [...]
+>> > > If you make this change, then if this races with execution of a setuid
+>> > > program that afterwards e.g. opens a unix domain socket, an attacker
+>> > > will be able to steal that socket and inject messages into
+>> > > communication with things like DBus. procfs currently has the same
+>> > > race, and that still needs to be fixed, but at least procfs doesn't
+>> > > let you open things like sockets because they don't have a working
+>> > > ->open handler, and it enforces the normal permission check for
+>> > > opening files.
+>> >
+>> > It isn't only exec that can change credentials.  Do we need a lock for
+>> > changing credentials?
+> [...]
+>> > If we need a lock around credential change let's design and build that.
+>> > Having a mismatch between what a lock is designed to do, and what
+>> > people use it for can only result in other bugs as people get confused.
+>>
+>> Hmm... what benefits do we get from making it a separate lock? I guess
+>> it would allow us to make it a per-task lock instead of a
+>> signal_struct-wide one? That might be helpful...
+>
+> But actually, isn't the core purpose of the cred_guard_mutex to guard
+> against concurrent credential changes anyway? That's what almost
+> everyone uses it for, and it's in the name...
+
+Having been through all of the users nope.
+
+Maybe someone tried to repurpose for that.  I haven't traced through
+when it went the it was renamed from cred_exec_mutex to
+cred_guard_mutex.
+
+The original purpose was to make make exec and ptrace deadlock.  But it
+was seen as being there to allow safely calculating the new credentials
+before the point of now return.  Because if a process is ptraced or not
+affects the new credential calculations.  Unfortunately offering that
+guarantee fundamentally leads to deadlock.
+
+So ptrace_attach and seccomp use the cred_guard_mutex to guarantee
+a deadlock.
+
+The common use is to take cred_guard_mutex to guard the window when
+credentials and process details are out of sync in exec.  But there
+is at least do_io_accounting that seems to have the same justification
+for holding __pidfd_fget.
+
+With effort I suspect we can replace exec_change_mutex with task_lock.
+When we are guaranteed to be single threaded placing exec_change_mutex
+in signal_struct doesn't really help us (except maybe in some races?).
+
+The deep problem is no one really understands cred_guard_mutex so it is
+a mess.  Code with poorly defined semantics is always wrong somewhere
+for someone.  Which is part of why I am attacking this and having the
+conversations to make certain I understand what is going on.
+
+I see your point about commit_creds making a process undumpable.  So in
+practice it really is only exec that changes creds in a way that
+ptrace_may_access will allow the process to be inspected.
+
+So I guess for now the practical non-regressing course is to change
+everything to my exec_change_mutex, removing the deadlock.  Then we
+figure out how to cleanly deal with the races inspecting a process with
+changing credentials has.
+
+Eric
