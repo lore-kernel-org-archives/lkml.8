@@ -2,142 +2,163 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D18CBC18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 15:30:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 671C9C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 15:31:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A108520578
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 15:30:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=windriversystems.onmicrosoft.com header.i=@windriversystems.onmicrosoft.com header.b="aXMcvl5M"
+	by mail.kernel.org (Postfix) with ESMTP id 3EFEC20578
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 15:31:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583854300;
+	bh=Uo1TDOeLFo1Wguk9igTKm1HigZCW2NY+t8xJKcLUdw0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=elnxOfIY3+CG+xTpaSD9WJWcN+Nk+2R3lhZNnfdPSxqY7q3NIpbE2Ipt1dBA7B//4
+	 BXiT+OcKuf7ANfPQhIXFxxebHvgmVczDUTiUYkUvqfDxYbsYkGZYpioYDVK2obzTU2
+	 ITXkquiiJydWFrYGjTyW5vGqhC79dF6fusIw5m3k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727387AbgCJPaj (ORCPT
+        id S1727681AbgCJPbj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 11:30:39 -0400
-Received: from mail-dm6nam12on2088.outbound.protection.outlook.com ([40.107.243.88]:18221
-        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726269AbgCJPaj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 11:30:39 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=j92WTDvh85LL9DjTAR8v1qBUT6rHQIJYP2ejN356QiHPU/f6oFBMiEwKklJP89U3G48acfh7qFhtMxCv5VSiFmJO3yjCqCJqg52hpZFwIlWqRLkXlHhJWC9RKqdcCLXhqh5BJGbbqj0MCUzD6MDdo8NlaPGiM+TWEG4MKQBQi0s0E/s4mJuYsxis5MMksyHd/FNpwfni0N9e+egnIeJcoURXelcmSJk6vOXE5Z3M3sMKrIsodTTWmVzA7gjeYY0zJ00j0sEVORjGMiMJDH6vPtzYsR/ex/JK9nub62VQjRN9E1w0mmQY5Yu7TspwfS8PgrEHaSxNu13Bn5F5n6fmHg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0fkQcfTs9wPsVJrL8XcAVA/W2xyJK4+3au428pQxJD0=;
- b=d2x0n4pHEvWvtChACl+SFHLA5qacJWCfZfNhGdOiLcNI9irxSvsvc8eE01J1aMapRTdCcpIo7f5wCetHqmoP+ovmcVElLE4f4eqTA0P1bU74Fixr0vJb+OkUcOBxl1EilYpA4eKAhpOOrvuu4OxAzzBY5MhxIxgx1ySzwcvoG+rVJGVSwO0C0AvnRG43q+dP+jag9J1Vd28pV289yz/g1cwfxVAALKsEoxP/npWndzOdQQ/jPm6EkTWc68RbmV/yxGg4islO+A8IGpvubuSDyco9jdeovrN2UNohGsFmkmiHY6wBG/wmHNrtEpmrFD0BU+j5rEIcoEPVH0mwb65yTA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=windriver.com; dmarc=pass action=none
- header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=windriversystems.onmicrosoft.com;
- s=selector2-windriversystems-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0fkQcfTs9wPsVJrL8XcAVA/W2xyJK4+3au428pQxJD0=;
- b=aXMcvl5MsOPsibU3jrxJZmnjzVPwcfh1ZWAr4UGi90cN52gsKxiefIXlyvai1zxb04g5LFArpMuFqMMNAfqqCJGMkRI70vJhK2a5oMKiMhAzxhkBRq4sPJBz4hfvnatIe2c/0RJzNNt8S2oUce+td9HSfXH9w+boLw60BLM/874=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Zhe.He@windriver.com; 
-Received: from SN6PR11MB3360.namprd11.prod.outlook.com (2603:10b6:805:c8::30)
- by SN6PR11MB3200.namprd11.prod.outlook.com (2603:10b6:805:ba::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.17; Tue, 10 Mar
- 2020 15:30:37 +0000
-Received: from SN6PR11MB3360.namprd11.prod.outlook.com
- ([fe80::d852:181d:278b:ba9d]) by SN6PR11MB3360.namprd11.prod.outlook.com
- ([fe80::d852:181d:278b:ba9d%5]) with mapi id 15.20.2793.013; Tue, 10 Mar 2020
- 15:30:36 +0000
-Subject: Re: disk revalidation updates and OOM
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     jack@suse.cz, Jens Axboe <axboe@kernel.dk>,
-        viro@zeniv.linux.org.uk, bvanassche@acm.org, keith.busch@intel.com,
-        tglx@linutronix.de, mwilck@suse.com, yuyufen@huawei.com,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <93b395e6-5c3f-0157-9572-af0f9094dbd7@windriver.com>
- <20200310074018.GB26381@lst.de>
-From:   He Zhe <zhe.he@windriver.com>
-Message-ID: <75865e17-48f8-a63a-3a29-f995115ffcfc@windriver.com>
-Date:   Tue, 10 Mar 2020 23:30:27 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-In-Reply-To: <20200310074018.GB26381@lst.de>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-ClientProxiedBy: HK2PR02CA0156.apcprd02.prod.outlook.com
- (2603:1096:201:1f::16) To SN6PR11MB3360.namprd11.prod.outlook.com
- (2603:10b6:805:c8::30)
+        Tue, 10 Mar 2020 11:31:39 -0400
+Received: from conssluserg-02.nifty.com ([210.131.2.81]:46015 "EHLO
+        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726420AbgCJPbj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 11:31:39 -0400
+Received: from mail-vk1-f181.google.com (mail-vk1-f181.google.com [209.85.221.181]) (authenticated)
+        by conssluserg-02.nifty.com with ESMTP id 02AFVYF4029019;
+        Wed, 11 Mar 2020 00:31:34 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 02AFVYF4029019
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1583854295;
+        bh=cU9zGQWEYLmKu3ABbJP9fWNhvET72vVMMuEoK2xZbeA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=uBFbZowblEtMMMtmmPl1g2DHYesZd0O3dcspp/C1j7pYuuZiW7+A/50a8OxAD9sGX
+         3LR/6esVVadbdu8bba9C/iyNdz3dcV1XCPR8GGy8utGuvugcaQ3MEfylMfUIJDhMlc
+         NG5vO76Han+PqEgbLSWPcOmKIEPTutMTSJ6dyhq7dpIkAXIgNcot9dq/L918KUFXBu
+         q9NuQO9PRXoSuGMXGCJbNN9TfnWlWmC97te5FfbTjQxdYauJy0Gw7S/20R3mgtEzV3
+         16OaLPqNErNEHNFQgVtuKtUqoV+aSA0TJIcw56ttliWlmuWvG/pJxx/tbqL5XKtYis
+         myG5OlrsN218A==
+X-Nifty-SrcIP: [209.85.221.181]
+Received: by mail-vk1-f181.google.com with SMTP id i78so3679380vke.0;
+        Tue, 10 Mar 2020 08:31:34 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ3vCFmusR8luwcYaMMcsI3mZ2mG7fV4UiJqXUPY8wbCJC5dlOnf
+        zMTXqPz5XlTk+nd2QFV2Ims2XOVspzBgT7y5L3k=
+X-Google-Smtp-Source: ADFU+vshzsYrewZL9/qV8QBmAcUvMQcoFa4yNoeetgkikl+9ovLz5Pmn2O39v6n04YVWO2hgbFnjooVJIw0mOh6UFtA=
+X-Received: by 2002:a1f:900c:: with SMTP id s12mr2563486vkd.96.1583854293448;
+ Tue, 10 Mar 2020 08:31:33 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [128.224.162.175] (60.247.85.82) by HK2PR02CA0156.apcprd02.prod.outlook.com (2603:1096:201:1f::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.16 via Frontend Transport; Tue, 10 Mar 2020 15:30:33 +0000
-X-Originating-IP: [60.247.85.82]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 842dd433-f9c8-43cb-3eeb-08d7c507fb31
-X-MS-TrafficTypeDiagnostic: SN6PR11MB3200:
-X-Microsoft-Antispam-PRVS: <SN6PR11MB3200197A777544B228C1AD128FFF0@SN6PR11MB3200.namprd11.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:605;
-X-Forefront-PRVS: 033857D0BD
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(39840400004)(346002)(366004)(136003)(376002)(396003)(189003)(199004)(7416002)(5660300002)(478600001)(86362001)(2616005)(66556008)(16576012)(316002)(66946007)(31696002)(6666004)(956004)(66476007)(53546011)(966005)(52116002)(31686004)(6916009)(186003)(16526019)(4326008)(6486002)(2906002)(36756003)(81166006)(6706004)(81156014)(8676002)(8936002)(26005)(78286006);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR11MB3200;H:SN6PR11MB3360.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-Received-SPF: None (protection.outlook.com: windriver.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: M6YDGfgPPRC3180Dz7vzM5fs4tVEE783SlORKAtMeyith8DmIqaQ1LKmK4tiHc9IWDk8pWyfyxikt+0zmTXkfFAfLzT2gO6vDUhSqOAKy/kXhFJZDA53X+BWB26M/q7/es45HSHEsldN5pHE5ER+C9Vxz5CczSsicR29ShOCM0dCh2XZ1VkbvWgwmAk7dQlOF4X33gDrP1A6XzS2AI9V6VpKpC3RlKMqgGhixnAEHVrKQMkpsJlx6K/LT2dACH4H4vEu4EU/9a6whM9F9Vz5wvH7yKJhfFm/sEevxbcBtp/RpnUb6nfVIKP9uvxEdYCAkv1BT4nWayTbwXMQvtVNWnYaOCa7eHEaWlBHz35zwLscO91T2UcOvm9psd09E6SxcNTqSXGFWTdqXCGJ3Abz9QR8XP7Tilp05ItiRTT9Ve9sac9yChYc4D2ehxb1zVTi+I9qbrX8OOeD3lRbu0y9NWUQuzusjvSV1+XwbobHchW8NGxJh6BJa15kzawwhUtkH2DbPibsz9X7aKimwk/bwnW3c97YU6xmYFbQJLc0/Efz76u79/4hxtLfjScfNj30VXMv5kJy8dBp4CRV8eCQ2LVzVHxudL91LjPHOwYoa9M=
-X-MS-Exchange-AntiSpam-MessageData: YdhU9ISHZfYoZ5+rG/I9JgUBacgvVbVmyqBKJtRoai8XOI7kDwsU6GJL5ceF0vacNueuTefOVX12BGtUY2M22utmHNLBnKKQ1TWqaon8+q/s+GHIajtgsJqV2919uMS3YZ2ONourotqNnNHckVq3NQ==
-X-OriginatorOrg: windriver.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 842dd433-f9c8-43cb-3eeb-08d7c507fb31
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Mar 2020 15:30:36.7735
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: VUwm0dOaOWwDV+WM5FjFSZ7HX7eSmOqOUgysBh4vTzS3HeWEIILp4MiMqNGfmzQXxhh0keIH8RzIBSKthJuG1Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR11MB3200
+References: <20200308073400.23398-1-natechancellor@gmail.com>
+ <CAK7LNARcTHpd8fzrAhFVB_AR7NoBgenX64de0eS2uN8g0by9PQ@mail.gmail.com>
+ <20200310012545.GA16822@ubuntu-m2-xlarge-x86> <c2a687d065c1463d8eea9947687b3b05@AcuMS.aculab.com>
+In-Reply-To: <c2a687d065c1463d8eea9947687b3b05@AcuMS.aculab.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Wed, 11 Mar 2020 00:30:57 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARMsO0AeO8-kH4czMuW0Y_=dN+ZhtXNdRE7CWGvU2PNvA@mail.gmail.com>
+Message-ID: <CAK7LNARMsO0AeO8-kH4czMuW0Y_=dN+ZhtXNdRE7CWGvU2PNvA@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: Disable -Wpointer-to-enum-cast
+To:     David Laight <David.Laight@aculab.com>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Mar 10, 2020 at 8:31 PM David Laight <David.Laight@aculab.com> wrote:
+>
+> From: Nathan Chancellor
+> > Sent: 10 March 2020 01:26
+> ...
+> > Sure, I can send v2 to do that but I think that sending 97 patches just
+> > casting the small values (usually less than twenty) to unsigned long
+> > then to the enum is rather frivolous. I audited at least ten to fifteen
+> > of these call sites when creating the clang patch and they are all
+> > basically false positives.
+>
+> Such casts just make the code hard to read.
+> If misused casts can hide horrid bugs.
+> IMHO sprinkling the code with casts just to remove
+> compiler warnings will bite back one day.
+>
+
+I agree that too much casts make the code hard to read,
+but irrespective of this patch, there is no difference
+in the fact that we need a cast to convert
+(const void *) to a non-pointer value.
+
+The difference is whether we use
+(uintptr_t) or (enum foo).
 
 
-On 3/10/20 3:40 PM, Christoph Hellwig wrote:
-> On Mon, Mar 02, 2020 at 11:55:44AM +0800, He Zhe wrote:
->> Hi,
->>
->> Since the following commit
->> https://git.kernel.org/pub/scm/linux/kernel/git/axboe/linux-block.git/commit/?h=for-5.5/disk-revalidate&id=6917d0689993f46d97d40dd66c601d0fd5b1dbdd
->> until now(v5.6-rc4),
->>
->> If we start udisksd service of systemd(v244), systemd-udevd will scan /dev/hdc
->> (the cdrom device created by default in qemu(v4.2.0)). systemd-udevd will
->> endlessly run and cause OOM.
->>
->>
->>
->> It works well by reverting the following series of commits.
->>
->> 979c690d block: move clearing bd_invalidated into check_disk_size_change
->> f0b870d block: remove (__)blkdev_reread_part as an exported API
->> 142fe8f block: fix bdev_disk_changed for non-partitioned devices
->> a1548b6 block: move rescan_partitions to fs/block_dev.c
->> 6917d06 block: merge invalidate_partitions into rescan_partitions
-> So this is the exact requirement of commits to be reverted from a bisect
-> or just a first guess?
-
-Many commits failed to build or boot during bisection.
-
-At least the following four have to be reverted to make it work.
-
-979c690d block: move clearing bd_invalidated into check_disk_size_change
-f0b870d block: remove (__)blkdev_reread_part as an exported API
-142fe8f block: fix bdev_disk_changed for non-partitioned devices
-a1548b6 block: move rescan_partitions to fs/block_dev.c
-
-Regards,
-Zhe
 
 
+If we want to avoid casts completely,
+we could use union in struct of_device_id
+although this might be rejected.
+
+
+FWIW:
+
+diff --git a/drivers/ata/ahci_brcm.c b/drivers/ata/ahci_brcm.c
+index 6853dbb4131d..534170bea134 100644
+--- a/drivers/ata/ahci_brcm.c
++++ b/drivers/ata/ahci_brcm.c
+@@ -415,11 +415,11 @@ static struct scsi_host_template ahci_platform_sht = {
+ };
+
+ static const struct of_device_id ahci_of_match[] = {
+-       {.compatible = "brcm,bcm7425-ahci", .data = (void *)BRCM_SATA_BCM7425},
+-       {.compatible = "brcm,bcm7445-ahci", .data = (void *)BRCM_SATA_BCM7445},
+-       {.compatible = "brcm,bcm63138-ahci", .data = (void *)BRCM_SATA_BCM7445},
+-       {.compatible = "brcm,bcm-nsp-ahci", .data = (void *)BRCM_SATA_NSP},
+-       {.compatible = "brcm,bcm7216-ahci", .data = (void *)BRCM_SATA_BCM7216},
++       {.compatible = "brcm,bcm7425-ahci", .data2 = BRCM_SATA_BCM7425},
++       {.compatible = "brcm,bcm7445-ahci", .data2 = BRCM_SATA_BCM7445},
++       {.compatible = "brcm,bcm63138-ahci", .data2 = BRCM_SATA_BCM7445},
++       {.compatible = "brcm,bcm-nsp-ahci", .data2 = BRCM_SATA_NSP},
++       {.compatible = "brcm,bcm7216-ahci", .data2 = BRCM_SATA_BCM7216},
+        {},
+ };
+ MODULE_DEVICE_TABLE(of, ahci_of_match);
+@@ -442,7 +442,7 @@ static int brcm_ahci_probe(struct platform_device *pdev)
+        if (!of_id)
+                return -ENODEV;
+
+-       priv->version = (enum brcm_ahci_version)of_id->data;
++       priv->version = of_id->data2;
+        priv->dev = dev;
+
+        res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "top-ctrl");
+diff --git a/include/linux/mod_devicetable.h b/include/linux/mod_devicetable.h
+index e3596db077dc..98d44ebf146a 100644
+--- a/include/linux/mod_devicetable.h
++++ b/include/linux/mod_devicetable.h
+@@ -261,7 +261,10 @@ struct of_device_id {
+        char    name[32];
+        char    type[32];
+        char    compatible[128];
+-       const void *data;
++       union {
++               const void *data;
++               unsigned long data2;
++       };
+ };
+
+ /* VIO */
+
+
+
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
