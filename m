@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7993C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:55:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4ED3C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:55:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88F102467D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:55:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CD902468F
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:55:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583844954;
-	bh=cG8xBS3xZCfN0tOEGRJjaUOF0nL+MWt/juF0Qz+0BpE=;
+	s=default; t=1583844957;
+	bh=9uebQZjFeWi3MCS3tSW9iUkH5yUcXXi5PjERCzdWf7M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ySgQ4SVe97kSC+LhHd+eom1ANC1Mc9OveuD1ok/kglPz3iiuQ51xTBIl+7FrttjFE
-	 FhT4Q0muatEs1U20fBX28S/Mff8I+rMqVc1ItEdpBlePkVIMU5++Sq+svtYd/kIDOo
-	 86Pbr5CsXC16XyCI5utoZ+UG0RPh+/5tMlF4YUSs=
+	b=s3K8QlZryje1hdEbhBJfRGa0Meh+HD8rqn0jSnSunUMfTiLzmPuNBfRvsOCwq29Vd
+	 0FwsD2KiHMKTYsrLvERLMt3eM0nv2Eq8vORZVz+BJrFVJYaqfhv9Kb4RF+kcWWn94m
+	 zsys4gtBhz0ymQ8XEFoQcBpcFOKHdXEbkujctynI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729575AbgCJMzx (ORCPT
+        id S1729589AbgCJMzz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:55:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34762 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:55:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34846 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728220AbgCJMzu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:55:50 -0400
+        id S1729576AbgCJMzx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:55:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D488D2253D;
-        Tue, 10 Mar 2020 12:55:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5CD862467D;
+        Tue, 10 Mar 2020 12:55:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844950;
-        bh=cG8xBS3xZCfN0tOEGRJjaUOF0nL+MWt/juF0Qz+0BpE=;
+        s=default; t=1583844952;
+        bh=9uebQZjFeWi3MCS3tSW9iUkH5yUcXXi5PjERCzdWf7M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kqabZE1NnLamplFubAhUFA4hNklOA31GpqgYio8roEpeD+UojpbLdMqxS0pYdhrG7
-         s8KRttYAC0hUtlvkGpRhmGVZnoMPbKy1d7yREkyhuV3BkGcmOOi8+JV07qgNjT/ZqF
-         5TmNpPxQX5T1bmVLiNWkzVvPKShpe9z5CDKJJzXQ=
+        b=p10Ohr7mnG+SpXe/4+I+A9mbrHSp6ssX4gaJDdhr9s624cdut8sWFWjYNV3oNfNHf
+         Fs6i9wHdREYFY5A/p64yWUR3Bb7xzdgLIQuHLN4dUN1Fz6O10OUGPVbpqYMJm1WOmp
+         rE3O+Vb4Eh6K/FxHXKZTcDaiZrlgGCBDzd3zp1DE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Westphal <fw@strlen.de>,
+        stable@vger.kernel.org, Cong Wang <xiyou.wangcong@gmail.com>,
         Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 010/189] netfilter: hashlimit: do not use indirect calls during gc
-Date:   Tue, 10 Mar 2020 13:37:27 +0100
-Message-Id: <20200310123640.583088063@linuxfoundation.org>
+        Sasha Levin <sashal@kernel.org>,
+        syzbot+d195fd3b9a364ddd6731@syzkaller.appspotmail.com
+Subject: [PATCH 5.5 011/189] netfilter: xt_hashlimit: unregister proc file before releasing mutex
+Date:   Tue, 10 Mar 2020 13:37:28 +0100
+Message-Id: <20200310123640.671681502@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123639.608886314@linuxfoundation.org>
 References: <20200310123639.608886314@linuxfoundation.org>
@@ -60,74 +61,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Westphal <fw@strlen.de>
+From: Cong Wang <xiyou.wangcong@gmail.com>
 
-[ Upstream commit 28b3a4270c0fc064557e409111f2a678e64b6fa7 ]
+[ Upstream commit 99b79c3900d4627672c85d9f344b5b0f06bc2a4d ]
 
-no need, just use a simple boolean to indicate we want to reap all
-entries.
+Before releasing the global mutex, we only unlink the hashtable
+from the hash list, its proc file is still not unregistered at
+this point. So syzbot could trigger a race condition where a
+parallel htable_create() could register the same file immediately
+after the mutex is released.
 
-Signed-off-by: Florian Westphal <fw@strlen.de>
+Move htable_remove_proc_entry() back to mutex protection to
+fix this. And, fold htable_destroy() into htable_put() to make
+the code slightly easier to understand.
+
+Reported-and-tested-by: syzbot+d195fd3b9a364ddd6731@syzkaller.appspotmail.com
+Fixes: c4a3922d2d20 ("netfilter: xt_hashlimit: reduce hashlimit_mutex scope for htable_put()")
+Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
 Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/xt_hashlimit.c | 22 ++++------------------
- 1 file changed, 4 insertions(+), 18 deletions(-)
+ net/netfilter/xt_hashlimit.c | 16 ++++++----------
+ 1 file changed, 6 insertions(+), 10 deletions(-)
 
 diff --git a/net/netfilter/xt_hashlimit.c b/net/netfilter/xt_hashlimit.c
-index 1b68a131083c2..7a2c4b8408c49 100644
+index 7a2c4b8408c49..8c835ad637290 100644
 --- a/net/netfilter/xt_hashlimit.c
 +++ b/net/netfilter/xt_hashlimit.c
-@@ -358,21 +358,7 @@ static int htable_create(struct net *net, struct hashlimit_cfg3 *cfg,
- 	return 0;
+@@ -402,15 +402,6 @@ static void htable_remove_proc_entry(struct xt_hashlimit_htable *hinfo)
+ 		remove_proc_entry(hinfo->name, parent);
  }
  
--static bool select_all(const struct xt_hashlimit_htable *ht,
--		       const struct dsthash_ent *he)
+-static void htable_destroy(struct xt_hashlimit_htable *hinfo)
 -{
--	return true;
+-	cancel_delayed_work_sync(&hinfo->gc_work);
+-	htable_remove_proc_entry(hinfo);
+-	htable_selective_cleanup(hinfo, true);
+-	kfree(hinfo->name);
+-	vfree(hinfo);
 -}
 -
--static bool select_gc(const struct xt_hashlimit_htable *ht,
--		      const struct dsthash_ent *he)
--{
--	return time_after_eq(jiffies, he->expires);
--}
--
--static void htable_selective_cleanup(struct xt_hashlimit_htable *ht,
--			bool (*select)(const struct xt_hashlimit_htable *ht,
--				      const struct dsthash_ent *he))
-+static void htable_selective_cleanup(struct xt_hashlimit_htable *ht, bool select_all)
+ static struct xt_hashlimit_htable *htable_find_get(struct net *net,
+ 						   const char *name,
+ 						   u_int8_t family)
+@@ -432,8 +423,13 @@ static void htable_put(struct xt_hashlimit_htable *hinfo)
  {
- 	unsigned int i;
- 
-@@ -382,7 +368,7 @@ static void htable_selective_cleanup(struct xt_hashlimit_htable *ht,
- 
- 		spin_lock_bh(&ht->lock);
- 		hlist_for_each_entry_safe(dh, n, &ht->hash[i], node) {
--			if ((*select)(ht, dh))
-+			if (time_after_eq(jiffies, dh->expires) || select_all)
- 				dsthash_free(ht, dh);
- 		}
- 		spin_unlock_bh(&ht->lock);
-@@ -396,7 +382,7 @@ static void htable_gc(struct work_struct *work)
- 
- 	ht = container_of(work, struct xt_hashlimit_htable, gc_work.work);
- 
--	htable_selective_cleanup(ht, select_gc);
-+	htable_selective_cleanup(ht, false);
- 
- 	queue_delayed_work(system_power_efficient_wq,
- 			   &ht->gc_work, msecs_to_jiffies(ht->cfg.gc_interval));
-@@ -420,7 +406,7 @@ static void htable_destroy(struct xt_hashlimit_htable *hinfo)
- {
- 	cancel_delayed_work_sync(&hinfo->gc_work);
- 	htable_remove_proc_entry(hinfo);
--	htable_selective_cleanup(hinfo, select_all);
-+	htable_selective_cleanup(hinfo, true);
- 	kfree(hinfo->name);
- 	vfree(hinfo);
+ 	if (refcount_dec_and_mutex_lock(&hinfo->use, &hashlimit_mutex)) {
+ 		hlist_del(&hinfo->node);
++		htable_remove_proc_entry(hinfo);
+ 		mutex_unlock(&hashlimit_mutex);
+-		htable_destroy(hinfo);
++
++		cancel_delayed_work_sync(&hinfo->gc_work);
++		htable_selective_cleanup(hinfo, true);
++		kfree(hinfo->name);
++		vfree(hinfo);
+ 	}
  }
+ 
 -- 
 2.20.1
 
