@@ -2,222 +2,77 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CC39C18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:59:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 697BFC10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:59:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2065215A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:59:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="UOdRYzat"
+	by mail.kernel.org (Postfix) with ESMTP id 30148222D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:59:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583873983;
+	bh=3sPIdnBr9v7RZA4nE5B3Yg3InvtEVR8cOXudgA35fbU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=RrdGKggN/lOJYAvRvEe6+u0Wq+Y4pN3RRz3RtlXr58k0OPRiOreC/VRGCJNfR2awE
+	 5ol3vYAgIc7ouaCVi55R0CjT2mmupEPTdOPbvZTxfkRgo2y5OxOOJ2FREFfYnpaeyn
+	 Ne0pyB9XqwSo8JEVF2CthuvUvT4hIGUyKJHZHgCA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727558AbgCJU7b (ORCPT
+        id S1727574AbgCJU7m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 16:59:31 -0400
-Received: from mail-mw2nam12on2076.outbound.protection.outlook.com ([40.107.244.76]:6210
-        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726100AbgCJU7a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 16:59:30 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=idvnn0MgsZaieAK5U+6bo2EOX1MUpcLAqE7toRjU+eyKoU+0swsjatlji/Rb9+WeI4Yq6WVVK1w4kQui1f9d5jV7S9SnmVJhAU7/2tk2lmI3YhwE9IwY3gWlZCq6ofYT71jnk4XB3DousjeqNFNvtfTIjW/nu8fKUHAPFmIHsR8pJrvS0Myat+eqW9FhTQ70ZZhiOr/u9tahqRGN7/gv3cBZzG59V840AA2AXHYuNeCQ2bmwnvogAyq7RhTfrPGXiHRNZ/hmI4M5bsrgzofuKcEtjzW+px3LfNtrYjLnQBidSArQ8UI9HT5Xm0lpMVjnM9llVnrqQd1+v/gcluRHHA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=092wl3f7D4on7HSq4O35XGzsjMJEZ9u6xCe2zcJhPr4=;
- b=kY4xFnbH2h3FmkHilMT/YiFAa601Xp70OHL2H3tJvtcV93fsB63pQgHiJN+TEepd0d2X4kCJ2NALP4bRjrla6EkJRpKnEw0Q2m2WOxsCesqdqdA4L2SgwUNKiJ3ZiwYqH+MB245oP0Ko0234tWLTjXcycYxM7JHgo9dLlNL+sqdXmF2HGXEVMs0A0HX9iz8d7eX6kiHsxPS1r+Hy4ikctLpPKEREDqVg5K3hGhMV2HDJC5q+B1o7r1+DNNNwwuQ8WGJWRgHUSePBxYIWBLT6zjyI1I5mjz9qcLRzh+sDmA+SJb45Tv9/q30qyw28+FElYcDMrs+SocUJ0yyU3/GioQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=092wl3f7D4on7HSq4O35XGzsjMJEZ9u6xCe2zcJhPr4=;
- b=UOdRYzatyZAnAzRe5xC2qqIxSfDXVMWX0ywMN9qFITXUN7IPRA97JVVM5RX/36g8sH/g+Q2UZbcBKJ+YGgGK6UFk1UAsvKM3IhoWBlj4oCoL8UPwBlcmQ4PbAcP05HO+eMnNK3ul1/RWtk1qFv0p2kEzoJP8GRKe6UR4Jiatmqs=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Thomas.Lendacky@amd.com; 
-Received: from DM6PR12MB3163.namprd12.prod.outlook.com (2603:10b6:5:15e::26)
- by DM6PR12MB2747.namprd12.prod.outlook.com (2603:10b6:5:4a::25) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.17; Tue, 10 Mar
- 2020 20:59:27 +0000
-Received: from DM6PR12MB3163.namprd12.prod.outlook.com
- ([fe80::f0f9:a88f:f840:2733]) by DM6PR12MB3163.namprd12.prod.outlook.com
- ([fe80::f0f9:a88f:f840:2733%7]) with mapi id 15.20.2793.018; Tue, 10 Mar 2020
- 20:59:27 +0000
-Subject: Re: [PATCH 4.14 057/126] KVM: SVM: Override default MMIO mask if
- memory encryption is enabled
-From:   Tom Lendacky <thomas.lendacky@amd.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>
-References: <20200310124203.704193207@linuxfoundation.org>
- <20200310124207.819562318@linuxfoundation.org>
- <20200310181952.GF9305@linux.intel.com>
- <220a78d4-0e46-a321-49cd-5d1c5827aef0@amd.com>
-Message-ID: <0bab862b-0780-38c3-0c60-b078d61613de@amd.com>
-Date:   Tue, 10 Mar 2020 15:59:25 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-In-Reply-To: <220a78d4-0e46-a321-49cd-5d1c5827aef0@amd.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: DM5PR07CA0032.namprd07.prod.outlook.com
- (2603:10b6:3:16::18) To DM6PR12MB3163.namprd12.prod.outlook.com
- (2603:10b6:5:15e::26)
+        Tue, 10 Mar 2020 16:59:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36262 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726100AbgCJU7l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 16:59:41 -0400
+Received: from dhcp-10-100-145-180.wdl.wdc.com (unknown [199.255.45.60])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C536E215A4;
+        Tue, 10 Mar 2020 20:59:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583873981;
+        bh=3sPIdnBr9v7RZA4nE5B3Yg3InvtEVR8cOXudgA35fbU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=cVGBhmVTRQ3ln/30HZV9lX37+j5vxGkhfsG36xbMx/Gxyr2Lcev6OTDC/8GKSCRv8
+         pv+OFFEoUKZ/wdX8Q3HKOQlFYsYpAnWiRNBEmN+/1Qwj6DAxkpW49BAl8JjfgNg9TJ
+         RzcimG9dQxmBMRdxXfatt026qmRcFIfXkfxCVvDM=
+Date:   Tue, 10 Mar 2020 13:59:38 -0700
+From:   Keith Busch <kbusch@kernel.org>
+To:     Prabhath Sajeepa <psajeepa@purestorage.com>
+Cc:     axboe@fb.com, hch@lst.de, sagi@grimberg.me,
+        linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
+        roland@purestorage.com
+Subject: Re: [PATCH] nvme-rdma: Avoid double freeing of async event data
+Message-ID: <20200310205938.GE604509@dhcp-10-100-145-180.wdl.wdc.com>
+References: <1583788073-39681-1-git-send-email-psajeepa@purestorage.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [10.236.30.118] (165.204.77.1) by DM5PR07CA0032.namprd07.prod.outlook.com (2603:10b6:3:16::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.17 via Frontend Transport; Tue, 10 Mar 2020 20:59:26 +0000
-X-Originating-IP: [165.204.77.1]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 4318bee0-9d6c-4375-3183-08d7c535eb6e
-X-MS-TrafficTypeDiagnostic: DM6PR12MB2747:
-X-Microsoft-Antispam-PRVS: <DM6PR12MB27472C185AB09C90F7165C3BECFF0@DM6PR12MB2747.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
-X-Forefront-PRVS: 033857D0BD
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(39860400002)(396003)(346002)(366004)(376002)(189003)(199004)(45080400002)(36756003)(16526019)(66476007)(186003)(966005)(52116002)(31686004)(53546011)(66556008)(478600001)(6486002)(5660300002)(2906002)(86362001)(316002)(110136005)(8676002)(16576012)(81156014)(26005)(8936002)(31696002)(956004)(66946007)(2616005)(4326008)(81166006);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB2747;H:DM6PR12MB3163.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: vhSzasA6BjagWTGD8PjkxUtuqSd+mbtq9zu8rsc6394bki2EUszRTo0mPiC0aReuuoqXfm85bb/ZQtkLUBFeiBoikYSYFmdXhLMz4zI1DkZwXwDfDeBiwmatR/cBWDFfXYAs5rH+UNCFGt0ksqO33hXb8h5INb8p5yWo9BhkP9QEqCJcu6eHuIGGLD97twJWCjLEgIuQHo73zjDBGn0ms9ezdFoeklQgWOwsDHY2mzdr1s214AbX8Ao3EcWVLU+7vr2fkW6oetor6Lf3UBribiCTAaGiAi3Qt66tid5ArSUoTsxo6MOChIG1SGXt9Y/k5pGfCMCeY9j2Lnii3RP3qX4t/7nourY8FmCpZsQ1EgTHh+iILr/rC8Hs0eWLd5EkfqPL8CV0UIQx3b4HY+krMZMHDC77onIBWppzYiCJBzlbhifoVwh2P7eb66uSfSA4Dzyjl00D/WnmAcb8npMyrjfp70uryY+lLRQvi4XQrHCF9aNKQE0LLrGVRaprwZafl7lYb2Icy6I25hWEXPWd8w==
-X-MS-Exchange-AntiSpam-MessageData: Aup3ohxiUBy+bEfTb45as4Mr7xX5htqbBsLsURKKCBqPJEfAvRXXZx0VzAEmTw90yUOsSRq/AoY69eXb8OANTbj0PTPP4liOBFUK/mY88Adb/h1003pDSsNpqodXpR/C+13Q/v5zH+rCprg38nm8mA==
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4318bee0-9d6c-4375-3183-08d7c535eb6e
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Mar 2020 20:59:27.1919
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 7tTT5DRhizJ6ma961SjbT3gd6D7XgS8VpYnjI0nTOEYwHqwjN0Nq4jorWtf1JVz18aKF3P5uUJfu9uB2OFVEQA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB2747
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1583788073-39681-1-git-send-email-psajeepa@purestorage.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/10/20 1:42 PM, Tom Lendacky wrote:
-> On 3/10/20 1:19 PM, Sean Christopherson wrote:
->> Has this been tested on the stable kernels?  There's a recent bug report[*]
->> that suggests the 4.19 backport of this patch may be causing issues.
+On Mon, Mar 09, 2020 at 03:07:53PM -0600, Prabhath Sajeepa wrote:
+> The timeout of identify cmd, which is invoked as part of admin queue
+> creation, can result in freeing of async event data both in
+> nvme_rdma_timeout handler and error handling path of
+> nvme_rdma_configure_admin queue thus causing NULL pointer reference.
+> Call Trace:
+>  ? nvme_rdma_setup_ctrl+0x223/0x800 [nvme_rdma]
+>  nvme_rdma_create_ctrl+0x2ba/0x3f7 [nvme_rdma]
+>  nvmf_dev_write+0xa54/0xcc6 [nvme_fabrics]
+>  __vfs_write+0x1b/0x40
+>  vfs_write+0xb2/0x1b0
+>  ksys_write+0x61/0xd0
+>  __x64_sys_write+0x1a/0x20
+>  do_syscall_64+0x60/0x1e0
+>  entry_SYSCALL_64_after_hwframe+0x44/0xa9
 > 
-> I missed this went the stable patches went by...  when backported to the
-> older version of kvm_mmu_set_mmio_spte_mask() in the stable kernels (4.14
-> and 4.19), the call should have been:
-> 
-> kvm_mmu_set_mmio_spte_mask(mask, mask) and not:
-> 
-> kvm_mmu_set_mmio_spte_mask(mask, PT_WRITABLE_MASK | PT_USER_MASK);
-> 
-> The call in the original upstream patch was:
-> 
-> kvm_mmu_set_mmio_spte_mask(mask, mask, PT_WRITABLE_MASK | PT_USER_MASK);
+> Signed-off-by: Prabhath Sajeepa <psajeepa@purestorage.com>
+> Reviewed-by: Roland Dreier <roland@purestorage.com>
 
-Greg,
-
-I should have asked in the earlier email...  how do you want to address this?
-
-Thanks,
-Tom
-
-> 
-> Tom
-> 
->>
->> [*] https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Fbugzilla.kernel.org%2Fshow_bug.cgi%3Fid%3D206795&amp;data=02%7C01%7Cthomas.lendacky%40amd.com%7C559dd742543741e4bc7608d7c51fa1d5%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637194611958586378&amp;sdata=k%2F3WUFrqvibbf%2FEaCFgOIhUWMZ%2BqHjawmmy1GII7KgA%3D&amp;reserved=0
->>
->>
->> On Tue, Mar 10, 2020 at 01:41:18PM +0100, Greg Kroah-Hartman wrote:
->>> From: Tom Lendacky <thomas.lendacky@amd.com>
->>>
->>> commit 52918ed5fcf05d97d257f4131e19479da18f5d16 upstream.
->>>
->>> The KVM MMIO support uses bit 51 as the reserved bit to cause nested page
->>> faults when a guest performs MMIO. The AMD memory encryption support uses
->>> a CPUID function to define the encryption bit position. Given this, it is
->>> possible that these bits can conflict.
->>>
->>> Use svm_hardware_setup() to override the MMIO mask if memory encryption
->>> support is enabled. Various checks are performed to ensure that the mask
->>> is properly defined and rsvd_bits() is used to generate the new mask (as
->>> was done prior to the change that necessitated this patch).
->>>
->>> Fixes: 28a1f3ac1d0c ("kvm: x86: Set highest physical address bits in non-present/reserved SPTEs")
->>> Suggested-by: Sean Christopherson <sean.j.christopherson@intel.com>
->>> Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
->>> Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
->>> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
->>> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->>>
->>> ---
->>>  arch/x86/kvm/svm.c |   43 +++++++++++++++++++++++++++++++++++++++++++
->>>  1 file changed, 43 insertions(+)
->>>
->>> --- a/arch/x86/kvm/svm.c
->>> +++ b/arch/x86/kvm/svm.c
->>> @@ -1088,6 +1088,47 @@ static int avic_ga_log_notifier(u32 ga_t
->>>  	return 0;
->>>  }
->>>  
->>> +/*
->>> + * The default MMIO mask is a single bit (excluding the present bit),
->>> + * which could conflict with the memory encryption bit. Check for
->>> + * memory encryption support and override the default MMIO mask if
->>> + * memory encryption is enabled.
->>> + */
->>> +static __init void svm_adjust_mmio_mask(void)
->>> +{
->>> +	unsigned int enc_bit, mask_bit;
->>> +	u64 msr, mask;
->>> +
->>> +	/* If there is no memory encryption support, use existing mask */
->>> +	if (cpuid_eax(0x80000000) < 0x8000001f)
->>> +		return;
->>> +
->>> +	/* If memory encryption is not enabled, use existing mask */
->>> +	rdmsrl(MSR_K8_SYSCFG, msr);
->>> +	if (!(msr & MSR_K8_SYSCFG_MEM_ENCRYPT))
->>> +		return;
->>> +
->>> +	enc_bit = cpuid_ebx(0x8000001f) & 0x3f;
->>> +	mask_bit = boot_cpu_data.x86_phys_bits;
->>> +
->>> +	/* Increment the mask bit if it is the same as the encryption bit */
->>> +	if (enc_bit == mask_bit)
->>> +		mask_bit++;
->>> +
->>> +	/*
->>> +	 * If the mask bit location is below 52, then some bits above the
->>> +	 * physical addressing limit will always be reserved, so use the
->>> +	 * rsvd_bits() function to generate the mask. This mask, along with
->>> +	 * the present bit, will be used to generate a page fault with
->>> +	 * PFER.RSV = 1.
->>> +	 *
->>> +	 * If the mask bit location is 52 (or above), then clear the mask.
->>> +	 */
->>> +	mask = (mask_bit < 52) ? rsvd_bits(mask_bit, 51) | PT_PRESENT_MASK : 0;
->>> +
->>> +	kvm_mmu_set_mmio_spte_mask(mask, PT_WRITABLE_MASK | PT_USER_MASK);
->>> +}
->>> +
->>>  static __init int svm_hardware_setup(void)
->>>  {
->>>  	int cpu;
->>> @@ -1123,6 +1164,8 @@ static __init int svm_hardware_setup(voi
->>>  		kvm_enable_efer_bits(EFER_SVME | EFER_LMSLE);
->>>  	}
->>>  
->>> +	svm_adjust_mmio_mask();
->>> +
->>>  	for_each_possible_cpu(cpu) {
->>>  		r = svm_cpu_init(cpu);
->>>  		if (r)
->>>
->>>
+Thanks, applied to new branch for 5.6-rc6.
