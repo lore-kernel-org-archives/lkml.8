@@ -2,148 +2,123 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81A4AC10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:36:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48093C10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:36:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F24520578
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:36:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VQBmIGLV"
+	by mail.kernel.org (Postfix) with ESMTP id 11774222C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:36:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726487AbgCJUgI (ORCPT
+        id S1727112AbgCJUgU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 16:36:08 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:46502 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726265AbgCJUgH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 16:36:07 -0400
-Received: by mail-pf1-f193.google.com with SMTP id c19so4744072pfo.13;
-        Tue, 10 Mar 2020 13:36:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=fV5+RiKGHa+0tysZC6eRzTKR3e7KC+kQ8EcrhIyapM4=;
-        b=VQBmIGLVfJEfJVQJSU078Gto/o5LJlmAF9oHI5o4vgeCX2gK3rjNvsQ1G9T2Z1A0fJ
-         44UNjuBSDZjCBlp4WNS0wZSWBvvB3xV8Dfwlzruf9cSSohEWhRHmyY6Aw5o+XLtZVKDJ
-         4jMU//lqJQSW/Nsb1mwVLk0XWPx5Ev0INwttHJ6yMmjMsLXGdFPussXrjMtIywAvG7ta
-         Kfd37IYbD+1pbG4fDXTtblgcm6QfzHcZo9/K4NPBeYkPix8hTzLdlYA/8b3Mu78hlWcQ
-         uINtxglfZKNMO0SVDVI0Bg5EO26lf6dqW7I7zA0N7Pu9EwPd/2ipCagrcIMqb45VcXsY
-         ZggQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=fV5+RiKGHa+0tysZC6eRzTKR3e7KC+kQ8EcrhIyapM4=;
-        b=Ib1VEIcWzSfyj6Dix0C8JdVtDkaQOSWfBflGdQSmogfAPw0C+xVxDwjWmKb0hPnFwO
-         364DVoOpbBRX5ynZpZ+DiBuAwNgpofdwr0eSeeeupDNq/1yg/arMydS1Fl5OVqrnKBrB
-         KP2nNvcRweT4QKZiy/SOpHWyOlkLEueLaGHw8RnrVfoPy0k0AVxqD6/xJ9rCYvCFUj0/
-         QRIjcYih01iTYbMHQuCy0nARvWqjWbcXx80YtR47oARIg1EBzeK7Fdzp9qWDh10DTtTk
-         UtvsATjOERTytVAdhQI5DFxUsQKqhPclZDx6OqAmkGkxGEFbMNGgg+QZg0LObHupydWz
-         nlVQ==
-X-Gm-Message-State: ANhLgQ1jrHgL65iU8xcSRZiFDO8H/sl/RqBJkr7JiBnVLCDKEYVZ9M/N
-        Q9lm/psUNYGBYahZp4UJq8Y=
-X-Google-Smtp-Source: ADFU+vteDYFDTXUuR514tIcr2qrQXOj/kIC1OkMBZwy0pVRATabXWRso4IHATHfKlZU5qbO2kbRpXg==
-X-Received: by 2002:a62:760e:: with SMTP id r14mr16229814pfc.51.1583872565275;
-        Tue, 10 Mar 2020 13:36:05 -0700 (PDT)
-Received: from [192.168.86.235] (c-73-241-150-58.hsd1.ca.comcast.net. [73.241.150.58])
-        by smtp.gmail.com with ESMTPSA id m128sm49687689pfm.183.2020.03.10.13.36.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Mar 2020 13:36:04 -0700 (PDT)
-Subject: Re: KASAN: invalid-free in tcf_exts_destroy
-To:     Cong Wang <xiyou.wangcong@gmail.com>,
-        syzbot <syzbot+dcc34d54d68ef7d2d53d@syzkaller.appspotmail.com>
-Cc:     David Miller <davem@davemloft.net>,
-        Jamal Hadi Salim <jhs@mojatatu.com>,
-        Jiri Pirko <jiri@resnulli.us>,
-        Jakub Kicinski <kuba@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-References: <00000000000034513e05a05cfc23@google.com>
- <CAM_iQpVgQ+Mc16CVds-ywp6YHEbwbGtJwqoQXBFbrMTOUZS0YQ@mail.gmail.com>
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-Message-ID: <635ab023-d180-7ddf-a280-78080040512c@gmail.com>
-Date:   Tue, 10 Mar 2020 13:36:02 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 10 Mar 2020 16:36:20 -0400
+Received: from mga01.intel.com ([192.55.52.88]:59441 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726265AbgCJUgT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 16:36:19 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Mar 2020 13:36:19 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,538,1574150400"; 
+   d="scan'208";a="441428430"
+Received: from yyu32-desk.sc.intel.com ([143.183.136.146])
+  by fmsmga005.fm.intel.com with ESMTP; 10 Mar 2020 13:36:19 -0700
+Message-ID: <e62e968c0980b091d7b263401ddd10162773678f.camel@intel.com>
+Subject: Re: [PATCH v2 8/8] x86/fpu/xstate: Restore supervisor xstates for
+ __fpu__restore_sig()
+From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Rik van Riel <riel@surriel.com>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Date:   Tue, 10 Mar 2020 13:36:19 -0700
+In-Reply-To: <20200306205039.GA5337@cz.tnic>
+References: <6f91699c91f9ea0f527e80ed3ea2999444a8d2d1.camel@intel.com>
+         <20200228172202.GD25261@zn.tnic>
+         <9a283ad42da140d73de680b1975da142e62e016e.camel@intel.com>
+         <20200228183131.GE25261@zn.tnic>
+         <7c6560b067436e2ec52121bba6bff64833e28d8d.camel@intel.com>
+         <20200228214742.GF25261@zn.tnic>
+         <c8da950a64db495088f0abe3932a489a84e4da97.camel@intel.com>
+         <20200229143644.GA1129@zn.tnic>
+         <6778d141a3cdbbe51cdeb3a8efb9c34e0951f6c6.camel@intel.com>
+         <53e795ffbc029de316985476fd61845b7a9e824f.camel@intel.com>
+         <20200306205039.GA5337@cz.tnic>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
 MIME-Version: 1.0
-In-Reply-To: <CAM_iQpVgQ+Mc16CVds-ywp6YHEbwbGtJwqoQXBFbrMTOUZS0YQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, 2020-03-06 at 21:50 +0100, Borislav Petkov wrote:
+> On Wed, Mar 04, 2020 at 10:18:46AM -0800, Yu-cheng Yu wrote:
+> > There is another way to keep this patch...
+> > 
+> > if (xfeatures_mask_supervisor()) {
+> > 	fpu->state.xsave.xfeatures &= xfeatures_mask_supervisor();
+> 
+> Is the subsequent XSAVE in copy_user_to_fpregs_zeroing() going to
+> restore the user bits in XSTATE_BV you just cleared?
+> 
+> Sorry, it looks like it would but the SDM text is abysmal.
+
+I checked and this won't work.
 
 
-On 3/10/20 11:33 AM, Cong Wang wrote:
-> On Sun, Mar 8, 2020 at 12:35 PM syzbot
-> <syzbot+dcc34d54d68ef7d2d53d@syzkaller.appspotmail.com> wrote:
->>
->> Hello,
->>
->> syzbot found the following crash on:
->>
->> HEAD commit:    c2003765 Merge tag 'io_uring-5.6-2020-03-07' of git://git...
->> git tree:       upstream
->> console output: https://syzkaller.appspot.com/x/log.txt?x=10cd2ae3e00000
->> kernel config:  https://syzkaller.appspot.com/x/.config?x=4527d1e2fb19fd5c
->> dashboard link: https://syzkaller.appspot.com/bug?extid=dcc34d54d68ef7d2d53d
->> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
->> userspace arch: i386
->> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1561b01de00000
->> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15aad2f9e00000
->>
->> The bug was bisected to:
->>
->> commit 599be01ee567b61f4471ee8078870847d0a11e8e
->> Author: Cong Wang <xiyou.wangcong@gmail.com>
->> Date:   Mon Feb 3 05:14:35 2020 +0000
->>
->>     net_sched: fix an OOB access in cls_tcindex
->>
->> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=10a275fde00000
->> final crash:    https://syzkaller.appspot.com/x/report.txt?x=12a275fde00000
->> console output: https://syzkaller.appspot.com/x/log.txt?x=14a275fde00000
->>
->> IMPORTANT: if you fix the bug, please add the following tag to the commit:
->> Reported-by: syzbot+dcc34d54d68ef7d2d53d@syzkaller.appspotmail.com
->> Fixes: 599be01ee567 ("net_sched: fix an OOB access in cls_tcindex")
->>
->> IPVS: ftp: loaded support on port[0] = 21
->> ==================================================================
->> BUG: KASAN: double-free or invalid-free in tcf_exts_destroy+0x62/0xc0 net/sched/cls_api.c:3002
->>
->> CPU: 1 PID: 9507 Comm: syz-executor467 Not tainted 5.6.0-rc4-syzkaller #0
->> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
->> Call Trace:
->>  __dump_stack lib/dump_stack.c:77 [inline]
->>  dump_stack+0x188/0x20d lib/dump_stack.c:118
->>  print_address_description.constprop.0.cold+0xd3/0x315 mm/kasan/report.c:374
->>  kasan_report_invalid_free+0x61/0xa0 mm/kasan/report.c:468
->>  __kasan_slab_free+0x129/0x140 mm/kasan/common.c:455
->>  __cache_free mm/slab.c:3426 [inline]
->>  kfree+0x109/0x2b0 mm/slab.c:3757
->>  tcf_exts_destroy+0x62/0xc0 net/sched/cls_api.c:3002
->>  tcf_exts_change+0xf4/0x150 net/sched/cls_api.c:3059
->>  tcindex_set_parms+0xed8/0x1a00 net/sched/cls_tcindex.c:456
-> 
-> Looks like a consequence of "slab-out-of-bounds Write in tcindex_set_parms".
-> 
-> Thanks.
-> 
 
-I have a dozen more syzbot reports involving net/sched code, do you want
-me to release them right now ?
+Earlier you wrote:
+
+  53973 / (3*60 + 35) =~ 251 XSAVES invocations per second!
+
+I would argue that the kernel does much more than that for context
+switches.
+
+These are from:
+  perf record -a make -j32 bzImage
+
+# Samples: 11M of event 'cycles'
+# Event count (approx.): 7610600069602
+#
+# Overhead  Symbol
+     2.19%  [.] ht_lookup_with_hash
+     1.74%  [.] _int_malloc
+     1.46%  [.] _cpp_lex_token
+     1.46%  [.] ggc_internal_alloc
+     1.10%  [.] cpp_get_token_with_location
+     1.10%  [.] malloc
+     1.05%  [.] _int_free
+     0.71%  [.] elf_read
+     0.70%  [.] ggc_internal_cleared_alloc
+     0.69%  [.] htab_find_slot
+     0.69%  [.] c_lex_with_flags
+     0.61%  [.] get_combined_adhoc_loc
+     0.57%  [.] linemap_position_for_column
+[...]
+     0.00%  [.] 0x0000000000bad020
+     0.00%  [.] 0x0000000000b4952b
+     0.00%  [k] __fpu__restore_sig
+
+Here, __fpu__restore_sig() actually takes very little percentage.
+Consider this and later maintenance, I think copy_xregs_to_kernel() is at
+least not worse than saving each state separately.
+
+Yu-cheng
+
 
