@@ -7,47 +7,57 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30C4DC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:11:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B74D7C18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:11:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0607A2468C
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:11:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FA7224699
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:11:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583845900;
-	bh=vHRDbj6UVOHRSQWFOnKdMq/CIfcCsdWrXBioM9JlNZM=;
+	s=default; t=1583845901;
+	bh=i2EE9TBKzEVYuVVycK2c5NdXSr9SD58Kva8fe9XBTLA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=thnsfQS95v0KZpVBA2qf24/SOxZbPLYhN0nCVOFpnikKO+hQXMucBnW7Iu5E3QldG
-	 C56pqldfBid9lz8IFCFr0RERuyW9atF7NSkUOtoi318ZGcLc6ek2SFv63tMzN2bfbR
-	 WnZJcWrDTF13f0N5kDCmhj3MTjzfODXj18ECz48w=
+	b=yQstTfFBipIKZY+7tld0HhB4k/Ty7dcwpaESRSuSPj9YNLKdR9h8E2kxIoX+iP3py
+	 D5tyd56xAElLAwxIMffnY3uvNuKUqYE9KTyrmnEz/PNPshBk+57eMdTyu23p17RWeg
+	 7TO5JYBzo6uKERplo/Y4LMepGZuxAIPAovWKmePw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729049AbgCJNLj (ORCPT
+        id S1730841AbgCJNLk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:11:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33150 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:11:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33238 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731441AbgCJNLf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:11:35 -0400
+        id S1730903AbgCJNLi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:11:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4532424692;
-        Tue, 10 Mar 2020 13:11:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97B08208E4;
+        Tue, 10 Mar 2020 13:11:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845894;
-        bh=vHRDbj6UVOHRSQWFOnKdMq/CIfcCsdWrXBioM9JlNZM=;
+        s=default; t=1583845898;
+        bh=i2EE9TBKzEVYuVVycK2c5NdXSr9SD58Kva8fe9XBTLA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PegA665/ZBiSzDTeArqBnnahjt4g0bMv3mlMFDPyUKAbqcCfkeOzdcR7JYzDYruug
-         1wvTXe/RqhQ0epOJmW4U8rTepQs9qmlFd4NIvYL44HKjm5DqWiqdHdJQ1aBj8S9/UR
-         6AmUXNJDkmB2jA9wu8tEX+qBbId0GcGD0Bn5Lm9Y=
+        b=xJMJmdsHzcLZycrhRsMsONAKfZn1n7pN7fzpXTm045/eVFkAr/uRtizMN4dQac/3g
+         yxpFSNwLR+NY1Hw+DkJVk3sIstk3AIozzYQmn6/kQOJmiB2kvJJTXVlsupGi6XJQwP
+         qWVeFwvh/7FhtlIxP1yzq85b3wvy/sLcucYNplKI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Brian Masney <masneyb@onstation.org>,
+        stable@vger.kernel.org, Rob Clark <robdclark@gmail.com>,
+        Sean Paul <sean@poorly.run>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Todd Kjos <tkjos@google.com>,
+        Alistair Delva <adelva@google.com>,
+        Amit Pundir <amit.pundir@linaro.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        freedreno@lists.freedesktop.org,
+        clang-built-linux@googlegroups.com,
+        John Stultz <john.stultz@linaro.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
         Rob Clark <robdclark@chromium.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 13/86] drm/msm/mdp5: rate limit pp done timeout warnings
-Date:   Tue, 10 Mar 2020 13:44:37 +0100
-Message-Id: <20200310124531.511081490@linuxfoundation.org>
+Subject: [PATCH 4.19 14/86] drm: msm: Fix return type of dsi_mgr_connector_mode_valid for kCFI
+Date:   Tue, 10 Mar 2020 13:44:38 +0100
+Message-Id: <20200310124531.562308450@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310124530.808338541@linuxfoundation.org>
 References: <20200310124530.808338541@linuxfoundation.org>
@@ -60,35 +70,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brian Masney <masneyb@onstation.org>
+From: John Stultz <john.stultz@linaro.org>
 
-[ Upstream commit ef8c9809acb0805c991bba8bdd4749fc46d44a98 ]
+[ Upstream commit 7fd2dfc3694922eb7ace4801b7208cf9f62ebc7d ]
 
-Add rate limiting of the 'pp done time out' warnings since these
-warnings can quickly fill the dmesg buffer.
+I was hitting kCFI crashes when building with clang, and after
+some digging finally narrowed it down to the
+dsi_mgr_connector_mode_valid() function being implemented as
+returning an int, instead of an enum drm_mode_status.
 
-Signed-off-by: Brian Masney <masneyb@onstation.org>
+This patch fixes it, and appeases the opaque word of the kCFI
+gods (seriously, clang inlining everything makes the kCFI
+backtraces only really rough estimates of where things went
+wrong).
+
+Thanks as always to Sami for his help narrowing this down.
+
+Cc: Rob Clark <robdclark@gmail.com>
+Cc: Sean Paul <sean@poorly.run>
+Cc: Sami Tolvanen <samitolvanen@google.com>
+Cc: Todd Kjos <tkjos@google.com>
+Cc: Alistair Delva <adelva@google.com>
+Cc: Amit Pundir <amit.pundir@linaro.org>
+Cc: Sumit Semwal <sumit.semwal@linaro.org>
+Cc: freedreno@lists.freedesktop.org
+Cc: clang-built-linux@googlegroups.com
+Signed-off-by: John Stultz <john.stultz@linaro.org>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Tested-by: Amit Pundir <amit.pundir@linaro.org>
 Signed-off-by: Rob Clark <robdclark@chromium.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/msm/dsi/dsi_manager.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c
-index b1da9ce543790..aa28a43ff842c 100644
---- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c
-+++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c
-@@ -1118,8 +1118,8 @@ static void mdp5_crtc_wait_for_pp_done(struct drm_crtc *crtc)
- 	ret = wait_for_completion_timeout(&mdp5_crtc->pp_completion,
- 						msecs_to_jiffies(50));
- 	if (ret == 0)
--		dev_warn(dev->dev, "pp done time out, lm=%d\n",
--			 mdp5_cstate->pipeline.mixer->lm);
-+		dev_warn_ratelimited(dev->dev, "pp done time out, lm=%d\n",
-+				     mdp5_cstate->pipeline.mixer->lm);
+diff --git a/drivers/gpu/drm/msm/dsi/dsi_manager.c b/drivers/gpu/drm/msm/dsi/dsi_manager.c
+index 5224010d90e4a..bd66d2aac41f7 100644
+--- a/drivers/gpu/drm/msm/dsi/dsi_manager.c
++++ b/drivers/gpu/drm/msm/dsi/dsi_manager.c
+@@ -328,7 +328,7 @@ static int dsi_mgr_connector_get_modes(struct drm_connector *connector)
+ 	return num;
  }
  
- static void mdp5_crtc_wait_for_flush_done(struct drm_crtc *crtc)
+-static int dsi_mgr_connector_mode_valid(struct drm_connector *connector,
++static enum drm_mode_status dsi_mgr_connector_mode_valid(struct drm_connector *connector,
+ 				struct drm_display_mode *mode)
+ {
+ 	int id = dsi_mgr_connector_get_id(connector);
 -- 
 2.20.1
 
