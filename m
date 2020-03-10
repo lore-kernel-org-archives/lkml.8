@@ -2,385 +2,228 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67915C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 11:39:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75084C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 11:41:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E3DF24655
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 11:39:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KiZsMKxE"
+	by mail.kernel.org (Postfix) with ESMTP id 43B1A2468F
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 11:41:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583840473;
+	bh=QLt7kZCEnxiePVqlsBlF0aubfvfE3Qs3WP4X0CM6NhE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=UeBReZjKrEPGMejkHpvGMeAsYMBZaS146y6NgrJET7jRh6nqq2BLHyTXOcg0C9xdl
+	 78hqmGMKhGc0g3qN+ekw2umYk/eb0wzy0X+X+kmlVB/Zh7dgEo44ni6SL8k8rqM4h6
+	 3NUDHAAMkixj7waGD8TSPU9JG5kBp2SsajJ3+lDc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726353AbgCJLjP (ORCPT
+        id S1726378AbgCJLlM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 07:39:15 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:36321 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726252AbgCJLjO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 07:39:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583840352;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=jYyaTcgwaf+Ab6kZAkjqe1I6QREcj9m2tO6nfw5ZQhs=;
-        b=KiZsMKxEEjSp59Y9S16aVl+ujCzy0n8rPBorbsDwkwB/OxKCV5A2ilNAdGVecepgvVTbCW
-        Qj2AMDyA6YRESFuXrsXaeTyMWqcDqS6AAyo7udgD6rDyVkg6H/33oIpxOFrYKK2wJWMVIz
-        dJOBD1ijUEqdrs2Eda3SQ+meFc6CINo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-425-VDq5mprMPNyVsFVBJ2MGbg-1; Tue, 10 Mar 2020 07:39:09 -0400
-X-MC-Unique: VDq5mprMPNyVsFVBJ2MGbg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 10 Mar 2020 07:41:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37464 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726224AbgCJLlL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 07:41:11 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B9E7D8017CC;
-        Tue, 10 Mar 2020 11:39:06 +0000 (UTC)
-Received: from t480s.redhat.com (unknown [10.36.118.8])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C25295D9CA;
-        Tue, 10 Mar 2020 11:38:55 +0000 (UTC)
-From:   David Hildenbrand <david@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, virtualization@lists.linux-foundation.org,
-        Jason Wang <jasowang@redhat.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        David Hildenbrand <david@redhat.com>,
-        Tyler Sanderson <tysand@google.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Wei Wang <wei.w.wang@intel.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        David Rientjes <rientjes@google.com>,
-        Nadav Amit <namit@vmware.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH v3] virtio-balloon: Switch back to OOM handler for VIRTIO_BALLOON_F_DEFLATE_ON_OOM
-Date:   Tue, 10 Mar 2020 12:38:54 +0100
-Message-Id: <20200310113854.11515-1-david@redhat.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 0DE6E2468C;
+        Tue, 10 Mar 2020 11:41:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583840471;
+        bh=QLt7kZCEnxiePVqlsBlF0aubfvfE3Qs3WP4X0CM6NhE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=zGfLGVzdPIfTnCccgNOVx5CW1R9dpXEQhO7A4pCF6ujMer/TI9GJ0w2KBRqmSGTw5
+         FGZpHsXhUpPSur83ZvsuZqmAV3lBaKsVnb8fiLCmxRS5stu2EWx0FW5Xkr4BHYwfFp
+         +CAZbAIJ98sTFpB1t7Surh8En5pUN7wvUG66OoLY=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jBdG1-00BY0v-AA; Tue, 10 Mar 2020 11:41:09 +0000
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 10 Mar 2020 11:41:09 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     Robert Richter <rrichter@marvell.com>
+Cc:     kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
+        Eric Auger <eric.auger@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <Andrew.Murray@arm.com>,
+        Zenghui Yu <yuzenghui@huawei.com>
+Subject: Re: [PATCH v3 03/32] irqchip/gic-v3: Workaround Cavium TX1 erratum
+ when reading GICD_TYPER2
+In-Reply-To: <20200309221137.5pjh4vkc62ft3h2a@rric.localdomain>
+References: <20191224111055.11836-1-maz@kernel.org>
+ <20191224111055.11836-4-maz@kernel.org>
+ <20200309221137.5pjh4vkc62ft3h2a@rric.localdomain>
+Message-ID: <b1b7db1f0e1c47b7d9e2dfbbe3409b77@kernel.org>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/1.3.10
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: rrichter@marvell.com, kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org, eric.auger@redhat.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com, tglx@linutronix.de, jason@lakedaemon.net, lorenzo.pieralisi@arm.com, Andrew.Murray@arm.com, yuzenghui@huawei.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 71994620bb25 ("virtio_balloon: replace oom notifier with shrinker"=
-)
-changed the behavior when deflation happens automatically. Instead of
-deflating when called by the OOM handler, the shrinker is used.
+Hi Robert,
 
-However, the balloon is not simply some other slab cache that should be
-shrunk when under memory pressure. The shrinker does not have a concept o=
-f
-priorities yet, so this behavior cannot be configured. Eventually once
-that is in place, we might want to switch back after doing proper
-testing.
+On 2020-03-09 22:11, Robert Richter wrote:
+> On 24.12.19 11:10:26, Marc Zyngier wrote:
+>> Despite the architecture spec being extremely clear about the fact
+>> that reserved registers in the GIC distributor memory map are RES0
+>> (and thus are not allowed to generate an exception), the Cavium
+>> ThunderX (aka TX1) SoC explodes as such:
+>> 
+>> [    0.000000] GICv3: GIC: Using split EOI/Deactivate mode
+>> [    0.000000] GICv3: 128 SPIs implemented
+>> [    0.000000] GICv3: 0 Extended SPIs implemented
+>> [    0.000000] Internal error: synchronous external abort: 96000210 
+>> [#1] SMP
+>> [    0.000000] Modules linked in:
+>> [    0.000000] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 
+>> 5.4.0-rc4-00035-g3cf6a3d5725f #7956
+>> [    0.000000] Hardware name: cavium,thunder-88xx (DT)
+>> [    0.000000] pstate: 60000085 (nZCv daIf -PAN -UAO)
+>> [    0.000000] pc : __raw_readl+0x0/0x8
+>> [    0.000000] lr : gic_init_bases+0x110/0x560
+>> [    0.000000] sp : ffff800011243d90
+>> [    0.000000] x29: ffff800011243d90 x28: 0000000000000000
+>> [    0.000000] x27: 0000000000000018 x26: 0000000000000002
+>> [    0.000000] x25: ffff8000116f0000 x24: ffff000fbe6a2c80
+>> [    0.000000] x23: 0000000000000000 x22: ffff010fdc322b68
+>> [    0.000000] x21: ffff800010a7a208 x20: 00000000009b0404
+>> [    0.000000] x19: ffff80001124dad0 x18: 0000000000000010
+>> [    0.000000] x17: 000000004d8d492b x16: 00000000f67eb9af
+>> [    0.000000] x15: ffffffffffffffff x14: ffff800011249908
+>> [    0.000000] x13: ffff800091243ae7 x12: ffff800011243af4
+>> [    0.000000] x11: ffff80001126e000 x10: ffff800011243a70
+>> [    0.000000] x9 : 00000000ffffffd0 x8 : ffff80001069c828
+>> [    0.000000] x7 : 0000000000000059 x6 : ffff8000113fb4d1
+>> [    0.000000] x5 : 0000000000000001 x4 : 0000000000000000
+>> [    0.000000] x3 : 0000000000000000 x2 : 0000000000000000
+>> [    0.000000] x1 : 0000000000000000 x0 : ffff8000116f000c
+>> [    0.000000] Call trace:
+>> [    0.000000]  __raw_readl+0x0/0x8
+>> [    0.000000]  gic_of_init+0x188/0x224
+>> [    0.000000]  of_irq_init+0x200/0x3cc
+>> [    0.000000]  irqchip_init+0x1c/0x40
+>> [    0.000000]  init_IRQ+0x160/0x1d0
+>> [    0.000000]  start_kernel+0x2ec/0x4b8
+>> [    0.000000] Code: a8c47bfd d65f03c0 d538d080 d65f03c0 (b9400000)
+>> 
+>> when reading the GICv4.1 GICD_TYPER2 register, which is unexpected...
+>> 
+>> Work around it by adding a new quirk flagging all the A1 revisions
+>> of the distributor, but it remains unknown whether this could affect
+>> other revisions of this SoC (or even other SoCs from the same silicon
+>> vendor).
+>> 
+>> Signed-off-by: Marc Zyngier <maz@kernel.org>
+>> ---
+>>  drivers/irqchip/irq-gic-v3.c | 23 ++++++++++++++++++++++-
+>>  1 file changed, 22 insertions(+), 1 deletion(-)
+>> 
+>> diff --git a/drivers/irqchip/irq-gic-v3.c 
+>> b/drivers/irqchip/irq-gic-v3.c
+>> index 286f98222878..640d4db65b78 100644
+>> --- a/drivers/irqchip/irq-gic-v3.c
+>> +++ b/drivers/irqchip/irq-gic-v3.c
+>> @@ -34,6 +34,7 @@
+>>  #define GICD_INT_NMI_PRI	(GICD_INT_DEF_PRI & ~0x80)
+>> 
+>>  #define FLAGS_WORKAROUND_GICR_WAKER_MSM8996	(1ULL << 0)
+>> +#define FLAGS_WORKAROUND_GICD_TYPER2_TX1	(1ULL << 1)
+>> 
+>>  struct redist_region {
+>>  	void __iomem		*redist_base;
+>> @@ -1464,6 +1465,15 @@ static bool gic_enable_quirk_msm8996(void 
+>> *data)
+>>  	return true;
+>>  }
+>> 
+>> +static bool gic_enable_quirk_tx1(void *data)
+>> +{
+>> +	struct gic_chip_data *d = data;
+>> +
+>> +	d->flags |= FLAGS_WORKAROUND_GICD_TYPER2_TX1;
+>> +
+>> +	return true;
+>> +}
+>> +
+>>  static bool gic_enable_quirk_hip06_07(void *data)
+>>  {
+>>  	struct gic_chip_data *d = data;
+>> @@ -1502,6 +1512,12 @@ static const struct gic_quirk gic_quirks[] = {
+>>  		.mask	= 0xffffffff,
+>>  		.init	= gic_enable_quirk_hip06_07,
+>>  	},
+>> +	{
+>> +		.desc	= "GICv3: Cavium TX1 GICD_TYPER2 erratum",
+> 
+> There is no errata number yet.
 
-There was a report that this results in undesired side effects when
-inflating the balloon to shrink the page cache. [1]
-	"When inflating the balloon against page cache (i.e. no free memory
-	 remains) vmscan.c will both shrink page cache, but also invoke the
-	 shrinkers -- including the balloon's shrinker. So the balloon
-	 driver allocates memory which requires reclaim, vmscan gets this
-	 memory by shrinking the balloon, and then the driver adds the
-	 memory back to the balloon. Basically a busy no-op."
+Please let me know when/if you obtain one.
 
-The name "deflate on OOM" makes it pretty clear when deflation should
-happen - after other approaches to reclaim memory failed, not while
-reclaiming. This allows to minimize the footprint of a guest - memory
-will only be taken out of the balloon when really needed.
+> 
+>> +		.iidr	= 0xa100034c,
+>> +		.mask	= 0xfff00fff,
+>> +		.init	= gic_enable_quirk_tx1,
+> 
+> All TX1 and OcteonTX parts are affected, which is a0-a7 and b0-b7. So
+> the iidr/mask should be:
+> 
+> 		.iidr   = 0xa000034c,
+> 		.mask   = 0xe8f00fff,
 
-Keep using the shrinker for VIRTIO_BALLOON_F_FREE_PAGE_HINT, because
-this has no such side effects. Always register the shrinker with
-VIRTIO_BALLOON_F_FREE_PAGE_HINT now. We are always allowed to reuse free
-pages that are still to be processed by the guest. The hypervisor takes
-care of identifying and resolving possible races between processing a
-hinting request and the guest reusing a page.
+Thanks, that's pretty helpful. I'll update the patch with these values
+and the corresponding description.
 
-In contrast to pre commit 71994620bb25 ("virtio_balloon: replace oom
-notifier with shrinker"), don't add a moodule parameter to configure the
-number of pages to deflate on OOM. Can be re-added if really needed.
-Also, pay attention that leak_balloon() returns the number of 4k pages -
-convert it properly in virtio_balloon_oom_notify().
+>> +	},
+>>  	{
+>>  	}
+>>  };
+>> @@ -1577,7 +1593,12 @@ static int __init gic_init_bases(void __iomem 
+>> *dist_base,
+>>  	pr_info("%d SPIs implemented\n", GIC_LINE_NR - 32);
+>>  	pr_info("%d Extended SPIs implemented\n", GIC_ESPI_NR);
+>> 
+>> -	gic_data.rdists.gicd_typer2 = readl_relaxed(gic_data.dist_base + 
+>> GICD_TYPER2);
+>> +	/*
+>> +	 * ThunderX1 explodes on reading GICD_TYPER2, in total violation
+>> +	 * of the spec (which says that reserved addresses are RES0).
+>> +	 */
+>> +	if (!(gic_data.flags & FLAGS_WORKAROUND_GICD_TYPER2_TX1))
+>> +		gic_data.rdists.gicd_typer2 = readl_relaxed(gic_data.dist_base + 
+>> GICD_TYPER2);
+> 
+> You already said that checking for ArchRev of GICD_PIDR2 isn't an
+> option here. Though, it could...
 
-Testing done by Tyler for future reference:
-  Test setup: VM with 16 CPU, 64GB RAM. Running Debian 10. We have a 42
-  GB file full of random bytes that we continually cat to /dev/null.
-  This fills the page cache as the file is read. Meanwhile we trigger
-  the balloon to inflate, with a target size of 53 GB. This setup causes
-  the balloon inflation to pressure the page cache as the page cache is
-  also trying to grow. Afterwards we shrink the balloon back to zero (so
-  total deflate =3D total inflate).
+Once GICv3.2 starts using this register as well (because GICD_TYPER is
+already completely full), we'd have to fix it again. There is also the 
+thing
+you hinted at in the other thread: TX1 will generate a SEA on every 
+reserved
+GICD registers, so we may need to protect more than just this one over 
+time,
+and maybe more than just in the distributor.
 
-  Without patch (kernel 4.19.0-5):
-  Inflation never reaches the target until we stop the "cat file >
-  /dev/null" process. Total inflation time was 542 seconds. The longest
-  period that made no net forward progress was 315 seconds (see attached
-  graph).
-  Result of "grep balloon /proc/vmstat" after the test:
-  balloon_inflate 154828377
-  balloon_deflate 154828377
+Thanks,
 
-  With patch (kernel 5.6.0-rc4+):
-  Total inflation duration was 63 seconds. No deflate-queue activity
-  occurs when pressuring the page-cache.
-  Result of "grep balloon /proc/vmstat" after the test:
-  balloon_inflate 12968539
-  balloon_deflate 12968539
-
-  Conclusion: This patch fixes the issue. In the test it reduced
-  inflate/deflate activity by 12x, and reduced inflation time by 8.6x.
-  But more importantly, if we hadn't killed the "grep balloon
-  /proc/vmstat" process then, without the patch, the inflation process
-  would never reach the target.
-
-[1] https://www.spinics.net/lists/linux-virtualization/msg40863.html
-
-Reported-by: Tyler Sanderson <tysand@google.com>
-Tested-by: Tyler Sanderson <tysand@google.com>
-Fixes: 71994620bb25 ("virtio_balloon: replace oom notifier with shrinker"=
-)
-Cc: Michael S. Tsirkin <mst@redhat.com>
-Cc: Wei Wang <wei.w.wang@intel.com>
-Cc: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Cc: David Rientjes <rientjes@google.com>
-Cc: Nadav Amit <namit@vmware.com>
-Cc: Michal Hocko <mhocko@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
-
-v2 -> v3:
-- Use vb->vdev instead of vdev in all feature checks. We'll clean the
-  other ones up later.
-- Add one empty line virtballoon_probe() to make it look consistent.
-- Drop one unrelated added line in virtballoon_remove()
-
-v1 -> v2:
-- Rebase on top of linux-next (free page reporting)
-- Clarified some parts in the patch description and added testing
-  instructions/results
-- Added Fixes: and Tested-by:
-
-As this patch is based on free page reporting, MST suggested to take this
-via Andrew's tree.
-
----
- drivers/virtio/virtio_balloon.c | 103 +++++++++++++++-----------------
- 1 file changed, 47 insertions(+), 56 deletions(-)
-
-diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_ball=
-oon.c
-index 8511d258dbb4..b0f15dc779c6 100644
---- a/drivers/virtio/virtio_balloon.c
-+++ b/drivers/virtio/virtio_balloon.c
-@@ -14,6 +14,7 @@
- #include <linux/slab.h>
- #include <linux/module.h>
- #include <linux/balloon_compaction.h>
-+#include <linux/oom.h>
- #include <linux/wait.h>
- #include <linux/mm.h>
- #include <linux/mount.h>
-@@ -28,7 +29,9 @@
-  */
- #define VIRTIO_BALLOON_PAGES_PER_PAGE (unsigned)(PAGE_SIZE >> VIRTIO_BAL=
-LOON_PFN_SHIFT)
- #define VIRTIO_BALLOON_ARRAY_PFNS_MAX 256
--#define VIRTBALLOON_OOM_NOTIFY_PRIORITY 80
-+/* Maximum number of (4k) pages to deflate on OOM notifications. */
-+#define VIRTIO_BALLOON_OOM_NR_PAGES 256
-+#define VIRTIO_BALLOON_OOM_NOTIFY_PRIORITY 80
-=20
- #define VIRTIO_BALLOON_FREE_PAGE_ALLOC_FLAG (__GFP_NORETRY | __GFP_NOWAR=
-N | \
- 					     __GFP_NOMEMALLOC)
-@@ -114,9 +117,12 @@ struct virtio_balloon {
- 	/* Memory statistics */
- 	struct virtio_balloon_stat stats[VIRTIO_BALLOON_S_NR];
-=20
--	/* To register a shrinker to shrink memory upon memory pressure */
-+	/* Shrinker to return free pages - VIRTIO_BALLOON_F_FREE_PAGE_HINT */
- 	struct shrinker shrinker;
-=20
-+	/* OOM notifier to deflate on OOM - VIRTIO_BALLOON_F_DEFLATE_ON_OOM */
-+	struct notifier_block oom_nb;
-+
- 	/* Free page reporting device */
- 	struct virtqueue *reporting_vq;
- 	struct page_reporting_dev_info pr_dev_info;
-@@ -830,50 +836,13 @@ static unsigned long shrink_free_pages(struct virti=
-o_balloon *vb,
- 	return blocks_freed * VIRTIO_BALLOON_HINT_BLOCK_PAGES;
- }
-=20
--static unsigned long leak_balloon_pages(struct virtio_balloon *vb,
--                                          unsigned long pages_to_free)
--{
--	return leak_balloon(vb, pages_to_free * VIRTIO_BALLOON_PAGES_PER_PAGE) =
-/
--		VIRTIO_BALLOON_PAGES_PER_PAGE;
--}
--
--static unsigned long shrink_balloon_pages(struct virtio_balloon *vb,
--					  unsigned long pages_to_free)
--{
--	unsigned long pages_freed =3D 0;
--
--	/*
--	 * One invocation of leak_balloon can deflate at most
--	 * VIRTIO_BALLOON_ARRAY_PFNS_MAX balloon pages, so we call it
--	 * multiple times to deflate pages till reaching pages_to_free.
--	 */
--	while (vb->num_pages && pages_freed < pages_to_free)
--		pages_freed +=3D leak_balloon_pages(vb,
--						  pages_to_free - pages_freed);
--
--	update_balloon_size(vb);
--
--	return pages_freed;
--}
--
- static unsigned long virtio_balloon_shrinker_scan(struct shrinker *shrin=
-ker,
- 						  struct shrink_control *sc)
- {
--	unsigned long pages_to_free, pages_freed =3D 0;
- 	struct virtio_balloon *vb =3D container_of(shrinker,
- 					struct virtio_balloon, shrinker);
-=20
--	pages_to_free =3D sc->nr_to_scan;
--
--	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_FREE_PAGE_HINT))
--		pages_freed =3D shrink_free_pages(vb, pages_to_free);
--
--	if (pages_freed >=3D pages_to_free)
--		return pages_freed;
--
--	pages_freed +=3D shrink_balloon_pages(vb, pages_to_free - pages_freed);
--
--	return pages_freed;
-+	return shrink_free_pages(vb, sc->nr_to_scan);
- }
-=20
- static unsigned long virtio_balloon_shrinker_count(struct shrinker *shri=
-nker,
-@@ -881,12 +850,22 @@ static unsigned long virtio_balloon_shrinker_count(=
-struct shrinker *shrinker,
- {
- 	struct virtio_balloon *vb =3D container_of(shrinker,
- 					struct virtio_balloon, shrinker);
--	unsigned long count;
-=20
--	count =3D vb->num_pages / VIRTIO_BALLOON_PAGES_PER_PAGE;
--	count +=3D vb->num_free_page_blocks * VIRTIO_BALLOON_HINT_BLOCK_PAGES;
-+	return vb->num_free_page_blocks * VIRTIO_BALLOON_HINT_BLOCK_PAGES;
-+}
-+
-+static int virtio_balloon_oom_notify(struct notifier_block *nb,
-+				     unsigned long dummy, void *parm)
-+{
-+	struct virtio_balloon *vb =3D container_of(nb,
-+						 struct virtio_balloon, oom_nb);
-+	unsigned long *freed =3D parm;
-+
-+	*freed +=3D leak_balloon(vb, VIRTIO_BALLOON_OOM_NR_PAGES) /
-+		  VIRTIO_BALLOON_PAGES_PER_PAGE;
-+	update_balloon_size(vb);
-=20
--	return count;
-+	return NOTIFY_OK;
- }
-=20
- static void virtio_balloon_unregister_shrinker(struct virtio_balloon *vb=
-)
-@@ -971,7 +950,23 @@ static int virtballoon_probe(struct virtio_device *v=
-dev)
- 						  VIRTIO_BALLOON_CMD_ID_STOP);
- 		spin_lock_init(&vb->free_page_list_lock);
- 		INIT_LIST_HEAD(&vb->free_page_list);
-+		/*
-+		 * We're allowed to reuse any free pages, even if they are
-+		 * still to be processed by the host.
-+		 */
-+		err =3D virtio_balloon_register_shrinker(vb);
-+		if (err)
-+			goto out_del_balloon_wq;
-+	}
-+
-+	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_DEFLATE_ON_OOM)) {
-+		vb->oom_nb.notifier_call =3D virtio_balloon_oom_notify;
-+		vb->oom_nb.priority =3D VIRTIO_BALLOON_OOM_NOTIFY_PRIORITY;
-+		err =3D register_oom_notifier(&vb->oom_nb);
-+		if (err < 0)
-+			goto out_unregister_shrinker;
- 	}
-+
- 	if (virtio_has_feature(vdev, VIRTIO_BALLOON_F_PAGE_POISON)) {
- 		/* Start with poison val of 0 representing general init */
- 		__u32 poison_val =3D 0;
-@@ -986,15 +981,6 @@ static int virtballoon_probe(struct virtio_device *v=
-dev)
- 		virtio_cwrite(vb->vdev, struct virtio_balloon_config,
- 			      poison_val, &poison_val);
- 	}
--	/*
--	 * We continue to use VIRTIO_BALLOON_F_DEFLATE_ON_OOM to decide if a
--	 * shrinker needs to be registered to relieve memory pressure.
--	 */
--	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_DEFLATE_ON_OOM)) {
--		err =3D virtio_balloon_register_shrinker(vb);
--		if (err)
--			goto out_del_balloon_wq;
--	}
-=20
- 	vb->pr_dev_info.report =3D virtballoon_free_page_report;
- 	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_REPORTING)) {
-@@ -1003,12 +989,12 @@ static int virtballoon_probe(struct virtio_device =
-*vdev)
- 		capacity =3D virtqueue_get_vring_size(vb->reporting_vq);
- 		if (capacity < PAGE_REPORTING_CAPACITY) {
- 			err =3D -ENOSPC;
--			goto out_unregister_shrinker;
-+			goto out_unregister_oom;
- 		}
-=20
- 		err =3D page_reporting_register(&vb->pr_dev_info);
- 		if (err)
--			goto out_unregister_shrinker;
-+			goto out_unregister_oom;
- 	}
-=20
- 	virtio_device_ready(vdev);
-@@ -1017,8 +1003,11 @@ static int virtballoon_probe(struct virtio_device =
-*vdev)
- 		virtballoon_changed(vdev);
- 	return 0;
-=20
--out_unregister_shrinker:
-+out_unregister_oom:
- 	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_DEFLATE_ON_OOM))
-+		unregister_oom_notifier(&vb->oom_nb);
-+out_unregister_shrinker:
-+	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_FREE_PAGE_HINT))
- 		virtio_balloon_unregister_shrinker(vb);
- out_del_balloon_wq:
- 	if (virtio_has_feature(vdev, VIRTIO_BALLOON_F_FREE_PAGE_HINT))
-@@ -1061,6 +1050,8 @@ static void virtballoon_remove(struct virtio_device=
- *vdev)
- 	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_REPORTING))
- 		page_reporting_unregister(&vb->pr_dev_info);
- 	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_DEFLATE_ON_OOM))
-+		unregister_oom_notifier(&vb->oom_nb);
-+	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_FREE_PAGE_HINT))
- 		virtio_balloon_unregister_shrinker(vb);
- 	spin_lock_irq(&vb->stop_update_lock);
- 	vb->stop_update =3D true;
---=20
-2.24.1
-
+         M.
+-- 
+Jazz is not dead. It just smells funny...
