@@ -2,101 +2,102 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11349C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 17:14:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8104BC18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 17:14:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD6F82146E
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 17:14:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583860447;
-	bh=o0q9VpNdhVGqOnm1WVJorPJ2VBsqPoVuT+wH+fscnfA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Knl/h4vLeq5WWVhp6dSCYBgP7LkqdgiR/+b8Cl2Yhm8tDRq7gBJevgT+Zy43zm1w/
-	 Ct8g7Ermcds7JN5akwQRAaS0zM1WoYrblLjBJxcClhJ+YRj4I641X/U2Po+1KacUXl
-	 zAOLtmhzXujtYUmGY8Tm/V9M5zpWRu7VjoNEVMwA=
+	by mail.kernel.org (Postfix) with ESMTP id 5A48821D56
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 17:14:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726913AbgCJROG (ORCPT
+        id S1727007AbgCJROQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 13:14:06 -0400
-Received: from foss.arm.com ([217.140.110.172]:39758 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726295AbgCJROG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 13:14:06 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0A8EC1FB;
-        Tue, 10 Mar 2020 10:14:06 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 76BCF3F67D;
-        Tue, 10 Mar 2020 10:14:05 -0700 (PDT)
-Date:   Tue, 10 Mar 2020 17:14:03 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Michael Walle <michael@walle.cc>
-Cc:     Vladimir Oltean <olteanv@gmail.com>, linux-spi@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>, linux-media@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>
-Subject: Re: [PATCH] spi: spi-fsl-dspi: fix DMA mapping
-Message-ID: <20200310171403.GL4106@sirena.org.uk>
-References: <20200310073313.21277-1-michael@walle.cc>
- <4beb5200a76f2d817be7276444543de4@walle.cc>
- <ea6ffa30ddc2459d07935e5e61a41172@walle.cc>
- <CA+h21hqMoPhbq8YG0UeV1kP0iXApYsJvb9MZjPGX54dm2U-KnQ@mail.gmail.com>
- <76923af394f334337a3cac125c270087@walle.cc>
+        Tue, 10 Mar 2020 13:14:16 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2543 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726504AbgCJROQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 13:14:16 -0400
+Received: from lhreml702-cah.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id 52588B476245A54C551D;
+        Tue, 10 Mar 2020 17:14:14 +0000 (GMT)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ lhreml702-cah.china.huawei.com (10.201.108.43) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Tue, 10 Mar 2020 17:14:13 +0000
+Received: from [127.0.0.1] (10.202.226.45) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5; Tue, 10 Mar
+ 2020 17:14:13 +0000
+Subject: Re: linux-next: Tree for Mar 10 (mtd/spi-nor/)
+To:     Randy Dunlap <rdunlap@infradead.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
+CC:     <linux-mtd@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Joe Perches <joe@perches.com>, Mark Brown <broonie@kernel.org>
+References: <20200310201923.24e34363@canb.auug.org.au>
+ <43df5279-7d91-020d-1632-9b3528f4feee@infradead.org>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <f9d33b09-fe9f-2c26-96dc-b2eaa53c614b@huawei.com>
+Date:   Tue, 10 Mar 2020 17:14:13 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="sCNd3Ivk/oijKKf1"
-Content-Disposition: inline
-In-Reply-To: <76923af394f334337a3cac125c270087@walle.cc>
-X-Cookie: In space, no one can hear you fart.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <43df5279-7d91-020d-1632-9b3528f4feee@infradead.org>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.45]
+X-ClientProxiedBy: lhreml706-chm.china.huawei.com (10.201.108.55) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
++
 
---sCNd3Ivk/oijKKf1
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 10/03/2020 14:37, Randy Dunlap wrote:
+> On 3/10/20 2:19 AM, Stephen Rothwell wrote:
+>> Hi all,
+>>
+>> Changes since 20200306:
+>>
+>> Removed tree: nfc-next (abanboned)
+> 
+>                                doned
+> 
+> 
+> on i386:
+> 
+> WARNING: unmet direct dependencies detected for MTD_SPI_NOR
 
-On Tue, Mar 10, 2020 at 03:12:45PM +0100, Michael Walle wrote:
-> Am 2020-03-10 14:02, schrieb Vladimir Oltean:
+Uh, so kbuild honors a "select" of a config option which has unmet 
+dependencies:
 
-> > I'm testing LS1028A with IOMMU_DEFAULT_PASSTHROUGH=y and I didn't have
-> > time to change my setup now. I've also sent a v3 to my patch series
-> > which is going to conflict with this one, sorry.
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/kbuild/kconfig-language.rst?h=v5.6-rc5#n143
 
-> No worries, its easy enough to rebase.
+So this looks introduced by:
 
-> > I would have picked
-> > your patch up with my series but I didn't have the right environment
-> > to test it.
+https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/drivers/spi/Kconfig?h=next-20200310&id=e14572c52546c16e159c4c1814984843a119e823
 
-> I'll resend a v2 once your series is working.
+>    Depends on [m]: MTD [=m] && SPI_MASTER [=y] >    Selected by [y]:
+>    - SPI_HISI_SFC_V3XX [=y] && SPI [=y] && SPI_MASTER [=y] && (ARM64 && ACPI [=y] || COMPILE_TEST [=y]) && HAS_IOMEM [=y]
+> 
+> ERROR: "spi_nor_scan" [drivers/mtd/spi-nor/intel-spi.ko] undefined!
+> ERROR: "spi_nor_scan" [drivers/mtd/spi-nor/mtk-quadspi.ko] undefined!
+> ERROR: "spi_nor_scan" [drivers/mtd/spi-nor/hisi-sfc.ko] undefined!
+> ERROR: "spi_nor_scan" [drivers/mtd/spi-nor/aspeed-smc.ko] undefined!
+> 
+> 
+> Full randconfig file is attached.
+> 
+> 
+> ______________________________________________________
+> Linux MTD discussion mailing list
+> http://lists.infradead.org/mailman/listinfo/linux-mtd/
+> 
 
-Since it looks like your series might need another spin anyway I'm
-thinking it's sensible to apply this now and you rebase instead?  Cuts
-down on the number of pending patches if nothing else (unless the
-testing stuff gets sorted out of course).
-
---sCNd3Ivk/oijKKf1
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5nytsACgkQJNaLcl1U
-h9CFXAf9Fs1LfShbPgNXymA2EJASuKmlCDxY/9JGibPArY1h+qg7eMbJsbijndm2
-iXclHhId06fmvFubASnkilFQmkiJRa8xQ9f0nc5bAU0im4gKeMaO95GzMzoyrCa4
-SPLpHEjJLWqD/aW9ewH7Hr5Q9Z45QvmGW/43go97TgXv5CTwwZzcEuLDSabSFUaR
-mVvqUpQGy+dnRCebK5XVt31+n5SSJ8ma6c8e6QcO8qRbJzf5Nq4hxg1eH+vYNAkR
-vQGIiF3wL9aMu9JbLmTFSPe/yj+WSGr9jDNPT6NgbR54XxwCzFVjAQx21Nj7xVIe
-+PQK4vngYCQTN36fg6XPznpD7EeEYA==
-=+Mos
------END PGP SIGNATURE-----
-
---sCNd3Ivk/oijKKf1--
