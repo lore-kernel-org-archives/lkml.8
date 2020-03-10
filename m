@@ -2,330 +2,162 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.7 required=3.0 tests=FORGED_MUA_MOZILLA,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE85CC2BB57
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:44:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE890C18E7A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:44:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3F4524684
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:44:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583847855;
-	bh=E8QkjHVkzOcpMzAbxGJQTzkpHIqmt5HiFJokGy90umg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DUZV+K096cG7dM31kggGs+b7v0vcusIRwwC3YXkrEFSYDfiTrNjl1CzniWNxsrtgK
-	 fC4dP/UFa58s1rU1iTGlm0pk6l2NrsMEyJdJPLFSQkDEdO7t28hy0zB9TX24B8vr7k
-	 i5ggEwmRtT/ZihTms0AYCgXcGb/i00zzZRVugyfQ=
+	by mail.kernel.org (Postfix) with ESMTP id 8D43D24649
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:44:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727917AbgCJNoN (ORCPT
+        id S1726885AbgCJNob (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:44:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37590 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727206AbgCJNnT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:43:19 -0400
-Received: from mail.kernel.org (ip5f5ad4e9.dynamic.kabel-deutschland.de [95.90.212.233])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 68419246AA;
-        Tue, 10 Mar 2020 13:43:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583847797;
-        bh=E8QkjHVkzOcpMzAbxGJQTzkpHIqmt5HiFJokGy90umg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1fsorBq9m4u8TSGUhgE7YDg4bocLSDsZCkOBBLiKF7xc0o4IUXDlUrth4mwUpCTB7
-         nwDVR3Og3/3jap8Yq4/BNLay6ifrDiRXwDqSDHFVH5RR7pMJl14Xs8sjkriSZqjYu2
-         zIIQSbKzlahHqKg2MDkaNZiXku9SpxfJCKf3GJlY=
-Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
-        (envelope-from <mchehab@kernel.org>)
-        id 1jBfAB-0005wK-EA; Tue, 10 Mar 2020 14:43:15 +0100
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        linux-media@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v2 15/22] media: docs: split uAPI info from imx.rst
-Date:   Tue, 10 Mar 2020 14:43:06 +0100
-Message-Id: <da5a18aa27c564cdb4fa6f84026be1c72c1a877c.1583847556.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <cover.1583847556.git.mchehab+huawei@kernel.org>
-References: <cover.1583847556.git.mchehab+huawei@kernel.org>
+        Tue, 10 Mar 2020 09:44:31 -0400
+Received: from mail-oln040092065064.outbound.protection.outlook.com ([40.92.65.64]:21094
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726353AbgCJNoZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:44:25 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=YsjjE4kKS6KrTu1V2AsyqPh6fKHbdgb28cEziFyjxyRs30uGyZjpEFz4hQg5utQt6Wf7Gjm4z3XW3SuKo2t+6zZksneiPJJCSW4zJgpdDhLr/Dq9l3rfnEiFu6frBJWKTAkGFgKbRcFps8lLKJqwKKjRNHUwjPG9pbhbt8tEfiarxwDz/P6TTYg/lwRepWPUldDo7S00Dabq/5247n2BDlIEBur4WXAfoKkYQjh9Qww+lD3jwNMXG/IEFY0KVqhSr+7iDNa6/hp/u5ZCxF5gcie5IC0/yKSNbf7S1EX8QfHBpggkmiNDy4E0hwIu+tMgOFukJU9G6ECIKqoR146XRg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bLHW4bnkRE8FhDXjRsEkmXEsSRfI6uPgd9InYXaTyn4=;
+ b=lxDJrM+xPKjfdADIHE6E+GE0b/6l+L/uPtSyXLyVWS3f0XJK/vC9yuNjcw7DaHFMF4GjUa6ci8Sa8mr5yUYUFjAI5PKhK1KFGjQ/0TdPnUX2FpK1+bHaNjo1/G6Y9pZxExGZcO+oCIBZe14D6x7mIxjyXG6VtEqLtJ7iymN2aatahD7gPPW7/n3yBmrS2LqIaVsSat8wQDiYI7CWSnDAm3Rgc6MIYYZpVZRWepQG9hY9tPGs9723VrFkVBu3L3jgvQJhq5iHJvXmCRsjUInTwKxgA9+HXgo7UFS/4Xu8sPvHVaANJpIsHCMKZnIhJzaT8ZtPGNpaBgValjRfOHKFSg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=hotmail.de; dmarc=pass action=none header.from=hotmail.de;
+ dkim=pass header.d=hotmail.de; arc=none
+Received: from HE1EUR01FT023.eop-EUR01.prod.protection.outlook.com
+ (2a01:111:e400:7e18::38) by
+ HE1EUR01HT184.eop-EUR01.prod.protection.outlook.com (2a01:111:e400:7e18::426)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.11; Tue, 10 Mar
+ 2020 13:44:21 +0000
+Received: from AM6PR03MB5170.eurprd03.prod.outlook.com (10.152.0.52) by
+ HE1EUR01FT023.mail.protection.outlook.com (10.152.0.162) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2793.11 via Frontend Transport; Tue, 10 Mar 2020 13:44:21 +0000
+X-IncomingTopHeaderMarker: OriginalChecksum:7E750738653F338AC5481CC98ABEC498EE56D1454207C1D827F599A94EC87B9E;UpperCasedChecksum:546C79F509E24C24D31C77329F65014E73A7551D242F040C319041A4C5FA5FC8;SizeAsReceived:10300;Count:50
+Received: from AM6PR03MB5170.eurprd03.prod.outlook.com
+ ([fe80::1956:d274:cab3:b4dd]) by AM6PR03MB5170.eurprd03.prod.outlook.com
+ ([fe80::1956:d274:cab3:b4dd%6]) with mapi id 15.20.2793.013; Tue, 10 Mar 2020
+ 13:44:20 +0000
+From:   Bernd Edlinger <bernd.edlinger@hotmail.de>
+Subject: [PATCH 4/4] kernel: doc: remove outdated comment cred.c
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Andrei Vagin <avagin@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Yuyang Du <duyuyang@gmail.com>,
+        David Hildenbrand <david@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        David Howells <dhowells@redhat.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christian Kellner <christian@kellner.me>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>
+References: <AM6PR03MB5170EB4427BF5C67EE98FF09E4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87r1y8dqqz.fsf@x220.int.ebiederm.org>
+ <AM6PR03MB517053AED7DC89F7C0704B7DE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <AM6PR03MB51703B44170EAB4626C9B2CAE4E20@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87tv32cxmf.fsf_-_@x220.int.ebiederm.org>
+ <87v9ne5y4y.fsf_-_@x220.int.ebiederm.org>
+ <87zhcq4jdj.fsf_-_@x220.int.ebiederm.org>
+ <AM6PR03MB5170BC58D90BAD80CDEF3F8BE4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <878sk94eay.fsf@x220.int.ebiederm.org>
+ <AM6PR03MB517086003BD2C32E199690A3E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87r1y12yc7.fsf@x220.int.ebiederm.org> <87k13t2xpd.fsf@x220.int.ebiederm.org>
+ <87d09l2x5n.fsf@x220.int.ebiederm.org>
+ <AM6PR03MB5170F0F9DC18F5EA77C9A857E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <871rq12vxu.fsf@x220.int.ebiederm.org>
+ <AM6PR03MB5170DF45E3245F55B95CCD91E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <877dzt1fnf.fsf@x220.int.ebiederm.org>
+Message-ID: <AM6PR03MB517039DB07AB641C194FEA57E4FF0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+Date:   Tue, 10 Mar 2020 14:44:18 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+In-Reply-To: <877dzt1fnf.fsf@x220.int.ebiederm.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: AM0PR06CA0087.eurprd06.prod.outlook.com
+ (2603:10a6:208:fa::28) To AM6PR03MB5170.eurprd03.prod.outlook.com
+ (2603:10a6:20b:ca::23)
+X-Microsoft-Original-Message-ID: <26ec8f1e-607a-3464-e580-c68ae3cdbc70@hotmail.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [192.168.1.101] (92.77.140.102) by AM0PR06CA0087.eurprd06.prod.outlook.com (2603:10a6:208:fa::28) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.15 via Frontend Transport; Tue, 10 Mar 2020 13:44:19 +0000
+X-Microsoft-Original-Message-ID: <26ec8f1e-607a-3464-e580-c68ae3cdbc70@hotmail.de>
+X-TMN:  [fGR2VABPmKiLligx1HY68sPKWOnof6VG]
+X-MS-PublicTrafficType: Email
+X-IncomingHeaderCount: 50
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-Correlation-Id: a9c155f3-bd6d-4879-c15e-08d7c4f922a1
+X-MS-TrafficTypeDiagnostic: HE1EUR01HT184:
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 0Zh7x99FEz4cVfBEjGLhgYuzTuULKoVywh+n1v+3vpN8MSa68Yfye2zoJeUA3axCxAweLjyZYosWdyZIXte1s1QjvucfKtOYxpzJUUoqCR0W+Dz/4YpkyPU5G7mKFRXrUuV3yNvNmK3xg6h5SF7eyJ2rOeTfgH6jA6VQi8uAdS8rEAh/rqHKV59rkWRzdGPo
+X-MS-Exchange-AntiSpam-MessageData: ivLrgL/u02+FA2EPMhnF+65aFV1Qaky912d50Y5zLXtrJ+jE6gM09S8uzLts73rqNYJfcJ3RURUBl+wdBVZDwBdd3DFdie3i93MvOWgq+nVlQfJ6+7Di6e5Ns5Kprtk4GG2t7kREoSOzoSCc5YxSUw==
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a9c155f3-bd6d-4879-c15e-08d7c4f922a1
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Mar 2020 13:44:20.5919
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1EUR01HT184
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This file contains both driver develompent documentation and
-userspace API.
+This removes an outdated comment in prepare_kernel_cred.
 
-Split on two, as they're usually read by different audiences.
+There is no "cred_replace_mutex" any more, so the comment must
+go away.
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Signed-off-by: Bernd Edlinger <bernd.edlinger@hotmail.de>
 ---
- Documentation/media/v4l-drivers/imx-uapi.rst | 125 +++++++++++++++++++
- Documentation/media/v4l-drivers/imx.rst      |  88 +------------
- Documentation/media/v4l-drivers/index.rst    |   1 +
- 3 files changed, 128 insertions(+), 86 deletions(-)
- create mode 100644 Documentation/media/v4l-drivers/imx-uapi.rst
+ kernel/cred.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/Documentation/media/v4l-drivers/imx-uapi.rst b/Documentation/media/v4l-drivers/imx-uapi.rst
-new file mode 100644
-index 000000000000..8d47712dea9f
---- /dev/null
-+++ b/Documentation/media/v4l-drivers/imx-uapi.rst
-@@ -0,0 +1,125 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+=========================
-+i.MX Video Capture Driver
-+=========================
-+
-+Events
-+======
-+
-+.. _imx_api_ipuX_csiY:
-+
-+ipuX_csiY
-+---------
-+
-+This subdev can generate the following event when enabling the second
-+IDMAC source pad:
-+
-+- V4L2_EVENT_IMX_FRAME_INTERVAL_ERROR
-+
-+The user application can subscribe to this event from the ipuX_csiY
-+subdev node. This event is generated by the Frame Interval Monitor
-+(see below for more on the FIM).
-+
-+Controls
-+========
-+
-+.. _imx_api_FIM:
-+
-+Frame Interval Monitor in ipuX_csiY
-+-----------------------------------
-+
-+The adv718x decoders can occasionally send corrupt fields during
-+NTSC/PAL signal re-sync (too little or too many video lines). When
-+this happens, the IPU triggers a mechanism to re-establish vertical
-+sync by adding 1 dummy line every frame, which causes a rolling effect
-+from image to image, and can last a long time before a stable image is
-+recovered. Or sometimes the mechanism doesn't work at all, causing a
-+permanent split image (one frame contains lines from two consecutive
-+captured images).
-+
-+From experiment it was found that during image rolling, the frame
-+intervals (elapsed time between two EOF's) drop below the nominal
-+value for the current standard, by about one frame time (60 usec),
-+and remain at that value until rolling stops.
-+
-+While the reason for this observation isn't known (the IPU dummy
-+line mechanism should show an increase in the intervals by 1 line
-+time every frame, not a fixed value), we can use it to detect the
-+corrupt fields using a frame interval monitor. If the FIM detects a
-+bad frame interval, the ipuX_csiY subdev will send the event
-+V4L2_EVENT_IMX_FRAME_INTERVAL_ERROR. Userland can register with
-+the FIM event notification on the ipuX_csiY subdev device node.
-+Userland can issue a streaming restart when this event is received
-+to correct the rolling/split image.
-+
-+The ipuX_csiY subdev includes custom controls to tweak some dials for
-+FIM. If one of these controls is changed during streaming, the FIM will
-+be reset and will continue at the new settings.
-+
-+- V4L2_CID_IMX_FIM_ENABLE
-+
-+Enable/disable the FIM.
-+
-+- V4L2_CID_IMX_FIM_NUM
-+
-+How many frame interval measurements to average before comparing against
-+the nominal frame interval reported by the sensor. This can reduce noise
-+caused by interrupt latency.
-+
-+- V4L2_CID_IMX_FIM_TOLERANCE_MIN
-+
-+If the averaged intervals fall outside nominal by this amount, in
-+microseconds, the V4L2_EVENT_IMX_FRAME_INTERVAL_ERROR event is sent.
-+
-+- V4L2_CID_IMX_FIM_TOLERANCE_MAX
-+
-+If any intervals are higher than this value, those samples are
-+discarded and do not enter into the average. This can be used to
-+discard really high interval errors that might be due to interrupt
-+latency from high system load.
-+
-+- V4L2_CID_IMX_FIM_NUM_SKIP
-+
-+How many frames to skip after a FIM reset or stream restart before
-+FIM begins to average intervals.
-+
-+- V4L2_CID_IMX_FIM_ICAP_CHANNEL / V4L2_CID_IMX_FIM_ICAP_EDGE
-+
-+These controls will configure an input capture channel as the method
-+for measuring frame intervals. This is superior to the default method
-+of measuring frame intervals via EOF interrupt, since it is not subject
-+to uncertainty errors introduced by interrupt latency.
-+
-+Input capture requires hardware support. A VSYNC signal must be routed
-+to one of the i.MX6 input capture channel pads.
-+
-+V4L2_CID_IMX_FIM_ICAP_CHANNEL configures which i.MX6 input capture
-+channel to use. This must be 0 or 1.
-+
-+V4L2_CID_IMX_FIM_ICAP_EDGE configures which signal edge will trigger
-+input capture events. By default the input capture method is disabled
-+with a value of IRQ_TYPE_NONE. Set this control to IRQ_TYPE_EDGE_RISING,
-+IRQ_TYPE_EDGE_FALLING, or IRQ_TYPE_EDGE_BOTH to enable input capture,
-+triggered on the given signal edge(s).
-+
-+When input capture is disabled, frame intervals will be measured via
-+EOF interrupt.
-+
-+
-+File list
-+---------
-+
-+drivers/staging/media/imx/
-+include/media/imx.h
-+include/linux/imx-media.h
-+
-+
-+Authors
-+-------
-+
-+- Steve Longerbeam <steve_longerbeam@mentor.com>
-+- Philipp Zabel <kernel@pengutronix.de>
-+- Russell King <linux@armlinux.org.uk>
-+
-+Copyright (C) 2012-2017 Mentor Graphics Inc.
-diff --git a/Documentation/media/v4l-drivers/imx.rst b/Documentation/media/v4l-drivers/imx.rst
-index 1246573c1019..3182951c7651 100644
---- a/Documentation/media/v4l-drivers/imx.rst
-+++ b/Documentation/media/v4l-drivers/imx.rst
-@@ -191,14 +191,7 @@ or unqualified interlaced). The capture interface will enforce the same
- field order as the source pad field order (interlaced-bt if source pad
- is seq-bt, interlaced-tb if source pad is seq-tb).
- 
--This subdev can generate the following event when enabling the second
--IDMAC source pad:
--
--- V4L2_EVENT_IMX_FRAME_INTERVAL_ERROR
--
--The user application can subscribe to this event from the ipuX_csiY
--subdev node. This event is generated by the Frame Interval Monitor
--(see below for more on the FIM).
-+For events produced by ipuX_csiY, see ref:`imx_api_ipuX_csiY`.
- 
- Cropping in ipuX_csiY
- ---------------------
-@@ -247,84 +240,7 @@ rate by half at the IDMAC output source pad:
- Frame Interval Monitor in ipuX_csiY
- -----------------------------------
- 
--The adv718x decoders can occasionally send corrupt fields during
--NTSC/PAL signal re-sync (too little or too many video lines). When
--this happens, the IPU triggers a mechanism to re-establish vertical
--sync by adding 1 dummy line every frame, which causes a rolling effect
--from image to image, and can last a long time before a stable image is
--recovered. Or sometimes the mechanism doesn't work at all, causing a
--permanent split image (one frame contains lines from two consecutive
--captured images).
--
--From experiment it was found that during image rolling, the frame
--intervals (elapsed time between two EOF's) drop below the nominal
--value for the current standard, by about one frame time (60 usec),
--and remain at that value until rolling stops.
--
--While the reason for this observation isn't known (the IPU dummy
--line mechanism should show an increase in the intervals by 1 line
--time every frame, not a fixed value), we can use it to detect the
--corrupt fields using a frame interval monitor. If the FIM detects a
--bad frame interval, the ipuX_csiY subdev will send the event
--V4L2_EVENT_IMX_FRAME_INTERVAL_ERROR. Userland can register with
--the FIM event notification on the ipuX_csiY subdev device node.
--Userland can issue a streaming restart when this event is received
--to correct the rolling/split image.
--
--The ipuX_csiY subdev includes custom controls to tweak some dials for
--FIM. If one of these controls is changed during streaming, the FIM will
--be reset and will continue at the new settings.
--
--- V4L2_CID_IMX_FIM_ENABLE
--
--Enable/disable the FIM.
--
--- V4L2_CID_IMX_FIM_NUM
--
--How many frame interval measurements to average before comparing against
--the nominal frame interval reported by the sensor. This can reduce noise
--caused by interrupt latency.
--
--- V4L2_CID_IMX_FIM_TOLERANCE_MIN
--
--If the averaged intervals fall outside nominal by this amount, in
--microseconds, the V4L2_EVENT_IMX_FRAME_INTERVAL_ERROR event is sent.
--
--- V4L2_CID_IMX_FIM_TOLERANCE_MAX
--
--If any intervals are higher than this value, those samples are
--discarded and do not enter into the average. This can be used to
--discard really high interval errors that might be due to interrupt
--latency from high system load.
--
--- V4L2_CID_IMX_FIM_NUM_SKIP
--
--How many frames to skip after a FIM reset or stream restart before
--FIM begins to average intervals.
--
--- V4L2_CID_IMX_FIM_ICAP_CHANNEL
--- V4L2_CID_IMX_FIM_ICAP_EDGE
--
--These controls will configure an input capture channel as the method
--for measuring frame intervals. This is superior to the default method
--of measuring frame intervals via EOF interrupt, since it is not subject
--to uncertainty errors introduced by interrupt latency.
--
--Input capture requires hardware support. A VSYNC signal must be routed
--to one of the i.MX6 input capture channel pads.
--
--V4L2_CID_IMX_FIM_ICAP_CHANNEL configures which i.MX6 input capture
--channel to use. This must be 0 or 1.
--
--V4L2_CID_IMX_FIM_ICAP_EDGE configures which signal edge will trigger
--input capture events. By default the input capture method is disabled
--with a value of IRQ_TYPE_NONE. Set this control to IRQ_TYPE_EDGE_RISING,
--IRQ_TYPE_EDGE_FALLING, or IRQ_TYPE_EDGE_BOTH to enable input capture,
--triggered on the given signal edge(s).
--
--When input capture is disabled, frame intervals will be measured via
--EOF interrupt.
--
-+See ref:`imx_api_FIM`.
- 
- ipuX_vdic
- ---------
-diff --git a/Documentation/media/v4l-drivers/index.rst b/Documentation/media/v4l-drivers/index.rst
-index 364c65ea86fb..67665a8abe02 100644
---- a/Documentation/media/v4l-drivers/index.rst
-+++ b/Documentation/media/v4l-drivers/index.rst
-@@ -75,5 +75,6 @@ For more details see the file COPYING in the source distribution of Linux.
- 	vimc-devel
- 
- 	cx2341x-uapi
-+	imx-uapi
- 	meye-uapi
- 	omap3isp-uapi
+diff --git a/kernel/cred.c b/kernel/cred.c
+index 809a985..71a7926 100644
+--- a/kernel/cred.c
++++ b/kernel/cred.c
+@@ -675,8 +675,6 @@ void __init cred_init(void)
+  * The caller may change these controls afterwards if desired.
+  *
+  * Returns the new credentials or NULL if out of memory.
+- *
+- * Does not take, and does not return holding current->cred_replace_mutex.
+  */
+ struct cred *prepare_kernel_cred(struct task_struct *daemon)
+ {
 -- 
-2.24.1
-
+1.9.1
