@@ -2,112 +2,91 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EF49C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:14:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47E2EC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:15:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 185402467F
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:14:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583831685;
-	bh=Wi6CL6iB7RwT0hh+gpEgbzB/O/wFTDNg36YiiDVjK5M=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=xRQC9QAa7h50kp7hYd7qtye9dhu31RBCGQieU3F7jiqatsa1OtxsJYQeYkjIUZWlA
-	 FRXC7fWC1Xhurmg7eHIG8GEtukpOVSyimSiAmeXatddqQTE+rrvVSqVKd9jXqWg+i2
-	 83oZ7kEYiXtkqZbr8vhWlVk8PssvVdmOa6qtnCpE=
+	by mail.kernel.org (Postfix) with ESMTP id 2647E208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:15:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726443AbgCJJOn (ORCPT
+        id S1726451AbgCJJP4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 05:14:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44800 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726195AbgCJJOn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 05:14:43 -0400
-Received: from localhost (unknown [193.47.165.251])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F64C20674;
-        Tue, 10 Mar 2020 09:14:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583831682;
-        bh=Wi6CL6iB7RwT0hh+gpEgbzB/O/wFTDNg36YiiDVjK5M=;
-        h=From:To:Cc:Subject:Date:From;
-        b=vSB/ejyXc+jE1iES8JJPvEKTB+3tk3Yi3JlMQbNr1iARpr5TCrxpIJE6bkCSM2Y3M
-         QcHeqxVRrAx4K+pPjZYYGqIbOf10YoJ9tnuBY/U0zmMisXTTSC5K4bmWmTzls6b3df
-         /Gt6l3s53xwKtF+vW4Wxh0p4r2URxaGS5HjR0OIg=
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Cc:     Leon Romanovsky <leonro@mellanox.com>,
-        Gal Pressman <galpress@amazon.com>,
-        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-        Mark Zhang <markz@mellanox.com>,
-        Yishai Hadas <yishaih@mellanox.com>
-Subject: [PATCH rdma-next v1 00/11] Add Enhanced Connection Established (ECE)
-Date:   Tue, 10 Mar 2020 11:14:27 +0200
-Message-Id: <20200310091438.248429-1-leon@kernel.org>
-X-Mailer: git-send-email 2.24.1
+        Tue, 10 Mar 2020 05:15:56 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:33001 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726211AbgCJJPz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 05:15:55 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jBazO-00025d-Hq; Tue, 10 Mar 2020 10:15:50 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id C3E781C21F0;
+        Tue, 10 Mar 2020 10:15:49 +0100 (CET)
+Date:   Tue, 10 Mar 2020 09:15:49 -0000
+From:   "tip-bot2 for Tony W Wang-oc" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/cpu] x86/Kconfig: Drop vendor dependency for X86_UMIP
+Cc:     "Tony W Wang-oc" <TonyWWang-oc@zhaoxin.com>,
+        Borislav Petkov <bp@suse.de>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <1583733990-2587-1-git-send-email-TonyWWang-oc@zhaoxin.com>
+References: <1583733990-2587-1-git-send-email-TonyWWang-oc@zhaoxin.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-ID: <158383174941.28353.575378555250987688.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leon Romanovsky <leonro@mellanox.com>
+The following commit has been merged into the x86/cpu branch of tip:
 
-Changelog:
- v1: Dropped field_avail patch in favor of mass conversion to use function
-     which already exists in the kernel code.
- v0: https://lore.kernel.org/lkml/20200305150105.207959-1-leon@kernel.org
+Commit-ID:     bdb04a1abbf92c998f1afb5f00a037f2edaec1f7
+Gitweb:        https://git.kernel.org/tip/bdb04a1abbf92c998f1afb5f00a037f2edaec1f7
+Author:        Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
+AuthorDate:    Mon, 09 Mar 2020 14:06:30 +08:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Tue, 10 Mar 2020 10:10:53 +01:00
 
-Enhanced Connection Established or ECE is new negotiation scheme
-introduced in IBTA v1.4 to exchange extra information about nodes
-capabilities and later negotiate them at the connection establishment
-phase.
+x86/Kconfig: Drop vendor dependency for X86_UMIP
 
-The RDMA-CM messages (REQ, REP, SIDR_REQ and SIDR_REP) were extended
-to carry two fields, one new and another gained new functionality:
- * VendorID is a new field that indicates that common subset of vendor
-   option bits are supported as indicated by that VendorID.
- * AttributeModifier already exists, but overloaded to indicate which
-   vendor options are supported by this VendorID.
+Some Centaur family 7 CPUs and Zhaoxin family 7 CPUs support the UMIP
+feature too. The text size growth which UMIP adds is ~1K and distro
+kernels enable it anyway so remove the vendor dependency.
 
-This is kernel part of such functionality which is responsible to get data
-from librdmacm and properly create and handle RDMA-CM messages.
+ [ bp: Rewrite commit message. ]
 
-Thanks
+Signed-off-by: Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Link: https://lkml.kernel.org/r/1583733990-2587-1-git-send-email-TonyWWang-oc@zhaoxin.com
+---
+ arch/x86/Kconfig | 1 -
+ 1 file changed, 1 deletion(-)
 
-Leon Romanovsky (11):
-  RDMA/cm: Add Enhanced Connection Establishment (ECE) bits
-  RDMA/mlx4: Delete duplicated offsetofend implementation
-  RDMA/efa: Use in-kernel offsetofend() to check field availability
-  RDMA/mlx5: Use offsetofend() instead of duplicated variant
-  RDMA/cm: Delete not implemented CM peer to peer communication
-  RDMA/uapi: Add ECE definitions to UCMA
-  RDMA/ucma: Extend ucma_connect to receive ECE parameters
-  RDMA/ucma: Deliver ECE parameters through UCMA events
-  RDMA/cm: Send and receive ECE parameter over the wire
-  RDMA/cma: Connect ECE to rdma_accept
-  RDMA/cma: Provide ECE reject reason
-
- drivers/infiniband/core/cm.c          | 48 ++++++++++++++++++------
- drivers/infiniband/core/cma.c         | 54 ++++++++++++++++++++++++---
- drivers/infiniband/core/cma_priv.h    |  1 +
- drivers/infiniband/core/ucma.c        | 40 ++++++++++++++++----
- drivers/infiniband/hw/efa/efa_verbs.c |  7 +---
- drivers/infiniband/hw/mlx4/main.c     |  9 ++---
- drivers/infiniband/hw/mlx5/main.c     | 42 ++++++++++-----------
- drivers/infiniband/hw/mlx5/mlx5_ib.h  | 16 +++-----
- include/rdma/ib_cm.h                  | 11 +++++-
- include/rdma/ibta_vol1_c12.h          |  6 +++
- include/rdma/rdma_cm.h                | 28 ++++++++++++--
- include/uapi/rdma/rdma_user_cm.h      | 15 +++++++-
- 12 files changed, 203 insertions(+), 74 deletions(-)
-
---
-2.24.1
-
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index beea770..cb3633d 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -1875,7 +1875,6 @@ config X86_SMAP
+ 
+ config X86_UMIP
+ 	def_bool y
+-	depends on CPU_SUP_INTEL || CPU_SUP_AMD
+ 	prompt "User Mode Instruction Prevention" if EXPERT
+ 	---help---
+ 	  User Mode Instruction Prevention (UMIP) is a security feature in
