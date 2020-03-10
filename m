@@ -3,140 +3,114 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B71CC18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 10:14:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7752C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 10:14:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 732DF20637
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 10:14:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9021A222D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 10:14:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g8ZD6JIS"
+	dkim=pass (1024-bit key) header.d=silabs.onmicrosoft.com header.i=@silabs.onmicrosoft.com header.b="c3JzZ7IQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726438AbgCJKOH (ORCPT
+        id S1726475AbgCJKOQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 06:14:07 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:40729 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726244AbgCJKOH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 06:14:07 -0400
-Received: by mail-lf1-f65.google.com with SMTP id j17so5821494lfe.7;
-        Tue, 10 Mar 2020 03:14:05 -0700 (PDT)
+        Tue, 10 Mar 2020 06:14:16 -0400
+Received: from mail-bn8nam12on2076.outbound.protection.outlook.com ([40.107.237.76]:6032
+        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726244AbgCJKOQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 06:14:16 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ezesZafEhAbkkhZ6Tlcpo4npnOvaW6OWQykOC03Cio4HRl5kJpswFUEo8nYovDys5jRRXhc2KKsdKjyevEKkQJEVf9l/ezbrquNcHdjCMV8bqxEetMc/J+9XBFVfCPTRfyf3MCPhaTT6mTq84pwxrObN6LpHk64S++PNbK/blz7qNRYRiqM1nk8703c1qidS74R3NLxli7ld27p2VtyQgirOnb7l2QvBSFlWFvnB5DmiiPaQWbQoGv3O8qq8L9GMWsoFnfpZcpD3tMeiZgJKN4b/D4IFRFJD3YX1S6UoU/Bjn45aiXVc+Q06+K13RDvG2dYUlsk7AgIXfBjTA9qUhw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=juYTxEEp0l2bOgyQgYBor8ImI7ZTATLjVOtctxwSA4E=;
+ b=nYk3Oku1KlsO/x+M4lKY8yKf4syED5D5plruj2jm4SH15DzEPfPeAHTGP+ozE5s+DNrMydU8D/rvvl15B+I2YD3foC6/46WIm9MC+Bwx8XzjUZ52rNuVTSGFnBO34z5BS5wdgRtjejgGmafjqR/WjD+PUhNVxkmG0ONuXKc/9pv097pnA43Taq3goXZH65r4qGuxJxqeTdUK6hhpcEBLRcPg/buzXpclG10h/uMslPwPL3w9HyNrQLr1264eHxggD6Oo8br/Bw5veLLIA+q+exES/G8xBH1gEzR/M74mw6NSp5apJo3PQVd1quuD/H579/Bk/71hi50VYJY5BO4G7g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=silabs.com; dmarc=pass action=none header.from=silabs.com;
+ dkim=pass header.d=silabs.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=H41EK6fFWsu7lc3SctFKC6jvmteBRlGuxbpCpld6vno=;
-        b=g8ZD6JIS5Nbi5VQkoVKI9M/R0asumknvg+5tJnMpLTrwLqopBa459G+Q/XQzcwPv1A
-         dnFXMhqtT5oJqRaM0Kwk034c0qEj7/G4f0UyF3vC+FunNgutepJnWbUIIsGWNMpGPrij
-         jCA2K6vv24K2GdNo8Kj6muOUhaj5wLjo7+xZTE36a18WvipB2aBXdQTWg0csU9DCnIdr
-         zMRrnaF4sdNWdxAyrCOzLDh60CE54BVAevIoJBTwsg102Mg3I3iWoDVg8tiNJ8LskBgt
-         3Uik+QIPptsu2Tb68aLInTso3Nwoo+3e8nPPA+WZWFbBl4GCkwQ4O6CZhst/1TtrprRx
-         aaXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=H41EK6fFWsu7lc3SctFKC6jvmteBRlGuxbpCpld6vno=;
-        b=hWR5rykeIlqbSGtI2aeckCYNP3m4mdHHaCugsc7Zle8BbfH6WG/bL+EgPgdmMBSmRY
-         UOL8UfnYyUi7G8+3hM4topFjO6EF6seuJVwXGpDDuQMk3NjZpm+6PLAzJ5ch9nVfgx4z
-         BKSYiZIfRfdj5Ri++KZJD+9bgn4PfufS44lUXLiR+a9KgKMPXJhBWJsowxddkuWk6YD+
-         Pw65yTaDBBVBzPTXtDp2C3Qv4sKIjVHDF8DZZWfWIbfysVW28AbeXEmad8n3Tt1Dcalw
-         KPWqWD/tbRGf6n2DKKqzqDF3QW1Ivch7TF/NaP0i08QdNzuHWAyMezgPmx+jK0MkJm3e
-         LXNA==
-X-Gm-Message-State: ANhLgQ0jRLhnM1E9H+szgp4wURDOQmJOF22mnIOQ1m58Motg3sWgTEnQ
-        kBF2VIZ/DU6b5lmvq+sNXZvEOHoHCiQNHZGnCWU=
-X-Google-Smtp-Source: ADFU+vsQgLEAeKs3QBpJxub3atlz11c+n+Pl9FnwgZlDHA1wgeUPgTtZl/KRIlugnXJikY9VrxzECcYh0hftZrqU0oQ=
-X-Received: by 2002:a19:f615:: with SMTP id x21mr325697lfe.47.1583835244537;
- Tue, 10 Mar 2020 03:14:04 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200305103228.9686-1-zhang.lyra@gmail.com> <CAMuHMdVyy3v24zBxJFe5hYdnzdj80dvE2Z9GO4=AC1N8fD64pw@mail.gmail.com>
- <CAAfSe-spu2oNmfEYt+WQvRQy1bCC0e1MFjbUyBAFzghd5XNBfw@mail.gmail.com>
- <CAMuHMdV1qQZF-kAwbcxhHQZZ9hs0dG-OTZ2NcB25Jtra6ii5iA@mail.gmail.com>
- <CA+H2tpEzFAbfzMuUGMfW3BqCKv2+kk+cLL5gWpR-zJZFYwWKqw@mail.gmail.com> <CAMuHMdUKD5Ob_o4E3bH9wx=6r2PU+7U3RQ_GVRj7ZQc-e5Y4TA@mail.gmail.com>
-In-Reply-To: <CAMuHMdUKD5Ob_o4E3bH9wx=6r2PU+7U3RQ_GVRj7ZQc-e5Y4TA@mail.gmail.com>
-From:   Orson Zhai <orsonzhai@gmail.com>
-Date:   Tue, 10 Mar 2020 18:13:51 +0800
-Message-ID: <CA+H2tpFaEp0Wbna=Z-A0bnno5hymVrSDE-397-Jdp6Uqsm0+qQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] arm64: change ARCH_SPRD Kconfig to tristate
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Chunyan Zhang <zhang.lyra@gmail.com>,
+ d=silabs.onmicrosoft.com; s=selector2-silabs-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=juYTxEEp0l2bOgyQgYBor8ImI7ZTATLjVOtctxwSA4E=;
+ b=c3JzZ7IQT8c5/KseYpdjkpn13/mIrjQ/+TPfVED+4PD7Mpl6SkF/Mz+o0nd/hsdyxSvE/n+iWzmEgU35rnxfl8SMHag9M9wfEAtQ5CHIxhN3RU/+kl8fd/rOyxiQ44NSvWVcolURE1Lc/4SVl+75abYswBVpOKbVktzwB+YAsYU=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Jerome.Pouiller@silabs.com; 
+Received: from MN2PR11MB4063.namprd11.prod.outlook.com (2603:10b6:208:13f::22)
+ by MN2PR11MB3615.namprd11.prod.outlook.com (2603:10b6:208:ec::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.17; Tue, 10 Mar
+ 2020 10:14:13 +0000
+Received: from MN2PR11MB4063.namprd11.prod.outlook.com
+ ([fe80::ade4:5702:1c8b:a2b3]) by MN2PR11MB4063.namprd11.prod.outlook.com
+ ([fe80::ade4:5702:1c8b:a2b3%7]) with mapi id 15.20.2793.013; Tue, 10 Mar 2020
+ 10:14:13 +0000
+From:   Jerome Pouiller <Jerome.Pouiller@silabs.com>
+To:     devel@driverdev.osuosl.org, linux-wireless@vger.kernel.org
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Jiri Slaby <jslaby@suse.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Chunyan Zhang <chunyan.zhang@unisoc.com>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Android Kernel Team <kernel-team@android.com>
-Content-Type: text/plain; charset="UTF-8"
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Pouiller?= 
+        <jerome.pouiller@silabs.com>
+Subject: [PATCH 0/5] staging: wfx: late fixes
+Date:   Tue, 10 Mar 2020 11:13:51 +0100
+Message-Id: <20200310101356.182818-1-Jerome.Pouiller@silabs.com>
+X-Mailer: git-send-email 2.25.1
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
+X-ClientProxiedBy: PR0P264CA0180.FRAP264.PROD.OUTLOOK.COM
+ (2603:10a6:100:1c::24) To MN2PR11MB4063.namprd11.prod.outlook.com
+ (2603:10b6:208:13f::22)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from pc-42.silabs.com (37.71.187.125) by PR0P264CA0180.FRAP264.PROD.OUTLOOK.COM (2603:10a6:100:1c::24) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.14 via Frontend Transport; Tue, 10 Mar 2020 10:14:12 +0000
+X-Mailer: git-send-email 2.25.1
+X-Originating-IP: [37.71.187.125]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 19d38bc4-2181-49c6-e096-08d7c4dbc81d
+X-MS-TrafficTypeDiagnostic: MN2PR11MB3615:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <MN2PR11MB3615AD4E8B49507ECEAEE94B93FF0@MN2PR11MB3615.namprd11.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5797;
+X-Forefront-PRVS: 033857D0BD
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(39850400004)(136003)(366004)(376002)(396003)(346002)(189003)(199004)(6666004)(52116002)(5660300002)(2616005)(86362001)(316002)(956004)(36756003)(478600001)(4744005)(7696005)(8936002)(54906003)(4326008)(16526019)(186003)(26005)(6486002)(66574012)(66946007)(8676002)(1076003)(81166006)(2906002)(66476007)(81156014)(66556008)(107886003);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB3615;H:MN2PR11MB4063.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+Received-SPF: None (protection.outlook.com: silabs.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: KxNtqmcZcBj1RKInZPd8eo5Fn+UhFoIQ/radbCDslRRfIBAuEZDGnYpv9MNCSfiLLOrK5bNzg9hXaTXj7yPHJhgjPoHYiKpxRNaLxz6gh+bSICBBiLn33RYf6hh1i7G1cA4VNe7rg6eDOsRRxTeB5q41x5oWkjgdEyqf8l56jC1FyHXJBafU2UAWkjOkX+LfFwwEsTppctpNwUlcW0fuMTDV4Iih41NPBEgCEK51zNxBesKcY7tDFkmi1SWpoxQRfOSZjjuiT7SV1tJc2Z4ex+AqfjW1WCMG/Q0BrpmK9+67NcANPmaeOVKIwwBdScHBLmvaxp8+2LZ7iASTLZmAGhSYGqNQYkXXaaxr8QnjnImADR8VwWLMcLd7PHxv0T26nu+wwO9aVLeLfBt0ZzTUKAtalXzvlWdgu9EH4SPKjQCn4yFGdYnYeAqIAaFaEadQ
+X-MS-Exchange-AntiSpam-MessageData: jUqCGpVMHlDc1VC0B2wBWWaEjBfcMJo50SiOn9a9bJEbBzLTv5W/DXoUwIl8NeNQ2Lbj1Z6/WoXvqdqGTAaoW2vPrQS23mFeKC1+fx0BLR14zE936OmCXzGNyirCoc9vlbWPaEpv7eu5mfTF5QM5Wg==
+X-OriginatorOrg: silabs.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 19d38bc4-2181-49c6-e096-08d7c4dbc81d
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Mar 2020 10:14:13.3595
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 54dbd822-5231-4b20-944d-6f4abcd541fb
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: d9NU8hHOk7wy/maVvcMazfAYyiDF0AHrdQGm2cmjy6b9Dybg+pA1PEpt7SetfSJllejnDXAxZxt3RBHRF/74Fw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB3615
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 10, 2020 at 5:52 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->
-> Hi Orson,
->
-> On Tue, Mar 10, 2020 at 10:41 AM Orson Zhai <orsonzhai@gmail.com> wrote:
-> > On Mon, Mar 9, 2020 at 6:32 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > > On Mon, Mar 9, 2020 at 9:32 AM Chunyan Zhang <zhang.lyra@gmail.com> wrote:
-> > > > On Mon, 9 Mar 2020 at 16:03, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > > > > On Thu, Mar 5, 2020 at 11:33 AM Chunyan Zhang <zhang.lyra@gmail.com> wrote:
-> > > > > > From: Chunyan Zhang <chunyan.zhang@unisoc.com>
-> > > > > >
-> > > > > > The default value of Kconfig for almost all sprd drivers are the same with
-> > > > > > ARCH_SPRD, making these drivers built as modules as default would be easier
-> > > > > > if we can set ARCH_SPRD as 'm', so this patch change ARCH_SPRD to tristate.
-> > > > > >
-> > > > > > Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
-> > > > >
-> > > > > Can you actually boot a kernel on a Spreadtrum platform when all platform
-> > > > > and driver support is modular?
-> > > >
-> > > > Yes, even if all drivers are modular.
-> > >
-> > > Cool. No hard dependencies on e.g. regulators that are turned off when
-> > > unused?
-> > >
-> > > > But I hope serial can be builtin, then I can have a console to see
-> > > > kernel output before loading modules.
-> > >
-> > > No dependency on the clock driver?
-> > > Oh, I see you have a hack in the serial driver, to assume default
-> > > values when the serial port's parent clock is not found.  That may
-> > > limit use of the other serial ports, depending on the actual serial
-> > > hardware.
-> >
-> > There is an function named "sprd_uart_is_console()" in the driver
-> > code. So the hack could be only applied when the
-> > port is identified as console. And other ports might return
-> > PROBE_DEFER until the clock is ready.
-> >
-> > Could it work out of the limitation?
->
-> Yes, that could work.  You also have only a single SPRD_DEFAULT_SOURCE_CLK,
-> which makes it simple to handle.
-> For other SoCs, there may be a variation of possible values, depending on
-> SoC and/or board.
-
-Ok, thanks.
-
--Orson
-
->
-> Gr{oetje,eeting}s,
->
->                         Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
->
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
+RnJvbTogSsOpcsO0bWUgUG91aWxsZXIgPGplcm9tZS5wb3VpbGxlckBzaWxhYnMuY29tPgoKVGhp
+cyBzZXJpZXMgZml4ZXMgc29tZSBpc3N1ZXMgZm9yIDUuNi4gVGhlIHR3byBsYXN0IHBhdGNoZXMg
+Zml4IG1pc3VzZQpvZiBSQ1UuIFRoZXkgYXJlIHByb2JhYmx5IHRoZSBtb3N0IGltcG9ydGFudCBv
+ZiB0aGUgc2VyaWVzLgoKSsOpcsO0bWUgUG91aWxsZXIgKDUpOgogIHN0YWdpbmc6IHdmeDogZml4
+IHdhcm5pbmcgYWJvdXQgZnJlZWluZyBpbi11c2UgbXV0ZXggZHVyaW5nIGRldmljZQogICAgdW5y
+ZWdpc3RlcgogIHN0YWdpbmc6IHdmeDogZml4IGxpbmVzIGVuZGluZyB3aXRoIGEgY29tbWEgaW5z
+dGVhZCBvZiBhIHNlbWljb2xvbgogIHN0YWdpbmc6IHdmeDogbWFrZSB3YXJuaW5nIGFib3V0IHBl
+bmRpbmcgZnJhbWUgbGVzcyBzY2FyeQogIHN0YWdpbmc6IHdmeDogZml4IFJDVSB1c2FnZSBpbiB3
+Znhfam9pbl9maW5hbGl6ZSgpCiAgc3RhZ2luZzogd2Z4OiBmaXggUkNVIHVzYWdlIGJldHdlZW4g
+aGlmX2pvaW4oKSBhbmQKICAgIGllZWU4MDIxMV9ic3NfZ2V0X2llKCkKCiBkcml2ZXJzL3N0YWdp
+bmcvd2Z4L2hpZl90eC5jICAgICB8IDE1ICsrKysrKysrLS0tLS0tLQogZHJpdmVycy9zdGFnaW5n
+L3dmeC9oaWZfdHguaCAgICAgfCAgMiArLQogZHJpdmVycy9zdGFnaW5nL3dmeC9oaWZfdHhfbWli
+LmggfCAxNSArKysrKysrKysrLS0tLS0KIGRyaXZlcnMvc3RhZ2luZy93Zngvc3RhLmMgICAgICAg
+IHwgMjUgKysrKysrKysrKysrKysrLS0tLS0tLS0tLQogNCBmaWxlcyBjaGFuZ2VkLCAzNCBpbnNl
+cnRpb25zKCspLCAyMyBkZWxldGlvbnMoLSkKCi0tIAoyLjI1LjEKCg==
