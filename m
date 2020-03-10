@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CACE9C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:55:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1237BC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:55:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DE9324697
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:55:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFB432468F
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:55:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583844905;
-	bh=boie7kjDXkrMgYA2kRh557Gzikic9mujKoVkRXup9ow=;
+	s=default; t=1583844908;
+	bh=0TQYR1CoOeat+OC33dAfyJD1V5YNNLKHuNChSjJvb24=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2bqflyqX16dHXUTwBDs5jqUEqQV9YuqxYrkRIk/Ft6zLARY+VlzpE2cjZaRGu0DgP
-	 yeahZI7Xss5BH2m9cL8x5WLBA5/ddoy4GXItgwqeAFPrZrs4tC9Tu/8jYD1BcfAAod
-	 iL6sgxaB2f7VtWFVsbWPX0+Li8fSDgLjN3fn46dk=
+	b=0lO0A5rqgKIMBZbTM7PpzT4LMLtwTNLC0sSbcgqLGmfte+UQ0p/jHXKXgsprTJoWX
+	 r6ih5ElFM4GjXxY+7aWlOEqsMixpPMsBaEh8eikq7w85xkCyAKl1B7jnwo0HdZ/cmk
+	 hqTGRg6KUOu76LqQddSnr7E/A59pldR5phooPUd8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729212AbgCJMzE (ORCPT
+        id S1729457AbgCJMzH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:55:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33668 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:55:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33758 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729438AbgCJMzA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:55:00 -0400
+        id S1728580AbgCJMzF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:55:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19F07246B0;
-        Tue, 10 Mar 2020 12:54:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D4172253D;
+        Tue, 10 Mar 2020 12:55:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844900;
-        bh=boie7kjDXkrMgYA2kRh557Gzikic9mujKoVkRXup9ow=;
+        s=default; t=1583844903;
+        bh=0TQYR1CoOeat+OC33dAfyJD1V5YNNLKHuNChSjJvb24=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UGbT0Qr22ACdbPBVrPGCsZA+LAm1H40ojQOUM4hzDqqLRJ9xdIP8FHn9Fvmhl7wdQ
-         8F+72v3/IC9m/siZC2hZVdNxzH2PrBdUNZMCs24BIKjRQS2p+yWamBgZiC+MRn1j98
-         CSV8fgJe75q5Hm7U6Y/BlRpIg2BwjXKxJIYyjphU=
+        b=VlKYwrKDs/uTg3uMvCEkMKGiZIS8IkLN9g39Jw9Hfu26P3u2Y0ekcv7/J9hLiVgyL
+         BCwE2nNvdvDscQ5Zy9Y3aYZsFlkeRMlzur2haXViLW6t76Hu1WJ2OGx07YpnCPnPFf
+         +IyP+Nm49N8D0T6MgRzq9YqDsXeOwYC8Nc0Foxyw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH 5.4 161/168] dmaengine: coh901318: Fix a double lock bug in dma_tc_handle()
-Date:   Tue, 10 Mar 2020 13:40:07 +0100
-Message-Id: <20200310123651.841870478@linuxfoundation.org>
+        stable@vger.kernel.org, Art Nikpal <email2tema@gmail.com>,
+        Christian Hewitt <christianshewitt@gmail.com>,
+        Kevin Hilman <khilman@baylibre.com>
+Subject: [PATCH 5.4 162/168] arm64: dts: meson: fix gxm-khadas-vim2 wifi
+Date:   Tue, 10 Mar 2020 13:40:08 +0100
+Message-Id: <20200310123651.956446886@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123635.322799692@linuxfoundation.org>
 References: <20200310123635.322799692@linuxfoundation.org>
@@ -59,41 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Christian Hewitt <christianshewitt@gmail.com>
 
-commit 36d5d22090d13fd3a7a8c9663a711cbe6970aac8 upstream.
+commit 146033562e7e5d1c9aae9653986806664995f1d5 upstream.
 
-The caller is already holding the lock so this will deadlock.
+before
 
-Fixes: 0b58828c923e ("DMAENGINE: COH 901 318 remove irq counting")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Link: https://lore.kernel.org/r/20200217144050.3i4ymbytogod4ijn@kili.mountain
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+[6.418252] brcmfmac: F1 signature read @0x18000000=0x17224356
+[6.435663] brcmfmac: brcmf_fw_alloc_request: using brcm/brcmfmac4356-sdio for chip BCM4356/2
+[6.551259] brcmfmac: brcmf_sdiod_ramrw: membytes transfer failed
+[6.551275] brcmfmac: brcmf_sdio_verifymemory: error -84 on reading 2048 membytes at 0x00184000
+[6.551352] brcmfmac: brcmf_sdio_download_firmware: dongle image file download failed
+
+after
+
+[6.657165] brcmfmac: F1 signature read @0x18000000=0x17224356
+[6.660807] brcmfmac: brcmf_fw_alloc_request: using brcm/brcmfmac4356-sdio for chip BCM4356/2
+[6.918643] brcmfmac: brcmf_fw_alloc_request: using brcm/brcmfmac4356-sdio for chip BCM4356/2
+[6.918734] brcmfmac: brcmf_c_process_clm_blob: no clm_blob available (err=-2), device may have limited channels available
+[6.922724] brcmfmac: brcmf_c_preinit_dcmds: Firmware: BCM4356/2 wl0: Jun 16 2015 14:25:06 version 7.35.184.r1 (TOB) (r559293) FWID 01-b22ae69c
+
+Fixes: adc52bf7ef16 ("arm64: dts: meson: fix mmc v2 chips max frequencies")
+Suggested-by: Art Nikpal <email2tema@gmail.com>
+Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+Link: https://lore.kernel.org/r/1582212790-11402-1-git-send-email-christianshewitt@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/dma/coh901318.c |    4 ----
- 1 file changed, 4 deletions(-)
+ arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/dma/coh901318.c
-+++ b/drivers/dma/coh901318.c
-@@ -1947,8 +1947,6 @@ static void dma_tc_handle(struct coh9013
- 		return;
- 	}
+--- a/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts
+@@ -327,7 +327,7 @@
+ 	#size-cells = <0>;
  
--	spin_lock(&cohc->lock);
--
- 	/*
- 	 * When we reach this point, at least one queue item
- 	 * should have been moved over from cohc->queue to
-@@ -1969,8 +1967,6 @@ static void dma_tc_handle(struct coh9013
- 	if (coh901318_queue_start(cohc) == NULL)
- 		cohc->busy = 0;
+ 	bus-width = <4>;
+-	max-frequency = <50000000>;
++	max-frequency = <60000000>;
  
--	spin_unlock(&cohc->lock);
--
- 	/*
- 	 * This tasklet will remove items from cohc->active
- 	 * and thus terminates them.
+ 	non-removable;
+ 	disable-wp;
 
 
