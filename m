@@ -2,71 +2,90 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81C8FC18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 06:52:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFF4BC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 06:55:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BB682467C
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 06:52:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81B242467D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 06:55:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583823130;
-	bh=Oz3P5ayW5l9oGHl/hWJeil6IyaDGi7XQ8iU+vqSxfec=;
+	s=default; t=1583823331;
+	bh=ZRCNkTGQgwAEDE8s853tkWNNHFMgO9nid8aMskpYkP8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XrAyqeNtQW6TPzYf1NenmJMGVaS1o6YsigHGExw2I073dRC1tlsykbPBIA9fDgQfY
-	 7Loy2KRFm1ZpPSJFMeyKYkEgsv7I10kQp5j+h1fE4bKcfZ+bjbls86SBfvB8ARE9Kb
-	 l5aDBYrzIuk5bHGhfhKGCshwVdhkn0e8OH7xf4q8=
+	b=FLTso2Myjkvou6Y767OubdZ9i6gw+oIWLHi5MefrcOaTiPW6KGEI1aMDSAVAxmxw3
+	 XdogTyfJufPyjOzE3KyP0usR5a5ANJIIBzlWZKrK7s2Wmtm+CHev6AwTPabfNeKXtX
+	 Fupyw7HYoavbLn+VlL4EjkdCpqBGSOn31MHb+VLk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726269AbgCJGwJ (ORCPT
+        id S1726252AbgCJGza (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 02:52:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57694 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 02:55:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60100 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725919AbgCJGwJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 02:52:09 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1725919AbgCJGza (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 02:55:30 -0400
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 217EA24673;
-        Tue, 10 Mar 2020 06:52:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8AAE724673;
+        Tue, 10 Mar 2020 06:55:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583823128;
-        bh=Oz3P5ayW5l9oGHl/hWJeil6IyaDGi7XQ8iU+vqSxfec=;
+        s=default; t=1583823329;
+        bh=ZRCNkTGQgwAEDE8s853tkWNNHFMgO9nid8aMskpYkP8=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QGpOT9Y9V7egRs3bW8RQvwHK9bxrH+TJr/yXLHbzLRtQxJ9AFoq1zkzqGOrJJ6/PY
-         Fccl9NRAqz01Q5o3lfpQHXuc3PkD1+cSWdSlapwG02U5gf1LBOztTep4y0Q/DYR2QW
-         G6FfMOI3e0VNbSh4hysi1lzdcp32KirkOHavwxuI=
-Date:   Tue, 10 Mar 2020 07:52:06 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Pavel Machek <pavel@denx.de>
-Cc:     corbet@lwn.net, linux-doc@vger.kernel.org,
-        kernel list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] devices.txt: document minor for rfkill
-Message-ID: <20200310065206.GA1967668@kroah.com>
-References: <20200309223332.GB1634@duo.ucw.cz>
+        b=YDBbac6jQ5YBSWONwFuddRv8bO3Yf7NBJGFTJ4fwRnb+KMhEYL8hLp9tKMD9NXcuv
+         95UizvXqQuT/PSxN9pQWxeSwiVl/has3oLUDdQvJJWA2XlHcZ95/UR9ZZCSB0kyMzs
+         HhVcM4Z69pfcBMln107gs7CbzcWYyIPjbqFXglMg=
+Date:   Tue, 10 Mar 2020 14:55:22 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     peng.fan@nxp.com
+Cc:     s.hauer@pengutronix.de, festevam@gmail.com, kernel@pengutronix.de,
+        linux-imx@nxp.com, olof@lixom.net, aisheng.dong@nxp.com,
+        leonard.crestez@nxp.com, abel.vesa@nxp.com, krzk@kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V5 0/2] soc: imx: increase build coverage for imx8 soc
+ driver
+Message-ID: <20200310065521.GA17772@dragon>
+References: <1582252339-15733-1-git-send-email-peng.fan@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200309223332.GB1634@duo.ucw.cz>
+In-Reply-To: <1582252339-15733-1-git-send-email-peng.fan@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 09, 2020 at 11:33:32PM +0100, Pavel Machek wrote:
-> Rfkill is using	minor 242, document that.
+On Fri, Feb 21, 2020 at 10:32:17AM +0800, peng.fan@nxp.com wrote:
+> From: Peng Fan <peng.fan@nxp.com>
 > 
-> Signed-off-by: Pavel Machek <pavel@denx.de>
-> Fixes: 8670b2b8b029a6650d133486be9d2ace146fd29a
+> V5:
+>  Add missed "static inline" in misc.h
+> 
+> V4:
+>  Add dummy functions to fix build issue when soc-imx-scu.c built in,
+>  but drivers/firmware/imx/imx-scu.c not built in.
+>  No change to Patch 2/2.
+> 
+> V3:
+>  Per Arnd's suggestions, merged Patch 2/3/4/5 into one patch
+>  Dropped the defconfig change with a default Kconfig
+> 
+>  Leonard, I dropped you R-b in V3 since the change.
+> 
+> V2:
+>  Include Leonard's patch to fix build break after enable compile test
+>  Add Leonard's R-b tag
+> 
+> Rename soc-imx8.c to soc-imx8m.c which is for i.MX8M family
+> Add SOC_IMX8M for build gate soc-imx8m.c
+> Increase build coverage for i.MX SoC driver
+> 
+> Peng Fan (2):
+>   firmware: imx: add dummy functions
+>   soc: imx: increase build coverage for imx8m soc driver
 
-Please use the proper format as described in
-Documentation/process/submitting-patches.rst for the Fixes: tag.
-
-Can you do that and resend?
-
-thanks,
-
-greg k-h
+Applied both, thanks.
