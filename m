@@ -2,132 +2,183 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AC1CC10F25
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 01:49:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CABFC10F25
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 01:52:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70A4620637
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 01:49:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="PudBCYXA"
+	by mail.kernel.org (Postfix) with ESMTP id 29A4724649
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 01:52:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726450AbgCJBtf (ORCPT
+        id S1726477AbgCJBwe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 21:49:35 -0400
-Received: from ozlabs.org ([203.11.71.1]:38073 "EHLO ozlabs.org"
+        Mon, 9 Mar 2020 21:52:34 -0400
+Received: from mga03.intel.com ([134.134.136.65]:54728 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726134AbgCJBte (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 21:49:34 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48bygh0Vbxz9sRR;
-        Tue, 10 Mar 2020 12:49:20 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1583804972;
-        bh=2nMbPXqoFva+vIQiZlyjpUkDxSQLc6a9j+wggGzR0Mk=;
-        h=Date:From:To:Cc:Subject:From;
-        b=PudBCYXAt551Jub9w7iWPLOTZChGK+qvy8C7dywCchs74obrzhxexpS0sdQx5u3Lh
-         pPPrUMvBvnviGINii9el1z5FS2ndmxPQ5OJT9mjHYNRZMpARQfub20lHQgI+yJLTTT
-         nNkE0FGpMnif57L2NzjwzKsPG/FfMikd+HQOyW2/fPvpaxHPPFYl4sGhUw9I1ljXIr
-         EY61FT5vsI6xvHR/eJrVmUQHZqXck/lfUCbwON/jYYAVl+v3a7IZ5hmTZdXrT2q4zX
-         41j3a4G+HcpjpVn/8XZWjCY7iSy5LXjRH9qSVIFHythBfvSZH9SAxkVG91MHK0USfc
-         w2Kwfe3tk7CPA==
-Date:   Tue, 10 Mar 2020 12:49:18 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ionela Voinescu <ionela.voinescu@arm.com>,
-        Thara Gopinath <thara.gopinath@linaro.org>
-Subject: linux-next: manual merge of the tip tree with the arm64 tree
-Message-ID: <20200310124918.4b46924a@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/1W3_m_cXI0R=jJB5FTj6d4=";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        id S1726134AbgCJBwe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 21:52:34 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Mar 2020 18:52:33 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,535,1574150400"; 
+   d="scan'208";a="265455423"
+Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
+  by fmsmga004.fm.intel.com with ESMTP; 09 Mar 2020 18:52:28 -0700
+From:   "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+To:     linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        broonie@kernel.org, vigneshr@ti.com, robh+dt@kernel.org
+Cc:     devicetree@vger.kernel.org, boris.brezillon@free-electrons.com,
+        simon.k.r.goldschmidt@gmail.com, dinguyen@kernel.org,
+        tien.fong.chee@intel.com, marex@denx.de,
+        linux-mtd@lists.infradead.org, dwmw2@infradead.org, richard@nod.at,
+        computersforpeace@gmail.com, cyrille.pitchen@atmel.com,
+        david.oberhollenzer@sigma-star.at, miquel.raynal@bootlin.com,
+        tudor.ambarus@gmail.com, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com,
+        "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Subject: [PATCH v12 0/4] spi: cadence-quadspi: Add support for the Cadence QSPI controller
+Date:   Tue, 10 Mar 2020 09:52:09 +0800
+Message-Id: <20200310015213.1734-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/1W3_m_cXI0R=jJB5FTj6d4=
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Add support for the Cadence QSPI controller. This controller is
+present in the Intel Lightning Mountain(LGM) SoCs, Altera and TI SoCs.
 
-Hi all,
+This driver does not support generic SPI and also the implementation
+only supports spi-mem interface to replace the existing driver in
+mtd/spi-nor/cadence-quadspi.c, which supports SPI-NOR memory.
 
-Today's linux-next merge of the tip tree got a conflict in:
+So we have decided that adapt spi-mem framework with existing driver 
+to support SPI-NOR and SPI-NAND flash memories.
 
-  include/linux/arch_topology.h
+changes from v11
+ -- Boris suggested to split the patches
+ -- split 3 patches like below  
+    i) spi-mem adaptation
+    ii) convert the existing drivers to spi based.
+    ii) add intel changes to above 2 patches.
+ -- Rob's build issue resolved
+ 
+changes from v10
+ -- Rob's review comments update in dt_schema yaml.
+ -- add valid contraints constraints. 
 
-between commit:
+changes from v9:
+ -- Mark's review comments address
+ -- add check to shared interrupt handler
+ -- add check decoder if present
+ -- add error check for quirks capability data
+ -- remove the existing cadence_quadspi.c from drivers/mtd/spi-nor path
+ -- remove CONFIG macro from Kconfig in the above path
+ -- remove cadence_quadspi.o build option from Makefile in the above path
 
-  cd0ed03a8903 ("arm64: use activity monitors for frequency invariance")
+changes from v8:
+ -- remove the depends MTD macro
+ -- comment into C++ style
+ -- remove spaces and tabs where not applicable.
+ -- align the macro string as same as existing one.
+ -- replace QUAD to op->data.buswidth variable.
+ -- add CQSPI_NEEDS_ADDR_SWAP instead of soc_selection variable
 
-from the arm64 tree and commit:
+changes from v7:
+ -- remove addr_buf kept like as original
+ -- drop bus-num, chipselect variable
+ -- add soc_selection varible to differetiate the features
+ -- replace dev->ddev in dma function
+ -- add seperate function to handle the 24bit slave device address
+    translation for lgm soc
+ -- correct sentence seems incomplete in Kconfig
+ -- add cqspi->soc_selection check to keep the original TI platform
+    working code.
 
-  ad58cc5cc50c ("drivers/base/arch_topology: Add infrastructure to store an=
-d update instantaneous thermal pressure")
+changes from v6:
+ -- Add the Signed-off-by Vignesh in commit message
+ -- bus_num, num_chipselect added to avoid the garbage bus number
+    during the probe and spi_register.
+ -- master mode bits updated
+ -- address sequence is different from TI and Intel SoC Ip handling
+    so modified as per Intel and differentiating by use_dac_mode variable.
+ -- dummy cycles also different b/w two platforms, so keeping separate check
+ -- checkpatch errors which are intentional left as is for better readability
 
-from the tip tree.
+changes from v5:
+ -- kbuild test robot warnings fixed
+ -- Add Reported-By: Dan Carpenter <dan.carpenter@oracle.com>
 
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
+changes from v4:
+ -- kbuild test robot warnings fixed
+ -- Add Reborted-by: tag
 
---=20
-Cheers,
-Stephen Rothwell
+changes from v3:
+spi-cadence-quadspi.c
+ -- static to all functions wrt to local to the file.
+ -- Prefix cqspi_ and make the function static
+ -- cmd_ops, data_ops and dummy_ops dropped
+ -- addr_ops kept since it is required for address calculation.
+ -- devm_ used for supported functions , removed legacy API's
+ -- removed "indirect" name from functions
+ -- replaced by master->mode_bits = SPI_RX_QUAD | SPI_TX_DUAL | SPI_RX_DUAL | SPI_RX_OCTAL;
+    as per Vignesh susggestion
+ -- removed free functions since devm_ handles automatically.
+ -- dropped all unused Macros
 
-diff --cc include/linux/arch_topology.h
-index 1ccdddb541a7,88a115e81f27..000000000000
---- a/include/linux/arch_topology.h
-+++ b/include/linux/arch_topology.h
-@@@ -33,8 -33,16 +33,18 @@@ unsigned long topology_get_freq_scale(i
-  	return per_cpu(freq_scale, cpu);
-  }
- =20
- +bool arch_freq_counters_available(struct cpumask *cpus);
- +
-+ DECLARE_PER_CPU(unsigned long, thermal_pressure);
-+=20
-+ static inline unsigned long topology_get_thermal_pressure(int cpu)
-+ {
-+ 	return per_cpu(thermal_pressure, cpu);
-+ }
-+=20
-+ void arch_set_thermal_pressure(struct cpumask *cpus,
-+ 			       unsigned long th_pressure);
-+=20
-  struct cpu_topology {
-  	int thread_id;
-  	int core_id;
+YAML file update:
+ -- cadence,qspi.yaml file name replace by cdns,qspi-nor.yaml
+ -- compatible string updated as per Vignesh suggestion
+ -- for single entry, removed descriptions
+ -- removed optional parameters
+  Build Result:
+   linux$ make DT_SCHEMA_FILES=Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml dt_binding_check
+    CHKDT   Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
+    SCHEMA  Documentation/devicetree/bindings/processed-schema.yaml
+    DTC     Documentation/devicetree/bindings/spi/cdns,qspi-nor.example.dt.yaml
+    CHECK   Documentation/devicetree/bindings/spi/cdns,qspi-nor.example.dt.yaml
 
---Sig_/1W3_m_cXI0R=jJB5FTj6d4=
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
 
------BEGIN PGP SIGNATURE-----
+Ramuthevar Vadivel Murugan (2):
+  dt-bindings: spi: Add schema for Cadence QSPI Controller driver
+  spi: cadence-quadspi: Add support for the Cadence QSPI controller
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5m8h4ACgkQAVBC80lX
-0GwT6wf+KBeH9e8kPWUbUmEx7Y5cRTj6eN0mxZ4ejAz+6S5kzJzVMfaPCCXEaatp
-a22dEHuhEauckjjJWcqnUOECUJiTM8uSnvsGZemR8B0o2oFTUq53/rqDNBJgFxPx
-NlTWz+JASpmzW/eyCqEUSumk3cAHeV2sxLzCb85Bf2JEBx+yQtieb+hkRyUzkua/
-zdsRln1eaGUUsSHS1J8xDlC87j4U/xAI5UEcvXwfDpCoeAIxpF1Znei0VkRXaQUi
-McpaiBxcI/ihF8M5lfLQFkluwPS+zGyiWbXswfdkCDRKaVfajx3DuPwRDtcd8xl3
-y8XVqY9dvFSdwUMhkfvs4qR5rGzOmA==
-=5uon
------END PGP SIGNATURE-----
+ .../devicetree/bindings/mtd/cadence-quadspi.txt    |  67 ---
+ .../devicetree/bindings/spi/cdns,qspi-nor.yaml     | 142 +++++
+ drivers/mtd/spi-nor/Kconfig                        |  11 -
+ drivers/mtd/spi-nor/Makefile                       |   1 -
+ drivers/spi/Kconfig                                |  10 +
+ drivers/spi/Makefile                               |   1 +
+ .../spi-cadence-quadspi.c}                         | 641 ++++++++++-----------
+ 7 files changed, 456 insertions(+), 417 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
+ create mode 100644 Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
+ rename drivers/{mtd/spi-nor/cadence-quadspi.c => spi/spi-cadence-quadspi.c} (73%)
 
---Sig_/1W3_m_cXI0R=jJB5FTj6d4=--
+Ramuthevar Vadivel Murugan (4):
+  dt-bindings: spi: Add schema for Cadence QSPI Controller driver
+  mtd: spi-nor: add spi-mem support in cadence-quadspi controller driver
+  spi: cadence-quadspi: Add support for the Cadence QSPI controller
+  spi: cadence-quadspi: Add qspi support for Intel LGM SoC
+
+ .../devicetree/bindings/mtd/cadence-quadspi.txt    |  67 ---
+ .../devicetree/bindings/spi/cdns,qspi-nor.yaml     | 127 ++++
+ drivers/mtd/spi-nor/Kconfig                        |  11 -
+ drivers/mtd/spi-nor/Makefile                       |   1 -
+ drivers/spi/Kconfig                                |  10 +
+ drivers/spi/Makefile                               |   1 +
+ .../spi-cadence-quadspi.c}                         | 643 ++++++++++-----------
+ 7 files changed, 442 insertions(+), 418 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
+ create mode 100644 Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
+ rename drivers/{mtd/spi-nor/cadence-quadspi.c => spi/spi-cadence-quadspi.c} (73%)
+
+-- 
+2.11.0
+
