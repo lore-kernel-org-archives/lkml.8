@@ -2,85 +2,114 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6529BC18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 23:56:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CD1AC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 23:57:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F5E1222C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 23:56:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDE7E21D56
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 23:57:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="vyVom9i2"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="n6t+vBz4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727860AbgCJX43 (ORCPT
+        id S1727877AbgCJX5f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 19:56:29 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:59679 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726380AbgCJX43 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 19:56:29 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 6EF7D891AD;
-        Wed, 11 Mar 2020 12:56:25 +1300 (NZDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1583884585;
-        bh=i6spy7H0mnXxSX3RJVNtY/uVM5eELBp7aQ01gNjYRBA=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To;
-        b=vyVom9i2s5Hx6a8/yeIyu80h7zFZuCeObPvCLW0IQy5HQ5qf8KzfUcgZJbSo1sHt5
-         76k5uwRIa/GrO8y7si75oSiILH5cRnRo2+9eQdpXTBouOHURrk/V5SCS8U33i1CQAR
-         Bva4SXT9J/bjbWKMC/u++fCOI8lEWQCkfRUr23Ep2f+owo2Jhvfed5SjRR8qywNos5
-         hsFDKkdaU+qMIt32RPy39hfNyTq/nO3uKrMDHQQ9/nixP+jX/ZgWLi0zqJwytXJ3Os
-         3Cy9aJrDN/drOS8fzJr3bbdIzI3KHCPAvE7DdkYZldOmQB9TL34kUKAJZEHxJb17Jo
-         shd2tNXqKJX9w==
-Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5e68292a0000>; Wed, 11 Mar 2020 12:56:26 +1300
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8)
- by svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with
- Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 11 Mar 2020 12:56:25 +1300
-Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
- svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
- 15.00.1497.006; Wed, 11 Mar 2020 12:56:25 +1300
-From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To:     "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>
-CC:     "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        Tue, 10 Mar 2020 19:57:35 -0400
+Received: from mail-db8eur05on2049.outbound.protection.outlook.com ([40.107.20.49]:6224
+        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727397AbgCJX5f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 19:57:35 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=OOMWuUVfO4sNUHXixsWJOB42/6Y3BsN/4AMcA5MBffvLMCpwhkXMecbPcSfZdRphwmsYexA0O2rLg45fGKAqD7JdS9FEXLT+bk9XoT4/7TDqlP9vFVZPAg4h0RnY3MbNFlkas7dRD2tIwmrXBtZinF1WK//j1unGGM2QzGbgysPT6g5rVuM+1a2LW0l8gdZbRXo/4SrnT8IKAp8GvTZvxz8gXT9cBo1BvULEndvh76JFl3Vw3MQ6OxfcGbSpi8tYKyCtv2Xg3qvMFSM5AFz1D8zs3Sk0mdcllwI+/tshcpqSbTJMXpI1zXqdCmk0kjusdko3dXcqv7ydKfv3hq/SXw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bSjS/LRJmYsShCpQXnRE9fVsZ8od6xXIoPPJxUr7ZFU=;
+ b=aLST8uoDlKYghb7hYSWNt39T0ifoWBb39DN13Ma46NaiTM0WEUxT/i4dnqwzs94bZ5qjm6td/14vUdQ67CCjoCJ95HU28gWK3e0Nj6z8M04U+h9t/G+fhi16Tqk1VFZ7pMtSb6LDMSNpVlw8/y32HdR3q2aVGrcmH0SCeWCw2qlenL2t2Gh+lTLUwjzFdxWjXRxnT5vkI8DISVN79NVEBZXmYcmQVMWpCne3JcYMhbjH+/6+MAzf2ZOHvPyvMDFcyOSHQYWi+hwKufesOFhUOyiQRM8YuDmBYFOWTGOEV+ol21jri3ZW7zLRv5UBg+H/YVkEYTaZK7kdL8TX3D6ixQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bSjS/LRJmYsShCpQXnRE9fVsZ8od6xXIoPPJxUr7ZFU=;
+ b=n6t+vBz4Crem18jf5xM5Knx3G0u0AiU6IAHLEDhujiO2qDyTw3YGdb9PdLyda525Wttjq7IJNYey4qBBksR3h2li0rqEaOyFB8JfWGRzcYR9W0Wuhw0VQqNaKWYBes03V50+eMFlVCI01MaG42jGVRPjsik/jCch96OsOCsbHzs=
+Received: from VI1PR05MB5102.eurprd05.prod.outlook.com (20.177.51.151) by
+ VI1PR05MB3504.eurprd05.prod.outlook.com (10.175.242.138) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2793.16; Tue, 10 Mar 2020 23:57:31 +0000
+Received: from VI1PR05MB5102.eurprd05.prod.outlook.com
+ ([fe80::8cea:6c66:19fe:fbc2]) by VI1PR05MB5102.eurprd05.prod.outlook.com
+ ([fe80::8cea:6c66:19fe:fbc2%7]) with mapi id 15.20.2793.013; Tue, 10 Mar 2020
+ 23:57:31 +0000
+From:   Saeed Mahameed <saeedm@mellanox.com>
+To:     "sfr@canb.auug.org.au" <sfr@canb.auug.org.au>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+CC:     "linux-next@vger.kernel.org" <linux-next@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1 0/2] rtc: update ds1388 support
-Thread-Topic: [PATCH v1 0/2] rtc: update ds1388 support
-Thread-Index: AQHV3WU+H1/zGGoZhUuiU3BVBeOj3ahB2kkA
-Date:   Tue, 10 Mar 2020 23:56:24 +0000
-Message-ID: <7a6941c28e4ccf8711b9511902c44c78d93caca0.camel@alliedtelesis.co.nz>
-References: <20200207031812.14424-1-chris.packham@alliedtelesis.co.nz>
-In-Reply-To: <20200207031812.14424-1-chris.packham@alliedtelesis.co.nz>
-Accept-Language: en-NZ, en-US
+Subject: Re: linux-next: Signed-off-by missing for commits in the net-next
+ tree
+Thread-Topic: linux-next: Signed-off-by missing for commits in the net-next
+ tree
+Thread-Index: AQHV9sLlUkLYzArmsEq8vpUsvhtdFahCgcgA
+Date:   Tue, 10 Mar 2020 23:57:31 +0000
+Message-ID: <ace96f9842592c35458e970af900ec7a43029ae5.camel@mellanox.com>
+References: <20200310210130.04bd5e2f@canb.auug.org.au>
+In-Reply-To: <20200310210130.04bd5e2f@canb.auug.org.au>
+Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [2001:df5:b000:22:65a9:299a:2e71:839f]
+user-agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=saeedm@mellanox.com; 
+x-originating-ip: [73.15.39.150]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 65bb8c2e-07c3-4450-724f-08d7c54ecbd5
+x-ms-traffictypediagnostic: VI1PR05MB3504:
+x-microsoft-antispam-prvs: <VI1PR05MB35047E1FA8729B6C0B7A8E5EBEFF0@VI1PR05MB3504.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4303;
+x-forefront-prvs: 033857D0BD
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(396003)(376002)(366004)(136003)(346002)(189003)(199004)(478600001)(81166006)(6506007)(2616005)(36756003)(76116006)(6512007)(66946007)(64756008)(66446008)(186003)(26005)(4326008)(66556008)(91956017)(66476007)(2906002)(8676002)(6486002)(8936002)(5660300002)(4744005)(316002)(71200400001)(86362001)(81156014)(110136005)(54906003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB3504;H:VI1PR05MB5102.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: rY03BPYLhze87war+TiXIjHnOKisu0DaTNn+ZKyR+hUjO0AZZgOyCSwtPdcJmRdau25G31u5ex1FQuC9KJGJkn+fxSrJSGXsHJIdGmvaenAClujfHxCy0AnVxNu6aDLylMCLJMp5Z7udHN5CS1dojeGoPVGq/yhG1ZEnD6tTcREu7huG/zO/ucdhSoLz/HOFLuPSd+6XBpgTWzeaiyrp010gg02GoEste2VJPPl0kQcWKF0HSEL6SU3DFWUbPbPTpY2/O3LMyPpVrmHIeCpJ7Rh5qX7eMQw1l6nk+s8m59ggrBXncLk89SD5WJRdsuPWdC0BUKoZvwyNHpS76yEc/0WxnL8R/lHmzXJpB+8THuNOUySUOyvQUcyj7sr3c4ezH3rgcffQxiuQKQ2hkt1WPYM8sQy0edarG34sZf9UWjznBWz8mLdY2qrDSQJq3L+f
+x-ms-exchange-antispam-messagedata: s5AhGX6b+7vf1//qerMeejUZ3oPmC6zM95C+sWoFp6oOK6771ycjDmTXQ3nRMSr3YnTZ9WJVWyXmIhkO4tQdt8fdpI5skx/K7nHeasf4n9v1aiYBRCQvL3lgqoeU3z8T10/W3O1QR4FrKMc/xwTaww==
+x-ms-exchange-transport-forked: True
 Content-Type: text/plain; charset="utf-8"
-Content-ID: <8478A953076ED943AFE8BE15B99E5ACD@atlnz.lc>
+Content-ID: <57A42E158A2A414E8DFF4B7212C6F3D2@eurprd05.prod.outlook.com>
 Content-Transfer-Encoding: base64
 MIME-Version: 1.0
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 65bb8c2e-07c3-4450-724f-08d7c54ecbd5
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Mar 2020 23:57:31.3229
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: uwqkfaMd0GNaKD2m56tbuoKoS9YJrY36FPKiOYu920pldW5mZ72wxsYng5UoG9lorognrKHUWr78GiyGlFCadA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB3504
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQWxsLA0KDQpPbiBGcmksIDIwMjAtMDItMDcgYXQgMTY6MTggKzEzMDAsIENocmlzIFBhY2to
-YW0gd3JvdGU6DQo+IFRoZSBkczEzODggYXMgYSBzbGlnaHRseSBkaWZmZXJlbnQgcmVnaXN0ZXIg
-bGF5b3V0IGFuZCB3YXRjaGRvZyB0aW1lcg0KPiBjYXBhYmlsaXRpZXMuIEFkZCBzdXBwb3J0IGZv
-ciBib3RoIG9mIHRoZXNlLg0KPiANCj4gQ2hyaXMgUGFja2hhbSAoMik6DQo+ICAgcnRjOiBkczEz
-MDc6IGhhbmRsZSBvc2NpbGxhdG9yIGZhaWx1cmUgZmxhZ3MgZm9yIGRzMTM4OCB2YXJpYW50DQo+
-ICAgcnRjOiBkczEzMDc6IGFkZCBzdXBwb3J0IGZvciB3YXRjaGRvZyB0aW1lciBvbiBkczEzODgN
-Cj4gDQo+ICBkcml2ZXJzL3J0Yy9ydGMtZHMxMzA3LmMgfCAxMTQgKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrDQo+ICAxIGZpbGUgY2hhbmdlZCwgMTE0IGluc2VydGlvbnMo
-KykNCj4gDQoNCkJlZW4gYSB3aGlsZSB3aXRoIG5vIHJlc3BvbnNlIG9uIHRoaXMuIEZyaWVuZGx5
-IHBpbmcuDQo=
+T24gVHVlLCAyMDIwLTAzLTEwIGF0IDIxOjAxICsxMTAwLCBTdGVwaGVuIFJvdGh3ZWxsIHdyb3Rl
+Og0KPiBIaSBhbGwsDQo+IA0KPiBDb21taXRzDQo+IA0KPiAgIGI2MzI5M2U3NTlhMSAoIm5ldC9t
+bHg1ZTogU2hvdy9zZXQgUnggbmV0d29yayBmbG93IGNsYXNzaWZpY2F0aW9uDQo+IHJ1bGVzIG9u
+IHVsIHJlcCIpDQo+ICAgNjc4M2U4YjI5ZjYzICgibmV0L21seDVlOiBJbml0IGV0aHRvb2wgc3Rl
+ZXJpbmcgZm9yIHJlcHJlc2VudG9ycyIpDQo+ICAgMDEwMTNhZDM1NWQ2ICgibmV0L21seDVlOiBT
+aG93L3NldCBSeCBmbG93IGluZGlyIHRhYmxlIGFuZCBSU1MgaGFzaA0KPiBrZXkgb24gdWwgcmVw
+IikNCj4gDQoNCkhpIFN0ZXBoZW4sIA0KDQpjaGVja3BhdGNoIGRvZXNuJ3Qgc2VlbSB0byBjYXRj
+aCBzdWNoIHByb2JsZW1zLi4gDQoNCkkgY291bnQgb24gb3VyIENJIHRvIGRvIHN1Y2ggY2hlY2tz
+IGZvciBtZSwgc28gaW5zdGVhZCBvZiBtZSB3cml0aW5nIGEgDQpuZXcgc2NyaXB0IGV2ZXJ5IHRp
+bWUgd2UgaGl0IGEgbmV3IHVuZm9yZXNlZW4gaXNzdWUsIGkgd2FzIHdvbmRlcmluZw0Kd2hlcmUg
+Y2FuIGkgZmluZCB0aGUgc2V0IG9mIHRlc3Qvc2NyaXB0cyB5b3UgYXJlIHJ1bm5pbmcgPyANCg0K
+PiBhcmUgbWlzc2luZyBhIFNpZ25lZC1vZmYtYnkgZnJvbSB0aGVpciBjb21taXR0ZXIuDQo+IA0K
