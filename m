@@ -2,129 +2,128 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 024E6C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 17:47:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12097C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 17:47:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D186420727
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 17:47:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E282B21D7E
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 17:47:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JUHQbBY+"
+	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="zIJySxHv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727283AbgCJRrc (ORCPT
+        id S1727363AbgCJRrl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 13:47:32 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:38138 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726703AbgCJRr3 (ORCPT
+        Tue, 10 Mar 2020 13:47:41 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:40725 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726990AbgCJRri (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 13:47:29 -0400
-Received: by mail-lj1-f194.google.com with SMTP id w1so15181992ljh.5;
-        Tue, 10 Mar 2020 10:47:27 -0700 (PDT)
+        Tue, 10 Mar 2020 13:47:38 -0400
+Received: by mail-wr1-f68.google.com with SMTP id p2so16218854wrw.7
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 10:47:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QOo8QOtiq46Mv3iqusJE/rAX/jSTXhFYzSSPT1tZ1sw=;
-        b=JUHQbBY+Cv10kHOGFsDvf4lPZskoGS/yPWqEztEH2N4i836T/sf/6mzHyVZs+RQ7wl
-         agx+oXqwk1aYgczJtmFX/p9eMgBo38i32+CSa+t/nx8/8qjJ25LikrGtts6zX1uhZDzO
-         k8Qxq8VdMnFU5UuVr/CYcDWpE132yZFeTzKR+CHy3ryj681GyNdFLnVRyF6cecLrVp57
-         dCQA8+gknJtWxkymcX3fxX5al0cjJSSj9Ydkvjb8uvjRETobAVPdmpND2cn0IziUuGHf
-         KHYv0Sgd1anwHIsEcuZlNVJLstfRH0hQ4tF5R57GDO+IqJ/OrtnEDKeBOOAUi3itwjx7
-         /Qwg==
+        d=cloudflare.com; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=XC8IKQ74vPv+UfMSye3u7t/54ed4ZAgOtHUPCB0KwJI=;
+        b=zIJySxHvPp+R2UTCXnHsTySARcEwLDoOm3+7DSZAUoGamSnvk4Z4m/33Y22UZhZvPi
+         HRjm7o/EH8TQJqeSEacRldso2oXzc0+fB9bwfzz2X23lp9AsuVD2eG/y8ojk15LjQWKQ
+         hd+gxzQvdId2G79HdN+YP70IurA1njyIw1/oQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QOo8QOtiq46Mv3iqusJE/rAX/jSTXhFYzSSPT1tZ1sw=;
-        b=N6MhjrtxK9LtLXigz7+Wfxsa0xfAechBbSnB1UaE09kYCjOgPr6konu7ODQSlkdd7i
-         tl5j0s2tjDhlvtS2PKsDrFg7WxSG1CSo7PH0qwpS4CH/slPAlu0KTCXz+w3ewwGvlCRl
-         ogAcV4Nqg+HJCqGUZsUhKXRYa9eQbNtKhOSB6OwXCJs7htxRYTUPb6dMT2R7q3Oo0VPR
-         oKSRDUXmpsjteN2C2z/Pu8m0+5nrqZxWzwqRugiCZPu0rdS8gvI2PQTQ5GXZBIwRk/Vt
-         uQuD9bTgCyIU0QEgtFbgCjUvvbcSKrKJQ8gENYdhNRLXodCTy1N0eQttgMozX1ul3SOG
-         9AHA==
-X-Gm-Message-State: ANhLgQ0kf8Qd3fy+kTvju9TPJ29pFKWHG9FL1EH+f8tK5bD4y/Olny0G
-        QV12YPJD/bBaQcDHdEP3/dClj20ReLR8J/oQqqM=
-X-Google-Smtp-Source: ADFU+vtO6XDBUly2q5RwFmPsNbaMJeEdaZyVLi0rlyVA0BqaPbI8w0ky1P21EnZcM+VsFjs13RNYMXvePJEzes2APEY=
-X-Received: by 2002:a2e:8145:: with SMTP id t5mr13789511ljg.144.1583862446770;
- Tue, 10 Mar 2020 10:47:26 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200309180350.21075-1-steve@sk2.org>
-In-Reply-To: <20200309180350.21075-1-steve@sk2.org>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Tue, 10 Mar 2020 10:47:15 -0700
-Message-ID: <CAADnVQJ0EephJiY8F5KJFbYPBg2=hTHOi3WOUtVFE=qgoVbSuA@mail.gmail.com>
-Subject: Re: [PATCH v2] docs: sysctl/kernel: document BPF entries
-To:     Stephen Kitt <steve@sk2.org>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=XC8IKQ74vPv+UfMSye3u7t/54ed4ZAgOtHUPCB0KwJI=;
+        b=Xh5yPgh0KTY5QTUf11tzlU6JGckgS/CCkLY8VOcdwyMnn+DDLUW0RMN/FvZ/qf5zPZ
+         E95N/rjMTpKzV35PbRs3LdvZxJhKV76ClXi4VthPTyFR4bvw4oOlnJLTsWmcy7RaLgqO
+         GLIT1JP9cAHqegwPdes+ojj4mlOHQY/iTmsEwkqH2nUFEtkDhJ4PUgbt/x8nPr6TEfF6
+         CU/YTtZGDJE1thd2vVyIEVPYM1avqAmGMSzCwHBLE0a9Q3Y6opeef67Wn8UfyguGP06G
+         1bbRcYzDw1itUFb4yK7dG5wpuDvXY76cJfwFt46ln0SFtwPKEsZwbW2Yq5ekN+A85qWx
+         +uzw==
+X-Gm-Message-State: ANhLgQ2S4m0bumYvlWGG3ux+SFlFI2kfDAnvJQPgoD0vyDSKUshWbilD
+        FVEwkT5JtDHu8MzGxhR1N3lNSQ==
+X-Google-Smtp-Source: ADFU+vsjj2OPEOgFyNbWcbNMGg6PA4mx+5cRmNV6PwJWCtb3+fuf9br0wM59YIl8VXByekmeR/p31w==
+X-Received: by 2002:adf:a3c9:: with SMTP id m9mr26515647wrb.349.1583862456912;
+        Tue, 10 Mar 2020 10:47:36 -0700 (PDT)
+Received: from localhost.localdomain ([2a06:98c0:1000:8250:9494:775c:e7b6:e690])
+        by smtp.gmail.com with ESMTPSA id k4sm9118691wrx.27.2020.03.10.10.47.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Mar 2020 10:47:34 -0700 (PDT)
+From:   Lorenz Bauer <lmb@cloudflare.com>
+To:     John Fastabend <john.fastabend@gmail.com>,
         Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>, bpf <bpf@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Jakub Sitnicki <jakub@cloudflare.com>,
+        Lorenz Bauer <lmb@cloudflare.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>
+Cc:     kernel-team@cloudflare.com, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 4/5] bpf: sockmap, sockhash: return file descriptors from privileged lookup
+Date:   Tue, 10 Mar 2020 17:47:10 +0000
+Message-Id: <20200310174711.7490-5-lmb@cloudflare.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200310174711.7490-1-lmb@cloudflare.com>
+References: <20200310174711.7490-1-lmb@cloudflare.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 9, 2020 at 11:05 AM Stephen Kitt <steve@sk2.org> wrote:
->
-> Based on the implementation in kernel/bpf/syscall.c,
-> kernel/bpf/trampoline.c, include/linux/filter.h, and the documentation
-> in bpftool-prog.rst.
->
-> The section style doesn't match the surrounding sections; it matches
-> the style of the reworked kernel.rst queued up in docs-next.
->
-> Signed-off-by: Stephen Kitt <steve@sk2.org>
-> ---
->
-> Notes:
->     Changes since v1:
->     - rebased on bpf-next instead of docs-next.
->
->  Documentation/admin-guide/sysctl/kernel.rst | 24 +++++++++++++++++++++
->  1 file changed, 24 insertions(+)
->
-> diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
-> index def074807cee..eea7afd509ac 100644
-> --- a/Documentation/admin-guide/sysctl/kernel.rst
-> +++ b/Documentation/admin-guide/sysctl/kernel.rst
-> @@ -174,6 +174,20 @@ See the type_of_loader and ext_loader_ver fields in
->  Documentation/x86/boot.rst for additional information.
->
->
-> +bpf_stats_enabled
-> +=================
-> +
-> +Controls whether the kernel should collect statistics on BPF programs
-> +(total time spent running, number of times run...). Enabling
-> +statistics causes a slight reduction in performance on each program
-> +run. The statistics can be seen using ``bpftool``.
-> +
-> += ===================================
-> +0 Don't collect statistics (default).
-> +1 Collect statistics.
-> += ===================================
-> +
-> +
->  cap_last_cap:
->  =============
->
-> @@ -1123,6 +1137,16 @@ NMI switch that most IA32 servers have fires unknown NMI up, for
->  example.  If a system hangs up, try pressing the NMI switch.
->
->
-> +unprivileged_bpf_disabled
-> +=========================
-> +
-> +Writing 1 to this entry will disabled unprivileged calls to ``bpf()``;
+Allow callers with CAP_NET_ADMIN to retrieve file descriptors from a
+sockmap and sockhash. O_CLOEXEC is enforced on all fds.
 
-same typo as was pointed out earlier.
+Without this, it's difficult to resize or otherwise rebuild existing
+sockmap or sockhashes.
+
+Suggested-by: Jakub Sitnicki <jakub@cloudflare.com>
+Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
+---
+ net/core/sock_map.c | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+
+diff --git a/net/core/sock_map.c b/net/core/sock_map.c
+index 03e04426cd21..3228936aa31e 100644
+--- a/net/core/sock_map.c
++++ b/net/core/sock_map.c
+@@ -347,12 +347,31 @@ static void *sock_map_lookup(struct bpf_map *map, void *key)
+ static int __sock_map_copy_value(struct bpf_map *map, struct sock *sk,
+ 				 void *value)
+ {
++	struct file *file;
++	int fd;
++
+ 	switch (map->value_size) {
+ 	case sizeof(u64):
+ 		sock_gen_cookie(sk);
+ 		*(u64 *)value = atomic64_read(&sk->sk_cookie);
+ 		return 0;
+ 
++	case sizeof(u32):
++		if (!capable(CAP_NET_ADMIN))
++			return -EPERM;
++
++		fd = get_unused_fd_flags(O_CLOEXEC);
++		if (unlikely(fd < 0))
++			return fd;
++
++		read_lock_bh(&sk->sk_callback_lock);
++		file = get_file(sk->sk_socket->file);
++		read_unlock_bh(&sk->sk_callback_lock);
++
++		fd_install(fd, file);
++		*(u32 *)value = fd;
++		return 0;
++
+ 	default:
+ 		return -ENOSPC;
+ 	}
+-- 
+2.20.1
+
