@@ -2,207 +2,501 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D156C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 05:17:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3E61C10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 05:41:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3992024655
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 05:17:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ejKiPIjD"
+	by mail.kernel.org (Postfix) with ESMTP id B3AB72464B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 05:41:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726389AbgCJFRC (ORCPT
+        id S1726268AbgCJFk7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 01:17:02 -0400
-Received: from mail-vk1-f201.google.com ([209.85.221.201]:48472 "EHLO
-        mail-vk1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726045AbgCJFQ7 (ORCPT
+        Tue, 10 Mar 2020 01:40:59 -0400
+Received: from relay10.mail.gandi.net ([217.70.178.230]:52549 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726156AbgCJFk7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 01:16:59 -0400
-Received: by mail-vk1-f201.google.com with SMTP id z2so4978960vkg.15
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 22:16:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=qlkc3lstB8viYH6PTDeV+46tsu4TlJq92uxB1YryNdc=;
-        b=ejKiPIjD0GtiAKcJ3Gaj202XVbpxBQvhDBSY7rz8rfFOExoEot3lkuQXtFggrgrZVT
-         OYgzMehYpUfnSYPwRJI/8AFdNONytigNW2znh+4Z+l5KKtSUoXbnVypELhi9anijwFjU
-         5AjVztlBLTzRurndLNu6j1VyReVgCHihIYM1Yno5Gnw3281g3FlxEYQ2BmPDq09ab9a2
-         b537M87Rq/6zOkLFE4NbgqCss7T0I13DjofmCnDUMNL0qZzmEYjZRYERFJliNw4+Diwd
-         McC4l1Py95cx8gMZxjGXlPaaMIAauH6/RBDg8x7atkebQWTBR1Q0wmimxLuMIvctbmcp
-         nbXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=qlkc3lstB8viYH6PTDeV+46tsu4TlJq92uxB1YryNdc=;
-        b=rBe5tTkgt5FrNm4g352jEDiSfDt79eEvtlEvyNRNXIbiCddlFmKSyw5tE7dXdqu35F
-         IxKyKLsxnWI5i4y5V6fcwfwoywkazuC9DHRFJNHYUSuUdXv1AW5gNhPNWcAlW7B+lRFn
-         i5ecRAo2+tzbZlCplWU0cqOxK2pcyerhyWgYQWJjaerjVTplCwpPqoI1cynUmrlVWbsD
-         KqsDMzO/VBLI8XXC7gKESxUF+iOSlY1Fd3mwvVM/5HHX0jesfi+1CYYBJMncERMsH5qT
-         ED/2Y2jATzNf4j4C50RWvzHPLCZdIK04p2zDc5qvgz8pS4Zd/6q6/B+0dOUxKjRcS4sD
-         80Ng==
-X-Gm-Message-State: ANhLgQ26hcR+RXKkU+RYttg1IGHeKv7SkSOVJH4stFLhw2GjdeUeZyKO
-        srYv9u5KX16uzJ29X0AtU/eSntiJqSx93w==
-X-Google-Smtp-Source: ADFU+vu05+1XJj00xUUY5nWHb75mpQagWKleiSaRoA1Rkd9cq1yjoid5/9z3RUqEKGqqzhZVdW5qxxpPO93sRQ==
-X-Received: by 2002:a1f:5385:: with SMTP id h127mr10294318vkb.56.1583817415532;
- Mon, 09 Mar 2020 22:16:55 -0700 (PDT)
-Date:   Mon,  9 Mar 2020 22:16:05 -0700
-Message-Id: <20200310051606.33121-1-shakeelb@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
-Subject: [PATCH v4 1/2] cgroup: memcg: net: do not associate sock with
- unrelated cgroup
-From:   Shakeel Butt <shakeelb@google.com>
-To:     Eric Dumazet <edumazet@google.com>, Roman Gushchin <guro@fb.com>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Greg Thelen <gthelen@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        netdev@vger.kernel.org, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Shakeel Butt <shakeelb@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 10 Mar 2020 01:40:59 -0400
+Received: from [192.168.0.12] (127.19.86.79.rev.sfr.net [79.86.19.127])
+        (Authenticated sender: alex@ghiti.fr)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 221B2240004;
+        Tue, 10 Mar 2020 05:40:54 +0000 (UTC)
+From:   Alex Ghiti <alex@ghiti.fr>
+Subject: Re: [PATCH v2 1/2] riscv: Add support to dump the kernel page tables
+To:     Zong Li <zong.li@sifive.com>, paul.walmsley@sifive.com,
+        palmer@dabbelt.com, aou@eecs.berkeley.edu,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20200210083515.10864-1-zong.li@sifive.com>
+ <20200210083515.10864-2-zong.li@sifive.com>
+Message-ID: <c7c798a2-b45c-7b06-5232-f268a9ae8eb9@ghiti.fr>
+Date:   Tue, 10 Mar 2020 01:40:54 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
+MIME-Version: 1.0
+In-Reply-To: <20200210083515.10864-2-zong.li@sifive.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We are testing network memory accounting in our setup and noticed
-inconsistent network memory usage and often unrelated cgroups network
-usage correlates with testing workload. On further inspection, it
-seems like mem_cgroup_sk_alloc() and cgroup_sk_alloc() are broken in
-irq context specially for cgroup v1.
+Hi Zong,
 
-mem_cgroup_sk_alloc() and cgroup_sk_alloc() can be called in irq context
-and kind of assumes that this can only happen from sk_clone_lock()
-and the source sock object has already associated cgroup. However in
-cgroup v1, where network memory accounting is opt-in, the source sock
-can be unassociated with any cgroup and the new cloned sock can get
-associated with unrelated interrupted cgroup.
+On 2/10/20 3:35 AM, Zong Li wrote:
+> In a similar manner to arm64, x86, powerpc, etc., it can traverse all
+> page tables, and dump the page table layout with the memory types and
+> permissions.
+> 
+> Add a debugfs file at /sys/kernel/debug/kernel_page_tables to export
+> the page table layout to userspace.
+> 
+> Changes in v2:
+> - Remove #ifdef CONFIG_PTDUMP_CORE in header. Suggested by Steven Price.
+> 
+> Signed-off-by: Zong Li <zong.li@sifive.com>
+> ---
+>   arch/riscv/Kconfig               |   1 +
+>   arch/riscv/include/asm/pgtable.h |  10 +
+>   arch/riscv/include/asm/ptdump.h  |  11 ++
+>   arch/riscv/mm/Makefile           |   1 +
+>   arch/riscv/mm/ptdump.c           | 317 +++++++++++++++++++++++++++++++
+>   5 files changed, 340 insertions(+)
+>   create mode 100644 arch/riscv/include/asm/ptdump.h
+>   create mode 100644 arch/riscv/mm/ptdump.c
+> 
+> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+> index 73f029eae0cc..6e81da55b5e4 100644
+> --- a/arch/riscv/Kconfig
+> +++ b/arch/riscv/Kconfig
+> @@ -29,6 +29,7 @@ config RISCV
+>   	select GENERIC_SMP_IDLE_THREAD
+>   	select GENERIC_ATOMIC64 if !64BIT
+>   	select GENERIC_IOREMAP
+> +	select GENERIC_PTDUMP
+>   	select HAVE_ARCH_AUDITSYSCALL
+>   	select HAVE_ARCH_SECCOMP_FILTER
+>   	select HAVE_ASM_MODVERSIONS
+> diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
+> index e43041519edd..ac353e44f80c 100644
+> --- a/arch/riscv/include/asm/pgtable.h
+> +++ b/arch/riscv/include/asm/pgtable.h
+> @@ -444,6 +444,16 @@ static inline int ptep_clear_flush_young(struct vm_area_struct *vma,
+>   #endif
+>   #define FIXADDR_START    (FIXADDR_TOP - FIXADDR_SIZE)
+>   
+> +/*
+> + * In the RV64 Linux scheme, we give the user half of the virtual-address space
+> + * and give the kernel the other (upper) half.
+> + */
+> +#ifdef CONFIG_64BIT
+> +#define KERN_VIRT_START	(-(BIT(CONFIG_VA_BITS)) + TASK_SIZE) > +#else
+> +#define KERN_VIRT_START	FIXADDR_START
+> +#endif
+> +
+>   /*
+>    * Task size is 0x4000000000 for RV64 or 0x9fc00000 for RV32.
+>    * Note that PGDIR_SIZE must evenly divide TASK_SIZE.
+> diff --git a/arch/riscv/include/asm/ptdump.h b/arch/riscv/include/asm/ptdump.h
+> new file mode 100644
+> index 000000000000..e29af7191909
+> --- /dev/null
+> +++ b/arch/riscv/include/asm/ptdump.h
+> @@ -0,0 +1,11 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright (C) 2019 SiFive
+> + */
+> +
+> +#ifndef _ASM_RISCV_PTDUMP_H
+> +#define _ASM_RISCV_PTDUMP_H
+> +
+> +void ptdump_check_wx(void);
+> +
+> +#endif /* _ASM_RISCV_PTDUMP_H */
+> diff --git a/arch/riscv/mm/Makefile b/arch/riscv/mm/Makefile
+> index 50b7af58c566..814e16a8d68a 100644
+> --- a/arch/riscv/mm/Makefile
+> +++ b/arch/riscv/mm/Makefile
+> @@ -15,6 +15,7 @@ ifeq ($(CONFIG_MMU),y)
+>   obj-$(CONFIG_SMP) += tlbflush.o
+>   endif
+>   obj-$(CONFIG_HUGETLB_PAGE) += hugetlbpage.o
+> +obj-$(CONFIG_PTDUMP_CORE) += ptdump.o
+>   obj-$(CONFIG_KASAN)   += kasan_init.o
+>   
+>   ifdef CONFIG_KASAN
+> diff --git a/arch/riscv/mm/ptdump.c b/arch/riscv/mm/ptdump.c
+> new file mode 100644
+> index 000000000000..9a67e723fff7
+> --- /dev/null
+> +++ b/arch/riscv/mm/ptdump.c
+> @@ -0,0 +1,317 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (C) 2019 SiFive
+> + */
+> +
+> +#include <linux/init.h>
+> +#include <linux/debugfs.h>
+> +#include <linux/seq_file.h>
+> +#include <linux/ptdump.h>
+> +
+> +#include <asm/ptdump.h>
+> +#include <asm/pgtable.h>
+> +#include <asm/kasan.h>
+> +
+> +#define pt_dump_seq_printf(m, fmt, args...)	\
+> +({						\
+> +	if (m)					\
+> +		seq_printf(m, fmt, ##args);	\
+> +})
+> +
+> +#define pt_dump_seq_puts(m, fmt)	\
+> +({					\
+> +	if (m)				\
+> +		seq_printf(m, fmt);	\
+> +})
+> +
+> +/*
+> + * The page dumper groups page table entries of the same type into a single
+> + * description. It uses pg_state to track the range information while
+> + * iterating over the pte entries. When the continuity is broken it then
+> + * dumps out a description of the range.
+> + */
+> +struct pg_state {
+> +	struct ptdump_state ptdump;
+> +	struct seq_file *seq;
+> +	const struct addr_marker *marker;
+> +	unsigned long start_address;
+> +	unsigned long start_pa;
+> +	unsigned long last_pa;
+> +	int level;
+> +	u64 current_prot;
+> +	bool check_wx;
+> +	unsigned long wx_pages;
+> +};
+> +
+> +/* Address marker */
+> +struct addr_marker {
+> +	unsigned long start_address;
+> +	const char *name;
+> +};
+> +
+> +static struct addr_marker address_markers[] = {
+> +#ifdef CONFIG_KASAN
+> +	{KASAN_SHADOW_START,	"Kasan shadow start"},
+> +	{KASAN_SHADOW_END,	"Kasan shadow end"},
+> +#endif
+> +	{FIXADDR_START,		"Fixmap start"},
+> +	{FIXADDR_TOP,		"Fixmap end"},
+> +	{PCI_IO_START,		"PCI I/O start"},
+> +	{PCI_IO_END,		"PCI I/O end"},
+> +#ifdef CONFIG_SPARSEMEM_VMEMMAP
+> +	{VMEMMAP_START,		"vmemmap start"},
+> +	{VMEMMAP_END,		"vmemmap end"},
+> +#endif
+> +	{VMALLOC_START,		"vmalloc() area"},
+> +	{VMALLOC_END,		"vmalloc() end"},
+> +	{PAGE_OFFSET,		"Linear mapping"},
+> +	{-1, NULL},
+> +};
+> +
+> +/* Page Table Entry */
+> +struct prot_bits {
+> +	u64 mask;
+> +	u64 val;
+> +	const char *set;
+> +	const char *clear;
+> +};
+> +
+> +static const struct prot_bits pte_bits[] = {
+> +	{
+> +		.mask = _PAGE_SOFT,
+> +		.val = _PAGE_SOFT,
+> +		.set = "RSW",
+> +		.clear = "   ",
+> +	}, {
+> +		.mask = _PAGE_DIRTY,
+> +		.val = _PAGE_DIRTY,
+> +		.set = "D",
+> +		.clear = ".",
+> +	}, {
+> +		.mask = _PAGE_ACCESSED,
+> +		.val = _PAGE_ACCESSED,
+> +		.set = "A",
+> +		.clear = ".",
+> +	}, {
+> +		.mask = _PAGE_GLOBAL,
+> +		.val = _PAGE_GLOBAL,
+> +		.set = "G",
+> +		.clear = ".",
+> +	}, {
+> +		.mask = _PAGE_USER,
+> +		.val = _PAGE_USER,
+> +		.set = "U",
+> +		.clear = ".",
+> +	}, {
+> +		.mask = _PAGE_EXEC,
+> +		.val = _PAGE_EXEC,
+> +		.set = "X",
+> +		.clear = ".",
+> +	}, {
+> +		.mask = _PAGE_WRITE,
+> +		.val = _PAGE_WRITE,
+> +		.set = "W",
+> +		.clear = ".",
+> +	}, {
+> +		.mask = _PAGE_READ,
+> +		.val = _PAGE_READ,
+> +		.set = "R",
+> +		.clear = ".",
+> +	}, {
+> +		.mask = _PAGE_PRESENT,
+> +		.val = _PAGE_PRESENT,
+> +		.set = "V",
+> +		.clear = ".",
+> +	}
+> +};
+> +
+> +/* Page Level */
+> +struct pg_level {
+> +	const char *name;
+> +	u64 mask;
+> +};
+> +
+> +static struct pg_level pg_level[] = {
+> +	{ /* pgd */
+> +		.name = "PGD",
+> +	}, { /* p4d */
+> +		.name = (CONFIG_PGTABLE_LEVELS > 4) ? "P4D" : "PGD",
+> +	}, { /* pud */
+> +		.name = (CONFIG_PGTABLE_LEVELS > 3) ? "PUD" : "PGD",
+> +	}, { /* pmd */
+> +		.name = (CONFIG_PGTABLE_LEVELS > 2) ? "PMD" : "PGD",
+> +	}, { /* pte */
+> +		.name = "PTE",
+> +	},
+> +};
+> +
+> +static void dump_prot(struct pg_state *st)
+> +{
+> +	unsigned int i;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(pte_bits); i++) {
+> +		const char *s;
+> +
+> +		if ((st->current_prot & pte_bits[i].mask) == pte_bits[i].val)
+> +			s = pte_bits[i].set;
+> +		else
+> +			s = pte_bits[i].clear;
+> +
+> +		if (s)
+> +			pt_dump_seq_printf(st->seq, " %s", s);
+> +	}
+> +}
+> +
+> +#ifdef CONFIG_64BIT
+> +#define ADDR_FORMAT	"0x%016lx"
+> +#else
+> +#define ADDR_FORMAT	"0x%08lx"
+> +#endif
+> +static void dump_addr(struct pg_state *st, unsigned long addr)
+> +{
+> +	static const char units[] = "KMGTPE";
+> +	const char *unit = units;
+> +	unsigned long delta;
+> +
+> +	pt_dump_seq_printf(st->seq, ADDR_FORMAT "-" ADDR_FORMAT "   ",
+> +			   st->start_address, addr);
+> +
+> +	pt_dump_seq_printf(st->seq, " " ADDR_FORMAT " ", st->start_pa);
+> +	delta = (addr - st->start_address) >> 10;
+> +
+> +	while (!(delta & 1023) && unit[1]) {
+> +		delta >>= 10;
+> +		unit++;
+> +	}
+> +
+> +	pt_dump_seq_printf(st->seq, "%9lu%c %s", delta, *unit,
+> +			   pg_level[st->level].name);
+> +}
+> +
+> +static void note_prot_wx(struct pg_state *st, unsigned long addr)
+> +{
+> +	if (!st->check_wx)
+> +		return;
+> +
+> +	if ((st->current_prot & (_PAGE_WRITE | _PAGE_EXEC)) !=
+> +	    (_PAGE_WRITE | _PAGE_EXEC))
+> +		return;
+> +
+> +	WARN_ONCE(1, "riscv/mm: Found insecure W+X mapping at address %p/%pS\n",
+> +		  (void *)st->start_address, (void *)st->start_address);
+> +
+> +	st->wx_pages += (addr - st->start_address) / PAGE_SIZE;
+> +}
+> +
+> +static void note_page(struct ptdump_state *pt_st, unsigned long addr,
+> +		      int level, unsigned long val)
+> +{
+> +	struct pg_state *st = container_of(pt_st, struct pg_state, ptdump);
+> +	u64 pa = PFN_PHYS(pte_pfn(__pte(val)));
+> +	u64 prot = 0;
+> +
+> +	if (level >= 0)
+> +		prot = val & pg_level[level].mask;
+> +
+> +	if (st->level == -1) {
+> +		st->level = level;
+> +		st->current_prot = prot;
+> +		st->start_address = addr;
+> +		st->start_pa = pa;
+> +		st->last_pa = pa;
+> +		pt_dump_seq_printf(st->seq, "---[ %s ]---\n", st->marker->name);
+> +	} else if (prot != st->current_prot ||
+> +		   level != st->level || addr >= st->marker[1].start_address) {
+> +		if (st->current_prot) {
+> +			note_prot_wx(st, addr);
+> +			dump_addr(st, addr);
+> +			dump_prot(st);
+> +			pt_dump_seq_puts(st->seq, "\n");
+> +		}
+> +
+> +		while (addr >= st->marker[1].start_address) {
+> +			st->marker++;
+> +			pt_dump_seq_printf(st->seq, "---[ %s ]---\n",
+> +					   st->marker->name);
+> +		}
+> +
+> +		st->start_address = addr;
+> +		st->start_pa = pa;
+> +		st->last_pa = pa;
+> +		st->current_prot = prot;
+> +		st->level = level;
+> +	} else {
+> +		st->last_pa = pa;
+> +	}
+> +}
+> +
+> +static void ptdump_walk(struct seq_file *s)
+> +{
+> +	struct pg_state st = {
+> +		.seq = s,
+> +		.marker = address_markers,
+> +		.level = -1,
+> +		.ptdump = {
+> +			.note_page = note_page,
+> +			.range = (struct ptdump_range[]) {
+> +				{KERN_VIRT_START, ULONG_MAX},
+> +				{0, 0}
+> +			}
+> +		}
+> +	};
+> +
+> +	ptdump_walk_pgd(&st.ptdump, &init_mm, NULL);
+> +}
+> +
+> +void ptdump_check_wx(void)
+> +{
+> +	struct pg_state st = {
+> +		.seq = NULL,
+> +		.marker = (struct addr_marker[]) {
+> +			{0, NULL},
+> +			{-1, NULL},
+> +		},
+> +		.level = -1,
+> +		.check_wx = true,
+> +		.ptdump = {
+> +			.note_page = note_page,
+> +			.range = (struct ptdump_range[]) {
+> +				{KERN_VIRT_START, ULONG_MAX},
+> +				{0, 0}
+> +			}
+> +		}
+> +	};
+> +
+> +	ptdump_walk_pgd(&st.ptdump, &init_mm, NULL);
+> +
+> +	if (st.wx_pages)
+> +		pr_warn("Checked W+X mappings: FAILED, %lu W+X pages found\n",
 
-Cgroup v2 can also suffer if the source sock object was created by
-process in the root cgroup or if sk_alloc() is called in irq context.
-The fix is to just do nothing in interrupt.
+"FAILED" should be lowercase like "passed" below (or the other way around).
 
-WARNING: Please note that about half of the TCP sockets are allocated
-from the IRQ context, so, memory used by such sockets will not be
-accouted by the memcg.
+> +			st.wx_pages);
+> +	else
+> +		pr_info("Checked W+X mappings: passed, no W+X pages found\n");
+> +}
+> +
+> +static int ptdump_show(struct seq_file *m, void *v)
+> +{
+> +	ptdump_walk(m);
+> +
+> +	return 0;
+> +}
+> +
+> +DEFINE_SHOW_ATTRIBUTE(ptdump);
+> +
+> +static int ptdump_init(void)
+> +{
+> +	unsigned int i, j;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(pg_level); i++)
+> +		for (j = 0; j < ARRAY_SIZE(pte_bits); j++)
+> +			pg_level[i].mask |= pte_bits[j].mask;
+> +
+> +	debugfs_create_file("kernel_page_tables", 0400, NULL, NULL,
+> +			    &ptdump_fops);
+> +
+> +	return 0;
+> +}
+> +
+> +device_initcall(ptdump_init);
+> 
 
-The stack trace of mem_cgroup_sk_alloc() from IRQ-context:
+Other than the small comment above, I have tested it on my sv48 series 
+(I had to do some small changes to adapt it, but nothing significant):
 
-CPU: 70 PID: 12720 Comm: ssh Tainted:  5.6.0-smp-DEV #1
-Hardware name: ...
-Call Trace:
- <IRQ>
- dump_stack+0x57/0x75
- mem_cgroup_sk_alloc+0xe9/0xf0
- sk_clone_lock+0x2a7/0x420
- inet_csk_clone_lock+0x1b/0x110
- tcp_create_openreq_child+0x23/0x3b0
- tcp_v6_syn_recv_sock+0x88/0x730
- tcp_check_req+0x429/0x560
- tcp_v6_rcv+0x72d/0xa40
- ip6_protocol_deliver_rcu+0xc9/0x400
- ip6_input+0x44/0xd0
- ? ip6_protocol_deliver_rcu+0x400/0x400
- ip6_rcv_finish+0x71/0x80
- ipv6_rcv+0x5b/0xe0
- ? ip6_sublist_rcv+0x2e0/0x2e0
- process_backlog+0x108/0x1e0
- net_rx_action+0x26b/0x460
- __do_softirq+0x104/0x2a6
- do_softirq_own_stack+0x2a/0x40
- </IRQ>
- do_softirq.part.19+0x40/0x50
- __local_bh_enable_ip+0x51/0x60
- ip6_finish_output2+0x23d/0x520
- ? ip6table_mangle_hook+0x55/0x160
- __ip6_finish_output+0xa1/0x100
- ip6_finish_output+0x30/0xd0
- ip6_output+0x73/0x120
- ? __ip6_finish_output+0x100/0x100
- ip6_xmit+0x2e3/0x600
- ? ipv6_anycast_cleanup+0x50/0x50
- ? inet6_csk_route_socket+0x136/0x1e0
- ? skb_free_head+0x1e/0x30
- inet6_csk_xmit+0x95/0xf0
- __tcp_transmit_skb+0x5b4/0xb20
- __tcp_send_ack.part.60+0xa3/0x110
- tcp_send_ack+0x1d/0x20
- tcp_rcv_state_process+0xe64/0xe80
- ? tcp_v6_connect+0x5d1/0x5f0
- tcp_v6_do_rcv+0x1b1/0x3f0
- ? tcp_v6_do_rcv+0x1b1/0x3f0
- __release_sock+0x7f/0xd0
- release_sock+0x30/0xa0
- __inet_stream_connect+0x1c3/0x3b0
- ? prepare_to_wait+0xb0/0xb0
- inet_stream_connect+0x3b/0x60
- __sys_connect+0x101/0x120
- ? __sys_getsockopt+0x11b/0x140
- __x64_sys_connect+0x1a/0x20
- do_syscall_64+0x51/0x200
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
+---[ Fixmap start ]---
+0xffff9dfffef00000-0xffff9dffff000000    0x0000000082200000         1M 
+PTE     D A . . . W R V
+---[ Fixmap end ]---
+---[ PCI I/O start ]---
+---[ PCI I/O end ]---
+---[ vmalloc() area ]---
+0xffffa00000000000-0xffffa00004000000    0x000000000c000000        64M 
+PTE     D A . . . W R V
+0xffffa00004001000-0xffffa00004002000    0x0000000010008000         4K 
+PTE     D A . . . W R V
+0xffffa00004003000-0xffffa00004004000    0x0000000010007000         4K 
+PTE     D A . . . W R V
+0xffffa00004005000-0xffffa00004006000    0x0000000010006000         4K 
+PTE     D A . . . W R V
+0xffffa00004011000-0xffffa00004012000    0x0000000010000000         4K 
+PTE     D A . . . W R V
+0xffffa0000401c000-0xffffa0000401f000    0x00000007af979000        12K 
+PTE     D A . . . W R V
+0xffffbffffffbb000-0xffffbffffffbe000    0x00000007b030e000        12K 
+PTE     D A . . . W R V
+0xffffbffffffcc000-0xffffbffffffcf000    0x00000007b0311000        12K 
+PTE     D A . . . W R V
+0xffffbffffffdd000-0xffffbffffffe0000    0x00000007b0314000        12K 
+PTE     D A . . . W R V
+0xffffbffffffee000-0xffffbfffffff1000    0x00000007b0317000        12K 
+PTE     D A . . . W R V
+---[ vmalloc() end ]---
+---[ Linear mapping ]---
+0xffffc00000000000-0xffffc00752e00000    0x0000000080200000     29998M 
+PMD     D A . . X W R V
 
-The stack trace of mem_cgroup_sk_alloc() from IRQ-context:
-Fixes: 2d7580738345 ("mm: memcontrol: consolidate cgroup socket tracking")
-Fixes: d979a39d7242 ("cgroup: duplicate cgroup reference when cloning sockets")
-Signed-off-by: Shakeel Butt <shakeelb@google.com>
-Reviewed-by: Roman Gushchin <guro@fb.com>
----
-Changes since v3:
-- None
+You can then add:
 
-Changes since v2:
-- Added a warning.
-- Fixed a typo.
-- Added the stacktrace.
+Tested-by: Alexandre Ghiti <alex@ghiti.fr>
 
-Changes since v1:
-- Fix cgroup_sk_alloc() too.
+Thanks,
 
- kernel/cgroup/cgroup.c | 4 ++++
- mm/memcontrol.c        | 4 ++++
- 2 files changed, 8 insertions(+)
-
-diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
-index 4b70d0ae37e5..7e8755e8c33e 100644
---- a/kernel/cgroup/cgroup.c
-+++ b/kernel/cgroup/cgroup.c
-@@ -6461,6 +6461,10 @@ void cgroup_sk_alloc(struct sock_cgroup_data *skcd)
- 		return;
- 	}
- 
-+	/* Don't associate the sock with unrelated interrupted task's cgroup. */
-+	if (in_interrupt())
-+		return;
-+
- 	rcu_read_lock();
- 
- 	while (true) {
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 1e1260847c63..06a889b0538b 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -6751,6 +6751,10 @@ void mem_cgroup_sk_alloc(struct sock *sk)
- 		return;
- 	}
- 
-+	/* Do not associate the sock with unrelated interrupted task's memcg. */
-+	if (in_interrupt())
-+		return;
-+
- 	rcu_read_lock();
- 	memcg = mem_cgroup_from_task(current);
- 	if (memcg == root_mem_cgroup)
--- 
-2.25.1.481.gfbce0eb801-goog
-
+Alex
