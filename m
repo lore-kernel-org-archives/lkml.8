@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89992C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:18:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D63AAC18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:18:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53F31208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:18:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F45E222D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:18:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583846310;
-	bh=Xsc8LvYZIeFd8bE6v1ZDxoI41P161LSVCjfpgOa/g1I=;
+	s=default; t=1583846313;
+	bh=dJeKi+R32ZhJSaKkqRgirh033mtVSJyG7ZWIYC80IkU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R9QaROFWZI+DN/gPk9B0B8rXzqn9PX011ZBEEzPoyU8eNLE0qqwiL4ahZGLy7OxLb
-	 Op7yeybG/d8vgD4oOTG6SSfWi9OQsuYIagfRRiQrymOGwvPz9QDTWCHPqtYUsPeedu
-	 0BS5KbEsK3Rp4c3L2MvmtdC/JLrTM2D5qabxvhHY=
+	b=oLhDd24VOlMmfqVHIpgUkt1w0GCASOKSgNf1ucpT6lsN6Q99xCbxF75txrgEiXvl/
+	 +G1o5wkRRo/pPpIZJMnL65Rsu1rN/jpkJivcA4wjwdgXWX7qTWTLfzbcIV3ZaM55Lp
+	 Ql8VR7bR+WW6f2zKlTxDiSNyiWe+wPBUIXJExyjI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731753AbgCJNS3 (ORCPT
+        id S1731343AbgCJNKm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:18:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60232 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:10:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60022 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729098AbgCJNKq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:10:46 -0400
+        id S1730821AbgCJNKg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:10:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B78320409;
-        Tue, 10 Mar 2020 13:10:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 055432468D;
+        Tue, 10 Mar 2020 13:10:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845845;
-        bh=Xsc8LvYZIeFd8bE6v1ZDxoI41P161LSVCjfpgOa/g1I=;
+        s=default; t=1583845835;
+        bh=dJeKi+R32ZhJSaKkqRgirh033mtVSJyG7ZWIYC80IkU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bdJHVHWMB5jexepJW7SAcUFcxB6QgGgADwo9CMiq9WshJYvjjcUSz+soOWENXB8Yz
-         +yzPDX+kWV/JQX9MISsZS7+FavBId0eLSoC7+5HOAzw01Cet4dblSOgmy1zHHmuas6
-         Kdl5iKi/UEhJ1XZmYa8QW4XxVKO6lbcKAQAbpsjY=
+        b=ZUOuUexbqCQWq5bVdYVFpC/0p8s8peCc3/qEWqvPevTH9nOaRT9TCp+KVflPor55b
+         9ujBvPLZopLELXLSXrfRNkuHRLIzGaheRvjL+x3pLXaYndk5OY4xw2h1utbqa74yJP
+         FHU4wUP6jbwB1ZNAaExRkkyGhEXZ+ns797Ag9gTI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sanchayan Maity <maitysanchayan@gmail.com>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Johan Hovold <johan@kernel.org>,
-        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-Subject: [PATCH 4.14 121/126] ARM: dts: imx6dl-colibri-eval-v3: fix sram compatible properties
-Date:   Tue, 10 Mar 2020 13:42:22 +0100
-Message-Id: <20200310124211.171806692@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+cb0c054eabfba4342146@syzkaller.appspotmail.com,
+        Bernard Metzler <bmt@zurich.ibm.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Subject: [PATCH 4.14 117/126] RDMA/iwcm: Fix iwcm work deallocation
+Date:   Tue, 10 Mar 2020 13:42:18 +0100
+Message-Id: <20200310124210.964531891@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310124203.704193207@linuxfoundation.org>
 References: <20200310124203.704193207@linuxfoundation.org>
@@ -62,52 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Bernard Metzler <bmt@zurich.ibm.com>
 
-commit bcbf53a0dab50980867476994f6079c1ec5bb3a3 upstream.
+commit 810dbc69087b08fd53e1cdd6c709f385bc2921ad upstream.
 
-The sram-node compatible properties have mistakingly combined the
-model-specific string with the generic "mtd-ram" string.
+The dealloc_work_entries() function must update the work_free_list pointer
+while freeing its entries, since potentially called again on same list. A
+second iteration of the work list caused system crash. This happens, if
+work allocation fails during cma_iw_listen() and free_cm_id() tries to
+free the list again during cleanup.
 
-Note that neither "cy7c1019dv33-10zsxi, mtd-ram" or
-"cy7c1019dv33-10zsxi" are used by any in-kernel driver and they are
-not present in any binding.
-
-The physmap driver will however bind to platform devices that specify
-"mtd-ram".
-
-Fixes: fc48e76489fd ("ARM: dts: imx6: Add support for Toradex Colibri iMX6 module")
-Cc: Sanchayan Maity <maitysanchayan@gmail.com>
-Cc: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Reviewed-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Fixes: 922a8e9fb2e0 ("RDMA: iWARP Connection Manager.")
+Link: https://lore.kernel.org/r/20200302181614.17042-1-bmt@zurich.ibm.com
+Reported-by: syzbot+cb0c054eabfba4342146@syzkaller.appspotmail.com
+Signed-off-by: Bernard Metzler <bmt@zurich.ibm.com>
+Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/infiniband/core/iwcm.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts
-+++ b/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts
-@@ -231,7 +231,7 @@
+--- a/drivers/infiniband/core/iwcm.c
++++ b/drivers/infiniband/core/iwcm.c
+@@ -158,8 +158,10 @@ static void dealloc_work_entries(struct
+ {
+ 	struct list_head *e, *tmp;
  
- 	/* SRAM on Colibri nEXT_CS0 */
- 	sram@0,0 {
--		compatible = "cypress,cy7c1019dv33-10zsxi, mtd-ram";
-+		compatible = "cypress,cy7c1019dv33-10zsxi", "mtd-ram";
- 		reg = <0 0 0x00010000>;
- 		#address-cells = <1>;
- 		#size-cells = <1>;
-@@ -242,7 +242,7 @@
+-	list_for_each_safe(e, tmp, &cm_id_priv->work_free_list)
++	list_for_each_safe(e, tmp, &cm_id_priv->work_free_list) {
++		list_del(e);
+ 		kfree(list_entry(e, struct iwcm_work, free_list));
++	}
+ }
  
- 	/* SRAM on Colibri nEXT_CS1 */
- 	sram@1,0 {
--		compatible = "cypress,cy7c1019dv33-10zsxi, mtd-ram";
-+		compatible = "cypress,cy7c1019dv33-10zsxi", "mtd-ram";
- 		reg = <1 0 0x00010000>;
- 		#address-cells = <1>;
- 		#size-cells = <1>;
+ static int alloc_work_entries(struct iwcm_id_private *cm_id_priv, int count)
 
 
