@@ -2,201 +2,172 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BD0FC10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:24:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0D88C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:25:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4ED72071B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:24:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="bVXYq8To"
+	by mail.kernel.org (Postfix) with ESMTP id 94F47222C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:25:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727742AbgCJWYy (ORCPT
+        id S1727870AbgCJWZT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 18:24:54 -0400
-Received: from gateway30.websitewelcome.com ([192.185.149.4]:28261 "EHLO
-        gateway30.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726293AbgCJWYy (ORCPT
+        Tue, 10 Mar 2020 18:25:19 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:57252 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727733AbgCJWZQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 18:24:54 -0400
-Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
-        by gateway30.websitewelcome.com (Postfix) with ESMTP id 3674B9C082
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 17:13:19 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id Bn7njdS18XVkQBn7njwBkA; Tue, 10 Mar 2020 17:13:19 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=LGn5R7nio+zIIEI3TW5iV/Xir950f8gqF9dbU/tWSDk=; b=bVXYq8To1DkDJNTngXcJXMIRM5
-        ase5kSd7Ka0nMamn7fBQnhFhU6jnHGVLfObdAeewIPItZlxncjnDlBwBZl6ahrZ/Xp1HpuFW3k8R1
-        sGcUoB3Xt57vd2FhjBNAriPLX6++KrW7CyQ1SsTvUDdXlvK39ZsNkXDlWJcAnku5Dx7c46YBPr3B5
-        nUjMSn8kd78ehQbHk0MAjqb006YssOsGoS2D5mGvyOqJDMm8TgIj/HpIP2RI9kUgqpZaotHxlOIl/
-        dY6rzff6s7v+9CmZKcTXD6TSzGmFL5vzzWbE90MH8TSmnRX/h8fLpTL1ywnDx53FA2stxz6/ZDIlr
-        c9Ng4/qA==;
-Received: from 187-162-252-62.static.axtel.net ([187.162.252.62]:46822 helo=[192.168.0.140])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1jBn7m-002Pl2-LT; Tue, 10 Mar 2020 17:13:18 -0500
-Subject: Re: [PATCH][next] zd1211rw/zd_usb.h: Replace zero-length array with
- flexible-array member
-To:     Jes Sorensen <jes.sorensen@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>
-Cc:     Joe Perches <joe@perches.com>, Daniel Drake <dsd@gentoo.org>,
-        Ulrich Kunitz <kune@deine-taler.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200305111216.GA24982@embeddedor>
- <87k13yq2jo.fsf@kamboji.qca.qualcomm.com>
- <256881484c5db07e47c611a56550642a6f6bd8e9.camel@perches.com>
- <87blpapyu5.fsf@kamboji.qca.qualcomm.com>
- <1bb7270f-545b-23ca-aa27-5b3c52fba1be@embeddedor.com>
- <87r1y0nwip.fsf@kamboji.qca.qualcomm.com>
- <48ff1333-0a14-36d8-9565-a7f13a06c974@embeddedor.com>
- <021d1125-3ffd-39ef-395a-b796c527bde4@gmail.com>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <fb3395d7-e932-10ac-1feb-ab2ceb63424e@embeddedor.com>
-Date:   Tue, 10 Mar 2020 17:13:17 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 10 Mar 2020 18:25:16 -0400
+Received: by mail-io1-f72.google.com with SMTP id d13so72280ioo.23
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 15:25:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=iMEYVslbplYNLdReSoQGq40tgBRv5wh9xhPpnbQxrBw=;
+        b=o66aRxpa3Q0IARVt/y+Fka5wiM/ZRnw0rnsc/WEl6ExKwHl2jIqZq8sESWdTehfqhL
+         bwu+t0sQGu4hB7if3XFJL60du4Q7Ov3HAjs4bX/vIYZ1dLpKrXsKEuC8Adc/U20mPT/O
+         f24ojFFxpGNQyge14cBOL3n4MoH3HxcWMSGlRItxrVR3ugixsXXO52b6MYfuQPKWy/d9
+         1RFoBPoPs+TVNvsqSdPyzx+DWGlL+TtVNGog0m2J0Kctdqbz1ophynu35ypzR3WI093S
+         DU6KFqO8C79eJRSAsc+dHtUiJQsd+aswxtRgri5vpExRya+EVY2a9bx1FrLFZpkTjVIG
+         hjzw==
+X-Gm-Message-State: ANhLgQ1anN7Tb2XnhCI4K1qNhhU7O2XEh2g69dOlfeaw0Mx3mcmoFAqm
+        QJlYvtPWxlCliZDUCGPfgfdmUMZxsy0P47uQXLijcGYl/1ya
+X-Google-Smtp-Source: ADFU+vta+XD7p0+MhslnsH4SQZfIU0+2oBYDLLzrj4f3mx115yDR394mdF7imKHmUk2nB8EZU3DcSc5I5TqT+a4R2u6Gyv6WCYgD
 MIME-Version: 1.0
-In-Reply-To: <021d1125-3ffd-39ef-395a-b796c527bde4@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.252.62
-X-Source-L: No
-X-Exim-ID: 1jBn7m-002Pl2-LT
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-252-62.static.axtel.net ([192.168.0.140]) [187.162.252.62]:46822
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 9
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+X-Received: by 2002:a92:41c7:: with SMTP id o190mr246126ila.11.1583879113643;
+ Tue, 10 Mar 2020 15:25:13 -0700 (PDT)
+Date:   Tue, 10 Mar 2020 15:25:13 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000efa06005a0879722@google.com>
+Subject: KASAN: use-after-free Read in tcindex_dump
+From:   syzbot <syzbot+653090db2562495901dc@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, jhs@mojatatu.com, jiri@resnulli.us,
+        kuba@kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        xiyou.wangcong@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello,
+
+syzbot found the following crash on:
+
+HEAD commit:    c2003765 Merge tag 'io_uring-5.6-2020-03-07' of git://git...
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1275b731e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=4527d1e2fb19fd5c
+dashboard link: https://syzkaller.appspot.com/bug?extid=653090db2562495901dc
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1180ff29e00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+653090db2562495901dc@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KASAN: use-after-free in tcindex_dump+0xb6e/0xc20 net/sched/cls_tcindex.c:637
+Read of size 8 at addr ffff88807ebd0020 by task syz-executor.3/10006
+
+CPU: 0 PID: 10006 Comm: syz-executor.3 Not tainted 5.6.0-rc4-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x188/0x20d lib/dump_stack.c:118
+ print_address_description.constprop.0.cold+0xd3/0x315 mm/kasan/report.c:374
+ __kasan_report.cold+0x1a/0x32 mm/kasan/report.c:506
+ kasan_report+0xe/0x20 mm/kasan/common.c:641
+ tcindex_dump+0xb6e/0xc20 net/sched/cls_tcindex.c:637
+ tcf_fill_node+0x572/0x930 net/sched/cls_api.c:1814
+ tfilter_notify+0x139/0x2a0 net/sched/cls_api.c:1840
+ tc_new_tfilter+0xab2/0x20b0 net/sched/cls_api.c:2107
+ rtnetlink_rcv_msg+0x810/0xad0 net/core/rtnetlink.c:5427
+ netlink_rcv_skb+0x15a/0x410 net/netlink/af_netlink.c:2478
+ netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
+ netlink_unicast+0x537/0x740 net/netlink/af_netlink.c:1329
+ netlink_sendmsg+0x882/0xe10 net/netlink/af_netlink.c:1918
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg+0xcf/0x120 net/socket.c:672
+ ____sys_sendmsg+0x6b9/0x7d0 net/socket.c:2343
+ ___sys_sendmsg+0x100/0x170 net/socket.c:2397
+ __sys_sendmsg+0xec/0x1b0 net/socket.c:2430
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x45c4a9
+Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007fb7e5f98c78 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 00007fb7e5f996d4 RCX: 000000000045c4a9
+RDX: 0000000000000000 RSI: 00000000200001c0 RDI: 0000000000000004
+RBP: 000000000076bfc0 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
+R13: 00000000000009fa R14: 00000000004cc777 R15: 000000000076bfcc
+
+Allocated by task 10000:
+ save_stack+0x1b/0x80 mm/kasan/common.c:72
+ set_track mm/kasan/common.c:80 [inline]
+ __kasan_kmalloc mm/kasan/common.c:515 [inline]
+ __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:488
+ __do_kmalloc mm/slab.c:3656 [inline]
+ __kmalloc+0x161/0x7a0 mm/slab.c:3665
+ kmalloc_array include/linux/slab.h:597 [inline]
+ kcalloc include/linux/slab.h:608 [inline]
+ tcindex_alloc_perfect_hash+0x5a/0x320 net/sched/cls_tcindex.c:281
+ tcindex_set_parms+0x1568/0x1a00 net/sched/cls_tcindex.c:405
+ tcindex_change+0x203/0x2e0 net/sched/cls_tcindex.c:518
+ tc_new_tfilter+0xa59/0x20b0 net/sched/cls_api.c:2103
+ rtnetlink_rcv_msg+0x810/0xad0 net/core/rtnetlink.c:5427
+ netlink_rcv_skb+0x15a/0x410 net/netlink/af_netlink.c:2478
+ netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
+ netlink_unicast+0x537/0x740 net/netlink/af_netlink.c:1329
+ netlink_sendmsg+0x882/0xe10 net/netlink/af_netlink.c:1918
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg+0xcf/0x120 net/socket.c:672
+ ____sys_sendmsg+0x6b9/0x7d0 net/socket.c:2343
+ ___sys_sendmsg+0x100/0x170 net/socket.c:2397
+ __sys_sendmsg+0xec/0x1b0 net/socket.c:2430
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Freed by task 262:
+ save_stack+0x1b/0x80 mm/kasan/common.c:72
+ set_track mm/kasan/common.c:80 [inline]
+ kasan_set_free_info mm/kasan/common.c:337 [inline]
+ __kasan_slab_free+0xf7/0x140 mm/kasan/common.c:476
+ __cache_free mm/slab.c:3426 [inline]
+ kfree+0x109/0x2b0 mm/slab.c:3757
+ tcindex_partial_destroy_work+0x2e/0x50 net/sched/cls_tcindex.c:264
+ process_one_work+0x94b/0x1690 kernel/workqueue.c:2264
+ worker_thread+0x96/0xe20 kernel/workqueue.c:2410
+ kthread+0x357/0x430 kernel/kthread.c:255
+ ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+
+The buggy address belongs to the object at ffff88807ebd0000
+ which belongs to the cache kmalloc-16k of size 16384
+The buggy address is located 32 bytes inside of
+ 16384-byte region [ffff88807ebd0000, ffff88807ebd4000)
+The buggy address belongs to the page:
+page:ffffea0001faf400 refcount:1 mapcount:0 mapping:ffff8880aa002380 index:0x0 compound_mapcount: 0
+flags: 0xfffe0000010200(slab|head)
+raw: 00fffe0000010200 ffffea0001faf208 ffffea0001faf608 ffff8880aa002380
+raw: 0000000000000000 ffff88807ebd0000 0000000100000001 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff88807ebcff00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ ffff88807ebcff80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
 
 
-On 3/10/20 5:07 PM, Jes Sorensen wrote:
-> On 3/10/20 5:52 PM, Gustavo A. R. Silva wrote:
->>
->>
->> On 3/10/20 8:56 AM, Kalle Valo wrote:
->>> + jes
->>>
->>> "Gustavo A. R. Silva" <gustavo@embeddedor.com> writes:
->>>>> I wrote in a confusing way, my question above was about the actual patch
->>>>> and not the the title. For example, Jes didn't like this style change:
->>>>>
->>>>> https://patchwork.kernel.org/patch/11402315/
->>>>>
->>>>
->>>> It doesn't seem that that comment adds a lot to the conversation. The only
->>>> thing that it says is literally "fix the compiler". By the way, more than
->>>> a hundred patches have already been applied to linux-next[1] and he seems
->>>> to be the only person that has commented such a thing.
->>>
->>> But I also asked who prefers this format in that thread, you should not
->>> ignore questions from two maintainers (me and Jes).
->>>
->>
->> I'm sorry. I thought the changelog text had already the proper information.
->> In the changelog text I'm quoting the GCC documentation below:
->>
->> "The preferred mechanism to declare variable-length types like struct line
->> above is the ISO C99 flexible array member..." [1]
->>
->> I'm also including a link to the following KSPP open issue:
->>
->> https://github.com/KSPP/linux/issues/21
->>
->> The issue above mentions the following:
->>
->> "Both cases (0-byte and 1-byte arrays) pose confusion for things like sizeof(),
->> CONFIG_FORTIFY_SOURCE."
->>
->> sizeof(flexible-array-member) triggers a warning because flexible array members have
->> incomplete type[1]. There are some instances of code in which the sizeof operator
->> is being incorrectly/erroneously applied to zero-length arrays and the result is zero.
->> Such instances may be hiding some bugs. So, the idea is also to get completely rid
->> of those sorts of issues.
-> 
-> As I stated in my previous answer, this seems more code churn than an
-> actual fix. If this is a real problem, shouldn't the work be put into
-> fixing the compiler to handle foo[0] instead? It seems that is where the
-> real value would be.
-> 
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-Yeah. But, unfortunately, I'm not a compiler guy, so I'm not able to fix the
-compiler as you suggest. And I honestly don't see what is so annoying/disturbing
-about applying a patch that removes the 0 from foo[0] when it brings benefit
-to the whole codebase.
-
-Thanks
---
-Gustavo
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
