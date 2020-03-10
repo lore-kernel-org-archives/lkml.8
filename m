@@ -2,121 +2,101 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14F17C18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:00:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CE8EC18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:02:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE3932464B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 11:59:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583841599;
-	bh=l0GPZ7rgbbX42aXiVWrJZANgIIl3Aa/6T0DuOcGTUrQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qXvgsM5iMNIaVTCIi+wmybrLJtkS7xlXkGfoSNNo1ohQ78alILXGlakYT1lbmXFst
-	 IPD/6086njLHHQRdX0/2rDHHPresrKUmBkziHFouC4eHZBch/VCOkzULRNUkMlUJb6
-	 lXif247SVAz4RQx1LP0XyT8W9eiRWosM2l1Wf1rA=
+	by mail.kernel.org (Postfix) with ESMTP id D1B5624680
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:02:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ELstMXLY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726510AbgCJL76 (ORCPT
+        id S1726385AbgCJMCX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 07:59:58 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:39360 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726252AbgCJL76 (ORCPT
+        Tue, 10 Mar 2020 08:02:23 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:54802 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726224AbgCJMCX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 07:59:58 -0400
-Received: by mail-wm1-f66.google.com with SMTP id f7so1032294wml.4;
-        Tue, 10 Mar 2020 04:59:56 -0700 (PDT)
+        Tue, 10 Mar 2020 08:02:23 -0400
+Received: by mail-wm1-f65.google.com with SMTP id n8so1083533wmc.4
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 05:02:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=mfThv2Ldbu4yvtonAdZ7hsdZm1jzxZzXGDjXqQ8NU0M=;
+        b=ELstMXLYQgBBWfgP4eHD0p/B56BEMC7lmxoHn0vkZq0WtxMw189/cbfUhUVPNZ6k8H
+         SgCq7To1Wp4k7Fex5iYAIr5RivymO5G5DMXhA5VThVX6j6HZrzfSP5QqWUddLC+iLYg+
+         pX7xBogJ6dCoPJmjHYYZ3YYyJ6fg/GpveGEBTD6Mc5LXY7O+j8z/Q9aKHF2YGlu9Hwdq
+         iRs+ptEBCxlLpF6E17gNS5+lbDxiMJ+TjXvhfh6VxmL8wmqmuPRmsEeSsFD1lI26blRs
+         we0FugT0DVs7TTGiQS7OyVCTuKBysSTUrN0GiKB08+IaOYVENbTgVI6UicSKxocBvu90
+         7kSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=0bAhm3DuaLfkzUm2lkD/QpZIHlNuTATTEEtwUNoLDMc=;
-        b=H5WlDiIcRKRNsZ5ub5rK9FEK1l0y+mnnmFPfvMMGzXM2eL7qth29CXc387NxexQQ7n
-         wYdePWPXJZx5VJc0SwcHeTVSCvB8YvjWNbSfV1uNHmgxS9eSxVpW9K8jboR2DeN4Qikf
-         p0z7BhuLhxw3u+zpJrO+Q35OhtS6m44KWlXaHbuL1HANYxvFHFccsJXo/xTmDJD56A/V
-         86DuETJgTRZ3sF+8l4zcVI+GpnzdxfLuM1uCzLzitz83ha5fjAX4Dp6/GR2duy0xnILC
-         wsuOpektqHgPV5m2SfIgU7MeZjyVPUH2K0ux1Gzn374yzPe7srIt9gDQiAcKl0n0UnFf
-         HvcQ==
-X-Gm-Message-State: ANhLgQ1Q2LGAYQEyPG42iPmuwBTPu77IA8UqbJFz9s7mNAPVa65DSXKh
-        UmnGekSOI+GU0B++Ehr6WjQ=
-X-Google-Smtp-Source: ADFU+vuTmNn8vy4JGsoYYV4PMEgdh1palpn0A7Ri4XkzIOQ/sbHDPtvrJg+BmE/NgDS3Qt080LephA==
-X-Received: by 2002:a7b:c20c:: with SMTP id x12mr1914581wmi.80.1583841596287;
-        Tue, 10 Mar 2020 04:59:56 -0700 (PDT)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id m21sm3763917wmi.27.2020.03.10.04.59.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Mar 2020 04:59:55 -0700 (PDT)
-Date:   Tue, 10 Mar 2020 12:59:55 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        virtio-dev@lists.oasis-open.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Igor Mammedov <imammedo@redhat.com>,
-        Dave Young <dyoung@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Vlastimil Babka <vbabka@suse.cz>
-Subject: Re: [PATCH v1 07/11] virtio-mem: Allow to offline partially
- unplugged memory blocks
-Message-ID: <20200310115955.GI8447@dhcp22.suse.cz>
-References: <20200302134941.315212-1-david@redhat.com>
- <20200302134941.315212-8-david@redhat.com>
- <20200310114312.GG8447@dhcp22.suse.cz>
- <e505b4cb-1d12-d6e6-3524-9dfa65ae34bf@redhat.com>
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=mfThv2Ldbu4yvtonAdZ7hsdZm1jzxZzXGDjXqQ8NU0M=;
+        b=Ifp9aq45YjNeTP6/WmF8GCCmhfknJxIYViA1EIhaSmugOG4V2kHR1AlKVz3p9Sjt/q
+         qwa1Bh3D7ophYAzffW6r0ODfKiEyDLfhzZVjssxHAQD7hwpURESNaxG+VYReNUodHaD1
+         YLF2M8nN1GsK5J9ICVK7OG4Ar75U2hkZXVihfH5bLSUqzxsrtFM6b/j21k1Cr8vGMbnA
+         yL7Kvetr0UFMb6mp+Ljik+NDDVfBPsuU0cvF7FblN3vBRa8mabmKe0UKDmh1epqfFgge
+         fWt2u92bfGOJMrlk64VtFySazc5g+9cQwaK4TG8Ek1fTrUYIA9p5ol/wwsthvkIkHFxf
+         8jtA==
+X-Gm-Message-State: ANhLgQ331Rff9XgvCYd+pfXDsnZxSANIG4JZ83MBUnKOf0IZb4Keh9oW
+        SshHUalBCWg8yw+YfBSUjzp+HA==
+X-Google-Smtp-Source: ADFU+vsHcmUVwlqm4sIPILPaC+ui1eO/CnvHSQdEErD3WCvjmIq7Yi9CVOf29Ba2CBzxxYuFMoakMw==
+X-Received: by 2002:a7b:c4cc:: with SMTP id g12mr1942727wmk.104.1583841739989;
+        Tue, 10 Mar 2020 05:02:19 -0700 (PDT)
+Received: from leoy-ThinkPad-X240s ([92.118.13.13])
+        by smtp.gmail.com with ESMTPSA id c5sm3745323wma.3.2020.03.10.05.02.02
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 10 Mar 2020 05:02:17 -0700 (PDT)
+Date:   Tue, 10 Mar 2020 20:01:54 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Robert Walker <robert.walker@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Coresight ML <coresight@lists.linaro.org>
+Subject: Re: [PATCH v5 0/5] perf cs-etm: Fix synthesizing instruction samples
+Message-ID: <20200310120154.GA11393@leoy-ThinkPad-X240s>
+References: <20200219021811.20067-1-leo.yan@linaro.org>
+ <20200310054305.GA21545@leoy-ThinkPad-X240s>
+ <20200310114503.GA25299@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e505b4cb-1d12-d6e6-3524-9dfa65ae34bf@redhat.com>
+In-Reply-To: <20200310114503.GA25299@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 10-03-20 12:46:05, David Hildenbrand wrote:
-> On 10.03.20 12:43, Michal Hocko wrote:
-> > On Mon 02-03-20 14:49:37, David Hildenbrand wrote:
-> > [...]
-> >> +static void virtio_mem_notify_going_offline(struct virtio_mem *vm,
-> >> +					    unsigned long mb_id)
-> >> +{
-> >> +	const unsigned long nr_pages = PFN_DOWN(vm->subblock_size);
-> >> +	unsigned long pfn;
-> >> +	int sb_id, i;
-> >> +
-> >> +	for (sb_id = 0; sb_id < vm->nb_sb_per_mb; sb_id++) {
-> >> +		if (virtio_mem_mb_test_sb_plugged(vm, mb_id, sb_id, 1))
-> >> +			continue;
-> >> +		/*
-> >> +		 * Drop our reference to the pages so the memory can get
-> >> +		 * offlined and add the unplugged pages to the managed
-> >> +		 * page counters (so offlining code can correctly subtract
-> >> +		 * them again).
-> >> +		 */
-> >> +		pfn = PFN_DOWN(virtio_mem_mb_id_to_phys(mb_id) +
-> >> +			       sb_id * vm->subblock_size);
-> >> +		adjust_managed_page_count(pfn_to_page(pfn), nr_pages);
-> >> +		for (i = 0; i < nr_pages; i++)
-> >> +			page_ref_dec(pfn_to_page(pfn + i));
+On Tue, Mar 10, 2020 at 08:45:03AM -0300, Arnaldo Carvalho de Melo wrote:
+
+[...]
+
+> > Could you pick up this patch set?  I confirmed this patch set can
+> > cleanly apply on top of the latest mainline kernel (5.6-rc5).
 > > 
-> > Is there ever situation this might be a different than 1->0 transition?
+> > Or if you want me to resend this patch set, please feel free let me
+> > know.  Thanks!
 > 
-> Only if some other code would be taking a reference. At least not from
-> virtio-mem perspective.
+> Thanks, all build tested on x86 and arm64 (with CORESIGHT=1, etc), applied.
 
-OK, so that is essentially an error condition. I think it shouldn't go
-silent and you want something like
-	if (WARN_ON(!page_ref_sub_and_test(page)))
-		dump_page(pfn_to_page(pfn + i), "YOUR REASON");
+Thank you, Arnaldo.
 
--- 
-Michal Hocko
-SUSE Labs
+Leo
