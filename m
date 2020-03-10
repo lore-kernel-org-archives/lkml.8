@@ -2,173 +2,117 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08362C18E5C
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 14:38:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8557DC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 14:39:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4D4420848
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 14:38:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TmPjz/lh"
+	by mail.kernel.org (Postfix) with ESMTP id 66E9620848
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 14:39:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727341AbgCJOiL (ORCPT
+        id S1727002AbgCJOju convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 10:38:11 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:55800 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726437AbgCJOiK (ORCPT
+        Tue, 10 Mar 2020 10:39:50 -0400
+Received: from relay2-d.mail.gandi.net ([217.70.183.194]:39361 "EHLO
+        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726391AbgCJOju (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 10:38:10 -0400
-Received: by mail-wm1-f67.google.com with SMTP id 6so1669853wmi.5;
-        Tue, 10 Mar 2020 07:38:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=TjTCBST6cpMsAppV8JBTTv+T9QV8G6JLefGJ8DTMePs=;
-        b=TmPjz/lhjnZcVRNn4y7bnt8Dk07ZJMZgLzzwpZhO0PigzBsVHOzApOPqb8iS68o/0k
-         68Pfb1OWY6pUMqTmla/Xpx059WGaOz7mrx3lZaN0Jc/Cww2Weu/4QuCe5D7IKW9wyapS
-         9bMaFcqPftQSMlzmOoApEsG8MtVqdbJPC8wuvEfiNcpXcJw4AJMnruYO4sHW6HiZy+W5
-         YP9bCAMQUnJQLxUnb57Xb/lZHz18dPYCVVBwQdPS/UOSTshMrArQpZYkI5UCmu3ubPwh
-         gdpLBWrqe6AU88bYyLlXipVH8XOjZKei/9XNKnWOY94jeRRHYHhFMUCFMs2qGWKFKtzc
-         L3WA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=TjTCBST6cpMsAppV8JBTTv+T9QV8G6JLefGJ8DTMePs=;
-        b=YssoY7dhfl3vop8VPmwE/ozv1QW1CuJJuKfJIZSbGTHJCle7VZyJ2yZG0VOyKN8tZK
-         zZZocc/3VUmPcbVGT2meDBxw99NgNDws9jkSZVtgH9A9zBtsEyNzfoQMcFr2XdcUAX7E
-         NSZDiymUuL493XwVd60Ic4E0jt6aDXJ7bS8gBKGlOVMflAscuYrV3cBBjWqYJVvUim0B
-         GXsE922HKDmXmwtO4AQW1dwIYaPzkWM0TSHKWLmwZhyKQTo4V8vY1nF5gHK9/Vx+CzjI
-         +eFGUfT7VJZPtwRgRUuRmkf/yuYaOMyilws7br5vYmNOKuTf64wJmfRLohLNhEFzdety
-         vS3A==
-X-Gm-Message-State: ANhLgQ0rz23wpK8gOaM3iUB2gt2UPOh2hYG+6MBEutvuBAhlhv+GHp2m
-        kze4u/CBn7ZHBSgUMJJUvq4=
-X-Google-Smtp-Source: ADFU+vtljeoEU+yem2iyDmCFuSh/4804c3cfqoE81CpBPKgnGi1igq3KI2mh2HhVQsq/asf+qr2lkw==
-X-Received: by 2002:a7b:cb97:: with SMTP id m23mr1992564wmi.140.1583851087374;
-        Tue, 10 Mar 2020 07:38:07 -0700 (PDT)
-Received: from Ansuel-XPS.localdomain (host218-254-dynamic.53-79-r.retail.telecomitalia.it. [79.53.254.218])
-        by smtp.googlemail.com with ESMTPSA id c23sm4516611wme.39.2020.03.10.07.38.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Mar 2020 07:38:06 -0700 (PDT)
-From:   Ansuel Smith <ansuelsmth@gmail.com>
-To:     sboyd@kernel.org
-Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
-        John Crispin <john@phrozen.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] clk: qcom: clk-rpm: add missing rpm clk for ipq806x
-Date:   Tue, 10 Mar 2020 15:37:56 +0100
-Message-Id: <20200310143756.244-1-ansuelsmth@gmail.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <sboyd@kernel.org>
-References: <sboyd@kernel.org>
+        Tue, 10 Mar 2020 10:39:50 -0400
+X-Originating-IP: 90.89.41.158
+Received: from localhost (lfbn-tou-1-1473-158.w90-89.abo.wanadoo.fr [90.89.41.158])
+        (Authenticated sender: antoine.tenart@bootlin.com)
+        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id CC5BF40015;
+        Tue, 10 Mar 2020 14:39:47 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20200310132402.GF5932@lunn.ch>
+References: <20200310090720.521745-1-antoine.tenart@bootlin.com> <20200310090720.521745-3-antoine.tenart@bootlin.com> <20200310132402.GF5932@lunn.ch>
+Cc:     davem@davemloft.net, f.fainelli@gmail.com, hkallweit1@gmail.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+From:   Antoine Tenart <antoine.tenart@bootlin.com>
+Subject: Re: [PATCH net-next 2/3] net: phy: mscc: split the driver into separate files
+To:     Andrew Lunn <andrew@lunn.ch>
+Message-ID: <158385110464.511694.2184737961207511908@kwain>
+Date:   Tue, 10 Mar 2020 15:38:34 +0100
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add missing definition of rpm clk for ipq806x soc
+Hello Andrew,
 
-Signed-off-by: John Crispin <john@phrozen.org>
-Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-Acked-by: John Crispin <john@phrozen.org>
----
- .../devicetree/bindings/clock/qcom,rpmcc.txt  |  1 +
- drivers/clk/qcom/clk-rpm.c                    | 35 +++++++++++++++++++
- include/dt-bindings/clock/qcom,rpmcc.h        |  4 +++
- 3 files changed, 40 insertions(+)
+Quoting Andrew Lunn (2020-03-10 14:24:02)
+> On Tue, Mar 10, 2020 at 10:07:19AM +0100, Antoine Tenart wrote:
+> > +++ b/drivers/net/phy/mscc/mscc.h
+> > @@ -0,0 +1,451 @@
+> > +/* SPDX-License-Identifier: (GPL-2.0 OR MIT) */
+> > +/*
+> > + * Driver for Microsemi VSC85xx PHYs
+> > + *
+> > + * Copyright (c) 2016 Microsemi Corporation
+> > + */
+> > +
+> > +#ifndef _MSCC_PHY_H_
+> > +#define _MSCC_PHY_H_
+> > +
+> > +#if IS_ENABLED(CONFIG_MACSEC)
+> > +#include <net/macsec.h>
+> > +#include "mscc_macsec.h"
+> > +#endif
+> 
+> > +#if IS_ENABLED(CONFIG_MACSEC)
+> > +struct macsec_flow {
+> > +     struct list_head list;
+> > +     enum mscc_macsec_destination_ports port;
+> > +     enum macsec_bank bank;
+> > +     u32 index;
+> > +     int assoc_num;
+> > +     bool has_transformation;
+> > +
+> > +     /* Highest takes precedence [0..15] */
+> > +     u8 priority;
+> > +
+> > +     u8 key[MACSEC_KEYID_LEN];
+> > +
+> > +     union {
+> > +             struct macsec_rx_sa *rx_sa;
+> > +             struct macsec_tx_sa *tx_sa;
+> > +     };
+> > +
+> > +     /* Matching */
+> > +     struct {
+> > +             u8 sci:1;
+> > +             u8 tagged:1;
+> > +             u8 untagged:1;
+> > +             u8 etype:1;
+> > +     } match;
+> > +
+> > +     u16 etype;
+> > +
+> > +     /* Action */
+> > +     struct {
+> > +             u8 bypass:1;
+> > +             u8 drop:1;
+> > +     } action;
+> > +
+> > +};
+> > +#endif
+> 
+> Could some of this be moved into mscc_macsec.h? It would reduce the
+> number of #ifdefs.
 
-diff --git a/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt b/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
-index 944719bd586f..4bb2cbeff2b4 100644
---- a/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
-+++ b/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
-@@ -15,6 +15,7 @@ Required properties :
- 			"qcom,rpmcc-msm8916", "qcom,rpmcc"
- 			"qcom,rpmcc-msm8974", "qcom,rpmcc"
- 			"qcom,rpmcc-apq8064", "qcom,rpmcc"
-+			"qcom,rpmcc-ipq806x", "qcom,rpmcc"
- 			"qcom,rpmcc-msm8996", "qcom,rpmcc"
- 			"qcom,rpmcc-msm8998", "qcom,rpmcc"
- 			"qcom,rpmcc-qcs404", "qcom,rpmcc"
-diff --git a/drivers/clk/qcom/clk-rpm.c b/drivers/clk/qcom/clk-rpm.c
-index 9e3110a71f12..f71d228fd6bd 100644
---- a/drivers/clk/qcom/clk-rpm.c
-+++ b/drivers/clk/qcom/clk-rpm.c
-@@ -543,10 +543,45 @@ static const struct rpm_clk_desc rpm_clk_apq8064 = {
- 	.num_clks = ARRAY_SIZE(apq8064_clks),
- };
- 
-+/* ipq806x */
-+DEFINE_CLK_RPM(ipq806x, afab_clk, afab_a_clk, QCOM_RPM_APPS_FABRIC_CLK);
-+DEFINE_CLK_RPM(ipq806x, cfpb_clk, cfpb_a_clk, QCOM_RPM_CFPB_CLK);
-+DEFINE_CLK_RPM(ipq806x, daytona_clk, daytona_a_clk, QCOM_RPM_DAYTONA_FABRIC_CLK);
-+DEFINE_CLK_RPM(ipq806x, ebi1_clk, ebi1_a_clk, QCOM_RPM_EBI1_CLK);
-+DEFINE_CLK_RPM(ipq806x, sfab_clk, sfab_a_clk, QCOM_RPM_SYS_FABRIC_CLK);
-+DEFINE_CLK_RPM(ipq806x, sfpb_clk, sfpb_a_clk, QCOM_RPM_SFPB_CLK);
-+DEFINE_CLK_RPM(ipq806x, nss_fabric_0_clk, nss_fabric_0_a_clk, QCOM_RPM_NSS_FABRIC_0_CLK);
-+DEFINE_CLK_RPM(ipq806x, nss_fabric_1_clk, nss_fabric_1_a_clk, QCOM_RPM_NSS_FABRIC_1_CLK);
-+
-+static struct clk_rpm *ipq806x_clks[] = {
-+	[RPM_APPS_FABRIC_CLK] = &ipq806x_afab_clk,
-+	[RPM_APPS_FABRIC_A_CLK] = &ipq806x_afab_a_clk,
-+	[RPM_CFPB_CLK] = &ipq806x_cfpb_clk,
-+	[RPM_CFPB_A_CLK] = &ipq806x_cfpb_a_clk,
-+	[RPM_DAYTONA_FABRIC_CLK] = &ipq806x_daytona_clk,
-+	[RPM_DAYTONA_FABRIC_A_CLK] = &ipq806x_daytona_a_clk,
-+	[RPM_EBI1_CLK] = &ipq806x_ebi1_clk,
-+	[RPM_EBI1_A_CLK] = &ipq806x_ebi1_a_clk,
-+	[RPM_SYS_FABRIC_CLK] = &ipq806x_sfab_clk,
-+	[RPM_SYS_FABRIC_A_CLK] = &ipq806x_sfab_a_clk,
-+	[RPM_SFPB_CLK] = &ipq806x_sfpb_clk,
-+	[RPM_SFPB_A_CLK] = &ipq806x_sfpb_a_clk,
-+	[RPM_NSS_FABRIC_0_CLK] = &ipq806x_nss_fabric_0_clk,
-+	[RPM_NSS_FABRIC_0_A_CLK] = &ipq806x_nss_fabric_0_a_clk,
-+	[RPM_NSS_FABRIC_1_CLK] = &ipq806x_nss_fabric_1_clk,
-+	[RPM_NSS_FABRIC_1_A_CLK] = &ipq806x_nss_fabric_1_a_clk,
-+};
-+
-+static const struct rpm_clk_desc rpm_clk_ipq806x = {
-+	.clks = ipq806x_clks,
-+	.num_clks = ARRAY_SIZE(ipq806x_clks),
-+};
-+
- static const struct of_device_id rpm_clk_match_table[] = {
- 	{ .compatible = "qcom,rpmcc-msm8660", .data = &rpm_clk_msm8660 },
- 	{ .compatible = "qcom,rpmcc-apq8060", .data = &rpm_clk_msm8660 },
- 	{ .compatible = "qcom,rpmcc-apq8064", .data = &rpm_clk_apq8064 },
-+	{ .compatible = "qcom,rpmcc-ipq806x", .data = &rpm_clk_ipq806x },
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, rpm_clk_match_table);
-diff --git a/include/dt-bindings/clock/qcom,rpmcc.h b/include/dt-bindings/clock/qcom,rpmcc.h
-index 8e3095720552..ae74c43c485d 100644
---- a/include/dt-bindings/clock/qcom,rpmcc.h
-+++ b/include/dt-bindings/clock/qcom,rpmcc.h
-@@ -37,6 +37,10 @@
- #define RPM_XO_A0				27
- #define RPM_XO_A1				28
- #define RPM_XO_A2				29
-+#define RPM_NSS_FABRIC_0_CLK			30
-+#define RPM_NSS_FABRIC_0_A_CLK			31
-+#define RPM_NSS_FABRIC_1_CLK			32
-+#define RPM_NSS_FABRIC_1_A_CLK			33
- 
- /* SMD RPM clocks */
- #define RPM_SMD_XO_CLK_SRC				0
+You're right, will do in v2.
+
+Do you also want the '#if IS_ENABLED(MACSEC)' to be in the mscc_macsec.h
+file, for the whole file, or do I keep its inclusion conditional here?
+
+Thanks!
+Antoine
+
 -- 
-2.25.0
-
+Antoine Ténart, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
