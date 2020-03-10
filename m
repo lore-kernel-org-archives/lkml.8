@@ -2,141 +2,149 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCEACC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:38:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06211C10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:39:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 694E122522
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:38:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583879892;
-	bh=pOBRO4yQ8M2x5rhKzXXtC/NotBfv7rzNIGCF6qFlYII=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=KLvlsr0WfPcFg2W1G/i2Ie26zbvndc/EKcmCsD4rotY3s5/IlkJzUUZ0L5uiIpjkq
-	 mnoojzCMOWEV/HAyl5sNCYi92i0wiP1oKhVmo+iYa5ez3Ep84VJYQ9m7uRMhcoC88n
-	 8SgeQaEeWsKsC4E5prw4EZ0O+Ns9KAqtn4ePZ+k4=
+	by mail.kernel.org (Postfix) with ESMTP id 8FAFE208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:39:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="L82H7GjH";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="c72SQQxy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727821AbgCJWiL (ORCPT
+        id S1727773AbgCJWjl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 18:38:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60500 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727729AbgCJWiK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 18:38:10 -0400
-Received: from ebiggers-linuxstation.mtv.corp.google.com (unknown [104.132.1.77])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C222208E4;
-        Tue, 10 Mar 2020 22:38:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583879889;
-        bh=pOBRO4yQ8M2x5rhKzXXtC/NotBfv7rzNIGCF6qFlYII=;
-        h=From:To:Cc:Subject:Date:From;
-        b=WmB/WPVisfZXQc/q46fki9sEs/5zldSkoVQPd5xDlLkwCablpaYbd63LfoaC3HhOO
-         zu0452JvLmv+1dzSUWvNXYM6iRqBfYQrYNJHvTCS+OkNjYCT1QZsy47zwmqf01ak5z
-         r5GXvNqp02ClyPx2wGZ7ZBv59X7B4wxFjs5i7CZI=
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-fsdevel@vger.kernel.org, stable@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
+        Tue, 10 Mar 2020 18:39:41 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:60670 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726273AbgCJWjl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 18:39:41 -0400
+Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02AMZQDa015520;
+        Tue, 10 Mar 2020 15:38:57 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
+ subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=facebook; bh=42eT40sFP+9KYDh+3vlLMH6rGIDplm/89EAughFcMVA=;
+ b=L82H7GjHGpJCnOI268kTXJLkR3CNE74iPQCm+69ckcxQStB3NUQ4Phajn6ocHyhmnaDf
+ Ro2IuLRRiT/kvmyLG9vJubm2LHmj+UcX+Ac3RkhbCMpsvckdJ9Ydv64VZMGkT+8eVllt
+ 1pdYnPxADX03eCJJmLihfuPnNppMNwsQXak= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 2yp8rdukmy-4
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Tue, 10 Mar 2020 15:38:57 -0700
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.35.173) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1847.3; Tue, 10 Mar 2020 15:38:53 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Nv6aHqhprFrXEhfztQbGesNenKcqtwwc0obOBmX0rsJXECF78am/O76pZa7CwrJomp9g1PO7FAq75eyVD7U+xCnIuNwwisLFeke6YmF2VwVHviLtZFRv3QZNCL/ydh2rhfLcVtUj4V2bcIHB0ny1IMkNOlvxSrl++nOLuc7TmB5rRHMTAGdG3Un+q0p5po7Y6alYp2RmpL+fljckcg2A6C2xzD6j/jVioF3HZjqk2FHVPK1HTJ+s3C1S8vDKUsGbkklaeplo2/cfbVIHMNoQGW39mkIzy2KXKGTd32OtlbS7pWbbDETj9xnYWkddgSXGA6eI5ZG2AwUQbjJx8ScUZA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=42eT40sFP+9KYDh+3vlLMH6rGIDplm/89EAughFcMVA=;
+ b=fBrcq5G1zqidubQySPbL9Z2J4ap3Ngsvgk47f2kTf/l7IOHN+Ympzn6CK1TSx0LynF/blSO6YJ0qDah0iP/NOxdkha0TX64u5ZlkY+KUb8a71TROSbZUQkZkbkN9uGM4aHRRtEKfIZZxWyERc+q3RW/3uKGb6z2HRcT0xirQwWQi/dr2MB2cQe7y4ZRaq55ZVCKF+oGLpOohwa59pI+ITEJNTbjoqt78UDQZQSscFHlSM2MvPgzcHd/TYDYhrjhXF9QhcxNM/Zn/cc0TWiGgm2w7Iqmngomwsrc3M3Ms3BQeMqkFsNH1QZrQ2SC4JhqddLiGx9j0QSKRN92r92zkRA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=42eT40sFP+9KYDh+3vlLMH6rGIDplm/89EAughFcMVA=;
+ b=c72SQQxyvs++c/j1hyQWztpgf0VyEleupBRvc2UjSD2k/hJ04gwl4VomcvlySCZPT8GRZFBO6NGPnYRLjcdhAgVOU1lCCe8qsj8W89+GZEKpwxR9yj0YHlNNwPP46dWzLnUEo2pZJ0X5tFknmMsiG7+Y/VVRJCB15EdRR9UaETc=
+Received: from MWHPR15MB1661.namprd15.prod.outlook.com (2603:10b6:300:124::23)
+ by MWHPR15MB1566.namprd15.prod.outlook.com (2603:10b6:300:bc::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.16; Tue, 10 Mar
+ 2020 22:38:53 +0000
+Received: from MWHPR15MB1661.namprd15.prod.outlook.com
+ ([fe80::f930:6bf2:6d2:93ef]) by MWHPR15MB1661.namprd15.prod.outlook.com
+ ([fe80::f930:6bf2:6d2:93ef%8]) with mapi id 15.20.2793.013; Tue, 10 Mar 2020
+ 22:38:52 +0000
+Date:   Tue, 10 Mar 2020 15:38:48 -0700
+From:   Roman Gushchin <guro@fb.com>
+To:     Shakeel Butt <shakeelb@google.com>
+CC:     Eric Dumazet <edumazet@google.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Greg Thelen <gthelen@google.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jeff Vander Stoep <jeffv@google.com>,
-        Jessica Yu <jeyu@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Luis Chamberlain <mcgrof@kernel.org>
-Subject: [PATCH] kmod: make request_module() return an error when autoloading is disabled
-Date:   Tue, 10 Mar 2020 15:37:31 -0700
-Message-Id: <20200310223731.126894-1-ebiggers@kernel.org>
-X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
+        "David S . Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        <netdev@vger.kernel.org>, <linux-mm@kvack.org>,
+        <cgroups@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 2/2] net: memcg: late association of sock to memcg
+Message-ID: <20200310223848.GC96999@carbon.dhcp.thefacebook.com>
+References: <20200310051606.33121-1-shakeelb@google.com>
+ <20200310051606.33121-2-shakeelb@google.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200310051606.33121-2-shakeelb@google.com>
+X-ClientProxiedBy: MWHPR21CA0048.namprd21.prod.outlook.com
+ (2603:10b6:300:129::34) To MWHPR15MB1661.namprd15.prod.outlook.com
+ (2603:10b6:300:124::23)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from carbon.dhcp.thefacebook.com (2620:10d:c090:400::5:9c9e) by MWHPR21CA0048.namprd21.prod.outlook.com (2603:10b6:300:129::34) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.9 via Frontend Transport; Tue, 10 Mar 2020 22:38:51 +0000
+X-Originating-IP: [2620:10d:c090:400::5:9c9e]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: a0f6f206-86cc-4562-40fa-08d7c543cf26
+X-MS-TrafficTypeDiagnostic: MWHPR15MB1566:
+X-Microsoft-Antispam-PRVS: <MWHPR15MB1566E92A07585E336C99D79BBEFF0@MWHPR15MB1566.namprd15.prod.outlook.com>
+X-FB-Source: Internal
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-Forefront-PRVS: 033857D0BD
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(396003)(136003)(376002)(366004)(39860400002)(346002)(199004)(189003)(7416002)(7696005)(8936002)(6916009)(66556008)(66946007)(81156014)(81166006)(66476007)(8676002)(86362001)(52116002)(186003)(16526019)(33656002)(6506007)(55016002)(316002)(5660300002)(2906002)(54906003)(9686003)(4326008)(6666004)(1076003)(478600001)(4744005);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1566;H:MWHPR15MB1661.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+Received-SPF: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: mIFDXct3aIYWBozDCNcls7dc6Q2RLzWAk/M3v3T7KqTwtrYofb4Y+kf1A60QqVN813TuMgV6ePfFx/dm6Z+oWWP/9qBo1qr5muBeZxrg1WZ7ya2uN8pf+s+WSMWwIPm08t5Za1ecxDnEkk0mszQD3QbDHYgLtjwiGlMglAEPlDz0CW9bgmry44DAMdT4ia7VpU7awQn5FwThqA4zuG9cCudcM/8cNpqq+nfnFV0bV2a0qF7OLkJWPXvgsU1z5XysoUVsTMbDgKQfo4UeWOysvGK7Zv7gnYnLFNDnn0QDGcOoj7mOLjq3uc8cgKTZ9jZP2rRRaDM0P12bwNLO9PJq0J8uu8OGm17hfYfMzco2Q0o2DInGb3+iGs3hYC7nhWV6rqo7jvzIxGjoW3kR9JPSS9KirHaYJ+1lcI87J/Sgnuu8ZSsC2Wo8nx+eFkcDLzls
+X-MS-Exchange-AntiSpam-MessageData: Z8Fcm8pu81+Qr6nkJJ8zWoqOTav2BZ1L1+eDmCHVUeYNcUJ6ZxEXQTUytztRZxULI12U9Xi9R6okpI+AEppcWWMkzlzkNodkLJ9ad5lDHIfsYF0wxfIjt2IX2C9pxF+sOYlcvvQz71BrzoIhmIEpWAoGntFroZYos4gRMwUVqPV5dvn0KtFCynVdwHKh+G5C
+X-MS-Exchange-CrossTenant-Network-Message-Id: a0f6f206-86cc-4562-40fa-08d7c543cf26
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Mar 2020 22:38:52.7954
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Ag1QunNnWanVuLruO49RlKExIiP1u1incKgWJPiNvb9gJgx5eeHIneXaJtqM1JLq
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1566
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-10_16:2020-03-10,2020-03-10 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 phishscore=0
+ priorityscore=1501 impostorscore=0 spamscore=0 bulkscore=0 suspectscore=1
+ clxscore=1015 malwarescore=0 lowpriorityscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003100134
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+On Mon, Mar 09, 2020 at 10:16:06PM -0700, Shakeel Butt wrote:
+> If a TCP socket is allocated in IRQ context or cloned from unassociated
+> (i.e. not associated to a memcg) in IRQ context then it will remain
+> unassociated for its whole life. Almost half of the TCPs created on the
+> system are created in IRQ context, so, memory used by such sockets will
+> not be accounted by the memcg.
+> 
+> This issue is more widespread in cgroup v1 where network memory
+> accounting is opt-in but it can happen in cgroup v2 if the source socket
+> for the cloning was created in root memcg.
+> 
+> To fix the issue, just do the association of the sockets at the accept()
+> time in the process context and then force charge the memory buffer
+> already used and reserved by the socket.
+> 
+> Signed-off-by: Shakeel Butt <shakeelb@google.com>
 
-It's long been possible to disable kernel module autoloading completely
-by setting /proc/sys/kernel/modprobe to the empty string.  This can be
-preferable to setting it to a nonexistent file since it avoids the
-overhead of an attempted execve(), avoids potential deadlocks, and
-avoids the call to security_kernel_module_request() and thus on
-SELinux-based systems eliminates the need to write SELinux rules to
-dontaudit module_request.
+Reviewed-by: Roman Gushchin <guro@fb.com>
 
-However, when module autoloading is disabled in this way,
-request_module() returns 0.  This is broken because callers expect 0 to
-mean that the module was successfully loaded.
-
-Apparently this was never noticed because this method of disabling
-module autoloading isn't used much, and also most callers don't use the
-return value of request_module() since it's always necessary to check
-whether the module registered its functionality or not anyway.  But
-improperly returning 0 can indeed confuse a few callers, for example
-get_fs_type() in fs/filesystems.c where it causes a WARNING to be hit:
-
-	if (!fs && (request_module("fs-%.*s", len, name) == 0)) {
-		fs = __get_fs_type(name, len);
-		WARN_ONCE(!fs, "request_module fs-%.*s succeeded, but still no fs?\n", len, name);
-	}
-
-This is easily reproduced with:
-
-	echo > /proc/sys/kernel/modprobe
-	mount -t NONEXISTENT none /
-
-It causes:
-
-	request_module fs-NONEXISTENT succeeded, but still no fs?
-	WARNING: CPU: 1 PID: 1106 at fs/filesystems.c:275 get_fs_type+0xd6/0xf0
-	[...]
-
-Arguably this warning is broken and should be removed, since the module
-could have been unloaded already.  However, request_module() should also
-correctly return an error when it fails.  So let's make it return
--ENOENT, which matches the error when the modprobe binary doesn't exist.
-
-Cc: stable@vger.kernel.org
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Jeff Vander Stoep <jeffv@google.com>
-Cc: Jessica Yu <jeyu@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Luis Chamberlain <mcgrof@kernel.org>
-Signed-off-by: Eric Biggers <ebiggers@google.com>
----
- kernel/kmod.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/kmod.c b/kernel/kmod.c
-index bc6addd9152b..a2de58de6ab6 100644
---- a/kernel/kmod.c
-+++ b/kernel/kmod.c
-@@ -120,7 +120,7 @@ static int call_modprobe(char *module_name, int wait)
-  * invoke it.
-  *
-  * If module auto-loading support is disabled then this function
-- * becomes a no-operation.
-+ * simply returns -ENOENT.
-  */
- int __request_module(bool wait, const char *fmt, ...)
- {
-@@ -137,7 +137,7 @@ int __request_module(bool wait, const char *fmt, ...)
- 	WARN_ON_ONCE(wait && current_is_async());
- 
- 	if (!modprobe_path[0])
--		return 0;
-+		return -ENOENT;
- 
- 	va_start(args, fmt);
- 	ret = vsnprintf(module_name, MODULE_NAME_LEN, fmt, args);
--- 
-2.25.1.481.gfbce0eb801-goog
-
+Thank you!
