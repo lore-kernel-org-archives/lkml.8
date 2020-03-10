@@ -2,124 +2,127 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E557C18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 19:29:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 721E1C18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 19:29:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2F9C20873
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 19:29:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583868577;
-	bh=YSHmdSAUsUSrb+SJgrEy4KtQYNx3lyMmXOPE42VX0Sw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=sfSIciFtn5M3Y3qkzwmPeiqTNMbZKfp8KzdodUilsOF4WNghpByVm+ZgE448EWitA
-	 ptMnGV30L2UbvrkW8esHsDJfi+dQsxzgUyXlKMLbjfqp8/0T9eOUqkn/ZCMTUOUMWD
-	 JBzxAT7wDDA5oV5p5M5hiTiCm1NW1lH0UwcIYsFg=
+	by mail.kernel.org (Postfix) with ESMTP id 4D8E420873
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 19:29:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727299AbgCJT3f (ORCPT
+        id S1727369AbgCJT3p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 15:29:35 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:39018 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726545AbgCJT3f (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 15:29:35 -0400
-Received: by mail-oi1-f195.google.com with SMTP id d63so8315975oig.6;
-        Tue, 10 Mar 2020 12:29:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Ti2DUsUootG5Bb/9jhB9jDTpr9Lf8fcuPShhiLFGbzM=;
-        b=XkiXm48dhGj1zviyak5rl6WPvlc/PXIeKsmSfUkH47YV5fN6mbG+iIgnPQHE+lr+4v
-         VpAIlbAvMoFoRvquYUoJjJ3qK/NFLIcuhvmr30RJJfGhX70ju89AmbdpQwVDkXDIM8KQ
-         v7R0+G64tV4wx2FTxaEwxUVkop8PwQZKLN5rTuKG8M9/3O2+pRxcxEXFJJsfnr0Em9Hq
-         711+tpT+O8k/CfEk/5R7eIOgOLl9W/kgYWIiZpDTR4HDTFPJREathiMSsmKdWLfC3eZ0
-         9fe/kCJrMJTDK0UEJbFoDASNijrnwX6dHfLQd6g+puJu+E+jXrQza01yt0df2JrgWW2p
-         kQuQ==
-X-Gm-Message-State: ANhLgQ29z+j0z3KGVjXTz0pJc4/jBkcrJ/NNFskWSBBfdqJej/gRr0v1
-        L3YJLalIHRx+R9q4Mb0wi4cNvsE=
-X-Google-Smtp-Source: ADFU+vsY5QkUJk3nxoCTdVDguFzMCTpu2klhELBPLKSw5lX4mSJAHDv7frNw6F1f7dVSVtDFZ845tw==
-X-Received: by 2002:aca:e106:: with SMTP id y6mr2370120oig.131.1583868574471;
-        Tue, 10 Mar 2020 12:29:34 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 3sm16382764otd.15.2020.03.10.12.29.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Mar 2020 12:29:33 -0700 (PDT)
-Received: (nullmailer pid 17778 invoked by uid 1000);
-        Tue, 10 Mar 2020 19:29:33 -0000
-Date:   Tue, 10 Mar 2020 14:29:33 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Johan Jonker <jbx6244@gmail.com>
-Cc:     heiko@sntech.de, gregkh@linuxfoundation.org,
-        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: usb: dwc2: add compatible property for
- rk3328 usb
-Message-ID: <20200310192933.GA15236@bogus>
-References: <20200302115812.7207-1-jbx6244@gmail.com>
+        Tue, 10 Mar 2020 15:29:45 -0400
+Received: from mga12.intel.com ([192.55.52.136]:21692 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726545AbgCJT3o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 15:29:44 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Mar 2020 12:29:44 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,538,1574150400"; 
+   d="scan'208";a="353693892"
+Received: from hhuan26-mobl1.amr.corp.intel.com ([10.254.76.69])
+  by fmsmga001.fm.intel.com with ESMTP; 10 Mar 2020 12:29:41 -0700
+Content-Type: text/plain; charset=iso-8859-15; format=flowed; delsp=yes
+To:     "Jarkko Sakkinen" <jarkko.sakkinen@linux.intel.com>,
+        "Dr. Greg" <greg@enjellic.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, sean.j.christopherson@intel.com,
+        nhorman@redhat.com, npmccallum@redhat.com, haitao.huang@intel.com,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        kai.svahn@intel.com, bp@alien8.de, josh@joshtriplett.org,
+        luto@kernel.org, kai.huang@intel.com, rientjes@google.com,
+        cedric.xing@intel.com, puiterwijk@redhat.com,
+        linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v28 14/22] selftests/x86: Add a selftest for SGX
+References: <20200303233609.713348-1-jarkko.sakkinen@linux.intel.com>
+ <20200303233609.713348-15-jarkko.sakkinen@linux.intel.com>
+ <20200306053210.GA16297@wind.enjellic.com>
+Date:   Tue, 10 Mar 2020 14:29:41 -0500
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200302115812.7207-1-jbx6244@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
+From:   "Haitao Huang" <haitao.huang@linux.intel.com>
+Organization: Intel Corp
+Message-ID: <op.0g923rgpwjvjmi@hhuan26-mobl1.amr.corp.intel.com>
+In-Reply-To: <20200306053210.GA16297@wind.enjellic.com>
+User-Agent: Opera Mail/1.0 (Win32)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 02, 2020 at 12:58:11PM +0100, Johan Jonker wrote:
-> A test with the command below gives these errors:
-> 
-> arch/arm64/boot/dts/rockchip/rk3328-a1.dt.yaml: usb@ff580000: compatible:
-> ['rockchip,rk3328-usb', 'rockchip,rk3066-usb', 'snps,dwc2']
-> is not valid under any of the given schemas
-> arch/arm64/boot/dts/rockchip/rk3328-evb.dt.yaml: usb@ff580000: compatible:
-> ['rockchip,rk3328-usb', 'rockchip,rk3066-usb', 'snps,dwc2']
-> is not valid under any of the given schemas
-> arch/arm64/boot/dts/rockchip/rk3328-rock64.dt.yaml: usb@ff580000: compatible:
-> ['rockchip,rk3328-usb', 'rockchip,rk3066-usb', 'snps,dwc2']
-> is not valid under any of the given schemas
-> arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dt.yaml: usb@ff580000: compatible:
-> ['rockchip,rk3328-usb', 'rockchip,rk3066-usb', 'snps,dwc2']
-> is not valid under any of the given schemas
-> 
-> The compatible property for rk3328 dwc2 usb was somehow never added to
-> the documention. Fix this error by adding
-> 'rockchip,rk3328-usb', 'rockchip,rk3066-usb', 'snps,dwc2'
-> to dwc2.yaml.
-> 
-> make ARCH=arm64 dtbs_check
-> DT_SCHEMA_FILES=Documentation/devicetree/bindings/usb/dwc2.yaml
-> 
-> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
-> ---
->  Documentation/devicetree/bindings/usb/dwc2.yaml | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/dwc2.yaml b/Documentation/devicetree/bindings/usb/dwc2.yaml
-> index e95ba9373..e9f4cea21 100644
-> --- a/Documentation/devicetree/bindings/usb/dwc2.yaml
-> +++ b/Documentation/devicetree/bindings/usb/dwc2.yaml
-> @@ -41,6 +41,10 @@ properties:
->            - const: rockchip,rk3288-usb
+On Thu, 05 Mar 2020 23:32:10 -0600, Dr. Greg <greg@enjellic.com> wrote:
 
-Convert this entry to an 'enum' and add 'rockchip,rk3328-usb' here.
+> On Wed, Mar 04, 2020 at 01:36:01AM +0200, Jarkko Sakkinen wrote:
+>
+> Good evening, I hope the end of the week is going well for everyone.
+>
+>> Add a selftest for SGX. It is a trivial test where a simple enclave
+>> copies one 64-bit word of memory between two memory locations given
+>> to the enclave as arguments. Use ENCLS[EENTER] to invoke the
+>> enclave.
+>
+> Just as a clarification, are you testing the new driver against signed
+> production class enclaves in .so format that also include metadata
+> layout directives or is the driver just getting tested against the two
+> page toy enclave that copies a word of memory from one memory location
+> to another?
+>
 
->            - const: rockchip,rk3066-usb
->            - const: snps,dwc2
-> +      - items:
-> +          - const: rockchip,rk3328-usb
-> +          - const: rockchip,rk3066-usb
-> +          - const: snps,dwc2
->        - const: lantiq,arx100-usb
->        - const: lantiq,xrx200-usb
->        - items:
-> -- 
-> 2.11.0
-> 
+We (Intel SGX SDK/PSW team) tested this driver for enclaves in .so format  
+with metadata. Our 2.8 release supports v24 and 2.9 supports v25+. Both  
+production signed and debug signed enclaves worked.
+
+*Note* we did make some code changes in our runtime for v24+, mainly  
+dealing with src & EPC page alignment for EADD, open one fd per enclave,  
+use -z noexecstack linker option, etc. You can see the changes on GitHub.
+
+> Our PSW/runtime is currently failing to initialize production class
+> enclaves secondary to a return value of -4 from the ENCLU[EINIT]
+> instruction, which means the measurement of the loaded enclave has
+> failed to match the value in the signature structure.
+>
+> The same enclave loads fine with the out of kernel driver.  Our
+> diagnostics tell us we are feeding identical page streams and
+> permissions to the page add ioctl's of both drivers.  The identity
+> modulus signature of the signing key for the enclave is being written
+> to the launch control registers.
+>
+> We see the same behavior from both our unit test enclaves and the
+> Quoting Enclave from the Intel SGX runtime.
+>
+We did not see any issue loading QE in our tests. Please directly email me  
+on this test if you have specific questions.
+
+> When we ported our runtime loader to the new driver ABI we kept things
+> simple and add only a single page at a time in order to replicate the
+> behavior of the old driver.
+>
+> Secondly, we were wondering what distribution you are building the
+> self-tests with?  Initial indications are that the selftest signing
+> utility doesn't build properly with OpenSSL 1.1.1.
+>
+> Have a good day.
+>
+> Dr. Greg
+>
+> As always,
+> Dr. Greg Wettstein, Ph.D, Worker
+> IDfusion, LLC               SGX secured infrastructure and
+> 4206 N. 19th Ave.           autonomously self-defensive platforms.
+> Fargo, ND  58102
+> PH: 701-281-1686            EMAIL: greg@idfusion.net
+> ------------------------------------------------------------------------------
+> "Don't worry about people stealing your ideas.  If your ideas are any
+>  good, you'll have to ram them down people's throats."
+>                                 -- Howard Aiken
+
+
+-- 
+Using Opera's mail client: http://www.opera.com/mail/
