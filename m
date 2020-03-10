@@ -2,29 +2,29 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 445AAC10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:01:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63EA4C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:01:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9665E21927
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:01:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25DCD222C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:01:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=agner.ch header.i=@agner.ch header.b="LXf1qgLL"
+	dkim=pass (1024-bit key) header.d=agner.ch header.i=@agner.ch header.b="ahIkeuJR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727721AbgCJWB1 (ORCPT
+        id S1727783AbgCJWB3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 18:01:27 -0400
-Received: from mail.kmu-office.ch ([178.209.48.109]:43976 "EHLO
+        Tue, 10 Mar 2020 18:01:29 -0400
+Received: from mail.kmu-office.ch ([178.209.48.109]:44020 "EHLO
         mail.kmu-office.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727582AbgCJWB1 (ORCPT
+        with ESMTP id S1727685AbgCJWB2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 18:01:27 -0400
+        Tue, 10 Mar 2020 18:01:28 -0400
 Received: from zyt.lan (unknown [IPv6:2a02:169:3df5::564])
-        by mail.kmu-office.ch (Postfix) with ESMTPSA id 4D6365C4E83;
+        by mail.kmu-office.ch (Postfix) with ESMTPSA id 7CE245C4F77;
         Tue, 10 Mar 2020 23:01:25 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agner.ch; s=dkim;
         t=1583877685;
@@ -32,10 +32,10 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agner.ch; s=dkim;
          to:to:cc:cc:mime-version:mime-version:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=jAGZ+WQdZpOOEry3q6vNEUuMTxiiGakwu2hkgW7TYVE=;
-        b=LXf1qgLLQ4XWcmci9Meq3tKfJdVQHxtW0704bfe4rkST5kBKI50+2+H+1vlPdsSfeNHA0a
-        OSm80+iV7NB0hgO1X0VLZjr09DwHKMyKNZCJohisgGaqM3oAy+zBPy9a10gW4iIE2uEFLV
-        1W131pV2/7TIUmhouF7Wasmtew8Tsjk=
+        bh=iuHVTJkLweKCJuZWDefjVMbM1hgCkPZXzUUonobozno=;
+        b=ahIkeuJRhZukJATJRseCals6g6MH0+Qu2ES2ZbEFAcH1YkiXBeyQorphoQwymeQVrPcKrh
+        m5UiR0FS9IR1SIFz7yJEE6EyZczjv/9anSy69AYWj3kkqCF7G2RUXAKVT4aeWLq97PfoJa
+        c+ESNj+WLhN1gryd/AR9SQlSZXUqrhQ=
 From:   Stefan Agner <stefan@agner.ch>
 To:     linux@armlinux.org.uk
 Cc:     arnd@arndb.de, ard.biesheuvel@linaro.org, robin.murphy@arm.com,
@@ -43,9 +43,9 @@ Cc:     arnd@arndb.de, ard.biesheuvel@linaro.org, robin.murphy@arm.com,
         manojgupta@google.com, jiancai@google.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         clang-built-linux@googlegroups.com, Stefan Agner <stefan@agner.ch>
-Subject: [PATCH 1/3] ARM: use .fpu assembler directives instead of assembler arguments
-Date:   Tue, 10 Mar 2020 23:01:19 +0100
-Message-Id: <4165f81a1f1fdc53fe273307d1accb40f8663e01.1583360296.git.stefan@agner.ch>
+Subject: [PATCH 3/3] ARM: use VFP assembler mnemonics if available
+Date:   Tue, 10 Mar 2020 23:01:21 +0100
+Message-Id: <3c8127839ced991fadb08c0a5a7beebb3ff489af.1583360296.git.stefan@agner.ch>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1583360296.git.stefan@agner.ch>
 References: <cover.1583360296.git.stefan@agner.ch>
@@ -56,113 +56,158 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Explicit FPU selection has been introduced in commit 1a6be26d5b1a
-("[ARM] Enable VFP to be built when non-VFP capable CPUs are selected")
-to make use of assembler mnemonics for VFP instructions.
+Clang's integrated assembler does not allow to to use the mcr
+instruction to access floating point co-processor registers:
+arch/arm/vfp/vfpmodule.c:342:2: error: invalid operand for instruction
+        fmxr(FPEXC, fpexc & ~(FPEXC_EX|FPEXC_DEX|FPEXC_FP2V|FPEXC_VV|FPEXC_TRAP_MASK));
+        ^
+arch/arm/vfp/vfpinstr.h:79:6: note: expanded from macro 'fmxr'
+        asm("mcr p10, 7, %0, " vfpreg(_vfp_) ", cr0, 0 @ fmxr   " #_vfp_ ", %0" \
+            ^
+<inline asm>:1:6: note: instantiated into assembly here
+        mcr p10, 7, r0, cr8, cr0, 0 @ fmxr      FPEXC, r0
+            ^
 
-However, clang currently does not support passing assembler flags
-like this and errors out with:
-clang-10: error: the clang compiler does not support '-Wa,-mfpu=softvfp+vfp'
+Ideally we would replace this code with the unified assembler language
+mnemonics vmrs/vmsr on call sites along with .fpu assembler directives.
+The GNU assembler supports the .fpu directive at least since 2.17 (when
+documentation has been added). Since Linux requires binutils 2.21 it is
+safe to use .fpu directive. However, binutils does not allow to use
+FPINST or FPINST2 as an argument to vmrs/vmsr instructions up to
+binutils 2.24 (see binutils commit 16d02dc907c5).
 
-Make use of the .fpu assembler directives to select the floating point
-hardware selectively. Also use the new unified assembler language
-mnemonics. This allows to build these procedures with Clang.
+Use as-instr to check if FPINST/FPINST2 can be used. If they can be used
+make use of .fpu directives and UAL VFP mnemonics for register access.
 
+This allows to build vfpmodule.c with Clang and its integrated assembler.
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/905
 Signed-off-by: Stefan Agner <stefan@agner.ch>
 ---
- arch/arm/vfp/Makefile |  2 --
- arch/arm/vfp/vfphw.S  | 30 +++++++++++++++++++-----------
- 2 files changed, 19 insertions(+), 13 deletions(-)
+ arch/arm/include/asm/vfp.h       |  2 ++
+ arch/arm/include/asm/vfpmacros.h | 12 +++++++++++-
+ arch/arm/vfp/Makefile            |  5 +++++
+ arch/arm/vfp/vfphw.S             |  1 +
+ arch/arm/vfp/vfpinstr.h          | 23 +++++++++++++++++++----
+ 5 files changed, 38 insertions(+), 5 deletions(-)
 
+diff --git a/arch/arm/include/asm/vfp.h b/arch/arm/include/asm/vfp.h
+index 7157d2a30a49..a73c29ff4d1f 100644
+--- a/arch/arm/include/asm/vfp.h
++++ b/arch/arm/include/asm/vfp.h
+@@ -9,6 +9,7 @@
+ #ifndef __ASM_VFP_H
+ #define __ASM_VFP_H
+ 
++#ifndef HAVE_VMRS_FPINST
+ #define FPSID			cr0
+ #define FPSCR			cr1
+ #define MVFR1			cr6
+@@ -16,6 +17,7 @@
+ #define FPEXC			cr8
+ #define FPINST			cr9
+ #define FPINST2			cr10
++#endif
+ 
+ /* FPSID bits */
+ #define FPSID_IMPLEMENTER_BIT	(24)
+diff --git a/arch/arm/include/asm/vfpmacros.h b/arch/arm/include/asm/vfpmacros.h
+index 947ee5395e1f..eb8d3738f227 100644
+--- a/arch/arm/include/asm/vfpmacros.h
++++ b/arch/arm/include/asm/vfpmacros.h
+@@ -8,7 +8,16 @@
+ 
+ #include <asm/vfp.h>
+ 
+-@ Macros to allow building with old toolkits (with no VFP support)
++#ifdef HAVE_VMRS_FPINST
++	.macro	VFPFMRX, rd, sysreg, cond
++	vmrs\cond	\rd, \sysreg
++	.endm
++
++	.macro	VFPFMXR, sysreg, rd, cond
++	vmsr\cond	\sysreg, \rd
++	.endm
++#else
++	@ Macros to allow building with old toolkits (with no VFP support)
+ 	.macro	VFPFMRX, rd, sysreg, cond
+ 	MRC\cond	p10, 7, \rd, \sysreg, cr0, 0	@ FMRX	\rd, \sysreg
+ 	.endm
+@@ -16,6 +25,7 @@
+ 	.macro	VFPFMXR, sysreg, rd, cond
+ 	MCR\cond	p10, 7, \rd, \sysreg, cr0, 0	@ FMXR	\sysreg, \rd
+ 	.endm
++#endif
+ 
+ 	@ read all the working registers back into the VFP
+ 	.macro	VFPFLDMIA, base, tmp
 diff --git a/arch/arm/vfp/Makefile b/arch/arm/vfp/Makefile
-index 9975b63ac3b0..749901a72d6d 100644
+index 749901a72d6d..f145c99fba6b 100644
 --- a/arch/arm/vfp/Makefile
 +++ b/arch/arm/vfp/Makefile
-@@ -8,6 +8,4 @@
+@@ -8,4 +8,9 @@
  # ccflags-y := -DDEBUG
  # asflags-y := -DDEBUG
  
--KBUILD_AFLAGS	:=$(KBUILD_AFLAGS:-msoft-float=-Wa,-mfpu=softvfp+vfp -mfloat-abi=soft)
--
++vmrs_fpinst    := $(call as-instr,.fpu vfpv2\nvmrs r0$(comma)FPINST,-DHAVE_VMRS_FPINST=1)
++
++KBUILD_CFLAGS  += $(vmrs_fpinst)
++KBUILD_AFLAGS  += $(vmrs_fpinst)
++
  obj-y		+= vfpmodule.o entry.o vfphw.o vfpsingle.o vfpdouble.o
 diff --git a/arch/arm/vfp/vfphw.S b/arch/arm/vfp/vfphw.S
-index b2e560290860..e214007a20a2 100644
+index e214007a20a2..90e5659827c7 100644
 --- a/arch/arm/vfp/vfphw.S
 +++ b/arch/arm/vfp/vfphw.S
-@@ -258,11 +258,13 @@ vfp_current_hw_state_address:
+@@ -78,6 +78,7 @@
+ ENTRY(vfp_support_entry)
+ 	DBGSTR3	"instr %08x pc %08x state %p", r0, r2, r10
  
- ENTRY(vfp_get_float)
- 	tbl_branch r0, r3, #3
--	.irp	dr,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
--1:	mrc	p10, 0, r0, c\dr, c0, 0	@ fmrs	r0, s0
-+	.irp	dr,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,
-+1:	vmov	r0, s\dr
- 	ret	lr
- 	.org	1b + 8
--1:	mrc	p10, 0, r0, c\dr, c0, 4	@ fmrs	r0, s1
-+	.endr
-+	.irp	dr,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31
-+1:	vmov	r0, s\dr
- 	ret	lr
- 	.org	1b + 8
- 	.endr
-@@ -271,10 +273,12 @@ ENDPROC(vfp_get_float)
- ENTRY(vfp_put_float)
- 	tbl_branch r1, r3, #3
- 	.irp	dr,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
--1:	mcr	p10, 0, r0, c\dr, c0, 0	@ fmsr	r0, s0
-+1:	vmov	s\dr, r0
- 	ret	lr
- 	.org	1b + 8
--1:	mcr	p10, 0, r0, c\dr, c0, 4	@ fmsr	r0, s1
-+	.endr
-+	.irp	dr,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31
-+1:	vmov	s\dr, r0
- 	ret	lr
- 	.org	1b + 8
- 	.endr
-@@ -282,15 +286,17 @@ ENDPROC(vfp_put_float)
- 
- ENTRY(vfp_get_double)
- 	tbl_branch r0, r3, #3
 +	.fpu	vfpv2
- 	.irp	dr,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
--1:	fmrrd	r0, r1, d\dr
-+1:	vmov	r0, r1, d\dr
- 	ret	lr
- 	.org	1b + 8
- 	.endr
- #ifdef CONFIG_VFPv3
- 	@ d16 - d31 registers
--	.irp	dr,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
--1:	mrrc	p11, 3, r0, r1, c\dr	@ fmrrd	r0, r1, d\dr
-+	.fpu	vfpv3
-+	.irp	dr,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31
-+1:	vmov	r0, r1, d\dr
- 	ret	lr
- 	.org	1b + 8
- 	.endr
-@@ -304,15 +310,17 @@ ENDPROC(vfp_get_double)
+ 	ldr	r3, [sp, #S_PSR]	@ Neither lazy restore nor FP exceptions
+ 	and	r3, r3, #MODE_MASK	@ are supported in kernel mode
+ 	teq	r3, #USR_MODE
+diff --git a/arch/arm/vfp/vfpinstr.h b/arch/arm/vfp/vfpinstr.h
+index 38dc154e39ff..0db3825c4b4f 100644
+--- a/arch/arm/vfp/vfpinstr.h
++++ b/arch/arm/vfp/vfpinstr.h
+@@ -62,10 +62,23 @@
+ #define FPSCR_C (1 << 29)
+ #define FPSCR_V	(1 << 28)
  
- ENTRY(vfp_put_double)
- 	tbl_branch r2, r3, #3
-+	.fpu	vfpv2
- 	.irp	dr,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
--1:	fmdrr	d\dr, r0, r1
-+1:	vmov	d\dr, r0, r1
- 	ret	lr
- 	.org	1b + 8
- 	.endr
- #ifdef CONFIG_VFPv3
-+	.fpu	vfpv3
- 	@ d16 - d31 registers
--	.irp	dr,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
--1:	mcrr	p11, 3, r0, r1, c\dr	@ fmdrr	r0, r1, d\dr
-+	.irp	dr,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31
-+1:	vmov	d\dr, r0, r1
- 	ret	lr
- 	.org	1b + 8
- 	.endr
+-/*
+- * Since we aren't building with -mfpu=vfp, we need to code
+- * these instructions using their MRC/MCR equivalents.
+- */
++#ifdef HAVE_VMRS_FPINST
++
++#define fmrx(_vfp_) ({			\
++	u32 __v;			\
++	asm(".fpu	vfpv2\n"	\
++	    "vmrs	%0, " #_vfp_	\
++	    : "=r" (__v) : : "cc");	\
++	__v;				\
++ })
++
++#define fmxr(_vfp_,_var_)		\
++	asm(".fpu	vfpv2\n"	\
++	    "vmsr	" #_vfp_ ", %0"	\
++	   : : "r" (_var_) : "cc")
++
++#else
++
+ #define vfpreg(_vfp_) #_vfp_
+ 
+ #define fmrx(_vfp_) ({			\
+@@ -79,6 +92,8 @@
+ 	asm("mcr p10, 7, %0, " vfpreg(_vfp_) ", cr0, 0 @ fmxr	" #_vfp_ ", %0"	\
+ 	   : : "r" (_var_) : "cc")
+ 
++#endif
++
+ u32 vfp_single_cpdo(u32 inst, u32 fpscr);
+ u32 vfp_single_cprt(u32 inst, u32 fpscr, struct pt_regs *regs);
+ 
 -- 
 2.25.1
 
