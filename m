@@ -2,92 +2,131 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57B65C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 18:31:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ABF2C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 18:31:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3456421D56
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 18:31:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D43820727
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 18:31:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UentoJdJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727491AbgCJSbS (ORCPT
+        id S1727514AbgCJSbW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 14:31:18 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:14679 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726466AbgCJSbR (ORCPT
+        Tue, 10 Mar 2020 14:31:22 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:42311 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726998AbgCJSbV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 14:31:17 -0400
-X-Originating-IP: 91.224.148.103
-Received: from localhost.localdomain (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id C1BB4240008;
-        Tue, 10 Mar 2020 18:31:13 +0000 (UTC)
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Liang Yang <liang.yang@amlogic.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Xiaolei Li <xiaolei.li@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>
-Cc:     linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linux-mtd@lists.infradead.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] mtd: rawnand: Replace zero-length array with flexible-array member
-Date:   Tue, 10 Mar 2020 19:31:12 +0100
-Message-Id: <20200310183112.18567-1-miquel.raynal@bootlin.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200226222722.GA18020@embeddedor>
-References: 
+        Tue, 10 Mar 2020 14:31:21 -0400
+Received: by mail-ot1-f67.google.com with SMTP id 66so14145050otd.9;
+        Tue, 10 Mar 2020 11:31:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7jfISf3OEyvEx0oLvSI1273sxi5HaeHIy5eXl6CUYSk=;
+        b=UentoJdJ5VZTR83/ZDu/HfKaS1HpoOPI7RSJ5ng4nDGd6z+It18K+I5lb69vMdjwZB
+         RAlTIyIAqPckJXVCAcHAWLsYR18MRy/aeNKfIDm2nWuBxTwmxlTjBytrqu1q6vdccnX4
+         3ZqnwYu1DBkRUI0vM7MVfVJSAPlNI7Z1QHc1VLCuUFeYfo5/ePMR/LO3bbpn0X6DS6WT
+         CloXkMQVj47l8Bbl2rY57GwdvhxrHWHSzyAf0sF08hC0yHqlD7s9EKtqOSnnzGsgb6Wo
+         h66sSAyU4R9se6wV+0bGaqba/HhjK24MiN/HTcWHgeDxPZI44/ep+ktlyI2PG6ewb/I7
+         wXWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7jfISf3OEyvEx0oLvSI1273sxi5HaeHIy5eXl6CUYSk=;
+        b=mzhMJftzzb7qx7tRLQYspSXC9UpDVbwh/DkEQpsWfite5jqa6Z1lySamGg69DZrx3e
+         XrJl4p0HQ4kZLZ1vvwKsYh/osW/LFg3XTLspYwCDHIZRDvgE7ny70px6026c0hhjRQjo
+         peJ6FcTbXb07oVV0pN9rlAY7xvfGtg4piZVNzZwRc6/j7YQgNwXywutElm9M5CqdVA9N
+         8CrIJAef6w7CHe875IZQhnPSs7WXCpSf89C4rroxeFIKpISw+4mLNgrMU5nRXwn/S8VV
+         J9oKYiVa97NmYu/cU+QkpVEgZtM4MEaeiCZxxvJqoTPzr8+JATPuUY3546evMLLbbjDr
+         oEcA==
+X-Gm-Message-State: ANhLgQ0y1Ve8/KQFaS4WSnnREVgMM6vJD/SFFiP86tO9vJG7wA5aJ3aZ
+        7S+qPhXA6Vn/2kxKji4RJFVutoqh4IuTdRRgmuc=
+X-Google-Smtp-Source: ADFU+vtLCDX3KJyCLZbj2vhkUc2Ppo+C8h1OD95k0wYeGtls5yyv4Hrsbmya39rogJUAvqAiID5smIyai2nRPF5neOw=
+X-Received: by 2002:a9d:4702:: with SMTP id a2mr17569197otf.319.1583865079547;
+ Tue, 10 Mar 2020 11:31:19 -0700 (PDT)
 MIME-Version: 1.0
-X-linux-mtd-patch-notification: thanks
-X-linux-mtd-patch-commit: 76d2f79cf5ae53bc5781903af98a1cb51ef12915
-Content-Transfer-Encoding: 8bit
+References: <000000000000490abd05a05fa060@google.com>
+In-Reply-To: <000000000000490abd05a05fa060@google.com>
+From:   Cong Wang <xiyou.wangcong@gmail.com>
+Date:   Tue, 10 Mar 2020 11:31:06 -0700
+Message-ID: <CAM_iQpXrLCmQGXr8C9iw0+QxsP6DtQqoRqG18aegPhpjcpXdhQ@mail.gmail.com>
+Subject: Re: KASAN: slab-out-of-bounds Write in tcindex_set_parms
+To:     syzbot <syzbot+c72da7b9ed57cde6fca2@syzkaller.appspotmail.com>
+Cc:     David Miller <davem@davemloft.net>,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        Jiri Pirko <jiri@resnulli.us>,
+        Jakub Kicinski <kuba@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-02-26 at 22:27:22 UTC, "Gustavo A. R. Silva" wrote:
-> The current codebase makes use of the zero-length array language
-> extension to the C90 standard, but the preferred mechanism to declare
-> variable-length types such as these ones is a flexible array member[1][2],
-> introduced in C99:
-> 
-> struct foo {
->         int stuff;
->         struct boo array[];
-> };
-> 
-> By making use of the mechanism above, we will get a compiler warning
-> in case the flexible array does not occur last in the structure, which
-> will help us prevent some kind of undefined behavior bugs from being
-> inadvertently introduced[3] to the codebase from now on.
-> 
-> Also, notice that, dynamic memory allocations won't be affected by
-> this change:
-> 
-> "Flexible array members have incomplete type, and so the sizeof operator
-> may not be applied. As a quirk of the original implementation of
-> zero-length arrays, sizeof evaluates to zero."[1]
-> 
-> This issue was found with the help of Coccinelle.
-> 
-> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> [2] https://github.com/KSPP/linux/issues/21
-> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> Acked-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+On Sun, Mar 8, 2020 at 3:44 PM syzbot
+<syzbot+c72da7b9ed57cde6fca2@syzkaller.appspotmail.com> wrote:
+>
+> Hello,
+>
+> syzbot found the following crash on:
+>
+> HEAD commit:    425c075d Merge branch 'tun-debug'
+> git tree:       net-next
+> console output: https://syzkaller.appspot.com/x/log.txt?x=134d2ae3e00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=598678fc6e800071
+> dashboard link: https://syzkaller.appspot.com/bug?extid=c72da7b9ed57cde6fca2
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=122ed70de00000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=116689fde00000
+>
+> The bug was bisected to:
+>
+> commit 599be01ee567b61f4471ee8078870847d0a11e8e
+> Author: Cong Wang <xiyou.wangcong@gmail.com>
+> Date:   Mon Feb 3 05:14:35 2020 +0000
+>
+>     net_sched: fix an OOB access in cls_tcindex
+>
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=150a7d53e00000
+> final crash:    https://syzkaller.appspot.com/x/report.txt?x=170a7d53e00000
+> console output: https://syzkaller.appspot.com/x/log.txt?x=130a7d53e00000
+>
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+c72da7b9ed57cde6fca2@syzkaller.appspotmail.com
+> Fixes: 599be01ee567 ("net_sched: fix an OOB access in cls_tcindex")
+>
+> IPVS: ftp: loaded support on port[0] = 21
+> ==================================================================
+> BUG: KASAN: slab-out-of-bounds in tcindex_set_parms+0x17fd/0x1a00 net/sched/cls_tcindex.c:455
+> Write of size 16 at addr ffff8880a219e6b8 by task syz-executor508/9705
+>
+> CPU: 1 PID: 9705 Comm: syz-executor508 Not tainted 5.6.0-rc3-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> Call Trace:
+>  __dump_stack lib/dump_stack.c:77 [inline]
+>  dump_stack+0x188/0x20d lib/dump_stack.c:118
+>  print_address_description.constprop.0.cold+0xd3/0x315 mm/kasan/report.c:374
+>  __kasan_report.cold+0x1a/0x32 mm/kasan/report.c:506
+>  kasan_report+0xe/0x20 mm/kasan/common.c:641
+>  tcindex_set_parms+0x17fd/0x1a00 net/sched/cls_tcindex.c:455
 
-Applied to https://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git nand/next, thanks.
 
-Miquel
+I think we probably don't check the boundary of 'handle' properly.
+
+397         if (cp->perfect || valid_perfect_hash(cp))
+398                 if (handle >= cp->alloc_hash)
+399                         goto errout_alloc;
+
+I will think more about it.
+
+Thanks.
