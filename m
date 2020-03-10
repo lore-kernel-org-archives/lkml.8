@@ -5,55 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0792CC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:44:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC853C18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:44:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1EBA246D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:44:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87D75246C1
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:44:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583844244;
-	bh=zelQCojRdjTRJfT/utokvhhGatHdiVoh5veId4tJeag=;
+	s=default; t=1583844248;
+	bh=ZS8/nYq1P3iQZ/7cVhbUQlgUQa9jZTe4mt8nxCgCiuM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tVGj/NKIEWBAqFIopTQPIuGIeHXPompP+dOruLwIEQWzXHNU9UM+66vt0ITSds/v7
-	 m2ZVcEnx5IE8cWP7DvRJmR0eeXXxD9+LZIzRACvBOku2lviGiMOv2cVqvJhYUQLXDc
-	 kTiq/7KrxiXqyY7rnf/ncsInt9ECGMERXDqnIY/M=
+	b=ezfTcGkElSRnn0EkOOx2gEEFk2LtdEBjcAzfo6AUnlJdpgZouiM4J5AlD7MlZG8o8
+	 G8IqO6e3K/nENt+gEXP9Kk44iN4xPhLp3NI3Ne869gjIvKZxnkuHRGaJeEFRlb3SZs
+	 8wQPA7LZJ5X3PaqrgHbg64GIjOGxwoz6s5UfS7kY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727684AbgCJMoD (ORCPT
+        id S1727693AbgCJMoH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:44:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44446 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:44:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44838 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726501AbgCJMn5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:43:57 -0400
+        id S1727683AbgCJMoD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:44:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 06DA924686;
-        Tue, 10 Mar 2020 12:43:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F35E2246D4;
+        Tue, 10 Mar 2020 12:44:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844237;
-        bh=zelQCojRdjTRJfT/utokvhhGatHdiVoh5veId4tJeag=;
+        s=default; t=1583844243;
+        bh=ZS8/nYq1P3iQZ/7cVhbUQlgUQa9jZTe4mt8nxCgCiuM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m1DkBiyFMHB81QRoaEVnEF2rMml+6DKV/A4NcwESl6UZAWa5tbA4C2YLyX/TiVxNn
-         eaZlulIdtsJ4ygoGoWCL5PtOG4pwvbQ5jC+LIqWk/rufXHA6trInUo5xk8/lrHxXHQ
-         9+nfforcqX/fJTU3GP5Cf8cr69sEkYJP3oRu0w9M=
+        b=FU2/T1PKzLuBGwe3okIWwQGLIyB30mMY6cZnSBj7+qWJYyr4OnpOGXimM3+LJXMUB
+         8XmeBikCzTf/en0tMDFuvJ7dMfozqLiMLQttou6rOZq3Nrxh60eB2/0Xwid/orRJtU
+         TNM716SxihW4opZWmCn6LDwNdao2k4sZwiU5wtx4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Ajay Kaher <akaher@vmware.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 01/88] iwlwifi: pcie: fix rb_allocator workqueue allocation
-Date:   Tue, 10 Mar 2020 13:38:09 +0100
-Message-Id: <20200310123606.848982431@linuxfoundation.org>
+        stable@vger.kernel.org, Ezequiel Lara Gomez <ezegomez@amazon.com>,
+        Arthur Kiyanovski <akiyano@amazon.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 11/88] net: ena: add missing ethtool TX timestamping indication
+Date:   Tue, 10 Mar 2020 13:38:19 +0100
+Message-Id: <20200310123609.166067110@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123606.543939933@linuxfoundation.org>
 References: <20200310123606.543939933@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -62,43 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Berg <johannes.berg@intel.com>
+From: Arthur Kiyanovski <akiyano@amazon.com>
 
-commit 8188a18ee2e48c9a7461139838048363bfce3fef upstream
+[ Upstream commit cf6d17fde93bdda23c9b02dd5906a12bf8c55209 ]
 
-We don't handle failures in the rb_allocator workqueue allocation
-correctly. To fix that, move the code earlier so the cleanup is
-easier and we don't have to undo all the interrupt allocations in
-this case.
+Current implementation of the driver calls skb_tx_timestamp()to add a
+software tx timestamp to the skb, however the software-transmit capability
+is not reported in ethtool -T.
 
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
-[Ajay: Rewrote this patch for v4.9.y, as 4.9.y codebase is different from mainline]
-Signed-off-by: Ajay Kaher <akaher@vmware.com>
+This commit updates the ethtool structure to report the software-transmit
+capability in ethtool -T using the standard ethtool_op_get_ts_info().
+This function reports all software timestamping capabilities (tx and rx),
+as well as setting phc_index = -1. phc_index is the index of the PTP
+hardware clock device that will be used for hardware timestamps. Since we
+don't have such a device in ENA, using the default -1 value is the correct
+setting.
+
+Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
+Signed-off-by: Ezequiel Lara Gomez <ezegomez@amazon.com>
+Signed-off-by: Arthur Kiyanovski <akiyano@amazon.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlwifi/pcie/rx.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/amazon/ena/ena_ethtool.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/rx.c b/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
-index a2ebe46bcfc5b..395bbe2c0f983 100644
---- a/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
-+++ b/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
-@@ -898,9 +898,13 @@ int iwl_pcie_rx_init(struct iwl_trans *trans)
- 			return err;
- 	}
- 	def_rxq = trans_pcie->rxq;
--	if (!rba->alloc_wq)
-+	if (!rba->alloc_wq) {
- 		rba->alloc_wq = alloc_workqueue("rb_allocator",
- 						WQ_HIGHPRI | WQ_UNBOUND, 1);
-+		if (!rba->alloc_wq)
-+			return -ENOMEM;
-+	}
-+
- 	INIT_WORK(&rba->rx_alloc, iwl_pcie_rx_allocator_work);
+diff --git a/drivers/net/ethernet/amazon/ena/ena_ethtool.c b/drivers/net/ethernet/amazon/ena/ena_ethtool.c
+index 06fd061a20e9a..d85fe0de28dba 100644
+--- a/drivers/net/ethernet/amazon/ena/ena_ethtool.c
++++ b/drivers/net/ethernet/amazon/ena/ena_ethtool.c
+@@ -819,6 +819,7 @@ static const struct ethtool_ops ena_ethtool_ops = {
+ 	.get_channels		= ena_get_channels,
+ 	.get_tunable		= ena_get_tunable,
+ 	.set_tunable		= ena_set_tunable,
++	.get_ts_info            = ethtool_op_get_ts_info,
+ };
  
- 	cancel_work_sync(&rba->rx_alloc);
+ void ena_set_ethtool_ops(struct net_device *netdev)
 -- 
 2.20.1
 
