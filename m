@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0B7EC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:47:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3250EC18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:47:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 874482468F
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:47:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08C272468D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:47:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583844461;
-	bh=m2VMjPdP7Tghk64h+YiyaAAmIOugxKZ/W6szpaKD2Vs=;
+	s=default; t=1583844465;
+	bh=jQRkvTTSvmorzupsnApKvUN8T93chrRBwJoSMoNe3Ko=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xpDB65fz8TEzE/13fEKVzjYbhlBtlHUbxlna03+MLSTSMHHIaxftES+/Ig1PZ27jV
-	 KOQZ3+eTBy5gELV1p5pzd0xDYC3yskvXTz1hAKh1U/rghII4qNbeC7PXIIck2LdOyV
-	 YcZXWzlZwN/Z0+rqg4Yd0964hBWNHohOvIv2FUGA=
+	b=KWC9cO3YQC6I1AaTHJVlk+DUwnUo/1RfGJC5BvMcSLKEfEZrzaJcIG5wRbKQHnX4J
+	 4kYws2IK8R80fmg2lOI0VqW5gsX4BLMDgkH28CNOptZ4SK4dJJB9e5rPzF7KOz4tU6
+	 mRzXpgiQJxUiogIIAvul7/Iw58rbm9/Brsc555cA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728201AbgCJMrk (ORCPT
+        id S1727860AbgCJMro (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:47:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51428 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:47:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51528 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727901AbgCJMrf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:47:35 -0400
+        id S1727514AbgCJMrl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:47:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 62BBE2467D;
-        Tue, 10 Mar 2020 12:47:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 48DBE24691;
+        Tue, 10 Mar 2020 12:47:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844454;
-        bh=m2VMjPdP7Tghk64h+YiyaAAmIOugxKZ/W6szpaKD2Vs=;
+        s=default; t=1583844460;
+        bh=jQRkvTTSvmorzupsnApKvUN8T93chrRBwJoSMoNe3Ko=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d9PsmU+QooTm+JrJJ2bNw3tmITheplZFsDLuQMVVnpS8RLnKhUJuyC32kaD/awuQI
-         eSHmOeBupEzC/lLsBLFDtpabG+gAxKzppwN4R67HhzrLroYcxcVmphyBxFEQ05NTYl
-         tH6YNNyxNwZVP+QbJJWtB8b0hLWHVOv8CNN+xVlQ=
+        b=b7RA0e6EUqNU3DOs/WQVlcuDp0ZcA3asNUgDna81o2vJXUieJNAHs8wwIfCdd0DXG
+         bZaSfIVKiiFkwoAUXVveermmI95oRlOg2qOePclu3en8PoNIPoczFi5cspmIl/ea65
+         0eTpaMNjfLeo94HgpFZ6AjhrRoPA/DQ8K5OAC/Eo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        yangerkun <yangerkun@huawei.com>
-Subject: [PATCH 4.9 88/88] crypto: algif_skcipher - use ZERO_OR_NULL_PTR in skcipher_recvmsg_async
-Date:   Tue, 10 Mar 2020 13:39:36 +0100
-Message-Id: <20200310123625.434168321@linuxfoundation.org>
+        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>
+Subject: [PATCH 4.9 75/88] dmaengine: tegra-apb: Fix use-after-free
+Date:   Tue, 10 Mar 2020 13:39:23 +0100
+Message-Id: <20200310123623.917173559@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123606.543939933@linuxfoundation.org>
 References: <20200310123606.543939933@linuxfoundation.org>
@@ -59,55 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: yangerkun <yangerkun@huawei.com>
+From: Dmitry Osipenko <digetx@gmail.com>
 
-Nowdays, we trigger a oops:
-...
-kasan: GPF could be caused by NULL-ptr deref or user memory accessgeneral protection fault: 0000 [#1] SMP KASAN
-...
-Call Trace:
- [<ffffffff81a26fb1>] skcipher_recvmsg_async+0x3f1/0x1400 x86/../crypto/algif_skcipher.c:543
- [<ffffffff81a28053>] skcipher_recvmsg+0x93/0x7f0 x86/../crypto/algif_skcipher.c:723
- [<ffffffff823e43a4>] sock_recvmsg_nosec x86/../net/socket.c:702 [inline]
- [<ffffffff823e43a4>] sock_recvmsg x86/../net/socket.c:710 [inline]
- [<ffffffff823e43a4>] sock_recvmsg+0x94/0xc0 x86/../net/socket.c:705
- [<ffffffff823e464b>] sock_read_iter+0x27b/0x3a0 x86/../net/socket.c:787
- [<ffffffff817f479b>] aio_run_iocb+0x21b/0x7a0 x86/../fs/aio.c:1520
- [<ffffffff817f57c9>] io_submit_one x86/../fs/aio.c:1630 [inline]
- [<ffffffff817f57c9>] do_io_submit+0x6b9/0x10b0 x86/../fs/aio.c:1688
- [<ffffffff817f902d>] SYSC_io_submit x86/../fs/aio.c:1713 [inline]
- [<ffffffff817f902d>] SyS_io_submit+0x2d/0x40 x86/../fs/aio.c:1710
- [<ffffffff828b33c3>] tracesys_phase2+0x90/0x95
+commit 94788af4ed039476ff3527b0e6a12c1dc42cb022 upstream.
 
-In skcipher_recvmsg_async, we use '!sreq->tsg' to determine does we
-calloc fail. However, kcalloc may return ZERO_SIZE_PTR, and with this,
-the latter sg_init_table will trigger the bug. Fix it be use ZERO_OF_NULL_PTR.
+I was doing some experiments with I2C and noticed that Tegra APB DMA
+driver crashes sometime after I2C DMA transfer termination. The crash
+happens because tegra_dma_terminate_all() bails out immediately if pending
+list is empty, and thus, it doesn't release the half-completed descriptors
+which are getting re-used before ISR tasklet kicks-in.
 
-This function was introduced with ' commit a596999b7ddf ("crypto:
-algif - change algif_skcipher to be asynchronous")', and has been removed
-with 'commit e870456d8e7c ("crypto: algif_skcipher - overhaul memory
-management")'.
+ tegra-i2c 7000c400.i2c: DMA transfer timeout
+ elants_i2c 0-0010: elants_i2c_irq: failed to read data: -110
+ ------------[ cut here ]------------
+ WARNING: CPU: 0 PID: 142 at lib/list_debug.c:45 __list_del_entry_valid+0x45/0xac
+ list_del corruption, ddbaac44->next is LIST_POISON1 (00000100)
+ Modules linked in:
+ CPU: 0 PID: 142 Comm: kworker/0:2 Not tainted 5.5.0-rc2-next-20191220-00175-gc3605715758d-dirty #538
+ Hardware name: NVIDIA Tegra SoC (Flattened Device Tree)
+ Workqueue: events_freezable_power_ thermal_zone_device_check
+ [<c010e5c5>] (unwind_backtrace) from [<c010a1c5>] (show_stack+0x11/0x14)
+ [<c010a1c5>] (show_stack) from [<c0973925>] (dump_stack+0x85/0x94)
+ [<c0973925>] (dump_stack) from [<c011f529>] (__warn+0xc1/0xc4)
+ [<c011f529>] (__warn) from [<c011f7e9>] (warn_slowpath_fmt+0x61/0x78)
+ [<c011f7e9>] (warn_slowpath_fmt) from [<c042497d>] (__list_del_entry_valid+0x45/0xac)
+ [<c042497d>] (__list_del_entry_valid) from [<c047a87f>] (tegra_dma_tasklet+0x5b/0x154)
+ [<c047a87f>] (tegra_dma_tasklet) from [<c0124799>] (tasklet_action_common.constprop.0+0x41/0x7c)
+ [<c0124799>] (tasklet_action_common.constprop.0) from [<c01022ab>] (__do_softirq+0xd3/0x2a8)
+ [<c01022ab>] (__do_softirq) from [<c0124683>] (irq_exit+0x7b/0x98)
+ [<c0124683>] (irq_exit) from [<c0168c19>] (__handle_domain_irq+0x45/0x80)
+ [<c0168c19>] (__handle_domain_irq) from [<c043e429>] (gic_handle_irq+0x45/0x7c)
+ [<c043e429>] (gic_handle_irq) from [<c0101aa5>] (__irq_svc+0x65/0x94)
+ Exception stack(0xde2ebb90 to 0xde2ebbd8)
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: yangerkun <yangerkun@huawei.com>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Acked-by: Jon Hunter <jonathanh@nvidia.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200209163356.6439-2-digetx@gmail.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- crypto/algif_skcipher.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/dma/tegra20-apb-dma.c |    4 ----
+ 1 file changed, 4 deletions(-)
 
-v1->v2:
-update the commit message
-
---- a/crypto/algif_skcipher.c
-+++ b/crypto/algif_skcipher.c
-@@ -538,7 +538,7 @@ static int skcipher_recvmsg_async(struct
- 	lock_sock(sk);
- 	tx_nents = skcipher_all_sg_nents(ctx);
- 	sreq->tsg = kcalloc(tx_nents, sizeof(*sg), GFP_KERNEL);
--	if (unlikely(!sreq->tsg))
-+	if (unlikely(ZERO_OR_NULL_PTR(sreq->tsg)))
- 		goto unlock;
- 	sg_init_table(sreq->tsg, tx_nents);
- 	memcpy(iv, ctx->iv, ivsize);
+--- a/drivers/dma/tegra20-apb-dma.c
++++ b/drivers/dma/tegra20-apb-dma.c
+@@ -755,10 +755,6 @@ static int tegra_dma_terminate_all(struc
+ 	bool was_busy;
+ 
+ 	spin_lock_irqsave(&tdc->lock, flags);
+-	if (list_empty(&tdc->pending_sg_req)) {
+-		spin_unlock_irqrestore(&tdc->lock, flags);
+-		return 0;
+-	}
+ 
+ 	if (!tdc->busy)
+ 		goto skip_dma_stop;
 
 
