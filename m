@@ -2,116 +2,234 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A913C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 10:46:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1637CC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 10:47:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F5AB21D7E
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 10:46:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="UcdMYQAO"
+	by mail.kernel.org (Postfix) with ESMTP id D5F1C21D7E
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 10:47:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726331AbgCJKqT (ORCPT
+        id S1726271AbgCJKrb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 06:46:19 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:56310 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725937AbgCJKqS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 06:46:18 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02AAcoWR081573;
-        Tue, 10 Mar 2020 10:46:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=1RisN3S7KM3q/8X60PBMjhXZIbFkHsb770PygEikLQM=;
- b=UcdMYQAOyUZiSFKHzyk6WZHOZfZ1jSJpCZgDUTkHTIamr9/HJdnodla4sGz/3TYPExfx
- faKxU3h/FFJmqGEpHlcpUSRWQgvw65E9LLe4YbutcmO242GFBednrEi9NP84ysSOwL5a
- oK++BuqCkNrNbKVSSnieI427QoDr5+8PY4wD6W0Fzjzsb4DlDan9MLKKdSY6gUWT/JK4
- D3dmWGD5VxLFW5btxzgSau3LqJD3zTw7G8jBcTSP4+JJt80DGUPFTPVfTibpxnCT6BnL
- B2pPLaFVSJpofP+dBatFF/utz8UfGK/AGyS3w7PyddyhQ3NEC/3Y0gF5LAVSTlUIi6YR Zw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 2ym3jqmsva-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 10 Mar 2020 10:46:10 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02AAcQYm069503;
-        Tue, 10 Mar 2020 10:46:10 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 2yp8nry2uf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 10 Mar 2020 10:46:09 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 02AAk8Rs026312;
-        Tue, 10 Mar 2020 10:46:08 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 10 Mar 2020 03:46:08 -0700
-Date:   Tue, 10 Mar 2020 13:46:01 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
-        Todd Kjos <tkjos@android.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
-        Martijn Coenen <maco@android.com>, surenb@google.com,
-        Christian Brauner <christian@brauner.io>
-Subject: Re: [RFC] ashmem: Fix ashmem shrinker nr_to_scan
-Message-ID: <20200310104601.GB11561@kadam>
-References: <20200306011930.99378-1-joel@joelfernandes.org>
+        Tue, 10 Mar 2020 06:47:31 -0400
+Received: from mga09.intel.com ([134.134.136.24]:4660 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725937AbgCJKrb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 06:47:31 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Mar 2020 03:47:30 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,518,1574150400"; 
+   d="scan'208";a="260743273"
+Received: from hao-dev.bj.intel.com (HELO localhost) ([10.238.157.65])
+  by orsmga002.jf.intel.com with ESMTP; 10 Mar 2020 03:47:29 -0700
+Date:   Tue, 10 Mar 2020 18:26:33 +0800
+From:   Wu Hao <hao.wu@intel.com>
+To:     Xu Yilun <yilun.xu@intel.com>
+Cc:     mdf@kernel.org, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Luwei Kang <luwei.kang@intel.com>
+Subject: Re: [PATCH 2/7] fpga: dfl: pci: add irq info for feature devices
+ enumeration
+Message-ID: <20200310102633.GB28396@hao-dev>
+References: <1583749790-10837-1-git-send-email-yilun.xu@intel.com>
+ <1583749790-10837-3-git-send-email-yilun.xu@intel.com>
+ <20200310024626.GB11861@hao-dev>
+ <20200310094143.GB30868@yilunxu-OptiPlex-7050>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200306011930.99378-1-joel@joelfernandes.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9555 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxscore=0 phishscore=0
- spamscore=0 malwarescore=0 adultscore=0 suspectscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2003100071
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9555 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 clxscore=1011
- priorityscore=1501 mlxscore=0 phishscore=0 mlxlogscore=999 impostorscore=0
- bulkscore=0 spamscore=0 suspectscore=0 lowpriorityscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2003100071
+In-Reply-To: <20200310094143.GB30868@yilunxu-OptiPlex-7050>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 05, 2020 at 08:19:30PM -0500, Joel Fernandes (Google) wrote:
-> nr_to_scan is the number of pages to be freed however ashmem doesn't
-> discount nr_to_scan correctly as it frees ranges. It should be
-> discounting them by pages than by ranges. Correct the issue.
+On Tue, Mar 10, 2020 at 05:41:43PM +0800, Xu Yilun wrote:
+> On Tue, Mar 10, 2020 at 10:46:26AM +0800, Wu Hao wrote:
+> > Hi Yilun
+> > 
+> > Some comments inline. : )
+> > 
+> > On Mon, Mar 09, 2020 at 06:29:45PM +0800, Xu Yilun wrote:
+> > > Some DFL FPGA PCIe cards (e.g. Intel FPGA Programmable Acceleration
+> > > Card) support MSI-X based interrupts. This patch allows PCIe driver
+> > > to prepare and pass interrupt resources to DFL via enumeration API.
+> > > These interrupt resources could then be assigned to actual features
+> > > which use them.
+> > > 
+> > > Signed-off-by: Luwei Kang <luwei.kang@intel.com>
+> > > Signed-off-by: Wu Hao <hao.wu@intel.com>
+> > > Signed-off-by: Xu Yilun <yilun.xu@intel.com>
+> > > ---
+> > >  drivers/fpga/dfl-pci.c | 66 ++++++++++++++++++++++++++++++++++++++++++++++----
+> > >  1 file changed, 61 insertions(+), 5 deletions(-)
+> > > 
+> > > diff --git a/drivers/fpga/dfl-pci.c b/drivers/fpga/dfl-pci.c
+> > > index 5387550..a3370e5 100644
+> > > --- a/drivers/fpga/dfl-pci.c
+> > > +++ b/drivers/fpga/dfl-pci.c
+> > > @@ -80,8 +80,23 @@ static void cci_remove_feature_devs(struct pci_dev *pcidev)
+> > >  	dfl_fpga_feature_devs_remove(drvdata->cdev);
+> > >  }
+> > >  
+> > > +static int *cci_pci_create_irq_table(struct pci_dev *pcidev, unsigned int nvec)
+> > > +{
+> > > +	int *table, i;
+> > > +
+> > > +	table = kcalloc(nvec, sizeof(int), GFP_KERNEL);
+> > 
+> > Maybe devm_ version is better?
 > 
-> Cc: surenb@google.com
-> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> ---
->  drivers/staging/android/ashmem.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+> This table will be freed right after dfl_fpga_enum_info_add_irq(). Maybe
+> don't need devm_ version.
 > 
-> diff --git a/drivers/staging/android/ashmem.c b/drivers/staging/android/ashmem.c
-> index 5891d0744a760..cb525ea6db98a 100644
-> --- a/drivers/staging/android/ashmem.c
-> +++ b/drivers/staging/android/ashmem.c
-> @@ -458,6 +458,8 @@ ashmem_shrink_scan(struct shrinker *shrink, struct shrink_control *sc)
->  		lru_del(range);
->  
->  		freed += range_size(range);
-> +		sc->nr_to_scan -=  range_size(range);
-                                 ^^
-Two space characters.
+> > 
+> > > +	if (!table)
+> > > +		return NULL;
+> > > +
+> > > +	for (i = 0; i < nvec; i++)
+> > 
+> > i should be unsigned int as well?
+> 
+> Yes I should change it.
+> 
+> > 
+> > > +		table[i] = pci_irq_vector(pcidev, i);
 
-In the old code we didn't *really* have to worry about sc->nr_to_scan
-dropping to negative, but now we do.  ->nr_to_scan is unsigned so it
-would be a high positive value now so it's maybe a forever loop?  I'm
-too lazy to verify...
+Hi Yilun,
 
-regards,
-dan carpenter
+one more place here.
+
+
+table = kcalloc(nevc, sizeof(int), GFP_KERNEL);
+if (table) {
+	...
+}	
+
+return table;
+
+Thanks
+Hao
+
+> > > +
+> > > +	return table;
+> > > +}
+> > > +
+> > >  /* enumerate feature devices under pci device */
+> > > -static int cci_enumerate_feature_devs(struct pci_dev *pcidev)
+> > > +static int cci_enumerate_feature_devs(struct pci_dev *pcidev,
+> > > +				      unsigned int nvec)
+> > >  {
+> > >  	struct cci_drvdata *drvdata = pci_get_drvdata(pcidev);
+> > >  	struct dfl_fpga_enum_info *info;
+> > > @@ -89,6 +104,7 @@ static int cci_enumerate_feature_devs(struct pci_dev *pcidev)
+> > >  	resource_size_t start, len;
+> > >  	int port_num, bar, i, ret = 0;
+> > >  	void __iomem *base;
+> > > +	int *irq_table;
+> > >  	u32 offset;
+> > >  	u64 v;
+> > >  
+> > > @@ -97,6 +113,18 @@ static int cci_enumerate_feature_devs(struct pci_dev *pcidev)
+> > >  	if (!info)
+> > >  		return -ENOMEM;
+> > >  
+> > > +	/* add irq info for enumeration if really needed */
+> > > +	if (nvec) {
+> > > +		irq_table = cci_pci_create_irq_table(pcidev, nvec);
+> > > +		if (irq_table) {
+> > > +			dfl_fpga_enum_info_add_irq(info, nvec, irq_table);
+> > > +			kfree(irq_table);
+> > > +		} else {
+> > > +			ret = -ENOMEM;
+> > > +			goto enum_info_free_exit;
+> > > +		}
+> > > +	}
+> > > +
+> > >  	/* start to find Device Feature List from Bar 0 */
+> > >  	base = cci_pci_ioremap_bar(pcidev, 0);
+> > >  	if (!base) {
+> > > @@ -173,6 +201,28 @@ static int cci_enumerate_feature_devs(struct pci_dev *pcidev)
+> > >  	return ret;
+> > >  }
+> > >  
+> > > +static int cci_pci_alloc_irq(struct pci_dev *pcidev)
+> > > +{
+> > > +	int nvec = pci_msix_vec_count(pcidev);
+> > > +	int ret;
+> > > +
+> > > +	if (nvec <= 0) {
+> > > +		dev_dbg(&pcidev->dev, "fpga interrupt not supported\n");
+> > > +		return 0;
+> > > +	}
+> > > +
+> > > +	ret = pci_alloc_irq_vectors(pcidev, nvec, nvec, PCI_IRQ_MSIX);
+> > > +	if (ret < 0)
+> > > +		return ret;
+> > > +
+> > > +	return nvec;
+> > > +}
+> > > +
+> > > +static void cci_pci_free_irq(struct pci_dev *pcidev)
+> > > +{
+> > > +	pci_free_irq_vectors(pcidev);
+> > > +}
+> > > +
+> > >  static
+> > >  int cci_pci_probe(struct pci_dev *pcidev, const struct pci_device_id *pcidevid)
+> > >  {
+> > > @@ -210,14 +260,19 @@ int cci_pci_probe(struct pci_dev *pcidev, const struct pci_device_id *pcidevid)
+> > >  		goto disable_error_report_exit;
+> > >  	}
+> > >  
+> > > -	ret = cci_enumerate_feature_devs(pcidev);
+> > > -	if (ret) {
+> > > -		dev_err(&pcidev->dev, "enumeration failure %d.\n", ret);
+> > > +	ret = cci_pci_alloc_irq(pcidev);
+> > > +	if (ret < 0) {
+> > > +		dev_err(&pcidev->dev, "Fail to alloc irq %d.\n", ret);
+> > 
+> > we prepare mmio resources in side cci_enumerate_feature_devs.
+> > 
+> > maybe we could put irq resources code in side cce_enumerate_feature_devs too?
+> 
+> Yes I will try to change it in patch v2.
+> 
+> Thanks for your quick response.
+> 
+> > 
+> > 
+> > Thanks
+> > Hao
+> > 
+> > >  		goto disable_error_report_exit;
+> > >  	}
+> > >  
+> > > -	return ret;
+> > > +	ret = cci_enumerate_feature_devs(pcidev, (unsigned int)ret);
+> > > +	if (!ret)
+> > > +		return ret;
+> > > +
+> > > +	dev_err(&pcidev->dev, "enumeration failure %d.\n", ret);
+> > >  
+> > > +	cci_pci_free_irq(pcidev);
+> > >  disable_error_report_exit:
+> > >  	pci_disable_pcie_error_reporting(pcidev);
+> > >  	return ret;
+> > > @@ -263,6 +318,7 @@ static void cci_pci_remove(struct pci_dev *pcidev)
+> > >  		cci_pci_sriov_configure(pcidev, 0);
+> > >  
+> > >  	cci_remove_feature_devs(pcidev);
+> > > +	cci_pci_free_irq(pcidev);
+> > >  	pci_disable_pcie_error_reporting(pcidev);
+> > >  }
+> > >  
+> > > -- 
+> > > 2.7.4
