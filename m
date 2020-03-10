@@ -2,118 +2,99 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2438BC18E5C
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:33:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2CB8C18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:33:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F267A24684
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:33:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="RkadbTZs"
+	by mail.kernel.org (Postfix) with ESMTP id AE98420675
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:33:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583847199;
+	bh=DJ7m9Kjn2gggjYhzhVkrVZAJu0ldu3G8qeweFwR+9ko=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=oNoHhlVrFx4t6o35X3AkW4m7hh7GcIPP088AS25sjwNc2iAx9QAy8s1PfKlXX4Ng9
+	 pvx9O8wntB7RQpQAiw1w83qYmgoYSNvZnJIRn5DF3a99zx0nEOTIE6eCSvbHvs9YIP
+	 Xm1XT0hbMYTQoOPPVf95OBfPhRIBgRKDfOSW97mc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728467AbgCJNdK (ORCPT
+        id S1728535AbgCJNdT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:33:10 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:44860 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727972AbgCJMsr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:48:47 -0400
-Received: by mail-lf1-f66.google.com with SMTP id i10so10738243lfg.11
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 05:48:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=02YCpOcYgDr2RIZdF/x1NVUywRgMsFxtc+njZV4rLeY=;
-        b=RkadbTZs67fU9rSXGjUpIYuJJqO/hjj4cQZTKNqQhWlzhil9no9aSQh/hdlLwNp+7m
-         NA45dgJZ3moN/DxYshX5WzSk+mv/+Y9FCbSyQ13p/EcUB5p3PfOCeTdVoLFbacGbb3Xf
-         BbdXyBh99t3+aoKRMOrsbF6ojIE5Zlcc7qlJjg3bgVBeecYhWRTgw7H4A6T4kQt9Iz2n
-         dPb63B8RDKqNYjcnueVxQ2dIyKEYaMGCmZFh3pChz/bha8/K1P+f0PaKPArh88LuTNAV
-         Nr353sAH0Y9OR+5Z0vj86pxdPS3uQ0upAY+n70y5hCHyVLoys7XULawzdWe9dT5XHnWP
-         g0sg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=02YCpOcYgDr2RIZdF/x1NVUywRgMsFxtc+njZV4rLeY=;
-        b=XutwtjNWrlYSdxk/Xrs/q72D+fZhS6RjTUXaA39qCRAI+6zJRASiRPl/ML1p27Z8Dn
-         8DceUawawF0uFTt/C/0jLuZPINp+oLFuZyrZqQr/wF8lgysw1Kvr24Wn4uI5VTh/ldIG
-         DvnSnqdih9aROaBOxcXbF41oynVhUwfP+B7GxSJQJWyzGFXSxqHbZ8EOCIVTHBayz8pv
-         FEWcw1L0j/72uB7QPCNCKnTeKxxlKTr99DzCbtUHrofGBxGslJdmU7FzNgRFJ93iU1sk
-         7cf0OVAyy/Esz3TPFbfwh3Ze64nuZf8vXSEO8pGMccMTDlZ9xAwFDvKBids+k4385S6y
-         KZzg==
-X-Gm-Message-State: ANhLgQ1xf3yTVBvZnRuK2ZU3q0T0i8qdTB8qOA8LR2hbGQmD37JpGpsE
-        0KyaEuyBJgF9Q9evyfmlkNqqNQ==
-X-Google-Smtp-Source: ADFU+vsgmv0jq7AXXvtsvyuZoBOTHOnaupBq/z++CY1/zbVVC5+3JatnqiO1l0kG1KPSmZcEcESjhw==
-X-Received: by 2002:ac2:5598:: with SMTP id v24mr499682lfg.139.1583844525496;
-        Tue, 10 Mar 2020 05:48:45 -0700 (PDT)
-Received: from localhost (h-200-138.A463.priv.bahnhof.se. [176.10.200.138])
-        by smtp.gmail.com with ESMTPSA id b17sm23704416ljd.5.2020.03.10.05.48.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Mar 2020 05:48:44 -0700 (PDT)
-Date:   Tue, 10 Mar 2020 13:48:44 +0100
-From:   Niklas <niklas.soderlund@ragnatech.se>
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Lad Prabhakar <prabhakar.csengg@gmail.com>
-Subject: Re: [PATCH v2 3/3] media: rcar-vin: rcar-csi2: Add support for
- MEDIA_BUS_FMT_SRGGB8_1X8 format
-Message-ID: <20200310124844.GP2975348@oden.dyn.berto.se>
-References: <1583838364-12932-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1583838364-12932-4-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Tue, 10 Mar 2020 09:33:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52790 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727966AbgCJMsh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:48:37 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E87E820674;
+        Tue, 10 Mar 2020 12:48:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583844516;
+        bh=DJ7m9Kjn2gggjYhzhVkrVZAJu0ldu3G8qeweFwR+9ko=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ugnQmeLha7POIPXHRLc753b4rP856nwUqCysIFx3iqR48HxYa6kO7ynDEET/+E7Td
+         5P6M2nRGGKeY7jAhKVv+Sph5aDk476r/A/w7L/gqAoTy4s1QO+8TFW1WYTrTsphijo
+         aqNSIVpQu95nKf4FVgIYgqw8ZGP0kxqw4HoVFrFk=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Omer Shpigelman <oshpigelman@habana.ai>,
+        Oded Gabbay <oded.gabbay@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 020/168] habanalabs: do not halt CoreSight during hard reset
+Date:   Tue, 10 Mar 2020 13:37:46 +0100
+Message-Id: <20200310123637.709270676@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200310123635.322799692@linuxfoundation.org>
+References: <20200310123635.322799692@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1583838364-12932-4-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lad,
+From: Omer Shpigelman <oshpigelman@habana.ai>
 
-Thanks for your work.
+[ Upstream commit a37e47192dfa98f79a0cd5ab991c224b5980c982 ]
 
-On 2020-03-10 11:06:04 +0000, Lad Prabhakar wrote:
-> This patch adds support for MEDIA_BUS_FMT_SRGGB8_1X8 format for CSI2
-> input.
-> 
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+During hard reset we must not write to the device.
+Hence avoid halting CoreSight during user context close if it is done
+during hard reset.
+In addition, we must not re-enable clock gating afterwards as it was
+deliberately disabled in the beginning of the hard reset flow.
 
-Small nit, you can drop rcar-vin from the subject as this patch is for 
-the rcar-csi2 driver. With this fixed,
+Signed-off-by: Omer Shpigelman <oshpigelman@habana.ai>
+Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
+Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/misc/habanalabs/device.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-
-> ---
->  drivers/media/platform/rcar-vin/rcar-csi2.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/media/platform/rcar-vin/rcar-csi2.c b/drivers/media/platform/rcar-vin/rcar-csi2.c
-> index 39e1639..b030ef6 100644
-> --- a/drivers/media/platform/rcar-vin/rcar-csi2.c
-> +++ b/drivers/media/platform/rcar-vin/rcar-csi2.c
-> @@ -320,6 +320,7 @@ static const struct rcar_csi2_format rcar_csi2_formats[] = {
->  	{ .code = MEDIA_BUS_FMT_YUYV8_1X16,	.datatype = 0x1e, .bpp = 16 },
->  	{ .code = MEDIA_BUS_FMT_UYVY8_2X8,	.datatype = 0x1e, .bpp = 16 },
->  	{ .code = MEDIA_BUS_FMT_YUYV10_2X10,	.datatype = 0x1e, .bpp = 20 },
-> +	{ .code = MEDIA_BUS_FMT_SRGGB8_1X8,     .datatype = 0x2a, .bpp = 8 },
->  };
->  
->  static const struct rcar_csi2_format *rcsi2_code_to_fmt(unsigned int code)
-> -- 
-> 2.7.4
-> 
-
+diff --git a/drivers/misc/habanalabs/device.c b/drivers/misc/habanalabs/device.c
+index eb9c07833a517..a7a4fed4d8995 100644
+--- a/drivers/misc/habanalabs/device.c
++++ b/drivers/misc/habanalabs/device.c
+@@ -600,7 +600,9 @@ int hl_device_set_debug_mode(struct hl_device *hdev, bool enable)
+ 			goto out;
+ 		}
+ 
+-		hdev->asic_funcs->halt_coresight(hdev);
++		if (!hdev->hard_reset_pending)
++			hdev->asic_funcs->halt_coresight(hdev);
++
+ 		hdev->in_debug = 0;
+ 
+ 		goto out;
 -- 
-Regards,
-Niklas Söderlund
+2.20.1
+
+
+
