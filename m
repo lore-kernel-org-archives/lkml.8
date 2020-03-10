@@ -2,158 +2,140 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C43E1C18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 21:57:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F2BCC18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 21:58:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9177E222C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 21:57:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C3C921927
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 21:58:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="U+DI/gme"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L6rjEMhM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727701AbgCJV5u (ORCPT
+        id S1727718AbgCJV6K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 17:57:50 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:38571 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727311AbgCJV5u (ORCPT
+        Tue, 10 Mar 2020 17:58:10 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:36974 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727311AbgCJV6K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 17:57:50 -0400
-Received: by mail-pl1-f195.google.com with SMTP id w3so70080plz.5
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 14:57:49 -0700 (PDT)
+        Tue, 10 Mar 2020 17:58:10 -0400
+Received: by mail-pl1-f193.google.com with SMTP id f16so72099plj.4;
+        Tue, 10 Mar 2020 14:58:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=qYdxwwwpYm23LuoOol66JOS31vLZfpo3MXiCkbyPzr8=;
-        b=U+DI/gmeBVvE0NZblYAgaOZPjifrN5fk+p5gpLgDTyfGPTvgXLQ9vkTEgIGJXF4uJL
-         Fd952FkPe2/jNEyATMsvJrqqJ6kZ+XFOunzZ92lTnwRcgI7Pa8CXnOyw7Qb8CEESpM7G
-         WfgtTQ5XY2rs03J4e6y3h1z8ES9S3LYFcA/sA=
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=B9Roab6ePOiJKklWHo6BPOlYOpdJbmxDABODEgGHp3M=;
+        b=L6rjEMhMFAf49ITD8/Po8bF5OoNgBuFBMbb6LCxBezF0LTJl+6t5MUvSjyYiHtBL6p
+         ah/6BHCbySLYVyGlPHcSZMuqqmoKSPVMn8WmDAM2KCchwLDu0frZBEq9ANwLyvfSSPGK
+         s+zUo+IrOcMGSYVfzlbqfPDxyU2E520mjIPSguIeik+eh4lQ2x8+lqUYY1dnPfXJG+ud
+         GZEsDTHjuKMk+jXRTkaPPTmtR5nBoeZUNUee2DqJzD5frgY5rPsGZL293h5I5oi3mFQv
+         kYicjx8BTOTqnEdjzsdM7W2wSAUdEdXevM8LfEjxsbhY+BoVY4sVmsoHClOMMsebMVR0
+         Js4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=qYdxwwwpYm23LuoOol66JOS31vLZfpo3MXiCkbyPzr8=;
-        b=hFHM+g0Z/CLYbK+ghbF6bLgAiCN1ma+fsK1EQS0uiFCsIFsIk0YbjbpR9kG8AL7Pu7
-         2udtRe/Io1mbenPKD1Y3TnTNetOFkr+3081wHAJwTiET/8SqNd1qdxUCI7xl8gkKmxoW
-         Bdp6FjA4L0wgX4F/x+lS9iQeMO/JwaXruuIfIeaXfox5ISnM1jsuYps6PLPfhz2aVIq8
-         vM924amOcW3pQCgTRBKBo2KhPJWwr9g++IpR4olDtuIu2Lf8VrID6UrrxCOUU1BKAyoj
-         s2CCSYVACixy2X/YDJ5hUcl0KygY3x5hJKzG5+cHsNd70o5SbWi3hQoY32W7aHJXQvPY
-         KSQg==
-X-Gm-Message-State: ANhLgQ3WbC51PssBq6Z77RVy7fQEZXHIEwVYYuVEgHEkQJ3nGK3xHCBH
-        7S92aYCneRWYKYPw7DHLd1dICQ6pr20=
-X-Google-Smtp-Source: ADFU+vuBaEaTeYfHN/Q5va1wjqReuMLDH16k2pXg+pd13QFSJEnP/TcDz8IkAB3cuekA2ZHVICXqlg==
-X-Received: by 2002:a17:90a:8c0f:: with SMTP id a15mr58797pjo.156.1583877468981;
-        Tue, 10 Mar 2020 14:57:48 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id mr7sm3122253pjb.12.2020.03.10.14.57.47
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=B9Roab6ePOiJKklWHo6BPOlYOpdJbmxDABODEgGHp3M=;
+        b=M5reJXk9SqB5cP2wqe8Im39xad8r8qIAkcRYYtfOrpe3jFReST2yV2vR/Di5nYLX4D
+         uHwiyI+90fz9eQ6WEnLEAAmNOTjcXHOngWDZEYciGHuRzj2gN9dcgvY0UHL/yJASaNk3
+         nnyzIFc08WreHQOeI++9uh9rGjkEoleC5IZZ/Kvs0R5FEirxjTzW+UWTSatbpszyPw5w
+         gkhX+e2Wdv6YDdctip+0oDWo4KSYCOW/qNOyJorGgf8jLGg5NE/AY3DwZkKNYnekcqdI
+         XNxnihvmlB/twhZd3m+tm+EQaBw8tIvWvCHDyrS7Ya6ubQbXwaipg/Q0jpqlfqlXABdV
+         4rmA==
+X-Gm-Message-State: ANhLgQ3kDJygoFD/RusvSULSyFfm2wpsch8cLE9rFmamVX1NlIdJMq7P
+        /4b20Lphhf5mkC8ZdSjnM4pD6c7t
+X-Google-Smtp-Source: ADFU+vtKtlKFQpM4Xfy/lazlHbTIqENQisg5wSpoZu7Ak52cQ4jfXsgVOpoZPd0JCOLE/mQg1j6J7Q==
+X-Received: by 2002:a17:902:8308:: with SMTP id bd8mr43579plb.210.1583877488443;
+        Tue, 10 Mar 2020 14:58:08 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id b64sm30023120pfa.94.2020.03.10.14.58.07
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Mar 2020 14:57:48 -0700 (PDT)
-Date:   Tue, 10 Mar 2020 14:57:46 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Akash Asthana <akashast@codeaurora.org>
-Cc:     robh+dt@kernel.org, agross@kernel.org, mark.rutland@arm.com,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mgautam@codeaurora.org,
-        rojay@codeaurora.org, skakit@codeaurora.org, swboyd@chromium.org
-Subject: Re: [PATCH V4 3/3] dt-bindings: geni-se: Add binding for UART pin
- swap
-Message-ID: <20200310215746.GZ24720@google.com>
-References: <1581932212-19469-1-git-send-email-akashast@codeaurora.org>
- <1581932212-19469-4-git-send-email-akashast@codeaurora.org>
- <20200218190731.GC15781@google.com>
- <ec5de895-3e86-811e-7ffc-fb98e115f850@codeaurora.org>
+        Tue, 10 Mar 2020 14:58:08 -0700 (PDT)
+Subject: Re: [PATCH 4.14 000/126] 4.14.173-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+References: <20200310124203.704193207@linuxfoundation.org>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <925bea2f-e0a3-be33-f8d8-a88a8ca1d90e@roeck-us.net>
+Date:   Tue, 10 Mar 2020 14:58:06 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
+In-Reply-To: <20200310124203.704193207@linuxfoundation.org>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ec5de895-3e86-811e-7ffc-fb98e115f850@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Akash,
+On 3/10/20 5:40 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.14.173 release.
+> There are 126 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Thu, 12 Mar 2020 12:41:42 +0000.
+> Anything received after that time might be too late.
+> 
 
-The patch that implements the binding landed in tty/tty-next:
+Build results:
+	total: 172 pass: 172 fail: 0
+Qemu test results:
+	total: 401 pass: 401 fail: 0
 
-9fa3c4b1fa379 tty: serial: qcom_geni_serial: Fix GPIO swapping with workaround
-
-The binding needs a re-spin to match the implementation.
-
-Thanks
-
-Matthias
-
-On Wed, Feb 19, 2020 at 06:51:35PM +0530, Akash Asthana wrote:
-> Hi Matthias,
-> 
-> On 2/19/2020 12:37 AM, Matthias Kaehlcke wrote:
-> > Hi Akash,
-> > 
-> > I didn't see a patch that implements the binding, did you post it?
-> 
-> We haven't posted any update on patch@
-> https://patchwork.kernel.org/cover/11313817/
-> 
-> [tty: serial: qcom_geni_serial: Configure UART_IO_MACRO_CTRL register]. We
-> will spin it ASAP.
-> 
-> > 
-> > 
-> > On Mon, Feb 17, 2020 at 03:06:52PM +0530, Akash Asthana wrote:
-> > > Add documentation to support RX/TX/CTS/RTS pin swap in HW.
-> > > 
-> > > Signed-off-by: Akash Asthana <akashast@codeaurora.org>
-> > > ---
-> > >   Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml | 9 +++++++++
-> > >   1 file changed, 9 insertions(+)
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml
-> > > index 11530df..7e4b9af 100644
-> > > --- a/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml
-> > > +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml
-> > > @@ -165,6 +165,15 @@ patternProperties:
-> > >             - description: UART core irq
-> > >             - description: Wakeup irq (RX GPIO)
-> > > +      rx-tx-swap:
-> > > +        description: RX and TX pins are swap.
-> > s/swap/swapped/
-> Ok
-> > 
-> > > +
-> > > +      cts-rts-swap:
-> > > +        description: CTS and RTS pins are swap.
-> > s/swap/swapped/
-> Ok
-> > 
-> > > +
-> > > +      rx-tx-cts-rts-swap:
-> > > +        description: RX-TX and CTS-RTS both pairs are swap.
-> > I don't think this option adds much value, if both pairs are swapped
-> > the above two properties can be set.
-> 
-> Yeah ok, It is possible to derive value for rx-tx-cts-rts if above 2
-> properties are set.
-> 
-> > 
-> > > +
-> > >       required:
-> > >         - compatible
-> > >         - interrupts
-> > > -- 
-> > > The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
-> 
-> Thanks for reviewing,
-> 
-> 
-> Regards,
-> 
-> Akash
-> 
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
+Guenter
