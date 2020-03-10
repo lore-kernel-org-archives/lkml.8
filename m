@@ -2,218 +2,183 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E0F0C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 11:18:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6CBCC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 11:19:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D80182468D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 11:18:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 947D22468C
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 11:19:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VpxfH9xC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726548AbgCJLSo (ORCPT
+        id S1726437AbgCJLT0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 07:18:44 -0400
-Received: from mga03.intel.com ([134.134.136.65]:21993 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726402AbgCJLSo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 07:18:44 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Mar 2020 04:18:43 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,536,1574150400"; 
-   d="scan'208";a="353602579"
-Received: from kuha.fi.intel.com ([10.237.72.162])
-  by fmsmga001.fm.intel.com with SMTP; 10 Mar 2020 04:18:38 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Tue, 10 Mar 2020 13:18:37 +0200
-Date:   Tue, 10 Mar 2020 13:18:37 +0200
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     Brendan Higgins <brendanhiggins@google.com>
-Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        hdegoede@redhat.com,
-        "rafael.j.wysocki" <rafael.j.wysocki@intel.com>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        lkft-triage@lists.linaro.org,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Subject: Re: BUG: kernel NULL pointer dereference, address: 00 -
- ida_free+0x76/0x140
-Message-ID: <20200310111837.GA1368052@kuha.fi.intel.com>
-References: <CA+G9fYvRZ9eCE29FjXkv1dQfrdGO3uWp4Tvkip5Z_jsgjVJeAQ@mail.gmail.com>
- <CAHp75VfhKoLtWkLHUyzg6m=rx833qiCVimWJVKU13qrX+aJz-Q@mail.gmail.com>
- <CAFd5g45GbSX1BkuaH=8639ESHi-MCGkpFhEZZpycm9=jQb93rg@mail.gmail.com>
- <CAFd5g47aaE+tGeHPrQmhfi6_nrvi1K4DvtRodh=zN21-uiQ1DQ@mail.gmail.com>
- <20200305223350.GA2852@mara.localdomain>
- <20200306120525.GC68079@kuha.fi.intel.com>
- <CAFd5g45c9L4BBRNtxtQf_NFr2bR6Wgt9uOHW86gzb6Ozeb0SBA@mail.gmail.com>
- <CAFd5g45cdygYfxGoCkk710tLXFADeLNb+6w-=vhkDMLP9OM7bw@mail.gmail.com>
+        Tue, 10 Mar 2020 07:19:26 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:37846 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726186AbgCJLT0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 07:19:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583839164;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=qfsU9Bh+9ERXSvjXe/Jnk6fWHOirWhBhsnum3jMiYw8=;
+        b=VpxfH9xCfCaBgIZpeBibodLU39T+Z9rrYfDhdSqRh2sBE4f0kh+HoG29znNzJs8zDppTgA
+        7AhNLMxF5rC1QsMOcauP06cfiXzj7HmVpusZSs4dYw3yhWkxwE5akUlbB4Bc5+fXMpydXk
+        DDr324GUg2Fvbx9Cx8zA1kXITn/KBU8=
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
+ [209.85.160.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-43-iZZFG3kyPZe1avT3tnznEg-1; Tue, 10 Mar 2020 07:19:20 -0400
+X-MC-Unique: iZZFG3kyPZe1avT3tnznEg-1
+Received: by mail-qt1-f199.google.com with SMTP id q7so8872566qtp.16
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 04:19:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=qfsU9Bh+9ERXSvjXe/Jnk6fWHOirWhBhsnum3jMiYw8=;
+        b=M+Vozi4xKkimPOn0/YZ+bxtB01JCAGcock/Q+0ombsOM3BGcN8VsZahy9om0HsXIgM
+         5LoDxKKv20BQUY2/VaYrO4aSS27HcMPcAAakHaX+11PObxfRSS4wo1BGOgiW/AyQAvQa
+         /VIfsNEURTxs28emb31W8dse13S9LrAVEp26gKdHq4RU4gshUiv1EwxLleOWASm7ZBKm
+         n2LKGcQdCU31ZhUh7hXBDOJcfQSQ8Kxblb6nHQ01pm557Bhr/in8ajDozYPElPR8Yalk
+         6E6bj2c5OnzIFVnokiI+vwI7yZDuw6iFHojW3Cf/TCxAMXyZj7slvA4UaThCb4OjfeJg
+         Xltw==
+X-Gm-Message-State: ANhLgQ0MoiaYppdl4Va1wcafoQO6y/cYZsdURC/ehMbQzYbRSUeAy3Mf
+        Tk7RJPTSVZK8rbZ+yJI0lu0zz6tU6oVu9xGu/FDQzjLvQ4Q9/dEFxAmLetTVtr55Ltn7NctRZRP
+        I6EqTKipu4lHt4zsUqyI8426f
+X-Received: by 2002:a37:4141:: with SMTP id o62mr18336382qka.282.1583839160118;
+        Tue, 10 Mar 2020 04:19:20 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vvFQXTyeq0C9+jsN/NWv2w1PTOeNblibyZ7JGEqrKf11uCaqcYvWES5T61GOlUp4h635fOhPA==
+X-Received: by 2002:a37:4141:: with SMTP id o62mr18336356qka.282.1583839159836;
+        Tue, 10 Mar 2020 04:19:19 -0700 (PDT)
+Received: from redhat.com (bzq-79-178-2-19.red.bezeqint.net. [79.178.2.19])
+        by smtp.gmail.com with ESMTPSA id e130sm23973211qkb.72.2020.03.10.04.19.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Mar 2020 04:19:18 -0700 (PDT)
+Date:   Tue, 10 Mar 2020 07:19:13 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        virtualization@lists.linux-foundation.org,
+        Jason Wang <jasowang@redhat.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Tyler Sanderson <tysand@google.com>,
+        Wei Wang <wei.w.wang@intel.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        David Rientjes <rientjes@google.com>,
+        Nadav Amit <namit@vmware.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v2] virtio-balloon: Switch back to OOM handler for
+ VIRTIO_BALLOON_F_DEFLATE_ON_OOM
+Message-ID: <20200310071844-mutt-send-email-mst@kernel.org>
+References: <20200310103903.6014-1-david@redhat.com>
+ <20200310070413-mutt-send-email-mst@kernel.org>
+ <78427916-fc17-b081-6b1e-cbcb00d51752@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAFd5g45cdygYfxGoCkk710tLXFADeLNb+6w-=vhkDMLP9OM7bw@mail.gmail.com>
+In-Reply-To: <78427916-fc17-b081-6b1e-cbcb00d51752@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 09, 2020 at 02:43:13PM -0700, Brendan Higgins wrote:
-> On Mon, Mar 9, 2020 at 1:35 PM Brendan Higgins
-> <brendanhiggins@google.com> wrote:
-> >
-> > On Fri, Mar 6, 2020 at 4:05 AM Heikki Krogerus
-> > <heikki.krogerus@linux.intel.com> wrote:
-> > >
-> > > On Fri, Mar 06, 2020 at 12:33:50AM +0200, Sakari Ailus wrote:
-> > > > Hi Brendan,
-> > > >
-> > > > On Thu, Mar 05, 2020 at 11:51:20AM -0800, Brendan Higgins wrote:
-> > > > > On Thu, Mar 5, 2020 at 11:40 AM Brendan Higgins
-> > > > > <brendanhiggins@google.com> wrote:
-> > > > > >
-> > > > > > On Thu, Mar 5, 2020 at 11:18 AM Andy Shevchenko
-> > > > > > <andy.shevchenko@gmail.com> wrote:
-> > > > > > >
-> > > > > > > +Cc: Sakari
-> > > > > > >
-> > > > > > > On Thu, Mar 5, 2020 at 6:00 PM Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
-> > > > > > > >
-> > > > > > > > Regression reported on Linux next 5.6.0-rc4-next-20200305 on x86_64,
-> > > > > > > > i386, arm and arm64. The steps to reproduce is running kselftests lib
-> > > > > > > > printf.sh test case.
-> > > > > > > > Which is doing modprobe operations.
-> > > > > > > >
-> > > > > > > > BTW, there are few RCU warnings from the boot log.
-> > > > > > > > Please refer below link for more details.
-> > > > > > > >
-> > > > > > > > Steps reproduce by using kselftests,
-> > > > > > > >
-> > > > > > > >           - lsmod || true
-> > > > > > > >           - cd /opt/kselftests/default-in-kernel/lib/
-> > > > > > > >           - export PATH=/opt/kselftests/default-in-kernel/kselftest:$PATH
-> > > > > > > >           - ./printf.sh || true
-> > > > > > > >           - ./bitmap.sh || true
-> > > > > > > >           - ./prime_numbers.sh || true
-> > > > > > > >           - ./strscpy.sh || true
-> > > > > > > >
-> > > > > > > > x86_64 kernel BUG dump.
-> > > > > > > > + ./printf.sh
-> > > > > >
-> > > > > > Oops, I am wondering if I broke this with my change "Revert "software
-> > > > > > node: Simplify software_node_release() function"":
-> > > > > >
-> > > > > > https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=d1c19322388d6935b534b494a2c223dd089e30dd
-> > > > > >
-> > > > > > I am still investigating, will update later.
-> > > > >
-> > > > > Okay, yeah, I am pretty sure I caused the breakage. I got an email
-> > > > > from kernel test robot a couple days ago that I didn't see:
-> > > > >
-> > > > > https://lists.01.org/hyperkitty/list/lkp@lists.01.org/thread/N3ZN5XH7HK24JVEJ5WSQD2SK6YCDRILR/
-> > > > >
-> > > > > It shows the same breakage after applying this change.
-> > > > >
-> > > > > I am still investigating how my change broke it, nevertheless.
-> > > >
-> > > > As nodes in the tree are being removed, the code before the patch that
-> > > > "simplified" the software_node_release() function accessed the node's parent
-> > > > in its release function.
-> > > >
-> > > > And if CONFIG_DEBUG_KOBJECT_RELEASE is defined, the release functions are no
-> > > > longer necessarily called in order, leading to referencing released memory.
-> > > > Oops!
-> > > >
-> > > > So Heikki's patch actually fixed a bug. :-)
-> > >
-> > > Well, I think it just hid the problem. It looks like the core
-> > > (lib/kobject.c) allows the parent kobject to be released before the
-> > > last child kobject is released. To be honest, that does not sound
-> > > right to me...
-> > >
-> > > I think we can workaround this problem by taking reference to the
-> > > parent when the child is added, and then releasing it when the child
-> > > is released, and in that way be guaranteed that the parent will not
-> > > disappear before the child is fully released, but that still does not
-> > > feel right. It feels more like the core is not doing it's job to me.
-> > > The parent just should not be released before its children.
-> > >
-> > > Either I'm wrong about that, and we still should take the reference on
-> > > the parent, or we revert my patch like Brendan proposed and then fix
-> >
-> > Either way, isn't it wrong to release the node ID before deleting the
-> > sysfs entry? I am not sure that my fix was the correct one, but I
-> > believe the bug that Heidi and I found is actually a bug.
-
-I agree.
-
-> > > the core with something like this (warning, I did not even try to
-> > > compile that):
-> >
-> > I will try it out.
-> >
-> > > diff --git a/lib/kobject.c b/lib/kobject.c
-> > > index 83198cb37d8d..ec5774992337 100644
-> > > --- a/lib/kobject.c
-> > > +++ b/lib/kobject.c
-> > > @@ -680,6 +680,12 @@ static void kobject_cleanup(struct kobject *kobj)
-> > >                 kobject_uevent(kobj, KOBJ_REMOVE);
-> > >         }
-> > >
-> > > +       if (t && t->release) {
-> > > +               pr_debug("kobject: '%s' (%p): calling ktype release\n",
-> > > +                        kobject_name(kobj), kobj);
-> > > +               t->release(kobj);
-> > > +       }
-> > > +
-> > >         /* remove from sysfs if the caller did not do it */
-> > >         if (kobj->state_in_sysfs) {
-> > >                 pr_debug("kobject: '%s' (%p): auto cleanup kobject_del\n",
-> > > @@ -687,12 +693,6 @@ static void kobject_cleanup(struct kobject *kobj)
-> > >                 kobject_del(kobj);
-> > >         }
-> > >
-> > > -       if (t && t->release) {
-> > > -               pr_debug("kobject: '%s' (%p): calling ktype release\n",
-> > > -                        kobject_name(kobj), kobj);
-> > > -               t->release(kobj);
-> > > -       }
-> > > -
-> > >         /* free name if we allocated it */
-> > >         if (name) {
-> > >                 pr_debug("kobject: '%s': free name\n", name);
+On Tue, Mar 10, 2020 at 12:12:50PM +0100, David Hildenbrand wrote:
+> >>  static void virtio_balloon_unregister_shrinker(struct virtio_balloon *vb)
+> >> @@ -971,7 +950,22 @@ static int virtballoon_probe(struct virtio_device *vdev)
+> >>  						  VIRTIO_BALLOON_CMD_ID_STOP);
+> >>  		spin_lock_init(&vb->free_page_list_lock);
+> >>  		INIT_LIST_HEAD(&vb->free_page_list);
+> >> +		/*
+> >> +		 * We're allowed to reuse any free pages, even if they are
+> >> +		 * still to be processed by the host.
+> >> +		 */
+> >> +		err = virtio_balloon_register_shrinker(vb);
+> >> +		if (err)
+> >> +			goto out_del_balloon_wq;
+> >>  	}
+> >> +	if (virtio_has_feature(vdev, VIRTIO_BALLOON_F_DEFLATE_ON_OOM)) {
+> >> +		vb->oom_nb.notifier_call = virtio_balloon_oom_notify;
+> >> +		vb->oom_nb.priority = VIRTIO_BALLOON_OOM_NOTIFY_PRIORITY;
+> >> +		err = register_oom_notifier(&vb->oom_nb);
+> >> +		if (err < 0)
+> >> +			goto out_unregister_shrinker;
+> >> +	}
+> >> +
+> > 
+> > 
+> > Let's decide whether we want an empty line after }, or not, and stick to
+> > it. I prefer an empty line but no biggie as long as we are consistent.
 > 
-> Alright, so I tried it and it looks like Heikki's suggestion worked.
+> Can add one.
 > 
-> Is everyone comfortable going this route?
+> > 
+> >>  	if (virtio_has_feature(vdev, VIRTIO_BALLOON_F_PAGE_POISON)) {
+> >>  		/* Start with poison val of 0 representing general init */
+> >>  		__u32 poison_val = 0;
+> >> @@ -986,15 +980,6 @@ static int virtballoon_probe(struct virtio_device *vdev)
+> >>  		virtio_cwrite(vb->vdev, struct virtio_balloon_config,
+> >>  			      poison_val, &poison_val);
+> >>  	}
+> >> -	/*
+> >> -	 * We continue to use VIRTIO_BALLOON_F_DEFLATE_ON_OOM to decide if a
+> >> -	 * shrinker needs to be registered to relieve memory pressure.
+> >> -	 */
+> >> -	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_DEFLATE_ON_OOM)) {
+> >> -		err = virtio_balloon_register_shrinker(vb);
+> >> -		if (err)
+> >> -			goto out_del_balloon_wq;
+> >> -	}
+> >>  
+> >>  	vb->pr_dev_info.report = virtballoon_free_page_report;
+> >>  	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_REPORTING)) {
+> >> @@ -1003,12 +988,12 @@ static int virtballoon_probe(struct virtio_device *vdev)
+> >>  		capacity = virtqueue_get_vring_size(vb->reporting_vq);
+> >>  		if (capacity < PAGE_REPORTING_CAPACITY) {
+> >>  			err = -ENOSPC;
+> >> -			goto out_unregister_shrinker;
+> >> +			goto out_unregister_oom;
+> >>  		}
+> >>  
+> >>  		err = page_reporting_register(&vb->pr_dev_info);
+> >>  		if (err)
+> >> -			goto out_unregister_shrinker;
+> >> +			goto out_unregister_oom;
+> >>  	}
+> >>  
+> >>  	virtio_device_ready(vdev);
+> >> @@ -1017,8 +1002,11 @@ static int virtballoon_probe(struct virtio_device *vdev)
+> >>  		virtballoon_changed(vdev);
+> >>  	return 0;
+> >>  
+> >> +out_unregister_oom:
+> >> +	if (virtio_has_feature(vdev, VIRTIO_BALLOON_F_DEFLATE_ON_OOM))
+> >> +		unregister_oom_notifier(&vb->oom_nb);
+> >>  out_unregister_shrinker:
+> >> -	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_DEFLATE_ON_OOM))
+> >> +	if (virtio_has_feature(vdev, VIRTIO_BALLOON_F_FREE_PAGE_HINT))
+> >>  		virtio_balloon_unregister_shrinker(vb);
+> > 
+> > 
+> > What's with vdev versus vb->vdev here?
+> > I suggest we keep using vb->vdev to make the patch minimal if we can.
+> > Same elsewhere.
+> 
+> As we touch this line either way, does it really make a difference? No
+> strong opinion. Can just do a vb->vdev and clean this up globally later.
+> 
 
-Hold on. Another way to fix the problem is to increment the parent's
-reference count before that kobject_del(kobj) is called, and then
-decrementing it after t->release(kobj) is called. It may be safer to
-fix the problem like that.
+Let's just be consistent. I guess that means keep using vb->vdev
+everywhere.
 
-My example above proofs that there is the problem, but it changes the
-order of execution which I think can always have other consequences.
+> -- 
+> Thanks,
+> 
+> David / dhildenb
 
-> Also, should I send this fix as a separate patch? Or do people want me
-> to send an updated revision of my revert patch with the fix?
-
-This needs to be send in its own separate patch. Ideally it could be
-send together with the revert in the same series, but I'm not sure
-that's possible anymore. Didn't Greg pick the revert already?
-
-
-thanks,
-
--- 
-heikki
