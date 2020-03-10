@@ -2,131 +2,120 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E2F6C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 21:39:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA3A3C18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 21:39:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4874F222C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 21:39:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B729922522
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 21:39:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qow1Yly0"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="B4tbgodb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727617AbgCJVjh (ORCPT
+        id S1727662AbgCJVjw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 17:39:37 -0400
-Received: from mail-ua1-f65.google.com ([209.85.222.65]:44800 "EHLO
-        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726604AbgCJVjg (ORCPT
+        Tue, 10 Mar 2020 17:39:52 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:36961 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726463AbgCJVjw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 17:39:36 -0400
-Received: by mail-ua1-f65.google.com with SMTP id a33so5253990uad.11
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 14:39:35 -0700 (PDT)
+        Tue, 10 Mar 2020 17:39:52 -0400
+Received: by mail-pf1-f195.google.com with SMTP id p14so89436pfn.4
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 14:39:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GdlXGBu011eILr6E7BKeOR6UiLq6Vdo/qhWhU5E0PbY=;
-        b=qow1Yly0Eo6wNCVCAXCutaqv7CgN7WaQcfi68e6dnzv9swNvIzu6OER4ZCvTlqsND0
-         v/wSUS0v8kJvwGnHBDvYrjU3aL1TVqj1p8lgA60b+qp0HENgTLb+f9Kd0py+Z1tnFnPu
-         4oj7QZuEgxniGPxwYyBRmG/Asfmc41HbYw9i+H5IuuLAVAcNxQN0lZE/LiC3uw6+w6SC
-         VytsXj/SMfOm5I3i8dxSxO3ukRTE9VzrnqduCBzKbYwFatcJezX15OG0D0I5/L6bBnoO
-         uaRDM/xM6Y1p1fLIouawRKNZadIjdXjfmkxW2UYmlOg5Y7++zGD7F/xYSx+5wsKlVUUr
-         GiFw==
+        h=date:from:to:cc:subject:message-id:user-agent:mime-version;
+        bh=vzwzOrISC8AE6Ft8LM/EkNEsA5EmXRG9n4oBptOAC84=;
+        b=B4tbgodbmpEw4if6P+g89G1vo8NtdE1LRRFqpf4jl226jISTdzX3Svw0VVSLA8/+Yg
+         96cjfZK1I4vhnM3JeLPXB2NI3BtHwOeLYDHQbUmHnxTpr7mzT+95ABi/GxT+ZmxZBeLj
+         AUeNP7/DQI0guHcsT+BsZhVY9jHenjA83RyswSovB48KEssZCLYOSKWj2qRSPj48Nacl
+         20WfGk9h2ZhBNGF46yFx41faRs5sJYvjhncO3iWFkT6CEDMvHSbs4+tf24mPECaLHe0d
+         EUKR1BUR9PIQOobfSAjqPIDG5pAvv5b1LCEsBvQ+oR9V52FJHWBZa6wWOvwwW+jT4UoP
+         N0Mg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GdlXGBu011eILr6E7BKeOR6UiLq6Vdo/qhWhU5E0PbY=;
-        b=lZL6xz/UrJC7cRjkqcyxG2K3GgC/K2bFoo2RI3Ofi3+YREVFEqGfHiwGsLqB5BRhcQ
-         o2oz9HZ6yPvxyuyMhYsYLvNGsCVHEUy2dK7y7hLpXfGWfhziR+az0YoyZGUshRM8HKqt
-         gSo21umMtxr75E7W2JiDgm6koEH5sU6eiAPIEIp6/HGtvc8f3KhUwcp+grAv48gEBchP
-         l2sYrPenQEmaLYQHGE74GAYq2cJ4QW5vIgMI7/A2Bh9o2+H4CFfbBUhoYct8+6gG1g/D
-         2JcHc3VcvWUuVvjPwYRyHK8+XG8tnRhpF9uQznHEX5m7uWvALJ0mvvo5p9MubwGXjYQg
-         sWZg==
-X-Gm-Message-State: ANhLgQ0mh/xgybNcGsiBqOOJcVaP32+oDYwAty1696G/ngjxNxK2BoNs
-        qbWCXn5CjnL7RZjt/1JkCl2ow2QWM6as9jBW8wDAAg==
-X-Google-Smtp-Source: ADFU+vvrCP8710FwovNQiq3TRDaasFyzXucpbPikePRLc6w5tbh734JpqREX6WUJxdQfuVbpX+V0ftICxermILFQWdA=
-X-Received: by 2002:ab0:2851:: with SMTP id c17mr13587156uaq.63.1583876374973;
- Tue, 10 Mar 2020 14:39:34 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:user-agent
+         :mime-version;
+        bh=vzwzOrISC8AE6Ft8LM/EkNEsA5EmXRG9n4oBptOAC84=;
+        b=Y5tPRiK6IQYmXVMGQzpMlRlgYjMgmJmNjMiI9+ZltQeY1ElsjlRX56KEuCM/7d/4r7
+         3Mcc+HmwQCSPYBNH960uJbtgTXUxQV3cb6ZtJM/m0I9PsWMC0scAyyZB6cJdTDGvBZJK
+         cNISIacZLTETksOwgKv9KgthOsEHMj2V7nhT92GQ9M/CJOvaEX7/wNUnpQCLq2MIRUNO
+         UhtiGMEeIz9iUn0ue/v/ZKQPSCinLUnt1h6rmsZfc/XX/KuRbViZ+vCBAt2tOznJ+CM3
+         /E5HBSVeCnBOdh6YAcKql0NYno4fgyt+7yLl8uW1t8iPdtynZsW4/F6SENX+6hxOdLHu
+         M7cQ==
+X-Gm-Message-State: ANhLgQ3KwtRZRMXBhIDv07mgFScf8Iz8wR09w3xKCerm3kM5mxxf8ohl
+        7wLJAY8I7O+t3C8o7QbNzmx1cg==
+X-Google-Smtp-Source: ADFU+vuI2NxooomqK+7EhwkWpuecOjCyFtdWZeLBT5Dysz/5KuClAiEyVeMPqCHMFXTtTucpEYxUSQ==
+X-Received: by 2002:a65:5b49:: with SMTP id y9mr22608048pgr.153.1583876389690;
+        Tue, 10 Mar 2020 14:39:49 -0700 (PDT)
+Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
+        by smtp.gmail.com with ESMTPSA id m26sm2252920pgc.77.2020.03.10.14.39.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Mar 2020 14:39:49 -0700 (PDT)
+Date:   Tue, 10 Mar 2020 14:39:48 -0700 (PDT)
+From:   David Rientjes <rientjes@google.com>
+X-X-Sender: rientjes@chino.kir.corp.google.com
+To:     Andrew Morton <akpm@linux-foundation.org>
+cc:     Vlastimil Babka <vbabka@suse.cz>, Michal Hocko <mhocko@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: [patch] mm, oom: prevent soft lockup on memcg oom for UP systems
+Message-ID: <alpine.DEB.2.21.2003101438510.161160@chino.kir.corp.google.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-References: <20200310185003.57344-1-irogers@google.com> <20200310195915.GA1676879@tassilo.jf.intel.com>
-In-Reply-To: <20200310195915.GA1676879@tassilo.jf.intel.com>
-From:   Stephane Eranian <eranian@google.com>
-Date:   Tue, 10 Mar 2020 14:39:23 -0700
-Message-ID: <CABPqkBRQo=bEOiCFGFjwcM8TZaXMFyaL7o1hcFd6Bc3w+LhJQA@mail.gmail.com>
-Subject: Re: [PATCH] perf tools: add support for lipfm4
-To:     Andi Kleen <ak@linux.intel.com>
-Cc:     Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Igor Lubashev <ilubashe@akamai.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Jiwei Sun <jiwei.sun@windriver.com>,
-        yuzhoujian <yuzhoujian@didichuxing.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        John Garry <john.garry@huawei.com>,
-        LKML <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 10, 2020 at 12:59 PM Andi Kleen <ak@linux.intel.com> wrote:
->
-> On Tue, Mar 10, 2020 at 11:50:03AM -0700, Ian Rogers wrote:
-> > This patch links perf with the libpfm4 library.
-> > This library contains all the hardware event tables for all
-> > processors supported by perf_events. This is a helper library
-> > that help convert from a symbolic event name to the event
-> > encoding required by the underlying kernel interface. This
-> > library is open-source and available from: http://perfmon2.sf.net.
->
-> For most CPUs the builtin perf JSON event support should make
-> this redundant.
->
-We decided to post this patch to propose an alternative to the JSON
-file approach. It could be an option during the build.
-The libpfm4 library has been around for 15 years now. Therefore, it
-supports a lot of processors core and uncore and it  is very portable.
-The key value add I see is that this is a library that can be, and has
-been, used by tool developers directly in their apps. It can
-work with more than Linux perf_events interface. It is not tied to the
-interface. It has well defined and documented entry points.
-We do use libpfm4 extensively at Google in both the perf tool and
-applications. The PAPI toolkit also relies on this library.
+When a process is oom killed as a result of memcg limits and the victim
+is waiting to exit, nothing ends up actually yielding the processor back
+to the victim on UP systems with preemption disabled.  Instead, the
+charging process simply loops in memcg reclaim and eventually soft
+lockups.
 
-I don't see this as competing with the JSON approach. It is just an
-option I'd like to offer to users especially those familiar
-with it in their apps.
+Memory cgroup out of memory: Killed process 808 (repro) total-vm:41944kB, anon-rss:35344kB, file-rss:504kB, shmem-rss:0kB, UID:0 pgtables:108kB oom_score_adj:0
+watchdog: BUG: soft lockup - CPU#0 stuck for 23s! [repro:806]
+CPU: 0 PID: 806 Comm: repro Not tainted 5.6.0-rc5+ #136
+RIP: 0010:shrink_lruvec+0x4e9/0xa40
+...
+Call Trace:
+ shrink_node+0x40d/0x7d0
+ do_try_to_free_pages+0x13f/0x470
+ try_to_free_mem_cgroup_pages+0x16d/0x230
+ try_charge+0x247/0xac0
+ mem_cgroup_try_charge+0x10a/0x220
+ mem_cgroup_try_charge_delay+0x1e/0x40
+ handle_mm_fault+0xdf2/0x15f0
+ do_user_addr_fault+0x21f/0x420
+ page_fault+0x2f/0x40
 
-> Perhaps you could list what CPUs it actually supports over
-> the existing JSON tables.
->
-> If it's only a few it would be likely better to add
-> appropiate json files.
->
-> If it's a massive number it might be useful, although
-> JSON support would be better for those too.
->
-> -Andi
+Make sure that something ends up actually yielding the processor back to
+the victim to allow for memory freeing.  Most appropriate place appears to
+be shrink_node_memcgs() where the iteration of all decendant memcgs could
+be particularly lengthy.
+
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: stable@vger.kernel.org
+Signed-off-by: David Rientjes <rientjes@google.com>
+---
+ mm/vmscan.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -2637,6 +2637,8 @@ static void shrink_node_memcgs(pg_data_t *pgdat, struct scan_control *sc)
+ 		unsigned long reclaimed;
+ 		unsigned long scanned;
+ 
++		cond_resched();
++
+ 		switch (mem_cgroup_protected(target_memcg, memcg)) {
+ 		case MEMCG_PROT_MIN:
+ 			/*
