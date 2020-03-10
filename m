@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C8D2C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:44:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB58AC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:44:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C4CB246AA
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:44:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A778D246A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:44:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583844252;
-	bh=k/1DM/98TU/ijAoGfLniJako7x1XJ5bDAuIAfvSeJbc=;
+	s=default; t=1583844256;
+	bh=bulQOK/My/jMPNZAniR85hY3Af0spvx6/wgGchrJY7w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nem6GwqbEMOtRPaYLWTGse8oInoecJxJ5UVRf/6oLFy8+w8gop4dyj9FWXtUnkkNW
-	 uhOItMwsJYABM0EbqcioG3HBXNczVL+A0oQ58M7Fdk+29fiVgroZCKkxgt68GuoT9f
-	 rAsgbGWwW1Dv89lGnYUOY3X3XVBKLQGMw68UtE84=
+	b=Muqd6XlhkuaxSmKJDRVSiS9SH5tp7jPD7bzFzqWpyeQlPOh4QkGvCMiOxqR5XcVZI
+	 qNmyiwaZlKNK/RoPyMfQOO36r/6LVDW5SeGasebD2Nl+v7NeDzCWPu9OiOhpogWBMZ
+	 xxthiLaEDV4dJ312Raw7d3zd8BP4KTpZuEYZj4+A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726674AbgCJMoK (ORCPT
+        id S1727386AbgCJMoP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:44:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45268 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:44:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45966 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727018AbgCJMoG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:44:06 -0400
+        id S1727700AbgCJMoJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:44:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6DBE6246D8;
-        Tue, 10 Mar 2020 12:44:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD841246EB;
+        Tue, 10 Mar 2020 12:44:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844245;
-        bh=k/1DM/98TU/ijAoGfLniJako7x1XJ5bDAuIAfvSeJbc=;
+        s=default; t=1583844249;
+        bh=bulQOK/My/jMPNZAniR85hY3Af0spvx6/wgGchrJY7w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vvoBwX7XDNwUK1q8Lh3grbfngjRkO1va8VdQzFUIbf9Ng25qlFqCZrSxYnsau+HiX
-         /qkCll/+GciWB2S5oh87iPlwme/pn2/0+dRvzkvJs4uMQGOPTSrjPdDNXbVVSd+7sL
-         vYF8HhNoel+FAlCh69wsPoGF/Z6jyiJODCo6kV8A=
+        b=H8/7iFpBKLEeVgltgbr6Nh5+0rUbULn3C88H+ZNBK5LQ0Ryc5rUEisMm1Cx1JmYdQ
+         bqgEv5x/oav5vjEoiuQlodSsKRVitx+7Xuto1VWRtzB8p1fq7y89nsnFlt4JuCTEBZ
+         lw1+eTHeOh72Dx/ZFLkuJEgJhCFc/lMSiqMPpBqM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Sameeh Jubran <sameehj@amazon.com>,
-        Arthur Kiyanovski <akiyano@amazon.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 12/88] net: ena: fix incorrect default RSS key
-Date:   Tue, 10 Mar 2020 13:38:20 +0100
-Message-Id: <20200310123609.368720060@linuxfoundation.org>
+Subject: [PATCH 4.9 13/88] net: ena: rss: fix failure to get indirection table
+Date:   Tue, 10 Mar 2020 13:38:21 +0100
+Message-Id: <20200310123609.580032129@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123606.543939933@linuxfoundation.org>
 References: <20200310123606.543939933@linuxfoundation.org>
@@ -61,81 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arthur Kiyanovski <akiyano@amazon.com>
+From: Sameeh Jubran <sameehj@amazon.com>
 
-[ Upstream commit 0d1c3de7b8c78a5e44b74b62ede4a63629f5d811 ]
+[ Upstream commit 0c8923c0a64fb5d14bebb9a9065d2dc25ac5e600 ]
 
-Bug description:
-When running "ethtool -x <if_name>" the key shows up as all zeros.
+On old hardware, getting / setting the hash function is not supported while
+gettting / setting the indirection table is.
 
-When we use "ethtool -X <if_name> hfunc toeplitz hkey <some:random:key>" to
-set the key and then try to retrieve it using "ethtool -x <if_name>" then
-we return the correct key because we return the one we saved.
-
-Bug cause:
-We don't fetch the key from the device but instead return the key
-that we have saved internally which is by default set to zero upon
-allocation.
-
-Fix:
-This commit fixes the issue by initializing the key to a random value
-using netdev_rss_key_fill().
+This commit enables us to still show the indirection table on older
+hardwares by setting the hash function and key to NULL.
 
 Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
 Signed-off-by: Sameeh Jubran <sameehj@amazon.com>
-Signed-off-by: Arthur Kiyanovski <akiyano@amazon.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/amazon/ena/ena_com.c | 15 +++++++++++++++
- drivers/net/ethernet/amazon/ena/ena_com.h |  1 +
- 2 files changed, 16 insertions(+)
+ drivers/net/ethernet/amazon/ena/ena_ethtool.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/drivers/net/ethernet/amazon/ena/ena_com.c b/drivers/net/ethernet/amazon/ena/ena_com.c
-index f09b7887039a2..be8a2d48c98f2 100644
---- a/drivers/net/ethernet/amazon/ena/ena_com.c
-+++ b/drivers/net/ethernet/amazon/ena/ena_com.c
-@@ -839,6 +839,19 @@ static int ena_com_get_feature(struct ena_com_dev *ena_dev,
- 				      0);
- }
+diff --git a/drivers/net/ethernet/amazon/ena/ena_ethtool.c b/drivers/net/ethernet/amazon/ena/ena_ethtool.c
+index d85fe0de28dba..8c44ac7232ba2 100644
+--- a/drivers/net/ethernet/amazon/ena/ena_ethtool.c
++++ b/drivers/net/ethernet/amazon/ena/ena_ethtool.c
+@@ -663,7 +663,21 @@ static int ena_get_rxfh(struct net_device *netdev, u32 *indir, u8 *key,
+ 	if (rc)
+ 		return rc;
  
-+static void ena_com_hash_key_fill_default_key(struct ena_com_dev *ena_dev)
-+{
-+	struct ena_admin_feature_rss_flow_hash_control *hash_key =
-+		(ena_dev->rss).hash_key;
-+
-+	netdev_rss_key_fill(&hash_key->key, sizeof(hash_key->key));
-+	/* The key is stored in the device in u32 array
-+	 * as well as the API requires the key to be passed in this
-+	 * format. Thus the size of our array should be divided by 4
++	/* We call this function in order to check if the device
++	 * supports getting/setting the hash function.
 +	 */
-+	hash_key->keys_num = sizeof(hash_key->key) / sizeof(u32);
-+}
+ 	rc = ena_com_get_hash_function(adapter->ena_dev, &ena_func, key);
 +
- static int ena_com_hash_key_allocate(struct ena_com_dev *ena_dev)
- {
- 	struct ena_rss *rss = &ena_dev->rss;
-@@ -2367,6 +2380,8 @@ int ena_com_rss_init(struct ena_com_dev *ena_dev, u16 indr_tbl_log_size)
- 	if (unlikely(rc))
- 		goto err_hash_key;
- 
-+	ena_com_hash_key_fill_default_key(ena_dev);
++	if (rc) {
++		if (rc == -EOPNOTSUPP) {
++			key = NULL;
++			hfunc = NULL;
++			rc = 0;
++		}
 +
- 	rc = ena_com_hash_ctrl_init(ena_dev);
- 	if (unlikely(rc))
- 		goto err_hash_ctrl;
-diff --git a/drivers/net/ethernet/amazon/ena/ena_com.h b/drivers/net/ethernet/amazon/ena/ena_com.h
-index 509d7b8e15ab9..628bf7a8fc0cb 100644
---- a/drivers/net/ethernet/amazon/ena/ena_com.h
-+++ b/drivers/net/ethernet/amazon/ena/ena_com.h
-@@ -41,6 +41,7 @@
- #include <linux/spinlock.h>
- #include <linux/types.h>
- #include <linux/wait.h>
-+#include <linux/netdevice.h>
++		return rc;
++	}
++
+ 	if (rc)
+ 		return rc;
  
- #include "ena_common_defs.h"
- #include "ena_admin_defs.h"
 -- 
 2.20.1
 
