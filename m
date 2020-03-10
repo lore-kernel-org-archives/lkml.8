@@ -2,185 +2,121 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 696B6C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 14:07:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91361C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 14:09:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BCCF2464B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 14:07:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A73A2464B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 14:09:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=metafoo.de header.i=@metafoo.de header.b="Cb7t7IdT"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HheXlu1S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727080AbgCJOHJ (ORCPT
+        id S1726512AbgCJOJ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 10:07:09 -0400
-Received: from www381.your-server.de ([78.46.137.84]:52632 "EHLO
-        www381.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726451AbgCJOHI (ORCPT
+        Tue, 10 Mar 2020 10:09:29 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:49623 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726380AbgCJOJ2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 10:07:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=metafoo.de;
-         s=default2002; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-        MIME-Version:Date:Message-ID:References:Cc:To:From:Subject:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=B60gRpqWPVR4hCYQQG/uqrF5IwKTwlRjU/7e6kB2EUo=; b=Cb7t7IdT7RRXm/vhh7M/whNk0X
-        9K4b3XqDP4Dg0Gey1TgvKKXa9BKrnMRTFE/FfemQ4EkeVpprOy1QWn+OOVp2gXX28BA4scZGld0pY
-        ++5towU/ebfm8SCFA33dULh74GctLAo7pxgfRu/AcKNLWy0T1qxBRmYHKi6LBeZeSYKfFDaAERIUO
-        BZ9YwutkBgTEkhDVg4/gUeA82L7fE5EWB0zu5xFzr5qlCtJ+Vrr4LS/l79q5fT7Dxnjh2JmULZWcG
-        rzojE2YZUb7jMbEcKpzWs5YJS5x8QSVnIjlGLjZu9NTGheufzXQgRCrDu/H1bMT6Aof6F4hdUnlJj
-        uPje/BSg==;
-Received: from sslproxy02.your-server.de ([78.47.166.47])
-        by www381.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <lars@metafoo.de>)
-        id 1jBfXG-0002h1-9V; Tue, 10 Mar 2020 15:07:06 +0100
-Received: from [93.104.100.58] (helo=[192.168.178.20])
-        by sslproxy02.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <lars@metafoo.de>)
-        id 1jBfXF-000PYM-Vc; Tue, 10 Mar 2020 15:07:06 +0100
-Subject: Re: [PATCH][RESEND] usb: dwc3: gadget: Handle dequeuing of non queued
- URB gracefully
-From:   Lars-Peter Clausen <lars@metafoo.de>
-To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "balbi@kernel.org" <balbi@kernel.org>
-Cc:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "bigeasy@linutronix.de" <bigeasy@linutronix.de>,
-        "m.olbrich@pengutronix.de" <m.olbrich@pengutronix.de>
-References: <20191106144553.16956-1-alexandru.ardelean@analog.com>
- <20200116132459.22383-1-alexandru.ardelean@analog.com>
- <87d0b1885e.fsf@kernel.org>
- <5313c926109f39699e63342b4ff71102d3cfa495.camel@analog.com>
- <1df6e9be-2233-a0b2-1ddc-76de9d62a397@metafoo.de>
-Message-ID: <dc52d6a0-12ed-a34c-01c4-0fc5ccbf7b1d@metafoo.de>
-Date:   Tue, 10 Mar 2020 15:07:05 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 10 Mar 2020 10:09:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583849367;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=byWQY42UbKEvCBp8MZXn5MOeNLyHCCWS7iASAAIHrRc=;
+        b=HheXlu1SVyi3nfmcJWM7USg9CMbR7wXPqNuSBv+Jsm0QeZNoVLyjYWyhfca4yI39Qr2OCY
+        nsRWLKsYAD009t2bClX0PKQjlTTq3Xlt8kK9iPMmHBAUR3XLhdB+2/wWzdCcU33Ja25GWl
+        fbuaYPnHe7zYGZdrserRPrcLBlnicNg=
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
+ [209.85.160.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-454-lfW40ij5PLuqsiI-hXSeAw-1; Tue, 10 Mar 2020 10:09:26 -0400
+X-MC-Unique: lfW40ij5PLuqsiI-hXSeAw-1
+Received: by mail-qt1-f199.google.com with SMTP id n4so9228940qtv.5
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 07:09:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=byWQY42UbKEvCBp8MZXn5MOeNLyHCCWS7iASAAIHrRc=;
+        b=XC2RqXYJbeiIudSqjqndwmkmIg5P2AXkTZs7GYfE7TjQSxUlBYE14JO/OKgi4INHLh
+         kiX0FB9lDZESep1h16bSE2lBosLOEI/br0qetUshof4hG0wRkYaOAHEYOC+sSSyRsc2/
+         txE6WmDzGsS5XT2CmmIjpbulr0afV/t4XIkt5/f1e8ET4+aavoDjRiIk5Uo6x5iRYAwH
+         OBp2f46dhOHm/YVbuy+0ExPKBrPTS70sl8UpeDqMyqKzAw/86WP197fj1El7mgL1aItt
+         6pR6gJJaR7LOcpEeHGehQnf0kICY8xKG93XVpdL4s+VjyHa7SSRt8WPPpPNtWk+Rwk6y
+         qlqQ==
+X-Gm-Message-State: ANhLgQ28ntu0NAexC2ZTqD4v0d7vXL6RUE7ggo34cs/mw4fYvwmW+8xr
+        wm/ROV16vutswvVHGfRiCKoa+y99m9fVSRSPgHwvE6Y7uc5F9diW4b/PJPJXwRYnJS1vOEWCJRH
+        QbuCMz24NNIAzRr5hwgmuX6Tm
+X-Received: by 2002:a05:6214:1749:: with SMTP id dc9mr19418536qvb.236.1583849365643;
+        Tue, 10 Mar 2020 07:09:25 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vuselEllZdFmXTm+ij76DcuB/hAvX4mBLfQIVzSXmReeE0fULDXOqySrnGv9L/lJyNuHicsAw==
+X-Received: by 2002:a05:6214:1749:: with SMTP id dc9mr19418482qvb.236.1583849365206;
+        Tue, 10 Mar 2020 07:09:25 -0700 (PDT)
+Received: from xz-x1 ([2607:9880:19c0:32::2])
+        by smtp.gmail.com with ESMTPSA id k25sm361047qtm.94.2020.03.10.07.09.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Mar 2020 07:09:24 -0700 (PDT)
+Date:   Tue, 10 Mar 2020 10:09:21 -0400
+From:   Peter Xu <peterx@redhat.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     kbuild test robot <lkp@intel.com>, kbuild-all@lists.01.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Yan Zhao <yan.y.zhao@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Christophe de Dinechin <dinechin@redhat.com>,
+        Lei Cao <lei.cao@stratus.com>
+Subject: Re: [PATCH v5 05/14] KVM: X86: Implement ring-based dirty memory
+ tracking
+Message-ID: <20200310140921.GD326977@xz-x1>
+References: <20200304174947.69595-6-peterx@redhat.com>
+ <202003061911.MfG74mgX%lkp@intel.com>
+ <20200309213554.GF4206@xz-x1>
+ <20200310022931-mutt-send-email-mst@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <1df6e9be-2233-a0b2-1ddc-76de9d62a397@metafoo.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Authenticated-Sender: lars@metafoo.de
-X-Virus-Scanned: Clear (ClamAV 0.102.2/25747/Tue Mar 10 12:06:29 2020)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200310022931-mutt-send-email-mst@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/10/20 2:45 PM, Lars-Peter Clausen wrote:
-> On 3/10/20 2:22 PM, Ardelean, Alexandru wrote:
->> On Thu, 2020-01-30 at 14:02 +0200, Felipe Balbi wrote:
->>> [External]
->>>
->>>
->>> Hi,
->>>
->>> Alexandru Ardelean <alexandru.ardelean@analog.com> writes:
->>>
->>>> From: Lars-Peter Clausen <lars@metafoo.de>
->>>>
->>>> Trying to dequeue and URB that is currently not queued should be a 
->>>> no-op
->>>> and be handled gracefully.
->>>>
->>>> Use the list field of the URB to indicate whether it is queued or 
->>>> not by
->>>> setting it to the empty list when it is not queued.
->>>>
->>>> Handling this gracefully allows for race condition free synchronization
->>>> between the complete callback being called to to a completed 
->>>> transfer and
->>>> trying to call usb_ep_dequeue() at the same time.
->>> We need a little more information here. Can you further explain what
->>> happens and how you caught this?
->> Apologies for the delay [of this reply].
->> It's been a while since this patch was created, and it was on a 4.14 
->> kernel.
->> Lars was trying to fix various crashes with USB DWC3 OTG + some Xilinx 
->> patches.
->> I did not track the status of the OTG stuff upstream. I think it's a 
->> lot of
->> patches in the Xilinx tree.
->>
->> The context has changed from 4.14 [obviously], and there were many 
->> things that
->> could have influenced things.
->> I've been trying to RFC some of these patches now.
->> [ yeah I know: maybe I should have [probably] also added an RFC tag :) ]
->> Some of the patches [including this one] seemed to make sense, even 
->> outside of
->> the context of the crashes that were happening on 4.14.
->> Atm, we're at 4.19 and we don't see issues, but we still have this patch.
->> We may drop it and see what happens.
->> ¯\_(ツ)_/¯
->>
->> But in any case, it does require a bit more re-investigation.
->> Apologies for the noise that this patch created :)
+On Tue, Mar 10, 2020 at 02:31:55AM -0400, Michael S. Tsirkin wrote:
+> On Mon, Mar 09, 2020 at 05:35:54PM -0400, Peter Xu wrote:
+> > I'll probably also
+> > move KVM_DIRTY_LOG_PAGE_OFFSET==0 definition to uapi/linux/kvm.h.
 > 
-> The race condition is between a gadget calling usb_ep_dequeue() and the 
-> driver completing the URB.
 > 
-> Lets say in a thread you have a reference to a in-flight URB and you 
-> want to abort the request, e.g. because the application that sent the 
-> request has been closed. But concurrently to that the URB is completed 
-> by the hardware and the interrupt fires and marks the URB as complete. 
-> Your thread is suspended while the interrupt is running, once the 
-> interrupt has finished the thread wakes up, still has the reference to 
-> the URB, but now it has been completed. The thread still calls 
-> usb_ep_dequeue() though and then undefined behavior occurs.
-> 
+> IMHO KVM_DIRTY_LOG_PAGE_OFFSET is kind of pointless anyway - 
+> we won't be able to move data around just by changing the
+> uapi value since userspace isn't
+> recompiled when kernel changes ...
 
-Sorry, one quick correction. I believe the issue actually occurs when 
-you have more than one CPU and the thread is not suspended, while the 
-interrupt is running. In this case it is possible that the IRQ fires the 
-driver marks the URB as complete, then unlocks, the driver lock and 
-calls the complete callback, but before the complete callback runs the 
-other thread calls usb_ep_dequeue(). There is no way to protect against 
-this condition at the gadget level and it needs to be handled in the driver.
+Yes I think we can even drop this KVM_DIRTY_LOG_PAGE_OFFSET==0
+definition.  IMHO it's only a matter of whether we would like to
+directly reference this value in the common code (e.g., for kernel
+virt/kvm_main.c) or we want quite a few of this instead:
 
-Basically
+#ifdef KVM_DIRTY_LOG_PAGE_OFFSET
+..
+#endif
 
-  CPU 1                         | CPU 2
---------------------------------------------------------------
-URB IRQ fires                  |                             |
-spin_lock(&dwc->lock);         |                             |
-                                |                             |
-Driver handles completed URB   |                             |
-frees resources, etc           | spin_lock(&gadget->lock)    |
-                                | usb_ep_dequeue()            |
-spin_unlock(&dwc->lock);       |                             |
-usb_gadget_giveback_request()  | spin_lock(&dwc->lock)       |
-                                |                             |
-Call compelte callback         | Try to free URB resources   |
-                                | again => Undefined behavior |
-                                |                             |
-                                | spin_lock(&dwc->lock)       |
-                                | spin_unlock(&gadget->lock)  |
-spin_lock(&gadget->lock)       |                             |
-                                |                             |
-Mark URB as compelte in gadget |                             |
-spin_unlock(&gadget->lock)     |                             |
-spin_unlock(&dwc->lock)        |                             |
-spin_lock(&dwc->lock)          |                             |
-finish IRQ                     |                             |
+I slightly prefer to not use lots of "#ifdef"s so I chose to make sure
+it's defined.  However I've no strong opinion on this either. So I'm
+open to change that if anyone insists with some reasons.
 
+Thanks,
 
-> The context in which we observed the issue is when using function fs to 
-> create a userspace gadget and using aio_cancel() to abort a pending URB. 
-> But really any gadget that aborts a transfer before it is completed or 
-> before the timeout occurred can run into this issue.
-> 
-> - Lars
-> 
-
-
-
+-- 
+Peter Xu
 
