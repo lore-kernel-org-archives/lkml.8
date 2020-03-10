@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ABA4C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:49:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 088E0C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:49:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4B752467D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:49:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C61232468E
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:49:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583844590;
-	bh=jau1VO2RurX6p/hY4tlELu2JvfoYnyg42A+M1rbMYNE=;
+	s=default; t=1583844594;
+	bh=gv6GqbAuDDbgr1R9cOCkCMZgTenrheR/uwPK7uFGFQc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EnU9VmT2WvmLw4rCc/2kWN2GjnH0WbGO+BdlO6dkt6qkCfoTjVuWzMBFLPkMbheN7
-	 CxDzCsuobH+NOdZqiHQUcXtlxTW1tg2W+FvYjOhSUPZwSwbc9sNFm13HLuLq6W31b0
-	 2nSSn1weIIFZRV9eQ2gxuvFX3dH/6uSjfmy60+4s=
+	b=iFyku0D/PO2h2N9uIB/FLpAhFo6tgqfEXLG8BHzICg9SzpRJBNkfbGRjDhwxPrpP7
+	 YPmy1rFY1el8FSusxcbNQYd96VhXzP0cwTCOF2TZE3Mbvdhjjb0cILOgI1OLgoylaT
+	 PXRoTMxIkx2QHjsmRgYTWddZhu547FP4now55QcE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728502AbgCJMtt (ORCPT
+        id S1728519AbgCJMtx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:49:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54240 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:49:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54298 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726847AbgCJMtr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:49:47 -0400
+        id S1728496AbgCJMts (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:49:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7CA5E20674;
-        Tue, 10 Mar 2020 12:49:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03CF02467D;
+        Tue, 10 Mar 2020 12:49:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844586;
-        bh=jau1VO2RurX6p/hY4tlELu2JvfoYnyg42A+M1rbMYNE=;
+        s=default; t=1583844588;
+        bh=gv6GqbAuDDbgr1R9cOCkCMZgTenrheR/uwPK7uFGFQc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JCP355UHa38jyELzg36RZcT0Ro8LnawCLcw/RPazksmmnOm5odd82Hujyyv2fCU/P
-         SXYrQd4pizp1BrPgT8JEzrJmK3DtzUYFWMdoBqYCMikJ/A/HcGkQLPOtD/ZRplkN82
-         cihtKC/U6Se6j7KANZgct/Iz0bjIKQxH2OO8QCc8=
+        b=CUT2frWF7lm9ohu/TlFYKiIoZM+s6w3Zjmh/KTur+7QLv0tFRE3SQcann7nw33H/f
+         OnxHgElTmtL9jvnWz47tSVITf8AiZ5Z8sGSH55wmEvE09F/RyhHW1fQNFm4XqU1evG
+         CM3Sf5TtaISKPQjNwXn9hwzgMLtmqijH5Z5OhJoA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Julian Wiedmann <jwi@linux.ibm.com>,
-        Alexandra Winter <wintera@linux.ibm.com>,
-        Benjamin Block <bblock@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Steffen Maier <maier@linux.ibm.com>
-Subject: [PATCH 5.4 045/168] s390/qdio: fill SL with absolute addresses
-Date:   Tue, 10 Mar 2020 13:38:11 +0100
-Message-Id: <20200310123639.918742522@linuxfoundation.org>
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Christoph Hellwig <hch@lst.de>,
+        Keith Busch <kbusch@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 046/168] nvme: Fix uninitialized-variable warning
+Date:   Tue, 10 Mar 2020 13:38:12 +0100
+Message-Id: <20200310123640.026189189@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123635.322799692@linuxfoundation.org>
 References: <20200310123635.322799692@linuxfoundation.org>
@@ -63,110 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Julian Wiedmann <jwi@linux.ibm.com>
+From: Keith Busch <kbusch@kernel.org>
 
-[ Upstream commit e9091ffd6a0aaced111b5d6ead5eaab5cd7101bc ]
+[ Upstream commit 15755854d53b4bbb0bb37a0fce66f0156cfc8a17 ]
 
-As the comment says, sl->sbal holds an absolute address. qeth currently
-solves this through wild casting, while zfcp doesn't care.
+gcc may detect a false positive on nvme using an unintialized variable
+if setting features fails. Since this is not a fast path, explicitly
+initialize this variable to suppress the warning.
 
-Handle this properly in the code that actually builds the SL.
-
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
-Reviewed-by: Alexandra Winter <wintera@linux.ibm.com>
-Reviewed-by: Steffen Maier <maier@linux.ibm.com> [for qdio]
-Reviewed-by: Benjamin Block <bblock@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Reported-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Keith Busch <kbusch@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/include/asm/qdio.h      |  2 +-
- drivers/s390/cio/qdio_setup.c     |  3 ++-
- drivers/s390/net/qeth_core_main.c | 23 +++++++++++------------
- 3 files changed, 14 insertions(+), 14 deletions(-)
+ drivers/nvme/host/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/s390/include/asm/qdio.h b/arch/s390/include/asm/qdio.h
-index e3f238e8c6116..4f35b1055f30a 100644
---- a/arch/s390/include/asm/qdio.h
-+++ b/arch/s390/include/asm/qdio.h
-@@ -227,7 +227,7 @@ struct qdio_buffer {
-  * @sbal: absolute SBAL address
-  */
- struct sl_element {
--	unsigned long sbal;
-+	u64 sbal;
- } __attribute__ ((packed));
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index 7dacfd102a992..b8fe42f4b3c5b 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -1161,8 +1161,8 @@ static int nvme_identify_ns(struct nvme_ctrl *ctrl,
+ static int nvme_features(struct nvme_ctrl *dev, u8 op, unsigned int fid,
+ 		unsigned int dword11, void *buffer, size_t buflen, u32 *result)
+ {
++	union nvme_result res = { 0 };
+ 	struct nvme_command c;
+-	union nvme_result res;
+ 	int ret;
  
- /**
-diff --git a/drivers/s390/cio/qdio_setup.c b/drivers/s390/cio/qdio_setup.c
-index cd164886132fd..ee0b3c5862110 100644
---- a/drivers/s390/cio/qdio_setup.c
-+++ b/drivers/s390/cio/qdio_setup.c
-@@ -8,6 +8,7 @@
- #include <linux/kernel.h>
- #include <linux/slab.h>
- #include <linux/export.h>
-+#include <linux/io.h>
- #include <asm/qdio.h>
- 
- #include "cio.h"
-@@ -207,7 +208,7 @@ static void setup_storage_lists(struct qdio_q *q, struct qdio_irq *irq_ptr,
- 
- 	/* fill in sl */
- 	for (j = 0; j < QDIO_MAX_BUFFERS_PER_Q; j++)
--		q->sl->element[j].sbal = (unsigned long)q->sbal[j];
-+		q->sl->element[j].sbal = virt_to_phys(q->sbal[j]);
- }
- 
- static void setup_queues(struct qdio_irq *irq_ptr,
-diff --git a/drivers/s390/net/qeth_core_main.c b/drivers/s390/net/qeth_core_main.c
-index 23852888eb2ca..b727d1e34523e 100644
---- a/drivers/s390/net/qeth_core_main.c
-+++ b/drivers/s390/net/qeth_core_main.c
-@@ -4716,10 +4716,10 @@ static void qeth_qdio_establish_cq(struct qeth_card *card,
- 	if (card->options.cq == QETH_CQ_ENABLED) {
- 		int offset = QDIO_MAX_BUFFERS_PER_Q *
- 			     (card->qdio.no_in_queues - 1);
--		for (i = 0; i < QDIO_MAX_BUFFERS_PER_Q; ++i) {
--			in_sbal_ptrs[offset + i] = (struct qdio_buffer *)
--				virt_to_phys(card->qdio.c_q->bufs[i].buffer);
--		}
-+
-+		for (i = 0; i < QDIO_MAX_BUFFERS_PER_Q; i++)
-+			in_sbal_ptrs[offset + i] =
-+				card->qdio.c_q->bufs[i].buffer;
- 
- 		queue_start_poll[card->qdio.no_in_queues - 1] = NULL;
- 	}
-@@ -4753,10 +4753,9 @@ static int qeth_qdio_establish(struct qeth_card *card)
- 		rc = -ENOMEM;
- 		goto out_free_qib_param;
- 	}
--	for (i = 0; i < QDIO_MAX_BUFFERS_PER_Q; ++i) {
--		in_sbal_ptrs[i] = (struct qdio_buffer *)
--			virt_to_phys(card->qdio.in_q->bufs[i].buffer);
--	}
-+
-+	for (i = 0; i < QDIO_MAX_BUFFERS_PER_Q; i++)
-+		in_sbal_ptrs[i] = card->qdio.in_q->bufs[i].buffer;
- 
- 	queue_start_poll = kcalloc(card->qdio.no_in_queues, sizeof(void *),
- 				   GFP_KERNEL);
-@@ -4777,11 +4776,11 @@ static int qeth_qdio_establish(struct qeth_card *card)
- 		rc = -ENOMEM;
- 		goto out_free_queue_start_poll;
- 	}
-+
- 	for (i = 0, k = 0; i < card->qdio.no_out_queues; ++i)
--		for (j = 0; j < QDIO_MAX_BUFFERS_PER_Q; ++j, ++k) {
--			out_sbal_ptrs[k] = (struct qdio_buffer *)virt_to_phys(
--				card->qdio.out_qs[i]->bufs[j]->buffer);
--		}
-+		for (j = 0; j < QDIO_MAX_BUFFERS_PER_Q; j++, k++)
-+			out_sbal_ptrs[k] =
-+				card->qdio.out_qs[i]->bufs[j]->buffer;
- 
- 	memset(&init_data, 0, sizeof(struct qdio_initialize));
- 	init_data.cdev                   = CARD_DDEV(card);
+ 	memset(&c, 0, sizeof(c));
 -- 
 2.20.1
 
