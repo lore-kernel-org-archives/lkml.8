@@ -2,151 +2,127 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60A92C10F25
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 02:28:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72CBAC10F25
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 02:30:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40C1120637
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 02:28:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 427D620637
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 02:30:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726599AbgCJC2U (ORCPT
+        id S1726637AbgCJCaW convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 22:28:20 -0400
-Received: from mga03.intel.com ([134.134.136.65]:56464 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726450AbgCJC2T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 22:28:19 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Mar 2020 19:28:18 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,535,1574150400"; 
-   d="scan'208";a="388766932"
-Received: from yhuang-dev.sh.intel.com (HELO yhuang-dev) ([10.239.159.23])
-  by orsmga004.jf.intel.com with ESMTP; 09 Mar 2020 19:28:15 -0700
-From:   "Huang\, Ying" <ying.huang@intel.com>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     David Hildenbrand <david@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Mel Gorman <mgorman@suse.de>, Vlastimil Babka <vbabka@suse.cz>,
-        Zi Yan <ziy@nvidia.com>, Peter Zijlstra <peterz@infradead.org>,
-        Minchan Kim <minchan@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Hugh Dickins <hughd@google.com>
-Subject: Re: [PATCH -V3] mm: Add PageLayzyFree() helper functions for MADV_FREE
-References: <20200309021744.1309482-1-ying.huang@intel.com>
-        <68360241-eb18-b3d8-bf6f-4dbbed258ee6@redhat.com>
-        <20200309121300.GL8447@dhcp22.suse.cz>
-Date:   Tue, 10 Mar 2020 10:28:14 +0800
-In-Reply-To: <20200309121300.GL8447@dhcp22.suse.cz> (Michal Hocko's message of
-        "Mon, 9 Mar 2020 13:13:00 +0100")
-Message-ID: <87mu8px7sx.fsf@yhuang-dev.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Mon, 9 Mar 2020 22:30:22 -0400
+Received: from twhmllg4.macronix.com ([211.75.127.132]:14569 "EHLO
+        TWHMLLG4.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726450AbgCJCaV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 22:30:21 -0400
+Received: from twhfm1p2.macronix.com (twhfm1p2.macronix.com [172.17.20.92])
+        by TWHMLLG4.macronix.com with ESMTP id 02A2U9g6072289;
+        Tue, 10 Mar 2020 10:30:09 +0800 (GMT-8)
+        (envelope-from masonccyang@mxic.com.tw)
+Received: from MXML06C.mxic.com.tw (mxml06c.mxic.com.tw [172.17.14.55])
+        by Forcepoint Email with ESMTP id 337CDB3A3A355115CDAE;
+        Tue, 10 Mar 2020 10:30:09 +0800 (CST)
+In-Reply-To: <20200309141403.241e773e@xps13>
+References: <1583220084-10890-1-git-send-email-masonccyang@mxic.com.tw> <20200309141403.241e773e@xps13>
+To:     "Miquel Raynal" <miquel.raynal@bootlin.com>
+Cc:     allison@lohutok.net, bbrezillon@kernel.org,
+        frieder.schrempf@kontron.de, juliensu@mxic.com.tw,
+        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        rfontana@redhat.com, richard@nod.at, s.hauer@pengutronix.de,
+        stefan@agner.ch, tglx@linutronix.de, vigneshr@ti.com,
+        yuehaibing@huawei.com
+Subject: Re: [PATCH v3 0/4] mtd: rawnand: Add support Macronix Block Portection & Deep
+ Power Down mode
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+X-KeepSent: C31C83BB:5F8F8B14-48258527:000B6AF2;
+ type=4; name=$KeepSent
+X-Mailer: Lotus Notes Release 8.5.3FP4 SHF90 June 10, 2013
+Message-ID: <OFC31C83BB.5F8F8B14-ON48258527.000B6AF2-48258527.000DBE12@mxic.com.tw>
+From:   masonccyang@mxic.com.tw
+Date:   Tue, 10 Mar 2020 10:30:09 +0800
+X-MIMETrack: Serialize by Router on MXML06C/TAIWAN/MXIC(Release 9.0.1FP10 HF265|July 25, 2018) at
+ 2020/03/10 AM 10:30:09,
+        Serialize complete at 2020/03/10 AM 10:30:09
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 8BIT
+X-MAIL: TWHMLLG4.macronix.com 02A2U9g6072289
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Michal Hocko <mhocko@kernel.org> writes:
 
-> On Mon 09-03-20 09:55:38, David Hildenbrand wrote:
->> On 09.03.20 03:17, Huang, Ying wrote:
-> [...]
->> > @@ -1235,7 +1234,7 @@ static unsigned long shrink_page_list(struct list_head *page_list,
->> >  		 * Try to allocate it some swap space here.
->> >  		 * Lazyfree page could be freed directly
->> >  		 */
->> > -		if (PageAnon(page) && PageSwapBacked(page)) {
->> > +		if (PageAnon(page) && !__PageLazyFree(page)) {
->> >  			if (!PageSwapCache(page)) {
->> >  				if (!(sc->gfp_mask & __GFP_IO))
->> >  					goto keep_locked;
->> > @@ -1411,7 +1410,7 @@ static unsigned long shrink_page_list(struct list_head *page_list,
->> >  			}
->> >  		}
->> >  
->> > -		if (PageAnon(page) && !PageSwapBacked(page)) {
->> > +		if (PageLazyFree(page)) {
->> >  			/* follow __remove_mapping for reference */
->> >  			if (!page_ref_freeze(page, 1))
->> >  				goto keep_locked;
->> > 
->> 
->> I still prefer something like
->> 
->> diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
->> index fd6d4670ccc3..7538501230bd 100644
->> --- a/include/linux/page-flags.h
->> +++ b/include/linux/page-flags.h
->> @@ -63,6 +63,10 @@
->>   * page_waitqueue(page) is a wait queue of all tasks waiting for the page
->>   * to become unlocked.
->>   *
->> + * PG_swapbacked used with anonymous pages (PageAnon()) indicates that a
->> + * page is backed by swap. Anonymous pages without PG_swapbacked are
->> + * pages that can be lazily freed (e.g., MADV_FREE) on demand.
->> + *
->>   * PG_uptodate tells whether the page's contents is valid.  When a read
->>   * completes, the page becomes uptodate, unless a disk I/O error happened.
->>   *
->> 
->> and really don't like the use of !__PageLazyFree() instead of PageSwapBacked().
->
-> I have to say that I do not have a strong opinion about helper
-> functions. In general I tend to be against adding them unless there is a
-> very good reason for them. This particular patch is in a gray zone a bit.
->
-> There are few places which are easier to follow but others sound like,
-> we have a hammer let's use it. E.g. shrink_page_list path above.
+Hi Miquel,
 
-I can remove all these places.  Only keep the helpful places.
+> 
+> Mason Yang <masonccyang@mxic.com.tw> wrote on Tue,  3 Mar 2020 15:21:20
+> +0800:
+> 
+> > Hi,
+> > 
+> > Changelog
+> > 
+> > v3:
+> > patch nand_lock_area/nand_unlock_area.
+> > fixed kbuidtest robot warnings and reviewer's comments.
+> 
+> I know it is painful for the contributor but I really need more details
+> in the changelog. This is something I care about because I can speed-up
 
-> There is a clear comment explaining PageAnon && PageSwapBacked check
-> being LazyFree related but do I have to know that this is LazyFree
-> path? I believe that seeing PageSwapBacked has a more meaning to me
-> because it tells me that anonymous pages without a backing store
-> doesn't really need swap entry.  This happens to be Lazy free related
-> today but with a heavy overloading of our flags this might differ in
-> the future. You have effectively made a more generic description more
-> specific without a very good reason.
+okay, more changelog as
 
-Yes.  The following piece isn't lazy free specific.  We can keep use PageSwapBacked().
+1. Patched the Kdoc for both lock_area/unlock_area and _suspend/_resume
+2. Created a helper to read default protected value (after device power 
+on)
+        for protection function detection.
+3. patched the prefix for Macronix deep power down command, 0xB9
+4. Patched the description of mxic_nand_resume() and add a small sleeping 
+delay.
+5. Created a helper for deep power down device part number detection.
 
- @@ -1235,7 +1234,7 @@ static unsigned long shrink_page_list(struct list_head *page_list,
-  		 * Try to allocate it some swap space here.
-  		 * Lazyfree page could be freed directly
-  		 */
- -		if (PageAnon(page) && PageSwapBacked(page)) {
- +		if (PageAnon(page) && !__PageLazyFree(page)) {
-  			if (!PageSwapCache(page)) {
-  				if (!(sc->gfp_mask & __GFP_IO))
-  					goto keep_locked;
 
-And the following piece is lazy free specific.  I think it helps.
+> my reviews when I know what I already acked or not. "fixing reviewer's
+> comments" is way too vague, I have absolutely no idea of what I told
+> you last time :) So please, for the next iterations, be more verbose in
+> these changelogs! (that's fine for this one, I'll check myself).
+> 
+> Cheers,
+> Miquèl
 
- @@ -1411,7 +1410,7 @@ static unsigned long shrink_page_list(struct list_head *page_list,
-  			}
-  		}
-  
- -		if (PageAnon(page) && !PageSwapBacked(page)) {
- +		if (PageLazyFree(page)) {
-  			/* follow __remove_mapping for reference */
-  			if (!page_ref_freeze(page, 1))
-  				goto keep_locked;
- 
-> On the other hand having PG_swapbacked description in page-flags.h above
-> gives a very useful information which was previously hidden at the
-> definition so this is a clear improvement.
+thanks for your time and review.
+Mason
 
-Yes.  I think it's good to add document for PG_swapbacked definition.
 
-> That being said I think that the patch is not helpful enough. I would
-> much rather see a simply documentation update.
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information 
+and/or personal data, which is protected by applicable laws. Please be 
+reminded that duplication, disclosure, distribution, or use of this e-mail 
+(and/or its attachments) or any part thereof is prohibited. If you receive 
+this e-mail in error, please notify us immediately and delete this mail as 
+well as its attachment(s) from your system. In addition, please be 
+informed that collection, processing, and/or use of personal data is 
+prohibited unless expressly permitted by personal data protection laws. 
+Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
+
+
+
+============================================================================
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
+
