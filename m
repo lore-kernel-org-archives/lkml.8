@@ -2,52 +2,52 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70E81C18E5C
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:16:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25C51C18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:16:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4086020873
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:16:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E53FB20873
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:16:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583846176;
-	bh=FLADw+GKBExK9ezf3kJ+0wVCGT6MykYNqQ0rey0KKok=;
+	s=default; t=1583846180;
+	bh=66QW2+ESPuzoUmehFdhSS+d4CRWx0EfkVdbM2bdSjKI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KZ69EK9P/rZWUEAt+gd7opkRB2cVBRCgJOsVDONzZAxvX2ZUuuI9atcDnp+RGy+Qt
-	 aIyic57HhFHS+kTMwKTjHrXB/+Q1XcYPRhw+q4/7AQQAOedJ6jwkNTJ0d6IyRDnKxN
-	 BYCkImCzcJ9jsb0zHPZ4XWMNLDmeQ/qOtfNSIP2M=
+	b=01J2i4cv1DAD6Eg2gH0abispCt+t4+4y76dDcSXcw5VVOOa9qovMYOuOHwru+HUOJ
+	 bXXUmPrpqaNzNvDGWq2maMucNsGBU3jk6cwDegeBaVx1S0RKXc6dGCEGxAwXfsVgss
+	 lSJdDd8MlN4MwUZfnPj4Na7mY0N6vtGZxhZQ6G5U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731748AbgCJNNm (ORCPT
+        id S1731710AbgCJNNa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:13:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36384 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:13:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36184 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731722AbgCJNNd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:13:33 -0400
+        id S1731699AbgCJNNZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:13:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 34FA220409;
-        Tue, 10 Mar 2020 13:13:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 85ED62468F;
+        Tue, 10 Mar 2020 13:13:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583846012;
-        bh=FLADw+GKBExK9ezf3kJ+0wVCGT6MykYNqQ0rey0KKok=;
+        s=default; t=1583846005;
+        bh=66QW2+ESPuzoUmehFdhSS+d4CRWx0EfkVdbM2bdSjKI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kQCoSWXfKsXbXdACrz1kOxN1hZVYiuIUlCeIw7SdDJU7FZCTPrtgipdJugYvxv2eO
-         jEdr+z0AEVObokV6tcPUtawYILCvKfwX4QgR7pDdaHM/2KvUzqjt0HidENplXYbVKV
-         o6vl7eIZ1srJvIIRgEQb87UGpydalZYqJ8auaLWA=
+        b=wp6t/Py2+EZXbVGdfepUndT0G1JzZiwWfJ34gz8GuV0Q7GACbBvohql1LJ1y/qY1I
+         182yNVOVONjxH8u349I8rOrVOIdmchxFx+A8p5CvxrjFMjnJz0plP+88KcK4MVcTna
+         AMYcpN1U5BFzNp98BirFk1g9xd/PIxvC0ICyfq68=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH 4.19 54/86] dmaengine: tegra-apb: Prevent race conditions of tasklet vs free list
-Date:   Tue, 10 Mar 2020 13:45:18 +0100
-Message-Id: <20200310124533.710299227@linuxfoundation.org>
+        stable@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 25/86] s390: make install not depend on vmlinux
+Date:   Tue, 10 Mar 2020 13:44:49 +0100
+Message-Id: <20200310124532.141598042@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310124530.808338541@linuxfoundation.org>
 References: <20200310124530.808338541@linuxfoundation.org>
@@ -60,37 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Osipenko <digetx@gmail.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
 
-commit c33ee1301c393a241d6424e36eff1071811b1064 upstream.
+[ Upstream commit 94e90f727f7424d827256023cace829cad6896f4 ]
 
-The interrupt handler puts a half-completed DMA descriptor on a free list
-and then schedules tasklet to process bottom half of the descriptor that
-executes client's callback, this creates possibility to pick up the busy
-descriptor from the free list. Thus, let's disallow descriptor's re-use
-until it is fully processed.
+For the same reason as commit 19514fc665ff ("arm, kbuild: make "make
+install" not depend on vmlinux"), the install targets should never
+trigger the rebuild of the kernel.
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-Acked-by: Jon Hunter <jonathanh@nvidia.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200209163356.6439-3-digetx@gmail.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+The variable, CONFIGURE, is not set by anyone. Remove it as well.
 
+Link: https://lkml.kernel.org/r/20200216144829.27023-1-masahiroy@kernel.org
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/tegra20-apb-dma.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/s390/Makefile      | 2 +-
+ arch/s390/boot/Makefile | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/dma/tegra20-apb-dma.c
-+++ b/drivers/dma/tegra20-apb-dma.c
-@@ -288,7 +288,7 @@ static struct tegra_dma_desc *tegra_dma_
+diff --git a/arch/s390/Makefile b/arch/s390/Makefile
+index 4bccde36cb161..9a3a698c8fca5 100644
+--- a/arch/s390/Makefile
++++ b/arch/s390/Makefile
+@@ -140,7 +140,7 @@ all: bzImage
+ #KBUILD_IMAGE is necessary for packaging targets like rpm-pkg, deb-pkg...
+ KBUILD_IMAGE	:= $(boot)/bzImage
  
- 	/* Do not allocate if desc are waiting for ack */
- 	list_for_each_entry(dma_desc, &tdc->free_dma_desc, node) {
--		if (async_tx_test_ack(&dma_desc->txd)) {
-+		if (async_tx_test_ack(&dma_desc->txd) && !dma_desc->cb_count) {
- 			list_del(&dma_desc->node);
- 			spin_unlock_irqrestore(&tdc->lock, flags);
- 			dma_desc->txd.flags = 0;
+-install: vmlinux
++install:
+ 	$(Q)$(MAKE) $(build)=$(boot) $@
+ 
+ bzImage: vmlinux
+diff --git a/arch/s390/boot/Makefile b/arch/s390/boot/Makefile
+index f6a9b0c203553..45c72d1f9e7d2 100644
+--- a/arch/s390/boot/Makefile
++++ b/arch/s390/boot/Makefile
+@@ -46,7 +46,7 @@ quiet_cmd_ar = AR      $@
+ $(obj)/startup.a: $(OBJECTS) FORCE
+ 	$(call if_changed,ar)
+ 
+-install: $(CONFIGURE) $(obj)/bzImage
++install:
+ 	sh -x  $(srctree)/$(obj)/install.sh $(KERNELRELEASE) $(obj)/bzImage \
+ 	      System.map "$(INSTALL_PATH)"
+ 
+-- 
+2.20.1
+
 
 
