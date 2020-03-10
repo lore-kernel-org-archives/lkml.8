@@ -2,128 +2,130 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B58DC10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 21:04:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23179C18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 21:05:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 457FB215A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 21:04:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CngUwdr3"
+	by mail.kernel.org (Postfix) with ESMTP id ECC37215A4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 21:05:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726395AbgCJVEL (ORCPT
+        id S1727234AbgCJVFK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 17:04:11 -0400
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:44380 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726100AbgCJVEL (ORCPT
+        Tue, 10 Mar 2020 17:05:10 -0400
+Received: from out02.mta.xmission.com ([166.70.13.232]:52914 "EHLO
+        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726100AbgCJVFJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 17:04:11 -0400
-Received: by mail-vs1-f68.google.com with SMTP id u24so9388478vso.11
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 14:04:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sdbG+NqozjHb3DuLnEyD+xmAePEHTJeITgREUaZPMNg=;
-        b=CngUwdr3bxoD5iC/5lI0WCL6Mqn6nSmpoMEK83K3xN0v08ISyBSVyXb/zcm5ZDQeCb
-         PgmUesXLiCxl6wmzOs5WtQIdvBMj/VSdElpEMXjRzX85yI28VD7T7jVb0ccczckgBQ34
-         Lm/tL7AYk/ec8oVUMbXgOswT0jyxukaC0XZqc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sdbG+NqozjHb3DuLnEyD+xmAePEHTJeITgREUaZPMNg=;
-        b=fftSwv9ZNecvDUZuijWjsrwcD2eH5nuBFsTmnIhBbsAj3jUi1Pw/Iz49AVeqlkyQx1
-         Nlc1aOIH0jMOR88iTosJ/Gh2rgYiEPijv2/yVqf2vUBXfQxLT9qjMmXBKaG7OoVi2o8j
-         zjLy2dJ195ZFv1qjkfvD/rkN8BgX92qqkpHF+AFId778UaK+0SCQzGXr/fIo4SLoq/UE
-         jdcmUSd+HkzXq8ig4iSp061CWoHuKZ/JOqs05HD1MqEb9rc6hsYy8iNKyaGAVtyux+Ee
-         ILWXW0ULJtUpxokFkb8Zi4EUuqs9Af+0a40QQSeaKXu9jofKETBpolHnIqZ+hC14s4ko
-         wwRQ==
-X-Gm-Message-State: ANhLgQ3uTlymr4cyl3E09b6XNlUXFHkJQ17iE1juY6qA7S2De3u17mBN
-        Wbydo9Q4hcuoOu25Bm3B/ic2sjg1RB0=
-X-Google-Smtp-Source: ADFU+vukKZkg1TzUcseJwe5+ocYbKzxAhZpM/7iKPacx5+akReKNSViL76PGDmCAIYW8iG2Xm47JsQ==
-X-Received: by 2002:a67:fb12:: with SMTP id d18mr2171724vsr.149.1583874249514;
-        Tue, 10 Mar 2020 14:04:09 -0700 (PDT)
-Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com. [209.85.222.41])
-        by smtp.gmail.com with ESMTPSA id y23sm8497627uay.0.2020.03.10.14.04.08
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Mar 2020 14:04:08 -0700 (PDT)
-Received: by mail-ua1-f41.google.com with SMTP id b2so2774578uas.13
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 14:04:08 -0700 (PDT)
-X-Received: by 2002:ab0:a90:: with SMTP id d16mr8706162uak.22.1583874247823;
- Tue, 10 Mar 2020 14:04:07 -0700 (PDT)
+        Tue, 10 Mar 2020 17:05:09 -0400
+Received: from in01.mta.xmission.com ([166.70.13.51])
+        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jBm3o-0007Ja-5Z; Tue, 10 Mar 2020 15:05:08 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jBm3n-0008Ca-EI; Tue, 10 Mar 2020 15:05:08 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Andrei Vagin <avagin@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Peter Zijlstra \(Intel\)" <peterz@infradead.org>,
+        Yuyang Du <duyuyang@gmail.com>,
+        David Hildenbrand <david@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        David Howells <dhowells@redhat.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christian Kellner <christian@kellner.me>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        "linux-doc\@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel\@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-mm\@kvack.org" <linux-mm@kvack.org>,
+        "stable\@vger.kernel.org" <stable@vger.kernel.org>,
+        "linux-api\@vger.kernel.org" <linux-api@vger.kernel.org>
+References: <87v9ne5y4y.fsf_-_@x220.int.ebiederm.org>
+        <87zhcq4jdj.fsf_-_@x220.int.ebiederm.org>
+        <AM6PR03MB5170BC58D90BAD80CDEF3F8BE4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <878sk94eay.fsf@x220.int.ebiederm.org>
+        <AM6PR03MB517086003BD2C32E199690A3E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <87r1y12yc7.fsf@x220.int.ebiederm.org>
+        <87k13t2xpd.fsf@x220.int.ebiederm.org>
+        <87d09l2x5n.fsf@x220.int.ebiederm.org>
+        <AM6PR03MB5170F0F9DC18F5EA77C9A857E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <871rq12vxu.fsf@x220.int.ebiederm.org>
+        <202003101352.28BE3BEB4@keescook>
+Date:   Tue, 10 Mar 2020 16:02:48 -0500
+In-Reply-To: <202003101352.28BE3BEB4@keescook> (Kees Cook's message of "Tue,
+        10 Mar 2020 13:55:54 -0700")
+Message-ID: <87a74nsz2f.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-References: <20200303174349.075101355@linuxfoundation.org> <20200303174349.401386271@linuxfoundation.org>
- <20200304151316.GA2367@duo.ucw.cz> <20200304171817.GC1852712@kroah.com> <20200309101410.GA18031@duo.ucw.cz>
-In-Reply-To: <20200309101410.GA18031@duo.ucw.cz>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Tue, 10 Mar 2020 14:03:55 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=X4u90Q3-QLHqUSGQkNZOXO4HZ_euVXCSUncQj0bhH3dw@mail.gmail.com>
-Message-ID: <CAD=FV=X4u90Q3-QLHqUSGQkNZOXO4HZ_euVXCSUncQj0bhH3dw@mail.gmail.com>
-Subject: Re: [PATCH] drm/msm: fix leaks if initialization fails
-To:     Pavel Machek <pavel@denx.de>, Rob Clark <robdclark@gmail.com>,
-        Sean Paul <seanpaul@chromium.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "# 4.0+" <stable@vger.kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-XM-SPF: eid=1jBm3n-0008Ca-EI;;;mid=<87a74nsz2f.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX18PTvqUqvFHzaS8aRXcjAAB8aMmbAjVv+4=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH v2 5/5] exec: Add a exec_update_mutex to replace cred_guard_mutex
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Kees Cook <keescook@chromium.org> writes:
 
-On Mon, Mar 9, 2020 at 3:14 AM Pavel Machek <pavel@denx.de> wrote:
+> On Mon, Mar 09, 2020 at 02:02:37PM -0500, Eric W. Biederman wrote:
+>>     exec: Add exec_update_mutex to replace cred_guard_mutex
+>>     
+>>     The cred_guard_mutex is problematic as it is held over possibly
+>>     indefinite waits for userspace.  The possilbe indefinite waits for
+>>     userspace that I have identified are: The cred_guard_mutex is held in
+>>     PTRACE_EVENT_EXIT waiting for the tracer.  The cred_guard_mutex is
+>>     held over "put_user(0, tsk->clear_child_tid)" in exit_mm().  The
+>>     cred_guard_mutex is held over "get_user(futex_offset, ...")  in
+>>     exit_robust_list.  The cred_guard_mutex held over copy_strings.
 >
-> We should free resources in unlikely case of allocation failure.
->
-> Signed-off-by: Pavel Machek <pavel@denx.de>
->
-> ---
->
-> > Can you submit a patch to fix it?
->
-> Here it is.
->
-> Best regards,
->                                                                 Pavel
->
->
-> diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
-> index 83a0000eecb3..f5c1495cc4b9 100644
-> --- a/drivers/gpu/drm/msm/msm_drv.c
-> +++ b/drivers/gpu/drm/msm/msm_drv.c
-> @@ -444,8 +444,10 @@ static int msm_drm_init(struct device *dev, struct drm_driver *drv)
->         if (!dev->dma_parms) {
->                 dev->dma_parms = devm_kzalloc(dev, sizeof(*dev->dma_parms),
->                                               GFP_KERNEL);
-> -               if (!dev->dma_parms)
-> -                       return -ENOMEM;
-> +               if (!dev->dma_parms) {
-> +                       ret = -ENOMEM;
-> +                       goto err_msm_uninit;
-> +               }
->         }
->         dma_set_max_seg_size(dev, DMA_BIT_MASK(32));
+> I suspect you're not trying to make a comprehensive list here, but do
+> you want to mention seccomp too (since it's yet another weird case).
 
-Looks good.  Error cases both above and below your "goto" both already
-go to err_msm_uninit(), so it makes sense it would also be the
-appropriate place for you to go to.  ...and no extra cleanup was
-needed for dma_parms allocation since it was devm.  Thus:
+I was calling out all of the places I have found so far where
+cred_guard_mutex is held over waiting for userspace to maybe do
+something.  Those places are what cause our deadlocks.
 
-Fixes: db735fc4036b ("drm/msm: Set dma maximum segment size for mdss")
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
+>> [...]
+>>     Holding a mutex over any of those possibly indefinite waits for
+>>     userspace does not appear necessary.  Add exec_update_mutex that will
+>>     just cover updating the process during exec where the permissions and
+>>     the objects pointed to by the task struct may be out of sync.
+>
+> Should the specific resources be pointed out here? creds, mm, ... ?
+>
+> But otherwise, yup, looks sane:
 
-Thanks for noticing and fixing!
+Probably not.  The design is if exec changes it we will hold the
+cred_guard_mutex over it, so things are semi-atomic.
 
--Doug
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+
+Eric
