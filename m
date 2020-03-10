@@ -2,144 +2,115 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90853C10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:02:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A6C4C3F2D0
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:03:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CDEF21927
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:02:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6CE3222C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:03:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dP0qwPIo"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GlviqSyh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727761AbgCJWCr (ORCPT
+        id S1727785AbgCJWDE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 18:02:47 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:45737 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726283AbgCJWCp (ORCPT
+        Tue, 10 Mar 2020 18:03:04 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:47460 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726283AbgCJWDE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 18:02:45 -0400
-Received: by mail-ot1-f66.google.com with SMTP id f21so14750047otp.12;
-        Tue, 10 Mar 2020 15:02:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=SF/rLdHGOUkZmCUHks4hnv/hgG7mXzY0mjAu3eORSKc=;
-        b=dP0qwPIoqktkEhRgFZTVTTWxkcFRfYDGvzuin4BmCyx1dFeyQ0uOwyb4eBHicOUILm
-         DI3VMZq1rLcTrvMuznKSlRjP7zuiHhlLoneeAP2Ukbu89NsY5cjbW5zupm8KmYjnPOQC
-         PhyMikcYH7oAz4FvqHke97OV+X/SBipPp1vmICbL+MLCxrA9ighbLPrG6XKNtMJfpKKl
-         OSmo7GIymlx5q2EcDMB1TCAheYxf6xqD7Pwng4RkPs8Zy8Esc+4aTjqft250RJeGUwcz
-         VTG6cyYyRJg83R8lsAHOiWf8xK6gxrrkg9NP8zaiqd+XvIp5Gx+JaBnF6WdRX6NPXNaV
-         GR4w==
+        Tue, 10 Mar 2020 18:03:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583877783;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=40W/kfQFw5xqXbXKZGwOTmPRgRjffptCSgf0Kp+g8OA=;
+        b=GlviqSyhUvI2vgdzP0oDOE136jlcwDkyDy7bcz6Kvx5PvlRFmXlzK/ig/HbxaxRpE1eAQJ
+        3sJzvdLOgsimRyPSrlu8OJrC36q2J7kuFYwVIQwyWNjN3crlEgXPpoGEhYnfWSmnFPEvvB
+        TEuFkqBdf+JGbang79je28qoTfdf3jE=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-407-jXbMTMIZNyaGkpWb0X8g1w-1; Tue, 10 Mar 2020 18:03:01 -0400
+X-MC-Unique: jXbMTMIZNyaGkpWb0X8g1w-1
+Received: by mail-wr1-f71.google.com with SMTP id t14so7360053wrs.12
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 15:03:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SF/rLdHGOUkZmCUHks4hnv/hgG7mXzY0mjAu3eORSKc=;
-        b=iXpcxP4ZtSotvmhH/6V4tv86MDBDMbyVRa/Ba1KXgGsOpqOnqGdreHTqHNeatAH6rq
-         bZ1kopUp8iVJZB4QAeRn8yH3sRz0pZsb8kOc/SYjnnzwlhZvS+MKdyAjoVdFAV5GfnfO
-         OsJ/O9/gB78doGEf4IbMgYvoLG2cV2pQR8MWVEqmtZLHZqs1tFztXJQTjAtXWuOwj2Dg
-         Q7P3TFes+TrYTsaAErv9oA2901HFn7bPb0QFK7500ARDAyWtRhU0gJFYRuziztj2qY+J
-         adoKVca45bvadmAoobycWjft+zsGMAb6vqHUqKJKt6hzESyhpoWr4hxgzv/fgp0xCLZK
-         9DpA==
-X-Gm-Message-State: ANhLgQ0YU7H26zFqEucBI5rcekY3iS+ECKQjEVp40FvfASAFGq5W1R4p
-        o/Mth7S576Sm87n4zYtg+6iypyPUK5gbz+Ryl7k=
-X-Google-Smtp-Source: ADFU+vueS+uiLnK7xdhsPHDa9dL2BYINp7cvAGX4mf8Z/DEw5HjuYJXCQGm60Z4IpnUSa5E1ExpmM2OF+ASb4BYIOrM=
-X-Received: by 2002:a9d:4702:: with SMTP id a2mr18202147otf.319.1583877763719;
- Tue, 10 Mar 2020 15:02:43 -0700 (PDT)
-MIME-Version: 1.0
-References: <00000000000034513e05a05cfc23@google.com> <CAM_iQpVgQ+Mc16CVds-ywp6YHEbwbGtJwqoQXBFbrMTOUZS0YQ@mail.gmail.com>
- <635ab023-d180-7ddf-a280-78080040512c@gmail.com>
-In-Reply-To: <635ab023-d180-7ddf-a280-78080040512c@gmail.com>
-From:   Cong Wang <xiyou.wangcong@gmail.com>
-Date:   Tue, 10 Mar 2020 15:02:32 -0700
-Message-ID: <CAM_iQpUwkLeOtbxeQ6uPA6Zm6t2Xdm08rvKOX8yJ-UCckKq9Eg@mail.gmail.com>
-Subject: Re: KASAN: invalid-free in tcf_exts_destroy
-To:     Eric Dumazet <eric.dumazet@gmail.com>
-Cc:     syzbot <syzbot+dcc34d54d68ef7d2d53d@syzkaller.appspotmail.com>,
-        David Miller <davem@davemloft.net>,
-        Jamal Hadi Salim <jhs@mojatatu.com>,
-        Jiri Pirko <jiri@resnulli.us>,
-        Jakub Kicinski <kuba@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=40W/kfQFw5xqXbXKZGwOTmPRgRjffptCSgf0Kp+g8OA=;
+        b=ORD3gkWY3UghogIhSV1xjiMFSxqC5woE42Pd1PpC5KvPNmcbjM3TBs3foD6TKlmkTx
+         9QezgGyWxrthPF5wWBJzk81sFrsyEVLFhvmPBfV6q7O2xH+VLsop2vNFgcFEsIigg09Z
+         B6lWmlzd2uqC2CDWgawAZBb0hAihvTaazKBsMUV8Ct4R1+ruTo0UU9xSmyeM3vclLlp6
+         IOZAzEMgf+4oKlxjzSPLWNgzO4xUw6YIPSgP6lZ7dQoAfrtExSxHSdBHRSvW8NvKSBvE
+         YUNY/HunyEUjRxN2dPAJ97YpV2tVydQY24jIMetnVc40VnISBZZind7iPJaKKdtlUZA7
+         bCEQ==
+X-Gm-Message-State: ANhLgQ3Bs0Bara8k6DTv67NXq8UIS6ksUXKdDsrt+QyGQhPCW78NxLP2
+        r+JN48tKyum+XwLN7Nyve6nG6JEPLS37yk3F/AfBhhSbW2DntJt+hUDeeMosXyAGWMiaO53onoS
+        exg3Z82U8zUHOrNngKo4dHl5R
+X-Received: by 2002:a5d:4687:: with SMTP id u7mr15891897wrq.129.1583877780643;
+        Tue, 10 Mar 2020 15:03:00 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vtZW/8L6Ll/FpuR0abFGldY17cpkX73JNYI1cBMm+URNiyq/qfzVgh4k4hvqu/EPs8sL15bng==
+X-Received: by 2002:a5d:4687:: with SMTP id u7mr15891878wrq.129.1583877780451;
+        Tue, 10 Mar 2020 15:03:00 -0700 (PDT)
+Received: from [192.168.3.122] (p5B0C6338.dip0.t-ipconnect.de. [91.12.99.56])
+        by smtp.gmail.com with ESMTPSA id u25sm5672417wml.17.2020.03.10.15.02.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Mar 2020 15:02:59 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   David Hildenbrand <david@redhat.com>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH v3] virtio-balloon: Switch back to OOM handler for VIRTIO_BALLOON_F_DEFLATE_ON_OOM
+Date:   Tue, 10 Mar 2020 23:02:58 +0100
+Message-Id: <6021D755-F883-4524-B3D1-07C03C7DF11B@redhat.com>
+References: <20200310172114-mutt-send-email-mst@kernel.org>
+Cc:     David Hildenbrand <david@redhat.com>,
+        David Rientjes <rientjes@google.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        virtualization@lists.linux-foundation.org,
+        Jason Wang <jasowang@redhat.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Tyler Sanderson <tysand@google.com>,
+        Wei Wang <wei.w.wang@intel.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Nadav Amit <namit@vmware.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+In-Reply-To: <20200310172114-mutt-send-email-mst@kernel.org>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+X-Mailer: iPhone Mail (17D50)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 10, 2020 at 1:36 PM Eric Dumazet <eric.dumazet@gmail.com> wrote:
->
->
->
-> On 3/10/20 11:33 AM, Cong Wang wrote:
-> > On Sun, Mar 8, 2020 at 12:35 PM syzbot
-> > <syzbot+dcc34d54d68ef7d2d53d@syzkaller.appspotmail.com> wrote:
-> >>
-> >> Hello,
-> >>
-> >> syzbot found the following crash on:
-> >>
-> >> HEAD commit:    c2003765 Merge tag 'io_uring-5.6-2020-03-07' of git://git...
-> >> git tree:       upstream
-> >> console output: https://syzkaller.appspot.com/x/log.txt?x=10cd2ae3e00000
-> >> kernel config:  https://syzkaller.appspot.com/x/.config?x=4527d1e2fb19fd5c
-> >> dashboard link: https://syzkaller.appspot.com/bug?extid=dcc34d54d68ef7d2d53d
-> >> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> >> userspace arch: i386
-> >> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1561b01de00000
-> >> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15aad2f9e00000
-> >>
-> >> The bug was bisected to:
-> >>
-> >> commit 599be01ee567b61f4471ee8078870847d0a11e8e
-> >> Author: Cong Wang <xiyou.wangcong@gmail.com>
-> >> Date:   Mon Feb 3 05:14:35 2020 +0000
-> >>
-> >>     net_sched: fix an OOB access in cls_tcindex
-> >>
-> >> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=10a275fde00000
-> >> final crash:    https://syzkaller.appspot.com/x/report.txt?x=12a275fde00000
-> >> console output: https://syzkaller.appspot.com/x/log.txt?x=14a275fde00000
-> >>
-> >> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> >> Reported-by: syzbot+dcc34d54d68ef7d2d53d@syzkaller.appspotmail.com
-> >> Fixes: 599be01ee567 ("net_sched: fix an OOB access in cls_tcindex")
-> >>
-> >> IPVS: ftp: loaded support on port[0] = 21
-> >> ==================================================================
-> >> BUG: KASAN: double-free or invalid-free in tcf_exts_destroy+0x62/0xc0 net/sched/cls_api.c:3002
-> >>
-> >> CPU: 1 PID: 9507 Comm: syz-executor467 Not tainted 5.6.0-rc4-syzkaller #0
-> >> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> >> Call Trace:
-> >>  __dump_stack lib/dump_stack.c:77 [inline]
-> >>  dump_stack+0x188/0x20d lib/dump_stack.c:118
-> >>  print_address_description.constprop.0.cold+0xd3/0x315 mm/kasan/report.c:374
-> >>  kasan_report_invalid_free+0x61/0xa0 mm/kasan/report.c:468
-> >>  __kasan_slab_free+0x129/0x140 mm/kasan/common.c:455
-> >>  __cache_free mm/slab.c:3426 [inline]
-> >>  kfree+0x109/0x2b0 mm/slab.c:3757
-> >>  tcf_exts_destroy+0x62/0xc0 net/sched/cls_api.c:3002
-> >>  tcf_exts_change+0xf4/0x150 net/sched/cls_api.c:3059
-> >>  tcindex_set_parms+0xed8/0x1a00 net/sched/cls_tcindex.c:456
-> >
-> > Looks like a consequence of "slab-out-of-bounds Write in tcindex_set_parms".
-> >
-> > Thanks.
-> >
->
-> I have a dozen more syzbot reports involving net/sched code, do you want
-> me to release them right now ?
 
-I have no problem with this, at least I can close them as dup etc.. Please
-go ahead.
 
-Thanks.
+> Am 10.03.2020 um 22:25 schrieb Michael S. Tsirkin <mst@redhat.com>:
+>=20
+> =EF=BB=BFOn Tue, Mar 10, 2020 at 08:13:19PM +0100, David Hildenbrand wrote=
+:
+>>> Should this have:
+>>>=20
+>>> Cc: stable@vger.kernel.org # 4.19+
+>>=20
+>> I guess as nothing will actually "crash" it's not worth stable.
+>=20
+>=20
+> No - it's a regression, it would be a stable candidate from that POV.
+
+AFAIK
+
+=E2=80=9E It must fix a problem that causes a build error (but not for thing=
+s marked CONFIG_BROKEN), an oops, a hang, data corruption, a real security i=
+ssue, or some =E2=80=9Coh, that=E2=80=99s not good=E2=80=9D issue. In short,=
+ something critical.=E2=80=9C
+
+If this regression is that critical is debatable. But it doesn=E2=80=98t mat=
+ter as you correctly say, it=E2=80=98s too big :)=
+
