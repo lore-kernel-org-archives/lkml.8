@@ -2,110 +2,167 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97479C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:08:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BFD5C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:08:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 785A82468C
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:08:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8BB920873
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:08:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583845715;
+	bh=MrfiEAOqo2c6soZtF49+uQY9CXJVEwSV5pTL7U/BZ5A=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Q4MsHC8JWcyNxojVYXvK5+3XJmZv51NUKBrFD94HKb7P8g8JO7EFb3JAsmjr2RsBI
+	 FVIM3EY6f6Ihp+PX8HrXidPQxS4qw0Gr7LYkiMAjAcd7LE5ZyOrf16eVO41ngXKzY6
+	 zywba6Y2mvlj+xRjUT51UgZY6PN7S6RbbgSMmoDE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731121AbgCJNI3 (ORCPT
+        id S1731125AbgCJNId (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:08:29 -0400
-Received: from mga01.intel.com ([192.55.52.88]:19572 "EHLO mga01.intel.com"
+        Tue, 10 Mar 2020 09:08:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54962 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731107AbgCJNIZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:08:25 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Mar 2020 06:08:24 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,537,1574150400"; 
-   d="scan'208";a="388926224"
-Received: from akharche-mobl2.ccr.corp.intel.com (HELO localhost) ([10.251.86.23])
-  by orsmga004.jf.intel.com with ESMTP; 10 Mar 2020 06:08:19 -0700
-Date:   Tue, 10 Mar 2020 15:08:18 +0200
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     "Dr. Greg" <greg@enjellic.com>
-Cc:     Nathaniel McCallum <npmccallum@redhat.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com,
-        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        Neil Horman <nhorman@redhat.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        "Svahn, Kai" <kai.svahn@intel.com>, bp@alien8.de,
-        Josh Triplett <josh@joshtriplett.org>, luto@kernel.org,
-        kai.huang@intel.com, rientjes@google.com, cedric.xing@intel.com,
-        Patrick Uiterwijk <puiterwijk@redhat.com>,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v28 14/22] selftests/x86: Add a selftest for SGX
-Message-ID: <20200310130818.GA32334@linux.intel.com>
-References: <20200303233609.713348-1-jarkko.sakkinen@linux.intel.com>
- <20200303233609.713348-15-jarkko.sakkinen@linux.intel.com>
- <CAOASepN1JrD6OEzZycbqOr6_ZVACK=EctEOoQ8oSAEeigMr1Eg@mail.gmail.com>
- <04362c0cf66bf66e8f7c25a531830b9f294d2d09.camel@linux.intel.com>
- <20200306154222.GA20820@wind.enjellic.com>
- <20200306190753.GH7472@linux.intel.com>
- <20200307174223.GA30928@wind.enjellic.com>
+        id S1731117AbgCJNI2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:08:28 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 705C220873;
+        Tue, 10 Mar 2020 13:08:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583845707;
+        bh=MrfiEAOqo2c6soZtF49+uQY9CXJVEwSV5pTL7U/BZ5A=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=pZna7l8blkqtdp0FkczbT8cDKa+KVs3mFCv4IRDAzfhQveroQcanfAR/qA6WkSRcf
+         HVNcm2NEHzwlIS7kbuT7IzAc6nz9QnO3eCeckDVm0Ga+FNelPnHBZmMkv7The77Q+v
+         n2y3F16G7hzc3/zIEODI8HgH8jw9ilwdosg+4PMA=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Maor Gottlieb <maorg@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 071/126] RDMA/core: Fix pkey and port assignment in get_new_pps
+Date:   Tue, 10 Mar 2020 13:41:32 +0100
+Message-Id: <20200310124208.552135205@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200310124203.704193207@linuxfoundation.org>
+References: <20200310124203.704193207@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200307174223.GA30928@wind.enjellic.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 07, 2020 at 11:42:23AM -0600, Dr. Greg wrote:
-> On Fri, Mar 06, 2020 at 09:07:53PM +0200, Jarkko Sakkinen wrote:
-> 
-> Good morning, I hope the weekend is going well for everyone.
-> 
-> > Actually many people have applaused to have a small scoped, even if
-> > not perfect, test program to look at how SGX works. One that is only
-> > dependent on glibc. None of the selftests are meant to be production
-> > peaces of code. You are getting wrong the role of the selftest in
-> > the first place.
-> 
-> We certainly want to be counted in the camp of those who are
-> applausing you for making the selftests available, particularly the
-> new VDSO setup and entry code.
-> 
-> We arguably have similar motivations.  We architected and authored an
-> entire SGX runtime that has as its only dependencies the MUSL C
-> library, libelf and OpenSSL, primarily because we needed an easily
-> auditable and low footprint SGX implementation.
+From: Maor Gottlieb <maorg@mellanox.com>
 
-Good to hear!
+[ Upstream commit 801b67f3eaafd3f2ec8b65d93142d4ffedba85df ]
 
-> To the point at hand though, I'm certainly not a very smart guy so I
-> doubt that I am able to understand the role of the selftests.  We do
-> seem to agree though that they only provide a rudimentary exercise of
-> the driver.
+When port is part of the modify mask, then we should take it from the
+qp_attr and not from the old pps. Same for PKEY. Otherwise there are
+panics in some configurations:
 
-The role of kselftests is not to be production code. They are somewhat
-adhoc pieces of code that just check that "things turn on" e.g. in a
-new kernel release or a new hardware platform.
+  RIP: 0010:get_pkey_idx_qp_list+0x50/0x80 [ib_core]
+  Code: c7 18 e8 13 04 30 ef 0f b6 43 06 48 69 c0 b8 00 00 00 48 03 85 a0 04 00 00 48 8b 50 20 48 8d 48 20 48 39 ca 74 1a 0f b7 73 04 <66> 39 72 10 75 08 eb 10 66 39 72 10 74 0a 48 8b 12 48 39 ca 75 f2
+  RSP: 0018:ffffafb3480932f0 EFLAGS: 00010203
+  RAX: ffff98059ababa10 RBX: ffff980d926e8cc0 RCX: ffff98059ababa30
+  RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff98059ababa28
+  RBP: ffff98059b940000 R08: 00000000000310c0 R09: ffff97fe47c07480
+  R10: 0000000000000036 R11: 0000000000000200 R12: 0000000000000071
+  R13: ffff98059b940000 R14: ffff980d87f948a0 R15: 0000000000000000
+  FS:  00007f88deb31740(0000) GS:ffff98059f600000(0000) knlGS:0000000000000000
+  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  CR2: 0000000000000010 CR3: 0000000853e26001 CR4: 00000000001606e0
+  Call Trace:
+   port_pkey_list_insert+0x3d/0x1b0 [ib_core]
+   ? kmem_cache_alloc_trace+0x215/0x220
+   ib_security_modify_qp+0x226/0x3a0 [ib_core]
+   _ib_modify_qp+0xcf/0x390 [ib_core]
+   ipoib_init_qp+0x7f/0x200 [ib_ipoib]
+   ? rvt_modify_port+0xd0/0xd0 [rdmavt]
+   ? ib_find_pkey+0x99/0xf0 [ib_core]
+   ipoib_ib_dev_open_default+0x1a/0x200 [ib_ipoib]
+   ipoib_ib_dev_open+0x96/0x130 [ib_ipoib]
+   ipoib_open+0x44/0x130 [ib_ipoib]
+   __dev_open+0xd1/0x160
+   __dev_change_flags+0x1ab/0x1f0
+   dev_change_flags+0x23/0x60
+   do_setlink+0x328/0xe30
+   ? __nla_validate_parse+0x54/0x900
+   __rtnl_newlink+0x54e/0x810
+   ? __alloc_pages_nodemask+0x17d/0x320
+   ? page_fault+0x30/0x50
+   ? _cond_resched+0x15/0x30
+   ? kmem_cache_alloc_trace+0x1c8/0x220
+   rtnl_newlink+0x43/0x60
+   rtnetlink_rcv_msg+0x28f/0x350
+   ? kmem_cache_alloc+0x1fb/0x200
+   ? _cond_resched+0x15/0x30
+   ? __kmalloc_node_track_caller+0x24d/0x2d0
+   ? rtnl_calcit.isra.31+0x120/0x120
+   netlink_rcv_skb+0xcb/0x100
+   netlink_unicast+0x1e0/0x340
+   netlink_sendmsg+0x317/0x480
+   ? __check_object_size+0x48/0x1d0
+   sock_sendmsg+0x65/0x80
+   ____sys_sendmsg+0x223/0x260
+   ? copy_msghdr_from_user+0xdc/0x140
+   ___sys_sendmsg+0x7c/0xc0
+   ? skb_dequeue+0x57/0x70
+   ? __inode_wait_for_writeback+0x75/0xe0
+   ? fsnotify_grab_connector+0x45/0x80
+   ? __dentry_kill+0x12c/0x180
+   __sys_sendmsg+0x58/0xa0
+   do_syscall_64+0x5b/0x200
+   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+  RIP: 0033:0x7f88de467f10
 
-> We also seem to agree that the primary role of the driver is to
-> service the needs of those of us that are building production level
-> SGX runtime stacks.  In service of that premise, it would be helpful
-> to know if you are internally testing the driver/VDSO against enclaves
-> of production quality, with metadata, or just the two page selftest
-> enclave.
+Link: https://lore.kernel.org/r/20200227125728.100551-1-leon@kernel.org
+Cc: <stable@vger.kernel.org>
+Fixes: 1dd017882e01 ("RDMA/core: Fix protection fault in get_pkey_idx_qp_list")
+Signed-off-by: Maor Gottlieb <maorg@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Tested-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/infiniband/core/security.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-I do agree that a more complete test suite would be an essential thing
-to have. In that I'd just use the SDK and implement it outside the
-kernel tree.
+diff --git a/drivers/infiniband/core/security.c b/drivers/infiniband/core/security.c
+index 9b82766913294..61aff69e9f67b 100644
+--- a/drivers/infiniband/core/security.c
++++ b/drivers/infiniband/core/security.c
+@@ -339,11 +339,15 @@ static struct ib_ports_pkeys *get_new_pps(const struct ib_qp *qp,
+ 		return NULL;
+ 
+ 	if (qp_attr_mask & IB_QP_PORT)
+-		new_pps->main.port_num =
+-			(qp_pps) ? qp_pps->main.port_num : qp_attr->port_num;
++		new_pps->main.port_num = qp_attr->port_num;
++	else if (qp_pps)
++		new_pps->main.port_num = qp_pps->main.port_num;
++
+ 	if (qp_attr_mask & IB_QP_PKEY_INDEX)
+-		new_pps->main.pkey_index = (qp_pps) ? qp_pps->main.pkey_index :
+-						      qp_attr->pkey_index;
++		new_pps->main.pkey_index = qp_attr->pkey_index;
++	else if (qp_pps)
++		new_pps->main.pkey_index = qp_pps->main.pkey_index;
++
+ 	if ((qp_attr_mask & IB_QP_PKEY_INDEX) && (qp_attr_mask & IB_QP_PORT))
+ 		new_pps->main.state = IB_PORT_PKEY_VALID;
+ 
+-- 
+2.20.1
 
-Unfortunately I do not have time to implement such.
 
-/Jarkko
+
