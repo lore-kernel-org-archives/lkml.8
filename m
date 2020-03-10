@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1455C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:47:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36A0EC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:47:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8F5F2468F
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:47:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B62B2468E
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:47:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583844471;
-	bh=QlOsJOP0pH/gbXaqPyoYajKNPgocEMqUiTth3Vkjpo0=;
+	s=default; t=1583844475;
+	bh=g9FrH39E2EWG7NdRwYJpo7nD4uRn8g79O8Prpmhhhqk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GIvAE6zN5vXT9WkXdmRA5F1ryZgWmMa5TBq8Og9UbpI7+WfOrNdPA4lCBg5N7mUPp
-	 NWuZiL/wk6AuQthmm45W+m8HS5Oe+dwk4c6XJu3NKL5Q4FyTqR/zjoNxqmXJ6UvhHa
-	 hd2xqI78uUmtihSOA4A7t7iibx7dBN9GX3PB3j3w=
+	b=ous8LLRxEL2G2sOZ3FysUOpyvyRTqCA1CKsrAabPVAuZOl+Z2p+ZziazdlaouVVRs
+	 HU8eDTWEQcu0U0T2BsDbaOWw6GVMN5STMAHYhGtDKp1TT67aMysVshbS9kQgSo5uo5
+	 mxXB1zeVX6Jd2XzsKfv0khaKnrxnJMgr1v4BZv5M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728226AbgCJMru (ORCPT
+        id S1728235AbgCJMrx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:47:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51676 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:47:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51704 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728216AbgCJMrq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:47:46 -0400
+        id S1727978AbgCJMrt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:47:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3E2A82468D;
-        Tue, 10 Mar 2020 12:47:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE9692468F;
+        Tue, 10 Mar 2020 12:47:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844465;
-        bh=QlOsJOP0pH/gbXaqPyoYajKNPgocEMqUiTth3Vkjpo0=;
+        s=default; t=1583844468;
+        bh=g9FrH39E2EWG7NdRwYJpo7nD4uRn8g79O8Prpmhhhqk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nuOK0Wnae59JVQmbnBeVj9ZbRzzmB7Q/nhLSSTICTN0O1HGmA2thIGcxYEkqNSU5G
-         6owViCkZu1TcDaOuz6LiKaXaj5PtTKBFP2IxK8phSL8UONds7C8i9bhOYMCHBXDwoI
-         3jo25G6rdTKfY4wiHWnVQDS1OuC2eboLa6fWmgOc=
+        b=mVElWaV/JFFm63Fk+8DDaWij2MIB6aE47g1YVy7KJ/72Iw6MAFZDM5mrHuYt7mAxf
+         TO/aQi1rOgrWY9XM/xGB4R0XFHjraVqfGrS633sRIoCQIha4GXZL8MtLEvq8SEGVjS
+         3PCXH+MNQjttQ+byQbmyhiA5bnzC0oqdAnMAf4Ew=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pavel Machek <pavel@denx.de>,
-        Vladimir Oltean <olteanv@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>
-Subject: [PATCH 4.9 77/88] ARM: dts: ls1021a: Restore MDIO compatible to gianfar
-Date:   Tue, 10 Mar 2020 13:39:25 +0100
-Message-Id: <20200310123624.140135549@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
+        Cezary Rojewski <cezary.rojewski@intel.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 4.9 78/88] ASoC: pcm: Fix possible buffer overflow in dpcm state sysfs output
+Date:   Tue, 10 Mar 2020 13:39:26 +0100
+Message-Id: <20200310123624.267419035@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123606.543939933@linuxfoundation.org>
 References: <20200310123606.543939933@linuxfoundation.org>
@@ -60,54 +60,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Oltean <olteanv@gmail.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit 7155c44624d061692b4c13aa8343f119c67d4fc0 upstream.
+commit 6c89ffea60aa3b2a33ae7987de1e84bfb89e4c9e upstream.
 
-The difference between "fsl,etsec2-mdio" and "gianfar" has to do with
-the .get_tbipa function, which calculates the address of the TBIPA
-register automatically, if not explicitly specified. [ see
-drivers/net/ethernet/freescale/fsl_pq_mdio.c ]. On LS1021A, the TBIPA
-register is at offset 0x30 within the port register block, which is what
-the "gianfar" method of calculating addresses actually does.
+dpcm_show_state() invokes multiple snprintf() calls to concatenate
+formatted strings on the fixed size buffer.  The usage of snprintf()
+is supposed for avoiding the buffer overflow, but it doesn't work as
+expected because snprintf() doesn't return the actual output size but
+the size to be written.
 
-Luckily, the bad "compatible" is inconsequential for ls1021a.dtsi,
-because the TBIPA register is explicitly specified via the second "reg"
-(<0x0 0x2d10030 0x0 0x4>), so the "get_tbipa" function is dead code.
-Nonetheless it's good to restore it to its correct value.
+Fix this bug by replacing all snprintf() calls with scnprintf()
+calls.
 
-Background discussion:
-https://www.spinics.net/lists/stable/msg361156.html
-
-Fixes: c7861adbe37f ("ARM: dts: ls1021: Fix SGMII PCS link remaining down after PHY disconnect")
-Reported-by: Pavel Machek <pavel@denx.de>
-Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Fixes: f86dcef87b77 ("ASoC: dpcm: Add debugFS support for DPCM")
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Acked-by: Cezary Rojewski <cezary.rojewski@intel.com>
+Link: https://lore.kernel.org/r/20200218111737.14193-4-tiwai@suse.de
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/boot/dts/ls1021a.dtsi |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ sound/soc/soc-pcm.c |   16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
---- a/arch/arm/boot/dts/ls1021a.dtsi
-+++ b/arch/arm/boot/dts/ls1021a.dtsi
-@@ -505,7 +505,7 @@
- 		};
+--- a/sound/soc/soc-pcm.c
++++ b/sound/soc/soc-pcm.c
+@@ -2979,16 +2979,16 @@ static ssize_t dpcm_show_state(struct sn
+ 	ssize_t offset = 0;
  
- 		mdio0: mdio@2d24000 {
--			compatible = "fsl,etsec2-mdio";
-+			compatible = "gianfar";
- 			device_type = "mdio";
- 			#address-cells = <1>;
- 			#size-cells = <0>;
-@@ -513,7 +513,7 @@
- 		};
+ 	/* FE state */
+-	offset += snprintf(buf + offset, size - offset,
++	offset += scnprintf(buf + offset, size - offset,
+ 			"[%s - %s]\n", fe->dai_link->name,
+ 			stream ? "Capture" : "Playback");
  
- 		mdio1: mdio@2d64000 {
--			compatible = "fsl,etsec2-mdio";
-+			compatible = "gianfar";
- 			device_type = "mdio";
- 			#address-cells = <1>;
- 			#size-cells = <0>;
+-	offset += snprintf(buf + offset, size - offset, "State: %s\n",
++	offset += scnprintf(buf + offset, size - offset, "State: %s\n",
+ 	                dpcm_state_string(fe->dpcm[stream].state));
+ 
+ 	if ((fe->dpcm[stream].state >= SND_SOC_DPCM_STATE_HW_PARAMS) &&
+ 	    (fe->dpcm[stream].state <= SND_SOC_DPCM_STATE_STOP))
+-		offset += snprintf(buf + offset, size - offset,
++		offset += scnprintf(buf + offset, size - offset,
+ 				"Hardware Params: "
+ 				"Format = %s, Channels = %d, Rate = %d\n",
+ 				snd_pcm_format_name(params_format(params)),
+@@ -2996,10 +2996,10 @@ static ssize_t dpcm_show_state(struct sn
+ 				params_rate(params));
+ 
+ 	/* BEs state */
+-	offset += snprintf(buf + offset, size - offset, "Backends:\n");
++	offset += scnprintf(buf + offset, size - offset, "Backends:\n");
+ 
+ 	if (list_empty(&fe->dpcm[stream].be_clients)) {
+-		offset += snprintf(buf + offset, size - offset,
++		offset += scnprintf(buf + offset, size - offset,
+ 				" No active DSP links\n");
+ 		goto out;
+ 	}
+@@ -3008,16 +3008,16 @@ static ssize_t dpcm_show_state(struct sn
+ 		struct snd_soc_pcm_runtime *be = dpcm->be;
+ 		params = &dpcm->hw_params;
+ 
+-		offset += snprintf(buf + offset, size - offset,
++		offset += scnprintf(buf + offset, size - offset,
+ 				"- %s\n", be->dai_link->name);
+ 
+-		offset += snprintf(buf + offset, size - offset,
++		offset += scnprintf(buf + offset, size - offset,
+ 				"   State: %s\n",
+ 				dpcm_state_string(be->dpcm[stream].state));
+ 
+ 		if ((be->dpcm[stream].state >= SND_SOC_DPCM_STATE_HW_PARAMS) &&
+ 		    (be->dpcm[stream].state <= SND_SOC_DPCM_STATE_STOP))
+-			offset += snprintf(buf + offset, size - offset,
++			offset += scnprintf(buf + offset, size - offset,
+ 				"   Hardware Params: "
+ 				"Format = %s, Channels = %d, Rate = %d\n",
+ 				snd_pcm_format_name(params_format(params)),
 
 
