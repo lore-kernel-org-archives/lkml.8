@@ -2,128 +2,106 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05E20C10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:48:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 766A6C18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:51:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACF8A222D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:48:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A4B3222D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:51:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="M0yx0ruQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727817AbgCJWse (ORCPT
+        id S1727707AbgCJWvY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 18:48:34 -0400
-Received: from mga07.intel.com ([134.134.136.100]:16854 "EHLO mga07.intel.com"
+        Tue, 10 Mar 2020 18:51:24 -0400
+Received: from rere.qmqm.pl ([91.227.64.183]:64947 "EHLO rere.qmqm.pl"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726293AbgCJWse (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 18:48:34 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Mar 2020 15:48:33 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,538,1574150400"; 
-   d="scan'208";a="245844918"
-Received: from acrisan1-mobl1.amr.corp.intel.com (HELO [10.251.22.118]) ([10.251.22.118])
-  by orsmga006.jf.intel.com with ESMTP; 10 Mar 2020 15:48:32 -0700
-Subject: Re: interaction of MADV_PAGEOUT with CoW anonymous mappings?
-To:     Michal Hocko <mhocko@kernel.org>, Jann Horn <jannh@google.com>
-Cc:     Minchan Kim <minchan@kernel.org>, Linux-MM <linux-mm@kvack.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Daniel Colascione <dancol@google.com>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>
-References: <CAG48ez0G3JkMq61gUmyQAaCq=_TwHbi1XKzWRooxZkv08PQKuw@mail.gmail.com>
- <20200310184814.GA8447@dhcp22.suse.cz>
- <CAG48ez2pNSKL9ZTH-PQ93+Kc6ObH6Pa1vVg3OS85WT0TB8m3=A@mail.gmail.com>
- <20200310210906.GD8447@dhcp22.suse.cz>
-From:   Dave Hansen <dave.hansen@intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-Message-ID: <cf95db88-968d-fee5-1c15-10d024c09d8a@intel.com>
-Date:   Tue, 10 Mar 2020 15:48:31 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1726325AbgCJWvY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 18:51:24 -0400
+Received: from remote.user (localhost [127.0.0.1])
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 48cVgs3FwSzB1;
+        Tue, 10 Mar 2020 23:51:21 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
+        t=1583880681; bh=HCqVY0Ab2Jo0fK/uAoRfORRHPkIU6lz6VreLU0tBoWw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=M0yx0ruQd1XhnQDQUFMtuRWclv7Cav2MJsYUnoiQpIWE1llFxTQlyk0IIaQP60Hj7
+         jbqMCRX6/SCmPDyj4wo3F/ENP+S7LXEv5MIODRndKeNIyCKYDrBtvlwlGz9RkbdWLA
+         0kuYmDot6M6jp2XsBbSU2fQmi3ILK9X+DPufQx8zCWf7VOES3c5ALG+k8lJEToDWX1
+         /NjsOd0iAtMNLobnl65mXODLSFWOvtiev+mnWi96vZ5hRM/JzuqrRAYF1sUMcjcsXv
+         xlh3bBIeYbxGSNsRWpmDexi0tYz2FXFEbYmMrZ5rFlXDjHr2psjCc+tqG8CT7JAJ+V
+         mkgh0EoSI2FcA==
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.102.2 at mail
+Date:   Tue, 10 Mar 2020 23:51:18 +0100
+From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
+To:     Pavel Machek <pavel@denx.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Sergey Organov <sorganov@gmail.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 12/86] usb: gadget: serial: fix Tx stall after
+ buffer overflow
+Message-ID: <20200310225118.GA32479@qmqm.qmqm.pl>
+References: <20200310124530.808338541@linuxfoundation.org>
+ <20200310124531.459641903@linuxfoundation.org>
+ <20200310150834.GA24886@duo.ucw.cz>
 MIME-Version: 1.0
-In-Reply-To: <20200310210906.GD8447@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=iso-8859-2
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200310150834.GA24886@duo.ucw.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Maybe instead of just punting on MADV_PAGEOUT for map_count>1 we should
-only let it affect the *local* process.  We could still put the page in
-the swap cache, we just wouldn't go do the rmap walk.
+On Tue, Mar 10, 2020 at 04:08:35PM +0100, Pavel Machek wrote:
+> Hi!
+> 
+> > From: Sergey Organov <sorganov@gmail.com>
+> > 
+> > [ Upstream commit e4bfded56cf39b8d02733c1e6ef546b97961e18a ]
+> > 
+> > Symptom: application opens /dev/ttyGS0 and starts sending (writing) to
+> > it while either USB cable is not connected, or nobody listens on the
+> > other side of the cable. If driver circular buffer overflows before
+> > connection is established, no data will be written to the USB layer
+> > until/unless /dev/ttyGS0 is closed and re-opened again by the
+> > application (the latter besides having no means of being notified about
+> > the event of establishing of the connection.)
+> > 
+> > Fix: on open and/or connect, kick Tx to flush circular buffer data to
+> > USB layer.
+> 
+> > diff --git a/drivers/usb/gadget/function/u_serial.c b/drivers/usb/gadget/function/u_serial.c
+> > index d4d317db89df5..38afe96c5cd26 100644
+> > --- a/drivers/usb/gadget/function/u_serial.c
+> > +++ b/drivers/usb/gadget/function/u_serial.c
+> > @@ -567,8 +567,10 @@ static int gs_start_io(struct gs_port *port)
+> >  	port->n_read = 0;
+> >  	started = gs_start_rx(port);
+> >  
+> > -	/* unblock any pending writes into our circular buffer */
+> >  	if (started) {
+> > +		gs_start_tx(port);
+> > +		/* Unblock any pending writes into our circular buffer, in case
+> > +		 * we didn't in gs_start_tx() */
+> >  		tty_wakeup(port->port.tty);
+> 
+> I'm confused. gs-start_tx() is done twice in a row. Its return
+> convention seem to be 0 in success case, and non-zero on failure. But
+> it is assigned to variable called "started", which does not sound like
+> "error" to me.
+> 
+> Are you sure this is correct?
 
-On 3/10/20 2:09 PM, Michal Hocko wrote:
-> I still have to think about how this could be used for any reasonable
-> attack.
+The function before 'if (started)' is gs_start_rx() - it's RX not TX.
 
-While this sounds theoretically vulnerable, I'm having a hard time
-convincing myself that it's in any way practical.
-
-Code that's a victim to LVI has to hit a fault or an "assist".  The most
-likely assist in this case is if the victim needs to set the PTE
-Accessed or Dirty bits.
-
-There would first need to be some secret that an attacker wants to
-steal, then some *other* data that directly or indirectly protects the
-secret.  The load of the "other" data would be what needs to encounter
-the fault or the assist, and would also need to be able to speculatively
-reach a "disclosure gadget".
-
-The attacker would sit there and do MADV_PAGEOUT constantly, inducing
-lots of faults and assists and then _separately_ poison the
-microarchitectural buffers that lead to the "other" data getting an
-injected speculative value.
-
-If an app is vulnerable to this, it's probably going to need to be using
-the "other" data a *lot*.  It's going to have a really hard time doing
-that because it's going to be handling page faults all the time.  It
-also can't ever write to the data being shared, or it will break the COW.
+Best Regards,
+Micha³ Miros³aw
