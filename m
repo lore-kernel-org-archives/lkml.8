@@ -2,102 +2,152 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0C1FC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 23:16:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 685BCC10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 23:17:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FED32071B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 23:16:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="m1sTUdtz"
+	by mail.kernel.org (Postfix) with ESMTP id 1D6FF2071B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 23:17:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727725AbgCJXQw (ORCPT
+        id S1727796AbgCJXQz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 19:16:52 -0400
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:38948 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726380AbgCJXQv (ORCPT
+        Tue, 10 Mar 2020 19:16:55 -0400
+Received: from 17.mo5.mail-out.ovh.net ([46.105.56.132]:33569 "EHLO
+        17.mo5.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727752AbgCJXQy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 19:16:51 -0400
-Received: by mail-pj1-f67.google.com with SMTP id d8so1097825pje.4
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 16:16:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=zXg9Gj7QTUwpYvOhGlvMrbNF6i7eg/pUYIjVoM9j78w=;
-        b=m1sTUdtz0IBH4T58S0Qp8F887lOMFeQ6E3LwhmSyto0/XicAZGMKH/OdcvxBS/gioj
-         hpdgTy+8k2waNEDrL7V93U+BcQrXkOtW7w1AYTphgWutJGFtTIY3zpT15dtk3Y+co1p9
-         dCqpvzXMboOTnI8q3DAmcjPcZiP2ChNuhzxOw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=zXg9Gj7QTUwpYvOhGlvMrbNF6i7eg/pUYIjVoM9j78w=;
-        b=N6nJCQ9UCN/+sl58qG2vSoQizC+IFcQ/Vq2Gy5iS2jS58kCALx77XP61pTsFQF5JC3
-         djeN9a51247222e7G09fEgml2PRooLezF/Fbsk84kf/hcJy9MjL1n+qhyefJ9Jrv3+LH
-         NTkCzFgf0P7nY3Z9V6dsVpbm+KBTQ0w0+IpD0JIq5Pn15DpAIxoDeOk/znAseOQ6X4Vh
-         IwBqMRPoGN3jbysu6deh5Y/6S/QWDkMVuUbWsLqvVygslfHa4ZWIXnokK4T31XhLqRbN
-         sfTULcM7vz9E/ImCqW0bvRVGUukeaA9qm5MQiss9C6r7v+Mp7dduSheQwca+fT7Zz2MO
-         W9Fw==
-X-Gm-Message-State: ANhLgQ1OlB/8iHEb/erM8uYSupy8fg24RG+pVY+KYY+vomSXjNHvtYPR
-        NTVsy4jLSB+dZAewPa+RzeRvDA==
-X-Google-Smtp-Source: ADFU+vua2DRqzHPDCg1h0WaWa5jUQRYxfdS9IEm3qlPlei+YNlP5TOn8cJF3gz2OQRyZ5zwlg/XAUQ==
-X-Received: by 2002:a17:90b:438d:: with SMTP id in13mr333664pjb.114.1583882210644;
-        Tue, 10 Mar 2020 16:16:50 -0700 (PDT)
-Received: from evgreen2.mtv.corp.google.com ([2620:15c:202:201:ffda:7716:9afc:1301])
-        by smtp.gmail.com with ESMTPSA id 15sm43071797pfp.125.2020.03.10.16.16.49
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 10 Mar 2020 16:16:50 -0700 (PDT)
-From:   Evan Green <evgreen@chromium.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Evan Green <evgreen@chromium.org>, Andy Gross <agross@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: dts: sc7180: Include interconnect definitions
-Date:   Tue, 10 Mar 2020 16:16:29 -0700
-Message-Id: <20200310161502.1.Ia2884ed3c8826f52fbd5dcfa7a376a2fac4f31e6@changeid>
-X-Mailer: git-send-email 2.24.1
+        Tue, 10 Mar 2020 19:16:54 -0400
+Received: from player759.ha.ovh.net (unknown [10.110.208.202])
+        by mo5.mail-out.ovh.net (Postfix) with ESMTP id A0BAF270FEE
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 22:57:18 +0100 (CET)
+Received: from sk2.org (82-65-25-201.subs.proxad.net [82.65.25.201])
+        (Authenticated sender: steve@sk2.org)
+        by player759.ha.ovh.net (Postfix) with ESMTPSA id 5878B104D32F2;
+        Tue, 10 Mar 2020 21:57:05 +0000 (UTC)
+Date:   Tue, 10 Mar 2020 22:57:02 +0100
+From:   Stephen Kitt <steve@sk2.org>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>, bpf <bpf@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] docs: sysctl/kernel: document BPF entries
+Message-ID: <20200310225702.2da4519c@heffalump.sk2.org>
+In-Reply-To: <CAADnVQJ0EephJiY8F5KJFbYPBg2=hTHOi3WOUtVFE=qgoVbSuA@mail.gmail.com>
+References: <20200309180350.21075-1-steve@sk2.org>
+        <CAADnVQJ0EephJiY8F5KJFbYPBg2=hTHOi3WOUtVFE=qgoVbSuA@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+ boundary="Sig_/O4H7GWQKOH1ilLfxU.Pj.YK"; protocol="application/pgp-signature"
+X-Ovh-Tracer-Id: 954200173656165741
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedugedruddvtddgudegiecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvuffkjghfofggtgesghdtreerredtvdenucfhrhhomhepufhtvghphhgvnhcumfhithhtuceoshhtvghvvgesshhkvddrohhrgheqnecukfhppedtrddtrddtrddtpdekvddrieehrddvhedrvddtudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphdqohhuthdphhgvlhhopehplhgrhigvrhejheelrdhhrgdrohhvhhdrnhgvthdpihhnvghtpedtrddtrddtrddtpdhmrghilhhfrhhomhepshhtvghvvgesshhkvddrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Re-introduce the include of the sc7180 interconnect node name
-definitions. Though this was part of v5 of the interconnect provider
-series [1], it was dropped because the DT changes went through a
-different tree than the header. Re-add that now.
+--Sig_/O4H7GWQKOH1ilLfxU.Pj.YK
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Interconnect clients being introduced can reference this patch as a
-dependency, rather than racing each other to add the include.
+On Tue, 10 Mar 2020 10:47:15 -0700, Alexei Starovoitov
+<alexei.starovoitov@gmail.com> wrote:
 
-[1] https://patchwork.kernel.org/patch/11417989/
+> On Mon, Mar 9, 2020 at 11:05 AM Stephen Kitt <steve@sk2.org> wrote:
+> >
+> > Based on the implementation in kernel/bpf/syscall.c,
+> > kernel/bpf/trampoline.c, include/linux/filter.h, and the documentation
+> > in bpftool-prog.rst.
+> >
+> > The section style doesn't match the surrounding sections; it matches
+> > the style of the reworked kernel.rst queued up in docs-next.
+> >
+> > Signed-off-by: Stephen Kitt <steve@sk2.org>
+> > ---
+> >
+> > Notes:
+> >     Changes since v1:
+> >     - rebased on bpf-next instead of docs-next.
+> >
+> >  Documentation/admin-guide/sysctl/kernel.rst | 24 +++++++++++++++++++++
+> >  1 file changed, 24 insertions(+)
+> >
+> > diff --git a/Documentation/admin-guide/sysctl/kernel.rst
+> > b/Documentation/admin-guide/sysctl/kernel.rst index
+> > def074807cee..eea7afd509ac 100644 ---
+> > a/Documentation/admin-guide/sysctl/kernel.rst +++
+> > b/Documentation/admin-guide/sysctl/kernel.rst @@ -174,6 +174,20 @@ See
+> > the type_of_loader and ext_loader_ver fields in
+> > Documentation/x86/boot.rst for additional information.
+> >
+> >
+> > +bpf_stats_enabled
+> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > +
+> > +Controls whether the kernel should collect statistics on BPF programs
+> > +(total time spent running, number of times run...). Enabling
+> > +statistics causes a slight reduction in performance on each program
+> > +run. The statistics can be seen using ``bpftool``.
+> > +
+> > +=3D =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > +0 Don't collect statistics (default).
+> > +1 Collect statistics.
+> > +=3D =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > +
+> > +
+> >  cap_last_cap:
+> >  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> >
+> > @@ -1123,6 +1137,16 @@ NMI switch that most IA32 servers have fires
+> > unknown NMI up, for example.  If a system hangs up, try pressing the NMI
+> > switch.
+> >
+> >
+> > +unprivileged_bpf_disabled
+> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D
+> > +
+> > +Writing 1 to this entry will disabled unprivileged calls to ``bpf()``;=
+ =20
+>=20
+> same typo as was pointed out earlier.
 
-Signed-off-by: Evan Green <evgreen@chromium.org>
----
+Oh dear, sorry about that, v3 is on its way :-(.
 
- arch/arm64/boot/dts/qcom/sc7180.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+Regards,
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index 89ba01246f95b..eb5a527da685a 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -10,6 +10,7 @@
- #include <dt-bindings/clock/qcom,gpucc-sc7180.h>
- #include <dt-bindings/clock/qcom,rpmh.h>
- #include <dt-bindings/clock/qcom,videocc-sc7180.h>
-+#include <dt-bindings/interconnect/qcom,sc7180.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/phy/phy-qcom-qusb2.h>
- #include <dt-bindings/power/qcom-aoss-qmp.h>
--- 
-2.24.1
+Stephen
 
+--Sig_/O4H7GWQKOH1ilLfxU.Pj.YK
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEEnPVX/hPLkMoq7x0ggNMC9Yhtg5wFAl5oDS4ACgkQgNMC9Yht
+g5wY9hAAk12F/rXYyveXRZ0+57xIPIGL2rBRZOEF8WxN8lEbpREk35+vufvy4p0l
+cxnAPh/aIcZA9dkxZOA1prAK+B6Q2tIvCKXLWOhr5WW3C31hEDfPfbqr9PvPp9DJ
+m1JorpMHFdiwYOymrTBg+Xgm8I/4F6InRlnHchNAMw/kronscoCFC7sh6yJiXRrr
+gyEV7tA5IQm4rGzCwxOIyU3IqeKvNOyeh41aor4YcjL7Y3l+WB7XV2XieVP7zX1Z
+OwvrFGWKJGz+rj3A4i5JLZchFfnwuA3jVS80QbyfpMNuS/ICWGoDCYw3K5mqvwce
+00Ur1+UCAH41PIT8If0yF7/hDzyr/X8ZHcdvjoObOqTJ33rjxJWEnezzlXqNUwiz
+qhmVNaJ3TUmSkGpMlu0ATEzoj0yvgeuXtoq9DjrXaZ+BKWsMgnUaE3+7jMlbuUIJ
+hMD/0Fk+d8x4dTUUIyIkHvSFrJq5TEtWYsTlIWpP0KvLLf3Uf+11/Ve4vtPsHsVC
+qyOMa9arCvV82yjRzvR2m74+ld1zBk7lH0r+X6mLnX4iJd6MNLY79UCUZ0ACTWME
+xQQ7kENBvARy+UHwkwNpv4ybd1P+1I6hZu+NKvV+ZWkXvqGsr71v0N1nEgbd+ZSV
+kadnjSZlyoMP546no7de7kvl2iAqB1UDeD2L26W5zHCRjprStlA=
+=6Whk
+-----END PGP SIGNATURE-----
+
+--Sig_/O4H7GWQKOH1ilLfxU.Pj.YK--
