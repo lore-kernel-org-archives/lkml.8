@@ -2,255 +2,165 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33411C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 16:54:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A84E4C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 16:54:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1B2420873
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 16:54:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D02B21D56
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 16:54:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583859284;
+	bh=XQQa0PLtN8swMBCXZL8OPpBHL06E8seSbXfVlS1Sc9Q=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=1Q7CmzBwb8pnY4EREiSAm7w37iW6zOyoTzooXHqErGVDKYNUKUUNGLh6SleAIQatI
+	 Av/GotYt8iW+BEXdrDlgoNk8EjgSRR+PuPwTQjSIi4uAJpgWkCZbyv436v//MtisgU
+	 3WM2qyOebAIO8y4nZmUuKShlxwpEU6JL5b3A4wDA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726968AbgCJQyK (ORCPT
+        id S1727073AbgCJQyn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 12:54:10 -0400
-Received: from mga09.intel.com ([134.134.136.24]:39029 "EHLO mga09.intel.com"
+        Tue, 10 Mar 2020 12:54:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53074 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726837AbgCJQyK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 12:54:10 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Mar 2020 09:54:09 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,537,1574150400"; 
-   d="scan'208";a="234406247"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga007.fm.intel.com with ESMTP; 10 Mar 2020 09:54:08 -0700
-Received: from [10.251.24.33] (kliang2-mobl.ccr.corp.intel.com [10.251.24.33])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726477AbgCJQym (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 12:54:42 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id 666A85804A0;
-        Tue, 10 Mar 2020 09:54:07 -0700 (PDT)
-Subject: Re: [PATCH V2 1/9] perf pmu: Add support for PMU capabilities
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     jolsa@redhat.com, peterz@infradead.org, mingo@redhat.com,
-        linux-kernel@vger.kernel.org, namhyung@kernel.org,
-        adrian.hunter@intel.com, mathieu.poirier@linaro.org,
-        ravi.bangoria@linux.ibm.com, alexey.budankov@linux.intel.com,
-        vitaly.slobodskoy@intel.com, pavel.gerasimov@intel.com,
-        mpe@ellerman.id.au, eranian@google.com, ak@linux.intel.com
-References: <20200309174639.4594-1-kan.liang@linux.intel.com>
- <20200309174639.4594-2-kan.liang@linux.intel.com>
- <20200310130644.GC15931@kernel.org>
- <00ebb51d-0282-8181-7285-c60aec27566c@linux.intel.com>
- <20200310140421.GD15931@kernel.org>
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-Message-ID: <fa4e32f0-1572-a9aa-e609-3cecaae7ef9e@linux.intel.com>
-Date:   Tue, 10 Mar 2020 12:54:05 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        by mail.kernel.org (Postfix) with ESMTPSA id 97F9420873;
+        Tue, 10 Mar 2020 16:54:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583859281;
+        bh=XQQa0PLtN8swMBCXZL8OPpBHL06E8seSbXfVlS1Sc9Q=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=RKDipRUKJ4U3391gbaAHXUKR1S+8mTtl+uFLWAbWba+gU8n0RpHJr/1SIjXTSIhU0
+         Bm4OOqSdpTzZJBCaQMFaWl3ktQZzcHMcTH4BR+B5EdFhtKMFQlMlFubU0T+tj3F3ss
+         zeD4uis+T1/Zbf8eS4tKJtPq20m+lfLf5kPScK94=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 7617F35229CC; Tue, 10 Mar 2020 09:54:41 -0700 (PDT)
+Date:   Tue, 10 Mar 2020 09:54:41 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        "Joel Fernandes, Google" <joel@joelfernandes.org>,
+        Frederic Weisbecker <frederic@kernel.org>, bpf@vger.kernel.org
+Subject: Re: Instrumentation and RCU
+Message-ID: <20200310165441.GE2935@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <87mu8p797b.fsf@nanos.tec.linutronix.de>
+ <1403546357.21810.1583779060302.JavaMail.zimbra@efficios.com>
+ <20200310014043.4dbagqbr2wsbuarm@ast-mbp>
 MIME-Version: 1.0
-In-Reply-To: <20200310140421.GD15931@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200310014043.4dbagqbr2wsbuarm@ast-mbp>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Mar 09, 2020 at 06:40:45PM -0700, Alexei Starovoitov wrote:
+> On Mon, Mar 09, 2020 at 02:37:40PM -0400, Mathieu Desnoyers wrote:
+> > > 
+> > >    But what's relevant is the tracer overhead which is e.g. inflicted
+> > >    with todays trace_hardirqs_off/on() implementation because that
+> > >    unconditionally uses the rcuidle variant with the scru/rcu_irq dance
+> > >    around every tracepoint.
+> > 
+> > I think one of the big issues here is that most of the uses of
+> > trace_hardirqs_off() are from sites which already have RCU watching,
+> > so we are doing heavy-weight operations for nothing.
+> 
+> I think kernel/trace/trace_preemptirq.c created too many problems for the
+> kernel without providing tangible benefits. My understanding no one is using it
+> in production. It's a tool to understand how kernel works. And such debugging
+> tool can and should be removed.
+> 
+> One of Thomas's patches mentioned that bpf can be invoked from hardirq and
+> preempt tracers. This connection doesn't exist in a direct way, but
+> theoretically it's possible. There is no practical use though and I would be
+> happy to blacklist such bpf usage at a minimum.
+> 
+> > We could use the approach proposed by Peterz's and Steven's patches to basically
+> > do a lightweight "is_rcu_watching()" check for rcuidle tracepoint, and only enable
+> > RCU for those cases. We could then simply go back on using regular RCU like so:
+> > 
+> > #define __DO_TRACE(tp, proto, args, cond, rcuidle)                      \
+> >         do {                                                            \
+> >                 struct tracepoint_func *it_func_ptr;                    \
+> >                 void *it_func;                                          \
+> >                 void *__data;                                           \
+> >                 bool exit_rcu = false;                                  \
+> >                                                                         \
+> >                 if (!(cond))                                            \
+> >                         return;                                         \
+> >                                                                         \
+> >                 if (rcuidle && !rcu_is_watching()) {                    \
+> >                         rcu_irq_enter_irqson();                         \
+> >                         exit_rcu = true;                                \
+> >                 }                                                       \
+> >                 preempt_disable_notrace();                              \
+> >                 it_func_ptr = rcu_dereference_raw((tp)->funcs);         \
+> >                 if (it_func_ptr) {                                      \
+> >                         do {                                            \
+> >                                 it_func = (it_func_ptr)->func;          \
+> >                                 __data = (it_func_ptr)->data;           \
+> >                                 ((void(*)(proto))(it_func))(args);      \
+> >                         } while ((++it_func_ptr)->func);                \
+> >                 }                                                       \
+> >                 preempt_enable_notrace();                               \
+> >                 if (exit_rcu)                                           \
+> >                         rcu_irq_exit_irqson();                          \
+> >         } while (0)
+> 
+> I think it's a fine approach interim.
+> 
+> Long term sounds like Paul is going to provide sleepable and low overhead
+> rcu_read_lock_for_tracers() that will include bpf.
 
+It now builds without errors, so the obvious problems are taken care of...
 
-On 3/10/2020 10:04 AM, Arnaldo Carvalho de Melo wrote:
-> Em Tue, Mar 10, 2020 at 09:53:24AM -0400, Liang, Kan escreveu:
->> On 3/10/2020 9:06 AM, Arnaldo Carvalho de Melo wrote:
->>> Em Mon, Mar 09, 2020 at 10:46:31AM -0700, kan.liang@linux.intel.com escreveu:
->>>> +static int perf_pmu__new_caps(struct list_head *list, char *name, char *value)
->>>> +{
->>>> +	struct perf_pmu_caps *caps;
->>>> +
->>>> +	caps = zalloc(sizeof(*caps));
->>>> +	if (!caps)
->>>> +		return -ENOMEM;
-> 
->>> So here you check if zalloc fails and returns a proper error
-> 
->>>> +	caps->name = strdup(name);
->>>> +	caps->value = strndup(value, strlen(value) - 1);
-> 
->>> But then you don't check strdup()?
->   
->> Right, I should check strdup(), otherwise the capability information may be
->> incomplete. I will fix it in V3.
-> 
-> Thanks, overall just consider making the patches smaller if possible,
-> with prep patches paving the way for more complex changes so that
-> reviewing becomes easier, for instance:
-> 
->    perf machine: Refine the function for LBR call stack reconstruction
-> 
-> Seems to do too many things at once. It was unfortunate, for instance,
-> that the pre-existing code had that
-> 
-> resolve_lbr_callchain_sample()
-> {
-> 	/* LBR only affects the user callchain */
-> 	if (i != chain_nr) {
-> 		body of the function, long
-> 		....
-> 		return err;
-> 	}
-> 
-> 	return 0;
-> }
-> 
-> One of the things you did in this patch was to the more sensible:
-> 
-> 	/* LBR only affects the user callchain */
-> 	if (i == chain_nr)
-> 		return 0;
-> 
-> 	body of the function
-> 	...
-> 	return err;
-> 
-> So if you had a prep patch at this point just removing that silly
-> indent, then we would see that that is just removing the indent, the
-> next patch wouldn't have that check for user callchains, would be
-> smaller, I think that would help reduce the patch sizes.
-> 
-> Then if you just moved to a separate function the (callchain_param.order
-> == ORDER_CALLEE) part, the patch would again be smaller, etc.
-> 
-> This helps reviewing and usually helps us later, with bisection, when
-> some bug is introduced,
+Working on the less-obvious errors as rcutorture encounters them.
 
+> My understanding that this new rcu flavor won't have "idle" issues,
+> so rcu_is_watching() checks will not be necessary.
 
-Sure, I will go through all patches and see what I can do to reduce the 
-size of patches in V3.
+True.  However, if the from-idle code invokes other code relying on
+vanilla RCU, such checks are still required.  But I must let others
+weigh in on this.
 
+> And if we remove trace_preemptirq.c the only thing left will be Thomas's points
+> 1 (low level entry) and 2 (breakpoints) that can be addressed without
+> creating fancy .text annotations and teach objtool about it.
 
-Thanks,
-Kan
+And the intent is to cover these cases as well.  Of course, we all know
+which road is paved with good intentions.  ;-)
 
-> 
-> Regards,
-> 
-> - Arnaldo
-> 
->> Thanks,
->> Kan
->>
->>>
->>>> +	list_add_tail(&caps->list, list);
->>>> +	return 0;
->>>> +}
->>>> +
->>>> +/*
->>>> + * Reading/parsing the given pmu capabilities, which should be located at:
->>>> + * /sys/bus/event_source/devices/<dev>/caps as sysfs group attributes.
->>>> + * Return the number of capabilities
->>>> + */
->>>> +int perf_pmu__caps_parse(struct perf_pmu *pmu)
->>>> +{
->>>> +	struct stat st;
->>>> +	char caps_path[PATH_MAX];
->>>> +	const char *sysfs = sysfs__mountpoint();
->>>> +	DIR *caps_dir;
->>>> +	struct dirent *evt_ent;
->>>> +	int nr_caps = 0;
->>>> +
->>>> +	if (!sysfs)
->>>> +		return -1;
->>>> +
->>>> +	snprintf(caps_path, PATH_MAX,
->>>> +		 "%s" EVENT_SOURCE_DEVICE_PATH "%s/caps", sysfs, pmu->name);
->>>> +
->>>> +	if (stat(caps_path, &st) < 0)
->>>> +		return 0;	/* no error if caps does not exist */
->>>> +
->>>> +	caps_dir = opendir(caps_path);
->>>> +	if (!caps_dir)
->>>> +		return -EINVAL;
->>>> +
->>>> +	while ((evt_ent = readdir(caps_dir)) != NULL) {
->>>> +		char path[PATH_MAX + NAME_MAX + 1];
->>>> +		char *name = evt_ent->d_name;
->>>> +		char value[128];
->>>> +		FILE *file;
->>>> +
->>>> +		if (!strcmp(name, ".") || !strcmp(name, ".."))
->>>> +			continue;
->>>> +
->>>> +		snprintf(path, sizeof(path), "%s/%s", caps_path, name);
->>>> +
->>>> +		file = fopen(path, "r");
->>>> +		if (!file)
->>>> +			break;
->>>> +
->>>> +		if (!fgets(value, sizeof(value), file) ||
->>>> +		    (perf_pmu__new_caps(&pmu->caps, name, value) < 0)) {
->>>> +			fclose(file);
->>>> +			break;
->>>> +		}
->>>> +
->>>> +		nr_caps++;
->>>> +		fclose(file);
->>>> +	}
->>>> +
->>>> +	closedir(caps_dir);
->>>> +
->>>> +	return nr_caps;
->>>> +}
->>>> +
->>>> +struct perf_pmu_caps *perf_pmu__scan_caps(struct perf_pmu *pmu,
->>>> +					  struct perf_pmu_caps *caps)
->>>> +{
->>>> +	if (!pmu)
->>>> +		return NULL;
->>>> +
->>>> +	if (!caps)
->>>> +		caps = list_prepare_entry(caps, &pmu->caps, list);
->>>> +
->>>> +	list_for_each_entry_continue(caps, &pmu->caps, list)
->>>> +		return caps;
->>>> +
->>>> +	return NULL;
->>>> +}
->>>> diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
->>>> index 6737e3d5d568..a228e27ae462 100644
->>>> --- a/tools/perf/util/pmu.h
->>>> +++ b/tools/perf/util/pmu.h
->>>> @@ -21,6 +21,12 @@ enum {
->>>>    struct perf_event_attr;
->>>> +struct perf_pmu_caps {
->>>> +	char *name;
->>>> +	char *value;
->>>> +	struct list_head list;
->>>> +};
->>>> +
->>>>    struct perf_pmu {
->>>>    	char *name;
->>>>    	__u32 type;
->>>> @@ -32,6 +38,7 @@ struct perf_pmu {
->>>>    	struct perf_cpu_map *cpus;
->>>>    	struct list_head format;  /* HEAD struct perf_pmu_format -> list */
->>>>    	struct list_head aliases; /* HEAD struct perf_pmu_alias -> list */
->>>> +	struct list_head caps;    /* HEAD struct perf_pmu_caps -> list */
->>>>    	struct list_head list;    /* ELEM */
->>>>    };
->>>> @@ -102,4 +109,9 @@ struct pmu_events_map *perf_pmu__find_map(struct perf_pmu *pmu);
->>>>    int perf_pmu__convert_scale(const char *scale, char **end, double *sval);
->>>> +int perf_pmu__caps_parse(struct perf_pmu *pmu);
->>>> +
->>>> +struct perf_pmu_caps *perf_pmu__scan_caps(struct perf_pmu *pmu,
->>>> +					  struct perf_pmu_caps *caps);
->>>> +
->>>>    #endif /* __PMU_H */
->>>> -- 
->>>> 2.17.1
->>>>
->>>
-> 
+> In the mean time I've benchmarked srcu for sleepable bpf and it's quite heavy.
+> srcu_read_lock+unlock roughly adds 10x execution cost to trivial bpf prog.
+> I'm proceeding with it anyway, but really hoping that
+> rcu_read_lock_for_tracers() will materialize soon.
+
+OK, 10x is a bit on the painful side!
+
+							Thanx, Paul
+
+> In general I'm sceptical that .text annotations will work. Let's say all of
+> idle is a red zone. But a ton of normal functions are called when idle. So
+> objtool will go and mark them as red zone too. This way large percent of the
+> kernel will be off limits for tracers. Which is imo not a good trade off. I
+> think addressing 1 and 2 with explicit notrace/nokprobe annotations will cover
+> all practical cases where people can shot themselves in a foot with a tracer. I
+> realize that there will be forever whack-a-mole game and these annotations will
+> never reach 100%. I think it's a fine trade off. Security is never 100% either.
+> Tracing is never going to be 100% safe too.
