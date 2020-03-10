@@ -2,119 +2,257 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A4F0C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:04:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69300C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:04:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64E102465A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:04:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 404B12468E
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:04:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="XXsXuouY";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="epIKnBDy"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="RDyHe6m5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726283AbgCJJE0 (ORCPT
+        id S1726617AbgCJJEt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 05:04:26 -0400
-Received: from out1-smtp.messagingengine.com ([66.111.4.25]:56179 "EHLO
-        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726195AbgCJJE0 (ORCPT
+        Tue, 10 Mar 2020 05:04:49 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:40068 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726463AbgCJJEt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 05:04:26 -0400
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailout.nyi.internal (Postfix) with ESMTP id 1F27E21EBC;
-        Tue, 10 Mar 2020 05:04:25 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute1.internal (MEProxy); Tue, 10 Mar 2020 05:04:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=uatK4ds+rmul1mRriGcrKyF/spn
-        Qea/id1rAEINGl3w=; b=XXsXuouY7BuRN3rXbfvoUn57graVW/NVR5a8/96Mvsi
-        hvLOkUQYjK66xoqjljmfXr08gzhlbfiGX4uW9yr1lIgMggYcxrzjywqv7vu9l+hi
-        BlG/qDUDIEr26w6MeepzWyWQBSTglWR75hDfg4FuCE5a/M75yNqt3Q6mf3LE+AKo
-        0AeUW+FgHyzBkXhA2dtFRsJ3LKlERchyl3ESyro+dvgySt8UC61g9ULQM9ygbY2H
-        C885gchkLJlHb3AabL2bNjGEufdWRvHuoQr23fwZHa+zh+WXXtR/SJJkGEvSLtJW
-        W7vxWYvOGhCh3ZvMltEPNIecVnSI5fXyPgn4ImCe+Xw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=uatK4d
-        s+rmul1mRriGcrKyF/spnQea/id1rAEINGl3w=; b=epIKnBDy3QLd/vkX2YNGB+
-        58BK51/dq1HOwaMyadHz5C0aQpUQQk86MBCXP8sOLHk5eSq6zAh9anxZ590Hpad7
-        Bf267Ue8QHvT7ODd2B/oGn4NrRkX4h56W1cEEGawNtB1y8FxcfhGiaWApDyV4m5s
-        iBhRb4CdUaKYj5/HwerD3D+yv0J/lE8tzt2O/klofxKiVW4NDCOAF6Xul6lQVTQP
-        8DZHSFaewgS+Za8tjVHIXHYWcahhFHCy3WcJ4vhXshKyxW2ynCrpPpzzR4Dcc/kD
-        5QjTYzet678vPilm4CV4x6lbCXefEQJPdx9T/rCNM3k2zNHYkyr3PnDPZmK51Ucw
-        ==
-X-ME-Sender: <xms:GFhnXliTxr80ghzg69QEHLKVo47_4VUy2n9RRAQEGvl-e85_QHxIcg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrudduledguddvjecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepifhrvghg
-    ucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecukfhppeekfedrkeeirdekledrud
-    dtjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehg
-    rhgvgheskhhrohgrhhdrtghomh
-X-ME-Proxy: <xmx:GFhnXkvZp3U3C_OGY09YoE3qV3ZYBJe0bnm2rY5UQoxOpGFRFtcg9w>
-    <xmx:GFhnXhhIVa7Nh5wmjv1C9Y-T-RP4AcXappCtRc7SLMRw9i8ztP4fDA>
-    <xmx:GFhnXgQVBslFMxEbJWAaoQO_41BrL2G_K62ZcDERfgQpg0dqumdV5w>
-    <xmx:GVhnXvJFAjKxRB4HR8DkAeZwRWWa7UK5qaBtck7Fiw0rNrRWQbKcTQ>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 3B4EA3280069;
-        Tue, 10 Mar 2020 05:04:24 -0400 (EDT)
-Date:   Tue, 10 Mar 2020 10:04:22 +0100
-From:   Greg KH <greg@kroah.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jiri Slaby <jslaby@suse.cz>
-Subject: Re: linux-next: manual merge of the tty tree with Linus' tree
-Message-ID: <20200310090422.GB2445065@kroah.com>
-References: <20200310144013.6df85b46@canb.auug.org.au>
+        Tue, 10 Mar 2020 05:04:49 -0400
+Received: by mail-il1-f195.google.com with SMTP id g6so11303940ilc.7
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 02:04:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Xzr8UYzdvftZ6ltdGQbjJdh9bUR9GLrhRRIuy8ArwB4=;
+        b=RDyHe6m5+q+Scf2Ni55JlRKzEtOHifAsDgt15eT2pTD2VUKeCE+KYgQtdZAmwFkarQ
+         VKizaqkSXZl/ApSAqJqKTuW8HtJtha4X5WiTaSB8lHdNasnkHa7vIw1Pck0qfsUm0f9K
+         0TdOkgNWcVzOzIOjdNwjtzWumRcBSZHCrjOJs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Xzr8UYzdvftZ6ltdGQbjJdh9bUR9GLrhRRIuy8ArwB4=;
+        b=Y/NkxFcuLN9rziyBraqIlLXJ0wJFlRZFdwrFKKNVutmt5JqzLpPW8uvcK8VY6MbiZY
+         kEdb9a399jXvRkeEafIagwZl5VeTXXwL/4h+DdfF6O21fyH9mcOuMp4vBvrC58FhVEBZ
+         DLlSLVhLIaUjUfJXfjznG9p7MXUvkt6FCYCnJgdJFpPXN8rYfPs1evJMcydWlpdApOkU
+         IrxB+A4lDwdG5/ysZQMEI+XlAE3EIIVq0s5hjS15Pewj25q1KDtjHPZ8jzku8u4Gl+7M
+         07DhIgIzVYBICM7ACj1PEhAXAK68jSa5ShgfPyjiJMz2TfEezULuieULEQp+tvE3noDi
+         D/TA==
+X-Gm-Message-State: ANhLgQ3yhjedTt2y24mqNMSzxji65R9TQV/yHGUkxgnKRXpl5tZLJWQy
+        hfzgyh8VldwxyG3kQJss6zyNdLNVOGJqsSu0vmANkA==
+X-Google-Smtp-Source: ADFU+vvq8i3JMm5o0X3/1MqtmAel5jkKS2wcrPJRHAwLVOCTl1K0j3m/i1LMC83XO9ToGr4MeFAzuPBc8Q6td2fS6RY=
+X-Received: by 2002:a05:6e02:f43:: with SMTP id y3mr19302685ilj.174.1583831088115;
+ Tue, 10 Mar 2020 02:04:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200310144013.6df85b46@canb.auug.org.au>
+References: <158376244589.344135.12925590041630631412.stgit@warthog.procyon.org.uk>
+ <158376251286.344135.12815432977346939752.stgit@warthog.procyon.org.uk>
+In-Reply-To: <158376251286.344135.12815432977346939752.stgit@warthog.procyon.org.uk>
+From:   Miklos Szeredi <miklos@szeredi.hu>
+Date:   Tue, 10 Mar 2020 10:04:36 +0100
+Message-ID: <CAJfpegv202o=NmRF5rFpzdGyZSSC_MmVg9cOeFDrnjjQ2Fjk6Q@mail.gmail.com>
+Subject: Re: [PATCH 07/14] fsinfo: Allow mount information to be queried [ver #18]
+To:     David Howells <dhowells@redhat.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, Ian Kent <raven@themaw.net>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Christian Brauner <christian@brauner.io>,
+        Jann Horn <jannh@google.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Karel Zak <kzak@redhat.com>, Jeff Layton <jlayton@redhat.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        LSM <linux-security-module@vger.kernel.org>,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 10, 2020 at 02:40:13PM +1100, Stephen Rothwell wrote:
-> Hi all,
-> 
-> Today's linux-next merge of the tty tree got a conflict in:
-> 
->   drivers/tty/vt/selection.c
-> 
-> between commits:
-> 
->   4b70dd57a15d ("vt: selection, push console lock down")
->   e8c75a30a23c ("vt: selection, push sel_lock up")
-> 
-> from Linus' tree and commits:
-> 
->   9256d09f1da1 ("vt: selection, create struct from console selection globals")
->   bc80932cc25a ("vt: selection, indent switch-case properly")
-> 
-> from the tty tree.
-> 
-> I fixed it up (I think - see below) and can carry the fix as necessary.
-> This is now fixed as far as linux-next is concerned, but any non trivial
-> conflicts should be mentioned to your upstream maintainer when your tree
-> is submitted for merging.  You may also want to consider cooperating
-> with the maintainer of the conflicting tree to minimise any particularly
-> complex conflicts.
+On Mon, Mar 9, 2020 at 3:02 PM David Howells <dhowells@redhat.com> wrote:
+>
+> Allow mount information, including information about the topology tree to
+> be queried with the fsinfo() system call.  Setting AT_FSINFO_QUERY_MOUNT
+> allows overlapping mounts to be queried by indicating that the syscall
+> should interpet the pathname as a number indicating the mount ID.
+>
+> To this end, a number of fsinfo() attributes are provided:
+>
+>  (1) FSINFO_ATTR_MOUNT_INFO.
+>
+>      This is a structure providing information about a mount, including:
+>
+>         - Mounted superblock ID (mount ID uniquifier).
+>         - Mount ID (can be used with AT_FSINFO_QUERY_MOUNT).
+>         - Parent mount ID.
+>         - Mount attributes (eg. R/O, NOEXEC).
+>         - Mount change/notification counter.
+>
+>      Note that the parent mount ID is overridden to the ID of the queried
+>      mount if the parent lies outside of the chroot or dfd tree.
+>
+>  (2) FSINFO_ATTR_MOUNT_PATH.
+>
+>      This a string providing information about a bind mount relative the
+>      the root that was bound off, though it may get overridden by the
+>      filesystem (NFS unconditionally sets it to "/", for example).
+>
+>  (3) FSINFO_ATTR_MOUNT_POINT.
+>
+>      This is a string indicating the name of the mountpoint within the
+>      parent mount, limited to the parent's mounted root and the chroot.
+>
+>  (4) FSINFO_ATTR_MOUNT_POINT_FULL.
+>
+>      This is a string indicating the full path of the mountpoint, limited to
+>      the chroot.
+>
+>  (5) FSINFO_ATTR_MOUNT_CHILDREN.
+>
+>      This produces an array of structures, one for each child and capped
+>      with one for the argument mount (checked after listing all the
+>      children).  Each element contains the mount ID and the change counter
+>      of the respective mount object.
+>
+> Signed-off-by: David Howells <dhowells@redhat.com>
+> ---
+>
+>  fs/d_path.c                 |    2
+>  fs/fsinfo.c                 |   14 +++
+>  fs/internal.h               |   10 ++
+>  fs/namespace.c              |  177 +++++++++++++++++++++++++++++++++++++++++++
+>  include/uapi/linux/fsinfo.h |   36 +++++++++
+>  samples/vfs/test-fsinfo.c   |   43 ++++++++++
+>  6 files changed, 281 insertions(+), 1 deletion(-)
+>
+> diff --git a/fs/d_path.c b/fs/d_path.c
+> index 0f1fc1743302..4c203f64e45e 100644
+> --- a/fs/d_path.c
+> +++ b/fs/d_path.c
+> @@ -229,7 +229,7 @@ static int prepend_unreachable(char **buffer, int *buflen)
+>         return prepend(buffer, buflen, "(unreachable)", 13);
+>  }
+>
+> -static void get_fs_root_rcu(struct fs_struct *fs, struct path *root)
+> +void get_fs_root_rcu(struct fs_struct *fs, struct path *root)
+>  {
+>         unsigned seq;
+>
+> diff --git a/fs/fsinfo.c b/fs/fsinfo.c
+> index bafeb73feaf4..6d2bc03998e4 100644
+> --- a/fs/fsinfo.c
+> +++ b/fs/fsinfo.c
+> @@ -236,6 +236,14 @@ static int fsinfo_generic_seq_read(struct path *path, struct fsinfo_context *ctx
+>                         ret = sb->s_op->show_options(&m, path->mnt->mnt_root);
+>                 break;
+>
+> +       case FSINFO_ATTR_MOUNT_PATH:
+> +               if (sb->s_op->show_path) {
+> +                       ret = sb->s_op->show_path(&m, path->mnt->mnt_root);
+> +               } else {
+> +                       seq_dentry(&m, path->mnt->mnt_root, " \t\n\\");
+> +               }
+> +               break;
+> +
+>         case FSINFO_ATTR_FS_STATISTICS:
+>                 if (sb->s_op->show_stats)
+>                         ret = sb->s_op->show_stats(&m, path->mnt->mnt_root);
+> @@ -270,6 +278,12 @@ static const struct fsinfo_attribute fsinfo_common_attributes[] = {
+>
+>         FSINFO_LIST     (FSINFO_ATTR_FSINFO_ATTRIBUTES, (void *)123UL),
+>         FSINFO_VSTRUCT_N(FSINFO_ATTR_FSINFO_ATTRIBUTE_INFO, (void *)123UL),
+> +
+> +       FSINFO_VSTRUCT  (FSINFO_ATTR_MOUNT_INFO,        fsinfo_generic_mount_info),
+> +       FSINFO_STRING   (FSINFO_ATTR_MOUNT_PATH,        fsinfo_generic_seq_read),
+> +       FSINFO_STRING   (FSINFO_ATTR_MOUNT_POINT,       fsinfo_generic_mount_point),
+> +       FSINFO_STRING   (FSINFO_ATTR_MOUNT_POINT_FULL,  fsinfo_generic_mount_point_full),
+> +       FSINFO_LIST     (FSINFO_ATTR_MOUNT_CHILDREN,    fsinfo_generic_mount_children),
+>         {}
+>  };
+>
+> diff --git a/fs/internal.h b/fs/internal.h
+> index abbd5299e7dc..1a318dc85f2f 100644
+> --- a/fs/internal.h
+> +++ b/fs/internal.h
+> @@ -15,6 +15,7 @@ struct mount;
+>  struct shrink_control;
+>  struct fs_context;
+>  struct user_namespace;
+> +struct fsinfo_context;
+>
+>  /*
+>   * block_dev.c
+> @@ -47,6 +48,11 @@ extern int __block_write_begin_int(struct page *page, loff_t pos, unsigned len,
+>   */
+>  extern void __init chrdev_init(void);
+>
+> +/*
+> + * d_path.c
+> + */
+> +extern void get_fs_root_rcu(struct fs_struct *fs, struct path *root);
+> +
+>  /*
+>   * fs_context.c
+>   */
+> @@ -93,6 +99,10 @@ extern void __mnt_drop_write_file(struct file *);
+>  extern void dissolve_on_fput(struct vfsmount *);
+>  extern int lookup_mount_object(struct path *, int, struct path *);
+>  extern int fsinfo_generic_mount_source(struct path *, struct fsinfo_context *);
+> +extern int fsinfo_generic_mount_info(struct path *, struct fsinfo_context *);
+> +extern int fsinfo_generic_mount_point(struct path *, struct fsinfo_context *);
+> +extern int fsinfo_generic_mount_point_full(struct path *, struct fsinfo_context *);
+> +extern int fsinfo_generic_mount_children(struct path *, struct fsinfo_context *);
+>
+>  /*
+>   * fs_struct.c
+> diff --git a/fs/namespace.c b/fs/namespace.c
+> index 54e8eb93fdd6..a6cb8c6b004f 100644
+> --- a/fs/namespace.c
+> +++ b/fs/namespace.c
+> @@ -4149,4 +4149,181 @@ int lookup_mount_object(struct path *root, int mnt_id, struct path *_mntpt)
+>         goto out_unlock;
+>  }
+>
+> +/*
+> + * Retrieve information about the nominated mount.
+> + */
+> +int fsinfo_generic_mount_info(struct path *path, struct fsinfo_context *ctx)
+> +{
+> +       struct fsinfo_mount_info *p = ctx->buffer;
+> +       struct super_block *sb;
+> +       struct mount *m;
+> +       struct path root;
+> +       unsigned int flags;
+> +
+> +       m = real_mount(path->mnt);
+> +       sb = m->mnt.mnt_sb;
+> +
+> +       p->sb_unique_id         = sb->s_unique_id;
+> +       p->mnt_unique_id        = m->mnt_unique_id;
+> +       p->mnt_id               = m->mnt_id;
+> +       p->parent_id            = m->mnt_parent->mnt_id;
+> +
+> +       get_fs_root(current->fs, &root);
+> +       if (path->mnt == root.mnt) {
+> +               p->parent_id = p->mnt_id;
+> +       } else {
+> +               rcu_read_lock();
+> +               if (!are_paths_connected(&root, path))
+> +                       p->parent_id = p->mnt_id;
+> +               rcu_read_unlock();
+> +       }
+> +       if (IS_MNT_SHARED(m))
+> +               p->group_id = m->mnt_group_id;
+> +       if (IS_MNT_SLAVE(m)) {
+> +               int master = m->mnt_master->mnt_group_id;
+> +               int dom = get_dominating_id(m, &root);
 
-Thank you for this, I hadn't gotten to it yet.
+This isn't safe without namespace_sem or mount_lock.
 
-Your merge looks the same as mine, and I've pushed out the merge
-resolution in my tree.
-
-Jiri, can you double-check to verify that the merge is correct in my
-tree?
-
-thanks,
-
-greg k-h
+Thanks,
+Miklos
