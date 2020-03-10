@@ -2,130 +2,133 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC850C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 15:39:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CA36C18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 15:41:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C31720675
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 15:39:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6812120675
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 15:41:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="XDlxLPGa"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Ra5+SIXX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727359AbgCJPjD (ORCPT
+        id S1726469AbgCJPlV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 11:39:03 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:26134 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726283AbgCJPjD (ORCPT
+        Tue, 10 Mar 2020 11:41:21 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:46210 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725965AbgCJPlV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 11:39:03 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1583854743; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=gUmzy0ip2pBA4D+C/B3z0+zgPFLhXRY4x38ZdJYS4bI=; b=XDlxLPGaj9UQQ4tWF9YeEEIp08Uq2+iWjtbqfl701p/XRdgR6EcXZkz0SrOq5eXny8vheVcr
- xfhG66Snqoy/2oLZhJ/OwVb6L1JfGFtBW+I5T/5IXzpJufkAhv50HbHFJZr3SnKss4mk+SSz
- cZHVdtWZ3kYUUgl+mTzxOMcQ5Os=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e67b487.7f36ed5cd1b8-smtp-out-n01;
- Tue, 10 Mar 2020 15:38:47 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id A75E3C433CB; Tue, 10 Mar 2020 15:38:47 +0000 (UTC)
-Received: from [192.168.1.2] (unknown [183.83.137.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C51FEC433D2;
-        Tue, 10 Mar 2020 15:38:43 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C51FEC433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-Subject: Re: [PATCH v3 2/4] soc: qcom: Add SoC sleep stats driver
-To:     Stephen Boyd <swboyd@chromium.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     mka@chromium.org, evgreen@chromium.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        agross@kernel.org, dianders@chromium.org, rnayak@codeaurora.org,
-        ilina@codeaurora.org, lsrao@codeaurora.org,
-        Mahesh Sivasubramanian <msivasub@codeaurora.org>
-References: <1583479412-18320-1-git-send-email-mkshah@codeaurora.org>
- <1583479412-18320-3-git-send-email-mkshah@codeaurora.org>
- <20200307064231.GF1094083@builder>
- <e1133bcd-b1fe-98b3-3a28-c12d07ff8ebc@codeaurora.org>
- <158377799320.66766.16447517220100414599@swboyd.mtv.corp.google.com>
-From:   Maulik Shah <mkshah@codeaurora.org>
-Message-ID: <ad874421-f197-174f-3d30-2037c7fb57a0@codeaurora.org>
-Date:   Tue, 10 Mar 2020 21:08:41 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 10 Mar 2020 11:41:21 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02AFf771071642;
+        Tue, 10 Mar 2020 10:41:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1583854867;
+        bh=o8p5fgauZyRiTn5E7k0GtjXIgdIv7UAxDQEKWWWaJfY=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=Ra5+SIXXQfeVOZm3RvbV5swiBlvbReP7NTLQX/D8K+VqcBi9liQGpquLYWf9iw29J
+         4ETfAYOode0Lsr6LyYcndg4kc9ygQL/UoqToEg+Mm/9Os5MJgYsXqFy0d+m4uILvmf
+         6RtL7KddBk0DvyXZIsBQQg04LHxSa2E8YXiCrum0=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02AFf7mA050793
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 10 Mar 2020 10:41:07 -0500
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 10
+ Mar 2020 10:41:07 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 10 Mar 2020 10:41:06 -0500
+Received: from [128.247.81.242] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02AFf6vb119386;
+        Tue, 10 Mar 2020 10:41:06 -0500
+Subject: Re: [PATCH] bus: ti-sysc: Fix quirk flags for lcdc on am335x
+To:     Tony Lindgren <tony@atomide.com>, <linux-omap@vger.kernel.org>
+CC:     "Andrew F . Davis" <afd@ti.com>, Faiz Abbas <faiz_abbas@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Keerthy <j-keerthy@ti.com>, Nishanth Menon <nm@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Roger Quadros <rogerq@ti.com>, Suman Anna <s-anna@ti.com>,
+        Tero Kristo <t-kristo@ti.com>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, Jyri Sarha <jsarha@ti.com>
+References: <20200309181912.28645-1-tony@atomide.com>
+From:   Dave Gerlach <d-gerlach@ti.com>
+Message-ID: <1196fb5a-ed41-51bb-67a4-dc9c7fe3ed36@ti.com>
+Date:   Tue, 10 Mar 2020 10:45:01 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <158377799320.66766.16447517220100414599@swboyd.mtv.corp.google.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200309181912.28645-1-tony@atomide.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Tony,
+On 3/9/20 1:19 PM, Tony Lindgren wrote:
+> Commit adb72394e2ab ("ARM: OMAP2+: Drop legacy platform data for am3
+> lcdc") dropped legacy platform data but we never added the quirks for
+> SWSUP_SIDLE and SWSUP_MSTANDBY for lcdc for ti-sysc driver.
+> 
+> This breaks suspend/resume. Let's fix the issue by enabling the same
+> quirks for ti-sysc driver as we had earlier with platform data.
+> 
+> Fixes: adb72394e2ab ("ARM: OMAP2+: Drop legacy platform data for am3 lcdc")
+> Fixes: 23731eac9848 ("bus: ti-sysc: Detect devices on am335x when DEBUG is enabled")
+> Reported-by: Keerthy <j-keerthy@ti.com>
+> Cc: Jyri Sarha <jsarha@ti.com>
+> Cc: Keerthy <j-keerthy@ti.com>
+> Cc: Dave Gerlach <d-gerlach@ti.com>
+> Cc: Tero Kristo <t-kristo@ti.com>
+> Signed-off-by: Tony Lindgren <tony@atomide.com>
+> ---
+> 
+> This patch is against v5.6-rc series, it needs a merge conflict resolved
+> for Linux next next is using -ENODEV instead of -1 for missing registers.
 
-On 3/9/2020 11:49 PM, Stephen Boyd wrote:
-> Quoting Maulik Shah (2020-03-09 03:58:27)
->> On 3/7/2020 12:12 PM, Bjorn Andersson wrote:
->>> On Thu 05 Mar 23:23 PST 2020, Maulik Shah wrote:
->>>> diff --git a/drivers/soc/qcom/soc_sleep_stats.c b/drivers/soc/qcom/soc_sleep_stats.c
->>>> new file mode 100644
->>>> index 00000000..79a14d2
->>>> --- /dev/null
->>>> +++ b/drivers/soc/qcom/soc_sleep_stats.c
->>>> @@ -0,0 +1,248 @@
-> [...]
->>>> +    u32 pid;
->>>> +};
->>>> +
->>>> +static struct subsystem_data subsystems[] = {
->>>> +    { "modem", MODEM_ITEM_ID, PID_MODEM },
->>>> +    { "adsp", ADSP_ITEM_ID, PID_ADSP },
->>>> +    { "cdsp", CDSP_ITEM_ID, PID_CDSP },
->>>> +    { "slpi", SLPI_ITEM_ID, PID_SLPI },
->>>> +    { "gpu", GPU_ITEM_ID, PID_APSS },
->>>> +    { "display", DISPLAY_ITEM_ID, PID_APSS },
->>>> +};
->>>> +
->>>> +struct stats_config {
->>>> +    unsigned int offset_addr;
->>>> +    unsigned int num_records;
->>>> +    bool appended_stats_avail;
->>>> +};
->>>> +
->>>> +static const struct stats_config *config;
->>> Add this to soc_sleep_stats_data and pass that as s->private instead of
->>> just the reg, to avoid the global variable.
->> No, this is required to keep global. we are not passing just reg as s->private,
->> we are passing "reg + offset" which differs for each stat.
-> Can you please stop sending these review comment replies and then
-> immediately turning around and sending the next revision of the patch
-> series. I doubt that the changes take less than an hour to write and it
-> would be helpful for everyone involved to have constructive discussions
-> about the code if there's ever a response besides "done" or "ok".
-Sure, i be careful to wait for at least few days before spinning new one,
-atleast wait till all discussion finish on current version.
 
-Also will try to reply in more details for comments as much as possible.
->
-> In this case it should be possible to get rid of the global 'config'.
-> Make a new container struct to hold the config and offset or figure out
-> what actually needs to be passed into the functions instead and do that
-> when the files are created.
+Tested with v5.6-rc5, can confirm that suspend looks OK now and is 
+exited without "pm33xx pm33xx: PM: Could not transition all powerdomains 
+to target state" message with this patch.
 
-i will address this to get rid of global config.
+Tested-by: Dave Gerlach <d-gerlach@ti.com>
 
-Thanks,
-Maulik
+Regards,
+Dave
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+> 
+> ---
+>   drivers/bus/ti-sysc.c | 3 ++-
+>   1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
+> --- a/drivers/bus/ti-sysc.c
+> +++ b/drivers/bus/ti-sysc.c
+> @@ -1266,6 +1266,8 @@ static const struct sysc_revision_quirk sysc_revision_quirks[] = {
+>   	SYSC_QUIRK("gpu", 0x50000000, 0x14, -1, -1, 0x00010201, 0xffffffff, 0),
+>   	SYSC_QUIRK("gpu", 0x50000000, 0xfe00, 0xfe10, -1, 0x40000000 , 0xffffffff,
+>   		   SYSC_MODULE_QUIRK_SGX),
+> +	SYSC_QUIRK("lcdc", 0, 0, 0x54, -1, 0x4f201000, 0xffffffff,
+> +		   SYSC_QUIRK_SWSUP_SIDLE | SYSC_QUIRK_SWSUP_MSTANDBY),
+>   	SYSC_QUIRK("usb_otg_hs", 0, 0x400, 0x404, 0x408, 0x00000050,
+>   		   0xffffffff, SYSC_QUIRK_SWSUP_SIDLE | SYSC_QUIRK_SWSUP_MSTANDBY),
+>   	SYSC_QUIRK("usb_otg_hs", 0, 0, 0x10, -1, 0x4ea2080d, 0xffffffff,
+> @@ -1294,7 +1296,6 @@ static const struct sysc_revision_quirk sysc_revision_quirks[] = {
+>   	SYSC_QUIRK("gpu", 0, 0xfe00, 0xfe10, -1, 0x40000000 , 0xffffffff, 0),
+>   	SYSC_QUIRK("hsi", 0, 0, 0x10, 0x14, 0x50043101, 0xffffffff, 0),
+>   	SYSC_QUIRK("iss", 0, 0, 0x10, -1, 0x40000101, 0xffffffff, 0),
+> -	SYSC_QUIRK("lcdc", 0, 0, 0x54, -1, 0x4f201000, 0xffffffff, 0),
+>   	SYSC_QUIRK("mcasp", 0, 0, 0x4, -1, 0x44306302, 0xffffffff, 0),
+>   	SYSC_QUIRK("mcasp", 0, 0, 0x4, -1, 0x44307b02, 0xffffffff, 0),
+>   	SYSC_QUIRK("mcbsp", 0, -1, 0x8c, -1, 0, 0, 0),
+> 
