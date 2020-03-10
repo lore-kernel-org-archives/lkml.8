@@ -2,177 +2,114 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C6CEC10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 00:06:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D83FC10F25
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 00:06:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C07E24655
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 00:06:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70A0D24670
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 00:06:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="qlovkNo+"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HL3ZhDns"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727509AbgCJAGS (ORCPT
+        id S1727523AbgCJAGY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 20:06:18 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:59487 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727242AbgCJAGR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 20:06:17 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48bwNk5B2wz9sRR;
-        Tue, 10 Mar 2020 11:06:14 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1583798774;
-        bh=7lQ8pI0XYE2KiKCl/kYDNDDZgptti74pekITiXXL/J4=;
-        h=Date:From:To:Cc:Subject:From;
-        b=qlovkNo+ecl805wgOZLkxTq3lDnuiYfJU7lYf6AbpXwQmTVPlBu4i32Nzze2BZIn2
-         5A6NXjCJS2bK+Vm78cXyz224iXG2POPHTfG232Lfvefp9iefGY4rK+hL0aiVxI8dvF
-         6cdZxLrNL+yyyR5v1TyY9QGLX5Q/9OV1HB/sq20fAelfx8jWcZQHhsah747qb11KHs
-         uv5aJ4iEqxOF2WTRlbTMa0cav4fjHTc+XG/FqFFDdlBG2Dx33fEUmh76Tmgrn+vWzN
-         Zf6rV+mHQt2qlC3h4ttpclRImktidvF9smUBab8JZNVirG62zGXJCm5pvFOMJpkpFG
-         QgEfu5WD/pc5w==
-Date:   Tue, 10 Mar 2020 11:06:12 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Dmitry Yakunin <zeil@yandex-team.ru>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>
-Subject: linux-next: manual merge of the net-next tree with the net tree
-Message-ID: <20200310110612.611ab9ad@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/7r9Ijk1oPrdyyqujRJR6XhL";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        Mon, 9 Mar 2020 20:06:24 -0400
+Received: from mail-pj1-f73.google.com ([209.85.216.73]:37295 "EHLO
+        mail-pj1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727242AbgCJAGX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 20:06:23 -0400
+Received: by mail-pj1-f73.google.com with SMTP id d9so680781pjs.2
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 17:06:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=bdQzhDLUPsxOm6QqZ3hLu+lvyMhDWFhXWI3PbzbhChY=;
+        b=HL3ZhDns/Fm8Dzrc17UD5zmpwurRv/Q9PXH36tRJTRSymI40PHBq6pcyslCC61Qk+o
+         NTwIxD663xAck53Xs+lfHDMiTxRI6gdxZFaCPntKL9ihkQLfJpFyS4+0HsLGlVWBH7Pg
+         8i4CXlBg/NfTw5tHfnARzxkHFPNg2sHJsfQrWWs7eu7eS3W2q2qC4oQbG5xiX3h8x6Rn
+         gSUQuan0HxAOuJ4bky3oFQTkXOQrGde9rOVTut2edQRTTBbk//IIo/7Rvz7FbfktkYLY
+         M7wxm507BXjhQpSQg1Ma4eqvW/YaJxxCwR1xzfg1gGh2jfWtzeB+76Y1PB1cZcC4QAQ1
+         15Vg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=bdQzhDLUPsxOm6QqZ3hLu+lvyMhDWFhXWI3PbzbhChY=;
+        b=Vm2LpG65mgtH+Eb6qFHN7zPwNJcmJQs5q33qIqcHzI3VkSzijXIN2I4dSS0EunEHCa
+         28vk3ChLTuEiem2P4XWf5GFIQT3//Gs+1Fz1hOAdNhKAnuUacEB687Uqjz4T9o58F4PT
+         OscoA83qLu/TEt9NChMFgowx+oP4NQwP4skJoRiPHXqhFDf0DJdX9aG7N4MH9n0hInML
+         TJSVYFkki2DdCLPA5kujWkAmDEPhXWwwqYJa3XKNe5mqD8DEhwqtQ5jreoga632MGfwn
+         I6lqFkW8kFv23UAwVPzqKm4k5ipwzOYxHrYQuU7WUkY4ciVSbUNpb8KYH8uEXxUB+i1W
+         F+5A==
+X-Gm-Message-State: ANhLgQ1Pvn2DhezgqdJTVjSvRLycz0E6x2LOqhMJngYtHE4wbbEveGTx
+        vBENyJGa8w4NQ0jMcBBS60tPVVUEPKYW
+X-Google-Smtp-Source: ADFU+vuGQ8fT2JXf1JRD3wm3mul6BK5fRWp/eQfqYaAjUaKocRKkkUmdDfacVg+LSo7TqiBDGChU5mRWRnGn
+X-Received: by 2002:a63:f925:: with SMTP id h37mr18801182pgi.103.1583798782458;
+ Mon, 09 Mar 2020 17:06:22 -0700 (PDT)
+Date:   Mon,  9 Mar 2020 17:06:13 -0700
+Message-Id: <20200310000617.20662-1-rajatja@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
+Subject: [PATCH v7 0/4] drm: Add support for integrated privacy screen
+From:   Rajat Jain <rajatja@google.com>
+To:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        "=?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?=" 
+        <ville.syrjala@linux.intel.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Imre Deak <imre.deak@intel.com>,
+        "=?UTF-8?q?Jos=C3=A9=20Roberto=20de=20Souza?=" <jose.souza@intel.com>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org, gregkh@linuxfoundation.org,
+        mathewk@google.com, Daniel Thompson <daniel.thompson@linaro.org>,
+        Jonathan Corbet <corbet@lwn.net>, Pavel Machek <pavel@denx.de>,
+        seanpaul@google.com, Duncan Laurie <dlaurie@google.com>,
+        jsbarnes@google.com, Thierry Reding <thierry.reding@gmail.com>,
+        mpearson@lenovo.com, Nitin Joshi1 <njoshi1@lenovo.com>,
+        Sugumaran Lacshiminarayanan <slacshiminar@lenovo.com>,
+        Tomoki Maruichi <maruichit@lenovo.com>
+Cc:     Rajat Jain <rajatja@google.com>, rajatxjain@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/7r9Ijk1oPrdyyqujRJR6XhL
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+This patchset adds:
+ - (Generic) integrated privacy screen support in drm
+ - Ability in i915 to attach to ACPI nodes
+ - an implmentation for ACPI privacy screen in i915
 
-Hi all,
+Rajat Jain (4):
+  intel_acpi: Rename drm_dev local variable to dev
+  drm/connector: Add support for privacy-screen property
+  drm/i915: Lookup and attach ACPI device node for connectors
+  drm/i915: Add support for integrated privacy screen
 
-Today's linux-next merge of the net-next tree got a conflict in:
+ drivers/gpu/drm/drm_atomic_uapi.c             |   4 +
+ drivers/gpu/drm/drm_connector.c               |  56 ++++++
+ drivers/gpu/drm/i915/Makefile                 |   3 +-
+ drivers/gpu/drm/i915/display/intel_acpi.c     |  28 ++-
+ drivers/gpu/drm/i915/display/intel_atomic.c   |   1 +
+ .../drm/i915/display/intel_display_types.h    |   5 +
+ drivers/gpu/drm/i915/display/intel_dp.c       |  43 ++++-
+ .../drm/i915/display/intel_privacy_screen.c   | 175 ++++++++++++++++++
+ .../drm/i915/display/intel_privacy_screen.h   |  27 +++
+ drivers/gpu/drm/i915/i915_drv.h               |   2 +
+ include/drm/drm_connector.h                   |  25 +++
+ 11 files changed, 365 insertions(+), 4 deletions(-)
+ create mode 100644 drivers/gpu/drm/i915/display/intel_privacy_screen.c
+ create mode 100644 drivers/gpu/drm/i915/display/intel_privacy_screen.h
 
-  net/ipv4/inet_diag.c
+-- 
+2.25.1.481.gfbce0eb801-goog
 
-between commit:
-
-  83f73c5bb7b9 ("inet_diag: return classid for all socket types")
-
-from the net tree and commit:
-
-  085c20cacf2b ("bpf: inet_diag: Dump bpf_sk_storages in inet_diag_dump()")
-
-from the net-next tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc net/ipv4/inet_diag.c
-index 8c8377568a78,e1cad25909df..000000000000
---- a/net/ipv4/inet_diag.c
-+++ b/net/ipv4/inet_diag.c
-@@@ -298,6 -289,66 +303,48 @@@ int inet_sk_diag_fill(struct sock *sk,=20
-  			goto errout;
-  	}
- =20
- -	if (ext & (1 << (INET_DIAG_CLASS_ID - 1)) ||
- -	    ext & (1 << (INET_DIAG_TCLASS - 1))) {
- -		u32 classid =3D 0;
- -
- -#ifdef CONFIG_SOCK_CGROUP_DATA
- -		classid =3D sock_cgroup_classid(&sk->sk_cgrp_data);
- -#endif
- -		/* Fallback to socket priority if class id isn't set.
- -		 * Classful qdiscs use it as direct reference to class.
- -		 * For cgroup2 classid is always zero.
- -		 */
- -		if (!classid)
- -			classid =3D sk->sk_priority;
- -
- -		if (nla_put_u32(skb, INET_DIAG_CLASS_ID, classid))
- -			goto errout;
- -	}
- -
-+ 	/* Keep it at the end for potential retry with a larger skb,
-+ 	 * or else do best-effort fitting, which is only done for the
-+ 	 * first_nlmsg.
-+ 	 */
-+ 	if (cb_data->bpf_stg_diag) {
-+ 		bool first_nlmsg =3D ((unsigned char *)nlh =3D=3D skb->data);
-+ 		unsigned int prev_min_dump_alloc;
-+ 		unsigned int total_nla_size =3D 0;
-+ 		unsigned int msg_len;
-+ 		int err;
-+=20
-+ 		msg_len =3D skb_tail_pointer(skb) - (unsigned char *)nlh;
-+ 		err =3D bpf_sk_storage_diag_put(cb_data->bpf_stg_diag, sk, skb,
-+ 					      INET_DIAG_SK_BPF_STORAGES,
-+ 					      &total_nla_size);
-+=20
-+ 		if (!err)
-+ 			goto out;
-+=20
-+ 		total_nla_size +=3D msg_len;
-+ 		prev_min_dump_alloc =3D cb->min_dump_alloc;
-+ 		if (total_nla_size > prev_min_dump_alloc)
-+ 			cb->min_dump_alloc =3D min_t(u32, total_nla_size,
-+ 						   MAX_DUMP_ALLOC_SIZE);
-+=20
-+ 		if (!first_nlmsg)
-+ 			goto errout;
-+=20
-+ 		if (cb->min_dump_alloc > prev_min_dump_alloc)
-+ 			/* Retry with pskb_expand_head() with
-+ 			 * __GFP_DIRECT_RECLAIM
-+ 			 */
-+ 			goto errout;
-+=20
-+ 		WARN_ON_ONCE(total_nla_size <=3D prev_min_dump_alloc);
-+=20
-+ 		/* Send what we have for this sk
-+ 		 * and move on to the next sk in the following
-+ 		 * dump()
-+ 		 */
-+ 	}
-+=20
-  out:
-  	nlmsg_end(skb, nlh);
-  	return 0;
-
---Sig_/7r9Ijk1oPrdyyqujRJR6XhL
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5m2fQACgkQAVBC80lX
-0GwjnQgAhFFX8PDORAxjYrJAEHqRPBUIQhcpfE5KhtzuJur5SaOmFlsjVTwN41CM
-TVHs6u5kJAL/stdMAFPca4YXEE66+N7PDs81uYDmqZL8/ogkDeDd2blw0brWq/uE
-f5RG7pD+oADLfuA9gLr+aUXrctXvDopKwaEvDOu3FG6qH8yGkfiX2GcwCjPTGOPm
-hQJn/z2iv/murAVsNC9X39F/W/kTCOuSLAxL2pVmyBkCI1CaGYGpbD5iJzO/MG19
-6bvfuwNOYWfWjC77I0zbQs6BCvMejSwJDe95b9pQ1BA1BhZd5lWhcBbX0z1KVoRF
-hjCNg1YxZReN9kC8Bc0l/t3wh/eCyQ==
-=uQDe
------END PGP SIGNATURE-----
-
---Sig_/7r9Ijk1oPrdyyqujRJR6XhL--
