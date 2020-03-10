@@ -2,134 +2,100 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D1CEC10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 23:09:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32B03C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 23:10:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 523FB222C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 23:09:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD8872071B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 23:10:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="EBaUbOvI"
+	dkim=pass (2048-bit key) header.d=cloud.ionos.com header.i=@cloud.ionos.com header.b="AFnM8/qV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727736AbgCJXJy (ORCPT
+        id S1727806AbgCJXKH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 19:09:54 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:46611 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726325AbgCJXJx (ORCPT
+        Tue, 10 Mar 2020 19:10:07 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:41803 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727588AbgCJXKH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 19:09:53 -0400
-Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 88EFD23E76;
-        Wed, 11 Mar 2020 00:09:49 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1583881790;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=LdXbv3uElz5yQ5qGjxhsqm0U2lY05oTqfEXnfYIHMz8=;
-        b=EBaUbOvIfKodPUEguZcuPIKEw1o7IPARUaZHCLEDdGGbzV9pgOXIcrsnTPxVyxkKVTzMWm
-        zSIkvieCuDuHiLrqpx9fzACg5r+sdU/+e4nK8SMjKvhpl/Qe1MIz4orUWaigbbrfr6awsY
-        hDK7YzdcBVlmOyFODj7Rzf356IOjA/A=
-From:   Michael Walle <michael@walle.cc>
-To:     linux-kernel@vger.kernel.org
-Cc:     Lee Jones <lee.jones@linaro.org>, Michael Walle <michael@walle.cc>,
-        Christoph Hellwig <hch@lst.de>, Rob Herring <robh@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Russell King <linux@armlinux.org.uk>
-Subject: [RFC PATCH] mfd: mfd-core: inherit only valid dma_masks/flags from parent
-Date:   Wed, 11 Mar 2020 00:09:35 +0100
-Message-Id: <20200310230935.23962-1-michael@walle.cc>
-X-Mailer: git-send-email 2.20.1
+        Tue, 10 Mar 2020 19:10:07 -0400
+Received: by mail-ed1-f67.google.com with SMTP id m25so490750edq.8
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 16:10:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloud.ionos.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ZjzfLVKcrEVYs6WhxkjJMrt4JgyDW89UP2lOPu52OFg=;
+        b=AFnM8/qVZ5INpBhagP0TzCOiNgkxgenab2JvoMJ9TochGwwsyROWvjIewmaXHDUmar
+         l+T11XTf3Z5/Ln3tLw8rQzmHYyAEoebfFfwlJsw4tdw5dINkokIRH6NS2P54C8D6wCSe
+         ws5FELqRVVqhVPNU17Zok/L7q8FpBv0xeV2Yx/a7IwZ+YYOXOhMa8eTAabzdA20EG7IY
+         J84WyBNSEyA/7FhPiNt9Zcn8JPOOzmRwoHz4R7hn1NRoq0KTMVjRHrmh0e6pxHuZgivu
+         ZZqYfgk18R1hF/eFxnc6c5j6COc0wlMKtMCm0st1cu2neOcTZro4+BlqXr2NtmU9v/Vs
+         2n4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ZjzfLVKcrEVYs6WhxkjJMrt4JgyDW89UP2lOPu52OFg=;
+        b=Vn45SZI67ou8UKI+h7kReN11H9/X3NOT52sFCZaGzEQft5ObkKQ0c7yVhAVdRDygTO
+         lVf+YjsPbxPqkWg8//2LNJ1nDeAR9eLf3kkfE15BVzYMTB6BSYi5AACkyKB5xAMQtPQe
+         GEUD0IjZyGcm3SQpbBL0Cvdi/3Lv9C0c/kOIoHazE51rxbSwheCT8RZVmAuMwInnJJyg
+         oM8lV7XRqqPkHD1EC4r9jvxp8b4GKR1hMOt2PfXFLoK6UFjIQJcAHeju/Z1FSvDlNuUb
+         VHCyd4m9RGrTr66JjGa7ptcU3aeZUCHKO2E41lQgCV2k63THvYKn4i7WnxDngFNX7AVf
+         k4ww==
+X-Gm-Message-State: ANhLgQ1udWCXMLOloj8AFtue9XcGd1CcBA3JhCqzPSdxl6FXNqgww665
+        bXbHHAWsjGBy53ZDiVZsF0PrJQ==
+X-Google-Smtp-Source: ADFU+vuw/QrLgknOBSnLL6UEPd5ZmG0mMBAvF0lDukG/ngJ9XGt+BMvhR1Vfo0DVxEJ2jx46GiOIfQ==
+X-Received: by 2002:a05:6402:549:: with SMTP id i9mr174325edx.323.1583881805877;
+        Tue, 10 Mar 2020 16:10:05 -0700 (PDT)
+Received: from ?IPv6:2001:16b8:4849:2c00:55b0:6e1e:26ab:27a5? ([2001:16b8:4849:2c00:55b0:6e1e:26ab:27a5])
+        by smtp.gmail.com with ESMTPSA id h22sm3715651eds.88.2020.03.10.16.10.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Mar 2020 16:10:05 -0700 (PDT)
+Subject: Re: [PATCH v2] block: refactor duplicated macros
+To:     Matteo Croce <mcroce@redhat.com>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-bcache@vger.kernel.org, linux-raid@vger.kernel.org,
+        linux-mmc@vger.kernel.org, xen-devel@lists.xenproject.org,
+        linux-scsi@vger.kernel.org, linux-nfs@vger.kernel.org
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Song Liu <song@kernel.org>
+References: <20200310223516.102758-1-mcroce@redhat.com>
+From:   Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+Message-ID: <d473061b-688f-f4a6-c0e8-61c22b8a2b10@cloud.ionos.com>
+Date:   Wed, 11 Mar 2020 00:10:04 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: ++++
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: 88EFD23E76
-X-Spamd-Result: default: False [4.90 / 15.00];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         R_MISSING_CHARSET(2.50)[];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         MIME_GOOD(-0.10)[text/plain];
-         NEURAL_SPAM(0.00)[0.530];
-         BROKEN_CONTENT_TYPE(1.50)[];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_SEVEN(0.00)[7];
-         MID_CONTAINS_FROM(1.00)[];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         ASN(0.00)[asn:31334, ipnet:2a02:810c:8000::/33, country:DE]
+In-Reply-To: <20200310223516.102758-1-mcroce@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Only copy the dma_masks and flags from the parent device, if the parent
-has a valid dma_mask/flags. Commit cdfee5623290 ("driver core:
-initialize a default DMA mask for platform device") initialize the DMA
-masks of a platform device. But if the parent doesn't have a dma_mask
-set, for example if it's an I2C device, the dma_mask of the child
-platform device will be set to zero again. Which leads to many "DMA mask
-not set" warnings, if the MFD cell has the of_compatible property set.
 
-[    1.877937] sl28cpld-pwm sl28cpld-pwm: DMA mask not set
-[    1.883282] sl28cpld-pwm sl28cpld-pwm.0: DMA mask not set
-[    1.888795] sl28cpld-gpio sl28cpld-gpio: DMA mask not set
 
-Thus a MFD child should just inherit valid dma_masks and keep the
-platform default otherwise.
+On 3/10/20 11:35 PM, Matteo Croce wrote:
+> +++ b/drivers/md/raid1.c
+> @@ -2129,7 +2129,7 @@ static void process_checks(struct r1bio *r1_bio)
+>   	int vcnt;
+>   
+>   	/* Fix variable parts of all bios */
+> -	vcnt = (r1_bio->sectors + PAGE_SIZE / 512 - 1) >> (PAGE_SHIFT - 9);
+> +	vcnt = (r1_bio->sectors + PAGE_SECTORS - 1) >> (PAGE_SHIFT - 9);
 
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Rob Herring <robh@kernel.org>
-Cc: Robin Murphy <robin.murphy@arm.com>
-Cc: Russell King <linux@armlinux.org.uk>
-Signed-off-by: Michael Walle <michael@walle.cc>
----
+Maybe replace "PAGE_SHIFT - 9" with "PAGE_SECTORS_SHIFT" too.
 
-Hi,
-
-I don't know if that is the correct way of handling things. Maybe I'm
-also doing something wrong in my driver, I had a look at other I2C MFD
-drivers but couldn't find a clue why they shouldn't have the same
-problem.
-
-There was also a thread [1] about this topic, but there seems to be no
-conclusion.
-
-[1] https://www.spinics.net/lists/linux-renesas-soc/msg31581.html
-
- drivers/mfd/mfd-core.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/mfd/mfd-core.c b/drivers/mfd/mfd-core.c
-index b9eb8f40c073..5d8ea5e8e93c 100644
---- a/drivers/mfd/mfd-core.c
-+++ b/drivers/mfd/mfd-core.c
-@@ -139,9 +139,12 @@ static int mfd_add_device(struct device *parent, int id,
- 
- 	pdev->dev.parent = parent;
- 	pdev->dev.type = &mfd_dev_type;
--	pdev->dev.dma_mask = parent->dma_mask;
--	pdev->dev.dma_parms = parent->dma_parms;
--	pdev->dev.coherent_dma_mask = parent->coherent_dma_mask;
-+	if (parent->dma_mask)
-+		pdev->dev.dma_mask = parent->dma_mask;
-+	if (parent->dma_parms)
-+		pdev->dev.dma_parms = parent->dma_parms;
-+	if (parent->coherent_dma_mask)
-+		pdev->dev.coherent_dma_mask = parent->coherent_dma_mask;
- 
- 	ret = regulator_bulk_register_supply_alias(
- 			&pdev->dev, cell->parent_supplies,
--- 
-2.20.1
-
+Thanks,
+Guoqing
