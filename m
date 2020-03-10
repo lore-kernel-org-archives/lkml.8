@@ -2,115 +2,129 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A6C4C3F2D0
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:03:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AC45C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:03:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6CE3222C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:03:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A7F2222C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:03:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GlviqSyh"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="I20JsyOJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727785AbgCJWDE (ORCPT
+        id S1727788AbgCJWDW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 18:03:04 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:47460 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726283AbgCJWDE (ORCPT
+        Tue, 10 Mar 2020 18:03:22 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:40026 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727313AbgCJWDV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 18:03:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583877783;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=40W/kfQFw5xqXbXKZGwOTmPRgRjffptCSgf0Kp+g8OA=;
-        b=GlviqSyhUvI2vgdzP0oDOE136jlcwDkyDy7bcz6Kvx5PvlRFmXlzK/ig/HbxaxRpE1eAQJ
-        3sJzvdLOgsimRyPSrlu8OJrC36q2J7kuFYwVIQwyWNjN3crlEgXPpoGEhYnfWSmnFPEvvB
-        TEuFkqBdf+JGbang79je28qoTfdf3jE=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-407-jXbMTMIZNyaGkpWb0X8g1w-1; Tue, 10 Mar 2020 18:03:01 -0400
-X-MC-Unique: jXbMTMIZNyaGkpWb0X8g1w-1
-Received: by mail-wr1-f71.google.com with SMTP id t14so7360053wrs.12
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 15:03:01 -0700 (PDT)
+        Tue, 10 Mar 2020 18:03:21 -0400
+Received: by mail-wm1-f66.google.com with SMTP id e26so3113372wme.5
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 15:03:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=dYEP1uE4NnVFr/AeDKddTWSxJgA20EPFg2G+JAahXU0=;
+        b=I20JsyOJIesiZZQ8aV/IdyM+r4UI4cQUwV9OU88GjMqXQdcGxyWCcTu+TKnMpQTwzR
+         8zsRR1Ku3VvKEiqj1/PL8R5Nrk6wcQBvAnxyWKr7fOA7HdZ08IH0zfDTMBnRXrE4sv+B
+         1FJbyCwTIoyCOqD2c6zdL2IiWQINHKswybaSp4LQ7NJ/mx5atiVaaCA7KJmFqkI1NxgO
+         ZLyx0BgypSHUQzKXHvqeJWj1ZAU41f5jkODNqWwySdRgLuSbY/bjut3UAN1jCydVdFW5
+         4q0nzPNiNsFhSQ2UmsMYO7SYzoSm7Xv0C8TZTspbL4HFRap19/7Ybum6IG+LQMJ662fW
+         FIwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=40W/kfQFw5xqXbXKZGwOTmPRgRjffptCSgf0Kp+g8OA=;
-        b=ORD3gkWY3UghogIhSV1xjiMFSxqC5woE42Pd1PpC5KvPNmcbjM3TBs3foD6TKlmkTx
-         9QezgGyWxrthPF5wWBJzk81sFrsyEVLFhvmPBfV6q7O2xH+VLsop2vNFgcFEsIigg09Z
-         B6lWmlzd2uqC2CDWgawAZBb0hAihvTaazKBsMUV8Ct4R1+ruTo0UU9xSmyeM3vclLlp6
-         IOZAzEMgf+4oKlxjzSPLWNgzO4xUw6YIPSgP6lZ7dQoAfrtExSxHSdBHRSvW8NvKSBvE
-         YUNY/HunyEUjRxN2dPAJ97YpV2tVydQY24jIMetnVc40VnISBZZind7iPJaKKdtlUZA7
-         bCEQ==
-X-Gm-Message-State: ANhLgQ3Bs0Bara8k6DTv67NXq8UIS6ksUXKdDsrt+QyGQhPCW78NxLP2
-        r+JN48tKyum+XwLN7Nyve6nG6JEPLS37yk3F/AfBhhSbW2DntJt+hUDeeMosXyAGWMiaO53onoS
-        exg3Z82U8zUHOrNngKo4dHl5R
-X-Received: by 2002:a5d:4687:: with SMTP id u7mr15891897wrq.129.1583877780643;
-        Tue, 10 Mar 2020 15:03:00 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vtZW/8L6Ll/FpuR0abFGldY17cpkX73JNYI1cBMm+URNiyq/qfzVgh4k4hvqu/EPs8sL15bng==
-X-Received: by 2002:a5d:4687:: with SMTP id u7mr15891878wrq.129.1583877780451;
-        Tue, 10 Mar 2020 15:03:00 -0700 (PDT)
-Received: from [192.168.3.122] (p5B0C6338.dip0.t-ipconnect.de. [91.12.99.56])
-        by smtp.gmail.com with ESMTPSA id u25sm5672417wml.17.2020.03.10.15.02.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Mar 2020 15:02:59 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   David Hildenbrand <david@redhat.com>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH v3] virtio-balloon: Switch back to OOM handler for VIRTIO_BALLOON_F_DEFLATE_ON_OOM
-Date:   Tue, 10 Mar 2020 23:02:58 +0100
-Message-Id: <6021D755-F883-4524-B3D1-07C03C7DF11B@redhat.com>
-References: <20200310172114-mutt-send-email-mst@kernel.org>
-Cc:     David Hildenbrand <david@redhat.com>,
-        David Rientjes <rientjes@google.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        virtualization@lists.linux-foundation.org,
-        Jason Wang <jasowang@redhat.com>,
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=dYEP1uE4NnVFr/AeDKddTWSxJgA20EPFg2G+JAahXU0=;
+        b=cx6q3wtV5rK5olNleG9tGP01zvTmg1uho0az65G/sAXEMuCk96skzyeOACN6Qpt6ln
+         QoJgBICdrbtkAB5oh6I2dPPSKMeVCvbkrkDxadd7w6nFOzT7Oi1OdeL1Y4wOclw4jRC3
+         EBe9IT4GxpC7AkW75wx6YmnhKkQTXR0TGFwjUabzL6cIBjPy/bPMr6faGywFxFkgP1Qg
+         XxUvxf3hKBJjGp09o+iFeQklLlgURdMl/tMp4RTbPn81EwJ+Wt4Xr1FNDCC3HlZb7T/s
+         jaeiacbwPysGedj5O/uGfHl1K+MRQqqFIm/K0m516QTnVzdArjMRxN0Aa/Bce+IrKGSk
+         G5ng==
+X-Gm-Message-State: ANhLgQ3Yn4bbL3f1p1N/MmrwE81UiV+lOyESyIfs6JRQY9k5D3D4wLgG
+        O1A2guTUlGDRPGJKgDcj2XFBMw==
+X-Google-Smtp-Source: ADFU+vsFsnumgp9VoOGVYqCrNLZ5ay6csw80CWgZBfUy0rM6bs6wjkEgt0Ofqq4WtgfmKA4Ub4RhiQ==
+X-Received: by 2002:a1c:4e14:: with SMTP id g20mr3853268wmh.143.1583877798471;
+        Tue, 10 Mar 2020 15:03:18 -0700 (PDT)
+Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
+        by smtp.gmail.com with ESMTPSA id w67sm1892315wmb.41.2020.03.10.15.03.17
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 10 Mar 2020 15:03:17 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Rob Herring <robh+dt@kernel.org>
+List-Id: <soc.lore.kernel.org>
+Cc:     Jianxin Pan <jianxin.pan@amlogic.com>,
+        "open list\:ARM\/Amlogic Meson..." 
+        <linux-amlogic@lists.infradead.org>, SoC Team <soc@kernel.org>,
         Stephen Rothwell <sfr@canb.auug.org.au>,
-        Tyler Sanderson <tysand@google.com>,
-        Wei Wang <wei.w.wang@intel.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Nadav Amit <namit@vmware.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-In-Reply-To: <20200310172114-mutt-send-email-mst@kernel.org>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-X-Mailer: iPhone Mail (17D50)
+        devicetree@vger.kernel.org,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        "open list\:THERMAL" <linux-pm@vger.kernel.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "moderated list\:ARM\/FREESCALE IMX \/ MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v2] dt-bindings: power: Fix dt_binding_check error
+In-Reply-To: <CAL_JsqJAxfL_Q3HYHk_8VeefdXnhYT7kcPe3F5Gzk1Vfj+xtww@mail.gmail.com>
+References: <1583164448-83438-1-git-send-email-jianxin.pan@amlogic.com> <7hsgiqra5x.fsf@baylibre.com> <CAL_JsqJAxfL_Q3HYHk_8VeefdXnhYT7kcPe3F5Gzk1Vfj+xtww@mail.gmail.com>
+Date:   Tue, 10 Mar 2020 15:03:15 -0700
+Message-ID: <7h36afn9zw.fsf@baylibre.com>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Rob Herring <robh+dt@kernel.org> writes:
+
+> On Mon, Mar 2, 2020 at 10:31 AM Kevin Hilman <khilman@baylibre.com> wrote:
+>>
+>> Hi Jianxin,
+>>
+>> Jianxin Pan <jianxin.pan@amlogic.com> writes:
+>>
+>> > Missing ';' in the end of secure-monitor example node.
+>> >
+>> > Fixes: 165b5fb294e8 ("dt-bindings: power: add Amlogic secure power domains bindings")
+>> > Reported-by: Rob Herring <robh+dt@kernel.org>
+>> > Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
+>> > ---
+>> >  Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml | 2 +-
+>> >  1 file changed, 1 insertion(+), 1 deletion(-)
+>> >
+>> > diff --git a/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml b/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml
+>> > index af32209..bc4e037 100644
+>> > --- a/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml
+>> > +++ b/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml
+>> > @@ -36,5 +36,5 @@ examples:
+>> >              compatible = "amlogic,meson-a1-pwrc";
+>> >              #power-domain-cells = <1>;
+>> >          };
+>> > -    }
+>> > +    };
+>>
+>> Thanks for the fix.  Queued for v5.7.
+>>
+>> @Arnd, @Olof: you can ignore this one.  I requested Jianxin to send to
+>> you thinking this was a fix for something you already queued, but it's
+>> not.  I'll handle it.
+>
+> Someone has what needs fixing queued in linux-next, but this fix is
+> still not there. Somehow it seems like features show up in linux-next
+> faster than fixes for SoC tree...
+
+The fix (this patch) is queued in my 'for-next' branch which I pushed
+yesterday.  I guess it missed next-20200310 but should be in tomorrow.
+
+Kevin
 
 
-> Am 10.03.2020 um 22:25 schrieb Michael S. Tsirkin <mst@redhat.com>:
->=20
-> =EF=BB=BFOn Tue, Mar 10, 2020 at 08:13:19PM +0100, David Hildenbrand wrote=
-:
->>> Should this have:
->>>=20
->>> Cc: stable@vger.kernel.org # 4.19+
->>=20
->> I guess as nothing will actually "crash" it's not worth stable.
->=20
->=20
-> No - it's a regression, it would be a stable candidate from that POV.
-
-AFAIK
-
-=E2=80=9E It must fix a problem that causes a build error (but not for thing=
-s marked CONFIG_BROKEN), an oops, a hang, data corruption, a real security i=
-ssue, or some =E2=80=9Coh, that=E2=80=99s not good=E2=80=9D issue. In short,=
- something critical.=E2=80=9C
-
-If this regression is that critical is debatable. But it doesn=E2=80=98t mat=
-ter as you correctly say, it=E2=80=98s too big :)=
-
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/khilman/linux-amlogic.git/log/?h=for-next
