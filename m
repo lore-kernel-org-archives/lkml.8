@@ -2,84 +2,184 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8C5CC18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 16:44:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37B1FC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 16:45:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFDBD222C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 16:44:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04F16222C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 16:45:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OLgxZaW6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726986AbgCJQoZ (ORCPT
+        id S1727049AbgCJQpX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 12:44:25 -0400
-Received: from foss.arm.com ([217.140.110.172]:39442 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726307AbgCJQoY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 12:44:24 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0E0AB1FB;
-        Tue, 10 Mar 2020 09:44:24 -0700 (PDT)
-Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 09A613F67D;
-        Tue, 10 Mar 2020 09:44:19 -0700 (PDT)
-Subject: Re: [PATCH 0/3] Request direct mapping for modem firmware subdevice
-To:     Joerg Roedel <joro@8bytes.org>, Sibi Sankar <sibis@codeaurora.org>
-Cc:     ohad@wizery.com, devicetree@vger.kernel.org,
-        linux-kernel-owner@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bjorn.andersson@linaro.org, iommu@lists.linux-foundation.org,
-        robh+dt@kernel.org, agross@kernel.org
-References: <20200309182255.20142-1-sibis@codeaurora.org>
- <20200310112332.GG3794@8bytes.org>
- <4ed6ddd667a3e6f670084a443d141474@codeaurora.org>
- <20200310162320.GL3794@8bytes.org>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <a50040a9-54fe-f682-dd7e-b2991b48d633@arm.com>
-Date:   Tue, 10 Mar 2020 16:44:12 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 10 Mar 2020 12:45:23 -0400
+Received: from mail-vk1-f195.google.com ([209.85.221.195]:40919 "EHLO
+        mail-vk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726269AbgCJQpW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 12:45:22 -0400
+Received: by mail-vk1-f195.google.com with SMTP id k63so1613859vka.7;
+        Tue, 10 Mar 2020 09:45:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Id7nxzKDmSxI0cxB6yaElDPLzg27V9lnZyiHS/FO3cA=;
+        b=OLgxZaW6bKNkMqqk5xI+ZQZ5koSwhOU2O2YajGrqtFX0SGrvSFA9HmS/gCiiWJw8G/
+         Asl8ogHEcdLsWX8yltDot3pYdZGeoA3rT7NfPPqvrk1mYkJ7A31cY43vYOamEzs9SwXP
+         JcosmGuuSgns7PgnY2K1/NO2xPkuw29r9EZUa2ie2FQ+PZGF8bRwPwKbAKRZz1H+g73v
+         Oivk+VjqvgZ31Rx2ZbTPnVy7H/MQdjdr98cb5WzHBD94PJNx0tDJf7tkxjYIiXhGirO2
+         F0S4i/g0nTnmcM8ID3R5XfUXFMqneDfyw4Bgl9hNo/MNMJUU8aFxZJD/tx8yHNmj8vud
+         jcJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Id7nxzKDmSxI0cxB6yaElDPLzg27V9lnZyiHS/FO3cA=;
+        b=jLFFZMcdNHpnnf/qzXshaC4vxS+xrTOwN5gXZmfWL0bRpVwBCrxh7QA/ADOj2O2+GU
+         s/hvJXPjv6wYew5IUjLlzbR9tPTBZ/UvoPc5gPm3JAZLS4Sd1wIZ+uUONGee3MnExtk8
+         w1se1fkhPKalUw/NqjDiSFzC3F1DYD4ZcOK70/5chZ70TqVtrWh4VHPA4W2kabUcIPLk
+         Ha1minHqWfxvCN6IITCUGJjjRQzIB5/wHrUML4gKgaeLVniV0LybJYC80wH8MZL8JXsC
+         XKI+49Tahh3U+H94SeDhPwjlTQ7p79Onq/1u6HYYTDbtmxSCC+BfdXAPh49IfTT1rzj1
+         DGFw==
+X-Gm-Message-State: ANhLgQ0iayZ1s2KQVDjLWxSKsPCiB+b3kRS90afZytKJZYc1qtnXcRYb
+        4Pz8w4xPgoo58qfXXvVLZ3Pz1Ln3r3rCywY4rMA=
+X-Google-Smtp-Source: ADFU+vsFnMZOJyX+JnMLr2gSOiucHUxAptJ2co35Xt2ai8onMy2NXP9Q6zK4kHPGL3XY4vYMadgXzXQO5GJyc3DfNHA=
+X-Received: by 2002:a1f:b401:: with SMTP id d1mr11868133vkf.26.1583858719158;
+ Tue, 10 Mar 2020 09:45:19 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200310162320.GL3794@8bytes.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <00000000000088452f05a07621d2@google.com>
+In-Reply-To: <00000000000088452f05a07621d2@google.com>
+From:   =?UTF-8?B?6buE56eL6ZKn?= <anenbupt@gmail.com>
+Date:   Wed, 11 Mar 2020 00:45:08 +0800
+Message-ID: <CADG63jBA42RVg_GGDHhMP0iL0VP2FTm8N7684wdOccATO_TrzA@mail.gmail.com>
+Subject: Re: WARNING: refcount bug in sctp_wfree
+To:     syzbot <syzbot+cea71eec5d6de256d54d@syzkaller.appspotmail.com>
+Cc:     davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
+        linux-sctp@vger.kernel.org, marcelo.leitner@gmail.com,
+        netdev@vger.kernel.org, nhorman@tuxdriver.com,
+        syzkaller-bugs@googlegroups.com, vyasevich@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/03/2020 4:23 pm, Joerg Roedel wrote:
-> On Tue, Mar 10, 2020 at 07:30:50PM +0530, Sibi Sankar wrote:
->> The accesses are initiated by the firmware
->> and they access modem reserved regions.
->> However as explained in ^^ any accesses
->> outside the region will result in a violation
->> and is controlled through XPUs (protection units).
-> 
-> Okay, this sounds like a case for arm_smmu_get_resv_region(). It should
-> return an entry for the reserved memory region the firmware needs to
-> access, so that generic iommu can setup this mapping.
-> 
-> Note that it should return that entry only for your device, not for all
-> devices. Maybe there is a property in DT or IORT you can set to
-> transport this information into the arm-smmu driver.
-> 
-> This is pretty similar to RMRR mapping on the Intel VT-d IOMMU or
-> Unity-mapped ranges in the AMD-Vi IOMMU.
+sctp_wfree
+    ->refcount_sub_and_test(sizeof(struct sctp_chunk),
+                                      &sk->sk_wmem_alloc)
+sctp_wfree will sub sizeof(struct sctp_chunk) for every skb. So could
+we add the extra size for gso segment ?
 
-Yup, a way to describe boot-time memory regions in IORT is in the 
-process of being specced out; the first attempt at an equivalent for DT 
-is here:
 
-https://lore.kernel.org/linux-iommu/20191209150748.2471814-1-thierry.reding@gmail.com/
 
-If that's not enough and the SMMU still needs to treat certain Stream 
-IDs specially because they may be untranslatable (due to having direct 
-access to memory as a side-channel), then that should be handled in the 
-SoC-specific corner of the SMMU driver, not delegated to individual 
-endpoint drivers.
+--- a/net/sctp/output.c
++++ b/net/sctp/output.c
+@@ -398,7 +398,8 @@ static void sctp_packet_gso_append(struct sk_buff
+*head, struct sk_buff *skb)
+        head->truesize += skb->truesize;
+        head->data_len += skb->len;
+        head->len += skb->len;
+-       refcount_add(skb->truesize, &head->sk->sk_wmem_alloc);
++       refcount_add(skb->truesize + sizeof(struct sctp_chunk),
++                               &head->sk->sk_wmem_alloc);
 
-Robin.
+        __skb_header_release(skb);
+
+On Tue, Mar 10, 2020 at 9:36 AM syzbot
+<syzbot+cea71eec5d6de256d54d@syzkaller.appspotmail.com> wrote:
+>
+> Hello,
+>
+> syzbot found the following crash on:
+>
+> HEAD commit:    2c523b34 Linux 5.6-rc5
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=155a5f29e00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=a5295e161cd85b82
+> dashboard link: https://syzkaller.appspot.com/bug?extid=cea71eec5d6de256d54d
+> compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=164b5181e00000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=166dd70de00000
+>
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+cea71eec5d6de256d54d@syzkaller.appspotmail.com
+>
+> ------------[ cut here ]------------
+> refcount_t: underflow; use-after-free.
+> WARNING: CPU: 1 PID: 8668 at lib/refcount.c:28 refcount_warn_saturate+0x15b/0x1a0 lib/refcount.c:28
+> Kernel panic - not syncing: panic_on_warn set ...
+> CPU: 1 PID: 8668 Comm: syz-executor779 Not tainted 5.6.0-rc5-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> Call Trace:
+>  __dump_stack lib/dump_stack.c:77 [inline]
+>  dump_stack+0x1e9/0x30e lib/dump_stack.c:118
+>  panic+0x264/0x7a0 kernel/panic.c:221
+>  __warn+0x209/0x210 kernel/panic.c:582
+>  report_bug+0x1ac/0x2d0 lib/bug.c:195
+>  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+>  do_error_trap+0xca/0x1c0 arch/x86/kernel/traps.c:267
+>  do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:286
+>  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
+> RIP: 0010:refcount_warn_saturate+0x15b/0x1a0 lib/refcount.c:28
+> Code: c7 e4 ff d0 88 31 c0 e8 23 20 b3 fd 0f 0b eb 85 e8 8a 4a e0 fd c6 05 ff 70 b1 05 01 48 c7 c7 10 00 d1 88 31 c0 e8 05 20 b3 fd <0f> 0b e9 64 ff ff ff e8 69 4a e0 fd c6 05 df 70 b1 05 01 48 c7 c7
+> RSP: 0018:ffffc90001f577d0 EFLAGS: 00010246
+> RAX: 8c9c9070bbb4e500 RBX: 0000000000000003 RCX: ffff8880938a63c0
+> RDX: 0000000000000000 RSI: 0000000080000000 RDI: 0000000000000000
+> RBP: 0000000000000003 R08: ffffffff815e16e6 R09: fffffbfff15db92a
+> R10: fffffbfff15db92a R11: 0000000000000000 R12: dffffc0000000000
+> R13: ffff88809de82000 R14: ffff8880a89237c0 R15: 1ffff11013be52b0
+>  sctp_wfree+0x3b1/0x710 net/sctp/socket.c:9111
+>  skb_release_head_state+0xfb/0x210 net/core/skbuff.c:651
+>  skb_release_all net/core/skbuff.c:662 [inline]
+>  __kfree_skb+0x22/0x1c0 net/core/skbuff.c:678
+>  sctp_chunk_destroy net/sctp/sm_make_chunk.c:1454 [inline]
+>  sctp_chunk_put+0x17b/0x200 net/sctp/sm_make_chunk.c:1481
+>  __sctp_outq_teardown+0x80a/0x9d0 net/sctp/outqueue.c:257
+>  sctp_association_free+0x21e/0x7c0 net/sctp/associola.c:339
+>  sctp_cmd_delete_tcb net/sctp/sm_sideeffect.c:930 [inline]
+>  sctp_cmd_interpreter net/sctp/sm_sideeffect.c:1318 [inline]
+>  sctp_side_effects net/sctp/sm_sideeffect.c:1185 [inline]
+>  sctp_do_sm+0x3c01/0x5560 net/sctp/sm_sideeffect.c:1156
+>  sctp_primitive_ABORT+0x93/0xc0 net/sctp/primitive.c:104
+>  sctp_close+0x231/0x770 net/sctp/socket.c:1512
+>  inet_release+0x135/0x180 net/ipv4/af_inet.c:427
+>  __sock_release net/socket.c:605 [inline]
+>  sock_close+0xd8/0x260 net/socket.c:1283
+>  __fput+0x2d8/0x730 fs/file_table.c:280
+>  task_work_run+0x176/0x1b0 kernel/task_work.c:113
+>  exit_task_work include/linux/task_work.h:22 [inline]
+>  do_exit+0x5ef/0x1f80 kernel/exit.c:801
+>  do_group_exit+0x15e/0x2c0 kernel/exit.c:899
+>  __do_sys_exit_group+0x13/0x20 kernel/exit.c:910
+>  __se_sys_exit_group+0x10/0x10 kernel/exit.c:908
+>  __x64_sys_exit_group+0x37/0x40 kernel/exit.c:908
+>  do_syscall_64+0xf3/0x1b0 arch/x86/entry/common.c:294
+>  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> RIP: 0033:0x43ef98
+> Code: Bad RIP value.
+> RSP: 002b:00007ffcc7e7c398 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
+> RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 000000000043ef98
+> RDX: 0000000000000000 RSI: 000000000000003c RDI: 0000000000000000
+> RBP: 00000000004be7a8 R08: 00000000000000e7 R09: ffffffffffffffd0
+> R10: 000000002059aff8 R11: 0000000000000246 R12: 0000000000000001
+> R13: 00000000006d01a0 R14: 0000000000000000 R15: 0000000000000000
+> Kernel Offset: disabled
+> Rebooting in 86400 seconds..
+>
+>
+> ---
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> syzbot can test patches for this bug, for details see:
+> https://goo.gl/tpsmEJ#testing-patches
