@@ -2,106 +2,167 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F3C9C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 08:02:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95F20C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 08:02:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C17624673
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 08:02:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="tu+rIegZ"
+	by mail.kernel.org (Postfix) with ESMTP id 72C512467C
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 08:02:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726395AbgCJICS (ORCPT
+        id S1726436AbgCJIC4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 04:02:18 -0400
-Received: from ozlabs.org ([203.11.71.1]:32947 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725919AbgCJICS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 04:02:18 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48c6xy0mz6z9sPF;
-        Tue, 10 Mar 2020 19:02:12 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1583827335;
-        bh=aMJHHEyENsZl87/r2ZJRugO9+TZPdfQT3JlSpCuYIao=;
-        h=Date:From:To:Cc:Subject:From;
-        b=tu+rIegZQ83tGYwnL75Ey+AsxqAhQda2PAhxflEREV/vmvRUDFm+/KbE/0pqohKLE
-         WtoXYt1kAbFGHlw583fd9AjB72I32FW8jnjKklDCmg2kGnu0bFJTJEHgiF3wod33Ea
-         liuG1iUZzdsfpNF9PKeNq/XHUPgzwxZOpp41VoNCcJJaHLx6PtspCnJ2fq/ZI8SmbM
-         BGvpwWEycK4XScRVYK1xiKcUuTnXeSuIe3/EPw+sJiEnGdjDAgTGzwBTydj76ejDMS
-         ootfLtdV9s5dDf9aZLGrG4h6jqZ8FmUSYGVenY+G0bv+sY9ZI9+2YdG+H8CTznqM9+
-         /62AUuj83YaNQ==
-Date:   Tue, 10 Mar 2020 19:02:05 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        David Hildenbrand <david@redhat.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Subject: linux-next: manual merge of the akpm-current tree with the vhost
- tree
-Message-ID: <20200310190205.7c152ef9@canb.auug.org.au>
+        Tue, 10 Mar 2020 04:02:56 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:36921 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726295AbgCJIC4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 04:02:56 -0400
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1jBZqd-0003q9-DC; Tue, 10 Mar 2020 09:02:43 +0100
+Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1jBZqb-000205-1H; Tue, 10 Mar 2020 09:02:41 +0100
+Date:   Tue, 10 Mar 2020 09:02:41 +0100
+From:   Sascha Hauer <s.hauer@pengutronix.de>
+To:     Robin Gong <yibin.gong@nxp.com>
+Cc:     vkoul@kernel.org, shawnguo@kernel.org,
+        u.kleine-koenig@pengutronix.de, broonie@kernel.org,
+        robh+dt@kernel.org, festevam@gmail.com, dan.j.williams@intel.com,
+        mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com,
+        l.stach@pengutronix.de, martin.fuzzey@flowbird.group,
+        kernel@pengutronix.de, linux-spi@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-imx@nxp.com, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [RESEND v6  07/13] spi: imx: remove ERR009165 workaround on
+ i.mx6ul
+Message-ID: <20200310080240.GS3335@pengutronix.de>
+References: <1583839922-22699-1-git-send-email-yibin.gong@nxp.com>
+ <1583839922-22699-8-git-send-email-yibin.gong@nxp.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/=r6dahv_exMUQNhFiy4ztKK";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1583839922-22699-8-git-send-email-yibin.gong@nxp.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 08:40:21 up 19 days, 15:10, 46 users,  load average: 0.37, 0.19,
+ 0.18
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: sha@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/=r6dahv_exMUQNhFiy4ztKK
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Tue, Mar 10, 2020 at 07:31:56PM +0800, Robin Gong wrote:
+> ERR009165 fixed on i.mx6ul/6ull/6sll. All other i.mx6/7 and
+> i.mx8m/8mm still need this errata. Please refer to nxp official
+> errata document from https://www.nxp.com/ .
+> 
+> For removing workaround on those chips. Add new i.mx6ul type.
+> 
+> Signed-off-by: Robin Gong <yibin.gong@nxp.com>
+> Acked-by: Mark Brown <broonie@kernel.org>
+> ---
+>  drivers/spi/spi-imx.c | 50 +++++++++++++++++++++++++++++++++++++++++++++-----
+>  1 file changed, 45 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/spi/spi-imx.c b/drivers/spi/spi-imx.c
+> index 842a86e..f7ee2ec 100644
+> --- a/drivers/spi/spi-imx.c
+> +++ b/drivers/spi/spi-imx.c
+> @@ -57,6 +57,7 @@ enum spi_imx_devtype {
+>  	IMX35_CSPI,	/* CSPI on all i.mx except above */
+>  	IMX51_ECSPI,	/* ECSPI on i.mx51 */
+>  	IMX53_ECSPI,	/* ECSPI on i.mx53 and later */
+> +	IMX6UL_ECSPI,	/* ERR009165 fix from i.mx6ul */
+>  };
+>  
+>  struct spi_imx_data;
+> @@ -75,6 +76,11 @@ struct spi_imx_devtype_data {
+>  	bool has_slavemode;
+>  	unsigned int fifo_size;
+>  	bool dynamic_burst;
+> +	/*
+> +	 * ERR009165 fixed or not:
+> +	 * https://www.nxp.com/docs/en/errata/IMX6DQCE.pdf
+> +	 */
+> +	bool tx_glitch_fixed;
+>  	enum spi_imx_devtype devtype;
+>  };
+>  
+> @@ -128,7 +134,8 @@ static inline int is_imx35_cspi(struct spi_imx_data *d)
+>  
+>  static inline int is_imx51_ecspi(struct spi_imx_data *d)
+>  {
+> -	return d->devtype_data->devtype == IMX51_ECSPI;
+> +	return d->devtype_data->devtype == IMX51_ECSPI ||
+> +	       d->devtype_data->devtype == IMX6UL_ECSPI;
+>  }
 
-Hi all,
+Erm, no. A i.MX51 ECSPI is a i.MX51 ECSPI and not a i.MX6UL ECSPI. If
+you want to handle them equally somewhere then explicitly test for
+i.MX6ul *and* i.MX51 there.
 
-Today's linux-next merge of the akpm-current tree got a conflict in:
+>  
+>  static inline int is_imx53_ecspi(struct spi_imx_data *d)
+> @@ -585,9 +592,16 @@ static int mx51_ecspi_prepare_transfer(struct spi_imx_data *spi_imx,
+>  	ctrl |= mx51_ecspi_clkdiv(spi_imx, t->speed_hz, &clk);
+>  	spi_imx->spi_bus_clk = clk;
+>  
+> -	/* ERR009165: work in XHC mode as PIO */
+> -	if (spi_imx->usedma)
+> -		ctrl &= ~MX51_ECSPI_CTRL_SMC;
+> +	/*
+> +	 * ERR009165: work in XHC mode instead of SMC as PIO on the chips
+> +	 * before i.mx6ul.
+> +	 */
+> +	if (spi_imx->usedma) {
+> +		if (spi_imx->devtype_data->tx_glitch_fixed)
+> +			ctrl |= MX51_ECSPI_CTRL_SMC;
+> +		else
+> +			ctrl &= ~MX51_ECSPI_CTRL_SMC;
+> +	}
 
-  drivers/virtio/virtio_balloon.c
+Changed again, but the PIO case still not honoured. This should look
+like
+	if (spi_imx->usedma && spi_imx->devtype_data->tx_glitch_fixed)
+		ctrl |= MX51_ECSPI_CTRL_SMC;
+	else
+		ctrl &= ~MX51_ECSPI_CTRL_SMC;
 
-between commit:
+>  
+>  	writel(ctrl, spi_imx->base + MX51_ECSPI_CTRL);
+>  
+> @@ -615,6 +629,8 @@ static void mx51_setup_wml(struct spi_imx_data *spi_imx)
+>  {
+>  	u32 tx_wml = 0;
+>  
+> +	if (spi_imx->devtype_data->tx_glitch_fixed)
+> +		tx_wml = spi_imx->wml;
 
-  b5769cdc14fc ("virtio-balloon: Switch back to OOM handler for VIRTIO_BALL=
-OON_F_DEFLATE_ON_OOM")
+That explains the variable introduced in the last patch, ok.
 
-from the vhost tree and commits:
+I have the impression that splitting up 06/13 and 07/13 into two patches
+doesn't make it easier to review.
 
-  b64c4d5bea98 ("virtio-balloon: pull page poisoning config out of free pag=
-e hinting")
-  80c03575431c ("virtio-balloon: add support for providing free page report=
-s to host")
+Sascha
 
-from the akpm-current tree.
 
-I looked at the conflict for a while but could not easily see how to
-reconcile it, so I decided to revert the vhost tree commit for today.
-Some advice would be appreciated.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/=r6dahv_exMUQNhFiy4ztKK
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5nSX0ACgkQAVBC80lX
-0GzZKggAnGNccWdEzs0YfK/+WMBdNyEPGVl4YCnYaOsyvyMNzLr6BG9Q+q3gylXk
-DVHqkyioJrrZwuBVWMTGQzCfCKsPC/bHvG29IodU5Hjej8mcL2zCw8PhFq1HXKmb
-1cYeTHjMycONT5BQFeocwsC86T6+wZzOKGtwv5wo6XE6xnSPJQMd5uEyeKKouclX
-0yIhjthqyH0e0GTC9g2TDALzwbubh9bsJonydHyv8V3scrOZUGtklF/yp1VP3d4c
-/wwiySsJxQJzabQomAEUu2WvGYp9AKiXBSG1cjhO+Tgp3d8WUJ12Ln846fWdfPN7
-PhesQKsNLwMdDmW3eaR3yWbwj7t99A==
-=tVY+
------END PGP SIGNATURE-----
-
---Sig_/=r6dahv_exMUQNhFiy4ztKK--
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
