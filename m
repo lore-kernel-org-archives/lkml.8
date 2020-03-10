@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C89AC18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:03:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDCBDC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:03:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5EE12468D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:03:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 978DD20409
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:03:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583845422;
-	bh=AayI18LkSJjxsRqW0wj91p+S39Sy+kfU3MHhJHUHFMU=;
+	s=default; t=1583845427;
+	bh=7NRmezi1vA7WMk2yR8WRvB8DC2NMDVyQdd4/HrxFIMc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qYihwiF0L4okbPGkMR+V5EGoWCqtFOac8lPcJ1p9AfDGIdJyN0P/4us2GX4K0PHxD
-	 JPvIoq228Phvrw2amT/LqklUw8h6LdqGpYwi0Mit8t49ZznhMviwvkdvJlftlOdhwW
-	 4U7rPnC6xOFRiw/qLE/Jq3JrzoayoinYbBFv5imM=
+	b=RyH3rdmaHSteOg8IBfEjC9TFdlZamtAB8PKQv5kx4WuvCjOzLYojK+oyYqb5bh1Bp
+	 YEXYlHRZfcE6j6zhm7QSYTSDSkZXuDlLdSIS0oxxB5HERPFooeoZASz2FbF8yMQFU3
+	 r6067WDzYAwo7hIJ11rY43GaaZtxY9DtKuBxvjZE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728703AbgCJNDk (ORCPT
+        id S1730648AbgCJNDq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:03:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48388 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:03:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48568 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730625AbgCJNDi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:03:38 -0400
+        id S1728676AbgCJNDo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:03:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 752A520409;
-        Tue, 10 Mar 2020 13:03:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 268722468D;
+        Tue, 10 Mar 2020 13:03:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845417;
-        bh=AayI18LkSJjxsRqW0wj91p+S39Sy+kfU3MHhJHUHFMU=;
+        s=default; t=1583845423;
+        bh=7NRmezi1vA7WMk2yR8WRvB8DC2NMDVyQdd4/HrxFIMc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hAMRTQ2asbk7lZOwfn/etGSSjNusoy3G4EKt6jnn95VFIyRZpwZ9ft+mcnSPUpy1q
-         tm7YEIxt+2/uAnIvIiJpfpba/2UiHZOMVqpZA8HQeoHE2r+uTfOF5cLApbVNMcdaVU
-         XinVVezREwE4pHq5FB2QN80o8ZV5gGln6G1DHozE=
+        b=z8gd0lAV6kvYdNBAdUMmMjogrMi/eOpEApF3lpD9H/6N9uoRZcuBxGmUJH+bFnVXm
+         Xz9E3dv8LinLh29iGTkzH4AJ9bzZmNd2MR3tXYztJGPwu0hRGAqRKzXjoC+3L3Ia2z
+         hWTNhoTsQZfAG8xCC6d7X3F/hopKaTs2wtutCQQc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Leonard Crestez <leonard.crestez@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>
-Subject: [PATCH 5.5 158/189] soc: imx-scu: Align imx sc msg structs to 4
-Date:   Tue, 10 Mar 2020 13:39:55 +0100
-Message-Id: <20200310123655.989313781@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 5.5 177/189] hwmon: (adt7462) Fix an error return in ADT7462_REG_VOLT()
+Date:   Tue, 10 Mar 2020 13:40:14 +0100
+Message-Id: <20200310123657.585510280@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123639.608886314@linuxfoundation.org>
 References: <20200310123639.608886314@linuxfoundation.org>
@@ -59,36 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leonard Crestez <leonard.crestez@nxp.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-commit f10e58a5d20e1cf3a39a842da92c9dd0c3c23849 upstream.
+commit 44f2f882909fedfc3a56e4b90026910456019743 upstream.
 
-The imx SC api strongly assumes that messages are composed out of
-4-bytes words but some of our message structs have odd sizeofs.
+This is only called from adt7462_update_device().  The caller expects it
+to return zero on error.  I fixed a similar issue earlier in commit
+a4bf06d58f21 ("hwmon: (adt7462) ADT7462_REG_VOLT_MAX() should return 0")
+but I missed this one.
 
-This produces many oopses with CONFIG_KASAN=y.
-
-Fix by marking with __aligned(4).
-
-Fixes: 73feb4d0f8f1 ("soc: imx-scu: Add SoC UID(unique identifier) support")
-Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Fixes: c0b4e3ab0c76 ("adt7462: new hwmon driver")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Link: https://lore.kernel.org/r/20200303101608.kqjwfcazu2ylhi2a@kili.mountain
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/soc/imx/soc-imx-scu.c |    2 +-
+ drivers/hwmon/adt7462.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/soc/imx/soc-imx-scu.c
-+++ b/drivers/soc/imx/soc-imx-scu.c
-@@ -25,7 +25,7 @@ struct imx_sc_msg_misc_get_soc_id {
- 			u32 id;
- 		} resp;
- 	} data;
--} __packed;
-+} __packed __aligned(4);
+--- a/drivers/hwmon/adt7462.c
++++ b/drivers/hwmon/adt7462.c
+@@ -413,7 +413,7 @@ static int ADT7462_REG_VOLT(struct adt74
+ 			return 0x95;
+ 		break;
+ 	}
+-	return -ENODEV;
++	return 0;
+ }
  
- struct imx_sc_msg_misc_get_soc_uid {
- 	struct imx_sc_rpc_msg hdr;
+ /* Provide labels for sysfs */
 
 
