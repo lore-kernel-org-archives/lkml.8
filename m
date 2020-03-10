@@ -2,53 +2,56 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95A85C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:54:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F363C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:54:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 686A424697
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:54:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1678820674
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:54:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583844843;
-	bh=Hdj9Xj4OjgQMShoUBLeSfokjxn4D5YsJdsBsM0BdGsU=;
+	s=default; t=1583844846;
+	bh=u1tL22Oa8Lt3kR4tVCpS9TqfnburU/QugzCbNdKVgIw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yQNcYRv2YOJBwh3WtckWO75CWphQXjuaimF8Th2lG9VJxQuqJ4dcsxFuhijUCnXRs
-	 /YUNsapmpUoiW5oKgRG8jGyrVp/K95HSwkdvfnKn/dwsceCMUNvK6TXTdRZXMwLOfr
-	 khNG9rtm39igVeY6cY8pexobeGzlPfsQPRFlFwVQ=
+	b=SXZW8jH01olwpPYvQWPj/PgPqkBkIfCPPSmw4p7PeUdqzssc3z0q4otIDIeb4vu79
+	 OhM2HJ1pzzp7YR1umPdmkflMrgxOoCgpbHucpBTB4w1aud+ditWBW5yrRilFu8ogEJ
+	 NP01hkHIhwgDvyR7AVV1LyagssqFGMdwvAyN5AvU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729288AbgCJMyB (ORCPT
+        id S1729297AbgCJMyE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:54:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60286 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:54:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60336 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729284AbgCJMx6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:53:58 -0400
+        id S1729289AbgCJMyB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:54:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3631824693;
-        Tue, 10 Mar 2020 12:53:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B026320674;
+        Tue, 10 Mar 2020 12:54:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844837;
-        bh=Hdj9Xj4OjgQMShoUBLeSfokjxn4D5YsJdsBsM0BdGsU=;
+        s=default; t=1583844841;
+        bh=u1tL22Oa8Lt3kR4tVCpS9TqfnburU/QugzCbNdKVgIw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ml2plmj0JzQaUEab19U7CckWHIGp48YV4fQR/VvcvSxkDsgThqhwlHve/BDHKukcI
-         sxhOK20XujcolP3FrSa9ImfAEPFh79sRhtHbIzwCWRvQe9fIYGN7G2azsiRH73PaU+
-         XOprz5DCNJASokrCVPAemkaWOV7xoYs9yTqx5RKA=
+        b=m6+jCOu0bQy4qdASIrBXlRZvETF9jDDssCLRdtIudgPU5D+88hAo7xuYDE5MUSwDB
+         Ak3t3h9dgRPCRo+izneglXZBUZltrDPvgYVbuwGl2h/fR7WUYEL/xnPPBcMP/03vKP
+         4Fa/UeGPI0z5sjLzk0rlOYzmT5lBrQ4V2lAV/RzU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 5.4 110/168] dm zoned: Fix reference counter initial value of chunk works
-Date:   Tue, 10 Mar 2020 13:39:16 +0100
-Message-Id: <20200310123646.534986078@linuxfoundation.org>
+        stable@vger.kernel.org, Marcel Partap <mpartap@gmx.net>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Michael Scott <hashcode0f@gmail.com>,
+        NeKit <nekit1000@gmail.com>, Pavel Machek <pavel@ucw.cz>,
+        Sebastian Reichel <sre@kernel.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH 5.4 137/168] phy: mapphone-mdm6600: Fix timeouts by adding wake-up handling
+Date:   Tue, 10 Mar 2020 13:39:43 +0100
+Message-Id: <20200310123649.365414852@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123635.322799692@linuxfoundation.org>
 References: <20200310123635.322799692@linuxfoundation.org>
@@ -61,107 +64,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+From: Tony Lindgren <tony@atomide.com>
 
-commit ee63634bae02e13c8c0df1209a6a0ca5326f3189 upstream.
+commit be4e3c737eebd75815633f4b8fd766defaf0f1fc upstream.
 
-Dm-zoned initializes reference counters of new chunk works with zero
-value and refcount_inc() is called to increment the counter. However, the
-refcount_inc() function handles the addition to zero value as an error
-and triggers the warning as follows:
+We have an interrupt handler for the wake-up GPIO pin, but we're missing
+the code to wake-up the system. This can cause timeouts receiving data
+for the UART that shares the wake-up GPIO pin with the USB PHY.
 
-refcount_t: addition on 0; use-after-free.
-WARNING: CPU: 7 PID: 1506 at lib/refcount.c:25 refcount_warn_saturate+0x68/0xf0
-...
-CPU: 7 PID: 1506 Comm: systemd-udevd Not tainted 5.4.0+ #134
-...
-Call Trace:
- dmz_map+0x2d2/0x350 [dm_zoned]
- __map_bio+0x42/0x1a0
- __split_and_process_non_flush+0x14a/0x1b0
- __split_and_process_bio+0x83/0x240
- ? kmem_cache_alloc+0x165/0x220
- dm_process_bio+0x90/0x230
- ? generic_make_request_checks+0x2e7/0x680
- dm_make_request+0x3e/0xb0
- generic_make_request+0xcf/0x320
- ? memcg_drain_all_list_lrus+0x1c0/0x1c0
- submit_bio+0x3c/0x160
- ? guard_bio_eod+0x2c/0x130
- mpage_readpages+0x182/0x1d0
- ? bdev_evict_inode+0xf0/0xf0
- read_pages+0x6b/0x1b0
- __do_page_cache_readahead+0x1ba/0x1d0
- force_page_cache_readahead+0x93/0x100
- generic_file_read_iter+0x83a/0xe40
- ? __seccomp_filter+0x7b/0x670
- new_sync_read+0x12a/0x1c0
- vfs_read+0x9d/0x150
- ksys_read+0x5f/0xe0
- do_syscall_64+0x5b/0x180
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-...
+All we need to do is just wake the system and kick the autosuspend
+timeout to fix the issue.
 
-After this warning, following refcount API calls for the counter all fail
-to change the counter value.
-
-Fix this by setting the initial reference counter value not zero but one
-for the new chunk works. Instead, do not call refcount_inc() via
-dmz_get_chunk_work() for the new chunks works.
-
-The failure was observed with linux version 5.4 with CONFIG_REFCOUNT_FULL
-enabled. Refcount rework was merged to linux version 5.5 by the
-commit 168829ad09ca ("Merge branch 'locking-core-for-linus' of
-git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip"). After this
-commit, CONFIG_REFCOUNT_FULL was removed and the failure was observed
-regardless of kernel configuration.
-
-Linux version 4.20 merged the commit 092b5648760a ("dm zoned: target: use
-refcount_t for dm zoned reference counters"). Before this commit, dm
-zoned used atomic_t APIs which does not check addition to zero, then this
-fix is not necessary.
-
-Fixes: 092b5648760a ("dm zoned: target: use refcount_t for dm zoned reference counters")
-Cc: stable@vger.kernel.org # 5.4+
-Signed-off-by: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-Reviewed-by: Damien Le Moal <damien.lemoal@wdc.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Fixes: 5d1ebbda0318 ("phy: mapphone-mdm6600: Add USB PHY driver for MDM6600 on Droid 4")
+Cc: Marcel Partap <mpartap@gmx.net>
+Cc: Merlijn Wajer <merlijn@wizzup.org>
+Cc: Michael Scott <hashcode0f@gmail.com>
+Cc: NeKit <nekit1000@gmail.com>
+Cc: Pavel Machek <pavel@ucw.cz>
+Cc: Sebastian Reichel <sre@kernel.org>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/dm-zoned-target.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/phy/motorola/phy-mapphone-mdm6600.c |   18 ++++++++++++++++--
+ 1 file changed, 16 insertions(+), 2 deletions(-)
 
---- a/drivers/md/dm-zoned-target.c
-+++ b/drivers/md/dm-zoned-target.c
-@@ -533,8 +533,9 @@ static int dmz_queue_chunk_work(struct d
+--- a/drivers/phy/motorola/phy-mapphone-mdm6600.c
++++ b/drivers/phy/motorola/phy-mapphone-mdm6600.c
+@@ -243,10 +243,24 @@ static irqreturn_t phy_mdm6600_wakeirq_t
+ {
+ 	struct phy_mdm6600 *ddata = data;
+ 	struct gpio_desc *mode_gpio1;
++	int error, wakeup;
  
- 	/* Get the BIO chunk work. If one is not active yet, create one */
- 	cw = radix_tree_lookup(&dmz->chunk_rxtree, chunk);
--	if (!cw) {
--
-+	if (cw) {
-+		dmz_get_chunk_work(cw);
-+	} else {
- 		/* Create a new chunk work */
- 		cw = kmalloc(sizeof(struct dm_chunk_work), GFP_NOIO);
- 		if (unlikely(!cw)) {
-@@ -543,7 +544,7 @@ static int dmz_queue_chunk_work(struct d
- 		}
+ 	mode_gpio1 = ddata->mode_gpios->desc[PHY_MDM6600_MODE1];
+-	dev_dbg(ddata->dev, "OOB wake on mode_gpio1: %i\n",
+-		gpiod_get_value(mode_gpio1));
++	wakeup = gpiod_get_value(mode_gpio1);
++	if (!wakeup)
++		return IRQ_NONE;
++
++	dev_dbg(ddata->dev, "OOB wake on mode_gpio1: %i\n", wakeup);
++	error = pm_runtime_get_sync(ddata->dev);
++	if (error < 0) {
++		pm_runtime_put_noidle(ddata->dev);
++
++		return IRQ_NONE;
++	}
++
++	/* Just wake-up and kick the autosuspend timer */
++	pm_runtime_mark_last_busy(ddata->dev);
++	pm_runtime_put_autosuspend(ddata->dev);
  
- 		INIT_WORK(&cw->work, dmz_chunk_work);
--		refcount_set(&cw->refcount, 0);
-+		refcount_set(&cw->refcount, 1);
- 		cw->target = dmz;
- 		cw->chunk = chunk;
- 		bio_list_init(&cw->bio_list);
-@@ -556,7 +557,6 @@ static int dmz_queue_chunk_work(struct d
- 	}
- 
- 	bio_list_add(&cw->bio_list, bio);
--	dmz_get_chunk_work(cw);
- 
- 	dmz_reclaim_bio_acc(dmz->reclaim);
- 	if (queue_work(dmz->chunk_wq, &cw->work))
+ 	return IRQ_HANDLED;
+ }
 
 
