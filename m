@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 205AEC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:48:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F7E0C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:48:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC07A2468D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:47:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41DC32468E
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:48:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583844480;
-	bh=XT/MO7aK5SsWIBRiMbJ29n7rSEC/rEmTvtY415pZyWg=;
+	s=default; t=1583844483;
+	bh=mT4Is3gTXjJnNKGVbzohHzQbJiVs/z0vEr6I06JIZJo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IeWLBkxB7JFE8vCvSoZXk53dSQPopk/xm6suRuQkmKmYWFd+LjRIjXOdWVLC0KVv4
-	 mjQJvDye9EOuxeJrj1hqFg5y/kJRQkSJYDWUBhdkMlYonPUbtfqtVQD/9evEBFx+4t
-	 mJCer4W8TYRk54GGvPrd33uiLC31O/RbEp0jYhXI=
+	b=v1NMmwmQe4Npacs39NW5niy2Eq3A6z0xkt/sOCS+mpq63Q1L9N2VZK8ZWnqT0grE3
+	 7aZVoNZ9/GvO/a/udMXYO1rSwWZT+QPGPTxXiJ5cS9+psVAC9ie/jXP7zsdCY4aN30
+	 hS1FNpVuODQBs/TsMjFSzgdxcAD1ntl/nFiaXn4E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728248AbgCJMr6 (ORCPT
+        id S1728012AbgCJMsB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:47:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51856 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:48:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51950 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728237AbgCJMry (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:47:54 -0400
+        id S1727828AbgCJMr7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:47:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 68AAC2468D;
-        Tue, 10 Mar 2020 12:47:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C0A5420674;
+        Tue, 10 Mar 2020 12:47:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844473;
-        bh=XT/MO7aK5SsWIBRiMbJ29n7rSEC/rEmTvtY415pZyWg=;
+        s=default; t=1583844479;
+        bh=mT4Is3gTXjJnNKGVbzohHzQbJiVs/z0vEr6I06JIZJo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KSBvStdHp++J+4rQN/ba8goRiYbrgRLCHDkArO4s2VLLEsaEFRBZqfSjMBA5bUqeN
-         AHEB9IykHtGFSyv3X5DPmQmUQx7a0nUNaald67fHg8cd7sYCt/rJV1J/vMgWBsRn4q
-         XmpvvQhHNVUXzGxiRUJCO3AazuE2/GytYloyNBy0=
+        b=1iofb3weVLYfv6jvSE/24cvIbxAkUCtR2HgkT/ETQtHpUm544kfZ8kGogLIrALwO+
+         pS+RUF8HNuUh+/qFhuSje0qqiCG0e0Qi42msXhIF8TSO8VALArsQacljz7Bwm/OFvR
+         iLuq1MhABnz/Puh/kNKXhqfqVj6G5dOe9/zBVw4w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 4.9 80/88] ASoC: dapm: Correct DAPM handling of active widgets during shutdown
-Date:   Tue, 10 Mar 2020 13:39:28 +0100
-Message-Id: <20200310123624.461651289@linuxfoundation.org>
+        stable@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>
+Subject: [PATCH 4.9 72/88] vt: selection, push console lock down
+Date:   Tue, 10 Mar 2020 13:39:20 +0100
+Message-Id: <20200310123623.463360507@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123606.543939933@linuxfoundation.org>
 References: <20200310123606.543939933@linuxfoundation.org>
@@ -60,43 +58,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
+From: Jiri Slaby <jslaby@suse.cz>
 
-commit 9b3193089e77d3b59b045146ff1c770dd899acb1 upstream.
+commit 4b70dd57a15d2f4685ac6e38056bad93e81e982f upstream.
 
-commit c2caa4da46a4 ("ASoC: Fix widget powerdown on shutdown") added a
-set of the power state during snd_soc_dapm_shutdown to ensure the
-widgets powered off. However, when commit 39eb5fd13dff
-("ASoC: dapm: Delay w->power update until the changes are written")
-added the new_power member of the widget structure, to differentiate
-between the current power state and the target power state, it did not
-update the shutdown to use the new_power member.
+We need to nest the console lock in sel_lock, so we have to push it down
+a bit. Fortunately, the callers of set_selection_* just lock the console
+lock around the function call. So moving it down is easy.
 
-As new_power has not updated it will be left in the state set by the
-last DAPM sequence, ie. 1 for active widgets. So as the DAPM sequence
-for the shutdown proceeds it will turn the widgets on (despite them
-already being on) rather than turning them off.
+In the next patch, we switch the order.
 
-Fixes: 39eb5fd13dff ("ASoC: dapm: Delay w->power update until the changes are written")
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Link: https://lore.kernel.org/r/20200228153145.21013-1-ckeepax@opensource.cirrus.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+Fixes: 07e6124a1a46 ("vt: selection, close sel_buffer race")
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200228115406.5735-1-jslaby@suse.cz
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/soc-dapm.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/tty/vt/selection.c |   13 ++++++++++++-
+ drivers/tty/vt/vt.c        |    2 --
+ 2 files changed, 12 insertions(+), 3 deletions(-)
 
---- a/sound/soc/soc-dapm.c
-+++ b/sound/soc/soc-dapm.c
-@@ -4363,7 +4363,7 @@ static void soc_dapm_shutdown_dapm(struc
- 			continue;
- 		if (w->power) {
- 			dapm_seq_insert(w, &down_list, false);
--			w->power = 0;
-+			w->new_power = 0;
- 			powerdown = 1;
- 		}
- 	}
+--- a/drivers/tty/vt/selection.c
++++ b/drivers/tty/vt/selection.c
+@@ -158,7 +158,7 @@ static int store_utf8(u16 c, char *p)
+  *	The entire selection process is managed under the console_lock. It's
+  *	 a lot under the lock but its hardly a performance path
+  */
+-int set_selection(const struct tiocl_selection __user *sel, struct tty_struct *tty)
++static int __set_selection(const struct tiocl_selection __user *sel, struct tty_struct *tty)
+ {
+ 	struct vc_data *vc = vc_cons[fg_console].d;
+ 	int sel_mode, new_sel_start, new_sel_end, spc;
+@@ -334,6 +334,17 @@ unlock:
+ 	return ret;
+ }
+ 
++int set_selection(const struct tiocl_selection __user *v, struct tty_struct *tty)
++{
++	int ret;
++
++	console_lock();
++	ret = __set_selection(v, tty);
++	console_unlock();
++
++	return ret;
++}
++
+ /* Insert the contents of the selection buffer into the
+  * queue of the tty associated with the current console.
+  * Invoked by ioctl().
+--- a/drivers/tty/vt/vt.c
++++ b/drivers/tty/vt/vt.c
+@@ -2690,9 +2690,7 @@ int tioclinux(struct tty_struct *tty, un
+ 	switch (type)
+ 	{
+ 		case TIOCL_SETSEL:
+-			console_lock();
+ 			ret = set_selection((struct tiocl_selection __user *)(p+1), tty);
+-			console_unlock();
+ 			break;
+ 		case TIOCL_PASTESEL:
+ 			ret = paste_selection(tty);
 
 
