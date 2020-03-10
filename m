@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1E54C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:06:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EF92C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:06:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78FFF2071B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:06:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEFE52468D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:06:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583845608;
-	bh=sM82G4kYr9KdBjXCKP43/pRLLLrB+mJe9ieCgn41Mwo=;
+	s=default; t=1583845614;
+	bh=yFqi2y2qU/nMBZWWI+25GCg6s4a8gGw/XhyKPyhRuAA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sjZQats5V0mHxjs+PF3fZdgQGV/37otAT1i5lymcxcS69Qc4eKulbhxEqbH/VL/Fz
-	 0bu4cya1AC0/mDSRZ25miwWRNw4RtJi2tf+qalCiKdbp5+IMceDdkiqutVV7JOnS3p
-	 Dou24SKa+mHvOL+7JA5Zr6Bzq5NjSjAR6nJX5gFk=
+	b=Loha5HB43JO9OLKxmBojfqQxIUZad4hm6y4sdRFhbZDgvSd+GhHEi4Di4+lP7CTan
+	 o3Duwvzw7YvIObR793SmCk9EOihpsy9DilOi5B/BxGNOW86I/gU7ZZG0XdnLJkIOxM
+	 iQNlyU8rzE0DnHVQzGDkaAfVshRYY8KHfc3qBySs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729121AbgCJNGr (ORCPT
+        id S1730885AbgCJNGw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:06:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52290 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:06:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52390 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730876AbgCJNGk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:06:40 -0400
+        id S1730570AbgCJNGr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:06:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B64D12071B;
-        Tue, 10 Mar 2020 13:06:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 131C72071B;
+        Tue, 10 Mar 2020 13:06:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845600;
-        bh=sM82G4kYr9KdBjXCKP43/pRLLLrB+mJe9ieCgn41Mwo=;
+        s=default; t=1583845606;
+        bh=yFqi2y2qU/nMBZWWI+25GCg6s4a8gGw/XhyKPyhRuAA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DSf/og521zLFJrm1E9vC0NcZyPa4fGl1vybz046VvxxIOX3l5UTaEm8ob+hLrTyRW
-         ml9sJ8ow8he4/dCKXPf0o3yuhyDVi+hOn38k/+Ur/2cB7Td7KMY7d37Qs+Hg5OPYrU
-         +BZaDcq/97f/kHMXS/J12ubjk0BdUAUXvYyH3Mwg=
+        b=2e3+iDJwgsE4JcPvnkzj82QjMQbAhzfUaQqXgMaGEdQHmDnOCspxtDhDPENuEdLG/
+         IDZEsuXrNi2tG8OnelBPajFsUx2kwF967reO895C965kLlZa1UFxP0f5xAednaowQk
+         wRy0qpR6lTrJS49RwfZI/+uwrBy1G4njJSKWBxJM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Jason Baron <jbaron@akamai.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 033/126] net: sched: correct flower port blocking
-Date:   Tue, 10 Mar 2020 13:40:54 +0100
-Message-Id: <20200310124206.526633885@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+1f4d90ead370d72e450b@syzkaller.appspotmail.com,
+        Paul Moore <paul@paul-moore.com>
+Subject: [PATCH 4.14 035/126] audit: fix error handling in audit_data_to_entry()
+Date:   Tue, 10 Mar 2020 13:40:56 +0100
+Message-Id: <20200310124206.633524409@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310124203.704193207@linuxfoundation.org>
 References: <20200310124203.704193207@linuxfoundation.org>
@@ -61,67 +60,204 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Baron <jbaron@akamai.com>
+From: Paul Moore <paul@paul-moore.com>
 
-[ Upstream commit 8a9093c79863b58cc2f9874d7ae788f0d622a596 ]
+commit 2ad3e17ebf94b7b7f3f64c050ff168f9915345eb upstream.
 
-tc flower rules that are based on src or dst port blocking are sometimes
-ineffective due to uninitialized stack data. __skb_flow_dissect() extracts
-ports from the skb for tc flower to match against. However, the port
-dissection is not done when when the FLOW_DIS_IS_FRAGMENT bit is set in
-key_control->flags. All callers of __skb_flow_dissect(), zero-out the
-key_control field except for fl_classify() as used by the flower
-classifier. Thus, the FLOW_DIS_IS_FRAGMENT may be set on entry to
-__skb_flow_dissect(), since key_control is allocated on the stack
-and may not be initialized.
+Commit 219ca39427bf ("audit: use union for audit_field values since
+they are mutually exclusive") combined a number of separate fields in
+the audit_field struct into a single union.  Generally this worked
+just fine because they are generally mutually exclusive.
+Unfortunately in audit_data_to_entry() the overlap can be a problem
+when a specific error case is triggered that causes the error path
+code to attempt to cleanup an audit_field struct and the cleanup
+involves attempting to free a stored LSM string (the lsm_str field).
+Currently the code always has a non-NULL value in the
+audit_field.lsm_str field as the top of the for-loop transfers a
+value into audit_field.val (both .lsm_str and .val are part of the
+same union); if audit_data_to_entry() fails and the audit_field
+struct is specified to contain a LSM string, but the
+audit_field.lsm_str has not yet been properly set, the error handling
+code will attempt to free the bogus audit_field.lsm_str value that
+was set with audit_field.val at the top of the for-loop.
 
-Since key_basic and key_control are present for all flow keys, let's
-make sure they are initialized.
+This patch corrects this by ensuring that the audit_field.val is only
+set when needed (it is cleared when the audit_field struct is
+allocated with kcalloc()).  It also corrects a few other issues to
+ensure that in case of error the proper error code is returned.
 
-Fixes: 62230715fd24 ("flow_dissector: do not dissect l4 ports for fragments")
-Co-developed-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Acked-by: Cong Wang <xiyou.wangcong@gmail.com>
-Signed-off-by: Jason Baron <jbaron@akamai.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Cc: stable@vger.kernel.org
+Fixes: 219ca39427bf ("audit: use union for audit_field values since they are mutually exclusive")
+Reported-by: syzbot+1f4d90ead370d72e450b@syzkaller.appspotmail.com
+Signed-off-by: Paul Moore <paul@paul-moore.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- include/net/flow_dissector.h |    9 +++++++++
- net/sched/cls_flower.c       |    1 +
- 2 files changed, 10 insertions(+)
 
---- a/include/net/flow_dissector.h
-+++ b/include/net/flow_dissector.h
-@@ -5,6 +5,7 @@
- #include <linux/types.h>
- #include <linux/in6.h>
- #include <linux/siphash.h>
-+#include <linux/string.h>
- #include <uapi/linux/if_ether.h>
+---
+ kernel/auditfilter.c |   71 ++++++++++++++++++++++++++++-----------------------
+ 1 file changed, 39 insertions(+), 32 deletions(-)
+
+--- a/kernel/auditfilter.c
++++ b/kernel/auditfilter.c
+@@ -435,6 +435,7 @@ static struct audit_entry *audit_data_to
+ 	bufp = data->buf;
+ 	for (i = 0; i < data->field_count; i++) {
+ 		struct audit_field *f = &entry->rule.fields[i];
++		u32 f_val;
  
- /**
-@@ -282,4 +283,12 @@ static inline void *skb_flow_dissector_t
- 	return ((char *)target_container) + flow_dissector->offset[key_id];
- }
+ 		err = -EINVAL;
  
-+static inline void
-+flow_dissector_init_keys(struct flow_dissector_key_control *key_control,
-+			 struct flow_dissector_key_basic *key_basic)
-+{
-+	memset(key_control, 0, sizeof(*key_control));
-+	memset(key_basic, 0, sizeof(*key_basic));
-+}
-+
- #endif
---- a/net/sched/cls_flower.c
-+++ b/net/sched/cls_flower.c
-@@ -160,6 +160,7 @@ static int fl_classify(struct sk_buff *s
- 	if (!atomic_read(&head->ht.nelems))
- 		return -1;
+@@ -443,12 +444,12 @@ static struct audit_entry *audit_data_to
+ 			goto exit_free;
  
-+	flow_dissector_init_keys(&skb_key.control, &skb_key.basic);
- 	fl_clear_masked_range(&skb_key, &head->mask);
+ 		f->type = data->fields[i];
+-		f->val = data->values[i];
++		f_val = data->values[i];
  
- 	info = skb_tunnel_info(skb);
+ 		/* Support legacy tests for a valid loginuid */
+-		if ((f->type == AUDIT_LOGINUID) && (f->val == AUDIT_UID_UNSET)) {
++		if ((f->type == AUDIT_LOGINUID) && (f_val == AUDIT_UID_UNSET)) {
+ 			f->type = AUDIT_LOGINUID_SET;
+-			f->val = 0;
++			f_val = 0;
+ 			entry->rule.pflags |= AUDIT_LOGINUID_LEGACY;
+ 		}
+ 
+@@ -464,7 +465,7 @@ static struct audit_entry *audit_data_to
+ 		case AUDIT_SUID:
+ 		case AUDIT_FSUID:
+ 		case AUDIT_OBJ_UID:
+-			f->uid = make_kuid(current_user_ns(), f->val);
++			f->uid = make_kuid(current_user_ns(), f_val);
+ 			if (!uid_valid(f->uid))
+ 				goto exit_free;
+ 			break;
+@@ -473,12 +474,13 @@ static struct audit_entry *audit_data_to
+ 		case AUDIT_SGID:
+ 		case AUDIT_FSGID:
+ 		case AUDIT_OBJ_GID:
+-			f->gid = make_kgid(current_user_ns(), f->val);
++			f->gid = make_kgid(current_user_ns(), f_val);
+ 			if (!gid_valid(f->gid))
+ 				goto exit_free;
+ 			break;
+ 		case AUDIT_SESSIONID:
+ 		case AUDIT_ARCH:
++			f->val = f_val;
+ 			entry->rule.arch_f = f;
+ 			break;
+ 		case AUDIT_SUBJ_USER:
+@@ -491,11 +493,13 @@ static struct audit_entry *audit_data_to
+ 		case AUDIT_OBJ_TYPE:
+ 		case AUDIT_OBJ_LEV_LOW:
+ 		case AUDIT_OBJ_LEV_HIGH:
+-			str = audit_unpack_string(&bufp, &remain, f->val);
+-			if (IS_ERR(str))
++			str = audit_unpack_string(&bufp, &remain, f_val);
++			if (IS_ERR(str)) {
++				err = PTR_ERR(str);
+ 				goto exit_free;
+-			entry->rule.buflen += f->val;
+-
++			}
++			entry->rule.buflen += f_val;
++			f->lsm_str = str;
+ 			err = security_audit_rule_init(f->type, f->op, str,
+ 						       (void **)&f->lsm_rule);
+ 			/* Keep currently invalid fields around in case they
+@@ -504,68 +508,71 @@ static struct audit_entry *audit_data_to
+ 				pr_warn("audit rule for LSM \'%s\' is invalid\n",
+ 					str);
+ 				err = 0;
+-			}
+-			if (err) {
+-				kfree(str);
++			} else if (err)
+ 				goto exit_free;
+-			} else
+-				f->lsm_str = str;
+ 			break;
+ 		case AUDIT_WATCH:
+-			str = audit_unpack_string(&bufp, &remain, f->val);
+-			if (IS_ERR(str))
++			str = audit_unpack_string(&bufp, &remain, f_val);
++			if (IS_ERR(str)) {
++				err = PTR_ERR(str);
+ 				goto exit_free;
+-			entry->rule.buflen += f->val;
+-
+-			err = audit_to_watch(&entry->rule, str, f->val, f->op);
++			}
++			err = audit_to_watch(&entry->rule, str, f_val, f->op);
+ 			if (err) {
+ 				kfree(str);
+ 				goto exit_free;
+ 			}
++			entry->rule.buflen += f_val;
+ 			break;
+ 		case AUDIT_DIR:
+-			str = audit_unpack_string(&bufp, &remain, f->val);
+-			if (IS_ERR(str))
++			str = audit_unpack_string(&bufp, &remain, f_val);
++			if (IS_ERR(str)) {
++				err = PTR_ERR(str);
+ 				goto exit_free;
+-			entry->rule.buflen += f->val;
+-
++			}
+ 			err = audit_make_tree(&entry->rule, str, f->op);
+ 			kfree(str);
+ 			if (err)
+ 				goto exit_free;
++			entry->rule.buflen += f_val;
+ 			break;
+ 		case AUDIT_INODE:
++			f->val = f_val;
+ 			err = audit_to_inode(&entry->rule, f);
+ 			if (err)
+ 				goto exit_free;
+ 			break;
+ 		case AUDIT_FILTERKEY:
+-			if (entry->rule.filterkey || f->val > AUDIT_MAX_KEY_LEN)
++			if (entry->rule.filterkey || f_val > AUDIT_MAX_KEY_LEN)
+ 				goto exit_free;
+-			str = audit_unpack_string(&bufp, &remain, f->val);
+-			if (IS_ERR(str))
++			str = audit_unpack_string(&bufp, &remain, f_val);
++			if (IS_ERR(str)) {
++				err = PTR_ERR(str);
+ 				goto exit_free;
+-			entry->rule.buflen += f->val;
++			}
++			entry->rule.buflen += f_val;
+ 			entry->rule.filterkey = str;
+ 			break;
+ 		case AUDIT_EXE:
+-			if (entry->rule.exe || f->val > PATH_MAX)
++			if (entry->rule.exe || f_val > PATH_MAX)
+ 				goto exit_free;
+-			str = audit_unpack_string(&bufp, &remain, f->val);
++			str = audit_unpack_string(&bufp, &remain, f_val);
+ 			if (IS_ERR(str)) {
+ 				err = PTR_ERR(str);
+ 				goto exit_free;
+ 			}
+-			entry->rule.buflen += f->val;
+-
+-			audit_mark = audit_alloc_mark(&entry->rule, str, f->val);
++			audit_mark = audit_alloc_mark(&entry->rule, str, f_val);
+ 			if (IS_ERR(audit_mark)) {
+ 				kfree(str);
+ 				err = PTR_ERR(audit_mark);
+ 				goto exit_free;
+ 			}
++			entry->rule.buflen += f_val;
+ 			entry->rule.exe = audit_mark;
+ 			break;
++		default:
++			f->val = f_val;
++			break;
+ 		}
+ 	}
+ 
 
 
