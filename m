@@ -2,109 +2,110 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1D38C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 01:06:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34ECBC10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 01:07:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C73424655
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 01:06:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AB8D24649
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 01:07:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726464AbgCJBGz (ORCPT
+        id S1726501AbgCJBHZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 21:06:55 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:44568 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726115AbgCJBGz (ORCPT
+        Mon, 9 Mar 2020 21:07:25 -0400
+Received: from relmlor1.renesas.com ([210.160.252.171]:21605 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726466AbgCJBHY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 21:06:55 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 9DE7380307C5;
-        Tue, 10 Mar 2020 01:06:53 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 7s97QYij5BRW; Tue, 10 Mar 2020 04:06:53 +0300 (MSK)
-Date:   Tue, 10 Mar 2020 04:06:03 +0300
-From:   Sergey Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Jiri Slaby <jslaby@suse.com>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 18/22] tty: mips_ejtag_fdc: Mark expected switch
- fall-through
-References: <20200306124705.6595-1-Sergey.Semin@baikalelectronics.ru>
- <20200306124913.151A68030792@mail.baikalelectronics.ru>
- <20200309161243.D5D5180307C7@mail.baikalelectronics.ru>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200309161243.D5D5180307C7@mail.baikalelectronics.ru>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
-Message-Id: <20200310010653.9DE7380307C5@mail.baikalelectronics.ru>
+        Mon, 9 Mar 2020 21:07:24 -0400
+Date:   10 Mar 2020 10:07:23 +0900
+X-IronPort-AV: E=Sophos;i="5.70,535,1574089200"; 
+   d="scan'208";a="41431033"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie5.idc.renesas.com with ESMTP; 10 Mar 2020 10:07:23 +0900
+Received: from mercury.renesas.com (unknown [10.166.252.133])
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 2B391400753F;
+        Tue, 10 Mar 2020 10:07:23 +0900 (JST)
+Message-ID: <87a74pvwz8.wl-kuninori.morimoto.gx@renesas.com>
+From:   Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+To:     Alex Riesen <alexander.riesen@cetitec.com>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Driver Development <devel@driverdev.osuosl.org>,
+        Linux Media <linux-media@vger.kernel.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Device Tree <devicetree@vger.kernel.org>,
+        Renesas SoC <linux-renesas-soc@vger.kernel.org>
+Subject: Re: [PATCH 8/8] arm64: dts: renesas: salvator: add a connection from adv748x codec (HDMI input) to the R-Car SoC
+In-Reply-To: <20200309110931.GB3593@pflmari>
+References: <CAMuHMdWobAE+y90DRi+zQadObWPxLyQiGNTe4t77O-2S1Vp5yA@mail.gmail.com>
+        <20200302150706.GB3717@pflmari>
+        <CAMuHMdW21rYXoOSE8azHNqYjng_j41rsL=Fo2bZc=1ULi9+pLw@mail.gmail.com>
+        <20200302160906.GC3717@pflmari>
+        <CAMuHMdVNGsVHyvAgC5dAHx=8Ax18EHx2tS6Hm5Bkg4ms=mW6Zw@mail.gmail.com>
+        <20200305143628.GB25741@pflmari>
+        <20200306131632.GA4878@pendragon.ideasonboard.com>
+        <20200306134154.GD27714@pflmari>
+        <20200306134546.GE4878@pendragon.ideasonboard.com>
+        <87r1y2wbze.wl-kuninori.morimoto.gx@renesas.com>
+        <20200309110931.GB3593@pflmari>
+User-Agent: Wanderlust/2.15.9 Emacs/25.2 Mule/6.0
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 09, 2020 at 05:12:40PM +0100, Jiri Slaby wrote:
-> On 06. 03. 20, 13:47, Sergey.Semin@baikalelectronics.ru wrote:
-> > From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > 
-> > Mark mips_ejtag_fdc_encode() methods switch-case-4 as expecting to
-> > fall through.
-> > 
-> > This patch fixes the following warning:
-> > 
-> > drivers/tty/mips_ejtag_fdc.c: In function ‘mips_ejtag_fdc_encode’:
-> > drivers/tty/mips_ejtag_fdc.c:245:13: warning: this statement may fall through [-Wimplicit-fallthrough=]
-> >    word.word &= 0x00ffffff;
-> >    ~~~~~~~~~~^~~~~~~~~~~~~
-> > drivers/tty/mips_ejtag_fdc.c:246:2: note: here
-> >   case 3:
-> >   ^~~~
-> > 
-> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> > Cc: Paul Burton <paulburton@kernel.org>
-> > Cc: Ralf Baechle <ralf@linux-mips.org>
-> > ---
-> >  drivers/tty/mips_ejtag_fdc.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/drivers/tty/mips_ejtag_fdc.c b/drivers/tty/mips_ejtag_fdc.c
-> > index 620d8488b83e..21e76a2ec182 100644
-> > --- a/drivers/tty/mips_ejtag_fdc.c
-> > +++ b/drivers/tty/mips_ejtag_fdc.c
-> > @@ -243,6 +243,7 @@ static struct fdc_word mips_ejtag_fdc_encode(const char **ptrs,
-> >  		/* Fall back to a 3 byte encoding */
-> >  		word.bytes = 3;
-> >  		word.word &= 0x00ffffff;
-> > +		/* Fall through */
+
+Hi Alex
+
+> Should the adv748x driver also implement anything to configure the frequency
+> of MCLK clock? I mean something like .set_sysclk and .set_fmt callbacks of
+> snd_soc_dai_ops?
 > 
-> We now have "fallthrough;", so I believe you should use that instead of
-> comments.
+> Or is the driver implementation, which depends on mclk-fs to be 256, the audio
+> stream format to be 8x S24_LE, and requires strictly 48kHz sampling rate on
+> the HDMI input, a totally acceptable first attempt at writing a DAI driver?
 > 
+> I'm a bit bothered by that, as the hardware is also capable of decoding
+> stereo, sampling rate 32-192kHz, a variety of PCM and compressed/encrypted
+> formats, 128-768fs MCLK multipliers, and a row of I2S options.
+> 
+> I just find it confusing to place the configuration interfaces.
+> For instance, the patches use the media ioctl for audio output selection to
+> select I2S protocol. While works, it does not feel right (shouldn't it be in
+> the device tree?)
+> 
+> Maybe you can point me at a driver doing something similar? I'm studying media
+> drivers now, but not many of them use ASoC interfaces for devices providing a
+> clock. Or maybe I should better look at sound/soc/...?
 
-Hello Jiri,
+Setting Sound Clock for all cases/patterns are very complex and difficult actually.
+(ADV7482 configuration) x (ADG divider / selector) x etc, etc...
 
-Thanks for the comment. I didn't know about that new macro. Since Greg
-already pulled this patch in his tty-next branch, I won't send an
-update in the next patchset revision. But I'll certainly remember that
-there is a specific macro to fix the fallthrough warning in the kernel
-and will use it next time I find the same problem someplace else.
+Thus, Current R-Car sound is assuming that audio_clk_a/b/c/i are providing
+route clock (= no configuration, fixed clock), and ADG divides it,
+and provide best clock to each SSIx.
 
-Regards,
--Sergey
+Current Salvator/ULCB already have 44.1/48kHz route clock (= CS2000 and Audio_CLK_A),
+and we can reuse it for all SSIx. Thus, ADV7482 clock is not necessary, I guess ?
+Or providing specific clock for some case is enough
+(ADG will automatically select it if necessary).
 
-> thanks,
-> -- 
-> js
-> suse labs
+If ADV7482 needs more detail clock settings combination,
+then, there is no method to adjust to it.
+We need to consider such system somehow.
+
+Thank you for your help !!
+
+Best regards
+---
+Kuninori Morimoto
