@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03816C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:50:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29437C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:50:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C88FF24691
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:50:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0025C24694
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:50:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583844607;
-	bh=nRO455Vq+s6RfjtfOB2yl+aWuz2EYmxn6affqv+/Knc=;
+	s=default; t=1583844611;
+	bh=wy9W+fQwofwFUAdAK7CWRsY2cm5mGzcAMji3HmIrySs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P42Qpe7xmxqwQtg21CyxGc0xreGoCTOTqz1SxTeIi0cyHF+Y7q7v8PXWuAZFkDNl5
-	 IsIWjdZIYirK8j/vy/Nv3OqNF0VuZonTFVCnj8neRpdIGZN/9xgzFNACLUgH5Dkw+h
-	 pvfSCoercjxwU38l72N+KcH2aQ255hy8rzDVPVEM=
+	b=Rb+Q+6fFuSeHDmzeTt472ariP3NzM7z/hTrYiEjCQWQQqdnLDE72Lw+1CrS5hJtDt
+	 BM2fTzxokNjcIdapc4DKNcaSK/wRpv67F8risKO4v7V3a6ReUYUZV7GjAuKDqDZZxp
+	 +B+h1LK2AEtK32xBr+4gRe4wdpWaBZ9aFD2qZ9T4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727682AbgCJMuG (ORCPT
+        id S1728553AbgCJMuJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:50:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54550 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:50:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54496 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727080AbgCJMuC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:50:02 -0400
+        id S1728116AbgCJMt7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:49:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5AE2D2468E;
-        Tue, 10 Mar 2020 12:50:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D670C20674;
+        Tue, 10 Mar 2020 12:49:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844601;
-        bh=nRO455Vq+s6RfjtfOB2yl+aWuz2EYmxn6affqv+/Knc=;
+        s=default; t=1583844599;
+        bh=wy9W+fQwofwFUAdAK7CWRsY2cm5mGzcAMji3HmIrySs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cteE66bItAdn0azoPg+6li25dgMk/GSeycF/OldywR+WB7oV9MwxWu7f3kjhX4VRh
-         Es8ZybLg6Ay/fxd7Y3MdqOzCdyxqlEvQgUdjSZUnvcjq1GaBarYKupqo8oZ88zvhBB
-         bi6eMfeQIXFr0Inin4YYeGDrfuccLw+9A3zhJw1A=
+        b=pZBh/2aiXyn9L2eeprPMD3T1C5urf0F7P73wCF1IHxVCpHa90grm3YYWtt2cM6VGj
+         vShNqeI1r5Zh2Th+OoLpMwP56PvYUHr1D3MWB4mUMUi1C0gneIQbWBPNR158vrQLAX
+         WD9AvnUcbfQJvX4IZMSePLmiTMYqblTnxykSaP70=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Guo Ren <guoren@linux.alibaba.com>,
+        Mo Qihui <qihui.mo@verisilicon.com>,
+        Zhange Jian <zhang_jian5@dahuatech.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 051/168] csky: Set regs->usp to kernel sp, when the exception is from kernel
-Date:   Tue, 10 Mar 2020 13:38:17 +0100
-Message-Id: <20200310123640.523177260@linuxfoundation.org>
+Subject: [PATCH 5.4 050/168] csky/mm: Fixup export invalid_pte_table symbol
+Date:   Tue, 10 Mar 2020 13:38:16 +0100
+Message-Id: <20200310123640.430251045@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123635.322799692@linuxfoundation.org>
 References: <20200310123635.322799692@linuxfoundation.org>
@@ -61,151 +63,33 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Guo Ren <guoren@linux.alibaba.com>
 
-[ Upstream commit f8e17c17b81070f38062dce79ca7f4541851dadd ]
+[ Upstream commit 7f4a567332f035ab16b29010fbd04a0f10183c77 ]
 
-In the past, we didn't care about kernel sp when saving pt_reg. But in some
-cases, we still need pt_reg->usp to represent the kernel stack before enter
-exception.
-
-For cmpxhg in atomic.S, we need save and restore usp for above.
+There is no present bit in csky pmd hardware, so we need to prepare invalid_pte_table
+for empty pmd entry and the functions (pmd_none & pmd_present) in pgtable.h need
+invalid_pte_talbe to get result. If a module use these functions, we need export the
+symbol for it.
 
 Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
+Cc: Mo Qihui <qihui.mo@verisilicon.com>
+Cc: Zhange Jian <zhang_jian5@dahuatech.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/csky/abiv1/inc/abi/entry.h | 19 ++++++++++++++-----
- arch/csky/abiv2/inc/abi/entry.h | 11 +++++++++++
- arch/csky/kernel/atomic.S       |  8 ++++++--
- 3 files changed, 31 insertions(+), 7 deletions(-)
+ arch/csky/mm/init.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/csky/abiv1/inc/abi/entry.h b/arch/csky/abiv1/inc/abi/entry.h
-index 7ab78bd0f3b13..f35a9f3315ee6 100644
---- a/arch/csky/abiv1/inc/abi/entry.h
-+++ b/arch/csky/abiv1/inc/abi/entry.h
-@@ -16,14 +16,16 @@
- #define LSAVE_A4	40
- #define LSAVE_A5	44
+diff --git a/arch/csky/mm/init.c b/arch/csky/mm/init.c
+index d4c2292ea46bc..00e96278b3776 100644
+--- a/arch/csky/mm/init.c
++++ b/arch/csky/mm/init.c
+@@ -31,6 +31,7 @@
  
-+#define usp ss1
-+
- .macro USPTOKSP
--	mtcr	sp, ss1
-+	mtcr	sp, usp
- 	mfcr	sp, ss0
- .endm
- 
- .macro KSPTOUSP
- 	mtcr	sp, ss0
--	mfcr	sp, ss1
-+	mfcr	sp, usp
- .endm
- 
- .macro	SAVE_ALL epc_inc
-@@ -45,7 +47,13 @@
- 	add	lr, r13
- 	stw     lr, (sp, 8)
- 
-+	mov	lr, sp
-+	addi	lr, 32
-+	addi	lr, 32
-+	addi	lr, 16
-+	bt	2f
- 	mfcr	lr, ss1
-+2:
- 	stw     lr, (sp, 16)
- 
- 	stw     a0, (sp, 20)
-@@ -79,9 +87,10 @@
- 	ldw     a0, (sp, 12)
- 	mtcr    a0, epsr
- 	btsti   a0, 31
-+	bt      1f
- 	ldw     a0, (sp, 16)
- 	mtcr	a0, ss1
--
-+1:
- 	ldw     a0, (sp, 24)
- 	ldw     a1, (sp, 28)
- 	ldw     a2, (sp, 32)
-@@ -102,9 +111,9 @@
- 	addi	sp, 32
- 	addi	sp, 8
- 
--	bt      1f
-+	bt      2f
- 	KSPTOUSP
--1:
-+2:
- 	rte
- .endm
- 
-diff --git a/arch/csky/abiv2/inc/abi/entry.h b/arch/csky/abiv2/inc/abi/entry.h
-index 9897a16b45e5d..94a7a58765dff 100644
---- a/arch/csky/abiv2/inc/abi/entry.h
-+++ b/arch/csky/abiv2/inc/abi/entry.h
-@@ -31,7 +31,13 @@
- 
- 	mfcr	lr, epsr
- 	stw	lr, (sp, 12)
-+	btsti   lr, 31
-+	bf      1f
-+	addi    lr, sp, 152
-+	br	2f
-+1:
- 	mfcr	lr, usp
-+2:
- 	stw	lr, (sp, 16)
- 
- 	stw     a0, (sp, 20)
-@@ -64,8 +70,10 @@
- 	mtcr	a0, epc
- 	ldw	a0, (sp, 12)
- 	mtcr	a0, epsr
-+	btsti   a0, 31
- 	ldw	a0, (sp, 16)
- 	mtcr	a0, usp
-+	mtcr	a0, ss0
- 
- #ifdef CONFIG_CPU_HAS_HILO
- 	ldw	a0, (sp, 140)
-@@ -86,6 +94,9 @@
- 	addi    sp, 40
- 	ldm     r16-r30, (sp)
- 	addi    sp, 72
-+	bf	1f
-+	mfcr	sp, ss0
-+1:
- 	rte
- .endm
- 
-diff --git a/arch/csky/kernel/atomic.S b/arch/csky/kernel/atomic.S
-index 5b84f11485aeb..3821ef9b75672 100644
---- a/arch/csky/kernel/atomic.S
-+++ b/arch/csky/kernel/atomic.S
-@@ -17,10 +17,12 @@ ENTRY(csky_cmpxchg)
- 	mfcr	a3, epc
- 	addi	a3, TRAP0_SIZE
- 
--	subi    sp, 8
-+	subi    sp, 16
- 	stw     a3, (sp, 0)
- 	mfcr    a3, epsr
- 	stw     a3, (sp, 4)
-+	mfcr	a3, usp
-+	stw     a3, (sp, 8)
- 
- 	psrset	ee
- #ifdef CONFIG_CPU_HAS_LDSTEX
-@@ -47,7 +49,9 @@ ENTRY(csky_cmpxchg)
- 	mtcr	a3, epc
- 	ldw     a3, (sp, 4)
- 	mtcr	a3, epsr
--	addi	sp, 8
-+	ldw     a3, (sp, 8)
-+	mtcr	a3, usp
-+	addi	sp, 16
- 	KSPTOUSP
- 	rte
- END(csky_cmpxchg)
+ pgd_t swapper_pg_dir[PTRS_PER_PGD] __page_aligned_bss;
+ pte_t invalid_pte_table[PTRS_PER_PTE] __page_aligned_bss;
++EXPORT_SYMBOL(invalid_pte_table);
+ unsigned long empty_zero_page[PAGE_SIZE / sizeof(unsigned long)]
+ 						__page_aligned_bss;
+ EXPORT_SYMBOL(empty_zero_page);
 -- 
 2.20.1
 
