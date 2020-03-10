@@ -2,126 +2,164 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B5FCC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:49:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3907C10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:53:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E956B205F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:49:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="GyMd7mCl"
+	by mail.kernel.org (Postfix) with ESMTP id 8D164222C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:53:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583873601;
+	bh=X38RRtVqyUT4CN0WqneduuxullKycoYkG3EBJHKN4ak=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=oKHuzpj07ziO09lLJTKk9pUm/umIGHiSeCDfFZjKilVhSfx+MbI7H3HUuT/YWF5qV
+	 aT8USKu17RCehbQHU8sp7PIBhyAjeT4XeFzj0hMcCXa+S98eRWKQspM8K2+kfDg1fT
+	 aTLD5eHG5GCE8bsYW6BK+geEPp5U0U8KANGk78Ho=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726464AbgCJUtk (ORCPT
+        id S1726331AbgCJUxU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 16:49:40 -0400
-Received: from mx0b-00154904.pphosted.com ([148.163.137.20]:55272 "EHLO
-        mx0b-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726273AbgCJUtj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 16:49:39 -0400
-Received: from pps.filterd (m0170397.ppops.net [127.0.0.1])
-        by mx0b-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02AKgNFI013920;
-        Tue, 10 Mar 2020 16:49:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
- subject : date : message-id : references : content-type :
- content-transfer-encoding : mime-version; s=smtpout1;
- bh=ci+/51ptKyE39a7YYyZ5UiDVa9nqAd5kk2CaifmmT6I=;
- b=GyMd7mCl4EMgtWDmpKkHPcbrl6O8H5tvx7q388gUiQuhEuL2cD6D5wFHIAJQx8T3/Ccg
- lLN/h7x7A0ZZFAnFhcAlxDNUkV+ivVgtAr9veqR5CivHHfRdllSNTUUBa/kgouHVw7In
- 7UCjIPtegcEMqZH3taoosv2ElxfG9WV6sOIZq7j1Wz0bEtmnxhFr/DwHDJSSxylrCR+k
- 2Lw1I2QtUOcqyAczdCjafBXN8CWjw95bGYFrY3tGIpb6oWHCPQPNk6mkAhdVUcrXaKMx
- s+ZLaLfiUETSJpKJWwH3g4DXTp4OIr3jU+MCZYZUPz4E5Oi3/60HN9E9M6cbx4hQoQp0 BA== 
-Received: from mx0a-00154901.pphosted.com (mx0a-00154901.pphosted.com [67.231.149.39])
-        by mx0b-00154904.pphosted.com with ESMTP id 2ym5k1mfg6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 10 Mar 2020 16:49:38 -0400
-Received: from pps.filterd (m0133268.ppops.net [127.0.0.1])
-        by mx0a-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02AKkPBu121591;
-        Tue, 10 Mar 2020 16:49:37 -0400
-Received: from ausxippc101.us.dell.com (ausxippc101.us.dell.com [143.166.85.207])
-        by mx0a-00154901.pphosted.com with ESMTP id 2ym6qygxrf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 10 Mar 2020 16:49:37 -0400
-X-LoopCount0: from 10.166.132.129
-X-PREM-Routing: D-Outbound
-X-IronPort-AV: E=Sophos;i="5.60,346,1549951200"; 
-   d="scan'208";a="1366226772"
-From:   <Austin.Bolen@dell.com>
-To:     <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        <Austin.Bolen@dell.com>, <helgaas@kernel.org>
-CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <ashok.raj@intel.com>
-Subject: Re: [PATCH v17 09/12] PCI/AER: Allow clearing Error Status Register
- in FF mode
-Thread-Topic: [PATCH v17 09/12] PCI/AER: Allow clearing Error Status Register
- in FF mode
-Thread-Index: AQHV9oVCCTYsDGOZY0iqPe3akO+s+A==
-Date:   Tue, 10 Mar 2020 20:49:29 +0000
-Message-ID: <c1fb95450690466eb562f48666902cd2@AUSX13MPC107.AMER.DELL.COM>
-References: <20200310193257.GA170043@google.com>
- <38277b0f6c2e4c5d88e741b7354c72d1@AUSX13MPC107.AMER.DELL.COM>
- <8289f9b3-b9eb-6a80-1271-3db9aeef5161@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [143.166.24.40]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 10 Mar 2020 16:53:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59492 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726100AbgCJUxU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 16:53:20 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 72A67215A4;
+        Tue, 10 Mar 2020 20:53:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583873599;
+        bh=X38RRtVqyUT4CN0WqneduuxullKycoYkG3EBJHKN4ak=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=otUuKkQNvFiyLqR/B+XGEmxu//oczmU3atnGXA1MrlE91xln8IY/iQ+1EPsJbSZyO
+         YV5vURZINH6wAoJH9PZlABqmmtqgRMN/HoJ6BXmbYmjLvRPBl081ga2ErdmFs2wudf
+         8J0Pse6uOdyHU4K1m2kBwWMSpm8Jm20vNaiTjYxQ=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 4964E35229CC; Tue, 10 Mar 2020 13:53:19 -0700 (PDT)
+Date:   Tue, 10 Mar 2020 13:53:19 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH] tracepoint: rcuidle: use rcu_is_watching() and tree-rcu
+Message-ID: <20200310205319.GH2935@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200310202054.5880-1-mathieu.desnoyers@efficios.com>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-10_13:2020-03-10,2020-03-10 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 spamscore=0
- mlxscore=0 impostorscore=0 priorityscore=1501 bulkscore=0 clxscore=1015
- malwarescore=0 lowpriorityscore=0 suspectscore=0 mlxlogscore=999
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003100123
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 lowpriorityscore=0
- spamscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- priorityscore=1501 malwarescore=0 bulkscore=0 mlxscore=0 suspectscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003100122
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200310202054.5880-1-mathieu.desnoyers@efficios.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/10/2020 3:44 PM, Kuppuswamy Sathyanarayanan wrote:=0A=
-> =0A=
-<snip>=0A=
-> =0A=
-> Please check the following spec reference (change to 4.5.1 Table 4-6)=0A=
-> =0A=
-> the OS is permitted to read or write DPC Control and Status registers of =
-a=0A=
-> port while processing an Error Disconnect Recover notification from firmw=
-are=0A=
-> on that port. Error Disconnect Recover notification processing begins=0A=
-> with the=0A=
-> Error Disconnect Recover notify from Firmware, and *ends when the OS=0A=
-> releases=0A=
-> DPC by clearing the DPC Trigger Status bit*.Firmware can read DPC Trigger=
-=0A=
-> Status bit to determine the ownership of DPC Control and Status=0A=
-> registers. Firmware=0A=
-> is not permitted to write to DPC Control and Status registers if DPC=0A=
-> Trigger Status is=0A=
-> set i.e. the link is in DPC state. *Outside of the Error Disconnect=0A=
-> Recover notification=0A=
-> processing window, the OS is not permitted to modify DPC Control or=0A=
-> Status registers*;=0A=
-> only firmware is allowed to.=0A=
-> =0A=
-> Since the EDR processing window ends with clearing DPC Trigger status=0A=
-> bit, OS needs to=0A=
-> clear DPC and AER registers before it ends.=0A=
-> =0A=
-> Austin,=0A=
-> =0A=
-> I think the order needs to be reversed in the implementation note.=0A=
-=0A=
-Agreed.=0A=
+On Tue, Mar 10, 2020 at 04:20:54PM -0400, Mathieu Desnoyers wrote:
+> commit e6753f23d961 ("tracepoint: Make rcuidle tracepoint callers use
+> SRCU") aimed at improving performance of rcuidle tracepoints by using
+> SRCU rather than temporarily enabling tree-rcu every time.
+> 
+> commit 865e63b04e9b ("tracing: Add back in rcu_irq_enter/exit_irqson()
+> for rcuidle tracepoints") adds back the high-overhead enabling of
+> tree-rcu because perf expects RCU to be watching when called from
+> rcuidle tracepoints.
+> 
+> It turns out that by using "rcu_is_watching()" and conditionally
+> calling the high-overhead rcu_irq_enter/exit_irqson(), the original
+> motivation for using SRCU in the first place disappears.
+
+Adding Alexei on CC for his thoughts, given that these were his
+benchmarks.  I believe that he also has additional use cases.
+
+But given the use cases you describe, this seems plausible.  This does
+mean that tracepoints cannot be attached to the CPU-hotplug code that
+runs on the incoming/outgoing CPU early/late in that process, though
+that might be OK.
+
+						Thanx, Paul
+
+> I suspect that the original benchmarks justifying the introduction
+> of SRCU to handle rcuidle tracepoints was caused by preempt/irq
+> tracepoints, which are typically invoked from contexts that have
+> RCU watching.
+> 
+> Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+> CC: Thomas Gleixner <tglx@linutronix.de>
+> CC: Steven Rostedt <rostedt@goodmis.org>
+> CC: Joel Fernandes <joel@joelfernandes.org>
+> CC: "Paul E. McKenney" <paulmck@kernel.org>
+> CC: Peter Zijlstra <peterz@infradead.org>
+> CC: Frederic Weisbecker <fweisbec@gmail.com>
+> CC: Ingo Molnar <mingo@kernel.org>
+> ---
+>  include/linux/tracepoint.h | 25 ++++++++++---------------
+>  1 file changed, 10 insertions(+), 15 deletions(-)
+> 
+> diff --git a/include/linux/tracepoint.h b/include/linux/tracepoint.h
+> index 1fb11daa5c53..8e0e94fee29a 100644
+> --- a/include/linux/tracepoint.h
+> +++ b/include/linux/tracepoint.h
+> @@ -165,25 +165,22 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
+>  		void *it_func;						\
+>  		void *__data;						\
+>  		int __maybe_unused __idx = 0;				\
+> +		bool __exit_rcu = false;				\
+>  									\
+>  		if (!(cond))						\
+>  			return;						\
+>  									\
+> -		/* srcu can't be used from NMI */			\
+> -		WARN_ON_ONCE(rcuidle && in_nmi());			\
+> -									\
+> -		/* keep srcu and sched-rcu usage consistent */		\
+> -		preempt_disable_notrace();				\
+> -									\
+>  		/*							\
+> -		 * For rcuidle callers, use srcu since sched-rcu	\
+> -		 * doesn't work from the idle path.			\
+> +		 * For rcuidle callers, temporarily enable RCU if	\
+> +		 * it is not currently watching.			\
+>  		 */							\
+> -		if (rcuidle) {						\
+> -			__idx = srcu_read_lock_notrace(&tracepoint_srcu);\
+> +		if (rcuidle && !rcu_is_watching()) {			\
+>  			rcu_irq_enter_irqson();				\
+> +			__exit_rcu = true;				\
+>  		}							\
+>  									\
+> +		preempt_disable_notrace();				\
+> +									\
+>  		it_func_ptr = rcu_dereference_raw((tp)->funcs);		\
+>  									\
+>  		if (it_func_ptr) {					\
+> @@ -194,12 +191,10 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
+>  			} while ((++it_func_ptr)->func);		\
+>  		}							\
+>  									\
+> -		if (rcuidle) {						\
+> -			rcu_irq_exit_irqson();				\
+> -			srcu_read_unlock_notrace(&tracepoint_srcu, __idx);\
+> -		}							\
+> -									\
+>  		preempt_enable_notrace();				\
+> +									\
+> +		if (__exit_rcu)						\
+> +			rcu_irq_exit_irqson();				\
+>  	} while (0)
+>  
+>  #ifndef MODULE
+> -- 
+> 2.17.1
+> 
