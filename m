@@ -2,53 +2,51 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD442C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:15:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECD0EC18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:15:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9219C208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:15:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C52262467D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:15:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583846103;
-	bh=u5+Vg2yfAlzpgILsxMkOEolNoK2PS64jZe6xICgGDfI=;
+	s=default; t=1583846104;
+	bh=hMgyNO9SwxdpDdXHi0vUFQ4xNWHFHxVSSKacno0+8aY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WydnQk3A9wwmEuu3FEbIH96l1AozlCkhMYMii2SKE/BtznPNPHUXZWzfzQhAiBRq7
-	 9pF7vtXpHbUX3ZUeaIP81vhawJ5rRJoDBVaJvayx9quI4qmbADYbeH0Xb7XRLhEXRN
-	 ZyW9ZrF2dKiowC/PITR7rldfnpsOyPmSKDYsrNcI=
+	b=HRtGRFq/p+dqKgpjlfUw4baBW2/GiDMYkOao00mSU1GvviumvkPHPVvJm89DiFhfI
+	 MEGGg/7bovM52WnwsBkSKeWwdNQgBmhcXv63R8tuFF7+5nFn489HeV9Yc6ME3u1bqH
+	 Q/T6EzSt1Vg1V8zc7b8TkRkbGx0kn0RtV5/f0gVs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731971AbgCJNPC (ORCPT
+        id S1731655AbgCJNPD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:15:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39212 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:15:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39338 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731956AbgCJNO6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:14:58 -0400
+        id S1731967AbgCJNPC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:15:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B6A47208E4;
-        Tue, 10 Mar 2020 13:14:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EACA7208E4;
+        Tue, 10 Mar 2020 13:15:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583846098;
-        bh=u5+Vg2yfAlzpgILsxMkOEolNoK2PS64jZe6xICgGDfI=;
+        s=default; t=1583846101;
+        bh=hMgyNO9SwxdpDdXHi0vUFQ4xNWHFHxVSSKacno0+8aY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SLrJJPese5Ry0URLKJ/xF/gkFwoHVJ2nXQuA5QVMVziqFiSt+4r8prwWqrIIEd5Z6
-         T5KPSeaOB2wTUw7Vjzg3L19I1avqsX7ICLHB1S0BDaKs579rZxgVgDszJKgnsEpcTk
-         gFm/L1fbUg5lcmdC1ajjoC85aOIiJpnPgI5WgPS0=
+        b=aYVtdVe+Rc+0w1ipiG+3Tc8Zj3Vr6NngmdJr0RxCg0dL/Y+mwnIytUYG0bJe/NZcj
+         jNJha1XZhqr+sJkzwi6s9WUXNbX1wpmjvArLrbCTCBruxLAXtUeU0ORSDUBHXLBK24
+         FN1uxw3b0Gmvxuwszg2xgEiKfz/5BzE6WgGWAz9o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Deepak Ukey <deepak.ukey@microchip.com>,
-        Viswas G <Viswas.G@microchip.com>,
-        Jack Wang <jinpu.wang@cloud.ionos.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.19 86/86] scsi: pm80xx: Fixed kernel panic during error recovery for SATA drive
-Date:   Tue, 10 Mar 2020 13:45:50 +0100
-Message-Id: <20200310124535.513334751@linuxfoundation.org>
+        stable@vger.kernel.org, Maxime Ripard <mripard@kernel.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>
+Subject: [PATCH 4.19 69/86] drm/sun4i: de2/de3: Remove unsupported VI layer formats
+Date:   Tue, 10 Mar 2020 13:45:33 +0100
+Message-Id: <20200310124534.502971450@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310124530.808338541@linuxfoundation.org>
 References: <20200310124530.808338541@linuxfoundation.org>
@@ -61,71 +59,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Deepak Ukey <deepak.ukey@microchip.com>
+From: Jernej Skrabec <jernej.skrabec@siol.net>
 
-commit 196ba6629cf95e51403337235d09742fcdc3febd upstream.
+commit a4769905f0ae32cae4f096f646ab03b8b4794c74 upstream.
 
-Disabling the SATA drive interface cause kernel panic. When the drive
-Interface is disabled, device should be deregistered after aborting all
-pending I/Os. Also changed the port recovery timeout to 10000 ms for
-PM8006 controller.
+YUV444 and YVU444 are planar formats, but HW format RGB888 is packed.
+This means that those two mappings were never correct. Remove them.
 
-Signed-off-by: Deepak Ukey <deepak.ukey@microchip.com>
-Signed-off-by: Viswas G <Viswas.G@microchip.com>
-Reviewed-by: Jack Wang <jinpu.wang@cloud.ionos.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 60a3dcf96aa8 ("drm/sun4i: Add DE2 definitions for YUV formats")
+Acked-by: Maxime Ripard <mripard@kernel.org>
+Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200224173901.174016-2-jernej.skrabec@siol.net
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/pm8001/pm8001_sas.c |    6 +++++-
- drivers/scsi/pm8001/pm80xx_hwi.c |    2 +-
- drivers/scsi/pm8001/pm80xx_hwi.h |    2 ++
- 3 files changed, 8 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/sun4i/sun8i_mixer.c    |   12 ------------
+ drivers/gpu/drm/sun4i/sun8i_vi_layer.c |    2 --
+ 2 files changed, 14 deletions(-)
 
---- a/drivers/scsi/pm8001/pm8001_sas.c
-+++ b/drivers/scsi/pm8001/pm8001_sas.c
-@@ -866,6 +866,8 @@ static void pm8001_dev_gone_notify(struc
- 			spin_unlock_irqrestore(&pm8001_ha->lock, flags);
- 			pm8001_exec_internal_task_abort(pm8001_ha, pm8001_dev ,
- 				dev, 1, 0);
-+			while (pm8001_dev->running_req)
-+				msleep(20);
- 			spin_lock_irqsave(&pm8001_ha->lock, flags);
- 		}
- 		PM8001_CHIP_DISP->dereg_dev_req(pm8001_ha, device_id);
-@@ -1238,8 +1240,10 @@ int pm8001_abort_task(struct sas_task *t
- 			PM8001_MSG_DBG(pm8001_ha,
- 				pm8001_printk("Waiting for Port reset\n"));
- 			wait_for_completion(&completion_reset);
--			if (phy->port_reset_status)
-+			if (phy->port_reset_status) {
-+				pm8001_dev_gone_notify(dev);
- 				goto out;
-+			}
+--- a/drivers/gpu/drm/sun4i/sun8i_mixer.c
++++ b/drivers/gpu/drm/sun4i/sun8i_mixer.c
+@@ -257,12 +257,6 @@ static const struct de2_fmt_info de2_for
+ 		.csc = SUN8I_CSC_MODE_YUV2RGB,
+ 	},
+ 	{
+-		.drm_fmt = DRM_FORMAT_YUV444,
+-		.de2_fmt = SUN8I_MIXER_FBFMT_RGB888,
+-		.rgb = true,
+-		.csc = SUN8I_CSC_MODE_YUV2RGB,
+-	},
+-	{
+ 		.drm_fmt = DRM_FORMAT_YUV422,
+ 		.de2_fmt = SUN8I_MIXER_FBFMT_YUV422,
+ 		.rgb = false,
+@@ -281,12 +275,6 @@ static const struct de2_fmt_info de2_for
+ 		.csc = SUN8I_CSC_MODE_YUV2RGB,
+ 	},
+ 	{
+-		.drm_fmt = DRM_FORMAT_YVU444,
+-		.de2_fmt = SUN8I_MIXER_FBFMT_RGB888,
+-		.rgb = true,
+-		.csc = SUN8I_CSC_MODE_YVU2RGB,
+-	},
+-	{
+ 		.drm_fmt = DRM_FORMAT_YVU422,
+ 		.de2_fmt = SUN8I_MIXER_FBFMT_YUV422,
+ 		.rgb = false,
+--- a/drivers/gpu/drm/sun4i/sun8i_vi_layer.c
++++ b/drivers/gpu/drm/sun4i/sun8i_vi_layer.c
+@@ -363,11 +363,9 @@ static const u32 sun8i_vi_layer_formats[
+ 	DRM_FORMAT_YUV411,
+ 	DRM_FORMAT_YUV420,
+ 	DRM_FORMAT_YUV422,
+-	DRM_FORMAT_YUV444,
+ 	DRM_FORMAT_YVU411,
+ 	DRM_FORMAT_YVU420,
+ 	DRM_FORMAT_YVU422,
+-	DRM_FORMAT_YVU444,
+ };
  
- 			/*
- 			 * 4. SATA Abort ALL
---- a/drivers/scsi/pm8001/pm80xx_hwi.c
-+++ b/drivers/scsi/pm8001/pm80xx_hwi.c
-@@ -604,7 +604,7 @@ static void update_main_config_table(str
- 		pm8001_ha->main_cfg_tbl.pm80xx_tbl.port_recovery_timer &=
- 					0x0000ffff;
- 		pm8001_ha->main_cfg_tbl.pm80xx_tbl.port_recovery_timer |=
--					0x140000;
-+					CHIP_8006_PORT_RECOVERY_TIMEOUT;
- 	}
- 	pm8001_mw32(address, MAIN_PORT_RECOVERY_TIMER,
- 			pm8001_ha->main_cfg_tbl.pm80xx_tbl.port_recovery_timer);
---- a/drivers/scsi/pm8001/pm80xx_hwi.h
-+++ b/drivers/scsi/pm8001/pm80xx_hwi.h
-@@ -228,6 +228,8 @@
- #define SAS_MAX_AIP                     0x200000
- #define IT_NEXUS_TIMEOUT       0x7D0
- #define PORT_RECOVERY_TIMEOUT  ((IT_NEXUS_TIMEOUT/100) + 30)
-+/* Port recovery timeout, 10000 ms for PM8006 controller */
-+#define CHIP_8006_PORT_RECOVERY_TIMEOUT 0x640000
- 
- #ifdef __LITTLE_ENDIAN_BITFIELD
- struct sas_identify_frame_local {
+ struct sun8i_vi_layer *sun8i_vi_layer_init_one(struct drm_device *drm,
 
 
