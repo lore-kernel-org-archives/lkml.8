@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCA41C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:51:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AB2CC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:51:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A24382253D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:51:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01E8824692
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:51:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583844700;
-	bh=evF/NFjY1s7IY6EJgZeQWXpsFLeu01Fl+Ck86HHRJlk=;
+	s=default; t=1583844704;
+	bh=Hr0G+nFXcIDG6ca9t1Jtkybg8zOVWRTs/0oHIp/z1/w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wZQv3YytxFXTWofur6Az40fJIqA4MOd9Ho0XDUbotrBZqHreLMWukCuGJmSIjNFad
-	 kme0wKqZgIN5pTUlTy7CbX3vzENUfiZZfZNUPrdrQSdqF9Sv8gbGoACfhE+2kmwRTE
-	 dsJPI9aGhIebQCKExgmvh4V5g06LuCPptoqV4sgI=
+	b=wuJpgMaj7+8eQgSpQ/J0zMNkxXkRDOtk1gbQ3VfXnYlWzQWmaJv1L5NL0SLMPzbH4
+	 itjl16H1TrhGtbwsD6hctGa5MImL95Y62DxPqiCBgKp41UHemKTDfqXoG/AgZtlmUT
+	 MBxieHUhgkNY3t5muo1dTPpa+mDqktvUum5iVlv0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728945AbgCJMvj (ORCPT
+        id S1728516AbgCJMvm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:51:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56662 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:51:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56630 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728928AbgCJMvf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:51:35 -0400
+        id S1728459AbgCJMvb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:51:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 626492468E;
-        Tue, 10 Mar 2020 12:51:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 89B1B2468F;
+        Tue, 10 Mar 2020 12:51:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844693;
-        bh=evF/NFjY1s7IY6EJgZeQWXpsFLeu01Fl+Ck86HHRJlk=;
+        s=default; t=1583844691;
+        bh=Hr0G+nFXcIDG6ca9t1Jtkybg8zOVWRTs/0oHIp/z1/w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IFSXgezohemDqhZFFUuCuNcJzFTJ6IASo9JCba8YmiRRkQN/BxTUafxTGl+k6VgbT
-         h+Cj3mUZaLQjer+x2EfRPLLq7o971EMn2sOkmO+zYjN+Yz7ZpWo4S5buTMYH25NHbO
-         WqykEn7mQqRLCpxuaHtwt4dvdMYyEFY8myoLwQFk=
+        b=CAqeOg1Lo5ZJoTtCtBxw6sppbkoDgtjHGBTg/7lEmviwI60HgANewsZyBrpJoXULd
+         FGMBFX0+mpacx13XZT8cGtGym3GXG+6IDUlkJKwVSSMEfsMViWR2SGyKgvSwMiWMsu
+         SkpDY4vA4yYwEgh0Sh825j6V3i8jw7iq7Jx5AlvI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>,
-        syzbot+59997e8d5cbdc486e6f6@syzkaller.appspotmail.com
-Subject: [PATCH 5.4 085/168] vt: selection, close sel_buffer race
-Date:   Tue, 10 Mar 2020 13:38:51 +0100
-Message-Id: <20200310123643.893829738@linuxfoundation.org>
+        stable@vger.kernel.org, Jay Dolan <jay.dolan@accesio.com>
+Subject: [PATCH 5.4 084/168] serial: 8250_exar: add support for ACCES cards
+Date:   Tue, 10 Mar 2020 13:38:50 +0100
+Message-Id: <20200310123643.782684914@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123635.322799692@linuxfoundation.org>
 References: <20200310123635.322799692@linuxfoundation.org>
@@ -59,154 +58,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Slaby <jslaby@suse.cz>
+From: Jay Dolan <jay.dolan@accesio.com>
 
-commit 07e6124a1a46b4b5a9b3cacc0c306b50da87abf5 upstream.
+commit 10c5ccc3c6d32f3d7d6c07de1d3f0f4b52f3e3ab upstream.
 
-syzkaller reported this UAF:
-BUG: KASAN: use-after-free in n_tty_receive_buf_common+0x2481/0x2940 drivers/tty/n_tty.c:1741
-Read of size 1 at addr ffff8880089e40e9 by task syz-executor.1/13184
+Add ACCES VIDs and PIDs that use the Exar chips
 
-CPU: 0 PID: 13184 Comm: syz-executor.1 Not tainted 5.4.7 #1
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
-Call Trace:
-...
- kasan_report+0xe/0x20 mm/kasan/common.c:634
- n_tty_receive_buf_common+0x2481/0x2940 drivers/tty/n_tty.c:1741
- tty_ldisc_receive_buf+0xac/0x190 drivers/tty/tty_buffer.c:461
- paste_selection+0x297/0x400 drivers/tty/vt/selection.c:372
- tioclinux+0x20d/0x4e0 drivers/tty/vt/vt.c:3044
- vt_ioctl+0x1bcf/0x28d0 drivers/tty/vt/vt_ioctl.c:364
- tty_ioctl+0x525/0x15a0 drivers/tty/tty_io.c:2657
- vfs_ioctl fs/ioctl.c:47 [inline]
-
-It is due to a race between parallel paste_selection (TIOCL_PASTESEL)
-and set_selection_user (TIOCL_SETSEL) invocations. One uses sel_buffer,
-while the other frees it and reallocates a new one for another
-selection. Add a mutex to close this race.
-
-The mutex takes care properly of sel_buffer and sel_buffer_lth only. The
-other selection global variables (like sel_start, sel_end, and sel_cons)
-are protected only in set_selection_user. The other functions need quite
-some more work to close the races of the variables there. This is going
-to happen later.
-
-This likely fixes (I am unsure as there is no reproducer provided) bug
-206361 too. It was marked as CVE-2020-8648.
-
-Signed-off-by: Jiri Slaby <jslaby@suse.cz>
-Reported-by: syzbot+59997e8d5cbdc486e6f6@syzkaller.appspotmail.com
+Signed-off-by: Jay Dolan <jay.dolan@accesio.com>
 Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200210081131.23572-2-jslaby@suse.cz
+Link: https://lore.kernel.org/r/20200305140504.22237-1-jay.dolan@accesio.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/vt/selection.c |   23 +++++++++++++++++------
- 1 file changed, 17 insertions(+), 6 deletions(-)
+ drivers/tty/serial/8250/8250_exar.c |   33 +++++++++++++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
 
---- a/drivers/tty/vt/selection.c
-+++ b/drivers/tty/vt/selection.c
-@@ -16,6 +16,7 @@
- #include <linux/tty.h>
- #include <linux/sched.h>
- #include <linux/mm.h>
-+#include <linux/mutex.h>
- #include <linux/slab.h>
- #include <linux/types.h>
+--- a/drivers/tty/serial/8250/8250_exar.c
++++ b/drivers/tty/serial/8250/8250_exar.c
+@@ -25,6 +25,14 @@
  
-@@ -45,6 +46,7 @@ static volatile int sel_start = -1; 	/*
- static int sel_end;
- static int sel_buffer_lth;
- static char *sel_buffer;
-+static DEFINE_MUTEX(sel_lock);
+ #include "8250.h"
  
- /* clear_selection, highlight and highlight_pointer can be called
-    from interrupt (via scrollback/front) */
-@@ -186,7 +188,7 @@ int set_selection_kernel(struct tiocl_se
- 	char *bp, *obp;
- 	int i, ps, pe, multiplier;
- 	u32 c;
--	int mode;
-+	int mode, ret = 0;
++#define PCI_DEVICE_ID_ACCES_COM_2S		0x1052
++#define PCI_DEVICE_ID_ACCES_COM_4S		0x105d
++#define PCI_DEVICE_ID_ACCES_COM_8S		0x106c
++#define PCI_DEVICE_ID_ACCES_COM232_8		0x10a8
++#define PCI_DEVICE_ID_ACCES_COM_2SM		0x10d2
++#define PCI_DEVICE_ID_ACCES_COM_4SM		0x10db
++#define PCI_DEVICE_ID_ACCES_COM_8SM		0x10ea
++
+ #define PCI_DEVICE_ID_COMMTECH_4224PCI335	0x0002
+ #define PCI_DEVICE_ID_COMMTECH_4222PCI335	0x0004
+ #define PCI_DEVICE_ID_COMMTECH_2324PCI335	0x000a
+@@ -658,6 +666,22 @@ static int __maybe_unused exar_resume(st
  
- 	poke_blanked_console();
+ static SIMPLE_DEV_PM_OPS(exar_pci_pm, exar_suspend, exar_resume);
  
-@@ -212,6 +214,7 @@ int set_selection_kernel(struct tiocl_se
- 	if (ps > pe)	/* make sel_start <= sel_end */
- 		swap(ps, pe);
- 
-+	mutex_lock(&sel_lock);
- 	if (sel_cons != vc_cons[fg_console].d) {
- 		clear_selection();
- 		sel_cons = vc_cons[fg_console].d;
-@@ -257,9 +260,10 @@ int set_selection_kernel(struct tiocl_se
- 			break;
- 		case TIOCL_SELPOINTER:
- 			highlight_pointer(pe);
--			return 0;
-+			goto unlock;
- 		default:
--			return -EINVAL;
-+			ret = -EINVAL;
-+			goto unlock;
++static const struct exar8250_board acces_com_2x = {
++	.num_ports	= 2,
++	.setup		= pci_xr17c154_setup,
++};
++
++static const struct exar8250_board acces_com_4x = {
++	.num_ports	= 4,
++	.setup		= pci_xr17c154_setup,
++};
++
++static const struct exar8250_board acces_com_8x = {
++	.num_ports	= 8,
++	.setup		= pci_xr17c154_setup,
++};
++
++
+ static const struct exar8250_board pbn_fastcom335_2 = {
+ 	.num_ports	= 2,
+ 	.setup		= pci_fastcom335_setup,
+@@ -726,6 +750,15 @@ static const struct exar8250_board pbn_e
  	}
  
- 	/* remove the pointer */
-@@ -281,7 +285,7 @@ int set_selection_kernel(struct tiocl_se
- 	else if (new_sel_start == sel_start)
- 	{
- 		if (new_sel_end == sel_end)	/* no action required */
--			return 0;
-+			goto unlock;
- 		else if (new_sel_end > sel_end)	/* extend to right */
- 			highlight(sel_end + 2, new_sel_end);
- 		else				/* contract from right */
-@@ -309,7 +313,8 @@ int set_selection_kernel(struct tiocl_se
- 	if (!bp) {
- 		printk(KERN_WARNING "selection: kmalloc() failed\n");
- 		clear_selection();
--		return -ENOMEM;
-+		ret = -ENOMEM;
-+		goto unlock;
- 	}
- 	kfree(sel_buffer);
- 	sel_buffer = bp;
-@@ -334,7 +339,9 @@ int set_selection_kernel(struct tiocl_se
- 		}
- 	}
- 	sel_buffer_lth = bp - sel_buffer;
--	return 0;
-+unlock:
-+	mutex_unlock(&sel_lock);
-+	return ret;
- }
- EXPORT_SYMBOL_GPL(set_selection_kernel);
- 
-@@ -364,6 +371,7 @@ int paste_selection(struct tty_struct *t
- 	tty_buffer_lock_exclusive(&vc->port);
- 
- 	add_wait_queue(&vc->paste_wait, &wait);
-+	mutex_lock(&sel_lock);
- 	while (sel_buffer && sel_buffer_lth > pasted) {
- 		set_current_state(TASK_INTERRUPTIBLE);
- 		if (signal_pending(current)) {
-@@ -371,7 +379,9 @@ int paste_selection(struct tty_struct *t
- 			break;
- 		}
- 		if (tty_throttled(tty)) {
-+			mutex_unlock(&sel_lock);
- 			schedule();
-+			mutex_lock(&sel_lock);
- 			continue;
- 		}
- 		__set_current_state(TASK_RUNNING);
-@@ -380,6 +390,7 @@ int paste_selection(struct tty_struct *t
- 					      count);
- 		pasted += count;
- 	}
-+	mutex_unlock(&sel_lock);
- 	remove_wait_queue(&vc->paste_wait, &wait);
- 	__set_current_state(TASK_RUNNING);
- 
+ static const struct pci_device_id exar_pci_tbl[] = {
++	EXAR_DEVICE(ACCESSIO, ACCES_COM_2S, acces_com_2x),
++	EXAR_DEVICE(ACCESSIO, ACCES_COM_4S, acces_com_4x),
++	EXAR_DEVICE(ACCESSIO, ACCES_COM_8S, acces_com_8x),
++	EXAR_DEVICE(ACCESSIO, ACCES_COM232_8, acces_com_8x),
++	EXAR_DEVICE(ACCESSIO, ACCES_COM_2SM, acces_com_2x),
++	EXAR_DEVICE(ACCESSIO, ACCES_COM_4SM, acces_com_4x),
++	EXAR_DEVICE(ACCESSIO, ACCES_COM_8SM, acces_com_8x),
++
++
+ 	CONNECT_DEVICE(XR17C152, UART_2_232, pbn_connect),
+ 	CONNECT_DEVICE(XR17C154, UART_4_232, pbn_connect),
+ 	CONNECT_DEVICE(XR17C158, UART_8_232, pbn_connect),
 
 
