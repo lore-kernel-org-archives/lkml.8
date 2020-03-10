@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E629C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:47:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F19EC18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:47:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F3D52468D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:47:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A85A20674
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:47:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583844439;
-	bh=FENz68I0RaPEhZkP8bdUxUd0mUyE1lN/0TK31Bdtg44=;
+	s=default; t=1583844441;
+	bh=xVHPfJwgpy+80zOCWhcXFojkR2XjvT3blf7cFg0/OCg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wFr/SMO7eWWNq5qgiwVdguXzE3B2175EQb8bmAfRR9fLJBQcylGMKfnqbJALRnpUC
-	 0gdoRdXLFbWmgMHF9n/wjPvHE0X+gNeYybcDQKegIM1dQtQuWqWxPZjeqvZPx8MrlX
-	 5b5Sz0Sb1wyoX8GFXl3Px7ODvPk8LwrexjEuF8aI=
+	b=l1DFjgAJMPPyW+6Dv8hVWPU4R5OJdj+5oPNMrq0rXqx4NriKFZXCf53K2M/NakaVZ
+	 UEHgROaq/+CswK5OtCWqSJ0kwbJMYjeNQot3eFmezptqtb46eRvcdtPXGjLuQSruz9
+	 4l/kbQGH+22r3Lahfk2iz0Mr7EiwNDbVfl6AVEdk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728150AbgCJMrQ (ORCPT
+        id S1728159AbgCJMrU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:47:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50872 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:47:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51082 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728130AbgCJMrM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:47:12 -0400
+        id S1727916AbgCJMrR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:47:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5244B2468D;
-        Tue, 10 Mar 2020 12:47:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6429320674;
+        Tue, 10 Mar 2020 12:47:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844431;
-        bh=FENz68I0RaPEhZkP8bdUxUd0mUyE1lN/0TK31Bdtg44=;
+        s=default; t=1583844436;
+        bh=xVHPfJwgpy+80zOCWhcXFojkR2XjvT3blf7cFg0/OCg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ajgFQAhpzX1k96isUBo6VvugodOhCYB8xexFkDRtKe0grew5/KISNusnOUfuBnt0M
-         kkmKtUsQGOirI8l01QH5TIPMQXi/e3QGIZhHqt6C4anIWD8NrWvo3kf9z8C9s5oMWg
-         kChDTJY5t4NboxKPC/sZG0MZ3ei/UlvGFF5o88PQ=
+        b=datS4WqDTjhcMPYs1VCBXJTAXN1JV4lqJqgQQxrbuwtDkyRCYhK/83EoqriYti6q7
+         HEpSQYmCMg7gI0LzwUJQvgbroSUM1voMnOGWpQjwnLWBR2NUZk+ZGBuCb+zTJ8bYRF
+         tZzDfz8SlcTNwoT6uucr9TGo09APR3TGKZv2oR3s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jean Delvare <jdelvare@suse.de>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 4.9 31/88] ACPI: watchdog: Fix gas->access_width usage
-Date:   Tue, 10 Mar 2020 13:38:39 +0100
-Message-Id: <20200310123613.535568269@linuxfoundation.org>
+        stable@vger.kernel.org, Jason Gunthorpe <jgg@mellanox.com>
+Subject: [PATCH 4.9 82/88] RMDA/cm: Fix missing ib_cm_destroy_id() in ib_cm_insert_listen()
+Date:   Tue, 10 Mar 2020 13:39:30 +0100
+Message-Id: <20200310123624.696596703@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123606.543939933@linuxfoundation.org>
 References: <20200310123606.543939933@linuxfoundation.org>
@@ -60,54 +58,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
+From: Jason Gunthorpe <jgg@mellanox.com>
 
-commit 2ba33a4e9e22ac4dda928d3e9b5978a3a2ded4e0 upstream.
+commit c14dfddbd869bf0c2bafb7ef260c41d9cebbcfec upstream.
 
-ACPI Generic Address Structure (GAS) access_width field is not in bytes
-as the driver seems to expect in few places so fix this by using the
-newly introduced macro ACPI_ACCESS_BYTE_WIDTH().
+The algorithm pre-allocates a cm_id since allocation cannot be done while
+holding the cm.lock spinlock, however it doesn't free it on one error
+path, leading to a memory leak.
 
-Fixes: b1abf6fc4982 ("ACPI / watchdog: Fix off-by-one error at resource assignment")
-Fixes: 058dfc767008 ("ACPI / watchdog: Add support for WDAT hardware watchdog")
-Reported-by: Jean Delvare <jdelvare@suse.de>
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Reviewed-by: Jean Delvare <jdelvare@suse.de>
-Cc: 4.16+ <stable@vger.kernel.org> # 4.16+
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Fixes: 067b171b8679 ("IB/cm: Share listening CM IDs")
+Link: https://lore.kernel.org/r/20200221152023.GA8680@ziepe.ca
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/acpi/acpi_watchdog.c |    3 +--
- drivers/watchdog/wdat_wdt.c  |    2 +-
- 2 files changed, 2 insertions(+), 3 deletions(-)
+ drivers/infiniband/core/cm.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/acpi/acpi_watchdog.c
-+++ b/drivers/acpi/acpi_watchdog.c
-@@ -129,12 +129,11 @@ void __init acpi_watchdog_init(void)
- 		gas = &entries[i].register_region;
- 
- 		res.start = gas->address;
-+		res.end = res.start + ACPI_ACCESS_BYTE_WIDTH(gas->access_width) - 1;
- 		if (gas->space_id == ACPI_ADR_SPACE_SYSTEM_MEMORY) {
- 			res.flags = IORESOURCE_MEM;
--			res.end = res.start + ALIGN(gas->access_width, 4) - 1;
- 		} else if (gas->space_id == ACPI_ADR_SPACE_SYSTEM_IO) {
- 			res.flags = IORESOURCE_IO;
--			res.end = res.start + gas->access_width - 1;
- 		} else {
- 			pr_warn("Unsupported address space: %u\n",
- 				gas->space_id);
---- a/drivers/watchdog/wdat_wdt.c
-+++ b/drivers/watchdog/wdat_wdt.c
-@@ -392,7 +392,7 @@ static int wdat_wdt_probe(struct platfor
- 
- 		memset(&r, 0, sizeof(r));
- 		r.start = gas->address;
--		r.end = r.start + gas->access_width - 1;
-+		r.end = r.start + ACPI_ACCESS_BYTE_WIDTH(gas->access_width) - 1;
- 		if (gas->space_id == ACPI_ADR_SPACE_SYSTEM_MEMORY) {
- 			r.flags = IORESOURCE_MEM;
- 		} else if (gas->space_id == ACPI_ADR_SPACE_SYSTEM_IO) {
+--- a/drivers/infiniband/core/cm.c
++++ b/drivers/infiniband/core/cm.c
+@@ -1073,6 +1073,7 @@ struct ib_cm_id *ib_cm_insert_listen(str
+ 			/* Sharing an ib_cm_id with different handlers is not
+ 			 * supported */
+ 			spin_unlock_irqrestore(&cm.lock, flags);
++			ib_destroy_cm_id(cm_id);
+ 			return ERR_PTR(-EINVAL);
+ 		}
+ 		atomic_inc(&cm_id_priv->refcount);
 
 
