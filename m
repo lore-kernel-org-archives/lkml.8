@@ -2,78 +2,112 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E56D6C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:13:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EF49C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:14:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6B3E2467F
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:13:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 185402467F
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:14:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583831685;
+	bh=Wi6CL6iB7RwT0hh+gpEgbzB/O/wFTDNg36YiiDVjK5M=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=xRQC9QAa7h50kp7hYd7qtye9dhu31RBCGQieU3F7jiqatsa1OtxsJYQeYkjIUZWlA
+	 FRXC7fWC1Xhurmg7eHIG8GEtukpOVSyimSiAmeXatddqQTE+rrvVSqVKd9jXqWg+i2
+	 83oZ7kEYiXtkqZbr8vhWlVk8PssvVdmOa6qtnCpE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726893AbgCJJN0 (ORCPT
+        id S1726443AbgCJJOn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 05:13:26 -0400
-Received: from 8bytes.org ([81.169.241.247]:50518 "EHLO theia.8bytes.org"
+        Tue, 10 Mar 2020 05:14:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44800 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726443AbgCJJMf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 05:12:35 -0400
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 6C468608; Tue, 10 Mar 2020 10:12:32 +0100 (CET)
-From:   Joerg Roedel <joro@8bytes.org>
-To:     iommu@lists.linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        virtualization@lists.linux-foundation.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 04/15] iommu/tegra-gart: Remove direct access of dev->iommu_fwspec
-Date:   Tue, 10 Mar 2020 10:12:18 +0100
-Message-Id: <20200310091229.29830-5-joro@8bytes.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200310091229.29830-1-joro@8bytes.org>
-References: <20200310091229.29830-1-joro@8bytes.org>
+        id S1726195AbgCJJOn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 05:14:43 -0400
+Received: from localhost (unknown [193.47.165.251])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F64C20674;
+        Tue, 10 Mar 2020 09:14:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583831682;
+        bh=Wi6CL6iB7RwT0hh+gpEgbzB/O/wFTDNg36YiiDVjK5M=;
+        h=From:To:Cc:Subject:Date:From;
+        b=vSB/ejyXc+jE1iES8JJPvEKTB+3tk3Yi3JlMQbNr1iARpr5TCrxpIJE6bkCSM2Y3M
+         QcHeqxVRrAx4K+pPjZYYGqIbOf10YoJ9tnuBY/U0zmMisXTTSC5K4bmWmTzls6b3df
+         /Gt6l3s53xwKtF+vW4Wxh0p4r2URxaGS5HjR0OIg=
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Cc:     Leon Romanovsky <leonro@mellanox.com>,
+        Gal Pressman <galpress@amazon.com>,
+        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+        Mark Zhang <markz@mellanox.com>,
+        Yishai Hadas <yishaih@mellanox.com>
+Subject: [PATCH rdma-next v1 00/11] Add Enhanced Connection Established (ECE)
+Date:   Tue, 10 Mar 2020 11:14:27 +0200
+Message-Id: <20200310091438.248429-1-leon@kernel.org>
+X-Mailer: git-send-email 2.24.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+From: Leon Romanovsky <leonro@mellanox.com>
 
-Use the accessor functions instead of directly dereferencing
-dev->iommu_fwspec.
+Changelog:
+ v1: Dropped field_avail patch in favor of mass conversion to use function
+     which already exists in the kernel code.
+ v0: https://lore.kernel.org/lkml/20200305150105.207959-1-leon@kernel.org
 
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
----
- drivers/iommu/tegra-gart.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Enhanced Connection Established or ECE is new negotiation scheme
+introduced in IBTA v1.4 to exchange extra information about nodes
+capabilities and later negotiate them at the connection establishment
+phase.
 
-diff --git a/drivers/iommu/tegra-gart.c b/drivers/iommu/tegra-gart.c
-index 3fb7ba72507d..db6559e8336f 100644
---- a/drivers/iommu/tegra-gart.c
-+++ b/drivers/iommu/tegra-gart.c
-@@ -247,7 +247,7 @@ static int gart_iommu_add_device(struct device *dev)
- {
- 	struct iommu_group *group;
- 
--	if (!dev->iommu_fwspec)
-+	if (!dev_iommu_fwspec_get(dev))
- 		return -ENODEV;
- 
- 	group = iommu_group_get_for_dev(dev);
--- 
-2.17.1
+The RDMA-CM messages (REQ, REP, SIDR_REQ and SIDR_REP) were extended
+to carry two fields, one new and another gained new functionality:
+ * VendorID is a new field that indicates that common subset of vendor
+   option bits are supported as indicated by that VendorID.
+ * AttributeModifier already exists, but overloaded to indicate which
+   vendor options are supported by this VendorID.
+
+This is kernel part of such functionality which is responsible to get data
+from librdmacm and properly create and handle RDMA-CM messages.
+
+Thanks
+
+Leon Romanovsky (11):
+  RDMA/cm: Add Enhanced Connection Establishment (ECE) bits
+  RDMA/mlx4: Delete duplicated offsetofend implementation
+  RDMA/efa: Use in-kernel offsetofend() to check field availability
+  RDMA/mlx5: Use offsetofend() instead of duplicated variant
+  RDMA/cm: Delete not implemented CM peer to peer communication
+  RDMA/uapi: Add ECE definitions to UCMA
+  RDMA/ucma: Extend ucma_connect to receive ECE parameters
+  RDMA/ucma: Deliver ECE parameters through UCMA events
+  RDMA/cm: Send and receive ECE parameter over the wire
+  RDMA/cma: Connect ECE to rdma_accept
+  RDMA/cma: Provide ECE reject reason
+
+ drivers/infiniband/core/cm.c          | 48 ++++++++++++++++++------
+ drivers/infiniband/core/cma.c         | 54 ++++++++++++++++++++++++---
+ drivers/infiniband/core/cma_priv.h    |  1 +
+ drivers/infiniband/core/ucma.c        | 40 ++++++++++++++++----
+ drivers/infiniband/hw/efa/efa_verbs.c |  7 +---
+ drivers/infiniband/hw/mlx4/main.c     |  9 ++---
+ drivers/infiniband/hw/mlx5/main.c     | 42 ++++++++++-----------
+ drivers/infiniband/hw/mlx5/mlx5_ib.h  | 16 +++-----
+ include/rdma/ib_cm.h                  | 11 +++++-
+ include/rdma/ibta_vol1_c12.h          |  6 +++
+ include/rdma/rdma_cm.h                | 28 ++++++++++++--
+ include/uapi/rdma/rdma_user_cm.h      | 15 +++++++-
+ 12 files changed, 203 insertions(+), 74 deletions(-)
+
+--
+2.24.1
 
