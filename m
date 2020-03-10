@@ -2,249 +2,190 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C5FAC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 08:34:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01443C18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 08:37:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C48E2467D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 08:34:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="pOpPuAYA"
+	by mail.kernel.org (Postfix) with ESMTP id CF6772253D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 08:37:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583829447;
+	bh=Y6jQM7RVsO58Dx3weRXmbV8Gsl+HLdIqb3PDN6mkEAs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=BNsW+Jy5WKHHEb/AUeMGEyClsPub4Qp201jfoRtWBqldpXU26vfPXzXwksr8VZgTo
+	 kYsQNee1fghDIof1TCdM6DzPbOx0q6YgnGfCJL+gJhzyAjMcoJBt6u4QF4AZa+KZ2t
+	 Q0nUyAZ0CQL5e603ivGAVmEizM4hLASAAf08YyC0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726510AbgCJIee (ORCPT
+        id S1726498AbgCJIh0 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 04:34:34 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:36797 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726389AbgCJIed (ORCPT
+        Tue, 10 Mar 2020 04:37:26 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:36401 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726462AbgCJIh0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 04:34:33 -0400
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id D43A62250D;
-        Tue, 10 Mar 2020 09:34:30 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1583829271;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=vgowaNrAOxwomK5gTiZmCbMPjVXrLv/qrl77BGvAIBE=;
-        b=pOpPuAYAuk3VaFwt7R7J76lNNIUmXSp/pKp2tNafADDnQEZoZhnwrSNjmXrrABiHMwQ8xe
-        x0tAyesUvr+tEm/0c81mWDqqggamr04MMWvwsAHQTqqmcqATNVV3xyxDBKKWrWjDA7jdz7
-        FvqaOx3SQokKl6Uh/FKzPZggOxUvI4M=
+        Tue, 10 Mar 2020 04:37:26 -0400
+Received: by mail-ot1-f65.google.com with SMTP id j14so12376619otq.3;
+        Tue, 10 Mar 2020 01:37:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=DKzFIFLjLlsOT1OmyKxWh7fyVNk0UFpX9V9hd2JpLz4=;
+        b=WBlIK/bCvECWvCwAjSGNxDscoq64evFLsKbyKqB5dJPRYy8liUDE+zfOMJTQS9Qj+F
+         IbFG7Rs4kaL6AcsBxRof8k58RMyw2ySq5/8rVkuMML0X1c/Ro/F1NT3b/EyItgF7RzcX
+         hqOB1xh3ZXsRiaBkPBMC7jj7sLlqiswYuleoA2m00keR1NXG3AzmJMG5XR67fzoyo2ES
+         e66Ck4SG7lGbfgx5Yf3kfAzZobvecKTtMXR53/H5UfICPT1+nacJtnfUNTbvrskCTSnN
+         nKn/S6sgBZhSICdvj3ORQ1tO3pdyugah4Lu54AQNEMp4Qva6LppQD/n4RSTiII1spxrE
+         6MBQ==
+X-Gm-Message-State: ANhLgQ3UQzqc5Uh3/Rm+oTTa/jfmCGKgiDYQIt98HFYX8JGzYCrQExXT
+        EZCzqcXbH5wJ0hmXmBv8otnnNpXwN571WNiVafm9QF+z
+X-Google-Smtp-Source: ADFU+vvNPIef0MecvLmJCFpMsoRoZypHjlU4iKA6axUtECduLpHHeWQxLr9C/RfVQG+s0ay6fqFKHVpBXbTkTmNP8u4=
+X-Received: by 2002:a05:6830:110:: with SMTP id i16mr15503565otp.189.1583829445214;
+ Tue, 10 Mar 2020 01:37:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 10 Mar 2020 09:34:30 +0100
-From:   Michael Walle <michael@walle.cc>
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     broonie@kernel.org, linux-spi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, shawnguo@kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, eha@deif.com, angelo@sysam.it,
-        andrew.smirnov@gmail.com, gustavo@embeddedor.com, weic@nvidia.com,
-        mhosny@nvidia.com, peng.ma@nxp.com
-Subject: Re: [PATCH v2 0/6] NXP DSPI bugfixes and support for LS1028A
-In-Reply-To: <20200309210755.6759-1-olteanv@gmail.com>
-References: <20200309210755.6759-1-olteanv@gmail.com>
-Message-ID: <2194d93de3870940148de58606dcb6ef@walle.cc>
-X-Sender: michael@walle.cc
-User-Agent: Roundcube Webmail/1.3.10
-X-Spamd-Bar: +
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: D43A62250D
-X-Spamd-Result: default: False [1.40 / 15.00];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[dt];
-         MIME_GOOD(-0.10)[text/plain];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_TWELVE(0.00)[15];
-         NEURAL_HAM(-0.00)[-0.501];
-         FREEMAIL_TO(0.00)[gmail.com];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         FREEMAIL_CC(0.00)[kernel.org,vger.kernel.org,arm.com,deif.com,sysam.it,gmail.com,embeddedor.com,nvidia.com,nxp.com];
-         MID_RHS_MATCH_FROM(0.00)[];
-         SUSPICIOUS_RECIPS(1.50)[]
+References: <20200227013411.1.Ica3bb9fa898499d94e0b0a2bfa08ec46c89d84fa@changeid>
+ <20200303170948.1.I108734f38ade020c3e5da825839dca11d2a2ff87@changeid>
+ <CAJZ5v0j+bx5fh1wv738MNoui_SaZ-c21rDnZkWOqi_GCVg5stQ@mail.gmail.com>
+ <F8C6368A-1537-482B-8FE5-350A18D936A8@intel.com> <CAJZ5v0iBMiGKeFXRTLkR8oFQbdCJq0TnhpFZkMBK4gF0VNjumA@mail.gmail.com>
+ <6089B7674E6F464F847AB76B599E0EAA78AB6A98@PGSMSX102.gar.corp.intel.com>
+In-Reply-To: <6089B7674E6F464F847AB76B599E0EAA78AB6A98@PGSMSX102.gar.corp.intel.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 10 Mar 2020 09:37:14 +0100
+Message-ID: <CAJZ5v0g6fAPZxX3MKGomjTWfWVMV-A+8yUC=ydOg5YwD-moDvQ@mail.gmail.com>
+Subject: Re: [PATCH v3] intel_idle: Add Comet Lake support
+To:     "Pan, Harry" <harry.pan@intel.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Harry Pan <gs0622@gmail.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Len Brown <lenb@kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 2020-03-09 22:07, schrieb Vladimir Oltean:
-> This series addresses a few issues that were missed during the previous
-> series "[PATCH 00/12] TCFQ to XSPI migration for NXP DSPI driver", on
-> SoCs other than LS1021A and LS1043A. DMA mode has been completely 
-> broken
-> by that series, and XSPI mode never worked on little-endian 
-> controllers.
-> 
-> Then it introduces support for the LS1028A chip, whose compatible has
-> recently been documented here:
-> 
-> https://lore.kernel.org/linux-devicetree/20200218171418.18297-1-michael@walle.cc/
-> 
-> The device tree for the LS1028A SoC is extended with DMA channels
-> definition, such that even though the default operating mode is XSPI,
-> one can simply change DSPI_XSPI_MODE to DSPI_DMA_MODE in the
-> devtype_data structure of the driver and use that instead.
-> 
-> For testing, benchmarking and debugging, the mikroBUS connector on the
-> LS1028A-RDB is made available via spidev.
+On Mon, Mar 9, 2020 at 10:07 AM Pan, Harry <harry.pan@intel.com> wrote:
+>
+> Hi Rafael,
+>
+> Thanks for the comments.
+> I have some questions, I am wondering if you can share upstream thought w.r.t the future development of intel_idle.
+>
+>  - It looks to me since v5.6 intel_idle will prefer _CST of ACPI rather than the general table embedded in this driver.
+
+Not exactly.
+
+The rules are as follows:
+ * If there is a built-in table for the given processor in the driver,
+it will be used, but the C-states that are not exposed in _CST will be
+disabled by default (the state parameters come from the built-in table
+for all C-states).
+ * Otherwise (i.e. the driver does not recognized the given
+processor), C-state definitions will be based on the _CST data.
+
+See https://www.kernel.org/doc/html/latest/admin-guide/pm/intel_idle.html
+for details.
+
+>  - Any pros and cons of using the tables of _CST in firmware and embedded one in the kernel?
+
+Both can be used at the same time (see above).
+
+The built-in table in the kernel must be suitable for all of the
+platforms shipped with the given processor (SoC).
+
+Obviously, the _CST table allows intel_idle to work if the processor
+included in the platform is not recognized by it.
+
+Generally, our planned strategy is to provide built-in C-state tables
+for all new "mainstream" processors with the use_acpi flag set to
+avoid enabling C-states that may have not been validated on a given
+platform by default.
+
+>  - Can the table in _CST archive more optimal idle states management?
+
+Possibly, but not likely.
+
+> If there is already any reference, documents I missed, kindly enlighten me then I would like to read it first before refining the questions.
+
+See above. :-)
+
+Thanks!
 
 
-
-Let me start with the positive things... something is working, both in
-XSPI mode and DMA mode ;) At least the SPI flash is detected.
-
-And please note, that I have my patch applied:
-   https://lore.kernel.org/lkml/20200310073313.21277-1-michael@walle.cc/
-
-Further note, that the mtd device is either mtd0 in XSPI mode or mtd10
-in DMA mode, because the first probe fails due to EPROBE_DEFER.
-
-So starting with XSPI, if you have a big flash and cancel the readout
-strange things happen.
-
-# hexdump -C /dev/mtd0
-00000000  00 75 68 75 0a ff ff ff  ff ff ff ff ff ff ff ff  
-|.uhu............|
-00000010  ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff  
-|................|
-*
-^C[   35.487948] fsl-dspi 2120000.spi: Waiting for transfer to complete 
-failed!
-[   35.495038] spi_master spi2: failed to transfer one message from 
-queue
-
-# hexdump -C /dev/mtd0
-00000000  00 75 68 75 0a ff ff ff  ff ff ff ff ff ff ff ff  
-|.uhu............|
-00000010  ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff  
-|................|
-*
-^C[   38.495955] fsl-dspi 2120000.spi: Waiting for transfer to complete 
-failed!
-[   38.503097] spi_master spi2: failed to transfer one message from 
-queue
-[   38.509729] Unable to handle kernel paging request at virtual address 
-ffff800095ab3377
-[   38.517676] Mem abort info:
-[   38.520474]   ESR = 0x96000045
-[   38.523533]   EC = 0x25: DABT (current EL), IL = 32 bits
-[   38.528861]   SET = 0, FnV = 0
-[   38.531921]   EA = 0, S1PTW = 0
-[   38.535067] Data abort info:
-[   38.537952]   ISV = 0, ISS = 0x00000045
-[   38.541797]   CM = 0, WnR = 1
-[   38.544771] swapper pgtable: 4k pages, 48-bit VAs, 
-pgdp=0000000082621000
-[   38.551494] [ffff800095ab3377] pgd=00000020fffff003, 
-p4d=00000020fffff003, pud=0000000000000000
-[   38.560229] Internal error: Oops: 96000045 [#1] PREEMPT SMP
-[   38.565819] Modules linked in:
-[   38.568882] CPU: 0 PID: 2729 Comm: hexdump Not tainted 
-5.6.0-rc4-next-20200306-00052-gd8730cdc8a0b-dirty #193
-[   38.578834] Hardware name: Kontron SMARC-sAL28 (Single PHY) on SMARC 
-Eval 2.0 carrier (DT)
-[   38.587129] pstate: 20000085 (nzCv daIf -PAN -UAO)
-[   38.591941] pc : ktime_get_real_ts64+0x3c/0x110
-[   38.596487] lr : spi_take_timestamp_pre+0x40/0x90
-[   38.601203] sp : ffff800010003d90
-[   38.604525] x29: ffff800010003d90 x28: ffff80001200e000
-[   38.609854] x27: ffff800011da9000 x26: ffff002079c40400
-[   38.615184] x25: ffff8000117fe018 x24: ffff800011daa1a0
-[   38.620513] x23: ffff800015ab3860 x22: ffff800095ab3377
-[   38.625841] x21: 000000000000146e x20: ffff8000120c3000
-[   38.631170] x19: ffff0020795f6e80 x18: ffff800011da9948
-[   38.636498] x17: 0000000000000000 x16: 0000000000000000
-[   38.641826] x15: ffff800095ab3377 x14: 0720072007200720
-[   38.647155] x13: 0720072007200765 x12: 0775076507750771
-[   38.652483] x11: 0720076d076f0772 x10: 0000000000000040
-[   38.657812] x9 : ffff8000108e2100 x8 : ffff800011dcabe8
-[   38.663139] x7 : 0000000000000000 x6 : ffff800015ab3a60
-[   38.668468] x5 : 0000000007200720 x4 : ffff800095ab3377
-[   38.673796] x3 : 0000000000000000 x2 : 0000000000000ab0
-[   38.679125] x1 : ffff800011daa000 x0 : 0000000000000026
-[   38.684454] Call trace:
-[   38.686905]  ktime_get_real_ts64+0x3c/0x110
-[   38.691100]  spi_take_timestamp_pre+0x40/0x90
-[   38.695470]  dspi_fifo_write+0x58/0x2c0
-[   38.699315]  dspi_interrupt+0xbc/0xd0
-[   38.702987]  __handle_irq_event_percpu+0x78/0x2c0
-[   38.707706]  handle_irq_event_percpu+0x3c/0x90
-[   38.712161]  handle_irq_event+0x4c/0xd0
-[   38.716008]  handle_fasteoi_irq+0xbc/0x170
-[   38.720115]  generic_handle_irq+0x2c/0x40
-[   38.724135]  __handle_domain_irq+0x68/0xc0
-[   38.728243]  gic_handle_irq+0xc8/0x160
-[   38.732000]  el1_irq+0xb8/0x180
-[   38.735149]  spi_nor_spimem_read_data+0xe0/0x140
-[   38.739779]  spi_nor_read+0xc4/0x120
-[   38.743364]  mtd_read_oob+0xa8/0xc0
-[   38.746860]  mtd_read+0x4c/0x80
-[   38.750007]  mtdchar_read+0x108/0x2a0
-[   38.753679]  __vfs_read+0x20/0x50
-[   38.757002]  vfs_read+0xa4/0x190
-[   38.760237]  ksys_read+0x6c/0xf0
-[   38.763471]  __arm64_sys_read+0x20/0x30
-[   38.767319]  el0_svc_common.constprop.3+0x90/0x160
-[   38.772125]  do_el0_svc+0x28/0x90
-[   38.775449]  el0_sync_handler+0x118/0x190
-[   38.779468]  el0_sync+0x140/0x180
-[   38.782793] Code: 91000294 1400000f d50339bf f9405e80 (f90002c0)
-[   38.788910] ---[ end trace 55da560db4d6bef7 ]---
-[   38.793540] Kernel panic - not syncing: Fatal exception in interrupt
-[   38.799914] SMP: stopping secondary CPUs
-[   38.803849] Kernel Offset: disabled
-[   38.807344] CPU features: 0x10002,20006008
-[   38.811451] Memory Limit: none
-[   38.814513] ---[ end Kernel panic - not syncing: Fatal exception in 
-interrupt ]---
-
-
-
-In DMA mode one byte writes seem to work. But at least 5 byte writes do 
-not:
-
-# echo -ne '\x00' > /dev/mtd10
-# echo 'huhu' > /dev/mtd10
-[   34.275383] fsl-dspi 2120000.spi: DMA tx timeout
-[   34.280035] fsl-dspi 2120000.spi: DMA transfer failed
-[   34.285116] fsl-dspi 2120000.spi: Waiting for transfer to complete 
-failed!
-[   34.292029] spi_master spi2: failed to transfer one message from 
-queue
-sh: write error: Connection timed out
-#
-
-Vladimir, what kind of SPI device do you have to test?
-
--michael
-
-
-
-> 
-> Vladimir Oltean (6):
->   spi: spi-fsl-dspi: Don't access reserved fields in SPI_MCR
->   spi: spi-fsl-dspi: Fix little endian access to PUSHR CMD and TXDATA
->   spi: spi-fsl-dspi: Fix oper_word_size of zero for DMA mode
->   spi: spi-fsl-dspi: Add support for LS1028A
->   arm64: dts: ls1028a: Specify the DMA channels for the DSPI 
-> controllers
->   arm64: dts: ls1028a-rdb: Add a spidev node for the mikroBUS
-> 
->  .../boot/dts/freescale/fsl-ls1028a-rdb.dts    | 14 ++++++
->  .../arm64/boot/dts/freescale/fsl-ls1028a.dtsi |  6 +++
->  drivers/spi/spi-fsl-dspi.c                    | 50 +++++++++++++++----
->  3 files changed, 60 insertions(+), 10 deletions(-)
+___________________________________
+> 從: Rafael J. Wysocki [rafael@kernel.org]
+> 寄件日期: 2020年3月5日 上午 05:14
+> 至: Pan, Harry
+> 副本: Rafael J. Wysocki; LKML; Harry Pan; Jacob Pan; Len Brown; Linux PM
+> 主旨: Re: [PATCH v3] intel_idle: Add Comet Lake support
+>
+> On Wed, Mar 4, 2020 at 12:57 PM Pan, Harry <harry.pan@intel.com> wrote:
+> >
+> > Hi Rafael,
+> >
+> > Yes, I skipped it considering to align CML-U V0 and A0 stepping w/ the same table; I sent v4 for your review.
+>
+> Skipping that flag is risky, because it may cause some C-states to be
+> enabled on systems where they have not been validated (e.g. systems
+> shipping with other OSes which only use _CST C-states).  There were
+> problems related to that in the past which is one of the reasons for
+> adding _CST support to intel_idle.  use_acpi should be set for all new
+> platforms going forward as a rule.
+>
+> > In the other hand, I am proposing using _CST as long term plan in CrOS dev teams.
+>
+> That I obviously agree with. :-)
+>
+>
+> > > On Mar 4, 2020, at 17:53, Rafael J. Wysocki <rafael@kernel.org> wrote:
+> > >
+> > > ﻿On Tue, Mar 3, 2020 at 10:10 AM Harry Pan <harry.pan@intel.com> wrote:
+> > >>
+> > >> Add a general C-state table in order to support Comet Lake.
+> > >>
+> > >> Signed-off-by: Harry Pan <harry.pan@intel.com>
+> > >>
+> > >> ---
+> > >>
+> > >> drivers/idle/intel_idle.c | 7 +++++++
+> > >> 1 file changed, 7 insertions(+)
+> > >>
+> > >> diff --git a/drivers/idle/intel_idle.c b/drivers/idle/intel_idle.c
+> > >> index d55606608ac8..05bce595fafe 100644
+> > >> --- a/drivers/idle/intel_idle.c
+> > >> +++ b/drivers/idle/intel_idle.c
+> > >> @@ -1067,6 +1067,11 @@ static const struct idle_cpu idle_cpu_dnv = {
+> > >>        .use_acpi = true,
+> > >> };
+> > >>
+> > >> +static const struct idle_cpu idle_cpu_cml = {
+> > >> +       .state_table = skl_cstates,
+> > >> +       .disable_promotion_to_c1e = true,
+> > >
+> > > .use_acpi = true,
+> > >
+> > > missing?  Otherwise you can just use idle_cpu_skl as is, can't you?
+> > >
+> > >> +};
+> > >> +
+> > >> static const struct x86_cpu_id intel_idle_ids[] __initconst = {
+> > >>        INTEL_CPU_FAM6(NEHALEM_EP,              idle_cpu_nhx),
+> > >>        INTEL_CPU_FAM6(NEHALEM,                 idle_cpu_nehalem),
+> > >> @@ -1105,6 +1110,8 @@ static const struct x86_cpu_id intel_idle_ids[] __initconst = {
+> > >>        INTEL_CPU_FAM6(ATOM_GOLDMONT_PLUS,      idle_cpu_bxt),
+> > >>        INTEL_CPU_FAM6(ATOM_GOLDMONT_D,         idle_cpu_dnv),
+> > >>        INTEL_CPU_FAM6(ATOM_TREMONT_D,          idle_cpu_dnv),
+> > >> +       INTEL_CPU_FAM6(COMETLAKE_L,             idle_cpu_cml),
+> > >> +       INTEL_CPU_FAM6(COMETLAKE,               idle_cpu_cml),
+> > >>        {}
+> > >> };
+> > >>
+> > >> --
+> > >> 2.24.1
+> > >>
