@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB8ACC18E5C
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:40:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D05D6C18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:40:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98BC824695
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:40:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 941B224693
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:40:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583844054;
-	bh=ZUvjNHDMNkA5w1OaCt5uXOAXNEr8JUTGUvR6ZTw8Vt0=;
+	s=default; t=1583844056;
+	bh=XB0eXlnHgCFTFydQLt1lB8sAGRyooOBSfne7bQfFq/E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bri7sr6FDyNRy50XzW3SoffYDSasK2y2/ecoVdi116oYOlsvuhX0Q88U3SYNGW/bk
-	 wM0vXAlptC225BZ5i8rAC/iWHHZ2Hjxa1P7K+t909qoPr6ZjgVeJlE/A2DK0xWDLZe
-	 5YFNWlhE0puXmndYexgnqv9MYUBeI+5+w3OoOAJM=
+	b=sZyMYtmx4HiipPZgGIrNzLBEdVBSIQ41X3IediRXlm5OSZ9WnhpHehcmarkPKFr4J
+	 XkUk0GuMR2xyWCIM/5IK/aP/RtywGT81nGpannOMnjfLWZ0Xxyo25zBIdLzGvNppkR
+	 fMiU4n4wiS15Hxim2BhgYQzV0SLSVfFdI94Zz9A8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726526AbgCJMkx (ORCPT
+        id S1726558AbgCJMkz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:40:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39946 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:40:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39844 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726492AbgCJMkw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:40:52 -0400
+        id S1726497AbgCJMkx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:40:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 36C9924686;
-        Tue, 10 Mar 2020 12:40:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E0D9A24693;
+        Tue, 10 Mar 2020 12:40:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844051;
-        bh=ZUvjNHDMNkA5w1OaCt5uXOAXNEr8JUTGUvR6ZTw8Vt0=;
+        s=default; t=1583844048;
+        bh=XB0eXlnHgCFTFydQLt1lB8sAGRyooOBSfne7bQfFq/E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DTYEsTKDQhsKzBcwIl3T0K4nefKT3nby4+lm9mYRzYbVrW/30N4YuJNt3yL5LTIJt
-         GPnBHAhRQCPTRwEkGmME2qsOY5W9aqvydhbrh1zgSnmUHcNsAyC/TrQPTW2w9EKZK8
-         O4Ku+17S4U1d+phmfSwVPZcSPQ9Mx3M+HtqTrGRQ=
+        b=LnWO0KTKs5paGLC7oPC1hD54gplSQYgNxOvkxrh+Piaft8QwqIGmEjniFrdIbjQvb
+         UGvhoCS3cDQR+D5dnU7UhnbBLmFsv6sdPSx1eRsc5QID00ZF8S+kTlUsXLl6a38mYs
+         msuKaLk/agKcXfz2GZ1qVTyOI3Y1h2hTfQ9rP7JM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Suraj Jitindar Singh <surajjs@amazon.com>,
         Theodore Tso <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>,
         stable@kernel.org
-Subject: [PATCH 4.4 03/72] ext4: fix potential race between s_flex_groups online resizing and access
-Date:   Tue, 10 Mar 2020 13:38:16 +0100
-Message-Id: <20200310123602.206336197@linuxfoundation.org>
+Subject: [PATCH 4.4 02/72] ext4: fix potential race between online resizing and write operations
+Date:   Tue, 10 Mar 2020 13:38:15 +0100
+Message-Id: <20200310123601.802217525@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123601.053680753@linuxfoundation.org>
 References: <20200310123601.053680753@linuxfoundation.org>
@@ -60,302 +60,324 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suraj Jitindar Singh <surajjs@amazon.com>
+From: Theodore Ts'o <tytso@mit.edu>
 
-commit 7c990728b99ed6fbe9c75fc202fce1172d9916da upstream.
+commit 1d0c3924a92e69bfa91163bda83c12a994b4d106 upstream.
 
-During an online resize an array of s_flex_groups structures gets replaced
-so it can get enlarged. If there is a concurrent access to the array and
-this memory has been reused then this can lead to an invalid memory access.
-
-The s_flex_group array has been converted into an array of pointers rather
-than an array of structures. This is to ensure that the information
-contained in the structures cannot get out of sync during a resize due to
-an accessor updating the value in the old structure after it has been
-copied but before the array pointer is updated. Since the structures them-
-selves are no longer copied but only the pointers to them this case is
-mitigated.
+During an online resize an array of pointers to buffer heads gets
+replaced so it can get enlarged.  If there is a racing block
+allocation or deallocation which uses the old array, and the old array
+has gotten reused this can lead to a GPF or some other random kernel
+memory getting modified.
 
 Link: https://bugzilla.kernel.org/show_bug.cgi?id=206443
-Link: https://lore.kernel.org/r/20200221053458.730016-4-tytso@mit.edu
-Signed-off-by: Suraj Jitindar Singh <surajjs@amazon.com>
+Link: https://lore.kernel.org/r/20200221053458.730016-2-tytso@mit.edu
+Reported-by: Suraj Jitindar Singh <surajjs@amazon.com>
 Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Cc: stable@kernel.org # 4.4.x
 Cc: stable@kernel.org # 4.9.x
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/ext4.h    |  2 +-
- fs/ext4/ialloc.c  | 23 +++++++++------
- fs/ext4/mballoc.c |  9 ++++--
- fs/ext4/resize.c  |  7 +++--
- fs/ext4/super.c   | 72 ++++++++++++++++++++++++++++++++---------------
- 5 files changed, 76 insertions(+), 37 deletions(-)
+ fs/ext4/balloc.c | 14 +++++++++---
+ fs/ext4/ext4.h   | 20 +++++++++++++++++-
+ fs/ext4/resize.c | 55 ++++++++++++++++++++++++++++++++++++++----------
+ fs/ext4/super.c  | 31 +++++++++++++++++++--------
+ 4 files changed, 96 insertions(+), 24 deletions(-)
 
+diff --git a/fs/ext4/balloc.c b/fs/ext4/balloc.c
+index e0fb7cdcee897..b041a215cd738 100644
+--- a/fs/ext4/balloc.c
++++ b/fs/ext4/balloc.c
+@@ -279,6 +279,7 @@ struct ext4_group_desc * ext4_get_group_desc(struct super_block *sb,
+ 	ext4_group_t ngroups = ext4_get_groups_count(sb);
+ 	struct ext4_group_desc *desc;
+ 	struct ext4_sb_info *sbi = EXT4_SB(sb);
++	struct buffer_head *bh_p;
+ 
+ 	if (block_group >= ngroups) {
+ 		ext4_error(sb, "block_group >= groups_count - block_group = %u,"
+@@ -289,7 +290,14 @@ struct ext4_group_desc * ext4_get_group_desc(struct super_block *sb,
+ 
+ 	group_desc = block_group >> EXT4_DESC_PER_BLOCK_BITS(sb);
+ 	offset = block_group & (EXT4_DESC_PER_BLOCK(sb) - 1);
+-	if (!sbi->s_group_desc[group_desc]) {
++	bh_p = sbi_array_rcu_deref(sbi, s_group_desc, group_desc);
++	/*
++	 * sbi_array_rcu_deref returns with rcu unlocked, this is ok since
++	 * the pointer being dereferenced won't be dereferenced again. By
++	 * looking at the usage in add_new_gdb() the value isn't modified,
++	 * just the pointer, and so it remains valid.
++	 */
++	if (!bh_p) {
+ 		ext4_error(sb, "Group descriptor not loaded - "
+ 			   "block_group = %u, group_desc = %u, desc = %u",
+ 			   block_group, group_desc, offset);
+@@ -297,10 +305,10 @@ struct ext4_group_desc * ext4_get_group_desc(struct super_block *sb,
+ 	}
+ 
+ 	desc = (struct ext4_group_desc *)(
+-		(__u8 *)sbi->s_group_desc[group_desc]->b_data +
++		(__u8 *)bh_p->b_data +
+ 		offset * EXT4_DESC_SIZE(sb));
+ 	if (bh)
+-		*bh = sbi->s_group_desc[group_desc];
++		*bh = bh_p;
+ 	return desc;
+ }
+ 
 diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
-index 1f5622c7adc56..e1f2d0499080e 100644
+index 00ab963114872..1f5622c7adc56 100644
 --- a/fs/ext4/ext4.h
 +++ b/fs/ext4/ext4.h
-@@ -1410,7 +1410,7 @@ struct ext4_sb_info {
- 	unsigned int s_extent_max_zeroout_kb;
+@@ -1303,7 +1303,7 @@ struct ext4_sb_info {
+ 	loff_t s_bitmap_maxbytes;	/* max bytes for bitmap files */
+ 	struct buffer_head * s_sbh;	/* Buffer containing the super block */
+ 	struct ext4_super_block *s_es;	/* Pointer to the super block in the buffer */
+-	struct buffer_head **s_group_desc;
++	struct buffer_head * __rcu *s_group_desc;
+ 	unsigned int s_mount_opt;
+ 	unsigned int s_mount_opt2;
+ 	unsigned int s_mount_flags;
+@@ -1491,6 +1491,23 @@ static inline void ext4_inode_aio_set(struct inode *inode, ext4_io_end_t *io)
+ 	inode->i_private = io;
+ }
  
- 	unsigned int s_log_groups_per_flex;
--	struct flex_groups *s_flex_groups;
-+	struct flex_groups * __rcu *s_flex_groups;
- 	ext4_group_t s_flex_groups_allocated;
++/*
++ * Returns: sbi->field[index]
++ * Used to access an array element from the following sbi fields which require
++ * rcu protection to avoid dereferencing an invalid pointer due to reassignment
++ * - s_group_desc
++ * - s_group_info
++ * - s_flex_group
++ */
++#define sbi_array_rcu_deref(sbi, field, index)				   \
++({									   \
++	typeof(*((sbi)->field)) _v;					   \
++	rcu_read_lock();						   \
++	_v = ((typeof(_v)*)rcu_dereference((sbi)->field))[index];	   \
++	rcu_read_unlock();						   \
++	_v;								   \
++})
++
+ /*
+  * Inode dynamic state flags
+  */
+@@ -2555,6 +2572,7 @@ extern int ext4_generic_delete_entry(handle_t *handle,
+ extern int ext4_empty_dir(struct inode *inode);
  
- 	/* workqueue for reserved extent conversions (buffered io) */
-diff --git a/fs/ext4/ialloc.c b/fs/ext4/ialloc.c
-index 0963213e9cd36..c31b05f0bd691 100644
---- a/fs/ext4/ialloc.c
-+++ b/fs/ext4/ialloc.c
-@@ -331,11 +331,13 @@ void ext4_free_inode(handle_t *handle, struct inode *inode)
- 
- 	percpu_counter_inc(&sbi->s_freeinodes_counter);
- 	if (sbi->s_log_groups_per_flex) {
--		ext4_group_t f = ext4_flex_group(sbi, block_group);
-+		struct flex_groups *fg;
- 
--		atomic_inc(&sbi->s_flex_groups[f].free_inodes);
-+		fg = sbi_array_rcu_deref(sbi, s_flex_groups,
-+					 ext4_flex_group(sbi, block_group));
-+		atomic_inc(&fg->free_inodes);
- 		if (is_directory)
--			atomic_dec(&sbi->s_flex_groups[f].used_dirs);
-+			atomic_dec(&fg->used_dirs);
- 	}
- 	BUFFER_TRACE(bh2, "call ext4_handle_dirty_metadata");
- 	fatal = ext4_handle_dirty_metadata(handle, NULL, bh2);
-@@ -376,12 +378,13 @@ static void get_orlov_stats(struct super_block *sb, ext4_group_t g,
- 			    int flex_size, struct orlov_stats *stats)
- {
- 	struct ext4_group_desc *desc;
--	struct flex_groups *flex_group = EXT4_SB(sb)->s_flex_groups;
- 
- 	if (flex_size > 1) {
--		stats->free_inodes = atomic_read(&flex_group[g].free_inodes);
--		stats->free_clusters = atomic64_read(&flex_group[g].free_clusters);
--		stats->used_dirs = atomic_read(&flex_group[g].used_dirs);
-+		struct flex_groups *fg = sbi_array_rcu_deref(EXT4_SB(sb),
-+							     s_flex_groups, g);
-+		stats->free_inodes = atomic_read(&fg->free_inodes);
-+		stats->free_clusters = atomic64_read(&fg->free_clusters);
-+		stats->used_dirs = atomic_read(&fg->used_dirs);
- 		return;
- 	}
- 
-@@ -981,7 +984,8 @@ got:
- 		if (sbi->s_log_groups_per_flex) {
- 			ext4_group_t f = ext4_flex_group(sbi, group);
- 
--			atomic_inc(&sbi->s_flex_groups[f].used_dirs);
-+			atomic_inc(&sbi_array_rcu_deref(sbi, s_flex_groups,
-+							f)->used_dirs);
- 		}
- 	}
- 	if (ext4_has_group_desc_csum(sb)) {
-@@ -1004,7 +1008,8 @@ got:
- 
- 	if (sbi->s_log_groups_per_flex) {
- 		flex_group = ext4_flex_group(sbi, group);
--		atomic_dec(&sbi->s_flex_groups[flex_group].free_inodes);
-+		atomic_dec(&sbi_array_rcu_deref(sbi, s_flex_groups,
-+						flex_group)->free_inodes);
- 	}
- 
- 	inode->i_ino = ino + group * EXT4_INODES_PER_GROUP(sb);
-diff --git a/fs/ext4/mballoc.c b/fs/ext4/mballoc.c
-index 828b4c080c381..e15a5c5ddc096 100644
---- a/fs/ext4/mballoc.c
-+++ b/fs/ext4/mballoc.c
-@@ -2995,7 +2995,8 @@ ext4_mb_mark_diskspace_used(struct ext4_allocation_context *ac,
- 		ext4_group_t flex_group = ext4_flex_group(sbi,
- 							  ac->ac_b_ex.fe_group);
- 		atomic64_sub(ac->ac_b_ex.fe_len,
--			     &sbi->s_flex_groups[flex_group].free_clusters);
-+			     &sbi_array_rcu_deref(sbi, s_flex_groups,
-+						  flex_group)->free_clusters);
- 	}
- 
- 	err = ext4_handle_dirty_metadata(handle, NULL, bitmap_bh);
-@@ -4887,7 +4888,8 @@ do_more:
- 	if (sbi->s_log_groups_per_flex) {
- 		ext4_group_t flex_group = ext4_flex_group(sbi, block_group);
- 		atomic64_add(count_clusters,
--			     &sbi->s_flex_groups[flex_group].free_clusters);
-+			     &sbi_array_rcu_deref(sbi, s_flex_groups,
-+						  flex_group)->free_clusters);
- 	}
- 
- 	if (!(flags & EXT4_FREE_BLOCKS_NO_QUOT_UPDATE))
-@@ -5032,7 +5034,8 @@ int ext4_group_add_blocks(handle_t *handle, struct super_block *sb,
- 	if (sbi->s_log_groups_per_flex) {
- 		ext4_group_t flex_group = ext4_flex_group(sbi, block_group);
- 		atomic64_add(EXT4_NUM_B2C(sbi, blocks_freed),
--			     &sbi->s_flex_groups[flex_group].free_clusters);
-+			     &sbi_array_rcu_deref(sbi, s_flex_groups,
-+						  flex_group)->free_clusters);
- 	}
- 
- 	ext4_mb_unload_buddy(&e4b);
+ /* resize.c */
++extern void ext4_kvfree_array_rcu(void *to_free);
+ extern int ext4_group_add(struct super_block *sb,
+ 				struct ext4_new_group_data *input);
+ extern int ext4_group_extend(struct super_block *sb,
 diff --git a/fs/ext4/resize.c b/fs/ext4/resize.c
-index 31b05884f7b00..f5b6667b0ab06 100644
+index 5223eb25bf599..31b05884f7b00 100644
 --- a/fs/ext4/resize.c
 +++ b/fs/ext4/resize.c
-@@ -1422,11 +1422,14 @@ static void ext4_update_super(struct super_block *sb,
- 		   percpu_counter_read(&sbi->s_freeclusters_counter));
- 	if (ext4_has_feature_flex_bg(sb) && sbi->s_log_groups_per_flex) {
- 		ext4_group_t flex_group;
-+		struct flex_groups *fg;
+@@ -16,6 +16,33 @@
+ 
+ #include "ext4_jbd2.h"
+ 
++struct ext4_rcu_ptr {
++	struct rcu_head rcu;
++	void *ptr;
++};
 +
- 		flex_group = ext4_flex_group(sbi, group_data[0].group);
-+		fg = sbi_array_rcu_deref(sbi, s_flex_groups, flex_group);
- 		atomic64_add(EXT4_NUM_B2C(sbi, free_blocks),
--			     &sbi->s_flex_groups[flex_group].free_clusters);
-+			     &fg->free_clusters);
- 		atomic_add(EXT4_INODES_PER_GROUP(sb) * flex_gd->count,
--			   &sbi->s_flex_groups[flex_group].free_inodes);
-+			   &fg->free_inodes);
++static void ext4_rcu_ptr_callback(struct rcu_head *head)
++{
++	struct ext4_rcu_ptr *ptr;
++
++	ptr = container_of(head, struct ext4_rcu_ptr, rcu);
++	kvfree(ptr->ptr);
++	kfree(ptr);
++}
++
++void ext4_kvfree_array_rcu(void *to_free)
++{
++	struct ext4_rcu_ptr *ptr = kzalloc(sizeof(*ptr), GFP_KERNEL);
++
++	if (ptr) {
++		ptr->ptr = to_free;
++		call_rcu(&ptr->rcu, ext4_rcu_ptr_callback);
++		return;
++	}
++	synchronize_rcu();
++	kvfree(to_free);
++}
++
+ int ext4_resize_begin(struct super_block *sb)
+ {
+ 	struct ext4_sb_info *sbi = EXT4_SB(sb);
+@@ -541,8 +568,8 @@ static int setup_new_flex_group_blocks(struct super_block *sb,
+ 				brelse(gdb);
+ 				goto out;
+ 			}
+-			memcpy(gdb->b_data, sbi->s_group_desc[j]->b_data,
+-			       gdb->b_size);
++			memcpy(gdb->b_data, sbi_array_rcu_deref(sbi,
++				s_group_desc, j)->b_data, gdb->b_size);
+ 			set_buffer_uptodate(gdb);
+ 
+ 			err = ext4_handle_dirty_metadata(handle, NULL, gdb);
+@@ -849,13 +876,15 @@ static int add_new_gdb(handle_t *handle, struct inode *inode,
+ 	}
+ 	brelse(dind);
+ 
+-	o_group_desc = EXT4_SB(sb)->s_group_desc;
++	rcu_read_lock();
++	o_group_desc = rcu_dereference(EXT4_SB(sb)->s_group_desc);
+ 	memcpy(n_group_desc, o_group_desc,
+ 	       EXT4_SB(sb)->s_gdb_count * sizeof(struct buffer_head *));
++	rcu_read_unlock();
+ 	n_group_desc[gdb_num] = gdb_bh;
+-	EXT4_SB(sb)->s_group_desc = n_group_desc;
++	rcu_assign_pointer(EXT4_SB(sb)->s_group_desc, n_group_desc);
+ 	EXT4_SB(sb)->s_gdb_count++;
+-	kvfree(o_group_desc);
++	ext4_kvfree_array_rcu(o_group_desc);
+ 
+ 	le16_add_cpu(&es->s_reserved_gdt_blocks, -1);
+ 	err = ext4_handle_dirty_super(handle, sb);
+@@ -903,9 +932,11 @@ static int add_new_gdb_meta_bg(struct super_block *sb,
+ 		return err;
  	}
  
- 	/*
+-	o_group_desc = EXT4_SB(sb)->s_group_desc;
++	rcu_read_lock();
++	o_group_desc = rcu_dereference(EXT4_SB(sb)->s_group_desc);
+ 	memcpy(n_group_desc, o_group_desc,
+ 	       EXT4_SB(sb)->s_gdb_count * sizeof(struct buffer_head *));
++	rcu_read_unlock();
+ 	n_group_desc[gdb_num] = gdb_bh;
+ 
+ 	BUFFER_TRACE(gdb_bh, "get_write_access");
+@@ -916,9 +947,9 @@ static int add_new_gdb_meta_bg(struct super_block *sb,
+ 		return err;
+ 	}
+ 
+-	EXT4_SB(sb)->s_group_desc = n_group_desc;
++	rcu_assign_pointer(EXT4_SB(sb)->s_group_desc, n_group_desc);
+ 	EXT4_SB(sb)->s_gdb_count++;
+-	kvfree(o_group_desc);
++	ext4_kvfree_array_rcu(o_group_desc);
+ 	return err;
+ }
+ 
+@@ -1180,7 +1211,8 @@ static int ext4_add_new_descs(handle_t *handle, struct super_block *sb,
+ 		 * use non-sparse filesystems anymore.  This is already checked above.
+ 		 */
+ 		if (gdb_off) {
+-			gdb_bh = sbi->s_group_desc[gdb_num];
++			gdb_bh = sbi_array_rcu_deref(sbi, s_group_desc,
++						     gdb_num);
+ 			BUFFER_TRACE(gdb_bh, "get_write_access");
+ 			err = ext4_journal_get_write_access(handle, gdb_bh);
+ 
+@@ -1262,7 +1294,7 @@ static int ext4_setup_new_descs(handle_t *handle, struct super_block *sb,
+ 		/*
+ 		 * get_write_access() has been called on gdb_bh by ext4_add_new_desc().
+ 		 */
+-		gdb_bh = sbi->s_group_desc[gdb_num];
++		gdb_bh = sbi_array_rcu_deref(sbi, s_group_desc, gdb_num);
+ 		/* Update group descriptor block for new group */
+ 		gdp = (struct ext4_group_desc *)(gdb_bh->b_data +
+ 						 gdb_off * EXT4_DESC_SIZE(sb));
+@@ -1489,7 +1521,8 @@ exit_journal:
+ 		for (; gdb_num <= gdb_num_end; gdb_num++) {
+ 			struct buffer_head *gdb_bh;
+ 
+-			gdb_bh = sbi->s_group_desc[gdb_num];
++			gdb_bh = sbi_array_rcu_deref(sbi, s_group_desc,
++						     gdb_num);
+ 			if (old_gdb == gdb_bh->b_blocknr)
+ 				continue;
+ 			update_backups(sb, gdb_bh->b_blocknr, gdb_bh->b_data,
 diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-index 567830f41f797..fe015becceea9 100644
+index adf02b1509ca5..567830f41f797 100644
 --- a/fs/ext4/super.c
 +++ b/fs/ext4/super.c
-@@ -795,6 +795,7 @@ static void ext4_put_super(struct super_block *sb)
+@@ -794,6 +794,7 @@ static void ext4_put_super(struct super_block *sb)
+ {
  	struct ext4_sb_info *sbi = EXT4_SB(sb);
  	struct ext4_super_block *es = sbi->s_es;
- 	struct buffer_head **group_desc;
-+	struct flex_groups **flex_groups;
++	struct buffer_head **group_desc;
  	int aborted = 0;
  	int i, err;
  
-@@ -832,8 +833,13 @@ static void ext4_put_super(struct super_block *sb)
+@@ -826,9 +827,12 @@ static void ext4_put_super(struct super_block *sb)
+ 	if (!(sb->s_flags & MS_RDONLY))
+ 		ext4_commit_super(sb, 1);
+ 
++	rcu_read_lock();
++	group_desc = rcu_dereference(sbi->s_group_desc);
  	for (i = 0; i < sbi->s_gdb_count; i++)
- 		brelse(group_desc[i]);
- 	kvfree(group_desc);
-+	flex_groups = rcu_dereference(sbi->s_flex_groups);
-+	if (flex_groups) {
-+		for (i = 0; i < sbi->s_flex_groups_allocated; i++)
-+			kvfree(flex_groups[i]);
-+		kvfree(flex_groups);
-+	}
- 	rcu_read_unlock();
--	kvfree(sbi->s_flex_groups);
+-		brelse(sbi->s_group_desc[i]);
+-	kvfree(sbi->s_group_desc);
++		brelse(group_desc[i]);
++	kvfree(group_desc);
++	rcu_read_unlock();
+ 	kvfree(sbi->s_flex_groups);
  	percpu_counter_destroy(&sbi->s_freeclusters_counter);
  	percpu_counter_destroy(&sbi->s_freeinodes_counter);
- 	percpu_counter_destroy(&sbi->s_dirs_counter);
-@@ -1982,8 +1988,8 @@ done:
- int ext4_alloc_flex_bg_array(struct super_block *sb, ext4_group_t ngroup)
+@@ -3236,7 +3240,7 @@ static void ext4_set_resv_clusters(struct super_block *sb)
+ static int ext4_fill_super(struct super_block *sb, void *data, int silent)
  {
- 	struct ext4_sb_info *sbi = EXT4_SB(sb);
--	struct flex_groups *new_groups;
--	int size;
-+	struct flex_groups **old_groups, **new_groups;
-+	int size, i;
- 
- 	if (!sbi->s_log_groups_per_flex)
- 		return 0;
-@@ -1992,22 +1998,37 @@ int ext4_alloc_flex_bg_array(struct super_block *sb, ext4_group_t ngroup)
- 	if (size <= sbi->s_flex_groups_allocated)
- 		return 0;
- 
--	size = roundup_pow_of_two(size * sizeof(struct flex_groups));
--	new_groups = ext4_kvzalloc(size, GFP_KERNEL);
-+	new_groups = ext4_kvzalloc(roundup_pow_of_two(size *
-+				   sizeof(*sbi->s_flex_groups)), GFP_KERNEL);
- 	if (!new_groups) {
--		ext4_msg(sb, KERN_ERR, "not enough memory for %d flex groups",
--			 size / (int) sizeof(struct flex_groups));
-+		ext4_msg(sb, KERN_ERR,
-+			 "not enough memory for %d flex group pointers", size);
- 		return -ENOMEM;
- 	}
--
--	if (sbi->s_flex_groups) {
--		memcpy(new_groups, sbi->s_flex_groups,
--		       (sbi->s_flex_groups_allocated *
--			sizeof(struct flex_groups)));
--		kvfree(sbi->s_flex_groups);
-+	for (i = sbi->s_flex_groups_allocated; i < size; i++) {
-+		new_groups[i] = ext4_kvzalloc(roundup_pow_of_two(
-+					      sizeof(struct flex_groups)),
-+					      GFP_KERNEL);
-+		if (!new_groups[i]) {
-+			for (i--; i >= sbi->s_flex_groups_allocated; i--)
-+				kvfree(new_groups[i]);
-+			kvfree(new_groups);
-+			ext4_msg(sb, KERN_ERR,
-+				 "not enough memory for %d flex groups", size);
-+			return -ENOMEM;
-+		}
- 	}
--	sbi->s_flex_groups = new_groups;
--	sbi->s_flex_groups_allocated = size / sizeof(struct flex_groups);
-+	rcu_read_lock();
-+	old_groups = rcu_dereference(sbi->s_flex_groups);
-+	if (old_groups)
-+		memcpy(new_groups, old_groups,
-+		       (sbi->s_flex_groups_allocated *
-+			sizeof(struct flex_groups *)));
-+	rcu_read_unlock();
-+	rcu_assign_pointer(sbi->s_flex_groups, new_groups);
-+	sbi->s_flex_groups_allocated = size;
-+	if (old_groups)
-+		ext4_kvfree_array_rcu(old_groups);
- 	return 0;
- }
- 
-@@ -2015,6 +2036,7 @@ static int ext4_fill_flex_info(struct super_block *sb)
- {
- 	struct ext4_sb_info *sbi = EXT4_SB(sb);
- 	struct ext4_group_desc *gdp = NULL;
-+	struct flex_groups *fg;
- 	ext4_group_t flex_group;
- 	int i, err;
- 
-@@ -2032,12 +2054,11 @@ static int ext4_fill_flex_info(struct super_block *sb)
- 		gdp = ext4_get_group_desc(sb, i, NULL);
- 
- 		flex_group = ext4_flex_group(sbi, i);
--		atomic_add(ext4_free_inodes_count(sb, gdp),
--			   &sbi->s_flex_groups[flex_group].free_inodes);
-+		fg = sbi_array_rcu_deref(sbi, s_flex_groups, flex_group);
-+		atomic_add(ext4_free_inodes_count(sb, gdp), &fg->free_inodes);
- 		atomic64_add(ext4_free_group_clusters(sb, gdp),
--			     &sbi->s_flex_groups[flex_group].free_clusters);
--		atomic_add(ext4_used_dirs_count(sb, gdp),
--			   &sbi->s_flex_groups[flex_group].used_dirs);
-+			     &fg->free_clusters);
-+		atomic_add(ext4_used_dirs_count(sb, gdp), &fg->used_dirs);
- 	}
- 
- 	return 1;
-@@ -3243,6 +3264,7 @@ static int ext4_fill_super(struct super_block *sb, void *data, int silent)
- 	struct buffer_head *bh, **group_desc;
+ 	char *orig_data = kstrdup(data, GFP_KERNEL);
+-	struct buffer_head *bh;
++	struct buffer_head *bh, **group_desc;
  	struct ext4_super_block *es = NULL;
  	struct ext4_sb_info *sbi = kzalloc(sizeof(*sbi), GFP_KERNEL);
-+	struct flex_groups **flex_groups;
  	ext4_fsblk_t block;
- 	ext4_fsblk_t sb_block = get_sb_block(&data);
- 	ext4_fsblk_t logical_sb_block;
-@@ -4159,8 +4181,14 @@ failed_mount7:
- 	ext4_unregister_li_request(sb);
- failed_mount6:
- 	ext4_mb_release(sb);
--	if (sbi->s_flex_groups)
--		kvfree(sbi->s_flex_groups);
+@@ -3795,9 +3799,10 @@ static int ext4_fill_super(struct super_block *sb, void *data, int silent)
+ 			goto failed_mount;
+ 		}
+ 	}
+-	sbi->s_group_desc = ext4_kvmalloc(db_count *
++	rcu_assign_pointer(sbi->s_group_desc,
++			   ext4_kvmalloc(db_count *
+ 					  sizeof(struct buffer_head *),
+-					  GFP_KERNEL);
++					  GFP_KERNEL));
+ 	if (sbi->s_group_desc == NULL) {
+ 		ext4_msg(sb, KERN_ERR, "not enough memory");
+ 		ret = -ENOMEM;
+@@ -3807,14 +3812,19 @@ static int ext4_fill_super(struct super_block *sb, void *data, int silent)
+ 	bgl_lock_init(sbi->s_blockgroup_lock);
+ 
+ 	for (i = 0; i < db_count; i++) {
++		struct buffer_head *bh;
++
+ 		block = descriptor_loc(sb, logical_sb_block, i);
+-		sbi->s_group_desc[i] = sb_bread_unmovable(sb, block);
+-		if (!sbi->s_group_desc[i]) {
++		bh = sb_bread_unmovable(sb, block);
++		if (!bh) {
+ 			ext4_msg(sb, KERN_ERR,
+ 			       "can't read group descriptor %d", i);
+ 			db_count = i;
+ 			goto failed_mount2;
+ 		}
++		rcu_read_lock();
++		rcu_dereference(sbi->s_group_desc)[i] = bh;
++		rcu_read_unlock();
+ 	}
+ 	sbi->s_gdb_count = db_count;
+ 	if (!ext4_check_descriptors(sb, logical_sb_block, &first_not_zeroed)) {
+@@ -4177,9 +4187,12 @@ failed_mount3:
+ 	if (sbi->s_mmp_tsk)
+ 		kthread_stop(sbi->s_mmp_tsk);
+ failed_mount2:
 +	rcu_read_lock();
-+	flex_groups = rcu_dereference(sbi->s_flex_groups);
-+	if (flex_groups) {
-+		for (i = 0; i < sbi->s_flex_groups_allocated; i++)
-+			kvfree(flex_groups[i]);
-+		kvfree(flex_groups);
-+	}
++	group_desc = rcu_dereference(sbi->s_group_desc);
+ 	for (i = 0; i < db_count; i++)
+-		brelse(sbi->s_group_desc[i]);
+-	kvfree(sbi->s_group_desc);
++		brelse(group_desc[i]);
++	kvfree(group_desc);
 +	rcu_read_unlock();
- 	percpu_counter_destroy(&sbi->s_freeclusters_counter);
- 	percpu_counter_destroy(&sbi->s_freeinodes_counter);
- 	percpu_counter_destroy(&sbi->s_dirs_counter);
+ failed_mount:
+ 	if (sbi->s_chksum_driver)
+ 		crypto_free_shash(sbi->s_chksum_driver);
 -- 
 2.20.1
 
