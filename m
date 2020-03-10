@@ -2,110 +2,77 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66992C18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:09:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9676DC10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:09:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32E1E215A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:09:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="JNhblDwo"
+	by mail.kernel.org (Postfix) with ESMTP id 5BCF421655
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:09:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727634AbgCJUJF (ORCPT
+        id S1727646AbgCJUJe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 16:09:05 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:17624 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727334AbgCJUJE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 16:09:04 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e67f3b30000>; Tue, 10 Mar 2020 13:08:19 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 10 Mar 2020 13:09:03 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 10 Mar 2020 13:09:03 -0700
-Received: from [10.26.11.187] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 10 Mar
- 2020 20:09:00 +0000
-Subject: Re: [PATCH 5.5 000/189] 5.5.9-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
-        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
-References: <20200310123639.608886314@linuxfoundation.org>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <d5975b9f-e97b-2cf4-9c1a-c52b4fed7191@nvidia.com>
-Date:   Tue, 10 Mar 2020 20:08:58 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 10 Mar 2020 16:09:34 -0400
+Received: from mga03.intel.com ([134.134.136.65]:59487 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727211AbgCJUJd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 16:09:33 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Mar 2020 13:09:33 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,538,1574150400"; 
+   d="scan'208";a="245808300"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga006.jf.intel.com with ESMTP; 10 Mar 2020 13:09:30 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jBlBx-0002cb-VR; Wed, 11 Mar 2020 04:09:29 +0800
+Date:   Wed, 11 Mar 2020 04:08:31 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     kbuild-all@lists.01.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Liran Alon <liran.alon@oracle.com>,
+        Miaohe Lin <linmiaohe@huawei.com>
+Subject: [RFC PATCH] KVM: nVMX: nested_vmx_handle_enlightened_vmptrld() can
+ be static
+Message-ID: <20200310200830.GA84412@69fab159caf3>
+References: <20200309155216.204752-4-vkuznets@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200310123639.608886314@linuxfoundation.org>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1583870899; bh=W4e83qOuH67Fat31Jl9Sg7ElkF3JGxcNsRIPAQK61Zg=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=JNhblDwo39JWI9UoDVEyTH1nTA5ks0WoM06c/lyvM+M6nfMMSYMQWkVdnCQRk54eJ
-         QQVx6q87InMHsgCsAzWvz00cX15T5p/c3WTmPmis2aUk2br9U94f9uMAcvGFmfnLY0
-         BtRFS7wYl02pB1O1jJhrMZLpZYTbvXNqU2+pQz2L5a/gM5fZlpBfFLoUldHIsWIaDF
-         gChdjxuRxnGOYaLItKTKjUqocAn3b/3p2Wx9yoWkiekyZyRmb77EibaSeOlr00fLjp
-         4Gky1Y05qJ2AuIenyu2+dsQusAvsVj8pKDOj8gNSTHKC42kQeMtKmLNjyeApUYVX9O
-         OzjtgXV0LYbJw==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200309155216.204752-4-vkuznets@redhat.com>
+X-Patchwork-Hint: ignore
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 10/03/2020 12:37, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.5.9 release.
-> There are 189 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Thu, 12 Mar 2020 12:34:10 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.5.9-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.5.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+Fixes: e3fd8bda412e ("KVM: nVMX: properly handle errors in nested_vmx_handle_enlightened_vmptrld()")
+Signed-off-by: kbuild test robot <lkp@intel.com>
+---
+ nested.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-All tests are passing for Tegra ...
-
-Test results for stable-v5.5:
-    13 builds:	13 pass, 0 fail
-    22 boots:	22 pass, 0 fail
-    40 tests:	40 pass, 0 fail
-
-Linux version:	5.5.9-rc1-g11e07aec0780
-Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
-                tegra194-p2972-0000, tegra20-ventana,
-                tegra210-p2371-2180, tegra210-p3450-0000,
-                tegra30-cardhu-a04
-
-Cheers
-Jon
-
--- 
-nvpublic
+diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+index 65df8bcbb9c86..1d9ab1e9933fb 100644
+--- a/arch/x86/kvm/vmx/nested.c
++++ b/arch/x86/kvm/vmx/nested.c
+@@ -1910,7 +1910,7 @@ static int copy_vmcs12_to_enlightened(struct vcpu_vmx *vmx)
+  * This is an equivalent of the nested hypervisor executing the vmptrld
+  * instruction.
+  */
+-enum nested_evmptrld_status nested_vmx_handle_enlightened_vmptrld(
++static enum nested_evmptrld_status nested_vmx_handle_enlightened_vmptrld(
+ 	struct kvm_vcpu *vcpu, bool from_launch)
+ {
+ 	struct vcpu_vmx *vmx = to_vmx(vcpu);
