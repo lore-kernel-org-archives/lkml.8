@@ -2,249 +2,251 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FD1DC18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 14:56:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39CB5C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 14:57:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7283C21655
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 14:56:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BKkCb0vn"
+	by mail.kernel.org (Postfix) with ESMTP id 0A9DC20675
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 14:57:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727705AbgCJO4y (ORCPT
+        id S1727734AbgCJO5T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 10:56:54 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:44939 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727532AbgCJO4y (ORCPT
+        Tue, 10 Mar 2020 10:57:19 -0400
+Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:41849
+        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726382AbgCJO5S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 10:56:54 -0400
-Received: by mail-ed1-f67.google.com with SMTP id g19so16658507eds.11;
-        Tue, 10 Mar 2020 07:56:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3tBZ7IlogX5/PA8Gk/q6l+Q+QQ9JEW0HnkSIb+T0XY8=;
-        b=BKkCb0vnCaYKiD8zFlTBrP+dwrak2K1qXKhs7nDNLNKtnIMiPtN2hQxnBt4PAYKhVm
-         ftDc9lzxtxDHDBYQilawEfB+/4jdxtfctVnRZZ3komg/hxrc9+J1Z+4TELcwNYpfffZ/
-         uXzmk7zzExhNfZxqRyj7rnQMtZehQ3betPOcMcz+IHRgdPiciGLiKJoJclokySzsi5jp
-         AzMsr8aiaC+GWeuZ/Yw16eKM0YDzDbNgtXgDniiO88jWoT5K6T22Kxqjett1ExJ+AHeg
-         7KJLl1c0OgylHvJ/XD05VvrSUO6D891l++3AnPRi6KqDA2qG5XJ1RLTh37VUW0dfttvI
-         027g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3tBZ7IlogX5/PA8Gk/q6l+Q+QQ9JEW0HnkSIb+T0XY8=;
-        b=Bp183aljcmRWr91l8U+xrVCdfib6WR3VyndatmA24/sCxXdRTznT6xHc4wWTD+qD3e
-         2uMVhjSrRkJ1SNQkRr6azonrLC9LyXaFMx+m6NJ1TlgCeVRwtYx35FbMdn02kCu2QiDf
-         gq3d9zkhTIWGpWtTfYRzdNcANAd1eAhEyrU3axDDeWRTk43LC8uwo7UvQ1kHQECHXjjg
-         Ll8p3h3dTG+l4e2WwLEF4zklyH6B78njI8bblhVvztqIPiQg7EVdhgpr88Q+4WumbNAc
-         vL9HkX6MUIk8zV78kNIqja3/nbg6MatOfWg+3ztD9+/YyKcclcUYS4qbxkTGAs5qM3/K
-         o7lg==
-X-Gm-Message-State: ANhLgQ3dlMVeAKNZr0naxUfuX43551Zhl5RUwyDQCRGOzNgnX/hr6jbN
-        tmkqKT+y4eqjJOjJqL5ChYjTrvDYZAs+l3deg7Y=
-X-Google-Smtp-Source: ADFU+vvV4BJ5Q01DPTC1SXAIfh/z8Wj4OYX4DvkBj6FtrhuQgaiDZaJI4i0vQNonaDpV/NYMAD4l7KAUvVSi/I0hMjA=
-X-Received: by 2002:aa7:d98b:: with SMTP id u11mr23211295eds.318.1583852212265;
- Tue, 10 Mar 2020 07:56:52 -0700 (PDT)
+        Tue, 10 Mar 2020 10:57:18 -0400
+X-IronPort-AV: E=Sophos;i="5.70,537,1574118000"; 
+   d="scan'208";a="341899706"
+Received: from dt-lawall.paris.inria.fr ([128.93.67.65])
+  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Mar 2020 15:57:16 +0100
+Date:   Tue, 10 Mar 2020 15:57:15 +0100 (CET)
+From:   Julia Lawall <julia.lawall@inria.fr>
+X-X-Sender: julia@hadrien
+To:     Shreeya Patel <shreeya.patel23498@gmail.com>
+cc:     Larry.Finger@lwfinger.net, gregkh@linuxfoundation.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        outreachy-kernel@googlegroups.com, sbrivio@redhat.com,
+        daniel.baluta@gmail.com, nramas@linux.microsoft.com,
+        hverkuil@xs4all.nl
+Subject: Re: [Outreachy kernel] [PATCH v2] Staging: rtl8188eu: rtw_mlme: Add
+ space around operators
+In-Reply-To: <20200310144702.14653-1-shreeya.patel23498@gmail.com>
+Message-ID: <alpine.DEB.2.21.2003101554530.26409@hadrien>
+References: <20200310144702.14653-1-shreeya.patel23498@gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-References: <20200310125542.5939-1-olteanv@gmail.com> <615284875b709f602d57e4a4621a83c1@walle.cc>
-In-Reply-To: <615284875b709f602d57e4a4621a83c1@walle.cc>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Tue, 10 Mar 2020 16:56:39 +0200
-Message-ID: <CA+h21hrYoHVDvsxT1EPWhYprL+zNHfE4MW7k4HxiK7ma4ZWn1g@mail.gmail.com>
-Subject: Re: [PATCH v3 0/7] NXP DSPI bugfixes and support for LS1028A
-To:     Michael Walle <michael@walle.cc>
-Cc:     Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, Esben Haabendal <eha@deif.com>,
-        angelo@sysam.it, andrew.smirnov@gmail.com,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Wei Chen <weic@nvidia.com>, Mohamed Hosny <mhosny@nvidia.com>,
-        peng.ma@nxp.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Michael,
 
-On Tue, 10 Mar 2020 at 16:11, Michael Walle <michael@walle.cc> wrote:
->
 
->
-> XSPI mode, while now I cannot reproduce the kernel oops anymore, I've
-> found two
-> other problems (1), (2). Which are likely the same underlying problem.
-> DMA mode
-> works "better" now, still one problem (3).
->
-> (1) It seems like the first write/read/erase after the aborted
-> instruction
-> don't get through:
->
-> # hexdump -C /dev/mtd0
-> 00000000  ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff
-> |................|
-> *
-> [  627.914654] fsl-dspi 2120000.spi: Waiting for transfer to complete
-> failed!
-> ^C[  627.921649] spi_master spi1: failed to transfer one message from
-> queue
->
-> #
-> # echo huhu > /dev/mtd0
-> # hexdump -C /dev/mtd0
-> 00000000  ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff
-> |................|
-> *
-> hexdump: /dev/mtd0: Input/output error
-> 003df000
-> # echo huhu > /dev/mtd0
-> # hexdump -C /dev/mtd0
-> 00000000  68 75 68 75 0a ff ff ff  ff ff ff ff ff ff ff ff
-> |huhu............|
-> 00000010  ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff
-> |................|
-> *
-> [  642.738905] fsl-dspi 2120000.spi: Waiting for transfer to complete
-> failed!
-> ^C[  642.745832] spi_master spi1: failed to transfer one message from
-> queue
-> #
-> # flash_erase /dev/mtd0 0 1
-> Erasing 4 Kibyte @ 0 -- 100 % complete
-> #
-> # hexdump -C /dev/mtd0
-> 00000000  68 75 68 75 0a ff ff ff  ff ff ff ff ff ff ff ff
-> |huhu............|
-> 00000010  ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff
-> |................|
-> *
-> hexdump: /dev/mtd0: Input/output error
-> 0023d000
-> # hexdump -C /dev/mtd0
-> 00000000  68 75 68 75 0a ff ff ff  ff ff ff ff ff ff ff ff
-> |huhu............|
-> 00000010  ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff
-> |................|
-> *
->
-> (2) Also, reading the flash, every second time there is (reproducibly)
-> an
-> IO error:
->
-> # hexdump -C /dev/mtd0
-> 00000000  68 75 68 75 0a ff ff ff  ff ff ff ff ff ff ff ff
-> |huhu............|
-> 00000010  ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff
-> |................|
-> *
-> 01000000
-> # hexdump -C /dev/mtd0
-> 00000000  68 75 68 75 0a ff ff ff  ff ff ff ff ff ff ff ff
-> |huhu............|
-> 00000010  ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff
-> |................|
-> *
-> hexdump: /dev/mtd0: Input/output error
-> 00dc0000
-> # hexdump -C /dev/mtd0
-> 00000000  68 75 68 75 0a ff ff ff  ff ff ff ff ff ff ff ff
-> |huhu............|
-> 00000010  ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff
-> |................|
-> *
-> 01000000
-> # hexdump -C /dev/mtd0
-> 00000000  68 75 68 75 0a ff ff ff  ff ff ff ff ff ff ff ff
-> |huhu............|
-> 00000010  ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff
-> |................|
-> *
-> hexdump: /dev/mtd0: Input/output error
-> 00e6a000
->
+On Tue, 10 Mar 2020, Shreeya Patel wrote:
 
-Just to be clear, issue 2 is seen only after you abort another
-transaction, right?
+> Add space around operators for improving the code
+> readability.
+>
+> Reported by checkpatch.pl
+>
+> Signed-off-by: Shreeya Patel <shreeya.patel23498@gmail.com>
+> ---
+>
+> rtw_mlme_old.o - Previously produced object file before making any
+> changes to the source code.
+> rtw_mlme.o - Object file produced after compiling the changes done in source
+> file.
+>
+> Following is the output of diff between the previously produced object
+> file and the object file produced after compiling the changes.
+>
+> shreeya@Shreeya-Patel:~git/kernels/staging/drivers/staging/rtl8188eu/core$ diff rtw_mlme_old.o rtw_mlme.o
+> shreeya@Shreeya-Patel:~git/kernels/staging/drivers/staging/rtl8188eu/core$
+>
+> Following output shows that there was no other change in the source
+> code except for whitespace.
+>
+> shreeya@Shreeya-Patel:~git/kernels/staging$ git diff -w drivers/staging/rtl8188eu/core/
+> shreeya@Shreeya-Patel:~git/kernels/staging$
 
-> (3) Depening on the content length there is also an IO error. Funny
-> enough,
-> the content is still written to the SPI flash.
->
-> # echo -n 1 > /dev/mtd10
-> # echo -n 12 > /dev/mtd10
-> # echo -n 123 > /dev/mtd10
-> # echo -n 1234 > /dev/mtd10
-> # echo -n 12345 > /dev/mtd10
-> sh: write error: Input/output error
-> # echo -n 123456 > /dev/mtd10
-> # echo -n 1234567 > /dev/mtd10
-> sh: write error: Input/output error
-> # echo -n 12345678 > /dev/mtd10
-> # echo -n 123456789 > /dev/mtd10
-> # echo -n 1234567890 > /dev/mtd10
-> # echo -n 12345678901 > /dev/mtd10
-> # echo -n 123456789012 > /dev/mtd10
-> # echo -n 1234567890123 > /dev/mtd10
-> sh: write error: Input/output error
-> # echo -n 12345678901234 > /dev/mtd10
-> # echo -n 123456789012345 > /dev/mtd10
-> sh: write error: Input/output error
-> # echo -n 1234567890123456 > /dev/mtd10
-> # echo -n 12345678901234567 > /dev/mtd10
-> # echo -n 123456789012345678 > /dev/mtd10
->
->
-> # flash_erase /dev/mtd10 0 1
-> Erasing 4 Kibyte @ 0 -- 100 % complete
-> # hexdump -C /dev/mtd10
-> 00000000  ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff
-> |................|
-> *
-> ^C
-> # echo -n 12345 > /dev/mtd10
-> sh: write error: Input/output error
-> # hexdump -C /dev/mtd10
-> 00000000  31 32 33 34 35 ff ff ff  ff ff ff ff ff ff ff ff
-> |12345...........|
-> 00000010  ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff
-> |................|
-> *
-> ^C
->
+If this information is importamt, it should be above the line.  On the
+other hand, it is much too detailed, making it hard to figure out what is
+being said.  It would be better to just say diff of the .o files before
+and after the changes shows no difference.  Likewise git diff -w shows no
+difference.  That way one can quickly see what tests you did, without
+being distracted by the machine name, the directory name, etc.
 
-For this one, I think the reported message->actual_length is incorrect
-in dspi_dma_xfer, which makes spi-mem scream.
+julia
+
 
 >
-> -michael
+> Changes in v2
+>   - Include the file name in Subject to make it more specific.
+>   - Add the output of diff between the previously produced object
+> file and the object file produced after compiling the changes.
+>   - Add the output of git diff -w to show no changes in source file
+> except for whitespace.
 >
-> >
-> > Vladimir Oltean (7):
-> >   spi: spi-fsl-dspi: Don't access reserved fields in SPI_MCR
-> >   spi: spi-fsl-dspi: Avoid use-after-free in interrupt mode
-> >   spi: spi-fsl-dspi: Fix little endian access to PUSHR CMD and TXDATA
-> >   spi: spi-fsl-dspi: Fix bits-per-word acceleration in DMA mode
-> >   spi: spi-fsl-dspi: Add support for LS1028A
-> >   arm64: dts: ls1028a: Specify the DMA channels for the DSPI
-> > controllers
-> >   arm64: dts: ls1028a-rdb: Add a spidev node for the mikroBUS
-> >
-> >  .../boot/dts/freescale/fsl-ls1028a-rdb.dts    |  14 ++
-> >  .../arm64/boot/dts/freescale/fsl-ls1028a.dtsi |   6 +
-> >  drivers/spi/spi-fsl-dspi.c                    | 188 +++++++++++-------
-> >  3 files changed, 134 insertions(+), 74 deletions(-)
-
-Thanks,
--Vladimir
+>
+>  drivers/staging/rtl8188eu/core/rtw_mlme.c | 40 +++++++++++------------
+>  1 file changed, 20 insertions(+), 20 deletions(-)
+>
+> diff --git a/drivers/staging/rtl8188eu/core/rtw_mlme.c b/drivers/staging/rtl8188eu/core/rtw_mlme.c
+> index 8da955e8343b..9de2d421f6b1 100644
+> --- a/drivers/staging/rtl8188eu/core/rtw_mlme.c
+> +++ b/drivers/staging/rtl8188eu/core/rtw_mlme.c
+> @@ -149,7 +149,7 @@ static void _rtw_free_network(struct mlme_priv *pmlmepriv, struct wlan_network *
+>  	    (check_fwstate(pmlmepriv, WIFI_ADHOC_STATE)))
+>  		lifetime = 1;
+>  	if (!isfreeall) {
+> -		delta_time = (curr_time - pnetwork->last_scanned)/HZ;
+> +		delta_time = (curr_time - pnetwork->last_scanned) / HZ;
+>  		if (delta_time < lifetime)/*  unit:sec */
+>  			return;
+>  	}
+> @@ -249,8 +249,8 @@ void rtw_generate_random_ibss(u8 *pibss)
+>  	pibss[1] = 0x11;
+>  	pibss[2] = 0x87;
+>  	pibss[3] = (u8)(curtime & 0xff);/* p[0]; */
+> -	pibss[4] = (u8)((curtime>>8) & 0xff);/* p[1]; */
+> -	pibss[5] = (u8)((curtime>>16) & 0xff);/* p[2]; */
+> +	pibss[4] = (u8)((curtime >> 8) & 0xff);/* p[1]; */
+> +	pibss[5] = (u8)((curtime >> 16) & 0xff);/* p[2]; */
+>  }
+>
+>  u8 *rtw_get_capability_from_ie(u8 *ie)
+> @@ -357,9 +357,9 @@ void update_network(struct wlan_bssid_ex *dst, struct wlan_bssid_ex *src,
+>  			rssi_final = rssi_ori;
+>  	} else {
+>  		if (sq_smp != 101) { /* from the right channel */
+> -			ss_final = ((u32)(src->PhyInfo.SignalStrength)+(u32)(dst->PhyInfo.SignalStrength)*4)/5;
+> -			sq_final = ((u32)(src->PhyInfo.SignalQuality)+(u32)(dst->PhyInfo.SignalQuality)*4)/5;
+> -			rssi_final = (src->Rssi+dst->Rssi*4)/5;
+> +			ss_final = ((u32)(src->PhyInfo.SignalStrength) + (u32)(dst->PhyInfo.SignalStrength) * 4) / 5;
+> +			sq_final = ((u32)(src->PhyInfo.SignalQuality) + (u32)(dst->PhyInfo.SignalQuality) * 4) / 5;
+> +			rssi_final = (src->Rssi + dst->Rssi * 4) / 5;
+>  		} else {
+>  			/* bss info not receiving from the right channel, use the original RX signal infos */
+>  			ss_final = dst->PhyInfo.SignalStrength;
+> @@ -510,7 +510,7 @@ static int rtw_is_desired_network(struct adapter *adapter, struct wlan_network *
+>  	privacy = pnetwork->network.Privacy;
+>
+>  	if (check_fwstate(pmlmepriv, WIFI_UNDER_WPS)) {
+> -		if (rtw_get_wps_ie(pnetwork->network.ies+_FIXED_IE_LENGTH_, pnetwork->network.ie_length-_FIXED_IE_LENGTH_, NULL, &wps_ielen))
+> +		if (rtw_get_wps_ie(pnetwork->network.ies + _FIXED_IE_LENGTH_, pnetwork->network.ie_length - _FIXED_IE_LENGTH_, NULL, &wps_ielen))
+>  			return true;
+>  		else
+>  			return false;
+> @@ -925,7 +925,7 @@ static void rtw_joinbss_update_network(struct adapter *padapter, struct wlan_net
+>  	switch (pnetwork->network.InfrastructureMode) {
+>  	case Ndis802_11Infrastructure:
+>  		if (pmlmepriv->fw_state & WIFI_UNDER_WPS)
+> -			pmlmepriv->fw_state = WIFI_STATION_STATE|WIFI_UNDER_WPS;
+> +			pmlmepriv->fw_state = WIFI_STATION_STATE | WIFI_UNDER_WPS;
+>  		else
+>  			pmlmepriv->fw_state = WIFI_STATION_STATE;
+>  		break;
+> @@ -1097,14 +1097,14 @@ static u8 search_max_mac_id(struct adapter *padapter)
+>  #if defined(CONFIG_88EU_AP_MODE)
+>  	if (check_fwstate(pmlmepriv, WIFI_AP_STATE)) {
+>  		for (aid = pstapriv->max_num_sta; aid > 0; aid--) {
+> -			if (pstapriv->sta_aid[aid-1])
+> +			if (pstapriv->sta_aid[aid - 1])
+>  				break;
+>  		}
+>  		mac_id = aid + 1;
+>  	} else
+>  #endif
+>  	{/* adhoc  id =  31~2 */
+> -		for (mac_id = NUM_STA-1; mac_id >= IBSS_START_MAC_ID; mac_id--) {
+> +		for (mac_id = NUM_STA - 1; mac_id >= IBSS_START_MAC_ID; mac_id--) {
+>  			if (pmlmeinfo->FW_sta_info[mac_id].status == 1)
+>  				break;
+>  		}
+> @@ -1123,7 +1123,7 @@ void rtw_stassoc_hw_rpt(struct adapter *adapter, struct sta_info *psta)
+>
+>  	macid = search_max_mac_id(adapter);
+>  	rtw_hal_set_hwreg(adapter, HW_VAR_TX_RPT_MAX_MACID, (u8 *)&macid);
+> -	media_status = (psta->mac_id<<8)|1; /*   MACID|OPMODE:1 connect */
+> +	media_status = (psta->mac_id << 8) | 1; /*   MACID|OPMODE:1 connect */
+>  	rtw_hal_set_hwreg(adapter, HW_VAR_H2C_MEDIA_STATUS_RPT, (u8 *)&media_status);
+>  }
+>
+> @@ -1213,7 +1213,7 @@ void rtw_stadel_event_callback(struct adapter *adapter, u8 *pbuf)
+>  	if (mac_id >= 0) {
+>  		u16 media_status;
+>
+> -		media_status = (mac_id<<8)|0; /*   MACID|OPMODE:0 means disconnect */
+> +		media_status = (mac_id << 8) | 0; /*   MACID|OPMODE:0 means disconnect */
+>  		/* for STA, AP, ADHOC mode, report disconnect stauts to FW */
+>  		rtw_hal_set_hwreg(adapter, HW_VAR_H2C_MEDIA_STATUS_RPT, (u8 *)&media_status);
+>  	}
+> @@ -1640,7 +1640,7 @@ int rtw_restruct_wmm_ie(struct adapter *adapter, u8 *in_ie, u8 *out_ie, uint in_
+>  	for (i = 12; i < in_len; i += (in_ie[i + 1] + 2) /* to the next IE element */) {
+>  		ielength = initial_out_len;
+>
+> -		if (in_ie[i] == 0xDD && in_ie[i+2] == 0x00 && in_ie[i+3] == 0x50  && in_ie[i+4] == 0xF2 && in_ie[i+5] == 0x02 && i+5 < in_len) {
+> +		if (in_ie[i] == 0xDD && in_ie[i + 2] == 0x00 && in_ie[i + 3] == 0x50  && in_ie[i + 4] == 0xF2 && in_ie[i + 5] == 0x02 && i + 5 < in_len) {
+>  			/* WMM element ID and OUI */
+>  			/* Append WMM IE to the last index of out_ie */
+>
+> @@ -1734,13 +1734,13 @@ int rtw_restruct_sec_ie(struct adapter *adapter, u8 *in_ie, u8 *out_ie, uint in_
+>  		authmode = _WPA2_IE_ID_;
+>
+>  	if (check_fwstate(pmlmepriv, WIFI_UNDER_WPS)) {
+> -		memcpy(out_ie+ielength, psecuritypriv->wps_ie, psecuritypriv->wps_ie_len);
+> +		memcpy(out_ie + ielength, psecuritypriv->wps_ie, psecuritypriv->wps_ie_len);
+>
+>  		ielength += psecuritypriv->wps_ie_len;
+>  	} else if ((authmode == _WPA_IE_ID_) || (authmode == _WPA2_IE_ID_)) {
+>  		/* copy RSN or SSN */
+> -		memcpy(&out_ie[ielength], &psecuritypriv->supplicant_ie[0], psecuritypriv->supplicant_ie[1]+2);
+> -		ielength += psecuritypriv->supplicant_ie[1]+2;
+> +		memcpy(&out_ie[ielength], &psecuritypriv->supplicant_ie[0], psecuritypriv->supplicant_ie[1] + 2);
+> +		ielength += psecuritypriv->supplicant_ie[1] + 2;
+>  		rtw_report_sec_ie(adapter, authmode, psecuritypriv->supplicant_ie);
+>  	}
+>
+> @@ -1865,7 +1865,7 @@ unsigned int rtw_restructure_ht_ie(struct adapter *padapter, u8 *in_ie, u8 *out_
+>
+>  	phtpriv->ht_option = false;
+>
+> -	p = rtw_get_ie(in_ie+12, _HT_CAPABILITY_IE_, &ielen, in_len-12);
+> +	p = rtw_get_ie(in_ie + 12, _HT_CAPABILITY_IE_, &ielen, in_len - 12);
+>
+>  	if (p && ielen > 0) {
+>  		struct ieee80211_ht_cap ht_cap;
+> @@ -1904,16 +1904,16 @@ unsigned int rtw_restructure_ht_ie(struct adapter *padapter, u8 *in_ie, u8 *out_
+>  		else
+>  			ht_cap.ampdu_params_info |= IEEE80211_HT_CAP_AMPDU_DENSITY & 0x00;
+>
+> -		rtw_set_ie(out_ie+out_len, _HT_CAPABILITY_IE_,
+> +		rtw_set_ie(out_ie + out_len, _HT_CAPABILITY_IE_,
+>  			   sizeof(struct ieee80211_ht_cap),
+>  			   (unsigned char *)&ht_cap, pout_len);
+>
+>  		phtpriv->ht_option = true;
+>
+> -		p = rtw_get_ie(in_ie+12, _HT_ADD_INFO_IE_, &ielen, in_len-12);
+> +		p = rtw_get_ie(in_ie + 12, _HT_ADD_INFO_IE_, &ielen, in_len - 12);
+>  		if (p && (ielen == sizeof(struct ieee80211_ht_addt_info))) {
+>  			out_len = *pout_len;
+> -			rtw_set_ie(out_ie+out_len, _HT_ADD_INFO_IE_, ielen, p+2, pout_len);
+> +			rtw_set_ie(out_ie + out_len, _HT_ADD_INFO_IE_, ielen, p + 2, pout_len);
+>  		}
+>  	}
+>  	return phtpriv->ht_option;
+> --
+> 2.17.1
+>
+> --
+> You received this message because you are subscribed to the Google Groups "outreachy-kernel" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to outreachy-kernel+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/outreachy-kernel/20200310144702.14653-1-shreeya.patel23498%40gmail.com.
+>
