@@ -2,94 +2,197 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35E6BC10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 19:59:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8146CC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:00:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB238222C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 19:59:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23C2A20675
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:00:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lToTywfF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727407AbgCJT7R (ORCPT
+        id S1727473AbgCJUAz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 15:59:17 -0400
-Received: from mga09.intel.com ([134.134.136.24]:58810 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726545AbgCJT7Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 15:59:16 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Mar 2020 12:59:15 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,538,1574150400"; 
-   d="scan'208";a="231440862"
-Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
-  by orsmga007.jf.intel.com with ESMTP; 10 Mar 2020 12:59:15 -0700
-Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id 7AF3C301BCC; Tue, 10 Mar 2020 12:59:15 -0700 (PDT)
-Date:   Tue, 10 Mar 2020 12:59:15 -0700
-From:   Andi Kleen <ak@linux.intel.com>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Igor Lubashev <ilubashe@akamai.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Jiwei Sun <jiwei.sun@windriver.com>,
-        yuzhoujian <yuzhoujian@didichuxing.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        John Garry <john.garry@huawei.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH] perf tools: add support for lipfm4
-Message-ID: <20200310195915.GA1676879@tassilo.jf.intel.com>
-References: <20200310185003.57344-1-irogers@google.com>
+        Tue, 10 Mar 2020 16:00:55 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:37490 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726545AbgCJUAz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 16:00:55 -0400
+Received: by mail-ot1-f65.google.com with SMTP id b3so14478257otp.4
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 13:00:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zIAAqBT5cH5cbbW3GFto6v7mD8pF39ecAMkC8oTgutI=;
+        b=lToTywfF6/WNafCRISYFb5qIPhLOZD7H3m7K11tcVGoSy0sDMKZ5AOMrdtIh1Zcm+N
+         FsSDckkbtI4yqMRWo5Fjqdg64HXXgblPk8H7PM2B/BLCmb4xHoUig7plVH7TGc1gK2Cr
+         kNb3g6Is4ZWWVGTXV2n1kZH9gibgqCnEAvqkgY/U8QdWJYyuzGJ5/NKmku3+6X9qrx4w
+         ahi9XPBSsYLPDacA5iChtNW4lQKX1M3pK4Y+gCGh2NS8fv2rmtdk2F6Wa83/mGUwm7si
+         i9wYysP5fygg3ep0iX3jaDt/BGsNFKQNDX1evsDSMAIoQCH29ffsppjtETxuQHNKCs5q
+         BGiw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zIAAqBT5cH5cbbW3GFto6v7mD8pF39ecAMkC8oTgutI=;
+        b=sCUiY97dqLV+hBbjVPNy/2tzYQLGagxAJNB0q6GoGHKbZRHRF5n+g4a2NUKV6K4qUz
+         ZAffdO83fsw6YuTmXYXWRKwIrEAcyZv9qh77kYPEkefzF31pk4Dj65nV3bYJUuYnvJ01
+         1IUC6ZqBAnkvSoXxRTpDfryIEksgYkyLXBDrC9GY7Ip6rxJmGyKJRmnqL+RmqzpaWiLl
+         X5B2J20Cxa4/Rc7vO90DvnyQMLzfGuQNTPmHxmcF+RAZPTNsAI32IoYHFSXrVtIssXFb
+         9hppDt8kmNm+4kltkbNvpqB8JzlVqf+GtS0jGsnz8L+4rrL0SBOOCVAkiSUSyXQ+eCmm
+         aRmw==
+X-Gm-Message-State: ANhLgQ1TPYU1pH9rD4+g3+1FIGkeSQSjQtSxai2+4d67/zj/iif5NgLM
+        p4Owi4GXuVH1npZZ2ub+RLfmTAUtwfbSNrjD3FezlA==
+X-Google-Smtp-Source: ADFU+vtcsmeizoaiKSlTHolQlrAnABBwhEpSV9VVyJB0PvpgO9H1QULcgU81RJuwJLNtl9eG+n2+fGb/mXJ4ROrh4fc=
+X-Received: by 2002:a05:6830:1d6e:: with SMTP id l14mr17776467oti.32.1583870453922;
+ Tue, 10 Mar 2020 13:00:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200310185003.57344-1-irogers@google.com>
+References: <87r1y8dqqz.fsf@x220.int.ebiederm.org> <AM6PR03MB517053AED7DC89F7C0704B7DE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <AM6PR03MB51703B44170EAB4626C9B2CAE4E20@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87tv32cxmf.fsf_-_@x220.int.ebiederm.org> <87v9ne5y4y.fsf_-_@x220.int.ebiederm.org>
+ <87eeu25y14.fsf_-_@x220.int.ebiederm.org> <20200309195909.h2lv5uawce5wgryx@wittgenstein>
+ <877dztz415.fsf@x220.int.ebiederm.org> <20200309201729.yk5sd26v4bz4gtou@wittgenstein>
+ <87k13txnig.fsf@x220.int.ebiederm.org> <20200310085540.pztaty2mj62xt2nm@wittgenstein>
+ <87wo7svy96.fsf_-_@x220.int.ebiederm.org> <CAG48ez2cUZMVOAXfHPNjKjYsMSaWkjUjOCHo0KYZ+oXQUW4viA@mail.gmail.com>
+ <87k13sui1p.fsf@x220.int.ebiederm.org>
+In-Reply-To: <87k13sui1p.fsf@x220.int.ebiederm.org>
+From:   Jann Horn <jannh@google.com>
+Date:   Tue, 10 Mar 2020 21:00:27 +0100
+Message-ID: <CAG48ez2vRgaEVJ=Rs8gn6HkGO6syL8MpSOUq7BNN+OUE1uYxCA@mail.gmail.com>
+Subject: Re: [PATCH] pidfd: Stop taking cred_guard_mutex
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        Kees Cook <keescook@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Andrei Vagin <avagin@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Yuyang Du <duyuyang@gmail.com>,
+        David Hildenbrand <david@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        David Howells <dhowells@redhat.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christian Kellner <christian@kellner.me>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Sargun Dhillon <sargun@sargun.me>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 10, 2020 at 11:50:03AM -0700, Ian Rogers wrote:
-> This patch links perf with the libpfm4 library.
-> This library contains all the hardware event tables for all
-> processors supported by perf_events. This is a helper library
-> that help convert from a symbolic event name to the event
-> encoding required by the underlying kernel interface. This
-> library is open-source and available from: http://perfmon2.sf.net.
+On Tue, Mar 10, 2020 at 8:29 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
+> Jann Horn <jannh@google.com> writes:
+> > On Tue, Mar 10, 2020 at 7:54 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
+> >> During exec some file descriptors are closed and the files struct is
+> >> unshared.  But all of that can happen at other times and it has the
+> >> same protections during exec as at ordinary times.  So stop taking the
+> >> cred_guard_mutex as it is useless.
+> >>
+> >> Furthermore he cred_guard_mutex is a bad idea because it is deadlock
+> >> prone, as it is held in serveral while waiting possibly indefinitely
+> >> for userspace to do something.
+> >
+> > Please don't. Just use the new exec_update_mutex like everywhere else.
+> >
+> >> Cc: Sargun Dhillon <sargun@sargun.me>
+> >> Cc: Christian Brauner <christian.brauner@ubuntu.com>
+> >> Cc: Arnd Bergmann <arnd@arndb.de>
+> >> Fixes: 8649c322f75c ("pid: Implement pidfd_getfd syscall")
+> >> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+> >> ---
+> >>  kernel/pid.c | 6 ------
+> >>  1 file changed, 6 deletions(-)
+> >>
+> >> Christian if you don't have any objections I will take this one through
+> >> my tree.
+> >>
+> >> I tried to figure out why this code path takes the cred_guard_mutex and
+> >> the archive on lore.kernel.org was not helpful in finding that part of
+> >> the conversation.
+> >
+> > That was my suggestion.
+> >
+> >> diff --git a/kernel/pid.c b/kernel/pid.c
+> >> index 60820e72634c..53646d5616d2 100644
+> >> --- a/kernel/pid.c
+> >> +++ b/kernel/pid.c
+> >> @@ -577,17 +577,11 @@ static struct file *__pidfd_fget(struct task_struct *task, int fd)
+> >>         struct file *file;
+> >>         int ret;
+> >>
+> >> -       ret = mutex_lock_killable(&task->signal->cred_guard_mutex);
+> >> -       if (ret)
+> >> -               return ERR_PTR(ret);
+> >> -
+> >>         if (ptrace_may_access(task, PTRACE_MODE_ATTACH_REALCREDS))
+> >>                 file = fget_task(task, fd);
+> >>         else
+> >>                 file = ERR_PTR(-EPERM);
+> >>
+> >> -       mutex_unlock(&task->signal->cred_guard_mutex);
+> >> -
+> >>         return file ?: ERR_PTR(-EBADF);
+> >>  }
+> >
+> > If you make this change, then if this races with execution of a setuid
+> > program that afterwards e.g. opens a unix domain socket, an attacker
+> > will be able to steal that socket and inject messages into
+> > communication with things like DBus. procfs currently has the same
+> > race, and that still needs to be fixed, but at least procfs doesn't
+> > let you open things like sockets because they don't have a working
+> > ->open handler, and it enforces the normal permission check for
+> > opening files.
+>
+> It isn't only exec that can change credentials.  Do we need a lock for
+> changing credentials?
 
-For most CPUs the builtin perf JSON event support should make
-this redundant.
+Hmm, I guess so? Normally, a task that's changing credentials becomes
+nondumpable at the same time (and there are explicit memory barriers
+in commit_creds() and __ptrace_may_access() to enforce the ordering
+for this); so you normally don't see tasks becoming ptrace-accessible
+via anything other than execve(). But I guess if someone opens a
+root-only file, closes it, drops privileges, and then explicitly does
+prctl(PR_SET_DUMPABLE, 1), we should probably protect that, too.
 
-Perhaps you could list what CPUs it actually supports over
-the existing JSON tables.
+> Wouldn't it be sufficient to simply test ptrace_may_access after
+> we get a copy of the file?
 
-If it's only a few it would be likely better to add
-appropiate json files.
+There are also setuid helpers that can, after having done privileged
+stuff, drop privileges and call execve(); after that,
+ptrace_may_access() succeeds again. In particular, polkit has a helper
+that does this.
 
-If it's a massive number it might be useful, although
-JSON support would be better for those too.
+> If we need a lock around credential change let's design and build that.
+> Having a mismatch between what a lock is designed to do, and what
+> people use it for can only result in other bugs as people get confused.
 
--Andi
+Hmm... what benefits do we get from making it a separate lock? I guess
+it would allow us to make it a per-task lock instead of a
+signal_struct-wide one? That might be helpful...
