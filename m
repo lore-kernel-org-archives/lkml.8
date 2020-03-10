@@ -2,119 +2,312 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8742C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 21:40:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61F0AC10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 21:42:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DCD0222C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 21:40:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19A58222C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 21:42:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pVHbW9YK"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="okzgk5iR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727706AbgCJVk2 (ORCPT
+        id S1727504AbgCJVm5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 17:40:28 -0400
-Received: from mail-ot1-f54.google.com ([209.85.210.54]:37038 "EHLO
-        mail-ot1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726268AbgCJVk2 (ORCPT
+        Tue, 10 Mar 2020 17:42:57 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:34954 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726307AbgCJVm4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 17:40:28 -0400
-Received: by mail-ot1-f54.google.com with SMTP id b3so14763908otp.4
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 14:40:27 -0700 (PDT)
+        Tue, 10 Mar 2020 17:42:56 -0400
+Received: by mail-pf1-f193.google.com with SMTP id u68so98884pfb.2
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 14:42:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=30v28QZwvgciyeUbGcFniNwVinb7jSfmAcitW4ywOgw=;
-        b=pVHbW9YKRfFKZADsnAMJUGWLLN4457YVQMmhbheWBFB3MwtHdAS3MmRJYpyKaJnsOb
-         rFf6OXsUpkBbr5iDyWHykufITmHwEqrVNRlJqU63iuzLFlg1Z9MIRUH7UWE4GgLt0miz
-         5WTmAnuC4FApvZNx+enghhHzYN0PInrSX/8HNHkBs5vuFg6tkrFnlhEmj47EoYVX5IjP
-         YOccE9PudP0FfqfHBvzgCI8LKHZgbRKKToWxImEyQlMGHTFJqk+EXMcAF0uDr+n5LQKg
-         fy1W/aiXBgKwdLBhXziDEqmkP5FSQOg05yyWFYcle69NPG2P47ndKV1i5Wvpy21K2sEQ
-         X47w==
+        bh=u8S0xt9zGk63HhTITzK6CBJ11aBQXn7zIA733l18/vY=;
+        b=okzgk5iR0Ngu9YfAwSgoczbpRrjU11JC2c0oOGP4m8ZZ7BheeCcgPo+jjOSoInWkyH
+         sgjrb7UAE1jhF/3DbeKNSlD6DXlddZpNz4w/TvQcf8pNp6h6hmPBS6yM/VQTYD6JFChe
+         bo9t7VxlT5HM7L9eEwZYiCxxO+a5dh6O2DET1j5FIrqd2li/rz2xuTh9NKIgfRRIgenU
+         VOW+NkGwoidDgX/tWmNhww+WyxknFoSSz6tADLvkCunP7KTVV8SD8eHG5JNccEUV9q9d
+         tjZpJQjKoMYF9428sAnfroAOcPvb67/GJr3H5teLHuRw0mzF0acIULuvCAbncOFKlq42
+         +YEQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=30v28QZwvgciyeUbGcFniNwVinb7jSfmAcitW4ywOgw=;
-        b=HTQifvdQrH2cCPNSguMleJuDPLVSPPKmrXeVN8jE39xeVamRdOgiJMu8Svgl1Fp3m4
-         A9SG4HrxooJWAdCseVq2alcGOfjj/tOi30IBy4jpBAL8za6kEhQztO6imi7cMlDNTZIB
-         H+G/EkRfJ5QfMdrmyxKReAemMjzkIQpcLE8+YuDU+u5T7YapPQuPHqD/ce020a6rnb/s
-         JdjAbA4uqgzk8dGxDMCU2flCIy16yx2W2d+hzxNaLBc50kBKmKYXPC2GauoUUGjtVDPh
-         rFfm0/AvA1oqf6K5yU5GnxQMtdE9VJ75K8jxmbQA+12Etfktx0wI70+kVf0JX/ttu1B1
-         j+bA==
-X-Gm-Message-State: ANhLgQ1gaq9Q5mHBHdB1zPAoiBmofJv2bEtT8iZXSA69EYCR+vFxzeQX
-        O09uS3BP8iqrIR7arUKh6KotAlYP2bAFtesfp4EPgA==
-X-Google-Smtp-Source: ADFU+vuwo43Am+Q4ZOSwVz+gheEF2PfMeUE0HNw3+JQ8rS3wiOXwG1aHHfvywTiOdtBznco4h3w5ww0CkXTuxEA/kKc=
-X-Received: by 2002:a9d:6654:: with SMTP id q20mr5592078otm.180.1583876427094;
- Tue, 10 Mar 2020 14:40:27 -0700 (PDT)
+        bh=u8S0xt9zGk63HhTITzK6CBJ11aBQXn7zIA733l18/vY=;
+        b=ezbQTp3Gi8eR0Qi23svrw0qR5UlPRNOijSBtnHgla6nRe7Y+mL5SBwJIYEX+r5TrfH
+         rdgQFxgDNxEh0lPa+RRu+Y1g/KsbVsRmJXo4iEi0/PGPrdeGC325lEt8Doe3hp8qfpsl
+         kSiBWN2s+yTEE1Dw+hul777e5T15B3lEhWT8RNEDfgiQiwj1VNJZaGB01TT03PHUswQR
+         WmQCUccpKYPPPV5aXCU+b8FpEC7XnoafgduqDeCH5Fn5FsV4CPtZa1oAunesU7Mq/EYS
+         VtbqyceuocrQJRzsX9OpgZqjg9QSiIDMkWpfRkG/LKzVIeQf1AYVs/+jITRLR8TjwpxA
+         Lu+w==
+X-Gm-Message-State: ANhLgQ0BRcR5r4xKkk7nKk26Op6/CFALz+rREBOoWTHyJFI0GydzazpM
+        PfDC1OVL2kEG8tKYQDBAdHF69nA/aFOrXKBByMQ1Ew==
+X-Google-Smtp-Source: ADFU+vsqTzbRFxBhJwU+7zg1aBIJwNmzJYba1DWApx+Cn+UV1QTcs5ugzhxFTPaxJaevR94W14XVjl3cFIfCimo8i4U=
+X-Received: by 2002:a62:1b51:: with SMTP id b78mr17127409pfb.23.1583876574800;
+ Tue, 10 Mar 2020 14:42:54 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAG48ez0G3JkMq61gUmyQAaCq=_TwHbi1XKzWRooxZkv08PQKuw@mail.gmail.com>
- <20200310184814.GA8447@dhcp22.suse.cz> <CAKOZueua_v8jHCpmEtTB6f3i9e2YnmX4mqdYVWhV4E=Z-n+zRQ@mail.gmail.com>
-In-Reply-To: <CAKOZueua_v8jHCpmEtTB6f3i9e2YnmX4mqdYVWhV4E=Z-n+zRQ@mail.gmail.com>
-From:   Jann Horn <jannh@google.com>
-Date:   Tue, 10 Mar 2020 22:40:00 +0100
-Message-ID: <CAG48ez2EWzn_xm0Q3YaPjSXrhVAAOUUvNDyDQ+jpgavmN6wLvQ@mail.gmail.com>
-Subject: Re: interaction of MADV_PAGEOUT with CoW anonymous mappings?
-To:     Daniel Colascione <dancol@google.com>
-Cc:     Michal Hocko <mhocko@kernel.org>, Minchan Kim <minchan@kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>
+References: <20200227024301.217042-1-trishalfonso@google.com>
+ <20200227024301.217042-2-trishalfonso@google.com> <alpine.LRH.2.20.2002271136160.12417@dhcp-10-175-190-15.vpn.oracle.com>
+ <CAKFsvUK2hFV3LePxwBXO_ubrgYoOk7fuKMOy+vSAH5Tf3SrMOA@mail.gmail.com>
+ <alpine.LRH.2.20.2003031617400.13146@dhcp-10-175-165-222.vpn.oracle.com>
+ <CAKFsvUKk=ggYsRcaDrrtRuW3-A5cQh1Q5uA3NBMsnAL1nEUsLg@mail.gmail.com> <alpine.LRH.2.20.2003050736090.2979@dhcp-10-175-220-65.vpn.oracle.com>
+In-Reply-To: <alpine.LRH.2.20.2003050736090.2979@dhcp-10-175-220-65.vpn.oracle.com>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Tue, 10 Mar 2020 14:42:43 -0700
+Message-ID: <CAFd5g47hRetvP3Y262MXbnExcsQ_BXi9RYRPObAVvjJPVKCKDw@mail.gmail.com>
+Subject: Re: [RFC PATCH 2/2] KUnit: KASAN Integration
+To:     Alan Maguire <alan.maguire@oracle.com>
+Cc:     Patricia Alfonso <trishalfonso@google.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        David Gow <davidgow@google.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        KUnit Development <kunit-dev@googlegroups.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 10, 2020 at 9:19 PM Daniel Colascione <dancol@google.com> wrote:
-> On Tue, Mar 10, 2020 at 11:48 AM Michal Hocko <mhocko@kernel.org> wrote:
-> > On Tue 10-03-20 19:08:28, Jann Horn wrote:
-> > > >From looking at the source code, it looks to me as if using
-> > > MADV_PAGEOUT on a CoW anonymous mapping will page out the page if
-> > > possible, even if other processes still have the same page mapped. Is
-> > > that correct?
-> > >
-> > > If so, that's probably bad in environments where many processes (with
-> > > different privileges) are forked from a single zygote process (like
-> > > Android and Chrome), I think? If you accidentally call it on a CoW
-> > > anonymous mapping with shared pages, you'll degrade the performance of
-> > > other processes. And if an attacker does it intentionally, they could
-> > > use that to aid with exploiting race conditions or weird
-> > > microarchitectural stuff (e.g. the new https://lviattack.eu/lvi.pdf
-> > > talks about "the assumption that attackers can provoke page faults or
-> > > microcode assists for (arbitrary) load operations in the victim
-> > > domain").
-> > >
-> > > Should madvise_cold_or_pageout_pte_range() maybe refuse to operate on
-> > > pages with mapcount>1, or something like that? Or does it already do
-> > > that, and I just missed the check?
-> >
-> > I have brought up side channel attacks earlier [1] but only in the
-> > context of shared page cache pages. I didn't really consider shared
-> > anonymous pages to be a real problem. I was under impression that CoW
-> > pages shouldn't be a real problem because any security sensible
-> > applications shouldn't allow untrusted code to be forked and CoW
-> > anything really important. I believe we have made this assumption
-> > in other places - IIRC on gup with FOLL_FORCE but I admit I have
-> > very happily forgot most details.
+On Wed, Mar 4, 2020 at 11:47 PM Alan Maguire <alan.maguire@oracle.com> wrote:
 >
-> I'm more worried about the performance implications. Consider
-> libc.so's data section: that's a COW mapping, and we COW it during
-> zygote initialization as we load and relocate libc.so. Child processes
-> shouldn't be dirtying and re-COWing those relocated pages. If I
-> understand Jann's message correctly, MADV_PAGEOUT would force the
-> pages corresponding to the libc.so data segment out to zram just
-> because we MADV_PAGEOUT-ed a single process that happened to use libc.
-> We should leave those pages in memory, IMHO.
+> On Wed, 4 Mar 2020, Patricia Alfonso wrote:
+>
+> > On Tue, Mar 3, 2020 at 8:40 AM Alan Maguire <alan.maguire@oracle.com> wrote:
+> > >
+> > > On Fri, 28 Feb 2020, Patricia Alfonso wrote:
+> > >
+> > > > On Thu, Feb 27, 2020 at 6:04 AM Alan Maguire <alan.maguire@oracle.com> wrote:
+> > > > >
+> > > > > On Wed, 26 Feb 2020, Patricia Alfonso wrote:
+> > > > >
+> > > > > > Integrate KASAN into KUnit testing framework.
+> > > > >
+> > > > > This is a great idea! Some comments/suggestions below...
+> > > > >
+> > > >
+> > > > Thank you so much for your suggestions!
+> > > >
+> > >
+> > > No problem! Extending KUnit to test things like KASAN
+> > > is really valuable, as it shows us ways we can improve
+> > > the framework. More below...
+> > >
+> > > > > >  - Fail tests when KASAN reports an error that is not expected
+> > > > > >  - Use KUNIT_EXPECT_KASAN_FAIL to expect a KASAN error in KASAN tests
+> > > > > >  - KUnit struct added to current task to keep track of the current test
+> > > > > > from KASAN code
+> > > > > >  - Booleans representing if a KASAN report is expected and if a KASAN
+> > > > > >  report is found added to kunit struct
+> > > > > >  - This prints "line# has passed" or "line# has failed"
+> > > > > >
+> > > > > > Signed-off-by: Patricia Alfonso <trishalfonso@google.com>
+> > > > > > ---
+> > > > > > If anyone has any suggestions on how best to print the failure
+> > > > > > messages, please share!
+> > > > > >
+> > > > > > One issue I have found while testing this is the allocation fails in
+> > > > > > kmalloc_pagealloc_oob_right() sometimes, but not consistently. This
+> > > > > > does cause the test to fail on the KUnit side, as expected, but it
+> > > > > > seems to skip all the tests before this one because the output starts
+> > > > > > with this failure instead of with the first test, kmalloc_oob_right().
+> > > > > >
+> > > > > >  include/kunit/test.h                | 24 ++++++++++++++++++++++++
+> > > > > >  include/linux/sched.h               |  7 ++++++-
+> > > > > >  lib/kunit/test.c                    |  7 ++++++-
+> > > > > >  mm/kasan/report.c                   | 19 +++++++++++++++++++
+> > > > > >  tools/testing/kunit/kunit_kernel.py |  2 +-
+> > > > > >  5 files changed, 56 insertions(+), 3 deletions(-)
+> > > > > >
+> > > > > > diff --git a/include/kunit/test.h b/include/kunit/test.h
+> > > > > > index 2dfb550c6723..2e388f8937f3 100644
+> > > > > > --- a/include/kunit/test.h
+> > > > > > +++ b/include/kunit/test.h
+> > > > > > @@ -21,6 +21,8 @@ struct kunit_resource;
+> > > > > >  typedef int (*kunit_resource_init_t)(struct kunit_resource *, void *);
+> > > > > >  typedef void (*kunit_resource_free_t)(struct kunit_resource *);
+> > > > > >
+> > > > > > +void kunit_set_failure(struct kunit *test);
+> > > > > > +
+> > > > > >  /**
+> > > > > >   * struct kunit_resource - represents a *test managed resource*
+> > > > > >   * @allocation: for the user to store arbitrary data.
+> > > > > > @@ -191,6 +193,9 @@ struct kunit {
+> > > > > >        * protect it with some type of lock.
+> > > > > >        */
+> > > > > >       struct list_head resources; /* Protected by lock. */
+> > > > > > +
+> > > > > > +     bool kasan_report_expected;
+> > > > > > +     bool kasan_report_found;
+> > > > > >  };
+> > > > > >
+> > > > >
+> > > > > Is this needed here? You're testing something pretty
+> > > > > specific so it seems wrong to add to the generic
+> > > > > kunit resource unless there's a good reason. I see the
+> > > > > code around setting these values in mm/kasan/report.c,
+> > > > > but I wonder if we could do something more generic.
+> > > > >
+> > > > > How about the concept of a static resource (assuming a
+> > > > > dynamically allocated one is out because it messes
+> > > > > with memory allocation tests)? Something like this:
+> > > > >
+> > > > > #define kunit_add_static_resource(test, resource_ptr, resource_field)   \
+> > > > >         do {                                                            \
+> > > > >                 spin_lock(&test->lock);                                 \
+> > > > >                 (resource_ptr)->resource_field.init = NULL;             \
+> > > > >                 (resource_ptr)->resource_field.free = NULL;             \
+> > > > >                 list_add_tail(&(resource_ptr)->resource_field,          \
+> > > > >                               &test->resources);                        \
+> > > > >                 spin_unlock(&test->lock);                               \
+> > > > >         } while (0)
+> > > > >
+> > > > >
+> > > > > Within your kasan code you could then create a kasan-specific
+> > > > > structure that embends a kunit_resource, and contains the
+> > > > > values you need:
+> > > > >
+> > > > > struct kasan_report_resource {
+> > > > >         struct kunit_resource res;
+> > > > >         bool kasan_report_expected;
+> > > > >         bool kasan_report_found;
+> > > > > };
+> > > > >
+> > > > > (One thing we'd need to do for such static resources is fix
+> > > > > kunit_resource_free() to check if there's a free() function,
+> > > > > and if not assume a static resource)
+> > > > >
+> > > > > If you then create an init() function associated with your
+> > > > > kunit suite (which will be run for every case) it can do this:
+> > > > >
+> > > > > int kunit_kasan_test_init(struct kunit *test)
+> > > > > {
+> > > > >         kunit_add_static_resource(test, &my_kasan_report_resource, res);
+> > > > >         ...
+> > > > > }
+> > > > >
+> > > > > The above should also be used to initialize current->kasan_unit_test
+> > > > > instead of doing that in kunit_try_run_case().  With those
+> > > > > changes, you don't (I think) need to change anything in core
+> > > > > kunit (assuming support for static resources).
+> > > > >
+> > > > > To retrieve the resource during tests or in kasan context, the
+> > > > > method seems to be to use kunit_resource_find(). However, that
+> > > > > requires a match function which seems a bit heavyweight for the
+> > > > > static case.  We should probably have a default "find by name"
+> > > > > or similar function here, and add an optional "name" field
+> > > > > to kunit resources to simplify things.  Anyway here you'd
+> > > > > use something like:
+> > > > >
+> > > > >         kasan_report_resource = kunit_resource_find(test, matchfn,
+> > > > >                                                     NULL, matchdata);
+> > > > >
+> > > > >
+> > > > > Are there any barriers to taking this sort of approach (apart
+> > > > > from the support for static resources not being there yet)?
+> > > > >
+> > > >
+> > > > I'm not sure. I don't have any experience with kunit resources so I
+> > > > would have to put some more effort into understanding how this would
+> > > > work for myself. I wonder if this might be a bit of an over
+> > > > complicated way of eliminating an extraneous boolean... maybe we can
+> > > > find a simpler solution for the first version of this patch and add
+> > > > the notion of a static resource for generic use later.
+> > > >
+> > >
+> > > My personal preference would be to try and learn what's needed
+> > > by KASAN and improve the KUnit APIs so the next developer finds
+> > > life a bit easier. More hassle for you I know, but actual use cases
+> > > like this are invaluable for improving the API.  I've sent
+> > > out an RFC patchset which has the functionality I _think_ you
+> > > need but I may be missing something:
+> > >
+> > > https://lore.kernel.org/linux-kselftest/1583251361-12748-1-git-send-email-alan.maguire@oracle.com/T/#t
+> > >
+> > > The idea is your test can do something like this:
+> > >
+> > > struct kasan_data {
+> > >         bool report_expected;
+> > >         bool report_found;
+> > > };
+> > >
+> > >
+> > > my_kasan_test(struct kunit *test)
+> > > {
+> > >         struct kunit_resource resource;
+> > >         struct kasan_data kasan_data;
+> > >
+> > > ...
+> > >         // add our named resource using static resource/data
+> > >         kunit_add_named_resource(test, NULL, NULL, &resource,
+> > >                                  "kasan_data", &kasan_data);
+> > > ...
+> > >
+> > > }
+> > Does this require the user to set up this kasan_data resource in each
+> > KASAN test? Or can we set up the resource on the KUnit side whenever a
+> > user writes a test that expects a KASAN failure? I've been playing
+> > around with it and I can only seem to get it to work when I add the
+> > resource within the test, but I could be missing something.
+> >
+>
+> The current model of resources is they are associated with
+> the running state of a test for the lifetime of that test.
+> If it's a resource common to many/most tests, I'd suggest
+> creating an init() function for the associated suite; this
+> will get run prior to executing each test, and in it you
+> could initialize your resource. If the resource isn't
+> used in the test, it doesn't really matter so this might be
+> the simplest way to handle things:
+>
+> struct kasan_data {
+>          bool report_expected;
+>          bool report_found;
+> };
+>
+> struct kasan_data kasan_data;
+> struct kunit_resource resource;
+>
+> kasan_init(struct kunit *test)
+> {
+>
+>          // add our named resource using static resource/data
+>          kunit_add_named_resource(test, NULL, NULL, &resource,
+>                                   "kasan_data", &kasan_data);
+>
+>         return 0;
+> }
+>
+> static struct kunit_suite kasan_suite = {
+>         .name = "kasan",
+>         .init = kasan_init,
+>         ...
+> };
+>
+>
+> This all presumes however that KASAN will only need access to the
+> resource during the lifetime of each test.  There's currently
+> no concept of free-floating resources outside of test execution
+> context.
 
-Actually, the libc.so data section is a file mapping, so I think
-can_do_pageout() would decide whether the caller is allowed to force
-pageout based on whether the caller is the owner of (or capable over)
-libc (in other words, root, basically). But I think the bss section,
-as well as heap memory, could have pageout forced by anyone.
+So we do have some patches lying around that add support for resources
+associated with a suite of tests that I can send out if anyone is
+interested; nevertheless, I think it makes sense for KASAN to only
+care about tests cases; you still get the KASAN report either way and
+KUnit isn't really supposed to care what happens outside of KUnit.
+
+Cheers
