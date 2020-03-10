@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE974C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:51:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF592C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:52:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A99152468F
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:51:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9BA720674
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:52:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583844714;
-	bh=5SN7HBIx7S/iolfgVHveQ4pUn7G7+gnmiMjM+m1Zmmw=;
+	s=default; t=1583844721;
+	bh=qWAc4lkmnx7MFeaEj37pRCLigJTuMPeW3Vz6mPUmO8s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=COCtlUT/lWb33QJIL8FFD4nWaCCFfvayEiV8ByLSNbiclNOYdxYo8CabbDOR5BIw1
-	 lsT5fDHevPeYs5uNzMCeu5Ij7r5A8+GHExypnZ4OQI/hJXcsZOnZqrYx9ehIjPTCPr
-	 KuvKL/BFxAQjrUA2TAoUPad3zy37OuoEXl7e7JL8=
+	b=L5CZ/66Bte+HcKoG9RrdhAhygaLBkbG25w5L1Ua2WdYKU8bbukYnkJIbinEl+nKmL
+	 TkGMqd43Zbxr/mF4jf67/HsJ0/OX6/Kz9iJ45YIGhuG3/Wg9E/93ahZQTlWMPtW+Yh
+	 EuY8xlcIyOmW6YPcN6mqe8Igr/ElEQ1/AWUsWPFM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728575AbgCJMvx (ORCPT
+        id S1728995AbgCJMwA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:51:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57126 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:52:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728968AbgCJMvr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:51:47 -0400
+        id S1727692AbgCJMv5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:51:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5A6E2253D;
-        Tue, 10 Mar 2020 12:51:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C96922468F;
+        Tue, 10 Mar 2020 12:51:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844707;
-        bh=5SN7HBIx7S/iolfgVHveQ4pUn7G7+gnmiMjM+m1Zmmw=;
+        s=default; t=1583844717;
+        bh=qWAc4lkmnx7MFeaEj37pRCLigJTuMPeW3Vz6mPUmO8s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VBxzc8kL70ySX922sy6QBuBevmsiQQEyfg8Pip+iE9vdpCuUUDVNv2OoZBXEeIMqt
-         1SL5J58hNHV7T/ATTIKnRGuIk3oclRFqt+3J195lmhDZN01HGnlSQUq87hY8XzGbXE
-         UK5DB4Ncy1mXCyqS1RQyTO/uP/hkZiUCeF35fjcQ=
+        b=yeHllDNN3YvHUsvj4KUVH4AE7afcORrGmzCYzyneHVgAH6xvOalGeCmvGwpBAyeQx
+         b/Hd/9NPHEOm4gmnfDOHphte0KY0iatYZmMB5GnSbT4VT70QiY/OmzZSlmWL3VmXee
+         mCuAdFuU/S7Ksmki0TIRl4DBxV7P0i7IdE/HxqLc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Subject: [PATCH 5.4 089/168] media: mc-entity.c: use & to check pad flags, not ==
-Date:   Tue, 10 Mar 2020 13:38:55 +0100
-Message-Id: <20200310123644.307258286@linuxfoundation.org>
+        stable@vger.kernel.org, Wei Li <liwei391@huawei.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Tan Xiaojun <tanxiaojun@huawei.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 5.4 093/168] perf intel-bts: Fix endless record after being terminated
+Date:   Tue, 10 Mar 2020 13:38:59 +0100
+Message-Id: <20200310123644.714147403@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123635.322799692@linuxfoundation.org>
 References: <20200310123635.322799692@linuxfoundation.org>
@@ -59,39 +62,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+From: Wei Li <liwei391@huawei.com>
 
-commit 044041cd5227ec9ccf969f4bf1cc08bffe13b9d3 upstream.
+commit 783fed2f35e2a6771c8dc6ee29b8c4b9930783ce upstream.
 
-These are bits so to test if a pad is a sink you use & but not ==.
+In __cmd_record(), when receiving SIGINT(ctrl + c), a 'done' flag will
+be set and the event list will be disabled by evlist__disable() once.
 
-It looks like the only reason this hasn't caused problems before is that
-media_get_pad_index() is currently only used with pads that do not set the
-MEDIA_PAD_FL_MUST_CONNECT flag. So a pad really had only the SINK or SOURCE
-flag set and nothing else.
+While in auxtrace_record.read_finish(), the related events will be
+enabled again, if they are continuous, the recording seems to be
+endless.
 
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Cc: <stable@vger.kernel.org>      # for v5.3 and up
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+If the intel_bts event is disabled, we don't enable it again here.
+
+Note: This patch is NOT tested since i don't have such a machine with
+intel_bts feature, but the code seems buggy same as arm-spe and
+intel-pt.
+
+Signed-off-by: Wei Li <liwei391@huawei.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Tan Xiaojun <tanxiaojun@huawei.com>
+Cc: stable@vger.kernel.org # 5.4+
+Link: http://lore.kernel.org/lkml/20200214132654.20395-3-adrian.hunter@intel.com
+[ahunter: removed redundant 'else' after 'return']
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/mc/mc-entity.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/perf/arch/x86/util/intel-bts.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/drivers/media/mc/mc-entity.c
-+++ b/drivers/media/mc/mc-entity.c
-@@ -639,9 +639,9 @@ int media_get_pad_index(struct media_ent
- 		return -EINVAL;
+--- a/tools/perf/arch/x86/util/intel-bts.c
++++ b/tools/perf/arch/x86/util/intel-bts.c
+@@ -415,9 +415,12 @@ static int intel_bts_read_finish(struct
+ 	struct evsel *evsel;
  
- 	for (i = 0; i < entity->num_pads; i++) {
--		if (entity->pads[i].flags == MEDIA_PAD_FL_SINK)
-+		if (entity->pads[i].flags & MEDIA_PAD_FL_SINK)
- 			pad_is_sink = true;
--		else if (entity->pads[i].flags == MEDIA_PAD_FL_SOURCE)
-+		else if (entity->pads[i].flags & MEDIA_PAD_FL_SOURCE)
- 			pad_is_sink = false;
- 		else
- 			continue;	/* This is an error! */
+ 	evlist__for_each_entry(btsr->evlist, evsel) {
+-		if (evsel->core.attr.type == btsr->intel_bts_pmu->type)
++		if (evsel->core.attr.type == btsr->intel_bts_pmu->type) {
++			if (evsel->disabled)
++				return 0;
+ 			return perf_evlist__enable_event_idx(btsr->evlist,
+ 							     evsel, idx);
++		}
+ 	}
+ 	return -EINVAL;
+ }
 
 
