@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D1E2C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:00:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A59EC18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:00:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F4B7246AB
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:00:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C969820674
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:00:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583845229;
-	bh=/mdxnAdIc908lANtJyPC1YYbCwLetm54mAVznZ+geG8=;
+	s=default; t=1583845231;
+	bh=KWUWdMBADgn5gMykUcybBQ4xBivDbrrAUduc1Xak4GE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mKYMGBUjw4ZzFWqQpTu7XjAqAuEkfloSUXVnA5vzHIKNjWhmiWruN89Bm8MR+P5Md
-	 /QFdz1pd1mZw+7sSA07ODIGEtw4JpvbAjEmjyzRTqvsJV/dl/WSiGtHBQJv/7QT2Ue
-	 QVwUd4zUaxu5opom6uD3hVYoHoNT8+aEEKX2UFGE=
+	b=DKHb490W0i26OnhrEqFeZWMs6YfWQ0Tbx7+/UO55TBOla7u7gPiEozSkJi/bNTfGB
+	 CsLwVBLCxFNVmqGWBRuJ0uIkjNvvEv4tREKvkqDetSV8gszxmaWqhTHazTB+kKhq8Y
+	 lH7gfvYeCAlJcmvR1RuFpqGXnkgZYWDAlPCWHs34=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730130AbgCJNA1 (ORCPT
+        id S1730137AbgCJNAb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:00:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41160 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:00:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41212 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729979AbgCJNAY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:00:24 -0400
+        id S1730129AbgCJNA1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:00:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E35B220674;
-        Tue, 10 Mar 2020 13:00:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8321E20674;
+        Tue, 10 Mar 2020 13:00:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845223;
-        bh=/mdxnAdIc908lANtJyPC1YYbCwLetm54mAVznZ+geG8=;
+        s=default; t=1583845226;
+        bh=KWUWdMBADgn5gMykUcybBQ4xBivDbrrAUduc1Xak4GE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k4lKnSUh7WodyAR/GTtolxJssw/XM786N+nWL1+ztZOOnHCMyO9AsFMRKE5rAs/Hc
-         XqtNn266eMYtZ3R87zOwhB/O6+jdkdBFp1P/p4pi2gIrLpRvdtQbHGvi4mdrPsvBue
-         iGxPjaXNRb2dsBZssDgg4E0r2aQpyO8hko+R54hI=
+        b=2VEdeM0gMEcRcbnAq3wmoXs/FFFUsbAoLCgztiyNUTOiIgwf3/SDhPpSYoZlyixk5
+         ZAsTjj5HnES1ksWcOmYJPLaHmODHAOzpFKh18DiWTbBvB6WDWHeXUN7Pt6EgBFA4Ug
+         QGhxPJQmy5sQlBoCfukKaTaQjhmrDWmSEfiW/ko4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jacob Keller <jacob.e.keller@intel.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Borislav Petkov <bp@suse.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>
-Subject: [PATCH 5.5 105/189] x86/pkeys: Manually set X86_FEATURE_OSPKE to preserve existing changes
-Date:   Tue, 10 Mar 2020 13:39:02 +0100
-Message-Id: <20200310123650.321435804@linuxfoundation.org>
+        stable@vger.kernel.org, Niklas Schnelle <schnelle@linux.ibm.com>,
+        Pierre Morel <pmorel@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+Subject: [PATCH 5.5 106/189] s390/pci: Fix unexpected write combine on resource
+Date:   Tue, 10 Mar 2020 13:39:03 +0100
+Message-Id: <20200310123650.411911992@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123639.608886314@linuxfoundation.org>
 References: <20200310123639.608886314@linuxfoundation.org>
@@ -61,56 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Niklas Schnelle <schnelle@linux.ibm.com>
 
-commit 735a6dd02222d8d070c7bb748f25895239ca8c92 upstream.
+commit df057c914a9c219ac8b8ed22caf7da2f80c1fe26 upstream.
 
-Explicitly set X86_FEATURE_OSPKE via set_cpu_cap() instead of calling
-get_cpu_cap() to pull the feature bit from CPUID after enabling CR4.PKE.
-Invoking get_cpu_cap() effectively wipes out any {set,clear}_cpu_cap()
-changes that were made between this_cpu->c_init() and setup_pku(), as
-all non-synthetic feature words are reinitialized from the CPU's CPUID
-values.
+In the initial MIO support introduced in
 
-Blasting away capability updates manifests most visibility when running
-on a VMX capable CPU, but with VMX disabled by BIOS.  To indicate that
-VMX is disabled, init_ia32_feat_ctl() clears X86_FEATURE_VMX, using
-clear_cpu_cap() instead of setup_clear_cpu_cap() so that KVM can report
-which CPU is misconfigured (KVM needs to probe every CPU anyways).
-Restoring X86_FEATURE_VMX from CPUID causes KVM to think VMX is enabled,
-ultimately leading to an unexpected #GP when KVM attempts to do VMXON.
+commit 71ba41c9b1d9 ("s390/pci: provide support for MIO instructions")
 
-Arguably, init_ia32_feat_ctl() should use setup_clear_cpu_cap() and let
-KVM figure out a different way to report the misconfigured CPU, but VMX
-is not the only feature bit that is affected, i.e. there is precedent
-that tweaking feature bits via {set,clear}_cpu_cap() after ->c_init()
-is expected to work.  Most notably, x86_init_rdrand()'s clearing of
-X86_FEATURE_RDRAND when RDRAND malfunctions is also overwritten.
+zpci_map_resource() and zpci_setup_resources() default to using the
+mio_wb address as the resource's start address. This means users of the
+mapping, which includes most drivers, will get write combining on PCI
+Stores. This may lead to problems when drivers expect write through
+behavior when not using an explicit ioremap_wc().
 
-Fixes: 0697694564c8 ("x86/mm/pkeys: Actually enable Memory Protection Keys in the CPU")
-Reported-by: Jacob Keller <jacob.e.keller@intel.com>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
-Tested-by: Jacob Keller <jacob.e.keller@intel.com>
 Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/20200226231615.13664-1-sean.j.christopherson@intel.com
+Fixes: 71ba41c9b1d9 ("s390/pci: provide support for MIO instructions")
+Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
+Reviewed-by: Pierre Morel <pmorel@linux.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kernel/cpu/common.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/s390/pci/pci.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -462,7 +462,7 @@ static __always_inline void setup_pku(st
- 	 * cpuid bit to be set.  We need to ensure that we
- 	 * update that bit in this CPU's "cpu_info".
- 	 */
--	get_cpu_cap(c);
-+	set_cpu_cap(c, X86_FEATURE_OSPKE);
- }
+--- a/arch/s390/pci/pci.c
++++ b/arch/s390/pci/pci.c
+@@ -424,7 +424,7 @@ static void zpci_map_resources(struct pc
  
- #ifdef CONFIG_X86_INTEL_MEMORY_PROTECTION_KEYS
+ 		if (zpci_use_mio(zdev))
+ 			pdev->resource[i].start =
+-				(resource_size_t __force) zdev->bars[i].mio_wb;
++				(resource_size_t __force) zdev->bars[i].mio_wt;
+ 		else
+ 			pdev->resource[i].start = (resource_size_t __force)
+ 				pci_iomap_range_fh(pdev, i, 0, 0);
+@@ -531,7 +531,7 @@ static int zpci_setup_bus_resources(stru
+ 			flags |= IORESOURCE_MEM_64;
+ 
+ 		if (zpci_use_mio(zdev))
+-			addr = (unsigned long) zdev->bars[i].mio_wb;
++			addr = (unsigned long) zdev->bars[i].mio_wt;
+ 		else
+ 			addr = ZPCI_ADDR(entry);
+ 		size = 1UL << zdev->bars[i].size;
 
 
