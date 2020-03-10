@@ -2,103 +2,175 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A927C10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:42:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37EC3C10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:42:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3989E222D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:42:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ai8FMPZw"
+	by mail.kernel.org (Postfix) with ESMTP id F0B43222C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:42:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727576AbgCJUmM (ORCPT
+        id S1727607AbgCJUmP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 16:42:12 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:40826 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727520AbgCJUmJ (ORCPT
+        Tue, 10 Mar 2020 16:42:15 -0400
+Received: from relmlor2.renesas.com ([210.160.252.172]:12322 "EHLO
+        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727528AbgCJUmM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 16:42:09 -0400
-Received: by mail-ot1-f67.google.com with SMTP id h17so2140401otn.7
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 13:42:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/deQQvgAa+oP9j87xo/rUZaCa5U0Y9db6yvuNAirEL0=;
-        b=Ai8FMPZwPDU7dLeUmmQ5IrGiGriK5BF4c8C/goY7nt9A9p0gwe5maK+FI7+io4/LeT
-         TH75Po6PkJ8cLhul21gKVq5bWmL9bTskL2/wNLmg/UhfqLGQmIZTlDwwzbG4bhIx/8Wv
-         nl67KGQquy1o2acEsx4cOKOda/SY8w9A9rZBy4UxDDi2XSDeodDuMiMmGE448FGGfIHQ
-         US1d67PAbkslxP0i5Ev6LK+9hnyhEL4jnDxjpu/dzCkvxOA6VRtuB0PUXr6qtk9lROVD
-         NYYE3TiPoonSAGo6CIxmgX00jAcsnM1upezPCYcMpmmNna94s8ehKfcP/zP+lB6K5b1w
-         sjHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/deQQvgAa+oP9j87xo/rUZaCa5U0Y9db6yvuNAirEL0=;
-        b=n5eBYWs/yeqmA8UajAcXJzlTZ1+lWKi5R66ZEExGCooGEMTanTq2WUfxH9NRnPpMBJ
-         jpJeTo1h5/B7DAH/vVI1gTz/Y5srkwJcndLmHnEMkwXUuc488bbkQweyG5wDxbtN3Lf1
-         wZUCvIILIetfdtP4gJemX4+wRyvCYpPrbl+sJIHzoddyb4Lt6sDgyjhnE5RNFE/GkPCE
-         9a52H1J1VZ4AseM4HPEJ/28Z+uWKXl2dyuKToPIsw9Gpz6tl2iXwW6W3LLAJyT+7Aj2N
-         IiVeCvfG+uVjoLNaRFl7V8uDwpQmA//txpLzd1vqeyYc8C0KNzhId+1T2tnqvlBWdRI6
-         GdcA==
-X-Gm-Message-State: ANhLgQ33NmMNj3oZ2LOXN0h8zOVndMXBU82iWtvsG7we3QWV/VivVCcN
-        OX4omAxYJffahQEkBFQ8gq/lWDfvBPVijLRgukb+tg==
-X-Google-Smtp-Source: ADFU+vtGvITp2sg+JZTjjfj9Q4pfx+/tRU62/dj4Jx5MF0ePB3TZaCSIkHsvrMO5+nTGln9aZv0pNAz+jfn/4+0y8w0=
-X-Received: by 2002:a05:6830:118c:: with SMTP id u12mr17412267otq.124.1583872928122;
- Tue, 10 Mar 2020 13:42:08 -0700 (PDT)
-MIME-Version: 1.0
-References: <CALvZod62gypsxCYOpGsR6SWwp7roh8eEEKvZ8WNFtjB0bH=okg@mail.gmail.com>
- <C17G1V88F2XD.EQFO8E8QX1YO@dlxu-fedora-R90QNFJV>
-In-Reply-To: <C17G1V88F2XD.EQFO8E8QX1YO@dlxu-fedora-R90QNFJV>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Tue, 10 Mar 2020 13:41:57 -0700
-Message-ID: <CALvZod6mcoKTqi=OvyHQLbm1LszijDV-traf4Rx9oXmLSZe-Gg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/4] kernfs: kvmalloc xattr value instead of kmalloc
-To:     Daniel Xu <dxu@dxuuu.xyz>
-Cc:     Cgroups <cgroups@vger.kernel.org>, Tejun Heo <tj@kernel.org>,
-        Li Zefan <lizefan@huawei.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kernel Team <kernel-team@fb.com>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 10 Mar 2020 16:42:12 -0400
+X-IronPort-AV: E=Sophos;i="5.70,538,1574089200"; 
+   d="scan'208";a="41303690"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie6.idc.renesas.com with ESMTP; 11 Mar 2020 05:42:10 +0900
+Received: from localhost.localdomain (unknown [10.226.36.204])
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 9878C40F8AD8;
+        Wed, 11 Mar 2020 05:42:07 +0900 (JST)
+From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>
+Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v3 2/2] arm64: dts: renesas: Add HiHope RZ/G2M board with idk-1110wr display
+Date:   Tue, 10 Mar 2020 20:41:59 +0000
+Message-Id: <1583872919-7757-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1583872919-7757-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <1583872919-7757-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 10, 2020 at 1:40 PM Daniel Xu <dxu@dxuuu.xyz> wrote:
->
-> Hi Shakeel,
->
-> On Tue Mar 10, 2020 at 12:40 PM, Shakeel Butt wrote:
-> > Hi Daniel,
-> >
-> >
-> > On Thu, Mar 5, 2020 at 1:16 PM Daniel Xu <dxu@dxuuu.xyz> wrote:
-> > >
-> > > It's not really necessary to have contiguous physical memory for xattr
-> > > values. We no longer need to worry about higher order allocations
-> > > failing with kvmalloc, especially because the xattr size limit is at
-> > > 64K.
-> > >
-> > > Signed-off-by: Daniel Xu <dxu@dxuuu.xyz>
-> >
-> >
-> > The patch looks fine to me. However the commit message is too cryptic
-> > i.e. hard to get the motivation behind the change.
-> >
->
-> Thanks for taking a look. The real reason I did it was because Tejun
-> said so :).
->
-> Tejun, is there a larger reason?
->
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 
-I understand the reason. I am just suggesting to rephrase it to be more clear.
+The HiHope RZ/G2M is advertised as compatible with panel idk-1110wr
+from Advantech, however the panel isn't sold alongside the board.
+A new dts, adding everything that's required to get the panel to
+work the HiHope RZ/G2M, is the most convenient way to support the
+HiHope RZ/G2M when it's connected to the idk-1110wr.
+
+Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+---
+ arch/arm64/boot/dts/renesas/Makefile               |  1 +
+ .../r8a774a1-hihope-rzg2m-ex-idk-1110wr.dts        | 86 ++++++++++++++++++++++
+ 2 files changed, 87 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/renesas/r8a774a1-hihope-rzg2m-ex-idk-1110wr.dts
+
+diff --git a/arch/arm64/boot/dts/renesas/Makefile b/arch/arm64/boot/dts/renesas/Makefile
+index 2153842..82dd245 100644
+--- a/arch/arm64/boot/dts/renesas/Makefile
++++ b/arch/arm64/boot/dts/renesas/Makefile
+@@ -1,6 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0
+ dtb-$(CONFIG_ARCH_R8A774A1) += r8a774a1-hihope-rzg2m.dtb
+ dtb-$(CONFIG_ARCH_R8A774A1) += r8a774a1-hihope-rzg2m-ex.dtb
++dtb-$(CONFIG_ARCH_R8A774A1) += r8a774a1-hihope-rzg2m-ex-idk-1110wr.dtb
+ dtb-$(CONFIG_ARCH_R8A774B1) += r8a774b1-hihope-rzg2n.dtb
+ dtb-$(CONFIG_ARCH_R8A774B1) += r8a774b1-hihope-rzg2n-ex.dtb
+ dtb-$(CONFIG_ARCH_R8A774C0) += r8a774c0-cat874.dtb r8a774c0-ek874.dtb \
+diff --git a/arch/arm64/boot/dts/renesas/r8a774a1-hihope-rzg2m-ex-idk-1110wr.dts b/arch/arm64/boot/dts/renesas/r8a774a1-hihope-rzg2m-ex-idk-1110wr.dts
+new file mode 100644
+index 0000000..6033cae
+--- /dev/null
++++ b/arch/arm64/boot/dts/renesas/r8a774a1-hihope-rzg2m-ex-idk-1110wr.dts
+@@ -0,0 +1,86 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Device Tree Source for the HiHope RZ/G2M sub board connected to an
++ * Advantech IDK-1110WR 10.1" LVDS panel
++ *
++ * Copyright (C) 2020 Renesas Electronics Corp.
++ */
++
++#include "r8a774a1-hihope-rzg2m-ex.dts"
++
++/ {
++	backlight {
++		compatible = "pwm-backlight";
++		pwms = <&pwm0 0 50000>;
++
++		brightness-levels = <0 2 8 16 32 64 128 255>;
++		default-brightness-level = <6>;
++	};
++
++	panel-lvds {
++		compatible = "advantech,idk-1110wr", "panel-lvds";
++
++		width-mm = <223>;
++		height-mm = <125>;
++
++		data-mapping = "jeida-24";
++
++		panel-timing {
++			/* 1024x600 @60Hz */
++			clock-frequency = <51200000>;
++			hactive = <1024>;
++			vactive = <600>;
++			hsync-len = <240>;
++			hfront-porch = <40>;
++			hback-porch = <40>;
++			vfront-porch = <15>;
++			vback-porch = <10>;
++			vsync-len = <10>;
++		};
++
++		port {
++			panel_in: endpoint {
++				remote-endpoint = <&lvds0_out>;
++			};
++		};
++	};
++};
++
++&gpio1 {
++	/*
++	 * When GP1_20 is LOW LVDS0 is connected to the LVDS connector
++	 * When GP1_20 is HIGH LVDS0 is connected to the LT8918L
++	 */
++	lvds-connector-en-gpio {
++		gpio-hog;
++		gpios = <20 GPIO_ACTIVE_HIGH>;
++		output-low;
++		line-name = "lvds-connector-en-gpio";
++	};
++};
++
++&lvds0 {
++	status = "okay";
++
++	ports {
++		port@1 {
++			lvds0_out: endpoint {
++				remote-endpoint = <&panel_in>;
++			};
++		};
++	};
++};
++
++&pfc {
++	pwm0_pins: pwm0 {
++		groups = "pwm0";
++		function = "pwm0";
++	};
++};
++
++&pwm0 {
++	pinctrl-0 = <&pwm0_pins>;
++	pinctrl-names = "default";
++
++	status = "okay";
++};
+-- 
+2.7.4
+
