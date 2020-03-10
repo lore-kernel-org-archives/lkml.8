@@ -4,50 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36660C18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:00:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFE4CC18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:00:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F255E24693
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:00:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E50224691
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:00:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583845256;
-	bh=N0oeHqaNHMwHKF0xJfnEyQKeRl69pwS6XSWHxDsDKos=;
+	s=default; t=1583845258;
+	bh=57BNidfkCgyHGp2V2pvqDx8ODcuDKUnpR4jy10Hregk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hBOiNnQ2CfqrevhQZ2Q8AhV2VSfhIjk9bmdeeuRlWrEpmAuH3Nk/cXUBZoNHTrzJt
-	 wCod/zLygWnhC/0X/HwZGw0lFKaDwF0l9PJVBOitEsX9aYVbibPZ/dxQ4tu3VYsxw6
-	 aXGSynXugvnO0wTzpUsxFx8RJt+QB/1Lgdr/6ox0=
+	b=OgwHPHwJeYxk/NTXbFOsLwQt4EiJ1dpC7xpPjycZkTeBDAtgqHD3CXotQzzGfS8Nu
+	 i2RfEuz3nBWsc8mh/bYBHbXEsM7xi10Bb62iu8/sR8J+Yaf6rRl4OX5f//obu8rrN4
+	 /lZyRcG/DNAmZJ781GXD10+WmDah5Mv5MprKdTKk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730190AbgCJNAv (ORCPT
+        id S1730200AbgCJNA5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:00:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41712 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:00:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41838 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728197AbgCJNAt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:00:49 -0400
+        id S1727933AbgCJNAz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:00:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31ECD20674;
-        Tue, 10 Mar 2020 13:00:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 341332467D;
+        Tue, 10 Mar 2020 13:00:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845248;
-        bh=N0oeHqaNHMwHKF0xJfnEyQKeRl69pwS6XSWHxDsDKos=;
+        s=default; t=1583845254;
+        bh=57BNidfkCgyHGp2V2pvqDx8ODcuDKUnpR4jy10Hregk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tazTQIDXxWrrRawA0OEKM6VwdaF9iRuT3bNr0b0UeDjTUy4XoWhEd2CyExuJ2mrxl
-         FH3TGkHofAfaSQjbXEECq29/1KInhPYbQzp4OLcBGyrTmHJuZ9aM17bZWqDPpq6zn6
-         DuUKBdrMAqOHTkabJWe0PMSP3b3AhqqsK3px4V9Q=
+        b=JsTE/RBnxXYGMUhnyer+W0kCuHgd2aZoIMQU+4Csi0vitOUI2+ghS6jHJPvpNCnuL
+         tNv+XZQ9fmk1AvMtTLlbsbubLefvEAWWqATBnjNRWCN2JiDk0qDQRUX9QBRlHOE+UO
+         LDKFHjyoE/rWaTLZ4GkowOEgjZ6FVNTEoxbmRWmE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Prike Liang <Prike.Liang@amd.com>,
-        Evan Quan <evan.quan@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH 5.5 113/189] drm/amd/powerplay: fix pre-check condition for setting clock range
-Date:   Tue, 10 Mar 2020 13:39:10 +0100
-Message-Id: <20200310123651.170961721@linuxfoundation.org>
+        stable@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+        Rafael Aquini <aquini@redhat.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Zi Yan <zi.yan@cs.rutgers.edu>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Michal Hocko <mhocko@suse.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.5 079/189] mm, numa: fix bad pmd by atomically check for pmd_trans_huge when marking page tables prot_numa
+Date:   Tue, 10 Mar 2020 13:38:36 +0100
+Message-Id: <20200310123647.631445432@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123639.608886314@linuxfoundation.org>
 References: <20200310123639.608886314@linuxfoundation.org>
@@ -60,52 +65,134 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Prike Liang <Prike.Liang@amd.com>
+From: Mel Gorman <mgorman@techsingularity.net>
 
-commit 80381d40c9bf5218db06a7d7246c5478c95987ee upstream.
+commit 8b272b3cbbb50a6a8e62d8a15affd473a788e184 upstream.
 
-This fix will handle some MP1 FW issue like as mclk dpm table in renoir has a reverse
-dpm clock layout and a zero frequency dpm level as following case.
+: A user reported a bug against a distribution kernel while running a
+: proprietary workload described as "memory intensive that is not swapping"
+: that is expected to apply to mainline kernels.  The workload is
+: read/write/modifying ranges of memory and checking the contents.  They
+: reported that within a few hours that a bad PMD would be reported followed
+: by a memory corruption where expected data was all zeros.  A partial
+: report of the bad PMD looked like
+:
+:   [ 5195.338482] ../mm/pgtable-generic.c:33: bad pmd ffff8888157ba008(000002e0396009e2)
+:   [ 5195.341184] ------------[ cut here ]------------
+:   [ 5195.356880] kernel BUG at ../mm/pgtable-generic.c:35!
+:   ....
+:   [ 5195.410033] Call Trace:
+:   [ 5195.410471]  [<ffffffff811bc75d>] change_protection_range+0x7dd/0x930
+:   [ 5195.410716]  [<ffffffff811d4be8>] change_prot_numa+0x18/0x30
+:   [ 5195.410918]  [<ffffffff810adefe>] task_numa_work+0x1fe/0x310
+:   [ 5195.411200]  [<ffffffff81098322>] task_work_run+0x72/0x90
+:   [ 5195.411246]  [<ffffffff81077139>] exit_to_usermode_loop+0x91/0xc2
+:   [ 5195.411494]  [<ffffffff81003a51>] prepare_exit_to_usermode+0x31/0x40
+:   [ 5195.411739]  [<ffffffff815e56af>] retint_user+0x8/0x10
+:
+: Decoding revealed that the PMD was a valid prot_numa PMD and the bad PMD
+: was a false detection.  The bug does not trigger if automatic NUMA
+: balancing or transparent huge pages is disabled.
+:
+: The bug is due a race in change_pmd_range between a pmd_trans_huge and
+: pmd_nond_or_clear_bad check without any locks held.  During the
+: pmd_trans_huge check, a parallel protection update under lock can have
+: cleared the PMD and filled it with a prot_numa entry between the transhuge
+: check and the pmd_none_or_clear_bad check.
+:
+: While this could be fixed with heavy locking, it's only necessary to make
+: a copy of the PMD on the stack during change_pmd_range and avoid races.  A
+: new helper is created for this as the check if quite subtle and the
+: existing similar helpful is not suitable.  This passed 154 hours of
+: testing (usually triggers between 20 minutes and 24 hours) without
+: detecting bad PMDs or corruption.  A basic test of an autonuma-intensive
+: workload showed no significant change in behaviour.
 
-cat pp_dpm_mclk
-0: 1200Mhz
-1: 1200Mhz
-2: 800Mhz
-3: 0Mhz
+Although Mel withdrew the patch on the face of LKML comment
+https://lkml.org/lkml/2017/4/10/922 the race window aforementioned is
+still open, and we have reports of Linpack test reporting bad residuals
+after the bad PMD warning is observed.  In addition to that, bad
+rss-counter and non-zero pgtables assertions are triggered on mm teardown
+for the task hitting the bad PMD.
 
-Signed-off-by: Prike Liang <Prike.Liang@amd.com>
-Reviewed-by: Evan Quan <evan.quan@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Cc: stable@vger.kernel.org
+ host kernel: mm/pgtable-generic.c:40: bad pmd 00000000b3152f68(8000000d2d2008e7)
+ ....
+ host kernel: BUG: Bad rss-counter state mm:00000000b583043d idx:1 val:512
+ host kernel: BUG: non-zero pgtables_bytes on freeing mm: 4096
+
+The issue is observed on a v4.18-based distribution kernel, but the race
+window is expected to be applicable to mainline kernels, as well.
+
+[akpm@linux-foundation.org: fix comment typo, per Rafael]
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Rafael Aquini <aquini@redhat.com>
+Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
+Cc: <stable@vger.kernel.org>
+Cc: Zi Yan <zi.yan@cs.rutgers.edu>
+Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Michal Hocko <mhocko@suse.com>
+Link: http://lkml.kernel.org/r/20200216191800.22423-1-aquini@redhat.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/amd/powerplay/amdgpu_smu.c |    2 +-
- drivers/gpu/drm/amd/powerplay/smu_v12_0.c  |    3 ---
- 2 files changed, 1 insertion(+), 4 deletions(-)
+ mm/mprotect.c |   38 ++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 36 insertions(+), 2 deletions(-)
 
---- a/drivers/gpu/drm/amd/powerplay/amdgpu_smu.c
-+++ b/drivers/gpu/drm/amd/powerplay/amdgpu_smu.c
-@@ -222,7 +222,7 @@ int smu_set_soft_freq_range(struct smu_c
- {
- 	int ret = 0;
+--- a/mm/mprotect.c
++++ b/mm/mprotect.c
+@@ -161,6 +161,31 @@ static unsigned long change_pte_range(st
+ 	return pages;
+ }
  
--	if (min <= 0 && max <= 0)
-+	if (min < 0 && max < 0)
- 		return -EINVAL;
++/*
++ * Used when setting automatic NUMA hinting protection where it is
++ * critical that a numa hinting PMD is not confused with a bad PMD.
++ */
++static inline int pmd_none_or_clear_bad_unless_trans_huge(pmd_t *pmd)
++{
++	pmd_t pmdval = pmd_read_atomic(pmd);
++
++	/* See pmd_none_or_trans_huge_or_clear_bad for info on barrier */
++#ifdef CONFIG_TRANSPARENT_HUGEPAGE
++	barrier();
++#endif
++
++	if (pmd_none(pmdval))
++		return 1;
++	if (pmd_trans_huge(pmdval))
++		return 0;
++	if (unlikely(pmd_bad(pmdval))) {
++		pmd_clear_bad(pmd);
++		return 1;
++	}
++
++	return 0;
++}
++
+ static inline unsigned long change_pmd_range(struct vm_area_struct *vma,
+ 		pud_t *pud, unsigned long addr, unsigned long end,
+ 		pgprot_t newprot, int dirty_accountable, int prot_numa)
+@@ -178,8 +203,17 @@ static inline unsigned long change_pmd_r
+ 		unsigned long this_pages;
  
- 	if (!smu_clk_dpm_is_enabled(smu, clk_type))
---- a/drivers/gpu/drm/amd/powerplay/smu_v12_0.c
-+++ b/drivers/gpu/drm/amd/powerplay/smu_v12_0.c
-@@ -373,9 +373,6 @@ int smu_v12_0_set_soft_freq_limited_rang
- {
- 	int ret = 0;
+ 		next = pmd_addr_end(addr, end);
+-		if (!is_swap_pmd(*pmd) && !pmd_trans_huge(*pmd) && !pmd_devmap(*pmd)
+-				&& pmd_none_or_clear_bad(pmd))
++
++		/*
++		 * Automatic NUMA balancing walks the tables with mmap_sem
++		 * held for read. It's possible a parallel update to occur
++		 * between pmd_trans_huge() and a pmd_none_or_clear_bad()
++		 * check leading to a false positive and clearing.
++		 * Hence, it's necessary to atomically read the PMD value
++		 * for all the checks.
++		 */
++		if (!is_swap_pmd(*pmd) && !pmd_devmap(*pmd) &&
++		     pmd_none_or_clear_bad_unless_trans_huge(pmd))
+ 			goto next;
  
--	if (max < min)
--		return -EINVAL;
--
- 	switch (clk_type) {
- 	case SMU_GFXCLK:
- 	case SMU_SCLK:
+ 		/* invoke the mmu notifier if the pmd is populated */
 
 
