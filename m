@@ -2,110 +2,105 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B5FBC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 03:42:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84ACFC10F25
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 03:42:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0966F2465A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 03:42:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583811748;
-	bh=9t6PQTF4yZhBSTuBT59aCA5e/8OFUhyc/DijBpBFCMQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BCBVtBqYmyzr3ge99SBeiLsu+HJz5buYdLjihBVRDvqyNJ2h4SjZHztLvpj61ZXTz
-	 D9e2nFp+KVrU78GgL0hHnH24DRuZs4gmNZoZOWo8rg8zaVd34PAexVua0IvCdityk5
-	 mHpFPTWzMJYeHynjE7uzE7QmIG9YJ3rnhMr/kOdY=
+	by mail.kernel.org (Postfix) with ESMTP id 68A6C2465A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 03:42:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726449AbgCJDm1 (ORCPT
+        id S1726480AbgCJDmb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 23:42:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54554 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726195AbgCJDm0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 23:42:26 -0400
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8022224649;
-        Tue, 10 Mar 2020 03:42:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583811746;
-        bh=9t6PQTF4yZhBSTuBT59aCA5e/8OFUhyc/DijBpBFCMQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ELC4laBnmWyQWgtZJRyxXX+wvcGYrYptReol9dy2C3ggnAg2cY9PZ1OrFLqsto5O9
-         tn20frD/Hqh27tEbDmU+/a+bYw3QDHLxoSQlmL0qZcLO+5zejMPu1kyug5rZmeiFYV
-         yiALkYFxuWN8B0V8zbnTLxDUbpJw0kg9IFB65Lfk=
-Date:   Tue, 10 Mar 2020 11:42:15 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Joakim Zhang <qiangqing.zhang@nxp.com>
-Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
-        Anson.Huang@nxp.com, leonard.crestez@nxp.com,
-        daniel.baluta@nxp.com, aisheng.dong@nxp.com, peng.fan@nxp.com,
-        fugang.duan@nxp.com, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/7] clk: imx8: Add SCU and LPCG clocks for I2C in CM40 SS
-Message-ID: <20200310034214.GB15729@dragon>
-References: <1581909561-12058-1-git-send-email-qiangqing.zhang@nxp.com>
- <1581909561-12058-3-git-send-email-qiangqing.zhang@nxp.com>
+        Mon, 9 Mar 2020 23:42:31 -0400
+Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:58538 "EHLO
+        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726195AbgCJDma (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 23:42:30 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07417;MF=yun.wang@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0TsBJEkt_1583811746;
+Received: from testdeMacBook-Pro.local(mailfrom:yun.wang@linux.alibaba.com fp:SMTPD_---0TsBJEkt_1583811746)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 10 Mar 2020 11:42:26 +0800
+Subject: Re: [RFC PATCH] sched: fix the nonsense shares when load of cfs_rq is
+ too, small
+To:     Vincent Guittot <vincent.guittot@linaro.org>,
+        Ben Segall <bsegall@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mel Gorman <mgorman@suse.de>,
+        "open list:SCHEDULER" <linux-kernel@vger.kernel.org>
+References: <44fa1cee-08db-e4ab-e5ab-08d6fbd421d7@linux.alibaba.com>
+ <20200303195245.GF2596@hirez.programming.kicks-ass.net>
+ <xm26o8tc3qkv.fsf@bsegall-linux.svl.corp.google.com>
+ <1180c6cd-ff61-2c9f-d689-ffe58f8c5a68@linux.alibaba.com>
+ <xm267dzx47k9.fsf@bsegall-linux.svl.corp.google.com>
+ <CAKfTPtDKTp_G1VNgAXnh=_yLS_T6YkipOsQQ52tBRp-m612JEw@mail.gmail.com>
+From:   =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
+Message-ID: <49a4dd4a-e7b6-5182-150d-16fff2d101cf@linux.alibaba.com>
+Date:   Tue, 10 Mar 2020 11:42:26 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:68.0)
+ Gecko/20100101 Thunderbird/68.4.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1581909561-12058-3-git-send-email-qiangqing.zhang@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CAKfTPtDKTp_G1VNgAXnh=_yLS_T6YkipOsQQ52tBRp-m612JEw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 17, 2020 at 11:19:16AM +0800, Joakim Zhang wrote:
-> Add SCU and LPCG clocks for I2C in CM40 SS.
+
+
+On 2020/3/9 下午7:15, Vincent Guittot wrote:
+[snip]
+>>>> -       load = max(scale_load_down(cfs_rq->load.weight), cfs_rq->avg.load_avg);
+>>>> +       load = max(cfs_rq->load.weight, scale_load(cfs_rq->avg.load_avg));
+>>>>
+>>>>         tg_weight = atomic_long_read(&tg->load_avg);
+>>>
+>>> Get the point, but IMHO fix scale_load_down() sounds better, to
+>>> cover all the similar cases, let's first try that way see if it's
+>>> working :-)
+>>
+>> Yeah, that might not be a bad idea as well; it's just that doing this
+>> fix would keep you from losing all your precision (and I'd have to think
+>> if that would result in fairness issues like having all the group ses
+>> having the full tg shares, or something like that).
 > 
-> Signed-off-by: Joakim Zhang <qiangqing.zhang@nxp.com>
-> ---
->  include/dt-bindings/clock/imx8-clock.h | 13 ++++++++++++-
->  1 file changed, 12 insertions(+), 1 deletion(-)
-
-I think it can be merged into patch #4.
-
-Shawn
-
+> AFAICT, we already have a fairness problem case because
+> scale_load_down is used in calc_delta_fair() so all sched groups that
+> have a weight lower than 1024 will end up with the same increase of
+> their vruntime when running.
+> Then the load_avg is used to balance between rq so load_balance will
+> ensure at least 1 task per CPU but not more because the load_avg which
+> is then used will stay null.
 > 
-> diff --git a/include/dt-bindings/clock/imx8-clock.h b/include/dt-bindings/clock/imx8-clock.h
-> index 673a8c662340..84a442be700f 100644
-> --- a/include/dt-bindings/clock/imx8-clock.h
-> +++ b/include/dt-bindings/clock/imx8-clock.h
-> @@ -131,7 +131,12 @@
->  #define IMX_ADMA_PWM_CLK				188
->  #define IMX_ADMA_LCD_CLK				189
->  
-> -#define IMX_SCU_CLK_END					190
-> +/* CM40 SS */
-> +#define IMX_CM40_IPG_CLK				200
-> +#define IMX_CM40_I2C_CLK				205
-> +
-> +#define IMX_SCU_CLK_END					220
-> +
->  
->  /* LPCG clocks */
->  
-> @@ -290,4 +295,10 @@
->  
->  #define IMX_ADMA_LPCG_CLK_END				45
->  
-> +/* CM40 SS LPCG */
-> +#define IMX_CM40_LPCG_I2C_IPG_CLK			0
-> +#define IMX_CM40_LPCG_I2C_CLK				1
-> +
-> +#define IMX_CM40_LPCG_CLK_END				2
-> +
->  #endif /* __DT_BINDINGS_CLOCK_IMX_H */
-> -- 
-> 2.17.1
+> That being said, having a min of 2 for scale_load_down will enable us
+> to have the tg->load_avg != 0 so a tg_weight != 0 and each sched group
+> will not have the full shares. But it will make those group completely
+> fair anyway.
+> The best solution would be not to scale down the weight but that's a
+> bigger change
+
+Does that means a changing for all those 'load.weight' related
+calculation, to reserve the scaled weight?
+
+I suppose u64 is capable for 'cfs_rq.load' to reserve the scaled up load,
+changing all those places could be annoying but still fine.
+
+However, I'm not quite sure about the benefit, how much more precision
+we'll gain and does that really matters? better to have some testing to
+demonstrate it.
+
+Regards,
+Michael Wang
+
+
 > 
