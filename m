@@ -4,89 +4,90 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9B18C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 18:41:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D902FC18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 18:41:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDD0322525
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 18:41:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB6E62253D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 18:41:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583865668;
-	bh=JEmCfmMIkH6weUIwI31TNG03fTSIYBwntznYJOJYO4U=;
+	s=default; t=1583865673;
+	bh=Ck3Z2DUi4J7kJJL1GeyA323OUte/zlDqXJuhcZsgVjU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=shly69uj/Kr3mKI0A1J1Oss8WULIXBS6IC+tVVkikV86ZNAIGVUqBqDf8KyuF/yGs
-	 5jqrNKbiKORXKCWntVc38d6j21WjSxf1vLDxoe+RzkJpjFYVKVd7D/le3PY3y7BGyY
-	 MPymDIiHeggWmUhO+g4m/0QqVFveC/BXWlpn85L0=
+	b=1fw6qWvZqGDJtQHPgCwy+gd/n9fKLO2QN6ogeYFQnVzp9DBHKoZJMPRYBPvP8s7jM
+	 7CHnbWat0Rfe0RwghqzzOz2OMsosEdyKw8i8c74NOinlPN3C0kjya2OecVO31QeoJc
+	 vQzBw5U8aOgenWupriJqXqEf9rL0xfOVXPu55PoY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726752AbgCJSlH (ORCPT
+        id S1727123AbgCJSlM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 14:41:07 -0400
-Received: from mail-ot1-f43.google.com ([209.85.210.43]:35586 "EHLO
-        mail-ot1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726283AbgCJSlH (ORCPT
+        Tue, 10 Mar 2020 14:41:12 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:43358 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726283AbgCJSlL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 14:41:07 -0400
-Received: by mail-ot1-f43.google.com with SMTP id k26so6947064otr.2;
-        Tue, 10 Mar 2020 11:41:05 -0700 (PDT)
+        Tue, 10 Mar 2020 14:41:11 -0400
+Received: by mail-ot1-f67.google.com with SMTP id a6so6288993otb.10;
+        Tue, 10 Mar 2020 11:41:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=PQABEcEk14Djn/LTjb5Ace2N+AY5AMQXCZutVyQXiUs=;
-        b=ukiSN6A3P2avIco+2SYJf+QS34JEcdWNnWES82FFSuwlh19xM+xe+sgDx2HI4pjocX
-         MwPmoktmbD6visqO1dVIl0O1XdYZUxaSp+Ortc9fPBghuhG01U8nfI1NESZpKPtcGKNM
-         pC0jrCg/qQYIn8I16s7yzy2ZqlK6gsL7qZat1eAEGzFqK/nk+po58Z3+LN6ds+zuHFXi
-         pWT8zC2guomWpnD7iq3u15P2P7VL9OQ1L+Wv5usSJ7bNB8nb4/YWEWtVM3XIxHLS0INq
-         cXmkiD2SHlQz1YG8Nr5FJWzuybl4DUVdpefKggv/AJATLKUJegtxXSsPEvCvN43HnxNW
-         8d1g==
-X-Gm-Message-State: ANhLgQ0KArhO1IIZyPOWpnX9aJRcNFTPdDAf91uYlPNNHX97Jwu3KZdg
-        xvUwE5+0HS5Jw/aTdvE/aQ==
-X-Google-Smtp-Source: ADFU+vuCpy55+wQ03dvYMG8T9a9Ha2z5esUQgxNizO1+WBHUPrvJ7vapbxm/UI4ejAFS/eHYpZMrxg==
-X-Received: by 2002:a9d:67c7:: with SMTP id c7mr3275865otn.85.1583865665110;
-        Tue, 10 Mar 2020 11:41:05 -0700 (PDT)
+        bh=Yilc9mhdFZvcfQin0GJ0eQvRcufzr/Dm7B4thkkaYHw=;
+        b=FQeA8OBm7XuNoqtbmUQRPmLvDo7VOfvlDpUdgpCZwXfcXQqCwsV5sTOKIMVHcSJaoM
+         bSefGwKzEN8c/lIWkazxMlDqWZPLX+2MXHPCl6p6ZGnIyVFUpLSeWQHGIFkmWeJGcamC
+         GNBfPYYRw/BCkU/7MukVskqfxFeJSGSQ7EiV8wYrl3W/9WTIbyJM62Ep1cVECAA3dHuo
+         zaXUZTvzL1XU2+36F+v9x9vuJSY/QB8ie5E4R39CUInG8PZeajSSR4G+GFhPp4QD6YHg
+         Eg+WlAnyH2vtLQJzliLhu2jvNpk43y4QoaO4iUhKZt1ZWsSoS2/w29dA1nlXR2LezVcw
+         O1Qw==
+X-Gm-Message-State: ANhLgQ3QLa27OOL2siRzLZ94LfUMfxGfAdcXYbXYfVpCKt3nq4vZTspO
+        vmBbrpuhEQTVvz0u4oNHNw==
+X-Google-Smtp-Source: ADFU+vs/2TypjqEMN/AlYKRD1w+166WI1z9sKyXsLQjXpYLMyf6JNW7TSM5mm39EtFmpUM3Gntw1rA==
+X-Received: by 2002:a05:6830:1b68:: with SMTP id d8mr17520762ote.56.1583865670711;
+        Tue, 10 Mar 2020 11:41:10 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id s128sm4496355oia.4.2020.03.10.11.41.03
+        by smtp.gmail.com with ESMTPSA id s22sm5984280otr.57.2020.03.10.11.41.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Mar 2020 11:41:04 -0700 (PDT)
-Received: (nullmailer pid 2384 invoked by uid 1000);
-        Tue, 10 Mar 2020 18:41:03 -0000
-Date:   Tue, 10 Mar 2020 13:41:03 -0500
+        Tue, 10 Mar 2020 11:41:10 -0700 (PDT)
+Received: (nullmailer pid 2632 invoked by uid 1000);
+        Tue, 10 Mar 2020 18:41:09 -0000
+Date:   Tue, 10 Mar 2020 13:41:09 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Robin Gong <yibin.gong@nxp.com>
-Cc:     s.hauer@pengutronix.de, vkoul@kernel.org, shawnguo@kernel.org,
-        u.kleine-koenig@pengutronix.de, broonie@kernel.org,
-        robh+dt@kernel.org, festevam@gmail.com, dan.j.williams@intel.com,
-        mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com,
-        l.stach@pengutronix.de, martin.fuzzey@flowbird.group,
-        kernel@pengutronix.de, linux-spi@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-imx@nxp.com, dmaengine@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [RESEND v6  08/13] spi: imx: add new i.mx6ul compatible name in
- binding doc
-Message-ID: <20200310184103.GA2192@bogus>
-References: <1583839922-22699-1-git-send-email-yibin.gong@nxp.com>
- <1583839922-22699-9-git-send-email-yibin.gong@nxp.com>
+To:     Ansuel Smith <ansuelsmth@gmail.com>
+Cc:     sboyd@kernel.org, Ansuel Smith <ansuelsmth@gmail.com>,
+        John Crispin <john@phrozen.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] clk: qcom: clk-rpm: add missing rpm clk for ipq806x
+Message-ID: <20200310184109.GA2508@bogus>
+References: <sboyd@kernel.org>
+ <20200310143756.244-1-ansuelsmth@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1583839922-22699-9-git-send-email-yibin.gong@nxp.com>
+In-Reply-To: <20200310143756.244-1-ansuelsmth@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 10 Mar 2020 19:31:57 +0800, Robin Gong wrote:
-> ERR009165 fixed from i.mx6ul, add its compatible name in binding doc.
+On Tue, 10 Mar 2020 15:37:56 +0100, Ansuel Smith wrote:
+> Add missing definition of rpm clk for ipq806x soc
 > 
-> Signed-off-by: Robin Gong <yibin.gong@nxp.com>
-> Acked-by: Mark Brown <broonie@kernel.org>
+> Signed-off-by: John Crispin <john@phrozen.org>
+> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> Acked-by: John Crispin <john@phrozen.org>
 > ---
->  Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt | 1 +
->  1 file changed, 1 insertion(+)
+>  .../devicetree/bindings/clock/qcom,rpmcc.txt  |  1 +
+>  drivers/clk/qcom/clk-rpm.c                    | 35 +++++++++++++++++++
+>  include/dt-bindings/clock/qcom,rpmcc.h        |  4 +++
+>  3 files changed, 40 insertions(+)
 > 
 
 Please add Acked-by/Reviewed-by tags when posting new versions. However,
