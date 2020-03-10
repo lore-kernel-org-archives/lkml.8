@@ -2,125 +2,85 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AC96C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 14:12:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE82FC18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 14:13:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D9D620674
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 14:12:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 957B820674
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 14:13:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="PQ+UEguI"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="VUMeVtRy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727372AbgCJOMs (ORCPT
+        id S1727399AbgCJOND (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 10:12:48 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:35035 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726463AbgCJOMs (ORCPT
+        Tue, 10 Mar 2020 10:13:03 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:41329 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726591AbgCJOND (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 10:12:48 -0400
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 0CFAA23ECA;
-        Tue, 10 Mar 2020 15:12:45 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1583849565;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=hEWql192yhW7vtj33Ar2ueUuqZzJlfD7KDs4yhM6yuY=;
-        b=PQ+UEguI+6SdYnqx6Rtn22RYead+fBmeyqt/n8R9DqO///TzSh9elzyIUB3fkJAb0eDZkH
-        LWEdFzv03wvcW/kGvWMN7I+dWJRmr4aT5cBkoKjGHrgK+MmtC/QZH3j6F5n8VhXFi9rds0
-        nYmd9aodavlaShm5p5AGAcONE0ELWCI=
+        Tue, 10 Mar 2020 10:13:03 -0400
+Received: by mail-io1-f66.google.com with SMTP id m25so12853977ioo.8
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 07:13:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OYU1wxb/ge5DirIWwK28AnywpJQY3e/U9vYLjiccLeo=;
+        b=VUMeVtRyDXOmmJAxS6+A2yYelERcpsMobnU+K+HXqAre31LWH5Ybg9m1IevwykOAC8
+         LuhKNNqsEpPoC+7agcvG1rpEStM2V2YpmRpy+BjS+BXwOrIaMeNotiWCXzqWdLczA50g
+         BSV6AlSgpI8eO6i/dsioSkintiC6wBXLVK/So=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OYU1wxb/ge5DirIWwK28AnywpJQY3e/U9vYLjiccLeo=;
+        b=Oqgwkpg55si1Q6pPzfA8yNfrKElrXa3/u/bkEqz1iQ/5wTZxnaZtdg518jv4R29MUv
+         zPyfBpKev0VshVMvtocmp1fjlv/GcI+nGzWgWuVBQ9LURFv1UIc/yqpWY/w3k1V1BeKD
+         sNfgyAefJfYyKXvSXLi5eQfeG0tBPI3gAYAHo6rGBfdtgLYZMrMp7PZ8scuu6LOzC2os
+         YFZqkrSyBxlww8Iptfi07k8MFcLRAQaI3KjgQsdO6ZcdGrzo6mPiweywo11geGWLvcw9
+         i3o6tZ3rIrJlUTFm7BtA3MMAotY/CN+WihosN2oW7UKM76c9xxaHZZwW9EA/q7lEUxmF
+         mSuw==
+X-Gm-Message-State: ANhLgQ05PwdV7twJtQp9mZxsDHM1EV0r+zN1MjAQa+tI+FIkdT2jooPR
+        xZv4ebQboINZvWjanpSmdiKRTp0YidF4Wk7G1B1fCQ==
+X-Google-Smtp-Source: ADFU+vt4UJTT+vs/UI2ECs5CVHI9EXdfAc9QZZ6Sp885Ay5Ze3oaL6r9lcZCZ0eNm46t4uWRe96k4C0dQKTFbWt2E9E=
+X-Received: by 2002:a5d:934d:: with SMTP id i13mr17966092ioo.154.1583849582112;
+ Tue, 10 Mar 2020 07:13:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 10 Mar 2020 15:12:45 +0100
-From:   Michael Walle <michael@walle.cc>
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     linux-spi@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>,
-        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linaro-mm-sig@lists.linaro.org,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>
-Subject: Re: [PATCH] spi: spi-fsl-dspi: fix DMA mapping
-In-Reply-To: <CA+h21hqMoPhbq8YG0UeV1kP0iXApYsJvb9MZjPGX54dm2U-KnQ@mail.gmail.com>
-References: <20200310073313.21277-1-michael@walle.cc>
- <4beb5200a76f2d817be7276444543de4@walle.cc>
- <ea6ffa30ddc2459d07935e5e61a41172@walle.cc>
- <CA+h21hqMoPhbq8YG0UeV1kP0iXApYsJvb9MZjPGX54dm2U-KnQ@mail.gmail.com>
-Message-ID: <76923af394f334337a3cac125c270087@walle.cc>
-X-Sender: michael@walle.cc
-User-Agent: Roundcube Webmail/1.3.10
-X-Spamd-Bar: /
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: 0CFAA23ECA
-X-Spamd-Result: default: False [-0.10 / 15.00];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         MIME_GOOD(-0.10)[text/plain];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_SEVEN(0.00)[9];
-         NEURAL_HAM(-0.00)[-0.597];
-         FREEMAIL_TO(0.00)[gmail.com];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         MID_RHS_MATCH_FROM(0.00)[]
+References: <20200304165845.3081-1-vgoyal@redhat.com> <20200304165845.3081-8-vgoyal@redhat.com>
+In-Reply-To: <20200304165845.3081-8-vgoyal@redhat.com>
+From:   Miklos Szeredi <miklos@szeredi.hu>
+Date:   Tue, 10 Mar 2020 15:12:51 +0100
+Message-ID: <CAJfpeguxR2mR53BHEaSQUq2dN6mUVQHMVCoECrCX1F6x38M-0A@mail.gmail.com>
+Subject: Re: [PATCH 07/20] fuse: Get rid of no_mount_options
+To:     Vivek Goyal <vgoyal@redhat.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvdimm@lists.01.org, virtio-fs@redhat.com,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 2020-03-10 14:02, schrieb Vladimir Oltean:
-> On Tue, 10 Mar 2020 at 10:12, Michael Walle <michael@walle.cc> wrote:
->> 
->> Am 2020-03-10 08:40, schrieb Michael Walle:
->> > Am 2020-03-10 08:33, schrieb Michael Walle:
->> >> Use the correct device to request the DMA mapping. Otherwise the IOMMU
->> >> doesn't get the mapping and it will generate a page fault.
->> >>
->> >> The error messages look like:
->> >> [    3.008452] arm-smmu 5000000.iommu: Unhandled context fault:
->> >> fsr=0x402, iova=0xf9800000, fsynr=0x3f0022, cbfrsynra=0x828, cb=8
->> >> [    3.020123] arm-smmu 5000000.iommu: Unhandled context fault:
->> >> fsr=0x402, iova=0xf9800000, fsynr=0x3f0022, cbfrsynra=0x828, cb=8
->> >>
->> >> This was tested on a custom board with a LS1028A SoC.
->> >
->> > Oh fu.. please disregard this patch. DMA mapping still isn't working.
->> > Somehow I missed that the transfer mode was turned back to its default
->> > XSPI mode.
->> 
->> Damn. I need more coffee.. this patch IS working. Only the first probe
->> fails due to EPROBE_DEFER.
->> 
->> [    2.539706] fsl-dspi 2120000.spi: rx dma channel not available 
->> (-517)
->> [    2.546200] fsl-dspi 2120000.spi: can't get dma channels
->> [    3.622774] spi-nor spi1.0: w25q128fw (16384 Kbytes)
->> 
->> -michael
-> 
-> I'm testing LS1028A with IOMMU_DEFAULT_PASSTHROUGH=y and I didn't have
-> time to change my setup now. I've also sent a v3 to my patch series
-> which is going to conflict with this one, sorry.
+On Wed, Mar 4, 2020 at 5:59 PM Vivek Goyal <vgoyal@redhat.com> wrote:
+>
+> This option was introduced so that for virtio_fs we don't show any mounts
+> options fuse_show_options(). Because we don't offer any of these options
+> to be controlled by mounter.
+>
+> Very soon we are planning to introduce option "dax" which mounter should
+> be able to specify. And no_mount_options does not work anymore. What
+> we need is a per mount option specific flag so that fileystem can
+> specify which options to show.
+>
+> Add few such flags to control the behavior in more fine grained manner
+> and get rid of no_mount_options.
+>
+> Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
 
-No worries, its easy enough to rebase.
-
-> I would have picked
-> your patch up with my series but I didn't have the right environment
-> to test it.
-
-I'll resend a v2 once your series is working.
-
--michael
+Reviewed-by: Miklos Szeredi <mszeredi@redhat.com>
