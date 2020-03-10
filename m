@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3109C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:50:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32C4AC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:51:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6F5224694
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:50:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 070242468F
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:51:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583844655;
-	bh=eoNayO3uiDva1CrJ3Fk5TV4cI6wo6Xy7e7/LDxK2Xuo=;
+	s=default; t=1583844660;
+	bh=oF0xEUGHLnM5+Uc5nUYYEJU5ATFGGvoruCj46yHPjcw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E3Fg1N4b6Mfu/3l9qgtZJG4CtkibYQw15CMvLYxRgx6VVYjKFu1axZB6HwTmvvTmK
-	 zPrR/CeFyjMy6646vKyr3c/1S5HNilbYMIondjrhyqH9qAqQWNYH0Do6RgilhZFgTn
-	 XRmZB55uE3BbzUH3In+dVvPVl3EEkXPs3Jwl9CQQ=
+	b=wJYG2kcxs7AfUqE6CkDXRTOfLVh7mXO4hZVgA8skTRiofef3ayBvCND59KPGQ6CT8
+	 VcDC81i1rOQpS4xjhmhZCtBcQfLCwWACcL7tM7Qa9Jhmb+0O2XlU3CUejV0d3amzVC
+	 XaSsrK+fHIhAF7S9Gdyqg2+duEe6rtcy3reD5np8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727979AbgCJMuy (ORCPT
+        id S1728743AbgCJMu7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:50:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55744 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:50:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55842 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728725AbgCJMux (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:50:53 -0400
+        id S1727368AbgCJMu5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:50:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 593D420674;
-        Tue, 10 Mar 2020 12:50:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 317B124691;
+        Tue, 10 Mar 2020 12:50:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844652;
-        bh=eoNayO3uiDva1CrJ3Fk5TV4cI6wo6Xy7e7/LDxK2Xuo=;
+        s=default; t=1583844655;
+        bh=oF0xEUGHLnM5+Uc5nUYYEJU5ATFGGvoruCj46yHPjcw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tMXWyZ5Oyzjp0T65V9QiNoYzYjd9rXum1jE77AL76oFrYj7i/YhqogsSQO66xwpYz
-         16oAj0/J6DgNQacryPlp3ZVZwQzveZIWdYz9nuUOLejDCfTOlcLs+/HRdf3sDzMGcU
-         /4AeMOwlYeEl8998qVITQTB2yrz4gBYUUKbnZwx4=
+        b=ivhCgWId1p4w3JplCDw1VMefr8Hp2tLPAM+0IhofK7YXDKadljfiABxMxfulNqifp
+         pJaad7PVaDJ7A9Zv9ui5y5viXXx79IpJkMjr/S4kRgsf7DwafmYcUb/SojhZ4Ujhjb
+         hulLyZ+xXg7VqLpbtUDsxeVnbHkXUARNIaeWHN+I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hangbin Liu <liuhangbin@gmail.com>,
+        stable@vger.kernel.org, Dmitry Bogdanov <dbogdanov@marvell.com>,
+        Igor Russkikh <irusskikh@marvell.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 030/168] selftests: forwarding: vxlan_bridge_1d: fix tos value
-Date:   Tue, 10 Mar 2020 13:37:56 +0100
-Message-Id: <20200310123638.631592521@linuxfoundation.org>
+Subject: [PATCH 5.4 031/168] net: atlantic: check rpc result and wait for rpc address
+Date:   Tue, 10 Mar 2020 13:37:57 +0100
+Message-Id: <20200310123638.718323939@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123635.322799692@linuxfoundation.org>
 References: <20200310123635.322799692@linuxfoundation.org>
@@ -60,41 +61,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hangbin Liu <liuhangbin@gmail.com>
+From: Igor Russkikh <irusskikh@marvell.com>
 
-[ Upstream commit 4e867c9a50ff1a07ed0b86c3b1c8bc773933d728 ]
+[ Upstream commit e7b5f97e6574dc4918e375d5f8d24ec31653cd6d ]
 
-After commit 71130f29979c ("vxlan: fix tos value before xmit") we start
-strict vxlan xmit tos value by RT_TOS(), which limits the tos value less
-than 0x1E. With current value 0x40 the test will failed with "v1: Expected
-to capture 10 packets, got 0". So let's choose a smaller tos value for
-testing.
+Artificial HW reliability tests revealed a possible hangup in
+the driver. Normally, when device disappears from bus, all
+register reads returns 0xFFFFFFFF.
 
-Fixes: d417ecf533fe ("selftests: forwarding: vxlan_bridge_1d: Add a TOS test")
-Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
+At remote procedure invocation towards FW there is a logic
+where result is compared with -1 in a loop.
+That caused an infinite loop if hardware due to some issues
+disappears from bus.
+
+Add extra result checks to prevent this.
+
+Signed-off-by: Dmitry Bogdanov <dbogdanov@marvell.com>
+Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/net/forwarding/vxlan_bridge_1d.sh | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ .../aquantia/atlantic/hw_atl/hw_atl_utils.c   | 19 +++++++++++++++++--
+ 1 file changed, 17 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/selftests/net/forwarding/vxlan_bridge_1d.sh b/tools/testing/selftests/net/forwarding/vxlan_bridge_1d.sh
-index bb10e33690b25..353613fc19475 100755
---- a/tools/testing/selftests/net/forwarding/vxlan_bridge_1d.sh
-+++ b/tools/testing/selftests/net/forwarding/vxlan_bridge_1d.sh
-@@ -516,9 +516,9 @@ test_tos()
- 	RET=0
+diff --git a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_utils.c b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_utils.c
+index 52646855495ed..873f9865f0d15 100644
+--- a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_utils.c
++++ b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_utils.c
+@@ -22,6 +22,7 @@
+ #define HW_ATL_MIF_ADDR         0x0208U
+ #define HW_ATL_MIF_VAL          0x020CU
  
- 	tc filter add dev v1 egress pref 77 prot ip \
--		flower ip_tos 0x40 action pass
--	vxlan_ping_test $h1 192.0.2.3 "-Q 0x40" v1 egress 77 10
--	vxlan_ping_test $h1 192.0.2.3 "-Q 0x30" v1 egress 77 0
-+		flower ip_tos 0x11 action pass
-+	vxlan_ping_test $h1 192.0.2.3 "-Q 0x11" v1 egress 77 10
-+	vxlan_ping_test $h1 192.0.2.3 "-Q 0x12" v1 egress 77 0
- 	tc filter del dev v1 egress pref 77 prot ip
++#define HW_ATL_MPI_RPC_ADDR     0x0334U
+ #define HW_ATL_RPC_CONTROL_ADR  0x0338U
+ #define HW_ATL_RPC_STATE_ADR    0x033CU
  
- 	log_test "VXLAN: envelope TOS inheritance"
+@@ -48,15 +49,14 @@
+ #define FORCE_FLASHLESS 0
+ 
+ static int hw_atl_utils_ver_match(u32 ver_expected, u32 ver_actual);
+-
+ static int hw_atl_utils_mpi_set_state(struct aq_hw_s *self,
+ 				      enum hal_atl_utils_fw_state_e state);
+-
+ static u32 hw_atl_utils_get_mpi_mbox_tid(struct aq_hw_s *self);
+ static u32 hw_atl_utils_mpi_get_state(struct aq_hw_s *self);
+ static u32 hw_atl_utils_mif_cmd_get(struct aq_hw_s *self);
+ static u32 hw_atl_utils_mif_addr_get(struct aq_hw_s *self);
+ static u32 hw_atl_utils_rpc_state_get(struct aq_hw_s *self);
++static u32 aq_fw1x_rpc_get(struct aq_hw_s *self);
+ 
+ int hw_atl_utils_initfw(struct aq_hw_s *self, const struct aq_fw_ops **fw_ops)
+ {
+@@ -413,6 +413,10 @@ static int hw_atl_utils_init_ucp(struct aq_hw_s *self,
+ 					self, self->mbox_addr,
+ 					self->mbox_addr != 0U,
+ 					1000U, 10000U);
++	err = readx_poll_timeout_atomic(aq_fw1x_rpc_get, self,
++					self->rpc_addr,
++					self->rpc_addr != 0U,
++					1000U, 100000U);
+ 
+ 	return err;
+ }
+@@ -469,6 +473,12 @@ int hw_atl_utils_fw_rpc_wait(struct aq_hw_s *self,
+ 						self, fw.val,
+ 						sw.tid == fw.tid,
+ 						1000U, 100000U);
++		if (err < 0)
++			goto err_exit;
++
++		err = aq_hw_err_from_flags(self);
++		if (err < 0)
++			goto err_exit;
+ 
+ 		if (fw.len == 0xFFFFU) {
+ 			err = hw_atl_utils_fw_rpc_call(self, sw.len);
+@@ -950,6 +960,11 @@ static u32 hw_atl_utils_rpc_state_get(struct aq_hw_s *self)
+ 	return aq_hw_read_reg(self, HW_ATL_RPC_STATE_ADR);
+ }
+ 
++static u32 aq_fw1x_rpc_get(struct aq_hw_s *self)
++{
++	return aq_hw_read_reg(self, HW_ATL_MPI_RPC_ADDR);
++}
++
+ const struct aq_fw_ops aq_fw_1x_ops = {
+ 	.init = hw_atl_utils_mpi_create,
+ 	.deinit = hw_atl_fw1x_deinit,
 -- 
 2.20.1
 
