@@ -2,237 +2,188 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B0FEC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 18:03:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5A4CC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 18:04:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21E1421927
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 18:03:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 807E921927
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 18:04:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QJcjnsoR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726481AbgCJSD6 (ORCPT
+        id S1726623AbgCJSEa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 14:03:58 -0400
-Received: from mga03.intel.com ([134.134.136.65]:50812 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726283AbgCJSD5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 14:03:57 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Mar 2020 11:03:56 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,537,1574150400"; 
-   d="scan'208";a="236123984"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga008.jf.intel.com with ESMTP; 10 Mar 2020 11:03:56 -0700
-Received: from [10.125.249.53] (rsudarik-mobl.ccr.corp.intel.com [10.125.249.53])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id 3E05B58010D;
-        Tue, 10 Mar 2020 11:03:53 -0700 (PDT)
-Subject: Re: [PATCH v7 0/3] [RESEND] perf x86: Exposing IO stack to IO PMON
- mapping through sysfs
-To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, namhyung@kernel.org,
-        linux-kernel@vger.kernel.org, eranian@google.com,
-        bgregg@netflix.com, ak@linux.intel.com, kan.liang@linux.intel.com
-Cc:     alexander.antonov@intel.com
-References: <20200303135418.9621-1-roman.sudarikov@linux.intel.com>
-From:   "Sudarikov, Roman" <roman.sudarikov@linux.intel.com>
-Message-ID: <b09cd7ca-6862-264f-d21f-ac0694accfc8@linux.intel.com>
-Date:   Tue, 10 Mar 2020 21:03:49 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Tue, 10 Mar 2020 14:04:30 -0400
+Received: from mail-qv1-f66.google.com ([209.85.219.66]:32854 "EHLO
+        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726283AbgCJSEa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 14:04:30 -0400
+Received: by mail-qv1-f66.google.com with SMTP id cz10so3114945qvb.0
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 11:04:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Jrx7ubFINctPX04p6Hf8KyJKt25rJORd6jzd4KzVUBU=;
+        b=QJcjnsoR/ICUsOvsk9dQb33SdBP+Nx3DJbB+PJFiGW5YeW6eQemNP1mPoec5JheE6B
+         PjrRD5f7RjJ2bG8VXa79EwpfzFMyiqesvlrAEjReFR3Luy7wBzeI5ZwdDQG97Awvfyga
+         Le45/UsBRrSWrKpekob3XB9GHWIRIqlEUhXI8nuI1iXxCY9TxHsJpgv+dLo7wNfnTxWH
+         kS9PBkZsjdRXutsubq7n4PHWEQDx+9NH2TP/eOmQ0apCp0vehWSPsCDAC7HZ864U357q
+         45HCZwUGTi7yV1yAH8IzDyynI5mDtA4SnODRDEMtdyfZJxInuT4gk6GZ+E4HgtGK4N1t
+         Z3Sg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Jrx7ubFINctPX04p6Hf8KyJKt25rJORd6jzd4KzVUBU=;
+        b=TbQlOLITjZ5Unnph7yNxMoC8o+Vo7ORVoQ+KaI8qC9AVzy+ht24ephBF8Fo1NxQQfI
+         VixB3RI1Y3k17aC6oz2GjG2YuT3acazmdTf2RgZpAMyQppUVUPtOcKVRxop6ZaIJ4u3p
+         Fy9pZJKbz7CIFhXcabmeLEPkIT3RSC68InwRkOZdQWc3TfROfQpPDzl8iAfYfYQOmbXi
+         p1W1FUDDPhYF+n+wjsiBkTFlYuktHTcDI5rjbjQOOnMS2LaglKN6kMcpEjNhkRP/3JKA
+         g8AQbgSpRV46QHCEMmDoLqKt5Of8gq5OMcfJfKtC07GnGs/EruFfv/gOGggGgmhYvSKv
+         aQyQ==
+X-Gm-Message-State: ANhLgQ3tSv6KkhPE0gmvJvViu7+43hEfSd/CogR80wRrDbZhN0rkvQHB
+        GgQEWBYahtxLW8Wz7LkH8vYmE0d0HWg=
+X-Google-Smtp-Source: ADFU+vtqyMZH7+Mmz//SVO+EiV7Ri8P7wdBYUGHREoEbLP2wvHALJni1hoQWBEI2OE/qaoZtd0tJDQ==
+X-Received: by 2002:ad4:4e26:: with SMTP id dm6mr19330987qvb.229.1583863468511;
+        Tue, 10 Mar 2020 11:04:28 -0700 (PDT)
+Received: from quaco.ghostprotocols.net (179-240-149-111.3g.claro.net.br. [179.240.149.111])
+        by smtp.gmail.com with ESMTPSA id g3sm8980446qke.89.2020.03.10.11.04.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Mar 2020 11:04:27 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id D7CC740009; Tue, 10 Mar 2020 15:04:23 -0300 (-03)
+Date:   Tue, 10 Mar 2020 15:04:23 -0300
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     kan.liang@linux.intel.com, mingo@redhat.com, peterz@infradead.org,
+        linux-kernel@vger.kernel.org, mark.rutland@arm.com,
+        namhyung@kernel.org, ravi.bangoria@linux.ibm.com,
+        yao.jin@linux.intel.com, ak@linux.intel.com
+Subject: Re: [PATCH V2 0/5] Support metric group constraint
+Message-ID: <20200310180423.GL15931@kernel.org>
+References: <1582581564-184429-1-git-send-email-kan.liang@linux.intel.com>
+ <20200226153549.GD217283@krava>
 MIME-Version: 1.0
-In-Reply-To: <20200303135418.9621-1-roman.sudarikov@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200226153549.GD217283@krava>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Peter,
+Em Wed, Feb 26, 2020 at 04:35:49PM +0100, Jiri Olsa escreveu:
+> On Mon, Feb 24, 2020 at 01:59:19PM -0800, kan.liang@linux.intel.com wrote:
+> > From: Kan Liang <kan.liang@linux.intel.com>
+> > 
+> > Changes since V1:
+> > - Remove global static flag violate_nmi_constraint, and add a new
+> >   function metricgroup___watchdog_constraint_hint() for all
+> >   watchdog constraint hints in patch 4.
+> >   The rest of the patches are not changed.
+> 
+> Acked-by: Jiri Olsa <jolsa@redhat.com>
 
-Could you please take a look at the patch set and let me know if 
-anything needs fixing?
+Thanks, tested, applied,
 
-Thanks,
-Roman
+- Arnaldo
+ 
+> thanks,
+> jirka
+> 
+> > 
+> > Some metric groups, e.g. Page_Walks_Utilization, will never count when
+> > NMI watchdog is enabled.
+> > 
+> >  $echo 1 > /proc/sys/kernel/nmi_watchdog
+> >  $perf stat -M Page_Walks_Utilization
+> > 
+> >  Performance counter stats for 'system wide':
+> > 
+> >  <not counted>      itlb_misses.walk_pending       (0.00%)
+> >  <not counted>      dtlb_load_misses.walk_pending  (0.00%)
+> >  <not counted>      dtlb_store_misses.walk_pending (0.00%)
+> >  <not counted>      ept.walk_pending               (0.00%)
+> >  <not counted>      cycles                         (0.00%)
+> > 
+> >        2.343460588 seconds time elapsed
+> > 
+> >  Some events weren't counted. Try disabling the NMI watchdog:
+> >         echo 0 > /proc/sys/kernel/nmi_watchdog
+> >         perf stat ...
+> >         echo 1 > /proc/sys/kernel/nmi_watchdog
+> >  The events in group usually have to be from the same PMU. Try
+> >  reorganizing the group.
+> > 
+> > A metric group is a weak group, which relies on group validation
+> > code in the kernel to determine whether to be opened as a group or
+> > a non-group. However, group validation code may return false-positives,
+> > especially when NMI watchdog is enabled. (The metric group is allowed
+> > as a group but will never be scheduled.)
+> > 
+> > The attempt to fix the group validation code has been rejected.
+> > https://lore.kernel.org/lkml/20200117091341.GX2827@hirez.programming.kicks-ass.net/
+> > Because we cannot accurately predict whether the group can be scheduled
+> > as a group, only by checking current status.
+> > 
+> > This patch set provides another solution to mitigate the issue.
+> > Add "MetricConstraint" in event list, which provides a hint for perf tool,
+> > e.g. "MetricConstraint": "NO_NMI_WATCHDOG". Perf tool can change the
+> > metric group to non-group (standalone metrics) if NMI watchdog is enabled.
+> > 
+> > After applying the patch,
+> > 
+> >  $echo 1 > /proc/sys/kernel/nmi_watchdog
+> >  $perf stat -M Page_Walks_Utilization
+> >   Splitting metric group Page_Walks_Utilization into standalone metrics.
+> >   Try disabling the NMI watchdog to comply NO_NMI_WATCHDOG metric constraint:
+> >         echo 0 > /proc/sys/kernel/nmi_watchdog
+> >         perf stat ...
+> >         echo 1 > /proc/sys/kernel/nmi_watchdog
+> > 
+> >  Performance counter stats for 'system wide':
+> > 
+> >         18,253,454      itlb_misses.walk_pending  #      0.0
+> >                               Page_Walks_Utilization   (50.55%)
+> >         78,051,525      dtlb_load_misses.walk_pending  (50.55%)
+> >         29,213,063      dtlb_store_misses.walk_pending (50.55%)
+> >                  0      ept.walk_pending               (50.55%)
+> >      2,542,132,364      cycles                         (49.92%)
+> > 
+> >        1.037095993 seconds time elapsed
+> > 
+> > Kan Liang (5):
+> >   perf jevents: Support metric constraint
+> >   perf metricgroup: Factor out metricgroup__add_metric_weak_group()
+> >   perf util: Factor out sysctl__nmi_watchdog_enabled()
+> >   perf metricgroup: Support metric constraint
+> >   perf vendor events: Add NO_NMI_WATCHDOG metric constraint
+> > 
+> >  .../arch/x86/cascadelakex/clx-metrics.json         |   3 +-
+> >  .../pmu-events/arch/x86/skylake/skl-metrics.json   |   3 +-
+> >  .../pmu-events/arch/x86/skylakex/skx-metrics.json  |   3 +-
+> >  tools/perf/pmu-events/jevents.c                    |  19 ++--
+> >  tools/perf/pmu-events/jevents.h                    |   2 +-
+> >  tools/perf/pmu-events/pmu-events.h                 |   1 +
+> >  tools/perf/util/metricgroup.c                      | 109 ++++++++++++++++-----
+> >  tools/perf/util/stat-display.c                     |   6 +-
+> >  tools/perf/util/util.c                             |  18 ++++
+> >  tools/perf/util/util.h                             |   2 +
+> >  10 files changed, 128 insertions(+), 38 deletions(-)
+> > 
+> > -- 
+> > 2.7.4
+> > 
+> 
 
-On 03.03.2020 16:54, roman.sudarikov@linux.intel.com wrote:
-> From: Roman Sudarikov <roman.sudarikov@linux.intel.com>
->
-> The previous version can be found at:
-> v6: https://lkml.kernel.org/r/20200213150148.5627-1-roman.sudarikov@linux.intel.com/
->
-> Changes in this revision are:
-> v6 -> v7:
-> - Addressed comments from Greg Kroah-Hartman:
->    1. Added proper handling of load/unload path
->    2. Simplified the mapping attribute show procedure by using the segment value
->       of the first available root bus for all mapping attributes which is safe
->       due to current implementation supports single segment configuration only
->    3. Fixed coding style issues (extra lines, gotos in error path, macros etc)
->
-> The previous version can be found at:
-> v5: https://lkml.kernel.org/r/20200211161549.19828-1-roman.sudarikov@linux.intel.com/
->
-> Changes in this revision are:
-> v5 -> v6:
->    1. Changed the mapping attribute name to "dieX"
->    2. Called sysfs_attr_init() prior to dynamically creating the mapping attrs
->    3. Removed redundant "empty" attribute
->    4. Got an agreement on the mapping attribute format
->
-> The previous version can be found at:
-> v4: https://lkml.kernel.org/r/20200117133759.5729-1-roman.sudarikov@linux.intel.com/
->
-> Changes in this revision are:
-> v4 -> v5:
-> - Addressed comments from Greg Kroah-Hartman:
->    1. Using the attr_update flow for newly introduced optional attributes
->    2. No subfolder, optional attributes are created the same level as 'cpumask'
->    3. No symlinks, optional attributes are created as files
->    4. Single file for each IIO PMON block to node mapping
->    5. Added Documentation/ABI/sysfs-devices-mapping
->
-> The previous version can be found at:
-> v3: https://lkml.kernel.org/r/20200113135444.12027-1-roman.sudarikov@linux.intel.com
->
-> Changes in this revision are:
-> v3 -> v4:
-> - Addressed comments from Greg Kroah-Hartman:
->    1. Reworked handling of newly introduced attribute.
->    2. Required Documentation update is expected in the follow up patchset
->
->
-> The previous version can be found at:
-> v2: https://lkml.kernel.org/r/20191210091451.6054-1-roman.sudarikov@linux.intel.com
->
-> Changes in this revision are:
-> v2 -> v3:
->    1. Addressed comments from Peter and Kan
->
-> The previous version can be found at:
-> v1: https://lkml.kernel.org/r/20191126163630.17300-1-roman.sudarikov@linux.intel.com
->
-> Changes in this revision are:
-> v1 -> v2:
->    1. Fixed process related issues;
->    2. This patch set includes kernel support for IIO stack to PMON mapping;
->    3. Stephane raised concerns regarding output format which may require
-> code changes in the user space part of the feature only. We will continue
-> output format discussion in the context of user space update.
->
-> Intel® Xeon® Scalable processor family (code name Skylake-SP) makes
-> significant changes in the integrated I/O (IIO) architecture. The new
-> solution introduces IIO stacks which are responsible for managing traffic
-> between the PCIe domain and the Mesh domain. Each IIO stack has its own
-> PMON block and can handle either DMI port, x16 PCIe root port, MCP-Link
-> or various built-in accelerators. IIO PMON blocks allow concurrent
-> monitoring of I/O flows up to 4 x4 bifurcation within each IIO stack.
->
-> Software is supposed to program required perf counters within each IIO
-> stack and gather performance data. The tricky thing here is that IIO PMON
-> reports data per IIO stack but users have no idea what IIO stacks are -
-> they only know devices which are connected to the platform.
->
-> Understanding IIO stack concept to find which IIO stack that particular
-> IO device is connected to, or to identify an IIO PMON block to program
-> for monitoring specific IIO stack assumes a lot of implicit knowledge
-> about given Intel server platform architecture.
->
-> This patch set introduces:
-> 1. An infrastructure for exposing an Uncore unit to Uncore PMON mapping
->     through sysfs-backend;
-> 2. A new --iiostat mode in perf stat to provide I/O performance metrics
->     per I/O device.
->
-> Usage examples:
->
-> 1. List all devices below IIO stacks
->    ./perf stat --iiostat=show
->
-> Sample output w/o libpci:
->
->      S0-RootPort0-uncore_iio_0<00:00.0>
->      S1-RootPort0-uncore_iio_0<81:00.0>
->      S0-RootPort1-uncore_iio_1<18:00.0>
->      S1-RootPort1-uncore_iio_1<86:00.0>
->      S1-RootPort1-uncore_iio_1<88:00.0>
->      S0-RootPort2-uncore_iio_2<3d:00.0>
->      S1-RootPort2-uncore_iio_2<af:00.0>
->      S1-RootPort3-uncore_iio_3<da:00.0>
->
-> Sample output with libpci:
->
->      S0-RootPort0-uncore_iio_0<00:00.0 Sky Lake-E DMI3 Registers>
->      S1-RootPort0-uncore_iio_0<81:00.0 Ethernet Controller X710 for 10GbE SFP+>
->      S0-RootPort1-uncore_iio_1<18:00.0 Omni-Path HFI Silicon 100 Series [discrete]>
->      S1-RootPort1-uncore_iio_1<86:00.0 Ethernet Controller XL710 for 40GbE QSFP+>
->      S1-RootPort1-uncore_iio_1<88:00.0 Ethernet Controller XL710 for 40GbE QSFP+>
->      S0-RootPort2-uncore_iio_2<3d:00.0 Ethernet Connection X722 for 10GBASE-T>
->      S1-RootPort2-uncore_iio_2<af:00.0 Omni-Path HFI Silicon 100 Series [discrete]>
->      S1-RootPort3-uncore_iio_3<da:00.0 NVMe Datacenter SSD [Optane]>
->
-> 2. Collect metrics for all I/O devices below IIO stack
->
->    ./perf stat --iiostat -- dd if=/dev/zero of=/dev/nvme0n1 bs=1M oflag=direct
->      357708+0 records in
->      357707+0 records out
->      375083606016 bytes (375 GB, 349 GiB) copied, 215.381 s, 1.7 GB/s
->
->    Performance counter stats for 'system wide':
->
->       device             Inbound Read(MB)    Inbound Write(MB)    Outbound Read(MB)   Outbound Write(MB)
->      00:00.0                    0                    0                    0                    0
->      81:00.0                    0                    0                    0                    0
->      18:00.0                    0                    0                    0                    0
->      86:00.0                    0                    0                    0                    0
->      88:00.0                    0                    0                    0                    0
->      3b:00.0                    3                    0                    0                    0
->      3c:03.0                    3                    0                    0                    0
->      3d:00.0                    3                    0                    0                    0
->      af:00.0                    0                    0                    0                    0
->      da:00.0               358559                   44                    0                   22
->
->      215.383783574 seconds time elapsed
->
->
-> 3. Collect metrics for comma separted list of I/O devices
->
->    ./perf stat --iiostat=da:00.0 -- dd if=/dev/zero of=/dev/nvme0n1 bs=1M oflag=direct
->      381555+0 records in
->      381554+0 records out
->      400088457216 bytes (400 GB, 373 GiB) copied, 374.044 s, 1.1 GB/s
->
->    Performance counter stats for 'system wide':
->
->       device             Inbound Read(MB)    Inbound Write(MB)    Outbound Read(MB)   Outbound Write(MB)
->      da:00.0               382462                   47                    0                   23
->
->      374.045775505 seconds time elapsed
->
-> Roman Sudarikov (3):
->    perf x86: Infrastructure for exposing an Uncore unit to PMON mapping
->    perf x86: Topology max dies for whole system
->    perf x86: Exposing an Uncore unit to PMON for Intel Xeon® server
->      platform
->
->   .../ABI/testing/sysfs-devices-mapping         |  33 +++
->   arch/x86/events/intel/uncore.c                |  21 +-
->   arch/x86/events/intel/uncore.h                |  18 ++
->   arch/x86/events/intel/uncore_snbep.c          | 193 ++++++++++++++++++
->   4 files changed, 259 insertions(+), 6 deletions(-)
->   create mode 100644 Documentation/ABI/testing/sysfs-devices-mapping
->
->
-> base-commit: 98d54f81e36ba3bf92172791eba5ca5bd813989b
+-- 
 
-
+- Arnaldo
