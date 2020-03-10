@@ -2,239 +2,366 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65BD8C10F25
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 01:02:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1368FC10F25
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 01:05:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F58D20637
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 01:02:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D220E20637
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 01:05:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gGjInPXd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727612AbgCJBCy (ORCPT
+        id S1726389AbgCJBFi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 21:02:54 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:44538 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727380AbgCJBCx (ORCPT
+        Mon, 9 Mar 2020 21:05:38 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:41846 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726202AbgCJBFi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 21:02:53 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 14C4680307C5;
-        Tue, 10 Mar 2020 01:02:49 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id F8oVAyj-VzAj; Tue, 10 Mar 2020 04:02:47 +0300 (MSK)
-Date:   Tue, 10 Mar 2020 04:01:50 +0300
-From:   Sergey Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
-        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paul.burton@imgtec.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, <linux-mips@vger.kernel.org>,
-        <linux-pm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 00/22] mips: Prepare MIPS-arch code for Baikal-T1 SoC
- support
-References: <20200306124705.6595-1-Sergey.Semin@baikalelectronics.ru>
+        Mon, 9 Mar 2020 21:05:38 -0400
+Received: by mail-lf1-f65.google.com with SMTP id q10so8677799lfo.8
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 18:05:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Ygq4rL6c32b9v1mGIXmpjeyzDhpEGmFslVXH83B3YQI=;
+        b=gGjInPXdKZ+GQ+k0bdOIaoJ0g2Zi/WGSTdvmbRGcdW2F0cdc9UoYm8eeTpLoEgR9L9
+         4PN/93glZzGJPsOyfvJ5x3vagJ0yF+Rs9g+8SezQ7bwMfgv4zxzgM6FkcJWItNm33dq8
+         O8QVTWv5claEBO+Lc1bb5weQ3bhpi3i/dLxsUrZf8E1FtmPhbRSaMXTtxiiZyK3D0Qhz
+         udW2aY9fzrx88P4JwvBoe+BbGk3qT9MQRdeU6st0GbuSahNUbvIMxzzZDBkXVmW13CJ+
+         RaYb2USVlCFmxB2q8t7KJHNyQ0RocEB+Ua+iv2mhK7lmSffgAAM+3tR0ZtfgSphgV3Tv
+         eV2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Ygq4rL6c32b9v1mGIXmpjeyzDhpEGmFslVXH83B3YQI=;
+        b=LPzDU1oBVAHqQB7Uku+3OITfGcGJSfCVQ7sfrXyDSQZ2QDxi48u31Fqvuj+MUcw/Xt
+         ++YmkEf0UV/oBcFNWYZAjm6VyvcQoa48nHs9kiyebtXkAx33FNhsHd/1/fC7Laj50fQT
+         Zz251COwjD6X43iK0x5+Cn12W117fSTYgCAhtVT29SWwp35MJmuJNWfPln1gcU2TcdX0
+         v82X7bKCPwiJAKOVCe4g3B43nGCwqgPvARN+1tvRQItDhGvhejhPhT7ZN1ioQDGOlDC0
+         zwlsp3lfQbTFYr0pzkBN3dgGp7QyxT26KiiZHt4/FGgyT1UaEETJ+z+9kBwqEJbsRhpd
+         6IvA==
+X-Gm-Message-State: ANhLgQ3ly5TLrRLjgeI43gWjb3rLOfktyuL9Zj5U35TtQ78BAAskvrXr
+        WWBTS3W7O245WS0JhcZbxzV9AN/Dbqv+7fwyGJprYg==
+X-Google-Smtp-Source: ADFU+vtHcZhKvzzl5a2j6uSJBS313bp20fEBZQgxPfgMt2/YQwS8EYKnQRaBhZ3RLzo7gLKn4ZkwwECGmj3cQrvkRDI=
+X-Received: by 2002:a19:fc1d:: with SMTP id a29mr11058514lfi.209.1583802332298;
+ Mon, 09 Mar 2020 18:05:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200306124705.6595-1-Sergey.Semin@baikalelectronics.ru>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
-Message-Id: <20200310010249.14C4680307C5@mail.baikalelectronics.ru>
+References: <cover.1581555616.git.ashish.kalra@amd.com> <b1b4675537fc592a6a78c0ca1888feba0d515557.1581555616.git.ashish.kalra@amd.com>
+In-Reply-To: <b1b4675537fc592a6a78c0ca1888feba0d515557.1581555616.git.ashish.kalra@amd.com>
+From:   Steve Rutherford <srutherford@google.com>
+Date:   Mon, 9 Mar 2020 18:04:56 -0700
+Message-ID: <CABayD+cZhCUkEAdCv+qTgvBOzsfDX5Vo8kYATHZDa4PwX_PYiQ@mail.gmail.com>
+Subject: Re: [PATCH 02/12] KVM: SVM: Add KVM_SEND_UPDATE_DATA command
+To:     Ashish Kalra <Ashish.Kalra@amd.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Joerg Roedel <joro@8bytes.org>,
+        Borislav Petkov <bp@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        David Rientjes <rientjes@google.com>, X86 ML <x86@kernel.org>,
+        KVM list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 06, 2020 at 03:46:43PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
-> From: Serge Semin <fancer.lancer@gmail.com>
-> 
-> This is a first patchset of a series of about 25 ones, which are intended to
-> add the full Baikal-T1 SoC [1] support to the Linux kernel. Since they will
-> concern various kernel subsystems, I decided to split the whole work up into
-> the patchesets in accordance with the subsystems/devices their changes are
-> introduced for. Nearly 2/3 of the work is already done and will be sent out
-> very soon. While the rest of the changes specifically related to the fast-speed
-> interfaces (DW 12G PHY, PCIe, SATA, xGBE, GMAC, USB, DDRC, IC) are still in
-> refactoring and preparation for integration into the mainline kernel. Hopefully
-> I'll finish them up in the next two-three months, and submit them straight
-> away.
-> 
-> Getting back to this patchset. As the subject states this is intended to
-> prepare the MIPS-arch and generic kernel code for further Baikal-T1 SoC
-> platform support integration (note the Baikal-T1 SoC platform code will be
-> submitted last after the whole series of patchsets as a closure of the
-> submission process). First of all the patchset starts with a set of changes
-> to the dt-bindings kernel concerning MIPS CPC and CDMM nodes as being described
-> by the trivial device bindings. In addition we updated the vendors prefix
-> schema with Baikal Electronics JSC prefix so being further committed device
-> drivers would be correctly accepted by the checkpatch-script.
-> 
-> Then I found out that dtc-compiler integrated into the kernel doesn't support
-> all the possible values of the 'reg'-property used to define the i2c-slave
-> devices address. It may have 10-bits and own-slave flags, so the compiler has
-> to deal with them. Even though the patch might be better to be integrated into
-> the mainline dtc repo I decided to send it to the kernel first.
-> 
-> While I was working with the MIPS architecture code, I discovered, that there
-> is a bug in the Coherency Manager v2 error causes declaration and the errors
-> handler lacked of CM2  L2 ECC/parity errors support. So the fixes are here in
-> the patchset.
-> 
-> Baikal-T1 SoC is based on the MIPS P5600 Warrior IP-core, which itself has
-> MIPS32 Release 5 architecture. Even though on ISA level it doesn't differ much
-> from the MIPS32 Release 2 release, there are still some peculiarities, which
-> make it's justified to add the direct MIPS32r5 support into the kernel (see
-> the specific patch for details). In addition seeing there is more than one
-> real chip based on the MIPS P5600 core on the market, it would be good to have
-> the direct P5600 CPU config in the MIPS-arch.
-> 
-> There were some issues we discovered while were working with MIPS-arch code.
-> So the cleanups and fixes are introduced in this patchset. First of all the
-> Write-Merge CPU feature hasn't been handled in a generic way. Even if a
-> platform defined the writecombine flag as _CACHE_UNCACHED_ACCELERATED, the
-> feature might have been disabled in the CP0 register. We either enable it or
-> leave it as is in accordance with the knowledge of whether the corresponding
-> platform really supports it. Secondly Memory Accessibility Attribute Registers
-> (MAAR) haven't been properly initialized when Extended Physical Address (XPA)
-> mode was enabled. Thirdly since some of the platforms may have a very strict
-> limitations on the IO-memory access instructions. For instance Baikal-T1 SoC
-> IO-memory can be accessed by the lw/sw instructions only. In this case
-> for early-printk and CPS-debug code we suggest to use the instructions in
-> accordance with the UART-registers offset (lb/sb if offset = 0, lh/sh
-> if offset = 1 and so on). Fourthly in case if CPUFREQ feature is enabled
-> and frequency of the CPU is changed by the reference clock alteration, we
-> must make sure that MIPS r4k timer related services are properly updated
-> when CPU-frequency changes. It concerns udelay lpj adjustment, MIPS timer
-> clockevent frequency update. In addition when CPU reference frequency changes
-> it isn't recommended to use the timer as clocksource at all, since currently
-> the subsystem isn't tolerant to the unstable clock sources. So in this case
-> we suggest to use the r4k timer for clocksourcing only as a last resort.
-> Fifthly we discovered a bug in a method of CPUFREQ boost feature enable
-> procedure and fixed it in one of the patches within this patchset. And finally
-> there are a few fixups/cleanups we suggest to integrate into the MIPS FDC
-> and CDMM related code (see the patches for details).
-> 
-> This patchset is rebased and tested on the mainline Linux kernel 5.6-rc4:
-> commit 98d54f81e36b ("Linux 5.6-rc4").
-> 
-> [1] http://www.baikalelectronics.com/products/168/
-> 
-> P.S. Sorry for the previous emails burst. I forgot to start the series with
-> this cover-letter and the corporate smtp broke the transmission in the middle
-> anyway. Please don't pay attention to them. Here is the proper emails
-> resubmission.
-> 
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Cc: Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>
-> Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
-> Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
-> Cc: Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>
-> Cc: Vadim Vlasov <V.Vlasov@baikalelectronics.ru>
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: Paul Burton <paul.burton@imgtec.com>
-> Cc: Ralf Baechle <ralf@linux-mips.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Frank Rowand <frowand.list@gmail.com>
-> cc: Tony Lindgren <tony@atomide.com>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Jiri Slaby <jslaby@suse.com>
-> Cc: linux-mips@vger.kernel.org
-> Cc: linux-pm@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
+On Wed, Feb 12, 2020 at 5:15 PM Ashish Kalra <Ashish.Kalra@amd.com> wrote:
+>
+> From: Brijesh Singh <brijesh.singh@amd.com>
+>
+> The command is used for encrypting the guest memory region using the encr=
+yption
+> context created with KVM_SEV_SEND_START.
+>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: Paolo Bonzini <pbonzini@redhat.com>
+> Cc: "Radim Kr=C4=8Dm=C3=A1=C5=99" <rkrcmar@redhat.com>
+> Cc: Joerg Roedel <joro@8bytes.org>
+> Cc: Borislav Petkov <bp@suse.de>
+> Cc: Tom Lendacky <thomas.lendacky@amd.com>
+> Cc: x86@kernel.org
+> Cc: kvm@vger.kernel.org
 > Cc: linux-kernel@vger.kernel.org
-> 
-> Serge Semin (22):
->   dt-bindings: Permit platform devices in the trivial-devices bindings
->   dt-bindings: Add MIPS CPC controller as a trivial devices
->   dt-bindings: Add MIPS CDMM controller as a trivial device
->   dt-bindings: Add vendor prefix for Baikal Electronics, JSC
->   mips: cm: Fix an invalid error code of INTVN_*_ERR
->   mips: cm: Add L2 ECC/parity errors reporting
->   mips: Add MIPS32 Release 5 support
->   mips: Add MIPS Warrior P5600 support
->   mips: Fix cpu_has_mips64r1/2 activation for MIPS32 CPUs
->   mips: Add CP0 Write Merge config support
->   mips: Add CONFIG/CONFIG6 reg fields macro
->   mips: MAAR: Use more precise address mask
->   mips: MAAR: Add XPA mode support
->   mips: early_printk_8250: Use offset-sized IO-mem accessors
->   mips: Use offset-sized IO-mem accessors in CPS debug printout
->   mips: cdmm: Add mti,mips-cdmm dtb node support
->   bus: cdmm: Add MIPS R5 arch support
->   tty: mips_ejtag_fdc: Mark expected switch fall-through
->   mips: Add udelay lpj numbers adjustment
->   mips: csrc-r4k: Decrease r4k-clocksource rating if CPU_FREQ enabled
->   mips: cevt-r4k: Update the r4k-clockevent frequency in sync with CPU
->   cpufreq: Return zero on success in boost sw setting
-> 
->  .../bindings/power/mti,mips-cpc.txt           |  8 ---
->  .../devicetree/bindings/trivial-devices.yaml  | 12 ++--
->  .../devicetree/bindings/vendor-prefixes.yaml  |  2 +
->  arch/mips/Kconfig                             | 62 ++++++++++++++--
->  arch/mips/Makefile                            |  2 +
->  arch/mips/include/asm/asmmacro.h              | 18 ++---
->  arch/mips/include/asm/compiler.h              |  5 ++
->  arch/mips/include/asm/cpu-features.h          | 34 ++++++---
->  arch/mips/include/asm/cpu-info.h              |  2 +-
->  arch/mips/include/asm/cpu-type.h              |  6 +-
->  arch/mips/include/asm/cpu.h                   | 11 +--
->  arch/mips/include/asm/fpu.h                   |  4 +-
->  arch/mips/include/asm/hazards.h               |  8 ++-
->  arch/mips/include/asm/maar.h                  | 17 ++++-
->  arch/mips/include/asm/mipsregs.h              | 33 ++++++++-
->  arch/mips/include/asm/module.h                |  4 ++
->  arch/mips/include/asm/stackframe.h            |  2 +-
->  arch/mips/include/asm/switch_to.h             |  8 +--
->  arch/mips/kernel/cevt-r4k.c                   | 44 ++++++++++++
->  arch/mips/kernel/cps-vec-ns16550.S            | 18 ++++-
->  arch/mips/kernel/cpu-probe.c                  | 60 ++++++++++++++++
->  arch/mips/kernel/csrc-r4k.c                   |  4 ++
->  arch/mips/kernel/early_printk_8250.c          | 34 ++++++++-
->  arch/mips/kernel/entry.S                      |  6 +-
->  arch/mips/kernel/mips-cm.c                    | 66 +++++++++++++++--
->  arch/mips/kernel/proc.c                       |  2 +
->  arch/mips/kernel/r4k_fpu.S                    | 14 ++--
->  arch/mips/kernel/spram.c                      |  4 +-
->  arch/mips/kernel/time.c                       | 70 +++++++++++++++++++
->  arch/mips/kvm/vz.c                            |  6 +-
->  arch/mips/lib/csum_partial.S                  |  6 +-
->  arch/mips/mm/c-r4k.c                          |  7 +-
->  arch/mips/mm/init.c                           |  8 ++-
->  arch/mips/mm/sc-mips.c                        |  7 +-
->  drivers/bus/Kconfig                           |  2 +-
->  drivers/bus/mips_cdmm.c                       | 15 ++++
->  drivers/cpufreq/cpufreq.c                     |  2 +-
->  drivers/tty/mips_ejtag_fdc.c                  |  1 +
->  38 files changed, 529 insertions(+), 85 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/power/mti,mips-cpc.txt
-> 
-> -- 
-> 2.25.1
-> 
+> Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
+> Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
+> ---
+>  .../virt/kvm/amd-memory-encryption.rst        |  24 ++++
+>  arch/x86/kvm/svm.c                            | 136 +++++++++++++++++-
+>  include/uapi/linux/kvm.h                      |   9 ++
+>  3 files changed, 165 insertions(+), 4 deletions(-)
+>
+> diff --git a/Documentation/virt/kvm/amd-memory-encryption.rst b/Documenta=
+tion/virt/kvm/amd-memory-encryption.rst
+> index 826911f41f3b..0f1c3860360f 100644
+> --- a/Documentation/virt/kvm/amd-memory-encryption.rst
+> +++ b/Documentation/virt/kvm/amd-memory-encryption.rst
+> @@ -265,6 +265,30 @@ Returns: 0 on success, -negative on error
+>                  __u32 session_len;
+>          };
+>
+> +11. KVM_SEV_SEND_UPDATE_DATA
+> +----------------------------
+> +
+> +The KVM_SEV_SEND_UPDATE_DATA command can be used by the hypervisor to en=
+crypt the
+> +outgoing guest memory region with the encryption context creating using
+> +KVM_SEV_SEND_START.
+> +
+> +Parameters (in): struct kvm_sev_send_update_data
+> +
+> +Returns: 0 on success, -negative on error
+> +
+> +::
+> +
+> +        struct kvm_sev_launch_send_update_data {
+> +                __u64 hdr_uaddr;        /* userspace address containing =
+the packet header */
+> +                __u32 hdr_len;
+> +
+> +                __u64 guest_uaddr;      /* the source memory region to b=
+e encrypted */
+> +                __u32 guest_len;
+> +
+> +                __u64 trans_uaddr;      /* the destition memory region  =
+*/
+> +                __u32 trans_len;
+> +        };
+> +
+>  References
+>  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>
+> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+> index 3a7e2cac51de..ae97f774e979 100644
+> --- a/arch/x86/kvm/svm.c
+> +++ b/arch/x86/kvm/svm.c
+> @@ -426,6 +426,7 @@ static DECLARE_RWSEM(sev_deactivate_lock);
+>  static DEFINE_MUTEX(sev_bitmap_lock);
+>  static unsigned int max_sev_asid;
+>  static unsigned int min_sev_asid;
+> +static unsigned long sev_me_mask;
+>  static unsigned long *sev_asid_bitmap;
+>  static unsigned long *sev_reclaim_asid_bitmap;
+>  #define __sme_page_pa(x) __sme_set(page_to_pfn(x) << PAGE_SHIFT)
+> @@ -1231,16 +1232,22 @@ static int avic_ga_log_notifier(u32 ga_tag)
+>  static __init int sev_hardware_setup(void)
+>  {
+>         struct sev_user_data_status *status;
+> +       int eax, ebx;
+>         int rc;
+>
+> -       /* Maximum number of encrypted guests supported simultaneously */
+> -       max_sev_asid =3D cpuid_ecx(0x8000001F);
+> +       /*
+> +        * Query the memory encryption information.
+> +        *  EBX:  Bit 0:5 Pagetable bit position used to indicate encrypt=
+ion
+> +        *  (aka Cbit).
+> +        *  ECX:  Maximum number of encrypted guests supported simultaneo=
+usly.
+> +        *  EDX:  Minimum ASID value that should be used for SEV guest.
+> +        */
+> +       cpuid(0x8000001f, &eax, &ebx, &max_sev_asid, &min_sev_asid);
+>
+>         if (!max_sev_asid)
+>                 return 1;
+>
+> -       /* Minimum ASID value that should be used for SEV guest */
+> -       min_sev_asid =3D cpuid_edx(0x8000001F);
+> +       sev_me_mask =3D 1UL << (ebx & 0x3f);
+>
+>         /* Initialize SEV ASID bitmaps */
+>         sev_asid_bitmap =3D bitmap_zalloc(max_sev_asid, GFP_KERNEL);
+> @@ -7262,6 +7269,124 @@ static int sev_send_start(struct kvm *kvm, struct=
+ kvm_sev_cmd *argp)
+>         return ret;
+>  }
+>
+> +/* Userspace wants to query either header or trans length. */
+> +static int
+> +__sev_send_update_data_query_lengths(struct kvm *kvm, struct kvm_sev_cmd=
+ *argp,
+> +                                    struct kvm_sev_send_update_data *par=
+ams)
+> +{
+> +       struct kvm_sev_info *sev =3D &to_kvm_svm(kvm)->sev_info;
+> +       struct sev_data_send_update_data *data;
+> +       int ret;
+> +
+> +       data =3D kzalloc(sizeof(*data), GFP_KERNEL_ACCOUNT);
+> +       if (!data)
+> +               return -ENOMEM;
+> +
+> +       data->handle =3D sev->handle;
+> +       ret =3D sev_issue_cmd(kvm, SEV_CMD_SEND_UPDATE_DATA, data, &argp-=
+>error);
+> +
+> +       params->hdr_len =3D data->hdr_len;
+> +       params->trans_len =3D data->trans_len;
+> +
+> +       if (copy_to_user((void __user *)(uintptr_t)argp->data, params,
+> +                        sizeof(struct kvm_sev_send_update_data)))
+> +               ret =3D -EFAULT;
+> +
+> +       kfree(data);
+> +       return ret;
+> +}
+> +
+> +static int sev_send_update_data(struct kvm *kvm, struct kvm_sev_cmd *arg=
+p)
+> +{
+> +       struct kvm_sev_info *sev =3D &to_kvm_svm(kvm)->sev_info;
+> +       struct sev_data_send_update_data *data;
+> +       struct kvm_sev_send_update_data params;
+> +       void *hdr, *trans_data;
+> +       struct page **guest_page;
+> +       unsigned long n;
+> +       int ret, offset;
+> +
+> +       if (!sev_guest(kvm))
+> +               return -ENOTTY;
+> +
+> +       if (copy_from_user(&params, (void __user *)(uintptr_t)argp->data,
+> +                       sizeof(struct kvm_sev_send_update_data)))
+> +               return -EFAULT;
+> +
+> +       /* userspace wants to query either header or trans length */
+> +       if (!params.trans_len || !params.hdr_len)
+> +               return __sev_send_update_data_query_lengths(kvm, argp, &p=
+arams);
+> +
+> +       if (!params.trans_uaddr || !params.guest_uaddr ||
+> +           !params.guest_len || !params.hdr_uaddr)
+> +               return -EINVAL;
+> +
+> +
+> +       /* Check if we are crossing the page boundary */
+> +       offset =3D params.guest_uaddr & (PAGE_SIZE - 1);
+> +       if ((params.guest_len + offset > PAGE_SIZE))
+> +               return -EINVAL;
+> +
+> +       /* Pin guest memory */
+> +       guest_page =3D sev_pin_memory(kvm, params.guest_uaddr & PAGE_MASK=
+,
+> +                                   PAGE_SIZE, &n, 0);
+> +       if (!guest_page)
+> +               return -EFAULT;
+> +
+> +       /* allocate memory for header and transport buffer */
+> +       ret =3D -ENOMEM;
+> +       hdr =3D kmalloc(params.hdr_len, GFP_KERNEL_ACCOUNT);
+> +       if (!hdr)
+> +               goto e_unpin;
+> +
+> +       trans_data =3D kmalloc(params.trans_len, GFP_KERNEL_ACCOUNT);
+> +       if (!trans_data)
+> +               goto e_free_hdr;
+> +
+> +       data =3D kzalloc(sizeof(*data), GFP_KERNEL);
+> +       if (!data)
+> +               goto e_free_trans_data;
+> +
+> +       data->hdr_address =3D __psp_pa(hdr);
+> +       data->hdr_len =3D params.hdr_len;
+> +       data->trans_address =3D __psp_pa(trans_data);
+> +       data->trans_len =3D params.trans_len;
+> +
+> +       /* The SEND_UPDATE_DATA command requires C-bit to be always set. =
+*/
+> +       data->guest_address =3D (page_to_pfn(guest_page[0]) << PAGE_SHIFT=
+) +
+> +                               offset;
+> +       data->guest_address |=3D sev_me_mask;
+> +       data->guest_len =3D params.guest_len;
+> +       data->handle =3D sev->handle;
+> +
+> +       ret =3D sev_issue_cmd(kvm, SEV_CMD_SEND_UPDATE_DATA, data, &argp-=
+>error);
+> +
+> +       if (ret)
+> +               goto e_free;
+> +
+> +       /* copy transport buffer to user space */
+> +       if (copy_to_user((void __user *)(uintptr_t)params.trans_uaddr,
+> +                        trans_data, params.trans_len)) {
+> +               ret =3D -EFAULT;
+> +               goto e_unpin;
+> +       }
+> +
+> +       /* Copy packet header to userspace. */
+> +       ret =3D copy_to_user((void __user *)(uintptr_t)params.hdr_uaddr, =
+hdr,
+> +                               params.hdr_len);
+> +
+> +e_free:
+> +       kfree(data);
+> +e_free_trans_data:
+> +       kfree(trans_data);
+> +e_free_hdr:
+> +       kfree(hdr);
+> +e_unpin:
+> +       sev_unpin_memory(kvm, guest_page, n);
+> +
+> +       return ret;
+> +}
+> +
+>  static int svm_mem_enc_op(struct kvm *kvm, void __user *argp)
+>  {
+>         struct kvm_sev_cmd sev_cmd;
+> @@ -7306,6 +7431,9 @@ static int svm_mem_enc_op(struct kvm *kvm, void __u=
+ser *argp)
+>         case KVM_SEV_SEND_START:
+>                 r =3D sev_send_start(kvm, &sev_cmd);
+>                 break;
+> +       case KVM_SEV_SEND_UPDATE_DATA:
+> +               r =3D sev_send_update_data(kvm, &sev_cmd);
+> +               break;
+>         default:
+>                 r =3D -EINVAL;
+>                 goto out;
+> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+> index 17bef4c245e1..d9dc81bb9c55 100644
+> --- a/include/uapi/linux/kvm.h
+> +++ b/include/uapi/linux/kvm.h
+> @@ -1570,6 +1570,15 @@ struct kvm_sev_send_start {
+>         __u32 session_len;
+>  };
+>
+> +struct kvm_sev_send_update_data {
+> +       __u64 hdr_uaddr;
+> +       __u32 hdr_len;
+> +       __u64 guest_uaddr;
+> +       __u32 guest_len;
+> +       __u64 trans_uaddr;
+> +       __u32 trans_len;
+> +};
+Input from others is welcome here, but I'd put the padding in
+intentionally (explicitly fill in the reserved u8s between *_len and
+*_uaddr). I had to double check that this pattern was intentional and
+matched the SEV spec.
+> +
+>  #define KVM_DEV_ASSIGN_ENABLE_IOMMU    (1 << 0)
+>  #define KVM_DEV_ASSIGN_PCI_2_3         (1 << 1)
+>  #define KVM_DEV_ASSIGN_MASK_INTX       (1 << 2)
+> --
+> 2.17.1
+>
 
-Folks,
+High level: this looks good. Same comments on documenting the magic
+parameters for querying as the prior patch, and also the -EFAULT
+behavior.
 
-It appears our corporate email server changes the Message-Id field of 
-messages passing through it. Due to that the emails threading gets to be
-broken. I'll resubmit the properly structured v2 patchset as soon as our system
-administrator fixes the problem. Sorry for the inconvenience caused by it.
-
-Regards,
--Sergey
+Thanks,
+Steve
