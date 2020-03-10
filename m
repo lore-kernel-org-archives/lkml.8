@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 470E0C18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:20:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC86BC18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:20:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 163CC20409
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:20:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C435B20873
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:20:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583846433;
-	bh=q3yD8SMbWAwNrT1iBJkEQAuuzq44A4f7dNbQy1ansmw=;
+	s=default; t=1583846440;
+	bh=8bO6GO8E6i/3MSac76iNpHF7RHMSIu3EktKoxlFkfTo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q1zy7RXcaz3GACz06tGOAQlbKIh2/B9lOP8PY3fvr/RktOzZ8CymKPTKgOoBxeerP
-	 tu9Gj+49bkEbhkrZ4aUDtlEs0zg3tM2i80inQ0kfcKGkEBxUDOGg4zuYYlaoy5fWqt
-	 MkbMsmSL07vgG0Tzpq+vQgcJyZ9txZzvvkyd1t0M=
+	b=0Qckhu0iTLSoOVWbJiCCnYNbtK/PtuUWYdKkwMI8eJYgNLxdVOzPDQ1wBewoI/gN3
+	 kfp8EF0JhbyhTt7skZzEk1WN64zi3NAR3T/87xWMhtFhd8k9X8hiORWnRn+iCyM9Fv
+	 e5Kv5eYqMt5s/GSUB15UV9bkAGqC8/E6tgkegoX8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729933AbgCJNUb (ORCPT
+        id S1730610AbgCJNHF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:20:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52974 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:07:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52620 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730939AbgCJNHP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:07:15 -0400
+        id S1730901AbgCJNG7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:06:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 555932469D;
-        Tue, 10 Mar 2020 13:07:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A20492468D;
+        Tue, 10 Mar 2020 13:06:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845634;
-        bh=q3yD8SMbWAwNrT1iBJkEQAuuzq44A4f7dNbQy1ansmw=;
+        s=default; t=1583845619;
+        bh=8bO6GO8E6i/3MSac76iNpHF7RHMSIu3EktKoxlFkfTo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rLVCzYgaA0xGXpf8IWHn0dfEKL9YbXNCwNfEO8jjKAocrlAbsliwT9Xvs5ws0CEIy
-         7ffMDOoUTNfEiCNPecY/FBkhHCw4EuFmrjA0J90mtQe/P3AFhhjRAUg9ePxIKx+vPL
-         J8j4VAnljv7QhBd1EWWYK3uwqfhZ3NOEbUP2a4zI=
+        b=YgezkV1c13KQBdUKmLgehlTaoDC82iSLgpVkfGwl/JVH2tsDwIYPm6gQqXOzQS3IX
+         l/9p0IlKGGfuuyo+g8ZYuA8D9ziFrLoB9zyVAfevZOv1vhx2mcCIqS1Xxx4l1mlYCg
+         WichjsMkP+OcyFOcNLLLpPag9snjAxHtsTNew1N8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+784ccb935f9900cc7c9e@syzkaller.appspotmail.com,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Jiri Kosina <jkosina@suse.cz>
-Subject: [PATCH 4.14 044/126] HID: hiddev: Fix race in in hiddev_disconnect()
-Date:   Tue, 10 Mar 2020 13:41:05 +0100
-Message-Id: <20200310124207.123826596@linuxfoundation.org>
+        stable@vger.kernel.org, Jan Kiszka <jan.kiszka@web.de>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Oliver Upton <oupton@google.com>
+Subject: [PATCH 4.14 038/126] KVM: VMX: check descriptor table exits on instruction emulation
+Date:   Tue, 10 Mar 2020 13:40:59 +0100
+Message-Id: <20200310124206.797741032@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310124203.704193207@linuxfoundation.org>
 References: <20200310124203.704193207@linuxfoundation.org>
@@ -62,39 +61,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: dan.carpenter@oracle.com <dan.carpenter@oracle.com>
+From: Oliver Upton <oupton@google.com>
 
-commit 5c02c447eaeda29d3da121a2e17b97ccaf579b51 upstream.
+commit 86f7e90ce840aa1db407d3ea6e9b3a52b2ce923c upstream.
 
-Syzbot reports that "hiddev" is used after it's free in hiddev_disconnect().
-The hiddev_disconnect() function sets "hiddev->exist = 0;" so
-hiddev_release() can free it as soon as we drop the "existancelock"
-lock.  This patch moves the mutex_unlock(&hiddev->existancelock) until
-after we have finished using it.
+KVM emulates UMIP on hardware that doesn't support it by setting the
+'descriptor table exiting' VM-execution control and performing
+instruction emulation. When running nested, this emulation is broken as
+KVM refuses to emulate L2 instructions by default.
 
-Reported-by: syzbot+784ccb935f9900cc7c9e@syzkaller.appspotmail.com
-Fixes: 7f77897ef2b6 ("HID: hiddev: fix potential use-after-free")
-Suggested-by: Alan Stern <stern@rowland.harvard.edu>
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Correct this regression by allowing the emulation of descriptor table
+instructions if L1 hasn't requested 'descriptor table exiting'.
+
+Fixes: 07721feee46b ("KVM: nVMX: Don't emulate instructions in guest mode")
+Reported-by: Jan Kiszka <jan.kiszka@web.de>
+Cc: stable@vger.kernel.org
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Jim Mattson <jmattson@google.com>
+Signed-off-by: Oliver Upton <oupton@google.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hid/usbhid/hiddev.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kvm/vmx.c |   15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
---- a/drivers/hid/usbhid/hiddev.c
-+++ b/drivers/hid/usbhid/hiddev.c
-@@ -954,9 +954,9 @@ void hiddev_disconnect(struct hid_device
- 	hiddev->exist = 0;
+--- a/arch/x86/kvm/vmx.c
++++ b/arch/x86/kvm/vmx.c
+@@ -12370,6 +12370,7 @@ static int vmx_check_intercept_io(struct
+ 	else
+ 		intercept = nested_vmx_check_io_bitmaps(vcpu, port, size);
  
- 	if (hiddev->open) {
--		mutex_unlock(&hiddev->existancelock);
- 		hid_hw_close(hiddev->hid);
- 		wake_up_interruptible(&hiddev->wait);
-+		mutex_unlock(&hiddev->existancelock);
- 	} else {
- 		mutex_unlock(&hiddev->existancelock);
- 		kfree(hiddev);
++	/* FIXME: produce nested vmexit and return X86EMUL_INTERCEPTED.  */
+ 	return intercept ? X86EMUL_UNHANDLEABLE : X86EMUL_CONTINUE;
+ }
+ 
+@@ -12399,6 +12400,20 @@ static int vmx_check_intercept(struct kv
+ 	case x86_intercept_outs:
+ 		return vmx_check_intercept_io(vcpu, info);
+ 
++	case x86_intercept_lgdt:
++	case x86_intercept_lidt:
++	case x86_intercept_lldt:
++	case x86_intercept_ltr:
++	case x86_intercept_sgdt:
++	case x86_intercept_sidt:
++	case x86_intercept_sldt:
++	case x86_intercept_str:
++		if (!nested_cpu_has2(vmcs12, SECONDARY_EXEC_DESC))
++			return X86EMUL_CONTINUE;
++
++		/* FIXME: produce nested vmexit and return X86EMUL_INTERCEPTED.  */
++		break;
++
+ 	/* TODO: check more intercepts... */
+ 	default:
+ 		break;
 
 
