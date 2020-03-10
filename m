@@ -2,200 +2,317 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45282C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 16:05:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72AEDC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 16:06:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DD3C21D56
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 16:05:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36CF7215A4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 16:06:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583856402;
+	bh=QaB1DLMLzYVmS7NOzAyfnAV62dQxl/Io1eNsemn2W1Q=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=P/IL+QX1b7wIViQPVfo5oJPpbiU04KxTzPE4YeZWLUTOav30hyN9SKa7UkhUyb3PW
+	 l2YunT5VWT2BQA3ocXi3slr7mOcXXNS9vn1nGas8zmSXchLyfhud10Yy8wIgxLw2pH
+	 ur68mBM76dD1BTZlCEyGsaUqxU0D8Ukq1cYZwCvc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727041AbgCJQFx (ORCPT
+        id S1726992AbgCJQGl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 12:05:53 -0400
-Received: from mga18.intel.com ([134.134.136.126]:46544 "EHLO mga18.intel.com"
+        Tue, 10 Mar 2020 12:06:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35110 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726283AbgCJQFw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 12:05:52 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Mar 2020 09:05:51 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,518,1574150400"; 
-   d="scan'208";a="260834221"
-Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
-  by orsmga002.jf.intel.com with SMTP; 10 Mar 2020 09:05:46 -0700
-Received: by stinkbox (sSMTP sendmail emulation); Tue, 10 Mar 2020 18:05:45 +0200
-Date:   Tue, 10 Mar 2020 18:05:45 +0200
-From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
-To:     Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>
-Cc:     jani.nikula@linux.intel.com, daniel@ffwll.ch,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        airlied@linux.ie, maarten.lankhorst@linux.intel.com,
-        tzimmermann@suse.de, mripard@kernel.org, mihail.atanassov@arm.com,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        =?iso-8859-1?Q?Jos=E9?= Roberto de Souza 
-        <jose.souza@intel.com>,
-        Juha-Pekka Heikkila <juhapekka.heikkila@gmail.com>,
-        linux-kernel@vger.kernel.org, ankit.k.nautiyal@intel.com
-Subject: Re: [RFC][PATCH 3/5] drm/i915: Enable scaling filter for plane and
- pipe
-Message-ID: <20200310160545.GI13686@intel.com>
-References: <20200225070545.4482-1-pankaj.laxminarayan.bharadiya@intel.com>
- <20200225070545.4482-4-pankaj.laxminarayan.bharadiya@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200225070545.4482-4-pankaj.laxminarayan.bharadiya@intel.com>
-X-Patchwork-Hint: comment
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1726283AbgCJQGk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 12:06:40 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B015820873;
+        Tue, 10 Mar 2020 16:06:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583856399;
+        bh=QaB1DLMLzYVmS7NOzAyfnAV62dQxl/Io1eNsemn2W1Q=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ynOndZMfdVzZq7sozSoaZ0uDLdIPIPfVDGTPa8HJ5ZdDpsTZjuSGzbQEgViPqptWi
+         MjNDaQLs2aT1lZQHfnnlj+ZRPO5hJxwfXNmWmsidKbFA+HusiYmoFBRAiK+4JK1clf
+         wwrmzNBz73ksDoiiylKgUYLLDo7SQem45kanjPjQ=
+Date:   Wed, 11 Mar 2020 01:06:33 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Jason Wessel <jason.wessel@windriver.com>
+Subject: Re: Instrumentation and RCU
+Message-Id: <20200311010633.dea4de0ae9c0f28340a56752@kernel.org>
+In-Reply-To: <87pndk5tb4.fsf@nanos.tec.linutronix.de>
+References: <87mu8p797b.fsf@nanos.tec.linutronix.de>
+        <20200309141546.5b574908@gandalf.local.home>
+        <87fteh73sp.fsf@nanos.tec.linutronix.de>
+        <20200310170951.87c29e9c1cfbddd93ccd92b3@kernel.org>
+        <87pndk5tb4.fsf@nanos.tec.linutronix.de>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 12:35:43PM +0530, Pankaj Bharadiya wrote:
-> Attach scaling filter property for crtc and plane and program the
-> scaler control register for the selected filter type.
+On Tue, 10 Mar 2020 12:43:27 +0100
+Thomas Gleixner <tglx@linutronix.de> wrote:
+
+> Masami,
 > 
-> This is preparatory patch to enable Nearest-neighbor integer scaling.
+> Masami Hiramatsu <mhiramat@kernel.org> writes:
+> > On Mon, 09 Mar 2020 19:59:18 +0100
+> > Thomas Gleixner <tglx@linutronix.de> wrote:
+> >
+> >> >> #2) Breakpoint utilization
+> >> >> 
+> >> >>     As recent findings have shown, breakpoint utilization needs to be
+> >> >>     extremly careful about not creating infinite breakpoint recursions.
+> >> >> 
+> >> >>     I think that's pretty much obvious, but falls into the overall
+> >> >>     question of how to protect callchains.
+> >> >
+> >> > This is rather unique, and I agree that its best to at least get to a point
+> >> > where we limit the tracing within breakpoint code. I'm fine with making
+> >> > rcu_nmi_exit() nokprobe too.
+> >> 
+> >> Yes, the break point stuff is unique, but it has nicely demonstrated how
+> >> much of the code is affected by it.
+> >
+> > I see. I had followed the callchain several times, and always found new function.
+> > So I agree with the off-limit section idea. That is a kind of entry code section
+> > but more generic one. It is natural to split such sensitive code in different
+> > place.
+> >
+> > BTW, what about kdb stuffs? (+Cc Jason)
 > 
-> Signed-off-by: Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>
-> Signed-off-by: Ankit Nautiyal <ankit.k.nautiyal@intel.com>
-> ---
->  drivers/gpu/drm/i915/display/intel_display.c | 17 +++++++++++++++--
->  drivers/gpu/drm/i915/display/intel_sprite.c  | 12 +++++++++++-
->  drivers/gpu/drm/i915/i915_reg.h              |  1 +
->  3 files changed, 27 insertions(+), 3 deletions(-)
+> That's yet another area of wreckage which nobody every looked at.
 > 
-> diff --git a/drivers/gpu/drm/i915/display/intel_display.c b/drivers/gpu/drm/i915/display/intel_display.c
-> index 3031e64ee518..b5903ef3c5a0 100644
-> --- a/drivers/gpu/drm/i915/display/intel_display.c
-> +++ b/drivers/gpu/drm/i915/display/intel_display.c
-> @@ -6242,6 +6242,8 @@ static void skl_pfit_enable(const struct intel_crtc_state *crtc_state)
->  	struct intel_crtc *crtc = to_intel_crtc(crtc_state->uapi.crtc);
->  	struct drm_i915_private *dev_priv = to_i915(crtc->base.dev);
->  	enum pipe pipe = crtc->pipe;
-> +	const struct drm_crtc_state *state = &crtc_state->uapi;
-> +	u32 scaling_filter = PS_FILTER_MEDIUM;
->  	const struct intel_crtc_scaler_state *scaler_state =
->  		&crtc_state->scaler_state;
->  
-> @@ -6258,6 +6260,11 @@ static void skl_pfit_enable(const struct intel_crtc_state *crtc_state)
->  		pfit_w = (crtc_state->pch_pfit.size >> 16) & 0xFFFF;
->  		pfit_h = crtc_state->pch_pfit.size & 0xFFFF;
->  
-> +		if (state->scaling_filter ==
-> +		    DRM_SCALING_FILTER_NEAREST_NEIGHBOR) {
-> +			scaling_filter = PS_FILTER_PROGRAMMED;
-> +		}
+> >> >> #4 Protecting call chains
+> >> >> 
+> >> >>    Our current approach of annotating functions with notrace/noprobe is
+> >> >>    pretty much broken.
+> >> >> 
+> >> >>    Functions which are marked NOPROBE or notrace call out into functions
+> >> >>    which are not marked and while this might be ok, there are enough
+> >> >>    places where it is not. But we have no way to verify that.
+> >
+> > Agreed. That's the reason why I haven't add kprobe-fuzzer yet.
+> > It is easy to make a fuzzer for kprobes by ftrace (note that we need
+> > to enable CONFIG_KPROBE_EVENTS_ON_NOTRACE=y to check notrace functions),
+> > but there is no way to kick the target code. In the result, most of the
+> > kprobed functions are just not hit. I'm not sure such test code is
+> > reasonable or not.
+> 
+> Well, test code is always reasonable, but you have to be aware that code
+> coverage is a really hard to solve problem with a code base as complex
+> as the kernel.
 
-Just make that a function that can be used all over.
-skl_scaler_filter(scaling_filter) or something.
+Yes, especially, the corner case which we need to find is hard to cover.
 
-> +
->  		hscale = (crtc_state->pipe_src_w << 16) / pfit_w;
->  		vscale = (crtc_state->pipe_src_h << 16) / pfit_h;
->  
-> @@ -6268,8 +6275,10 @@ static void skl_pfit_enable(const struct intel_crtc_state *crtc_state)
->  
->  		spin_lock_irqsave(&dev_priv->uncore.lock, irqflags);
->  
-> -		intel_de_write_fw(dev_priv, SKL_PS_CTRL(pipe, id), PS_SCALER_EN |
-> -				  PS_FILTER_MEDIUM | scaler_state->scalers[id].mode);
-> +		intel_de_write_fw(dev_priv, SKL_PS_CTRL(pipe, id),
-> +				  PS_SCALER_EN |
-> +				  scaling_filter |
-> +				  scaler_state->scalers[id].mode);
->  		intel_de_write_fw(dev_priv, SKL_PS_VPHASE(pipe, id),
->  				  PS_Y_PHASE(0) | PS_UV_RGB_PHASE(uv_rgb_vphase));
->  		intel_de_write_fw(dev_priv, SKL_PS_HPHASE(pipe, id),
-> @@ -16695,6 +16704,10 @@ static int intel_crtc_init(struct drm_i915_private *dev_priv, enum pipe pipe)
->  		dev_priv->plane_to_crtc_mapping[i9xx_plane] = crtc;
->  	}
->  
-> +
-> +	if (INTEL_GEN(dev_priv) >= 11)
+> >> which is also in section "text" then the analysis tool will find the
+> >> missing offlimit_safecall() - or what ever method we chose to annotate
+> >> that stuff. Surely not an annotation on the called function itself
+> >> because that might be safe to call in one context but not in another.
+> >
+> > Hmm, what the offlimit_safecall() does? and what happen if the 
+> > do_fragile_stuff_on_enter() invokes a library code? I think we also need
+> > to tweak kbuild to duplicate some library code to the off-limit text
+> > area.
+> 
+> That's why we want the sections and the annotation. If something calls
+> out of a noinstr section into a regular text section and the call is not
+> annotated at the call site, then objtool can complain and tell you. What
+> Peter and I came up with looks like this:
+> 
+> noinstr foo()
+> 	do_protected(); <- Safe because in the noinstr section
+> 
+> 	instr_begin();	<- Marks the begin of a safe region, ignored
+>         		   by objtool
+> 
+>         do_stuff();     <- All good   
+> 
+>         instr_end();    <- End of the safe region. objtool starts
+> 			   looking again
+> 
+>         do_other_stuff();  <- Unsafe because do_other_stuff() is
+>         		      not protected
+> and:
+> 
+> noinstr do_protected()
+>         bar();		<- objtool will complain here
+> 
+> See?
 
-gen >= 10 actually. Even glk seems to have it but bspec says not to
-use it on glk. Supposedly not validated.
+OK, so this is for what the instr_begin() and instr_end() ensure the
+instrumentation safeness. Would you think this will also applied to
+notrace functons? I mean, how can large this section be.
 
-ilk/snb/ivb pfits also has programmable coefficients actually. So
-IMO we should enable this on those as well.
+It seems there are several different aspect (or level), RCU idle,
+kprobes recursive call(NOKPROBE), and ftrace recursive call(notrace).
+Would the offlimit section include all of them or some specific cases?
 
-The bigger problem will be how is userspace supposed to use this if it's
-a crtc property? Those will not get automagically exposed via xrandr.
+> >> These annotations are halfways easy to monitor for abuse and they should
+> >> be prominent enough in the code that at least for the people dealing
+> >> with that kind of code they act as a warning flag.
+> >
+> > This off-limit text will be good for entries, but I think we still not
+> > able to remove all NOKPROBE_SYMBOLS with this.
+> >
+> > For example __die() is marked a NOKPROBE because if we hit a recursive
+> > int3, it calls BUG() to dump stacks etc for debug. So that function
+> > must NOT probed. (I think we also should mark all backtrace functions
+> > in this case, but not yet) Would we move those backtrace related
+> > functions (including printk, and console drivers?) into the offlimit
+> > text too?
+> 
+> That's something we need to figure out and decide on. Some of this stuff
+> sureley wants to be in the noinstr section. Other things might end up
+> still being explicitely annotated, but that should be the exception not
+> the rule.
 
-> +		drm_crtc_enable_scaling_filter(&crtc->base);
-> +
->  	intel_color_init(crtc);
->  
->  	drm_WARN_ON(&dev_priv->drm, drm_crtc_index(&crtc->base) != crtc->pipe);
-> diff --git a/drivers/gpu/drm/i915/display/intel_sprite.c b/drivers/gpu/drm/i915/display/intel_sprite.c
-> index 7abeefe8dce5..fd7b31a21723 100644
-> --- a/drivers/gpu/drm/i915/display/intel_sprite.c
-> +++ b/drivers/gpu/drm/i915/display/intel_sprite.c
-> @@ -414,6 +414,12 @@ skl_program_scaler(struct intel_plane *plane,
->  	u16 y_hphase, uv_rgb_hphase;
->  	u16 y_vphase, uv_rgb_vphase;
->  	int hscale, vscale;
-> +	const struct drm_plane_state *state = &plane_state->uapi;
-> +	u32 scaling_filter = PS_FILTER_MEDIUM;
-> +
-> +	if (state->scaling_filter == DRM_SCALING_FILTER_NEAREST_NEIGHBOR) {
-> +		scaling_filter = PS_FILTER_PROGRAMMED;
-> +	}
->  
->  	hscale = drm_rect_calc_hscale(&plane_state->uapi.src,
->  				      &plane_state->uapi.dst,
-> @@ -441,7 +447,8 @@ skl_program_scaler(struct intel_plane *plane,
->  	}
->  
->  	intel_de_write_fw(dev_priv, SKL_PS_CTRL(pipe, scaler_id),
-> -			  PS_SCALER_EN | PS_PLANE_SEL(plane->id) | scaler->mode);
-> +			  scaling_filter | PS_SCALER_EN |
-> +			  PS_PLANE_SEL(plane->id) | scaler->mode);
->  	intel_de_write_fw(dev_priv, SKL_PS_VPHASE(pipe, scaler_id),
->  			  PS_Y_PHASE(y_vphase) | PS_UV_RGB_PHASE(uv_rgb_vphase));
->  	intel_de_write_fw(dev_priv, SKL_PS_HPHASE(pipe, scaler_id),
-> @@ -3104,6 +3111,9 @@ skl_universal_plane_create(struct drm_i915_private *dev_priv,
->  
->  	drm_plane_create_zpos_immutable_property(&plane->base, plane_id);
->  
-> +	if (INTEL_GEN(dev_priv) >= 11)
+I think some library code can be duplicated in the offlimit section if
+needed. And stacktrace can also be a part of offlimit as like as a
+"service" call from normal world, since usually, stacktrace is for
+debugging.
 
-also gen>=10
+> > Hmm, if there is a bust_kprobes(), that can be easy to fix this issue.
+> 
+> That might help, but is obviously racy as hell.
 
-Also this patch breaks things as we don't yet have the code to program
-the coefficients. So the series needs to be reordered.
+I tried something like below. It needs a new set_memory_rw()
+like function which can be called from int3 context.
 
-> +		drm_plane_enable_scaling_filter(&plane->base);
-> +
->  	drm_plane_helper_add(&plane->base, &intel_plane_helper_funcs);
->  
->  	return plane;
-> diff --git a/drivers/gpu/drm/i915/i915_reg.h b/drivers/gpu/drm/i915/i915_reg.h
-> index f45b5e86ec63..34923b1c284c 100644
-> --- a/drivers/gpu/drm/i915/i915_reg.h
-> +++ b/drivers/gpu/drm/i915/i915_reg.h
-> @@ -7212,6 +7212,7 @@ enum {
->  #define PS_PLANE_SEL(plane) (((plane) + 1) << 25)
->  #define PS_FILTER_MASK         (3 << 23)
->  #define PS_FILTER_MEDIUM       (0 << 23)
-> +#define PS_FILTER_PROGRAMMED   (1 << 23)
->  #define PS_FILTER_EDGE_ENHANCE (2 << 23)
->  #define PS_FILTER_BILINEAR     (3 << 23)
->  #define PS_VERT3TAP            (1 << 21)
-> -- 
-> 2.23.0
+diff --git a/arch/x86/kernel/kprobes/core.c b/arch/x86/kernel/kprobes/core.c
+index 4d7022a740ab..7ab5bbc69cc9 100644
+--- a/arch/x86/kernel/kprobes/core.c
++++ b/arch/x86/kernel/kprobes/core.c
+@@ -619,6 +619,9 @@ static void setup_singlestep(struct kprobe *p, struct pt_regs *regs,
+ }
+ NOKPROBE_SYMBOL(setup_singlestep);
+ 
++int __read_mostly kprobe_oops_in_progress;
++extern int __set_page_rw_raw(unsigned long addr);
++
+ /*
+  * We have reentered the kprobe_handler(), since another probe was hit while
+  * within the handler. We save the original kprobes variables and just single
+@@ -635,6 +638,17 @@ static int reenter_kprobe(struct kprobe *p, struct pt_regs *regs,
+ 		setup_singlestep(p, regs, kcb, 1);
+ 		break;
+ 	case KPROBE_REENTER:
++		if (unlikely(kprobe_oops_in_progress)) {
++			/*
++			 * We do not sync cores but there is no way to send
++			 * IPI from here. If other core hits int3, they can
++			 * recover by themselves.
++			 */
++			__set_page_rw_raw((unsigned long)p->addr);
++			*(p->addr) = p->ainsn.insn[0];
++			return 1;
++		}
++
+ 		/* A probe has been hit in the codepath leading up to, or just
+ 		 * after, single-stepping of a probed instruction. This entire
+ 		 * codepath should strictly reside in .kprobes.text section.
+@@ -643,6 +657,8 @@ static int reenter_kprobe(struct kprobe *p, struct pt_regs *regs,
+ 		 */
+ 		pr_err("Unrecoverable kprobe detected.\n");
+ 		dump_kprobe(p);
++		/* Any further non-optimized kprobes are disabled forcibly */
++		kprobe_oops_in_progress++;
+ 		BUG();
+ 	default:
+ 		/* impossible cases */
+diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
+index abbdecb75fad..0f550b1aad29 100644
+--- a/arch/x86/mm/init_64.c
++++ b/arch/x86/mm/init_64.c
+@@ -33,6 +33,7 @@
+ #include <linux/nmi.h>
+ #include <linux/gfp.h>
+ #include <linux/kcore.h>
++#include <linux/kprobes.h>
+ 
+ #include <asm/processor.h>
+ #include <asm/bios_ebda.h>
+@@ -1345,6 +1346,60 @@ int kern_addr_valid(unsigned long addr)
+ 	return pfn_valid(pte_pfn(*pte));
+ }
+ 
++int __set_page_rw_raw(unsigned long addr)
++{
++	unsigned long above = ((long)addr) >> __VIRTUAL_MASK_SHIFT;
++	pgd_t *pgd;
++	p4d_t *p4d;
++	pud_t *pud;
++	pmd_t *pmd;
++	pte_t *pte;
++
++	if (above != 0 && above != -1UL)
++		return 0;
++
++	pgd = pgd_offset_k(addr);
++	if (pgd_none(*pgd))
++		return 0;
++
++	p4d = p4d_offset(pgd, addr);
++	if (p4d_none(*p4d))
++		return 0;
++
++	pud = pud_offset(p4d, addr);
++	if (pud_none(*pud))
++		return 0;
++
++	if (pud_large(*pud)) {
++		if (!pfn_valid(pud_pfn(*pud)))
++			return 0;
++		pud_mkwrite(*pud);
++		goto flush;
++	}
++
++	pmd = pmd_offset(pud, addr);
++	if (pmd_none(*pmd))
++		return 0;
++
++	if (pmd_large(*pmd)) {
++		if (!pfn_valid(pmd_pfn(*pmd)))
++			return 0;
++		pmd_mkwrite(*pmd);
++		goto flush;
++	}
++
++	pte = pte_offset_kernel(pmd, addr);
++	if (pte_none(*pte) || !pfn_valid(pte_pfn(*pte)))
++		return 0;
++
++	pte_mkwrite(*pte);
++
++flush:
++	__flush_tlb_one_kernel(addr);
++	return 1;
++}
++NOKPROBE_SYMBOL(__set_page_rw_raw);
++
+ /*
+  * Block size is the minimum amount of memory which can be hotplugged or
+  * hotremoved. It must be power of two and must be equal or larger than
+
+
+Thank you,
 
 -- 
-Ville Syrjälä
-Intel
+Masami Hiramatsu <mhiramat@kernel.org>
