@@ -2,118 +2,223 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EA3BC18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 19:12:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85750C18E5C
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 19:13:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B84A215A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 19:12:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4646C21D7E
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 19:13:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="J0WefFmT"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Uk3i+0Hg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727079AbgCJTMN (ORCPT
+        id S1727210AbgCJTNg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 15:12:13 -0400
-Received: from mail-ot1-f53.google.com ([209.85.210.53]:38762 "EHLO
-        mail-ot1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726466AbgCJTMM (ORCPT
+        Tue, 10 Mar 2020 15:13:36 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:37085 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726546AbgCJTNf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 15:12:12 -0400
-Received: by mail-ot1-f53.google.com with SMTP id i14so14315570otp.5
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 12:12:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5f/ZIdPcYSXzyxew8zIk4AJ4DOH6Pen1hOIrk5wOGuM=;
-        b=J0WefFmTNOhOFZfuP45RhnlFcgePPbh0WTKAXHMYkK6WpB792ZvmtCF0IY9fwLL+D9
-         JYJva+8s2L8brQt+mP0QlFI7Ubx3EtJuWV5oTHXRO+WY28LuJwAyn/8SxV+0Qyy7CD76
-         /aczONR6PbSmyO4Jpl0ndluwcRjeuPxynXS2PAiNIKnzmcG8zQ+rRLwuSK3v7H/42U7s
-         3gBiwksatm7XW6OgKd+S9mlSz2ZH4IjWEd7jU44IaTUcLYGy0AfPrWXWEqjPK8Ug+Ff/
-         4HY4RTJ54vfJgBDg9xuGCcljL/Sz5iU602XYFQ1/oJw+1pqY892w0lM1AOzT3wGCOwp6
-         gkvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5f/ZIdPcYSXzyxew8zIk4AJ4DOH6Pen1hOIrk5wOGuM=;
-        b=hU2TL1EYilFCEZJVVYUMeBvX7nhHoOBlbaQUVgoB+EpYfxaCBd/lmWCzZbVMiv+Etc
-         S6PsdNrgyAOlic2qao9TkMvfe7TklmNxiPN1ljstptfC9DBrinXAdcIZk/b2gdY+Q30Z
-         DrxuTO+xMGzsXFKYEWcWNqpKAt/nlOmKDM379ZG2m4/gbSw0rG/ff2sx9SYv0ltJ+w3y
-         q+6Y4+nCRUTnL5py9uZ9Sp0oq09vQs4ijfxdgQ5/QqHCDwmtKXRxoqztuGIJz8tBnuTc
-         ci+KgfN0Jv/Wbb4CdtpxlOJuNjffK9nG4RAy7UQhd5VHB0ibVABV9c4QlJU8UUaX8meH
-         gBDQ==
-X-Gm-Message-State: ANhLgQ3c5WSFW67CdJNdG94VCqIDE9pWUCxBRImQaC0mzCEHGqEuji8H
-        QRlZT1G9V1g+zOlUfs9dMMtXfGNl7CmU3zgAzDMDgQ==
-X-Google-Smtp-Source: ADFU+vtpoR0syrUpVW9+sWGjnb2mV+Evtc2BNWvaZAC67ZRm+H1x48AKs6JQmohLa3X8uvKP9YzaVUlGmxjfz8k3eXs=
-X-Received: by 2002:a05:6830:1d6e:: with SMTP id l14mr17635080oti.32.1583867531366;
- Tue, 10 Mar 2020 12:12:11 -0700 (PDT)
+        Tue, 10 Mar 2020 15:13:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583867613;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=QW5g7lbmMvTsHzYHlNqdZQJfE2pRMb6b/7YHKXkWnFI=;
+        b=Uk3i+0HggwS7vZBgll7jGlQ+OddxbUYE4oyLr3kGmSgPvS4h/LWJoKE6EmIaLmVmrMvLa+
+        mYFX4LPkFhcyO63LUj6MvbTFxFLRoLD/zxdXCayG2ey5jzdh4Kuo3kkvFHq1eEGv73K6V6
+        Rl6F3v6Wdy5l/Q+8aZjcRbCsmD/PcRo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-406-P4jqKqzSNMWqPo85VCXTUA-1; Tue, 10 Mar 2020 15:13:27 -0400
+X-MC-Unique: P4jqKqzSNMWqPo85VCXTUA-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D2E4213F7;
+        Tue, 10 Mar 2020 19:13:25 +0000 (UTC)
+Received: from [10.36.116.71] (ovpn-116-71.ams2.redhat.com [10.36.116.71])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 315BD84779;
+        Tue, 10 Mar 2020 19:13:20 +0000 (UTC)
+Subject: Re: [PATCH v3] virtio-balloon: Switch back to OOM handler for
+ VIRTIO_BALLOON_F_DEFLATE_ON_OOM
+To:     David Rientjes <rientjes@google.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        virtualization@lists.linux-foundation.org,
+        Jason Wang <jasowang@redhat.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Tyler Sanderson <tysand@google.com>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Wei Wang <wei.w.wang@intel.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Nadav Amit <namit@vmware.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <20200310113854.11515-1-david@redhat.com>
+ <alpine.DEB.2.21.2003101204590.90377@chino.kir.corp.google.com>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <890da35b-1ac2-9c2e-b42d-96d24d3e0f4c@redhat.com>
+Date:   Tue, 10 Mar 2020 20:13:19 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <CAG48ez0G3JkMq61gUmyQAaCq=_TwHbi1XKzWRooxZkv08PQKuw@mail.gmail.com>
- <20200310184814.GA8447@dhcp22.suse.cz>
-In-Reply-To: <20200310184814.GA8447@dhcp22.suse.cz>
-From:   Jann Horn <jannh@google.com>
-Date:   Tue, 10 Mar 2020 20:11:45 +0100
-Message-ID: <CAG48ez2pNSKL9ZTH-PQ93+Kc6ObH6Pa1vVg3OS85WT0TB8m3=A@mail.gmail.com>
-Subject: Re: interaction of MADV_PAGEOUT with CoW anonymous mappings?
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Minchan Kim <minchan@kernel.org>, Linux-MM <linux-mm@kvack.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Daniel Colascione <dancol@google.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <alpine.DEB.2.21.2003101204590.90377@chino.kir.corp.google.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 10, 2020 at 7:48 PM Michal Hocko <mhocko@kernel.org> wrote:
-> On Tue 10-03-20 19:08:28, Jann Horn wrote:
-> > Hi!
-> >
-> > >From looking at the source code, it looks to me as if using
-> > MADV_PAGEOUT on a CoW anonymous mapping will page out the page if
-> > possible, even if other processes still have the same page mapped. Is
-> > that correct?
-> >
-> > If so, that's probably bad in environments where many processes (with
-> > different privileges) are forked from a single zygote process (like
-> > Android and Chrome), I think? If you accidentally call it on a CoW
-> > anonymous mapping with shared pages, you'll degrade the performance of
-> > other processes. And if an attacker does it intentionally, they could
-> > use that to aid with exploiting race conditions or weird
-> > microarchitectural stuff (e.g. the new https://lviattack.eu/lvi.pdf
-> > talks about "the assumption that attackers can provoke page faults or
-> > microcode assists for (arbitrary) load operations in the victim
-> > domain").
-> >
-> > Should madvise_cold_or_pageout_pte_range() maybe refuse to operate on
-> > pages with mapcount>1, or something like that? Or does it already do
-> > that, and I just missed the check?
->
-> I have brought up side channel attacks earlier [1] but only in the
-> context of shared page cache pages. I didn't really consider shared
-> anonymous pages to be a real problem. I was under impression that CoW
-> pages shouldn't be a real problem because any security sensible
-> applications shouldn't allow untrusted code to be forked and CoW
-> anything really important. I believe we have made this assumption
-> in other places - IIRC on gup with FOLL_FORCE but I admit I have
-> very happily forgot most details.
+On 10.03.20 20:05, David Rientjes wrote:
+> On Tue, 10 Mar 2020, David Hildenbrand wrote:
+> 
+>> Commit 71994620bb25 ("virtio_balloon: replace oom notifier with shrinker")
+>> changed the behavior when deflation happens automatically. Instead of
+>> deflating when called by the OOM handler, the shrinker is used.
+>>
+>> However, the balloon is not simply some other slab cache that should be
+>> shrunk when under memory pressure. The shrinker does not have a concept of
+>> priorities yet, so this behavior cannot be configured. Eventually once
+>> that is in place, we might want to switch back after doing proper
+>> testing.
+>>
+>> There was a report that this results in undesired side effects when
+>> inflating the balloon to shrink the page cache. [1]
+>> 	"When inflating the balloon against page cache (i.e. no free memory
+>> 	 remains) vmscan.c will both shrink page cache, but also invoke the
+>> 	 shrinkers -- including the balloon's shrinker. So the balloon
+>> 	 driver allocates memory which requires reclaim, vmscan gets this
+>> 	 memory by shrinking the balloon, and then the driver adds the
+>> 	 memory back to the balloon. Basically a busy no-op."
+>>
+>> The name "deflate on OOM" makes it pretty clear when deflation should
+>> happen - after other approaches to reclaim memory failed, not while
+>> reclaiming. This allows to minimize the footprint of a guest - memory
+>> will only be taken out of the balloon when really needed.
+>>
+>> Keep using the shrinker for VIRTIO_BALLOON_F_FREE_PAGE_HINT, because
+>> this has no such side effects. Always register the shrinker with
+>> VIRTIO_BALLOON_F_FREE_PAGE_HINT now. We are always allowed to reuse free
+>> pages that are still to be processed by the guest. The hypervisor takes
+>> care of identifying and resolving possible races between processing a
+>> hinting request and the guest reusing a page.
+>>
+>> In contrast to pre commit 71994620bb25 ("virtio_balloon: replace oom
+>> notifier with shrinker"), don't add a moodule parameter to configure the
+>> number of pages to deflate on OOM. Can be re-added if really needed.
+>> Also, pay attention that leak_balloon() returns the number of 4k pages -
+>> convert it properly in virtio_balloon_oom_notify().
+>>
+>> Testing done by Tyler for future reference:
+>>   Test setup: VM with 16 CPU, 64GB RAM. Running Debian 10. We have a 42
+>>   GB file full of random bytes that we continually cat to /dev/null.
+>>   This fills the page cache as the file is read. Meanwhile we trigger
+>>   the balloon to inflate, with a target size of 53 GB. This setup causes
+>>   the balloon inflation to pressure the page cache as the page cache is
+>>   also trying to grow. Afterwards we shrink the balloon back to zero (so
+>>   total deflate = total inflate).
+>>
+>>   Without patch (kernel 4.19.0-5):
+>>   Inflation never reaches the target until we stop the "cat file >
+>>   /dev/null" process. Total inflation time was 542 seconds. The longest
+>>   period that made no net forward progress was 315 seconds (see attached
+>>   graph).
+>>   Result of "grep balloon /proc/vmstat" after the test:
+>>   balloon_inflate 154828377
+>>   balloon_deflate 154828377
+>>
+>>   With patch (kernel 5.6.0-rc4+):
+>>   Total inflation duration was 63 seconds. No deflate-queue activity
+>>   occurs when pressuring the page-cache.
+>>   Result of "grep balloon /proc/vmstat" after the test:
+>>   balloon_inflate 12968539
+>>   balloon_deflate 12968539
+>>
+>>   Conclusion: This patch fixes the issue. In the test it reduced
+>>   inflate/deflate activity by 12x, and reduced inflation time by 8.6x.
+>>   But more importantly, if we hadn't killed the "grep balloon
+>>   /proc/vmstat" process then, without the patch, the inflation process
+>>   would never reach the target.
+>>
+>> [1] https://www.spinics.net/lists/linux-virtualization/msg40863.html
+>>
+>> Reported-by: Tyler Sanderson <tysand@google.com>
+>> Tested-by: Tyler Sanderson <tysand@google.com>
+>> Fixes: 71994620bb25 ("virtio_balloon: replace oom notifier with shrinker")
+>> Cc: Michael S. Tsirkin <mst@redhat.com>
+>> Cc: Wei Wang <wei.w.wang@intel.com>
+>> Cc: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+>> Cc: David Rientjes <rientjes@google.com>
+>> Cc: Nadav Amit <namit@vmware.com>
+>> Cc: Michal Hocko <mhocko@kernel.org>
+>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>> Signed-off-by: David Hildenbrand <david@redhat.com>
+> 
+> Acked-by: David Rientjes <rientjes@google.com>
+> 
 
-Android has a "zygote" process that starts up the whole Java
-environment with a bunch of libraries before entering into a loop that
-fork()s off a child every time the user wants to launch an app. So all
-the apps, and even browser renderer processes, on the device share
-many CoW VMAs. See
-<https://developer.android.com/topic/performance/memory-overview#SharingRAM>.
+Thanks!
 
-I think Chrome on Linux desktop systems also forks off renderers from
-a common zygote process after initializing libraries and so on. See
-<https://chromium.googlesource.com/chromium/src.git/+/master/docs/linux/zygote.md>.
-(But they use a relatively strict seccomp sandbox that e.g. doesn't
-permit MADV_PAGEOUT.)
+> Should this have:
+> 
+> Cc: stable@vger.kernel.org # 4.19+
+
+I guess as nothing will actually "crash" it's not worth stable.
+
+-- 
+Thanks,
+
+David / dhildenb
+
