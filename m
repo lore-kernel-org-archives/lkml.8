@@ -2,97 +2,133 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F3EFC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:26:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E5BCC18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:26:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36F4224680
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:26:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MPjkwmXI"
+	by mail.kernel.org (Postfix) with ESMTP id 7115E20675
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:26:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583846813;
+	bh=b93qjLrP7kBdG7uaRgYsfgoCaOfZGJ8AZBEVQjuy4/E=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=YjIohqW386DPGeCAdD65iVtHyoS3YPtRZyivSF333lCrRQdr72Adm7aWtWwGlp40u
+	 LFqOqpkNtzfLcc+I3Etj/Sib096rKfXSPLRy1oH9EX+FH49ZdCktTqPU+0pmWkH9rZ
+	 +cJ3s119ACRDFTxXDAFfD8eMe9KxKAtCmTIuQ6gw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730224AbgCJN0s (ORCPT
+        id S1729043AbgCJN0w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:26:48 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:33624 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728043AbgCJN0p (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:26:45 -0400
-Received: by mail-lj1-f194.google.com with SMTP id f13so14135714ljp.0;
-        Tue, 10 Mar 2020 06:26:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=OFEfv78mqxElApVv1PrLdhetmsXCx++xAuLsijmT7RU=;
-        b=MPjkwmXIAf3FWyEgLP72VjHIRYpfGhG20UY8BhN66PsNpd4eGCduEIgthZsYBz4n9C
-         5H9OfqJmEgjp2Du2id90Wx5m8OyU9+TmYOjINHJkzc1MiJV6yIfrsGPCiafRVAOWGSuI
-         1Gs+jLcTEOpUsyfNPXJF25iNTJOrR8OVSF9/i3xeJiy8Y6D57slJhMk+tWGFtq3QujnP
-         mciLBxJjYSs+Px/jakxMHhE/edRBjYPhwpCEOW7gEDNifraZRlkCfEkeqfeNmacRF/kx
-         qhxV+c2mGxh8SBUwtPRh02MYUUi5QbY75MS43mhKGPjlYRn3XXCTvXwUoHI55oLqsOkD
-         bbfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=OFEfv78mqxElApVv1PrLdhetmsXCx++xAuLsijmT7RU=;
-        b=WfPklX4tjngMs3psv/VlVntfAMWekYLHNpA3vkNHc9XyL575gYOpHI2v09EcxJfUbA
-         0K4UekBNGdr7Cp6HAP1u6I8aE9QiqlRk9Oquks2B8ID7IFaajf/nb8KaW8Ksv74bX7zC
-         qfMHFY6Es5WNoiVBqACJmngb35k6H3AXVWNTNbXM2UMoP/QW85Mj1fCHy3bBsGKJPWrV
-         WUKDrfTmFAEPj/u12YYMLHULHkfW2ViBIG9q1AxPIDzfsxgeHYlRc/Z1v/si7X/rDfdY
-         KlXaT13q9Hk58BMTcDXQe3lpsn5wEH/1poaQsmZDzUaqA5VMomALjM3o265RcRa6VNM5
-         d8lQ==
-X-Gm-Message-State: ANhLgQ2h63mwAj4hKZlTXL9dQRn43KDEr+hZdPvhAKHVKoGzjCob1HuW
-        owJPnt4KjiMw15rkYLT48K0MiP8n
-X-Google-Smtp-Source: ADFU+vs0D5hsfb7X1yf/tpe6lP/YNwM1B9Ae7W/yTvjMuZrOxV1xdmC8WTPJFzqs51fKWHW5jAXXMQ==
-X-Received: by 2002:a05:651c:114:: with SMTP id a20mr12995219ljb.122.1583846803027;
-        Tue, 10 Mar 2020 06:26:43 -0700 (PDT)
-Received: from [192.168.2.145] (94-29-39-224.dynamic.spd-mgts.ru. [94.29.39.224])
-        by smtp.googlemail.com with ESMTPSA id j24sm8742473lji.76.2020.03.10.06.26.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Mar 2020 06:26:42 -0700 (PDT)
-Subject: Re: [PATCH v1] i2c: tegra: Make timeout error more informative
-To:     Wolfram Sang <wsa@the-dreams.de>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200302173512.2743-1-digetx@gmail.com>
- <20200310113706.GW1987@ninjato>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <017aad72-9872-a4aa-dc99-bd7d08c0db14@gmail.com>
-Date:   Tue, 10 Mar 2020 16:26:41 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 10 Mar 2020 09:26:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34706 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729327AbgCJMzs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:55:48 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6150020674;
+        Tue, 10 Mar 2020 12:55:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583844947;
+        bh=b93qjLrP7kBdG7uaRgYsfgoCaOfZGJ8AZBEVQjuy4/E=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=oakv7ZfwEWyB2/To9U5URmbQ3pg9dQf8SKHGbxLFca/0FWMxjSA1cEtwd2xofx2dx
+         DggX3m+JMKasscjpGOxyWsmW7WqgOe2vPqtfAXJBGhdMCknRzr9t44cU6iCIFbDS2Y
+         LuShnDFJZpyMMzMAHgeAzLP2dioGRLql/j8nGaEQ=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Jaroslav Kysela <perex@perex.cz>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 001/189] ASoC: intel/skl/hda - export number of digital microphones via control components
+Date:   Tue, 10 Mar 2020 13:37:18 +0100
+Message-Id: <20200310123639.732775259@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200310123639.608886314@linuxfoundation.org>
+References: <20200310123639.608886314@linuxfoundation.org>
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-In-Reply-To: <20200310113706.GW1987@ninjato>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-10.03.2020 14:37, Wolfram Sang пишет:
-> On Mon, Mar 02, 2020 at 08:35:12PM +0300, Dmitry Osipenko wrote:
->> The I2C timeout error message doesn't tell us what exactly failed and some
->> I2C client drivers do not clarify the error either. Adding WARN_ON_ONCE()
->> results in a stacktrace being dumped into KMSG, which is very useful for
->> debugging purposes.
-> 
-> This is good for debugging, in deed, yet not good in the generic case.
-> Timeouts are not an exception on the I2C bus (think of an EEPROM which
-> is busy during an erase cycle), so it shouldn't be printed at all.
-> 
-> This prinout should rather be dropped or at least be dev_dbg.
+From: Jaroslav Kysela <perex@perex.cz>
 
-Oh, well. I'll keep this debugging applied locally then, it's quite
-unfortunate when something fails silently :)
+[ Upstream commit 8cd9956f61c65022209ce6d1e55ed12aea12357d ]
+
+It is required for the auto-detection in the user space (for UCM).
+
+Signed-off-by: Jaroslav Kysela <perex@perex.cz>
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc: Mark Brown <broonie@kernel.org>
+Link: https://lore.kernel.org/r/20191204211556.12671-2-pierre-louis.bossart@linux.intel.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ sound/soc/intel/boards/skl_hda_dsp_generic.c | 8 ++++++++
+ sound/soc/sof/intel/hda.c                    | 3 ++-
+ 2 files changed, 10 insertions(+), 1 deletion(-)
+
+diff --git a/sound/soc/intel/boards/skl_hda_dsp_generic.c b/sound/soc/intel/boards/skl_hda_dsp_generic.c
+index 4e45901e3a2f1..11eaee9ae41f7 100644
+--- a/sound/soc/intel/boards/skl_hda_dsp_generic.c
++++ b/sound/soc/intel/boards/skl_hda_dsp_generic.c
+@@ -100,6 +100,8 @@ static struct snd_soc_card hda_soc_card = {
+ 	.late_probe = skl_hda_card_late_probe,
+ };
+ 
++static char hda_soc_components[30];
++
+ #define IDISP_DAI_COUNT		3
+ #define HDAC_DAI_COUNT		2
+ #define DMIC_DAI_COUNT		2
+@@ -183,6 +185,12 @@ static int skl_hda_audio_probe(struct platform_device *pdev)
+ 	hda_soc_card.dev = &pdev->dev;
+ 	snd_soc_card_set_drvdata(&hda_soc_card, ctx);
+ 
++	if (mach->mach_params.dmic_num > 0) {
++		snprintf(hda_soc_components, sizeof(hda_soc_components),
++				"cfg-dmics:%d", mach->mach_params.dmic_num);
++		hda_soc_card.components = hda_soc_components;
++	}
++
+ 	return devm_snd_soc_register_card(&pdev->dev, &hda_soc_card);
+ }
+ 
+diff --git a/sound/soc/sof/intel/hda.c b/sound/soc/sof/intel/hda.c
+index 82ecadda886c6..a1780259292fa 100644
+--- a/sound/soc/sof/intel/hda.c
++++ b/sound/soc/sof/intel/hda.c
+@@ -351,7 +351,7 @@ static int hda_init_caps(struct snd_sof_dev *sdev)
+ 	const char *tplg_filename;
+ 	const char *idisp_str;
+ 	const char *dmic_str;
+-	int dmic_num;
++	int dmic_num = 0;
+ 	int codec_num = 0;
+ 	int i;
+ #endif
+@@ -472,6 +472,7 @@ static int hda_init_caps(struct snd_sof_dev *sdev)
+ 		mach_params->codec_mask = bus->codec_mask;
+ 		mach_params->platform = dev_name(sdev->dev);
+ 		mach_params->common_hdmi_codec_drv = hda_codec_use_common_hdmi;
++		mach_params->dmic_num = dmic_num;
+ 	}
+ 
+ 	/* create codec instances */
+-- 
+2.20.1
+
+
+
