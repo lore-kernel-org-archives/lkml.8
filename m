@@ -2,51 +2,55 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2461C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:07:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C91B7C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:07:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B312E24691
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:07:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FA7A24692
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:07:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583845648;
-	bh=qd721I88vNXch3ZqPReQwf2cEtykqf23s69glri4oKA=;
+	s=default; t=1583845652;
+	bh=oDh7SuUHFtSuw4pwi8W77mLorLw1uIiStk6IAmt32qA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jPOfR4Wa3zCM064chyW11q0eDOp0xKw1SiDUEArVf/3l+gnSoM41xG45Dc8pxpPD+
-	 xrjBwDWCyB11UG6xfOxa2xjwuNVoP/h61Z72ghp096SecgY10W43v7Jt6yg43Nu2T5
-	 mUls9aEf1YUhRsLpXpsU6gebOrO/b0Ih5nk8jKbk=
+	b=r4K0nCD2XqqWzNGwW5m+tBca8WpUetyKHAPloS9teGJbq7bF+nGd65a6sl0jpF5Ig
+	 IfwWbRcAzAh0vhHbrk7SgvmQpAwmQDqNwGoUrl0xF+uK0wjAfBZRPgHs6cFrT4WVaa
+	 Ioks31mlOlXRRRVt8R21r98pbbJhLvxgxbTM4188=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730046AbgCJNH1 (ORCPT
+        id S1730708AbgCJNHb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:07:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53210 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:07:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53290 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730193AbgCJNHZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:07:25 -0400
+        id S1730976AbgCJNH2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:07:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3450B246A9;
-        Tue, 10 Mar 2020 13:07:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA8BB20409;
+        Tue, 10 Mar 2020 13:07:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845644;
-        bh=qd721I88vNXch3ZqPReQwf2cEtykqf23s69glri4oKA=;
+        s=default; t=1583845647;
+        bh=oDh7SuUHFtSuw4pwi8W77mLorLw1uIiStk6IAmt32qA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fEs62SmKlbInA4wi9qRfszCus9B4ovFSvPUg38PbpPyfUClS4XBExuGHLAIKBT0OS
-         DNd8AgxWA3XoKgQyslr+5aOHU49QBJY9KnGOGc2GzvDHUxvSQ4yEyQ2wglPGIwbyC+
-         1I10wPIuPBEFZ2F+GjEX0IGdANDK/OqLyJPXX8kQ=
+        b=iXgsUsRZzIST9oC5TWGUGFp3t83kj7rqQ22E0mDibXr8e/vVTv9vjYa4n/WrIpVyJ
+         UXjGIsLwSESHB4IsvnvGisZtHHoAldDoS3hCFJG8D8PzL1Gx7CNRvln8hVFFszrVHF
+         YMLIYyVccCgclkKXvCdaQkunpsE5wA66HmlkmqcM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Wolfram Sang <wsa@the-dreams.de>
-Subject: [PATCH 4.14 047/126] i2c: jz4780: silence log flood on txabrt
-Date:   Tue, 10 Mar 2020 13:41:08 +0100
-Message-Id: <20200310124207.284609147@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Kristian Evensen <kristian.evensen@gmail.com>,
+        Aleksander Morgado <aleksander@aleksander.es>,
+        =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 012/126] qmi_wwan: unconditionally reject 2 ep interfaces
+Date:   Tue, 10 Mar 2020 13:40:33 +0100
+Message-Id: <20200310124204.841886268@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310124203.704193207@linuxfoundation.org>
 References: <20200310124203.704193207@linuxfoundation.org>
@@ -59,76 +63,132 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wolfram Sang <wsa@the-dreams.de>
+From: Bjørn Mork <bjorn@mork.no>
 
-commit 9e661cedcc0a072d91a32cb88e0515ea26e35711 upstream.
+[ Upstream commit 00516d13d4cfa56ce39da144db2dbf08b09b9357 ]
 
-The printout for txabrt is way too talkative and is highly annoying with
-scanning programs like 'i2cdetect'. Reduce it to the minimum, the rest
-can be gained by I2C core debugging and datasheet information. Also,
-make it a debug printout, it won't help the regular user.
+We have been using the fact that the QMI and DIAG functions
+usually are the only ones with class/subclass/protocol being
+ff/ff/ff on Quectel modems. This has allowed us to match the
+QMI function without knowing the exact interface number,
+which can vary depending on firmware configuration.
 
-Fixes: ba92222ed63a ("i2c: jz4780: Add i2c bus controller driver for Ingenic JZ4780")
-Reported-by: H. Nikolaus Schaller <hns@goldelico.com>
-Tested-by: H. Nikolaus Schaller <hns@goldelico.com>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+The ability to silently reject the DIAG function, which is
+usually handled by the option driver, is important for this
+method to work.  This is done based on the knowledge that it
+has exactly 2 bulk endpoints.  QMI function control interfaces
+will have either 3 or 1 endpoint. This rule is universal so
+the quirk condition can be removed.
 
+The fixed layouts known from the Gobi1k and Gobi2k modems
+have been gradually replaced by more dynamic layouts, and
+many vendors now use configurable layouts without changing
+device IDs.  Renaming the class/subclass/protocol matching
+macro makes it more obvious that this is now not Quectel
+specific anymore.
+
+Cc: Kristian Evensen <kristian.evensen@gmail.com>
+Cc: Aleksander Morgado <aleksander@aleksander.es>
+Signed-off-by: Bjørn Mork <bjorn@mork.no>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-jz4780.c |   36 ++----------------------------------
- 1 file changed, 2 insertions(+), 34 deletions(-)
+ drivers/net/usb/qmi_wwan.c | 42 ++++++++++++++------------------------
+ 1 file changed, 15 insertions(+), 27 deletions(-)
 
---- a/drivers/i2c/busses/i2c-jz4780.c
-+++ b/drivers/i2c/busses/i2c-jz4780.c
-@@ -82,25 +82,6 @@
- #define JZ4780_I2C_STA_TFNF		BIT(1)
- #define JZ4780_I2C_STA_ACT		BIT(0)
+diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
+index 08215a9f61454..189715438328f 100644
+--- a/drivers/net/usb/qmi_wwan.c
++++ b/drivers/net/usb/qmi_wwan.c
+@@ -63,7 +63,6 @@ enum qmi_wwan_flags {
  
--static const char * const jz4780_i2c_abrt_src[] = {
--	"ABRT_7B_ADDR_NOACK",
--	"ABRT_10ADDR1_NOACK",
--	"ABRT_10ADDR2_NOACK",
--	"ABRT_XDATA_NOACK",
--	"ABRT_GCALL_NOACK",
--	"ABRT_GCALL_READ",
--	"ABRT_HS_ACKD",
--	"SBYTE_ACKDET",
--	"ABRT_HS_NORSTRT",
--	"SBYTE_NORSTRT",
--	"ABRT_10B_RD_NORSTRT",
--	"ABRT_MASTER_DIS",
--	"ARB_LOST",
--	"SLVFLUSH_TXFIFO",
--	"SLV_ARBLOST",
--	"SLVRD_INTX",
+ enum qmi_wwan_quirks {
+ 	QMI_WWAN_QUIRK_DTR = 1 << 0,	/* needs "set DTR" request */
+-	QMI_WWAN_QUIRK_QUECTEL_DYNCFG = 1 << 1,	/* check num. endpoints */
+ };
+ 
+ struct qmimux_hdr {
+@@ -853,16 +852,6 @@ static const struct driver_info	qmi_wwan_info_quirk_dtr = {
+ 	.data           = QMI_WWAN_QUIRK_DTR,
+ };
+ 
+-static const struct driver_info	qmi_wwan_info_quirk_quectel_dyncfg = {
+-	.description	= "WWAN/QMI device",
+-	.flags		= FLAG_WWAN | FLAG_SEND_ZLP,
+-	.bind		= qmi_wwan_bind,
+-	.unbind		= qmi_wwan_unbind,
+-	.manage_power	= qmi_wwan_manage_power,
+-	.rx_fixup       = qmi_wwan_rx_fixup,
+-	.data           = QMI_WWAN_QUIRK_DTR | QMI_WWAN_QUIRK_QUECTEL_DYNCFG,
 -};
 -
- #define JZ4780_I2C_INTST_IGC		BIT(11)
- #define JZ4780_I2C_INTST_ISTT		BIT(10)
- #define JZ4780_I2C_INTST_ISTP		BIT(9)
-@@ -538,21 +519,8 @@ done:
+ #define HUAWEI_VENDOR_ID	0x12D1
  
- static void jz4780_i2c_txabrt(struct jz4780_i2c *i2c, int src)
+ /* map QMI/wwan function by a fixed interface number */
+@@ -883,14 +872,18 @@ static const struct driver_info	qmi_wwan_info_quirk_quectel_dyncfg = {
+ #define QMI_GOBI_DEVICE(vend, prod) \
+ 	QMI_FIXED_INTF(vend, prod, 0)
+ 
+-/* Quectel does not use fixed interface numbers on at least some of their
+- * devices. We need to check the number of endpoints to ensure that we bind to
+- * the correct interface.
++/* Many devices have QMI and DIAG functions which are distinguishable
++ * from other vendor specific functions by class, subclass and
++ * protocol all being 0xff. The DIAG function has exactly 2 endpoints
++ * and is silently rejected when probed.
++ *
++ * This makes it possible to match dynamically numbered QMI functions
++ * as seen on e.g. many Quectel modems.
+  */
+-#define QMI_QUIRK_QUECTEL_DYNCFG(vend, prod) \
++#define QMI_MATCH_FF_FF_FF(vend, prod) \
+ 	USB_DEVICE_AND_INTERFACE_INFO(vend, prod, USB_CLASS_VENDOR_SPEC, \
+ 				      USB_SUBCLASS_VENDOR_SPEC, 0xff), \
+-	.driver_info = (unsigned long)&qmi_wwan_info_quirk_quectel_dyncfg
++	.driver_info = (unsigned long)&qmi_wwan_info_quirk_dtr
+ 
+ static const struct usb_device_id products[] = {
+ 	/* 1. CDC ECM like devices match on the control interface */
+@@ -996,10 +989,10 @@ static const struct usb_device_id products[] = {
+ 		USB_DEVICE_AND_INTERFACE_INFO(0x03f0, 0x581d, USB_CLASS_VENDOR_SPEC, 1, 7),
+ 		.driver_info = (unsigned long)&qmi_wwan_info,
+ 	},
+-	{QMI_QUIRK_QUECTEL_DYNCFG(0x2c7c, 0x0125)},	/* Quectel EC25, EC20 R2.0  Mini PCIe */
+-	{QMI_QUIRK_QUECTEL_DYNCFG(0x2c7c, 0x0306)},	/* Quectel EP06/EG06/EM06 */
+-	{QMI_QUIRK_QUECTEL_DYNCFG(0x2c7c, 0x0512)},	/* Quectel EG12/EM12 */
+-	{QMI_QUIRK_QUECTEL_DYNCFG(0x2c7c, 0x0800)},	/* Quectel RM500Q-GL */
++	{QMI_MATCH_FF_FF_FF(0x2c7c, 0x0125)},	/* Quectel EC25, EC20 R2.0  Mini PCIe */
++	{QMI_MATCH_FF_FF_FF(0x2c7c, 0x0306)},	/* Quectel EP06/EG06/EM06 */
++	{QMI_MATCH_FF_FF_FF(0x2c7c, 0x0512)},	/* Quectel EG12/EM12 */
++	{QMI_MATCH_FF_FF_FF(0x2c7c, 0x0800)},	/* Quectel RM500Q-GL */
+ 
+ 	/* 3. Combined interface devices matching on interface number */
+ 	{QMI_FIXED_INTF(0x0408, 0xea42, 4)},	/* Yota / Megafon M100-1 */
+@@ -1379,7 +1372,6 @@ static int qmi_wwan_probe(struct usb_interface *intf,
  {
--	int i;
--
--	dev_err(&i2c->adap.dev, "txabrt: 0x%08x\n", src);
--	dev_err(&i2c->adap.dev, "device addr=%x\n",
--		jz4780_i2c_readw(i2c, JZ4780_I2C_TAR));
--	dev_err(&i2c->adap.dev, "send cmd count:%d  %d\n",
--		i2c->cmd, i2c->cmd_buf[i2c->cmd]);
--	dev_err(&i2c->adap.dev, "receive data count:%d  %d\n",
--		i2c->cmd, i2c->data_buf[i2c->cmd]);
--
--	for (i = 0; i < 16; i++) {
--		if (src & BIT(i))
--			dev_dbg(&i2c->adap.dev, "I2C TXABRT[%d]=%s\n",
--				i, jz4780_i2c_abrt_src[i]);
--	}
-+	dev_dbg(&i2c->adap.dev, "txabrt: 0x%08x, cmd: %d, send: %d, recv: %d\n",
-+		src, i2c->cmd, i2c->cmd_buf[i2c->cmd], i2c->data_buf[i2c->cmd]);
- }
+ 	struct usb_device_id *id = (struct usb_device_id *)prod;
+ 	struct usb_interface_descriptor *desc = &intf->cur_altsetting->desc;
+-	const struct driver_info *info;
  
- static inline int jz4780_i2c_xfer_read(struct jz4780_i2c *i2c,
+ 	/* Workaround to enable dynamic IDs.  This disables usbnet
+ 	 * blacklisting functionality.  Which, if required, can be
+@@ -1415,12 +1407,8 @@ static int qmi_wwan_probe(struct usb_interface *intf,
+ 	 * different. Ignore the current interface if the number of endpoints
+ 	 * equals the number for the diag interface (two).
+ 	 */
+-	info = (void *)id->driver_info;
+-
+-	if (info->data & QMI_WWAN_QUIRK_QUECTEL_DYNCFG) {
+-		if (desc->bNumEndpoints == 2)
+-			return -ENODEV;
+-	}
++	if (desc->bNumEndpoints == 2)
++		return -ENODEV;
+ 
+ 	return usbnet_probe(intf, id);
+ }
+-- 
+2.20.1
+
 
 
