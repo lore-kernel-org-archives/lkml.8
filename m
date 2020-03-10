@@ -2,55 +2,53 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16582C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:19:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9898FC18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:19:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC1F820409
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:19:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 664F820409
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:19:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583846347;
-	bh=hP7QB49/EqfVLxCeySXGAPy+WtwNAdFQlnAJKdDcWTc=;
+	s=default; t=1583846355;
+	bh=vvd+ga9xtofA4LLzni39uzCH/EHz5pUxMLbMT7GfNUc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MuuORDiXQ1Pgz2ICToKAk6Pa8tUi2vWkNVPGKySChV8cz5TQ3yTAO7x4LA+8cmajd
-	 qplUX5y17RKpTZ0Wy1SIuvdAzDQzi2gZq/pK24QzuTgg5h0gTG0sbQvrFfJkiM1eoy
-	 Gp9pyRYQpEJB4/kp+VxzFeUcOeorQ3nKKAzOSN9s=
+	b=mEgXbjIuGjttIKuWqvs08NCMVt7Va4mrcsQ0GE0jM3sGMV5sIv3c8KACPwscp/0cA
+	 MDuTZAv3yRTOmPEFH813kbb39uUzNQVQ/zajKqRGsOIpkDmVQPb+ZR0PwTFNC+U5HI
+	 ZC91IqgrDpcRwND49dCcWGeA2WxpicbH+BmYSZfM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731263AbgCJNJn (ORCPT
+        id S1730850AbgCJNJY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:09:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56914 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:09:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56358 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731256AbgCJNJm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:09:42 -0400
+        id S1730425AbgCJNJU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:09:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B5EF20873;
-        Tue, 10 Mar 2020 13:09:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 31979208E4;
+        Tue, 10 Mar 2020 13:09:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845781;
-        bh=hP7QB49/EqfVLxCeySXGAPy+WtwNAdFQlnAJKdDcWTc=;
+        s=default; t=1583845759;
+        bh=vvd+ga9xtofA4LLzni39uzCH/EHz5pUxMLbMT7GfNUc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ndRsMaqII4iENyzZEGPxppW/sjOCBfjZ+GfDOUkAN+teFfsW2qjiDexlnI+rXwl4l
-         Unxx//BXyMa7DFl3iRujDgGX4wr/r6iETPo90CyTWpHJiBHH1UwUTYwYeCNieLzI34
-         Bw+nVGOgTiscoGTXcnkqhdm2q/X1LoeTylunZxoo=
+        b=i+yjpRYMvHIZfMP1DUxONJX0nj4Ev8evPMgPCWF/B0nXH5GfT2SlMmKeB6kDc7jXK
+         uVhFy5ecs0SugK0g1LZtfY9EDFJZF4YBTBwHbEFqPMwAQgMGEvXGZda+HgtfKA+esJ
+         TiSs3KNUGmJZyOo+sm2eFCC7MO3JuoAvL1qtUjtg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Hannes Frederic Sowa <hannes@stressinduktion.org>,
-        Eric Dumazet <edumazet@google.com>,
-        Jason Wang <jasowang@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Tommi Rantala <tommi.t.rantala@nokia.com>
-Subject: [PATCH 4.14 059/126] tuntap: correctly set SOCKWQ_ASYNC_NOSPACE
-Date:   Tue, 10 Mar 2020 13:41:20 +0100
-Message-Id: <20200310124207.925139999@linuxfoundation.org>
+        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Juergen Gross <jgross@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 089/126] x86/xen: Distribute switch variables for initialization
+Date:   Tue, 10 Mar 2020 13:41:50 +0100
+Message-Id: <20200310124209.494850234@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310124203.704193207@linuxfoundation.org>
 References: <20200310124203.704193207@linuxfoundation.org>
@@ -63,68 +61,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Wang <jasowang@redhat.com>
+From: Kees Cook <keescook@chromium.org>
 
-commit 2f3ab6221e4c87960347d65c7cab9bd917d1f637 upstream.
+[ Upstream commit 9038ec99ceb94fb8d93ade5e236b2928f0792c7c ]
 
-When link is down, writes to the device might fail with
--EIO. Userspace needs an indication when the status is resolved.  As a
-fix, tun_net_open() attempts to wake up writers - but that is only
-effective if SOCKWQ_ASYNC_NOSPACE has been set in the past. This is
-not the case of vhost_net which only poll for EPOLLOUT after it meets
-errors during sendmsg().
+Variables declared in a switch statement before any case statements
+cannot be automatically initialized with compiler instrumentation (as
+they are not part of any execution flow). With GCC's proposed automatic
+stack variable initialization feature, this triggers a warning (and they
+don't get initialized). Clang's automatic stack variable initialization
+(via CONFIG_INIT_STACK_ALL=y) doesn't throw a warning, but it also
+doesn't initialize such variables[1]. Note that these warnings (or silent
+skipping) happen before the dead-store elimination optimization phase,
+so even when the automatic initializations are later elided in favor of
+direct initializations, the warnings remain.
 
-This patch fixes this by making sure SOCKWQ_ASYNC_NOSPACE is set when
-socket is not writable or device is down to guarantee EPOLLOUT will be
-raised in either tun_chr_poll() or tun_sock_write_space() after device
-is up.
+To avoid these problems, move such variables into the "case" where
+they're used or lift them up into the main function body.
 
-Cc: Hannes Frederic Sowa <hannes@stressinduktion.org>
-Cc: Eric Dumazet <edumazet@google.com>
-Fixes: 1bd4978a88ac2 ("tun: honor IFF_UP in tun_get_user()")
-Signed-off-by: Jason Wang <jasowang@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Tommi Rantala <tommi.t.rantala@nokia.com>
+arch/x86/xen/enlighten_pv.c: In function ‘xen_write_msr_safe’:
+arch/x86/xen/enlighten_pv.c:904:12: warning: statement will never be executed [-Wswitch-unreachable]
+  904 |   unsigned which;
+      |            ^~~~~
 
+[1] https://bugs.llvm.org/show_bug.cgi?id=44916
+
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Link: https://lore.kernel.org/r/20200220062318.69299-1-keescook@chromium.org
+Reviewed-by: Juergen Gross <jgross@suse.com>
+[boris: made @which an 'unsigned int']
+Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/tun.c |   19 +++++++++++++++----
- 1 file changed, 15 insertions(+), 4 deletions(-)
+ arch/x86/xen/enlighten_pv.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
---- a/drivers/net/tun.c
-+++ b/drivers/net/tun.c
-@@ -1134,6 +1134,13 @@ static void tun_net_init(struct net_devi
- 	dev->max_mtu = MAX_MTU - dev->hard_header_len;
- }
+diff --git a/arch/x86/xen/enlighten_pv.c b/arch/x86/xen/enlighten_pv.c
+index f79a0cdc6b4e7..1f8175bf2a5e3 100644
+--- a/arch/x86/xen/enlighten_pv.c
++++ b/arch/x86/xen/enlighten_pv.c
+@@ -909,14 +909,15 @@ static u64 xen_read_msr_safe(unsigned int msr, int *err)
+ static int xen_write_msr_safe(unsigned int msr, unsigned low, unsigned high)
+ {
+ 	int ret;
++#ifdef CONFIG_X86_64
++	unsigned int which;
++	u64 base;
++#endif
  
-+static bool tun_sock_writeable(struct tun_struct *tun, struct tun_file *tfile)
-+{
-+	struct sock *sk = tfile->socket.sk;
-+
-+	return (tun->dev->flags & IFF_UP) && sock_writeable(sk);
-+}
-+
- /* Character device part */
+ 	ret = 0;
  
- /* Poll */
-@@ -1156,10 +1163,14 @@ static unsigned int tun_chr_poll(struct
- 	if (!skb_array_empty(&tfile->tx_array))
- 		mask |= POLLIN | POLLRDNORM;
- 
--	if (tun->dev->flags & IFF_UP &&
--	    (sock_writeable(sk) ||
--	     (!test_and_set_bit(SOCKWQ_ASYNC_NOSPACE, &sk->sk_socket->flags) &&
--	      sock_writeable(sk))))
-+	/* Make sure SOCKWQ_ASYNC_NOSPACE is set if not writable to
-+	 * guarantee EPOLLOUT to be raised by either here or
-+	 * tun_sock_write_space(). Then process could get notification
-+	 * after it writes to a down device and meets -EIO.
-+	 */
-+	if (tun_sock_writeable(tun, tfile) ||
-+	    (!test_and_set_bit(SOCKWQ_ASYNC_NOSPACE, &sk->sk_socket->flags) &&
-+	     tun_sock_writeable(tun, tfile)))
- 		mask |= POLLOUT | POLLWRNORM;
- 
- 	if (tun->dev->reg_state != NETREG_REGISTERED)
+ 	switch (msr) {
+ #ifdef CONFIG_X86_64
+-		unsigned which;
+-		u64 base;
+-
+ 	case MSR_FS_BASE:		which = SEGBASE_FS; goto set;
+ 	case MSR_KERNEL_GS_BASE:	which = SEGBASE_GS_USER; goto set;
+ 	case MSR_GS_BASE:		which = SEGBASE_GS_KERNEL; goto set;
+-- 
+2.20.1
+
 
 
