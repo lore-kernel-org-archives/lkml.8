@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8529EC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:50:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03816C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:50:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EEF324692
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:50:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C88FF24691
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:50:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583844603;
-	bh=cDrG6eBvBexdJXtqq7vBX8LWzWqJNBH8R4xqScia/FM=;
+	s=default; t=1583844607;
+	bh=nRO455Vq+s6RfjtfOB2yl+aWuz2EYmxn6affqv+/Knc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EHEyJsB4IfIM0FMnbkuNLpiGqhlbYpJFwtFFlsf1EYz8YTUcIzLv/glYrk9SXdO5A
-	 gN7portvKL8h7rn2UAk9vurhujcd7ah1wGeVisrucNDqLh+zFIYYEuKA9yaK9Aq1xW
-	 B6j9J2Mk5wMRp6XUYMccVwGwknvXvMFR/U3rCXIg=
+	b=P42Qpe7xmxqwQtg21CyxGc0xreGoCTOTqz1SxTeIi0cyHF+Y7q7v8PXWuAZFkDNl5
+	 IsIWjdZIYirK8j/vy/Nv3OqNF0VuZonTFVCnj8neRpdIGZN/9xgzFNACLUgH5Dkw+h
+	 pvfSCoercjxwU38l72N+KcH2aQ255hy8rzDVPVEM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728539AbgCJMuB (ORCPT
+        id S1727682AbgCJMuG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:50:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54464 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:50:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54550 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728514AbgCJMt6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:49:58 -0400
+        id S1727080AbgCJMuC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:50:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8797824692;
-        Tue, 10 Mar 2020 12:49:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5AE2D2468E;
+        Tue, 10 Mar 2020 12:50:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844596;
-        bh=cDrG6eBvBexdJXtqq7vBX8LWzWqJNBH8R4xqScia/FM=;
+        s=default; t=1583844601;
+        bh=nRO455Vq+s6RfjtfOB2yl+aWuz2EYmxn6affqv+/Knc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qYBj2H1PM9f6700YCx9zruD7yWtbYpKXXT6OerBQY0Lz0mJU/+HB0dX274Uf3rS/l
-         uoqwVgGVswePYpWiWb/6zviihN+ToEUO3oPlnFWUKptgcsicqPGABalKhCSDQ5TMjN
-         UY68dt/tabjyFFz5eT4AWohxRLIphOnyc6p0EcR4=
+        b=cteE66bItAdn0azoPg+6li25dgMk/GSeycF/OldywR+WB7oV9MwxWu7f3kjhX4VRh
+         Es8ZybLg6Ay/fxd7Y3MdqOzCdyxqlEvQgUdjSZUnvcjq1GaBarYKupqo8oZ88zvhBB
+         bi6eMfeQIXFr0Inin4YYeGDrfuccLw+9A3zhJw1A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tim Harvey <tharvey@gateworks.com>,
-        Robert Jones <rjones@gateworks.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Guo Ren <guoren@linux.alibaba.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 049/168] net: thunderx: workaround BGX TX Underflow issue
-Date:   Tue, 10 Mar 2020 13:38:15 +0100
-Message-Id: <20200310123640.340182742@linuxfoundation.org>
+Subject: [PATCH 5.4 051/168] csky: Set regs->usp to kernel sp, when the exception is from kernel
+Date:   Tue, 10 Mar 2020 13:38:17 +0100
+Message-Id: <20200310123640.523177260@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123635.322799692@linuxfoundation.org>
 References: <20200310123635.322799692@linuxfoundation.org>
@@ -61,153 +59,153 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tim Harvey <tharvey@gateworks.com>
+From: Guo Ren <guoren@linux.alibaba.com>
 
-[ Upstream commit 971617c3b761c876d686a2188220a33898c90e99 ]
+[ Upstream commit f8e17c17b81070f38062dce79ca7f4541851dadd ]
 
-While it is not yet understood why a TX underflow can easily occur
-for SGMII interfaces resulting in a TX wedge. It has been found that
-disabling/re-enabling the LMAC resolves the issue.
+In the past, we didn't care about kernel sp when saving pt_reg. But in some
+cases, we still need pt_reg->usp to represent the kernel stack before enter
+exception.
 
-Signed-off-by: Tim Harvey <tharvey@gateworks.com>
-Reviewed-by: Robert Jones <rjones@gateworks.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+For cmpxhg in atomic.S, we need save and restore usp for above.
+
+Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/ethernet/cavium/thunder/thunder_bgx.c | 62 ++++++++++++++++++-
- .../net/ethernet/cavium/thunder/thunder_bgx.h |  9 +++
- 2 files changed, 68 insertions(+), 3 deletions(-)
+ arch/csky/abiv1/inc/abi/entry.h | 19 ++++++++++++++-----
+ arch/csky/abiv2/inc/abi/entry.h | 11 +++++++++++
+ arch/csky/kernel/atomic.S       |  8 ++++++--
+ 3 files changed, 31 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/net/ethernet/cavium/thunder/thunder_bgx.c b/drivers/net/ethernet/cavium/thunder/thunder_bgx.c
-index 6cc100e7d5c07..76ff42ec3ae5e 100644
---- a/drivers/net/ethernet/cavium/thunder/thunder_bgx.c
-+++ b/drivers/net/ethernet/cavium/thunder/thunder_bgx.c
-@@ -410,10 +410,19 @@ void bgx_lmac_rx_tx_enable(int node, int bgx_idx, int lmacid, bool enable)
- 	lmac = &bgx->lmac[lmacid];
+diff --git a/arch/csky/abiv1/inc/abi/entry.h b/arch/csky/abiv1/inc/abi/entry.h
+index 7ab78bd0f3b13..f35a9f3315ee6 100644
+--- a/arch/csky/abiv1/inc/abi/entry.h
++++ b/arch/csky/abiv1/inc/abi/entry.h
+@@ -16,14 +16,16 @@
+ #define LSAVE_A4	40
+ #define LSAVE_A5	44
  
- 	cfg = bgx_reg_read(bgx, lmacid, BGX_CMRX_CFG);
--	if (enable)
-+	if (enable) {
- 		cfg |= CMR_PKT_RX_EN | CMR_PKT_TX_EN;
--	else
++#define usp ss1
 +
-+		/* enable TX FIFO Underflow interrupt */
-+		bgx_reg_modify(bgx, lmacid, BGX_GMP_GMI_TXX_INT_ENA_W1S,
-+			       GMI_TXX_INT_UNDFLW);
-+	} else {
- 		cfg &= ~(CMR_PKT_RX_EN | CMR_PKT_TX_EN);
-+
-+		/* Disable TX FIFO Underflow interrupt */
-+		bgx_reg_modify(bgx, lmacid, BGX_GMP_GMI_TXX_INT_ENA_W1C,
-+			       GMI_TXX_INT_UNDFLW);
-+	}
- 	bgx_reg_write(bgx, lmacid, BGX_CMRX_CFG, cfg);
+ .macro USPTOKSP
+-	mtcr	sp, ss1
++	mtcr	sp, usp
+ 	mfcr	sp, ss0
+ .endm
  
- 	if (bgx->is_rgx)
-@@ -1535,6 +1544,48 @@ static int bgx_init_phy(struct bgx *bgx)
- 	return bgx_init_of_phy(bgx);
- }
+ .macro KSPTOUSP
+ 	mtcr	sp, ss0
+-	mfcr	sp, ss1
++	mfcr	sp, usp
+ .endm
  
-+static irqreturn_t bgx_intr_handler(int irq, void *data)
-+{
-+	struct bgx *bgx = (struct bgx *)data;
-+	u64 status, val;
-+	int lmac;
-+
-+	for (lmac = 0; lmac < bgx->lmac_count; lmac++) {
-+		status = bgx_reg_read(bgx, lmac, BGX_GMP_GMI_TXX_INT);
-+		if (status & GMI_TXX_INT_UNDFLW) {
-+			pci_err(bgx->pdev, "BGX%d lmac%d UNDFLW\n",
-+				bgx->bgx_id, lmac);
-+			val = bgx_reg_read(bgx, lmac, BGX_CMRX_CFG);
-+			val &= ~CMR_EN;
-+			bgx_reg_write(bgx, lmac, BGX_CMRX_CFG, val);
-+			val |= CMR_EN;
-+			bgx_reg_write(bgx, lmac, BGX_CMRX_CFG, val);
-+		}
-+		/* clear interrupts */
-+		bgx_reg_write(bgx, lmac, BGX_GMP_GMI_TXX_INT, status);
-+	}
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static void bgx_register_intr(struct pci_dev *pdev)
-+{
-+	struct bgx *bgx = pci_get_drvdata(pdev);
-+	int ret;
-+
-+	ret = pci_alloc_irq_vectors(pdev, BGX_LMAC_VEC_OFFSET,
-+				    BGX_LMAC_VEC_OFFSET, PCI_IRQ_ALL_TYPES);
-+	if (ret < 0) {
-+		pci_err(pdev, "Req for #%d msix vectors failed\n",
-+			BGX_LMAC_VEC_OFFSET);
-+		return;
-+	}
-+	ret = pci_request_irq(pdev, GMPX_GMI_TX_INT, bgx_intr_handler, NULL,
-+			      bgx, "BGX%d", bgx->bgx_id);
-+	if (ret)
-+		pci_free_irq(pdev, GMPX_GMI_TX_INT, bgx);
-+}
-+
- static int bgx_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- {
- 	int err;
-@@ -1550,7 +1601,7 @@ static int bgx_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ .macro	SAVE_ALL epc_inc
+@@ -45,7 +47,13 @@
+ 	add	lr, r13
+ 	stw     lr, (sp, 8)
  
- 	pci_set_drvdata(pdev, bgx);
++	mov	lr, sp
++	addi	lr, 32
++	addi	lr, 32
++	addi	lr, 16
++	bt	2f
+ 	mfcr	lr, ss1
++2:
+ 	stw     lr, (sp, 16)
  
--	err = pci_enable_device(pdev);
-+	err = pcim_enable_device(pdev);
- 	if (err) {
- 		dev_err(dev, "Failed to enable PCI device\n");
- 		pci_set_drvdata(pdev, NULL);
-@@ -1604,6 +1655,8 @@ static int bgx_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 	stw     a0, (sp, 20)
+@@ -79,9 +87,10 @@
+ 	ldw     a0, (sp, 12)
+ 	mtcr    a0, epsr
+ 	btsti   a0, 31
++	bt      1f
+ 	ldw     a0, (sp, 16)
+ 	mtcr	a0, ss1
+-
++1:
+ 	ldw     a0, (sp, 24)
+ 	ldw     a1, (sp, 28)
+ 	ldw     a2, (sp, 32)
+@@ -102,9 +111,9 @@
+ 	addi	sp, 32
+ 	addi	sp, 8
  
- 	bgx_init_hw(bgx);
+-	bt      1f
++	bt      2f
+ 	KSPTOUSP
+-1:
++2:
+ 	rte
+ .endm
  
-+	bgx_register_intr(pdev);
-+
- 	/* Enable all LMACs */
- 	for (lmac = 0; lmac < bgx->lmac_count; lmac++) {
- 		err = bgx_lmac_enable(bgx, lmac);
-@@ -1620,6 +1673,7 @@ static int bgx_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+diff --git a/arch/csky/abiv2/inc/abi/entry.h b/arch/csky/abiv2/inc/abi/entry.h
+index 9897a16b45e5d..94a7a58765dff 100644
+--- a/arch/csky/abiv2/inc/abi/entry.h
++++ b/arch/csky/abiv2/inc/abi/entry.h
+@@ -31,7 +31,13 @@
  
- err_enable:
- 	bgx_vnic[bgx->bgx_id] = NULL;
-+	pci_free_irq(pdev, GMPX_GMI_TX_INT, bgx);
- err_release_regions:
- 	pci_release_regions(pdev);
- err_disable_device:
-@@ -1637,6 +1691,8 @@ static void bgx_remove(struct pci_dev *pdev)
- 	for (lmac = 0; lmac < bgx->lmac_count; lmac++)
- 		bgx_lmac_disable(bgx, lmac);
+ 	mfcr	lr, epsr
+ 	stw	lr, (sp, 12)
++	btsti   lr, 31
++	bf      1f
++	addi    lr, sp, 152
++	br	2f
++1:
+ 	mfcr	lr, usp
++2:
+ 	stw	lr, (sp, 16)
  
-+	pci_free_irq(pdev, GMPX_GMI_TX_INT, bgx);
-+
- 	bgx_vnic[bgx->bgx_id] = NULL;
- 	pci_release_regions(pdev);
- 	pci_disable_device(pdev);
-diff --git a/drivers/net/ethernet/cavium/thunder/thunder_bgx.h b/drivers/net/ethernet/cavium/thunder/thunder_bgx.h
-index 25888706bdcd1..cdea493921857 100644
---- a/drivers/net/ethernet/cavium/thunder/thunder_bgx.h
-+++ b/drivers/net/ethernet/cavium/thunder/thunder_bgx.h
-@@ -180,6 +180,15 @@
- #define BGX_GMP_GMI_TXX_BURST		0x38228
- #define BGX_GMP_GMI_TXX_MIN_PKT		0x38240
- #define BGX_GMP_GMI_TXX_SGMII_CTL	0x38300
-+#define BGX_GMP_GMI_TXX_INT		0x38500
-+#define BGX_GMP_GMI_TXX_INT_W1S		0x38508
-+#define BGX_GMP_GMI_TXX_INT_ENA_W1C	0x38510
-+#define BGX_GMP_GMI_TXX_INT_ENA_W1S	0x38518
-+#define  GMI_TXX_INT_PTP_LOST			BIT_ULL(4)
-+#define  GMI_TXX_INT_LATE_COL			BIT_ULL(3)
-+#define  GMI_TXX_INT_XSDEF			BIT_ULL(2)
-+#define  GMI_TXX_INT_XSCOL			BIT_ULL(1)
-+#define  GMI_TXX_INT_UNDFLW			BIT_ULL(0)
+ 	stw     a0, (sp, 20)
+@@ -64,8 +70,10 @@
+ 	mtcr	a0, epc
+ 	ldw	a0, (sp, 12)
+ 	mtcr	a0, epsr
++	btsti   a0, 31
+ 	ldw	a0, (sp, 16)
+ 	mtcr	a0, usp
++	mtcr	a0, ss0
  
- #define BGX_MSIX_VEC_0_29_ADDR		0x400000 /* +(0..29) << 4 */
- #define BGX_MSIX_VEC_0_29_CTL		0x400008
+ #ifdef CONFIG_CPU_HAS_HILO
+ 	ldw	a0, (sp, 140)
+@@ -86,6 +94,9 @@
+ 	addi    sp, 40
+ 	ldm     r16-r30, (sp)
+ 	addi    sp, 72
++	bf	1f
++	mfcr	sp, ss0
++1:
+ 	rte
+ .endm
+ 
+diff --git a/arch/csky/kernel/atomic.S b/arch/csky/kernel/atomic.S
+index 5b84f11485aeb..3821ef9b75672 100644
+--- a/arch/csky/kernel/atomic.S
++++ b/arch/csky/kernel/atomic.S
+@@ -17,10 +17,12 @@ ENTRY(csky_cmpxchg)
+ 	mfcr	a3, epc
+ 	addi	a3, TRAP0_SIZE
+ 
+-	subi    sp, 8
++	subi    sp, 16
+ 	stw     a3, (sp, 0)
+ 	mfcr    a3, epsr
+ 	stw     a3, (sp, 4)
++	mfcr	a3, usp
++	stw     a3, (sp, 8)
+ 
+ 	psrset	ee
+ #ifdef CONFIG_CPU_HAS_LDSTEX
+@@ -47,7 +49,9 @@ ENTRY(csky_cmpxchg)
+ 	mtcr	a3, epc
+ 	ldw     a3, (sp, 4)
+ 	mtcr	a3, epsr
+-	addi	sp, 8
++	ldw     a3, (sp, 8)
++	mtcr	a3, usp
++	addi	sp, 16
+ 	KSPTOUSP
+ 	rte
+ END(csky_cmpxchg)
 -- 
 2.20.1
 
