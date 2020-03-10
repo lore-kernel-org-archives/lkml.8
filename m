@@ -2,274 +2,76 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E091C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:50:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9BCAC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:50:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0E692467D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:50:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583844634;
-	bh=a0w6XGHLj81c4scGNJXQUFss029TBYmnO1vDpktbZVY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pw1f6TfuBjmjn/tDa4IzS22nQtejdrR3VagK8EHLtxP4ylT1Z9amKyZeYUVeVU2j4
-	 85eMJylPhRPp3gn4jbg6SISB7aZrOB7pO6NfChVC3iPSdApxeX776v34umZ0n4Yn1d
-	 Fzr2sfgr3fh19nIkHRQZ4UbAz+Ucoi0f1mi9Y1+Y=
+	by mail.kernel.org (Postfix) with ESMTP id A43822468E
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:50:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728629AbgCJMuc (ORCPT
+        id S1728639AbgCJMue (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:50:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55146 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728604AbgCJMu2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:50:28 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D9492468E;
-        Tue, 10 Mar 2020 12:50:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844626;
-        bh=a0w6XGHLj81c4scGNJXQUFss029TBYmnO1vDpktbZVY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h3BaxqbQfCsfP4KzQFQ23MjneDPGu3Osq9cerWuaPTt9hez0pur3FcdqweCCLiQ8p
-         InZnpCty5FV8bO+RacuM2LVJbnV761onYXg5PEnQncxUwuc62LvWtvfUgE0jPyG+k8
-         XWyTAMGfYaLvH4BeXT3+p6hxa7+wStshSBeZ44DI=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Todd Kjos <tkjos@google.com>
-Subject: [PATCH 5.4 059/168] binder: prevent UAF for binderfs devices II
-Date:   Tue, 10 Mar 2020 13:38:25 +0100
-Message-Id: <20200310123641.278007573@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200310123635.322799692@linuxfoundation.org>
-References: <20200310123635.322799692@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 10 Mar 2020 08:50:34 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:11616 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728596AbgCJMu3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:50:29 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 7B8B0322FAE80E6DD4EA;
+        Tue, 10 Mar 2020 20:50:21 +0800 (CST)
+Received: from szvp000203569.huawei.com (10.120.216.130) by
+ DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
+ 14.3.487.0; Tue, 10 Mar 2020 20:50:12 +0800
+From:   Chao Yu <yuchao0@huawei.com>
+To:     <jaegeuk@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
+        Chao Yu <yuchao0@huawei.com>
+Subject: [PATCH 2/5] f2fs: force compressed data into warm area
+Date:   Tue, 10 Mar 2020 20:50:06 +0800
+Message-ID: <20200310125009.12966-2-yuchao0@huawei.com>
+X-Mailer: git-send-email 2.18.0.rc1
+In-Reply-To: <20200310125009.12966-1-yuchao0@huawei.com>
+References: <20200310125009.12966-1-yuchao0@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.120.216.130]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Brauner <christian.brauner@ubuntu.com>
+Generally, data shows better continuity in warm data area as its
+default allocation direction is right, in order to enhance
+sequential read/write performance of compress inode, let's force
+compress data into warm area.
 
-commit f0fe2c0f050d31babcad7d65f1d550d462a40064 upstream.
-
-This is a necessary follow up to the first fix I proposed and we merged
-in 2669b8b0c79 ("binder: prevent UAF for binderfs devices"). I have been
-overly optimistic that the simple fix I proposed would work. But alas,
-ihold() + iput() won't work since the inodes won't survive the
-destruction of the superblock.
-So all we get with my prior fix is a different race with a tinier
-race-window but it doesn't solve the issue. Fwiw, the problem lies with
-generic_shutdown_super(). It even has this cozy Al-style comment:
-
-          if (!list_empty(&sb->s_inodes)) {
-                  printk("VFS: Busy inodes after unmount of %s. "
-                     "Self-destruct in 5 seconds.  Have a nice day...\n",
-                     sb->s_id);
-          }
-
-On binder_release(), binder_defer_work(proc, BINDER_DEFERRED_RELEASE) is
-called which punts the actual cleanup operation to a workqueue. At some
-point, binder_deferred_func() will be called which will end up calling
-binder_deferred_release() which will retrieve and cleanup the
-binder_context attach to this struct binder_proc.
-
-If we trace back where this binder_context is attached to binder_proc we
-see that it is set in binder_open() and is taken from the struct
-binder_device it is associated with. This obviously assumes that the
-struct binder_device that context is attached to is _never_ freed. While
-that might be true for devtmpfs binder devices it is most certainly
-wrong for binderfs binder devices.
-
-So, assume binder_open() is called on a binderfs binder devices. We now
-stash away the struct binder_context associated with that struct
-binder_devices:
-	proc->context = &binder_dev->context;
-	/* binderfs stashes devices in i_private */
-	if (is_binderfs_device(nodp)) {
-		binder_dev = nodp->i_private;
-		info = nodp->i_sb->s_fs_info;
-		binder_binderfs_dir_entry_proc = info->proc_log_dir;
-	} else {
-	.
-	.
-	.
-	proc->context = &binder_dev->context;
-
-Now let's assume that the binderfs instance for that binder devices is
-shutdown via umount() and/or the mount namespace associated with it goes
-away. As long as there is still an fd open for that binderfs binder
-device things are fine. But let's assume we now close the last fd for
-that binderfs binder device. Now binder_release() is called and punts to
-the workqueue. Assume that the workqueue has quite a bit of stuff to do
-and doesn't get to cleaning up the struct binder_proc and the associated
-struct binder_context with it for that binderfs binder device right
-away. In the meantime, the VFS is killing the super block and is
-ultimately calling sb->evict_inode() which means it will call
-binderfs_evict_inode() which does:
-
-static void binderfs_evict_inode(struct inode *inode)
-{
-	struct binder_device *device = inode->i_private;
-	struct binderfs_info *info = BINDERFS_I(inode);
-
-	clear_inode(inode);
-
-	if (!S_ISCHR(inode->i_mode) || !device)
-		return;
-
-	mutex_lock(&binderfs_minors_mutex);
-	--info->device_count;
-	ida_free(&binderfs_minors, device->miscdev.minor);
-	mutex_unlock(&binderfs_minors_mutex);
-
-	kfree(device->context.name);
-	kfree(device);
-}
-
-thereby freeing the struct binder_device including struct
-binder_context.
-
-Now the workqueue finally has time to get around to cleaning up struct
-binder_proc and is now trying to access the associate struct
-binder_context. Since it's already freed it will OOPs.
-
-Fix this by introducing a refounct on binder devices.
-
-This is an alternative fix to 51d8a7eca677 ("binder: prevent UAF read in
-print_binder_transaction_log_entry()").
-
-Fixes: 3ad20fe393b3 ("binder: implement binderfs")
-Fixes: 2669b8b0c798 ("binder: prevent UAF for binderfs devices")
-Fixes: 03e2e07e3814 ("binder: Make transaction_log available in binderfs")
-Related : 51d8a7eca677 ("binder: prevent UAF read in print_binder_transaction_log_entry()")
-Cc: stable@vger.kernel.org
-Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
-Acked-by: Todd Kjos <tkjos@google.com>
-Link: https://lore.kernel.org/r/20200303164340.670054-1-christian.brauner@ubuntu.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
 ---
- drivers/android/binder.c          |   12 +++++++++---
- drivers/android/binder_internal.h |   15 ++-------------
- drivers/android/binderfs.c        |    7 +++++--
- 3 files changed, 16 insertions(+), 18 deletions(-)
+ fs/f2fs/segment.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/drivers/android/binder.c
-+++ b/drivers/android/binder.c
-@@ -5223,13 +5223,14 @@ static int binder_open(struct inode *nod
- 	proc->default_priority = task_nice(current);
- 	/* binderfs stashes devices in i_private */
- 	if (is_binderfs_device(nodp)) {
--		binder_dev = binderfs_device_get(nodp->i_private);
-+		binder_dev = nodp->i_private;
- 		info = nodp->i_sb->s_fs_info;
- 		binder_binderfs_dir_entry_proc = info->proc_log_dir;
- 	} else {
- 		binder_dev = container_of(filp->private_data,
- 					  struct binder_device, miscdev);
- 	}
-+	refcount_inc(&binder_dev->ref);
- 	proc->context = &binder_dev->context;
- 	binder_alloc_init(&proc->alloc);
+diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+index 601d67e72c50..ab1bc750712a 100644
+--- a/fs/f2fs/segment.c
++++ b/fs/f2fs/segment.c
+@@ -3037,9 +3037,10 @@ static int __get_segment_type_6(struct f2fs_io_info *fio)
+ 	if (fio->type == DATA) {
+ 		struct inode *inode = fio->page->mapping->host;
  
-@@ -5424,6 +5425,12 @@ static void binder_deferred_release(stru
- 		context->binder_context_mgr_node = NULL;
- 	}
- 	mutex_unlock(&context->context_mgr_node_lock);
-+	device = container_of(proc->context, struct binder_device, context);
-+	if (refcount_dec_and_test(&device->ref)) {
-+		kfree(context->name);
-+		kfree(device);
-+	}
-+	proc->context = NULL;
- 	binder_inner_proc_lock(proc);
- 	/*
- 	 * Make sure proc stays alive after we
-@@ -5487,8 +5494,6 @@ static void binder_deferred_release(stru
- 		     outgoing_refs, active_transactions);
- 
- 	binder_proc_dec_tmpref(proc);
--	device = container_of(proc->context, struct binder_device, context);
--	binderfs_device_put(device);
- }
- 
- static void binder_deferred_func(struct work_struct *work)
-@@ -6082,6 +6087,7 @@ static int __init init_binder_device(con
- 	binder_device->miscdev.minor = MISC_DYNAMIC_MINOR;
- 	binder_device->miscdev.name = name;
- 
-+	refcount_set(&binder_device->ref, 1);
- 	binder_device->context.binder_context_mgr_uid = INVALID_UID;
- 	binder_device->context.name = name;
- 	mutex_init(&binder_device->context.context_mgr_node_lock);
---- a/drivers/android/binder_internal.h
-+++ b/drivers/android/binder_internal.h
-@@ -8,6 +8,7 @@
- #include <linux/list.h>
- #include <linux/miscdevice.h>
- #include <linux/mutex.h>
-+#include <linux/refcount.h>
- #include <linux/stddef.h>
- #include <linux/types.h>
- #include <linux/uidgid.h>
-@@ -33,21 +34,9 @@ struct binder_device {
- 	struct miscdevice miscdev;
- 	struct binder_context context;
- 	struct inode *binderfs_inode;
-+	refcount_t ref;
- };
- 
--static inline struct binder_device *binderfs_device_get(struct binder_device *dev)
--{
--	if (dev->binderfs_inode)
--		ihold(dev->binderfs_inode);
--	return dev;
--}
--
--static inline void binderfs_device_put(struct binder_device *dev)
--{
--	if (dev->binderfs_inode)
--		iput(dev->binderfs_inode);
--}
--
- /**
-  * binderfs_mount_opts - mount options for binderfs
-  * @max: maximum number of allocatable binderfs binder devices
---- a/drivers/android/binderfs.c
-+++ b/drivers/android/binderfs.c
-@@ -154,6 +154,7 @@ static int binderfs_binder_device_create
- 	if (!name)
- 		goto err;
- 
-+	refcount_set(&device->ref, 1);
- 	device->binderfs_inode = inode;
- 	device->context.binder_context_mgr_uid = INVALID_UID;
- 	device->context.name = name;
-@@ -257,8 +258,10 @@ static void binderfs_evict_inode(struct
- 	ida_free(&binderfs_minors, device->miscdev.minor);
- 	mutex_unlock(&binderfs_minors_mutex);
- 
--	kfree(device->context.name);
--	kfree(device);
-+	if (refcount_dec_and_test(&device->ref)) {
-+		kfree(device->context.name);
-+		kfree(device);
-+	}
- }
- 
- /**
-
+-		if (is_cold_data(fio->page) || file_is_cold(inode) ||
+-				f2fs_compressed_file(inode))
++		if (is_cold_data(fio->page) || file_is_cold(inode))
+ 			return CURSEG_COLD_DATA;
++		if (f2fs_compressed_file(inode))
++			return CURSEG_WARM_DATA;
+ 		if (file_is_hot(inode) ||
+ 				is_inode_flag_set(inode, FI_HOT_DATA) ||
+ 				f2fs_is_atomic_file(inode) ||
+-- 
+2.18.0.rc1
 
