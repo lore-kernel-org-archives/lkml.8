@@ -2,133 +2,300 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4635C18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:06:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63719C3F2D0
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:06:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A35C215A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:06:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E6C3215A4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:06:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="kxqsCWqe";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="xqB83TzD"
+	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="YpNMmUnz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727264AbgCJUGM (ORCPT
+        id S1727441AbgCJUGZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 16:06:12 -0400
-Received: from esa3.hgst.iphmx.com ([216.71.153.141]:21286 "EHLO
-        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726604AbgCJUGM (ORCPT
+        Tue, 10 Mar 2020 16:06:25 -0400
+Received: from mx0b-00154904.pphosted.com ([148.163.137.20]:44666 "EHLO
+        mx0b-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726604AbgCJUGY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 16:06:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1583870772; x=1615406772;
-  h=from:to:cc:subject:date:message-id:references:
-   content-transfer-encoding:mime-version;
-  bh=xy1nHYvlca+0SW3S/1h2lIjATHr4sq10J4dbf58wSQ8=;
-  b=kxqsCWqetBRPaVO5NH9tYPQbmYbW0EGRRJZkNpy8Q50CK+J23plnxX2o
-   e/osqZIBSYhoQbLZTwfKSmG+K+ZctBlYhxvbmcoex2I52pOq4ai8flLYO
-   SaDdErHLZIqakDjWSaaLU8y8cft06D9zepWAci2Q7ZbaFfSPkbtHtC+jW
-   3g3VsI/VVUUpt3KeEV9/7gfElSJaQg8BBr3n3cJSEZVDLigBhv2G2E6Mo
-   mLvJVI4krawwGnGlQm3j6LzaLsNvvLaEJmGQ2MMbxES1/BYFcBa8gnDSh
-   BMfMWlXmea/eDxnMRLymCi61AkzELIusC9TpS0AE2tLYHgZcjP1rQh4gv
-   w==;
-IronPort-SDR: 15w1VcWKyNhVE7pA7oEyXSol0az15UjfY2rBZ0PyrOZ0pIG6NLP/vzkhOzatKVnvwDYeq5/eaI
- MHdKRrFoM5yeNqMukObCGkXGn+UzddNrEDuPQXnz+XQQFTBnR2SGQBKOpCM6mqsU+f4FvcIz6J
- U9TMDpBHdPul41w+f0OEFVq2YTojtX2VCb3Z00THipxkudyHiE5uAPw+BdCAy+h4ErAMwgTmjY
- KyLKhXDObg+3DMiXP5B27e7qR6fKNou8wsG+FfOza3ttVz0lZmlyzc/do7YGq4DTfpaJGT5bpY
- QDU=
-X-IronPort-AV: E=Sophos;i="5.70,538,1574092800"; 
-   d="scan'208";a="136465773"
-Received: from mail-dm6nam10lp2103.outbound.protection.outlook.com (HELO NAM10-DM6-obe.outbound.protection.outlook.com) ([104.47.58.103])
-  by ob1.hgst.iphmx.com with ESMTP; 11 Mar 2020 04:06:10 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=czxJ8Gb2ameHysg2n/c1dtd8tTu4xDgh1B3xpfD83pQYmw0W8XTMyHrtBsiwNZy2bEy4XOhWj3D7I8lC64jRmro02or0lQuY2esr8w5cw/d8AaR1OypAbfi3WqUwv5B/p8xyZhSd+TgOlgUYsTrriOCO76dRlZrgvPHV8BayBOb76t0UiqsYnxeVEYjtTSkIH34ykiDRFU2I2dZJVbg31EGD3+N4pUQtbEsEdmuNM7bTD2zd7wvO9eZaQ5ubwvmtuiiPiL5t9/XioGKIWKWVeplTWVD18Tp8AufcurDOgqdA3otMED/4URG83fts6avBNIxPgyqDitq+iTDgKFJkcg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xy1nHYvlca+0SW3S/1h2lIjATHr4sq10J4dbf58wSQ8=;
- b=m+IuZfF9nf4kB8WljIy9Zau3Q0tpqbwhRqguNEvKrOKNJCtqS/RSrJnNB10O/YjqLKIjsU5UNtcTHwp2uBuOOl7mKUt25lOcJINeqmDVIwGHkgTBP/dsni8p8xBB+byX8MUbDYqvrFl5MUjbDEdyLW89tA1c3yx1bsog1bdOz9wug+tFtab8NjJLZBx64eiUU+cmJ6dLZ5dWQLx4fDCqchS2RTcBURMwEmuM7LDo4ZR8VHz4SLS2cntAA+G2lmzPBYQa/OGfHpcq9xKugZgFV/o8iMiKZcG4LokVi+XhjI49XCxFvQkwIJ+t4p9ymUHWiCABsge4ZUFaIKt/MpihkA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xy1nHYvlca+0SW3S/1h2lIjATHr4sq10J4dbf58wSQ8=;
- b=xqB83TzDqD63esGbUvFpTwlvmpyopgLPOkproZ1KY4gJcRupvQUJ3MqiPfyOU9ivYFM4Exm2Y9EEl+xuZmtZMKU8mPcL7hZOfadbnyEvMehNVbELQUjwTqwjiBTrJjyGVrVC6COyl1FhKwAj/qukgNochgT2S4gwj6fXOo3YApY=
-Received: from BYAPR04MB5749.namprd04.prod.outlook.com (2603:10b6:a03:106::21)
- by BYAPR04MB5077.namprd04.prod.outlook.com (2603:10b6:a03:41::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.17; Tue, 10 Mar
- 2020 20:06:09 +0000
-Received: from BYAPR04MB5749.namprd04.prod.outlook.com
- ([fe80::fdf8:bd6f:b33d:c2df]) by BYAPR04MB5749.namprd04.prod.outlook.com
- ([fe80::fdf8:bd6f:b33d:c2df%3]) with mapi id 15.20.2793.013; Tue, 10 Mar 2020
- 20:06:09 +0000
-From:   Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
-To:     Martijn Coenen <maco@android.com>,
-        "axboe@kernel.dk" <axboe@kernel.dk>, "hch@lst.de" <hch@lst.de>
-CC:     "bvanassche@acm.org" <bvanassche@acm.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kernel-team@android.com" <kernel-team@android.com>
-Subject: Re: [PATCH] loop: Only freeze block queue when needed.
-Thread-Topic: [PATCH] loop: Only freeze block queue when needed.
-Thread-Index: AQHV9tzWizCqQ9yVzkSRTpgNoS0evA==
-Date:   Tue, 10 Mar 2020 20:06:09 +0000
-Message-ID: <BYAPR04MB57495AC9DDD87E250770419086FF0@BYAPR04MB5749.namprd04.prod.outlook.com>
-References: <20200310130654.92205-1-maco@android.com>
+        Tue, 10 Mar 2020 16:06:24 -0400
+Received: from pps.filterd (m0170395.ppops.net [127.0.0.1])
+        by mx0b-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02AJvJtA018948;
+        Tue, 10 Mar 2020 16:06:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
+ subject : date : message-id : references : content-type :
+ content-transfer-encoding : mime-version; s=smtpout1;
+ bh=q8NFsq0BumiNBC6+W5xPurAXWd0/OXsfbmsEzeCMVf8=;
+ b=YpNMmUnzpYPsl6fsrHNCg5rcE+RxY0sto9+ra4yzuh1Wr4VD+lwIzMXqMJFTKB1zZtKq
+ sNCJIuU5p3g+xCgEHA6KbaIHBFW1Ozw8wXyL2SO28PmBEF0sbxtVFl6+TNJg0RFNKuJF
+ QZ/bSBP0Kre22YQ9bq7oH8/vxcp4kpAIeV8yRIoAC9KJWCK0oiMQucyCBpjALqGWpy9F
+ Zbck+LyxvT5tzQyTIeGuOwcb+V+BhqERSRRLZ09WQcwXPUs5VnXBZvlp8yWoZBwuSD9S
+ GOGmtN/iuFUJ3KTjun0f7b3cwTo7mOj0lDDomC5mwetNGT0HrHCDB6ReveTLoD2OlcJt Ng== 
+Received: from mx0b-00154901.pphosted.com (mx0b-00154901.pphosted.com [67.231.157.37])
+        by mx0b-00154904.pphosted.com with ESMTP id 2ym95vm07w-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 10 Mar 2020 16:06:23 -0400
+Received: from pps.filterd (m0144103.ppops.net [127.0.0.1])
+        by mx0b-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02AK5AMo194010;
+        Tue, 10 Mar 2020 16:06:23 -0400
+Received: from ausxippc110.us.dell.com (AUSXIPPC110.us.dell.com [143.166.85.200])
+        by mx0b-00154901.pphosted.com with ESMTP id 2yp9u285vs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 10 Mar 2020 16:06:22 -0400
+X-LoopCount0: from 10.166.132.132
+X-PREM-Routing: D-Outbound
+X-IronPort-AV: E=Sophos;i="5.60,349,1549951200"; 
+   d="scan'208";a="922195689"
+From:   <Austin.Bolen@dell.com>
+To:     <helgaas@kernel.org>, <Austin.Bolen@dell.com>
+CC:     <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <ashok.raj@intel.com>
+Subject: Re: [PATCH v17 09/12] PCI/AER: Allow clearing Error Status Register
+ in FF mode
+Thread-Topic: [PATCH v17 09/12] PCI/AER: Allow clearing Error Status Register
+ in FF mode
+Thread-Index: AQHV9oVCCTYsDGOZY0iqPe3akO+s+A==
+Date:   Tue, 10 Mar 2020 20:06:21 +0000
+Message-ID: <38277b0f6c2e4c5d88e741b7354c72d1@AUSX13MPC107.AMER.DELL.COM>
+References: <20200310193257.GA170043@google.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Chaitanya.Kulkarni@wdc.com; 
-x-originating-ip: [199.255.45.62]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 634818e9-0381-4bc1-eb30-08d7c52e7967
-x-ms-traffictypediagnostic: BYAPR04MB5077:
-x-microsoft-antispam-prvs: <BYAPR04MB5077814FBEB867066F47475B86FF0@BYAPR04MB5077.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:2958;
-x-forefront-prvs: 033857D0BD
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(39860400002)(376002)(136003)(346002)(366004)(199004)(189003)(52536014)(71200400001)(478600001)(8936002)(81166006)(81156014)(4744005)(316002)(7696005)(8676002)(2906002)(33656002)(86362001)(55016002)(54906003)(26005)(66946007)(5660300002)(66556008)(53546011)(66446008)(110136005)(76116006)(4326008)(6506007)(66476007)(9686003)(186003)(64756008);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR04MB5077;H:BYAPR04MB5749.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 72I6XgGBzbz7bcgbSO0JJxC6mNJBalxyQdcW9CEPFknk8WPJp5/mkHSdOEKP5FjVVk8GQcaJmjMCequCW7fVrJVcC0oDcdXcMqb/htXPtOPGDE8wGoYiU2JyosrZpTyqgkAeFIbAGXLUyLrUryzFDR2Z7zEL6xpB1fYlv3fWKxnXmlgvstCrEhKrbq73pXpiKDeFGq7CpDJ2griYjcDdtSv/rhRzYKtL8D/FcrkCluRozldrdfhENf/okVmzCh8tMLX6fjllBX06Be5DfAEQAnSHBd55NLzcNIN5K7QUzTqBH20eF51rCfvoUzY1uLAxx/Az/NQGsUHYUWKtOerAFT2EJk9m5myH5SrQRo82zUopW8OZISSWUGz7iTVQbRq/cz0XP0lpNcTE9nooeHVwVpnYy5FK/5JHJQ8/y3KlCvKMrcWMyri7KE2INDxFLcLZ
-x-ms-exchange-antispam-messagedata: 0CWsKyonxF7GLDS/CVo0lyrRqZOmdS5kJquTXUkTNHMxSKLI+f3QVPiIgUR+8Xk0e35QiSD5x3Kyiz1cwzZUxBQc1OAJgZHiII5J7DlH7cZtiGf0ybnI5cRarl50LVmBG0MxSxFecVbTsR7r/OelrQ==
-x-ms-exchange-transport-forked: True
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [143.166.24.60]
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 634818e9-0381-4bc1-eb30-08d7c52e7967
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Mar 2020 20:06:09.0626
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: FICMu/A12GYHBZaXA2Ty62It9fXUduvIJoUTzH3U2jdfts++U0XClf4Gdh2VzOe8CvROKbWNJbcnpzFO+mFIfOP+tKboEiCFJKNi1wCGgZw=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR04MB5077
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-10_13:2020-03-10,2020-03-10 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
+ priorityscore=1501 mlxscore=0 lowpriorityscore=0 mlxlogscore=999
+ phishscore=0 suspectscore=0 adultscore=0 spamscore=0 clxscore=1015
+ impostorscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2001150001 definitions=main-2003100118
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 malwarescore=0
+ mlxlogscore=999 lowpriorityscore=0 clxscore=1015 impostorscore=0
+ priorityscore=1501 mlxscore=0 suspectscore=0 bulkscore=0 adultscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003100117
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Looks good to me.=0A=
+On 3/10/2020 2:33 PM, Bjorn Helgaas wrote:=0A=
+> =0A=
+> [EXTERNAL EMAIL]=0A=
+> =0A=
+> On Tue, Mar 10, 2020 at 06:14:20PM +0000, Austin.Bolen@dell.com wrote:=0A=
+>> On 3/9/2020 11:28 PM, Kuppuswamy, Sathyanarayanan wrote:=0A=
+>>> On 3/9/2020 7:40 PM, Bjorn Helgaas wrote:=0A=
+>>>> [+cc Austin, tentative Linux patches on this git branch:=0A=
+>>>> https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/tree/d=
+rivers/pci/pcie?h=3Dreview/edr]=0A=
+>>>>=0A=
+>>>> On Tue, Mar 03, 2020 at 06:36:32PM -0800, sathyanarayanan.kuppuswamy@l=
+inux.intel.com wrote:=0A=
+>>>>> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.in=
+tel.com>=0A=
+>>>>>=0A=
+>>>>> As per PCI firmware specification r3.2 System Firmware Intermediary=
 =0A=
-Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>=0A=
+>>>>> (SFI) _OSC and DPC Updates ECR=0A=
+>>>>> (https://members.pcisig.com/wg/PCI-SIG/document/13563), sec titled "D=
+PC=0A=
+>>>>> Event Handling Implementation Note", page 10, Error Disconnect Recove=
+r=0A=
+>>>>> (EDR) support allows OS to handle error recovery and clearing Error=
 =0A=
-On 03/10/2020 06:07 AM, Martijn Coenen wrote:=0A=
-> __loop_update_dio() can be called as a part of loop_set_fd(), when the=0A=
-> block queue is not yet up and running; avoid freezing the block queue in=
+>>>>> Registers even in FF mode. So create new API pci_aer_raw_clear_status=
+()=0A=
+>>>>> which allows clearing AER registers without FF mode checks.=0A=
+>>>>=0A=
+>>>> I see that this ECR was released as an ECN a few days ago:=0A=
+>>>> https://members.pcisig.com/wg/PCI-SIG/document/14076=0A=
+>>>> Regrettably the title in the PDF still says "ECR" (the rendered title=
 =0A=
-> that case, since that is an expensive operation.=0A=
->=0A=
-> Signed-off-by: Martijn Coenen<maco@android.com>=0A=
+>>>> *page* says "ENGINEERING CHANGE NOTIFICATION", but some metadata=0A=
+>>>> buried in the file says "ECR - SFI _OSC Support and DPC Updates".=0A=
+>>=0A=
+>> I'll see if PCI-SIG can update the metadata and repost.=0A=
+> =0A=
+> If that's possible, it would be nice to update the metadata for the=0A=
+> "Downstream Port Containment related Enhancements" ECN as well.  That=0A=
+> one currently says "ECR - CardBus Header Proposal", which means that's=0A=
+> what's in the window title bar and icons in the panel.=0A=
+=0A=
+Sure, I'll check.=0A=
+=0A=
+> =0A=
+>>>> Anyway, I think I see the note you refer to (now on page 12):=0A=
+>>>>=0A=
+>>>>      IMPLEMENTATION NOTE=0A=
+>>>>      DPC Event Handling=0A=
+>>>>=0A=
+>>>>      The flow chart below documents the behavior when firmware maintai=
+ns=0A=
+>>>>      control of AER and DPC and grants control of PCIe Hot-Plug to the=
+=0A=
+>>>>      operating system.=0A=
+>>>>=0A=
+>>>>      ...=0A=
+>>>>=0A=
+>>>>      Capture and clear device AER status. OS may choose to offline=0A=
+>>>>      devices3, either via SW (not load driver) or HW (power down devic=
+e,=0A=
+>>>>      disable Link5,6,7). Otherwise process _HPX, complete device=0A=
+>>>>      enumeration, load drivers=0A=
+>>>>=0A=
+>>>> This clearly suggests that the OS should clear device AER status.=0A=
+>>>> However, according to the intro text, firmware has retained control of=
+=0A=
+>>>> AER, so what gives the OS the right to clear AER status?=0A=
+>>>>=0A=
+>>>> The Downstream Port Containment Related Enhancements ECN (sec 4.5.1,=
+=0A=
+>>>> table 4-6) contains an exception that allows the OS to read/write=0A=
+>>>> DPC registers during recovery.  But=0A=
+>>>>=0A=
+>>>>      - that is for *DPC* registers, not for AER registers, and=0A=
+>>>>=0A=
+>>>>      - that exception only applies between OS receipt of the EDR=0A=
+>>>>        notification and OS release of DPC by clearing the DPC Trigger=
+=0A=
+>>>>        Status bit.=0A=
+>>>>=0A=
+>>>> The flowchart in the SFI ECN shows the OS releasing DPC before=0A=
+>>>> clearing AER status:=0A=
+>>>>=0A=
+>>>>      - Receive EDR notification=0A=
+>>>>=0A=
+>>>>      - Cleanup - Notify and unload child drivers below Port=0A=
+>>>>=0A=
+>>>>      - Bring Port out of DPC, clear port error status, assign bus numb=
+ers=0A=
+>>>>        to child devices.=0A=
+>>>>=0A=
+>>>>        I assume this box includes clearing DPC error status and cleari=
+ng=0A=
+>>>>        Trigger Status?  They seem to be out of order in the box.=0A=
+>>=0A=
+>> OS clears the DPC Trigger Status bit which will bring port below it out=
+=0A=
+>> of containment. Then OS will clear the "port" error status bits (i.e.,=
+=0A=
+>> the AER and DPC status bits in the root port or downstream port that=0A=
+>> triggered containment). I don't think it would hurt to do this two steps=
+=0A=
+>> in reverse order but don't think it is necessary. Note that error status=
+=0A=
+>> bits for devices below the port in containment are cleared later after=
+=0A=
+>> f/w has a chance to log them.=0A=
+> =0A=
+> Maybe I'm misreading the DPC enhancements ECN.  I think it says the OS=0A=
+> can read/write DPC registers until it clears the DPC Trigger Status.=0A=
+> If the OS clears Trigger Status first, my understanding is that we're=0A=
+> now out of the EDR notification processing window and the OS is not=0A=
+> permitted to write DPC registers.=0A=
+> =0A=
+> If it's OK for the OS to clear Trigger Status before clearing DPC=0A=
+> error status, what is the event that determines when the OS may no=0A=
+> longer read/write the DPC registers?=0A=
+=0A=
+I think there are a few different registers to consider... DPC Control, =0A=
+DPC Status, various AER registers, and the RP PIO registers. At this =0A=
+point in the flow, the firmware has already had a chance to read all of =0A=
+them and so it really doesn't matter the order the OS does those two =0A=
+things. The firmware isn't going to get notified again until _OST so by =0A=
+then both operation will be done and system firmware will have no idea =0A=
+which order the OS did them in, nor will it care.  But since the =0A=
+existing normative text specifies and order, I would just follow that.=0A=
+=0A=
+> =0A=
+>>>>      - Evaluate _OST=0A=
+>>>>=0A=
+>>>>      - Capture and clear device AER status.=0A=
+>>>>=0A=
+>>>>        This seems suspect to me.  Where does it say the OS is=0A=
+>>>>        allowed to write AER status when firmware retains control=0A=
+>>>>        of AER?=0A=
+>>>>=0A=
+>>>> This patch series does things in this order:=0A=
+>>>>=0A=
+>>>>      - Receive EDR notification (edr_handle_event(), edr.c)=0A=
+>>>>=0A=
+>>>>      - Read, log, and clear DPC error regs (dpc_process_error(),=0A=
+>>>>        dpc.c).=0A=
+>>>>=0A=
+>>>>        This also clears AER uncorrectable error status when the=0A=
+>>>>        relevant HEST entries do not have the FIRMWARE_FIRST bit=0A=
+>>>>        set.  I think this is incorrect: the test should be based=0A=
+>>>>        the _OSC negotiation for AER ownership, not on the HEST=0A=
+>>>>        entries.  But this problem pre-dates this patch series.=0A=
+>>>>=0A=
+>>>>      - Clear AER status (pci_aer_raw_clear_status(), aer.c).=0A=
+>>>>=0A=
+>>>>        This is at least inside the EDR recovery window, but again,=0A=
+>>>>        I don't see where it says the OS is allowed to write the=0A=
+>>>>        AER status.=0A=
+>>>=0A=
+>>> Implementation note is the only reference we have regarding=0A=
+>>> clearing the AER registers.=0A=
+>>>=0A=
+>>> But since the spec says both DPC and AER needs to be always=0A=
+>>> controlled together by the either OS or firmware, and when=0A=
+>>> firmware relinquishes control over DPC registers in EDR=0A=
+>>> notification window, we can assume that we also have control over=0A=
+>>> AER registers.=0A=
+>>>=0A=
+>>> But I agree that is not explicitly spelled out any where outside=0A=
+>>> the implementation note.=0A=
+> =0A=
+> This is all quite unsatisfying since implementation notes are not=0A=
+> normative.  I would far rather reference actual spec text.=0A=
+=0A=
+Yes, the change I mention below would be to add normative text.=0A=
+=0A=
+> =0A=
+>>> Austin,=0A=
+>>>=0A=
+>>> May be ECN (section 4.5.1, table 4-6) needs to be updated to add=0A=
+>>> this clarification.=0A=
+>>=0A=
+>> Sure we can update to section 4.5.1, table 4-6 to indicate when OS=0A=
+>> can clear the AER status bits. It will just follow what's done in=0A=
+>> the implementation note so I think it's acceptable to follow=0A=
+>> implementation guidance for now.=0A=
+> =0A=
+> There are no events after the "clear device AER status" box.  That=0A=
+> seems to mean the OS can write the AER status registers at any time.=0A=
+> But the whole implementation note assumes firmware maintains control=0A=
+> of AER.=0A=
+> =0A=
+=0A=
+In this model the OS doesn't own DPC or AER but the model allows OS to =0A=
+touch both DPC and AER registers at certain times.  I would view =0A=
+ownership in this case as who is the primary owner and not who is the =0A=
+sole entity allowed to access the registers.=0A=
+=0A=
+For the normative text describing when OS clears the AER bits following =0A=
+the informative flow chart, it could say that OS clears AER as soon as =0A=
+possible after OST returns and before OS processes _HPX and loading =0A=
+drivers.  Open to other suggestions as well.=0A=
+=0A=
+>>>>      - Attempt recovery (pcie_do_recovery(), err.c)=0A=
+>>>>=0A=
+>>>>      - Clear DPC Trigger Status (dpc_reset_link(), dpc.c)=0A=
+>>>>=0A=
+>>>>      - Evaluate _OST (acpi_send_edr_status(), edr.c)=0A=
+>>>>=0A=
+>>>> What am I missing?=0A=
+> =0A=
 =0A=
