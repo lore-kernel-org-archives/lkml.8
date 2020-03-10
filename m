@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70084C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:18:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 680C7C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:18:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A1C220873
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:18:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38EE420409
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:18:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583846323;
-	bh=MjftV02fkHbcXmGv+eBttb48zfa/BdDIjySLYODfq0E=;
+	s=default; t=1583846334;
+	bh=jQRkvTTSvmorzupsnApKvUN8T93chrRBwJoSMoNe3Ko=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IWs40Zk/CnOSznoZl4A7eGsd4WCGCdHwwe9nXl2VhtGeqcjRrOdh1FBMtLn8kiXmT
-	 vq7khecgTItoUAEZV2+ojHNpK0ONV5aVXQ9/Y36qYWGrsXhAgMwuk1YL1geSfjWLQV
-	 MposVj88mwX09x4s4oEdNjThb/X0dW8LK3pfh9Cw=
+	b=lguN+tG33LTcHrtO8VVOcXh+TwTS+3BpnqfX/c6g491DlwMrj0u4a9ocIpyIfF3B5
+	 bPpIEu0zpjaYpG8U8tBL/KtyXpHn871xifz0AUNMW4QNBbVeBi/Vpld1gJtb7jsbAW
+	 ZDIPXic9W03sCP2E/QGiFy9y6yFKmCIhnkOmC2C0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730838AbgCJNKU (ORCPT
+        id S1731508AbgCJNSw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:10:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59598 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:18:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58568 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731313AbgCJNKR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:10:17 -0400
+        id S1730618AbgCJNKG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:10:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CFD462468C;
-        Tue, 10 Mar 2020 13:10:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E982A246DE;
+        Tue, 10 Mar 2020 13:10:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845816;
-        bh=MjftV02fkHbcXmGv+eBttb48zfa/BdDIjySLYODfq0E=;
+        s=default; t=1583845805;
+        bh=jQRkvTTSvmorzupsnApKvUN8T93chrRBwJoSMoNe3Ko=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jeSQRKbX1xr0cKzZCSseKo0o/kx2h9mw7zmXjOZUyuBFRBNdG94od/QuzGNmQ7C4X
-         w7mzNHM4q2aCmoOdcfQAHxFWgQZKGaQFnkLeoImlF5XTeHTlaPt26sVYOYIKAap2Hx
-         ztXdFlCrkdIx5G1clk6EE+u0bSxhIzuPvGKDd/bI=
+        b=xqJbxuvuB5ocStvZuJ6x9B/wQyt8cxbJ8GhTjuQ7D3JwUse8Pjz6AaM427KfbS5HP
+         Box3fErghs9PDp8Sxq9M6yd5w75LEZZy3+CIytT9KMd9exal2tDkXe2mDZKmYHaMHB
+         m/Lu7F+a0tU4eMW6xOhYeVRrJ31ospJXIe8sts28=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dragos Tarcatu <dragos_tarcatu@mentor.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 4.14 111/126] ASoC: topology: Fix memleak in soc_tplg_link_elems_load()
-Date:   Tue, 10 Mar 2020 13:42:12 +0100
-Message-Id: <20200310124210.649737497@linuxfoundation.org>
+        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>
+Subject: [PATCH 4.14 107/126] dmaengine: tegra-apb: Fix use-after-free
+Date:   Tue, 10 Mar 2020 13:42:08 +0100
+Message-Id: <20200310124210.438533035@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310124203.704193207@linuxfoundation.org>
 References: <20200310124203.704193207@linuxfoundation.org>
@@ -59,39 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dragos Tarcatu <dragos_tarcatu@mentor.com>
+From: Dmitry Osipenko <digetx@gmail.com>
 
-commit 2b2d5c4db732c027a14987cfccf767dac1b45170 upstream.
+commit 94788af4ed039476ff3527b0e6a12c1dc42cb022 upstream.
 
-If soc_tplg_link_config() fails, _link needs to be freed in case of
-topology ABI version mismatch. However the current code is returning
-directly and ends up leaking memory in this case.
-This patch fixes that.
+I was doing some experiments with I2C and noticed that Tegra APB DMA
+driver crashes sometime after I2C DMA transfer termination. The crash
+happens because tegra_dma_terminate_all() bails out immediately if pending
+list is empty, and thus, it doesn't release the half-completed descriptors
+which are getting re-used before ISR tasklet kicks-in.
 
-Fixes: 593d9e52f9bb ("ASoC: topology: Add support to configure existing physical DAI links")
-Signed-off-by: Dragos Tarcatu <dragos_tarcatu@mentor.com>
-Link: https://lore.kernel.org/r/20200207185325.22320-2-dragos_tarcatu@mentor.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+ tegra-i2c 7000c400.i2c: DMA transfer timeout
+ elants_i2c 0-0010: elants_i2c_irq: failed to read data: -110
+ ------------[ cut here ]------------
+ WARNING: CPU: 0 PID: 142 at lib/list_debug.c:45 __list_del_entry_valid+0x45/0xac
+ list_del corruption, ddbaac44->next is LIST_POISON1 (00000100)
+ Modules linked in:
+ CPU: 0 PID: 142 Comm: kworker/0:2 Not tainted 5.5.0-rc2-next-20191220-00175-gc3605715758d-dirty #538
+ Hardware name: NVIDIA Tegra SoC (Flattened Device Tree)
+ Workqueue: events_freezable_power_ thermal_zone_device_check
+ [<c010e5c5>] (unwind_backtrace) from [<c010a1c5>] (show_stack+0x11/0x14)
+ [<c010a1c5>] (show_stack) from [<c0973925>] (dump_stack+0x85/0x94)
+ [<c0973925>] (dump_stack) from [<c011f529>] (__warn+0xc1/0xc4)
+ [<c011f529>] (__warn) from [<c011f7e9>] (warn_slowpath_fmt+0x61/0x78)
+ [<c011f7e9>] (warn_slowpath_fmt) from [<c042497d>] (__list_del_entry_valid+0x45/0xac)
+ [<c042497d>] (__list_del_entry_valid) from [<c047a87f>] (tegra_dma_tasklet+0x5b/0x154)
+ [<c047a87f>] (tegra_dma_tasklet) from [<c0124799>] (tasklet_action_common.constprop.0+0x41/0x7c)
+ [<c0124799>] (tasklet_action_common.constprop.0) from [<c01022ab>] (__do_softirq+0xd3/0x2a8)
+ [<c01022ab>] (__do_softirq) from [<c0124683>] (irq_exit+0x7b/0x98)
+ [<c0124683>] (irq_exit) from [<c0168c19>] (__handle_domain_irq+0x45/0x80)
+ [<c0168c19>] (__handle_domain_irq) from [<c043e429>] (gic_handle_irq+0x45/0x7c)
+ [<c043e429>] (gic_handle_irq) from [<c0101aa5>] (__irq_svc+0x65/0x94)
+ Exception stack(0xde2ebb90 to 0xde2ebbd8)
+
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Acked-by: Jon Hunter <jonathanh@nvidia.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200209163356.6439-2-digetx@gmail.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/soc-topology.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/dma/tegra20-apb-dma.c |    4 ----
+ 1 file changed, 4 deletions(-)
 
---- a/sound/soc/soc-topology.c
-+++ b/sound/soc/soc-topology.c
-@@ -2177,8 +2177,11 @@ static int soc_tplg_link_elems_load(stru
- 		}
+--- a/drivers/dma/tegra20-apb-dma.c
++++ b/drivers/dma/tegra20-apb-dma.c
+@@ -755,10 +755,6 @@ static int tegra_dma_terminate_all(struc
+ 	bool was_busy;
  
- 		ret = soc_tplg_link_config(tplg, _link);
--		if (ret < 0)
-+		if (ret < 0) {
-+			if (!abi_match)
-+				kfree(_link);
- 			return ret;
-+		}
+ 	spin_lock_irqsave(&tdc->lock, flags);
+-	if (list_empty(&tdc->pending_sg_req)) {
+-		spin_unlock_irqrestore(&tdc->lock, flags);
+-		return 0;
+-	}
  
- 		/* offset by version-specific struct size and
- 		 * real priv data size
+ 	if (!tdc->busy)
+ 		goto skip_dma_stop;
 
 
