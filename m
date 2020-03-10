@@ -2,118 +2,65 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27180C10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:18:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4859AC18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:19:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBC64208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:18:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 159F0208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:19:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727787AbgCJWSs (ORCPT
+        id S1727798AbgCJWTC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 18:18:48 -0400
-Received: from 9.mo179.mail-out.ovh.net ([46.105.76.148]:60656 "EHLO
-        9.mo179.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726283AbgCJWSs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 18:18:48 -0400
-Received: from player779.ha.ovh.net (unknown [10.108.35.232])
-        by mo179.mail-out.ovh.net (Postfix) with ESMTP id 9D66A155E4D
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 22:58:51 +0100 (CET)
-Received: from sk2.org (82-65-25-201.subs.proxad.net [82.65.25.201])
-        (Authenticated sender: steve@sk2.org)
-        by player779.ha.ovh.net (Postfix) with ESMTPSA id C61D8103FEFF3;
-        Tue, 10 Mar 2020 21:58:38 +0000 (UTC)
-From:   Stephen Kitt <steve@sk2.org>
-To:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>, bpf@vger.kernel.org
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Stephen Kitt <steve@sk2.org>
-Subject: [PATCH v3] docs: sysctl/kernel: document BPF entries
-Date:   Tue, 10 Mar 2020 22:58:24 +0100
-Message-Id: <20200310215824.17139-1-steve@sk2.org>
-X-Mailer: git-send-email 2.20.1
+        Tue, 10 Mar 2020 18:19:02 -0400
+Received: from mga03.intel.com ([134.134.136.65]:3387 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726283AbgCJWTC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 18:19:02 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Mar 2020 15:19:01 -0700
+X-IronPort-AV: E=Sophos;i="5.70,538,1574150400"; 
+   d="scan'208";a="242472808"
+Received: from rchatre-mobl.amr.corp.intel.com (HELO [10.251.10.135]) ([10.251.10.135])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 10 Mar 2020 15:19:01 -0700
+Subject: Re: [PATCH V1 12/13] selftests/resctrl: Dynamically select buffer
+ size for CAT test
+To:     Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
+        shuah@kernel.org, linux-kselftest@vger.kernel.org
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        tony.luck@intel.com, babu.moger@amd.com, james.morse@arm.com,
+        ravi.v.shankar@intel.com, fenghua.yu@intel.com, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+References: <cover.1583657204.git.sai.praneeth.prakhya@intel.com>
+ <18ab8b47d1d2b6373d7899bdf8df19fa94afcfaa.1583657204.git.sai.praneeth.prakhya@intel.com>
+From:   Reinette Chatre <reinette.chatre@intel.com>
+Message-ID: <50e8e1a1-f7ef-2ea8-178e-49adf3373e23@intel.com>
+Date:   Tue, 10 Mar 2020 15:19:00 -0700
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Ovh-Tracer-Id: 980377346576829727
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedugedruddvtddgudegkecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomhepufhtvghphhgvnhcumfhithhtuceoshhtvghvvgesshhkvddrohhrgheqnecukfhppedtrddtrddtrddtpdekvddrieehrddvhedrvddtudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphdqohhuthdphhgvlhhopehplhgrhigvrhejjeelrdhhrgdrohhvhhdrnhgvthdpihhnvghtpedtrddtrddtrddtpdhmrghilhhfrhhomhepshhtvghvvgesshhkvddrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+In-Reply-To: <18ab8b47d1d2b6373d7899bdf8df19fa94afcfaa.1583657204.git.sai.praneeth.prakhya@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Based on the implementation in kernel/bpf/syscall.c,
-kernel/bpf/trampoline.c, include/linux/filter.h, and the documentation
-in bpftool-prog.rst.
+Hi Sai,
 
-The section style doesn't match the surrounding sections; it matches
-the style of the reworked kernel.rst queued up in docs-next.
+On 3/6/2020 7:40 PM, Sai Praneeth Prakhya wrote:
+> Presently, while running CAT test case, if user hasn't given any input for
+> '-n' option, the test defaults to 5 bits to determine the buffer size that
+> is used during test. Instead of statically running always with 5 bits,
+> change it such that the buffer size is always half of the cache size.
 
-Signed-off-by: Stephen Kitt <steve@sk2.org>
----
+This seems more appropriate as a preparation patch to not have to make
+so many changes on top of the earlier patches included in this series.
 
-Notes:
-    Changes since v2:
-    - fixed "will disabled" typo.
-    
-    Changes since v1:
-    - rebased on bpf-next instead of docs-next.
-
- Documentation/admin-guide/sysctl/kernel.rst | 24 +++++++++++++++++++++
- 1 file changed, 24 insertions(+)
-
-diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
-index def074807cee..9e1417628572 100644
---- a/Documentation/admin-guide/sysctl/kernel.rst
-+++ b/Documentation/admin-guide/sysctl/kernel.rst
-@@ -174,6 +174,20 @@ See the type_of_loader and ext_loader_ver fields in
- Documentation/x86/boot.rst for additional information.
- 
- 
-+bpf_stats_enabled
-+=================
-+
-+Controls whether the kernel should collect statistics on BPF programs
-+(total time spent running, number of times run...). Enabling
-+statistics causes a slight reduction in performance on each program
-+run. The statistics can be seen using ``bpftool``.
-+
-+= ===================================
-+0 Don't collect statistics (default).
-+1 Collect statistics.
-+= ===================================
-+
-+
- cap_last_cap:
- =============
- 
-@@ -1123,6 +1137,16 @@ NMI switch that most IA32 servers have fires unknown NMI up, for
- example.  If a system hangs up, try pressing the NMI switch.
- 
- 
-+unprivileged_bpf_disabled
-+=========================
-+
-+Writing 1 to this entry will disable unprivileged calls to ``bpf()``;
-+once disabled, calling ``bpf()`` without ``CAP_SYS_ADMIN`` will return
-+``-EPERM``.
-+
-+Once set, this can't be cleared.
-+
-+
- watchdog:
- =========
- 
-
-base-commit: 3e7c67d90e3ed2f34fce42699f11b150dd1d3999
--- 
-2.20.1
-
+Reinette
