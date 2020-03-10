@@ -2,270 +2,125 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA34FC18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 11:58:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8C82C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 11:58:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4CDB2464B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 11:58:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F6B72464B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 11:58:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="qwG8D0Bq"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="PA6Bxm1M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726616AbgCJL6i (ORCPT
+        id S1726622AbgCJL65 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 07:58:38 -0400
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:1435 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726378AbgCJL6h (ORCPT
+        Tue, 10 Mar 2020 07:58:57 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:17096 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726269AbgCJL65 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 07:58:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1583841516; x=1615377516;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   mime-version;
-  bh=GLQMl8kB6L2gbGSvOLAcWQ3LR6fwEMuXM72yqr8G2dc=;
-  b=qwG8D0BqgdAs7/7Tv0t5LucUgs6bWmssAQcKjx2RlDWz3sCe5XeyZXow
-   Qd1DzDj5K3DmJ8fgN6ryCvOeAOajzAxrWy0p01NQxtFwHE3NGklPib9Q2
-   ecFfHcSkxHUlhr+NkPcah3hPn5nFmc0RMISRlFdMc/MvHBEfkYVs9e7h7
-   U=;
-IronPort-SDR: 8SwpRMdNCwA8m2jRw0p2SzfsnO3apG+FVYSSBLuSMBzsa1Eu+sVvMf6ukALAhAg4ur07YmBKHr
- 39/AxGiFLT+g==
-X-IronPort-AV: E=Sophos;i="5.70,536,1574121600"; 
-   d="scan'208";a="31704177"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1d-9ec21598.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 10 Mar 2020 11:58:32 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1d-9ec21598.us-east-1.amazon.com (Postfix) with ESMTPS id 36389A19B8;
-        Tue, 10 Mar 2020 11:58:21 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1236.3; Tue, 10 Mar 2020 11:58:21 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.160.16) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 10 Mar 2020 11:58:09 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-CC:     SeongJae Park <sjpark@amazon.com>, <akpm@linux-foundation.org>,
-        "SeongJae Park" <sjpark@amazon.de>, <aarcange@redhat.com>,
-        <yang.shi@linux.alibaba.com>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
-        <brendan.d.gregg@gmail.com>, <brendanhiggins@google.com>,
-        <cai@lca.pw>, <colin.king@canonical.com>, <corbet@lwn.net>,
-        <dwmw@amazon.com>, <jolsa@redhat.com>, <kirill@shutemov.name>,
-        <mark.rutland@arm.com>, <mgorman@suse.de>, <minchan@kernel.org>,
-        <mingo@redhat.com>, <namhyung@kernel.org>, <peterz@infradead.org>,
-        <rdunlap@infradead.org>, <rientjes@google.com>,
-        <rostedt@goodmis.org>, <shuah@kernel.org>, <sj38.park@gmail.com>,
-        <vbabka@suse.cz>, <vdavydov.dev@gmail.com>, <linux-mm@kvack.org>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: Re: [PATCH v6 11/14] Documentation/admin-guide/mm: Add a document for DAMON
-Date:   Tue, 10 Mar 2020 12:57:55 +0100
-Message-ID: <20200310115755.25270-1-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200310090348.000077d5@Huawei.com> (raw)
+        Tue, 10 Mar 2020 07:58:57 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02ABqhBb001980;
+        Tue, 10 Mar 2020 12:58:46 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type :
+ content-transfer-encoding; s=STMicroelectronics;
+ bh=7PdSQP9uKR51iNtYVitiCEnAIHdj8uJHoRAAyMFEF+A=;
+ b=PA6Bxm1MH9uoNGVpvd0UA0ZOnLLatTfG6cCHVl/4/GduExtCzgdJD+SBQyg4DgQs8ikl
+ hwnd04UPk1Oi22YgTPhNlqLJ4xvc1EbZa17RFknl/k8xl0nS0f+SGtwsWQrCE+96GBnS
+ ssckaewO5YiLVWLmI2aaPA+vAASQsdsH1Kk6dNjnzdrAE8OETgs5QBm0L8A1BASKzldH
+ yHjP6Zzk+Y3OQTHPz0+t6SV0k57UPmPA48h60Ovkj2Fk72wKvGR1y3O2ZLhqJmLFcv5v
+ P55JJOMOS3C2RjdfZr4tDJ/LK+2R+QHrjR4kQo15kJIRxMW3CI4tB9l0ei4E8/lkBCI/ PA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2ym292b4eh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 10 Mar 2020 12:58:46 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 14ED9100038;
+        Tue, 10 Mar 2020 12:58:41 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id D42302A971D;
+        Tue, 10 Mar 2020 12:58:41 +0100 (CET)
+Received: from localhost (10.75.127.48) by SFHDAG3NODE2.st.com (10.75.127.8)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 10 Mar 2020 12:58:41
+ +0100
+From:   Alain Volmat <alain.volmat@st.com>
+To:     <wsa@the-dreams.de>, <pierre-yves.mordret@st.com>
+CC:     <alain.volmat@st.com>, <alexandre.torgue@st.com>,
+        <linux-i2c@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <fabrice.gasnier@st.com>
+Subject: [PATCH v2] i2c: stm32f7: do not backup read-only PECR register
+Date:   Tue, 10 Mar 2020 12:58:41 +0100
+Message-ID: <1583841521-27897-1-git-send-email-alain.volmat@st.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.160.16]
-X-ClientProxiedBy: EX13D12UWC004.ant.amazon.com (10.43.162.182) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.75.127.48]
+X-ClientProxiedBy: SFHDAG4NODE1.st.com (10.75.127.10) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-10_06:2020-03-10,2020-03-10 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 10 Mar 2020 09:03:48 +0000 Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
+The PECR register provides received packet computed PEC value. 
+It makes no sense restoring its value after a reset, and anyway,
+as read-only register it cannot be restored.
 
-> On Mon, 24 Feb 2020 13:30:44 +0100
-> SeongJae Park <sjpark@amazon.com> wrote:
-> 
-> > From: SeongJae Park <sjpark@amazon.de>
-> > 
-> > This commit adds a simple document for DAMON under
-> > `Documentation/admin-guide/mm`.
-> > 
-> 
-> Nice document to get people started.
-> 
-> Certainly worked for me doing some initial playing around.
+Fixes: ea6dd25deeb5 ("i2c: stm32f7: add PM_SLEEP suspend/resume support")
+Signed-off-by: Alain Volmat <alain.volmat@st.com>
+Reviewed-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
+---
+v2: rebase on top of other i2c-stm32f7 patches integrated within i2c-next
 
-Great to hear that :)
+ drivers/i2c/busses/i2c-stm32f7.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-> 
-> In general this is an interesting piece of work.   I can see there are numerous
-> possible avenues to explore in making the monitoring more flexible, or potentially
-> better at tracking usage whilst not breaking your fundamental 'bounded overhead'
-> requirement.   Will be fun perhaps to explore some of those.
-> 
-> I'll do some more exploring and perhaps try some real world workloads.
-> 
-> Thanks,
-> 
-> Jonathan
-> 
-> 
-> > Signed-off-by: SeongJae Park <sjpark@amazon.de>
-> > ---
-> >  .../admin-guide/mm/data_access_monitor.rst    | 414 ++++++++++++++++++
-> >  Documentation/admin-guide/mm/index.rst        |   1 +
-> >  2 files changed, 415 insertions(+)
-> >  create mode 100644 Documentation/admin-guide/mm/data_access_monitor.rst
-> > 
-> > diff --git a/Documentation/admin-guide/mm/data_access_monitor.rst b/Documentation/admin-guide/mm/data_access_monitor.rst
-> > new file mode 100644
-> > index 000000000000..4d836c3866e2
-> > --- /dev/null
-> > +++ b/Documentation/admin-guide/mm/data_access_monitor.rst
-> > @@ -0,0 +1,414 @@
-> > +.. SPDX-License-Identifier: GPL-2.0
-> > +
-> > +==========================
-> > +DAMON: Data Access MONitor
-> > +==========================
-> > +
-> > +Introduction
-> > +============
-> > +
-> > +Memory management decisions can normally be more efficient if finer data access
-> > +information is available.  However, because finer information usually comes
-> > +with higher overhead, most systems including Linux made a tradeoff: Forgive
-> > +some wise decisions and use coarse information and/or light-weight heuristics.
-> 
-> I'm not sure what "Forgive some wise decisions" means...
+diff --git a/drivers/i2c/busses/i2c-stm32f7.c b/drivers/i2c/busses/i2c-stm32f7.c
+index 8fe7f8caf91b..6418f5982894 100644
+--- a/drivers/i2c/busses/i2c-stm32f7.c
++++ b/drivers/i2c/busses/i2c-stm32f7.c
+@@ -176,7 +176,6 @@
+  * @cr2: Control register 2
+  * @oar1: Own address 1 register
+  * @oar2: Own address 2 register
+- * @pecr: PEC register
+  * @tmgr: Timing register
+  */
+ struct stm32f7_i2c_regs {
+@@ -184,7 +183,6 @@ struct stm32f7_i2c_regs {
+ 	u32 cr2;
+ 	u32 oar1;
+ 	u32 oar2;
+-	u32 pecr;
+ 	u32 tmgr;
+ };
+ 
+@@ -2196,7 +2194,6 @@ static int stm32f7_i2c_regs_backup(struct stm32f7_i2c_dev *i2c_dev)
+ 	backup_regs->cr2 = readl_relaxed(i2c_dev->base + STM32F7_I2C_CR2);
+ 	backup_regs->oar1 = readl_relaxed(i2c_dev->base + STM32F7_I2C_OAR1);
+ 	backup_regs->oar2 = readl_relaxed(i2c_dev->base + STM32F7_I2C_OAR2);
+-	backup_regs->pecr = readl_relaxed(i2c_dev->base + STM32F7_I2C_PECR);
+ 	backup_regs->tmgr = readl_relaxed(i2c_dev->base + STM32F7_I2C_TIMINGR);
+ 	stm32f7_i2c_write_fm_plus_bits(i2c_dev, false);
+ 
+@@ -2229,7 +2226,6 @@ static int stm32f7_i2c_regs_restore(struct stm32f7_i2c_dev *i2c_dev)
+ 	writel_relaxed(backup_regs->cr2, i2c_dev->base + STM32F7_I2C_CR2);
+ 	writel_relaxed(backup_regs->oar1, i2c_dev->base + STM32F7_I2C_OAR1);
+ 	writel_relaxed(backup_regs->oar2, i2c_dev->base + STM32F7_I2C_OAR2);
+-	writel_relaxed(backup_regs->pecr, i2c_dev->base + STM32F7_I2C_PECR);
+ 	stm32f7_i2c_write_fm_plus_bits(i2c_dev, true);
+ 
+ 	pm_runtime_put_sync(i2c_dev->dev);
+-- 
+2.7.4
 
-I wanted to mean that the mechanism makes no optimal decisions.  Will wordsmith
-again.
-
-> 
-> > +
-> > +A number of experimental data access pattern awared memory management
-> > +optimizations say the sacrifices are
-> > +huge (2.55x slowdown).  
-> 
-> Good to have a reference.
-
-:)
-
-> 
-> > However, none of those has successfully adopted to
-> 
-> adopted into the 
-
-Thanks for correcting.
-
-> 
-[...]
-> > +Applying Dynamic Memory Mappings
-> > +--------------------------------
-> > +
-> > +Only a number of small parts in the super-huge virtual address space of the
-> > +processes is mapped to physical memory and accessed.  Thus, tracking the
-> > +unmapped address regions is just wasteful.  However, tracking every memory
-> > +mapping change might incur an overhead.  For the reason, DAMON applies the
-> > +dynamic memory mapping changes to the tracking regions only for each of an
-> > +user-specified time interval (``regions update interval``).
-> 
-> One key part of the approach is the 3 region bit.  Perhaps talk about that here
-> somewhere?
-
-I was afraid if it is too implementation detail, as this document is for admin
-users.  Will add it in next spin, though.
-
-> 
-> > +
-> > +
-> > +``debugfs`` Interface
-> > +=====================
-> > +
-> > +DAMON exports four files, ``attrs``, ``pids``, ``record``, and ``monitor_on``
-> > +under its debugfs directory, ``<debugfs>/damon/``.
-> > +
-> > +Attributes
-> > +----------
-> > +
-> > +Users can read and write the ``sampling interval``, ``aggregation interval``,
-> > +``regions update interval``, and min/max number of monitoring target regions by
-> > +reading from and writing to the ``attrs`` file.  For example, below commands
-> > +set those values to 5 ms, 100 ms, 1,000 ms, 10, 1000 and check it again::
-> > +
-> > +    # cd <debugfs>/damon
-> > +    # echo 5000 100000 1000000 10 1000 > attrs
-> 
-> I'm personally a great fan of human readable interfaces.  Could we just
-> split this into one file per interval?  That way the file naming would
-> make it self describing.
-
-I was worried if it makes too many files.  Do you think it's ok?
-
-> 
-> > +    # cat attrs
-> > +    5000 100000 1000000 10 1000
-> > +
-> > +Target PIDs
-> > +-----------
-> > +
-> > +Users can read and write the pids of current monitoring target processes by
-> > +reading from and writing to the ``pids`` file.  For example, below commands set
-> > +processes having pids 42 and 4242 as the processes to be monitored and check it
-> > +again::
-> > +
-> > +    # cd <debugfs>/damon
-> > +    # echo 42 4242 > pids
-> > +    # cat pids
-> > +    42 4242
-> > +
-> > +Note that setting the pids doesn't starts the monitoring.
-> > +
-> > +Record
-> > +------
-> > +
-> > +DAMON support direct monitoring result record feature.  The recorded results
-> > +are first written to a buffer and flushed to a file in batch.  Users can set
-> > +the size of the buffer and the path to the result file by reading from and
-> > +writing to the ``record`` file.  For example, below commands set the buffer to
-> > +be 4 KiB and the result to be saved in ``/damon.data``.
-> > +
-> > +    # cd <debugfs>/damon
-> > +    # echo "4096 /damon.data" > pids
-> 
-> write it to record, not pids.
-
-Ah, good eye!
-
-> 
-> > +    # cat record
-> > +    4096 /damon.data
-> > +
-> > +Turning On/Off
-> > +--------------
-> > +
-> > +You can check current status, start and stop the monitoring by reading from and
-> > +writing to the ``monitor_on`` file.  Writing ``on`` to the file starts DAMON to
-> > +monitor the target processes with the attributes.  Writing ``off`` to the file
-> > +stops DAMON.  DAMON also stops if every target processes is be terminated.
-> > +Below example commands turn on, off, and check status of DAMON::
-> > +
-> > +    # cd <debugfs>/damon
-> > +    # echo on > monitor_on
-> > +    # echo off > monitor_on
-> > +    # cat monitor_on
-> > +    off
-> > +
-> > +Please note that you cannot write to the ``attrs`` and ``pids`` files while the
-> > +monitoring is turned on.  If you write to the files while DAMON is running,
-> > +``-EINVAL`` will be returned.
-> 
-> Perhaps -EBUSY would be more informative?  Implies values might be fine, but
-> the issue is 'not now'.
-
-Agreed, will change so!
-
-
-Thanks,
-SeongJae Park
-
-[...]
