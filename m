@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 835ADC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:21:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 056AEC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:22:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 510D8208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:21:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D04F7208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:21:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583846512;
-	bh=Gi2HCx1YofuYMRCXOfa14WQHjbGNP+q62w86WcmCKYo=;
+	s=default; t=1583846519;
+	bh=X7tG5Nb9FdI0XtMkJSgMz6obTbzw75umNhrHk6RRrbA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HbPSiukHh0Y6l4dicmW3dIITm5osjJrw2SpCKqNgmzMP1iAdxi70ioWhrdGdumS9X
-	 OVIesKdZF0xp1kELLDMaA39Os1bSwTae6fn4Z8qnNBq0L09CVxue2zb63yGrl64meL
-	 /DUKCkUh2HfkEt1lNC6cYKZqZiViwOgUglnSnRj0=
+	b=i27MW+5ZSBkV9b/DspHsWZ6LafkE2yGJe+UIlg/E/LlAjzPV0qgeZcwehhYIM+cWT
+	 DuudfOtRXjVfSAmIZbM/Dj1f/cOrTRH9ewPVA5J4xQgM10EL7wXRWld28j6Kd9AD0r
+	 GYZIDMxDIWTFrimm59lKbrBmRbyLPm/kAmWzpPn0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730660AbgCJNVu (ORCPT
+        id S1730937AbgCJNV6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:21:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45190 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:21:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43710 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730388AbgCJNCY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:02:24 -0400
+        id S1730320AbgCJNB6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:01:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E68112468D;
-        Tue, 10 Mar 2020 13:02:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67E29208E4;
+        Tue, 10 Mar 2020 13:01:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845344;
-        bh=Gi2HCx1YofuYMRCXOfa14WQHjbGNP+q62w86WcmCKYo=;
+        s=default; t=1583845317;
+        bh=X7tG5Nb9FdI0XtMkJSgMz6obTbzw75umNhrHk6RRrbA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nMSb1O704GrS5Y2NJhgDLJKVgNwSxHOWENSsBmw4ymxUnU84nTtQ8wpENA3+1MAIt
-         Paz4w7YFwrEb9RSGKp5wyv40LDNOYkjcWStYv3fjaqG8MrF/8NCbj5fji0j6cH8mYW
-         lUOCj/eiTXF5dGWrq1YMQyD5oGR8BojRBbFV9E78=
+        b=lCEwFOdDiFF6Hg3HFiPfZuegk4F7jXpma4T+zC7KZfP77aG61CkURfF8qA5WSJMW1
+         Co7Hzg9qKLrE6YG8dLOmUDwfA0+cKm1eLn+dLVVt9YQVZdHrMaHWpjB+PHeWj84Olw
+         cbv3tmxBn34iOCNPwTFt2KSicjly112HcB4C9OJk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Stanislav Lisovskiy <stanislav.lisovskiy@intel.com>,
-        Matt Roper <matthew.d.roper@intel.com>,
-        Matt Atwood <matthew.s.atwood@intel.com>,
-        Jani Nikula <jani.nikula@intel.com>
-Subject: [PATCH 5.5 148/189] drm/i915: Program MBUS with rmw during initialization
-Date:   Tue, 10 Mar 2020 13:39:45 +0100
-Message-Id: <20200310123654.808776227@linuxfoundation.org>
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 5.5 140/189] spi: atmel-quadspi: fix possible MMIO window size overrun
+Date:   Tue, 10 Mar 2020 13:39:37 +0100
+Message-Id: <20200310123653.981003009@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123639.608886314@linuxfoundation.org>
 References: <20200310123639.608886314@linuxfoundation.org>
@@ -62,57 +60,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matt Roper <matthew.d.roper@intel.com>
+From: Tudor Ambarus <tudor.ambarus@microchip.com>
 
-commit c725161924f9a5872a3e53b73345a6026a5c170e upstream.
+commit 8e093ea4d3593379be46b845b9e823179558047e upstream.
 
-It wasn't terribly clear from the bspec's wording, but after discussion
-with the hardware folks, it turns out that we need to preserve the
-pre-existing contents of the MBUS ABOX control register when
-initializing a few specific bits.
+The QSPI controller memory space is limited to 128MB:
+0x9000_00000-0x9800_00000/0XD000_0000--0XD800_0000.
 
-Bspec: 49213
-Bspec: 50096
-Fixes: 4cb4585e5a7f ("drm/i915/icl: initialize MBus during display init")
-Cc: Stanislav Lisovskiy <stanislav.lisovskiy@intel.com>
-Signed-off-by: Matt Roper <matthew.d.roper@intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200204011032.582737-1-matthew.d.roper@intel.com
-Reviewed-by: Matt Atwood <matthew.s.atwood@intel.com>
-(cherry picked from commit 837b63e6087838d0f1e612d448405419199d8033)
-Signed-off-by: Jani Nikula <jani.nikula@intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200228004320.127142-1-matthew.d.roper@intel.com
+There are nor flashes that are bigger in size than the memory size
+supported by the controller: Micron MT25QL02G (256 MB).
+
+Check if the address exceeds the MMIO window size. An improvement
+would be to add support for regular SPI mode and fall back to it
+when the flash memories overrun the controller's memory space.
+
+Fixes: 0e6aae08e9ae ("spi: Add QuadSPI driver for Atmel SAMA5D2")
+Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+Link: https://lore.kernel.org/r/20200228155437.1558219-1-tudor.ambarus@microchip.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/i915/display/intel_display_power.c |   16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
+ drivers/spi/atmel-quadspi.c |   11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
---- a/drivers/gpu/drm/i915/display/intel_display_power.c
-+++ b/drivers/gpu/drm/i915/display/intel_display_power.c
-@@ -4471,13 +4471,19 @@ static void icl_dbuf_disable(struct drm_
+--- a/drivers/spi/atmel-quadspi.c
++++ b/drivers/spi/atmel-quadspi.c
+@@ -149,6 +149,7 @@ struct atmel_qspi {
+ 	struct clk		*qspick;
+ 	struct platform_device	*pdev;
+ 	const struct atmel_qspi_caps *caps;
++	resource_size_t		mmap_size;
+ 	u32			pending;
+ 	u32			mr;
+ 	u32			scr;
+@@ -329,6 +330,14 @@ static int atmel_qspi_exec_op(struct spi
+ 	u32 sr, offset;
+ 	int err;
  
- static void icl_mbus_init(struct drm_i915_private *dev_priv)
- {
--	u32 val;
-+	u32 mask, val;
++	/*
++	 * Check if the address exceeds the MMIO window size. An improvement
++	 * would be to add support for regular SPI mode and fall back to it
++	 * when the flash memories overrun the controller's memory space.
++	 */
++	if (op->addr.val + op->data.nbytes > aq->mmap_size)
++		return -ENOTSUPP;
++
+ 	err = atmel_qspi_set_cfg(aq, op, &offset);
+ 	if (err)
+ 		return err;
+@@ -480,6 +489,8 @@ static int atmel_qspi_probe(struct platf
+ 		goto exit;
+ 	}
  
--	val = MBUS_ABOX_BT_CREDIT_POOL1(16) |
--	      MBUS_ABOX_BT_CREDIT_POOL2(16) |
--	      MBUS_ABOX_B_CREDIT(1) |
--	      MBUS_ABOX_BW_CREDIT(1);
-+	mask = MBUS_ABOX_BT_CREDIT_POOL1_MASK |
-+		MBUS_ABOX_BT_CREDIT_POOL2_MASK |
-+		MBUS_ABOX_B_CREDIT_MASK |
-+		MBUS_ABOX_BW_CREDIT_MASK;
- 
-+	val = I915_READ(MBUS_ABOX_CTL);
-+	val &= ~mask;
-+	val |= MBUS_ABOX_BT_CREDIT_POOL1(16) |
-+		MBUS_ABOX_BT_CREDIT_POOL2(16) |
-+		MBUS_ABOX_B_CREDIT(1) |
-+		MBUS_ABOX_BW_CREDIT(1);
- 	I915_WRITE(MBUS_ABOX_CTL, val);
- }
- 
++	aq->mmap_size = resource_size(res);
++
+ 	/* Get the peripheral clock */
+ 	aq->pclk = devm_clk_get(&pdev->dev, "pclk");
+ 	if (IS_ERR(aq->pclk))
 
 
