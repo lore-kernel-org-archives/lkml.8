@@ -2,215 +2,264 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6883CC18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 15:35:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48020C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 15:37:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2ADB420578
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 15:35:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1489D20675
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 15:37:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TEU4Xb4N"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="EgQ3rQ9m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727409AbgCJPfr (ORCPT
+        id S1726594AbgCJPh2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 11:35:47 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:35952 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726877AbgCJPfq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 11:35:46 -0400
-Received: by mail-wr1-f66.google.com with SMTP id s5so12555691wrg.3
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 08:35:43 -0700 (PDT)
+        Tue, 10 Mar 2020 11:37:28 -0400
+Received: from mail-bn7nam10on2047.outbound.protection.outlook.com ([40.107.92.47]:6024
+        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726380AbgCJPh1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 11:37:27 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=EI5Mj/4iwzvqOqFBP7bWuNDt6CxfRr/E2dAON9DZVE2dAua/QEguWU/Ir/sVDplAGzg++L8aAxjB/clRw35zZDn4djSeCut6A1TdldQnbyeE+5N8wh/piSI7zujrU3u0+Y+E9jeZgfIqkvArqPzuLXLzkUMNhfjvr+4EoQOYqqn+vOE6Ux9bcmVfnCZvIb1zUEi8miTc4MKBrmXwk4L40SLDg3bxj8qiTCO1wn0mILGPhS7Ap1qp1p6ZjMtZnUgwWQMy5LOwEbgaf2NaAzOjXCcXlvOI0Im92OVmUTHyxrzcC4fpItG2irIVrIDuk6oF11U9TvywmGg8Uhg3KK2zpA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jhBQhPejRKg9huVBsDwInAaBYpFIw//kUcE4VzfzQpQ=;
+ b=auJoBIqDdEEmSgVhjdCiPobnU5ShypkwEonbFnXkp222NHs8JboG8Kl873YyZTxwE2IWG/io8c5RmltSOW7I2sQ9H0WULni05xBwHhgX0POy+vAlHheJIJJV0ZpLKbu8gX1n5BDVDpWOHZ97lKC5ceuG+UPDRGZ770g5fc1WdCMKQTcZJXnlERPnqLbGnS6ItvSPVAXgnyz3BAkLRFCk8tz1eDKseVxL2mpxOMQ9vFEY9eN6+n7NUeuNw/v/vssdN7Bc1cukIlJeN7zeVmJ6RWgGv3qgszawGp1ATHtBXifx/WSwja9CRyW8dWmSF12KSDMme4IU+cgO4GXd0+qW7Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Pg+ee1cpf0I56dBXZYlWH8+GfpDAR/oLM1LChHL11OE=;
-        b=TEU4Xb4Nj2JTgQGqMIsKquU4DA+8l74mfb2aLF2fXNSUhulCw6Ts/Z3shDrBR09hN2
-         xuNROZm3F1E0JXW7yhW8nTHDPYH2RM23J5T3DP7WBfXs6RXZ78+TftyuQH3nLOaWKcPv
-         exFQdrjKR5Jc1JE0C8hsqAOnCT4eU4sVAMzy8emuiylfI/9gQNEc3HSIScw9ePq9uWhT
-         RS2HChfOKnR1PSe2pcp/Gx94hanP9q8k+cYC9iHkt/hLJu9jUTGmTfhsc/ZmuJ30eHjZ
-         i2lRy7ko+qy6aAuKWFhMag5PaqO/8l7EB+3jq7pxM6QyoAqlEuLw3ZzgxdubQzNOafdT
-         IzyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Pg+ee1cpf0I56dBXZYlWH8+GfpDAR/oLM1LChHL11OE=;
-        b=f38s8eJaUX/BXTX59EGAobgC1vFIIYxIJTRq2X2sDBQCh8J8OgAwq+Poa5t8KwOdO0
-         ANbNc9U66ZrO9XekmG419hSyFqzmI3eK3C4VDcuKKahjBRwV19ba9RwFkUHwvrtzMK75
-         krUhdnWlv4ItoH1TfERZH0GjrX+BFYUlMeVj/GyxCgPHghi/HEvAgjRDhcr2duB1MWs4
-         FFsRFoekxR6LZ9aIMqLYW4/CdDur/+k8PLWs5cd9ZkOkfOQ/u3Eo/PTUBtw89HzeqeKl
-         kn2Ya+gwM6+pjUpaRaJYrSapCxUeY3aclH7dtGBtHfRaXb2pZwuJ3AYFLezV1OKgtj6f
-         jE+g==
-X-Gm-Message-State: ANhLgQ2Wxv2ZlngEZ5z1MlhgihcBGZlUN5mZjcPiNtisP/yAZ1uGqHYa
-        hZjPxNWPwdUA1kIYEDdSCeu4Mw==
-X-Google-Smtp-Source: ADFU+vvjb6Nn7KupVxFXeO3Y0Zp6+S9aQDU7y1PpacP1t+aKi1MLOGykt3bJ+F4UmvskzIAERbEkPQ==
-X-Received: by 2002:a5d:54ce:: with SMTP id x14mr27396766wrv.353.1583854543104;
-        Tue, 10 Mar 2020 08:35:43 -0700 (PDT)
-Received: from [10.44.66.8] ([212.45.67.2])
-        by smtp.googlemail.com with ESMTPSA id j66sm4672937wmb.21.2020.03.10.08.35.41
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 10 Mar 2020 08:35:42 -0700 (PDT)
-Subject: Re: [v5, 2/3] interconnect: qcom: Add SC7180 interconnect provider
- driver
-To:     Evan Green <evgreen@google.com>,
-        Odelu Kukatla <okukatla@codeaurora.org>
-Cc:     David Dai <daidavid1@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-pm@vger.kernel.org, sboyd@kernel.org,
-        Lina Iyer <ilina@codeaurora.org>,
-        Sean Sweeney <seansw@qti.qualcomm.com>,
-        Alex Elder <elder@linaro.org>,
-        linux-arm-msm-owner@vger.kernel.org
-References: <1583241493-21212-1-git-send-email-okukatla@codeaurora.org>
- <1583241493-21212-3-git-send-email-okukatla@codeaurora.org>
- <CAE=gft5LE=_hBLbkWHDAQ6O9vrbfF=LtS7B=1tWWDE3euZov_g@mail.gmail.com>
-From:   Georgi Djakov <georgi.djakov@linaro.org>
-Openpgp: preference=signencrypt
-Autocrypt: addr=georgi.djakov@linaro.org; prefer-encrypt=mutual; keydata=
- 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
- KEmKjLDvB0pePJkdTw==
-Message-ID: <cdd73fe7-c7e4-d035-d1dd-be4f1b9c142c@linaro.org>
-Date:   Tue, 10 Mar 2020 17:35:41 +0200
-MIME-Version: 1.0
-In-Reply-To: <CAE=gft5LE=_hBLbkWHDAQ6O9vrbfF=LtS7B=1tWWDE3euZov_g@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jhBQhPejRKg9huVBsDwInAaBYpFIw//kUcE4VzfzQpQ=;
+ b=EgQ3rQ9mouT6Bx1px/T5Jr9FhJHBOLVcHLc+nNj4/oKcyE2J2YV1r5t0PSQsvKDIH2kLPGRgVi6k5yLC8kYFsERtrxWO1Y3AO7sazdDtPV14PeAg2KnlxSuiMk0j4aD5bDf0juqS1ZTgkqC2aoN+TxXTRGxxxIz11IBFhSQixQQ=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Mikita.Lipski@amd.com; 
+Received: from DM6PR12MB2906.namprd12.prod.outlook.com (2603:10b6:5:15f::20)
+ by DM6PR12MB4529.namprd12.prod.outlook.com (2603:10b6:5:2ab::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.16; Tue, 10 Mar
+ 2020 15:35:43 +0000
+Received: from DM6PR12MB2906.namprd12.prod.outlook.com
+ ([fe80::cd57:c685:c45c:8c07]) by DM6PR12MB2906.namprd12.prod.outlook.com
+ ([fe80::cd57:c685:c45c:8c07%6]) with mapi id 15.20.2793.013; Tue, 10 Mar 2020
+ 15:35:43 +0000
+Subject: Re: [PATCH v2 2/4] drm/dp_mst: Use full_pbn instead of available_pbn
+ for bandwidth checks
+To:     Lyude Paul <lyude@redhat.com>, dri-devel@lists.freedesktop.org
+Cc:     Mikita Lipski <mikita.lipski@amd.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Sean Paul <sean@poorly.run>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        linux-kernel@vger.kernel.org
+References: <20200306234623.547525-1-lyude@redhat.com>
+ <20200306234623.547525-3-lyude@redhat.com>
+From:   Mikita Lipski <mlipski@amd.com>
+Organization: AMD
+Message-ID: <143de1a1-c59f-6ff0-501c-1467872bc9d9@amd.com>
+Date:   Tue, 10 Mar 2020 11:35:40 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+In-Reply-To: <20200306234623.547525-3-lyude@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: YTXPR0101CA0014.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b00::27) To DM6PR12MB2906.namprd12.prod.outlook.com
+ (2603:10b6:5:15f::20)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [172.29.224.72] (165.204.55.250) by YTXPR0101CA0014.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b00::27) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.14 via Frontend Transport; Tue, 10 Mar 2020 15:35:42 +0000
+X-Originating-IP: [165.204.55.250]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 90595b80-85b3-4072-32e4-08d7c508b1bd
+X-MS-TrafficTypeDiagnostic: DM6PR12MB4529:|DM6PR12MB4529:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM6PR12MB4529CA854B2A9CDC065D1151E4FF0@DM6PR12MB4529.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-Forefront-PRVS: 033857D0BD
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(376002)(366004)(396003)(136003)(346002)(189003)(199004)(52116002)(36916002)(26005)(8936002)(8676002)(4326008)(81156014)(81166006)(66946007)(478600001)(54906003)(316002)(31686004)(2906002)(16576012)(5660300002)(36756003)(6486002)(7416002)(186003)(16526019)(31696002)(53546011)(956004)(2616005)(66476007)(66556008);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB4529;H:DM6PR12MB2906.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 2sxowzDOCFJsi4+Cfjt6zZT1cwhlmNdFhV2bZMrd7LfNI7wud/CxkESBCZKmsCLTtSOziV0QgtN30gyvpu2e9/pvY7nSCDUo5T+iW6zdpox5120XdohAJU0TkW20u93rY67rDYpRY6V/ECC3OFTC51de2mZ5XmJg5b06TjIv5khPdtD3ikfl3W12Ps1Xmt1B27TIvRa0/fFnXq9Ly4Zphox64FINL9aXjdJ3m4KqgNduqBCCTbtru05an4CVEmf/+z9faxG1R6sjVGy+Pw7lftlKJgmcqPLIx2tioQiyf8GK78osGTrqJb1BigYe9bxhUCG0xd4sLkieAUR/vvtLG1AJjQY41TF6onJUXDsFB2PlcHed+2stff4AxhBFOKIOZ9AglzjL12Wa0NyjeVQWuVV/BaKS+NoyJORPXeqnLse32/RGzJ6UJwFSULQzjKsi
+X-MS-Exchange-AntiSpam-MessageData: qmUhpKvrzwov1wjr4PZZWBoSAJhXVlQzxlce8WcZ8fX0csQiYUDL15DoMjWbPvkzkhdsC4G9QSsP9M6hmTQIFRNBZFescYkj5dvato1ps86oEG7mptVaa/S5p4DaN7qdhdIpc4aMcaiGWDQaWTKcug==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 90595b80-85b3-4072-32e4-08d7c508b1bd
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Mar 2020 15:35:42.9700
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: aknlMQ9YOglkFiIAkQIw4SRL5k/QAxA9ZS6uUNUZhpYn8poLzOU/MV/Psk6GiLMt
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4529
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/9/20 19:33, Evan Green wrote:
-> On Tue, Mar 3, 2020 at 5:18 AM Odelu Kukatla <okukatla@codeaurora.org> wrote:
->>
->> Add driver for the Qualcomm interconnect buses found in SC7180 based
->> platforms. The topology consists of several NoCs that are controlled by
->> a remote processor that collects the aggregated bandwidth for each
->> master-slave pairs.
->>
->> Signed-off-by: Odelu Kukatla <okukatla@codeaurora.org>
->> ---
->>  drivers/interconnect/qcom/Kconfig  |  10 +
->>  drivers/interconnect/qcom/Makefile |   2 +
->>  drivers/interconnect/qcom/sc7180.c | 641 +++++++++++++++++++++++++++++++++++++
->>  drivers/interconnect/qcom/sc7180.h | 149 +++++++++
->>  4 files changed, 802 insertions(+)
->>  create mode 100644 drivers/interconnect/qcom/sc7180.c
->>  create mode 100644 drivers/interconnect/qcom/sc7180.h
->>
->> diff --git a/drivers/interconnect/qcom/Kconfig b/drivers/interconnect/qcom/Kconfig
->> index f6418a6..482c5be 100644
->> --- a/drivers/interconnect/qcom/Kconfig
->> +++ b/drivers/interconnect/qcom/Kconfig
->> @@ -42,6 +42,16 @@ config INTERCONNECT_QCOM_RPMH
->>         depends on INTERCONNECT_QCOM || COMPILE_TEST
->>         depends on QCOM_COMMAND_DB
->>
->> +config INTERCONNECT_QCOM_SC7180
->> +       tristate "Qualcomm SC7180 interconnect driver"
->> +       depends on INTERCONNECT_QCOM
->> +       depends on (QCOM_RPMH && QCOM_COMMAND_DB && OF) || COMPILE_TEST
->> +       select INTERCONNECT_QCOM_RPMH
->> +       select INTERCONNECT_QCOM_BCM_VOTER
->> +       help
->> +         This is a driver for the Qualcomm Network-on-Chip on sc7180-based
->> +         platforms.
->> +
->>  config INTERCONNECT_QCOM_SDM845
->>         tristate "Qualcomm SDM845 interconnect driver"
->>         depends on INTERCONNECT_QCOM
->> diff --git a/drivers/interconnect/qcom/Makefile b/drivers/interconnect/qcom/Makefile
->> index d591bb5..5325558 100644
->> --- a/drivers/interconnect/qcom/Makefile
->> +++ b/drivers/interconnect/qcom/Makefile
->> @@ -5,6 +5,7 @@ qnoc-msm8916-objs                       := msm8916.o
->>  qnoc-msm8974-objs                      := msm8974.o
->>  qnoc-qcs404-objs                       := qcs404.o
->>  icc-rpmh-obj                           := icc-rpmh.o
->> +qnoc-sc7180-objs                       := sc7180.o
->>  qnoc-sdm845-objs                       := sdm845.o
->>  icc-smd-rpm-objs                       := smd-rpm.o
->>
->> @@ -13,5 +14,6 @@ obj-$(CONFIG_INTERCONNECT_QCOM_MSM8916) += qnoc-msm8916.o
->>  obj-$(CONFIG_INTERCONNECT_QCOM_MSM8974) += qnoc-msm8974.o
->>  obj-$(CONFIG_INTERCONNECT_QCOM_QCS404) += qnoc-qcs404.o
->>  obj-$(CONFIG_INTERCONNECT_QCOM_RPMH) += icc-rpmh.o
->> +obj-$(CONFIG_INTERCONNECT_QCOM_SC7180) += qnoc-sc7180.o
->>  obj-$(CONFIG_INTERCONNECT_QCOM_SDM845) += qnoc-sdm845.o
->>  obj-$(CONFIG_INTERCONNECT_QCOM_SMD_RPM) += icc-smd-rpm.o
->> diff --git a/drivers/interconnect/qcom/sc7180.c b/drivers/interconnect/qcom/sc7180.c
->> new file mode 100644
->> index 0000000..dcf493d
->> --- /dev/null
->> +++ b/drivers/interconnect/qcom/sc7180.c
->> @@ -0,0 +1,641 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Copyright (c) 2020, The Linux Foundation. All rights reserved.
->> + *
->> + */
->> +
->> +#include <linux/device.h>
->> +#include <linux/interconnect.h>
->> +#include <linux/interconnect-provider.h>
->> +#include <linux/module.h>
->> +#include <linux/of_platform.h>
+
+
+On 3/6/20 6:46 PM, Lyude Paul wrote:
+> DisplayPort specifications are fun. For a while, it's been really
+> unclear to us what available_pbn actually does. There's a somewhat vague
+> explanation in the DisplayPort spec (starting from 1.2) that partially
+> explains it:
 > 
-> Nit: As Georgi mentioned in the previous review, you can remove this
-> an replace it with of_device.h. No need to spin for just that, though.
+>    The minimum payload bandwidth number supported by the path. Each node
+>    updates this number with its available payload bandwidth number if its
+>    payload bandwidth number is less than that in the Message Transaction
+>    reply.
+> 
+> So, it sounds like available_pbn represents the smallest link rate in
+> use between the source and the branch device. Cool, so full_pbn is just
+> the highest possible PBN that the branch device supports right?
+> 
+> Well, we assumed that for quite a while until Sean Paul noticed that on
+> some MST hubs, available_pbn will actually get set to 0 whenever there's
+> any active payloads on the respective branch device. This caused quite a
+> bit of confusion since clearing the payload ID table would end up fixing
+> the available_pbn value.
+> 
+> So, we just went with that until commit cd82d82cbc04 ("drm/dp_mst: Add
+> branch bandwidth validation to MST atomic check") started breaking
+> people's setups due to us getting erroneous available_pbn values. So, we
+> did some more digging and got confused until we finally looked at the
+> definition for full_pbn:
+> 
+>    The bandwidth of the link at the trained link rate and lane count
+>    between the DP Source device and the DP Sink device with no time slots
+>    allocated to VC Payloads, represented as a Payload Bandwidth Number. As
+>    with the Available_Payload_Bandwidth_Number, this number is determined
+>    by the link with the lowest lane count and link rate.
+> 
+> That's what we get for not reading specs closely enough, hehe. So, since
+> full_pbn is definitely what we want for doing bandwidth restriction
+> checks - let's start using that instead and ignore available_pbn
+> entirely.
+> 
 
-I have already applied this version, so any follow-up patches are welcome.
 
+Thank you for the fix and a very detailed explanation.
+I was really confused by available_pbn and why it wouldn't get updated 
+and was searching for the solution in wrong places. But I'm glad you 
+were able to identify the solution.
+I still think the port should have an available_pbn value so it could be 
+updated when driver parses RESOURCE_STATUS_NOTIFY and 
+ENUM_PATH_RESOURCES messages.
+With that being said it is a great find. Thanks.
+
+Reviewed-by: Mikita Lipski <mikita.lipski@amd.com>
+
+> Signed-off-by: Lyude Paul <lyude@redhat.com>
+> Fixes: cd82d82cbc04 ("drm/dp_mst: Add branch bandwidth validation to MST atomic check")
+> Cc: Mikita Lipski <mikita.lipski@amd.com>
+> Cc: Hans de Goede <hdegoede@redhat.com>
+> Cc: Sean Paul <sean@poorly.run>
+> ---
+>   drivers/gpu/drm/drm_dp_mst_topology.c | 15 +++++++--------
+>   include/drm/drm_dp_mst_helper.h       |  4 ++--
+>   2 files changed, 9 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
+> index 6714d8a5c558..79ebb871230b 100644
+> --- a/drivers/gpu/drm/drm_dp_mst_topology.c
+> +++ b/drivers/gpu/drm/drm_dp_mst_topology.c
+> @@ -2306,7 +2306,7 @@ drm_dp_mst_handle_link_address_port(struct drm_dp_mst_branch *mstb,
+>   								port);
+>   			}
+>   		} else {
+> -			port->available_pbn = 0;
+> +			port->full_pbn = 0;
+>   		}
+>   	}
+>   
+> @@ -2401,7 +2401,7 @@ drm_dp_mst_handle_conn_stat(struct drm_dp_mst_branch *mstb,
+>   		if (port->ddps) {
+>   			dowork = true;
+>   		} else {
+> -			port->available_pbn = 0;
+> +			port->full_pbn = 0;
+>   		}
+>   	}
+>   
+> @@ -2553,7 +2553,7 @@ static int drm_dp_check_and_send_link_address(struct drm_dp_mst_topology_mgr *mg
+>   		if (port->input || !port->ddps)
+>   			continue;
+>   
+> -		if (!port->available_pbn) {
+> +		if (!port->full_pbn) {
+>   			drm_modeset_lock(&mgr->base.lock, NULL);
+>   			drm_dp_send_enum_path_resources(mgr, mstb, port);
+>   			drm_modeset_unlock(&mgr->base.lock);
+> @@ -2999,8 +2999,7 @@ drm_dp_send_enum_path_resources(struct drm_dp_mst_topology_mgr *mgr,
+>   				      path_res->port_number,
+>   				      path_res->full_payload_bw_number,
+>   				      path_res->avail_payload_bw_number);
+> -			port->available_pbn =
+> -				path_res->avail_payload_bw_number;
+> +			port->full_pbn = path_res->full_payload_bw_number;
+>   			port->fec_capable = path_res->fec_capable;
+>   		}
+>   	}
+> @@ -3585,7 +3584,7 @@ drm_dp_mst_topology_mgr_invalidate_mstb(struct drm_dp_mst_branch *mstb)
+>   
+>   	list_for_each_entry(port, &mstb->ports, next) {
+>   		/* The PBN for each port will also need to be re-probed */
+> -		port->available_pbn = 0;
+> +		port->full_pbn = 0;
+>   
+>   		if (port->mstb)
+>   			drm_dp_mst_topology_mgr_invalidate_mstb(port->mstb);
+> @@ -4853,8 +4852,8 @@ int drm_dp_mst_atomic_check_bw_limit(struct drm_dp_mst_branch *branch,
+>   			if (drm_dp_mst_atomic_check_bw_limit(port->mstb, mst_state))
+>   				return -ENOSPC;
+>   
+> -		if (port->available_pbn > 0)
+> -			pbn_limit = port->available_pbn;
+> +		if (port->full_pbn > 0)
+> +			pbn_limit = port->full_pbn;
+>   	}
+>   	DRM_DEBUG_ATOMIC("[MST BRANCH:%p] branch has %d PBN available\n",
+>   			 branch, pbn_limit);
+> diff --git a/include/drm/drm_dp_mst_helper.h b/include/drm/drm_dp_mst_helper.h
+> index 5483f888712a..1d4c996cb92d 100644
+> --- a/include/drm/drm_dp_mst_helper.h
+> +++ b/include/drm/drm_dp_mst_helper.h
+> @@ -81,7 +81,7 @@ struct drm_dp_vcpi {
+>    * &drm_dp_mst_topology_mgr.base.lock.
+>    * @num_sdp_stream_sinks: Number of stream sinks. Protected by
+>    * &drm_dp_mst_topology_mgr.base.lock.
+> - * @available_pbn: Available bandwidth for this port. Protected by
+> + * @full_pbn: Max possible bandwidth for this port. Protected by
+>    * &drm_dp_mst_topology_mgr.base.lock.
+>    * @next: link to next port on this branch device
+>    * @aux: i2c aux transport to talk to device connected to this port, protected
+> @@ -126,7 +126,7 @@ struct drm_dp_mst_port {
+>   	u8 dpcd_rev;
+>   	u8 num_sdp_streams;
+>   	u8 num_sdp_stream_sinks;
+> -	uint16_t available_pbn;
+> +	uint16_t full_pbn;
+>   	struct list_head next;
+>   	/**
+>   	 * @mstb: the branch device connected to this port, if there is one.
+> 
+
+-- 
 Thanks,
-Georgi
+Mikita Lipski
+Software Engineer 2, AMD
+mikita.lipski@amd.com
