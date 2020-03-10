@@ -2,158 +2,134 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DATE_IN_PAST_03_06,
-	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6448BC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 17:02:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71040C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 17:05:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BF0521D7E
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 17:02:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47A2021D7E
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 17:05:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HxrwY+VM"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VeQXF0cr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727194AbgCJRCH (ORCPT
+        id S1726462AbgCJRFl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 13:02:07 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:29910 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726898AbgCJRCG (ORCPT
+        Tue, 10 Mar 2020 13:05:41 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:37449 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726295AbgCJRFl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 13:02:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583859725;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=s059DjlnEcczveYufFN5KML3mixHomqVeP5rihntnzg=;
-        b=HxrwY+VMSzNpctBBzPeV5zBF2tSHSbb8BsUXlCVMXAx4AQiBmWjB3OHx12ppVhqVUwDpq7
-        qMDFXfBXf2CzHvCPF9HIOgiUplDoJTblBS0J29pdQDdscgJhS8HqduLVkka40SmllMMtM8
-        4gxCJkVl9kr2zmfUHigZX0Q/p/v+AO4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-273-4GdUry3_MQmA2UOKZTRSrg-1; Tue, 10 Mar 2020 13:02:02 -0400
-X-MC-Unique: 4GdUry3_MQmA2UOKZTRSrg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B929E1937FC1;
-        Tue, 10 Mar 2020 17:02:00 +0000 (UTC)
-Received: from fuller.cnet (ovpn-116-43.gru2.redhat.com [10.97.116.43])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E37E75D9CA;
-        Tue, 10 Mar 2020 17:01:59 +0000 (UTC)
-Received: by fuller.cnet (Postfix, from userid 1000)
-        id 8C1FE42FE412; Tue, 10 Mar 2020 10:50:06 -0300 (-03)
-Date:   Tue, 10 Mar 2020 10:50:06 -0300
-From:   Marcelo Tosatti <mtosatti@redhat.com>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Joao Martins <joao.m.martins@oracle.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Subject: Re: [PATCH] cpuidle-haltpoll: allow force loading on hosts without
- the REALTIME hint
-Message-ID: <20200310135006.GA6397@fuller.cnet>
-References: <20200221174331.1480468-1-mail@maciej.szmigiero.name>
- <75d483b5-8edf-efb1-9642-ca367e2f1423@maciej.szmigiero.name>
- <2118832.28snYOIflM@kreacher>
+        Tue, 10 Mar 2020 13:05:41 -0400
+Received: by mail-wr1-f67.google.com with SMTP id 6so16873172wre.4
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 10:05:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=V2pGv/F3fb90BGXpKCDOidB6iWxOC6kQch9TvvDExWQ=;
+        b=VeQXF0crM1hy3UQaVzKzxaSVetHnvCqHAfce3p4P/ICUltPZGweTGDdVEoRD4s5x+F
+         rM+5BHW8p4Sp5zeCIrR5TQ7yT2fbDYZGyXdvLo0Gyfsb4AtSFsTxuF6jPBjMLcMvEuz7
+         5YKSKVa9j0zKk/1rmwu5TYnIuMWklBNPXJ4gI2MnmOuUxMUJ+0EWYhipHIAr/tEVZn+z
+         2onNZlqmePWBW1jDLUsmUhCR//SNmFI0VagFKRfhj6DT1khSNLs+35h0zbXFaqQiyvpZ
+         oNnwnn7Y2gANz4AExhVId3S+j/l5IcBKQ56tiCwu8YsqZ7ItVXVAU4xca29d1ZyVrqXJ
+         DDjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=V2pGv/F3fb90BGXpKCDOidB6iWxOC6kQch9TvvDExWQ=;
+        b=RXhDVhUeQgm7PGtZys7xkVZTiULjN2xq/oVxMDb6itXg5J7JvzDhCNuPvY3KLo/CUz
+         xZ1FZZOihwQVmqaSfHYJgX7LCSNOuKynnUcM3u1zpfKQJfA/FIGfVln0dMWlg+/cGPGH
+         gotG99UJ4aloO+JP61MxLAi8MW7Ktb0W2zFMoPQuRZYdRGet6/U874acnbUubnsYcg91
+         0EuLCSprbNWRClK+WQCU9xfwJ+EEbRapROnuRR1Y7f5SH8xRUAnVSPlozGbw2dkyPJZf
+         TSI1Q1PDBdkzxEYbimd3M9u47gHouggaCQSGW2CDuY68TD42UkeBGRynCQo1QgfROuDK
+         +DYg==
+X-Gm-Message-State: ANhLgQ34p/aOtovc5q5bmP3mVgP6Q7wCtCcNTIhNPz8hDGb4hnCYIq1Q
+        3s/X+XMXI5elH2N0bHWVMVzXTw==
+X-Google-Smtp-Source: ADFU+vv1fzoBgLAS9dMUu/kgFvxBEkZ24A5EkgKtG2cBZw55ztM0JuCdRstUNjkRZCz+N35sqlcK+w==
+X-Received: by 2002:a5d:43cc:: with SMTP id v12mr27790937wrr.125.1583859938739;
+        Tue, 10 Mar 2020 10:05:38 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id f4sm11241592wrt.24.2020.03.10.10.05.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Mar 2020 10:05:38 -0700 (PDT)
+Date:   Tue, 10 Mar 2020 17:05:36 +0000
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Jason Wessel <jason.wessel@windriver.com>
+Subject: Re: Instrumentation and RCU
+Message-ID: <20200310170536.w4p5r2fnsyaorys5@holly.lan>
+References: <87mu8p797b.fsf@nanos.tec.linutronix.de>
+ <20200309141546.5b574908@gandalf.local.home>
+ <87fteh73sp.fsf@nanos.tec.linutronix.de>
+ <20200310170951.87c29e9c1cfbddd93ccd92b3@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2118832.28snYOIflM@kreacher>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+In-Reply-To: <20200310170951.87c29e9c1cfbddd93ccd92b3@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 04, 2020 at 11:31:31AM +0100, Rafael J. Wysocki wrote:
-> On Friday, February 28, 2020 6:10:18 PM CET Maciej S. Szmigiero wrote:
-> > A friendly ping here.
-> > 
-> > Maciej
-> > 
-> > On 21.02.2020 18:43, Maciej S. Szmigiero wrote:
-> > > From: "Maciej S. Szmigiero" <maciej.szmigiero@oracle.com>
-> > > 
-> > > Before commit 1328edca4a14 ("cpuidle-haltpoll: Enable kvm guest polling
-> > > when dedicated physical CPUs are available") the cpuidle-haltpoll driver
-> > > could also be used in scenarios when the host does not advertise the
-> > > KVM_HINTS_REALTIME hint.
-> > > 
-> > > While the behavior introduced by the aforementioned commit makes sense as
-> > > the default there are cases where the old behavior is desired, for example,
-> > > when other kernel changes triggered by presence by this hint are unwanted,
-> > > for some workloads where the latency benefit from polling overweights the
-> > > loss from idle CPU capacity that otherwise would be available, or just when
-> > > running under older Qemu versions that lack this hint.
-> > > 
-> > > Let's provide a typical "force" module parameter that allows restoring the
-> > > old behavior.
-> > > 
-> > > Signed-off-by: Maciej S. Szmigiero <maciej.szmigiero@oracle.com>
-> > > ---
-> > >  drivers/cpuidle/cpuidle-haltpoll.c | 12 +++++++++++-
-> > >  1 file changed, 11 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/drivers/cpuidle/cpuidle-haltpoll.c b/drivers/cpuidle/cpuidle-haltpoll.c
-> > > index b0ce9bc78113..07e5b36076bb 100644
-> > > --- a/drivers/cpuidle/cpuidle-haltpoll.c
-> > > +++ b/drivers/cpuidle/cpuidle-haltpoll.c
-> > > @@ -18,6 +18,11 @@
-> > >  #include <linux/kvm_para.h>
-> > >  #include <linux/cpuidle_haltpoll.h>
-> > >  
-> > > +static bool force __read_mostly;
-> > > +module_param(force, bool, 0444);
-> > > +MODULE_PARM_DESC(force,
-> > > +		 "Load even if the host does not provide the REALTIME hint");
+On Tue, Mar 10, 2020 at 05:09:51PM +0900, Masami Hiramatsu wrote:
+> Hi,
 > 
-> Why not to say "Load unconditionally" here?
+> On Mon, 09 Mar 2020 19:59:18 +0100
+> Thomas Gleixner <tglx@linutronix.de> wrote:
+> 
+> > >> #2) Breakpoint utilization
+> > >> 
+> > >>     As recent findings have shown, breakpoint utilization needs to be
+> > >>     extremly careful about not creating infinite breakpoint recursions.
+> > >> 
+> > >>     I think that's pretty much obvious, but falls into the overall
+> > >>     question of how to protect callchains.
+> > >
+> > > This is rather unique, and I agree that its best to at least get to a point
+> > > where we limit the tracing within breakpoint code. I'm fine with making
+> > > rcu_nmi_exit() nokprobe too.
+> > 
+> > Yes, the break point stuff is unique, but it has nicely demonstrated how
+> > much of the code is affected by it.
+> 
+> I see. I had followed the callchain several times, and always found new function.
+> So I agree with the off-limit section idea. That is a kind of entry code section
+> but more generic one. It is natural to split such sensitive code in different
+> place.
+> 
+> BTW, what about kdb stuffs? (+Cc Jason)
 
-Makes sense to me.
+There is some double breakpoint detection code but IIRC this merely
+retrospectively warns the user that they have their hurt their system...
+and whether the system would run long enough to reach that logic is
+relatively unlikely.
 
-> As is, one needs to know what "the REALTIME hint" is to understand it.
-> 
-> > > +
-> > >  static struct cpuidle_device __percpu *haltpoll_cpuidle_devices;
-> > >  static enum cpuhp_state haltpoll_hp_state;
-> > >  
-> > > @@ -90,6 +95,11 @@ static void haltpoll_uninit(void)
-> > >  	haltpoll_cpuidle_devices = NULL;
-> > >  }
-> > >  
-> > > +static bool haltpool_want(void)
-> > > +{
-> > > +	return kvm_para_has_hint(KVM_HINTS_REALTIME) || force;
-> > > +}
-> > > +
-> > >  static int __init haltpoll_init(void)
-> > >  {
-> > >  	int ret;
-> > > @@ -102,7 +112,7 @@ static int __init haltpoll_init(void)
-> > >  	cpuidle_poll_state_init(drv);
-> > >  
-> > >  	if (!kvm_para_available() ||
-> > > -		!kvm_para_has_hint(KVM_HINTS_REALTIME))
-> > > +	    !haltpool_want())
-> 
-> And you don't need to break this line.
-> 
-> > >  		return -ENODEV;
-> > >  
-> > >  	ret = cpuidle_register_driver(drv);
-> > > 
-> > 
-> > 
-> 
-> Thanks!
-> 
-> 
+For both kdb and kgdb, the main "defence" is the use case. Neither kdb
+or kgdb faces the userspace (except via a SysRq, which can be disabled)
+and triggering either already implies the user is not especially
+concerned about things like availability guarantees since they are happy
+for everything running on the system to be halted indefinitely.
 
+Additionally breakpoints in kgdb/kdb are not wildcarded so there are no
+need to worry about a user selecting a bad pattern! Setting a breakpoint
+with kgdb/kdb needs a user (who is assumed to have kernel knowledge) to
+have explicitly chose to study the dynamic behaviour of that particular
+bit of code.
+
+I'm not saying kgdb/kdb would not benefit from additional safety
+barriers (it would), simply that the problem is less acute.
+
+
+Daniel.
