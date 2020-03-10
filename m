@@ -2,76 +2,100 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D09FC10F25
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 00:48:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3885C10F25
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 00:48:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5D2A2146E
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 00:48:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 820382467D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 00:48:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583801337;
+	bh=MyWY5amDJAzJzdzhFcv6Tu9m3xmj/uJuETu5vTpbu1E=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=HEuAyvpgEnjxS4uFTinZVi2n78aNWZiPWIP6g869Ne5l+fRcwm4POGmt4EwjkVwi/
+	 fgs925gTi2QWBiUKCe/YPHk1eXuCRRzFv09ZHHPgCaHJ0QM9xOISOPymMHLaZ64iqG
+	 CHWY7SASvXy/wvajX5cziWOrdaw08ZzVa4F6PepY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727572AbgCJAsS (ORCPT
+        id S1727581AbgCJAs4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 20:48:18 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:34202 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727287AbgCJAsS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 20:48:18 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 57F1415A0069C;
-        Mon,  9 Mar 2020 17:48:17 -0700 (PDT)
-Date:   Mon, 09 Mar 2020 17:48:16 -0700 (PDT)
-Message-Id: <20200309.174816.1763845933351180364.davem@davemloft.net>
-To:     andre.przywara@arm.com
-Cc:     radhey.shyam.pandey@xilinx.com, michal.simek@xilinx.com,
-        hancock@sedsystems.ca, netdev@vger.kernel.org,
-        rmk+kernel@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, andrew@lunn.ch
-Subject: Re: [PATCH v2 06/14] net: axienet: Factor out TX descriptor chain
- cleanup
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200309181851.190164-7-andre.przywara@arm.com>
-References: <20200309181851.190164-1-andre.przywara@arm.com>
-        <20200309181851.190164-7-andre.przywara@arm.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
+        Mon, 9 Mar 2020 20:48:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47178 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727287AbgCJAsz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 20:48:55 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 21F192146E;
+        Tue, 10 Mar 2020 00:48:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583801335;
+        bh=MyWY5amDJAzJzdzhFcv6Tu9m3xmj/uJuETu5vTpbu1E=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=m2SM3CNeB9AYYwMegS2jCzUUGfrXy4qy+7yHmzpz470bfnGsfowU9w1uN04i1PjNS
+         NPr39yPhzzG/w7UlNxW5oRW4PH5Ukm7/+fUWgOqN8Rk6XTj+mzCpMcXBWHGnfsyjvT
+         JWHDqz5vyedqi0m4W3YIlVS5G458CGUYD97ld12Y=
+Date:   Mon, 9 Mar 2020 17:48:54 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Wei Yang <richard.weiyang@linux.alibaba.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Tim Chen <tim.c.chen@linux.intel.com>
+Subject: Re: [PATCH] mm/swap_slots.c: don't reset the cache slot after use
+Message-Id: <20200309174854.b6b8c7f019c3dde048c28f94@linux-foundation.org>
+In-Reply-To: <20200309090940.34130-1-richard.weiyang@linux.alibaba.com>
+References: <20200309090940.34130-1-richard.weiyang@linux.alibaba.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 09 Mar 2020 17:48:17 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andre Przywara <andre.przywara@arm.com>
-Date: Mon,  9 Mar 2020 18:18:43 +0000
+On Mon,  9 Mar 2020 17:09:40 +0800 Wei Yang <richard.weiyang@linux.alibaba.com> wrote:
 
-> -static void axienet_start_xmit_done(struct net_device *ndev)
-> +static int axienet_free_tx_chain(struct net_device *ndev, u32 first_bd,
-> +				 int nr_bds, u32 *sizep)
+> Currently we would clear the cache slot if it is used. While this is not
+> necessary, since this entry would not be used until refilled.
+> 
+> Leave it untouched and assigned the value directly to entry which makes
+> the code little more neat.
+> 
+> Also this patch merges the else and if, since this is the only case we
+> refill and repeat swap cache.
+
+cc Tim, who can hopefully remember how this code works ;)
+
+> --- a/mm/swap_slots.c
+> +++ b/mm/swap_slots.c
+> @@ -309,7 +309,7 @@ int free_swap_slot(swp_entry_t entry)
+>  
+>  swp_entry_t get_swap_page(struct page *page)
 >  {
-> -	u32 size = 0;
-> -	u32 packets = 0;
->  	struct axienet_local *lp = netdev_priv(ndev);
-> +	int max_bds = (nr_bds != -1) ? nr_bds : lp->tx_bd_num;
->  	struct axidma_bd *cur_p;
-> -	unsigned int status = 0;
-> +	unsigned int status;
-> +	int i;
-
-Please use reverse christms tree ordering for local variable
-declarations.
-
-> +static void axienet_start_xmit_done(struct net_device *ndev)
-> +{
-> +	u32 size = 0;
-> +	u32 packets = 0;
-> +	struct axienet_local *lp = netdev_priv(ndev);
-
-Likewise.
+> -	swp_entry_t entry, *pentry;
+> +	swp_entry_t entry;
+>  	struct swap_slots_cache *cache;
+>  
+>  	entry.val = 0;
+> @@ -336,13 +336,10 @@ swp_entry_t get_swap_page(struct page *page)
+>  		if (cache->slots) {
+>  repeat:
+>  			if (cache->nr) {
+> -				pentry = &cache->slots[cache->cur++];
+> -				entry = *pentry;
+> -				pentry->val = 0;
+> +				entry = cache->slots[cache->cur++];
+>  				cache->nr--;
+> -			} else {
+> -				if (refill_swap_slots_cache(cache))
+> -					goto repeat;
+> +			} else if (refill_swap_slots_cache(cache)) {
+> +				goto repeat;
+>  			}
+>  		}
+>  		mutex_unlock(&cache->alloc_lock);
+> -- 
+> 2.20.1 (Apple Git-117)
