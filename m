@@ -2,445 +2,166 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64CA9C10F25
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 00:06:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C7EAC10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 00:09:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 245DC2253D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 00:06:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3289124655
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 00:09:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="scj7XEzy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GmWZ2zNy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727574AbgCJAGf (ORCPT
+        id S1727507AbgCJAJM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 20:06:35 -0400
-Received: from mail-vk1-f202.google.com ([209.85.221.202]:36680 "EHLO
-        mail-vk1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727533AbgCJAGe (ORCPT
+        Mon, 9 Mar 2020 20:09:12 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:39728 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727242AbgCJAJL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 20:06:34 -0400
-Received: by mail-vk1-f202.google.com with SMTP id l19so2110056vko.3
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 17:06:32 -0700 (PDT)
+        Mon, 9 Mar 2020 20:09:11 -0400
+Received: by mail-lj1-f196.google.com with SMTP id f10so12092324ljn.6;
+        Mon, 09 Mar 2020 17:09:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc:content-transfer-encoding;
-        bh=As2MgrbSLjrL3zAjIuYMRljole1TlaR/KGnmofKr/OU=;
-        b=scj7XEzyodUmhnen3jYdeDE02J4jdpUCh+cbccA2g06kB8N1JFUfFrIz4kzRA8kltX
-         VdFwDlFdsCCgnfdK/h1MvGBL/dtABPOqkBo2futvhMjQBw0Gp/2+IYYaHQz5WgDQF9Av
-         E97/e1+eo0L0k9RR6/UitUT46urA4+nb6MHkm1FqDqIz7VCAl6lqWzM9GI0SHr8qpSVd
-         tB8Xi7OJJ98Ukw0lLwjK2W60HknFt5VQH/J0LD03wfkt12RM2rvF4Q6blzHkwdL34M0k
-         zCkB6MDdgif8mqTMgo8hFhcYdNbTWRP0Xq5wgJ3Xj4K/xr75ZZHBzN0PsKQfJOGlFYjb
-         XCMw==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nOkimidvyE/85zDjV2EvZo2MwwHSxFziV1SbX9R/ibI=;
+        b=GmWZ2zNy3pBOaZKriqQ+ELzUA3ZkISmORCjefwTdN4b6GxnT8oDZNXtKGfqGeLb0xN
+         IiiTUGNMcYuPt78bzuCu2JseD2cKOcG2BKIbBv1nrDraA4IiFTuiOIGeLR9XtJWTSHSU
+         o5Y/SCO0xHIPL/s3Pnm9NltrhNpdm7orHHx5Ul5VHu3SlrFWDRkRvpCRJoKDfkv8aok4
+         7gSVUyGypCeG5yDuly7tpN0rQT+gi/PCLpHd+t/JsrbziukkSxb5v8o0NeMAsDbF2NF7
+         CYyb5DSfuCPlfnZdjg8XkFrrco44Kf7YR9qedQo6F6nt1XP0LKndiRnpRysETF81WdNy
+         m3cg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc:content-transfer-encoding;
-        bh=As2MgrbSLjrL3zAjIuYMRljole1TlaR/KGnmofKr/OU=;
-        b=hB29TE65lyygXDRpOEF3QAxE3Am3N+ND691mAyYxcI5VbCz8SpQ0+wph8lnKTTXyTM
-         Oy7+En7v5YgMT4e77WlusGtBIBk12NDfiTYg9ROkAav+Ij4HRmRkHcU9U9Ps8VoG5i0f
-         C3t4SFV+CE/OsqGNp0zUs79ex9cfukMbmE6SAB/hW24hUC6GERGotYUVgEqT/yXY/Qte
-         3kyCcceMIJZggpPzbZajbgcwmcIPXUTmynDDlUT1FjFYs6M5jP2UEK2YchGGgHiCe6Qi
-         NS9c1FWmfYkzCLMyzEdKN90vuPOEj6qvPgDhx/ot5mzFSjNVYVi/iXb7XtPEUB5pZqjI
-         K9Jg==
-X-Gm-Message-State: ANhLgQ0q5c42iOnH9TLs5M8HW4YdJcMcexhD8ZystFwabE8x15UonSYJ
-        MA2fge10iyWC3yxL/svbPKqaNAuhgXXQ
-X-Google-Smtp-Source: ADFU+vtQE3vV+61Yrn6asBi8R07klDCVixINgWY7stZ7HDgH1/RzQnWF9XKV9S0Xt0vURx/q33zhDwPH+NMI
-X-Received: by 2002:a1f:45cd:: with SMTP id s196mr6612219vka.102.1583798792197;
- Mon, 09 Mar 2020 17:06:32 -0700 (PDT)
-Date:   Mon,  9 Mar 2020 17:06:17 -0700
-In-Reply-To: <20200310000617.20662-1-rajatja@google.com>
-Message-Id: <20200310000617.20662-5-rajatja@google.com>
-Mime-Version: 1.0
-References: <20200310000617.20662-1-rajatja@google.com>
-X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
-Subject: [PATCH v7 4/4] drm/i915: Add support for integrated privacy screen
-From:   Rajat Jain <rajatja@google.com>
-To:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        "=?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?=" 
-        <ville.syrjala@linux.intel.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Imre Deak <imre.deak@intel.com>,
-        "=?UTF-8?q?Jos=C3=A9=20Roberto=20de=20Souza?=" <jose.souza@intel.com>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org, gregkh@linuxfoundation.org,
-        mathewk@google.com, Daniel Thompson <daniel.thompson@linaro.org>,
-        Jonathan Corbet <corbet@lwn.net>, Pavel Machek <pavel@denx.de>,
-        seanpaul@google.com, Duncan Laurie <dlaurie@google.com>,
-        jsbarnes@google.com, Thierry Reding <thierry.reding@gmail.com>,
-        mpearson@lenovo.com, Nitin Joshi1 <njoshi1@lenovo.com>,
-        Sugumaran Lacshiminarayanan <slacshiminar@lenovo.com>,
-        Tomoki Maruichi <maruichit@lenovo.com>
-Cc:     Rajat Jain <rajatja@google.com>, rajatxjain@gmail.com
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nOkimidvyE/85zDjV2EvZo2MwwHSxFziV1SbX9R/ibI=;
+        b=EtgbDLQ7rNknyA+IkoYfcGZlC8R+faRu7iOL8ZH+I5Qqv1Q+7x5huVL1C1ww3ZQXXw
+         1Dca9XjpXBMZBSEfp5xpuabMacoDwDjhNVWxc2vKANY1N7+sh089LDR0PMONd1jiEbvv
+         s8W6VqmHZb7X1CZXX3ttH2LVbkVTHm5N+Qx8oAJuC/t3BJS7qFtYtVHxZgLOnlLx86yi
+         58RohfCdgXRKMEMtDU4AMRk4RLqNXxiiyKde7DIOR7YonFjH4w6dpyOc6bcpRS27WFmC
+         pqysuDFBbTsN3UbEXWtY1Syf3xCNa6ziDkD2Ox7jiW7QkI3aDHpp53rttlBBHKWUquBE
+         HMwA==
+X-Gm-Message-State: ANhLgQ1m1HLFXEX8tlwsWha2lbXqHYTuVmrrKr/65MVGEBB6ulBOo5Hr
+        72cmSVlWMKEl3N0wzNYBMc6gv2VmzANzrFmcIJY=
+X-Google-Smtp-Source: ADFU+vvjCYjVO/XFpatNgn8tZurmWdaqMzx7frshrS7TT94YxiCF5e8FcMU3eOUTCYMk5SHGalsvUcqmR8ytYRc9NOc=
+X-Received: by 2002:a2e:9b90:: with SMTP id z16mr11153242lji.254.1583798948111;
+ Mon, 09 Mar 2020 17:09:08 -0700 (PDT)
+MIME-Version: 1.0
+References: <CAMe9rOoRTVUzNC88Ho2XTTNJCymrd3L=XdB9xFcgxPVwAZ0FWA@mail.gmail.com>
+ <AE81FEF5-ECC5-46AA-804D-9D64E656D16E@amacapital.net> <CAMe9rOoDMenvD9XRL1szR5yLQEwv9Q6f4O7CtwbdZ-cJqzezKA@mail.gmail.com>
+ <0088001c-0b12-a7dc-ff2a-9d5c282fa36b@intel.com> <CAMe9rOqf0OHL9397Vikgb=UWhRMf+FmGq-9VAJNmfmzNMMDkCw@mail.gmail.com>
+ <56ab33ac-865b-b37e-75f2-a489424566c3@intel.com> <CAMe9rOrzrXORQgcAwzGn+=PBvxCEgc5Km_TQq+P7uoqwiacJSA@mail.gmail.com>
+ <c06073a2-6858-d5dc-d74b-ef2568bd9423@intel.com> <CAMe9rOrxM=RefftngNXhP906mrW1SMy7vp+O=yOj_WwcdQpGcg@mail.gmail.com>
+ <CALCETrWF1NQeGXy0GXRwW71Bc3oSN=vsXMsBqnaqs7Us7RYebQ@mail.gmail.com>
+In-Reply-To: <CALCETrWF1NQeGXy0GXRwW71Bc3oSN=vsXMsBqnaqs7Us7RYebQ@mail.gmail.com>
+From:   "H.J. Lu" <hjl.tools@gmail.com>
+Date:   Mon, 9 Mar 2020 17:08:29 -0700
+Message-ID: <CAMe9rOpJjaro_qK6kghGNuSHDaP_MjVaZMbok2kbuBD48VmvXg@mail.gmail.com>
+Subject: Re: [RFC PATCH v9 01/27] Documentation/x86: Add CET description
+To:     Andy Lutomirski <luto@amacapital.net>
+Cc:     Dave Hansen <dave.hansen@intel.com>,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>, x86-patch-review@intel.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for an ACPI based integrated privacy screen that is
-available on some systems.
+On Mon, Mar 9, 2020 at 4:59 PM Andy Lutomirski <luto@amacapital.net> wrote:
+>
+> On Mon, Mar 9, 2020 at 4:52 PM H.J. Lu <hjl.tools@gmail.com> wrote:
+> >
+> > On Mon, Mar 9, 2020 at 4:21 PM Dave Hansen <dave.hansen@intel.com> wrote:
+> > >
+> > > On 3/9/20 4:11 PM, H.J. Lu wrote:
+> > > > A threaded application is loaded from disk.  The object file on disk is
+> > > > either CET enabled or not CET enabled.
+> > >
+> > > Huh.  Are you saying that all instructions executed on userspace on
+> > > Linux come off of object files on the disk?  That's an interesting
+> > > assertion.  You might want to go take a look at the processes on your
+> > > systems.  Here's my browser for example:
+> > >
+> > > # for p in $(ps aux | grep chromium | awk '{print $2}' ); do cat
+> > > /proc/$p/maps; done | grep ' r-xp 00000000 00:00 0'
+> > > ...
+> > > 202f00082000-202f000bf000 r-xp 00000000 00:00 0
+> > > 202f000c2000-202f000c3000 r-xp 00000000 00:00 0
+> > > 202f00102000-202f00103000 r-xp 00000000 00:00 0
+> > > 202f00142000-202f00143000 r-xp 00000000 00:00 0
+> > > 202f00182000-202f001bf000 r-xp 00000000 00:00 0
+> > >
+> > > Lots of funny looking memory areas which are anonymous and executable!
+> > > Those didn't come off the disk.  Same thing in firefox.  Weird.  Any
+> > > idea what those are?
+> > >
+> > > One guess: https://en.wikipedia.org/wiki/Just-in-time_compilation
+> >
+> > jitted code belongs to a process loaded from disk.  Enable CET in
+> > an application which uses JIT engine means to also enable CET in
+> > JIT engine.  Take git as an example, "git grep" crashed for me on Tiger
+> > Lake.   It turned out that git itself was compiled with -fcf-protection and
+> > git was linked against libpcre2-8.so.0 also compiled with -fcf-protection,
+> > which has a JIT, sljit, which was not CET enabled.  git crashed in the
+> > jitted codes due to missing ENDBR.  I had to enable CET in sljit to make
+> > git working on CET enabled Tiger Lake.  So we need to enable CET in
+> > JIT engine before enabling CET in applications which use JIT engine.
+>
+> This could presumably have been fixed by having libpcre or sljit
+> disable IBT before calling into JIT code or by running the JIT code in
+> another thread.  In the other direction, a non-CET libpcre build could
+> build IBT-capable JITted code and enable JIT (by syscall if we allow
+> that or by creating a thread?) when calling it.  And IBT has this
 
-Signed-off-by: Rajat Jain <rajatja@google.com>
----
-v7: * Move the privacy-screen property back into drm core.
-    * Do the actual HW EPS toggling at commit time.
-    * Provide a sample ACPI node for reference in comments.=20
-v6: Always initialize prop in intel_attach_privacy_screen_property()
-v5: fix a cosmetic checkpatch warning
-v4: Fix a typo in intel_privacy_screen.h
-v3: * Change license to GPL-2.0 OR MIT
-    * Move privacy screen enum from UAPI to intel_display_types.h
-    * Rename parameter name and some other minor changes.
-v2: Formed by splitting the original patch into multiple patches.
-    - All code has been moved into i915 now.
-    - Privacy screen is a i915 property
-    - Have a local state variable to store the prvacy screen. Don't read
-      it from hardware.
+This is not how thread in user space works.
 
- drivers/gpu/drm/i915/Makefile                 |   3 +-
- drivers/gpu/drm/i915/display/intel_atomic.c   |   1 +
- drivers/gpu/drm/i915/display/intel_dp.c       |  30 ++-
- .../drm/i915/display/intel_privacy_screen.c   | 175 ++++++++++++++++++
- .../drm/i915/display/intel_privacy_screen.h   |  27 +++
- 5 files changed, 234 insertions(+), 2 deletions(-)
- create mode 100644 drivers/gpu/drm/i915/display/intel_privacy_screen.c
- create mode 100644 drivers/gpu/drm/i915/display/intel_privacy_screen.h
+> fancy legacy bitmap to allow non-instrumented code to run with IBT on,
+> although SHSTK doesn't have hardware support for a similar feature.
 
-diff --git a/drivers/gpu/drm/i915/Makefile b/drivers/gpu/drm/i915/Makefile
-index 9f887a86e555d..da42389107f9c 100644
---- a/drivers/gpu/drm/i915/Makefile
-+++ b/drivers/gpu/drm/i915/Makefile
-@@ -209,7 +209,8 @@ i915-y +=3D \
- 	display/intel_vga.o
- i915-$(CONFIG_ACPI) +=3D \
- 	display/intel_acpi.o \
--	display/intel_opregion.o
-+	display/intel_opregion.o \
-+	display/intel_privacy_screen.o
- i915-$(CONFIG_DRM_FBDEV_EMULATION) +=3D \
- 	display/intel_fbdev.o
-=20
-diff --git a/drivers/gpu/drm/i915/display/intel_atomic.c b/drivers/gpu/drm/=
-i915/display/intel_atomic.c
-index d043057d2fa03..fc6264b4a7f73 100644
---- a/drivers/gpu/drm/i915/display/intel_atomic.c
-+++ b/drivers/gpu/drm/i915/display/intel_atomic.c
-@@ -150,6 +150,7 @@ int intel_digital_connector_atomic_check(struct drm_con=
-nector *conn,
- 	    new_conn_state->base.picture_aspect_ratio !=3D old_conn_state->base.p=
-icture_aspect_ratio ||
- 	    new_conn_state->base.content_type !=3D old_conn_state->base.content_t=
-ype ||
- 	    new_conn_state->base.scaling_mode !=3D old_conn_state->base.scaling_m=
-ode ||
-+	    new_conn_state->base.privacy_screen_status !=3D old_conn_state->base.=
-privacy_screen_status ||
- 	    !blob_equal(new_conn_state->base.hdr_output_metadata,
- 			old_conn_state->base.hdr_output_metadata))
- 		crtc_state->mode_changed =3D true;
-diff --git a/drivers/gpu/drm/i915/display/intel_dp.c b/drivers/gpu/drm/i915=
-/display/intel_dp.c
-index 41c623b029464..a39b0c420b50a 100644
---- a/drivers/gpu/drm/i915/display/intel_dp.c
-+++ b/drivers/gpu/drm/i915/display/intel_dp.c
-@@ -62,6 +62,7 @@
- #include "intel_lspcon.h"
- #include "intel_lvds.h"
- #include "intel_panel.h"
-+#include "intel_privacy_screen.h"
- #include "intel_psr.h"
- #include "intel_sideband.h"
- #include "intel_tc.h"
-@@ -5886,6 +5887,12 @@ intel_dp_connector_register(struct drm_connector *co=
-nnector)
- 		dev_priv->acpi_scan_done =3D true;
- 	}
-=20
-+	/* Check for integrated Privacy screen support */
-+	if (intel_privacy_screen_present(to_intel_connector(connector)))
-+		drm_connector_attach_privacy_screen_property(connector);
-+	else
-+		drm_connector_destroy_privacy_screen_property(connector);
-+
- 	DRM_DEBUG_KMS("registering %s bus for %s\n",
- 		      intel_dp->aux.name, connector->kdev->kobj.name);
-=20
-@@ -6881,9 +6888,30 @@ intel_dp_add_properties(struct intel_dp *intel_dp, s=
-truct drm_connector *connect
- 		drm_connector_attach_scaling_mode_property(connector, allowed_scalers);
-=20
- 		connector->state->scaling_mode =3D DRM_MODE_SCALE_ASPECT;
-+
-+		drm_connector_create_privacy_screen_property(connector);
- 	}
- }
-=20
-+static void intel_dp_update_privacy_screen(struct intel_encoder *encoder,
-+				const struct intel_crtc_state *crtc_state,
-+				const struct drm_connector_state *conn_state)
-+{
-+	struct drm_connector *connector =3D conn_state->connector;
-+
-+	if (connector->privacy_screen_property)
-+		intel_privacy_screen_set_val(to_intel_connector(connector),
-+					     conn_state->privacy_screen_status);
-+}
-+
-+static void intel_dp_update_pipe(struct intel_encoder *encoder,
-+				 const struct intel_crtc_state *crtc_state,
-+				 const struct drm_connector_state *conn_state)
-+{
-+	intel_dp_update_privacy_screen(encoder, crtc_state, conn_state);
-+	intel_panel_update_backlight(encoder, crtc_state, conn_state);
-+}
-+
- static void intel_dp_init_panel_power_timestamps(struct intel_dp *intel_dp=
-)
- {
- 	intel_dp->panel_power_off_time =3D ktime_get_boottime();
-@@ -7825,7 +7853,7 @@ bool intel_dp_init(struct drm_i915_private *dev_priv,
- 	intel_encoder->compute_config =3D intel_dp_compute_config;
- 	intel_encoder->get_hw_state =3D intel_dp_get_hw_state;
- 	intel_encoder->get_config =3D intel_dp_get_config;
--	intel_encoder->update_pipe =3D intel_panel_update_backlight;
-+	intel_encoder->update_pipe =3D intel_dp_update_pipe;
- 	intel_encoder->suspend =3D intel_dp_encoder_suspend;
- 	if (IS_CHERRYVIEW(dev_priv)) {
- 		intel_encoder->pre_pll_enable =3D chv_dp_pre_pll_enable;
-diff --git a/drivers/gpu/drm/i915/display/intel_privacy_screen.c b/drivers/=
-gpu/drm/i915/display/intel_privacy_screen.c
-new file mode 100644
-index 0000000000000..6ff61ddf4c0a4
---- /dev/null
-+++ b/drivers/gpu/drm/i915/display/intel_privacy_screen.c
-@@ -0,0 +1,175 @@
-+// SPDX-License-Identifier: GPL-2.0 OR MIT
-+/*
-+ * Intel ACPI privacy screen code
-+ *
-+ * Copyright =C2=A9 2020 Google Inc.
-+ *
-+ * This code can help detect and control an integrated EPS (electronic
-+ * privacy screen) via ACPI functions. It expects an ACPI node for the
-+ * drm connector device with the following elements:
-+ *
-+ * UUID should be "c7033113-8720-4ceb-9090-9d52b3e52d73"
-+ *
-+ * _ADR =3D ACPI address per Spec (also see intel_acpi_device_id_update())
-+ * https://uefi.org/sites/default/files/resources/ACPI_6_3_final_Jan30.pdf
-+ * Pages 1119 - 1123.
-+ *
-+ * _DSM method that will perform the following functions according to
-+ * Local1 argument passed to it:
-+ *  - Local1 =3D 0 (EPS capabilities): Report EPS presence and capabilitie=
-s.
-+ *  - Local1 =3D 1 (EPS State)  :  _DSM returns 1 if EPS is enabled, 0 oth=
-erwise.
-+ *  - Local1 =3D 2 (EPS Enable) :  _DSM enables EPS
-+ *  - Local1 =3D 3 (EPS Disable):  _DSM disables EPS
-+ *
-+ * Here is a sample ACPI node:
-+ *
-+ *  Scope (\_SB.PCI0.GFX0) // Intel graphics device (PCI device)
-+ *  {
-+ *      Method (_DOD, 0, NotSerialized)  // _DOD: Display Output Devices
-+ *      {
-+ *          Return (Package (0x01)
-+ *          {
-+ *              0x80010400
-+ *          })
-+ *      }
-+ *
-+ *      Device (LCD)
-+ *      {
-+ *          Name (_ADR, 0x80010400)  // _ADR: Address
-+ *          Name (_STA, 0x0F)  // _STA: Status
-+ *
-+ *          Method (EPSP, 0, NotSerialized) // EPS Present
-+ *          {
-+ *              Return (0x01)
-+ *          }
-+ *
-+ *          Method (EPSS, 0, NotSerialized) // EPS State
-+ *          {
-+ *              Local0 =3D \_SB.PCI0.GRXS (0xCD)
-+ *              Return (Local0)
-+ *          }
-+ *
-+ *          Method (EPSE, 0, NotSerialized) // EPS Enable
-+ *          {
-+ *              \_SB.PCI0.STXS (0xCD)
-+ *          }
-+ *
-+ *          Method (EPSD, 0, NotSerialized) // EPS Disable
-+ *          {
-+ *              \_SB.PCI0.CTXS (0xCD)
-+ *          }
-+ *
-+ *          Method (_DSM, 4, Serialized)  // _DSM: Device-Specific Method
-+ *          {
-+ *              ToBuffer (Arg0, Local0)
-+ *              If ((Local0 =3D=3D ToUUID ("c7033113-8720-4ceb-9090-9d52b3=
-e52d73")))
-+ *              {
-+ *                  ToInteger (Arg2, Local1)
-+ *                  If ((Local1 =3D=3D Zero))
-+ *                  {
-+ *                      Local2 =3D EPSP ()
-+ *                      If ((Local2 =3D=3D One))
-+ *                      {
-+ *                          Return (Buffer (One)
-+ *                          {
-+ *                               0x0F
-+ *                          })
-+ *                      }
-+ *                  }
-+ *
-+ *                  If ((Local1 =3D=3D One))
-+ *                  {
-+ *                      Return (EPSS ())
-+ *                  }
-+ *
-+ *                  If ((Local1 =3D=3D 0x02))
-+ *                  {
-+ *                      EPSE ()
-+ *                  }
-+ *
-+ *                  If ((Local1 =3D=3D 0x03))
-+ *                  {
-+ *                      EPSD ()
-+ *                  }
-+ *
-+ *                  Return (Buffer (One)
-+ *                  {
-+ *                       0x00
-+ *                  })
-+ *              }
-+ *
-+ *              Return (Buffer (One)
-+ *              {
-+ *                   0x00
-+ *              })
-+ *          }
-+ *      }
-+ *  }
-+ */
-+
-+#include <linux/acpi.h>
-+
-+#include "intel_privacy_screen.h"
-+
-+#define CONNECTOR_DSM_REVID 1
-+
-+#define CONNECTOR_DSM_FN_PRIVACY_ENABLE		2
-+#define CONNECTOR_DSM_FN_PRIVACY_DISABLE	3
-+
-+static const guid_t drm_conn_dsm_guid =3D
-+	GUID_INIT(0xC7033113, 0x8720, 0x4CEB,
-+		  0x90, 0x90, 0x9D, 0x52, 0xB3, 0xE5, 0x2D, 0x73);
-+
-+/* Makes _DSM call to set privacy screen status */
-+static void acpi_privacy_screen_call_dsm(struct intel_connector *connector=
-,
-+					 u64 func)
-+{
-+	union acpi_object *obj;
-+	acpi_handle acpi_handle =3D connector->acpi_handle;
-+
-+	if (!acpi_handle)
-+		return;
-+
-+	obj =3D acpi_evaluate_dsm(acpi_handle, &drm_conn_dsm_guid,
-+				CONNECTOR_DSM_REVID, func, NULL);
-+	if (!obj) {
-+		drm_err(connector->base.dev,
-+			"failed to evaluate _DSM for fn %llx\n", func);
-+		return;
-+	}
-+
-+	ACPI_FREE(obj);
-+}
-+
-+void intel_privacy_screen_set_val(struct intel_connector *connector,
-+				  enum drm_privacy_screen_status val)
-+{
-+	if (val =3D=3D PRIVACY_SCREEN_DISABLED)
-+		acpi_privacy_screen_call_dsm(connector,
-+					     CONNECTOR_DSM_FN_PRIVACY_DISABLE);
-+	else if (val =3D=3D PRIVACY_SCREEN_ENABLED)
-+		acpi_privacy_screen_call_dsm(connector,
-+					     CONNECTOR_DSM_FN_PRIVACY_ENABLE);
-+	else
-+		drm_err(connector->base.dev,
-+			"Cannot set privacy screen to invalid val %u\n", val);
-+}
-+
-+bool intel_privacy_screen_present(struct intel_connector *connector)
-+{
-+	acpi_handle handle =3D connector->acpi_handle;
-+
-+	if (!handle)
-+		return false;
-+
-+	if (!acpi_check_dsm(handle, &drm_conn_dsm_guid,
-+			    CONNECTOR_DSM_REVID,
-+			    1 << CONNECTOR_DSM_FN_PRIVACY_ENABLE |
-+			    1 << CONNECTOR_DSM_FN_PRIVACY_DISABLE)) {
-+		drm_dbg_kms(connector->base.dev,
-+			    "ACPI node but no privacy scrn\n");
-+		return false;
-+	}
-+	drm_info(connector->base.dev, "supports privacy screen\n");
-+	return true;
-+}
-diff --git a/drivers/gpu/drm/i915/display/intel_privacy_screen.h b/drivers/=
-gpu/drm/i915/display/intel_privacy_screen.h
-new file mode 100644
-index 0000000000000..f8d2e246ea0bd
---- /dev/null
-+++ b/drivers/gpu/drm/i915/display/intel_privacy_screen.h
-@@ -0,0 +1,27 @@
-+/* SPDX-License-Identifier: GPL-2.0 OR MIT */
-+/*
-+ * Copyright =C2=A9 2019 Google Inc.
-+ */
-+
-+#ifndef __DRM_PRIVACY_SCREEN_H__
-+#define __DRM_PRIVACY_SCREEN_H__
-+
-+#include "intel_display_types.h"
-+
-+#ifdef CONFIG_ACPI
-+bool intel_privacy_screen_present(struct intel_connector *connector);
-+void intel_privacy_screen_set_val(struct intel_connector *connector,
-+				  enum drm_privacy_screen_status val);
-+#else
-+static bool intel_privacy_screen_present(struct intel_connector *connector=
-)
-+{
-+	return false;
-+}
-+
-+static void
-+intel_privacy_screen_set_val(struct intel_connector *connector,
-+			     enum drm_privacy_screen_status val)
-+{ }
-+#endif /* CONFIG_ACPI */
-+
-+#endif /* __DRM_PRIVACY_SCREEN_H__ */
---=20
-2.25.1.481.gfbce0eb801-goog
+All these changes are called CET enabing.
 
+> So, sure, the glibc-linked ELF ecosystem needs some degree of CET
+> coordination, but it is absolutely not the case that a process MUST
+> have all CET or no CET.  Let's please support the complicated cases in
+> the kernel and the ABI too.  If glibc wants to make it annoying to do
+> complicated things, so be it.  People work behind glibc's back all the
+> time.
+
+CET is no different from NX in this regard.
+
+
+-- 
+H.J.
