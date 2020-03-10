@@ -2,576 +2,185 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D3EBC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 05:09:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 130F8C10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 05:17:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 490AE2467F
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 05:09:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583816978;
-	bh=a+O1uY+gF6EmAXiNhRbLqaV9Ui8ABiC4TVTZXyGDdds=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=N3Dy5AakBqcOL3udsF3xtycjGzRPFyuECR0K7uJ26/uEn8uTaApG4HMbSwf5lvPz8
-	 OFf2K3FtylR6NrlHXqeiH72V3OzsbfiOyq62e3FY0AtQZPqnvFYK68Si4F/hrMWtek
-	 3kEobHy1+6OBGr4ZqEQmGTKxWWGTUbklGAURDnZU=
+	by mail.kernel.org (Postfix) with ESMTP id D675B24655
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 05:17:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WSg4BIUK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726220AbgCJFJh (ORCPT
+        id S1726293AbgCJFQ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 01:09:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38314 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725988AbgCJFJh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 01:09:37 -0400
-Received: from localhost.localdomain (unknown [122.167.84.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7731624655;
-        Tue, 10 Mar 2020 05:09:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583816976;
-        bh=a+O1uY+gF6EmAXiNhRbLqaV9Ui8ABiC4TVTZXyGDdds=;
-        h=From:To:Cc:Subject:Date:From;
-        b=PcQHWNefEvf4WBIoOsEHzmEjB+lc6SpvmsdDZH0Z6K+/9wnA01+mySUcIqSlOtJsL
-         KriGj/7/Si/LAnx2cMQ3HRTe5+eTFTErrWRSAHzvQayg97iFa07ZwtUjVhEYJNnXuM
-         /GL+7DX6EPDFw7DlAgsGo3rjJ8WcmbxBzpQX3Nz0=
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     linux-arm-msm@vger.kernel.org,
-        Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        psodagud@codeaurora.org, tsoni@codeaurora.org,
-        jshriram@codeaurora.org, Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH] arm64: dts: qcom: sm8250: Add sm8250 dts file
-Date:   Tue, 10 Mar 2020 10:39:10 +0530
-Message-Id: <20200310050910.506854-1-vkoul@kernel.org>
-X-Mailer: git-send-email 2.24.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Tue, 10 Mar 2020 01:16:59 -0400
+Received: from mail-pl1-f201.google.com ([209.85.214.201]:45300 "EHLO
+        mail-pl1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726224AbgCJFQ7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 01:16:59 -0400
+Received: by mail-pl1-f201.google.com with SMTP id s6so5254744plp.12
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 22:16:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=TNtB+QSpy4uNCr/VYeHhGUHpJm44aSfYPkSBHYJ0zsw=;
+        b=WSg4BIUKLHoYQm/UXhi2utv1mRHFPdRhsVGHEtX37hLa6oKvf+GiEOyE40iROyKSf+
+         L8F8KCMSY/cpHRmKMpDK5fpqRQM8P7TbJm/Y+ZT7w3HU2m09s3n7nYI66paQrMjhnAsx
+         oSA3qeYL4hyN6rQC8zQrXFwCNsA67HPzYJJVlVE5ai9KnE1ahr9W70vJ+Tpw3xqWS5h2
+         OQY2h9TXySmUQic68Xmva58powbgn/8Fcnq6BG1k1/u742vQOOniW8UqSBo1e3jGV6Eg
+         zzbwVCS93BgxblcxdJjABsarILtkj4oJJpF9GaltxoxQuwVY2OU2qJz6tVGcGaCL6x5s
+         miZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=TNtB+QSpy4uNCr/VYeHhGUHpJm44aSfYPkSBHYJ0zsw=;
+        b=A0qTr8KQokGjQfulDIJ+E/g374xDYaTbCEE+CZN9CjFLDnNh8h3dpdkQKHhp2ZraP8
+         78na1wulThXHnRxziHzSi9D8+epWIU3/4AW8WCeJmQqEnoL32nL/+MewYuuU+0WbYGEk
+         VB8ZvqQ6IEXerOhETRI880BTVBzRRNE5SGey6NXNECqorcMr+204tuYdyHy0YBzKJK4y
+         g7Ni/CwIRaMYH9CJ6McZD28+x9Wpy3mA5BFe0I2Uh5F2E4/YOw8rqoaF1XHrEq2PLOYe
+         g9FVPpaEGUiDRlImBMd6JRDoeZSp9qUWLhJWE8hSolhWxgaXu4h9ubemHmSh+2+KO25Y
+         CJ9w==
+X-Gm-Message-State: ANhLgQ3yUn+hfc4yi0TG92to8s65+ytzRO/xcpsbNV223cwdmD1WW2Gc
+        Bz63/jMWKVJ6nEyElxaiZoaDHuoOmYgExQ==
+X-Google-Smtp-Source: ADFU+vvCgK2su0Vey9F/dsAYP7pK2PzEwMOn7opQOpgiX/aLfjRILGRM2uW867o24mCxDlVAb6tRZVuzSwHkyQ==
+X-Received: by 2002:a17:90a:8005:: with SMTP id b5mr1361533pjn.37.1583817417871;
+ Mon, 09 Mar 2020 22:16:57 -0700 (PDT)
+Date:   Mon,  9 Mar 2020 22:16:06 -0700
+In-Reply-To: <20200310051606.33121-1-shakeelb@google.com>
+Message-Id: <20200310051606.33121-2-shakeelb@google.com>
+Mime-Version: 1.0
+References: <20200310051606.33121-1-shakeelb@google.com>
+X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
+Subject: [PATCH v4 2/2] net: memcg: late association of sock to memcg
+From:   Shakeel Butt <shakeelb@google.com>
+To:     Eric Dumazet <edumazet@google.com>, Roman Gushchin <guro@fb.com>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Greg Thelen <gthelen@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        netdev@vger.kernel.org, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Shakeel Butt <shakeelb@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
+If a TCP socket is allocated in IRQ context or cloned from unassociated
+(i.e. not associated to a memcg) in IRQ context then it will remain
+unassociated for its whole life. Almost half of the TCPs created on the
+system are created in IRQ context, so, memory used by such sockets will
+not be accounted by the memcg.
 
-Add sm8250 devicetree file for SM8250 SoC and SM8250 MTP platform.
-This file adds the basic nodes like cpu, psci and other required
-configuration for booting up to the serial console.
+This issue is more widespread in cgroup v1 where network memory
+accounting is opt-in but it can happen in cgroup v2 if the source socket
+for the cloning was created in root memcg.
 
-Signed-off-by: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+To fix the issue, just do the association of the sockets at the accept()
+time in the process context and then force charge the memory buffer
+already used and reserved by the socket.
+
+Signed-off-by: Shakeel Butt <shakeelb@google.com>
 ---
- arch/arm64/boot/dts/qcom/Makefile       |   1 +
- arch/arm64/boot/dts/qcom/sm8250-mtp.dts |  29 ++
- arch/arm64/boot/dts/qcom/sm8250.dtsi    | 444 ++++++++++++++++++++++++
- 3 files changed, 474 insertions(+)
- create mode 100644 arch/arm64/boot/dts/qcom/sm8250-mtp.dts
- create mode 100644 arch/arm64/boot/dts/qcom/sm8250.dtsi
+Changes since v3:
+- Moved the memcg association completely at accept time.
 
-diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-index 973c0f079659..c6014c0340ed 100644
---- a/arch/arm64/boot/dts/qcom/Makefile
-+++ b/arch/arm64/boot/dts/qcom/Makefile
-@@ -22,5 +22,6 @@ dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-db845c.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-mtp.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sdm850-lenovo-yoga-c630.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sm8150-mtp.dtb
-+dtb-$(CONFIG_ARCH_QCOM)	+= sm8250-mtp.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= qcs404-evb-1000.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= qcs404-evb-4000.dtb
-diff --git a/arch/arm64/boot/dts/qcom/sm8250-mtp.dts b/arch/arm64/boot/dts/qcom/sm8250-mtp.dts
-new file mode 100644
-index 000000000000..224d0f1ea6f9
---- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/sm8250-mtp.dts
-@@ -0,0 +1,29 @@
-+// SPDX-License-Identifier: BSD-3-Clause
-+/*
-+ * Copyright (c) 2020, The Linux Foundation. All rights reserved.
-+ */
-+
-+/dts-v1/;
-+
-+#include "sm8250.dtsi"
-+
-+/ {
-+	model = "Qualcomm Technologies, Inc. SM8250 MTP";
-+	compatible = "qcom,sm8250-mtp";
-+
-+	aliases {
-+		serial0 = &uart2;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+};
-+
-+&qupv3_id_1 {
-+	status = "okay";
-+};
-+
-+&uart2 {
-+	status = "okay";
-+};
-diff --git a/arch/arm64/boot/dts/qcom/sm8250.dtsi b/arch/arm64/boot/dts/qcom/sm8250.dtsi
-new file mode 100644
-index 000000000000..1373bc53dec9
---- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/sm8250.dtsi
-@@ -0,0 +1,444 @@
-+// SPDX-License-Identifier: BSD-3-Clause
-+/*
-+ * Copyright (c) 2020, The Linux Foundation. All rights reserved.
-+ */
-+
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/clock/qcom,rpmh.h>
-+#include <dt-bindings/soc/qcom,rpmh-rsc.h>
-+
-+/ {
-+	interrupt-parent = <&intc>;
-+
-+	#address-cells = <2>;
-+	#size-cells = <2>;
-+
-+	chosen { };
-+
-+	clocks {
-+		xo_board: xo-board {
-+			compatible = "fixed-clock";
-+			#clock-cells = <0>;
-+			clock-frequency = <38400000>;
-+			clock-output-names = "xo_board";
-+		};
-+
-+		sleep_clk: sleep-clk {
-+			compatible = "fixed-clock";
-+			clock-frequency = <32000>;
-+			#clock-cells = <1>;
-+		};
-+	};
-+
-+	cpus {
-+		#address-cells = <2>;
-+		#size-cells = <0>;
-+
-+		CPU0: cpu@0 {
-+			device_type = "cpu";
-+			compatible = "qcom,kryo485";
-+			reg = <0x0 0x0>;
-+			enable-method = "psci";
-+			next-level-cache = <&L2_0>;
-+			L2_0: l2-cache {
-+			      compatible = "cache";
-+			      next-level-cache = <&L3_0>;
-+				L3_0: l3-cache {
-+				      compatible = "cache";
-+				};
-+			};
-+		};
-+
-+		CPU1: cpu@100 {
-+			device_type = "cpu";
-+			compatible = "qcom,kryo485";
-+			reg = <0x0 0x100>;
-+			enable-method = "psci";
-+			next-level-cache = <&L2_100>;
-+			L2_100: l2-cache {
-+			      compatible = "cache";
-+			      next-level-cache = <&L3_0>;
-+			};
-+		};
-+
-+		CPU2: cpu@200 {
-+			device_type = "cpu";
-+			compatible = "qcom,kryo485";
-+			reg = <0x0 0x200>;
-+			enable-method = "psci";
-+			next-level-cache = <&L2_200>;
-+			L2_200: l2-cache {
-+			      compatible = "cache";
-+			      next-level-cache = <&L3_0>;
-+			};
-+		};
-+
-+		CPU3: cpu@300 {
-+			device_type = "cpu";
-+			compatible = "qcom,kryo485";
-+			reg = <0x0 0x300>;
-+			enable-method = "psci";
-+			next-level-cache = <&L2_300>;
-+			L2_300: l2-cache {
-+			      compatible = "cache";
-+			      next-level-cache = <&L3_0>;
-+			};
-+		};
-+
-+		CPU4: cpu@400 {
-+			device_type = "cpu";
-+			compatible = "qcom,kryo485";
-+			reg = <0x0 0x400>;
-+			enable-method = "psci";
-+			next-level-cache = <&L2_400>;
-+			L2_400: l2-cache {
-+			      compatible = "cache";
-+			      next-level-cache = <&L3_0>;
-+			};
-+		};
-+
-+		CPU5: cpu@500 {
-+			device_type = "cpu";
-+			compatible = "qcom,kryo485";
-+			reg = <0x0 0x500>;
-+			enable-method = "psci";
-+			next-level-cache = <&L2_500>;
-+			L2_500: l2-cache {
-+			      compatible = "cache";
-+			      next-level-cache = <&L3_0>;
-+			};
-+
-+		};
-+
-+		CPU6: cpu@600 {
-+			device_type = "cpu";
-+			compatible = "qcom,kryo485";
-+			reg = <0x0 0x600>;
-+			enable-method = "psci";
-+			next-level-cache = <&L2_600>;
-+			L2_600: l2-cache {
-+			      compatible = "cache";
-+			      next-level-cache = <&L3_0>;
-+			};
-+		};
-+
-+		CPU7: cpu@700 {
-+			device_type = "cpu";
-+			compatible = "qcom,kryo485";
-+			reg = <0x0 0x700>;
-+			enable-method = "psci";
-+			next-level-cache = <&L2_700>;
-+			L2_700: l2-cache {
-+			      compatible = "cache";
-+			      next-level-cache = <&L3_0>;
-+			};
-+		};
-+	};
-+
-+	firmware {
-+		scm: scm {
-+			compatible = "qcom,scm";
-+			#reset-cells = <1>;
-+		};
-+	};
-+
-+	tcsr_mutex: hwlock {
-+		compatible = "qcom,tcsr-mutex";
-+		syscon = <&tcsr_mutex_regs 0 0x1000>;
-+		#hwlock-cells = <1>;
-+	};
-+
-+	memory@80000000 {
-+		device_type = "memory";
-+		/* We expect the bootloader to fill in the size */
-+		reg = <0x0 0x80000000 0x0 0x0>;
-+	};
-+
-+	pmu {
-+		compatible = "arm,armv8-pmuv3";
-+		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_HIGH>;
-+	};
-+
-+	psci {
-+		compatible = "arm,psci-1.0";
-+		method = "smc";
-+	};
-+
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		hyp_mem: memory@80000000 {
-+			reg = <0x0 0x80000000 0x0 0x600000>;
-+			no-map;
-+		};
-+
-+		xbl_aop_mem: memory@80700000 {
-+			reg = <0x0 0x80700000 0x0 0x160000>;
-+			no-map;
-+		};
-+
-+		cmd_db: memory@80860000 {
-+			compatible = "qcom,cmd-db";
-+			reg = <0x0 0x80860000 0x0 0x20000>;
-+			no-map;
-+		};
-+
-+		smem_mem: memory@80900000 {
-+			reg = <0x0 0x80900000 0x0 0x200000>;
-+			no-map;
-+		};
-+
-+		removed_mem: memory@80b00000 {
-+			reg = <0x0 0x80b00000 0x0 0x5300000>;
-+			no-map;
-+		};
-+
-+		camera_mem: memory@86200000 {
-+			reg = <0x0 0x86200000 0x0 0x500000>;
-+			no-map;
-+		};
-+
-+		wlan_mem: memory@86700000 {
-+			reg = <0x0 0x86700000 0x0 0x100000>;
-+			no-map;
-+		};
-+
-+		ipa_fw_mem: memory@86800000 {
-+			reg = <0x0 0x86800000 0x0 0x10000>;
-+			no-map;
-+		};
-+
-+		ipa_gsi_mem: memory@86810000 {
-+			reg = <0x0 0x86810000 0x0 0xa000>;
-+			no-map;
-+		};
-+
-+		gpu_mem: memory@8681a000 {
-+			reg = <0x0 0x8681a000 0x0 0x2000>;
-+			no-map;
-+		};
-+
-+		npu_mem: memory@86900000 {
-+			reg = <0x0 0x86900000 0x0 0x500000>;
-+			no-map;
-+		};
-+
-+		video_mem: memory@86e00000 {
-+			reg = <0x0 0x86e00000 0x0 0x500000>;
-+			no-map;
-+		};
-+
-+		cvp_mem: memory@87300000 {
-+			reg = <0x0 0x87300000 0x0 0x500000>;
-+			no-map;
-+		};
-+
-+		cdsp_mem: memory@87800000 {
-+			reg = <0x0 0x87800000 0x0 0x1400000>;
-+			no-map;
-+		};
-+
-+		slpi_mem: memory@88c00000 {
-+			reg = <0x0 0x88c00000 0x0 0x1500000>;
-+			no-map;
-+		};
-+
-+		adsp_mem: memory@8a100000 {
-+			reg = <0x0 0x8a100000 0x0 0x1d00000>;
-+			no-map;
-+		};
-+
-+		spss_mem: memory@8be00000 {
-+			reg = <0x0 0x8be00000 0x0 0x100000>;
-+			no-map;
-+		};
-+
-+		cdsp_secure_heap: memory@8bf00000 {
-+			reg = <0x0 0x8bf00000 0x0 0x4600000>;
-+			no-map;
-+		};
-+	};
-+
-+	smem: qcom,smem {
-+		compatible = "qcom,smem";
-+		memory-region = <&smem_mem>;
-+		hwlocks = <&tcsr_mutex 3>;
-+	};
-+
-+	soc: soc@0 {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges = <0 0 0 0 0x10 0>;
-+		dma-ranges = <0 0 0 0 0x10 0>;
-+		compatible = "simple-bus";
-+
-+		gcc: clock-controller@100000 {
-+			compatible = "qcom,gcc-sm8250";
-+			reg = <0x0 0x00100000 0x0 0x1f0000>;
-+			#clock-cells = <1>;
-+			#reset-cells = <1>;
-+			#power-domain-cells = <1>;
-+			clock-names = "bi_tcxo", "sleep_clk";
-+			clocks = <&rpmhcc RPMH_CXO_CLK>, <&sleep_clk>;
-+		};
-+
-+		qupv3_id_1: geniqup@ac0000 {
-+			compatible = "qcom,geni-se-qup";
-+			reg = <0x0 0x00ac0000 0x0 0x6000>;
-+			clock-names = "m-ahb", "s-ahb";
-+			clocks = <&gcc 133>, <&gcc 134>;
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			ranges;
-+			status = "disabled";
-+
-+			uart2: serial@a90000 {
-+				compatible = "qcom,geni-debug-uart";
-+				reg = <0x0 0x00a90000 0x0 0x4000>;
-+				clock-names = "se";
-+				clocks = <&gcc 113>;
-+				interrupts = <GIC_SPI 357 IRQ_TYPE_LEVEL_HIGH>;
-+				status = "disabled";
-+			};
-+		};
-+
-+		intc: interrupt-controller@17a00000 {
-+			compatible = "arm,gic-v3";
-+			#interrupt-cells = <3>;
-+			interrupt-controller;
-+			reg = <0x0 0x17a00000 0x0 0x10000>,     /* GICD */
-+			      <0x0 0x17a60000 0x0 0x100000>;    /* GICR * 8 */
-+			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+
-+		pdc: interrupt-controller@b220000 {
-+			compatible = "qcom,sm8250-pdc";
-+			reg = <0x0b220000 0x30000>, <0x17c000f0 0x60>;
-+			qcom,pdc-ranges = <0 480 94>, <94 609 31>,
-+					  <125 63 1>, <126 716 12>;
-+			#interrupt-cells = <2>;
-+			interrupt-parent = <&intc>;
-+			interrupt-controller;
-+		};
-+
-+		spmi: qcom,spmi@c440000 {
-+			compatible = "qcom,spmi-pmic-arb";
-+			reg = <0x0 0x0c440000 0x0 0x0001100>,
-+			      <0x0 0x0c600000 0x0 0x2000000>,
-+			      <0x0 0x0e600000 0x0 0x0100000>,
-+			      <0x0 0x0e700000 0x0 0x00a0000>,
-+			      <0x0 0x0c40a000 0x0 0x0026000>;
-+			reg-names = "core", "chnls", "obsrvr", "intr", "cnfg";
-+			interrupt-names = "periph_irq";
-+			interrupts-extended = <&pdc 1 IRQ_TYPE_LEVEL_HIGH>;
-+			qcom,ee = <0>;
-+			qcom,channel = <0>;
-+			#address-cells = <2>;
-+			#size-cells = <0>;
-+			interrupt-controller;
-+			#interrupt-cells = <4>;
-+		};
-+
-+		apps_rsc: rsc@18200000 {
-+			label = "apps_rsc";
-+			compatible = "qcom,rpmh-rsc";
-+			reg = <0x0 0x18200000 0x0 0x10000>,
-+				<0x0 0x18210000 0x0 0x10000>,
-+				<0x0 0x18220000 0x0 0x10000>;
-+			reg-names = "drv-0", "drv-1", "drv-2";
-+			interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
-+			qcom,tcs-offset = <0xd00>;
-+			qcom,drv-id = <2>;
-+			qcom,tcs-config = <ACTIVE_TCS  2>, <SLEEP_TCS   3>,
-+					  <WAKE_TCS    3>, <CONTROL_TCS 1>;
-+
-+			rpmhcc: clock-controller {
-+				compatible = "qcom,sm8250-rpmh-clk";
-+				#clock-cells = <1>;
-+				clock-names = "xo";
-+				clocks = <&xo_board>;
-+			};
-+		};
-+
-+		tcsr_mutex_regs: syscon@1f40000 {
-+			compatible = "syscon";
-+			reg = <0x0 0x01f40000 0x0 0x40000>;
-+		};
-+
-+		timer@17c20000 {
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			ranges;
-+			compatible = "arm,armv7-timer-mem";
-+			reg = <0x0 0x17c20000 0x0 0x1000>;
-+			clock-frequency = <19200000>;
-+
-+			frame@17c21000 {
-+				frame-number = <0>;
-+				interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
-+					     <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
-+				reg = <0x0 0x17c21000 0x0 0x1000>,
-+				      <0x0 0x17c22000 0x0 0x1000>;
-+			};
-+
-+			frame@17c23000 {
-+				frame-number = <1>;
-+				interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
-+				reg = <0x0 0x17c23000 0x0 0x1000>;
-+				status = "disabled";
-+			};
-+
-+			frame@17c25000 {
-+				frame-number = <2>;
-+				interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
-+				reg = <0x0 0x17c25000 0x0 0x1000>;
-+				status = "disabled";
-+			};
-+
-+			frame@17c27000 {
-+				frame-number = <3>;
-+				interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
-+				reg = <0x0 0x17c27000 0x0 0x1000>;
-+				status = "disabled";
-+			};
-+
-+			frame@17c29000 {
-+				frame-number = <4>;
-+				interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
-+				reg = <0x0 0x17c29000 0x0 0x1000>;
-+				status = "disabled";
-+			};
-+
-+			frame@17c2b000 {
-+				frame-number = <5>;
-+				interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
-+				reg = <0x0 0x17c2b000 0x0 0x1000>;
-+				status = "disabled";
-+			};
-+
-+			frame@17c2d000 {
-+				frame-number = <6>;
-+				interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
-+				reg = <0x0 0x17c2d000 0x0 0x1000>;
-+				status = "disabled";
-+			};
-+		};
-+
-+	};
-+
-+	timer {
-+		compatible = "arm,armv8-timer";
-+		interrupts = <GIC_PPI 13
-+				(GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 14
-+				(GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 11
-+				(GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 12
-+				(GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>;
-+	};
-+};
+Changes since v2:
+- Additional check for charging.
+- Release the sock after charging.
+
+Changes since v1:
+- added sk->sk_rmem_alloc to initial charging.
+- added synchronization to get memory usage and set sk_memcg race-free.
+
+ mm/memcontrol.c                 | 14 --------------
+ net/core/sock.c                 |  5 ++++-
+ net/ipv4/inet_connection_sock.c | 20 ++++++++++++++++++++
+ 3 files changed, 24 insertions(+), 15 deletions(-)
+
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index 06a889b0538b..351603c6c1c9 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -6737,20 +6737,6 @@ void mem_cgroup_sk_alloc(struct sock *sk)
+ 	if (!mem_cgroup_sockets_enabled)
+ 		return;
+ 
+-	/*
+-	 * Socket cloning can throw us here with sk_memcg already
+-	 * filled. It won't however, necessarily happen from
+-	 * process context. So the test for root memcg given
+-	 * the current task's memcg won't help us in this case.
+-	 *
+-	 * Respecting the original socket's memcg is a better
+-	 * decision in this case.
+-	 */
+-	if (sk->sk_memcg) {
+-		css_get(&sk->sk_memcg->css);
+-		return;
+-	}
+-
+ 	/* Do not associate the sock with unrelated interrupted task's memcg. */
+ 	if (in_interrupt())
+ 		return;
+diff --git a/net/core/sock.c b/net/core/sock.c
+index e4af4dbc1c9e..0fc8937a7ff4 100644
+--- a/net/core/sock.c
++++ b/net/core/sock.c
+@@ -1832,7 +1832,10 @@ struct sock *sk_clone_lock(const struct sock *sk, const gfp_t priority)
+ 		atomic_set(&newsk->sk_zckey, 0);
+ 
+ 		sock_reset_flag(newsk, SOCK_DONE);
+-		mem_cgroup_sk_alloc(newsk);
++
++		/* sk->sk_memcg will be populated at accept() time */
++		newsk->sk_memcg = NULL;
++
+ 		cgroup_sk_alloc(&newsk->sk_cgrp_data);
+ 
+ 		rcu_read_lock();
+diff --git a/net/ipv4/inet_connection_sock.c b/net/ipv4/inet_connection_sock.c
+index a4db79b1b643..65a3b2565102 100644
+--- a/net/ipv4/inet_connection_sock.c
++++ b/net/ipv4/inet_connection_sock.c
+@@ -482,6 +482,26 @@ struct sock *inet_csk_accept(struct sock *sk, int flags, int *err, bool kern)
+ 		}
+ 		spin_unlock_bh(&queue->fastopenq.lock);
+ 	}
++
++	if (mem_cgroup_sockets_enabled) {
++		int amt;
++
++		/* atomically get the memory usage, set and charge the
++		 * sk->sk_memcg.
++		 */
++		lock_sock(newsk);
++
++		/* The sk has not been accepted yet, no need to look at
++		 * sk->sk_wmem_queued.
++		 */
++		amt = sk_mem_pages(newsk->sk_forward_alloc +
++				   atomic_read(&sk->sk_rmem_alloc));
++		mem_cgroup_sk_alloc(newsk);
++		if (newsk->sk_memcg && amt)
++			mem_cgroup_charge_skmem(newsk->sk_memcg, amt);
++
++		release_sock(newsk);
++	}
+ out:
+ 	release_sock(sk);
+ 	if (req)
 -- 
-2.24.1
+2.25.1.481.gfbce0eb801-goog
 
