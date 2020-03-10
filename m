@@ -2,102 +2,70 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8104BC18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 17:14:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46BA8C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 17:17:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A48821D56
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 17:14:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22D8D2146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 17:17:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727007AbgCJROQ (ORCPT
+        id S1726477AbgCJRR5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 13:14:16 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2543 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726504AbgCJROQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 13:14:16 -0400
-Received: from lhreml702-cah.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id 52588B476245A54C551D;
-        Tue, 10 Mar 2020 17:14:14 +0000 (GMT)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- lhreml702-cah.china.huawei.com (10.201.108.43) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Tue, 10 Mar 2020 17:14:13 +0000
-Received: from [127.0.0.1] (10.202.226.45) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5; Tue, 10 Mar
- 2020 17:14:13 +0000
-Subject: Re: linux-next: Tree for Mar 10 (mtd/spi-nor/)
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-CC:     <linux-mtd@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Joe Perches <joe@perches.com>, Mark Brown <broonie@kernel.org>
-References: <20200310201923.24e34363@canb.auug.org.au>
- <43df5279-7d91-020d-1632-9b3528f4feee@infradead.org>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <f9d33b09-fe9f-2c26-96dc-b2eaa53c614b@huawei.com>
-Date:   Tue, 10 Mar 2020 17:14:13 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Tue, 10 Mar 2020 13:17:57 -0400
+Received: from ms.lwn.net ([45.79.88.28]:44048 "EHLO ms.lwn.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726395AbgCJRR5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 13:17:57 -0400
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id 851432E4;
+        Tue, 10 Mar 2020 17:17:56 +0000 (UTC)
+Date:   Tue, 10 Mar 2020 11:17:55 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Jonathan =?UTF-8?B?TmV1c2Now6RmZXI=?= <j.neuschaefer@gmx.net>
+Cc:     linux-doc@vger.kernel.org,
+        Federico Vaga <federico.vaga@vaga.pv.it>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] docs: it_IT: netdev-FAQ: Fix link to original document
+Message-ID: <20200310111755.31b5c0a3@lwn.net>
+In-Reply-To: <20200305205123.8569-1-j.neuschaefer@gmx.net>
+References: <20200305205123.8569-1-j.neuschaefer@gmx.net>
+Organization: LWN.net
 MIME-Version: 1.0
-In-Reply-To: <43df5279-7d91-020d-1632-9b3528f4feee@infradead.org>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.45]
-X-ClientProxiedBy: lhreml706-chm.china.huawei.com (10.201.108.55) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+
+On Thu,  5 Mar 2020 21:51:21 +0100
+Jonathan Neuschäfer <j.neuschaefer@gmx.net> wrote:
 
-On 10/03/2020 14:37, Randy Dunlap wrote:
-> On 3/10/20 2:19 AM, Stephen Rothwell wrote:
->> Hi all,
->>
->> Changes since 20200306:
->>
->> Removed tree: nfc-next (abanboned)
+> Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
+> ---
+>  Documentation/translations/it_IT/networking/netdev-FAQ.rst | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
->                                doned
+> diff --git a/Documentation/translations/it_IT/networking/netdev-FAQ.rst b/Documentation/translations/it_IT/networking/netdev-FAQ.rst
+> index 8489ead7cff1..7e2456bb7d92 100644
+> --- a/Documentation/translations/it_IT/networking/netdev-FAQ.rst
+> +++ b/Documentation/translations/it_IT/networking/netdev-FAQ.rst
+> @@ -1,6 +1,6 @@
+>  .. include:: ../disclaimer-ita.rst
 > 
+> -:Original: :ref:`Documentation/process/stable-kernel-rules.rst <stable_kernel_rules>`
+> +:Original: :ref:`Documentation/networking/netdev-FAQ.rst <netdev-FAQ>`
 > 
-> on i386:
+>  .. _it_netdev-FAQ:
 > 
-> WARNING: unmet direct dependencies detected for MTD_SPI_NOR
+> --
+> 2.20.1
+> 
+Applied, thanks.
 
-Uh, so kbuild honors a "select" of a config option which has unmet 
-dependencies:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/kbuild/kconfig-language.rst?h=v5.6-rc5#n143
-
-So this looks introduced by:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/drivers/spi/Kconfig?h=next-20200310&id=e14572c52546c16e159c4c1814984843a119e823
-
->    Depends on [m]: MTD [=m] && SPI_MASTER [=y] >    Selected by [y]:
->    - SPI_HISI_SFC_V3XX [=y] && SPI [=y] && SPI_MASTER [=y] && (ARM64 && ACPI [=y] || COMPILE_TEST [=y]) && HAS_IOMEM [=y]
-> 
-> ERROR: "spi_nor_scan" [drivers/mtd/spi-nor/intel-spi.ko] undefined!
-> ERROR: "spi_nor_scan" [drivers/mtd/spi-nor/mtk-quadspi.ko] undefined!
-> ERROR: "spi_nor_scan" [drivers/mtd/spi-nor/hisi-sfc.ko] undefined!
-> ERROR: "spi_nor_scan" [drivers/mtd/spi-nor/aspeed-smc.ko] undefined!
-> 
-> 
-> Full randconfig file is attached.
-> 
-> 
-> ______________________________________________________
-> Linux MTD discussion mailing list
-> http://lists.infradead.org/mailman/listinfo/linux-mtd/
-> 
-
+jon
