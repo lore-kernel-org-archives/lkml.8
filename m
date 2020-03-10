@@ -4,62 +4,101 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E818EC10DCE
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 01:12:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B92BC10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 01:12:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C99CF206EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 01:12:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3B0B206F7
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 01:12:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727428AbgCMBMB (ORCPT
+        id S1727222AbgCMBL0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 21:12:01 -0400
-Received: from 97-93-29-23.dhcp.snlo.ca.charter.com ([97.93.29.23]:54474 "EHLO
+        Thu, 12 Mar 2020 21:11:26 -0400
+Received: from 97-93-29-23.dhcp.snlo.ca.charter.com ([97.93.29.23]:54444 "EHLO
         skomatineni-linux.nvidia.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727179AbgCMBL1 (ORCPT
+        by vger.kernel.org with ESMTP id S1726971AbgCMBL0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 21:11:27 -0400
-X-Greylist: delayed 91210 seconds by postgrey-1.27 at vger.kernel.org; Thu, 12 Mar 2020 21:11:26 EDT
+        Thu, 12 Mar 2020 21:11:26 -0400
 Received: by skomatineni-linux.nvidia.com (Postfix, from userid 1000)
-        id 070701040081; Tue, 10 Mar 2020 21:02:53 -0700 (PDT)
+        id 402D0104006E; Mon,  9 Mar 2020 17:13:27 -0700 (PDT)
 From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     skomatineni@nvidia.com, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, robh+dt@kernel.org, josephl@nvidia.com,
-        daniel.lezcano@linaro.org, mmaddireddy@nvidia.com,
-        nkristam@nvidia.com
-Cc:     devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v1] arm64: tegra: Add reset-cells to mc
-Date:   Tue, 10 Mar 2020 21:02:46 -0700
-Message-Id: <1583899366-1588-1-git-send-email-skomatineni@nvidia.com>
+To:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
+        baolin.wang@linaro.org, kstewart@linuxfoundation.org,
+        tglx@linutronix.de, bradleybolen@gmail.com,
+        gregkh@linuxfoundation.org, thierry.reding@gmail.com,
+        jonathanh@nvidia.com
+Cc:     skomatineni@nvidia.com, anrao@nvidia.com,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mmc@vger.kernel.org
+Subject: [PATCH v1 1/3] mmc: core: Add capability for hosts supporting long HW busy wait
+Date:   Mon,  9 Mar 2020 17:13:23 -0700
+Message-Id: <1583799205-8442-1-git-send-email-skomatineni@nvidia.com>
 X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tegra210 device tree is missing reset-cells property for mc node.
+Some mmc operation like SLEEP_AWAKE and cache flush through SWITCH
+command takes longer time and for host controllers supporting HW
+busy detection, core driver converts R1B type to R1 type response
+for these commands if operation time is more than HW busy timeout
+and uses SW poll for busy state.
 
-This patch fixes it.
+This patch adds a host capability MMC_CAP2_LONG_WAIT_HW_BUSY for
+hosts supporting long or infinite busy wait of HW busy detection
+for these long mmc operations and prevents core driver from
+converting R1B to R1 response type.
 
 Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 ---
- arch/arm64/boot/dts/nvidia/tegra210.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/mmc/core/mmc.c     | 3 ++-
+ drivers/mmc/core/mmc_ops.c | 3 ++-
+ include/linux/mmc/host.h   | 1 +
+ 3 files changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra210.dtsi b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-index 66dd1df..9241163 100644
---- a/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-@@ -935,6 +935,7 @@
- 		interrupts = <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>;
+diff --git a/drivers/mmc/core/mmc.c b/drivers/mmc/core/mmc.c
+index c2abd41..5aea3a6 100644
+--- a/drivers/mmc/core/mmc.c
++++ b/drivers/mmc/core/mmc.c
+@@ -1916,7 +1916,8 @@ static int mmc_sleep(struct mmc_host *host)
+ 	 * from doing hw busy detection, which is done by converting to a R1
+ 	 * response instead of a R1B.
+ 	 */
+-	if (host->max_busy_timeout && (timeout_ms > host->max_busy_timeout)) {
++	if (host->max_busy_timeout && (timeout_ms > host->max_busy_timeout) &&
++	    !(host->caps2 & MMC_CAP2_LONG_WAIT_HW_BUSY)) {
+ 		cmd.flags = MMC_RSP_R1 | MMC_CMD_AC;
+ 	} else {
+ 		cmd.flags = MMC_RSP_R1B | MMC_CMD_AC;
+diff --git a/drivers/mmc/core/mmc_ops.c b/drivers/mmc/core/mmc_ops.c
+index aa0cab1..251b4c7 100644
+--- a/drivers/mmc/core/mmc_ops.c
++++ b/drivers/mmc/core/mmc_ops.c
+@@ -579,7 +579,8 @@ int __mmc_switch(struct mmc_card *card, u8 set, u8 index, u8 value,
+ 	 * the host to avoid HW busy detection, by converting to a R1 response
+ 	 * instead of a R1B.
+ 	 */
+-	if (host->max_busy_timeout && (timeout_ms > host->max_busy_timeout))
++	if (host->max_busy_timeout && (timeout_ms > host->max_busy_timeout) &&
++	    !(host->caps2 & MMC_CAP2_LONG_WAIT_HW_BUSY))
+ 		use_r1b_resp = false;
  
- 		#iommu-cells = <1>;
-+		#reset-cells = <1>;
- 	};
+ 	cmd.opcode = MMC_SWITCH;
+diff --git a/include/linux/mmc/host.h b/include/linux/mmc/host.h
+index 6aaa15e..1cda4dd 100644
+--- a/include/linux/mmc/host.h
++++ b/include/linux/mmc/host.h
+@@ -371,6 +371,7 @@ struct mmc_host {
+ #define MMC_CAP2_CQE_DCMD	(1 << 24)	/* CQE can issue a direct command */
+ #define MMC_CAP2_AVOID_3_3V	(1 << 25)	/* Host must negotiate down from 3.3V */
+ #define MMC_CAP2_MERGE_CAPABLE	(1 << 26)	/* Host can merge a segment over the segment size */
++#define MMC_CAP2_LONG_WAIT_HW_BUSY (1 << 27)	/* Host can support long busy timeout, do not convert R1B to R1 response */
  
- 	sata@70020000 {
+ 	int			fixed_drv_type;	/* fixed driver type for non-removable media */
+ 
 -- 
 2.7.4
 
