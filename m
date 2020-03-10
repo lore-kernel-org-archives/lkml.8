@@ -2,165 +2,175 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=FORGED_MUA_MOZILLA,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F3A0C18E7A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:43:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2445BC18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:43:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6831824685
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:43:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E957520675
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:43:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583847821;
+	bh=ZbUxE4qmaJpjCh53VNItYQAdXkWgNpvqmaDLJujFXdc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=rVrDbouMis220PBqhoVHiCiiOHBZVPv7IDJG88q0Hv/8Gtugf4FGadBjqEgkfh0Xe
+	 2gDWiG9dtkC4pKKg21lm3hKj1X+1EgV4NCcuysx5xaA3XmqBg+Al9D1apvGR9FkPIE
+	 fXmQgUdu0VQ3cHe7IHyuSohdRGIkb9xTamQuwMyU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727711AbgCJNn3 (ORCPT
+        id S1727557AbgCJNnX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:43:29 -0400
-Received: from mail-oln040092065090.outbound.protection.outlook.com ([40.92.65.90]:30183
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727312AbgCJNn1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:43:27 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bMN6w/Qr/aS+HIOfZPZ5/HS/kEaZhWvScWGYXuxjLY9WPXvIlNnaRl2RxRBJkYp9LsVyZ5h2jRsUwI6i7IoMvi1bRiafxWezUycxxBDBtBY2427+Q+cfBK2/yPcNAfBxaQ21trd3Kbc8KYnwkNAqXKEbj7oPV7FV4VIUku2HQmBh2eBs+xKzUjx9gc3utBJbDeU/+3eDCCujn9dD+6tzRiBfqUJyA74cP3nMCkqXDmIoQNLakQdgNdcuORh9N9rtkCOx4goGZzsm8/fIoLw4WkDh32o3whyYGtkXKEA2dpwRfp+BC/DaAYBHOylwXBB7McYM/VrsHGSWJln0JKbv4g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XTIzbf6Kcu4NlVyKdTF/2JwkVBkFSzRIiCGYzIWzx7U=;
- b=h9QF3UhrzTj4e/81LMmX0Ji/eLV2aiCo+nL7CpLUd/qLUdR9H/fsmLHQZDBFIbmrWctZlBTOto4mqvLUwkCGkQ2xoD1TCjbMuiaaAFAhVc5/abY99YEfEMRYkUvOVgzrqfzhw3kYc9YKJXenNf2LiGvLgZJzKzDFHXg8YkubiPWzxXFH6EcmBBrDZiAx2gWnfkE1ta77q4HVQT5khORC9s1V9UpUkmhB/OQscEd8xuET45BLJKrLjh/fFUbFTTFS2a8x1ZsEujHao6kkZIxctxStZkXJx/R8riT1M99Ri6a36kPed5b6WzNXAW3+So0Qg+zZhSEMM8w5KmV0Q0GnfA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hotmail.de; dmarc=pass action=none header.from=hotmail.de;
- dkim=pass header.d=hotmail.de; arc=none
-Received: from HE1EUR01FT023.eop-EUR01.prod.protection.outlook.com
- (2a01:111:e400:7e18::3a) by
- HE1EUR01HT009.eop-EUR01.prod.protection.outlook.com (2a01:111:e400:7e18::488)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.11; Tue, 10 Mar
- 2020 13:43:23 +0000
-Received: from AM6PR03MB5170.eurprd03.prod.outlook.com (10.152.0.52) by
- HE1EUR01FT023.mail.protection.outlook.com (10.152.0.162) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2793.11 via Frontend Transport; Tue, 10 Mar 2020 13:43:23 +0000
-X-IncomingTopHeaderMarker: OriginalChecksum:BC32DD4A261A6B8205E6ADF6EAB85B37EC990743ABB9F94782C126A987649264;UpperCasedChecksum:35D01622DF07921CB9D4DB6EBAE8AA9A4EC44BD275AB2ADAEE31F947CB5AF6DD;SizeAsReceived:10306;Count:50
-Received: from AM6PR03MB5170.eurprd03.prod.outlook.com
- ([fe80::1956:d274:cab3:b4dd]) by AM6PR03MB5170.eurprd03.prod.outlook.com
- ([fe80::1956:d274:cab3:b4dd%6]) with mapi id 15.20.2793.013; Tue, 10 Mar 2020
- 13:43:23 +0000
-From:   Bernd Edlinger <bernd.edlinger@hotmail.de>
-Subject: [PATCH 0/4] Use new infrastructure to fix deadlocks in execve
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Andrei Vagin <avagin@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Yuyang Du <duyuyang@gmail.com>,
-        David Hildenbrand <david@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        David Howells <dhowells@redhat.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christian Kellner <christian@kellner.me>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>
-References: <AM6PR03MB5170EB4427BF5C67EE98FF09E4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <87r1y8dqqz.fsf@x220.int.ebiederm.org>
- <AM6PR03MB517053AED7DC89F7C0704B7DE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <AM6PR03MB51703B44170EAB4626C9B2CAE4E20@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <87tv32cxmf.fsf_-_@x220.int.ebiederm.org>
- <87v9ne5y4y.fsf_-_@x220.int.ebiederm.org>
- <87zhcq4jdj.fsf_-_@x220.int.ebiederm.org>
- <AM6PR03MB5170BC58D90BAD80CDEF3F8BE4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <878sk94eay.fsf@x220.int.ebiederm.org>
- <AM6PR03MB517086003BD2C32E199690A3E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <87r1y12yc7.fsf@x220.int.ebiederm.org> <87k13t2xpd.fsf@x220.int.ebiederm.org>
- <87d09l2x5n.fsf@x220.int.ebiederm.org>
- <AM6PR03MB5170F0F9DC18F5EA77C9A857E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <871rq12vxu.fsf@x220.int.ebiederm.org>
- <AM6PR03MB5170DF45E3245F55B95CCD91E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <877dzt1fnf.fsf@x220.int.ebiederm.org>
-Message-ID: <AM6PR03MB51701C6F60699F99C5C67E0BE4FF0@AM6PR03MB5170.eurprd03.prod.outlook.com>
-Date:   Tue, 10 Mar 2020 14:43:21 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-In-Reply-To: <877dzt1fnf.fsf@x220.int.ebiederm.org>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: AM0PR06CA0101.eurprd06.prod.outlook.com
- (2603:10a6:208:fa::42) To AM6PR03MB5170.eurprd03.prod.outlook.com
- (2603:10a6:20b:ca::23)
-X-Microsoft-Original-Message-ID: <c7315cf7-713e-5b1d-38f7-20f77d3babea@hotmail.de>
+        Tue, 10 Mar 2020 09:43:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37598 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726979AbgCJNnT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:43:19 -0400
+Received: from mail.kernel.org (ip5f5ad4e9.dynamic.kabel-deutschland.de [95.90.212.233])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 33E0024696;
+        Tue, 10 Mar 2020 13:43:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583847797;
+        bh=ZbUxE4qmaJpjCh53VNItYQAdXkWgNpvqmaDLJujFXdc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=tq8OGCCRIXbvfhEHXhkYn953gqEza8TALJ2GJfpnJveGJN4kyoVEqw6f1ccbH4ZJO
+         O7QSldLPofag3d/2s3Bb8cw83tF6g3SxIr2yw+njqpEEVFGC1MnF9fhOXNXa64nXi6
+         p9ZHsukXomOloGVSSU4IvDt7sGgEpwcM/bhY7454=
+Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
+        (envelope-from <mchehab@kernel.org>)
+        id 1jBfAB-0005w7-BT; Tue, 10 Mar 2020 14:43:15 +0100
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        linux-media@vger.kernel.org
+Subject: [PATCH v2 12/22] media: docs: split uAPI info from fimc.rst
+Date:   Tue, 10 Mar 2020 14:43:03 +0100
+Message-Id: <ecd443e3b29035e1fdd9ebb20a0d8c40ae4cacbb.1583847556.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <cover.1583847556.git.mchehab+huawei@kernel.org>
+References: <cover.1583847556.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [192.168.1.101] (92.77.140.102) by AM0PR06CA0101.eurprd06.prod.outlook.com (2603:10a6:208:fa::42) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.16 via Frontend Transport; Tue, 10 Mar 2020 13:43:21 +0000
-X-Microsoft-Original-Message-ID: <c7315cf7-713e-5b1d-38f7-20f77d3babea@hotmail.de>
-X-TMN:  [brG/2mTCvyYYudno6HDU6fhBD8F14Y7+]
-X-MS-PublicTrafficType: Email
-X-IncomingHeaderCount: 50
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-Correlation-Id: 10d9e532-7fd0-4b56-d300-08d7c4f9006b
-X-MS-TrafficTypeDiagnostic: HE1EUR01HT009:
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: KpfFSpSqKmus4lGNhEHdz7J7tlMiA/tSubeDZRFzX52cevNYsjMTr1uWuT8AbioUTZkwNOO4/GJPHzZYVcI2TAl5cWNaqLHSfnwgIxMORe7Svl1uJd8HFmgKr7IiZpbiHIpUQQ4tbkU8BhwpTwFq7DUi1rgPN1CR9ESMpMMRhORTn7MGYLayQTTXqv1C0zdz
-X-MS-Exchange-AntiSpam-MessageData: HovD+oKudL+zDQeiwb8n73p9ytIxhfk+yzOEkn0mybXKdEQbxNrH6ctVE3knvAgLYmSqR2tvFNxsbDWZrrPu+frQIKPfS3UDRTETi4Nfq1EApXmHeGw5lZX1aV5oM0cXbi2AlwRkL41XCTZrRjAMjg==
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 10d9e532-7fd0-4b56-d300-08d7c4f9006b
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Mar 2020 13:43:23.3299
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1EUR01HT009
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a follow up on Eric's patch series to
-fix the deadlocks observed with ptracing when execve
-in multi-threaded applications.
+This file contains both driver develompent documentation and
+userspace API.
 
-This fixes the simple and most important case where
-the cred_guard_mutex causes strace to deadlock.
+Split on two, as they're usually read by different audiences.
 
-This also adds a test case (which is only partially
-fixed so far, the rest of the fixes will follow
-soon).
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+---
+ .../media/v4l-drivers/fimc-devel.rst          | 33 +++++++++++++++++++
+ Documentation/media/v4l-drivers/fimc.rst      | 22 ++-----------
+ Documentation/media/v4l-drivers/index.rst     |  1 +
+ 3 files changed, 36 insertions(+), 20 deletions(-)
+ create mode 100644 Documentation/media/v4l-drivers/fimc-devel.rst
 
-Two trivial comment fixes are also included.
-
-Bernd Edlinger (4):
-  exec: Fix a deadlock in ptrace
-  selftests/ptrace: add test cases for dead-locks
-  mm: docs: Fix a comment in process_vm_rw_core
-  kernel: doc: remove outdated comment in prepare_kernel_cred
-
- kernel/cred.c                             |  2 -
- kernel/fork.c                             |  4 +-
- mm/process_vm_access.c                    |  2 +-
- tools/testing/selftests/ptrace/Makefile   |  4 +-
- tools/testing/selftests/ptrace/vmaccess.c | 86 +++++++++++++++++++++++++++++++
- 5 files changed, 91 insertions(+), 7 deletions(-)
- create mode 100644 tools/testing/selftests/ptrace/vmaccess.c
-
+diff --git a/Documentation/media/v4l-drivers/fimc-devel.rst b/Documentation/media/v4l-drivers/fimc-devel.rst
+new file mode 100644
+index 000000000000..956e3a9901f8
+--- /dev/null
++++ b/Documentation/media/v4l-drivers/fimc-devel.rst
+@@ -0,0 +1,33 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++.. include:: <isonum.txt>
++
++The Samsung S5P/EXYNOS4 FIMC driver
++===================================
++
++Copyright |copy| 2012 - 2013 Samsung Electronics Co., Ltd.
++
++Files partitioning
++------------------
++
++- media device driver
++
++  drivers/media/platform/exynos4-is/media-dev.[ch]
++
++- camera capture video device driver
++
++  drivers/media/platform/exynos4-is/fimc-capture.c
++
++- MIPI-CSI2 receiver subdev
++
++  drivers/media/platform/exynos4-is/mipi-csis.[ch]
++
++- video post-processor (mem-to-mem)
++
++  drivers/media/platform/exynos4-is/fimc-core.c
++
++- common files
++
++  drivers/media/platform/exynos4-is/fimc-core.h
++  drivers/media/platform/exynos4-is/fimc-reg.h
++  drivers/media/platform/exynos4-is/regs-fimc.h
+diff --git a/Documentation/media/v4l-drivers/fimc.rst b/Documentation/media/v4l-drivers/fimc.rst
+index 74585ba48b7f..0b8ddc4a3008 100644
+--- a/Documentation/media/v4l-drivers/fimc.rst
++++ b/Documentation/media/v4l-drivers/fimc.rst
+@@ -38,26 +38,6 @@ Not currently supported
+ - LCD writeback input
+ - per frame clock gating (mem-to-mem)
+ 
+-Files partitioning
+-------------------
+-
+-- media device driver
+-  drivers/media/platform/exynos4-is/media-dev.[ch]
+-
+-- camera capture video device driver
+-  drivers/media/platform/exynos4-is/fimc-capture.c
+-
+-- MIPI-CSI2 receiver subdev
+-  drivers/media/platform/exynos4-is/mipi-csis.[ch]
+-
+-- video post-processor (mem-to-mem)
+-  drivers/media/platform/exynos4-is/fimc-core.c
+-
+-- common files
+-  drivers/media/platform/exynos4-is/fimc-core.h
+-  drivers/media/platform/exynos4-is/fimc-reg.h
+-  drivers/media/platform/exynos4-is/regs-fimc.h
+-
+ User space interfaces
+ ---------------------
+ 
+@@ -74,6 +54,7 @@ connections of the MIPI-CSIS device(s) to the FIMC entities.
+ The media device interface allows to configure the SoC for capturing image
+ data from the sensor through more than one FIMC instance (e.g. for simultaneous
+ viewfinder and still capture setup).
++
+ Reconfiguration is done by enabling/disabling media links created by the driver
+ during initialization. The internal device topology can be easily discovered
+ through media entity and links enumeration.
+@@ -116,6 +97,7 @@ sensor subdev -> mipi-csi subdev -> fimc subdev -> video node
+ When we configure these devices through sub-device API at user space, the
+ configuration flow must be from left to right, and the video node is
+ configured as last one.
++
+ When we don't use sub-device user space API the whole configuration of all
+ devices belonging to the pipeline is done at the video node driver.
+ The sysfs entry allows to instruct the capture node driver not to configure
+diff --git a/Documentation/media/v4l-drivers/index.rst b/Documentation/media/v4l-drivers/index.rst
+index 2d782a40a7b6..adf72937b119 100644
+--- a/Documentation/media/v4l-drivers/index.rst
++++ b/Documentation/media/v4l-drivers/index.rst
+@@ -70,6 +70,7 @@ For more details see the file COPYING in the source distribution of Linux.
+ 	cx2341x-devel
+ 	cx88-devel
+ 	davinci-vpbe-devel
++	fimc-devel
+ 	vimc-devel
+ 
+ 	cx2341x-uapi
 -- 
-1.9.1
+2.24.1
+
