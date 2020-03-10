@@ -2,494 +2,180 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 209C8C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:27:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10A99C18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:28:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB2772051A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:27:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E189D2051A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:28:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726382AbgCJJ1i (ORCPT
+        id S1726462AbgCJJ2V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 05:27:38 -0400
-Received: from mga03.intel.com ([134.134.136.65]:15302 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726202AbgCJJ1i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 05:27:38 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Mar 2020 02:27:36 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,518,1574150400"; 
-   d="scan'208";a="260720262"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.141])
-  by orsmga002.jf.intel.com with ESMTP; 10 Mar 2020 02:27:34 -0700
-Date:   Tue, 10 Mar 2020 17:25:31 +0800
-From:   Xu Yilun <yilun.xu@intel.com>
-To:     Wu Hao <hao.wu@intel.com>
-Cc:     mdf@kernel.org, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Luwei Kang <luwei.kang@intel.com>
-Subject: Re: [PATCH 1/7] fpga: dfl: parse interrupt info for feature devices
-  on enumeration
-Message-ID: <20200310092531.GA30868@yilunxu-OptiPlex-7050>
-References: <1583749790-10837-1-git-send-email-yilun.xu@intel.com>
- <1583749790-10837-2-git-send-email-yilun.xu@intel.com>
- <20200310022649.GA11861@hao-dev>
+        Tue, 10 Mar 2020 05:28:21 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:37155 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726252AbgCJJ2V (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 05:28:21 -0400
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1jBbBE-0006N3-GD; Tue, 10 Mar 2020 10:28:04 +0100
+Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1jBbBE-0006Yx-0M; Tue, 10 Mar 2020 10:28:04 +0100
+Date:   Tue, 10 Mar 2020 10:28:03 +0100
+From:   Sascha Hauer <s.hauer@pengutronix.de>
+To:     Robin Gong <yibin.gong@nxp.com>
+Cc:     "vkoul@kernel.org" <vkoul@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        "martin.fuzzey@flowbird.group" <martin.fuzzey@flowbird.group>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: Re: [RESEND v6  09/13] dmaengine: imx-sdma: remove ERR009165 on
+ i.mx6ul
+Message-ID: <20200310092803.GW3335@pengutronix.de>
+References: <1583839922-22699-1-git-send-email-yibin.gong@nxp.com>
+ <1583839922-22699-10-git-send-email-yibin.gong@nxp.com>
+ <20200310081925.GT3335@pengutronix.de>
+ <VE1PR04MB6638029458AFDE3005C6E4A489FF0@VE1PR04MB6638.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200310022649.GA11861@hao-dev>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <VE1PR04MB6638029458AFDE3005C6E4A489FF0@VE1PR04MB6638.eurprd04.prod.outlook.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 10:25:44 up 19 days, 16:56, 51 users,  load average: 0.30, 0.15,
+ 0.14
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: sha@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 10, 2020 at 10:26:49AM +0800, Wu Hao wrote:
-> Hi Yilun
-> 
-> Some comments inline.
-> 
-> On Mon, Mar 09, 2020 at 06:29:44PM +0800, Xu Yilun wrote:
-> > DFL based FPGA devices could support interrupts for different purposes,
-> > but current DFL framework only supports feature device enumeration with
-> > given MMIO resources information via common DFL headers. This patch
-> > introduces one new API dfl_fpga_enum_info_add_irq for low level bus
-> > drivers (e.g. PCIe device driver) to pass its interrupt resources
-> > information to DFL framework for enumeration, and also adds interrupt
-> > enumeration code in framework to parse and assign interrupt resources
-> > for enumerated feature devices and their own sub features.
+On Tue, Mar 10, 2020 at 08:59:03AM +0000, Robin Gong wrote:
+> On 2020/03/10 Sascha Hauer <s.hauer@pengutronix.de> wrote: 
+> > On Tue, Mar 10, 2020 at 07:31:58PM +0800, Robin Gong wrote:
+> > > ECSPI issue fixed from i.mx6ul at hardware level, no need
+> > > ERR009165 anymore on those chips such as i.mx8mq. Add i.mx6sx from
+> > > where i.mx6ul source.
+> > >
+> > > Signed-off-by: Robin Gong <yibin.gong@nxp.com>
+> > > Acked-by: Vinod Koul <vkoul@kernel.org>
+> > > ---
+> > >  drivers/dma/imx-sdma.c | 51
+> > > +++++++++++++++++++++++++++++++++++++++++++++++++-
+> > >  1 file changed, 50 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c index
+> > > 56288d8..5ae7237 100644
+> > > --- a/drivers/dma/imx-sdma.c
+> > > +++ b/drivers/dma/imx-sdma.c
+> > > @@ -419,6 +419,13 @@ struct sdma_driver_data {
+> > >  	int num_events;
+> > >  	struct sdma_script_start_addrs	*script_addrs;
+> > >  	bool check_ratio;
+> > > +	/*
+> > > +	 * ecspi ERR009165 fixed should be done in sdma script
+> > > +	 * and it has been fixed in soc from i.mx6ul.
+> > > +	 * please get more information from the below link:
+> > > +	 *
+> > https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fwww.nx
+> > p.com%2Fdocs%2Fen%2Ferrata%2FIMX6DQCE.pdf&amp;data=02%7C01%7Cyi
+> > bin.gong%40nxp.com%7C91d42046e6894501d48508d7c4cbcae2%7C686ea1d3
+> > bc2b4c6fa92cd99c5c301635%7C0%7C1%7C637194251876090170&amp;sdata=
+> > T6LA4xz9CUFlNpnyjHSThEQb8i1rhbY9e1nUyxIGD5Q%3D&amp;reserved=0
+> > > +	 */
+> > > +	bool ecspi_fixed;
+> > >  };
+> > >
+> > >  struct sdma_engine {
+> > > @@ -539,6 +546,31 @@ static struct sdma_driver_data sdma_imx6q = {
+> > >  	.script_addrs = &sdma_script_imx6q,
+> > >  };
+> > >
+> > > +static struct sdma_script_start_addrs sdma_script_imx6sx = {
+> > > +	.ap_2_ap_addr = 642,
+> > > +	.uart_2_mcu_addr = 817,
+> > > +	.mcu_2_app_addr = 747,
+> > > +	.uartsh_2_mcu_addr = 1032,
+> > > +	.mcu_2_shp_addr = 960,
+> > > +	.app_2_mcu_addr = 683,
+> > > +	.shp_2_mcu_addr = 891,
+> > > +	.spdif_2_mcu_addr = 1100,
+> > > +	.mcu_2_spdif_addr = 1134,
+> > > +};
+> > > +
+> > > +static struct sdma_driver_data sdma_imx6sx = {
+> > > +	.chnenbl0 = SDMA_CHNENBL0_IMX35,
+> > > +	.num_events = 48,
+> > > +	.script_addrs = &sdma_script_imx6sx, };
+> > > +
+> > > +static struct sdma_driver_data sdma_imx6ul = {
+> > > +	.chnenbl0 = SDMA_CHNENBL0_IMX35,
+> > > +	.num_events = 48,
+> > > +	.script_addrs = &sdma_script_imx6sx,
+> > > +	.ecspi_fixed = true,
+> > > +};
+> > > +
+> > >  static struct sdma_script_start_addrs sdma_script_imx7d = {
+> > >  	.ap_2_ap_addr = 644,
+> > >  	.uart_2_mcu_addr = 819,
+> > > @@ -584,9 +616,15 @@ static const struct platform_device_id
+> > sdma_devtypes[] = {
+> > >  		.name = "imx6q-sdma",
+> > >  		.driver_data = (unsigned long)&sdma_imx6q,
+> > >  	}, {
+> > > +		.name = "imx6sx-sdma",
+> > > +		.driver_data = (unsigned long)&sdma_imx6sx,
+> > > +	}, {
 > > 
-> > With this patch, DFL framework enumerates interrupt resources for core
-> > features, including PORT Error Reporting, FME (FPGA Management Engine)
-> > Error Reporting and also AFU User Interrupts.
-> > 
-> > Signed-off-by: Luwei Kang <luwei.kang@intel.com>
-> > Signed-off-by: Wu Hao <hao.wu@intel.com>
-> > Signed-off-by: Xu Yilun <yilun.xu@intel.com>
-> > ---
-> >  drivers/fpga/dfl.c | 140 +++++++++++++++++++++++++++++++++++++++++++++++++++--
-> >  drivers/fpga/dfl.h |  40 +++++++++++++++
-> >  2 files changed, 176 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/drivers/fpga/dfl.c b/drivers/fpga/dfl.c
-> > index 9909948..493822d 100644
-> > --- a/drivers/fpga/dfl.c
-> > +++ b/drivers/fpga/dfl.c
-> > @@ -11,6 +11,7 @@
-> >   *   Xiao Guangrong <guangrong.xiao@linux.intel.com>
-> >   */
-> >  #include <linux/module.h>
-> > +#include <asm/irq.h>
-> >  
-> >  #include "dfl.h"
-> >  
-> > @@ -421,6 +422,9 @@ EXPORT_SYMBOL_GPL(dfl_fpga_dev_ops_unregister);
-> >   *
-> >   * @dev: device to enumerate.
-> >   * @cdev: the container device for all feature devices.
-> > + * @nr_irqs: number of irqs for all feature devices.
-> > + * @irq_table: Linux IRQ numbers for all irqs, indexed by local irq index of
-> > + *	       this device.
-> >   * @feature_dev: current feature device.
-> >   * @ioaddr: header register region address of feature device in enumeration.
-> >   * @sub_features: a sub features linked list for feature device in enumeration.
-> > @@ -429,6 +433,9 @@ EXPORT_SYMBOL_GPL(dfl_fpga_dev_ops_unregister);
-> >  struct build_feature_devs_info {
-> >  	struct device *dev;
-> >  	struct dfl_fpga_cdev *cdev;
-> > +	unsigned int nr_irqs;
-> > +	int *irq_table;
-> > +
-> >  	struct platform_device *feature_dev;
-> >  	void __iomem *ioaddr;
-> >  	struct list_head sub_features;
-> > @@ -442,12 +449,16 @@ struct build_feature_devs_info {
-> >   * @mmio_res: mmio resource of this sub feature.
-> >   * @ioaddr: mapped base address of mmio resource.
-> >   * @node: node in sub_features linked list.
-> > + * @irq_base: start of irq index in this sub feature.
-> > + * @nr_irqs: number of irqs of this sub feature.
-> >   */
-> >  struct dfl_feature_info {
-> >  	u64 fid;
-> >  	struct resource mmio_res;
-> >  	void __iomem *ioaddr;
-> >  	struct list_head node;
-> > +	unsigned int irq_base;
-> > +	unsigned int nr_irqs;
-> >  };
-> >  
-> >  static void dfl_fpga_cdev_add_port_dev(struct dfl_fpga_cdev *cdev,
-> > @@ -520,6 +531,8 @@ static int build_info_commit_dev(struct build_feature_devs_info *binfo)
-> >  	/* fill features and resource information for feature dev */
-> >  	list_for_each_entry_safe(finfo, p, &binfo->sub_features, node) {
-> >  		struct dfl_feature *feature = &pdata->features[index];
-> > +		struct dfl_feature_irq_ctx *ctx;
-> > +		int i, virq;
-> >  
-> >  		/* save resource information for each feature */
-> >  		feature->id = finfo->fid;
-> > @@ -527,6 +540,24 @@ static int build_info_commit_dev(struct build_feature_devs_info *binfo)
-> >  		feature->ioaddr = finfo->ioaddr;
-> >  		fdev->resource[index++] = finfo->mmio_res;
-> >  
-> > +		if (finfo->nr_irqs) {
-> > +			ctx = devm_kcalloc(binfo->dev, finfo->nr_irqs,
-> > +					   sizeof(*ctx), GFP_KERNEL);
-> > +			if (!ctx)
-> > +				return -ENOMEM;
-> > +
-> > +			for (i = 0; i < finfo->nr_irqs; i++) {
-> > +				virq = binfo->irq_table[finfo->irq_base + i];
-> 
-> Looks like it checks the irq_table input in commit_dev which is the last step
-> of enumeration. I feel that maybe it's better to check the input earlier, e.g.
-> in dfl_fpga_enum_info_add_irq() function below.
+> > Now the i.MX6sx uses a new sdma_script_start_addrs entry which is the same
+> > as the i.MX6q one we used before with one exception: it lacks the
+> > per_2_per_addr = 6331 entry. This is only used for IMX_DMATYPE_ASRC and
+> Totally same script for i.mx6 chips whatever i.MX6sx, i.MX6q or i.MX6ul. 
 
-Yes the check could be done earlier. But maybe too early checking in
-dfl_fpga_enum_info_add_irq(). I think dfl should allow holes in
-irq_table. We make sure sub features get valid irq numbers for
-each of its irq line, that should be enough.
+When it's the same then use it.
 
-So maybe do this check in parse_feature_irqs() is better?
+> > IMX_DMATYPE_ASRC_SP, both are entirely unused in the mainline kernel. So
+> > why must the i.MX6sx changed here and what has this to do with ECSPI?
+> i.MX6ul is based on i.MX6sx, so adding i.MX6sx could keep good shape on our i.MX family evolution.
 
-> 
-> BTW: why it's named as virq? any specific meaning?
+My point is that there is no difference between i.MX6q and i.MX6sx here,
+so do not artificially introduce i.MX6sx support when all you do is
+copying the i.MX6q support.
 
-I'm just trying to indicate it's a linux irq number, not a hardware
-local irq number. I see the name also used as linux irq number in other
-drivers.
+Sascha
 
-> 
-> > +				if (virq < 0 || virq > NR_IRQS)
-> > +					return -EINVAL;
-> > +
-> > +				ctx[i].irq = virq;
-> > +			}
-> > +
-> > +			feature->irq_ctx = ctx;
-> > +			feature->nr_irqs = finfo->nr_irqs;
-> > +		}
-> > +
-> >  		list_del(&finfo->node);
-> >  		kfree(finfo);
-> >  	}
-> > @@ -648,7 +679,8 @@ static u64 feature_id(void __iomem *start)
-> >  static int
-> >  create_feature_instance(struct build_feature_devs_info *binfo,
-> >  			struct dfl_fpga_enum_dfl *dfl, resource_size_t ofst,
-> > -			resource_size_t size, u64 fid)
-> > +			resource_size_t size, u64 fid, unsigned int irq_base,
-> > +			unsigned int nr_irqs)
-> >  {
-> >  	struct dfl_feature_info *finfo;
-> >  
-> > @@ -667,6 +699,8 @@ create_feature_instance(struct build_feature_devs_info *binfo,
-> >  	finfo->mmio_res.start = dfl->start + ofst;
-> >  	finfo->mmio_res.end = finfo->mmio_res.start + size - 1;
-> >  	finfo->mmio_res.flags = IORESOURCE_MEM;
-> > +	finfo->irq_base = irq_base;
-> > +	finfo->nr_irqs = nr_irqs;
-> >  	finfo->ioaddr = dfl->ioaddr + ofst;
-> >  
-> >  	list_add_tail(&finfo->node, &binfo->sub_features);
-> > @@ -684,7 +718,8 @@ static int parse_feature_port_afu(struct build_feature_devs_info *binfo,
-> >  
-> >  	WARN_ON(!size);
-> >  
-> > -	return create_feature_instance(binfo, dfl, ofst, size, FEATURE_ID_AFU);
-> > +	return create_feature_instance(binfo, dfl, ofst, size, FEATURE_ID_AFU,
-> > +				       0, 0);
-> >  }
-> >  
-> >  static int parse_feature_afu(struct build_feature_devs_info *binfo,
-> > @@ -724,7 +759,7 @@ static int parse_feature_fiu(struct build_feature_devs_info *binfo,
-> >  	if (ret)
-> >  		return ret;
-> >  
-> > -	ret = create_feature_instance(binfo, dfl, ofst, 0, 0);
-> > +	ret = create_feature_instance(binfo, dfl, ofst, 0, 0, 0, 0);
-> >  	if (ret)
-> >  		return ret;
-> >  	/*
-> > @@ -742,17 +777,72 @@ static int parse_feature_fiu(struct build_feature_devs_info *binfo,
-> >  	return ret;
-> >  }
-> >  
-> > +static void parse_feature_irqs(struct build_feature_devs_info *binfo,
-> > +			       struct dfl_fpga_enum_dfl *dfl,
-> > +			       resource_size_t ofst,
-> > +			       unsigned int *irq_base, unsigned int *nr_irqs)
-> > +{
-> > +	u64 id, v;
-> > +
-> > +	/*
-> > +	 * Ideally DFL framework should only read info from DFL header, but
-> > +	 * current version DFL only provides mmio resources information for
-> > +	 * each feature in DFL Header, no field for interrupt resources.
-> > +	 * Some interrupt resources information are provided by specific
-> > +	 * mmio registers of each components(e.g. different private features)
-> > +	 * which supports interrupt. So in order to parse and assign irq
-> > +	 * resources to different components, DFL framework has to look into
-> > +	 * specific capability registers of these core private features.
-> > +	 *
-> > +	 * Once future DFL version supports generic interrupt resources
-> > +	 * information in common DFL headers, below code could be replaced by
-> > +	 * some generic interrupt parsing code.
-> 
-> Per my understanding, even later version hardware uses common DFL Header Field
-> for interrupt resources enumeration, but we still keep this quirk for old
-> version hardware, right?
-
-Yes, later version hardware will introduce the common DFL description of
-interrupt, which should override these quirks. But to be compatible to
-old version hardware, driver should fallback to these quirks for these 3
-sub feature if common interrupt description is not provided.
-
-> 
-> > +	 */
-> > +
-> > +	id = feature_id((dfl->ioaddr + ofst));
-> > +
-> > +	if (id == PORT_FEATURE_ID_UINT) {
-> > +		v = readq(dfl->ioaddr + ofst + PORT_UINT_CAP);
-> > +		*irq_base = FIELD_GET(PORT_UINT_CAP_FST_VECT, v);
-> > +		*nr_irqs = FIELD_GET(PORT_UINT_CAP_INT_NUM, v);
-> > +	} else if (id == PORT_FEATURE_ID_ERROR) {
-> > +		v = readq(dfl->ioaddr + ofst + PORT_ERROR_CAP);
-> > +		*irq_base = FIELD_GET(PORT_ERROR_CAP_INT_VECT, v);
-> > +		*nr_irqs = FIELD_GET(PORT_ERROR_CAP_SUPP_INT, v);
-> > +	} else if (id == FME_FEATURE_ID_GLOBAL_ERR) {
-> > +		v = readq(dfl->ioaddr + ofst + FME_ERROR_CAP);
-> > +		*irq_base = FIELD_GET(FME_ERROR_CAP_INT_VECT, v);
-> > +		*nr_irqs = FIELD_GET(FME_ERROR_CAP_SUPP_INT, v);
-> > +	} else {
-> > +		return;
-> > +	}
-> > +
-> > +	dev_dbg(binfo->dev, "feature: 0x%llx, nr_irqs: %u, irq_base: %u\n",
-> > +		(unsigned long long)id, *nr_irqs, *irq_base);
-> > +
-> > +	if (*irq_base + *nr_irqs > binfo->nr_irqs) {
-> > +		*irq_base = 0;
-> > +		*nr_irqs = 0;
-> > +		dev_err(binfo->dev, "Inconsistent interrupt number on HW\n");
-> 
-> Maybe you want to print feature id as well in this error case.
-
-OK. Print feature_id should be helpful when we hit the error.
-
-> 
-> > +	}
-> > +}
-> > +
-> >  static int parse_feature_private(struct build_feature_devs_info *binfo,
-> >  				 struct dfl_fpga_enum_dfl *dfl,
-> >  				 resource_size_t ofst)
-> >  {
-> > +	unsigned int irq_base = 0, nr_irqs = 0;
-> > +
-> >  	if (!binfo->feature_dev) {
-> >  		dev_err(binfo->dev, "the private feature %llx does not belong to any AFU.\n",
-> >  			(unsigned long long)feature_id(dfl->ioaddr + ofst));
-> >  		return -EINVAL;
-> >  	}
-> >  
-> > -	return create_feature_instance(binfo, dfl, ofst, 0, 0);
-> > +	parse_feature_irqs(binfo, dfl, ofst, &irq_base, &nr_irqs);
-> > +
-> > +	return create_feature_instance(binfo, dfl, ofst, 0, 0, irq_base,
-> > +				       nr_irqs);
-> >  }
-> >  
-> >  /**
-> > @@ -853,6 +943,10 @@ void dfl_fpga_enum_info_free(struct dfl_fpga_enum_info *info)
-> >  		devm_kfree(dev, dfl);
-> >  	}
-> >  
-> > +	/* remove irq table */
-> > +	if (info->irq_table)
-> > +		devm_kfree(dev, info->irq_table);
-> > +
-> >  	devm_kfree(dev, info);
-> >  	put_device(dev);
-> >  }
-> > @@ -892,6 +986,40 @@ int dfl_fpga_enum_info_add_dfl(struct dfl_fpga_enum_info *info,
-> >  }
-> >  EXPORT_SYMBOL_GPL(dfl_fpga_enum_info_add_dfl);
-> >  
-> > +/**
-> > + * dfl_fpga_enum_info_add_irq - add irq table to enum info
-> > + *
-> > + * @info: ptr to dfl_fpga_enum_info
-> > + * @nr_irqs: number of irqs for all feature devices.
-> 
-> It's better to say, number of irqs of the dfl fpga device to be enumerated.
-> This function needs to be used before enumerate API.
-
-Yes, I'll change it.
-
-> 
-> > + * @irq_table: Linux IRQ numbers for all irqs, indexed by local irq index of
-> > + *	       this device.
-> > + *
-> > + * One FPGA device may have several interrupts. This function adds irq
-> > + * information of all feature devices to enumeration info for next step
-> 
-> Same here.
-
-Yes.
-
-> 
-> > + * enumeration.
-> > + *
-> > + * Return: 0 on success, negative error code otherwise.
-> > + */
-> > +int dfl_fpga_enum_info_add_irq(struct dfl_fpga_enum_info *info,
-> > +			       unsigned int nr_irqs, int *irq_table)
-> > +{
-> > +	if (!nr_irqs)
-> > +		return -EINVAL;
-> > +
-> 
-> Looks like currently it only allows add irq table once, so please document
-> this as it doesn't support users adding multiple irq tables.
-
-Sure.
-
-> 
-> Thanks
-> Hao
-> 
-> > +	if (info->irq_table)
-> > +		return -EEXIST;
-> > +
-> > +	info->irq_table = devm_kmemdup(info->dev, irq_table,
-> > +				       sizeof(int) * nr_irqs, GFP_KERNEL);
-> > +	if (!info->irq_table)
-> > +		return -ENOMEM;
-> > +
-> > +	info->nr_irqs = nr_irqs;
-> > +
-> > +	return 0;
-> > +}
-> > +EXPORT_SYMBOL_GPL(dfl_fpga_enum_info_add_irq);
-> > +
-> >  static int remove_feature_dev(struct device *dev, void *data)
-> >  {
-> >  	struct platform_device *pdev = to_platform_device(dev);
-> > @@ -959,6 +1087,10 @@ dfl_fpga_feature_devs_enumerate(struct dfl_fpga_enum_info *info)
-> >  	binfo->dev = info->dev;
-> >  	binfo->cdev = cdev;
-> >  
-> > +	binfo->nr_irqs = info->nr_irqs;
-> > +	if (info->nr_irqs)
-> > +		binfo->irq_table = info->irq_table;
-> > +
-> >  	/*
-> >  	 * start enumeration for all feature devices based on Device Feature
-> >  	 * Lists.
-> > diff --git a/drivers/fpga/dfl.h b/drivers/fpga/dfl.h
-> > index 4a9a33c..6a498cd 100644
-> > --- a/drivers/fpga/dfl.h
-> > +++ b/drivers/fpga/dfl.h
-> > @@ -112,6 +112,13 @@
-> >  #define FME_PORT_OFST_ACC_VF	1
-> >  #define FME_PORT_OFST_IMP	BIT_ULL(60)
-> >  
-> > +/* FME Error Capability Register */
-> > +#define FME_ERROR_CAP		0x70
-> > +
-> > +/* FME Error Capability Register Bitfield */
-> > +#define FME_ERROR_CAP_SUPP_INT	BIT_ULL(0)		/* Interrupt Support */
-> > +#define FME_ERROR_CAP_INT_VECT	GENMASK_ULL(12, 1)	/* Interrupt vector */
-> > +
-> >  /* PORT Header Register Set */
-> >  #define PORT_HDR_DFH		DFH
-> >  #define PORT_HDR_GUID_L		GUID_L
-> > @@ -145,6 +152,20 @@
-> >  #define PORT_STS_PWR_STATE_AP2	2			/* 90% throttling */
-> >  #define PORT_STS_PWR_STATE_AP6	6			/* 100% throttling */
-> >  
-> > +/* Port Error Capability Register */
-> > +#define PORT_ERROR_CAP		0x38
-> > +
-> > +/* Port Error Capability Register Bitfield */
-> > +#define PORT_ERROR_CAP_SUPP_INT	BIT_ULL(0)		/* Interrupt Support */
-> > +#define PORT_ERROR_CAP_INT_VECT	GENMASK_ULL(12, 1)	/* Interrupt vector */
-> > +
-> > +/* Port Uint Capability Register */
-> > +#define PORT_UINT_CAP		0x8
-> > +
-> > +/* Port Uint Capability Register Bitfield */
-> > +#define PORT_UINT_CAP_INT_NUM	GENMASK_ULL(11, 0)	/* Interrupts num */
-> > +#define PORT_UINT_CAP_FST_VECT	GENMASK_ULL(23, 12)	/* First Vector */
-> > +
-> >  /**
-> >   * struct dfl_fpga_port_ops - port ops
-> >   *
-> > @@ -189,6 +210,15 @@ struct dfl_feature_driver {
-> >  };
-> >  
-> >  /**
-> > + * struct dfl_feature_irq_ctx - dfl private feature interrupt context
-> > + *
-> > + * @irq: Linux IRQ number of this interrupt.
-> > + */
-> > +struct dfl_feature_irq_ctx {
-> > +	int irq;
-> > +};
-> > +
-> > +/**
-> >   * struct dfl_feature - sub feature of the feature devices
-> >   *
-> >   * @id: sub feature id.
-> > @@ -196,12 +226,16 @@ struct dfl_feature_driver {
-> >   *		    this index is used to find its mmio resource from the
-> >   *		    feature dev (platform device)'s reources.
-> >   * @ioaddr: mapped mmio resource address.
-> > + * @irq_ctx: interrupt context list.
-> > + * @nr_irqs: number of interrupt contexts.
-> >   * @ops: ops of this sub feature.
-> >   */
-> >  struct dfl_feature {
-> >  	u64 id;
-> >  	int resource_index;
-> >  	void __iomem *ioaddr;
-> > +	struct dfl_feature_irq_ctx *irq_ctx;
-> > +	unsigned int nr_irqs;
-> >  	const struct dfl_feature_ops *ops;
-> >  };
-> >  
-> > @@ -388,10 +422,14 @@ static inline u8 dfl_feature_revision(void __iomem *base)
-> >   *
-> >   * @dev: parent device.
-> >   * @dfls: list of device feature lists.
-> > + * @nr_irqs: number of irqs for all feature devices.
-> > + * @irq_table: Linux IRQ numbers for all irqs, indexed by hw irq numbers.
-> >   */
-> >  struct dfl_fpga_enum_info {
-> >  	struct device *dev;
-> >  	struct list_head dfls;
-> > +	unsigned int nr_irqs;
-> > +	int *irq_table;
-> >  };
-> >  
-> >  /**
-> > @@ -415,6 +453,8 @@ struct dfl_fpga_enum_info *dfl_fpga_enum_info_alloc(struct device *dev);
-> >  int dfl_fpga_enum_info_add_dfl(struct dfl_fpga_enum_info *info,
-> >  			       resource_size_t start, resource_size_t len,
-> >  			       void __iomem *ioaddr);
-> > +int dfl_fpga_enum_info_add_irq(struct dfl_fpga_enum_info *info,
-> > +			       unsigned int nr_irqs, int *irq_table);
-> >  void dfl_fpga_enum_info_free(struct dfl_fpga_enum_info *info);
-> >  
-> >  /**
-> > -- 
-> > 2.7.4
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
