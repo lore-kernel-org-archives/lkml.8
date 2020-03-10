@@ -2,174 +2,141 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 622DDC10F25
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 00:57:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1DABC10F25
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 00:59:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3479E24649
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 00:57:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583801864;
-	bh=hv/wJWI7gkQDnGVISxHm+oiONB52KqrznHkCU1HEsbE=;
-	h=Date:From:To:Subject:In-Reply-To:List-ID:From;
-	b=UVrvEOIqY4cCoBB8Wnbs4mA4h5pgr/Gi/TfvOTY01tqVxDrpPEEZKjT3YSkcGpoEU
-	 1SrnUMT0NzwUei1MyuqMOrOw+BpqYRf/IVB7vvTJ3gtjYrGCW3HFKz0oTk+q7A5uix
-	 K97ji5OnWi3zhZR13fnNFZxAJoRHmWP9GGhoAq18=
+	by mail.kernel.org (Postfix) with ESMTP id C2A5820637
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 00:59:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Fak4fcYg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727609AbgCJA5n (ORCPT
+        id S1727567AbgCJA7O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 20:57:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48820 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727380AbgCJA5n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 20:57:43 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 9 Mar 2020 20:59:14 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:40947 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727380AbgCJA7O (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 20:59:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583801952;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=rgE+3Y9Et3pGVeJCeCY81N5N89gH++qwpWmMm68T6sQ=;
+        b=Fak4fcYgtIjT5f5xWXRtLZ3AwaxCeHCdxpVu6WMgnh2zh1L8LsmHxTplp95ro4MuanvAeR
+        f9Us5tf5/GjzeRT20j8uvOd9ABnZ4nKImB4UwIMuTsIK3JEvFAny7WClkvLh8pkrZRptSF
+        8Ny6JKs47AruwJbDnlyO4UmHhqf/v+c=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-365--bfDQZw2NgKlldNbJI9xtg-1; Mon, 09 Mar 2020 20:59:10 -0400
+X-MC-Unique: -bfDQZw2NgKlldNbJI9xtg-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C6F2320637;
-        Tue, 10 Mar 2020 00:57:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583801862;
-        bh=hv/wJWI7gkQDnGVISxHm+oiONB52KqrznHkCU1HEsbE=;
-        h=Date:From:To:Subject:In-Reply-To:From;
-        b=nNPsoLtTM9VHCueBMLf99SyAggk/tVmXAeyyN8Fde+EwTi+HpDCZrag+iZFIKvvhy
-         GTwficNSGhCbdLCZMerTwKE2PZwu0l1+49U9mPFe4dmUz/ED/7+QphHthehNCobAW3
-         OqnPGnoBju/mZstgPaoxxQzQ6SQ00w3pgj2mcr/Q=
-Date:   Mon, 09 Mar 2020 17:57:41 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     bp@alien8.de, geert@linux-m68k.org, haren@us.ibm.com,
-        joe@perches.com, johannes@sipsolutions.net, keescook@chromium.org,
-        linux-kernel@vger.kernel.org, mingo@redhat.com,
-        mm-commits@vger.kernel.org, rikard.falkeborn@gmail.com,
-        tglx@linutronix.de, yamada.masahiro@socionext.com
-Subject:  +
- linux-bitsh-add-compile-time-sanity-check-of-genmask-inputs.patch added to
- -mm tree
-Message-ID: <20200310005741.yFMy7WAMl%akpm@linux-foundation.org>
-In-Reply-To: <20200305222751.6d781a3f2802d79510941e4e@linux-foundation.org>
-User-Agent: s-nail v14.8.16
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 55914100550D;
+        Tue, 10 Mar 2020 00:59:09 +0000 (UTC)
+Received: from madcap2.tricolour.ca (ovpn-112-16.rdu2.redhat.com [10.10.112.16])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id B709B5D9CA;
+        Tue, 10 Mar 2020 00:59:01 +0000 (UTC)
+Date:   Mon, 9 Mar 2020 20:58:58 -0400
+From:   Richard Guy Briggs <rgb@redhat.com>
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     Linux-Audit Mailing List <linux-audit@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, sgrubb@redhat.com,
+        omosnace@redhat.com, Eric Paris <eparis@parisplace.org>
+Subject: Re: [PATCH ghak120] audit: trigger accompanying records when no
+ rules present
+Message-ID: <20200310005858.m4s23fl3huwevyp5@madcap2.tricolour.ca>
+References: <e75e80e820f215d2311941e083580827f6c1dbb6.1582059594.git.rgb@redhat.com>
+ <CAHC9VhTXFg_w8xJChPZZFY=HMpF722p-_NYy=06xjSkLFSCzbg@mail.gmail.com>
+ <20200309203107.lzhshn6uzknhmosu@madcap2.tricolour.ca>
+ <CAHC9VhS9o7wmBEfvF=+=cfUzvfcTs9Hu15KcLJjW+92KxBxQ3g@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHC9VhS9o7wmBEfvF=+=cfUzvfcTs9Hu15KcLJjW+92KxBxQ3g@mail.gmail.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2020-03-09 19:55, Paul Moore wrote:
+> On Mon, Mar 9, 2020 at 4:31 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > On 2020-02-27 20:02, Paul Moore wrote:
+> > > On Tue, Feb 18, 2020 at 4:01 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > > >
+> > > > When there are no audit rules registered, mandatory records (config,
+> > > > etc.) are missing their accompanying records (syscall, proctitle, etc.).
+> > > >
+> > > > This is due to audit context dummy set on syscall entry based on absence
+> > > > of rules that signals that no other records are to be printed.
+> > > >
+> > > > Clear the dummy bit in auditsc_set_stamp() when the first record of an
+> > > > event is generated.
+> > > >
+> > > > Please see upstream github issue
+> > > > https://github.com/linux-audit/audit-kernel/issues/120
+> > > >
+> > > > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+> > > > ---
+> > > >  kernel/auditsc.c | 2 ++
+> > > >  1 file changed, 2 insertions(+)
+> > > >
+> > > > diff --git a/kernel/auditsc.c b/kernel/auditsc.c
+> > > > index 4effe01ebbe2..31195d122344 100644
+> > > > --- a/kernel/auditsc.c
+> > > > +++ b/kernel/auditsc.c
+> > > > @@ -2176,6 +2176,8 @@ int auditsc_get_stamp(struct audit_context *ctx,
+> > > >         t->tv_sec  = ctx->ctime.tv_sec;
+> > > >         t->tv_nsec = ctx->ctime.tv_nsec;
+> > > >         *serial    = ctx->serial;
+> > > > +       if (ctx->dummy)
+> > > > +               ctx->dummy = 0;
+> > >
+> > > Two comments:
+> > >
+> > > * Why even bother checking to see if ctx->dummy is true?  If it is
+> > > true you set it to false/0; if it is already false you leave it alone.
+> > > Either way ctx->dummy is going to be set to false when you are past
+> > > these two lines, might as well just always set ctx->dummy to false/0.
+> >
+> > Ok, no problem.
+> >
+> > > * Why are you setting ->dummy to false in auditsc_get_stamp() and not
+> > > someplace a bit more obvious like audit_log_start()?  Is it because
+> > > auditsc_get_stamp() only gets called once per event?  I'm willing to
+> > > take the "hit" of one extra assignment in audit_log_start() to keep
+> > > this in a more obvious place and not buried in auditsc_get_stamp().
+> >
+> > It is because the context is only available when syscall logging is
+> > enabled (which is on most platforms and hopefully eventually all) and
+> > makes for cleaner code and lack of need to check existance of the
+> > context.
+> 
+> At the very least let's create some sort of accessor function for
+> dummy then, hiding this in auditsc_get_stamp() seems very wrong to me.
 
-The patch titled
-     Subject: linux/bits.h: add compile time sanity check of GENMASK inputs
-has been added to the -mm tree.  Its filename is
-     linux-bitsh-add-compile-time-sanity-check-of-genmask-inputs.patch
+Ok.  Anything else?
 
-This patch should soon appear at
-    http://ozlabs.org/~akpm/mmots/broken-out/linux-bitsh-add-compile-time-sanity-check-of-genmask-inputs.patch
-and later at
-    http://ozlabs.org/~akpm/mmotm/broken-out/linux-bitsh-add-compile-time-sanity-check-of-genmask-inputs.patch
+I also found useless context and dummy checks in audit_log_proctitle
+and removed them since it can't be called if the context doesn't exist.
 
-Before you just go and hit "reply", please:
-   a) Consider who else should be cc'ed
-   b) Prefer to cc a suitable mailing list as well
-   c) Ideally: find the original patch on the mailing list and do a
-      reply-to-all to that, adding suitable additional cc's
+> paul moore
 
-*** Remember to use Documentation/process/submit-checklist.rst when testing your code ***
+- RGB
 
-The -mm tree is included into linux-next and is updated
-there every 3-4 working days
-
-------------------------------------------------------
-From: Rikard Falkeborn <rikard.falkeborn@gmail.com>
-Subject: linux/bits.h: add compile time sanity check of GENMASK inputs
-
-GENMASK() and GENMASK_ULL() are supposed to be called with the high bit as
-the first argument and the low bit as the second argument.  Mixing them
-will return a mask with zero bits set.
-
-Recent commits show getting this wrong is not uncommon, see e.g.  commit
-aa4c0c9091b0 ("net: stmmac: Fix misuses of GENMASK macro") and commit
-9bdd7bb3a844 ("clocksource/drivers/npcm: Fix misuse of GENMASK macro").
-
-To prevent such mistakes from appearing again, add compile time sanity
-checking to the arguments of GENMASK() and GENMASK_ULL().  If both
-arguments are known at compile time, and the low bit is higher than the
-high bit, break the build to detect the mistake immediately.
-
-Since GENMASK() is used in declarations, BUILD_BUG_ON_ZERO() must be used
-instead of BUILD_BUG_ON().
-
-__builtin_constant_p does not evaluate is argument, it only checks if it
-is a constant or not at compile time, and __builtin_choose_expr does not
-evaluate the expression that is not chosen.  Therefore, GENMASK(x++, 0)
-does only evaluate x++ once.
-
-Commit 95b980d62d52 ("linux/bits.h: make BIT(), GENMASK(), and friends
-available in assembly") made the macros in linux/bits.h available in
-assembly.  Since BUILD_BUG_OR_ZERO() is not asm compatible, disable the
-checks if the file is included in an asm file.
-
-Due to bugs in GCC versions before 4.9 [0], disable the check if building
-with a too old GCC compiler.
-
-[0]: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=19449
-
-Link: http://lkml.kernel.org/r/20200308193954.2372399-1-rikard.falkeborn@gmail.com
-Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
-Reviewed-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Haren Myneni <haren@us.ibm.com>
-Cc: Joe Perches <joe@perches.com>
-Cc: Johannes Berg <johannes@sipsolutions.net>
-Cc: lkml <linux-kernel@vger.kernel.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
----
-
- include/linux/bits.h |   22 ++++++++++++++++++++--
- 1 file changed, 20 insertions(+), 2 deletions(-)
-
---- a/include/linux/bits.h~linux-bitsh-add-compile-time-sanity-check-of-genmask-inputs
-+++ a/include/linux/bits.h
-@@ -18,12 +18,30 @@
-  * position @h. For example
-  * GENMASK_ULL(39, 21) gives us the 64bit vector 0x000000ffffe00000.
-  */
--#define GENMASK(h, l) \
-+#if !defined(__ASSEMBLY__) && \
-+	(!defined(CONFIG_CC_IS_GCC) || CONFIG_GCC_VERSION >= 49000)
-+#include <linux/build_bug.h>
-+#define GENMASK_INPUT_CHECK(h, l) \
-+	(BUILD_BUG_ON_ZERO(__builtin_choose_expr( \
-+		__builtin_constant_p((l) > (h)), (l) > (h), 0)))
-+#else
-+/*
-+ * BUILD_BUG_ON_ZERO is not available in h files included from asm files,
-+ * disable the input check if that is the case.
-+ */
-+#define GENMASK_INPUT_CHECK(h, l) 0
-+#endif
-+
-+#define __GENMASK(h, l) \
- 	(((~UL(0)) - (UL(1) << (l)) + 1) & \
- 	 (~UL(0) >> (BITS_PER_LONG - 1 - (h))))
-+#define GENMASK(h, l) \
-+	(GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
- 
--#define GENMASK_ULL(h, l) \
-+#define __GENMASK_ULL(h, l) \
- 	(((~ULL(0)) - (ULL(1) << (l)) + 1) & \
- 	 (~ULL(0) >> (BITS_PER_LONG_LONG - 1 - (h))))
-+#define GENMASK_ULL(h, l) \
-+	(GENMASK_INPUT_CHECK(h, l) + __GENMASK_ULL(h, l))
- 
- #endif	/* __LINUX_BITS_H */
-_
-
-Patches currently in -mm which might be from rikard.falkeborn@gmail.com are
-
-linux-bitsh-add-compile-time-sanity-check-of-genmask-inputs.patch
+--
+Richard Guy Briggs <rgb@redhat.com>
+Sr. S/W Engineer, Kernel Security, Base Operating Systems
+Remote, Ottawa, Red Hat Canada
+IRC: rgb, SunRaycer
+Voice: +1.647.777.2635, Internal: (81) 32635
 
