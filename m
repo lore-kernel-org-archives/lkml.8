@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A897BC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:34:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0582AC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:34:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75D6320675
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:34:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAD7A24649
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:34:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583847283;
-	bh=TmISeBl+z/riu5zI1Aow+4OtmrTWBLBSDho4zHJx+0g=;
+	s=default; t=1583847287;
+	bh=mQi+kJKCA4XsCXfQOnNrS/gSe+ZGvNiadlAQOyB6ZBM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gDAZWkHngTzUrC7oXWHW1SmfEMfxFyt8drHdw11nR/S9gHgxYzQpiYquxChtyHyc3
-	 xGE+x3TghVOAKX+L/dvIRtPIl1MKUNYShKJJ1Adn59b1hzYihvhyIWRjB1EgeeETT+
-	 BEeU46izapfBjWDRoRULwY2IGiv7BLh/NWwMNsCw=
+	b=AicTMekJJj6bQ54bnADt3JMAelJR28MQEmYbp2RR8MxOLdkDVTeqhqWDO9jgQOK6B
+	 5DloQ0PD1yf2speNmaiXWlv36qCfWipY/lh/R0bTY1pbTZcxFfQLnS51/owQ/auNwS
+	 WrkdyTDUNkGqw//yNmZCplCh1f757vAkI/QuRYGo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726731AbgCJMqI (ORCPT
+        id S1727604AbgCJMqB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:46:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49012 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:46:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48856 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727722AbgCJMqG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:46:06 -0400
+        id S1726775AbgCJMp5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:45:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 270B224696;
-        Tue, 10 Mar 2020 12:46:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C733020674;
+        Tue, 10 Mar 2020 12:45:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844365;
-        bh=TmISeBl+z/riu5zI1Aow+4OtmrTWBLBSDho4zHJx+0g=;
+        s=default; t=1583844357;
+        bh=mQi+kJKCA4XsCXfQOnNrS/gSe+ZGvNiadlAQOyB6ZBM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vB5LMzaAiR8/queMPFHGeq+B+5eQt+nr4BmAvYG7s7eRD9D4Ts9077ucBUrfgxJlT
-         0QudpRm5UUs64zfajwN++ZD9tb0AyOb0SloILk+DfgoPsWnMopW0WZg7gk0VJ6vJbl
-         XdEm0jSC4anL6I3N20hGtBcEd7Z+WvPdsk4invlM=
+        b=WkQLss7fEHxhBULlP+fkMhlwtiAwk8btAe1ubCYlvJNqYlvOPNet3xMTignqy3auF
+         e5P/+3JevwFOz8UL6xkKrzSd+KZKO1uaXEBguS52DyIAWCG1rtmIg0r0A4oFQtnflQ
+         mUEj/N91I22erCxuYPym0IAAi1pKj51K8FAzsVfo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sergey Organov <sorganov@gmail.com>,
-        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
-        Felipe Balbi <balbi@kernel.org>,
+        stable@vger.kernel.org, Chuanhong Guo <gch981213@gmail.com>,
+        Daniel Golle <daniel@makrotopia.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 54/88] usb: gadget: serial: fix Tx stall after buffer overflow
-Date:   Tue, 10 Mar 2020 13:39:02 +0100
-Message-Id: <20200310123619.619783130@linuxfoundation.org>
+Subject: [PATCH 4.9 51/88] serial: ar933x_uart: set UART_CS_{RX,TX}_READY_ORIDE
+Date:   Tue, 10 Mar 2020 13:38:59 +0100
+Message-Id: <20200310123618.789983260@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123606.543939933@linuxfoundation.org>
 References: <20200310123606.543939933@linuxfoundation.org>
@@ -61,45 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sergey Organov <sorganov@gmail.com>
+From: Daniel Golle <daniel@makrotopia.org>
 
-[ Upstream commit e4bfded56cf39b8d02733c1e6ef546b97961e18a ]
+[ Upstream commit 87c5cbf71ecbb9e289d60a2df22eb686c70bf196 ]
 
-Symptom: application opens /dev/ttyGS0 and starts sending (writing) to
-it while either USB cable is not connected, or nobody listens on the
-other side of the cable. If driver circular buffer overflows before
-connection is established, no data will be written to the USB layer
-until/unless /dev/ttyGS0 is closed and re-opened again by the
-application (the latter besides having no means of being notified about
-the event of establishing of the connection.)
+On AR934x this UART is usually not initialized by the bootloader
+as it is only used as a secondary serial port while the primary
+UART is a newly introduced NS16550-compatible.
+In order to make use of the ar933x-uart on AR934x without RTS/CTS
+hardware flow control, one needs to set the
+UART_CS_{RX,TX}_READY_ORIDE bits as other than on AR933x where this
+UART is used as primary/console, the bootloader on AR934x typically
+doesn't set those bits.
+Setting them explicitely on AR933x should not do any harm, so just
+set them unconditionally.
 
-Fix: on open and/or connect, kick Tx to flush circular buffer data to
-USB layer.
-
-Signed-off-by: Sergey Organov <sorganov@gmail.com>
-Reviewed-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Tested-by: Chuanhong Guo <gch981213@gmail.com>
+Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+Link: https://lore.kernel.org/r/20200207095335.GA179836@makrotopia.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/function/u_serial.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/tty/serial/ar933x_uart.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/usb/gadget/function/u_serial.c b/drivers/usb/gadget/function/u_serial.c
-index 510a54f889635..5d7d0f2e80a5e 100644
---- a/drivers/usb/gadget/function/u_serial.c
-+++ b/drivers/usb/gadget/function/u_serial.c
-@@ -715,8 +715,10 @@ static int gs_start_io(struct gs_port *port)
- 	port->n_read = 0;
- 	started = gs_start_rx(port);
+diff --git a/drivers/tty/serial/ar933x_uart.c b/drivers/tty/serial/ar933x_uart.c
+index d4462512605b5..246f4aab74075 100644
+--- a/drivers/tty/serial/ar933x_uart.c
++++ b/drivers/tty/serial/ar933x_uart.c
+@@ -289,6 +289,10 @@ static void ar933x_uart_set_termios(struct uart_port *port,
+ 	ar933x_uart_rmw_set(up, AR933X_UART_CS_REG,
+ 			    AR933X_UART_CS_HOST_INT_EN);
  
--	/* unblock any pending writes into our circular buffer */
- 	if (started) {
-+		gs_start_tx(port);
-+		/* Unblock any pending writes into our circular buffer, in case
-+		 * we didn't in gs_start_tx() */
- 		tty_wakeup(port->port.tty);
- 	} else {
- 		gs_free_requests(ep, head, &port->read_allocated);
++	/* enable RX and TX ready overide */
++	ar933x_uart_rmw_set(up, AR933X_UART_CS_REG,
++		AR933X_UART_CS_TX_READY_ORIDE | AR933X_UART_CS_RX_READY_ORIDE);
++
+ 	/* reenable the UART */
+ 	ar933x_uart_rmw(up, AR933X_UART_CS_REG,
+ 			AR933X_UART_CS_IF_MODE_M << AR933X_UART_CS_IF_MODE_S,
+@@ -421,6 +425,10 @@ static int ar933x_uart_startup(struct uart_port *port)
+ 	ar933x_uart_rmw_set(up, AR933X_UART_CS_REG,
+ 			    AR933X_UART_CS_HOST_INT_EN);
+ 
++	/* enable RX and TX ready overide */
++	ar933x_uart_rmw_set(up, AR933X_UART_CS_REG,
++		AR933X_UART_CS_TX_READY_ORIDE | AR933X_UART_CS_RX_READY_ORIDE);
++
+ 	/* Enable RX interrupts */
+ 	up->ier = AR933X_UART_INT_RX_VALID;
+ 	ar933x_uart_write(up, AR933X_UART_INT_EN_REG, up->ier);
 -- 
 2.20.1
 
