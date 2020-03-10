@@ -2,270 +2,175 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4080EC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 18:06:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54A5BC18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 18:07:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E360A20873
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 18:06:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 289DC21D56
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 18:07:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="qZfxwvqR";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="XcMWqoxa"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="My/uKnzK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726891AbgCJSGQ (ORCPT
+        id S1726956AbgCJSHZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 14:06:16 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:24800 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726403AbgCJSGQ (ORCPT
+        Tue, 10 Mar 2020 14:07:25 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:43353 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726436AbgCJSHY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 14:06:16 -0400
-Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02AHtTuA002400;
-        Tue, 10 Mar 2020 11:06:04 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
- subject : message-id : references : content-type : in-reply-to :
- mime-version; s=facebook; bh=vLlCKE3WAr0m59sWXWJwXlaSx2AfJH0bQ/ywFOK39D0=;
- b=qZfxwvqRzC+CnXET3TJjAvX8sGj483Nh4gVwS2KebOC9YJbkFeN8yj/hP1SDu5KGKuxo
- 2wiE2PYzKEf4wZAlWP1Kb3z5SvJZuMjVT0gA2QZCaydVbRd6FKiDTG2JfMR05UpleBk7
- 6Ga9AmuCtsFAXbVkY5e/yHrYOFIq27Uw3Ns= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 2ypfj4058f-2
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Tue, 10 Mar 2020 11:06:04 -0700
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.35.174) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1847.3; Tue, 10 Mar 2020 11:06:03 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Eh11QCxKhVBDlLQ09/YNyeo7wtotKZF1f9LNovOIsXFQwOlSS3LEizXo0jcbtJoY40Npf1+UhyckRe56SUnl43MXMGhAdDmVvbQr3DUMkKAYx3rEl5EHaV/Z+i84sFbY3GYeh7oc9F6MJ7Ip9Tka/xUJRG2Imn1poPu8eBzZ7eNMfzAAPZ0qNEZN/dRyq+cWuVZzFAsz/zDj810jzX24IVphQTcdYLWvpEkxoZSrFSbZZhOgs/7esV2Lx+kFRr5tM90Xrw3XU0/pOEydzdFyBgsZRQQkPgUsJ2k5yJmBltwvxTFkVvk4hq2HmmvCkdQDcb6CCUC6R3ENjTY2qCMBfg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vLlCKE3WAr0m59sWXWJwXlaSx2AfJH0bQ/ywFOK39D0=;
- b=kmWuRh8VGFxDVMdWqdd+yPOTRPX/F8r09qI3V5VHGF4PUWb+t3Z5bfa21GKdIZ3B+KITWiUZlXUm4SbMsCTKXtoxoOdNVyaevty258YUBtksmynoj5rwBNZRETPs/Ni4jWB5upeA2/uUCCVc5yaT94qP1SgwW3NTmJchtUukGrzA10aUs4dIlzRpfqFdGfkShDNTIj7niUYMCdJ80kfvYI14gvnhhzfbpyqKaQzDEFwwAab4a5FVj4mNW7dGLyYXnPjOETSAC+oxEcPMbF3Fv9+g4gMVA9uhsazZcS6AETRjs3lZBWr9lJ8JR1Dn3d+MFdCQkzXjjhk4iCfa7X4LYA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vLlCKE3WAr0m59sWXWJwXlaSx2AfJH0bQ/ywFOK39D0=;
- b=XcMWqoxaxwnonjl/NVMIoTVsmeHnklRo/uBISu/DfaLI24RUoIOQq2dZ6kxh6x4SQvL6YTqOv35R1hC6enwBGA+8Xe5Lpmp+0ATMbLERru0XZp0SAMb9zaZSaIVesslkyGQE+vd/OCSBguT2zmwoAOTDvCxgn3Rla70/DkGsG6Q=
-Received: from MWHPR15MB1661.namprd15.prod.outlook.com (2603:10b6:300:124::23)
- by MWHPR15MB1519.namprd15.prod.outlook.com (2603:10b6:300:bc::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.17; Tue, 10 Mar
- 2020 18:06:02 +0000
-Received: from MWHPR15MB1661.namprd15.prod.outlook.com
- ([fe80::f930:6bf2:6d2:93ef]) by MWHPR15MB1661.namprd15.prod.outlook.com
- ([fe80::f930:6bf2:6d2:93ef%8]) with mapi id 15.20.2793.013; Tue, 10 Mar 2020
- 18:06:02 +0000
-Date:   Tue, 10 Mar 2020 11:05:58 -0700
-From:   Roman Gushchin <guro@fb.com>
-To:     Mike Kravetz <mike.kravetz@oracle.com>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>, <linux-mm@kvack.org>,
-        <kernel-team@fb.com>, <linux-kernel@vger.kernel.org>,
-        Rik van Riel <riel@surriel.com>
-Subject: Re: [PATCH v2] mm: hugetlb: optionally allocate gigantic hugepages
- using cma
-Message-ID: <20200310180558.GD85000@carbon.dhcp.thefacebook.com>
-References: <20200310002524.2291595-1-guro@fb.com>
- <5cfa9031-fc15-2bcc-adb9-9779285ef0f7@oracle.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5cfa9031-fc15-2bcc-adb9-9779285ef0f7@oracle.com>
-X-ClientProxiedBy: MWHPR10CA0063.namprd10.prod.outlook.com
- (2603:10b6:300:2c::25) To MWHPR15MB1661.namprd15.prod.outlook.com
- (2603:10b6:300:124::23)
+        Tue, 10 Mar 2020 14:07:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583863644;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=HtdZDSB9VGAI7D1yhnmNJX0tN7XLkk/JV9iMCSI2TFo=;
+        b=My/uKnzKnn002sPkeyMOnj/wSYvZI4ziKy3viIxBOmsdd+9qfTlqv83MtlXJuZTwvmSIeN
+        mAON5ufg5nzUpxx29F9IODqfO35MaS9WwheRlLYYzqqecGFUmGkY+FhJ4w43IjrK0xRdFs
+        in1T71u2WCiuIXPa8r3eT4/H9/4vrD8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-205-MTcNXNR0PEifXEEHLcJJKA-1; Tue, 10 Mar 2020 14:07:21 -0400
+X-MC-Unique: MTcNXNR0PEifXEEHLcJJKA-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F04CC800D4E;
+        Tue, 10 Mar 2020 18:07:19 +0000 (UTC)
+Received: from horse.redhat.com (unknown [10.18.25.210])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BDEAD19C7F;
+        Tue, 10 Mar 2020 18:07:19 +0000 (UTC)
+Received: by horse.redhat.com (Postfix, from userid 10451)
+        id 463E022021D; Tue, 10 Mar 2020 14:07:19 -0400 (EDT)
+Date:   Tue, 10 Mar 2020 14:07:19 -0400
+From:   Vivek Goyal <vgoyal@redhat.com>
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     Michael Stapelberg <michael+lkml@stapelberg.ch>,
+        fuse-devel <fuse-devel@lists.sourceforge.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kyle Sanderson <kyle.leet@gmail.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: Still a pretty bad time on 5.4.6 with fuse_request_end.
+Message-ID: <20200310180719.GB38440@redhat.com>
+References: <CAJfpegtUAHPL9tsFB85ZqjAfy0xwz7ATRcCtLbzFBo8=WnCvLw@mail.gmail.com>
+ <20200209080918.1562823-1-michael+lkml@stapelberg.ch>
+ <CAJfpegv4iL=bW3TXP3F9w1z6-LUox8KiBmw7UBcWE-0jiK0YsA@mail.gmail.com>
+ <CANnVG6kYh6M30mwBHcGeFf=fhqKmWKPeUj2GYbvNgtq0hm=gXQ@mail.gmail.com>
+ <CAJfpegtX0Z3_OZFG50epWGHkW5aOMfYmn61WmqYC67aBmJyDMA@mail.gmail.com>
+ <CANnVG6=s1C7LSDGD1-Ato-sfaKi1LQvW3GM5wfAiUqWXibEohw@mail.gmail.com>
+ <CAJfpegvBguKcNZk-p7sAtSuNH_7HfdCyYvo8Wh7X6P=hT=kPrA@mail.gmail.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from carbon.dhcp.thefacebook.com (2620:10d:c090:400::5:3d1f) by MWHPR10CA0063.namprd10.prod.outlook.com (2603:10b6:300:2c::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.16 via Frontend Transport; Tue, 10 Mar 2020 18:06:01 +0000
-X-Originating-IP: [2620:10d:c090:400::5:3d1f]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 5cd015d2-0769-4b12-afdc-08d7c51db176
-X-MS-TrafficTypeDiagnostic: MWHPR15MB1519:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <MWHPR15MB1519F07D67C7F6D18DBC2458BEFF0@MWHPR15MB1519.namprd15.prod.outlook.com>
-X-FB-Source: Internal
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-Forefront-PRVS: 033857D0BD
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(39860400002)(396003)(346002)(366004)(136003)(376002)(199004)(189003)(7696005)(8676002)(52116002)(33656002)(6506007)(8936002)(316002)(6666004)(1076003)(81156014)(5660300002)(2906002)(53546011)(81166006)(6916009)(55016002)(66476007)(66556008)(66946007)(4326008)(86362001)(16526019)(186003)(478600001)(9686003)(54906003);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1519;H:MWHPR15MB1661.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-Received-SPF: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: SEe9GgU8tGjnm+Qbj+72SP52fvPXb3fU8wHl8xzGERTrRJXbydO/o4QqIzQ7WqfEipcUl2l5uRmoEOWaUs5WzSFbLcI9nY6TYklis8xgpMh0FvYhMJs1Nu+SSaP5LDrNkw5bx5SqlbUvj6Mh1HnyeFME3xNNUQ3eqqAwyjNjrvEIWDE9cWmfnmRf4CTGbZd8Ifa73YuBXvGD8R7AIvL4HVnNe2Xpgaw2fpvSlCxgnzwUyH4TVt0gw3/A9fThlybFclhc0YocIK5MrEmRImHjjM6kxKd6Xq7t/DzDFopqOEJiBPC5D4wWzapT2FEMF/w3h8aoZlTGh0j8DJ2p/BOiVVUubaucQVMfhcSZ/AxkITf689dOL1k0meOAIogvvoVAJUEfV9Q2/EIrDBWJkdrfnzCbryfvxI78Gxia1F0xVzbWA6KpsNW0qARmCFs5RrE0
-X-MS-Exchange-AntiSpam-MessageData: 9Ltjg4BqroXgMSo8jw8HFm3ojFoXEqp1qbNSE+5d4UgnXoZkg7l0JXCA0SsBX9NuUYdIuCpMrMqEF1kVydx3Rk5St2mQYYtk9ZYSnDOrTbgqFyLfSEyd/J5Gmht8HmzP1ddAz19sMjedIJdDFD4fKbZsPO7e+oqSPyGlGoOK6bMbu3wSWqPP4on7Pl1Ij+0G
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5cd015d2-0769-4b12-afdc-08d7c51db176
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Mar 2020 18:06:02.1302
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: L9qA8PjYYwJu8Fyv/U0LihdeWgzosQ2rjC1ZeAQYgS90quZWqFpy7Cl8q2lkANhP
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1519
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-10_12:2020-03-10,2020-03-10 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 bulkscore=0 adultscore=0
- priorityscore=1501 lowpriorityscore=0 mlxscore=0 spamscore=0
- suspectscore=1 impostorscore=0 phishscore=0 clxscore=1015 mlxlogscore=999
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003100109
-X-FB-Internal: deliver
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAJfpegvBguKcNZk-p7sAtSuNH_7HfdCyYvo8Wh7X6P=hT=kPrA@mail.gmail.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 10, 2020 at 10:27:01AM -0700, Mike Kravetz wrote:
-> On 3/9/20 5:25 PM, Roman Gushchin wrote:
-> > Commit 944d9fec8d7a ("hugetlb: add support for gigantic page allocation
-> > at runtime") has added the run-time allocation of gigantic pages. However
-> > it actually works only at early stages of the system loading, when
-> > the majority of memory is free. After some time the memory gets
-> > fragmented by non-movable pages, so the chances to find a contiguous
-> > 1 GB block are getting close to zero. Even dropping caches manually
-> > doesn't help a lot.
-> > 
-> > At large scale rebooting servers in order to allocate gigantic hugepages
-> > is quite expensive and complex. At the same time keeping some constant
-> > percentage of memory in reserved hugepages even if the workload isn't
-> > using it is a big waste: not all workloads can benefit from using 1 GB
-> > pages.
-> > 
-> > The following solution can solve the problem:
-> > 1) On boot time a dedicated cma area* is reserved. The size is passed
-> >    as a kernel argument.
-> > 2) Run-time allocations of gigantic hugepages are performed using the
-> >    cma allocator and the dedicated cma area
-> > 
-> > In this case gigantic hugepages can be allocated successfully with a
-> > high probability, however the memory isn't completely wasted if nobody
-> > is using 1GB hugepages: it can be used for pagecache, anon memory,
-> > THPs, etc.
-> > 
-> > * On a multi-node machine a per-node cma area is allocated on each node.
-> >   Following gigantic hugetlb allocation are using the first available
-> >   numa node if the mask isn't specified by a user.
-> > 
-> > Usage:
-> > 1) configure the kernel to allocate a cma area for hugetlb allocations:
-> >    pass hugetlb_cma=10G as a kernel argument
-> > 
-> > 2) allocate hugetlb pages as usual, e.g.
-> >    echo 10 > /sys/kernel/mm/hugepages/hugepages-1048576kB/nr_hugepages
-> > 
-> > If the option isn't enabled or the allocation of the cma area failed,
-> > the current behavior of the system is preserved.
-> > 
-> > Only x86 is covered by this patch, but it's trivial to extend it to
-> > cover other architectures as well.
-> > 
-> > v2: fixed !CONFIG_CMA build, suggested by Andrew Morton
-> > 
-> > Signed-off-by: Roman Gushchin <guro@fb.com>
-> 
-> Thanks!  I really like this idea.
+On Wed, Feb 12, 2020 at 08:36:11PM +0100, Miklos Szeredi wrote:
+> On Wed, Feb 12, 2020 at 10:38 AM Michael Stapelberg
+> <michael+lkml@stapelberg.ch> wrote:
+> >
+> > Unfortunately not: when I change the code like so:
+> >
+> >     bool async;
+> >     uint32_t opcode_early =3D req->args->opcode;
+> >
+> >     if (test_and_set_bit(FR_FINISHED, &req->flags))
+> >         goto put_request;
+> >
+> >     async =3D req->args->end;
+> >
+> > =E2=80=A6gdb only reports:
+> >
+> > (gdb) bt
+> > #0  0x000000a700000001 in ?? ()
+> > #1  0xffffffff8137fc99 in fuse_copy_finish (cs=3D0x20000ffffffff) at
+> > fs/fuse/dev.c:681
+> > Backtrace stopped: previous frame inner to this frame (corrupt stack?=
+)
+> >
+> > But maybe that=E2=80=99s a hint in and of itself?
+>=20
+> Yep, it's a stack use after return bug.   Attached patch should fix
+> it, though I haven't tested it.
 
-Thank you!
+I think I have noticed couple of crashes in fuse_request_end() while
+it was trying to call req->args->end() and I suspect this patch might
+fix the issue.
 
-> 
-> > ---
-> >  .../admin-guide/kernel-parameters.txt         |   7 ++
-> >  arch/x86/kernel/setup.c                       |   3 +
-> >  include/linux/hugetlb.h                       |   2 +
-> >  mm/hugetlb.c                                  | 115 ++++++++++++++++++
-> >  4 files changed, 127 insertions(+)
-> > 
-> <snip>
-> > diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-> > index a74262c71484..ceeb06ddfd41 100644
-> > --- a/arch/x86/kernel/setup.c
-> > +++ b/arch/x86/kernel/setup.c
-> > @@ -16,6 +16,7 @@
-> >  #include <linux/pci.h>
-> >  #include <linux/root_dev.h>
-> >  #include <linux/sfi.h>
-> > +#include <linux/hugetlb.h>
-> >  #include <linux/tboot.h>
-> >  #include <linux/usb/xhci-dbgp.h>
-> >  
-> > @@ -1158,6 +1159,8 @@ void __init setup_arch(char **cmdline_p)
-> >  	initmem_init();
-> >  	dma_contiguous_reserve(max_pfn_mapped << PAGE_SHIFT);
-> >  
-> > +	hugetlb_cma_reserve();
-> > +
-> 
-> I know this is called from arch specific code here to fit in with the timing
-> of CMA setup/reservation calls.  However, there really is nothing architecture
-> specific about this functionality.  It would be great IMO if we could make
-> this architecture independent.  However, I can not think of a straight forward
-> way to do this.
+Just that I have not been able to reproduce it reliably to be able test
+it.
 
-I agree. Unfortunately I have no better idea than having an arch-dependent hook.
+Vivek
 
-> 
-> >  	/*
-> >  	 * Reserve memory for crash kernel after SRAT is parsed so that it
-> >  	 * won't consume hotpluggable memory.
-> <snip>
-> > diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-> <snip>
-> > +void __init hugetlb_cma_reserve(void)
-> > +{
-> > +	unsigned long totalpages = 0;
-> > +	unsigned long start_pfn, end_pfn;
-> > +	phys_addr_t size;
-> > +	int nid, i, res;
-> > +
-> > +	if (!hugetlb_cma_size && !hugetlb_cma_percent)
-> > +		return;
-> > +
-> > +	if (hugetlb_cma_percent) {
-> > +		for_each_mem_pfn_range(i, MAX_NUMNODES, &start_pfn, &end_pfn,
-> > +				       NULL)
-> > +			totalpages += end_pfn - start_pfn;
-> > +
-> > +		size = PAGE_SIZE * (hugetlb_cma_percent * 100 * totalpages) /
-> > +			10000UL;
-> > +	} else {
-> > +		size = hugetlb_cma_size;
-> > +	}
-> > +
-> > +	pr_info("hugetlb_cma: reserve %llu, %llu per node\n", size,
-> > +		size / nr_online_nodes);
-> > +
-> > +	size /= nr_online_nodes;
-> > +
-> > +	for_each_node_state(nid, N_ONLINE) {
-> > +		unsigned long min_pfn = 0, max_pfn = 0;
-> > +
-> > +		for_each_mem_pfn_range(i, nid, &start_pfn, &end_pfn, NULL) {
-> > +			if (!min_pfn)
-> > +				min_pfn = start_pfn;
-> > +			max_pfn = end_pfn;
-> > +		}
-> > +
-> > +		res = cma_declare_contiguous(PFN_PHYS(min_pfn), size,
-> > +					     PFN_PHYS(max_pfn), (1UL << 30),
-> 
-> The alignment is hard coded for x86 gigantic page size.  If this supports
-> more architectures or becomes arch independent we will need to determine
-> what this alignment should be.  Perhaps an arch specific call back to get
-> the alignment for gigantic pages.  That will require a little thought as
-> some arch's support multiple gigantic page sizes.
+>=20
+> Thanks,
+> Miklos
 
-Good point!
-Should we take the biggest possible size as a reference?
-Or the smallest (larger than MAX_ORDER)?
+> ---
+>  fs/fuse/dev.c    |    6 +++---
+>  fs/fuse/fuse_i.h |    2 ++
+>  2 files changed, 5 insertions(+), 3 deletions(-)
+>=20
+> --- a/fs/fuse/dev.c
+> +++ b/fs/fuse/dev.c
+> @@ -276,12 +276,10 @@ static void flush_bg_queue(struct fuse_c
+>  void fuse_request_end(struct fuse_conn *fc, struct fuse_req *req)
+>  {
+>  	struct fuse_iqueue *fiq =3D &fc->iq;
+> -	bool async;
+> =20
+>  	if (test_and_set_bit(FR_FINISHED, &req->flags))
+>  		goto put_request;
+> =20
+> -	async =3D req->args->end;
+>  	/*
+>  	 * test_and_set_bit() implies smp_mb() between bit
+>  	 * changing and below intr_entry check. Pairs with
+> @@ -324,7 +322,7 @@ void fuse_request_end(struct fuse_conn *
+>  		wake_up(&req->waitq);
+>  	}
+> =20
+> -	if (async)
+> +	if (test_bit(FR_ASYNC, &req->flags))
+>  		req->args->end(fc, req->args, req->out.h.error);
+>  put_request:
+>  	fuse_put_request(fc, req);
+> @@ -471,6 +469,8 @@ static void fuse_args_to_req(struct fuse
+>  	req->in.h.opcode =3D args->opcode;
+>  	req->in.h.nodeid =3D args->nodeid;
+>  	req->args =3D args;
+> +	if (args->end)
+> +		set_bit(FR_ASYNC, &req->flags);
+>  }
+> =20
+>  ssize_t fuse_simple_request(struct fuse_conn *fc, struct fuse_args *ar=
+gs)
+> --- a/fs/fuse/fuse_i.h
+> +++ b/fs/fuse/fuse_i.h
+> @@ -301,6 +301,7 @@ struct fuse_io_priv {
+>   * FR_SENT:		request is in userspace, waiting for an answer
+>   * FR_FINISHED:		request is finished
+>   * FR_PRIVATE:		request is on private list
+> + * FR_ASYNC:		request is asynchronous
+>   */
+>  enum fuse_req_flag {
+>  	FR_ISREPLY,
+> @@ -314,6 +315,7 @@ enum fuse_req_flag {
+>  	FR_SENT,
+>  	FR_FINISHED,
+>  	FR_PRIVATE,
+> +	FR_ASYNC,
+>  };
+> =20
+>  /**
 
-Thanks!
