@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BDA4C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:34:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E4CFC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:34:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E702824649
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:34:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2839B20675
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:34:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583847290;
-	bh=NisVW/p2wf8rpwpiYJMb0ShWUKL331EHXrmVqlbQlhI=;
+	s=default; t=1583847293;
+	bh=Z0KNwg6IP7EWvAv7Vzu6mx2CMsvoDKIofWCO/NEXt/c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ik+nRv6OtFWwSlxveneps2ZAUlDueqJHGukzklW+jyMY/Kuzj8W4xAeZRhl6gcda1
-	 iwfs6+YgNhCtCfs6Lj6DnnGIooD8qmBxWLo3URSXXK3TZGGAGHI1K8SvUhOhvkiu/a
-	 etLSkTHTZWo/t9dhcXwaV9j4uYjxfWyriwbfuaME=
+	b=NF8+wRrj4abbYT35CUOB0WwC3gDgaNGIQbbbS09O2esyqHOxjRsl5FAHiBb379Bua
+	 8xNa9uq/JB2SZiIVVlClyoI6qkooEVSPP+6Gikcezj9LH4KOk6ys9wE8OikwgTrGdh
+	 kQ6Ea89HzwI8FHOZfONOSuk0msK9ab3TaqxGODKs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727393AbgCJMpz (ORCPT
+        id S1727983AbgCJNew (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:45:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48696 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:34:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48596 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726861AbgCJMpv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:45:51 -0400
+        id S1727196AbgCJMpt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:45:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C6B0D2467D;
-        Tue, 10 Mar 2020 12:45:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 26D1224691;
+        Tue, 10 Mar 2020 12:45:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844351;
-        bh=NisVW/p2wf8rpwpiYJMb0ShWUKL331EHXrmVqlbQlhI=;
+        s=default; t=1583844348;
+        bh=Z0KNwg6IP7EWvAv7Vzu6mx2CMsvoDKIofWCO/NEXt/c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KAOHqr/BIQT84CGzWDRUXI74KgG/jWJAjqWIqH5VbryOPwOA9GFMePsR1tfTanXn6
-         26J7O5Sp+Fsy01vLWVbuNQOLmE42rODaKP4Z2ttl0hSZMjpjaUmHZ1DcQ7ER1JuRe4
-         TonpoaOUBu20CociAoO/HlbMYNWl7RgLxsRxc+Kk=
+        b=qgdPjKq/tjCY/hYKGEuwM+0cDMr88POXKF4VUtK255tWO3E+cAGNs3EZ+/grqVP5f
+         ifzlmq9jaC9GmG+MR93E3usZT3vha97115clQJduqNAMMOhV3buQPNQrDHrrhW9m8g
+         lBP97v0Qy6eXSANAaz6UAM6+UY1Oa9CDN6EDdQiE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+f2a62d07a5198c819c7b@syzkaller.appspotmail.com,
-        =?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        syzbot+399c44bf1f43b8747403@syzkaller.appspotmail.com,
+        syzbot+e4b12d8d202701f08b6d@syzkaller.appspotmail.com,
+        Paul Moore <paul@paul-moore.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 50/88] vhost: Check docket sk_family instead of call getname
-Date:   Tue, 10 Mar 2020 13:38:58 +0100
-Message-Id: <20200310123618.551780685@linuxfoundation.org>
+Subject: [PATCH 4.9 49/88] audit: always check the netlink payload length in audit_receive_msg()
+Date:   Tue, 10 Mar 2020 13:38:57 +0100
+Message-Id: <20200310123618.260904337@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123606.543939933@linuxfoundation.org>
 References: <20200310123606.543939933@linuxfoundation.org>
@@ -63,59 +62,151 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eugenio Pérez <eperezma@redhat.com>
+From: Paul Moore <paul@paul-moore.com>
 
-[ Upstream commit 42d84c8490f9f0931786f1623191fcab397c3d64 ]
+[ Upstream commit 756125289285f6e55a03861bf4b6257aa3d19a93 ]
 
-Doing so, we save one call to get data we already have in the struct.
+This patch ensures that we always check the netlink payload length
+in audit_receive_msg() before we take any action on the payload
+itself.
 
-Also, since there is no guarantee that getname use sockaddr_ll
-parameter beyond its size, we add a little bit of security here.
-It should do not do beyond MAX_ADDR_LEN, but syzbot found that
-ax25_getname writes more (72 bytes, the size of full_sockaddr_ax25,
-versus 20 + 32 bytes of sockaddr_ll + MAX_ADDR_LEN in syzbot repro).
-
-Fixes: 3a4d5c94e9593 ("vhost_net: a kernel-level virtio server")
-Reported-by: syzbot+f2a62d07a5198c819c7b@syzkaller.appspotmail.com
-Signed-off-by: Eugenio Pérez <eperezma@redhat.com>
-Acked-by: Michael S. Tsirkin <mst@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Cc: stable@vger.kernel.org
+Reported-by: syzbot+399c44bf1f43b8747403@syzkaller.appspotmail.com
+Reported-by: syzbot+e4b12d8d202701f08b6d@syzkaller.appspotmail.com
+Signed-off-by: Paul Moore <paul@paul-moore.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/vhost/net.c | 13 ++-----------
- 1 file changed, 2 insertions(+), 11 deletions(-)
+ kernel/audit.c | 40 +++++++++++++++++++++-------------------
+ 1 file changed, 21 insertions(+), 19 deletions(-)
 
-diff --git a/drivers/vhost/net.c b/drivers/vhost/net.c
-index dd8798bf88e7c..861f43f8f9cea 100644
---- a/drivers/vhost/net.c
-+++ b/drivers/vhost/net.c
-@@ -914,11 +914,7 @@ static int vhost_net_release(struct inode *inode, struct file *f)
+diff --git a/kernel/audit.c b/kernel/audit.c
+index 3461a3d874fed..53dcaa3b67bcf 100644
+--- a/kernel/audit.c
++++ b/kernel/audit.c
+@@ -751,13 +751,11 @@ static void audit_log_feature_change(int which, u32 old_feature, u32 new_feature
+ 	audit_log_end(ab);
+ }
  
- static struct socket *get_raw_socket(int fd)
+-static int audit_set_feature(struct sk_buff *skb)
++static int audit_set_feature(struct audit_features *uaf)
  {
--	struct {
--		struct sockaddr_ll sa;
--		char  buf[MAX_ADDR_LEN];
--	} uaddr;
--	int uaddr_len = sizeof uaddr, r;
-+	int r;
- 	struct socket *sock = sockfd_lookup(fd, &r);
+-	struct audit_features *uaf;
+ 	int i;
  
- 	if (!sock)
-@@ -930,12 +926,7 @@ static struct socket *get_raw_socket(int fd)
- 		goto err;
+ 	BUILD_BUG_ON(AUDIT_LAST_FEATURE + 1 > ARRAY_SIZE(audit_feature_names));
+-	uaf = nlmsg_data(nlmsg_hdr(skb));
+ 
+ 	/* if there is ever a version 2 we should handle that here */
+ 
+@@ -823,6 +821,7 @@ static int audit_receive_msg(struct sk_buff *skb, struct nlmsghdr *nlh)
+ {
+ 	u32			seq;
+ 	void			*data;
++	int			data_len;
+ 	int			err;
+ 	struct audit_buffer	*ab;
+ 	u16			msg_type = nlh->nlmsg_type;
+@@ -846,6 +845,7 @@ static int audit_receive_msg(struct sk_buff *skb, struct nlmsghdr *nlh)
  	}
+ 	seq  = nlh->nlmsg_seq;
+ 	data = nlmsg_data(nlh);
++	data_len = nlmsg_len(nlh);
  
--	r = sock->ops->getname(sock, (struct sockaddr *)&uaddr.sa,
--			       &uaddr_len, 0);
--	if (r)
--		goto err;
+ 	switch (msg_type) {
+ 	case AUDIT_GET: {
+@@ -867,7 +867,7 @@ static int audit_receive_msg(struct sk_buff *skb, struct nlmsghdr *nlh)
+ 		struct audit_status	s;
+ 		memset(&s, 0, sizeof(s));
+ 		/* guard against past and future API changes */
+-		memcpy(&s, data, min_t(size_t, sizeof(s), nlmsg_len(nlh)));
++		memcpy(&s, data, min_t(size_t, sizeof(s), data_len));
+ 		if (s.mask & AUDIT_STATUS_ENABLED) {
+ 			err = audit_set_enabled(s.enabled);
+ 			if (err < 0)
+@@ -930,7 +930,9 @@ static int audit_receive_msg(struct sk_buff *skb, struct nlmsghdr *nlh)
+ 			return err;
+ 		break;
+ 	case AUDIT_SET_FEATURE:
+-		err = audit_set_feature(skb);
++		if (data_len < sizeof(struct audit_features))
++			return -EINVAL;
++		err = audit_set_feature(data);
+ 		if (err)
+ 			return err;
+ 		break;
+@@ -942,6 +944,8 @@ static int audit_receive_msg(struct sk_buff *skb, struct nlmsghdr *nlh)
+ 
+ 		err = audit_filter(msg_type, AUDIT_FILTER_USER);
+ 		if (err == 1) { /* match or error */
++			char *str = data;
++
+ 			err = 0;
+ 			if (msg_type == AUDIT_USER_TTY) {
+ 				err = tty_audit_push();
+@@ -950,19 +954,17 @@ static int audit_receive_msg(struct sk_buff *skb, struct nlmsghdr *nlh)
+ 			}
+ 			mutex_unlock(&audit_cmd_mutex);
+ 			audit_log_common_recv_msg(&ab, msg_type);
+-			if (msg_type != AUDIT_USER_TTY)
++			if (msg_type != AUDIT_USER_TTY) {
++				/* ensure NULL termination */
++				str[data_len - 1] = '\0';
+ 				audit_log_format(ab, " msg='%.*s'",
+ 						 AUDIT_MESSAGE_TEXT_MAX,
+-						 (char *)data);
+-			else {
+-				int size;
 -
--	if (uaddr.sa.sll_family != AF_PACKET) {
-+	if (sock->sk->sk_family != AF_PACKET) {
- 		r = -EPFNOSUPPORT;
- 		goto err;
- 	}
++						 str);
++			} else {
+ 				audit_log_format(ab, " data=");
+-				size = nlmsg_len(nlh);
+-				if (size > 0 &&
+-				    ((unsigned char *)data)[size - 1] == '\0')
+-					size--;
+-				audit_log_n_untrustedstring(ab, data, size);
++				if (data_len > 0 && str[data_len - 1] == '\0')
++					data_len--;
++				audit_log_n_untrustedstring(ab, str, data_len);
+ 			}
+ 			audit_set_portid(ab, NETLINK_CB(skb).portid);
+ 			audit_log_end(ab);
+@@ -971,7 +973,7 @@ static int audit_receive_msg(struct sk_buff *skb, struct nlmsghdr *nlh)
+ 		break;
+ 	case AUDIT_ADD_RULE:
+ 	case AUDIT_DEL_RULE:
+-		if (nlmsg_len(nlh) < sizeof(struct audit_rule_data))
++		if (data_len < sizeof(struct audit_rule_data))
+ 			return -EINVAL;
+ 		if (audit_enabled == AUDIT_LOCKED) {
+ 			audit_log_common_recv_msg(&ab, AUDIT_CONFIG_CHANGE);
+@@ -980,7 +982,7 @@ static int audit_receive_msg(struct sk_buff *skb, struct nlmsghdr *nlh)
+ 			return -EPERM;
+ 		}
+ 		err = audit_rule_change(msg_type, NETLINK_CB(skb).portid,
+-					   seq, data, nlmsg_len(nlh));
++					   seq, data, data_len);
+ 		break;
+ 	case AUDIT_LIST_RULES:
+ 		err = audit_list_rules_send(skb, seq);
+@@ -994,7 +996,7 @@ static int audit_receive_msg(struct sk_buff *skb, struct nlmsghdr *nlh)
+ 	case AUDIT_MAKE_EQUIV: {
+ 		void *bufp = data;
+ 		u32 sizes[2];
+-		size_t msglen = nlmsg_len(nlh);
++		size_t msglen = data_len;
+ 		char *old, *new;
+ 
+ 		err = -EINVAL;
+@@ -1070,7 +1072,7 @@ static int audit_receive_msg(struct sk_buff *skb, struct nlmsghdr *nlh)
+ 
+ 		memset(&s, 0, sizeof(s));
+ 		/* guard against past and future API changes */
+-		memcpy(&s, data, min_t(size_t, sizeof(s), nlmsg_len(nlh)));
++		memcpy(&s, data, min_t(size_t, sizeof(s), data_len));
+ 		/* check if new data is valid */
+ 		if ((s.enabled != 0 && s.enabled != 1) ||
+ 		    (s.log_passwd != 0 && s.log_passwd != 1))
 -- 
 2.20.1
 
