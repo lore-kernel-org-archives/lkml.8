@@ -4,23 +4,24 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60A0CC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:13:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC2A9C18E5C
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:13:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 373932467F
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:13:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF58424681
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:13:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726851AbgCJJNO (ORCPT
+        id S1726872AbgCJJNV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 05:13:14 -0400
-Received: from 8bytes.org ([81.169.241.247]:50586 "EHLO theia.8bytes.org"
+        Tue, 10 Mar 2020 05:13:21 -0400
+Received: from 8bytes.org ([81.169.241.247]:50500 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726481AbgCJJMh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 05:12:37 -0400
+        id S1726461AbgCJJMg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 05:12:36 -0400
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 633C0869; Tue, 10 Mar 2020 10:12:33 +0100 (CET)
+        id CD11C768; Tue, 10 Mar 2020 10:12:32 +0100 (CET)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     iommu@lists.linux-foundation.org
 Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
@@ -39,9 +40,9 @@ Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
         Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 09/15] iommu/arm-smmu-v3: Use accessor functions for iommu private data
-Date:   Tue, 10 Mar 2020 10:12:23 +0100
-Message-Id: <20200310091229.29830-10-joro@8bytes.org>
+Subject: [PATCH 06/15] iommu: Move iommu_fwspec to struct dev_iommu
+Date:   Tue, 10 Mar 2020 10:12:20 +0100
+Message-Id: <20200310091229.29830-7-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200310091229.29830-1-joro@8bytes.org>
 References: <20200310091229.29830-1-joro@8bytes.org>
@@ -52,63 +53,85 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Make use of dev_iommu_priv_set/get() functions in the code.
+Move the iommu_fwspec pointer in struct device into struct dev_iommu.
+This is a step in the effort to reduce the iommu related pointers in
+struct device to one.
 
-Tested-by: Hanjun Guo <guohanjun@huawei.com>
+Tested-by: Will Deacon <will@kernel.org> # arm-smmu
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- drivers/iommu/arm-smmu-v3.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/iommu/iommu.c  |  3 +++
+ include/linux/device.h |  1 -
+ include/linux/iommu.h  | 12 ++++++++----
+ 3 files changed, 11 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-index aa3ac2a03807..2b68498dfb66 100644
---- a/drivers/iommu/arm-smmu-v3.c
-+++ b/drivers/iommu/arm-smmu-v3.c
-@@ -2659,7 +2659,7 @@ static int arm_smmu_attach_dev(struct iommu_domain *domain, struct device *dev)
+diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+index beac2ef063dd..826a67ba247f 100644
+--- a/drivers/iommu/iommu.c
++++ b/drivers/iommu/iommu.c
+@@ -2405,6 +2405,9 @@ int iommu_fwspec_init(struct device *dev, struct fwnode_handle *iommu_fwnode,
+ 	if (fwspec)
+ 		return ops == fwspec->ops ? 0 : -EINVAL;
+ 
++	if (!dev_iommu_get(dev))
++		return -ENOMEM;
++
+ 	fwspec = kzalloc(sizeof(*fwspec), GFP_KERNEL);
  	if (!fwspec)
- 		return -ENOENT;
+ 		return -ENOMEM;
+diff --git a/include/linux/device.h b/include/linux/device.h
+index 405a8f11bec1..ca29c39a6480 100644
+--- a/include/linux/device.h
++++ b/include/linux/device.h
+@@ -613,7 +613,6 @@ struct device {
  
--	master = fwspec->iommu_priv;
-+	master = dev_iommu_priv_get(dev);
- 	smmu = master->smmu;
+ 	void	(*release)(struct device *dev);
+ 	struct iommu_group	*iommu_group;
+-	struct iommu_fwspec	*iommu_fwspec;
+ 	struct dev_iommu	*iommu;
  
- 	arm_smmu_detach_dev(master);
-@@ -2795,7 +2795,7 @@ static int arm_smmu_add_device(struct device *dev)
- 	if (!fwspec || fwspec->ops != &arm_smmu_ops)
- 		return -ENODEV;
+ 	bool			offline_disabled:1;
+diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+index 1c9fa5c1174b..f5edc21a644d 100644
+--- a/include/linux/iommu.h
++++ b/include/linux/iommu.h
+@@ -368,14 +368,15 @@ struct iommu_fault_param {
+  * struct dev_iommu - Collection of per-device IOMMU data
+  *
+  * @fault_param: IOMMU detected device fault reporting data
++ * @fwspec:	 IOMMU fwspec data
+  *
+  * TODO: migrate other per device data pointers under iommu_dev_data, e.g.
+  *	struct iommu_group	*iommu_group;
+- *	struct iommu_fwspec	*iommu_fwspec;
+  */
+ struct dev_iommu {
+ 	struct mutex lock;
+-	struct iommu_fault_param *fault_param;
++	struct iommu_fault_param	*fault_param;
++	struct iommu_fwspec		*fwspec;
+ };
  
--	if (WARN_ON_ONCE(fwspec->iommu_priv))
-+	if (WARN_ON_ONCE(dev_iommu_priv_get(dev)))
- 		return -EBUSY;
+ int  iommu_device_register(struct iommu_device *iommu);
+@@ -614,13 +615,16 @@ const struct iommu_ops *iommu_ops_from_fwnode(struct fwnode_handle *fwnode);
  
- 	smmu = arm_smmu_get_by_fwnode(fwspec->iommu_fwnode);
-@@ -2810,7 +2810,7 @@ static int arm_smmu_add_device(struct device *dev)
- 	master->smmu = smmu;
- 	master->sids = fwspec->ids;
- 	master->num_sids = fwspec->num_ids;
--	fwspec->iommu_priv = master;
-+	dev_iommu_priv_set(dev, master);
- 
- 	/* Check the SIDs are in range of the SMMU and our stream table */
- 	for (i = 0; i < master->num_sids; i++) {
-@@ -2852,7 +2852,7 @@ static int arm_smmu_add_device(struct device *dev)
- 	iommu_device_unlink(&smmu->iommu, dev);
- err_free_master:
- 	kfree(master);
--	fwspec->iommu_priv = NULL;
-+	dev_iommu_priv_set(dev, NULL);
- 	return ret;
+ static inline struct iommu_fwspec *dev_iommu_fwspec_get(struct device *dev)
+ {
+-	return dev->iommu_fwspec;
++	if (dev->iommu)
++		return dev->iommu->fwspec;
++	else
++		return NULL;
  }
  
-@@ -2865,7 +2865,7 @@ static void arm_smmu_remove_device(struct device *dev)
- 	if (!fwspec || fwspec->ops != &arm_smmu_ops)
- 		return;
+ static inline void dev_iommu_fwspec_set(struct device *dev,
+ 					struct iommu_fwspec *fwspec)
+ {
+-	dev->iommu_fwspec = fwspec;
++	dev->iommu->fwspec = fwspec;
+ }
  
--	master = fwspec->iommu_priv;
-+	master = dev_iommu_priv_get(dev);
- 	smmu = master->smmu;
- 	arm_smmu_detach_dev(master);
- 	iommu_group_remove_device(dev);
+ int iommu_probe_device(struct device *dev);
 -- 
 2.17.1
 
