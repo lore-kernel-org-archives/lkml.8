@@ -2,251 +2,188 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39CB5C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 14:57:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25077C18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 14:57:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A9DC20675
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 14:57:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0025D20675
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 14:57:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727734AbgCJO5T (ORCPT
+        id S1727754AbgCJO5V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 10:57:19 -0400
-Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:41849
-        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726382AbgCJO5S (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 10:57:18 -0400
-X-IronPort-AV: E=Sophos;i="5.70,537,1574118000"; 
-   d="scan'208";a="341899706"
-Received: from dt-lawall.paris.inria.fr ([128.93.67.65])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Mar 2020 15:57:16 +0100
-Date:   Tue, 10 Mar 2020 15:57:15 +0100 (CET)
-From:   Julia Lawall <julia.lawall@inria.fr>
-X-X-Sender: julia@hadrien
-To:     Shreeya Patel <shreeya.patel23498@gmail.com>
-cc:     Larry.Finger@lwfinger.net, gregkh@linuxfoundation.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        outreachy-kernel@googlegroups.com, sbrivio@redhat.com,
-        daniel.baluta@gmail.com, nramas@linux.microsoft.com,
-        hverkuil@xs4all.nl
-Subject: Re: [Outreachy kernel] [PATCH v2] Staging: rtl8188eu: rtw_mlme: Add
- space around operators
-In-Reply-To: <20200310144702.14653-1-shreeya.patel23498@gmail.com>
-Message-ID: <alpine.DEB.2.21.2003101554530.26409@hadrien>
-References: <20200310144702.14653-1-shreeya.patel23498@gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Tue, 10 Mar 2020 10:57:21 -0400
+Received: from mail.itouring.de ([188.40.134.68]:51338 "EHLO mail.itouring.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727717AbgCJO5U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 10:57:20 -0400
+Received: from tux.applied-asynchrony.com (p5B07E2B3.dip0.t-ipconnect.de [91.7.226.179])
+        by mail.itouring.de (Postfix) with ESMTPSA id D39C94161A07;
+        Tue, 10 Mar 2020 15:57:17 +0100 (CET)
+Received: from [192.168.100.223] (ragnarok.applied-asynchrony.com [192.168.100.223])
+        by tux.applied-asynchrony.com (Postfix) with ESMTP id 96A53F01606;
+        Tue, 10 Mar 2020 15:57:17 +0100 (CET)
+Subject: Re: [PATCH 5.4 000/168] 5.4.25-stable review
+From:   =?UTF-8?Q?Holger_Hoffst=c3=a4tte?= <holger@applied-asynchrony.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, linux@roeck-us.net, shuah@kernel.org,
+        stable@vger.kernel.org, Paolo Valente <paolo.valente@linaro.org>
+References: <20200310123635.322799692@linuxfoundation.org>
+ <d97347d3-4eea-f5e1-8a3c-a12410e9ad5f@applied-asynchrony.com>
+ <20200310143527.GB3376131@kroah.com>
+ <daf30758-fe28-0709-7908-91bb99ee5e39@applied-asynchrony.com>
+Organization: Applied Asynchrony, Inc.
+Message-ID: <98d45686-66fd-7a0d-dfc0-48d631b3cc04@applied-asynchrony.com>
+Date:   Tue, 10 Mar 2020 15:57:17 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <daf30758-fe28-0709-7908-91bb99ee5e39@applied-asynchrony.com>
+Content-Type: multipart/mixed;
+ boundary="------------C83E17AA918EF88B0541897E"
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This is a multi-part message in MIME format.
+--------------C83E17AA918EF88B0541897E
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+
+On 3/10/20 3:51 PM, Holger Hoffstätte wrote:
+> On 3/10/20 3:35 PM, Greg Kroah-Hartman wrote:
+>> On Tue, Mar 10, 2020 at 03:02:37PM +0100, Holger Hoffstätte wrote:
+>>> On 3/10/20 1:37 PM, Greg Kroah-Hartman wrote:
+>>>> This is the start of the stable review cycle for the 5.4.25 release.
+>>>
+>>> This fails to compile due to broken patch 001/168:
+>>> "block, bfq: get a ref to a group when adding it to a service tree":
+>>>
+>>> ..
+>>> block/bfq-wf2q.c: In function 'bfq_get_entity':
+>>> ./include/linux/kernel.h:994:51: error: 'struct bfq_group' has no member named 'entity'
+>>> ..
+>>>
+>>> The calls to bfq_get_entity::bfqg_and_blkg_get and bfq_forget_entity::bfqg_and_blkg_put
+>>> in bfq-wf2q.c need to be wrapped in #ifdef CONFIG_BFQ_GROUP_IOSCHED, otherwise
+>>> the build will fail when CONFIG_BFQ_GROUP_IOSCHED is not enabled.
+>>> This horribly error-prone #ifdef mess was finally removed in upstream commit
+>>> 4d8340d0d4d9. For 5.4 we'll either need that as well or add them back.
+>>
+>> Ick, that's a mess.
+>>
+>> I'll go drop that patch now, odd that it passed my build tests...
+> 
+> Uh, please no? It fixes a rather nasty UAF when cgroups are in use.
+> Please just add the other upstream commit as well, I confirmed it applies
+> cleanly and fixes the problem.
+> 
+
+Alternatively I've appended the version originally sent to the mailing list,
+with those #ifdefs intact. That's what I had in my tree so far, you could
+consider it a 5.4 backport. Other than that there's no functional difference
+to the upstream version.
+
+hth,
+Holger
+
+--------------C83E17AA918EF88B0541897E
+Content-Type: text/x-patch;
+ name="block-20200131-get-a-ref-to-a-group-when-adding-it-to-a-service-tree.patch"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename*0="block-20200131-get-a-ref-to-a-group-when-adding-it-to-a-serv";
+ filename*1="ice-tree.patch"
+
+From: Paolo Valente <paolo.valente@linaro.org>
+To: Jens Axboe <axboe@kernel.dk>
+Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, bfq-iosched@googlegroups.com,
+    oleksandr@natalenko.name, patdung100@gmail.com, cevich@redhat.com, Paolo Valente <paolo.valente@linaro.org>
+Subject: [PATCH BUGFIX 5/6] block, bfq: get a ref to a group when adding it to a service tree
+Date: Fri, 31 Jan 2020 10:24:08 +0100
+
+BFQ schedules generic entities, which may represent either bfq_queues
+or groups of bfq_queues. When an entity is inserted into a service
+tree, a reference must be taken, to make sure that the entity does not
+disappear while still referred in the tree. Unfortunately, such a
+reference is mistakenly taken only if the entity represents a
+bfq_queue. This commit takes a reference also in case the entity
+represents a group.
+
+Tested-by: Chris Evich <cevich@redhat.com>
+Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
+---
+ block/bfq-cgroup.c  |  2 +-
+ block/bfq-iosched.h |  1 +
+ block/bfq-wf2q.c    | 16 +++++++++++++++-
+ 3 files changed, 17 insertions(+), 2 deletions(-)
+
+diff --git a/block/bfq-cgroup.c b/block/bfq-cgroup.c
+index c818c64766e5..f85b25fd06f2 100644
+--- a/block/bfq-cgroup.c
++++ b/block/bfq-cgroup.c
+@@ -332,7 +332,7 @@ static void bfqg_put(struct bfq_group *bfqg)
+ 		kfree(bfqg);
+ }
+ 
+-static void bfqg_and_blkg_get(struct bfq_group *bfqg)
++void bfqg_and_blkg_get(struct bfq_group *bfqg)
+ {
+ 	/* see comments in bfq_bic_update_cgroup for why refcounting bfqg */
+ 	bfqg_get(bfqg);
+diff --git a/block/bfq-iosched.h b/block/bfq-iosched.h
+index f1cb89def7f8..b9627ec7007b 100644
+--- a/block/bfq-iosched.h
++++ b/block/bfq-iosched.h
+@@ -984,6 +984,7 @@ struct bfq_group *bfq_find_set_group(struct bfq_data *bfqd,
+ struct blkcg_gq *bfqg_to_blkg(struct bfq_group *bfqg);
+ struct bfq_group *bfqq_group(struct bfq_queue *bfqq);
+ struct bfq_group *bfq_create_group_hierarchy(struct bfq_data *bfqd, int node);
++void bfqg_and_blkg_get(struct bfq_group *bfqg);
+ void bfqg_and_blkg_put(struct bfq_group *bfqg);
+ 
+ #ifdef CONFIG_BFQ_GROUP_IOSCHED
+diff --git a/block/bfq-wf2q.c b/block/bfq-wf2q.c
+index 26776bdbdf36..ef06e0d34b5b 100644
+--- a/block/bfq-wf2q.c
++++ b/block/bfq-wf2q.c
+@@ -533,7 +533,13 @@ static void bfq_get_entity(struct bfq_entity *entity)
+ 		bfqq->ref++;
+ 		bfq_log_bfqq(bfqq->bfqd, bfqq, "get_entity: %p %d",
+ 			     bfqq, bfqq->ref);
++#ifdef CONFIG_BFQ_GROUP_IOSCHED
++	} else
++		bfqg_and_blkg_get(container_of(entity, struct bfq_group,
++					       entity));
++#else
+ 	}
++#endif
+ }
+ 
+ /**
+@@ -647,8 +653,16 @@ static void bfq_forget_entity(struct bfq_service_tree *st,
+ 
+ 	entity->on_st_or_in_serv = false;
+ 	st->wsum -= entity->weight;
+-	if (bfqq && !is_in_service)
++	if (is_in_service)
++		return;
++
++	if (bfqq)
+ 		bfq_put_queue(bfqq);
++#ifdef CONFIG_BFQ_GROUP_IOSCHED
++	else
++		bfqg_and_blkg_put(container_of(entity, struct bfq_group,
++					       entity));
++#endif
+ }
+ 
+ /**
+-- 
+2.20.1
 
 
-On Tue, 10 Mar 2020, Shreeya Patel wrote:
 
-> Add space around operators for improving the code
-> readability.
->
-> Reported by checkpatch.pl
->
-> Signed-off-by: Shreeya Patel <shreeya.patel23498@gmail.com>
-> ---
->
-> rtw_mlme_old.o - Previously produced object file before making any
-> changes to the source code.
-> rtw_mlme.o - Object file produced after compiling the changes done in source
-> file.
->
-> Following is the output of diff between the previously produced object
-> file and the object file produced after compiling the changes.
->
-> shreeya@Shreeya-Patel:~git/kernels/staging/drivers/staging/rtl8188eu/core$ diff rtw_mlme_old.o rtw_mlme.o
-> shreeya@Shreeya-Patel:~git/kernels/staging/drivers/staging/rtl8188eu/core$
->
-> Following output shows that there was no other change in the source
-> code except for whitespace.
->
-> shreeya@Shreeya-Patel:~git/kernels/staging$ git diff -w drivers/staging/rtl8188eu/core/
-> shreeya@Shreeya-Patel:~git/kernels/staging$
-
-If this information is importamt, it should be above the line.  On the
-other hand, it is much too detailed, making it hard to figure out what is
-being said.  It would be better to just say diff of the .o files before
-and after the changes shows no difference.  Likewise git diff -w shows no
-difference.  That way one can quickly see what tests you did, without
-being distracted by the machine name, the directory name, etc.
-
-julia
-
-
->
-> Changes in v2
->   - Include the file name in Subject to make it more specific.
->   - Add the output of diff between the previously produced object
-> file and the object file produced after compiling the changes.
->   - Add the output of git diff -w to show no changes in source file
-> except for whitespace.
->
->
->  drivers/staging/rtl8188eu/core/rtw_mlme.c | 40 +++++++++++------------
->  1 file changed, 20 insertions(+), 20 deletions(-)
->
-> diff --git a/drivers/staging/rtl8188eu/core/rtw_mlme.c b/drivers/staging/rtl8188eu/core/rtw_mlme.c
-> index 8da955e8343b..9de2d421f6b1 100644
-> --- a/drivers/staging/rtl8188eu/core/rtw_mlme.c
-> +++ b/drivers/staging/rtl8188eu/core/rtw_mlme.c
-> @@ -149,7 +149,7 @@ static void _rtw_free_network(struct mlme_priv *pmlmepriv, struct wlan_network *
->  	    (check_fwstate(pmlmepriv, WIFI_ADHOC_STATE)))
->  		lifetime = 1;
->  	if (!isfreeall) {
-> -		delta_time = (curr_time - pnetwork->last_scanned)/HZ;
-> +		delta_time = (curr_time - pnetwork->last_scanned) / HZ;
->  		if (delta_time < lifetime)/*  unit:sec */
->  			return;
->  	}
-> @@ -249,8 +249,8 @@ void rtw_generate_random_ibss(u8 *pibss)
->  	pibss[1] = 0x11;
->  	pibss[2] = 0x87;
->  	pibss[3] = (u8)(curtime & 0xff);/* p[0]; */
-> -	pibss[4] = (u8)((curtime>>8) & 0xff);/* p[1]; */
-> -	pibss[5] = (u8)((curtime>>16) & 0xff);/* p[2]; */
-> +	pibss[4] = (u8)((curtime >> 8) & 0xff);/* p[1]; */
-> +	pibss[5] = (u8)((curtime >> 16) & 0xff);/* p[2]; */
->  }
->
->  u8 *rtw_get_capability_from_ie(u8 *ie)
-> @@ -357,9 +357,9 @@ void update_network(struct wlan_bssid_ex *dst, struct wlan_bssid_ex *src,
->  			rssi_final = rssi_ori;
->  	} else {
->  		if (sq_smp != 101) { /* from the right channel */
-> -			ss_final = ((u32)(src->PhyInfo.SignalStrength)+(u32)(dst->PhyInfo.SignalStrength)*4)/5;
-> -			sq_final = ((u32)(src->PhyInfo.SignalQuality)+(u32)(dst->PhyInfo.SignalQuality)*4)/5;
-> -			rssi_final = (src->Rssi+dst->Rssi*4)/5;
-> +			ss_final = ((u32)(src->PhyInfo.SignalStrength) + (u32)(dst->PhyInfo.SignalStrength) * 4) / 5;
-> +			sq_final = ((u32)(src->PhyInfo.SignalQuality) + (u32)(dst->PhyInfo.SignalQuality) * 4) / 5;
-> +			rssi_final = (src->Rssi + dst->Rssi * 4) / 5;
->  		} else {
->  			/* bss info not receiving from the right channel, use the original RX signal infos */
->  			ss_final = dst->PhyInfo.SignalStrength;
-> @@ -510,7 +510,7 @@ static int rtw_is_desired_network(struct adapter *adapter, struct wlan_network *
->  	privacy = pnetwork->network.Privacy;
->
->  	if (check_fwstate(pmlmepriv, WIFI_UNDER_WPS)) {
-> -		if (rtw_get_wps_ie(pnetwork->network.ies+_FIXED_IE_LENGTH_, pnetwork->network.ie_length-_FIXED_IE_LENGTH_, NULL, &wps_ielen))
-> +		if (rtw_get_wps_ie(pnetwork->network.ies + _FIXED_IE_LENGTH_, pnetwork->network.ie_length - _FIXED_IE_LENGTH_, NULL, &wps_ielen))
->  			return true;
->  		else
->  			return false;
-> @@ -925,7 +925,7 @@ static void rtw_joinbss_update_network(struct adapter *padapter, struct wlan_net
->  	switch (pnetwork->network.InfrastructureMode) {
->  	case Ndis802_11Infrastructure:
->  		if (pmlmepriv->fw_state & WIFI_UNDER_WPS)
-> -			pmlmepriv->fw_state = WIFI_STATION_STATE|WIFI_UNDER_WPS;
-> +			pmlmepriv->fw_state = WIFI_STATION_STATE | WIFI_UNDER_WPS;
->  		else
->  			pmlmepriv->fw_state = WIFI_STATION_STATE;
->  		break;
-> @@ -1097,14 +1097,14 @@ static u8 search_max_mac_id(struct adapter *padapter)
->  #if defined(CONFIG_88EU_AP_MODE)
->  	if (check_fwstate(pmlmepriv, WIFI_AP_STATE)) {
->  		for (aid = pstapriv->max_num_sta; aid > 0; aid--) {
-> -			if (pstapriv->sta_aid[aid-1])
-> +			if (pstapriv->sta_aid[aid - 1])
->  				break;
->  		}
->  		mac_id = aid + 1;
->  	} else
->  #endif
->  	{/* adhoc  id =  31~2 */
-> -		for (mac_id = NUM_STA-1; mac_id >= IBSS_START_MAC_ID; mac_id--) {
-> +		for (mac_id = NUM_STA - 1; mac_id >= IBSS_START_MAC_ID; mac_id--) {
->  			if (pmlmeinfo->FW_sta_info[mac_id].status == 1)
->  				break;
->  		}
-> @@ -1123,7 +1123,7 @@ void rtw_stassoc_hw_rpt(struct adapter *adapter, struct sta_info *psta)
->
->  	macid = search_max_mac_id(adapter);
->  	rtw_hal_set_hwreg(adapter, HW_VAR_TX_RPT_MAX_MACID, (u8 *)&macid);
-> -	media_status = (psta->mac_id<<8)|1; /*   MACID|OPMODE:1 connect */
-> +	media_status = (psta->mac_id << 8) | 1; /*   MACID|OPMODE:1 connect */
->  	rtw_hal_set_hwreg(adapter, HW_VAR_H2C_MEDIA_STATUS_RPT, (u8 *)&media_status);
->  }
->
-> @@ -1213,7 +1213,7 @@ void rtw_stadel_event_callback(struct adapter *adapter, u8 *pbuf)
->  	if (mac_id >= 0) {
->  		u16 media_status;
->
-> -		media_status = (mac_id<<8)|0; /*   MACID|OPMODE:0 means disconnect */
-> +		media_status = (mac_id << 8) | 0; /*   MACID|OPMODE:0 means disconnect */
->  		/* for STA, AP, ADHOC mode, report disconnect stauts to FW */
->  		rtw_hal_set_hwreg(adapter, HW_VAR_H2C_MEDIA_STATUS_RPT, (u8 *)&media_status);
->  	}
-> @@ -1640,7 +1640,7 @@ int rtw_restruct_wmm_ie(struct adapter *adapter, u8 *in_ie, u8 *out_ie, uint in_
->  	for (i = 12; i < in_len; i += (in_ie[i + 1] + 2) /* to the next IE element */) {
->  		ielength = initial_out_len;
->
-> -		if (in_ie[i] == 0xDD && in_ie[i+2] == 0x00 && in_ie[i+3] == 0x50  && in_ie[i+4] == 0xF2 && in_ie[i+5] == 0x02 && i+5 < in_len) {
-> +		if (in_ie[i] == 0xDD && in_ie[i + 2] == 0x00 && in_ie[i + 3] == 0x50  && in_ie[i + 4] == 0xF2 && in_ie[i + 5] == 0x02 && i + 5 < in_len) {
->  			/* WMM element ID and OUI */
->  			/* Append WMM IE to the last index of out_ie */
->
-> @@ -1734,13 +1734,13 @@ int rtw_restruct_sec_ie(struct adapter *adapter, u8 *in_ie, u8 *out_ie, uint in_
->  		authmode = _WPA2_IE_ID_;
->
->  	if (check_fwstate(pmlmepriv, WIFI_UNDER_WPS)) {
-> -		memcpy(out_ie+ielength, psecuritypriv->wps_ie, psecuritypriv->wps_ie_len);
-> +		memcpy(out_ie + ielength, psecuritypriv->wps_ie, psecuritypriv->wps_ie_len);
->
->  		ielength += psecuritypriv->wps_ie_len;
->  	} else if ((authmode == _WPA_IE_ID_) || (authmode == _WPA2_IE_ID_)) {
->  		/* copy RSN or SSN */
-> -		memcpy(&out_ie[ielength], &psecuritypriv->supplicant_ie[0], psecuritypriv->supplicant_ie[1]+2);
-> -		ielength += psecuritypriv->supplicant_ie[1]+2;
-> +		memcpy(&out_ie[ielength], &psecuritypriv->supplicant_ie[0], psecuritypriv->supplicant_ie[1] + 2);
-> +		ielength += psecuritypriv->supplicant_ie[1] + 2;
->  		rtw_report_sec_ie(adapter, authmode, psecuritypriv->supplicant_ie);
->  	}
->
-> @@ -1865,7 +1865,7 @@ unsigned int rtw_restructure_ht_ie(struct adapter *padapter, u8 *in_ie, u8 *out_
->
->  	phtpriv->ht_option = false;
->
-> -	p = rtw_get_ie(in_ie+12, _HT_CAPABILITY_IE_, &ielen, in_len-12);
-> +	p = rtw_get_ie(in_ie + 12, _HT_CAPABILITY_IE_, &ielen, in_len - 12);
->
->  	if (p && ielen > 0) {
->  		struct ieee80211_ht_cap ht_cap;
-> @@ -1904,16 +1904,16 @@ unsigned int rtw_restructure_ht_ie(struct adapter *padapter, u8 *in_ie, u8 *out_
->  		else
->  			ht_cap.ampdu_params_info |= IEEE80211_HT_CAP_AMPDU_DENSITY & 0x00;
->
-> -		rtw_set_ie(out_ie+out_len, _HT_CAPABILITY_IE_,
-> +		rtw_set_ie(out_ie + out_len, _HT_CAPABILITY_IE_,
->  			   sizeof(struct ieee80211_ht_cap),
->  			   (unsigned char *)&ht_cap, pout_len);
->
->  		phtpriv->ht_option = true;
->
-> -		p = rtw_get_ie(in_ie+12, _HT_ADD_INFO_IE_, &ielen, in_len-12);
-> +		p = rtw_get_ie(in_ie + 12, _HT_ADD_INFO_IE_, &ielen, in_len - 12);
->  		if (p && (ielen == sizeof(struct ieee80211_ht_addt_info))) {
->  			out_len = *pout_len;
-> -			rtw_set_ie(out_ie+out_len, _HT_ADD_INFO_IE_, ielen, p+2, pout_len);
-> +			rtw_set_ie(out_ie + out_len, _HT_ADD_INFO_IE_, ielen, p + 2, pout_len);
->  		}
->  	}
->  	return phtpriv->ht_option;
-> --
-> 2.17.1
->
-> --
-> You received this message because you are subscribed to the Google Groups "outreachy-kernel" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to outreachy-kernel+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/outreachy-kernel/20200310144702.14653-1-shreeya.patel23498%40gmail.com.
->
+--------------C83E17AA918EF88B0541897E--
