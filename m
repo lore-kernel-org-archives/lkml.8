@@ -4,58 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB397C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 11:17:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D112C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 11:17:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C300624692
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 11:17:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1C1B24695
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 11:17:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583839024;
-	bh=a+MJwKbeEW1/mWfc2kj2GaYVcvMfbKDFFFii9iqUW8M=;
+	s=default; t=1583839028;
+	bh=j1G0rDcGBYGZpyC/f4KJDCMnb0hSEfIHSr6dRwUluIM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u03P0wsyUGMGdPDJQZK2ybOgrZVk/6GyACmwUbvBY914BYibABXh8Wkz2mKm296jC
-	 XDPDyL9J6sIM0JzeeshD/rIH2ujcVXdfU80sHgUuqIj0m1DEx2xcZ3+KHMkCpLyrIX
-	 noMN88khiLD9smShbc/KsVer7aJCNurq3k7mpTU8=
+	b=G50qyqP+cTCRWYEDvcDYdNYnNSFomeyV7FtyGFX0ssB6XT8R3Z2mb6aHg8H43FMLc
+	 82VP8jM7kP687dcRVKECaeCnxKooxvJ/2kXxWqgEZoWLHvL3GjIaDfUaB7QRFkDWMi
+	 eLjQXrsN9+YHJ00AE/bhOfDTS/jrBRPYBxQTD0vI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726902AbgCJLRD (ORCPT
+        id S1726921AbgCJLRH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 07:17:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54970 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 07:17:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55048 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726875AbgCJLRA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 07:17:00 -0400
+        id S1726901AbgCJLRE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 07:17:04 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A18D2469E;
-        Tue, 10 Mar 2020 11:16:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D5E024693;
+        Tue, 10 Mar 2020 11:16:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583839019;
-        bh=a+MJwKbeEW1/mWfc2kj2GaYVcvMfbKDFFFii9iqUW8M=;
+        s=default; t=1583839023;
+        bh=j1G0rDcGBYGZpyC/f4KJDCMnb0hSEfIHSr6dRwUluIM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xK8SfHnYv9qCB8xkfTM4IZb2iNBl8ZrYUGFKHzsCWPsTM4RhlOuxY32Oiw5yFMsfY
-         zCIpqSrqLpIfHVnUMt/Ytwuf/gjDulYOYD/udrpd2goNsQNTjQoHTahsx7Lz1bmuDc
-         Qy/Q/VfM3hoQ7F2YvpzFn8x1fMlAVRQHOpeLnzP8=
+        b=xPDEWSBg4r6WLSv+7YrlN7KiQg0DMrtAQOiMg1O1KPVWvvhvZ1ZhnrC84wz16L7cj
+         Y05IIFZjkbvxlyl8YRTdD9yYgWnC2S8Lc2KYbWMLhhLs+2G+NihvzqV9Usin4J/43A
+         M8BJwQgoWRh962XcJYW9p2ipF6mGUYdKcrFU4h6M=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Andi Kleen <ak@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Michael Petlan <mpetlan@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>, Jin Yao <yao.jin@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 15/19] perf expr: Make expr__parse() return -1 on error
-Date:   Tue, 10 Mar 2020 08:15:47 -0300
-Message-Id: <20200310111551.25160-16-acme@kernel.org>
+Subject: [PATCH 16/19] perf block-info: Fix wrong block address comparison in block_info__cmp()
+Date:   Tue, 10 Mar 2020 08:15:48 -0300
+Message-Id: <20200310111551.25160-17-acme@kernel.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200310111551.25160-1-acme@kernel.org>
 References: <20200310111551.25160-1-acme@kernel.org>
@@ -66,59 +64,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Olsa <jolsa@kernel.org>
+From: Jin Yao <yao.jin@linux.intel.com>
 
-To match the error value of the expr__find_other function, so all
-exported expr functions return the same values:
-0 on success, -1 on error.
+Commit 6041441870ab ("perf block: Cleanup and refactor block info
+functions") introduces block_info__cmp(), which compares two blocks.
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Reviewed-by: Andi Kleen <ak@linux.intel.com>
+But the issues are:
+
+1. It should return the strcmp cmp value only if it's not 0.
+
+2. When symbol names are matched, we need to compare the addresses
+   of blocks further. But it wrongly uses the symbol addresses for
+   comparison.
+
+3. If the syms are both NULL, we can't consider these two blocks are
+   matched.
+
+This patch fixes above 3 issues.
+
+Fixes: 6041441870ab ("perf block: Cleanup and refactor block info functions")
+Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: John Garry <john.garry@huawei.com>
-Cc: Kajol Jain <kjain@linux.ibm.com>
-Cc: Michael Petlan <mpetlan@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Jin Yao <yao.jin@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Kan Liang <kan.liang@linux.intel.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Link: http://lore.kernel.org/lkml/20200228093616.67125-6-jolsa@kernel.org
+Link: http://lore.kernel.org/lkml/20200202141655.32053-2-yao.jin@linux.intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/expr.c | 4 ++--
- tools/perf/util/expr.c  | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ tools/perf/util/block-info.c | 21 ++++++---------------
+ 1 file changed, 6 insertions(+), 15 deletions(-)
 
-diff --git a/tools/perf/tests/expr.c b/tools/perf/tests/expr.c
-index 755d73c86c68..28313e59d6f6 100644
---- a/tools/perf/tests/expr.c
-+++ b/tools/perf/tests/expr.c
-@@ -45,11 +45,11 @@ int test__expr(struct test *t __maybe_unused, int subtest __maybe_unused)
+diff --git a/tools/perf/util/block-info.c b/tools/perf/util/block-info.c
+index fbbb6d640dad..5b4214656e29 100644
+--- a/tools/perf/util/block-info.c
++++ b/tools/perf/util/block-info.c
+@@ -74,30 +74,21 @@ int64_t block_info__cmp(struct perf_hpp_fmt *fmt __maybe_unused,
  
- 	p = "FOO/0";
- 	ret = expr__parse(&val, &ctx, p);
--	TEST_ASSERT_VAL("division by zero", ret == 1);
-+	TEST_ASSERT_VAL("division by zero", ret == -1);
+ 	if (!bi_l->sym || !bi_r->sym) {
+ 		if (!bi_l->sym && !bi_r->sym)
+-			return 0;
++			return -1;
+ 		else if (!bi_l->sym)
+ 			return -1;
+ 		else
+ 			return 1;
+ 	}
  
- 	p = "BAR/";
- 	ret = expr__parse(&val, &ctx, p);
--	TEST_ASSERT_VAL("missing operand", ret == 1);
-+	TEST_ASSERT_VAL("missing operand", ret == -1);
+-	if (bi_l->sym == bi_r->sym) {
+-		if (bi_l->start == bi_r->start) {
+-			if (bi_l->end == bi_r->end)
+-				return 0;
+-			else
+-				return (int64_t)(bi_r->end - bi_l->end);
+-		} else
+-			return (int64_t)(bi_r->start - bi_l->start);
+-	} else {
+-		cmp = strcmp(bi_l->sym->name, bi_r->sym->name);
++	cmp = strcmp(bi_l->sym->name, bi_r->sym->name);
++	if (cmp)
+ 		return cmp;
+-	}
  
- 	TEST_ASSERT_VAL("find other",
- 			expr__find_other("FOO + BAR + BAZ + BOZO", "FOO", &other, &num_other) == 0);
-diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
-index 45b25530db5b..fd192ddf93c1 100644
---- a/tools/perf/util/expr.c
-+++ b/tools/perf/util/expr.c
-@@ -54,7 +54,7 @@ __expr__parse(double *val, struct parse_ctx *ctx, const char *expr,
+-	if (bi_l->sym->start != bi_r->sym->start)
+-		return (int64_t)(bi_r->sym->start - bi_l->sym->start);
++	if (bi_l->start != bi_r->start)
++		return (int64_t)(bi_r->start - bi_l->start);
  
- int expr__parse(double *final_val, struct parse_ctx *ctx, const char *expr)
- {
--	return __expr__parse(final_val, ctx, expr, EXPR_PARSE);
-+	return __expr__parse(final_val, ctx, expr, EXPR_PARSE) ? -1 : 0;
+-	return (int64_t)(bi_r->sym->end - bi_l->sym->end);
++	return (int64_t)(bi_r->end - bi_l->end);
  }
  
- static bool
+ static void init_block_info(struct block_info *bi, struct symbol *sym,
 -- 
 2.21.1
 
