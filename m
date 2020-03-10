@@ -2,197 +2,133 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8146CC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:00:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4635C18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:06:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23C2A20675
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:00:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A35C215A4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:06:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lToTywfF"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="kxqsCWqe";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="xqB83TzD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727473AbgCJUAz (ORCPT
+        id S1727264AbgCJUGM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 16:00:55 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:37490 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726545AbgCJUAz (ORCPT
+        Tue, 10 Mar 2020 16:06:12 -0400
+Received: from esa3.hgst.iphmx.com ([216.71.153.141]:21286 "EHLO
+        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726604AbgCJUGM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 16:00:55 -0400
-Received: by mail-ot1-f65.google.com with SMTP id b3so14478257otp.4
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 13:00:54 -0700 (PDT)
+        Tue, 10 Mar 2020 16:06:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1583870772; x=1615406772;
+  h=from:to:cc:subject:date:message-id:references:
+   content-transfer-encoding:mime-version;
+  bh=xy1nHYvlca+0SW3S/1h2lIjATHr4sq10J4dbf58wSQ8=;
+  b=kxqsCWqetBRPaVO5NH9tYPQbmYbW0EGRRJZkNpy8Q50CK+J23plnxX2o
+   e/osqZIBSYhoQbLZTwfKSmG+K+ZctBlYhxvbmcoex2I52pOq4ai8flLYO
+   SaDdErHLZIqakDjWSaaLU8y8cft06D9zepWAci2Q7ZbaFfSPkbtHtC+jW
+   3g3VsI/VVUUpt3KeEV9/7gfElSJaQg8BBr3n3cJSEZVDLigBhv2G2E6Mo
+   mLvJVI4krawwGnGlQm3j6LzaLsNvvLaEJmGQ2MMbxES1/BYFcBa8gnDSh
+   BMfMWlXmea/eDxnMRLymCi61AkzELIusC9TpS0AE2tLYHgZcjP1rQh4gv
+   w==;
+IronPort-SDR: 15w1VcWKyNhVE7pA7oEyXSol0az15UjfY2rBZ0PyrOZ0pIG6NLP/vzkhOzatKVnvwDYeq5/eaI
+ MHdKRrFoM5yeNqMukObCGkXGn+UzddNrEDuPQXnz+XQQFTBnR2SGQBKOpCM6mqsU+f4FvcIz6J
+ U9TMDpBHdPul41w+f0OEFVq2YTojtX2VCb3Z00THipxkudyHiE5uAPw+BdCAy+h4ErAMwgTmjY
+ KyLKhXDObg+3DMiXP5B27e7qR6fKNou8wsG+FfOza3ttVz0lZmlyzc/do7YGq4DTfpaJGT5bpY
+ QDU=
+X-IronPort-AV: E=Sophos;i="5.70,538,1574092800"; 
+   d="scan'208";a="136465773"
+Received: from mail-dm6nam10lp2103.outbound.protection.outlook.com (HELO NAM10-DM6-obe.outbound.protection.outlook.com) ([104.47.58.103])
+  by ob1.hgst.iphmx.com with ESMTP; 11 Mar 2020 04:06:10 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=czxJ8Gb2ameHysg2n/c1dtd8tTu4xDgh1B3xpfD83pQYmw0W8XTMyHrtBsiwNZy2bEy4XOhWj3D7I8lC64jRmro02or0lQuY2esr8w5cw/d8AaR1OypAbfi3WqUwv5B/p8xyZhSd+TgOlgUYsTrriOCO76dRlZrgvPHV8BayBOb76t0UiqsYnxeVEYjtTSkIH34ykiDRFU2I2dZJVbg31EGD3+N4pUQtbEsEdmuNM7bTD2zd7wvO9eZaQ5ubwvmtuiiPiL5t9/XioGKIWKWVeplTWVD18Tp8AufcurDOgqdA3otMED/4URG83fts6avBNIxPgyqDitq+iTDgKFJkcg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xy1nHYvlca+0SW3S/1h2lIjATHr4sq10J4dbf58wSQ8=;
+ b=m+IuZfF9nf4kB8WljIy9Zau3Q0tpqbwhRqguNEvKrOKNJCtqS/RSrJnNB10O/YjqLKIjsU5UNtcTHwp2uBuOOl7mKUt25lOcJINeqmDVIwGHkgTBP/dsni8p8xBB+byX8MUbDYqvrFl5MUjbDEdyLW89tA1c3yx1bsog1bdOz9wug+tFtab8NjJLZBx64eiUU+cmJ6dLZ5dWQLx4fDCqchS2RTcBURMwEmuM7LDo4ZR8VHz4SLS2cntAA+G2lmzPBYQa/OGfHpcq9xKugZgFV/o8iMiKZcG4LokVi+XhjI49XCxFvQkwIJ+t4p9ymUHWiCABsge4ZUFaIKt/MpihkA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zIAAqBT5cH5cbbW3GFto6v7mD8pF39ecAMkC8oTgutI=;
-        b=lToTywfF6/WNafCRISYFb5qIPhLOZD7H3m7K11tcVGoSy0sDMKZ5AOMrdtIh1Zcm+N
-         FsSDckkbtI4yqMRWo5Fjqdg64HXXgblPk8H7PM2B/BLCmb4xHoUig7plVH7TGc1gK2Cr
-         kNb3g6Is4ZWWVGTXV2n1kZH9gibgqCnEAvqkgY/U8QdWJYyuzGJ5/NKmku3+6X9qrx4w
-         ahi9XPBSsYLPDacA5iChtNW4lQKX1M3pK4Y+gCGh2NS8fv2rmtdk2F6Wa83/mGUwm7si
-         i9wYysP5fygg3ep0iX3jaDt/BGsNFKQNDX1evsDSMAIoQCH29ffsppjtETxuQHNKCs5q
-         BGiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zIAAqBT5cH5cbbW3GFto6v7mD8pF39ecAMkC8oTgutI=;
-        b=sCUiY97dqLV+hBbjVPNy/2tzYQLGagxAJNB0q6GoGHKbZRHRF5n+g4a2NUKV6K4qUz
-         ZAffdO83fsw6YuTmXYXWRKwIrEAcyZv9qh77kYPEkefzF31pk4Dj65nV3bYJUuYnvJ01
-         1IUC6ZqBAnkvSoXxRTpDfryIEksgYkyLXBDrC9GY7Ip6rxJmGyKJRmnqL+RmqzpaWiLl
-         X5B2J20Cxa4/Rc7vO90DvnyQMLzfGuQNTPmHxmcF+RAZPTNsAI32IoYHFSXrVtIssXFb
-         9hppDt8kmNm+4kltkbNvpqB8JzlVqf+GtS0jGsnz8L+4rrL0SBOOCVAkiSUSyXQ+eCmm
-         aRmw==
-X-Gm-Message-State: ANhLgQ1TPYU1pH9rD4+g3+1FIGkeSQSjQtSxai2+4d67/zj/iif5NgLM
-        p4Owi4GXuVH1npZZ2ub+RLfmTAUtwfbSNrjD3FezlA==
-X-Google-Smtp-Source: ADFU+vtcsmeizoaiKSlTHolQlrAnABBwhEpSV9VVyJB0PvpgO9H1QULcgU81RJuwJLNtl9eG+n2+fGb/mXJ4ROrh4fc=
-X-Received: by 2002:a05:6830:1d6e:: with SMTP id l14mr17776467oti.32.1583870453922;
- Tue, 10 Mar 2020 13:00:53 -0700 (PDT)
-MIME-Version: 1.0
-References: <87r1y8dqqz.fsf@x220.int.ebiederm.org> <AM6PR03MB517053AED7DC89F7C0704B7DE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <AM6PR03MB51703B44170EAB4626C9B2CAE4E20@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <87tv32cxmf.fsf_-_@x220.int.ebiederm.org> <87v9ne5y4y.fsf_-_@x220.int.ebiederm.org>
- <87eeu25y14.fsf_-_@x220.int.ebiederm.org> <20200309195909.h2lv5uawce5wgryx@wittgenstein>
- <877dztz415.fsf@x220.int.ebiederm.org> <20200309201729.yk5sd26v4bz4gtou@wittgenstein>
- <87k13txnig.fsf@x220.int.ebiederm.org> <20200310085540.pztaty2mj62xt2nm@wittgenstein>
- <87wo7svy96.fsf_-_@x220.int.ebiederm.org> <CAG48ez2cUZMVOAXfHPNjKjYsMSaWkjUjOCHo0KYZ+oXQUW4viA@mail.gmail.com>
- <87k13sui1p.fsf@x220.int.ebiederm.org>
-In-Reply-To: <87k13sui1p.fsf@x220.int.ebiederm.org>
-From:   Jann Horn <jannh@google.com>
-Date:   Tue, 10 Mar 2020 21:00:27 +0100
-Message-ID: <CAG48ez2vRgaEVJ=Rs8gn6HkGO6syL8MpSOUq7BNN+OUE1uYxCA@mail.gmail.com>
-Subject: Re: [PATCH] pidfd: Stop taking cred_guard_mutex
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        Kees Cook <keescook@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Andrei Vagin <avagin@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Yuyang Du <duyuyang@gmail.com>,
-        David Hildenbrand <david@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        David Howells <dhowells@redhat.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christian Kellner <christian@kellner.me>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xy1nHYvlca+0SW3S/1h2lIjATHr4sq10J4dbf58wSQ8=;
+ b=xqB83TzDqD63esGbUvFpTwlvmpyopgLPOkproZ1KY4gJcRupvQUJ3MqiPfyOU9ivYFM4Exm2Y9EEl+xuZmtZMKU8mPcL7hZOfadbnyEvMehNVbELQUjwTqwjiBTrJjyGVrVC6COyl1FhKwAj/qukgNochgT2S4gwj6fXOo3YApY=
+Received: from BYAPR04MB5749.namprd04.prod.outlook.com (2603:10b6:a03:106::21)
+ by BYAPR04MB5077.namprd04.prod.outlook.com (2603:10b6:a03:41::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.17; Tue, 10 Mar
+ 2020 20:06:09 +0000
+Received: from BYAPR04MB5749.namprd04.prod.outlook.com
+ ([fe80::fdf8:bd6f:b33d:c2df]) by BYAPR04MB5749.namprd04.prod.outlook.com
+ ([fe80::fdf8:bd6f:b33d:c2df%3]) with mapi id 15.20.2793.013; Tue, 10 Mar 2020
+ 20:06:09 +0000
+From:   Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
+To:     Martijn Coenen <maco@android.com>,
+        "axboe@kernel.dk" <axboe@kernel.dk>, "hch@lst.de" <hch@lst.de>
+CC:     "bvanassche@acm.org" <bvanassche@acm.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Sargun Dhillon <sargun@sargun.me>
-Content-Type: text/plain; charset="UTF-8"
+        "kernel-team@android.com" <kernel-team@android.com>
+Subject: Re: [PATCH] loop: Only freeze block queue when needed.
+Thread-Topic: [PATCH] loop: Only freeze block queue when needed.
+Thread-Index: AQHV9tzWizCqQ9yVzkSRTpgNoS0evA==
+Date:   Tue, 10 Mar 2020 20:06:09 +0000
+Message-ID: <BYAPR04MB57495AC9DDD87E250770419086FF0@BYAPR04MB5749.namprd04.prod.outlook.com>
+References: <20200310130654.92205-1-maco@android.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Chaitanya.Kulkarni@wdc.com; 
+x-originating-ip: [199.255.45.62]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 634818e9-0381-4bc1-eb30-08d7c52e7967
+x-ms-traffictypediagnostic: BYAPR04MB5077:
+x-microsoft-antispam-prvs: <BYAPR04MB5077814FBEB867066F47475B86FF0@BYAPR04MB5077.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:2958;
+x-forefront-prvs: 033857D0BD
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(39860400002)(376002)(136003)(346002)(366004)(199004)(189003)(52536014)(71200400001)(478600001)(8936002)(81166006)(81156014)(4744005)(316002)(7696005)(8676002)(2906002)(33656002)(86362001)(55016002)(54906003)(26005)(66946007)(5660300002)(66556008)(53546011)(66446008)(110136005)(76116006)(4326008)(6506007)(66476007)(9686003)(186003)(64756008);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR04MB5077;H:BYAPR04MB5749.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 72I6XgGBzbz7bcgbSO0JJxC6mNJBalxyQdcW9CEPFknk8WPJp5/mkHSdOEKP5FjVVk8GQcaJmjMCequCW7fVrJVcC0oDcdXcMqb/htXPtOPGDE8wGoYiU2JyosrZpTyqgkAeFIbAGXLUyLrUryzFDR2Z7zEL6xpB1fYlv3fWKxnXmlgvstCrEhKrbq73pXpiKDeFGq7CpDJ2griYjcDdtSv/rhRzYKtL8D/FcrkCluRozldrdfhENf/okVmzCh8tMLX6fjllBX06Be5DfAEQAnSHBd55NLzcNIN5K7QUzTqBH20eF51rCfvoUzY1uLAxx/Az/NQGsUHYUWKtOerAFT2EJk9m5myH5SrQRo82zUopW8OZISSWUGz7iTVQbRq/cz0XP0lpNcTE9nooeHVwVpnYy5FK/5JHJQ8/y3KlCvKMrcWMyri7KE2INDxFLcLZ
+x-ms-exchange-antispam-messagedata: 0CWsKyonxF7GLDS/CVo0lyrRqZOmdS5kJquTXUkTNHMxSKLI+f3QVPiIgUR+8Xk0e35QiSD5x3Kyiz1cwzZUxBQc1OAJgZHiII5J7DlH7cZtiGf0ybnI5cRarl50LVmBG0MxSxFecVbTsR7r/OelrQ==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 634818e9-0381-4bc1-eb30-08d7c52e7967
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Mar 2020 20:06:09.0626
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: FICMu/A12GYHBZaXA2Ty62It9fXUduvIJoUTzH3U2jdfts++U0XClf4Gdh2VzOe8CvROKbWNJbcnpzFO+mFIfOP+tKboEiCFJKNi1wCGgZw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR04MB5077
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 10, 2020 at 8:29 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
-> Jann Horn <jannh@google.com> writes:
-> > On Tue, Mar 10, 2020 at 7:54 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
-> >> During exec some file descriptors are closed and the files struct is
-> >> unshared.  But all of that can happen at other times and it has the
-> >> same protections during exec as at ordinary times.  So stop taking the
-> >> cred_guard_mutex as it is useless.
-> >>
-> >> Furthermore he cred_guard_mutex is a bad idea because it is deadlock
-> >> prone, as it is held in serveral while waiting possibly indefinitely
-> >> for userspace to do something.
-> >
-> > Please don't. Just use the new exec_update_mutex like everywhere else.
-> >
-> >> Cc: Sargun Dhillon <sargun@sargun.me>
-> >> Cc: Christian Brauner <christian.brauner@ubuntu.com>
-> >> Cc: Arnd Bergmann <arnd@arndb.de>
-> >> Fixes: 8649c322f75c ("pid: Implement pidfd_getfd syscall")
-> >> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
-> >> ---
-> >>  kernel/pid.c | 6 ------
-> >>  1 file changed, 6 deletions(-)
-> >>
-> >> Christian if you don't have any objections I will take this one through
-> >> my tree.
-> >>
-> >> I tried to figure out why this code path takes the cred_guard_mutex and
-> >> the archive on lore.kernel.org was not helpful in finding that part of
-> >> the conversation.
-> >
-> > That was my suggestion.
-> >
-> >> diff --git a/kernel/pid.c b/kernel/pid.c
-> >> index 60820e72634c..53646d5616d2 100644
-> >> --- a/kernel/pid.c
-> >> +++ b/kernel/pid.c
-> >> @@ -577,17 +577,11 @@ static struct file *__pidfd_fget(struct task_struct *task, int fd)
-> >>         struct file *file;
-> >>         int ret;
-> >>
-> >> -       ret = mutex_lock_killable(&task->signal->cred_guard_mutex);
-> >> -       if (ret)
-> >> -               return ERR_PTR(ret);
-> >> -
-> >>         if (ptrace_may_access(task, PTRACE_MODE_ATTACH_REALCREDS))
-> >>                 file = fget_task(task, fd);
-> >>         else
-> >>                 file = ERR_PTR(-EPERM);
-> >>
-> >> -       mutex_unlock(&task->signal->cred_guard_mutex);
-> >> -
-> >>         return file ?: ERR_PTR(-EBADF);
-> >>  }
-> >
-> > If you make this change, then if this races with execution of a setuid
-> > program that afterwards e.g. opens a unix domain socket, an attacker
-> > will be able to steal that socket and inject messages into
-> > communication with things like DBus. procfs currently has the same
-> > race, and that still needs to be fixed, but at least procfs doesn't
-> > let you open things like sockets because they don't have a working
-> > ->open handler, and it enforces the normal permission check for
-> > opening files.
->
-> It isn't only exec that can change credentials.  Do we need a lock for
-> changing credentials?
-
-Hmm, I guess so? Normally, a task that's changing credentials becomes
-nondumpable at the same time (and there are explicit memory barriers
-in commit_creds() and __ptrace_may_access() to enforce the ordering
-for this); so you normally don't see tasks becoming ptrace-accessible
-via anything other than execve(). But I guess if someone opens a
-root-only file, closes it, drops privileges, and then explicitly does
-prctl(PR_SET_DUMPABLE, 1), we should probably protect that, too.
-
-> Wouldn't it be sufficient to simply test ptrace_may_access after
-> we get a copy of the file?
-
-There are also setuid helpers that can, after having done privileged
-stuff, drop privileges and call execve(); after that,
-ptrace_may_access() succeeds again. In particular, polkit has a helper
-that does this.
-
-> If we need a lock around credential change let's design and build that.
-> Having a mismatch between what a lock is designed to do, and what
-> people use it for can only result in other bugs as people get confused.
-
-Hmm... what benefits do we get from making it a separate lock? I guess
-it would allow us to make it a per-task lock instead of a
-signal_struct-wide one? That might be helpful...
+Looks good to me.=0A=
+=0A=
+Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>=0A=
+=0A=
+On 03/10/2020 06:07 AM, Martijn Coenen wrote:=0A=
+> __loop_update_dio() can be called as a part of loop_set_fd(), when the=0A=
+> block queue is not yet up and running; avoid freezing the block queue in=
+=0A=
+> that case, since that is an expensive operation.=0A=
+>=0A=
+> Signed-off-by: Martijn Coenen<maco@android.com>=0A=
+=0A=
