@@ -2,51 +2,54 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 864E3C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:36:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35DB2C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:36:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 553BF20675
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:36:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0289420675
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:36:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583847398;
-	bh=VHILj1hdvLedi4bK9aldW2sCS/TGmle25NoRM34pY1A=;
+	s=default; t=1583847402;
+	bh=bh71+yUWZJ2KgQTnvoKcgRM0pieJSYtq5owc9PoROas=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gJ3BoURxdEsNi/on9iyGnaMgdgzd2hLlwR2BkB5hZHrPhKapUIEgBsbQZow7ONIT6
-	 GGgapdvIWmifs6uPXr4jDJJaIWmryff93HTKNMxIKGdi32PH6YGFZZvfmlC9eJrhTA
-	 NhD/4V4AgAxbyPGuWRDMtCVoS1YtwB8HoqdIsGSk=
+	b=TMJNft7l8z3YQAy/GyFujWXrfgk2TL4ud9ruiEoqmqSI1xIvdlmkkQ3wlrdp3RZ5K
+	 cGESccD7fKrQ7ID3sTFXRBJGDnG5t0ea/IJE23IuUWh0olWatf1QgK0cwqYd4p2oOG
+	 BsHBzz47JmFTlR0LQrAkfNPrqQKVe2469Iqde3Lo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728040AbgCJNgh (ORCPT
+        id S1728144AbgCJNgk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:36:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42872 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:36:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42606 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726729AbgCJMmp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:42:45 -0400
+        id S1726708AbgCJMme (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:42:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E7C772469C;
-        Tue, 10 Mar 2020 12:42:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F02BD2469C;
+        Tue, 10 Mar 2020 12:42:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844164;
-        bh=VHILj1hdvLedi4bK9aldW2sCS/TGmle25NoRM34pY1A=;
+        s=default; t=1583844154;
+        bh=bh71+yUWZJ2KgQTnvoKcgRM0pieJSYtq5owc9PoROas=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fWZKjOedYyh/DOOIrtMps1rjAxEUgtgWCaNynZUK/7BYBVdBs3fpoTPOt0UZ3IjBs
-         EKqL9LahvLvzYCaXtFq4de6s/BzO65P2FutL7LvBEyiGiZTTzotLFPo2/ttYjaynVG
-         RQzIPr5yjQGYdqIyJ3E0OS7UWy9OLuV9bN+cxe94=
+        b=LgQx1qOXRenCGhrCqUgg6YrvwHCLNzkzFNa9cQP4Btuufi7BQA6LxDUFbKWZGAJmE
+         pt6f6voPk3ddrW5yjE6g4BoL7p5qPMd6OCwAQazHCq10r7tsr43u/ppmoSPwn4foV4
+         seTB0AJE/UAfg4k1rYFtshA9LBz04qsGn0uUfeIw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 17/72] nfc: pn544: Fix occasional HW initialization failure
-Date:   Tue, 10 Mar 2020 13:38:30 +0100
-Message-Id: <20200310123605.849507429@linuxfoundation.org>
+        stable@vger.kernel.org, Cornelia Huck <cohuck@redhat.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Vasily Averin <vvs@virtuozzo.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 49/72] s390/cio: cio_ignore_proc_seq_next should increase position index
+Date:   Tue, 10 Mar 2020 13:39:02 +0100
+Message-Id: <20200310123613.424488147@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123601.053680753@linuxfoundation.org>
 References: <20200310123601.053680753@linuxfoundation.org>
@@ -59,43 +62,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Osipenko <digetx@gmail.com>
+From: Vasily Averin <vvs@virtuozzo.com>
 
-[ Upstream commit c3331d2fe3fd4d5e321f2467d01f72de7edfb5d0 ]
+[ Upstream commit 8b101a5e14f2161869636ff9cb4907b7749dc0c2 ]
 
-The PN544 driver checks the "enable" polarity during of driver's probe and
-it's doing that by turning ON and OFF NFC with different polarities until
-enabling succeeds. It takes some time for the hardware to power-down, and
-thus, to deassert the IRQ that is raised by turning ON the hardware.
-Since the delay after last power-down of the polarity-checking process is
-missed in the code, the interrupt may trigger immediately after installing
-the IRQ handler (right after the checking is done), which results in IRQ
-handler trying to touch the disabled HW and ends with marking NFC as
-'DEAD' during of the driver's probe:
+if seq_file .next fuction does not change position index,
+read after some lseek can generate unexpected output.
 
-  pn544_hci_i2c 1-002a: NFC: nfc_en polarity : active high
-  pn544_hci_i2c 1-002a: NFC: invalid len byte
-  shdlc: llc_shdlc_recv_frame: NULL Frame -> link is dead
-
-This patch fixes the occasional NFC initialization failure on Nexus 7
-device.
-
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=206283
+Link: https://lore.kernel.org/r/d44c53a7-9bc1-15c7-6d4a-0c10cb9dffce@virtuozzo.com
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nfc/pn544/i2c.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/s390/cio/blacklist.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/drivers/nfc/pn544/i2c.c
-+++ b/drivers/nfc/pn544/i2c.c
-@@ -241,6 +241,7 @@ static void pn544_hci_i2c_platform_init(
+diff --git a/drivers/s390/cio/blacklist.c b/drivers/s390/cio/blacklist.c
+index 20314aad7ab7d..f329459cadf14 100644
+--- a/drivers/s390/cio/blacklist.c
++++ b/drivers/s390/cio/blacklist.c
+@@ -303,8 +303,10 @@ static void *
+ cio_ignore_proc_seq_next(struct seq_file *s, void *it, loff_t *offset)
+ {
+ 	struct ccwdev_iter *iter;
++	loff_t p = *offset;
  
- out:
- 	gpio_set_value_cansleep(phy->gpio_en, !phy->en_polarity);
-+	usleep_range(10000, 15000);
+-	if (*offset >= (__MAX_SUBCHANNEL + 1) * (__MAX_SSID + 1))
++	(*offset)++;
++	if (p >= (__MAX_SUBCHANNEL + 1) * (__MAX_SSID + 1))
+ 		return NULL;
+ 	iter = it;
+ 	if (iter->devno == __MAX_SUBCHANNEL) {
+@@ -314,7 +316,6 @@ cio_ignore_proc_seq_next(struct seq_file *s, void *it, loff_t *offset)
+ 			return NULL;
+ 	} else
+ 		iter->devno++;
+-	(*offset)++;
+ 	return iter;
  }
  
- static void pn544_hci_i2c_enable_mode(struct pn544_i2c_phy *phy, int run_mode)
+-- 
+2.20.1
+
 
 
