@@ -2,87 +2,194 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DA89C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 15:19:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02DC6C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 15:19:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E49220727
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 15:19:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C09D820727
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 15:19:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=diehl.com header.i=@diehl.com header.b="l7PpgXsP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726784AbgCJPTI (ORCPT
+        id S1727390AbgCJPTU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 11:19:08 -0400
-Received: from mga01.intel.com ([192.55.52.88]:33159 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726316AbgCJPTI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 11:19:08 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Mar 2020 08:19:07 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,537,1574150400"; 
-   d="scan'208";a="234378139"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
-  by fmsmga007.fm.intel.com with ESMTP; 10 Mar 2020 08:19:07 -0700
-Date:   Tue, 10 Mar 2020 08:19:07 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Vivek Goyal <vgoyal@redhat.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, virtio-fs@redhat.com, miklos@szeredi.hu,
-        stefanha@redhat.com, dgilbert@redhat.com, mst@redhat.com
-Subject: Re: [PATCH 02/20] dax: Create a range version of
- dax_layout_busy_page()
-Message-ID: <20200310151906.GA670549@iweiny-DESK2.sc.intel.com>
-References: <20200304165845.3081-1-vgoyal@redhat.com>
- <20200304165845.3081-3-vgoyal@redhat.com>
+        Tue, 10 Mar 2020 11:19:20 -0400
+Received: from enterprise02.smtp.diehl.com ([193.201.238.220]:44723 "EHLO
+        enterprise02.smtp.diehl.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726316AbgCJPTU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 11:19:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=diehl.com; i=@diehl.com; q=dns/txt; s=default;
+  t=1583853557; x=1615389557;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=vU71zSnwFVODRVIuVfAPNwf3eGjvZuG6xPJFQqaMeRQ=;
+  b=l7PpgXsP/eKk0HV5Tv6FPKiq8YIvuJzcrOG8dgJt3GjyydzF3IyDvDM7
+   UrcNelz7Y1Z6aTsFowywzFPPP/wVnvb9b3Ph9WNYRMZELsmT9Kf8+1h2T
+   sMVq9MIzW2zU4mpxplLGq3Oqh7gzHen3xY8ePm0J/KaSQNWKvPg9i25zw
+   wVCNIzIir9ZUnO7K4p7JGTx8063/KV+Dl359WWnXOwzCAzxLp35AAlyF3
+   mB2bFZqX8sHjJM8dXQvpkfyEo4YwVDDsp43SIA5i4+rX7AGu2QQZQwHVY
+   j/QnFRpFK/P4xHnJ1NqjA5sz4M1FlJ196uVO76EoPEtmwJdGMHXuViKtA
+   Q==;
+IronPort-SDR: RFx+TRgGTH8xT4DTXODmtfOhg+vXBsilOhwLSXSdVXy3TRIMJ1L5j23YO+ZW3dn46c4+Rgrf1a
+ b45BjfKAQqLg==
+From:   Denis Osterland-Heim <denis.osterland@diehl.com>
+To:     "dmurphy@ti.com" <dmurphy@ti.com>, "pavel@ucw.cz" <pavel@ucw.cz>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: Re: [PATCH v2] leds: pwm: add support for default-state device
+ property
+Thread-Topic: [PATCH v2] leds: pwm: add support for default-state device
+ property
+Thread-Index: AQHV9tn/0ZJlTn83ZkK/QE6qVZtMD6hB4AuA
+Date:   Tue, 10 Mar 2020 15:19:13 +0000
+Message-ID: <4c16da22994de29c2fbb23c877d55685bcbf8993.camel@diehl.com>
+References: <20200310123126.4709-1-Denis.Osterland@diehl.com>
+In-Reply-To: <20200310123126.4709-1-Denis.Osterland@diehl.com>
+Accept-Language: de-DE, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+x-ms-exchange-messagesentrepresentingtype: 1
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <240A1D2EE27F0A42BBB9087FFBA9EB74@diehl.internal>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200304165845.3081-3-vgoyal@redhat.com>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+X-TrailerSkip: 1
+X-GBS-PROC: byQFdw3ukCM+zy1/poiPczywPLyVzQN2zO8NaFtTWMmHjEyB/6ZT2XQiWITmqaBi
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 04, 2020 at 11:58:27AM -0500, Vivek Goyal wrote:
->  
-> +	/* If end == 0, all pages from start to till end of file */
-> +	if (!end) {
-> +		end_idx = ULONG_MAX;
-> +		len = 0;
-
-I find this a bit odd to specify end == 0 for ULONG_MAX...
-
->  }
-> +EXPORT_SYMBOL_GPL(dax_layout_busy_page_range);
-> +
-> +/**
-> + * dax_layout_busy_page - find first pinned page in @mapping
-> + * @mapping: address space to scan for a page with ref count > 1
-> + *
-> + * DAX requires ZONE_DEVICE mapped pages. These pages are never
-> + * 'onlined' to the page allocator so they are considered idle when
-> + * page->count == 1. A filesystem uses this interface to determine if
-> + * any page in the mapping is busy, i.e. for DMA, or other
-> + * get_user_pages() usages.
-> + *
-> + * It is expected that the filesystem is holding locks to block the
-> + * establishment of new mappings in this address_space. I.e. it expects
-> + * to be able to run unmap_mapping_range() and subsequently not race
-> + * mapping_mapped() becoming true.
-> + */
-> +struct page *dax_layout_busy_page(struct address_space *mapping)
-> +{
-> +	return dax_layout_busy_page_range(mapping, 0, 0);
-
-... other functions I have seen specify ULONG_MAX here.  Which IMO makes this
-call site more clear.
-
-Ira
-
+SGksDQoNCnNob3VsZCBiZQ0KSW4tUmVwbHktVG86IDwyMDIwMDMwOTA4MjIxOC4xMzI2My0x
+LURlbmlzLk9zdGVybGFuZEBkaWVobC5jb20+DQppbnN0ZWFkIG9mDQpSZXBseS1UbzogPDIw
+MjAwMzA5MDgyMjE4LjEzMjYzLTEtRGVuaXMuT3N0ZXJsYW5kQGRpZWhsLmNvbT4NCg0KU29y
+cnkNCg0KQW0gRGllbnN0YWcsIGRlbiAxMC4wMy4yMDIwLCAxMzo0NyArMDEwMCBzY2hyaWVi
+IERlbmlzIE9zdGVybGFuZC1IZWltOg0KPiBUaGlzIHBhdGNoIGFkZHMgc3VwcG9ydCBmb3Ig
+ImRlZmF1bHQtc3RhdGUiIGRldmljZXRyZWUgcHJvcGVydHksIHdoaWNoDQo+IGFsbG93cyB0
+byBkZWZlciBwd20gaW5pdCB0byBmaXJzdCB1c2Ugb2YgbGVkLg0KPiANCj4gVGhpcyBhbGxv
+d3MgdG8gY29uZmlndXJlIHRoZSBQV00gZWFybHkgaW4gYm9vdGxvYWRlciB0byBsZXQgdGhl
+IExFRA0KPiBibGluayB1bnRpbCBhbiBhcHBsaWNhdGlvbiBpbiBMaW51eCB1c2Vyc3BhY2Ug
+c2V0IHNvbWV0aGluZyBkaWZmZXJlbnQuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBEZW5pcyBP
+c3RlcmxhbmQtSGVpbSA8RGVuaXMuT3N0ZXJsYW5kQGRpZWhsLmNvbT4NCj4gLS0tDQo+IHYx
+LT52MjoNCj4gICAtIHVzZSBkZWZhdWx0LXN0YXRlID0gImtlZXAiLCBhcyBzdWdnZXN0ZWQg
+YnkgSmFjZWsgQW5hc3pld3NraQ0KPiAgIC0gY2FsYyBpbml0aWFsIGJyaWdodG5lc3Mgd2l0
+aCBQV00gc3RhdGUgZnJvbSBkZXZpY2UNCj4gDQo+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5n
+cy9sZWRzL2xlZHMtcHdtLnR4dCAgICAgfCAgMiArKw0KPiAgZHJpdmVycy9sZWRzL2xlZHMt
+cHdtLmMgICAgICAgICAgICAgICAgICAgICAgIHwgMzMgKysrKysrKysrKysrKysrKystLQ0K
+PiAgaW5jbHVkZS9saW51eC9sZWRzX3B3bS5oICAgICAgICAgICAgICAgICAgICAgIHwgIDEg
+Kw0KPiAgMyBmaWxlcyBjaGFuZ2VkLCAzMyBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygt
+KQ0KPiANCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9sZWRzL2xlZHMtcHdtLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9sZWRzL2xlZHMtcHdtLnR4dA0KPiBpbmRleCA2YzY1ODNjMzVmMmYuLmQwZjQ4OTY4MDU5
+NCAxMDA2NDQNCj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2xl
+ZHMvbGVkcy1wd20udHh0DQo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9sZWRzL2xlZHMtcHdtLnR4dA0KPiBAQCAtMTksNiArMTksOCBAQCBMRUQgc3ViLW5v
+ZGUgcHJvcGVydGllczoNCj4gICAgc2VlIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9sZWRzL2NvbW1vbi50eHQNCj4gIC0gbGludXgsZGVmYXVsdC10cmlnZ2VyIDogIChv
+cHRpb25hbCkNCj4gICAgc2VlIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9s
+ZWRzL2NvbW1vbi50eHQNCj4gKy0gZGVmYXVsdC1zdGF0ZSA6IChvcHRpb25hbCkNCj4gKyAg
+c2VlIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9sZWRzL2NvbW1vbi55YW1s
+DQo+ICANCj4gIEV4YW1wbGU6DQo+ICANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbGVkcy9s
+ZWRzLXB3bS5jIGIvZHJpdmVycy9sZWRzL2xlZHMtcHdtLmMNCj4gaW5kZXggOGI2OTY1YTU2
+M2U5Li45MjcyNmMyZTQzYmEgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvbGVkcy9sZWRzLXB3
+bS5jDQo+ICsrKyBiL2RyaXZlcnMvbGVkcy9sZWRzLXB3bS5jDQo+IEBAIC03NSw3ICs3NSw4
+IEBAIHN0YXRpYyBpbnQgbGVkX3B3bV9hZGQoc3RydWN0IGRldmljZSAqZGV2LCBzdHJ1Y3Qg
+bGVkX3B3bV9wcml2ICpwcml2LA0KPiAgCWxlZF9kYXRhLT5hY3RpdmVfbG93ID0gbGVkLT5h
+Y3RpdmVfbG93Ow0KPiAgCWxlZF9kYXRhLT5jZGV2Lm5hbWUgPSBsZWQtPm5hbWU7DQo+ICAJ
+bGVkX2RhdGEtPmNkZXYuZGVmYXVsdF90cmlnZ2VyID0gbGVkLT5kZWZhdWx0X3RyaWdnZXI7
+DQo+IC0JbGVkX2RhdGEtPmNkZXYuYnJpZ2h0bmVzcyA9IExFRF9PRkY7DQo+ICsJcmV0ID0g
+bGVkLT5kZWZhdWx0X3N0YXRlID09IExFRFNfR1BJT19ERUZTVEFURV9PTjsNCj4gKwlsZWRf
+ZGF0YS0+Y2Rldi5icmlnaHRuZXNzID0gcmV0ID8gbGVkLT5tYXhfYnJpZ2h0bmVzcyA6IExF
+RF9PRkY7DQo+ICAJbGVkX2RhdGEtPmNkZXYubWF4X2JyaWdodG5lc3MgPSBsZWQtPm1heF9i
+cmlnaHRuZXNzOw0KPiAgCWxlZF9kYXRhLT5jZGV2LmZsYWdzID0gTEVEX0NPUkVfU1VTUEVO
+RFJFU1VNRTsNCj4gIA0KPiBAQCAtOTcsNyArOTgsOCBAQCBzdGF0aWMgaW50IGxlZF9wd21f
+YWRkKHN0cnVjdCBkZXZpY2UgKmRldiwgc3RydWN0IGxlZF9wd21fcHJpdiAqcHJpdiwNCj4g
+IAkgKiBGSVhNRTogcHdtX2FwcGx5X2FyZ3MoKSBzaG91bGQgYmUgcmVtb3ZlZCB3aGVuIHN3
+aXRjaGluZyB0byB0aGUNCj4gIAkgKiBhdG9taWMgUFdNIEFQSS4NCj4gIAkgKi8NCj4gLQlw
+d21fYXBwbHlfYXJncyhsZWRfZGF0YS0+cHdtKTsNCj4gKwlpZiAobGVkLT5kZWZhdWx0X3N0
+YXRlICE9IExFRFNfR1BJT19ERUZTVEFURV9LRUVQKQ0KPiArCQlwd21fYXBwbHlfYXJncyhs
+ZWRfZGF0YS0+cHdtKTsNCj4gIA0KPiAgCXB3bV9nZXRfYXJncyhsZWRfZGF0YS0+cHdtLCAm
+cGFyZ3MpOw0KPiAgDQo+IEBAIC0xMDUsMTAgKzEwNywyMyBAQCBzdGF0aWMgaW50IGxlZF9w
+d21fYWRkKHN0cnVjdCBkZXZpY2UgKmRldiwgc3RydWN0IGxlZF9wd21fcHJpdiAqcHJpdiwN
+Cj4gIAlpZiAoIWxlZF9kYXRhLT5wZXJpb2QgJiYgKGxlZC0+cHdtX3BlcmlvZF9ucyA+IDAp
+KQ0KPiAgCQlsZWRfZGF0YS0+cGVyaW9kID0gbGVkLT5wd21fcGVyaW9kX25zOw0KPiAgDQo+
+ICsJaWYgKGxlZC0+ZGVmYXVsdF9zdGF0ZSA9PSBMRURTX0dQSU9fREVGU1RBVEVfS0VFUCkg
+ew0KPiArCQl1aW50NjRfdCBicmlnaHRuZXNzOw0KPiArCQlzdHJ1Y3QgcHdtX2RldmljZSAq
+cHdtID0gbGVkX2RhdGEtPnB3bTsNCj4gKwkJc3RydWN0IHB3bV9zdGF0ZSBzdGF0ZTsNCj4g
+Kw0KPiArCQlwd20tPmNoaXAtPm9wcy0+Z2V0X3N0YXRlKHB3bS0+Y2hpcCwgcHdtLCAmc3Rh
+dGUpOw0KPiArCQlicmlnaHRuZXNzID0gbGVkLT5tYXhfYnJpZ2h0bmVzcyAqIHN0YXRlLmR1
+dHlfY3ljbGU7DQo+ICsJCWRvX2RpdihicmlnaHRuZXNzLCBzdGF0ZS5wZXJpb2QpOw0KPiAr
+CQlsZWRfZGF0YS0+Y2Rldi5icmlnaHRuZXNzID0gKGVudW0gbGVkX2JyaWdodG5lc3MpYnJp
+Z2h0bmVzczsNCj4gKwl9DQo+ICsNCj4gIAlyZXQgPSBkZXZtX2xlZF9jbGFzc2Rldl9yZWdp
+c3RlcihkZXYsICZsZWRfZGF0YS0+Y2Rldik7DQo+ICAJaWYgKHJldCA9PSAwKSB7DQo+ICAJ
+CXByaXYtPm51bV9sZWRzKys7DQo+IC0JCWxlZF9wd21fc2V0KCZsZWRfZGF0YS0+Y2Rldiwg
+bGVkX2RhdGEtPmNkZXYuYnJpZ2h0bmVzcyk7DQo+ICsJCWlmIChsZWQtPmRlZmF1bHRfc3Rh
+dGUgIT0gTEVEU19HUElPX0RFRlNUQVRFX0tFRVApDQo+ICsJCQlsZWRfcHdtX3NldCgmbGVk
+X2RhdGEtPmNkZXYsDQo+ICsJCQkJCWxlZF9kYXRhLT5jZGV2LmJyaWdodG5lc3MpOw0KPiAg
+CX0gZWxzZSB7DQo+ICAJCWRldl9lcnIoZGV2LCAiZmFpbGVkIHRvIHJlZ2lzdGVyIFBXTSBs
+ZWQgZm9yICVzOiAlZFxuIiwNCj4gIAkJCWxlZC0+bmFtZSwgcmV0KTsNCj4gQEAgLTEyNiw2
+ICsxNDEsOCBAQCBzdGF0aWMgaW50IGxlZF9wd21fY3JlYXRlX2Z3bm9kZShzdHJ1Y3QgZGV2
+aWNlICpkZXYsIHN0cnVjdCBsZWRfcHdtX3ByaXYgKnByaXYpDQo+ICAJbWVtc2V0KCZsZWQs
+IDAsIHNpemVvZihsZWQpKTsNCj4gIA0KPiAgCWRldmljZV9mb3JfZWFjaF9jaGlsZF9ub2Rl
+KGRldiwgZndub2RlKSB7DQo+ICsJCWNvbnN0IGNoYXIgKnN0YXRlID0gTlVMTDsNCj4gKw0K
+PiAgCQlyZXQgPSBmd25vZGVfcHJvcGVydHlfcmVhZF9zdHJpbmcoZndub2RlLCAibGFiZWwi
+LCAmbGVkLm5hbWUpOw0KPiAgCQlpZiAocmV0ICYmIGlzX29mX25vZGUoZndub2RlKSkNCj4g
+IAkJCWxlZC5uYW1lID0gdG9fb2Zfbm9kZShmd25vZGUpLT5uYW1lOw0KPiBAQCAtMTQzLDYg
+KzE2MCwxNiBAQCBzdGF0aWMgaW50IGxlZF9wd21fY3JlYXRlX2Z3bm9kZShzdHJ1Y3QgZGV2
+aWNlICpkZXYsIHN0cnVjdCBsZWRfcHdtX3ByaXYgKnByaXYpDQo+ICAJCWZ3bm9kZV9wcm9w
+ZXJ0eV9yZWFkX3UzMihmd25vZGUsICJtYXgtYnJpZ2h0bmVzcyIsDQo+ICAJCQkJCSAmbGVk
+Lm1heF9icmlnaHRuZXNzKTsNCj4gIA0KPiArCQlpZiAoIWZ3bm9kZV9wcm9wZXJ0eV9yZWFk
+X3N0cmluZyhmd25vZGUsICJkZWZhdWx0LXN0YXRlIiwNCj4gKwkJCQkJCSAmc3RhdGUpKSB7
+DQo+ICsJCQlpZiAoIXN0cmNtcChzdGF0ZSwgImtlZXAiKSkNCj4gKwkJCQlsZWQuZGVmYXVs
+dF9zdGF0ZSA9IExFRFNfR1BJT19ERUZTVEFURV9LRUVQOw0KPiArCQkJZWxzZSBpZiAoIXN0
+cmNtcChzdGF0ZSwgIm9uIikpDQo+ICsJCQkJbGVkLmRlZmF1bHRfc3RhdGUgPSBMRURTX0dQ
+SU9fREVGU1RBVEVfT047DQo+ICsJCQllbHNlDQo+ICsJCQkJbGVkLmRlZmF1bHRfc3RhdGUg
+PSBMRURTX0dQSU9fREVGU1RBVEVfT0ZGOw0KPiArCQl9DQo+ICsNCj4gIAkJcmV0ID0gbGVk
+X3B3bV9hZGQoZGV2LCBwcml2LCAmbGVkLCBmd25vZGUpOw0KPiAgCQlpZiAocmV0KSB7DQo+
+ICAJCQlmd25vZGVfaGFuZGxlX3B1dChmd25vZGUpOw0KPiBkaWZmIC0tZ2l0IGEvaW5jbHVk
+ZS9saW51eC9sZWRzX3B3bS5oIGIvaW5jbHVkZS9saW51eC9sZWRzX3B3bS5oDQo+IGluZGV4
+IDkzZDEwMWQyODk0My4uYzllZjkwMTI5MTNkIDEwMDY0NA0KPiAtLS0gYS9pbmNsdWRlL2xp
+bnV4L2xlZHNfcHdtLmgNCj4gKysrIGIvaW5jbHVkZS9saW51eC9sZWRzX3B3bS5oDQo+IEBA
+IC0xMCw2ICsxMCw3IEBAIHN0cnVjdCBsZWRfcHdtIHsNCj4gIAljb25zdCBjaGFyCSpkZWZh
+dWx0X3RyaWdnZXI7DQo+ICAJdW5zaWduZWQJcHdtX2lkIF9fZGVwcmVjYXRlZDsNCj4gIAl1
+OCAJCWFjdGl2ZV9sb3c7DQo+ICsJdTgJCWRlZmF1bHRfc3RhdGU7DQo+ICAJdW5zaWduZWQg
+CW1heF9icmlnaHRuZXNzOw0KPiAgCXVuc2lnbmVkCXB3bV9wZXJpb2RfbnM7DQo+ICB9Ow0K
+DQoNCkRpZWhsIENvbm5lY3Rpdml0eSBTb2x1dGlvbnMgR21iSA0KR2VzY2jDpGZ0c2bDvGhy
+dW5nOiBIb3JzdCBMZW9uYmVyZ2VyDQpTaXR6IGRlciBHZXNlbGxzY2hhZnQ6IE7DvHJuYmVy
+ZyAtIFJlZ2lzdGVyZ2VyaWNodDogQW10c2dlcmljaHQNCk7DvHJuYmVyZzogSFJCIDMyMzE1
+DQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18NCg0KRGVy
+IEluaGFsdCBkZXIgdm9yc3RlaGVuZGVuIEUtTWFpbCBpc3QgbmljaHQgcmVjaHRsaWNoIGJp
+bmRlbmQuIERpZXNlIEUtTWFpbCBlbnRoYWVsdCB2ZXJ0cmF1bGljaGUgdW5kL29kZXIgcmVj
+aHRsaWNoIGdlc2NodWV0enRlIEluZm9ybWF0aW9uZW4uDQpJbmZvcm1pZXJlbiBTaWUgdW5z
+IGJpdHRlLCB3ZW5uIFNpZSBkaWVzZSBFLU1haWwgZmFlbHNjaGxpY2hlcndlaXNlIGVyaGFs
+dGVuIGhhYmVuLiBCaXR0ZSBsb2VzY2hlbiBTaWUgaW4gZGllc2VtIEZhbGwgZGllIE5hY2hy
+aWNodC4NCkplZGUgdW5lcmxhdWJ0ZSBGb3JtIGRlciBSZXByb2R1a3Rpb24sIEJla2FubnRn
+YWJlLCBBZW5kZXJ1bmcsIFZlcnRlaWx1bmcgdW5kL29kZXIgUHVibGlrYXRpb24gZGllc2Vy
+IEUtTWFpbCBpc3Qgc3RyZW5nc3RlbnMgdW50ZXJzYWd0Lg0KLSBJbmZvcm1hdGlvbmVuIHp1
+bSBEYXRlbnNjaHV0eiwgaW5zYmVzb25kZXJlIHp1IElocmVuIFJlY2h0ZW4sIGVyaGFsdGVu
+IFNpZSB1bnRlciBodHRwczovL3d3dy5kaWVobC5jb20vZ3JvdXAvZGUvdHJhbnNwYXJlbnot
+dW5kLWluZm9ybWF0aW9uc3BmbGljaHRlbi8NCg0KVGhlIGNvbnRlbnRzIG9mIHRoZSBhYm92
+ZSBtZW50aW9uZWQgZS1tYWlsIGlzIG5vdCBsZWdhbGx5IGJpbmRpbmcuIFRoaXMgZS1tYWls
+IGNvbnRhaW5zIGNvbmZpZGVudGlhbCBhbmQvb3IgbGVnYWxseSBwcm90ZWN0ZWQgaW5mb3Jt
+YXRpb24uIFBsZWFzZSBpbmZvcm0gdXMgaWYgeW91IGhhdmUgcmVjZWl2ZWQgdGhpcyBlLW1h
+aWwgYnkNCm1pc3Rha2UgYW5kIGRlbGV0ZSBpdCBpbiBzdWNoIGEgY2FzZS4gRWFjaCB1bmF1
+dGhvcml6ZWQgcmVwcm9kdWN0aW9uLCBkaXNjbG9zdXJlLCBhbHRlcmF0aW9uLCBkaXN0cmli
+dXRpb24gYW5kL29yIHB1YmxpY2F0aW9uIG9mIHRoaXMgZS1tYWlsIGlzIHN0cmljdGx5IHBy
+b2hpYml0ZWQuIA0KLSBGb3IgZ2VuZXJhbCBpbmZvcm1hdGlvbiBvbiBkYXRhIHByb3RlY3Rp
+b24gYW5kIHlvdXIgcmVzcGVjdGl2ZSByaWdodHMgcGxlYXNlIHZpc2l0IGh0dHBzOi8vd3d3
+LmRpZWhsLmNvbS9ncm91cC9lbi90cmFuc3BhcmVuY3ktYW5kLWluZm9ybWF0aW9uLW9ibGln
+YXRpb25zLw0K
