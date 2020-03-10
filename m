@@ -2,141 +2,79 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32742C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 02:38:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A254C10F25
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 02:38:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DE7A24649
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 02:38:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="eyGcaXh5"
+	by mail.kernel.org (Postfix) with ESMTP id 100BA24649
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 02:38:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726822AbgCJCiJ (ORCPT
+        id S1726860AbgCJCiV convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 22:38:09 -0400
-Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17897 "EHLO
-        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726464AbgCJCiJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 22:38:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1583807858;
-        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
-        h=Date:In-Reply-To:References:MIME-Version:Content-Type:Content-Transfer-Encoding:Subject:To:CC:From:Message-ID;
-        bh=SRB4gI+kmNulvAgHVpKm0WCkLF/bIFaCvoqIj9M+hWw=;
-        b=eyGcaXh590ZfA2qIFavo5UB/lXnKcszs4kKUn+ApMEHHjltR70wUbnBtE3175l8s
-        u0f4rA2VxxvQgOjrAMxyxZgDYOfxwHHPMqK5FaTYcYDgTa6LDJakuetiI4KseWtZ6h5
-        SoTvq6VMRHANbwimgGILboxE0HqSu2sHqvpZlQLk=
-Received: from [10.233.233.252] (125.120.190.194 [125.120.190.194]) by mx.zoho.com.cn
-        with SMTPS id 158380785586338.32031942445258; Tue, 10 Mar 2020 10:37:35 +0800 (CST)
-Date:   Tue, 10 Mar 2020 10:37:34 +0800
-User-Agent: K-9 Mail for Android
-In-Reply-To: <2ba6de2e-7880-d322-a0f6-5cea2647ea50@loongson.cn>
-References: <1583742206-29163-1-git-send-email-yangtiezhu@loongson.cn> <1583742206-29163-2-git-send-email-yangtiezhu@loongson.cn> <170be7ca00e.133ea84fa2305.7803335422925759322@flygoat.com> <2ba6de2e-7880-d322-a0f6-5cea2647ea50@loongson.cn>
+        Mon, 9 Mar 2020 22:38:21 -0400
+Received: from szxga08-in.huawei.com ([45.249.212.255]:46238 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725845AbgCJCiU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 22:38:20 -0400
+Received: from DGGEMM405-HUB.china.huawei.com (unknown [172.30.72.55])
+        by Forcepoint Email with ESMTP id 481785740B42A67CB5F8;
+        Tue, 10 Mar 2020 10:38:18 +0800 (CST)
+Received: from dggeme703-chm.china.huawei.com (10.1.199.99) by
+ DGGEMM405-HUB.china.huawei.com (10.3.20.213) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 10 Mar 2020 10:38:16 +0800
+Received: from dggeme753-chm.china.huawei.com (10.3.19.99) by
+ dggeme703-chm.china.huawei.com (10.1.199.99) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1713.5; Tue, 10 Mar 2020 10:38:16 +0800
+Received: from dggeme753-chm.china.huawei.com ([10.7.64.70]) by
+ dggeme753-chm.china.huawei.com ([10.7.64.70]) with mapi id 15.01.1713.004;
+ Tue, 10 Mar 2020 10:38:16 +0800
+From:   linmiaohe <linmiaohe@huawei.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+CC:     Paolo Bonzini <pbonzini@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Liran Alon <liran.alon@oracle.com>
+Subject: Re[PATCH 3/6] KVM: nVMX: properly handle errors in
+ nested_vmx_handle_enlightened_vmptrld()
+Thread-Topic: Re[PATCH 3/6] KVM: nVMX: properly handle errors in
+ nested_vmx_handle_enlightened_vmptrld()
+Thread-Index: AdX2g+kg61+qMhM5ThKDU/fibqij4w==
+Date:   Tue, 10 Mar 2020 02:38:16 +0000
+Message-ID: <a65dcb60347c4300a0a1f53c9f25792c@huawei.com>
+Accept-Language: en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.173.221.158]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: =?UTF-8?Q?Re=3A_=E5=9B=9E=E5=A4=8D=3A=5BPATCH_1/6=5D_PCI=3A_Add_Loongs?= =?UTF-8?Q?on_vendor_ID_and_7A1000_device_IDs?=
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>
-CC:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        linux-mips <linux-mips@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        linux-ide <linux-ide@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Xuefeng Li <lixuefeng@loongson.cn>
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-Message-ID: <7262AFE6-B850-4F34-A79F-2B59341C9B88@flygoat.com>
-X-ZohoCNMailClient: External
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-=E4=BA=8E 2020=E5=B9=B43=E6=9C=8810=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=881=
-0:31:56, Tiezhu Yang <yangtiezhu@loongson=2Ecn> =E5=86=99=E5=88=B0:
->On 03/09/2020 04:50 PM, Jiaxun Yang wrote:
->>   ---- =E5=9C=A8 =E6=98=9F=E6=9C=9F=E4=B8=80, 2020-03-09 16:23:21 Tiezh=
-u Yang
-><yangtiezhu@loongson=2Ecn> =E6=92=B0=E5=86=99 ----
->>   > Add the Loongson vendor ID and 7A1000 device IDs to pci_ids=2Eh
->>   > to be used by the controller driver in the future=2E
->>   >
->>   > The Loongson IDs can be found at the following link:
->>   >
->https://git=2Ekernel=2Eorg/pub/scm/utils/pciutils/pciutils=2Egit/tree/pci=
-=2Eids
->>   >
->>   > Signed-off-by: Tiezhu Yang <yangtiezhu@loongson=2Ecn>
->>   > ---
->>   >  include/linux/pci_ids=2Eh | 18 ++++++++++++++++++
->>   >  1 file changed, 18 insertions(+)
->>   >
->>   > diff --git a/include/linux/pci_ids=2Eh b/include/linux/pci_ids=2Eh
->>   > index 352c0d7=2E=2E0125ab4 100644
->>   > --- a/include/linux/pci_ids=2Eh
->>   > +++ b/include/linux/pci_ids=2Eh
->>   > @@ -3113,4 +3113,22 @@
->>   >
->>   >  #define PCI_VENDOR_ID_NCUBE        0x10ff
->>   >
->>   > +#define PCI_VENDOR_ID_LOONGSON            0x0014
->>   > +#define PCI_DEVICE_ID_LOONGSON_7A1000_HT    0x7a00
->>   > +#define PCI_DEVICE_ID_LOONGSON_7A1000_APB    0x7a02
->>   > +#define PCI_DEVICE_ID_LOONGSON_7A1000_GMAC    0x7a03
->>   > +#define PCI_DEVICE_ID_LOONGSON_7A1000_OTG    0x7a04
->>   > +#define PCI_DEVICE_ID_LOONGSON_7A1000_DC    0x7a06
->>   > +#define PCI_DEVICE_ID_LOONGSON_7A1000_HDA    0x7a07
->>   > +#define PCI_DEVICE_ID_LOONGSON_7A1000_SATA    0x7a08
->>   > +#define PCI_DEVICE_ID_LOONGSON_7A1000_PCIE_X1    0x7a09
->>   > +#define PCI_DEVICE_ID_LOONGSON_7A1000_SPI    0x7a0b
->>   > +#define PCI_DEVICE_ID_LOONGSON_7A1000_LPC    0x7a0c
->>   > +#define PCI_DEVICE_ID_LOONGSON_7A1000_DMA    0x7a0f
->>   > +#define PCI_DEVICE_ID_LOONGSON_7A1000_EHCI    0x7a14
->>   > +#define PCI_DEVICE_ID_LOONGSON_7A1000_GPU    0x7a15
->>   > +#define PCI_DEVICE_ID_LOONGSON_7A1000_PCIE_X4    0x7a19
->>   > +#define PCI_DEVICE_ID_LOONGSON_7A1000_OHCI    0x7a24
->>   > +#define PCI_DEVICE_ID_LOONGSON_7A1000_PCIE_X8    0x7a29
->>
->> Devices IDs are unlikely to be reused by mutiple subsystems, so
->probably we don't need
->> to add them here?
+Hi:
+Vitaly Kuznetsov <vkuznets@redhat.com> writes:
+>nested_vmx_handle_enlightened_vmptrld() fails in two cases:
+>- when we fail to kvm_vcpu_map() the supplied GPA
+>- when revision_id is incorrect.
+>Genuine Hyper-V raises #UD in the former case (at least with *some* incorrect GPAs) and does VMfailInvalid() in the later. KVM doesn't do anything so L1 just gets stuck retrying the same faulty VMLAUNCH.
 >
->Hi Jiaxun,
+>nested_vmx_handle_enlightened_vmptrld() has two call sites:
+>nested_vmx_run() and nested_get_vmcs12_pages(). The former needs to queue do much: the failure there happens after migration when L2 was running (and
+>L1 did something weird like wrote to VP assist page from a different vCPU), just kill L1 with KVM_EXIT_INTERNAL_ERROR.
 >
->I think it is better to define the device IDs in pci_ids=2Eh,
->otherwise it seems a little disorganized=2E
+>Reported-by: Miaohe Lin <linmiaohe@huawei.com>
+>Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 
-Please read the comment at the start of this file=2E
-New entries should be added only if they're shared by multiple drivers=2E
+Thanks for fixing this issue!:) The code looks fine for and it should works as far as I can say.
+Reviewed-by: Miaohe Lin <linmiaohe@huawei.com>
 
-That's the rule=2E
-
-And probably you can split these two patches into a new series
-as they're likely to be accepted=2E
-
-Thanks=2E
-
->
->Thanks,
->
->Tiezhu Yang
->
->>  =20
->>> +
->>   >  #endif /* _LINUX_PCI_IDS_H */
->>   > --
->>   > 2=2E1=2E0
->>   >
->>   >
-
---=20
-Jiaxun Yang
