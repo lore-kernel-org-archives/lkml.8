@@ -2,52 +2,152 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47B04C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 11:04:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECC04C18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 11:04:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 237DF2468D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 11:04:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C338E2468D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 11:04:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VhdHJtbB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726437AbgCJLEb (ORCPT
+        id S1726442AbgCJLEv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 07:04:31 -0400
-Received: from mx.sdf.org ([205.166.94.20]:60698 "EHLO mx.sdf.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726202AbgCJLEa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 07:04:30 -0400
-X-Greylist: delayed 512 seconds by postgrey-1.27 at vger.kernel.org; Tue, 10 Mar 2020 07:04:30 EDT
-Received: from sdf.org (IDENT:lkml@faeroes.freeshell.org [205.166.94.9])
-        by mx.sdf.org (8.15.2/8.14.5) with ESMTPS id 02AAtqUs002320
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits) verified NO);
-        Tue, 10 Mar 2020 10:55:53 GMT
-Received: (from lkml@localhost)
-        by sdf.org (8.15.2/8.12.8/Submit) id 02AAtqjn009972;
-        Tue, 10 Mar 2020 10:55:52 GMT
-Date:   Tue, 10 Mar 2020 10:55:52 +0000
-From:   George Spelvin <lkml@SDF.ORG>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Ard Biesheuvel <ardb@kernel.org>, George Spelvin <lkml@sdf.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        clang-built-linux@googlegroups.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] int128: fix __uint128_t compiler test in Kconfig
-Message-ID: <20200310105552.GA24925@SDF.ORG>
-References: <20200310101250.22374-1-masahiroy@kernel.org>
- <20200310101250.22374-2-masahiroy@kernel.org>
+        Tue, 10 Mar 2020 07:04:51 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:38888 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726252AbgCJLEv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 07:04:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583838290;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=CzkrWAmBf2oqqeq6nmGCN0dfk2xPizcnlNYu+9BCd+8=;
+        b=VhdHJtbBM2UJ7wihHh7agbQKfcNldICQy9XKaRmv2cRQ/9Yvg7O8UzTF7KnJdgqedblf1o
+        8T2uFMLwxn0xt8VWMSnBXdmoopO770O471tecm9eoVfZKbLAltFO8l+ZF4FxiFdyxCEJx+
+        P6fX73BFRDYRi2Gui1uczpHTzizjygY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-389--FRRzkK1NtS5nisEDRQ31g-1; Tue, 10 Mar 2020 07:04:45 -0400
+X-MC-Unique: -FRRzkK1NtS5nisEDRQ31g-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7AB9218B5FAA;
+        Tue, 10 Mar 2020 11:04:44 +0000 (UTC)
+Received: from localhost (unknown [10.36.118.73])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B404B5C28E;
+        Tue, 10 Mar 2020 11:04:38 +0000 (UTC)
+Date:   Tue, 10 Mar 2020 11:04:37 +0000
+From:   Stefan Hajnoczi <stefanha@redhat.com>
+To:     Vivek Goyal <vgoyal@redhat.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvdimm@lists.01.org, virtio-fs@redhat.com, miklos@szeredi.hu,
+        dgilbert@redhat.com, mst@redhat.com,
+        Sebastien Boeuf <sebastien.boeuf@intel.com>,
+        kbuild test robot <lkp@intel.com>
+Subject: Re: [PATCH 04/20] virtio: Implement get_shm_region for PCI transport
+Message-ID: <20200310110437.GI140737@stefanha-x1.localdomain>
+References: <20200304165845.3081-1-vgoyal@redhat.com>
+ <20200304165845.3081-5-vgoyal@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+In-Reply-To: <20200304165845.3081-5-vgoyal@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="zgY/UHCnsaNnNXRx"
 Content-Disposition: inline
-In-Reply-To: <20200310101250.22374-2-masahiroy@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thank you!  As your 1/2 commit message explained, the best way to fix
-this was not entirely obvious.
+--zgY/UHCnsaNnNXRx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-FWIW, this series
-Tested-by: George Spelvin <lkml@sdf.org>
+On Wed, Mar 04, 2020 at 11:58:29AM -0500, Vivek Goyal wrote:
+> diff --git a/drivers/virtio/virtio_pci_modern.c b/drivers/virtio/virtio_p=
+ci_modern.c
+> index 7abcc50838b8..52f179411015 100644
+> --- a/drivers/virtio/virtio_pci_modern.c
+> +++ b/drivers/virtio/virtio_pci_modern.c
+> @@ -443,6 +443,111 @@ static void del_vq(struct virtio_pci_vq_info *info)
+>  =09vring_del_virtqueue(vq);
+>  }
+> =20
+> +static int virtio_pci_find_shm_cap(struct pci_dev *dev,
+> +                                   u8 required_id,
+> +                                   u8 *bar, u64 *offset, u64 *len)
+> +{
+> +=09int pos;
+> +
+> +        for (pos =3D pci_find_capability(dev, PCI_CAP_ID_VNDR);
+
+Please fix the mixed tabs vs space indentation in this patch.
+
+> +static bool vp_get_shm_region(struct virtio_device *vdev,
+> +=09=09=09      struct virtio_shm_region *region, u8 id)
+> +{
+> +=09struct virtio_pci_device *vp_dev =3D to_vp_device(vdev);
+> +=09struct pci_dev *pci_dev =3D vp_dev->pci_dev;
+> +=09u8 bar;
+> +=09u64 offset, len;
+> +=09phys_addr_t phys_addr;
+> +=09size_t bar_len;
+> +=09int ret;
+> +
+> +=09if (!virtio_pci_find_shm_cap(pci_dev, id, &bar, &offset, &len)) {
+> +=09=09return false;
+> +=09}
+> +
+> +=09ret =3D pci_request_region(pci_dev, bar, "virtio-pci-shm");
+> +=09if (ret < 0) {
+> +=09=09dev_err(&pci_dev->dev, "%s: failed to request BAR\n",
+> +=09=09=09__func__);
+> +=09=09return false;
+> +=09}
+> +
+> +=09phys_addr =3D pci_resource_start(pci_dev, bar);
+> +=09bar_len =3D pci_resource_len(pci_dev, bar);
+> +
+> +        if (offset + len > bar_len) {
+> +                dev_err(&pci_dev->dev,
+> +                        "%s: bar shorter than cap offset+len\n",
+> +                        __func__);
+> +                return false;
+> +        }
+> +
+> +=09region->len =3D len;
+> +=09region->addr =3D (u64) phys_addr + offset;
+> +
+> +=09return true;
+> +}
+
+Missing pci_release_region()?
+
+--zgY/UHCnsaNnNXRx
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl5ndEUACgkQnKSrs4Gr
+c8jLYwf/exeUl3WphEdcCDBZB1FzUfCmswGzkwrT92YXIdpwgJZrl688mmhjXloi
+GJqsnE3BX20JSmDOw3KlRiByhAEaz2HwKpdjT62Xq3CBRMLDemAymoDsGtjlanVK
+fdmw17AJzX01wpcPW2ek87jGaHwygYHt4GFrE9NH+TiB7WVU0EfXmaF1fbVREkT1
+VGzPZqY0xpWl3g12g9P0BCrftqa0PyLG29aHHG5NFs7kbTNaej5NcBOUjxEvk9jB
+3mS+w/vUz7cdZPyj0BxxVjNN6udpyi83i4QdTzgLKilwD9x1VhvtnVVJiOdXOdvm
+h4bns2UcpEqEvyaSsVzo3jlYx+OeRw==
+=74o7
+-----END PGP SIGNATURE-----
+
+--zgY/UHCnsaNnNXRx--
+
