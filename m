@@ -4,50 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7A79C18E7A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:01:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C054C18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:01:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79EF82467D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:01:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E3DB2467D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:01:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583845261;
-	bh=/4ABY4o8TTdcJwj6+fijhNuT5dju9meI2BmNsWpfIck=;
+	s=default; t=1583845264;
+	bh=uUmpij+9W1OTILI+xOFyBliAfKE59rmj0bsOZV9Bvy8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FBze0Dgvn+pc5uuVSLxkR5GHttJ0Rh+18XBtz5tRZtZRippCWLPkJfhcws/vgQ8Kv
-	 pyxPzgsHgQNIZqqtkXPXGUevUUjFDD6C3oXrRYeMvvNKwou/EbK+riXnxnnp+mENpi
-	 oJkS8BpAF50hcUmPgbTk/H8sEpz+5ta/+DlebJPQ=
+	b=ZuO7VDF160SCNdl4Q96uDSAsVcaVFss9RluU+JnOBT/1x5bNk3V/nPlpQJa/m1djx
+	 8k+o6kWHfJ1+pCYVX+1HHTV90tinQVxu6jwVmvPOLpgoGNHCR1bLzypJ01kt7Qkop6
+	 +9Yp4IdgY3HS96d5KWVMV3wNw+oGxpYdiT4O5yWs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730208AbgCJNBA (ORCPT
+        id S1730220AbgCJNBC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:01:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41778 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:01:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41922 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728242AbgCJNA4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:00:56 -0400
+        id S1728918AbgCJNA5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:00:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2CB620409;
-        Tue, 10 Mar 2020 13:00:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E2D3024694;
+        Tue, 10 Mar 2020 13:00:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845252;
-        bh=/4ABY4o8TTdcJwj6+fijhNuT5dju9meI2BmNsWpfIck=;
+        s=default; t=1583845257;
+        bh=uUmpij+9W1OTILI+xOFyBliAfKE59rmj0bsOZV9Bvy8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wf1f0y1gMlajefy+0CRS3rERBrFffZkx4YvSHdhJQ4CyrhL9Nr3KaLMe+flBJXuBw
-         mFa5rbBlH/wj3a59NJIUcWeGh47LUYKbo5JLDp8+S8+vYKB1lEDA76GJZ/qtxjeb2S
-         8e11Yh6SKDWg62YG0wZ2GrhgI0LCkvh/FycNeyXQ=
+        b=RhWpApp9s/TjdmaZwTHBwjTqpGBXDcHzUFwmVGUy0a2S65HJmeO2zvwXIKE+0WQSp
+         EIo3GHnB6yNxHiVOw00U1srMYIc/Q3FX+Kh724IYtDgLEcG9Zutyej9znWnx9534pw
+         Xm7/r9/AbU90nlBuYjL0y0UXwLRgWFQzVZ9CZzdk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Zhang Xiaoxu <zhangxiaoxu5@huawei.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>
-Subject: [PATCH 5.5 078/189] vgacon: Fix a UAF in vgacon_invert_region
-Date:   Tue, 10 Mar 2020 13:38:35 +0100
-Message-Id: <20200310123647.501335178@linuxfoundation.org>
+        stable@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+        "Huang, Ying" <ying.huang@intel.com>, Zi Yan <ziy@nvidia.com>,
+        William Kucharski <william.kucharski@oracle.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.5 080/189] mm: fix possible PMD dirty bit lost in set_pmd_migration_entry()
+Date:   Tue, 10 Mar 2020 13:38:37 +0100
+Message-Id: <20200310123647.724793912@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123639.608886314@linuxfoundation.org>
 References: <20200310123639.608886314@linuxfoundation.org>
@@ -60,130 +65,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
+From: Huang Ying <ying.huang@intel.com>
 
-commit 513dc792d6060d5ef572e43852683097a8420f56 upstream.
+commit 8a8683ad9ba48b4b52a57f013513d1635c1ca5c4 upstream.
 
-When syzkaller tests, there is a UAF:
-  BUG: KASan: use after free in vgacon_invert_region+0x9d/0x110 at addr
-    ffff880000100000
-  Read of size 2 by task syz-executor.1/16489
-  page:ffffea0000004000 count:0 mapcount:-127 mapping:          (null)
-  index:0x0
-  page flags: 0xfffff00000000()
-  page dumped because: kasan: bad access detected
-  CPU: 1 PID: 16489 Comm: syz-executor.1 Not tainted
-  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
-  rel-1.9.3-0-ge2fc41e-prebuilt.qemu-project.org 04/01/2014
-  Call Trace:
-    [<ffffffffb119f309>] dump_stack+0x1e/0x20
-    [<ffffffffb04af957>] kasan_report+0x577/0x950
-    [<ffffffffb04ae652>] __asan_load2+0x62/0x80
-    [<ffffffffb090f26d>] vgacon_invert_region+0x9d/0x110
-    [<ffffffffb0a39d95>] invert_screen+0xe5/0x470
-    [<ffffffffb0a21dcb>] set_selection+0x44b/0x12f0
-    [<ffffffffb0a3bfae>] tioclinux+0xee/0x490
-    [<ffffffffb0a1d114>] vt_ioctl+0xff4/0x2670
-    [<ffffffffb0a0089a>] tty_ioctl+0x46a/0x1a10
-    [<ffffffffb052db3d>] do_vfs_ioctl+0x5bd/0xc40
-    [<ffffffffb052e2f2>] SyS_ioctl+0x132/0x170
-    [<ffffffffb11c9b1b>] system_call_fastpath+0x22/0x27
-    Memory state around the buggy address:
-     ffff8800000fff00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-     00 00
-     ffff8800000fff80: 00 00 00 00 00 00 00 00 00 00 00 00 00
-     00 00 00
-    >ffff880000100000: ff ff ff ff ff ff ff ff ff ff ff ff ff
-     ff ff ff
+In set_pmd_migration_entry(), pmdp_invalidate() is used to change PMD
+atomically.  But the PMD is read before that with an ordinary memory
+reading.  If the THP (transparent huge page) is written between the PMD
+reading and pmdp_invalidate(), the PMD dirty bit may be lost, and cause
+data corruption.  The race window is quite small, but still possible in
+theory, so need to be fixed.
 
-It can be reproduce in the linux mainline by the program:
-  #include <stdio.h>
-  #include <stdlib.h>
-  #include <unistd.h>
-  #include <fcntl.h>
-  #include <sys/types.h>
-  #include <sys/stat.h>
-  #include <sys/ioctl.h>
-  #include <linux/vt.h>
+The race is fixed via using the return value of pmdp_invalidate() to get
+the original content of PMD, which is a read/modify/write atomic
+operation.  So no THP writing can occur in between.
 
-  struct tiocl_selection {
-    unsigned short xs;      /* X start */
-    unsigned short ys;      /* Y start */
-    unsigned short xe;      /* X end */
-    unsigned short ye;      /* Y end */
-    unsigned short sel_mode; /* selection mode */
-  };
+The race has been introduced when the THP migration support is added in
+the commit 616b8371539a ("mm: thp: enable thp migration in generic path").
+But this fix depends on the commit d52605d7cb30 ("mm: do not lose dirty
+and accessed bits in pmdp_invalidate()").  So it's easy to be backported
+after v4.16.  But the race window is really small, so it may be fine not
+to backport the fix at all.
 
-  #define TIOCL_SETSEL    2
-  struct tiocl {
-    unsigned char type;
-    unsigned char pad;
-    struct tiocl_selection sel;
-  };
-
-  int main()
-  {
-    int fd = 0;
-    const char *dev = "/dev/char/4:1";
-
-    struct vt_consize v = {0};
-    struct tiocl tioc = {0};
-
-    fd = open(dev, O_RDWR, 0);
-
-    v.v_rows = 3346;
-    ioctl(fd, VT_RESIZEX, &v);
-
-    tioc.type = TIOCL_SETSEL;
-    ioctl(fd, TIOCLINUX, &tioc);
-
-    return 0;
-  }
-
-When resize the screen, update the 'vc->vc_size_row' to the new_row_size,
-but when 'set_origin' in 'vgacon_set_origin', vgacon use 'vga_vram_base'
-for 'vc_origin' and 'vc_visible_origin', not 'vc_screenbuf'. It maybe
-smaller than 'vc_screenbuf'. When TIOCLINUX, use the new_row_size to calc
-the offset, it maybe larger than the vga_vram_size in vgacon driver, then
-bad access.
-Also, if set an larger screenbuf firstly, then set an more larger
-screenbuf, when copy old_origin to new_origin, a bad access may happen.
-
-So, If the screen size larger than vga_vram, resize screen should be
-failed. This alse fix CVE-2020-8649 and CVE-2020-8647.
-
-Linus pointed out that overflow checking seems absent. We're saved by
-the existing bounds checks in vc_do_resize() with rather strict
-limits:
-
-	if (cols > VC_RESIZE_MAXCOL || lines > VC_RESIZE_MAXROW)
-		return -EINVAL;
-
-Fixes: 0aec4867dca14 ("[PATCH] SVGATextMode fix")
-Reference: CVE-2020-8647 and CVE-2020-8649
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
-[danvet: augment commit message to point out overflow safety]
-Cc: stable@vger.kernel.org
-Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200304022429.37738-1-zhangxiaoxu5@huawei.com
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
+Reviewed-by: Zi Yan <ziy@nvidia.com>
+Reviewed-by: William Kucharski <william.kucharski@oracle.com>
+Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Cc: <stable@vger.kernel.org>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: Andrea Arcangeli <aarcange@redhat.com>
+Link: http://lkml.kernel.org/r/20200220075220.2327056-1-ying.huang@intel.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/video/console/vgacon.c |    3 +++
- 1 file changed, 3 insertions(+)
+ mm/huge_memory.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/drivers/video/console/vgacon.c
-+++ b/drivers/video/console/vgacon.c
-@@ -1316,6 +1316,9 @@ static int vgacon_font_get(struct vc_dat
- static int vgacon_resize(struct vc_data *c, unsigned int width,
- 			 unsigned int height, unsigned int user)
- {
-+	if ((width << 1) * height > vga_vram_size)
-+		return -EINVAL;
-+
- 	if (width % 2 || width > screen_info.orig_video_cols ||
- 	    height > (screen_info.orig_video_lines * vga_default_font_height)/
- 	    c->vc_font.height)
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -3032,8 +3032,7 @@ void set_pmd_migration_entry(struct page
+ 		return;
+ 
+ 	flush_cache_range(vma, address, address + HPAGE_PMD_SIZE);
+-	pmdval = *pvmw->pmd;
+-	pmdp_invalidate(vma, address, pvmw->pmd);
++	pmdval = pmdp_invalidate(vma, address, pvmw->pmd);
+ 	if (pmd_dirty(pmdval))
+ 		set_page_dirty(page);
+ 	entry = make_migration_entry(page, pmd_write(pmdval));
 
 
