@@ -7,57 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD946C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:42:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78B8AC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:42:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92C1C246A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:42:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 392D1246A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:42:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583844148;
-	bh=t2rrqzoW7TB77qiw1SOKTPOwUk9Edw9mxwPjCXvnKmI=;
+	s=default; t=1583844151;
+	bh=awzDN82KYJ5TGTZJjcvf3lRygd874USY6KRrUfyWfDQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Bbf+LYUTtWXYiDy8nRuULdneLJdrhg9SRNOGV9rSCXlYo3Yun/YnrWt8Y1MLsUfYy
-	 zlISYDRnun0q1NVPiqDiGF5vOhOYPddwFIgI5G/vwK74X+18b7jPC7aWUFIo44qMRq
-	 NEZUP/P9fM5CfzIVNvdRhSJLKCjYGVsc6+HSmN1o=
+	b=CXnemMH1p43FLCTuQ2MVG6GDK+W3HC4nagcFO84mqw5AQwIlBDLitBdxGbx15J44b
+	 qd0bCjLv098JwQ21Lwcu0W/8ds+n+KlhpJKojl3kAbJEdaaP/882Cg/x+APG+Jg3Zc
+	 ai/TaxHK8PdUM43aKFW0zV4kh2dpGByphqO+s5Fo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727340AbgCJMm0 (ORCPT
+        id S1726703AbgCJMma (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:42:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42152 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:42:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42006 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727302AbgCJMmR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:42:17 -0400
+        id S1727262AbgCJMmJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:42:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C2AE6246A3;
-        Tue, 10 Mar 2020 12:42:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB30724691;
+        Tue, 10 Mar 2020 12:42:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844137;
-        bh=t2rrqzoW7TB77qiw1SOKTPOwUk9Edw9mxwPjCXvnKmI=;
+        s=default; t=1583844129;
+        bh=awzDN82KYJ5TGTZJjcvf3lRygd874USY6KRrUfyWfDQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XIVyB4Dr9qjm214JYoZOvZjCMZlzY0ef+h+ya5MuCiFxZOEaKQH82Sl8eOZJVPqzJ
-         aBBTwOC3GXmyiw5PlhAKRlDyw4agkfpuG5dEC8keIhmDJRcWs99jp6aFZo0VD8kTp3
-         P5V7DhllqWl048DuPhEM0vLohFgm0GISoOcTmdAc=
+        b=F/WJJWGMJFsaMTC9iD/QoeKXNQe+6F0oJscyboPO8OimOs/2kSYy44az/+AfT3fwm
+         qkvVZskuSWe27IeC58tjezcKJXc0wDbl18xmdKCSMyrwSqn1xkIVQyrtvbP8r2Dsqt
+         eAHQvySrGuCmtWjGtW60+Jeb/lhW2xGQnNJlz5PA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rob Clark <robdclark@gmail.com>,
-        Sean Paul <sean@poorly.run>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Todd Kjos <tkjos@google.com>,
-        Alistair Delva <adelva@google.com>,
-        Amit Pundir <amit.pundir@linaro.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        freedreno@lists.freedesktop.org,
-        clang-built-linux@googlegroups.com,
-        John Stultz <john.stultz@linaro.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Rob Clark <robdclark@chromium.org>,
+        stable@vger.kernel.org, Michal Nazarewicz <mina86@mina86.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Felipe Balbi <balbi@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 43/72] drm: msm: Fix return type of dsi_mgr_connector_mode_valid for kCFI
-Date:   Tue, 10 Mar 2020 13:38:56 +0100
-Message-Id: <20200310123612.064015342@linuxfoundation.org>
+Subject: [PATCH 4.4 41/72] usb: gadget: ffs: ffs_aio_cancel(): Save/restore IRQ flags
+Date:   Tue, 10 Mar 2020 13:38:54 +0100
+Message-Id: <20200310123611.686906801@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123601.053680753@linuxfoundation.org>
 References: <20200310123601.053680753@linuxfoundation.org>
@@ -70,53 +62,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Stultz <john.stultz@linaro.org>
+From: Lars-Peter Clausen <lars@metafoo.de>
 
-[ Upstream commit 7fd2dfc3694922eb7ace4801b7208cf9f62ebc7d ]
+[ Upstream commit 43d565727a3a6fd24e37c7c2116475106af71806 ]
 
-I was hitting kCFI crashes when building with clang, and after
-some digging finally narrowed it down to the
-dsi_mgr_connector_mode_valid() function being implemented as
-returning an int, instead of an enum drm_mode_status.
+ffs_aio_cancel() can be called from both interrupt and thread context. Make
+sure that the current IRQ state is saved and restored by using
+spin_{un,}lock_irq{save,restore}().
 
-This patch fixes it, and appeases the opaque word of the kCFI
-gods (seriously, clang inlining everything makes the kCFI
-backtraces only really rough estimates of where things went
-wrong).
+Otherwise undefined behavior might occur.
 
-Thanks as always to Sami for his help narrowing this down.
-
-Cc: Rob Clark <robdclark@gmail.com>
-Cc: Sean Paul <sean@poorly.run>
-Cc: Sami Tolvanen <samitolvanen@google.com>
-Cc: Todd Kjos <tkjos@google.com>
-Cc: Alistair Delva <adelva@google.com>
-Cc: Amit Pundir <amit.pundir@linaro.org>
-Cc: Sumit Semwal <sumit.semwal@linaro.org>
-Cc: freedreno@lists.freedesktop.org
-Cc: clang-built-linux@googlegroups.com
-Signed-off-by: John Stultz <john.stultz@linaro.org>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Tested-by: Amit Pundir <amit.pundir@linaro.org>
-Signed-off-by: Rob Clark <robdclark@chromium.org>
+Acked-by: Michal Nazarewicz <mina86@mina86.com>
+Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/msm/dsi/dsi_manager.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/gadget/function/f_fs.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/dsi/dsi_manager.c b/drivers/gpu/drm/msm/dsi/dsi_manager.c
-index 0455ff75074ad..439dfb69e2ef8 100644
---- a/drivers/gpu/drm/msm/dsi/dsi_manager.c
-+++ b/drivers/gpu/drm/msm/dsi/dsi_manager.c
-@@ -302,7 +302,7 @@ static int dsi_mgr_connector_get_modes(struct drm_connector *connector)
- 	return num;
- }
- 
--static int dsi_mgr_connector_mode_valid(struct drm_connector *connector,
-+static enum drm_mode_status dsi_mgr_connector_mode_valid(struct drm_connector *connector,
- 				struct drm_display_mode *mode)
+diff --git a/drivers/usb/gadget/function/f_fs.c b/drivers/usb/gadget/function/f_fs.c
+index 4cb1355271ec4..9536c409a90d5 100644
+--- a/drivers/usb/gadget/function/f_fs.c
++++ b/drivers/usb/gadget/function/f_fs.c
+@@ -888,18 +888,19 @@ static int ffs_aio_cancel(struct kiocb *kiocb)
  {
- 	int id = dsi_mgr_connector_get_id(connector);
+ 	struct ffs_io_data *io_data = kiocb->private;
+ 	struct ffs_epfile *epfile = kiocb->ki_filp->private_data;
++	unsigned long flags;
+ 	int value;
+ 
+ 	ENTER();
+ 
+-	spin_lock_irq(&epfile->ffs->eps_lock);
++	spin_lock_irqsave(&epfile->ffs->eps_lock, flags);
+ 
+ 	if (likely(io_data && io_data->ep && io_data->req))
+ 		value = usb_ep_dequeue(io_data->ep, io_data->req);
+ 	else
+ 		value = -EINVAL;
+ 
+-	spin_unlock_irq(&epfile->ffs->eps_lock);
++	spin_unlock_irqrestore(&epfile->ffs->eps_lock, flags);
+ 
+ 	return value;
+ }
 -- 
 2.20.1
 
