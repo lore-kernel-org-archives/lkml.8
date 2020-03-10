@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FCF6C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:22:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59A2CC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:22:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD7DB222D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:22:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22C88222D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:22:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583846550;
-	bh=vpZhIUp+F3EInqF6s0EGWeJU4WQkBICg3jGrpxrEyvw=;
+	s=default; t=1583846555;
+	bh=gIJfk8IWJAFC8UyqBhu4d6Moz8REygtxs5NtIhfu6r4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pjNtoqqIijA47AMpY3vEEM+9kjzL0LqhZfZAv7AXMoRjpY7tiyB7YK+Yj8TqXbSYJ
-	 KArmkF1QLUXJXKRhZArFF38AVzwgXboa/d95zwFd7Ki+68DO2vZLX4EIKqdPzc8jco
-	 WXgNFJ845bfFA+E08z5a6VfbLFipKS/FXWRFcnoY=
+	b=2iMbTASptil6AD/6RwZEp+72TnjiRGKOTZ/82u0gGMd75SRPl31BRpj8+8iJk0uns
+	 BEMaEU0Lzx+f3nX2oxmHCCqXocXg7j6qXf/wUGTRvTGzI8/zkO6eBIoeziW+hppB6I
+	 bbfBaHwLNt51rur5L3eEXPawwfkPlEfjrGpkxLYs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730321AbgCJNWa (ORCPT
+        id S1730935AbgCJNWe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:22:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42540 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:22:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42474 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730254AbgCJNBW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:01:22 -0400
+        id S1730252AbgCJNBT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:01:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 201BC2467D;
-        Tue, 10 Mar 2020 13:01:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9FC422468D;
+        Tue, 10 Mar 2020 13:01:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845281;
-        bh=vpZhIUp+F3EInqF6s0EGWeJU4WQkBICg3jGrpxrEyvw=;
+        s=default; t=1583845279;
+        bh=gIJfk8IWJAFC8UyqBhu4d6Moz8REygtxs5NtIhfu6r4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=COe2dfPUh7gNhcGGnxd1aPbW4luXvFzoNNlj7+cKTKRr3Ojs2EYo/jetn8iexC7T0
-         KYpgdeluWk/2FQJspUuEeivEfFrzeCvM3fhWXwHHX6qqxazIGfecIYVR6E3nkfJPG1
-         /JyI3/EOJTgEu9goVDeC+wTY21dDysm036Kck+M4=
+        b=bQIcEMOfWmoYj9/csxRa7hS4rnyZOjAkGZGqmfLAyNabsAPCV09tLJff3N4qhUmf1
+         qiA/XgIeg1afhn0HEQ17ncbSVq/pIB3k6n9ng/pVfqVCnUpGQokhPP9RhglLIldn2+
+         lRearzBun0BdiQ+Fpu3Hr/10hJ8Jktt0+TIEQFYk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Jonas Gorski <jonas.gorski@gmail.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 5.5 128/189] spi: bcm63xx-hsspi: Really keep pll clk enabled
-Date:   Tue, 10 Mar 2020 13:39:25 +0100
-Message-Id: <20200310123652.720548105@linuxfoundation.org>
+        stable@vger.kernel.org, Pavel Machek <pavel@denx.de>,
+        Vladimir Oltean <olteanv@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>
+Subject: [PATCH 5.5 127/189] ARM: dts: ls1021a: Restore MDIO compatible to gianfar
+Date:   Tue, 10 Mar 2020 13:39:24 +0100
+Message-Id: <20200310123652.604300541@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123639.608886314@linuxfoundation.org>
 References: <20200310123639.608886314@linuxfoundation.org>
@@ -61,43 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Vladimir Oltean <olteanv@gmail.com>
 
-commit 51bddd4501bc414b8b1e8f4d096b4a5304068169 upstream.
+commit 7155c44624d061692b4c13aa8343f119c67d4fc0 upstream.
 
-The purpose of commit 0fd85869c2a9 ("spi/bcm63xx-hsspi: keep pll clk enabled")
-was to keep the pll clk enabled through the lifetime of the device.
+The difference between "fsl,etsec2-mdio" and "gianfar" has to do with
+the .get_tbipa function, which calculates the address of the TBIPA
+register automatically, if not explicitly specified. [ see
+drivers/net/ethernet/freescale/fsl_pq_mdio.c ]. On LS1021A, the TBIPA
+register is at offset 0x30 within the port register block, which is what
+the "gianfar" method of calculating addresses actually does.
 
-In order to do that, some 'clk_prepare_enable()'/'clk_disable_unprepare()'
-calls have been added in the error handling path of the probe function, in
-the remove function and in the suspend and resume functions.
+Luckily, the bad "compatible" is inconsequential for ls1021a.dtsi,
+because the TBIPA register is explicitly specified via the second "reg"
+(<0x0 0x2d10030 0x0 0x4>), so the "get_tbipa" function is dead code.
+Nonetheless it's good to restore it to its correct value.
 
-However, a 'clk_disable_unprepare()' call has been unfortunately left in
-the probe function. So the commit seems to be more or less a no-op.
+Background discussion:
+https://www.spinics.net/lists/stable/msg361156.html
 
-Axe it now, so that the pll clk is left enabled through the lifetime of
-the device, as described in the commit.
-
-Fixes: 0fd85869c2a9 ("spi/bcm63xx-hsspi: keep pll clk enabled")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Acked-by: Jonas Gorski <jonas.gorski@gmail.com>
-Link: https://lore.kernel.org/r/20200228213838.7124-1-christophe.jaillet@wanadoo.fr
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: c7861adbe37f ("ARM: dts: ls1021: Fix SGMII PCS link remaining down after PHY disconnect")
+Reported-by: Pavel Machek <pavel@denx.de>
+Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/spi/spi-bcm63xx-hsspi.c |    1 -
- 1 file changed, 1 deletion(-)
+ arch/arm/boot/dts/ls1021a.dtsi |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/spi/spi-bcm63xx-hsspi.c
-+++ b/drivers/spi/spi-bcm63xx-hsspi.c
-@@ -366,7 +366,6 @@ static int bcm63xx_hsspi_probe(struct pl
- 			goto out_disable_clk;
+--- a/arch/arm/boot/dts/ls1021a.dtsi
++++ b/arch/arm/boot/dts/ls1021a.dtsi
+@@ -728,7 +728,7 @@
+ 		};
  
- 		rate = clk_get_rate(pll_clk);
--		clk_disable_unprepare(pll_clk);
- 		if (!rate) {
- 			ret = -EINVAL;
- 			goto out_disable_pll_clk;
+ 		mdio0: mdio@2d24000 {
+-			compatible = "fsl,etsec2-mdio";
++			compatible = "gianfar";
+ 			device_type = "mdio";
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+@@ -737,7 +737,7 @@
+ 		};
+ 
+ 		mdio1: mdio@2d64000 {
+-			compatible = "fsl,etsec2-mdio";
++			compatible = "gianfar";
+ 			device_type = "mdio";
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
 
 
