@@ -2,237 +2,89 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7315FC18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:17:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7E99C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:17:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 329C0215A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:17:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C0F921655
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:17:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583871431;
-	bh=9kS4fll6kN31/YdZoAfwvgpKCt0IRqiPyB7uZLKuKj4=;
+	s=default; t=1583871460;
+	bh=cnbireeiV5S3r6lq2ej/Yy197jTRchqLG5DrkP8MDXk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WsbMLlKPxe9ue49QnWA20Bxzh4xKlRN+Q1ELsl8mhQDONBJS/l1HZiWxq/K8lQcBs
-	 7xtrBrDqn1+bVLFXdmnmICxQ5pmTq2FbgeHY0iv+ycau4Ymduu81AiNvtxpjHnOsyh
-	 Q0eJ1enxJFLNxi4hSFJw7rqIzrCnsrf4njg4gelc=
+	b=BXqeCEX7xULrh0HxFY8zbpLS+VxthXKzeYpyEhyf5Eiy6e+GHrjiuPRQaQoNL3ob6
+	 1gvcqlzGojKkEAELxkWSg0q6YATD7PzBN88txaE8nA81eOgHzGe5zQe2+vCeRF8kDU
+	 0s+kIKeM5EQrsQ7Vv7yD8GqBItgY+fHmwI32Y2/A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727417AbgCJURK (ORCPT
+        id S1726423AbgCJURj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 16:17:10 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:40370 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726100AbgCJURJ (ORCPT
+        Tue, 10 Mar 2020 16:17:39 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:33576 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726271AbgCJURj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 16:17:09 -0400
-Received: by mail-oi1-f195.google.com with SMTP id y71so9900942oia.7;
-        Tue, 10 Mar 2020 13:17:08 -0700 (PDT)
+        Tue, 10 Mar 2020 16:17:39 -0400
+Received: by mail-ot1-f68.google.com with SMTP id g15so8400629otr.0;
+        Tue, 10 Mar 2020 13:17:37 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=TepfMU12ngaZGfWbNFvmwR9hVezQFj2Now5HdZrqyu4=;
-        b=MAlWxbQMNLWWC9P8QMAlwbnTXeUHr+B8wCFlherpg0AzyPeN+KOnhJlFLYMpkDPpOU
-         58T7gWcw9ypogPyHrBYXjZCain/0ZsoVdDVzemMyVMfvNjsoUFdk1ubHFad3oH+9DHyH
-         ahXD5IdaUIPjhGrST2jJMsq0SxbjBE6iibughMY8QBW9fOWvCldrHzReRZB5qypmXwyI
-         MSH14uSKsvs+Qg9s7gZjxfWkrVsQC0S617QkHwP6aRMvw6UxaOZDNwpF3gpD5+RkEKRI
-         d3v47nyrllbqkDHqMBY3V++WclDcrt77o/K/AP4PQ57IvE+GL2aZRRF1MD3mvdNjYnK+
-         wn3A==
-X-Gm-Message-State: ANhLgQ16CTog/bVzNBgs/vhXaMg1iSrYK/BM2Ifqu1c00UJC5nXpq1Sl
-        PyL6TFpezpsZOd0y0PktWw==
-X-Google-Smtp-Source: ADFU+vvZi3Wc3khoMI8YsXkDStp3Ap7La8yZEb6cDvR9LqlLDGYFEkbj63tHb9TF0rmn3zaaorK9tQ==
-X-Received: by 2002:aca:ac46:: with SMTP id v67mr2512370oie.62.1583871428243;
-        Tue, 10 Mar 2020 13:17:08 -0700 (PDT)
+        bh=SALtb00tEMzq9uXRFmiEx+QH3Zf98Xn1eLOE8cTe24I=;
+        b=W/8rLsfafV8/aTCibIqkDcQ0EKqQ6uOq5hOD5FuaM0P8CDcyBM/mX3g8uog911l9t+
+         bmQnw2iTun+nHhIjtt4D3QRmb79MgESkz3FCXOm4ygtkLNM21XapZ15zXv6LaF2JktuX
+         ra0w9B4U2I6FCF7xLMemaVCeMmctt1ePrA6RuXC1X9R+13h+XomrmcLTj24jQXpG7vt6
+         98D0BCpRe8GdibSn+o0w2zpDRjBRPw5k8eE8GK+PeeYt+09GKOYUY7C5W4Mi2R88sNCp
+         QHB36NevxLJMo1Vl9shT4CMB07YpzVm+E6OFM6Nnw/7hDLfs2m1xhpZWA82sT9HB6N7a
+         ZSOQ==
+X-Gm-Message-State: ANhLgQ2tYaiZ2VYMVr4pBfvismgFbOSH+V3wdcl4gwgN0XyvQWAYwYEf
+        kTAFV6COHtGDJX6Xs7nM9w==
+X-Google-Smtp-Source: ADFU+vvd4bWBEv3HptnfOHpj19yNbzPlCehj5aSpWXjg8ppsPpo03XcBLibrk39Ai/jwvcUg9e35Xw==
+X-Received: by 2002:a05:6830:1d69:: with SMTP id l9mr18434593oti.192.1583871456874;
+        Tue, 10 Mar 2020 13:17:36 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id h6sm7762867otq.63.2020.03.10.13.17.07
+        by smtp.gmail.com with ESMTPSA id l1sm4573693oic.22.2020.03.10.13.17.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Mar 2020 13:17:07 -0700 (PDT)
-Received: (nullmailer pid 30625 invoked by uid 1000);
-        Tue, 10 Mar 2020 20:17:06 -0000
-Date:   Tue, 10 Mar 2020 15:17:06 -0500
+        Tue, 10 Mar 2020 13:17:35 -0700 (PDT)
+Received: (nullmailer pid 31532 invoked by uid 1000);
+        Tue, 10 Mar 2020 20:17:34 -0000
+Date:   Tue, 10 Mar 2020 15:17:34 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Mark Rutland <mark.rutland@arm.com>, od@zcrc.me,
-        =?utf-8?B?5ZGo55Cw5p2w?= <zhouyanjie@wanyeetech.com>,
-        linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] dt-bindings: rtc: Convert and update jz4740-rtc doc
- to YAML
-Message-ID: <20200310201706.GA25562@bogus>
-References: <20200302213953.28834-1-paul@crapouillou.net>
- <20200302213953.28834-3-paul@crapouillou.net>
+To:     Abel Vesa <abel.vesa@nxp.com>
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        Anson Huang <anson.huang@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Peng Fan <peng.fan@nxp.com>, Jacky Bai <ping.bai@nxp.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-clk@vger.kernel.org, Abel Vesa <abel.vesa@nxp.com>
+Subject: Re: [RFC 07/11] dt-bindings: clocks: imx8mp: Add ids for audiomix
+ clocks
+Message-ID: <20200310201734.GA31480@bogus>
+References: <1583226206-19758-1-git-send-email-abel.vesa@nxp.com>
+ <1583226206-19758-8-git-send-email-abel.vesa@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200302213953.28834-3-paul@crapouillou.net>
+In-Reply-To: <1583226206-19758-8-git-send-email-abel.vesa@nxp.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 02, 2020 at 06:39:53PM -0300, Paul Cercueil wrote:
-> Convert the jz4740-rtc doc to YAML, and update it to reflect the new
-> changes in the driver:
-> - More compatible strings are specified, with fallbacks if needed,
-> - The vendor-specific properties are now properly prefixed with the
->   'ingenic,' prefix.
+On Tue,  3 Mar 2020 11:03:22 +0200, Abel Vesa wrote:
+> Add all the clock ids for the audiomix clocks.
 > 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
 > ---
->  .../bindings/rtc/ingenic,jz4740-rtc.txt       | 37 --------
->  .../devicetree/bindings/rtc/ingenic,rtc.yaml  | 87 +++++++++++++++++++
->  2 files changed, 87 insertions(+), 37 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/rtc/ingenic,jz4740-rtc.txt
->  create mode 100644 Documentation/devicetree/bindings/rtc/ingenic,rtc.yaml
+>  include/dt-bindings/clock/imx8mp-clock.h | 62 ++++++++++++++++++++++++++++++++
+>  1 file changed, 62 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/rtc/ingenic,jz4740-rtc.txt b/Documentation/devicetree/bindings/rtc/ingenic,jz4740-rtc.txt
-> deleted file mode 100644
-> index 41c7ae18fd7b..000000000000
-> --- a/Documentation/devicetree/bindings/rtc/ingenic,jz4740-rtc.txt
-> +++ /dev/null
-> @@ -1,37 +0,0 @@
-> -JZ4740 and similar SoCs real-time clock driver
-> -
-> -Required properties:
-> -
-> -- compatible: One of:
-> -  - "ingenic,jz4740-rtc" - for use with the JZ4740 SoC
-> -  - "ingenic,jz4780-rtc" - for use with the JZ4780 SoC
-> -- reg: Address range of rtc register set
-> -- interrupts: IRQ number for the alarm interrupt
-> -- clocks: phandle to the "rtc" clock
-> -- clock-names: must be "rtc"
-> -
-> -Optional properties:
-> -- system-power-controller: To use this component as the
-> -  system power controller
-> -- reset-pin-assert-time-ms: Reset pin low-level assertion
-> -  time after wakeup (default 60ms; range 0-125ms if RTC clock
-> -  at 32 kHz)
-> -- min-wakeup-pin-assert-time-ms: Minimum wakeup pin assertion
-> -  time (default 100ms; range 0-2s if RTC clock at 32 kHz)
-> -
-> -Example:
-> -
-> -rtc@10003000 {
-> -	compatible = "ingenic,jz4740-rtc";
-> -	reg = <0x10003000 0x40>;
-> -
-> -	interrupt-parent = <&intc>;
-> -	interrupts = <32>;
-> -
-> -	clocks = <&rtc_clock>;
-> -	clock-names = "rtc";
-> -
-> -	system-power-controller;
-> -	reset-pin-assert-time-ms = <60>;
-> -	min-wakeup-pin-assert-time-ms = <100>;
-> -};
-> diff --git a/Documentation/devicetree/bindings/rtc/ingenic,rtc.yaml b/Documentation/devicetree/bindings/rtc/ingenic,rtc.yaml
-> new file mode 100644
-> index 000000000000..c18ed8ac263f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/rtc/ingenic,rtc.yaml
-> @@ -0,0 +1,87 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/rtc/ingenic,rtc.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Ingenic SoCs Real-Time Clock DT bindings
-> +
-> +maintainers:
-> +  - Paul Cercueil <paul@crapouillou.net>
-> +
-> +allOf:
-> +  - $ref: rtc.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - enum:
-> +        - ingenic,jz4740-rtc
-> +        - ingenic,jz4760-rtc
-> +      - items:
-> +        - const: ingenic,jz4725b-rtc
-> +        - const: ingenic,jz4740-rtc
-> +      - items:
-> +        - enum:
-> +          - ingenic,jz4770-rtc
-> +          - ingenic,jz4780-rtc
-> +        - const: ingenic,jz4760-rtc
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  clock-names:
-> +    const: rtc
-> +
-> +  system-power-controller:
-> +    description: |
-> +      Indicates that the RTC is responsible for powering OFF
-> +      the system.
-> +    type: boolean
-> +
-> +  ingenic,reset-pin-assert-time-ms:
-> +    description: |
-> +      Reset pin low-level assertion time after wakeup
-> +      (assuming RTC clock at 32 kHz)
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
 
-You can drop this because standard units have a type already.
-
-> +      - minimum: 0
-> +      - maximum: 125
-> +      - default: 60
-
-And then move all there out of allOf.
-
-> +
-> +  ingenic,min-wakeup-pin-assert-time-ms:
-> +    description: |
-> +      Minimum wakeup pin assertion time
-> +      (assuming RTC clock at 32 kHz)
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +      - minimum: 0
-> +      - maximum: 2000
-> +      - default: 100
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - clocks
-> +  - clock-names
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/jz4740-cgu.h>
-> +    rtc_dev: rtc@10003000 {
-> +      compatible = "ingenic,jz4740-rtc";
-> +      reg = <0x10003000 0x40>;
-> +
-> +      interrupt-parent = <&intc>;
-> +      interrupts = <15>;
-> +
-> +      clocks = <&cgu JZ4740_CLK_RTC>;
-> +      clock-names = "rtc";
-> +    };
-> -- 
-> 2.25.1
-> 
+Acked-by: Rob Herring <robh@kernel.org>
