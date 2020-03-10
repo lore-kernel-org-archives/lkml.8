@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18E03C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:14:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5DF1C18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:15:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E521F24649
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:14:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9572F208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:15:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583846099;
-	bh=LOH85/x3D4YpyOFgIuC3ZBsEchD+aCjhnBXoY9/o9eM=;
+	s=default; t=1583846100;
+	bh=WpjhtepsHcS+tj0gWRcVw2itJKBHW95e/0vrZBov4tM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x/znneRQPRBKoH/IGHRatU+QQuc15S2lSNysIYuv3CHYVBkUfTQ1i92sCejCaXbSb
-	 uP0/sK3pCSpyzD5uPP4dt5cQCjz69gBo3rBbJij32b6iEq9lAyOB1G7PrWhjZhYhRE
-	 ULLUIgRyVRVAO/4bAsw97hX086i0YmzCjv/O8V98=
+	b=qW99wBbhDHCFLYm22+p0DT3ApO3llteOhZOwKhqESfhNupslY2eUouE4h9GlGEoMQ
+	 Uma9HQffiGhVqwNcPDqOpn11FFo8Td6cGh63oTj35IN7dVN4qy7INEZBt9hRAzEsxa
+	 ASP9HLR26bKSPBORaEksUDRx7Xuq2HXrrsKZ+Yh8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731733AbgCJNO5 (ORCPT
+        id S1731964AbgCJNO7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:14:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39052 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:14:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39110 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731938AbgCJNOx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:14:53 -0400
+        id S1728182AbgCJNO5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:14:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 823CD2467D;
-        Tue, 10 Mar 2020 13:14:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E9E724691;
+        Tue, 10 Mar 2020 13:14:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583846093;
-        bh=LOH85/x3D4YpyOFgIuC3ZBsEchD+aCjhnBXoY9/o9eM=;
+        s=default; t=1583846095;
+        bh=WpjhtepsHcS+tj0gWRcVw2itJKBHW95e/0vrZBov4tM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0avQhl6GkJaqRx3muiZdJfzqlT+QeRfhZDsQ6JDeg3FQNSfb+ZQv1ovDMz0BjxUvI
-         E+uOjW7eXnNd9rHSP6MFN8zlUjtUPNluKvhfMnlJY2lXl7a5SIdt5zUjrn6zOzCrNf
-         kmU1FG0Rh/6jE64A+mol6Y2OO7L+ih9iAJKIP+KI=
+        b=WHyGa6rO5f/T+PC9Y4PqAVqdE0c3P0W3DlB/C/82GNs+xFtXDV6tplYc6SnyhlEdI
+         YmdQoO3dtLE/N6zqt+6Wzx4qDf4115R89HLKRJuUeSBb1LleY5z48C8AN3090GTBXI
+         4OJLWK4HBDDuTKedGTl8iGni1BOfE1M8lvt6YaZg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Heinz Mauelshagen <heinzm@redhat.com>,
-        Mikulas Patocka <mpatocka@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 4.19 85/86] dm integrity: fix a deadlock due to offloading to an incorrect workqueue
-Date:   Tue, 10 Mar 2020 13:45:49 +0100
-Message-Id: <20200310124535.461145996@linuxfoundation.org>
+        stable@vger.kernel.org, Maxime Ripard <mripard@kernel.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>
+Subject: [PATCH 4.19 68/86] drm/sun4i: Fix DE2 VI layer format support
+Date:   Tue, 10 Mar 2020 13:45:32 +0100
+Message-Id: <20200310124534.451678532@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310124530.808338541@linuxfoundation.org>
 References: <20200310124530.808338541@linuxfoundation.org>
@@ -60,95 +59,168 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mikulas Patocka <mpatocka@redhat.com>
+From: Jernej Skrabec <jernej.skrabec@siol.net>
 
-commit 53770f0ec5fd417429775ba006bc4abe14002335 upstream.
+commit 20896ef137340e9426cf322606f764452f5eb960 upstream.
 
-If we need to perform synchronous I/O in dm_integrity_map_continue(),
-we must make sure that we are not in the map function - in order to
-avoid the deadlock due to bio queuing in generic_make_request. To
-avoid the deadlock, we offload the request to metadata_wq.
+DE2 VI layer doesn't support blending which means alpha channel is
+ignored. Replace all formats with alpha with "don't care" (X) channel.
 
-However, metadata_wq also processes metadata updates for write requests.
-If there are too many requests that get offloaded to metadata_wq at the
-beginning of dm_integrity_map_continue, the workqueue metadata_wq
-becomes clogged and the system is incapable of processing any metadata
-updates.
-
-This causes a deadlock because all the requests that need to do metadata
-updates wait for metadata_wq to proceed and metadata_wq waits inside
-wait_and_add_new_range until some existing request releases its range
-lock (which doesn't happen because the range lock is released after
-metadata update).
-
-In order to fix the deadlock, we create a new workqueue offload_wq and
-offload requests to it - so that processing of offload_wq is independent
-from processing of metadata_wq.
-
-Fixes: 7eada909bfd7 ("dm: add integrity target")
-Cc: stable@vger.kernel.org # v4.12+
-Reported-by: Heinz Mauelshagen <heinzm@redhat.com>
-Tested-by: Heinz Mauelshagen <heinzm@redhat.com>
-Signed-off-by: Heinz Mauelshagen <heinzm@redhat.com>
-Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Fixes: 7480ba4d7571 ("drm/sun4i: Add support for DE2 VI planes")
+Acked-by: Maxime Ripard <mripard@kernel.org>
+Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200224173901.174016-4-jernej.skrabec@siol.net
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/dm-integrity.c |   15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/sun4i/sun8i_mixer.c    |   56 +++++++++++++++++++++++++++++++++
+ drivers/gpu/drm/sun4i/sun8i_vi_layer.c |   22 ++++++------
+ 2 files changed, 67 insertions(+), 11 deletions(-)
 
---- a/drivers/md/dm-integrity.c
-+++ b/drivers/md/dm-integrity.c
-@@ -198,6 +198,7 @@ struct dm_integrity_c {
- 	struct list_head wait_list;
- 	wait_queue_head_t endio_wait;
- 	struct workqueue_struct *wait_wq;
-+	struct workqueue_struct *offload_wq;
+--- a/drivers/gpu/drm/sun4i/sun8i_mixer.c
++++ b/drivers/gpu/drm/sun4i/sun8i_mixer.c
+@@ -111,46 +111,102 @@ static const struct de2_fmt_info de2_for
+ 		.csc = SUN8I_CSC_MODE_OFF,
+ 	},
+ 	{
++		/* for DE2 VI layer which ignores alpha */
++		.drm_fmt = DRM_FORMAT_XRGB4444,
++		.de2_fmt = SUN8I_MIXER_FBFMT_ARGB4444,
++		.rgb = true,
++		.csc = SUN8I_CSC_MODE_OFF,
++	},
++	{
+ 		.drm_fmt = DRM_FORMAT_ABGR4444,
+ 		.de2_fmt = SUN8I_MIXER_FBFMT_ABGR4444,
+ 		.rgb = true,
+ 		.csc = SUN8I_CSC_MODE_OFF,
+ 	},
+ 	{
++		/* for DE2 VI layer which ignores alpha */
++		.drm_fmt = DRM_FORMAT_XBGR4444,
++		.de2_fmt = SUN8I_MIXER_FBFMT_ABGR4444,
++		.rgb = true,
++		.csc = SUN8I_CSC_MODE_OFF,
++	},
++	{
+ 		.drm_fmt = DRM_FORMAT_RGBA4444,
+ 		.de2_fmt = SUN8I_MIXER_FBFMT_RGBA4444,
+ 		.rgb = true,
+ 		.csc = SUN8I_CSC_MODE_OFF,
+ 	},
+ 	{
++		/* for DE2 VI layer which ignores alpha */
++		.drm_fmt = DRM_FORMAT_RGBX4444,
++		.de2_fmt = SUN8I_MIXER_FBFMT_RGBA4444,
++		.rgb = true,
++		.csc = SUN8I_CSC_MODE_OFF,
++	},
++	{
+ 		.drm_fmt = DRM_FORMAT_BGRA4444,
+ 		.de2_fmt = SUN8I_MIXER_FBFMT_BGRA4444,
+ 		.rgb = true,
+ 		.csc = SUN8I_CSC_MODE_OFF,
+ 	},
+ 	{
++		/* for DE2 VI layer which ignores alpha */
++		.drm_fmt = DRM_FORMAT_BGRX4444,
++		.de2_fmt = SUN8I_MIXER_FBFMT_BGRA4444,
++		.rgb = true,
++		.csc = SUN8I_CSC_MODE_OFF,
++	},
++	{
+ 		.drm_fmt = DRM_FORMAT_ARGB1555,
+ 		.de2_fmt = SUN8I_MIXER_FBFMT_ARGB1555,
+ 		.rgb = true,
+ 		.csc = SUN8I_CSC_MODE_OFF,
+ 	},
+ 	{
++		/* for DE2 VI layer which ignores alpha */
++		.drm_fmt = DRM_FORMAT_XRGB1555,
++		.de2_fmt = SUN8I_MIXER_FBFMT_ARGB1555,
++		.rgb = true,
++		.csc = SUN8I_CSC_MODE_OFF,
++	},
++	{
+ 		.drm_fmt = DRM_FORMAT_ABGR1555,
+ 		.de2_fmt = SUN8I_MIXER_FBFMT_ABGR1555,
+ 		.rgb = true,
+ 		.csc = SUN8I_CSC_MODE_OFF,
+ 	},
+ 	{
++		/* for DE2 VI layer which ignores alpha */
++		.drm_fmt = DRM_FORMAT_XBGR1555,
++		.de2_fmt = SUN8I_MIXER_FBFMT_ABGR1555,
++		.rgb = true,
++		.csc = SUN8I_CSC_MODE_OFF,
++	},
++	{
+ 		.drm_fmt = DRM_FORMAT_RGBA5551,
+ 		.de2_fmt = SUN8I_MIXER_FBFMT_RGBA5551,
+ 		.rgb = true,
+ 		.csc = SUN8I_CSC_MODE_OFF,
+ 	},
+ 	{
++		/* for DE2 VI layer which ignores alpha */
++		.drm_fmt = DRM_FORMAT_RGBX5551,
++		.de2_fmt = SUN8I_MIXER_FBFMT_RGBA5551,
++		.rgb = true,
++		.csc = SUN8I_CSC_MODE_OFF,
++	},
++	{
+ 		.drm_fmt = DRM_FORMAT_BGRA5551,
+ 		.de2_fmt = SUN8I_MIXER_FBFMT_BGRA5551,
+ 		.rgb = true,
+ 		.csc = SUN8I_CSC_MODE_OFF,
++	},
++	{
++		/* for DE2 VI layer which ignores alpha */
++		.drm_fmt = DRM_FORMAT_BGRX5551,
++		.de2_fmt = SUN8I_MIXER_FBFMT_BGRA5551,
++		.rgb = true,
++		.csc = SUN8I_CSC_MODE_OFF,
+ 	},
+ 	{
+ 		.drm_fmt = DRM_FORMAT_UYVY,
+--- a/drivers/gpu/drm/sun4i/sun8i_vi_layer.c
++++ b/drivers/gpu/drm/sun4i/sun8i_vi_layer.c
+@@ -330,26 +330,26 @@ static const struct drm_plane_funcs sun8
+ };
  
- 	unsigned char commit_seq;
- 	commit_id_t commit_ids[N_COMMIT_IDS];
-@@ -1237,7 +1238,7 @@ static void dec_in_flight(struct dm_inte
- 			dio->range.logical_sector += dio->range.n_sectors;
- 			bio_advance(bio, dio->range.n_sectors << SECTOR_SHIFT);
- 			INIT_WORK(&dio->work, integrity_bio_wait);
--			queue_work(ic->wait_wq, &dio->work);
-+			queue_work(ic->offload_wq, &dio->work);
- 			return;
- 		}
- 		do_endio_flush(ic, dio);
-@@ -1657,7 +1658,7 @@ static void dm_integrity_map_continue(st
+ /*
+- * While all RGB formats are supported, VI planes don't support
+- * alpha blending, so there is no point having formats with alpha
+- * channel if their opaque analog exist.
++ * While DE2 VI layer supports same RGB formats as UI layer, alpha
++ * channel is ignored. This structure lists all unique variants
++ * where alpha channel is replaced with "don't care" (X) channel.
+  */
+ static const u32 sun8i_vi_layer_formats[] = {
+-	DRM_FORMAT_ABGR1555,
+-	DRM_FORMAT_ABGR4444,
+-	DRM_FORMAT_ARGB1555,
+-	DRM_FORMAT_ARGB4444,
+ 	DRM_FORMAT_BGR565,
+ 	DRM_FORMAT_BGR888,
+-	DRM_FORMAT_BGRA5551,
+-	DRM_FORMAT_BGRA4444,
++	DRM_FORMAT_BGRX4444,
++	DRM_FORMAT_BGRX5551,
+ 	DRM_FORMAT_BGRX8888,
+ 	DRM_FORMAT_RGB565,
+ 	DRM_FORMAT_RGB888,
+-	DRM_FORMAT_RGBA4444,
+-	DRM_FORMAT_RGBA5551,
++	DRM_FORMAT_RGBX4444,
++	DRM_FORMAT_RGBX5551,
+ 	DRM_FORMAT_RGBX8888,
++	DRM_FORMAT_XBGR1555,
++	DRM_FORMAT_XBGR4444,
+ 	DRM_FORMAT_XBGR8888,
++	DRM_FORMAT_XRGB1555,
++	DRM_FORMAT_XRGB4444,
+ 	DRM_FORMAT_XRGB8888,
  
- 	if (need_sync_io && from_map) {
- 		INIT_WORK(&dio->work, integrity_bio_wait);
--		queue_work(ic->metadata_wq, &dio->work);
-+		queue_work(ic->offload_wq, &dio->work);
- 		return;
- 	}
- 
-@@ -3308,6 +3309,14 @@ static int dm_integrity_ctr(struct dm_ta
- 		goto bad;
- 	}
- 
-+	ic->offload_wq = alloc_workqueue("dm-integrity-offload", WQ_MEM_RECLAIM,
-+					  METADATA_WORKQUEUE_MAX_ACTIVE);
-+	if (!ic->offload_wq) {
-+		ti->error = "Cannot allocate workqueue";
-+		r = -ENOMEM;
-+		goto bad;
-+	}
-+
- 	ic->commit_wq = alloc_workqueue("dm-integrity-commit", WQ_MEM_RECLAIM, 1);
- 	if (!ic->commit_wq) {
- 		ti->error = "Cannot allocate workqueue";
-@@ -3544,6 +3553,8 @@ static void dm_integrity_dtr(struct dm_t
- 		destroy_workqueue(ic->metadata_wq);
- 	if (ic->wait_wq)
- 		destroy_workqueue(ic->wait_wq);
-+	if (ic->offload_wq)
-+		destroy_workqueue(ic->offload_wq);
- 	if (ic->commit_wq)
- 		destroy_workqueue(ic->commit_wq);
- 	if (ic->writer_wq)
+ 	DRM_FORMAT_NV16,
 
 
