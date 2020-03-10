@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B52A9C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:54:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C12E9C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:54:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8347A20674
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:54:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9564E2253D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:54:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583844890;
-	bh=uE2tZ0cXXEfqiy3UNn8FOMrI+JRdn0gH0gv8NGuJsVM=;
+	s=default; t=1583844894;
+	bh=RR666m3kE14bDoKAn3ewMRmEh+SQ3gye3oYJoRZy3mU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pI0o420DhqsyZPi6pVux0atiIkdcYh+4Ed4Lqskwvc34XbqoFdspOOChH2tc1VRDP
-	 5NROZUaeq7nZU8snrHMYt+uQqbKd6l8O3oCl3b9dn1rM5FL6MctVvIv9eOqkNI6tnm
-	 YEg47WU84mc4luDo8cszE0pM97yNsOe+ZoQpNbzw=
+	b=lgJ6futUQw17mH3r2ULTrp9Y/UpUgbQIAWiFe6CbTAVzTmB9HT5Zzp2qS81i3wnPl
+	 +1h04XJticTu/QKpRl3cKVsD+LHSxgrFoLdYG+0ts5Q3VwtA9NAzBfE8SG9iXmWMcI
+	 xXLYpQhCGorBjdm/uIOiklM/Y9FLNl1KL9tDpmjI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729165AbgCJMyt (ORCPT
+        id S1728648AbgCJMyx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:54:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33332 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:54:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33358 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729406AbgCJMyp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:54:45 -0400
+        id S1729070AbgCJMyt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:54:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A72722468F;
-        Tue, 10 Mar 2020 12:54:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3209D20674;
+        Tue, 10 Mar 2020 12:54:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844885;
-        bh=uE2tZ0cXXEfqiy3UNn8FOMrI+JRdn0gH0gv8NGuJsVM=;
+        s=default; t=1583844887;
+        bh=RR666m3kE14bDoKAn3ewMRmEh+SQ3gye3oYJoRZy3mU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wt2/7OS+iM9svd2ZY9Q2UMfNtJXyyv+n9fDSNm+JnOF9D2G9ZuPMMfVMR8KkGKL/G
-         sqacA95UWWHIbgp6pd0WeycNzBKh1Tm+DBIOSt/5bUY7MC8itmW9Rtu9PQC2OBEdyv
-         dhl1XtJZN1q9SJ6Ch8sPWR2lUEdlOYu2/RsMkDdc=
+        b=Q/6xIEx1nW6LJAtO/QCBPOBhiwwKg8xNaWXtBa+wmdlJM/wO3Sg887KZqMgtizN5h
+         8VXGGjfrAFNwELqe2IYo54Gq/FksLBTrbPG3vTzMhv12qHyxvdszh6pcjmRCrbnfvM
+         ECpDb2+Fi5U60QL/1nczYNIp3cph69P0JLEe/o9U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, John Bates <jbates@chromium.org>,
-        Chia-I Wu <olvaffe@gmail.com>,
-        Gerd Hoffmann <kraxel@redhat.com>
-Subject: [PATCH 5.4 116/168] drm/virtio: fix resource id creation race
-Date:   Tue, 10 Mar 2020 13:39:22 +0100
-Message-Id: <20200310123647.154455955@linuxfoundation.org>
+        stable@vger.kernel.org, Mikulas Patocka <mpatocka@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>
+Subject: [PATCH 5.4 107/168] dm cache: fix a crash due to incorrect work item cancelling
+Date:   Tue, 10 Mar 2020 13:39:13 +0100
+Message-Id: <20200310123646.231946054@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123635.322799692@linuxfoundation.org>
 References: <20200310123635.322799692@linuxfoundation.org>
@@ -60,38 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Bates <jbates@chromium.org>
+From: Mikulas Patocka <mpatocka@redhat.com>
 
-commit fbb30168c7395b9cfeb9e6f7b0c0bca854a6552d upstream.
+commit 7cdf6a0aae1cccf5167f3f04ecddcf648b78e289 upstream.
 
-The previous code was not thread safe and caused
-undefined behavior from spurious duplicate resource IDs.
-In this patch, an atomic_t is used instead. We no longer
-see any duplicate IDs in tests with this change.
+The crash can be reproduced by running the lvm2 testsuite test
+lvconvert-thin-external-cache.sh for several minutes, e.g.:
+  while :; do make check T=shell/lvconvert-thin-external-cache.sh; done
 
-Fixes: 16065fcdd19d ("drm/virtio: do NOT reuse resource ids")
-Signed-off-by: John Bates <jbates@chromium.org>
-Reviewed-by: Chia-I Wu <olvaffe@gmail.com>
-Link: http://patchwork.freedesktop.org/patch/msgid/20200220225319.45621-1-jbates@chromium.org
-Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+The crash happens in this call chain:
+do_waker -> policy_tick -> smq_tick -> end_hotspot_period -> clear_bitset
+-> memset -> __memset -- which accesses an invalid pointer in the vmalloc
+area.
+
+The work entry on the workqueue is executed even after the bitmap was
+freed. The problem is that cancel_delayed_work doesn't wait for the
+running work item to finish, so the work item can continue running and
+re-submitting itself even after cache_postsuspend. In order to make sure
+that the work item won't be running, we must use cancel_delayed_work_sync.
+
+Also, change flush_workqueue to drain_workqueue, so that if some work item
+submits itself or another work item, we are properly waiting for both of
+them.
+
+Fixes: c6b4fcbad044 ("dm: add cache target")
+Cc: stable@vger.kernel.org # v3.9
+Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/virtio/virtgpu_object.c |    4 ++--
+ drivers/md/dm-cache-target.c |    4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/gpu/drm/virtio/virtgpu_object.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_object.c
-@@ -42,8 +42,8 @@ static int virtio_gpu_resource_id_get(st
- 		 * "f91a9dd35715 Fix unlinking resources from hash
- 		 * table." (Feb 2019) fixes the bug.
- 		 */
--		static int handle;
--		handle++;
-+		static atomic_t seqno = ATOMIC_INIT(0);
-+		int handle = atomic_inc_return(&seqno);
- 		*resid = handle + 1;
- 	} else {
- 		int handle = ida_alloc(&vgdev->resource_ida, GFP_KERNEL);
+--- a/drivers/md/dm-cache-target.c
++++ b/drivers/md/dm-cache-target.c
+@@ -2867,8 +2867,8 @@ static void cache_postsuspend(struct dm_
+ 	prevent_background_work(cache);
+ 	BUG_ON(atomic_read(&cache->nr_io_migrations));
+ 
+-	cancel_delayed_work(&cache->waker);
+-	flush_workqueue(cache->wq);
++	cancel_delayed_work_sync(&cache->waker);
++	drain_workqueue(cache->wq);
+ 	WARN_ON(cache->tracker.in_flight);
+ 
+ 	/*
 
 
