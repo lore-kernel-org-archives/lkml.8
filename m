@@ -2,227 +2,167 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9227EC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:34:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C38DC18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:34:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 632192467D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:34:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=diehl.com header.i=@diehl.com header.b="HI4fouM3"
+	by mail.kernel.org (Postfix) with ESMTP id 1565124680
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:34:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583847249;
+	bh=aAh8HTcpkWTgZrwIhaEle/qErc1CXYXt6Pbh6xGrSBI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=V4sQQ6jq/4QkYfGeKFi9L8awDLDqGWy35W3ZFZd13rU6knBe1VZTYurWTtKGnnNoA
+	 5cJouj6M4VBsexMf6qoNd1FPQPEjdCV2k/BD14Uo7/qDoWUy4mJ6iUhm+0v3fOK8AQ
+	 gC222xhLN4aIwULwNIVks2RUuRcwlCFttFblEmJg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728128AbgCJNeB (ORCPT
+        id S1728697AbgCJNeH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:34:01 -0400
-Received: from enterprise01.smtp.diehl.com ([193.201.238.219]:55608 "EHLO
-        enterprise01.smtp.diehl.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727560AbgCJMrK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:47:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=diehl.com; i=@diehl.com; q=dns/txt; s=default;
-  t=1583844429; x=1615380429;
-  h=from:to:cc:subject:date:message-id:reply-to:
-   content-transfer-encoding:mime-version;
-  bh=vJMUNeqDMsTha7ppeHbqyximHbM6DIWnSoKrK5grZ1I=;
-  b=HI4fouM3osPsipuSsDRORHWMBkCeo5sru6keNAtqcJm2+IplX2APbBn4
-   ETbQXy8igc6H6q52eh0c5Q34ByM/N2/PlafESucJWCfI0d4w7vYm6Y6o2
-   GoktJzCgv/plND2Nak/xQGp7GMUdUXT/CADJTf4sg/8FRfB8WPgdVygCg
-   Fp0eOXO7j9t9dBySwEs2cvc5RscGnzfaAUexsUvA3fX5ryFKWDMNgLvYz
-   F1xuVm3Jrhn8oMiWym49xznpd/ovrvS5Z/rG3qFnNHSaX2V9+tFUwp7ra
-   4B/gbYBLQlqAgcmLgXhhvRGbwsnLPSGgx+qu/1F+WzFoU7EVEFNglbqxd
-   w==;
-IronPort-SDR: HJKi4lh+OgEVnpq5+7C8qWg2DW7WiNTN9D7ZiCg5AttouSI2wgSKdTlbxC7drEZyQaa1l7rfCD
- /FSbIuI8n7Sw==
-From:   Denis Osterland-Heim <denis.osterland@diehl.com>
-To:     "dmurphy@ti.com" <dmurphy@ti.com>, "pavel@ucw.cz" <pavel@ucw.cz>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Denis Osterland-Heim" <denis.osterland@diehl.com>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: [PATCH v2] leds: pwm: add support for default-state device property
-Thread-Topic: [PATCH v2] leds: pwm: add support for default-state device
- property
-Thread-Index: AQHV9tn/0ZJlTn83ZkK/QE6qVZtMDw==
-Date:   Tue, 10 Mar 2020 12:47:03 +0000
-Message-ID: <20200310123126.4709-1-Denis.Osterland@diehl.com>
-Reply-To: "20200309082218.13263-1-Denis.Osterland@diehl.com" 
-          <20200309082218.13263-1-Denis.Osterland@diehl.com>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-x-ms-exchange-messagesentrepresentingtype: 1
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 10 Mar 2020 09:34:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50678 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726438AbgCJMrD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:47:03 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B97772468D;
+        Tue, 10 Mar 2020 12:47:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583844423;
+        bh=aAh8HTcpkWTgZrwIhaEle/qErc1CXYXt6Pbh6xGrSBI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=tLSZFmkxel7mNUgVEvvwXwKTViYmW/eCSaib2VtUBLMynFsoQ3xuqCzYHmnVgxxNE
+         cDI4j3sUkkUy+iAVilLn/bq7bx0v0rnKW2KXPJYE3AOJU2qc9CBpvywDx3pB5HZhYJ
+         EaW48akSYp+un4Jq6g2uxfnrIjh3PnKPCKsU7TS0=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Li RongQing <lirongqing@baidu.com>,
+        Kurt Kanzenbach <kurt@linutronix.de>,
+        Vikram Pandita <vikram.pandita@ti.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH 4.9 38/88] serial: 8250: Check UPF_IRQ_SHARED in advance
+Date:   Tue, 10 Mar 2020 13:38:46 +0100
+Message-Id: <20200310123615.221930865@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200310123606.543939933@linuxfoundation.org>
+References: <20200310123606.543939933@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-X-TrailerSkip: 1
-X-GBS-PROC: byQFdw3ukCM+zy1/poiPc/AZUMLuadj5bOamS2OKQu8jauJJNj7A4I2WQ4sGAD2T
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds support for =22default-state=22 devicetree property, whic=
-h
-allows to defer pwm init to first use of led.
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-This allows to configure the PWM early in bootloader to let the LED
-blink until an application in Linux userspace set something different.
+commit 7febbcbc48fc92e3f33863b32ed715ba4aff18c4 upstream.
 
-Signed-off-by: Denis Osterland-Heim <Denis.Osterland@diehl.com>
+The commit 54e53b2e8081
+  ("tty: serial: 8250: pass IRQ shared flag to UART ports")
+nicely explained the problem:
+
+---8<---8<---
+
+On some systems IRQ lines between multiple UARTs might be shared. If so, the
+irqflags have to be configured accordingly. The reason is: The 8250 port startup
+code performs IRQ tests *before* the IRQ handler for that particular port is
+registered. This is performed in serial8250_do_startup(). This function checks
+whether IRQF_SHARED is configured and only then disables the IRQ line while
+testing.
+
+This test is performed upon each open() of the UART device. Imagine two UARTs
+share the same IRQ line: On is already opened and the IRQ is active. When the
+second UART is opened, the IRQ line has to be disabled while performing IRQ
+tests. Otherwise an IRQ might handler might be invoked, but the IRQ itself
+cannot be handled, because the corresponding handler isn't registered,
+yet. That's because the 8250 code uses a chain-handler and invokes the
+corresponding port's IRQ handling routines himself.
+
+Unfortunately this IRQF_SHARED flag isn't configured for UARTs probed via device
+tree even if the IRQs are shared. This way, the actual and shared IRQ line isn't
+disabled while performing tests and the kernel correctly detects a spurious
+IRQ. So, adding this flag to the DT probe solves the issue.
+
+Note: The UPF_SHARE_IRQ flag is configured unconditionally. Therefore, the
+IRQF_SHARED flag can be set unconditionally as well.
+
+Example stack trace by performing `echo 1 > /dev/ttyS2` on a non-patched system:
+
+|irq 85: nobody cared (try booting with the "irqpoll" option)
+| [...]
+|handlers:
+|[<ffff0000080fc628>] irq_default_primary_handler threaded [<ffff00000855fbb8>] serial8250_interrupt
+|Disabling IRQ #85
+
+---8<---8<---
+
+But unfortunately didn't fix the root cause. Let's try again here by moving
+IRQ flag assignment from serial_link_irq_chain() to serial8250_do_startup().
+
+This should fix the similar issue reported for 8250_pnp case.
+
+Since this change we don't need to have custom solutions in 8250_aspeed_vuart
+and 8250_of drivers, thus, drop them.
+
+Fixes: 1c2f04937b3e ("serial: 8250: add IRQ trigger support")
+Reported-by: Li RongQing <lirongqing@baidu.com>
+Cc: Kurt Kanzenbach <kurt@linutronix.de>
+Cc: Vikram Pandita <vikram.pandita@ti.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: stable <stable@vger.kernel.org>
+Acked-by: Kurt Kanzenbach <kurt@linutronix.de>
+Link: https://lore.kernel.org/r/20200211135559.85960-1-andriy.shevchenko@linux.intel.com
+[Kurt: Backport to v4.9]
+Signed-off-by: Kurt Kanzenbach <kurt@linutronix.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
-v1->v2:
-  - use default-state =3D =22keep=22, as suggested by Jacek Anaszewski
-  - calc initial brightness with PWM state from device
+ drivers/tty/serial/8250/8250_core.c |    5 ++---
+ drivers/tty/serial/8250/8250_port.c |    4 ++++
+ 2 files changed, 6 insertions(+), 3 deletions(-)
 
- .../devicetree/bindings/leds/leds-pwm.txt     |  2 ++
- drivers/leds/leds-pwm.c                       | 33 +++++++++++++++++--
- include/linux/leds_pwm.h                      |  1 +
- 3 files changed, 33 insertions(+), 3 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/leds/leds-pwm.txt b/Docume=
-ntation/devicetree/bindings/leds/leds-pwm.txt
-index 6c6583c35f2f..d0f489680594 100644
---- a/Documentation/devicetree/bindings/leds/leds-pwm.txt
-+++ b/Documentation/devicetree/bindings/leds/leds-pwm.txt
-@@ -19,6 +19,8 @@ LED sub-node properties:
-   see Documentation/devicetree/bindings/leds/common.txt
- - linux,default-trigger :  (optional)
-   see Documentation/devicetree/bindings/leds/common.txt
-+- default-state : (optional)
-+  see Documentation/devicetree/bindings/leds/common.yaml
-=20
- Example:
-=20
-diff --git a/drivers/leds/leds-pwm.c b/drivers/leds/leds-pwm.c
-index 8b6965a563e9..92726c2e43ba 100644
---- a/drivers/leds/leds-pwm.c
-+++ b/drivers/leds/leds-pwm.c
-@@ -75,7 +75,8 @@ static int led_pwm_add(struct device *dev, struct led_p=
-wm_priv *priv,
- 	led_data->active_low =3D led->active_low;
- 	led_data->cdev.name =3D led->name;
- 	led_data->cdev.default_trigger =3D led->default_trigger;
--	led_data->cdev.brightness =3D LED_OFF;
-+	ret =3D led->default_state =3D=3D LEDS_GPIO_DEFSTATE_ON;
-+	led_data->cdev.brightness =3D ret =3F led->max_brightness : LED_OFF;
- 	led_data->cdev.max_brightness =3D led->max_brightness;
- 	led_data->cdev.flags =3D LED_CORE_SUSPENDRESUME;
-=20
-@@ -97,7 +98,8 @@ static int led_pwm_add(struct device *dev, struct led_p=
-wm_priv *priv,
- 	 * FIXME: pwm_apply_args() should be removed when switching to the
- 	 * atomic PWM API.
- 	 */
--	pwm_apply_args(led_data->pwm);
-+	if (led->default_state !=3D LEDS_GPIO_DEFSTATE_KEEP)
-+		pwm_apply_args(led_data->pwm);
-=20
- 	pwm_get_args(led_data->pwm, &pargs);
-=20
-@@ -105,10 +107,23 @@ static int led_pwm_add(struct device *dev, struct l=
-ed_pwm_priv *priv,
- 	if (!led_data->period && (led->pwm_period_ns > 0))
- 		led_data->period =3D led->pwm_period_ns;
-=20
-+	if (led->default_state =3D=3D LEDS_GPIO_DEFSTATE_KEEP) {
-+		uint64_t brightness;
-+		struct pwm_device *pwm =3D led_data->pwm;
-+		struct pwm_state state;
+--- a/drivers/tty/serial/8250/8250_core.c
++++ b/drivers/tty/serial/8250/8250_core.c
+@@ -181,7 +181,7 @@ static int serial_link_irq_chain(struct
+ 	struct hlist_head *h;
+ 	struct hlist_node *n;
+ 	struct irq_info *i;
+-	int ret, irq_flags = up->port.flags & UPF_SHARE_IRQ ? IRQF_SHARED : 0;
++	int ret;
+ 
+ 	mutex_lock(&hash_mutex);
+ 
+@@ -216,9 +216,8 @@ static int serial_link_irq_chain(struct
+ 		INIT_LIST_HEAD(&up->list);
+ 		i->head = &up->list;
+ 		spin_unlock_irq(&i->lock);
+-		irq_flags |= up->port.irqflags;
+ 		ret = request_irq(up->port.irq, serial8250_interrupt,
+-				  irq_flags, "serial", i);
++				  up->port.irqflags, "serial", i);
+ 		if (ret < 0)
+ 			serial_do_unlink(i, up);
+ 	}
+--- a/drivers/tty/serial/8250/8250_port.c
++++ b/drivers/tty/serial/8250/8250_port.c
+@@ -2199,6 +2199,10 @@ int serial8250_do_startup(struct uart_po
+ 		}
+ 	}
+ 
++	/* Check if we need to have shared IRQs */
++	if (port->irq && (up->port.flags & UPF_SHARE_IRQ))
++		up->port.irqflags |= IRQF_SHARED;
 +
-+		pwm->chip->ops->get_state(pwm->chip, pwm, &state);
-+		brightness =3D led->max_brightness * state.duty_cycle;
-+		do_div(brightness, state.period);
-+		led_data->cdev.brightness =3D (enum led_brightness)brightness;
-+	}
-+
- 	ret =3D devm_led_classdev_register(dev, &led_data->cdev);
- 	if (ret =3D=3D 0) {
- 		priv->num_leds++;
--		led_pwm_set(&led_data->cdev, led_data->cdev.brightness);
-+		if (led->default_state !=3D LEDS_GPIO_DEFSTATE_KEEP)
-+			led_pwm_set(&led_data->cdev,
-+					led_data->cdev.brightness);
- 	} else {
- 		dev_err(dev, =22failed to register PWM led for %s: %d=5Cn=22,
- 			led->name, ret);
-@@ -126,6 +141,8 @@ static int led_pwm_create_fwnode(struct device *dev, =
-struct led_pwm_priv *priv)
- 	memset(&led, 0, sizeof(led));
-=20
- 	device_for_each_child_node(dev, fwnode) {
-+		const char *state =3D NULL;
-+
- 		ret =3D fwnode_property_read_string(fwnode, =22label=22, &led.name);
- 		if (ret && is_of_node(fwnode))
- 			led.name =3D to_of_node(fwnode)->name;
-@@ -143,6 +160,16 @@ static int led_pwm_create_fwnode(struct device *dev,=
- struct led_pwm_priv *priv)
- 		fwnode_property_read_u32(fwnode, =22max-brightness=22,
- 					 &led.max_brightness);
-=20
-+		if (!fwnode_property_read_string(fwnode, =22default-state=22,
-+						 &state)) {
-+			if (!strcmp(state, =22keep=22))
-+				led.default_state =3D LEDS_GPIO_DEFSTATE_KEEP;
-+			else if (!strcmp(state, =22on=22))
-+				led.default_state =3D LEDS_GPIO_DEFSTATE_ON;
-+			else
-+				led.default_state =3D LEDS_GPIO_DEFSTATE_OFF;
-+		}
-+
- 		ret =3D led_pwm_add(dev, priv, &led, fwnode);
- 		if (ret) {
- 			fwnode_handle_put(fwnode);
-diff --git a/include/linux/leds_pwm.h b/include/linux/leds_pwm.h
-index 93d101d28943..c9ef9012913d 100644
---- a/include/linux/leds_pwm.h
-+++ b/include/linux/leds_pwm.h
-@@ -10,6 +10,7 @@ struct led_pwm {
- 	const char	*default_trigger;
- 	unsigned	pwm_id __deprecated;
- 	u8 		active_low;
-+	u8		default_state;
- 	unsigned 	max_brightness;
- 	unsigned	pwm_period_ns;
- };
---=20
-2.25.1
+ 	if (port->irq) {
+ 		unsigned char iir1;
+ 		/*
 
 
-
-Diehl Connectivity Solutions GmbH
-Gesch=E4ftsf=FChrung: Horst Leonberger
-Sitz der Gesellschaft: N=FCrnberg - Registergericht: Amtsgericht
-N=FCrnberg: HRB 32315
-_________________________________________________________________________=
-__________________________
-
-Der Inhalt der vorstehenden E-Mail ist nicht rechtlich bindend. Diese E-M=
-ail enthaelt vertrauliche und/oder rechtlich geschuetzte Informationen.
-Informieren Sie uns bitte, wenn Sie diese E-Mail faelschlicherweise erhal=
-ten haben. Bitte loeschen Sie in diesem Fall die Nachricht.
-Jede unerlaubte Form der Reproduktion, Bekanntgabe, Aenderung, Verteilung=
- und/oder Publikation dieser E-Mail ist strengstens untersagt.
-- Informationen zum Datenschutz, insbesondere zu Ihren Rechten, erhalten =
-Sie unter https://www.diehl.com/group/de/transparenz-und-informationspfli=
-chten/
-
-The contents of the above mentioned e-mail is not legally binding. This e=
--mail contains confidential and/or legally protected information. Please =
-inform us if you have received this e-mail by
-mistake and delete it in such a case. Each unauthorized reproduction, dis=
-closure, alteration, distribution and/or publication of this e-mail is st=
-rictly prohibited.=20
-- For general information on data protection and your respective rights p=
-lease visit https://www.diehl.com/group/en/transparency-and-information-o=
-bligations/
