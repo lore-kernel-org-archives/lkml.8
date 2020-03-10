@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6EE7C18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:54:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B54D9C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:54:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D77324693
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:54:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80DFF2468E
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:54:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583844852;
-	bh=CLL7T+YiC1fWFLnmvzohg0ZeFuSTWM7U9KxIUt33uq8=;
+	s=default; t=1583844857;
+	bh=ZO8FwvmxBq4EK5HBjM/dWfdx3Zqag8CeMb7CbOYrfFI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L0IIJAI6jHo2LpEN/KiuzHilOzd30PufOlrIpCvLqqBaCpcyPqCMn1yS5JA/yLwO1
-	 W/eLhYC5FxoFecYecZzcFFd8e+LnZb8kg2o97hosox/YGCzMCijFtwOeZXUAPS4IAL
-	 WHlhpalW1W3/8BKStffnvahtm4NTGDTfkVw4p1Js=
+	b=AsAoLTBo8oV1s8N7BibuFyy5qIZxY16AaqqS09Dky+EdO3zzJsOdwtN4EOZ4KQ3V5
+	 n9LvVztaIA7OQ9ttQH452M6tIrP55dc5OwOteHkCeFcaUSvx1kZ5AnArARzMAcViSt
+	 plRP8LUSpWhkV1kwwu0eVwVn/+DYc1XTSqdfMUdk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727018AbgCJMyL (ORCPT
+        id S1729334AbgCJMyQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:54:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60620 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:54:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60678 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729314AbgCJMyJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:54:09 -0400
+        id S1729327AbgCJMyM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:54:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 137D120674;
-        Tue, 10 Mar 2020 12:54:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 872502468E;
+        Tue, 10 Mar 2020 12:54:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844849;
-        bh=CLL7T+YiC1fWFLnmvzohg0ZeFuSTWM7U9KxIUt33uq8=;
+        s=default; t=1583844852;
+        bh=ZO8FwvmxBq4EK5HBjM/dWfdx3Zqag8CeMb7CbOYrfFI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gviqwx/6x7pv6W21yx+A7t2tYulqbZD278KVsktzbftA8svu2w0un/ombB0bV/EvF
-         FDTvqk4q8gfgSgdBKgoK+7p/Imcai2sl2Vv1oDj+/5qG3mAQ25wnRu1LDk7dIAJK38
-         1QWGIhdgR1Tk8Kqsdm+bE9TRbtCNANswARVwCFho=
+        b=AIVVqfjD11smJgi6jrnqZokL1I/oe3iCudS1jyI9jsqdGhWE6TuiJIX5QE6bLWDjK
+         Gu06p9IoiQhPSKSbJHA2ZTkuDIUR00WBMRYSBP44GbZsOriSSI23NMIpIdEO7i8Dzq
+         nbSpMvQ7E/Q058rKYlv41R9usIserNVxUWdzBt2s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
+        stable@vger.kernel.org, Leonard Crestez <leonard.crestez@nxp.com>,
         Shawn Guo <shawnguo@kernel.org>
-Subject: [PATCH 5.4 140/168] arm64: dts: imx8qxp-mek: Remove unexisting Ethernet PHY
-Date:   Tue, 10 Mar 2020 13:39:46 +0100
-Message-Id: <20200310123649.673662567@linuxfoundation.org>
+Subject: [PATCH 5.4 141/168] firmware: imx: misc: Align imx sc msg structs to 4
+Date:   Tue, 10 Mar 2020 13:39:47 +0100
+Message-Id: <20200310123649.774083610@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123635.322799692@linuxfoundation.org>
 References: <20200310123635.322799692@linuxfoundation.org>
@@ -60,41 +59,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fabio Estevam <festevam@gmail.com>
+From: Leonard Crestez <leonard.crestez@nxp.com>
 
-commit 26c4b4758fce8f0ae744335e1762213be29db441 upstream.
+commit 1e6a4eba693ac72e6f91b4252458c933110e5f4c upstream.
 
-There is only on Ethernet port and one Ethernet PHY on imx8qxp-mek.
+The imx SC api strongly assumes that messages are composed out of
+4-bytes words but some of our message structs have odd sizeofs.
 
-Remove the unexisting ethphy1 port.
+This produces many oopses with CONFIG_KASAN=y:
 
-This fixes a run-time warning:
+    BUG: KASAN: stack-out-of-bounds in imx_mu_send_data+0x108/0x1f0
 
-mdio_bus 5b040000.ethernet-1: MDIO device at address 1 is missing.
+It shouldn't cause an issues in normal use because these structs are
+always allocated on the stack.
 
-Fixes: fdea904e85e1 ("arm64: dts: imx: add imx8qxp mek support")
-Signed-off-by: Fabio Estevam <festevam@gmail.com>
-Reviewed-by: Leonard Crestez <leonard.crestez@nxp.com>
+Fixes: 15e1f2bc8b3b ("firmware: imx: add misc svc support")
+Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
 Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/boot/dts/freescale/imx8qxp-mek.dts |    5 -----
- 1 file changed, 5 deletions(-)
+ drivers/firmware/imx/misc.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts
-@@ -52,11 +52,6 @@
- 			compatible = "ethernet-phy-ieee802.3-c22";
- 			reg = <0>;
- 		};
--
--		ethphy1: ethernet-phy@1 {
--			compatible = "ethernet-phy-ieee802.3-c22";
--			reg = <1>;
--		};
- 	};
- };
+--- a/drivers/firmware/imx/misc.c
++++ b/drivers/firmware/imx/misc.c
+@@ -16,7 +16,7 @@ struct imx_sc_msg_req_misc_set_ctrl {
+ 	u32 ctrl;
+ 	u32 val;
+ 	u16 resource;
+-} __packed;
++} __packed __aligned(4);
  
+ struct imx_sc_msg_req_cpu_start {
+ 	struct imx_sc_rpc_msg hdr;
+@@ -30,12 +30,12 @@ struct imx_sc_msg_req_misc_get_ctrl {
+ 	struct imx_sc_rpc_msg hdr;
+ 	u32 ctrl;
+ 	u16 resource;
+-} __packed;
++} __packed __aligned(4);
+ 
+ struct imx_sc_msg_resp_misc_get_ctrl {
+ 	struct imx_sc_rpc_msg hdr;
+ 	u32 val;
+-} __packed;
++} __packed __aligned(4);
+ 
+ /*
+  * This function sets a miscellaneous control value.
 
 
