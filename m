@@ -2,217 +2,198 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEFA7C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:46:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2A7EC18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:46:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BF7F24695
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:46:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="gBX0hj2b"
+	by mail.kernel.org (Postfix) with ESMTP id 9A5CE24694
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:46:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583844382;
+	bh=OHeUxoWl7PYvP4RNxPRj0SEgouS4L+rb+7tOc67OhaM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=qjKxng0OpoOqfjRCIKZE68T6ngQNbczCpnn/cROskRd4ba5leXfSu7+vXO73HNGBE
+	 gtGvg455QKAeaKH0g0aC38sq4QkmN8rk/RaQdIWCt1VycgGN2uQt0fLkiw7pD7oKHB
+	 rWa3/PH16Mvr+EJHL40dohNrHx4f/0DKYup06vRg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727974AbgCJMqN (ORCPT
+        id S1728000AbgCJMqV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 10 Mar 2020 08:46:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49318 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727779AbgCJMqN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 10 Mar 2020 08:46:13 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:39536 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727850AbgCJMqJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:46:09 -0400
-Received: by mail-lf1-f66.google.com with SMTP id j15so10769521lfk.6
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 05:46:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=gSh1O1Tg9hbTntXDCgjlVsmaZkd6pHTV1/gOIcuwgPA=;
-        b=gBX0hj2bXSbp6ZWoSSKmNdJnfp75xbmMV8MJPUiA15XORwlHFEVauBYND86NTZjePe
-         uMWEWtNNrphpDgivuZbFv64ouBIlSFLbilwZbzkEP4+lDXLRNVdOZh9CE+xD6jNOsJs7
-         toYBQQeNbDyh4fT09xiiQnN2fGYbuj9I7YeeZ536wtMuCh3jByrjO/NZ2X6yvXnsl4I5
-         jP3Jkw15A01benfiwwOLuORcAQmA0ZahHiP+CzcIdgMutm6kPKvVXtUk5uWkHhlkysD3
-         HaWjZQxlfG15VjJEWCWUawaTHG3hlxHiVaAekhkAs5lBFFdLYGW8HUSTtVx+qQ9cpyrV
-         G31Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=gSh1O1Tg9hbTntXDCgjlVsmaZkd6pHTV1/gOIcuwgPA=;
-        b=mhMyg0d8iBJLDdv9XvBRy7YVuILjMByOqVxV5poqcFgUVW/VbtD+5NyWtJvPfSS3YE
-         rkg2lbiZJi+TRfrU+7OAhkEskTI4YhxID8DV88QsZMg8L7fieIp/+6hzK3uZut8Tq/l0
-         ScN8uW0odRLl5UI8JcXAu0Tk5vFxdTyJMc8QIE9/ZAyrRehBkCHhzCJiVXm2UD/dKDuU
-         dZ0fIqfFhtQYlhZQo97411bgFSgdqEft6iEFE8n5ggdetFFrSwjDpdnSs6bEWTE5WT80
-         ipxOF36/MWoUq7Nv79GDU5tLdW98w3vEinZKAMii97ObqupsNdYouJvPvR42ekSzRbDs
-         YWLQ==
-X-Gm-Message-State: ANhLgQ17PoWJ4whCDVpikb77/yNaHXiKD4+zW3Di2/e6LLvDZO8WJh1H
-        zfe8TQuT8HDCQyR8mOoERd7mgQ==
-X-Google-Smtp-Source: ADFU+vujsGPeuu/uOOnds8ODD/USMbLgA+oa2eE0LaLi60lfZcm8MGkkOgN13EGJlp/DwCPZ7b32NQ==
-X-Received: by 2002:a19:ac42:: with SMTP id r2mr8254913lfc.38.1583844366775;
-        Tue, 10 Mar 2020 05:46:06 -0700 (PDT)
-Received: from localhost (h-200-138.A463.priv.bahnhof.se. [176.10.200.138])
-        by smtp.gmail.com with ESMTPSA id c22sm3508834lfm.25.2020.03.10.05.46.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Mar 2020 05:46:05 -0700 (PDT)
-Date:   Tue, 10 Mar 2020 13:46:05 +0100
-From:   Niklas <niklas.soderlund@ragnatech.se>
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Lad Prabhakar <prabhakar.csengg@gmail.com>
-Subject: Re: [PATCH v2 2/3] media: rcar-vin: Add support for
- MEDIA_BUS_FMT_SRGGB8_1X8 format
-Message-ID: <20200310124605.GO2975348@oden.dyn.berto.se>
-References: <1583838364-12932-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1583838364-12932-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5DDA920674;
+        Tue, 10 Mar 2020 12:46:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583844372;
+        bh=OHeUxoWl7PYvP4RNxPRj0SEgouS4L+rb+7tOc67OhaM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=qM3DNuNURVIBwXRIOd+O+w69dX91xKOvjVNLow0wb0YJOPBGByHYKB/g1iq4JiKy0
+         4iM4fhjaUfopTOtJ7TxpyiTeoecqC3gVtrFsuDJlgdIxkUaErsm2hxjoSR3yEV+FVw
+         p8UfEHe2QtkQI0+k8Chz0v3hpaQUIl5LMi/MlUh0=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Marek Vasut <marex@denx.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Lukas Wunner <lukas@wunner.de>, Petr Stetiar <ynezz@true.cz>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 57/88] net: ks8851-ml: Remove 8-bit bus accessors
+Date:   Tue, 10 Mar 2020 13:39:05 +0100
+Message-Id: <20200310123620.673846137@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200310123606.543939933@linuxfoundation.org>
+References: <20200310123606.543939933@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1583838364-12932-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lad,
+From: Marek Vasut <marex@denx.de>
 
-Thanks for your work.
+[ Upstream commit 69233bba6543a37755158ca3382765387b8078df ]
 
-On 2020-03-10 11:06:03 +0000, Lad Prabhakar wrote:
-> Add support for MEDIA_BUS_FMT_SRGGB8_1X8 format in rcar-vin by setting
-> format type to RAW8 in VNMC register and appropriately setting the
-> bpp, bytesperline to enable V4L2_PIX_FMT_SRGGB8.
-> 
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> ---
->  drivers/media/platform/rcar-vin/rcar-core.c |  1 +
->  drivers/media/platform/rcar-vin/rcar-dma.c  |  9 ++++++++-
->  drivers/media/platform/rcar-vin/rcar-v4l2.c | 13 ++++++++++++-
->  3 files changed, 21 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/media/platform/rcar-vin/rcar-core.c b/drivers/media/platform/rcar-vin/rcar-core.c
-> index 7440c89..76daf2f 100644
-> --- a/drivers/media/platform/rcar-vin/rcar-core.c
-> +++ b/drivers/media/platform/rcar-vin/rcar-core.c
-> @@ -469,6 +469,7 @@ static int rvin_parallel_subdevice_attach(struct rvin_dev *vin,
->  		case MEDIA_BUS_FMT_UYVY8_2X8:
->  		case MEDIA_BUS_FMT_UYVY10_2X10:
->  		case MEDIA_BUS_FMT_RGB888_1X24:
-> +		case MEDIA_BUS_FMT_SRGGB8_1X8:
->  			vin->mbus_code = code.code;
->  			vin_dbg(vin, "Found media bus format for %s: %d\n",
->  				subdev->name, vin->mbus_code);
-> diff --git a/drivers/media/platform/rcar-vin/rcar-dma.c b/drivers/media/platform/rcar-vin/rcar-dma.c
-> index 1a30cd0..1c1fafa 100644
-> --- a/drivers/media/platform/rcar-vin/rcar-dma.c
-> +++ b/drivers/media/platform/rcar-vin/rcar-dma.c
-> @@ -85,6 +85,7 @@
->  #define VNMC_INF_YUV8_BT601	(1 << 16)
->  #define VNMC_INF_YUV10_BT656	(2 << 16)
->  #define VNMC_INF_YUV10_BT601	(3 << 16)
-> +#define VNMC_INF_RAW8		(4 << 16)
->  #define VNMC_INF_YUV16		(5 << 16)
->  #define VNMC_INF_RGB888		(6 << 16)
->  #define VNMC_VUP		(1 << 10)
-> @@ -587,7 +588,6 @@ void rvin_crop_scale_comp(struct rvin_dev *vin)
->  	rvin_write(vin, vin->crop.top, VNSLPRC_REG);
->  	rvin_write(vin, vin->crop.top + vin->crop.height - 1, VNELPRC_REG);
->  
-> -
->  	/* TODO: Add support for the UDS scaler. */
->  	if (vin->info->model != RCAR_GEN3)
->  		rvin_crop_scale_comp_gen2(vin);
-> @@ -676,6 +676,9 @@ static int rvin_setup(struct rvin_dev *vin)
->  
->  		input_is_yuv = true;
->  		break;
-> +	case MEDIA_BUS_FMT_SRGGB8_1X8:
-> +		vnmc |= VNMC_INF_RAW8;
-> +		break;
->  	default:
->  		break;
->  	}
-> @@ -737,6 +740,9 @@ static int rvin_setup(struct rvin_dev *vin)
->  	case V4L2_PIX_FMT_ABGR32:
->  		dmr = VNDMR_A8BIT(vin->alpha) | VNDMR_EXRGB | VNDMR_DTMD_ARGB;
->  		break;
-> +	case V4L2_PIX_FMT_SRGGB8:
-> +		dmr = 0;
-> +		break;
->  	default:
->  		vin_err(vin, "Invalid pixelformat (0x%x)\n",
->  			vin->format.pixelformat);
-> @@ -1110,6 +1116,7 @@ static int rvin_mc_validate_format(struct rvin_dev *vin, struct v4l2_subdev *sd,
->  	case MEDIA_BUS_FMT_UYVY8_2X8:
->  	case MEDIA_BUS_FMT_UYVY10_2X10:
->  	case MEDIA_BUS_FMT_RGB888_1X24:
-> +	case MEDIA_BUS_FMT_SRGGB8_1X8:
->  		vin->mbus_code = fmt.format.code;
->  		break;
->  	default:
-> diff --git a/drivers/media/platform/rcar-vin/rcar-v4l2.c b/drivers/media/platform/rcar-vin/rcar-v4l2.c
-> index 5151a3c..4698099 100644
-> --- a/drivers/media/platform/rcar-vin/rcar-v4l2.c
-> +++ b/drivers/media/platform/rcar-vin/rcar-v4l2.c
-> @@ -66,6 +66,10 @@ static const struct rvin_video_format rvin_formats[] = {
->  		.fourcc			= V4L2_PIX_FMT_ABGR32,
->  		.bpp			= 4,
->  	},
-> +	{
-> +		.fourcc			= V4L2_PIX_FMT_SRGGB8,
-> +		.bpp			= 2,
+This driver is mixing 8-bit and 16-bit bus accessors for reasons unknown,
+however the speculation is that this was some sort of attempt to support
+the 8-bit bus mode.
 
-This does not look right, is not bytes-per-pixel 1 for a SRGGB8?
+As per the KS8851-16MLL documentation, all two registers accessed via the
+8-bit accessors are internally 16-bit registers, so reading them using
+16-bit accessors is fine. The KS_CCR read can be converted to 16-bit read
+outright, as it is already a concatenation of two 8-bit reads of that
+register. The KS_RXQCR accesses are 8-bit only, however writing the top
+8 bits of the register is OK as well, since the driver caches the entire
+16-bit register value anyway.
 
-> +	},
->  };
->  
->  const struct rvin_video_format *rvin_format_from_pixel(struct rvin_dev *vin,
-> @@ -102,6 +106,7 @@ static u32 rvin_format_bytesperline(struct rvin_dev *vin,
->  {
->  	const struct rvin_video_format *fmt;
->  	u32 align;
-> +	u8 div;
->  
->  	fmt = rvin_format_from_pixel(vin, pix->pixelformat);
->  
-> @@ -112,16 +117,22 @@ static u32 rvin_format_bytesperline(struct rvin_dev *vin,
->  	case V4L2_PIX_FMT_NV12:
->  	case V4L2_PIX_FMT_NV16:
->  		align = 0x20;
-> +		div = 1;
-> +		break;
-> +	case V4L2_PIX_FMT_SRGGB8:
-> +		align = 0x10;
-> +		div = 2;
+Finally, the driver is not used by any hardware in the kernel right now.
+The only hardware available to me is one with 16-bit bus, so I have no
+way to test the 8-bit bus mode, however it is unlikely this ever really
+worked anyway. If the 8-bit bus mode is ever required, it can be easily
+added by adjusting the 16-bit accessors to do 2 consecutive accesses,
+which is how this should have been done from the beginning.
 
-Yes this does not look right at all, I think you should set bpp to 1 and 
-drop the div handling here.
+Signed-off-by: Marek Vasut <marex@denx.de>
+Cc: David S. Miller <davem@davemloft.net>
+Cc: Lukas Wunner <lukas@wunner.de>
+Cc: Petr Stetiar <ynezz@true.cz>
+Cc: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/ethernet/micrel/ks8851_mll.c | 45 +++---------------------
+ 1 file changed, 5 insertions(+), 40 deletions(-)
 
->  		break;
->  	default:
->  		align = 0x10;
-> +		div = 1;
->  		break;
->  	}
->  
->  	if (V4L2_FIELD_IS_SEQUENTIAL(pix->field))
->  		align = 0x80;
->  
-> -	return ALIGN(pix->width, align) * fmt->bpp;
-> +	return ALIGN(pix->width / div, align) * fmt->bpp;
->  }
->  
->  static u32 rvin_format_sizeimage(struct v4l2_pix_format *pix)
-> -- 
-> 2.7.4
-> 
-
+diff --git a/drivers/net/ethernet/micrel/ks8851_mll.c b/drivers/net/ethernet/micrel/ks8851_mll.c
+index 8dc1f0277117d..721f851674531 100644
+--- a/drivers/net/ethernet/micrel/ks8851_mll.c
++++ b/drivers/net/ethernet/micrel/ks8851_mll.c
+@@ -474,24 +474,6 @@ static int msg_enable;
+  * chip is busy transferring packet data (RX/TX FIFO accesses).
+  */
+ 
+-/**
+- * ks_rdreg8 - read 8 bit register from device
+- * @ks	  : The chip information
+- * @offset: The register address
+- *
+- * Read a 8bit register from the chip, returning the result
+- */
+-static u8 ks_rdreg8(struct ks_net *ks, int offset)
+-{
+-	u16 data;
+-	u8 shift_bit = offset & 0x03;
+-	u8 shift_data = (offset & 1) << 3;
+-	ks->cmd_reg_cache = (u16) offset | (u16)(BE0 << shift_bit);
+-	iowrite16(ks->cmd_reg_cache, ks->hw_addr_cmd);
+-	data  = ioread16(ks->hw_addr);
+-	return (u8)(data >> shift_data);
+-}
+-
+ /**
+  * ks_rdreg16 - read 16 bit register from device
+  * @ks	  : The chip information
+@@ -507,22 +489,6 @@ static u16 ks_rdreg16(struct ks_net *ks, int offset)
+ 	return ioread16(ks->hw_addr);
+ }
+ 
+-/**
+- * ks_wrreg8 - write 8bit register value to chip
+- * @ks: The chip information
+- * @offset: The register address
+- * @value: The value to write
+- *
+- */
+-static void ks_wrreg8(struct ks_net *ks, int offset, u8 value)
+-{
+-	u8  shift_bit = (offset & 0x03);
+-	u16 value_write = (u16)(value << ((offset & 1) << 3));
+-	ks->cmd_reg_cache = (u16)offset | (BE0 << shift_bit);
+-	iowrite16(ks->cmd_reg_cache, ks->hw_addr_cmd);
+-	iowrite16(value_write, ks->hw_addr);
+-}
+-
+ /**
+  * ks_wrreg16 - write 16bit register value to chip
+  * @ks: The chip information
+@@ -642,8 +608,7 @@ static void ks_read_config(struct ks_net *ks)
+ 	u16 reg_data = 0;
+ 
+ 	/* Regardless of bus width, 8 bit read should always work.*/
+-	reg_data = ks_rdreg8(ks, KS_CCR) & 0x00FF;
+-	reg_data |= ks_rdreg8(ks, KS_CCR+1) << 8;
++	reg_data = ks_rdreg16(ks, KS_CCR);
+ 
+ 	/* addr/data bus are multiplexed */
+ 	ks->sharedbus = (reg_data & CCR_SHARED) == CCR_SHARED;
+@@ -747,7 +712,7 @@ static inline void ks_read_qmu(struct ks_net *ks, u16 *buf, u32 len)
+ 
+ 	/* 1. set sudo DMA mode */
+ 	ks_wrreg16(ks, KS_RXFDPR, RXFDPR_RXFPAI);
+-	ks_wrreg8(ks, KS_RXQCR, (ks->rc_rxqcr | RXQCR_SDA) & 0xff);
++	ks_wrreg16(ks, KS_RXQCR, ks->rc_rxqcr | RXQCR_SDA);
+ 
+ 	/* 2. read prepend data */
+ 	/**
+@@ -764,7 +729,7 @@ static inline void ks_read_qmu(struct ks_net *ks, u16 *buf, u32 len)
+ 	ks_inblk(ks, buf, ALIGN(len, 4));
+ 
+ 	/* 4. reset sudo DMA Mode */
+-	ks_wrreg8(ks, KS_RXQCR, ks->rc_rxqcr);
++	ks_wrreg16(ks, KS_RXQCR, ks->rc_rxqcr);
+ }
+ 
+ /**
+@@ -997,13 +962,13 @@ static void ks_write_qmu(struct ks_net *ks, u8 *pdata, u16 len)
+ 	ks->txh.txw[1] = cpu_to_le16(len);
+ 
+ 	/* 1. set sudo-DMA mode */
+-	ks_wrreg8(ks, KS_RXQCR, (ks->rc_rxqcr | RXQCR_SDA) & 0xff);
++	ks_wrreg16(ks, KS_RXQCR, ks->rc_rxqcr | RXQCR_SDA);
+ 	/* 2. write status/lenth info */
+ 	ks_outblk(ks, ks->txh.txw, 4);
+ 	/* 3. write pkt data */
+ 	ks_outblk(ks, (u16 *)pdata, ALIGN(len, 4));
+ 	/* 4. reset sudo-DMA mode */
+-	ks_wrreg8(ks, KS_RXQCR, ks->rc_rxqcr);
++	ks_wrreg16(ks, KS_RXQCR, ks->rc_rxqcr);
+ 	/* 5. Enqueue Tx(move the pkt from TX buffer into TXQ) */
+ 	ks_wrreg16(ks, KS_TXQCR, TXQCR_METFE);
+ 	/* 6. wait until TXQCR_METFE is auto-cleared */
 -- 
-Regards,
-Niklas Söderlund
+2.20.1
+
+
+
