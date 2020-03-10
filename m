@@ -5,57 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66B6FC10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 06:39:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B55F0C10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 06:40:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40181222D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 06:39:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9061A222D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 06:40:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KLDksvb8"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cou9tdhq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726469AbgCJGj6 (ORCPT
+        id S1726498AbgCJGkC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 02:39:58 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:34629 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726415AbgCJGjz (ORCPT
+        Tue, 10 Mar 2020 02:40:02 -0400
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:37786 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726411AbgCJGjz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 10 Mar 2020 02:39:55 -0400
-Received: by mail-pf1-f195.google.com with SMTP id 23so4231695pfj.1
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 23:39:54 -0700 (PDT)
+Received: by mail-pj1-f66.google.com with SMTP id ca13so10879pjb.2
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 23:39:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=YfsVrt7o0ODeUDzbZH0eQVL/Trhvd8Ql3RVuWDHCtRc=;
-        b=KLDksvb8qftLeVhKdBJT4b7E2h5NmKPfyCN40KXtOLFGfxfnvKLioP1Tlz4NMxDVSd
-         I1tO5lSgxS3RBwsfkFv4b+0HUosL/20Rpo853cTPbA7bAf5S9Ynw925F4w6jkm2NhL0G
-         QZPMzSaVpt/eSYzyX8Z0KaxJ1aW2I5C3MH9iA9quuNmZeiQNdUNQibXXVPxhzzrw1pU2
-         e+9TeD3gtFh+detgUv2b+97jv896tGRMGwiCotkd5zAkn1Hx+MROcj9Wl5l3dZ527ZN2
-         tAIrn+DHQFNszG0c3ULjWAW7Ywvx5QS4WFbHJeW5mpNid+O4r/X+uZVtt3t8DYAs2tKA
-         SEvg==
+        bh=Wth+YSNI1ILDm//Nc9zfzczmIG6U29YhiobOLaMSS5A=;
+        b=cou9tdhqsO28ChyfRFJ7LAFEH7FzhzZXKctfzMAgZPf9ZJ7qnB3p8YQqC6t/EuUjMz
+         DZH65hjX3Cf9bDvbpVqsCNo0/TyUN/cb7+OS3ZJ9VY7sUqUunwMpOI0DB8BfsrDDQiZk
+         Ytoqf2sZyzfR3PfaT51X3gsass7Jt4kmIzi/VXr0Kw45Wj4Jte6ITaX99scuWBXpOEBl
+         hRz5J3rKjjGlgn8H9nvs9IauWfg+HCpoHkFfwsL+eEDtNTiq0rEmffkf/UhfGvESO6mq
+         zFSW5Jiy7850L9GZ7CWQLVb2NZLmJVIqPj8xP7wPHjsOLMYWl3qN0HqdEQ5NylMyyLMr
+         sWzg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=YfsVrt7o0ODeUDzbZH0eQVL/Trhvd8Ql3RVuWDHCtRc=;
-        b=mgIBCqj/RFeL0vGLdwTELscdQcVXTzVH+ENK3vqr+ywv0Lz1djduK1nIN0bPkRyWFh
-         B6Hqr0cnWAwhsP76NAZRlACCqn8vDm1WFSC6DhOzwm2GLjwRSVr98vY1G/rilD/UurWr
-         sIv4cDUsnpkZH97JDccoG2Dw9fR8fRirjz8yLgVCEUEPCLGxa7zGVRvp5jA5OEEmt/U3
-         V3as28ai2Q1YDuYYSSTi+D3J/twGvBrjb+S2QCEmfKosExRKEIYDindAAdMmqskPrjVY
-         w8iH+RNcJa4OKN6zPhv5v1ZFe/wizaeYtFj6Oi7kW9B0eoPQTzb952am1Q2ul3DOg1BF
-         8uiQ==
-X-Gm-Message-State: ANhLgQ0XDkabn0rKJ/2x/LygT11IjKOF/4aMCKAI+CAMtKnUHgiUItVb
-        Qll3Z325iNBk1CGXVi3ppVJ50w==
-X-Google-Smtp-Source: ADFU+vtvxuY+C1k56CM5yxeOKK08r6aj22AtT1xpPxBLyuNs+JKtEgkVp7+ooNt5HIjluwmGBZq/5A==
-X-Received: by 2002:a63:8f17:: with SMTP id n23mr20759591pgd.161.1583822393538;
-        Mon, 09 Mar 2020 23:39:53 -0700 (PDT)
+        bh=Wth+YSNI1ILDm//Nc9zfzczmIG6U29YhiobOLaMSS5A=;
+        b=JfNg+elyOdsbmsYfJ9DhLgOZjYJK6NSqCKonR+MxTDeR8/c1w2IvCGZvPYVMtsWs0v
+         TLYbwPRl4AVUjCrhra+CphT/KQTNNWc4Ss4o7Ru+xPn0EE6YXSrhPi3jGTzqnlYgOTaN
+         XF/Xik0U1NRN8uxC4KF1RjKkWjAfuI8WakeMKdtYABgqTvWWX2ggFwp+tZ/4Wfv3jKqY
+         vY7l7bFCl2206pGuILgYjC0iJ0tTSurHA1MsLVgFP0110gMl0SYZYrnhVxo1zDwGqUhy
+         zmpjiQTu37vT3U07nn1+QK9/rEOl/LJU2gZnwtJxzOI/CFTEG1xEkYc7ZiAYeoduFEG2
+         rRHg==
+X-Gm-Message-State: ANhLgQ0XwRP9zQ3eNx24dBgH9cIOD9s3k+1OlCZw2BS/cPw6GlToZMNB
+        iHaJXBiJEiam2kIxRejMdygqfQ==
+X-Google-Smtp-Source: ADFU+vtAtJ+mkEcjXYud1PcBTJ+GOJyqExwers6az7Navv2+vZIm0KfBsjEdIR2qpJfCeoWagqXYvQ==
+X-Received: by 2002:a17:90a:a617:: with SMTP id c23mr236519pjq.32.1583822394882;
+        Mon, 09 Mar 2020 23:39:54 -0700 (PDT)
 Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id j38sm42398468pgi.51.2020.03.09.23.39.52
+        by smtp.gmail.com with ESMTPSA id j38sm42398468pgi.51.2020.03.09.23.39.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Mar 2020 23:39:52 -0700 (PDT)
+        Mon, 09 Mar 2020 23:39:54 -0700 (PDT)
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
 To:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
@@ -63,9 +63,9 @@ To:     Andy Gross <agross@kernel.org>,
 Cc:     linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Mathieu Poirier <mathieu.poirier@linaro.org>
-Subject: [PATCH v4 3/4] remoteproc: qcom: q6v5: Add common panic handler
-Date:   Mon,  9 Mar 2020 23:38:16 -0700
-Message-Id: <20200310063817.3344712-4-bjorn.andersson@linaro.org>
+Subject: [PATCH v4 4/4] remoteproc: qcom: Introduce panic handler for PAS and ADSP
+Date:   Mon,  9 Mar 2020 23:38:17 -0700
+Message-Id: <20200310063817.3344712-5-bjorn.andersson@linaro.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20200310063817.3344712-1-bjorn.andersson@linaro.org>
 References: <20200310063817.3344712-1-bjorn.andersson@linaro.org>
@@ -76,10 +76,9 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a common panic handler that invokes a stop request and sleep enough
-to let the remoteproc flush it's caches etc in order to aid post mortem
-debugging. For now a hard coded 200ms is returned to the remoteproc
-core, this value is taken from the downstream kernel.
+Make the PAS and ADSP/CDSP remoteproc drivers implement the panic
+handler that will invoke a stop to prepare the remoteprocs for post
+mortem debugging.
 
 Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
@@ -87,59 +86,60 @@ Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Change since v3:
  - Change return type to unsigned long
 
- drivers/remoteproc/qcom_q6v5.c | 20 ++++++++++++++++++++
- drivers/remoteproc/qcom_q6v5.h |  1 +
- 2 files changed, 21 insertions(+)
+ drivers/remoteproc/qcom_q6v5_adsp.c | 8 ++++++++
+ drivers/remoteproc/qcom_q6v5_pas.c  | 8 ++++++++
+ 2 files changed, 16 insertions(+)
 
-diff --git a/drivers/remoteproc/qcom_q6v5.c b/drivers/remoteproc/qcom_q6v5.c
-index cb0f4a0be032..111a442c993c 100644
---- a/drivers/remoteproc/qcom_q6v5.c
-+++ b/drivers/remoteproc/qcom_q6v5.c
-@@ -15,6 +15,8 @@
- #include <linux/remoteproc.h>
- #include "qcom_q6v5.h"
- 
-+#define Q6V5_PANIC_DELAY_MS	200
-+
- /**
-  * qcom_q6v5_prepare() - reinitialize the qcom_q6v5 context before start
-  * @q6v5:	reference to qcom_q6v5 context to be reinitialized
-@@ -162,6 +164,24 @@ int qcom_q6v5_request_stop(struct qcom_q6v5 *q6v5)
+diff --git a/drivers/remoteproc/qcom_q6v5_adsp.c b/drivers/remoteproc/qcom_q6v5_adsp.c
+index d5cdff942535..8f1044e8ea3b 100644
+--- a/drivers/remoteproc/qcom_q6v5_adsp.c
++++ b/drivers/remoteproc/qcom_q6v5_adsp.c
+@@ -292,12 +292,20 @@ static void *adsp_da_to_va(struct rproc *rproc, u64 da, int len)
+ 	return adsp->mem_region + offset;
  }
- EXPORT_SYMBOL_GPL(qcom_q6v5_request_stop);
  
-+/**
-+ * qcom_q6v5_panic() - panic handler to invoke a stop on the remote
-+ * @q6v5:	reference to qcom_q6v5 context
-+ *
-+ * Set the stop bit and sleep in order to allow the remote processor to flush
-+ * its caches etc for post mortem debugging.
-+ *
-+ * Return: 200ms
-+ */
-+unsigned long qcom_q6v5_panic(struct qcom_q6v5 *q6v5)
++static unsigned long adsp_panic(struct rproc *rproc)
 +{
-+	qcom_smem_state_update_bits(q6v5->state,
-+				    BIT(q6v5->stop_bit), BIT(q6v5->stop_bit));
++	struct qcom_adsp *adsp = rproc->priv;
 +
-+	return Q6V5_PANIC_DELAY_MS;
++	return qcom_q6v5_panic(&adsp->q6v5);
 +}
-+EXPORT_SYMBOL_GPL(qcom_q6v5_panic);
 +
- /**
-  * qcom_q6v5_init() - initializer of the q6v5 common struct
-  * @q6v5:	handle to be initialized
-diff --git a/drivers/remoteproc/qcom_q6v5.h b/drivers/remoteproc/qcom_q6v5.h
-index 7ac92c1e0f49..c4ed887c1499 100644
---- a/drivers/remoteproc/qcom_q6v5.h
-+++ b/drivers/remoteproc/qcom_q6v5.h
-@@ -42,5 +42,6 @@ int qcom_q6v5_prepare(struct qcom_q6v5 *q6v5);
- int qcom_q6v5_unprepare(struct qcom_q6v5 *q6v5);
- int qcom_q6v5_request_stop(struct qcom_q6v5 *q6v5);
- int qcom_q6v5_wait_for_start(struct qcom_q6v5 *q6v5, int timeout);
-+unsigned long qcom_q6v5_panic(struct qcom_q6v5 *q6v5);
+ static const struct rproc_ops adsp_ops = {
+ 	.start = adsp_start,
+ 	.stop = adsp_stop,
+ 	.da_to_va = adsp_da_to_va,
+ 	.parse_fw = qcom_register_dump_segments,
+ 	.load = adsp_load,
++	.panic = adsp_panic,
+ };
  
- #endif
+ static int adsp_init_clock(struct qcom_adsp *adsp, const char **clk_ids)
+diff --git a/drivers/remoteproc/qcom_q6v5_pas.c b/drivers/remoteproc/qcom_q6v5_pas.c
+index e64c268e6113..678c0ddfce96 100644
+--- a/drivers/remoteproc/qcom_q6v5_pas.c
++++ b/drivers/remoteproc/qcom_q6v5_pas.c
+@@ -243,12 +243,20 @@ static void *adsp_da_to_va(struct rproc *rproc, u64 da, int len)
+ 	return adsp->mem_region + offset;
+ }
+ 
++static unsigned long adsp_panic(struct rproc *rproc)
++{
++	struct qcom_adsp *adsp = (struct qcom_adsp *)rproc->priv;
++
++	return qcom_q6v5_panic(&adsp->q6v5);
++}
++
+ static const struct rproc_ops adsp_ops = {
+ 	.start = adsp_start,
+ 	.stop = adsp_stop,
+ 	.da_to_va = adsp_da_to_va,
+ 	.parse_fw = qcom_register_dump_segments,
+ 	.load = adsp_load,
++	.panic = adsp_panic,
+ };
+ 
+ static int adsp_init_clock(struct qcom_adsp *adsp)
 -- 
 2.24.0
 
