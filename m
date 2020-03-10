@@ -7,49 +7,53 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1A02C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:20:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C49BC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:20:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6F9320873
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:20:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54746208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:20:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583846400;
-	bh=mMpegqvCUE/XWiuKDNsYBG2O0fRKd5FLftKvcpeAULo=;
+	s=default; t=1583846403;
+	bh=UFx5DEXiFUfVTRW6CG4s7+7JeUlESCSJAD4fsfTcsGc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Zuw9RgKKDbe7KUSRgEDlV54xSnkngG90BRTZhXCEhzMYiQKMh5js2wlVrMJGHsXj6
-	 yb5SvFKNiBvhNyYxStQFG/+M+WmRYiwsNMr4B1ubdD03hRqRnF9ia79VyYyZO0PEmI
-	 elEyCYnxobxw3mWPoZneR65UsMo406jJuk5QNWT4=
+	b=oGnfZY2OJt5gG6Vg/9zEPlEO1oUYIuPQ0DiK2gQ7mppqX3QmwiYLkAFhTEg2+IrG6
+	 s4lfRYqBpd+hEgLNBvRt6D/He6IpxwkgpCwWknWCfJqeUMPj2NwBnvE17A/NrjGHvR
+	 nB6/AOdMNxkZsrHi41skWAF0CP5TxE4e7dRTc7SA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731323AbgCJNT7 (ORCPT
+        id S1730142AbgCJNIE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:19:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54332 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:08:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54022 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731060AbgCJNIG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:08:06 -0400
+        id S1727866AbgCJNH5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:07:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA9562071B;
-        Tue, 10 Mar 2020 13:08:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 13EC420873;
+        Tue, 10 Mar 2020 13:07:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845685;
-        bh=mMpegqvCUE/XWiuKDNsYBG2O0fRKd5FLftKvcpeAULo=;
+        s=default; t=1583845676;
+        bh=UFx5DEXiFUfVTRW6CG4s7+7JeUlESCSJAD4fsfTcsGc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LwIhnuPD0Ofgx675Xo8+jwUjfmbciCZZtP4wze6m5KW4J9kVLSYsliHKSMOOTfU39
-         DD/rlnX3V3v8KwgDf2htOoXAgUS8ixAslSSPmvocOrWLCwmjEpQxgGcycJMXxP1IkI
-         o6vzN01T8uGww0vCIPVqe60lZuaFdvOYU4IppzHk=
+        b=qZAA+hKeKaY4rT2i+xQIX/HLygRcLI/Phb/l5DTNb2aVvGrLmcc606aDmTw2xuREJ
+         U60xB8VkV7iNBwMd7olVHDHOzq1tPZkbY3iXr+A6tQaZkYLHQ7I4f9JWus6RxQ1AQw
+         g786o60/vxrR3LKMFgeTr2Dx3DbYjUjb12oFPdpY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Rientjes <rientjes@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.14 064/126] mm, thp: fix defrag setting if newline is not used
-Date:   Tue, 10 Mar 2020 13:41:25 +0100
-Message-Id: <20200310124208.188044362@linuxfoundation.org>
+        stable@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>, bristot@redhat.com,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 4.14 061/126] kprobes: Set unoptimized flag after unoptimizing code
+Date:   Tue, 10 Mar 2020 13:41:22 +0100
+Message-Id: <20200310124208.031658450@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310124203.704193207@linuxfoundation.org>
 References: <20200310124203.704193207@linuxfoundation.org>
@@ -62,107 +66,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Rientjes <rientjes@google.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-commit f42f25526502d851d0e3ca1e46297da8aafce8a7 upstream.
+commit f66c0447cca1281116224d474cdb37d6a18e4b5b upstream.
 
-If thp defrag setting "defer" is used and a newline is *not* used when
-writing to the sysfs file, this is interpreted as the "defer+madvise"
-option.
+Set the unoptimized flag after confirming the code is completely
+unoptimized. Without this fix, when a kprobe hits the intermediate
+modified instruction (the first byte is replaced by an INT3, but
+later bytes can still be a jump address operand) while unoptimizing,
+it can return to the middle byte of the modified code, which causes
+an invalid instruction exception in the kernel.
 
-This is because we do prefix matching and if five characters are written
-without a newline, the current code ends up comparing to the first five
-bytes of the "defer+madvise" option and using that instead.
+Usually, this is a rare case, but if we put a probe on the function
+call while text patching, it always causes a kernel panic as below:
 
-Use the more appropriate sysfs_streq() that handles the trailing newline
-for us.  Since this doubles as a nice cleanup, do it in enabled_store()
-as well.
+ # echo p text_poke+5 > kprobe_events
+ # echo 1 > events/kprobes/enable
+ # echo 0 > events/kprobes/enable
 
-The current implementation relies on prefix matching: the number of
-bytes compared is either the number of bytes written or the length of
-the option being compared.  With a newline, "defer\n" does not match
-"defer+"madvise"; without a newline, however, "defer" is considered to
-match "defer+madvise" (prefix matching is only comparing the first five
-bytes).  End result is that writing "defer" is broken unless it has an
-additional trailing character.
+invalid opcode: 0000 [#1] PREEMPT SMP PTI
+ RIP: 0010:text_poke+0x9/0x50
+ Call Trace:
+  arch_unoptimize_kprobe+0x22/0x28
+  arch_unoptimize_kprobes+0x39/0x87
+  kprobe_optimizer+0x6e/0x290
+  process_one_work+0x2a0/0x610
+  worker_thread+0x28/0x3d0
+  ? process_one_work+0x610/0x610
+  kthread+0x10d/0x130
+  ? kthread_park+0x80/0x80
+  ret_from_fork+0x3a/0x50
 
-This means that writing "madv" in the past would match and set
-"madvise".  With strict checking, that no longer is the case but it is
-unlikely anybody is currently doing this.
+text_poke() is used for patching the code in optprobes.
 
-Link: http://lkml.kernel.org/r/alpine.DEB.2.21.2001171411020.56385@chino.kir.corp.google.com
-Fixes: 21440d7eb904 ("mm, thp: add new defer+madvise defrag option")
-Signed-off-by: David Rientjes <rientjes@google.com>
-Suggested-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
-Cc: Mel Gorman <mgorman@techsingularity.net>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+This can happen even if we blacklist text_poke() and other functions,
+because there is a small time window during which we show the intermediate
+code to other CPUs.
+
+ [ mingo: Edited the changelog. ]
+
+Tested-by: Alexei Starovoitov <ast@kernel.org>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: bristot@redhat.com
+Fixes: 6274de4984a6 ("kprobes: Support delayed unoptimizing")
+Link: https://lkml.kernel.org/r/157483422375.25881.13508326028469515760.stgit@devnote2
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/huge_memory.c |   24 ++++++++----------------
- 1 file changed, 8 insertions(+), 16 deletions(-)
+ kernel/kprobes.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -163,16 +163,13 @@ static ssize_t enabled_store(struct kobj
+--- a/kernel/kprobes.c
++++ b/kernel/kprobes.c
+@@ -523,6 +523,8 @@ static void do_unoptimize_kprobes(void)
+ 	arch_unoptimize_kprobes(&unoptimizing_list, &freeing_list);
+ 	/* Loop free_list for disarming */
+ 	list_for_each_entry_safe(op, tmp, &freeing_list, list) {
++		/* Switching from detour code to origin */
++		op->kp.flags &= ~KPROBE_FLAG_OPTIMIZED;
+ 		/* Disarm probes if marked disabled */
+ 		if (kprobe_disabled(&op->kp))
+ 			arch_disarm_kprobe(&op->kp);
+@@ -662,6 +664,7 @@ static void force_unoptimize_kprobe(stru
  {
- 	ssize_t ret = count;
+ 	lockdep_assert_cpus_held();
+ 	arch_unoptimize_kprobe(op);
++	op->kp.flags &= ~KPROBE_FLAG_OPTIMIZED;
+ 	if (kprobe_disabled(&op->kp))
+ 		arch_disarm_kprobe(&op->kp);
+ }
+@@ -689,7 +692,6 @@ static void unoptimize_kprobe(struct kpr
+ 		return;
+ 	}
  
--	if (!memcmp("always", buf,
--		    min(sizeof("always")-1, count))) {
-+	if (sysfs_streq(buf, "always")) {
- 		clear_bit(TRANSPARENT_HUGEPAGE_REQ_MADV_FLAG, &transparent_hugepage_flags);
- 		set_bit(TRANSPARENT_HUGEPAGE_FLAG, &transparent_hugepage_flags);
--	} else if (!memcmp("madvise", buf,
--			   min(sizeof("madvise")-1, count))) {
-+	} else if (sysfs_streq(buf, "madvise")) {
- 		clear_bit(TRANSPARENT_HUGEPAGE_FLAG, &transparent_hugepage_flags);
- 		set_bit(TRANSPARENT_HUGEPAGE_REQ_MADV_FLAG, &transparent_hugepage_flags);
--	} else if (!memcmp("never", buf,
--			   min(sizeof("never")-1, count))) {
-+	} else if (sysfs_streq(buf, "never")) {
- 		clear_bit(TRANSPARENT_HUGEPAGE_FLAG, &transparent_hugepage_flags);
- 		clear_bit(TRANSPARENT_HUGEPAGE_REQ_MADV_FLAG, &transparent_hugepage_flags);
- 	} else
-@@ -236,32 +233,27 @@ static ssize_t defrag_store(struct kobje
- 			    struct kobj_attribute *attr,
- 			    const char *buf, size_t count)
- {
--	if (!memcmp("always", buf,
--		    min(sizeof("always")-1, count))) {
-+	if (sysfs_streq(buf, "always")) {
- 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_FLAG, &transparent_hugepage_flags);
- 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_OR_MADV_FLAG, &transparent_hugepage_flags);
- 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_REQ_MADV_FLAG, &transparent_hugepage_flags);
- 		set_bit(TRANSPARENT_HUGEPAGE_DEFRAG_DIRECT_FLAG, &transparent_hugepage_flags);
--	} else if (!memcmp("defer+madvise", buf,
--		    min(sizeof("defer+madvise")-1, count))) {
-+	} else if (sysfs_streq(buf, "defer+madvise")) {
- 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_DIRECT_FLAG, &transparent_hugepage_flags);
- 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_FLAG, &transparent_hugepage_flags);
- 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_REQ_MADV_FLAG, &transparent_hugepage_flags);
- 		set_bit(TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_OR_MADV_FLAG, &transparent_hugepage_flags);
--	} else if (!memcmp("defer", buf,
--		    min(sizeof("defer")-1, count))) {
-+	} else if (sysfs_streq(buf, "defer")) {
- 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_DIRECT_FLAG, &transparent_hugepage_flags);
- 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_OR_MADV_FLAG, &transparent_hugepage_flags);
- 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_REQ_MADV_FLAG, &transparent_hugepage_flags);
- 		set_bit(TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_FLAG, &transparent_hugepage_flags);
--	} else if (!memcmp("madvise", buf,
--			   min(sizeof("madvise")-1, count))) {
-+	} else if (sysfs_streq(buf, "madvise")) {
- 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_DIRECT_FLAG, &transparent_hugepage_flags);
- 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_FLAG, &transparent_hugepage_flags);
- 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_OR_MADV_FLAG, &transparent_hugepage_flags);
- 		set_bit(TRANSPARENT_HUGEPAGE_DEFRAG_REQ_MADV_FLAG, &transparent_hugepage_flags);
--	} else if (!memcmp("never", buf,
--			   min(sizeof("never")-1, count))) {
-+	} else if (sysfs_streq(buf, "never")) {
- 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_DIRECT_FLAG, &transparent_hugepage_flags);
- 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_FLAG, &transparent_hugepage_flags);
- 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_OR_MADV_FLAG, &transparent_hugepage_flags);
+-	op->kp.flags &= ~KPROBE_FLAG_OPTIMIZED;
+ 	if (!list_empty(&op->list)) {
+ 		/* Dequeue from the optimization queue */
+ 		list_del_init(&op->list);
 
 
