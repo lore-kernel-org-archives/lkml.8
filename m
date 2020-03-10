@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A10FC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:28:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B63C8C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:28:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F3D320675
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:28:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AF7D2071B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:28:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583846893;
-	bh=l0bQBjOHyBTmYG7E0FipiaVFcmNoBZYZxkmnVGypQTQ=;
+	s=default; t=1583846895;
+	bh=nnwxZghy9qMMharnd6Mv2u5XeJJ/Ophsfiznx4exfvQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fy/Myu74A4CcQNDMEUBw9MPXaEUNyEwrOlJ33kMBrZBJiPXCwmRU7xmrF66on0VSG
-	 3embNxOpxIQKEBRCCRYAZ2O6LsTh944sZI5tt8V98HRvAdq95EMeFDPTvKF7jT9Fcy
-	 sp/m6inxoBu7yJOOZ3tzMJig93F4euXjDhd/gPvg=
+	b=oyW2VxZ6TYHJtNRKmDzfc1FOqnbjG8J7nuJBAYBZrlrCINyv0+wCHoRdHfL6BlkJx
+	 fPaDzgwLFQ+LmwdOPN6O3muGeVr6duHArCfV1T4d84aL3NM8tOpE/8Sxf6lpLKJnvb
+	 pfYhHIzkakP5o88YtEc4cEIJn3p+1nQkLAd9gTvg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729727AbgCJN2L (ORCPT
+        id S1729608AbgCJN2K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:28:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59386 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:28:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59470 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726316AbgCJMxX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:53:23 -0400
+        id S1729179AbgCJMxZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:53:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93FE520674;
-        Tue, 10 Mar 2020 12:53:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 102FB2468F;
+        Tue, 10 Mar 2020 12:53:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844803;
-        bh=l0bQBjOHyBTmYG7E0FipiaVFcmNoBZYZxkmnVGypQTQ=;
+        s=default; t=1583844805;
+        bh=nnwxZghy9qMMharnd6Mv2u5XeJJ/Ophsfiznx4exfvQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ujnLU1E2AqbpwusrCecfn+w8mfMSEFunWty55taw9BB9dTosbUYUZxrA7DKrPpodp
-         Q5tprTogk/vZinRicp8RmpRwR7Ww2PyKPcYkJc2p9TftpwJW0KoaqPniHjOBBKCm2o
-         IR6Kaae9tjJifQbnbgOg5YbshiZAtaLYvPNnBud4=
+        b=XyRZznpdKwUqP3vUs73IzHogSYYzIghPmFaocjp9nJ1qYi2QOzb9wIKH4A1+7pMvO
+         f6SLa8foU49Jau5hTOQI+ThI70qorz6VinGufHW96fvw1mqU/Do8dekR0oa/8gYidc
+         +1HhlNPtePsdh8n9i19NxRSkWCvHHPq0yqrQpd2g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
-        Cezary Rojewski <cezary.rojewski@intel.com>,
+        stable@vger.kernel.org, Matthias Reichl <hias@horus.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
         Mark Brown <broonie@kernel.org>
-Subject: [PATCH 5.4 125/168] ASoC: pcm: Fix possible buffer overflow in dpcm state sysfs output
-Date:   Tue, 10 Mar 2020 13:39:31 +0100
-Message-Id: <20200310123648.123392655@linuxfoundation.org>
+Subject: [PATCH 5.4 126/168] ASoC: pcm512x: Fix unbalanced regulator enable call in probe error path
+Date:   Tue, 10 Mar 2020 13:39:32 +0100
+Message-Id: <20200310123648.212784825@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123635.322799692@linuxfoundation.org>
 References: <20200310123635.322799692@linuxfoundation.org>
@@ -60,84 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Matthias Reichl <hias@horus.com>
 
-commit 6c89ffea60aa3b2a33ae7987de1e84bfb89e4c9e upstream.
+commit ac0a68997935c4acb92eaae5ad8982e0bb432d56 upstream.
 
-dpcm_show_state() invokes multiple snprintf() calls to concatenate
-formatted strings on the fixed size buffer.  The usage of snprintf()
-is supposed for avoiding the buffer overflow, but it doesn't work as
-expected because snprintf() doesn't return the actual output size but
-the size to be written.
+When we get a clock error during probe we have to call
+regulator_bulk_disable before bailing out, otherwise we trigger
+a warning in regulator_put.
 
-Fix this bug by replacing all snprintf() calls with scnprintf()
-calls.
+Fix this by using "goto err" like in the error cases above.
 
-Fixes: f86dcef87b77 ("ASoC: dpcm: Add debugFS support for DPCM")
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Acked-by: Cezary Rojewski <cezary.rojewski@intel.com>
-Link: https://lore.kernel.org/r/20200218111737.14193-4-tiwai@suse.de
+Fixes: 5a3af1293194d ("ASoC: pcm512x: Add PCM512x driver")
+Signed-off-by: Matthias Reichl <hias@horus.com>
+Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Link: https://lore.kernel.org/r/20200220202956.29233-1-hias@horus.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/soc-pcm.c |   16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ sound/soc/codecs/pcm512x.c |    8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
---- a/sound/soc/soc-pcm.c
-+++ b/sound/soc/soc-pcm.c
-@@ -3169,16 +3169,16 @@ static ssize_t dpcm_show_state(struct sn
- 	unsigned long flags;
- 
- 	/* FE state */
--	offset += snprintf(buf + offset, size - offset,
-+	offset += scnprintf(buf + offset, size - offset,
- 			"[%s - %s]\n", fe->dai_link->name,
- 			stream ? "Capture" : "Playback");
- 
--	offset += snprintf(buf + offset, size - offset, "State: %s\n",
-+	offset += scnprintf(buf + offset, size - offset, "State: %s\n",
- 	                dpcm_state_string(fe->dpcm[stream].state));
- 
- 	if ((fe->dpcm[stream].state >= SND_SOC_DPCM_STATE_HW_PARAMS) &&
- 	    (fe->dpcm[stream].state <= SND_SOC_DPCM_STATE_STOP))
--		offset += snprintf(buf + offset, size - offset,
-+		offset += scnprintf(buf + offset, size - offset,
- 				"Hardware Params: "
- 				"Format = %s, Channels = %d, Rate = %d\n",
- 				snd_pcm_format_name(params_format(params)),
-@@ -3186,10 +3186,10 @@ static ssize_t dpcm_show_state(struct sn
- 				params_rate(params));
- 
- 	/* BEs state */
--	offset += snprintf(buf + offset, size - offset, "Backends:\n");
-+	offset += scnprintf(buf + offset, size - offset, "Backends:\n");
- 
- 	if (list_empty(&fe->dpcm[stream].be_clients)) {
--		offset += snprintf(buf + offset, size - offset,
-+		offset += scnprintf(buf + offset, size - offset,
- 				" No active DSP links\n");
- 		goto out;
+--- a/sound/soc/codecs/pcm512x.c
++++ b/sound/soc/codecs/pcm512x.c
+@@ -1564,13 +1564,15 @@ int pcm512x_probe(struct device *dev, st
  	}
-@@ -3199,16 +3199,16 @@ static ssize_t dpcm_show_state(struct sn
- 		struct snd_soc_pcm_runtime *be = dpcm->be;
- 		params = &dpcm->hw_params;
  
--		offset += snprintf(buf + offset, size - offset,
-+		offset += scnprintf(buf + offset, size - offset,
- 				"- %s\n", be->dai_link->name);
+ 	pcm512x->sclk = devm_clk_get(dev, NULL);
+-	if (PTR_ERR(pcm512x->sclk) == -EPROBE_DEFER)
+-		return -EPROBE_DEFER;
++	if (PTR_ERR(pcm512x->sclk) == -EPROBE_DEFER) {
++		ret = -EPROBE_DEFER;
++		goto err;
++	}
+ 	if (!IS_ERR(pcm512x->sclk)) {
+ 		ret = clk_prepare_enable(pcm512x->sclk);
+ 		if (ret != 0) {
+ 			dev_err(dev, "Failed to enable SCLK: %d\n", ret);
+-			return ret;
++			goto err;
+ 		}
+ 	}
  
--		offset += snprintf(buf + offset, size - offset,
-+		offset += scnprintf(buf + offset, size - offset,
- 				"   State: %s\n",
- 				dpcm_state_string(be->dpcm[stream].state));
- 
- 		if ((be->dpcm[stream].state >= SND_SOC_DPCM_STATE_HW_PARAMS) &&
- 		    (be->dpcm[stream].state <= SND_SOC_DPCM_STATE_STOP))
--			offset += snprintf(buf + offset, size - offset,
-+			offset += scnprintf(buf + offset, size - offset,
- 				"   Hardware Params: "
- 				"Format = %s, Channels = %d, Rate = %d\n",
- 				snd_pcm_format_name(params_format(params)),
 
 
