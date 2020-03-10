@@ -2,114 +2,152 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52361C10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 19:50:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCA3DC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 19:51:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2F1D208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 19:50:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79828215A4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 19:51:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="OhbAghdN"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aTt4VyNI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727653AbgCJTuB (ORCPT
+        id S1727354AbgCJTvj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 15:50:01 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:37600 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727112AbgCJTuB (ORCPT
+        Tue, 10 Mar 2020 15:51:39 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:55284 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726604AbgCJTvj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 15:50:01 -0400
-Received: by mail-io1-f67.google.com with SMTP id k4so14082742ior.4
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 12:50:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=a3QS0e8RcKFN7/huSeBCCDwuVM9JqD+PwQz/25LYZ7s=;
-        b=OhbAghdNUJbciPVHuH7moOlqqCFrFRE9cU5y6G8bZaazds/cVCLgdwVJGN8cktdJeV
-         PcCU4iK+sDFS7sQ0uFJKeBvYtAZY/fdaWTYPriu+UWlAjLMThNuq340tP6KkBerdfuKh
-         y3T0QJitw2eIkqR+syI0QC6SM1+A3omTiS8nU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=a3QS0e8RcKFN7/huSeBCCDwuVM9JqD+PwQz/25LYZ7s=;
-        b=AC2ixpEQL7RD8uYFQW+5yrcdnoqcTdaAaHpj/xQH3aXzwRMpQc/Mj+TZemmZD/wId9
-         lHy71xB8FzWvXSy/MR7XrEo5vMVsOLcC8z/sL9NOH/BfpP0tEwzTAJCyUUInvLfS+u4W
-         m8E1LP2Apjz7f6FQzUcSDw+22MASIvBQ6EcBvDeYNzPPhqMk168oz5XLjFEWQQ9+3oEC
-         QTRvml2Q/rGFaNvEWR6GYRjrA7+Wfo8mowtNMGgRU4+NU1Q2yabmltZE4CzpDzO6YuUt
-         ovA8E961Eh9seAPM+39765QQqh1bxKOMLhBCLzqSH9N95r7u9SnH1JQLzLlY8PqJWeNI
-         pvjw==
-X-Gm-Message-State: ANhLgQ2lFW21JX1oMly5Xjz5CjrB11xhAdK9GB7VyI67MrsHVSlzuMLc
-        qPgb2i33QqV58NMgwzlUTSyI7IPnwijf3/FH1GPUqA==
-X-Google-Smtp-Source: ADFU+vst15KzgX+tYyB+mxwdb3zdIiBvf9oRWln6x3JODjSTwfwW2FTFg8mFRjfOJtT7xvjklxE++Xz8fUEBp6Pgo14=
-X-Received: by 2002:a02:a813:: with SMTP id f19mr19907887jaj.35.1583869800367;
- Tue, 10 Mar 2020 12:50:00 -0700 (PDT)
+        Tue, 10 Mar 2020 15:51:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583869897;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=l3PhESK6uLexgJItbHee1HRK9XWHVAGUlhz9Vq1Mc4E=;
+        b=aTt4VyNIaQhde14wlKLhuW+EykooJDZ//QAZvR8aUXRbeUSpYqquXLDpaz75VOV0E7cDDh
+        YLSEXmPH+oAzazSlGquz6BmzvlwX+GcG0Z+EhWFUc5cfFKdNo/lKMFdDfKXVjHsEyP0NBl
+        IU1RVK+bSWeKETMqZi96LMDO8F7Ofag=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-411-vir2D4viMvG5hbmtrcKL2Q-1; Tue, 10 Mar 2020 15:51:34 -0400
+X-MC-Unique: vir2D4viMvG5hbmtrcKL2Q-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 901FE8017CC;
+        Tue, 10 Mar 2020 19:51:31 +0000 (UTC)
+Received: from Ruby.bss.redhat.com (dhcp-10-20-1-196.bss.redhat.com [10.20.1.196])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 870E88F366;
+        Tue, 10 Mar 2020 19:51:28 +0000 (UTC)
+From:   Lyude Paul <lyude@redhat.com>
+To:     intel-gfx@lists.freedesktop.org,
+        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>
+Cc:     Manasi Navare <manasi.d.navare@intel.com>,
+        "Lee, Shawn C" <shawn.c.lee@intel.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        =?UTF-8?q?Jos=C3=A9=20Roberto=20de=20Souza?= <jose.souza@intel.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Lucas De Marchi <lucas.demarchi@intel.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3] drm/i915/mst: Hookup DRM DP MST late_register/early_unregister callbacks
+Date:   Tue, 10 Mar 2020 15:51:21 -0400
+Message-Id: <20200310195122.1590925-1-lyude@redhat.com>
+In-Reply-To: <20200310185417.1588984-1-lyude@redhat.com>
+References: <20200310185417.1588984-1-lyude@redhat.com>
 MIME-Version: 1.0
-References: <20200304165845.3081-1-vgoyal@redhat.com> <20200304165845.3081-13-vgoyal@redhat.com>
-In-Reply-To: <20200304165845.3081-13-vgoyal@redhat.com>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Tue, 10 Mar 2020 20:49:49 +0100
-Message-ID: <CAJfpeguY8gDYVp_q3-W6JNA24zCry+SfWmEW2zuHLQLhmyUB3Q@mail.gmail.com>
-Subject: Re: [PATCH 12/20] fuse: Introduce setupmapping/removemapping commands
-To:     Vivek Goyal <vgoyal@redhat.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, virtio-fs@redhat.com,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Peng Tao <tao.peng@linux.alibaba.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 4, 2020 at 5:59 PM Vivek Goyal <vgoyal@redhat.com> wrote:
->
-> Introduce two new fuse commands to setup/remove memory mappings. This
-> will be used to setup/tear down file mapping in dax window.
->
-> Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
-> Signed-off-by: Peng Tao <tao.peng@linux.alibaba.com>
-> ---
->  include/uapi/linux/fuse.h | 37 +++++++++++++++++++++++++++++++++++++
->  1 file changed, 37 insertions(+)
->
-> diff --git a/include/uapi/linux/fuse.h b/include/uapi/linux/fuse.h
-> index 5b85819e045f..62633555d547 100644
-> --- a/include/uapi/linux/fuse.h
-> +++ b/include/uapi/linux/fuse.h
-> @@ -894,4 +894,41 @@ struct fuse_copy_file_range_in {
->         uint64_t        flags;
->  };
->
-> +#define FUSE_SETUPMAPPING_ENTRIES 8
-> +#define FUSE_SETUPMAPPING_FLAG_WRITE (1ull << 0)
-> +struct fuse_setupmapping_in {
-> +       /* An already open handle */
-> +       uint64_t        fh;
-> +       /* Offset into the file to start the mapping */
-> +       uint64_t        foffset;
-> +       /* Length of mapping required */
-> +       uint64_t        len;
-> +       /* Flags, FUSE_SETUPMAPPING_FLAG_* */
-> +       uint64_t        flags;
-> +       /* Offset in Memory Window */
-> +       uint64_t        moffset;
-> +};
-> +
-> +struct fuse_setupmapping_out {
-> +       /* Offsets into the cache of mappings */
-> +       uint64_t        coffset[FUSE_SETUPMAPPING_ENTRIES];
-> +        /* Lengths of each mapping */
-> +        uint64_t       len[FUSE_SETUPMAPPING_ENTRIES];
-> +};
+i915 can enable aux device nodes for DP MST by calling
+drm_dp_mst_connector_late_register()/drm_dp_mst_connector_early_unregiste=
+r(),
+so let's hook that up.
 
-fuse_setupmapping_out together with FUSE_SETUPMAPPING_ENTRIES seem to be unused.
+Changes since v1:
+* Call intel_connector_register/unregister() from
+  intel_dp_mst_connector_late_register/unregister() so we don't lose
+  error injection - Ville Syrj=C3=A4l=C3=A4
+Changes since v2:
+* Don't forget to clean up if intel_connector_register() fails - Ville
 
-Thanks,
-Miklos
+Cc: Ville Syrj=C3=A4l=C3=A4 <ville.syrjala@linux.intel.com>
+Cc: Manasi Navare <manasi.d.navare@intel.com>
+Cc: "Lee, Shawn C" <shawn.c.lee@intel.com>
+Signed-off-by: Lyude Paul <lyude@redhat.com>
+---
+ drivers/gpu/drm/i915/display/intel_dp_mst.c | 33 +++++++++++++++++++--
+ 1 file changed, 31 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/gpu/drm/i915/display/intel_dp_mst.c b/drivers/gpu/dr=
+m/i915/display/intel_dp_mst.c
+index d53978ed3c12..e08caca658c6 100644
+--- a/drivers/gpu/drm/i915/display/intel_dp_mst.c
++++ b/drivers/gpu/drm/i915/display/intel_dp_mst.c
+@@ -548,12 +548,41 @@ static int intel_dp_mst_get_ddc_modes(struct drm_co=
+nnector *connector)
+ 	return ret;
+ }
+=20
++static int
++intel_dp_mst_connector_late_register(struct drm_connector *connector)
++{
++	struct intel_connector *intel_connector =3D to_intel_connector(connecto=
+r);
++	int ret;
++
++	ret =3D drm_dp_mst_connector_late_register(connector,
++						 intel_connector->port);
++	if (ret < 0)
++		return ret;
++
++	ret =3D intel_connector_register(connector);
++	if (ret < 0)
++		drm_dp_mst_connector_early_unregister(connector,
++						      intel_connector->port);
++
++	return ret;
++}
++
++static void
++intel_dp_mst_connector_early_unregister(struct drm_connector *connector)
++{
++	struct intel_connector *intel_connector =3D to_intel_connector(connecto=
+r);
++
++	intel_connector_unregister(connector);
++	drm_dp_mst_connector_early_unregister(connector,
++					      intel_connector->port);
++}
++
+ static const struct drm_connector_funcs intel_dp_mst_connector_funcs =3D=
+ {
+ 	.fill_modes =3D drm_helper_probe_single_connector_modes,
+ 	.atomic_get_property =3D intel_digital_connector_atomic_get_property,
+ 	.atomic_set_property =3D intel_digital_connector_atomic_set_property,
+-	.late_register =3D intel_connector_register,
+-	.early_unregister =3D intel_connector_unregister,
++	.late_register =3D intel_dp_mst_connector_late_register,
++	.early_unregister =3D intel_dp_mst_connector_early_unregister,
+ 	.destroy =3D intel_connector_destroy,
+ 	.atomic_destroy_state =3D drm_atomic_helper_connector_destroy_state,
+ 	.atomic_duplicate_state =3D intel_digital_connector_duplicate_state,
+--=20
+2.24.1
+
