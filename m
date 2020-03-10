@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42442C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:27:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A310C18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:27:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B7D720675
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:27:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 171BA2071B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:27:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583846833;
-	bh=khnnaXEotQCDVtCSFvYA545nYovW0yzZNDRL37GEq3c=;
+	s=default; t=1583846840;
+	bh=9RiMgh8QPyWIuQfhiMeAtqfXBCzae0ghcsVZphTMLKs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yEJvOUU83yZrWgWVTsJ5uPNuO21iU01Lw1gxRWAznMO65/TeLhQI6QtCr65HjGoDo
-	 /UJsKDyIxpImK2NWsETUa6CCIpz0viZxvkRxcVq0DlY0jTtROs2qFpbzV0VpdUNmLT
-	 BO9wE8ZbBAeeTg/VELBpZ+boWOfHoauyc0YCU/m8=
+	b=cRTAB5K/5JBb5qBQHYmwGDx3MOsjLXMiSdKCACS+4Ghh19SqrO7gadNi1BkABkoM+
+	 v8hCZklcYv5XT4KIOhPirJqGSMgk6bbs00FRAjm3K9w8e6UmCCg9FmAklCXfgYaatM
+	 BbhqkJbgLAGNsZ0+H2HCUaJcDxno7/9qV/ul9dtU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729470AbgCJN1L (ORCPT
+        id S1729187AbgCJMyz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:27:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33986 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:54:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33498 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729099AbgCJMzO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:55:14 -0400
+        id S1729412AbgCJMyx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:54:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 794192253D;
-        Tue, 10 Mar 2020 12:55:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 33E5620674;
+        Tue, 10 Mar 2020 12:54:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844913;
-        bh=khnnaXEotQCDVtCSFvYA545nYovW0yzZNDRL37GEq3c=;
+        s=default; t=1583844892;
+        bh=9RiMgh8QPyWIuQfhiMeAtqfXBCzae0ghcsVZphTMLKs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a4c7gZI7EYoTumsbsqKin6y0uDL3tnZVDnmRWdqwhVT1zYs8bihXXHFHy9dChwyQ0
-         GCcidswKfTVDVa9VwN7R5wKqFrkSJPu4vfOin6haF+qXECZ3Oo1pLoBvbrG5upYi3x
-         N5YYTClawZfGxHyx/E+Z1a62LTxaoP9p9fDauOyY=
+        b=r/4FeE5tg16wC0IfRcIO+y1eez2arrrhaOdQojmBYY92rBNdXS8xhXuZU2XqPNoAk
+         0IoKAMF2K8BKB3PYlfZ/pzH9HqPD137oK3KlVqr5BSA2IZtxlsn2giNr1rzshOEeZV
+         DDPzpw4/l7GamMBmFR90rpdqa5woBEg09U0sOeEI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>, linux-efi@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 5.4 166/168] efi/x86: Align GUIDs to their size in the mixed mode runtime wrapper
-Date:   Tue, 10 Mar 2020 13:40:12 +0100
-Message-Id: <20200310123652.363028853@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>
+Subject: [PATCH 5.4 158/168] ARM: dts: imx7-colibri: Fix frequency for sd/mmc
+Date:   Tue, 10 Mar 2020 13:40:04 +0100
+Message-Id: <20200310123651.514115742@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123635.322799692@linuxfoundation.org>
 References: <20200310123635.322799692@linuxfoundation.org>
@@ -61,129 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard Biesheuvel <ardb@kernel.org>
+From: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
 
-commit 63056e8b5ebf41d52170e9f5ba1fc83d1855278c upstream.
+commit 2773fe1d31c42ffae2a9cb9a6055d99dd86e2fee upstream.
 
-Hans reports that his mixed mode systems running v5.6-rc1 kernels hit
-the WARN_ON() in virt_to_phys_or_null_size(), caused by the fact that
-efi_guid_t objects on the vmap'ed stack happen to be misaligned with
-respect to their sizes. As a quick (i.e., backportable) fix, copy GUID
-pointer arguments to the local stack into a buffer that is naturally
-aligned to its size, so that it is guaranteed to cover only one
-physical page.
+SD/MMC on Colibri iMX7S/D modules successfully support
+200Mhz frequency in HS200 mode.
 
-Note that on x86, we cannot rely on the stack pointer being aligned
-the way the compiler expects, so we need to allocate an 8-byte aligned
-buffer of sufficient size, and copy the GUID into that buffer at an
-offset that is aligned to 16 bytes.
+Removing the unnecessary max-frequency limit significantly
+increases the performance:
 
-Fixes: f6697df36bdf0bf7 ("x86/efi: Prevent mixed mode boot corruption with CONFIG_VMAP_STACK=y")
-Reported-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Tested-by: Hans de Goede <hdegoede@redhat.com>
-Cc: linux-efi@vger.kernel.org
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/r/20200221084849.26878-2-ardb@kernel.org
+== before fix ====
+root@colibri-imx7-emmc:~# hdparm -t /dev/mmcblk0
+/dev/mmcblk0:
+ Timing buffered disk reads: 252 MB in  3.02 seconds =  83.54 MB/sec
+==================
+
+=== after fix ====
+root@colibri-imx7-emmc:~# hdparm -t /dev/mmcblk0
+/dev/mmcblk0:
+ Timing buffered disk reads: 408 MB in  3.00 seconds = 135.94 MB/sec
+==================
+
+Fixes: f928a4a377e4 ("ARM: dts: imx7: add Toradex Colibri iMX7D 1GB (eMMC) support")
+Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/platform/efi/efi_64.c |   25 +++++++++++++++++++++----
- 1 file changed, 21 insertions(+), 4 deletions(-)
+ arch/arm/boot/dts/imx7-colibri.dtsi |    1 -
+ 1 file changed, 1 deletion(-)
 
---- a/arch/x86/platform/efi/efi_64.c
-+++ b/arch/x86/platform/efi/efi_64.c
-@@ -791,6 +791,8 @@ static efi_status_t
- efi_thunk_get_variable(efi_char16_t *name, efi_guid_t *vendor,
- 		       u32 *attr, unsigned long *data_size, void *data)
- {
-+	u8 buf[24] __aligned(8);
-+	efi_guid_t *vnd = PTR_ALIGN((efi_guid_t *)buf, sizeof(*vnd));
- 	efi_status_t status;
- 	u32 phys_name, phys_vendor, phys_attr;
- 	u32 phys_data_size, phys_data;
-@@ -798,8 +800,10 @@ efi_thunk_get_variable(efi_char16_t *nam
- 
- 	spin_lock_irqsave(&efi_runtime_lock, flags);
- 
-+	*vnd = *vendor;
-+
- 	phys_data_size = virt_to_phys_or_null(data_size);
--	phys_vendor = virt_to_phys_or_null(vendor);
-+	phys_vendor = virt_to_phys_or_null(vnd);
- 	phys_name = virt_to_phys_or_null_size(name, efi_name_size(name));
- 	phys_attr = virt_to_phys_or_null(attr);
- 	phys_data = virt_to_phys_or_null_size(data, *data_size);
-@@ -816,14 +820,18 @@ static efi_status_t
- efi_thunk_set_variable(efi_char16_t *name, efi_guid_t *vendor,
- 		       u32 attr, unsigned long data_size, void *data)
- {
-+	u8 buf[24] __aligned(8);
-+	efi_guid_t *vnd = PTR_ALIGN((efi_guid_t *)buf, sizeof(*vnd));
- 	u32 phys_name, phys_vendor, phys_data;
- 	efi_status_t status;
- 	unsigned long flags;
- 
- 	spin_lock_irqsave(&efi_runtime_lock, flags);
- 
-+	*vnd = *vendor;
-+
- 	phys_name = virt_to_phys_or_null_size(name, efi_name_size(name));
--	phys_vendor = virt_to_phys_or_null(vendor);
-+	phys_vendor = virt_to_phys_or_null(vnd);
- 	phys_data = virt_to_phys_or_null_size(data, data_size);
- 
- 	/* If data_size is > sizeof(u32) we've got problems */
-@@ -840,6 +848,8 @@ efi_thunk_set_variable_nonblocking(efi_c
- 				   u32 attr, unsigned long data_size,
- 				   void *data)
- {
-+	u8 buf[24] __aligned(8);
-+	efi_guid_t *vnd = PTR_ALIGN((efi_guid_t *)buf, sizeof(*vnd));
- 	u32 phys_name, phys_vendor, phys_data;
- 	efi_status_t status;
- 	unsigned long flags;
-@@ -847,8 +857,10 @@ efi_thunk_set_variable_nonblocking(efi_c
- 	if (!spin_trylock_irqsave(&efi_runtime_lock, flags))
- 		return EFI_NOT_READY;
- 
-+	*vnd = *vendor;
-+
- 	phys_name = virt_to_phys_or_null_size(name, efi_name_size(name));
--	phys_vendor = virt_to_phys_or_null(vendor);
-+	phys_vendor = virt_to_phys_or_null(vnd);
- 	phys_data = virt_to_phys_or_null_size(data, data_size);
- 
- 	/* If data_size is > sizeof(u32) we've got problems */
-@@ -865,14 +877,18 @@ efi_thunk_get_next_variable(unsigned lon
- 			    efi_char16_t *name,
- 			    efi_guid_t *vendor)
- {
-+	u8 buf[24] __aligned(8);
-+	efi_guid_t *vnd = PTR_ALIGN((efi_guid_t *)buf, sizeof(*vnd));
- 	efi_status_t status;
- 	u32 phys_name_size, phys_name, phys_vendor;
- 	unsigned long flags;
- 
- 	spin_lock_irqsave(&efi_runtime_lock, flags);
- 
-+	*vnd = *vendor;
-+
- 	phys_name_size = virt_to_phys_or_null(name_size);
--	phys_vendor = virt_to_phys_or_null(vendor);
-+	phys_vendor = virt_to_phys_or_null(vnd);
- 	phys_name = virt_to_phys_or_null_size(name, *name_size);
- 
- 	status = efi_thunk(get_next_variable, phys_name_size,
-@@ -880,6 +896,7 @@ efi_thunk_get_next_variable(unsigned lon
- 
- 	spin_unlock_irqrestore(&efi_runtime_lock, flags);
- 
-+	*vendor = *vnd;
- 	return status;
- }
- 
+--- a/arch/arm/boot/dts/imx7-colibri.dtsi
++++ b/arch/arm/boot/dts/imx7-colibri.dtsi
+@@ -337,7 +337,6 @@
+ 	assigned-clock-rates = <400000000>;
+ 	bus-width = <8>;
+ 	fsl,tuning-step = <2>;
+-	max-frequency = <100000000>;
+ 	vmmc-supply = <&reg_module_3v3>;
+ 	vqmmc-supply = <&reg_DCDC3>;
+ 	non-removable;
 
 
