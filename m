@@ -2,126 +2,144 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B810C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:54:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7493CC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:54:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1142D24693
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:54:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XkznGvka"
+	by mail.kernel.org (Postfix) with ESMTP id 4842424696
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:54:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583844873;
+	bh=uZ3e2sAC+DUv2HA27y3ZUYEuia0YujYutSP2G86WGiI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=j6Vnz/NADT6jk9OcLTqygBVsjIC8IsJ2Pd24VVgFM02PPaKymJ4I6Vpej+eqRjSPi
+	 ik42TVwlyNuwozitjMYkpNXnzBOBLlo3U6q4jGaHLOftMJh0CVtTZxi9tTQmiqzxTv
+	 t60ns+i025CyuZgyph/PulsQrYN4cbnKoeVnekQ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729369AbgCJMya (ORCPT
+        id S1727747AbgCJMyb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:54:30 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:36029 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729350AbgCJMyX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:54:23 -0400
-Received: by mail-qk1-f193.google.com with SMTP id u25so12557091qkk.3;
-        Tue, 10 Mar 2020 05:54:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4gPRUE/8c5unfeblSQvhYpKxeSuVZhZNXJJMTut3+xc=;
-        b=XkznGvkaYBTUY217XQ+/JcQlXuOsrjWrLd6qvYVsRlLicZNCjg+d1sTOEeWvFDBjed
-         ZUQFiYxNYCClkr65W3vIB7yabWXsorUCj9aoLmomRhnyGmNzS97zSfSpHywipgu2WlML
-         5GQjtgI93aBcWLFmFWtro9CmlXquwSClaP6pI8JhmVxxHoD+ywnBhYIi0tL5byG53uHe
-         HOh3OK35wClm2ks6crxtZTJmPM1XzoHgk/pmQ3S/3FEKsFWVaHcUpEs4Li1XwIw9Eij7
-         l3eZfqtzF8TEb9w+VUtY2cK+IIlD/WcB23bnYGWkxIH/bCgp91JtqG+n3saW1kbB6HGz
-         07jw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4gPRUE/8c5unfeblSQvhYpKxeSuVZhZNXJJMTut3+xc=;
-        b=NCOg7YCbAvKQHwGhs0qvOzf8I6su65P9a+E50imI6lUwlMGid9USmjS/APlZTv8ryO
-         /Hqr4Xey0NxaRPqZ36fvuaccNRHFNDrxsTW5fk8wpwkjwf7fMskYucrWRQwkhhm+fNmz
-         FV5zpvm5f9kO8sFTNTGwfnTNPhRAH2OdMiCHF/N+9xzas4BHvucVLUcMQxpX7KTJqDCz
-         WyG5UUC5pp+XFDgiYWkwsh/b+8tkclRvSvoVUBBk7diP9/SnbwqrexK7jXksmUvlxKkW
-         /b4Z2jflslLdcAvgX2U58uooGyKdXcrN6XdFJtUXE9w+OOpEAJO+diuVUE0stslIptNi
-         PwrQ==
-X-Gm-Message-State: ANhLgQ1nKO/VtkW8wHApSt5FV8XxvnIp7vwnkHYiOgl/sxeW3uEpW1J8
-        UxrRV73nXNdp4X78621mjbjYSpoYjm8Nfa37+Pg=
-X-Google-Smtp-Source: ADFU+vvDgu6r2lvGrzD+aENtSuJiR4ntDHyMa/Gp9A1Gub6RnDjugtxTlXjHNfyjGwMDnaqFEam8O6u6HzvTy4j0zEU=
-X-Received: by 2002:a05:620a:22cd:: with SMTP id o13mr10800851qki.160.1583844862180;
- Tue, 10 Mar 2020 05:54:22 -0700 (PDT)
+        Tue, 10 Mar 2020 08:54:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32808 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728510AbgCJMy0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:54:26 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CED5C24692;
+        Tue, 10 Mar 2020 12:54:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583844866;
+        bh=uZ3e2sAC+DUv2HA27y3ZUYEuia0YujYutSP2G86WGiI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=TlZOnrx+YAu/YjnoQdNteur4KLvjoUI+FTH9M0WPOqzznHrH94PapXtgfGbLDIjTq
+         yHnUriVIB80XMLeNHwAxBANBHHWFDtXsQ8Agg6XcmDs91afokZ71Fe+CQNr4gA2IOv
+         tJ4GNWaPiM+xP6WbeHa/xiB7I7yCw1NpkPdSYLqg=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Max Gurtovoy <maxg@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Subject: [PATCH 5.4 146/168] RDMA/rw: Fix error flow during RDMA context initialization
+Date:   Tue, 10 Mar 2020 13:39:52 +0100
+Message-Id: <20200310123650.306129285@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200310123635.322799692@linuxfoundation.org>
+References: <20200310123635.322799692@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <1580185137-11255-1-git-send-email-gupt21@gmail.com> <20200310122934.GA13896@ninjato>
-In-Reply-To: <20200310122934.GA13896@ninjato>
-From:   rishi gupta <gupt21@gmail.com>
-Date:   Tue, 10 Mar 2020 18:24:10 +0530
-Message-ID: <CALUj-guKqkRKVKDa1U+gv0rLx23zc5cFT3Qnakp4muk9LSUYfQ@mail.gmail.com>
-Subject: Re: [PATCH v3] HID: mcp2221: add usb to i2c-smbus host bridge
-To:     Wolfram Sang <wsa@the-dreams.de>
-Cc:     Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        wsa+renesas@sang-engineering.com,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I will send two more patches in sometime.
+From: Max Gurtovoy <maxg@mellanox.com>
 
-Patch 1: Define i2c_adapter_quirks to let i2c core check msg's order,
-type and length
-              As of now this driver itself is doing this sanity.
+commit 6affca140cbea01f497c4f4e16f1e2be7f74bd04 upstream.
 
-Patch 2: Add support for GPIO functionality
+In case the SGL was mapped for P2P DMA operation, we must unmap it using
+pci_p2pdma_unmap_sg during the error unwind of rdma_rw_ctx_init()
 
-On Tue, Mar 10, 2020 at 5:59 PM Wolfram Sang <wsa@the-dreams.de> wrote:
->
->
-> > +     if (num == 1) {
-> > +             if (msgs->flags & I2C_M_RD) {
-> > +                     ret = mcp_i2c_smbus_read(mcp, msgs, MCP2221_I2C_RD_DATA,
-> > +                                                     0, 0, NULL);
-> > +             } else {
-> > +                     ret = mcp_i2c_write(mcp, msgs, MCP2221_I2C_WR_DATA, 1);
-> > +             }
-> > +             if (ret)
-> > +                     goto exit;
-> > +             ret = num;
-> > +     } else if (num == 2) {
-> > +             /* Ex transaction; send reg address and read its contents */
-> > +             if (msgs[0].addr == msgs[1].addr &&
-> > +                     !(msgs[0].flags & I2C_M_RD) &&
-> > +                      (msgs[1].flags & I2C_M_RD)) {
-> > +
-> > +                     ret = mcp_i2c_write(mcp, &msgs[0],
-> > +                                             MCP2221_I2C_WR_NO_STOP, 0);
-> > +                     if (ret)
-> > +                             goto exit;
-> > +
-> > +                     ret = mcp_i2c_smbus_read(mcp, &msgs[1],
-> > +                                             MCP2221_I2C_RD_RPT_START,
-> > +                                             0, 0, NULL);
-> > +                     if (ret)
-> > +                             goto exit;
-> > +                     ret = num;
-> > +             } else {
-> > +                     dev_err(&adapter->dev,
-> > +                             "unsupported multi-msg i2c transaction\n");
-> > +                     ret = -EOPNOTSUPP;
-> > +             }
-> > +     } else {
-> > +             dev_err(&adapter->dev,
-> > +                     "unsupported multi-msg i2c transaction\n");
-> > +             ret = -EOPNOTSUPP;
-> > +     }
->
-> Have a look at struct i2c_adapter_quirks and especially the flags to let
-> the I2C core do the sanity checks from here.
->
+Fixes: 7f73eac3a713 ("PCI/P2PDMA: Introduce pci_p2pdma_unmap_sg()")
+Link: https://lore.kernel.org/r/20200220100819.41860-1-maxg@mellanox.com
+Signed-off-by: Max Gurtovoy <maxg@mellanox.com>
+Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
+Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/infiniband/core/rw.c |   31 ++++++++++++++++++++-----------
+ 1 file changed, 20 insertions(+), 11 deletions(-)
+
+--- a/drivers/infiniband/core/rw.c
++++ b/drivers/infiniband/core/rw.c
+@@ -268,6 +268,23 @@ static int rdma_rw_init_single_wr(struct
+ 	return 1;
+ }
+ 
++static void rdma_rw_unmap_sg(struct ib_device *dev, struct scatterlist *sg,
++			     u32 sg_cnt, enum dma_data_direction dir)
++{
++	if (is_pci_p2pdma_page(sg_page(sg)))
++		pci_p2pdma_unmap_sg(dev->dma_device, sg, sg_cnt, dir);
++	else
++		ib_dma_unmap_sg(dev, sg, sg_cnt, dir);
++}
++
++static int rdma_rw_map_sg(struct ib_device *dev, struct scatterlist *sg,
++			  u32 sg_cnt, enum dma_data_direction dir)
++{
++	if (is_pci_p2pdma_page(sg_page(sg)))
++		return pci_p2pdma_map_sg(dev->dma_device, sg, sg_cnt, dir);
++	return ib_dma_map_sg(dev, sg, sg_cnt, dir);
++}
++
+ /**
+  * rdma_rw_ctx_init - initialize a RDMA READ/WRITE context
+  * @ctx:	context to initialize
+@@ -290,11 +307,7 @@ int rdma_rw_ctx_init(struct rdma_rw_ctx
+ 	struct ib_device *dev = qp->pd->device;
+ 	int ret;
+ 
+-	if (is_pci_p2pdma_page(sg_page(sg)))
+-		ret = pci_p2pdma_map_sg(dev->dma_device, sg, sg_cnt, dir);
+-	else
+-		ret = ib_dma_map_sg(dev, sg, sg_cnt, dir);
+-
++	ret = rdma_rw_map_sg(dev, sg, sg_cnt, dir);
+ 	if (!ret)
+ 		return -ENOMEM;
+ 	sg_cnt = ret;
+@@ -333,7 +346,7 @@ int rdma_rw_ctx_init(struct rdma_rw_ctx
+ 	return ret;
+ 
+ out_unmap_sg:
+-	ib_dma_unmap_sg(dev, sg, sg_cnt, dir);
++	rdma_rw_unmap_sg(dev, sg, sg_cnt, dir);
+ 	return ret;
+ }
+ EXPORT_SYMBOL(rdma_rw_ctx_init);
+@@ -583,11 +596,7 @@ void rdma_rw_ctx_destroy(struct rdma_rw_
+ 		break;
+ 	}
+ 
+-	if (is_pci_p2pdma_page(sg_page(sg)))
+-		pci_p2pdma_unmap_sg(qp->pd->device->dma_device, sg,
+-				    sg_cnt, dir);
+-	else
+-		ib_dma_unmap_sg(qp->pd->device, sg, sg_cnt, dir);
++	rdma_rw_unmap_sg(qp->pd->device, sg, sg_cnt, dir);
+ }
+ EXPORT_SYMBOL(rdma_rw_ctx_destroy);
+ 
+
+
