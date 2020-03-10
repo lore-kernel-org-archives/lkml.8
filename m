@@ -6,37 +6,37 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D950C18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 07:03:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B548C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 07:03:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AFC924696
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 07:03:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5492A2469A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 07:03:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726595AbgCJHDy (ORCPT
+        id S1726617AbgCJHD4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 03:03:54 -0400
+        Tue, 10 Mar 2020 03:03:56 -0400
 Received: from mga09.intel.com ([134.134.136.24]:5965 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726483AbgCJHDw (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 03:03:52 -0400
+        id S1726594AbgCJHDy (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 03:03:54 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Mar 2020 00:03:51 -0700
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Mar 2020 00:03:54 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,535,1574150400"; 
-   d="scan'208";a="265524651"
+   d="scan'208";a="265524657"
 Received: from kbl.sh.intel.com ([10.239.159.24])
-  by fmsmga004.fm.intel.com with ESMTP; 10 Mar 2020 00:03:49 -0700
+  by fmsmga004.fm.intel.com with ESMTP; 10 Mar 2020 00:03:51 -0700
 From:   Jin Yao <yao.jin@linux.intel.com>
 To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
         mingo@redhat.com, alexander.shishkin@linux.intel.com
 Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
         kan.liang@intel.com, yao.jin@intel.com,
         Jin Yao <yao.jin@linux.intel.com>
-Subject: [PATCH v1 08/14] perf util: Add new block info functions for top N hot blocks comparison
-Date:   Tue, 10 Mar 2020 15:02:39 +0800
-Message-Id: <20200310070245.16314-9-yao.jin@linux.intel.com>
+Subject: [PATCH v1 09/14] perf util: Add new block info fmts for showing hot blocks comparison
+Date:   Tue, 10 Mar 2020 15:02:40 +0800
+Message-Id: <20200310070245.16314-10-yao.jin@linux.intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200310070245.16314-1-yao.jin@linux.intel.com>
 References: <20200310070245.16314-1-yao.jin@linux.intel.com>
@@ -45,529 +45,192 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It's also useful to figure out the top N hottest blocks from old perf
-data file and figure out the top N hottest blocks from new perf data file,
-and then compare them for the cycles diff. It can let us easily know
-how many cycles are moved from one block to another block.
+We support three new columns in output
 
-This patch adds new helper functions and data structures for the block
-comparison.
+New Stream Diff(cycles%,cycles):
+  The diff of 'Sampled Cycles%' and 'Avg Cycles' between new stream
+  and old stream for the same block.
 
-And it also updates the existing perf-diff to be compatible with
-the new interface.
+  If block is not matched, it reports "[block not in new stream]" or
+  "[block changed in new stream]".
+
+New Stream Sampled Cycles%:
+  The 'Sampled Cycles%' of the block in new stream. It's only reported
+  when the block is changed in new stream.
+
+New Stream Avg Cycles:
+  The 'Average Cycles' of the block in new stream. It's only reported
+  when the block is changed in new stream.
 
 Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
 ---
- tools/perf/builtin-diff.c    |  45 +-----
- tools/perf/util/block-info.c | 305 ++++++++++++++++++++++++++++++++++-
- tools/perf/util/block-info.h |  32 +++-
- tools/perf/util/srclist.h    |   9 ++
- 4 files changed, 345 insertions(+), 46 deletions(-)
+ tools/perf/util/block-info.c | 117 ++++++++++++++++++++++++++++++++++-
+ tools/perf/util/block-info.h |   4 ++
+ 2 files changed, 120 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/builtin-diff.c b/tools/perf/builtin-diff.c
-index 9c801b9bc5bb..dcbc9bba4e61 100644
---- a/tools/perf/builtin-diff.c
-+++ b/tools/perf/builtin-diff.c
-@@ -598,27 +598,6 @@ static void init_block_hist(struct block_hist *bh)
- 	bh->valid = true;
- }
- 
--static struct hist_entry *get_block_pair(struct hist_entry *he,
--					 struct hists *hists_pair)
--{
--	struct rb_root_cached *root = hists_pair->entries_in;
--	struct rb_node *next = rb_first_cached(root);
--	int64_t cmp;
--
--	while (next != NULL) {
--		struct hist_entry *he_pair = rb_entry(next, struct hist_entry,
--						      rb_node_in);
--
--		next = rb_next(&he_pair->rb_node_in);
--
--		cmp = __block_info__cmp(he_pair, he);
--		if (!cmp)
--			return he_pair;
--	}
--
--	return NULL;
--}
--
- static void init_spark_values(unsigned long *svals, int num)
- {
- 	for (int i = 0; i < num; i++)
-@@ -665,26 +644,6 @@ static void compute_cycles_diff(struct hist_entry *he,
- 	}
- }
- 
--static void block_hists_match(struct hists *hists_base,
--			      struct hists *hists_pair)
--{
--	struct rb_root_cached *root = hists_base->entries_in;
--	struct rb_node *next = rb_first_cached(root);
--
--	while (next != NULL) {
--		struct hist_entry *he = rb_entry(next, struct hist_entry,
--						 rb_node_in);
--		struct hist_entry *pair = get_block_pair(he, hists_pair);
--
--		next = rb_next(&he->rb_node_in);
--
--		if (pair) {
--			hist_entry__add_pair(pair, he);
--			compute_cycles_diff(he, pair);
--		}
--	}
--}
--
- static void hists__precompute(struct hists *hists)
- {
- 	struct rb_root_cached *root;
-@@ -737,7 +696,9 @@ static void hists__precompute(struct hists *hists)
- 
- 				if (bh->valid && pair_bh->valid) {
- 					block_hists_match(&bh->block_hists,
--							  &pair_bh->block_hists);
-+							  &pair_bh->block_hists,
-+							  NULL,
-+							  compute_cycles_diff);
- 					hists__output_resort(&pair_bh->block_hists,
- 							     NULL);
- 				}
 diff --git a/tools/perf/util/block-info.c b/tools/perf/util/block-info.c
-index 423ec69bda6c..247c87b8df56 100644
+index 247c87b8df56..2ad9e2dd7f77 100644
 --- a/tools/perf/util/block-info.c
 +++ b/tools/perf/util/block-info.c
-@@ -12,6 +12,7 @@
- #include "evlist.h"
- #include "hist.h"
- #include "ui/browsers/hists.h"
-+#include "debug.h"
+@@ -41,7 +41,19 @@ static struct block_header_column {
+ 	[PERF_HPP_REPORT__BLOCK_DSO] = {
+ 		.name = "Shared Object",
+ 		.width = 20,
+-	}
++	},
++	[PERF_HPP__BLOCK_NEW_STREAM_DIFF] = {
++		.name = "New Stream Diff(cycles%,cycles)",
++		.width = 31,
++	},
++	[PERF_HPP__BLOCK_NEW_STREAM_TOTAL_CYCLES_PCT] = {
++		.name = "New Stream Sampled Cycles%",
++		.width = 26,
++	},
++	[PERF_HPP__BLOCK_NEW_STREAM_AVG_CYCLES] = {
++		.name = "New Stream Avg Cycles",
++		.width = 21,
++	},
+ };
  
- static struct block_header_column {
- 	const char *name;
-@@ -50,10 +51,24 @@ struct block_info *block_info__get(struct block_info *bi)
- 	return bi;
+ struct block_info *block_info__get(struct block_info *bi)
+@@ -342,6 +354,100 @@ static int block_dso_entry(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
+ 			 "[unknown]");
  }
  
-+static void free_block_line(struct block_line **bl)
++static int block_new_stream_diff_entry(struct perf_hpp_fmt *fmt,
++				       struct perf_hpp *hpp,
++				       struct hist_entry *he)
 +{
-+	if ((*bl)->start_file)
-+		free((*bl)->start_file);
++	struct block_fmt *block_fmt = container_of(fmt, struct block_fmt, fmt);
++	struct hist_entry *pair = hist_entry__next_pair(he);
++	struct block_info *bi_h, *bi_p;
++	double ratio_h = 0.0, ratio_p = 0.0;
++	s64 cycles_diff;
++	char buf[32];
 +
-+	if ((*bl)->end_file)
-+		free((*bl)->end_file);
++	if (!pair) {
++		return scnprintf(hpp->buf, hpp->size, "%*s", block_fmt->width,
++				 "[block not in new stream]");
++	}
 +
-+	zfree(bl);
++	bi_h = he->block_info;
++	bi_p = pair->block_info;
++
++	if (bi_p->block_changed) {
++		return scnprintf(hpp->buf, hpp->size, "%*s", block_fmt->width,
++				 "[block changed in new stream]");
++	}
++
++	if (bi_h->total_cycles)
++		ratio_h = (double)bi_h->cycles / (double)bi_h->total_cycles;
++
++	if (bi_p->total_cycles)
++		ratio_p = (double)bi_p->cycles / (double)bi_p->total_cycles;
++
++	cycles_diff = (s64)(bi_p->cycles_aggr / bi_p->num_aggr) -
++		(s64)(bi_h->cycles_aggr / bi_h->num_aggr);
++
++	snprintf(buf, sizeof(buf), "%4.2f%%, %4ld",
++		 100.0 * (ratio_p - ratio_h), cycles_diff);
++
++	return scnprintf(hpp->buf, hpp->size, "%*s", block_fmt->width, buf);
 +}
 +
- void block_info__put(struct block_info *bi)
- {
--	if (bi && refcount_dec_and_test(&bi->refcnt))
-+	if (bi && refcount_dec_and_test(&bi->refcnt)) {
-+		if (bi->line)
-+			free_block_line(&bi->line);
- 		free(bi);
++static int block_new_stream_total_cycles_pct_entry(struct perf_hpp_fmt *fmt,
++						   struct perf_hpp *hpp,
++						   struct hist_entry *he)
++{
++	struct block_fmt *block_fmt = container_of(fmt, struct block_fmt, fmt);
++	struct hist_entry *pair = hist_entry__next_pair(he);
++	struct block_info *bi_p;
++	double ratio = 0.0;
++
++	if (!pair) {
++		return scnprintf(hpp->buf, hpp->size, "%*s", block_fmt->width,
++				 "-");
 +	}
- }
- 
- struct block_info *block_info__new(void)
-@@ -65,7 +80,8 @@ struct block_info *block_info__new(void)
- 	return bi;
- }
- 
--int64_t __block_info__cmp(struct hist_entry *left, struct hist_entry *right)
-+int64_t __block_info__cmp(struct hist_entry *left, struct hist_entry *right,
-+			  struct srclist *src_list __maybe_unused)
++
++	bi_p = pair->block_info;
++
++	if (!bi_p->block_changed) {
++		return scnprintf(hpp->buf, hpp->size, "%*s", block_fmt->width,
++				 "-");
++	}
++
++	if (bi_p->total_cycles)
++		ratio = (double)bi_p->cycles / (double)bi_p->total_cycles;
++
++	return color_pct(hpp, block_fmt->width, 100.0 * ratio);
++}
++
++static int block_new_stream_avg_cycles_entry(struct perf_hpp_fmt *fmt,
++					     struct perf_hpp *hpp,
++					     struct hist_entry *he)
++{
++	struct block_fmt *block_fmt = container_of(fmt, struct block_fmt, fmt);
++	struct hist_entry *pair = hist_entry__next_pair(he);
++	struct block_info *bi_p;
++	char cycles_buf[16];
++
++	if (!pair) {
++		return scnprintf(hpp->buf, hpp->size, "%*s", block_fmt->width,
++				 "-");
++	}
++
++	bi_p = pair->block_info;
++
++	if (!bi_p->block_changed) {
++		return scnprintf(hpp->buf, hpp->size, "%*s", block_fmt->width,
++				 "-");
++	}
++
++	cycles_string(bi_p->cycles_aggr / bi_p->num_aggr, cycles_buf,
++		      sizeof(cycles_buf));
++
++	return scnprintf(hpp->buf, hpp->size, "%*s", block_fmt->width,
++			 cycles_buf);
++}
++
+ static void init_block_header(struct block_fmt *block_fmt)
  {
- 	struct block_info *bi_l = left->block_info;
- 	struct block_info *bi_r = right->block_info;
-@@ -93,7 +109,7 @@ int64_t __block_info__cmp(struct hist_entry *left, struct hist_entry *right)
- int64_t block_info__cmp(struct perf_hpp_fmt *fmt __maybe_unused,
- 			struct hist_entry *left, struct hist_entry *right)
- {
--	return __block_info__cmp(left, right);
-+	return __block_info__cmp(left, right, NULL);
- }
- 
- static void init_block_info(struct block_info *bi, struct symbol *sym,
-@@ -446,8 +462,10 @@ struct block_report *block_info__create_report(struct evlist *evlist,
- 	evlist__for_each_entry(evlist, pos) {
- 		struct hists *hists = evsel__hists(pos);
- 
-+		hists__output_resort(hists, NULL);
- 		process_block_report(hists, &block_reports[i], total_cycles,
- 				     block_hpps, nr_hpps);
-+		block_reports[i].evsel_idx = pos->idx;
- 		i++;
+ 	struct perf_hpp_fmt *fmt = &block_fmt->fmt;
+@@ -385,6 +491,15 @@ static void hpp_register(struct block_fmt *block_fmt, int idx,
+ 	case PERF_HPP_REPORT__BLOCK_DSO:
+ 		fmt->entry = block_dso_entry;
+ 		break;
++	case PERF_HPP__BLOCK_NEW_STREAM_DIFF:
++		fmt->entry = block_new_stream_diff_entry;
++		break;
++	case PERF_HPP__BLOCK_NEW_STREAM_TOTAL_CYCLES_PCT:
++		fmt->entry = block_new_stream_total_cycles_pct_entry;
++		break;
++	case PERF_HPP__BLOCK_NEW_STREAM_AVG_CYCLES:
++		fmt->entry = block_new_stream_avg_cycles_entry;
++		break;
+ 	default:
+ 		return;
  	}
- 
-@@ -496,3 +514,284 @@ float block_info__total_cycles_percent(struct hist_entry *he)
- 
- 	return 0.0;
- }
-+
-+struct block_report *block_info__get_report(struct block_report *reps,
-+					    int nr_reps, int evsel_idx)
-+{
-+	for (int i = 0; i < nr_reps; i++) {
-+		if (reps[i].evsel_idx == evsel_idx)
-+			return &reps[i];
-+	}
-+
-+	return NULL;
-+}
-+
-+static char *move_to_relpath(char *path, const char *dir)
-+{
-+	const char *d = dir, *end = dir + strlen(dir);
-+	char *s;
-+
-+	/* skip '.' and '/' */
-+	while ((d != end) && ((*d == '.') || (*d == '/')))
-+		d++;
-+
-+	if (d == end)
-+		return NULL;
-+
-+	s = strstr(path, d);
-+	if (!s)
-+		return NULL;
-+
-+	s += strlen(d);
-+
-+	while (*s == '/' && *s != 0)
-+		s++;
-+
-+	if (*s == 0)
-+		return NULL;
-+
-+	return s;
-+}
-+
-+static int block_addr2line(struct hist_entry *he, const char *dir)
-+{
-+	struct block_info *bi = he->block_info;
-+	struct block_line *bl;
-+
-+	if (!he->ms.map || !he->ms.map->dso)
-+		return -1;
-+
-+	bl = zalloc(sizeof(*bl));
-+	if (!bl)
-+		return -1;
-+
-+	symbol_conf.disable_add2line_warn = true;
-+	bl->start_file = get_srcline_split(he->ms.map->dso,
-+					   map__rip_2objdump(he->ms.map,
-+							     bi->sym->start + bi->start),
-+					   &bl->start_nr);
-+	if (!bl->start_file)
-+		goto err;
-+
-+	if (dir)
-+		bl->start_rel = move_to_relpath(bl->start_file, dir);
-+
-+	bl->end_file = get_srcline_split(he->ms.map->dso,
-+					 map__rip_2objdump(he->ms.map,
-+							   bi->sym->start + bi->end),
-+					 &bl->end_nr);
-+	if (!bl->end_file)
-+		goto err;
-+
-+	if (dir)
-+		bl->end_rel = move_to_relpath(bl->end_file, dir);
-+
-+	bi->line = bl;
-+	return 0;
-+
-+err:
-+	free_block_line(&bl);
-+	return -1;
-+}
-+
-+int block_hists_addr2line(struct hists *hists, const char *dir)
-+{
-+	struct rb_root_cached *root = hists->entries_in;
-+	struct rb_node *next = rb_first_cached(root);
-+
-+	while (next != NULL) {
-+		struct hist_entry *he = rb_entry(next, struct hist_entry,
-+						 rb_node_in);
-+
-+		if (!he)
-+			break;
-+
-+		block_addr2line(he, dir);
-+		next = rb_next(&he->rb_node_in);
-+	}
-+
-+	return 0;
-+}
-+
-+bool block_same_srcfiles(struct block_line *bl_a, struct block_line *bl_b)
-+{
-+	if (!bl_a->start_file || !bl_a->end_file ||
-+	    !bl_b->start_file || !bl_b->end_file) {
-+		return false;
-+	}
-+
-+	if (!strcmp(bl_a->start_file, bl_b->start_file) &&
-+	    !strcmp(bl_a->end_file, bl_b->end_file) &&
-+	    !strcmp(bl_a->start_file, bl_a->end_file)) {
-+		return true;
-+	}
-+
-+	if (!bl_a->start_rel || !bl_a->end_rel ||
-+	    !bl_b->start_rel || !bl_b->end_rel) {
-+		return false;
-+	}
-+
-+	if (!strcmp(bl_a->start_rel, bl_b->start_rel) &&
-+	    !strcmp(bl_a->end_rel, bl_b->end_rel) &&
-+	    !strcmp(bl_a->start_rel, bl_a->end_rel)) {
-+		return true;
-+	}
-+
-+	return false;
-+}
-+
-+void block_line_dump(struct block_info *bi, const char *str)
-+{
-+	if (bi && bi->line) {
-+		pr_debug("%s: %s:%d -> %s:%d\n",
-+			 str,
-+			 bi->line->start_file,
-+			 bi->line->start_nr,
-+			 bi->line->end_file,
-+			 bi->line->end_nr);
-+	}
-+}
-+
-+static bool block_line_matched(struct src_node *node,
-+			       int start_nr_a, int end_nr_a,
-+			       int start_nr_b, int end_nr_b,
-+			       bool *changed)
-+{
-+	int i, j, start_a, end_a, start_b, changed_nr = 0;
-+	struct line_pair *lp;
-+
-+	*changed = false;
-+
-+	if (abs(end_nr_a - start_nr_a) !=
-+	    abs(end_nr_b - start_nr_b)) {
-+		return false;
-+	}
-+
-+	i = start_a = (start_nr_a < end_nr_a) ? start_nr_a : end_nr_a;
-+	end_a = (end_nr_a > start_nr_a) ? end_nr_a : start_nr_a;
-+
-+	j = start_b = (start_nr_b < end_nr_b) ? start_nr_b : end_nr_b;
-+
-+	while (i <= end_a) {
-+		lp = srclist__line_pair(node, i);
-+		if (!lp)
-+			return false;
-+
-+		if (lp->b_nr != j)
-+			changed_nr++;
-+
-+		i++; j++;
-+	}
-+
-+	if ((i == end_a + 1) && (changed_nr == 0))
-+		return true;
-+
-+	/*
-+	 * At least one line is unchanged in this block,
-+	 * we think this block is changed (not a new block).
-+	 */
-+	if (changed_nr < end_a - start_a + 1)
-+		*changed = true;
-+
-+	return false;
-+}
-+
-+bool block_srclist_matched(struct srclist *slist, char *rel_path,
-+			   int start_nr_a, int end_nr_a,
-+			   int start_nr_b, int end_nr_b,
-+			   bool *changed)
-+{
-+	struct src_node *node;
-+	bool ret;
-+
-+	*changed = false;
-+
-+	node = srclist__find(slist, rel_path, true);
-+	if (!node)
-+		return false;
-+
-+	ret = block_line_matched(node, start_nr_a, end_nr_a,
-+				 start_nr_b, end_nr_b, changed);
-+
-+	if (ret) {
-+		pr_debug("block MATCHED (a vs. b)\t\t%s: (%d-%d) vs. (%d-%d)\n",
-+			 node->info.rel_path,
-+			 start_nr_a, end_nr_a,
-+			 start_nr_b, end_nr_b);
-+	} else if (*changed) {
-+		pr_debug("block CHANGED (a vs. b)\t\t%s: (%d-%d) vs. (%d-%d)\n",
-+			 node->info.rel_path,
-+			 start_nr_a, end_nr_a,
-+			 start_nr_b, end_nr_b);
-+	} else {
-+		pr_debug("block UNMATCHED (a vs. b)\t%s: (%d-%d) vs. (%d-%d)\n",
-+			 node->info.rel_path,
-+			 start_nr_a, end_nr_a,
-+			 start_nr_b, end_nr_b);
-+	}
-+
-+	return ret;
-+}
-+
-+static struct hist_entry *get_block_pair(struct hist_entry *he,
-+					 struct hists *hists_pair,
-+					 struct srclist *src_list)
-+{
-+	struct rb_root_cached *root = hists_pair->entries_in;
-+	struct rb_node *next = rb_first_cached(root);
-+	int64_t cmp;
-+
-+	while (next != NULL) {
-+		struct hist_entry *he_pair = rb_entry(next, struct hist_entry,
-+						      rb_node_in);
-+
-+		next = rb_next(&he_pair->rb_node_in);
-+
-+		cmp = __block_info__cmp(he_pair, he, src_list);
-+		if (!cmp)
-+			return he_pair;
-+	}
-+
-+	return NULL;
-+}
-+
-+void block_hists_match(struct hists *hists_base,
-+		       struct hists *hists_pair,
-+		       struct srclist *src_list,
-+		       void (*func)(struct hist_entry *,
-+				    struct hist_entry *))
-+{
-+	struct rb_root_cached *root = hists_base->entries_in;
-+	struct rb_node *next = rb_first_cached(root);
-+
-+	while (next != NULL) {
-+		struct hist_entry *he = rb_entry(next, struct hist_entry,
-+						 rb_node_in);
-+		struct hist_entry *pair = get_block_pair(he, hists_pair,
-+							 src_list);
-+
-+		next = rb_next(&he->rb_node_in);
-+
-+		if (pair) {
-+			hist_entry__add_pair(pair, he);
-+
-+			if (func)
-+				(*func)(he, pair);
-+		}
-+	}
-+}
-+
-+int block_info__match_report(struct block_report *rep_base,
-+			     struct block_report *rep_pair,
-+			     struct srclist *src_list,
-+			     void (*func)(struct hist_entry *,
-+					  struct hist_entry *))
-+{
-+	struct block_hist *bh_base = &rep_base->hist;
-+	struct block_hist *bh_pair = &rep_pair->hist;
-+
-+	block_hists_match(&bh_base->block_hists, &bh_pair->block_hists,
-+			  src_list, func);
-+
-+	return 0;
-+}
 diff --git a/tools/perf/util/block-info.h b/tools/perf/util/block-info.h
-index 42e9dcc4cf0a..458bd998089d 100644
+index 458bd998089d..4e22bce81731 100644
 --- a/tools/perf/util/block-info.h
 +++ b/tools/perf/util/block-info.h
-@@ -20,6 +20,8 @@ struct block_info {
- 	int			num;
- 	int			num_aggr;
+@@ -22,6 +22,7 @@ struct block_info {
  	refcount_t		refcnt;
-+	struct block_line	*line;
-+	bool			srcline_matched;
+ 	struct block_line	*line;
+ 	bool			srcline_matched;
++	bool			block_changed;
  };
  
  struct block_fmt {
-@@ -46,6 +48,7 @@ struct block_report {
- 	u64			cycles;
- 	struct block_fmt	fmts[PERF_HPP_REPORT__BLOCK_MAX_INDEX];
- 	int			nr_fmts;
-+	int			evsel_idx;
+@@ -40,6 +41,9 @@ enum {
+ 	PERF_HPP_REPORT__BLOCK_AVG_CYCLES,
+ 	PERF_HPP_REPORT__BLOCK_RANGE,
+ 	PERF_HPP_REPORT__BLOCK_DSO,
++	PERF_HPP__BLOCK_NEW_STREAM_DIFF,
++	PERF_HPP__BLOCK_NEW_STREAM_TOTAL_CYCLES_PCT,
++	PERF_HPP__BLOCK_NEW_STREAM_AVG_CYCLES,
+ 	PERF_HPP_REPORT__BLOCK_MAX_INDEX
  };
- 
- struct block_hist;
-@@ -62,7 +65,8 @@ static inline void __block_info__zput(struct block_info **bi)
- 
- #define block_info__zput(bi) __block_info__zput(&bi)
- 
--int64_t __block_info__cmp(struct hist_entry *left, struct hist_entry *right);
-+int64_t __block_info__cmp(struct hist_entry *left, struct hist_entry *right,
-+			  struct srclist *src_list __maybe_unused);
- 
- int64_t block_info__cmp(struct perf_hpp_fmt *fmt __maybe_unused,
- 			struct hist_entry *left, struct hist_entry *right);
-@@ -83,4 +87,30 @@ int report__browse_block_hists(struct block_hist *bh, float min_percent,
- 
- float block_info__total_cycles_percent(struct hist_entry *he);
- 
-+struct block_report *block_info__get_report(struct block_report *reps,
-+					    int nr_reps, int evsel_idx);
-+
-+int block_hists_addr2line(struct hists *hists, const char *dir);
-+
-+void block_line_dump(struct block_info *bi, const char *str);
-+
-+bool block_same_srcfiles(struct block_line *bl_a, struct block_line *bl_b);
-+
-+bool block_srclist_matched(struct srclist *slist, char *rel_path,
-+			   int start_nr_a, int end_nr_a,
-+			   int start_nr_b, int end_nr_b,
-+			   bool *changed);
-+
-+void block_hists_match(struct hists *hists_base,
-+		       struct hists *hists_pair,
-+		       struct srclist *src_list,
-+		       void (*func)(struct hist_entry *,
-+				    struct hist_entry *));
-+
-+int block_info__match_report(struct block_report *rep_base,
-+			     struct block_report *rep_pair,
-+			     struct srclist *src_list,
-+			     void (*func)(struct hist_entry *,
-+					  struct hist_entry *));
-+
- #endif /* __PERF_BLOCK_H */
-diff --git a/tools/perf/util/srclist.h b/tools/perf/util/srclist.h
-index f25b0de91a13..46866d5c51d7 100644
---- a/tools/perf/util/srclist.h
-+++ b/tools/perf/util/srclist.h
-@@ -33,6 +33,15 @@ struct srclist {
- 	const char *after_dir;
- };
- 
-+struct block_line {
-+	char *start_file;
-+	char *end_file;
-+	char *start_rel;
-+	char *end_rel;
-+	unsigned int start_nr;
-+	unsigned int end_nr;
-+};
-+
- struct srclist *srclist__new(const char *before_dir, const char *after_dir);
- void srclist__delete(struct srclist *slist);
  
 -- 
 2.17.1
