@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FC4BC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:04:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3458FC18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:05:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68434208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:04:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06CB9208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:05:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583845499;
-	bh=0TQYR1CoOeat+OC33dAfyJD1V5YNNLKHuNChSjJvb24=;
+	s=default; t=1583845501;
+	bh=boie7kjDXkrMgYA2kRh557Gzikic9mujKoVkRXup9ow=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yB2aniGjvCvbCWZwDj8H3dHdJKRx35Mt9IdB4rnXVPtm2xlRfQ1CO4gY+w/g83KBI
-	 e/YMDCJV8Nd/xvqW7Moeqt+WnyvQJNgdR7mNrRrIZXVuwlMJgC9Jr77K6dysd4mVeC
-	 r3lhp0DfaX4UvHt4giEXA2czOFEebb0HzwP0JtWY=
+	b=hZe8aVYqH+SmaQV7ninpmkvGBDQ8M+OnmTfrdHwXjVBBQ04eylpiv0XhUVBp4xAVE
+	 hnZbLSbHfQ1RJSL/4tBab9+spBhw0K4wnX1B1MBuYjPs9tCJ9sSV4FfJPwjhO84oni
+	 6xVuiCBcV5oY9T8h9corgZCllZGNCVy9qzMaI2Zg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730678AbgCJND7 (ORCPT
+        id S1730663AbgCJNDy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:03:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48818 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:03:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730672AbgCJND4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:03:56 -0400
+        id S1728581AbgCJNDu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:03:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 25131208E4;
-        Tue, 10 Mar 2020 13:03:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C37820409;
+        Tue, 10 Mar 2020 13:03:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845435;
-        bh=0TQYR1CoOeat+OC33dAfyJD1V5YNNLKHuNChSjJvb24=;
+        s=default; t=1583845429;
+        bh=boie7kjDXkrMgYA2kRh557Gzikic9mujKoVkRXup9ow=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Mx4qcSlmEXthzJuLngH5NvLdij4rObS5+T3pkWpDCZS18KCC7zjzGZUHcrp+s+UXQ
-         y1JcnmQUqxHfifTiwIw0y6uyiDZfyxphcR8NoyreJa/ECxaO1/Qvkg9FWyL7eFJfNs
-         CUCmxxVz2kgGV7OXIWODSP1aM8qMH+B4yf9EUBLc=
+        b=sgUqaEibi53ZQ6Suf2yOo8ZSOwFH3pun5Uneo9OwPQhVewZzlOZKAxwnwAIS2BUDd
+         /Ub544ehoRvcuwYmCLSSd0PVXv65h2HNpsDEZntEwAQM9puA6zWorLzS9RsHm6Szr9
+         FFC5iABsjXji4VNaJuJtmaydSC2tUBey98TLDOWc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Art Nikpal <email2tema@gmail.com>,
-        Christian Hewitt <christianshewitt@gmail.com>,
-        Kevin Hilman <khilman@baylibre.com>
-Subject: [PATCH 5.5 181/189] arm64: dts: meson: fix gxm-khadas-vim2 wifi
-Date:   Tue, 10 Mar 2020 13:40:18 +0100
-Message-Id: <20200310123657.874783208@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Vinod Koul <vkoul@kernel.org>
+Subject: [PATCH 5.5 179/189] dmaengine: coh901318: Fix a double lock bug in dma_tc_handle()
+Date:   Tue, 10 Mar 2020 13:40:16 +0100
+Message-Id: <20200310123657.728086134@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123639.608886314@linuxfoundation.org>
 References: <20200310123639.608886314@linuxfoundation.org>
@@ -60,47 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Hewitt <christianshewitt@gmail.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-commit 146033562e7e5d1c9aae9653986806664995f1d5 upstream.
+commit 36d5d22090d13fd3a7a8c9663a711cbe6970aac8 upstream.
 
-before
+The caller is already holding the lock so this will deadlock.
 
-[6.418252] brcmfmac: F1 signature read @0x18000000=0x17224356
-[6.435663] brcmfmac: brcmf_fw_alloc_request: using brcm/brcmfmac4356-sdio for chip BCM4356/2
-[6.551259] brcmfmac: brcmf_sdiod_ramrw: membytes transfer failed
-[6.551275] brcmfmac: brcmf_sdio_verifymemory: error -84 on reading 2048 membytes at 0x00184000
-[6.551352] brcmfmac: brcmf_sdio_download_firmware: dongle image file download failed
-
-after
-
-[6.657165] brcmfmac: F1 signature read @0x18000000=0x17224356
-[6.660807] brcmfmac: brcmf_fw_alloc_request: using brcm/brcmfmac4356-sdio for chip BCM4356/2
-[6.918643] brcmfmac: brcmf_fw_alloc_request: using brcm/brcmfmac4356-sdio for chip BCM4356/2
-[6.918734] brcmfmac: brcmf_c_process_clm_blob: no clm_blob available (err=-2), device may have limited channels available
-[6.922724] brcmfmac: brcmf_c_preinit_dcmds: Firmware: BCM4356/2 wl0: Jun 16 2015 14:25:06 version 7.35.184.r1 (TOB) (r559293) FWID 01-b22ae69c
-
-Fixes: adc52bf7ef16 ("arm64: dts: meson: fix mmc v2 chips max frequencies")
-Suggested-by: Art Nikpal <email2tema@gmail.com>
-Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
-Signed-off-by: Kevin Hilman <khilman@baylibre.com>
-Link: https://lore.kernel.org/r/1582212790-11402-1-git-send-email-christianshewitt@gmail.com
+Fixes: 0b58828c923e ("DMAENGINE: COH 901 318 remove irq counting")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Link: https://lore.kernel.org/r/20200217144050.3i4ymbytogod4ijn@kili.mountain
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/dma/coh901318.c |    4 ----
+ 1 file changed, 4 deletions(-)
 
---- a/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts
-@@ -327,7 +327,7 @@
- 	#size-cells = <0>;
+--- a/drivers/dma/coh901318.c
++++ b/drivers/dma/coh901318.c
+@@ -1947,8 +1947,6 @@ static void dma_tc_handle(struct coh9013
+ 		return;
+ 	}
  
- 	bus-width = <4>;
--	max-frequency = <50000000>;
-+	max-frequency = <60000000>;
+-	spin_lock(&cohc->lock);
+-
+ 	/*
+ 	 * When we reach this point, at least one queue item
+ 	 * should have been moved over from cohc->queue to
+@@ -1969,8 +1967,6 @@ static void dma_tc_handle(struct coh9013
+ 	if (coh901318_queue_start(cohc) == NULL)
+ 		cohc->busy = 0;
  
- 	non-removable;
- 	disable-wp;
+-	spin_unlock(&cohc->lock);
+-
+ 	/*
+ 	 * This tasklet will remove items from cohc->active
+ 	 * and thus terminates them.
 
 
