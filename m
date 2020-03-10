@@ -2,152 +2,105 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECC04C18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 11:04:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 615E2C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 11:06:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C338E2468D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 11:04:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 335ED2468C
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 11:06:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VhdHJtbB"
+	dkim=pass (1024-bit key) header.d=dlink.ru header.i=@dlink.ru header.b="bBwaJaBm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726442AbgCJLEv (ORCPT
+        id S1726316AbgCJLGR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 07:04:51 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:38888 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726252AbgCJLEv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 07:04:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583838290;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=CzkrWAmBf2oqqeq6nmGCN0dfk2xPizcnlNYu+9BCd+8=;
-        b=VhdHJtbBM2UJ7wihHh7agbQKfcNldICQy9XKaRmv2cRQ/9Yvg7O8UzTF7KnJdgqedblf1o
-        8T2uFMLwxn0xt8VWMSnBXdmoopO770O471tecm9eoVfZKbLAltFO8l+ZF4FxiFdyxCEJx+
-        P6fX73BFRDYRi2Gui1uczpHTzizjygY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-389--FRRzkK1NtS5nisEDRQ31g-1; Tue, 10 Mar 2020 07:04:45 -0400
-X-MC-Unique: -FRRzkK1NtS5nisEDRQ31g-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7AB9218B5FAA;
-        Tue, 10 Mar 2020 11:04:44 +0000 (UTC)
-Received: from localhost (unknown [10.36.118.73])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B404B5C28E;
-        Tue, 10 Mar 2020 11:04:38 +0000 (UTC)
-Date:   Tue, 10 Mar 2020 11:04:37 +0000
-From:   Stefan Hajnoczi <stefanha@redhat.com>
-To:     Vivek Goyal <vgoyal@redhat.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, virtio-fs@redhat.com, miklos@szeredi.hu,
-        dgilbert@redhat.com, mst@redhat.com,
-        Sebastien Boeuf <sebastien.boeuf@intel.com>,
-        kbuild test robot <lkp@intel.com>
-Subject: Re: [PATCH 04/20] virtio: Implement get_shm_region for PCI transport
-Message-ID: <20200310110437.GI140737@stefanha-x1.localdomain>
-References: <20200304165845.3081-1-vgoyal@redhat.com>
- <20200304165845.3081-5-vgoyal@redhat.com>
+        Tue, 10 Mar 2020 07:06:17 -0400
+Received: from fd.dlink.ru ([178.170.168.18]:41560 "EHLO fd.dlink.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726197AbgCJLGQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 07:06:16 -0400
+Received: by fd.dlink.ru (Postfix, from userid 5000)
+        id 0BB0A1B202D6; Tue, 10 Mar 2020 14:06:12 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru 0BB0A1B202D6
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dlink.ru; s=mail;
+        t=1583838373; bh=zWQ6sSBeQ4ZJmFi46qXc72fj+12rlHW/EzyjYyoS410=;
+        h=From:To:Cc:Subject:Date;
+        b=bBwaJaBmKlfSV9U6fVwNkddD6Xi/28pLcXBpD/PHpl/Kzqt4zMusfCEbAdG59Nx0Q
+         aYBT0i09rzwC2u617ClWAYCsAdspDzMhQAToFDt9yUUebxFrzMjXbmY6xPAkcaFQZl
+         L8ESg3u3lbzU8XePe7RpJVAGcmrz7qkXOvGdv4nU=
+Received: from mail.rzn.dlink.ru (mail.rzn.dlink.ru [178.170.168.13])
+        by fd.dlink.ru (Postfix) with ESMTP id E84601B202D2;
+        Tue, 10 Mar 2020 14:06:05 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru E84601B202D2
+Received: from mail.rzn.dlink.ru (localhost [127.0.0.1])
+        by mail.rzn.dlink.ru (Postfix) with ESMTP id C2C611B20AE9;
+        Tue, 10 Mar 2020 14:06:04 +0300 (MSK)
+Received: from localhost.localdomain (unknown [196.196.203.126])
+        by mail.rzn.dlink.ru (Postfix) with ESMTPA;
+        Tue, 10 Mar 2020 14:06:04 +0300 (MSK)
+From:   Alexander Lobakin <alobakin@dlink.ru>
+To:     Amit Shah <amit@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sjur Brandeland <sjur.brandeland@stericsson.com>,
+        Rusty Russell <rusty@rustcorp.com.au>,
+        Alexander Lobakin <alobakin@dlink.ru>,
+        virtualization@lists.linux-foundation.org, stable@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] virtio: virtio_console: add missing MODULE_DEVICE_TABLE() for rproc serial
+Date:   Tue, 10 Mar 2020 14:05:38 +0300
+Message-Id: <20200310110538.19254-1-alobakin@dlink.ru>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <20200304165845.3081-5-vgoyal@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="zgY/UHCnsaNnNXRx"
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---zgY/UHCnsaNnNXRx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+rproc_serial_id_table lacks an exposure to module devicetable, so
+when remoteproc firmware requests VIRTIO_ID_RPROC_SERIAL, no uevent
+is generated and no module autoloading occurs.
+Add missing MODULE_DEVICE_TABLE() annotation and move the existing
+one for VIRTIO_ID_CONSOLE right to the table itself.
 
-On Wed, Mar 04, 2020 at 11:58:29AM -0500, Vivek Goyal wrote:
-> diff --git a/drivers/virtio/virtio_pci_modern.c b/drivers/virtio/virtio_p=
-ci_modern.c
-> index 7abcc50838b8..52f179411015 100644
-> --- a/drivers/virtio/virtio_pci_modern.c
-> +++ b/drivers/virtio/virtio_pci_modern.c
-> @@ -443,6 +443,111 @@ static void del_vq(struct virtio_pci_vq_info *info)
->  =09vring_del_virtqueue(vq);
->  }
-> =20
-> +static int virtio_pci_find_shm_cap(struct pci_dev *dev,
-> +                                   u8 required_id,
-> +                                   u8 *bar, u64 *offset, u64 *len)
-> +{
-> +=09int pos;
-> +
-> +        for (pos =3D pci_find_capability(dev, PCI_CAP_ID_VNDR);
+Fixes: 1b6370463e88 ("virtio_console: Add support for remoteproc serial")
+Cc: <stable@vger.kernel.org> # v3.8+
+Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
+---
+ drivers/char/virtio_console.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Please fix the mixed tabs vs space indentation in this patch.
-
-> +static bool vp_get_shm_region(struct virtio_device *vdev,
-> +=09=09=09      struct virtio_shm_region *region, u8 id)
-> +{
-> +=09struct virtio_pci_device *vp_dev =3D to_vp_device(vdev);
-> +=09struct pci_dev *pci_dev =3D vp_dev->pci_dev;
-> +=09u8 bar;
-> +=09u64 offset, len;
-> +=09phys_addr_t phys_addr;
-> +=09size_t bar_len;
-> +=09int ret;
-> +
-> +=09if (!virtio_pci_find_shm_cap(pci_dev, id, &bar, &offset, &len)) {
-> +=09=09return false;
-> +=09}
-> +
-> +=09ret =3D pci_request_region(pci_dev, bar, "virtio-pci-shm");
-> +=09if (ret < 0) {
-> +=09=09dev_err(&pci_dev->dev, "%s: failed to request BAR\n",
-> +=09=09=09__func__);
-> +=09=09return false;
-> +=09}
-> +
-> +=09phys_addr =3D pci_resource_start(pci_dev, bar);
-> +=09bar_len =3D pci_resource_len(pci_dev, bar);
-> +
-> +        if (offset + len > bar_len) {
-> +                dev_err(&pci_dev->dev,
-> +                        "%s: bar shorter than cap offset+len\n",
-> +                        __func__);
-> +                return false;
-> +        }
-> +
-> +=09region->len =3D len;
-> +=09region->addr =3D (u64) phys_addr + offset;
-> +
-> +=09return true;
-> +}
-
-Missing pci_release_region()?
-
---zgY/UHCnsaNnNXRx
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl5ndEUACgkQnKSrs4Gr
-c8jLYwf/exeUl3WphEdcCDBZB1FzUfCmswGzkwrT92YXIdpwgJZrl688mmhjXloi
-GJqsnE3BX20JSmDOw3KlRiByhAEaz2HwKpdjT62Xq3CBRMLDemAymoDsGtjlanVK
-fdmw17AJzX01wpcPW2ek87jGaHwygYHt4GFrE9NH+TiB7WVU0EfXmaF1fbVREkT1
-VGzPZqY0xpWl3g12g9P0BCrftqa0PyLG29aHHG5NFs7kbTNaej5NcBOUjxEvk9jB
-3mS+w/vUz7cdZPyj0BxxVjNN6udpyi83i4QdTzgLKilwD9x1VhvtnVVJiOdXOdvm
-h4bns2UcpEqEvyaSsVzo3jlYx+OeRw==
-=74o7
------END PGP SIGNATURE-----
-
---zgY/UHCnsaNnNXRx--
+diff --git a/drivers/char/virtio_console.c b/drivers/char/virtio_console.c
+index 4df9b40d6342..7e1bc0f580a2 100644
+--- a/drivers/char/virtio_console.c
++++ b/drivers/char/virtio_console.c
+@@ -2116,6 +2116,7 @@ static struct virtio_device_id id_table[] = {
+ 	{ VIRTIO_ID_CONSOLE, VIRTIO_DEV_ANY_ID },
+ 	{ 0 },
+ };
++MODULE_DEVICE_TABLE(virtio, id_table);
+ 
+ static unsigned int features[] = {
+ 	VIRTIO_CONSOLE_F_SIZE,
+@@ -2128,6 +2129,7 @@ static struct virtio_device_id rproc_serial_id_table[] = {
+ #endif
+ 	{ 0 },
+ };
++MODULE_DEVICE_TABLE(virtio, rproc_serial_id_table);
+ 
+ static unsigned int rproc_serial_features[] = {
+ };
+@@ -2280,6 +2282,5 @@ static void __exit fini(void)
+ module_init(init);
+ module_exit(fini);
+ 
+-MODULE_DEVICE_TABLE(virtio, id_table);
+ MODULE_DESCRIPTION("Virtio console driver");
+ MODULE_LICENSE("GPL");
+-- 
+2.25.1
 
