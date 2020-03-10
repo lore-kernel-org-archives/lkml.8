@@ -2,186 +2,144 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1331DC10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:09:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 536B1C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:11:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2B43215A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:09:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08E7322525
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:11:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="m/uY0trW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727674AbgCJUJh (ORCPT
+        id S1727485AbgCJUL1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 16:09:37 -0400
-Received: from mga04.intel.com ([192.55.52.120]:16157 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727082AbgCJUJf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 16:09:35 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Mar 2020 13:09:33 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,538,1574150400"; 
-   d="scan'208";a="443292786"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga006.fm.intel.com with ESMTP; 10 Mar 2020 13:09:30 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jBlBy-0002dY-7a; Wed, 11 Mar 2020 04:09:30 +0800
-Date:   Wed, 11 Mar 2020 04:08:29 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     kbuild-all@lists.01.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Liran Alon <liran.alon@oracle.com>,
-        Miaohe Lin <linmiaohe@huawei.com>
-Subject: Re: [PATCH 3/6] KVM: nVMX: properly handle errors in
- nested_vmx_handle_enlightened_vmptrld()
-Message-ID: <202003110349.xe2VS7PJ%lkp@intel.com>
-References: <20200309155216.204752-4-vkuznets@redhat.com>
+        Tue, 10 Mar 2020 16:11:27 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:34809 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726604AbgCJUL1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 16:11:27 -0400
+Received: by mail-oi1-f194.google.com with SMTP id g6so15291040oiy.1
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 13:11:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=K3vOtJHo8wa+L0rub3QWCJZcPdNt+IghtsNXVMZnf9o=;
+        b=m/uY0trWMAr4FqVX9i9CSnmjQPURPHBOvx6pe5fEMWJ/e5Tk2vaRLevTLCVkqDclV/
+         9U8dYbHfSmT1VryWEJSOssyM6R8QAQdwr6JjSl1yllVynLdhE+EqANllz3GJD9T5HKJx
+         5o1mk82fLBEMHb75zYy13h8oqLlVg+LksCTipqO4JL4jJKJTlWmW0OpW3rTbODkp5lQD
+         o6zv+ZZn4FMnxGec2LxSQUD3vMa8YdhAk6f9V4RcuRPJetmizxPCHUgu3hzhD81e8CVo
+         Qx3HgSr4qFdSi9ME0sT7JSnsZUpOvPvCvsVRKmVC565oSKAhwb9Ar6hsa+h/gil57td2
+         EUFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=K3vOtJHo8wa+L0rub3QWCJZcPdNt+IghtsNXVMZnf9o=;
+        b=ZQz/kYUWmx5uXxZgT4LRmYiPf1ZjsGedyuzmVmiIWq7P1PX6MEUaHrJqzW5F1Sew8t
+         wXk6atlReUdlNS5+oDA6Djrg99T5Kd4ByktFam+e394sTcJ5mxREDWCQR8ZJkxUk71/+
+         KleAJSxmczGT8az/MEWJwxYYm+qPPpAoFJ4b9TUmOFQNlVZwe3F8ADm3RNTrftNBVv8R
+         a3XjFtcKhtiLlFIVihO+6vz+IiyfDVrE4Rdxsm5ctUTJwX8RDHaZVQ8Ye/GcHvXo2+TO
+         u9uUpj56q5+8HWWGRXHKQq/x0yWTWUqcAVLRQPjOiH7FPhI8PG5Rfq1a6LDZ06X/Zmve
+         cpIA==
+X-Gm-Message-State: ANhLgQ20vA03wDLMI7AJRdc5+sR6Vud5nuJ6nxSGrHDujboY/d1/hMPr
+        Hz/OQ+0aSryI6AoL9nq+RB0r1sDTwrOTMU0RNLtXiw==
+X-Google-Smtp-Source: ADFU+vvZVc2KY+6w3Oc3P2SV7qOVRFP8YKpYN4giT8uBe7Bxf6wvbyMTpIifKCNOOu6O6nioDLX4rtyrr5xoVXiS41s=
+X-Received: by 2002:aca:bac1:: with SMTP id k184mr2032952oif.157.1583871086051;
+ Tue, 10 Mar 2020 13:11:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200309155216.204752-4-vkuznets@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <87r1y8dqqz.fsf@x220.int.ebiederm.org> <AM6PR03MB517053AED7DC89F7C0704B7DE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <AM6PR03MB51703B44170EAB4626C9B2CAE4E20@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87tv32cxmf.fsf_-_@x220.int.ebiederm.org> <87v9ne5y4y.fsf_-_@x220.int.ebiederm.org>
+ <87eeu25y14.fsf_-_@x220.int.ebiederm.org> <20200309195909.h2lv5uawce5wgryx@wittgenstein>
+ <877dztz415.fsf@x220.int.ebiederm.org> <20200309201729.yk5sd26v4bz4gtou@wittgenstein>
+ <87k13txnig.fsf@x220.int.ebiederm.org> <20200310085540.pztaty2mj62xt2nm@wittgenstein>
+ <87wo7svy96.fsf_-_@x220.int.ebiederm.org> <CAG48ez2cUZMVOAXfHPNjKjYsMSaWkjUjOCHo0KYZ+oXQUW4viA@mail.gmail.com>
+ <87k13sui1p.fsf@x220.int.ebiederm.org> <CAG48ez2vRgaEVJ=Rs8gn6HkGO6syL8MpSOUq7BNN+OUE1uYxCA@mail.gmail.com>
+In-Reply-To: <CAG48ez2vRgaEVJ=Rs8gn6HkGO6syL8MpSOUq7BNN+OUE1uYxCA@mail.gmail.com>
+From:   Jann Horn <jannh@google.com>
+Date:   Tue, 10 Mar 2020 21:10:59 +0100
+Message-ID: <CAG48ez1LjW1xAGe-5tNtstCWxG2bkiHaQUMOcJNjx=z-2Wc2Jw@mail.gmail.com>
+Subject: Re: [PATCH] pidfd: Stop taking cred_guard_mutex
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        Kees Cook <keescook@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Andrei Vagin <avagin@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Yuyang Du <duyuyang@gmail.com>,
+        David Hildenbrand <david@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        David Howells <dhowells@redhat.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christian Kellner <christian@kellner.me>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Sargun Dhillon <sargun@sargun.me>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vitaly,
+On Tue, Mar 10, 2020 at 9:00 PM Jann Horn <jannh@google.com> wrote:
+> On Tue, Mar 10, 2020 at 8:29 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
+> > Jann Horn <jannh@google.com> writes:
+> > > On Tue, Mar 10, 2020 at 7:54 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
+> > >> During exec some file descriptors are closed and the files struct is
+> > >> unshared.  But all of that can happen at other times and it has the
+> > >> same protections during exec as at ordinary times.  So stop taking the
+> > >> cred_guard_mutex as it is useless.
+> > >>
+> > >> Furthermore he cred_guard_mutex is a bad idea because it is deadlock
+> > >> prone, as it is held in serveral while waiting possibly indefinitely
+> > >> for userspace to do something.
+[...]
+> > > If you make this change, then if this races with execution of a setuid
+> > > program that afterwards e.g. opens a unix domain socket, an attacker
+> > > will be able to steal that socket and inject messages into
+> > > communication with things like DBus. procfs currently has the same
+> > > race, and that still needs to be fixed, but at least procfs doesn't
+> > > let you open things like sockets because they don't have a working
+> > > ->open handler, and it enforces the normal permission check for
+> > > opening files.
+> >
+> > It isn't only exec that can change credentials.  Do we need a lock for
+> > changing credentials?
+[...]
+> > If we need a lock around credential change let's design and build that.
+> > Having a mismatch between what a lock is designed to do, and what
+> > people use it for can only result in other bugs as people get confused.
+>
+> Hmm... what benefits do we get from making it a separate lock? I guess
+> it would allow us to make it a per-task lock instead of a
+> signal_struct-wide one? That might be helpful...
 
-I love your patch! Perhaps something to improve:
-
-[auto build test WARNING on next-20200306]
-[also build test WARNING on v5.6-rc5]
-[if your patch is applied to the wrong git tree, please drop us a note to help
-improve the system. BTW, we also suggest to use '--base' option to specify the
-base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
-
-url:    https://github.com/0day-ci/linux/commits/Vitaly-Kuznetsov/KVM-nVMX-propperly-handle-enlightened-vmptrld-failure-conditions/20200310-033952
-base:    b86a6a241b7c60ca7a6ca4fb3c0d2aedbbf2c1b6
-reproduce:
-        # apt-get install sparse
-        # sparse version: v0.6.1-174-g094d5a94-dirty
-        make ARCH=x86_64 allmodconfig
-        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
-
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp@intel.com>
-
-
-sparse warnings: (new ones prefixed by >>)
-
->> arch/x86/kvm/vmx/nested.c:1913:29: sparse: sparse: symbol 'nested_vmx_handle_enlightened_vmptrld' was not declared. Should it be static?
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (100790 becomes 790)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (a000a becomes a)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (80688 becomes 688)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (80608 becomes 608)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (80108 becomes 108)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (80388 becomes 388)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (20482 becomes 482)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (80b88 becomes b88)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (80188 becomes 188)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (80208 becomes 208)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (80288 becomes 288)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (a000a becomes a)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (100010 becomes 10)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (100710 becomes 710)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (100090 becomes 90)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (20402 becomes 402)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (100790 becomes 790)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (100490 becomes 490)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (100310 becomes 310)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (100590 becomes 590)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (100610 becomes 610)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (100690 becomes 690)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (120912 becomes 912)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (100590 becomes 590)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (20002 becomes 2)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (20082 becomes 82)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (20102 becomes 102)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (20182 becomes 182)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (20202 becomes 202)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (20282 becomes 282)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (20302 becomes 302)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (20382 becomes 382)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (120012 becomes 12)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (120092 becomes 92)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (120112 becomes 112)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (120192 becomes 192)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (120212 becomes 212)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (120292 becomes 292)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (120312 becomes 312)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (120392 becomes 392)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (120412 becomes 412)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (120492 becomes 492)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (120592 becomes 592)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (120612 becomes 612)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (120512 becomes 512)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (120692 becomes 692)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (120712 becomes 712)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (120792 becomes 792)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (120812 becomes 812)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (120892 becomes 892)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (1a019a becomes 19a)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (1a021a becomes 21a)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (1a029a becomes 29a)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (1a031a becomes 31a)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (1a039a becomes 39a)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (1a041a becomes 41a)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (1a049a becomes 49a)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (1a051a becomes 51a)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (1a059a becomes 59a)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (1a061a becomes 61a)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (120a92 becomes a92)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (1a089a becomes 89a)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (1a091a becomes 91a)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (1a099a becomes 99a)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (a028a becomes 28a)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (a030a becomes 30a)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (a038a becomes 38a)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (a040a becomes 40a)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (a048a becomes 48a)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (80b08 becomes b08)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (100190 becomes 190)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (100210 becomes 210)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (80708 becomes 708)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (80788 becomes 788)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (80808 becomes 808)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (80888 becomes 888)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (100390 becomes 390)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (100410 becomes 410)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (100510 becomes 510)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (a008a becomes 8a)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (a008a becomes 8a)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (a048a becomes 48a)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (180018 becomes 18)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (a010a becomes 10a)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (a010a becomes 10a)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (80408 becomes 408)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (80c88 becomes c88)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (180118 becomes 118)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (180198 becomes 198)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (1a009a becomes 9a)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (a028a becomes 28a)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (a030a becomes 30a)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (a038a becomes 38a)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (a040a becomes 40a)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (100410 becomes 410)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (100510 becomes 510)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (1a081a becomes 81a)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: cast truncates bits from constant value (1b009b becomes 9b)
-   arch/x86/kvm/vmx/evmcs.h:81:30: sparse: sparse: too many warnings
-
-Please review and possibly fold the followup patch.
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+But actually, isn't the core purpose of the cred_guard_mutex to guard
+against concurrent credential changes anyway? That's what almost
+everyone uses it for, and it's in the name...
