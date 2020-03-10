@@ -2,85 +2,238 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E5FEC10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 19:41:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCB1CC18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 19:42:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5041E21D7E
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 19:41:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C55721655
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 19:42:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TlrBvmiH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727146AbgCJTlt (ORCPT
+        id S1727405AbgCJTl7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 15:41:49 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:50040 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726604AbgCJTls (ORCPT
+        Tue, 10 Mar 2020 15:41:59 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:44751 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727220AbgCJTl7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 15:41:48 -0400
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 686A329196A;
-        Tue, 10 Mar 2020 19:41:46 +0000 (GMT)
-Date:   Tue, 10 Mar 2020 20:41:42 +0100
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Mason Yang <masonccyang@mxic.com.tw>
-Cc:     miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
-        frieder.schrempf@kontron.de, tglx@linutronix.de, stefan@agner.ch,
-        juliensu@mxic.com.tw, allison@lohutok.net,
-        linux-kernel@vger.kernel.org, bbrezillon@kernel.org,
-        rfontana@redhat.com, linux-mtd@lists.infradead.org,
-        yuehaibing@huawei.com, s.hauer@pengutronix.de
-Subject: Re: [PATCH v3 3/4] mtd: rawnand: Add support manufacturer specific
- suspend/resume operation
-Message-ID: <20200310204142.540fc7c4@collabora.com>
-In-Reply-To: <20200310203930.2b8c0cfb@collabora.com>
-References: <1583220084-10890-1-git-send-email-masonccyang@mxic.com.tw>
-        <1583220084-10890-4-git-send-email-masonccyang@mxic.com.tw>
-        <20200310203930.2b8c0cfb@collabora.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Tue, 10 Mar 2020 15:41:59 -0400
+Received: by mail-pg1-f196.google.com with SMTP id 37so2602542pgm.11
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 12:41:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=qsAj2oEClkaTLi4EUL/pEiq1pFyUUCB2KOkTiCcWrMI=;
+        b=TlrBvmiHbtSlu1Hjs18OeYpjWZ1zrB7okL5oCaYB80XwQ4lOUJqAoDsj9plYbdkOJv
+         cnKnkoc0yUeLU0KTxvgnGf1VX365QNcl4wGdtwvBNsP0NJAlODOxZq4PD94TGZDR9STY
+         TC+BxON/e64iSCWN8yy83J6PtkzsLbf+lCMNcM0Fd/1QlsB5uqPQ0ncxazN8Q9hyAZn0
+         wS9/nPjF7Ib8vA9c7NMen8ynFsMnNv9mNCedPE+a+Y2bM+jQPZ5eaV6Wf8qMmtTwakQU
+         f8yHGMm0S4Q8k5ym53NGCP9RDnbPoIWB0nV3FwVjjr9Ls97pqyJKuCBXsWT1/CFXrl2L
+         BlyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=qsAj2oEClkaTLi4EUL/pEiq1pFyUUCB2KOkTiCcWrMI=;
+        b=HpZNCzm4iAjqNZRf5T575Xvg/ZiZde3MOtf06f8PdLncjQ0ObPCGCQeF3352V/DOGK
+         TD5QgkNOgUroNxtyU7TUXoPC6PxEkbo7cMZtZBGU4v0JNQsAZ5inperxPBHShLB3K9rd
+         /rgD+Glx37/oPqe8C0g+UZ1rX/Lh2jE9AHdOL5agoBip74j96WbKGBzpf1FTBD7tBHLD
+         5LdV0g2UyztFFpi6uMvBUSSA16l9dyyV7R53hS/a75Y+AyNnlVojV8g9E3eIz4WGpS3k
+         LCvo5W896xfU848U2aSftW321CPFdiUFRhL7q7VT94k6oJeDMOB5pMqX8LSGFKzSJG1W
+         6eNg==
+X-Gm-Message-State: ANhLgQ1EJE+c95xUczmgutOLKRDuY2NzbATy322gbV25Czu4hb3FjtaK
+        buSuugn6QK7gHyvysiiuhWp2MQ==
+X-Google-Smtp-Source: ADFU+vvkoZSxbOTDTwZa31Qwg7I5P57vc+BLyjS0Z6dpw69tGObYJH4jz1oKTtg21E58KjZrxJN/jQ==
+X-Received: by 2002:a62:6d01:: with SMTP id i1mr22231787pfc.94.1583869317333;
+        Tue, 10 Mar 2020 12:41:57 -0700 (PDT)
+Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id x190sm49454544pfb.96.2020.03.10.12.41.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Mar 2020 12:41:56 -0700 (PDT)
+Date:   Tue, 10 Mar 2020 12:41:54 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Wolfram Sang <wsa@the-dreams.de>, linux-kernel@vger.kernel.org,
+        Andy Gross <agross@kernel.org>, linux-i2c@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, Alok Chauhan <alokc@codeaurora.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Brendan Higgins <brendanhiggins@google.com>
+Subject: Re: [PATCH v2 2/3] i2c: qcom-geni: Grow a dev pointer to simplify
+ code
+Message-ID: <20200310194154.GN264362@yoga>
+References: <20200310154358.39367-1-swboyd@chromium.org>
+ <20200310154358.39367-3-swboyd@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200310154358.39367-3-swboyd@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 10 Mar 2020 20:39:30 +0100
-Boris Brezillon <boris.brezillon@collabora.com> wrote:
+On Tue 10 Mar 08:43 PDT 2020, Stephen Boyd wrote:
 
-> On Tue,  3 Mar 2020 15:21:23 +0800
-> Mason Yang <masonccyang@mxic.com.tw> wrote:
+> Some lines are long here. Use a struct dev pointer to shorten lines and
+> simplify code. The clk_get() call can fail because of EPROBE_DEFER
+> problems too, so just remove the error print message because it isn't
+> useful. Finally, platform_get_irq() already prints an error so just
+> remove that error message.
 > 
-> > Patch nand_suspend() & nand_resume() for manufacturer specific
-> > suspend/resume operation.
-> > 
-> > Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
-> > Reported-by: kbuild test robot <lkp@intel.com>
-> > Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
-> > ---
-> >  drivers/mtd/nand/raw/nand_base.c | 11 ++++++++---
-> >  include/linux/mtd/rawnand.h      |  4 ++++
-> >  2 files changed, 12 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/drivers/mtd/nand/raw/nand_base.c b/drivers/mtd/nand/raw/nand_base.c
-> > index 769be81..b44e460 100644
-> > --- a/drivers/mtd/nand/raw/nand_base.c
-> > +++ b/drivers/mtd/nand/raw/nand_base.c
-> > @@ -4327,7 +4327,9 @@ static int nand_suspend(struct mtd_info *mtd)
-> >  	struct nand_chip *chip = mtd_to_nand(mtd);
-> >  
-> >  	mutex_lock(&chip->lock);
-> > -	chip->suspended = 1;
-> > +	if (chip->_suspend)
-> > +		if (!chip->_suspend(chip))
-> > +			chip->suspended = 1;
+> Cc: Alok Chauhan <alokc@codeaurora.org>
+> Reviewed-by: Douglas Anderson <dianders@chromium.org>
+> Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
+> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> ---
+>  drivers/i2c/busses/i2c-qcom-geni.c | 57 ++++++++++++++----------------
+>  1 file changed, 26 insertions(+), 31 deletions(-)
+> 
+> diff --git a/drivers/i2c/busses/i2c-qcom-geni.c b/drivers/i2c/busses/i2c-qcom-geni.c
+> index 4efca130035a..2f5fb2e83f95 100644
+> --- a/drivers/i2c/busses/i2c-qcom-geni.c
+> +++ b/drivers/i2c/busses/i2c-qcom-geni.c
+> @@ -502,45 +502,40 @@ static int geni_i2c_probe(struct platform_device *pdev)
+>  	struct resource *res;
+>  	u32 proto, tx_depth;
+>  	int ret;
+> +	struct device *dev = &pdev->dev;
+>  
+> -	gi2c = devm_kzalloc(&pdev->dev, sizeof(*gi2c), GFP_KERNEL);
+> +	gi2c = devm_kzalloc(dev, sizeof(*gi2c), GFP_KERNEL);
+>  	if (!gi2c)
+>  		return -ENOMEM;
+>  
+> -	gi2c->se.dev = &pdev->dev;
+> -	gi2c->se.wrapper = dev_get_drvdata(pdev->dev.parent);
+> +	gi2c->se.dev = dev;
+> +	gi2c->se.wrapper = dev_get_drvdata(dev->parent);
+>  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -	gi2c->se.base = devm_ioremap_resource(&pdev->dev, res);
+> +	gi2c->se.base = devm_ioremap_resource(dev, res);
+>  	if (IS_ERR(gi2c->se.base))
+>  		return PTR_ERR(gi2c->se.base);
+>  
+> -	gi2c->se.clk = devm_clk_get(&pdev->dev, "se");
+> -	if (IS_ERR(gi2c->se.clk) && !has_acpi_companion(&pdev->dev)) {
+> -		ret = PTR_ERR(gi2c->se.clk);
+> -		dev_err(&pdev->dev, "Err getting SE Core clk %d\n", ret);
 
-Shouldn't you propagate the error to the caller if chip->_suspend()
-fails?
+Afaict this line would still be useful, although it might need the usual
+probe deferral exception(?)
+
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+
+Regards,
+Bjorn
+
+> -		return ret;
+> -	}
+> +	gi2c->se.clk = devm_clk_get(dev, "se");
+> +	if (IS_ERR(gi2c->se.clk) && !has_acpi_companion(dev))
+> +		return PTR_ERR(gi2c->se.clk);
+>  
+> -	ret = device_property_read_u32(&pdev->dev, "clock-frequency",
+> -							&gi2c->clk_freq_out);
+> +	ret = device_property_read_u32(dev, "clock-frequency",
+> +				       &gi2c->clk_freq_out);
+>  	if (ret) {
+> -		dev_info(&pdev->dev,
+> -			"Bus frequency not specified, default to 100kHz.\n");
+> +		dev_info(dev, "Bus frequency not specified, default to 100kHz.\n");
+>  		gi2c->clk_freq_out = KHZ(100);
+>  	}
+>  
+> -	if (has_acpi_companion(&pdev->dev))
+> -		ACPI_COMPANION_SET(&gi2c->adap.dev, ACPI_COMPANION(&pdev->dev));
+> +	if (has_acpi_companion(dev))
+> +		ACPI_COMPANION_SET(&gi2c->adap.dev, ACPI_COMPANION(dev));
+>  
+>  	gi2c->irq = platform_get_irq(pdev, 0);
+> -	if (gi2c->irq < 0) {
+> -		dev_err(&pdev->dev, "IRQ error for i2c-geni\n");
+> +	if (gi2c->irq < 0)
+>  		return gi2c->irq;
+> -	}
+>  
+>  	ret = geni_i2c_clk_map_idx(gi2c);
+>  	if (ret) {
+> -		dev_err(&pdev->dev, "Invalid clk frequency %d Hz: %d\n",
+> +		dev_err(dev, "Invalid clk frequency %d Hz: %d\n",
+>  			gi2c->clk_freq_out, ret);
+>  		return ret;
+>  	}
+> @@ -549,29 +544,29 @@ static int geni_i2c_probe(struct platform_device *pdev)
+>  	init_completion(&gi2c->done);
+>  	spin_lock_init(&gi2c->lock);
+>  	platform_set_drvdata(pdev, gi2c);
+> -	ret = devm_request_irq(&pdev->dev, gi2c->irq, geni_i2c_irq, 0,
+> -			       dev_name(&pdev->dev), gi2c);
+> +	ret = devm_request_irq(dev, gi2c->irq, geni_i2c_irq, 0,
+> +			       dev_name(dev), gi2c);
+>  	if (ret) {
+> -		dev_err(&pdev->dev, "Request_irq failed:%d: err:%d\n",
+> +		dev_err(dev, "Request_irq failed:%d: err:%d\n",
+>  			gi2c->irq, ret);
+>  		return ret;
+>  	}
+>  	/* Disable the interrupt so that the system can enter low-power mode */
+>  	disable_irq(gi2c->irq);
+>  	i2c_set_adapdata(&gi2c->adap, gi2c);
+> -	gi2c->adap.dev.parent = &pdev->dev;
+> -	gi2c->adap.dev.of_node = pdev->dev.of_node;
+> +	gi2c->adap.dev.parent = dev;
+> +	gi2c->adap.dev.of_node = dev->of_node;
+>  	strlcpy(gi2c->adap.name, "Geni-I2C", sizeof(gi2c->adap.name));
+>  
+>  	ret = geni_se_resources_on(&gi2c->se);
+>  	if (ret) {
+> -		dev_err(&pdev->dev, "Error turning on resources %d\n", ret);
+> +		dev_err(dev, "Error turning on resources %d\n", ret);
+>  		return ret;
+>  	}
+>  	proto = geni_se_read_proto(&gi2c->se);
+>  	tx_depth = geni_se_get_tx_fifo_depth(&gi2c->se);
+>  	if (proto != GENI_SE_I2C) {
+> -		dev_err(&pdev->dev, "Invalid proto %d\n", proto);
+> +		dev_err(dev, "Invalid proto %d\n", proto);
+>  		geni_se_resources_off(&gi2c->se);
+>  		return -ENXIO;
+>  	}
+> @@ -581,11 +576,11 @@ static int geni_i2c_probe(struct platform_device *pdev)
+>  							true, true, true);
+>  	ret = geni_se_resources_off(&gi2c->se);
+>  	if (ret) {
+> -		dev_err(&pdev->dev, "Error turning off resources %d\n", ret);
+> +		dev_err(dev, "Error turning off resources %d\n", ret);
+>  		return ret;
+>  	}
+>  
+> -	dev_dbg(&pdev->dev, "i2c fifo/se-dma mode. fifo depth:%d\n", tx_depth);
+> +	dev_dbg(dev, "i2c fifo/se-dma mode. fifo depth:%d\n", tx_depth);
+>  
+>  	gi2c->suspended = 1;
+>  	pm_runtime_set_suspended(gi2c->se.dev);
+> @@ -595,12 +590,12 @@ static int geni_i2c_probe(struct platform_device *pdev)
+>  
+>  	ret = i2c_add_adapter(&gi2c->adap);
+>  	if (ret) {
+> -		dev_err(&pdev->dev, "Error adding i2c adapter %d\n", ret);
+> +		dev_err(dev, "Error adding i2c adapter %d\n", ret);
+>  		pm_runtime_disable(gi2c->se.dev);
+>  		return ret;
+>  	}
+>  
+> -	dev_dbg(&pdev->dev, "Geni-I2C adaptor successfully added\n");
+> +	dev_dbg(dev, "Geni-I2C adaptor successfully added\n");
+>  
+>  	return 0;
+>  }
+> -- 
+> Sent by a computer, using git, on the internet
+> 
