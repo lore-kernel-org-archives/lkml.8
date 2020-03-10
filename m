@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E708DC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:14:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 629F4C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:14:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCF142467D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:14:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25F7524649
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:14:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583846072;
-	bh=WoTcMx73nhch94RQCY7BGFRcIrxG2++2Ycxc15M+Lzc=;
+	s=default; t=1583846078;
+	bh=pa4rtIdt+J/KPSGDNPxCrNJY9q9sv5d3ABtemL83ATg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qKFhj0k57MklRwvMp0Cq2k3CnmnBrlFocQPezICo5SU3EKtm6npc3noq/Sr0dSn1g
-	 dmNXMM5NBSXzFaDWdKlawQ/lK32dq2T8/wBnmUG9Okiff7XhoOlCPNR3C5zNfK+DdW
-	 ACgbCzhkbSxiu99rTKXuw+Q4RA/KlzVre6/9bcUI=
+	b=neGNZ5Z9W8WAQBJ5yTrwL9+3eWFV72OlrpDwsbnHarO14AVD60AQoMlm20QKjDcD3
+	 dmlaoGaOvSbCsiQ6XmUstn9quqypdBRVc35aTaowxVVF7YY8JWz37bqK1U2/D5Snv6
+	 Vb2tTVUphh4HFN2UgMJfqmkdDyiq9JujhIEJ5hkw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731693AbgCJNOb (ORCPT
+        id S1731897AbgCJNOg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:14:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38264 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:14:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38446 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731876AbgCJNO3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:14:29 -0400
+        id S1730352AbgCJNOf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:14:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5001D2467D;
-        Tue, 10 Mar 2020 13:14:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1DE56208E4;
+        Tue, 10 Mar 2020 13:14:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583846068;
-        bh=WoTcMx73nhch94RQCY7BGFRcIrxG2++2Ycxc15M+Lzc=;
+        s=default; t=1583846074;
+        bh=pa4rtIdt+J/KPSGDNPxCrNJY9q9sv5d3ABtemL83ATg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q3vJzOCkhf6zYrgRcVEwiG403aUDIk5FQ8QZ+c9FCDE8YgtumL4NwBAD6SxqkExUL
-         PeZkQGpsoD0GzebIxKxwH81gNUv1JIn2LxB1BW0joKZNNsLiyvf0hDxfuMrqCQWYis
-         8d/2c50mXa5LBS5umJ4MHf/VNNrIpYRiqHBcqrHg=
+        b=QkGfie9oNFBYsvIROJiQcQu9Yib+uzG0M1pbba42TWmYfn7M9N4C4hTaC5M41xalO
+         c+ArevEBx2T91wWLCmVrQQcRh17JIVnpVG9QaB8UVYKJCwaWjHbukXQqt+mlh4UE1r
+         9K+FQ27oCZ5IjG/IYdJp2ubU/L362iYfM174FqW4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lucas Stach <l.stach@pengutronix.de>,
-        Ahmad Fatoum <a.fatoum@pengutronix.de>,
-        Rouven Czerwinski <r.czerwinski@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>
-Subject: [PATCH 4.19 76/86] ARM: imx: build v7_cpu_resume() unconditionally
-Date:   Tue, 10 Mar 2020 13:45:40 +0100
-Message-Id: <20200310124534.868784177@linuxfoundation.org>
+        stable@vger.kernel.org, Sanchayan Maity <maitysanchayan@gmail.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Johan Hovold <johan@kernel.org>,
+        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+Subject: [PATCH 4.19 78/86] ARM: dts: imx6dl-colibri-eval-v3: fix sram compatible properties
+Date:   Tue, 10 Mar 2020 13:45:42 +0100
+Message-Id: <20200310124534.972425085@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310124530.808338541@linuxfoundation.org>
 References: <20200310124530.808338541@linuxfoundation.org>
@@ -61,119 +62,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ahmad Fatoum <a.fatoum@pengutronix.de>
+From: Johan Hovold <johan@kernel.org>
 
-commit 512a928affd51c2dc631401e56ad5ee5d5dd68b6 upstream.
+commit bcbf53a0dab50980867476994f6079c1ec5bb3a3 upstream.
 
-This function is not only needed by the platform suspend code, but is also
-reused as the CPU resume function when the ARM cores can be powered down
-completely in deep idle, which is the case on i.MX6SX and i.MX6UL(L).
+The sram-node compatible properties have mistakingly combined the
+model-specific string with the generic "mtd-ram" string.
 
-Providing the static inline stub whenever CONFIG_SUSPEND is disabled means
-that those platforms will hang on resume from cpuidle if suspend is disabled.
+Note that neither "cy7c1019dv33-10zsxi, mtd-ram" or
+"cy7c1019dv33-10zsxi" are used by any in-kernel driver and they are
+not present in any binding.
 
-So there are two problems:
+The physmap driver will however bind to platform devices that specify
+"mtd-ram".
 
-  - The static inline stub masks the linker error
-  - The function is not available where needed
-
-Fix both by just building the function unconditionally, when
-CONFIG_SOC_IMX6 is enabled. The actual code is three instructions long,
-so it's arguably ok to just leave it in for all i.MX6 kernel configurations.
-
-Fixes: 05136f0897b5 ("ARM: imx: support arm power off in cpuidle for i.mx6sx")
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
-Signed-off-by: Rouven Czerwinski <r.czerwinski@pengutronix.de>
+Fixes: fc48e76489fd ("ARM: dts: imx6: Add support for Toradex Colibri iMX6 module")
+Cc: Sanchayan Maity <maitysanchayan@gmail.com>
+Cc: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Reviewed-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
 Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/mach-imx/Makefile       |    2 ++
- arch/arm/mach-imx/common.h       |    4 ++--
- arch/arm/mach-imx/resume-imx6.S  |   24 ++++++++++++++++++++++++
- arch/arm/mach-imx/suspend-imx6.S |   14 --------------
- 4 files changed, 28 insertions(+), 16 deletions(-)
+ arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/arch/arm/mach-imx/Makefile
-+++ b/arch/arm/mach-imx/Makefile
-@@ -89,6 +89,8 @@ AFLAGS_suspend-imx6.o :=-Wa,-march=armv7
- obj-$(CONFIG_SOC_IMX6) += suspend-imx6.o
- obj-$(CONFIG_SOC_IMX53) += suspend-imx53.o
- endif
-+AFLAGS_resume-imx6.o :=-Wa,-march=armv7-a
-+obj-$(CONFIG_SOC_IMX6) += resume-imx6.o
- obj-$(CONFIG_SOC_IMX6) += pm-imx6.o
+--- a/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts
++++ b/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts
+@@ -234,7 +234,7 @@
  
- obj-$(CONFIG_SOC_IMX1) += mach-imx1.o
---- a/arch/arm/mach-imx/common.h
-+++ b/arch/arm/mach-imx/common.h
-@@ -103,17 +103,17 @@ void imx_cpu_die(unsigned int cpu);
- int imx_cpu_kill(unsigned int cpu);
+ 	/* SRAM on Colibri nEXT_CS0 */
+ 	sram@0,0 {
+-		compatible = "cypress,cy7c1019dv33-10zsxi, mtd-ram";
++		compatible = "cypress,cy7c1019dv33-10zsxi", "mtd-ram";
+ 		reg = <0 0 0x00010000>;
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+@@ -245,7 +245,7 @@
  
- #ifdef CONFIG_SUSPEND
--void v7_cpu_resume(void);
- void imx53_suspend(void __iomem *ocram_vbase);
- extern const u32 imx53_suspend_sz;
- void imx6_suspend(void __iomem *ocram_vbase);
- #else
--static inline void v7_cpu_resume(void) {}
- static inline void imx53_suspend(void __iomem *ocram_vbase) {}
- static const u32 imx53_suspend_sz;
- static inline void imx6_suspend(void __iomem *ocram_vbase) {}
- #endif
- 
-+void v7_cpu_resume(void);
-+
- void imx6_pm_ccm_init(const char *ccm_compat);
- void imx6q_pm_init(void);
- void imx6dl_pm_init(void);
---- /dev/null
-+++ b/arch/arm/mach-imx/resume-imx6.S
-@@ -0,0 +1,24 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later */
-+/*
-+ * Copyright 2014 Freescale Semiconductor, Inc.
-+ */
-+
-+#include <linux/linkage.h>
-+#include <asm/assembler.h>
-+#include <asm/asm-offsets.h>
-+#include <asm/hardware/cache-l2x0.h>
-+#include "hardware.h"
-+
-+/*
-+ * The following code must assume it is running from physical address
-+ * where absolute virtual addresses to the data section have to be
-+ * turned into relative ones.
-+ */
-+
-+ENTRY(v7_cpu_resume)
-+	bl	v7_invalidate_l1
-+#ifdef CONFIG_CACHE_L2X0
-+	bl	l2c310_early_resume
-+#endif
-+	b	cpu_resume
-+ENDPROC(v7_cpu_resume)
---- a/arch/arm/mach-imx/suspend-imx6.S
-+++ b/arch/arm/mach-imx/suspend-imx6.S
-@@ -333,17 +333,3 @@ resume:
- 
- 	ret	lr
- ENDPROC(imx6_suspend)
--
--/*
-- * The following code must assume it is running from physical address
-- * where absolute virtual addresses to the data section have to be
-- * turned into relative ones.
-- */
--
--ENTRY(v7_cpu_resume)
--	bl	v7_invalidate_l1
--#ifdef CONFIG_CACHE_L2X0
--	bl	l2c310_early_resume
--#endif
--	b	cpu_resume
--ENDPROC(v7_cpu_resume)
+ 	/* SRAM on Colibri nEXT_CS1 */
+ 	sram@1,0 {
+-		compatible = "cypress,cy7c1019dv33-10zsxi, mtd-ram";
++		compatible = "cypress,cy7c1019dv33-10zsxi", "mtd-ram";
+ 		reg = <1 0 0x00010000>;
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
 
 
