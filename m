@@ -2,129 +2,101 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0B2AC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 07:01:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0C2FC18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 07:01:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 868D524673
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 07:01:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ch9tuHA5"
+	by mail.kernel.org (Postfix) with ESMTP id B922024680
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 07:01:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583823708;
+	bh=uXhlkK6m4rFYqC7rfUPeSbG0I1pRrOsi/+xRnMgu3Bs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=l9gmj3qdU5mmgwzdhFB238llJ3INm60lgJPgCxwYZDRSzNnGNipYNKgKiSYev1Z1i
+	 HDSU4gLWcbLa+OveQwLVkx0Gh78fbmXOFyVKUdclmYJovEqg/z8e6BN/2UP1T8kTO8
+	 E/jJfSuTnw2ROEtFOQrFFg0TjA1bTJivpBg7a5eg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726307AbgCJHB0 (ORCPT
+        id S1726380AbgCJHBr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 03:01:26 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:44678 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726195AbgCJHB0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 03:01:26 -0400
-Received: by mail-pl1-f196.google.com with SMTP id d9so5059926plo.11;
-        Tue, 10 Mar 2020 00:01:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=YVCc+DwPWWPXpUGQIKeRYvwB/hOaYmc0ZXRCQL5h/QI=;
-        b=Ch9tuHA5mP7aZFRWp0dUFohQRYj+RTodiPvpCIpy4uvOXMytCkwdiMZ8Fwni/PV1Nj
-         gUjFzAIGWPoFoGnUY4THtMnyY/X+jN3DJJ/BxpHSt3HVYYq22nZ59dxdQqW/co+r7VYN
-         Q0ZQvxNXcEsmMocQ6TZGyvzuK7zrhPG75zitXlYJzcwYg0B/QADaBME/215jJcAe6t3e
-         0ZBrSTlKoZRb6o4kiw3ItxxWf44Bea+Mz142XjKc/nR0uuGB5RGH6nheTo2d5g+va3Vw
-         2yweAWeEhHJ2kF1UhpbB2jCnYSF2UsHsaxTqwXnK/dIzivkulWBYkDHbrA0Tq3TRASph
-         CuWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=YVCc+DwPWWPXpUGQIKeRYvwB/hOaYmc0ZXRCQL5h/QI=;
-        b=twlSLYhPvXzTu9HmseqhisVOvU8lSxXW9Xnc3fktx6cMBgXrVZcG11SoCvhuxePCIA
-         SHw/OYjp3z+sSirf164pj3kzAlDzFHV4CWBpzJ5ZjMxXopN2J40cZJB+RU0x+rxorrcr
-         PD2ave4wm7J+3HwR1fuQ+xEZeavAsQjl7njhbx3j9OgfulFxGvdb76iTOZr5xBFovaDD
-         8S5uKfZ02yYj6oea2eQVX8FdxU9/2sDOB0qJH1n5HhCTEDv3jQX9Z3oUT53DOvjOUnnh
-         079PwwcnPwI2oce2/VDzYSDkQ78NmxRCfNp8TsIE8QTtQ/QxFVlOjYOum4qzusMzYAVg
-         fCng==
-X-Gm-Message-State: ANhLgQ1Um/tRwTfz9tjiWBqRxC6Xelc9cpJT4hh4EqA8VEN8Hk+aFjtb
-        AE5obU77nr/66it+KBhdBtP2lww9
-X-Google-Smtp-Source: ADFU+vtWyb9wxDCHh+eWg5cFe/KSNXdnPSQSZLGp23dJF5fr7mZVeuzE2lhp5gRqVxgsx9KRANH4EA==
-X-Received: by 2002:a17:90a:a409:: with SMTP id y9mr261468pjp.103.1583823685319;
-        Tue, 10 Mar 2020 00:01:25 -0700 (PDT)
-Received: from localhost.localdomain ([103.7.29.6])
-        by smtp.googlemail.com with ESMTPSA id k14sm1645934pje.3.2020.03.10.00.01.22
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 10 Mar 2020 00:01:24 -0700 (PDT)
-From:   Wanpeng Li <kernellwp@gmail.com>
-X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-Subject: [PATCH] KVM: X86: Don't load/put guest FPU context for sleeping AP
-Date:   Tue, 10 Mar 2020 15:01:19 +0800
-Message-Id: <1583823679-17648-1-git-send-email-wanpengli@tencent.com>
-X-Mailer: git-send-email 2.7.4
+        Tue, 10 Mar 2020 03:01:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38940 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726100AbgCJHBr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 03:01:47 -0400
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B1A12467C;
+        Tue, 10 Mar 2020 07:01:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583823706;
+        bh=uXhlkK6m4rFYqC7rfUPeSbG0I1pRrOsi/+xRnMgu3Bs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=uV3Ts6vkE5Fp768fM6DJjeKqN3gx2pe3fboRGD2UPeS0RWNuXx/iedtBQPvOqo8MA
+         t4V9s014B537zzvQIxhpJtf4B74ttqKqfJvYG2+xqJYcOU6dspuHFCjy1UOR8dmw1H
+         /DJB1Xvj60Z8y1d8tiKBFT26V1Gw8cYIXoStU21c=
+Date:   Tue, 10 Mar 2020 15:01:38 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, catalin.marinas@arm.com,
+        will@kernel.org, rui.zhang@intel.com, daniel.lezcano@linaro.org,
+        amit.kucheria@verdurent.com, aisheng.dong@nxp.com,
+        linux@roeck-us.net, srinivas.kandagatla@linaro.org,
+        krzk@kernel.org, fugang.duan@nxp.com, peng.fan@nxp.com,
+        daniel.baluta@nxp.com, bjorn.andersson@linaro.org, olof@lixom.net,
+        dinguyen@kernel.org, leonard.crestez@nxp.com,
+        marcin.juszkiewicz@linaro.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-pm@vger.kernel.org, Linux-imx@nxp.com
+Subject: Re: [PATCH V16 4/5] defconfig: arm64: add i.MX system controller
+ thermal support
+Message-ID: <20200310070134.GB17772@dragon>
+References: <1582330132-13461-1-git-send-email-Anson.Huang@nxp.com>
+ <1582330132-13461-4-git-send-email-Anson.Huang@nxp.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1582330132-13461-4-git-send-email-Anson.Huang@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wanpeng Li <wanpengli@tencent.com>
+On Sat, Feb 22, 2020 at 08:08:51AM +0800, Anson Huang wrote:
+> This patch enables CONFIG_IMX_SC_THERMAL as module.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-kvm_load_guest_fpu() and kvm_put_guest_fpu() each consume more than 14us 
-observed by ftrace, the qemu userspace FPU is swapped out for the guest 
-FPU context for the duration of the KVM_RUN ioctl even if sleeping AP, 
-we shouldn't load/put guest FPU context for this case especially for 
-serverless scenario which sensitives to boot time.
+Prefix should be 'arm64: defconfig: ...'
 
-Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
----
- arch/x86/kvm/x86.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+Fixed it up and applied patch.
 
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 5de2006..080ffa4 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -8680,7 +8680,6 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
- 
- 	vcpu_load(vcpu);
- 	kvm_sigset_activate(vcpu);
--	kvm_load_guest_fpu(vcpu);
- 
- 	if (unlikely(vcpu->arch.mp_state == KVM_MP_STATE_UNINITIALIZED)) {
- 		if (kvm_run->immediate_exit) {
-@@ -8718,12 +8717,14 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
- 		}
- 	}
- 
-+	kvm_load_guest_fpu(vcpu);
-+
- 	if (unlikely(vcpu->arch.complete_userspace_io)) {
- 		int (*cui)(struct kvm_vcpu *) = vcpu->arch.complete_userspace_io;
- 		vcpu->arch.complete_userspace_io = NULL;
- 		r = cui(vcpu);
- 		if (r <= 0)
--			goto out;
-+			goto out_fpu;
- 	} else
- 		WARN_ON(vcpu->arch.pio.count || vcpu->mmio_needed);
- 
-@@ -8732,8 +8733,9 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
- 	else
- 		r = vcpu_run(vcpu);
- 
--out:
-+out_fpu:
- 	kvm_put_guest_fpu(vcpu);
-+out:
- 	if (vcpu->run->kvm_valid_regs)
- 		store_regs(vcpu);
- 	post_kvm_run_save(vcpu);
--- 
-2.7.4
+Shawn
 
+> ---
+> No change.
+> ---
+>  arch/arm64/configs/defconfig | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> index 1c74437..1ff479c 100644
+> --- a/arch/arm64/configs/defconfig
+> +++ b/arch/arm64/configs/defconfig
+> @@ -453,6 +453,7 @@ CONFIG_THERMAL_GOV_POWER_ALLOCATOR=y
+>  CONFIG_CPU_THERMAL=y
+>  CONFIG_THERMAL_EMULATION=y
+>  CONFIG_QORIQ_THERMAL=m
+> +CONFIG_IMX_SC_THERMAL=m
+>  CONFIG_ROCKCHIP_THERMAL=m
+>  CONFIG_RCAR_THERMAL=y
+>  CONFIG_RCAR_GEN3_THERMAL=y
+> -- 
+> 2.7.4
+> 
