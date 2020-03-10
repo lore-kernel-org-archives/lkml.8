@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83383C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:09:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E25FEC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:09:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B7CF24692
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:09:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADB7920873
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:09:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583845746;
-	bh=OoHyhfRyBUnq1aIroK2fJfnM0W9lFx9ViMY61JxNtEY=;
+	s=default; t=1583845751;
+	bh=h9VO2Y3iLgmkckLlYUSL5GxvLwG/mcpr+WlanXYTang=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cgu0H8CtWfkU5wWq1TytQo3Unsoku17IhnjDY1V2arl5/3s++GKNMdheaIbagz7mI
-	 AkEmIfspMNUe1487zHr/OSdCVsZFYY0BZbQUTwHikszJ7ea92mce6dr8qmnwzlwsN5
-	 w/ASI9ZdP3TR4UOaWm5yjSWD2TZjJQGq8zCnrtlg=
+	b=jCxfqy2a3ZVkyALKz587HgGCqCstszeoDOXcZer0OsD2mEs7/CWD55Sfv7ZtphfMA
+	 jectH+6kgXN60Fv4l8zJwGYnBCfk+Z6gkw8+DPB/a4VWIZMKGpv+lc78WcQnugUM7V
+	 Iv6Pby+rOwDO96yRoy5yaAHdHVE2JuuQKLaBhnC8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731193AbgCJNJE (ORCPT
+        id S1731208AbgCJNJK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:09:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55918 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:09:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56120 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730231AbgCJNJB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:09:01 -0400
+        id S1730661AbgCJNJJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:09:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8CB5520409;
-        Tue, 10 Mar 2020 13:09:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 34E162469D;
+        Tue, 10 Mar 2020 13:09:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845741;
-        bh=OoHyhfRyBUnq1aIroK2fJfnM0W9lFx9ViMY61JxNtEY=;
+        s=default; t=1583845748;
+        bh=h9VO2Y3iLgmkckLlYUSL5GxvLwG/mcpr+WlanXYTang=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sX+SDWImuQkR/tqNFJjTa1R5ED1sMzxHjTPrOg2AhgznjHoa92Rc1dDSiZzUMlj7d
-         O/CQN4TRmXA24e+iIw/JRixkHcMAEnYxXDCtj0ZVXWZ1VGtAHDke/I4vFBrj+LoY0k
-         0Hoo4VxDlgfrnPy5hHaC0Om7AG02FEd88JCtDv5o=
+        b=PllSUsVMbJicDiouvoBiPOWOZobHorq0IeN50LQ2zJAgXWkvzdd/sPuqH/CkhnBWu
+         o12gaNey9tTV3illUh5ng8WHD100976xY9EmPDoz35zwH8Uwwqs4M0NU1uSNj2jvVR
+         COYbuisr9L+XagAsdTi24OrfVwiSjea6aq62EQ/c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marek Vasut <marex@denx.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Lukas Wunner <lukas@wunner.de>, Petr Stetiar <ynezz@true.cz>,
-        YueHaibing <yuehaibing@huawei.com>,
+        stable@vger.kernel.org, Marco Felsch <m.felsch@pengutronix.de>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 082/126] net: ks8851-ml: Remove 8-bit bus accessors
-Date:   Tue, 10 Mar 2020 13:41:43 +0100
-Message-Id: <20200310124209.131327673@linuxfoundation.org>
+Subject: [PATCH 4.14 085/126] watchdog: da9062: do not ping the hw during stop()
+Date:   Tue, 10 Mar 2020 13:41:46 +0100
+Message-Id: <20200310124209.289046253@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310124203.704193207@linuxfoundation.org>
 References: <20200310124203.704193207@linuxfoundation.org>
@@ -62,136 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Vasut <marex@denx.de>
+From: Marco Felsch <m.felsch@pengutronix.de>
 
-[ Upstream commit 69233bba6543a37755158ca3382765387b8078df ]
+[ Upstream commit e9a0e65eda3f78d0b04ec6136c591c000cbc3b76 ]
 
-This driver is mixing 8-bit and 16-bit bus accessors for reasons unknown,
-however the speculation is that this was some sort of attempt to support
-the 8-bit bus mode.
+The da9062 hw has a minimum ping cool down phase of at least 200ms. The
+driver takes that into account by setting the min_hw_heartbeat_ms to
+300ms and the core guarantees that the hw limit is observed for the
+ping() calls. But the core can't guarantee the required minimum ping
+cool down phase if a stop() command is send immediately after the ping()
+command. So it is not allowed to ping the watchdog within the stop()
+command as the driver does. Remove the ping can be done without doubts
+because the watchdog gets disabled anyway and a (re)start resets the
+watchdog counter too.
 
-As per the KS8851-16MLL documentation, all two registers accessed via the
-8-bit accessors are internally 16-bit registers, so reading them using
-16-bit accessors is fine. The KS_CCR read can be converted to 16-bit read
-outright, as it is already a concatenation of two 8-bit reads of that
-register. The KS_RXQCR accesses are 8-bit only, however writing the top
-8 bits of the register is OK as well, since the driver caches the entire
-16-bit register value anyway.
-
-Finally, the driver is not used by any hardware in the kernel right now.
-The only hardware available to me is one with 16-bit bus, so I have no
-way to test the 8-bit bus mode, however it is unlikely this ever really
-worked anyway. If the 8-bit bus mode is ever required, it can be easily
-added by adjusting the 16-bit accessors to do 2 consecutive accesses,
-which is how this should have been done from the beginning.
-
-Signed-off-by: Marek Vasut <marex@denx.de>
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Lukas Wunner <lukas@wunner.de>
-Cc: Petr Stetiar <ynezz@true.cz>
-Cc: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Link: https://lore.kernel.org/r/20200120091729.16256-1-m.felsch@pengutronix.de
+[groeck: Updated description]
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/micrel/ks8851_mll.c | 45 +++---------------------
- 1 file changed, 5 insertions(+), 40 deletions(-)
+ drivers/watchdog/da9062_wdt.c | 7 -------
+ 1 file changed, 7 deletions(-)
 
-diff --git a/drivers/net/ethernet/micrel/ks8851_mll.c b/drivers/net/ethernet/micrel/ks8851_mll.c
-index adbe0a6fe0db9..77d059d7f8c55 100644
---- a/drivers/net/ethernet/micrel/ks8851_mll.c
-+++ b/drivers/net/ethernet/micrel/ks8851_mll.c
-@@ -474,24 +474,6 @@ static int msg_enable;
-  * chip is busy transferring packet data (RX/TX FIFO accesses).
-  */
+diff --git a/drivers/watchdog/da9062_wdt.c b/drivers/watchdog/da9062_wdt.c
+index 9083d3d922b0b..79383ff620199 100644
+--- a/drivers/watchdog/da9062_wdt.c
++++ b/drivers/watchdog/da9062_wdt.c
+@@ -126,13 +126,6 @@ static int da9062_wdt_stop(struct watchdog_device *wdd)
+ 	struct da9062_watchdog *wdt = watchdog_get_drvdata(wdd);
+ 	int ret;
  
--/**
-- * ks_rdreg8 - read 8 bit register from device
-- * @ks	  : The chip information
-- * @offset: The register address
-- *
-- * Read a 8bit register from the chip, returning the result
-- */
--static u8 ks_rdreg8(struct ks_net *ks, int offset)
--{
--	u16 data;
--	u8 shift_bit = offset & 0x03;
--	u8 shift_data = (offset & 1) << 3;
--	ks->cmd_reg_cache = (u16) offset | (u16)(BE0 << shift_bit);
--	iowrite16(ks->cmd_reg_cache, ks->hw_addr_cmd);
--	data  = ioread16(ks->hw_addr);
--	return (u8)(data >> shift_data);
--}
+-	ret = da9062_reset_watchdog_timer(wdt);
+-	if (ret) {
+-		dev_err(wdt->hw->dev, "Failed to ping the watchdog (err = %d)\n",
+-			ret);
+-		return ret;
+-	}
 -
- /**
-  * ks_rdreg16 - read 16 bit register from device
-  * @ks	  : The chip information
-@@ -507,22 +489,6 @@ static u16 ks_rdreg16(struct ks_net *ks, int offset)
- 	return ioread16(ks->hw_addr);
- }
- 
--/**
-- * ks_wrreg8 - write 8bit register value to chip
-- * @ks: The chip information
-- * @offset: The register address
-- * @value: The value to write
-- *
-- */
--static void ks_wrreg8(struct ks_net *ks, int offset, u8 value)
--{
--	u8  shift_bit = (offset & 0x03);
--	u16 value_write = (u16)(value << ((offset & 1) << 3));
--	ks->cmd_reg_cache = (u16)offset | (BE0 << shift_bit);
--	iowrite16(ks->cmd_reg_cache, ks->hw_addr_cmd);
--	iowrite16(value_write, ks->hw_addr);
--}
--
- /**
-  * ks_wrreg16 - write 16bit register value to chip
-  * @ks: The chip information
-@@ -642,8 +608,7 @@ static void ks_read_config(struct ks_net *ks)
- 	u16 reg_data = 0;
- 
- 	/* Regardless of bus width, 8 bit read should always work.*/
--	reg_data = ks_rdreg8(ks, KS_CCR) & 0x00FF;
--	reg_data |= ks_rdreg8(ks, KS_CCR+1) << 8;
-+	reg_data = ks_rdreg16(ks, KS_CCR);
- 
- 	/* addr/data bus are multiplexed */
- 	ks->sharedbus = (reg_data & CCR_SHARED) == CCR_SHARED;
-@@ -747,7 +712,7 @@ static inline void ks_read_qmu(struct ks_net *ks, u16 *buf, u32 len)
- 
- 	/* 1. set sudo DMA mode */
- 	ks_wrreg16(ks, KS_RXFDPR, RXFDPR_RXFPAI);
--	ks_wrreg8(ks, KS_RXQCR, (ks->rc_rxqcr | RXQCR_SDA) & 0xff);
-+	ks_wrreg16(ks, KS_RXQCR, ks->rc_rxqcr | RXQCR_SDA);
- 
- 	/* 2. read prepend data */
- 	/**
-@@ -764,7 +729,7 @@ static inline void ks_read_qmu(struct ks_net *ks, u16 *buf, u32 len)
- 	ks_inblk(ks, buf, ALIGN(len, 4));
- 
- 	/* 4. reset sudo DMA Mode */
--	ks_wrreg8(ks, KS_RXQCR, ks->rc_rxqcr);
-+	ks_wrreg16(ks, KS_RXQCR, ks->rc_rxqcr);
- }
- 
- /**
-@@ -997,13 +962,13 @@ static void ks_write_qmu(struct ks_net *ks, u8 *pdata, u16 len)
- 	ks->txh.txw[1] = cpu_to_le16(len);
- 
- 	/* 1. set sudo-DMA mode */
--	ks_wrreg8(ks, KS_RXQCR, (ks->rc_rxqcr | RXQCR_SDA) & 0xff);
-+	ks_wrreg16(ks, KS_RXQCR, ks->rc_rxqcr | RXQCR_SDA);
- 	/* 2. write status/lenth info */
- 	ks_outblk(ks, ks->txh.txw, 4);
- 	/* 3. write pkt data */
- 	ks_outblk(ks, (u16 *)pdata, ALIGN(len, 4));
- 	/* 4. reset sudo-DMA mode */
--	ks_wrreg8(ks, KS_RXQCR, ks->rc_rxqcr);
-+	ks_wrreg16(ks, KS_RXQCR, ks->rc_rxqcr);
- 	/* 5. Enqueue Tx(move the pkt from TX buffer into TXQ) */
- 	ks_wrreg16(ks, KS_TXQCR, TXQCR_METFE);
- 	/* 6. wait until TXQCR_METFE is auto-cleared */
+ 	ret = regmap_update_bits(wdt->hw->regmap,
+ 				 DA9062AA_CONTROL_D,
+ 				 DA9062AA_TWDSCALE_MASK,
 -- 
 2.20.1
 
