@@ -2,243 +2,98 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49060C18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 19:27:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7D8EC18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 19:27:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1116321D7E
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 19:27:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gLOKaX4F"
+	by mail.kernel.org (Postfix) with ESMTP id 7792220873
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 19:27:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583868432;
+	bh=L91ZGvyPG6SoSyZiVQkhs+qHEP7CHBNmCUrkxEfq6qA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=b96zrXln/Uo4vhw79Q+RGQPDqUGPT5i9C7JQKFN61Qc5UnAelF20KEenSlrx6L0n3
+	 0qtEgC06cbDRnCEudErTlwDEqDYuDq5NiOqdysWkrlPns48QcLZKf2tIL3BLype2YQ
+	 eXQJkdGnYeMJg973RiDHIcLx4t9Yeg6QPsFc7U9A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727225AbgCJT06 (ORCPT
+        id S1727327AbgCJT1L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 15:26:58 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:43905 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726851AbgCJT06 (ORCPT
+        Tue, 10 Mar 2020 15:27:11 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:46114 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726497AbgCJT1K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 15:26:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583868417;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=vBBQf8YSJ+Mjo+kqeDTD8Z4+zLQIuCyl3eitu/ifyRg=;
-        b=gLOKaX4FUFgxhYjSeRfVd8SGQnJIggupH6sYrpniPJAQcX4Im4tnjUci7+QK/uIG0gc7Yt
-        yQ2QASGsp3VA2PKKaBKdbQxeKnR6bCi24sNMhv3KhGMdR94Ef8Igwtv1vcYRWCxTq5Z+7A
-        I7CC//hj5GnxWAT/Eh0pJ5jo3hlKz4U=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-418-f5NGIyrIP6SlVn9aogqbJg-1; Tue, 10 Mar 2020 15:26:51 -0400
-X-MC-Unique: f5NGIyrIP6SlVn9aogqbJg-1
-Received: by mail-wr1-f69.google.com with SMTP id c16so6370750wrt.2
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 12:26:50 -0700 (PDT)
+        Tue, 10 Mar 2020 15:27:10 -0400
+Received: by mail-oi1-f195.google.com with SMTP id a22so15047232oid.13;
+        Tue, 10 Mar 2020 12:27:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=vBBQf8YSJ+Mjo+kqeDTD8Z4+zLQIuCyl3eitu/ifyRg=;
-        b=swRumnhaH0EUj0UWhdryYKrXcETwUMLXLHFB5id+bVMgolkGWagwChXPBrd7ZH3W+w
-         g6tlUSQyhxkXxT3xOsNE3UTZ6rQ/6PUeQTjISHplgRrx4RJY/yOuiO0eOE6z8166Lg7Z
-         R2fgyD3PJsNeYgMv1lbFoejyDpa248EtQQznIj8J0RTyDu5topjeTLOCPwKNp5DTj70i
-         qAyRcJG4O9AbNKxRx75Yslib6v4+j1oYnuQye9O9GvsC6H7UhQ/5CI11/bu9ZmM70RDh
-         dRabLjNNe7IlRtOl8woR7KmjS9+bHqwUJrZ/WHWuvjOH7/9xw7O7DS4hJ00V8r3nipge
-         W7dg==
-X-Gm-Message-State: ANhLgQ1CO4ClUHMIY7ieoupz09YcQVci10RajBJ6ARwZdqde90DgmrkK
-        GqOmVhHMZyFZuSlkMzlUK02wuWaVyvf+sa0AnynxlKYApPjiUGuHvINqZNGmYl8qLw/uUCqTPb6
-        IENS97USdwOnwYelguTTo8TSP
-X-Received: by 2002:a7b:c153:: with SMTP id z19mr3416624wmi.37.1583868409468;
-        Tue, 10 Mar 2020 12:26:49 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vulmI+P5MpROhNKaiKOfzCCxtCMi66TM8UrbbQOxyf42qxjAGtaVwzF6sV60157AZSfFYTJtQ==
-X-Received: by 2002:a7b:c153:: with SMTP id z19mr3416586wmi.37.1583868409147;
-        Tue, 10 Mar 2020 12:26:49 -0700 (PDT)
-Received: from kherbst.pingu.com ([2a02:8308:b0be:6900:482c:9537:40:83ba])
-        by smtp.gmail.com with ESMTPSA id c8sm58633569wru.7.2020.03.10.12.26.47
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Zk3nV+rnevYhsEtIp8S5NhXsIWAJWfizdxJq3VogyBs=;
+        b=WBI0Gj7K7iCUKY0aY61jBT6XVmHyhQx/3+S2opbg4My6XvJYAGZphzn13IwfnWqKKa
+         dDeEm5JZymplkjLnWXggzvszpi6Gu5moELZ53bgBvbryxscJsBeUl1O3SffJC7phRiy8
+         vkl2BkjLUDpdJl1sJhJUMMPSbdp8nfY9OKgWbmo9TsNWjHfqkOsd+mLSAF2yMtPks/Ro
+         LDTexfvS+g7S0bHCwvfnbRRAiJfWEweSiH+HDDfoORK3P+wTDCpUPaMaZCKnLoyjOuXy
+         4Cj661k+77I9w98Bgs+Ic3o6jV/rgdLs2Vdtqt+ce2eBAVmGjIUDvBEMISV4y5nSdqeq
+         9vCg==
+X-Gm-Message-State: ANhLgQ1AI2ImgqdYjgIkbivelrHV1UCwXcF2N4u8sqtZEEkOSDUQPlVM
+        8qFEKNUW+7C2g9+5JYU9iQ==
+X-Google-Smtp-Source: ADFU+vt4+g6JzZFc2bA7YzaatPyonL9+FOXoSCwg0RcSGx+p2akdnElyUgvTbw3URfv8kOoMSIEdUg==
+X-Received: by 2002:aca:b1d5:: with SMTP id a204mr2321167oif.82.1583868430034;
+        Tue, 10 Mar 2020 12:27:10 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id j5sm16235753otl.71.2020.03.10.12.27.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Mar 2020 12:26:48 -0700 (PDT)
-From:   Karol Herbst <kherbst@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Karol Herbst <kherbst@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lyude Paul <lyude@redhat.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Mika Westerberg <mika.westerberg@intel.com>,
-        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: [PATCH v7] pci: prevent putting nvidia GPUs into lower device states on certain intel bridges
-Date:   Tue, 10 Mar 2020 20:26:27 +0100
-Message-Id: <20200310192627.437947-1-kherbst@redhat.com>
-X-Mailer: git-send-email 2.24.1
+        Tue, 10 Mar 2020 12:27:09 -0700 (PDT)
+Received: (nullmailer pid 13676 invoked by uid 1000);
+        Tue, 10 Mar 2020 19:27:08 -0000
+Date:   Tue, 10 Mar 2020 14:27:08 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Johan Jonker <jbx6244@gmail.com>
+Cc:     heiko@sntech.de, robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] dt-bindings: arm: fix Rockchip Kylin board
+ bindings
+Message-ID: <20200310192708.GA13604@bogus>
+References: <20200302092759.3291-1-jbx6244@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200302092759.3291-1-jbx6244@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes the infamous 'runtime PM' bug many users are facing on Laptops with
-Nvidia Pascal GPUs by skipping said PCI power state changes on the GPU.
+On Mon,  2 Mar 2020 10:27:57 +0100, Johan Jonker wrote:
+> A test with the command below gives this error:
+> 
+> arch/arm/boot/dts/rk3036-kylin.dt.yaml: /: compatible:
+> ['rockchip,rk3036-kylin', 'rockchip,rk3036']
+> is not valid under any of the given schemas
+> 
+> Normally the dt-binding is the authoritative part, so boards should follow
+> the binding, but in the kylin-case the compatible from the .dts is used for
+> years in the field now, so fix the binding, as otherwise
+> we would break old users.
+> 
+> Fix this error by changing 'rockchip,kylin-rk3036' to
+> 'rockchip,rk3036-kylin' in rockchip.yaml.
+> 
+> make ARCH=arm dtbs_check
+> DT_SCHEMA_FILES=Documentation/devicetree/bindings/arm/rockchip.yaml
+> 
+> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+> ---
+>  Documentation/devicetree/bindings/arm/rockchip.yaml | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
 
-Depending on the used kernel there might be messages like those in demsg:
-
-"nouveau 0000:01:00.0: Refused to change power state, currently in D3"
-"nouveau 0000:01:00.0: can't change power state from D3cold to D0 (config
-space inaccessible)"
-followed by backtraces of kernel crashes or timeouts within nouveau.
-
-It's still unkown why this issue exists, but this is a reliable workaround
-and solves a very annoying issue for user having to choose between a
-crashing kernel or higher power consumption of their Laptops.
-
-Signed-off-by: Karol Herbst <kherbst@redhat.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Lyude Paul <lyude@redhat.com>
-Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
-Cc: Mika Westerberg <mika.westerberg@intel.com>
-Cc: linux-pci@vger.kernel.org
-Cc: linux-pm@vger.kernel.org
-Cc: dri-devel@lists.freedesktop.org
-Cc: nouveau@lists.freedesktop.org
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=205623
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-
----
-v2: convert to pci_dev quirk
-    put a proper technical explanation of the issue as a in-code comment
-v3: disable it only for certain combinations of intel and nvidia hardware
-v4: simplify quirk by setting flag on the GPU itself
-v5: restructure quirk to make it easier to add new IDs
-    fix whitespace issues
-    fix potential NULL pointer access
-    update the quirk documentation
-v6: move quirk into nouveau
-v7: fix typos and commit message
-
- drivers/gpu/drm/nouveau/nouveau_drm.c | 57 +++++++++++++++++++++++++++
- drivers/pci/pci.c                     |  8 ++++
- include/linux/pci.h                   |  1 +
- 3 files changed, 66 insertions(+)
-
-diff --git a/drivers/gpu/drm/nouveau/nouveau_drm.c b/drivers/gpu/drm/nouveau/nouveau_drm.c
-index b65ae817eabf..2c86f0248305 100644
---- a/drivers/gpu/drm/nouveau/nouveau_drm.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_drm.c
-@@ -618,6 +618,60 @@ nouveau_drm_device_fini(struct drm_device *dev)
- 	kfree(drm);
- }
- 
-+/*
-+ * On some Intel PCIe bridge controllers doing a
-+ * D0 -> D3hot -> D3cold -> D0 sequence causes Nvidia GPUs to not reappear.
-+ * Skipping the intermediate D3hot step seems to make it work again. This is
-+ * probably caused by not meeting the expectation the involved AML code has
-+ * when the GPU is put into D3hot state before invoking it.
-+ *
-+ * This leads to various manifestations of this issue:
-+ *  - AML code execution to power on the GPU hits an infinite loop (as the
-+ *    code waits on device memory to change).
-+ *  - kernel crashes, as all PCI reads return -1, which most code isn't able
-+ *    to handle well enough.
-+ *
-+ * In all cases dmesg will contain at least one line like this:
-+ * 'nouveau 0000:01:00.0: Refused to change power state, currently in D3'
-+ * followed by a lot of nouveau timeouts.
-+ *
-+ * In the \_SB.PCI0.PEG0.PG00._OFF code deeper down writes bit 0x80 to the not
-+ * documented PCI config space register 0x248 of the Intel PCIe bridge
-+ * controller (0x1901) in order to change the state of the PCIe link between
-+ * the PCIe port and the GPU. There are alternative code paths using other
-+ * registers, which seem to work fine (executed pre Windows 8):
-+ *  - 0xbc bit 0x20 (publicly available documentation claims 'reserved')
-+ *  - 0xb0 bit 0x10 (link disable)
-+ * Changing the conditions inside the firmware by poking into the relevant
-+ * addresses does resolve the issue, but it seemed to be ACPI private memory
-+ * and not any device accessible memory at all, so there is no portable way of
-+ * changing the conditions.
-+ * On a XPS 9560 that means bits [0,3] on \CPEX need to be cleared.
-+ *
-+ * The only systems where this behavior can be seen are hybrid graphics laptops
-+ * with a secondary Nvidia Maxwell, Pascal or Turing GPU. It's unclear whether
-+ * this issue only occurs in combination with listed Intel PCIe bridge
-+ * controllers and the mentioned GPUs or other devices as well.
-+ *
-+ * documentation on the PCIe bridge controller can be found in the
-+ * "7th Generation Intel® Processor Families for H Platforms Datasheet Volume 2"
-+ * Section "12 PCI Express* Controller (x16) Registers"
-+ */
-+
-+static void quirk_broken_nv_runpm(struct pci_dev *dev)
-+{
-+	struct pci_dev *bridge = pci_upstream_bridge(dev);
-+
-+	if (!bridge || bridge->vendor != PCI_VENDOR_ID_INTEL)
-+		return;
-+
-+	switch (bridge->device) {
-+	case 0x1901:
-+		dev->parent_d3cold = 1;
-+		break;
-+	}
-+}
-+
- static int nouveau_drm_probe(struct pci_dev *pdev,
- 			     const struct pci_device_id *pent)
- {
-@@ -699,6 +753,7 @@ static int nouveau_drm_probe(struct pci_dev *pdev,
- 	if (ret)
- 		goto fail_drm_dev_init;
- 
-+	quirk_broken_nv_runpm(pdev);
- 	return 0;
- 
- fail_drm_dev_init:
-@@ -735,6 +790,8 @@ nouveau_drm_remove(struct pci_dev *pdev)
- {
- 	struct drm_device *dev = pci_get_drvdata(pdev);
- 
-+	/* revert our workaround */
-+	pdev->parent_d3cold = false;
- 	nouveau_drm_device_remove(dev);
- 	pci_disable_device(pdev);
- }
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index d828ca835a98..9c4044fc2553 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -861,6 +861,14 @@ static int pci_raw_set_power_state(struct pci_dev *dev, pci_power_t state)
- 	   || (state == PCI_D2 && !dev->d2_support))
- 		return -EIO;
- 
-+	/*
-+	 * Power management can be disabled for certain devices as they don't
-+	 * come back up later on runtime_resume. We rely on platform means to
-+	 * cut power consumption instead (e.g. ACPI).
-+	 */
-+	if (state != PCI_D0 && dev->parent_d3cold)
-+		return 0;
-+
- 	pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
- 	if (pmcsr == (u16) ~0) {
- 		pci_err(dev, "can't change power state from %s to %s (config space inaccessible)\n",
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 3840a541a9de..3c01f043519a 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -340,6 +340,7 @@ struct pci_dev {
- 	unsigned int	no_d3cold:1;	/* D3cold is forbidden */
- 	unsigned int	bridge_d3:1;	/* Allow D3 for bridge */
- 	unsigned int	d3cold_allowed:1;	/* D3cold is allowed by user */
-+	unsigned int	parent_d3cold:1;	/* Power manage the parent instead */
- 	unsigned int	mmio_always_on:1;	/* Disallow turning off io/mem
- 						   decoding during BAR sizing */
- 	unsigned int	wakeup_prepared:1;
--- 
-2.24.1
-
+Reviewed-by: Rob Herring <robh@kernel.org>
