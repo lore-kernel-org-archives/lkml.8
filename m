@@ -2,247 +2,201 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDC22C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:47:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65B98C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:48:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AD4624681
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:47:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oJTgBwjl"
+	by mail.kernel.org (Postfix) with ESMTP id 3365D2467D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:48:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583833722;
+	bh=tvxX5UVos2zsOxwlElC2O65i+a0ovs227kYz49z+2UQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=qKglZMPgB7bmoHHAnMruNVb9oLJuzuO4Ae4yIC3e1aHSg4/75iGSp3ck0m16fon3p
+	 VZi/IQo10wMqFLng2QEmcaZMeybaNQ6i7iU43/ynyTY2qfJ/cWzLK8YjUfEmrJFfMB
+	 LYkuNCqlSWk2VBe5ZXoRFmjwLsDZ39Uw/617Sx44=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726451AbgCJJrf (ORCPT
+        id S1726463AbgCJJsl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 05:47:35 -0400
-Received: from mail-ua1-f65.google.com ([209.85.222.65]:34100 "EHLO
-        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726268AbgCJJre (ORCPT
+        Tue, 10 Mar 2020 05:48:41 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:34132 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726211AbgCJJsk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 05:47:34 -0400
-Received: by mail-ua1-f65.google.com with SMTP id g21so2029296uaj.1
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 02:47:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1GrBhJ3sYPhTyFLJxdqpea0j+CXCkiyKV2bVrjt+fe0=;
-        b=oJTgBwjlZwRJ40I3EYTtU3V2CtDXLkXbVX0zNTIUAWGdSymXvoHp/4+gJoexFOdg6l
-         rX5jEvtoDF4tmpvKf478/Rujy5k3qOSVGzPcuhNUb0IKmwhppoqaHXpWP2ou0mmJL5y7
-         ueVO+mHG+8Frz6KixBcLoY+n4MN+FIMdvroYbz3b7UdjQ7BkmggeB2xA2OApNlB2qugy
-         MNLxG3UFYaXwjttQXJHRtlqP43CF6E8fr+CqCoEnsVzLKqHJtANf7xnEz9Y7Nt2oS1Xf
-         qPfnVgjVH/S0g1hySeblK3z8UYrMBgawPinuQLKZrNUfot1Zrq/0YOEk1gxbVXj1B3Qh
-         5YTA==
+        Tue, 10 Mar 2020 05:48:40 -0400
+Received: by mail-wr1-f65.google.com with SMTP id z15so14957741wrl.1;
+        Tue, 10 Mar 2020 02:48:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1GrBhJ3sYPhTyFLJxdqpea0j+CXCkiyKV2bVrjt+fe0=;
-        b=PmovgR1VzuThwswl3fqnuZ8rv53AZJXSng/GXF6aEw0zAeI3JhRTFGFTCMRQIFEep3
-         0YBRgQBmsqVZVP7FuJNkqned+t4gmEB3N4hn62JQnlrrnLLB1LGF1CDZf2AQF1qw8y8S
-         mwE/5F0xTVrY6XGrwo4NPiUfp9fw78efoJ6Xbunl4qLHCATypmAeveNMm8Iz9jd8xV+b
-         p4kU3gGmBlUkALJPOCMKYLCutF4zAmcnZl9gxYvojhpdhqmz0AwvtLANCpwvzZf1ZA32
-         lfmVueonvneqNRXBnCP5Ihn85+h1xNogRcD6Kki9xm/YrvRyppNRVGlyMoXGpWVgnhBk
-         zrJA==
-X-Gm-Message-State: ANhLgQ3QPzPA015UgvaDbsxNUqlKzVSbTtyLr1GjfUvREJtcqgbeTZEM
-        QUAoGn6kE3+d6bK6ogJUCZWhsHnCEE3e3w8cpB6low==
-X-Google-Smtp-Source: ADFU+vvtoiJgc8TJGK+oS5jVJmCejClnjhMmcnQ6XUIDSORdD/dv+QYgmtUJ5E16LLL1sVIbA/QMWiwUDmsyFCk1WXw=
-X-Received: by 2002:ab0:7802:: with SMTP id x2mr11627770uaq.100.1583833652861;
- Tue, 10 Mar 2020 02:47:32 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=e+4+q3tBPeSakzLbgRWCQK4gOR8PDIS0+RGcMO8Rfpc=;
+        b=eLD/cncseoqOWgyzzM1V7gmb8t5VE825w4IX3eXg6Jm1/nzO4FJspOu0Uvud05PXzn
+         nzOh6zeofmYDqiOhCFxwHuVESi73J1Ft4wj2W2TBMYzMFyOlWEUVimc1sLGtUmMlW7HZ
+         NsY3rblr/1vGSl23oqu1SqXE5hS4hPkVNX3AQ1jZWoGXwh073ygWSvHpCsucH7slVRMR
+         uelUvb56NfoAXl0w2kOawtT/N21Y6VI/FpDQb4jBHByj5etnHVJivziwl19SOjGZLA2j
+         5xaNPngzQstSHUpEtWPjxDBPOn6y65bCK/8yajlJ5mYHBbcs1fdzTiULhfZEDILIXf+C
+         92qQ==
+X-Gm-Message-State: ANhLgQ0BsOKpPBSotFrll3mCXgAvgLP0mPbm2Jkgcs7cT9+pcI8cKS1H
+        3/gI5d488QsMVZObm/HJjebmxNAh
+X-Google-Smtp-Source: ADFU+vvQ9U5ebYXUs0B/jnFtpUo9X8N9a+PmUrzOLRUCDtZF/cqq+adIDAY3B0XcphphqsOT4NVuRw==
+X-Received: by 2002:a5d:5512:: with SMTP id b18mr25951308wrv.215.1583833718510;
+        Tue, 10 Mar 2020 02:48:38 -0700 (PDT)
+Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
+        by smtp.gmail.com with ESMTPSA id f15sm3321283wmj.25.2020.03.10.02.48.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Mar 2020 02:48:37 -0700 (PDT)
+Date:   Tue, 10 Mar 2020 10:48:36 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     brookxu <brookxu.cn@gmail.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     hannes@cmpxchg.org, vdavydov.dev@gmail.com,
+        akpm@linux-foundation.org, cgroups@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv2] memcg: fix NULL pointer dereference in
+ __mem_cgroup_usage_unregister_event
+Message-ID: <20200310094836.GD8447@dhcp22.suse.cz>
+References: <077a6f67-aefa-4591-efec-f2f3af2b0b02@gmail.com>
 MIME-Version: 1.0
-References: <CA+G9fYuqAQfhzF2BzHr7vMHx68bo8-jT+ob_F3eHQ3=oFjgYdg@mail.gmail.com>
- <CAPDyKFokE6x0mn+v5B9=so-SyrdTn0JBU8Mrp3Zdu6kSaCie2g@mail.gmail.com>
- <0963b60f-15e7-4bc6-10df-6fc8003e4d42@nvidia.com> <CAPDyKFq5NoeHEBK3sv3yOSD2+pm9FueH1gaTyPq0j7GLfa6vnA@mail.gmail.com>
- <34fd84d7-387b-b6f3-7fb3-aa490909e205@ti.com> <CAPDyKFrrO4noYqdxWL9Y8Nx75LopbDudKGMotkGbGcAF1oq==w@mail.gmail.com>
- <5e9b5646-bd48-e55b-54ee-1c2c41fc9218@nvidia.com> <CAPDyKFqpNo_4OePBR1KnJNO=kR8XEqbcsEd=icSceSdDH+Rk1Q@mail.gmail.com>
- <757853cf-987e-f6b6-9259-b4560a031692@nvidia.com> <d12fe142-7e72-ab58-33ab-17817e35096f@nvidia.com>
- <c216f131-6f83-c9c9-9d17-8d44ec06972d@nvidia.com> <87ad7586-9569-4276-044a-adb64e84ca15@nvidia.com>
- <a0962e0b-0f1d-9f32-f6e9-92f69f93167f@nvidia.com> <57ddddc2-3ee8-d867-bba0-0dd9929ba37d@nvidia.com>
- <CAPDyKFqZSd9E3+16yFsmpee2JsbRJ-DGThxx7NJHu6UE00Xi1Q@mail.gmail.com>
- <26ee7225-9483-4664-c2d7-b5cefeadcd4b@nvidia.com> <CAPDyKFqwVQDEnPNi33mc9ycTxpaT1cRLejbR3Ja4c8dha4gFRw@mail.gmail.com>
- <0301bbd5-8d4d-4a77-42c7-8a1391c2d60a@nvidia.com>
-In-Reply-To: <0301bbd5-8d4d-4a77-42c7-8a1391c2d60a@nvidia.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Tue, 10 Mar 2020 10:46:55 +0100
-Message-ID: <CAPDyKFp93H0=ttazofW9NMBtL5VnjB4PdkwN0FDCtWR0pMHrPA@mail.gmail.com>
-Subject: Re: LKFT: arm x15: mmc1: cache flush error -110
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     Jon Hunter <jonathanh@nvidia.com>,
-        Bitan Biswas <bbiswas@nvidia.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        Alexei Starovoitov <ast@kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        lkft-triage@lists.linaro.org,
-        open list <linux-kernel@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        John Stultz <john.stultz@linaro.org>,
-        Faiz Abbas <faiz_abbas@ti.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Kishon <kishon@ti.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <077a6f67-aefa-4591-efec-f2f3af2b0b02@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 9 Mar 2020 at 18:33, Sowjanya Komatineni <skomatineni@nvidia.com> wrote:
->
->
-> On 3/6/20 3:14 AM, Ulf Hansson wrote:
-> > External email: Use caution opening links or attachments
-> >
-> >
-> > [...]
-> >
-> >>>>>>>>>>> Actually we always use R1B with CMD6 as per spec.
-> >>>>>>>>>> I fully agree that R1B is preferable, but it's not against the
-> >>>>>>>>>> spec to
-> >>>>>>>>>> send CMD13 to poll for busy.
-> >>>>>>>>>>
-> >>>>>>>>>> Moreover, we need to cope with the scenario when the host has
-> >>>>>>>>>> specified a maximum timeout that isn't sufficiently long enough for
-> >>>>>>>>>> the requested operation. Do you have another proposal for how to
-> >>>>>>>>>> manage this, but disabling MMC_RSP_BUSY?
-> >>>>>>>>>>
-> >>>>>>>>>> Let's assume you driver would get a R1B for the CMD6 (we force it),
-> >>>>>>>>>> then what timeout would the driver be using if we would set
-> >>>>>>>>>> cmd.busy_timeout to 30ms?
-> >>>>>>>>>>
-> >>>> Sorry didn't understood clearly. Are you asking with 30s timeout, whats
-> >>>> the data timeout counter used?
-> >>> Yes. It seems like it will pick the maximum, which is 11s?
-> >> yes
-> > Okay, thanks!
-> >
-> >>>> Because of above mentioned issue on our host where CMD interrupt happens
-> >>>> after busy state, poll for busy returns right away as not busy.
-> >>> I see.
-> >>>
-> >>>> So issuing CMD13 after CMD6-R1 followed by busy poll should be working.
-> >>>> But weird that with small delay of 1ms or debug print before CMD13 it
-> >>>> doesn't timeout and works all the time.
-> >>> I have digested the information you provided in these emails. Let me
-> >>> summarize it, to see if I have understood correctly.
-> >>>
-> >>> 1.
-> >>> Your controller can't distinguish between R1 and R1B because of a
-> >>> limitation in the HW. So, in both cases you need to wait for the card
-> >>> to stop signal busy, before the controller can give an IRQ to notify
-> >>> that the R1 response has been received. Correct?
-> >>>
-> >>> In this context, I am wondering if sdhci_send_command(), really
-> >>> conforms to these requirements. For example, depending on if the CMD6
-> >>> has MMC_RSP_BUSY or not, it may pick either SDHCI_CMD_RESP_SHORT or
-> >>> SDHCI_CMD_RESP_SHORT_BUSY.
-> >>>
-> >>> Does this work as expected for your case?
-> >> Design team re-verified internally and bug where HW waits for busy state
-> >> before IRQ is only for R1B and R1 is spec compliant.
-> >>
-> >> So, with R1, CMD complete is generated after response received.
-> > Okay.
-> >
-> > So, the issue we see for CMD6 with R1, is a software problem that we
-> > should be able to fix.
-> >
-> >> With R1B, CMD complete and xfer complete both are generated after
-> >> response received + device busy (max timeout of 11s)
-> >> DATA timeout interrupt will be asserted incase if HW busy detection fails.
-> >>
-> >> With R1B we may see DATA Timeout if operation takes more than max busy
-> >> timeout of 11s.
-> > Okay, I see.
-> >
-> >>> 2.
-> >>> Assuming my interpretation of the above is somewhat correct. Then you
-> >>> always need to set a busy timeout for R1/R1B responses in the
-> >>> controller. The maximum timeout seems to be 11s long. Obviously, this
-> >>> isn't enough for all cases, such as cache flushing and erase, for
-> >>> example. So, what can we do to support a longer timeouts than 11s?
-> >>> Would it be possible to disable the HW timeout, if the requested
-> >>> timeout is longer than 11s and use a SW timeout instead?
-> >>>
-> >>> Kind regards
-> >>> Uffe
-> >> For erase long operations we have register bit to enable for infinite
-> >> busy wait mode where host controller would be monitoring until card is busy.
-> > Alright, that sounds great!
-> >
-> >> But so far for emmc devices we used on our platforms, we haven't seen
-> >> cache flush taking more than 11s.
-> > I understand that 11s is probably fine to use, for most cases.
-> >
-> > However, it's not spec compliant, as for some operations there are
-> > simply no timeout specified. BKOPS, cache flush, sanitize are cases
-> > like this - and then 11s is definitely not sufficient.
-> >
-> >> Will get back on possibility of disabling HW timeout and using SW timeout..
-> > Thanks!
-> >
-> > I would like to get the regression fixed asap, but I also would like
-> > to avoid reverting patches, unless really necessary. May I propose the
-> > following two options.
-> >
-> > 1. Find out why polling with ->card_busy() or CMD13, for a CMD6 with
-> > an R1 response doesn't work - and then fix that behaviour.
-> >
-> > 2. Set the mmc->max_busy_timeout to zero for sdhci-tegra, which makes
-> > the core to always use R1B for CMD6 (and erase). This also means that
-> > when the cmd->busy_timeout becomes longer than 11s, sdhci-tegra must
-> > disable the HW busy timeout and just wait "forever".
-> >
-> > If you decide for 2, you can add the software timeout support on top,
-> > but make that can be considered as a next step of an improvement,
-> > rather than needed as fix. Note that, I believe there are some support
-> > for software timeout already in the sdhci core, maybe you need to
-> > tweak it a bit for your case, I don't know.
-> >
-> > Kind regards
-> > Uffe
->
-> Hi Uffe
->
-> Will go with 2nd option and will send patches out when ready.
+[Cc Kirill, I didn't realize he has implemented this code]
 
-Okay, good.
+On Fri 06-03-20 09:02:02, brookxu wrote:
+> From: Chunguang Xu <brookxu@tencent.com>
+> 
+> An eventfd monitors multiple memory thresholds of the cgroup, closes them,
+> the kernel deletes all events related to this eventfd. Before all events
+> are deleted, another eventfd monitors the memory threshold of this cgroup,
+> leading to a crash:
+> 
+> [  135.675108] BUG: kernel NULL pointer dereference, address: 0000000000000004
+> [  135.675350] #PF: supervisor write access in kernel mode
+> [  135.675579] #PF: error_code(0x0002) - not-present page
+> [  135.675816] PGD 800000033058e067 P4D 800000033058e067 PUD 3355ce067 PMD 0
+> [  135.676080] Oops: 0002 [#1] SMP PTI
+> [  135.676332] CPU: 2 PID: 14012 Comm: kworker/2:6 Kdump: loaded Not tainted 5.6.0-rc4 #3
+> [  135.676610] Hardware name: LENOVO 20AWS01K00/20AWS01K00, BIOS GLET70WW (2.24 ) 05/21/2014
+> [  135.676909] Workqueue: events memcg_event_remove
+> [  135.677192] RIP: 0010:__mem_cgroup_usage_unregister_event+0xb3/0x190
+> [  135.677825] RSP: 0018:ffffb47e01c4fe18 EFLAGS: 00010202
+> [  135.678186] RAX: 0000000000000001 RBX: ffff8bb223a8a000 RCX: 0000000000000001
+> [  135.678548] RDX: 0000000000000001 RSI: ffff8bb22fb83540 RDI: 0000000000000001
+> [  135.678912] RBP: ffffb47e01c4fe48 R08: 0000000000000000 R09: 0000000000000010
+> [  135.679287] R10: 000000000000000c R11: 071c71c71c71c71c R12: ffff8bb226aba880
+> [  135.679670] R13: ffff8bb223a8a480 R14: 0000000000000000 R15: 0000000000000000
+> [  135.680066] FS:  0000000000000000(0000) GS:ffff8bb242680000(0000) knlGS:0000000000000000
+> [  135.680475] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [  135.680894] CR2: 0000000000000004 CR3: 000000032c29c003 CR4: 00000000001606e0
+> [  135.681325] Call Trace:
+> [  135.681763]  memcg_event_remove+0x32/0x90
+> [  135.682209]  process_one_work+0x172/0x380
+> [  135.682657]  worker_thread+0x49/0x3f0
+> [  135.683111]  kthread+0xf8/0x130
+> [  135.683570]  ? max_active_store+0x80/0x80
+> [  135.684034]  ? kthread_bind+0x10/0x10
+> [  135.684506]  ret_from_fork+0x35/0x40
+> [  135.689733] CR2: 0000000000000004
+> 
+> We can reproduce this problem in the following ways:
+>  
+> 1. We create a new cgroup subdirectory and a new eventfd, and then we
+>    monitor multiple memory thresholds of the cgroup through this eventfd.
+> 2. closing this eventfd, and __mem_cgroup_usage_unregister_event () will be
+>    called multiple times to delete all events related to this eventfd.
+> 
+> The first time __mem_cgroup_usage_unregister_event() is called, the kernel
+> will clear all items related to this eventfd in thresholds-> primary.Since
+> there is currently only one eventfd, thresholds-> primary becomes empty,
+> so the kernel will set thresholds-> primary and hresholds-> spare to NULL.
+> If at this time, the user creates a new eventfd and monitor the memory
+> threshold of this cgroup, kernel will re-initialize thresholds-> primary.
+> Then when __mem_cgroup_usage_unregister_event () is called for the second
+> time, because thresholds-> primary is not empty, the system will access
+> thresholds-> spare, but thresholds-> spare is NULL, which will trigger a
+> crash.
+> 
+> In general, the longer it takes to delete all events related to this
+> eventfd, the easier it is to trigger this problem.
+> 
+> The solution is to check whether the thresholds associated with the eventfd
+> has been cleared when deleting the event. If so, we do nothing.
+> 
+> Signed-off-by: Chunguang Xu <brookxu@tencent.com>
 
->
-> BTW, Tegra host also supports SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK for
-> data timeout based on host clock when using finite mode (HW busy
-> detection based on DATA TIMEOUT count value when cmd operation timeout
-> is < 11s for tegra host).
->
-> So, looks like we cant set host max_busy_timeout to 0 for Tegra host to
-> force R1B during SWITCH and SLEEP_AWAKE.
->
-> So, was thinking to introduce host capability MMC_CAP2_LONG_WAIT_HW_BUSY
-> which can be used for hosts supporting long or infinite HW busy wait
-> detection and will update mmc and mmc_ops drivers to not allow convert
-> R1B to R1B for hosts with this capability during SLEEP_AWAKE and SWITCH.
+The fix looks reasonable to me
+Acked-by: Michal Hocko <mhocko@suse.com>
 
-That seems reasonable, it becomes probably both easier and clearer by
-adding a new host cap.
+It seems that the code has been broken since 2c488db27b61 ("memcg: clean
+up memory thresholds"). We've had 371528caec55 ("mm: memcg: Correct
+unregistring of events attached to the same eventfd") but it didn't
+catch this case for some reason. Unless I am missing something the code
+was broken back then already. Kirill please double check after me.
 
-In any case, let me help out and cook a patch for this for the core
-part (I leave the sdhci change to you). It may be a bit tricky,
-especially since I have currently queued a bunch of new changes for
-v5.7, that enables more users of mmc_poll_for_busy() in the core.
-Maybe I need to temporarily drop them, so we can fix these problems
-first. I will check.
+So if I am not wrong then we want
+Fixes: 2c488db27b61 ("memcg: clean up memory thresholds")
+Cc: stable
 
-Probably, I would also name the cap MMC_CAP_HW_NEED_RSP_BUSY, as that
-seems to be describing the common problem we have for sdhci
-omap/tegra.
+sounds appropriate because this seems to be user trigerable.
 
-Finally, it seems like MMC_CAP_WAIT_WHILE_BUSY should be set for
-sdhci- tegra, so while at it, perhaps you can cook a patch for that as
-well.
+Thanks for preparing the patch!
 
-Kind regards
-Uffe
+Btw. you should double check your email sender because it seemed to
+whitespace damaged the patch (\t -> spaces). Please use git send-email
+instead.
+
+> ---
+>  mm/memcontrol.c | 10 ++++++++--
+>  1 file changed, 8 insertions(+), 2 deletions(-)
+> 
+> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> index d09776c..4575a58 100644
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -4027,7 +4027,7 @@ static void __mem_cgroup_usage_unregister_event(struct mem_cgroup *memcg,
+>      struct mem_cgroup_thresholds *thresholds;
+>      struct mem_cgroup_threshold_ary *new;
+>      unsigned long usage;
+> -    int i, j, size;
+> +    int i, j, size, entries;
+>  
+>      mutex_lock(&memcg->thresholds_lock);
+>  
+> @@ -4047,12 +4047,18 @@ static void __mem_cgroup_usage_unregister_event(struct mem_cgroup *memcg,
+>      __mem_cgroup_threshold(memcg, type == _MEMSWAP);
+>  
+>      /* Calculate new number of threshold */
+> -    size = 0;
+> +    size = entries = 0;
+>      for (i = 0; i < thresholds->primary->size; i++) {
+>          if (thresholds->primary->entries[i].eventfd != eventfd)
+>              size++;
+> +        else
+> +            entries++;
+>      }
+>  
+> +    /* If items related to eventfd have been cleared, nothing to do */
+> +    if (!entries)
+> +        goto unlock;
+> +
+>      new = thresholds->spare;
+>  
+>      /* Set thresholds array to NULL if we don't have thresholds */
+> -- 
+> 1.8.3.1
+
+-- 
+Michal Hocko
+SUSE Labs
