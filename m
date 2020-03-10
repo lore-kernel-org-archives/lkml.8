@@ -2,131 +2,124 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAD_ENC_HEADER,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67CBDC18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:38:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C192C10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:40:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EE8821655
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:38:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11B5321D56
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:40:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b="ZTdTsBQq";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="QyL8Hee7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726480AbgCJUiK (ORCPT
+        id S1726545AbgCJUkP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 16:38:10 -0400
-Received: from shelob.surriel.com ([96.67.55.147]:50480 "EHLO
-        shelob.surriel.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726265AbgCJUiJ (ORCPT
+        Tue, 10 Mar 2020 16:40:15 -0400
+Received: from wout5-smtp.messagingengine.com ([64.147.123.21]:50569 "EHLO
+        wout5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726100AbgCJUkP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 16:38:09 -0400
-Received: from imladris.surriel.com ([96.67.55.152])
-        by shelob.surriel.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.92.3)
-        (envelope-from <riel@shelob.surriel.com>)
-        id 1jBldd-0001bs-E1; Tue, 10 Mar 2020 16:38:05 -0400
-Message-ID: <c3b1e383989b9422b3fb6e3e6f7ebf733f23ad7a.camel@surriel.com>
-Subject: Re: [PATCH v2] mm: hugetlb: optionally allocate gigantic hugepages
- using cma
-From:   Rik van Riel <riel@surriel.com>
-To:     Mike Kravetz <mike.kravetz@oracle.com>,
-        Michal Hocko <mhocko@kernel.org>, Roman Gushchin <guro@fb.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>, linux-mm@kvack.org,
-        kernel-team@fb.com, linux-kernel@vger.kernel.org
-Date:   Tue, 10 Mar 2020 16:38:04 -0400
-In-Reply-To: <c20a0d81-341f-caac-0e47-f8753fbb6dbe@oracle.com>
-References: <20200310002524.2291595-1-guro@fb.com>
-         <5cfa9031-fc15-2bcc-adb9-9779285ef0f7@oracle.com>
-         <20200310180558.GD85000@carbon.dhcp.thefacebook.com>
-         <4b78a8a9-7b5a-eb62-acaa-2677e615bea1@oracle.com>
-         <20200310191906.GA96999@carbon.dhcp.thefacebook.com>
-         <20200310193622.GC8447@dhcp22.suse.cz>
-         <43e2e8443288260aa305f39ba566f81bf065d010.camel@surriel.com>
-         <57494a9c-5c24-20b6-0bda-dac8bbb6f731@oracle.com>
-         <4147bc1d429a4336dcb45a6cb2657d082f35ab25.camel@surriel.com>
-         <c20a0d81-341f-caac-0e47-f8753fbb6dbe@oracle.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-YLfLpufuUfbzXS9k6KF4"
-User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
-MIME-Version: 1.0
+        Tue, 10 Mar 2020 16:40:15 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.west.internal (Postfix) with ESMTP id 57C2A930;
+        Tue, 10 Mar 2020 16:40:14 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Tue, 10 Mar 2020 16:40:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dxuuu.xyz; h=
+        content-transfer-encoding:content-type:in-reply-to:date:cc
+        :subject:from:to:message-id; s=fm2; bh=8WvbRILYPoYcT8dxosBEiC8oW
+        xw+zHTO76bbxckt8n8=; b=ZTdTsBQqnGlN82GljZ7ESrmeyYE+fTjgey4UhMzpJ
+        3N4fMDtH9kyzIGOx7nzUYnSKc7bXucBB8PkuCIq/jwR/fFicp7c1o20WDkFIcL9O
+        qax6PFx9BpgRnJgmLcC8T9bfhHyanrIqjCaHZAExqUaNRYiWoM1YLg7Fytzh+FHT
+        Y6rUSTgvbrsCTnuGM/vOM5f+6Jh3xYQ4l5fgxQ2ce1bA5XdPxMStWzD+/zZmv/UK
+        JHOd23JYCyC3yqwNz+MOXJczPOceZyk93e+7MhjWeQgKmGa1GgwmPVUvO8/54BES
+        dhXMJPlxelF1uvg4t1fYU2ypuDHhXw8HTQhoLXEf377Hw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=8WvbRI
+        LYPoYcT8dxosBEiC8oWxw+zHTO76bbxckt8n8=; b=QyL8Hee7vDR49szK/qplbo
+        DJgRHYUR7BLgBMCqGnNi/yEhTbWK1F/Vxm27DH6xOSTGZ9qBEYoxCcjOJBJaUTVg
+        IzNoXjRmOi2WsGj3pKFybI4t6AVpxuCwTA85KAhFFKkCjPn8FR7m6RJmz6swNKJd
+        mZgUS1XKDKNK5osuEmg/WeawvyjNGbZqYw0g5qvhMTJxVf0ueop8qfBJn0R6SQTw
+        bg8QbkSCePE+YAZx2Vwa+EGoz0OGTG3XFVhgh+t+czA922S9NdxdeJUdnJ5HLRBS
+        V0EPPoRtMjQSK1DhY2HRuRwCvbPtjdLtdJ6mVYZzbVwpnGz2lSsu0i8pnxw8JthQ
+        ==
+X-ME-Sender: <xms:KvtnXgFs-_XVzzMRlvmy1bjTd8Lla2kFeC7DUQIbNVvJSGexithkWg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedruddvtddgudefvdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enfghrlhcuvffnffculdejtddmnecujfgurhepgfgtjgffuffhvffksehtqhertddttdej
+    necuhfhrohhmpedfffgrnhhivghlucgiuhdfuceougiguhesugiguhhuuhdrgiihiieqne
+    cukfhppeduieefrdduudegrddufedvrddunecuvehluhhsthgvrhfuihiivgeptdenucfr
+    rghrrghmpehmrghilhhfrhhomhepugiguhesugiguhhuuhdrgiihii
+X-ME-Proxy: <xmx:KvtnXqg1JUtLw_VLSVuqYV3WOOUqv8S4lG7JM09lmiqoSj7eM4ZdKw>
+    <xmx:KvtnXqmyp3gH0CR7g6EK0Ti3JvUPxdsA1viCZgxZm6lFmRPCoqi7_g>
+    <xmx:KvtnXrdrAshGVQBQe2kkLgNqmg4Ply9P_uKFW9j724oGFheM6DHJZQ>
+    <xmx:LftnXnH0hzH8R6XDCjjPQMaFcDr7LXFchhul-4VbrlK0_CZq_AcIjg>
+Received: from localhost (unknown [163.114.132.1])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 42A4E328005E;
+        Tue, 10 Mar 2020 16:40:09 -0400 (EDT)
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Originaldate: Tue Mar 10, 2020 at 12:40 PM
+Originalfrom: "Shakeel Butt" <shakeelb@google.com>
+Original: =?utf-8?q?Hi_Daniel,
+ =0D=0A=0D=0AOn_Thu,_Mar_5,_2020_at_1:16_PM_Daniel_Xu_?=
+ =?utf-8?q?<dxu@dxuuu.xyz>_wrote:=0D=0A>=0D=0A>_It's_not_really_necessary_?=
+ =?utf-8?q?to_have_contiguous_physical_memory_for_xattr=0D=0A>_values._We_?=
+ =?utf-8?q?no_longer_need_to_worry_about_higher_order_allocations=0D=0A>_f?=
+ =?utf-8?q?ailing_with_kvmalloc,_especially_because_the_xattr_size_limit_i?=
+ =?utf-8?q?s_at=0D=0A>_64K.=0D=0A>=0D=0A>_Signed-off-by:_Daniel_Xu_<dxu@dx?=
+ =?utf-8?q?uuu.xyz>=0D=0A=0D=0AThe_patch_looks_fine_to_me._However_the_com?=
+ =?utf-8?q?mit_message_is_too_cryptic=0D=0Ai.e._hard_to_get_the_motivation?=
+ =?utf-8?q?_behind_the_change.=0D=0A?=
+In-Reply-To: <CALvZod62gypsxCYOpGsR6SWwp7roh8eEEKvZ8WNFtjB0bH=okg@mail.gmail.com>
+Date:   Tue, 10 Mar 2020 13:40:08 -0700
+Cc:     "Cgroups" <cgroups@vger.kernel.org>, "Tejun Heo" <tj@kernel.org>,
+        "Li Zefan" <lizefan@huawei.com>,
+        "Johannes Weiner" <hannes@cmpxchg.org>,
+        "LKML" <linux-kernel@vger.kernel.org>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        "Kernel Team" <kernel-team@fb.com>
+Subject: Re: [PATCH v2 1/4] kernfs: kvmalloc xattr value instead of kmalloc
+From:   "Daniel Xu" <dxu@dxuuu.xyz>
+To:     "Shakeel Butt" <shakeelb@google.com>
+Message-Id: <C17G1V88F2XD.EQFO8E8QX1YO@dlxu-fedora-R90QNFJV>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Shakeel,
 
---=-YLfLpufuUfbzXS9k6KF4
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, 2020-03-10 at 13:29 -0700, Mike Kravetz wrote:
-> On 3/10/20 1:15 PM, Rik van Riel wrote:
-> > On Tue, 2020-03-10 at 13:11 -0700, Mike Kravetz wrote:
-> > > the more I think about it, the more I like limiting CMA
-> > > reservations
-> > > to
-> > > only one gigantic huge page size (per arch).
-> >=20
-> > Why, though?
-> >=20
-> > The cma_alloc function can return allocations of different
-> > sizes at the same time.
-> >=20
-> > There is no limitation in the underlying code that would stop
-> > a user from allocating hugepages of different sizes through
-> > sysfs.
+On Tue Mar 10, 2020 at 12:40 PM, Shakeel Butt wrote:
+> Hi Daniel,
+>
 >=20
-> True, there is no technical reason.
+> On Thu, Mar 5, 2020 at 1:16 PM Daniel Xu <dxu@dxuuu.xyz> wrote:
+> >
+> > It's not really necessary to have contiguous physical memory for xattr
+> > values. We no longer need to worry about higher order allocations
+> > failing with kvmalloc, especially because the xattr size limit is at
+> > 64K.
+> >
+> > Signed-off-by: Daniel Xu <dxu@dxuuu.xyz>
+>
 >=20
-> I was only trying to simplify the setup and answer the outstanding
-> questions.
-> - What alignment to use for reservations?
+> The patch looks fine to me. However the commit message is too cryptic
+> i.e. hard to get the motivation behind the change.
+>
 
-Alignment can be the largest hugepage size the system
-supports, assuming the amount of memory set aside is
-at least this large?
+Thanks for taking a look. The real reason I did it was because Tejun
+said so :).
 
-> - What is minimum size of reservations?
+Tejun, is there a larger reason?
 
-One good thing is that it isn't really a reservation,
-since the memory can still be used for things like page
-cache and anonymous memory, so if too much is reserved
-the memory does not go to waste.
 
-One of my follow-up projects to Roman's project will be
-to get THP & khugepaged to effectively use memory in the
-hugepage CMA area, too.
-
-That way when a system is running a workload that is not
-using 1GB hugetlbfs pages, that easily defragmentable memory
-pool will still bring some benefits to the workload.
-
-> If only one gigantic page size is supported, the answer is
-> simple.  In any
-> case, I think input from arch specific code will be needed.
-
-Agreed.
-
---=20
-All Rights Reversed.
-
---=-YLfLpufuUfbzXS9k6KF4
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEKR73pCCtJ5Xj3yADznnekoTE3oMFAl5n+q0ACgkQznnekoTE
-3oOHkgf/ZQ1I2L6OIxzLSO8V0GshyzL880uu043u4Yft+nSOgmxUpRkjFxKLue3b
-sy1O/oBTgPLJ6LkpZuMFyRaw6uPL2qMt7JIPwKu9LdmvhHAh5Sm8H6sYZ2rEc5oD
-WuQnXMmTrRZRdP9Z3AsBMH6hh+ztzQEVA9UV+q+aP4pmzxoQYbDstnw8cdPaqk2M
-grlFDjqdlxg3nebwc3uzkdVjOEtzg9VQCde6Vgud7B7S1JdvDeswdXxuQiRu1Fy3
-ag0WQgjjOokgQlA7QTgxGdHmKUDweFef/zbiMfFYPwWaqRmkXEr/4hkOaN9WO5v/
-Hdc/arJQ3gyKCwX4Y+RQhA/gErKsig==
-=Hi/q
------END PGP SIGNATURE-----
-
---=-YLfLpufuUfbzXS9k6KF4--
-
+Thanks,
+Daniel
