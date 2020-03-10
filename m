@@ -2,202 +2,166 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 367B9C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:05:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1453EC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:06:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F33A82465A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:05:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5E362465A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:06:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FUIzwQPC"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fQr9EAae"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726642AbgCJJFr (ORCPT
+        id S1726608AbgCJJGO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 05:05:47 -0400
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:43373 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726205AbgCJJFr (ORCPT
+        Tue, 10 Mar 2020 05:06:14 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:29084 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726224AbgCJJGO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 05:05:47 -0400
-Received: by mail-vs1-f66.google.com with SMTP id 7so7879189vsr.10
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 02:05:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=IDHNp0kW8UZ5wVwRVY7Vrr/1bl/yMtFsFyxPULVhd4I=;
-        b=FUIzwQPCeu8dBEpHx+yYi9CrbOu7d822Ma/8XKSFj5B1UjoSmkI6kkIPNbTsw5ATUy
-         A3ncpVnV0xTpdQIRlM3pKOmrUbSZfWjQTW8DPstw6sBqsP3U+somaNvfQUGfWcilrWGv
-         7VA9VtR5rjQYbWAfv2Kkp+jvj2/O/DU/e9w4H8TqadcsLJ/RhSWa20K5+UMEnqH9v/Sk
-         ss8FcDFWhI3F0IlztcY49V9LDuTk9vCT19bwgu7J2DeOh4WTyAEczlXch7IML4rWOFdh
-         FFgT9DBjaZ7sxNABFHIueqhOskdDNIuA62V9opzil0t8a14f09dyupylcYjUCAiaLMjk
-         7G3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IDHNp0kW8UZ5wVwRVY7Vrr/1bl/yMtFsFyxPULVhd4I=;
-        b=BFnlHAPFzkMUTpF8nxfOmO6RMLlLvkY1uIgNYXL1zXM90xxZ6R/WsNoPfe0Gt+xAOU
-         FmBzziBWi2tOVYvUy2XheELHN71ESkJjiGLtiPPVeCcg7C8JzF1ZjtcfHqfURxHA4vDd
-         DIhKVlDdUk0Fh119oCMZhfpw3xh6+1tdp3aaxLVkjMcPgHrg4PdAN4Ku0TI/KBPnwA4P
-         8A1Yge4LNpY/cW7g0sBCndetKYDwFTIIUBzAC+L5tBRw4O7EgWpZ+iEOH/+tOxP/aojc
-         rH7dsdB71jOZRhVip8QN5ETXKXNWj+ungO8qaMmQWb/ReBzKvmyxsZqkSl1Ob2mEPuOu
-         xXhg==
-X-Gm-Message-State: ANhLgQ3q+yT9kErGW0PfqWll8bykePWjhNB5joa1mv6Vm5DShw9Q/Sfp
-        InCGEFe5hoxxucib5MEk4af/buE6mlmPmvsGOU8l3A==
-X-Google-Smtp-Source: ADFU+vunNCxQSZEaoMl1wWz/zElJ7FMTKAkFt/FhteIaiycncpEItDFDrvaw1TyPvKFRON8mBab1sfe67lriT6kHLIg=
-X-Received: by 2002:a67:646:: with SMTP id 67mr12004425vsg.34.1583831144529;
- Tue, 10 Mar 2020 02:05:44 -0700 (PDT)
+        Tue, 10 Mar 2020 05:06:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583831172;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=kpI0tfAZvKjdaV68NAZyXyRrlsXucQd9PwkfDftAWqQ=;
+        b=fQr9EAaelyN4DohP1aYs6iSGmuUD1wkZOgjrHuC8b941RTI/cmUt36/P7jVRHWclchXNje
+        q4yFtT0dI2zkoMsQZBXSbEROgxKpUFIvxpLVyvmRnBisA4UiHZ2ubTgmxU/P5Ptx0eujHG
+        zVEDOIcvnz2zYZRKx6A93p6NswOrBrE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-458-SDmuKGNZNAK66RZuB1V3qg-1; Tue, 10 Mar 2020 05:06:09 -0400
+X-MC-Unique: SDmuKGNZNAK66RZuB1V3qg-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id ECA721005509;
+        Tue, 10 Mar 2020 09:06:07 +0000 (UTC)
+Received: from [10.36.118.8] (unknown [10.36.118.8])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B30EE7389F;
+        Tue, 10 Mar 2020 09:06:03 +0000 (UTC)
+Subject: Re: linux-next: manual merge of the akpm-current tree with the vhost
+ tree
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>
+References: <20200310190205.7c152ef9@canb.auug.org.au>
+ <c7a2f5f7-6e30-cfbe-99b8-722be517ed20@redhat.com>
+ <20200310050017-mutt-send-email-mst@kernel.org>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <77969004-66c6-0b1b-32d2-e54069698fa4@redhat.com>
+Date:   Tue, 10 Mar 2020 10:06:02 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <20200212024220.GA32111@seokyung-mobl1> <CAPDyKFr9H2XcgCk9AmHgJfHC+PySh66KxegMJ4yb4aqKSVt3kg@mail.gmail.com>
- <BYAPR11MB269638142E2BF2C6E108B40A9CE20@BYAPR11MB2696.namprd11.prod.outlook.com>
- <CAPDyKFr=hE6diZmaVy-os3rFScHe+8OphBS+edkVGK+Z-J_=HA@mail.gmail.com> <BYAPR11MB2696D160D6F5B7C98E0503E79CFF0@BYAPR11MB2696.namprd11.prod.outlook.com>
-In-Reply-To: <BYAPR11MB2696D160D6F5B7C98E0503E79CFF0@BYAPR11MB2696.namprd11.prod.outlook.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Tue, 10 Mar 2020 10:05:07 +0100
-Message-ID: <CAPDyKFqqDWMsHEb493p__FNzYaEzE6Ry0bkd-2ng7cdM886zjw@mail.gmail.com>
-Subject: Re: [PATCH] mmc: mmc: Fix the timing for clock changing in mmc
-To:     "Seo, Kyungmin" <kyungmin.seo@intel.com>
-Cc:     "Hunter, Adrian" <adrian.hunter@intel.com>,
-        Chaotian Jing <chaotian.jing@mediatek.com>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200310050017-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 10 Mar 2020 at 05:28, Seo, Kyungmin <kyungmin.seo@intel.com> wrote:
->
-> I read the link and patch of Chaotian Jing.
-> I also point out what Chaotian said.
-> Most host controllers have DLL tuning values for each mode. When host controller is set as HS400 mode with 50MHz clock, host controller uses DLL value which is tuned with 200MHz clock.
->
-> If DLL value in HS400 mode doesn't have the pass range in HS mode, command transfer failing may fail.
-> In order to make robust sdhci driver, I think the patch needs to be considered.
+On 10.03.20 10:04, Michael S. Tsirkin wrote:
+> On Tue, Mar 10, 2020 at 09:39:21AM +0100, David Hildenbrand wrote:
+>> On 10.03.20 09:02, Stephen Rothwell wrote:
+>>> Hi all,
+>>>
+>>> Today's linux-next merge of the akpm-current tree got a conflict in:
+>>>
+>>>   drivers/virtio/virtio_balloon.c
+>>>
+>>> between commit:
+>>>
+>>>   b5769cdc14fc ("virtio-balloon: Switch back to OOM handler for VIRTIO_BALLOON_F_DEFLATE_ON_OOM")
+>>>
+>>> from the vhost tree and commits:
+>>>
+>>>   b64c4d5bea98 ("virtio-balloon: pull page poisoning config out of free page hinting")
+>>>   80c03575431c ("virtio-balloon: add support for providing free page reports to host")
+>>>
+>>> from the akpm-current tree.
+>>>
+>>> I looked at the conflict for a while but could not easily see how to
+>>> reconcile it, so I decided to revert the vhost tree commit for today.
+>>> Some advice would be appreciated.
+>>>
+>>
+>> Yes, the free page reporting features are currently in Andrews tree and
+>> most probably won't go via the vhost tree due to the core-mm changes.
+>> Ideally, the VIRTIO_BALLOON_F_DEFLATE_ON_OOM fix would go in unchanged,
+>> because some people might be interested in backporting it (it's not a
+>> stable fix, though).
+>>
+>> I think rebasing any way round shouldn't be too hard.
+>>
+>> @Alex, Michael, what's your thought on this?
+> 
+> I propose rebasing on top of the akpm tree and merging through there.
+> David could you do the rebase pls? I'll review and ack.
+> 
+> While there, keeping virtio_balloon_unregister_shrinker and
+> virtio_balloon_register_shrinker around might be a good idea to
+> minimize backporting pain.
 
-I have, but I am not picking it up in its current form.
+Will do.
 
-> Of course, CMD6 with HS400 mode and 200MHz clock should not cause any problem because it's correct configuration.
+-- 
+Thanks,
 
-Yes, but not for all cases, as I said in my reply in those email-threads.
+David / dhildenb
 
-What I had in mind, is that I I think we should inform
-mmc_hs400_to_hs200() about under what situation it's getting called.
-Depending on that, we should either decrease the clock rate before or
-after we send the CMD6.
-
-Would that work for your case?
-
-Kind regards
-Uffe
-
->
-> Thanks
->
-> -----Original Message-----
-> From: Ulf Hansson <ulf.hansson@linaro.org>
-> Sent: Friday, March 6, 2020 12:18 AM
-> To: Seo, Kyungmin <kyungmin.seo@intel.com>; Hunter, Adrian <adrian.hunter@intel.com>; Chaotian Jing <chaotian.jing@mediatek.com>
-> Cc: linux-mmc@vger.kernel.org; Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-> Subject: Re: [PATCH] mmc: mmc: Fix the timing for clock changing in mmc
->
-> + Adrian, Chaotian
->
-> On Thu, 5 Mar 2020 at 09:57, Seo, Kyungmin <kyungmin.seo@intel.com> wrote:
-> >
-> > The mmc_hs400_to_hs200 function is called only in HS400 mode.
-> > I saw the clock change from 200MHz to 52MHz via oscilloscope on real platform.
-> >
-> > I think CMD6 is sent in HS400 mode with 200MHz clock, but it's not.
-> > First CMD6 in mmc_hs400_to_hs200 function is sent with 52MHz clock.
->
-> I had a vague memory that we have discussed a similar problem as your are pointing out on the mailing list already. And I was right.
->
-> Please read up on the below references, [1], [2] for the earlier discussions. I suggested a solution for Chaotian to try, but it seems like he never managed to give it a go, as I don't recall new patch being posted.
->
-> Perhaps you can pick up were Chaotian left and see if you can implement the suggested solution(s). My main concern is breaking other host drivers, as that seems quite likely to happen, if we aren't careful about this.
->
-> Kind regards
-> Uffe
->
-> [1]
-> https://lore.kernel.org/linux-mmc/1548921212-5219-1-git-send-email-chaotian.jing@mediatek.com/
-> [2]
-> https://lore.kernel.org/linux-mmc/CAPDyKFquyyXx1MqNLVXuFxcEDB9nKzN8LGGNUP2yxoVMQrWiUg@mail.gmail.com/
->
->
->
-> >
-> > Thanks
-> > KM
-> >
-> > -----Original Message-----
-> > From: Ulf Hansson <ulf.hansson@linaro.org>
-> > Sent: Wednesday, March 4, 2020 8:09 PM
-> > To: Seo, Kyungmin <kyungmin.seo@intel.com>
-> > Cc: linux-mmc@vger.kernel.org; Linux Kernel Mailing List
-> > <linux-kernel@vger.kernel.org>
-> > Subject: Re: [PATCH] mmc: mmc: Fix the timing for clock changing in
-> > mmc
-> >
-> > On Wed, 12 Feb 2020 at 03:40, Kyungmin Seo <kyungmin.seo@intel.com> wrote:
-> > >
-> > > The clock has to be changed after sending CMD6 for HS mode selection
-> > > in
-> > > mmc_hs400_to_hs200() function.
-> > >
-> > > The JEDEC 5.0 and 5.1 said that "High-speed" mode selection has to
-> > > enable the the high speed mode timing in the Device, before chaning
-> > > the clock frequency to a frequency between 26MHz and 52MHz.
-> >
-> > I think that is based upon the assumption that you are using a lower frequency to start with.
-> >
-> > For example, assume that you are running with 400KHz during card initialization, then you want to send the CMD6 to switch to HS mode and that should be done, before updating the clock rate.
-> >
-> > mmc_hs400_to_hs200() goes the opposite direction, so I think the current code looks correct to me.
-> >
-> > Kind regards
-> > Uffe
-> >
-> > >
-> > > Signed-off-by: Kyungmin Seo <kyungmin.seo@intel.com>
-> > > ---
-> > >  drivers/mmc/core/mmc.c | 8 ++++----
-> > >  1 file changed, 4 insertions(+), 4 deletions(-)
-> > >
-> > > diff --git a/drivers/mmc/core/mmc.c b/drivers/mmc/core/mmc.c index
-> > > 3486bc7fbb64..98640b51c73e 100644
-> > > --- a/drivers/mmc/core/mmc.c
-> > > +++ b/drivers/mmc/core/mmc.c
-> > > @@ -1196,10 +1196,6 @@ int mmc_hs400_to_hs200(struct mmc_card *card)
-> > >         int err;
-> > >         u8 val;
-> > >
-> > > -       /* Reduce frequency to HS */
-> > > -       max_dtr = card->ext_csd.hs_max_dtr;
-> > > -       mmc_set_clock(host, max_dtr);
-> > > -
-> > >         /* Switch HS400 to HS DDR */
-> > >         val = EXT_CSD_TIMING_HS;
-> > >         err = __mmc_switch(card, EXT_CSD_CMD_SET_NORMAL,
-> > > EXT_CSD_HS_TIMING, @@ -1210,6 +1206,10 @@ int
-> > > mmc_hs400_to_hs200(struct mmc_card *card)
-> > >
-> > >         mmc_set_timing(host, MMC_TIMING_MMC_DDR52);
-> > >
-> > > +       /* Reduce frequency to HS */
-> > > +       max_dtr = card->ext_csd.hs_max_dtr;
-> > > +       mmc_set_clock(host, max_dtr);
-> > > +
-> > >         err = mmc_switch_status(card);
-> > >         if (err)
-> > >                 goto out_err;
-> > > --
-> > > 2.17.1
-> > >
