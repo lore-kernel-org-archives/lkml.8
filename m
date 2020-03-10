@@ -2,62 +2,64 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12885C10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:55:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 518A5C10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:55:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C507A215A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:55:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06586215A4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:55:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="JzCi/SFg"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="IBp8c/r3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726704AbgCJUzR (ORCPT
+        id S1727206AbgCJUzZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 16:55:17 -0400
-Received: from mail-dm6nam10on2059.outbound.protection.outlook.com ([40.107.93.59]:62017
-        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
+        Tue, 10 Mar 2020 16:55:25 -0400
+Received: from mail-bn8nam12on2067.outbound.protection.outlook.com ([40.107.237.67]:6205
+        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726100AbgCJUzR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 16:55:17 -0400
+        id S1726100AbgCJUzZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 16:55:25 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=AQl579z/o2r9PBmhNTKqNgNdD+dQ1A4k9PUjOL6wf8cOJSUb8KqimntLIdRLcufjMooe22nufgnnmVMJhjHei1KRXAqDwUszAbTCF5wQ4tKHATIt9CTBNsrNdVSkv8sgnOm1DlBeyRvonnhBFeGByWLmpO3AEDI2lyMJuQQlta3+y3eregPiJCKJixpFx3AvhNjDw82NgV785Pc9eL15g7qadyO+WbfhXPtBxQK9C14edGSB88UZBOQ3HFyVuA7kec+lbzi/PB4AHfx3Y8Z9q89vjWXC1TXzUuOb+tQQzRKeVJxDLRGVUj8sicS8hPoe1a8/UhYn80KcovIYNVnfSg==
+ b=A6VO3JxVKxtF8yJn5L+oPQf7mvTpQLQCSYgwr+2tUJYALdaEvF0RKZIXoI3KueEQ3tuZpc05lya/ACGdze1kkGbcXoAtaoL38LOa/3gavbhNl/5eLDVDyEh8fW363kc3tVpMWkHj+5xQZ2/wEmq4eIwfTPBZvUaQs8ze+5XedwzRi04sde6gCZbfHM+0J6iCcXrvWYe45TDaVeOX+Lc17sptEL8k2rZMmcWQhWm3cbdQ3L9a7X1C5PKcnskXI0ym2tNfxNspN04CGgywLq8tkqXcTThag74bNJjH5+IhNfeCLXNLvGLlj0xjUOMsq5+YVu5ch7KSI9Zkrz4iBFwwHA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aWNOy7UQ+gcEFrKy+Sxi2eXxpoqap/njQwc4iSsQl7E=;
- b=nKged3WER2yVUJyOXVOXWyqeFJ8uTuExAr5D1O0OWg5i9oToLif6dyqNkagumQBL2lgrgKidZpyjfdplAqD/ePvcXC3YXqOp7qQiFckzqLXSP+g0yFgDMu3wn0/S2TPD47mSLuGPbfBkdn67677xnKuysTVmqzU/vZ8zofj9QClLX7BXXNAJhX2+Wx+s86uvTAa6atE/Kr/iC8IbAhPTFHx2UynIvIUzJUMKeGv1wsxYwgkldf14WJ9AQdlMD5NGfl+Pn7e85QPg80RBu9f8Ow0PbTaOTu+C78CG3anZW9QODHz4QwK5xzkRwYifWrdNTyos/lIZMYd/dJ1XlgPa2g==
+ bh=Izgrxc5QjnA4+TiLDvjkaJeiODmSdJxaxz5568Qo+Sc=;
+ b=Sh30guYNEBGrtFRrXGKB0aW8ePA6eFTFo61iMW7W66endn0p0N2AWIVOFyLHwxUpOfznsl2+BIKl3vzHmCSpaPIKo3BWAH9UTnL52KwlN/8GPxfTu/hJIaDVFK2B2movTA611cfTjietRRu1bAEfPo1xcAg9nDf5bNABmXx4CweZ5nXtAk3Ls4/DjC5BtqJv0joVG0t0IcuPBAAgSkdCCvy4ygXVS5mB8bTl2sxW6UP1BN3ZFQfO5Yr9vK7bLGiPNb4JlpSt56GP5Gryywh5V3bWvNjohUNu8NQMqEP0jfMemexrrylnFEPrWAMZJtfOL3QZBdOICx1f5ze7pCDKfg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aWNOy7UQ+gcEFrKy+Sxi2eXxpoqap/njQwc4iSsQl7E=;
- b=JzCi/SFgJ4fPawbT3PxRu8jLhyO2aqvNJsxmHHlb6qfilXrYBPBwXdMdp6nEhXxFrmYQMI3JqbOSDpbJaH2BPxCcyJqnhEzsTEVcjgWfQ5QCcCatyoGybKuDfYv3SSBi6VdZOZrL2Da+Su1/m6eVfIVecHMvgoLN+3rWtVGxiFs=
+ bh=Izgrxc5QjnA4+TiLDvjkaJeiODmSdJxaxz5568Qo+Sc=;
+ b=IBp8c/r3JCerI3qSrfM+ulHjh2LtpHTFLQmB4//ImliseDKddFoHvz7TFYSsSl05aok70pKFNoQ0zGlbcdxRM8cTnSO3MkW9sOceA/pQtwlQBlmMuFdSddnyrM+lFo6bkwwvIshpBBNyvCEVDXR7VVq1gG2fx1omfNDXvvShSiE=
 Authentication-Results: spf=none (sender IP is )
  smtp.mailfrom=Sanju.Mehta@amd.com; 
 Received: from MN2PR12MB3455.namprd12.prod.outlook.com (2603:10b6:208:d0::22)
- by MN2PR12MB4031.namprd12.prod.outlook.com (2603:10b6:208:16e::16) with
+ by MN2PR12MB2925.namprd12.prod.outlook.com (2603:10b6:208:ad::11) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.15; Tue, 10 Mar
- 2020 20:55:16 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.11; Tue, 10 Mar
+ 2020 20:55:21 +0000
 Received: from MN2PR12MB3455.namprd12.prod.outlook.com
  ([fe80::f19a:d981:717:3cb6]) by MN2PR12MB3455.namprd12.prod.outlook.com
  ([fe80::f19a:d981:717:3cb6%2]) with mapi id 15.20.2793.013; Tue, 10 Mar 2020
- 20:55:16 +0000
+ 20:55:21 +0000
 From:   Sanjay R Mehta <sanju.mehta@amd.com>
 To:     jdmason@kudzu.us, dave.jiang@intel.com, allenbh@gmail.com,
         arindam.nath@amd.com, logang@deltatee.com, Shyam-sundar.S-k@amd.com
 Cc:     linux-ntb@googlegroups.com, linux-kernel@vger.kernel.org,
         Sanjay R Mehta <sanju.mehta@amd.com>
-Subject: [PATCH v2 0/5] ntb perf, ntb tool and ntb-hw improvements
-Date:   Tue, 10 Mar 2020 15:54:49 -0500
-Message-Id: <1583873694-19151-1-git-send-email-sanju.mehta@amd.com>
+Subject: [PATCH v2 1/5] ntb_perf: refactor code for CPU and DMA transfers
+Date:   Tue, 10 Mar 2020 15:54:50 -0500
+Message-Id: <1583873694-19151-2-git-send-email-sanju.mehta@amd.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1583873694-19151-1-git-send-email-sanju.mehta@amd.com>
+References: <1583873694-19151-1-git-send-email-sanju.mehta@amd.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 X-ClientProxiedBy: MA1PR0101CA0038.INDPRD01.PROD.OUTLOOK.COM
@@ -65,70 +67,316 @@ X-ClientProxiedBy: MA1PR0101CA0038.INDPRD01.PROD.OUTLOOK.COM
  (2603:10b6:208:d0::22)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from sanjuamdntb2.amd.com (165.204.156.251) by MA1PR0101CA0038.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:22::24) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2793.14 via Frontend Transport; Tue, 10 Mar 2020 20:55:13 +0000
+Received: from sanjuamdntb2.amd.com (165.204.156.251) by MA1PR0101CA0038.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:22::24) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2793.14 via Frontend Transport; Tue, 10 Mar 2020 20:55:18 +0000
 X-Mailer: git-send-email 2.7.4
 X-Originating-IP: [165.204.156.251]
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: d14c03be-45a9-4646-ac56-08d7c535558a
-X-MS-TrafficTypeDiagnostic: MN2PR12MB4031:|MN2PR12MB4031:
+X-MS-Office365-Filtering-Correlation-Id: 187728bc-31a9-4438-ca8b-08d7c53558e4
+X-MS-TrafficTypeDiagnostic: MN2PR12MB2925:|MN2PR12MB2925:
 X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <MN2PR12MB4031426AB83C1BB765DB3971E5FF0@MN2PR12MB4031.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
+X-Microsoft-Antispam-PRVS: <MN2PR12MB2925C29E5F5F57D53D2EB5A4E5FF0@MN2PR12MB2925.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
 X-Forefront-PRVS: 033857D0BD
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(366004)(39860400002)(376002)(136003)(346002)(199004)(189003)(86362001)(316002)(66946007)(6636002)(8936002)(956004)(8676002)(5660300002)(81166006)(66476007)(66556008)(52116002)(7696005)(2616005)(4326008)(478600001)(6666004)(6486002)(2906002)(81156014)(26005)(36756003)(16526019)(186003);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR12MB4031;H:MN2PR12MB3455.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(346002)(376002)(136003)(39860400002)(396003)(199004)(189003)(2616005)(6666004)(956004)(6486002)(316002)(52116002)(7696005)(478600001)(8936002)(6636002)(36756003)(26005)(16526019)(8676002)(66946007)(4326008)(81156014)(186003)(2906002)(66556008)(5660300002)(66476007)(86362001)(81166006);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR12MB2925;H:MN2PR12MB3455.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
 Received-SPF: None (protection.outlook.com: amd.com does not designate
  permitted sender hosts)
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: LX5OGgEoAhaSd0rnSsvGOOjt13ss/MlrJvB+kQXrtDYrcR/7HKlfcPkJo9fklgJxBVlGnyOyRx50V8Muxo5bccR11iVdTBrp4uiFHqHTYJrYkTr59J6yXyTNgK0bfBJnwd49P27JbDILG6pUghMqLcgIj5xXjovPPL3cKGCkTVCse6ii8OQQFwnEnL7ua182hjbxYYDjBOFLNxkjVhGXfQWyPN5TTNM5ew/x0Oap8+vGOMFuRXNaYydq6Oei48Q9/fKW+dtqmBXCCek7sMj6JGNPKNcsVjfA+oHyUrFhXCIMgAjQjdzbE0JVIaUASTpEynbobBpi9GB9lvwZpKRlCGJMbuDiZSwxtMslUJjeYxUwtUTZx1af4ZH0+aJ54VVIu6LZ9oA8HiQ/IeLrqb0hNIG9WpbpdqFSqUOjAp4YygWFrNYQKcWXGhX1ZbDl+jqa
-X-MS-Exchange-AntiSpam-MessageData: sqeu0tI4hWONAQ9/AP0Vvy5NqIOV9gewiU8Yw3j+MaWHyPO3t+sdxCy1kcchOk9SPPnABEfYoNJewoR6CaG1VzYeHcFizqQCZuvBAf5HiNq/jgIME/eyhzYU2BuB0m8umaL+x6tIo2ZHrW9d2W9yEw==
+X-Microsoft-Antispam-Message-Info: Rg9t1sOX9vNqYhddxMKtQYzk2sVDV4CmBz7Ibel9EZMld8CmDV79KWauyjdxWZAqX/2zj4jtDyJwz8oyPDxYhvpNgll51STTKfMDLMWtnFlC+uoBbRD4TFCXxw7Z9saFes1BWGK4rD0bbrxRe5N1/FXuG50TdR43XaNbRMVtcfkW2bKLZfpKlLxM/BSZLJIJC3c40D2YDKE+23EtUG4WfX0aIbw8957r64F5lcSMIcpJO5FUHsqWE2GTWVv3FDQRoO7C7+Qn56R6Bob0no09NpwC3esYN6HWrY1qtOHyZirIzIaev6Jwfsuqi8szPPGIyoqOgcHhP1a7Th6wcLXbTASZk5nDLF/RIUKUBJDO0v2rxPNdNt/jBfS+XWI2r+DeHukLgsGG3Pc+xxaTemHfNo1X0sJYsHmNGamyIGd5elD3VhQ5XFO31qPkIVuUoeJY
+X-MS-Exchange-AntiSpam-MessageData: vNf6/0RwU9v1zcVZAUa4p5c/s070QNDfIACJ2dl/TgWsWvE7/M41bXbWrYdr6VLJdgdYznQYF07eV7BI4ba3VCtvt8JfyKBSa0Dv1GmiGmSQz63NZxS3dK/OmNaPzj45gpsMKWvpr0CMqsXkJlskEg==
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d14c03be-45a9-4646-ac56-08d7c535558a
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Mar 2020 20:55:15.9432
+X-MS-Exchange-CrossTenant-Network-Message-Id: 187728bc-31a9-4438-ca8b-08d7c53558e4
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Mar 2020 20:55:21.3111
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: tHQUssLaIuOFzEDoC/nygrTf0pvfYBCwhu1KKdMGLkQTj187M0tKcusgjlhjOmdyxJRWD4cR2DQBQ8Ee1zOWBA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4031
+X-MS-Exchange-CrossTenant-UserPrincipalName: QqW8nzlakx7rgKlQ/ThcoLjF9OrvQ3SRZxzAQfiRI/PKyBGb/7eVifeKEqsGQS3NKCrYW9F6EQ1/2AxFN2hQIQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB2925
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch series modifies the ntb perf code to
-have separate functions for CPU and DMA transfers.
-It also adds handling for -EAGAIN error code so
-that we re-try sending commands later.
+From: Arindam Nath <arindam.nath@amd.com>
 
-Fixes have been made to ntb_perf, ntb_tool and 
-ntb_hw* files.
+This patch creates separate function to handle CPU
+and DMA transfers. Since CPU transfers use memcopy
+and DMA transfers use dmaengine APIs, these changes
+not only allow logical separation between the two,
+but also allows someone to clearly see the difference
+in the way the two are handled.
 
-The patches are based on Linus' tree,
+In the case of DMA, we DMA from system memory to the
+memory window(MW) of NTB, which is a MMIO region, we
+should not use dma_map_page() for mapping MW. The
+correct way to map a MMIO region is to use
+dma_map_resource(), so the code is modified
+accordingly.
 
-git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+dma_map_resource() expects physical address of the
+region to be mapped for DMA, we add a new field,
+outbuf_phys_addr, to struct perf_peer, and also
+another field, outbuf_dma_addr, to store the
+corresponding mapped address returned by the API.
 
-v2: Incorporated improvements suggested by Logan Gunthorpe
+Since the MW is contiguous, rather than mapping
+chunk-by-chunk, we map the entire MW before the
+actual DMA transfer happens. Then for each chunk,
+we simply pass offset into the mapped region and
+DMA to that region. Then later, we unmap the MW
+during perf_clear_test().
 
-Arindam Nath (2):
-  ntb_perf: refactor code for CPU and DMA transfers
-  ntb_perf: send command in response to EAGAIN
+The above means that now we need to have different
+function parameters to deal with in the case of
+CPU and DMA transfers. In the case of CPU transfers,
+we simply need the CPU virtual addresses for memcopy,
+but in the case of DMA, we need dma_addr_t, which
+will be different from CPU physical address depending
+on whether IOMMU is enabled or not. Thus we now
+have two separate functions, perf_copy_chunk_cpu(),
+and perf_copy_chunk_dma() to take care of above
+consideration.
 
-Logan Gunthorpe (1):
-  ntb: hw: remove the code that sets the DMA mask
+Signed-off-by: Arindam Nath <arindam.nath@amd.com>
+Signed-off-by: Sanjay R Mehta <sanju.mehta@amd.com>
+---
+ drivers/ntb/test/ntb_perf.c | 141 +++++++++++++++++++++++++++++++++-----------
+ 1 file changed, 105 insertions(+), 36 deletions(-)
 
-Sanjay R Mehta (2):
-  ntb_perf: pass correct struct device to dma_alloc_coherent
-  ntb_tool: pass correct struct device to dma_alloc_coherent
-
- drivers/ntb/hw/amd/ntb_hw_amd.c    |   4 -
- drivers/ntb/hw/idt/ntb_hw_idt.c    |   6 --
- drivers/ntb/hw/intel/ntb_hw_gen1.c |   4 -
- drivers/ntb/test/ntb_perf.c        | 167 +++++++++++++++++++++++++++----------
- drivers/ntb/test/ntb_tool.c        |   6 +-
- 5 files changed, 126 insertions(+), 61 deletions(-)
-
+diff --git a/drivers/ntb/test/ntb_perf.c b/drivers/ntb/test/ntb_perf.c
+index e9b7c2d..6d16628 100644
+--- a/drivers/ntb/test/ntb_perf.c
++++ b/drivers/ntb/test/ntb_perf.c
+@@ -149,6 +149,8 @@ struct perf_peer {
+ 	u64 outbuf_xlat;
+ 	resource_size_t outbuf_size;
+ 	void __iomem *outbuf;
++	phys_addr_t outbuf_phys_addr;
++	dma_addr_t outbuf_dma_addr;
+ 
+ 	/* Inbound MW params */
+ 	dma_addr_t inbuf_xlat;
+@@ -775,26 +777,24 @@ static void perf_dma_copy_callback(void *data)
+ 	wake_up(&pthr->dma_wait);
+ }
+ 
+-static int perf_copy_chunk(struct perf_thread *pthr,
+-			   void __iomem *dst, void *src, size_t len)
++static int perf_copy_chunk_cpu(struct perf_thread *pthr,
++			       void __iomem *dst, void *src, size_t len)
++{
++	memcpy_toio(dst, src, len);
++
++	return likely(atomic_read(&pthr->perf->tsync) > 0) ? 0 : -EINTR;
++}
++
++static int perf_copy_chunk_dma(struct perf_thread *pthr,
++			       dma_addr_t dst, void *src, size_t len)
+ {
+ 	struct dma_async_tx_descriptor *tx;
+ 	struct dmaengine_unmap_data *unmap;
+ 	struct device *dma_dev;
+ 	int try = 0, ret = 0;
+ 
+-	if (!use_dma) {
+-		memcpy_toio(dst, src, len);
+-		goto ret_check_tsync;
+-	}
+-
+ 	dma_dev = pthr->dma_chan->device->dev;
+-
+-	if (!is_dma_copy_aligned(pthr->dma_chan->device, offset_in_page(src),
+-				 offset_in_page(dst), len))
+-		return -EIO;
+-
+-	unmap = dmaengine_get_unmap_data(dma_dev, 2, GFP_NOWAIT);
++	unmap = dmaengine_get_unmap_data(dma_dev, 1, GFP_NOWAIT);
+ 	if (!unmap)
+ 		return -ENOMEM;
+ 
+@@ -807,17 +807,12 @@ static int perf_copy_chunk(struct perf_thread *pthr,
+ 	}
+ 	unmap->to_cnt = 1;
+ 
+-	unmap->addr[1] = dma_map_page(dma_dev, virt_to_page(dst),
+-		offset_in_page(dst), len, DMA_FROM_DEVICE);
+-	if (dma_mapping_error(dma_dev, unmap->addr[1])) {
+-		ret = -EIO;
+-		goto err_free_resource;
+-	}
+-	unmap->from_cnt = 1;
+-
+ 	do {
+-		tx = dmaengine_prep_dma_memcpy(pthr->dma_chan, unmap->addr[1],
+-			unmap->addr[0], len, DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
++		tx = dmaengine_prep_dma_memcpy(pthr->dma_chan, dst,
++					       unmap->addr[0], len,
++					       DMA_PREP_INTERRUPT |
++					       DMA_CTRL_ACK);
++
+ 		if (!tx)
+ 			msleep(DMA_MDELAY);
+ 	} while (!tx && (try++ < DMA_TRIES));
+@@ -833,22 +828,16 @@ static int perf_copy_chunk(struct perf_thread *pthr,
+ 
+ 	ret = dma_submit_error(dmaengine_submit(tx));
+ 	if (ret) {
+-		dmaengine_unmap_put(unmap);
+ 		goto err_free_resource;
+ 	}
+ 
+-	dmaengine_unmap_put(unmap);
+-
+ 	atomic_inc(&pthr->dma_sync);
+ 	dma_async_issue_pending(pthr->dma_chan);
+ 
+-ret_check_tsync:
+-	return likely(atomic_read(&pthr->perf->tsync) > 0) ? 0 : -EINTR;
+-
+ err_free_resource:
+ 	dmaengine_unmap_put(unmap);
+ 
+-	return ret;
++	return likely(atomic_read(&pthr->perf->tsync) > 0) ? ret : -EINTR;
+ }
+ 
+ static bool perf_dma_filter(struct dma_chan *chan, void *data)
+@@ -893,7 +882,7 @@ static int perf_init_test(struct perf_thread *pthr)
+ 	return 0;
+ }
+ 
+-static int perf_run_test(struct perf_thread *pthr)
++static int perf_run_test_cpu(struct perf_thread *pthr)
+ {
+ 	struct perf_peer *peer = pthr->perf->test_peer;
+ 	struct perf_ctx *perf = pthr->perf;
+@@ -914,7 +903,7 @@ static int perf_run_test(struct perf_thread *pthr)
+ 
+ 	/* Copied field is cleared on test launch stage */
+ 	while (pthr->copied < total_size) {
+-		ret = perf_copy_chunk(pthr, flt_dst, flt_src, chunk_size);
++		ret = perf_copy_chunk_cpu(pthr, flt_dst, flt_src, chunk_size);
+ 		if (ret) {
+ 			dev_err(&perf->ntb->dev, "%d: Got error %d on test\n",
+ 				pthr->tidx, ret);
+@@ -937,6 +926,74 @@ static int perf_run_test(struct perf_thread *pthr)
+ 	return 0;
+ }
+ 
++static int perf_run_test_dma(struct perf_thread *pthr)
++{
++	struct perf_peer *peer = pthr->perf->test_peer;
++	struct perf_ctx *perf = pthr->perf;
++	struct device *dma_dev;
++	dma_addr_t flt_dst, bnd_dst;
++	u64 total_size, chunk_size;
++	void *flt_src;
++	int ret = 0;
++
++	total_size = 1ULL << total_order;
++	chunk_size = 1ULL << chunk_order;
++	chunk_size = min_t(u64, peer->outbuf_size, chunk_size);
++
++	/* Map MW for DMA */
++	dma_dev = pthr->dma_chan->device->dev;
++	peer->outbuf_dma_addr = dma_map_resource(dma_dev,
++						 peer->outbuf_phys_addr,
++						 peer->outbuf_size,
++						 DMA_FROM_DEVICE, 0);
++	if (dma_mapping_error(dma_dev, peer->outbuf_dma_addr)) {
++		dma_unmap_resource(dma_dev, peer->outbuf_dma_addr,
++				   peer->outbuf_size, DMA_FROM_DEVICE, 0);
++		return -EIO;
++	}
++
++	flt_src = pthr->src;
++	bnd_dst = peer->outbuf_dma_addr + peer->outbuf_size;
++	flt_dst = peer->outbuf_dma_addr;
++
++	pthr->duration = ktime_get();
++	/* Copied field is cleared on test launch stage */
++	while (pthr->copied < total_size) {
++		ret = perf_copy_chunk_dma(pthr, flt_dst, flt_src, chunk_size);
++		if (ret) {
++			dev_err(&perf->ntb->dev, "%d: Got error %d on test\n",
++				pthr->tidx, ret);
++			return ret;
++		}
++
++		pthr->copied += chunk_size;
++
++		flt_dst += chunk_size;
++		flt_src += chunk_size;
++		if (flt_dst >= bnd_dst || flt_dst < peer->outbuf_dma_addr) {
++			flt_dst = peer->outbuf_dma_addr;
++			flt_src = pthr->src;
++		}
++
++		/* Give up CPU to give a chance for other threads to use it */
++		schedule();
++	}
++
++	return 0;
++}
++
++static int perf_run_test(struct perf_thread *pthr)
++{
++	int ret = 0;
++
++	if (!use_dma)
++		ret = perf_run_test_cpu(pthr);
++	else
++		ret = perf_run_test_dma(pthr);
++
++	return ret;
++}
++
+ static int perf_sync_test(struct perf_thread *pthr)
+ {
+ 	struct perf_ctx *perf = pthr->perf;
+@@ -969,6 +1026,8 @@ static int perf_sync_test(struct perf_thread *pthr)
+ static void perf_clear_test(struct perf_thread *pthr)
+ {
+ 	struct perf_ctx *perf = pthr->perf;
++	struct perf_peer *peer = pthr->perf->test_peer;
++	struct device *dma_dev;
+ 
+ 	if (!use_dma)
+ 		goto no_dma_notify;
+@@ -978,6 +1037,10 @@ static void perf_clear_test(struct perf_thread *pthr)
+ 	 * We call it anyway just to be sure of the transfers completion.
+ 	 */
+ 	(void)dmaengine_terminate_sync(pthr->dma_chan);
++	/* Un-map MW */
++	dma_dev = pthr->dma_chan->device->dev;
++	dma_unmap_resource(dma_dev, peer->outbuf_dma_addr, peer->outbuf_size,
++			   DMA_FROM_DEVICE, 0);
+ 
+ 	dma_release_channel(pthr->dma_chan);
+ 
+@@ -1383,10 +1446,16 @@ static int perf_setup_peer_mw(struct perf_peer *peer)
+ 	if (ret)
+ 		return ret;
+ 
+-	peer->outbuf = devm_ioremap_wc(&perf->ntb->dev, phys_addr,
+-					peer->outbuf_size);
+-	if (!peer->outbuf)
+-		return -ENOMEM;
++	if (use_dma) {
++		/* For DMA to/from MW */
++		peer->outbuf_phys_addr = phys_addr;
++	} else {
++		/* For CPU read(from)/write(to) MW */
++		peer->outbuf = devm_ioremap_wc(&perf->ntb->dev, phys_addr,
++					       peer->outbuf_size);
++		if (!peer->outbuf)
++			return -ENOMEM;
++	}
+ 
+ 	if (max_mw_size && peer->outbuf_size > max_mw_size) {
+ 		peer->outbuf_size = max_mw_size;
 -- 
 2.7.4
 
