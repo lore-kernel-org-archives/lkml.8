@@ -2,251 +2,148 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=FORGED_MUA_MOZILLA,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5F1DC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:34:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81A4AC10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:36:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71A7F21927
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:34:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F24520578
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:36:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VQBmIGLV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727027AbgCJUeP (ORCPT
+        id S1726487AbgCJUgI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 16:34:15 -0400
-Received: from mail-db8eur05olkn2076.outbound.protection.outlook.com ([40.92.89.76]:26657
-        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726293AbgCJUeO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 16:34:14 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WcIEyrTUfMaHQbnYYU69H60WcLBOcxjNjkw6M6FER+zQKxoO11BO2dl7HRFd9tkLp2hRbo6YZBLoIKjZH6Dvkfgcm0VRlkOQagDCRHbBxTmZLX0Deth0CMoWSB/BoG0EoNzfTBIt+atO+6imSn2Zl9JuNK8vvkcJIBsQBFxCZzsvQi6dWQUQ/CzuYRV03c1sAWLvoQ2VwN62r+vew6HnVHoqEQhueLl2Ucon8RzxVc/b8ti3wd1BWc1sn4bR7tvVhDMsEioCemVSRImRq2OFu/cmOhU6AjBH25hgkI+bqKUcCaytbb9X1UIi7ZQyh3XoYp8jQtBkdDuhDfPQbv7M1g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vAMMURuQOqpRTcA7Rkvbc6MqvIzvGiO1uSjjJcyUb30=;
- b=ACzEtZU1AHXhYWN4CHS7kzH9hPtpYLK0GAnGWq2FOlEpYr0dwSTzMQkIUu3qj2OmNiV88pJwcQB8O68m34jCoJQdcbaktX/j6qn4Gz8Oyq1LBsd18YL1Pi8Pb9vmCUYdRKZz+QbDcKRBN5ICMBzSFqSd/3dS4N4vt5ZQTIazOAD6trNm2uHRUMjzfLcfkdwC8zGQ+anEvWNIxCf7QM9J38viAFUGDBnHVQA98nEDxCWMMzaUTUMVcGkGoggaY71c8niC4ojDewYx8LDs479pANL9S65U/9KYiaMPBTcQLymUlj2Ea3VudfVOaAoSnM+q8gWeGdpwAzhdjliZPul0lA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hotmail.de; dmarc=pass action=none header.from=hotmail.de;
- dkim=pass header.d=hotmail.de; arc=none
-Received: from DB8EUR05FT064.eop-eur05.prod.protection.outlook.com
- (2a01:111:e400:fc0f::39) by
- DB8EUR05HT123.eop-eur05.prod.protection.outlook.com (2a01:111:e400:fc0f::467)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.11; Tue, 10 Mar
- 2020 20:34:07 +0000
-Received: from AM6PR03MB5170.eurprd03.prod.outlook.com (10.233.238.55) by
- DB8EUR05FT064.mail.protection.outlook.com (10.233.239.123) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2793.11 via Frontend Transport; Tue, 10 Mar 2020 20:34:07 +0000
-X-IncomingTopHeaderMarker: OriginalChecksum:6E2F2765202CE35416464C135C6FFBA2B719C05EE3CB6A8D11B988178C1F7E4F;UpperCasedChecksum:DEB30F3B4732FBB9D66C8D6B6912433D1AF3FA695E5EA99E62586E709F1D7555;SizeAsReceived:9951;Count:50
-Received: from AM6PR03MB5170.eurprd03.prod.outlook.com
- ([fe80::1956:d274:cab3:b4dd]) by AM6PR03MB5170.eurprd03.prod.outlook.com
- ([fe80::1956:d274:cab3:b4dd%6]) with mapi id 15.20.2793.013; Tue, 10 Mar 2020
- 20:34:06 +0000
-Subject: Re: [PATCH v2 2/5] exec: Factor unshare_sighand out of de_thread and
- call it separately
-To:     Kees Cook <keescook@chromium.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Andrei Vagin <avagin@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Yuyang Du <duyuyang@gmail.com>,
-        David Hildenbrand <david@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        David Howells <dhowells@redhat.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christian Kellner <christian@kellner.me>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>
-References: <87v9nlii0b.fsf@x220.int.ebiederm.org>
- <AM6PR03MB5170609D44967E044FD1BE40E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <87a74xi4kz.fsf@x220.int.ebiederm.org>
- <AM6PR03MB51705AA3009B4986BB6EF92FE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <87r1y8dqqz.fsf@x220.int.ebiederm.org>
- <AM6PR03MB517053AED7DC89F7C0704B7DE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <AM6PR03MB51703B44170EAB4626C9B2CAE4E20@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <87tv32cxmf.fsf_-_@x220.int.ebiederm.org>
- <87v9ne5y4y.fsf_-_@x220.int.ebiederm.org>
- <87k13u5y26.fsf_-_@x220.int.ebiederm.org> <202003101319.BAE7B535A@keescook>
-From:   Bernd Edlinger <bernd.edlinger@hotmail.de>
-Message-ID: <AM6PR03MB5170BDBF7D6E4AC63B40E9C0E4FF0@AM6PR03MB5170.eurprd03.prod.outlook.com>
-Date:   Tue, 10 Mar 2020 21:34:03 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-In-Reply-To: <202003101319.BAE7B535A@keescook>
-Content-Type: text/plain; charset=windows-1252
+        Tue, 10 Mar 2020 16:36:08 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:46502 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726265AbgCJUgH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 16:36:07 -0400
+Received: by mail-pf1-f193.google.com with SMTP id c19so4744072pfo.13;
+        Tue, 10 Mar 2020 13:36:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=fV5+RiKGHa+0tysZC6eRzTKR3e7KC+kQ8EcrhIyapM4=;
+        b=VQBmIGLVfJEfJVQJSU078Gto/o5LJlmAF9oHI5o4vgeCX2gK3rjNvsQ1G9T2Z1A0fJ
+         44UNjuBSDZjCBlp4WNS0wZSWBvvB3xV8Dfwlzruf9cSSohEWhRHmyY6Aw5o+XLtZVKDJ
+         4jMU//lqJQSW/Nsb1mwVLk0XWPx5Ev0INwttHJ6yMmjMsLXGdFPussXrjMtIywAvG7ta
+         Kfd37IYbD+1pbG4fDXTtblgcm6QfzHcZo9/K4NPBeYkPix8hTzLdlYA/8b3Mu78hlWcQ
+         uINtxglfZKNMO0SVDVI0Bg5EO26lf6dqW7I7zA0N7Pu9EwPd/2ipCagrcIMqb45VcXsY
+         ZggQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=fV5+RiKGHa+0tysZC6eRzTKR3e7KC+kQ8EcrhIyapM4=;
+        b=Ib1VEIcWzSfyj6Dix0C8JdVtDkaQOSWfBflGdQSmogfAPw0C+xVxDwjWmKb0hPnFwO
+         364DVoOpbBRX5ynZpZ+DiBuAwNgpofdwr0eSeeeupDNq/1yg/arMydS1Fl5OVqrnKBrB
+         KP2nNvcRweT4QKZiy/SOpHWyOlkLEueLaGHw8RnrVfoPy0k0AVxqD6/xJ9rCYvCFUj0/
+         QRIjcYih01iTYbMHQuCy0nARvWqjWbcXx80YtR47oARIg1EBzeK7Fdzp9qWDh10DTtTk
+         UtvsATjOERTytVAdhQI5DFxUsQKqhPclZDx6OqAmkGkxGEFbMNGgg+QZg0LObHupydWz
+         nlVQ==
+X-Gm-Message-State: ANhLgQ1jrHgL65iU8xcSRZiFDO8H/sl/RqBJkr7JiBnVLCDKEYVZ9M/N
+        Q9lm/psUNYGBYahZp4UJq8Y=
+X-Google-Smtp-Source: ADFU+vteDYFDTXUuR514tIcr2qrQXOj/kIC1OkMBZwy0pVRATabXWRso4IHATHfKlZU5qbO2kbRpXg==
+X-Received: by 2002:a62:760e:: with SMTP id r14mr16229814pfc.51.1583872565275;
+        Tue, 10 Mar 2020 13:36:05 -0700 (PDT)
+Received: from [192.168.86.235] (c-73-241-150-58.hsd1.ca.comcast.net. [73.241.150.58])
+        by smtp.gmail.com with ESMTPSA id m128sm49687689pfm.183.2020.03.10.13.36.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Mar 2020 13:36:04 -0700 (PDT)
+Subject: Re: KASAN: invalid-free in tcf_exts_destroy
+To:     Cong Wang <xiyou.wangcong@gmail.com>,
+        syzbot <syzbot+dcc34d54d68ef7d2d53d@syzkaller.appspotmail.com>
+Cc:     David Miller <davem@davemloft.net>,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        Jiri Pirko <jiri@resnulli.us>,
+        Jakub Kicinski <kuba@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+References: <00000000000034513e05a05cfc23@google.com>
+ <CAM_iQpVgQ+Mc16CVds-ywp6YHEbwbGtJwqoQXBFbrMTOUZS0YQ@mail.gmail.com>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <635ab023-d180-7ddf-a280-78080040512c@gmail.com>
+Date:   Tue, 10 Mar 2020 13:36:02 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <CAM_iQpVgQ+Mc16CVds-ywp6YHEbwbGtJwqoQXBFbrMTOUZS0YQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: ZR0P278CA0034.CHEP278.PROD.OUTLOOK.COM
- (2603:10a6:910:1c::21) To AM6PR03MB5170.eurprd03.prod.outlook.com
- (2603:10a6:20b:ca::23)
-X-Microsoft-Original-Message-ID: <413880a2-67ee-abda-4d94-5fbc3a5f2ce0@hotmail.de>
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [192.168.1.101] (92.77.140.102) by ZR0P278CA0034.CHEP278.PROD.OUTLOOK.COM (2603:10a6:910:1c::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.16 via Frontend Transport; Tue, 10 Mar 2020 20:34:04 +0000
-X-Microsoft-Original-Message-ID: <413880a2-67ee-abda-4d94-5fbc3a5f2ce0@hotmail.de>
-X-TMN:  [DsNTvsup9lZ76RgwngAXzyrPQegfXQCx]
-X-MS-PublicTrafficType: Email
-X-IncomingHeaderCount: 50
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-Correlation-Id: c95913f9-1af9-44d2-566d-08d7c5326111
-X-MS-TrafficTypeDiagnostic: DB8EUR05HT123:
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: w2FGXk/Rw0XOCw+CWrOFh7T3lufTrUFbuwCliexGLVlvacylgONvHzVBqY/4sKRwJyrmwelZfnzrYhmqFWvw3zv7WIhY6BHRQtsyTbF9TrC2YovjA5P1Np90KcTFLE52GhBUj4+3xdaVoCaDRrJ0XWXUQYUfwQlZ2BA12wbLRqTfVmKdgjJjWzxOYRMh+M6T
-X-MS-Exchange-AntiSpam-MessageData: e7isqGKnWltXNTIoA/I+4t0398dD8dlfkBFpzeaiBiLbycQwkT8t55u00tbQ61cOky4WnCESdGu8EllZSmXQo/yj41LeMrUAl8rJz5VYppDr0JR27TbKDloC7QJERB4uHq42/TAp26jmCOIT6hIf6A==
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c95913f9-1af9-44d2-566d-08d7c5326111
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Mar 2020 20:34:06.6875
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8EUR05HT123
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/10/20 9:29 PM, Kees Cook wrote:
-> On Sun, Mar 08, 2020 at 04:36:17PM -0500, Eric W. Biederman wrote:
+
+
+On 3/10/20 11:33 AM, Cong Wang wrote:
+> On Sun, Mar 8, 2020 at 12:35 PM syzbot
+> <syzbot+dcc34d54d68ef7d2d53d@syzkaller.appspotmail.com> wrote:
 >>
->> This makes the code clearer and makes it easier to implement a mutex
->> that is not taken over any locations that may block indefinitely waiting
->> for userspace.
+>> Hello,
 >>
->> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
->> ---
->>  fs/exec.c | 39 ++++++++++++++++++++++++++-------------
->>  1 file changed, 26 insertions(+), 13 deletions(-)
+>> syzbot found the following crash on:
 >>
->> diff --git a/fs/exec.c b/fs/exec.c
->> index c3f34791f2f0..ff74b9a74d34 100644
->> --- a/fs/exec.c
->> +++ b/fs/exec.c
->> @@ -1194,6 +1194,23 @@ static int de_thread(struct task_struct *tsk)
->>  	flush_itimer_signals();
->>  #endif
+>> HEAD commit:    c2003765 Merge tag 'io_uring-5.6-2020-03-07' of git://git...
+>> git tree:       upstream
+>> console output: https://syzkaller.appspot.com/x/log.txt?x=10cd2ae3e00000
+>> kernel config:  https://syzkaller.appspot.com/x/.config?x=4527d1e2fb19fd5c
+>> dashboard link: https://syzkaller.appspot.com/bug?extid=dcc34d54d68ef7d2d53d
+>> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+>> userspace arch: i386
+>> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1561b01de00000
+>> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15aad2f9e00000
+>>
+>> The bug was bisected to:
+>>
+>> commit 599be01ee567b61f4471ee8078870847d0a11e8e
+>> Author: Cong Wang <xiyou.wangcong@gmail.com>
+>> Date:   Mon Feb 3 05:14:35 2020 +0000
+>>
+>>     net_sched: fix an OOB access in cls_tcindex
+>>
+>> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=10a275fde00000
+>> final crash:    https://syzkaller.appspot.com/x/report.txt?x=12a275fde00000
+>> console output: https://syzkaller.appspot.com/x/log.txt?x=14a275fde00000
+>>
+>> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+>> Reported-by: syzbot+dcc34d54d68ef7d2d53d@syzkaller.appspotmail.com
+>> Fixes: 599be01ee567 ("net_sched: fix an OOB access in cls_tcindex")
+>>
+>> IPVS: ftp: loaded support on port[0] = 21
+>> ==================================================================
+>> BUG: KASAN: double-free or invalid-free in tcf_exts_destroy+0x62/0xc0 net/sched/cls_api.c:3002
+>>
+>> CPU: 1 PID: 9507 Comm: syz-executor467 Not tainted 5.6.0-rc4-syzkaller #0
+>> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+>> Call Trace:
+>>  __dump_stack lib/dump_stack.c:77 [inline]
+>>  dump_stack+0x188/0x20d lib/dump_stack.c:118
+>>  print_address_description.constprop.0.cold+0xd3/0x315 mm/kasan/report.c:374
+>>  kasan_report_invalid_free+0x61/0xa0 mm/kasan/report.c:468
+>>  __kasan_slab_free+0x129/0x140 mm/kasan/common.c:455
+>>  __cache_free mm/slab.c:3426 [inline]
+>>  kfree+0x109/0x2b0 mm/slab.c:3757
+>>  tcf_exts_destroy+0x62/0xc0 net/sched/cls_api.c:3002
+>>  tcf_exts_change+0xf4/0x150 net/sched/cls_api.c:3059
+>>  tcindex_set_parms+0xed8/0x1a00 net/sched/cls_tcindex.c:456
 > 
-> Semi-related (existing behavior): in de_thread(), what keeps the thread
-> group from changing? i.e.:
+> Looks like a consequence of "slab-out-of-bounds Write in tcindex_set_parms".
 > 
->         if (thread_group_empty(tsk))
->                 goto no_thread_group;
-> 
->         /*
->          * Kill all other threads in the thread group.
->          */
->         spin_lock_irq(lock);
-> 	... kill other threads under lock ...
-> 
-> Why is the thread_group_emtpy() test not under lock?
+> Thanks.
 > 
 
-A new thread cannot created when only one thread is executing,
-right?
+I have a dozen more syzbot reports involving net/sched code, do you want
+me to release them right now ?
 
->>  
->> +	BUG_ON(!thread_group_leader(tsk));
->> +	return 0;
->> +
->> +killed:
->> +	/* protects against exit_notify() and __exit_signal() */
-> 
-> I wonder if include/linux/sched/task.h's definition of tasklist_lock
-> should explicitly gain note about group_exit_task and notify_count,
-> or, alternatively, signal.h's section on these fields should gain a
-> comment? tasklist_lock is unmentioned in signal.h... :(
-> 
->> +	read_lock(&tasklist_lock);
->> +	sig->group_exit_task = NULL;
->> +	sig->notify_count = 0;
->> +	read_unlock(&tasklist_lock);
->> +	return -EAGAIN;
->> +}
->> +
->> +
->> +static int unshare_sighand(struct task_struct *me)
->> +{
->> +	struct sighand_struct *oldsighand = me->sighand;
->> +
->>  	if (refcount_read(&oldsighand->count) != 1) {
->>  		struct sighand_struct *newsighand;
->>  		/*
->> @@ -1210,23 +1227,13 @@ static int de_thread(struct task_struct *tsk)
->>  
->>  		write_lock_irq(&tasklist_lock);
->>  		spin_lock(&oldsighand->siglock);
->> -		rcu_assign_pointer(tsk->sighand, newsighand);
->> +		rcu_assign_pointer(me->sighand, newsighand);
->>  		spin_unlock(&oldsighand->siglock);
->>  		write_unlock_irq(&tasklist_lock);
->>  
->>  		__cleanup_sighand(oldsighand);
->>  	}
->> -
->> -	BUG_ON(!thread_group_leader(tsk));
->>  	return 0;
->> -
->> -killed:
->> -	/* protects against exit_notify() and __exit_signal() */
->> -	read_lock(&tasklist_lock);
->> -	sig->group_exit_task = NULL;
->> -	sig->notify_count = 0;
->> -	read_unlock(&tasklist_lock);
->> -	return -EAGAIN;
->>  }
->>  
->>  char *__get_task_comm(char *buf, size_t buf_size, struct task_struct *tsk)
->> @@ -1264,13 +1271,19 @@ int flush_old_exec(struct linux_binprm * bprm)
->>  	int retval;
->>  
->>  	/*
->> -	 * Make sure we have a private signal table and that
->> -	 * we are unassociated from the previous thread group.
->> +	 * Make this the only thread in the thread group.
->>  	 */
->>  	retval = de_thread(me);
->>  	if (retval)
->>  		goto out;
->>  
->> +	/*
->> +	 * Make the signal table private.
->> +	 */
->> +	retval = unshare_sighand(me);
->> +	if (retval)
->> +		goto out;
->> +
->>  	/*
->>  	 * Must be called _before_ exec_mmap() as bprm->mm is
->>  	 * not visibile until then. This also enables the update
->> -- 
->> 2.25.0
-> 
-> Otherwise, yes, sensible separation.
-> 
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-> 
