@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16A7DC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:52:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19381C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:52:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDF222468E
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:52:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3F4620674
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:52:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583844735;
-	bh=3aUHtr5VhDOf2LoeEAfUA4zom+D6IHvYST6XzR/+4/Y=;
+	s=default; t=1583844740;
+	bh=U9fQTBsZ77C7T0LqNy6KK/CCyL7/y0DL4O9YsefmW0Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=b6iYgaKHZV/9rYgzipg/RU1Vl/QSubA/114UlxUZT8K6oCCXlPIuhrHA2798z1Nho
-	 tvGrer+16qwWBmNiJOiCGrjEc/zhMO7qHRpkTStgUBOX+mXt7JiIwzl14eK3qtu9OF
-	 MLjjjplvB36LpV4RYNQ5Kf/ve261VgW4w4POCQlM=
+	b=QuPqLoL99HlbU3ilb+Ey8/tfBseE7xATox6qiJCPWvqngVXLMwM1cgMmpS76/8tWu
+	 t7qAzYDkSQsrxqgLTje0lXc93O847yuIrt/jrL0BjtKesOPsI/RIpKTJXW5yo4785I
+	 9ZB+YLKiTCv+grijYhCbQ/ta/ZWYN698I7XeoRsg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729019AbgCJMwO (ORCPT
+        id S1729037AbgCJMwT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:52:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57592 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:52:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57940 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729005AbgCJMwJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:52:09 -0400
+        id S1729025AbgCJMwQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:52:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 245C420674;
-        Tue, 10 Mar 2020 12:52:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A289F2253D;
+        Tue, 10 Mar 2020 12:52:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844728;
-        bh=3aUHtr5VhDOf2LoeEAfUA4zom+D6IHvYST6XzR/+4/Y=;
+        s=default; t=1583844736;
+        bh=U9fQTBsZ77C7T0LqNy6KK/CCyL7/y0DL4O9YsefmW0Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ijPcdLVMJG0ZobxjpfL4TQOpXmdox8thgFFjWDa0uHnQByqVMmQQgR0py691balDA
-         UAZs2ErWTsfqqUaTkwK10Ee2ZJf0tUPPi5eQIIGqaR+HxGNBh21fOL0Lcxyz7Sc/yD
-         MzbVt8v1zu37p2Pkxx8AaJeUcCehJOGz4lchLyyE=
+        b=lp3g8KofP7SZyDYs+zXobEu9y/4ByToWoNVtUbtXD7Hw9fnKuHIVa/aPHUC83k9p+
+         Aafeejp01yrzHhe4VO8JpY4qIIkAhhx6UtNvRphlVE0aWwn3sLDUmMNExBX1izlACG
+         SykdBgdLXzfPWGsQHNHxmwFD2olK6d+Sf7MZ7Bp0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Simon Han <z.han@kunbus.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 5.4 096/168] spi: spidev: Fix CS polarity if GPIO descriptors are used
-Date:   Tue, 10 Mar 2020 13:39:02 +0100
-Message-Id: <20200310123645.084722622@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+Subject: [PATCH 5.4 099/168] s390/mm: fix panic in gup_fast on large pud
+Date:   Tue, 10 Mar 2020 13:39:05 +0100
+Message-Id: <20200310123645.404447808@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123635.322799692@linuxfoundation.org>
 References: <20200310123635.322799692@linuxfoundation.org>
@@ -61,55 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lukas Wunner <lukas@wunner.de>
+From: Gerald Schaefer <gerald.schaefer@de.ibm.com>
 
-commit 138c9c32f090894614899eca15e0bb7279f59865 upstream.
+commit 582b4e55403e053d8a48ff687a05174da9cc3fb0 upstream.
 
-Commit f3186dd87669 ("spi: Optionally use GPIO descriptors for CS GPIOs")
-amended of_spi_parse_dt() to always set SPI_CS_HIGH for SPI slaves whose
-Chip Select is defined by a "cs-gpios" devicetree property.
+On s390 there currently is no implementation of pud_write(). That was ok
+as long as we had our own implementation of get_user_pages_fast() which
+checked for pud protection by testing the bit directly w/o using
+pud_write(). The other callers of pud_write() are not reachable on s390.
 
-This change broke userspace applications which issue an SPI_IOC_WR_MODE
-ioctl() to an spidev:  Chip Select polarity will be incorrect unless the
-application is changed to set SPI_CS_HIGH.  And once changed, it will be
-incompatible with kernels not containing the commit.
+After commit 1a42010cdc26 ("s390/mm: convert to the generic
+get_user_pages_fast code") we use the generic get_user_pages_fast(), which
+does call pud_write() in pud_access_permitted() for FOLL_WRITE access on
+a large pud. Without an s390 specific pud_write(), the generic version is
+called, which contains a BUG() statement to remind us that we don't have a
+proper implementation. This results in a kernel panic.
 
-Fix by setting SPI_CS_HIGH in spidev_ioctl() (under the same conditions
-as in of_spi_parse_dt()).
+Fix this by providing an implementation of pud_write().
 
-Fixes: f3186dd87669 ("spi: Optionally use GPIO descriptors for CS GPIOs")
-Reported-by: Simon Han <z.han@kunbus.com>
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Link: https://lore.kernel.org/r/fca3ba7cdc930cd36854666ceac4fbcf01b89028.1582027457.git.lukas@wunner.de
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Cc: stable@vger.kernel.org # v5.1+
+Cc: <stable@vger.kernel.org> # 5.2+
+Fixes: 1a42010cdc26 ("s390/mm: convert to the generic get_user_pages_fast code")
+Signed-off-by: Gerald Schaefer <gerald.schaefer@de.ibm.com>
+Reviewed-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/spi/spidev.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ arch/s390/include/asm/pgtable.h |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/drivers/spi/spidev.c
-+++ b/drivers/spi/spidev.c
-@@ -394,6 +394,7 @@ spidev_ioctl(struct file *filp, unsigned
- 		else
- 			retval = get_user(tmp, (u32 __user *)arg);
- 		if (retval == 0) {
-+			struct spi_controller *ctlr = spi->controller;
- 			u32	save = spi->mode;
+--- a/arch/s390/include/asm/pgtable.h
++++ b/arch/s390/include/asm/pgtable.h
+@@ -756,6 +756,12 @@ static inline int pmd_write(pmd_t pmd)
+ 	return (pmd_val(pmd) & _SEGMENT_ENTRY_WRITE) != 0;
+ }
  
- 			if (tmp & ~SPI_MODE_MASK) {
-@@ -401,6 +402,10 @@ spidev_ioctl(struct file *filp, unsigned
- 				break;
- 			}
- 
-+			if (ctlr->use_gpio_descriptors && ctlr->cs_gpiods &&
-+			    ctlr->cs_gpiods[spi->chip_select])
-+				tmp |= SPI_CS_HIGH;
++#define pud_write pud_write
++static inline int pud_write(pud_t pud)
++{
++	return (pud_val(pud) & _REGION3_ENTRY_WRITE) != 0;
++}
 +
- 			tmp |= spi->mode & ~SPI_MODE_MASK;
- 			spi->mode = (u16)tmp;
- 			retval = spi_setup(spi);
+ static inline int pmd_dirty(pmd_t pmd)
+ {
+ 	int dirty = 1;
 
 
