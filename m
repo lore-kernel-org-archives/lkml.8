@@ -2,97 +2,140 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABD16C18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:21:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52CAFC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:21:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8399C21D7E
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:21:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B86C21D7E
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:21:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ofGge65i"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YD3e92xT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731290AbgCJNVH (ORCPT
+        id S1731321AbgCJNVL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:21:07 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:42970 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728891AbgCJNVE (ORCPT
+        Tue, 10 Mar 2020 09:21:11 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:30328 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1731157AbgCJNVE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 10 Mar 2020 09:21:04 -0400
-Received: by mail-lf1-f66.google.com with SMTP id t21so10839608lfe.9;
-        Tue, 10 Mar 2020 06:21:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=eCOf6OlvnGPo1hdNSLTHBdAdbBO34t+xIqKTSfU9Lvs=;
-        b=ofGge65itC/lwthulFPkeKmDbr51QadcYAHtbQTWHLMr4RdA4qAd/052klcqj2lAsG
-         lG19xD5JLaz+SSBvbyWBnexIZXc+pMAmdLEy/8T0gU/LQSksodQR33+THK0q9M2snw2N
-         GCSwTKPgt0loPawbXIl8cFRjEWNxE1H1gbIf4NsO213jri589TnigSRklTK61xdOj60u
-         Vz17OG0RXYAJKvJx4S+NNYBKhIlvGutiLYN5BEW6S2OfLzQwh6t822l/YxOgLNhAGHhB
-         AGa1bkaG9PycUT/K+Jw38gw8R06DQVD5zMnrU5+OTuVhu7qk3UDW2PX9DhrNMn4pNvXK
-         3A6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=eCOf6OlvnGPo1hdNSLTHBdAdbBO34t+xIqKTSfU9Lvs=;
-        b=SedNbbYY7eEz2PvpOv+31uzHZYbA0nfTUc07HdlNyzilL/VOOwtXYbpOmpn8yGPnyf
-         Yefv+5HTNt38osYqbkwr0/7LgmCZ9q2hvoYw16wVFl9ERVaYArrPjerHBbVEk8duxke7
-         A55eVc5jb8l6AxcTMIMc0Q5hgSTNAh8BA3QxX3qwgJdOPCscseox2/raOFAn7iivpIK0
-         LvaUlmPrgY9/JIKqJVksqAj3ZZZs8RIV6kUNFzELzpaQnFgd2nfljC4dT26NRDXgHChN
-         TvPUeinsV/YwHjya6CL3QcP1A4FagqVzoDSpsPwPlD2jlq8BpCA3Aja1gijsrgYvMsOT
-         Cisw==
-X-Gm-Message-State: ANhLgQ3d0wNyKGSUOpCgi44OciAOSFyZ5gnuavv3TwfNDc6MJZ1HmpL9
-        +PdjenW3rtgo/jDv3xisDrY4JHEO
-X-Google-Smtp-Source: ADFU+vvwQjyIsXgU6I8GX3SpR7E8fsB37sAUt5jafoxPGt96Qq9i12zZidE0qlga4HzlmkG+DA5O4w==
-X-Received: by 2002:ac2:5c44:: with SMTP id s4mr9161431lfp.129.1583846462339;
-        Tue, 10 Mar 2020 06:21:02 -0700 (PDT)
-Received: from [192.168.2.145] (94-29-39-224.dynamic.spd-mgts.ru. [94.29.39.224])
-        by smtp.googlemail.com with ESMTPSA id v17sm12992881lfn.64.2020.03.10.06.21.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Mar 2020 06:21:01 -0700 (PDT)
-Subject: Re: [PATCH v1] power: supply: bq27xxx_battery: Silence deferred-probe
- error
-To:     =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
-        "Andrew F. Davis" <afd@ti.com>
-Cc:     Sebastian Reichel <sre@kernel.org>,
-        David Heidelberg <david@ixit.cz>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200308215143.27823-1-digetx@gmail.com>
- <20200309230608.aur2iddomzrdw4pq@pali>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <4d0cb298-f6ab-731d-a5d9-e08ed092f504@gmail.com>
-Date:   Tue, 10 Mar 2020 16:21:00 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <20200309230608.aur2iddomzrdw4pq@pali>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583846463;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=OWKLC6YFTswPrseeFy+IPkjasajYnHDmIwP6eT4uoEA=;
+        b=YD3e92xT0y6G3pAd1AdUbbbLVzxUQ1rcK54TeNyjdT9OiyZm/b5OCrYGdqAGbUcSMoQQMD
+        9mf0F0GrCqU3mhklZtu1DTQ54rWxYEVkE3HfIsYjXVgfEUMPxLzUAxF8hnuRiQc5x4F5Im
+        LQzG0G60dXatcke0a5ymnANavExiXLU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-200-zzPzheoIOOm5WmAtUd9nyA-1; Tue, 10 Mar 2020 09:20:59 -0400
+X-MC-Unique: zzPzheoIOOm5WmAtUd9nyA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D142F107ACC9;
+        Tue, 10 Mar 2020 13:20:57 +0000 (UTC)
+Received: from madcap2.tricolour.ca (ovpn-112-16.rdu2.redhat.com [10.10.112.16])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id F03948F363;
+        Tue, 10 Mar 2020 13:20:50 +0000 (UTC)
+From:   Richard Guy Briggs <rgb@redhat.com>
+To:     Linux-Audit Mailing List <linux-audit@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     Paul Moore <paul@paul-moore.com>, sgrubb@redhat.com,
+        omosnace@redhat.com, eparis@parisplace.org,
+        Richard Guy Briggs <rgb@redhat.com>
+Subject: [PATCH V2 ghak120] audit: trigger accompanying records when no rules present
+Date:   Tue, 10 Mar 2020 09:20:17 -0400
+Message-Id: <199b556aae531db6e08f2711b1751e976f8bd48a.1583801740.git.rgb@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-10.03.2020 02:06, Pali Rohár пишет:
-> On Monday 09 March 2020 00:51:43 Dmitry Osipenko wrote:
->> The driver fails to probe with -EPROBE_DEFER if battery's power supply
->> (charger driver) isn't ready yet and this results in a bit noisy error
->> message in KMSG during kernel's boot up. Let's silence the harmless
->> error message.
->>
->> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> 
-> Hello Dmitry! This change make sense, it is really not an error when
-> bq27k device registration is deferred. You can add my:
-> 
-> Reviewed-by: Pali Rohár <pali@kernel.org>
+When there are no audit rules registered, mandatory records (config,
+etc.) are missing their accompanying records (syscall, proctitle, etc.).
 
-Thank you and Andrew for taking a look at this patch!
+This is due to audit context dummy set on syscall entry based on absence
+of rules that signals that no other records are to be printed.
+
+Clear the dummy bit if any record is generated.
+
+The proctitle context and dummy checks are pointless since the
+proctitle record will not be printed if no syscall records are printed.
+
+Please see upstream github issue
+https://github.com/linux-audit/audit-kernel/issues/120
+
+Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+---
+Chagelog:
+v2:
+- unconditionally clear dummy
+- create audit_clear_dummy accessor function
+- remove proctitle context and dummy checks
+---
+ kernel/audit.c   | 1 +
+ kernel/audit.h   | 8 ++++++++
+ kernel/auditsc.c | 3 ---
+ 3 files changed, 9 insertions(+), 3 deletions(-)
+
+diff --git a/kernel/audit.c b/kernel/audit.c
+index 17b0d523afb3..b96331e1976d 100644
+--- a/kernel/audit.c
++++ b/kernel/audit.c
+@@ -1798,6 +1798,7 @@ struct audit_buffer *audit_log_start(struct audit_context *ctx, gfp_t gfp_mask,
+ 	}
+ 
+ 	audit_get_stamp(ab->ctx, &t, &serial);
++	audit_clear_dummy(ab->ctx);
+ 	audit_log_format(ab, "audit(%llu.%03lu:%u): ",
+ 			 (unsigned long long)t.tv_sec, t.tv_nsec/1000000, serial);
+ 
+diff --git a/kernel/audit.h b/kernel/audit.h
+index 6fb7160412d4..2eed4d231624 100644
+--- a/kernel/audit.h
++++ b/kernel/audit.h
+@@ -290,6 +290,13 @@ extern bool audit_tree_match(struct audit_chunk *chunk,
+ extern void audit_filter_inodes(struct task_struct *tsk,
+ 				struct audit_context *ctx);
+ extern struct list_head *audit_killed_trees(void);
++
++static inline void audit_clear_dummy(struct audit_context *ctx)
++{
++	if (ctx)
++		ctx->dummy = 0;
++}
++
+ #else /* CONFIG_AUDITSYSCALL */
+ #define auditsc_get_stamp(c, t, s) 0
+ #define audit_put_watch(w) {}
+@@ -323,6 +330,7 @@ static inline int audit_signal_info_syscall(struct task_struct *t)
+ }
+ 
+ #define audit_filter_inodes(t, c) AUDIT_DISABLED
++#define audit_clear_dummy(c) {}
+ #endif /* CONFIG_AUDITSYSCALL */
+ 
+ extern char *audit_unpack_string(void **bufp, size_t *remain, size_t len);
+diff --git a/kernel/auditsc.c b/kernel/auditsc.c
+index 4effe01ebbe2..814406a35db1 100644
+--- a/kernel/auditsc.c
++++ b/kernel/auditsc.c
+@@ -1406,9 +1406,6 @@ static void audit_log_proctitle(void)
+ 	struct audit_context *context = audit_context();
+ 	struct audit_buffer *ab;
+ 
+-	if (!context || context->dummy)
+-		return;
+-
+ 	ab = audit_log_start(context, GFP_KERNEL, AUDIT_PROCTITLE);
+ 	if (!ab)
+ 		return;	/* audit_panic or being filtered */
+-- 
+1.8.3.1
+
