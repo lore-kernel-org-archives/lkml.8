@@ -2,145 +2,270 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B4B5C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 15:19:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02113C18E5C
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 15:20:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45C1C20873
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 15:19:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF5CA20727
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 15:20:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GBOi4QCf"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="m/zNCZ70"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727698AbgCJPTm (ORCPT
+        id S1727838AbgCJPUf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 11:19:42 -0400
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:39822 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726283AbgCJPTm (ORCPT
+        Tue, 10 Mar 2020 11:20:35 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:41700 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727806AbgCJPUf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 11:19:42 -0400
-Received: by mail-pj1-f68.google.com with SMTP id d8so544752pje.4;
-        Tue, 10 Mar 2020 08:19:39 -0700 (PDT)
+        Tue, 10 Mar 2020 11:20:35 -0400
+Received: by mail-pf1-f194.google.com with SMTP id z65so6613911pfz.8
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 08:20:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=huM9T9WHuYDrTYCmfrrg7G98j8DPLX2NGS/Rp9cZB4k=;
-        b=GBOi4QCfdjl+yJpiosND5H7ro1Wy1jDc7jGAc3s8J7G2CApUfzU3KRDNZ/dQ50NqZS
-         ZTm9jC5/B76ifbeOcS/8ckWV3g+RTnAWX8wNjGQtogMBUhI5AN/CMHoA8UlkpdJJMTmc
-         XhSdyiahtxuMN1d/CxSTOcp0T666Oaz8k9sKEAhYBWtc0RKuYtCXvmdRT4P6DsBDfR1q
-         6GsoPKYf97y4alCY1Cg3i48ms3KqrrFvMfiuwaZPWKj0hejk4zOq20PyCjA6HGcwfsdo
-         tHnjh1XlzBOSPw46tkC0fJNYExMHL1SA/BsNoVYcuArmxD7e2k7efhJiYK6YvAKXVZqZ
-         1v9w==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=6MhFgIdze8CFf2DOrBawMYLjN6c8ytgEy4KTgM5UsKI=;
+        b=m/zNCZ70DcHzitOz0JSTs00aicOWLVtUPobgMC2juOgSuvBdRUs2ULP0Ups4xAIQ4+
+         GkiAoRRV7UEuj9/HSK3R8iaYqmCTarzCPhjS+DlYPrfcEvSBosUBkj+izKK2cQjS8BjW
+         GFq1ZXcm0Cgr3caOvqgwfypDmqe3jbdjn018IQLTmBYACIgMYqij/5lRoPNNCUMhGdhX
+         gTfK86J+0GkyCRD62BYej6x5QSHQ4y6zPt7H+6m6gOtGalne8wVoFc0jlhTdYfolU+Qu
+         Ng3TUPVBRljKkoRg3ffG8G99Z61/jah0DJbo9NMGFbjDtP1dnbj6HzePS3abQQ81/6bp
+         UdNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=huM9T9WHuYDrTYCmfrrg7G98j8DPLX2NGS/Rp9cZB4k=;
-        b=J5VyKUcWPRzxSbASrluTKSYLx6uOFEb2UtFIUL8ZW8Kh4N1Km2xqqhUGpJtXvw4Wwp
-         pPCRBrQX0pr5euF6BI2xs2ZBavDJeipIAknbVlDy++BpMPZz/no/NLE8flq/C0yv5EVU
-         c3a8b1FFbKtJgBgPJTG71XDwchkptroy0aPJhAESs7RhI6MVTHKrajI0y3kZGMBDL1jS
-         h9hMBwJisvXPbuJYx88m4Y90khAGnvU+Dwu7yOTTlhoA60pDW2KgQ1EKqR6xT16Xo9BS
-         FHQimktxPsC5nx8AuQkt8rzMFkvpSzSyCch91KqUgM0EZ8eX4Nc7TCzx0swwjEIWRIT2
-         UsxA==
-X-Gm-Message-State: ANhLgQ0joV/LCJfJMdGVlqukvePFinTZp1H1x8JIQ1kNgwPZkXvyMK+/
-        aRYDRIY2vOgSP3eFh7qRm7Tw/5Ph
-X-Google-Smtp-Source: ADFU+vuMAE8yuXxUR/q0YmihjAA9YOMGWlX8MjslBVxU6daKPkq6/fF7h7g6WF4jyUtQjCgTH8nQaQ==
-X-Received: by 2002:a17:902:7007:: with SMTP id y7mr4269033plk.208.1583853578605;
-        Tue, 10 Mar 2020 08:19:38 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id l11sm2516031pjy.44.2020.03.10.08.19.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Mar 2020 08:19:37 -0700 (PDT)
-Subject: Re: [PATCH 5.4 000/167] 5.4.25-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-References: <20200310144113.973994620@linuxfoundation.org>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <6a879f69-71b0-1c83-d22a-0baa67411898@roeck-us.net>
-Date:   Tue, 10 Mar 2020 08:19:36 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=6MhFgIdze8CFf2DOrBawMYLjN6c8ytgEy4KTgM5UsKI=;
+        b=LCnEhNuIZ0pVokJUchhPaAfFtdxY12YvvmLNxLGtmuImnJ+ZQia6IwCBKbgfSG292J
+         R+rsuxRPO1tSiad/Ub9MSTk2juK74n1IYCa3N31wtYuiovNkNmtBi9/gGX4oP0pF9vmh
+         Bc2N3pvviCkxxTNNd7fzBWiu7Ezlw0PTzkJGKFQBPrdiDgk2jlqdR6kuGmyUsRM9iLbs
+         EioYlIXo+nO6ftrZ9BHqMyzcXT+ZOKG1NeDVwWdKV3heEDo46ft18kpKcwuBc9VGBr47
+         1HQyu300bhQbIeIK4sd/+8UyW5DrqBWDUo6vZS1WCW7VGUISsDYxthStPfYx3DBYraDl
+         V2CA==
+X-Gm-Message-State: ANhLgQ0e5ukBt/YrZgpX3LwOBB8267mEQJBS++zYhQr27MSTlHVQhX9p
+        +0Yvh0xUFWLYiNW5605bvqmtGQ==
+X-Google-Smtp-Source: ADFU+vuDMeVSrBmcnm1f3SeMtYbGOm0trJg8lN9EATMG0oGxhlTM5PSR5uh75bg8T3fDm2w5zn88ZA==
+X-Received: by 2002:a62:ce48:: with SMTP id y69mr10163479pfg.178.1583853634107;
+        Tue, 10 Mar 2020 08:20:34 -0700 (PDT)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id dw19sm2662207pjb.16.2020.03.10.08.20.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Mar 2020 08:20:33 -0700 (PDT)
+Date:   Tue, 10 Mar 2020 09:20:31 -0600
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Cl?ment Leger <cleger@kalrayinc.com>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        linux-remoteproc <linux-remoteproc@vger.kernel.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Andy Gross <agross@kernel.org>,
+        Patrice Chotard <patrice.chotard@st.com>,
+        linux-doc <linux-doc@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
+        Loic PALLARDY <loic.pallardy@st.com>, s-anna <s-anna@ti.com>
+Subject: Re: [PATCH v5 5/8] remoteproc: Rename rproc_elf_sanity_check for
+ elf32
+Message-ID: <20200310152031.GA25781@xps15>
+References: <20200210162209.23149-1-cleger@kalray.eu>
+ <20200302093902.27849-1-cleger@kalray.eu>
+ <20200302093902.27849-6-cleger@kalray.eu>
+ <20200302231342.GE262924@yoga>
+ <482678048.7666348.1583222551942.JavaMail.zimbra@kalray.eu>
+ <20200310000005.GF14744@builder>
 MIME-Version: 1.0
-In-Reply-To: <20200310144113.973994620@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200310000005.GF14744@builder>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/10/20 7:42 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.4.25 release.
-> There are 167 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Mon, Mar 09, 2020 at 05:00:05PM -0700, Bjorn Andersson wrote:
+> On Tue 03 Mar 00:02 PST 2020, Cl?ment Leger wrote:
 > 
-> Responses should be made by Thu, 12 Mar 2020 14:40:27 +0000.
-> Anything received after that time might be too late.
+> > Hi Bjorn, 
+> > 
+> > ----- On 3 Mar, 2020, at 00:13, Bjorn Andersson bjorn.andersson@linaro.org wrote:
+> > 
+> > > On Mon 02 Mar 01:38 PST 2020, Clement Leger wrote:
+> > > 
+> > >> Since this function will be modified to support both elf32 and elf64,
+> > >> rename the existing one to elf32 (which is the only supported format
+> > >> at the moment). This will allow not to introduce possible side effect
+> > >> when adding elf64 support (ie: all backends will still support only
+> > >> elf32 if not requested explicitely using rproc_elf_sanity_check).
+> > >> 
+> > > 
+> > > Is there a reason for preventing ELF64 binaries be loaded?
+> > 
+> > I decided to go this way to let driver maintainer decide if they want
+> > to support elf64 to avoid problems with 64bits addresses/sizes which do
+> > not fit in their native type (size_t for instance). This is probably
+> > not going to happen and there are additionnal checks before calling
+> > rproc_da_to_va. And addresses should be filtered by rproc_da_to_va.
+> > So, actually it seems there is no reason to forbid supporting elf32/64
+> > for all drivers.
+> > 
 > 
+> I was hoping to hear some additional feedback on this from others.
 
+I didn't follow up on this one because I agreed with your assesment and didn't
+think it was needed.
 
-kernel/fork.c:2523:2: error: #error clone3 requires copy_thread_tls support in arch
- 2523 | #error clone3 requires copy_thread_tls support in arch
+Simply put I would rather see rproc_elf_sanity_check() gain support for elf64
+and let the platform code decide what to do with format they don't support
+rather than spinning a new function.
 
-Affects v5.4.y-queue and v5.5.y-queue.
+> 
+> I've merge the patch as is, but think it would be nice to clean this up
+> and just have the driver ignore if fed a 32 or 64-elf.
 
-Caused by "csky: Fixup compile warning for three unimplemented syscalls",
-which in turn looks like an auto-pick. When auto-picking patches, it might
-be desirable to ensure that they compile.
+It would be really nice to see this cleaned up in time for the coming merge
+window...
 
-Guenter
+Thanks
+Mathieu
+
+> 
+> Regards,
+> Bjorn
+> 
+> > Regards,
+> > 
+> > Clément
+> > 
+> > > 
+> > > Regards,
+> > > Bjorn
+> > > 
+> > >> Signed-off-by: Clement Leger <cleger@kalray.eu>
+> > >> ---
+> > >>  drivers/remoteproc/remoteproc_core.c       | 2 +-
+> > >>  drivers/remoteproc/remoteproc_elf_loader.c | 6 +++---
+> > >>  drivers/remoteproc/remoteproc_internal.h   | 2 +-
+> > >>  drivers/remoteproc/st_remoteproc.c         | 2 +-
+> > >>  drivers/remoteproc/st_slim_rproc.c         | 2 +-
+> > >>  drivers/remoteproc/stm32_rproc.c           | 2 +-
+> > >>  6 files changed, 8 insertions(+), 8 deletions(-)
+> > >> 
+> > >> diff --git a/drivers/remoteproc/remoteproc_core.c
+> > >> b/drivers/remoteproc/remoteproc_core.c
+> > >> index 4bfaf4a3c4a3..99f0b796fbc7 100644
+> > >> --- a/drivers/remoteproc/remoteproc_core.c
+> > >> +++ b/drivers/remoteproc/remoteproc_core.c
+> > >> @@ -2055,7 +2055,7 @@ struct rproc *rproc_alloc(struct device *dev, const char
+> > >> *name,
+> > >>  		rproc->ops->load = rproc_elf_load_segments;
+> > >>  		rproc->ops->parse_fw = rproc_elf_load_rsc_table;
+> > >>  		rproc->ops->find_loaded_rsc_table = rproc_elf_find_loaded_rsc_table;
+> > >> -		rproc->ops->sanity_check = rproc_elf_sanity_check;
+> > >> +		rproc->ops->sanity_check = rproc_elf32_sanity_check;
+> > >>  		rproc->ops->get_boot_addr = rproc_elf_get_boot_addr;
+> > >>  	}
+> > >>  
+> > >> diff --git a/drivers/remoteproc/remoteproc_elf_loader.c
+> > >> b/drivers/remoteproc/remoteproc_elf_loader.c
+> > >> index c2a9783cfb9a..5a67745f2638 100644
+> > >> --- a/drivers/remoteproc/remoteproc_elf_loader.c
+> > >> +++ b/drivers/remoteproc/remoteproc_elf_loader.c
+> > >> @@ -25,13 +25,13 @@
+> > >>  #include "remoteproc_internal.h"
+> > >>  
+> > >>  /**
+> > >> - * rproc_elf_sanity_check() - Sanity Check ELF firmware image
+> > >> + * rproc_elf_sanity_check() - Sanity Check ELF32 firmware image
+> > >>   * @rproc: the remote processor handle
+> > >>   * @fw: the ELF firmware image
+> > >>   *
+> > >>   * Make sure this fw image is sane.
+> > >>   */
+> > >> -int rproc_elf_sanity_check(struct rproc *rproc, const struct firmware *fw)
+> > >> +int rproc_elf32_sanity_check(struct rproc *rproc, const struct firmware *fw)
+> > >>  {
+> > >>  	const char *name = rproc->firmware;
+> > >>  	struct device *dev = &rproc->dev;
+> > >> @@ -89,7 +89,7 @@ int rproc_elf_sanity_check(struct rproc *rproc, const struct
+> > >> firmware *fw)
+> > >>  
+> > >>  	return 0;
+> > >>  }
+> > >> -EXPORT_SYMBOL(rproc_elf_sanity_check);
+> > >> +EXPORT_SYMBOL(rproc_elf32_sanity_check);
+> > >>  
+> > >>  /**
+> > >>   * rproc_elf_get_boot_addr() - Get rproc's boot address.
+> > >> diff --git a/drivers/remoteproc/remoteproc_internal.h
+> > >> b/drivers/remoteproc/remoteproc_internal.h
+> > >> index 0deae5f237b8..28639c588d58 100644
+> > >> --- a/drivers/remoteproc/remoteproc_internal.h
+> > >> +++ b/drivers/remoteproc/remoteproc_internal.h
+> > >> @@ -54,7 +54,7 @@ void *rproc_da_to_va(struct rproc *rproc, u64 da, size_t len);
+> > >>  phys_addr_t rproc_va_to_pa(void *cpu_addr);
+> > >>  int rproc_trigger_recovery(struct rproc *rproc);
+> > >>  
+> > >> -int rproc_elf_sanity_check(struct rproc *rproc, const struct firmware *fw);
+> > >> +int rproc_elf32_sanity_check(struct rproc *rproc, const struct firmware *fw);
+> > >>  u64 rproc_elf_get_boot_addr(struct rproc *rproc, const struct firmware *fw);
+> > >>  int rproc_elf_load_segments(struct rproc *rproc, const struct firmware *fw);
+> > >>  int rproc_elf_load_rsc_table(struct rproc *rproc, const struct firmware *fw);
+> > >> diff --git a/drivers/remoteproc/st_remoteproc.c
+> > >> b/drivers/remoteproc/st_remoteproc.c
+> > >> index a3268d95a50e..a6cbfa452764 100644
+> > >> --- a/drivers/remoteproc/st_remoteproc.c
+> > >> +++ b/drivers/remoteproc/st_remoteproc.c
+> > >> @@ -233,7 +233,7 @@ static const struct rproc_ops st_rproc_ops = {
+> > >>  	.parse_fw		= st_rproc_parse_fw,
+> > >>  	.load			= rproc_elf_load_segments,
+> > >>  	.find_loaded_rsc_table	= rproc_elf_find_loaded_rsc_table,
+> > >> -	.sanity_check		= rproc_elf_sanity_check,
+> > >> +	.sanity_check		= rproc_elf32_sanity_check,
+> > >>  	.get_boot_addr		= rproc_elf_get_boot_addr,
+> > >>  };
+> > >>  
+> > >> diff --git a/drivers/remoteproc/st_slim_rproc.c
+> > >> b/drivers/remoteproc/st_slim_rproc.c
+> > >> index 09bcb4d8b9e0..3cca8b65a8db 100644
+> > >> --- a/drivers/remoteproc/st_slim_rproc.c
+> > >> +++ b/drivers/remoteproc/st_slim_rproc.c
+> > >> @@ -203,7 +203,7 @@ static const struct rproc_ops slim_rproc_ops = {
+> > >>  	.da_to_va       = slim_rproc_da_to_va,
+> > >>  	.get_boot_addr	= rproc_elf_get_boot_addr,
+> > >>  	.load		= rproc_elf_load_segments,
+> > >> -	.sanity_check	= rproc_elf_sanity_check,
+> > >> +	.sanity_check	= rproc_elf32_sanity_check,
+> > >>  };
+> > >>  
+> > >>  /**
+> > >> diff --git a/drivers/remoteproc/stm32_rproc.c b/drivers/remoteproc/stm32_rproc.c
+> > >> index a18f88044111..9a8b5f5e2572 100644
+> > >> --- a/drivers/remoteproc/stm32_rproc.c
+> > >> +++ b/drivers/remoteproc/stm32_rproc.c
+> > >> @@ -505,7 +505,7 @@ static struct rproc_ops st_rproc_ops = {
+> > >>  	.load		= rproc_elf_load_segments,
+> > >>  	.parse_fw	= stm32_rproc_parse_fw,
+> > >>  	.find_loaded_rsc_table = rproc_elf_find_loaded_rsc_table,
+> > >> -	.sanity_check	= rproc_elf_sanity_check,
+> > >> +	.sanity_check	= rproc_elf32_sanity_check,
+> > >>  	.get_boot_addr	= rproc_elf_get_boot_addr,
+> > >>  };
+> > >>  
+> > >> --
+> > >> 2.15.0.276.g89ea799
