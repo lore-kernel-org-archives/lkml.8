@@ -2,160 +2,118 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 239AFC18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 21:30:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 569D3C18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 21:30:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05D3D222C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 21:30:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36A77208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 21:30:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727631AbgCJVad (ORCPT
+        id S1727654AbgCJVay (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 17:30:33 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:58351 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726265AbgCJVad (ORCPT
+        Tue, 10 Mar 2020 17:30:54 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:50788 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726265AbgCJVax (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 17:30:33 -0400
-Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jBmRs-0000sm-Qb; Tue, 10 Mar 2020 21:30:00 +0000
-Date:   Tue, 10 Mar 2020 22:29:57 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Jann Horn <jannh@google.com>,
-        Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        Kees Cook <keescook@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Andrei Vagin <avagin@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Yuyang Du <duyuyang@gmail.com>,
-        David Hildenbrand <david@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        David Howells <dhowells@redhat.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christian Kellner <christian@kellner.me>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Sargun Dhillon <sargun@sargun.me>
-Subject: Re: [PATCH] pidfd: Stop taking cred_guard_mutex
-Message-ID: <20200310212957.aatd4yzjwsyudi2g@wittgenstein>
-References: <877dztz415.fsf@x220.int.ebiederm.org>
- <20200309201729.yk5sd26v4bz4gtou@wittgenstein>
- <87k13txnig.fsf@x220.int.ebiederm.org>
- <20200310085540.pztaty2mj62xt2nm@wittgenstein>
- <87wo7svy96.fsf_-_@x220.int.ebiederm.org>
- <CAG48ez2cUZMVOAXfHPNjKjYsMSaWkjUjOCHo0KYZ+oXQUW4viA@mail.gmail.com>
- <87k13sui1p.fsf@x220.int.ebiederm.org>
- <CAG48ez2vRgaEVJ=Rs8gn6HkGO6syL8MpSOUq7BNN+OUE1uYxCA@mail.gmail.com>
- <CAG48ez1LjW1xAGe-5tNtstCWxG2bkiHaQUMOcJNjx=z-2Wc2Jw@mail.gmail.com>
- <87lfo8rkqo.fsf@x220.int.ebiederm.org>
+        Tue, 10 Mar 2020 17:30:53 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: sre)
+        with ESMTPSA id 95993293E8E
+Received: by earth.universe (Postfix, from userid 1000)
+        id 6BF9A3C0C82; Tue, 10 Mar 2020 22:30:50 +0100 (CET)
+Date:   Tue, 10 Mar 2020 22:30:50 +0100
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     Sandeep Patil <sspatil@android.com>
+Cc:     Dan Murphy <dmurphy@ti.com>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@android.com
+Subject: Re: [PATCH v4 2/4] power_supply: Add additional health properties to
+ the header
+Message-ID: <20200310213050.si7gcr2wbmjgr7jf@earth.universe>
+References: <20200116175039.1317-1-dmurphy@ti.com>
+ <20200116175039.1317-3-dmurphy@ti.com>
+ <20200117010658.iqs2zpwl6bsomkuo@earth.universe>
+ <20200306235548.GA187098@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="35joe23zra66xihb"
 Content-Disposition: inline
-In-Reply-To: <87lfo8rkqo.fsf@x220.int.ebiederm.org>
+In-Reply-To: <20200306235548.GA187098@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 10, 2020 at 03:57:35PM -0500, Eric W. Biederman wrote:
-> Jann Horn <jannh@google.com> writes:
-> 
-> > On Tue, Mar 10, 2020 at 9:00 PM Jann Horn <jannh@google.com> wrote:
-> >> On Tue, Mar 10, 2020 at 8:29 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
-> >> > Jann Horn <jannh@google.com> writes:
-> >> > > On Tue, Mar 10, 2020 at 7:54 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
-> >> > >> During exec some file descriptors are closed and the files struct is
-> >> > >> unshared.  But all of that can happen at other times and it has the
-> >> > >> same protections during exec as at ordinary times.  So stop taking the
-> >> > >> cred_guard_mutex as it is useless.
-> >> > >>
-> >> > >> Furthermore he cred_guard_mutex is a bad idea because it is deadlock
-> >> > >> prone, as it is held in serveral while waiting possibly indefinitely
-> >> > >> for userspace to do something.
-> > [...]
-> >> > > If you make this change, then if this races with execution of a setuid
-> >> > > program that afterwards e.g. opens a unix domain socket, an attacker
-> >> > > will be able to steal that socket and inject messages into
-> >> > > communication with things like DBus. procfs currently has the same
-> >> > > race, and that still needs to be fixed, but at least procfs doesn't
-> >> > > let you open things like sockets because they don't have a working
-> >> > > ->open handler, and it enforces the normal permission check for
-> >> > > opening files.
-> >> >
-> >> > It isn't only exec that can change credentials.  Do we need a lock for
-> >> > changing credentials?
-> > [...]
-> >> > If we need a lock around credential change let's design and build that.
-> >> > Having a mismatch between what a lock is designed to do, and what
-> >> > people use it for can only result in other bugs as people get confused.
-> >>
-> >> Hmm... what benefits do we get from making it a separate lock? I guess
-> >> it would allow us to make it a per-task lock instead of a
-> >> signal_struct-wide one? That might be helpful...
-> >
-> > But actually, isn't the core purpose of the cred_guard_mutex to guard
-> > against concurrent credential changes anyway? That's what almost
-> > everyone uses it for, and it's in the name...
-> 
-> Having been through all of the users nope.
-> 
-> Maybe someone tried to repurpose for that.  I haven't traced through
-> when it went the it was renamed from cred_exec_mutex to
-> cred_guard_mutex.
-> 
-> The original purpose was to make make exec and ptrace deadlock.  But it
-> was seen as being there to allow safely calculating the new credentials
-> before the point of now return.  Because if a process is ptraced or not
-> affects the new credential calculations.  Unfortunately offering that
-> guarantee fundamentally leads to deadlock.
-> 
-> So ptrace_attach and seccomp use the cred_guard_mutex to guarantee
-> a deadlock.
-> 
-> The common use is to take cred_guard_mutex to guard the window when
-> credentials and process details are out of sync in exec.  But there
-> is at least do_io_accounting that seems to have the same justification
-> for holding __pidfd_fget.
-> 
-> With effort I suspect we can replace exec_change_mutex with task_lock.
-> When we are guaranteed to be single threaded placing exec_change_mutex
-> in signal_struct doesn't really help us (except maybe in some races?).
-> 
-> The deep problem is no one really understands cred_guard_mutex so it is
-> a mess.  Code with poorly defined semantics is always wrong somewhere
 
-This is a good point. When discussing patches sensitive to credential
-changes cred_guard_mutex was always introduced as having the purpose to
-guard against concurrent credential changes. And I'm pretty sure that
-that's how most people have been using it for quite a long time. I mean,
-it's at least the case for seccomp and proc and probably quite a few
-more. So the problem seems to me that it has clear _intended_ semantics
-that runs into issues in all sorts of cases. So if cred_guard_mutex is
-not that then we seem to need to provide something that serves it's
-intended purpose.
+--35joe23zra66xihb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi Sandeep,
+
+On Fri, Mar 06, 2020 at 03:55:48PM -0800, Sandeep Patil wrote:
+> On Fri, Jan 17, 2020 at 02:06:58AM +0100, Sebastian Reichel wrote:
+> > Hi,
+> >=20
+> > On Thu, Jan 16, 2020 at 11:50:37AM -0600, Dan Murphy wrote:
+> > > Add HEALTH_WARM, HEALTH_COOL and HEALTH_HOT to the health enum.
+> > >=20
+> > > Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> > > ---
+> >=20
+> > Looks good. But I will not merge it without a user and have comments
+> > for the driver.
+>=20
+> Android has been looking for these properties for a while now [1].
+> It was added[2] when we saw that the manufacturers were implementing these
+> properties in the driver. I didn't know the properties were absent upstre=
+am
+> until yesterday. Somebody pointed out in our ongoing effort to make sure
+> all core kernel changes that android depends on are present upstream.
+>=20
+> I think those values are also propagated in application facing APIs in
+> Android (but I am not sure yet, let me know if that's something you want
+> to find out).
+>=20
+> I wanted to chime in and present you a 'user' for this if that helps.
+
+With user I meant an upstream kernel driver, which exposes the
+values. But thanks for the pointer. This should be mentioned in
+the patch description, also the fact that the status values are
+directly taken from JEITA spec.
+
+> Cc: kernel-team@android.com
+>=20
+> - ssp
+>=20
+> 1. https://android.googlesource.com/platform/system/core/+/refs/heads/mas=
+ter/healthd/BatteryMonitor.cpp#162
+> 2. https://android-review.googlesource.com/c/platform/system/core/+/414481
+
+-- Sebastian
+
+--35joe23zra66xihb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl5oBwcACgkQ2O7X88g7
++pqdpw/+Lcc4W0PsvkYpEfn0QKMOTsIdEV/XS+BPufOCcHNwB+J8VhlmicgdEpf6
+2zviAP4z/u6yz72Tb1zgQlJVplBlfmxYoWgWjUUYbscZ0YQNTFDanOyUHjyw9I5b
+S6Sx9z1jAbWkQk5tb5novx/eXpwYq/AScfKDAuwIqN+Aid8OXRB6vHi56nVCEuWH
+bQkt7CdHQCa6wodzcN5TEShhzXi3nMNHpAXHg1MRzyijzNEnH16G88vVtHfhflxw
+4zzSrGWVyyZAzqK8ap1tXEIOhTFvev4hSm69fUDPB5fF1rc43pTY78jzRcFbx+Qe
+0TBaJwP9pkaCxMEY4qJdNEIO8UnzL7Wcu76XrWEvcXJg/jFXzNo6p64lA+sfDoMl
+UFxh1WsAFLF3rAO0d5vj5pHojIZ0IAmp82ruzJEFPqmlGslSZ8bmbgFz4+bqc3J9
+45toClOMeAbp8QZvd8cVI+OriVGpjcOGaUtjbVSul9T2sWnqs7UuHgtyNI6oYRU3
+zpEkwk80aZAgb9MSpicykzBH8zTXaSDIKN6nhcWlcceyBGiD2VTZ9DRpxcgyD27y
+GMEo4kMf1W++TELOIhwJsB7MzHNc8e1nLcBK9TTy5YNDAqvMs/YWjVfYfy0VpfMh
+bm4wW6p52ufDicRSq2AwUl65InaRKRY3XRIVzfVe4bg8PihKD8E=
+=OK1D
+-----END PGP SIGNATURE-----
+
+--35joe23zra66xihb--
