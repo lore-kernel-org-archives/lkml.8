@@ -6,37 +6,37 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66C74C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 07:04:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50783C18E5C
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 07:04:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49FA62468A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 07:04:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D50824682
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 07:04:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbgCJHEL (ORCPT
+        id S1726695AbgCJHEG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 03:04:11 -0400
+        Tue, 10 Mar 2020 03:04:06 -0400
 Received: from mga09.intel.com ([134.134.136.24]:5994 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726703AbgCJHEH (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 03:04:07 -0400
+        id S1726650AbgCJHEC (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 03:04:02 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Mar 2020 00:04:06 -0700
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Mar 2020 00:04:01 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,535,1574150400"; 
-   d="scan'208";a="265524713"
+   d="scan'208";a="265524684"
 Received: from kbl.sh.intel.com ([10.239.159.24])
-  by fmsmga004.fm.intel.com with ESMTP; 10 Mar 2020 00:04:04 -0700
+  by fmsmga004.fm.intel.com with ESMTP; 10 Mar 2020 00:03:59 -0700
 From:   Jin Yao <yao.jin@linux.intel.com>
 To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
         mingo@redhat.com, alexander.shishkin@linux.intel.com
 Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
         kan.liang@intel.com, yao.jin@intel.com,
         Jin Yao <yao.jin@linux.intel.com>
-Subject: [PATCH v1 14/14] perf diff: Filter out streams by changed functions
-Date:   Tue, 10 Mar 2020 15:02:45 +0800
-Message-Id: <20200310070245.16314-15-yao.jin@linux.intel.com>
+Subject: [PATCH v1 12/14] perf util: Filter out streams by name of changed functions
+Date:   Tue, 10 Mar 2020 15:02:43 +0800
+Message-Id: <20200310070245.16314-13-yao.jin@linux.intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200310070245.16314-1-yao.jin@linux.intel.com>
 References: <20200310070245.16314-1-yao.jin@linux.intel.com>
@@ -49,122 +49,149 @@ Sometime some changes are not reflected in the source code,
 e.g. changing the compiler option. So for this, we can't get
 the changes by diffing the source code lines.
 
-This patch introduces a new perf-diff option "--changed-func".
-It passes the names of changed functions then perf-diff can
-know what functions are changed.
+This idea is to let user provide a list of changed functions,
+then perf-diff can know these functions are not matched between
+old perf data and new perf data.
 
-For example,
-perf diff --stream --changed-func main --changed-func rand
-
-It passes the function list {"main", "rand"} to perf-diff.
-Now perf-diff knows the functions "main" and "rand" in new perf
-data file are changed.
+In this patch, the names of changed function names are stored
+in strlist, and we will check if the symbol name is in strlist.
+If yes, that means this function is changed.
 
 Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
 ---
- tools/perf/Documentation/perf-diff.txt |  5 +++++
- tools/perf/builtin-diff.c              | 30 ++++++++++++++++++++++++--
- 2 files changed, 33 insertions(+), 2 deletions(-)
+ tools/perf/builtin-diff.c   |  2 +-
+ tools/perf/util/callchain.c | 30 ++++++++++++++++++++++++++----
+ tools/perf/util/callchain.h |  4 +++-
+ 3 files changed, 30 insertions(+), 6 deletions(-)
 
-diff --git a/tools/perf/Documentation/perf-diff.txt b/tools/perf/Documentation/perf-diff.txt
-index 296fea98ac07..784598c12e26 100644
---- a/tools/perf/Documentation/perf-diff.txt
-+++ b/tools/perf/Documentation/perf-diff.txt
-@@ -196,6 +196,11 @@ OPTIONS
- 	Source code directory corresponding to perf.data. Should be
- 	used with --stream and --before.
- 
-+--changed-func=::
-+	The given function is changed in new perf data file. This option
-+	needs to be used with --stream option. Multiple functions can be given
-+	by using this option more than once.
-+
- COMPARISON
- ----------
- The comparison is governed by the baseline file. The baseline perf.data
 diff --git a/tools/perf/builtin-diff.c b/tools/perf/builtin-diff.c
-index 98e9ab8c69ce..5e5f29105fe1 100644
+index 566e811054b1..2f891e8a5122 100644
 --- a/tools/perf/builtin-diff.c
 +++ b/tools/perf/builtin-diff.c
-@@ -27,6 +27,7 @@
- #include "util/block-info.h"
- #include "util/srclist.h"
- #include "util/callchain.h"
-+#include "util/strlist.h"
- #include <linux/err.h>
- #include <linux/zalloc.h>
- #include <subcmd/pager.h>
-@@ -49,6 +50,7 @@ struct perf_diff {
- 	bool				 src_cmp;
- 	bool				 stream;
- 	struct srclist			*src_list;
-+	struct strlist			*func_list;
- 	u64				 total_cycles;
- 	float				 min_percent;
- };
-@@ -1017,7 +1019,8 @@ static int process_base_stream(struct data__file *data_base,
+@@ -1017,7 +1017,7 @@ static int process_base_stream(struct data__file *data_base,
  		if (!es_pair)
  			return -1;
  
--		callchain_match_streams(es_base, es_pair, pdiff.src_list, NULL);
-+		callchain_match_streams(es_base, es_pair, pdiff.src_list,
-+					pdiff.func_list);
+-		callchain_match_streams(es_base, es_pair, pdiff.src_list);
++		callchain_match_streams(es_base, es_pair, pdiff.src_list, NULL);
  		callchain_stream_report(es_base, es_pair);
  	}
  
-@@ -1043,7 +1046,7 @@ static int process_base_stream(struct data__file *data_base,
- 		block_hists_addr2line(&rep_pair->hist.block_hists, pair_dir);
- 
- 		block_info__match_report(rep_base, rep_pair,
--					 pdiff.src_list, NULL, NULL);
-+					 pdiff.src_list, pdiff.func_list, NULL);
- 
- 		fprintf(stdout, "%s", title);
- 
-@@ -1213,6 +1216,24 @@ static struct callchain_streams *create_evsel_streams(struct evlist *evlist,
- 	return evsel_streams;
+diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
+index e13eee1042eb..19019329ea32 100644
+--- a/tools/perf/util/callchain.c
++++ b/tools/perf/util/callchain.c
+@@ -1814,16 +1814,35 @@ static bool chain_srclist_match(struct srclist *src_list, const char *srcline_a,
+ 	return false;
  }
  
-+static int parse_func(const struct option *opt __maybe_unused,
-+		      const char *str, int unset __maybe_unused)
++static bool sym_name_changed(struct callchain_list *base_chain,
++			     struct callchain_list *pair_chain,
++			     struct strlist *func_list)
 +{
-+	int ret;
++	if (!func_list || !base_chain->ms.sym || !pair_chain->ms.sym)
++		return false;
 +
-+	if (!pdiff.func_list) {
-+		pdiff.func_list = strlist__new(NULL, NULL);
-+		if (!pdiff.func_list)
-+			return -ENOMEM;
-+	}
++	if (strlist__has_entry(func_list, base_chain->ms.sym->name))
++		return true;
 +
-+	ret = strlist__add(pdiff.func_list, str);
-+	if (ret < 0)
-+		return ret;
-+
-+	return 0;
++	return false;
 +}
 +
- static int __cmd_diff(void)
+ static bool chain_match(struct callchain_list *base_chain,
+ 			struct callchain_list *pair_chain,
+ 			struct srclist *src_list,
++			struct strlist *func_list,
+ 			bool *src_changed)
  {
- 	struct data__file *d;
-@@ -1312,6 +1333,9 @@ static int __cmd_diff(void)
- 	if (pdiff.src_list)
- 		srclist__delete(pdiff.src_list);
+ 	enum match_result match;
+ 	bool src_found = false;
++	bool func_changed;
  
-+	if (pdiff.func_list)
-+		strlist__delete(pdiff.func_list);
+ 	*src_changed = false;
+ 
++	func_changed = sym_name_changed(base_chain, pair_chain, func_list);
++	if (func_changed)
++		return false;
 +
- 	return ret;
- }
+ 	/*
+ 	 * Check sourceline first. If not matched,
+ 	 * fallback to symbol match and address match.
+@@ -1854,6 +1873,7 @@ static bool chain_match(struct callchain_list *base_chain,
+ static bool callchain_node_matched(struct callchain_node *base_cnode,
+ 				   struct callchain_node *pair_cnode,
+ 				   struct srclist *src_list,
++				   struct strlist *func_list,
+ 				   int *nr_changed)
+ {
+ 	struct callchain_list *base_chain, *pair_chain;
+@@ -1875,7 +1895,7 @@ static bool callchain_node_matched(struct callchain_node *base_cnode,
+ 		}
  
-@@ -1390,6 +1414,8 @@ static const struct option options[] = {
- 	OPT_CALLBACK(0, "percent-limit", &pdiff, "percent",
- 		     "Don't show entries under that percent",
- 		     parse_percent_limit),
-+	OPT_CALLBACK(0, "changed-func", NULL, "func",
-+		     "Given function is changed", parse_func),
- 	OPT_END()
- };
+ 		match = chain_match(base_chain, pair_chain, src_list,
+-				    &src_changed);
++				    func_list, &src_changed);
  
+ 		if (src_changed) {
+ 			pair_chain->src_changed = true;
+@@ -1901,6 +1921,7 @@ static bool callchain_node_matched(struct callchain_node *base_cnode,
+ static struct stream_node *stream_node_match(struct stream_node *base_node,
+ 					     struct callchain_streams *cs_pair,
+ 					     struct srclist *src_list,
++					     struct strlist *func_list,
+ 					     bool *src_changed)
+ {
+ 	*src_changed = false;
+@@ -1910,7 +1931,7 @@ static struct stream_node *stream_node_match(struct stream_node *base_node,
+ 		int nr_changed = 0;
+ 
+ 		if (callchain_node_matched(base_node->cnode, pair_node->cnode,
+-					   src_list, &nr_changed)) {
++					   src_list, func_list, &nr_changed)) {
+ 			if (nr_changed)
+ 				*src_changed = true;
+ 
+@@ -1932,7 +1953,8 @@ static void stream_nodes_link(struct stream_node *base_node,
+ 
+ void callchain_match_streams(struct callchain_streams *cs_base,
+ 			     struct callchain_streams *cs_pair,
+-			     struct srclist *src_list)
++			     struct srclist *src_list,
++			     struct strlist *func_list)
+ {
+ 	for (int i = 0; i < cs_base->nr_streams; i++) {
+ 		struct stream_node *base_node = &cs_base->streams[i];
+@@ -1940,7 +1962,7 @@ void callchain_match_streams(struct callchain_streams *cs_base,
+ 		bool src_changed;
+ 
+ 		pair_node = stream_node_match(base_node, cs_pair, src_list,
+-					      &src_changed);
++					      func_list, &src_changed);
+ 		if (pair_node)
+ 			stream_nodes_link(base_node, pair_node, src_changed);
+ 		else
+diff --git a/tools/perf/util/callchain.h b/tools/perf/util/callchain.h
+index 90826a280476..a6153af9f776 100644
+--- a/tools/perf/util/callchain.h
++++ b/tools/perf/util/callchain.h
+@@ -7,6 +7,7 @@
+ #include "map_symbol.h"
+ #include "branch.h"
+ #include "srclist.h"
++#include "strlist.h"
+ 
+ struct addr_location;
+ struct evsel;
+@@ -316,7 +317,8 @@ struct callchain_streams *callchain_evsel_streams_get(struct callchain_streams *
+ 
+ void callchain_match_streams(struct callchain_streams *cs_base,
+ 			     struct callchain_streams *cs_pair,
+-			     struct srclist *src_list);
++			     struct srclist *src_list,
++			     struct strlist *func_list);
+ 
+ void callchain_stream_report(struct callchain_streams *cs_base,
+ 			     struct callchain_streams *cs_pair);
 -- 
 2.17.1
 
