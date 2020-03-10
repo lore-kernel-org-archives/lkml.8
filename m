@@ -2,121 +2,173 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CBAEC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:56:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FF6EC18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:56:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00E2A2467D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:56:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lxNhQrpb"
+	by mail.kernel.org (Postfix) with ESMTP id 174C62467D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:56:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583844971;
+	bh=s2g0LRWX6H7MbcPgU/o429p+TqB9XRPEgt3LrYpmpyI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=v7uWTJ2zTwnei2Nbl2DIGPvFj+/vhNQONPPcoiJmUTYZ1lssioE/kGZmQq68zd9w6
+	 AmeMErNoXuv8tvRzZkw5KwsJJDOICIsL3V8YIj3caouJivV5q1PcabpQmT3srEXrnW
+	 bSczNplkb4lxCBgQznraQlssYbXFvDYUnLCXZ/Lk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729629AbgCJM4F (ORCPT
+        id S1729633AbgCJM4K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:56:05 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:36291 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729617AbgCJM4E (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:56:04 -0400
-Received: by mail-wr1-f68.google.com with SMTP id s5so11822830wrg.3;
-        Tue, 10 Mar 2020 05:56:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=2LDQl7IwXLsgWdbG7WRtsJmahe9ELOlGpRrYf324SYo=;
-        b=lxNhQrpbCvDIY90uCxn9ackV2e5ym09lQFAFBY/o3J5La4Tr6bltCGO/l/M7GJn1WV
-         aeItkqxWusoI6rOx54r6UQC485PvfypqIBMsNOoW8n5H5WTG0UJpAlqbFCnEVgTYhCur
-         z8fDmilP6rK66SETC+po7FWPDW/GYEHpTKcs2izqvPn6O8lwK8kzez76IoH2f4SbK9/w
-         sm5DayClua4cPshUqiX8c1/umPhaNj4BDT7a+OoPNHA+4K3OJHd/pO9CAo+TunJ4tIm4
-         jEx8X0ne+dbXriVX+KLv98Psb2qUD2fKR0Q83bsz4MFGkl2780r81D8DRKnZxLFnNbU5
-         vW9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=2LDQl7IwXLsgWdbG7WRtsJmahe9ELOlGpRrYf324SYo=;
-        b=oFEJVge6RdpJMi1UsfO4yehrPn0MAb21xIKCLNaap+IP3x6JkUsM9dNldgq7D23Vdd
-         BQ5w/Zkw6Ncmv9UgEe1WajIga4lum3vDIiXT/vyAdMUEhFoUtx0zbk3HNMJl0QmyEuiS
-         +qgskGMkb0PSulJWRRWp++qd7aOtyCJXl29UNtC7EaRyyZv+WgyjO454+O7NGBHopoYg
-         syL8RNJUCZNDav9jnPMhY8nilLXYgcLUtLE0tXyT88wqgaDzxpVY4kNcyO1I7HxhNsAd
-         vAc8BmuU6yB3uXX+YaN3MKycwV/9XBTUiHPOG/DhZN5402xXayS9wr4l7n1vtk/I9MIw
-         d7KA==
-X-Gm-Message-State: ANhLgQ2ayejHh61bKOEft+GHPi6Vo7mSy4rNWTPhV/jeHD/zCDWdogrH
-        adQ4ABCQQxEfqsmf7kXTWAU=
-X-Google-Smtp-Source: ADFU+vttnPba9hD6mVrnvClOOK8HMD0cDCtk1Jsgf9RHvW5Hvh+3+czQ4K4PfLPn248oQkZAfW2vjw==
-X-Received: by 2002:a5d:4c4a:: with SMTP id n10mr28574797wrt.116.1583844960527;
-        Tue, 10 Mar 2020 05:56:00 -0700 (PDT)
-Received: from localhost.localdomain ([79.115.60.40])
-        by smtp.gmail.com with ESMTPSA id t81sm4018594wmb.15.2020.03.10.05.55.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Mar 2020 05:56:00 -0700 (PDT)
-From:   Vladimir Oltean <olteanv@gmail.com>
-To:     broonie@kernel.org
-Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        shawnguo@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, eha@deif.com, angelo@sysam.it,
-        andrew.smirnov@gmail.com, gustavo@embeddedor.com, weic@nvidia.com,
-        mhosny@nvidia.com, michael@walle.cc, peng.ma@nxp.com
-Subject: [PATCH v3 7/7] arm64: dts: ls1028a-rdb: Add a spidev node for the mikroBUS
-Date:   Tue, 10 Mar 2020 14:55:42 +0200
-Message-Id: <20200310125542.5939-8-olteanv@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200310125542.5939-1-olteanv@gmail.com>
-References: <20200310125542.5939-1-olteanv@gmail.com>
+        Tue, 10 Mar 2020 08:56:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35266 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728083AbgCJM4I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:56:08 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C0DDF2253D;
+        Tue, 10 Mar 2020 12:56:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583844967;
+        bh=s2g0LRWX6H7MbcPgU/o429p+TqB9XRPEgt3LrYpmpyI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ZcUjbss4suOj89GU53nIISDLUCiXt14IaVN8gfqdDble1GLRA6Pfaku8dXlBpkk84
+         2XSkIrhLFBZuUWv0gshdblQjZTkBrsR87jabqa5++Cxm/mZVaVdEOctcwr++Hg/pe6
+         nd1rzMADFQH227Y7i+i11ROWSNzjE3H2Eqs6SJ6c=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Jack Pham <jackp@codeaurora.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 016/189] usb: gadget: composite: Support more than 500mA MaxPower
+Date:   Tue, 10 Mar 2020 13:37:33 +0100
+Message-Id: <20200310123641.157879263@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200310123639.608886314@linuxfoundation.org>
+References: <20200310123639.608886314@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Oltean <vladimir.oltean@nxp.com>
+From: Jack Pham <jackp@codeaurora.org>
 
-For debugging, it is useful to have access to the DSPI controller
-signals. On the reference design board, these are exported to either the
-mikroBUS1 or mikroBUS2 connector (according to the CPLD register
-BRDCFG3[SPI3]).
+[ Upstream commit a2035411fa1d1206cea7d5dfe833e78481844a76 ]
 
-Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+USB 3.x SuperSpeed peripherals can draw up to 900mA of VBUS power
+when in configured state. However, if a configuration wanting to
+take advantage of this is added with MaxPower greater than 500
+(currently possible if using a ConfigFS gadget) the composite
+driver fails to accommodate this for a couple reasons:
+
+ - usb_gadget_vbus_draw() when called from set_config() and
+   composite_resume() will be passed the MaxPower value without
+   regard for the current connection speed, resulting in a
+   violation for USB 2.0 since the max is 500mA.
+
+ - the bMaxPower of the configuration descriptor would be
+   incorrectly encoded, again if the connection speed is only
+   at USB 2.0 or below, likely wrapping around U8_MAX since
+   the 2mA multiplier corresponds to a maximum of 510mA.
+
+Fix these by adding checks against the current gadget->speed
+when the c->MaxPower value is used (set_config() and
+composite_resume()) and appropriately limit based on whether
+it is currently at a low-/full-/high- or super-speed connection.
+
+Because 900 is not divisible by 8, with the round-up division
+currently used in encode_bMaxPower() a MaxPower of 900mA will
+result in an encoded value of 0x71. When a host stack (including
+Linux and Windows) enumerates this on a single port root hub, it
+reads this value back and decodes (multiplies by 8) to get 904mA
+which is strictly greater than 900mA that is typically budgeted
+for that port, causing it to reject the configuration. Instead,
+we should be using the round-down behavior of normal integral
+division so that 900 / 8 -> 0x70 or 896mA to stay within range.
+And we might as well change it for the high/full/low case as well
+for consistency.
+
+N.B. USB 3.2 Gen N x 2 allows for up to 1500mA but there doesn't
+seem to be any any peripheral controller supported by Linux that
+does two lane operation, so for now keeping the clamp at 900
+should be fine.
+
+Signed-off-by: Jack Pham <jackp@codeaurora.org>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
-Changes in v3:
-None.
+ drivers/usb/gadget/composite.c | 24 ++++++++++++++++++------
+ 1 file changed, 18 insertions(+), 6 deletions(-)
 
-Changes in v2:
-Change compatible string for spidev node.
-
- arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
-index bb7ba3bcbe56..13555ed52b89 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
-@@ -83,6 +83,20 @@
- 	};
- };
+diff --git a/drivers/usb/gadget/composite.c b/drivers/usb/gadget/composite.c
+index cd303a3ea6802..223f72d4d9edd 100644
+--- a/drivers/usb/gadget/composite.c
++++ b/drivers/usb/gadget/composite.c
+@@ -438,9 +438,13 @@ static u8 encode_bMaxPower(enum usb_device_speed speed,
+ 	if (!val)
+ 		return 0;
+ 	if (speed < USB_SPEED_SUPER)
+-		return DIV_ROUND_UP(val, 2);
++		return min(val, 500U) / 2;
+ 	else
+-		return DIV_ROUND_UP(val, 8);
++		/*
++		 * USB 3.x supports up to 900mA, but since 900 isn't divisible
++		 * by 8 the integral division will effectively cap to 896mA.
++		 */
++		return min(val, 900U) / 8;
+ }
  
-+&dspi2 {
-+	bus-num = <2>;
-+	status = "okay";
-+
-+	/* mikroBUS1 */
-+	spidev@0 {
-+		compatible = "rohm,dh2228fv";
-+		spi-max-frequency = <20000000>;
-+		fsl,spi-cs-sck-delay = <100>;
-+		fsl,spi-sck-cs-delay = <100>;
-+		reg = <0>;
-+	};
-+};
-+
- &esdhc {
- 	sd-uhs-sdr104;
- 	sd-uhs-sdr50;
+ static int config_buf(struct usb_configuration *config,
+@@ -852,6 +856,10 @@ static int set_config(struct usb_composite_dev *cdev,
+ 
+ 	/* when we return, be sure our power usage is valid */
+ 	power = c->MaxPower ? c->MaxPower : CONFIG_USB_GADGET_VBUS_DRAW;
++	if (gadget->speed < USB_SPEED_SUPER)
++		power = min(power, 500U);
++	else
++		power = min(power, 900U);
+ done:
+ 	usb_gadget_vbus_draw(gadget, power);
+ 	if (result >= 0 && cdev->delayed_status)
+@@ -2278,7 +2286,7 @@ void composite_resume(struct usb_gadget *gadget)
+ {
+ 	struct usb_composite_dev	*cdev = get_gadget_data(gadget);
+ 	struct usb_function		*f;
+-	u16				maxpower;
++	unsigned			maxpower;
+ 
+ 	/* REVISIT:  should we have config level
+ 	 * suspend/resume callbacks?
+@@ -2292,10 +2300,14 @@ void composite_resume(struct usb_gadget *gadget)
+ 				f->resume(f);
+ 		}
+ 
+-		maxpower = cdev->config->MaxPower;
++		maxpower = cdev->config->MaxPower ?
++			cdev->config->MaxPower : CONFIG_USB_GADGET_VBUS_DRAW;
++		if (gadget->speed < USB_SPEED_SUPER)
++			maxpower = min(maxpower, 500U);
++		else
++			maxpower = min(maxpower, 900U);
+ 
+-		usb_gadget_vbus_draw(gadget, maxpower ?
+-			maxpower : CONFIG_USB_GADGET_VBUS_DRAW);
++		usb_gadget_vbus_draw(gadget, maxpower);
+ 	}
+ 
+ 	cdev->suspended = 0;
 -- 
-2.17.1
+2.20.1
+
+
 
