@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 909F7C1975A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:01:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7529C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:02:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56F4A2467D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:01:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A643B2467D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:02:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583845319;
-	bh=res+kNY6oEd1iav7ZQxfpSu96Lndx0UOZKW8UJxr7Cw=;
+	s=default; t=1583845322;
+	bh=EhjIXFcU/NEoGOcn/vLlzLLVAbERpWFtTV+W1py1Wo4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Jn2VhhSwZTTlEzdvdkHcd1+/Wou9UTiLAIFDXFr45DHiyn8hQCmWjd0GDIzwV+pbp
-	 n4DxTrZ3UScJAOADn2F3aiLvAhS1d8jfMV1J7oaCEiWzjuui0hCuI4bcHYyETFRfdg
-	 1O3jqaGRVg2vRg9M1fA0z+aW08Pf937QhNtLtDi4=
+	b=OH5M2sryzcopcwbnpddiqhOigtZDJ72GH3wmThUm7UMFPXJC73h0zsuEhTkwYNdHi
+	 YDs0nPPLBvl6Efzn3AIGSNjbEQn+BlxZZcxXlQg5p8pnMmATOL8OqqV5TwNjkdqbWM
+	 kbhEwI+CZw/t/sla/RiU8OtGtQlwO4o8K1la30Q4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730127AbgCJNB5 (ORCPT
+        id S1727791AbgCJNCB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:01:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43436 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:02:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43602 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730336AbgCJNBw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:01:52 -0400
+        id S1728387AbgCJNBz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:01:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B7B5920409;
-        Tue, 10 Mar 2020 13:01:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C6D8324693;
+        Tue, 10 Mar 2020 13:01:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845312;
-        bh=res+kNY6oEd1iav7ZQxfpSu96Lndx0UOZKW8UJxr7Cw=;
+        s=default; t=1583845315;
+        bh=EhjIXFcU/NEoGOcn/vLlzLLVAbERpWFtTV+W1py1Wo4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iDhs1oJM1QoYGNbtOL9iZ3BM4NY1QaEJRlJBrtnzw072N+BnBbiNzXIftR7LkDXUW
-         SkVi/V/ib2VcaJlM+m228piArqWIVULr1dTcMsBiJ6sn9hAhgrNlOB2ORK/ottpy+t
-         YlseRUadRiUOTowpVxcXzRF17NuzT6ZSDg8FhbkE=
+        b=zk4k4Dkq54r9MIVEryDzoGaZ8LsaHVpUHxfDstxJUmmt3JUZN1lBlrJ2Mszyo5wQT
+         NJ7Ozrf0PVS6YZ3q3a13555/C82fBySTkMhahbFBvD7ji80bgfYN0qMiHelw8cwDWR
+         vJuaENJ/jHeLyHHCUB6HIHw9hkL/WAzPT4tl6xFc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 5.5 138/189] ASoC: dapm: Correct DAPM handling of active widgets during shutdown
-Date:   Tue, 10 Mar 2020 13:39:35 +0100
-Message-Id: <20200310123653.772698923@linuxfoundation.org>
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Takashi Iwai <tiwai@suse.de>, Mark Brown <broonie@kernel.org>
+Subject: [PATCH 5.5 139/189] ASoC: soc-component: tidyup snd_soc_pcm_component_sync_stop()
+Date:   Tue, 10 Mar 2020 13:39:36 +0100
+Message-Id: <20200310123653.880021980@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123639.608886314@linuxfoundation.org>
 References: <20200310123639.608886314@linuxfoundation.org>
@@ -60,43 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
+From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 
-commit 9b3193089e77d3b59b045146ff1c770dd899acb1 upstream.
+commit f1861a7c58ba1ba43c7adff6909d9a920338e4a8 upstream.
 
-commit c2caa4da46a4 ("ASoC: Fix widget powerdown on shutdown") added a
-set of the power state during snd_soc_dapm_shutdown to ensure the
-widgets powered off. However, when commit 39eb5fd13dff
-("ASoC: dapm: Delay w->power update until the changes are written")
-added the new_power member of the widget structure, to differentiate
-between the current power state and the target power state, it did not
-update the shutdown to use the new_power member.
+commit 1e5ddb6ba73894 ("ASoC: component: Add sync_stop PCM ops")
+added snd_soc_pcm_component_sync_stop(), but it is checking
+ioctrl instead of sync_stop. This is bug.
+This patch fixup it.
 
-As new_power has not updated it will be left in the state set by the
-last DAPM sequence, ie. 1 for active widgets. So as the DAPM sequence
-for the shutdown proceeds it will turn the widgets on (despite them
-already being on) rather than turning them off.
-
-Fixes: 39eb5fd13dff ("ASoC: dapm: Delay w->power update until the changes are written")
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Link: https://lore.kernel.org/r/20200228153145.21013-1-ckeepax@opensource.cirrus.com
+Fixes: commit 1e5ddb6ba73894 ("ASoC: component: Add sync_stop PCM ops")
+Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc: Takashi Iwai <tiwai@suse.de>
+Link: https://lore.kernel.org/r/8736av7a8c.wl-kuninori.morimoto.gx@renesas.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/soc-dapm.c |    2 +-
+ sound/soc/soc-component.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/sound/soc/soc-dapm.c
-+++ b/sound/soc/soc-dapm.c
-@@ -4749,7 +4749,7 @@ static void soc_dapm_shutdown_dapm(struc
- 			continue;
- 		if (w->power) {
- 			dapm_seq_insert(w, &down_list, false);
--			w->power = 0;
-+			w->new_power = 0;
- 			powerdown = 1;
- 		}
- 	}
+--- a/sound/soc/soc-component.c
++++ b/sound/soc/soc-component.c
+@@ -452,7 +452,7 @@ int snd_soc_pcm_component_sync_stop(stru
+ 	int ret;
+ 
+ 	for_each_rtd_components(rtd, rtdcom, component) {
+-		if (component->driver->ioctl) {
++		if (component->driver->sync_stop) {
+ 			ret = component->driver->sync_stop(component,
+ 							   substream);
+ 			if (ret < 0)
 
 
