@@ -2,202 +2,227 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EFB9C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:33:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9227EC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:34:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7D052467D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:33:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583847239;
-	bh=f46wVpoNnd2pNzVzlYhD9iT3WUv9uDCPoLscqFWZl94=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=haD8Z4bUMVCGSLlgiMmexcj18A2voiln2ivbtmqoveNiveo9Bfvpbve/IntsVllOL
-	 GBpBZDZnZ6Mlv8s3sXwLvccqR7lUVnx3vkXRjEXDIPHJJR6SedakM+POUjpMpQZg9+
-	 tUMZNWJ18J5T6Oc5lWVdMKPGMb9/AtxPmnEUEoBw=
+	by mail.kernel.org (Postfix) with ESMTP id 632192467D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:34:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=diehl.com header.i=@diehl.com header.b="HI4fouM3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728635AbgCJNd5 (ORCPT
+        id S1728128AbgCJNeB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:33:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50940 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726391AbgCJMrP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:47:15 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5CBF20674;
-        Tue, 10 Mar 2020 12:47:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844434;
-        bh=f46wVpoNnd2pNzVzlYhD9iT3WUv9uDCPoLscqFWZl94=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yDGrYPW9i8oi8+elhkYnLQPZOXzm8LXNwaZW7D1NKkUgnH5bIFRXfsSIaA/bFkXIR
-         3URBKTksZaYBuDN3MzBa56m+6qAU/zMB4kRq/9WOmdx9VesKLP6AWp1zJR7RSpVCtk
-         JdQ7Ra/HBByy+SnAbDGsyrnwsAR+gbsMrd2OcFGI=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>,
-        syzbot+26183d9746e62da329b8@syzkaller.appspotmail.com
-Subject: [PATCH 4.9 73/88] vt: selection, push sel_lock up
-Date:   Tue, 10 Mar 2020 13:39:21 +0100
-Message-Id: <20200310123623.577928756@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200310123606.543939933@linuxfoundation.org>
-References: <20200310123606.543939933@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 10 Mar 2020 09:34:01 -0400
+Received: from enterprise01.smtp.diehl.com ([193.201.238.219]:55608 "EHLO
+        enterprise01.smtp.diehl.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727560AbgCJMrK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:47:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=diehl.com; i=@diehl.com; q=dns/txt; s=default;
+  t=1583844429; x=1615380429;
+  h=from:to:cc:subject:date:message-id:reply-to:
+   content-transfer-encoding:mime-version;
+  bh=vJMUNeqDMsTha7ppeHbqyximHbM6DIWnSoKrK5grZ1I=;
+  b=HI4fouM3osPsipuSsDRORHWMBkCeo5sru6keNAtqcJm2+IplX2APbBn4
+   ETbQXy8igc6H6q52eh0c5Q34ByM/N2/PlafESucJWCfI0d4w7vYm6Y6o2
+   GoktJzCgv/plND2Nak/xQGp7GMUdUXT/CADJTf4sg/8FRfB8WPgdVygCg
+   Fp0eOXO7j9t9dBySwEs2cvc5RscGnzfaAUexsUvA3fX5ryFKWDMNgLvYz
+   F1xuVm3Jrhn8oMiWym49xznpd/ovrvS5Z/rG3qFnNHSaX2V9+tFUwp7ra
+   4B/gbYBLQlqAgcmLgXhhvRGbwsnLPSGgx+qu/1F+WzFoU7EVEFNglbqxd
+   w==;
+IronPort-SDR: HJKi4lh+OgEVnpq5+7C8qWg2DW7WiNTN9D7ZiCg5AttouSI2wgSKdTlbxC7drEZyQaa1l7rfCD
+ /FSbIuI8n7Sw==
+From:   Denis Osterland-Heim <denis.osterland@diehl.com>
+To:     "dmurphy@ti.com" <dmurphy@ti.com>, "pavel@ucw.cz" <pavel@ucw.cz>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Denis Osterland-Heim" <denis.osterland@diehl.com>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: [PATCH v2] leds: pwm: add support for default-state device property
+Thread-Topic: [PATCH v2] leds: pwm: add support for default-state device
+ property
+Thread-Index: AQHV9tn/0ZJlTn83ZkK/QE6qVZtMDw==
+Date:   Tue, 10 Mar 2020 12:47:03 +0000
+Message-ID: <20200310123126.4709-1-Denis.Osterland@diehl.com>
+Reply-To: "20200309082218.13263-1-Denis.Osterland@diehl.com" 
+          <20200309082218.13263-1-Denis.Osterland@diehl.com>
+Accept-Language: de-DE, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+x-ms-exchange-messagesentrepresentingtype: 1
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-TrailerSkip: 1
+X-GBS-PROC: byQFdw3ukCM+zy1/poiPc/AZUMLuadj5bOamS2OKQu8jauJJNj7A4I2WQ4sGAD2T
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Slaby <jslaby@suse.cz>
+This patch adds support for =22default-state=22 devicetree property, whic=
+h
+allows to defer pwm init to first use of led.
 
-commit e8c75a30a23c6ba63f4ef6895cbf41fd42f21aa2 upstream.
+This allows to configure the PWM early in bootloader to let the LED
+blink until an application in Linux userspace set something different.
 
-sel_lock cannot nest in the console lock. Thanks to syzkaller, the
-kernel states firmly:
-
-> WARNING: possible circular locking dependency detected
-> 5.6.0-rc3-syzkaller #0 Not tainted
-> ------------------------------------------------------
-> syz-executor.4/20336 is trying to acquire lock:
-> ffff8880a2e952a0 (&tty->termios_rwsem){++++}, at: tty_unthrottle+0x22/0x100 drivers/tty/tty_ioctl.c:136
->
-> but task is already holding lock:
-> ffffffff89462e70 (sel_lock){+.+.}, at: paste_selection+0x118/0x470 drivers/tty/vt/selection.c:374
->
-> which lock already depends on the new lock.
->
-> the existing dependency chain (in reverse order) is:
->
-> -> #2 (sel_lock){+.+.}:
->        mutex_lock_nested+0x1b/0x30 kernel/locking/mutex.c:1118
->        set_selection_kernel+0x3b8/0x18a0 drivers/tty/vt/selection.c:217
->        set_selection_user+0x63/0x80 drivers/tty/vt/selection.c:181
->        tioclinux+0x103/0x530 drivers/tty/vt/vt.c:3050
->        vt_ioctl+0x3f1/0x3a30 drivers/tty/vt/vt_ioctl.c:364
-
-This is ioctl(TIOCL_SETSEL).
-Locks held on the path: console_lock -> sel_lock
-
-> -> #1 (console_lock){+.+.}:
->        console_lock+0x46/0x70 kernel/printk/printk.c:2289
->        con_flush_chars+0x50/0x650 drivers/tty/vt/vt.c:3223
->        n_tty_write+0xeae/0x1200 drivers/tty/n_tty.c:2350
->        do_tty_write drivers/tty/tty_io.c:962 [inline]
->        tty_write+0x5a1/0x950 drivers/tty/tty_io.c:1046
-
-This is write().
-Locks held on the path: termios_rwsem -> console_lock
-
-> -> #0 (&tty->termios_rwsem){++++}:
->        down_write+0x57/0x140 kernel/locking/rwsem.c:1534
->        tty_unthrottle+0x22/0x100 drivers/tty/tty_ioctl.c:136
->        mkiss_receive_buf+0x12aa/0x1340 drivers/net/hamradio/mkiss.c:902
->        tty_ldisc_receive_buf+0x12f/0x170 drivers/tty/tty_buffer.c:465
->        paste_selection+0x346/0x470 drivers/tty/vt/selection.c:389
->        tioclinux+0x121/0x530 drivers/tty/vt/vt.c:3055
->        vt_ioctl+0x3f1/0x3a30 drivers/tty/vt/vt_ioctl.c:364
-
-This is ioctl(TIOCL_PASTESEL).
-Locks held on the path: sel_lock -> termios_rwsem
-
-> other info that might help us debug this:
->
-> Chain exists of:
->   &tty->termios_rwsem --> console_lock --> sel_lock
-
-Clearly. From the above, we have:
- console_lock -> sel_lock
- sel_lock -> termios_rwsem
- termios_rwsem -> console_lock
-
-Fix this by reversing the console_lock -> sel_lock dependency in
-ioctl(TIOCL_SETSEL). First, lock sel_lock, then console_lock.
-
-Signed-off-by: Jiri Slaby <jslaby@suse.cz>
-Reported-by: syzbot+26183d9746e62da329b8@syzkaller.appspotmail.com
-Fixes: 07e6124a1a46 ("vt: selection, close sel_buffer race")
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200228115406.5735-2-jslaby@suse.cz
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Denis Osterland-Heim <Denis.Osterland@diehl.com>
 ---
- drivers/tty/vt/selection.c |   16 +++++++---------
- 1 file changed, 7 insertions(+), 9 deletions(-)
+v1->v2:
+  - use default-state =3D =22keep=22, as suggested by Jacek Anaszewski
+  - calc initial brightness with PWM state from device
 
---- a/drivers/tty/vt/selection.c
-+++ b/drivers/tty/vt/selection.c
-@@ -205,7 +205,6 @@ static int __set_selection(const struct
- 		pe = tmp;
- 	}
- 
--	mutex_lock(&sel_lock);
- 	if (sel_cons != vc_cons[fg_console].d) {
- 		clear_selection();
- 		sel_cons = vc_cons[fg_console].d;
-@@ -251,10 +250,9 @@ static int __set_selection(const struct
- 			break;
- 		case TIOCL_SELPOINTER:
- 			highlight_pointer(pe);
--			goto unlock;
-+			return 0;
- 		default:
--			ret = -EINVAL;
--			goto unlock;
-+			return -EINVAL;
- 	}
- 
- 	/* remove the pointer */
-@@ -276,7 +274,7 @@ static int __set_selection(const struct
- 	else if (new_sel_start == sel_start)
- 	{
- 		if (new_sel_end == sel_end)	/* no action required */
--			goto unlock;
-+			return 0;
- 		else if (new_sel_end > sel_end)	/* extend to right */
- 			highlight(sel_end + 2, new_sel_end);
- 		else				/* contract from right */
-@@ -303,8 +301,7 @@ static int __set_selection(const struct
- 	if (!bp) {
- 		printk(KERN_WARNING "selection: kmalloc() failed\n");
- 		clear_selection();
--		ret = -ENOMEM;
--		goto unlock;
-+		return -ENOMEM;
- 	}
- 	kfree(sel_buffer);
- 	sel_buffer = bp;
-@@ -329,8 +326,7 @@ static int __set_selection(const struct
- 		}
- 	}
- 	sel_buffer_lth = bp - sel_buffer;
--unlock:
--	mutex_unlock(&sel_lock);
+ .../devicetree/bindings/leds/leds-pwm.txt     |  2 ++
+ drivers/leds/leds-pwm.c                       | 33 +++++++++++++++++--
+ include/linux/leds_pwm.h                      |  1 +
+ 3 files changed, 33 insertions(+), 3 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/leds/leds-pwm.txt b/Docume=
+ntation/devicetree/bindings/leds/leds-pwm.txt
+index 6c6583c35f2f..d0f489680594 100644
+--- a/Documentation/devicetree/bindings/leds/leds-pwm.txt
++++ b/Documentation/devicetree/bindings/leds/leds-pwm.txt
+@@ -19,6 +19,8 @@ LED sub-node properties:
+   see Documentation/devicetree/bindings/leds/common.txt
+ - linux,default-trigger :  (optional)
+   see Documentation/devicetree/bindings/leds/common.txt
++- default-state : (optional)
++  see Documentation/devicetree/bindings/leds/common.yaml
+=20
+ Example:
+=20
+diff --git a/drivers/leds/leds-pwm.c b/drivers/leds/leds-pwm.c
+index 8b6965a563e9..92726c2e43ba 100644
+--- a/drivers/leds/leds-pwm.c
++++ b/drivers/leds/leds-pwm.c
+@@ -75,7 +75,8 @@ static int led_pwm_add(struct device *dev, struct led_p=
+wm_priv *priv,
+ 	led_data->active_low =3D led->active_low;
+ 	led_data->cdev.name =3D led->name;
+ 	led_data->cdev.default_trigger =3D led->default_trigger;
+-	led_data->cdev.brightness =3D LED_OFF;
++	ret =3D led->default_state =3D=3D LEDS_GPIO_DEFSTATE_ON;
++	led_data->cdev.brightness =3D ret =3F led->max_brightness : LED_OFF;
+ 	led_data->cdev.max_brightness =3D led->max_brightness;
+ 	led_data->cdev.flags =3D LED_CORE_SUSPENDRESUME;
+=20
+@@ -97,7 +98,8 @@ static int led_pwm_add(struct device *dev, struct led_p=
+wm_priv *priv,
+ 	 * FIXME: pwm_apply_args() should be removed when switching to the
+ 	 * atomic PWM API.
+ 	 */
+-	pwm_apply_args(led_data->pwm);
++	if (led->default_state !=3D LEDS_GPIO_DEFSTATE_KEEP)
++		pwm_apply_args(led_data->pwm);
+=20
+ 	pwm_get_args(led_data->pwm, &pargs);
+=20
+@@ -105,10 +107,23 @@ static int led_pwm_add(struct device *dev, struct l=
+ed_pwm_priv *priv,
+ 	if (!led_data->period && (led->pwm_period_ns > 0))
+ 		led_data->period =3D led->pwm_period_ns;
+=20
++	if (led->default_state =3D=3D LEDS_GPIO_DEFSTATE_KEEP) {
++		uint64_t brightness;
++		struct pwm_device *pwm =3D led_data->pwm;
++		struct pwm_state state;
 +
- 	return ret;
- }
- 
-@@ -338,9 +334,11 @@ int set_selection(const struct tiocl_sel
- {
- 	int ret;
- 
-+	mutex_lock(&sel_lock);
- 	console_lock();
- 	ret = __set_selection(v, tty);
- 	console_unlock();
-+	mutex_unlock(&sel_lock);
- 
- 	return ret;
- }
++		pwm->chip->ops->get_state(pwm->chip, pwm, &state);
++		brightness =3D led->max_brightness * state.duty_cycle;
++		do_div(brightness, state.period);
++		led_data->cdev.brightness =3D (enum led_brightness)brightness;
++	}
++
+ 	ret =3D devm_led_classdev_register(dev, &led_data->cdev);
+ 	if (ret =3D=3D 0) {
+ 		priv->num_leds++;
+-		led_pwm_set(&led_data->cdev, led_data->cdev.brightness);
++		if (led->default_state !=3D LEDS_GPIO_DEFSTATE_KEEP)
++			led_pwm_set(&led_data->cdev,
++					led_data->cdev.brightness);
+ 	} else {
+ 		dev_err(dev, =22failed to register PWM led for %s: %d=5Cn=22,
+ 			led->name, ret);
+@@ -126,6 +141,8 @@ static int led_pwm_create_fwnode(struct device *dev, =
+struct led_pwm_priv *priv)
+ 	memset(&led, 0, sizeof(led));
+=20
+ 	device_for_each_child_node(dev, fwnode) {
++		const char *state =3D NULL;
++
+ 		ret =3D fwnode_property_read_string(fwnode, =22label=22, &led.name);
+ 		if (ret && is_of_node(fwnode))
+ 			led.name =3D to_of_node(fwnode)->name;
+@@ -143,6 +160,16 @@ static int led_pwm_create_fwnode(struct device *dev,=
+ struct led_pwm_priv *priv)
+ 		fwnode_property_read_u32(fwnode, =22max-brightness=22,
+ 					 &led.max_brightness);
+=20
++		if (!fwnode_property_read_string(fwnode, =22default-state=22,
++						 &state)) {
++			if (!strcmp(state, =22keep=22))
++				led.default_state =3D LEDS_GPIO_DEFSTATE_KEEP;
++			else if (!strcmp(state, =22on=22))
++				led.default_state =3D LEDS_GPIO_DEFSTATE_ON;
++			else
++				led.default_state =3D LEDS_GPIO_DEFSTATE_OFF;
++		}
++
+ 		ret =3D led_pwm_add(dev, priv, &led, fwnode);
+ 		if (ret) {
+ 			fwnode_handle_put(fwnode);
+diff --git a/include/linux/leds_pwm.h b/include/linux/leds_pwm.h
+index 93d101d28943..c9ef9012913d 100644
+--- a/include/linux/leds_pwm.h
++++ b/include/linux/leds_pwm.h
+@@ -10,6 +10,7 @@ struct led_pwm {
+ 	const char	*default_trigger;
+ 	unsigned	pwm_id __deprecated;
+ 	u8 		active_low;
++	u8		default_state;
+ 	unsigned 	max_brightness;
+ 	unsigned	pwm_period_ns;
+ };
+--=20
+2.25.1
 
 
+
+Diehl Connectivity Solutions GmbH
+Gesch=E4ftsf=FChrung: Horst Leonberger
+Sitz der Gesellschaft: N=FCrnberg - Registergericht: Amtsgericht
+N=FCrnberg: HRB 32315
+_________________________________________________________________________=
+__________________________
+
+Der Inhalt der vorstehenden E-Mail ist nicht rechtlich bindend. Diese E-M=
+ail enthaelt vertrauliche und/oder rechtlich geschuetzte Informationen.
+Informieren Sie uns bitte, wenn Sie diese E-Mail faelschlicherweise erhal=
+ten haben. Bitte loeschen Sie in diesem Fall die Nachricht.
+Jede unerlaubte Form der Reproduktion, Bekanntgabe, Aenderung, Verteilung=
+ und/oder Publikation dieser E-Mail ist strengstens untersagt.
+- Informationen zum Datenschutz, insbesondere zu Ihren Rechten, erhalten =
+Sie unter https://www.diehl.com/group/de/transparenz-und-informationspfli=
+chten/
+
+The contents of the above mentioned e-mail is not legally binding. This e=
+-mail contains confidential and/or legally protected information. Please =
+inform us if you have received this e-mail by
+mistake and delete it in such a case. Each unauthorized reproduction, dis=
+closure, alteration, distribution and/or publication of this e-mail is st=
+rictly prohibited.=20
+- For general information on data protection and your respective rights p=
+lease visit https://www.diehl.com/group/en/transparency-and-information-o=
+bligations/
