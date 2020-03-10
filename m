@@ -2,186 +2,98 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A947BC18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 16:39:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0997C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 16:39:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DE16222C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 16:39:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2016222C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 16:39:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583858384;
+	bh=DAW7xTUed0FfcyKkaoTCpHE55I+ixoL7o21Jj1lUqZA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=O4xh21OLoUJzCHM3If73vbMQP7e1XX5/OHmdtD7shjxzB7GTDkmzxcPAxBaqFAM4H
+	 +RX+KFb0YQrZNgBP69rlchK6Z81aeumd6yZIGr7HmndlldFOmqe4gLmK6saUfDpyZ/
+	 qqTQQHbV6NI8fil1rrwdBsELiCVHwZYhVMq9e3ag=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726569AbgCJQjk (ORCPT
+        id S1726825AbgCJQjn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 12:39:40 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:11218 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727181AbgCJQjk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 12:39:40 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id C2C462B96F6C27146853;
-        Wed, 11 Mar 2020 00:30:38 +0800 (CST)
-Received: from localhost.localdomain (10.69.192.58) by
- DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
- 14.3.487.0; Wed, 11 Mar 2020 00:30:31 +0800
-From:   John Garry <john.garry@huawei.com>
-To:     <axboe@kernel.dk>, <jejb@linux.ibm.com>,
-        <martin.petersen@oracle.com>, <hare@suse.de>,
-        <ming.lei@redhat.com>, <bvanassche@acm.org>, <hch@infradead.org>
-CC:     <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-scsi@vger.kernel.org>,
-        <virtualization@lists.linux-foundation.org>,
-        <esc.storagedev@microsemi.com>, <chenxiang66@hisilicon.com>,
-        Hannes Reinecke <hare@suse.com>
-Subject: [PATCH RFC v2 22/24] scsi: drop scsi command list
-Date:   Wed, 11 Mar 2020 00:25:48 +0800
-Message-ID: <1583857550-12049-23-git-send-email-john.garry@huawei.com>
-X-Mailer: git-send-email 2.8.1
-In-Reply-To: <1583857550-12049-1-git-send-email-john.garry@huawei.com>
-References: <1583857550-12049-1-git-send-email-john.garry@huawei.com>
+        Tue, 10 Mar 2020 12:39:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48782 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726647AbgCJQjl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 12:39:41 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 996F2222C3;
+        Tue, 10 Mar 2020 16:39:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583858379;
+        bh=DAW7xTUed0FfcyKkaoTCpHE55I+ixoL7o21Jj1lUqZA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=CPMiHDgw4e/BVbFl+DIYaq0q+o+/Q1tF9JzU/U68B1NHU7qvT748iN3MQmm6B1yP8
+         bObq+88sQqBKI+A0M6cCkbQnV5qGVwejvs3SvqlM41yDIxLjTaWUaiAe9hTzwkHz7j
+         kU1Ignb00T9aZuUn0oAEaFLRPFxtDi5S/wy7+4Vg=
+Date:   Tue, 10 Mar 2020 17:39:35 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Johan Hovold <johan@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Sanchayan Maity <maitysanchayan@gmail.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+Subject: Re: [PATCH 5.5 175/189] ARM: dts: imx6dl-colibri-eval-v3: fix sram
+ compatible properties
+Message-ID: <20200310163935.GA3430367@kroah.com>
+References: <20200310123639.608886314@linuxfoundation.org>
+ <20200310123657.443556491@linuxfoundation.org>
+ <20200310150512.GC14211@localhost>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.69.192.58]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200310150512.GC14211@localhost>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hannes Reinecke <hare@suse.com>
+On Tue, Mar 10, 2020 at 04:05:12PM +0100, Johan Hovold wrote:
+> On Tue, Mar 10, 2020 at 01:40:12PM +0100, Greg Kroah-Hartman wrote:
+> > From: Johan Hovold <johan@kernel.org>
+> > 
+> > commit bcbf53a0dab50980867476994f6079c1ec5bb3a3 upstream.
+> > 
+> > The sram-node compatible properties have mistakingly combined the
+> > model-specific string with the generic "mtd-ram" string.
+> > 
+> > Note that neither "cy7c1019dv33-10zsxi, mtd-ram" or
+> > "cy7c1019dv33-10zsxi" are used by any in-kernel driver and they are
+> > not present in any binding.
+> > 
+> > The physmap driver will however bind to platform devices that specify
+> > "mtd-ram".
+> > 
+> > Fixes: fc48e76489fd ("ARM: dts: imx6: Add support for Toradex Colibri iMX6 module")
+> > Cc: Sanchayan Maity <maitysanchayan@gmail.com>
+> > Cc: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+> > Cc: Shawn Guo <shawnguo@kernel.org>
+> > Signed-off-by: Johan Hovold <johan@kernel.org>
+> > Reviewed-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+> > Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> 
+> This was never meant to go into stable so I didn't add a stable CC-tag.
+> 
+> It causes a driver to bind to the corresponding platform devices, which
+> have so far been unbound and may therefore have unwanted side-effects.
+> 
+> I don't think it's stable material either way.
 
-No users left, kill it.
+Thanks, now dropped from all kernel trees.
 
-Signed-off-by: Hannes Reinecke <hare@suse.com>
----
- drivers/scsi/scsi.c        |  1 -
- drivers/scsi/scsi_lib.c    | 32 --------------------------------
- drivers/scsi/scsi_scan.c   |  1 -
- include/scsi/scsi_cmnd.h   |  1 -
- include/scsi/scsi_device.h |  1 -
- include/scsi/scsi_host.h   |  2 --
- 6 files changed, 38 deletions(-)
-
-diff --git a/drivers/scsi/scsi.c b/drivers/scsi/scsi.c
-index 930e4803d888..8ca36d778bcf 100644
---- a/drivers/scsi/scsi.c
-+++ b/drivers/scsi/scsi.c
-@@ -104,7 +104,6 @@ EXPORT_SYMBOL(scsi_sd_pm_domain);
-  */
- void scsi_put_command(struct scsi_cmnd *cmd)
- {
--	scsi_del_cmd_from_list(cmd);
- 	BUG_ON(delayed_work_pending(&cmd->abort_work));
- }
- 
-diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c
-index af4f56cd0093..1253893007d3 100644
---- a/drivers/scsi/scsi_lib.c
-+++ b/drivers/scsi/scsi_lib.c
-@@ -562,7 +562,6 @@ static void scsi_mq_uninit_cmd(struct scsi_cmnd *cmd)
- {
- 	scsi_mq_free_sgtables(cmd);
- 	scsi_uninit_cmd(cmd);
--	scsi_del_cmd_from_list(cmd);
- }
- 
- /* Returns false when no more bytes to process, true if there are more */
-@@ -1098,35 +1097,6 @@ static void scsi_cleanup_rq(struct request *rq)
- 	}
- }
- 
--/* Add a command to the list used by the aacraid and dpt_i2o drivers */
--void scsi_add_cmd_to_list(struct scsi_cmnd *cmd)
--{
--	struct scsi_device *sdev = cmd->device;
--	struct Scsi_Host *shost = sdev->host;
--	unsigned long flags;
--
--	if (shost->use_cmd_list) {
--		spin_lock_irqsave(&sdev->list_lock, flags);
--		list_add_tail(&cmd->list, &sdev->cmd_list);
--		spin_unlock_irqrestore(&sdev->list_lock, flags);
--	}
--}
--
--/* Remove a command from the list used by the aacraid and dpt_i2o drivers */
--void scsi_del_cmd_from_list(struct scsi_cmnd *cmd)
--{
--	struct scsi_device *sdev = cmd->device;
--	struct Scsi_Host *shost = sdev->host;
--	unsigned long flags;
--
--	if (shost->use_cmd_list) {
--		spin_lock_irqsave(&sdev->list_lock, flags);
--		BUG_ON(list_empty(&cmd->list));
--		list_del_init(&cmd->list);
--		spin_unlock_irqrestore(&sdev->list_lock, flags);
--	}
--}
--
- /* Called after a request has been started. */
- void scsi_init_command(struct scsi_device *dev, struct scsi_cmnd *cmd)
- {
-@@ -1159,8 +1129,6 @@ void scsi_init_command(struct scsi_device *dev, struct scsi_cmnd *cmd)
- 	cmd->retries = retries;
- 	if (in_flight)
- 		__set_bit(SCMD_STATE_INFLIGHT, &cmd->state);
--
--	scsi_add_cmd_to_list(cmd);
- }
- 
- static blk_status_t scsi_setup_scsi_cmnd(struct scsi_device *sdev,
-diff --git a/drivers/scsi/scsi_scan.c b/drivers/scsi/scsi_scan.c
-index 058079f915f1..f2437a7570ce 100644
---- a/drivers/scsi/scsi_scan.c
-+++ b/drivers/scsi/scsi_scan.c
-@@ -236,7 +236,6 @@ static struct scsi_device *scsi_alloc_sdev(struct scsi_target *starget,
- 	sdev->sdev_state = SDEV_CREATED;
- 	INIT_LIST_HEAD(&sdev->siblings);
- 	INIT_LIST_HEAD(&sdev->same_target_siblings);
--	INIT_LIST_HEAD(&sdev->cmd_list);
- 	INIT_LIST_HEAD(&sdev->starved_entry);
- 	INIT_LIST_HEAD(&sdev->event_list);
- 	spin_lock_init(&sdev->list_lock);
-diff --git a/include/scsi/scsi_cmnd.h b/include/scsi/scsi_cmnd.h
-index c73280b3706d..50addc112212 100644
---- a/include/scsi/scsi_cmnd.h
-+++ b/include/scsi/scsi_cmnd.h
-@@ -68,7 +68,6 @@ struct scsi_pointer {
- struct scsi_cmnd {
- 	struct scsi_request req;
- 	struct scsi_device *device;
--	struct list_head list;  /* scsi_cmnd participates in queue lists */
- 	struct list_head eh_entry; /* entry for the host eh_cmd_q */
- 	struct delayed_work abort_work;
- 
-diff --git a/include/scsi/scsi_device.h b/include/scsi/scsi_device.h
-index f8312a3e5b42..f146a4557787 100644
---- a/include/scsi/scsi_device.h
-+++ b/include/scsi/scsi_device.h
-@@ -110,7 +110,6 @@ struct scsi_device {
- 	atomic_t device_blocked;	/* Device returned QUEUE_FULL. */
- 
- 	spinlock_t list_lock;
--	struct list_head cmd_list;	/* queue of in use SCSI Command structures */
- 	struct list_head starved_entry;
- 	unsigned short queue_depth;	/* How deep of a queue we want */
- 	unsigned short max_queue_depth;	/* max queue depth */
-diff --git a/include/scsi/scsi_host.h b/include/scsi/scsi_host.h
-index 663aef22437a..dc62794f4cb5 100644
---- a/include/scsi/scsi_host.h
-+++ b/include/scsi/scsi_host.h
-@@ -634,8 +634,6 @@ struct Scsi_Host {
- 	/* The controller does not support WRITE SAME */
- 	unsigned no_write_same:1;
- 
--	unsigned use_cmd_list:1;
--
- 	/* Host responded with short (<36 bytes) INQUIRY result */
- 	unsigned short_inquiry:1;
- 
--- 
-2.17.1
-
+greg k-h
