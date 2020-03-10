@@ -2,138 +2,179 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AF8EC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:32:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BED7DC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:32:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2FD824649
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:32:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D04224681
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:32:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mqSjKHGj"
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="Dqk65sEm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729661AbgCJNcG (ORCPT
+        id S1729707AbgCJNcH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 10 Mar 2020 09:32:07 -0400
+Received: from mail-eopbgr1410101.outbound.protection.outlook.com ([40.107.141.101]:33513
+        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728218AbgCJNcG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 10 Mar 2020 09:32:06 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:39184 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729017AbgCJNcD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:32:03 -0400
-Received: by mail-wm1-f67.google.com with SMTP id f7so1352083wml.4
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 06:32:01 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lgCkZmy26pUqI/3EoyysuCzSCIVjsB1fNPypMc+fj8f0pfqeTi2+C5Bc9IUYWa8sYhYoHMHPccd0h8Tkv7pcL2Asa0LN2WEk+ipETGmZDxME4Sa5t71dhgeY2+Vrnr0PnfjTEtL6cZtJ7SSIon5W/BMGsPhD0KTVB7rEe1G4Qx+de8fEzQUCIsZGEtER/7SCKZgkRj6XTLZKLhmPiYvwGbJWR7uU7NmPNfrpDCaCbPey5KRBZU0BdxVTQxzp8j5mk3/toyKiF8tdfKI211cSb7XdZK5XL2Cnf4A6gv1mJ6ktfBkMhW7+5Qr3HAIjKHvNmMMuunkVzDTsuDra2j4odA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=p4NY/WWErLq5lZkjl2MizQht6hx1KXOP1yGn0Kwd/DE=;
+ b=OkshEY/zPHLab2K0obFn7Ar1GSoh/FWj3i/QlT38c76Jz2RZ/C91kRsmrKXBc/PGwDVYcjUBCdZuum3Q69rX/fqtCx6SABoLg/lC8Yrp2TtNKp/avHrPFZKwkdPSjtMzGqbTvqDb4X23H9xJ2WGi6L3HZGRumguD2v9bz9V29B00H3Q6TuzsL+4yD0XdhV9umzCeBpID6uQwTztHq6dqHgxAmLv6NdGgbbsz6w665/3SdUFqCmBiQx+r8lCns7J9mfW8Cs+lCFoFN+2UvVF1QkiAvD+1sDCN4JNlFiLDg1Q22av6rfXPdbtCzijRhVh00UqpvjuIKIQB4Qc3SzpR9g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
+ header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=0PDXUNP0CNWIcOfZIatzfIp7MveLX2/j+5KT4VopvNc=;
-        b=mqSjKHGj010PNQfFZwfvEAmV8ADnB1wWjI4PptouwtPF1tHRYa+/DX4AQxW14hNUIy
-         yws6pL6lXIbp/OY5sKPGIpD+hiliV3ZIpgEaM2hRRoksOdzVTJhmUpUTPMkcXPQE70AM
-         oaluGsvPDi9Ae258jTLONdHvwLzIaaLTz4ASzlhD0zMfanLXbc0aJktA/Z97UdNtnoTv
-         BlxmaVfkLnP1Lg5RkSevCvFVdlINZNRcroScsQuOjIUz7eD8Q6v/e5jagkdBjmUsHTvL
-         qP6T0H63x/A0Fxb38hSCohESNWEF3RklHtLnBF4BGVDPkpgdNNVBdGrnoVGoBT+JURVA
-         KJWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=0PDXUNP0CNWIcOfZIatzfIp7MveLX2/j+5KT4VopvNc=;
-        b=T8EZpfuL7BYNK/rdy8fwMzhYJw3oI01OXJ1woJfekprsLXChVi+TwmYtNejx371e4L
-         oJt6MjXFf1q1IxA3HWclQ2CTFymys9OLnL7mFmK6KZwpHj1T9ydXN6jYLiWvltF6xfJ9
-         iIWDCsPT221cNFHFKVBWUuDRgk4xZrd28BMn7O6rl2CjQ0+Tnzmbfwbh9Ourk1WJ7DZQ
-         UQkM6nvo6hTRa9KbCt4XDf/EOwp9d3TJNTWDIyeg5J4kKB7J28Iy1EqFpuVaG9GYblHx
-         KbkJHoi65pIBK6v/FESQyGkWBLZ7QZjaX5AR77vaR6X6XbWRcftmHT3JzM8jLmOcEeSp
-         lNpw==
-X-Gm-Message-State: ANhLgQ3WQ8/duOu7+KXJ6YdWaFu7gQoNvH8QizgdPRyP2UonzN/8qBu3
-        AN2V+YwsUyBHFCq6G/xTG6Q=
-X-Google-Smtp-Source: ADFU+vv+T6EX42I7QsCPKFPJNMq6GUXg9pANHhKWydd9YqyV4Y93WsRrc5JL+R7T0hRAGNFYQNCtDA==
-X-Received: by 2002:a05:600c:c8:: with SMTP id u8mr2236586wmm.178.1583847120433;
-        Tue, 10 Mar 2020 06:32:00 -0700 (PDT)
-Received: from localhost.localdomain ([197.248.222.210])
-        by smtp.googlemail.com with ESMTPSA id o7sm14047141wrx.60.2020.03.10.06.31.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Mar 2020 06:31:59 -0700 (PDT)
-From:   Wambui Karuga <wambui.karugax@gmail.com>
-To:     airlied@linux.ie, daniel@ffwll.ch,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        gregkh@linuxfoundation.org
-Subject: [PATCH v2 13/17] drm/omap: remove checks for return value of drm_debugfs functions
-Date:   Tue, 10 Mar 2020 16:31:17 +0300
-Message-Id: <20200310133121.27913-14-wambui.karugax@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200310133121.27913-1-wambui.karugax@gmail.com>
-References: <20200310133121.27913-1-wambui.karugax@gmail.com>
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=p4NY/WWErLq5lZkjl2MizQht6hx1KXOP1yGn0Kwd/DE=;
+ b=Dqk65sEmNhDRsF0qqqhaFJSWdDuC8Yu1ZggYn4lx458XJjbxuS5CfYHs9CD6J/cSNxFrE3NM0svLqg4ZGaJx9BuoWJNJE0GC1HD/6ZlS8pQokraHqscs1SPNbs8tlgw1pW4HW+x3bnGvxCc7XH0TNk3F9S6wZRf+D0caKdbvF6I=
+Received: from OSBPR01MB3590.jpnprd01.prod.outlook.com (20.178.97.80) by
+ OSBPR01MB3318.jpnprd01.prod.outlook.com (20.178.5.147) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2793.14; Tue, 10 Mar 2020 13:32:01 +0000
+Received: from OSBPR01MB3590.jpnprd01.prod.outlook.com
+ ([fe80::6df0:eb47:a259:b94b]) by OSBPR01MB3590.jpnprd01.prod.outlook.com
+ ([fe80::6df0:eb47:a259:b94b%7]) with mapi id 15.20.2793.018; Tue, 10 Mar 2020
+ 13:32:00 +0000
+From:   Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Niklas <niklas.soderlund@ragnatech.se>
+CC:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Lad Prabhakar <prabhakar.csengg@gmail.com>
+Subject: RE: [PATCH v2 3/3] media: rcar-vin: rcar-csi2: Add support for
+ MEDIA_BUS_FMT_SRGGB8_1X8 format
+Thread-Topic: [PATCH v2 3/3] media: rcar-vin: rcar-csi2: Add support for
+ MEDIA_BUS_FMT_SRGGB8_1X8 format
+Thread-Index: AQHV9swB6r3pn+oA/0Oe+3GvBSYM56hBxt8AgAAL0eA=
+Date:   Tue, 10 Mar 2020 13:32:00 +0000
+Message-ID: <OSBPR01MB3590DD80FE95AEFC8CAAB32DAAFF0@OSBPR01MB3590.jpnprd01.prod.outlook.com>
+References: <1583838364-12932-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1583838364-12932-4-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200310124844.GP2975348@oden.dyn.berto.se>
+In-Reply-To: <20200310124844.GP2975348@oden.dyn.berto.se>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=prabhakar.mahadev-lad.rj@bp.renesas.com; 
+x-originating-ip: [193.141.220.21]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: e905f176-60be-44e1-0056-08d7c4f769c9
+x-ms-traffictypediagnostic: OSBPR01MB3318:
+x-microsoft-antispam-prvs: <OSBPR01MB33188A819E5BA3609D676725AAFF0@OSBPR01MB3318.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 033857D0BD
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(39860400002)(136003)(376002)(396003)(366004)(189003)(199004)(54906003)(71200400001)(6916009)(9686003)(55016002)(478600001)(5660300002)(66476007)(81166006)(7696005)(52536014)(66556008)(4326008)(8936002)(86362001)(186003)(66446008)(26005)(64756008)(53546011)(316002)(6506007)(66574012)(66946007)(76116006)(8676002)(2906002)(33656002)(81156014);DIR:OUT;SFP:1102;SCL:1;SRVR:OSBPR01MB3318;H:OSBPR01MB3590.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
+received-spf: None (protection.outlook.com: bp.renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: f/8ILCJhjUv0qC7yQ2tcfkZafN2wSDSDPxvZvu5JZ52oDXpYUTTm1HjjSvlW4vWke5wV8DyKUl+b4JM+RBmp8uSL+J8mhO3Aqp2IGpoM6ts+GIpixIN4wL3vCftBhRSU64fF5u69srb+dlpDlJKUvyZpge/bdAlqu9G7NyzD1Za5mQQ1M/mJYFp5vlP2Uf5ykkkfsVjuAiu8PxvpVqSbeSk9zs3L2XY0cmi7/0tKMRFLr/8hdtHySCy3SIMJFZsOfFQ72Mrdcy6tOCh2hzNMuPdxCTkWKlP1PVjNYUlEWtd0jStxBUhNJ5yUwaryQM7iIQTf9y0cMX9GB5jiwNAQNmlrPfLe7GYoEjdDV1QUaYP3o4RP2IQ6lZQRTaC+/2ZhAA9Eirs35jb+ZltrBN1pCLep31f8qfdKYVPppnlIiU+q+PRTIkHjnDqbfjQXRNzV
+x-ms-exchange-antispam-messagedata: w3D9WLHRTlLnp9RgRkgALCgdbMhGqoYfMPdRC6TUQuZGpPruDq/8302EdO/3Shx1vqlNVOnPdFUX008WYYfD+zMNgR0FLNac+69bEjCfbfIvbP3+I6ZENl38F2TKbzglJATpyz+FbQmYskoD+9P7Jg==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: bp.renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e905f176-60be-44e1-0056-08d7c4f769c9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Mar 2020 13:32:00.2543
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: unsPvuuOGE7CVgpisryLuIAz5w7NHssDHWHkzXSnxz6QiFG6S7WAvP1Mgw5xYTUsq0Xk9+PyWrwtlT9oGVNaxr/e/KRvGtL+XQl7DVPVIfwcZmyPkrmyw0QlnsqUj+Wi
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSBPR01MB3318
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since 987d65d01356 (drm: debugfs: make
-drm_debugfs_create_files() never fail), there is no need to ever check
-the return value for drm_debugfs_create_files(). Therefore remove the
-checks for the return value and subsequent error handling in
-omap_debugfs_init().
+Hi Niklas,
 
-These changes also enables the changing of omap_debugfs_init() to return
-0 directly.
+Thank you for the review.
 
-v2: convert omap_debugfs_init() to return 0 instead of void to avoid
-introduction of build issues and enable individual driver compilation.
+> -----Original Message-----
+> From: Niklas <niklas.soderlund@ragnatech.se>
+> Sent: 10 March 2020 12:49
+> To: Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>; linux-
+> media@vger.kernel.org; linux-renesas-soc@vger.kernel.org; linux-
+> kernel@vger.kernel.org; Lad Prabhakar <prabhakar.csengg@gmail.com>
+> Subject: Re: [PATCH v2 3/3] media: rcar-vin: rcar-csi2: Add support for
+> MEDIA_BUS_FMT_SRGGB8_1X8 format
+>
+> Hi Lad,
+>
+> Thanks for your work.
+>
+> On 2020-03-10 11:06:04 +0000, Lad Prabhakar wrote:
+> > This patch adds support for MEDIA_BUS_FMT_SRGGB8_1X8 format for
+> CSI2
+> > input.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-
+> lad.rj@bp.renesas.com>
+>
+> Small nit, you can drop rcar-vin from the subject as this patch is for th=
+e rcar-
+> csi2 driver. With this fixed,
+>
+Sure will update it for next iteration.
 
-References: https://lists.freedesktop.org/archives/dri-devel/2020-February/257183.html
-Signed-off-by: Wambui Karuga <wambui.karugax@gmail.com>
----
- drivers/gpu/drm/omapdrm/omap_debugfs.c | 27 +++++++-------------------
- 1 file changed, 7 insertions(+), 20 deletions(-)
+Cheers,
+--Prabhakar
 
-diff --git a/drivers/gpu/drm/omapdrm/omap_debugfs.c b/drivers/gpu/drm/omapdrm/omap_debugfs.c
-index 34dfb33145b4..ed63dcced79a 100644
---- a/drivers/gpu/drm/omapdrm/omap_debugfs.c
-+++ b/drivers/gpu/drm/omapdrm/omap_debugfs.c
-@@ -82,29 +82,16 @@ static struct drm_info_list omap_dmm_debugfs_list[] = {
- 
- int omap_debugfs_init(struct drm_minor *minor)
- {
--	struct drm_device *dev = minor->dev;
--	int ret;
--
--	ret = drm_debugfs_create_files(omap_debugfs_list,
--			ARRAY_SIZE(omap_debugfs_list),
--			minor->debugfs_root, minor);
--
--	if (ret) {
--		dev_err(dev->dev, "could not install omap_debugfs_list\n");
--		return ret;
--	}
-+	drm_debugfs_create_files(omap_debugfs_list,
-+				 ARRAY_SIZE(omap_debugfs_list),
-+				 minor->debugfs_root, minor);
- 
- 	if (dmm_is_available())
--		ret = drm_debugfs_create_files(omap_dmm_debugfs_list,
--				ARRAY_SIZE(omap_dmm_debugfs_list),
--				minor->debugfs_root, minor);
-+		drm_debugfs_create_files(omap_dmm_debugfs_list,
-+					 ARRAY_SIZE(omap_dmm_debugfs_list),
-+					 minor->debugfs_root, minor);
- 
--	if (ret) {
--		dev_err(dev->dev, "could not install omap_dmm_debugfs_list\n");
--		return ret;
--	}
--
--	return ret;
-+	return 0;
- }
- 
- #endif
--- 
-2.25.1
+> Reviewed-by: Niklas S=F6derlund <niklas.soderlund+renesas@ragnatech.se>
+>
+> > ---
+> >  drivers/media/platform/rcar-vin/rcar-csi2.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/drivers/media/platform/rcar-vin/rcar-csi2.c
+> > b/drivers/media/platform/rcar-vin/rcar-csi2.c
+> > index 39e1639..b030ef6 100644
+> > --- a/drivers/media/platform/rcar-vin/rcar-csi2.c
+> > +++ b/drivers/media/platform/rcar-vin/rcar-csi2.c
+> > @@ -320,6 +320,7 @@ static const struct rcar_csi2_format
+> rcar_csi2_formats[] =3D {
+> >  { .code =3D MEDIA_BUS_FMT_YUYV8_1X16,.datatype =3D 0x1e,
+> .bpp =3D 16 },
+> >  { .code =3D MEDIA_BUS_FMT_UYVY8_2X8,.datatype =3D 0x1e,
+> .bpp =3D 16 },
+> >  { .code =3D MEDIA_BUS_FMT_YUYV10_2X10,.datatype =3D 0x1e,
+> .bpp =3D 20 },
+> > +{ .code =3D MEDIA_BUS_FMT_SRGGB8_1X8,     .datatype =3D 0x2a, .bpp =3D
+> 8 },
+> >  };
+> >
+> >  static const struct rcar_csi2_format *rcsi2_code_to_fmt(unsigned int
+> > code)
+> > --
+> > 2.7.4
+> >
+>
+> --
+> Regards,
+> Niklas S=F6derlund
 
+
+Renesas Electronics Europe GmbH, Geschaeftsfuehrer/President: Carsten Jauch=
+, Sitz der Gesellschaft/Registered office: Duesseldorf, Arcadiastrasse 10, =
+40472 Duesseldorf, Germany, Handelsregister/Commercial Register: Duesseldor=
+f, HRB 3708 USt-IDNr./Tax identification no.: DE 119353406 WEEE-Reg.-Nr./WE=
+EE reg. no.: DE 14978647
