@@ -2,209 +2,132 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6D65C10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 04:33:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C45F7C10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 04:47:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92D4C2467F
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 04:33:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 979D92465A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 04:47:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="j3E9quZB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726369AbgCJEd3 (ORCPT
+        id S1726202AbgCJErA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 00:33:29 -0400
-Received: from mga09.intel.com ([134.134.136.24]:58619 "EHLO mga09.intel.com"
+        Tue, 10 Mar 2020 00:47:00 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:56465 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725999AbgCJEdX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 00:33:23 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Mar 2020 21:33:22 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,535,1574150400"; 
-   d="scan'208";a="415049664"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga005.jf.intel.com with ESMTP; 09 Mar 2020 21:33:20 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jBWa0-0006CD-8A; Tue, 10 Mar 2020 12:33:20 +0800
-Date:   Tue, 10 Mar 2020 12:33:18 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [rcu:rcu/next] BUILD SUCCESS
- f4420cc0365ca024df456f3c2f15e908856c01ce
-Message-ID: <5e67188e.JO70Aj5mOA8hGeH3%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1725947AbgCJEq7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 00:46:59 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48c2cb63Dkz9sRN;
+        Tue, 10 Mar 2020 15:46:52 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1583815616;
+        bh=uZVru08ZcwV3CJvUrWNv3wJ5KlB6+idQYNsw8XOiMX8=;
+        h=Date:From:To:Cc:Subject:From;
+        b=j3E9quZB6a/4mO6ssCf/I2vy1BEeYj6G5ISbUtnnguqcmO1/+FI9JbFFZRuL+Zmqd
+         zVfhhO6vos9LcHgTO6DGB7v5ZaniYQXyt+YirFzYuxpfXgcegkAXxu0A08s6NoZVdH
+         ejGtthWxk/cT1ylD2MOwdlmu3Rv3eliCOT4nt6SSJ3zL12s6ALpx0uPugLU2cr/pCG
+         SQhf7yZTSMfr3p/TLXzPV96FSPBQQJ8f1zDcRg1XVC8HNIeOmhIeLK+Hc690bDUSWE
+         VSjGVQ6j2j/7/yqEfEzlX2xGjUz4BDOCaUkRugrteNlRjNhP6lnShXhY+5YzVant8y
+         phXjpUCcN7Auw==
+Date:   Tue, 10 Mar 2020 15:46:51 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        Christian Brauner <christian@brauner.io>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Corey Minyard <cminyard@mvista.com>
+Subject: linux-next: manual merge of the userns tree with the pidfd-fixes
+ tree
+Message-ID: <20200310154651.27cf84f4@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/f0rP32LNCnRWHOpHRwg.9UW";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git  rcu/next
-branch HEAD: f4420cc0365ca024df456f3c2f15e908856c01ce  Revert "rculist: Describe variadic macro argument in a Sphinx-compatible way"
+--Sig_/f0rP32LNCnRWHOpHRwg.9UW
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-elapsed time: 485m
+Hi all,
 
-configs tested: 146
-configs skipped: 0
+Today's linux-next merge of the userns tree got a conflict in:
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+  kernel/pid.c
 
-arm64                            allyesconfig
-arm                              allyesconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm                               allnoconfig
-arm                              allmodconfig
-arm                         at91_dt_defconfig
-arm                           efm32_defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                        multi_v7_defconfig
-arm                        shmobile_defconfig
-arm                           sunxi_defconfig
-arm64                               defconfig
-ia64                                defconfig
-powerpc                             defconfig
-i386                              allnoconfig
-sparc                               defconfig
-i386                             alldefconfig
-i386                             allyesconfig
-i386                                defconfig
-ia64                             alldefconfig
-ia64                             allmodconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-nios2                         3c120_defconfig
-nios2                         10m50_defconfig
-c6x                        evmc6678_defconfig
-xtensa                          iss_defconfig
-c6x                              allyesconfig
-xtensa                       common_defconfig
-openrisc                 simple_smp_defconfig
-openrisc                    or1ksim_defconfig
-alpha                               defconfig
-csky                                defconfig
-nds32                             allnoconfig
-nds32                               defconfig
-h8300                     edosk2674_defconfig
-h8300                    h8300h-sim_defconfig
-h8300                       h8s-sim_defconfig
-m68k                             allmodconfig
-m68k                       m5475evb_defconfig
-m68k                          multi_defconfig
-m68k                           sun3_defconfig
-arc                              allyesconfig
-arc                                 defconfig
-microblaze                      mmu_defconfig
-microblaze                    nommu_defconfig
-powerpc                           allnoconfig
-powerpc                       ppc64_defconfig
-powerpc                          rhel-kconfig
-mips                      fuloong2e_defconfig
-mips                      malta_kvm_defconfig
-mips                             allyesconfig
-mips                         64r6el_defconfig
-mips                              allnoconfig
-mips                           32r2_defconfig
-mips                             allmodconfig
-parisc                            allnoconfig
-parisc                           allyesconfig
-parisc                generic-32bit_defconfig
-parisc                generic-64bit_defconfig
-alpha                randconfig-a001-20200309
-m68k                 randconfig-a001-20200309
-mips                 randconfig-a001-20200309
-nds32                randconfig-a001-20200309
-parisc               randconfig-a001-20200309
-riscv                randconfig-a001-20200309
-sparc64              randconfig-a001-20200309
-microblaze           randconfig-a001-20200309
-c6x                  randconfig-a001-20200309
-nios2                randconfig-a001-20200309
-h8300                randconfig-a001-20200309
-openrisc             randconfig-a001-20200309
-sh                   randconfig-a001-20200309
-csky                 randconfig-a001-20200309
-s390                 randconfig-a001-20200309
-xtensa               randconfig-a001-20200309
-x86_64               randconfig-b001-20200309
-x86_64               randconfig-b002-20200309
-x86_64               randconfig-b003-20200309
-i386                 randconfig-b001-20200309
-i386                 randconfig-b002-20200309
-i386                 randconfig-b003-20200309
-x86_64               randconfig-c001-20200309
-x86_64               randconfig-c002-20200309
-x86_64               randconfig-c003-20200309
-i386                 randconfig-c001-20200309
-i386                 randconfig-c002-20200309
-i386                 randconfig-c003-20200309
-x86_64               randconfig-d001-20200309
-x86_64               randconfig-d002-20200309
-x86_64               randconfig-d003-20200309
-i386                 randconfig-d001-20200309
-i386                 randconfig-d002-20200309
-i386                 randconfig-d003-20200309
-x86_64               randconfig-f001-20200309
-x86_64               randconfig-f002-20200309
-x86_64               randconfig-f003-20200309
-i386                 randconfig-f001-20200309
-i386                 randconfig-f002-20200309
-i386                 randconfig-f003-20200309
-x86_64               randconfig-g003-20200309
-i386                 randconfig-g001-20200309
-i386                 randconfig-g003-20200309
-x86_64               randconfig-g001-20200309
-x86_64               randconfig-g002-20200309
-i386                 randconfig-g002-20200309
-x86_64               randconfig-h001-20200309
-x86_64               randconfig-h002-20200309
-x86_64               randconfig-h003-20200309
-i386                 randconfig-h001-20200309
-i386                 randconfig-h002-20200309
-i386                 randconfig-h003-20200309
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-s390                             alldefconfig
-s390                             allmodconfig
-s390                              allnoconfig
-s390                             allyesconfig
-s390                          debug_defconfig
-s390                                defconfig
-s390                       zfcpdump_defconfig
-sh                               allmodconfig
-sh                                allnoconfig
-sh                          rsk7269_defconfig
-sh                  sh7785lcr_32bit_defconfig
-sh                            titan_defconfig
-sparc                            allyesconfig
-sparc64                          allmodconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                             defconfig
-um                                  defconfig
-um                             i386_defconfig
-um                           x86_64_defconfig
-x86_64                                   rhel
-x86_64                               rhel-7.6
-x86_64                         rhel-7.2-clear
-x86_64                                    lkp
-x86_64                              fedora-25
-x86_64                                  kexec
+between commits:
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+  b26ebfe12f34 ("pid: Fix error return value in some cases")
+  8deb24dcb89c ("pid: make ENOMEM return value more obvious")
+
+from the pidfd-fixes tree and commit:
+
+  69879c01a0c3 ("proc: Remove the now unnecessary internal mount of proc")
+
+from the userns tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc kernel/pid.c
+index be43122eb876,60820e72634c..000000000000
+--- a/kernel/pid.c
++++ b/kernel/pid.c
+@@@ -247,21 -244,6 +244,16 @@@ struct pid *alloc_pid(struct pid_namesp
+  		tmp =3D tmp->parent;
+  	}
+ =20
+ +	/*
+ +	 * ENOMEM is not the most obvious choice especially for the case
+ +	 * where the child subreaper has already exited and the pid
+ +	 * namespace denies the creation of any new processes. But ENOMEM
+ +	 * is what we have exposed to userspace for a long time and it is
+ +	 * documented behavior for pid namespaces. So we can't easily
+ +	 * change it even if there were an error code better suited.
+ +	 */
+ +	retval =3D -ENOMEM;
+ +
+- 	if (unlikely(is_child_reaper(pid))) {
+- 		if (pid_ns_prepare_proc(ns))
+- 			goto out_free;
+- 	}
+-=20
+  	get_pid_ns(ns);
+  	refcount_set(&pid->count, 1);
+  	for (type =3D 0; type < PIDTYPE_MAX; ++type)
+
+--Sig_/f0rP32LNCnRWHOpHRwg.9UW
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5nG7sACgkQAVBC80lX
+0GyY2Qf/QkFdktb8LvpWJPTtCQA0ov3TmxgllsLj8CsccNlidAj4QPHQ5ywWXZ5g
+fQbXiT4eV29TXyTxf5cGR70Fw6lMkjQYpRyM29Ns6qcvKb9A96I7FNAe5I3sb10T
+j8Z1ZCCVCLa+ii8tyGEmUvefHL/3E+JO5PpvoJ9YWTasPTmdSq9Fw1xMp4wjbcc5
+Dt4HV4k27k+6D5c76Tw5Eo3rxEqHe1cTlAslRjMrLxiREPjsgQx4K/BDkpk5LmZd
+wmTig00SnBadnDsJcOC1P3xbd7FZjmED9v/Cz0+JuRcII9+IMaz+3wpcfofog3Ji
+5CCpZzTZt9DbruTmdBUCFu7vXrwjFg==
+=YKmT
+-----END PGP SIGNATURE-----
+
+--Sig_/f0rP32LNCnRWHOpHRwg.9UW--
