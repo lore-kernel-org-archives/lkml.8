@@ -2,146 +2,127 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F4E8C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:48:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76F4FC18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:49:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FDDE20637
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:48:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="PfDYnxNS";
-	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="DhhbvSZJ"
+	by mail.kernel.org (Postfix) with ESMTP id 582B620637
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:49:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726710AbgCJNsO (ORCPT
+        id S1726988AbgCJNtA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:48:14 -0400
-Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:13500 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726390AbgCJNsN (ORCPT
+        Tue, 10 Mar 2020 09:49:00 -0400
+Received: from orion.archlinux.org ([88.198.91.70]:53686 "EHLO
+        orion.archlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726390AbgCJNtA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:48:13 -0400
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02ADheAk008603;
-        Tue, 10 Mar 2020 06:47:26 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=date : from : to :
- cc : subject : message-id : references : content-type : in-reply-to :
- mime-version; s=pfpt0818; bh=My48sBqpMiHz8gZOzD73kt62jfDvD+0R5QX0Kc5Qa9c=;
- b=PfDYnxNS3T6SaDjaM4+BHX0g0KtGz7XVXjelmPxDBigY2cYKuZ0QA8xWs2z6qKPi2ww4
- CwS4hGpvMrtBSqtkAgT6ZsDrRMIyVSmAWLGmZizgMuYoMCepYS8yxPB2FWKe+S4MO00y
- yAdoXEvgiJGKXgHg6hqPyiBqPYSmO9CG7dAZ4UVID9U8kvm5LrbAvtTAmvTdhulNOVnQ
- ePwTow9kP1RmkJCFfd7UoGDCss2vAdAvkii4aG4ClP3YCuJ6KluwduCSZUoUG0HO7epc
- RD149HngShiCKlvryvNFWw88JooLSl2zG7bCo4uDA5IAJwA8HRmTcEB8IZ6ORL/wvoTs KA== 
-Received: from sc-exch01.marvell.com ([199.233.58.181])
-        by mx0b-0016f401.pphosted.com with ESMTP id 2yp04fkjpg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Tue, 10 Mar 2020 06:47:26 -0700
-Received: from SC-EXCH03.marvell.com (10.93.176.83) by SC-EXCH01.marvell.com
- (10.93.176.81) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 10 Mar
- 2020 06:47:24 -0700
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.172)
- by SC-EXCH03.marvell.com (10.93.176.83) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2 via Frontend Transport; Tue, 10 Mar 2020 06:47:24 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gQfrgV2rgSKg+phCL4vEAqBYJHxWvW8L9AroomAe2Nbis3B/F0hXF2VWNZcwZi5e++w2BRtmXcBnLC5DAiHYaSj+Y8waDaqjUqHcsUsgD50eOMftBexf6Y11puvv01t0WEo7BrEExUs38rxjBQEpcxwHoOCNHK6RTs8D58NUdhx0vHHes5Rnvvmsxw9dyTffPHIYuTObPlKgCTT87PZh0xsUc1axzsTS+VFVw1u3LynT10KOFv6a9MIr4TOUlIJlKKqOBFzSkJmdEZw8RgAhn+n/iZhFEO0/QKqibzB8K2su+4q5XFfaFcueURr4KTyW/vk9OQ5HbvZ7/T4FymxiQw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=My48sBqpMiHz8gZOzD73kt62jfDvD+0R5QX0Kc5Qa9c=;
- b=kzAudi0ZyTjrWcvlEITRHxQ39Jm2N2uDavIs7QwleWQ6j8xYOSzROS6gyEIGsVIb/w2jeVBDx6eLexi3wpD3jkrI6MsNeg6VYvQgIK+DukNJ9pHgH1DMIifXBZuvHG4JpmP8CrNjAY3KcinSBGdH3qVI42DnwcF3egdbcni8fPKU0vOvJO6pb33+ojNj7J+a+Dp6eY+kS0dRU4fWyNcbJlqmSODOXtE6pUl8M2uDOoFyB3ny07M2V/kbof7vOwD5zb7cDd2p8IsMt4WxHC5brv4TalbwnBsVGZiVGan+tnvOpGHqg/z3fxnF36pcji+Yjuo6an4S9OMIlxVCeXfoTQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
- dkim=pass header.d=marvell.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=marvell.onmicrosoft.com; s=selector1-marvell-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=My48sBqpMiHz8gZOzD73kt62jfDvD+0R5QX0Kc5Qa9c=;
- b=DhhbvSZJI4nrOJND7NzCPVUNfuCMe8qAwYsh+G739fTzVYbtQBmOlpGiJ1KX4uBIaNnBnCH9MkxqG8NRtOEhFYtq/q4Y5AmoNEfkqbz81AftavcDg601JVifSXD6A56dpULha1Egbgh753rifIxAldLAkW2Q4tf11h50wAEgidQ=
-Received: from MN2PR18MB3408.namprd18.prod.outlook.com (2603:10b6:208:165::10)
- by MN2PR18MB2637.namprd18.prod.outlook.com (2603:10b6:208:aa::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.17; Tue, 10 Mar
- 2020 13:47:23 +0000
-Received: from MN2PR18MB3408.namprd18.prod.outlook.com
- ([fe80::30c4:52fe:fdf8:faff]) by MN2PR18MB3408.namprd18.prod.outlook.com
- ([fe80::30c4:52fe:fdf8:faff%7]) with mapi id 15.20.2793.013; Tue, 10 Mar 2020
- 13:47:23 +0000
-Date:   Tue, 10 Mar 2020 14:47:13 +0100
-From:   Robert Richter <rrichter@marvell.com>
-To:     Hanna Hawa <hhhawa@amazon.com>
-CC:     <bp@alien8.de>, <mchehab@kernel.org>, <tony.luck@intel.com>,
-        <james.morse@arm.com>, <robh+dt@kernel.org>,
-        <frowand.list@gmail.com>, <davem@davemloft.net>,
-        <gregkh@linuxfoundation.org>, <Jonathan.Cameron@huawei.com>,
-        <arnd@arndb.de>, <linux-kernel@vger.kernel.org>,
-        <linux-edac@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <dwmw@amazon.co.uk>, <benh@amazon.com>, <ronenk@amazon.com>,
-        <talel@amazon.com>, <jonnyc@amazon.com>, <hanochu@amazon.com>,
-        <barakw@amazon.com>
-Subject: Re: [PATCH v9 3/3] edac: Add support for Amazon's Annapurna Labs L2
- EDAC
-Message-ID: <20200310134713.n4gtrgtjdjymmgm5@rric.localdomain>
-References: <20200129195016.956-1-hhhawa@amazon.com>
- <20200129195016.956-4-hhhawa@amazon.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200129195016.956-4-hhhawa@amazon.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-ClientProxiedBy: HE1PR07CA0031.eurprd07.prod.outlook.com
- (2603:10a6:7:66::17) To MN2PR18MB3408.namprd18.prod.outlook.com
- (2603:10b6:208:165::10)
+        Tue, 10 Mar 2020 09:49:00 -0400
+Received: from orion.archlinux.org (localhost [127.0.0.1])
+        by orion.archlinux.org (Postfix) with ESMTP id 8833519E7731B5;
+        Tue, 10 Mar 2020 13:48:56 +0000 (UTC)
+Received: from genesis (unknown [IPv6:2001:8a0:f254:2300:dad6:8c60:8394:88da])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: ffy00)
+        by orion.archlinux.org (Postfix) with ESMTPSA;
+        Tue, 10 Mar 2020 13:48:56 +0000 (UTC)
+Message-ID: <6c58685f039d329615d84e2df1cd2a155db73c61.camel@archlinux.org>
+Subject: Re: [PATCH] add ALWAYS_POLL quirk to lenovo pixart mouse
+From:   Filipe =?ISO-8859-1?Q?La=EDns?= <lains@archlinux.org>
+To:     Tony Fischetti <tony.fischetti@gmail.com>, jikos@kernel.org,
+        benjamin.tissoires@redhat.com
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20200304164700.11574-1-tony.fischetti@gmail.com>
+References: <20200304164700.11574-1-tony.fischetti@gmail.com>
+Organization: Archlinux
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-D18kH6Rv4f+uoa9OdL5O"
+Date:   Tue, 10 Mar 2020 13:48:54 +0000
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from rric.localdomain (31.208.96.227) by HE1PR07CA0031.eurprd07.prod.outlook.com (2603:10a6:7:66::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.7 via Frontend Transport; Tue, 10 Mar 2020 13:47:20 +0000
-X-Originating-IP: [31.208.96.227]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 81566fc2-4bbc-4ffa-be50-08d7c4f98fa3
-X-MS-TrafficTypeDiagnostic: MN2PR18MB2637:
-X-Microsoft-Antispam-PRVS: <MN2PR18MB2637E1FF1C4DE324D6C4ADCFD9FF0@MN2PR18MB2637.namprd18.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:5236;
-X-Forefront-PRVS: 033857D0BD
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(346002)(136003)(39850400004)(396003)(376002)(47630400002)(189003)(199004)(9686003)(4744005)(26005)(186003)(55016002)(66946007)(8936002)(66556008)(16526019)(66476007)(6666004)(8676002)(53546011)(1076003)(81156014)(4326008)(956004)(81166006)(5660300002)(7416002)(6506007)(7696005)(52116002)(478600001)(2906002)(316002)(86362001)(6916009);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB2637;H:MN2PR18MB3408.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-Received-SPF: None (protection.outlook.com: marvell.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 3iDPY63OFmKeEvxkYoUabbu/05T+TPyoPb08LDX9pJ+TmJYsHZdIm4MaKygNjRMXSUDuzcErYEcTBQQWmXootgCGYaWmH00biqMTCujwo47Gp0WA5fAHlqqeu8C1D+Ka04KIY3J9ZYk6SEV4xXcsGnLOaqko/F2gWtEcVa9srBk8B5Ii6w0gw9J6Kfv7ljw0ltUHyf+yNd0jM/QJvUu9HRgLLXSTzWR6ZUw5zlJKwxexZNzCB2FPRq2PT61wBGwb+DBI7G86833zaVp99KQvec+6hbYUasqkX46uCmWuLtTkSpyH2WfpFiA2QqH3VhgFjbkDHs1I+1DfWKT4TaiGah+EKFMzxdjD4d/yFiCPKy70/emx/YNO4y2AY4T1NCS+XQsjs4o+eXrtdUORlIE0bCxAhkzNLxmZO350K2Xnbmvfk7ZShQOQ87GQ71s0niGz
-X-MS-Exchange-AntiSpam-MessageData: ZDeLOLbfR76Mc9JtJpCvKO5Ao4Vr7gMwPWX9x7ljlsQ5/a62Ff9oIvp0AUsylfFWX+cnMv4OS2QCCRMz9VLSOsxWgNGShhfF2XPyWyxcDI7puOTDrub6xvxV+kf3admSCoMv5q1AjpVHO1m+oA5wEQ==
-X-MS-Exchange-CrossTenant-Network-Message-Id: 81566fc2-4bbc-4ffa-be50-08d7c4f98fa3
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Mar 2020 13:47:23.4646
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ggssCBrCi+hHedYGRAFzuCAbIIF8XRQF9tfv90kVxC1x4rTU5d3FSIspTJ/Thc+ErvnnHkRTDjUDfCm/+tHg5w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB2637
-X-OriginatorOrg: marvell.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-10_07:2020-03-10,2020-03-10 signatures=0
+User-Agent: Evolution 3.36.0 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29.01.20 21:50:16, Hanna Hawa wrote:
-> Adds support for Amazon's Annapurna Labs L2 EDAC driver to detect and
-> report L2 errors.
-> 
-> Signed-off-by: Hanna Hawa <hhhawa@amazon.com>
+
+--=-D18kH6Rv4f+uoa9OdL5O
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, 2020-03-04 at 11:47 -0500, Tony Fischetti wrote:
+> A lenovo pixart mouse (17ef:608d) is afflicted common the the malfunction
+> where it disconnects and reconnects every minute--each time incrementing
+> the device number. This patch adds the device id of the device and
+> specifies that it needs the HID_QUIRK_ALWAYS_POLL quirk in order to
+> work properly.
 > ---
->  MAINTAINERS               |   5 +
->  drivers/edac/Kconfig      |   8 ++
->  drivers/edac/Makefile     |   1 +
->  drivers/edac/al_l2_edac.c | 270 ++++++++++++++++++++++++++++++++++++++
->  4 files changed, 284 insertions(+)
->  create mode 100644 drivers/edac/al_l2_edac.c
+>  drivers/hid/hid-ids.h    | 1 +
+>  drivers/hid/hid-quirks.c | 1 +
+>  2 files changed, 2 insertions(+)
+>=20
+> diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
+> index 3a400ce603c4..9e1dfc714ea8 100644
+> --- a/drivers/hid/hid-ids.h
+> +++ b/drivers/hid/hid-ids.h
+> @@ -726,6 +726,7 @@
+>  #define USB_DEVICE_ID_LENOVO_X1_COVER	0x6085
+>  #define USB_DEVICE_ID_LENOVO_X1_TAB	0x60a3
+>  #define USB_DEVICE_ID_LENOVO_X1_TAB3	0x60b5
+> +#define USB_DEVICE_ID_LENOVO_PIXART_USB_OPTICAL_MOUSE	0x608d
 
-Hanna, most of the review comments by Boris for patch #1 (al_l1_edac)
-apply here too. Please address them.
+This ID is really ambiguous. Pixart makes the sensors for the big
+majority of devices. Isn't there any other identifier you could use? If
+there isn't, you could do USB_DEVICE_ID_LENOVO_MOUSE_608D.
 
-Thanks,
+>  #define USB_VENDOR_ID_LG		0x1fd2
+>  #define USB_DEVICE_ID_LG_MULTITOUCH	0x0064
+> diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
+> index 0e7b2d998395..247747d6d8cf 100644
+> --- a/drivers/hid/hid-quirks.c
+> +++ b/drivers/hid/hid-quirks.c
+> @@ -103,6 +103,7 @@ static const struct hid_device_id hid_quirks[] =3D {
+>  	{ HID_USB_DEVICE(USB_VENDOR_ID_KYE, USB_DEVICE_ID_KYE_PENSKETCH_M912), =
+HID_QUIRK_MULTI_INPUT },
+>  	{ HID_USB_DEVICE(USB_VENDOR_ID_KYE, USB_DEVICE_ID_KYE_EASYPEN_M406XE), =
+HID_QUIRK_MULTI_INPUT },
+>  	{ HID_USB_DEVICE(USB_VENDOR_ID_KYE, USB_DEVICE_ID_PIXART_USB_OPTICAL_MO=
+USE_ID2), HID_QUIRK_ALWAYS_POLL },
+> +	{ HID_USB_DEVICE(USB_VENDOR_ID_LENOVO, USB_DEVICE_ID_LENOVO_PIXART_USB_=
+OPTICAL_MOUSE), HID_QUIRK_ALWAYS_POLL },
+>  	{ HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, USB_DEVICE_ID_LOGITECH_C007), =
+HID_QUIRK_ALWAYS_POLL },
+>  	{ HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, USB_DEVICE_ID_LOGITECH_C077), =
+HID_QUIRK_ALWAYS_POLL },
+>  	{ HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, USB_DEVICE_ID_LOGITECH_KEYBOAR=
+D_G710_PLUS), HID_QUIRK_NOGET },
 
--Robert
+--=20
+Filipe La=C3=ADns
+
+--=-D18kH6Rv4f+uoa9OdL5O
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0jW0leqs33gyftiw+JPGdIFqqV0FAl5nmsIACgkQ+JPGdIFq
+qV23mA//dSEx+nA96yLuiFEk1Qwyrsy9Zd7whEkUTLEXu5KFGfVl5htHPaMTBAw7
+CgfR/w/sxnGjLgq3XRyDRjuPhyICNCkBuAb+X+bCXkFfA1ID+93dW/rEA5P+ZHvS
+aSl6q2XuG7pKwpqBwlojm5tVMapo/QgKsOI6cBBD4pO3EehMBDc7/0TIeURkYUwx
+vu1sLaF5yQZ8VdgNSRLm91NBPItRpPpY4txzBqAk87imfczF4AOPYjh58U1pvrz0
+xJ/4HAC0zBrADYuc0BScXAiFLgfYOHEURPRuNnQjaULU6bY2icfc+dYMCvtQshaP
+4UqXDDQ/d/cB89PazumCehSYOIMFUOQ6FEfFIGSc+doUqVoCze6W8nIa/r+B/+Py
+kdv8Q1mZz70JXsoWzEQblK9q5cpKRkh7ZGV3RcCyjGreOjkD+g6LySsXW76nRCNc
+r4h9jMoReILVQ0XAwUKq6p1qYbGxL7iege+C7bAs9rv/H1hBnt6cPNRBhU6nwwaw
+pFLb6DSM00rjCaBtbp23x9I1ytymXYBmLJ4lbtzId/E/q3ZLGVGL7EL9733K0mbK
+7okqPDppHrF8LDrk89aX840hzn7vxe4phfoD+4jElVeBO7HoHpY66FCLB2ScFZIF
+ebBCzuGweSZAGTHm5SEvHAnu78rBIUA6+sFtkOBK+jeoy3JrFi8=
+=p4bC
+-----END PGP SIGNATURE-----
+
+--=-D18kH6Rv4f+uoa9OdL5O--
