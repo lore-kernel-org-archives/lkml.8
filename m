@@ -2,165 +2,270 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52B0BC10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:46:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C476CC10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:46:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05E1021927
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:46:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B353205F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:46:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="G6l98F+X"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tDPEiTZK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727672AbgCJUqA (ORCPT
+        id S1727686AbgCJUqi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 16:46:00 -0400
-Received: from mail-eopbgr1400094.outbound.protection.outlook.com ([40.107.140.94]:60844
-        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727280AbgCJUp5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 16:45:57 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jZpBG0+to/4OaUic3ora7y3MSupj9pIb2Dz0Z6cdhukLNLIicXA2NBlGxQ2mw0R74FmeAXqZK+aWCEcDcbe8u1eFCNUlL3em/4kooGS/qs6NgXliT59ySk2AvbFkEYsR9O45mELvpVpu4NNidzCfkxnavsVNzV81viIBq7GmLBQkS3jR20icuLjlJgsnAocCgzEoxZbsRcYfPyZ4TSFtDtX1sBm0bR0TpmGRyrs+nxWqA4b/jhPxSKX/lrMze7uUW1Q1iNtzirCnvkUDnOcJHEGVY1fF2Kvka0QhYCc8yLfTdU++nquelzNPUYC71L+OXPEbwpmL8gkyGunU+vW/+Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IqHbHuaWGCr5w3IM18M6srB9hkn5UhStJTD+DZ1UE8A=;
- b=TR7P3UIrkM5tsIE8KxaoKPpEdqiugi+YHIQx2E97pb2M0DuNXr9eXeOFeNhzk1tHgPM2T1o8WL6PHmIrYJ/WYK3FcjJb8+F8tELy+2RiJlN1Qe5QxMdMreuPCKjj4aPBuEUWIUt8dmKfI6kwwVUjtgvfESNUCX2WYVhfFgCdbrNbGzH9k+bVwFHr4fstJjLKIr1sDum2Pe0Yzh2CS9DRROiMdcfZIRopleToPgoAZxBxRwGvVcSNSJJDVUo/Szk+EBMI1vKm7CFN0qDi7UeZTf4n6V2fDGB8w+FWxjEHWww/lbolATASeFzrr64uPIhSSa9m9VnkfotD9biPImrlaA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
- header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
+        Tue, 10 Mar 2020 16:46:38 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:46031 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726271AbgCJUqh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 16:46:37 -0400
+Received: by mail-pf1-f194.google.com with SMTP id 2so4565pfg.12
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 13:46:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IqHbHuaWGCr5w3IM18M6srB9hkn5UhStJTD+DZ1UE8A=;
- b=G6l98F+XoKCGRJNrfFG91xMbTy3oAwF+NFOG/MJJMqyzByqiCF7FxCRNbu8ibRoaq1WVfyGEJ8sLf8pNF++LQVsT8ZySJU2AOdQRuj6azPmperAH9i2dbPvUfizGA71QZ5I7AEMpJMRZTyAhEW628PCT0+LdLJkaPcZLkhniwkU=
-Received: from OSBPR01MB3590.jpnprd01.prod.outlook.com (20.178.97.80) by
- OSBPR01MB4822.jpnprd01.prod.outlook.com (20.179.182.149) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2793.17; Tue, 10 Mar 2020 20:45:52 +0000
-Received: from OSBPR01MB3590.jpnprd01.prod.outlook.com
- ([fe80::6df0:eb47:a259:b94b]) by OSBPR01MB3590.jpnprd01.prod.outlook.com
- ([fe80::6df0:eb47:a259:b94b%7]) with mapi id 15.20.2793.018; Tue, 10 Mar 2020
- 20:45:52 +0000
-From:   Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Sam Ravnborg <sam@ravnborg.org>
-CC:     Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: RE: [PATCH v8] dt-bindings: display: Add idk-2121wr binding
-Thread-Topic: [PATCH v8] dt-bindings: display: Add idk-2121wr binding
-Thread-Index: AQHV9xOlCc8Y9xnvg0ugmqANfj2zpqhCPT+AgAANyaA=
-Date:   Tue, 10 Mar 2020 20:45:51 +0000
-Message-ID: <OSBPR01MB359023719B67A166C3502798AAFF0@OSBPR01MB3590.jpnprd01.prod.outlook.com>
-References: <1583869169-1006-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200310195425.GA23440@ravnborg.org>
-In-Reply-To: <20200310195425.GA23440@ravnborg.org>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=prabhakar.mahadev-lad.rj@bp.renesas.com; 
-x-originating-ip: [193.141.220.21]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 30e5e66a-74e0-4866-4ad1-08d7c53405a8
-x-ms-traffictypediagnostic: OSBPR01MB4822:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <OSBPR01MB4822D3E13B9887D3ED0BEACCAAFF0@OSBPR01MB4822.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6790;
-x-forefront-prvs: 033857D0BD
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(199004)(189003)(66946007)(8936002)(66476007)(6506007)(66446008)(53546011)(966005)(2906002)(498600001)(107886003)(9686003)(66556008)(5660300002)(64756008)(33656002)(54906003)(4326008)(81156014)(6916009)(186003)(55016002)(8676002)(81166006)(7696005)(76116006)(26005)(86362001)(52536014)(71200400001);DIR:OUT;SFP:1102;SCL:1;SRVR:OSBPR01MB4822;H:OSBPR01MB3590.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:1;
-received-spf: None (protection.outlook.com: bp.renesas.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 5uKsHf/0/8Rq363vXRjOmQ1zIjm9yirjno3HfnlUo0/jvWj3j1LUPTJcHJeRiYhEHBCOsmN7ErL9xQ/c+fEe4kivto5hod6ulyxrw7A11IYdMGF++TNbLZs/Z0y+LfkREqA65HxV47xMEmPm6REGiZ1gbvAWamlzt5KriIEBYXnJKiTcsFdzQGSUqwQM5NcaDZ18V7EgYOI5CqS9RLRVjgKFq9zFib66htx2NNg8+4ovwgoxQH25QWjQisQGQIWMqOh3XaRwXidWGKm0Rkquet8u6Jl9cVDhaDeb5nXDD6hXg3MeRtZ85m/ecESyLcv6iG676gbEKIZexdTzrBGwnVVoidV5ldxlerTzWqZJbULWUbPYdI6d4iCJBVsGpcr81uImYo8z2JOKod9vNU3E69wOQ+HwZzi7t5xKCSZzuMpaZp5QlVHrIb1m5aJiGwEK9p/raGm2PDN2Kr8+GyhbAgw8BqCa76+Ay9apfMhD/EPUzUaqmtSY1fqsf4FFmbIFkCKf7oLPy6eLGbLRf/EkGA==
-x-ms-exchange-antispam-messagedata: 9PQTMixdNYeUvlFclYgur9lNOStSLUqjE7HetoZsEBiDyNdM/XvCph27edv8/mqe2aiZkEL53UX7JH3EEbx+hSsszrN4O2a0IxpAqbaqrwk5NEpd2JEVqluyUz4XzytXwT9YLLIC8T9hW/6pphPhFg==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dHDyU6G/3PWCtvFuoOre6k3J3Ww9bHTi6I8bhr1RLW0=;
+        b=tDPEiTZKCuFr5c8YQDWtpPPSo7JCZb7nKqNKQNeGP9nOeNUhC90ePx39hzySMLqK33
+         QzIq0KL8ZRIeqbeB69KpcCB/RMTclqIJDfoRG0tobaaKa3nCqZHXSag47wP3cM53mHE9
+         wjFx9vgpyPPGqS1xQjAq7xWXCiq1KdfE9+OPhd6FTtG3ypRW6f6l3mul4lcEF66DpTI7
+         7n84nB29mXG0j8Stfr4L8H0zuvTkCXhA0s3QPsBzE6BsrCprl6n+K4Fu76Lap0hu23mt
+         NHIONPSkJEJqLsIZZumc0N+JWzB88aTI705HtK0CPuUHIq2SzvribqanW8ct/ZwcCQnL
+         ne+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dHDyU6G/3PWCtvFuoOre6k3J3Ww9bHTi6I8bhr1RLW0=;
+        b=tRZVaiyJhQvJCoXhmHgLJLVt7Uful5Fmp8FiAGY0Yo4+p7UK35ckPYSKmDei0Z1PJ0
+         IoxAgeCZV5lM9urxbV/dcBgh+L+CRc1PPng48Lhf64YueozBDKi5sCQRGW+aOkf2YYJW
+         vFe/XTH5FX6VK8sjXAkQ2t+UpfIrbJDzdAU8oVe5ivVMk1V3UJDw1B6f3deSKM9tbEhY
+         ZZvf7aP9+5zz5J8ym2K82cGNmBGCDmduqUtqYcu4o0Sdd/O4rjvyyrdbtxhQzF5lowQU
+         //ffMsc6RLP562IpX9a+C35osGuh511fgm/Jq+3ljTG2Cy7jHYcEryeGlcwM9mOTlzi8
+         H/Ew==
+X-Gm-Message-State: ANhLgQ22unPWymXoE0f3ud8uvRmivinrQ/XA3gofWwTIGQxzIaUnMDeD
+        2BGWpHKID5jIUNRhu8aaVcJ4sl/1U6jRONXAEfM8SQ==
+X-Google-Smtp-Source: ADFU+vtebrezbE+L8+EnJ9bmiGBw5xqzW3DLk2kpHmj22qMrFN+n/T0GaAX4j09XTTZS0PnyDxdBlWlsjMyndKyxUOI=
+X-Received: by 2002:a63:650:: with SMTP id 77mr16283706pgg.201.1583873195939;
+ Tue, 10 Mar 2020 13:46:35 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: bp.renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 30e5e66a-74e0-4866-4ad1-08d7c53405a8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Mar 2020 20:45:51.6293
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 9DAtfyii9n5onfCfofYcu0rETk1JMgAQGUSHC16cX/0QsO0s/tC2R8X20Ciq4qK3AbSRITfaf6pS6ZrdqHpwVhMEloqqG1GKXPu6Jk+hIPV/+prBOqL+TsYN4x+YP4bp
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSBPR01MB4822
+References: <CA+G9fYvRZ9eCE29FjXkv1dQfrdGO3uWp4Tvkip5Z_jsgjVJeAQ@mail.gmail.com>
+ <CAHp75VfhKoLtWkLHUyzg6m=rx833qiCVimWJVKU13qrX+aJz-Q@mail.gmail.com>
+ <CAFd5g45GbSX1BkuaH=8639ESHi-MCGkpFhEZZpycm9=jQb93rg@mail.gmail.com>
+ <CAFd5g47aaE+tGeHPrQmhfi6_nrvi1K4DvtRodh=zN21-uiQ1DQ@mail.gmail.com>
+ <20200305223350.GA2852@mara.localdomain> <20200306120525.GC68079@kuha.fi.intel.com>
+ <CAFd5g45c9L4BBRNtxtQf_NFr2bR6Wgt9uOHW86gzb6Ozeb0SBA@mail.gmail.com>
+ <CAFd5g45cdygYfxGoCkk710tLXFADeLNb+6w-=vhkDMLP9OM7bw@mail.gmail.com> <20200310111837.GA1368052@kuha.fi.intel.com>
+In-Reply-To: <20200310111837.GA1368052@kuha.fi.intel.com>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Tue, 10 Mar 2020 13:46:24 -0700
+Message-ID: <CAFd5g452sDMZToU+FDa-Odbkd_t1708gcRMAZQG+U4LnV=Xqgw@mail.gmail.com>
+Subject: Re: BUG: kernel NULL pointer dereference, address: 00 - ida_free+0x76/0x140
+To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        hdegoede@redhat.com,
+        "rafael.j.wysocki" <rafael.j.wysocki@intel.com>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        lkft-triage@lists.linaro.org,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sam,
-
-> -----Original Message-----
-> From: Sam Ravnborg <sam@ravnborg.org>
-> Sent: 10 March 2020 19:54
-> To: Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Cc: Thierry Reding <thierry.reding@gmail.com>; David Airlie
-> <airlied@linux.ie>; Daniel Vetter <daniel@ffwll.ch>; Rob Herring
-> <robh+dt@kernel.org>; Mark Rutland <mark.rutland@arm.com>; dri-
-> devel@lists.freedesktop.org; devicetree@vger.kernel.org; linux-
-> kernel@vger.kernel.org; Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> Subject: Re: [PATCH v8] dt-bindings: display: Add idk-2121wr binding
+On Tue, Mar 10, 2020 at 4:18 AM Heikki Krogerus
+<heikki.krogerus@linux.intel.com> wrote:
 >
-> Hi Prabhakar
+> On Mon, Mar 09, 2020 at 02:43:13PM -0700, Brendan Higgins wrote:
+> > On Mon, Mar 9, 2020 at 1:35 PM Brendan Higgins
+> > <brendanhiggins@google.com> wrote:
+> > >
+> > > On Fri, Mar 6, 2020 at 4:05 AM Heikki Krogerus
+> > > <heikki.krogerus@linux.intel.com> wrote:
+> > > >
+> > > > On Fri, Mar 06, 2020 at 12:33:50AM +0200, Sakari Ailus wrote:
+> > > > > Hi Brendan,
+> > > > >
+> > > > > On Thu, Mar 05, 2020 at 11:51:20AM -0800, Brendan Higgins wrote:
+> > > > > > On Thu, Mar 5, 2020 at 11:40 AM Brendan Higgins
+> > > > > > <brendanhiggins@google.com> wrote:
+> > > > > > >
+> > > > > > > On Thu, Mar 5, 2020 at 11:18 AM Andy Shevchenko
+> > > > > > > <andy.shevchenko@gmail.com> wrote:
+> > > > > > > >
+> > > > > > > > +Cc: Sakari
+> > > > > > > >
+> > > > > > > > On Thu, Mar 5, 2020 at 6:00 PM Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+> > > > > > > > >
+> > > > > > > > > Regression reported on Linux next 5.6.0-rc4-next-20200305 on x86_64,
+> > > > > > > > > i386, arm and arm64. The steps to reproduce is running kselftests lib
+> > > > > > > > > printf.sh test case.
+> > > > > > > > > Which is doing modprobe operations.
+> > > > > > > > >
+> > > > > > > > > BTW, there are few RCU warnings from the boot log.
+> > > > > > > > > Please refer below link for more details.
+> > > > > > > > >
+> > > > > > > > > Steps reproduce by using kselftests,
+> > > > > > > > >
+> > > > > > > > >           - lsmod || true
+> > > > > > > > >           - cd /opt/kselftests/default-in-kernel/lib/
+> > > > > > > > >           - export PATH=/opt/kselftests/default-in-kernel/kselftest:$PATH
+> > > > > > > > >           - ./printf.sh || true
+> > > > > > > > >           - ./bitmap.sh || true
+> > > > > > > > >           - ./prime_numbers.sh || true
+> > > > > > > > >           - ./strscpy.sh || true
+> > > > > > > > >
+> > > > > > > > > x86_64 kernel BUG dump.
+> > > > > > > > > + ./printf.sh
+> > > > > > >
+> > > > > > > Oops, I am wondering if I broke this with my change "Revert "software
+> > > > > > > node: Simplify software_node_release() function"":
+> > > > > > >
+> > > > > > > https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=d1c19322388d6935b534b494a2c223dd089e30dd
+> > > > > > >
+> > > > > > > I am still investigating, will update later.
+> > > > > >
+> > > > > > Okay, yeah, I am pretty sure I caused the breakage. I got an email
+> > > > > > from kernel test robot a couple days ago that I didn't see:
+> > > > > >
+> > > > > > https://lists.01.org/hyperkitty/list/lkp@lists.01.org/thread/N3ZN5XH7HK24JVEJ5WSQD2SK6YCDRILR/
+> > > > > >
+> > > > > > It shows the same breakage after applying this change.
+> > > > > >
+> > > > > > I am still investigating how my change broke it, nevertheless.
+> > > > >
+> > > > > As nodes in the tree are being removed, the code before the patch that
+> > > > > "simplified" the software_node_release() function accessed the node's parent
+> > > > > in its release function.
+> > > > >
+> > > > > And if CONFIG_DEBUG_KOBJECT_RELEASE is defined, the release functions are no
+> > > > > longer necessarily called in order, leading to referencing released memory.
+> > > > > Oops!
+> > > > >
+> > > > > So Heikki's patch actually fixed a bug. :-)
+> > > >
+> > > > Well, I think it just hid the problem. It looks like the core
+> > > > (lib/kobject.c) allows the parent kobject to be released before the
+> > > > last child kobject is released. To be honest, that does not sound
+> > > > right to me...
+> > > >
+> > > > I think we can workaround this problem by taking reference to the
+> > > > parent when the child is added, and then releasing it when the child
+> > > > is released, and in that way be guaranteed that the parent will not
+> > > > disappear before the child is fully released, but that still does not
+> > > > feel right. It feels more like the core is not doing it's job to me.
+> > > > The parent just should not be released before its children.
+> > > >
+> > > > Either I'm wrong about that, and we still should take the reference on
+> > > > the parent, or we revert my patch like Brendan proposed and then fix
+> > >
+> > > Either way, isn't it wrong to release the node ID before deleting the
+> > > sysfs entry? I am not sure that my fix was the correct one, but I
+> > > believe the bug that Heidi and I found is actually a bug.
 >
-> On Tue, Mar 10, 2020 at 07:39:29PM +0000, Lad Prabhakar wrote:
-> > From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> >
-> > Add binding for the idk-2121wr LVDS panel from Advantech.
-> >
-> > Some panel-specific documentation can be found here:
-> > https://buy.advantech.eu/Displays/Embedded-LCD-Kits-High-
-> Brightness/mo
-> > del-IDK-2121WR-K2FHA2E.htm
-> >
-> > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-
-> lad.rj@bp.renesas.com>
-> > ---
-> >
-> > Hi All,
-> > This patch is part of series [1] ("Add dual-LVDS panel support to
-> > EK874), all the patches have been accepted from it except this one. I
-> > have fixed Rob's comments in this version of the patch.
-> >
-> > [1] https://patchwork.kernel.org/cover/11297589/
-> >
-> > V7->8
-> >  * Dropped ref to lvds.yaml, since the panel a dual channel LVDS, as a
-> >    result the root port is called as ports instead of port and the chil=
-d
-> >    node port@0 and port@1 are used for even and odd pixels, hence
-> binding
-> >    has required property as ports instead of port.
+> I agree.
 >
-> Looks good, thanks for your persistence..
-> Applied and pushed to drm-misc-next.
+> > > > the core with something like this (warning, I did not even try to
+> > > > compile that):
+> > >
+> > > I will try it out.
+> > >
+> > > > diff --git a/lib/kobject.c b/lib/kobject.c
+> > > > index 83198cb37d8d..ec5774992337 100644
+> > > > --- a/lib/kobject.c
+> > > > +++ b/lib/kobject.c
+> > > > @@ -680,6 +680,12 @@ static void kobject_cleanup(struct kobject *kobj)
+> > > >                 kobject_uevent(kobj, KOBJ_REMOVE);
+> > > >         }
+> > > >
+> > > > +       if (t && t->release) {
+> > > > +               pr_debug("kobject: '%s' (%p): calling ktype release\n",
+> > > > +                        kobject_name(kobj), kobj);
+> > > > +               t->release(kobj);
+> > > > +       }
+> > > > +
+> > > >         /* remove from sysfs if the caller did not do it */
+> > > >         if (kobj->state_in_sysfs) {
+> > > >                 pr_debug("kobject: '%s' (%p): auto cleanup kobject_del\n",
+> > > > @@ -687,12 +693,6 @@ static void kobject_cleanup(struct kobject *kobj)
+> > > >                 kobject_del(kobj);
+> > > >         }
+> > > >
+> > > > -       if (t && t->release) {
+> > > > -               pr_debug("kobject: '%s' (%p): calling ktype release\n",
+> > > > -                        kobject_name(kobj), kobj);
+> > > > -               t->release(kobj);
+> > > > -       }
+> > > > -
+> > > >         /* free name if we allocated it */
+> > > >         if (name) {
+> > > >                 pr_debug("kobject: '%s': free name\n", name);
+> >
+> > Alright, so I tried it and it looks like Heikki's suggestion worked.
+> >
+> > Is everyone comfortable going this route?
 >
-Thank you for the review and acceptance.
+> Hold on. Another way to fix the problem is to increment the parent's
+> reference count before that kobject_del(kobj) is called, and then
+> decrementing it after t->release(kobj) is called. It may be safer to
+> fix the problem like that.
 
-Cheers,
---Prabhakar
+Right, this was your first suggestion above, right? That actually made
+more sense to me, but you seemed skeptical of it due to it being
+messier, which makes sense.
 
-> Sam
+Nevertheless, having children take a reference seems like the right
+thing to do because the children need to degregister themselves from
+the parent. Calling t->release() ahead of kobject_del() seems to
+reintroduce the problem that I pointed out, albeit *much* more
+briefly. If I understand correctly, it is always wrong to have a sysfs
+entry that points to a partially deallocated kobject. Please correct
+me if I am wrong.
 
+So I think there are two solutions: Either we have to ensure that each
+child is deallocated first so we can preserve the kobject_del() and
+then t->release() ordering, or we have to add some sort of "locking"
+mechanism to prevent the kobject from being accessed by anything other
+than the deallocation code until it is fully deallocated; well, it
+would have to prevent any access at all :-). I think it goes without
+saying that this "locking" idea is pretty flawed.
 
-Renesas Electronics Europe GmbH, Geschaeftsfuehrer/President: Carsten Jauch=
-, Sitz der Gesellschaft/Registered office: Duesseldorf, Arcadiastrasse 10, =
-40472 Duesseldorf, Germany, Handelsregister/Commercial Register: Duesseldor=
-f, HRB 3708 USt-IDNr./Tax identification no.: DE 119353406 WEEE-Reg.-Nr./WE=
-EE reg. no.: DE 14978647
+The problem with just having children take a reference is that the
+kobject children already take a reference to their parent, so it seems
+like the kobject should be smart enough to deallocate children rather
+than having swnode have to keep a separate tally of children, no?
+
+Sorry if this all seems obvious, I am not an expert on this part of the kernel.
+
+> My example above proofs that there is the problem, but it changes the
+> order of execution which I think can always have other consequences.
+>
+> > Also, should I send this fix as a separate patch? Or do people want me
+> > to send an updated revision of my revert patch with the fix?
+>
+> This needs to be send in its own separate patch. Ideally it could be
+> send together with the revert in the same series, but I'm not sure
+> that's possible anymore. Didn't Greg pick the revert already?
+
+Sounds good.
+
+I did already let Greg know when he emailed us on backporting the
+patch to stable, and he acked saying he removed them. So as long as
+these are not in the queue for 5.6 (it is not in Linus' tree yet), we
+should be good.
+
+Cheers
