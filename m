@@ -2,101 +2,149 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F36E4C18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 21:06:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C177AC18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 21:07:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC6A0222C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 21:06:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583874378;
-	bh=vhxZrp2Lx5DeATCenHy71j1LATXknii/r2+vE+Yb5m0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=R1rHC6qvNmBHQZBGFdfRBQLtaLbIYAtV5GSUcS7e4gEBsRZ8HMNasY7QcugBwUt5s
-	 G9vJTj8Cs+oroCTzyO/IUTRTgXrrgQiqb/hLeW18SY7d4i5hqpDfGoIlklVnUc4D00
-	 qINCXNiiJpWCasA+PtEGypREO+nfy57tc/FcOGRw=
+	by mail.kernel.org (Postfix) with ESMTP id 8E410215A4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 21:07:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727650AbgCJVGR (ORCPT
+        id S1727367AbgCJVHu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 17:06:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40586 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726271AbgCJVGR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 17:06:17 -0400
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 36E4A227BF;
-        Tue, 10 Mar 2020 21:06:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583874376;
-        bh=vhxZrp2Lx5DeATCenHy71j1LATXknii/r2+vE+Yb5m0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=VSxML8CZIv6TujbXRjRw9Ndm8hswQ0Iy4czB2jk6b7uVrcoP7w2FT3QpRGHO/Gfw8
-         1PAC8sWmIxLgfBwLT0IoBg95GgOQJewHjIgNWqAF9o7XsmOF2nFAtuL0aHnkZz6PQW
-         ByM8dtKGpYIidv0mnusE83YjNVcG4UXW3V9qqpcY=
-Received: by mail-lf1-f54.google.com with SMTP id i10so12136173lfg.11;
-        Tue, 10 Mar 2020 14:06:16 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ04zCsRs7UK9XWxVx7wooYAdDNSM9b0I0WQv78AILIpGR7hrwLU
-        Mm1oEeT5RNcvNoUsZ/IhpxOsvFDGqis7tSd4obw=
-X-Google-Smtp-Source: ADFU+vudBQrw1oSvW+1z/bikz1NjhAJyNp9q/S1l7eZSBzV8bqzYmhmQtaOP3eZbtp4E2HGJaK7++RE5+JjVfD/y/h8=
-X-Received: by 2002:ac2:554d:: with SMTP id l13mr39638lfk.82.1583874374294;
- Tue, 10 Mar 2020 14:06:14 -0700 (PDT)
+        Tue, 10 Mar 2020 17:07:50 -0400
+Received: from out01.mta.xmission.com ([166.70.13.231]:60672 "EHLO
+        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726271AbgCJVHt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 17:07:49 -0400
+Received: from in01.mta.xmission.com ([166.70.13.51])
+        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jBm6N-0005ve-Sr; Tue, 10 Mar 2020 15:07:47 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jBm6M-0000IU-Og; Tue, 10 Mar 2020 15:07:47 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Jann Horn <jannh@google.com>
+Cc:     Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Kees Cook <keescook@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Andrei Vagin <avagin@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Peter Zijlstra \(Intel\)" <peterz@infradead.org>,
+        Yuyang Du <duyuyang@gmail.com>,
+        David Hildenbrand <david@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        David Howells <dhowells@redhat.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christian Kellner <christian@kellner.me>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        "linux-doc\@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel\@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-mm\@kvack.org" <linux-mm@kvack.org>,
+        "stable\@vger.kernel.org" <stable@vger.kernel.org>,
+        "linux-api\@vger.kernel.org" <linux-api@vger.kernel.org>
+References: <AM6PR03MB5170EB4427BF5C67EE98FF09E4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <87k142lpfz.fsf@x220.int.ebiederm.org>
+        <AM6PR03MB51704206634C009500A8080DE4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <875zfmloir.fsf@x220.int.ebiederm.org>
+        <AM6PR03MB51707ABF20B6CBBECC34865FE4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <87v9nmjulm.fsf@x220.int.ebiederm.org>
+        <AM6PR03MB5170B976E6387FDDAD59A118E4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <202003021531.C77EF10@keescook>
+        <20200303085802.eqn6jbhwxtmz4j2x@wittgenstein>
+        <AM6PR03MB5170285B336790D3450E2644E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <87v9nlii0b.fsf@x220.int.ebiederm.org>
+        <AM6PR03MB5170609D44967E044FD1BE40E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <87a74xi4kz.fsf@x220.int.ebiederm.org>
+        <AM6PR03MB51705AA3009B4986BB6EF92FE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <87r1y8dqqz.fsf@x220.int.ebiederm.org>
+        <AM6PR03MB517053AED7DC89F7C0704B7DE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <AM6PR03MB51703B44170EAB4626C9B2CAE4E20@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        <87tv32cxmf.fsf_-_@x220.int.ebiederm.org>
+        <87v9ne5y4y.fsf_-_@x220.int.ebiederm.org>
+        <87eeu25y14.fsf_-_@x220.int.ebiederm.org>
+        <CAG48ez2aYfcwC7Sr6RseFk=PpvLAddcHsVsrTr_AS=jLvUu2KA@mail.gmail.com>
+Date:   Tue, 10 Mar 2020 16:05:27 -0500
+In-Reply-To: <CAG48ez2aYfcwC7Sr6RseFk=PpvLAddcHsVsrTr_AS=jLvUu2KA@mail.gmail.com>
+        (Jann Horn's message of "Tue, 10 Mar 2020 21:57:50 +0100")
+Message-ID: <8736afsyy0.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-References: <20200223165724.23816-1-mcroce@redhat.com>
-In-Reply-To: <20200223165724.23816-1-mcroce@redhat.com>
-From:   Song Liu <song@kernel.org>
-Date:   Tue, 10 Mar 2020 14:06:02 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW6DOkyvscJhxXPE+KLsw=WH6CQ=8_5uThzf7_pmD3E8JA@mail.gmail.com>
-Message-ID: <CAPhsuW6DOkyvscJhxXPE+KLsw=WH6CQ=8_5uThzf7_pmD3E8JA@mail.gmail.com>
-Subject: Re: [PATCH] block: refactor duplicated macros
-To:     Matteo Croce <mcroce@redhat.com>
-Cc:     linux-block@vger.kernel.org,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-nvdimm@lists.01.org, linux-bcache@vger.kernel.org,
-        linux-raid <linux-raid@vger.kernel.org>,
-        linux-mmc@vger.kernel.org, xen-devel@lists.xenproject.org,
-        linux-scsi@vger.kernel.org, linux-nfs@vger.kernel.org,
-        Jens Axboe <axboe@kernel.dk>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Anna Schumaker <anna.schumaker@netapp.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-XM-SPF: eid=1jBm6M-0000IU-Og;;;mid=<8736afsyy0.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1+joPIlLZ6q1EENkKnYWgLXYsgDIP3sn3g=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH v2 3/5] exec: Move cleanup of posix timers on exec out of de_thread
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Feb 23, 2020 at 8:58 AM Matteo Croce <mcroce@redhat.com> wrote:
->
-> The macros PAGE_SECTORS, PAGE_SECTORS_SHIFT and SECTOR_MASK are defined
-> several times in different flavours across the whole tree.
-> Define them just once in a common header.
->
-> Signed-off-by: Matteo Croce <mcroce@redhat.com>
-> ---
->  block/blk-lib.c                  |  2 +-
->  drivers/block/brd.c              |  3 ---
->  drivers/block/null_blk_main.c    |  4 ----
->  drivers/block/zram/zram_drv.c    |  8 ++++----
->  drivers/block/zram/zram_drv.h    |  2 --
->  drivers/dax/super.c              |  2 +-
->  drivers/md/bcache/util.h         |  2 --
->  drivers/md/dm-bufio.c            |  6 +++---
->  drivers/md/dm-integrity.c        | 10 +++++-----
->  drivers/md/md.c                  |  4 ++--
->  drivers/md/raid1.c               |  2 +-
->  drivers/mmc/core/host.c          |  3 ++-
->  drivers/scsi/xen-scsifront.c     |  4 ++--
->  fs/iomap/buffered-io.c           |  2 +-
->  fs/nfs/blocklayout/blocklayout.h |  2 --
->  include/linux/blkdev.h           |  4 ++++
->  include/linux/device-mapper.h    |  1 -
->  17 files changed, 26 insertions(+), 35 deletions(-)
+Jann Horn <jannh@google.com> writes:
 
-For md:
+> On Sun, Mar 8, 2020 at 10:39 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
+>> These functions have very little to do with de_thread move them out
+>> of de_thread an into flush_old_exec proper so it can be more clearly
+>> seen what flush_old_exec is doing.
+>>
+>> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+>> ---
+>>  fs/exec.c | 10 +++++-----
+>>  1 file changed, 5 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/fs/exec.c b/fs/exec.c
+>> index ff74b9a74d34..215d86f77b63 100644
+>> --- a/fs/exec.c
+>> +++ b/fs/exec.c
+>> @@ -1189,11 +1189,6 @@ static int de_thread(struct task_struct *tsk)
+>>         /* we have changed execution domain */
+>>         tsk->exit_signal = SIGCHLD;
+>>
+>> -#ifdef CONFIG_POSIX_TIMERS
+>> -       exit_itimers(sig);
+>> -       flush_itimer_signals();
+>> -#endif
+>> -
+>>         BUG_ON(!thread_group_leader(tsk));
+>>         return 0;
+>>
+>> @@ -1277,6 +1272,11 @@ int flush_old_exec(struct linux_binprm * bprm)
+>>         if (retval)
+>>                 goto out;
+>>
+>> +#ifdef CONFIG_POSIX_TIMERS
+>> +       exit_itimers(me->signal);
+>> +       flush_itimer_signals();
+>> +#endif
+>
+> nit: exit_itimers() has a comment referring to de_thread, that should
+> probably be updated
 
-Acked-by: Song Liu <song@kernel.org>
+Good point.
+
+Eric
+
