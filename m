@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C30B5C18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:42:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75474C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:42:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E40F24698
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:42:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BDA524693
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:42:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583844161;
-	bh=SQ2MaxiEeeggYa8Al9n/ttmWC3FChj2NL+dGYfBYCuY=;
+	s=default; t=1583844168;
+	bh=0yC6sXkVWtqG7e+QMEiQvk1PLyTDCmV8uQD29gvoQ4Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=J0BN795O8v91AGylvv6YgLIiGLU57Bf6F1ywbtwnude+m85AsqSWQt54rwgq+vFXM
-	 8SjWjcPIFnTQmacFWtSLsuf2NuwqWZZgozOwbz6aA9XgDM9j1MXSWBDVH5HVvwZIeB
-	 cF4ob2ghyBFn9wIMxf2W3E+FwyjM3GgihTn4yVH8=
+	b=TLQpLwmT5Hpv9iULCakLkp+HekrXvC5RUsBwD2i4XOR6vTLyikjuUOshDqSHQgDiT
+	 o5bysoPZA91D4PFl2I3d1WP25S9Y+LKdcRlRsw9r2GlQwKib//2Be5wi3ESpewcGK6
+	 6L4yQ/GqCv2Bv9N2yAgQiGVrglc/OhLhKuHAq7yQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727414AbgCJMmk (ORCPT
+        id S1727417AbgCJMmq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:42:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42666 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:42:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42840 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726729AbgCJMmh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:42:37 -0400
+        id S1726705AbgCJMmm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:42:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 723E224691;
-        Tue, 10 Mar 2020 12:42:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7833724691;
+        Tue, 10 Mar 2020 12:42:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844157;
-        bh=SQ2MaxiEeeggYa8Al9n/ttmWC3FChj2NL+dGYfBYCuY=;
+        s=default; t=1583844161;
+        bh=0yC6sXkVWtqG7e+QMEiQvk1PLyTDCmV8uQD29gvoQ4Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YsYjpZ6MD3mXXJwXz99lIpwxCn2blAhxl+48XbtJ+DNTKt8Djwu3S0IsZzyBeRGJe
-         30y2X7zN6017r4tY5ecgpikqKH3e+B6upw5/8urQP3OJ/0sW4jiAm9zpImWrwSu0XH
-         UbTjwjUezHHdE84aDdZcRj0MXEPWB1wRYsWUn7jo=
+        b=RVfgnAaFN39llhNOYKqXtEFE9kyoSsxd29tuCfBdqMj7+xWaQ1YcRvmnP7+rFpVBb
+         2lZl+jENani0Cv+4Dcqva9esDbpuaXrduM81zTAEMRMHz/qBXaRmpRKuLABKadppLA
+         yAtC19ZqOt/HyIMmrUOesM7ryiiY8CNC+TwYOChg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ronnie Sahlberg <lsahlber@redhat.com>,
-        Steve French <stfrench@microsoft.com>,
-        Pavel Shilovsky <pshilov@microsoft.com>,
-        Aurelien Aptel <aaptel@suse.com>
-Subject: [PATCH 4.4 50/72] cifs: dont leak -EAGAIN for stat() during reconnect
-Date:   Tue, 10 Mar 2020 13:39:03 +0100
-Message-Id: <20200310123613.706021327@linuxfoundation.org>
+        stable@vger.kernel.org, Hangbin Liu <liuhangbin@gmail.com>,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        Xin Long <lucien.xin@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 16/72] sctp: move the format error check out of __sctp_sf_do_9_1_abort
+Date:   Tue, 10 Mar 2020 13:38:29 +0100
+Message-Id: <20200310123605.668187910@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123601.053680753@linuxfoundation.org>
 References: <20200310123601.053680753@linuxfoundation.org>
@@ -61,61 +61,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ronnie Sahlberg <lsahlber@redhat.com>
+From: Xin Long <lucien.xin@gmail.com>
 
-commit fc513fac56e1b626ae48a74d7551d9c35c50129e upstream.
+[ Upstream commit 245709ec8be89af46ea7ef0444c9c80913999d99 ]
 
-If from cifs_revalidate_dentry_attr() the SMB2/QUERY_INFO call fails with an
-error, such as STATUS_SESSION_EXPIRED, causing the session to be reconnected
-it is possible we will leak -EAGAIN back to the application even for
-system calls such as stat() where this is not a valid error.
+When T2 timer is to be stopped, the asoc should also be deleted,
+otherwise, there will be no chance to call sctp_association_free
+and the asoc could last in memory forever.
 
-Fix this by re-trying the operation from within cifs_revalidate_dentry_attr()
-if cifs_get_inode_info*() returns -EAGAIN.
+However, in sctp_sf_shutdown_sent_abort(), after adding the cmd
+SCTP_CMD_TIMER_STOP for T2 timer, it may return error due to the
+format error from __sctp_sf_do_9_1_abort() and miss adding
+SCTP_CMD_ASSOC_FAILED where the asoc will be deleted.
 
-This fixes stat() and possibly also other system calls that uses
-cifs_revalidate_dentry*().
+This patch is to fix it by moving the format error check out of
+__sctp_sf_do_9_1_abort(), and do it before adding the cmd
+SCTP_CMD_TIMER_STOP for T2 timer.
 
-Signed-off-by: Ronnie Sahlberg <lsahlber@redhat.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
-Reviewed-by: Aurelien Aptel <aaptel@suse.com>
-CC: Stable <stable@vger.kernel.org>
+Thanks Hangbin for reporting this issue by the fuzz testing.
+
+v1->v2:
+  - improve the comment in the code as Marcelo's suggestion.
+
+Fixes: 96ca468b86b0 ("sctp: check invalid value of length parameter in error cause")
+Reported-by: Hangbin Liu <liuhangbin@gmail.com>
+Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- fs/cifs/inode.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ net/sctp/sm_statefuns.c |   27 ++++++++++++++++++++-------
+ 1 file changed, 20 insertions(+), 7 deletions(-)
 
---- a/fs/cifs/inode.c
-+++ b/fs/cifs/inode.c
-@@ -1957,6 +1957,7 @@ int cifs_revalidate_dentry_attr(struct d
- 	struct inode *inode = d_inode(dentry);
- 	struct super_block *sb = dentry->d_sb;
- 	char *full_path = NULL;
-+	int count = 0;
- 
- 	if (inode == NULL)
- 		return -ENOENT;
-@@ -1978,15 +1979,18 @@ int cifs_revalidate_dentry_attr(struct d
- 		 full_path, inode, inode->i_count.counter,
- 		 dentry, dentry->d_time, jiffies);
- 
-+again:
- 	if (cifs_sb_master_tcon(CIFS_SB(sb))->unix_ext)
- 		rc = cifs_get_inode_info_unix(&inode, full_path, sb, xid);
- 	else
- 		rc = cifs_get_inode_info(&inode, full_path, NULL, sb,
- 					 xid, NULL);
--
-+	if (rc == -EAGAIN && count++ < 10)
-+		goto again;
- out:
- 	kfree(full_path);
- 	free_xid(xid);
-+
- 	return rc;
+--- a/net/sctp/sm_statefuns.c
++++ b/net/sctp/sm_statefuns.c
+@@ -177,6 +177,16 @@ sctp_chunk_length_valid(struct sctp_chun
+ 	return 1;
  }
  
++/* Check for format error in an ABORT chunk */
++static inline bool sctp_err_chunk_valid(struct sctp_chunk *chunk)
++{
++	struct sctp_errhdr *err;
++
++	sctp_walk_errors(err, chunk->chunk_hdr);
++
++	return (void *)err == (void *)chunk->chunk_end;
++}
++
+ /**********************************************************
+  * These are the state functions for handling chunk events.
+  **********************************************************/
+@@ -2159,6 +2169,9 @@ sctp_disposition_t sctp_sf_shutdown_pend
+ 		    sctp_bind_addr_state(&asoc->base.bind_addr, &chunk->dest))
+ 		return sctp_sf_discard_chunk(net, ep, asoc, type, arg, commands);
+ 
++	if (!sctp_err_chunk_valid(chunk))
++		return sctp_sf_pdiscard(net, ep, asoc, type, arg, commands);
++
+ 	return __sctp_sf_do_9_1_abort(net, ep, asoc, type, arg, commands);
+ }
+ 
+@@ -2201,6 +2214,9 @@ sctp_disposition_t sctp_sf_shutdown_sent
+ 		    sctp_bind_addr_state(&asoc->base.bind_addr, &chunk->dest))
+ 		return sctp_sf_discard_chunk(net, ep, asoc, type, arg, commands);
+ 
++	if (!sctp_err_chunk_valid(chunk))
++		return sctp_sf_pdiscard(net, ep, asoc, type, arg, commands);
++
+ 	/* Stop the T2-shutdown timer. */
+ 	sctp_add_cmd_sf(commands, SCTP_CMD_TIMER_STOP,
+ 			SCTP_TO(SCTP_EVENT_TIMEOUT_T2_SHUTDOWN));
+@@ -2466,6 +2482,9 @@ sctp_disposition_t sctp_sf_do_9_1_abort(
+ 		    sctp_bind_addr_state(&asoc->base.bind_addr, &chunk->dest))
+ 		return sctp_sf_discard_chunk(net, ep, asoc, type, arg, commands);
+ 
++	if (!sctp_err_chunk_valid(chunk))
++		return sctp_sf_pdiscard(net, ep, asoc, type, arg, commands);
++
+ 	return __sctp_sf_do_9_1_abort(net, ep, asoc, type, arg, commands);
+ }
+ 
+@@ -2482,15 +2501,9 @@ static sctp_disposition_t __sctp_sf_do_9
+ 
+ 	/* See if we have an error cause code in the chunk.  */
+ 	len = ntohs(chunk->chunk_hdr->length);
+-	if (len >= sizeof(struct sctp_chunkhdr) + sizeof(struct sctp_errhdr)) {
+-
+-		sctp_errhdr_t *err;
+-		sctp_walk_errors(err, chunk->chunk_hdr);
+-		if ((void *)err != (void *)chunk->chunk_end)
+-			return sctp_sf_pdiscard(net, ep, asoc, type, arg, commands);
+ 
++	if (len >= sizeof(struct sctp_chunkhdr) + sizeof(struct sctp_errhdr))
+ 		error = ((sctp_errhdr_t *)chunk->skb->data)->cause;
+-	}
+ 
+ 	sctp_add_cmd_sf(commands, SCTP_CMD_SET_SK_ERR, SCTP_ERROR(ECONNRESET));
+ 	/* ASSOC_FAILED will DELETE_TCB. */
 
 
