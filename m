@@ -5,49 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0124BC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:57:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4EF3C18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:57:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB3B424694
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:57:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDB8D24697
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:57:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583845052;
-	bh=h8EAJl19Wp0HALYjFidwI9cUFJDeGchtkcXLkJUuArs=;
+	s=default; t=1583845054;
+	bh=EpB+hNHyM4aBcJsJprlm1tfQc8ejGExjREpw2qKL+j4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H/YxWKZMQmDPTzYuxsjXVuiS5GoYICc1gFqcIqABdhFlN/RA9PoBSo0ZljsZlJcE2
-	 mkD5rioBzEHRBkqqTPhcK4T8hq+tnSuNxfEkkmVuTeH6PaKTKpksKku8lhMR8afcB1
-	 QAZHJWsbbKj8zrL1yZFgts9Hj78LgMYU9wET5+YE=
+	b=QXPpdfuS9tbafNXs1b7dX72CNbLe+uRv5oLwnlD7rAHUhuU5BmHveGwcYrXMpdsQT
+	 Nrep0JyLU/eF7BOo7HF9ccV/AlCB9iZvyIxw/DfddOP4qiasDs1G86+6MxVi/ac2rm
+	 VI0VU4Cnh/7YhLZhgb6gRN7hiuKPC7V//6zw/5Bk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729784AbgCJM5c (ORCPT
+        id S1729793AbgCJM5d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:57:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36918 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:57:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37134 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729770AbgCJM5X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:57:23 -0400
+        id S1729785AbgCJM5c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:57:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0FBA02468E;
-        Tue, 10 Mar 2020 12:57:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 53ADD2468E;
+        Tue, 10 Mar 2020 12:57:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845043;
-        bh=h8EAJl19Wp0HALYjFidwI9cUFJDeGchtkcXLkJUuArs=;
+        s=default; t=1583845051;
+        bh=EpB+hNHyM4aBcJsJprlm1tfQc8ejGExjREpw2qKL+j4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SUYkodR3zX2CNU9nicbF5PRU4uMLrhRv881UgKfDT9KEI7GgVnOgG61Q/hkpzzl3r
-         quQN+/RQQsBvDlzXTFIxWhbD2pQAn6Xglr+20o/X4gRLNR26ovVc0v04xNeAb1Mp6c
-         nXjF1naqLnBYLwwgnKC2fHFYUXNDHZIYOlgKF1FE=
+        b=Q0TW/a0fOZijcZkXauuNFinWEL+JEyqfNO0Q37JCpIUSdflBQi9eaSUh2BobscFW2
+         NF4vOE4XniBpQmJNSI/Df3u9zcdD0k1aHV+wBS+9HZ83sBJ5QKPjqIJZpy2hONBTWE
+         meNJigp1v5r0X5o9egjNEm+FU9m7rvQMxVqvBPss=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alex Deucher <alexander.deucher@amd.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 042/189] iommu/amd: Disable IOMMU on Stoney Ridge systems
-Date:   Tue, 10 Mar 2020 13:37:59 +0100
-Message-Id: <20200310123643.714703156@linuxfoundation.org>
+        stable@vger.kernel.org, "H.J. Lu" <hjl.tools@gmail.com>,
+        Borislav Petkov <bp@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 045/189] x86/boot/compressed: Dont declare __force_order in kaslr_64.c
+Date:   Tue, 10 Mar 2020 13:38:02 +0100
+Message-Id: <20200310123644.028693381@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123639.608886314@linuxfoundation.org>
 References: <20200310123639.608886314@linuxfoundation.org>
@@ -60,65 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: H.J. Lu <hjl.tools@gmail.com>
 
-[ Upstream commit 3dfee47b215e49788cfc80e474820ea2e948c031 ]
+[ Upstream commit df6d4f9db79c1a5d6f48b59db35ccd1e9ff9adfc ]
 
-Serious screen flickering when Stoney Ridge outputs to a 4K monitor.
+GCC 10 changed the default to -fno-common, which leads to
 
-Use identity-mapping and PCI ATS doesn't help this issue.
+    LD      arch/x86/boot/compressed/vmlinux
+  ld: arch/x86/boot/compressed/pgtable_64.o:(.bss+0x0): multiple definition of `__force_order'; \
+    arch/x86/boot/compressed/kaslr_64.o:(.bss+0x0): first defined here
+  make[2]: *** [arch/x86/boot/compressed/Makefile:119: arch/x86/boot/compressed/vmlinux] Error 1
 
-According to Alex Deucher, IOMMU isn't enabled on Windows, so let's do
-the same here to avoid screen flickering on 4K monitor.
+Since __force_order is already provided in pgtable_64.c, there is no
+need to declare __force_order in kaslr_64.c.
 
-Cc: Alex Deucher <alexander.deucher@amd.com>
-Bug: https://gitlab.freedesktop.org/drm/amd/issues/961
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Acked-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: H.J. Lu <hjl.tools@gmail.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Link: https://lkml.kernel.org/r/20200124181811.4780-1-hjl.tools@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/amd_iommu_init.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+ arch/x86/boot/compressed/kaslr_64.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/drivers/iommu/amd_iommu_init.c b/drivers/iommu/amd_iommu_init.c
-index d7cbca8bf2cd4..b5ae9f7c0510b 100644
---- a/drivers/iommu/amd_iommu_init.c
-+++ b/drivers/iommu/amd_iommu_init.c
-@@ -2533,6 +2533,7 @@ static int __init early_amd_iommu_init(void)
- 	struct acpi_table_header *ivrs_base;
- 	acpi_status status;
- 	int i, remap_cache_sz, ret = 0;
-+	u32 pci_id;
+diff --git a/arch/x86/boot/compressed/kaslr_64.c b/arch/x86/boot/compressed/kaslr_64.c
+index 748456c365f46..9557c5a15b91e 100644
+--- a/arch/x86/boot/compressed/kaslr_64.c
++++ b/arch/x86/boot/compressed/kaslr_64.c
+@@ -29,9 +29,6 @@
+ #define __PAGE_OFFSET __PAGE_OFFSET_BASE
+ #include "../../mm/ident_map.c"
  
- 	if (!amd_iommu_detected)
- 		return -ENODEV;
-@@ -2620,6 +2621,16 @@ static int __init early_amd_iommu_init(void)
- 	if (ret)
- 		goto out;
- 
-+	/* Disable IOMMU if there's Stoney Ridge graphics */
-+	for (i = 0; i < 32; i++) {
-+		pci_id = read_pci_config(0, i, 0, 0);
-+		if ((pci_id & 0xffff) == 0x1002 && (pci_id >> 16) == 0x98e4) {
-+			pr_info("Disable IOMMU on Stoney Ridge\n");
-+			amd_iommu_disabled = true;
-+			break;
-+		}
-+	}
-+
- 	/* Disable any previously enabled IOMMUs */
- 	if (!is_kdump_kernel() || amd_iommu_disabled)
- 		disable_iommus();
-@@ -2728,7 +2739,7 @@ static int __init state_next(void)
- 		ret = early_amd_iommu_init();
- 		init_state = ret ? IOMMU_INIT_ERROR : IOMMU_ACPI_FINISHED;
- 		if (init_state == IOMMU_ACPI_FINISHED && amd_iommu_disabled) {
--			pr_info("AMD IOMMU disabled on kernel command-line\n");
-+			pr_info("AMD IOMMU disabled\n");
- 			init_state = IOMMU_CMDLINE_DISABLED;
- 			ret = -EINVAL;
- 		}
+-/* Used by pgtable.h asm code to force instruction serialization. */
+-unsigned long __force_order;
+-
+ /* Used to track our page table allocation area. */
+ struct alloc_pgt_data {
+ 	unsigned char *pgt_buf;
 -- 
 2.20.1
 
