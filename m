@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B679C18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:59:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80156C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:59:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 594DA2253D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:59:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DE302253D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:59:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583845169;
-	bh=FXX8B0x0n9nfbA091PCc2o//Nqx3Gj8KH1PPBSL/LpY=;
+	s=default; t=1583845174;
+	bh=hKYGiz4zk2QHN8e6pfKsbViwp/zI0pmUHjXxczMOWvU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M+ZoXGagMtQpygCGJaW2b11S2fdyfpAgrxVxtYxCY06botTyDIz7gewT9mWMxHdOu
-	 k7/KtzKTqeuqt96jyy6r4QUZhc/GIYKb7EPO1X1L4X98roQHQ7HQkocu1cdFWmJSD4
-	 2BrkXbk3TRxoi4jzSUskmxT0bQEplKh9VhxJDJmc=
+	b=WCUSyeeerJ6VsaiU42nEHq/s2sAc1s1m/WnIQd7y5NlBmzbKssUow//tT8Bj8GMZF
+	 7UiE8xi+x7pq3jRTiJGyD8nmd5nhI4/53v9NP+jzgXsRUiWELZsWqYC8PKcf8l2VWz
+	 Joz1Wbs16sOP5qia+KRxhlJ06vnv8Rw07yj/+IuY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730031AbgCJM72 (ORCPT
+        id S1730039AbgCJM7d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:59:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39846 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:59:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39926 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730021AbgCJM7Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:59:25 -0400
+        id S1730023AbgCJM71 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:59:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ABC222468D;
-        Tue, 10 Mar 2020 12:59:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 488602253D;
+        Tue, 10 Mar 2020 12:59:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845164;
-        bh=FXX8B0x0n9nfbA091PCc2o//Nqx3Gj8KH1PPBSL/LpY=;
+        s=default; t=1583845166;
+        bh=hKYGiz4zk2QHN8e6pfKsbViwp/zI0pmUHjXxczMOWvU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vOKUcb+e7vuRNhyykICD/UTGd499PQdrlCJH8e1nI5ZARi5v6ojJiyr4TPePjTEy+
-         r6aCFuJn2dCDhwEfoVfAlZ+D9M1vHloQ3ZU/c06SwC2VPZ9uXJNhqCpRk6USHph4/j
-         E6+z53VeUvfK4/JiBAMJIIoM/nEatkVpbKsQlJm8=
+        b=s1D2vPTPT9+64SItJcGxyjMR/40/J0qPWnVLr4YYHyOXRz7KpVBf5HP5mD68cOkcK
+         rMpuUjsudQzPwsWYEEO+ImM/vxhKdMmgJxsTAox2Nkx8pKTPBsYNTzo40sNkJm4njY
+         tFNWkgBhSjInMvwx0zbwomP+yMHB379ngUHJavHI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Faiz Abbas <faiz_abbas@ti.com>,
-        Tony Lindgren <tony@atomide.com>
-Subject: [PATCH 5.5 086/189] arm: dts: dra76x: Fix mmc3 max-frequency
-Date:   Tue, 10 Mar 2020 13:38:43 +0100
-Message-Id: <20200310123648.383765774@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Rikard Falkeborn <rikard.falkeborn@gmail.com>,
+        Ondrej Jirman <megous@megous.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>
+Subject: [PATCH 5.5 087/189] phy: allwinner: Fix GENMASK misuse
+Date:   Tue, 10 Mar 2020 13:38:44 +0100
+Message-Id: <20200310123648.473874835@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123639.608886314@linuxfoundation.org>
 References: <20200310123639.608886314@linuxfoundation.org>
@@ -59,34 +62,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Faiz Abbas <faiz_abbas@ti.com>
+From: Rikard Falkeborn <rikard.falkeborn@gmail.com>
 
-commit fa63c0039787b8fbacf4d6a51e3ff44288f5b90b upstream.
+commit 96b4ea324ae92386db2b0c73ace597c80cde1ecb upstream.
 
-dra76x is not affected by i887 which requires mmc3 node to be limited to
-a max frequency of 64 MHz. Fix this by overwriting the correct value in
-the the dra76 specific dtsi.
+Arguments are supposed to be ordered high then low.
 
-Fixes: 895bd4b3e5ec ("ARM: dts: Add support for dra76-evm")
-Cc: stable@vger.kernel.org
-Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Fixes: a228890f9458 ("phy: allwinner: add phy driver for USB3 PHY on Allwinner H6 SoC")
+Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
+Tested-by: Ondrej Jirman <megous@megous.com>
+Signed-off-by: Ondrej Jirman <megous@megous.com>
+Acked-by: Maxime Ripard <mripard@kernel.org>
+Acked-by: Chen-Yu Tsai <wens@csie.org>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20191110124355.1569-1-rikard.falkeborn@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/boot/dts/dra76x.dtsi |    5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/phy/allwinner/phy-sun50i-usb3.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/arm/boot/dts/dra76x.dtsi
-+++ b/arch/arm/boot/dts/dra76x.dtsi
-@@ -86,3 +86,8 @@
- &usb4_tm {
- 	status = "disabled";
- };
-+
-+&mmc3 {
-+	/* dra76x is not affected by i887 */
-+	max-frequency = <96000000>;
-+};
+--- a/drivers/phy/allwinner/phy-sun50i-usb3.c
++++ b/drivers/phy/allwinner/phy-sun50i-usb3.c
+@@ -49,7 +49,7 @@
+ #define SUNXI_LOS_BIAS(n)		((n) << 3)
+ #define SUNXI_LOS_BIAS_MASK		GENMASK(5, 3)
+ #define SUNXI_TXVBOOSTLVL(n)		((n) << 0)
+-#define SUNXI_TXVBOOSTLVL_MASK		GENMASK(0, 2)
++#define SUNXI_TXVBOOSTLVL_MASK		GENMASK(2, 0)
+ 
+ struct sun50i_usb3_phy {
+ 	struct phy *phy;
 
 
