@@ -2,129 +2,307 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB707C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 07:53:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46E38C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 07:54:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78F9B24673
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 07:53:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=micron.com header.i=@micron.com header.b="led3BRO/"
+	by mail.kernel.org (Postfix) with ESMTP id 13F752467C
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 07:54:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726467AbgCJHxN (ORCPT
+        id S1726385AbgCJHyx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 03:53:13 -0400
-Received: from mail-dm6nam10on2041.outbound.protection.outlook.com ([40.107.93.41]:2625
-        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726202AbgCJHxM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 03:53:12 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GvB8VJmbkHxzGzHO6V+ot5QRYvBvUI4LDSBLSPBaV+idbo3odnWUlkj8c39cKk54FsKb9bFVdAcmSsw+bxWxfduu7Z/Lc+6rvT9juPcTjiAChQGP2FoDENnz+FRc+D/PXXtJm9Ub47DU+pFV6GOijDO04imW0iXje2UfwtwHxmp5X8DiCsjQI68jM95Cz9BCafHTIDNWTaGqvIGF94fzzSTjIFCKq8sQmPi4Cn9RdmPoffixjae+fWFe6OTkrqrjv0iI8vR9RMRNcn1R8G01qekYpGG0VW+CaWvQFrvxKP9CY5+zLewnUQ24rUoRI7RFHSP35k26USARyYkRNb1zYA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DsPy290iqWCxaeYYZBjFevix6t35nCydLAwDKRBiNXo=;
- b=O0ztSVv3o5U9y3oGH909wDng1YS5d1yBoZa5JdUDWZgyuO9roEO5HsqmkVDM/d22+4tgc1nF6JU1KBJjFM8+WyI01j+H2qffFMcxH3PH9tb/sHO00cOIns81c4RvS/sootADcwJ7s7vIcMUo0U+FagjOjV3PF0UbikZ+9Un/N/8txEryOnpdYkJh+go9U/NJ5CJBOIE0fz0aeGCENUX7ybkTG1J2LMw6bzctN7NPQjMdMKgKEta7FyW9x3UQ4DxgWJ0byamg7tgdz6S/gRMTunklNxANfd8l+jKiGeIqESjdWs7nVah4gxHHxXziYSG5J1m9BYafGLRLHx/5JnMsjQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=micron.com; dmarc=pass action=none header.from=micron.com;
- dkim=pass header.d=micron.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=micron.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DsPy290iqWCxaeYYZBjFevix6t35nCydLAwDKRBiNXo=;
- b=led3BRO/KUxP3Nxe0SzkORHxxiMtdybEWD++A/p6fO1kjyJdLflPc57eUb95S74Sdpowo6PI/m7fWqGmhdLvmqqP9DukTF7zNVvByY+UcZ0a0xZvSOyzrKsxKjh+Cduwe+lp2ROnd+JPBkKA5wZbUCb55Z9tIC74RHOyUWk+mSQ=
-Received: from BN7PR08MB5684.namprd08.prod.outlook.com (2603:10b6:408:35::23)
- by BN7PR08MB5089.namprd08.prod.outlook.com (2603:10b6:408:2f::28) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.14; Tue, 10 Mar
- 2020 07:53:09 +0000
-Received: from BN7PR08MB5684.namprd08.prod.outlook.com
- ([fe80::589d:e16:907b:5135]) by BN7PR08MB5684.namprd08.prod.outlook.com
- ([fe80::589d:e16:907b:5135%5]) with mapi id 15.20.2793.013; Tue, 10 Mar 2020
- 07:53:09 +0000
-From:   "Bean Huo (beanhuo)" <beanhuo@micron.com>
-To:     Bart Van Assche <bvanassche@acm.org>,
-        "huobean@gmail.com" <huobean@gmail.com>,
-        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
-        "avri.altman@wdc.com" <avri.altman@wdc.com>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
-        "tomas.winkler@intel.com" <tomas.winkler@intel.com>,
-        "cang@codeaurora.org" <cang@codeaurora.org>
-CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [EXT] Re: [PATCH v3 1/1] scsi: ufs: fix LRB pointer incorrect
- initialization issue
-Thread-Topic: [EXT] Re: [PATCH v3 1/1] scsi: ufs: fix LRB pointer incorrect
- initialization issue
-Thread-Index: AQHV9n9eeuH1M6BoXESDolwuE5aB9ahBcyjA
-Date:   Tue, 10 Mar 2020 07:53:09 +0000
-Message-ID: <BN7PR08MB5684F9667DE1CD05D0D01EE6DBFF0@BN7PR08MB5684.namprd08.prod.outlook.com>
-References: <20200309161057.9897-1-beanhuo@micron.com>
- <20200309161057.9897-2-beanhuo@micron.com>
- <ede4addf-73c7-e5f8-5143-91eb0cd3eb9b@acm.org>
-In-Reply-To: <ede4addf-73c7-e5f8-5143-91eb0cd3eb9b@acm.org>
-Accept-Language: en-150, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcYmVhbmh1b1xhcHBkYXRhXHJvYW1pbmdcMDlkODQ5YjYtMzJkMy00YTQwLTg1ZWUtNmI4NGJhMjllMzViXG1zZ3NcbXNnLTJjNTVmMTEwLTYyYTQtMTFlYS04YjhkLWRjNzE5NjFmOWRkM1xhbWUtdGVzdFwyYzU1ZjExMS02MmE0LTExZWEtOGI4ZC1kYzcxOTYxZjlkZDNib2R5LnR4dCIgc3o9IjExMDkiIHQ9IjEzMjI4MzAwMzg1NzI2MDA3MCIgaD0iZ2NJTm1EOFpjZWh5U3UrZzQ2d2RKcWhtbGRnPSIgaWQ9IiIgYmw9IjAiIGJvPSIxIiBjaT0iY0FBQUFFUkhVMVJTUlVGTkNnVUFBSEFBQUFBbXpydnVzUGJWQWVPak1qL0NtMk1xNDZNeVA4S2JZeW9BQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFCQUFBQkFBQUE5cm1ud1FBQUFBQUFBQUFBQUFBQUFBPT0iLz48L21ldGE+
-x-dg-rorf: true
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=beanhuo@micron.com; 
-x-originating-ip: [165.225.86.138]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: ac56c3fe-1606-46fd-136f-08d7c4c8134a
-x-ms-traffictypediagnostic: BN7PR08MB5089:|BN7PR08MB5089:|BN7PR08MB5089:
-x-microsoft-antispam-prvs: <BN7PR08MB5089FCE8EB32F24C52211E09DBFF0@BN7PR08MB5089.namprd08.prod.outlook.com>
-x-ms-exchange-transport-forked: True
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 033857D0BD
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(366004)(39860400002)(346002)(396003)(136003)(199004)(189003)(52536014)(54906003)(9686003)(110136005)(186003)(7416002)(8676002)(86362001)(33656002)(4326008)(26005)(81166006)(81156014)(6506007)(55016002)(2906002)(5660300002)(316002)(8936002)(478600001)(66946007)(64756008)(66446008)(4744005)(71200400001)(55236004)(53546011)(76116006)(66476007)(66556008)(7696005)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:BN7PR08MB5089;H:BN7PR08MB5684.namprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: micron.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: k6N55SbPpgHm63TKEaxtakZIcYBoUJJle7vn3FcrHCdtNPMdS0OMXYDV1gyiLRYmkrn4aGXAcgJHn91a/ECJ7ZACES9cH0bVb89Y6020sM6fmd9SqIOKavwMe4nrknrPoqAJtskBtbGbSMcpLXbzpG1lqwnJ0zZdXYWIV7SWKA6XY/J09szUrEXoo4fW1NKH7K8zTnBJBcBiHYiVEb+N+x/BBgxZe9ioiWb8yzbWOMiOD1Af2nrtEA/oeTcLQHPlhhl7rZCAzsU/q2+FEg0OIUtb28KLm+EpkkUCnd9ybdk/zGqyr5AmKJK8w3JNIZ8n7X3RnS8kBBb7S5ZT7mWUWRPTgdzncA3OIMdYSCuBuzpn7szbMaN7dpFRg8lDaEmMl+JSiw+oCjsfM8YauCrq17E874uUOmVScYXxMql5tike7ShegmFBpZFzinc3TbLYg/vJC/ElqrgT9uy7CehomUL2IKgZY/lDPlBthObBkKYd3fVYJWJu3dZ+PIYAG/zN
-x-ms-exchange-antispam-messagedata: nGwpLemIqe947Jll8pST68FVQgPU8zeQ9tXW/eKCdBMJysTMNBaRjHP7KsKLmABca9d8eJoX1mb1JdJazPojthYg+g5dpGP0qNeKHHtNyl+tqhljjDqLmrGxAljnc/kXqVRAo+ntE7KHE9FGTdrkLw==
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 10 Mar 2020 03:54:53 -0400
+Received: from mga12.intel.com ([192.55.52.136]:33310 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725919AbgCJHyx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 03:54:53 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Mar 2020 00:54:51 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,518,1574150400"; 
+   d="scan'208";a="321714006"
+Received: from shao2-debian.sh.intel.com (HELO localhost) ([10.239.13.3])
+  by orsmga001.jf.intel.com with ESMTP; 10 Mar 2020 00:54:48 -0700
+Date:   Tue, 10 Mar 2020 15:54:36 +0800
+From:   kernel test robot <rong.a.chen@intel.com>
+To:     yangerkun <yangerkun@huawei.com>
+Cc:     Jeff Layton <jlayton@kernel.org>, NeilBrown <neilb@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org,
+        Bruce Fields <bfields@fieldses.org>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Subject: Re: [locks] 6d390e4b5d: will-it-scale.per_process_ops -96.6%
+ regression
+Message-ID: <20200310075436.GY5972@shao2-debian>
+References: <20200308140314.GQ5972@shao2-debian>
+ <e3783d060c778cb41b77380ad3e278133b52f57e.camel@kernel.org>
+ <CAHk-=whGK712fPqmQ3FSHxqe3Aqny4bEeWEvfaytLeLV2+ijCQ@mail.gmail.com>
+ <34355c4fe6c3968b1f619c60d5ff2ca11a313096.camel@kernel.org>
+ <1bfba96b4bf0d3ca9a18a2bced3ef3a2a7b44dad.camel@kernel.org>
+ <87blp5urwq.fsf@notabene.neil.brown.name>
+ <41c83d34ae4c166f48e7969b2b71e43a0f69028d.camel@kernel.org>
+ <ed73fb5d-ddd5-fefd-67ae-2d786e68544a@huawei.com>
 MIME-Version: 1.0
-X-OriginatorOrg: micron.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ac56c3fe-1606-46fd-136f-08d7c4c8134a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Mar 2020 07:53:09.1570
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: f38a5ecd-2813-4862-b11b-ac1d563c806f
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: qmFRJigt7rjRk5g81HxTzEn05uBBGollPwErz0yU9Z+Z07g/EzsW4bL0OP6VWAMyDVE0OtKOC72qxkG1U0snhg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR08MB5089
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ed73fb5d-ddd5-fefd-67ae-2d786e68544a@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIEJhcnQgDQoNCj4gU3ViamVjdDogW0VYVF0gUmU6IFtQQVRDSCB2MyAxLzFdIHNjc2k6IHVm
-czogZml4IExSQiBwb2ludGVyIGluY29ycmVjdCBpbml0aWFsaXphdGlvbg0KPiBpc3N1ZQ0KPiAN
-Cj4gT24gMjAyMC0wMy0wOSAwOToxMCwgaHVvYmVhbkBnbWFpbC5jb20gd3JvdGU6DQo+ID4gQEAg
-LTQ4MzQsNiArNDgyOSw3IEBAIHN0YXRpYyB2b2lkIF9fdWZzaGNkX3RyYW5zZmVyX3JlcV9jb21w
-bChzdHJ1Y3QNCj4gdWZzX2hiYSAqaGJhLA0KPiA+ICAJCQljb250aW51ZTsNCj4gPiAgCQljbWQg
-PSBibGtfbXFfcnFfdG9fcGR1KHJlcSk7DQo+ID4gIAkJbHJicCA9IHNjc2lfY21kX3ByaXYoY21k
-KTsNCj4gPiArCQl1ZnNoY2RfaW5pdF9scmIoaGJhLCBscmJwLCBpbmRleCk7DQo+ID4gIAkJaWYg
-KHVmc2hjZF9pc19zY3NpKHJlcSkpIHsNCj4gPiAgCQkJdWZzaGNkX2FkZF9jb21tYW5kX3RyYWNl
-KGhiYSwgcmVxLCAiY29tcGxldGUiKTsNCj4gPiAgCQkJcmVzdWx0ID0gdWZzaGNkX3RyYW5zZmVy
-X3JzcF9zdGF0dXMoaGJhLCBscmJwKTsNCj4gDQo+IFRoaXMgdWZzaGNkX2luaXRfbHJiKCkgY2Fs
-bCBsb29rcyBpbmNvcnJlY3QgdG8gbWUuIEkgdGhpbmsgdGhhdA0KPiB1ZnNoY2RfaW5pdF9scmIo
-KSBzaG91bGQgb25seSBiZSBjYWxsZWQgYmVmb3JlIGEgcmVxdWVzdCBpcyBzdWJtaXR0ZWQgdG8g
-dGhlIFVGUw0KPiBjb250cm9sbGVyIGFuZCBhbHNvIHRoYXQgdWZzaGNkX2luaXRfbHJiKCkgc2hv
-dWxkIG5vdCBiZSBjYWxsZWQgZnJvbSB0aGUNCj4gY29tcGxldGlvbiBwYXRoLg0KPiANCg0KX191
-ZnNoY2RfdHJhbnNmZXJfcmVxX2NvbXBsKCkNCgl1ZnNoY2RfdHJhbnNmZXJfcnNwX3N0YXR1cygp
-ICB3aWxsIGFjY2VzcyBscmJwLT51Y2RfcnNwX3B0ci4NCldpdGhvdXQgY2FsbGluZyB1ZnNoY2Rf
-aW5pdF9scmIoKSBoZXJlLCB0aGVyZSB3aWxsIGJlIGFuIGVycm9yLg0KDQovL0JlYW4NCg0KIA0K
-PiBUaGFua3MsDQo+IA0KPiBCYXJ0Lg0K
+On Tue, Mar 10, 2020 at 11:24:50AM +0800, yangerkun wrote:
+> On 2020/3/10 6:11, Jeff Layton wrote:
+> > On Tue, 2020-03-10 at 08:42 +1100, NeilBrown wrote:
+> > > On Mon, Mar 09 2020, Jeff Layton wrote:
+> > > 
+> > > > On Mon, 2020-03-09 at 13:22 -0400, Jeff Layton wrote:
+> > > > > On Mon, 2020-03-09 at 08:52 -0700, Linus Torvalds wrote:
+> > > > > > On Mon, Mar 9, 2020 at 7:36 AM Jeff Layton <jlayton@kernel.org> wrote:
+> > > > > > > On Sun, 2020-03-08 at 22:03 +0800, kernel test robot wrote:
+> > > > > > > > FYI, we noticed a -96.6% regression of will-it-scale.per_process_ops due to commit:
+> > > > > > > 
+> > > > > > > This is not completely unexpected as we're banging on the global
+> > > > > > > blocked_lock_lock now for every unlock. This test just thrashes file
+> > > > > > > locks and unlocks without doing anything in between, so the workload
+> > > > > > > looks pretty artificial [1].
+> > > > > > > 
+> > > > > > > It would be nice to avoid the global lock in this codepath, but it
+> > > > > > > doesn't look simple to do. I'll keep thinking about it, but for now I'm
+> > > > > > > inclined to ignore this result unless we see a problem in more realistic
+> > > > > > > workloads.
+> > > > > > 
+> > > > > > That is a _huge_ regression, though.
+> > > > > > 
+> > > > > > What about something like the attached? Wouldn't that work? And make
+> > > > > > the code actually match the old comment about wow "fl_blocker" being
+> > > > > > NULL being special.
+> > > > > > 
+> > > > > > The old code seemed to not know about things like memory ordering either.
+> > > > > > 
+> > > > > > Patch is entirely untested, but aims to have that "smp_store_release()
+> > > > > > means I'm done and not going to touch it any more", making that
+> > > > > > smp_load_acquire() test hopefully be valid as per the comment..
+> > > > > 
+> > > > > Yeah, something along those lines maybe. I don't think we can use
+> > > > > fl_blocker that way though, as the wait_event_interruptible is waiting
+> > > > > on it to go to NULL, and the wake_up happens before fl_blocker is
+> > > > > cleared.
+> > > > > 
+> > > > > Maybe we need to mix in some sort of FL_BLOCK_ACTIVE flag and use that
+> > > > > instead of testing for !fl_blocker to see whether we can avoid the
+> > > > > blocked_lock_lock?
+> > > > 
+> > > > How about something like this instead? (untested other than for
+> > > > compilation)
+> > > > 
+> > > > Basically, this just switches the waiters over to wait for
+> > > > fl_blocked_member to go empty. That still happens before the wakeup, so
+> > > > it should be ok to wait on that.
+> > > > 
+> > > > I think we can also eliminate the lockless list_empty check in
+> > > > locks_delete_block, as the fl_blocker check should be sufficient now.
+> > > > -- 
+> > > > Jeff Layton <jlayton@kernel.org>
+> > > >  From c179d779c9b72838ed9996a65d686d86679d1639 Mon Sep 17 00:00:00 2001
+> > > > From: Linus Torvalds <torvalds@linux-foundation.org>
+> > > > Date: Mon, 9 Mar 2020 14:35:43 -0400
+> > > > Subject: [PATCH] locks: reinstate locks_delete_lock optimization
+> > > > 
+> > > > ...by using smp_load_acquire and smp_store_release to close the race
+> > > > window.
+> > > > 
+> > > > [ jlayton: wait on the fl_blocked_requests list to go empty instead of
+> > > > 	   the fl_blocker pointer to clear. Remove the list_empty check
+> > > > 	   from locks_delete_lock shortcut. ]
+> > > 
+> > > Why do you think it is OK to remove that list_empty check?  I don't
+> > > think it is.  There might be locked requests that need to be woken up.
+> > > 
+> > > As the problem here is a use-after-free due to a race, one option would
+> > > be to use rcu_free() on the file_lock, and hold rcu_read_lock() around
+> > > test/use.
+> > > 
+> > > Another option is to use a different lock.  The fl_wait contains a
+> > > spinlock, and we have wake_up_locked() which is provided for exactly
+> > > these sorts of situations where the wake_up call can race with a thread
+> > > waking up.
+> > > 
+> > > So my compile-tested-only proposal is below.
+> > > I can probably a proper change-log entry if you think the patch is a
+> > > good way to go.
+> > > 
+> > > NeilBrown
+> > > 
+> > > 
+> > > diff --git a/fs/locks.c b/fs/locks.c
+> > > index 426b55d333d5..8aa04d5ac8b3 100644
+> > > --- a/fs/locks.c
+> > > +++ b/fs/locks.c
+> > > @@ -735,11 +735,13 @@ static void __locks_wake_up_blocks(struct file_lock *blocker)
+> > >   		waiter = list_first_entry(&blocker->fl_blocked_requests,
+> > >   					  struct file_lock, fl_blocked_member);
+> > > +		spin_lock(&waiter->fl_wait.lock);
+> > >   		__locks_delete_block(waiter);
+> > >   		if (waiter->fl_lmops && waiter->fl_lmops->lm_notify)
+> > >   			waiter->fl_lmops->lm_notify(waiter);
+> > >   		else
+> > > -			wake_up(&waiter->fl_wait);
+> > > +			wake_up_locked(&waiter->fl_wait);
+> > > +		spin_unlock(&waiter->fl_wait.lock);
+> > >   	}
+> > >   }
+> > > @@ -753,6 +755,31 @@ int locks_delete_block(struct file_lock *waiter)
+> > >   {
+> > >   	int status = -ENOENT;
+> > > +	/*
+> > > +	 * If fl_blocker is NULL, it won't be set again as this thread
+> > > +	 * "owns" the lock and is the only one that might try to claim
+> > > +	 * the lock.  So it is safe to test fl_blocker locklessly.
+> > > +	 * Also if fl_blocker is NULL, this waiter is not listed on
+> > > +	 * fl_blocked_requests for some lock, so no other request can
+> > > +	 * be added to the list of fl_blocked_requests for this
+> > > +	 * request.  So if fl_blocker is NULL, it is safe to
+> > > +	 * locklessly check if fl_blocked_requests is empty.  If both
+> > > +	 * of these checks succeed, there is no need to take the lock.
+> > > +	 * However, some other thread might have only *just* set
+> > > +	 * fl_blocker to NULL and it about to send a wakeup on
+> > > +	 * fl_wait, so we mustn't return too soon or we might free waiter
+> > > +	 * before that wakeup can be sent.  So take the fl_wait.lock
+> > > +	 * to serialize with the wakeup in __locks_wake_up_blocks().
+> > > +	 */
+> > > +	if (waiter->fl_blocker == NULL) {
+> > > +		spin_lock(&waiter->fl_wait.lock);
+> > > +		if (waiter->fl_blocker == NULL &&
+> > > +		    list_empty(&waiter->fl_blocked_requests)) {
+> > > +			spin_unlock(&waiter->fl_wait.lock);
+> > > +			return status;
+> > > +		}
+> > > +		spin_unlock(&waiter->fl_wait.lock);
+> > > +	}
+> > >   	spin_lock(&blocked_lock_lock);
+> > >   	if (waiter->fl_blocker)
+> > >   		status = 0;
+> > > 
+> > 
+> > Looks good on a cursory check, and I'm inclined to go with this since
+> > it's less fiddly for people to backport.
+> > 
+> > One other difference to note -- we are holding the fl_wait lock when
+> > calling lm_notify, but I don't think it will matter to any of the
+> > existing lm_notify functions.
+> > 
+> > If you want to clean up the changelog and resend that would be great.
+> > 
+> > Thanks,
+> > 
+> Something others. I think there is no need to call locks_delete_block for
+> all case in function like flock_lock_inode_wait. What we should do as the
+> patch '16306a61d3b7 ("fs/locks: always delete_block after waiting.")'
+> describes is that we need call locks_delete_block not only for error equal
+> to -ERESTARTSYS(please point out if I am wrong). And this patch may fix the
+> regression too since simple lock that success or unlock will not try to
+> acquire blocked_lock_lock.
+> 
+> 
+> 
+> From 40a0604199e9810d0380f90c403bbd4300075cad Mon Sep 17 00:00:00 2001
+> From: yangerkun <yangerkun@huawei.com>
+> Date: Tue, 10 Mar 2020 10:12:57 +0800
+> Subject: [PATCH] fs/locks: fix the regression in flocks
+> 
+> '6d390e4b5d48 ("locks: fix a potential use-after-free problem when
+> wakeup a waiter")' introduce a regression since we will acquire
+> blocked_lock_lock everytime we lock or unlock. Actually, what patch
+> '16306a61d3b7 ("fs/locks: always delete_block after waiting.")' want to
+> do is that we should wakeup waiter not only for error equals to
+> -ERESTARTSYS, some other error code like -ENOMEM return from
+> flock_lock_inode need be treated the same as the file_lock may block other
+> flock too(flock a -> conflict with others and begin to wait -> flock b
+> conflict with a and wait for a -> someone wakeup flock a then
+> flock_lock_inode return -ENOMEM). Fix this regression by check error.
+> 
+> Fixes: 16306a61d3b7 ("fs/locks: always delete_block after waiting.")
+> Fixes: 6d390e4b5d48 ("locks: fix a potential use-after-free problem when
+> wakeup a waiter")
+> Signed-off-by: yangerkun <yangerkun@huawei.com>
+> ---
+>  fs/locks.c | 14 ++++++++++----
+>  1 file changed, 10 insertions(+), 4 deletions(-)
+> 
+> diff --git a/fs/locks.c b/fs/locks.c
+> index 426b55d333d5..403ed2230dd4 100644
+> --- a/fs/locks.c
+> +++ b/fs/locks.c
+> @@ -1354,7 +1354,9 @@ static int posix_lock_inode_wait(struct inode *inode,
+> struct file_lock *fl)
+>  		if (error)
+>  			break;
+>  	}
+> -	locks_delete_block(fl);
+> +	if (error)
+> +		locks_delete_block(fl);
+> +
+>  	return error;
+>  }
+> 
+> @@ -1447,7 +1449,8 @@ int locks_mandatory_area(struct inode *inode, struct
+> file *filp, loff_t start,
+> 
+>  		break;
+>  	}
+> -	locks_delete_block(&fl);
+> +	if (error)
+> +		locks_delete_block(&fl);
+> 
+>  	return error;
+>  }
+> @@ -2126,7 +2129,9 @@ static int flock_lock_inode_wait(struct inode *inode,
+> struct file_lock *fl)
+>  		if (error)
+>  			break;
+>  	}
+> -	locks_delete_block(fl);
+> +	if (error)
+> +		locks_delete_block(fl);
+> +
+>  	return error;
+>  }
+> 
+> @@ -2403,7 +2408,8 @@ static int do_lock_file_wait(struct file *filp,
+> unsigned int cmd,
+>  		if (error)
+>  			break;
+>  	}
+> -	locks_delete_block(fl);
+> +	if (error)
+> +		locks_delete_block(fl);
+> 
+>  	return error;
+>  }
+> -- 
+> 2.17.2
+> 
+
+Hi,
+
+We tested the above patch, the result of will-it-scale.per_process_ops
+increased to 62404.
+
+0a68ff5e2e7cf226  6d390e4b5d48ec03bb87e63cf0  a3f09d0d818584c84780e6753e  testcase/testparams/testbox
+----------------  --------------------------  --------------------------  ---------------------------
+         %stddev      change         %stddev      change         %stddev
+             \          |                \          |                \  
+     66597 ±  3%       -97%       2260              -6%      62404 ±  6%  will-it-scale/performance-process-100%-lock1-ucode=0x11/lkp-knm01
+     66597             -97%       2260              -6%      62404        GEO-MEAN will-it-scale.per_process_ops
+
+Best Regards,
+Rong Chen
