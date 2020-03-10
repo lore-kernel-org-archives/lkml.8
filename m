@@ -2,160 +2,589 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DA36C18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:02:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCD33C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:02:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2A432465A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:02:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="qgbv5wUk"
+	by mail.kernel.org (Postfix) with ESMTP id 9BBFE2464B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:02:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726809AbgCJJCO (ORCPT
+        id S1726780AbgCJJCN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 05:02:14 -0400
-Received: from mail-eopbgr50081.outbound.protection.outlook.com ([40.107.5.81]:53731
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726389AbgCJJCN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 10 Mar 2020 05:02:13 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DCXQyxpaLT+WkrtRxVDRdgbcsaIxVen22sGb9V8uA9TjFYd96L3Z6RglW2nHbRHiR2jUxAv0+LM7Du4UrwYDV4H75OsgAwAGVZSYeTjce/NcyIUG856W8m9Tqnx5DDRCLwhkL1i7lT7DPGSzDWt6G9pV41zEjQpLOb2fpnM7m0WtISY+IhsRkIe77N6MvCBhZkqwH2pcEvacweAnAl1ZS+pHN8bu0b0pVZN84uoeppVdAw7rOjdGQFV6mPW95QBMnl347wu5mlrlezpSvqIXa0yio2C1ELr8fsfWv6kv4ygJSjIXVhoJ8gao7Pf7pLHluz432tPC8xQx6Fdu/16zKw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fCrgOZ0DeDIjIMZC/9xKzqmm+35+mySyLhnDR1fMF7Y=;
- b=clTv9f7H93ZN4vzxce2JJjc3gsGFS0wvoI3CZFzLSDO8zTil0UCeNbzXfIpAP6IllqQ39p/rs2Ypr7LSXs46NJ3SImo7TJauk55XRo6Jg2WFnEMjKZbljsRDUV8kXsr+7FNN+uZiXn05/tYwQpFZgykb8bGzGUjDjjuFhvW1KB7JjfMQYaAT0EKaC1pXpX/3WtU83Y9Jyavkpr0d5Wc8pW57wTNl3utjHSnvKaeyMVXQEzt3MS87qz5QfhRd5a4N5SswT1d5+Hky5ElyJmWf9/xaDllOD+aangqQiBuyjueGhS0UnLPQhUE8urpq8Ur5O8FUxLbG/47qE8SBjwXn3g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fCrgOZ0DeDIjIMZC/9xKzqmm+35+mySyLhnDR1fMF7Y=;
- b=qgbv5wUkaW3ebLVLwzy8XZ+Lepjes8xweWqGEn3LqX+CkXwIyUhPW4t+AkglAsI/0SAtSyJKs593NUxvFhYhFrAA50H8nbyNwEqky/r9nuLbwS9qmma6wXkdQFhs0R5IIRZtDZHd2TAsnHXWlGewuRWGg+M+fgMbirjVW2c/fN0=
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (20.179.232.15) by
- VE1PR04MB6749.eurprd04.prod.outlook.com (10.255.118.22) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2793.17; Tue, 10 Mar 2020 09:02:09 +0000
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::490:6caa:24b:4a31]) by VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::490:6caa:24b:4a31%6]) with mapi id 15.20.2793.013; Tue, 10 Mar 2020
- 09:02:09 +0000
-From:   Robin Gong <yibin.gong@nxp.com>
-To:     =?iso-8859-1?Q?Uwe_Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-CC:     Sascha Hauer <s.hauer@pengutronix.de>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-        "martin.fuzzey@flowbird.group" <martin.fuzzey@flowbird.group>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: RE: [RESEND v6  06/13] spi: imx: fix ERR009165
-Thread-Topic: [RESEND v6  06/13] spi: imx: fix ERR009165
-Thread-Index: AQHV9oxXftoGpg9l0ka8yr0vqbewZqhBcOwAgAAKFSCAAAYlgIAABlYA
-Date:   Tue, 10 Mar 2020 09:02:08 +0000
-Message-ID: <VE1PR04MB6638B911F4767D238B16279289FF0@VE1PR04MB6638.eurprd04.prod.outlook.com>
-References: <1583839922-22699-1-git-send-email-yibin.gong@nxp.com>
- <1583839922-22699-7-git-send-email-yibin.gong@nxp.com>
- <20200310073920.GR3335@pengutronix.de>
- <VE1PR04MB66384DA6732A840FE1D80C1989FF0@VE1PR04MB6638.eurprd04.prod.outlook.com>
- <20200310083725.sb6cufp5wznvxcji@pengutronix.de>
-In-Reply-To: <20200310083725.sb6cufp5wznvxcji@pengutronix.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yibin.gong@nxp.com; 
-x-originating-ip: [92.121.68.129]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 72b9ad52-1ecd-43ff-f5a0-08d7c4d1b6dd
-x-ms-traffictypediagnostic: VE1PR04MB6749:|VE1PR04MB6749:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VE1PR04MB67490CCCF13A35B93381F84289FF0@VE1PR04MB6749.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2582;
-x-forefront-prvs: 033857D0BD
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(366004)(376002)(136003)(39860400002)(346002)(199004)(189003)(81156014)(66476007)(8936002)(64756008)(66556008)(66446008)(76116006)(66946007)(8676002)(54906003)(186003)(71200400001)(26005)(7696005)(316002)(81166006)(66574012)(6506007)(4326008)(7416002)(478600001)(966005)(45080400002)(2906002)(6916009)(33656002)(52536014)(5660300002)(86362001)(9686003)(55016002);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6749;H:VE1PR04MB6638.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: bhKnSoLwZCTBQpoDUd/QHyDXqZgdNNYvuR38libsVOK1iu7XFcHDaeqy4PdwRk6fHAxheXJJLRDquOZeEO2Ta4znYqjcB483O/sYzwbp1E69UajzplFcG9pe1pWCVBfQ807/gbZVYO48q4nV3BzVHdQgRpHJHEGOaO1AOml+cjI8AlcTlvUC9nG6YYgXvNO9KhkNLFM5HTwqJc4V03FcIBY0XhVwo89ZJaWb5XRtTzDhAjCHVuEMRZ4rirLhRw790NFUs04NVMZ2XkOdRBzEdP0JR+eDcfW0epk2N5EKykHrZnTDHqVa7PanGuFySCbPlPrXNh3TplLEPJ7tCN2sku9tTIw1UbG7rsyIFsF/Ce02x+mcgvzr01c8zUo57Wq4nVr1eHbjJ3Pkgpf2n6940EUYjundh5tBPNa0HI6gjyl4oAINA2M+Jcc8EIOouE1/Es/apODdbH56q4P8NBOuqQt2VNBJ+BY4NxGoy6WsTOBFA3xvNgXEbsX8E/hOHyMcjnuBoDPNEcz5DBKCbVkGZg==
-x-ms-exchange-antispam-messagedata: jxTSNTu9eneTnlaC2cDz1Sl/j9hqaLwEVIQp+0hm/6SCv5Iv6Zni8R7gx70bq29I41BGOOiYg3wp0wUVd4HxCPrInwzMn60fCLOexBNaoqOLLXLqKKjuMoho6Gttreve3L4yZ7YsFYYIux3GEl94FA==
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2537 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726486AbgCJJCN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 05:02:13 -0400
+Received: from LHREML710-CAH.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id 13E7F87DC8F2A86B469E;
+        Tue, 10 Mar 2020 09:02:12 +0000 (GMT)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ LHREML710-CAH.china.huawei.com (10.201.108.33) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Tue, 10 Mar 2020 09:02:11 +0000
+Received: from localhost (10.202.226.57) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Tue, 10 Mar
+ 2020 09:02:10 +0000
+Date:   Tue, 10 Mar 2020 09:02:09 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     SeongJae Park <sjpark@amazon.com>
+CC:     <akpm@linux-foundation.org>, SeongJae Park <sjpark@amazon.de>,
+        <aarcange@redhat.com>, <yang.shi@linux.alibaba.com>,
+        <acme@kernel.org>, <alexander.shishkin@linux.intel.com>,
+        <amit@kernel.org>, <brendan.d.gregg@gmail.com>,
+        <brendanhiggins@google.com>, <cai@lca.pw>,
+        <colin.king@canonical.com>, <corbet@lwn.net>, <dwmw@amazon.com>,
+        <jolsa@redhat.com>, <kirill@shutemov.name>, <mark.rutland@arm.com>,
+        <mgorman@suse.de>, <minchan@kernel.org>, <mingo@redhat.com>,
+        <namhyung@kernel.org>, <peterz@infradead.org>,
+        <rdunlap@infradead.org>, <rientjes@google.com>,
+        <rostedt@goodmis.org>, <shuah@kernel.org>, <sj38.park@gmail.com>,
+        <vbabka@suse.cz>, <vdavydov.dev@gmail.com>, <linux-mm@kvack.org>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v6 08/14] mm/damon: Add debugfs interface
+Message-ID: <20200310090209.00000d6b@Huawei.com>
+In-Reply-To: <20200224123047.32506-9-sjpark@amazon.com>
+References: <20200224123047.32506-1-sjpark@amazon.com>
+ <20200224123047.32506-9-sjpark@amazon.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 72b9ad52-1ecd-43ff-f5a0-08d7c4d1b6dd
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Mar 2020 09:02:09.0213
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Ojr/6iNY6CL0R+gsu7DaB+7f9xJLgXGET1HN0goQTSDCSSwvPwmke2eN69iILeWkV32zIABiL9Y7Gj2WGCP1aA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6749
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.57]
+X-ClientProxiedBy: lhreml715-chm.china.huawei.com (10.201.108.66) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/03/10 Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de> wrote:
->=20
-> Hello,
->=20
-> On Tue, Mar 10, 2020 at 08:27:41AM +0000, Robin Gong wrote:
-> > On 2020/03/10 Sascha Hauer <s.hauer@pengutronix.de> wrote:
-> > > On Tue, Mar 10, 2020 at 07:31:55PM +0800, Robin Gong wrote:
-> > > >  	writel(ctrl, spi_imx->base + MX51_ECSPI_CTRL);
-> > > >
-> > > > @@ -612,12 +613,14 @@ static int mx51_ecspi_prepare_transfer(struct
-> > > > spi_imx_data *spi_imx,
-> > > >
-> > > >  static void mx51_setup_wml(struct spi_imx_data *spi_imx)  {
-> > > > +	u32 tx_wml =3D 0;
-> > > > +
-> > > >  	/*
-> > > >  	 * Configure the DMA register: setup the watermark
-> > > >  	 * and enable DMA request.
-> > > >  	 */
-> > > >  	writel(MX51_ECSPI_DMA_RX_WML(spi_imx->wml - 1) |
-> > > > -		MX51_ECSPI_DMA_TX_WML(spi_imx->wml) |
-> > > > +		MX51_ECSPI_DMA_TX_WML(tx_wml) |
-> > >
-> > > tx_wml is never assigned any other value than 0. Drop the variable.
-> > That's prepared for 07/13 patch which may assign spi_imx->wml to tx_wml=
-.
->=20
-> Then this belongs into patch 7, right?
-Okay, understood your concern. Then I'll drop tx_wml to make it clear.
->=20
-> Best regards
-> Uwe
->=20
-> --
-> Pengutronix e.K.                           | Uwe Kleine-K=F6nig
-> |
-> Industrial Linux Solutions                 |
-> https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fwww.p
-> engutronix.de%2F&amp;data=3D02%7C01%7Cyibin.gong%40nxp.com%7Cca6f14
-> 28f4224fa79f1d08d7c4ce4a41%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0
-> %7C0%7C637194262606339591&amp;sdata=3DkI9HAyC%2FG3qmrIrLmfUDJ7dac
-> %2FOEDBtDm4oeRyak1xE%3D&amp;reserved=3D0 |
+On Mon, 24 Feb 2020 13:30:41 +0100
+SeongJae Park <sjpark@amazon.com> wrote:
+
+> From: SeongJae Park <sjpark@amazon.de>
+> 
+> This commit adds a debugfs interface for DAMON.
+> 
+> DAMON exports four files, ``attrs``, ``pids``, ``record``, and
+> ``monitor_on`` under its debugfs directory, ``<debugfs>/damon/``.
+> 
+> Attributes
+> ----------
+> 
+> Users can read and write the ``sampling interval``, ``aggregation
+> interval``, ``regions update interval``, and min/max number of
+> monitoring target regions by reading from and writing to the ``attrs``
+> file.  For example, below commands set those values to 5 ms, 100 ms,
+> 1,000 ms, 10, 1000 and check it again::
+> 
+>     # cd <debugfs>/damon
+>     # echo 5000 100000 1000000 10 1000 > attrs
+>     # cat attrs
+>     5000 100000 1000000 10 1000
+> 
+> Target PIDs
+> -----------
+> 
+> Users can read and write the pids of current monitoring target processes
+> by reading from and writing to the ``pids`` file.  For example, below
+> commands set processes having pids 42 and 4242 as the processes to be
+> monitored and check it again::
+> 
+>     # cd <debugfs>/damon
+>     # echo 42 4242 > pids
+>     # cat pids
+>     42 4242
+> 
+> Note that setting the pids doesn't starts the monitoring.
+> 
+> Record
+> ------
+> 
+> DAMON support direct monitoring result record feature.  The recorded
+> results are first written to a buffer and flushed to a file in batch.
+> Users can set the size of the buffer and the path to the result file by
+> reading from and writing to the ``record`` file.  For example, below
+> commands set the buffer to be 4 KiB and the result to be saved in
+> '/damon.data'.
+> 
+>     # cd <debugfs>/damon
+>     # echo 4096 /damon.data > pids
+>     # cat record
+>     4096 /damon.data
+> 
+> Turning On/Off
+> --------------
+> 
+> You can check current status, start and stop the monitoring by reading
+> from and writing to the ``monitor_on`` file.  Writing ``on`` to the file
+> starts DAMON to monitor the target processes with the attributes.
+> Writing ``off`` to the file stops DAMON.  DAMON also stops if every
+> target processes is be terminated.  Below example commands turn on, off,
+> and check status of DAMON::
+> 
+>     # cd <debugfs>/damon
+>     # echo on > monitor_on
+>     # echo off > monitor_on
+>     # cat monitor_on
+>     off
+> 
+> Please note that you cannot write to the ``attrs`` and ``pids`` files
+> while the monitoring is turned on.  If you write to the files while
+> DAMON is running, ``-EINVAL`` will be returned.
+> 
+> Signed-off-by: SeongJae Park <sjpark@amazon.de>
+
+Some of the code in here seems a bit fragile and convoluted.
+
+> ---
+>  mm/damon.c | 377 ++++++++++++++++++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 376 insertions(+), 1 deletion(-)
+> 
+> diff --git a/mm/damon.c b/mm/damon.c
+> index b3e9b9da5720..facb1d7f121b 100644
+> --- a/mm/damon.c
+> +++ b/mm/damon.c
+> @@ -10,6 +10,7 @@
+>  #define pr_fmt(fmt) "damon: " fmt
+>  
+>  #include <linux/damon.h>
+> +#include <linux/debugfs.h>
+>  #include <linux/delay.h>
+>  #include <linux/kthread.h>
+>  #include <linux/mm.h>
+> @@ -46,6 +47,24 @@
+>  /* Get a random number in [l, r) */
+>  #define damon_rand(ctx, l, r) (l + prandom_u32_state(&ctx->rndseed) % (r - l))
+>  
+> +/*
+> + * For each 'sample_interval', DAMON checks whether each region is accessed or
+> + * not.  It aggregates and keeps the access information (number of accesses to
+> + * each region) for 'aggr_interval' and then flushes it to the result buffer if
+> + * an 'aggr_interval' surpassed.  And for each 'regions_update_interval', damon
+> + * checks whether the memory mapping of the target tasks has changed (e.g., by
+> + * mmap() calls from the applications) and applies the changes.
+> + *
+> + * All time intervals are in micro-seconds.
+> + */
+> +static struct damon_ctx damon_user_ctx = {
+> +	.sample_interval = 5 * 1000,
+> +	.aggr_interval = 100 * 1000,
+> +	.regions_update_interval = 1000 * 1000,
+> +	.min_nr_regions = 10,
+> +	.max_nr_regions = 1000,
+> +};
+> +
+>  /*
+>   * Construct a damon_region struct
+>   *
+> @@ -1026,15 +1045,371 @@ int damon_set_attrs(struct damon_ctx *ctx, unsigned long sample_int,
+>  	return 0;
+>  }
+>  
+> +/*
+> + * debugfs functions
+
+Seems unnecessary when their naming makes this clear.
+
+> + */
+> +
+> +static ssize_t debugfs_monitor_on_read(struct file *file,
+> +		char __user *buf, size_t count, loff_t *ppos)
+> +{
+> +	struct damon_ctx *ctx = &damon_user_ctx;
+> +	char monitor_on_buf[5];
+> +	bool monitor_on;
+> +	int ret;
+> +
+> +	spin_lock(&ctx->kdamond_lock);
+> +	monitor_on = ctx->kdamond != NULL;
+> +	spin_unlock(&ctx->kdamond_lock);
+> +
+> +	ret = snprintf(monitor_on_buf, 5, monitor_on ? "on\n" : "off\n");
+> +
+> +	return simple_read_from_buffer(buf, count, ppos, monitor_on_buf, ret);
+> +}
+> +
+> +static ssize_t debugfs_monitor_on_write(struct file *file,
+> +		const char __user *buf, size_t count, loff_t *ppos)
+> +{
+> +	struct damon_ctx *ctx = &damon_user_ctx;
+> +	ssize_t ret;
+> +	bool on = false;
+> +	char cmdbuf[5];
+> +
+> +	ret = simple_write_to_buffer(cmdbuf, 5, ppos, buf, count);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	if (sscanf(cmdbuf, "%s", cmdbuf) != 1)
+> +		return -EINVAL;
+> +	if (!strncmp(cmdbuf, "on", 5))
+> +		on = true;
+> +	else if (!strncmp(cmdbuf, "off", 5))
+> +		on = false;
+> +	else
+> +		return -EINVAL;
+> +
+> +	if (damon_turn_kdamond(ctx, on))
+> +		return -EINVAL;
+> +
+> +	return ret;
+> +}
+> +
+> +static ssize_t damon_sprint_pids(struct damon_ctx *ctx, char *buf, ssize_t len)
+> +{
+> +	struct damon_task *t;
+> +	int written = 0;
+> +	int rc;
+> +
+> +	damon_for_each_task(ctx, t) {
+> +		rc = snprintf(&buf[written], len - written, "%lu ", t->pid);
+> +		if (!rc)
+> +			return -ENOMEM;
+> +		written += rc;
+> +	}
+> +	if (written)
+> +		written -= 1;
+> +	written += snprintf(&buf[written], len - written, "\n");
+> +	return written;
+> +}
+> +
+> +static ssize_t debugfs_pids_read(struct file *file,
+> +		char __user *buf, size_t count, loff_t *ppos)
+> +{
+> +	struct damon_ctx *ctx = &damon_user_ctx;
+> +	ssize_t len;
+> +	char pids_buf[320];
+> +
+> +	len = damon_sprint_pids(ctx, pids_buf, 320);
+> +	if (len < 0)
+> +		return len;
+> +
+> +	return simple_read_from_buffer(buf, count, ppos, pids_buf, len);
+> +}
+> +
+> +/*
+> + * Converts a string into an array of unsigned long integers
+> + *
+> + * Returns an array of unsigned long integers if the conversion success, or
+> + * NULL otherwise.
+> + */
+> +static unsigned long *str_to_pids(const char *str, ssize_t len,
+> +				ssize_t *nr_pids)
+> +{
+> +	unsigned long *pids;
+> +	const int max_nr_pids = 32;
+> +	unsigned long pid;
+> +	int pos = 0, parsed, ret;
+> +
+> +	*nr_pids = 0;
+> +	pids = kmalloc_array(max_nr_pids, sizeof(unsigned long), GFP_KERNEL);
+> +	if (!pids)
+> +		return NULL;
+> +	while (*nr_pids < max_nr_pids && pos < len) {
+> +		ret = sscanf(&str[pos], "%lu%n", &pid, &parsed);
+> +		pos += parsed;
+> +		if (ret != 1)
+> +			break;
+> +		pids[*nr_pids] = pid;
+> +		*nr_pids += 1;
+> +	}
+> +	if (*nr_pids == 0) {
+> +		kfree(pids);
+> +		pids = NULL;
+> +	}
+> +
+> +	return pids;
+> +}
+> +
+> +static ssize_t debugfs_pids_write(struct file *file,
+> +		const char __user *buf, size_t count, loff_t *ppos)
+> +{
+> +	struct damon_ctx *ctx = &damon_user_ctx;
+> +	char *kbuf;
+> +	unsigned long *targets;
+> +	ssize_t nr_targets;
+> +	ssize_t ret;
+> +
+> +	kbuf = kmalloc_array(count, sizeof(char), GFP_KERNEL);
+> +	if (!kbuf)
+> +		return -ENOMEM;
+> +
+> +	ret = simple_write_to_buffer(kbuf, 512, ppos, buf, count);
+
+Why only 512?
+
+> +	if (ret < 0)
+> +		goto out;
+> +
+> +	targets = str_to_pids(kbuf, ret, &nr_targets);
+> +	if (!targets) {
+> +		ret = -ENOMEM;
+> +		goto out;
+> +	}
+> +
+> +	spin_lock(&ctx->kdamond_lock);
+> +	if (ctx->kdamond)
+> +		goto monitor_running;
+> +
+> +	damon_set_pids(ctx, targets, nr_targets);
+> +	spin_unlock(&ctx->kdamond_lock);
+> +
+> +	goto free_targets_out;
+> +
+> +monitor_running:
+> +	spin_unlock(&ctx->kdamond_lock);
+> +	pr_err("%s: kdamond is running. Turn it off first.\n", __func__);
+> +	ret = -EINVAL;
+> +free_targets_out:
+> +	kfree(targets);
+> +out:
+> +	kfree(kbuf);
+> +	return ret;
+> +}
+> +
+> +static ssize_t debugfs_record_read(struct file *file,
+> +		char __user *buf, size_t count, loff_t *ppos)
+> +{
+> +	struct damon_ctx *ctx = &damon_user_ctx;
+> +	char record_buf[20 + MAX_RFILE_PATH_LEN];
+> +	int ret;
+> +
+> +	ret = snprintf(record_buf, ARRAY_SIZE(record_buf), "%u %s\n",
+> +			ctx->rbuf_len, ctx->rfile_path);
+> +	return simple_read_from_buffer(buf, count, ppos, record_buf, ret);
+> +}
+> +
+> +static ssize_t debugfs_record_write(struct file *file,
+> +		const char __user *buf, size_t count, loff_t *ppos)
+> +{
+> +	struct damon_ctx *ctx = &damon_user_ctx;
+> +	char *kbuf;
+> +	unsigned int rbuf_len;
+> +	char rfile_path[MAX_RFILE_PATH_LEN];
+> +	ssize_t ret;
+> +
+> +	kbuf = kmalloc_array(count + 1, sizeof(char), GFP_KERNEL);
+> +	if (!kbuf)
+> +		return -ENOMEM;
+> +	kbuf[count] = '\0';
+> +
+> +	ret = simple_write_to_buffer(kbuf, count, ppos, buf, count);
+> +	if (ret < 0)
+> +		goto out;
+> +	if (sscanf(kbuf, "%u %s",
+> +				&rbuf_len, rfile_path) != 2) {
+> +		ret = -EINVAL;
+> +		goto out;
+> +	}
+> +
+> +	spin_lock(&ctx->kdamond_lock);
+> +	if (ctx->kdamond)
+> +		goto monitor_running;
+> +
+> +	damon_set_recording(ctx, rbuf_len, rfile_path);
+> +	spin_unlock(&ctx->kdamond_lock);
+> +
+> +	goto out;
+> +
+> +monitor_running:
+> +	spin_unlock(&ctx->kdamond_lock);
+> +	pr_err("%s: kdamond is running. Turn it off first.\n", __func__);
+> +	ret = -EINVAL;
+> +out:
+> +	kfree(kbuf);
+> +	return ret;
+> +}
+> +
+> +
+> +static ssize_t debugfs_attrs_read(struct file *file,
+> +		char __user *buf, size_t count, loff_t *ppos)
+> +{
+> +	struct damon_ctx *ctx = &damon_user_ctx;
+> +	char kbuf[128];
+> +	int ret;
+> +
+> +	ret = snprintf(kbuf, ARRAY_SIZE(kbuf), "%lu %lu %lu %lu %lu\n",
+> +			ctx->sample_interval, ctx->aggr_interval,
+> +			ctx->regions_update_interval, ctx->min_nr_regions,
+> +			ctx->max_nr_regions);
+> +
+> +	return simple_read_from_buffer(buf, count, ppos, kbuf, ret);
+> +}
+> +
+> +static ssize_t debugfs_attrs_write(struct file *file,
+> +		const char __user *buf, size_t count, loff_t *ppos)
+> +{
+> +	struct damon_ctx *ctx = &damon_user_ctx;
+> +	unsigned long s, a, r, minr, maxr;
+> +	char *kbuf;
+> +	ssize_t ret;
+> +
+> +	kbuf = kmalloc_array(count, sizeof(char), GFP_KERNEL);
+
+malloc fine for array of characters.   The checks on overflow etc cannot be
+relevant here.
+
+> +	if (!kbuf)
+> +		return -ENOMEM;
+> +
+> +	ret = simple_write_to_buffer(kbuf, count, ppos, buf, count);
+> +	if (ret < 0)
+> +		goto out;
+> +
+> +	if (sscanf(kbuf, "%lu %lu %lu %lu %lu",
+> +				&s, &a, &r, &minr, &maxr) != 5) {
+> +		ret = -EINVAL;
+> +		goto out;
+> +	}
+> +
+> +	spin_lock(&ctx->kdamond_lock);
+> +	if (ctx->kdamond)
+> +		goto monitor_running;
+> +
+> +	damon_set_attrs(ctx, s, a, r, minr, maxr);
+> +	spin_unlock(&ctx->kdamond_lock);
+> +
+> +	goto out;
+> +
+> +monitor_running:
+> +	spin_unlock(&ctx->kdamond_lock);
+> +	pr_err("%s: kdamond is running. Turn it off first.\n", __func__);
+> +	ret = -EINVAL;
+
+This complex exit path is a bad idea from maintainability point of view...
+Just put the pr_err and spin_unlock in the error path above.
+
+> +out:
+> +	kfree(kbuf);
+> +	return ret;
+> +}
+> +
+> +static const struct file_operations monitor_on_fops = {
+> +	.owner = THIS_MODULE,
+> +	.read = debugfs_monitor_on_read,
+> +	.write = debugfs_monitor_on_write,
+> +};
+> +
+> +static const struct file_operations pids_fops = {
+> +	.owner = THIS_MODULE,
+> +	.read = debugfs_pids_read,
+> +	.write = debugfs_pids_write,
+> +};
+> +
+> +static const struct file_operations record_fops = {
+> +	.owner = THIS_MODULE,
+> +	.read = debugfs_record_read,
+> +	.write = debugfs_record_write,
+> +};
+> +
+> +static const struct file_operations attrs_fops = {
+> +	.owner = THIS_MODULE,
+> +	.read = debugfs_attrs_read,
+> +	.write = debugfs_attrs_write,
+> +};
+> +
+> +static struct dentry *debugfs_root;
+> +
+> +static int __init debugfs_init(void)
+
+Prefix this function.  Chances of sometime getting a header
+that includes debugfs_init feels rather too high!
+
+> +{
+> +	const char * const file_names[] = {"attrs", "record",
+> +		"pids", "monitor_on"};
+> +	const struct file_operations *fops[] = {&attrs_fops, &record_fops,
+> +		&pids_fops, &monitor_on_fops};
+> +	int i;
+> +
+> +	debugfs_root = debugfs_create_dir("damon", NULL);
+> +	if (!debugfs_root) {
+> +		pr_err("failed to create the debugfs dir\n");
+> +		return -ENOMEM;
+> +	}
+> +
+> +	for (i = 0; i < ARRAY_SIZE(file_names); i++) {
+> +		if (!debugfs_create_file(file_names[i], 0600, debugfs_root,
+> +					NULL, fops[i])) {
+> +			pr_err("failed to create %s file\n", file_names[i]);
+> +			return -ENOMEM;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int __init damon_init_user_ctx(void)
+> +{
+> +	int rc;
+> +
+> +	struct damon_ctx *ctx = &damon_user_ctx;
+> +
+> +	ktime_get_coarse_ts64(&ctx->last_aggregation);
+> +	ctx->last_regions_update = ctx->last_aggregation;
+> +
+> +	ctx->rbuf_offset = 0;
+> +	rc = damon_set_recording(ctx, 1024 * 1024, "/damon.data");
+> +	if (rc)
+> +		return rc;
+> +
+> +	ctx->kdamond = NULL;
+> +	ctx->kdamond_stop = false;
+> +	spin_lock_init(&ctx->kdamond_lock);
+> +
+> +	prandom_seed_state(&ctx->rndseed, 42);
+
+:)
+
+> +	INIT_LIST_HEAD(&ctx->tasks_list);
+> +
+> +	ctx->sample_cb = NULL;
+> +	ctx->aggregate_cb = NULL;
+
+Should already be set to 0.
+
+> +
+> +	return 0;
+> +}
+> +
+>  static int __init damon_init(void)
+>  {
+> +	int rc;
+> +
+>  	pr_info("init\n");
+>  
+> -	return 0;
+> +	rc = damon_init_user_ctx();
+> +	if (rc)
+> +		return rc;
+> +
+> +	return debugfs_init();
+
+In theory no code should ever be dependent on debugfs succeeding..
+There might be other daemon users so you should just eat the return
+code.
+
+
+>  }
+>  
+>  static void __exit damon_exit(void)
+>  {
+> +	damon_turn_kdamond(&damon_user_ctx, false);
+> +	debugfs_remove_recursive(debugfs_root);
+> +
+> +	kfree(damon_user_ctx.rbuf);
+> +	kfree(damon_user_ctx.rfile_path);
+> +
+>  	pr_info("exit\n");
+>  }
+>  
+
+
