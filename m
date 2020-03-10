@@ -2,122 +2,85 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00C7BC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 17:54:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95978C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 17:54:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA2EA21D56
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 17:54:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6638A21D56
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 17:54:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="S1B4FJXQ"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jayoZwrF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726866AbgCJRyG (ORCPT
+        id S1726990AbgCJRyW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 13:54:06 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:42970 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726445AbgCJRyG (ORCPT
+        Tue, 10 Mar 2020 13:54:22 -0400
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:40393 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726290AbgCJRyV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 13:54:06 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02AHgWnk177439;
-        Tue, 10 Mar 2020 17:51:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2020-01-29;
- bh=nhOIAxPWBW/vFald2XMRhINHxcne+kQkEpN70xmoA78=;
- b=S1B4FJXQBE4f0RtPDOLlmdFgewG/zzZPZPuW8UYnHQAaOg+rL5lLjj8YuKjN5eKCDZie
- JLm4fFwJDoina7GuRyg48Hixut+yRGsOgmaT6YZBq+omzdg1N634ngiJYgYpqjajNMwx
- +PxsSQNEhtLxAK3NM1CXPSC5vL3B7iIBqDQQ4PbxoEABWOAM/j/7drS1gZ1RPEbp3Am0
- 8bIn8uDE3aSaFgemFUJx95BeP/UXkFO7Sr2c6szGpJ343rFl2Jct/c0WrhZmrc0wl95C
- JBTb9XiOH9K4qbAlkWt6NK3DV9pA8OdETkkAYWXbaQrDiOE6mMy6xNdJ6bkm9gZsEkSp 8g== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2yp9v626mw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 10 Mar 2020 17:51:05 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02AHhHZw122274;
-        Tue, 10 Mar 2020 17:51:04 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 2yp8qphhv7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 10 Mar 2020 17:51:04 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 02AHon6j002138;
-        Tue, 10 Mar 2020 17:50:50 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 10 Mar 2020 10:50:49 -0700
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-kernel@vger.kernel.org,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Adaptec OEM Raid Solutions <aacraid@microsemi.com>,
-        Kai =?utf-8?Q?M?= =?utf-8?Q?=C3=A4kisara?= 
-        <Kai.Makisara@kolumbus.fi>, linux-scsi@vger.kernel.org,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        YOKOTA Hiroshi <yokota@netlab.is.tsukuba.ac.jp>,
-        megaraidlinux.pdl@broadcom.com,
-        Sumit Saxena <sumit.saxena@broadcom.com>,
-        esc.storagedev@microsemi.com, Doug Gilbert <dgilbert@interlog.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        HighPoint Linux Team <linux@highpoint-tech.com>,
-        Michael Schmitz <schmitzmic@gmail.com>,
-        Hannes Reinecke <hare@suse.com>, dc395x@twibble.org,
-        Oliver Neukum <oliver@neukum.org>,
-        Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
-        "Juergen E. Fischer" <fischer@norbit.de>,
-        Khalid Aziz <khalid@gonehiking.org>,
-        Kashyap Desai <kashyap.desai@broadcom.com>,
-        Jamie Lenehan <lenehan@twibble.org>,
-        Ali Akcaagac <aliakc@web.de>,
-        Don Brace <don.brace@microsemi.com>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Finn Thain <fthain@telegraphics.com.au>,
-        Avri Altman <avri.altman@wdc.com>,
-        GOTO Masanori <gotom@debian.or.jp>
-Subject: Re: [PATCH 00/42] Manually convert SCSI documentation to ReST format
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <cover.1583136624.git.mchehab+huawei@kernel.org>
-        <20200310114328.6354cffb@lwn.net>
-Date:   Tue, 10 Mar 2020 13:50:44 -0400
-In-Reply-To: <20200310114328.6354cffb@lwn.net> (Jonathan Corbet's message of
-        "Tue, 10 Mar 2020 11:43:28 -0600")
-Message-ID: <yq1zhco14ln.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+        Tue, 10 Mar 2020 13:54:21 -0400
+Received: by mail-pj1-f68.google.com with SMTP id gv19so746514pjb.5
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 10:54:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=9xrGyjBP9/lId96bp3b0igZ5Fq6/ehIsq8nZJf92rko=;
+        b=jayoZwrFjKOylGI+0rtBXlSDlY2LI3eMJQ9vUgbiaT7A5gbExcoxXs6kZ4H0rfpPKq
+         emu0SkdUMUaPDPNQMHeWDYB5I7e2BNz7Vx864brt4kmIZ/CYXCyKWi+0B9mD50fRESM8
+         4MSd6RAwPRlxig/I7ixHdKlIzWUOmq0/OuEeM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=9xrGyjBP9/lId96bp3b0igZ5Fq6/ehIsq8nZJf92rko=;
+        b=UUa3Ia80uD9Gc1JkHiAmwbCe1D0LIYSwnNg80ylV4l5eFvqZKb6cYaEWAtOe0RcGRD
+         bRmXQjLnkP0bIail6yli5CaVO5jUx+9Nqr7DnG4856r1us4wWwgQqy1HqI7C6jTvdD5x
+         PjvPanyTfq86DmrQ59hBA+oO5wtB1Hu4FYKYwibivVtcgyZndBp/nfJr7p5AZ7tFgv6R
+         aGKGNxoNZ0nhfPkSwJO0Tx57k4AFUWfEMKTH1n+PG9nne85cjhN3aXVA2uTmTmo460QY
+         +VGd23d/Ksz/51TsrT9WoxyRuTHlYMqrw/qlvgwDbIkYFCiIRmd7dk5eF2U+gOHBRHFO
+         uAgA==
+X-Gm-Message-State: ANhLgQ2kxD5UFQ3JhmN/PQqM4CJ2O0RW1QVaPVaHHQ1SXD9UUul1/xyd
+        k9jCoeU3cQ58JY6KWM3OqPchnA==
+X-Google-Smtp-Source: ADFU+vsELhgfsIXkY//Egix35HBOFMo21WrTy/dWY0Dm1iIST3gawKKEcusOZCNKpBkodKXdPRL59Q==
+X-Received: by 2002:a17:902:8b89:: with SMTP id ay9mr21466796plb.309.1583862860685;
+        Tue, 10 Mar 2020 10:54:20 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id h6sm2792595pjk.33.2020.03.10.10.54.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Mar 2020 10:54:19 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9556 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 malwarescore=0 mlxscore=0
- adultscore=0 suspectscore=0 bulkscore=0 spamscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2003100107
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9556 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 spamscore=0 mlxscore=0
- priorityscore=1501 lowpriorityscore=0 bulkscore=0 mlxlogscore=999
- phishscore=0 adultscore=0 clxscore=1011 impostorscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2003100107
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200310063338.3344582-2-bjorn.andersson@linaro.org>
+References: <20200310063338.3344582-1-bjorn.andersson@linaro.org> <20200310063338.3344582-2-bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v4 1/5] dt-bindings: remoteproc: Add Qualcomm PIL info binding
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 10 Mar 2020 10:54:19 -0700
+Message-ID: <158386285904.149997.9749528768955800249@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Quoting Bjorn Andersson (2020-03-09 23:33:34)
+> Add a devicetree binding for the Qualcomm peripheral image loader
+> relocation information region found in the IMEM.
+>=20
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
 
-Jon,
-
-> Any thoughts from the SCSI maintainers on this series?  Assuming
-> you're favorable, would you like to carry it or should I?
-
-I'm fine with this series and was going to queue it up. Unless you guys
-prefer to take it through docs?
-
--- 
-Martin K. Petersen	Oracle Linux Engineering
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
