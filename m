@@ -2,155 +2,142 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D828C10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:22:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 473FAC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:24:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2581B222C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:22:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 084CC222C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:24:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583879054;
+	bh=iccim/BkgKBZPpO3db15oYp/nGuyqgqOuvUnq2bkmEI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TIrATtw+Tn3vR6LuPrhKch9iBBExK3wiKBUuUYnLqezs/cvHjlMbbpAR6DZt/p0P+
+	 V1T8tO5KdZcM9S8rqulZBzb0ktL/eYusHxJ1HWf+GrsTZzS27Nv38UerFboAKBokt5
+	 18uGElBUmHCKx3I+JWSN3Y4S9QkHaEl4IRWrnQ0s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727775AbgCJWWd (ORCPT
+        id S1727699AbgCJWYM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 18:22:33 -0400
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:60663 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727685AbgCJWWc (ORCPT
+        Tue, 10 Mar 2020 18:24:12 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:41068 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726315AbgCJWYM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 18:22:32 -0400
-Received: from dread.disaster.area (pa49-195-202-68.pa.nsw.optusnet.com.au [49.195.202.68])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 3FD997E9BA9;
-        Wed, 11 Mar 2020 09:22:28 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1jBnGd-0004dQ-FO; Wed, 11 Mar 2020 09:22:27 +1100
-Date:   Wed, 11 Mar 2020 09:22:27 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     Eric Biggers <ebiggers@kernel.org>, linux-fsdevel@vger.kernel.org,
-        linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: Re: [PATCH] fs/direct-io.c: avoid workqueue allocation race
-Message-ID: <20200310222227.GP10776@dread.disaster.area>
-References: <CACT4Y+Zt+fjBwJk-TcsccohBgxRNs37Hb4m6ZkZGy7u5P2+aaA@mail.gmail.com>
- <20200308055221.1088089-1-ebiggers@kernel.org>
- <20200308231253.GN10776@dread.disaster.area>
- <20200309012424.GB371527@sol.localdomain>
- <20200310162758.GJ8036@magnolia>
+        Tue, 10 Mar 2020 18:24:12 -0400
+Received: by mail-pl1-f193.google.com with SMTP id t14so89181plr.8;
+        Tue, 10 Mar 2020 15:24:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=VHQdCYc7HG4lQiYGqYUT5UP51+C0gUPiE/s2rIkKRtU=;
+        b=KkWPHp8FUpWnyRN0umq7ZqUU6jx3hk5cpOiUL4uPzrawKLv6TEL2yRPitkww/xZ7ya
+         XOqwqFZQsUEJKkK9U20KiQTHiu14dxVnrL5+EOQzVZSz7hs4StJIAXm3kZxcD9RmNGNM
+         emB5EPlE9QfM63BvIiGnpUSAhQrvLunoPAx/lobQa872nLgOuNWUbPUy+Q5Jjhwr/p5n
+         D/xRRguId/b38RtD6CE8iZYcd4wFGQHNxmkw98D+feGYjCGUmbc1CZf558wu+g47zvNu
+         NfS+KuzM9qvdrLwUlx4Vu+cZ9QOUraHCYo+HIc/IDhoNFUxm2SmtLEbSOIvA5KAuaFR/
+         fPuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=VHQdCYc7HG4lQiYGqYUT5UP51+C0gUPiE/s2rIkKRtU=;
+        b=rwdOuIxuxPQbCRUre7Qm9GCkAlKPVl/ogjRPU0EeOh0idB8C6x6J6rZZaznijHWvU5
+         7d4o5/ks17ws98hjEs8ZCXCafU68G6N9jm3eB4PYIpgZl9X4fvaqDRz4dJVArvcmf/rh
+         8uBbYdWXtKFOjDuOJgJy5wOouW5UxrspldTKKj3yB0B9D/7cDeHX0G3FTC+R+mXGoMqM
+         rhnOldC9e4RopfErI6ZZwDCPEWU6ffU/zHGIq8q4AshokearX9AJhH9qa8G2O3VTb7qp
+         x0O8vl15AaEa1KbpjoxlTMiexjHbiqbUdvI+H0ThrJ5ijGyqMnPIKKMXwd4BkD9kczBq
+         UWmg==
+X-Gm-Message-State: ANhLgQ1RfoYukXk9TfxVou9d9P40CT6vxxunOJgrM0yG7oAzfNszv0b5
+        dqcpplyAsxQPfvpQ+Zb5lvc=
+X-Google-Smtp-Source: ADFU+vscvd0WY2fsGo8nNRttNgBNSpAdv2WUgdhACEYKmMYI3pA4z6251Yz9qfEoSYIvhhu71/jlYg==
+X-Received: by 2002:a17:90a:2ec7:: with SMTP id h7mr138998pjs.107.1583879051429;
+        Tue, 10 Mar 2020 15:24:11 -0700 (PDT)
+Received: from google.com ([2620:15c:211:1:3e01:2939:5992:52da])
+        by smtp.gmail.com with ESMTPSA id 139sm25480434pfy.70.2020.03.10.15.24.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Mar 2020 15:24:10 -0700 (PDT)
+Date:   Tue, 10 Mar 2020 15:24:08 -0700
+From:   Minchan Kim <minchan@kernel.org>
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, linux-api@vger.kernel.org,
+        oleksandr@redhat.com, Suren Baghdasaryan <surenb@google.com>,
+        Tim Murray <timmurray@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        John Dias <joaodias@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Jann Horn <jannh@google.com>,
+        alexander.h.duyck@linux.intel.com, sj38.park@gmail.com
+Subject: Re: [PATCH v7 3/7] mm: check fatal signal pending of target process
+Message-ID: <20200310222408.GC72963@google.com>
+References: <20200302193630.68771-1-minchan@kernel.org>
+ <20200302193630.68771-4-minchan@kernel.org>
+ <2f3a9530-483d-0861-3844-bc12d212dd93@suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200310162758.GJ8036@magnolia>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=X6os11be c=1 sm=1 tr=0
-        a=mqTaRPt+QsUAtUurwE173Q==:117 a=mqTaRPt+QsUAtUurwE173Q==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=SS2py6AdgQ4A:10
-        a=1XWaLZrsAAAA:8 a=7-415B0cAAAA:8 a=nc9e2v5Tfj97ZLR5cfIA:9
-        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+In-Reply-To: <2f3a9530-483d-0861-3844-bc12d212dd93@suse.cz>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Sorry, my responses are limited at the moment because I took a
-chunk out of a fingertip a couple of days ago and I can only do
-about half an hour before my hand and arm start to cramp from the
-weird positions and motions 3 finger typing results in.... ]
-
-On Tue, Mar 10, 2020 at 09:27:58AM -0700, Darrick J. Wong wrote:
-> On Sun, Mar 08, 2020 at 06:24:24PM -0700, Eric Biggers wrote:
-> > On Mon, Mar 09, 2020 at 10:12:53AM +1100, Dave Chinner wrote:
-> > > On Sat, Mar 07, 2020 at 09:52:21PM -0800, Eric Biggers wrote:
-> > > > From: Eric Biggers <ebiggers@google.com>
-> > > > 
-> > > > When a thread loses the workqueue allocation race in
-> > > > sb_init_dio_done_wq(), lockdep reports that the call to
-> > > > destroy_workqueue() can deadlock waiting for work to complete.  This is
-> > > > a false positive since the workqueue is empty.  But we shouldn't simply
-> > > > skip the lockdep check for empty workqueues for everyone.
-> > > 
-> > > Why not? If the wq is empty, it can't deadlock, so this is a problem
-> > > with the workqueue lockdep annotations, not a problem with code that
-> > > is destroying an empty workqueue.
+On Fri, Mar 06, 2020 at 11:22:07AM +0100, Vlastimil Babka wrote:
+> On 3/2/20 8:36 PM, Minchan Kim wrote:
+> > Bail out to prevent unnecessary CPU overhead if target process has
+> > pending fatal signal during (MADV_COLD|MADV_PAGEOUT) operation.
 > > 
-> > Skipping the lockdep check when flushing an empty workqueue would reduce the
-> > ability of lockdep to detect deadlocks when flushing that workqueue.  I.e., it
-> > could cause lots of false negatives, since there are many cases where workqueues
-> > are *usually* empty when flushed/destroyed but it's still possible that they are
-> > nonempty.
-> > 
-> > > 
-> > > > Just avoid this issue by using a mutex to serialize the workqueue
-> > > > allocation.  We still keep the preliminary check for ->s_dio_done_wq, so
-> > > > this doesn't affect direct I/O performance.
-> > > > 
-> > > > Also fix the preliminary check for ->s_dio_done_wq to use READ_ONCE(),
-> > > > since it's a data race.  (That part wasn't actually found by syzbot yet,
-> > > > but it could be detected by KCSAN in the future.)
-> > > > 
-> > > > Note: the lockdep false positive could alternatively be fixed by
-> > > > introducing a new function like "destroy_unused_workqueue()" to the
-> > > > workqueue API as previously suggested.  But I think it makes sense to
-> > > > avoid the double allocation anyway.
-> > > 
-> > > Fix the infrastructure, don't work around it be placing constraints
-> > > on how the callers can use the infrastructure to work around
-> > > problems internal to the infrastructure.
-> > 
-> > Well, it's also preferable not to make our debugging tools less effective to
-> > support people doing weird things that they shouldn't really be doing anyway.
-> > 
-> > (BTW, we need READ_ONCE() on ->sb_init_dio_done_wq anyway to properly annotate
-> > the data race.  That could be split into a separate patch though.)
-> > 
-> > Another idea that came up is to make each workqueue_struct track whether work
-> > has been queued on it or not yet, and make flush_workqueue() skip the lockdep
-> > check if the workqueue has always been empty.  (That could still cause lockdep
-> > false negatives, but not as many as if we checked if the workqueue is
-> > *currently* empty.)  Would you prefer that solution?  Adding more overhead to
-> > workqueues would be undesirable though, so I think it would have to be
-> > conditional on CONFIG_LOCKDEP, like (untested):
+> > Reviewed-by: Suren Baghdasaryan <surenb@google.com>
+> > Signed-off-by: Minchan Kim <minchan@kernel.org>
 > 
-> I can't speak for Dave, but if the problem here really is that lockdep's
-> modelling of flush_workqueue()'s behavior could be improved to eliminate
-> false reports, then this seems reasonable to me...
-
-Yeah, that's what I've been trying to say. IT seems much more
-reasonable to fix it for everyone once with a few lines of code than
-have to re-write every caller that might trip over this. e.g. think
-of all the failure teardown paths that destroy workqueues without
-having used them...
-
-So, yeah, this seems like a much better approach....
-
-> > diff --git a/kernel/workqueue.c b/kernel/workqueue.c
-> > index 301db4406bc37..72222c09bcaeb 100644
-> > --- a/kernel/workqueue.c
-> > +++ b/kernel/workqueue.c
-> > @@ -263,6 +263,7 @@ struct workqueue_struct {
-> >  	char			*lock_name;
-> >  	struct lock_class_key	key;
-> >  	struct lockdep_map	lockdep_map;
-> > +	bool			used;
-> >  #endif
-> >  	char			name[WQ_NAME_LEN]; /* I: workqueue name */
+> Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+> 
+> Nit below:
+> 
+> > ---
+> >  mm/madvise.c | 29 +++++++++++++++++++++--------
+> >  1 file changed, 21 insertions(+), 8 deletions(-)
+> > 
+> > diff --git a/mm/madvise.c b/mm/madvise.c
+> > index 349473fc6683..6543f2bfc3d8 100644
+> > --- a/mm/madvise.c
+> > +++ b/mm/madvise.c
+> > @@ -36,6 +36,7 @@
+> >  struct madvise_walk_private {
+> >  	struct mmu_gather *tlb;
+> >  	bool pageout;
+> > +	struct task_struct *target_task;
+> >  };
 > >  
-> > @@ -1404,6 +1405,9 @@ static void __queue_work(int cpu, struct workqueue_struct *wq,
-> >  	lockdep_assert_irqs_disabled();
+> >  /*
+> > @@ -316,6 +317,10 @@ static int madvise_cold_or_pageout_pte_range(pmd_t *pmd,
+> >  	if (fatal_signal_pending(current))
+> >  		return -EINTR;
 > >  
-> >  	debug_work_activate(work);
-> > +#ifdef CONFIG_LOCKDEP
-> > +	WRITE_ONCE(wq->used, true);
-> > +#endif
+> > +	if (private->target_task &&
+> > +			fatal_signal_pending(private->target_task))
+> > +		return -EINTR;
+> 
+> With madvise(2) private->target_task will be current, thus current will be
+> tested twice. Not wrong, but maybe add a "private->target_task != current"
+> condition?
 
-....with an appropriate comment to explain why this code is needed.
+It was in old series but removed because reviewer(IIRC, suren) wanted it.
+I am not strong preference either way. Since you said it's nit and
+considering other reviewer wanted to remove it, I will not change
+further.
 
-Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+Thanks!
