@@ -2,125 +2,230 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2551C10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 19:39:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF0B1C10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 19:39:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B90521655
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 19:39:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8AB221655
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 19:39:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727440AbgCJTjk (ORCPT
+        id S1727530AbgCJTjn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 15:39:40 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:49968 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726546AbgCJTjk (ORCPT
+        Tue, 10 Mar 2020 15:39:43 -0400
+Received: from relmlor1.renesas.com ([210.160.252.171]:8328 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726546AbgCJTjm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 15:39:40 -0400
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id E875429141E;
-        Tue, 10 Mar 2020 19:39:37 +0000 (GMT)
-Date:   Tue, 10 Mar 2020 20:39:30 +0100
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Mason Yang <masonccyang@mxic.com.tw>
-Cc:     miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
-        frieder.schrempf@kontron.de, tglx@linutronix.de, stefan@agner.ch,
-        juliensu@mxic.com.tw, allison@lohutok.net,
-        linux-kernel@vger.kernel.org, bbrezillon@kernel.org,
-        rfontana@redhat.com, linux-mtd@lists.infradead.org,
-        yuehaibing@huawei.com, s.hauer@pengutronix.de
-Subject: Re: [PATCH v3 3/4] mtd: rawnand: Add support manufacturer specific
- suspend/resume operation
-Message-ID: <20200310203930.2b8c0cfb@collabora.com>
-In-Reply-To: <1583220084-10890-4-git-send-email-masonccyang@mxic.com.tw>
-References: <1583220084-10890-1-git-send-email-masonccyang@mxic.com.tw>
-        <1583220084-10890-4-git-send-email-masonccyang@mxic.com.tw>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Tue, 10 Mar 2020 15:39:42 -0400
+X-IronPort-AV: E=Sophos;i="5.70,538,1574089200"; 
+   d="scan'208";a="41516787"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie5.idc.renesas.com with ESMTP; 11 Mar 2020 04:39:40 +0900
+Received: from localhost.localdomain (unknown [10.226.36.204])
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id CC0A940E36FF;
+        Wed, 11 Mar 2020 04:39:37 +0900 (JST)
+From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v8] dt-bindings: display: Add idk-2121wr binding
+Date:   Tue, 10 Mar 2020 19:39:29 +0000
+Message-Id: <1583869169-1006-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue,  3 Mar 2020 15:21:23 +0800
-Mason Yang <masonccyang@mxic.com.tw> wrote:
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 
-> Patch nand_suspend() & nand_resume() for manufacturer specific
-> suspend/resume operation.
-> 
-> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
-> ---
->  drivers/mtd/nand/raw/nand_base.c | 11 ++++++++---
->  include/linux/mtd/rawnand.h      |  4 ++++
->  2 files changed, 12 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/mtd/nand/raw/nand_base.c b/drivers/mtd/nand/raw/nand_base.c
-> index 769be81..b44e460 100644
-> --- a/drivers/mtd/nand/raw/nand_base.c
-> +++ b/drivers/mtd/nand/raw/nand_base.c
-> @@ -4327,7 +4327,9 @@ static int nand_suspend(struct mtd_info *mtd)
->  	struct nand_chip *chip = mtd_to_nand(mtd);
->  
->  	mutex_lock(&chip->lock);
-> -	chip->suspended = 1;
-> +	if (chip->_suspend)
-> +		if (!chip->_suspend(chip))
-> +			chip->suspended = 1;
->  	mutex_unlock(&chip->lock);
->  
->  	return 0;
-> @@ -4342,11 +4344,14 @@ static void nand_resume(struct mtd_info *mtd)
->  	struct nand_chip *chip = mtd_to_nand(mtd);
->  
->  	mutex_lock(&chip->lock);
-> -	if (chip->suspended)
-> +	if (chip->suspended) {
-> +		if (chip->_resume)
-> +			chip->_resume(chip);
->  		chip->suspended = 0;
-> -	else
-> +	} else {
->  		pr_err("%s called for a chip which is not in suspended state\n",
->  			__func__);
-> +	}
->  	mutex_unlock(&chip->lock);
->  }
->  
-> diff --git a/include/linux/mtd/rawnand.h b/include/linux/mtd/rawnand.h
-> index bc2fa3c..c0055ed 100644
-> --- a/include/linux/mtd/rawnand.h
-> +++ b/include/linux/mtd/rawnand.h
-> @@ -1064,6 +1064,8 @@ struct nand_legacy {
->   * @lock:		lock protecting the suspended field. Also used to
->   *			serialize accesses to the NAND device.
->   * @suspended:		set to 1 when the device is suspended, 0 when it's not.
-> + * @_suspend:		[REPLACEABLE] specific NAND device suspend operation
-> + * @_resume:		[REPLACEABLE] specific NAND device resume operation
+Add binding for the idk-2121wr LVDS panel from Advantech.
 
-Given you added 4 more methods in this series, I think now would be a
-good time to introduce a nand_chip_ops struct grouping all ops together.
+Some panel-specific documentation can be found here:
+https://buy.advantech.eu/Displays/Embedded-LCD-Kits-High-Brightness/model-IDK-2121WR-K2FHA2E.htm
 
->   * @bbt:		[INTERN] bad block table pointer
->   * @bbt_td:		[REPLACEABLE] bad block table descriptor for flash
->   *			lookup.
-> @@ -1119,6 +1121,8 @@ struct nand_chip {
->  
->  	struct mutex lock;
->  	unsigned int suspended : 1;
-> +	int (*_suspend)(struct nand_chip *chip);
-> +	void (*_resume)(struct nand_chip *chip);
->  
->  	uint8_t *oob_poi;
->  	struct nand_controller *controller;
+Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+---
+
+Hi All,
+This patch is part of series [1] ("Add dual-LVDS panel support to EK874),
+all the patches have been accepted from it except this one. I have fixed
+Rob's comments in this version of the patch.
+
+[1] https://patchwork.kernel.org/cover/11297589/
+
+V7->8
+ * Dropped ref to lvds.yaml, since the panel a dual channel LVDS, as a
+   result the root port is called as ports instead of port and the child
+   node port@0 and port@1 are used for even and odd pixels, hence binding
+   has required property as ports instead of port.
+
+v6->7
+ * Added reference to lvds.yaml
+ * Changed maintainer to myself
+ * Switched to dual license
+ * Dropped required properties except for ports as rest are already listed
+   in lvds.panel
+ * Dropped Reviewed-by tag of Laurent, due to the changes made it might not
+   be valid.
+
+v5->v6:
+ * No change
+
+v4->v5:
+* No change
+
+v3->v4:
+* Absorbed patch "dt-bindings: display: Add bindings for LVDS
+  bus-timings"
+* Big restructuring after Rob's and Laurent's comments
+
+v2->v3:
+* New patch
+
+ .../display/panel/advantech,idk-2121wr.yaml        | 122 +++++++++++++++++++++
+ 1 file changed, 122 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.yaml
+
+diff --git a/Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.yaml b/Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.yaml
+new file mode 100644
+index 0000000..6b7fddc
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.yaml
+@@ -0,0 +1,122 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/display/panel/advantech,idk-2121wr.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Advantech IDK-2121WR 21.5" Full-HD dual-LVDS panel
++
++maintainers:
++  - Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
++  - Thierry Reding <thierry.reding@gmail.com>
++
++description: |
++  The IDK-2121WR from Advantech is a Full-HD dual-LVDS panel.
++  A dual-LVDS interface is a dual-link connection with even pixels traveling
++  on one link, and with odd pixels traveling on the other link.
++
++  The panel expects odd pixels on the first port, and even pixels on the
++  second port, therefore the ports must be marked accordingly (with either
++  dual-lvds-odd-pixels or dual-lvds-even-pixels).
++
++properties:
++  compatible:
++    items:
++      - const: advantech,idk-2121wr
++      - {} # panel-lvds, but not listed here to avoid false select
++
++  width-mm:
++    const: 476
++
++  height-mm:
++    const: 268
++
++  data-mapping:
++    const: vesa-24
++
++  panel-timing: true
++
++  ports:
++    type: object
++    properties:
++      port@0:
++        type: object
++        description: The sink for odd pixels.
++        properties:
++          reg:
++            const: 0
++
++          dual-lvds-odd-pixels: true
++
++        required:
++          - reg
++          - dual-lvds-odd-pixels
++
++      port@1:
++        type: object
++        description: The sink for even pixels.
++        properties:
++          reg:
++            const: 1
++
++          dual-lvds-even-pixels: true
++
++        required:
++          - reg
++          - dual-lvds-even-pixels
++
++additionalProperties: false
++
++required:
++  - compatible
++  - width-mm
++  - height-mm
++  - data-mapping
++  - panel-timing
++  - ports
++
++examples:
++  - |+
++    panel-lvds {
++      compatible = "advantech,idk-2121wr", "panel-lvds";
++
++      width-mm = <476>;
++      height-mm = <268>;
++
++      data-mapping = "vesa-24";
++
++      panel-timing {
++        clock-frequency = <148500000>;
++        hactive = <1920>;
++        vactive = <1080>;
++        hsync-len = <44>;
++        hfront-porch = <88>;
++        hback-porch = <148>;
++        vfront-porch = <4>;
++        vback-porch = <36>;
++        vsync-len = <5>;
++      };
++
++      ports {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        port@0 {
++          reg = <0>;
++          dual-lvds-odd-pixels;
++          panel_in0: endpoint {
++            remote-endpoint = <&lvds0_out>;
++          };
++        };
++
++        port@1 {
++          reg = <1>;
++          dual-lvds-even-pixels;
++          panel_in1: endpoint {
++            remote-endpoint = <&lvds1_out>;
++          };
++        };
++      };
++    };
++
++...
+-- 
+2.7.4
 
