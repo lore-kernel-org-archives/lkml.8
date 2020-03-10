@@ -2,249 +2,135 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 420B9C18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 04:28:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08DFAC10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 04:28:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2079F24655
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 04:28:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA7B524655
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 04:28:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="b36wcJvf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726325AbgCJE2P (ORCPT
+        id S1726426AbgCJE2U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 00:28:15 -0400
-Received: from mga14.intel.com ([192.55.52.115]:51283 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725865AbgCJE2O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 00:28:14 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Mar 2020 21:28:13 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,535,1574150400"; 
-   d="scan'208";a="388790217"
-Received: from skuppusw-mobl5.amr.corp.intel.com (HELO [10.254.5.112]) ([10.254.5.112])
-  by orsmga004.jf.intel.com with ESMTP; 09 Mar 2020 21:28:13 -0700
-Subject: Re: [PATCH v17 09/12] PCI/AER: Allow clearing Error Status Register
- in FF mode
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Austin Bolen <austin_bolen@dell.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com
-References: <20200310024017.GA231196@google.com>
-From:   "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Message-ID: <de0cd5cc-9b59-882c-e40a-9bf00d20fbd4@linux.intel.com>
-Date:   Mon, 9 Mar 2020 21:28:12 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <20200310024017.GA231196@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Tue, 10 Mar 2020 00:28:20 -0400
+Received: from mail-eopbgr60071.outbound.protection.outlook.com ([40.107.6.71]:26552
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726342AbgCJE2S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 00:28:18 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VdRG+duEOSF5mdSFhFn9o0WTLRuAJUrgfjaKzN2Cc67d/mLyQU0tzNsDcCllfIsojX6XhGrCbEmY1Rr5nBtdYWBbrrpbTC5EwWR/oF4Bgo+fR9T/LPuwVR2kg8WWMKfQ3ebHggX9578Hw9VglbP1xSGFncQ8IPEh1IVv3X3n2n2I5aEvJYJnEmUwGFD65xc9G5kUjqHs4BnukdSDuCh9E6Ss9DafTfmpF6PeApQMsRG06YnJZ/6An3GJ9uhJRw4CHzPH2hj7k2EYd9evMDLjxd3/Mi8VHiopsgvRFbafWvuGcF2cETJnFBCytFoim/I/KDsS3vrlbspTFOyqOdX8/w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=r3KVCQAuWns/FR2Aecm+25bRRH8Z8YuJbnqRqXBk1xw=;
+ b=buUWNp0v8iHX+hruMc5cSEo3yduBHjkJ2EXBP4KW0wOAfXlBFKPPLxWM3fsl6e79+JQonqi8GR5EDtdBaPgz9ZghjXleHfqFyZ2CUvv+pYkiT3KD2e+0YwL/RyuStT/mM/ucNch7K4xnOuxXY24pDoUOa7WlHF4JExoAxaUKvFParW0/Dc1UUzgRVammWs8MLBxiL/oCjekYbVhsGivgbuRDjGupfdlrSzgzYCnpByQZIdBA2VZX9JN84rSFt1iIeT8TYKjw6gjO3R3CTKzWOaFflYKjfosmWzk7P2tlISi+ycpMfs1OLYyTgCy22kG3oDhucfH5X+P2QJbc34bnuQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=r3KVCQAuWns/FR2Aecm+25bRRH8Z8YuJbnqRqXBk1xw=;
+ b=b36wcJvfMd5Ri/t2E+ECtrLHrnIjCZ0qtuWyR4L3QsDYH8jMyyJChkw0yNGtdAlC4Uw4RljpcmSHvS59mzS7y1zat5HdMX8fRJN4Y+PpRzRMq8Nd9lPN12dDAF4yXZ3whNLFTGzVpxZ6E8ptCXD2fxWbHaArxFluGbzsUewMSLU=
+Received: from DB7PR04MB5242.eurprd04.prod.outlook.com (20.176.234.25) by
+ DB7PR04MB5290.eurprd04.prod.outlook.com (20.176.236.138) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2793.16; Tue, 10 Mar 2020 04:28:15 +0000
+Received: from DB7PR04MB5242.eurprd04.prod.outlook.com
+ ([fe80::d55c:9106:6fb2:cc34]) by DB7PR04MB5242.eurprd04.prod.outlook.com
+ ([fe80::d55c:9106:6fb2:cc34%4]) with mapi id 15.20.2793.013; Tue, 10 Mar 2020
+ 04:28:15 +0000
+From:   Ganapathi Bhat <ganapathi.bhat@nxp.com>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Amitkumar Karwar <amitkarwar@gmail.com>,
+        Xinming Hu <huxinming820@gmail.com>,
+        Lennert Buytenhek <buytenh@wantstofly.org>
+CC:     "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [EXT] [PATCH][next] wireless: marvell: Replace zero-length array
+ with flexible-array member
+Thread-Topic: [EXT] [PATCH][next] wireless: marvell: Replace zero-length array
+ with flexible-array member
+Thread-Index: AQHV63+AsCX3xTX2i06uJeo56Kx146hBOFgg
+Date:   Tue, 10 Mar 2020 04:28:14 +0000
+Message-ID: <DB7PR04MB52428EFEFA7CD058331CFF848FFF0@DB7PR04MB5242.eurprd04.prod.outlook.com>
+References: <20200225020413.GA8057@embeddedor>
+In-Reply-To: <20200225020413.GA8057@embeddedor>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=ganapathi.bhat@nxp.com; 
+x-originating-ip: [115.112.95.158]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: c8144e9c-555b-4ba0-f2f1-08d7c4ab7367
+x-ms-traffictypediagnostic: DB7PR04MB5290:
+x-microsoft-antispam-prvs: <DB7PR04MB5290B07C057BD59BA2A43AC88FFF0@DB7PR04MB5290.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 033857D0BD
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(346002)(396003)(376002)(366004)(136003)(189003)(199004)(478600001)(52536014)(54906003)(5660300002)(110136005)(55016002)(55236004)(6506007)(9686003)(66946007)(66556008)(7696005)(71200400001)(64756008)(2906002)(316002)(76116006)(66476007)(4326008)(44832011)(86362001)(66446008)(4744005)(33656002)(81156014)(186003)(81166006)(8676002)(8936002)(26005);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR04MB5290;H:DB7PR04MB5242.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: DrQz+sO7xkgtVtRDVoQ7Zy2PVHR5ZnioOBfrvOvatO3ZzCnwqUKtwByt/1r+por1pQC6YH1Mqj/enH9dwUf1G5Ac2VUu4VwXw+Rh/HEGkLWTmtNDnJPiZbFGqHdCHk2cJJmS32wuPOhnM/v1JrtWhTkQo8BUJc6wavuUqG0ZEx360WIuFfaXZY6/XS5rXCGC+Y9IjW9KpB5Fsazu91pBBiZmR2wvz9EHEYB7t4GNXYmIEYh9/slaTbt6XChx+sCazwe5hyf1ZJnoGUsN/LOHfSKmoMtwzowL28C8pAlka7a6OSyNQPFOOLSB/lKieqhF3raR7b/06Nxxh0e8en7OSGxqMvhZhlKPplhLHPBn3ELUiGJPjtHXGm36epeb5r81QqG+Mf6k+kPallE1+6Gk42ACbuhbK/W97mSXObir2kaFIzzVRnAM7U8cyEfXmj6f
+x-ms-exchange-antispam-messagedata: g7MbakOv0WLTXWMT5BtmFA1fW+zIl9/XS70kLzSBIVSYoC6/26kdHZwwwQFQvOP+ZwxtiYIHSHp8ta1ZAquQkE7B5rnpQPi/+RwTKTpqQKH1mkpA1OOTWnKydG9l5yb0qmSTZaMgxUsU499wxw5AgQ==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c8144e9c-555b-4ba0-f2f1-08d7c4ab7367
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Mar 2020 04:28:14.7460
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ehJ5UgxYrjJawg8YPGzUTAK4IPZ41jfCnWvYQNHcVwKyKbFmpryI7xDJUlURpdAf/CmaL3Yv72ykK/69NT9QXw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB5290
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bjorn,
+Hi Gustavo,
 
-On 3/9/2020 7:40 PM, Bjorn Helgaas wrote:
-> [+cc Austin, tentative Linux patches on this git branch:
-> https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/tree/drivers/pci/pcie?h=review/edr]
-> 
-> On Tue, Mar 03, 2020 at 06:36:32PM -0800, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
->> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->>
->> As per PCI firmware specification r3.2 System Firmware Intermediary
->> (SFI) _OSC and DPC Updates ECR
->> (https://members.pcisig.com/wg/PCI-SIG/document/13563), sec titled "DPC
->> Event Handling Implementation Note", page 10, Error Disconnect Recover
->> (EDR) support allows OS to handle error recovery and clearing Error
->> Registers even in FF mode. So create new API pci_aer_raw_clear_status()
->> which allows clearing AER registers without FF mode checks.
-> 
-> I see that this ECR was released as an ECN a few days ago:
-> https://members.pcisig.com/wg/PCI-SIG/document/14076
-> Regrettably the title in the PDF still says "ECR" (the rendered title
-> *page* says "ENGINEERING CHANGE NOTIFICATION", but some metadata
-> buried in the file says "ECR - SFI _OSC Support and DPC Updates".
-> 
-> Anyway, I think I see the note you refer to (now on page 12):
-> 
->    IMPLEMENTATION NOTE
->    DPC Event Handling
-> 
->    The flow chart below documents the behavior when firmware maintains
->    control of AER and DPC and grants control of PCIe Hot-Plug to the
->    operating system.
-> 
->    ...
-> 
->    Capture and clear device AER status. OS may choose to offline
->    devices3, either via SW (not load driver) or HW (power down device,
->    disable Link5,6,7). Otherwise process _HPX, complete device
->    enumeration, load drivers
-> 
-> This clearly suggests that the OS should clear device AER status.
-> However, according to the intro text, firmware has retained control of
-> AER, so what gives the OS the right to clear AER status?
-> 
-> The Downstream Port Containment Related Enhancements ECN (sec 4.5.1,
-> table 4-6) contains an exception that allows the OS to read/write
-> DPC registers during recovery.  But
-> 
->    - that is for *DPC* registers, not for AER registers, and
-> 
->    - that exception only applies between OS receipt of the EDR
->      notification and OS release of DPC by clearing the DPC Trigger
->      Status bit.
-> 
-> The flowchart in the SFI ECN shows the OS releasing DPC before
-> clearing AER status:
-> 
->    - Receive EDR notification
-> 
->    - Cleanup - Notify and unload child drivers below Port
-> 
->    - Bring Port out of DPC, clear port error status, assign bus numbers
->      to child devices.
-> 
->      I assume this box includes clearing DPC error status and clearing
->      Trigger Status?  They seem to be out of order in the box.
-> 
->    - Evaluate _OST
-> 
->    - Capture and clear device AER status.
-> 
->      This seems suspect to me.  Where does it say the OS is allowed to
->      write AER status when firmware retains control of AER?
-> 
-> This patch series does things in this order:
-> 
->    - Receive EDR notification (edr_handle_event(), edr.c)
-> 
->    - Read, log, and clear DPC error regs (dpc_process_error(), dpc.c).
-> 
->      This also clears AER uncorrectable error status when the relevant
->      HEST entries do not have the FIRMWARE_FIRST bit set.  I think this
->      is incorrect: the test should be based the _OSC negotiation for
->      AER ownership, not on the HEST entries.  But this problem
->      pre-dates this patch series.
-> 
->    - Clear AER status (pci_aer_raw_clear_status(), aer.c).
-> 
->      This is at least inside the EDR recovery window, but again, I
->      don't see where it says the OS is allowed to write the AER status.
+> The current codebase makes use of the zero-length array language extensio=
+n
+> to the C90 standard, but the preferred mechanism to declare variable-leng=
+th
+> types such as these ones is a flexible array member[1][2], introduced in =
+C99:
+>=20
+> struct foo {
+>         int stuff;
+>         struct boo array[];
+> };
+>=20
+> By making use of the mechanism above, we will get a compiler warning in
+> case the flexible array does not occur last in the structure, which will =
+help us
+> prevent some kind of undefined behavior bugs from being inadvertently
+> introduced[3] to the codebase from now on.
+>=20
+> Also, notice that, dynamic memory allocations won't be affected by this
+> change:
+>=20
+> "Flexible array members have incomplete type, and so the sizeof operator
+> may not be applied. As a quirk of the original implementation of zero-len=
+gth
+> arrays, sizeof evaluates to zero."[1]
 
-Implementation note is the only reference we have regarding clearing the
-AER registers.
+Thanks for this path.
 
-But since the spec says both DPC and AER needs to be always controlled
-together by the either OS or firmware, and when firmware relinquishes
-control over DPC registers in EDR notification window, we can assume
-that we also have control over AER registers.
-
-But I agree that is not explicitly spelled out any where outside the
-implementation note.
-
-
-Austin,
-
-May be ECN (section 4.5.1, table 4-6) needs to be updated to add this
-clarification.
-
-> 
->    - Attempt recovery (pcie_do_recovery(), err.c)
-> 
->    - Clear DPC Trigger Status (dpc_reset_link(), dpc.c)
-> 
->    - Evaluate _OST (acpi_send_edr_status(), edr.c)
-> 
-> What am I missing?
-> 
->> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->> ---
->>   drivers/pci/pci.h      |  2 ++
->>   drivers/pci/pcie/aer.c | 22 ++++++++++++++++++----
->>   2 files changed, 20 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
->> index e57e78b619f8..c239e6dd2542 100644
->> --- a/drivers/pci/pci.h
->> +++ b/drivers/pci/pci.h
->> @@ -655,6 +655,7 @@ extern const struct attribute_group aer_stats_attr_group;
->>   void pci_aer_clear_fatal_status(struct pci_dev *dev);
->>   void pci_aer_clear_device_status(struct pci_dev *dev);
->>   int pci_cleanup_aer_error_status_regs(struct pci_dev *dev);
->> +int pci_aer_raw_clear_status(struct pci_dev *dev);
->>   #else
->>   static inline void pci_no_aer(void) { }
->>   static inline void pci_aer_init(struct pci_dev *d) { }
->> @@ -665,6 +666,7 @@ static inline int pci_cleanup_aer_error_status_regs(struct pci_dev *dev)
->>   {
->>   	return -EINVAL;
->>   }
->> +int pci_aer_raw_clear_status(struct pci_dev *dev) { return -EINVAL; }
->>   #endif
->>   
->>   #ifdef CONFIG_ACPI
->> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
->> index c0540c3761dc..41afefa562b7 100644
->> --- a/drivers/pci/pcie/aer.c
->> +++ b/drivers/pci/pcie/aer.c
->> @@ -420,7 +420,16 @@ void pci_aer_clear_fatal_status(struct pci_dev *dev)
->>   		pci_write_config_dword(dev, pos + PCI_ERR_UNCOR_STATUS, status);
->>   }
->>   
->> -int pci_cleanup_aer_error_status_regs(struct pci_dev *dev)
->> +/**
->> + * pci_aer_raw_clear_status - Clear AER error registers.
->> + * @dev: the PCI device
->> + *
->> + * NOTE: Allows clearing error registers in both FF and
->> + * non FF modes.
->> + *
->> + * Returns 0 on success, or negative on failure.
->> + */
->> +int pci_aer_raw_clear_status(struct pci_dev *dev)
->>   {
->>   	int pos;
->>   	u32 status;
->> @@ -433,9 +442,6 @@ int pci_cleanup_aer_error_status_regs(struct pci_dev *dev)
->>   	if (!pos)
->>   		return -EIO;
->>   
->> -	if (pcie_aer_get_firmware_first(dev))
->> -		return -EIO;
->> -
->>   	port_type = pci_pcie_type(dev);
->>   	if (port_type == PCI_EXP_TYPE_ROOT_PORT) {
->>   		pci_read_config_dword(dev, pos + PCI_ERR_ROOT_STATUS, &status);
->> @@ -451,6 +457,14 @@ int pci_cleanup_aer_error_status_regs(struct pci_dev *dev)
->>   	return 0;
->>   }
->>   
->> +int pci_cleanup_aer_error_status_regs(struct pci_dev *dev)
->> +{
->> +	if (pcie_aer_get_firmware_first(dev))
->> +		return -EIO;
->> +
->> +	return pci_aer_raw_clear_status(dev);
->> +}
->> +
->>   void pci_save_aer_state(struct pci_dev *dev)
->>   {
->>   	struct pci_cap_saved_state *save_state;
->> -- 
->> 2.25.1
->>
-
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+Acked-by: Ganapathi Bhat <ganapathi.bhat@nxp.com>
+=20
