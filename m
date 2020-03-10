@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52390C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:43:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA535C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:43:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B07D24693
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:43:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9033924695
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:43:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583844212;
-	bh=DHTj3iipJvYk0j9FXVjxikfNzEUz/kACux+D0gu+MPM=;
+	s=default; t=1583844214;
+	bh=h164Xjzn/dkMEGOI+0GxP0JTKXYX9H1FF30K9z6chWM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OfNfOVbu1eXHxywOtiDogFi5txpUsRpODJjJrrdSzjeFvQWD31kWtBm5eqe/wIgUe
-	 VavsUfMbr0obiDGWfctOKV8b8yRbMrX4buLWETqGmTvaXepFDmPuuxCzuyfi4YRTs6
-	 xgUFHwDmj/blAaeP8ny6vZU4DZlfWVOf9JJ/OMH4=
+	b=l+c4n9JxJUzC04z+yYBXMI5hHme8P6d4VmW3vi51BHN4m51RUbtMCOj8Vs/ZIA3Nq
+	 j6693jAgOPNvTBxHn9h+CLJ3VzxIWNRbQnfoOKVH4Xm0CoXVO52+rpYlq5JfA/c7pq
+	 LngnZ0Huj8kvsYKarVcuL/CS7S6Ls2lyxEP3MsOU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727161AbgCJMnb (ORCPT
+        id S1727601AbgCJMnd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:43:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43824 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:43:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43872 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727582AbgCJMn2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:43:28 -0400
+        id S1727592AbgCJMna (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:43:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3525224695;
-        Tue, 10 Mar 2020 12:43:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A81D924693;
+        Tue, 10 Mar 2020 12:43:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844207;
-        bh=DHTj3iipJvYk0j9FXVjxikfNzEUz/kACux+D0gu+MPM=;
+        s=default; t=1583844210;
+        bh=h164Xjzn/dkMEGOI+0GxP0JTKXYX9H1FF30K9z6chWM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FBlm39wEeyiRJVehaF1QCQ15URBqBSxtRPU0SQN/NlNEDfea7mSufnXew6+pNtTXM
-         u0Bm004vlpb89rcfDWtTQKkCD41sbzXPqSF7r/z7SaE9oppiQJiAFviUMDT136Zrui
-         46jJlwKRkQI7WqmKWBZpN8dZgMIgU2elZhsTsKtM=
+        b=TUkR3ROik+e2RqwP5p0aL9rSQYcXA9GZ8NeI+4nxK5BIQ17h/rhNFoLbOOqWYaOYj
+         3rRYwvL28C/gorDyhxAWRW3RrtwiLkvmE15z1RhmZ31fzr1m/pMamdvCBILJDM64u/
+         rdPIbdKfpSONGXMu8lzCkgHimsQo7eNYig9Due9E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mikulas Patocka <mpatocka@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 4.4 71/72] dm cache: fix a crash due to incorrect work item cancelling
-Date:   Tue, 10 Mar 2020 13:39:24 +0100
-Message-Id: <20200310123619.207004558@linuxfoundation.org>
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>
+Subject: [PATCH 4.4 54/72] usb: core: port: do error out if usb_autopm_get_interface() fails
+Date:   Tue, 10 Mar 2020 13:39:07 +0100
+Message-Id: <20200310123614.652917590@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123601.053680753@linuxfoundation.org>
 References: <20200310123601.053680753@linuxfoundation.org>
@@ -59,51 +59,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mikulas Patocka <mpatocka@redhat.com>
+From: Eugeniu Rosca <erosca@de.adit-jv.com>
 
-commit 7cdf6a0aae1cccf5167f3f04ecddcf648b78e289 upstream.
+commit 1f8b39bc99a31759e97a0428a5c3f64802c1e61d upstream.
 
-The crash can be reproduced by running the lvm2 testsuite test
-lvconvert-thin-external-cache.sh for several minutes, e.g.:
-  while :; do make check T=shell/lvconvert-thin-external-cache.sh; done
+Reviewing a fresh portion of coverity defects in USB core
+(specifically CID 1458999), Alan Stern noted below in [1]:
 
-The crash happens in this call chain:
-do_waker -> policy_tick -> smq_tick -> end_hotspot_period -> clear_bitset
--> memset -> __memset -- which accesses an invalid pointer in the vmalloc
-area.
+On Tue, Feb 25, 2020 at 02:39:23PM -0500, Alan Stern wrote:
+ > A revised search finds line 997 in drivers/usb/core/hub.c and lines
+ > 216, 269 in drivers/usb/core/port.c.  (I didn't try looking in any
+ > other directories.)  AFAICT all three of these should check the
+ > return value, although a error message in the kernel log probably
+ > isn't needed.
 
-The work entry on the workqueue is executed even after the bitmap was
-freed. The problem is that cancel_delayed_work doesn't wait for the
-running work item to finish, so the work item can continue running and
-re-submitting itself even after cache_postsuspend. In order to make sure
-that the work item won't be running, we must use cancel_delayed_work_sync.
+Factor out the usb_port_runtime_{resume,suspend}() changes into a
+standalone patch to allow conflict-free porting on top of stable v3.9+.
 
-Also, change flush_workqueue to drain_workqueue, so that if some work item
-submits itself or another work item, we are properly waiting for both of
-them.
+[1] https://lore.kernel.org/lkml/Pine.LNX.4.44L0.2002251419120.1485-100000@iolanthe.rowland.org
 
-Fixes: c6b4fcbad044 ("dm: add cache target")
-Cc: stable@vger.kernel.org # v3.9
-Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Fixes: 971fcd492cebf5 ("usb: add runtime pm support for usb port device")
+Cc: stable@vger.kernel.org # v3.9+
+Suggested-by: Alan Stern <stern@rowland.harvard.edu>
+Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
+Link: https://lore.kernel.org/r/20200226175036.14946-3-erosca@de.adit-jv.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/dm-cache-target.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/usb/core/port.c |   10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
---- a/drivers/md/dm-cache-target.c
-+++ b/drivers/md/dm-cache-target.c
-@@ -2193,8 +2193,8 @@ static void wait_for_migrations(struct c
+--- a/drivers/usb/core/port.c
++++ b/drivers/usb/core/port.c
+@@ -98,7 +98,10 @@ static int usb_port_runtime_resume(struc
+ 	if (!port_dev->is_superspeed && peer)
+ 		pm_runtime_get_sync(&peer->dev);
  
- static void stop_worker(struct cache *cache)
- {
--	cancel_delayed_work(&cache->waker);
--	flush_workqueue(cache->wq);
-+	cancel_delayed_work_sync(&cache->waker);
-+	drain_workqueue(cache->wq);
- }
+-	usb_autopm_get_interface(intf);
++	retval = usb_autopm_get_interface(intf);
++	if (retval < 0)
++		return retval;
++
+ 	retval = usb_hub_set_port_power(hdev, hub, port1, true);
+ 	msleep(hub_power_on_good_delay(hub));
+ 	if (udev && !retval) {
+@@ -151,7 +154,10 @@ static int usb_port_runtime_suspend(stru
+ 	if (usb_port_block_power_off)
+ 		return -EBUSY;
  
- static void requeue_deferred_cells(struct cache *cache)
+-	usb_autopm_get_interface(intf);
++	retval = usb_autopm_get_interface(intf);
++	if (retval < 0)
++		return retval;
++
+ 	retval = usb_hub_set_port_power(hdev, hub, port1, false);
+ 	usb_clear_port_feature(hdev, port1, USB_PORT_FEAT_C_CONNECTION);
+ 	if (!port_dev->is_superspeed)
 
 
