@@ -2,108 +2,124 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D78BC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 11:25:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4E60C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 11:25:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1200E24692
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 11:25:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="QahxBK8b"
+	by mail.kernel.org (Postfix) with ESMTP id C61B924692
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 11:25:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726315AbgCJLZC (ORCPT
+        id S1726420AbgCJLZF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 07:25:02 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:46218 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726197AbgCJLZB (ORCPT
+        Tue, 10 Mar 2020 07:25:05 -0400
+Received: from outbound.smtp.vt.edu ([198.82.183.121]:51150 "EHLO
+        omr1.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726197AbgCJLZE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 07:25:01 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02ABO9Du003803;
-        Tue, 10 Mar 2020 11:24:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=fQ47Eu6kv63WdOsfFkfD5O2wiNedBjV0+Jjt76jl4nw=;
- b=QahxBK8b4d96OJIVK5bXGrWRybNqnbedybE4eKpzP2SqfrQOVlzp4h0kKK7M8lE3QUal
- 5nua7dHBvovux6eThwmdYfkAJggFY8N3Z//qwbFq60Ta5ToX73D+WjLNRX1lzWk5OQ6g
- ITi2MDyciQ8yQB/BHhqJbDX5U4tlKFJw5W01n6+Dhn/EYFPvok3lPTs8MzLeDxQXYSCo
- NuxAhZoiVvLWbeHgUNx8PUhXlCgw2xoOlP1393JbiHWAn/wv2EMqGiK0wLkf/9v2NDXM
- qi8ezEGrtbOp+59gpMDhcyHiSFZ0nzF1BxBbLZymc36uzsVu03wFia31ilzlnmUf3g1+ Jw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2yp7hm1a6x-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 10 Mar 2020 11:24:11 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02ABHLHV024906;
-        Tue, 10 Mar 2020 11:21:20 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 2yp8rhgahr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 10 Mar 2020 11:21:20 +0000
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 02ABLHoo010929;
-        Tue, 10 Mar 2020 11:21:17 GMT
-Received: from [192.168.8.5] (/213.41.92.70)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 10 Mar 2020 04:21:17 -0700
-Subject: Re: [patch part-II V2 08/13] tracing: Provide lockdep less
- trace_hardirqs_on/off() variants
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Brian Gerst <brgerst@gmail.com>,
-        Juergen Gross <jgross@suse.com>,
-        Frederic Weisbecker <frederic@kernel.org>
-References: <20200308222359.370649591@linutronix.de>
- <20200308222609.731890049@linutronix.de>
- <07a50582-1c2f-7f45-c7dd-5ff9c2ff3052@oracle.com>
- <20200310110802.GC29372@zn.tnic>
-From:   Alexandre Chartre <alexandre.chartre@oracle.com>
-Organization: Oracle Corporation
-Message-ID: <61deae1b-cd02-ec46-06a8-ef6edd85e06f@oracle.com>
-Date:   Tue, 10 Mar 2020 12:21:20 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.0
-MIME-Version: 1.0
-In-Reply-To: <20200310110802.GC29372@zn.tnic>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+        Tue, 10 Mar 2020 07:25:04 -0400
+Received: from mr3.cc.vt.edu (mr3.cc.vt.edu [IPv6:2607:b400:92:8500:0:7f:b804:6b0a])
+        by omr1.cc.vt.edu (8.14.4/8.14.4) with ESMTP id 02ABP3Pu032270
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 07:25:03 -0400
+Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com [209.85.219.71])
+        by mr3.cc.vt.edu (8.14.7/8.14.7) with ESMTP id 02ABOwOT010833
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 07:25:03 -0400
+Received: by mail-qv1-f71.google.com with SMTP id o10so8877416qvn.0
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 04:25:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :mime-version:content-transfer-encoding:date:message-id;
+        bh=OesXhfFfB1ZZgxnRfuwwLM+t7VkmSIoWuSuAcfzfaQ8=;
+        b=dCZbYLbquuVk5/ZFppDzrETygoVy3jGZ6CPKHNclKR7C3jw2V4zUxcQFwVO5Zi3FuS
+         UUNcGkzqrItSiMyM1ZY4hEuovR537qulZwmwOSc0JbmlF+cgfVEh+M+Y6XBv2qs1K1uw
+         +PTeAAVDxY8BXU1zO/92kOKjxEWxAsMqKnkbpy+0L1NIemp8UyTH1K278Zhf1cntce8O
+         QeI7Ukdw903H3H+vob7sBE7PI5oOYHwNljlO/LQ7UGT90NB/xhbQZhUUmGPu99ZZF2Pi
+         EnWImIGEmENwaQjYSUsQf/e8Yx3/jgiZDYMzyxZVVgWefpTrCeuvbLPRUKAt4/5ZYxj9
+         OvjA==
+X-Gm-Message-State: ANhLgQ2PH9GjgUaBBvB2YU9AQfYedUjA1pbJJQFJOVaVJP3h7V+GQObg
+        Fn2WzsENPXYrMROfpjx+E59JwzpkIqOQOxa64VymHUMSHGPzR4ziuOjQ/FUbVjPbYzJrJ+mjBdp
+        pFlT9DhES7FXhYdi+UTe/rRh4ZAe0etpWuxM=
+X-Received: by 2002:a05:6214:60d:: with SMTP id z13mr5971526qvw.183.1583839142739;
+        Tue, 10 Mar 2020 04:19:02 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vto9Cc/inOPkYfcSZLmhvSxM16DJD9Z9E7y4/q01ZrjcE60oTAT3RepCU3XjTs472qHoHtnOQ==
+X-Received: by 2002:a05:6214:60d:: with SMTP id z13mr5971506qvw.183.1583839142428;
+        Tue, 10 Mar 2020 04:19:02 -0700 (PDT)
+Received: from turing-police ([2601:5c0:c001:c9e1::359])
+        by smtp.gmail.com with ESMTPSA id w2sm23859201qto.73.2020.03.10.04.19.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Mar 2020 04:19:00 -0700 (PDT)
+From:   "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <valdis.kletnieks@vt.edu>
+X-Google-Original-From: "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <Valdis.Kletnieks@vt.edu>
+X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     "'Linux Next Mailing List'" <linux-next@vger.kernel.org>,
+        "'Linux Kernel Mailing List'" <linux-kernel@vger.kernel.org>,
+        devel@driverdev.osuosl.org,
+        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Namjae Jeon <namjae.jeon@samsung.com>,
+        Sungjong Seo <sj1557.seo@samsung.com>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH] staging: exfat: remove staging version of exfat filesystem
+In-Reply-To: <20200310105421.GA2810679@kroah.com>
+References: <20200310105421.GA2810679@kroah.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; boundary="==_Exmh_1583839139_13328P";
+         micalg=pgp-sha1; protocol="application/pgp-signature"
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9555 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=941 phishscore=0 mlxscore=0
- spamscore=0 malwarescore=0 bulkscore=0 adultscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2003100075
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9555 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0
- priorityscore=1501 clxscore=1015 mlxscore=0 impostorscore=0
- mlxlogscore=996 suspectscore=0 phishscore=0 malwarescore=0 adultscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003100076
+Date:   Tue, 10 Mar 2020 07:18:59 -0400
+Message-ID: <35151.1583839139@turing-police>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--==_Exmh_1583839139_13328P
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 3/10/20 12:08 PM, Borislav Petkov wrote:
-> On Tue, Mar 10, 2020 at 11:55:57AM +0100, Alexandre Chartre wrote:
->> Shouldn't trace_hardirqs_on() be updated to call __trace_hardirqs_on()? It's the same
->> code except for the lockdep call.
-> 
-> Fell into that one too initially. Look again. :)
-> 
+On Tue, 10 Mar 2020 11:54:21 +0100, Greg Kroah-Hartman said:
+> Now that there is a =22real=22 solution for exfat in the vfs tree queue=
+d up
+> to be merged in 5.7-rc1 the =22old=22 exfat code in staging can be remo=
+ved.
+>
+> Many thanks to Valdis for doing the work to get this into the tree in
+> the first place, it was greatly appreciated.
+>
+> Cc: Valdis Kletnieks <valdis.kletnieks=40vt.edu>
 
-Got it, rcuidle :) So maybe a better function name or a comment could avoid
-this confusion.
+You can stick my Acked-by: on that. :)
 
-Anyway, Reviewed-by: Alexandre Chartre <alexandre.chartre@oracle.com>
+And thanks to Namjae Jeon for graciously offering to take it off my hands=
 
-alex.
+by providing a better version, and to all the people at Linux Foundation
+and Microsoft who did a lot of behind the scenes work to make it happen..=
+.
+
+--==_Exmh_1583839139_13328P
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Comment: Exmh version 2.9.0 11/07/2018
+
+iQIVAwUBXmd3owdmEQWDXROgAQIhLhAAkEefL8MqDbPRHTLSuvJEcgA0wOk3+Y5q
+NaIlQZ3VNZQkIguUEEKq4Ic+mpBl9+r8rWIbJiDWYe2gZRq+b4BFi8Dlc9T46yst
+rW9YWLIGLsVwnCjvVRyZRO/S+6oSzFh6yTdkxQIBBOmWhhITLvIKoJozoSFTOwwn
+I0G97lwb9++mH2r9n87/3NHOfTyUB061TU3l5/fk/a3bpWWYrR+NXEuEli8QGukl
+eDwRMUvegpPBt/iPN7PTznuwbVKSYigB17Wopr+gAEnS3rZ2YeG2lkQFe7vnoevl
+6FNTcq2W5hJU2Jrb2eAuKMrW4LVg2rSis8jHmM7Eeoi/Pkyko/Cdfw1TD5L0Uqc/
+QYnofVkQrni42j8gCSTTHvzeag+rjmeSK/YEsjyYzVGnK3Hc+27mmMoHYTYQo7JI
+k2r4nZCZINc67E/DeBb1hWEnlbjdfeKwQLrW5qAm/x9jumGPto+nfqyaNHKwfmW1
+OMq9FCU+7HW9lG/FZHbOY/l0+yMlBeg3fM5YmiC0+aotmHPZiQoVMYDOThdG0ukc
+z91DNBW2rsqmrfc83U8nxnNxfnYyfWuNJ03IuLIhRY6BsrsUXLKZiFRQUPjGAs7i
+u+oBYngj9OUyw58ks8S5KYgoFZbqe1oWKBQ+fiXXKXqRt4CbagiSOeYcaVQPcctT
+Sy9zO5MRsa0=
+=l13Y
+-----END PGP SIGNATURE-----
+
+--==_Exmh_1583839139_13328P--
