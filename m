@@ -2,203 +2,149 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22834C10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 21:09:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 744E4C10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 21:09:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D766721655
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 21:09:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F81F215A4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 21:09:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583874549;
-	bh=aO/230DCKti683rP0qoBVP61iOvZbUB9+GrbuunBBek=;
+	s=default; t=1583874553;
+	bh=cf4KaBQ95enPqg75iDeqWf4riYZHTvXKTWyR/YnKGh8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vQ8+z0Da1O7u6taTn0EnwdqLkxdy8W+YK5ROuOuSAU0MDLOjC12Zrao87WuFo4bHh
-	 Ne187z6/9LtMz/bwhjeAGIblNwc5lFNqN2Uy5+B134U2KTAQu75SmS/MxLGsue0kTQ
-	 2SCvvovld2E43UgbeDyF1y0mG4M9DpSldsFSgCD8=
+	b=pNKqPizeEghQ3C9JE3uVEiqHcUh8wIVV7ibzHyw5o+8sqfrC24+HL3MwPf97+oLf9
+	 8nX1XhjhhtTgYFjQY+CObgZV4b3U16NFYaJyNSZ4Y9jdYKHSAf8y7i819utfOv1ASq
+	 a6JRw/byAe/qr6Sff73uGxDkHHADnC8p3hVDEius=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727589AbgCJVJH (ORCPT
+        id S1727683AbgCJVJM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 17:09:07 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:37258 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727518AbgCJVJH (ORCPT
+        Tue, 10 Mar 2020 17:09:12 -0400
+Received: from mail-wm1-f54.google.com ([209.85.128.54]:35248 "EHLO
+        mail-wm1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726293AbgCJVJK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 17:09:07 -0400
-Received: by mail-oi1-f193.google.com with SMTP id w13so4967855oih.4;
-        Tue, 10 Mar 2020 14:09:06 -0700 (PDT)
+        Tue, 10 Mar 2020 17:09:10 -0400
+Received: by mail-wm1-f54.google.com with SMTP id m3so2988842wmi.0
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 14:09:09 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=GfhqlgMKmzN4IuxVJjHneTo0nfEVjjRSeSr65YkBw7o=;
-        b=Aj/pjqHjph9rl9vnbfZAAvUpxO3Ydpqvxj7o+/Pjy81RqxFEto9s36rxJ9Ktjg/dVa
-         2u4waJP4xTvzgv9l6LabOIF1M+QsOKB3zCMzj4/fmEgVqQEp91eZ0q8ynKhf42gmJsiR
-         mwNitWbopDaSDeeDkKbCR2I5YSoNmywuwd8KKRrJiWjKCXlzSDEajXhzQ2kVFSoolTZC
-         RrRIcILOZQu08A0ZjmYhNMZYxngCXvz0YqIeHPIPw5Dkz5rjxssYNuglb6XIOMsXt6hQ
-         VmnzPbvj+9yCbso5oOBR43ja1Ij7HGY39rr32u/rsQZL+Aeyauk5BdgdDAeJAkQYgCd4
-         kcUw==
-X-Gm-Message-State: ANhLgQ1/TXWEFPVChmDXDwnvD3WbqviHFw2OhmTNw6LZhMjz2sdTGeQm
-        uiZF8KvYooXSrbkyqCMBaA==
-X-Google-Smtp-Source: ADFU+vuo4t0V5T26kso3ujaflSD82gWJtxIt/gxBCOgVp/HDNHLnUFS+kxRXLGet1zlCiae3LTR2EQ==
-X-Received: by 2002:aca:b205:: with SMTP id b5mr2682151oif.21.1583874546307;
-        Tue, 10 Mar 2020 14:09:06 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id h3sm2131748otr.4.2020.03.10.14.09.04
+         :mime-version:content-disposition:in-reply-to;
+        bh=vBlVR0/6AqSx69KL2XC6YUUZMyEmq7M8pE/bxrslsfY=;
+        b=ujZUNM+mfQSu3utMYqgnYjHCfuWXXVz/v/a958hqamf3hZU/fe2U4VAPmhxBJNM8Ud
+         UfqH5GmWdDVsfvxNiZSqfFm7vmtEC+vuBVf8u0GL7yH2J3ArlJgmTXFi3dVXieMxABHv
+         +bDdlcfWSk83GTpb9r1iAibQ+Cfs0zP8KV3CGY7lWfnmLM68vsVC3kL6QLUauYkBjq4n
+         qwaZUlj1kuD2fl6PvejxcASkR1EutWnzrHMICLkc9Syn3PWL/bFCiVY/Ebmx12IMMzCa
+         y/GStmIsmk6KvKFUiGkGYXffndmFTWkCnOiuz4oklrpTlPq85gyJd6i35rrMpK3k/jdL
+         dHXg==
+X-Gm-Message-State: ANhLgQ3HhZ3zNSiTMS+tDs4sYV1PIn+oXrmqgS0eECX4p6oR6KtX2Beu
+        VwWJ3XIv8FjKUvTKaKIwuN0=
+X-Google-Smtp-Source: ADFU+vscXDgpMC623/Va/knMMKGNYTRcsriKmLvs/0bz/CA0E/q41ws+2j4X5nm5BTI57+fggsZX4g==
+X-Received: by 2002:a7b:cb10:: with SMTP id u16mr3718880wmj.96.1583874549025;
+        Tue, 10 Mar 2020 14:09:09 -0700 (PDT)
+Received: from localhost (ip-37-188-253-35.eurotel.cz. [37.188.253.35])
+        by smtp.gmail.com with ESMTPSA id 138sm271231wmb.21.2020.03.10.14.09.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Mar 2020 14:09:05 -0700 (PDT)
-Received: (nullmailer pid 18143 invoked by uid 1000);
-        Tue, 10 Mar 2020 21:09:04 -0000
-Date:   Tue, 10 Mar 2020 16:09:04 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Roger Quadros <rogerq@ti.com>
-Cc:     t-kristo@ti.com, kishon@ti.com, nm@ti.com, nsekhar@ti.com,
-        vigneshr@ti.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/6] arm64: dts: ti: k3-j721e-main: Add serdes_ln_ctrl
- node to select SERDES lane mux
-Message-ID: <20200310210904.GA11275@bogus>
-References: <20200303101722.26052-1-rogerq@ti.com>
- <20200303101722.26052-4-rogerq@ti.com>
+        Tue, 10 Mar 2020 14:09:08 -0700 (PDT)
+Date:   Tue, 10 Mar 2020 22:09:06 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Jann Horn <jannh@google.com>
+Cc:     Minchan Kim <minchan@kernel.org>, Linux-MM <linux-mm@kvack.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Daniel Colascione <dancol@google.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Subject: Re: interaction of MADV_PAGEOUT with CoW anonymous mappings?
+Message-ID: <20200310210906.GD8447@dhcp22.suse.cz>
+References: <CAG48ez0G3JkMq61gUmyQAaCq=_TwHbi1XKzWRooxZkv08PQKuw@mail.gmail.com>
+ <20200310184814.GA8447@dhcp22.suse.cz>
+ <CAG48ez2pNSKL9ZTH-PQ93+Kc6ObH6Pa1vVg3OS85WT0TB8m3=A@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200303101722.26052-4-rogerq@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAG48ez2pNSKL9ZTH-PQ93+Kc6ObH6Pa1vVg3OS85WT0TB8m3=A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 03, 2020 at 12:17:19PM +0200, Roger Quadros wrote:
-> From: Kishon Vijay Abraham I <kishon@ti.com>
-> 
-> Add serdes_ln_ctrl node used for selecting SERDES lane mux.
-> 
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> Signed-off-by: Sekhar Nori <nsekhar@ti.com>
-> Signed-off-by: Roger Quadros <rogerq@ti.com>
-> ---
->  arch/arm64/boot/dts/ti/k3-j721e-main.dtsi | 27 ++++++++++++
->  include/dt-bindings/mux/mux-j721e-wiz.h   | 53 +++++++++++++++++++++++
->  2 files changed, 80 insertions(+)
->  create mode 100644 include/dt-bindings/mux/mux-j721e-wiz.h
-> 
-> diff --git a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
-> index cbaadee5bfdc..c5d54af37e91 100644
-> --- a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
-> +++ b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
-> @@ -5,6 +5,8 @@
->   * Copyright (C) 2016-2019 Texas Instruments Incorporated - http://www.ti.com/
->   */
->  #include <dt-bindings/phy/phy.h>
-> +#include <dt-bindings/mux/mux.h>
-> +#include <dt-bindings/mux/mux-j721e-wiz.h>
->  
->  &cbass_main {
->  	msmc_ram: sram@70000000 {
-> @@ -19,6 +21,31 @@
->  		};
->  	};
->  
-> +	scm_conf: scm-conf@100000 {
-> +		compatible = "syscon", "simple-mfd", "ti,j721e-system-controller";
+On Tue 10-03-20 20:11:45, Jann Horn wrote:
+> On Tue, Mar 10, 2020 at 7:48 PM Michal Hocko <mhocko@kernel.org> wrote:
+> > On Tue 10-03-20 19:08:28, Jann Horn wrote:
+> > > Hi!
+> > >
+> > > >From looking at the source code, it looks to me as if using
+> > > MADV_PAGEOUT on a CoW anonymous mapping will page out the page if
+> > > possible, even if other processes still have the same page mapped. Is
+> > > that correct?
+> > >
+> > > If so, that's probably bad in environments where many processes (with
+> > > different privileges) are forked from a single zygote process (like
+> > > Android and Chrome), I think? If you accidentally call it on a CoW
+> > > anonymous mapping with shared pages, you'll degrade the performance of
+> > > other processes. And if an attacker does it intentionally, they could
+> > > use that to aid with exploiting race conditions or weird
+> > > microarchitectural stuff (e.g. the new https://lviattack.eu/lvi.pdf
+> > > talks about "the assumption that attackers can provoke page faults or
+> > > microcode assists for (arbitrary) load operations in the victim
+> > > domain").
+> > >
+> > > Should madvise_cold_or_pageout_pte_range() maybe refuse to operate on
+> > > pages with mapcount>1, or something like that? Or does it already do
+> > > that, and I just missed the check?
+> >
+> > I have brought up side channel attacks earlier [1] but only in the
+> > context of shared page cache pages. I didn't really consider shared
+> > anonymous pages to be a real problem. I was under impression that CoW
+> > pages shouldn't be a real problem because any security sensible
+> > applications shouldn't allow untrusted code to be forked and CoW
+> > anything really important. I believe we have made this assumption
+> > in other places - IIRC on gup with FOLL_FORCE but I admit I have
+> > very happily forgot most details.
 
-Wrong ordering. Most significant first.
+I have quickly checked FOLL_FORCE and it is careful to break CoW on the
+write access.
 
-> +		reg = <0 0x00100000 0 0x1c000>;
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges = <0x0 0x0 0x00100000 0x1c000>;
-> +
-> +		serdes_ln_ctrl: serdes-ln-ctrl@4080 {
+> Android has a "zygote" process that starts up the whole Java
+> environment with a bunch of libraries before entering into a loop that
+> fork()s off a child every time the user wants to launch an app. So all
+> the apps, and even browser renderer processes, on the device share
+> many CoW VMAs. See
+> <https://developer.android.com/topic/performance/memory-overview#SharingRAM>.
 
-Your syscon.yaml change is not valid if you have child nodes. Do a 
-specific binding for this block.
-
-> +			compatible = "mmio-mux";
-> +			reg = <0x00004080 0x50>;
-> +			#mux-control-cells = <1>;
-> +			mux-reg-masks = <0x4080 0x3>, <0x4084 0x3>, /* SERDES0 lane0/1 select */
-> +					<0x4090 0x3>, <0x4094 0x3>, /* SERDES1 lane0/1 select */
-> +					<0x40a0 0x3>, <0x40a4 0x3>, /* SERDES2 lane0/1 select */
-> +					<0x40b0 0x3>, <0x40b4 0x3>, /* SERDES3 lane0/1 select */
-> +					<0x40c0 0x3>, <0x40c4 0x3>, <0x40c8 0x3>, <0x40cc 0x3>;
-> +					/* SERDES4 lane0/1/2/3 select */
-> +			idle-states = <SERDES0_LANE0_PCIE0_LANE0>, <SERDES0_LANE1_PCIE0_LANE1>,
-> +				      <SERDES1_LANE0_PCIE1_LANE0>, <SERDES1_LANE1_PCIE1_LANE1>,
-> +				      <SERDES2_LANE0_PCIE2_LANE0>, <SERDES2_LANE1_PCIE2_LANE1>,
-> +				      <MUX_IDLE_AS_IS>, <SERDES3_LANE1_USB3_0>,
-> +				      <SERDES4_LANE0_EDP_LANE0>, <SERDES4_LANE1_EDP_LANE1>, <SERDES4_LANE2_EDP_LANE2>, <SERDES4_LANE3_EDP_LANE3>;
-> +		};
-> +	};
-> +
->  	gic500: interrupt-controller@1800000 {
->  		compatible = "arm,gic-v3";
->  		#address-cells = <2>;
-> diff --git a/include/dt-bindings/mux/mux-j721e-wiz.h b/include/dt-bindings/mux/mux-j721e-wiz.h
-> new file mode 100644
-> index 000000000000..fd1c4ea9fc7f
-> --- /dev/null
-> +++ b/include/dt-bindings/mux/mux-j721e-wiz.h
-> @@ -0,0 +1,53 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * This header provides constants for J721E WIZ.
-> + */
-> +
-> +#ifndef _DT_BINDINGS_J721E_WIZ
-> +#define _DT_BINDINGS_J721E_WIZ
-> +
-> +#define SERDES0_LANE0_QSGMII_LANE1	0x0
-> +#define SERDES0_LANE0_PCIE0_LANE0	0x1
-> +#define SERDES0_LANE0_USB3_0_SWAP	0x2
-> +
-> +#define SERDES0_LANE1_QSGMII_LANE2	0x0
-> +#define SERDES0_LANE1_PCIE0_LANE1	0x1
-> +#define SERDES0_LANE1_USB3_0		0x2
-> +
-> +#define SERDES1_LANE0_QSGMII_LANE3	0x0
-> +#define SERDES1_LANE0_PCIE1_LANE0	0x1
-> +#define SERDES1_LANE0_USB3_1_SWAP	0x2
-> +#define SERDES1_LANE0_SGMII_LANE0	0x3
-> +
-> +#define SERDES1_LANE1_QSGMII_LANE4	0x0
-> +#define SERDES1_LANE1_PCIE1_LANE1	0x1
-> +#define SERDES1_LANE1_USB3_1		0x2
-> +#define SERDES1_LANE1_SGMII_LANE1	0x3
-> +
-> +#define SERDES2_LANE0_PCIE2_LANE0	0x1
-> +#define SERDES2_LANE0_SGMII_LANE0	0x3
-> +#define SERDES2_LANE0_USB3_1_SWAP	0x2
-> +
-> +#define SERDES2_LANE1_PCIE2_LANE1	0x1
-> +#define SERDES2_LANE1_USB3_1		0x2
-> +#define SERDES2_LANE1_SGMII_LANE1	0x3
-> +
-> +#define SERDES3_LANE0_PCIE3_LANE0	0x1
-> +#define SERDES3_LANE0_USB3_0_SWAP	0x2
-> +
-> +#define SERDES3_LANE1_PCIE3_LANE1	0x1
-> +#define SERDES3_LANE1_USB3_0		0x2
-> +
-> +#define SERDES4_LANE0_EDP_LANE0		0x0
-> +#define SERDES4_LANE0_QSGMII_LANE5	0x2
-> +
-> +#define SERDES4_LANE1_EDP_LANE1		0x0
-> +#define SERDES4_LANE1_QSGMII_LANE6	0x2
-> +
-> +#define SERDES4_LANE2_EDP_LANE2		0x0
-> +#define SERDES4_LANE2_QSGMII_LANE7	0x2
-> +
-> +#define SERDES4_LANE3_EDP_LANE3		0x0
-> +#define SERDES4_LANE3_QSGMII_LANE8	0x2
-> +
-> +#endif /* _DT_BINDINGS_J721E_WIZ */
-> -- 
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-> 
+I still have to think about how this could be used for any reasonable
+attack. But certainly the simplest workaround is to simply back off on
+pages mapped multiple times as we do for THP already. Something like the
+following should work but I haven't tested it at all
+diff --git a/mm/madvise.c b/mm/madvise.c
+index 43b47d3fae02..02daa447bf47 100644
+--- a/mm/madvise.c
++++ b/mm/madvise.c
+@@ -351,6 +351,10 @@ static int madvise_cold_or_pageout_pte_range(pmd_t *pmd,
+ 				goto regular_page;
+ 			return 0;
+ 		}
++		
++		/* Do not interfere with other mappings of this page */
++		if (page_mapcount(page) != 1)
++			goto huge_unlock;
+ 
+ 		if (pmd_young(orig_pmd)) {
+ 			pmdp_invalidate(vma, addr, pmd);
+@@ -426,6 +430,10 @@ static int madvise_cold_or_pageout_pte_range(pmd_t *pmd,
+ 			continue;
+ 		}
+ 
++		/* Do not interfere with other mappings of this page */
++		if (page_mapcount(page) != 1)
++			continue;
++
+ 		VM_BUG_ON_PAGE(PageTransCompound(page), page);
+ 
+ 		if (pte_young(ptent)) {
+-- 
+Michal Hocko
+SUSE Labs
