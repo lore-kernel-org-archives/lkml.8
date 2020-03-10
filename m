@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C37AC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:48:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7500C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:48:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02E732468E
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:48:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A29172468E
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:48:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583844510;
-	bh=oK3VlKykMd14h0+qC0KHi9ORL2bg4TEb/vdCaZ/mivY=;
+	s=default; t=1583844513;
+	bh=MA8zhD69ihie6dC77BwgHBWhp7WRCSyibezRwwFndzk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JFEIpuuYKLEcSN2lCxKHCzr8ffDC40PhuONuqY/ENjrLO0uMNBayNZljgleUcyDvd
-	 7lGU50nSlmidqko/HNE5CobBi3XhfgSevZfq9CA5HFtSeF35CPGpm2UanPiEMnZe9+
-	 p5fq3zGKykcFwLNMCb8uSLKbDhBNKkWXQAmgwCtU=
+	b=mbKoYEQCxC5vV0Zduvgj3slxsQyUGKnt4eW0r0tD+kCIgrrFaNMXay6XDrjCsMee7
+	 q+JQf0VIpnnzCjHbyMlMD8PaqY1Iysa8IUDEnQaiZhmpbBGMq5rFs9ywmRVKAdB8L+
+	 ZCXYfWuYfiRzgR0Yeh3fsFiWsv+A0aaniqmq6GIw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728332AbgCJMs2 (ORCPT
+        id S1728088AbgCJMsc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:48:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52528 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:48:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52576 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728315AbgCJMsZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:48:25 -0400
+        id S1728326AbgCJMs1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:48:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E61B424691;
-        Tue, 10 Mar 2020 12:48:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 62C4A2468E;
+        Tue, 10 Mar 2020 12:48:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844504;
-        bh=oK3VlKykMd14h0+qC0KHi9ORL2bg4TEb/vdCaZ/mivY=;
+        s=default; t=1583844506;
+        bh=MA8zhD69ihie6dC77BwgHBWhp7WRCSyibezRwwFndzk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fkIU6s9+M1ByA7ydAzS9Eb8LpHOjG1VtkGk1UdXjF17qAUU0OneVzJaKlDJJ4PHD/
-         HwYjN3NsCb5N3W3Djb3mt5skaq6L/3NTJrTfT4YuNSJC07l6r/3iFVpKV5xrj8/Kt+
-         E8tVH2oGvClJL3Q47YvfD4qHHMRKY33ZrdQheKnk=
+        b=IQerwmRQDyymewJ6fPXhR6rKnlFs5/A4piXDIGiOllqZxoGNe+4ccGbKVOMZeqqoL
+         iqx3eTMreS0CKCbnLWYdn14qwKbp9Lj2Rtpj0iKw0Tf+0GWqL9HtyTKTjLROwL29vR
+         9HKDepi4Clf829I+ZP9293MjiCn2QH+jaVMoJNvw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michal Nazarewicz <mina86@mina86.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        stable@vger.kernel.org, Sergey Organov <sorganov@gmail.com>,
+        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
         Felipe Balbi <balbi@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 017/168] usb: gadget: ffs: ffs_aio_cancel(): Save/restore IRQ flags
-Date:   Tue, 10 Mar 2020 13:37:43 +0100
-Message-Id: <20200310123637.426298580@linuxfoundation.org>
+Subject: [PATCH 5.4 018/168] usb: gadget: serial: fix Tx stall after buffer overflow
+Date:   Tue, 10 Mar 2020 13:37:44 +0100
+Message-Id: <20200310123637.516348081@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123635.322799692@linuxfoundation.org>
 References: <20200310123635.322799692@linuxfoundation.org>
@@ -62,51 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lars-Peter Clausen <lars@metafoo.de>
+From: Sergey Organov <sorganov@gmail.com>
 
-[ Upstream commit 43d565727a3a6fd24e37c7c2116475106af71806 ]
+[ Upstream commit e4bfded56cf39b8d02733c1e6ef546b97961e18a ]
 
-ffs_aio_cancel() can be called from both interrupt and thread context. Make
-sure that the current IRQ state is saved and restored by using
-spin_{un,}lock_irq{save,restore}().
+Symptom: application opens /dev/ttyGS0 and starts sending (writing) to
+it while either USB cable is not connected, or nobody listens on the
+other side of the cable. If driver circular buffer overflows before
+connection is established, no data will be written to the USB layer
+until/unless /dev/ttyGS0 is closed and re-opened again by the
+application (the latter besides having no means of being notified about
+the event of establishing of the connection.)
 
-Otherwise undefined behavior might occur.
+Fix: on open and/or connect, kick Tx to flush circular buffer data to
+USB layer.
 
-Acked-by: Michal Nazarewicz <mina86@mina86.com>
-Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Signed-off-by: Sergey Organov <sorganov@gmail.com>
+Reviewed-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
 Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/function/f_fs.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/usb/gadget/function/u_serial.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/usb/gadget/function/f_fs.c b/drivers/usb/gadget/function/f_fs.c
-index ced2581cf99fe..a9a711e046148 100644
---- a/drivers/usb/gadget/function/f_fs.c
-+++ b/drivers/usb/gadget/function/f_fs.c
-@@ -1162,18 +1162,19 @@ static int ffs_aio_cancel(struct kiocb *kiocb)
- {
- 	struct ffs_io_data *io_data = kiocb->private;
- 	struct ffs_epfile *epfile = kiocb->ki_filp->private_data;
-+	unsigned long flags;
- 	int value;
+diff --git a/drivers/usb/gadget/function/u_serial.c b/drivers/usb/gadget/function/u_serial.c
+index bb1e2e1d00769..038c445a4e9b5 100644
+--- a/drivers/usb/gadget/function/u_serial.c
++++ b/drivers/usb/gadget/function/u_serial.c
+@@ -560,8 +560,10 @@ static int gs_start_io(struct gs_port *port)
+ 	port->n_read = 0;
+ 	started = gs_start_rx(port);
  
- 	ENTER();
- 
--	spin_lock_irq(&epfile->ffs->eps_lock);
-+	spin_lock_irqsave(&epfile->ffs->eps_lock, flags);
- 
- 	if (likely(io_data && io_data->ep && io_data->req))
- 		value = usb_ep_dequeue(io_data->ep, io_data->req);
- 	else
- 		value = -EINVAL;
- 
--	spin_unlock_irq(&epfile->ffs->eps_lock);
-+	spin_unlock_irqrestore(&epfile->ffs->eps_lock, flags);
- 
- 	return value;
- }
+-	/* unblock any pending writes into our circular buffer */
+ 	if (started) {
++		gs_start_tx(port);
++		/* Unblock any pending writes into our circular buffer, in case
++		 * we didn't in gs_start_tx() */
+ 		tty_wakeup(port->port.tty);
+ 	} else {
+ 		gs_free_requests(ep, head, &port->read_allocated);
 -- 
 2.20.1
 
