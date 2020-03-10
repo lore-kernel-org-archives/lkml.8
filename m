@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C018BC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:48:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3585FC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:48:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 951992468E
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:48:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F02A22468D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:48:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583844516;
-	bh=gs80CAyiWe7yluTC5cDTPD3X5QuWPohFyMoKoM3duhM=;
+	s=default; t=1583844521;
+	bh=/OMNevqG0gX9m3pbaALuyBtVUnL99qbRW3KpDyLhr60=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X1k7EIwvfGBhBbAyvJ91cILZ2s2Nk9arhhnRMoc1cIMVAvQWQ/3ISBienxkmyl2Jx
-	 RFtC9ZA+ZW2M7E5qi27zjSbrluf15m8cvXUn4mtOWatplN6nlIZ5VpNfD7QX0mboGE
-	 wwFEccjlmhCCBn/Ro+Pqc48kT03EZaLWwFBUkf4w=
+	b=FLn4UTAC+DRmyUJ5bD7DSJ98KNgz9ByVgOYskPtmmzuXxUxDU22TOqY6lFovnw8eE
+	 bTRcIe2QWtLzLs0cB/mhTOi0ycEkUV4rWJOZIlEYQW/nz8+dTenzdXzPr19keAsI7c
+	 Z6eFWzwBZwnMvi+PrLBap4qaynyQIUbNnsX7hoFY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727570AbgCJMse (ORCPT
+        id S1728339AbgCJMsj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:48:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52660 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:48:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52726 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727316AbgCJMsc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:48:32 -0400
+        id S1727898AbgCJMsd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:48:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0FDA5246BD;
-        Tue, 10 Mar 2020 12:48:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8EA7724697;
+        Tue, 10 Mar 2020 12:48:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844510;
-        bh=gs80CAyiWe7yluTC5cDTPD3X5QuWPohFyMoKoM3duhM=;
+        s=default; t=1583844513;
+        bh=/OMNevqG0gX9m3pbaALuyBtVUnL99qbRW3KpDyLhr60=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ThmpUMraEHc7u6xvYAKb7x7L6GzfvhEHlY1ioYY+070WdXe/0WlbQupOnJ8lXEzZS
-         7ahEZvxdSyN2eq8nPmbEof0f6sq6/n0KEW09/FussWiDollBtBdeNHir0LjbgGT9XC
-         dfghwAZ1YUzTP5K07NqMWXeGXGnCSh6BlLn5Fxgk=
+        b=C4csOn1f8T61hrJPeh4hV0I3A1tbsQ0A63/N7v9/NUU+K8k1BIOXkkveQaOB6doI9
+         Eh2BcQgpA/31wFU1kpzbLcza7OjMTMNKZ7kpp+8+iWCDXPHNT9LhaIj3kGoePVy4yc
+         KymbA03MIul3IRVWtUYalkNMxZQNPhlBwfczxg5M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tomer Tayar <ttayar@habana.ai>,
-        Oded Gabbay <oded.gabbay@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 019/168] habanalabs: halt the engines before hard-reset
-Date:   Tue, 10 Mar 2020 13:37:45 +0100
-Message-Id: <20200310123637.605584036@linuxfoundation.org>
+        stable@vger.kernel.org, Chris Evich <cevich@redhat.com>,
+        Oleksandr Natalenko <oleksandr@natalenko.name>,
+        Paolo Valente <paolo.valente@linaro.org>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 002/168] block, bfq: get extra ref to prevent a queue from being freed during a group move
+Date:   Tue, 10 Mar 2020 13:37:28 +0100
+Message-Id: <20200310123635.527448147@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123635.322799692@linuxfoundation.org>
 References: <20200310123635.322799692@linuxfoundation.org>
@@ -60,141 +61,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oded Gabbay <oded.gabbay@gmail.com>
+From: Paolo Valente <paolo.valente@linaro.org>
 
-[ Upstream commit 908087ffbe896c100ed73d5f0ce11a5b7264af4a ]
+[ Upstream commit ecedd3d7e19911ab8fe42f17b77c0a30fe7f4db3 ]
 
-The driver must halt the engines before doing hard-reset, otherwise the
-device can go into undefined state. There is a place where the driver
-didn't do that and this patch fixes it.
+In bfq_bfqq_move(), the bfq_queue, say Q, to be moved to a new group
+may happen to be deactivated in the scheduling data structures of the
+source group (and then activated in the destination group). If Q is
+referred only by the data structures in the source group when the
+deactivation happens, then Q is freed upon the deactivation.
 
-Reviewed-by: Tomer Tayar <ttayar@habana.ai>
-Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
+This commit addresses this issue by getting an extra reference before
+the possible deactivation, and releasing this extra reference after Q
+has been moved.
+
+Tested-by: Chris Evich <cevich@redhat.com>
+Tested-by: Oleksandr Natalenko <oleksandr@natalenko.name>
+Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/misc/habanalabs/device.c    |  1 +
- drivers/misc/habanalabs/goya/goya.c | 42 +++++++++++++++++++++++++++++
- 2 files changed, 43 insertions(+)
+ block/bfq-cgroup.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/misc/habanalabs/device.c b/drivers/misc/habanalabs/device.c
-index 459fee70a597a..eb9c07833a517 100644
---- a/drivers/misc/habanalabs/device.c
-+++ b/drivers/misc/habanalabs/device.c
-@@ -1185,6 +1185,7 @@ int hl_device_init(struct hl_device *hdev, struct class *hclass)
- 	if (hdev->asic_funcs->get_hw_state(hdev) == HL_DEVICE_HW_STATE_DIRTY) {
- 		dev_info(hdev->dev,
- 			"H/W state is dirty, must reset before initializing\n");
-+		hdev->asic_funcs->halt_engines(hdev, true);
- 		hdev->asic_funcs->hw_fini(hdev, true);
- 	}
+diff --git a/block/bfq-cgroup.c b/block/bfq-cgroup.c
+index 0999d56bc4d19..ead6e42832982 100644
+--- a/block/bfq-cgroup.c
++++ b/block/bfq-cgroup.c
+@@ -634,6 +634,12 @@ void bfq_bfqq_move(struct bfq_data *bfqd, struct bfq_queue *bfqq,
+ 		bfq_bfqq_expire(bfqd, bfqd->in_service_queue,
+ 				false, BFQQE_PREEMPTED);
  
-diff --git a/drivers/misc/habanalabs/goya/goya.c b/drivers/misc/habanalabs/goya/goya.c
-index fe3574a83b7c3..1e97f6d77e3da 100644
---- a/drivers/misc/habanalabs/goya/goya.c
-+++ b/drivers/misc/habanalabs/goya/goya.c
-@@ -869,6 +869,11 @@ void goya_init_dma_qmans(struct hl_device *hdev)
-  */
- static void goya_disable_external_queues(struct hl_device *hdev)
- {
-+	struct goya_device *goya = hdev->asic_specific;
++	/*
++	 * get extra reference to prevent bfqq from being freed in
++	 * next possible deactivate
++	 */
++	bfqq->ref++;
 +
-+	if (!(goya->hw_cap_initialized & HW_CAP_DMA))
-+		return;
-+
- 	WREG32(mmDMA_QM_0_GLBL_CFG0, 0);
- 	WREG32(mmDMA_QM_1_GLBL_CFG0, 0);
- 	WREG32(mmDMA_QM_2_GLBL_CFG0, 0);
-@@ -930,6 +935,11 @@ static int goya_stop_external_queues(struct hl_device *hdev)
- {
- 	int rc, retval = 0;
+ 	if (bfq_bfqq_busy(bfqq))
+ 		bfq_deactivate_bfqq(bfqd, bfqq, false, false);
+ 	else if (entity->on_st)
+@@ -653,6 +659,8 @@ void bfq_bfqq_move(struct bfq_data *bfqd, struct bfq_queue *bfqq,
  
-+	struct goya_device *goya = hdev->asic_specific;
-+
-+	if (!(goya->hw_cap_initialized & HW_CAP_DMA))
-+		return retval;
-+
- 	rc = goya_stop_queue(hdev,
- 			mmDMA_QM_0_GLBL_CFG1,
- 			mmDMA_QM_0_CP_STS,
-@@ -1719,9 +1729,18 @@ void goya_init_tpc_qmans(struct hl_device *hdev)
-  */
- static void goya_disable_internal_queues(struct hl_device *hdev)
- {
-+	struct goya_device *goya = hdev->asic_specific;
-+
-+	if (!(goya->hw_cap_initialized & HW_CAP_MME))
-+		goto disable_tpc;
-+
- 	WREG32(mmMME_QM_GLBL_CFG0, 0);
- 	WREG32(mmMME_CMDQ_GLBL_CFG0, 0);
- 
-+disable_tpc:
-+	if (!(goya->hw_cap_initialized & HW_CAP_TPC))
-+		return;
-+
- 	WREG32(mmTPC0_QM_GLBL_CFG0, 0);
- 	WREG32(mmTPC0_CMDQ_GLBL_CFG0, 0);
- 
-@@ -1757,8 +1776,12 @@ static void goya_disable_internal_queues(struct hl_device *hdev)
-  */
- static int goya_stop_internal_queues(struct hl_device *hdev)
- {
-+	struct goya_device *goya = hdev->asic_specific;
- 	int rc, retval = 0;
- 
-+	if (!(goya->hw_cap_initialized & HW_CAP_MME))
-+		goto stop_tpc;
-+
- 	/*
- 	 * Each queue (QMAN) is a separate H/W logic. That means that each
- 	 * QMAN can be stopped independently and failure to stop one does NOT
-@@ -1785,6 +1808,10 @@ static int goya_stop_internal_queues(struct hl_device *hdev)
- 		retval = -EIO;
- 	}
- 
-+stop_tpc:
-+	if (!(goya->hw_cap_initialized & HW_CAP_TPC))
-+		return retval;
-+
- 	rc = goya_stop_queue(hdev,
- 			mmTPC0_QM_GLBL_CFG1,
- 			mmTPC0_QM_CP_STS,
-@@ -1950,6 +1977,11 @@ static int goya_stop_internal_queues(struct hl_device *hdev)
- 
- static void goya_dma_stall(struct hl_device *hdev)
- {
-+	struct goya_device *goya = hdev->asic_specific;
-+
-+	if (!(goya->hw_cap_initialized & HW_CAP_DMA))
-+		return;
-+
- 	WREG32(mmDMA_QM_0_GLBL_CFG1, 1 << DMA_QM_0_GLBL_CFG1_DMA_STOP_SHIFT);
- 	WREG32(mmDMA_QM_1_GLBL_CFG1, 1 << DMA_QM_1_GLBL_CFG1_DMA_STOP_SHIFT);
- 	WREG32(mmDMA_QM_2_GLBL_CFG1, 1 << DMA_QM_2_GLBL_CFG1_DMA_STOP_SHIFT);
-@@ -1959,6 +1991,11 @@ static void goya_dma_stall(struct hl_device *hdev)
- 
- static void goya_tpc_stall(struct hl_device *hdev)
- {
-+	struct goya_device *goya = hdev->asic_specific;
-+
-+	if (!(goya->hw_cap_initialized & HW_CAP_TPC))
-+		return;
-+
- 	WREG32(mmTPC0_CFG_TPC_STALL, 1 << TPC0_CFG_TPC_STALL_V_SHIFT);
- 	WREG32(mmTPC1_CFG_TPC_STALL, 1 << TPC1_CFG_TPC_STALL_V_SHIFT);
- 	WREG32(mmTPC2_CFG_TPC_STALL, 1 << TPC2_CFG_TPC_STALL_V_SHIFT);
-@@ -1971,6 +2008,11 @@ static void goya_tpc_stall(struct hl_device *hdev)
- 
- static void goya_mme_stall(struct hl_device *hdev)
- {
-+	struct goya_device *goya = hdev->asic_specific;
-+
-+	if (!(goya->hw_cap_initialized & HW_CAP_MME))
-+		return;
-+
- 	WREG32(mmMME_STALL, 0xFFFFFFFF);
+ 	if (!bfqd->in_service_queue && !bfqd->rq_in_driver)
+ 		bfq_schedule_dispatch(bfqd);
++	/* release extra ref taken above */
++	bfq_put_queue(bfqq);
  }
  
+ /**
 -- 
 2.20.1
 
