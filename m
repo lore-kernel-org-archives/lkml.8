@@ -2,145 +2,113 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BD25C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:05:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1ABDC18E5C
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:05:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0FCB2468C
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:05:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583845538;
-	bh=jZwp9oI17+t2+5P+loI5tsUoPSq83EYLbtUqSb/Eugc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n4p1z/9R+QJCu9QBpa489e/KE0Gk2/6/JoAYAZKnJPfQoKiiyhyM4ZZy3jwKGqhrm
-	 IfA6BXB9G2kaFKKvLU0Z8RcV2kmD8DfkQ390Fj7B+FDqy+vRootr0Wf981LO8wFo7l
-	 UBYvtQfpNqJpsaDzrHdQUn1ROzgazs+93TW+QeSM=
+	by mail.kernel.org (Postfix) with ESMTP id C37E320409
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:05:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730256AbgCJNFh (ORCPT
+        id S1730407AbgCJNC2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:05:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50780 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727721AbgCJNFe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:05:34 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8543724693;
-        Tue, 10 Mar 2020 13:05:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845534;
-        bh=jZwp9oI17+t2+5P+loI5tsUoPSq83EYLbtUqSb/Eugc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KoaWwCH+JpH+pFjXe4ny+Kf1dXkHHL5DUemf4FdnuJzjSxkZ98SMOF/dpoZuFmyxy
-         yzVzOBzlBZhqhsUU+nxBnhoMUaQawqb0mASJOGPiOW4rBsreKo1M0vmI4Rj0DG8RbK
-         PaxxcSQ0nyHsOBK2sHR0tANcPSCqM5XBcy5sp81Y=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Martynas Pumputis <martynas@weave.works>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Andy Strohman <astroh@amazon.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 002/126] netfilter: nf_conntrack: resolve clash for matching conntracks
-Date:   Tue, 10 Mar 2020 13:40:23 +0100
-Message-Id: <20200310124203.853827816@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200310124203.704193207@linuxfoundation.org>
-References: <20200310124203.704193207@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 10 Mar 2020 09:02:28 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:33607 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728492AbgCJNCW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:02:22 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jBeWY-0000Is-7k; Tue, 10 Mar 2020 14:02:18 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 499CD1C2233;
+        Tue, 10 Mar 2020 14:02:17 +0100 (CET)
+Date:   Tue, 10 Mar 2020 13:02:16 -0000
+From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/entry] x86/entry/64: Trace irqflags unconditionally as ON
+ when returning to user space
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200308222609.314596327@linutronix.de>
+References: <20200308222609.314596327@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Message-ID: <158384533691.28353.9671125002002974218.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martynas Pumputis <martynas@weave.works>
+The following commit has been merged into the x86/entry branch of tip:
 
-[ Upstream commit ed07d9a021df6da53456663a76999189badc432a ]
+Commit-ID:     810f80a61be8c1d4a574082737f7a18c7459fa7b
+Gitweb:        https://git.kernel.org/tip/810f80a61be8c1d4a574082737f7a18c7459fa7b
+Author:        Thomas Gleixner <tglx@linutronix.de>
+AuthorDate:    Sun, 08 Mar 2020 23:24:03 +01:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Tue, 10 Mar 2020 13:56:32 +01:00
 
-This patch enables the clash resolution for NAT (disabled in
-"590b52e10d41") if clashing conntracks match (i.e. both tuples are equal)
-and a protocol allows it.
+x86/entry/64: Trace irqflags unconditionally as ON when returning to user space
 
-The clash might happen for a connections-less protocol (e.g. UDP) when
-two threads in parallel writes to the same socket and consequent calls
-to "get_unique_tuple" return the same tuples (incl. reply tuples).
+User space cannot disable interrupts any longer so trace return to user space
+unconditionally as IRQS_ON.
 
-In this case it is safe to perform the resolution, as the losing CT
-describes the same mangling as the winning CT, so no modifications to
-the packet are needed, and the result of rules traversal for the loser's
-packet stays valid.
-
-Signed-off-by: Martynas Pumputis <martynas@weave.works>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
-Signed-off-by: Andy Strohman <astroh@amazon.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Alexandre Chartre <alexandre.chartre@oracle.com>
+Link: https://lkml.kernel.org/r/20200308222609.314596327@linutronix.de
 ---
- net/netfilter/nf_conntrack_core.c | 30 ++++++++++++++++++++++--------
- 1 file changed, 22 insertions(+), 8 deletions(-)
+ arch/x86/entry/entry_32.S | 2 +-
+ arch/x86/entry/entry_64.S | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/net/netfilter/nf_conntrack_core.c b/net/netfilter/nf_conntrack_core.c
-index 2e65271bed01f..a79f5a89cab14 100644
---- a/net/netfilter/nf_conntrack_core.c
-+++ b/net/netfilter/nf_conntrack_core.c
-@@ -543,6 +543,18 @@ nf_ct_key_equal(struct nf_conntrack_tuple_hash *h,
- 	       net_eq(net, nf_ct_net(ct));
- }
+diff --git a/arch/x86/entry/entry_32.S b/arch/x86/entry/entry_32.S
+index 80df781..b67bae7 100644
+--- a/arch/x86/entry/entry_32.S
++++ b/arch/x86/entry/entry_32.S
+@@ -1088,7 +1088,7 @@ SYM_FUNC_START(entry_INT80_32)
+ 	STACKLEAK_ERASE
  
-+static inline bool
-+nf_ct_match(const struct nf_conn *ct1, const struct nf_conn *ct2)
-+{
-+	return nf_ct_tuple_equal(&ct1->tuplehash[IP_CT_DIR_ORIGINAL].tuple,
-+				 &ct2->tuplehash[IP_CT_DIR_ORIGINAL].tuple) &&
-+	       nf_ct_tuple_equal(&ct1->tuplehash[IP_CT_DIR_REPLY].tuple,
-+				 &ct2->tuplehash[IP_CT_DIR_REPLY].tuple) &&
-+	       nf_ct_zone_equal(ct1, nf_ct_zone(ct2), IP_CT_DIR_ORIGINAL) &&
-+	       nf_ct_zone_equal(ct1, nf_ct_zone(ct2), IP_CT_DIR_REPLY) &&
-+	       net_eq(nf_ct_net(ct1), nf_ct_net(ct2));
-+}
-+
- /* caller must hold rcu readlock and none of the nf_conntrack_locks */
- static void nf_ct_gc_expired(struct nf_conn *ct)
- {
-@@ -736,19 +748,21 @@ static int nf_ct_resolve_clash(struct net *net, struct sk_buff *skb,
- 	/* This is the conntrack entry already in hashes that won race. */
- 	struct nf_conn *ct = nf_ct_tuplehash_to_ctrack(h);
- 	const struct nf_conntrack_l4proto *l4proto;
-+	enum ip_conntrack_info oldinfo;
-+	struct nf_conn *loser_ct = nf_ct_get(skb, &oldinfo);
+ restore_all:
+-	TRACE_IRQS_IRET
++	TRACE_IRQS_ON
+ 	SWITCH_TO_ENTRY_STACK
+ 	CHECK_AND_APPLY_ESPFIX
  
- 	l4proto = __nf_ct_l4proto_find(nf_ct_l3num(ct), nf_ct_protonum(ct));
- 	if (l4proto->allow_clash &&
--	    ((ct->status & IPS_NAT_DONE_MASK) == 0) &&
- 	    !nf_ct_is_dying(ct) &&
- 	    atomic_inc_not_zero(&ct->ct_general.use)) {
--		enum ip_conntrack_info oldinfo;
--		struct nf_conn *loser_ct = nf_ct_get(skb, &oldinfo);
--
--		nf_ct_acct_merge(ct, ctinfo, loser_ct);
--		nf_conntrack_put(&loser_ct->ct_general);
--		nf_ct_set(skb, ct, oldinfo);
--		return NF_ACCEPT;
-+		if (((ct->status & IPS_NAT_DONE_MASK) == 0) ||
-+		    nf_ct_match(ct, loser_ct)) {
-+			nf_ct_acct_merge(ct, ctinfo, loser_ct);
-+			nf_conntrack_put(&loser_ct->ct_general);
-+			nf_ct_set(skb, ct, oldinfo);
-+			return NF_ACCEPT;
-+		}
-+		nf_ct_put(ct);
- 	}
- 	NF_CT_STAT_INC(net, drop);
- 	return NF_DROP;
--- 
-2.20.1
-
-
-
+diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
+index f2bb91e..0e9504f 100644
+--- a/arch/x86/entry/entry_64.S
++++ b/arch/x86/entry/entry_64.S
+@@ -174,7 +174,7 @@ SYM_INNER_LABEL(entry_SYSCALL_64_after_hwframe, SYM_L_GLOBAL)
+ 	movq	%rsp, %rsi
+ 	call	do_syscall_64		/* returns with IRQs disabled */
+ 
+-	TRACE_IRQS_IRETQ		/* we're about to change IF */
++	TRACE_IRQS_ON			/* return enables interrupts */
+ 
+ 	/*
+ 	 * Try to use SYSRET instead of IRET if we're returning to
+@@ -619,7 +619,7 @@ ret_from_intr:
+ .Lretint_user:
+ 	mov	%rsp,%rdi
+ 	call	prepare_exit_to_usermode
+-	TRACE_IRQS_IRETQ
++	TRACE_IRQS_ON
+ 
+ SYM_INNER_LABEL(swapgs_restore_regs_and_return_to_usermode, SYM_L_GLOBAL)
+ #ifdef CONFIG_DEBUG_ENTRY
