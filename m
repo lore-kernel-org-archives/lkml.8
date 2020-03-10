@@ -2,173 +2,237 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFCC6C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 17:59:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B0FEC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 18:03:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86C4221927
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 17:59:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nINPOu/S"
+	by mail.kernel.org (Postfix) with ESMTP id 21E1421927
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 18:03:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726621AbgCJR7n (ORCPT
+        id S1726481AbgCJSD6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 13:59:43 -0400
-Received: from mail-yw1-f65.google.com ([209.85.161.65]:43292 "EHLO
-        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726271AbgCJR7n (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 13:59:43 -0400
-Received: by mail-yw1-f65.google.com with SMTP id p69so14467694ywh.10;
-        Tue, 10 Mar 2020 10:59:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=5XXpJ4ZxMNGZ3MVXM7l+KVCnncYkpt5mf2ustLE6DdY=;
-        b=nINPOu/Sja5C8M/v8YKrkjV95bUiVvaqQOqKU67QZMBfWEvfpjqXvchaZHqJyeSiM2
-         dAiCp656j3wJhK6aW5lB428xlyRacJw/qgjGIOII8K52FiJYh8WPS91HjC2hLYsGDVqg
-         Cw16NJH/7wAgX+uX65w4TCwHUg2P+C+hFgIqKidAY4oGFP5gyBofcRMOYFfyFwjan9G9
-         fFN9ep/Sj4msDIg1Q6HTkxuerbHafgIgRY2l1ToBSurvsbwMMKUn1C52+uTKcvzS5iUZ
-         dSkVIWDCF72oa/YDRXEhWrOrQoM4aOp21cJv9nYmYsZDBymHlgn8TKsiUGULnn+oVeWS
-         gpLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=5XXpJ4ZxMNGZ3MVXM7l+KVCnncYkpt5mf2ustLE6DdY=;
-        b=lv8SeFnglV1VjJqGQ8+ksR0rAHslisDP13qbgDYPkq6fxySK+FhTOGKZbqw4A3ZHU3
-         FxowrVElMuZB8Zrv9EtXonQMyCObDSFett7P25qj3wMCOp40lTOJDnlKklDHSW+0NsVF
-         EzqHjN1A2Slu28AfEbG9tMOnW0XLvIX8xO+DOHuKq9qnxvowucbvC2qMlCYwpfJfUkUL
-         6XgDsg1fboxX2ZMILkGh/F/wG+eFhLhNy0hy/GIpMvTFocU/eYEYzIOw8hrk3qjvxng0
-         PjNebLKwn2gpELg/XkZZ3KwwTAuNcfrU0F5K/uQjwSbIZecR7JQIqqCLzLohCwkdx1T/
-         8BkQ==
-X-Gm-Message-State: ANhLgQ3/ChzcOShQsiCW7MNG9wdhXQrhQ93PYwlZsNRsMFiACjK3l+VY
-        g068GgeUbOl3paGyBbphodMFbHox9w==
-X-Google-Smtp-Source: ADFU+vuvJt6P35wAIIszjBT1hM9wxlx3itdQojljMIZ4Tr3vPuYUPTveAXrpZe2627v2SqhJl7/xbQ==
-X-Received: by 2002:a25:6b4b:: with SMTP id o11mr25428867ybm.257.1583863179742;
-        Tue, 10 Mar 2020 10:59:39 -0700 (PDT)
-Received: from threadripper.novatech-llc.local ([216.21.169.52])
-        by smtp.gmail.com with ESMTPSA id a12sm17153101ywm.0.2020.03.10.10.59.38
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 10 Mar 2020 10:59:39 -0700 (PDT)
-From:   George McCollister <george.mccollister@gmail.com>
-To:     netdev@vger.kernel.org
-Cc:     Woojung Huh <woojung.huh@microchip.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Marek Vasut <marex@denx.de>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        George McCollister <george.mccollister@gmail.com>
-Subject: [PATCH net-next] net: dsa: microchip: use delayed_work instead of timer + work
-Date:   Tue, 10 Mar 2020 12:58:59 -0500
-Message-Id: <20200310175859.118105-1-george.mccollister@gmail.com>
-X-Mailer: git-send-email 2.11.0
+        Tue, 10 Mar 2020 14:03:58 -0400
+Received: from mga03.intel.com ([134.134.136.65]:50812 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726283AbgCJSD5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 14:03:57 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Mar 2020 11:03:56 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,537,1574150400"; 
+   d="scan'208";a="236123984"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga008.jf.intel.com with ESMTP; 10 Mar 2020 11:03:56 -0700
+Received: from [10.125.249.53] (rsudarik-mobl.ccr.corp.intel.com [10.125.249.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id 3E05B58010D;
+        Tue, 10 Mar 2020 11:03:53 -0700 (PDT)
+Subject: Re: [PATCH v7 0/3] [RESEND] perf x86: Exposing IO stack to IO PMON
+ mapping through sysfs
+To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@redhat.com, namhyung@kernel.org,
+        linux-kernel@vger.kernel.org, eranian@google.com,
+        bgregg@netflix.com, ak@linux.intel.com, kan.liang@linux.intel.com
+Cc:     alexander.antonov@intel.com
+References: <20200303135418.9621-1-roman.sudarikov@linux.intel.com>
+From:   "Sudarikov, Roman" <roman.sudarikov@linux.intel.com>
+Message-ID: <b09cd7ca-6862-264f-d21f-ac0694accfc8@linux.intel.com>
+Date:   Tue, 10 Mar 2020 21:03:49 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
+MIME-Version: 1.0
+In-Reply-To: <20200303135418.9621-1-roman.sudarikov@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Simplify ksz_common.c by using delayed_work instead of a combination of
-timer and work.
+Hello Peter,
 
-Signed-off-by: George McCollister <george.mccollister@gmail.com>
----
- drivers/net/dsa/microchip/ksz_common.c | 26 ++++++++------------------
- drivers/net/dsa/microchip/ksz_common.h |  3 +--
- 2 files changed, 9 insertions(+), 20 deletions(-)
+Could you please take a look at the patch set and let me know if 
+anything needs fixing?
 
-diff --git a/drivers/net/dsa/microchip/ksz_common.c b/drivers/net/dsa/microchip/ksz_common.c
-index d8fda4a02640..fd1d6676ae4f 100644
---- a/drivers/net/dsa/microchip/ksz_common.c
-+++ b/drivers/net/dsa/microchip/ksz_common.c
-@@ -67,7 +67,7 @@ static void port_r_cnt(struct ksz_device *dev, int port)
- static void ksz_mib_read_work(struct work_struct *work)
- {
- 	struct ksz_device *dev = container_of(work, struct ksz_device,
--					      mib_read);
-+					      mib_read.work);
- 	struct ksz_port_mib *mib;
- 	struct ksz_port *p;
- 	int i;
-@@ -93,32 +93,24 @@ static void ksz_mib_read_work(struct work_struct *work)
- 		p->read = false;
- 		mutex_unlock(&mib->cnt_mutex);
- 	}
--}
--
--static void mib_monitor(struct timer_list *t)
--{
--	struct ksz_device *dev = from_timer(dev, t, mib_read_timer);
- 
--	mod_timer(&dev->mib_read_timer, jiffies + dev->mib_read_interval);
--	schedule_work(&dev->mib_read);
-+	schedule_delayed_work(&dev->mib_read, dev->mib_read_interval);
- }
- 
- void ksz_init_mib_timer(struct ksz_device *dev)
- {
- 	int i;
- 
-+	INIT_DELAYED_WORK(&dev->mib_read, ksz_mib_read_work);
-+
- 	/* Read MIB counters every 30 seconds to avoid overflow. */
- 	dev->mib_read_interval = msecs_to_jiffies(30000);
- 
--	INIT_WORK(&dev->mib_read, ksz_mib_read_work);
--	timer_setup(&dev->mib_read_timer, mib_monitor, 0);
--
- 	for (i = 0; i < dev->mib_port_cnt; i++)
- 		dev->dev_ops->port_init_cnt(dev, i);
- 
- 	/* Start the timer 2 seconds later. */
--	dev->mib_read_timer.expires = jiffies + msecs_to_jiffies(2000);
--	add_timer(&dev->mib_read_timer);
-+	schedule_delayed_work(&dev->mib_read, msecs_to_jiffies(2000));
- }
- EXPORT_SYMBOL_GPL(ksz_init_mib_timer);
- 
-@@ -152,7 +144,7 @@ void ksz_adjust_link(struct dsa_switch *ds, int port,
- 	/* Read all MIB counters when the link is going down. */
- 	if (!phydev->link) {
- 		p->read = true;
--		schedule_work(&dev->mib_read);
-+		schedule_delayed_work(&dev->mib_read, 0);
- 	}
- 	mutex_lock(&dev->dev_mutex);
- 	if (!phydev->link)
-@@ -477,10 +469,8 @@ EXPORT_SYMBOL(ksz_switch_register);
- void ksz_switch_remove(struct ksz_device *dev)
- {
- 	/* timer started */
--	if (dev->mib_read_timer.expires) {
--		del_timer_sync(&dev->mib_read_timer);
--		flush_work(&dev->mib_read);
--	}
-+	if (dev->mib_read_interval)
-+		cancel_delayed_work_sync(&dev->mib_read);
- 
- 	dev->dev_ops->exit(dev);
- 	dsa_unregister_switch(dev->ds);
-diff --git a/drivers/net/dsa/microchip/ksz_common.h b/drivers/net/dsa/microchip/ksz_common.h
-index a20ebb749377..f2c9bb68fd33 100644
---- a/drivers/net/dsa/microchip/ksz_common.h
-+++ b/drivers/net/dsa/microchip/ksz_common.h
-@@ -80,8 +80,7 @@ struct ksz_device {
- 	struct vlan_table *vlan_cache;
- 
- 	struct ksz_port *ports;
--	struct timer_list mib_read_timer;
--	struct work_struct mib_read;
-+	struct delayed_work mib_read;
- 	unsigned long mib_read_interval;
- 	u16 br_member;
- 	u16 member;
--- 
-2.11.0
+Thanks,
+Roman
+
+On 03.03.2020 16:54, roman.sudarikov@linux.intel.com wrote:
+> From: Roman Sudarikov <roman.sudarikov@linux.intel.com>
+>
+> The previous version can be found at:
+> v6: https://lkml.kernel.org/r/20200213150148.5627-1-roman.sudarikov@linux.intel.com/
+>
+> Changes in this revision are:
+> v6 -> v7:
+> - Addressed comments from Greg Kroah-Hartman:
+>    1. Added proper handling of load/unload path
+>    2. Simplified the mapping attribute show procedure by using the segment value
+>       of the first available root bus for all mapping attributes which is safe
+>       due to current implementation supports single segment configuration only
+>    3. Fixed coding style issues (extra lines, gotos in error path, macros etc)
+>
+> The previous version can be found at:
+> v5: https://lkml.kernel.org/r/20200211161549.19828-1-roman.sudarikov@linux.intel.com/
+>
+> Changes in this revision are:
+> v5 -> v6:
+>    1. Changed the mapping attribute name to "dieX"
+>    2. Called sysfs_attr_init() prior to dynamically creating the mapping attrs
+>    3. Removed redundant "empty" attribute
+>    4. Got an agreement on the mapping attribute format
+>
+> The previous version can be found at:
+> v4: https://lkml.kernel.org/r/20200117133759.5729-1-roman.sudarikov@linux.intel.com/
+>
+> Changes in this revision are:
+> v4 -> v5:
+> - Addressed comments from Greg Kroah-Hartman:
+>    1. Using the attr_update flow for newly introduced optional attributes
+>    2. No subfolder, optional attributes are created the same level as 'cpumask'
+>    3. No symlinks, optional attributes are created as files
+>    4. Single file for each IIO PMON block to node mapping
+>    5. Added Documentation/ABI/sysfs-devices-mapping
+>
+> The previous version can be found at:
+> v3: https://lkml.kernel.org/r/20200113135444.12027-1-roman.sudarikov@linux.intel.com
+>
+> Changes in this revision are:
+> v3 -> v4:
+> - Addressed comments from Greg Kroah-Hartman:
+>    1. Reworked handling of newly introduced attribute.
+>    2. Required Documentation update is expected in the follow up patchset
+>
+>
+> The previous version can be found at:
+> v2: https://lkml.kernel.org/r/20191210091451.6054-1-roman.sudarikov@linux.intel.com
+>
+> Changes in this revision are:
+> v2 -> v3:
+>    1. Addressed comments from Peter and Kan
+>
+> The previous version can be found at:
+> v1: https://lkml.kernel.org/r/20191126163630.17300-1-roman.sudarikov@linux.intel.com
+>
+> Changes in this revision are:
+> v1 -> v2:
+>    1. Fixed process related issues;
+>    2. This patch set includes kernel support for IIO stack to PMON mapping;
+>    3. Stephane raised concerns regarding output format which may require
+> code changes in the user space part of the feature only. We will continue
+> output format discussion in the context of user space update.
+>
+> Intel® Xeon® Scalable processor family (code name Skylake-SP) makes
+> significant changes in the integrated I/O (IIO) architecture. The new
+> solution introduces IIO stacks which are responsible for managing traffic
+> between the PCIe domain and the Mesh domain. Each IIO stack has its own
+> PMON block and can handle either DMI port, x16 PCIe root port, MCP-Link
+> or various built-in accelerators. IIO PMON blocks allow concurrent
+> monitoring of I/O flows up to 4 x4 bifurcation within each IIO stack.
+>
+> Software is supposed to program required perf counters within each IIO
+> stack and gather performance data. The tricky thing here is that IIO PMON
+> reports data per IIO stack but users have no idea what IIO stacks are -
+> they only know devices which are connected to the platform.
+>
+> Understanding IIO stack concept to find which IIO stack that particular
+> IO device is connected to, or to identify an IIO PMON block to program
+> for monitoring specific IIO stack assumes a lot of implicit knowledge
+> about given Intel server platform architecture.
+>
+> This patch set introduces:
+> 1. An infrastructure for exposing an Uncore unit to Uncore PMON mapping
+>     through sysfs-backend;
+> 2. A new --iiostat mode in perf stat to provide I/O performance metrics
+>     per I/O device.
+>
+> Usage examples:
+>
+> 1. List all devices below IIO stacks
+>    ./perf stat --iiostat=show
+>
+> Sample output w/o libpci:
+>
+>      S0-RootPort0-uncore_iio_0<00:00.0>
+>      S1-RootPort0-uncore_iio_0<81:00.0>
+>      S0-RootPort1-uncore_iio_1<18:00.0>
+>      S1-RootPort1-uncore_iio_1<86:00.0>
+>      S1-RootPort1-uncore_iio_1<88:00.0>
+>      S0-RootPort2-uncore_iio_2<3d:00.0>
+>      S1-RootPort2-uncore_iio_2<af:00.0>
+>      S1-RootPort3-uncore_iio_3<da:00.0>
+>
+> Sample output with libpci:
+>
+>      S0-RootPort0-uncore_iio_0<00:00.0 Sky Lake-E DMI3 Registers>
+>      S1-RootPort0-uncore_iio_0<81:00.0 Ethernet Controller X710 for 10GbE SFP+>
+>      S0-RootPort1-uncore_iio_1<18:00.0 Omni-Path HFI Silicon 100 Series [discrete]>
+>      S1-RootPort1-uncore_iio_1<86:00.0 Ethernet Controller XL710 for 40GbE QSFP+>
+>      S1-RootPort1-uncore_iio_1<88:00.0 Ethernet Controller XL710 for 40GbE QSFP+>
+>      S0-RootPort2-uncore_iio_2<3d:00.0 Ethernet Connection X722 for 10GBASE-T>
+>      S1-RootPort2-uncore_iio_2<af:00.0 Omni-Path HFI Silicon 100 Series [discrete]>
+>      S1-RootPort3-uncore_iio_3<da:00.0 NVMe Datacenter SSD [Optane]>
+>
+> 2. Collect metrics for all I/O devices below IIO stack
+>
+>    ./perf stat --iiostat -- dd if=/dev/zero of=/dev/nvme0n1 bs=1M oflag=direct
+>      357708+0 records in
+>      357707+0 records out
+>      375083606016 bytes (375 GB, 349 GiB) copied, 215.381 s, 1.7 GB/s
+>
+>    Performance counter stats for 'system wide':
+>
+>       device             Inbound Read(MB)    Inbound Write(MB)    Outbound Read(MB)   Outbound Write(MB)
+>      00:00.0                    0                    0                    0                    0
+>      81:00.0                    0                    0                    0                    0
+>      18:00.0                    0                    0                    0                    0
+>      86:00.0                    0                    0                    0                    0
+>      88:00.0                    0                    0                    0                    0
+>      3b:00.0                    3                    0                    0                    0
+>      3c:03.0                    3                    0                    0                    0
+>      3d:00.0                    3                    0                    0                    0
+>      af:00.0                    0                    0                    0                    0
+>      da:00.0               358559                   44                    0                   22
+>
+>      215.383783574 seconds time elapsed
+>
+>
+> 3. Collect metrics for comma separted list of I/O devices
+>
+>    ./perf stat --iiostat=da:00.0 -- dd if=/dev/zero of=/dev/nvme0n1 bs=1M oflag=direct
+>      381555+0 records in
+>      381554+0 records out
+>      400088457216 bytes (400 GB, 373 GiB) copied, 374.044 s, 1.1 GB/s
+>
+>    Performance counter stats for 'system wide':
+>
+>       device             Inbound Read(MB)    Inbound Write(MB)    Outbound Read(MB)   Outbound Write(MB)
+>      da:00.0               382462                   47                    0                   23
+>
+>      374.045775505 seconds time elapsed
+>
+> Roman Sudarikov (3):
+>    perf x86: Infrastructure for exposing an Uncore unit to PMON mapping
+>    perf x86: Topology max dies for whole system
+>    perf x86: Exposing an Uncore unit to PMON for Intel Xeon® server
+>      platform
+>
+>   .../ABI/testing/sysfs-devices-mapping         |  33 +++
+>   arch/x86/events/intel/uncore.c                |  21 +-
+>   arch/x86/events/intel/uncore.h                |  18 ++
+>   arch/x86/events/intel/uncore_snbep.c          | 193 ++++++++++++++++++
+>   4 files changed, 259 insertions(+), 6 deletions(-)
+>   create mode 100644 Documentation/ABI/testing/sysfs-devices-mapping
+>
+>
+> base-commit: 98d54f81e36ba3bf92172791eba5ca5bd813989b
+
 
