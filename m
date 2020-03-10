@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C300C18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:01:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 857E3C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:01:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10DBD208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:01:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D8592467D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:01:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583845300;
-	bh=TCnicF+IulriJkqk77wcgKGaA9yvCkJFj5VIQHJujAE=;
+	s=default; t=1583845303;
+	bh=Cg/CqJDhL5vBLVPwq3kwxrK1hEijNk3vd2jgYBFSC7k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iAbTQheuM/PV8StWIP82P4JU2GuUXoLiQL4SMWFRXE/qn6WZd+EcgcgW3pc2cKECc
-	 p4BGOGBMh8nHEqpgRkO9yoy5rc98ixSnTDmRASZgqQvIltIUoOKioKz2cXZyKQiFFr
-	 3s5M/Flp1DlX8JyxHJDogLyXDr6C1VnsCM1118jc=
+	b=VMdDcDZdUHmcF32NdvhKVWkFAsN3A29+rJnZETBmxOhgklWLr+breCEnnf4eSJ9JV
+	 4PNEU6s97czTAcW6HIFZI4sM+Buyei0vTP9yRF7dbCbzugGV6/Eq2AW5/+eyzXDUJU
+	 qnYnGlDbi7zEurFqfBLAKc7AiBNh+ATeWCZ0cKG8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728338AbgCJNBi (ORCPT
+        id S1730296AbgCJNBm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:01:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42778 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:01:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42952 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730269AbgCJNBa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:01:30 -0400
+        id S1730281AbgCJNBg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:01:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B640324649;
-        Tue, 10 Mar 2020 13:01:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC64124649;
+        Tue, 10 Mar 2020 13:01:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845290;
-        bh=TCnicF+IulriJkqk77wcgKGaA9yvCkJFj5VIQHJujAE=;
+        s=default; t=1583845296;
+        bh=Cg/CqJDhL5vBLVPwq3kwxrK1hEijNk3vd2jgYBFSC7k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nMDPxwWINuwGmDm+ddn6/Kom31LBjQ28jsVStW2guZTJoWNME613fL+cO5cwF1sNY
-         pXim7lZkhS915GoaXeZme6FtypKKW1cYUOo9aiPHYgBxb0E50Ug2VCASD6KLYEfdcw
-         EN31TV6jgmSEq4BAX1oFXUOvzh8KYi0njuc9nqqw=
+        b=RLiRq6FPr0200W0gOym3i0jzD8HVWqjkMg8zwd/CU4rZSDmkpOjh7UeIE2/+4oY7N
+         wWe1GYVw2si7W2Q0VcPusY7WWlf91JGiU7QGvQNpG1dq/TZL6VjeOxwcQZm+5Z4Jz/
+         bLuHsO3qwXMamhcY9lxnr2BEhryWIar1TRrUzfM0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dragos Tarcatu <dragos_tarcatu@mentor.com>,
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
+        Cezary Rojewski <cezary.rojewski@intel.com>,
         Mark Brown <broonie@kernel.org>
-Subject: [PATCH 5.5 131/189] ASoC: topology: Fix memleak in soc_tplg_manifest_load()
-Date:   Tue, 10 Mar 2020 13:39:28 +0100
-Message-Id: <20200310123653.062370320@linuxfoundation.org>
+Subject: [PATCH 5.5 133/189] ASoC: intel: skl: Fix pin debug prints
+Date:   Tue, 10 Mar 2020 13:39:30 +0100
+Message-Id: <20200310123653.271276796@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123639.608886314@linuxfoundation.org>
 References: <20200310123639.608886314@linuxfoundation.org>
@@ -59,61 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dragos Tarcatu <dragos_tarcatu@mentor.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit 242c46c023610dbc0213fc8fb6b71eb836bc5d95 upstream.
+commit 64bbacc5f08c01954890981c63de744df1f29a30 upstream.
 
-In case of ABI version mismatch, _manifest needs to be freed as
-it is just a copy of the original topology manifest. However, if
-a driver manifest handler is defined, that would get executed and
-the cleanup is never reached. Fix that by getting the return status
-of manifest() instead of returning directly.
+skl_print_pins() loops over all given pins but it overwrites the text
+at the very same position while increasing the returned length.
+Fix this to show the all pin contents properly.
 
-Fixes: 583958fa2e52 ("ASoC: topology: Make manifest backward compatible from ABI v4")
-Signed-off-by: Dragos Tarcatu <dragos_tarcatu@mentor.com>
-Link: https://lore.kernel.org/r/20200207185325.22320-3-dragos_tarcatu@mentor.com
+Fixes: d14700a01f91 ("ASoC: Intel: Skylake: Debugfs facility to dump module config")
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Acked-by: Cezary Rojewski <cezary.rojewski@intel.com>
+Link: https://lore.kernel.org/r/20200218111737.14193-2-tiwai@suse.de
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/soc-topology.c |   12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ sound/soc/intel/skylake/skl-debug.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/sound/soc/soc-topology.c
-+++ b/sound/soc/soc-topology.c
-@@ -2503,7 +2503,7 @@ static int soc_tplg_manifest_load(struct
- {
- 	struct snd_soc_tplg_manifest *manifest, *_manifest;
- 	bool abi_match;
--	int err;
-+	int ret = 0;
+--- a/sound/soc/intel/skylake/skl-debug.c
++++ b/sound/soc/intel/skylake/skl-debug.c
+@@ -34,7 +34,7 @@ static ssize_t skl_print_pins(struct skl
+ 	int i;
+ 	ssize_t ret = 0;
  
- 	if (tplg->pass != SOC_TPLG_PASS_MANIFEST)
- 		return 0;
-@@ -2516,19 +2516,19 @@ static int soc_tplg_manifest_load(struct
- 		_manifest = manifest;
- 	} else {
- 		abi_match = false;
--		err = manifest_new_ver(tplg, manifest, &_manifest);
--		if (err < 0)
--			return err;
-+		ret = manifest_new_ver(tplg, manifest, &_manifest);
-+		if (ret < 0)
-+			return ret;
- 	}
- 
- 	/* pass control to component driver for optional further init */
- 	if (tplg->comp && tplg->ops && tplg->ops->manifest)
--		return tplg->ops->manifest(tplg->comp, tplg->index, _manifest);
-+		ret = tplg->ops->manifest(tplg->comp, tplg->index, _manifest);
- 
- 	if (!abi_match)	/* free the duplicated one */
- 		kfree(_manifest);
- 
--	return 0;
-+	return ret;
+-	for (i = 0; i < max_pin; i++)
++	for (i = 0; i < max_pin; i++) {
+ 		ret += snprintf(buf + size, MOD_BUF - size,
+ 				"%s %d\n\tModule %d\n\tInstance %d\n\t"
+ 				"In-used %s\n\tType %s\n"
+@@ -45,6 +45,8 @@ static ssize_t skl_print_pins(struct skl
+ 				m_pin[i].in_use ? "Used" : "Unused",
+ 				m_pin[i].is_dynamic ? "Dynamic" : "Static",
+ 				m_pin[i].pin_state, i);
++		size += ret;
++	}
+ 	return ret;
  }
  
- /* validate header magic, size and type */
 
 
