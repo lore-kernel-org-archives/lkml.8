@@ -2,295 +2,185 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3035C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 14:06:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 696B6C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 14:07:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACFD42464B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 14:06:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BCCF2464B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 14:07:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="lLFhSEWR"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=metafoo.de header.i=@metafoo.de header.b="Cb7t7IdT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726979AbgCJOGa (ORCPT
+        id S1727080AbgCJOHJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 10:06:30 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:44106 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726462AbgCJOGa (ORCPT
+        Tue, 10 Mar 2020 10:07:09 -0400
+Received: from www381.your-server.de ([78.46.137.84]:52632 "EHLO
+        www381.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726451AbgCJOHI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 10:06:30 -0400
-Received: by mail-lj1-f196.google.com with SMTP id a10so14236673ljp.11
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 07:06:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=AdYg6WPnW9nkA89dG9goaT7uA2jUoyPdqfmcB/nhqQs=;
-        b=lLFhSEWR+HU7ja9NF1SEaIRPUkuSq/q1KpKKxGDNWKy55S/lnFDty2Y3vaDEA6bUMP
-         FyXDWceMhkDPrQSTkWja+orj9SvX0zfeE/567tCDjxicaVxAdDGKNRzcVgKn3NvVlCG3
-         X/L9WBy5rgzTpkf1Knb1y5HyapKdcaTJKkkBSzNSUX3xwvJLG2mNoiDb8uHU3hLSF0cL
-         7IIk2Epu5dHnBS1eEGsb8klWcF2FY7CXzMBcbnvPZz0j8WdpjSmj0dJmU/GKfr3sR+R8
-         WuF4qX1nAb274Uix7x0W8w2Fsnr5ZitIACdph3zZ0SP3gtpN/DjYgtgMON1uAQyn7Jln
-         hM5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=AdYg6WPnW9nkA89dG9goaT7uA2jUoyPdqfmcB/nhqQs=;
-        b=okyFC1HsgA0hrTS1/MZp7XQTfd+762TVhy8YAcJ8vXtGRLwuUzrG8gDR7xo091NIq+
-         cSn00uDjbQjkfDoXy8wCKlXWxikc3G4USy6pN8b/E2mqKMdgxkC2cOOn1XiOaNp7CsHS
-         VTaDSumDDaoqJ3WtRV+Kjx1eJv04wlCTvM5sI59ErzQ9EZAaPGy3Yubo1BUJGE4OGlBN
-         SUmGgFfhWwEHMrW0PaYxnmhmkVyIKhMQEH8bpaiOSIXAGutjPHDgq+bP+tAIo08uCyZr
-         eGFC1HPeNh4xf4HlcnF6YtDfupxoRsBwOHQxCisDA9A6y3wEfAeo0pLb4bEYWrQtc+18
-         SeLg==
-X-Gm-Message-State: ANhLgQ1H+ShrfOu5uw50K70mFVDRNvlbghevg0UDmO4hxWyHdgqGYrN0
-        wP7XRCcPEYR/5Li/MHxd4S/ecg==
-X-Google-Smtp-Source: ADFU+vvn0FGMBKT7TgxoHvOiEt5+FcYaiJQSifYAr/xnXwoMX2oHjrURwCPMNdIqkGYybfS2enhxoA==
-X-Received: by 2002:a05:651c:1056:: with SMTP id x22mr9778959ljm.91.1583849186402;
-        Tue, 10 Mar 2020 07:06:26 -0700 (PDT)
-Received: from localhost (h-200-138.A463.priv.bahnhof.se. [176.10.200.138])
-        by smtp.gmail.com with ESMTPSA id q15sm477148lfb.26.2020.03.10.07.06.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Mar 2020 07:06:25 -0700 (PDT)
-Date:   Tue, 10 Mar 2020 15:06:25 +0100
-From:   Niklas <niklas.soderlund@ragnatech.se>
-To:     Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
+        Tue, 10 Mar 2020 10:07:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=metafoo.de;
+         s=default2002; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
+        MIME-Version:Date:Message-ID:References:Cc:To:From:Subject:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=B60gRpqWPVR4hCYQQG/uqrF5IwKTwlRjU/7e6kB2EUo=; b=Cb7t7IdT7RRXm/vhh7M/whNk0X
+        9K4b3XqDP4Dg0Gey1TgvKKXa9BKrnMRTFE/FfemQ4EkeVpprOy1QWn+OOVp2gXX28BA4scZGld0pY
+        ++5towU/ebfm8SCFA33dULh74GctLAo7pxgfRu/AcKNLWy0T1qxBRmYHKi6LBeZeSYKfFDaAERIUO
+        BZ9YwutkBgTEkhDVg4/gUeA82L7fE5EWB0zu5xFzr5qlCtJ+Vrr4LS/l79q5fT7Dxnjh2JmULZWcG
+        rzojE2YZUb7jMbEcKpzWs5YJS5x8QSVnIjlGLjZu9NTGheufzXQgRCrDu/H1bMT6Aof6F4hdUnlJj
+        uPje/BSg==;
+Received: from sslproxy02.your-server.de ([78.47.166.47])
+        by www381.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <lars@metafoo.de>)
+        id 1jBfXG-0002h1-9V; Tue, 10 Mar 2020 15:07:06 +0100
+Received: from [93.104.100.58] (helo=[192.168.178.20])
+        by sslproxy02.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <lars@metafoo.de>)
+        id 1jBfXF-000PYM-Vc; Tue, 10 Mar 2020 15:07:06 +0100
+Subject: Re: [PATCH][RESEND] usb: dwc3: gadget: Handle dequeuing of non queued
+ URB gracefully
+From:   Lars-Peter Clausen <lars@metafoo.de>
+To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Lad Prabhakar <prabhakar.csengg@gmail.com>
-Subject: Re: [PATCH v2 2/3] media: rcar-vin: Add support for
- MEDIA_BUS_FMT_SRGGB8_1X8 format
-Message-ID: <20200310140625.GA88560@oden.dyn.berto.se>
-References: <1583838364-12932-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1583838364-12932-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200310124605.GO2975348@oden.dyn.berto.se>
- <OSBPR01MB35905FFB621C2F4222692832AAFF0@OSBPR01MB3590.jpnprd01.prod.outlook.com>
+        "balbi@kernel.org" <balbi@kernel.org>
+Cc:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "bigeasy@linutronix.de" <bigeasy@linutronix.de>,
+        "m.olbrich@pengutronix.de" <m.olbrich@pengutronix.de>
+References: <20191106144553.16956-1-alexandru.ardelean@analog.com>
+ <20200116132459.22383-1-alexandru.ardelean@analog.com>
+ <87d0b1885e.fsf@kernel.org>
+ <5313c926109f39699e63342b4ff71102d3cfa495.camel@analog.com>
+ <1df6e9be-2233-a0b2-1ddc-76de9d62a397@metafoo.de>
+Message-ID: <dc52d6a0-12ed-a34c-01c4-0fc5ccbf7b1d@metafoo.de>
+Date:   Tue, 10 Mar 2020 15:07:05 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+In-Reply-To: <1df6e9be-2233-a0b2-1ddc-76de9d62a397@metafoo.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <OSBPR01MB35905FFB621C2F4222692832AAFF0@OSBPR01MB3590.jpnprd01.prod.outlook.com>
+X-Authenticated-Sender: lars@metafoo.de
+X-Virus-Scanned: Clear (ClamAV 0.102.2/25747/Tue Mar 10 12:06:29 2020)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lad,
-
-On 2020-03-10 13:42:20 +0000, Prabhakar Mahadev Lad wrote:
-> Hi Niklas,
+On 3/10/20 2:45 PM, Lars-Peter Clausen wrote:
+> On 3/10/20 2:22 PM, Ardelean, Alexandru wrote:
+>> On Thu, 2020-01-30 at 14:02 +0200, Felipe Balbi wrote:
+>>> [External]
+>>>
+>>>
+>>> Hi,
+>>>
+>>> Alexandru Ardelean <alexandru.ardelean@analog.com> writes:
+>>>
+>>>> From: Lars-Peter Clausen <lars@metafoo.de>
+>>>>
+>>>> Trying to dequeue and URB that is currently not queued should be a 
+>>>> no-op
+>>>> and be handled gracefully.
+>>>>
+>>>> Use the list field of the URB to indicate whether it is queued or 
+>>>> not by
+>>>> setting it to the empty list when it is not queued.
+>>>>
+>>>> Handling this gracefully allows for race condition free synchronization
+>>>> between the complete callback being called to to a completed 
+>>>> transfer and
+>>>> trying to call usb_ep_dequeue() at the same time.
+>>> We need a little more information here. Can you further explain what
+>>> happens and how you caught this?
+>> Apologies for the delay [of this reply].
+>> It's been a while since this patch was created, and it was on a 4.14 
+>> kernel.
+>> Lars was trying to fix various crashes with USB DWC3 OTG + some Xilinx 
+>> patches.
+>> I did not track the status of the OTG stuff upstream. I think it's a 
+>> lot of
+>> patches in the Xilinx tree.
+>>
+>> The context has changed from 4.14 [obviously], and there were many 
+>> things that
+>> could have influenced things.
+>> I've been trying to RFC some of these patches now.
+>> [ yeah I know: maybe I should have [probably] also added an RFC tag :) ]
+>> Some of the patches [including this one] seemed to make sense, even 
+>> outside of
+>> the context of the crashes that were happening on 4.14.
+>> Atm, we're at 4.19 and we don't see issues, but we still have this patch.
+>> We may drop it and see what happens.
+>> Â¯\_(ãƒ„)_/Â¯
+>>
+>> But in any case, it does require a bit more re-investigation.
+>> Apologies for the noise that this patch created :)
 > 
-> Thank for the review.
+> The race condition is between a gadget calling usb_ep_dequeue() and the 
+> driver completing the URB.
 > 
-> > -----Original Message-----
-> > From: Niklas <niklas.soderlund@ragnatech.se>
-> > Sent: 10 March 2020 12:46
-> > To: Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > Cc: Mauro Carvalho Chehab <mchehab@kernel.org>; linux-
-> > media@vger.kernel.org; linux-renesas-soc@vger.kernel.org; linux-
-> > kernel@vger.kernel.org; Lad Prabhakar <prabhakar.csengg@gmail.com>
-> > Subject: Re: [PATCH v2 2/3] media: rcar-vin: Add support for
-> > MEDIA_BUS_FMT_SRGGB8_1X8 format
-> >
-> > Hi Lad,
-> >
-> > Thanks for your work.
-> >
-> > On 2020-03-10 11:06:03 +0000, Lad Prabhakar wrote:
-> > > Add support for MEDIA_BUS_FMT_SRGGB8_1X8 format in rcar-vin by
-> > setting
-> > > format type to RAW8 in VNMC register and appropriately setting the
-> > > bpp, bytesperline to enable V4L2_PIX_FMT_SRGGB8.
-> > >
-> > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-
-> > lad.rj@bp.renesas.com>
-> > > ---
-> > >  drivers/media/platform/rcar-vin/rcar-core.c |  1 +
-> > > drivers/media/platform/rcar-vin/rcar-dma.c  |  9 ++++++++-
-> > > drivers/media/platform/rcar-vin/rcar-v4l2.c | 13 ++++++++++++-
-> > >  3 files changed, 21 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/drivers/media/platform/rcar-vin/rcar-core.c
-> > > b/drivers/media/platform/rcar-vin/rcar-core.c
-> > > index 7440c89..76daf2f 100644
-> > > --- a/drivers/media/platform/rcar-vin/rcar-core.c
-> > > +++ b/drivers/media/platform/rcar-vin/rcar-core.c
-> > > @@ -469,6 +469,7 @@ static int rvin_parallel_subdevice_attach(struct
-> > rvin_dev *vin,
-> > >  case MEDIA_BUS_FMT_UYVY8_2X8:
-> > >  case MEDIA_BUS_FMT_UYVY10_2X10:
-> > >  case MEDIA_BUS_FMT_RGB888_1X24:
-> > > +case MEDIA_BUS_FMT_SRGGB8_1X8:
-> > >  vin->mbus_code = code.code;
-> > >  vin_dbg(vin, "Found media bus format for %s: %d\n",
-> > >  subdev->name, vin->mbus_code);
-> > > diff --git a/drivers/media/platform/rcar-vin/rcar-dma.c
-> > > b/drivers/media/platform/rcar-vin/rcar-dma.c
-> > > index 1a30cd0..1c1fafa 100644
-> > > --- a/drivers/media/platform/rcar-vin/rcar-dma.c
-> > > +++ b/drivers/media/platform/rcar-vin/rcar-dma.c
-> > > @@ -85,6 +85,7 @@
-> > >  #define VNMC_INF_YUV8_BT601(1 << 16)
-> > >  #define VNMC_INF_YUV10_BT656(2 << 16)
-> > >  #define VNMC_INF_YUV10_BT601(3 << 16)
-> > > +#define VNMC_INF_RAW8(4 << 16)
-> > >  #define VNMC_INF_YUV16(5 << 16)
-> > >  #define VNMC_INF_RGB888(6 << 16)
-> > >  #define VNMC_VUP(1 << 10)
-> > > @@ -587,7 +588,6 @@ void rvin_crop_scale_comp(struct rvin_dev *vin)
-> > >  rvin_write(vin, vin->crop.top, VNSLPRC_REG);
-> > >  rvin_write(vin, vin->crop.top + vin->crop.height - 1, VNELPRC_REG);
-> > >
-> > > -
-> > >  /* TODO: Add support for the UDS scaler. */
-> > >  if (vin->info->model != RCAR_GEN3)
-> > >  rvin_crop_scale_comp_gen2(vin);
-> > > @@ -676,6 +676,9 @@ static int rvin_setup(struct rvin_dev *vin)
-> > >
-> > >  input_is_yuv = true;
-> > >  break;
-> > > +case MEDIA_BUS_FMT_SRGGB8_1X8:
-> > > +vnmc |= VNMC_INF_RAW8;
-> > > +break;
-> > >  default:
-> > >  break;
-> > >  }
-> > > @@ -737,6 +740,9 @@ static int rvin_setup(struct rvin_dev *vin)
-> > >  case V4L2_PIX_FMT_ABGR32:
-> > >  dmr = VNDMR_A8BIT(vin->alpha) | VNDMR_EXRGB |
-> > VNDMR_DTMD_ARGB;
-> > >  break;
-> > > +case V4L2_PIX_FMT_SRGGB8:
-> > > +dmr = 0;
-> > > +break;
-> > >  default:
-> > >  vin_err(vin, "Invalid pixelformat (0x%x)\n",
-> > >  vin->format.pixelformat);
-> > > @@ -1110,6 +1116,7 @@ static int rvin_mc_validate_format(struct
-> > rvin_dev *vin, struct v4l2_subdev *sd,
-> > >  case MEDIA_BUS_FMT_UYVY8_2X8:
-> > >  case MEDIA_BUS_FMT_UYVY10_2X10:
-> > >  case MEDIA_BUS_FMT_RGB888_1X24:
-> > > +case MEDIA_BUS_FMT_SRGGB8_1X8:
-> > >  vin->mbus_code = fmt.format.code;
-> > >  break;
-> > >  default:
-> > > diff --git a/drivers/media/platform/rcar-vin/rcar-v4l2.c
-> > > b/drivers/media/platform/rcar-vin/rcar-v4l2.c
-> > > index 5151a3c..4698099 100644
-> > > --- a/drivers/media/platform/rcar-vin/rcar-v4l2.c
-> > > +++ b/drivers/media/platform/rcar-vin/rcar-v4l2.c
-> > > @@ -66,6 +66,10 @@ static const struct rvin_video_format rvin_formats[]
-> > = {
-> > >  .fourcc= V4L2_PIX_FMT_ABGR32,
-> > >  .bpp= 4,
-> > >  },
-> > > +{
-> > > +.fourcc= V4L2_PIX_FMT_SRGGB8,
-> > > +.bpp= 2,
-> >
-> > This does not look right, is not bytes-per-pixel 1 for a SRGGB8?
-> >
-> I guessed the bpp's were picked from VnIS table as I result I did the same.
+> Lets say in a thread you have a reference to a in-flight URB and you 
+> want to abort the request, e.g. because the application that sent the 
+> request has been closed. But concurrently to that the URB is completed 
+> by the hardware and the interrupt fires and marks the URB as complete. 
+> Your thread is suspended while the interrupt is running, once the 
+> interrupt has finished the thread wakes up, still has the reference to 
+> the URB, but now it has been completed. The thread still calls 
+> usb_ep_dequeue() though and then undefined behavior occurs.
 > 
-> > > +},
-> > >  };
-> > >
-> > >  const struct rvin_video_format *rvin_format_from_pixel(struct
-> > > rvin_dev *vin, @@ -102,6 +106,7 @@ static u32
-> > > rvin_format_bytesperline(struct rvin_dev *vin,  {
-> > >  const struct rvin_video_format *fmt;
-> > >  u32 align;
-> > > +u8 div;
-> > >
-> > >  fmt = rvin_format_from_pixel(vin, pix->pixelformat);
-> > >
-> > > @@ -112,16 +117,22 @@ static u32 rvin_format_bytesperline(struct
-> > rvin_dev *vin,
-> > >  case V4L2_PIX_FMT_NV12:
-> > >  case V4L2_PIX_FMT_NV16:
-> > >  align = 0x20;
-> > > +div = 1;
-> > > +break;
-> > > +case V4L2_PIX_FMT_SRGGB8:
-> > > +align = 0x10;
-> > > +div = 2;
-> >
-> > Yes this does not look right at all, I think you should set bpp to 1 and drop the
-> > div handling here.
-> >
-> If I set bpp as 1 and drop the div VNIS_REG will be wrongly configured in
-> rvin_crop_scale_comp() and the image captured will be wrong.
-> 
-> For example for 640x480:
-> 
-> With the current patch bpp = 2:
-> bytesperline = 640
 
-This is wrong, if we have a line of 640 pixels and 2 bytes per pixel 
-then bytesperline must be at least 1280 bytes right?
+Sorry, one quick correction. I believe the issue actually occurs when 
+you have more than one CPU and the thread is not suspended, while the 
+interrupt is running. In this case it is possible that the IRQ fires the 
+driver marks the URB as complete, then unlocks, the driver lock and 
+calls the complete callback, but before the complete callback runs the 
+other thread calls usb_ep_dequeue(). There is no way to protect against 
+this condition at the gadget level and it needs to be handled in the driver.
 
-> image size = 307200
-> stride = 320
+Basically
 
-But this is incorrect, the VNIS_REG shall be at least the number of 
-pixels in a line (EPPrC - SPPrC -> 640 - 0 = 640). Then we need to align 
-it to the pixel unit (16, 32, 64, 128) depending on the output pixel 
-format.
-
-This usually result in a stride that is larger then the line length.  
-Thus you need a test application that knows the difference between width 
-* bpp and bytesperline. I use qv4l2 without opengl support when I do quick 
-tests and it does not support this hence I get a incorrect visual view 
-of the stream when testing.
-
-How does the image capture fail with bpp = 1?
-
-> 
-> And with bpp = 1 and div removed
-> bytesperline = 640
-> image size = 307200
-> stride = 640
+  CPU 1                         | CPU 2
+--------------------------------------------------------------
+URB IRQ fires                  |                             |
+spin_lock(&dwc->lock);         |                             |
+                                |                             |
+Driver handles completed URB   |                             |
+frees resources, etc           | spin_lock(&gadget->lock)    |
+                                | usb_ep_dequeue()            |
+spin_unlock(&dwc->lock);       |                             |
+usb_gadget_giveback_request()  | spin_lock(&dwc->lock)       |
+                                |                             |
+Call compelte callback         | Try to free URB resources   |
+                                | again => Undefined behavior |
+                                |                             |
+                                | spin_lock(&dwc->lock)       |
+                                | spin_unlock(&gadget->lock)  |
+spin_lock(&gadget->lock)       |                             |
+                                |                             |
+Mark URB as compelte in gadget |                             |
+spin_unlock(&gadget->lock)     |                             |
+spin_unlock(&dwc->lock)        |                             |
+spin_lock(&dwc->lock)          |                             |
+finish IRQ                     |                             |
 
 
+> The context in which we observed the issue is when using function fs to 
+> create a userspace gadget and using aio_cancel() to abort a pending URB. 
+> But really any gadget that aborts a transfer before it is completed or 
+> before the timeout occurred can run into this issue.
 > 
-> Cheers,
-> --Prabhakar
+> - Lars
 > 
-> > >  break;
-> > >  default:
-> > >  align = 0x10;
-> > > +div = 1;
-> > >  break;
-> > >  }
-> > >
-> > >  if (V4L2_FIELD_IS_SEQUENTIAL(pix->field))
-> > >  align = 0x80;
-> > >
-> > > -return ALIGN(pix->width, align) * fmt->bpp;
-> > > +return ALIGN(pix->width / div, align) * fmt->bpp;
-> > >  }
-> > >
-> > >  static u32 rvin_format_sizeimage(struct v4l2_pix_format *pix)
-> > > --
-> > > 2.7.4
-> > >
-> >
-> > --
-> > Regards,
-> > Niklas Söderlund
-> 
-> 
-> Renesas Electronics Europe GmbH, Geschaeftsfuehrer/President: Carsten Jauch, Sitz der Gesellschaft/Registered office: Duesseldorf, Arcadiastrasse 10, 40472 Duesseldorf, Germany, Handelsregister/Commercial Register: Duesseldorf, HRB 3708 USt-IDNr./Tax identification no.: DE 119353406 WEEE-Reg.-Nr./WEEE reg. no.: DE 14978647
 
--- 
-Regards,
-Niklas Söderlund
+
+
+
