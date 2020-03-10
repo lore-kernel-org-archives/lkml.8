@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D014C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:17:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4410C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:17:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69F31222D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:17:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71AD320873
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:17:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583846236;
-	bh=+v/rSLFy5PwCrzfAzZaFb36j3/dbL6vBNeLEcFwzJvA=;
+	s=default; t=1583846243;
+	bh=LvOIsdWShQIw1IRB4vuW/FaXSjTng2bCNWiLUXcwwRg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WeTCY3Uo5kJVkeu4DhWPZN4K8DuEqC4Bpo8WNz7bpJtElYG5sB/twtjguA/bBK0QU
-	 nlKQIgPotI0Wj9djtnzEVs7Qn0VFjc5eWuQPjXsFtDjcrXlOh+u+XZMbVD479un4Zo
-	 qBrPepgt+Ukp0R9pHYCXWPU27Z6gxYzv8jC2e3W0=
+	b=kza3khdRn4otSUDdCap05SbUP6bt4YwdKB+nzurj5xlLvVWle+ES2sJXSdLhcb+yN
+	 O969bF45lw9aO2B/MYiMBE6R155o6QO5hssk8Zfri29kx8eP6oa/bIEKMVfOzPVjl3
+	 DbNR7QPcb9Ut69THkp2oqT46GvLO3Ee+5bkk9SdY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731340AbgCJNMF (ORCPT
+        id S1731135AbgCJNRV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:12:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34010 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:17:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33834 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731501AbgCJNMB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:12:01 -0400
+        id S1731491AbgCJNL5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:11:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D007924691;
-        Tue, 10 Mar 2020 13:12:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D394F20409;
+        Tue, 10 Mar 2020 13:11:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845921;
-        bh=+v/rSLFy5PwCrzfAzZaFb36j3/dbL6vBNeLEcFwzJvA=;
+        s=default; t=1583845916;
+        bh=LvOIsdWShQIw1IRB4vuW/FaXSjTng2bCNWiLUXcwwRg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GpOYcvjlhu6mfK0Zn6vUyQo7qEY9VE5abFANBfAkifElZvvZO+LxL6GFFFsyTSPhP
-         69xx/hdngIhyCaG5zBS3DhN1FSC3os5nS72PcctDYu3RgzRWSi0DKeZpjMv/MoW7Ii
-         AAWD0r+R40E6zO1wEjWNERiftzCfGTG0xNunVZH4=
+        b=auEDWQwMJ8SXSMAg4xQM9/RwmM0d0bzNzR3KW5kV3n0ro++SK6TjT1yyfx+u2Bp1D
+         6LkaZuQjmspwjY+RVjibfRRGe4Subj815vQDAZHHQIQ9M0TEGaOx6/4spdBeTopqj5
+         rfrDRc6nCmdfF8p58AMivGmwxY2lPZ7W8Jc4wt+s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
+        stable@vger.kernel.org, Marek Vasut <marex@denx.de>,
         "David S. Miller" <davem@davemloft.net>,
+        Lukas Wunner <lukas@wunner.de>, Petr Stetiar <ynezz@true.cz>,
+        YueHaibing <yuehaibing@huawei.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 03/86] net: dsa: bcm_sf2: Forcibly configure IMP port for 1Gb/sec
-Date:   Tue, 10 Mar 2020 13:44:27 +0100
-Message-Id: <20200310124530.993443881@linuxfoundation.org>
+Subject: [PATCH 4.19 20/86] net: ks8851-ml: Remove 8-bit bus accessors
+Date:   Tue, 10 Mar 2020 13:44:44 +0100
+Message-Id: <20200310124531.875135619@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310124530.808338541@linuxfoundation.org>
 References: <20200310124530.808338541@linuxfoundation.org>
@@ -61,39 +62,136 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Marek Vasut <marex@denx.de>
 
-[ Upstream commit 98c5f7d44fef309e692c24c6d71131ee0f0871fb ]
+[ Upstream commit 69233bba6543a37755158ca3382765387b8078df ]
 
-We are still experiencing some packet loss with the existing advanced
-congestion buffering (ACB) settings with the IMP port configured for
-2Gb/sec, so revert to conservative link speeds that do not produce
-packet loss until this is resolved.
+This driver is mixing 8-bit and 16-bit bus accessors for reasons unknown,
+however the speculation is that this was some sort of attempt to support
+the 8-bit bus mode.
 
-Fixes: 8f1880cbe8d0 ("net: dsa: bcm_sf2: Configure IMP port for 2Gb/sec")
-Fixes: de34d7084edd ("net: dsa: bcm_sf2: Only 7278 supports 2Gb/sec IMP port")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
+As per the KS8851-16MLL documentation, all two registers accessed via the
+8-bit accessors are internally 16-bit registers, so reading them using
+16-bit accessors is fine. The KS_CCR read can be converted to 16-bit read
+outright, as it is already a concatenation of two 8-bit reads of that
+register. The KS_RXQCR accesses are 8-bit only, however writing the top
+8 bits of the register is OK as well, since the driver caches the entire
+16-bit register value anyway.
+
+Finally, the driver is not used by any hardware in the kernel right now.
+The only hardware available to me is one with 16-bit bus, so I have no
+way to test the 8-bit bus mode, however it is unlikely this ever really
+worked anyway. If the 8-bit bus mode is ever required, it can be easily
+added by adjusting the 16-bit accessors to do 2 consecutive accesses,
+which is how this should have been done from the beginning.
+
+Signed-off-by: Marek Vasut <marex@denx.de>
+Cc: David S. Miller <davem@davemloft.net>
+Cc: Lukas Wunner <lukas@wunner.de>
+Cc: Petr Stetiar <ynezz@true.cz>
+Cc: YueHaibing <yuehaibing@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/dsa/bcm_sf2.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/net/ethernet/micrel/ks8851_mll.c | 45 +++---------------------
+ 1 file changed, 5 insertions(+), 40 deletions(-)
 
-diff --git a/drivers/net/dsa/bcm_sf2.c b/drivers/net/dsa/bcm_sf2.c
-index f181a28cb452e..8c69789fbe094 100644
---- a/drivers/net/dsa/bcm_sf2.c
-+++ b/drivers/net/dsa/bcm_sf2.c
-@@ -73,8 +73,7 @@ static void bcm_sf2_imp_setup(struct dsa_switch *ds, int port)
- 		/* Force link status for IMP port */
- 		reg = core_readl(priv, offset);
- 		reg |= (MII_SW_OR | LINK_STS);
--		if (priv->type == BCM7278_DEVICE_ID)
--			reg |= GMII_SPEED_UP_2G;
-+		reg &= ~GMII_SPEED_UP_2G;
- 		core_writel(priv, reg, offset);
+diff --git a/drivers/net/ethernet/micrel/ks8851_mll.c b/drivers/net/ethernet/micrel/ks8851_mll.c
+index 35f8c9ef204d9..29ac83f4683a6 100644
+--- a/drivers/net/ethernet/micrel/ks8851_mll.c
++++ b/drivers/net/ethernet/micrel/ks8851_mll.c
+@@ -475,24 +475,6 @@ static int msg_enable;
+  * chip is busy transferring packet data (RX/TX FIFO accesses).
+  */
  
- 		/* Enable Broadcast, Multicast, Unicast forwarding to IMP port */
+-/**
+- * ks_rdreg8 - read 8 bit register from device
+- * @ks	  : The chip information
+- * @offset: The register address
+- *
+- * Read a 8bit register from the chip, returning the result
+- */
+-static u8 ks_rdreg8(struct ks_net *ks, int offset)
+-{
+-	u16 data;
+-	u8 shift_bit = offset & 0x03;
+-	u8 shift_data = (offset & 1) << 3;
+-	ks->cmd_reg_cache = (u16) offset | (u16)(BE0 << shift_bit);
+-	iowrite16(ks->cmd_reg_cache, ks->hw_addr_cmd);
+-	data  = ioread16(ks->hw_addr);
+-	return (u8)(data >> shift_data);
+-}
+-
+ /**
+  * ks_rdreg16 - read 16 bit register from device
+  * @ks	  : The chip information
+@@ -508,22 +490,6 @@ static u16 ks_rdreg16(struct ks_net *ks, int offset)
+ 	return ioread16(ks->hw_addr);
+ }
+ 
+-/**
+- * ks_wrreg8 - write 8bit register value to chip
+- * @ks: The chip information
+- * @offset: The register address
+- * @value: The value to write
+- *
+- */
+-static void ks_wrreg8(struct ks_net *ks, int offset, u8 value)
+-{
+-	u8  shift_bit = (offset & 0x03);
+-	u16 value_write = (u16)(value << ((offset & 1) << 3));
+-	ks->cmd_reg_cache = (u16)offset | (BE0 << shift_bit);
+-	iowrite16(ks->cmd_reg_cache, ks->hw_addr_cmd);
+-	iowrite16(value_write, ks->hw_addr);
+-}
+-
+ /**
+  * ks_wrreg16 - write 16bit register value to chip
+  * @ks: The chip information
+@@ -643,8 +609,7 @@ static void ks_read_config(struct ks_net *ks)
+ 	u16 reg_data = 0;
+ 
+ 	/* Regardless of bus width, 8 bit read should always work.*/
+-	reg_data = ks_rdreg8(ks, KS_CCR) & 0x00FF;
+-	reg_data |= ks_rdreg8(ks, KS_CCR+1) << 8;
++	reg_data = ks_rdreg16(ks, KS_CCR);
+ 
+ 	/* addr/data bus are multiplexed */
+ 	ks->sharedbus = (reg_data & CCR_SHARED) == CCR_SHARED;
+@@ -748,7 +713,7 @@ static inline void ks_read_qmu(struct ks_net *ks, u16 *buf, u32 len)
+ 
+ 	/* 1. set sudo DMA mode */
+ 	ks_wrreg16(ks, KS_RXFDPR, RXFDPR_RXFPAI);
+-	ks_wrreg8(ks, KS_RXQCR, (ks->rc_rxqcr | RXQCR_SDA) & 0xff);
++	ks_wrreg16(ks, KS_RXQCR, ks->rc_rxqcr | RXQCR_SDA);
+ 
+ 	/* 2. read prepend data */
+ 	/**
+@@ -765,7 +730,7 @@ static inline void ks_read_qmu(struct ks_net *ks, u16 *buf, u32 len)
+ 	ks_inblk(ks, buf, ALIGN(len, 4));
+ 
+ 	/* 4. reset sudo DMA Mode */
+-	ks_wrreg8(ks, KS_RXQCR, ks->rc_rxqcr);
++	ks_wrreg16(ks, KS_RXQCR, ks->rc_rxqcr);
+ }
+ 
+ /**
+@@ -998,13 +963,13 @@ static void ks_write_qmu(struct ks_net *ks, u8 *pdata, u16 len)
+ 	ks->txh.txw[1] = cpu_to_le16(len);
+ 
+ 	/* 1. set sudo-DMA mode */
+-	ks_wrreg8(ks, KS_RXQCR, (ks->rc_rxqcr | RXQCR_SDA) & 0xff);
++	ks_wrreg16(ks, KS_RXQCR, ks->rc_rxqcr | RXQCR_SDA);
+ 	/* 2. write status/lenth info */
+ 	ks_outblk(ks, ks->txh.txw, 4);
+ 	/* 3. write pkt data */
+ 	ks_outblk(ks, (u16 *)pdata, ALIGN(len, 4));
+ 	/* 4. reset sudo-DMA mode */
+-	ks_wrreg8(ks, KS_RXQCR, ks->rc_rxqcr);
++	ks_wrreg16(ks, KS_RXQCR, ks->rc_rxqcr);
+ 	/* 5. Enqueue Tx(move the pkt from TX buffer into TXQ) */
+ 	ks_wrreg16(ks, KS_TXQCR, TXQCR_METFE);
+ 	/* 6. wait until TXQCR_METFE is auto-cleared */
 -- 
 2.20.1
 
