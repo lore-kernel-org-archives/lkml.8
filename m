@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F403EC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:50:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFA7FC18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:50:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9D902468D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:50:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C731F20674
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:50:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583844613;
-	bh=zC3Y1C8HwIOEPRo15lvjJ/967zThZkg6I7D9cZHzu88=;
+	s=default; t=1583844616;
+	bh=1nbaMWuIFAoLjoGhCKBHXRKpAcZ/Cxe1xzwNFvknask=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1Gz0k2OtepDYtmSdouSwAfHThH629saYS/1LtlbA49o7LzGCKhRbtRw3BTiFShU1V
-	 U0DQOA+MQAUaaGu7FZbtkAZYwP0dFdgZjARBuw4x0iCvlOyaMHaK9wu8Ms4y11ONLY
-	 Z1qpp4U2jnIWlDeT/tAilOJUvZ3QRhYn4qARRaCg=
+	b=ITSOp0K3uZxCgiokOjw5ONy4wq7ls02Cr1xbOpLju4XXXTIIXGsF5z6CfPcIdO/g1
+	 EPaaarY8SetvCCwLD1rUKQUEVgFSrhwYKnc5DthGaSFaPV/VIqhUB+55fox+MJaRFp
+	 FeClGLTbf3TLWPRmhWeC8FnvoBkVw9aMuK45A8ew=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727567AbgCJMuM (ORCPT
+        id S1728571AbgCJMuP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:50:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54686 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:50:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54732 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728549AbgCJMuI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:50:08 -0400
+        id S1728554AbgCJMuL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:50:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 73E222468E;
-        Tue, 10 Mar 2020 12:50:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ECD4A20674;
+        Tue, 10 Mar 2020 12:50:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844607;
-        bh=zC3Y1C8HwIOEPRo15lvjJ/967zThZkg6I7D9cZHzu88=;
+        s=default; t=1583844610;
+        bh=1nbaMWuIFAoLjoGhCKBHXRKpAcZ/Cxe1xzwNFvknask=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Sh/BYcvi5f+LWoMzXm3z1lAkkghh6YUmZ9oJEykInhEc5PxJkhYr7gkA7vTO9nhD9
-         eZv6J+EQ8oekxvRDwX52FsXtQJfPzUecm55gfd2zvj1wxDuEASBEWFqEn7kZSNPFVj
-         g4uykD5OiiHVkJ0awVD07/9RfjMuWw4IOdH6W/tE=
+        b=fSl5rro9Ek53/w52UXnfEShaOptZu6b5XpR3HLadnKZxK+mI1/j7qvsPTa7Jh769t
+         n9LeX3UtxfmcYVNuNPoY0nMgZnMHEZlpCs6KrLTbPyl/Bo8+HRvYEpFLnwaQqfIisG
+         WyoavllrNCEzuea9Hu4s9zJY0isDY2Dsop04niPg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guo Ren <guoren@linux.alibaba.com>,
+        stable@vger.kernel.org, Harigovindan P <harigovi@codeaurora.org>,
+        Rob Clark <robdclark@chromium.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 053/168] csky: Fixup ftrace modify panic
-Date:   Tue, 10 Mar 2020 13:38:19 +0100
-Message-Id: <20200310123640.710173049@linuxfoundation.org>
+Subject: [PATCH 5.4 027/168] drm/msm/dsi: save pll state before dsi host is powered off
+Date:   Tue, 10 Mar 2020 13:37:53 +0100
+Message-Id: <20200310123638.376164554@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123635.322799692@linuxfoundation.org>
 References: <20200310123635.322799692@linuxfoundation.org>
@@ -59,36 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guo Ren <guoren@linux.alibaba.com>
+From: Harigovindan P <harigovi@codeaurora.org>
 
-[ Upstream commit 359ae00d12589c31cf103894d0f32588d523ca83 ]
+[ Upstream commit a1028dcfd0dd97884072288d0c8ed7f30399b528 ]
 
-During ftrace init, linux will replace all function prologues
-(call_mcout) with nops, but it need flush_dcache and
-invalidate_icache to make it work. So flush_cache functions
-couldn't be nested called by ftrace framework.
+Save pll state before dsi host is powered off. Without this change
+some register values gets resetted.
 
-Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
+Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
+Signed-off-by: Rob Clark <robdclark@chromium.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/csky/mm/Makefile | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/gpu/drm/msm/dsi/dsi_manager.c | 5 +++++
+ drivers/gpu/drm/msm/dsi/phy/dsi_phy.c | 4 ----
+ 2 files changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/arch/csky/mm/Makefile b/arch/csky/mm/Makefile
-index c94ef64810986..efb7ebab342b3 100644
---- a/arch/csky/mm/Makefile
-+++ b/arch/csky/mm/Makefile
-@@ -1,8 +1,10 @@
- # SPDX-License-Identifier: GPL-2.0-only
- ifeq ($(CONFIG_CPU_HAS_CACHEV2),y)
- obj-y +=			cachev2.o
-+CFLAGS_REMOVE_cachev2.o = $(CC_FLAGS_FTRACE)
- else
- obj-y +=			cachev1.o
-+CFLAGS_REMOVE_cachev1.o = $(CC_FLAGS_FTRACE)
- endif
+diff --git a/drivers/gpu/drm/msm/dsi/dsi_manager.c b/drivers/gpu/drm/msm/dsi/dsi_manager.c
+index 355a60b4a536f..73127948f54d9 100644
+--- a/drivers/gpu/drm/msm/dsi/dsi_manager.c
++++ b/drivers/gpu/drm/msm/dsi/dsi_manager.c
+@@ -479,6 +479,7 @@ static void dsi_mgr_bridge_post_disable(struct drm_bridge *bridge)
+ 	struct msm_dsi *msm_dsi1 = dsi_mgr_get_dsi(DSI_1);
+ 	struct mipi_dsi_host *host = msm_dsi->host;
+ 	struct drm_panel *panel = msm_dsi->panel;
++	struct msm_dsi_pll *src_pll;
+ 	bool is_dual_dsi = IS_DUAL_DSI();
+ 	int ret;
  
- obj-y +=			dma-mapping.o
+@@ -519,6 +520,10 @@ static void dsi_mgr_bridge_post_disable(struct drm_bridge *bridge)
+ 								id, ret);
+ 	}
+ 
++	/* Save PLL status if it is a clock source */
++	src_pll = msm_dsi_phy_get_pll(msm_dsi->phy);
++	msm_dsi_pll_save_state(src_pll);
++
+ 	ret = msm_dsi_host_power_off(host);
+ 	if (ret)
+ 		pr_err("%s: host %d power off failed,%d\n", __func__, id, ret);
+diff --git a/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c b/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c
+index 3522863a4984f..21519229fe73a 100644
+--- a/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c
++++ b/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c
+@@ -724,10 +724,6 @@ void msm_dsi_phy_disable(struct msm_dsi_phy *phy)
+ 	if (!phy || !phy->cfg->ops.disable)
+ 		return;
+ 
+-	/* Save PLL status if it is a clock source */
+-	if (phy->usecase != MSM_DSI_PHY_SLAVE)
+-		msm_dsi_pll_save_state(phy->pll);
+-
+ 	phy->cfg->ops.disable(phy);
+ 
+ 	dsi_phy_regulator_disable(phy);
 -- 
 2.20.1
 
