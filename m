@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F526C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:57:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A949C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:57:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AC612468E
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:57:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2F252468E
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:57:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583845065;
-	bh=CGebHgjhHTMYhcCX6pCED1lY8PBYxQiOsZ45mbhQ4xw=;
+	s=default; t=1583845071;
+	bh=wCxkECia1Bdipl3Uk+Po1/dnEMVWPfTLv75tbY6FuOI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GY+GUIc1AxjrcPNFgp1+YA3CdA41S95pzfjP6KYB2OICgGdt0GYhzE1o3NrdoLGqU
-	 aAEMKLqX828kMOqrNx4hf6Blk9X8Jv9cJTEqX3MgaK+wCZGnqnNtl/0XHsS793G27X
-	 u7pD8VYw3ljpWWGEpU/k0GLMU6gr1cGyNNnkaENM=
+	b=1tLlfLPSmb7dqeYJDX4ATE8pNFtLkNwmUXsHXF3p0M2qausdp6e5KiXixL+x+yd5F
+	 yxpR6F7evrFYtGfNYlel31jdxCQcXWyZrOdP7g4qnNiH3+9EMPfet6lR5j6AZFzBce
+	 0DfLLuk8uStLbPy0+9Su2ryLNTY8EygMXsOEhIN0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729820AbgCJM5n (ORCPT
+        id S1729834AbgCJM5t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:57:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37350 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:57:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37586 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729813AbgCJM5j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:57:39 -0400
+        id S1728042AbgCJM5p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:57:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D550420674;
-        Tue, 10 Mar 2020 12:57:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 969932467D;
+        Tue, 10 Mar 2020 12:57:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845059;
-        bh=CGebHgjhHTMYhcCX6pCED1lY8PBYxQiOsZ45mbhQ4xw=;
+        s=default; t=1583845065;
+        bh=wCxkECia1Bdipl3Uk+Po1/dnEMVWPfTLv75tbY6FuOI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I7w0z/5K2AHzhfpe+IlrRlk4oG6VBsbhG4whj/+Ri1EilKwjC51k8h3oOJcLbyMSz
-         OzcmTPaQqii/aa8KopMyNuB5853sYAobGVRtJaJX2vg1ssoUALrzMkE9Dawnm4qb6Y
-         2W0HylT0tGH7NNhp3h55H61t0lCj4cKnaEVoZCq8=
+        b=rwvSPgatFzzV9Zo/2kmWnvs4gzJnIluvbyGnM3t8wkzgqLyenkQ9FFlbCLLSrbXtj
+         Pxim7v3XupctTW81SjbHfOIEi1uSK2taSbufL3NIDa8mSq603rIDk8gpZsDKSjwXPn
+         FW546Mlr7acGUNjZisJMyU18G5sbSLoexhmrZpvI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Michal Swiatkowski <michal.swiatkowski@intel.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        stable@vger.kernel.org, Tim Harvey <tharvey@gateworks.com>,
+        Robert Jones <rjones@gateworks.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 048/189] ice: Dont tell the OS that link is going down
-Date:   Tue, 10 Mar 2020 13:38:05 +0100
-Message-Id: <20200310123644.354792694@linuxfoundation.org>
+Subject: [PATCH 5.5 050/189] net: thunderx: workaround BGX TX Underflow issue
+Date:   Tue, 10 Mar 2020 13:38:07 +0100
+Message-Id: <20200310123644.553050941@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123639.608886314@linuxfoundation.org>
 References: <20200310123639.608886314@linuxfoundation.org>
@@ -62,46 +61,153 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michal Swiatkowski <michal.swiatkowski@intel.com>
+From: Tim Harvey <tharvey@gateworks.com>
 
-[ Upstream commit 8a55c08d3bbc9ffc9639f69f742e59ebd99f913b ]
+[ Upstream commit 971617c3b761c876d686a2188220a33898c90e99 ]
 
-Remove code that tell the OS that link is going down when user
-change flow control via ethtool. When link is up it isn't certain
-that link goes down after 0x0605 aq command. If link doesn't go
-down, OS thinks that link is down, but physical link is up. To
-reset this state user have to take interface down and up.
+While it is not yet understood why a TX underflow can easily occur
+for SGMII interfaces resulting in a TX wedge. It has been found that
+disabling/re-enabling the LMAC resolves the issue.
 
-If link goes down after 0x0605 command, FW send information
-about that and after that driver tells the OS that the link goes
-down. So this code in ethtool is unnecessary.
-
-Signed-off-by: Michal Swiatkowski <michal.swiatkowski@intel.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Signed-off-by: Tim Harvey <tharvey@gateworks.com>
+Reviewed-by: Robert Jones <rjones@gateworks.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/ice/ice_ethtool.c | 7 -------
- 1 file changed, 7 deletions(-)
+ .../net/ethernet/cavium/thunder/thunder_bgx.c | 62 ++++++++++++++++++-
+ .../net/ethernet/cavium/thunder/thunder_bgx.h |  9 +++
+ 2 files changed, 68 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/ice/ice_ethtool.c b/drivers/net/ethernet/intel/ice/ice_ethtool.c
-index 9bd166e3dff3d..594f6dbb21102 100644
---- a/drivers/net/ethernet/intel/ice/ice_ethtool.c
-+++ b/drivers/net/ethernet/intel/ice/ice_ethtool.c
-@@ -2977,13 +2977,6 @@ ice_set_pauseparam(struct net_device *netdev, struct ethtool_pauseparam *pause)
- 	else
- 		return -EINVAL;
+diff --git a/drivers/net/ethernet/cavium/thunder/thunder_bgx.c b/drivers/net/ethernet/cavium/thunder/thunder_bgx.c
+index c4f6ec0cd183e..00751771f6624 100644
+--- a/drivers/net/ethernet/cavium/thunder/thunder_bgx.c
++++ b/drivers/net/ethernet/cavium/thunder/thunder_bgx.c
+@@ -410,10 +410,19 @@ void bgx_lmac_rx_tx_enable(int node, int bgx_idx, int lmacid, bool enable)
+ 	lmac = &bgx->lmac[lmacid];
  
--	/* Tell the OS link is going down, the link will go back up when fw
--	 * says it is ready asynchronously
--	 */
--	ice_print_link_msg(vsi, false);
--	netif_carrier_off(netdev);
--	netif_tx_stop_all_queues(netdev);
--
- 	/* Set the FC mode and only restart AN if link is up */
- 	status = ice_set_fc(pi, &aq_failures, link_up);
+ 	cfg = bgx_reg_read(bgx, lmacid, BGX_CMRX_CFG);
+-	if (enable)
++	if (enable) {
+ 		cfg |= CMR_PKT_RX_EN | CMR_PKT_TX_EN;
+-	else
++
++		/* enable TX FIFO Underflow interrupt */
++		bgx_reg_modify(bgx, lmacid, BGX_GMP_GMI_TXX_INT_ENA_W1S,
++			       GMI_TXX_INT_UNDFLW);
++	} else {
+ 		cfg &= ~(CMR_PKT_RX_EN | CMR_PKT_TX_EN);
++
++		/* Disable TX FIFO Underflow interrupt */
++		bgx_reg_modify(bgx, lmacid, BGX_GMP_GMI_TXX_INT_ENA_W1C,
++			       GMI_TXX_INT_UNDFLW);
++	}
+ 	bgx_reg_write(bgx, lmacid, BGX_CMRX_CFG, cfg);
  
+ 	if (bgx->is_rgx)
+@@ -1535,6 +1544,48 @@ static int bgx_init_phy(struct bgx *bgx)
+ 	return bgx_init_of_phy(bgx);
+ }
+ 
++static irqreturn_t bgx_intr_handler(int irq, void *data)
++{
++	struct bgx *bgx = (struct bgx *)data;
++	u64 status, val;
++	int lmac;
++
++	for (lmac = 0; lmac < bgx->lmac_count; lmac++) {
++		status = bgx_reg_read(bgx, lmac, BGX_GMP_GMI_TXX_INT);
++		if (status & GMI_TXX_INT_UNDFLW) {
++			pci_err(bgx->pdev, "BGX%d lmac%d UNDFLW\n",
++				bgx->bgx_id, lmac);
++			val = bgx_reg_read(bgx, lmac, BGX_CMRX_CFG);
++			val &= ~CMR_EN;
++			bgx_reg_write(bgx, lmac, BGX_CMRX_CFG, val);
++			val |= CMR_EN;
++			bgx_reg_write(bgx, lmac, BGX_CMRX_CFG, val);
++		}
++		/* clear interrupts */
++		bgx_reg_write(bgx, lmac, BGX_GMP_GMI_TXX_INT, status);
++	}
++
++	return IRQ_HANDLED;
++}
++
++static void bgx_register_intr(struct pci_dev *pdev)
++{
++	struct bgx *bgx = pci_get_drvdata(pdev);
++	int ret;
++
++	ret = pci_alloc_irq_vectors(pdev, BGX_LMAC_VEC_OFFSET,
++				    BGX_LMAC_VEC_OFFSET, PCI_IRQ_ALL_TYPES);
++	if (ret < 0) {
++		pci_err(pdev, "Req for #%d msix vectors failed\n",
++			BGX_LMAC_VEC_OFFSET);
++		return;
++	}
++	ret = pci_request_irq(pdev, GMPX_GMI_TX_INT, bgx_intr_handler, NULL,
++			      bgx, "BGX%d", bgx->bgx_id);
++	if (ret)
++		pci_free_irq(pdev, GMPX_GMI_TX_INT, bgx);
++}
++
+ static int bgx_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ {
+ 	int err;
+@@ -1550,7 +1601,7 @@ static int bgx_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 
+ 	pci_set_drvdata(pdev, bgx);
+ 
+-	err = pci_enable_device(pdev);
++	err = pcim_enable_device(pdev);
+ 	if (err) {
+ 		dev_err(dev, "Failed to enable PCI device\n");
+ 		pci_set_drvdata(pdev, NULL);
+@@ -1604,6 +1655,8 @@ static int bgx_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 
+ 	bgx_init_hw(bgx);
+ 
++	bgx_register_intr(pdev);
++
+ 	/* Enable all LMACs */
+ 	for (lmac = 0; lmac < bgx->lmac_count; lmac++) {
+ 		err = bgx_lmac_enable(bgx, lmac);
+@@ -1620,6 +1673,7 @@ static int bgx_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 
+ err_enable:
+ 	bgx_vnic[bgx->bgx_id] = NULL;
++	pci_free_irq(pdev, GMPX_GMI_TX_INT, bgx);
+ err_release_regions:
+ 	pci_release_regions(pdev);
+ err_disable_device:
+@@ -1637,6 +1691,8 @@ static void bgx_remove(struct pci_dev *pdev)
+ 	for (lmac = 0; lmac < bgx->lmac_count; lmac++)
+ 		bgx_lmac_disable(bgx, lmac);
+ 
++	pci_free_irq(pdev, GMPX_GMI_TX_INT, bgx);
++
+ 	bgx_vnic[bgx->bgx_id] = NULL;
+ 	pci_release_regions(pdev);
+ 	pci_disable_device(pdev);
+diff --git a/drivers/net/ethernet/cavium/thunder/thunder_bgx.h b/drivers/net/ethernet/cavium/thunder/thunder_bgx.h
+index 25888706bdcd1..cdea493921857 100644
+--- a/drivers/net/ethernet/cavium/thunder/thunder_bgx.h
++++ b/drivers/net/ethernet/cavium/thunder/thunder_bgx.h
+@@ -180,6 +180,15 @@
+ #define BGX_GMP_GMI_TXX_BURST		0x38228
+ #define BGX_GMP_GMI_TXX_MIN_PKT		0x38240
+ #define BGX_GMP_GMI_TXX_SGMII_CTL	0x38300
++#define BGX_GMP_GMI_TXX_INT		0x38500
++#define BGX_GMP_GMI_TXX_INT_W1S		0x38508
++#define BGX_GMP_GMI_TXX_INT_ENA_W1C	0x38510
++#define BGX_GMP_GMI_TXX_INT_ENA_W1S	0x38518
++#define  GMI_TXX_INT_PTP_LOST			BIT_ULL(4)
++#define  GMI_TXX_INT_LATE_COL			BIT_ULL(3)
++#define  GMI_TXX_INT_XSDEF			BIT_ULL(2)
++#define  GMI_TXX_INT_XSCOL			BIT_ULL(1)
++#define  GMI_TXX_INT_UNDFLW			BIT_ULL(0)
+ 
+ #define BGX_MSIX_VEC_0_29_ADDR		0x400000 /* +(0..29) << 4 */
+ #define BGX_MSIX_VEC_0_29_CTL		0x400008
 -- 
 2.20.1
 
