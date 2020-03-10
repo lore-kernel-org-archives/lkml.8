@@ -2,182 +2,405 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89DC8C18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 17:25:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AB57C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 17:26:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62C1F21927
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 17:25:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E157D2146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 17:26:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="WuyfZGd6"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="heWe+Cjt";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="JFE72vnW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726595AbgCJRZQ (ORCPT
+        id S1726622AbgCJR0a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 13:25:16 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:14586 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726271AbgCJRZQ (ORCPT
+        Tue, 10 Mar 2020 13:26:30 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:61074 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726271AbgCJR03 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 13:25:16 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e67cd200000>; Tue, 10 Mar 2020 10:23:44 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 10 Mar 2020 10:25:14 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 10 Mar 2020 10:25:14 -0700
-Received: from [10.2.175.232] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 10 Mar
- 2020 17:25:13 +0000
-Subject: Re: LKFT: arm x15: mmc1: cache flush error -110
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-CC:     Jon Hunter <jonathanh@nvidia.com>,
-        Bitan Biswas <bbiswas@nvidia.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        Alexei Starovoitov <ast@kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        <lkft-triage@lists.linaro.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        John Stultz <john.stultz@linaro.org>,
-        Faiz Abbas <faiz_abbas@ti.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Kishon <kishon@ti.com>
-References: <CA+G9fYuqAQfhzF2BzHr7vMHx68bo8-jT+ob_F3eHQ3=oFjgYdg@mail.gmail.com>
- <CAPDyKFrrO4noYqdxWL9Y8Nx75LopbDudKGMotkGbGcAF1oq==w@mail.gmail.com>
- <5e9b5646-bd48-e55b-54ee-1c2c41fc9218@nvidia.com>
- <CAPDyKFqpNo_4OePBR1KnJNO=kR8XEqbcsEd=icSceSdDH+Rk1Q@mail.gmail.com>
- <757853cf-987e-f6b6-9259-b4560a031692@nvidia.com>
- <d12fe142-7e72-ab58-33ab-17817e35096f@nvidia.com>
- <c216f131-6f83-c9c9-9d17-8d44ec06972d@nvidia.com>
- <87ad7586-9569-4276-044a-adb64e84ca15@nvidia.com>
- <a0962e0b-0f1d-9f32-f6e9-92f69f93167f@nvidia.com>
- <57ddddc2-3ee8-d867-bba0-0dd9929ba37d@nvidia.com>
- <CAPDyKFqZSd9E3+16yFsmpee2JsbRJ-DGThxx7NJHu6UE00Xi1Q@mail.gmail.com>
- <26ee7225-9483-4664-c2d7-b5cefeadcd4b@nvidia.com>
- <CAPDyKFqwVQDEnPNi33mc9ycTxpaT1cRLejbR3Ja4c8dha4gFRw@mail.gmail.com>
- <0301bbd5-8d4d-4a77-42c7-8a1391c2d60a@nvidia.com>
- <CAPDyKFp93H0=ttazofW9NMBtL5VnjB4PdkwN0FDCtWR0pMHrPA@mail.gmail.com>
- <f01b5533-124a-d978-a90a-9c9c6235fb65@nvidia.com>
- <CAPDyKFqJjsuHect-azQKO8cCoq5JJQrZ=eShsdLHq97NXgXnuQ@mail.gmail.com>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <227d9f08-582e-fd79-e1dc-7695bddd162d@nvidia.com>
-Date:   Tue, 10 Mar 2020 10:27:46 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 10 Mar 2020 13:26:29 -0400
+Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
+        by m0001303.ppops.net (8.16.0.42/8.16.0.42) with SMTP id 02AHP1a1007658;
+        Tue, 10 Mar 2020 10:26:14 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
+ subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=facebook; bh=FPc2L9p5zMAoqw4+4j1/G/pmwIAPk8LwMeb7OtovDpg=;
+ b=heWe+CjtvqZBj6lCDEYEB9cSmggJc6HqDuO2xvNY6okp8+ZqkGm+zDg3PQSiIi/4Nl7N
+ voJkoyeIYZsEdJ0n5t+sBJc1Z/3FpzpSAsRS84Mh9qEdg9nN6bNVogkaIbJOHcNjoYwu
+ Qp6eypUatpl1ecDORpEa4VuoIDMD5TjAWuw= 
+Received: from mail.thefacebook.com ([163.114.132.120])
+        by m0001303.ppops.net with ESMTP id 2yme3vnf8s-2
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Tue, 10 Mar 2020 10:26:13 -0700
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (100.104.98.9) by
+ o365-in.thefacebook.com (100.104.94.230) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1847.3; Tue, 10 Mar 2020 10:26:11 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=WF6hq1++g9GrbDovnyikzSLuCJnR8qacpnyibApbqTjR2o8+BfwnE02kFijyQw44D03GNFi+QvktdEHCNIBl7oDZ7e3PRCe+MwtbEfW4CAVSLtVekia4YHO6NFbpDh01Fdym+j3DkWULfco0Hk88be6xBUddFoyS3b11ZDleLgbh5rlk5bjlDIO2pthQVYazDoAIxZNEOEi/eCHg6ZqqGm0fujhWesxdtJJAXrDQkrcBqb9YRTaPrWqgv9YvuI+Pv+X5s4w40dszVbr2xlrcZKWoMcpIFQYNrYWrPu0m0pH78yklXGXBkojU7mud4vAb5bYtqTOYwETT1B1K+bEOPQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FPc2L9p5zMAoqw4+4j1/G/pmwIAPk8LwMeb7OtovDpg=;
+ b=AqlJn3Nn9ieR2FHm6SZzIobsNuEggF0aY2i7WkJ8ETu2Kxsk4af244G4v0BlorbaN0eWQz5n0lCMwFNwhTrsArbsNb8yRzGZ0xWwIY6G1mdLKeOeAWR8jSZzScjUYWcmp8VHz1wcS0F83lNqQu/MOoAbM9r1G9thXlB+8ivRG62tj2UrYqPlHZ/d9FdqjVOHSuGzg4lO5dlQetUkkauVpWogerD+hKu+S6BNzk8e+QFq5ih6kNZRb4VyIp3CS5uytV2QhNdwYsieUu0xTxw812mOI+A5ll0go59A77Oq3tB2iugS/L2xUjaaibWGK6feN3Iwm6kIJLvd3hJILfIJBg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FPc2L9p5zMAoqw4+4j1/G/pmwIAPk8LwMeb7OtovDpg=;
+ b=JFE72vnWI4LHBHyfbROdP2eSaB6T6N6q+zN3Lq8dZb/07uxnxtMPdTki9RHG+wBKJp/9kKt1+D2y4WM52wkxl4Y1KXSJZEjGozJDwSDnwOOtrBXTdW+YaT/qOhpjGGwJG29Jro03Tu1rfCSKwLahQSW+zMIsZGZVfPQAZGH2qYI=
+Received: from MWHPR15MB1661.namprd15.prod.outlook.com (2603:10b6:300:124::23)
+ by MWHPR15MB1262.namprd15.prod.outlook.com (2603:10b6:320:25::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.17; Tue, 10 Mar
+ 2020 17:26:09 +0000
+Received: from MWHPR15MB1661.namprd15.prod.outlook.com
+ ([fe80::f930:6bf2:6d2:93ef]) by MWHPR15MB1661.namprd15.prod.outlook.com
+ ([fe80::f930:6bf2:6d2:93ef%8]) with mapi id 15.20.2793.013; Tue, 10 Mar 2020
+ 17:26:09 +0000
+Date:   Tue, 10 Mar 2020 10:25:59 -0700
+From:   Roman Gushchin <guro@fb.com>
+To:     Michal Hocko <mhocko@kernel.org>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>, <linux-mm@kvack.org>,
+        <kernel-team@fb.com>, <linux-kernel@vger.kernel.org>,
+        Rik van Riel <riel@surriel.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>
+Subject: Re: [PATCH v2] mm: hugetlb: optionally allocate gigantic hugepages
+ using cma
+Message-ID: <20200310172559.GA85000@carbon.dhcp.thefacebook.com>
+References: <20200310002524.2291595-1-guro@fb.com>
+ <20200310084544.GY8447@dhcp22.suse.cz>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200310084544.GY8447@dhcp22.suse.cz>
+X-ClientProxiedBy: CO2PR04CA0160.namprd04.prod.outlook.com
+ (2603:10b6:104:4::14) To MWHPR15MB1661.namprd15.prod.outlook.com
+ (2603:10b6:300:124::23)
 MIME-Version: 1.0
-In-Reply-To: <CAPDyKFqJjsuHect-azQKO8cCoq5JJQrZ=eShsdLHq97NXgXnuQ@mail.gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1583861024; bh=u81zjZkUGBM+2adtEa1nBZaymHCbzrmBFSnlbj7WlR4=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=WuyfZGd69+yiiObkV6kiAq5Y13ZBDkr6Fd/CfP0IOyohs7XadcGaMpSEPK9+OcFdd
-         mbM40Sh4IfKYvbfDayRdQwHe20MEzCZMwzE1dL3ZOB6oIYQKW7bz/Px1SCqmRuZZ04
-         3fu5dRy4Ict2DrxUvis8S4i+e8TV8iXCjShSXxNkW/z4BHgsCUKSeRXTSkw8PnMBg0
-         qm9/IKMnT8+SVcQerASRUpuRlEPfPYXkO3zdYGjVKlKDo0lfvvEJky5zwwUdUyN5P0
-         xK1drhaFbDKXn9wA7vdrBQNqllcFeQS2ndch5TtxQhONrl0xvixgOHtM+eS5pTNuzw
-         D+stW+XqcH3ig==
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from carbon.dhcp.thefacebook.com (2620:10d:c090:400::5:27e5) by CO2PR04CA0160.namprd04.prod.outlook.com (2603:10b6:104:4::14) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.11 via Frontend Transport; Tue, 10 Mar 2020 17:26:08 +0000
+X-Originating-IP: [2620:10d:c090:400::5:27e5]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 8599927b-c361-4cb4-9db4-08d7c5181f07
+X-MS-TrafficTypeDiagnostic: MWHPR15MB1262:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <MWHPR15MB1262016FD76369C9BD56DF97BEFF0@MWHPR15MB1262.namprd15.prod.outlook.com>
+X-FB-Source: Internal
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-Forefront-PRVS: 033857D0BD
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(136003)(366004)(346002)(376002)(39860400002)(396003)(189003)(199004)(33656002)(6916009)(7696005)(52116002)(6506007)(81156014)(4326008)(8936002)(6666004)(81166006)(8676002)(478600001)(54906003)(9686003)(1076003)(86362001)(66946007)(5660300002)(55016002)(66556008)(2906002)(66476007)(186003)(16526019)(316002);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1262;H:MWHPR15MB1661.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+Received-SPF: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: uXELIWQli+KqKMwhbMl/BOn6/t379FZhuB1M3YOKyBw91I4IrExJSQ/XqzAg60/ByZZ2s7cf8FhPC7Dnm3PQ4VoSfV9azMOoNJhHLLhWQs03/aRLMrOC8zC6PgSLT6Vi4XHO/qm3WWLQHZnrSGP0x0nDVRpmJ5Nc1esmGnjjndYe6G+fCV53qzLY0iw/QExOJkA9jzij1nZGv2fwnETkuiu1Bp81ywpJrz1CObw9QTTp5s5NjIXHvM5cxVkpA8Lwmf4e9XaNh+X8OnygTjiQh2BH3lvwhE4TYSyBQfRXcqyWiBR5uEhc1TuR9DFjRtwdoQJzWaRFLCx5C94Uw7FgR1+gQdBs3tyhv6yv/LnP6x02bPLOg4KEArEajHSruGaXeRSdIDj1guyZRADSL6v83Gxz+eRbSJyNHiOxQdsKoB5bfXxP2D2M1W/l4BPb0oCQ
+X-MS-Exchange-AntiSpam-MessageData: o/9c1SKNt4HvfMvN1kxXREeNNgk5ut8d4Joo/Gsp9iyFosySpyvns04X6pZOGfdmoLGU+LsBS0XUjW6/AjDutNTsp9q1OhU9GdwX7vG3ry91db666mOuSjKzdk6htYLY6U7lw/DP9sj98fxeRiYSMyAc3f6q4vuzprCL8M4oPQNVIfP5Ij4UB6wLUFeDyGN7
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8599927b-c361-4cb4-9db4-08d7c5181f07
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Mar 2020 17:26:09.3321
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: TRvT6CI87p9XjjFhyy1Fz2cmBZPBi+YTeAYtJmdm2xJVu/B5sMeCK4mcm2wND4ee
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1262
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-10_12:2020-03-10,2020-03-10 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 bulkscore=0
+ malwarescore=0 impostorscore=0 phishscore=0 mlxlogscore=999 suspectscore=5
+ priorityscore=1501 mlxscore=0 adultscore=0 spamscore=0 lowpriorityscore=0
+ clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003100105
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello, Michal!
 
-On 3/10/20 10:09 AM, Ulf Hansson wrote:
-> External email: Use caution opening links or attachments
->
->
-> [...]
->
->>>>> I would like to get the regression fixed asap, but I also would like
->>>>> to avoid reverting patches, unless really necessary. May I propose the
->>>>> following two options.
->>>>>
->>>>> 1. Find out why polling with ->card_busy() or CMD13, for a CMD6 with
->>>>> an R1 response doesn't work - and then fix that behaviour.
->>>>>
->>>>> 2. Set the mmc->max_busy_timeout to zero for sdhci-tegra, which makes
->>>>> the core to always use R1B for CMD6 (and erase). This also means that
->>>>> when the cmd->busy_timeout becomes longer than 11s, sdhci-tegra must
->>>>> disable the HW busy timeout and just wait "forever".
->>>>>
->>>>> If you decide for 2, you can add the software timeout support on top,
->>>>> but make that can be considered as a next step of an improvement,
->>>>> rather than needed as fix. Note that, I believe there are some support
->>>>> for software timeout already in the sdhci core, maybe you need to
->>>>> tweak it a bit for your case, I don't know.
->>>>>
->>>>> Kind regards
->>>>> Uffe
->>>> Hi Uffe
->>>>
->>>> Will go with 2nd option and will send patches out when ready.
->>> Okay, good.
->>>
->>>> BTW, Tegra host also supports SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK for
->>>> data timeout based on host clock when using finite mode (HW busy
->>>> detection based on DATA TIMEOUT count value when cmd operation timeout
->>>> is < 11s for tegra host).
->>>>
->>>> So, looks like we cant set host max_busy_timeout to 0 for Tegra host to
->>>> force R1B during SWITCH and SLEEP_AWAKE.
->>>>
->>>> So, was thinking to introduce host capability MMC_CAP2_LONG_WAIT_HW_BUSY
->>>> which can be used for hosts supporting long or infinite HW busy wait
->>>> detection and will update mmc and mmc_ops drivers to not allow convert
->>>> R1B to R1B for hosts with this capability during SLEEP_AWAKE and SWITCH.
->>> That seems reasonable, it becomes probably both easier and clearer by
->>> adding a new host cap.
->>>
->>> In any case, let me help out and cook a patch for this for the core
->>> part (I leave the sdhci change to you). It may be a bit tricky,
->>> especially since I have currently queued a bunch of new changes for
->>> v5.7, that enables more users of mmc_poll_for_busy() in the core.
->>> Maybe I need to temporarily drop them, so we can fix these problems
->>> first. I will check.
->>>
->>> Probably, I would also name the cap MMC_CAP_HW_NEED_RSP_BUSY, as that
->>> seems to be describing the common problem we have for sdhci
->>> omap/tegra.
->>>
->>> Finally, it seems like MMC_CAP_WAIT_WHILE_BUSY should be set for
->>> sdhci- tegra, so while at it, perhaps you can cook a patch for that as
->>> well.
->>>
->>> Kind regards
->>> Uffe
->> OK, I sent v1 yesterday. Please ignore them then.
-> Oh, I haven't seen them. In any case, I am ignoring them.
->
->> Will send out patches only for HW busy wait modes program based on cmd
->> timeout and WAIT_WHILE_BUSY enabled.
-> Great, thanks!
->
-> Please help test the series I just posted as well, if you have the
-> time ofcourse.
->
-> Kind regards
-> Uffe
+On Tue, Mar 10, 2020 at 09:45:44AM +0100, Michal Hocko wrote:
+> [Cc Mike as hugetlb maintainer and keeping the full context for his
+> reference]
 
-Sure,
+Thanks!
 
-Thanks
+> 
+> On Mon 09-03-20 17:25:24, Roman Gushchin wrote:
+> > Commit 944d9fec8d7a ("hugetlb: add support for gigantic page allocation
+> > at runtime") has added the run-time allocation of gigantic pages. However
+> > it actually works only at early stages of the system loading, when
+> > the majority of memory is free. After some time the memory gets
+> > fragmented by non-movable pages, so the chances to find a contiguous
+> > 1 GB block are getting close to zero. Even dropping caches manually
+> > doesn't help a lot.
+> > 
+> > At large scale rebooting servers in order to allocate gigantic hugepages
+> > is quite expensive and complex. At the same time keeping some constant
+> > percentage of memory in reserved hugepages even if the workload isn't
+> > using it is a big waste: not all workloads can benefit from using 1 GB
+> > pages.
+> > 
+> > The following solution can solve the problem:
+> > 1) On boot time a dedicated cma area* is reserved. The size is passed
+> >    as a kernel argument.
+> > 2) Run-time allocations of gigantic hugepages are performed using the
+> >    cma allocator and the dedicated cma area
+> > 
+> > In this case gigantic hugepages can be allocated successfully with a
+> > high probability, however the memory isn't completely wasted if nobody
+> > is using 1GB hugepages: it can be used for pagecache, anon memory,
+> > THPs, etc.
+> > 
+> > * On a multi-node machine a per-node cma area is allocated on each node.
+> >   Following gigantic hugetlb allocation are using the first available
+> >   numa node if the mask isn't specified by a user.
+> > 
+> > Usage:
+> > 1) configure the kernel to allocate a cma area for hugetlb allocations:
+> >    pass hugetlb_cma=10G as a kernel argument
+> > 
+> > 2) allocate hugetlb pages as usual, e.g.
+> >    echo 10 > /sys/kernel/mm/hugepages/hugepages-1048576kB/nr_hugepages
+> > 
+> > If the option isn't enabled or the allocation of the cma area failed,
+> > the current behavior of the system is preserved.
+> > 
+> > Only x86 is covered by this patch, but it's trivial to extend it to
+> > cover other architectures as well.
+> 
+> Overall idea makes sense to me. I am worried about the configuration
+> side of the thing. Not only I would stick with the absolute size for now
+> for simplicity and because percentage usecase is not really explained
+> anywhere. I am also worried about the resulting memory layout you will
+> get when using the parameter.
 
-Sowjanya
+Thanks! I agree, we can drop the percentage configuration for the simplicity.
 
+> 
+> Let's scroll down to the setup code ...
+> 
+> > v2: fixed !CONFIG_CMA build, suggested by Andrew Morton
+> > 
+> > Signed-off-by: Roman Gushchin <guro@fb.com>
+> > ---
+> >  .../admin-guide/kernel-parameters.txt         |   7 ++
+> >  arch/x86/kernel/setup.c                       |   3 +
+> >  include/linux/hugetlb.h                       |   2 +
+> >  mm/hugetlb.c                                  | 115 ++++++++++++++++++
+> >  4 files changed, 127 insertions(+)
+> > 
+> > diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> > index 0c9894247015..d3349ec1dbef 100644
+> > --- a/Documentation/admin-guide/kernel-parameters.txt
+> > +++ b/Documentation/admin-guide/kernel-parameters.txt
+> > @@ -1452,6 +1452,13 @@
+> >  	hpet_mmap=	[X86, HPET_MMAP] Allow userspace to mmap HPET
+> >  			registers.  Default set by CONFIG_HPET_MMAP_DEFAULT.
+> >  
+> > +	hugetlb_cma=	[x86-64] The size of a cma area used for allocation
+> > +			of gigantic hugepages.
+> > +			Format: nn[GTPE] | nn%
+> > +
+> > +			If enabled, boot-time allocation of gigantic hugepages
+> > +			is skipped.
+> > +
+> >  	hugepages=	[HW,X86-32,IA-64] HugeTLB pages to allocate at boot.
+> >  	hugepagesz=	[HW,IA-64,PPC,X86-64] The size of the HugeTLB pages.
+> >  			On x86-64 and powerpc, this option can be specified
+> > diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+> > index a74262c71484..ceeb06ddfd41 100644
+> > --- a/arch/x86/kernel/setup.c
+> > +++ b/arch/x86/kernel/setup.c
+> > @@ -16,6 +16,7 @@
+> >  #include <linux/pci.h>
+> >  #include <linux/root_dev.h>
+> >  #include <linux/sfi.h>
+> > +#include <linux/hugetlb.h>
+> >  #include <linux/tboot.h>
+> >  #include <linux/usb/xhci-dbgp.h>
+> >  
+> > @@ -1158,6 +1159,8 @@ void __init setup_arch(char **cmdline_p)
+> >  	initmem_init();
+> >  	dma_contiguous_reserve(max_pfn_mapped << PAGE_SHIFT);
+> >  
+> > +	hugetlb_cma_reserve();
+> > +
+> >  	/*
+> >  	 * Reserve memory for crash kernel after SRAT is parsed so that it
+> >  	 * won't consume hotpluggable memory.
+> > diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
+> > index 50480d16bd33..50050c981ab9 100644
+> > --- a/include/linux/hugetlb.h
+> > +++ b/include/linux/hugetlb.h
+> > @@ -157,6 +157,8 @@ pte_t *huge_pmd_share(struct mm_struct *mm, unsigned long addr, pud_t *pud);
+> >  extern int sysctl_hugetlb_shm_group;
+> >  extern struct list_head huge_boot_pages;
+> >  
+> > +extern void __init hugetlb_cma_reserve(void);
+> > +
+> >  /* arch callbacks */
+> >  
+> >  pte_t *huge_pte_alloc(struct mm_struct *mm,
+> > diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+> > index 7fb31750e670..c6f58bab879c 100644
+> > --- a/mm/hugetlb.c
+> > +++ b/mm/hugetlb.c
+> > @@ -28,6 +28,7 @@
+> >  #include <linux/jhash.h>
+> >  #include <linux/numa.h>
+> >  #include <linux/llist.h>
+> > +#include <linux/cma.h>
+> >  
+> >  #include <asm/page.h>
+> >  #include <asm/pgtable.h>
+> > @@ -44,6 +45,9 @@
+> >  int hugetlb_max_hstate __read_mostly;
+> >  unsigned int default_hstate_idx;
+> >  struct hstate hstates[HUGE_MAX_HSTATE];
+> > +
+> > +static struct cma *hugetlb_cma[MAX_NUMNODES];
+> > +
+> >  /*
+> >   * Minimum page order among possible hugepage sizes, set to a proper value
+> >   * at boot time.
+> > @@ -1228,6 +1232,11 @@ static void destroy_compound_gigantic_page(struct page *page,
+> >  
+> >  static void free_gigantic_page(struct page *page, unsigned int order)
+> >  {
+> > +	if (IS_ENABLED(CONFIG_CMA) && hugetlb_cma[0]) {
+> > +		cma_release(hugetlb_cma[page_to_nid(page)], page, 1 << order);
+> > +		return;
+> > +	}
+> > +
+> >  	free_contig_range(page_to_pfn(page), 1 << order);
+> >  }
+> >  
+> > @@ -1237,6 +1246,23 @@ static struct page *alloc_gigantic_page(struct hstate *h, gfp_t gfp_mask,
+> >  {
+> >  	unsigned long nr_pages = 1UL << huge_page_order(h);
+> >  
+> > +	if (IS_ENABLED(CONFIG_CMA) && hugetlb_cma[0]) {
+> > +		struct page *page;
+> > +		int nid;
+> > +
+> > +		for_each_node_mask(nid, *nodemask) {
+> > +			if (!hugetlb_cma[nid])
+> > +				break;
+> > +
+> > +			page = cma_alloc(hugetlb_cma[nid], nr_pages,
+> > +					 huge_page_order(h), true);
+> > +			if (page)
+> > +				return page;
+> > +		}
+> > +
+> > +		return NULL;
+> > +	}
+> > +
+> >  	return alloc_contig_pages(nr_pages, gfp_mask, nid, nodemask);
+> >  }
+> >  
+> > @@ -2439,6 +2465,10 @@ static void __init hugetlb_hstate_alloc_pages(struct hstate *h)
+> >  
+> >  	for (i = 0; i < h->max_huge_pages; ++i) {
+> >  		if (hstate_is_gigantic(h)) {
+> > +			if (IS_ENABLED(CONFIG_CMA) && hugetlb_cma[0]) {
+> > +				pr_warn_once("HugeTLB: hugetlb_cma is enabled, skip boot time allocation\n");
+> > +				break;
+> > +			}
+> >  			if (!alloc_bootmem_huge_page(h))
+> >  				break;
+> >  		} else if (!alloc_pool_huge_page(h,
+> > @@ -5372,3 +5402,88 @@ void move_hugetlb_state(struct page *oldpage, struct page *newpage, int reason)
+> >  		spin_unlock(&hugetlb_lock);
+> >  	}
+> >  }
+> > +
+> > +#ifdef CONFIG_CMA
+> > +static unsigned long hugetlb_cma_size __initdata;
+> > +static unsigned long hugetlb_cma_percent __initdata;
+> > +
+> > +static int __init cmdline_parse_hugetlb_cma(char *p)
+> > +{
+> > +	unsigned long long val;
+> > +	char *endptr;
+> > +
+> > +	if (!p)
+> > +		return -EINVAL;
+> > +
+> > +	/* Value may be a percentage of total memory, otherwise bytes */
+> > +	val = simple_strtoull(p, &endptr, 0);
+> > +	if (*endptr == '%')
+> > +		hugetlb_cma_percent = clamp_t(unsigned long, val, 0, 100);
+> > +	else
+> > +		hugetlb_cma_size = memparse(p, &p);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +early_param("hugetlb_cma", cmdline_parse_hugetlb_cma);
+> > +
+> > +void __init hugetlb_cma_reserve(void)
+> > +{
+> > +	unsigned long totalpages = 0;
+> > +	unsigned long start_pfn, end_pfn;
+> > +	phys_addr_t size;
+> > +	int nid, i, res;
+> > +
+> > +	if (!hugetlb_cma_size && !hugetlb_cma_percent)
+> > +		return;
+> > +
+> > +	if (hugetlb_cma_percent) {
+> > +		for_each_mem_pfn_range(i, MAX_NUMNODES, &start_pfn, &end_pfn,
+> > +				       NULL)
+> > +			totalpages += end_pfn - start_pfn;
+> > +
+> > +		size = PAGE_SIZE * (hugetlb_cma_percent * 100 * totalpages) /
+> > +			10000UL;
+> > +	} else {
+> > +		size = hugetlb_cma_size;
+> > +	}
+> > +
+> > +	pr_info("hugetlb_cma: reserve %llu, %llu per node\n", size,
+> > +		size / nr_online_nodes);
+> > +
+> > +	size /= nr_online_nodes;
+> > +
+> > +	for_each_node_state(nid, N_ONLINE) {
+> > +		unsigned long min_pfn = 0, max_pfn = 0;
+> > +
+> > +		for_each_mem_pfn_range(i, nid, &start_pfn, &end_pfn, NULL) {
+> > +			if (!min_pfn)
+> > +				min_pfn = start_pfn;
+> > +			max_pfn = end_pfn;
+> > +		}
+> 
+> Do you want to compare the range to the size?
+
+You mean add a check that the range is big enough?
+
+> But besides that, I
+> believe this really needs to be much more careful. I believe you do not
+> want to eat a considerable part of the kernel memory because the
+> resulting configuration will really struggle (yeah all the low mem/high
+> mem problems all over again).
+
+Well, so far I was focused on a particular case when the target cma size
+is significantly smaller than the total RAM size (~5-10%). What is the right
+thing to do here? Fallback to the current behavior if the requested size is
+more than x% of total memory? 1/2? How do you think?
+
+We've discussed it with Rik in private, and he expressed an idea to start
+with ~50% always and then shrink it on-demand. Something that we might
+have here long-term.
+
+
+Thank you!
