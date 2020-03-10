@@ -2,201 +2,234 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65B98C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:48:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0E11C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:49:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3365D2467D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:48:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583833722;
-	bh=tvxX5UVos2zsOxwlElC2O65i+a0ovs227kYz49z+2UQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qKglZMPgB7bmoHHAnMruNVb9oLJuzuO4Ae4yIC3e1aHSg4/75iGSp3ck0m16fon3p
-	 VZi/IQo10wMqFLng2QEmcaZMeybaNQ6i7iU43/ynyTY2qfJ/cWzLK8YjUfEmrJFfMB
-	 LYkuNCqlSWk2VBe5ZXoRFmjwLsDZ39Uw/617Sx44=
+	by mail.kernel.org (Postfix) with ESMTP id C23AB2467D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:49:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726463AbgCJJsl (ORCPT
+        id S1726469AbgCJJtu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 05:48:41 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:34132 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726211AbgCJJsk (ORCPT
+        Tue, 10 Mar 2020 05:49:50 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:33126 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726211AbgCJJtu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 05:48:40 -0400
-Received: by mail-wr1-f65.google.com with SMTP id z15so14957741wrl.1;
-        Tue, 10 Mar 2020 02:48:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=e+4+q3tBPeSakzLbgRWCQK4gOR8PDIS0+RGcMO8Rfpc=;
-        b=eLD/cncseoqOWgyzzM1V7gmb8t5VE825w4IX3eXg6Jm1/nzO4FJspOu0Uvud05PXzn
-         nzOh6zeofmYDqiOhCFxwHuVESi73J1Ft4wj2W2TBMYzMFyOlWEUVimc1sLGtUmMlW7HZ
-         NsY3rblr/1vGSl23oqu1SqXE5hS4hPkVNX3AQ1jZWoGXwh073ygWSvHpCsucH7slVRMR
-         uelUvb56NfoAXl0w2kOawtT/N21Y6VI/FpDQb4jBHByj5etnHVJivziwl19SOjGZLA2j
-         5xaNPngzQstSHUpEtWPjxDBPOn6y65bCK/8yajlJ5mYHBbcs1fdzTiULhfZEDILIXf+C
-         92qQ==
-X-Gm-Message-State: ANhLgQ0BsOKpPBSotFrll3mCXgAvgLP0mPbm2Jkgcs7cT9+pcI8cKS1H
-        3/gI5d488QsMVZObm/HJjebmxNAh
-X-Google-Smtp-Source: ADFU+vvQ9U5ebYXUs0B/jnFtpUo9X8N9a+PmUrzOLRUCDtZF/cqq+adIDAY3B0XcphphqsOT4NVuRw==
-X-Received: by 2002:a5d:5512:: with SMTP id b18mr25951308wrv.215.1583833718510;
-        Tue, 10 Mar 2020 02:48:38 -0700 (PDT)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id f15sm3321283wmj.25.2020.03.10.02.48.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Mar 2020 02:48:37 -0700 (PDT)
-Date:   Tue, 10 Mar 2020 10:48:36 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     brookxu <brookxu.cn@gmail.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     hannes@cmpxchg.org, vdavydov.dev@gmail.com,
-        akpm@linux-foundation.org, cgroups@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCHv2] memcg: fix NULL pointer dereference in
- __mem_cgroup_usage_unregister_event
-Message-ID: <20200310094836.GD8447@dhcp22.suse.cz>
-References: <077a6f67-aefa-4591-efec-f2f3af2b0b02@gmail.com>
+        Tue, 10 Mar 2020 05:49:50 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jBbW9-0003Hx-L0; Tue, 10 Mar 2020 10:49:41 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 3B7871C21F0;
+        Tue, 10 Mar 2020 10:49:41 +0100 (CET)
+Date:   Tue, 10 Mar 2020 09:49:40 -0000
+From:   "tip-bot2 for Tony Luck" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: ras/core] x86/mce/dev-mcelog: Dynamically allocate space for
+ machine check records
+Cc:     Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@suse.de>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200218184408.GA23048@agluck-desk2.amr.corp.intel.com>
+References: <20200218184408.GA23048@agluck-desk2.amr.corp.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <077a6f67-aefa-4591-efec-f2f3af2b0b02@gmail.com>
+Message-ID: <158383378084.28353.4530898474579093158.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[Cc Kirill, I didn't realize he has implemented this code]
+The following commit has been merged into the ras/core branch of tip:
 
-On Fri 06-03-20 09:02:02, brookxu wrote:
-> From: Chunguang Xu <brookxu@tencent.com>
-> 
-> An eventfd monitors multiple memory thresholds of the cgroup, closes them,
-> the kernel deletes all events related to this eventfd. Before all events
-> are deleted, another eventfd monitors the memory threshold of this cgroup,
-> leading to a crash:
-> 
-> [  135.675108] BUG: kernel NULL pointer dereference, address: 0000000000000004
-> [  135.675350] #PF: supervisor write access in kernel mode
-> [  135.675579] #PF: error_code(0x0002) - not-present page
-> [  135.675816] PGD 800000033058e067 P4D 800000033058e067 PUD 3355ce067 PMD 0
-> [  135.676080] Oops: 0002 [#1] SMP PTI
-> [  135.676332] CPU: 2 PID: 14012 Comm: kworker/2:6 Kdump: loaded Not tainted 5.6.0-rc4 #3
-> [  135.676610] Hardware name: LENOVO 20AWS01K00/20AWS01K00, BIOS GLET70WW (2.24 ) 05/21/2014
-> [  135.676909] Workqueue: events memcg_event_remove
-> [  135.677192] RIP: 0010:__mem_cgroup_usage_unregister_event+0xb3/0x190
-> [  135.677825] RSP: 0018:ffffb47e01c4fe18 EFLAGS: 00010202
-> [  135.678186] RAX: 0000000000000001 RBX: ffff8bb223a8a000 RCX: 0000000000000001
-> [  135.678548] RDX: 0000000000000001 RSI: ffff8bb22fb83540 RDI: 0000000000000001
-> [  135.678912] RBP: ffffb47e01c4fe48 R08: 0000000000000000 R09: 0000000000000010
-> [  135.679287] R10: 000000000000000c R11: 071c71c71c71c71c R12: ffff8bb226aba880
-> [  135.679670] R13: ffff8bb223a8a480 R14: 0000000000000000 R15: 0000000000000000
-> [  135.680066] FS:  0000000000000000(0000) GS:ffff8bb242680000(0000) knlGS:0000000000000000
-> [  135.680475] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [  135.680894] CR2: 0000000000000004 CR3: 000000032c29c003 CR4: 00000000001606e0
-> [  135.681325] Call Trace:
-> [  135.681763]  memcg_event_remove+0x32/0x90
-> [  135.682209]  process_one_work+0x172/0x380
-> [  135.682657]  worker_thread+0x49/0x3f0
-> [  135.683111]  kthread+0xf8/0x130
-> [  135.683570]  ? max_active_store+0x80/0x80
-> [  135.684034]  ? kthread_bind+0x10/0x10
-> [  135.684506]  ret_from_fork+0x35/0x40
-> [  135.689733] CR2: 0000000000000004
-> 
-> We can reproduce this problem in the following ways:
->  
-> 1. We create a new cgroup subdirectory and a new eventfd, and then we
->    monitor multiple memory thresholds of the cgroup through this eventfd.
-> 2. closing this eventfd, and __mem_cgroup_usage_unregister_event () will be
->    called multiple times to delete all events related to this eventfd.
-> 
-> The first time __mem_cgroup_usage_unregister_event() is called, the kernel
-> will clear all items related to this eventfd in thresholds-> primary.Since
-> there is currently only one eventfd, thresholds-> primary becomes empty,
-> so the kernel will set thresholds-> primary and hresholds-> spare to NULL.
-> If at this time, the user creates a new eventfd and monitor the memory
-> threshold of this cgroup, kernel will re-initialize thresholds-> primary.
-> Then when __mem_cgroup_usage_unregister_event () is called for the second
-> time, because thresholds-> primary is not empty, the system will access
-> thresholds-> spare, but thresholds-> spare is NULL, which will trigger a
-> crash.
-> 
-> In general, the longer it takes to delete all events related to this
-> eventfd, the easier it is to trigger this problem.
-> 
-> The solution is to check whether the thresholds associated with the eventfd
-> has been cleared when deleting the event. If so, we do nothing.
-> 
-> Signed-off-by: Chunguang Xu <brookxu@tencent.com>
+Commit-ID:     d8ecca4043f2d9d89daab7915eca8c2ec6254d0f
+Gitweb:        https://git.kernel.org/tip/d8ecca4043f2d9d89daab7915eca8c2ec6254d0f
+Author:        Tony Luck <tony.luck@intel.com>
+AuthorDate:    Tue, 18 Feb 2020 10:44:08 -08:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Tue, 10 Mar 2020 10:25:14 +01:00
 
-The fix looks reasonable to me
-Acked-by: Michal Hocko <mhocko@suse.com>
+x86/mce/dev-mcelog: Dynamically allocate space for machine check records
 
-It seems that the code has been broken since 2c488db27b61 ("memcg: clean
-up memory thresholds"). We've had 371528caec55 ("mm: memcg: Correct
-unregistring of events attached to the same eventfd") but it didn't
-catch this case for some reason. Unless I am missing something the code
-was broken back then already. Kirill please double check after me.
+We have had a hard coded limit of 32 machine check records since the
+dawn of time.  But as numbers of cores increase, it is possible for
+more than 32 errors to be reported before a user process reads from
+/dev/mcelog. In this case the additional errors are lost.
 
-So if I am not wrong then we want
-Fixes: 2c488db27b61 ("memcg: clean up memory thresholds")
-Cc: stable
+Keep 32 as the minimum. But tune the maximum value up based on the
+number of processors.
 
-sounds appropriate because this seems to be user trigerable.
+Signed-off-by: Tony Luck <tony.luck@intel.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Link: https://lkml.kernel.org/r/20200218184408.GA23048@agluck-desk2.amr.corp.intel.com
+---
+ arch/x86/include/asm/mce.h           |  6 +--
+ arch/x86/kernel/cpu/mce/dev-mcelog.c | 47 +++++++++++++++------------
+ 2 files changed, 30 insertions(+), 23 deletions(-)
 
-Thanks for preparing the patch!
-
-Btw. you should double check your email sender because it seemed to
-whitespace damaged the patch (\t -> spaces). Please use git send-email
-instead.
-
-> ---
->  mm/memcontrol.c | 10 ++++++++--
->  1 file changed, 8 insertions(+), 2 deletions(-)
-> 
-> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> index d09776c..4575a58 100644
-> --- a/mm/memcontrol.c
-> +++ b/mm/memcontrol.c
-> @@ -4027,7 +4027,7 @@ static void __mem_cgroup_usage_unregister_event(struct mem_cgroup *memcg,
->      struct mem_cgroup_thresholds *thresholds;
->      struct mem_cgroup_threshold_ary *new;
->      unsigned long usage;
-> -    int i, j, size;
-> +    int i, j, size, entries;
->  
->      mutex_lock(&memcg->thresholds_lock);
->  
-> @@ -4047,12 +4047,18 @@ static void __mem_cgroup_usage_unregister_event(struct mem_cgroup *memcg,
->      __mem_cgroup_threshold(memcg, type == _MEMSWAP);
->  
->      /* Calculate new number of threshold */
-> -    size = 0;
-> +    size = entries = 0;
->      for (i = 0; i < thresholds->primary->size; i++) {
->          if (thresholds->primary->entries[i].eventfd != eventfd)
->              size++;
-> +        else
-> +            entries++;
->      }
->  
-> +    /* If items related to eventfd have been cleared, nothing to do */
-> +    if (!entries)
-> +        goto unlock;
-> +
->      new = thresholds->spare;
->  
->      /* Set thresholds array to NULL if we don't have thresholds */
-> -- 
-> 1.8.3.1
-
--- 
-Michal Hocko
-SUSE Labs
+diff --git a/arch/x86/include/asm/mce.h b/arch/x86/include/asm/mce.h
+index 4359b95..9d5b099 100644
+--- a/arch/x86/include/asm/mce.h
++++ b/arch/x86/include/asm/mce.h
+@@ -102,7 +102,7 @@
+ 
+ #define MCE_OVERFLOW 0		/* bit 0 in flags means overflow */
+ 
+-#define MCE_LOG_LEN 32
++#define MCE_LOG_MIN_LEN 32U
+ #define MCE_LOG_SIGNATURE	"MACHINECHECK"
+ 
+ /* AMD Scalable MCA */
+@@ -135,11 +135,11 @@
+  */
+ struct mce_log_buffer {
+ 	char signature[12]; /* "MACHINECHECK" */
+-	unsigned len;	    /* = MCE_LOG_LEN */
++	unsigned len;	    /* = elements in .mce_entry[] */
+ 	unsigned next;
+ 	unsigned flags;
+ 	unsigned recordlen;	/* length of struct mce */
+-	struct mce entry[MCE_LOG_LEN];
++	struct mce entry[];
+ };
+ 
+ enum mce_notifier_prios {
+diff --git a/arch/x86/kernel/cpu/mce/dev-mcelog.c b/arch/x86/kernel/cpu/mce/dev-mcelog.c
+index 7c8958d..d089567 100644
+--- a/arch/x86/kernel/cpu/mce/dev-mcelog.c
++++ b/arch/x86/kernel/cpu/mce/dev-mcelog.c
+@@ -29,11 +29,7 @@ static char *mce_helper_argv[2] = { mce_helper, NULL };
+  * separate MCEs from kernel messages to avoid bogus bug reports.
+  */
+ 
+-static struct mce_log_buffer mcelog = {
+-	.signature	= MCE_LOG_SIGNATURE,
+-	.len		= MCE_LOG_LEN,
+-	.recordlen	= sizeof(struct mce),
+-};
++static struct mce_log_buffer *mcelog;
+ 
+ static DECLARE_WAIT_QUEUE_HEAD(mce_chrdev_wait);
+ 
+@@ -45,21 +41,21 @@ static int dev_mce_log(struct notifier_block *nb, unsigned long val,
+ 
+ 	mutex_lock(&mce_chrdev_read_mutex);
+ 
+-	entry = mcelog.next;
++	entry = mcelog->next;
+ 
+ 	/*
+ 	 * When the buffer fills up discard new entries. Assume that the
+ 	 * earlier errors are the more interesting ones:
+ 	 */
+-	if (entry >= MCE_LOG_LEN) {
+-		set_bit(MCE_OVERFLOW, (unsigned long *)&mcelog.flags);
++	if (entry >= mcelog->len) {
++		set_bit(MCE_OVERFLOW, (unsigned long *)&mcelog->flags);
+ 		goto unlock;
+ 	}
+ 
+-	mcelog.next = entry + 1;
++	mcelog->next = entry + 1;
+ 
+-	memcpy(mcelog.entry + entry, mce, sizeof(struct mce));
+-	mcelog.entry[entry].finished = 1;
++	memcpy(mcelog->entry + entry, mce, sizeof(struct mce));
++	mcelog->entry[entry].finished = 1;
+ 
+ 	/* wake processes polling /dev/mcelog */
+ 	wake_up_interruptible(&mce_chrdev_wait);
+@@ -214,21 +210,21 @@ static ssize_t mce_chrdev_read(struct file *filp, char __user *ubuf,
+ 
+ 	/* Only supports full reads right now */
+ 	err = -EINVAL;
+-	if (*off != 0 || usize < MCE_LOG_LEN*sizeof(struct mce))
++	if (*off != 0 || usize < mcelog->len * sizeof(struct mce))
+ 		goto out;
+ 
+-	next = mcelog.next;
++	next = mcelog->next;
+ 	err = 0;
+ 
+ 	for (i = 0; i < next; i++) {
+-		struct mce *m = &mcelog.entry[i];
++		struct mce *m = &mcelog->entry[i];
+ 
+ 		err |= copy_to_user(buf, m, sizeof(*m));
+ 		buf += sizeof(*m);
+ 	}
+ 
+-	memset(mcelog.entry, 0, next * sizeof(struct mce));
+-	mcelog.next = 0;
++	memset(mcelog->entry, 0, next * sizeof(struct mce));
++	mcelog->next = 0;
+ 
+ 	if (err)
+ 		err = -EFAULT;
+@@ -242,7 +238,7 @@ out:
+ static __poll_t mce_chrdev_poll(struct file *file, poll_table *wait)
+ {
+ 	poll_wait(file, &mce_chrdev_wait, wait);
+-	if (READ_ONCE(mcelog.next))
++	if (READ_ONCE(mcelog->next))
+ 		return EPOLLIN | EPOLLRDNORM;
+ 	if (!mce_apei_read_done && apei_check_mce())
+ 		return EPOLLIN | EPOLLRDNORM;
+@@ -261,13 +257,13 @@ static long mce_chrdev_ioctl(struct file *f, unsigned int cmd,
+ 	case MCE_GET_RECORD_LEN:
+ 		return put_user(sizeof(struct mce), p);
+ 	case MCE_GET_LOG_LEN:
+-		return put_user(MCE_LOG_LEN, p);
++		return put_user(mcelog->len, p);
+ 	case MCE_GETCLEAR_FLAGS: {
+ 		unsigned flags;
+ 
+ 		do {
+-			flags = mcelog.flags;
+-		} while (cmpxchg(&mcelog.flags, flags, 0) != flags);
++			flags = mcelog->flags;
++		} while (cmpxchg(&mcelog->flags, flags, 0) != flags);
+ 
+ 		return put_user(flags, p);
+ 	}
+@@ -339,8 +335,18 @@ static struct miscdevice mce_chrdev_device = {
+ 
+ static __init int dev_mcelog_init_device(void)
+ {
++	int mce_log_len;
+ 	int err;
+ 
++	mce_log_len = max(MCE_LOG_MIN_LEN, num_online_cpus());
++	mcelog = kzalloc(sizeof(*mcelog) + mce_log_len * sizeof(struct mce), GFP_KERNEL);
++	if (!mcelog)
++		return -ENOMEM;
++
++	strncpy(mcelog->signature, MCE_LOG_SIGNATURE, sizeof(mcelog->signature));
++	mcelog->len = mce_log_len;
++	mcelog->recordlen = sizeof(struct mce);
++
+ 	/* register character device /dev/mcelog */
+ 	err = misc_register(&mce_chrdev_device);
+ 	if (err) {
+@@ -350,6 +356,7 @@ static __init int dev_mcelog_init_device(void)
+ 		else
+ 			pr_err("Unable to init device /dev/mcelog (rc: %d)\n", err);
+ 
++		kfree(mcelog);
+ 		return err;
+ 	}
+ 
