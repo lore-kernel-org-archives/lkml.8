@@ -2,53 +2,52 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FBC2C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:35:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED42DC18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:35:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 062A024649
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:35:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B34F320675
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:35:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583847323;
-	bh=sfBcGXRcQOZOoFxrn2GPLq76i/Oyp2K9kXMLiWQdk0U=;
+	s=default; t=1583847329;
+	bh=STmWgZXtOoYLDss1jIpBHRxybLNpQ9VaGzsak0WVtmo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2P2B/ps1yX9gs05Zu/JCo6qj0hOjLVm8YAdv728Gbyx3lF41fOJ7RjkvJLc/TNq96
-	 UvcXZvYChHfpbPmzaTTFxzwMCWiQKUPKVgV7P4TXeFwRq7wlqJYn/zOLK2dS6EgBPl
-	 77aUVxGNo35wb+o7TW4fKNrYO3k7kX5RU8TM0hQ8=
+	b=j/z9/2Hu5cwAZG++L2TnvQAn6n1FFNHD5w/R9CR85FovAN6bESntMeONU2dCooCgb
+	 /UKmr+3ebBruzxBeFU8h2gErTABvnxHj2+eeua5SCvNUSkzyr5bZaAb51/s116Isiz
+	 v8d4igXpV7QuxhuIF6OiZCaDS+PhlEbYJOaVNG7c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727801AbgCJMop (ORCPT
+        id S1727180AbgCJMoc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:44:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47036 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:44:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46786 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727789AbgCJMom (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:44:42 -0400
+        id S1727131AbgCJMo3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:44:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E43CB24691;
-        Tue, 10 Mar 2020 12:44:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C27B424695;
+        Tue, 10 Mar 2020 12:44:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844281;
-        bh=sfBcGXRcQOZOoFxrn2GPLq76i/Oyp2K9kXMLiWQdk0U=;
+        s=default; t=1583844268;
+        bh=STmWgZXtOoYLDss1jIpBHRxybLNpQ9VaGzsak0WVtmo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2p5mZcqS8ScgBql3W59DDYaecu1exAqqRyn0rUMJczC4CmZ5fBVVPeGV9Xi9tuj1T
-         Yhlck6daJrfrEaoXtQge433UqLykwgPIMusO9pqxNyQyCg64HgI1Jowb/iPSwuVuez
-         EBVnpbSaoP6OIeMo1+It/9GMpo6MmofPv10B9aQ0=
+        b=fF9WYuOI6yHCVAeoNL+WmFnQl7Qjeh40KHgzgFZakcFE2dAbxoA3OJ2druS9RMCnL
+         Ab6oVibNZYnB5Jy0E8Odr/LMUxNkKB/MnhW4yy4xw0Ih0dcdF0jciyBPYzoA+Z/f7e
+         Edefoco++t5gce8eIc3w2RTFuXfQYbVOYTYd4qe0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Benjamin Poirier <bpoirier@cumulusnetworks.com>,
-        Michal Kubecek <mkubecek@suse.cz>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 24/88] ipv6: Fix route replacement with dev-only route
-Date:   Tue, 10 Mar 2020 13:38:32 +0100
-Message-Id: <20200310123611.873089710@linuxfoundation.org>
+        stable@vger.kernel.org, Suraj Jitindar Singh <surajjs@amazon.com>,
+        Theodore Tso <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>,
+        stable@kernel.org
+Subject: [PATCH 4.9 02/88] ext4: fix potential race between online resizing and write operations
+Date:   Tue, 10 Mar 2020 13:38:10 +0100
+Message-Id: <20200310123607.268541368@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123606.543939933@linuxfoundation.org>
 References: <20200310123606.543939933@linuxfoundation.org>
@@ -61,58 +60,326 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Benjamin Poirier <bpoirier@cumulusnetworks.com>
+From: Theodore Ts'o <tytso@mit.edu>
 
-[ Upstream commit e404b8c7cfb31654c9024d497cec58a501501692 ]
+commit 1d0c3924a92e69bfa91163bda83c12a994b4d106 upstream.
 
-After commit 27596472473a ("ipv6: fix ECMP route replacement") it is no
-longer possible to replace an ECMP-able route by a non ECMP-able route.
-For example,
-	ip route add 2001:db8::1/128 via fe80::1 dev dummy0
-	ip route replace 2001:db8::1/128 dev dummy0
-does not work as expected.
+During an online resize an array of pointers to buffer heads gets
+replaced so it can get enlarged.  If there is a racing block
+allocation or deallocation which uses the old array, and the old array
+has gotten reused this can lead to a GPF or some other random kernel
+memory getting modified.
 
-Tweak the replacement logic so that point 3 in the log of the above commit
-becomes:
-3. If the new route is not ECMP-able, and no matching non-ECMP-able route
-exists, replace matching ECMP-able route (if any) or add the new route.
-
-We can now summarize the entire replace semantics to:
-When doing a replace, prefer replacing a matching route of the same
-"ECMP-able-ness" as the replace argument. If there is no such candidate,
-fallback to the first route found.
-
-Fixes: 27596472473a ("ipv6: fix ECMP route replacement")
-Signed-off-by: Benjamin Poirier <bpoirier@cumulusnetworks.com>
-Reviewed-by: Michal Kubecek <mkubecek@suse.cz>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=206443
+Link: https://lore.kernel.org/r/20200221053458.730016-2-tytso@mit.edu
+Reported-by: Suraj Jitindar Singh <surajjs@amazon.com>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Cc: stable@kernel.org # 4.4.x
+Cc: stable@kernel.org # 4.9.x
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv6/ip6_fib.c |    7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ fs/ext4/balloc.c | 14 +++++++++---
+ fs/ext4/ext4.h   | 20 +++++++++++++++++-
+ fs/ext4/resize.c | 55 ++++++++++++++++++++++++++++++++++++++----------
+ fs/ext4/super.c  | 31 +++++++++++++++++++--------
+ 4 files changed, 96 insertions(+), 24 deletions(-)
 
---- a/net/ipv6/ip6_fib.c
-+++ b/net/ipv6/ip6_fib.c
-@@ -784,8 +784,7 @@ static int fib6_add_rt2node(struct fib6_
- 					found++;
- 					break;
- 				}
--				if (rt_can_ecmp)
--					fallback_ins = fallback_ins ?: ins;
-+				fallback_ins = fallback_ins ?: ins;
- 				goto next_iter;
- 			}
+diff --git a/fs/ext4/balloc.c b/fs/ext4/balloc.c
+index 2455fe1446d62..de601f3c023d8 100644
+--- a/fs/ext4/balloc.c
++++ b/fs/ext4/balloc.c
+@@ -279,6 +279,7 @@ struct ext4_group_desc * ext4_get_group_desc(struct super_block *sb,
+ 	ext4_group_t ngroups = ext4_get_groups_count(sb);
+ 	struct ext4_group_desc *desc;
+ 	struct ext4_sb_info *sbi = EXT4_SB(sb);
++	struct buffer_head *bh_p;
  
-@@ -825,7 +824,9 @@ next_iter:
+ 	if (block_group >= ngroups) {
+ 		ext4_error(sb, "block_group >= groups_count - block_group = %u,"
+@@ -289,7 +290,14 @@ struct ext4_group_desc * ext4_get_group_desc(struct super_block *sb,
+ 
+ 	group_desc = block_group >> EXT4_DESC_PER_BLOCK_BITS(sb);
+ 	offset = block_group & (EXT4_DESC_PER_BLOCK(sb) - 1);
+-	if (!sbi->s_group_desc[group_desc]) {
++	bh_p = sbi_array_rcu_deref(sbi, s_group_desc, group_desc);
++	/*
++	 * sbi_array_rcu_deref returns with rcu unlocked, this is ok since
++	 * the pointer being dereferenced won't be dereferenced again. By
++	 * looking at the usage in add_new_gdb() the value isn't modified,
++	 * just the pointer, and so it remains valid.
++	 */
++	if (!bh_p) {
+ 		ext4_error(sb, "Group descriptor not loaded - "
+ 			   "block_group = %u, group_desc = %u, desc = %u",
+ 			   block_group, group_desc, offset);
+@@ -297,10 +305,10 @@ struct ext4_group_desc * ext4_get_group_desc(struct super_block *sb,
  	}
  
- 	if (fallback_ins && !found) {
--		/* No ECMP-able route found, replace first non-ECMP one */
-+		/* No matching route with same ecmp-able-ness found, replace
-+		 * first matching route
-+		 */
- 		ins = fallback_ins;
- 		iter = *ins;
- 		found++;
+ 	desc = (struct ext4_group_desc *)(
+-		(__u8 *)sbi->s_group_desc[group_desc]->b_data +
++		(__u8 *)bh_p->b_data +
+ 		offset * EXT4_DESC_SIZE(sb));
+ 	if (bh)
+-		*bh = sbi->s_group_desc[group_desc];
++		*bh = bh_p;
+ 	return desc;
+ }
+ 
+diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
+index 9713d3d41412c..42c6c02382377 100644
+--- a/fs/ext4/ext4.h
++++ b/fs/ext4/ext4.h
+@@ -1367,7 +1367,7 @@ struct ext4_sb_info {
+ 	loff_t s_bitmap_maxbytes;	/* max bytes for bitmap files */
+ 	struct buffer_head * s_sbh;	/* Buffer containing the super block */
+ 	struct ext4_super_block *s_es;	/* Pointer to the super block in the buffer */
+-	struct buffer_head **s_group_desc;
++	struct buffer_head * __rcu *s_group_desc;
+ 	unsigned int s_mount_opt;
+ 	unsigned int s_mount_opt2;
+ 	unsigned int s_mount_flags;
+@@ -1549,6 +1549,23 @@ static inline int ext4_valid_inum(struct super_block *sb, unsigned long ino)
+ 		 ino <= le32_to_cpu(EXT4_SB(sb)->s_es->s_inodes_count));
+ }
+ 
++/*
++ * Returns: sbi->field[index]
++ * Used to access an array element from the following sbi fields which require
++ * rcu protection to avoid dereferencing an invalid pointer due to reassignment
++ * - s_group_desc
++ * - s_group_info
++ * - s_flex_group
++ */
++#define sbi_array_rcu_deref(sbi, field, index)				   \
++({									   \
++	typeof(*((sbi)->field)) _v;					   \
++	rcu_read_lock();						   \
++	_v = ((typeof(_v)*)rcu_dereference((sbi)->field))[index];	   \
++	rcu_read_unlock();						   \
++	_v;								   \
++})
++
+ /*
+  * Inode dynamic state flags
+  */
+@@ -2558,6 +2575,7 @@ extern int ext4_generic_delete_entry(handle_t *handle,
+ extern bool ext4_empty_dir(struct inode *inode);
+ 
+ /* resize.c */
++extern void ext4_kvfree_array_rcu(void *to_free);
+ extern int ext4_group_add(struct super_block *sb,
+ 				struct ext4_new_group_data *input);
+ extern int ext4_group_extend(struct super_block *sb,
+diff --git a/fs/ext4/resize.c b/fs/ext4/resize.c
+index aef2a24dc9f94..b788bbe74579b 100644
+--- a/fs/ext4/resize.c
++++ b/fs/ext4/resize.c
+@@ -16,6 +16,33 @@
+ 
+ #include "ext4_jbd2.h"
+ 
++struct ext4_rcu_ptr {
++	struct rcu_head rcu;
++	void *ptr;
++};
++
++static void ext4_rcu_ptr_callback(struct rcu_head *head)
++{
++	struct ext4_rcu_ptr *ptr;
++
++	ptr = container_of(head, struct ext4_rcu_ptr, rcu);
++	kvfree(ptr->ptr);
++	kfree(ptr);
++}
++
++void ext4_kvfree_array_rcu(void *to_free)
++{
++	struct ext4_rcu_ptr *ptr = kzalloc(sizeof(*ptr), GFP_KERNEL);
++
++	if (ptr) {
++		ptr->ptr = to_free;
++		call_rcu(&ptr->rcu, ext4_rcu_ptr_callback);
++		return;
++	}
++	synchronize_rcu();
++	kvfree(to_free);
++}
++
+ int ext4_resize_begin(struct super_block *sb)
+ {
+ 	struct ext4_sb_info *sbi = EXT4_SB(sb);
+@@ -541,8 +568,8 @@ static int setup_new_flex_group_blocks(struct super_block *sb,
+ 				brelse(gdb);
+ 				goto out;
+ 			}
+-			memcpy(gdb->b_data, sbi->s_group_desc[j]->b_data,
+-			       gdb->b_size);
++			memcpy(gdb->b_data, sbi_array_rcu_deref(sbi,
++				s_group_desc, j)->b_data, gdb->b_size);
+ 			set_buffer_uptodate(gdb);
+ 
+ 			err = ext4_handle_dirty_metadata(handle, NULL, gdb);
+@@ -849,13 +876,15 @@ static int add_new_gdb(handle_t *handle, struct inode *inode,
+ 	}
+ 	brelse(dind);
+ 
+-	o_group_desc = EXT4_SB(sb)->s_group_desc;
++	rcu_read_lock();
++	o_group_desc = rcu_dereference(EXT4_SB(sb)->s_group_desc);
+ 	memcpy(n_group_desc, o_group_desc,
+ 	       EXT4_SB(sb)->s_gdb_count * sizeof(struct buffer_head *));
++	rcu_read_unlock();
+ 	n_group_desc[gdb_num] = gdb_bh;
+-	EXT4_SB(sb)->s_group_desc = n_group_desc;
++	rcu_assign_pointer(EXT4_SB(sb)->s_group_desc, n_group_desc);
+ 	EXT4_SB(sb)->s_gdb_count++;
+-	kvfree(o_group_desc);
++	ext4_kvfree_array_rcu(o_group_desc);
+ 
+ 	le16_add_cpu(&es->s_reserved_gdt_blocks, -1);
+ 	err = ext4_handle_dirty_super(handle, sb);
+@@ -903,9 +932,11 @@ static int add_new_gdb_meta_bg(struct super_block *sb,
+ 		return err;
+ 	}
+ 
+-	o_group_desc = EXT4_SB(sb)->s_group_desc;
++	rcu_read_lock();
++	o_group_desc = rcu_dereference(EXT4_SB(sb)->s_group_desc);
+ 	memcpy(n_group_desc, o_group_desc,
+ 	       EXT4_SB(sb)->s_gdb_count * sizeof(struct buffer_head *));
++	rcu_read_unlock();
+ 	n_group_desc[gdb_num] = gdb_bh;
+ 
+ 	BUFFER_TRACE(gdb_bh, "get_write_access");
+@@ -916,9 +947,9 @@ static int add_new_gdb_meta_bg(struct super_block *sb,
+ 		return err;
+ 	}
+ 
+-	EXT4_SB(sb)->s_group_desc = n_group_desc;
++	rcu_assign_pointer(EXT4_SB(sb)->s_group_desc, n_group_desc);
+ 	EXT4_SB(sb)->s_gdb_count++;
+-	kvfree(o_group_desc);
++	ext4_kvfree_array_rcu(o_group_desc);
+ 	return err;
+ }
+ 
+@@ -1180,7 +1211,8 @@ static int ext4_add_new_descs(handle_t *handle, struct super_block *sb,
+ 		 * use non-sparse filesystems anymore.  This is already checked above.
+ 		 */
+ 		if (gdb_off) {
+-			gdb_bh = sbi->s_group_desc[gdb_num];
++			gdb_bh = sbi_array_rcu_deref(sbi, s_group_desc,
++						     gdb_num);
+ 			BUFFER_TRACE(gdb_bh, "get_write_access");
+ 			err = ext4_journal_get_write_access(handle, gdb_bh);
+ 
+@@ -1262,7 +1294,7 @@ static int ext4_setup_new_descs(handle_t *handle, struct super_block *sb,
+ 		/*
+ 		 * get_write_access() has been called on gdb_bh by ext4_add_new_desc().
+ 		 */
+-		gdb_bh = sbi->s_group_desc[gdb_num];
++		gdb_bh = sbi_array_rcu_deref(sbi, s_group_desc, gdb_num);
+ 		/* Update group descriptor block for new group */
+ 		gdp = (struct ext4_group_desc *)(gdb_bh->b_data +
+ 						 gdb_off * EXT4_DESC_SIZE(sb));
+@@ -1489,7 +1521,8 @@ exit_journal:
+ 		for (; gdb_num <= gdb_num_end; gdb_num++) {
+ 			struct buffer_head *gdb_bh;
+ 
+-			gdb_bh = sbi->s_group_desc[gdb_num];
++			gdb_bh = sbi_array_rcu_deref(sbi, s_group_desc,
++						     gdb_num);
+ 			if (old_gdb == gdb_bh->b_blocknr)
+ 				continue;
+ 			update_backups(sb, gdb_bh->b_blocknr, gdb_bh->b_data,
+diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+index b69a78c061cbb..75840eef13417 100644
+--- a/fs/ext4/super.c
++++ b/fs/ext4/super.c
+@@ -826,6 +826,7 @@ static void ext4_put_super(struct super_block *sb)
+ {
+ 	struct ext4_sb_info *sbi = EXT4_SB(sb);
+ 	struct ext4_super_block *es = sbi->s_es;
++	struct buffer_head **group_desc;
+ 	int aborted = 0;
+ 	int i, err;
+ 
+@@ -857,9 +858,12 @@ static void ext4_put_super(struct super_block *sb)
+ 	if (!(sb->s_flags & MS_RDONLY))
+ 		ext4_commit_super(sb, 1);
+ 
++	rcu_read_lock();
++	group_desc = rcu_dereference(sbi->s_group_desc);
+ 	for (i = 0; i < sbi->s_gdb_count; i++)
+-		brelse(sbi->s_group_desc[i]);
+-	kvfree(sbi->s_group_desc);
++		brelse(group_desc[i]);
++	kvfree(group_desc);
++	rcu_read_unlock();
+ 	kvfree(sbi->s_flex_groups);
+ 	percpu_counter_destroy(&sbi->s_freeclusters_counter);
+ 	percpu_counter_destroy(&sbi->s_freeinodes_counter);
+@@ -3403,7 +3407,7 @@ static void ext4_set_resv_clusters(struct super_block *sb)
+ static int ext4_fill_super(struct super_block *sb, void *data, int silent)
+ {
+ 	char *orig_data = kstrdup(data, GFP_KERNEL);
+-	struct buffer_head *bh;
++	struct buffer_head *bh, **group_desc;
+ 	struct ext4_super_block *es = NULL;
+ 	struct ext4_sb_info *sbi = kzalloc(sizeof(*sbi), GFP_KERNEL);
+ 	ext4_fsblk_t block;
+@@ -3955,9 +3959,10 @@ static int ext4_fill_super(struct super_block *sb, void *data, int silent)
+ 			goto failed_mount;
+ 		}
+ 	}
+-	sbi->s_group_desc = ext4_kvmalloc(db_count *
++	rcu_assign_pointer(sbi->s_group_desc,
++			   ext4_kvmalloc(db_count *
+ 					  sizeof(struct buffer_head *),
+-					  GFP_KERNEL);
++					  GFP_KERNEL));
+ 	if (sbi->s_group_desc == NULL) {
+ 		ext4_msg(sb, KERN_ERR, "not enough memory");
+ 		ret = -ENOMEM;
+@@ -3967,14 +3972,19 @@ static int ext4_fill_super(struct super_block *sb, void *data, int silent)
+ 	bgl_lock_init(sbi->s_blockgroup_lock);
+ 
+ 	for (i = 0; i < db_count; i++) {
++		struct buffer_head *bh;
++
+ 		block = descriptor_loc(sb, logical_sb_block, i);
+-		sbi->s_group_desc[i] = sb_bread_unmovable(sb, block);
+-		if (!sbi->s_group_desc[i]) {
++		bh = sb_bread_unmovable(sb, block);
++		if (!bh) {
+ 			ext4_msg(sb, KERN_ERR,
+ 			       "can't read group descriptor %d", i);
+ 			db_count = i;
+ 			goto failed_mount2;
+ 		}
++		rcu_read_lock();
++		rcu_dereference(sbi->s_group_desc)[i] = bh;
++		rcu_read_unlock();
+ 	}
+ 	sbi->s_gdb_count = db_count;
+ 	if (!ext4_check_descriptors(sb, logical_sb_block, &first_not_zeroed)) {
+@@ -4349,9 +4359,12 @@ failed_mount3:
+ 	if (sbi->s_mmp_tsk)
+ 		kthread_stop(sbi->s_mmp_tsk);
+ failed_mount2:
++	rcu_read_lock();
++	group_desc = rcu_dereference(sbi->s_group_desc);
+ 	for (i = 0; i < db_count; i++)
+-		brelse(sbi->s_group_desc[i]);
+-	kvfree(sbi->s_group_desc);
++		brelse(group_desc[i]);
++	kvfree(group_desc);
++	rcu_read_unlock();
+ failed_mount:
+ 	if (sbi->s_chksum_driver)
+ 		crypto_free_shash(sbi->s_chksum_driver);
+-- 
+2.20.1
+
 
 
