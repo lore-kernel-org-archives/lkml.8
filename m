@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 088E0C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:49:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F621C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:49:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C61232468E
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:49:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54D4424692
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:49:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583844594;
-	bh=gv6GqbAuDDbgr1R9cOCkCMZgTenrheR/uwPK7uFGFQc=;
+	s=default; t=1583844599;
+	bh=QylDUZK3QTKd3//3nJslpmnCls/OiFTo4MnS8zfcwbA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iFyku0D/PO2h2N9uIB/FLpAhFo6tgqfEXLG8BHzICg9SzpRJBNkfbGRjDhwxPrpP7
-	 YPmy1rFY1el8FSusxcbNQYd96VhXzP0cwTCOF2TZE3Mbvdhjjb0cILOgI1OLgoylaT
-	 PXRoTMxIkx2QHjsmRgYTWddZhu547FP4now55QcE=
+	b=S+zm9Ay47tkcoEeCPyUo2CW6d2ZhLaELNFAUW5SkspD3iaETw8ibfo7+f28d9dg/C
+	 5pCr63n3/eLuryfQcFnaMNhKWyP0WttLZS61GKBk/VkOIqWYGrMCoPYVGa2aSXzeD/
+	 mZkavTBQpKVR4s9A+pvUxyzHUfimVBCzkCpIRve4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728519AbgCJMtx (ORCPT
+        id S1728528AbgCJMt6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:49:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54298 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:49:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54414 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728496AbgCJMts (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:49:48 -0400
+        id S1728496AbgCJMty (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:49:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03CF02467D;
-        Tue, 10 Mar 2020 12:49:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0281920674;
+        Tue, 10 Mar 2020 12:49:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844588;
-        bh=gv6GqbAuDDbgr1R9cOCkCMZgTenrheR/uwPK7uFGFQc=;
+        s=default; t=1583844593;
+        bh=QylDUZK3QTKd3//3nJslpmnCls/OiFTo4MnS8zfcwbA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CUT2frWF7lm9ohu/TlFYKiIoZM+s6w3Zjmh/KTur+7QLv0tFRE3SQcann7nw33H/f
-         OnxHgElTmtL9jvnWz47tSVITf8AiZ5Z8sGSH55wmEvE09F/RyhHW1fQNFm4XqU1evG
-         CM3Sf5TtaISKPQjNwXn9hwzgMLtmqijH5Z5OhJoA=
+        b=yB0pwZLQKISx5j/PVM1rO6la5QxzvPYpU0+r9800FrYBHd3+mZlVM0lh2fDFv5tZU
+         MnZDHcuF39Jhv1WOb+ZplgR+i1zmt4akOyhxkdi20G0M6FSYMHOmpPRf5pRTNlxupf
+         EJB82IGjU/4SNVd8dMAh+qdp9aKPfeAHcRR2oQYU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Christoph Hellwig <hch@lst.de>,
-        Keith Busch <kbusch@kernel.org>,
+        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Juergen Gross <jgross@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 046/168] nvme: Fix uninitialized-variable warning
-Date:   Tue, 10 Mar 2020 13:38:12 +0100
-Message-Id: <20200310123640.026189189@linuxfoundation.org>
+Subject: [PATCH 5.4 048/168] x86/xen: Distribute switch variables for initialization
+Date:   Tue, 10 Mar 2020 13:38:14 +0100
+Message-Id: <20200310123640.232503212@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123635.322799692@linuxfoundation.org>
 References: <20200310123635.322799692@linuxfoundation.org>
@@ -61,36 +61,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Keith Busch <kbusch@kernel.org>
+From: Kees Cook <keescook@chromium.org>
 
-[ Upstream commit 15755854d53b4bbb0bb37a0fce66f0156cfc8a17 ]
+[ Upstream commit 9038ec99ceb94fb8d93ade5e236b2928f0792c7c ]
 
-gcc may detect a false positive on nvme using an unintialized variable
-if setting features fails. Since this is not a fast path, explicitly
-initialize this variable to suppress the warning.
+Variables declared in a switch statement before any case statements
+cannot be automatically initialized with compiler instrumentation (as
+they are not part of any execution flow). With GCC's proposed automatic
+stack variable initialization feature, this triggers a warning (and they
+don't get initialized). Clang's automatic stack variable initialization
+(via CONFIG_INIT_STACK_ALL=y) doesn't throw a warning, but it also
+doesn't initialize such variables[1]. Note that these warnings (or silent
+skipping) happen before the dead-store elimination optimization phase,
+so even when the automatic initializations are later elided in favor of
+direct initializations, the warnings remain.
 
-Reported-by: Arnd Bergmann <arnd@arndb.de>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Keith Busch <kbusch@kernel.org>
+To avoid these problems, move such variables into the "case" where
+they're used or lift them up into the main function body.
+
+arch/x86/xen/enlighten_pv.c: In function ‘xen_write_msr_safe’:
+arch/x86/xen/enlighten_pv.c:904:12: warning: statement will never be executed [-Wswitch-unreachable]
+  904 |   unsigned which;
+      |            ^~~~~
+
+[1] https://bugs.llvm.org/show_bug.cgi?id=44916
+
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Link: https://lore.kernel.org/r/20200220062318.69299-1-keescook@chromium.org
+Reviewed-by: Juergen Gross <jgross@suse.com>
+[boris: made @which an 'unsigned int']
+Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/xen/enlighten_pv.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index 7dacfd102a992..b8fe42f4b3c5b 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -1161,8 +1161,8 @@ static int nvme_identify_ns(struct nvme_ctrl *ctrl,
- static int nvme_features(struct nvme_ctrl *dev, u8 op, unsigned int fid,
- 		unsigned int dword11, void *buffer, size_t buflen, u32 *result)
+diff --git a/arch/x86/xen/enlighten_pv.c b/arch/x86/xen/enlighten_pv.c
+index 6ea215cdeadac..6d4d8a5700b71 100644
+--- a/arch/x86/xen/enlighten_pv.c
++++ b/arch/x86/xen/enlighten_pv.c
+@@ -905,14 +905,15 @@ static u64 xen_read_msr_safe(unsigned int msr, int *err)
+ static int xen_write_msr_safe(unsigned int msr, unsigned low, unsigned high)
  {
-+	union nvme_result res = { 0 };
- 	struct nvme_command c;
--	union nvme_result res;
  	int ret;
++#ifdef CONFIG_X86_64
++	unsigned int which;
++	u64 base;
++#endif
  
- 	memset(&c, 0, sizeof(c));
+ 	ret = 0;
+ 
+ 	switch (msr) {
+ #ifdef CONFIG_X86_64
+-		unsigned which;
+-		u64 base;
+-
+ 	case MSR_FS_BASE:		which = SEGBASE_FS; goto set;
+ 	case MSR_KERNEL_GS_BASE:	which = SEGBASE_GS_USER; goto set;
+ 	case MSR_GS_BASE:		which = SEGBASE_GS_KERNEL; goto set;
 -- 
 2.20.1
 
