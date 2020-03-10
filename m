@@ -5,49 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F7D2C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:19:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75945C18E5C
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:19:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 255FD20409
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:19:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 424DF20409
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:19:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583846375;
-	bh=t562I3QUMTAhEUUq5KX4N5DKIqd6jTbpEv4WFsO02Dg=;
+	s=default; t=1583846377;
+	bh=6AqqsHXYGqAUE4BJHdnz8k5K7Vjs2f2FFAtP7X9UB6I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zOe+wehKEbKD5hjzBKbatyqZc4/8aaT9P0WNHlPtXSnzF/b6rYWLvoAYho4ZBCUbQ
-	 04H6BTNM8QhBne8z57/HeyOqT6Bgsyw0VoqkEeD/6uCzqDYf6NI083i/JVkpp5EQ/n
-	 5DfkLIWr3qEtG8Ha4PFd5CEmKnp6qO2Swn0pOadc=
+	b=0CiisJWrUqlzlxRVmZtqi8lNzCcSC5a7U7Tv+Ted4jzKbo6Pef4IBnXxthUUD6dHt
+	 mMSluYbAABX4rN2s3a1rJQsIOnJLGMwoKFde2psSVGnSNOeoYIXmI7t8TAMimnrs7i
+	 i/wMpkDVSGYogC+OCnPjBFrUvptfM7evbwuyXduU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731142AbgCJNIo (ORCPT
+        id S1731184AbgCJNTf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:08:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55154 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:19:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55536 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727876AbgCJNIh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:08:37 -0400
+        id S1731144AbgCJNIp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:08:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB0252468C;
-        Tue, 10 Mar 2020 13:08:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A6B62468D;
+        Tue, 10 Mar 2020 13:08:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845716;
-        bh=t562I3QUMTAhEUUq5KX4N5DKIqd6jTbpEv4WFsO02Dg=;
+        s=default; t=1583845723;
+        bh=6AqqsHXYGqAUE4BJHdnz8k5K7Vjs2f2FFAtP7X9UB6I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Oqd1uGaaveiAOWbX5v3UQcXjSgErBLy3Xh7Kmf5y1J3kU2hM7Otg0XPkSxthPFhwd
-         WlgPDpOMxBYLoWagOwhnqRfweJdKX9aXJUMAkitu20PHa6JLw2YgSc5p1LjAPzXX4b
-         UGmQzhZVuUh4CJxAFEvywEYJh6KWFogSzbqH0p38=
+        b=Hj+G5tmPa3JWvjECCTudmzm+Tm1kbFLH/+nGtyAntZ/gMnFiYM85IycY5HtaVGPjI
+         qWEeGBDU7ik1yr+SrNq8MFA6eRctXXOFiC3jM4LINlqXdQzL7BKGFlq4vvk782KAjq
+         YPwWDF907fiYQPEYE+D5V84ZcCFVSD0L0W9EWcKc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuanhong Guo <gch981213@gmail.com>,
-        Daniel Golle <daniel@makrotopia.org>,
+        stable@vger.kernel.org, Michal Nazarewicz <mina86@mina86.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Felipe Balbi <balbi@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 074/126] serial: ar933x_uart: set UART_CS_{RX,TX}_READY_ORIDE
-Date:   Tue, 10 Mar 2020 13:41:35 +0100
-Message-Id: <20200310124208.710962051@linuxfoundation.org>
+Subject: [PATCH 4.14 077/126] usb: gadget: ffs: ffs_aio_cancel(): Save/restore IRQ flags
+Date:   Tue, 10 Mar 2020 13:41:38 +0100
+Message-Id: <20200310124208.872383450@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310124203.704193207@linuxfoundation.org>
 References: <20200310124203.704193207@linuxfoundation.org>
@@ -60,56 +62,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Golle <daniel@makrotopia.org>
+From: Lars-Peter Clausen <lars@metafoo.de>
 
-[ Upstream commit 87c5cbf71ecbb9e289d60a2df22eb686c70bf196 ]
+[ Upstream commit 43d565727a3a6fd24e37c7c2116475106af71806 ]
 
-On AR934x this UART is usually not initialized by the bootloader
-as it is only used as a secondary serial port while the primary
-UART is a newly introduced NS16550-compatible.
-In order to make use of the ar933x-uart on AR934x without RTS/CTS
-hardware flow control, one needs to set the
-UART_CS_{RX,TX}_READY_ORIDE bits as other than on AR933x where this
-UART is used as primary/console, the bootloader on AR934x typically
-doesn't set those bits.
-Setting them explicitely on AR933x should not do any harm, so just
-set them unconditionally.
+ffs_aio_cancel() can be called from both interrupt and thread context. Make
+sure that the current IRQ state is saved and restored by using
+spin_{un,}lock_irq{save,restore}().
 
-Tested-by: Chuanhong Guo <gch981213@gmail.com>
-Signed-off-by: Daniel Golle <daniel@makrotopia.org>
-Link: https://lore.kernel.org/r/20200207095335.GA179836@makrotopia.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Otherwise undefined behavior might occur.
+
+Acked-by: Michal Nazarewicz <mina86@mina86.com>
+Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/ar933x_uart.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/usb/gadget/function/f_fs.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/tty/serial/ar933x_uart.c b/drivers/tty/serial/ar933x_uart.c
-index ed545a61413c0..ac56a5131a9cc 100644
---- a/drivers/tty/serial/ar933x_uart.c
-+++ b/drivers/tty/serial/ar933x_uart.c
-@@ -289,6 +289,10 @@ static void ar933x_uart_set_termios(struct uart_port *port,
- 	ar933x_uart_rmw_set(up, AR933X_UART_CS_REG,
- 			    AR933X_UART_CS_HOST_INT_EN);
+diff --git a/drivers/usb/gadget/function/f_fs.c b/drivers/usb/gadget/function/f_fs.c
+index cdffbe999500d..282396e8eec63 100644
+--- a/drivers/usb/gadget/function/f_fs.c
++++ b/drivers/usb/gadget/function/f_fs.c
+@@ -1078,18 +1078,19 @@ static int ffs_aio_cancel(struct kiocb *kiocb)
+ {
+ 	struct ffs_io_data *io_data = kiocb->private;
+ 	struct ffs_epfile *epfile = kiocb->ki_filp->private_data;
++	unsigned long flags;
+ 	int value;
  
-+	/* enable RX and TX ready overide */
-+	ar933x_uart_rmw_set(up, AR933X_UART_CS_REG,
-+		AR933X_UART_CS_TX_READY_ORIDE | AR933X_UART_CS_RX_READY_ORIDE);
-+
- 	/* reenable the UART */
- 	ar933x_uart_rmw(up, AR933X_UART_CS_REG,
- 			AR933X_UART_CS_IF_MODE_M << AR933X_UART_CS_IF_MODE_S,
-@@ -421,6 +425,10 @@ static int ar933x_uart_startup(struct uart_port *port)
- 	ar933x_uart_rmw_set(up, AR933X_UART_CS_REG,
- 			    AR933X_UART_CS_HOST_INT_EN);
+ 	ENTER();
  
-+	/* enable RX and TX ready overide */
-+	ar933x_uart_rmw_set(up, AR933X_UART_CS_REG,
-+		AR933X_UART_CS_TX_READY_ORIDE | AR933X_UART_CS_RX_READY_ORIDE);
-+
- 	/* Enable RX interrupts */
- 	up->ier = AR933X_UART_INT_RX_VALID;
- 	ar933x_uart_write(up, AR933X_UART_INT_EN_REG, up->ier);
+-	spin_lock_irq(&epfile->ffs->eps_lock);
++	spin_lock_irqsave(&epfile->ffs->eps_lock, flags);
+ 
+ 	if (likely(io_data && io_data->ep && io_data->req))
+ 		value = usb_ep_dequeue(io_data->ep, io_data->req);
+ 	else
+ 		value = -EINVAL;
+ 
+-	spin_unlock_irq(&epfile->ffs->eps_lock);
++	spin_unlock_irqrestore(&epfile->ffs->eps_lock, flags);
+ 
+ 	return value;
+ }
 -- 
 2.20.1
 
