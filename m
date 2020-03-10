@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C9C2C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:33:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCD0AC18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:33:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56B0B24649
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:33:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 903272467D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:33:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583847229;
-	bh=FLADw+GKBExK9ezf3kJ+0wVCGT6MykYNqQ0rey0KKok=;
+	s=default; t=1583847233;
+	bh=gQWh7sVvH+z0XgXF4BmUO0G1rkaaDUhYsderlOQ/u0Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=emJ4NmJwBmIbWqrTedcr1Md0TWMImYLP7gWGghkeOPxVMkgo/HAPbare5QPXkDlTm
-	 xlBG2Nsm1zN3urKSn/Hl7LE2U4n4JuCJM3QdaOvFHcwB0lkxZ+J1BzouA7Qv25Ldlb
-	 Wq4WgNBk/S7Omw+VnwYg3EjrUT7ty44/nIbOia7c=
+	b=ygQaivT6uHv3PumPoVRZ7dhaXtOK8yPXpfURYXhyg8WfnxrENtrt2Ni2mbfm/SucM
+	 qbE+VvER1xcvEX7ShRu0aTI9WtiDbcdsC6oThp2ejw9i7fy7yg8svhCaQA0W426z7q
+	 RV7cVsNFs+3QyvK6Jl4zkGLC96R4LoeBVWln7e/c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728607AbgCJNds (ORCPT
+        id S1727805AbgCJMr1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:33:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51602 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:47:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51190 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728206AbgCJMrn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:47:43 -0400
+        id S1726918AbgCJMrW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:47:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BCAA924697;
-        Tue, 10 Mar 2020 12:47:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D42E62468D;
+        Tue, 10 Mar 2020 12:47:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844463;
-        bh=FLADw+GKBExK9ezf3kJ+0wVCGT6MykYNqQ0rey0KKok=;
+        s=default; t=1583844442;
+        bh=gQWh7sVvH+z0XgXF4BmUO0G1rkaaDUhYsderlOQ/u0Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lo8HzKeZQ+9S08yEnSs+kfMa/Up0vg4QfNdYydDny+xws+oX/W6sYzAe3PnpB2aPf
-         SPEqnjCwujIMM+51cMZEu0wCKYaXcopDmXfBCgyaTuTxb67eImk++/VmBXbIpC/xws
-         1YtkLwgGG8jOndnI6yEi/VlA6UE8rvlPXu4bl8Ms=
+        b=ig/UmTMVyKGRg/eFYPonRNWIvXrDR1PzGrD/yp9QOvNOyvH3au2/F/eOPIanmL2M4
+         vbhSmQHHmB3OGoYIwgU9Mxz+WJuKj+LbRESSJU5w08vdf/LunXZZsY73GQ3MSnQtOO
+         O0IXfc/CFkO9Z/vkxojcG4RurYG9xkQEiXdyG/SU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH 4.9 76/88] dmaengine: tegra-apb: Prevent race conditions of tasklet vs free list
-Date:   Tue, 10 Mar 2020 13:39:24 +0100
-Message-Id: <20200310123624.022333416@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 4.9 84/88] hwmon: (adt7462) Fix an error return in ADT7462_REG_VOLT()
+Date:   Tue, 10 Mar 2020 13:39:32 +0100
+Message-Id: <20200310123624.933829480@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123606.543939933@linuxfoundation.org>
 References: <20200310123606.543939933@linuxfoundation.org>
@@ -60,37 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Osipenko <digetx@gmail.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-commit c33ee1301c393a241d6424e36eff1071811b1064 upstream.
+commit 44f2f882909fedfc3a56e4b90026910456019743 upstream.
 
-The interrupt handler puts a half-completed DMA descriptor on a free list
-and then schedules tasklet to process bottom half of the descriptor that
-executes client's callback, this creates possibility to pick up the busy
-descriptor from the free list. Thus, let's disallow descriptor's re-use
-until it is fully processed.
+This is only called from adt7462_update_device().  The caller expects it
+to return zero on error.  I fixed a similar issue earlier in commit
+a4bf06d58f21 ("hwmon: (adt7462) ADT7462_REG_VOLT_MAX() should return 0")
+but I missed this one.
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-Acked-by: Jon Hunter <jonathanh@nvidia.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200209163356.6439-3-digetx@gmail.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Fixes: c0b4e3ab0c76 ("adt7462: new hwmon driver")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Link: https://lore.kernel.org/r/20200303101608.kqjwfcazu2ylhi2a@kili.mountain
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/dma/tegra20-apb-dma.c |    2 +-
+ drivers/hwmon/adt7462.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/dma/tegra20-apb-dma.c
-+++ b/drivers/dma/tegra20-apb-dma.c
-@@ -288,7 +288,7 @@ static struct tegra_dma_desc *tegra_dma_
+--- a/drivers/hwmon/adt7462.c
++++ b/drivers/hwmon/adt7462.c
+@@ -426,7 +426,7 @@ static int ADT7462_REG_VOLT(struct adt74
+ 			return 0x95;
+ 		break;
+ 	}
+-	return -ENODEV;
++	return 0;
+ }
  
- 	/* Do not allocate if desc are waiting for ack */
- 	list_for_each_entry(dma_desc, &tdc->free_dma_desc, node) {
--		if (async_tx_test_ack(&dma_desc->txd)) {
-+		if (async_tx_test_ack(&dma_desc->txd) && !dma_desc->cb_count) {
- 			list_del(&dma_desc->node);
- 			spin_unlock_irqrestore(&tdc->lock, flags);
- 			dma_desc->txd.flags = 0;
+ /* Provide labels for sysfs */
 
 
