@@ -4,27 +4,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EEFAC18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 16:30:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E935C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 16:30:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 817F9215A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 16:30:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1757420848
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 16:30:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727083AbgCJQam (ORCPT
+        id S1727201AbgCJQar (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 12:30:42 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:35456 "EHLO huawei.com"
+        Tue, 10 Mar 2020 12:30:47 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:35552 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726395AbgCJQak (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 12:30:40 -0400
+        id S1726716AbgCJQap (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 12:30:45 -0400
 Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id AAB0846DB4A5C061FC87;
+        by Forcepoint Email with ESMTP id D7DFA548D466147AF310;
         Wed, 11 Mar 2020 00:30:33 +0800 (CST)
 Received: from localhost.localdomain (10.69.192.58) by
  DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
- 14.3.487.0; Wed, 11 Mar 2020 00:30:27 +0800
+ 14.3.487.0; Wed, 11 Mar 2020 00:30:26 +0800
 From:   John Garry <john.garry@huawei.com>
 To:     <axboe@kernel.dk>, <jejb@linux.ibm.com>,
         <martin.petersen@oracle.com>, <hare@suse.de>,
@@ -34,9 +35,9 @@ CC:     <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <virtualization@lists.linux-foundation.org>,
         <esc.storagedev@microsemi.com>, <chenxiang66@hisilicon.com>,
         Hannes Reinecke <hare@suse.com>
-Subject: [PATCH RFC v2 11/24] hpsa: move hpsa_hba_inquiry after scsi_add_host()
-Date:   Wed, 11 Mar 2020 00:25:37 +0800
-Message-ID: <1583857550-12049-12-git-send-email-john.garry@huawei.com>
+Subject: [PATCH RFC v2 08/24] scsi: add host tagset busy iterator
+Date:   Wed, 11 Mar 2020 00:25:34 +0800
+Message-ID: <1583857550-12049-9-git-send-email-john.garry@huawei.com>
 X-Mailer: git-send-email 2.8.1
 In-Reply-To: <1583857550-12049-1-git-send-email-john.garry@huawei.com>
 References: <1583857550-12049-1-git-send-email-john.garry@huawei.com>
@@ -51,83 +52,67 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Hannes Reinecke <hare@suse.de>
 
-Move hpsa_hba_inquiry to after scsi_add_host() so that the host
-is fully initialized.
+Add an iterator scsi_host_tagset_busy_iter() to easily traverse all
+busy commands. No locking is done here; this need to be ensured by
+the caller.
 
 Signed-off-by: Hannes Reinecke <hare@suse.com>
 ---
- drivers/scsi/hpsa.c | 37 +++++++++++++++++++------------------
- 1 file changed, 19 insertions(+), 18 deletions(-)
+ drivers/scsi/hosts.c     | 27 +++++++++++++++++++++++++++
+ include/scsi/scsi_host.h |  5 +++++
+ 2 files changed, 32 insertions(+)
 
-diff --git a/drivers/scsi/hpsa.c b/drivers/scsi/hpsa.c
-index 1a4ddfacb458..703f824584fe 100644
---- a/drivers/scsi/hpsa.c
-+++ b/drivers/scsi/hpsa.c
-@@ -5814,6 +5814,22 @@ static int hpsa_scsi_host_alloc(struct ctlr_info *h)
- 	return 0;
+diff --git a/drivers/scsi/hosts.c b/drivers/scsi/hosts.c
+index 1d669e47b692..97704a630f8e 100644
+--- a/drivers/scsi/hosts.c
++++ b/drivers/scsi/hosts.c
+@@ -650,3 +650,30 @@ void scsi_flush_work(struct Scsi_Host *shost)
+ 	flush_workqueue(shost->work_q);
  }
- 
-+static void hpsa_hba_inquiry(struct ctlr_info *h)
-+{
-+	int rc;
+ EXPORT_SYMBOL_GPL(scsi_flush_work);
 +
-+#define HBA_INQUIRY_BYTE_COUNT 64
-+	h->hba_inquiry_data = kmalloc(HBA_INQUIRY_BYTE_COUNT, GFP_KERNEL);
-+	if (!h->hba_inquiry_data)
-+		return;
-+	rc = hpsa_scsi_do_inquiry(h, RAID_CTLR_LUNID, 0,
-+		h->hba_inquiry_data, HBA_INQUIRY_BYTE_COUNT);
-+	if (rc != 0) {
-+		kfree(h->hba_inquiry_data);
-+		h->hba_inquiry_data = NULL;
-+	}
++struct scsi_host_tagset_busy_iter_data {
++	scsi_host_busy_iter_fn *fn;
++	void *priv;
++};
++
++static bool scsi_host_tagset_busy_iter_fn(struct request *req, void *priv,
++					  bool reserved)
++{
++	struct scsi_host_tagset_busy_iter_data *iter_data = priv;
++	struct scsi_cmnd *sc = blk_mq_rq_to_pdu(req);
++
++	return iter_data->fn(sc, iter_data->priv, reserved);
 +}
 +
- static int hpsa_scsi_add_host(struct ctlr_info *h)
- {
- 	int rv;
-@@ -5823,6 +5839,9 @@ static int hpsa_scsi_add_host(struct ctlr_info *h)
- 		dev_err(&h->pdev->dev, "scsi_add_host failed\n");
- 		return rv;
- 	}
++void scsi_host_tagset_busy_iter(struct Scsi_Host *shost,
++				scsi_host_busy_iter_fn *fn, void *priv)
++{
++	struct scsi_host_tagset_busy_iter_data iter_data = {
++		.fn = fn,
++		.priv = priv,
++	};
 +
-+	hpsa_hba_inquiry(h);
++	blk_mq_tagset_busy_iter(&shost->tag_set, scsi_host_tagset_busy_iter_fn,
++				&iter_data);
++}
++EXPORT_SYMBOL_GPL(scsi_host_tagset_busy_iter);
+diff --git a/include/scsi/scsi_host.h b/include/scsi/scsi_host.h
+index 2258a4f7b4d8..663aef22437a 100644
+--- a/include/scsi/scsi_host.h
++++ b/include/scsi/scsi_host.h
+@@ -767,6 +767,11 @@ static inline int scsi_host_scan_allowed(struct Scsi_Host *shost)
+ extern void scsi_unblock_requests(struct Scsi_Host *);
+ extern void scsi_block_requests(struct Scsi_Host *);
+ 
++typedef bool (scsi_host_busy_iter_fn)(struct scsi_cmnd *, void *, bool);
 +
- 	scsi_scan_host(h->scsi_host);
- 	return 0;
- }
-@@ -7899,22 +7918,6 @@ static int hpsa_pci_init(struct ctlr_info *h)
- 	return err;
- }
++void scsi_host_tagset_busy_iter(struct Scsi_Host *,
++				scsi_host_busy_iter_fn *fn, void *priv);
++
+ struct class_container;
  
--static void hpsa_hba_inquiry(struct ctlr_info *h)
--{
--	int rc;
--
--#define HBA_INQUIRY_BYTE_COUNT 64
--	h->hba_inquiry_data = kmalloc(HBA_INQUIRY_BYTE_COUNT, GFP_KERNEL);
--	if (!h->hba_inquiry_data)
--		return;
--	rc = hpsa_scsi_do_inquiry(h, RAID_CTLR_LUNID, 0,
--		h->hba_inquiry_data, HBA_INQUIRY_BYTE_COUNT);
--	if (rc != 0) {
--		kfree(h->hba_inquiry_data);
--		h->hba_inquiry_data = NULL;
--	}
--}
--
- static int hpsa_init_reset_devices(struct pci_dev *pdev, u32 board_id)
- {
- 	int rc, i;
-@@ -8810,8 +8813,6 @@ static int hpsa_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
- 	/* Turn the interrupts on so we can service requests */
- 	h->access.set_intr_mask(h, HPSA_INTR_ON);
- 
--	hpsa_hba_inquiry(h);
--
- 	h->lastlogicals = kzalloc(sizeof(*(h->lastlogicals)), GFP_KERNEL);
- 	if (!h->lastlogicals)
- 		dev_info(&h->pdev->dev,
+ /*
 -- 
 2.17.1
 
