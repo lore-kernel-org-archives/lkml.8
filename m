@@ -2,97 +2,167 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CB20C18E5A
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 445AAC10DCE
 	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:01:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3ADF0222C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:01:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9665E21927
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:01:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="jVjC6Nju"
+	dkim=pass (1024-bit key) header.d=agner.ch header.i=@agner.ch header.b="LXf1qgLL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727750AbgCJWB2 (ORCPT
+        id S1727721AbgCJWB1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 18:01:28 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:34347 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727688AbgCJWB1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 10 Mar 2020 18:01:27 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48cTZF1NB6z9s3x;
-        Wed, 11 Mar 2020 09:01:25 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1583877685;
-        bh=wzZzebi45AhIS8HGeVFhdyHkTlG8O3pVyWnqNN9rlqQ=;
-        h=Date:From:To:Cc:Subject:From;
-        b=jVjC6Nju7T0T9y+wjzfdyl/mtjA8IR7sw+h4jd/f7Ti0Pd40VyYazZf2eRRWGU2mJ
-         PMqLMtTwnNkj3c/CHqenS59dGXobbwChG76kOW9xmamf5QnIyr5FK1eRI1sIZ2FaB0
-         Bwjj+3QYsrECTk7K6BrA2eptDTkI3Hb+C8mSO6rAoAAkGKAcS54fhRGdya0LcP2sfd
-         wpJVBUW/zwHo0xZaI0kF0wMR5/8TnYhOkOsZOuYz/Le8XteAsq7frdw8bLNcGq6mLf
-         RwgMpX1YvHtGgNcFe5CG/0TlaZv7FMXzY3cKdh2nbwpGk2WgXWjeR8sJ/knchFE/9w
-         1tv7+owRHiwVw==
-Date:   Wed, 11 Mar 2020 09:01:15 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        KVM <kvm@vger.kernel.org>, S390 <linux-s390@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: Fixes tag needs some work in the kvms390-fixes tree
-Message-ID: <20200311090115.3967bbc6@canb.auug.org.au>
+Received: from mail.kmu-office.ch ([178.209.48.109]:43976 "EHLO
+        mail.kmu-office.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727582AbgCJWB1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 18:01:27 -0400
+Received: from zyt.lan (unknown [IPv6:2a02:169:3df5::564])
+        by mail.kmu-office.ch (Postfix) with ESMTPSA id 4D6365C4E83;
+        Tue, 10 Mar 2020 23:01:25 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agner.ch; s=dkim;
+        t=1583877685;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=jAGZ+WQdZpOOEry3q6vNEUuMTxiiGakwu2hkgW7TYVE=;
+        b=LXf1qgLLQ4XWcmci9Meq3tKfJdVQHxtW0704bfe4rkST5kBKI50+2+H+1vlPdsSfeNHA0a
+        OSm80+iV7NB0hgO1X0VLZjr09DwHKMyKNZCJohisgGaqM3oAy+zBPy9a10gW4iIE2uEFLV
+        1W131pV2/7TIUmhouF7Wasmtew8Tsjk=
+From:   Stefan Agner <stefan@agner.ch>
+To:     linux@armlinux.org.uk
+Cc:     arnd@arndb.de, ard.biesheuvel@linaro.org, robin.murphy@arm.com,
+        yamada.masahiro@socionext.com, ndesaulniers@google.com,
+        manojgupta@google.com, jiancai@google.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com, Stefan Agner <stefan@agner.ch>
+Subject: [PATCH 1/3] ARM: use .fpu assembler directives instead of assembler arguments
+Date:   Tue, 10 Mar 2020 23:01:19 +0100
+Message-Id: <4165f81a1f1fdc53fe273307d1accb40f8663e01.1583360296.git.stefan@agner.ch>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <cover.1583360296.git.stefan@agner.ch>
+References: <cover.1583360296.git.stefan@agner.ch>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/kv.9uJJpUfaryogAyL3K1zT";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/kv.9uJJpUfaryogAyL3K1zT
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Explicit FPU selection has been introduced in commit 1a6be26d5b1a
+("[ARM] Enable VFP to be built when non-VFP capable CPUs are selected")
+to make use of assembler mnemonics for VFP instructions.
 
-Hi all,
+However, clang currently does not support passing assembler flags
+like this and errors out with:
+clang-10: error: the clang compiler does not support '-Wa,-mfpu=softvfp+vfp'
 
-In commit
+Make use of the .fpu assembler directives to select the floating point
+hardware selectively. Also use the new unified assembler language
+mnemonics. This allows to build these procedures with Clang.
 
-  b5de9eede579 ("KVM: s390: Also reset registers in sync regs for initial c=
-pu reset")
+Signed-off-by: Stefan Agner <stefan@agner.ch>
+---
+ arch/arm/vfp/Makefile |  2 --
+ arch/arm/vfp/vfphw.S  | 30 +++++++++++++++++++-----------
+ 2 files changed, 19 insertions(+), 13 deletions(-)
 
-Fixes tag
+diff --git a/arch/arm/vfp/Makefile b/arch/arm/vfp/Makefile
+index 9975b63ac3b0..749901a72d6d 100644
+--- a/arch/arm/vfp/Makefile
++++ b/arch/arm/vfp/Makefile
+@@ -8,6 +8,4 @@
+ # ccflags-y := -DDEBUG
+ # asflags-y := -DDEBUG
+ 
+-KBUILD_AFLAGS	:=$(KBUILD_AFLAGS:-msoft-float=-Wa,-mfpu=softvfp+vfp -mfloat-abi=soft)
+-
+ obj-y		+= vfpmodule.o entry.o vfphw.o vfpsingle.o vfpdouble.o
+diff --git a/arch/arm/vfp/vfphw.S b/arch/arm/vfp/vfphw.S
+index b2e560290860..e214007a20a2 100644
+--- a/arch/arm/vfp/vfphw.S
++++ b/arch/arm/vfp/vfphw.S
+@@ -258,11 +258,13 @@ vfp_current_hw_state_address:
+ 
+ ENTRY(vfp_get_float)
+ 	tbl_branch r0, r3, #3
+-	.irp	dr,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+-1:	mrc	p10, 0, r0, c\dr, c0, 0	@ fmrs	r0, s0
++	.irp	dr,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,
++1:	vmov	r0, s\dr
+ 	ret	lr
+ 	.org	1b + 8
+-1:	mrc	p10, 0, r0, c\dr, c0, 4	@ fmrs	r0, s1
++	.endr
++	.irp	dr,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31
++1:	vmov	r0, s\dr
+ 	ret	lr
+ 	.org	1b + 8
+ 	.endr
+@@ -271,10 +273,12 @@ ENDPROC(vfp_get_float)
+ ENTRY(vfp_put_float)
+ 	tbl_branch r1, r3, #3
+ 	.irp	dr,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+-1:	mcr	p10, 0, r0, c\dr, c0, 0	@ fmsr	r0, s0
++1:	vmov	s\dr, r0
+ 	ret	lr
+ 	.org	1b + 8
+-1:	mcr	p10, 0, r0, c\dr, c0, 4	@ fmsr	r0, s1
++	.endr
++	.irp	dr,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31
++1:	vmov	s\dr, r0
+ 	ret	lr
+ 	.org	1b + 8
+ 	.endr
+@@ -282,15 +286,17 @@ ENDPROC(vfp_put_float)
+ 
+ ENTRY(vfp_get_double)
+ 	tbl_branch r0, r3, #3
++	.fpu	vfpv2
+ 	.irp	dr,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+-1:	fmrrd	r0, r1, d\dr
++1:	vmov	r0, r1, d\dr
+ 	ret	lr
+ 	.org	1b + 8
+ 	.endr
+ #ifdef CONFIG_VFPv3
+ 	@ d16 - d31 registers
+-	.irp	dr,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+-1:	mrrc	p11, 3, r0, r1, c\dr	@ fmrrd	r0, r1, d\dr
++	.fpu	vfpv3
++	.irp	dr,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31
++1:	vmov	r0, r1, d\dr
+ 	ret	lr
+ 	.org	1b + 8
+ 	.endr
+@@ -304,15 +310,17 @@ ENDPROC(vfp_get_double)
+ 
+ ENTRY(vfp_put_double)
+ 	tbl_branch r2, r3, #3
++	.fpu	vfpv2
+ 	.irp	dr,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+-1:	fmdrr	d\dr, r0, r1
++1:	vmov	d\dr, r0, r1
+ 	ret	lr
+ 	.org	1b + 8
+ 	.endr
+ #ifdef CONFIG_VFPv3
++	.fpu	vfpv3
+ 	@ d16 - d31 registers
+-	.irp	dr,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+-1:	mcrr	p11, 3, r0, r1, c\dr	@ fmdrr	r0, r1, d\dr
++	.irp	dr,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31
++1:	vmov	d\dr, r0, r1
+ 	ret	lr
+ 	.org	1b + 8
+ 	.endr
+-- 
+2.25.1
 
-  Fixes: 7de3f1423ff ("KVM: s390: Add new reset vcpu API")
-
-has these problem(s):
-
-  - SHA1 should be at least 12 digits long
-    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
-    or later) just making sure it is not set (or set to "auto").
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/kv.9uJJpUfaryogAyL3K1zT
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5oDisACgkQAVBC80lX
-0GzYaAf9FXBdN/sPL0m1wS/M8NvQrp0wWqykM2mze0kNV+wY77eqasWuk3dSkCZQ
-YOWpjCN/T6FTBwJpiNLZMtgoKYOKFwkPToNXjCNkl+3sXrp/8xhKREmnobTSpqyP
-XWhIzMfqyXRn5/5gWg44M/pVIE5KIDeDxZzeU4tbcDCCsoHOeqkdne1n7KOkRk+L
-yTw1hgzfqPeT6uegHLvSwgO1K1XwLDZagZJrPzdMgr5wGvMMEe6J4gk7msoXBpia
-3n+gZjDjDeYb8erVrRxqR7niqGb7vIPeeKkP4PNVKxnVoIg2N0/kLrQHHvnZGEaU
-prhFRX7EBNh0WELfnGmQDRa/L3c75Q==
-=IiMa
------END PGP SIGNATURE-----
-
---Sig_/kv.9uJJpUfaryogAyL3K1zT--
