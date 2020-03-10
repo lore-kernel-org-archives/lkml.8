@@ -2,230 +2,126 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 985F6C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 08:27:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8392BC18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 08:29:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 687C52467D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 08:27:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="oVTS5hWC"
+	by mail.kernel.org (Postfix) with ESMTP id 62C6124682
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 08:29:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726591AbgCJI1r (ORCPT
+        id S1726488AbgCJI3K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 04:27:47 -0400
-Received: from mail-eopbgr30058.outbound.protection.outlook.com ([40.107.3.58]:4885
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725919AbgCJI1r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 04:27:47 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FvrcMZEDbMS9adcN2QOBl5u6fJLjg93+e5XTrNGqQxVeOs3Xb4OFepX/NYlBn6SY5ui9BqzdLMTHfUTSuOwcVOdwPXWjEDZAifiVZRah/4HVTyl0MTrNL8qJyg89+GF3Li5DxrNYLrAXWh7yHdJnWq5SClKmSnqVPJoGkDrIR/RM7ra7t9/U5fAjr4InO8Mqm4DbKNYn9uA+NeSHMmN0pX/O3/Z4JnIJjOkGoOMzz6voPXe9zQFTbTvZOlGfdnTXbhBcqRRO8y5SFVW/1xZPyJmjKU24VT+ELQqsE2hqm+wB0cH75FpWzXIow7gcakUCa9SapH572/QH7e/nks/eVQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2m97V0eSykN1CXULL3ZV8lBCFT2zzdvfN7XyYpRQp04=;
- b=k012AudWV27lNLo/47LP3NHYnVl/IMXg7KeKmIVZCPDyXNVAmmqXKllG/r6wEFt0GqfNepmaJMmkL5A1Z6SWojCOdDFUoAoAb08r5Y9BeEowR50QLEX8/x0/Y+6kg8qpsnwSfPUjByyoobzOV4ZPqLz4eGrXr9IsCbmv6r3hlosqOXcUB/pVtP2rqLI6FumXbdNiebzOddWFXgaivelLrZ45d3ESpbebv86MBpsXhUP9lKnPb7Re+NetKGp8YYT8NP+KUJezkHigWLiov32v4WH58ECHSxJ63a9LnV3M/jXAMHpPQkx9nAdxs2Nc6Ui1biRP4xrwKqY5U70TXmbbvw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2m97V0eSykN1CXULL3ZV8lBCFT2zzdvfN7XyYpRQp04=;
- b=oVTS5hWC5dlu4Y0QUYLb6+LcL228z2CN155WNiT+twNBwWBrkGepid1VBsk2hiy2hOQ4LixQ/Z4jTSVOhExt0Enccl+7yJBm97avDrSKAkq2vE/+vJ6Gvvooi8PIS5VLUMoszQwkQBHuky45JTTdhP1NgickfBNj++lftvuYu5Q=
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (20.179.232.15) by
- VE1PR04MB6767.eurprd04.prod.outlook.com (20.179.234.220) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2793.16; Tue, 10 Mar 2020 08:27:41 +0000
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::490:6caa:24b:4a31]) by VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::490:6caa:24b:4a31%6]) with mapi id 15.20.2793.013; Tue, 10 Mar 2020
- 08:27:41 +0000
-From:   Robin Gong <yibin.gong@nxp.com>
-To:     Sascha Hauer <s.hauer@pengutronix.de>
-CC:     "vkoul@kernel.org" <vkoul@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-        "martin.fuzzey@flowbird.group" <martin.fuzzey@flowbird.group>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: RE: [RESEND v6  06/13] spi: imx: fix ERR009165
-Thread-Topic: [RESEND v6  06/13] spi: imx: fix ERR009165
-Thread-Index: AQHV9oxXftoGpg9l0ka8yr0vqbewZqhBcOwAgAAKFSA=
-Date:   Tue, 10 Mar 2020 08:27:41 +0000
-Message-ID: <VE1PR04MB66384DA6732A840FE1D80C1989FF0@VE1PR04MB6638.eurprd04.prod.outlook.com>
-References: <1583839922-22699-1-git-send-email-yibin.gong@nxp.com>
- <1583839922-22699-7-git-send-email-yibin.gong@nxp.com>
- <20200310073920.GR3335@pengutronix.de>
-In-Reply-To: <20200310073920.GR3335@pengutronix.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yibin.gong@nxp.com; 
-x-originating-ip: [92.121.68.129]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 88acc0a7-28e6-4a7a-fd5a-08d7c4cce668
-x-ms-traffictypediagnostic: VE1PR04MB6767:|VE1PR04MB6767:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VE1PR04MB67677423BDC29176E04EA8E689FF0@VE1PR04MB6767.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 033857D0BD
-x-forefront-antispam-report: SFV:NSPM;SFS:(10001)(10009020)(4636009)(376002)(346002)(366004)(39860400002)(396003)(136003)(189003)(199004)(66476007)(66446008)(64756008)(66556008)(76116006)(52536014)(71200400001)(966005)(4326008)(478600001)(45080400002)(55016002)(33656002)(66946007)(81156014)(81166006)(8676002)(6916009)(26005)(186003)(5660300002)(8936002)(7696005)(9686003)(2906002)(6506007)(86362001)(316002)(54906003)(7416002);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6767;H:VE1PR04MB6638.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: BIXgle4FfsSGj4XmFnr/EL1BRy7H8WXPnYoBZSrgEUlfbL8aGq+rNS1BvDuBCkFy4CpAaI9QWw1ti7RwqGZnBEtI/Jk/i1cHMBKiV3PsWeFFsjX/0d9THKin8/c7VMQXrro99LUTtENt1xSHfpfqkXAla4q/ve+ahRB9ePudPKbqAJP68DiP5kUi8c0ujg6zP1wZ9VPm1aUiJJ7kPMKCqh2xqKdpQOh+dyaHtoaGu7fu+wK1w766Nlb7fmL6ckPZVtpKd5fLoLbcvPRnBkQIibMwfKVBvv+kMEyByNapBdsXWtVx5zCm+juWqVY8OrPdkSYm70j/0tHY8i8hriB1jPS4xWs93fzAB7FtbkpdD1nAk8XZcRAf0omIgIabPR52LMjXBroR4b1CwLBnIyOqMrDOzLo4WeGKHlb1veJEkxADjbHCnopplcFktdfrD09Z9xdTP+vGfbcTA7J3N6EsvPQULHRnOaK1+WVtj6yPs10zgbsztxi2+I4orrdBIc4uQ+nBFVfJHPIzwYEhBV0huacHQBVMXVF56Va5sBqV6oyEaem6TgJbO0F/TEws3OKA7VNYOB9JDQLVJSkFQ2LFrpKtS+vg0cz79Oh0Rm0I4i239VyCdbzpTTEr8e7QjFQ3
-x-ms-exchange-antispam-messagedata: +3Lyxiq7DGvUgQigA/olGD9OXQFPw3M+46IN6L21TZmxhJGUnQi8OBRYCowDGOWWJ4INgjt9odf8169q/z0Yx76V/HNFXCHPgcIKxxlqz1ZCDvwoJnCbQxgf9QziTfI87HqrMz/RxEsWe9aE4eYXsQ==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 10 Mar 2020 04:29:10 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:39416 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725919AbgCJI3K (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 04:29:10 -0400
+Received: by mail-io1-f71.google.com with SMTP id v1so8470086ioh.6
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 01:29:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=0FgBXE7PAb7uDp915satuPjIwbrNJA32cUNG0KVfHS0=;
+        b=WCu499+bAPitpfLKehIM+5TOatWQSpGkw6m/dMGcD8PQFEi+ioW2YoxLvYubZTWwwq
+         oMjfPzc6r3GjMoz3Lxkrd/w/ASdlkwY6pBvR93gyocOiPxvaXaRt30Jv3mcmTmRZxBza
+         C6VCeML0ZoMC5uOON9cMq3QuwlFJ5oYfMGO/e8PxbTvfJh0FOqrvqveJzSIOzUnsAwCL
+         48IB1/bPhR6X2YoAubFyQA/u06MaiIa24L08yhjZ5AOz9Vjdla6ts4JLJE7PR3+f911d
+         tkivBS1+eGEAGSEVhq+AnwRHsnIEkGEtOA9SbP9lGRbbE0d4A0O23AttRhT/nd4aAlWz
+         kc3Q==
+X-Gm-Message-State: ANhLgQ0JBuMnuxAfnLHyAmwt44EzpvPloedGgHizT8nsLtpVrHKzTg60
+        iYj4ZhNPaeVMBfJ2S4Np8gcrsDI9hVB/zErjNn9E18m1XIiR
+X-Google-Smtp-Source: ADFU+vvYAllLcoRD5/dza8kqalZ5ZYAzGDIZw+7QxoUAVmnq1THBc7eyAo4J5Tx0umfqnhqRiKyOMQ8ril2A4UmvZk2SdYDbpVgc
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 88acc0a7-28e6-4a7a-fd5a-08d7c4cce668
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Mar 2020 08:27:41.2338
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: DKyloGauQ5OExnAF9hc/fYjt1bmj9E46FCUmErO2do+O84eEyhz9F3KnM1SzVYdWOhNXYfT8tP7w8StBXCjZ/Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6767
+X-Received: by 2002:a92:9edc:: with SMTP id s89mr19087599ilk.229.1583828949268;
+ Tue, 10 Mar 2020 01:29:09 -0700 (PDT)
+Date:   Tue, 10 Mar 2020 01:29:09 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000e8001905a07be9de@google.com>
+Subject: general protection fault in list_lru_del
+From:   syzbot <syzbot+34c3a8c021ca80c808b0@syzkaller.appspotmail.com>
+To:     akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/03/10 Sascha Hauer <s.hauer@pengutronix.de> wrote:
-> On Tue, Mar 10, 2020 at 07:31:55PM +0800, Robin Gong wrote:
-> > Change to XCH  mode even in dma mode, please refer to the below
-> > errata:
-> > https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fwww=
-.
-> >
-> nxp.com%2Fdocs%2Fen%2Ferrata%2FIMX6DQCE.pdf&amp;data=3D02%7C01%7C
-> yibin.g
-> >
-> ong%40nxp.com%7Ccbabce268dfd4b0a0e2a08d7c4c62ff6%7C686ea1d3bc2b4c
-> 6fa92
-> >
-> cd99c5c301635%7C0%7C1%7C637194227793913712&amp;sdata=3DQ5N49T4jgX
-> TcdTzsB
-> > 3D0saK2%2Fzj0R4gnJcGR%2Bd70Fm4%3D&amp;reserved=3D0
-> >
-> > Signed-off-by: Robin Gong <yibin.gong@nxp.com>
-> > Acked-by: Mark Brown <broonie@kernel.org>
-> > ---
-> >  drivers/spi/spi-imx.c | 17 ++++++++++-------
-> >  1 file changed, 10 insertions(+), 7 deletions(-)
-> >
-> > diff --git a/drivers/spi/spi-imx.c b/drivers/spi/spi-imx.c index
-> > f4f28a4..842a86e 100644
-> > --- a/drivers/spi/spi-imx.c
-> > +++ b/drivers/spi/spi-imx.c
-> > @@ -585,8 +585,9 @@ static int mx51_ecspi_prepare_transfer(struct
-> spi_imx_data *spi_imx,
-> >  	ctrl |=3D mx51_ecspi_clkdiv(spi_imx, t->speed_hz, &clk);
-> >  	spi_imx->spi_bus_clk =3D clk;
-> >
-> > +	/* ERR009165: work in XHC mode as PIO */
-> >  	if (spi_imx->usedma)
-> > -		ctrl |=3D MX51_ECSPI_CTRL_SMC;
-> > +		ctrl &=3D ~MX51_ECSPI_CTRL_SMC;
->=20
-> 'ctrl' was read from the hardware. In the dma case it was set explicitly,=
- but it
-> was never cleared for a PIO transfer. This looked wrong before this patch=
-. Now
-> with this patch it looks even more wrong:
-> We clear a bit that has never been set and we only do this for DMA, when =
-for
-> the PIO case it definitly must be cleared. Drop the if clause.
-Good point, ACK.
->=20
-> >
-> >  	writel(ctrl, spi_imx->base + MX51_ECSPI_CTRL);
-> >
-> > @@ -612,12 +613,14 @@ static int mx51_ecspi_prepare_transfer(struct
-> > spi_imx_data *spi_imx,
-> >
-> >  static void mx51_setup_wml(struct spi_imx_data *spi_imx)  {
-> > +	u32 tx_wml =3D 0;
-> > +
-> >  	/*
-> >  	 * Configure the DMA register: setup the watermark
-> >  	 * and enable DMA request.
-> >  	 */
-> >  	writel(MX51_ECSPI_DMA_RX_WML(spi_imx->wml - 1) |
-> > -		MX51_ECSPI_DMA_TX_WML(spi_imx->wml) |
-> > +		MX51_ECSPI_DMA_TX_WML(tx_wml) |
->=20
-> tx_wml is never assigned any other value than 0. Drop the variable.
-That's prepared for 07/13 patch which may assign spi_imx->wml to tx_wml.
->=20
-> >  		MX51_ECSPI_DMA_RXT_WML(spi_imx->wml) |
-> >  		MX51_ECSPI_DMA_TEDEN | MX51_ECSPI_DMA_RXDEN |
-> >  		MX51_ECSPI_DMA_RXTDEN, spi_imx->base + MX51_ECSPI_DMA);
-> @@ -1171,7
-> > +1174,11 @@ static int spi_imx_dma_configure(struct spi_master *master)
-> >  	tx.direction =3D DMA_MEM_TO_DEV;
-> >  	tx.dst_addr =3D spi_imx->base_phys + MXC_CSPITXDATA;
-> >  	tx.dst_addr_width =3D buswidth;
-> > -	tx.dst_maxburst =3D spi_imx->wml;
-> > +	/*
-> > +	 * For ERR009165 with tx_wml =3D 0 could enlarge burst size to fifo s=
-ize
-> > +	 * to speed up fifo filling as possible.
-> > +	 */
-> > +	tx.dst_maxburst =3D spi_imx->devtype_data->fifo_size;
-> >  	ret =3D dmaengine_slave_config(master->dma_tx, &tx);
-> >  	if (ret) {
-> >  		dev_err(spi_imx->dev, "TX dma configuration failed with %d\n",
-> > ret); @@ -1265,10 +1272,6 @@ static int spi_imx_sdma_init(struct
-> > device *dev, struct spi_imx_data *spi_imx,  {
-> >  	int ret;
-> >
-> > -	/* use pio mode for i.mx6dl chip TKT238285 */
-> > -	if (of_machine_is_compatible("fsl,imx6dl"))
-> > -		return 0;
->=20
-> So with this patch it becomes possible to do DMA on i.MX6dl, but it is
-> mentioned nowhere.
-That's a common IP issue but caught on i.mx6dl at that time, so this time I=
- didn't mention
-i.mx6dl.
->=20
-> Sascha
->=20
-> --
-> Pengutronix e.K.                           |
-> |
-> Steuerwalder Str. 21                       |
-> https://eur01.safelinks.protection.outlook.com/?url=3Dhttp%3A%2F%2Fwww.pe
-> ngutronix.de%2F&amp;data=3D02%7C01%7Cyibin.gong%40nxp.com%7Ccbabce2
-> 68dfd4b0a0e2a08d7c4c62ff6%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%
-> 7C1%7C637194227793913712&amp;sdata=3DTL%2BheiNsYVPld3qyzWjF6yQZgH2
-> HLdVFxzFeK3MupTc%3D&amp;reserved=3D0  |
-> 31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0
-> |
-> Amtsgericht Hildesheim, HRA 2686           | Fax:
-> +49-5121-206917-5555 |
+Hello,
+
+syzbot found the following crash on:
+
+HEAD commit:    63623fd4 Merge tag 'for-linus' of git://git.kernel.org/pub..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1492da55e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=9833e26bab355358
+dashboard link: https://syzkaller.appspot.com/bug?extid=34c3a8c021ca80c808b0
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+34c3a8c021ca80c808b0@syzkaller.appspotmail.com
+
+general protection fault, probably for non-canonical address 0xdffffc0000000000: 0000 [#1] PREEMPT SMP KASAN
+KASAN: null-ptr-deref in range [0x0000000000000000-0x0000000000000007]
+CPU: 1 PID: 11205 Comm: kworker/u4:4 Not tainted 5.6.0-rc3-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: krdsd rds_tcp_accept_worker
+RIP: 0010:__list_del_entry_valid+0x85/0xf5 lib/list_debug.c:51
+Code: 0f 84 e1 00 00 00 48 b8 22 01 00 00 00 00 ad de 49 39 c4 0f 84 e2 00 00 00 48 b8 00 00 00 00 00 fc ff df 4c 89 e2 48 c1 ea 03 <80> 3c 02 00 75 53 49 8b 14 24 4c 39 f2 0f 85 99 00 00 00 49 8d 7d
+RSP: 0018:ffffc90001b27af0 EFLAGS: 00010246
+RAX: dffffc0000000000 RBX: ffff888020040c60 RCX: ffffffff81a1dda6
+RDX: 0000000000000000 RSI: ffffffff81a1dba1 RDI: ffff888020040c68
+RBP: ffffc90001b27b08 R08: ffff88809f18e280 R09: fffff52000364f51
+R10: fffff52000364f50 R11: 0000000000000003 R12: 0000000000000000
+R13: 0000000000000000 R14: ffff888020040c60 R15: ffff888020040c68
+FS:  0000000000000000(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f78a44de000 CR3: 000000008c993000 CR4: 00000000001426e0
+DR0: 0000000000000000 DR1: 0000000000006920 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ __list_del_entry include/linux/list.h:132 [inline]
+ list_del_init include/linux/list.h:204 [inline]
+ list_lru_del+0x11d/0x620 mm/list_lru.c:158
+ inode_lru_list_del fs/inode.c:450 [inline]
+ iput_final fs/inode.c:1568 [inline]
+ iput+0x52c/0x900 fs/inode.c:1597
+ __sock_release+0x20e/0x280 net/socket.c:617
+ sock_release+0x18/0x20 net/socket.c:625
+ rds_tcp_accept_one+0x5a9/0xc00 net/rds/tcp_listen.c:251
+ rds_tcp_accept_worker+0x56/0x80 net/rds/tcp.c:525
+ process_one_work+0xa05/0x17a0 kernel/workqueue.c:2264
+ worker_thread+0x98/0xe40 kernel/workqueue.c:2410
+ kthread+0x361/0x430 kernel/kthread.c:255
+ ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+Modules linked in:
+---[ end trace 424f0561ef9bfe17 ]---
+RIP: 0010:__list_del_entry_valid+0x85/0xf5 lib/list_debug.c:51
+Code: 0f 84 e1 00 00 00 48 b8 22 01 00 00 00 00 ad de 49 39 c4 0f 84 e2 00 00 00 48 b8 00 00 00 00 00 fc ff df 4c 89 e2 48 c1 ea 03 <80> 3c 02 00 75 53 49 8b 14 24 4c 39 f2 0f 85 99 00 00 00 49 8d 7d
+RSP: 0018:ffffc90001b27af0 EFLAGS: 00010246
+RAX: dffffc0000000000 RBX: ffff888020040c60 RCX: ffffffff81a1dda6
+RDX: 0000000000000000 RSI: ffffffff81a1dba1 RDI: ffff888020040c68
+RBP: ffffc90001b27b08 R08: ffff88809f18e280 R09: fffff52000364f51
+R10: fffff52000364f50 R11: 0000000000000003 R12: 0000000000000000
+R13: 0000000000000000 R14: ffff888020040c60 R15: ffff888020040c68
+FS:  0000000000000000(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f78a44de000 CR3: 000000008c993000 CR4: 00000000001426e0
+DR0: 0000000000000000 DR1: 0000000000006920 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
