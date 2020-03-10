@@ -2,190 +2,106 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01443C18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 08:37:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 019A5C18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 08:37:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF6772253D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 08:37:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583829447;
-	bh=Y6jQM7RVsO58Dx3weRXmbV8Gsl+HLdIqb3PDN6mkEAs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=BNsW+Jy5WKHHEb/AUeMGEyClsPub4Qp201jfoRtWBqldpXU26vfPXzXwksr8VZgTo
-	 kYsQNee1fghDIof1TCdM6DzPbOx0q6YgnGfCJL+gJhzyAjMcoJBt6u4QF4AZa+KZ2t
-	 Q0nUyAZ0CQL5e603ivGAVmEizM4hLASAAf08YyC0=
+	by mail.kernel.org (Postfix) with ESMTP id D719724680
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 08:37:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726498AbgCJIh0 convert rfc822-to-8bit (ORCPT
+        id S1726548AbgCJIhm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 04:37:26 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:36401 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726462AbgCJIh0 (ORCPT
+        Tue, 10 Mar 2020 04:37:42 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:46081 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726389AbgCJIhm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 04:37:26 -0400
-Received: by mail-ot1-f65.google.com with SMTP id j14so12376619otq.3;
-        Tue, 10 Mar 2020 01:37:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=DKzFIFLjLlsOT1OmyKxWh7fyVNk0UFpX9V9hd2JpLz4=;
-        b=WBlIK/bCvECWvCwAjSGNxDscoq64evFLsKbyKqB5dJPRYy8liUDE+zfOMJTQS9Qj+F
-         IbFG7Rs4kaL6AcsBxRof8k58RMyw2ySq5/8rVkuMML0X1c/Ro/F1NT3b/EyItgF7RzcX
-         hqOB1xh3ZXsRiaBkPBMC7jj7sLlqiswYuleoA2m00keR1NXG3AzmJMG5XR67fzoyo2ES
-         e66Ck4SG7lGbfgx5Yf3kfAzZobvecKTtMXR53/H5UfICPT1+nacJtnfUNTbvrskCTSnN
-         nKn/S6sgBZhSICdvj3ORQ1tO3pdyugah4Lu54AQNEMp4Qva6LppQD/n4RSTiII1spxrE
-         6MBQ==
-X-Gm-Message-State: ANhLgQ3UQzqc5Uh3/Rm+oTTa/jfmCGKgiDYQIt98HFYX8JGzYCrQExXT
-        EZCzqcXbH5wJ0hmXmBv8otnnNpXwN571WNiVafm9QF+z
-X-Google-Smtp-Source: ADFU+vvNPIef0MecvLmJCFpMsoRoZypHjlU4iKA6axUtECduLpHHeWQxLr9C/RfVQG+s0ay6fqFKHVpBXbTkTmNP8u4=
-X-Received: by 2002:a05:6830:110:: with SMTP id i16mr15503565otp.189.1583829445214;
- Tue, 10 Mar 2020 01:37:25 -0700 (PDT)
+        Tue, 10 Mar 2020 04:37:42 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jBaOF-0008Uo-Lg; Tue, 10 Mar 2020 09:37:27 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jBaOD-00047A-I9; Tue, 10 Mar 2020 09:37:25 +0100
+Date:   Tue, 10 Mar 2020 09:37:25 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Robin Gong <yibin.gong@nxp.com>
+Cc:     Sascha Hauer <s.hauer@pengutronix.de>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        "martin.fuzzey@flowbird.group" <martin.fuzzey@flowbird.group>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: Re: [RESEND v6  06/13] spi: imx: fix ERR009165
+Message-ID: <20200310083725.sb6cufp5wznvxcji@pengutronix.de>
+References: <1583839922-22699-1-git-send-email-yibin.gong@nxp.com>
+ <1583839922-22699-7-git-send-email-yibin.gong@nxp.com>
+ <20200310073920.GR3335@pengutronix.de>
+ <VE1PR04MB66384DA6732A840FE1D80C1989FF0@VE1PR04MB6638.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-References: <20200227013411.1.Ica3bb9fa898499d94e0b0a2bfa08ec46c89d84fa@changeid>
- <20200303170948.1.I108734f38ade020c3e5da825839dca11d2a2ff87@changeid>
- <CAJZ5v0j+bx5fh1wv738MNoui_SaZ-c21rDnZkWOqi_GCVg5stQ@mail.gmail.com>
- <F8C6368A-1537-482B-8FE5-350A18D936A8@intel.com> <CAJZ5v0iBMiGKeFXRTLkR8oFQbdCJq0TnhpFZkMBK4gF0VNjumA@mail.gmail.com>
- <6089B7674E6F464F847AB76B599E0EAA78AB6A98@PGSMSX102.gar.corp.intel.com>
-In-Reply-To: <6089B7674E6F464F847AB76B599E0EAA78AB6A98@PGSMSX102.gar.corp.intel.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 10 Mar 2020 09:37:14 +0100
-Message-ID: <CAJZ5v0g6fAPZxX3MKGomjTWfWVMV-A+8yUC=ydOg5YwD-moDvQ@mail.gmail.com>
-Subject: Re: [PATCH v3] intel_idle: Add Comet Lake support
-To:     "Pan, Harry" <harry.pan@intel.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Harry Pan <gs0622@gmail.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Len Brown <lenb@kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <VE1PR04MB66384DA6732A840FE1D80C1989FF0@VE1PR04MB6638.eurprd04.prod.outlook.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 9, 2020 at 10:07 AM Pan, Harry <harry.pan@intel.com> wrote:
->
-> Hi Rafael,
->
-> Thanks for the comments.
-> I have some questions, I am wondering if you can share upstream thought w.r.t the future development of intel_idle.
->
->  - It looks to me since v5.6 intel_idle will prefer _CST of ACPI rather than the general table embedded in this driver.
+Hello,
 
-Not exactly.
-
-The rules are as follows:
- * If there is a built-in table for the given processor in the driver,
-it will be used, but the C-states that are not exposed in _CST will be
-disabled by default (the state parameters come from the built-in table
-for all C-states).
- * Otherwise (i.e. the driver does not recognized the given
-processor), C-state definitions will be based on the _CST data.
-
-See https://www.kernel.org/doc/html/latest/admin-guide/pm/intel_idle.html
-for details.
-
->  - Any pros and cons of using the tables of _CST in firmware and embedded one in the kernel?
-
-Both can be used at the same time (see above).
-
-The built-in table in the kernel must be suitable for all of the
-platforms shipped with the given processor (SoC).
-
-Obviously, the _CST table allows intel_idle to work if the processor
-included in the platform is not recognized by it.
-
-Generally, our planned strategy is to provide built-in C-state tables
-for all new "mainstream" processors with the use_acpi flag set to
-avoid enabling C-states that may have not been validated on a given
-platform by default.
-
->  - Can the table in _CST archive more optimal idle states management?
-
-Possibly, but not likely.
-
-> If there is already any reference, documents I missed, kindly enlighten me then I would like to read it first before refining the questions.
-
-See above. :-)
-
-Thanks!
-
-
-___________________________________
-> 從: Rafael J. Wysocki [rafael@kernel.org]
-> 寄件日期: 2020年3月5日 上午 05:14
-> 至: Pan, Harry
-> 副本: Rafael J. Wysocki; LKML; Harry Pan; Jacob Pan; Len Brown; Linux PM
-> 主旨: Re: [PATCH v3] intel_idle: Add Comet Lake support
->
-> On Wed, Mar 4, 2020 at 12:57 PM Pan, Harry <harry.pan@intel.com> wrote:
-> >
-> > Hi Rafael,
-> >
-> > Yes, I skipped it considering to align CML-U V0 and A0 stepping w/ the same table; I sent v4 for your review.
->
-> Skipping that flag is risky, because it may cause some C-states to be
-> enabled on systems where they have not been validated (e.g. systems
-> shipping with other OSes which only use _CST C-states).  There were
-> problems related to that in the past which is one of the reasons for
-> adding _CST support to intel_idle.  use_acpi should be set for all new
-> platforms going forward as a rule.
->
-> > In the other hand, I am proposing using _CST as long term plan in CrOS dev teams.
->
-> That I obviously agree with. :-)
->
->
-> > > On Mar 4, 2020, at 17:53, Rafael J. Wysocki <rafael@kernel.org> wrote:
+On Tue, Mar 10, 2020 at 08:27:41AM +0000, Robin Gong wrote:
+> On 2020/03/10 Sascha Hauer <s.hauer@pengutronix.de> wrote:
+> > On Tue, Mar 10, 2020 at 07:31:55PM +0800, Robin Gong wrote:
+> > >  	writel(ctrl, spi_imx->base + MX51_ECSPI_CTRL);
 > > >
-> > > ﻿On Tue, Mar 3, 2020 at 10:10 AM Harry Pan <harry.pan@intel.com> wrote:
-> > >>
-> > >> Add a general C-state table in order to support Comet Lake.
-> > >>
-> > >> Signed-off-by: Harry Pan <harry.pan@intel.com>
-> > >>
-> > >> ---
-> > >>
-> > >> drivers/idle/intel_idle.c | 7 +++++++
-> > >> 1 file changed, 7 insertions(+)
-> > >>
-> > >> diff --git a/drivers/idle/intel_idle.c b/drivers/idle/intel_idle.c
-> > >> index d55606608ac8..05bce595fafe 100644
-> > >> --- a/drivers/idle/intel_idle.c
-> > >> +++ b/drivers/idle/intel_idle.c
-> > >> @@ -1067,6 +1067,11 @@ static const struct idle_cpu idle_cpu_dnv = {
-> > >>        .use_acpi = true,
-> > >> };
-> > >>
-> > >> +static const struct idle_cpu idle_cpu_cml = {
-> > >> +       .state_table = skl_cstates,
-> > >> +       .disable_promotion_to_c1e = true,
+> > > @@ -612,12 +613,14 @@ static int mx51_ecspi_prepare_transfer(struct
+> > > spi_imx_data *spi_imx,
 > > >
-> > > .use_acpi = true,
-> > >
-> > > missing?  Otherwise you can just use idle_cpu_skl as is, can't you?
-> > >
-> > >> +};
-> > >> +
-> > >> static const struct x86_cpu_id intel_idle_ids[] __initconst = {
-> > >>        INTEL_CPU_FAM6(NEHALEM_EP,              idle_cpu_nhx),
-> > >>        INTEL_CPU_FAM6(NEHALEM,                 idle_cpu_nehalem),
-> > >> @@ -1105,6 +1110,8 @@ static const struct x86_cpu_id intel_idle_ids[] __initconst = {
-> > >>        INTEL_CPU_FAM6(ATOM_GOLDMONT_PLUS,      idle_cpu_bxt),
-> > >>        INTEL_CPU_FAM6(ATOM_GOLDMONT_D,         idle_cpu_dnv),
-> > >>        INTEL_CPU_FAM6(ATOM_TREMONT_D,          idle_cpu_dnv),
-> > >> +       INTEL_CPU_FAM6(COMETLAKE_L,             idle_cpu_cml),
-> > >> +       INTEL_CPU_FAM6(COMETLAKE,               idle_cpu_cml),
-> > >>        {}
-> > >> };
-> > >>
-> > >> --
-> > >> 2.24.1
-> > >>
+> > >  static void mx51_setup_wml(struct spi_imx_data *spi_imx)  {
+> > > +	u32 tx_wml = 0;
+> > > +
+> > >  	/*
+> > >  	 * Configure the DMA register: setup the watermark
+> > >  	 * and enable DMA request.
+> > >  	 */
+> > >  	writel(MX51_ECSPI_DMA_RX_WML(spi_imx->wml - 1) |
+> > > -		MX51_ECSPI_DMA_TX_WML(spi_imx->wml) |
+> > > +		MX51_ECSPI_DMA_TX_WML(tx_wml) |
+> > 
+> > tx_wml is never assigned any other value than 0. Drop the variable.
+> That's prepared for 07/13 patch which may assign spi_imx->wml to tx_wml.
+
+Then this belongs into patch 7, right?
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-K�nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
