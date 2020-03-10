@@ -2,223 +2,126 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DC0CC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 21:53:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB4E5C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 21:53:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DBBE215A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 21:53:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD319222C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 21:53:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="al26hH2A"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="utAh3QrV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727636AbgCJVxA (ORCPT
+        id S1727677AbgCJVxd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 17:53:00 -0400
-Received: from gateway36.websitewelcome.com ([192.185.196.23]:40024 "EHLO
-        gateway36.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726325AbgCJVw7 (ORCPT
+        Tue, 10 Mar 2020 17:53:33 -0400
+Received: from mail-oi1-f179.google.com ([209.85.167.179]:35674 "EHLO
+        mail-oi1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726325AbgCJVxd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 17:52:59 -0400
-Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
-        by gateway36.websitewelcome.com (Postfix) with ESMTP id EC4D24045D8BA
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 16:08:30 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id Bmo5jqBWR8vkBBmo5jipxi; Tue, 10 Mar 2020 16:52:57 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:Subject:From:References:Cc:To:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=RrYVOEG7rIVWSoBZh0Ua/7splnfH3PB+rncK1q4howo=; b=al26hH2AJxhIzUHQZU/37V47ZZ
-        i1Kd0Vn3NtUQDPTHXSmDMi/R6pLiL/jDAe7KBn8Itl0YqLSN9wj/jaVY6NQAxR+2IHI2T20pPQkmK
-        H8IwWPncxgUy0/p/FDY9v04lPvfgArEO18WghNspn9lKgYTDoMzQnqEftYtD0FK6baiQYjmHIXC7O
-        HNUOE2HFC/29IYkSeyQbbL9Z+ZGaHMWkT6E8yrXu3k5chvNkLFKJeZ8NJqP9UoETlX/xjGLDRbdFz
-        GWqd2siOyBRswTxo7g+r0sSfWSzuvkP4EFntv7t3Y9x0Lt5ehAq1vIcxaa80hOjdxWh5Fi/89kOdV
-        jzQ8PLdw==;
-Received: from 187-162-252-62.static.axtel.net ([187.162.252.62]:46600 helo=[192.168.0.140])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1jBmo4-002ERq-P7; Tue, 10 Mar 2020 16:52:56 -0500
-To:     Kalle Valo <kvalo@codeaurora.org>
-Cc:     Joe Perches <joe@perches.com>, Daniel Drake <dsd@gentoo.org>,
-        Ulrich Kunitz <kune@deine-taler.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jes.Sorensen@gmail.com
-References: <20200305111216.GA24982@embeddedor>
- <87k13yq2jo.fsf@kamboji.qca.qualcomm.com>
- <256881484c5db07e47c611a56550642a6f6bd8e9.camel@perches.com>
- <87blpapyu5.fsf@kamboji.qca.qualcomm.com>
- <1bb7270f-545b-23ca-aa27-5b3c52fba1be@embeddedor.com>
- <87r1y0nwip.fsf@kamboji.qca.qualcomm.com>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Subject: Re: [PATCH][next] zd1211rw/zd_usb.h: Replace zero-length array with
- flexible-array member
-Message-ID: <48ff1333-0a14-36d8-9565-a7f13a06c974@embeddedor.com>
-Date:   Tue, 10 Mar 2020 16:52:55 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 10 Mar 2020 17:53:33 -0400
+Received: by mail-oi1-f179.google.com with SMTP id c1so15572624oiy.2
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 14:53:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=28amOXdcgZ1tgbIjzoT1unfXPJs97/xVZ1Q2OiQ+6Jg=;
+        b=utAh3QrVVsP59y4SPip+7/1ssGzl80dGiqWjfte5x5SdG00BBhDOBE4EuZG8BfyRo1
+         So7NTUQq/NcOj4DC8vNG3FFcs18hqCogTLIO7apdCBLldxwFlTGWzFKmgGqQsv52Ty2D
+         oONi77phJwslRWog4zvNFEetHTP4AlzmX1BNVrzR6KKMm7NGM7y/qKcXpCMuu/PISI3z
+         /DvGLkZUvJdvcnBL40vZnQqOqRCOGt6P8LmiPdiqHtxHD/gXVvb8BAZixjNPGsLhMbbn
+         SDpGZMeh1blnemUG37moJtlrM0r0xKga9cKxUBSuypbG/B3i92LvAlZ3UuMaSo4PyRaF
+         GnQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=28amOXdcgZ1tgbIjzoT1unfXPJs97/xVZ1Q2OiQ+6Jg=;
+        b=b/XJgiF1nQ6laJtf9zyVq/OMKkDxcpS1CVMwbEOmNVfddqs2DXtUMKCoKJ62Fdj1Ki
+         SNezFUJuK7O+Y7HTmaJRfM6wg2YM1KV7nhTGI4ghy7V0e36onR5nyleqJz8jBMC3hdrD
+         xgnZ8Kytq+eqh5iBxByyLNaxtU3qlvANnuOah3H8svh1rBHZNUxsssTkNghGT4GUQ3YB
+         wR3NkZlFyG8kAVHD/J3wGBTST+PJXo7MD7pFMUvGa2AppO6XiE4vU/u4l+Iy/BqoQgOg
+         NPHjGocxpIFSwBN/uOU18+eGYD+4WdupIMnlKypOV1GLPFE5ycZ8CKbfpjws8Gtm9AZi
+         +RRA==
+X-Gm-Message-State: ANhLgQ1ZFQNA/Wwbo6oCuvTTcDHI1VrSbRepg66Ro0f6mK1ybKmcgpi8
+        rYQa2nrBoRaxme4NMYJUbbEIAd8a0FazRRhkYGX06Q==
+X-Google-Smtp-Source: ADFU+vs/PynMMOdJ4xb1jh1/YKI8pt7pcS0qS8D/NxIHOFOj0Sv8txvnm32MO24awX4H5b9p3Vg3n3q0D+H75nlWAdE=
+X-Received: by 2002:a05:6808:abc:: with SMTP id r28mr2766071oij.161.1583877211932;
+ Tue, 10 Mar 2020 14:53:31 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <87r1y0nwip.fsf@kamboji.qca.qualcomm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.252.62
-X-Source-L: No
-X-Exim-ID: 1jBmo4-002ERq-P7
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-252-62.static.axtel.net ([192.168.0.140]) [187.162.252.62]:46600
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 8
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+References: <CAG48ez0G3JkMq61gUmyQAaCq=_TwHbi1XKzWRooxZkv08PQKuw@mail.gmail.com>
+ <20200310184814.GA8447@dhcp22.suse.cz> <CAKOZueua_v8jHCpmEtTB6f3i9e2YnmX4mqdYVWhV4E=Z-n+zRQ@mail.gmail.com>
+ <CAG48ez2EWzn_xm0Q3YaPjSXrhVAAOUUvNDyDQ+jpgavmN6wLvQ@mail.gmail.com>
+In-Reply-To: <CAG48ez2EWzn_xm0Q3YaPjSXrhVAAOUUvNDyDQ+jpgavmN6wLvQ@mail.gmail.com>
+From:   Daniel Colascione <dancol@google.com>
+Date:   Tue, 10 Mar 2020 14:52:55 -0700
+Message-ID: <CAKOZues-ejm8kKOp9YaZwDy_HNhvWK12x2cqtqHBYj4DCQtXpQ@mail.gmail.com>
+Subject: Re: interaction of MADV_PAGEOUT with CoW anonymous mappings?
+To:     Jann Horn <jannh@google.com>
+Cc:     Michal Hocko <mhocko@kernel.org>, Minchan Kim <minchan@kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Mar 10, 2020 at 2:40 PM Jann Horn <jannh@google.com> wrote:
+>
+> On Tue, Mar 10, 2020 at 9:19 PM Daniel Colascione <dancol@google.com> wrote:
+> > On Tue, Mar 10, 2020 at 11:48 AM Michal Hocko <mhocko@kernel.org> wrote:
+> > > On Tue 10-03-20 19:08:28, Jann Horn wrote:
+> > > > >From looking at the source code, it looks to me as if using
+> > > > MADV_PAGEOUT on a CoW anonymous mapping will page out the page if
+> > > > possible, even if other processes still have the same page mapped. Is
+> > > > that correct?
+> > > >
+> > > > If so, that's probably bad in environments where many processes (with
+> > > > different privileges) are forked from a single zygote process (like
+> > > > Android and Chrome), I think? If you accidentally call it on a CoW
+> > > > anonymous mapping with shared pages, you'll degrade the performance of
+> > > > other processes. And if an attacker does it intentionally, they could
+> > > > use that to aid with exploiting race conditions or weird
+> > > > microarchitectural stuff (e.g. the new https://lviattack.eu/lvi.pdf
+> > > > talks about "the assumption that attackers can provoke page faults or
+> > > > microcode assists for (arbitrary) load operations in the victim
+> > > > domain").
+> > > >
+> > > > Should madvise_cold_or_pageout_pte_range() maybe refuse to operate on
+> > > > pages with mapcount>1, or something like that? Or does it already do
+> > > > that, and I just missed the check?
+> > >
+> > > I have brought up side channel attacks earlier [1] but only in the
+> > > context of shared page cache pages. I didn't really consider shared
+> > > anonymous pages to be a real problem. I was under impression that CoW
+> > > pages shouldn't be a real problem because any security sensible
+> > > applications shouldn't allow untrusted code to be forked and CoW
+> > > anything really important. I believe we have made this assumption
+> > > in other places - IIRC on gup with FOLL_FORCE but I admit I have
+> > > very happily forgot most details.
+> >
+> > I'm more worried about the performance implications. Consider
+> > libc.so's data section: that's a COW mapping, and we COW it during
+> > zygote initialization as we load and relocate libc.so. Child processes
+> > shouldn't be dirtying and re-COWing those relocated pages. If I
+> > understand Jann's message correctly, MADV_PAGEOUT would force the
+> > pages corresponding to the libc.so data segment out to zram just
+> > because we MADV_PAGEOUT-ed a single process that happened to use libc.
+> > We should leave those pages in memory, IMHO.
+>
+> Actually, the libc.so data section is a file mapping, so I think
+> can_do_pageout() would decide whether the caller is allowed to force
+> pageout based on whether the caller is the owner of (or capable over)
+> libc (in other words, root, basically). But I think the bss section,
+> as well as heap memory, could have pageout forced by anyone.
 
-
-On 3/10/20 8:56 AM, Kalle Valo wrote:
-> + jes
-> 
-> "Gustavo A. R. Silva" <gustavo@embeddedor.com> writes:
-> 
->> Hi,
->>
->> On 3/5/20 10:10, Kalle Valo wrote:
->>> Joe Perches <joe@perches.com> writes:
->>>
->>>> On Thu, 2020-03-05 at 16:50 +0200, Kalle Valo wrote:
->>>>> "Gustavo A. R. Silva" <gustavo@embeddedor.com> writes:
->>>> []
->>>>>>  drivers/net/wireless/zydas/zd1211rw/zd_usb.h | 8 ++++----
->>>>>>  1 file changed, 4 insertions(+), 4 deletions(-)
->>>>>
->>>>> "zd1211rw: " is enough, no need to have the filename in the title.
->>>
->>>>> But I asked this already in an earlier patch, who prefers this format?
->>>>> It already got opposition so I'm not sure what to do.
->>>>
->>>> I think it doesn't matter.
->>>>
->>>> Trivial inconsistencies in patch subject and word choice
->>>> don't have much overall impact.
->>>
->>> I wrote in a confusing way, my question above was about the actual patch
->>> and not the the title. For example, Jes didn't like this style change:
->>>
->>> https://patchwork.kernel.org/patch/11402315/
->>>
->>
->> It doesn't seem that that comment adds a lot to the conversation. The only
->> thing that it says is literally "fix the compiler". By the way, more than
->> a hundred patches have already been applied to linux-next[1] and he seems
->> to be the only person that has commented such a thing.
-> 
-> But I also asked who prefers this format in that thread, you should not
-> ignore questions from two maintainers (me and Jes).
-> 
-
-I'm sorry. I thought the changelog text had already the proper information.
-In the changelog text I'm quoting the GCC documentation below:
-
-"The preferred mechanism to declare variable-length types like struct line
-above is the ISO C99 flexible array member..." [1]
-
-I'm also including a link to the following KSPP open issue:
-
-https://github.com/KSPP/linux/issues/21
-
-The issue above mentions the following:
-
-"Both cases (0-byte and 1-byte arrays) pose confusion for things like sizeof(),
-CONFIG_FORTIFY_SOURCE."
-
-sizeof(flexible-array-member) triggers a warning because flexible array members have
-incomplete type[1]. There are some instances of code in which the sizeof operator
-is being incorrectly/erroneously applied to zero-length arrays and the result is zero.
-Such instances may be hiding some bugs. So, the idea is also to get completely rid
-of those sorts of issues.
-
-Should I update the changelog in some way so it is a bit more informative?
-
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-
-Thanks
---
-Gustavo
-
->> Qemu guys are adopting this format, too[2][3].
->>
->> On the other hand, the changelog text explains the reasons why we are
->> implementing this change all across the kernel tree. :)
->>
->> [1]
->> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/log/?qt=grep&q=flexible-array
->> [2] https://lists.nongnu.org/archive/html/qemu-s390x/2020-03/msg00019.html
->> [3] https://lists.nongnu.org/archive/html/qemu-s390x/2020-03/msg00020.html
-> 
-> TBH I was leaning more on Jes side on this, but I guess these patches
-> are ok if they are so widely accepted. Unless anyone objects?
-> 
+lmkd would have that capability though, right? But the point stands
+regardless. It sounds like both security and performance suggest a
+behavior change here. Thanks for bringing it up!
