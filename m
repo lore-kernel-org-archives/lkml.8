@@ -2,182 +2,136 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49570C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 15:14:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E40DAC18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 15:15:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20A2820873
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 15:14:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kGPh/mxF"
+	by mail.kernel.org (Postfix) with ESMTP id C82E421D56
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 15:15:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727036AbgCJPOL (ORCPT
+        id S1727413AbgCJPPM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 11:14:11 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:42295 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726415AbgCJPOK (ORCPT
-        <rfc822;Linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 11:14:10 -0400
-Received: by mail-qt1-f193.google.com with SMTP id g16so2253378qtp.9
-        for <Linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 08:14:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=+qR1nZB95A3CqTDYGX0bbznR/iFDjSAZBPiTL4z0/eI=;
-        b=kGPh/mxFDAdC7K/ZfDS6Bt3bBJUaMwTHC+dLyfNBZrnQCt7emo3EBQS/hLNz3zwRQw
-         vswtoebgyT0+D7br6MLB9i2MugPXD584KxQJD6khnjtYFFe9LnAhSVOPfZtqEkjJqH0C
-         liEByWIw4c3Ffz0EwcaGJLJd3C71njCkiiVLdhmXjL8AUYc3ztiPGUqkwUcjbVShV9Xd
-         LC9DpsRwf17tn4o3pWP4sakdp7ogN2XHo0Zv1gIMExo8JPwDt7TrHitjPxShM7aQo4Z3
-         Ond7HsapBVpgZRLtAKCYBn6flBQn+JwN2gTpmzQdPaph1BZ/9GvCFnDZAz+Kv+tqYLcU
-         pblg==
+        Tue, 10 Mar 2020 11:15:12 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:44121 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726415AbgCJPPM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 11:15:12 -0400
+Received: from mail-wm1-f71.google.com ([209.85.128.71])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <gpiccoli@canonical.com>)
+        id 1jBgb6-0006FP-UG
+        for linux-kernel@vger.kernel.org; Tue, 10 Mar 2020 15:15:09 +0000
+Received: by mail-wm1-f71.google.com with SMTP id p4so440335wmp.0
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 08:15:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=+qR1nZB95A3CqTDYGX0bbznR/iFDjSAZBPiTL4z0/eI=;
-        b=SlIOywUEMK6uEvnPrQeJ8MfmrynULdh9zTF8m+rPoN1ec7GUCRgU6CnsZonOTzAv2Z
-         ueXX9+oeXhOZxcDGxdxDXY4KU9S4S7nYtfpuK22LuOrhvgblpVdYWoxeV+9IgzjEElVe
-         m1baBTylfOZYhk/fgbSCplx/B5mXGgVxOm5SNvI6yAgiDtRWPsXr5Aw/bqhmwpT+AC+E
-         0+fmXaQZPhsqBZVMXT8x9a+GrfbcNofWEDxPb8VvD6wpZUPiMEnByivfv8lxqEG9QqwW
-         LWA6MT7CixkFyIxbbKcf65xAH84H3IACxIBDJGNkqdjKpR2rx2wovsOq/STeZzGoQN6B
-         A4/g==
-X-Gm-Message-State: ANhLgQ3LpJmmDBozyN4HA/xJJVN3Mb1r/s8e+pgaNGGKtKAsBLe1OgZ2
-        xNrIvlM8tDp0L2ZZ9qj2QUc=
-X-Google-Smtp-Source: ADFU+vuElx2/vRs+yZrG6Wde8wjMCLXTgwJ2zJJPq2c6oyQwQf/J2QJRUG5ScJtJXeOIhO2gc+gjuA==
-X-Received: by 2002:ac8:36a1:: with SMTP id a30mr8307340qtc.103.1583853249226;
-        Tue, 10 Mar 2020 08:14:09 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id o57sm4420341qtf.42.2020.03.10.08.14.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Mar 2020 08:14:08 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 230E540009; Tue, 10 Mar 2020 12:14:06 -0300 (-03)
-Date:   Tue, 10 Mar 2020 12:14:05 -0300
-To:     Jin Yao <yao.jin@linux.intel.com>
-Cc:     jolsa@kernel.org, peterz@infradead.org, mingo@redhat.com,
-        alexander.shishkin@linux.intel.com, Linux-kernel@vger.kernel.org,
-        ak@linux.intel.com, kan.liang@intel.com, yao.jin@intel.com
-Subject: Re: [PATCH v1 05/14] perf util: Calculate the sum of all streams hits
-Message-ID: <20200310151405.GH15931@kernel.org>
-References: <20200310070245.16314-1-yao.jin@linux.intel.com>
- <20200310070245.16314-6-yao.jin@linux.intel.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=SX7toKZWodKfwjLUNVU3mZINSd3WdGinFSx6G9WeLDk=;
+        b=YFUqnfQkTGawzHADm/SqlcrnNotxxDSur/gXsIrRu447Kp9gDeWqYOBlTsjEy57xeI
+         +AVJ8p2Ze3ZilWu+SIswldS0PAfoo2vCdBEm60xTkS15Pa+7/6eMki/jHdPIlE+SkfDE
+         tXH2ONnFwtH7G5LNZY89hawYWIobfS3mlHZ4v4BHVWYY8SYYMZ2C/10PyiGLCD9zKr0I
+         y5WKcz3pgviQ3Yk6AKYkEzIXu7nNux58NOdwYQwe5Qage5m9pRfX3CpsfmruQOW4bUDL
+         yFvir5zC3tPX2AVpg/s4+Mo69JG5TXdSygtie+Dk/4olfpGEGMcmFa9O2f8nH9o0/pcr
+         JXcA==
+X-Gm-Message-State: ANhLgQ3cGdigqPulEiu0Gni/hHhmZnf/Kn/qflGFwVqcLzifcxFA66/L
+        jjI57GuYTQBVZXlh2PZ/RWRt6uoSHdy1R64vQ4xJQL3mJWC6n5cENg+mlXEg11qyKW9ZBXAmMb2
+        jxagTQVKw/A16BqTywtF6krgb/kxe0lsKJtV9Xhsn5A==
+X-Received: by 2002:adf:ef44:: with SMTP id c4mr12995063wrp.404.1583853308616;
+        Tue, 10 Mar 2020 08:15:08 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vtSJ6usylxaeEgKGV13gLvCQGlN13i7Aktoi9ePJtqB/19xsQe+qjKKiMWcO7JVdMeLevXEuQ==
+X-Received: by 2002:adf:ef44:: with SMTP id c4mr12995038wrp.404.1583853308339;
+        Tue, 10 Mar 2020 08:15:08 -0700 (PDT)
+Received: from localhost (189-47-87-73.dsl.telesp.net.br. [189.47.87.73])
+        by smtp.gmail.com with ESMTPSA id f9sm15143586wrc.71.2020.03.10.08.15.06
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 10 Mar 2020 08:15:07 -0700 (PDT)
+From:   "Guilherme G. Piccoli" <gpiccoli@canonical.com>
+To:     linux-doc@vger.kernel.org
+Cc:     corbet@lwn.net, linux-kernel@vger.kernel.org, swood@redhat.com,
+        mcgrof@kernel.org, keescook@chromium.org, yzaikin@google.com,
+        mingo@kernel.org, gpiccoli@canonical.com, kernel@gpiccoli.net
+Subject: [PATCH] Documentation: Better document the softlockup_panic sysctl
+Date:   Tue, 10 Mar 2020 12:15:03 -0300
+Message-Id: <20200310151503.11589-1-gpiccoli@canonical.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200310070245.16314-6-yao.jin@linux.intel.com>
-X-Url:  http://acmel.wordpress.com
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, Mar 10, 2020 at 03:02:36PM +0800, Jin Yao escreveu:
-> We have used callchain_node->hit to measure the hot level of one
-> stream. This patch calculates the sum of hits of all streams.
-> 
-> Then in next patch, we can use following formula to report hot
-> percent for one stream.
-> 
-> hot percent = callchain_node->hit / sum of all hits
-> 
-> Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
-> ---
->  tools/perf/util/callchain.c | 35 +++++++++++++++++++++++++++++++++++
->  tools/perf/util/callchain.h |  1 +
->  2 files changed, 36 insertions(+)
-> 
-> diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
-> index a9dd91268b00..040995405664 100644
-> --- a/tools/perf/util/callchain.c
-> +++ b/tools/perf/util/callchain.c
-> @@ -1685,6 +1685,39 @@ static void update_hot_streams(struct hist_entry *he,
->  	}
->  }
->  
-> +static u64 count_callchain_hits(struct hist_entry *he)
-> +{
-> +	struct rb_root *root = &he->sorted_chain;
-> +	struct rb_node *rb_node = rb_first(root);
-> +	struct callchain_node *node;
-> +	u64 chain_hits = 0;
-> +
-> +	while (rb_node) {
-> +		node = rb_entry(rb_node, struct callchain_node, rb_node);
-> +		chain_hits += node->hit;
-> +		rb_node = rb_next(rb_node);
-> +	}
-> +
-> +	return chain_hits;
-> +}
-> +
-> +static u64 total_callchain_hits(struct hists *hists)
-> +{
-> +	struct rb_node *next;
-> +	u64 chain_hits = 0;
-> +
-> +	next = rb_first_cached(&hists->entries);
+Commit 9c44bc03fff4 ("softlockup: allow panic on lockup") added the
+softlockup_panic sysctl, but didn't add information about it to the file
+Documentation/admin-guide/sysctl/kernel.rst (which in that time certainly
+wasn't rst and had other name!).
 
-Try to combine the variable decl line with its initial assignment,
-saving one line, i.e.:
+This patch just adds the respective documentation and references it from
+the corresponding entry in Documentation/admin-guide/kernel-parameters.txt.
 
-+static u64 total_callchain_hits(struct hists *hists)
-+{
-+	struct rb_node *next = rb_first_cached(&hists->entries);
-+	u64 chain_hits = 0;
+This patch was strongly based on Scott Wood's commit d22881dc13b6
+("Documentation: Better document the hardlockup_panic sysctl").
+
+Signed-off-by: Guilherme G. Piccoli <gpiccoli@canonical.com>
+---
+ Documentation/admin-guide/kernel-parameters.txt |  6 +++---
+ Documentation/admin-guide/sysctl/kernel.rst     | 13 +++++++++++++
+ 2 files changed, 16 insertions(+), 3 deletions(-)
+
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index c07815d230bc..adf77ead02c3 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -4515,9 +4515,9 @@
+ 
+ 			A nonzero value instructs the soft-lockup detector
+ 			to panic the machine when a soft-lockup occurs. This
+-			is also controlled by CONFIG_BOOTPARAM_SOFTLOCKUP_PANIC
+-			which is the respective build-time switch to that
+-			functionality.
++			is also controlled by kernel.softlockup_panic sysctl
++			and CONFIG_BOOTPARAM_SOFTLOCKUP_PANIC, which is the
++			respective build-time switch to that functionality.
+ 
+ 	softlockup_all_cpu_backtrace=
+ 			[KNL] Should the soft-lockup detector generate
+diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
+index def074807cee..95b2f3256323 100644
+--- a/Documentation/admin-guide/sysctl/kernel.rst
++++ b/Documentation/admin-guide/sysctl/kernel.rst
+@@ -95,6 +95,7 @@ show up in /proc/sys/kernel:
+ - shmmax                      [ sysv ipc ]
+ - shmmni
+ - softlockup_all_cpu_backtrace
++- softlockup_panic
+ - soft_watchdog
+ - stack_erasing
+ - stop-a                      [ SPARC only ]
+@@ -1029,6 +1030,18 @@ NMI.
+ 1: on detection capture more debug information.
+ 
+ 
++softlockup_panic:
++=================
 +
-> +	while (next) {
-> +		struct hist_entry *he;
-> +
-> +		he = rb_entry(next, struct hist_entry, rb_node);
-
-Ditto:
-
-+		struct hist_entry *he = rb_entry(next, struct hist_entry, rb_node);
-
-> +		chain_hits += count_callchain_hits(he);
-> +		next = rb_next(&he->rb_node);
-> +	}
-> +
-> +	return chain_hits;
-> +}
-> +
->  static void get_hot_streams(struct hists *hists,
->  			    struct callchain_streams *s)
->  {
-> @@ -1698,6 +1731,8 @@ static void get_hot_streams(struct hists *hists,
->  		update_hot_streams(he, s);
->  		next = rb_next(&he->rb_node);
->  	}
-> +
-> +	s->chain_hits = total_callchain_hits(hists);
->  }
->  
->  struct callchain_streams *callchain_evsel_streams_create(struct evlist *evlist,
-> diff --git a/tools/perf/util/callchain.h b/tools/perf/util/callchain.h
-> index c996ab4fb108..3c0e0b45656b 100644
-> --- a/tools/perf/util/callchain.h
-> +++ b/tools/perf/util/callchain.h
-> @@ -173,6 +173,7 @@ struct callchain_streams {
->  	int			nr_streams_max;
->  	int			nr_streams;
->  	int			evsel_idx;
-> +	u64			chain_hits;
->  };
->  
->  extern __thread struct callchain_cursor callchain_cursor;
-> -- 
-> 2.17.1
-> 
-
++This parameter can be used to control whether the kernel panics when
++a soft lockup is detected.
++
++0: don't panic on soft lockup
++1: panic on soft lockup
++
++This can also be set using the softlockup_panic kernel parameter.
++
++
+ soft_watchdog:
+ ==============
+ 
 -- 
+2.24.1
 
-- Arnaldo
