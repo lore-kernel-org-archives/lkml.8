@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76A53C18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:43:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5F32C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:43:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4479C24686
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:43:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A543424686
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:43:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583844184;
-	bh=Yl1679fxqA9LwZ6IpB84+cAsrC1wEP/CXlBCoCxUi7A=;
+	s=default; t=1583844188;
+	bh=/m9J5AjHPmkxdv/mxTTAUj/YwiT+0U/ccx6qmEo4Vpo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=or1EIU/UbLxS10J+8Jp1Nf/0x1XkY/bBAdIgjRdJXARNvnuJbWwEgO127bjh9PHas
-	 al6NPUvC7GgEdO+A1CrhexlS1vnC1vNbX262SiaJrojjNfT6QcCgcZJH40dCRWY3ga
-	 ILHoI5JItB2GqZnwCa986Gos2TQ00pDBJZnPGe4k=
+	b=LzAU3CL7uiK/3pneUCwsJIroL39qPOh/qgL+5gamfbA2sbAK1byTqI2njdreHRcJk
+	 4f8ZT6bssIzJdO8/Yc3kGL+cKyOIYZeQg4ZgOBUSoFk14U6gR6E7JP7UV6QqgQyvtn
+	 6dF3NEZXl23RyYE9eCnxQWo7bqiu3wfjZdmdBpsA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727486AbgCJMnD (ORCPT
+        id S1727509AbgCJMnH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:43:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43142 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:43:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43292 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727455AbgCJMm4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:42:56 -0400
+        id S1727020AbgCJMnE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:43:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 53CCA24686;
-        Tue, 10 Mar 2020 12:42:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D867F24691;
+        Tue, 10 Mar 2020 12:43:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844175;
-        bh=Yl1679fxqA9LwZ6IpB84+cAsrC1wEP/CXlBCoCxUi7A=;
+        s=default; t=1583844183;
+        bh=/m9J5AjHPmkxdv/mxTTAUj/YwiT+0U/ccx6qmEo4Vpo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u2hoCW4nh2jbtFsvqQJkTkIMqGv6gzMzIKKnN65Yxe7VwOG3FOPm8Yz/+8vS9bWY8
-         VnJTUOukxvughqfySR+PTwY6aNuQaseA+27SUr+iFMd1hKVJcug01QW+HuWe265mg6
-         94Qpx3S149tmrp1HotNlwUh/zwtII9xwsIKFVJC0=
+        b=2H7/Of6txKB00VTw/AYhMJmvpi0IoouZx9WCJ0poftyjV6Rtrb581HC5YlE6gbxRt
+         QOED5gkK1vCYxyFg5HTxvkkxPYyGX5kdZiqM9hxbhB1KyxU2ml7MUaCFoS7bGd8pBD
+         cD2X6bv5v6dq3qWy3kXGBxEnsOV4zGQfMH5hsG9E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Korsnes <jkorsnes@cisco.com>,
-        Armando Visconti <armando.visconti@st.com>,
-        Jiri Kosina <jkosina@suse.cz>,
-        Alan Stern <stern@rowland.harvard.edu>
-Subject: [PATCH 4.4 21/72] HID: core: fix off-by-one memset in hid_report_raw_event()
-Date:   Tue, 10 Mar 2020 13:38:34 +0100
-Message-Id: <20200310123606.886657619@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
+        Cezary Rojewski <cezary.rojewski@intel.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 4.4 62/72] ASoC: pcm: Fix possible buffer overflow in dpcm state sysfs output
+Date:   Tue, 10 Mar 2020 13:39:15 +0100
+Message-Id: <20200310123616.767422404@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123601.053680753@linuxfoundation.org>
 References: <20200310123601.053680753@linuxfoundation.org>
@@ -61,46 +60,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Korsnes <jkorsnes@cisco.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit 5ebdffd25098898aff1249ae2f7dbfddd76d8f8f upstream.
+commit 6c89ffea60aa3b2a33ae7987de1e84bfb89e4c9e upstream.
 
-In case a report is greater than HID_MAX_BUFFER_SIZE, it is truncated,
-but the report-number byte is not correctly handled. This results in a
-off-by-one in the following memset, causing a kernel Oops and ensuing
-system crash.
+dpcm_show_state() invokes multiple snprintf() calls to concatenate
+formatted strings on the fixed size buffer.  The usage of snprintf()
+is supposed for avoiding the buffer overflow, but it doesn't work as
+expected because snprintf() doesn't return the actual output size but
+the size to be written.
 
-Note: With commit 8ec321e96e05 ("HID: Fix slab-out-of-bounds read in
-hid_field_extract") I no longer hit the kernel Oops as we instead fail
-"controlled" at probe if there is a report too long in the HID
-report-descriptor. hid_report_raw_event() is an exported symbol, so
-presumabely we cannot always rely on this being the case.
+Fix this bug by replacing all snprintf() calls with scnprintf()
+calls.
 
-Fixes: 966922f26c7f ("HID: fix a crash in hid_report_raw_event()
-                     function.")
-Signed-off-by: Johan Korsnes <jkorsnes@cisco.com>
-Cc: Armando Visconti <armando.visconti@st.com>
-Cc: Jiri Kosina <jkosina@suse.cz>
-Cc: Alan Stern <stern@rowland.harvard.edu>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Fixes: f86dcef87b77 ("ASoC: dpcm: Add debugFS support for DPCM")
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Acked-by: Cezary Rojewski <cezary.rojewski@intel.com>
+Link: https://lore.kernel.org/r/20200218111737.14193-4-tiwai@suse.de
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hid/hid-core.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ sound/soc/soc-pcm.c |   16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
---- a/drivers/hid/hid-core.c
-+++ b/drivers/hid/hid-core.c
-@@ -1508,7 +1508,9 @@ int hid_report_raw_event(struct hid_devi
+--- a/sound/soc/soc-pcm.c
++++ b/sound/soc/soc-pcm.c
+@@ -2866,16 +2866,16 @@ static ssize_t dpcm_show_state(struct sn
+ 	ssize_t offset = 0;
  
- 	rsize = ((report->size - 1) >> 3) + 1;
+ 	/* FE state */
+-	offset += snprintf(buf + offset, size - offset,
++	offset += scnprintf(buf + offset, size - offset,
+ 			"[%s - %s]\n", fe->dai_link->name,
+ 			stream ? "Capture" : "Playback");
  
--	if (rsize > HID_MAX_BUFFER_SIZE)
-+	if (report_enum->numbered && rsize >= HID_MAX_BUFFER_SIZE)
-+		rsize = HID_MAX_BUFFER_SIZE - 1;
-+	else if (rsize > HID_MAX_BUFFER_SIZE)
- 		rsize = HID_MAX_BUFFER_SIZE;
+-	offset += snprintf(buf + offset, size - offset, "State: %s\n",
++	offset += scnprintf(buf + offset, size - offset, "State: %s\n",
+ 	                dpcm_state_string(fe->dpcm[stream].state));
  
- 	if (csize < rsize) {
+ 	if ((fe->dpcm[stream].state >= SND_SOC_DPCM_STATE_HW_PARAMS) &&
+ 	    (fe->dpcm[stream].state <= SND_SOC_DPCM_STATE_STOP))
+-		offset += snprintf(buf + offset, size - offset,
++		offset += scnprintf(buf + offset, size - offset,
+ 				"Hardware Params: "
+ 				"Format = %s, Channels = %d, Rate = %d\n",
+ 				snd_pcm_format_name(params_format(params)),
+@@ -2883,10 +2883,10 @@ static ssize_t dpcm_show_state(struct sn
+ 				params_rate(params));
+ 
+ 	/* BEs state */
+-	offset += snprintf(buf + offset, size - offset, "Backends:\n");
++	offset += scnprintf(buf + offset, size - offset, "Backends:\n");
+ 
+ 	if (list_empty(&fe->dpcm[stream].be_clients)) {
+-		offset += snprintf(buf + offset, size - offset,
++		offset += scnprintf(buf + offset, size - offset,
+ 				" No active DSP links\n");
+ 		goto out;
+ 	}
+@@ -2895,16 +2895,16 @@ static ssize_t dpcm_show_state(struct sn
+ 		struct snd_soc_pcm_runtime *be = dpcm->be;
+ 		params = &dpcm->hw_params;
+ 
+-		offset += snprintf(buf + offset, size - offset,
++		offset += scnprintf(buf + offset, size - offset,
+ 				"- %s\n", be->dai_link->name);
+ 
+-		offset += snprintf(buf + offset, size - offset,
++		offset += scnprintf(buf + offset, size - offset,
+ 				"   State: %s\n",
+ 				dpcm_state_string(be->dpcm[stream].state));
+ 
+ 		if ((be->dpcm[stream].state >= SND_SOC_DPCM_STATE_HW_PARAMS) &&
+ 		    (be->dpcm[stream].state <= SND_SOC_DPCM_STATE_STOP))
+-			offset += snprintf(buf + offset, size - offset,
++			offset += scnprintf(buf + offset, size - offset,
+ 				"   Hardware Params: "
+ 				"Format = %s, Channels = %d, Rate = %d\n",
+ 				snd_pcm_format_name(params_format(params)),
 
 
