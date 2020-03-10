@@ -2,144 +2,171 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C40A3C10F25
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 01:35:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16222C10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 01:40:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 953E724681
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 01:35:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D306320637
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 01:40:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MI3LsZw7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726402AbgCJBfP (ORCPT
+        id S1726437AbgCJBkn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 21:35:15 -0400
-Received: from mail-il1-f199.google.com ([209.85.166.199]:42287 "EHLO
-        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726106AbgCJBfO (ORCPT
+        Mon, 9 Mar 2020 21:40:43 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:46673 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726134AbgCJBkm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 21:35:14 -0400
-Received: by mail-il1-f199.google.com with SMTP id j88so5548254ilg.9
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 18:35:13 -0700 (PDT)
+        Mon, 9 Mar 2020 21:40:42 -0400
+Received: by mail-ot1-f65.google.com with SMTP id 111so7302635oth.13;
+        Mon, 09 Mar 2020 18:40:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=rJK9U08Zj+HB08iS4A3NIowl4Auq1x6GFauaG9Dpfhk=;
+        b=MI3LsZw7vyE6zL2uUE5LNkRK6WONYZlKKzhm0UBGoazAzjL5rgnpIak9QpxbIdTEu3
+         xprwESHPBO8RKvGFDltAcR3+uL19Mz9JYzO5Sb3zXVDZMm8kzgUM8eAgWhHajSe8kG/4
+         soH9S/H5s2OkD/6rz3g3rjkLzvvGE2znJLj7gZeMbcWzk5CRht9yLYlG7xgYGWetING2
+         641vh+q8gpYOZ38KEASNyzZ9SJugm/1QlgZkz17eF+AOFUPfZwI1lOS+Mhc4WuFlMcSJ
+         Z4NsaM0Uv+8Ft4og3yBFYgOBclYQbt2aXLLwu7isUwxC5Zz5aS6XyRg2eaPTDjpBqSIN
+         ePYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=YbdjrwDCgk53GF6B/fIGmBRFT7qdRjvQ1XyLJmA9zlM=;
-        b=r1yM93jsgfCTU3P8H0Qtx37func39nvjbbRTE4SfEuxuVrbxidpX+rDBtLVerLhsQV
-         5Uh7o6RwYFHQadAUGQz4hfcPaick/eI3l3HxhjryE9cCHHT5+L6vcQhAsN5wuyApIhox
-         GXSawKkVYUncd0ZWT4JwN8Y9tR9rtLiAIVx0+IfHd5ym2XvBxffk6beSC4Aw9w+ud484
-         ObWEwX9MavXD32vY3098PWkc3DLcDnWIl0Kz4CbuaZCetWDA1u/KmMcj3JiqW2BVqwmj
-         5sMqAD4yU5sQHUnyc6cHBWzLgNZD3P1HCJnkSnFC3+Mzz316S7N8EJIi0dV++qyvvoPC
-         dvfw==
-X-Gm-Message-State: ANhLgQ0NGoIySeMbRoJuT+OgVqd78/19SBMCSZIH84usxXtkT2l1O79c
-        y+6WmGfMX7mzMHr6zcaIGg9zqnbL9PXXcUBgDXcRb8LiWHUQ
-X-Google-Smtp-Source: ADFU+vs2NfPe8HgdoqLcPm7y21aSZKycW2Q8MnPSd9Dq7l/yXHwoA8ohZAMEQzlecYslSFgzlOrhJezIjuW3LmuZHx4bRdw/rvS6
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=rJK9U08Zj+HB08iS4A3NIowl4Auq1x6GFauaG9Dpfhk=;
+        b=V5zyHqWA5NXtuirzqIJ+p/GQzKGW0E8mm3wswkQoG26wW8/3O3uRvd5VgyQEdx2Y3M
+         YaHDPMr6Y9/aYSqtlVBvtKu3b/b5Qhd5NO6u660V8Wr8649cDcjr7eds7ytFG/Soxwe4
+         mlZXcs/Mntes5IaNFedHiSInzmnBuPY1tnyCHxlfourry+lrwYsGOeyiLhC46lbGnBwz
+         gqLJMuPNYRE4GH0pS+epQ+hkg6OoyPJq5+gpVQnhEFvYPzoJXZM5LtxHH1ya/Wbt+Mx/
+         KDGGthGPeIl49572FonxwY5RTxnMZAMAsXVaP5QQo/Z2k/I7RkJTP7MuW4r5iSaJ9n05
+         pXgA==
+X-Gm-Message-State: ANhLgQ2Jqdqq9YsDkgJTKNRqNfJYH0YNMMifjWJ5mCrdQnBVwpBOau+b
+        IPwqHs7OiHQWnhCvmbDzwNY=
+X-Google-Smtp-Source: ADFU+vtI8p9Wnmx7w1A1sqX5hE4kdrervhf+WzPWCjCVoJywvvUUUffkcME7Ef2y7dQnPQxGY6M8Dg==
+X-Received: by 2002:a9d:4d8f:: with SMTP id u15mr15193747otk.261.1583804441415;
+        Mon, 09 Mar 2020 18:40:41 -0700 (PDT)
+Received: from ubuntu-m2-xlarge-x86 ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id k21sm2096097otn.58.2020.03.09.18.40.40
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 09 Mar 2020 18:40:40 -0700 (PDT)
+Date:   Mon, 9 Mar 2020 18:40:39 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        clang-built-linux@googlegroups.com, x86@kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Paul Burton <paul.burton@mips.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Mark Salyzyn <salyzyn@android.com>,
+        Kees Cook <keescook@chromium.org>,
+        Peter Collingbourne <pcc@google.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Andrei Vagin <avagin@openvz.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v2 20/20] arm64: vdso32: Enable Clang Compilation
+Message-ID: <20200310014039.GA12211@ubuntu-m2-xlarge-x86>
+References: <20200306133242.26279-1-vincenzo.frascino@arm.com>
+ <20200306133242.26279-21-vincenzo.frascino@arm.com>
 MIME-Version: 1.0
-X-Received: by 2002:a92:4e:: with SMTP id 75mr17624906ila.276.1583804112714;
- Mon, 09 Mar 2020 18:35:12 -0700 (PDT)
-Date:   Mon, 09 Mar 2020 18:35:12 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000088452f05a07621d2@google.com>
-Subject: WARNING: refcount bug in sctp_wfree
-From:   syzbot <syzbot+cea71eec5d6de256d54d@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
-        linux-sctp@vger.kernel.org, marcelo.leitner@gmail.com,
-        netdev@vger.kernel.org, nhorman@tuxdriver.com,
-        syzkaller-bugs@googlegroups.com, vyasevich@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200306133242.26279-21-vincenzo.frascino@arm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Fri, Mar 06, 2020 at 01:32:42PM +0000, Vincenzo Frascino wrote:
+> Enable Clang Compilation for the vdso32 library.
+> 
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+> ---
+>  arch/arm64/kernel/vdso32/Makefile | 13 ++++++++++++-
+>  1 file changed, 12 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/kernel/vdso32/Makefile b/arch/arm64/kernel/vdso32/Makefile
+> index 04df57b43cb1..650cfc5757eb 100644
+> --- a/arch/arm64/kernel/vdso32/Makefile
+> +++ b/arch/arm64/kernel/vdso32/Makefile
+> @@ -10,7 +10,18 @@ include $(srctree)/lib/vdso/Makefile
+>  
+>  # Same as cc-*option, but using CC_COMPAT instead of CC
+>  ifeq ($(CONFIG_CC_IS_CLANG), y)
+> -CC_COMPAT ?= $(CC)
+> +COMPAT_GCC_TOOLCHAIN_DIR := $(dir $(shell which $(CROSS_COMPILE_COMPAT)elfedit))
+> +COMPAT_GCC_TOOLCHAIN := $(realpath $(COMPAT_GCC_TOOLCHAIN_DIR)/..)
+> +
+> +CLANG_CC_COMPAT := $(CC)
+> +CLANG_CC_COMPAT += --target=$(notdir $(CROSS_COMPILE_COMPAT:%-=%))
+> +CLANG_CC_COMPAT += --prefix=$(COMPAT_GCC_TOOLCHAIN_DIR)
+> +CLANG_CC_COMPAT += -no-integrated-as -Qunused-arguments
+> +ifneq ($(COMPAT_GCC_TOOLCHAIN),)
+> +CLANG_CC_COMPAT += --gcc-toolchain=$(COMPAT_GCC_TOOLCHAIN)
+> +endif
+> +
+> +CC_COMPAT ?= $(CLANG_CC_COMPAT)
+>  else
+>  CC_COMPAT ?= $(CROSS_COMPILE_COMPAT)gcc
+>  endif
+> -- 
+> 2.25.1
+> 
+If CC_COMPAT is ever specified on the command line as clang (maybe by
+some unsuspecting user), we'd loose all of the above flags. Maybe it
+would be better to build a set of COMPAT_CLANG_FLAGS and append them to
+CC_COMPAT, maybe like below?
 
-syzbot found the following crash on:
+Regardless, the current approach works in my testing with clang 9.0.1
+and master (clang 11.0.0). This patch specifically is:
 
-HEAD commit:    2c523b34 Linux 5.6-rc5
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=155a5f29e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a5295e161cd85b82
-dashboard link: https://syzkaller.appspot.com/bug?extid=cea71eec5d6de256d54d
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=164b5181e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=166dd70de00000
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Tested-by: Nathan Chancellor <natechancellor@gmail.com> # build
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+cea71eec5d6de256d54d@syzkaller.appspotmail.com
+==================================================================================
 
-------------[ cut here ]------------
-refcount_t: underflow; use-after-free.
-WARNING: CPU: 1 PID: 8668 at lib/refcount.c:28 refcount_warn_saturate+0x15b/0x1a0 lib/refcount.c:28
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 1 PID: 8668 Comm: syz-executor779 Not tainted 5.6.0-rc5-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1e9/0x30e lib/dump_stack.c:118
- panic+0x264/0x7a0 kernel/panic.c:221
- __warn+0x209/0x210 kernel/panic.c:582
- report_bug+0x1ac/0x2d0 lib/bug.c:195
- fixup_bug arch/x86/kernel/traps.c:174 [inline]
- do_error_trap+0xca/0x1c0 arch/x86/kernel/traps.c:267
- do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:286
- invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
-RIP: 0010:refcount_warn_saturate+0x15b/0x1a0 lib/refcount.c:28
-Code: c7 e4 ff d0 88 31 c0 e8 23 20 b3 fd 0f 0b eb 85 e8 8a 4a e0 fd c6 05 ff 70 b1 05 01 48 c7 c7 10 00 d1 88 31 c0 e8 05 20 b3 fd <0f> 0b e9 64 ff ff ff e8 69 4a e0 fd c6 05 df 70 b1 05 01 48 c7 c7
-RSP: 0018:ffffc90001f577d0 EFLAGS: 00010246
-RAX: 8c9c9070bbb4e500 RBX: 0000000000000003 RCX: ffff8880938a63c0
-RDX: 0000000000000000 RSI: 0000000080000000 RDI: 0000000000000000
-RBP: 0000000000000003 R08: ffffffff815e16e6 R09: fffffbfff15db92a
-R10: fffffbfff15db92a R11: 0000000000000000 R12: dffffc0000000000
-R13: ffff88809de82000 R14: ffff8880a89237c0 R15: 1ffff11013be52b0
- sctp_wfree+0x3b1/0x710 net/sctp/socket.c:9111
- skb_release_head_state+0xfb/0x210 net/core/skbuff.c:651
- skb_release_all net/core/skbuff.c:662 [inline]
- __kfree_skb+0x22/0x1c0 net/core/skbuff.c:678
- sctp_chunk_destroy net/sctp/sm_make_chunk.c:1454 [inline]
- sctp_chunk_put+0x17b/0x200 net/sctp/sm_make_chunk.c:1481
- __sctp_outq_teardown+0x80a/0x9d0 net/sctp/outqueue.c:257
- sctp_association_free+0x21e/0x7c0 net/sctp/associola.c:339
- sctp_cmd_delete_tcb net/sctp/sm_sideeffect.c:930 [inline]
- sctp_cmd_interpreter net/sctp/sm_sideeffect.c:1318 [inline]
- sctp_side_effects net/sctp/sm_sideeffect.c:1185 [inline]
- sctp_do_sm+0x3c01/0x5560 net/sctp/sm_sideeffect.c:1156
- sctp_primitive_ABORT+0x93/0xc0 net/sctp/primitive.c:104
- sctp_close+0x231/0x770 net/sctp/socket.c:1512
- inet_release+0x135/0x180 net/ipv4/af_inet.c:427
- __sock_release net/socket.c:605 [inline]
- sock_close+0xd8/0x260 net/socket.c:1283
- __fput+0x2d8/0x730 fs/file_table.c:280
- task_work_run+0x176/0x1b0 kernel/task_work.c:113
- exit_task_work include/linux/task_work.h:22 [inline]
- do_exit+0x5ef/0x1f80 kernel/exit.c:801
- do_group_exit+0x15e/0x2c0 kernel/exit.c:899
- __do_sys_exit_group+0x13/0x20 kernel/exit.c:910
- __se_sys_exit_group+0x10/0x10 kernel/exit.c:908
- __x64_sys_exit_group+0x37/0x40 kernel/exit.c:908
- do_syscall_64+0xf3/0x1b0 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x43ef98
-Code: Bad RIP value.
-RSP: 002b:00007ffcc7e7c398 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 000000000043ef98
-RDX: 0000000000000000 RSI: 000000000000003c RDI: 0000000000000000
-RBP: 00000000004be7a8 R08: 00000000000000e7 R09: ffffffffffffffd0
-R10: 000000002059aff8 R11: 0000000000000246 R12: 0000000000000001
-R13: 00000000006d01a0 R14: 0000000000000000 R15: 0000000000000000
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+diff --git a/arch/arm64/kernel/vdso32/Makefile b/arch/arm64/kernel/vdso32/Makefile
+index 650cfc5757eb..df5145fab287 100644
+--- a/arch/arm64/kernel/vdso32/Makefile
++++ b/arch/arm64/kernel/vdso32/Makefile
+@@ -13,15 +13,16 @@ ifeq ($(CONFIG_CC_IS_CLANG), y)
+ COMPAT_GCC_TOOLCHAIN_DIR := $(dir $(shell which $(CROSS_COMPILE_COMPAT)elfedit))
+ COMPAT_GCC_TOOLCHAIN := $(realpath $(COMPAT_GCC_TOOLCHAIN_DIR)/..)
+ 
+-CLANG_CC_COMPAT := $(CC)
+-CLANG_CC_COMPAT += --target=$(notdir $(CROSS_COMPILE_COMPAT:%-=%))
+-CLANG_CC_COMPAT += --prefix=$(COMPAT_GCC_TOOLCHAIN_DIR)
+-CLANG_CC_COMPAT += -no-integrated-as -Qunused-arguments
++COMPAT_CLANG_FLAGS := --target=$(notdir $(CROSS_COMPILE_COMPAT:%-=%))
++COMPAT_CLANG_FLAGS += --prefix=$(COMPAT_GCC_TOOLCHAIN_DIR)
++COMPAT_CLANG_FLAGS += -no-integrated-as -Qunused-arguments
+ ifneq ($(COMPAT_GCC_TOOLCHAIN),)
+-CLANG_CC_COMPAT += --gcc-toolchain=$(COMPAT_GCC_TOOLCHAIN)
++COMPAT_CLANG_FLAGS += --gcc-toolchain=$(COMPAT_GCC_TOOLCHAIN)
+ endif
+ 
+-CC_COMPAT ?= $(CLANG_CC_COMPAT)
++CC_COMPAT ?= $(CC)
++CC_COMPAT += $(COMPAT_CLANG_FLAGS)
++
+ else
+ CC_COMPAT ?= $(CROSS_COMPILE_COMPAT)gcc
+ endif
