@@ -2,113 +2,107 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AC9CC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:24:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57C17C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:24:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38F80208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:24:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29684208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:24:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="d34cIJ40"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ilvVvEzj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729466AbgCJNYI (ORCPT
+        id S1730366AbgCJNYQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:24:08 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:55132 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730327AbgCJNYG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:24:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=IzQlYHGoa46ajr1EZTuJDABnxTaARMHlWCMFWC3lKAQ=; b=d34cIJ4053bHz7eMwjO57QAjDa
-        FKaLM/VRz2WjXv6n57jzGvtkzqK7Tvp9SRJBRAPwDY0ul3xcVH9C3g3kzZQcbIwqzw7Ev2NXV67zs
-        JcH9onBFBiXFMbEK/HvOIEjzb2DklOJ1VYQ1u1sR+iZeqoiAI4bz9MK8J2iIuth8pXeA=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jBera-0001oF-JW; Tue, 10 Mar 2020 14:24:02 +0100
-Date:   Tue, 10 Mar 2020 14:24:02 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Antoine Tenart <antoine.tenart@bootlin.com>
-Cc:     davem@davemloft.net, f.fainelli@gmail.com, hkallweit1@gmail.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next 2/3] net: phy: mscc: split the driver into
- separate files
-Message-ID: <20200310132402.GF5932@lunn.ch>
-References: <20200310090720.521745-1-antoine.tenart@bootlin.com>
- <20200310090720.521745-3-antoine.tenart@bootlin.com>
+        Tue, 10 Mar 2020 09:24:16 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:36902 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730449AbgCJNXm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:23:42 -0400
+Received: by mail-wm1-f67.google.com with SMTP id a141so1334641wme.2
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 06:23:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=gPirBuFJU2IYVL8LYQfFZ0eu4t+TRlVhuBDZMxGb9hU=;
+        b=ilvVvEzjfLtJBvWUGSa3OnGTCfi86/vEFlqtbCm6NJiYoBhCRDZUapJo2dRIEiJkLa
+         INNvpUexmx97rj5fT7DQdtfm73nwiz6z/E2oQoQGCJyUkoMimqaNTSOxkkMlGaPPUCRT
+         HsN8aZhqw3UKYwtg8jL+yLh0FdVoHo2SoPaPx6vB6ZLsYrKL8FIFhtDLnFaVpEqpv20c
+         kAlqj4FsRyYwMcRS4T43uF66T3dSKNH4w9isEYvXoKINICcDrnA+TfYDQj+ai3ecyteK
+         OP4QKIlUPOT5p61ZFKvuc9d9rCtKnEW5yye4yYuJHZ5lMjppnHWAlQd+3I9RS7zsbgNz
+         hj8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=gPirBuFJU2IYVL8LYQfFZ0eu4t+TRlVhuBDZMxGb9hU=;
+        b=iyTgNq6QSlUs6tJoX5zhkqzjYL51VEXszjDMXirvOmjggC6a+dkU5p40OfTLDVeF3g
+         FErtG/+XN/WExm0fFq0WxmtRniH9U1t2RMzM4iHJJ+Cim73tOKth7gDfHUWOc/LR7psW
+         7qDtG6unrg5UAeU3atTpxrXBsC7K0Q3aw3DABUmo9gNcqr/tdTTFjo8EAjbNUfZXRpi/
+         N32/XDUmO7e885vt3bgQk0spGY94gUwiXSeOghO6GHkVmN085LcSCbdpeeaBMgQ3KK82
+         DbIpXlfkOxzpAJCjuvpBJYa+6ZiG3l8hkqwZQIGJc1qvlbC5SU/TpsOMtItQAJBOwH7y
+         Cmqg==
+X-Gm-Message-State: ANhLgQ3T8Wr+wGbujLb5KYRt1I6zhFOyBmnGcvmnD47wJ7CgELvKKXWQ
+        c0FosNj7FCoe59Oc3MiZQ85Wog==
+X-Google-Smtp-Source: ADFU+vvLLR+6kVJHFUUSDE0Ws/C54RzxYBJ4WzqvAb95GnNd3dqtv0408agMrlqg3IxuLx6kPaLl6w==
+X-Received: by 2002:a7b:c204:: with SMTP id x4mr2254453wmi.20.1583846619369;
+        Tue, 10 Mar 2020 06:23:39 -0700 (PDT)
+Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.gmail.com with ESMTPSA id s22sm3761199wmc.16.2020.03.10.06.23.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Mar 2020 06:23:38 -0700 (PDT)
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+To:     gregkh@linuxfoundation.org
+Cc:     linux-kernel@vger.kernel.org, Khouloud Touil <ktouil@baylibre.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH 07/14] nvmem: release the write-protect pin
+Date:   Tue, 10 Mar 2020 13:22:50 +0000
+Message-Id: <20200310132257.23358-8-srinivas.kandagatla@linaro.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20200310132257.23358-1-srinivas.kandagatla@linaro.org>
+References: <20200310132257.23358-1-srinivas.kandagatla@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200310090720.521745-3-antoine.tenart@bootlin.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 10, 2020 at 10:07:19AM +0100, Antoine Tenart wrote:
-> +++ b/drivers/net/phy/mscc/mscc.h
-> @@ -0,0 +1,451 @@
-> +/* SPDX-License-Identifier: (GPL-2.0 OR MIT) */
-> +/*
-> + * Driver for Microsemi VSC85xx PHYs
-> + *
-> + * Copyright (c) 2016 Microsemi Corporation
-> + */
-> +
-> +#ifndef _MSCC_PHY_H_
-> +#define _MSCC_PHY_H_
-> +
-> +#if IS_ENABLED(CONFIG_MACSEC)
-> +#include <net/macsec.h>
-> +#include "mscc_macsec.h"
-> +#endif
+From: Khouloud Touil <ktouil@baylibre.com>
 
-> +#if IS_ENABLED(CONFIG_MACSEC)
-> +struct macsec_flow {
-> +	struct list_head list;
-> +	enum mscc_macsec_destination_ports port;
-> +	enum macsec_bank bank;
-> +	u32 index;
-> +	int assoc_num;
-> +	bool has_transformation;
-> +
-> +	/* Highest takes precedence [0..15] */
-> +	u8 priority;
-> +
-> +	u8 key[MACSEC_KEYID_LEN];
-> +
-> +	union {
-> +		struct macsec_rx_sa *rx_sa;
-> +		struct macsec_tx_sa *tx_sa;
-> +	};
-> +
-> +	/* Matching */
-> +	struct {
-> +		u8 sci:1;
-> +		u8 tagged:1;
-> +		u8 untagged:1;
-> +		u8 etype:1;
-> +	} match;
-> +
-> +	u16 etype;
-> +
-> +	/* Action */
-> +	struct {
-> +		u8 bypass:1;
-> +		u8 drop:1;
-> +	} action;
-> +
-> +};
-> +#endif
+Put the write-protect GPIO descriptor in nvmem_release() so that it can
+be automatically released when the associated device's reference count
+drops to 0.
 
-Could some of this be moved into mscc_macsec.h? It would reduce the
-number of #ifdefs.
+Fixes: 2a127da461a9 ("nvmem: add support for the write-protect pin")
+Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Signed-off-by: Khouloud Touil <ktouil@baylibre.com>
+[Bartosz: tweak the commit message]
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+---
+ drivers/nvmem/core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-       Andrew
+diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
+index 2758d90d63b7..c05c4f4a7b9e 100644
+--- a/drivers/nvmem/core.c
++++ b/drivers/nvmem/core.c
+@@ -72,6 +72,7 @@ static void nvmem_release(struct device *dev)
+ 	struct nvmem_device *nvmem = to_nvmem_device(dev);
+ 
+ 	ida_simple_remove(&nvmem_ida, nvmem->id);
++	gpiod_put(nvmem->wp_gpio);
+ 	kfree(nvmem);
+ }
+ 
+-- 
+2.21.0
+
