@@ -4,53 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAB8EC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:44:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E344C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:44:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CDC024695
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:44:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D893524691
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:44:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583844281;
-	bh=XAUzqqs/iFZqXjyiC3BTwxXkC+Ct1BC8ORsE7GURgB4=;
+	s=default; t=1583844284;
+	bh=FEOXa/UbLyPWHcCQheKDKsgCrVLyQN/TMkwpB2KryfQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JWnxXMC8sCxs1eDaC6cG9DFNBZsnLWrNB+z8DGGXW30mRC5X59bNah0fry64oVnAn
-	 im87vZ0Hous5oSKq7lFedYHtPZx8G963dfH4PgOitcDmWtVezcgOE0JQofD3Q/kURF
-	 oZDFhH5Z9Z1QY5IGr81ij92dy0xuXmurJeKwa9e4=
+	b=zM0SiBMpBBEdn9T1DithbWIsbd0sMUXVjjFw5lgW6de4FXa68ErfnzCHshjfh/alF
+	 nNa5vY/I9f4u/3A34Bh015ntbXYnLobqKJiF02c7yTb8yYgjTXrh5JMY42EZrsk4id
+	 8BH8zTfRm3b4IyFUVQJWx8UlH++GeySeaeK0OExc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726477AbgCJMok (ORCPT
+        id S1727790AbgCJMon (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:44:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46918 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:44:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46956 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727774AbgCJMog (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:44:36 -0400
+        id S1727783AbgCJMoj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:44:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 73A7E24691;
-        Tue, 10 Mar 2020 12:44:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 02A8C24691;
+        Tue, 10 Mar 2020 12:44:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844275;
-        bh=XAUzqqs/iFZqXjyiC3BTwxXkC+Ct1BC8ORsE7GURgB4=;
+        s=default; t=1583844278;
+        bh=FEOXa/UbLyPWHcCQheKDKsgCrVLyQN/TMkwpB2KryfQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qCRJ696ly9YC8Ba3vleNZgMIV0zm3Nt9RInoaTLtQUhqVFZ45NsKYpiWOADc51oQm
-         RF3d9Jc7mkLawEYndsnz40PVIk1Q8oLBBy468E7ooPELduSKvw7oztaLPTB2iEDJvg
-         Az5Eyd+QsAkaVb40uHVqQIc2NfMNkhapqCWdDaPw=
+        b=yzJgjivcPkRQWLYJPdP4loA6jpWC7WXH1EAq48lw5GxhGRNjh17f7TwLqiGPG8vQs
+         6HwRhOXLhD1CGnhNIu8vT1w6WQfOp/2RD5fT0oF2hVUUv1KBhrlkZwWaPmCTxywbbY
+         1sLqREt7tZwZ/G5eZGxfb9xFueGLWxs8UVnRkCi8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Arun Parameswaran <arun.parameswaran@broadcom.com>,
-        Scott Branden <scott.branden@broadcom.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
+        Benjamin Poirier <bpoirier@cumulusnetworks.com>,
+        Michal Kubecek <mkubecek@suse.cz>,
+        David Ahern <dsahern@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 22/88] net: phy: restore mdio regs in the iproc mdio driver
-Date:   Tue, 10 Mar 2020 13:38:30 +0100
-Message-Id: <20200310123611.443688839@linuxfoundation.org>
+Subject: [PATCH 4.9 23/88] ipv6: Fix nlmsg_flags when splitting a multipath route
+Date:   Tue, 10 Mar 2020 13:38:31 +0100
+Message-Id: <20200310123611.643941880@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123606.543939933@linuxfoundation.org>
 References: <20200310123606.543939933@linuxfoundation.org>
@@ -63,60 +62,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arun Parameswaran <arun.parameswaran@broadcom.com>
+From: Benjamin Poirier <bpoirier@cumulusnetworks.com>
 
-commit 6f08e98d62799e53c89dbf2c9a49d77e20ca648c upstream.
+[ Upstream commit afecdb376bd81d7e16578f0cfe82a1aec7ae18f3 ]
 
-The mii management register in iproc mdio block
-does not have a retention register so it is lost on suspend.
-Save and restore value of register while resuming from suspend.
+When splitting an RTA_MULTIPATH request into multiple routes and adding the
+second and later components, we must not simply remove NLM_F_REPLACE but
+instead replace it by NLM_F_CREATE. Otherwise, it may look like the netlink
+message was malformed.
 
-Fixes: bb1a619735b4 ("net: phy: Initialize mdio clock at probe function")
-Signed-off-by: Arun Parameswaran <arun.parameswaran@broadcom.com>
-Signed-off-by: Scott Branden <scott.branden@broadcom.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+For example,
+	ip route add 2001:db8::1/128 dev dummy0
+	ip route change 2001:db8::1/128 nexthop via fe80::30:1 dev dummy0 \
+		nexthop via fe80::30:2 dev dummy0
+results in the following warnings:
+[ 1035.057019] IPv6: RTM_NEWROUTE with no NLM_F_CREATE or NLM_F_REPLACE
+[ 1035.057517] IPv6: NLM_F_CREATE should be set when creating new route
+
+This patch makes the nlmsg sequence look equivalent for __ip6_ins_rt() to
+what it would get if the multipath route had been added in multiple netlink
+operations:
+	ip route add 2001:db8::1/128 dev dummy0
+	ip route change 2001:db8::1/128 nexthop via fe80::30:1 dev dummy0
+	ip route append 2001:db8::1/128 nexthop via fe80::30:2 dev dummy0
+
+Fixes: 27596472473a ("ipv6: fix ECMP route replacement")
+Signed-off-by: Benjamin Poirier <bpoirier@cumulusnetworks.com>
+Reviewed-by: Michal Kubecek <mkubecek@suse.cz>
+Reviewed-by: David Ahern <dsahern@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/phy/mdio-bcm-iproc.c |   20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ net/ipv6/route.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/net/phy/mdio-bcm-iproc.c
-+++ b/drivers/net/phy/mdio-bcm-iproc.c
-@@ -188,6 +188,23 @@ static int iproc_mdio_remove(struct plat
- 	return 0;
- }
+--- a/net/ipv6/route.c
++++ b/net/ipv6/route.c
+@@ -3069,6 +3069,7 @@ static int ip6_route_multipath_add(struc
+ 		 */
+ 		cfg->fc_nlinfo.nlh->nlmsg_flags &= ~(NLM_F_EXCL |
+ 						     NLM_F_REPLACE);
++		cfg->fc_nlinfo.nlh->nlmsg_flags |= NLM_F_CREATE;
+ 		nhn++;
+ 	}
  
-+#ifdef CONFIG_PM_SLEEP
-+int iproc_mdio_resume(struct device *dev)
-+{
-+	struct platform_device *pdev = to_platform_device(dev);
-+	struct iproc_mdio_priv *priv = platform_get_drvdata(pdev);
-+
-+	/* restore the mii clock configuration */
-+	iproc_mdio_config_clk(priv->base);
-+
-+	return 0;
-+}
-+
-+static const struct dev_pm_ops iproc_mdio_pm_ops = {
-+	.resume = iproc_mdio_resume
-+};
-+#endif /* CONFIG_PM_SLEEP */
-+
- static const struct of_device_id iproc_mdio_of_match[] = {
- 	{ .compatible = "brcm,iproc-mdio", },
- 	{ /* sentinel */ },
-@@ -198,6 +215,9 @@ static struct platform_driver iproc_mdio
- 	.driver = {
- 		.name = "iproc-mdio",
- 		.of_match_table = iproc_mdio_of_match,
-+#ifdef CONFIG_PM_SLEEP
-+		.pm = &iproc_mdio_pm_ops,
-+#endif
- 	},
- 	.probe = iproc_mdio_probe,
- 	.remove = iproc_mdio_remove,
 
 
