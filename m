@@ -2,53 +2,53 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB2DBC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:25:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC70BC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:25:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B833222D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:25:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90CC4208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:25:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583846707;
-	bh=d++i2rxskDMNAcTw7Q5XEt6x9MQycNx2Ds0IINKJFzA=;
+	s=default; t=1583846716;
+	bh=Ijmq/i5PFf8y/H7vXVaSKWPVJgkUToA6JgRLsQDTu7M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XdbI/NOLoHGnCfsomD2N9kwXpDagmR/6m57DL2cZ/IyW/c/IqwGK+NyCoEj8TDyco
-	 Xce9T0eYaAgGMgk9UPx9uEibedVfspPiuWhWEm5r/ajxdWin4ycdmeDv/yEXHUY07A
-	 Jqn9SBPx2+g8k4wJIoiquso8+vm/JxAHI/iBgAPc=
+	b=yLllWMzo9b3kz8VH82eA6EFImAN9RcM7hnuhgAKxVkYSjbaR+BlVO4Ra04EDcpK+8
+	 dptjRmMwUY0oTZTJBIpy2hRVcYU3JoNcyJDEvibEuCEweAbFwRMVtYSsC36Jf+Vo9a
+	 E4BMyG5OA+1qDvzpPK8GkrLaLso2Kk4gHAWrp8Ow=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729876AbgCJNZG (ORCPT
+        id S1729826AbgCJM5r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:25:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38088 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:57:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37538 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728185AbgCJM6L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:58:11 -0400
+        id S1729801AbgCJM5n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:57:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B900E20674;
-        Tue, 10 Mar 2020 12:58:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 24CBB20674;
+        Tue, 10 Mar 2020 12:57:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845090;
-        bh=d++i2rxskDMNAcTw7Q5XEt6x9MQycNx2Ds0IINKJFzA=;
+        s=default; t=1583845062;
+        bh=Ijmq/i5PFf8y/H7vXVaSKWPVJgkUToA6JgRLsQDTu7M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MeJSP2HUHkVlNVKW40HgECkMVGCSxZMphobV2sMQ1xo/OycuuWw1fmwW8Amxu4025
-         fc6ouoW8Wa4cNcxNVrhs3/ozSl6AjZOjE83hSmEnSxn3B/1gGxeLF/fJYj/OWK4VIG
-         HL+m+BEF1FtnyX3qZPVUVbNeV4IMX0IzSXpLUgOk=
+        b=gHBDt/Is9XhIs5F+ywYIOLZ7yGeHmANu6GD02HqgpOVISkZUbNU/HY15YWc9TiiYb
+         aMaMHxlk4gZqbc3QaUYDosNgqpKiXWQfJtUWajfwtJQ+uRh5gEd8hE0sVepxlvqnLt
+         XzkHgIKrIWqgJotPv1ssXxkEO1n64+w4ongeQ6ec=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Leonard Crestez <leonard.crestez@nxp.com>,
-        Peng Fan <peng.fan@nxp.com>,
-        ": Oleksij Rempel" <o.rempel@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>
-Subject: [PATCH 5.5 058/189] firmware: imx: scu: Ensure sequential TX
-Date:   Tue, 10 Mar 2020 13:38:15 +0100
-Message-Id: <20200310123645.453176342@linuxfoundation.org>
+        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Juergen Gross <jgross@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 049/189] x86/xen: Distribute switch variables for initialization
+Date:   Tue, 10 Mar 2020 13:38:06 +0100
+Message-Id: <20200310123644.460773649@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123639.608886314@linuxfoundation.org>
 References: <20200310123639.608886314@linuxfoundation.org>
@@ -61,85 +61,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leonard Crestez <leonard.crestez@nxp.com>
+From: Kees Cook <keescook@chromium.org>
 
-commit 26d0fba29c96241de8a9d16f045b1de49875884c upstream.
+[ Upstream commit 9038ec99ceb94fb8d93ade5e236b2928f0792c7c ]
 
-SCU requires that all messages words are written sequentially but linux MU
-driver implements multiple independent channels for each register so ordering
-between different channels must be ensured by SCU API interface.
+Variables declared in a switch statement before any case statements
+cannot be automatically initialized with compiler instrumentation (as
+they are not part of any execution flow). With GCC's proposed automatic
+stack variable initialization feature, this triggers a warning (and they
+don't get initialized). Clang's automatic stack variable initialization
+(via CONFIG_INIT_STACK_ALL=y) doesn't throw a warning, but it also
+doesn't initialize such variables[1]. Note that these warnings (or silent
+skipping) happen before the dead-store elimination optimization phase,
+so even when the automatic initializations are later elided in favor of
+direct initializations, the warnings remain.
 
-Wait for tx_done before every send to ensure that no queueing happens at the
-mailbox channel level.
+To avoid these problems, move such variables into the "case" where
+they're used or lift them up into the main function body.
 
-Fixes: edbee095fafb ("firmware: imx: add SCU firmware driver support")
-Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
-Cc: <stable@vger.kernel.org>
-Reviewed-by: Peng Fan <peng.fan@nxp.com>
-Reviewed-by:: Oleksij Rempel <o.rempel@pengutronix.de>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+arch/x86/xen/enlighten_pv.c: In function ‘xen_write_msr_safe’:
+arch/x86/xen/enlighten_pv.c:904:12: warning: statement will never be executed [-Wswitch-unreachable]
+  904 |   unsigned which;
+      |            ^~~~~
 
+[1] https://bugs.llvm.org/show_bug.cgi?id=44916
+
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Link: https://lore.kernel.org/r/20200220062318.69299-1-keescook@chromium.org
+Reviewed-by: Juergen Gross <jgross@suse.com>
+[boris: made @which an 'unsigned int']
+Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/firmware/imx/imx-scu.c |   27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+ arch/x86/xen/enlighten_pv.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
---- a/drivers/firmware/imx/imx-scu.c
-+++ b/drivers/firmware/imx/imx-scu.c
-@@ -29,6 +29,7 @@ struct imx_sc_chan {
- 	struct mbox_client cl;
- 	struct mbox_chan *ch;
- 	int idx;
-+	struct completion tx_done;
- };
- 
- struct imx_sc_ipc {
-@@ -100,6 +101,14 @@ int imx_scu_get_handle(struct imx_sc_ipc
- }
- EXPORT_SYMBOL(imx_scu_get_handle);
- 
-+/* Callback called when the word of a message is ack-ed, eg read by SCU */
-+static void imx_scu_tx_done(struct mbox_client *cl, void *mssg, int r)
-+{
-+	struct imx_sc_chan *sc_chan = container_of(cl, struct imx_sc_chan, cl);
-+
-+	complete(&sc_chan->tx_done);
-+}
-+
- static void imx_scu_rx_callback(struct mbox_client *c, void *msg)
+diff --git a/arch/x86/xen/enlighten_pv.c b/arch/x86/xen/enlighten_pv.c
+index 1f756ffffe8b3..79409120a6036 100644
+--- a/arch/x86/xen/enlighten_pv.c
++++ b/arch/x86/xen/enlighten_pv.c
+@@ -896,14 +896,15 @@ static u64 xen_read_msr_safe(unsigned int msr, int *err)
+ static int xen_write_msr_safe(unsigned int msr, unsigned low, unsigned high)
  {
- 	struct imx_sc_chan *sc_chan = container_of(c, struct imx_sc_chan, cl);
-@@ -149,6 +158,19 @@ static int imx_scu_ipc_write(struct imx_
+ 	int ret;
++#ifdef CONFIG_X86_64
++	unsigned int which;
++	u64 base;
++#endif
  
- 	for (i = 0; i < hdr->size; i++) {
- 		sc_chan = &sc_ipc->chans[i % 4];
-+
-+		/*
-+		 * SCU requires that all messages words are written
-+		 * sequentially but linux MU driver implements multiple
-+		 * independent channels for each register so ordering between
-+		 * different channels must be ensured by SCU API interface.
-+		 *
-+		 * Wait for tx_done before every send to ensure that no
-+		 * queueing happens at the mailbox channel level.
-+		 */
-+		wait_for_completion(&sc_chan->tx_done);
-+		reinit_completion(&sc_chan->tx_done);
-+
- 		ret = mbox_send_message(sc_chan->ch, &data[i]);
- 		if (ret < 0)
- 			return ret;
-@@ -247,6 +269,11 @@ static int imx_scu_probe(struct platform
- 		cl->knows_txdone = true;
- 		cl->rx_callback = imx_scu_rx_callback;
+ 	ret = 0;
  
-+		/* Initial tx_done completion as "done" */
-+		cl->tx_done = imx_scu_tx_done;
-+		init_completion(&sc_chan->tx_done);
-+		complete(&sc_chan->tx_done);
-+
- 		sc_chan->sc_ipc = sc_ipc;
- 		sc_chan->idx = i % 4;
- 		sc_chan->ch = mbox_request_channel_byname(cl, chan_name);
+ 	switch (msr) {
+ #ifdef CONFIG_X86_64
+-		unsigned which;
+-		u64 base;
+-
+ 	case MSR_FS_BASE:		which = SEGBASE_FS; goto set;
+ 	case MSR_KERNEL_GS_BASE:	which = SEGBASE_GS_USER; goto set;
+ 	case MSR_GS_BASE:		which = SEGBASE_GS_KERNEL; goto set;
+-- 
+2.20.1
+
 
 
