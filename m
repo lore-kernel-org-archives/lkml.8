@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E29CBC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:43:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0794EC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:43:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B60A324691
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:43:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB51D24698
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:43:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583844228;
-	bh=XxTGXWArpn7JRhRxJXLk6mX9vUg6mfOKu4yvicoqYuM=;
+	s=default; t=1583844232;
+	bh=f46wVpoNnd2pNzVzlYhD9iT3WUv9uDCPoLscqFWZl94=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DSCLoJsaZld3Qn2onrE5TphKhlrti80RXn+jCRkx4jnRjsHvum3qBsKlDeufXiLG8
-	 BkWny+NAThjWJcM4HsKp27K7TfK7MZoOU1AcvfQkdnv7+xQ1NveSiUTiPQszSdi/Iq
-	 fBdmIp8OlJZDVDTWNrlTQ01BEsMiwXxBkAgHErd8=
+	b=xbsrSu1Dn/WTsorfbQxhPP38eu8djFAVIJg0tZcmToZfJD3meYx0mVH5l66XYiTXK
+	 PSYbVUCO0nomC3Us0LZJUIa3pIwY1rRE6oYsEHiJ5LYK+9VzhAdClhlJwZyVrjXszC
+	 7L24DBCvWRj5A/3jfaqezz6KT4QTTGKnDjAME3VU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727650AbgCJMnr (ORCPT
+        id S1727661AbgCJMnv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:43:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44146 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:43:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44224 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726389AbgCJMno (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:43:44 -0400
+        id S1727244AbgCJMnr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:43:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B89DC24695;
-        Tue, 10 Mar 2020 12:43:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4445A24693;
+        Tue, 10 Mar 2020 12:43:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844224;
-        bh=XxTGXWArpn7JRhRxJXLk6mX9vUg6mfOKu4yvicoqYuM=;
+        s=default; t=1583844226;
+        bh=f46wVpoNnd2pNzVzlYhD9iT3WUv9uDCPoLscqFWZl94=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Hbgd3TWzS3W7tf4TC3Mf5F+Zo2Qk+DWENoZS9euNrANd5pvalbHVyQWuWdXwCl9J/
-         dJ4/xyMkHOZldXCDcF/JJS+LvE6Si0UlMXHNULYozr3Jcfv3Dn2yfC4X0L2zbg81k+
-         o575Ks6e2Qh8MTE4l7IxbV+U2isOF6scS7a8f7AE=
+        b=jc1owLbQ4e3no95U8Clt3L/8STzONXSgGUMmHjsLnoCmQKcVazm5v4wWLc5s/xXF5
+         wwHfLp8pDt3IF0ZKMhJjtjIRsSExYfrUhKvwaNJa1qBU+YRGCABKcQLBwEVldxTmdx
+         orDtnCd3fczgdwQ8gimGDQbDuKapltqEt6/YCtkI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>
-Subject: [PATCH 4.4 58/72] vt: selection, push console lock down
-Date:   Tue, 10 Mar 2020 13:39:11 +0100
-Message-Id: <20200310123615.678733417@linuxfoundation.org>
+        stable@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>,
+        syzbot+26183d9746e62da329b8@syzkaller.appspotmail.com
+Subject: [PATCH 4.4 59/72] vt: selection, push sel_lock up
+Date:   Tue, 10 Mar 2020 13:39:12 +0100
+Message-Id: <20200310123615.939632936@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123601.053680753@linuxfoundation.org>
 References: <20200310123601.053680753@linuxfoundation.org>
@@ -60,65 +61,143 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jiri Slaby <jslaby@suse.cz>
 
-commit 4b70dd57a15d2f4685ac6e38056bad93e81e982f upstream.
+commit e8c75a30a23c6ba63f4ef6895cbf41fd42f21aa2 upstream.
 
-We need to nest the console lock in sel_lock, so we have to push it down
-a bit. Fortunately, the callers of set_selection_* just lock the console
-lock around the function call. So moving it down is easy.
+sel_lock cannot nest in the console lock. Thanks to syzkaller, the
+kernel states firmly:
 
-In the next patch, we switch the order.
+> WARNING: possible circular locking dependency detected
+> 5.6.0-rc3-syzkaller #0 Not tainted
+> ------------------------------------------------------
+> syz-executor.4/20336 is trying to acquire lock:
+> ffff8880a2e952a0 (&tty->termios_rwsem){++++}, at: tty_unthrottle+0x22/0x100 drivers/tty/tty_ioctl.c:136
+>
+> but task is already holding lock:
+> ffffffff89462e70 (sel_lock){+.+.}, at: paste_selection+0x118/0x470 drivers/tty/vt/selection.c:374
+>
+> which lock already depends on the new lock.
+>
+> the existing dependency chain (in reverse order) is:
+>
+> -> #2 (sel_lock){+.+.}:
+>        mutex_lock_nested+0x1b/0x30 kernel/locking/mutex.c:1118
+>        set_selection_kernel+0x3b8/0x18a0 drivers/tty/vt/selection.c:217
+>        set_selection_user+0x63/0x80 drivers/tty/vt/selection.c:181
+>        tioclinux+0x103/0x530 drivers/tty/vt/vt.c:3050
+>        vt_ioctl+0x3f1/0x3a30 drivers/tty/vt/vt_ioctl.c:364
+
+This is ioctl(TIOCL_SETSEL).
+Locks held on the path: console_lock -> sel_lock
+
+> -> #1 (console_lock){+.+.}:
+>        console_lock+0x46/0x70 kernel/printk/printk.c:2289
+>        con_flush_chars+0x50/0x650 drivers/tty/vt/vt.c:3223
+>        n_tty_write+0xeae/0x1200 drivers/tty/n_tty.c:2350
+>        do_tty_write drivers/tty/tty_io.c:962 [inline]
+>        tty_write+0x5a1/0x950 drivers/tty/tty_io.c:1046
+
+This is write().
+Locks held on the path: termios_rwsem -> console_lock
+
+> -> #0 (&tty->termios_rwsem){++++}:
+>        down_write+0x57/0x140 kernel/locking/rwsem.c:1534
+>        tty_unthrottle+0x22/0x100 drivers/tty/tty_ioctl.c:136
+>        mkiss_receive_buf+0x12aa/0x1340 drivers/net/hamradio/mkiss.c:902
+>        tty_ldisc_receive_buf+0x12f/0x170 drivers/tty/tty_buffer.c:465
+>        paste_selection+0x346/0x470 drivers/tty/vt/selection.c:389
+>        tioclinux+0x121/0x530 drivers/tty/vt/vt.c:3055
+>        vt_ioctl+0x3f1/0x3a30 drivers/tty/vt/vt_ioctl.c:364
+
+This is ioctl(TIOCL_PASTESEL).
+Locks held on the path: sel_lock -> termios_rwsem
+
+> other info that might help us debug this:
+>
+> Chain exists of:
+>   &tty->termios_rwsem --> console_lock --> sel_lock
+
+Clearly. From the above, we have:
+ console_lock -> sel_lock
+ sel_lock -> termios_rwsem
+ termios_rwsem -> console_lock
+
+Fix this by reversing the console_lock -> sel_lock dependency in
+ioctl(TIOCL_SETSEL). First, lock sel_lock, then console_lock.
 
 Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+Reported-by: syzbot+26183d9746e62da329b8@syzkaller.appspotmail.com
 Fixes: 07e6124a1a46 ("vt: selection, close sel_buffer race")
 Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200228115406.5735-1-jslaby@suse.cz
+Link: https://lore.kernel.org/r/20200228115406.5735-2-jslaby@suse.cz
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/vt/selection.c |   13 ++++++++++++-
- drivers/tty/vt/vt.c        |    2 --
- 2 files changed, 12 insertions(+), 3 deletions(-)
+ drivers/tty/vt/selection.c |   16 +++++++---------
+ 1 file changed, 7 insertions(+), 9 deletions(-)
 
 --- a/drivers/tty/vt/selection.c
 +++ b/drivers/tty/vt/selection.c
-@@ -158,7 +158,7 @@ static int store_utf8(u16 c, char *p)
-  *	The entire selection process is managed under the console_lock. It's
-  *	 a lot under the lock but its hardly a performance path
-  */
--int set_selection(const struct tiocl_selection __user *sel, struct tty_struct *tty)
-+static int __set_selection(const struct tiocl_selection __user *sel, struct tty_struct *tty)
- {
- 	struct vc_data *vc = vc_cons[fg_console].d;
- 	int sel_mode, new_sel_start, new_sel_end, spc;
-@@ -334,6 +334,17 @@ unlock:
+@@ -205,7 +205,6 @@ static int __set_selection(const struct
+ 		pe = tmp;
+ 	}
+ 
+-	mutex_lock(&sel_lock);
+ 	if (sel_cons != vc_cons[fg_console].d) {
+ 		clear_selection();
+ 		sel_cons = vc_cons[fg_console].d;
+@@ -251,10 +250,9 @@ static int __set_selection(const struct
+ 			break;
+ 		case TIOCL_SELPOINTER:
+ 			highlight_pointer(pe);
+-			goto unlock;
++			return 0;
+ 		default:
+-			ret = -EINVAL;
+-			goto unlock;
++			return -EINVAL;
+ 	}
+ 
+ 	/* remove the pointer */
+@@ -276,7 +274,7 @@ static int __set_selection(const struct
+ 	else if (new_sel_start == sel_start)
+ 	{
+ 		if (new_sel_end == sel_end)	/* no action required */
+-			goto unlock;
++			return 0;
+ 		else if (new_sel_end > sel_end)	/* extend to right */
+ 			highlight(sel_end + 2, new_sel_end);
+ 		else				/* contract from right */
+@@ -303,8 +301,7 @@ static int __set_selection(const struct
+ 	if (!bp) {
+ 		printk(KERN_WARNING "selection: kmalloc() failed\n");
+ 		clear_selection();
+-		ret = -ENOMEM;
+-		goto unlock;
++		return -ENOMEM;
+ 	}
+ 	kfree(sel_buffer);
+ 	sel_buffer = bp;
+@@ -329,8 +326,7 @@ static int __set_selection(const struct
+ 		}
+ 	}
+ 	sel_buffer_lth = bp - sel_buffer;
+-unlock:
+-	mutex_unlock(&sel_lock);
++
  	return ret;
  }
  
-+int set_selection(const struct tiocl_selection __user *v, struct tty_struct *tty)
-+{
-+	int ret;
-+
-+	console_lock();
-+	ret = __set_selection(v, tty);
-+	console_unlock();
-+
-+	return ret;
-+}
-+
- /* Insert the contents of the selection buffer into the
-  * queue of the tty associated with the current console.
-  * Invoked by ioctl().
---- a/drivers/tty/vt/vt.c
-+++ b/drivers/tty/vt/vt.c
-@@ -2687,9 +2687,7 @@ int tioclinux(struct tty_struct *tty, un
- 	switch (type)
- 	{
- 		case TIOCL_SETSEL:
--			console_lock();
- 			ret = set_selection((struct tiocl_selection __user *)(p+1), tty);
--			console_unlock();
- 			break;
- 		case TIOCL_PASTESEL:
- 			ret = paste_selection(tty);
+@@ -338,9 +334,11 @@ int set_selection(const struct tiocl_sel
+ {
+ 	int ret;
+ 
++	mutex_lock(&sel_lock);
+ 	console_lock();
+ 	ret = __set_selection(v, tty);
+ 	console_unlock();
++	mutex_unlock(&sel_lock);
+ 
+ 	return ret;
+ }
 
 
