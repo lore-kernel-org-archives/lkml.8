@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3458FC18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:05:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDC5FC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:05:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06CB9208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:05:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91011208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:05:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583845501;
-	bh=boie7kjDXkrMgYA2kRh557Gzikic9mujKoVkRXup9ow=;
+	s=default; t=1583845505;
+	bh=b2skDpvrPgPj6Xui4z2yZFFBz2z91dVTcftzBEEU42o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hZe8aVYqH+SmaQV7ninpmkvGBDQ8M+OnmTfrdHwXjVBBQ04eylpiv0XhUVBp4xAVE
-	 hnZbLSbHfQ1RJSL/4tBab9+spBhw0K4wnX1B1MBuYjPs9tCJ9sSV4FfJPwjhO84oni
-	 6xVuiCBcV5oY9T8h9corgZCllZGNCVy9qzMaI2Zg=
+	b=xrEhco5DFvfrmiWKSGa0YVa+wQU7epa3XxjEmjuWl+wZMRiAZaW7ZhBM1zXxixs4m
+	 RgmBd8pl7TxtUKMEiGS7BnJhAixEyvBax+8xQ5Q9ITEOygK3hkhckTqmJd0iMAf1N2
+	 M+Lojh1X7fU9wDJcZnGFa5cGFxkGCu9q8rKcGPhg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730663AbgCJNDy (ORCPT
+        id S1728527AbgCJNDe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:03:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48666 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:03:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48104 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728581AbgCJNDu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:03:50 -0400
+        id S1729134AbgCJNDZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:03:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C37820409;
-        Tue, 10 Mar 2020 13:03:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03CEC20409;
+        Tue, 10 Mar 2020 13:03:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845429;
-        bh=boie7kjDXkrMgYA2kRh557Gzikic9mujKoVkRXup9ow=;
+        s=default; t=1583845404;
+        bh=b2skDpvrPgPj6Xui4z2yZFFBz2z91dVTcftzBEEU42o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sgUqaEibi53ZQ6Suf2yOo8ZSOwFH3pun5Uneo9OwPQhVewZzlOZKAxwnwAIS2BUDd
-         /Ub544ehoRvcuwYmCLSSd0PVXv65h2HNpsDEZntEwAQM9puA6zWorLzS9RsHm6Szr9
-         FFC5iABsjXji4VNaJuJtmaydSC2tUBey98TLDOWc=
+        b=w73M4vL0nvxZR5MXufwsJ7qeXZMBdyeYKQJkE0LQBhjnNoBtOW93Z4eK7GimPfhBV
+         ZSk816u/RWaHiWryhGitp1jlONthHNhckbq7ChL56DPc04SlX8+ZNInCP/2tfzoWA7
+         OYW0lePQ6cgmsaO299wh9XliuLh4yhOrKb3ErgJk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH 5.5 179/189] dmaengine: coh901318: Fix a double lock bug in dma_tc_handle()
-Date:   Tue, 10 Mar 2020 13:40:16 +0100
-Message-Id: <20200310123657.728086134@linuxfoundation.org>
+        stable@vger.kernel.org, Lucas Stach <l.stach@pengutronix.de>,
+        Ahmad Fatoum <a.fatoum@pengutronix.de>,
+        Rouven Czerwinski <r.czerwinski@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>
+Subject: [PATCH 5.5 171/189] ARM: imx: build v7_cpu_resume() unconditionally
+Date:   Tue, 10 Mar 2020 13:40:08 +0100
+Message-Id: <20200310123657.154373551@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123639.608886314@linuxfoundation.org>
 References: <20200310123639.608886314@linuxfoundation.org>
@@ -59,41 +61,119 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Ahmad Fatoum <a.fatoum@pengutronix.de>
 
-commit 36d5d22090d13fd3a7a8c9663a711cbe6970aac8 upstream.
+commit 512a928affd51c2dc631401e56ad5ee5d5dd68b6 upstream.
 
-The caller is already holding the lock so this will deadlock.
+This function is not only needed by the platform suspend code, but is also
+reused as the CPU resume function when the ARM cores can be powered down
+completely in deep idle, which is the case on i.MX6SX and i.MX6UL(L).
 
-Fixes: 0b58828c923e ("DMAENGINE: COH 901 318 remove irq counting")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Link: https://lore.kernel.org/r/20200217144050.3i4ymbytogod4ijn@kili.mountain
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Providing the static inline stub whenever CONFIG_SUSPEND is disabled means
+that those platforms will hang on resume from cpuidle if suspend is disabled.
+
+So there are two problems:
+
+  - The static inline stub masks the linker error
+  - The function is not available where needed
+
+Fix both by just building the function unconditionally, when
+CONFIG_SOC_IMX6 is enabled. The actual code is three instructions long,
+so it's arguably ok to just leave it in for all i.MX6 kernel configurations.
+
+Fixes: 05136f0897b5 ("ARM: imx: support arm power off in cpuidle for i.mx6sx")
+Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
+Signed-off-by: Rouven Czerwinski <r.czerwinski@pengutronix.de>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/dma/coh901318.c |    4 ----
- 1 file changed, 4 deletions(-)
+ arch/arm/mach-imx/Makefile       |    2 ++
+ arch/arm/mach-imx/common.h       |    4 ++--
+ arch/arm/mach-imx/resume-imx6.S  |   24 ++++++++++++++++++++++++
+ arch/arm/mach-imx/suspend-imx6.S |   14 --------------
+ 4 files changed, 28 insertions(+), 16 deletions(-)
 
---- a/drivers/dma/coh901318.c
-+++ b/drivers/dma/coh901318.c
-@@ -1947,8 +1947,6 @@ static void dma_tc_handle(struct coh9013
- 		return;
- 	}
+--- a/arch/arm/mach-imx/Makefile
++++ b/arch/arm/mach-imx/Makefile
+@@ -91,6 +91,8 @@ AFLAGS_suspend-imx6.o :=-Wa,-march=armv7
+ obj-$(CONFIG_SOC_IMX6) += suspend-imx6.o
+ obj-$(CONFIG_SOC_IMX53) += suspend-imx53.o
+ endif
++AFLAGS_resume-imx6.o :=-Wa,-march=armv7-a
++obj-$(CONFIG_SOC_IMX6) += resume-imx6.o
+ obj-$(CONFIG_SOC_IMX6) += pm-imx6.o
  
--	spin_lock(&cohc->lock);
--
- 	/*
- 	 * When we reach this point, at least one queue item
- 	 * should have been moved over from cohc->queue to
-@@ -1969,8 +1967,6 @@ static void dma_tc_handle(struct coh9013
- 	if (coh901318_queue_start(cohc) == NULL)
- 		cohc->busy = 0;
+ obj-$(CONFIG_SOC_IMX1) += mach-imx1.o
+--- a/arch/arm/mach-imx/common.h
++++ b/arch/arm/mach-imx/common.h
+@@ -109,17 +109,17 @@ void imx_cpu_die(unsigned int cpu);
+ int imx_cpu_kill(unsigned int cpu);
  
--	spin_unlock(&cohc->lock);
+ #ifdef CONFIG_SUSPEND
+-void v7_cpu_resume(void);
+ void imx53_suspend(void __iomem *ocram_vbase);
+ extern const u32 imx53_suspend_sz;
+ void imx6_suspend(void __iomem *ocram_vbase);
+ #else
+-static inline void v7_cpu_resume(void) {}
+ static inline void imx53_suspend(void __iomem *ocram_vbase) {}
+ static const u32 imx53_suspend_sz;
+ static inline void imx6_suspend(void __iomem *ocram_vbase) {}
+ #endif
+ 
++void v7_cpu_resume(void);
++
+ void imx6_pm_ccm_init(const char *ccm_compat);
+ void imx6q_pm_init(void);
+ void imx6dl_pm_init(void);
+--- /dev/null
++++ b/arch/arm/mach-imx/resume-imx6.S
+@@ -0,0 +1,24 @@
++/* SPDX-License-Identifier: GPL-2.0-or-later */
++/*
++ * Copyright 2014 Freescale Semiconductor, Inc.
++ */
++
++#include <linux/linkage.h>
++#include <asm/assembler.h>
++#include <asm/asm-offsets.h>
++#include <asm/hardware/cache-l2x0.h>
++#include "hardware.h"
++
++/*
++ * The following code must assume it is running from physical address
++ * where absolute virtual addresses to the data section have to be
++ * turned into relative ones.
++ */
++
++ENTRY(v7_cpu_resume)
++	bl	v7_invalidate_l1
++#ifdef CONFIG_CACHE_L2X0
++	bl	l2c310_early_resume
++#endif
++	b	cpu_resume
++ENDPROC(v7_cpu_resume)
+--- a/arch/arm/mach-imx/suspend-imx6.S
++++ b/arch/arm/mach-imx/suspend-imx6.S
+@@ -327,17 +327,3 @@ resume:
+ 
+ 	ret	lr
+ ENDPROC(imx6_suspend)
 -
- 	/*
- 	 * This tasklet will remove items from cohc->active
- 	 * and thus terminates them.
+-/*
+- * The following code must assume it is running from physical address
+- * where absolute virtual addresses to the data section have to be
+- * turned into relative ones.
+- */
+-
+-ENTRY(v7_cpu_resume)
+-	bl	v7_invalidate_l1
+-#ifdef CONFIG_CACHE_L2X0
+-	bl	l2c310_early_resume
+-#endif
+-	b	cpu_resume
+-ENDPROC(v7_cpu_resume)
 
 
