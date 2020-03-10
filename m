@@ -2,101 +2,93 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A553CC18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 15:43:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10095C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 15:44:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81B1E20675
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 15:43:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDAB121D56
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 15:44:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NmvS7ouP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726443AbgCJPnc (ORCPT
+        id S1726510AbgCJPoC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 11:43:32 -0400
-Received: from foss.arm.com ([217.140.110.172]:38744 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726315AbgCJPnc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 11:43:32 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CBB4B1FB;
-        Tue, 10 Mar 2020 08:43:29 -0700 (PDT)
-Received: from e110455-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A7A353F534;
-        Tue, 10 Mar 2020 08:43:29 -0700 (PDT)
-Received: by e110455-lin.cambridge.arm.com (Postfix, from userid 1000)
-        id 5585B682F35; Tue, 10 Mar 2020 15:43:28 +0000 (GMT)
-Date:   Tue, 10 Mar 2020 15:43:28 +0000
-From:   Liviu Dudau <liviu.dudau@arm.com>
-To:     Wambui Karuga <wambui.karugax@gmail.com>
-Cc:     airlied@linux.ie, daniel@ffwll.ch,
-        Brian Starkey <brian.starkey@arm.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        gregkh@linuxfoundation.org
-Subject: Re: [PATCH v2 06/17] drm/arm: make hdlcd_debugfs_init() return 0
-Message-ID: <20200310154328.GO364558@e110455-lin.cambridge.arm.com>
-References: <20200310133121.27913-1-wambui.karugax@gmail.com>
- <20200310133121.27913-7-wambui.karugax@gmail.com>
+        Tue, 10 Mar 2020 11:44:02 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:37445 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726390AbgCJPoB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 11:44:01 -0400
+Received: by mail-pg1-f196.google.com with SMTP id z12so6474282pgl.4
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 08:44:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Xni0YMnXezsFGTeUgEf4M3Fw4UAep4znIhY5+89pc7c=;
+        b=NmvS7ouPivSfaeLyNoamlTqUAre20DSjviVyELT04fVLTqJY+cqtT+C4DIrjB5EdOh
+         x7xmi17GzzdPu6q3nJ20O62xo8MRLSMyZeKJfPZdzHGz57nSj/bpUdASitiwhBPvjo7I
+         5ChfRRTRp3Ver3FLKPIspYIhbZiArEUViDYos=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Xni0YMnXezsFGTeUgEf4M3Fw4UAep4znIhY5+89pc7c=;
+        b=Z1tloB0QNj0BavxoKetglpUCWoD2WUkLNLu0JLUuoqZnLjgWqM97vZifH8JaIvXxHM
+         nByBUs8MWHMMoWL/yVL0tEodmreCH0nNIUA13tJEq1G6tq+BLD4D45tfDXl4VdACwooA
+         Z81IvnH3blLO0W/ctlfU+NZ0PFVer8Sz3QaJgPDp8Ux8Z7IDfRIOV/nn9wfVQ5N1uba2
+         61h8z7hBITlxRSglbQaON+XH093t2LJE0ciMEXI99jX0Zd/LBl6sUm/NVRGmIdAYkJ3p
+         B8p0GLmQ4RL4RvqAD8au8l+qjX4u2mavIQ3HdDEdi6HlWT/XjPS7BgRQ9Jeyw9rvku64
+         Nlww==
+X-Gm-Message-State: ANhLgQ1EQF4ke8AmvIoa/s4EW8yIsvByyL6fMBDPC5rsHoLiN+4f1F6d
+        M7xa1Fu01nFzRzCKwc1X89xWHA==
+X-Google-Smtp-Source: ADFU+vtm1q7lynSdly97Ecu4eD8ZY1rhs3jLKZ2SwYbl+1M/Bh8cn86sOV0C5VfaIx8al2st5nrmgw==
+X-Received: by 2002:a63:d18:: with SMTP id c24mr21557269pgl.218.1583855040357;
+        Tue, 10 Mar 2020 08:44:00 -0700 (PDT)
+Received: from smtp.gmail.com ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id m12sm2731090pjk.20.2020.03.10.08.43.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Mar 2020 08:43:59 -0700 (PDT)
+From:   Stephen Boyd <swboyd@chromium.org>
+To:     Wolfram Sang <wsa@the-dreams.de>
+Cc:     linux-kernel@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-i2c@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: [PATCH v2 0/3] Misc qcom geni i2c driver fixes
+Date:   Tue, 10 Mar 2020 08:43:55 -0700
+Message-Id: <20200310154358.39367-1-swboyd@chromium.org>
+X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200310133121.27913-7-wambui.karugax@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 10, 2020 at 04:31:10PM +0300, Wambui Karuga wrote:
-> Since commit 987d65d01356 (drm: debugfs: make
-> drm_debugfs_create_files() never fail), drm_debugfs_create_files() never
-> fails and should return void. Therefore, remove its use as the
-> return value of hdlcd_debugfs_init() and have the latter function return
-> 0 directly.
-> 
-> v2: make hdlcd_debugfs_init() return 0 instead of void to ensure that
-> each patch compiles individually.
-> 
-> References: https://lists.freedesktop.org/archives/dri-devel/2020-February/257183.html
-> Signed-off-by: Wambui Karuga <wambui.karugax@gmail.com>
+Here's a small collection of qcom geni i2c driver fixes that
+simplify the code and aid debugging. 
 
-Acked-by: Liviu Dudau <liviu.dudau@arm.com>
+Changes from v1;
+ - Simplified code some more and commented about platform_get_irq()
+   in commit text for patch 2
+ - Picked up reviewed by tags
+ - Fixed first patch to use &pdev->dev so it keeps compiling
+ - Rebased to v5.6-rc5
 
-Best regards,
-Liviu
+Stephen Boyd (3):
+  i2c: qcom-geni: Let firmware specify irq trigger flags
+  i2c: qcom-geni: Grow a dev pointer to simplify code
+  i2c: qcom-geni: Drop of_platform.h include
 
-> ---
->  drivers/gpu/drm/arm/hdlcd_drv.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/arm/hdlcd_drv.c b/drivers/gpu/drm/arm/hdlcd_drv.c
-> index 2e053815b54a..bd0ad6f46a97 100644
-> --- a/drivers/gpu/drm/arm/hdlcd_drv.c
-> +++ b/drivers/gpu/drm/arm/hdlcd_drv.c
-> @@ -226,8 +226,10 @@ static struct drm_info_list hdlcd_debugfs_list[] = {
->  
->  static int hdlcd_debugfs_init(struct drm_minor *minor)
->  {
-> -	return drm_debugfs_create_files(hdlcd_debugfs_list,
-> -		ARRAY_SIZE(hdlcd_debugfs_list),	minor->debugfs_root, minor);
-> +	drm_debugfs_create_files(hdlcd_debugfs_list,
-> +				 ARRAY_SIZE(hdlcd_debugfs_list),
-> +				 minor->debugfs_root, minor);
-> +	return 0;
->  }
->  #endif
->  
-> -- 
-> 2.25.1
-> 
+ drivers/i2c/busses/i2c-qcom-geni.c | 58 ++++++++++++++----------------
+ 1 file changed, 26 insertions(+), 32 deletions(-)
 
+
+base-commit: 2c523b344dfa65a3738e7039832044aa133c75fb
 -- 
-====================
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    ¯\_(ツ)_/¯
+Sent by a computer, using git, on the internet
+
