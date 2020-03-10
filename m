@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0485C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:04:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FC4BC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:04:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C22A7208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:04:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68434208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:04:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583845494;
-	bh=KJoKLhjYPFyRWD4d0UPL8yDXl4UR0+scisZD6bxeLpY=;
+	s=default; t=1583845499;
+	bh=0TQYR1CoOeat+OC33dAfyJD1V5YNNLKHuNChSjJvb24=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g0iZTAAYIdhawrDnI/TqmgHM/lWy9NtgaqNoZA4I04InvkqUwE4M7wDdNaG/U6ALq
-	 RcihLRNLImik6aLq6qd+G4BjBCCibmPt85UTpWyKRsIJanLinxGmcFBtAoDOxkS4Kx
-	 pvTzor0mOUbxBjY1GoUa4h+AqNilYJpzuTpf8+xA=
+	b=yB2aniGjvCvbCWZwDj8H3dHdJKRx35Mt9IdB4rnXVPtm2xlRfQ1CO4gY+w/g83KBI
+	 e/YMDCJV8Nd/xvqW7Moeqt+WnyvQJNgdR7mNrRrIZXVuwlMJgC9Jr77K6dysd4mVeC
+	 r3lhp0DfaX4UvHt4giEXA2czOFEebb0HzwP0JtWY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729206AbgCJNEY (ORCPT
+        id S1730678AbgCJND7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:04:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49416 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:03:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48818 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728334AbgCJNEW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:04:22 -0400
+        id S1730672AbgCJND4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:03:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0223A246AA;
-        Tue, 10 Mar 2020 13:04:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 25131208E4;
+        Tue, 10 Mar 2020 13:03:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845461;
-        bh=KJoKLhjYPFyRWD4d0UPL8yDXl4UR0+scisZD6bxeLpY=;
+        s=default; t=1583845435;
+        bh=0TQYR1CoOeat+OC33dAfyJD1V5YNNLKHuNChSjJvb24=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AMFxedS33TPownaWMRCMO2chcfyPx2ogwHvH8BI1ctTUTNpCMNVM9seaULOrB8dS4
-         dZsFQ9uaFRa5q5qrOMU9aCADTgE8Q9R0SEa94P2YKPTlRJrDIum/arUcxDWUKhrPYb
-         NiyEnLSk5qoYLuo52mWoDfNEdsKK1wUCWs5yqVRE=
+        b=Mx4qcSlmEXthzJuLngH5NvLdij4rObS5+T3pkWpDCZS18KCC7zjzGZUHcrp+s+UXQ
+         y1JcnmQUqxHfifTiwIw0y6uyiDZfyxphcR8NoyreJa/ECxaO1/Qvkg9FWyL7eFJfNs
+         CUCmxxVz2kgGV7OXIWODSP1aM8qMH+B4yf9EUBLc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aaro Koskinen <aaro.koskinen@nokia.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.5 189/189] net: stmmac: fix notifier registration
-Date:   Tue, 10 Mar 2020 13:40:26 +0100
-Message-Id: <20200310123658.506018546@linuxfoundation.org>
+        stable@vger.kernel.org, Art Nikpal <email2tema@gmail.com>,
+        Christian Hewitt <christianshewitt@gmail.com>,
+        Kevin Hilman <khilman@baylibre.com>
+Subject: [PATCH 5.5 181/189] arm64: dts: meson: fix gxm-khadas-vim2 wifi
+Date:   Tue, 10 Mar 2020 13:40:18 +0100
+Message-Id: <20200310123657.874783208@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123639.608886314@linuxfoundation.org>
 References: <20200310123639.608886314@linuxfoundation.org>
@@ -59,83 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aaro Koskinen <aaro.koskinen@nokia.com>
+From: Christian Hewitt <christianshewitt@gmail.com>
 
-commit 474a31e13a4e9749fb3ee55794d69d0f17ee0998 upstream.
+commit 146033562e7e5d1c9aae9653986806664995f1d5 upstream.
 
-We cannot register the same netdev notifier multiple times when probing
-stmmac devices. Register the notifier only once in module init, and also
-make debugfs creation/deletion safe against simultaneous notifier call.
+before
 
-Fixes: 481a7d154cbb ("stmmac: debugfs entry name is not be changed when udev rename device name.")
-Signed-off-by: Aaro Koskinen <aaro.koskinen@nokia.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+[6.418252] brcmfmac: F1 signature read @0x18000000=0x17224356
+[6.435663] brcmfmac: brcmf_fw_alloc_request: using brcm/brcmfmac4356-sdio for chip BCM4356/2
+[6.551259] brcmfmac: brcmf_sdiod_ramrw: membytes transfer failed
+[6.551275] brcmfmac: brcmf_sdio_verifymemory: error -84 on reading 2048 membytes at 0x00184000
+[6.551352] brcmfmac: brcmf_sdio_download_firmware: dongle image file download failed
+
+after
+
+[6.657165] brcmfmac: F1 signature read @0x18000000=0x17224356
+[6.660807] brcmfmac: brcmf_fw_alloc_request: using brcm/brcmfmac4356-sdio for chip BCM4356/2
+[6.918643] brcmfmac: brcmf_fw_alloc_request: using brcm/brcmfmac4356-sdio for chip BCM4356/2
+[6.918734] brcmfmac: brcmf_c_process_clm_blob: no clm_blob available (err=-2), device may have limited channels available
+[6.922724] brcmfmac: brcmf_c_preinit_dcmds: Firmware: BCM4356/2 wl0: Jun 16 2015 14:25:06 version 7.35.184.r1 (TOB) (r559293) FWID 01-b22ae69c
+
+Fixes: adc52bf7ef16 ("arm64: dts: meson: fix mmc v2 chips max frequencies")
+Suggested-by: Art Nikpal <email2tema@gmail.com>
+Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+Link: https://lore.kernel.org/r/1582212790-11402-1-git-send-email-christianshewitt@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c |   13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -4289,6 +4289,8 @@ static void stmmac_init_fs(struct net_de
- {
- 	struct stmmac_priv *priv = netdev_priv(dev);
+--- a/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts
+@@ -327,7 +327,7 @@
+ 	#size-cells = <0>;
  
-+	rtnl_lock();
-+
- 	/* Create per netdev entries */
- 	priv->dbgfs_dir = debugfs_create_dir(dev->name, stmmac_fs_dir);
+ 	bus-width = <4>;
+-	max-frequency = <50000000>;
++	max-frequency = <60000000>;
  
-@@ -4300,14 +4302,13 @@ static void stmmac_init_fs(struct net_de
- 	debugfs_create_file("dma_cap", 0444, priv->dbgfs_dir, dev,
- 			    &stmmac_dma_cap_fops);
- 
--	register_netdevice_notifier(&stmmac_notifier);
-+	rtnl_unlock();
- }
- 
- static void stmmac_exit_fs(struct net_device *dev)
- {
- 	struct stmmac_priv *priv = netdev_priv(dev);
- 
--	unregister_netdevice_notifier(&stmmac_notifier);
- 	debugfs_remove_recursive(priv->dbgfs_dir);
- }
- #endif /* CONFIG_DEBUG_FS */
-@@ -4825,14 +4826,14 @@ int stmmac_dvr_remove(struct device *dev
- 
- 	netdev_info(priv->dev, "%s: removing driver", __func__);
- 
--#ifdef CONFIG_DEBUG_FS
--	stmmac_exit_fs(ndev);
--#endif
- 	stmmac_stop_all_dma(priv);
- 
- 	stmmac_mac_set(priv, priv->ioaddr, false);
- 	netif_carrier_off(ndev);
- 	unregister_netdev(ndev);
-+#ifdef CONFIG_DEBUG_FS
-+	stmmac_exit_fs(ndev);
-+#endif
- 	phylink_destroy(priv->phylink);
- 	if (priv->plat->stmmac_rst)
- 		reset_control_assert(priv->plat->stmmac_rst);
-@@ -5052,6 +5053,7 @@ static int __init stmmac_init(void)
- 	/* Create debugfs main directory if it doesn't exist yet */
- 	if (!stmmac_fs_dir)
- 		stmmac_fs_dir = debugfs_create_dir(STMMAC_RESOURCE_NAME, NULL);
-+	register_netdevice_notifier(&stmmac_notifier);
- #endif
- 
- 	return 0;
-@@ -5060,6 +5062,7 @@ static int __init stmmac_init(void)
- static void __exit stmmac_exit(void)
- {
- #ifdef CONFIG_DEBUG_FS
-+	unregister_netdevice_notifier(&stmmac_notifier);
- 	debugfs_remove_recursive(stmmac_fs_dir);
- #endif
- }
+ 	non-removable;
+ 	disable-wp;
 
 
