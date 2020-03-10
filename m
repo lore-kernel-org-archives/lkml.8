@@ -2,135 +2,202 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D45AC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:45:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DFBAC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:45:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 043AA24655
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:45:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=metafoo.de header.i=@metafoo.de header.b="ByxP7Rr0"
+	by mail.kernel.org (Postfix) with ESMTP id 60C5A24655
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:45:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583847935;
+	bh=Gb1IRoHX5zmIsy6mPei1A2ZN94UYuoYi38cNq7SdFPg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Yrwos3vxa4IlCHWOzFG4EmogyMDKh5hao/8EZ9UbWgiwRkkGUAxS92JnO8Gm26R7J
+	 pycnjqGK9TH4lxpAW6QvZlgS2XAa4Oo9gD+s+p498q61wtcJLKCSMaeAhcFKHXi2Jt
+	 ZdqPFs33yHP5Xhj8GDlB7G2v8/3MpxgScP251J/E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727739AbgCJNp3 (ORCPT
+        id S1727803AbgCJNpe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:45:29 -0400
-Received: from www381.your-server.de ([78.46.137.84]:38168 "EHLO
-        www381.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726954AbgCJNpT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:45:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=metafoo.de;
-         s=default2002; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=NnM1QCunpjC6c6Up1F4TLwXN2QNnaCmd0eqQ9fsv1U8=; b=ByxP7Rr0IqQDfX69D6GKlInxYy
-        fwEBixIKZjzFgnSUdJ5M38R8uA5lOim4aZiKaU+Yz5ghNDHwUXxQNhvavvL7grSjyEzreVXqN9Sai
-        GNgzIc622oMkxsCof8B3BG82R+jarN+X9kqo6vGUqmovTb5/+QRp1OXyFVzko5GDcrjBokQ8RMP4l
-        wQ/O+F1OZlhe/uRdY/AZvqvt1A5eDFqzQCpvXwEii0DEuuw0g7PUbcH0kgr2c5z6dzzIPkEd/d3m3
-        kw1nF3ZcKrYOBqMbpWO7QC84eR4ZOlkxEWC0jNm8Y1v1tQ3SH9SrKlVmwtxl7YNK5fZSdNFFhlBzv
-        z3MH2xYg==;
-Received: from sslproxy06.your-server.de ([78.46.172.3])
-        by www381.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <lars@metafoo.de>)
-        id 1jBfC7-0000qB-CC; Tue, 10 Mar 2020 14:45:15 +0100
-Received: from [93.104.100.58] (helo=[192.168.178.20])
-        by sslproxy06.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <lars@metafoo.de>)
-        id 1jBfC7-0005Jq-2u; Tue, 10 Mar 2020 14:45:15 +0100
-Subject: Re: [PATCH][RESEND] usb: dwc3: gadget: Handle dequeuing of non queued
- URB gracefully
-To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "balbi@kernel.org" <balbi@kernel.org>
-Cc:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "bigeasy@linutronix.de" <bigeasy@linutronix.de>,
-        "m.olbrich@pengutronix.de" <m.olbrich@pengutronix.de>
-References: <20191106144553.16956-1-alexandru.ardelean@analog.com>
- <20200116132459.22383-1-alexandru.ardelean@analog.com>
- <87d0b1885e.fsf@kernel.org>
- <5313c926109f39699e63342b4ff71102d3cfa495.camel@analog.com>
-From:   Lars-Peter Clausen <lars@metafoo.de>
-Message-ID: <1df6e9be-2233-a0b2-1ddc-76de9d62a397@metafoo.de>
-Date:   Tue, 10 Mar 2020 14:45:14 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 10 Mar 2020 09:45:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37448 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726389AbgCJNnS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:43:18 -0400
+Received: from mail.kernel.org (ip5f5ad4e9.dynamic.kabel-deutschland.de [95.90.212.233])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0BB1924677;
+        Tue, 10 Mar 2020 13:43:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583847797;
+        bh=Gb1IRoHX5zmIsy6mPei1A2ZN94UYuoYi38cNq7SdFPg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=xHqL9QbdbGE4+K/dXK2cP6mjK1pj8fTv0NPwdnqBh+mYPYXmLPrqdryqe+1lPRSqr
+         +SRA7ySC3Lkdhfy0VNQlQBdd2l2inX+TAnTtbz0z87dNrBzmvdmv+J5qJRiGmzAEi+
+         A1yXkwUN9vMmZ8FZcRFhI1a0neQx0GvBEDfha/Ws=
+Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
+        (envelope-from <mchehab@kernel.org>)
+        id 1jBfAB-0005vQ-0t; Tue, 10 Mar 2020 14:43:15 +0100
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        linux-media@vger.kernel.org
+Subject: [PATCH v2 03/22] media: docs: split cpia2.rst on two files
+Date:   Tue, 10 Mar 2020 14:42:54 +0100
+Message-Id: <7f013c412e20cec66bf605bfccddc7f90fe187cd.1583847556.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <cover.1583847556.git.mchehab+huawei@kernel.org>
+References: <cover.1583847556.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <5313c926109f39699e63342b4ff71102d3cfa495.camel@analog.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Authenticated-Sender: lars@metafoo.de
-X-Virus-Scanned: Clear (ClamAV 0.102.2/25747/Tue Mar 10 12:06:29 2020)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/10/20 2:22 PM, Ardelean, Alexandru wrote:
-> On Thu, 2020-01-30 at 14:02 +0200, Felipe Balbi wrote:
->> [External]
->>
->>
->> Hi,
->>
->> Alexandru Ardelean <alexandru.ardelean@analog.com> writes:
->>
->>> From: Lars-Peter Clausen <lars@metafoo.de>
->>>
->>> Trying to dequeue and URB that is currently not queued should be a no-op
->>> and be handled gracefully.
->>>
->>> Use the list field of the URB to indicate whether it is queued or not by
->>> setting it to the empty list when it is not queued.
->>>
->>> Handling this gracefully allows for race condition free synchronization
->>> between the complete callback being called to to a completed transfer and
->>> trying to call usb_ep_dequeue() at the same time.
->> We need a little more information here. Can you further explain what
->> happens and how you caught this?
-> Apologies for the delay [of this reply].
-> It's been a while since this patch was created, and it was on a 4.14 kernel.
-> Lars was trying to fix various crashes with USB DWC3 OTG + some Xilinx patches.
-> I did not track the status of the OTG stuff upstream. I think it's a lot of
-> patches in the Xilinx tree.
->
-> The context has changed from 4.14 [obviously], and there were many things that
-> could have influenced things.
-> I've been trying to RFC some of these patches now.
-> [ yeah I know: maybe I should have [probably] also added an RFC tag :) ]
-> Some of the patches [including this one] seemed to make sense, even outside of
-> the context of the crashes that were happening on 4.14.
-> Atm, we're at 4.19 and we don't see issues, but we still have this patch.
-> We may drop it and see what happens.
-> ¯\_(ツ)_/¯
->
-> But in any case, it does require a bit more re-investigation.
-> Apologies for the noise that this patch created :)
+In order to be able to better organize the subsystem, split the
+cpia2 information on two files: one user-facing and another one
+from Kernel development PoV.
 
-The race condition is between a gadget calling usb_ep_dequeue() and the 
-driver completing the URB.
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+---
+ Documentation/media/v4l-drivers/cpia2.rst     | 46 ---------------
+ .../media/v4l-drivers/cpia2_devel.rst         | 56 +++++++++++++++++++
+ Documentation/media/v4l-drivers/index.rst     |  2 +
+ 3 files changed, 58 insertions(+), 46 deletions(-)
+ create mode 100644 Documentation/media/v4l-drivers/cpia2_devel.rst
 
-Lets say in a thread you have a reference to a in-flight URB and you 
-want to abort the request, e.g. because the application that sent the 
-request has been closed. But concurrently to that the URB is completed 
-by the hardware and the interrupt fires and marks the URB as complete. 
-Your thread is suspended while the interrupt is running, once the 
-interrupt has finished the thread wakes up, still has the reference to 
-the URB, but now it has been completed. The thread still calls 
-usb_ep_dequeue() though and then undefined behavior occurs.
-
-The context in which we observed the issue is when using function fs to 
-create a userspace gadget and using aio_cancel() to abort a pending URB. 
-But really any gadget that aborts a transfer before it is completed or 
-before the timeout occurred can run into this issue.
-
-- Lars
+diff --git a/Documentation/media/v4l-drivers/cpia2.rst b/Documentation/media/v4l-drivers/cpia2.rst
+index a86baa1c83f1..6f4258aebbfe 100644
+--- a/Documentation/media/v4l-drivers/cpia2.rst
++++ b/Documentation/media/v4l-drivers/cpia2.rst
+@@ -147,49 +147,3 @@ We are providing a modified gqcam application to view the output. In
+ order to avoid confusion, here it is called mview.  There is also the qx5view
+ program which can also control the lights on the qx5 microscope. MJPEG Tools
+ (http://mjpeg.sourceforge.net) can also be used to record from the camera.
+-
+-Notes to developers
+-~~~~~~~~~~~~~~~~~~~
+-
+-   - This is a driver version stripped of the 2.4 back compatibility
+-     and old MJPEG ioctl API. See cpia2.sf.net for 2.4 support.
+-
+-Programmer's overview of cpia2 driver
+-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-
+-Cpia2 is the second generation video coprocessor from VLSI Vision Ltd (now a
+-division of ST Microelectronics).  There are two versions.  The first is the
+-STV0672, which is capable of up to 30 frames per second (fps) in frame sizes
+-up to CIF, and 15 fps for VGA frames.  The STV0676 is an improved version,
+-which can handle up to 30 fps VGA.  Both coprocessors can be attached to two
+-CMOS sensors - the vvl6410 CIF sensor and the vvl6500 VGA sensor.  These will
+-be referred to as the 410 and the 500 sensors, or the CIF and VGA sensors.
+-
+-The two chipsets operate almost identically.  The core is an 8051 processor,
+-running two different versions of firmware.  The 672 runs the VP4 video
+-processor code, the 676 runs VP5.  There are a few differences in register
+-mappings for the two chips.  In these cases, the symbols defined in the
+-header files are marked with VP4 or VP5 as part of the symbol name.
+-
+-The cameras appear externally as three sets of registers. Setting register
+-values is the only way to control the camera.  Some settings are
+-interdependant, such as the sequence required to power up the camera. I will
+-try to make note of all of these cases.
+-
+-The register sets are called blocks.  Block 0 is the system block.  This
+-section is always powered on when the camera is plugged in.  It contains
+-registers that control housekeeping functions such as powering up the video
+-processor.  The video processor is the VP block.  These registers control
+-how the video from the sensor is processed.  Examples are timing registers,
+-user mode (vga, qvga), scaling, cropping, framerates, and so on.  The last
+-block is the video compressor (VC).  The video stream sent from the camera is
+-compressed as Motion JPEG (JPEGA).  The VC controls all of the compression
+-parameters.  Looking at the file cpia2_registers.h, you can get a full view
+-of these registers and the possible values for most of them.
+-
+-One or more registers can be set or read by sending a usb control message to
+-the camera.  There are three modes for this.  Block mode requests a number
+-of contiguous registers.  Random mode reads or writes random registers with
+-a tuple structure containing address/value pairs.  The repeat mode is only
+-used by VP4 to load a firmware patch.  It contains a starting address and
+-a sequence of bytes to be written into a gpio port.
+diff --git a/Documentation/media/v4l-drivers/cpia2_devel.rst b/Documentation/media/v4l-drivers/cpia2_devel.rst
+new file mode 100644
+index 000000000000..decaa4768c78
+--- /dev/null
++++ b/Documentation/media/v4l-drivers/cpia2_devel.rst
+@@ -0,0 +1,56 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++The cpia2 driver
++================
++
++Authors: Peter Pregler <Peter_Pregler@email.com>,
++Scott J. Bertin <scottbertin@yahoo.com>, and
++Jarl Totland <Jarl.Totland@bdc.no> for the original cpia driver, which
++this one was modelled from.
++
++
++Notes to developers
++~~~~~~~~~~~~~~~~~~~
++
++   - This is a driver version stripped of the 2.4 back compatibility
++     and old MJPEG ioctl API. See cpia2.sf.net for 2.4 support.
++
++Programmer's overview of cpia2 driver
++~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
++
++Cpia2 is the second generation video coprocessor from VLSI Vision Ltd (now a
++division of ST Microelectronics).  There are two versions.  The first is the
++STV0672, which is capable of up to 30 frames per second (fps) in frame sizes
++up to CIF, and 15 fps for VGA frames.  The STV0676 is an improved version,
++which can handle up to 30 fps VGA.  Both coprocessors can be attached to two
++CMOS sensors - the vvl6410 CIF sensor and the vvl6500 VGA sensor.  These will
++be referred to as the 410 and the 500 sensors, or the CIF and VGA sensors.
++
++The two chipsets operate almost identically.  The core is an 8051 processor,
++running two different versions of firmware.  The 672 runs the VP4 video
++processor code, the 676 runs VP5.  There are a few differences in register
++mappings for the two chips.  In these cases, the symbols defined in the
++header files are marked with VP4 or VP5 as part of the symbol name.
++
++The cameras appear externally as three sets of registers. Setting register
++values is the only way to control the camera.  Some settings are
++interdependant, such as the sequence required to power up the camera. I will
++try to make note of all of these cases.
++
++The register sets are called blocks.  Block 0 is the system block.  This
++section is always powered on when the camera is plugged in.  It contains
++registers that control housekeeping functions such as powering up the video
++processor.  The video processor is the VP block.  These registers control
++how the video from the sensor is processed.  Examples are timing registers,
++user mode (vga, qvga), scaling, cropping, framerates, and so on.  The last
++block is the video compressor (VC).  The video stream sent from the camera is
++compressed as Motion JPEG (JPEGA).  The VC controls all of the compression
++parameters.  Looking at the file cpia2_registers.h, you can get a full view
++of these registers and the possible values for most of them.
++
++One or more registers can be set or read by sending a usb control message to
++the camera.  There are three modes for this.  Block mode requests a number
++of contiguous registers.  Random mode reads or writes random registers with
++a tuple structure containing address/value pairs.  The repeat mode is only
++used by VP4 to load a firmware patch.  It contains a starting address and
++a sequence of bytes to be written into a gpio port.
+diff --git a/Documentation/media/v4l-drivers/index.rst b/Documentation/media/v4l-drivers/index.rst
+index eca22b82de94..72fbb394f6a2 100644
+--- a/Documentation/media/v4l-drivers/index.rst
++++ b/Documentation/media/v4l-drivers/index.rst
+@@ -65,3 +65,5 @@ For more details see the file COPYING in the source distribution of Linux.
+ 	vimc
+ 	vivid
+ 	zr364xx
++
++	cpia2_devel
+-- 
+2.24.1
 
