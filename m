@@ -2,86 +2,103 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3932C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 17:05:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E60D1C18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 17:07:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCF2D20578
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 17:05:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE2A421D56
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 17:07:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583860073;
+	bh=QcyJpzqmrELO00E+qlbm2MBTehCp0dNT6xT29QhqFrU=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=gYURAo9ZCRArtSLVBDv96wbj9AbCXKRu06r8QiEsu6Lzk1aeonWoPm20oXlYrexMR
+	 tX8dEJ1H7PkLyOT9Yw2pp3VyKpe34Ru+zRAEvFTFVSdSn7f1JODq0XmLXE48PSNup2
+	 SdDVu/dan/NMH0sxun66egWb5Qv1epC5rguwUT7s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726492AbgCJRF4 (ORCPT
+        id S1726508AbgCJRHw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 13:05:56 -0400
-Received: from ms.lwn.net ([45.79.88.28]:43944 "EHLO ms.lwn.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726295AbgCJRF4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 13:05:56 -0400
-Received: from lwn.net (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id DF53C537;
-        Tue, 10 Mar 2020 17:05:55 +0000 (UTC)
-Date:   Tue, 10 Mar 2020 11:05:54 -0600
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     "Guilherme G. Piccoli" <gpiccoli@canonical.com>
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        swood@redhat.com, mcgrof@kernel.org, keescook@chromium.org,
-        yzaikin@google.com, mingo@kernel.org, kernel@gpiccoli.net
-Subject: Re: [PATCH] Documentation: Better document the softlockup_panic
- sysctl
-Message-ID: <20200310110554.1fc016ad@lwn.net>
-In-Reply-To: <20200310151503.11589-1-gpiccoli@canonical.com>
-References: <20200310151503.11589-1-gpiccoli@canonical.com>
-Organization: LWN.net
+        Tue, 10 Mar 2020 13:07:52 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:44212 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726269AbgCJRHv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 13:07:51 -0400
+Received: by mail-qk1-f195.google.com with SMTP id f198so13400334qke.11;
+        Tue, 10 Mar 2020 10:07:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=QsUKZ0V5D0VdpsH159OxTwTzGxBhzIspzhMxQnG5cjo=;
+        b=U0Lcd3v1KGrx3uAg/4J0RhHt7Mv2MZDvx198kwAdMJsCnaGhoBmLSTtgpSqFOvQRMb
+         tvcrtceKx9EHZv1zIiyQkWHjqGoNY02kR5pKSotflJeN0sZBDp4aA6woTSXL9Sws31Op
+         5Q+FTr5ctewX3L7FEsQr/ZJ5L/z+22CyM5qiTMIFHJ8Igsh3WC06ldDCA1Fo8llOHI0I
+         6YQ1gE3Dy6d44lju4b+SunBKzNCJUjJw53qBn1BNqOMJ9q+I5WUHDUqPkYAVNSiCKhRF
+         5dxBXk3p/sBf7YCPERyDH88fbug+PpvyhiO+SQgJUilvvwNZ8tUGJ+mhuNuo8G8g3I/5
+         poxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition;
+        bh=QsUKZ0V5D0VdpsH159OxTwTzGxBhzIspzhMxQnG5cjo=;
+        b=EJedpufeywP9P9tQqEEQwaAKMrxRxEhCmPFy1HR7Yti0NsjLzFilzj9BWqpuYsrGAJ
+         7EuoATpPqGaOM1A5j1JSUCCmlL14gKdyoAt2JKfs4t80juei4/25qQLBls0J1hlhrwUF
+         qMfYrlZPdKxnp97vgyKVrhbuNB2IqlZ0tX2RsXI4OyrixR/NrLjGPE9iVOXRhxcGDeJS
+         s/Rs2DW5N9subxed0cKpXo4tmNPFxNHONXDkl1m3iCyY2N9osqbJ2qSXsQ/duh8815Oh
+         gFg7vEPXYTtmPvDtQcKRgbDLs1Pm3HSSBRp6iqYthScN88j6mE8bdGf77sGy12mqYnjE
+         1FIA==
+X-Gm-Message-State: ANhLgQ1S05GJrBaOqLIMamjrEYovxp4Lrs3OJbk7ak+eOKauIFCZGAcq
+        2nCSArrOPl33WR9t06ArV3Cj1drw284=
+X-Google-Smtp-Source: ADFU+vv/mJh8KEjDJUvYbmwKhXysmGg2oOqbk26yDD9NvcX4uTudt/qRWm8ZKAm6GbFoMax1HFW0Qg==
+X-Received: by 2002:a37:2d04:: with SMTP id t4mr21003446qkh.105.1583860068625;
+        Tue, 10 Mar 2020 10:07:48 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::23f8])
+        by smtp.gmail.com with ESMTPSA id k202sm11575975qke.134.2020.03.10.10.07.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Mar 2020 10:07:48 -0700 (PDT)
+Date:   Tue, 10 Mar 2020 13:07:46 -0400
+From:   Tejun Heo <tj@kernel.org>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH block/for-5.6-fixes] blk-iocost: fix incorrect vtime
+ comparison in iocg_is_idle()
+Message-ID: <20200310170746.GD79873@mtj.duckdns.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 10 Mar 2020 12:15:03 -0300
-"Guilherme G. Piccoli" <gpiccoli@canonical.com> wrote:
+vtimes may wrap and time_before/after64() should be used to determine
+whether a given vtime is before or after another. iocg_is_idle() was
+incorrectly using plain "<" comparison do determine whether done_vtime
+is before vtime. Here, the only thing we're interested in is whether
+done_vtime matches vtime which indicates that there's nothing in
+flight. Let's test for inequality instead.
 
-> Commit 9c44bc03fff4 ("softlockup: allow panic on lockup") added the
-> softlockup_panic sysctl, but didn't add information about it to the file
-> Documentation/admin-guide/sysctl/kernel.rst (which in that time certainly
-> wasn't rst and had other name!).
-> 
-> This patch just adds the respective documentation and references it from
-> the corresponding entry in Documentation/admin-guide/kernel-parameters.txt.
-> 
-> This patch was strongly based on Scott Wood's commit d22881dc13b6
-> ("Documentation: Better document the hardlockup_panic sysctl").
-> 
-> Signed-off-by: Guilherme G. Piccoli <gpiccoli@canonical.com>
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Fixes: 7caa47151ab2 ("blkcg: implement blk-iocost")
+Cc: stable@vger.kernel.org # v5.4+
+---
+ block/blk-iocost.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-So this doesn't even come close to applying; could you respin it against
-docs-next, please?
-
->  Documentation/admin-guide/kernel-parameters.txt |  6 +++---
->  Documentation/admin-guide/sysctl/kernel.rst     | 13 +++++++++++++
->  2 files changed, 16 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index c07815d230bc..adf77ead02c3 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -4515,9 +4515,9 @@
->  
->  			A nonzero value instructs the soft-lockup detector
->  			to panic the machine when a soft-lockup occurs. This
-> -			is also controlled by CONFIG_BOOTPARAM_SOFTLOCKUP_PANIC
-> -			which is the respective build-time switch to that
-> -			functionality.
-> +			is also controlled by kernel.softlockup_panic sysctl
-
-..and while you're at it, make it "*the* kernel.softlockup_panic sysctl" :)
-
-Thanks,
-
-jon
+diff --git a/block/blk-iocost.c b/block/blk-iocost.c
+index 27ca68621137..9a599cc28c29 100644
+--- a/block/blk-iocost.c
++++ b/block/blk-iocost.c
+@@ -1318,7 +1318,7 @@ static bool iocg_is_idle(struct ioc_gq *iocg)
+ 		return false;
+ 
+ 	/* is something in flight? */
+-	if (atomic64_read(&iocg->done_vtime) < atomic64_read(&iocg->vtime))
++	if (atomic64_read(&iocg->done_vtime) != atomic64_read(&iocg->vtime))
+ 		return false;
+ 
+ 	return true;
