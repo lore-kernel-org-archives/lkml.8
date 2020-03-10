@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B486C18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:53:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D7C4C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:53:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22D912468E
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:53:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 632BB2468F
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:53:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583844815;
-	bh=RdwNiBrqBMF96enX3Y8lOCJkGzpZXUYtdAP1pkP1rzc=;
+	s=default; t=1583844819;
+	bh=X7tG5Nb9FdI0XtMkJSgMz6obTbzw75umNhrHk6RRrbA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u0Kfl4aKvO7d0s5UgQj8rTjGtuQ4nFTrqSK1F9YmhTKh0Nt9MPNplePSJ1GNUIAyP
-	 L7TGSfWbuC6SAMpXDv5JieU3X1MVIJr9SDowxR4GtMp7hn77U/zNSfEWry9l9z6COH
-	 D41oM5cpQED/hSQUwA1Xljcx7b8K2x8y7bXJbArc=
+	b=2aLnP7TKngtRYsahOSBDmnHrW/5GZfZNMk6AaUKF/eGUHizppGfRYzSBAOu7+KFbW
+	 fqJpYKdUAczBtF2wjDF4hjCEn9+ItOkE5d2cVv5BS/yUG7JUSRZnQEicPpdAct3NUS
+	 JObAon3z8kuZ6qjsbagA/caUNUpuGddbAQF/pm0Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728438AbgCJMxd (ORCPT
+        id S1729220AbgCJMxi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:53:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59532 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:53:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729188AbgCJMx3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:53:29 -0400
+        id S1729188AbgCJMxg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:53:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5747A2253D;
-        Tue, 10 Mar 2020 12:53:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3A1120674;
+        Tue, 10 Mar 2020 12:53:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844808;
-        bh=RdwNiBrqBMF96enX3Y8lOCJkGzpZXUYtdAP1pkP1rzc=;
+        s=default; t=1583844816;
+        bh=X7tG5Nb9FdI0XtMkJSgMz6obTbzw75umNhrHk6RRrbA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CWoKq65JsGhoO1SZdy5GWbwH2rkVsRJBzz4d2newGbeVVbtHLI4OkTYfoBDKYFTj+
-         fpgTV/dl5S09LjLZWsCKY+IjcyuuF6nH/ZUNBhnXSfleiCCeboOhuX9rpI2K4/5KGv
-         PMEW1jrh4FytAN+WutigyXDKufN0nHgFt5GokFXs=
+        b=kRgw0/vx5pGTweZfYAEl0bxrnBcqG8CHgKse/4fakgiuOCXWUD2Yt0f7uA5/F/0OC
+         C/RmzzGe6elqOOBrEO/ApYgb4d/NSlPWkMhVjJr8Qln/DwqSxhEXsrPKocX2WO0OLY
+         YP4Rqu+0qw9mBbqlDvaAuBQ6iJt/D6wOomqrm5nY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mikulas Patocka <mpatocka@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 5.4 109/168] dm writecache: verify watermark during resume
-Date:   Tue, 10 Mar 2020 13:39:15 +0100
-Message-Id: <20200310123646.428917143@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 5.4 129/168] spi: atmel-quadspi: fix possible MMIO window size overrun
+Date:   Tue, 10 Mar 2020 13:39:35 +0100
+Message-Id: <20200310123648.527892444@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123635.322799692@linuxfoundation.org>
 References: <20200310123635.322799692@linuxfoundation.org>
@@ -59,57 +60,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mikulas Patocka <mpatocka@redhat.com>
+From: Tudor Ambarus <tudor.ambarus@microchip.com>
 
-commit 41c526c5af46d4c4dab7f72c99000b7fac0b9702 upstream.
+commit 8e093ea4d3593379be46b845b9e823179558047e upstream.
 
-Verify the watermark upon resume - so that if the target is reloaded
-with lower watermark, it will start the cleanup process immediately.
+The QSPI controller memory space is limited to 128MB:
+0x9000_00000-0x9800_00000/0XD000_0000--0XD800_0000.
 
-Fixes: 48debafe4f2f ("dm: add writecache target")
-Cc: stable@vger.kernel.org # 4.18+
-Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+There are nor flashes that are bigger in size than the memory size
+supported by the controller: Micron MT25QL02G (256 MB).
+
+Check if the address exceeds the MMIO window size. An improvement
+would be to add support for regular SPI mode and fall back to it
+when the flash memories overrun the controller's memory space.
+
+Fixes: 0e6aae08e9ae ("spi: Add QuadSPI driver for Atmel SAMA5D2")
+Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+Link: https://lore.kernel.org/r/20200228155437.1558219-1-tudor.ambarus@microchip.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/dm-writecache.c |   12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ drivers/spi/atmel-quadspi.c |   11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
---- a/drivers/md/dm-writecache.c
-+++ b/drivers/md/dm-writecache.c
-@@ -625,6 +625,12 @@ static void writecache_add_to_freelist(s
- 	wc->freelist_size++;
- }
+--- a/drivers/spi/atmel-quadspi.c
++++ b/drivers/spi/atmel-quadspi.c
+@@ -149,6 +149,7 @@ struct atmel_qspi {
+ 	struct clk		*qspick;
+ 	struct platform_device	*pdev;
+ 	const struct atmel_qspi_caps *caps;
++	resource_size_t		mmap_size;
+ 	u32			pending;
+ 	u32			mr;
+ 	u32			scr;
+@@ -329,6 +330,14 @@ static int atmel_qspi_exec_op(struct spi
+ 	u32 sr, offset;
+ 	int err;
  
-+static inline void writecache_verify_watermark(struct dm_writecache *wc)
-+{
-+	if (unlikely(wc->freelist_size + wc->writeback_size <= wc->freelist_high_watermark))
-+		queue_work(wc->writeback_wq, &wc->writeback_work);
-+}
++	/*
++	 * Check if the address exceeds the MMIO window size. An improvement
++	 * would be to add support for regular SPI mode and fall back to it
++	 * when the flash memories overrun the controller's memory space.
++	 */
++	if (op->addr.val + op->data.nbytes > aq->mmap_size)
++		return -ENOTSUPP;
 +
- static struct wc_entry *writecache_pop_from_freelist(struct dm_writecache *wc)
- {
- 	struct wc_entry *e;
-@@ -646,8 +652,8 @@ static struct wc_entry *writecache_pop_f
- 		list_del(&e->lru);
+ 	err = atmel_qspi_set_cfg(aq, op, &offset);
+ 	if (err)
+ 		return err;
+@@ -480,6 +489,8 @@ static int atmel_qspi_probe(struct platf
+ 		goto exit;
  	}
- 	wc->freelist_size--;
--	if (unlikely(wc->freelist_size + wc->writeback_size <= wc->freelist_high_watermark))
--		queue_work(wc->writeback_wq, &wc->writeback_work);
+ 
++	aq->mmap_size = resource_size(res);
 +
-+	writecache_verify_watermark(wc);
- 
- 	return e;
- }
-@@ -961,6 +967,8 @@ erase_this:
- 		writecache_commit_flushed(wc, false);
- 	}
- 
-+	writecache_verify_watermark(wc);
-+
- 	wc_unlock(wc);
- }
- 
+ 	/* Get the peripheral clock */
+ 	aq->pclk = devm_clk_get(&pdev->dev, "pclk");
+ 	if (IS_ERR(aq->pclk))
 
 
