@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D50E7C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:33:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C9C2C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:33:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DD5720675
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:33:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56B0B24649
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:33:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583847223;
-	bh=rajRhCp+31tFUezmvsnzAAkPUVlzKGxQwzKgz5dhv9Y=;
+	s=default; t=1583847229;
+	bh=FLADw+GKBExK9ezf3kJ+0wVCGT6MykYNqQ0rey0KKok=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P4rhjImmKQvyqmPFaz7iAGqCtOHdVyYshTS6Wy2wAauwa6KsVMMj7Uy9NrKhQfGdi
-	 9Rgvxml2joYi0mGv6qytz1JhCqrLCnxGker0AgksTomoLj/+P1zGP3+Os/bkl+1U70
-	 NvCEoxa7FwUjWFfOd+b8Oa4h4amRHOC7y845B2jA=
+	b=emJ4NmJwBmIbWqrTedcr1Md0TWMImYLP7gWGghkeOPxVMkgo/HAPbare5QPXkDlTm
+	 xlBG2Nsm1zN3urKSn/Hl7LE2U4n4JuCJM3QdaOvFHcwB0lkxZ+J1BzouA7Qv25Ldlb
+	 Wq4WgNBk/S7Omw+VnwYg3EjrUT7ty44/nIbOia7c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728221AbgCJNdm (ORCPT
+        id S1728607AbgCJNds (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:33:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51786 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:33:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51602 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726892AbgCJMrw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:47:52 -0400
+        id S1728206AbgCJMrn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:47:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E94B32468D;
-        Tue, 10 Mar 2020 12:47:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BCAA924697;
+        Tue, 10 Mar 2020 12:47:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844471;
-        bh=rajRhCp+31tFUezmvsnzAAkPUVlzKGxQwzKgz5dhv9Y=;
+        s=default; t=1583844463;
+        bh=FLADw+GKBExK9ezf3kJ+0wVCGT6MykYNqQ0rey0KKok=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZTewHxJrjIMxb0dti5x2ojRfWeFNpIUFNGobAi1041zz8O+qifd/i0DsgCRCBsODV
-         w1ukCPxh/k6mqennDklCpWmXKYRet0j/mA/O4DiZPCzdGewdNWRfmkEESD8w2smqIF
-         MATOBfQupA/5B1sWc0QUTdZLDTm66Wfh4lPp/QRY=
+        b=lo8HzKeZQ+9S08yEnSs+kfMa/Up0vg4QfNdYydDny+xws+oX/W6sYzAe3PnpB2aPf
+         SPEqnjCwujIMM+51cMZEu0wCKYaXcopDmXfBCgyaTuTxb67eImk++/VmBXbIpC/xws
+         1YtkLwgGG8jOndnI6yEi/VlA6UE8rvlPXu4bl8Ms=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Matthias Reichl <hias@horus.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 4.9 79/88] ASoC: pcm512x: Fix unbalanced regulator enable call in probe error path
-Date:   Tue, 10 Mar 2020 13:39:27 +0100
-Message-Id: <20200310123624.370298423@linuxfoundation.org>
+        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>
+Subject: [PATCH 4.9 76/88] dmaengine: tegra-apb: Prevent race conditions of tasklet vs free list
+Date:   Tue, 10 Mar 2020 13:39:24 +0100
+Message-Id: <20200310123624.022333416@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123606.543939933@linuxfoundation.org>
 References: <20200310123606.543939933@linuxfoundation.org>
@@ -60,47 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthias Reichl <hias@horus.com>
+From: Dmitry Osipenko <digetx@gmail.com>
 
-commit ac0a68997935c4acb92eaae5ad8982e0bb432d56 upstream.
+commit c33ee1301c393a241d6424e36eff1071811b1064 upstream.
 
-When we get a clock error during probe we have to call
-regulator_bulk_disable before bailing out, otherwise we trigger
-a warning in regulator_put.
+The interrupt handler puts a half-completed DMA descriptor on a free list
+and then schedules tasklet to process bottom half of the descriptor that
+executes client's callback, this creates possibility to pick up the busy
+descriptor from the free list. Thus, let's disallow descriptor's re-use
+until it is fully processed.
 
-Fix this by using "goto err" like in the error cases above.
-
-Fixes: 5a3af1293194d ("ASoC: pcm512x: Add PCM512x driver")
-Signed-off-by: Matthias Reichl <hias@horus.com>
-Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://lore.kernel.org/r/20200220202956.29233-1-hias@horus.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Acked-by: Jon Hunter <jonathanh@nvidia.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200209163356.6439-3-digetx@gmail.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/codecs/pcm512x.c |    8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/dma/tegra20-apb-dma.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/sound/soc/codecs/pcm512x.c
-+++ b/sound/soc/codecs/pcm512x.c
-@@ -1441,13 +1441,15 @@ int pcm512x_probe(struct device *dev, st
- 	}
+--- a/drivers/dma/tegra20-apb-dma.c
++++ b/drivers/dma/tegra20-apb-dma.c
+@@ -288,7 +288,7 @@ static struct tegra_dma_desc *tegra_dma_
  
- 	pcm512x->sclk = devm_clk_get(dev, NULL);
--	if (PTR_ERR(pcm512x->sclk) == -EPROBE_DEFER)
--		return -EPROBE_DEFER;
-+	if (PTR_ERR(pcm512x->sclk) == -EPROBE_DEFER) {
-+		ret = -EPROBE_DEFER;
-+		goto err;
-+	}
- 	if (!IS_ERR(pcm512x->sclk)) {
- 		ret = clk_prepare_enable(pcm512x->sclk);
- 		if (ret != 0) {
- 			dev_err(dev, "Failed to enable SCLK: %d\n", ret);
--			return ret;
-+			goto err;
- 		}
- 	}
- 
+ 	/* Do not allocate if desc are waiting for ack */
+ 	list_for_each_entry(dma_desc, &tdc->free_dma_desc, node) {
+-		if (async_tx_test_ack(&dma_desc->txd)) {
++		if (async_tx_test_ack(&dma_desc->txd) && !dma_desc->cb_count) {
+ 			list_del(&dma_desc->node);
+ 			spin_unlock_irqrestore(&tdc->lock, flags);
+ 			dma_desc->txd.flags = 0;
 
 
