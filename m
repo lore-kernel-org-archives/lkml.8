@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57DA4C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:30:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6491AC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:30:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2646224649
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:30:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DE8824649
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:30:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583847010;
-	bh=Ph+idRUyoWdvzU3oSvbTAZBlrlP+V+AFEYvR7CbBB1Q=;
+	s=default; t=1583847014;
+	bh=5KKM57E/6i1ezCg+qBrkEvzBJzmv+cHuBS7GbTFfXtc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TwAJA5bMP3Wh+vHuFiVMNlrwY3hgrQ7FqL5ZAOdSoFQSFc9s4DVONRJmMiagwkHua
-	 KEOyZsQa9Xiot7kQksL/WWuGjq8ArUkrfY4jnx7gzKXpr9qRRYxEbDEMmDaBfB8IAQ
-	 asmzJd8L8MgR3weSa5YqHMmnLoMKrHFhxuy20r1g=
+	b=YEjTVw1Ep4Jx6gwFGEFvL0ZNOwlxwwyhU3v1x8k2QH7DfaPEJ3aiW6EbaFj2U9Qmf
+	 r69UluO1I+Blj/5ywfMjUpYJhXHGvm0QR+wZpye4G4LRi8xQsvvIEwzq6Daxahf/Fz
+	 b7kS+ixj4U8ysrjYhTwFHwnGGqfxv6cN5dXRTQ4U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728327AbgCJMvD (ORCPT
+        id S1728701AbgCJMup (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:51:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55988 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:50:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55496 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727791AbgCJMvB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:51:01 -0400
+        id S1728674AbgCJMul (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:50:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2BB6224692;
-        Tue, 10 Mar 2020 12:50:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB82B24694;
+        Tue, 10 Mar 2020 12:50:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844660;
-        bh=Ph+idRUyoWdvzU3oSvbTAZBlrlP+V+AFEYvR7CbBB1Q=;
+        s=default; t=1583844640;
+        bh=5KKM57E/6i1ezCg+qBrkEvzBJzmv+cHuBS7GbTFfXtc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JqwqyMV2x0CWUMi4/xICQCTq2+Rfw3vJFKUdEiw6JGdMp89Xw7viUF6C7MKZ1L7WY
-         lXPTtIgkSuY57WDEswEw9sSkiI6H+e3kaTM2f/zWQXVuqketkeZ7PbltFX5V1hzgGt
-         tNSfyWHw6KBbIM+yy9FgK8VccTXBAlR7MiDIfIOo=
+        b=BPl9hmj15qlGXcvkIhWGFrLPQ6Ehl37aXLWo/47iNBB6ATDcwsrDYkvpVJ1V/6/Gm
+         siyMpmFOmiuhIJEPhvjp/MRwobDafwc16YyF2/jZI/dsNw5UWWxfe1o1JeItiwZUkz
+         m1VfBn+LhHOOj9c5j34+Km+0HTAHWSJnbm2X0WNg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marek Vasut <marex@denx.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Lukas Wunner <lukas@wunner.de>, Petr Stetiar <ynezz@true.cz>,
-        YueHaibing <yuehaibing@huawei.com>,
+        stable@vger.kernel.org, Harigovindan P <harigovi@codeaurora.org>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Rob Clark <robdclark@chromium.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 033/168] net: ks8851-ml: Fix 16-bit data access
-Date:   Tue, 10 Mar 2020 13:37:59 +0100
-Message-Id: <20200310123638.891490602@linuxfoundation.org>
+Subject: [PATCH 5.4 028/168] drm/msm/dsi/pll: call vco set rate explicitly
+Date:   Tue, 10 Mar 2020 13:37:54 +0100
+Message-Id: <20200310123638.458706602@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123635.322799692@linuxfoundation.org>
 References: <20200310123635.322799692@linuxfoundation.org>
@@ -62,46 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Vasut <marex@denx.de>
+From: Harigovindan P <harigovi@codeaurora.org>
 
-[ Upstream commit edacb098ea9c31589276152f09b4439052c0f2b1 ]
+[ Upstream commit c6659785dfb3f8d75f1fe637e4222ff8178f5280 ]
 
-The packet data written to and read from Micrel KSZ8851-16MLLI must be
-byte-swapped in 16-bit mode, add this byte-swapping.
+For a given byte clock, if VCO recalc value is exactly same as
+vco set rate value, vco_set_rate does not get called assuming
+VCO is already set to required value. But Due to GDSC toggle,
+VCO values are erased in the HW. To make sure VCO is programmed
+correctly, we forcefully call set_rate from vco_prepare.
 
-Signed-off-by: Marek Vasut <marex@denx.de>
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Lukas Wunner <lukas@wunner.de>
-Cc: Petr Stetiar <ynezz@true.cz>
-Cc: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
+Reviewed-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Signed-off-by: Rob Clark <robdclark@chromium.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/micrel/ks8851_mll.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/msm/dsi/pll/dsi_pll_10nm.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/net/ethernet/micrel/ks8851_mll.c b/drivers/net/ethernet/micrel/ks8851_mll.c
-index e2fb20154511e..5ae206ae5d2b3 100644
---- a/drivers/net/ethernet/micrel/ks8851_mll.c
-+++ b/drivers/net/ethernet/micrel/ks8851_mll.c
-@@ -197,7 +197,7 @@ static inline void ks_inblk(struct ks_net *ks, u16 *wptr, u32 len)
- {
- 	len >>= 1;
- 	while (len--)
--		*wptr++ = (u16)ioread16(ks->hw_addr);
-+		*wptr++ = be16_to_cpu(ioread16(ks->hw_addr));
- }
+diff --git a/drivers/gpu/drm/msm/dsi/pll/dsi_pll_10nm.c b/drivers/gpu/drm/msm/dsi/pll/dsi_pll_10nm.c
+index 8f6100db90ed4..aa9385d5bfff9 100644
+--- a/drivers/gpu/drm/msm/dsi/pll/dsi_pll_10nm.c
++++ b/drivers/gpu/drm/msm/dsi/pll/dsi_pll_10nm.c
+@@ -411,6 +411,12 @@ static int dsi_pll_10nm_vco_prepare(struct clk_hw *hw)
+ 	if (pll_10nm->slave)
+ 		dsi_pll_enable_pll_bias(pll_10nm->slave);
  
- /**
-@@ -211,7 +211,7 @@ static inline void ks_outblk(struct ks_net *ks, u16 *wptr, u32 len)
- {
- 	len >>= 1;
- 	while (len--)
--		iowrite16(*wptr++, ks->hw_addr);
-+		iowrite16(cpu_to_be16(*wptr++), ks->hw_addr);
- }
- 
- static void ks_disable_int(struct ks_net *ks)
++	rc = dsi_pll_10nm_vco_set_rate(hw,pll_10nm->vco_current_rate, 0);
++	if (rc) {
++		pr_err("vco_set_rate failed, rc=%d\n", rc);
++		return rc;
++	}
++
+ 	/* Start PLL */
+ 	pll_write(pll_10nm->phy_cmn_mmio + REG_DSI_10nm_PHY_CMN_PLL_CNTRL,
+ 		  0x01);
 -- 
 2.20.1
 
