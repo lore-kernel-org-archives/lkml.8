@@ -2,91 +2,119 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47E2EC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:15:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4022C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:16:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2647E208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:15:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE331208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 09:16:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583831803;
+	bh=ifu+suw8ibvQBfvdnxiPwN/3r4UIT2U+05cCsS+z0VE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vgCpvtHPmaqFInVlI4EvWWrjZ/e8QxXSY+nB6/so6dkYu34mBTx3PaFCMvTMoGHF6
+	 db0XK0OEhy0+qIsc9LYHHbYQGlbsCDWjFv5WkRqlLX3GP4Y6e6S1s2a9gQFtNqQ7Qq
+	 f6FZwPsOHwCMScfDqp0e0Rau3x6XM4JPC1Jh+Nt8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726451AbgCJJP4 (ORCPT
+        id S1726558AbgCJJQm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 05:15:56 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:33001 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726211AbgCJJPz (ORCPT
+        Tue, 10 Mar 2020 05:16:42 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:40812 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726258AbgCJJQm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 05:15:55 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jBazO-00025d-Hq; Tue, 10 Mar 2020 10:15:50 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id C3E781C21F0;
-        Tue, 10 Mar 2020 10:15:49 +0100 (CET)
-Date:   Tue, 10 Mar 2020 09:15:49 -0000
-From:   "tip-bot2 for Tony W Wang-oc" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/cpu] x86/Kconfig: Drop vendor dependency for X86_UMIP
-Cc:     "Tony W Wang-oc" <TonyWWang-oc@zhaoxin.com>,
-        Borislav Petkov <bp@suse.de>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <1583733990-2587-1-git-send-email-TonyWWang-oc@zhaoxin.com>
-References: <1583733990-2587-1-git-send-email-TonyWWang-oc@zhaoxin.com>
+        Tue, 10 Mar 2020 05:16:42 -0400
+Received: by mail-wr1-f67.google.com with SMTP id p2so13995748wrw.7;
+        Tue, 10 Mar 2020 02:16:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=fz3n4QEA4mMM+MBbJX+cMGlCMEaVSqf4LwkZvYcSZEw=;
+        b=EBXKq4nxdeL99uimUiCAa5Xl5Xc4upafB0sj6Esq6i//ChMnp9K3N7evpVDOeqJsE7
+         89lp2Ybs5CJ2dnFjQd5zSd0uuI4VIgmoEb4H83sT9heUyaufAmHZUkcMDv5T1+1gD+Ln
+         HFbTBydYQNjtzh7gVPMm2hGucEsypZfnp0+uZRVcpiL5A7U7yLqIQvBtYfOYMB8hp9+R
+         Fr/Qgu1aLl0gY8Xpzi6m47RijqVdFdn6StQqBXsQVHIMyqXHzlebU5KRBPis0Be4PQHM
+         PdwldUhTJ0fsuP4qFqpXLjRZ+IIL0tz4ndi83SYICqCTjF2uHRfF863A8OtoPdEEOmYn
+         YgrQ==
+X-Gm-Message-State: ANhLgQ2kYBj7mBmUf80iWIaWLxtyPn0aMVxn5NjcMgk0n4//nmtwv0BK
+        luYf5UNTl2OhgYDi3YO6o3E=
+X-Google-Smtp-Source: ADFU+vszMTJIkVmx1ZNqIN9KzQ8vaeAT6TaRYkPc1p0pHRH6nNgZB8aQkPvG80FiR8Kt9mo3LxxChg==
+X-Received: by 2002:adf:92c2:: with SMTP id 60mr9876964wrn.177.1583831798497;
+        Tue, 10 Mar 2020 02:16:38 -0700 (PDT)
+Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
+        by smtp.gmail.com with ESMTPSA id j14sm65506521wrn.32.2020.03.10.02.16.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Mar 2020 02:16:37 -0700 (PDT)
+Date:   Tue, 10 Mar 2020 10:16:37 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Nishanth Menon <nm@ti.com>,
+        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+        Tero Kristo <t-kristo@ti.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Rik van Riel <riel@surriel.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Dave Chinner <david@fromorbit.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Yafang Shao <laoar.shao@gmail.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        kernel-team@fb.com, Kishon Vijay Abraham I <kishon@ti.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>
+Subject: Re: [PATCH] vfs: keep inodes with page cache off the inode shrinker
+ LRU
+Message-ID: <20200310091637.GC8447@dhcp22.suse.cz>
+References: <CAK8P3a3pzgVvwyDhHPoiSOqyv+h_ixbsdWMqG3sELenRJqFuew@mail.gmail.com>
+ <671b05bc-7237-7422-3ece-f1a4a3652c92@oracle.com>
+ <CAK8P3a13jGdjVW1TzvCKjRBg-Yscs_WB2K1kw9AzRfn3G9a=-Q@mail.gmail.com>
+ <7c4c1459-60d5-24c8-6eb9-da299ead99ea@oracle.com>
+ <20200306203439.peytghdqragjfhdx@kahuna>
+ <CAK8P3a0Gyqu7kzO1JF=j9=jJ0T5ut=hbKepvke-2bppuPNKTuQ@mail.gmail.com>
+ <20200308141923.GI25745@shell.armlinux.org.uk>
+ <CAK8P3a2Gz5H_fcNtW0yCCjO1cRNa0nyd568sDYR0nNphu49YqQ@mail.gmail.com>
+ <20200309140439.GL25745@shell.armlinux.org.uk>
+ <CAK8P3a1HEhwie1uUObQMJyGcs_WSwz4Gj81tAWXZX4d2ff77XA@mail.gmail.com>
 MIME-Version: 1.0
-Message-ID: <158383174941.28353.575378555250987688.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a1HEhwie1uUObQMJyGcs_WSwz4Gj81tAWXZX4d2ff77XA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/cpu branch of tip:
+I am worried this went quite tangent to the original patch under
+discussion here, but let me clarify at least one point.
 
-Commit-ID:     bdb04a1abbf92c998f1afb5f00a037f2edaec1f7
-Gitweb:        https://git.kernel.org/tip/bdb04a1abbf92c998f1afb5f00a037f2edaec1f7
-Author:        Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
-AuthorDate:    Mon, 09 Mar 2020 14:06:30 +08:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Tue, 10 Mar 2020 10:10:53 +01:00
+On Mon 09-03-20 16:04:54, Arnd Bergmann wrote:
+> On Mon, Mar 9, 2020 at 3:05 PM Russell King - ARM Linux admin
+[...]
+> > What happened to requests for memory from highmem being able to be
+> > sourced from lowmem if highmem wasn't available?  That used to be
+> > standard kernel behaviour.
+> 
+> AFAICT this is how it's supposed to work, but for some reason it
+> doesn't always. I don't know the details, but have heard of recent
+> complaints about it. I don't think it's the actual get_free_pages
+> failing, but rather some heuristic looking at the number of free pages.
 
-x86/Kconfig: Drop vendor dependency for X86_UMIP
+This is indeed the case. There are low memory reserves which are not
+allowed for requests which can be satisfied from higher zones. This is
+the case for many many years. Just have a look at lowmem_reserve and
+their usage in __zone_watermark_ok. The layout of the reserves can be
+configured by /proc/sys/vm/lowmem_reserve_ratio.
 
-Some Centaur family 7 CPUs and Zhaoxin family 7 CPUs support the UMIP
-feature too. The text size growth which UMIP adds is ~1K and distro
-kernels enable it anyway so remove the vendor dependency.
-
- [ bp: Rewrite commit message. ]
-
-Signed-off-by: Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Link: https://lkml.kernel.org/r/1583733990-2587-1-git-send-email-TonyWWang-oc@zhaoxin.com
----
- arch/x86/Kconfig | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index beea770..cb3633d 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -1875,7 +1875,6 @@ config X86_SMAP
- 
- config X86_UMIP
- 	def_bool y
--	depends on CPU_SUP_INTEL || CPU_SUP_AMD
- 	prompt "User Mode Instruction Prevention" if EXPERT
- 	---help---
- 	  User Mode Instruction Prevention (UMIP) is a security feature in
+HTH
+-- 
+Michal Hocko
+SUSE Labs
