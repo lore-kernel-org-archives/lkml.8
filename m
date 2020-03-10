@@ -6,101 +6,72 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60477C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:41:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D56F2C10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:43:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C3C8205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:41:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88012208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 22:43:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727800AbgCJWlE (ORCPT
+        id S1727753AbgCJWnY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 18:41:04 -0400
-Received: from vmicros1.altlinux.org ([194.107.17.57]:58882 "EHLO
-        vmicros1.altlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726307AbgCJWlE (ORCPT
+        Tue, 10 Mar 2020 18:43:24 -0400
+Received: from smtprelay0023.hostedemail.com ([216.40.44.23]:46894 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726293AbgCJWnY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 18:41:04 -0400
-Received: from mua.local.altlinux.org (mua.local.altlinux.org [192.168.1.14])
-        by vmicros1.altlinux.org (Postfix) with ESMTP id 236F272CCF0;
-        Wed, 11 Mar 2020 01:41:01 +0300 (MSK)
-Received: by mua.local.altlinux.org (Postfix, from userid 508)
-        id 1A1F07CC7FF; Wed, 11 Mar 2020 01:41:01 +0300 (MSK)
-Date:   Wed, 11 Mar 2020 01:41:01 +0300
-From:   "Dmitry V. Levin" <ldv@altlinux.org>
-To:     Bernd Edlinger <bernd.edlinger@hotmail.de>
-Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Andrei Vagin <avagin@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Yuyang Du <duyuyang@gmail.com>,
-        David Hildenbrand <david@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        David Howells <dhowells@redhat.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christian Kellner <christian@kellner.me>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>
-Subject: Re: [PATCH 2/4] selftests/ptrace: add test cases for dead-locks
-Message-ID: <20200310224100.GA1563@altlinux.org>
-References: <878sk94eay.fsf@x220.int.ebiederm.org>
- <AM6PR03MB517086003BD2C32E199690A3E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <87r1y12yc7.fsf@x220.int.ebiederm.org>
- <87k13t2xpd.fsf@x220.int.ebiederm.org>
- <87d09l2x5n.fsf@x220.int.ebiederm.org>
- <AM6PR03MB5170F0F9DC18F5EA77C9A857E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <871rq12vxu.fsf@x220.int.ebiederm.org>
- <AM6PR03MB5170DF45E3245F55B95CCD91E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <877dzt1fnf.fsf@x220.int.ebiederm.org>
- <AM6PR03MB51703199741A2C27A78980FFE4FF0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        Tue, 10 Mar 2020 18:43:24 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay02.hostedemail.com (Postfix) with ESMTP id 406F0815F;
+        Tue, 10 Mar 2020 22:43:23 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: pot45_1d56460630d0c
+X-Filterd-Recvd-Size: 1994
+Received: from XPS-9350.home (unknown [47.151.143.254])
+        (Authenticated sender: joe@perches.com)
+        by omf01.hostedemail.com (Postfix) with ESMTPA;
+        Tue, 10 Mar 2020 22:43:21 +0000 (UTC)
+Message-ID: <ac0ab948aabd201360d9330c206dd72df14847ae.camel@perches.com>
+Subject: Re: [PATCH][next] zd1211rw/zd_usb.h: Replace zero-length array with
+ flexible-array member
+From:   Joe Perches <joe@perches.com>
+To:     Jes Sorensen <jes.sorensen@gmail.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Cc:     Daniel Drake <dsd@gentoo.org>, Ulrich Kunitz <kune@deine-taler.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Tue, 10 Mar 2020 15:41:39 -0700
+In-Reply-To: <e65fd08d-984f-0bdc-5fbf-6abceacf819a@gmail.com>
+References: <20200305111216.GA24982@embeddedor>
+         <87k13yq2jo.fsf@kamboji.qca.qualcomm.com>
+         <256881484c5db07e47c611a56550642a6f6bd8e9.camel@perches.com>
+         <87blpapyu5.fsf@kamboji.qca.qualcomm.com>
+         <1bb7270f-545b-23ca-aa27-5b3c52fba1be@embeddedor.com>
+         <87r1y0nwip.fsf@kamboji.qca.qualcomm.com>
+         <48ff1333-0a14-36d8-9565-a7f13a06c974@embeddedor.com>
+         <021d1125-3ffd-39ef-395a-b796c527bde4@gmail.com>
+         <fb3395d7-e932-10ac-1feb-ab2ceb63424e@embeddedor.com>
+         <937b0b529509ec1641453ef7c13f38e2d7cc813e.camel@perches.com>
+         <c2aa4d8d-1c39-1903-2b49-382f2143e181@embeddedor.com>
+         <8b6213e51131deacbdac29a8d9c088ae49933724.camel@perches.com>
+         <e65fd08d-984f-0bdc-5fbf-6abceacf819a@gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <AM6PR03MB51703199741A2C27A78980FFE4FF0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 10, 2020 at 02:44:01PM +0100, Bernd Edlinger wrote:
-> This adds test cases for ptrace deadlocks.
-> 
-> Additionally fixes a compile problem in get_syscall_info.c,
-> observed with gcc-4.8.4:
-> 
-> get_syscall_info.c: In function 'get_syscall_info':
-> get_syscall_info.c:93:3: error: 'for' loop initial declarations are only
->                                  allowed in C99 mode
->    for (unsigned int i = 0; i < ARRAY_SIZE(args); ++i) {
->    ^
-> get_syscall_info.c:93:3: note: use option -std=c99 or -std=gnu99 to compile
->                                your code
-[...]
-> @@ -1,6 +1,6 @@
->  # SPDX-License-Identifier: GPL-2.0-only
-> -CFLAGS += -iquote../../../../include/uapi -Wall
-> +CFLAGS += -std=c99 -pthread -iquote../../../../include/uapi -Wall
+On Tue, 2020-03-10 at 18:33 -0400, Jes Sorensen wrote:
+> Again, the changes are not harmful to the code, but add no value.
 
-Wouldn't it be better to choose -std=gnu99 over -std=c99?
+That argument asserts that style consistency is value-free.
+I generally disagree with that argument.
 
+But then again, it's likely we will have to agree to disagree.
 
--- 
-ldv
+cheers, Joe
+
