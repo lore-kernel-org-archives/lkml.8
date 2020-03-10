@@ -2,102 +2,99 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9688AC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:36:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F308FC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:36:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6589F20675
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:36:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583847388;
-	bh=6V+qKlGFkICzagPae7H5K7ezraI3PlEi9w4UkSTzxms=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P3rYZJ9jxVQ+favBdE4hab4YF6Gl2hn4fjDLDrwQJfv4BY/XWlPC+oHNpSa6hRJ5l
-	 uzIy+Yix2oaySlglS0k+7L9TcQgWuhGiAP7H3VA9lzOPAdXEMc6VrJQzqUja/kLWdj
-	 DIk0ARgzbwpPOz1Fkc4bsarB/rGz6JpR7laRmAVE=
+	by mail.kernel.org (Postfix) with ESMTP id CB26520675
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:36:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TO+BX/Pc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727433AbgCJMmt (ORCPT
+        id S1727938AbgCJNgb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:42:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42762 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727408AbgCJMmj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:42:39 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0675024695;
-        Tue, 10 Mar 2020 12:42:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844159;
-        bh=6V+qKlGFkICzagPae7H5K7ezraI3PlEi9w4UkSTzxms=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CWY/R3lfwrR1+ugUTf2jpqxT45LP8Ea1ewfKzuvpjbf09onhtAh0dJBwYtpmA+Jeb
-         4c+0oeeJhj06kCaSN5M3w3VBZfFX4ghOoaN1Aq/R0pvzuEIZyqYIVgeNQUgs0mOcs8
-         uYldRNND5qOVoVznDJp5+aV7EQz9JGbw5H+VS/d8=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jim Lin <jilin@nvidia.com>,
-        Alan Stern <stern@rowland.harvard.edu>
-Subject: [PATCH 4.4 51/72] usb: storage: Add quirk for Samsung Fit flash
-Date:   Tue, 10 Mar 2020 13:39:04 +0100
-Message-Id: <20200310123613.916120848@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200310123601.053680753@linuxfoundation.org>
-References: <20200310123601.053680753@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 10 Mar 2020 09:36:31 -0400
+Received: from mail-yw1-f67.google.com ([209.85.161.67]:35323 "EHLO
+        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726859AbgCJMmq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:42:46 -0400
+Received: by mail-yw1-f67.google.com with SMTP id d79so12386287ywd.2
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 05:42:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=X6+AR1Sm0huTiOmTHUHeBU28UDpRzfwyHTrCE/9H+0k=;
+        b=TO+BX/Pc83sjyH/1clGRsJ3evPMnbZNEMBak/+efgmCETo89CvQ/ilyaBphkZIjtCB
+         S75kPK6p+VkNIviTIMy1jqmoDgb59I+I0/3bYBkXP/jR8Ifu0C9AyiD6TaNVMJ7PM5Mx
+         gnV91kUlK593CUGAymHMd2eSkryNRhaAHD2F5iOc7VBqwDmA7mYAQKD1eU8mP6CgAk9I
+         tPW899+q2Lzhs97UGdAyHuyZzR3UHWTc/espqU0/UnURqJpPrV7NS66ipaKCIp9wCwQn
+         gN1BE8OK7vCi9Pv796lbWKjELx75rWPJRX0gKTmKtPeKC5lHLmHS6cBLjuqv7OUAMdVP
+         ZaSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=X6+AR1Sm0huTiOmTHUHeBU28UDpRzfwyHTrCE/9H+0k=;
+        b=dPlwgo8OJtH1sUd3IxL2/rmT8KCsTcjNh/yJwgPq2B040kG/lam9BWIQgnA3+ZhCqd
+         HTywzqoej+P7cc4EFE7gCBzzJ5uy2geAsrjl3LIieUhW7mIusBUqV+5U+mIhJgHzZaUi
+         EJQC06s0ItK+HN07WxD+MJuqKmVawlc+4TgdSEWvd5qIgX3GDviBu0B/yGcP4BjU31M7
+         i1hGPbrirvjUUHLuBYIj0Qfjs5ZifN8Spk7/K7TtD/St+gjVjWS3kXeeesRUaRJkqzOd
+         JCvJHjKycr8bunRTjfM0XQeuDLmQHfqhwKlF+jG3zR07FtoEcHWXmjrPY/JshgAZmAjJ
+         FUoA==
+X-Gm-Message-State: ANhLgQ2zl2FJ/XXxupjY9lHnQv6Viz9i4JsDg4n6zhXtrm4pAmKGmtAy
+        n4UIfAXUojToSzDWpc7HcVS2keqM9tLGzANU6dI=
+X-Google-Smtp-Source: ADFU+vv54Eb1eXMbNSVCbnLsO+PdRq5jfWrkb5E+TbuBdAGiawFXL5MWgwS36A0l/5qWvvMzujWM1RWYpl1dS4Q/Toc=
+X-Received: by 2002:a25:614b:: with SMTP id v72mr21345190ybb.154.1583844165317;
+ Tue, 10 Mar 2020 05:42:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200310115925.126174-1-anup.patel@wdc.com>
+In-Reply-To: <20200310115925.126174-1-anup.patel@wdc.com>
+From:   Bin Meng <bmeng.cn@gmail.com>
+Date:   Tue, 10 Mar 2020 20:42:35 +0800
+Message-ID: <CAEUhbmVqrgVF+FFsaO47nOBOZUWzA-LfAfubACNg8yJcx152gw@mail.gmail.com>
+Subject: Re: [PATCH] RISC-V: Only select essential drivers for SOC_VIRT config
+To:     Anup Patel <anup.patel@wdc.com>
+Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Anup Patel <anup@brainfault.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Atish Patra <atish.patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jim Lin <jilin@nvidia.com>
+On Tue, Mar 10, 2020 at 8:00 PM Anup Patel <anup.patel@wdc.com> wrote:
+>
+> The kconfig select causes build failues for SOC_VIRT config becaus
+> we are selecting lot of VIRTIO drivers without selecting all required
+> dependencies.
+>
 
-commit 86d92f5465958752481269348d474414dccb1552 upstream.
+Isn't this a sign of some VIRTIO Kconfig options are not correctly
+expressing dependencies?
 
-Current driver has 240 (USB2.0) and 2048 (USB3.0) as max_sectors,
-e.g., /sys/bus/scsi/devices/0:0:0:0/max_sectors
+> Better approach is to only select essential drivers from SOC_VIRT
+> config option and enable required VIRTIO drivers using defconfigs.
+>
+> Fixes: 759bdc168181 ("RISC-V: Add kconfig option for QEMU virt machine")
+> Signed-off-by: Anup Patel <anup.patel@wdc.com>
+> ---
+>  arch/riscv/Kconfig.socs           | 14 --------------
+>  arch/riscv/configs/defconfig      | 16 +++++++++++++++-
+>  arch/riscv/configs/rv32_defconfig | 16 +++++++++++++++-
+>  3 files changed, 30 insertions(+), 16 deletions(-)
+>
 
-If data access times out, driver error handling will issue a port
-reset.
-Sometimes Samsung Fit (090C:1000) flash disk will not respond to
-later Set Address or Get Descriptor command.
-
-Adding this quirk to limit max_sectors to 64 sectors to avoid issue
-occurring.
-
-Signed-off-by: Jim Lin <jilin@nvidia.com>
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/1583158895-31342-1-git-send-email-jilin@nvidia.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/usb/storage/unusual_devs.h |    6 ++++++
- 1 file changed, 6 insertions(+)
-
---- a/drivers/usb/storage/unusual_devs.h
-+++ b/drivers/usb/storage/unusual_devs.h
-@@ -1206,6 +1206,12 @@ UNUSUAL_DEV( 0x090a, 0x1200, 0x0000, 0x9
- 		USB_SC_RBC, USB_PR_BULK, NULL,
- 		0 ),
- 
-+UNUSUAL_DEV(0x090c, 0x1000, 0x1100, 0x1100,
-+		"Samsung",
-+		"Flash Drive FIT",
-+		USB_SC_DEVICE, USB_PR_DEVICE, NULL,
-+		US_FL_MAX_SECTORS_64),
-+
- /* aeb */
- UNUSUAL_DEV( 0x090c, 0x1132, 0x0000, 0xffff,
- 		"Feiya",
-
-
+Regards,
+Bin
