@@ -2,661 +2,227 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C89D9C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 14:52:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5150AC18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 14:54:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92E6E205F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 14:52:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BBA720674
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 14:54:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="EGqu7/Sg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727587AbgCJOwe (ORCPT
+        id S1727609AbgCJOyo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 10:52:34 -0400
-Received: from foss.arm.com ([217.140.110.172]:38064 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726466AbgCJOwd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 10:52:33 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 587DA7FA;
-        Tue, 10 Mar 2020 07:52:31 -0700 (PDT)
-Received: from p8cg001049571a15.arm.com (unknown [10.163.1.203])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id B92563F6CF;
-        Tue, 10 Mar 2020 07:52:16 -0700 (PDT)
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-To:     linux-mm@kvack.org
-Cc:     tsbogend@alpha.franken.de,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Richard Henderson <rth@twiddle.net>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Matt Turner <mattst88@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Guo Ren <guoren@kernel.org>, Brian Cain <bcain@codeaurora.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Sam Creasey <sammy@sammy.net>, Michal Simek <monstr@monstr.eu>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Nick Hu <nickhu@andestech.com>,
-        Greentime Hu <green.hu@gmail.com>,
-        Vincent Chen <deanbo422@gmail.com>,
-        Ley Foon Tan <ley.foon.tan@intel.com>,
-        Jonas Bonn <jonas@southpole.se>,
-        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
-        Stafford Horne <shorne@gmail.com>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jeff Dike <jdike@addtoit.com>,
-        Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Guan Xuetao <gxt@pku.edu.cn>, Chris Zankel <chris@zankel.net>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
-        linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-        linux-mips@vger.kernel.org, nios2-dev@lists.rocketboards.org,
-        openrisc@lists.librecores.org, linux-parisc@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
-        linux-xtensa@linux-xtensa.org, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH V3] mm/special: Create generic fallbacks for pte_special() and pte_mkspecial()
-Date:   Tue, 10 Mar 2020 20:22:04 +0530
-Message-Id: <1583851924-21603-1-git-send-email-anshuman.khandual@arm.com>
-X-Mailer: git-send-email 2.7.4
+        Tue, 10 Mar 2020 10:54:44 -0400
+Received: from mail-eopbgr1410115.outbound.protection.outlook.com ([40.107.141.115]:4605
+        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727390AbgCJOyn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 10:54:43 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=E2WY7U8pUEoFm+7h+4vNSCvJ2gJGXkgzwWehaLCABBvl2atZpt4tbEwto2fF65FhBDmQeS3ZGQmCfpyR5rGfBbuuPeRukz/j2aZWIGqvlO+1ni7BQ3iQPwQOY30hAsi3XVay9nkJsNxMj6xQJrMUslvbbE4S+C7LSRLdtplvy1qy2GUPLUr5RTydwpRf4kCJaaeYWt2FOxg9mixulK+LDfb0/6qL5K59zGGYDrThpS2w+N3HKZ6aGuez8kT8DtofP83yO+2V7hBNgrxAdfCODsLd2BhihEpzchi1g05sqArrdM+YFR//BvnnpVWcqzrsvwUG1POLoWnW+5IlLlvwBQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PEsCmbz52Vd+1CpboA5J7OUfJudWZhNwRk0JOejdgLg=;
+ b=fIdZz+y/jPecIdKhvzDn3IV8n43AGGt1zK2LNDP5KQ9hH79uNUTBhL1VUMvU0UkRYdxR5MTZhnVAP/AdhYvIMfTvh8hhEEJBMKMx6LKt1SF+gx4YvmAyjtEazxEXHq9W5Y9Hk9ufbOloh7ABzDW/pzE7eld7wtfBez6UsJqumbmwtgdGJ8qAmmhBpool7pp7n580nfc3pFSqjKHxW71HQ8ZBDFPN3aNO6uO9RthEBMduEofGhqYxqNaN4aqulJsMbALOWzIJxITsUfpWm7zlCiHH/IpocOdErFv2Rkf05oETIYIOWGJwJxrj4MCu8sg6yLTkvXQbt+OAA9c12G12CA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
+ header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PEsCmbz52Vd+1CpboA5J7OUfJudWZhNwRk0JOejdgLg=;
+ b=EGqu7/SgoJk11XHf9G28XW7KwE2wOiVKfKIvfn3NJyUublcWlORtV0sCwi4jRSgYmOPyhui0vtd4qbBSC6vpahby0doAHznhnAqqJae+4qC3cozj0d3rWJzscGbuhHvD2kPeXD5qdG6c7RJ63/cV2gAFutipPCXz/1UKOVwEcrI=
+Received: from OSBPR01MB3590.jpnprd01.prod.outlook.com (20.178.97.80) by
+ OSBPR01MB1878.jpnprd01.prod.outlook.com (52.134.224.147) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2793.16; Tue, 10 Mar 2020 14:54:37 +0000
+Received: from OSBPR01MB3590.jpnprd01.prod.outlook.com
+ ([fe80::6df0:eb47:a259:b94b]) by OSBPR01MB3590.jpnprd01.prod.outlook.com
+ ([fe80::6df0:eb47:a259:b94b%7]) with mapi id 15.20.2793.018; Tue, 10 Mar 2020
+ 14:54:37 +0000
+From:   Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Niklas <niklas.soderlund@ragnatech.se>
+CC:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Lad Prabhakar <prabhakar.csengg@gmail.com>
+Subject: RE: [PATCH v2 1/3] media: rcar-csi2: Add support to match fwnode
+ against remote or parent port
+Thread-Topic: [PATCH v2 1/3] media: rcar-csi2: Add support to match fwnode
+ against remote or parent port
+Thread-Index: AQHV9sv84jOQOl6o80eV6tyJA6xv8ahBxW0AgAAiDyA=
+Date:   Tue, 10 Mar 2020 14:54:37 +0000
+Message-ID: <OSBPR01MB35905E0F44991008B16F56CBAAFF0@OSBPR01MB3590.jpnprd01.prod.outlook.com>
+References: <1583838364-12932-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1583838364-12932-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200310124334.GN2975348@oden.dyn.berto.se>
+In-Reply-To: <20200310124334.GN2975348@oden.dyn.berto.se>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=prabhakar.mahadev-lad.rj@bp.renesas.com; 
+x-originating-ip: [193.141.220.21]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: ad406f91-6916-45e5-8adf-08d7c502f46b
+x-ms-traffictypediagnostic: OSBPR01MB1878:
+x-microsoft-antispam-prvs: <OSBPR01MB1878DA36F355B69895A0A5A4AAFF0@OSBPR01MB1878.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 033857D0BD
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(199004)(189003)(8676002)(81166006)(76116006)(64756008)(5660300002)(55016002)(66446008)(66476007)(66946007)(66556008)(6916009)(81156014)(186003)(52536014)(498600001)(9686003)(86362001)(4326008)(66574012)(8936002)(26005)(54906003)(7696005)(33656002)(71200400001)(2906002)(53546011)(6506007);DIR:OUT;SFP:1102;SCL:1;SRVR:OSBPR01MB1878;H:OSBPR01MB3590.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:1;
+received-spf: None (protection.outlook.com: bp.renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: cQiH0vBA80V/xf7EXNY6BbyHOhneChV+JzL9Rn0+6bmi3xf5OpmNLnLP166WJEYzqpWPP735Hms4gSIHtFG3GUlROcEA4ZeA2uZiWi4k5HFISFEEAgT462ftQNA9nReLwI6qTuyEF3clNSQ0Kpycle0Nt6Uk/Jeg8703zCQJ9O/TjIcxh4gdPelJ9rHbXPRZKAMLTm1LGVJXU7BfhihqRvPgiQ+PH1PpK83eMc05RfAf6J5P//VVt4w1HsuG+6QZkekouoPvSyFUYt1unPSZ/ngX0Wr9iWmC1L2PZuQdLWFmGhnK8XAYfFD3yH61Z2n0A0ES/PzQ2O9bldxc1AazrBktKXoZsgrcieUf++2PQhHonu8bx9nE/jww0p8xZHXuOmw0IVYWKvux7vS2Ds2kk1AoE4pr8HfD1v1Kzp/VD/AO9YTRyt8kWZlFFENrcUxP
+x-ms-exchange-antispam-messagedata: 3B24Nrsdg7l0k9WGkku7PcMB7kWzX1d5deJ8ICULk8wkQ5OOLh1KqgslaY1CWstQoLGuDWdCXFqsrEuatNhmgmuMXhVrgKKNSj4Vw7QjkiS//U6DpaPG1efpPTcJtoHuP7gE3MF1MlOu3HpzdZemtQ==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: bp.renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ad406f91-6916-45e5-8adf-08d7c502f46b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Mar 2020 14:54:37.4651
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 2nWIzT5aiTv0VOX8dVIu0Uh/9F2xk5cKITDEDiVfypiXTTXEWayhcohWTtBXlj3lRwn8FAyxCtG2ywBEi9aBgvrqZBbbZNRbvmioCG0x88JT7x+KkoDNXIGxueLxtNCW
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSBPR01MB1878
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently there are many platforms that dont enable ARCH_HAS_PTE_SPECIAL
-but required to define quite similar fallback stubs for special page table
-entry helpers such as pte_special() and pte_mkspecial(), as they get build
-in generic MM without a config check. This creates two generic fallback
-stub definitions for these helpers, eliminating much code duplication.
-
-mips platform has a special case where pte_special() and pte_mkspecial()
-visibility is wider than what ARCH_HAS_PTE_SPECIAL enablement requires.
-This restricts those symbol visibility in order to avoid redefinitions
-which is now exposed through this new generic stubs and subsequent build
-failure. arm platform set_pte_at() definition needs to be moved into a C
-file just to prevent a build failure.
-
-Cc: Richard Henderson <rth@twiddle.net>
-Cc: Ivan Kokshaysky <ink@jurassic.park.msu.ru>
-Cc: Matt Turner <mattst88@gmail.com>
-Cc: Russell King <linux@armlinux.org.uk>
-Cc: Guo Ren <guoren@kernel.org>
-Cc: Brian Cain <bcain@codeaurora.org>
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: Fenghua Yu <fenghua.yu@intel.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Sam Creasey <sammy@sammy.net>
-Cc: Michal Simek <monstr@monstr.eu>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: Paul Burton <paulburton@kernel.org>
-Cc: Nick Hu <nickhu@andestech.com>
-Cc: Greentime Hu <green.hu@gmail.com>
-Cc: Vincent Chen <deanbo422@gmail.com>
-Cc: Ley Foon Tan <ley.foon.tan@intel.com>
-Cc: Jonas Bonn <jonas@southpole.se>
-Cc: Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>
-Cc: Stafford Horne <shorne@gmail.com>
-Cc: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
-Cc: Helge Deller <deller@gmx.de>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Jeff Dike <jdike@addtoit.com>
-Cc: Richard Weinberger <richard@nod.at>
-Cc: Anton Ivanov <anton.ivanov@cambridgegreys.com>
-Cc: Guan Xuetao <gxt@pku.edu.cn>
-Cc: Chris Zankel <chris@zankel.net>
-Cc: Max Filippov <jcmvbkbc@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-alpha@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-csky@vger.kernel.org
-Cc: linux-hexagon@vger.kernel.org
-Cc: linux-ia64@vger.kernel.org
-Cc: linux-m68k@lists.linux-m68k.org
-Cc: linux-mips@vger.kernel.org
-Cc: nios2-dev@lists.rocketboards.org
-Cc: openrisc@lists.librecores.org
-Cc: linux-parisc@vger.kernel.org
-Cc: sparclinux@vger.kernel.org
-Cc: linux-um@lists.infradead.org
-Cc: linux-xtensa@linux-xtensa.org
-Cc: linux-arch@vger.kernel.org
-Cc: linux-mm@kvack.org
-Cc: linux-kernel@vger.kernel.org
-Acked-by: Guo Ren <guoren@kernel.org>			# csky
-Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>	# m68k
-Acked-by: Stafford Horne <shorne@gmail.com>		# openrisc
-Acked-by: Helge Deller <deller@gmx.de>			# parisc
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
----
-Build tested on multiple platforms but boot tested only for arm64.
-
-Changes in V3:
-
-- Used defined(CONFIG_ARCH_HAS_PTE_SPECIAL) in mips per Thomas
-
-Changes in V2: (https://patchwork.kernel.org/patch/11428285/)
-
-- s/HAVE_ARCH_PTE_SPECIAL/ARCH_HAS_PTE_SPECIAL per Geert
-
-Changes in V1: (https://patchwork.kernel.org/patch/11414613/)
-
- arch/alpha/include/asm/pgtable.h         |  2 --
- arch/arm/include/asm/pgtable-2level.h    |  2 --
- arch/arm/include/asm/pgtable.h           | 15 ++------
- arch/arm/mm/mmu.c                        | 14 ++++++++
- arch/csky/include/asm/pgtable.h          |  3 --
- arch/hexagon/include/asm/pgtable.h       |  2 --
- arch/ia64/include/asm/pgtable.h          |  2 --
- arch/m68k/include/asm/mcf_pgtable.h      | 10 ------
- arch/m68k/include/asm/motorola_pgtable.h |  2 --
- arch/m68k/include/asm/sun3_pgtable.h     |  2 --
- arch/microblaze/include/asm/pgtable.h    |  4 ---
- arch/mips/include/asm/pgtable.h          | 44 ++++++++++++++++--------
- arch/nds32/include/asm/pgtable.h         |  9 -----
- arch/nios2/include/asm/pgtable.h         |  3 --
- arch/openrisc/include/asm/pgtable.h      |  2 --
- arch/parisc/include/asm/pgtable.h        |  2 --
- arch/sparc/include/asm/pgtable_32.h      |  7 ----
- arch/um/include/asm/pgtable.h            | 10 ------
- arch/unicore32/include/asm/pgtable.h     |  3 --
- arch/xtensa/include/asm/pgtable.h        |  3 --
- include/linux/mm.h                       | 12 +++++++
- 21 files changed, 58 insertions(+), 95 deletions(-)
-
-diff --git a/arch/alpha/include/asm/pgtable.h b/arch/alpha/include/asm/pgtable.h
-index 299791ce14b6..0267aa8a4f86 100644
---- a/arch/alpha/include/asm/pgtable.h
-+++ b/arch/alpha/include/asm/pgtable.h
-@@ -268,7 +268,6 @@ extern inline void pud_clear(pud_t * pudp)	{ pud_val(*pudp) = 0; }
- extern inline int pte_write(pte_t pte)		{ return !(pte_val(pte) & _PAGE_FOW); }
- extern inline int pte_dirty(pte_t pte)		{ return pte_val(pte) & _PAGE_DIRTY; }
- extern inline int pte_young(pte_t pte)		{ return pte_val(pte) & _PAGE_ACCESSED; }
--extern inline int pte_special(pte_t pte)	{ return 0; }
- 
- extern inline pte_t pte_wrprotect(pte_t pte)	{ pte_val(pte) |= _PAGE_FOW; return pte; }
- extern inline pte_t pte_mkclean(pte_t pte)	{ pte_val(pte) &= ~(__DIRTY_BITS); return pte; }
-@@ -276,7 +275,6 @@ extern inline pte_t pte_mkold(pte_t pte)	{ pte_val(pte) &= ~(__ACCESS_BITS); ret
- extern inline pte_t pte_mkwrite(pte_t pte)	{ pte_val(pte) &= ~_PAGE_FOW; return pte; }
- extern inline pte_t pte_mkdirty(pte_t pte)	{ pte_val(pte) |= __DIRTY_BITS; return pte; }
- extern inline pte_t pte_mkyoung(pte_t pte)	{ pte_val(pte) |= __ACCESS_BITS; return pte; }
--extern inline pte_t pte_mkspecial(pte_t pte)	{ return pte; }
- 
- #define PAGE_DIR_OFFSET(tsk,address) pgd_offset((tsk),(address))
- 
-diff --git a/arch/arm/include/asm/pgtable-2level.h b/arch/arm/include/asm/pgtable-2level.h
-index 0d3ea35c97fe..9e084a464a97 100644
---- a/arch/arm/include/asm/pgtable-2level.h
-+++ b/arch/arm/include/asm/pgtable-2level.h
-@@ -211,8 +211,6 @@ static inline pmd_t *pmd_offset(pud_t *pud, unsigned long addr)
- #define pmd_addr_end(addr,end) (end)
- 
- #define set_pte_ext(ptep,pte,ext) cpu_set_pte_ext(ptep,pte,ext)
--#define pte_special(pte)	(0)
--static inline pte_t pte_mkspecial(pte_t pte) { return pte; }
- 
- /*
-  * We don't have huge page support for short descriptors, for the moment
-diff --git a/arch/arm/include/asm/pgtable.h b/arch/arm/include/asm/pgtable.h
-index eabcb48a7840..556468240ba5 100644
---- a/arch/arm/include/asm/pgtable.h
-+++ b/arch/arm/include/asm/pgtable.h
-@@ -252,19 +252,8 @@ static inline void __sync_icache_dcache(pte_t pteval)
- extern void __sync_icache_dcache(pte_t pteval);
- #endif
- 
--static inline void set_pte_at(struct mm_struct *mm, unsigned long addr,
--			      pte_t *ptep, pte_t pteval)
--{
--	unsigned long ext = 0;
--
--	if (addr < TASK_SIZE && pte_valid_user(pteval)) {
--		if (!pte_special(pteval))
--			__sync_icache_dcache(pteval);
--		ext |= PTE_EXT_NG;
--	}
--
--	set_pte_ext(ptep, pteval, ext);
--}
-+void set_pte_at(struct mm_struct *mm, unsigned long addr,
-+		      pte_t *ptep, pte_t pteval);
- 
- static inline pte_t clear_pte_bit(pte_t pte, pgprot_t prot)
- {
-diff --git a/arch/arm/mm/mmu.c b/arch/arm/mm/mmu.c
-index 5d0d0f86e790..16e9b041d7cf 100644
---- a/arch/arm/mm/mmu.c
-+++ b/arch/arm/mm/mmu.c
-@@ -1672,3 +1672,17 @@ void __init early_mm_init(const struct machine_desc *mdesc)
- 	build_mem_type_table();
- 	early_paging_init(mdesc);
- }
-+
-+void set_pte_at(struct mm_struct *mm, unsigned long addr,
-+			      pte_t *ptep, pte_t pteval)
-+{
-+	unsigned long ext = 0;
-+
-+	if (addr < TASK_SIZE && pte_valid_user(pteval)) {
-+		if (!pte_special(pteval))
-+			__sync_icache_dcache(pteval);
-+		ext |= PTE_EXT_NG;
-+	}
-+
-+	set_pte_ext(ptep, pteval, ext);
-+}
-diff --git a/arch/csky/include/asm/pgtable.h b/arch/csky/include/asm/pgtable.h
-index 9b7764cb7645..9ab4a445ad99 100644
---- a/arch/csky/include/asm/pgtable.h
-+++ b/arch/csky/include/asm/pgtable.h
-@@ -110,9 +110,6 @@ extern unsigned long empty_zero_page[PAGE_SIZE / sizeof(unsigned long)];
- extern void load_pgd(unsigned long pg_dir);
- extern pte_t invalid_pte_table[PTRS_PER_PTE];
- 
--static inline int pte_special(pte_t pte) { return 0; }
--static inline pte_t pte_mkspecial(pte_t pte) { return pte; }
--
- static inline void set_pte(pte_t *p, pte_t pte)
- {
- 	*p = pte;
-diff --git a/arch/hexagon/include/asm/pgtable.h b/arch/hexagon/include/asm/pgtable.h
-index 2fec20ad939e..d383e8bea5b2 100644
---- a/arch/hexagon/include/asm/pgtable.h
-+++ b/arch/hexagon/include/asm/pgtable.h
-@@ -158,8 +158,6 @@ extern pgd_t swapper_pg_dir[PTRS_PER_PGD];  /* located in head.S */
- 
- /* Seems to be zero even in architectures where the zero page is firewalled? */
- #define FIRST_USER_ADDRESS 0UL
--#define pte_special(pte)	0
--#define pte_mkspecial(pte)	(pte)
- 
- /*  HUGETLB not working currently  */
- #ifdef CONFIG_HUGETLB_PAGE
-diff --git a/arch/ia64/include/asm/pgtable.h b/arch/ia64/include/asm/pgtable.h
-index d602e7c622db..0e7b645b76c6 100644
---- a/arch/ia64/include/asm/pgtable.h
-+++ b/arch/ia64/include/asm/pgtable.h
-@@ -298,7 +298,6 @@ extern unsigned long VMALLOC_END;
- #define pte_exec(pte)		((pte_val(pte) & _PAGE_AR_RX) != 0)
- #define pte_dirty(pte)		((pte_val(pte) & _PAGE_D) != 0)
- #define pte_young(pte)		((pte_val(pte) & _PAGE_A) != 0)
--#define pte_special(pte)	0
- 
- /*
-  * Note: we convert AR_RWX to AR_RX and AR_RW to AR_R by clearing the 2nd bit in the
-@@ -311,7 +310,6 @@ extern unsigned long VMALLOC_END;
- #define pte_mkclean(pte)	(__pte(pte_val(pte) & ~_PAGE_D))
- #define pte_mkdirty(pte)	(__pte(pte_val(pte) | _PAGE_D))
- #define pte_mkhuge(pte)		(__pte(pte_val(pte)))
--#define pte_mkspecial(pte)	(pte)
- 
- /*
-  * Because ia64's Icache and Dcache is not coherent (on a cpu), we need to
-diff --git a/arch/m68k/include/asm/mcf_pgtable.h b/arch/m68k/include/asm/mcf_pgtable.h
-index b9f45aeded25..0031cd387b75 100644
---- a/arch/m68k/include/asm/mcf_pgtable.h
-+++ b/arch/m68k/include/asm/mcf_pgtable.h
-@@ -235,11 +235,6 @@ static inline int pte_young(pte_t pte)
- 	return pte_val(pte) & CF_PAGE_ACCESSED;
- }
- 
--static inline int pte_special(pte_t pte)
--{
--	return 0;
--}
--
- static inline pte_t pte_wrprotect(pte_t pte)
- {
- 	pte_val(pte) &= ~CF_PAGE_WRITABLE;
-@@ -312,11 +307,6 @@ static inline pte_t pte_mkcache(pte_t pte)
- 	return pte;
- }
- 
--static inline pte_t pte_mkspecial(pte_t pte)
--{
--	return pte;
--}
--
- #define swapper_pg_dir kernel_pg_dir
- extern pgd_t kernel_pg_dir[PTRS_PER_PGD];
- 
-diff --git a/arch/m68k/include/asm/motorola_pgtable.h b/arch/m68k/include/asm/motorola_pgtable.h
-index 62bedc61f110..a6f4b96d674e 100644
---- a/arch/m68k/include/asm/motorola_pgtable.h
-+++ b/arch/m68k/include/asm/motorola_pgtable.h
-@@ -168,7 +168,6 @@ static inline void pud_set(pud_t *pudp, pmd_t *pmdp)
- static inline int pte_write(pte_t pte)		{ return !(pte_val(pte) & _PAGE_RONLY); }
- static inline int pte_dirty(pte_t pte)		{ return pte_val(pte) & _PAGE_DIRTY; }
- static inline int pte_young(pte_t pte)		{ return pte_val(pte) & _PAGE_ACCESSED; }
--static inline int pte_special(pte_t pte)	{ return 0; }
- 
- static inline pte_t pte_wrprotect(pte_t pte)	{ pte_val(pte) |= _PAGE_RONLY; return pte; }
- static inline pte_t pte_mkclean(pte_t pte)	{ pte_val(pte) &= ~_PAGE_DIRTY; return pte; }
-@@ -186,7 +185,6 @@ static inline pte_t pte_mkcache(pte_t pte)
- 	pte_val(pte) = (pte_val(pte) & _CACHEMASK040) | m68k_supervisor_cachemode;
- 	return pte;
- }
--static inline pte_t pte_mkspecial(pte_t pte)	{ return pte; }
- 
- #define PAGE_DIR_OFFSET(tsk,address) pgd_offset((tsk),(address))
- 
-diff --git a/arch/m68k/include/asm/sun3_pgtable.h b/arch/m68k/include/asm/sun3_pgtable.h
-index bc4155264810..0caa18a08437 100644
---- a/arch/m68k/include/asm/sun3_pgtable.h
-+++ b/arch/m68k/include/asm/sun3_pgtable.h
-@@ -155,7 +155,6 @@ static inline void pmd_clear (pmd_t *pmdp) { pmd_val (*pmdp) = 0; }
- static inline int pte_write(pte_t pte)		{ return pte_val(pte) & SUN3_PAGE_WRITEABLE; }
- static inline int pte_dirty(pte_t pte)		{ return pte_val(pte) & SUN3_PAGE_MODIFIED; }
- static inline int pte_young(pte_t pte)		{ return pte_val(pte) & SUN3_PAGE_ACCESSED; }
--static inline int pte_special(pte_t pte)	{ return 0; }
- 
- static inline pte_t pte_wrprotect(pte_t pte)	{ pte_val(pte) &= ~SUN3_PAGE_WRITEABLE; return pte; }
- static inline pte_t pte_mkclean(pte_t pte)	{ pte_val(pte) &= ~SUN3_PAGE_MODIFIED; return pte; }
-@@ -168,7 +167,6 @@ static inline pte_t pte_mknocache(pte_t pte)	{ pte_val(pte) |= SUN3_PAGE_NOCACHE
- //static inline pte_t pte_mkcache(pte_t pte)	{ pte_val(pte) &= SUN3_PAGE_NOCACHE; return pte; }
- // until then, use:
- static inline pte_t pte_mkcache(pte_t pte)	{ return pte; }
--static inline pte_t pte_mkspecial(pte_t pte)	{ return pte; }
- 
- extern pgd_t swapper_pg_dir[PTRS_PER_PGD];
- extern pgd_t kernel_pg_dir[PTRS_PER_PGD];
-diff --git a/arch/microblaze/include/asm/pgtable.h b/arch/microblaze/include/asm/pgtable.h
-index 2def331f9e2c..db9bdfcf46b7 100644
---- a/arch/microblaze/include/asm/pgtable.h
-+++ b/arch/microblaze/include/asm/pgtable.h
-@@ -80,10 +80,6 @@ extern pte_t *va_to_pte(unsigned long address);
-  * Undefined behaviour if not..
-  */
- 
--static inline int pte_special(pte_t pte)	{ return 0; }
--
--static inline pte_t pte_mkspecial(pte_t pte)	{ return pte; }
--
- /* Start and end of the vmalloc area. */
- /* Make sure to map the vmalloc area above the pinned kernel memory area
-    of 32Mb.  */
-diff --git a/arch/mips/include/asm/pgtable.h b/arch/mips/include/asm/pgtable.h
-index aef5378f909c..f1801e7a4b15 100644
---- a/arch/mips/include/asm/pgtable.h
-+++ b/arch/mips/include/asm/pgtable.h
-@@ -269,6 +269,36 @@ static inline void set_pte_at(struct mm_struct *mm, unsigned long addr,
-  */
- extern pgd_t swapper_pg_dir[];
- 
-+/*
-+ * Platform specific pte_special() and pte_mkspecial() definitions
-+ * are required only when ARCH_HAS_PTE_SPECIAL is enabled.
-+ */
-+#if defined(CONFIG_ARCH_HAS_PTE_SPECIAL)
-+#if defined(CONFIG_PHYS_ADDR_T_64BIT) && defined(CONFIG_CPU_MIPS32)
-+static inline int pte_special(pte_t pte)
-+{
-+	return pte.pte_low & _PAGE_SPECIAL;
-+}
-+
-+static inline pte_t pte_mkspecial(pte_t pte)
-+{
-+	pte.pte_low |= _PAGE_SPECIAL;
-+	return pte;
-+}
-+#else
-+static inline int pte_special(pte_t pte)
-+{
-+	return pte_val(pte) & _PAGE_SPECIAL;
-+}
-+
-+static inline pte_t pte_mkspecial(pte_t pte)
-+{
-+	pte_val(pte) |= _PAGE_SPECIAL;
-+	return pte;
-+}
-+#endif
-+#endif /* CONFIG_ARCH_HAS_PTE_SPECIAL */
-+
- /*
-  * The following only work if pte_present() is true.
-  * Undefined behaviour if not..
-@@ -277,7 +307,6 @@ extern pgd_t swapper_pg_dir[];
- static inline int pte_write(pte_t pte)	{ return pte.pte_low & _PAGE_WRITE; }
- static inline int pte_dirty(pte_t pte)	{ return pte.pte_low & _PAGE_MODIFIED; }
- static inline int pte_young(pte_t pte)	{ return pte.pte_low & _PAGE_ACCESSED; }
--static inline int pte_special(pte_t pte) { return pte.pte_low & _PAGE_SPECIAL; }
- 
- static inline pte_t pte_wrprotect(pte_t pte)
- {
-@@ -338,17 +367,10 @@ static inline pte_t pte_mkyoung(pte_t pte)
- 	}
- 	return pte;
- }
--
--static inline pte_t pte_mkspecial(pte_t pte)
--{
--	pte.pte_low |= _PAGE_SPECIAL;
--	return pte;
--}
- #else
- static inline int pte_write(pte_t pte)	{ return pte_val(pte) & _PAGE_WRITE; }
- static inline int pte_dirty(pte_t pte)	{ return pte_val(pte) & _PAGE_MODIFIED; }
- static inline int pte_young(pte_t pte)	{ return pte_val(pte) & _PAGE_ACCESSED; }
--static inline int pte_special(pte_t pte) { return pte_val(pte) & _PAGE_SPECIAL; }
- 
- static inline pte_t pte_wrprotect(pte_t pte)
- {
-@@ -392,12 +414,6 @@ static inline pte_t pte_mkyoung(pte_t pte)
- 	return pte;
- }
- 
--static inline pte_t pte_mkspecial(pte_t pte)
--{
--	pte_val(pte) |= _PAGE_SPECIAL;
--	return pte;
--}
--
- #ifdef CONFIG_MIPS_HUGE_TLB_SUPPORT
- static inline int pte_huge(pte_t pte)	{ return pte_val(pte) & _PAGE_HUGE; }
- 
-diff --git a/arch/nds32/include/asm/pgtable.h b/arch/nds32/include/asm/pgtable.h
-index 6abc58ac406d..476cc4dd1709 100644
---- a/arch/nds32/include/asm/pgtable.h
-+++ b/arch/nds32/include/asm/pgtable.h
-@@ -286,15 +286,6 @@ PTE_BIT_FUNC(mkclean, &=~_PAGE_D);
- PTE_BIT_FUNC(mkdirty, |=_PAGE_D);
- PTE_BIT_FUNC(mkold, &=~_PAGE_YOUNG);
- PTE_BIT_FUNC(mkyoung, |=_PAGE_YOUNG);
--static inline int pte_special(pte_t pte)
--{
--	return 0;
--}
--
--static inline pte_t pte_mkspecial(pte_t pte)
--{
--	return pte;
--}
- 
- /*
-  * Mark the prot value as uncacheable and unbufferable.
-diff --git a/arch/nios2/include/asm/pgtable.h b/arch/nios2/include/asm/pgtable.h
-index 99985d8b7166..f98b7f4519ba 100644
---- a/arch/nios2/include/asm/pgtable.h
-+++ b/arch/nios2/include/asm/pgtable.h
-@@ -113,7 +113,6 @@ static inline int pte_dirty(pte_t pte)		\
- 	{ return pte_val(pte) & _PAGE_DIRTY; }
- static inline int pte_young(pte_t pte)		\
- 	{ return pte_val(pte) & _PAGE_ACCESSED; }
--static inline int pte_special(pte_t pte)	{ return 0; }
- 
- #define pgprot_noncached pgprot_noncached
- 
-@@ -168,8 +167,6 @@ static inline pte_t pte_mkdirty(pte_t pte)
- 	return pte;
- }
- 
--static inline pte_t pte_mkspecial(pte_t pte)	{ return pte; }
--
- static inline pte_t pte_mkyoung(pte_t pte)
- {
- 	pte_val(pte) |= _PAGE_ACCESSED;
-diff --git a/arch/openrisc/include/asm/pgtable.h b/arch/openrisc/include/asm/pgtable.h
-index 248d22d8faa7..7f3fb9ceb083 100644
---- a/arch/openrisc/include/asm/pgtable.h
-+++ b/arch/openrisc/include/asm/pgtable.h
-@@ -236,8 +236,6 @@ static inline int pte_write(pte_t pte) { return pte_val(pte) & _PAGE_WRITE; }
- static inline int pte_exec(pte_t pte)  { return pte_val(pte) & _PAGE_EXEC; }
- static inline int pte_dirty(pte_t pte) { return pte_val(pte) & _PAGE_DIRTY; }
- static inline int pte_young(pte_t pte) { return pte_val(pte) & _PAGE_ACCESSED; }
--static inline int pte_special(pte_t pte) { return 0; }
--static inline pte_t pte_mkspecial(pte_t pte) { return pte; }
- 
- static inline pte_t pte_wrprotect(pte_t pte)
- {
-diff --git a/arch/parisc/include/asm/pgtable.h b/arch/parisc/include/asm/pgtable.h
-index f0a365950536..9832c73a7021 100644
---- a/arch/parisc/include/asm/pgtable.h
-+++ b/arch/parisc/include/asm/pgtable.h
-@@ -377,7 +377,6 @@ static inline void pud_clear(pud_t *pud) {
- static inline int pte_dirty(pte_t pte)		{ return pte_val(pte) & _PAGE_DIRTY; }
- static inline int pte_young(pte_t pte)		{ return pte_val(pte) & _PAGE_ACCESSED; }
- static inline int pte_write(pte_t pte)		{ return pte_val(pte) & _PAGE_WRITE; }
--static inline int pte_special(pte_t pte)	{ return 0; }
- 
- static inline pte_t pte_mkclean(pte_t pte)	{ pte_val(pte) &= ~_PAGE_DIRTY; return pte; }
- static inline pte_t pte_mkold(pte_t pte)	{ pte_val(pte) &= ~_PAGE_ACCESSED; return pte; }
-@@ -385,7 +384,6 @@ static inline pte_t pte_wrprotect(pte_t pte)	{ pte_val(pte) &= ~_PAGE_WRITE; ret
- static inline pte_t pte_mkdirty(pte_t pte)	{ pte_val(pte) |= _PAGE_DIRTY; return pte; }
- static inline pte_t pte_mkyoung(pte_t pte)	{ pte_val(pte) |= _PAGE_ACCESSED; return pte; }
- static inline pte_t pte_mkwrite(pte_t pte)	{ pte_val(pte) |= _PAGE_WRITE; return pte; }
--static inline pte_t pte_mkspecial(pte_t pte)	{ return pte; }
- 
- /*
-  * Huge pte definitions.
-diff --git a/arch/sparc/include/asm/pgtable_32.h b/arch/sparc/include/asm/pgtable_32.h
-index 6d6f44c0cad9..0de659ae0ba4 100644
---- a/arch/sparc/include/asm/pgtable_32.h
-+++ b/arch/sparc/include/asm/pgtable_32.h
-@@ -223,11 +223,6 @@ static inline int pte_young(pte_t pte)
- 	return pte_val(pte) & SRMMU_REF;
- }
- 
--static inline int pte_special(pte_t pte)
--{
--	return 0;
--}
--
- static inline pte_t pte_wrprotect(pte_t pte)
- {
- 	return __pte(pte_val(pte) & ~SRMMU_WRITE);
-@@ -258,8 +253,6 @@ static inline pte_t pte_mkyoung(pte_t pte)
- 	return __pte(pte_val(pte) | SRMMU_REF);
- }
- 
--#define pte_mkspecial(pte)    (pte)
--
- #define pfn_pte(pfn, prot)		mk_pte(pfn_to_page(pfn), prot)
- 
- static inline unsigned long pte_pfn(pte_t pte)
-diff --git a/arch/um/include/asm/pgtable.h b/arch/um/include/asm/pgtable.h
-index 2daa58df2190..b5ddf5d98bd5 100644
---- a/arch/um/include/asm/pgtable.h
-+++ b/arch/um/include/asm/pgtable.h
-@@ -167,11 +167,6 @@ static inline int pte_newprot(pte_t pte)
- 	return(pte_present(pte) && (pte_get_bits(pte, _PAGE_NEWPROT)));
- }
- 
--static inline int pte_special(pte_t pte)
--{
--	return 0;
--}
--
- /*
-  * =================================
-  * Flags setting section.
-@@ -247,11 +242,6 @@ static inline pte_t pte_mknewpage(pte_t pte)
- 	return(pte);
- }
- 
--static inline pte_t pte_mkspecial(pte_t pte)
--{
--	return(pte);
--}
--
- static inline void set_pte(pte_t *pteptr, pte_t pteval)
- {
- 	pte_copy(*pteptr, pteval);
-diff --git a/arch/unicore32/include/asm/pgtable.h b/arch/unicore32/include/asm/pgtable.h
-index c8f7ba12f309..3b8731b3a937 100644
---- a/arch/unicore32/include/asm/pgtable.h
-+++ b/arch/unicore32/include/asm/pgtable.h
-@@ -177,7 +177,6 @@ extern struct page *empty_zero_page;
- #define pte_dirty(pte)		(pte_val(pte) & PTE_DIRTY)
- #define pte_young(pte)		(pte_val(pte) & PTE_YOUNG)
- #define pte_exec(pte)		(pte_val(pte) & PTE_EXEC)
--#define pte_special(pte)	(0)
- 
- #define PTE_BIT_FUNC(fn, op) \
- static inline pte_t pte_##fn(pte_t pte) { pte_val(pte) op; return pte; }
-@@ -189,8 +188,6 @@ PTE_BIT_FUNC(mkdirty,   |= PTE_DIRTY);
- PTE_BIT_FUNC(mkold,     &= ~PTE_YOUNG);
- PTE_BIT_FUNC(mkyoung,   |= PTE_YOUNG);
- 
--static inline pte_t pte_mkspecial(pte_t pte) { return pte; }
--
- /*
-  * Mark the prot value as uncacheable.
-  */
-diff --git a/arch/xtensa/include/asm/pgtable.h b/arch/xtensa/include/asm/pgtable.h
-index 27ac17c9da09..8be0c0568c50 100644
---- a/arch/xtensa/include/asm/pgtable.h
-+++ b/arch/xtensa/include/asm/pgtable.h
-@@ -266,7 +266,6 @@ static inline void paging_init(void) { }
- static inline int pte_write(pte_t pte) { return pte_val(pte) & _PAGE_WRITABLE; }
- static inline int pte_dirty(pte_t pte) { return pte_val(pte) & _PAGE_DIRTY; }
- static inline int pte_young(pte_t pte) { return pte_val(pte) & _PAGE_ACCESSED; }
--static inline int pte_special(pte_t pte) { return 0; }
- 
- static inline pte_t pte_wrprotect(pte_t pte)	
- 	{ pte_val(pte) &= ~(_PAGE_WRITABLE | _PAGE_HW_WRITE); return pte; }
-@@ -280,8 +279,6 @@ static inline pte_t pte_mkyoung(pte_t pte)
- 	{ pte_val(pte) |= _PAGE_ACCESSED; return pte; }
- static inline pte_t pte_mkwrite(pte_t pte)
- 	{ pte_val(pte) |= _PAGE_WRITABLE; return pte; }
--static inline pte_t pte_mkspecial(pte_t pte)
--	{ return pte; }
- 
- #define pgprot_noncached(prot) (__pgprot(pgprot_val(prot) & ~_PAGE_CA_MASK))
- 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index c54fb96cb1e6..b2b43c88bff2 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -1720,6 +1720,18 @@ static inline void sync_mm_rss(struct mm_struct *mm)
- }
- #endif
- 
-+#ifndef CONFIG_ARCH_HAS_PTE_SPECIAL
-+static inline int pte_special(pte_t pte)
-+{
-+	return 0;
-+}
-+
-+static inline pte_t pte_mkspecial(pte_t pte)
-+{
-+	return pte;
-+}
-+#endif
-+
- #ifndef CONFIG_ARCH_HAS_PTE_DEVMAP
- static inline int pte_devmap(pte_t pte)
- {
--- 
-2.20.1
-
+SGkgTmlrbGFzLA0KDQpUaGFuayB5b3UgZm9yIHRoZSByZXZpZXcuDQoNCj4gLS0tLS1PcmlnaW5h
+bCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTmlrbGFzIDxuaWtsYXMuc29kZXJsdW5kQHJhZ25hdGVj
+aC5zZT4NCj4gU2VudDogMTAgTWFyY2ggMjAyMCAxMjo0NA0KPiBUbzogUHJhYmhha2FyIE1haGFk
+ZXYgTGFkIDxwcmFiaGFrYXIubWFoYWRldi1sYWQucmpAYnAucmVuZXNhcy5jb20+DQo+IENjOiBN
+YXVybyBDYXJ2YWxobyBDaGVoYWIgPG1jaGVoYWJAa2VybmVsLm9yZz47IGxpbnV4LQ0KPiBtZWRp
+YUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LXJlbmVzYXMtc29jQHZnZXIua2VybmVsLm9yZzsgbGlu
+dXgtDQo+IGtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IExhZCBQcmFiaGFrYXIgPHByYWJoYWthci5j
+c2VuZ2dAZ21haWwuY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHYyIDEvM10gbWVkaWE6IHJj
+YXItY3NpMjogQWRkIHN1cHBvcnQgdG8gbWF0Y2ggZndub2RlDQo+IGFnYWluc3QgcmVtb3RlIG9y
+IHBhcmVudCBwb3J0DQo+DQo+IEhpIExhZCwNCj4NCj4gVGhhbmtzIGZvciB5b3VyIHdvcmsuDQo+
+DQo+IE9uIDIwMjAtMDMtMTAgMTE6MDY6MDIgKzAwMDAsIExhZCBQcmFiaGFrYXIgd3JvdGU6DQo+
+ID4gVGhlIHJjYXItY3NpMiBkcml2ZXIgdXNlcyB0aGUgdjRsMi1hc3luYyBmcmFtZXdvcmsgdG8g
+ZG8gZW5kcG9pbnQNCj4gPiBtYXRjaGluZyBpbnN0ZWFkIG9mIG5vZGUgbWF0Y2hpbmcuIFRoaXMg
+aXMgbmVlZGVkIGFzIGl0IG5lZWRzIHRvIHdvcmsNCj4gPiB3aXRoIHRoZSBhZHY3NDh4IGRyaXZl
+ciB3aGljaCByZWdpc3RlciBpdCBzZWxmIGluIHY0bDItYXN5bmMgdXNpbmcNCj4gPiBlbmRwb2lu
+dHMgaW5zdGVhZCBvZiBub2Rlcy4gVGhlIHJlYXNvbiBmb3IgdGhpcyBpcyB0aGF0IGZyb20gYSBz
+aW5nbGUNCj4gPiBEVCBub2RlIGl0IGNyZWF0ZXMgbXVsdGlwbGUgc3ViZGV2aWNlcywgb25lIGZv
+ciBlYWNoIGVuZHBvaW50Lg0KPiA+DQo+ID4gQnV0IHdoZW4gdXNpbmcgc3ViZGV2cyB3aGljaCBy
+ZWdpc3RlciBpdHNlbGYgaW4gdjRsMi1hc3luYyB1c2luZw0KPiA+IG5vZGVzLCB0aGUgcmNhci1j
+c2kyIGRyaXZlciBmYWlsZWQgdG8gZmluZCB0aGUgbWF0Y2hpbmcgZW5kcG9pbnQNCj4gPiBiZWNh
+dXNlIHRoZSBtYXRjaC5md25vZGUgd2FzIHBvaW50aW5nIHRvIHJlbW90ZSBlbmRwb2ludCBpbnN0
+ZWFkIG9mDQo+ID4gcmVtb3RlIHBhcmVudCBwb3J0Lg0KPiA+DQo+ID4gVGhpcyBjb21taXQgYWRk
+cyBzdXBwb3J0IGluIHJjYXItY3NpMiBkcml2ZXIgdG8gaGFuZGxlIGJvdGggdGhlIGNhc2VzDQo+
+ID4gd2hlcmUgc3ViZGV2IHJlZ2lzdGVycyBpbiB2NGwyLWFzeW5jIHVzaW5nIGVuZHBvaW50cy9u
+b2RlcywgYnkgdXNpbmcNCj4gPiBtYXRjaF90eXBlIGFzIFY0TDJfQVNZTkNfTUFUQ0hfQ1VTVE9N
+IGFuZCBpbXBsZW1lbnRpbmcgdGhlDQo+IG1hdGNoKCkNCj4gPiBjYWxsYmFjayB0byBjb21wYXJl
+IHRoZSBmd25vZGUgb2YgZWl0aGVyIHJlbW90ZS9wYXJlbnQuDQo+DQo+IFRoaXMgaXMgYSBub3Zl
+bCBhcHByb2FjaCB0byB0aGUgc29sdXRpb24sIGFuZCBJIHdvbid0IG9iamVjdCB0byBpdCBvdXQg
+cmlnaHQuIEJ1dCBJDQo+IHRoaW5rIHRoZSBwcm9wZXIgc29sdXRpb24gaXMgdG8gbW92ZSB0aGlz
+IGxvZ2ljIGludG8gdjRsMi1hc3luYyBpbnN0ZWFkIG9mDQo+IGFkZGluZyBhIGN1c3RvbSBtYXRj
+aCBoYW5kbGVyIGluIHJjYXItY3NpMi4NCj4NCj4gVGhpbmsgb2YgdGhlIHJldmVyZXMgdXNlLWNh
+c2UsIGEgZGlmZmVyZW50IENTSS0yIHJlY2VpdmVyIHdobyB3aXNoIHRvIHVzZSB0aGUNCj4gQURW
+NzQ4eCB3b3VsZCBzdGlsbCBoYXZlIHRoaXMgbm9kZSB2cy4gZW5kcG9pbnQgaXNzdWUuDQo+DQpB
+Z3JlZWQuDQoNCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IExhZCBQcmFiaGFrYXIgPHByYWJoYWth
+ci5tYWhhZGV2LQ0KPiBsYWQucmpAYnAucmVuZXNhcy5jb20+DQo+ID4gLS0tDQo+ID4gIGRyaXZl
+cnMvbWVkaWEvcGxhdGZvcm0vcmNhci12aW4vcmNhci1jc2kyLmMgfCA0MQ0KPiA+ICsrKysrKysr
+KysrKysrKysrKysrKysrKysrLS0tDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAzOCBpbnNlcnRpb25z
+KCspLCAzIGRlbGV0aW9ucygtKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbWVkaWEv
+cGxhdGZvcm0vcmNhci12aW4vcmNhci1jc2kyLmMNCj4gPiBiL2RyaXZlcnMvbWVkaWEvcGxhdGZv
+cm0vcmNhci12aW4vcmNhci1jc2kyLmMNCj4gPiBpbmRleCBmYWE5ZmIyLi4zOWUxNjM5IDEwMDY0
+NA0KPiA+IC0tLSBhL2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0vcmNhci12aW4vcmNhci1jc2kyLmMN
+Cj4gPiArKysgYi9kcml2ZXJzL21lZGlhL3BsYXRmb3JtL3JjYXItdmluL3JjYXItY3NpMi5jDQo+
+ID4gQEAgLTgwOCw2ICs4MDgsNDEgQEAgc3RhdGljIGludCByY3NpMl9wYXJzZV92NGwyKHN0cnVj
+dCByY2FyX2NzaTIgKnByaXYsDQo+ID4gIHJldHVybiAwOw0KPiA+ICB9DQo+ID4NCj4gPiArc3Rh
+dGljIGJvb2wgcmNzaTJfYXNkX21hdGNoKHN0cnVjdCBkZXZpY2UgKmRldiwNCj4gPiArICAgIHN0
+cnVjdCB2NGwyX2FzeW5jX3N1YmRldiAqYXN5bmNfc2QpIHsNCj4gPiArc3RydWN0IHJjYXJfY3Np
+MiAqcHJpdiA9IChzdHJ1Y3QgcmNhcl9jc2kyICopDQo+ID4gKyAgYXN5bmNfc2QtPm1hdGNoLmN1
+c3RvbS5wcml2Ow0KPiA+ICtzdHJ1Y3QgZndub2RlX2hhbmRsZSAqZW5kcG9pbnQ7DQo+ID4gK3N0
+cnVjdCBmd25vZGVfaGFuZGxlICpyZW1vdGU7DQo+ID4gK3N0cnVjdCBmd25vZGVfaGFuZGxlICpw
+YXJlbnQ7DQo+ID4gK3N0cnVjdCBkZXZpY2Vfbm9kZSAqbnA7DQo+ID4gK2Jvb2wgbWF0Y2hlZCA9
+IGZhbHNlOw0KPiA+ICsNCj4gPiArbnAgPSBvZl9ncmFwaF9nZXRfZW5kcG9pbnRfYnlfcmVncyhw
+cml2LT5kZXYtPm9mX25vZGUsIDAsIDApOw0KPiA+ICtpZiAoIW5wKSB7DQo+ID4gK2Rldl9lcnIo
+cHJpdi0+ZGV2LCAiTm90IGNvbm5lY3RlZCB0byBzdWJkZXZpY2VcbiIpOw0KPiA+ICtyZXR1cm4g
+LUVJTlZBTDsNCj4NCj4gWW91IGNhbid0IHJldHVybiAtRUlOVkFMIGhlcmUgYXMgaXQgd2lsbCBi
+ZSBpbnRlcnByZXRlZCBhcyBhIG1hdGNoIGJ5IHRoZSBjYWxsZXINCj4gOy0pLiAgWW91IHNob3Vs
+ZCBub3QgZXZlbiByZWdpc3RlciBhIGRldmljZSB3aXRoIHY0bDItYXN5bmMgaWYgaXQncyBub3QN
+Cj4gY29ubmVjdGVkIHRvIGFuIGVuZHBvaW50Lg0KPg0KTXkgYmFkLg0KDQo+ID4gK30NCj4gPiAr
+DQo+ID4gK2VuZHBvaW50ID0gb2ZfZndub2RlX2hhbmRsZShucCk7DQo+ID4gK3JlbW90ZSA9IGZ3
+bm9kZV9ncmFwaF9nZXRfcmVtb3RlX2VuZHBvaW50KGVuZHBvaW50KTsNCj4gPiArcGFyZW50ID0g
+Zndub2RlX2dyYXBoX2dldF9yZW1vdGVfcG9ydF9wYXJlbnQoZW5kcG9pbnQpOw0KPiA+ICtpZiAo
+cGFyZW50KSB7DQo+DQo+IFRoaXMgaXMgd3JvbmcsIHdlIHdpbGwgYWx3YXlzIGhhdmUgYSBwYXJl
+bnQgYW5kIHdpbGwgYWx3YXlzIHRha2UgdGhpcyBjb2RlDQo+IHBhdGguIEhlbmNlIHJlZHVjaW5n
+IHRoaXMgdG8gdGhlIGVxdWl2YWxlbnQgb2Ygbm9kZSBvbmx5IG1hdGNoaW5nLg0KPiBJIGFwcGxp
+ZWQgdGhpcyBwYXRjaCBhbmQgdHJpZWQgb24gTTMtTiB3aXRoIGEgQUR2NzQ4eCBhbmQgdGhlIHdy
+b25nDQo+IGVuZHBvaW50cyBvZiB0aGUgQURWNzQ4MiBpcyByb3V0ZWQgdG8gdGhlIHR3byBDU0kt
+MiByZWNlaXZlcnMsIGJyZWFraW5nIGl0Lg0KPg0KSSBkaWQgdHJ5IHRoZSBtZWRpYS10cmVlIG9u
+IE0zTiBidXQgaXQgaGFzIG1hbnkgaXNzdWVzIGZvciBib290aW5nLCBjb3VsZCB5b3UgcGxlYXNl
+DQpwb2ludCBtZSB0byBhIHRyZWUgd2hpY2ggSSBjYW4gdXNlIGZvciB0ZXN0aW5nLg0KDQo+IEkg
+YWRkZWQgc29tZSBkZWJ1ZyBwcmludG91dHMgdG8gZXhwbGFpbiB3aGF0cyBnb2luZyBvbjoNCj4N
+Cj4gICAgICogRmlyc3QgY2FsbA0KPiAgICAgICAgIGRldjogcmNhci1jc2kyIGZlYTgwMDAwLmNz
+aTINCj4gICAgICAgICBlbmRwb2ludDogL3NvYy9jc2kyQGZlYWEwMDAwL3BvcnRzL3BvcnRAMC9l
+bmRwb2ludA0KPiAgICAgICAgIHJlbW90ZTogL3NvYy9pMmNAZTY2ZDgwMDAvdmlkZW8tcmVjZWl2
+ZXJANzAvcG9ydEBhL2VuZHBvaW50DQo+ICAgICAgICAgcGFyZW50OiAvc29jL2kyY0BlNjZkODAw
+MC92aWRlby1yZWNlaXZlckA3MA0KPiAgICAgICAgIGRldi0+Zndub2RlOiAvc29jL2NzaTJAZmVh
+ODAwMDANCj4gICAgICAgICBkZXYtPm9mX25vZGU6IC9zb2MvY3NpMkBmZWE4MDAwMA0KPiAgICAg
+ICAgIG1hdGNoOiBmYWxzZQ0KPg0KPiAgICAgKiBTZWNvbmQgY2FsbA0KPiAgICAgICAgIGRldjog
+YWR2NzQ4eCA0LTAwNzANCj4gICAgICAgICBlbmRwb2ludDogL3NvYy9jc2kyQGZlYWEwMDAwL3Bv
+cnRzL3BvcnRAMC9lbmRwb2ludA0KPiAgICAgICAgIHJlbW90ZTogL3NvYy9pMmNAZTY2ZDgwMDAv
+dmlkZW8tcmVjZWl2ZXJANzAvcG9ydEBhL2VuZHBvaW50DQo+ICAgICAgICAgcGFyZW50OiAvc29j
+L2kyY0BlNjZkODAwMC92aWRlby1yZWNlaXZlckA3MA0KPiAgICAgICAgIGRldi0+Zndub2RlOiAv
+c29jL2kyY0BlNjZkODAwMC92aWRlby1yZWNlaXZlckA3MA0KPiAgICAgICAgIGRldi0+b2Zfbm9k
+ZTogL3NvYy9pMmNAZTY2ZDgwMDAvdmlkZW8tcmVjZWl2ZXJANzANCj4gICAgICAgICBtYXRjaDog
+dHJ1ZQ0KPg0KPiAgICAgKiBUaGlyZCBjYWxsDQo+ICAgICAgICAgZGV2OiBhZHY3NDh4IDQtMDA3
+MA0KPiAgICAgICAgIGVuZHBvaW50OiAvc29jL2NzaTJAZmVhODAwMDAvcG9ydHMvcG9ydEAwL2Vu
+ZHBvaW50DQo+ICAgICAgICAgcmVtb3RlOiAvc29jL2kyY0BlNjZkODAwMC92aWRlby1yZWNlaXZl
+ckA3MC9wb3J0QGIvZW5kcG9pbnQNCj4gICAgICAgICBwYXJlbnQ6IC9zb2MvaTJjQGU2NmQ4MDAw
+L3ZpZGVvLXJlY2VpdmVyQDcwDQo+ICAgICAgICAgZGV2LT5md25vZGU6IC9zb2MvaTJjQGU2NmQ4
+MDAwL3ZpZGVvLXJlY2VpdmVyQDcwDQo+ICAgICAgICAgZGV2LT5vZl9ub2RlOiAvc29jL2kyY0Bl
+NjZkODAwMC92aWRlby1yZWNlaXZlckA3MA0KPiAgICAgICAgIG1hdGNoOiB0cnVlDQo+DQpUaGFu
+ayB5b3UgZm9yIHRoZSBhYm92ZS4NCg0KPiBOb3cgd2UgaGF2ZSBhIG1lZGlhIGdyYXBoIHRoYXQg
+aXMgY29tcGxldGVseSBwcm9iZWQgYW5kIHZpZGVvIGRldmljZXMNCj4gcmVnaXN0ZXIgaW4gdGhl
+IHN5c3RlbSBidXQgeW91IGFyZSBub3QgYWJsZSB0byBzdHJlYW0gdmlkZW8gYXMgdGhlIHdyb25n
+DQo+IENTSS0yIHRyYW5zbWl0dGVyIGlzIGRlc2NyaWJlZCBpbiB0aGUgZ3JhcGggdG8gYmUgY29u
+bmVjdGVkIHRvIHRoZSB3cm9uZw0KPiByZWNlaXZlci4NCj4NCj4gVGhpcyBvbmx5IHN0cmVuZ3Ro
+ZW5zIG15IHZpZXcgdGhhdCB0aGlzIHNob3VsZCBub3QgYmUgZml4ZWQgd2l0aCBhIGN1c3RvbQ0K
+PiBtYXRjaGVyIGluIHJjYXItY3NpMiBidXQgZGlyZWN0bHkgaW4gdjRsLWFzeW5jLiBQbGVhc2Ug
+c2VlIGlmIHlvdSBjYW4ndCBhZGRyZXNzDQo+IHRoZSBpc3N1ZSBpbiB0aGUgZnJhbWV3b3JrIHRv
+IGFsbG93IG5vZGUgYW5kIGVuZHBvaW50IG1hdGNoaW5nIHRvIGNvLQ0KPiBleGlzdHMuDQo+DQpJ
+bGwgZG8gc29tZSBtb3JlIGRpZ2dpbmcg8J+Yig0KDQo+ID4gK2lmIChwYXJlbnQgPT0gZGV2LT5m
+d25vZGUgfHwNCj4gPiArICAgIHBhcmVudCA9PSAmZGV2LT5vZl9ub2RlLT5md25vZGUpDQo+ID4g
+K21hdGNoZWQgPSB0cnVlOw0KPiA+ICt9IGVsc2UgaWYgKHJlbW90ZSAmJiAhbWF0Y2hlZCkgew0K
+Pg0KPiBObyBuZWVkIHRvIGNoZWNrICFtYXRjaGVkIGhlcmUgOy0pDQo+DQpBZ3JlZWQuDQoNCkNo
+ZWVycywNCi0tUHJhYmhha2FyDQoNCj4gPiAraWYgKHJlbW90ZSA9PSBkZXYtPmZ3bm9kZSB8fA0K
+PiA+ICsgICAgcmVtb3RlID09ICZkZXYtPm9mX25vZGUtPmZ3bm9kZSkNCj4gPiArbWF0Y2hlZCA9
+IHRydWU7DQo+ID4gK30NCj4NCj4NCj4NCj4gPiArDQo+ID4gK29mX25vZGVfcHV0KG5wKTsNCj4g
+PiArDQo+ID4gK3JldHVybiBtYXRjaGVkOw0KPiA+ICt9DQo+ID4gKw0KPiA+ICBzdGF0aWMgaW50
+IHJjc2kyX3BhcnNlX2R0KHN0cnVjdCByY2FyX2NzaTIgKnByaXYpICB7DQo+ID4gIHN0cnVjdCBk
+ZXZpY2Vfbm9kZSAqZXA7DQo+ID4gQEAgLTgzMyw5ICs4NjgsOSBAQCBzdGF0aWMgaW50IHJjc2ky
+X3BhcnNlX2R0KHN0cnVjdCByY2FyX2NzaTIgKnByaXYpDQo+ID4gIHJldHVybiByZXQ7DQo+ID4g
+IH0NCj4gPg0KPiA+IC1wcml2LT5hc2QubWF0Y2guZndub2RlID0NCj4gPiAtDQo+IGZ3bm9kZV9n
+cmFwaF9nZXRfcmVtb3RlX2VuZHBvaW50KG9mX2Z3bm9kZV9oYW5kbGUoZXApKTsNCj4gPiAtcHJp
+di0+YXNkLm1hdGNoX3R5cGUgPSBWNEwyX0FTWU5DX01BVENIX0ZXTk9ERTsNCj4gPiArcHJpdi0+
+YXNkLm1hdGNoLmN1c3RvbS5tYXRjaCA9ICZyY3NpMl9hc2RfbWF0Y2g7DQo+ID4gK3ByaXYtPmFz
+ZC5tYXRjaC5jdXN0b20ucHJpdiA9IHByaXY7DQo+ID4gK3ByaXYtPmFzZC5tYXRjaF90eXBlID0g
+VjRMMl9BU1lOQ19NQVRDSF9DVVNUT007DQo+ID4NCj4gPiAgb2Zfbm9kZV9wdXQoZXApOw0KPiA+
+DQo+ID4gLS0NCj4gPiAyLjcuNA0KPiA+DQo+DQo+IC0tDQo+IFJlZ2FyZHMsDQo+IE5pa2xhcyBT
+w7ZkZXJsdW5kDQoNCg0KUmVuZXNhcyBFbGVjdHJvbmljcyBFdXJvcGUgR21iSCwgR2VzY2hhZWZ0
+c2Z1ZWhyZXIvUHJlc2lkZW50OiBDYXJzdGVuIEphdWNoLCBTaXR6IGRlciBHZXNlbGxzY2hhZnQv
+UmVnaXN0ZXJlZCBvZmZpY2U6IER1ZXNzZWxkb3JmLCBBcmNhZGlhc3RyYXNzZSAxMCwgNDA0NzIg
+RHVlc3NlbGRvcmYsIEdlcm1hbnksIEhhbmRlbHNyZWdpc3Rlci9Db21tZXJjaWFsIFJlZ2lzdGVy
+OiBEdWVzc2VsZG9yZiwgSFJCIDM3MDggVVN0LUlETnIuL1RheCBpZGVudGlmaWNhdGlvbiBuby46
+IERFIDExOTM1MzQwNiBXRUVFLVJlZy4tTnIuL1dFRUUgcmVnLiBuby46IERFIDE0OTc4NjQ3DQo=
