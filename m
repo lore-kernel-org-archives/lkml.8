@@ -2,173 +2,94 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BA57C18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 15:47:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9009C18E5A
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 15:47:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5765421D7E
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 15:47:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nyX2OVgP"
+	by mail.kernel.org (Postfix) with ESMTP id A4B21215A4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 15:47:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583855271;
+	bh=fxXBC6mLqLhF630XcKwvNoA3xYL1Mgjsv4/cnzDW8FE=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=1H8Qsrp8rbBMNcYSI+w31V6Vmrk0bmWM1oAiHBOsZB4Fyc1kBtlyTZXJq0xmcSdVx
+	 WYpu7qAa0meadNKPKTcAuaKk2yIncJQR4M0qy07M5/v7+80asGsj5cf973unZGGvQV
+	 3gg1pr84vQu+v6S8qjCq6zJhnrWqhAuiPYntmgys=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726980AbgCJPrK (ORCPT
+        id S1726830AbgCJPru (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 11:47:10 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:45164 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726861AbgCJPrI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 11:47:08 -0400
-Received: by mail-ot1-f67.google.com with SMTP id f21so13556364otp.12
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 08:47:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4HrHpJuYloPdd64QgDvsMEZuP7xh7v2AxwQIiGYP/MQ=;
-        b=nyX2OVgPZVTO0zNEHpYlZ63oRyFSngj5xEudidOqj0uclLGX1S3zY0a0pfVYbatnkh
-         2D8dMoBtwD6CVOzC+glCPpuvt8B96EHbtS82/rUczghAC0dNb4kQCpDrfGDyM9WZnqhE
-         cD6V6C6atqbJIAFiPVYvmYb94/db0bZxLbC57HdisRWP2TiqR6vE7vFtKOUuGN2Qqnoy
-         UMexxU5mlNO2XThhD5qTcBXOc17qUOjEsd6a01vAIa4/bhVs6QdAKwNo165h4SqsC52p
-         ITAZxkyx2Yityikj+lkO5XXyvLWVkLC9LbqQ8yZeKIwAnTwqHFumm0Ja4JSGxjFCyNUe
-         iFPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4HrHpJuYloPdd64QgDvsMEZuP7xh7v2AxwQIiGYP/MQ=;
-        b=JyCz1PGRXtwCsp8pl+nglJzaNuzKWsoKnPcmpm+3+zDRKHDzQqwUNTL+rnFqcxi+iY
-         JB+BCeBKULGGbKRRYP81PXy8qZj5lhfvJozJ5P8yenp/GIYGqCdeMQgzHY076IvZjcN1
-         P24//NhQklmbgYoXWGmU6S+h1hlgA/3aHtVB4Z+ETlUtgoyUlfJfgcv+1L0ITpJmZ88i
-         y5uXIxtTdFzLniGqdfxnltXWEfGpGcY646Vh/JbLwppHyabzl04IThU7zVDHBxW2940P
-         wmC2edKFG0QpUf5hhU3/21N/hxV19LZJdpp9f3O8ptgBXp7M796mVSEhQUCVak53Fcdc
-         tNFA==
-X-Gm-Message-State: ANhLgQ2vlU/oBp3sYDISjgLJONnL0fU4uDVj8tgUC+qfeuZOyLjNRwnS
-        cPloaDH0cqM8i77l0KUyxT/wJVftrndP7opzLW8efg==
-X-Google-Smtp-Source: ADFU+vvtWUnpgSR4cBsrFTI3Mtf9+RyaT5KjmUoKRwAbx1+YCbYzwZsgMVbDCYPSxtaSHxlcT6lv+BwV3Srw2n+HtWY=
-X-Received: by 2002:a9d:19e9:: with SMTP id k96mr17642241otk.68.1583855227689;
- Tue, 10 Mar 2020 08:47:07 -0700 (PDT)
+        Tue, 10 Mar 2020 11:47:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58010 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726467AbgCJPru (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 11:47:50 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D5C0320866;
+        Tue, 10 Mar 2020 15:47:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583855269;
+        bh=fxXBC6mLqLhF630XcKwvNoA3xYL1Mgjsv4/cnzDW8FE=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=t6BwwWyfltp0cLV9XE4wIgEp201EDrtvpsCABAtdCg+fbpp7EdL6PG2iWnkxtPkQd
+         Ik604FbqVyTy4wadVmpZAsXt2e7bm7XDJ3DIRBnb1ZhLVa1qlnYu0lMu71TBYTjzys
+         EuahFLGqKgSz2Vm3dRqAs7NvA4Js9NZR3HqrOCFE=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id ACDAD35226CF; Tue, 10 Mar 2020 08:47:49 -0700 (PDT)
+Date:   Tue, 10 Mar 2020 08:47:49 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     David Laight <David.Laight@ACULAB.COM>
+Cc:     'Marco Elver' <elver@google.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCH] list: Prevent compiler reloads inside 'safe' list
+ iteration
+Message-ID: <20200310154749.GZ2935@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200310092119.14965-1-chris@chris-wilson.co.uk>
+ <2e936d8fd2c445beb08e6dd3ee1f3891@AcuMS.aculab.com>
+ <158384100886.16414.15741589015363013386@build.alporthouse.com>
+ <723d527a4ad349b78bf11d52eba97c0e@AcuMS.aculab.com>
+ <20200310125031.GY2935@paulmck-ThinkPad-P72>
+ <CANpmjNNT3HY7i9TywX0cAFqBtx2J3qOGOUG5nHzxAZ4bk_qgtg@mail.gmail.com>
+ <77ff4da6b0a7448c947af6de4fb43cdb@AcuMS.aculab.com>
 MIME-Version: 1.0
-References: <20200310134603.30260-1-robert.foss@linaro.org>
- <20200310134603.30260-3-robert.foss@linaro.org> <CAOMZO5D7N6FfPMiycGun-eui-G-tbp15stwRWBWs4L98JHFfGA@mail.gmail.com>
-In-Reply-To: <CAOMZO5D7N6FfPMiycGun-eui-G-tbp15stwRWBWs4L98JHFfGA@mail.gmail.com>
-From:   Robert Foss <robert.foss@linaro.org>
-Date:   Tue, 10 Mar 2020 16:46:56 +0100
-Message-ID: <CAG3jFyuwHEXHD1JbWMwNX_LDtawJ1+-zEptzq2yrn8Uk+S3fdQ@mail.gmail.com>
-Subject: Re: [v1 2/3] media: ov8856: Add devicetree support
-To:     Fabio Estevam <festevam@gmail.com>
-Cc:     ben.kao@intel.com, Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan.Cameron@huawei.com,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-media <linux-media@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-mediatek@lists.infradead.org,
-        Dongchun Zhu <dongchun.zhu@mediatek.com>,
-        Tomasz Figa <tfiga@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <77ff4da6b0a7448c947af6de4fb43cdb@AcuMS.aculab.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 10 Mar 2020 at 15:03, Fabio Estevam <festevam@gmail.com> wrote:
->
-> On Tue, Mar 10, 2020 at 10:47 AM Robert Foss <robert.foss@linaro.org> wrote:
->
-> > +static int __ov8856_power_on(struct ov8856 *ov8856)
-> > +{
-> > +       struct i2c_client *client = v4l2_get_subdevdata(&ov8856->sd);
-> > +       int ret;
-> > +
-> > +       ret = clk_prepare_enable(ov8856->xvclk);
-> > +       if (ret < 0) {
-> > +               dev_err(&client->dev, "failed to enable xvclk\n");
-> > +               return ret;
-> > +       }
-> > +
-> > +       gpiod_set_value_cansleep(ov8856->n_shutdn_gpio, GPIOD_OUT_LOW);
-> > +
-> > +       ret = regulator_bulk_enable(OV8856_NUM_SUPPLIES, ov8856->supplies);
-> > +       if (ret < 0) {
-> > +               dev_err(&client->dev, "failed to enable regulators\n");
-> > +               goto disable_clk;
-> > +       }
-> > +
-> > +       gpiod_set_value_cansleep(ov8856->n_shutdn_gpio, GPIOD_OUT_HIGH);
->
-> To power it up you probably only need:
->
-> gpiod_set_value_cansleep(ov8856->n_shutdn_gpio, 0);
->
-> And use reset-gpios as active low in your device tree. Assuming the
-> reset-gpios is active low like other OmniVision sensors.
+On Tue, Mar 10, 2020 at 03:05:57PM +0000, David Laight wrote:
+> From: Marco Elver
+> > Sent: 10 March 2020 14:10
+> ...
+> > FWIW, for writes we're already being quite generous, in that plain
+> > aligned writes up to word-size are assumed to be "atomic" with the
+> > default (conservative) config, i.e. marking such writes is optional.
+> > Although, that's a generous assumption that is not always guaranteed
+> > to hold (https://lore.kernel.org/lkml/20190821103200.kpufwtviqhpbuv2n@willie-the-truck/).
+> 
+> Remind me to start writing everything in assembler.
 
-Ack.
+Been there, done that.  :-/
 
->
-> > +
-> > +       usleep_range(1500, 1800);
-> > +
-> > +       return 0;
-> > +
-> > +disable_clk:
-> > +       clk_disable_unprepare(ov8856->xvclk);
-> > +
-> > +       return ret;
-> > +}
-> > +
-> > +static void __ov8856_power_off(struct ov8856 *ov8856)
-> > +{
-> > +       gpiod_set_value_cansleep(ov8856->n_shutdn_gpio, GPIOD_OUT_LOW);
-> > +       regulator_bulk_disable(OV8856_NUM_SUPPLIES, ov8856->supplies);
-> > +       clk_disable_unprepare(ov8856->xvclk);
-> > +}
-> > +
-> > +
->
-> Unneede extra blank line.
+> That and to mark all structure members 'volatile'.
 
-Ack.
+Indeed.  READ_ONCE() and WRITE_ONCE() get this same effect, but without
+pessimizing non-concurrent accesses to those same members.  Plus KCSAN
+knows about READ_ONCE(), WRITE_ONCE(), and also volatile members.
 
->
-> >         v4l2_i2c_subdev_init(&ov8856->sd, client, &ov8856_subdev_ops);
-> > +       ov8856->xvclk = devm_clk_get(&client->dev, "xvclk");
-> > +       if (IS_ERR(ov8856->xvclk)) {
-> > +               dev_err(&client->dev, "failed to get xvclk\n");
-> > +               return -EINVAL;
->
-> You should better return the real error insteald
-> PTR_ERR(ov8856->xvclk). This way defer probe could work.
->
-
-Ack.
-
-> > +       }
-> > +
-> > +       ret = clk_set_rate(ov8856->xvclk, OV8856_XVCLK_24);
-> > +       if (ret < 0) {
-> > +               dev_err(&client->dev, "failed to set xvclk rate (24MHz)\n");
-> > +               return ret;
-> > +       }
-> > +
-> > +       ov8856->n_shutdn_gpio = devm_gpiod_get(&client->dev, "reset",
-> > +                                              GPIOD_OUT_LOW);
-> > +       if (IS_ERR(ov8856->n_shutdn_gpio)) {
-> > +               dev_err(&client->dev, "failed to get reset-gpios\n");
-> > +               return -EINVAL;
->
-> Please return the real error.
-
-Ack.
+							Thanx, Paul
