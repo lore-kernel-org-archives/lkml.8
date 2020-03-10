@@ -2,108 +2,117 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37112C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 16:01:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 321C6C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 16:01:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EDBF21D56
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 16:01:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QYDxC/nu"
+	by mail.kernel.org (Postfix) with ESMTP id 13BC721D56
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 16:01:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726824AbgCJQBW (ORCPT
+        id S1726892AbgCJQBc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 12:01:22 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:39796 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726445AbgCJQBV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 12:01:21 -0400
-Received: by mail-pl1-f194.google.com with SMTP id j20so5595093pll.6
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 09:01:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=5PprlbqoqI+8cqH5y1+LaXm/Lh1O+UbpqxwQEoE+kVQ=;
-        b=QYDxC/nug0FPO0R2YDDHDpINh+3k13f/K2ZFHSvhTtDb+xxhNyCFtyrpCsUQy1dWvN
-         GCiI4tkRZEnq/U0iMzpS8zQEPBFV0kTt0Cmo90IelMR3bgcbMzIow1xlr6OhlTUMgYEd
-         ZfMxcAxoXjw/IMN7D8O9LQ2cZRfgF/iSJRu4g=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=5PprlbqoqI+8cqH5y1+LaXm/Lh1O+UbpqxwQEoE+kVQ=;
-        b=SVvnufqdNd+E6TrK5Tw6nLCpK7goKM9ytrCpT9yRzhyXKyoqFvACfc0Y9Ls1KvSSw3
-         CKCNQlGnOmku30Nx+GylV/iElLyIEiQVPIU8PWzd0esG0DEPGyIDNEDkffJto+D4kVIH
-         LK2zrc7970/1bZtZnh3TxDRMw9bpPxWHP9F8MQVG750GgyExkXbk3/A+Q4oGtxUDq3BR
-         4/qhUTrYKnaGqzUjWwsQjQZ+pS9nn3N2HYFoojYpYq34UGJQouHeUxVB/ZY7ZVq60tGg
-         AGimxGPW9EtyGJiV0jZcrwyqTt/W4ebueBV72iK6pqz+q95QocMvPi/TK9yxq5RIAzRO
-         5w5w==
-X-Gm-Message-State: ANhLgQ0rlhhQ1ZNLUwQ86fzA9MuJcjX5H95gVqc+zBpG5PYPtVSTTwQ3
-        WdG3tpWEz+BR9iVSNCyg4NaBEw==
-X-Google-Smtp-Source: ADFU+vtmM+D+yGWVPf1IZeuUEbx/otAbFEt5GhAZoqGWcLN6EsWZZ4nPx3ClLaNnJpKVk5Q1kJWBww==
-X-Received: by 2002:a17:902:b903:: with SMTP id bf3mr21622900plb.144.1583856080398;
-        Tue, 10 Mar 2020 09:01:20 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id 6sm7318987pfx.69.2020.03.10.09.01.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Mar 2020 09:01:19 -0700 (PDT)
-Date:   Tue, 10 Mar 2020 09:01:18 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     syzbot <syzbot+cea71eec5d6de256d54d@syzkaller.appspotmail.com>
-Cc:     ardb@kernel.org, davem@davemloft.net, guohanjun@huawei.com,
-        kuba@kernel.org, linux-kernel@vger.kernel.org,
-        linux-sctp@vger.kernel.org, marcelo.leitner@gmail.com,
-        mingo@kernel.org, netdev@vger.kernel.org, nhorman@tuxdriver.com,
-        syzkaller-bugs@googlegroups.com, vyasevich@gmail.com,
-        will@kernel.org
-Subject: Re: WARNING: refcount bug in sctp_wfree
-Message-ID: <202003100900.1E2E399@keescook>
-References: <00000000000088452f05a07621d2@google.com>
- <000000000000cc985b05a07ce36f@google.com>
+        Tue, 10 Mar 2020 12:01:32 -0400
+Received: from mga14.intel.com ([192.55.52.115]:31254 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726445AbgCJQBb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 12:01:31 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Mar 2020 09:01:30 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,537,1574150400"; 
+   d="scan'208";a="353652216"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga001.fm.intel.com with ESMTP; 10 Mar 2020 09:01:30 -0700
+Date:   Tue, 10 Mar 2020 09:01:29 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Wanpeng Li <kernellwp@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+Subject: Re: [PATCH] KVM: X86: Don't load/put guest FPU context for sleeping
+ AP
+Message-ID: <20200310160129.GA9305@linux.intel.com>
+References: <1583823679-17648-1-git-send-email-wanpengli@tencent.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <000000000000cc985b05a07ce36f@google.com>
+In-Reply-To: <1583823679-17648-1-git-send-email-wanpengli@tencent.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 10, 2020 at 02:39:01AM -0700, syzbot wrote:
-> syzbot has bisected this bug to:
+On Tue, Mar 10, 2020 at 03:01:19PM +0800, Wanpeng Li wrote:
+> From: Wanpeng Li <wanpengli@tencent.com>
 > 
-> commit fb041bb7c0a918b95c6889fc965cdc4a75b4c0ca
-> Author: Will Deacon <will@kernel.org>
-> Date:   Thu Nov 21 11:59:00 2019 +0000
+> kvm_load_guest_fpu() and kvm_put_guest_fpu() each consume more than 14us 
+> observed by ftrace, the qemu userspace FPU is swapped out for the guest 
+> FPU context for the duration of the KVM_RUN ioctl even if sleeping AP, 
+> we shouldn't load/put guest FPU context for this case especially for 
+> serverless scenario which sensitives to boot time.
 > 
->     locking/refcount: Consolidate implementations of refcount_t
+> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+> ---
+>  arch/x86/kvm/x86.c | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 5de2006..080ffa4 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -8680,7 +8680,6 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
+>  
+>  	vcpu_load(vcpu);
+>  	kvm_sigset_activate(vcpu);
+> -	kvm_load_guest_fpu(vcpu);
+>  
+>  	if (unlikely(vcpu->arch.mp_state == KVM_MP_STATE_UNINITIALIZED)) {
+>  		if (kvm_run->immediate_exit) {
+> @@ -8718,12 +8717,14 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
+>  		}
+>  	}
+>  
+> +	kvm_load_guest_fpu(vcpu);
 
-I suspect this is just bisecting to here because it made the refcount
-checks more strict?
+Ugh, so this isn't safe on MPX capable CPUs, kvm_apic_accept_events() can
+trigger kvm_vcpu_reset() with @init_event=true and try to unload guest_fpu.
 
--Kees
+We could hack around that issue, but it'd be ugly, and I'm also concerned
+that calling vmx_vcpu_reset() without guest_fpu loaded will be problematic
+in the future with all the things that are getting managed by XSAVE.
 
+> +
+>  	if (unlikely(vcpu->arch.complete_userspace_io)) {
+>  		int (*cui)(struct kvm_vcpu *) = vcpu->arch.complete_userspace_io;
+>  		vcpu->arch.complete_userspace_io = NULL;
+>  		r = cui(vcpu);
+>  		if (r <= 0)
+> -			goto out;
+> +			goto out_fpu;
+>  	} else
+>  		WARN_ON(vcpu->arch.pio.count || vcpu->mmio_needed);
+>  
+> @@ -8732,8 +8733,9 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
+>  	else
+>  		r = vcpu_run(vcpu);
+>  
+> -out:
+> +out_fpu:
+>  	kvm_put_guest_fpu(vcpu);
+> +out:
+>  	if (vcpu->run->kvm_valid_regs)
+>  		store_regs(vcpu);
+>  	post_kvm_run_save(vcpu);
+> -- 
+> 2.7.4
 > 
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=117e9e91e00000
-> start commit:   2c523b34 Linux 5.6-rc5
-> git tree:       upstream
-> final crash:    https://syzkaller.appspot.com/x/report.txt?x=137e9e91e00000
-> console output: https://syzkaller.appspot.com/x/log.txt?x=157e9e91e00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=a5295e161cd85b82
-> dashboard link: https://syzkaller.appspot.com/bug?extid=cea71eec5d6de256d54d
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=164b5181e00000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=166dd70de00000
-> 
-> Reported-by: syzbot+cea71eec5d6de256d54d@syzkaller.appspotmail.com
-> Fixes: fb041bb7c0a9 ("locking/refcount: Consolidate implementations of refcount_t")
-> 
-> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-
--- 
-Kees Cook
