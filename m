@@ -4,56 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F3BAC18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:47:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 926C3C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:47:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C6F82468E
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:47:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 682612468D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:47:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583844432;
-	bh=iYoThNzsN9sLo4BBTBPvBQeaRYlI3YW5q55/Nq573as=;
+	s=default; t=1583844434;
+	bh=lH07DyGfCpn7Umrw/EPCa6h0VuEhaCMiaDb8h6et0cI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kvYJmL7ScWUf+8xJNHD1TbwVFQrOGpYDuvOEbctCE4ioHOwao6CbZy3XkKzFbJlrs
-	 z31sio/9VzHVYahjrzxlEtsyU8HWdfPQvLzMAlkrHR7jRZYPLclNf2/d1bRJrC+p+e
-	 dw4kT2gCJehSlyXYNHDs1XmBuoq5qT3W8YaeRPUk=
+	b=tefS9m+4ErAjRxPo880nQsCOFDE7b2tpxXRj+GvZx9gBfrilal8rCr0fSDxey0/y+
+	 WAB1ZC6tRSa0iiAalnu7YGJ212fcnLYXNDHMyvTBZbm7GLoIz0bzUTbZuzfxNOL2Rh
+	 uipZTwEFZHnqWBnsKZOC0UaKVrinqCjRJ8j/gpro=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727928AbgCJMrL (ORCPT
+        id S1728138AbgCJMrN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:47:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50750 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:47:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50822 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727938AbgCJMrH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:47:07 -0400
+        id S1728112AbgCJMrJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:47:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D90A20674;
-        Tue, 10 Mar 2020 12:47:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D732624696;
+        Tue, 10 Mar 2020 12:47:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583844426;
-        bh=iYoThNzsN9sLo4BBTBPvBQeaRYlI3YW5q55/Nq573as=;
+        s=default; t=1583844429;
+        bh=lH07DyGfCpn7Umrw/EPCa6h0VuEhaCMiaDb8h6et0cI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=skvQ1tfApCtlhdhzdVzZf9G4Xi9zZuwDZ44DiUlxkf87Q034MDTY7kLm6TILt+/z2
-         602CN6JqoQ1RDnejQQlj4aaH3a43T8rD29lBeJ/f48vlqXguNwl66V/kr+gmXByUYG
-         A7VwPmKPF9iNBFu/5zXC+37HxFEnWXCw3uCQxheY=
+        b=h2HpeYtoevXOSWDEUziZLGetMCSIbUfsJjWmjxb51FEHXYwctH4IxeQ9CjJDwO1W/
+         DKdbKd/emQEsjik4yn43fIwU3Hg95GhQKZWog9satYQgZc3SGoYjiOzgQS2ZumItha
+         Y0QkrjednCgXW1Htnv4R35PfncLXj0p3aCQVsPlI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
-        Jani Nikula <jani.nikula@intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Andy Gospodarek <gospo@broadcom.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.9 39/88] include/linux/bitops.h: introduce BITS_PER_TYPE
-Date:   Tue, 10 Mar 2020 13:38:47 +0100
-Message-Id: <20200310123615.448719347@linuxfoundation.org>
+        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
+        Richard Guy Briggs <rgb@redhat.com>,
+        "Erhard F." <erhard_f@mailbox.org>,
+        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 40/88] net: netlink: cap max groups which will be considered in netlink_bind()
+Date:   Tue, 10 Mar 2020 13:38:48 +0100
+Message-Id: <20200310123615.720352829@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123606.543939933@linuxfoundation.org>
 References: <20200310123606.543939933@linuxfoundation.org>
@@ -66,42 +62,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Wilson <chris@chris-wilson.co.uk>
+From: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
 
-commit 9144d75e22cad3c89e6b2ccab551db9ee28d250a upstream.
+commit 3a20773beeeeadec41477a5ba872175b778ff752 upstream.
 
-net_dim.h has a rather useful extension to BITS_PER_BYTE to compute the
-number of bits in a type (BITS_PER_BYTE * sizeof(T)), so promote the macro
-to bitops.h, alongside BITS_PER_BYTE, for wider usage.
+Since nl_groups is a u32 we can't bind more groups via ->bind
+(netlink_bind) call, but netlink has supported more groups via
+setsockopt() for a long time and thus nlk->ngroups could be over 32.
+Recently I added support for per-vlan notifications and increased the
+groups to 33 for NETLINK_ROUTE which exposed an old bug in the
+netlink_bind() code causing out-of-bounds access on archs where unsigned
+long is 32 bits via test_bit() on a local variable. Fix this by capping the
+maximum groups in netlink_bind() to BITS_PER_TYPE(u32), effectively
+capping them at 32 which is the minimum of allocated groups and the
+maximum groups which can be bound via netlink_bind().
 
-Link: http://lkml.kernel.org/r/20180706094458.14116-1-chris@chris-wilson.co.uk
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Reviewed-by: Jani Nikula <jani.nikula@intel.com>
-Cc: Randy Dunlap <rdunlap@infradead.org>
-Cc: Andy Gospodarek <gospo@broadcom.com>
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-[only take the bitops.h portion for stable kernels - gregkh]
+CC: Christophe Leroy <christophe.leroy@c-s.fr>
+CC: Richard Guy Briggs <rgb@redhat.com>
+Fixes: 4f520900522f ("netlink: have netlink per-protocol bind function return an error code.")
+Reported-by: Erhard F. <erhard_f@mailbox.org>
+Signed-off-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/bitops.h |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ net/netlink/af_netlink.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/include/linux/bitops.h
-+++ b/include/linux/bitops.h
-@@ -3,7 +3,8 @@
- #include <asm/types.h>
- #include <linux/bits.h>
+--- a/net/netlink/af_netlink.c
++++ b/net/netlink/af_netlink.c
+@@ -1003,7 +1003,8 @@ static int netlink_bind(struct socket *s
+ 	if (nlk->netlink_bind && groups) {
+ 		int group;
  
--#define BITS_TO_LONGS(nr)	DIV_ROUND_UP(nr, BITS_PER_BYTE * sizeof(long))
-+#define BITS_PER_TYPE(type) (sizeof(type) * BITS_PER_BYTE)
-+#define BITS_TO_LONGS(nr)	DIV_ROUND_UP(nr, BITS_PER_TYPE(long))
- 
- extern unsigned int __sw_hweight8(unsigned int w);
- extern unsigned int __sw_hweight16(unsigned int w);
+-		for (group = 0; group < nlk->ngroups; group++) {
++		/* nl_groups is a u32, so cap the maximum groups we can bind */
++		for (group = 0; group < BITS_PER_TYPE(u32); group++) {
+ 			if (!test_bit(group, &groups))
+ 				continue;
+ 			err = nlk->netlink_bind(net, group + 1);
+@@ -1022,7 +1023,7 @@ static int netlink_bind(struct socket *s
+ 			netlink_insert(sk, nladdr->nl_pid) :
+ 			netlink_autobind(sock);
+ 		if (err) {
+-			netlink_undo_bind(nlk->ngroups, groups, sk);
++			netlink_undo_bind(BITS_PER_TYPE(u32), groups, sk);
+ 			return err;
+ 		}
+ 	}
 
 
