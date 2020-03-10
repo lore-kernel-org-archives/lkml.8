@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07525C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:16:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 263E4C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:16:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1470208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:16:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3CF0222D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:16:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583846196;
-	bh=CJhgIN5k3IWFVhZ1QrtyhxB1lsqhZJrGul74hdime1Y=;
+	s=default; t=1583846200;
+	bh=/YWMA6UzFbrkQZoRfe9gmBWwA4nol1L1a3pn/jKWsC0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LA5fcRFj3/kTbf+XeswMnkNt5JCwEV3/lNqc5AizsMsQh7oMcpJYN6QxgBkzgcZV/
-	 Gc3FwaI0elBCFwLxtgJ7bmp57xLCudOh0k3Eeoshoi3tLtggBn9M8K9UvIrr0qUPLc
-	 2HhJeNCvKYVRr9SFnx/SptKbeLt/nFDYZTyT3XZo=
+	b=t9EiIXKNDvZWS/sksRLCDo4wvsqjlmUcLJj3NJsA1uRcn2jzGJFMJdqq2lFsNyM+H
+	 7A1VeUYqSMlfg3ddwgzKTgM+V2eHlKXFWW6OqXSxxbUdminuEAej549v34WglvPGRY
+	 RDsPWH5A2qgsAUvtQJ6R9W5P0ZUb11VYn0597xGo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730693AbgCJNQf (ORCPT
+        id S1731458AbgCJNMw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:16:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35632 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:12:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35204 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730937AbgCJNNG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:13:06 -0400
+        id S1731601AbgCJNMs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:12:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 10B32208E4;
-        Tue, 10 Mar 2020 13:13:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC80E20409;
+        Tue, 10 Mar 2020 13:12:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845985;
-        bh=CJhgIN5k3IWFVhZ1QrtyhxB1lsqhZJrGul74hdime1Y=;
+        s=default; t=1583845968;
+        bh=/YWMA6UzFbrkQZoRfe9gmBWwA4nol1L1a3pn/jKWsC0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c61IGCcN2TjeDrwagNv6Bk3RDGW+kyS2PcNCEnkfe4EafLMZPVFLZgWaBRb2o6Mt7
-         Y13RxEWcW/Eg3QeogWSvO093rF82usvfL8FBMNV+VyTkc/fN+Xn4azcmMKPQBxiQqB
-         JuTqUTudkb1GTHdf7LxmFK/3PIuatMPZSxGLZi1Y=
+        b=HJSTaH+dTGgjAl0uK0p+BOZHDo3ncH/lQGoBwGvSXCeEL2tVppkfH9IwNgEkNRUG9
+         eTIYZKyr93EYDgxORP6COiDX6GGjMJjYeN5fPRkTPE2mEsQn9AogCzux/yOSLDF6QD
+         PaagFZWmLVSsUAabzbx/IiksKaC4tSIfy/98iOpM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Faiz Abbas <faiz_abbas@ti.com>,
-        Tony Lindgren <tony@atomide.com>
-Subject: [PATCH 4.19 45/86] arm: dts: dra76x: Fix mmc3 max-frequency
-Date:   Tue, 10 Mar 2020 13:45:09 +0100
-Message-Id: <20200310124533.238577260@linuxfoundation.org>
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>
+Subject: [PATCH 4.19 40/86] usb: core: port: do error out if usb_autopm_get_interface() fails
+Date:   Tue, 10 Mar 2020 13:45:04 +0100
+Message-Id: <20200310124532.950413038@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310124530.808338541@linuxfoundation.org>
 References: <20200310124530.808338541@linuxfoundation.org>
@@ -59,34 +59,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Faiz Abbas <faiz_abbas@ti.com>
+From: Eugeniu Rosca <erosca@de.adit-jv.com>
 
-commit fa63c0039787b8fbacf4d6a51e3ff44288f5b90b upstream.
+commit 1f8b39bc99a31759e97a0428a5c3f64802c1e61d upstream.
 
-dra76x is not affected by i887 which requires mmc3 node to be limited to
-a max frequency of 64 MHz. Fix this by overwriting the correct value in
-the the dra76 specific dtsi.
+Reviewing a fresh portion of coverity defects in USB core
+(specifically CID 1458999), Alan Stern noted below in [1]:
 
-Fixes: 895bd4b3e5ec ("ARM: dts: Add support for dra76-evm")
-Cc: stable@vger.kernel.org
-Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+On Tue, Feb 25, 2020 at 02:39:23PM -0500, Alan Stern wrote:
+ > A revised search finds line 997 in drivers/usb/core/hub.c and lines
+ > 216, 269 in drivers/usb/core/port.c.  (I didn't try looking in any
+ > other directories.)  AFAICT all three of these should check the
+ > return value, although a error message in the kernel log probably
+ > isn't needed.
+
+Factor out the usb_port_runtime_{resume,suspend}() changes into a
+standalone patch to allow conflict-free porting on top of stable v3.9+.
+
+[1] https://lore.kernel.org/lkml/Pine.LNX.4.44L0.2002251419120.1485-100000@iolanthe.rowland.org
+
+Fixes: 971fcd492cebf5 ("usb: add runtime pm support for usb port device")
+Cc: stable@vger.kernel.org # v3.9+
+Suggested-by: Alan Stern <stern@rowland.harvard.edu>
+Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
+Link: https://lore.kernel.org/r/20200226175036.14946-3-erosca@de.adit-jv.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/boot/dts/dra76x.dtsi |    5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/usb/core/port.c |   10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
---- a/arch/arm/boot/dts/dra76x.dtsi
-+++ b/arch/arm/boot/dts/dra76x.dtsi
-@@ -81,3 +81,8 @@
- 		reg = <0x3fc>;
- 	};
- };
+--- a/drivers/usb/core/port.c
++++ b/drivers/usb/core/port.c
+@@ -203,7 +203,10 @@ static int usb_port_runtime_resume(struc
+ 	if (!port_dev->is_superspeed && peer)
+ 		pm_runtime_get_sync(&peer->dev);
+ 
+-	usb_autopm_get_interface(intf);
++	retval = usb_autopm_get_interface(intf);
++	if (retval < 0)
++		return retval;
 +
-+&mmc3 {
-+	/* dra76x is not affected by i887 */
-+	max-frequency = <96000000>;
-+};
+ 	retval = usb_hub_set_port_power(hdev, hub, port1, true);
+ 	msleep(hub_power_on_good_delay(hub));
+ 	if (udev && !retval) {
+@@ -256,7 +259,10 @@ static int usb_port_runtime_suspend(stru
+ 	if (usb_port_block_power_off)
+ 		return -EBUSY;
+ 
+-	usb_autopm_get_interface(intf);
++	retval = usb_autopm_get_interface(intf);
++	if (retval < 0)
++		return retval;
++
+ 	retval = usb_hub_set_port_power(hdev, hub, port1, false);
+ 	usb_clear_port_feature(hdev, port1, USB_PORT_FEAT_C_CONNECTION);
+ 	if (!port_dev->is_superspeed)
 
 
