@@ -2,109 +2,108 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A65A4C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 01:58:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0273C10F25
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 02:02:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 844B224649
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 01:58:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5DA224649
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 02:02:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="od8Ik/Ke"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726501AbgCJB6R (ORCPT
+        id S1726488AbgCJCCL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 21:58:17 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:40915 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726156AbgCJB6R (ORCPT
+        Mon, 9 Mar 2020 22:02:11 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:41573 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726134AbgCJCCL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 21:58:17 -0400
-Received: by mail-pl1-f193.google.com with SMTP id h11so1584064plk.7;
-        Mon, 09 Mar 2020 18:58:14 -0700 (PDT)
+        Mon, 9 Mar 2020 22:02:11 -0400
+Received: by mail-pf1-f194.google.com with SMTP id z65so5706332pfz.8
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 19:02:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=J7pCBtBDSjcVtEqS1SMqVaavriUKG9Gcw86QjHCE7is=;
+        b=od8Ik/Ke9KrtA9c/iHuIQuTCQ4UUl9WD9SzJlxBa0aaRNAas2uFuzo6bHEfdOUpWGm
+         WeUdb/iJ7YvGs4FVnzeE3n/MncwQcj9DyktXeEC+gNykkoQkBGT6NDSyM59/wmD91jHP
+         J7MugXKmAov+76/+0Kd3UjFBamWcWzVmFMy21HGRegnvWAJEziGuFvSt/YETxzmQCEcG
+         Nf8fkbMpKGksMaRpqWgBWAzPt6gY+4XqZKkWEgluS0U9VLe3zlffZVr1AxjfY39HYelJ
+         UHbdZVbmytWTt3fXxV3Ls781j0S6f2qR4VRLqYKFV6h0jz965t+gu7MmGKAE+USEBHOJ
+         2s3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=qyOPcviTsbfhQO/ypGIatzcQW1kAEltFF4Vqey2P0bg=;
-        b=aeEntUjxGHpxhYs1XpiPMjMYsgANMakFborTO9EJO1tPc6ym2zySzrwmjdC3AVcYPH
-         U6Eo92U9nynWOap9haRqL5tJNyIOahJUkmMG7mVSsfB8JPIl3Xghu9at12178xJTIfHj
-         vDRb0pOXDdBdqAXNvw3CRQQiXZpGVoo7aVS/7HJDKTGnJXjbJIUOJZkB2H81lphU78cI
-         bT7ZMrgPxeR3SnrKHrOGuLQimAuuJjges+kOu8ddWTmW6TCY6IMelnrlF5wycU4Jbsjr
-         BrTab00F3ESPNWFKT+ysHHnOK9QmQ/++pmeEXDL1MvY1tUE8vUF3xrCsvNPJ4WR6rcCj
-         UzJg==
-X-Gm-Message-State: ANhLgQ3P/c4j2XozQTBKd78uHaHoUQcjzchUPzznl4AUUhNHPCDivuUv
-        ng2c00X706R3pocYOEL8xhnsXvts
-X-Google-Smtp-Source: ADFU+vuzWuOCJtoLOOSx428DH3AEJzg/4yPkxNbaruhxw9/Mi4eYWCI4hq1L/gO7jIXpRrhGcfXzsw==
-X-Received: by 2002:a17:90b:3885:: with SMTP id mu5mr2189336pjb.25.1583805493868;
-        Mon, 09 Mar 2020 18:58:13 -0700 (PDT)
-Received: from ?IPv6:2601:647:4000:d7:c0e4:71da:7a83:2357? ([2601:647:4000:d7:c0e4:71da:7a83:2357])
-        by smtp.gmail.com with ESMTPSA id r64sm748524pjb.15.2020.03.09.18.58.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Mar 2020 18:58:13 -0700 (PDT)
-Subject: Re: [PATCH v3 1/1] scsi: ufs: fix LRB pointer incorrect
- initialization issue
-To:     huobean@gmail.com, alim.akhtar@samsung.com, avri.altman@wdc.com,
-        asutoshd@codeaurora.org, jejb@linux.ibm.com,
-        martin.petersen@oracle.com, stanley.chu@mediatek.com,
-        beanhuo@micron.com, tomas.winkler@intel.com, cang@codeaurora.org
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200309161057.9897-1-beanhuo@micron.com>
- <20200309161057.9897-2-beanhuo@micron.com>
-From:   Bart Van Assche <bvanassche@acm.org>
-Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
- mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
- LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
- fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
- AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
- 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
- AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
- igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
- Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
- jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
- macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
- CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
- RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
- PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
- eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
- lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
- T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
- ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
- CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
- oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
- //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
- mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
- goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
-Message-ID: <ede4addf-73c7-e5f8-5143-91eb0cd3eb9b@acm.org>
-Date:   Mon, 9 Mar 2020 18:58:11 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=J7pCBtBDSjcVtEqS1SMqVaavriUKG9Gcw86QjHCE7is=;
+        b=cyuqi5+LBcXMD0zoNtvhzolZA4w2vc0j+KyF9aLDRIKbHgWiPjBnmCiRzuTq/8xvI0
+         2PJziIVGTK5csJlZxo0z53UOL3RRTZ1nmbB6iKWcxykC4X2jxtlhINbXgCldXP7B4Rgz
+         PZvu20MzO0HyYqOszT5SDyt0XlvYejYRJ3Gd0LeRldbZBwjYxNsNT+NxshAkDe3UGxy8
+         eWlIOsY4fmrDpZIBM9YBOxrpiZ+WToSPfbPBpmINYm5y8GTCy5ilazSElHj5yMucZaG6
+         grOIGkhQO0eYsQfGtqOhKpryDbgJEdBG2XRmiYH6o6JRkeKwFaZSdH/Bn5sDI1Fu1p5F
+         qzog==
+X-Gm-Message-State: ANhLgQ3jU8M5wD0iLkAi2hgWKiZgWwqb9MeHjrDd7p0w6xiDQ34dtCWc
+        SQlTPDgMgqYvbqLti3mYlHM=
+X-Google-Smtp-Source: ADFU+vvHEV0JAO6ggNIK/yWlbU/Cwdn68CUMZ0ZoGJtaGZo6g7fDAvZKfEvDMy/2199NVxKR/8Il2A==
+X-Received: by 2002:a63:a069:: with SMTP id u41mr3283610pgn.3.1583805730150;
+        Mon, 09 Mar 2020 19:02:10 -0700 (PDT)
+Received: from localhost ([43.224.245.179])
+        by smtp.gmail.com with ESMTPSA id d6sm740081pjv.38.2020.03.09.19.02.08
+        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
+        Mon, 09 Mar 2020 19:02:09 -0700 (PDT)
+Date:   Tue, 10 Mar 2020 10:02:07 +0800
+From:   chenqiwu <qiwuchen55@gmail.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     akpm@linux-foundation.org, walken@google.com, rfontana@redhat.com,
+        dbueso@suse.de, tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        chenqiwu <chenqiwu@xiaomi.com>
+Subject: Re: [PATCH] rbtree: introduce three helpers about sort-order
+ iteration
+Message-ID: <20200310020206.GA8961@cqw-OptiPlex-7050>
+References: <1583769734-1311-1-git-send-email-qiwuchen55@gmail.com>
+ <20200309165511.GK12561@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <20200309161057.9897-2-beanhuo@micron.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200309165511.GK12561@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-03-09 09:10, huobean@gmail.com wrote:
-> @@ -4834,6 +4829,7 @@ static void __ufshcd_transfer_req_compl(struct ufs_hba *hba,
->  			continue;
->  		cmd = blk_mq_rq_to_pdu(req);
->  		lrbp = scsi_cmd_priv(cmd);
-> +		ufshcd_init_lrb(hba, lrbp, index);
->  		if (ufshcd_is_scsi(req)) {
->  			ufshcd_add_command_trace(hba, req, "complete");
->  			result = ufshcd_transfer_rsp_status(hba, lrbp);
+On Mon, Mar 09, 2020 at 05:55:11PM +0100, Peter Zijlstra wrote:
+> On Tue, Mar 10, 2020 at 12:02:14AM +0800, qiwuchen55@gmail.com wrote:
+> > +/**
+> > + * rbtree_for_each_entry_safe - iterate in sort-order over of given type
+> > + * allowing the backing memory of @pos to be invalidated.
+> > + * @pos:	the 'type *' to use as a loop cursor.
+> > + * @n:		another 'type *' to use as temporary storage.
+> > + * @root:	'rb_root *' of the rbtree.
+> > + * @field:	the name of the rb_node field within 'type'.
+> > + *
+> > + * rbtree_order_for_each_entry_safe() provides a similar guarantee as
+> > + * list_for_each_entry_safe() and allows the sort-order iteration to
+> > + * continue independent of changes to @pos by the body of the loop.
+> > + *
+> > + * Note, however, that it cannot handle other modifications that re-order the
+> > + * rbtree it is iterating over. This includes calling rb_erase() on @pos, as
+> > + * rb_erase() may rebalance the tree, causing us to miss some nodes.
+> > + */
+> > +#define rbtree_for_each_entry_safe(pos, n, root, field) \
+> > +	for (pos = rb_entry_safe(rb_first(root), typeof(*pos), field); \
+> > +	     pos && ({ n = rb_entry_safe(rb_next(&pos->field), \
+> > +			typeof(*pos), field); 1; }); \
+> > +	     pos = n)
+> 
+> Since this cannot deal with rb_erase(), what exactly is the purpose of
+> this thing?
 
-This ufshcd_init_lrb() call looks incorrect to me. I think that
-ufshcd_init_lrb() should only be called before a request is submitted to
-the UFS controller and also that ufshcd_init_lrb() should not be called
-from the completion path.
-
-Thanks,
-
-Bart.
+It's just a copy of rbtree_postorder_for_each_entry_safe() for
+the usage scenario of sort-order iteration. It can be used for
+walking the tree and free all entries of the given type.
