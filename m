@@ -7,45 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C210FC18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:59:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52BBDC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:59:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90A022468D
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:59:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 297F42253D
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 12:59:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583845159;
-	bh=wGtPODP5oRTLsKphsGUQeHu6ALiA2GFwsmRudaHXPGw=;
+	s=default; t=1583845163;
+	bh=zHbdShaZV+XM7ds1MbyGEf0M0GeteJZlB32nh7R+jx8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uERnodqYTDFs4tOp0bO1VT4a8zl2gBzg5jEpCOmYEWiYBUjTrfik2RRRrWLds7cun
-	 03ZQIuhQ+bhy8m9Mgq6dhdoHMqHZc85vAKvKWcf5bd/aENHlhJp9GzhU7s7zcd6cYY
-	 U9tWRLVDh7e9rgrGI1Q8BGFGMeSJRk1r5i9691Sg=
+	b=02mBSlo3dQuBIPu3Q61BP/7ilU9+1zpOWVLOPaqZbMZJqeo2J2HqmZUzVvQ13IOmN
+	 hjWQlFlmh+bljWCYaZttyqAGx5Y8CA7dEvw2YolMAghD1u2fOeqe9MlQIZPkF5kVrS
+	 MzjAiROiCkL1+bb6zW/daX/1pU244Kk9qT/HdZd0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730002AbgCJM7S (ORCPT
+        id S1730009AbgCJM7W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 08:59:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39604 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 08:59:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39664 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726436AbgCJM7O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 08:59:14 -0400
+        id S1726526AbgCJM7R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:59:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1CF8F2253D;
-        Tue, 10 Mar 2020 12:59:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03A7E24694;
+        Tue, 10 Mar 2020 12:59:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845153;
-        bh=wGtPODP5oRTLsKphsGUQeHu6ALiA2GFwsmRudaHXPGw=;
+        s=default; t=1583845156;
+        bh=zHbdShaZV+XM7ds1MbyGEf0M0GeteJZlB32nh7R+jx8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wI1RNab9PXHedPqwqOtoDgkaa1PsW5+VfnT/HA5YuWWqDzcSdtM+pheU1iizynQaX
-         GDY9VAhAiEfn06/DFaRSUj1ehjSKKz/BGjiKttAc4qTNH6b3g9+aAT/F5RSJzabI3s
-         ILzXihIARKB13jb+ALN3lOdXronFpx2NXB6sWg2o=
+        b=WfItBJgJSmutL7fHNea7Yip2sZBXYnPnj3zVm1HcBoZcNP8sEfY1nSKTvxXXxXico
+         yUixyWLpzrDQXOtdgW2cUR8E1+RSRTM0l2rNsndy+g0k78j6p4/EiIFFvyrTO81k7c
+         r88uXnZ35RyfDiJwY6TiKbrEjpy9XRvjuOh+ZzMs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Chen <peter.chen@nxp.com>
-Subject: [PATCH 5.5 074/189] usb: cdns3: gadget: toggle cycle bit before reset endpoint
-Date:   Tue, 10 Mar 2020 13:38:31 +0100
-Message-Id: <20200310123647.093371797@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+9d82b8de2992579da5d0@syzkaller.appspotmail.com,
+        Andrew Morton <akpm@linux-foundation.org>,
+        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.5 083/189] fat: fix uninit-memory access for partial initialized inode
+Date:   Tue, 10 Mar 2020 13:38:40 +0100
+Message-Id: <20200310123648.078279873@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123639.608886314@linuxfoundation.org>
 References: <20200310123639.608886314@linuxfoundation.org>
@@ -58,69 +62,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Chen <peter.chen@nxp.com>
+From: OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
 
-commit 4bf2dd65135a2d7fe202f7c10d65b51bcf645ac6 upstream.
+commit bc87302a093f0eab45cd4e250c2021299f712ec6 upstream.
 
-If there are TRBs pending during reset endpoint operation, the
-DMA will advance after reset operation, but it isn't expected,
-since the data is not yet available (For OUT, the data is not
-yet available). After the data is ready, there won't be any
-interrupt since the EP_TRADDR already points to next TRB entry
-and doorbell is not set.
+When get an error in the middle of reading an inode, some fields in the
+inode might be still not initialized.  And then the evict_inode path may
+access those fields via iput().
 
-To fix it, it toggles cycle bit before reset operation, and restores
-it after reset, it could avoid unexpected DMA advance due to
-cycle bit is for software during the endpoint reset operation.
+To fix, this makes sure that inode fields are initialized.
 
-Fixes: 7733f6c32e36 ("usb: cdns3: Add Cadence USB3 DRD Driver")
-Signed-off-by: Peter Chen <peter.chen@nxp.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200219141455.23257-3-peter.chen@nxp.com
+Reported-by: syzbot+9d82b8de2992579da5d0@syzkaller.appspotmail.com
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r/871rqnreqx.fsf@mail.parknet.co.jp
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/cdns3/gadget.c |   17 ++++++++++++++---
- 1 file changed, 14 insertions(+), 3 deletions(-)
+ fs/fat/inode.c |   19 +++++++------------
+ 1 file changed, 7 insertions(+), 12 deletions(-)
 
---- a/drivers/usb/cdns3/gadget.c
-+++ b/drivers/usb/cdns3/gadget.c
-@@ -2152,11 +2152,21 @@ int __cdns3_gadget_ep_clear_halt(struct
- {
- 	struct cdns3_device *priv_dev = priv_ep->cdns3_dev;
- 	struct usb_request *request;
-+	struct cdns3_request *priv_req;
-+	struct cdns3_trb *trb = NULL;
- 	int ret;
- 	int val;
+--- a/fs/fat/inode.c
++++ b/fs/fat/inode.c
+@@ -749,6 +749,13 @@ static struct inode *fat_alloc_inode(str
+ 		return NULL;
  
- 	trace_cdns3_halt(priv_ep, 0, 0);
- 
-+	request = cdns3_next_request(&priv_ep->pending_req_list);
-+	if (request) {
-+		priv_req = to_cdns3_request(request);
-+		trb = priv_req->trb;
-+		if (trb)
-+			trb->control = trb->control ^ TRB_CYCLE;
-+	}
+ 	init_rwsem(&ei->truncate_lock);
++	/* Zeroing to allow iput() even if partial initialized inode. */
++	ei->mmu_private = 0;
++	ei->i_start = 0;
++	ei->i_logstart = 0;
++	ei->i_attrs = 0;
++	ei->i_pos = 0;
 +
- 	writel(EP_CMD_CSTALL | EP_CMD_EPRST, &priv_dev->regs->ep_cmd);
+ 	return &ei->vfs_inode;
+ }
  
- 	/* wait for EPRST cleared */
-@@ -2167,10 +2177,11 @@ int __cdns3_gadget_ep_clear_halt(struct
+@@ -1373,16 +1380,6 @@ out:
+ 	return 0;
+ }
  
- 	priv_ep->flags &= ~(EP_STALLED | EP_STALL_PENDING);
- 
--	request = cdns3_next_request(&priv_ep->pending_req_list);
+-static void fat_dummy_inode_init(struct inode *inode)
+-{
+-	/* Initialize this dummy inode to work as no-op. */
+-	MSDOS_I(inode)->mmu_private = 0;
+-	MSDOS_I(inode)->i_start = 0;
+-	MSDOS_I(inode)->i_logstart = 0;
+-	MSDOS_I(inode)->i_attrs = 0;
+-	MSDOS_I(inode)->i_pos = 0;
+-}
 -
--	if (request)
-+	if (request) {
-+		if (trb)
-+			trb->control = trb->control ^ TRB_CYCLE;
- 		cdns3_rearm_transfer(priv_ep, 1);
-+	}
+ static int fat_read_root(struct inode *inode)
+ {
+ 	struct msdos_sb_info *sbi = MSDOS_SB(inode->i_sb);
+@@ -1843,13 +1840,11 @@ int fat_fill_super(struct super_block *s
+ 	fat_inode = new_inode(sb);
+ 	if (!fat_inode)
+ 		goto out_fail;
+-	fat_dummy_inode_init(fat_inode);
+ 	sbi->fat_inode = fat_inode;
  
- 	cdns3_start_all_request(priv_dev, priv_ep);
- 	return ret;
+ 	fsinfo_inode = new_inode(sb);
+ 	if (!fsinfo_inode)
+ 		goto out_fail;
+-	fat_dummy_inode_init(fsinfo_inode);
+ 	fsinfo_inode->i_ino = MSDOS_FSINFO_INO;
+ 	sbi->fsinfo_inode = fsinfo_inode;
+ 	insert_inode_hash(fsinfo_inode);
 
 
