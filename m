@@ -2,89 +2,177 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7E99C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:17:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 507AAC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:18:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C0F921655
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:17:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583871460;
-	bh=cnbireeiV5S3r6lq2ej/Yy197jTRchqLG5DrkP8MDXk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BXqeCEX7xULrh0HxFY8zbpLS+VxthXKzeYpyEhyf5Eiy6e+GHrjiuPRQaQoNL3ob6
-	 1gvcqlzGojKkEAELxkWSg0q6YATD7PzBN88txaE8nA81eOgHzGe5zQe2+vCeRF8kDU
-	 0s+kIKeM5EQrsQ7Vv7yD8GqBItgY+fHmwI32Y2/A=
+	by mail.kernel.org (Postfix) with ESMTP id E64BD215A4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 20:18:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="i6PwcH1Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726423AbgCJURj (ORCPT
+        id S1726582AbgCJUSA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 16:17:39 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:33576 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726271AbgCJURj (ORCPT
+        Tue, 10 Mar 2020 16:18:00 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:33865 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726436AbgCJUSA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 16:17:39 -0400
-Received: by mail-ot1-f68.google.com with SMTP id g15so8400629otr.0;
-        Tue, 10 Mar 2020 13:17:37 -0700 (PDT)
+        Tue, 10 Mar 2020 16:18:00 -0400
+Received: by mail-pg1-f193.google.com with SMTP id t3so6819264pgn.1
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 13:17:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=RKigTXtTZ1YImDJinI4wU2TyC7WQeMLqFQfSK2SiClo=;
+        b=i6PwcH1Y6dzAld5+0ItdFH0DNwVNQDvVoI3rFkpU5glNp7p1gPAzHwUVGup1Aj6YPT
+         mm52T1lUrybAlYpwBILDBxSuJksLBuWK9y1KWBhigTnvRKG8n9iDhSzGEkU4ueiYuSvY
+         EiCKda6MTerB6wqJNRGHCZxbLU3xNZ5OT1LFY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=SALtb00tEMzq9uXRFmiEx+QH3Zf98Xn1eLOE8cTe24I=;
-        b=W/8rLsfafV8/aTCibIqkDcQ0EKqQ6uOq5hOD5FuaM0P8CDcyBM/mX3g8uog911l9t+
-         bmQnw2iTun+nHhIjtt4D3QRmb79MgESkz3FCXOm4ygtkLNM21XapZ15zXv6LaF2JktuX
-         ra0w9B4U2I6FCF7xLMemaVCeMmctt1ePrA6RuXC1X9R+13h+XomrmcLTj24jQXpG7vt6
-         98D0BCpRe8GdibSn+o0w2zpDRjBRPw5k8eE8GK+PeeYt+09GKOYUY7C5W4Mi2R88sNCp
-         QHB36NevxLJMo1Vl9shT4CMB07YpzVm+E6OFM6Nnw/7hDLfs2m1xhpZWA82sT9HB6N7a
-         ZSOQ==
-X-Gm-Message-State: ANhLgQ2tYaiZ2VYMVr4pBfvismgFbOSH+V3wdcl4gwgN0XyvQWAYwYEf
-        kTAFV6COHtGDJX6Xs7nM9w==
-X-Google-Smtp-Source: ADFU+vvd4bWBEv3HptnfOHpj19yNbzPlCehj5aSpWXjg8ppsPpo03XcBLibrk39Ai/jwvcUg9e35Xw==
-X-Received: by 2002:a05:6830:1d69:: with SMTP id l9mr18434593oti.192.1583871456874;
-        Tue, 10 Mar 2020 13:17:36 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id l1sm4573693oic.22.2020.03.10.13.17.35
+         :mime-version:content-disposition:in-reply-to;
+        bh=RKigTXtTZ1YImDJinI4wU2TyC7WQeMLqFQfSK2SiClo=;
+        b=Bm4H2toIR7yIFOCmofnk3e/odUv0j1SsVmYv/wcY2o4Sr4msNX5euyWOFcyYgKGgXG
+         sM6Jr6XfTJ8rprCpxvHXJMJvdLohJ2QpVQrqKfx4gdgHz818vjVRb6lVd9Ocg9k3mFzb
+         CzpKpsjHvkwOnUBVHXgai5QE3oPpYkJJtZ3uELZZYhA7cc9cKqJUtI6pTQgNZB8aRnLB
+         x2QOx4Xk20+77WnOfBZ+DYanoOq2/qCQPmh81CRq0KpTPdQwChH/4agYwRf9lOO2bFUS
+         +bjwx3/JgCXQ0XPXxWyDAFsgT7LWIbO7wgGEDoDAdb2c5q5f9pC9JPXkfux7TMXCN8LW
+         FAJQ==
+X-Gm-Message-State: ANhLgQ2OmtNL/josvurvG4g7nSdjRWGgfBxgt86NmbCzi9zYZWMhbVfD
+        2t+Qu8sjsiMYpaQy1aYk+N/Qjg==
+X-Google-Smtp-Source: ADFU+vt2t4dqM/StQkYgOOR3czOMhuaGQySe+8w6u+0IAx0TkUIOlTLogaEjfIx9xPXJuWMsrEQx6g==
+X-Received: by 2002:a65:5383:: with SMTP id x3mr22185221pgq.279.1583871478687;
+        Tue, 10 Mar 2020 13:17:58 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id 199sm51876404pfv.81.2020.03.10.13.17.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Mar 2020 13:17:35 -0700 (PDT)
-Received: (nullmailer pid 31532 invoked by uid 1000);
-        Tue, 10 Mar 2020 20:17:34 -0000
-Date:   Tue, 10 Mar 2020 15:17:34 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Abel Vesa <abel.vesa@nxp.com>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Anson Huang <anson.huang@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Peng Fan <peng.fan@nxp.com>, Jacky Bai <ping.bai@nxp.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-clk@vger.kernel.org, Abel Vesa <abel.vesa@nxp.com>
-Subject: Re: [RFC 07/11] dt-bindings: clocks: imx8mp: Add ids for audiomix
- clocks
-Message-ID: <20200310201734.GA31480@bogus>
-References: <1583226206-19758-1-git-send-email-abel.vesa@nxp.com>
- <1583226206-19758-8-git-send-email-abel.vesa@nxp.com>
+        Tue, 10 Mar 2020 13:17:57 -0700 (PDT)
+Date:   Tue, 10 Mar 2020 13:17:56 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Andrei Vagin <avagin@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Yuyang Du <duyuyang@gmail.com>,
+        David Hildenbrand <david@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        David Howells <dhowells@redhat.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christian Kellner <christian@kellner.me>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>
+Subject: Re: [PATCH v2 1/5] exec: Only compute current once in flush_old_exec
+Message-ID: <202003101317.20BD018D9@keescook>
+References: <87v9nlii0b.fsf@x220.int.ebiederm.org>
+ <AM6PR03MB5170609D44967E044FD1BE40E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87a74xi4kz.fsf@x220.int.ebiederm.org>
+ <AM6PR03MB51705AA3009B4986BB6EF92FE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87r1y8dqqz.fsf@x220.int.ebiederm.org>
+ <AM6PR03MB517053AED7DC89F7C0704B7DE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <AM6PR03MB51703B44170EAB4626C9B2CAE4E20@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87tv32cxmf.fsf_-_@x220.int.ebiederm.org>
+ <87v9ne5y4y.fsf_-_@x220.int.ebiederm.org>
+ <87pndm5y3l.fsf_-_@x220.int.ebiederm.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1583226206-19758-8-git-send-email-abel.vesa@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <87pndm5y3l.fsf_-_@x220.int.ebiederm.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue,  3 Mar 2020 11:03:22 +0200, Abel Vesa wrote:
-> Add all the clock ids for the audiomix clocks.
+On Sun, Mar 08, 2020 at 04:35:26PM -0500, Eric W. Biederman wrote:
 > 
-> Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
+> Make it clear that current only needs to be computed once in
+> flush_old_exec.  This may have some efficiency improvements and it
+> makes the code easier to change.
+> 
+> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+
+modulo my suggestion of adding more comments (it could even be kerndoc!)
+that explicitly states that "me" should always be "current", yup, looks
+good:
+
+Reviewed-by: Kees Cook <keescook@chromium.org>
+
+-Kees
+
 > ---
->  include/dt-bindings/clock/imx8mp-clock.h | 62 ++++++++++++++++++++++++++++++++
->  1 file changed, 62 insertions(+)
+>  fs/exec.c | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
+> 
+> diff --git a/fs/exec.c b/fs/exec.c
+> index db17be51b112..c3f34791f2f0 100644
+> --- a/fs/exec.c
+> +++ b/fs/exec.c
+> @@ -1260,13 +1260,14 @@ void __set_task_comm(struct task_struct *tsk, const char *buf, bool exec)
+>   */
+>  int flush_old_exec(struct linux_binprm * bprm)
+>  {
+> +	struct task_struct *me = current;
+>  	int retval;
+>  
+>  	/*
+>  	 * Make sure we have a private signal table and that
+>  	 * we are unassociated from the previous thread group.
+>  	 */
+> -	retval = de_thread(current);
+> +	retval = de_thread(me);
+>  	if (retval)
+>  		goto out;
+>  
+> @@ -1294,10 +1295,10 @@ int flush_old_exec(struct linux_binprm * bprm)
+>  	bprm->mm = NULL;
+>  
+>  	set_fs(USER_DS);
+> -	current->flags &= ~(PF_RANDOMIZE | PF_FORKNOEXEC | PF_KTHREAD |
+> +	me->flags &= ~(PF_RANDOMIZE | PF_FORKNOEXEC | PF_KTHREAD |
+>  					PF_NOFREEZE | PF_NO_SETAFFINITY);
+>  	flush_thread();
+> -	current->personality &= ~bprm->per_clear;
+> +	me->personality &= ~bprm->per_clear;
+>  
+>  	/*
+>  	 * We have to apply CLOEXEC before we change whether the process is
+> @@ -1305,7 +1306,7 @@ int flush_old_exec(struct linux_binprm * bprm)
+>  	 * trying to access the should-be-closed file descriptors of a process
+>  	 * undergoing exec(2).
+>  	 */
+> -	do_close_on_exec(current->files);
+> +	do_close_on_exec(me->files);
+>  	return 0;
+>  
+>  out:
+> -- 
+> 2.25.0
 > 
 
-Acked-by: Rob Herring <robh@kernel.org>
+-- 
+Kees Cook
