@@ -2,239 +2,232 @@ Return-Path: <linux-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MENTIONS_GIT_HOSTING,RDNS_NONE,SPF_HELO_NONE,SPF_NONE autolearn=no
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MENTIONS_GIT_HOSTING,
+	PDS_HP_HELO_NORDNS,RDNS_NONE,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
 	autolearn_force=no version=3.4.0
-Received: from mga05.intel.com ([192.55.52.43]:36264 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726271AbgCJUns (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 16:43:48 -0400
-Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [PATCH v17 09/12] PCI/AER: Allow clearing Error Status Register
- in FF mode
-To: Austin.Bolen@dell.com, helgaas@kernel.org
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com
-References: <20200310193257.GA170043@google.com>
- <38277b0f6c2e4c5d88e741b7354c72d1@AUSX13MPC107.AMER.DELL.COM>
-From: Kuppuswamy Sathyanarayanan
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Message-ID: <8289f9b3-b9eb-6a80-1271-3db9aeef5161@linux.intel.com>
-Date: Tue, 10 Mar 2020 13:41:22 -0700
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:46031 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726271AbgCJUqh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 16:46:37 -0400
+Received: by mail-pf1-f194.google.com with SMTP id 2so4565pfg.12
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 13:46:37 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <38277b0f6c2e4c5d88e741b7354c72d1@AUSX13MPC107.AMER.DELL.COM>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <CA+G9fYvRZ9eCE29FjXkv1dQfrdGO3uWp4Tvkip5Z_jsgjVJeAQ@mail.gmail.com>
+ <CAHp75VfhKoLtWkLHUyzg6m=rx833qiCVimWJVKU13qrX+aJz-Q@mail.gmail.com>
+ <CAFd5g45GbSX1BkuaH=8639ESHi-MCGkpFhEZZpycm9=jQb93rg@mail.gmail.com>
+ <CAFd5g47aaE+tGeHPrQmhfi6_nrvi1K4DvtRodh=zN21-uiQ1DQ@mail.gmail.com>
+ <20200305223350.GA2852@mara.localdomain> <20200306120525.GC68079@kuha.fi.intel.com>
+ <CAFd5g45c9L4BBRNtxtQf_NFr2bR6Wgt9uOHW86gzb6Ozeb0SBA@mail.gmail.com>
+ <CAFd5g45cdygYfxGoCkk710tLXFADeLNb+6w-=vhkDMLP9OM7bw@mail.gmail.com> <20200310111837.GA1368052@kuha.fi.intel.com>
+In-Reply-To: <20200310111837.GA1368052@kuha.fi.intel.com>
+From: Brendan Higgins <brendanhiggins@google.com>
+Date: Tue, 10 Mar 2020 13:46:24 -0700
+Message-ID:
+ <CAFd5g452sDMZToU+FDa-Odbkd_t1708gcRMAZQG+U4LnV=Xqgw@mail.gmail.com>
+Subject: Re: BUG: kernel NULL pointer dereference, address: 00 - ida_free+0x76/0x140
+To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        hdegoede@redhat.com,
+        "rafael.j.wysocki" <rafael.j.wysocki@intel.com>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK"
+        <linux-kselftest@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        lkft-triage@lists.linaro.org,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 List-ID: <linux-kernel.vger.kernel.org>
-Message-ID: <20200310204122.sgUoKVHZJjfKM78iVBdwNAbQ1q6AMCEIit1AL1PybEI@z>
+Message-ID: <20200310204624.355IJs7ycPmpLreXX49WzBfejaO54Hz2Kb3x23P6BSE@z>
 
-Hi,
-
-On 3/10/20 1:06 PM, Austin.Bolen@dell.com wrote:
-> On 3/10/2020 2:33 PM, Bjorn Helgaas wrote:
->> [EXTERNAL EMAIL]
->>
->> On Tue, Mar 10, 2020 at 06:14:20PM +0000, Austin.Bolen@dell.com wrote:
->>> On 3/9/2020 11:28 PM, Kuppuswamy, Sathyanarayanan wrote:
->>>> On 3/9/2020 7:40 PM, Bjorn Helgaas wrote:
->>>>> [+cc Austin, tentative Linux patches on this git branch:
->>>>> https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/tree/drivers/pci/pcie?h=review/edr]
->>>>>
->>>>> On Tue, Mar 03, 2020 at 06:36:32PM -0800, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
->>>>>> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->>>>>>
->>>>>> As per PCI firmware specification r3.2 System Firmware Intermediary
->>>>>> (SFI) _OSC and DPC Updates ECR
->>>>>> (https://members.pcisig.com/wg/PCI-SIG/document/13563), sec titled "DPC
->>>>>> Event Handling Implementation Note", page 10, Error Disconnect Recover
->>>>>> (EDR) support allows OS to handle error recovery and clearing Error
->>>>>> Registers even in FF mode. So create new API pci_aer_raw_clear_status()
->>>>>> which allows clearing AER registers without FF mode checks.
->>>>> I see that this ECR was released as an ECN a few days ago:
->>>>> https://members.pcisig.com/wg/PCI-SIG/document/14076
->>>>> Regrettably the title in the PDF still says "ECR" (the rendered title
->>>>> *page* says "ENGINEERING CHANGE NOTIFICATION", but some metadata
->>>>> buried in the file says "ECR - SFI _OSC Support and DPC Updates".
->>> I'll see if PCI-SIG can update the metadata and repost.
->> If that's possible, it would be nice to update the metadata for the
->> "Downstream Port Containment related Enhancements" ECN as well.  That
->> one currently says "ECR - CardBus Header Proposal", which means that's
->> what's in the window title bar and icons in the panel.
-> Sure, I'll check.
+On Tue, Mar 10, 2020 at 4:18 AM Heikki Krogerus
+<heikki.krogerus@linux.intel.com> wrote:
 >
->>>>> Anyway, I think I see the note you refer to (now on page 12):
->>>>>
->>>>>       IMPLEMENTATION NOTE
->>>>>       DPC Event Handling
->>>>>
->>>>>       The flow chart below documents the behavior when firmware maintains
->>>>>       control of AER and DPC and grants control of PCIe Hot-Plug to the
->>>>>       operating system.
->>>>>
->>>>>       ...
->>>>>
->>>>>       Capture and clear device AER status. OS may choose to offline
->>>>>       devices3, either via SW (not load driver) or HW (power down device,
->>>>>       disable Link5,6,7). Otherwise process _HPX, complete device
->>>>>       enumeration, load drivers
->>>>>
->>>>> This clearly suggests that the OS should clear device AER status.
->>>>> However, according to the intro text, firmware has retained control of
->>>>> AER, so what gives the OS the right to clear AER status?
->>>>>
->>>>> The Downstream Port Containment Related Enhancements ECN (sec 4.5.1,
->>>>> table 4-6) contains an exception that allows the OS to read/write
->>>>> DPC registers during recovery.  But
->>>>>
->>>>>       - that is for *DPC* registers, not for AER registers, and
->>>>>
->>>>>       - that exception only applies between OS receipt of the EDR
->>>>>         notification and OS release of DPC by clearing the DPC Trigger
->>>>>         Status bit.
->>>>>
->>>>> The flowchart in the SFI ECN shows the OS releasing DPC before
->>>>> clearing AER status:
->>>>>
->>>>>       - Receive EDR notification
->>>>>
->>>>>       - Cleanup - Notify and unload child drivers below Port
->>>>>
->>>>>       - Bring Port out of DPC, clear port error status, assign bus numbers
->>>>>         to child devices.
->>>>>
->>>>>         I assume this box includes clearing DPC error status and clearing
->>>>>         Trigger Status?  They seem to be out of order in the box.
->>> OS clears the DPC Trigger Status bit which will bring port below it out
->>> of containment. Then OS will clear the "port" error status bits (i.e.,
->>> the AER and DPC status bits in the root port or downstream port that
->>> triggered containment). I don't think it would hurt to do this two steps
->>> in reverse order but don't think it is necessary. Note that error status
->>> bits for devices below the port in containment are cleared later after
->>> f/w has a chance to log them.
->> Maybe I'm misreading the DPC enhancements ECN.  I think it says the OS
->> can read/write DPC registers until it clears the DPC Trigger Status.
->> If the OS clears Trigger Status first, my understanding is that we're
->> now out of the EDR notification processing window and the OS is not
->> permitted to write DPC registers.
->>
->> If it's OK for the OS to clear Trigger Status before clearing DPC
->> error status, what is the event that determines when the OS may no
->> longer read/write the DPC registers?
-> I think there are a few different registers to consider... DPC Control,
-> DPC Status, various AER registers, and the RP PIO registers. At this
-> point in the flow, the firmware has already had a chance to read all of
-> them and so it really doesn't matter the order the OS does those two
-> things. The firmware isn't going to get notified again until _OST so by
-> then both operation will be done and system firmware will have no idea
-> which order the OS did them in, nor will it care.  But since the
-> existing normative text specifies and order, I would just follow that.
-I think the correct order is to clear the port error status *before clearing
-the DPC status trigger*.
-
-Please check the following spec reference (change to 4.5.1 Table 4-6)
-
-the OS is permitted to read or write DPC Control and Status registers of a
-port while processing an Error Disconnect Recover notification from firmware
-on that port. Error Disconnect Recover notification processing begins 
-with the
-Error Disconnect Recover notify from Firmware, and *ends when the OS 
-releases
-DPC by clearing the DPC Trigger Status bit*.Firmware can read DPC Trigger
-Status bit to determine the ownership of DPC Control and Status 
-registers. Firmware
-is not permitted to write to DPC Control and Status registers if DPC 
-Trigger Status is
-set i.e. the link is in DPC state. *Outside of the Error Disconnect 
-Recover notification
-processing window, the OS is not permitted to modify DPC Control or 
-Status registers*;
-only firmware is allowed to.
-
-Since the EDR processing window ends with clearing DPC Trigger status 
-bit, OS needs to
-clear DPC and AER registers before it ends.
-
-Austin,
-
-I think the order needs to be reversed in the implementation note.
+> On Mon, Mar 09, 2020 at 02:43:13PM -0700, Brendan Higgins wrote:
+> > On Mon, Mar 9, 2020 at 1:35 PM Brendan Higgins
+> > <brendanhiggins@google.com> wrote:
+> > >
+> > > On Fri, Mar 6, 2020 at 4:05 AM Heikki Krogerus
+> > > <heikki.krogerus@linux.intel.com> wrote:
+> > > >
+> > > > On Fri, Mar 06, 2020 at 12:33:50AM +0200, Sakari Ailus wrote:
+> > > > > Hi Brendan,
+> > > > >
+> > > > > On Thu, Mar 05, 2020 at 11:51:20AM -0800, Brendan Higgins wrote:
+> > > > > > On Thu, Mar 5, 2020 at 11:40 AM Brendan Higgins
+> > > > > > <brendanhiggins@google.com> wrote:
+> > > > > > >
+> > > > > > > On Thu, Mar 5, 2020 at 11:18 AM Andy Shevchenko
+> > > > > > > <andy.shevchenko@gmail.com> wrote:
+> > > > > > > >
+> > > > > > > > +Cc: Sakari
+> > > > > > > >
+> > > > > > > > On Thu, Mar 5, 2020 at 6:00 PM Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+> > > > > > > > >
+> > > > > > > > > Regression reported on Linux next 5.6.0-rc4-next-20200305 on x86_64,
+> > > > > > > > > i386, arm and arm64. The steps to reproduce is running kselftests lib
+> > > > > > > > > printf.sh test case.
+> > > > > > > > > Which is doing modprobe operations.
+> > > > > > > > >
+> > > > > > > > > BTW, there are few RCU warnings from the boot log.
+> > > > > > > > > Please refer below link for more details.
+> > > > > > > > >
+> > > > > > > > > Steps reproduce by using kselftests,
+> > > > > > > > >
+> > > > > > > > >           - lsmod || true
+> > > > > > > > >           - cd /opt/kselftests/default-in-kernel/lib/
+> > > > > > > > >           - export PATH=/opt/kselftests/default-in-kernel/kselftest:$PATH
+> > > > > > > > >           - ./printf.sh || true
+> > > > > > > > >           - ./bitmap.sh || true
+> > > > > > > > >           - ./prime_numbers.sh || true
+> > > > > > > > >           - ./strscpy.sh || true
+> > > > > > > > >
+> > > > > > > > > x86_64 kernel BUG dump.
+> > > > > > > > > + ./printf.sh
+> > > > > > >
+> > > > > > > Oops, I am wondering if I broke this with my change "Revert "software
+> > > > > > > node: Simplify software_node_release() function"":
+> > > > > > >
+> > > > > > > https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=d1c19322388d6935b534b494a2c223dd089e30dd
+> > > > > > >
+> > > > > > > I am still investigating, will update later.
+> > > > > >
+> > > > > > Okay, yeah, I am pretty sure I caused the breakage. I got an email
+> > > > > > from kernel test robot a couple days ago that I didn't see:
+> > > > > >
+> > > > > > https://lists.01.org/hyperkitty/list/lkp@lists.01.org/thread/N3ZN5XH7HK24JVEJ5WSQD2SK6YCDRILR/
+> > > > > >
+> > > > > > It shows the same breakage after applying this change.
+> > > > > >
+> > > > > > I am still investigating how my change broke it, nevertheless.
+> > > > >
+> > > > > As nodes in the tree are being removed, the code before the patch that
+> > > > > "simplified" the software_node_release() function accessed the node's parent
+> > > > > in its release function.
+> > > > >
+> > > > > And if CONFIG_DEBUG_KOBJECT_RELEASE is defined, the release functions are no
+> > > > > longer necessarily called in order, leading to referencing released memory.
+> > > > > Oops!
+> > > > >
+> > > > > So Heikki's patch actually fixed a bug. :-)
+> > > >
+> > > > Well, I think it just hid the problem. It looks like the core
+> > > > (lib/kobject.c) allows the parent kobject to be released before the
+> > > > last child kobject is released. To be honest, that does not sound
+> > > > right to me...
+> > > >
+> > > > I think we can workaround this problem by taking reference to the
+> > > > parent when the child is added, and then releasing it when the child
+> > > > is released, and in that way be guaranteed that the parent will not
+> > > > disappear before the child is fully released, but that still does not
+> > > > feel right. It feels more like the core is not doing it's job to me.
+> > > > The parent just should not be released before its children.
+> > > >
+> > > > Either I'm wrong about that, and we still should take the reference on
+> > > > the parent, or we revert my patch like Brendan proposed and then fix
+> > >
+> > > Either way, isn't it wrong to release the node ID before deleting the
+> > > sysfs entry? I am not sure that my fix was the correct one, but I
+> > > believe the bug that Heidi and I found is actually a bug.
 >
->>>>>       - Evaluate _OST
->>>>>
->>>>>       - Capture and clear device AER status.
->>>>>
->>>>>         This seems suspect to me.  Where does it say the OS is
->>>>>         allowed to write AER status when firmware retains control
->>>>>         of AER?
->>>>>
->>>>> This patch series does things in this order:
->>>>>
->>>>>       - Receive EDR notification (edr_handle_event(), edr.c)
->>>>>
->>>>>       - Read, log, and clear DPC error regs (dpc_process_error(),
->>>>>         dpc.c).
->>>>>
->>>>>         This also clears AER uncorrectable error status when the
->>>>>         relevant HEST entries do not have the FIRMWARE_FIRST bit
->>>>>         set.  I think this is incorrect: the test should be based
->>>>>         the _OSC negotiation for AER ownership, not on the HEST
->>>>>         entries.  But this problem pre-dates this patch series.
->>>>>
->>>>>       - Clear AER status (pci_aer_raw_clear_status(), aer.c).
->>>>>
->>>>>         This is at least inside the EDR recovery window, but again,
->>>>>         I don't see where it says the OS is allowed to write the
->>>>>         AER status.
->>>> Implementation note is the only reference we have regarding
->>>> clearing the AER registers.
->>>>
->>>> But since the spec says both DPC and AER needs to be always
->>>> controlled together by the either OS or firmware, and when
->>>> firmware relinquishes control over DPC registers in EDR
->>>> notification window, we can assume that we also have control over
->>>> AER registers.
->>>>
->>>> But I agree that is not explicitly spelled out any where outside
->>>> the implementation note.
->> This is all quite unsatisfying since implementation notes are not
->> normative.  I would far rather reference actual spec text.
-> Yes, the change I mention below would be to add normative text.
+> I agree.
 >
->>>> Austin,
->>>>
->>>> May be ECN (section 4.5.1, table 4-6) needs to be updated to add
->>>> this clarification.
->>> Sure we can update to section 4.5.1, table 4-6 to indicate when OS
->>> can clear the AER status bits. It will just follow what's done in
->>> the implementation note so I think it's acceptable to follow
->>> implementation guidance for now.
->> There are no events after the "clear device AER status" box.  That
->> seems to mean the OS can write the AER status registers at any time.
->> But the whole implementation note assumes firmware maintains control
->> of AER.
->>
-> In this model the OS doesn't own DPC or AER but the model allows OS to
-> touch both DPC and AER registers at certain times.  I would view
-> ownership in this case as who is the primary owner and not who is the
-> sole entity allowed to access the registers.
+> > > > the core with something like this (warning, I did not even try to
+> > > > compile that):
+> > >
+> > > I will try it out.
+> > >
+> > > > diff --git a/lib/kobject.c b/lib/kobject.c
+> > > > index 83198cb37d8d..ec5774992337 100644
+> > > > --- a/lib/kobject.c
+> > > > +++ b/lib/kobject.c
+> > > > @@ -680,6 +680,12 @@ static void kobject_cleanup(struct kobject *kobj)
+> > > >                 kobject_uevent(kobj, KOBJ_REMOVE);
+> > > >         }
+> > > >
+> > > > +       if (t && t->release) {
+> > > > +               pr_debug("kobject: '%s' (%p): calling ktype release\n",
+> > > > +                        kobject_name(kobj), kobj);
+> > > > +               t->release(kobj);
+> > > > +       }
+> > > > +
+> > > >         /* remove from sysfs if the caller did not do it */
+> > > >         if (kobj->state_in_sysfs) {
+> > > >                 pr_debug("kobject: '%s' (%p): auto cleanup kobject_del\n",
+> > > > @@ -687,12 +693,6 @@ static void kobject_cleanup(struct kobject *kobj)
+> > > >                 kobject_del(kobj);
+> > > >         }
+> > > >
+> > > > -       if (t && t->release) {
+> > > > -               pr_debug("kobject: '%s' (%p): calling ktype release\n",
+> > > > -                        kobject_name(kobj), kobj);
+> > > > -               t->release(kobj);
+> > > > -       }
+> > > > -
+> > > >         /* free name if we allocated it */
+> > > >         if (name) {
+> > > >                 pr_debug("kobject: '%s': free name\n", name);
+> >
+> > Alright, so I tried it and it looks like Heikki's suggestion worked.
+> >
+> > Is everyone comfortable going this route?
 >
-> For the normative text describing when OS clears the AER bits following
-> the informative flow chart, it could say that OS clears AER as soon as
-> possible after OST returns and before OS processes _HPX and loading
-> drivers.  Open to other suggestions as well.
-I think its better to have another handshake between OS and
-firmware to avoid unnecessary races.
->
->>>>>       - Attempt recovery (pcie_do_recovery(), err.c)
->>>>>
->>>>>       - Clear DPC Trigger Status (dpc_reset_link(), dpc.c)
->>>>>
->>>>>       - Evaluate _OST (acpi_send_edr_status(), edr.c)
->>>>>
->>>>> What am I missing?
+> Hold on. Another way to fix the problem is to increment the parent's
+> reference count before that kobject_del(kobj) is called, and then
+> decrementing it after t->release(kobj) is called. It may be safer to
+> fix the problem like that.
 
--- 
-Sathyanarayanan Kuppuswamy
-Linux kernel developer
+Right, this was your first suggestion above, right? That actually made
+more sense to me, but you seemed skeptical of it due to it being
+messier, which makes sense.
+
+Nevertheless, having children take a reference seems like the right
+thing to do because the children need to degregister themselves from
+the parent. Calling t->release() ahead of kobject_del() seems to
+reintroduce the problem that I pointed out, albeit *much* more
+briefly. If I understand correctly, it is always wrong to have a sysfs
+entry that points to a partially deallocated kobject. Please correct
+me if I am wrong.
+
+So I think there are two solutions: Either we have to ensure that each
+child is deallocated first so we can preserve the kobject_del() and
+then t->release() ordering, or we have to add some sort of "locking"
+mechanism to prevent the kobject from being accessed by anything other
+than the deallocation code until it is fully deallocated; well, it
+would have to prevent any access at all :-). I think it goes without
+saying that this "locking" idea is pretty flawed.
+
+The problem with just having children take a reference is that the
+kobject children already take a reference to their parent, so it seems
+like the kobject should be smart enough to deallocate children rather
+than having swnode have to keep a separate tally of children, no?
+
+Sorry if this all seems obvious, I am not an expert on this part of the kernel.
+
+> My example above proofs that there is the problem, but it changes the
+> order of execution which I think can always have other consequences.
+>
+> > Also, should I send this fix as a separate patch? Or do people want me
+> > to send an updated revision of my revert patch with the fix?
+>
+> This needs to be send in its own separate patch. Ideally it could be
+> send together with the revert in the same series, but I'm not sure
+> that's possible anymore. Didn't Greg pick the revert already?
+
+Sounds good.
+
+I did already let Greg know when he emailed us on backporting the
+patch to stable, and he acked saying he removed them. So as long as
+these are not in the queue for 5.6 (it is not in Linus' tree yet), we
+should be good.
+
+Cheers
 
