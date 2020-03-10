@@ -2,122 +2,86 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC9D8C18E5A
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:05:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED596C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:05:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91D972468C
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:05:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583845532;
-	bh=u1tL22Oa8Lt3kR4tVCpS9TqfnburU/QugzCbNdKVgIw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=byFTOeXT7nIEB/eGLPUvvs3OhBlcRxm180No+Mca9zafbmU+hi/9BL+DsqKImPEAE
-	 beIpGBCTxdcTYcnqoLTg+vaz74+GnmqIhOQaxZxFjzlCS3I7V/0mWKCNEZOna2WfAw
-	 Z+qBc85FuL25SNvLDj3VSFD68KhNLirq7zeHk98k=
+	by mail.kernel.org (Postfix) with ESMTP id C599A24691
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:05:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730441AbgCJNCi (ORCPT
+        id S1727865AbgCJNCa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:02:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45688 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730423AbgCJNCd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:02:33 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 14C432468D;
-        Tue, 10 Mar 2020 13:02:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845353;
-        bh=u1tL22Oa8Lt3kR4tVCpS9TqfnburU/QugzCbNdKVgIw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SvvCMq7W91hJjJpDq3wcXF2waw0SFMOCdh5doLUdcTot8dhKjjni8p66G3apjfVBd
-         JCAcJmL06Q6MuEmtt/ekGj8YOMBjaNP/f9NDS62HU8YynDs7vcfahc1+hnHe3iT6Y7
-         8Pn5f4B9hIr8IAZ5S+lgzOvfVyw3h8eldGJcZPkE=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marcel Partap <mpartap@gmx.net>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Michael Scott <hashcode0f@gmail.com>,
-        NeKit <nekit1000@gmail.com>, Pavel Machek <pavel@ucw.cz>,
-        Sebastian Reichel <sre@kernel.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH 5.5 151/189] phy: mapphone-mdm6600: Fix timeouts by adding wake-up handling
-Date:   Tue, 10 Mar 2020 13:39:48 +0100
-Message-Id: <20200310123655.153465134@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200310123639.608886314@linuxfoundation.org>
-References: <20200310123639.608886314@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 10 Mar 2020 09:02:30 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:33608 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728950AbgCJNCW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:02:22 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jBeWZ-0000JH-71; Tue, 10 Mar 2020 14:02:19 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id BECAE1C2234;
+        Tue, 10 Mar 2020 14:02:17 +0100 (CET)
+Date:   Tue, 10 Mar 2020 13:02:17 -0000
+From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/entry] x86/entry/32: Remove unused label restore_nocheck
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200308222609.219366430@linutronix.de>
+References: <20200308222609.219366430@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Message-ID: <158384533739.28353.17262412984967882832.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+The following commit has been merged into the x86/entry branch of tip:
 
-commit be4e3c737eebd75815633f4b8fd766defaf0f1fc upstream.
+Commit-ID:     74a4882d723a76cb3c72caf440ca5ef3f2bca6ab
+Gitweb:        https://git.kernel.org/tip/74a4882d723a76cb3c72caf440ca5ef3f2bca6ab
+Author:        Thomas Gleixner <tglx@linutronix.de>
+AuthorDate:    Sun, 08 Mar 2020 23:24:02 +01:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Tue, 10 Mar 2020 13:56:32 +01:00
 
-We have an interrupt handler for the wake-up GPIO pin, but we're missing
-the code to wake-up the system. This can cause timeouts receiving data
-for the UART that shares the wake-up GPIO pin with the USB PHY.
+x86/entry/32: Remove unused label restore_nocheck
 
-All we need to do is just wake the system and kick the autosuspend
-timeout to fix the issue.
-
-Fixes: 5d1ebbda0318 ("phy: mapphone-mdm6600: Add USB PHY driver for MDM6600 on Droid 4")
-Cc: Marcel Partap <mpartap@gmx.net>
-Cc: Merlijn Wajer <merlijn@wizzup.org>
-Cc: Michael Scott <hashcode0f@gmail.com>
-Cc: NeKit <nekit1000@gmail.com>
-Cc: Pavel Machek <pavel@ucw.cz>
-Cc: Sebastian Reichel <sre@kernel.org>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Alexandre Chartre <alexandre.chartre@oracle.com>
+Link: https://lkml.kernel.org/r/20200308222609.219366430@linutronix.de
 ---
- drivers/phy/motorola/phy-mapphone-mdm6600.c |   18 ++++++++++++++++--
- 1 file changed, 16 insertions(+), 2 deletions(-)
+ arch/x86/entry/entry_32.S | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/phy/motorola/phy-mapphone-mdm6600.c
-+++ b/drivers/phy/motorola/phy-mapphone-mdm6600.c
-@@ -243,10 +243,24 @@ static irqreturn_t phy_mdm6600_wakeirq_t
- {
- 	struct phy_mdm6600 *ddata = data;
- 	struct gpio_desc *mode_gpio1;
-+	int error, wakeup;
+diff --git a/arch/x86/entry/entry_32.S b/arch/x86/entry/entry_32.S
+index ddc87f2..80df781 100644
+--- a/arch/x86/entry/entry_32.S
++++ b/arch/x86/entry/entry_32.S
+@@ -1091,7 +1091,7 @@ restore_all:
+ 	TRACE_IRQS_IRET
+ 	SWITCH_TO_ENTRY_STACK
+ 	CHECK_AND_APPLY_ESPFIX
+-.Lrestore_nocheck:
++
+ 	/* Switch back to user CR3 */
+ 	SWITCH_TO_USER_CR3 scratch_reg=%eax
  
- 	mode_gpio1 = ddata->mode_gpios->desc[PHY_MDM6600_MODE1];
--	dev_dbg(ddata->dev, "OOB wake on mode_gpio1: %i\n",
--		gpiod_get_value(mode_gpio1));
-+	wakeup = gpiod_get_value(mode_gpio1);
-+	if (!wakeup)
-+		return IRQ_NONE;
-+
-+	dev_dbg(ddata->dev, "OOB wake on mode_gpio1: %i\n", wakeup);
-+	error = pm_runtime_get_sync(ddata->dev);
-+	if (error < 0) {
-+		pm_runtime_put_noidle(ddata->dev);
-+
-+		return IRQ_NONE;
-+	}
-+
-+	/* Just wake-up and kick the autosuspend timer */
-+	pm_runtime_mark_last_busy(ddata->dev);
-+	pm_runtime_put_autosuspend(ddata->dev);
- 
- 	return IRQ_HANDLED;
- }
-
-
