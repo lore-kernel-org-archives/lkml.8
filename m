@@ -2,364 +2,236 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A63EC10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 21:14:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30D82C10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 21:14:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DB8A222C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 21:14:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1B67222C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 21:14:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583874856;
-	bh=kOqE8zGCErI79fwsC2Z+2oEYNLpWijdwhWCVxRHeLFY=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=u3B/vDb25jNFV4kMHQLvPrJnRLsxYX+RAXfBEPlQ9MPEdfksk/F5XaddqwrcsThz/
-	 PXlUIMwg4vs4HCBKs5lsA8IDi/PmyWBQL2n4GWNal8tiOTa6XVCmPrYhePvZpXjBFq
-	 j+hQDjyZH/WXuSF1JF0BCZAscEnRvUt15yhaZq00=
+	s=default; t=1583874882;
+	bh=AJWhGg1youy4WUpiKu6E7SJD5UHASkpiuGAArPA11o4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=MGrNvbZAqfQ6s8rhYYb6va6X9O5It8V7FfO2ZzBplAPtmVD98GZpOKKaiK3SIxDQL
+	 CKM1jSzgtcivWiSskCSQtPjywWXS3sMoyMVhAvy1yAarmDG+bJMHTYliNshf5CreL5
+	 PW0hNCY0nui2D55EFmFrFhH8lQS65EFYGv1EVHfA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727518AbgCJVOP (ORCPT
+        id S1727555AbgCJVOk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 17:14:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47332 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726100AbgCJVOO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 17:14:14 -0400
-Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2DCF0222C3;
-        Tue, 10 Mar 2020 21:14:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583874853;
-        bh=kOqE8zGCErI79fwsC2Z+2oEYNLpWijdwhWCVxRHeLFY=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=dqeXkVkQxbUYam1uaxDZNgGOh9wEm9cuNgYMwyXrOfjfE1N/ODlxQW7nTQJkKpyyI
-         XNXDVaQR5QeE9z3el7g0CZcuKhz8P7J8aUZ7J/wQ0NVmsixcoSSeZyJgBLLW3SBzYT
-         CP5NB2gHM+hBge85KteJq7BP3vnB42eq20BarFE0=
-Message-ID: <c4ef31a663fbf7a3de349696e9f00f2f5c4ec89a.camel@kernel.org>
-Subject: Re: [locks] 6d390e4b5d: will-it-scale.per_process_ops -96.6%
- regression
-From:   Jeff Layton <jlayton@kernel.org>
-To:     NeilBrown <neilb@suse.de>, yangerkun <yangerkun@huawei.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     kernel test robot <rong.a.chen@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org,
-        Bruce Fields <bfields@fieldses.org>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Date:   Tue, 10 Mar 2020 17:14:11 -0400
-In-Reply-To: <878sk7vs8q.fsf@notabene.neil.brown.name>
-References: <20200308140314.GQ5972@shao2-debian>
-         <e3783d060c778cb41b77380ad3e278133b52f57e.camel@kernel.org>
-         <CAHk-=whGK712fPqmQ3FSHxqe3Aqny4bEeWEvfaytLeLV2+ijCQ@mail.gmail.com>
-         <34355c4fe6c3968b1f619c60d5ff2ca11a313096.camel@kernel.org>
-         <1bfba96b4bf0d3ca9a18a2bced3ef3a2a7b44dad.camel@kernel.org>
-         <87blp5urwq.fsf@notabene.neil.brown.name>
-         <41c83d34ae4c166f48e7969b2b71e43a0f69028d.camel@kernel.org>
-         <ed73fb5d-ddd5-fefd-67ae-2d786e68544a@huawei.com>
-         <923487db2c9396c79f8e8dd4f846b2b1762635c8.camel@kernel.org>
-         <36c58a6d07b67aac751fca27a4938dc1759d9267.camel@kernel.org>
-         <878sk7vs8q.fsf@notabene.neil.brown.name>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        Tue, 10 Mar 2020 17:14:40 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:32846 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726100AbgCJVOk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 17:14:40 -0400
+Received: by mail-ot1-f65.google.com with SMTP id g15so8564655otr.0;
+        Tue, 10 Mar 2020 14:14:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=JkykpUPy0GzuJ7bhjumSgmxVwtFhWeK9dyIcRUc31eA=;
+        b=LofeS0NirTHwx4p684SUKQftOm7j2JBSq3uDlv7MR1XY1P54t2a5BjeNOrgzudy3du
+         +tg5Ulhvd59BH56JDKvM2o49HUP2UJ/QqkIHR4FRuujIEPtDW7O7OSD0yNqXOPu2eErf
+         cQ5jjTJ19G/Zl8vI7YSluS+aD6nWDcfDcLBFLUgihgou6VcjImLL9YqWHkjHn0RxXjOO
+         QotaAK4CZH9eL+0sTbProV/BRjCDUXwPap27vZ/8bug42TQ6MpofhfXwtsIa5ERz/hLf
+         PnpcNJb7kPvSvrJXOKKMcrDup15WZ0wyIpkMk+J/eKvLMpDksPcRYaJTzeboJc8K76E+
+         rOwQ==
+X-Gm-Message-State: ANhLgQ3P8437SYEHjzKCsfpNtewKEXGJrfRck/jhpwHS4a6bmCScGzdj
+        NX27OdylkwU+U2Uq4c5BLQ==
+X-Google-Smtp-Source: ADFU+vvbDlmZAk8CYnYnooNDyFeX270kBDYuqmR69w2h0Ee3Cw0SeOa3W21yFBeimSgKYKVluXsYhA==
+X-Received: by 2002:a9d:4b0c:: with SMTP id q12mr19351298otf.77.1583874879261;
+        Tue, 10 Mar 2020 14:14:39 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id n6sm1646493otk.75.2020.03.10.14.14.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Mar 2020 14:14:38 -0700 (PDT)
+Received: (nullmailer pid 2800 invoked by uid 1000);
+        Tue, 10 Mar 2020 21:14:37 -0000
+Date:   Tue, 10 Mar 2020 16:14:37 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+Cc:     devicetree@vger.kernel.org, nick@shmanahar.org,
+        dmitry.torokhov@gmail.com, mark.rutland@arm.com,
+        nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
+        ludovic.desroches@microchip.com, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org, enric.balletbo@collabora.com,
+        helen.koike@collabora.com, ezequiel@collabora.com,
+        kernel@collabora.com, dafna3@gmail.com
+Subject: Re: [PATCH] dt-bindings: input: atmel_mxt_ts: convert
+ atmel,maxtouch.txt to yaml
+Message-ID: <20200310211437.GA18992@bogus>
+References: <20200303172533.30602-1-dafna.hirschfeld@collabora.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200303172533.30602-1-dafna.hirschfeld@collabora.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-03-11 at 08:01 +1100, NeilBrown wrote:
-> On Tue, Mar 10 2020, Jeff Layton wrote:
+On Tue, Mar 03, 2020 at 07:25:33PM +0200, Dafna Hirschfeld wrote:
+> Convert the binding file atmel,maxtouch.txt to yaml format.
+> Also change the file name in the MAINTAINERS file.
 > 
-> > On Tue, 2020-03-10 at 08:52 -0400, Jeff Layton wrote:
-> > 
-> > [snip]
-> > 
-> > > On Tue, 2020-03-10 at 11:24 +0800, yangerkun wrote:
-> > > > Something others. I think there is no need to call locks_delete_block 
-> > > > for all case in function like flock_lock_inode_wait. What we should do 
-> > > > as the patch '16306a61d3b7 ("fs/locks: always delete_block after 
-> > > > waiting.")' describes is that we need call locks_delete_block not only 
-> > > > for error equal to -ERESTARTSYS(please point out if I am wrong). And 
-> > > > this patch may fix the regression too since simple lock that success or 
-> > > > unlock will not try to acquire blocked_lock_lock.
-> > > > 
-> > > > 
-> > > 
-> > > Nice! This looks like it would work too, and it's a simpler fix.
-> > > 
-> > > I'd be inclined to add a WARN_ON_ONCE(fl->fl_blocker) after the if
-> > > statements to make sure we never exit with one still queued. Also, I
-> > > think we can do a similar optimization in __break_lease.
-> > > 
-> > > There are some other callers of locks_delete_block:
-> > > 
-> > > cifs_posix_lock_set: already only calls it in these cases
-> > > 
-> > > nlmsvc_unlink_block: I think we need to call this in most cases, and
-> > > they're not going to be high-performance codepaths in general
-> > > 
-> > > nfsd4 callback handling: Several calls here, most need to always be
-> > > called. find_blocked_lock could be reworked to take the
-> > > blocked_lock_lock only once (I'll do that in a separate patch).
-> > > 
-> > > How about something like this (
-> > > 
-> > > ----------------------8<---------------------
-> > > 
-> > > From: yangerkun <yangerkun@huawei.com>
-> > > 
-> > > [PATCH] filelock: fix regression in unlock performance
-> > > 
-> > > '6d390e4b5d48 ("locks: fix a potential use-after-free problem when
-> > > wakeup a waiter")' introduces a regression since we will acquire
-> > > blocked_lock_lock every time locks_delete_block is called.
-> > > 
-> > > In many cases we can just avoid calling locks_delete_block at all,
-> > > when we know that the wait was awoken by the condition becoming true.
-> > > Change several callers of locks_delete_block to only call it when
-> > > waking up due to signal or other error condition.
-> > > 
-> > > [ jlayton: add similar optimization to __break_lease, reword changelog,
-> > > 	   add WARN_ON_ONCE calls ]
-> > > 
-> > > Fixes: 16306a61d3b7 ("fs/locks: always delete_block after waiting.")
-> > > Fixes: 6d390e4b5d48 ("locks: fix a potential use-after-free problem when wakeup a waiter")
-> > > Signed-off-by: yangerkun <yangerkun@huawei.com>
-> > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> > > ---
-> > >  fs/locks.c | 29 ++++++++++++++++++++++-------
-> > >  1 file changed, 22 insertions(+), 7 deletions(-)
-> > > 
-> > > diff --git a/fs/locks.c b/fs/locks.c
-> > > index 426b55d333d5..b88a5b11c464 100644
-> > > --- a/fs/locks.c
-> > > +++ b/fs/locks.c
-> > > @@ -1354,7 +1354,10 @@ static int posix_lock_inode_wait(struct inode *inode, struct file_lock *fl)
-> > >  		if (error)
-> > >  			break;
-> > >  	}
-> > > -	locks_delete_block(fl);
-> > > +	if (error)
-> > > +		locks_delete_block(fl);
-> > > +	WARN_ON_ONCE(fl->fl_blocker);
-> > > +
-> > >  	return error;
-> > >  }
-> > >  
-> > > @@ -1447,7 +1450,9 @@ int locks_mandatory_area(struct inode *inode, struct file *filp, loff_t start,
-> > >  
-> > >  		break;
-> > >  	}
-> > > -	locks_delete_block(&fl);
-> > > +	if (error)
-> > > +		locks_delete_block(&fl);
-> > > +	WARN_ON_ONCE(fl.fl_blocker);
-> > >  
-> > >  	return error;
-> > >  }
-> > > @@ -1638,23 +1643,28 @@ int __break_lease(struct inode *inode, unsigned int mode, unsigned int type)
-> > >  
-> > >  	locks_dispose_list(&dispose);
-> > >  	error = wait_event_interruptible_timeout(new_fl->fl_wait,
-> > > -						!new_fl->fl_blocker, break_time);
-> > > +						 !new_fl->fl_blocker,
-> > > +						 break_time);
-> > >  
-> > >  	percpu_down_read(&file_rwsem);
-> > >  	spin_lock(&ctx->flc_lock);
-> > >  	trace_break_lease_unblock(inode, new_fl);
-> > > -	locks_delete_block(new_fl);
-> > >  	if (error >= 0) {
-> > >  		/*
-> > >  		 * Wait for the next conflicting lease that has not been
-> > >  		 * broken yet
-> > >  		 */
-> > > -		if (error == 0)
-> > > +		if (error == 0) {
-> > > +			locks_delete_block(new_fl);
-> > >  			time_out_leases(inode, &dispose);
-> > > +		}
-> > >  		if (any_leases_conflict(inode, new_fl))
-> > >  			goto restart;
-> > >  		error = 0;
-> > > +	} else {
-> > > +		locks_delete_block(new_fl);
-> > >  	}
-> > > +	WARN_ON_ONCE(fl->fl_blocker);
-> > >  out:
-> > >  	spin_unlock(&ctx->flc_lock);
-> > >  	percpu_up_read(&file_rwsem);
-> > > @@ -2126,7 +2136,10 @@ static int flock_lock_inode_wait(struct inode *inode, struct file_lock *fl)
-> > >  		if (error)
-> > >  			break;
-> > >  	}
-> > > -	locks_delete_block(fl);
-> > > +	if (error)
-> > > +		locks_delete_block(fl);
-> > > +	WARN_ON_ONCE(fl->fl_blocker);
-> > > +
-> > >  	return error;
-> > >  }
-> > >  
-> > > @@ -2403,7 +2416,9 @@ static int do_lock_file_wait(struct file *filp, unsigned int cmd,
-> > >  		if (error)
-> > >  			break;
-> > >  	}
-> > > -	locks_delete_block(fl);
-> > > +	if (error)
-> > > +		locks_delete_block(fl);
-> > > +	WARN_ON_ONCE(fl->fl_blocker);
-> > >  
-> > >  	return error;
-> > >  }
-> > 
-> > I've gone ahead and added the above patch to linux-next. Linus, Neil,
-> > are you ok with this one? I think this is probably the simplest
-> > approach.
+> This was tested and verified on ARM and ARM64 with:
 > 
-> I think this patch contains an assumption which is not justified.  It
-> assumes that if a wait_event completes without error, then the wake_up()
-> must have happened.  I don't think that is correct.
+> make dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/input/atmel,maxtouch.yaml
+> make dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/input/atmel,maxtouch.yaml
 > 
-> In the patch that caused the recent regression, the race described
-> involved a signal arriving just as __locks_wake_up_blocks() was being
-> called on another thread.
-> So the waiting process was woken by a signal *after* ->fl_blocker was set
-> to NULL, and *before* the wake_up().  If wait_event_interruptible()
-> finds that the condition is true, it will report success whether there
-> was a signal or not.
-> 
-> If you skip the locks_delete_block() after a wait, you get exactly the
-> same race as the optimization - which only skipped most of
-> locks_delete_block().
-> 
-> I have a better solution.  I did like your patch except that it changed
-> too much code.  So I revised it to change less code.  See below.
-> 
-> NeilBrown
-> 
-> From: NeilBrown <neilb@suse.de>
-> Date: Wed, 11 Mar 2020 07:39:04 +1100
-> Subject: [PATCH] locks: restore locks_delete_lock optimization
-> 
-> A recent patch (see Fixes: below) removed an optimization which is
-> important as it avoids taking a lock in a common case.
-> 
-> The comment justifying the optimisation was correct as far as it went,
-> in that if the tests succeeded, then the values would remain stable and
-> the test result will remain valid even without a lock.
-> 
-> However after the test succeeds the lock can be freed while some other
-> thread might have only just set ->blocker to NULL (thus allowing the
-> test to succeed) but has not yet called wake_up() on the wq in the lock.
-> If the wake_up happens after the lock is freed, a use-after-free error
-> occurs.
-> 
-> This patch restores the optimization and reorders code to avoid the
-> use-after-free.  Specifically we move the list_del_init on
-> fl_blocked_member to *after* the wake_up(), and add an extra test on
-> fl_block_member() to locks_delete_lock() before deciding to avoid taking
-> the spinlock.
-> 
-> As this involves breaking code out of __locks_delete_block(), we discard
-> the function completely and open-code it in the two places it was
-> called.
-> 
-> These lockless accesses do not require any memory barriers.  The failure
-> mode from possible memory access reordering is that the test at the top
-> of locks_delete_lock() will fail, and in that case we fall through into
-> the locked region which provides sufficient memory barriers implicitly.
-> 
-> Fixes: 6d390e4b5d48 ("locks: fix a potential use-after-free problem when wakeup a waiter")
-> Signed-off-by: NeilBrown <neilb@suse.de>
+> Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
 > ---
->  fs/locks.c | 42 ++++++++++++++++++++++++++++--------------
->  1 file changed, 28 insertions(+), 14 deletions(-)
+>  .../bindings/input/atmel,maxtouch.txt         | 41 ------------
+>  .../bindings/input/atmel,maxtouch.yaml        | 64 +++++++++++++++++++
+>  MAINTAINERS                                   |  2 +-
+>  3 files changed, 65 insertions(+), 42 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/input/atmel,maxtouch.txt
+>  create mode 100644 Documentation/devicetree/bindings/input/atmel,maxtouch.yaml
 > 
-> diff --git a/fs/locks.c b/fs/locks.c
-> index 426b55d333d5..dc99ab2262ea 100644
-> --- a/fs/locks.c
-> +++ b/fs/locks.c
-> @@ -716,18 +716,6 @@ static void locks_delete_global_blocked(struct file_lock *waiter)
->  	hash_del(&waiter->fl_link);
->  }
->  
-> -/* Remove waiter from blocker's block list.
-> - * When blocker ends up pointing to itself then the list is empty.
-> - *
-> - * Must be called with blocked_lock_lock held.
-> - */
-> -static void __locks_delete_block(struct file_lock *waiter)
-> -{
-> -	locks_delete_global_blocked(waiter);
-> -	list_del_init(&waiter->fl_blocked_member);
-> -	waiter->fl_blocker = NULL;
-> -}
+> diff --git a/Documentation/devicetree/bindings/input/atmel,maxtouch.txt b/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
+> deleted file mode 100644
+> index c88919480d37..000000000000
+> --- a/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
+> +++ /dev/null
+> @@ -1,41 +0,0 @@
+> -Atmel maXTouch touchscreen/touchpad
 > -
->  static void __locks_wake_up_blocks(struct file_lock *blocker)
->  {
->  	while (!list_empty(&blocker->fl_blocked_requests)) {
-> @@ -735,11 +723,13 @@ static void __locks_wake_up_blocks(struct file_lock *blocker)
+> -Required properties:
+> -- compatible:
+> -    atmel,maxtouch
+> -
+> -    The following compatibles have been used in various products but are
+> -    deprecated:
+> -	atmel,qt602240_ts
+> -	atmel,atmel_mxt_ts
+> -	atmel,atmel_mxt_tp
+> -	atmel,mXT224
+> -
+> -- reg: The I2C address of the device
+> -
+> -- interrupts: The sink for the touchpad's IRQ output
+> -    See ../interrupt-controller/interrupts.txt
+> -
+> -Optional properties for main touchpad device:
+> -
+> -- linux,gpio-keymap: When enabled, the SPT_GPIOPWN_T19 object sends messages
+> -    on GPIO bit changes. An array of up to 8 entries can be provided
+> -    indicating the Linux keycode mapped to each bit of the status byte,
+> -    starting at the LSB. Linux keycodes are defined in
+> -    <dt-bindings/input/input.h>.
+> -
+> -    Note: the numbering of the GPIOs and the bit they start at varies between
+> -    maXTouch devices. You must either refer to the documentation, or
+> -    experiment to determine which bit corresponds to which input. Use
+> -    KEY_RESERVED for unused padding values.
+> -
+> -- reset-gpios: GPIO specifier for the touchscreen's reset pin (active low)
+> -
+> -Example:
+> -
+> -	touch@4b {
+> -		compatible = "atmel,maxtouch";
+> -		reg = <0x4b>;
+> -		interrupt-parent = <&gpio>;
+> -		interrupts = <TEGRA_GPIO(W, 3) IRQ_TYPE_LEVEL_LOW>;
+> -	};
+> diff --git a/Documentation/devicetree/bindings/input/atmel,maxtouch.yaml b/Documentation/devicetree/bindings/input/atmel,maxtouch.yaml
+> new file mode 100644
+> index 000000000000..024dc4ded4f3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/input/atmel,maxtouch.yaml
+> @@ -0,0 +1,64 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/input/atmel,maxtouch.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Atmel maXTouch touchscreen/touchpad
+> +
+> +maintainers:
+> +  - Nick Dyer <nick@shmanahar.org>
+> +
+> +description: |
+> +  Atmel maXTouch touchscreen/touchpad
+> +
+> +properties:
+> +  compatible:
+> +    const: atmel,maxtouch
+> +
+> +  reg:
+> +    description: The I2C address of the device
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    description: The sink for the touchpad's IRQ output
+
+How many? Needs 'maxItems: 1'?
+
+You can drop the description.
+
+> +
+> +  linux,gpio-keymap:
+> +    description:
+> +      When enabled, the SPT_GPIOPWN_T19 object sends messages
+> +      on GPIO bit changes. An array of up to 8 entries can be provided
+> +      indicating the Linux keycode mapped to each bit of the status byte,
+> +      starting at the LSB. Linux keycodes are defined in
+> +      <dt-bindings/input/input.h>.
+> +      Note, the numbering of the GPIOs and the bit they start at varies between
+> +      maXTouch devices. You must either refer to the documentation, or
+> +      experiment to determine which bit corresponds to which input. Use
+> +      KEY_RESERVED for unused padding values.
+> +    $ref: /schemas/types.yaml#/definitions/uint32-array
+> +    maxItems: 8
+> +
+> +  reset-gpios:
+> +    description: GPIO specifier for the touchscreen's reset pin (active low)
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +
+> +additionalProperties: true
+
+That's the default and we generally want this to be 'false'.
+
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +    #include <dt-bindings/gpio/tegra-gpio.h>
+> +    i2c {
+> +          #address-cells = <1>;
+> +          #size-cells = <0>;
+> +          touch@4b {
+> +                compatible = "atmel,maxtouch";
+> +                reg = <0x4b>;
+> +                interrupt-parent = <&gpio>;
+> +                interrupts = <TEGRA_GPIO(W, 3) IRQ_TYPE_LEVEL_LOW>;
+> +          };
+> +    };
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 46fdb834d1fb..d553aa315734 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -2877,7 +2877,7 @@ ATMEL MAXTOUCH DRIVER
+>  M:	Nick Dyer <nick@shmanahar.org>
+>  T:	git git://github.com/ndyer/linux.git
+>  S:	Maintained
+> -F:	Documentation/devicetree/bindings/input/atmel,maxtouch.txt
+> +F:	Documentation/devicetree/bindings/input/atmel,maxtouch.yaml
+>  F:	drivers/input/touchscreen/atmel_mxt_ts.c
 >  
->  		waiter = list_first_entry(&blocker->fl_blocked_requests,
->  					  struct file_lock, fl_blocked_member);
-> -		__locks_delete_block(waiter);
-> +		locks_delete_global_blocked(waiter);
-> +		waiter->fl_blocker = NULL;
->  		if (waiter->fl_lmops && waiter->fl_lmops->lm_notify)
->  			waiter->fl_lmops->lm_notify(waiter);
->  		else
->  			wake_up(&waiter->fl_wait);
-> +		list_del_init(&waiter->fl_blocked_member);
-
-Are you sure you don't need a memory barrier here? Could the
-list_del_init be hoisted just above the if condition?
-
->  	}
->  }
->  
-> @@ -753,11 +743,35 @@ int locks_delete_block(struct file_lock *waiter)
->  {
->  	int status = -ENOENT;
->  
-> +	/*
-> +	 * If fl_blocker is NULL, it won't be set again as this thread
-> +	 * "owns" the lock and is the only one that might try to claim
-> +	 * the lock.  So it is safe to test fl_blocker locklessly.
-> +	 * Also if fl_blocker is NULL, this waiter is not listed on
-> +	 * fl_blocked_requests for some lock, so no other request can
-> +	 * be added to the list of fl_blocked_requests for this
-> +	 * request.  So if fl_blocker is NULL, it is safe to
-> +	 * locklessly check if fl_blocked_requests is empty.  If both
-> +	 * of these checks succeed, there is no need to take the lock.
-> +	 * We also check fl_blocked_member is empty.  This is logically
-> +	 * redundant with the test of fl_blocker, but it ensure that
-> +	 * __locks_wake_up_blocks() has finished the wakeup and will not
-> +	 * access the lock again, so it is safe to return and free.
-> +	 * There is no need for any memory barriers with these lockless
-> +	 * tests as is the reads happen before the corresponding writes are
-> +	 * seen, we fall through to the locked code.
-> +	 */
-> +	if (waiter->fl_blocker == NULL &&
-> +	    list_empty(&waiter->fl_blocked_member) &&
-> +	    list_empty(&waiter->fl_blocked_requests))
-> +		return status;
->  	spin_lock(&blocked_lock_lock);
->  	if (waiter->fl_blocker)
->  		status = 0;
->  	__locks_wake_up_blocks(waiter);
-> -	__locks_delete_block(waiter);
-> +	locks_delete_global_blocked(waiter);
-> +	list_del_init(&waiter->fl_blocked_member);
-> +	waiter->fl_blocker = NULL;
->  	spin_unlock(&blocked_lock_lock);
->  	return status;
->  }
-
--- 
-Jeff Layton <jlayton@kernel.org>
-
+>  ATMEL WIRELESS DRIVER
+> -- 
+> 2.17.1
+> 
