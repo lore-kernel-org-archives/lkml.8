@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D3C5C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:15:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79704C10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:15:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38B3A2468C
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:15:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F6FB208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:15:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583846119;
-	bh=KQWZPdXiBnz0B6QqOO2+OifV8bCjl1byOrQFtqrrht8=;
+	s=default; t=1583846126;
+	bh=CoD98Bo+ro5MOQj+ifjN5T4EteboXKPXi3D4jGprWWE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KpNIBVrqXOc1fmdqMU0yaCMnJsoHJr7KRtd9mX9VyeUP2uwwpdiie6rTNLDERjv7e
-	 wiaOOS16k0z/pi1UmXl93s8BOV89JrdFjix/MEPZVAPalCvOG2uu3b8h/dw9jKvnsY
-	 9VGumIZ6/cyO6ROZzV3wrHVKHorRfPJ/bMKVFqF8=
+	b=0D2MY5cbvfGwMrEBg3aB1cLntRK7tN9bows5Erf0WA2a+6PCNMX/U5FUXbQZANdzn
+	 4Z0WdnLzHC4P+3mwelRvP8FNkepJdmR2WxNCnyrLGpcrBnaYe9sLJ5jyjALA7zRq9U
+	 9MQbHzu1aleBW8X3oTqvxEzu2284OD2/mFrgjEh4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731796AbgCJNPS (ORCPT
+        id S1731147AbgCJNPY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:15:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39794 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:15:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39966 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732013AbgCJNPP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:15:15 -0400
+        id S1732022AbgCJNPV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:15:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2428E2468C;
-        Tue, 10 Mar 2020 13:15:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A391208E4;
+        Tue, 10 Mar 2020 13:15:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583846114;
-        bh=KQWZPdXiBnz0B6QqOO2+OifV8bCjl1byOrQFtqrrht8=;
+        s=default; t=1583846120;
+        bh=CoD98Bo+ro5MOQj+ifjN5T4EteboXKPXi3D4jGprWWE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OgKVd0b+ls7ub6BKefoVj8eXQ0dSngWh4NE444gxwRrJV+WGuQMB9bFGyqGSLx7ac
-         vHX8kYdApIJnD5pU9kC2Bky1e8IHybqEaXFKTn4d80rC03zZlMoJKQsVBJOXhp1kdQ
-         ZpA5au4qHvSEXYkqCa/BYAQYfmgLWyc/viEAfjhs=
+        b=KXyAnlKtrbCKd0dyNV4SDUIEKg+mj3p7w8BObbbAs3SSR8F39vAE3GGNI80HUABJR
+         4aPPWsQ4Vb3KNeBg5Z+fJgl0qP6413a6xRBsOR8qUSvGugESXcTFDZrqyOI5E1U2P3
+         wxn4DPTRH9gn+px4sWwHyUWRj9dq42d51vIyREX0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 4.19 74/86] RMDA/cm: Fix missing ib_cm_destroy_id() in ib_cm_insert_listen()
-Date:   Tue, 10 Mar 2020 13:45:38 +0100
-Message-Id: <20200310124534.764193534@linuxfoundation.org>
+        stable@vger.kernel.org, Matthias Reichl <hias@horus.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 4.19 66/86] ASoC: pcm512x: Fix unbalanced regulator enable call in probe error path
+Date:   Tue, 10 Mar 2020 13:45:30 +0100
+Message-Id: <20200310124534.347153999@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310124530.808338541@linuxfoundation.org>
 References: <20200310124530.808338541@linuxfoundation.org>
@@ -58,32 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Gunthorpe <jgg@mellanox.com>
+From: Matthias Reichl <hias@horus.com>
 
-commit c14dfddbd869bf0c2bafb7ef260c41d9cebbcfec upstream.
+commit ac0a68997935c4acb92eaae5ad8982e0bb432d56 upstream.
 
-The algorithm pre-allocates a cm_id since allocation cannot be done while
-holding the cm.lock spinlock, however it doesn't free it on one error
-path, leading to a memory leak.
+When we get a clock error during probe we have to call
+regulator_bulk_disable before bailing out, otherwise we trigger
+a warning in regulator_put.
 
-Fixes: 067b171b8679 ("IB/cm: Share listening CM IDs")
-Link: https://lore.kernel.org/r/20200221152023.GA8680@ziepe.ca
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Fix this by using "goto err" like in the error cases above.
+
+Fixes: 5a3af1293194d ("ASoC: pcm512x: Add PCM512x driver")
+Signed-off-by: Matthias Reichl <hias@horus.com>
+Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Link: https://lore.kernel.org/r/20200220202956.29233-1-hias@horus.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/core/cm.c |    1 +
- 1 file changed, 1 insertion(+)
+ sound/soc/codecs/pcm512x.c |    8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
---- a/drivers/infiniband/core/cm.c
-+++ b/drivers/infiniband/core/cm.c
-@@ -1231,6 +1231,7 @@ struct ib_cm_id *ib_cm_insert_listen(str
- 			/* Sharing an ib_cm_id with different handlers is not
- 			 * supported */
- 			spin_unlock_irqrestore(&cm.lock, flags);
-+			ib_destroy_cm_id(cm_id);
- 			return ERR_PTR(-EINVAL);
+--- a/sound/soc/codecs/pcm512x.c
++++ b/sound/soc/codecs/pcm512x.c
+@@ -1437,13 +1437,15 @@ int pcm512x_probe(struct device *dev, st
+ 	}
+ 
+ 	pcm512x->sclk = devm_clk_get(dev, NULL);
+-	if (PTR_ERR(pcm512x->sclk) == -EPROBE_DEFER)
+-		return -EPROBE_DEFER;
++	if (PTR_ERR(pcm512x->sclk) == -EPROBE_DEFER) {
++		ret = -EPROBE_DEFER;
++		goto err;
++	}
+ 	if (!IS_ERR(pcm512x->sclk)) {
+ 		ret = clk_prepare_enable(pcm512x->sclk);
+ 		if (ret != 0) {
+ 			dev_err(dev, "Failed to enable SCLK: %d\n", ret);
+-			return ret;
++			goto err;
  		}
- 		atomic_inc(&cm_id_priv->refcount);
+ 	}
+ 
 
 
