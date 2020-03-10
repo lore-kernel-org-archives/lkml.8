@@ -2,233 +2,162 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F10DC10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 02:40:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F95EC10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 02:43:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 179762464B
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 02:40:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D02CD24649
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 02:43:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="k6Ph42Kg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726845AbgCJCk3 (ORCPT
+        id S1726739AbgCJCn4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 22:40:29 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:57052 "EHLO loongson.cn"
+        Mon, 9 Mar 2020 22:43:56 -0400
+Received: from mail-eopbgr80057.outbound.protection.outlook.com ([40.107.8.57]:14406
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725845AbgCJCk2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 22:40:28 -0400
-Received: from [10.130.0.70] (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxD98S_mZeWgcZAA--.47S3;
-        Tue, 10 Mar 2020 10:40:19 +0800 (CST)
-Subject: =?UTF-8?Q?Re:_=e5=9b=9e=e5=a4=8d:[PATCH_4/6]_MIPS:_Loongson:_Add_DM?=
- =?UTF-8?Q?A_support_for_7A1000?=
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-References: <1583742206-29163-1-git-send-email-yangtiezhu@loongson.cn>
- <1583742206-29163-5-git-send-email-yangtiezhu@loongson.cn>
- <170be7768e3.c920b6d62296.161774605460069850@flygoat.com>
-Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        linux-mips <linux-mips@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        linux-ide <linux-ide@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Xuefeng Li <lixuefeng@loongson.cn>
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <a2f747e6-500e-0a4a-9e63-397b4aa0191f@loongson.cn>
-Date:   Tue, 10 Mar 2020 10:40:18 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+        id S1725845AbgCJCn4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 22:43:56 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=iTizFCRsJRfImCCAQrlY50vrArCPws5h9GHVHFy67zelCVa8eb8Z2/y8ZhGJTY3/S1ZYf/bxhnTsjqKvhmpVDcTrPeIZXuWP7ooV+PXSS/JEzzzELo4SH2ObdDhFrFRSIgdLz2qKXpQFqxDmUxZFJTkyBTGhWUdiw47/SgvfJ2qr/toB6RXjQNxMIckdKU1j+Hj7Ohf+FBF3ixfh6LH4mlTuyCOKpqdagidAJTn3S+pR2Iu605+/Xqf8MtT53y7VX6EXHkoCvXQ22hCcVVuEaSOmFBTb9X8p27Y30YUuM9qgTQ1zQJvgapnmOM5vbrvq7E/5TCNZSW/RwG7t8vyfbw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IdS16QVZD4rlxfanJ3olFmGa0HwRNH8Lk0v3d5qyMss=;
+ b=WLuoelcGxFZ5B+EyfDfaYakhTWWv6IiE1w9DAQxtBiSsbG+kBYdeTffoOzxPGN9JgSgC6FX74SEurIo0PalVkuwChWz4Vft3TXtAFQUjLNuRFOa5ARvXNDgQFlNp1XtlWjVj9sJQiCE1ABdHlzzKDStPcSeUPFSWO/lA0AqaZ+6A8gdoyTBq9wv8mAhCrupZnhlrceKLSydzODneB/cx+d+E7wx38iqdgHT4AYCWnogsdGeCXtVhpEUu00rS9ccBd/lXzdzSEhzzy2ejkGwbN4QrnJb6o7jesLsLNHpbSjlJt7udD2HUesHIAEGWOsCfQy9DtpMwRcFEOKj8O6ISNA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IdS16QVZD4rlxfanJ3olFmGa0HwRNH8Lk0v3d5qyMss=;
+ b=k6Ph42KgrXv5Oz/IZ9Iox8K2hZd+Vssmy3/tONcsAB+eFNAK1mypT1U6Kdg8DTXfGABJ/t09EfhWtcCiSa6+Ejv2g9JvE3BpxW+j1jZCyxb5MtcbIgRfqYY/j2twi4lDZMM0eJQ/OR7qBHpPE+Gx2iC/QP2RQLRx9BX88TbbfT8=
+Received: from AM6PR05MB5014.eurprd05.prod.outlook.com (20.177.33.13) by
+ AM6PR05MB5990.eurprd05.prod.outlook.com (20.179.3.143) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2793.17; Tue, 10 Mar 2020 02:43:51 +0000
+Received: from AM6PR05MB5014.eurprd05.prod.outlook.com
+ ([fe80::cbb:a034:c324:138b]) by AM6PR05MB5014.eurprd05.prod.outlook.com
+ ([fe80::cbb:a034:c324:138b%6]) with mapi id 15.20.2793.013; Tue, 10 Mar 2020
+ 02:43:51 +0000
+From:   Yanjun Zhu <yanjunz@mellanox.com>
+To:     Jason Gunthorpe <jgg@mellanox.com>,
+        syzbot <syzbot+e11efb687f5ab7f01f3d@syzkaller.appspotmail.com>
+CC:     "dledford@redhat.com" <dledford@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        Moni Shoua <monis@mellanox.com>,
+        "syzkaller-bugs@googlegroups.com" <syzkaller-bugs@googlegroups.com>
+Subject: RE: KASAN: use-after-free Read in rxe_query_port
+Thread-Topic: KASAN: use-after-free Read in rxe_query_port
+Thread-Index: AQHV9jkJCU28FFAXfky+bua200OhVqhBGZPg
+Date:   Tue, 10 Mar 2020 02:43:51 +0000
+Message-ID: <AM6PR05MB5014AD481B61AB9238396CD4D8FF0@AM6PR05MB5014.eurprd05.prod.outlook.com>
+References: <0000000000000c9e12059fc941ff@google.com>
+ <20200309173451.GA15143@mellanox.com>
+In-Reply-To: <20200309173451.GA15143@mellanox.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yanjunz@mellanox.com; 
+x-originating-ip: [118.201.220.138]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 5e77ed10-f437-4050-f81d-08d7c49cde0b
+x-ms-traffictypediagnostic: AM6PR05MB5990:|AM6PR05MB5990:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM6PR05MB5990BCBE93E4EFC9115C85D3D8FF0@AM6PR05MB5990.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 033857D0BD
+x-forefront-antispam-report: SFV:NSPM;SFS:(10001)(10009020)(4636009)(39860400002)(396003)(346002)(136003)(366004)(376002)(199004)(189003)(186003)(8676002)(81166006)(81156014)(110136005)(316002)(8936002)(54906003)(33656002)(7696005)(2906002)(66446008)(64756008)(66946007)(66476007)(66556008)(76116006)(6506007)(26005)(86362001)(52536014)(478600001)(4326008)(53546011)(71200400001)(9686003)(55016002)(966005)(5660300002)(99710200001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR05MB5990;H:AM6PR05MB5014.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: bO5yVR4ggEpmC+fYE80ltiWamzu3w36GKXvNaWmszDdV/rMgC6/uizyDCAsCE0LTEOhGF1xsXqYgNGKXbVXG3UZqaukK/+Q7YFzND1cnx0XTHwO2tJW/IKfyUUiPx0SeINQSIBsKz9hwuYGeb98Rb3eqnpHzVgcI/HmzeN8WUKOAynYCPN+3mwZMBtA52Bh4mUAu3GxwcE/7ls+ULJvuXR+Xjs33b+U8U8N77h/uwjBenkX3A1e/1P9Rv3M/mYkdA/nrBKxzY0ks8bvDvq9KiWQZMm/BrsYOjE5s8CC1OIIa/wO875K7+XNTr+dkwO+/1qcuonilUM/QHs327bUQP1maiL8VfW1JBzM9XBcw4VYPCAuRyO6HecfPGKFJyIkQSmvFg/0wXRGPjZklwWKTKgKek41fORn4gUadV3GMWOg1TqfLc6Eb4F+S6S6HHwvZfNnoU8FKyX3iAJGVqE8wff8AvDcKzFldzXBnlkhfILjt0ZjC99Eb3QNHrImuOHllHk47OYpt/WtZv04+JlXky/8EqZtGQgfP8yow2tz11r8qUsfV6VTE/fQwi5/EdGXnJA7cEiNbQtGGRtq034jOwkJOl575y3VoWlUXRnkr3YqQ+nPPMxwMHryg3PoVgrrGpEIbTh9uOcJ+qp7kj6WN0Q==
+x-ms-exchange-antispam-messagedata: 2u/iEUKEjJCLo6vs1RepsN0qBsatTpgPQ5rud1ypbpB9z4aNAPK1nnbFj8noz0IEcw80K8Vb7kJC99k54L3SISYNI/cI+dui3ZCHv/ph35S9RfZjrQXKUNtWmra7LMc26k2FD8QtymVETHUsIEv7JA==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-In-Reply-To: <170be7768e3.c920b6d62296.161774605460069850@flygoat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQAAf9DxD98S_mZeWgcZAA--.47S3
-X-Coremail-Antispam: 1UD129KBjvJXoW3Gr4fAr17Gr1DWFWkJw15XFb_yoW7Xr4DpF
-        Z7Aa1rGr4Yqr1UuFySg3yxWry5ZrZ5tr4IqFW2gF1Yka4qvw1rJF1UCryqgw1fAr48KF18
-        ZrW0gF1fuF47KFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUBY14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
-        6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r
-        4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2Wl
-        Yx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbV
-        WUJVW8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
-        Y2ka0xkIwI1lc7I2V7IY0VAS07AlzVAYIcxG8wCY02Avz4vE14v_Gr1l42xK82IYc2Ij64
-        vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
-        jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2I
-        x0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK
-        8VAvwI8IcIk0rVW3JVWrJr1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x
-        0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbN6pPUUUUU==
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5e77ed10-f437-4050-f81d-08d7c49cde0b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Mar 2020 02:43:51.4803
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: TssSOKmXzBDFY1rfXHErbI02vzIwpvTzL5pwYx/0SWn8P8DUUrOUKEnP+DyHiwOOLxHYa2nOah/x1MvmDmJqKw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR05MB5990
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/09/2020 04:44 PM, Jiaxun Yang wrote:
->
->   ---- 在 星期一, 2020-03-09 16:23:24 Tiezhu Yang <yangtiezhu@loongson.cn> 撰写 ----
->   > Implement __phys_to_dma() and __dma_to_phys() according to the
->   > node id offset in 7A1000 DMA route config register.
->
-> That design shocked me a lot. And It is known that some firmware didn't configure
-> HT Recieve window correctly to make it work. So probably for mainline kernel,
-> just set DMA_MASK to limit LS7A DMA address to Node0 would be a better Option?
+Hi, Jason
 
-Hi Jiaxun,
+I checked the source code and the symptoms.
+1. In dmesg " rdma_rxe: ignoring netdev event =3D 10 for netdevsim0 ", this=
+ indicates that the NIC which the rxe is based on is set to down.
+Then the following will run:
+"
+ib_unregister_work
+    __ib_unregister_device
+        disable_device
+            remove_client_context
+                kfree
+"
+Finally the port is freed.
+2. Cocurrently this port is accessed by the function=20
+"
+ib_query_port
+    __ib_query_port
+        rxe_query_port
+"
+So the use-after-free problem occurs.
 
-Let me rethink it and find a proper way.
+Please comment.
 
->   
->   > Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
->   > ---
->   >  arch/mips/include/asm/mach-loongson64/boot_param.h |  1 +
->   >  arch/mips/loongson64/dma.c                         | 49 +++++++++++++++++++++-
->   >  arch/mips/loongson64/init.c                        | 13 ++++++
->   >  3 files changed, 61 insertions(+), 2 deletions(-)
->   >
->   > diff --git a/arch/mips/include/asm/mach-loongson64/boot_param.h b/arch/mips/include/asm/mach-loongson64/boot_param.h
->   > index 225a563..60e7a7e 100644
->   > --- a/arch/mips/include/asm/mach-loongson64/boot_param.h
->   > +++ b/arch/mips/include/asm/mach-loongson64/boot_param.h
->   > @@ -218,5 +218,6 @@ struct loongson_system_configuration {
->   >  extern struct efi_memory_map_loongson *loongson_memmap;
->   >  extern struct loongson_system_configuration loongson_sysconf;
->   >  extern struct board_devices *eboard;
->   > +extern u32 node_id_offset;
->   >
->   >  #endif
->   > diff --git a/arch/mips/loongson64/dma.c b/arch/mips/loongson64/dma.c
->   > index 5e86635..997c257 100644
->   > --- a/arch/mips/loongson64/dma.c
->   > +++ b/arch/mips/loongson64/dma.c
->   > @@ -2,24 +2,69 @@
->   >  #include <linux/dma-direct.h>
->   >  #include <linux/init.h>
->   >  #include <linux/swiotlb.h>
->   > +#include <boot_param.h>
->   >
->   > -dma_addr_t __phys_to_dma(struct device *dev, phys_addr_t paddr)
->   > +struct loongson_dma_ops {
->   > +    dma_addr_t (*phys_to_dma)(struct device *dev, phys_addr_t paddr);
->   > +    phys_addr_t (*dma_to_phys)(struct device *dev, dma_addr_t daddr);
->   > +};
->   > +
->   > +struct loongson_dma_ops loongson_dma;
->   > +
->   > +dma_addr_t __rs780e_phys_to_dma(struct device *dev, phys_addr_t paddr)
->   >  {
->   >      /* We extract 2bit node id (bit 44~47, only bit 44~45 used now) from
->   >       * Loongson-3's 48bit address space and embed it into 40bit */
->   >      long nid = (paddr >> 44) & 0x3;
->   > +
->   >      return ((nid << 44) ^ paddr) | (nid << 37);
->   >  }
->   >
->   > -phys_addr_t __dma_to_phys(struct device *dev, dma_addr_t daddr)
->   > +dma_addr_t __ls7a_phys_to_dma(struct device *dev, phys_addr_t paddr)
->   > +{
->   > +    long nid = (paddr >> 44) & 0x3;
->   > +
->   > +    return ((nid << 44) ^ paddr) | (nid << (36 + node_id_offset));
->   > +}
->   > +
->   > +
->   > +dma_addr_t __phys_to_dma(struct device *dev, phys_addr_t paddr)
->   > +{
->   > +    return loongson_dma.phys_to_dma(dev, paddr);
->   > +}
->   > +
->   > +phys_addr_t __rs780e_dma_to_phys(struct device *dev, dma_addr_t daddr)
->   >  {
->   >      /* We extract 2bit node id (bit 44~47, only bit 44~45 used now) from
->   >       * Loongson-3's 48bit address space and embed it into 40bit */
->   >      long nid = (daddr >> 37) & 0x3;
->   > +
->   >      return ((nid << 37) ^ daddr) | (nid << 44);
->   >  }
->   >
->   > +phys_addr_t __ls7a_dma_to_phys(struct device *dev, dma_addr_t daddr)
->   > +{
->   > +    long nid = (daddr >> (36 + node_id_offset)) & 0x3;
->   > +
->   > +    return ((nid << (36 + node_id_offset)) ^ daddr) | (nid << 44);
->   > +}
->   > +
->   > +phys_addr_t __dma_to_phys(struct device *dev, dma_addr_t daddr)
->   > +{
->   > +    return loongson_dma.dma_to_phys(dev, daddr);
->   > +}
->   > +
->   >  void __init plat_swiotlb_setup(void)
->   >  {
->   >      swiotlb_init(1);
->   > +
->   > +    if (strstr(eboard->name, "780E")) {
->   > +        loongson_dma.phys_to_dma = __rs780e_phys_to_dma;
->   > +        loongson_dma.dma_to_phys = __rs780e_dma_to_phys;
->   > +    }
->   > +
->   > +    if (strstr(eboard->name, "7A1000")) {
->   > +        loongson_dma.phys_to_dma = __ls7a_phys_to_dma;
->   > +        loongson_dma.dma_to_phys = __ls7a_dma_to_phys;
->   > +    }
->   >  }
->   > diff --git a/arch/mips/loongson64/init.c b/arch/mips/loongson64/init.c
->   > index 5ac1a0f..dd8463d 100644
->   > --- a/arch/mips/loongson64/init.c
->   > +++ b/arch/mips/loongson64/init.c
->   > @@ -12,6 +12,11 @@
->   >  #include <asm/fw/fw.h>
->   >
->   >  #include <loongson.h>
->   > +#include <boot_param.h>
->   > +
->   > +#define NODE_ID_OFFSET_ADDR     0x90000E001001041CULL
->   > +
->   > +u32 node_id_offset;
->   >
->   >  static void __init mips_nmi_setup(void)
->   >  {
->   > @@ -23,6 +28,11 @@ static void __init mips_nmi_setup(void)
->   >      flush_icache_range((unsigned long)base, (unsigned long)base + 0x80);
->   >  }
->   >
->   > +static void ls7a_early_config(void)
->   > +{
->   > +    node_id_offset = (*(u32 *)NODE_ID_OFFSET_ADDR >> 8) & 0x1F;
->
-> Please avoid raw pointer. Use readl/writel instead.
+Thanks a lot.
+Zhu Yanjun
 
-OK, I will do it.
+-----Original Message-----
+From: Jason Gunthorpe <jgg@mellanox.com>=20
+Sent: Tuesday, March 10, 2020 1:35 AM
+To: syzbot <syzbot+e11efb687f5ab7f01f3d@syzkaller.appspotmail.com>
+Cc: dledford@redhat.com; linux-kernel@vger.kernel.org; linux-rdma@vger.kern=
+el.org; Moni Shoua <monis@mellanox.com>; syzkaller-bugs@googlegroups.com; Y=
+anjun Zhu <yanjunz@mellanox.com>
+Subject: Re: KASAN: use-after-free Read in rxe_query_port
+
+On Sun, Mar 01, 2020 at 03:20:12AM -0800, syzbot wrote:
+> Hello,
+>=20
+> syzbot found the following crash on:
+>=20
+> HEAD commit:    f8788d86 Linux 5.6-rc3
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=3D132d3645e0000=
+0
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=3D9833e26bab355=
+358
+> dashboard link: https://syzkaller.appspot.com/bug?extid=3De11efb687f5ab7f=
+01f3d
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+>=20
+> Unfortunately, I don't have any reproducer for this crash yet.
+>=20
+> IMPORTANT: if you fix the bug, please add the following tag to the commit=
+:
+> Reported-by: syzbot+e11efb687f5ab7f01f3d@syzkaller.appspotmail.com
+
+Yanjun, do you have some idea what this could be?
 
 Thanks,
-
-Tiezhu Yang
-
->
->   > +}
->   > +
->   >  void __init prom_init(void)
->   >  {
->   >      fw_init_cmdline();
->   > @@ -32,6 +42,9 @@ void __init prom_init(void)
->   >      set_io_port_base((unsigned long)
->   >          ioremap(LOONGSON_PCIIO_BASE, LOONGSON_PCIIO_SIZE));
->   >
->   > +    if (strstr(eboard->name, "7A1000"))
->   > +        ls7a_early_config();
->   > +
->   >      prom_init_numa_memory();
->   >
->   >      /* Hardcode to CPU UART 0 */
->   > --
->   > 2.1.0
->   >
->   >
-
+Jason
