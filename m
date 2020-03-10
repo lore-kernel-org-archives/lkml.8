@@ -2,171 +2,205 @@ Return-Path: <SRS0=K2g5=43=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE7FCC10F25
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 01:09:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9A7AC10F25
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 01:10:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 970F724649
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 01:09:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rjHPi4hI"
+	by mail.kernel.org (Postfix) with ESMTP id 880AB24649
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 01:10:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726477AbgCJBJp (ORCPT
+        id S1726480AbgCJBK3 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 9 Mar 2020 21:09:45 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:44300 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726106AbgCJBJo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 9 Mar 2020 21:09:44 -0400
-Received: by mail-lf1-f65.google.com with SMTP id i10so9407633lfg.11
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Mar 2020 18:09:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=VH46Ehb61wn3Nsa+EuwV9XgSdGbIry8HRNC2P/68lZA=;
-        b=rjHPi4hI9ySmdHPWP2/oYPXAfsvI7hQS1hNA1n1D8e0DkQcrAIlfGTtDtKyzW7VohF
-         x5okkNCqm1mdZCnmEifVd7HToQapaHAq5jl0zPMTSDxxwsesGLmhHpehIuBLdhCPYDB5
-         KVCiXQeg7q662Us88wInsQ1InY5bRPOEDRrIOMzC2meSn81EL9nW/d3BU9yP+lNA+Kma
-         QERGPQPJEnwirOhBMoEpEG87bLOTU4DZRXp3LaDjSAIuDjlU1/rfXqQKwLO9o/TSAqC+
-         rdc+lNawnw+f4GyFtQ5f5JFEy4rVOQBUoyQO59I0lRYNExodz/0726+bo7y93x3eYQJi
-         ++Cg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=VH46Ehb61wn3Nsa+EuwV9XgSdGbIry8HRNC2P/68lZA=;
-        b=lPnKt2mzlo/y9uNYCR0VKAr6l4nhMg9NnOlXOvxC+S7LxTtTGf+K7e4E1I9GmJzzN3
-         lszbZwlOWG85XSTOgmYnLj4Kqzs/+3tlSz4BocgDFuzUE1cutnZA+TsUDe+eAPpj9y8Q
-         +nxwp6Kd859CJztZBuGeORKajkJ14QTDZpze9uQCAIsSmi8q7nqf9Lh6kmhs9rFiVwXS
-         Y6W2dBQKLSOFw9SP/HiL0iEDBDgz9+3NWjrStyrzS1AR9JbYcup2BzmESRqUTfiCQ+Ms
-         K3wTbIMDvq/b/jrVgbbuGcimb+vHY/dP2xzDbeNBeCO8K9L+2K3nn1NPV7PR+bPoYnqR
-         32yw==
-X-Gm-Message-State: ANhLgQ2F5Fv7AJKKfRVRsc/hFx/sgf8Q0OlCleCObjvEvKggHymIInf1
-        S7HDaFfVHC9Y4zxvNqUgcBq8B3ThH1QtgMahSn226g==
-X-Google-Smtp-Source: ADFU+vsJpPQRtMLbg/7hFmm1JetBjf6nVzCFU9hpVCk7A5WXVIqO+oXTsLXumVJU+m7yZeRwnJx/e0EC+8gHpl6KelA=
-X-Received: by 2002:ac2:5222:: with SMTP id i2mr7811848lfl.81.1583802582314;
- Mon, 09 Mar 2020 18:09:42 -0700 (PDT)
+        Mon, 9 Mar 2020 21:10:29 -0400
+Received: from mail-oln040092253032.outbound.protection.outlook.com ([40.92.253.32]:47680
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726121AbgCJBK3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 9 Mar 2020 21:10:29 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=U94eAOAoauswfmyKpkXzmblZVfyWYuW+RT5s2KZ7k9B25K1hY1Pcfi4RXIACUOGwToNopSZKKfu9YcxEx/I0WNKpWHFbf1/sK5gK9RL/K1EHv+2pJdhgi33sqXIk5WXWdntnB7hlp4YBO/GMcQn0kSu+i9d2UiVQQnCWS9FcY0/Br7Bop+D7zsE56rDpmE4rTvsH5Sc668GB/CEYhzOfB1qwze4PBWQl36uGVQYAbn62LRXT5Mt6nzcZLgHcJ+i5njVbt1elo+Ntm7ZYGOhGmNkqJ1+B0sJ4LtuTraRNKWiElM2F0XK2JKDjM51UJvmfG29QXYjrQzKwe/xgKpEGTg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nBYfntADUxw41Qc6CzWTB/HGT5tN86qbIZGPHhItfD0=;
+ b=Dl5BX5t5fGSyM56Gzr1W1Z6TipygaYnh2yzP9bUY0DjGuCO6z45T+rbQQ6rePlaWJ8/7erdynTzDxRVe+LCUuKDjI+LyRaLGbR2KY712pLBAeZ9l1cBP/+a01UUO5QDba1b/fsp+vn8xmUY+NQo+W/eqbgE0uBBSAwqls6uXacl5ryAwQSvEVjeViwRElQZ7WD76eYkF0UYEV7LW9zpmh3U5GUQ/eJ8w37y+Qt5FQ4cBgCLWEG11rLaQTaX1liqdDdpLJ4nmgV/CLq26w/G0Q7oKY9SS9ZwhNHeqx5iG/4NOkw4oJTmMkq+4NV+0+2sYh1YActWHsMdiGVkDzvfxwQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Received: from HK2APC01FT060.eop-APC01.prod.protection.outlook.com
+ (2a01:111:e400:7ebc::37) by
+ HK2APC01HT078.eop-APC01.prod.protection.outlook.com (2a01:111:e400:7ebc::332)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.11; Tue, 10 Mar
+ 2020 01:10:24 +0000
+Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM (10.152.248.57) by
+ HK2APC01FT060.mail.protection.outlook.com (10.152.249.160) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2793.11 via Frontend Transport; Tue, 10 Mar 2020 01:10:24 +0000
+Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ ([fe80::a5dc:fc1:6544:5cb2]) by PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ ([fe80::a5dc:fc1:6544:5cb2%7]) with mapi id 15.20.2793.013; Tue, 10 Mar 2020
+ 01:10:24 +0000
+Received: from nicholas-dell-linux (49.196.154.16) by ME1PR01CA0130.ausprd01.prod.outlook.com (2603:10c6:200:1b::15) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.14 via Frontend Transport; Tue, 10 Mar 2020 01:10:21 +0000
+From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH v3 2/2] nvmem: Add support for write-only instances
+Thread-Topic: [PATCH v3 2/2] nvmem: Add support for write-only instances
+Thread-Index: AQHV9jsxJuscDJGSJEm8fhjJto18yKhBBNgA
+Date:   Tue, 10 Mar 2020 01:10:24 +0000
+Message-ID: <PSXP216MB04388474C638D9EAC994ECEA80FF0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+References: <PSXP216MB0438614877E3559E155F12AF80FE0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+ <PSXP216MB0438EF52E2F4E58264ADBB8A80FE0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+In-Reply-To: <PSXP216MB0438EF52E2F4E58264ADBB8A80FE0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+Accept-Language: en-AU, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: ME1PR01CA0130.ausprd01.prod.outlook.com
+ (2603:10c6:200:1b::15) To PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ (2603:1096:300:d::20)
+x-incomingtopheadermarker: OriginalChecksum:9088E1F1033EEEB6F52C934E61C9B536DCA1B292D62601BD613604A9ECD64EF9;UpperCasedChecksum:96BDA764C951C57580F899DB3E987838782C1E0515DD9AADE27770F848C95567;SizeAsReceived:7811;Count:50
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tmn:  [VMV59lluRA9JDK4pIqgP0/i9zgA2N/xv]
+x-microsoft-original-message-id: <20200310011014.GA2103@nicholas-dell-linux>
+x-ms-publictraffictype: Email
+x-incomingheadercount: 50
+x-eopattributedmessage: 0
+x-ms-office365-filtering-correlation-id: 7c73045c-d0b3-4ead-1117-08d7c48fcf4e
+x-ms-traffictypediagnostic: HK2APC01HT078:
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: NFpQE5j4Zpv+SqoKJxmb/GnTwojt7H22NVXz1BKYuYe7CiZmzjv9LjXDE5DbQwYb92HKLJd7Ibzi8OGJe+za2aggPXmf2MthYjX4Vgci1WB0DxNmCjSngCfBwTTVGTJk7LF3HqFHRibwizPi51eUH4njzAmm2Pwbj8fuO2uPgRVnozW8xTTjPplbAPmNROXn
+x-ms-exchange-antispam-messagedata: EQ3flCzuyu9a7GJcz45n3fGSo/Jq7rI5/qbG8Ghca4mhaytCGCheo3yI4Hd3xVPPx4Pv9LNx/bfadbKbmsPIFOc9BhhkuYdZuBXqv4Pg6MTo9VC5tjGJ7f3i59BrvbidCEx88C/sxHBsp04wcLlFhQ==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <D9AE6678071B5B4384EEB405A5E1395B@KORP216.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-References: <cover.1581555616.git.ashish.kalra@amd.com> <d6f21be0c775fd51a63565c8944b03b3bf099e0f.1581555616.git.ashish.kalra@amd.com>
-In-Reply-To: <d6f21be0c775fd51a63565c8944b03b3bf099e0f.1581555616.git.ashish.kalra@amd.com>
-From:   Steve Rutherford <srutherford@google.com>
-Date:   Mon, 9 Mar 2020 18:09:06 -0700
-Message-ID: <CABayD+dB-CQ7HwhDvkgxXne9fhy6Wbh8iQLVhEkegWhYMoLGGw@mail.gmail.com>
-Subject: Re: [PATCH 03/12] KVM: SVM: Add KVM_SEV_SEND_FINISH command
-To:     Ashish Kalra <Ashish.Kalra@amd.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Joerg Roedel <joro@8bytes.org>,
-        Borislav Petkov <bp@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        David Rientjes <rientjes@google.com>, X86 ML <x86@kernel.org>,
-        KVM list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7c73045c-d0b3-4ead-1117-08d7c48fcf4e
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Mar 2020 01:10:24.2317
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Internet
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK2APC01HT078
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 12, 2020 at 5:16 PM Ashish Kalra <Ashish.Kalra@amd.com> wrote:
->
-> From: Brijesh Singh <brijesh.singh@amd.com>
->
-> The command is used to finailize the encryption context created with
-> KVM_SEV_SEND_START command.
->
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Cc: Paolo Bonzini <pbonzini@redhat.com>
-> Cc: "Radim Kr=C4=8Dm=C3=A1=C5=99" <rkrcmar@redhat.com>
-> Cc: Joerg Roedel <joro@8bytes.org>
-> Cc: Borislav Petkov <bp@suse.de>
-> Cc: Tom Lendacky <thomas.lendacky@amd.com>
-> Cc: x86@kernel.org
-> Cc: kvm@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
-> Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
+On Mon, Mar 09, 2020 at 05:50:17PM +0000, Nicholas Johnson wrote:
+> There is at least one real-world use-case for write-only nvmem
+> instances. Refer to 03cd45d2e219 ("thunderbolt: Prevent crash if
+> non-active NVMem file is read").
+> 
+> Add support for write-only nvmem instances by adding attrs for 0200.
+> 
+> Change nvmem_register() to abort if NULL group is returned from
+> nvmem_sysfs_get_groups().
+> 
+> Return NULL from nvmem_sysfs_get_groups() in invalid cases.
+Oops, late night. Please drop the above line if you accept this. This 
+above line applies to patch 1/2 now.
+
+> 
+> Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
 > ---
->  .../virt/kvm/amd-memory-encryption.rst        |  8 +++++++
->  arch/x86/kvm/svm.c                            | 23 +++++++++++++++++++
->  2 files changed, 31 insertions(+)
->
-> diff --git a/Documentation/virt/kvm/amd-memory-encryption.rst b/Documenta=
-tion/virt/kvm/amd-memory-encryption.rst
-> index 0f1c3860360f..f22f09ad72bd 100644
-> --- a/Documentation/virt/kvm/amd-memory-encryption.rst
-> +++ b/Documentation/virt/kvm/amd-memory-encryption.rst
-> @@ -289,6 +289,14 @@ Returns: 0 on success, -negative on error
->                  __u32 trans_len;
->          };
->
-> +12. KVM_SEV_SEND_FINISH
-> +------------------------
+>  drivers/nvmem/nvmem-sysfs.c | 56 +++++++++++++++++++++++++++++++------
+>  1 file changed, 48 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/nvmem/nvmem-sysfs.c b/drivers/nvmem/nvmem-sysfs.c
+> index 9e0c429cd..846112786 100644
+> --- a/drivers/nvmem/nvmem-sysfs.c
+> +++ b/drivers/nvmem/nvmem-sysfs.c
+> @@ -196,16 +196,49 @@ static const struct attribute_group *nvmem_ro_root_dev_groups[] = {
+>  	NULL,
+>  };
+>  
+> +/* write only permission, root only */
+> +static struct bin_attribute bin_attr_wo_root_nvmem = {
+> +	.attr	= {
+> +		.name	= "nvmem",
+> +		.mode	= 0200,
+> +	},
+> +	.write	= bin_attr_nvmem_write,
+> +};
 > +
-> +After completion of the migration flow, the KVM_SEV_SEND_FINISH command =
-can be
-> +issued by the hypervisor to delete the encryption context.
+> +static struct bin_attribute *nvmem_bin_wo_root_attributes[] = {
+> +	&bin_attr_wo_root_nvmem,
+> +	NULL,
+> +};
 > +
-> +Returns: 0 on success, -negative on error
+> +static const struct attribute_group nvmem_bin_wo_root_group = {
+> +	.bin_attrs	= nvmem_bin_wo_root_attributes,
+> +	.attrs		= nvmem_attrs,
+> +};
 > +
->  References
->  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->
-> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-> index ae97f774e979..c55c1865f9e0 100644
-> --- a/arch/x86/kvm/svm.c
-> +++ b/arch/x86/kvm/svm.c
-> @@ -7387,6 +7387,26 @@ static int sev_send_update_data(struct kvm *kvm, s=
-truct kvm_sev_cmd *argp)
->         return ret;
->  }
->
-> +static int sev_send_finish(struct kvm *kvm, struct kvm_sev_cmd *argp)
-> +{
-> +       struct kvm_sev_info *sev =3D &to_kvm_svm(kvm)->sev_info;
-> +       struct sev_data_send_finish *data;
-> +       int ret;
+> +static const struct attribute_group *nvmem_wo_root_dev_groups[] = {
+> +	&nvmem_bin_wo_root_group,
+> +	NULL,
+> +};
 > +
-> +       if (!sev_guest(kvm))
-> +               return -ENOTTY;
-> +
-> +       data =3D kzalloc(sizeof(*data), GFP_KERNEL);
-> +       if (!data)
-> +               return -ENOMEM;
-> +
-> +       data->handle =3D sev->handle;
-> +       ret =3D sev_issue_cmd(kvm, SEV_CMD_SEND_FINISH, data, &argp->erro=
-r);
-> +
-> +       kfree(data);
-> +       return ret;
-> +}
-> +
->  static int svm_mem_enc_op(struct kvm *kvm, void __user *argp)
+>  const struct attribute_group **nvmem_sysfs_get_groups(
+>  					struct nvmem_device *nvmem,
+>  					const struct nvmem_config *config)
 >  {
->         struct kvm_sev_cmd sev_cmd;
-> @@ -7434,6 +7454,9 @@ static int svm_mem_enc_op(struct kvm *kvm, void __u=
-ser *argp)
->         case KVM_SEV_SEND_UPDATE_DATA:
->                 r =3D sev_send_update_data(kvm, &sev_cmd);
->                 break;
-> +       case KVM_SEV_SEND_FINISH:
-> +               r =3D sev_send_finish(kvm, &sev_cmd);
-> +               break;
->         default:
->                 r =3D -EINVAL;
->                 goto out;
-> --
-> 2.17.1
->
-Reviewed-by: Steve Rutherford <srutherford@google.com>
+> -	if (config->root_only)
+> -		return nvmem->read_only ?
+> -			nvmem_ro_root_dev_groups :
+> -			nvmem_rw_root_dev_groups;
+> +	/* Read-only */
+> +	if (nvmem->reg_read && (!nvmem->reg_write || nvmem->read_only))
+> +		return config->root_only ?
+> +			nvmem_ro_root_dev_groups : nvmem_ro_dev_groups;
+> +
+> +	/* Read-write */
+> +	if (nvmem->reg_read && nvmem->reg_write && !nvmem->read_only)
+> +		return config->root_only ?
+> +			nvmem_rw_root_dev_groups : nvmem_rw_dev_groups;
+>  
+> -	return nvmem->read_only ? nvmem_ro_dev_groups : nvmem_rw_dev_groups;
+> +	/* Write-only, do not honour request for global writable entry */
+> +	if (!nvmem->reg_read && nvmem->reg_write && !nvmem->read_only)
+> +		return config->root_only ? nvmem_wo_root_dev_groups : NULL;
+> +
+> +	return NULL;
+>  }
+>  
+>  /*
+> @@ -224,17 +257,24 @@ int nvmem_sysfs_setup_compat(struct nvmem_device *nvmem,
+>  	if (!config->base_dev)
+>  		return -EINVAL;
+>  
+> -	if (nvmem->read_only) {
+> +	if (nvmem->reg_read && (!nvmem->reg_write || nvmem->read_only)) {
+>  		if (config->root_only)
+>  			nvmem->eeprom = bin_attr_ro_root_nvmem;
+>  		else
+>  			nvmem->eeprom = bin_attr_ro_nvmem;
+> -	} else {
+> +	} else if (!nvmem->reg_read && nvmem->reg_write && !nvmem->read_only) {
+> +		if (config->root_only)
+> +			nvmem->eeprom = bin_attr_wo_root_nvmem;
+> +		else
+> +			return -EPERM;
+> +	} else if (nvmem->reg_read && nvmem->reg_write && !nvmem->read_only) {
+>  		if (config->root_only)
+>  			nvmem->eeprom = bin_attr_rw_root_nvmem;
+>  		else
+>  			nvmem->eeprom = bin_attr_rw_nvmem;
+> -	}
+> +	} else
+> +		return -EPERM;
+> +
+>  	nvmem->eeprom.attr.name = "eeprom";
+>  	nvmem->eeprom.size = nvmem->size;
+>  #ifdef CONFIG_DEBUG_LOCK_ALLOC
+> -- 
+> 2.25.1
+> 
