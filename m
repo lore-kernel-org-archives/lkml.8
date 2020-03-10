@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47245C10F27
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:23:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A07BC10F27
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:23:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D972208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:23:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E7A8208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 10 Mar 2020 13:23:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583846588;
-	bh=VuexKs39MVjL3+DndPO6XuISqRYdC9A34Djm9UGu9jQ=;
+	s=default; t=1583846593;
+	bh=L/8bNz1ay2DsHD8v+WzxzOz1K+YBVsMdPN+L+Xvzoac=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gjDOBkFw6nJGEup3bXBvBLpqMVPSdI3HvlJ7BXMOuVgBO31YJjfcDV9+vXQZoPoCo
-	 oK8Vpz1YpHyHIaWjNQAK89TIgxg/3vZ0EszWCZRKTjsXVkGZ3tDtWLIROhJHxEJ4sb
-	 Rx0NS+L8YVB0dGFko6MfAgafLeGAxRh7IPn+BRfk=
+	b=Gc61UCu35j5c3gAjAU6XxZ7WouBRlPWZ6zzGc7zYNnt7qA1X3EtsROjoOJiZoenaf
+	 /WxoNIU2PEWIKxwOH6o/ikXMKSujyKhAg1MahUcAr+lzcFpUDDYwyUfy9ExRtjGQwt
+	 NShfjOnrlCrvrXouY/DUihYvP3oMV8NU+NQfAkN0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728435AbgCJNXG (ORCPT
+        id S1727397AbgCJNXL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 09:23:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40684 "EHLO mail.kernel.org"
+        Tue, 10 Mar 2020 09:23:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40564 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730070AbgCJNAC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 09:00:02 -0400
+        id S1728110AbgCJM77 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 08:59:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 553BD2467D;
-        Tue, 10 Mar 2020 13:00:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A5DB024693;
+        Tue, 10 Mar 2020 12:59:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583845201;
-        bh=VuexKs39MVjL3+DndPO6XuISqRYdC9A34Djm9UGu9jQ=;
+        s=default; t=1583845198;
+        bh=L/8bNz1ay2DsHD8v+WzxzOz1K+YBVsMdPN+L+Xvzoac=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qTQVKXz+hgxdm/31yqFchq4G+hv4VswL8uohfL7PVoS0IJYa0+6mYCoOd784nzS5m
-         yMDqy5xqkIU+dKkOLW4VMuug6ZLz+zWLul4SHWdzgQqeyd/7dJY0nJ88kRzdq3QWlG
-         9+8Hj+070AzkZzk8vVwUBQ2HHygnNc8EsCl3UlUU=
+        b=S1WXAPjXEd28BBZsYLpxJ+zYvY6CxnqKOVcazZKJPQ/Rmxgrv86qpjlv8laznZyB+
+         3nEifQ67VdPQFh3p3gzWrYk8Twh/VipoXD20aMFVCZMMRsSF1Mral4ppvTmOLXMffP
+         yc30+9+mbU1WXNP7G6xE+KJ1a07UT8YYSwU+s/i8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Nicolas Dufresne <nicolas@ndufresne.ca>,
         Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Subject: [PATCH 5.5 098/189] media: v4l2-mem2mem.c: fix broken links
-Date:   Tue, 10 Mar 2020 13:38:55 +0100
-Message-Id: <20200310123649.616518359@linuxfoundation.org>
+Subject: [PATCH 5.5 097/189] media: vicodec: process all 4 components for RGB32 formats
+Date:   Tue, 10 Mar 2020 13:38:54 +0100
+Message-Id: <20200310123649.508730969@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200310123639.608886314@linuxfoundation.org>
 References: <20200310123639.608886314@linuxfoundation.org>
@@ -62,41 +61,103 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 
-commit 316e730f1d8bb029fe6cec2468fb2a50424485b3 upstream.
+commit 49a56266f96f2c6608373464af8755b431ef1513 upstream.
 
-The topology that v4l2_m2m_register_media_controller() creates for a
-processing block actually created a source-to-source link and a sink-to-sink
-link instead of two source-to-sink links.
+Only ARGB32-type pixelformat were assumed to have 4 components, which is
+wrong since RGB32-type pixelformats may have an alpha channel, so they
+should also assume 4 color components.
 
-Unfortunately v4l2-compliance never checked for such bad links, so this
-went unreported for quite some time.
+The XRGB32-type pixelformats really have only 3 color components, but this
+complicated matters since that creates strides that are sometimes width * 3
+and sometimes width * 4, and in fact this can result in buffer overflows.
+
+Keep things simple by just always processing all 4 color components.
+
+In the future we might want to optimize this again for the XRGB32-type
+pixelformats, but for now keep it simple and robust.
 
 Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Reported-by: Nicolas Dufresne <nicolas@ndufresne.ca>
-Cc: <stable@vger.kernel.org>      # for v4.19 and up
+Cc: <stable@vger.kernel.org>      # for v5.4 and up
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/v4l2-core/v4l2-mem2mem.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/media/platform/vicodec/codec-v4l2-fwht.c |   34 ++++++-----------------
+ 1 file changed, 9 insertions(+), 25 deletions(-)
 
---- a/drivers/media/v4l2-core/v4l2-mem2mem.c
-+++ b/drivers/media/v4l2-core/v4l2-mem2mem.c
-@@ -880,12 +880,12 @@ int v4l2_m2m_register_media_controller(s
- 		goto err_rel_entity1;
+--- a/drivers/media/platform/vicodec/codec-v4l2-fwht.c
++++ b/drivers/media/platform/vicodec/codec-v4l2-fwht.c
+@@ -27,17 +27,17 @@ static const struct v4l2_fwht_pixfmt_inf
+ 	{ V4L2_PIX_FMT_BGR24,   3, 3, 1, 3, 3, 1, 1, 3, 1, FWHT_FL_PIXENC_RGB},
+ 	{ V4L2_PIX_FMT_RGB24,   3, 3, 1, 3, 3, 1, 1, 3, 1, FWHT_FL_PIXENC_RGB},
+ 	{ V4L2_PIX_FMT_HSV24,   3, 3, 1, 3, 3, 1, 1, 3, 1, FWHT_FL_PIXENC_HSV},
+-	{ V4L2_PIX_FMT_BGR32,   4, 4, 1, 4, 4, 1, 1, 3, 1, FWHT_FL_PIXENC_RGB},
+-	{ V4L2_PIX_FMT_XBGR32,  4, 4, 1, 4, 4, 1, 1, 3, 1, FWHT_FL_PIXENC_RGB},
++	{ V4L2_PIX_FMT_BGR32,   4, 4, 1, 4, 4, 1, 1, 4, 1, FWHT_FL_PIXENC_RGB},
++	{ V4L2_PIX_FMT_XBGR32,  4, 4, 1, 4, 4, 1, 1, 4, 1, FWHT_FL_PIXENC_RGB},
+ 	{ V4L2_PIX_FMT_ABGR32,  4, 4, 1, 4, 4, 1, 1, 4, 1, FWHT_FL_PIXENC_RGB},
+-	{ V4L2_PIX_FMT_RGB32,   4, 4, 1, 4, 4, 1, 1, 3, 1, FWHT_FL_PIXENC_RGB},
+-	{ V4L2_PIX_FMT_XRGB32,  4, 4, 1, 4, 4, 1, 1, 3, 1, FWHT_FL_PIXENC_RGB},
++	{ V4L2_PIX_FMT_RGB32,   4, 4, 1, 4, 4, 1, 1, 4, 1, FWHT_FL_PIXENC_RGB},
++	{ V4L2_PIX_FMT_XRGB32,  4, 4, 1, 4, 4, 1, 1, 4, 1, FWHT_FL_PIXENC_RGB},
+ 	{ V4L2_PIX_FMT_ARGB32,  4, 4, 1, 4, 4, 1, 1, 4, 1, FWHT_FL_PIXENC_RGB},
+-	{ V4L2_PIX_FMT_BGRX32,  4, 4, 1, 4, 4, 1, 1, 3, 1, FWHT_FL_PIXENC_RGB},
++	{ V4L2_PIX_FMT_BGRX32,  4, 4, 1, 4, 4, 1, 1, 4, 1, FWHT_FL_PIXENC_RGB},
+ 	{ V4L2_PIX_FMT_BGRA32,  4, 4, 1, 4, 4, 1, 1, 4, 1, FWHT_FL_PIXENC_RGB},
+-	{ V4L2_PIX_FMT_RGBX32,  4, 4, 1, 4, 4, 1, 1, 3, 1, FWHT_FL_PIXENC_RGB},
++	{ V4L2_PIX_FMT_RGBX32,  4, 4, 1, 4, 4, 1, 1, 4, 1, FWHT_FL_PIXENC_RGB},
+ 	{ V4L2_PIX_FMT_RGBA32,  4, 4, 1, 4, 4, 1, 1, 4, 1, FWHT_FL_PIXENC_RGB},
+-	{ V4L2_PIX_FMT_HSV32,   4, 4, 1, 4, 4, 1, 1, 3, 1, FWHT_FL_PIXENC_HSV},
++	{ V4L2_PIX_FMT_HSV32,   4, 4, 1, 4, 4, 1, 1, 4, 1, FWHT_FL_PIXENC_HSV},
+ 	{ V4L2_PIX_FMT_GREY,    1, 1, 1, 1, 0, 1, 1, 1, 1, FWHT_FL_PIXENC_RGB},
+ };
  
- 	/* Connect the three entities */
--	ret = media_create_pad_link(m2m_dev->source, 0, &m2m_dev->proc, 1,
-+	ret = media_create_pad_link(m2m_dev->source, 0, &m2m_dev->proc, 0,
- 			MEDIA_LNK_FL_IMMUTABLE | MEDIA_LNK_FL_ENABLED);
- 	if (ret)
- 		goto err_rel_entity2;
- 
--	ret = media_create_pad_link(&m2m_dev->proc, 0, &m2m_dev->sink, 0,
-+	ret = media_create_pad_link(&m2m_dev->proc, 1, &m2m_dev->sink, 0,
- 			MEDIA_LNK_FL_IMMUTABLE | MEDIA_LNK_FL_ENABLED);
- 	if (ret)
- 		goto err_rm_links0;
+@@ -175,22 +175,14 @@ static int prepare_raw_frame(struct fwht
+ 	case V4L2_PIX_FMT_RGB32:
+ 	case V4L2_PIX_FMT_XRGB32:
+ 	case V4L2_PIX_FMT_HSV32:
+-		rf->cr = rf->luma + 1;
+-		rf->cb = rf->cr + 2;
+-		rf->luma += 2;
+-		break;
+-	case V4L2_PIX_FMT_BGR32:
+-	case V4L2_PIX_FMT_XBGR32:
+-		rf->cb = rf->luma;
+-		rf->cr = rf->cb + 2;
+-		rf->luma++;
+-		break;
+ 	case V4L2_PIX_FMT_ARGB32:
+ 		rf->alpha = rf->luma;
+ 		rf->cr = rf->luma + 1;
+ 		rf->cb = rf->cr + 2;
+ 		rf->luma += 2;
+ 		break;
++	case V4L2_PIX_FMT_BGR32:
++	case V4L2_PIX_FMT_XBGR32:
+ 	case V4L2_PIX_FMT_ABGR32:
+ 		rf->cb = rf->luma;
+ 		rf->cr = rf->cb + 2;
+@@ -198,10 +190,6 @@ static int prepare_raw_frame(struct fwht
+ 		rf->alpha = rf->cr + 1;
+ 		break;
+ 	case V4L2_PIX_FMT_BGRX32:
+-		rf->cb = rf->luma + 1;
+-		rf->cr = rf->cb + 2;
+-		rf->luma += 2;
+-		break;
+ 	case V4L2_PIX_FMT_BGRA32:
+ 		rf->alpha = rf->luma;
+ 		rf->cb = rf->luma + 1;
+@@ -209,10 +197,6 @@ static int prepare_raw_frame(struct fwht
+ 		rf->luma += 2;
+ 		break;
+ 	case V4L2_PIX_FMT_RGBX32:
+-		rf->cr = rf->luma;
+-		rf->cb = rf->cr + 2;
+-		rf->luma++;
+-		break;
+ 	case V4L2_PIX_FMT_RGBA32:
+ 		rf->alpha = rf->luma + 3;
+ 		rf->cr = rf->luma;
 
 
