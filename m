@@ -2,202 +2,79 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B428C18E5A
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 10:47:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00FF4C10F27
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 10:48:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03BFF2192A
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 10:47:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QOi6dwvP"
+	by mail.kernel.org (Postfix) with ESMTP id D320B2192A
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 10:48:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729047AbgCKKro (ORCPT
+        id S1729062AbgCKKsK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 06:47:44 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:36181 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726000AbgCKKro (ORCPT
+        Wed, 11 Mar 2020 06:48:10 -0400
+Received: from charlotte.tuxdriver.com ([70.61.120.58]:50105 "EHLO
+        smtp.tuxdriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726000AbgCKKsK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 06:47:44 -0400
-Received: by mail-pf1-f196.google.com with SMTP id i13so1104121pfe.3
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 03:47:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=7nixSWZgQM/dFUC8bWhHj5VYHF/zROxg8FtVN7hFmLo=;
-        b=QOi6dwvPN8OHaV1bE2retGQzAs7SOWAk2T47xslQl9YraTvgXmCCIqVnM1rCc23jll
-         kwzAixFcXlbPjOHXWMZGrKRm9hjgCygzy38WX73XQ+LEdD/80K854Fg2poCLTXWIhX3i
-         ECedpadbpwpK8OffP6IuuDF1PyCt8xL4uFXCM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=7nixSWZgQM/dFUC8bWhHj5VYHF/zROxg8FtVN7hFmLo=;
-        b=HeCecKHdkn2sxypwMeBP1D8L41IeuYjrZtxzDNmMSi+30K2uakCQv8uguzJMV6iso9
-         pGq95HdoRpC/caHRLKB2K1i9zk4NWBPDCiVlhWJprGmc/00fMO/LdIh097gWdpqdx/Zf
-         +dM2s0sfn54tzFelnBpC4XGnBKJRTknAAMyjkac0hivGUIux+D5+oXt1KmRv3ZM6BJ+z
-         EgHf4U+KroCfSxUGGwrPtQ78VU2enoi/U7wILeOwC+87tuIExBZ5ahGJgHcUQp0QAKbm
-         LDU+ebYd4j7jmk0cI4CcmfnyqzakDzK5/eh3KNjYMMK5xmGFHidicUwaiWbDAIEo8jly
-         g6Qw==
-X-Gm-Message-State: ANhLgQ0VJYE0itPW2PPyeWbDJdr8lECfffEQoZRQiTHqW26vPPtGKl1W
-        csZqs1J9VJe3KpvWy7CwrT6OamnK1cgVIg==
-X-Google-Smtp-Source: ADFU+vtONaLRs0MZ77NKdNRX2SZFe5YG+WPFREn7udU5gZ2+UjRAxfCMIWKN+J2IPHDqDv5/vV6VdQ==
-X-Received: by 2002:aa7:8d82:: with SMTP id i2mr2252091pfr.179.1583923662803;
-        Wed, 11 Mar 2020 03:47:42 -0700 (PDT)
-Received: from tfiga.tok.corp.google.com ([2401:fa00:8f:203:f5fe:2a5e:f953:c0ed])
-        by smtp.gmail.com with ESMTPSA id o19sm6181965pjr.2.2020.03.11.03.47.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Mar 2020 03:47:42 -0700 (PDT)
-From:   Tomasz Figa <tfiga@chromium.org>
-To:     linux-media@vger.kernel.org
-Cc:     Shunqian Zheng <zhengsq@rock-chips.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-kernel@vger.kernel.org,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Dongchun Zhu <dongchun.zhu@mediatek.com>,
-        Tomasz Figa <tfiga@chromium.org>
-Subject: [PATCH v2] media: i2c: ov5695: Fix power on and off sequences
-Date:   Wed, 11 Mar 2020 19:47:28 +0900
-Message-Id: <20200311104728.62909-1-tfiga@chromium.org>
-X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
+        Wed, 11 Mar 2020 06:48:10 -0400
+Received: from 2606-a000-111b-43ee-0000-0000-0000-1bf2.inf6.spectrum.com ([2606:a000:111b:43ee::1bf2] helo=localhost)
+        by smtp.tuxdriver.com with esmtpsa (TLSv1:AES256-SHA:256)
+        (Exim 4.63)
+        (envelope-from <nhorman@tuxdriver.com>)
+        id 1jByu4-0006Kh-Se; Wed, 11 Mar 2020 06:48:03 -0400
+Date:   Wed, 11 Mar 2020 06:47:56 -0400
+From:   Neil Horman <nhorman@tuxdriver.com>
+To:     Ido Schimmel <idosch@mellanox.com>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>, jiri@mellanox.com,
+        netdev@vger.kernel.org, "David S . Miller" <davem@davemloft.net>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Nicolas Pitre <nico@fluxnic.net>, linux-kbuild@vger.kernel.org,
+        Jakub Kicinski <kuba@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: drop_monitor: use IS_REACHABLE() to guard
+ net_dm_hw_report()
+Message-ID: <20200311104756.GA1972672@hmswarspite.think-freely.org>
+References: <20200311062925.5163-1-masahiroy@kernel.org>
+ <20200311093143.GB279080@splinter>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200311093143.GB279080@splinter>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dongchun Zhu <dongchun.zhu@mediatek.com>
-
-From the measured hardware signal, OV5695 reset pin goes high for a
-short period of time during boot-up. From the sensor specification, the
-reset pin is active low and the DT binding defines the pin as active
-low, which means that the values set by the driver are inverted and thus
-the value requested in probe ends up high.
-
-Fix it by changing probe to request the reset GPIO initialized to high,
-which makes the initial state of the physical signal low.
-
-In addition, DOVDD rising must occur before DVDD rising from spec., but
-regulator_bulk_enable() API enables all the regulators asynchronously.
-Use an explicit loops of regulator_enable() instead.
-
-For power off sequence, it is required that DVDD falls first. Given the
-bulk API does not give any guarantee about the order of regulators,
-change the driver to use regulator_disable() instead.
-
-The sensor also requires a delay between reset high and first I2C
-transaction, which was assumed to be 8192 XVCLK cycles, but 1ms is
-recommended by the vendor. Fix this as well.
-
-Signed-off-by: Dongchun Zhu <dongchun.zhu@mediatek.com>
-Signed-off-by: Tomasz Figa <tfiga@chromium.org>
----
- drivers/media/i2c/ov5695.c | 49 ++++++++++++++++++++++++--------------
- 1 file changed, 31 insertions(+), 18 deletions(-)
-
-Changes since v1:
-(https://patchwork.kernel.org/patch/11305411/)
- - Add comments explaining why the regulators are controlled one by one.
-   (Sakari)
-
-diff --git a/drivers/media/i2c/ov5695.c b/drivers/media/i2c/ov5695.c
-index d6cd15bb699ac..cc678d9d2e0da 100644
---- a/drivers/media/i2c/ov5695.c
-+++ b/drivers/media/i2c/ov5695.c
-@@ -971,16 +971,9 @@ static int ov5695_s_stream(struct v4l2_subdev *sd, int on)
- 	return ret;
- }
- 
--/* Calculate the delay in us by clock rate and clock cycles */
--static inline u32 ov5695_cal_delay(u32 cycles)
--{
--	return DIV_ROUND_UP(cycles, OV5695_XVCLK_FREQ / 1000 / 1000);
--}
--
- static int __ov5695_power_on(struct ov5695 *ov5695)
- {
--	int ret;
--	u32 delay_us;
-+	int i, ret;
- 	struct device *dev = &ov5695->client->dev;
- 
- 	ret = clk_prepare_enable(ov5695->xvclk);
-@@ -991,21 +984,28 @@ static int __ov5695_power_on(struct ov5695 *ov5695)
- 
- 	gpiod_set_value_cansleep(ov5695->reset_gpio, 1);
- 
--	ret = regulator_bulk_enable(OV5695_NUM_SUPPLIES, ov5695->supplies);
--	if (ret < 0) {
--		dev_err(dev, "Failed to enable regulators\n");
--		goto disable_clk;
-+	/*
-+	 * The hardware requires the regulators to be powered on in order,
-+	 * so enable them one by one.
-+	 */
-+	for (i = 0; i < OV5695_NUM_SUPPLIES; i++) {
-+		ret = regulator_enable(ov5695->supplies[i].consumer);
-+		if (ret) {
-+			dev_err(dev, "Failed to enable %s: %d\n",
-+				ov5695->supplies[i].supply, ret);
-+			goto disable_reg_clk;
-+		}
- 	}
- 
- 	gpiod_set_value_cansleep(ov5695->reset_gpio, 0);
- 
--	/* 8192 cycles prior to first SCCB transaction */
--	delay_us = ov5695_cal_delay(8192);
--	usleep_range(delay_us, delay_us * 2);
-+	usleep_range(1000, 1200);
- 
- 	return 0;
- 
--disable_clk:
-+disable_reg_clk:
-+	for (--i; i >= 0; i--)
-+		regulator_disable(ov5695->supplies[i].consumer);
- 	clk_disable_unprepare(ov5695->xvclk);
- 
- 	return ret;
-@@ -1013,9 +1013,22 @@ static int __ov5695_power_on(struct ov5695 *ov5695)
- 
- static void __ov5695_power_off(struct ov5695 *ov5695)
- {
-+	struct device *dev = &ov5695->client->dev;
-+	int i, ret;
-+
- 	clk_disable_unprepare(ov5695->xvclk);
- 	gpiod_set_value_cansleep(ov5695->reset_gpio, 1);
--	regulator_bulk_disable(OV5695_NUM_SUPPLIES, ov5695->supplies);
-+
-+	/*
-+	 * The hardware requires the regulators to be powered off in order,
-+	 * so disable them one by one.
-+	 */
-+	for (i = OV5695_NUM_SUPPLIES - 1; i >= 0; i--) {
-+		ret = regulator_disable(ov5695->supplies[i].consumer);
-+		if (ret)
-+			dev_err(dev, "Failed to disable %s: %d\n",
-+				ov5695->supplies[i].supply, ret);
-+	}
- }
- 
- static int __maybe_unused ov5695_runtime_resume(struct device *dev)
-@@ -1285,7 +1298,7 @@ static int ov5695_probe(struct i2c_client *client,
- 	if (clk_get_rate(ov5695->xvclk) != OV5695_XVCLK_FREQ)
- 		dev_warn(dev, "xvclk mismatched, modes are based on 24MHz\n");
- 
--	ov5695->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
-+	ov5695->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_HIGH);
- 	if (IS_ERR(ov5695->reset_gpio)) {
- 		dev_err(dev, "Failed to get reset-gpios\n");
- 		return -EINVAL;
--- 
-2.25.1.481.gfbce0eb801-goog
+On Wed, Mar 11, 2020 at 11:31:43AM +0200, Ido Schimmel wrote:
+> On Wed, Mar 11, 2020 at 03:29:25PM +0900, Masahiro Yamada wrote:
+> > In net/Kconfig, NET_DEVLINK implies NET_DROP_MONITOR.
+> > 
+> > The original behavior of the 'imply' keyword prevents NET_DROP_MONITOR
+> > from being 'm' when NET_DEVLINK=y.
+> > 
+> > With the planned Kconfig change that relaxes the 'imply', the
+> > combination of NET_DEVLINK=y and NET_DROP_MONITOR=m would be allowed.
+> > 
+> > Use IS_REACHABLE() to avoid the vmlinux link error for this case.
+> > 
+> > Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> 
+> Thanks, Masahiro.
+> 
+> Neil, Jiri, another option (long term) is to add a raw tracepoint (not
+> part of ABI) in devlink and have drop monitor register its probe on it
+> when monitoring.
+> 
+> Two advantages:
+> 1. Consistent with what drop monitor is already doing with kfree_skb()
+> tracepoint
+> 2. We can remove 'imply NET_DROP_MONITOR' altogether
+> 
+> What do you think?
+> 
+Agreed, I think I like this implementation better.
+Neil
 
