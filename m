@@ -2,150 +2,141 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7032C2BAEE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 17:04:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDADAC0044D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 17:05:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5251F206BE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 17:04:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43466206BE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 17:05:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730335AbgCKREy (ORCPT
+        id S1730372AbgCKRF0 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 13:04:54 -0400
-Received: from mga02.intel.com ([134.134.136.20]:44786 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729675AbgCKREy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 13:04:54 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Mar 2020 10:03:11 -0700
-X-IronPort-AV: E=Sophos;i="5.70,541,1574150400"; 
-   d="scan'208";a="277447604"
-Received: from rchatre-mobl.amr.corp.intel.com (HELO [10.251.23.31]) ([10.251.23.31])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 11 Mar 2020 10:03:11 -0700
-Subject: Re: [PATCH V1 10/13] selftests/resctrl: Change Cache Allocation
- Technology (CAT) test
-To:     Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
-        shuah@kernel.org, linux-kselftest@vger.kernel.org
-Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        tony.luck@intel.com, babu.moger@amd.com, james.morse@arm.com,
-        ravi.v.shankar@intel.com, fenghua.yu@intel.com, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-References: <cover.1583657204.git.sai.praneeth.prakhya@intel.com>
- <51d0f3c928fbc310c85bac6de20745f69cbc423e.1583657204.git.sai.praneeth.prakhya@intel.com>
- <4ac6fd87-1393-f247-40ae-5d6e34403e0f@intel.com>
- <8645c93547ae6c4e35633dbb09d9355219d9e3b2.camel@intel.com>
-From:   Reinette Chatre <reinette.chatre@intel.com>
-Message-ID: <e22014e5-8ffc-7966-b260-a0665f771ee2@intel.com>
-Date:   Wed, 11 Mar 2020 10:03:08 -0700
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <8645c93547ae6c4e35633dbb09d9355219d9e3b2.camel@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Wed, 11 Mar 2020 13:05:26 -0400
+Received: from coyote.holtmann.net ([212.227.132.17]:33594 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726099AbgCKRF0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 13:05:26 -0400
+Received: from marcel-macbook.fritz.box (p4FEFC5A7.dip0.t-ipconnect.de [79.239.197.167])
+        by mail.holtmann.org (Postfix) with ESMTPSA id 4829ECECE2;
+        Wed, 11 Mar 2020 18:14:53 +0100 (CET)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
+Subject: Re: [RFC PATCH v6 0/5] Bluetooth: Handle system suspend gracefully
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <20200311155404.209990-1-abhishekpandit@chromium.org>
+Date:   Wed, 11 Mar 2020 18:05:24 +0100
+Cc:     Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+        Alain Michaud <alainm@chromium.org>,
+        linux-bluetooth@vger.kernel.org,
+        chromeos-bluetooth-upstreaming@chromium.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jakub Kicinski <kuba@kernel.org>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <99C097F2-FD84-49B8-B3D7-F03C34C4F563@holtmann.org>
+References: <20200311155404.209990-1-abhishekpandit@chromium.org>
+To:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+X-Mailer: Apple Mail (2.3608.60.0.2.5)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sai,
+Hi Abhishek,
 
-On 3/10/2020 6:59 PM, Sai Praneeth Prakhya wrote:
-> On Tue, 2020-03-10 at 15:14 -0700, Reinette Chatre wrote:
->> Hi Sai,
->>
->> Not just specific to this patch but I think the prevalent use of global
->> variables that are initialized/used or allocated/released from a variety
->> of places within the code is creating traps. I seemed to have stumbled
->> on a few during this review so far but it is hard to keep track of and I
->> am not confident that I caught them all. Having the code be symmetrical
->> (allocate and free from same area or initialize and use from same area)
->> does help to avoid such complexity.
+> This patch series prepares the Bluetooth controller for system suspend
+> by disconnecting all devices and preparing the event filter and LE
+> whitelist with devices that can wake the system from suspend.
 > 
-> Sure! makes sense. I will try to wrap them up in some meaningful structures to
-> pass around functions and will see if everything still works as expected. If
-> not, I will comment why a particular variable needs to be global.
+> The main motivation for doing this is so we can enable Bluetooth as
+> a wake up source during suspend without it being noisy. Bluetooth should
+> wake the system when a HID device receives user input but otherwise not
+> send any events to the host.
 > 
->> This patch and the patch that follows are both quite large and difficult
->> to keep track of all the collected changes. There seems to be
->> opportunity for separating it into logical changes. Some of my comments
->> may be just because I could not keep track of all that is changed at the
->> same time.
+> This patch series was tested on several Chromebooks with both btusb and
+> hci_serdev on kernel 4.19. The set of tests was basically the following:
+> * Reconnects after suspend succeed
+> * HID devices can wake the system from suspend (needs some related bluez
+>  changes to call the Set Wake Capable management command)
+> * System properly pauses and unpauses discovery + advertising around
+>  suspend
+> * System does not wake from any events from non wakeable devices
 > 
-> Ok.. makes sense. The main reason this patch and the next patch are large 
-> because they do two things
-> 1. Remove previous CAT/CQM test case
-> 2. Add new CAT/CQM test cases
+> Series 2 has refactored the change into multiple smaller commits as
+> requested. I tried to simplify some of the whitelist filtering edge
+> cases but unfortunately it remains quite complex.
 > 
-> Since the new test cases are not just logical extensions or fixing some bugs
-> in previous test cases, the patch might not be readable. I am thinking to
-> split this at-least like this
-> 1. A patch to remove CAT test case
-> 2. A patch to remove CQM test case
-> 3. Patches that just add CAT and CQM (without other changes)
+> Series 3 has refactored it further and should have resolved the
+> whitelisting complexity in series 2.
 > 
-> Please let me know if you think otherwise
-
-I think this patch can be split up into logical changes without breaking
-the tests along the way. In my original review I identified two changes
-that can be split out. Other things that can be split out:
-- have CAT test take shareable bits into account
-- enable measurement of cache references (addition of this new perf
-event attribute, hooks to get measurements, etc.)
-- transition CAT test to use "perf rate" measurement instead of "perf count"
-- etc.
-
-
+> Series 4 adds a fix to check for powered down and powering down adapters.
 > 
->> On 3/6/2020 7:40 PM, Sai Praneeth Prakhya wrote:
-
-[SNIP]
-
->>> -static struct perf_event_attr pea_llc_miss;
->>> +static struct perf_event_attr pea_llc_miss, pea_llc_access;
->>>  static struct read_format rf_cqm;
->>> -static int fd_lm;
->>> +static int fd_lm, fd_la;
->>>  char llc_occup_path[1024];
->>>  
->>>  static void initialize_perf_event_attr(void)
->>> @@ -27,15 +27,30 @@ static void initialize_perf_event_attr(void)
->>>  	pea_llc_miss.inherit = 1;
->>>  	pea_llc_miss.exclude_guest = 1;
->>>  	pea_llc_miss.disabled = 1;
->>> +
->>> +	pea_llc_access.type = PERF_TYPE_HARDWARE;
->>> +	pea_llc_access.size = sizeof(struct perf_event_attr);
->>> +	pea_llc_access.read_format = PERF_FORMAT_GROUP;
->>> +	pea_llc_access.exclude_kernel = 1;
->>> +	pea_llc_access.exclude_hv = 1;
->>> +	pea_llc_access.exclude_idle = 1;
->>> +	pea_llc_access.exclude_callchain_kernel = 1;
->>> +	pea_llc_access.inherit = 1;
->>> +	pea_llc_access.exclude_guest = 1;
->>> +	pea_llc_access.disabled = 1;
->>> +
->>
->> This initialization appears to duplicate the initialization done above.
->> Perhaps this function could be a wrapper that calls an initialization
->> function with pointer to perf_event_attr that initializes structure the
->> same?
+> Series 5 moves set_wake_capable to the last patch in the series and
+> changes BT_DBG to bt_dev_dbg.
 > 
-> I did think about a wrapper but since pea_llc_access and pea_llc_miss are
-> global variables, I thought passing them as variables might not look good (why
-> do we want to pass a global variable?). I will try and see if I can make these
-> local variables.
+> Please review and provide any feedback.
+> 
+> Thanks
+> Abhishek
+> 
+> 
+> Changes in v6:
+> * Removed unused variables in hci_req_prepare_suspend
+> * Add int old_state to this patch
+> 
+> Changes in v5:
+> * Convert BT_DBG to bt_dev_dbg
+> * Added wakeable list and changed BT_DBG to bt_dev_dbg
+> * Add wakeable to hci_conn_params and change BT_DBG to bt_dev_dbg
+> * Changed BT_DBG to bt_dev_dbg
+> * Wakeable entries moved to other commits
+> * Patch moved to end of series
+> 
+> Changes in v4:
+> * Added check for mgmt_powering_down and hdev_is_powered in notifier
+> 
+> Changes in v3:
+> * Refactored to only handle BR/EDR devices
+> * Split LE changes into its own commit
+> * Added wakeable property to le_conn_param
+> * Use wakeable list for BR/EDR and wakeable property for LE
+> 
+> Changes in v2:
+> * Moved pm notifier registration into its own patch and moved params out
+>  of separate suspend_state
+> * Refactored filters and whitelist settings to its own patch
+> * Refactored update_white_list to have clearer edge cases
+> * Add connected devices to whitelist (previously missing corner case)
+> * Refactored pause discovery + advertising into its own patch
+> 
+> Abhishek Pandit-Subedi (5):
+>  Bluetooth: Handle PM_SUSPEND_PREPARE and PM_POST_SUSPEND
+>  Bluetooth: Handle BR/EDR devices during suspend
+>  Bluetooth: Handle LE devices during suspend
+>  Bluetooth: Pause discovery and advertising during suspend
+>  Bluetooth: Add mgmt op set_wake_capable
+> 
+> include/net/bluetooth/hci.h      |  17 +-
+> include/net/bluetooth/hci_core.h |  43 ++++
+> include/net/bluetooth/mgmt.h     |   7 +
+> net/bluetooth/hci_core.c         | 102 ++++++++++
+> net/bluetooth/hci_event.c        |  24 +++
+> net/bluetooth/hci_request.c      | 331 ++++++++++++++++++++++++++-----
+> net/bluetooth/hci_request.h      |   2 +
+> net/bluetooth/mgmt.c             |  92 +++++++++
+> 8 files changed, 558 insertions(+), 60 deletions(-)
 
-My goal was to avoid the duplicated code to initialize them identically.
-It is not clear to me why you think that would not look good. Perhaps I
-have not thought it through correctly ...
+patches 1-4 have been applied to bluetooth-next tree.
 
-Reinette
+I skipped patch 5 since now we have to discuss how best the API for setting the wakeable devices will be. Care to start up a discussion thread for that?
 
+Regards
+
+Marcel
 
