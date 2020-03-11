@@ -2,151 +2,140 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24DE9C10F29
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 03:48:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA8A5C10F29
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 03:52:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6C3B215A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 03:48:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="qXsTTh3r"
+	by mail.kernel.org (Postfix) with ESMTP id CAC3821655
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 03:52:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728109AbgCKDss (ORCPT
+        id S1728055AbgCKDwE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 23:48:48 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:47795 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727659AbgCKDsr (ORCPT
+        Tue, 10 Mar 2020 23:52:04 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:32883 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727685AbgCKDwE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 23:48:47 -0400
-X-UUID: e20a39dccc694c7abdaad7ccee920932-20200311
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=cMby1nCgA1pDUmKWXFEsXyQ9QhGgBEre690yHGxnHko=;
-        b=qXsTTh3r0gGGJwE3in7s8hEI7gDm3EFS8mST4H1eGhl+D6/GzUo75Wfc2Y4HtGZlW7rnTQ49Nq2Tr1+/H6n29TO+8JyVQdtVKxq1GlZ/1o3/9gGeOlB9m4w6atDhFDO4IqNJnsoOJONLxB3utkv+JKG1VwV6yZcAtu8l+Zzhxe8=;
-X-UUID: e20a39dccc694c7abdaad7ccee920932-20200311
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
-        (envelope-from <hsin-hsiung.wang@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 890007444; Wed, 11 Mar 2020 11:48:41 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 11 Mar 2020 11:47:13 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 11 Mar 2020 11:47:48 +0800
-Message-ID: <1583898520.17060.1.camel@mtksdaap41>
-Subject: Re: [PATCH v9 3/5] mfd: Add support for the MediaTek MT6358 PMIC
-From:   Hsin-hsiung Wang <hsin-hsiung.wang@mediatek.com>
-To:     Nicolas Boichat <drinkcat@chromium.org>
-CC:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Eddie Huang <eddie.huang@mediatek.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        "Frank Wunderlich" <frank-w@public-files.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Richard Fontana <rfontana@redhat.com>,
-        Josef Friedl <josef.friedl@speed.at>,
-        Ran Bi <ran.bi@mediatek.com>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        <linux-rtc@vger.kernel.org>,
-        srv_heupstream <srv_heupstream@mediatek.com>
-Date:   Wed, 11 Mar 2020 11:48:40 +0800
-In-Reply-To: <CANMq1KDF32v-YnFRcz8BT6tnD0yq2OOBy9t-R09yA+4zNUZj3A@mail.gmail.com>
-References: <1583835040-19157-1-git-send-email-hsin-hsiung.wang@mediatek.com>
-         <1583835040-19157-4-git-send-email-hsin-hsiung.wang@mediatek.com>
-         <CANMq1KDF32v-YnFRcz8BT6tnD0yq2OOBy9t-R09yA+4zNUZj3A@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Tue, 10 Mar 2020 23:52:04 -0400
+Received: by mail-pf1-f194.google.com with SMTP id n7so519856pfn.0;
+        Tue, 10 Mar 2020 20:52:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=4jWgXx47//lwhsK545GCcf8+J7kzYJPs216sdqcaw9s=;
+        b=TW+0cTiFtTEVo4Tv7RTH10WLCdTdyFE/bpVL1Od7GanN4NbkkSEOqbyWJHiwiXRZFc
+         /yinK0PrikS3BmS1SAS2s5ZX8meLUAWOIrWsjtF07x10DUpxl3FlnS5hUX/lh5Ryw+sn
+         DzszxHO2r4V7S3AbJxwcmj9X/cCbge9CMqhSDr7tI6YnsozpGrgmNqlN2hJm7KxlP6/W
+         o0WJXH/GaY7plIOF0BrBZLxZWUNcFBLt1CIWEZvfLdnJyC8uVGuSDWHlJDqMh8pOK/ir
+         /Km30cAIUDlB3Qv9ksGj2Pux+/D3ufO2673rACqDi+34cwDKyor7shLwFwz91k/oflhJ
+         imew==
+X-Gm-Message-State: ANhLgQ2+F/lkgZlQTRX3m0ksRsgHIScmA6YoX4S9iFAJRbiDotZoycel
+        vB0OIpPDB+5fcyqwCYfhBnyWDvmk
+X-Google-Smtp-Source: ADFU+vsPe3nR1yGq0IDimdwPKTmAbQvmNKp34gHbk96fo5xifYNzU9RqWOJGKqN9VqdizJVY2fi/ew==
+X-Received: by 2002:a65:5688:: with SMTP id v8mr850865pgs.403.1583898722629;
+        Tue, 10 Mar 2020 20:52:02 -0700 (PDT)
+Received: from [192.168.3.217] (c-73-241-217-19.hsd1.ca.comcast.net. [73.241.217.19])
+        by smtp.gmail.com with ESMTPSA id g11sm20680768pfo.184.2020.03.10.20.52.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Mar 2020 20:52:01 -0700 (PDT)
+Subject: Re: [EXT] Re: [PATCH v3 1/1] scsi: ufs: fix LRB pointer incorrect
+ initialization issue
+To:     "Bean Huo (beanhuo)" <beanhuo@micron.com>,
+        "huobean@gmail.com" <huobean@gmail.com>,
+        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
+        "avri.altman@wdc.com" <avri.altman@wdc.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
+        "tomas.winkler@intel.com" <tomas.winkler@intel.com>,
+        "cang@codeaurora.org" <cang@codeaurora.org>
+Cc:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200309161057.9897-1-beanhuo@micron.com>
+ <20200309161057.9897-2-beanhuo@micron.com>
+ <ede4addf-73c7-e5f8-5143-91eb0cd3eb9b@acm.org>
+ <BN7PR08MB5684F9667DE1CD05D0D01EE6DBFF0@BN7PR08MB5684.namprd08.prod.outlook.com>
+From:   Bart Van Assche <bvanassche@acm.org>
+Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
+ mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
+ LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
+ fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
+ AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
+ 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
+ AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
+ igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
+ Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
+ jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
+ macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
+ CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
+ RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
+ PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
+ eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
+ lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
+ T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
+ ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
+ CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
+ oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
+ //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
+ mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
+ goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
+Message-ID: <00b4f8d0-32d3-58c7-6361-6177ed8aaaed@acm.org>
+Date:   Tue, 10 Mar 2020 20:49:48 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <BN7PR08MB5684F9667DE1CD05D0D01EE6DBFF0@BN7PR08MB5684.namprd08.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksDQpUaGFua3MgZm9yIHRoZSByZXZpZXcuDQpJIHdpbGwgZml4IHRoZSBtaXN0YWtlIGluIHRo
-ZSBuZXh0IHZlcnNpb24uDQoNCk9uIFdlZCwgMjAyMC0wMy0xMSBhdCAxMToyNCArMDgwMCwgTmlj
-b2xhcyBCb2ljaGF0IHdyb3RlOg0KPiBUaGFua3MsIG11Y2ggYmV0dGVyLiBKdXN0IG9uZSBpc3N1
-ZSBsZWZ0Lg0KPiANCj4gT24gVHVlLCBNYXIgMTAsIDIwMjAgYXQgNjoxMCBQTSBIc2luLUhzaXVu
-ZyBXYW5nDQo+IDxoc2luLWhzaXVuZy53YW5nQG1lZGlhdGVrLmNvbT4gd3JvdGU6DQo+ID4NCj4g
-PiBUaGlzIGFkZHMgc3VwcG9ydCBmb3IgdGhlIE1lZGlhVGVrIE1UNjM1OCBQTUlDLiBUaGlzIGlz
-IGENCj4gPiBtdWx0aWZ1bmN0aW9uIGRldmljZSB3aXRoIHRoZSBmb2xsb3dpbmcgc3ViIG1vZHVs
-ZXM6DQo+ID4NCj4gPiAtIFJlZ3VsYXRvcg0KPiA+IC0gUlRDDQo+ID4gLSBDb2RlYw0KPiA+IC0g
-SW50ZXJydXB0DQo+ID4NCj4gPiBJdCBpcyBpbnRlcmZhY2VkIHRvIHRoZSBob3N0IGNvbnRyb2xs
-ZXIgdXNpbmcgU1BJIGludGVyZmFjZQ0KPiA+IGJ5IGEgcHJvcHJpZXRhcnkgaGFyZHdhcmUgY2Fs
-bGVkIFBNSUMgd3JhcHBlciBvciBwd3JhcC4NCj4gPiBNVDYzNTggTUZEIGlzIGEgY2hpbGQgZGV2
-aWNlIG9mIHRoZSBwd3JhcC4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEhzaW4tSHNpdW5nIFdh
-bmcgPGhzaW4taHNpdW5nLndhbmdAbWVkaWF0ZWsuY29tPg0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJz
-L21mZC9NYWtlZmlsZSAgICAgICAgICAgICAgICAgfCAgIDIgKy0NCj4gPiAgZHJpdmVycy9tZmQv
-bXQ2MzU4LWlycS5jICAgICAgICAgICAgIHwgMjM4ICsrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrDQo+ID4gIGRyaXZlcnMvbWZkL210NjM5Ny1jb3JlLmMgICAgICAgICAgICB8ICA1NSArKysr
-KystDQo+ID4gIGluY2x1ZGUvbGludXgvbWZkL210NjM1OC9jb3JlLmggICAgICB8IDE1OCArKysr
-KysrKysrKysrKysrKysrKw0KPiA+ICBpbmNsdWRlL2xpbnV4L21mZC9tdDYzNTgvcmVnaXN0ZXJz
-LmggfCAyODIgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysNCj4gPiAgaW5jbHVk
-ZS9saW51eC9tZmQvbXQ2Mzk3L2NvcmUuaCAgICAgIHwgICAzICsNCj4gPiAgNiBmaWxlcyBjaGFu
-Z2VkLCA3MzMgaW5zZXJ0aW9ucygrKSwgNSBkZWxldGlvbnMoLSkNCj4gPiAgY3JlYXRlIG1vZGUg
-MTAwNjQ0IGRyaXZlcnMvbWZkL210NjM1OC1pcnEuYw0KPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQg
-aW5jbHVkZS9saW51eC9tZmQvbXQ2MzU4L2NvcmUuaA0KPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQg
-aW5jbHVkZS9saW51eC9tZmQvbXQ2MzU4L3JlZ2lzdGVycy5oDQo+ID4NCj4gPiBkaWZmIC0tZ2l0
-IGEvZHJpdmVycy9tZmQvTWFrZWZpbGUgYi9kcml2ZXJzL21mZC9NYWtlZmlsZQ0KPiA+IGluZGV4
-IGI4M2YxNzIuLjlhZjE0MTQgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9tZmQvTWFrZWZpbGUN
-Cj4gPiArKysgYi9kcml2ZXJzL21mZC9NYWtlZmlsZQ0KPiA+IEBAIC0yMzgsNyArMjM4LDcgQEAg
-b2JqLSQoQ09ORklHX0lOVEVMX1NPQ19QTUlDKSAgICAgICAgKz0gaW50ZWwtc29jLXBtaWMubw0K
-PiA+ICBvYmotJChDT05GSUdfSU5URUxfU09DX1BNSUNfQlhUV0MpICAgICArPSBpbnRlbF9zb2Nf
-cG1pY19ieHR3Yy5vDQo+ID4gIG9iai0kKENPTkZJR19JTlRFTF9TT0NfUE1JQ19DSFRXQykgICAg
-ICs9IGludGVsX3NvY19wbWljX2NodHdjLm8NCj4gPiAgb2JqLSQoQ09ORklHX0lOVEVMX1NPQ19Q
-TUlDX0NIVERDX1RJKSAgKz0gaW50ZWxfc29jX3BtaWNfY2h0ZGNfdGkubw0KPiA+IC1tdDYzOTct
-b2JqcyAgICA6PSBtdDYzOTctY29yZS5vIG10NjM5Ny1pcnEubw0KPiA+ICttdDYzOTctb2JqcyAg
-ICAgICAgICAgICAgICAgICAgOj0gbXQ2Mzk3LWNvcmUubyBtdDYzOTctaXJxLm8gbXQ2MzU4LWly
-cS5vDQo+ID4gIG9iai0kKENPTkZJR19NRkRfTVQ2Mzk3KSAgICAgICArPSBtdDYzOTcubw0KPiA+
-ICBvYmotJChDT05GSUdfSU5URUxfU09DX1BNSUNfTVJGTEQpICAgICArPSBpbnRlbF9zb2NfcG1p
-Y19tcmZsZC5vDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9tZmQvbXQ2MzU4LWlycS5j
-IGIvZHJpdmVycy9tZmQvbXQ2MzU4LWlycS5jDQo+ID4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4g
-PiBpbmRleCAwMDAwMDAwLi4wYjk5YTM5DQo+ID4gLS0tIC9kZXYvbnVsbA0KPiA+ICsrKyBiL2Ry
-aXZlcnMvbWZkL210NjM1OC1pcnEuYw0KPiA+IEBAIC0wLDAgKzEsMjM4IEBADQo+ID4gW3NuaXBd
-DQo+ID4gK3N0YXRpYyBpcnFyZXR1cm5fdCBtdDYzNThfaXJxX2hhbmRsZXIoaW50IGlycSwgdm9p
-ZCAqZGF0YSkNCj4gPiArew0KPiA+ICsgICAgICAgc3RydWN0IG10NjM5N19jaGlwICpjaGlwID0g
-ZGF0YTsNCj4gPiArICAgICAgIHN0cnVjdCBwbWljX2lycV9kYXRhICptdDYzNThfaXJxX2RhdGEg
-PSBjaGlwLT5pcnFfZGF0YTsNCj4gPiArICAgICAgIHVuc2lnbmVkIGludCBiaXQsIGksIHRvcF9p
-cnFfc3RhdHVzOw0KPiA+ICsgICAgICAgaW50IHJldDsNCj4gPiArDQo+ID4gKyAgICAgICByZXQg
-PSByZWdtYXBfcmVhZChjaGlwLT5yZWdtYXAsDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAg
-ICBtdDYzNThfaXJxX2RhdGEtPnRvcF9pbnRfc3RhdHVzX3JlZywNCj4gPiArICAgICAgICAgICAg
-ICAgICAgICAgICAgICZ0b3BfaXJxX3N0YXR1cyk7DQo+ID4gKyAgICAgICBpZiAocmV0KSB7DQo+
-ID4gKyAgICAgICAgICAgICAgIGRldl9lcnIoY2hpcC0+ZGV2LA0KPiA+ICsgICAgICAgICAgICAg
-ICAgICAgICAgICJGYWlsZWQgdG8gcmVhZCBzdGF0dXMgZnJvbSB0aGUgZGV2aWNlLCByZXQ9JWRc
-biIsIHJldCk7DQo+ID4gKyAgICAgICAgICAgICAgIHJldHVybiBJUlFfTk9ORTsNCj4gPiArICAg
-ICAgIH0NCj4gPiArDQo+ID4gKyAgICAgICBmb3IgKGkgPSAwOyBpIDwgbXQ2MzU4X2lycV9kYXRh
-LT5udW1fdG9wOyBpKyspIHsNCj4gPiArICAgICAgICAgICAgICAgZm9yIChpID0gMDsgaSA8IG10
-NjM1OF9pcnFfZGF0YS0+bnVtX3RvcDsgaSsrKSB7DQo+IA0KPiBPbmx5IG9uZSBsb29wIG5lZWRl
-ZC4NCj4gDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgYml0ID0gQklUKG10NjM1OF9pbnRz
-W2ldLnRvcF9vZmZzZXQpOw0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIGlmICh0b3BfaXJx
-X3N0YXR1cyAmIGJpdCkgew0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgbXQ2
-MzU4X2lycV9zcF9oYW5kbGVyKGNoaXAsIGkpOw0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgdG9wX2lycV9zdGF0dXMgJj0gfmJpdDsNCj4gPiArICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgIGlmICghdG9wX2lycV9zdGF0dXMpDQo+ID4gKyAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgIGJyZWFrOw0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAg
-IH0NCj4gPiArICAgICAgICAgICAgICAgfQ0KPiA+ICsgICAgICAgfQ0KPiA+ICsNCj4gPiArICAg
-ICAgIHJldHVybiBJUlFfSEFORExFRDsNCj4gPiArfQ0KPiA+ICsNCj4gPiArc3RhdGljIGludCBw
-bWljX2lycV9kb21haW5fbWFwKHN0cnVjdCBpcnFfZG9tYWluICpkLCB1bnNpZ25lZCBpbnQgaXJx
-LA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBpcnFfaHdfbnVtYmVyX3QgaHcp
-DQo+ID4gK3sNCj4gPiArICAgICAgIHN0cnVjdCBtdDYzOTdfY2hpcCAqbXQ2Mzk3ID0gZC0+aG9z
-dF9kYXRhOw0KPiA+ICsNCj4gPiArICAgICAgIGlycV9zZXRfY2hpcF9kYXRhKGlycSwgbXQ2Mzk3
-KTsNCj4gPiArICAgICAgIGlycV9zZXRfY2hpcF9hbmRfaGFuZGxlcihpcnEsICZtdDYzNThfaXJx
-X2NoaXAsIGhhbmRsZV9sZXZlbF9pcnEpOw0KPiA+ICsgICAgICAgaXJxX3NldF9uZXN0ZWRfdGhy
-ZWFkKGlycSwgMSk7DQo+ID4gKyAgICAgICBpcnFfc2V0X25vcHJvYmUoaXJxKTsNCj4gPiArDQo+
-ID4gKyAgICAgICByZXR1cm4gMDsNCj4gPiArfQ0KPiA+IFtzbmlwXQ0KDQo=
+On 2020-03-10 00:53, Bean Huo (beanhuo) wrote:
+> Hi, Bart 
+> 
+>> Subject: [EXT] Re: [PATCH v3 1/1] scsi: ufs: fix LRB pointer incorrect initialization
+>> issue
+>>
+>> On 2020-03-09 09:10, huobean@gmail.com wrote:
+>>> @@ -4834,6 +4829,7 @@ static void __ufshcd_transfer_req_compl(struct
+>> ufs_hba *hba,
+>>>  			continue;
+>>>  		cmd = blk_mq_rq_to_pdu(req);
+>>>  		lrbp = scsi_cmd_priv(cmd);
+>>> +		ufshcd_init_lrb(hba, lrbp, index);
+>>>  		if (ufshcd_is_scsi(req)) {
+>>>  			ufshcd_add_command_trace(hba, req, "complete");
+>>>  			result = ufshcd_transfer_rsp_status(hba, lrbp);
+>>
+>> This ufshcd_init_lrb() call looks incorrect to me. I think that
+>> ufshcd_init_lrb() should only be called before a request is submitted to the UFS
+>> controller and also that ufshcd_init_lrb() should not be called from the
+>> completion path.
+> 
+> __ufshcd_transfer_req_compl()
+> 	ufshcd_transfer_rsp_status()  will access lrbp->ucd_rsp_ptr.
+> Without calling ufshcd_init_lrb() here, there will be an error.
+
+Hi Bean,
+
+I think that ufshcd_init_lrb() should only be called from the code that
+prepares a command before it is submitted and not from the command
+completion path. Because v5.6-rc5 has already been released, there is
+not that much time left until the merge window opens. I think it is less
+risky to revert commit 34656dda81ac ("scsi: ufs: Let the SCSI core
+allocate per-command UFS data") than to proceed with the above patch. Do
+you want to submit a revert or do you perhaps want me to do that?
+
+Thanks,
+
+Bart.
 
