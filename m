@@ -4,35 +4,35 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2CDEC0044D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:33:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BE43C2BAEE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:33:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA2F62073E
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:33:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6671220739
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:33:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583955215;
-	bh=An9qLmRx0DGKi4GH//fSuHHBoA5lb7OYchMnPrtL5zw=;
+	s=default; t=1583955219;
+	bh=D9azbbqu5UFd7c/WVWTmITZi7DlzpyO1HqIMv2YQ4W8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BpJZklrgY9xEZ55EO/LrjnxWNcEDQ+lsEb7I5j281ypjFnSGpx0nc2rRw7jTBG7Tn
-	 nn/wi9pPGlSocPjTidUMP5EkzirZLCBGSJbq1UpiQ2z75BKl+a5PLjBWTvQ29Ct5Q5
-	 oQcrcK++LjVbnd8i3978I1cCGA+D766k7Ri6I6ZM=
+	b=vltFKt1dl0XkdrK1e8/qMYbYnJhHdWxsLEy6aBVqmGcdyjbAqdUPLHNph108yDto4
+	 t4C/T/LSzPar+8pZFjFmBa7BvW1IhNrmHhvKBnt44AjWmz0pGIfJXmkq9c4HkoyJds
+	 laTxjyqZkcggnRT8s/ybBlofLQtxLiPDUGHkHaNU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731403AbgCKTdd (ORCPT
+        id S1731362AbgCKTdW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 15:33:33 -0400
-Received: from foss.arm.com ([217.140.110.172]:54476 "EHLO foss.arm.com"
+        Wed, 11 Mar 2020 15:33:22 -0400
+Received: from foss.arm.com ([217.140.110.172]:54348 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731057AbgCKTdb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 15:33:31 -0400
+        id S1731307AbgCKTdQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 15:33:16 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E97D71FB;
-        Wed, 11 Mar 2020 12:33:30 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 362261063;
+        Wed, 11 Mar 2020 12:33:16 -0700 (PDT)
 Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A25053F534;
-        Wed, 11 Mar 2020 12:33:26 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 895863F534;
+        Wed, 11 Mar 2020 12:33:15 -0700 (PDT)
 From:   Mark Brown <broonie@kernel.org>
 To:     Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will@kernel.org>
@@ -58,9 +58,9 @@ Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
         linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         Dave Martin <Dave.Martin@arm.com>,
         Mark Brown <broonie@kernel.org>
-Subject: [PATCH v9 13/13] arm64: BTI: Add Kconfig entry for userspace BTI
-Date:   Wed, 11 Mar 2020 19:26:08 +0000
-Message-Id: <20200311192608.40095-14-broonie@kernel.org>
+Subject: [PATCH v9 08/13] arm64: traps: Shuffle code to eliminate forward declarations
+Date:   Wed, 11 Mar 2020 19:26:03 +0000
+Message-Id: <20200311192608.40095-9-broonie@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200311192608.40095-1-broonie@kernel.org>
 References: <20200311192608.40095-1-broonie@kernel.org>
@@ -73,51 +73,153 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Dave Martin <Dave.Martin@arm.com>
 
-Now that the code for userspace BTI support is in the kernel add the
-Kconfig entry so that it can be built and used.
+Hoist the IT state handling code earlier in traps.c, to avoid
+accumulating forward declarations.
 
-[Split out of "arm64: Basic Branch Target Identification support" --
-broonie]
+No functional change.
 
 Signed-off-by: Dave Martin <Dave.Martin@arm.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- arch/arm64/Kconfig | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+ arch/arm64/kernel/traps.c | 103 ++++++++++++++++++--------------------
+ 1 file changed, 50 insertions(+), 53 deletions(-)
 
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 8a15bc68dadd..d65d226a77ec 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -1522,6 +1522,28 @@ endmenu
+diff --git a/arch/arm64/kernel/traps.c b/arch/arm64/kernel/traps.c
+index bc9f4292bfc3..3c07a7074145 100644
+--- a/arch/arm64/kernel/traps.c
++++ b/arch/arm64/kernel/traps.c
+@@ -272,7 +272,55 @@ void arm64_notify_die(const char *str, struct pt_regs *regs,
+ 	}
+ }
  
- menu "ARMv8.5 architectural features"
+-static void advance_itstate(struct pt_regs *regs);
++#ifdef CONFIG_COMPAT
++#define PSTATE_IT_1_0_SHIFT	25
++#define PSTATE_IT_1_0_MASK	(0x3 << PSTATE_IT_1_0_SHIFT)
++#define PSTATE_IT_7_2_SHIFT	10
++#define PSTATE_IT_7_2_MASK	(0x3f << PSTATE_IT_7_2_SHIFT)
++
++static u32 compat_get_it_state(struct pt_regs *regs)
++{
++	u32 it, pstate = regs->pstate;
++
++	it  = (pstate & PSTATE_IT_1_0_MASK) >> PSTATE_IT_1_0_SHIFT;
++	it |= ((pstate & PSTATE_IT_7_2_MASK) >> PSTATE_IT_7_2_SHIFT) << 2;
++
++	return it;
++}
++
++static void compat_set_it_state(struct pt_regs *regs, u32 it)
++{
++	u32 pstate_it;
++
++	pstate_it  = (it << PSTATE_IT_1_0_SHIFT) & PSTATE_IT_1_0_MASK;
++	pstate_it |= ((it >> 2) << PSTATE_IT_7_2_SHIFT) & PSTATE_IT_7_2_MASK;
++
++	regs->pstate &= ~PSR_AA32_IT_MASK;
++	regs->pstate |= pstate_it;
++}
++
++static void advance_itstate(struct pt_regs *regs)
++{
++	u32 it;
++
++	/* ARM mode */
++	if (!(regs->pstate & PSR_AA32_T_BIT) ||
++	    !(regs->pstate & PSR_AA32_IT_MASK))
++		return;
++
++	it  = compat_get_it_state(regs);
++
++	/*
++	 * If this is the last instruction of the block, wipe the IT
++	 * state. Otherwise advance it.
++	 */
++	if (!(it & 7))
++		it = 0;
++	else
++		it = (it & 0xe0) | ((it << 1) & 0x1f);
++
++	compat_set_it_state(regs, it);
++}
  
-+config ARM64_BTI
-+	bool "Branch Target Identification support"
-+	default y
-+	help
-+	  Branch Target Identification (part of the ARMv8.5 Extensions)
-+	  provides a mechanism to limit the set of locations to which computed
-+	  branch instructions such as BR or BLR can jump.
-+
-+	  To make use of BTI on CPUs that support it, say Y.
-+
-+	  BTI is intended to provide complementary protection to other control
-+	  flow integrity protection mechanisms, such as the Pointer
-+	  authentication mechanism provided as part of the ARMv8.3 Extensions.
-+	  For this reason, it does not make sense to enable this option without
-+	  also enabling support for pointer authentication.  Thus, when
-+	  enabling this option you should also select ARM64_PTR_AUTH=y.
-+
-+	  Userspace binaries must also be specifically compiled to make use of
-+	  this mechanism.  If you say N here or the hardware does not support
-+	  BTI, such binaries can still run, but you get no additional
-+	  enforcement of branch destinations.
-+
- config ARM64_E0PD
- 	bool "Enable support for E0PD"
- 	default y
+ void arm64_skip_faulting_instruction(struct pt_regs *regs, unsigned long size)
+ {
+@@ -285,7 +333,7 @@ void arm64_skip_faulting_instruction(struct pt_regs *regs, unsigned long size)
+ 	if (user_mode(regs))
+ 		user_fastforward_single_step(current);
+ 
+-	if (regs->pstate & PSR_MODE32_BIT)
++	if (compat_user_mode(regs))
+ 		advance_itstate(regs);
+ }
+ 
+@@ -578,34 +626,6 @@ static const struct sys64_hook sys64_hooks[] = {
+ 	{},
+ };
+ 
+-
+-#ifdef CONFIG_COMPAT
+-#define PSTATE_IT_1_0_SHIFT	25
+-#define PSTATE_IT_1_0_MASK	(0x3 << PSTATE_IT_1_0_SHIFT)
+-#define PSTATE_IT_7_2_SHIFT	10
+-#define PSTATE_IT_7_2_MASK	(0x3f << PSTATE_IT_7_2_SHIFT)
+-
+-static u32 compat_get_it_state(struct pt_regs *regs)
+-{
+-	u32 it, pstate = regs->pstate;
+-
+-	it  = (pstate & PSTATE_IT_1_0_MASK) >> PSTATE_IT_1_0_SHIFT;
+-	it |= ((pstate & PSTATE_IT_7_2_MASK) >> PSTATE_IT_7_2_SHIFT) << 2;
+-
+-	return it;
+-}
+-
+-static void compat_set_it_state(struct pt_regs *regs, u32 it)
+-{
+-	u32 pstate_it;
+-
+-	pstate_it  = (it << PSTATE_IT_1_0_SHIFT) & PSTATE_IT_1_0_MASK;
+-	pstate_it |= ((it >> 2) << PSTATE_IT_7_2_SHIFT) & PSTATE_IT_7_2_MASK;
+-
+-	regs->pstate &= ~PSR_AA32_IT_MASK;
+-	regs->pstate |= pstate_it;
+-}
+-
+ static bool cp15_cond_valid(unsigned int esr, struct pt_regs *regs)
+ {
+ 	int cond;
+@@ -626,29 +646,6 @@ static bool cp15_cond_valid(unsigned int esr, struct pt_regs *regs)
+ 	return aarch32_opcode_cond_checks[cond](regs->pstate);
+ }
+ 
+-static void advance_itstate(struct pt_regs *regs)
+-{
+-	u32 it;
+-
+-	/* ARM mode */
+-	if (!(regs->pstate & PSR_AA32_T_BIT) ||
+-	    !(regs->pstate & PSR_AA32_IT_MASK))
+-		return;
+-
+-	it  = compat_get_it_state(regs);
+-
+-	/*
+-	 * If this is the last instruction of the block, wipe the IT
+-	 * state. Otherwise advance it.
+-	 */
+-	if (!(it & 7))
+-		it = 0;
+-	else
+-		it = (it & 0xe0) | ((it << 1) & 0x1f);
+-
+-	compat_set_it_state(regs, it);
+-}
+-
+ static void compat_cntfrq_read_handler(unsigned int esr, struct pt_regs *regs)
+ {
+ 	int reg = (esr & ESR_ELx_CP15_32_ISS_RT_MASK) >> ESR_ELx_CP15_32_ISS_RT_SHIFT;
 -- 
 2.20.1
 
