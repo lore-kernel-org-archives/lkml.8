@@ -6,22 +6,22 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02A01C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 01:11:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DE69C10DCE
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 01:11:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB657206EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 01:11:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FFD8206EB
+	for <linux-kernel@archiver.kernel.org>; Fri, 13 Mar 2020 01:11:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727380AbgCMBLr (ORCPT
+        id S1727393AbgCMBLw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Mar 2020 21:11:47 -0400
-Received: from 97-93-29-23.dhcp.snlo.ca.charter.com ([97.93.29.23]:54468 "EHLO
+        Thu, 12 Mar 2020 21:11:52 -0400
+Received: from 97-93-29-23.dhcp.snlo.ca.charter.com ([97.93.29.23]:54476 "EHLO
         skomatineni-linux.nvidia.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727156AbgCMBL2 (ORCPT
+        by vger.kernel.org with ESMTP id S1727154AbgCMBL1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Mar 2020 21:11:28 -0400
+        Thu, 12 Mar 2020 21:11:27 -0400
 Received: by skomatineni-linux.nvidia.com (Postfix, from userid 1000)
-        id C0E9C1040073; Wed, 11 Mar 2020 01:54:09 -0700 (PDT)
+        id 5D85A104008C; Wed, 11 Mar 2020 01:56:04 -0700 (PDT)
 From:   Sowjanya Komatineni <skomatineni@nvidia.com>
 To:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
         baolin.wang@linaro.org, kstewart@linuxfoundation.org,
@@ -31,8 +31,8 @@ To:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
 Cc:     anrao@nvidia.com, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
 Subject: [PATCH v2 1/2] sdhci: tegra: Implement Tegra specific set_timeout callback
-Date:   Wed, 11 Mar 2020 01:54:06 -0700
-Message-Id: <1583916847-30400-1-git-send-email-skomatineni@nvidia.com>
+Date:   Wed, 11 Mar 2020 01:56:01 -0700
+Message-Id: <1583916962-9467-1-git-send-email-skomatineni@nvidia.com>
 X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
