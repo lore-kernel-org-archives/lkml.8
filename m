@@ -2,142 +2,116 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F22ABC10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 02:43:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD57BC10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 02:45:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAC5720637
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 02:43:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB9B120637
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 02:45:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cbc6m1pz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728044AbgCKCn0 (ORCPT
+        id S1727915AbgCKCpq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 22:43:26 -0400
-Received: from smtprelay0145.hostedemail.com ([216.40.44.145]:41932 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727685AbgCKCn0 (ORCPT
+        Tue, 10 Mar 2020 22:45:46 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:36715 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727506AbgCKCpq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 22:43:26 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay02.hostedemail.com (Postfix) with ESMTP id 15FA652AA;
-        Wed, 11 Mar 2020 02:43:25 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: kick15_57e25c75e760e
-X-Filterd-Recvd-Size: 3524
-Received: from XPS-9350.home (unknown [47.151.143.254])
-        (Authenticated sender: joe@perches.com)
-        by omf08.hostedemail.com (Postfix) with ESMTPA;
-        Wed, 11 Mar 2020 02:43:23 +0000 (UTC)
-Message-ID: <062df3c71913d94339aec60020db7594ba97b0a5.camel@perches.com>
-Subject: [PATCH] sfc: ethtool: Refactor to remove fallthrough comments in
- case blocks
-From:   Joe Perches <joe@perches.com>
-To:     Solarflare linux maintainers <linux-net-drivers@solarflare.com>,
-        Edward Cree <ecree@solarflare.com>,
-        Martin Habets <mhabets@solarflare.com>
-Cc:     "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Tue, 10 Mar 2020 19:41:41 -0700
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Tue, 10 Mar 2020 22:45:46 -0400
+Received: by mail-il1-f195.google.com with SMTP id h3so600578ils.3
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 19:45:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=k8BnMRt8VzyM9/Iob3jnPHEoeEkg0bXf9PoCpKaIZBI=;
+        b=cbc6m1pzHmkwjtaxbA17HMxOxKMQ1amglEFAzXX0JbE5LeXphwmaTjoxEESrql9dFH
+         Q5J0exL0ehWlNONBMYVn2xLlm4cp1NjVsCPKJRelZU/PO8IZel6NM/kIa28Do74fHxgX
+         zapR1DbTVFWbojlaVEa7VKnkyRRRhTWJxtv8hbwdTQRoeXjiLMOP0dz9TkRtjBwZmjUi
+         8vEDDyTtgyOOlUZ0xwiLlgQQ4FLrFuWGV0RXUbkhbzV22TQRs208amZF2B+mM5Z+nZMq
+         q9+7L5+VHPxHuYUxQ7pU/rvlyJrmn7E47UBRd1xQYHYAEM9e0DCN2t9Z+aaiVI06S5jJ
+         ONMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=k8BnMRt8VzyM9/Iob3jnPHEoeEkg0bXf9PoCpKaIZBI=;
+        b=CWDupUwF/rGVLmMngAy74ylPwa1uEV2/tOSFRqt9AZYWP98GFnEOluIAsyFf24b57R
+         za+v0AQrENo11EYs5N7hY5b8I9WJ8JXRL2QbzC0yBisxghSj12NPIF5ctf0AEJb5MJyQ
+         A782S0DGhMfsfskGQWr7eEh5xMY/XLOkXNhSFfczqFLJUNpx/r7kwRP1ru2Ol8bx/Ky1
+         r2krHJnH62x+UiNFJus6is6IoltK1MI/8XQg6lSBlckEJ9TKG+HYUlkh34qmV11HXftt
+         vGWrYrvS+BOWjajF2OYP8yuGekNVE/QEs0ynwNx+l1XJrVCcFODe7wYwKUPfGCGoKZ7p
+         7nAA==
+X-Gm-Message-State: ANhLgQ1Djz9tVMnOI0M0t3RM+3xkCGoVuP9p4qcQ0a7HvTZd3RASFDy9
+        X+//21EultRGZ9lBBERjWkuEpbE4H7w=
+X-Google-Smtp-Source: ADFU+vvXQZI3zbstWEqnSOSoYO5IMA8Gp3GzX6wkJJtuJijLgwEv5ZzmSf6QLJuVD9ydV8p2lNaijQ==
+X-Received: by 2002:a92:d851:: with SMTP id h17mr1105410ilq.104.1583894745118;
+        Tue, 10 Mar 2020 19:45:45 -0700 (PDT)
+Received: from [172.22.22.26] (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
+        by smtp.googlemail.com with ESMTPSA id t24sm2002503ioj.13.2020.03.10.19.45.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Mar 2020 19:45:44 -0700 (PDT)
+Subject: Re: [PATCH v2] bitfield.h: add FIELD_MAX() and field_max()
+From:   Alex Elder <elder@linaro.org>
+To:     Jakub Kicinski <kuba@kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>
+Cc:     David Miller <davem@davemloft.net>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        lkml <linux-kernel@vger.kernel.org>
+References: <20200306042302.17602-1-elder@linaro.org>
+ <20200310212938.GA17565@ubuntu-m2-xlarge-x86>
+ <20200310145825.6ddb3797@kicinski-fedora-PC1C0HJN>
+ <bc50d249-60ab-767d-ae0c-02629483df34@linaro.org>
+Message-ID: <e46a1ba6-e169-e5b5-7933-ab22848407df@linaro.org>
+Date:   Tue, 10 Mar 2020 21:45:43 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <bc50d249-60ab-767d-ae0c-02629483df34@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Converting fallthrough comments to fallthrough; creates warnings
-in this code when compiled with gcc.
+On 3/10/20 8:48 PM, Alex Elder wrote:
+> On 3/10/20 4:58 PM, Jakub Kicinski wrote:
+>> On Tue, 10 Mar 2020 14:29:38 -0700 Nathan Chancellor wrote:
+>>> Without this patch, the IPA driver that was picked up a couple of days
+>>> ago does not build...
+>>
+>> 😳 
+>>
+>> Yes please, Alex could you repost ASAP with [PATCH net-next] subject
+>> and CC netdev to get it into the netdev patchwork?
+>>
+>> Please also make IPA:
+>>
+>> 	depends on (ARCH_QCOM || COMPILE_TEST) && 64BIT && NET
+>>
+>> Otherwise it's really hard to make sure the code builds.
+> 
+> Sorry all.  I have been on vacation the last few days and only now
+> saw this.
+> 
+> I will put this together shortly.
 
-This code is overly complicated and reads rather better with a
-little refactoring and no fallthrough uses at all.
+I just sent an updated version of the field_max() patch.  I will do
+the COMPILE_TEST change separately (and not today).
 
-Remove the fallthrough comments and simplify the written source
-code while reducing the object code size.
+					-Alex
 
-Consolidate duplicated switch/case blocks for IPV4 and IPV6.
-
-defconfig x86-64 with sfc:
-
-$ size drivers/net/ethernet/sfc/ethtool.o*
-   text	   data	    bss	    dec	    hex	filename
-  10055	     12	      0	  10067	   2753	drivers/net/ethernet/sfc/ethtool.o.new
-  10135	     12	      0	  10147	   27a3	drivers/net/ethernet/sfc/ethtool.o.old
-
-Signed-off-by: Joe Perches <joe@perches.com>
----
- drivers/net/ethernet/sfc/ethtool.c | 36 ++++++++++++++++++++----------------
- 1 file changed, 20 insertions(+), 16 deletions(-)
-
-diff --git a/drivers/net/ethernet/sfc/ethtool.c b/drivers/net/ethernet/sfc/ethtool.c
-index 993b57..9a637cd 100644
---- a/drivers/net/ethernet/sfc/ethtool.c
-+++ b/drivers/net/ethernet/sfc/ethtool.c
-@@ -582,6 +582,7 @@ efx_ethtool_get_rxnfc(struct net_device *net_dev,
- 
- 	case ETHTOOL_GRXFH: {
- 		struct efx_rss_context *ctx = &efx->rss_context;
-+		__u64 data;
- 
- 		mutex_lock(&efx->rss_lock);
- 		if (info->flow_type & FLOW_RSS && info->rss_context) {
-@@ -591,35 +592,38 @@ efx_ethtool_get_rxnfc(struct net_device *net_dev,
- 				goto out_unlock;
- 			}
- 		}
--		info->data = 0;
-+
-+		data = 0;
- 		if (!efx_rss_active(ctx)) /* No RSS */
--			goto out_unlock;
-+			goto out_setdata_unlock;
-+
- 		switch (info->flow_type & ~FLOW_RSS) {
- 		case UDP_V4_FLOW:
--			if (ctx->rx_hash_udp_4tuple)
--				/* fall through */
--		case TCP_V4_FLOW:
--				info->data |= RXH_L4_B_0_1 | RXH_L4_B_2_3;
--			/* fall through */
--		case SCTP_V4_FLOW:
--		case AH_ESP_V4_FLOW:
--		case IPV4_FLOW:
--			info->data |= RXH_IP_SRC | RXH_IP_DST;
--			break;
- 		case UDP_V6_FLOW:
- 			if (ctx->rx_hash_udp_4tuple)
--				/* fall through */
-+				data = (RXH_L4_B_0_1 | RXH_L4_B_2_3 |
-+					RXH_IP_SRC | RXH_IP_DST);
-+			else
-+				data = RXH_IP_SRC | RXH_IP_DST;
-+			break;
-+		case TCP_V4_FLOW:
- 		case TCP_V6_FLOW:
--				info->data |= RXH_L4_B_0_1 | RXH_L4_B_2_3;
--			/* fall through */
-+			data = (RXH_L4_B_0_1 | RXH_L4_B_2_3 |
-+				RXH_IP_SRC | RXH_IP_DST);
-+			break;
-+		case SCTP_V4_FLOW:
- 		case SCTP_V6_FLOW:
-+		case AH_ESP_V4_FLOW:
- 		case AH_ESP_V6_FLOW:
-+		case IPV4_FLOW:
- 		case IPV6_FLOW:
--			info->data |= RXH_IP_SRC | RXH_IP_DST;
-+			data = RXH_IP_SRC | RXH_IP_DST;
- 			break;
- 		default:
- 			break;
- 		}
-+out_setdata_unlock:
-+		info->data = data;
- out_unlock:
- 		mutex_unlock(&efx->rss_lock);
- 		return rc;
-
+> 					-Alex
+> 
 
