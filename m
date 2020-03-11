@@ -2,106 +2,110 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CCDFC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 17:05:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B577C0044D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 17:05:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56DD720736
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 17:05:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="ZTcEX6f/"
+	by mail.kernel.org (Postfix) with ESMTP id C467320736
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 17:05:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730381AbgCKRFf (ORCPT
+        id S1730399AbgCKRFo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 13:05:35 -0400
-Received: from mout.gmx.net ([212.227.15.18]:37797 "EHLO mout.gmx.net"
+        Wed, 11 Mar 2020 13:05:44 -0400
+Received: from smtp.uniroma2.it ([160.80.6.16]:33681 "EHLO smtp.uniroma2.it"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726099AbgCKRFe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 13:05:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1583946330;
-        bh=45C/IaRIhJehtDpal1AuK6vZrVdODReRTFDhskQtxwM=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=ZTcEX6f/KFZAZ96vZAEao97xI5hwMCb08FwCDdFbz8lJ3vuct9wnhXSL9I9QKoPJQ
-         OkGz8FlD963D7bM38QZhcZXXp8RVVHZ+7D9DhX2yTpaliE7+KHSp9uZW//afLT1DS3
-         RqSEojhFtBjxlCUjjcwpi0HfJa4oyBoLj2t4q3xA=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [10.81.10.6] ([196.52.84.30]) by mail.gmx.com (mrgmx005
- [212.227.17.184]) with ESMTPSA (Nemesis) id 1MNbkv-1iwzgH1ga3-00P90x; Wed, 11
- Mar 2020 18:05:30 +0100
-Subject: Re: [Bug 206175] Fedora >= 5.4 kernels instantly freeze on boot
- without producing any display output
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        iommu <iommu@lists.linux-foundation.org>
-References: <bug-206175-5873@https.bugzilla.kernel.org/>
- <bug-206175-5873-S6PaNNClEr@https.bugzilla.kernel.org/>
- <CAHk-=wi4GS05j67V0D_cRXRQ=_Jh-NT0OuNpF-JFsDFj7jZK9A@mail.gmail.com>
- <20200310162342.GA4483@lst.de>
- <CAHk-=wgB2YMM6kw8W0wq=7efxsRERL14OHMOLU=Nd1OaR+sXvw@mail.gmail.com>
- <20200310182546.GA9268@lst.de> <20200311152453.GB23704@lst.de>
- <e70dd793-e8b8-ab0c-6027-6c22b5a99bfc@gmx.com>
- <20200311154328.GA24044@lst.de> <20200311154718.GB24044@lst.de>
- <962693d9-b595-c44d-1390-e044f29e91d3@gmx.com>
- <CAHk-=wj0E9vCO_VTiK6xuXAW13ZeeLsW=G3v+yNsCaUm1+H61A@mail.gmail.com>
- <CAHk-=whFu_p-eiyJfiEevV=a+irzW=9LMWjMaaFSaaasXout9w@mail.gmail.com>
- <CAHk-=whkKCxj-U9343Tk4Bbkc7oatqq26XGdAM6JJ+X==R_iNQ@mail.gmail.com>
-From:   "Artem S. Tashkinov" <aros@gmx.com>
-Message-ID: <8fb66574-4cce-879c-b15a-3d47eaaef03b@gmx.com>
-Date:   Wed, 11 Mar 2020 17:05:29 +0000
+        id S1726099AbgCKRFn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 13:05:43 -0400
+X-Greylist: delayed 633 seconds by postgrey-1.27 at vger.kernel.org; Wed, 11 Mar 2020 13:05:42 EDT
+Received: from localhost.localdomain ([160.80.103.126])
+        by smtp-2015.uniroma2.it (8.14.4/8.14.4/Debian-8) with ESMTP id 02BGsSfk025391
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Wed, 11 Mar 2020 17:54:29 +0100
+From:   Paolo Lungaroni <paolo.lungaroni@cnit.it>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Paolo Lungaroni <paolo.lungaroni@cnit.it>,
+        Andrea Mayer <andrea.mayer@uniroma2.it>,
+        Ahmed Abdelsalam <ahmed.abdelsalam@gssi.it>
+Subject: [net] seg6: fix SRv6 L2 tunnels to use IANA-assigned protocol number
+Date:   Wed, 11 Mar 2020 17:54:06 +0100
+Message-Id: <20200311165406.22044-1-paolo.lungaroni@cnit.it>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <CAHk-=whkKCxj-U9343Tk4Bbkc7oatqq26XGdAM6JJ+X==R_iNQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: ru
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:ivnWwQwoK229/COAsWDkQySbMVLGgbWYCxbJMJcOhltEDcRSub9
- Sb2qV/dcDlXoKlSU/Ff4+1s8p5xynh+RWQ9xxiCiyYRO9uRYJYlHDvoyWhr2fohRyrh5O/c
- 9hlw4Boq0Z5NFPB5MZZ08aWnUCl2yFtKSCyhorCuhpDDmCcAy2LfiQdIgY5OJejCCjYEpXm
- ttALpGFdZtW8ZibtBNhxg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:EaN7zs4KfbI=:FwadK1JAb9mZiYnNpwzwby
- fGibassHgvg4CyUe6eL0k1L1sKCtxKLDd95CJg6EdYPaSJlC2T0zMLbeV/JQcmJqz3x+HwEPU
- LCzAK0k7FzTM0H6IIOPffmliIPZdpjzfKJ2DULilyzfoTnQv9bEWepwOBwFqyuSViLwwsbo5u
- iEZb497QLMtDnV0mB1CsDaWqGAOq86aGDL2i4ErctcTf7ow6ZXDb7CgLVRMFpBcPykIv1EcrV
- nJcAch+oVU4j5Ej5+fbxL1+yZvnS6MjGKhhmOZR2naPieuG27gc8IWNIuue2Ye1XpIhDPNscm
- InmB9zUtll/k7dm3xVC9WJMd8UzL/iXBo4oSgTEQNrfAipPF12UH6UeD2RZWOLATQ6NQUW3aj
- wQfavS5p4j4zJ59hrnCUNKI9h5zzozlQnjFk862IroQa+pOc4MADQp/lvDz1l8fQASGVDh7c9
- GyeXAZcPm/TkkZg7FxRmHpvWwCE9/Ju12zqVNGP3HkpstOo5LgK74UPN5Wp52mly0xQ/M4DPa
- wguLng/GyMk+rqWUzwqDHLte62xC3zA7icxy/56QGphumYveV6LciwifW0k5Qv1T9hqsKKF1Z
- ZdokkU339XvNxy/0rl7DqAMi57hQKPkh7ScAmTk2W5bcIEzolS7y6aixm7ju0Bx573xi44H5s
- hf1FKt334e3pjwANKDRr1erR6D2CNu0sIlLR48hpkDmi0sR43UK17Z17DRvcA/OZ7unryihre
- mtcdqdDK7ah2kiCMjm84Cs7WLnhujoLbK2T0eyThxcuBs1+1AClSTDD4E+L6aOMaL4FaSnx3A
- u6j2OmyWY2YkN+OJ/NWPdC3jrkxOEd1tGLX9VbVo5W2+ve+dlFyAwbrtNcxAdM8Fv/8TJTVsF
- 8OF0HP/tuU7P1CLIaSXE+ajn6YiZKPf2qPKRdfz3hORKXD/l/R494IdAny+trTYHvq4L/QmHW
- JEs1LHjOwwferfQR8ftj0vzwSdc2uL0vIZjxg/5K98QBSdqIa3lVkr8n/6mZO+L8sXEaKLWJe
- 6tyWwHnWu7ts+Q+0Wp+qCAp2+FDiGw40cMNdRALakZ7E6mg/a/smz1PVa20V6EHLfT4MbiuYR
- 90NYheZfoZOf4YkkTnpLvkBW1loMPvV3pcjvINrM5OneC6Ot7uxBXTmCUPRb0S8E9HgyTeLMM
- 84FHgf9kEytTpgXQ3SZYnPRDznkQSqXLuNnKZV6c7bPuS+HAgG17NSnZzjh70DPFh2X3wubN7
- EhVd4jRjDEVnnP5gB
+Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: clamav-milter 0.100.0 at smtp-2015
+X-Virus-Status: Clean
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/11/20 4:48 PM, Linus Torvalds wrote:
-> On Wed, Mar 11, 2020 at 9:24 AM Linus Torvalds
-> <torvalds@linux-foundation.org> wrote:
->>
->> So it will have a different commit ID, updated message, and be a mix
->> of my patch and Christoph's.
->
-> I ended up pushing it out before starting on the pull requests, so
-> it's out there now.
->
-> Artem, it would be good to have confirmation that my (modified) tip of
-> tree now works for you. I don't actually doubt it does, but a final
-> confirmation would be appreciated.
->
+The Internet Assigned Numbers Authority (IANA) has recently assigned
+a protocol number value of 143 for Ethernet [1].
 
-Should I test kernel 5.6-rc5 with this patch applied or wait for you to
-commit it?
+Before this assignment, encapsulation mechanisms such as Segment Routing
+used the IPv6-NoNxt protocol number (59) to indicate that the encapsulated
+payload is an Ethernet frame.
+
+In this patch, we add the definition of the Ethernet protocol number to the
+kernel headers and update the SRv6 L2 tunnels to use it.
+
+[1] https://www.iana.org/assignments/protocol-numbers/protocol-numbers.xhtml
+
+Signed-off-by: Paolo Lungaroni <paolo.lungaroni@cnit.it>
+Reviewed-by: Andrea Mayer <andrea.mayer@uniroma2.it>
+Acked-by: Ahmed Abdelsalam <ahmed.abdelsalam@gssi.it>
+---
+ include/uapi/linux/in.h  | 2 ++
+ net/ipv6/seg6_iptunnel.c | 2 +-
+ net/ipv6/seg6_local.c    | 2 +-
+ 3 files changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/include/uapi/linux/in.h b/include/uapi/linux/in.h
+index 1521073b6348..8533bf07450f 100644
+--- a/include/uapi/linux/in.h
++++ b/include/uapi/linux/in.h
+@@ -74,6 +74,8 @@ enum {
+ #define IPPROTO_UDPLITE		IPPROTO_UDPLITE
+   IPPROTO_MPLS = 137,		/* MPLS in IP (RFC 4023)		*/
+ #define IPPROTO_MPLS		IPPROTO_MPLS
++  IPPROTO_ETHERNET = 143,	/* Ethernet-within-IPv6 Encapsulation	*/
++#define IPPROTO_ETHERNET	IPPROTO_ETHERNET
+   IPPROTO_RAW = 255,		/* Raw IP packets			*/
+ #define IPPROTO_RAW		IPPROTO_RAW
+   IPPROTO_MPTCP = 262,		/* Multipath TCP connection		*/
+diff --git a/net/ipv6/seg6_iptunnel.c b/net/ipv6/seg6_iptunnel.c
+index ab7f124ff5d7..8c52efe299cc 100644
+--- a/net/ipv6/seg6_iptunnel.c
++++ b/net/ipv6/seg6_iptunnel.c
+@@ -268,7 +268,7 @@ static int seg6_do_srh(struct sk_buff *skb)
+ 		skb_mac_header_rebuild(skb);
+ 		skb_push(skb, skb->mac_len);
+ 
+-		err = seg6_do_srh_encap(skb, tinfo->srh, NEXTHDR_NONE);
++		err = seg6_do_srh_encap(skb, tinfo->srh, IPPROTO_ETHERNET);
+ 		if (err)
+ 			return err;
+ 
+diff --git a/net/ipv6/seg6_local.c b/net/ipv6/seg6_local.c
+index 7cbc19731997..8165802d8e05 100644
+--- a/net/ipv6/seg6_local.c
++++ b/net/ipv6/seg6_local.c
+@@ -282,7 +282,7 @@ static int input_action_end_dx2(struct sk_buff *skb,
+ 	struct net_device *odev;
+ 	struct ethhdr *eth;
+ 
+-	if (!decap_and_validate(skb, NEXTHDR_NONE))
++	if (!decap_and_validate(skb, IPPROTO_ETHERNET))
+ 		goto drop;
+ 
+ 	if (!pskb_may_pull(skb, ETH_HLEN))
+-- 
+2.20.1
+
