@@ -2,89 +2,159 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62ADFC10F29
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 04:05:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE9D0C10F29
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 04:13:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4450E21655
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 04:05:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C623221D56
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 04:13:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="HHqxNgTA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726578AbgCKEFJ (ORCPT
+        id S1726328AbgCKENu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 00:05:09 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:37535 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725379AbgCKEFI (ORCPT
+        Wed, 11 Mar 2020 00:13:50 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:41052 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725379AbgCKENu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 00:05:08 -0400
-Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1jBscC-0002ym-Ui; Wed, 11 Mar 2020 04:05:05 +0000
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-To:     mathias.nyman@intel.com
-Cc:     gregkh@linuxfoundation.org, stern@rowland.harvard.edu,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>
-Subject: [PATCH v2] xhci: Set port link to RxDetect if port is not enabled after resume
-Date:   Wed, 11 Mar 2020 12:04:56 +0800
-Message-Id: <20200311040456.25851-1-kai.heng.feng@canonical.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 11 Mar 2020 00:13:50 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02B4Dblu125647;
+        Tue, 10 Mar 2020 23:13:37 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1583900017;
+        bh=5ofOG+gfPhoCmIZuODzbDvCrnXBGO1iU4BMFVihuZv0=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=HHqxNgTAkdPmlgBcyBRt8vw4//wXk7a+cDh/MitEhOTQUXnWyREtXboOtlrv8B46H
+         H26TH35w5hXSwBZzdV0/ivFV1v6FhXBO1KDVuXPEdre4UZSFSbAiF77QZHZvsKgwuJ
+         cFdOGixee9bWYIwry8zbwCXt7izizSgNEczcD2EU=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02B4DbpB127963
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 10 Mar 2020 23:13:37 -0500
+Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 10
+ Mar 2020 23:13:37 -0500
+Received: from localhost.localdomain (10.64.41.19) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 10 Mar 2020 23:13:37 -0500
+Received: from [10.24.69.20] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by localhost.localdomain (8.15.2/8.15.2) with ESMTP id 02B4DY32014325;
+        Tue, 10 Mar 2020 23:13:35 -0500
+Subject: Re: [PATCH v2 4/6] pwm: omap-dmtimer: Fix pwm disabling sequence
+To:     Tony Lindgren <tony@atomide.com>
+CC:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
+        Sekhar Nori <nsekhar@ti.com>, Vignesh R <vigneshr@ti.com>,
+        Sebastian Reichel <sre@kernel.org>
+References: <20200228095651.32464-1-lokeshvutla@ti.com>
+ <20200228095651.32464-5-lokeshvutla@ti.com>
+ <20200306181443.GJ37466@atomide.com>
+ <9129d4fe-a17e-2fa6-764c-6a746fa5096d@ti.com>
+ <20200309180123.GP37466@atomide.com>
+ <666dbb7a-db98-d16a-ee73-27d353d2a317@ti.com>
+ <20200310155242.GT37466@atomide.com>
+From:   Lokesh Vutla <lokeshvutla@ti.com>
+Message-ID: <296e28b7-7925-5dfa-ce5a-c0b2a2f1c2e0@ti.com>
+Date:   Wed, 11 Mar 2020 09:42:39 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+MIME-Version: 1.0
+In-Reply-To: <20200310155242.GT37466@atomide.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Dell TB16, Realtek USB ethernet (r8152) connects to an SMSC hub which
-then connects to ASMedia xHCI's root hub:
 
-/:  Bus 04.Port 1: Dev 1, Class=root_hub, Driver=xhci_hcd/2p, 5000M
-    |__ Port 1: Dev 2, If 0, Class=Hub, Driver=hub/7p, 5000M
-            |__ Port 2: Dev 3, If 0, Class=Vendor Specific Class, Driver=r8152, 5000M
 
-Bus 004 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub
-Bus 004 Device 002: ID 0424:5537 Standard Microsystems Corp. USB5537B
-Bus 004 Device 003: ID 0bda:8153 Realtek Semiconductor Corp. RTL8153 Gigabit Ethernet Adapter
+On 10/03/20 9:22 PM, Tony Lindgren wrote:
+> * Lokesh Vutla <lokeshvutla@ti.com> [200310 07:06]:
+>> Hi Tony,
+>>
+>> [...snip...]
+>>
+>>>>>>  
+>>>>>> +	/*
+>>>>>> +	 * Disable auto reload so that the current cycle gets completed and
+>>>>>> +	 * then the counter stops.
+>>>>>> +	 */
+>>>>>>  	mutex_lock(&omap->mutex);
+>>>>>> -	omap->pdata->stop(omap->dm_timer);
+>>>>>> +	omap->pdata->set_pwm(omap->dm_timer,
+>>>>>> +			     pwm_get_polarity(pwm) == PWM_POLARITY_INVERSED,
+>>>>>> +			     true, OMAP_TIMER_TRIGGER_OVERFLOW_AND_COMPARE,
+>>>>>> +			     false);
+>>>>>> +
+>>>>>>  	mutex_unlock(&omap->mutex);
+>>>>>>  }
+>>>>>
+>>>>> I'm seeing an issue with this patch where after use something is
+>>>>> left on and power consumption stays higher by about 30 mW after
+>>>>> use.
+>>>>
+>>>> Interesting...What is the PWM period and duty cycle in the test case?
+>>>> Can you dump the following registers before and after disabling:
+>>>> - TLDR
+>>>> - TMAR
+>>>> - TCLR
+>>>
+>>> Here's the state dumped before and after in omap_dm_timer_set_pwm():
+>>>
+>>> omap_timer 4803e000.timer: XXX set_pwm before: tldr: fffffeb8 tmar: fffffffe tclr: 00000040
+>>> omap_timer 4803e000.timer: XXX set_pwm after: tldr: fffffeb8 tmar: fffffffe tclr: 00001842
+>>> omap_timer 4013e000.timer: XXX set_pwm before: tldr: fffffeb8 tmar: fffffffe tclr: 00000040
+>>> omap_timer 4013e000.timer: XXX set_pwm after: tldr: fffffeb8 tmar: fffffffe tclr: 00001842
+>>> omap_timer 4013e000.timer: XXX set_pwm before: tldr: fffffeb8 tmar: fffffffe tclr: 00001843
+>>> omap_timer 4013e000.timer: XXX set_pwm after: tldr: fffffeb8 tmar: fffffffe tclr: 00001841
+>>> omap_timer 4803e000.timer: XXX set_pwm before: tldr: fffffeb8 tmar: fffffffe tclr: 00001843
+>>> omap_timer 4803e000.timer: XXX set_pwm after: tldr: fffffeb8 tmar: fffffffe tclr: 00001841
+>>>
+>>
+>> Looking at the registers:
+>> period = 327 *(1000/clk_freq in MHz) ns
+>> duty_cycle =  perioid.
+>>
+>> I did simulate this behavior on BeagleBoneBlack on timer7. PWM is going down
+>> after disabling.
+>>
+>>> So looks like the start bit is still enabled after use?
+>>
+>> Right, that is expected. The start bit gets disabled automatically once the pwm
+>> period completes. This is because auto reload bit is off. That's the main idea
+>> of this patch so that PWM period is completed after disabling, else PWM is
+>> stopped abruptly.
+> 
+> OK
+> 
+>> Not sure why it is not happening in your case. If you think it is not needed, I
+>> can drop this patch and add a limitation saying that PWM gets disabled
+>> immediately without completing the current cycle.
+> 
+> Could it be that we now have the cpu_pm notifier restore something
+> invalid after exiting idle that restarts the counter?
 
-The port is disabled after resume:
-xhci_hcd 0000:3f:00.0: Get port status 4-1 read: 0x280, return 0x280
+If that's the case, mis behavior should have happened without this patch as well.
 
-According to xHCI 4.19.1.2.1, we should set link to RxDetect to transit
-it from disabled state to disconnected state, which allows the port to
-be set to U0 and completes the resume process.
+Is it possible for you to dump the registers when you are observing higher power
+consumption after the use?
 
-My own test shows port can still resume when it's not enabled, as long
-as its link is in U states. So constrain the new logic only when link is
-not in any U state.
+However, I see an issue with the patch itself as pm_runtime is not disabled
+after the pwm is stopped. Not sure how that could be nullified with this approach.
 
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
----
- drivers/usb/host/xhci-hub.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/usb/host/xhci-hub.c b/drivers/usb/host/xhci-hub.c
-index a9c87eb8951e..263f9a9237a1 100644
---- a/drivers/usb/host/xhci-hub.c
-+++ b/drivers/usb/host/xhci-hub.c
-@@ -1776,6 +1776,14 @@ int xhci_bus_resume(struct usb_hcd *hcd)
- 			clear_bit(port_index, &bus_state->bus_suspended);
- 			continue;
- 		}
-+
-+		/* 4.19.1.2.1 */
-+		if (!(portsc & PORT_PE) && (portsc & PORT_PLS_MASK) > XDEV_U3) {
-+			portsc = xhci_port_state_to_neutral(portsc);
-+			portsc &= ~PORT_PLS_MASK;
-+			portsc |= PORT_LINK_STROBE | XDEV_RXDETECT;
-+		}
-+
- 		/* resume if we suspended the link, and it is still suspended */
- 		if (test_bit(port_index, &bus_state->bus_suspended))
- 			switch (portsc & PORT_PLS_MASK) {
--- 
-2.17.1
-
+Thanks and regards,
+Lokesh
