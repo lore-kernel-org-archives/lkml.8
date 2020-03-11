@@ -2,166 +2,102 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB539C18E5A
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 01:24:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 828B7C10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 01:25:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B05D6215A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 01:24:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44AAE215A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 01:25:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="khQEriv/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DGaA0U9L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727733AbgCKBYM (ORCPT
+        id S1727876AbgCKBZp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 21:24:12 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:36804 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727484AbgCKBYM (ORCPT
+        Tue, 10 Mar 2020 21:25:45 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:40749 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727506AbgCKBZo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 21:24:12 -0400
-Received: by mail-lf1-f68.google.com with SMTP id s1so267504lfd.3;
-        Tue, 10 Mar 2020 18:24:11 -0700 (PDT)
+        Tue, 10 Mar 2020 21:25:44 -0400
+Received: by mail-qk1-f196.google.com with SMTP id m2so568870qka.7;
+        Tue, 10 Mar 2020 18:25:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tFsCMPYEvQ090eghtJnuZSfndIYHXofg6kpzbpjDHcg=;
-        b=khQEriv/qXhJIlEcRUfHpUFBBNJlME/YbqhLsz8nEtpslFi3hDMOkwANIKEhmCYLIn
-         bKaKw0sRKxN+kYaN9gg0bSnEOl8ctNwfUxBPjELrFcsIjdXUN8o3N7sEblgIC11+H0Hb
-         kkTLLOwiDrrUPHBva+FhCK9knYGxysZb+I8src6lLjjdpAPbAG5RDBjMZtFx7uBorF1L
-         1JAYEomu+xOdLN23slKQQ9BEgsY5Yrxu7J3PQDfRO706FQnB7t8Y/bGeyZq7inIKNY5s
-         phKS+ngDHm2ynGfhdehkvlCeasU4TiC09gHJJy2vY0zw4LQhMRcaidUibP2n68b5TJTW
-         nkHQ==
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1Fukjl9q8moe8CzDk64XDMos63vCyfonbgEhEiAaGvw=;
+        b=DGaA0U9LZTxFDk9p+UrQTc+2w6FbZ2lAa1NdcuJN6FekMurcJUwLjEEAb30LZopenF
+         IhQQqBpDgZ/B1xli5AROa0jXmEJRoFr02uu/7E/l3xzQdINShRX0rY6vlr8pNZDUEmu+
+         lZCOyQ6Kz/rqCIq9UC4KZUNXRnvLdwhb/ShruKQrjpmEkIk64zxarVhNYPB8QfGuhQbZ
+         CjR6OS8+dQFdIojetGmZej1ArM7tpp/ZT+eMwCO3FmHKjNmgyu5Rw9LxF4HyEAniCgn6
+         mTeiCpXNH5mPFpBF7eBXIVTPfqKTUi1t2aq8/UoyLMzwd6IBCM1Z2+ivahWqzXIk+6i+
+         P65Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tFsCMPYEvQ090eghtJnuZSfndIYHXofg6kpzbpjDHcg=;
-        b=GQlLO/yZC+MYWFZM5M9LnNgduaOD9pQjJ92QRP26mmcsgjW1d6kW2x1v/8L1VcRtN7
-         KmLKsT7AByH0e7XGejkm/jO2rzW+7urHrjnYGpGBnp9IYi/6oNr6YC6X7WlLebth93f6
-         j2CmYAM95tmuXBw5F3Fn+GJIi7ZhzAnn6yeWEw4jZUbkbk74RuqPcDkqo6LvWSae7USD
-         Ay9opVXP+igzBLC8DZcNuemBqm5SucX3+hHu/WjOIHWfeKPfqs41MpMFNmC778QbVp+N
-         iDombWRmn+Yy2U+h3TNdhRdYgKbK3JGIoVyFZfn8SQ8Z+xGkW6MkvmBrqv811zOAOfFR
-         tUdw==
-X-Gm-Message-State: ANhLgQ0zqldo7H2X3iVk5IJXtu7vNdRuxEE+FUoBoso1ilAUIkWChbhS
-        5lbIBjbE1fz23/ChgWTm2+mI1opbeHR3xyZhWIYhJUmn/D4=
-X-Google-Smtp-Source: ADFU+vtVBcBmmMm93NbesCcxOezx6ue+FNXn7WKGQmB+8VFPVc0CNlHuwX5yQeRTpTjhhcjyixGtamX00YP1kjg7Q6I=
-X-Received: by 2002:a05:6512:1116:: with SMTP id l22mr491651lfg.70.1583889850626;
- Tue, 10 Mar 2020 18:24:10 -0700 (PDT)
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1Fukjl9q8moe8CzDk64XDMos63vCyfonbgEhEiAaGvw=;
+        b=nVj0kCpDDPARGcIpklskZoaiRn0MjAeIrJGKjiUI7VMl0bh0A6iBh5RJxrcvhAOBsI
+         iykG/kFWoGX4NwUk+aRbsGQxcdIg43jnY7pDoQQGX35ICKd0zg7OLMGjUeYQEa3yHP4t
+         CQpDUr9IJVSGF3gI7w+qNRhvKJ0U0Be9Sj4BwGTw76qE4WXRLWX7/fzYxdaO33sQ4MoC
+         nZn9JNWlTfbYCiyIbOsUWn384bySSzhR9/ql2UPXQpKrwWX7D47qEBlxDdldV/hUU2Jj
+         dWOjokX+qnK66xzQqBt6Wc17sQQ+kRknGpBTr9eFxm1ECxbIp3lFR9crbgGA5R7X6NcZ
+         cRIw==
+X-Gm-Message-State: ANhLgQ1od9qkiFT0SJZqaL3Dl5pfxMIXSU5EdO5MPu2/1i2fnuEYao5L
+        A5nsD9wlqwbPoC6p3lB3eS0=
+X-Google-Smtp-Source: ADFU+vtwivKOZ8x2mrkiVtdyMruWBJg75D32INLdZIi72P50DVRuj9bAjvMTNxFmNm86LOt8++lszQ==
+X-Received: by 2002:ae9:f504:: with SMTP id o4mr611927qkg.306.1583889941922;
+        Tue, 10 Mar 2020 18:25:41 -0700 (PDT)
+Received: from 73ec49dbc856.ic.unicamp.br (wifi-177-220-84-29.wifi.ic.unicamp.br. [177.220.84.29])
+        by smtp.gmail.com with ESMTPSA id i66sm4618570qkc.13.2020.03.10.18.25.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Mar 2020 18:25:41 -0700 (PDT)
+From:   Marcio Albano <marcio.ahf@gmail.com>
+To:     gregkh@linuxfoundation.org, dri-devel@lists.freedesktop.org,
+        linux-fbdev@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, lkcamp@lists.libreplanetbr.org
+Subject: [PATCH] staging: fbtft: Remove prohibited spaces before ')'
+Date:   Wed, 11 Mar 2020 01:25:33 +0000
+Message-Id: <20200311012533.26167-1-marcio.ahf@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20200311010138.10465-1-aford173@gmail.com>
-In-Reply-To: <20200311010138.10465-1-aford173@gmail.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Tue, 10 Mar 2020 22:24:01 -0300
-Message-ID: <CAOMZO5AqjrQxGcHVLPRQXC0nRUM+hOeWtnAK2vJ=O_P28FZ3-g@mail.gmail.com>
-Subject: Re: [PATCH V2] arm64: dts: imx: Add Beacon i.mx8mm development kit
-To:     Adam Ford <aford173@gmail.com>
-Cc:     "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        aford@beaconembeddedworks.com, Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Adam,
+Fix checkpatch errors:
 
-On Tue, Mar 10, 2020 at 10:01 PM Adam Ford <aford173@gmail.com> wrote:
+"ERROR: space prohibited before that close parenthesis ')'"
+in fbtft-bus.c:65 and fbtft-bus.c:67.
 
-> +&ecspi2 {
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&pinctrl_espi2>;
-> +       cs-gpios = <&gpio5 9 0>;
+Signed-off-by: Marcio Albano <marcio.ahf@gmail.com>
+---
+ drivers/staging/fbtft/fbtft-bus.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-You could use GPIO_ACTIVE_HIGH instead of hardcoded 0.
+diff --git a/drivers/staging/fbtft/fbtft-bus.c b/drivers/staging/fbtft/fbtft-bus.c
+index 63c65dd67..847cbfbbd 100644
+--- a/drivers/staging/fbtft/fbtft-bus.c
++++ b/drivers/staging/fbtft/fbtft-bus.c
+@@ -62,9 +62,9 @@ out:									      \
+ }                                                                             \
+ EXPORT_SYMBOL(func);
+ 
+-define_fbtft_write_reg(fbtft_write_reg8_bus8, u8, u8, )
++define_fbtft_write_reg(fbtft_write_reg8_bus8, u8, u8)
+ define_fbtft_write_reg(fbtft_write_reg16_bus8, __be16, u16, cpu_to_be16)
+-define_fbtft_write_reg(fbtft_write_reg16_bus16, u16, u16, )
++define_fbtft_write_reg(fbtft_write_reg16_bus16, u16, u16)
+ 
+ void fbtft_write_reg8_bus9(struct fbtft_par *par, int len, ...)
+ {
+-- 
+2.20.1
 
-> +       status = "okay";
-> +
-> +       at25@0 {
-
-Node names should be generic:
-
-eeprom@0
-
-> +               compatible = "atmel,at25";
-
-Documentation/devicetree/bindings/eeprom/at25.txt states:
-
-"- compatible : Should be "<vendor>,<type>", and generic value "atmel,at25".
-  Example "<vendor>,<type>" values:
-    "microchip,25lc040"
-    "st,m95m02"
-    "st,m95256"
-
-> +&i2c4 {
-> +
-
-Unneeded blank line.
-
-> diff --git a/arch/arm64/boot/dts/freescale/beacon-imx8mm-kit.dts b/arch/arm64/boot/dts/freescale/beacon-imx8mm-kit.dts
-> new file mode 100644
-> index 000000000000..417b15d345d5
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/freescale/beacon-imx8mm-kit.dts
-> @@ -0,0 +1,19 @@
-> +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-> +/*
-> + * Copyright 2020 Compass Electronics Group, LLC
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "imx8mm.dtsi"
-> +#include "beacon-imx8mm-som.dtsi"
-> +#include "beacon-imx8mm-baseboard.dtsi"
-
-The naming convention we use is to start the dts names with the i.MX
-SoC name, so:
-
-imx8mm-beacon-som.dtsi
-imx8mm-beacon-baseboard.dtsi
-
-> +/ {
-> +       model = "Beacon EmbeddedWorks i.MX8M Mini Development Kit";
-> +       compatible = "fsl,imx8mm";
-
-You should add an Entry for Beacon in
-Documentation/devicetree/bindings/vendor-prefixes.yaml on a separate
-patch.
-
-and then:
-
-compatible = "beacon,imx8mm-beacon-kit", "fsl,imx8mm"
-
-Also, please add an entry for this board in
-Documentation/devicetree/bindings/arm/fsl.yaml
-
-> +&i2c3 {
-> +       clock-frequency = <400000>;
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&pinctrl_i2c3>;
-> +       status = "okay";
-> +
-> +       eeprom@50 {
-> +               compatible = "atmel,24c64";
-
-Same comment about the compatible.
-
-> +&iomuxc {
-> +
-
-Unneeded blank line.
-
-> +               pinctrl_fec1: fec1grp {
