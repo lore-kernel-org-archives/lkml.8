@@ -2,141 +2,110 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01167C0044D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:33:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61957C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:34:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3F1620736
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:33:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583955230;
-	bh=Y9RGRUHIi6qkk5wya965oATudtCpKBHHkgm9GJfHUoc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ScktPeZYtux8Wy/TZ4PdFWnVtraOcD3prtFgrcEyWMHlCJ0ADERVu5Ewd9Tp+itn2
-	 C1mRiD17sBqMjPlV3bFK1z4egowme5W9gnxdTOYcVSxeM5ogdfWXuOhs8TDLYUjtsV
-	 UwvXefLACvtYW12B/eIUodDPmMS2oSq2zpOdqDDs=
+	by mail.kernel.org (Postfix) with ESMTP id 5909C20736
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:34:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731410AbgCKTdr (ORCPT
+        id S1731435AbgCKTeA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 15:33:47 -0400
-Received: from foss.arm.com ([217.140.110.172]:54292 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731289AbgCKTdM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 15:33:12 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BBDDDFEC;
-        Wed, 11 Mar 2020 12:33:11 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1CC3B3F534;
-        Wed, 11 Mar 2020 12:33:11 -0700 (PDT)
-From:   Mark Brown <broonie@kernel.org>
-To:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Paul Elliott <paul.elliott@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Yu-cheng Yu <yu-cheng.yu@intel.com>,
-        Amit Kachhap <amit.kachhap@arm.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        "H . J . Lu " <hjl.tools@gmail.com>,
-        Andrew Jones <drjones@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
-        Richard Henderson <richard.henderson@linaro.org>,
-        =?UTF-8?q?Kristina=20Mart=C5=A1enko?= <kristina.martsenko@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Florian Weimer <fweimer@redhat.com>,
-        Sudakshina Das <sudi.das@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Dave Martin <Dave.Martin@arm.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH v9 06/13] arm64: BTI: Decode BYTPE bits when printing PSTATE
-Date:   Wed, 11 Mar 2020 19:26:01 +0000
-Message-Id: <20200311192608.40095-7-broonie@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200311192608.40095-1-broonie@kernel.org>
-References: <20200311192608.40095-1-broonie@kernel.org>
+        Wed, 11 Mar 2020 15:34:00 -0400
+Received: from balrog.mythic-beasts.com ([46.235.227.24]:37785 "EHLO
+        balrog.mythic-beasts.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731414AbgCKTd7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 15:33:59 -0400
+Received: from 204.33.90.146.dyn.plus.net ([146.90.33.204]:40284 helo=slartibartfast.quignogs.org.uk)
+        by balrog.mythic-beasts.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92.3)
+        (envelope-from <peter@bikeshed.quignogs.org.uk>)
+        id 1jC728-0001Gt-6D; Wed, 11 Mar 2020 19:28:48 +0000
+From:   peter@bikeshed.quignogs.org.uk
+To:     linux-doc@vger.kernel.org, netdev@vger.kernel.org
+Cc:     Russell King <linux@armlinux.org.uk>, Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
+        Peter Lister <peter@bikeshed.quignogs.org.uk>
+Subject: [PATCH 1/1] Reformat return value descriptions as ReST lists.
+Date:   Wed, 11 Mar 2020 19:28:23 +0000
+Message-Id: <20200311192823.16213-2-peter@bikeshed.quignogs.org.uk>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200311192823.16213-1-peter@bikeshed.quignogs.org.uk>
+References: <20200311192823.16213-1-peter@bikeshed.quignogs.org.uk>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-BlackCat-Spam-Score: 65
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dave Martin <Dave.Martin@arm.com>
+From: Peter Lister <peter@bikeshed.quignogs.org.uk>
 
-The current code to print PSTATE symbolically when generating
-backtraces etc., does not include the BYTPE field used by Branch
-Target Identification.
+Added line breaks and blank lines to separate list items and escaped end-of-line
+colons.
 
-So, decode BYTPE and print it too.
+This removes these warnings from doc build...
 
-In the interests of human-readability, print the classes of BTI
-matched.  The symbolic notation, BYTPE (PSTATE[11:10]) and
-permitted classes of subsequent instruction are:
+./drivers/net/phy/sfp-bus.c:579: WARNING: Unexpected indentation.
+./drivers/net/phy/sfp-bus.c:619: WARNING: Unexpected indentation.
 
-    -- (BTYPE=0b00): any insn
-    jc (BTYPE=0b01): BTI jc, BTI j, BTI c, PACIxSP
-    -c (BYTPE=0b10): BTI jc, BTI c, PACIxSP
-    j- (BTYPE=0b11): BTI jc, BTI j
-
-Signed-off-by: Dave Martin <Dave.Martin@arm.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Peter Lister <peter@bikeshed.quignogs.org.uk>
 ---
- arch/arm64/kernel/process.c | 17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
+ drivers/net/phy/sfp-bus.c | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/kernel/process.c b/arch/arm64/kernel/process.c
-index b8e3faa8d406..24af13d7bde6 100644
---- a/arch/arm64/kernel/process.c
-+++ b/arch/arm64/kernel/process.c
-@@ -211,6 +211,15 @@ void machine_restart(char *cmd)
- 	while (1);
- }
- 
-+#define bstr(suffix, str) [PSR_BTYPE_ ## suffix >> PSR_BTYPE_SHIFT] = str
-+static const char *const btypes[] = {
-+	bstr(NONE, "--"),
-+	bstr(  JC, "jc"),
-+	bstr(   C, "-c"),
-+	bstr(  J , "j-")
-+};
-+#undef bstr
-+
- static void print_pstate(struct pt_regs *regs)
- {
- 	u64 pstate = regs->pstate;
-@@ -229,7 +238,10 @@ static void print_pstate(struct pt_regs *regs)
- 			pstate & PSR_AA32_I_BIT ? 'I' : 'i',
- 			pstate & PSR_AA32_F_BIT ? 'F' : 'f');
- 	} else {
--		printk("pstate: %08llx (%c%c%c%c %c%c%c%c %cPAN %cUAO)\n",
-+		const char *btype_str = btypes[(pstate & PSR_BTYPE_MASK) >>
-+					       PSR_BTYPE_SHIFT];
-+
-+		printk("pstate: %08llx (%c%c%c%c %c%c%c%c %cPAN %cUAO BTYPE=%s)\n",
- 			pstate,
- 			pstate & PSR_N_BIT ? 'N' : 'n',
- 			pstate & PSR_Z_BIT ? 'Z' : 'z',
-@@ -240,7 +252,8 @@ static void print_pstate(struct pt_regs *regs)
- 			pstate & PSR_I_BIT ? 'I' : 'i',
- 			pstate & PSR_F_BIT ? 'F' : 'f',
- 			pstate & PSR_PAN_BIT ? '+' : '-',
--			pstate & PSR_UAO_BIT ? '+' : '-');
-+			pstate & PSR_UAO_BIT ? '+' : '-',
-+			btype_str);
- 	}
- }
- 
+diff --git a/drivers/net/phy/sfp-bus.c b/drivers/net/phy/sfp-bus.c
+index d949ea7b4f8c..df1c66df830f 100644
+--- a/drivers/net/phy/sfp-bus.c
++++ b/drivers/net/phy/sfp-bus.c
+@@ -572,12 +572,18 @@ static void sfp_upstream_clear(struct sfp_bus *bus)
+  * the sfp_bus structure, incrementing its reference count.  This must
+  * be put via sfp_bus_put() when done.
+  *
+- * Returns: on success, a pointer to the sfp_bus structure,
++ * Returns\:
++ *
++ *          on success, a pointer to the sfp_bus structure,
+  *	    %NULL if no SFP is specified,
++ *
+  * 	    on failure, an error pointer value:
++ *
+  * 		corresponding to the errors detailed for
+  * 		fwnode_property_get_reference_args().
++ *
+  * 	        %-ENOMEM if we failed to allocate the bus.
++ *
+  *		an error from the upstream's connect_phy() method.
+  */
+ struct sfp_bus *sfp_bus_find_fwnode(struct fwnode_handle *fwnode)
+@@ -612,12 +618,18 @@ EXPORT_SYMBOL_GPL(sfp_bus_find_fwnode);
+  * the SFP bus using sfp_register_upstream().  This takes a reference on the
+  * bus, so it is safe to put the bus after this call.
+  *
+- * Returns: on success, a pointer to the sfp_bus structure,
++ * Returns\:
++ *
++ *          on success, a pointer to the sfp_bus structure,
+  *	    %NULL if no SFP is specified,
++ *
+  * 	    on failure, an error pointer value:
++ *
+  * 		corresponding to the errors detailed for
+  * 		fwnode_property_get_reference_args().
++ *
+  * 	        %-ENOMEM if we failed to allocate the bus.
++ *
+  *		an error from the upstream's connect_phy() method.
+  */
+ int sfp_bus_add_upstream(struct sfp_bus *bus, void *upstream,
 -- 
-2.20.1
+2.24.1
 
