@@ -2,70 +2,132 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C481CC0044D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:55:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1B93C0044D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:57:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF85320739
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:55:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A476F20737
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:57:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583956676;
+	bh=zWn91M4ieW3uyWmeopnLk/XJ/uaRZCNqXuoSYUTcaNs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jFSJG0N4wkF9YHnO75+V2wQjf4ATUJ0aR8Ow1nlOQ+E8XQ6n/Dvk7aMc/E4LGdMG6
+	 mYmQPECbeOGRCyxGmol+g6R0J3E/tANb6b6CFtYCWCl2/OqVKfVdBBzD9ZD8d50CPU
+	 F2PkRb3Y3wHxaUewrStbTowwjZD5sPeXAhRwMzms=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387461AbgCKTzd (ORCPT
+        id S2387467AbgCKT5y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 15:55:33 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:60859 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387452AbgCKTzd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 15:55:33 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jC7Rx-00079X-18; Wed, 11 Mar 2020 20:55:29 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jC7Rw-0000Pp-FD; Wed, 11 Mar 2020 20:55:28 +0100
-Date:   Wed, 11 Mar 2020 20:55:28 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     rishi gupta <gupt21@gmail.com>
-Cc:     thierry.reding@gmail.com, s.trumtrar@pengutronix.de,
-        linux-pwm@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/1] pwm: pca9685: replace CONFIG_PM with __maybe_unused
- to prevent build issues
-Message-ID: <20200311195528.iplmlcuvp2jjaecn@pengutronix.de>
-References: <1583941429-10921-1-git-send-email-gupt21@gmail.com>
- <20200311164449.flzzwxqqhcxisil3@pengutronix.de>
- <CALUj-guwTDR=WMz6KKADFjfFfdS3_aijfrTRCFzh9iPnFAaG6A@mail.gmail.com>
+        Wed, 11 Mar 2020 15:57:54 -0400
+Received: from foss.arm.com ([217.140.110.172]:54778 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387409AbgCKT5y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 15:57:54 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 199F71FB;
+        Wed, 11 Mar 2020 12:57:53 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8EEF73F534;
+        Wed, 11 Mar 2020 12:57:52 -0700 (PDT)
+Date:   Wed, 11 Mar 2020 19:57:50 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Tudor.Ambarus@microchip.com
+Cc:     linux-mtd@lists.infradead.org, devicetree@vger.kernel.org,
+        vigneshr@ti.com, richard@nod.at, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org, robh+dt@kernel.org,
+        linux-mediatek@lists.infradead.org, miquel.raynal@bootlin.com,
+        matthias.bgg@gmail.com, gch981213@gmail.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 4/4] mtd: spi-nor: remove mtk-quadspi driver
+Message-ID: <20200311195750.GL5411@sirena.org.uk>
+References: <20200306085052.28258-1-gch981213@gmail.com>
+ <20200309121020.GD4101@sirena.org.uk>
+ <2471214.x7VzW1FXlQ@localhost.localdomain>
+ <4427171.IzkiAjLLdB@localhost.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="TnYVF1hk1c8rpHiF"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CALUj-guwTDR=WMz6KKADFjfFfdS3_aijfrTRCFzh9iPnFAaG6A@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <4427171.IzkiAjLLdB@localhost.localdomain>
+X-Cookie: I'm a Lisp variable -- bind me!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 01:16:28AM +0530, rishi gupta wrote:
-> These 2 links contains more details:
-> https://lore.kernel.org/patchwork/patch/732981
-> https://lkml.org/lkml/2019/1/17/437
 
-These are both about SIMPLE_DEV_PM_OPS which doesn't apply to
-pwm-pca9685.
+--TnYVF1hk1c8rpHiF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Best regards
-Uwe
+On Tue, Mar 10, 2020 at 09:11:29AM +0000, Tudor.Ambarus@microchip.com wrote:
 
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+> You can also create an immutable tag that I can merge in my spi-nor/next=
+=20
+> branch, so that Linus doesn't have to deal with the conflict.
+
+The following changes since commit bb6d3fb354c5ee8d6bde2d576eb7220ea09862b9:
+
+  Linux 5.6-rc1 (2020-02-09 16:08:48 -0800)
+
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git tags/mtk-=
+mtd-spi-move
+
+for you to fetch changes up to e11e8473bcec748c3820636f11b986f611c9309b:
+
+  mtd: spi-nor: remove mtk-quadspi driver (2020-03-11 19:56:08 +0000)
+
+----------------------------------------------------------------
+spi: Rewrite mtk-quadspi spi-nor driver with spi-mem
+
+This patchset from Chuanhong Guo <gch981213@gmail.com> adds a spi-mem
+driver for Mediatek SPI-NOR controller, which already has limited
+support by mtk-quadspi. This new driver can make use of full quadspi
+capability of this controller.
+
+----------------------------------------------------------------
+Chuanhong Guo (4):
+      spi: make spi-max-frequency optional
+      spi: add support for mediatek spi-nor controller
+      dt-bindings: convert mtk-quadspi binding doc for spi-mtk-nor
+      mtd: spi-nor: remove mtk-quadspi driver
+
+ .../{mtd/mtk-quadspi.txt =3D> spi/spi-mtk-nor.txt}   |  15 +-
+ drivers/mtd/spi-nor/Kconfig                        |   8 -
+ drivers/mtd/spi-nor/Makefile                       |   1 -
+ drivers/mtd/spi-nor/mtk-quadspi.c                  | 565 -----------------
+ drivers/spi/Kconfig                                |  10 +
+ drivers/spi/Makefile                               |   1 +
+ drivers/spi/spi-mtk-nor.c                          | 689 +++++++++++++++++=
+++++
+ drivers/spi/spi.c                                  |   9 +-
+ 8 files changed, 708 insertions(+), 590 deletions(-)
+ rename Documentation/devicetree/bindings/{mtd/mtk-quadspi.txt =3D> spi/spi=
+-mtk-nor.txt} (75%)
+ delete mode 100644 drivers/mtd/spi-nor/mtk-quadspi.c
+ create mode 100644 drivers/spi/spi-mtk-nor.c
+
+--TnYVF1hk1c8rpHiF
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5pQr0ACgkQJNaLcl1U
+h9BuJgf+J4BVeDZ89cXm1ecHsmkFxwEbC3B2+ALUZTKsTZ4n5rM4aliKanEGJ5XX
+llfEUpxE7QAnZE9vv8yoKCfE8njVTTmyYi2TBJKg0hrcXb1Q3pvbsQJTO8uXm57g
+iajxxjrO0mdISzR0gErKYgJjdDyIUThSR89v5b7YXpWP4dHf7JSA4qwIWFhOLCZd
+fX3G8RIjqXkSJx2yKPjK7+xkA7u7GvP7U9kt1Nynt1NOlRtGyUywUZblL5MhZ2MG
+Bjln0lpBnhN285Mvntm49LmpoEnPdeHzbozsMVZHmD0+sdpGZ8PIQSiILb/mGCJf
+jpg/Q++KbM01LDw26eSGVIsnqAFBdA==
+=Neg9
+-----END PGP SIGNATURE-----
+
+--TnYVF1hk1c8rpHiF--
