@@ -2,95 +2,108 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6A8EC18E5A
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 02:41:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64A69C10F27
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 02:42:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C2DF20637
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 02:41:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3680E20637
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 02:42:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="QsTr1CwA"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Gfm9v9Xc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727980AbgCKClf (ORCPT
+        id S1727998AbgCKCmj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 22:41:35 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:60169 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727659AbgCKClf (ORCPT
+        Tue, 10 Mar 2020 22:42:39 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:53714 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727506AbgCKCmi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 22:41:35 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id B39AF8365A;
-        Wed, 11 Mar 2020 15:41:32 +1300 (NZDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1583894492;
-        bh=9uLth0Wy0j14fkveY2T4IR24UQOJ9+lVCUAP80s/zxs=;
-        h=From:To:Cc:Subject:Date;
-        b=QsTr1CwAQjraDtcGOKvcp0HvLJyo4yygweM0g9qw7mgsnc9KEqbxKOwcjFhxTC1jt
-         K4GzXZF2Tr8b2qo+V9xJ2hbHoWTH4QRaoyFCmptrW6zN7n4xnPgz4/kR3QYdxa9Yei
-         SWej/06vF6AS6TFfdJlZCjrbrWgvf/NXUdQWIiFLTAD332d0xG3pN6zE6Cz8HPV+Pv
-         NY5bhmvcqBY5ofiIaJfaET8yWVqikXFfdAirNGaC/zXLFqXr2c7zB6TCeCdrJBXOec
-         UNCeZfI+DEXv7lDOENgYD4iyE0QSKcwp2UZPrMsT0U0rExrKSIuTML8foXgZnNF6rO
-         DRqFuH800aR8w==
-Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5e684fdd0000>; Wed, 11 Mar 2020 15:41:33 +1300
-Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.20])
-        by smtp (Postfix) with ESMTP id 5BB0913EED5;
-        Wed, 11 Mar 2020 15:41:31 +1300 (NZDT)
-Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
-        id 6DEAE28006C; Wed, 11 Mar 2020 15:41:32 +1300 (NZDT)
-From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
-To:     davem@davemloft.net, andrew@lunn.ch, josua@solid-run.com
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH] net: mvmdio: avoid error message for optional IRQ
-Date:   Wed, 11 Mar 2020 15:41:30 +1300
-Message-Id: <20200311024131.1289-1-chris.packham@alliedtelesis.co.nz>
-X-Mailer: git-send-email 2.25.1
+        Tue, 10 Mar 2020 22:42:38 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02B2gPGM098802;
+        Wed, 11 Mar 2020 02:42:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2020-01-29;
+ bh=KfOy4Bpiplasnl/ncLcT96S4AGSmRKSa2SGlhHhNj7c=;
+ b=Gfm9v9XcT6XQ+dTH+zLoCwiHouQb3XBcrrPjnFoVSULeMvPSTMRT1AYsdS+YZ/h3e+kK
+ 4LNGmyUcyHVkh6jH/c00tkOF/3GQZoqbPtYA9xyZ0kk+9/uynbRkFq048YYs1v6zp4Zo
+ gxGCrvRgFEyVdsrOwOOqZtjVemeQjSMQoFFQbYD9Fd35xBUFK0CCaSdCmrcXf9Qw+7wj
+ ZSq2gsUJfmR3KAUOWCRSA+8OJ99ICISH7J7Dej+rFw1v0UebuiUG/XEBfkkAmf9KIrsx
+ CGHydj5mEdJ0zddeM4eAfSZduPG7zVsnIu7uMVCEiXH2n2kBXNidp0HUaJJgxcFeLscF Sw== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2yp9v641k0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 11 Mar 2020 02:42:24 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02B2g9Bi007440;
+        Wed, 11 Mar 2020 02:42:24 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 2yp8pvmbc7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 11 Mar 2020 02:42:24 +0000
+Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 02B2gLke024249;
+        Wed, 11 Mar 2020 02:42:21 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 10 Mar 2020 19:42:20 -0700
+To:     Matteo Croce <mcroce@redhat.com>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-bcache@vger.kernel.org,
+        linux-raid@vger.kernel.org, linux-mmc@vger.kernel.org,
+        xen-devel@lists.xenproject.org, linux-scsi@vger.kernel.org,
+        linux-nfs@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Song Liu <song@kernel.org>,
+        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+Subject: Re: [PATCH v3] block: refactor duplicated macros
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <20200311002254.121365-1-mcroce@redhat.com>
+Date:   Tue, 10 Mar 2020 22:42:17 -0400
+In-Reply-To: <20200311002254.121365-1-mcroce@redhat.com> (Matteo Croce's
+        message of "Wed, 11 Mar 2020 01:22:54 +0100")
+Message-ID: <yq1k13rr4s6.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-x-atlnz-ls: pat
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9556 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 malwarescore=0
+ mlxlogscore=999 bulkscore=0 suspectscore=0 mlxscore=0 spamscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003110015
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9556 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 spamscore=0 mlxscore=0
+ priorityscore=1501 lowpriorityscore=0 bulkscore=0 mlxlogscore=999
+ phishscore=0 adultscore=0 clxscore=1011 impostorscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2003110015
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Per the dt-binding the interrupt is optional so use
-platform_get_irq_optional() instead of platform_get_irq(). Since
-commit 7723f4c5ecdb ("driver core: platform: Add an error message to
-platform_get_irq*()") platform_get_irq() produces an error message
 
-  orion-mdio f1072004.mdio: IRQ index 0 not found
+Matteo,
 
-which is perfectly normal if one hasn't specified the optional property
-in the device tree.
+> The macros PAGE_SECTORS, PAGE_SECTORS_SHIFT and SECTOR_MASK are
+> defined several times in different flavours across the whole tree.
+> Define them just once in a common header.
+>
+> While at it, replace replace "PAGE_SHIFT - 9" with
+> "PAGE_SECTORS_SHIFT" too and rename SECTOR_MASK to PAGE_SECTORS_MASK.
 
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
----
- drivers/net/ethernet/marvell/mvmdio.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Looks OK to me.
 
-diff --git a/drivers/net/ethernet/marvell/mvmdio.c b/drivers/net/ethernet=
-/marvell/mvmdio.c
-index 0b9e851f3da4..d14762d93640 100644
---- a/drivers/net/ethernet/marvell/mvmdio.c
-+++ b/drivers/net/ethernet/marvell/mvmdio.c
-@@ -347,7 +347,7 @@ static int orion_mdio_probe(struct platform_device *p=
-dev)
- 	}
-=20
-=20
--	dev->err_interrupt =3D platform_get_irq(pdev, 0);
-+	dev->err_interrupt =3D platform_get_irq_optional(pdev, 0);
- 	if (dev->err_interrupt > 0 &&
- 	    resource_size(r) < MVMDIO_ERR_INT_MASK + 4) {
- 		dev_err(&pdev->dev,
---=20
-2.25.1
+Reviewed-by: Martin K. Petersen <martin.petersen@oracle.com>
 
+-- 
+Martin K. Petersen	Oracle Linux Engineering
