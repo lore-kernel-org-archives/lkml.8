@@ -2,159 +2,67 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URI_HEX,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B3ECC18E5A
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 08:56:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01165C10F27
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 08:57:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CBA120873
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 08:56:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D193020873
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 08:57:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728744AbgCKI4C (ORCPT
+        id S1728693AbgCKI5J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 04:56:02 -0400
-Received: from mga12.intel.com ([192.55.52.136]:8691 "EHLO mga12.intel.com"
+        Wed, 11 Mar 2020 04:57:09 -0400
+Received: from ns.iliad.fr ([212.27.33.1]:44996 "EHLO ns.iliad.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728150AbgCKI4C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 04:56:02 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Mar 2020 01:56:00 -0700
-X-IronPort-AV: E=Sophos;i="5.70,540,1574150400"; 
-   d="scan'208";a="277295646"
-Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Mar 2020 01:55:57 -0700
-Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
-        id 3E8972096B; Wed, 11 Mar 2020 10:55:55 +0200 (EET)
-Date:   Wed, 11 Mar 2020 10:55:55 +0200
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     linux-i2c <linux-i2c@vger.kernel.org>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-acpi@vger.kernel.org, Bingbu Cao <bingbu.cao@intel.com>,
-        linux-media <linux-media@vger.kernel.org>,
-        Chiranjeevi Rapolu <chiranjeevi.rapolu@intel.com>,
-        Hyungwoo Yang <hyungwoo.yang@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        rajmohan.mani@intel.com, Tomasz Figa <tfiga@chromium.org>
-Subject: Re: [PATCH v4 5/6] at24: Support probing while off
-Message-ID: <20200311085555.GH5379@paasikivi.fi.intel.com>
-References: <20200121134157.20396-1-sakari.ailus@linux.intel.com>
- <20200121134157.20396-6-sakari.ailus@linux.intel.com>
- <CAMpxmJU5dG49N2FA0oSQsOfKrCr3KQ1BisON4c+nUJJmZQG=bQ@mail.gmail.com>
+        id S1726160AbgCKI5J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 04:57:09 -0400
+Received: from ns.iliad.fr (localhost [127.0.0.1])
+        by ns.iliad.fr (Postfix) with ESMTP id 2A97F20600;
+        Wed, 11 Mar 2020 09:46:58 +0100 (CET)
+Received: from [192.168.108.51] (freebox.vlq16.iliad.fr [213.36.7.13])
+        by ns.iliad.fr (Postfix) with ESMTP id 1A3772007D;
+        Wed, 11 Mar 2020 09:46:58 +0100 (CET)
+Subject: Re: [PATCH -next 011/491] ARM/QUALCOMM SUPPORT: Use fallthrough;
+To:     Joe Perches <joe@perches.com>
+References: <cover.1583896344.git.joe@perches.com>
+ <2e6818291503f032e7662f1fa45fb64c7751a7ae.1583896348.git.joe@perches.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
+Message-ID: <c9ae6eed-6320-56c2-6248-b9c52e7d34d0@free.fr>
+Date:   Wed, 11 Mar 2020 09:46:58 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
+In-Reply-To: <2e6818291503f032e7662f1fa45fb64c7751a7ae.1583896348.git.joe@perches.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMpxmJU5dG49N2FA0oSQsOfKrCr3KQ1BisON4c+nUJJmZQG=bQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Wed Mar 11 09:46:58 2020 +0100 (CET)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bartosz,
+[ Trimming recipients list ]
 
-Thanks for the reply.
+On 11/03/2020 05:51, Joe Perches wrote:
 
-On Wed, Jan 29, 2020 at 02:36:17PM +0100, Bartosz Golaszewski wrote:
-> wt., 21 sty 2020 o 14:41 Sakari Ailus <sakari.ailus@linux.intel.com> napisał(a):
-> >
-> > In certain use cases (where the chip is part of a camera module, and the
-> > camera module is wired together with a camera privacy LED), powering on
-> > the device during probe is undesirable. Add support for the at24 to
-> > execute probe while being powered off. For this to happen, a hint in form
-> > of a device property is required from the firmware.
-> >
-> > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> > ---
-> >  drivers/misc/eeprom/at24.c | 31 +++++++++++++++++++++----------
-> >  1 file changed, 21 insertions(+), 10 deletions(-)
-> >
-> > diff --git a/drivers/misc/eeprom/at24.c b/drivers/misc/eeprom/at24.c
-> > index 0681d5fdd538a..5fc1162b67618 100644
-> > --- a/drivers/misc/eeprom/at24.c
-> > +++ b/drivers/misc/eeprom/at24.c
-> > @@ -564,6 +564,7 @@ static int at24_probe(struct i2c_client *client)
-> >         bool i2c_fn_i2c, i2c_fn_block;
-> >         unsigned int i, num_addresses;
-> >         struct at24_data *at24;
-> > +       bool low_power;
-> >         struct regmap *regmap;
-> >         bool writable;
-> >         u8 test_byte;
-> > @@ -701,19 +702,24 @@ static int at24_probe(struct i2c_client *client)
-> >
-> >         i2c_set_clientdata(client, at24);
-> >
-> > -       /* enable runtime pm */
-> > -       pm_runtime_set_active(dev);
-> > +       low_power = acpi_dev_state_low_power(&client->dev);
-> > +       if (!low_power)
-> > +               pm_runtime_set_active(dev);
-> > +
-> >         pm_runtime_enable(dev);
-> >
-> >         /*
-> > -        * Perform a one-byte test read to verify that the
-> > -        * chip is functional.
-> > +        * Perform a one-byte test read to verify that the chip is functional,
-> > +        * unless powering on the device is to be avoided during probe (i.e.
-> > +        * it's powered off right now).
-> >          */
-> > -       err = at24_read(at24, 0, &test_byte, 1);
-> > -       pm_runtime_idle(dev);
-> > -       if (err) {
-> > -               pm_runtime_disable(dev);
-> > -               return -ENODEV;
-> > +       if (!low_power) {
-> > +               err = at24_read(at24, 0, &test_byte, 1);
-> > +               pm_runtime_idle(dev);
-> > +               if (err) {
-> > +                       pm_runtime_disable(dev);
-> > +                       return -ENODEV;
-> > +               }
-> >         }
-> >
-> >         if (writable)
-> > @@ -728,8 +734,12 @@ static int at24_probe(struct i2c_client *client)
-> >
-> >  static int at24_remove(struct i2c_client *client)
-> >  {
-> > +       bool low_power;
-> > +
-> >         pm_runtime_disable(&client->dev);
-> > -       pm_runtime_set_suspended(&client->dev);
-> > +       low_power = acpi_dev_state_low_power(&client->dev);
-> 
-> This is inconsistent. You define the low_power field in the context
-> structure (BTW the name low_power is a bit vague here - without
-> looking at its assignment it would make me think it's about something
-> battery-related, how about 'off_at_probe'?) and instead of reusing
+> Convert the various uses of fallthrough comments to fallthrough;
 
-The field was called probe_powered_off in v1, but I changed it to
-probe_low_power (and renamed related functions etc.) based on review
-comments --- for the device may not be powered off actually.
+What is the rationale for such a change?
+Portability to different tool-chains? Something else?
 
-> this field here, you call acpi_dev_state_low_power() again. Either
-> don't store the context for the life-time of the device if not
-> necessary or don't call acpi_dev_state_low_power() at remove, although
-> the commit message doesn't describe whether the latter is done on
-> purpose.
+> Done via script
+> Link: https://lore.kernel.org/lkml/b56602fcf79f849e733e7b521bb0e17895d390fa.1582230379.git.joe.com/
 
-Right. probe-low-power property has the same effect on remove for
-consistency, i.e. the device can remain in low power state during remove.
-This is documented in probe_low_power field documentation in the first
-patch.
+Message-ID <b56602fcf79f849e733e7b521bb0e17895d390fa.1582230379.git.joe.com>
+not found
 
--- 
-Regards,
+1 partial match found:
 
-Sakari Ailus
+https://lore.kernel.org/lkml/b56602fcf79f849e733e7b521bb0e17895d390fa.1582230379.git.joe@perches.com/
