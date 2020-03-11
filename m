@@ -1,56 +1,86 @@
 Return-Path: <linux-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	RDNS_NONE,SPF_HELO_NONE,SPF_NONE autolearn=no autolearn_force=no version=3.4.0
-Received: from hermes.aosc.io ([199.195.250.187]:57849 "EHLO hermes.aosc.io"
+X-Spam-Level: 
+X-Spam-Status: No, score=-1.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,RDNS_NONE,SPF_HELO_NONE,SPF_NONE autolearn=no
+	autolearn_force=no version=3.4.0
+Received: from foss.arm.com ([217.140.110.172]:51686 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729675AbgCKQ3z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 12:29:55 -0400
-From: Icenowy Zheng <icenowy@aosc.io>
-To: Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, Ondrej Jirman <megous@megous.com>
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-sunxi@googlegroups.com, Icenowy Zheng <icenowy@aosc.io>
-Subject: [PATCH 0/5] Add support for PinePhone LCD panel
-Date: Thu, 12 Mar 2020 00:29:31 +0800
-Message-Id: <20200311162936.221613-1-icenowy@aosc.io>
+        id S1730052AbgCKQbJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 12:31:09 -0400
+Date: Wed, 11 Mar 2020 16:31:03 +0000
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: Mark Brown <broonie@kernel.org>
+Cc: Will Deacon <will@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Paul Elliott <paul.elliott@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>,
+        Amit Kachhap <amit.kachhap@arm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        "H . J . Lu " <hjl.tools@gmail.com>,
+        Andrew Jones <drjones@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Kristina =?utf-8?Q?Mart=C5=A1enko?= <kristina.martsenko@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Florian Weimer <fweimer@redhat.com>,
+        Sudakshina Das <sudi.das@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Dave Martin <Dave.Martin@arm.com>
+Subject: Re: [PATCH v8 03/11] arm64: Basic Branch Target Identification
+ support
+Message-ID: <20200311163103.GL3216816@arrakis.emea.arm.com>
+References: <20200227174417.23722-1-broonie@kernel.org>
+ <20200227174417.23722-4-broonie@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200227174417.23722-4-broonie@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 List-ID: <linux-kernel.vger.kernel.org>
 
-This patchset adds support for the LCD panel of PinePhone.
+On Thu, Feb 27, 2020 at 05:44:09PM +0000, Mark Brown wrote:
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index 0b30e884e088..e37f4f07b990 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -1519,6 +1519,28 @@ endmenu
+>  
+>  menu "ARMv8.5 architectural features"
+>  
+> +config ARM64_BTI
+> +	bool "Branch Target Identification support"
+> +	default y
+> +	help
+> +	  Branch Target Identification (part of the ARMv8.5 Extensions)
+> +	  provides a mechanism to limit the set of locations to which computed
+> +	  branch instructions such as BR or BLR can jump.
+> +
+> +	  To make use of BTI on CPUs that support it, say Y.
+> +
+> +	  BTI is intended to provide complementary protection to other control
+> +	  flow integrity protection mechanisms, such as the Pointer
+> +	  authentication mechanism provided as part of the ARMv8.3 Extensions.
+> +	  For this reason, it does not make sense to enable this option without
+> +	  also enabling support for pointer authentication.  Thus, when
+> +	  enabling this option you should also select ARM64_PTR_AUTH=y.
+> +
+> +	  Userspace binaries must also be specifically compiled to make use of
+> +	  this mechanism.  If you say N here or the hardware does not support
+> +	  BTI, such binaries can still run, but you get no additional
+> +	  enforcement of branch destinations.
 
-The first 3 patches are for the panel itself, and the last 2 patches are
-for enabling it on PinePhone.
-
-PATCH 4 is the fix of a bug in sun6i_mipi_dsi which will gets triggered
-on XBD599.
-
-Icenowy Zheng (5):
-  dt-bindings: vendor-prefixes: Add Xingbangda
-  dt-bindings: panel: add binding for Xingbangda XBD599 panel
-  drm: panel: add Xingbangda XBD599 panel
-  drm/sun4i: sun6i_mipi_dsi: fix horizontal timing calculation
-  arm64: allwinner: dts: a64: add LCD-related device nodes for PinePhone
-
- .../display/panel/xingbangda,xbd599.yaml      |  50 +++
- .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
- .../dts/allwinner/sun50i-a64-pinephone.dtsi   |  37 ++
- drivers/gpu/drm/panel/Kconfig                 |   9 +
- drivers/gpu/drm/panel/Makefile                |   1 +
- .../gpu/drm/panel/panel-xingbangda-xbd599.c   | 367 ++++++++++++++++++
- drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c        |  10 +-
- 7 files changed, 471 insertions(+), 5 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/display/panel/xingbangda,xbd599.yaml
- create mode 100644 drivers/gpu/drm/panel/panel-xingbangda-xbd599.c
+To keep the series bisectable, I'd move the Kconfig into a separate
+patch towards the end. It looks like the feature is only partially
+supported after patch 3, so let's not advertise it here.
 
 -- 
-2.24.1
+Catalin
 
