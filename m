@@ -2,129 +2,192 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FF66C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 20:32:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9475DC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 20:33:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 656F62074A
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 20:32:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QeISQDIo"
+	by mail.kernel.org (Postfix) with ESMTP id 9501E2074A
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 20:33:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583958812;
+	bh=ZhsTyoo2Ec0QZ0sq1nqzSyIjpak8+wMtHttt5uCeKZw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=VXb7+4bpbtwkUZLybucQRIaSbsSWRQ6vpM7etcxfsuoB61n+rDHYGh3cybzKnpL+U
+	 xKjEyx8M2CG3kEx1KS2WAFGRAJ4hh6JRsasdSOb77VLgwJ7Ok+9bR1f1iZKfoJykMi
+	 mjPAkQGCXk+OAW2s8M+S6A6RS02+QMryHWRvUfao=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729117AbgCKUcx (ORCPT
+        id S1729215AbgCKUda (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 16:32:53 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:35066 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725834AbgCKUcw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 16:32:52 -0400
-Received: by mail-qt1-f196.google.com with SMTP id v15so2660870qto.2
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 13:32:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=w1EPYYWs6HVF4jXQQJ+oocKs8ETWR2AXVndep1cXQyE=;
-        b=QeISQDIoe7EIb0BquIvVIQDY2tWWGvFxd1AgSN87e3ljqPZ7kQB/I83xqIAXthJCtD
-         M8nrFvW1nbg1mvE67QXFNqq+ymkmIVqyyQQPDGfNHS7/FvxHUWjKpsvroAfLVEvAhl0m
-         MO7V5hvdqFhRKCVr0mUdgbDNj3pL7HyeExdQYva/Uy2G1ABuaHcs/nSD0WSkCWMToALe
-         TA+z8CwLlbO23k0ZauRbPNqtO+lpvzUuYnaztQ/iovfp/3GcyLKDmut2Njk091o8aYH9
-         IXwMz8aZiiO5JfENs6Yl4M4AR9BuueUvArvGrTRwgiyyWVISgenMnobBPVcrT2f8DGkd
-         GlRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=w1EPYYWs6HVF4jXQQJ+oocKs8ETWR2AXVndep1cXQyE=;
-        b=l2OyLKrdgt24I5NwPP0hohgtn3xuE2iWkh5wNfGixrwgnhlb2jqHT/tVbnivMfFRMT
-         6dMtJaMoWRDmIaCtYXyFRyeLYQaZijhjli/dh4DzlihpsroZOk0Yb9hUW/iwwJNpHAZ8
-         QaGzyfwh/ylxAicgxyFmhXIQLtkUzAhjUKC8kGj/23uemlpPl5y/XuKr6El8zYsmmgVa
-         3HLYKR6MvwAobf0tlmo3+j/8GcuBOXHvz5kd3xqWxbnf54wbZWpihCnNRx2HsD+qdhnH
-         CTrS6Kxh83DYLbeF60V2e2f4gOw955IWuF91X/QBZS3qyIlcjlVKB3R1nrV+59YabGII
-         IDNQ==
-X-Gm-Message-State: ANhLgQ28VsF/+ERDVNYngydhycf7CF15OzDKyo3OhDXRQOsoB9oit5z6
-        vZAV4lU4UUQ1z6yMuVXlv3JPMkFm1Nc=
-X-Google-Smtp-Source: ADFU+vvjR1yY+nJq0VMWjBuJNtaZyLQOtkI59T2HLkM0lKo7OgEdsnmtG0yx4yW5iP/QYTWAOqiVPQ==
-X-Received: by 2002:ac8:94a:: with SMTP id z10mr4439600qth.357.1583958769806;
-        Wed, 11 Mar 2020 13:32:49 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id z19sm12793225qts.86.2020.03.11.13.32.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Mar 2020 13:32:49 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Wed, 11 Mar 2020 16:32:47 -0400
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Cannon Matthews <cannonmatthews@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Rientjes <rientjes@google.com>,
-        Greg Thelen <gthelen@google.com>,
-        Salman Qazi <sqazi@google.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH] mm: clear 1G pages with streaming stores on x86
-Message-ID: <20200311203246.GA3971914@rani.riverdale.lan>
-References: <20200307010353.172991-1-cannonmatthews@google.com>
- <20200309000820.f37opzmppm67g6et@box>
- <20200309090630.GC8447@dhcp22.suse.cz>
- <20200309153831.GK1454533@tassilo.jf.intel.com>
- <20200309183704.GA1573@bombadil.infradead.org>
- <CAJfu=UfPKZwqjGR5AdhFRo_je7X5q2=zpBSBQkrbh2KhYrOJiA@mail.gmail.com>
- <20200311005447.jkpsaghrpk3c4rwu@box>
- <20200311033552.GA3657254@rani.riverdale.lan>
- <20200311081607.3ahlk4msosj4qjsj@box>
- <20200311183240.GA3880414@rani.riverdale.lan>
+        Wed, 11 Mar 2020 16:33:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53486 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725834AbgCKUda (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 16:33:30 -0400
+Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C8DC32074A;
+        Wed, 11 Mar 2020 20:33:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583958810;
+        bh=ZhsTyoo2Ec0QZ0sq1nqzSyIjpak8+wMtHttt5uCeKZw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=LfpBlu5znasSN619CKpj8II+4wnZeF4HbG17auC5hHsjH3C+EOMwegtV8kGFr7whg
+         ku9umr9ugLdqH7UawNVhVcAvqWn356/0PplynKXNvRNzKSbMSV326H2QB784OQH+kn
+         GuxN5yWH3fLPG5TaydzdAO1jl0gOchUIa22/3FRs=
+Date:   Wed, 11 Mar 2020 15:33:26 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Austin.Bolen@dell.com
+Cc:     sathyanarayanan.kuppuswamy@linux.intel.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com
+Subject: Re: [PATCH v17 09/12] PCI/AER: Allow clearing Error Status Register
+ in FF mode
+Message-ID: <20200311203326.GA163074@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200311183240.GA3880414@rani.riverdale.lan>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <7b8d47f9180e43a7bdb01f9d8754c9f6@AUSX13MPC107.AMER.DELL.COM>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 02:32:41PM -0400, Arvind Sankar wrote:
-> On Wed, Mar 11, 2020 at 11:16:07AM +0300, Kirill A. Shutemov wrote:
-> > On Tue, Mar 10, 2020 at 11:35:54PM -0400, Arvind Sankar wrote:
-> > > 
-> > > The rationale for MOVNTI instruction is supposed to be that it avoids
-> > > cache pollution. Aside from the bench that shows MOVNTI to be faster for
-> > > the move itself, shouldn't it have an additional benefit in not trashing
-> > > the CPU caches?
-> > > 
-> > > As string instructions improve, why wouldn't the same improvements be
-> > > applied to MOVNTI?
+On Wed, Mar 11, 2020 at 05:27:35PM +0000, Austin.Bolen@dell.com wrote:
+> On 3/11/2020 12:12 PM, Bjorn Helgaas wrote:
 > > 
-> > String instructions inherently more flexible. Implementation can choose
-> > caching strategy depending on the operation size (cx) and other factors.
-> > Like if operation is large enough and cache is full of dirty cache lines
-> > that expensive to free up, it can choose to bypass cache. MOVNTI is more
-> > strict on semantics and more opaque to CPU.
+> > [EXTERNAL EMAIL]
+> > 
+> <SNIP>
+> > 
+> > I'm probably missing your intent, but that sounds like "the OS can
+> > read/write AER bits whenever it wants, regardless of ownership."
+> > 
+> > That doesn't sound practical to me, and I don't think it's really
+> > similar to DPC, where it's pretty clear that the OS can touch DPC bits
+> > it doesn't own but only *during the EDR processing window*.
 > 
-> But with today's processors, wouldn't writing 1G via the string
-> operations empty out almost the whole cache? Or are there already
-> optimizations to prevent one thread from hogging the L3?
+> Yes, by treating AER bits like DPC bits I meant I'd define the specific 
+> time windows when OS can touch the AER status bits similar to how it's 
+> done for DPC in the current ECN.
 
-Also, currently the stringop is only done 4k at a time, so it would
-likely not trigger any future cache-bypassing optimizations in any case.
+Makes sense, thanks.
 
-> 
-> If we do want to just use the string operations, it seems like the
-> clear_page routines should just call memset instead of duplicating it.
-> 
+> >>>> For the normative text describing when OS clears the AER bits
+> >>>> following the informative flow chart, it could say that OS clears
+> >>>> AER as soon as possible after OST returns and before OS processes
+> >>>> _HPX and loading drivers.  Open to other suggestions as well.
+> >>>
+> >>> I'm not sure what to do with "as soon as possible" either.  That
+> >>> doesn't seem like something firmware and the OS can agree on.
+> >>
+> >> I can just state that it's done after OST returns but before _HPX or
+> >> driver is loaded. Any time in that range is fine. I can't get super
+> >> specific here because different OSes do different things.  Even for
+> >> a given OS they change over time. And I need something generic
+> >> enough to support a wide variety of OS implementations.
 > > 
-> > And more importantly string instructions, unlike MOVNTI, is something that
-> > generated often by compiler and used in standard libraries a lot. It is
-> > and will be focus of optimization of CPU architects.
+> > Yeah.  I don't know how to solve this.
 > > 
-> > -- 
-> >  Kirill A. Shutemov
+> > Linux doesn't actually unload and reload drivers for the child devices
+> > (Sathy, correct me if I'm wrong here) even though DPC containment
+> > takes the link down and effectively unplugs and replugs the device.  I
+> > would *like* to handle it like hotplug, but some higher-level software
+> > doesn't deal well with things like storage devices disappearing and
+> > reappearing.
+> > 
+> > Since Linux doesn't actually re-enumerate the child devices, it
+> > wouldn't evaluate _HPX again.  It would probably be cleaner if it did,
+> > but it's all tied up with the whole unplug/replug problem.
+> 
+> DPC resets everything below it and so to get it back up and running it 
+> would mean that all buses and resources need to be assigned, _HPX 
+> evaluated, and drivers reloaded. If those things don't happen then the 
+> whole hierarchy below the port that triggered DPC will be inaccessible.
+
+Hmm, I think I might be confusing this with another situation.  Sathy,
+can you help me understand this?  I don't have a way to actually
+exercise this EDR path.  Is there some way the pciehp hotplug driver
+gets involved here?
+
+Here's how this seems to work as far as I can tell:
+
+  - Linux does not have DPC or AER control
+
+  - Linux installs EDR notify handler
+
+  - Linux evaluates DPC Enable _DSM
+
+  - DPC containment event occurs
+
+  - Firmware fields DPC interrupt
+
+  - DPC event is not a surprise remove
+
+  - Firmware sends EDR notification
+
+  - Linux EDR notify handler evaluates Locate _DSM
+
+  - Linux reads and logs DPC and AER error information for port in
+    containment mode.  [If it was an RP PIO error, Linux clears RP PIO
+    error status, which is an asymmetry with the non-RP PIO path.]
+
+  - Linux clears AER error status (pci_aer_raw_clear_status())
+
+  - Linux calls driver .error_detected() methods for all child devices
+    of the port in containment mode (pcie_do_recovery()).  These
+    devices are inaccessible because the link is down.
+
+  - Linux clears DPC Trigger Status (dpc_reset_link() from
+    pcie_do_recovery()).
+
+  - Linux calls driver .mmio_enabled() methods for all child devices.
+
+This is where I get lost.  These child devices are now accessible, but
+they've been reset, so I don't know how their config space got
+restored.  Did pciehp enumerate them?  Did we do something like
+pci_restore_state()?  I don't see where either of these happens.
+
+> For higher level software not handling storage device disappearing due 
+> to hot-plug, they will have the same problem with DPC since DPC holds 
+> the port in the disabled state (and hence will be inaccessible). And 
+> once DPC is released the devices will be unconfigured and so still 
+> inaccessible to upper-level software.  A lot of upper-level storage 
+> software I've seen can already handle this gracefully.
+> 
+> >>> For child devices of that port, obviously it's impossible to
+> >>> access AER registers until DPC Trigger Status is cleared, and the
+> >>> flowchart says the OS shouldn't access them until after _OST.
+> >>>
+> >>> I'm actually not sure we currently do *anything* with child device
+> >>> AER info in the EDR path.  pcie_do_recovery() does walk the
+> >>> sub-hierarchy of child devices, but it only calls error handling
+> >>> callbacks in the child drivers; it doesn't do anything with the
+> >>> child AER registers itself.  And of course, this happens before
+> >>> _OST, so it would be too early in any case.  But maybe I'm missing
+> >>> something here.
+> >>
+> >> My understanding is that the OS read/clears AER in the case where OS
+> >> has native control of AER.  Feedback from OSVs is they wanted to
+> >> continue to do that to keep the native OS controlled AER and FF
+> >> mechanism similar.  The other way we could have done it would be to
+> >> have the firmware read/clear AER and report them to OS via APEI.
+> > 
+> > When Linux has native control of AER, it reads/clears AER status.
+> > The flowchart is for the case where firmware has AER control, so I
+> > guess Linux would not field AER interrupts and wouldn't expect to
+> > read/clear AER status.  So I *guess* Linux would assume APEI?  But
+> > that doesn't seem to be what the flowchart assumes.
+> 
+> Correct on the flowchart.  The OSVs we talked with did not want to use 
+> APEI.  They wanted to read and clear AER themselves and hence the 
+> flowchart is written that way.
+
+So they want to basically do native AER handling even though firmware
+owns AER?  My head hurts.
+
+Bjorn
