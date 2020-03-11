@@ -2,119 +2,341 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36834C18E5A
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 09:42:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1137C10F27
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 09:43:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 192982146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 09:42:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 637F72192A
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 09:43:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BLl+kMFO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728488AbgCKJm1 (ORCPT
+        id S1728708AbgCKJnm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 05:42:27 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:48988 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726160AbgCKJm0 (ORCPT
+        Wed, 11 Mar 2020 05:43:42 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:46465 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726160AbgCKJnl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 05:42:26 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id A7E691C031B; Wed, 11 Mar 2020 10:42:24 +0100 (CET)
-Date:   Wed, 11 Mar 2020 10:42:24 +0100
-From:   Pavel Machek <pavel@denx.de>
-To:     =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     Pavel Machek <pavel@denx.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Sergey Organov <sorganov@gmail.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 12/86] usb: gadget: serial: fix Tx stall after
- buffer overflow
-Message-ID: <20200311094223.GA15976@duo.ucw.cz>
-References: <20200310124530.808338541@linuxfoundation.org>
- <20200310124531.459641903@linuxfoundation.org>
- <20200310150834.GA24886@duo.ucw.cz>
- <20200310225118.GA32479@qmqm.qmqm.pl>
+        Wed, 11 Mar 2020 05:43:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583919820;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=NGImlNSx01IBKgRPOyUzi20Hz9u2RISx8GsWfytxbAU=;
+        b=BLl+kMFOI015xVbykoo3b/j/Pn/EXrZ2QisldthgoZPXBVbBTEKrmO+o++y5krHD07+Q8a
+        B/AV2YvvkPIBFp6ZxEYwUmKmVPTmZgfC3B9wpwPwlbo9moYP7sq7Tu6rMRMN3kzEqbvtMf
+        cKGL+WEixcQvN7iAFgxqPW7GRV+gUBU=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-369-nYGTxxbzMz6kDrBsjpYI5A-1; Wed, 11 Mar 2020 05:43:37 -0400
+X-MC-Unique: nYGTxxbzMz6kDrBsjpYI5A-1
+Received: by mail-wr1-f69.google.com with SMTP id w6so703197wrm.16
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 02:43:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=NGImlNSx01IBKgRPOyUzi20Hz9u2RISx8GsWfytxbAU=;
+        b=tdcx/9RNGtQa3Cr5rkrvBNUxSoUyG9EHHjgjk8meKPYVYp6xx4x4Z4DKeSrhg4DNcE
+         gsfoke50BLBmrLB0ryRIXVt73YMq+kyEHibpKWB9IuUFFwrlZ7BJtX4RBa2CA4+xtfbg
+         3LIHBnHJ4+inzzrC1chWOCL2EIHUr7tHQ4sI0VA9lEsE2tNypYsSMViuAPSj3g7TGYrO
+         J3NDOZdcfbGDoqp1fuU5jXwLrECXtQtvP+ccZWKDOFJGpy1DpaOuGbY7J/k24cCV0Pr8
+         bieHcP8nBkqV/Qr4+aic0ueMSMBKVSE71DrUD+F/omJsL9Zmx1XqU4NVBm4SfgBBgQgh
+         Ly8g==
+X-Gm-Message-State: ANhLgQ3Ret2WD/IPJ0UcEpAiRAp2TGUYqpDrar0DZFA8CfINS6S+9Xlo
+        SwFtKeY+pbrFxpSaKYVDUFJIm6yMKFoif025mYmNrWjAc3lSr5Ha+sPGGbHgyUNqMSJQzzHQv13
+        48sBR3Dxuw0J0KStqbIvNterJ
+X-Received: by 2002:adf:df85:: with SMTP id z5mr2191148wrl.39.1583919815313;
+        Wed, 11 Mar 2020 02:43:35 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vuLTEDxvd7h9hxq2fN8VoXcdyAokbL+i5LSIHR9yJnZyuvlqY+ppqZI+x/D5NUjpup0+TWj7A==
+X-Received: by 2002:adf:df85:: with SMTP id z5mr2191111wrl.39.1583919814995;
+        Wed, 11 Mar 2020 02:43:34 -0700 (PDT)
+Received: from [192.168.178.58] ([151.21.173.186])
+        by smtp.gmail.com with ESMTPSA id z22sm2715765wmi.1.2020.03.11.02.43.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Mar 2020 02:43:34 -0700 (PDT)
+Subject: Re: [PATCH -next 021/491] KERNEL VIRTUAL MACHINE FOR X86 (KVM/x86):
+ Use fallthrough;
+To:     Joe Perches <joe@perches.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <cover.1583896344.git.joe@perches.com>
+ <e5314fc18acfe821da47ea52fa074b4c414f9266.1583896348.git.joe@perches.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <205522b8-a0f2-9baf-7365-782be0668d74@redhat.com>
+Date:   Wed, 11 Mar 2020 10:43:33 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="GvXjxJ+pjyke8COw"
-Content-Disposition: inline
-In-Reply-To: <20200310225118.GA32479@qmqm.qmqm.pl>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <e5314fc18acfe821da47ea52fa074b4c414f9266.1583896348.git.joe@perches.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 11/03/20 05:51, Joe Perches wrote:
+> Convert the various uses of fallthrough comments to fallthrough;
+> 
+> Done via script
+> Link: https://lore.kernel.org/lkml/b56602fcf79f849e733e7b521bb0e17895d390fa.1582230379.git.joe.com/
+> 
+> Signed-off-by: Joe Perches <joe@perches.com>
+> ---
+>  arch/x86/kvm/emulate.c  |  2 +-
+>  arch/x86/kvm/hyperv.c   |  2 +-
+>  arch/x86/kvm/irq_comm.c |  2 +-
+>  arch/x86/kvm/lapic.c    |  6 +++---
+>  arch/x86/kvm/mmu/mmu.c  |  2 +-
+>  arch/x86/kvm/svm.c      |  2 +-
+>  arch/x86/kvm/vmx/vmx.c  | 15 +++++++--------
+>  arch/x86/kvm/x86.c      | 12 ++++--------
+>  8 files changed, 19 insertions(+), 24 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/emulate.c b/arch/x86/kvm/emulate.c
+> index bc00642..bae4d8 100644
+> --- a/arch/x86/kvm/emulate.c
+> +++ b/arch/x86/kvm/emulate.c
+> @@ -3025,7 +3025,7 @@ static void string_registers_quirk(struct x86_emulate_ctxt *ctxt)
+>  	case 0xa4:	/* movsb */
+>  	case 0xa5:	/* movsd/w */
+>  		*reg_rmw(ctxt, VCPU_REGS_RSI) &= (u32)-1;
+> -		/* fall through */
+> +		fallthrough;
+>  	case 0xaa:	/* stosb */
+>  	case 0xab:	/* stosd/w */
+>  		*reg_rmw(ctxt, VCPU_REGS_RDI) &= (u32)-1;
+> diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
+> index a86fda7..934bfb4 100644
+> --- a/arch/x86/kvm/hyperv.c
+> +++ b/arch/x86/kvm/hyperv.c
+> @@ -1652,7 +1652,7 @@ int kvm_hv_hypercall(struct kvm_vcpu *vcpu)
+>  		ret = kvm_hvcall_signal_event(vcpu, fast, ingpa);
+>  		if (ret != HV_STATUS_INVALID_PORT_ID)
+>  			break;
+> -		/* fall through - maybe userspace knows this conn_id. */
+> +		fallthrough;	/* maybe userspace knows this conn_id */
+>  	case HVCALL_POST_MESSAGE:
+>  		/* don't bother userspace if it has no way to handle it */
+>  		if (unlikely(rep || !vcpu_to_synic(vcpu)->active)) {
+> diff --git a/arch/x86/kvm/irq_comm.c b/arch/x86/kvm/irq_comm.c
+> index c47d2a..4aa1c2e 100644
+> --- a/arch/x86/kvm/irq_comm.c
+> +++ b/arch/x86/kvm/irq_comm.c
+> @@ -285,7 +285,7 @@ int kvm_set_routing_entry(struct kvm *kvm,
+>  		switch (ue->u.irqchip.irqchip) {
+>  		case KVM_IRQCHIP_PIC_SLAVE:
+>  			e->irqchip.pin += PIC_NUM_PINS / 2;
+> -			/* fall through */
+> +			fallthrough;
+>  		case KVM_IRQCHIP_PIC_MASTER:
+>  			if (ue->u.irqchip.pin >= PIC_NUM_PINS / 2)
+>  				return -EINVAL;
+> diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+> index e3099c..64b7a9c 100644
+> --- a/arch/x86/kvm/lapic.c
+> +++ b/arch/x86/kvm/lapic.c
+> @@ -1023,7 +1023,7 @@ static int __apic_accept_irq(struct kvm_lapic *apic, int delivery_mode,
+>  	switch (delivery_mode) {
+>  	case APIC_DM_LOWEST:
+>  		vcpu->arch.apic_arb_prio++;
+> -		/* fall through */
+> +		fallthrough;
+>  	case APIC_DM_FIXED:
+>  		if (unlikely(trig_mode && !level))
+>  			break;
+> @@ -1311,7 +1311,7 @@ static u32 __apic_read(struct kvm_lapic *apic, unsigned int offset)
+>  		break;
+>  	case APIC_TASKPRI:
+>  		report_tpr_access(apic, false);
+> -		/* fall thru */
+> +		fallthrough;
+>  	default:
+>  		val = kvm_lapic_get_reg(apic, offset);
+>  		break;
+> @@ -1952,7 +1952,7 @@ int kvm_lapic_reg_write(struct kvm_lapic *apic, u32 reg, u32 val)
+>  
+>  	case APIC_LVT0:
+>  		apic_manage_nmi_watchdog(apic, val);
+> -		/* fall through */
+> +		fallthrough;
+>  	case APIC_LVTTHMR:
+>  	case APIC_LVTPC:
+>  	case APIC_LVT1:
+> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+> index 87e9ba..8593cd 100644
+> --- a/arch/x86/kvm/mmu/mmu.c
+> +++ b/arch/x86/kvm/mmu/mmu.c
+> @@ -4475,7 +4475,7 @@ __reset_rsvds_bits_mask(struct kvm_vcpu *vcpu,
+>  			rsvd_bits(maxphyaddr, 51);
+>  		rsvd_check->rsvd_bits_mask[1][4] =
+>  			rsvd_check->rsvd_bits_mask[0][4];
+> -		/* fall through */
+> +		fallthrough;
+>  	case PT64_ROOT_4LEVEL:
+>  		rsvd_check->rsvd_bits_mask[0][3] = exb_bit_rsvd |
+>  			nonleaf_bit8_rsvd | rsvd_bits(7, 7) |
+> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+> index 910005..73fa903 100644
+> --- a/arch/x86/kvm/svm.c
+> +++ b/arch/x86/kvm/svm.c
+> @@ -4449,7 +4449,7 @@ static int svm_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr)
+>  	case MSR_IA32_APICBASE:
+>  		if (kvm_vcpu_apicv_active(vcpu))
+>  			avic_update_vapic_bar(to_svm(vcpu), data);
+> -		/* Fall through */
+> +		fallthrough;
+>  	default:
+>  		return kvm_set_msr_common(vcpu, msr);
+>  	}
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index 69c5bd..1577cd 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -4538,12 +4538,12 @@ static bool rmode_exception(struct kvm_vcpu *vcpu, int vec)
+>  			vmcs_read32(VM_EXIT_INSTRUCTION_LEN);
+>  		if (vcpu->guest_debug & KVM_GUESTDBG_USE_SW_BP)
+>  			return false;
+> -		/* fall through */
+> +		fallthrough;
+>  	case DB_VECTOR:
+>  		if (vcpu->guest_debug &
+>  			(KVM_GUESTDBG_SINGLESTEP | KVM_GUESTDBG_USE_HW_BP))
+>  			return false;
+> -		/* fall through */
+> +		fallthrough;
+>  	case DE_VECTOR:
+>  	case OF_VECTOR:
+>  	case BR_VECTOR:
+> @@ -4692,7 +4692,7 @@ static int handle_exception_nmi(struct kvm_vcpu *vcpu)
+>  		}
+>  		kvm_run->debug.arch.dr6 = dr6 | DR6_FIXED_1;
+>  		kvm_run->debug.arch.dr7 = vmcs_readl(GUEST_DR7);
+> -		/* fall through */
+> +		fallthrough;
+>  	case BP_VECTOR:
+>  		/*
+>  		 * Update instruction length as we may reinject #BP from
+> @@ -5119,7 +5119,7 @@ static int handle_task_switch(struct kvm_vcpu *vcpu)
+>  				error_code =
+>  					vmcs_read32(IDT_VECTORING_ERROR_CODE);
+>  			}
+> -			/* fall through */
+> +			fallthrough;
+>  		case INTR_TYPE_SOFT_EXCEPTION:
+>  			kvm_clear_exception_queue(vcpu);
+>  			break;
+> @@ -5469,8 +5469,7 @@ static int handle_invpcid(struct kvm_vcpu *vcpu)
+>  		 * global flush. If needed, we could optimize this later by
+>  		 * keeping track of global entries in shadow page tables.
+>  		 */
+> -
+> -		/* fall-through */
+> +		fallthrough;
+>  	case INVPCID_TYPE_ALL_INCL_GLOBAL:
+>  		kvm_mmu_unload(vcpu);
+>  		return kvm_skip_emulated_instruction(vcpu);
+> @@ -6401,7 +6400,7 @@ static void __vmx_complete_interrupts(struct kvm_vcpu *vcpu,
+>  		break;
+>  	case INTR_TYPE_SOFT_EXCEPTION:
+>  		vcpu->arch.event_exit_inst_len = vmcs_read32(instr_len_field);
+> -		/* fall through */
+> +		fallthrough;
+>  	case INTR_TYPE_HARD_EXCEPTION:
+>  		if (idt_vectoring_info & VECTORING_INFO_DELIVER_CODE_MASK) {
+>  			u32 err = vmcs_read32(error_code_field);
+> @@ -6411,7 +6410,7 @@ static void __vmx_complete_interrupts(struct kvm_vcpu *vcpu,
+>  		break;
+>  	case INTR_TYPE_SOFT_INTR:
+>  		vcpu->arch.event_exit_inst_len = vmcs_read32(instr_len_field);
+> -		/* fall through */
+> +		fallthrough;
+>  	case INTR_TYPE_EXT_INTR:
+>  		kvm_queue_interrupt(vcpu, vector, type == INTR_TYPE_SOFT_INTR);
+>  		break;
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 2bbc0e0..e6280e 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -1071,7 +1071,6 @@ static int __kvm_set_dr(struct kvm_vcpu *vcpu, int dr, unsigned long val)
+>  			vcpu->arch.eff_db[dr] = val;
+>  		break;
+>  	case 4:
+> -		/* fall through */
+>  	case 6:
+>  		if (val & 0xffffffff00000000ULL)
+>  			return -1; /* #GP */
+> @@ -1079,7 +1078,6 @@ static int __kvm_set_dr(struct kvm_vcpu *vcpu, int dr, unsigned long val)
+>  		kvm_update_dr6(vcpu);
+>  		break;
+>  	case 5:
+> -		/* fall through */
+>  	default: /* 7 */
+>  		if (!kvm_dr7_valid(val))
+>  			return -1; /* #GP */
+> @@ -1110,7 +1108,6 @@ int kvm_get_dr(struct kvm_vcpu *vcpu, int dr, unsigned long *val)
+>  		*val = vcpu->arch.db[array_index_nospec(dr, size)];
+>  		break;
+>  	case 4:
+> -		/* fall through */
+>  	case 6:
+>  		if (vcpu->guest_debug & KVM_GUESTDBG_USE_HW_BP)
+>  			*val = vcpu->arch.dr6;
+> @@ -1118,7 +1115,6 @@ int kvm_get_dr(struct kvm_vcpu *vcpu, int dr, unsigned long *val)
+>  			*val = kvm_x86_ops->get_dr6(vcpu);
+>  		break;
+>  	case 5:
+> -		/* fall through */
+>  	default: /* 7 */
+>  		*val = vcpu->arch.dr7;
+>  		break;
+> @@ -2885,7 +2881,8 @@ int kvm_set_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>  
+>  	case MSR_K7_PERFCTR0 ... MSR_K7_PERFCTR3:
+>  	case MSR_P6_PERFCTR0 ... MSR_P6_PERFCTR1:
+> -		pr = true; /* fall through */
+> +		pr = true;
+> +		fallthrough;
+>  	case MSR_K7_EVNTSEL0 ... MSR_K7_EVNTSEL3:
+>  	case MSR_P6_EVNTSEL0 ... MSR_P6_EVNTSEL1:
+>  		if (kvm_pmu_is_valid_msr(vcpu, msr))
+> @@ -4181,8 +4178,7 @@ static int kvm_vcpu_ioctl_enable_cap(struct kvm_vcpu *vcpu,
+>  	case KVM_CAP_HYPERV_SYNIC2:
+>  		if (cap->args[0])
+>  			return -EINVAL;
+> -		/* fall through */
+> -
+> +		fallthrough;
+>  	case KVM_CAP_HYPERV_SYNIC:
+>  		if (!irqchip_in_kernel(vcpu->kvm))
+>  			return -EINVAL;
+> @@ -8478,7 +8474,7 @@ static inline int vcpu_block(struct kvm *kvm, struct kvm_vcpu *vcpu)
+>  		vcpu->arch.pv.pv_unhalted = false;
+>  		vcpu->arch.mp_state =
+>  			KVM_MP_STATE_RUNNABLE;
+> -		/* fall through */
+> +		fallthrough;
+>  	case KVM_MP_STATE_RUNNABLE:
+>  		vcpu->arch.apf.halted = false;
+>  		break;
+> 
 
---GvXjxJ+pjyke8COw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Acked-by: Paolo Bonzini <pbonzini@redhat.com>
 
-Hi!
-
-> > > From: Sergey Organov <sorganov@gmail.com>
-> > >=20
-> > > [ Upstream commit e4bfded56cf39b8d02733c1e6ef546b97961e18a ]
-> > >=20
-> > > Symptom: application opens /dev/ttyGS0 and starts sending (writing) to
-> > > it while either USB cable is not connected, or nobody listens on the
-> > > other side of the cable. If driver circular buffer overflows before
-> > > connection is established, no data will be written to the USB layer
-> > > until/unless /dev/ttyGS0 is closed and re-opened again by the
-> > > application (the latter besides having no means of being notified abo=
-ut
-> > > the event of establishing of the connection.)
-> > >=20
-> > > Fix: on open and/or connect, kick Tx to flush circular buffer data to
-> > > USB layer.
-> >=20
-> > > diff --git a/drivers/usb/gadget/function/u_serial.c b/drivers/usb/gad=
-get/function/u_serial.c
-> > > index d4d317db89df5..38afe96c5cd26 100644
-> > > --- a/drivers/usb/gadget/function/u_serial.c
-> > > +++ b/drivers/usb/gadget/function/u_serial.c
-> > > @@ -567,8 +567,10 @@ static int gs_start_io(struct gs_port *port)
-> > >  	port->n_read =3D 0;
-> > >  	started =3D gs_start_rx(port);
-> > > =20
-> > > -	/* unblock any pending writes into our circular buffer */
-> > >  	if (started) {
-> > > +		gs_start_tx(port);
-> > > +		/* Unblock any pending writes into our circular buffer, in case
-> > > +		 * we didn't in gs_start_tx() */
-> > >  		tty_wakeup(port->port.tty);
-> >=20
-> > I'm confused. gs-start_tx() is done twice in a row. Its return
-> > convention seem to be 0 in success case, and non-zero on failure. But
-> > it is assigned to variable called "started", which does not sound like
-> > "error" to me.
-> >=20
-> > Are you sure this is correct?
->=20
-> The function before 'if (started)' is gs_start_rx() - it's RX not
-> TX.
-
-Aha, I missed that, sorry for the noise.
-
-Best regards,
-								Pavel
---=20
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-
---GvXjxJ+pjyke8COw
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXmiyfwAKCRAw5/Bqldv6
-8pr/AJ9aSgvJ5WVI5DzY9pWECe0/+CVTOgCgjReT0Iys54B1ezCHTMyeB2GZffM=
-=+MLw
------END PGP SIGNATURE-----
-
---GvXjxJ+pjyke8COw--
