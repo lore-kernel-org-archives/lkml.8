@@ -2,377 +2,1206 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFBC6C10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 01:57:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A693CC10F27
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 02:04:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A68921655
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 01:57:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B46121655
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 02:04:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727744AbgCKB5V (ORCPT
+        id S1727865AbgCKCEh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 21:57:21 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:11222 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727484AbgCKB5V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 21:57:21 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 58EB776B38C8CC6921DD;
-        Wed, 11 Mar 2020 09:57:15 +0800 (CST)
-Received: from [127.0.0.1] (10.133.210.141) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.487.0; Wed, 11 Mar 2020
- 09:57:13 +0800
-Subject: Re: [locks] 6d390e4b5d: will-it-scale.per_process_ops -96.6%
- regression
-To:     NeilBrown <neilb@suse.de>, Jeff Layton <jlayton@kernel.org>,
-        "Linus Torvalds" <torvalds@linux-foundation.org>
-CC:     kernel test robot <rong.a.chen@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>, <lkp@lists.01.org>,
-        Bruce Fields <bfields@fieldses.org>,
-        Al Viro <viro@zeniv.linux.org.uk>
-References: <20200308140314.GQ5972@shao2-debian>
- <e3783d060c778cb41b77380ad3e278133b52f57e.camel@kernel.org>
- <CAHk-=whGK712fPqmQ3FSHxqe3Aqny4bEeWEvfaytLeLV2+ijCQ@mail.gmail.com>
- <34355c4fe6c3968b1f619c60d5ff2ca11a313096.camel@kernel.org>
- <1bfba96b4bf0d3ca9a18a2bced3ef3a2a7b44dad.camel@kernel.org>
- <87blp5urwq.fsf@notabene.neil.brown.name>
- <41c83d34ae4c166f48e7969b2b71e43a0f69028d.camel@kernel.org>
- <ed73fb5d-ddd5-fefd-67ae-2d786e68544a@huawei.com>
- <923487db2c9396c79f8e8dd4f846b2b1762635c8.camel@kernel.org>
- <36c58a6d07b67aac751fca27a4938dc1759d9267.camel@kernel.org>
- <878sk7vs8q.fsf@notabene.neil.brown.name>
-From:   yangerkun <yangerkun@huawei.com>
-Message-ID: <f9db707f-74ef-9439-1aec-e1ce8234888e@huawei.com>
-Date:   Wed, 11 Mar 2020 09:57:12 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Tue, 10 Mar 2020 22:04:37 -0400
+Received: from mga14.intel.com ([192.55.52.115]:9140 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727484AbgCKCEh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 22:04:37 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Mar 2020 19:04:35 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,539,1574150400"; 
+   d="scan'208";a="277194433"
+Received: from sai-dev-mach.sc.intel.com ([143.183.140.153])
+  by fmsmga002.fm.intel.com with ESMTP; 10 Mar 2020 19:04:35 -0700
+Message-ID: <8645c93547ae6c4e35633dbb09d9355219d9e3b2.camel@intel.com>
+Subject: Re: [PATCH V1 10/13] selftests/resctrl: Change Cache Allocation
+ Technology (CAT) test
+From:   Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>
+To:     Reinette Chatre <reinette.chatre@intel.com>, shuah@kernel.org,
+        linux-kselftest@vger.kernel.org
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        tony.luck@intel.com, babu.moger@amd.com, james.morse@arm.com,
+        ravi.v.shankar@intel.com, fenghua.yu@intel.com, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Tue, 10 Mar 2020 18:59:47 -0700
+In-Reply-To: <4ac6fd87-1393-f247-40ae-5d6e34403e0f@intel.com>
+References: <cover.1583657204.git.sai.praneeth.prakhya@intel.com>
+         <51d0f3c928fbc310c85bac6de20745f69cbc423e.1583657204.git.sai.praneeth.prakhya@intel.com>
+         <4ac6fd87-1393-f247-40ae-5d6e34403e0f@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
 MIME-Version: 1.0
-In-Reply-To: <878sk7vs8q.fsf@notabene.neil.brown.name>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.133.210.141]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Reinette,
 
+On Tue, 2020-03-10 at 15:14 -0700, Reinette Chatre wrote:
+> Hi Sai,
+> 
+> Not just specific to this patch but I think the prevalent use of global
+> variables that are initialized/used or allocated/released from a variety
+> of places within the code is creating traps. I seemed to have stumbled
+> on a few during this review so far but it is hard to keep track of and I
+> am not confident that I caught them all. Having the code be symmetrical
+> (allocate and free from same area or initialize and use from same area)
+> does help to avoid such complexity.
 
-On 2020/3/11 5:01, NeilBrown wrote:
-> On Tue, Mar 10 2020, Jeff Layton wrote:
-> 
->> On Tue, 2020-03-10 at 08:52 -0400, Jeff Layton wrote:
->>
->> [snip]
->>
->>> On Tue, 2020-03-10 at 11:24 +0800, yangerkun wrote:
->>>>>
->>>> Something others. I think there is no need to call locks_delete_block
->>>> for all case in function like flock_lock_inode_wait. What we should do
->>>> as the patch '16306a61d3b7 ("fs/locks: always delete_block after
->>>> waiting.")' describes is that we need call locks_delete_block not only
->>>> for error equal to -ERESTARTSYS(please point out if I am wrong). And
->>>> this patch may fix the regression too since simple lock that success or
->>>> unlock will not try to acquire blocked_lock_lock.
->>>>
->>>>
->>>
->>> Nice! This looks like it would work too, and it's a simpler fix.
->>>
->>> I'd be inclined to add a WARN_ON_ONCE(fl->fl_blocker) after the if
->>> statements to make sure we never exit with one still queued. Also, I
->>> think we can do a similar optimization in __break_lease.
->>>
->>> There are some other callers of locks_delete_block:
->>>
->>> cifs_posix_lock_set: already only calls it in these cases
->>>
->>> nlmsvc_unlink_block: I think we need to call this in most cases, and
->>> they're not going to be high-performance codepaths in general
->>>
->>> nfsd4 callback handling: Several calls here, most need to always be
->>> called. find_blocked_lock could be reworked to take the
->>> blocked_lock_lock only once (I'll do that in a separate patch).
->>>
->>> How about something like this (
->>>
->>> ----------------------8<---------------------
->>>
->>> From: yangerkun <yangerkun@huawei.com>
->>>
->>> [PATCH] filelock: fix regression in unlock performance
->>>
->>> '6d390e4b5d48 ("locks: fix a potential use-after-free problem when
->>> wakeup a waiter")' introduces a regression since we will acquire
->>> blocked_lock_lock every time locks_delete_block is called.
->>>
->>> In many cases we can just avoid calling locks_delete_block at all,
->>> when we know that the wait was awoken by the condition becoming true.
->>> Change several callers of locks_delete_block to only call it when
->>> waking up due to signal or other error condition.
->>>
->>> [ jlayton: add similar optimization to __break_lease, reword changelog,
->>> 	   add WARN_ON_ONCE calls ]
->>>
->>> Fixes: 16306a61d3b7 ("fs/locks: always delete_block after waiting.")
->>> Fixes: 6d390e4b5d48 ("locks: fix a potential use-after-free problem when wakeup a waiter")
->>> Signed-off-by: yangerkun <yangerkun@huawei.com>
->>> Signed-off-by: Jeff Layton <jlayton@kernel.org>
->>> ---
->>>   fs/locks.c | 29 ++++++++++++++++++++++-------
->>>   1 file changed, 22 insertions(+), 7 deletions(-)
->>>
->>> diff --git a/fs/locks.c b/fs/locks.c
->>> index 426b55d333d5..b88a5b11c464 100644
->>> --- a/fs/locks.c
->>> +++ b/fs/locks.c
->>> @@ -1354,7 +1354,10 @@ static int posix_lock_inode_wait(struct inode *inode, struct file_lock *fl)
->>>   		if (error)
->>>   			break;
->>>   	}
->>> -	locks_delete_block(fl);
->>> +	if (error)
->>> +		locks_delete_block(fl);
->>> +	WARN_ON_ONCE(fl->fl_blocker);
->>> +
->>>   	return error;
->>>   }
->>>   
->>> @@ -1447,7 +1450,9 @@ int locks_mandatory_area(struct inode *inode, struct file *filp, loff_t start,
->>>   
->>>   		break;
->>>   	}
->>> -	locks_delete_block(&fl);
->>> +	if (error)
->>> +		locks_delete_block(&fl);
->>> +	WARN_ON_ONCE(fl.fl_blocker);
->>>   
->>>   	return error;
->>>   }
->>> @@ -1638,23 +1643,28 @@ int __break_lease(struct inode *inode, unsigned int mode, unsigned int type)
->>>   
->>>   	locks_dispose_list(&dispose);
->>>   	error = wait_event_interruptible_timeout(new_fl->fl_wait,
->>> -						!new_fl->fl_blocker, break_time);
->>> +						 !new_fl->fl_blocker,
->>> +						 break_time);
->>>   
->>>   	percpu_down_read(&file_rwsem);
->>>   	spin_lock(&ctx->flc_lock);
->>>   	trace_break_lease_unblock(inode, new_fl);
->>> -	locks_delete_block(new_fl);
->>>   	if (error >= 0) {
->>>   		/*
->>>   		 * Wait for the next conflicting lease that has not been
->>>   		 * broken yet
->>>   		 */
->>> -		if (error == 0)
->>> +		if (error == 0) {
->>> +			locks_delete_block(new_fl);
->>>   			time_out_leases(inode, &dispose);
->>> +		}
->>>   		if (any_leases_conflict(inode, new_fl))
->>>   			goto restart;
->>>   		error = 0;
->>> +	} else {
->>> +		locks_delete_block(new_fl);
->>>   	}
->>> +	WARN_ON_ONCE(fl->fl_blocker);
->>>   out:
->>>   	spin_unlock(&ctx->flc_lock);
->>>   	percpu_up_read(&file_rwsem);
->>> @@ -2126,7 +2136,10 @@ static int flock_lock_inode_wait(struct inode *inode, struct file_lock *fl)
->>>   		if (error)
->>>   			break;
->>>   	}
->>> -	locks_delete_block(fl);
->>> +	if (error)
->>> +		locks_delete_block(fl);
->>> +	WARN_ON_ONCE(fl->fl_blocker);
->>> +
->>>   	return error;
->>>   }
->>>   
->>> @@ -2403,7 +2416,9 @@ static int do_lock_file_wait(struct file *filp, unsigned int cmd,
->>>   		if (error)
->>>   			break;
->>>   	}
->>> -	locks_delete_block(fl);
->>> +	if (error)
->>> +		locks_delete_block(fl);
->>> +	WARN_ON_ONCE(fl->fl_blocker);
->>>   
->>>   	return error;
->>>   }
->>
->> I've gone ahead and added the above patch to linux-next. Linus, Neil,
->> are you ok with this one? I think this is probably the simplest
->> approach.
-> 
-> I think this patch contains an assumption which is not justified.  It
-> assumes that if a wait_event completes without error, then the wake_up()
-> must have happened.  I don't think that is correct.
-> 
-> In the patch that caused the recent regression, the race described
-> involved a signal arriving just as __locks_wake_up_blocks() was being
-> called on another thread.
-> So the waiting process was woken by a signal *after* ->fl_blocker was set
-> to NULL, and *before* the wake_up().  If wait_event_interruptible()
-> finds that the condition is true, it will report success whether there
-> was a signal or not.
-Neil and Jeff, Hi,
+Sure! makes sense. I will try to wrap them up in some meaningful structures to
+pass around functions and will see if everything still works as expected. If
+not, I will comment why a particular variable needs to be global.
 
-But after this, like in flock_lock_inode_wait, we will go another 
-flock_lock_inode. And the flock_lock_inode it may return 
--ENOMEM/-ENOENT/-EAGAIN/0.
+> This patch and the patch that follows are both quite large and difficult
+> to keep track of all the collected changes. There seems to be
+> opportunity for separating it into logical changes. Some of my comments
+> may be just because I could not keep track of all that is changed at the
+> same time.
 
-- 0: If there is a try lock, it means that we have call 
-locks_move_blocks, and fl->fl_blocked_requests will be NULL, no need to 
-wake up at all. If there is a unlock, no one call wait for me, no need 
-to wake up too.
+Ok.. makes sense. The main reason this patch and the next patch are large 
+because they do two things
+1. Remove previous CAT/CQM test case
+2. Add new CAT/CQM test cases
 
-- ENOENT: means we are doing unlock, no one will wait for me, no need to 
-wake up.
+Since the new test cases are not just logical extensions or fixing some bugs
+in previous test cases, the patch might not be readable. I am thinking to
+split this at-least like this
+1. A patch to remove CAT test case
+2. A patch to remove CQM test case
+3. Patches that just add CAT and CQM (without other changes)
 
-- ENOMEM: since last time we go through flock_lock_inode someone may 
-wait for me, so for this error, we need to wake up them.
+Please let me know if you think otherwise
 
-- EAGAIN: since we has go through flock_lock_inode before, these may 
-never happen because FL_SLEEP will not lose.
+> On 3/6/2020 7:40 PM, Sai Praneeth Prakhya wrote:
+> > The present CAT test case, spawns two processes that run in two different
+> > control groups with exclusive schemata and both the processes read a
+> > buffer
+> > from memory only once. Before reading the buffer, perf miss count is
+> > cleared and perf miss count is calculated for the read. Since the
+> > processes
+> > are reading through the buffer only once and initially all the buffer is
+> > in
+> > memory perf miss count will always be the same regardless of the cache
+> > size
+> > allocated by CAT to these processes. So, the test isn't testing CAT. Fix
+> > this issue by changing the CAT test case.
+> > 
+> > The updated CAT test runs a "critical" process with exclusive schemata
+> > that
+> > reads a buffer (same as the size of allocated cache) multiple times
+> > there-by utilizing the allocated cache and calculates perf miss rate for
+> 
+> Transitioning the description from "perf miss count" to "perf miss rate"
+> is subtle. It would be valuable to elaborate what is meant with "perf
+> miss rate".
+> 
+> > every read of the buffer. The average of this perf miss rate is saved.
+> > This
+> > value indicates the critical process self induced misses. Now, the
+> > "critical" process runs besides a "noisy" neighbor that is reading a
+> > buffer
+> > that is 10 times the size of LLC and both the processes are in different
+> > control groups with exclusive schematas. The average perf miss rate for
+> > "critical" process is calculated again and compared with the earlier
+> > value.
+> > If the difference between both these values is greater than 5% it means
+> > that "noisy" neighbor does have impact on "critical" process which means
+> > CAT is not working as expected and hence the test fails.
+> > 
+> > Reported-by: Reinette Chatre <reinette.chatre@intel.com>
+> > Suggested-by: Tony Luck <tony.luck@intel.com>
+> > Co-developed-by: Fenghua Yu <fenghua.yu@intel.com>
+> > Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
+> > Signed-off-by: Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>
+> > ---
+> >  tools/testing/selftests/resctrl/cache.c         | 167 ++++++++-----
+> >  tools/testing/selftests/resctrl/cat_test.c      | 312 ++++++++++++++-----
+> > -----
+> >  tools/testing/selftests/resctrl/fill_buf.c      |  33 ++-
+> >  tools/testing/selftests/resctrl/resctrl.h       |   9 +-
+> >  tools/testing/selftests/resctrl/resctrl_tests.c |   2 +-
+> >  tools/testing/selftests/resctrl/resctrlfs.c     |  34 ++-
+> >  6 files changed, 352 insertions(+), 205 deletions(-)
+> > 
+> > diff --git a/tools/testing/selftests/resctrl/cache.c
+> > b/tools/testing/selftests/resctrl/cache.c
+> > index be60d7d3f066..e30cdd7b851c 100644
+> > --- a/tools/testing/selftests/resctrl/cache.c
+> > +++ b/tools/testing/selftests/resctrl/cache.c
+> > @@ -10,9 +10,9 @@ struct read_format {
+> >  	} values[2];
+> >  };
+> >  
+> > -static struct perf_event_attr pea_llc_miss;
+> > +static struct perf_event_attr pea_llc_miss, pea_llc_access;
+> >  static struct read_format rf_cqm;
+> > -static int fd_lm;
+> > +static int fd_lm, fd_la;
+> >  char llc_occup_path[1024];
+> >  
+> >  static void initialize_perf_event_attr(void)
+> > @@ -27,15 +27,30 @@ static void initialize_perf_event_attr(void)
+> >  	pea_llc_miss.inherit = 1;
+> >  	pea_llc_miss.exclude_guest = 1;
+> >  	pea_llc_miss.disabled = 1;
+> > +
+> > +	pea_llc_access.type = PERF_TYPE_HARDWARE;
+> > +	pea_llc_access.size = sizeof(struct perf_event_attr);
+> > +	pea_llc_access.read_format = PERF_FORMAT_GROUP;
+> > +	pea_llc_access.exclude_kernel = 1;
+> > +	pea_llc_access.exclude_hv = 1;
+> > +	pea_llc_access.exclude_idle = 1;
+> > +	pea_llc_access.exclude_callchain_kernel = 1;
+> > +	pea_llc_access.inherit = 1;
+> > +	pea_llc_access.exclude_guest = 1;
+> > +	pea_llc_access.disabled = 1;
+> > +
+> 
+> This initialization appears to duplicate the initialization done above.
+> Perhaps this function could be a wrapper that calls an initialization
+> function with pointer to perf_event_attr that initializes structure the
+> same?
 
-So the assumption may be ok and for some error case we need to wake up 
-someone may wait for me before(the reason for the patch "cifs: call 
-locks_delete_block for all error case in cifs_posix_lock_set"). If I am 
-wrong, please point out!
+I did think about a wrapper but since pea_llc_access and pea_llc_miss are
+global variables, I thought passing them as variables might not look good (why
+do we want to pass a global variable?). I will try and see if I can make these
+local variables.
 
+> >  }
+> >  
+> >  static void ioctl_perf_event_ioc_reset_enable(void)
+> >  {
+> >  	ioctl(fd_lm, PERF_EVENT_IOC_RESET, 0);
+> >  	ioctl(fd_lm, PERF_EVENT_IOC_ENABLE, 0);
+> > +
+> > +	ioctl(fd_la, PERF_EVENT_IOC_RESET, 0);
+> > +	ioctl(fd_la, PERF_EVENT_IOC_ENABLE, 0);
+> >  }
+> 
+> Here is more duplication.
+
+Ok.. will fix it.
+
+> >  
+> > -static int perf_event_open_llc_miss(pid_t pid, int cpu_no)
+> > +static int perf_event_open_llc_miss_rate(pid_t pid, int cpu_no)
+> >  {
+> >  	fd_lm = perf_event_open(&pea_llc_miss, pid, cpu_no, -1,
+> >  				PERF_FLAG_FD_CLOEXEC);
+> > @@ -45,29 +60,40 @@ static int perf_event_open_llc_miss(pid_t pid, int
+> > cpu_no)
+> >  		return -1;
+> >  	}
+> >  
+> > +	fd_la = perf_event_open(&pea_llc_access, pid, cpu_no, fd_lm,
+> > +				PERF_FLAG_FD_CLOEXEC);
+> > +	if (fd_la == -1) {
+> > +		perror("Error opening member");
+> > +		ctrlc_handler(0, NULL, NULL);
+> > +		return -1;
+> 
+> Should fd_lm not be closed on this error path?
+
+That's right. will fix it.
+
+> > +	}
+> > +
+> >  	return 0;
+> >  }
+> >  
+> > -static int initialize_llc_perf(void)
+> > +static void initialize_llc_perf(void)
+> >  {
+> >  	memset(&pea_llc_miss, 0, sizeof(struct perf_event_attr));
+> > +	memset(&pea_llc_access, 0, sizeof(struct perf_event_attr));
+> >  	memset(&rf_cqm, 0, sizeof(struct read_format));
+> >  
+> > -	/* Initialize perf_event_attr structures for HW_CACHE_MISSES */
+> > +	/*
+> > +	 * Initialize perf_event_attr structures for HW_CACHE_MISSES and
+> > +	 * HW_CACHE_REFERENCES
+> > +	 */
+> >  	initialize_perf_event_attr();
+> >  
+> >  	pea_llc_miss.config = PERF_COUNT_HW_CACHE_MISSES;
+> > +	pea_llc_access.config = PERF_COUNT_HW_CACHE_REFERENCES;
+> >  
+> > -	rf_cqm.nr = 1;
+> > -
+> > -	return 0;
+> > +	rf_cqm.nr = 2;
+> >  }
+> >  
+> >  static int reset_enable_llc_perf(pid_t pid, int cpu_no)
+> >  {
+> >  	int ret = 0;
+> >  
+> > -	ret = perf_event_open_llc_miss(pid, cpu_no);
+> > +	ret = perf_event_open_llc_miss_rate(pid, cpu_no);
+> >  	if (ret < 0)
+> >  		return ret;
+> >  
+> > @@ -78,21 +104,21 @@ static int reset_enable_llc_perf(pid_t pid, int
+> > cpu_no)
+> >  }
+> >  
+> >  /*
+> > - * get_llc_perf:	llc cache miss through perf events
+> > - * @cpu_no:		CPU number that the benchmark PID is binded to
+> > + * get_llc_perf_miss_rate:	llc cache miss rate through perf events
+> 
+> Could "llc" be "LLC" to be consistent with below?
+
+Sure! will fix it.
+
+> > + * @cpu_no:			CPU number that the benchmark PID is
+> > binded to
+> >   *
+> > - * Perf events like HW_CACHE_MISSES could be used to validate number of
+> > - * cache lines allocated.
+> > + * Perf events like HW_CACHE_MISSES and HW_CACHE_REFERENCES could be used
+> > to
+> > + * approximate LLc occupancy under controlled environment
+> 
+> s/LLc/LLC/
+
+Sure! my bad.
+
+> >   *
+> >   * Return: =0 on success.  <0 on failure.
+> >   */
+> > -static int get_llc_perf(unsigned long *llc_perf_miss)
+> > +static int get_llc_perf_miss_rate(float *llc_perf_miss_rate)
+> >  {
+> > -	__u64 total_misses;
+> > +	__u64 total_misses, total_references;
+> >  
+> >  	/* Stop counters after one span to get miss rate */
+> > -
+> >  	ioctl(fd_lm, PERF_EVENT_IOC_DISABLE, 0);
+> > +	ioctl(fd_la, PERF_EVENT_IOC_DISABLE, 0);
+> >  
+> >  	if (read(fd_lm, &rf_cqm, sizeof(struct read_format)) == -1) {
+> >  		perror("Could not get llc misses through perf");
+> > @@ -100,11 +126,19 @@ static int get_llc_perf(unsigned long
+> > *llc_perf_miss)
+> >  		return -1;
+> >  	}
+> >  
+> > +	if (read(fd_la, &rf_cqm, sizeof(struct read_format)) == -1) {
+> > +		perror("Could not get llc accesses through perf");
+> > +
+> > +		return -1;
+> 
+> It looks like the cleanup (closing of file descriptors) is omitted on
+> this and the earlier error path.
+
+True! Missed it, my bad! Will fix it.
+
+> > +	}
+> > +
+> >  	total_misses = rf_cqm.values[0].value;
+> > +	total_references = rf_cqm.values[1].value;
+> >  
+> >  	close(fd_lm);
+> > +	close(fd_la);
+> >  
+> > -	*llc_perf_miss = total_misses;
+> > +	*llc_perf_miss_rate = ((float)total_misses / total_references) * 100;
+> >  
+> >  	return 0;
+> >  }
+> > @@ -176,15 +210,16 @@ static int print_results_cache(char *filename, int
+> > bm_pid,
+> >  
+> >  int measure_cache_vals(struct resctrl_val_param *param, int bm_pid)
+> >  {
+> > -	unsigned long llc_perf_miss = 0, llc_occu_resc = 0, llc_value = 0;
+> > +	unsigned long llc_occu_resc = 0, llc_value = 0;
+> > +	float llc_perf_miss_rate = 0;
+> >  	int ret;
+> >  
+> >  	/* Measure cache miss from perf */
+> >  	if (!strcmp(param->resctrl_val, "cat")) {
+> > -		ret = get_llc_perf(&llc_perf_miss);
+> > +		ret = get_llc_perf_miss_rate(&llc_perf_miss_rate);
+> >  		if (ret < 0)
+> >  			return ret;
+> > -		llc_value = llc_perf_miss;
+> > +		llc_value = llc_perf_miss_rate;
+> 
+> What is the benefit of llc_perf_miss_rate being of type float?
+
+Good catch.. not really (as I think of it now). I think, I made it float while
+working on CQM test case with perf.
+
+> >  	}
+> >  
+> >  	/* Measure llc occupancy from resctrl */
+> > @@ -202,66 +237,72 @@ int measure_cache_vals(struct resctrl_val_param
+> > *param, int bm_pid)
+> >  }
+> >  
+> >  /*
+> > - * cache_val:		execute benchmark and measure LLC occupancy
+> > resctrl
+> > - * and perf cache miss for the benchmark
+> > - * @param:		parameters passed to cache_val()
+> > + * setup_critical_process:	Bind given pid to given cpu and write the pid
+> > + *				in requested resctrl FS location, set
+> > schemata,
+> > + *				initialize perf LLC counters and also
+> > initialize
+> > + *				fill buffer benchmark.
+> > + * @pid:			pid of the process
+> > + * @param:			Parameters passed to cache_val()
+> >   *
+> > - * Return:		0 on success. non-zero on failure.
+> > + * Return:			0 on success. non-zero on failure.
+> >   */
+> > -int cat_val(struct resctrl_val_param *param)
+> > +int setup_critical_process(pid_t pid, struct resctrl_val_param *param)
+> >  {
+> > -	int malloc_and_init_memory = 1, memflush = 1, operation = 0, ret = 0;
+> > +	int ret = 0;
+> >  	char *resctrl_val = param->resctrl_val;
+> > -	pid_t bm_pid;
+> > +	char schemata[64];
+> >  
+> > -	if (strcmp(param->filename, "") == 0)
+> > -		sprintf(param->filename, "stdio");
+> > +	/* Taskset parent (critical process) to a specified cpu */
+> > +	ret = taskset_benchmark(pid, param->cpu_no);
+> > +	if (ret)
+> > +		return ret;
+> >  
+> > -	bm_pid = getpid();
+> > +	/* Write parent to specified con_mon grp, mon_grp in resctrl FS */
+> > +	ret = write_bm_pid_to_resctrl(pid, param->ctrlgrp, param->mongrp,
+> > +				      resctrl_val);
+> > +	if (ret)
+> > +		return ret;
+> >  
+> > -	/* Taskset benchmark to specified cpu */
+> > -	ret = taskset_benchmark(bm_pid, param->cpu_no);
+> > +	sprintf(schemata, "%lx", param->mask);
+> > +	ret = write_schemata(param->ctrlgrp, schemata, param->cpu_no, "cat");
+> >  	if (ret)
+> >  		return ret;
+> >  
+> > -	/* Write benchmark to specified con_mon grp, mon_grp in resctrl FS */
+> > -	ret = write_bm_pid_to_resctrl(bm_pid, param->ctrlgrp, param->mongrp,
+> > -				      resctrl_val);
+> > +	initialize_llc_perf();
+> > +
+> > +	ret = init_buffer(param->span, 1, 1);
+> >  	if (ret)
+> >  		return ret;
+> >  
+> > -	if ((strcmp(resctrl_val, "cat") == 0)) {
+> > -		ret = initialize_llc_perf();
+> > -		if (ret)
+> > -			return ret;
+> > -	}
+> > +	return 0;
+> > +}
+> > +
+> > +int run_critical_process(pid_t pid, struct resctrl_val_param *param)
+> > +{
+> > +	int ret = 0;
+> >  
+> > -	/* Test runs until the callback setup() tells the test to stop. */
+> > +	/* Test runs until the callback setup() tells the test to stop */
+> >  	while (1) {
+> > -		if (strcmp(resctrl_val, "cat") == 0) {
+> > -			ret = param->setup(param);
+> > -			if (ret) {
+> > -				ret = 0;
+> > -				break;
+> > -			}
+> > -			ret = reset_enable_llc_perf(bm_pid, param->cpu_no);
+> > -			if (ret)
+> > -				break;
+> > -
+> > -			if (run_fill_buf(param->span, malloc_and_init_memory,
+> > -					 memflush, operation, resctrl_val)) {
+> > -				fprintf(stderr, "Error-running fill
+> > buffer\n");
+> > -				ret = -1;
+> > -				break;
+> > -			}
+> > -
+> > -			sleep(1);
+> > -			ret = measure_cache_vals(param, bm_pid);
+> > -			if (ret)
+> > -				break;
+> > -		} else {
+> > +		ret = param->setup(param);
+> > +		if (ret) {
+> > +			ret = 0;
+> > +			break;
+> > +		}
+> > +
+> > +		ret = reset_enable_llc_perf(pid, param->cpu_no);
+> 
+> This is in a while(1) loop and it seems reset_enable_llc_perf() opens
+> the file descriptors and reset then enable the counters. Would it not be
+> more efficient to open the file descriptors outside of this while() loop
+> and just reset/enable the counters within?
+
+I did try this (i.e. open perf counters before while loop and in the loop just
+reset them before every run) but I wasn't able to get readings from perf
+counters. Hence, I started having open perf counters in the loop. But please
+note that I didn't debug why that was the case and I tried it really long ago
+(when I initially worked on this code, so things might have changed now). I
+will try again and see if it works.
+
+> > +		if (ret)
+> > +			break;
+> > +
+> > +		/* Read buffer once */
+> > +		if (use_buffer_once(0)) {
+> > +			fprintf(stderr, "Error-running fill buffer\n");
+> > +			ret = -1;
+> >  			break;
+> >  		}
+> 
+> If I understand correctly reset_enable_llc_perf() will open the perf
+> file descriptors and start the measurement and measure_cache_vals() will
+> read from the file descriptors to obtain the measurements. It seems that
+> if use_buffer_once() fails that the perf file descriptors need to be closed?
+
+Yes, that's right. Will fix it.
 
 > 
-> If you skip the locks_delete_block() after a wait, you get exactly the
-> same race as the optimization - which only skipped most of
-> locks_delete_block().
+> > +
+> > +		ret = measure_cache_vals(param, pid);
+> > +		if (ret)
+> > +			break;
+> >  	}
+> >  
+> >  	return ret;
+> > diff --git a/tools/testing/selftests/resctrl/cat_test.c
+> > b/tools/testing/selftests/resctrl/cat_test.c
+> > index 046c7f285e72..f7a67f005fe5 100644
+> > --- a/tools/testing/selftests/resctrl/cat_test.c
+> > +++ b/tools/testing/selftests/resctrl/cat_test.c
+> > @@ -11,70 +11,65 @@
+> >  #include "resctrl.h"
+> >  #include <unistd.h>
+> >  
+> > -#define RESULT_FILE_NAME1	"result_cat1"
+> > -#define RESULT_FILE_NAME2	"result_cat2"
+> > -#define NUM_OF_RUNS		5
+> > -#define MAX_DIFF_PERCENT	4
+> > -#define MAX_DIFF		1000000
+> > +#define RESULT_FILE_NAME	"result_cat"
+> > +#define NUM_OF_RUNS		10
+> > +#define MAX_DIFF_PERCENT	5
+> >  
+> > -int count_of_bits;
+> >  char cbm_mask[256];
+> > -unsigned long long_mask;
+> > -unsigned long cache_size;
+> >  
+> > -/*
+> > - * Change schemata. Write schemata to specified
+> > - * con_mon grp, mon_grp in resctrl FS.
+> > - * Run 5 times in order to get average values.
+> > - */
+> > +static unsigned long avg_llc_perf_miss_rate_single_thread;
+> > +static unsigned long p1_mask, p2_mask;
 > 
-> I have a better solution.  I did like your patch except that it changed
-> too much code.  So I revised it to change less code.  See below.
+> If these _have_ to be global variables, could they have more descriptive
+> names?
+
+Sure! Will fix them.
+
+> > +static unsigned long cache_size;
+> > +static pid_t noisy_pid;
+> > +static int count_of_bits;
+> > +
+> > +/* Run 5 times in order to get average values */
 > 
-> NeilBrown
+> Seems like NUM_OF_RUNS above was changed to 10 so the above is no longer
+> accurate. Perhaps just say "Run NUM_OF_RUNS times" ?
+
+Sure!
+
+> >  static int cat_setup(struct resctrl_val_param *p)
+> >  {
+> > -	char schemata[64];
+> > -	int ret = 0;
+> > -
+> >  	/* Run NUM_OF_RUNS times */
+> >  	if (p->num_of_runs >= NUM_OF_RUNS)
+> >  		return -1;
+> >  
+> > -	if (p->num_of_runs == 0) {
+> > -		sprintf(schemata, "%lx", p->mask);
+> > -		ret = write_schemata(p->ctrlgrp, schemata, p->cpu_no,
+> > -				     p->resctrl_val);
+> > -	}
+> >  	p->num_of_runs++;
+> > -
+> > -	return ret;
+> > +	return 0;
+> >  }
 > 
-> From: NeilBrown <neilb@suse.de>
-> Date: Wed, 11 Mar 2020 07:39:04 +1100
-> Subject: [PATCH] locks: restore locks_delete_lock optimization
+> All of this complication does not seem to be necessary. This cat_setup()
+> does not actually do any setup ... it seems to only exist to be able to
+> break out of an infinite loop. Why not just eliminate this function and
+> just run the loop within run_critical_process() NUM_OF_RUNS times?
+
+Makes sense. Will change it.
+
+> >  
+> > -static void show_cache_info(unsigned long sum_llc_perf_miss, int
+> > no_of_bits,
+> > -			    unsigned long span)
+> > +static void show_cache_info(unsigned long sum_llc_perf_miss_rate,
+> > +			    int no_of_bits, unsigned long span)
+> >  {
+> > -	unsigned long allocated_cache_lines = span / 64;
+> > -	unsigned long avg_llc_perf_miss = 0;
+> > -	float diff_percent;
+> > +	unsigned long avg_llc_perf_miss_rate = 0, diff_percent = 0;
+> > +
+> > +	avg_llc_perf_miss_rate = sum_llc_perf_miss_rate / (NUM_OF_RUNS - 1);
+> > +	if (!noisy_pid) {
+> > +		avg_llc_perf_miss_rate_single_thread = avg_llc_perf_miss_rate;
+> > +		return;
+> > +	}
+> >  
+> > -	avg_llc_perf_miss = sum_llc_perf_miss / (NUM_OF_RUNS - 1);
+> > -	diff_percent = ((float)allocated_cache_lines - avg_llc_perf_miss) /
+> > -				allocated_cache_lines * 100;
+> > +	diff_percent = labs(avg_llc_perf_miss_rate -
+> > +		       avg_llc_perf_miss_rate_single_thread);
+> >  
+> > -	printf("%sok CAT: cache miss rate within %d%%\n",
+> > -	       !is_amd && abs((int)diff_percent) > MAX_DIFF_PERCENT ?
+> > +	printf("%sok CAT: cache miss rate difference within %d%%\n",
+> > +	       !is_amd && diff_percent > MAX_DIFF_PERCENT ?
+> >  	       "not " : "", MAX_DIFF_PERCENT);
+> > -	tests_run++;
+> > -	printf("# Percent diff=%d\n", abs((int)diff_percent));
+> >  	printf("# Number of bits: %d\n", no_of_bits);
+> > -	printf("# Avg_llc_perf_miss: %lu\n", avg_llc_perf_miss);
+> > -	printf("# Allocated cache lines: %lu\n", allocated_cache_lines);
+> > +	printf("# Buffer size: %lu\n", span);
+> > +	printf("# Avg_llc_perf_miss_rate without noisy process: %lu%%\n",
+> > +	       avg_llc_perf_miss_rate_single_thread);
+> > +	printf("# Avg_llc_perf_miss_rate with noisy process: %lu%%\n",
+> > +	       avg_llc_perf_miss_rate);
+> > +	printf("# Percent diff: %lu\n", diff_percent);
+> > +	tests_run++;
+> >  }
+> >  
+> >  static int check_results(struct resctrl_val_param *param)
+> >  {
+> >  	char *token_array[8], temp[512];
+> > -	unsigned long sum_llc_perf_miss = 0;
+> > +	unsigned long sum_llc_perf_miss_rate = 0;
+> >  	int runs = 0, no_of_bits = 0;
+> >  	FILE *fp;
+> >  
+> > -	printf("# Checking for pass/fail\n");
+> > +	if (noisy_pid)
+> > +		printf("# Checking for pass/fail\n");
+> >  	fp = fopen(param->filename, "r");
+> >  	if (!fp) {
+> >  		perror("# Cannot open file");
+> > @@ -90,37 +85,107 @@ static int check_results(struct resctrl_val_param
+> > *param)
+> >  			token_array[fields++] = token;
+> >  			token = strtok(NULL, ":\t");
+> >  		}
+> > +
+> >  		/*
+> >  		 * Discard the first value which is inaccurate due to
+> > monitoring
+> >  		 * setup transition phase.
+> >  		 */
+> > -		if (runs > 0)
+> > -			sum_llc_perf_miss += strtoul(token_array[3], NULL, 0);
+> >  		runs++;
+> > +		if (runs == 1)
+> > +			continue;
+> > +
+> > +		sum_llc_perf_miss_rate += strtoul(token_array[3], NULL, 0);
+> >  	}
+> >  
+> >  	fclose(fp);
+> >  	no_of_bits = count_bits(param->mask);
+> > -
+> > -	show_cache_info(sum_llc_perf_miss, no_of_bits, param->span);
+> > +	show_cache_info(sum_llc_perf_miss_rate, no_of_bits, param->span);
+> >  
+> >  	return 0;
+> >  }
+> >  
+> >  void cat_test_cleanup(void)
+> >  {
+> > -	remove(RESULT_FILE_NAME1);
+> > -	remove(RESULT_FILE_NAME2);
+> > +	remove(RESULT_FILE_NAME);
+> > +}
+> > +
+> > +static int prepare_masks_for_two_processes(int no_of_bits, char
+> > *cache_type)
 > 
-> A recent patch (see Fixes: below) removed an optimization which is
-> important as it avoids taking a lock in a common case.
+> It would be valuable to include comments that describe the goal of these
+> masks. Some questions that may be asked when seeing this function ...
+> Why are two masks needed? What are the differences between them? How are
+> they intended to be used?
+
+Ok.. makes sense. Will add comments. Just to keep things clear here (for
+others), the two masks are exclusive masks. The masks are exclusive because no
+other process should cause interference for the critical process.
+
+> > +{
+> > +	int ret, i;
+> > +	unsigned long long_mask, shareable_mask;
+> > +
+> > +	/* Get default cbm mask for L3/L2 cache */
+> > +	ret = get_cbm_mask(cache_type);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	/* Get max number of bits from default cbm mask */
+> > +	long_mask = strtoul(cbm_mask, NULL, 16);
+> > +	count_of_bits = count_bits(long_mask);
+> > +
+> > +	/*
+> > +	 * Max limit is count_of_bits - 1 because we need exclusive masks for
+> > +	 * the two processes. So, the last saved bit will be used by the other
+> > +	 * process.
+> > +	 */
+> > +	if (no_of_bits < 1 || no_of_bits > count_of_bits - 1) {
+> > +		printf("Invalid input value for no_of_bits 'n'\n");
+> > +		printf("Please Enter value in range 1 to %d\n",
+> > +		       count_of_bits - 1);
+> > +		return -1;
+> > +	}
+> > +
+> > +	ret = get_shareable_mask(cache_type, &shareable_mask);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	/* Prepare cbm mask without any shareable bits */
+> > +	for (i = 0; i < no_of_bits; i++) {
+> > +		p1_mask <<= 1;
+> > +		p1_mask |= 1;
+> > +	}
+> > +	p1_mask = ~shareable_mask & p1_mask;
+> > +	p2_mask = ~p1_mask & long_mask;
+> > +
+> > +	return 0;
+> >  }
+> >  
+> > -int cat_perf_miss_val(int cpu_no, int n, char *cache_type)
+> > +static int start_noisy_process(pid_t pid, int sibling_cpu_no)
+> >  {
+> > -	unsigned long l_mask, l_mask_1;
+> > -	int ret, pipefd[2], sibling_cpu_no;
+> > -	char pipe_message;
+> > -	pid_t bm_pid;
+> > +	int ret;
+> > +	unsigned long buf_size = cache_size * 10;
+> >  
+> > -	cache_size = 0;
+> > +	/* Taskset noisy process to specified cpu */
+> > +	ret = taskset_benchmark(pid, sibling_cpu_no);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	/* Write noisy process to root con_mon grp in resctrl FS */
+> > +	ret = write_bm_pid_to_resctrl(pid, "", "", "cat");
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	/*
+> > +	 * Passing 'cat' will not loop around buffer forever, hence don't pass
+> > +	 * test name
+> > +	 */
+> > +	ret = run_fill_buf(buf_size, 1, 1, 0, "");
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +int cat_perf_miss_val(int cpu_no, int no_of_bits, char *cache_type)
+> > +{
+> > +	int ret, sibling_cpu_no;
+> > +	unsigned long buf_size;
+> > +	pid_t critical_pid;
+> > +	char schemata[64];
+> > +
+> > +	noisy_pid = 0;
+> > +	critical_pid = getpid();
+> > +	printf("# critical_pid: %d\n", critical_pid);
+> >  
+> >  	ret = remount_resctrlfs(true);
+> >  	if (ret)
+> > @@ -129,77 +194,43 @@ int cat_perf_miss_val(int cpu_no, int n, char
+> > *cache_type)
+> >  	if (!validate_resctrl_feature_request("cat"))
+> >  		return -1;
+> >  
+> > -	/* Get default cbm mask for L3/L2 cache */
+> > -	ret = get_cbm_mask(cache_type);
+> > +	ret = prepare_masks_for_two_processes(no_of_bits, cache_type);
+> >  	if (ret)
+> >  		return ret;
 > 
-> The comment justifying the optimisation was correct as far as it went,
-> in that if the tests succeeded, then the values would remain stable and
-> the test result will remain valid even without a lock.
+> Global variables p1_mask and p2_mask are initialized from above and only
+> used in this function. Would it not be simpler to just initialize and
+> use them as local variables here?
+
+Makes sense. Will change them.
+
+> >  
+> > -	long_mask = strtoul(cbm_mask, NULL, 16);
+> > +	/*
+> > +	 * Change root con_mon grp schemata to be exclusive of critical
+> > process
+> > +	 * schemata to avoid any interference
+> > +	 */
+> > +	sprintf(schemata, "%lx", p2_mask);
+> > +	ret = write_schemata("", schemata, cpu_no, "cat");
+> > +	if (ret)
+> > +		return ret;
+> >  
+> >  	/* Get L3/L2 cache size */
+> >  	ret = get_cache_size(cpu_no, cache_type, &cache_size);
+> >  	if (ret)
+> >  		return ret;
+> > -	printf("cache size :%lu\n", cache_size);
+> > -
+> > -	/* Get max number of bits from default-cabm mask */
+> > -	count_of_bits = count_bits(long_mask);
+> > -
+> > -	if (n < 1 || n > count_of_bits - 1) {
+> > -		printf("Invalid input value for no_of_bits n!\n");
+> > -		printf("Please Enter value in range 1 to %d\n",
+> > -		       count_of_bits - 1);
+> > -		return -1;
+> > -	}
+> > -
+> > -	/* Get core id from same socket for running another thread */
+> > -	sibling_cpu_no = get_core_sibling(cpu_no);
+> > -	if (sibling_cpu_no < 0)
+> > -		return -1;
+> > +	printf("# cache size: %lu\n", cache_size);
+> >  
+> > +	buf_size = cache_size * ((float)(no_of_bits) / count_of_bits);
 > 
-> However after the test succeeds the lock can be freed while some other
-> thread might have only just set ->blocker to NULL (thus allowing the
-> test to succeed) but has not yet called wake_up() on the wq in the lock.
-> If the wake_up happens after the lock is freed, a use-after-free error
-> occurs.
+> Is all the parentheses and float necessary? The number of bits with
+> which the cache can be partitioned should divide the cache evenly, no?
+> How about:
+> buf_size = cache_size / count_of_bits * no_of_bits
+
+Makes sense. Will fix it.
+
+> >  	struct resctrl_val_param param = {
+> >  		.resctrl_val	= "cat",
+> >  		.cpu_no		= cpu_no,
+> >  		.mum_resctrlfs	= 0,
+> >  		.setup		= cat_setup,
+> > +		.ctrlgrp	= "c1",
+> > +		.filename	= RESULT_FILE_NAME,
+> > +		.mask		= p1_mask,
+> > +		.num_of_runs	= 0,
+> > +		.span		= buf_size
+> >  	};
+> >  
+> > -	l_mask = long_mask >> n;
+> > -	l_mask_1 = ~l_mask & long_mask;
+> > -
+> > -	/* Set param values for parent thread which will be allocated bitmask
+> > -	 * with (max_bits - n) bits
+> > -	 */
+> > -	param.span = cache_size * (count_of_bits - n) / count_of_bits;
+> > -	strcpy(param.ctrlgrp, "c2");
+> > -	strcpy(param.mongrp, "m2");
+> > -	strcpy(param.filename, RESULT_FILE_NAME2);
+> > -	param.mask = l_mask;
+> > -	param.num_of_runs = 0;
+> > -
+> > -	if (pipe(pipefd)) {
+> > -		perror("# Unable to create pipe");
+> > -		return errno;
+> > -	}
+> > -
+> > -	bm_pid = fork();
+> > -
+> > -	/* Set param values for child thread which will be allocated bitmask
+> > -	 * with n bits
+> > -	 */
+> > -	if (bm_pid == 0) {
+> > -		param.mask = l_mask_1;
+> > -		strcpy(param.ctrlgrp, "c1");
+> > -		strcpy(param.mongrp, "m1");
+> > -		param.span = cache_size * n / count_of_bits;
+> > -		strcpy(param.filename, RESULT_FILE_NAME1);
+> > -		param.num_of_runs = 0;
+> > -		param.cpu_no = sibling_cpu_no;
+> > -	}
+> > -
+> > -	remove(param.filename);
+> > +	ret = setup_critical_process(critical_pid, &param);
+> > +	if (ret)
+> > +		return ret;
+> >  
+> > -	ret = cat_val(&param);
+> > +	ret = run_critical_process(critical_pid, &param);
+> >  	if (ret)
+> >  		return ret;
+> >  
+> > @@ -207,38 +238,51 @@ int cat_perf_miss_val(int cpu_no, int n, char
+> > *cache_type)
+> >  	if (ret)
+> >  		return ret;
+> >  
+> > -	if (bm_pid == 0) {
+> > -		/* Tell parent that child is ready */
+> > -		close(pipefd[0]);
+> > -		pipe_message = 1;
+> > -		if (write(pipefd[1], &pipe_message, sizeof(pipe_message)) <
+> > -		    sizeof(pipe_message)) {
+> > -			close(pipefd[1]);
+> > -			perror("# failed signaling parent process");
+> > -			return errno;
+> > -		}
+> > +	printf("# ran critical process without noisy process\n");
+> >  
+> > -		close(pipefd[1]);
+> > -		while (1)
+> > -			;
+> > +	/*
+> > +	 * Results from first run of critical process are already calculated
+> > +	 * and stored in 'avg_llc_perf_miss_single_thread'. Hence, delete the
+> > +	 * file, so that it could be reused for second run.
+> > +	 */
+> > +	cat_test_cleanup();
+> > +
+> > +	/* Get core id from same socket for running noisy process */
+> > +	sibling_cpu_no = get_core_sibling(cpu_no);
+> > +	if (sibling_cpu_no < 0)
+> > +		return -1;
+> > +
+> > +	noisy_pid = fork();
+> > +	if (noisy_pid == 0) {
 > 
-> This patch restores the optimization and reorders code to avoid the
-> use-after-free.  Specifically we move the list_del_init on
-> fl_blocked_member to *after* the wake_up(), and add an extra test on
-> fl_block_member() to locks_delete_lock() before deciding to avoid taking
-> the spinlock.
+> This is confusing. Before the above "noisy_pid == 0" meant that we are
+> dealing with the critical process. Now this changes, "noisy_pid == 0"
+> means that we are dealing with the noisy process ... and below
+> "noisy_pid != 0" means we are dealing with the critical process?
+
+Sorry! for the confusion. It's because I have used the same variable
+"noisy_pid" for two different purposes.
+1. To check if "noisy" process is started or not (i.e. before fork())
+2. To store the pid of "noisy" process (after fork())
+
+I will use different variables so that the code might be clear.
+
+> > +		/*
+> > +		 * Child is the noisy_process which runs in root con_mon grp
+> > by
+> > +		 * default and hence no need to write pid to resctrl FS.
+> > +		 * Schemata for root con_mon grp is also set above.
+> > +		 */
+> > +		printf("# noisy_pid: %d\n", getpid());
+> > +		ret = start_noisy_process(getpid(), sibling_cpu_no);
+> > +		exit(EXIT_SUCCESS);
+> > +	} else if (noisy_pid == -1) {
+> > +		return -1;
+> >  	} else {
+> > -		/* Parent waits for child to be ready. */
+> > -		close(pipefd[1]);
+> > -		pipe_message = 0;
+> > -		while (pipe_message != 1) {
+> > -			if (read(pipefd[0], &pipe_message,
+> > -				 sizeof(pipe_message)) < sizeof(pipe_message))
+> > {
+> > -				perror("# failed reading from child process");
+> > -				break;
+> > -			}
+> > -		}
+> > -		close(pipefd[0]);
+> > -		kill(bm_pid, SIGKILL);
+> > -	}
+> > +		/*
+> > +		 * Parent runs again. Sleep for a second here so that noisy
+> > +		 * process gets to run before critical process
+> > +		 */
+> > +		sleep(1);
+> > +		param.num_of_runs = 0;
+> > +		ret = run_critical_process(critical_pid, &param);
+> > +		if (ret)
+> > +			return ret;
+> >  
+> > -	cat_test_cleanup();
+> > -	if (bm_pid)
+> > -		umount_resctrlfs();
+> > +		ret = check_results(&param);
+> > +		if (ret)
+> > +			return ret;
+> > +
+> > +		ret = kill(noisy_pid, SIGKILL);
+> > +		if (ret)
+> > +			printf("Failed to kill noisy_pid\n");
+> > +	}
+> >  
+> >  	return 0;
+> >  }
+> > diff --git a/tools/testing/selftests/resctrl/fill_buf.c
+> > b/tools/testing/selftests/resctrl/fill_buf.c
+> > index 204ae8870a32..0500dab90b2e 100644
+> > --- a/tools/testing/selftests/resctrl/fill_buf.c
+> > +++ b/tools/testing/selftests/resctrl/fill_buf.c
+> > @@ -139,7 +139,6 @@ static int fill_cache_write(char *resctrl_val)
+> >  	return 0;
+> >  }
+> >  
+> > -static
+> >  int init_buffer(unsigned long long buf_size, int malloc_and_init, int
+> > memflush)
+> >  {
+> >  	unsigned char *start_ptr, *end_ptr;
+> > @@ -177,7 +176,33 @@ int init_buffer(unsigned long long buf_size, int
+> > malloc_and_init, int memflush)
+> >  	return 0;
+> >  }
+> >  
+> > -static int use_buffer_forever(int op, char *resctrl_val)
+> > +int use_buffer_once(int op)
+> > +{
+> > +	FILE *fp;
+> > +	int ret = 0;
+> > +
+> > +	if (op == 0) {
+> > +		ret = fill_one_span_read();
+> > +
+> > +		/* Consume result so that reading memory is not optimized */
+> > +		fp = fopen("/dev/null", "w");
+> > +		if (!fp)
+> > +			perror("Unable to write to /dev/null");
+> > +		fprintf(fp, "Sum: %d ", ret);
+> > +		fclose(fp);
+> > +		ret = 0;
+> > +	} else {
+> > +		fill_one_span_write();
+> > +	}
+> > +
+> > +	if (ret) {
+> > +		printf("\n Error in fill cache read/write...\n");
+> > +		return -1;
+> > +	}
+> > +	return 0;
+> > +}
+> > +
+> > +int use_buffer_forever(int op, char *resctrl_val)
+> >  {
+> >  	int ret;
+> >  
+> > @@ -187,7 +212,7 @@ static int use_buffer_forever(int op, char
+> > *resctrl_val)
+> >  		ret = fill_cache_write(resctrl_val);
+> >  
+> >  	if (ret) {
+> > -		printf("\n Errror in fill cache read/write...\n");
+> > +		printf("\n Error in fill cache read/write...\n");
 > 
-> As this involves breaking code out of __locks_delete_block(), we discard
-> the function completely and open-code it in the two places it was
-> called.
+> Please remove this hunk. Two reasons: (1) only one logical change per
+> patch, (2) a fix for this was already submitted upstream.
+
+Sure! makes sense. I wasn't aware that there is already a fix for this.
+
+> >  		return -1;
+> >  	}
+> >  
+> > @@ -228,7 +253,7 @@ int run_fill_buf(unsigned long span, int
+> > malloc_and_init_memory,
+> >  	ret = fill_cache(cache_size, malloc_and_init_memory, memflush, op,
+> >  			 resctrl_val);
+> >  	if (ret) {
+> > -		printf("\n Errror in fill cache\n");
+> > +		printf("\n Error in fill cache\n");
 > 
-> These lockless accesses do not require any memory barriers.  The failure
-> mode from possible memory access reordering is that the test at the top
-> of locks_delete_lock() will fail, and in that case we fall through into
-> the locked region which provides sufficient memory barriers implicitly.
+> Same comment as above.
+
+Ok
+
+> >  		return -1;
+> >  	}
+> >  
+> > diff --git a/tools/testing/selftests/resctrl/resctrl.h
+> > b/tools/testing/selftests/resctrl/resctrl.h
+> > index e320e79bc4d4..79148cbbd7a4 100644
+> > --- a/tools/testing/selftests/resctrl/resctrl.h
+> > +++ b/tools/testing/selftests/resctrl/resctrl.h
+> > @@ -27,7 +27,7 @@
+> >  #define MB			(1024 * 1024)
+> >  #define RESCTRL_PATH		"/sys/fs/resctrl"
+> >  #define PHYS_ID_PATH		"/sys/devices/system/cpu/cpu"
+> > -#define CBM_MASK_PATH		"/sys/fs/resctrl/info"
+> > +#define INFO_PATH		"/sys/fs/resctrl/info"
+> >  
+> >  #define PARENT_EXIT(err_msg)			\
+> >  	do {					\
+> > @@ -84,6 +84,9 @@ int write_bm_pid_to_resctrl(pid_t bm_pid, char *ctrlgrp,
+> > char *mongrp,
+> >  			    char *resctrl_val);
+> >  int perf_event_open(struct perf_event_attr *hw_event, pid_t pid, int cpu,
+> >  		    int group_fd, unsigned long flags);
+> > +int init_buffer(unsigned long long buf_size, int malloc_and_init, int
+> > memflush);
+> > +int use_buffer_once(int op);
+> > +int use_buffer_forever(int op, char *resctrl_val);
+> >  int run_fill_buf(unsigned long span, int malloc_and_init_memory, int
+> > memflush,
+> >  		 int op, char *resctrl_va);
+> >  int resctrl_val(char **benchmark_cmd, struct resctrl_val_param *param);
+> > @@ -93,9 +96,11 @@ void mbm_test_cleanup(void);
+> >  int mba_schemata_change(int cpu_no, char *bw_report, char
+> > **benchmark_cmd);
+> >  void mba_test_cleanup(void);
+> >  int get_cbm_mask(char *cache_type);
+> > +int get_shareable_mask(char *cache_type, unsigned long *shareable_mask);
+> >  int get_cache_size(int cpu_no, char *cache_type, unsigned long
+> > *cache_size);
+> >  void ctrlc_handler(int signum, siginfo_t *info, void *ptr);
+> > -int cat_val(struct resctrl_val_param *param);
+> > +int setup_critical_process(pid_t pid, struct resctrl_val_param *param);
+> > +int run_critical_process(pid_t pid, struct resctrl_val_param *param);
+> >  void cat_test_cleanup(void);
+> >  int cat_perf_miss_val(int cpu_no, int no_of_bits, char *cache_type);
+> >  int cqm_resctrl_val(int cpu_no, int n, char **benchmark_cmd);
+> > diff --git a/tools/testing/selftests/resctrl/resctrl_tests.c
+> > b/tools/testing/selftests/resctrl/resctrl_tests.c
+> > index 84a436e0775c..60db128312a6 100644
+> > --- a/tools/testing/selftests/resctrl/resctrl_tests.c
+> > +++ b/tools/testing/selftests/resctrl/resctrl_tests.c
+> > @@ -192,8 +192,8 @@ int main(int argc, char **argv)
+> >  		printf("# Starting CAT test ...\n");
+> >  		res = cat_perf_miss_val(cpu_no, no_of_bits, "L3");
+> >  		printf("%sok CAT: test\n", res ? "not " : "");
+> > -		tests_run++;
+> >  		cat_test_cleanup();
+> > +		tests_run++;
+> >  	}
 > 
-> Fixes: 6d390e4b5d48 ("locks: fix a potential use-after-free problem when wakeup a waiter")
-> Signed-off-by: NeilBrown <neilb@suse.de>
-> ---
->   fs/locks.c | 42 ++++++++++++++++++++++++++++--------------
->   1 file changed, 28 insertions(+), 14 deletions(-)
+> What is the benefit of this change?
+
+Just wanted to keep the pattern same for all the test cases i.e. "tests_run"
+increments last.
+
+> If you want to do cleanup like this
+> then it would be great to separate it into a different patch to keep
+> logical changes together and make this patch easier to review.
+
+Ok.. makes sense.
+
+> >  
+> >  	printf("1..%d\n", tests_run);
+> > diff --git a/tools/testing/selftests/resctrl/resctrlfs.c
+> > b/tools/testing/selftests/resctrl/resctrlfs.c
+> > index 465faaad3239..52452bb0178a 100644
+> > --- a/tools/testing/selftests/resctrl/resctrlfs.c
+> > +++ b/tools/testing/selftests/resctrl/resctrlfs.c
+> > @@ -215,7 +215,7 @@ int get_cbm_mask(char *cache_type)
+> >  	char cbm_mask_path[1024];
+> >  	FILE *fp;
+> >  
+> > -	sprintf(cbm_mask_path, "%s/%s/cbm_mask", CBM_MASK_PATH, cache_type);
+> > +	sprintf(cbm_mask_path, "%s/%s/cbm_mask", INFO_PATH, cache_type);
 > 
-> diff --git a/fs/locks.c b/fs/locks.c
-> index 426b55d333d5..dc99ab2262ea 100644
-> --- a/fs/locks.c
-> +++ b/fs/locks.c
-> @@ -716,18 +716,6 @@ static void locks_delete_global_blocked(struct file_lock *waiter)
->   	hash_del(&waiter->fl_link);
->   }
->   
-> -/* Remove waiter from blocker's block list.
-> - * When blocker ends up pointing to itself then the list is empty.
-> - *
-> - * Must be called with blocked_lock_lock held.
-> - */
-> -static void __locks_delete_block(struct file_lock *waiter)
-> -{
-> -	locks_delete_global_blocked(waiter);
-> -	list_del_init(&waiter->fl_blocked_member);
-> -	waiter->fl_blocker = NULL;
-> -}
-> -
->   static void __locks_wake_up_blocks(struct file_lock *blocker)
->   {
->   	while (!list_empty(&blocker->fl_blocked_requests)) {
-> @@ -735,11 +723,13 @@ static void __locks_wake_up_blocks(struct file_lock *blocker)
->   
->   		waiter = list_first_entry(&blocker->fl_blocked_requests,
->   					  struct file_lock, fl_blocked_member);
-> -		__locks_delete_block(waiter);
-> +		locks_delete_global_blocked(waiter);
-> +		waiter->fl_blocker = NULL;
->   		if (waiter->fl_lmops && waiter->fl_lmops->lm_notify)
->   			waiter->fl_lmops->lm_notify(waiter);
->   		else
->   			wake_up(&waiter->fl_wait);
-> +		list_del_init(&waiter->fl_blocked_member);
->   	}
->   }
->   
-> @@ -753,11 +743,35 @@ int locks_delete_block(struct file_lock *waiter)
->   {
->   	int status = -ENOENT;
->   
-> +	/*
-> +	 * If fl_blocker is NULL, it won't be set again as this thread
-> +	 * "owns" the lock and is the only one that might try to claim
-> +	 * the lock.  So it is safe to test fl_blocker locklessly.
-> +	 * Also if fl_blocker is NULL, this waiter is not listed on
-> +	 * fl_blocked_requests for some lock, so no other request can
-> +	 * be added to the list of fl_blocked_requests for this
-> +	 * request.  So if fl_blocker is NULL, it is safe to
-> +	 * locklessly check if fl_blocked_requests is empty.  If both
-> +	 * of these checks succeed, there is no need to take the lock.
-> +	 * We also check fl_blocked_member is empty.  This is logically
-> +	 * redundant with the test of fl_blocker, but it ensure that
-> +	 * __locks_wake_up_blocks() has finished the wakeup and will not
-> +	 * access the lock again, so it is safe to return and free.
-> +	 * There is no need for any memory barriers with these lockless
-> +	 * tests as is the reads happen before the corresponding writes are
-> +	 * seen, we fall through to the locked code.
-> +	 */
-> +	if (waiter->fl_blocker == NULL &&
-> +	    list_empty(&waiter->fl_blocked_member) &&
-> +	    list_empty(&waiter->fl_blocked_requests))
-> +		return status;
->   	spin_lock(&blocked_lock_lock);
->   	if (waiter->fl_blocker)
->   		status = 0;
->   	__locks_wake_up_blocks(waiter);
-> -	__locks_delete_block(waiter);
-> +	locks_delete_global_blocked(waiter);
-> +	list_del_init(&waiter->fl_blocked_member);
-> +	waiter->fl_blocker = NULL;
->   	spin_unlock(&blocked_lock_lock);
->   	return status;
->   }
+> This could also be a separate patch.
+
+Ok.
+
+> >  
+> >  	fp = fopen(cbm_mask_path, "r");
+> >  	if (!fp) {
+> > @@ -235,6 +235,38 @@ int get_cbm_mask(char *cache_type)
+> >  }
+> >  
+> >  /*
+> > + * get_shareable_mask - Get shareable mask from shareable_bits for given
+> > cache
+> > + * @cache_type:		Cache level L2/L3
+> > + * @shareable_mask:	Mask is returned as unsigned long value
+> > + *
+> > + * Return: = 0 on success, < 0 on failure.
+> > + */
+> > +int get_shareable_mask(char *cache_type, unsigned long *shareable_mask)
+> > +{
+> > +	char shareable_bits_file[1024];
+> > +	FILE *fp;
+> > +
+> > +	sprintf(shareable_bits_file, "%s/%s/shareable_bits", INFO_PATH,
+> > +		cache_type);
+> > +
+> > +	fp = fopen(shareable_bits_file, "r");
+> > +	if (!fp) {
+> > +		perror("Failed to open shareable_bits file");
+> > +
+> > +		return -1;
+> > +	}
+> > +	if (fscanf(fp, "%lx", shareable_mask) <= 0) {
+> > +		perror("Could not get shareable bits");
+> > +		fclose(fp);
+> > +
+> > +		return -1;
+> > +	}
+> > +	fclose(fp);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +/*
+> >   * get_core_sibling - Get sibling core id from the same socket for given
+> > CPU
+> >   * @cpu_no:	CPU number
+> >   *
+> > 
 > 
+> Apart from the code comments I do remain interested in how this test
+> performs on different systems under different load to ensure that the
+> hardware prefetcher does not interfere with the results. If you do have
+> assumptions/requirements in this area ("This has to run on an idle
+> system") then it should be added to at least the README.
+
+Sure! I will add the assumption to README and will also get data with/without
+H/W prefetchers.
+
+> As a sidenote when I looked at the README it seems to not take these
+> cache tests into account ... it reads "Currently it supports Memory
+> Bandwidth Monitoring test and Memory Bandwidth Allocation test on Intel
+> RDT hardware. More tests will be added in the future."
+
+Ok. Will update the README file.
+
+Regards,
+Sai
 
