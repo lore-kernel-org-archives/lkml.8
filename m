@@ -2,150 +2,141 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18876C0044D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 23:27:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AA84C2BAEE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 23:27:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1366720755
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 23:27:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 620C420755
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 23:27:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="syfha4jg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pUb+BoV8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731518AbgCKX1O (ORCPT
+        id S1731547AbgCKX1x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 19:27:14 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:46685 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731392AbgCKX1N (ORCPT
+        Wed, 11 Mar 2020 19:27:53 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:32989 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731392AbgCKX1w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 19:27:13 -0400
-Received: by mail-pl1-f195.google.com with SMTP id w12so1819807pll.13
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 16:27:11 -0700 (PDT)
+        Wed, 11 Mar 2020 19:27:52 -0400
+Received: by mail-pg1-f194.google.com with SMTP id m5so2053012pgg.0;
+        Wed, 11 Mar 2020 16:27:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=B+P5HzLaM16ohcAsqpflA7I9ODGTAOGyeegeNgXsSGE=;
-        b=syfha4jgJwh+J6XhF5bW8uBcSARH9kAztF+dhRPJfttxgccsdTy/AIVri3rvRv3Fwa
-         9F2EnXPRiUI9CDsgVUXb1mCcNiXrC6ydkdtm3Nn9enXB0wfjL2QAo4zCRAvIGnOSST81
-         AsloIi0gUQg9GWtBsqUVkjIp3pJMk36kOSMARfDCMmVLmdfBAYLRhngnawfY6OUwohoA
-         XumBRAwyC213wzT/B0iJOWjo/SvqphaglAE5DBtPSTv16o7XSS6t3DrcQfEmf1Mckq6J
-         SF/yas8PBIS5C9CHdC1KnJuDJWGWZeVFgGFPcov0fk5yG5KSBm4XhLvlxEktqCMXZYXA
-         BKSw==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:message-id:in-reply-to:references:subject
+         :mime-version:content-transfer-encoding;
+        bh=5R3NN9uod3puJ0jWV50H8GmRPXUpheE41lirnX7p648=;
+        b=pUb+BoV8jLVjeU16S4PEOg3tBCYrl5lqKfkvCxyc+ZfjKZgAaINNZ8KJ/1oTikFe8s
+         mPDwEAOF5NDA0lxRp36m7kCFnwbrHMHhiYJxbiwcJ5Qljsv/chgvvzxjYblRFDayLY3s
+         0RRjmrXiN+op5rNo9h1txoctx3RBu1uVQM3899eVOktFKtV+MZx4WEVNkCj8TNFZasE+
+         oO7Uya6N8CwDWFMJaL9PzIkXIrQa+9nceOo2fRZ8IrJOdnKvZUtxb/2h8gEW2ynMfFew
+         LdP3kLU3b2xGOILVhG0SzNi4c+/3oBFEp+ovA7zCLYW23q22bP2UgA3HI+tb3g2Gv/Lg
+         Eh5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=B+P5HzLaM16ohcAsqpflA7I9ODGTAOGyeegeNgXsSGE=;
-        b=uJTMiadDFsQMwSKxeBAGkpr1foTf2TM4WS6BWvhX9DWtKvCI2M0bxbzyNA7R1sYMSk
-         so0zB1/U/ymhsE1gV2WIYevoZt25CGLuIZ2XTcVO/imggp3q29aBBdGo56m0jGlCdKKs
-         zhfWTegsksEix/dPj9L26x7L2wbvH0Dgb1iBxAIxvQ0pVLkeW2G/m5De8yWgbVs0xZOA
-         v4UOLqR76SJwh79sMHP2yvf4lptlauysUZW4xYJYEuCvUM7XYlcHBoqDSL6xHg4tfY+7
-         B0Hv1FNDof+zILR7xWNQBiPX6Xa0ss1+RpMpN0FfeKMIbevYE78RjUSfEG5LgELsQTro
-         Q+pg==
-X-Gm-Message-State: ANhLgQ2H/SARGbwNWpACtJ4OFKaK6tKXOfSPowa2buEsLtzwbSv4eqjp
-        D+ARhdpicJ1f2yl4+H7CS6iuNg==
-X-Google-Smtp-Source: ADFU+vvBwEs7gVR5id+E8qDY6/R8/eSfPSWztv+mHnxr2PAnEwGaXhNDzZBYPfZ8d7+aIzGBxoLimw==
-X-Received: by 2002:a17:90a:1a51:: with SMTP id 17mr1108757pjl.118.1583969230836;
-        Wed, 11 Mar 2020 16:27:10 -0700 (PDT)
-Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id y7sm12371229pfq.159.2020.03.11.16.27.09
+        h=x-gm-message-state:date:from:to:cc:message-id:in-reply-to
+         :references:subject:mime-version:content-transfer-encoding;
+        bh=5R3NN9uod3puJ0jWV50H8GmRPXUpheE41lirnX7p648=;
+        b=k06GApmRV5i0kT8YZSSESuezdXZwFRvOW3Xlf7wjghVpfGJqMFgBZhikbR0axHmHq0
+         NgriyldMbjLooZjJKY82ae1u+UWel6hQtGfr3N4vRLtYXwGbx8e7VADeGTaWUNoxlxS6
+         Y9DrwSUsmtjAxyybRz4Mz3RQmmHJuGDyoxA5kKYPhc0oh43fxeI6mdeONqbTLbGBOtXg
+         QBWWpfj2KDB+3a3gyyjsNYPTOo9OHdFPYPpknUi5KeBY86+yOV8os/6zDWBqma8iWw/e
+         SvfUkn8aSs6HXNhpTka1hmxS9qIH9r0fO5ldzL/YYBH9r6qRZEBOPVywtM+B9edSBw2M
+         8ExQ==
+X-Gm-Message-State: ANhLgQ08mWuqKd9xq5SRPs8byTuxGOK5y7FVUifZDnuoPz3ClHqvJ8CK
+        Op8rv679zPGvE8vpOusR2KQ=
+X-Google-Smtp-Source: ADFU+vv6GiZ+6i0Ggxj8wOsDrW2Db/Q/QKiHSDPVYXlxRL+9oE8tICzz8OwXEDaeg2yNeK7CmNyYoA==
+X-Received: by 2002:a62:cdcc:: with SMTP id o195mr3095617pfg.323.1583969271400;
+        Wed, 11 Mar 2020 16:27:51 -0700 (PDT)
+Received: from localhost ([184.63.162.180])
+        by smtp.gmail.com with ESMTPSA id s18sm6479240pjp.24.2020.03.11.16.27.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Mar 2020 16:27:10 -0700 (PDT)
-Date:   Wed, 11 Mar 2020 16:27:07 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Loic Pallardy <loic.pallardy@st.com>
-Cc:     ohad@wizery.com, mathieu.poirier@linaro.org,
-        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        arnaud.pouliquen@st.com, benjamin.gaignard@linaro.org,
-        fabien.dessenne@st.com, s-anna@ti.com
-Subject: Re: [RFC 1/2] remoteproc: sysfs: authorize rproc shutdown when rproc
- is crashed
-Message-ID: <20200311232707.GA1214176@minitux>
-References: <1583924072-20648-1-git-send-email-loic.pallardy@st.com>
- <1583924072-20648-2-git-send-email-loic.pallardy@st.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1583924072-20648-2-git-send-email-loic.pallardy@st.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+        Wed, 11 Mar 2020 16:27:50 -0700 (PDT)
+Date:   Wed, 11 Mar 2020 16:27:41 -0700
+From:   John Fastabend <john.fastabend@gmail.com>
+To:     Lorenz Bauer <lmb@cloudflare.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jakub Sitnicki <jakub@cloudflare.com>,
+        Lorenz Bauer <lmb@cloudflare.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>
+Cc:     kernel-team@cloudflare.com, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Message-ID: <5e6973ed90f8d_20552ab9153405b4ca@john-XPS-13-9370.notmuch>
+In-Reply-To: <20200310174711.7490-5-lmb@cloudflare.com>
+References: <20200310174711.7490-1-lmb@cloudflare.com>
+ <20200310174711.7490-5-lmb@cloudflare.com>
+Subject: RE: [PATCH 4/5] bpf: sockmap, sockhash: return file descriptors from
+ privileged lookup
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 11 Mar 03:54 PDT 2020, Loic Pallardy wrote:
-
-> When remoteproc recovery is disabled and rproc crashed, user space
-> client has no way to reboot co-processor except by a complete platform
-> reboot.
-> Indeed rproc_shutdown() is called by sysfs state_store() only is rproc
-> state is RPROC_RUNNING.
+Lorenz Bauer wrote:
+> Allow callers with CAP_NET_ADMIN to retrieve file descriptors from a
+> sockmap and sockhash. O_CLOEXEC is enforced on all fds.
 > 
-> This patch offers the possibility to shutdown the co-processor if
-> it is in RPROC_CRASHED state and so to restart properly co-processor
-> from sysfs interface.
+> Without this, it's difficult to resize or otherwise rebuild existing
+> sockmap or sockhashes.
 > 
-
-I did recently run into a similar problem when I fed my remoteproc
-faulty firmware, which lead to it recovering immediately upon boot. The
-amount of time spent in !CRASHED state was minimal, so I didn't have any
-way to stop the remoteproc.
-
-> Signed-off-by: Loic Pallardy <loic.pallardy@st.com>
+> Suggested-by: Jakub Sitnicki <jakub@cloudflare.com>
+> Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
 > ---
->  drivers/remoteproc/remoteproc_core.c  | 2 +-
->  drivers/remoteproc/remoteproc_sysfs.c | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
+>  net/core/sock_map.c | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
 > 
-> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-> index 097f33e4f1f3..7ac87a75cd1b 100644
-> --- a/drivers/remoteproc/remoteproc_core.c
-> +++ b/drivers/remoteproc/remoteproc_core.c
-> @@ -1812,7 +1812,7 @@ void rproc_shutdown(struct rproc *rproc)
->  	if (!atomic_dec_and_test(&rproc->power))
->  		goto out;
+> diff --git a/net/core/sock_map.c b/net/core/sock_map.c
+> index 03e04426cd21..3228936aa31e 100644
+> --- a/net/core/sock_map.c
+> +++ b/net/core/sock_map.c
+> @@ -347,12 +347,31 @@ static void *sock_map_lookup(struct bpf_map *map, void *key)
+>  static int __sock_map_copy_value(struct bpf_map *map, struct sock *sk,
+>  				 void *value)
+>  {
+> +	struct file *file;
+> +	int fd;
+> +
+>  	switch (map->value_size) {
+>  	case sizeof(u64):
+>  		sock_gen_cookie(sk);
+>  		*(u64 *)value = atomic64_read(&sk->sk_cookie);
+>  		return 0;
 >  
-> -	ret = rproc_stop(rproc, false);
-> +	ret = rproc_stop(rproc, rproc->state == RPROC_CRASHED);
+> +	case sizeof(u32):
+> +		if (!capable(CAP_NET_ADMIN))
+> +			return -EPERM;
+> +
+> +		fd = get_unused_fd_flags(O_CLOEXEC);
+> +		if (unlikely(fd < 0))
+> +			return fd;
+> +
+> +		read_lock_bh(&sk->sk_callback_lock);
+> +		file = get_file(sk->sk_socket->file);
+> +		read_unlock_bh(&sk->sk_callback_lock);
+> +
+> +		fd_install(fd, file);
+> +		*(u32 *)value = fd;
+> +		return 0;
+> +
 
-Afaict this is unrelated to the problem you're describing in the commit
-message.
+Hi Lorenz, Can you say something about what happens if the sk
+is deleted from the map or the sock is closed/unhashed ideally
+in the commit message so we have it for later reference. I guess
+because we are in an rcu block here the sk will be OK and psock
+reference will exist until after the rcu block at least because
+of call_rcu(). If the psock is destroyed from another path then
+the fd will still point at the sock. correct?
 
->  	if (ret) {
->  		atomic_inc(&rproc->power);
->  		goto out;
-> diff --git a/drivers/remoteproc/remoteproc_sysfs.c b/drivers/remoteproc/remoteproc_sysfs.c
-> index 7f8536b73295..1029458a4678 100644
-> --- a/drivers/remoteproc/remoteproc_sysfs.c
-> +++ b/drivers/remoteproc/remoteproc_sysfs.c
-> @@ -101,7 +101,7 @@ static ssize_t state_store(struct device *dev,
->  		if (ret)
->  			dev_err(&rproc->dev, "Boot failed: %d\n", ret);
->  	} else if (sysfs_streq(buf, "stop")) {
-> -		if (rproc->state != RPROC_RUNNING)
-> +		if (rproc->state != RPROC_RUNNING && rproc->state != RPROC_CRASHED)
-
-Analogous to the problem reported by Alex here
-https://patchwork.kernel.org/patch/11413161/ the handling of stop seems
-racy.
-
-In particular, I believe you're failing to protect against a race
-with a just scheduled rproc_crash_handler_work() being executed after
-the mutex_unlock() in rproc_shutdown()...
-
-With Alex fix that should be less of a problem though...
-
-Regards,
-Bjorn
-
->  			return -EINVAL;
->  
->  		rproc_shutdown(rproc);
-> -- 
-> 2.7.4
-> 
+Thanks.
