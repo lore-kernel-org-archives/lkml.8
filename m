@@ -2,90 +2,150 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74CB1C0044D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 17:04:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7032C2BAEE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 17:04:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C88C0206BE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 17:04:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XSWOdsI7"
+	by mail.kernel.org (Postfix) with ESMTP id 5251F206BE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 17:04:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730280AbgCKREq (ORCPT
+        id S1730335AbgCKREy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 13:04:46 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:45465 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729675AbgCKREp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 13:04:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583946284;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=jykx3cJByb3AWCb0WV64LkUlnx3R9Hi3e1lE7ij8ROg=;
-        b=XSWOdsI7jKXGkxrXUz+LY5oZdm1+A3z30b0kLKFdo823TlBRLLUqTsBd+bcDZIabFwC1Ig
-        5c/VL2s/FGhWhSl/6DWxfhyoo0hCVTjrDIDrz91fufSlkU6RBWhUDSSK4YspLSiPy2i33o
-        Gc50xMUqvnZLKtE9DFesBAw6tIWBQmk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-451-fylXbBEaNUCy-xrSG-2R-A-1; Wed, 11 Mar 2020 13:04:39 -0400
-X-MC-Unique: fylXbBEaNUCy-xrSG-2R-A-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 07B451937FC0;
-        Wed, 11 Mar 2020 17:04:38 +0000 (UTC)
-Received: from elisabeth (ovpn-200-42.brq.redhat.com [10.40.200.42])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7E1755D9C5;
-        Wed, 11 Mar 2020 17:04:34 +0000 (UTC)
-Date:   Wed, 11 Mar 2020 18:04:28 +0100
-From:   Stefano Brivio <sbrivio@redhat.com>
-To:     Shreeya Patel <shreeya.patel23498@gmail.com>
-Cc:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, outreachy-kernel@googlegroups.com,
-        daniel.baluta@gmail.com, nramas@linux.microsoft.com,
-        hverkuil@xs4all.nl, Larry.Finger@lwfinger.net
-Subject: Re: [Outreachy kernel] [PATCH v4] Staging: rtl8188eu: rtw_mlme: Add
- space around operators
-Message-ID: <20200311180428.6489fe9b@elisabeth>
-In-Reply-To: <20200311131742.31068-1-shreeya.patel23498@gmail.com>
-References: <20200311131742.31068-1-shreeya.patel23498@gmail.com>
-Organization: Red Hat
+        Wed, 11 Mar 2020 13:04:54 -0400
+Received: from mga02.intel.com ([134.134.136.20]:44786 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729675AbgCKREy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 13:04:54 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Mar 2020 10:03:11 -0700
+X-IronPort-AV: E=Sophos;i="5.70,541,1574150400"; 
+   d="scan'208";a="277447604"
+Received: from rchatre-mobl.amr.corp.intel.com (HELO [10.251.23.31]) ([10.251.23.31])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 11 Mar 2020 10:03:11 -0700
+Subject: Re: [PATCH V1 10/13] selftests/resctrl: Change Cache Allocation
+ Technology (CAT) test
+To:     Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
+        shuah@kernel.org, linux-kselftest@vger.kernel.org
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        tony.luck@intel.com, babu.moger@amd.com, james.morse@arm.com,
+        ravi.v.shankar@intel.com, fenghua.yu@intel.com, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+References: <cover.1583657204.git.sai.praneeth.prakhya@intel.com>
+ <51d0f3c928fbc310c85bac6de20745f69cbc423e.1583657204.git.sai.praneeth.prakhya@intel.com>
+ <4ac6fd87-1393-f247-40ae-5d6e34403e0f@intel.com>
+ <8645c93547ae6c4e35633dbb09d9355219d9e3b2.camel@intel.com>
+From:   Reinette Chatre <reinette.chatre@intel.com>
+Message-ID: <e22014e5-8ffc-7966-b260-a0665f771ee2@intel.com>
+Date:   Wed, 11 Mar 2020 10:03:08 -0700
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <8645c93547ae6c4e35633dbb09d9355219d9e3b2.camel@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 11 Mar 2020 18:47:42 +0530
-Shreeya Patel <shreeya.patel23498@gmail.com> wrote:
+Hi Sai,
 
-> Add space around operators for improving the code
-> readability.
-> Reported by checkpatch.pl
+On 3/10/2020 6:59 PM, Sai Praneeth Prakhya wrote:
+> On Tue, 2020-03-10 at 15:14 -0700, Reinette Chatre wrote:
+>> Hi Sai,
+>>
+>> Not just specific to this patch but I think the prevalent use of global
+>> variables that are initialized/used or allocated/released from a variety
+>> of places within the code is creating traps. I seemed to have stumbled
+>> on a few during this review so far but it is hard to keep track of and I
+>> am not confident that I caught them all. Having the code be symmetrical
+>> (allocate and free from same area or initialize and use from same area)
+>> does help to avoid such complexity.
 > 
-> git diff -w shows no difference.
-> diff of the .o files before and after the changes shows no difference.
+> Sure! makes sense. I will try to wrap them up in some meaningful structures to
+> pass around functions and will see if everything still works as expected. If
+> not, I will comment why a particular variable needs to be global.
 > 
-> Signed-off-by: Shreeya Patel <shreeya.patel23498@gmail.com>
+>> This patch and the patch that follows are both quite large and difficult
+>> to keep track of all the collected changes. There seems to be
+>> opportunity for separating it into logical changes. Some of my comments
+>> may be just because I could not keep track of all that is changed at the
+>> same time.
+> 
+> Ok.. makes sense. The main reason this patch and the next patch are large 
+> because they do two things
+> 1. Remove previous CAT/CQM test case
+> 2. Add new CAT/CQM test cases
+> 
+> Since the new test cases are not just logical extensions or fixing some bugs
+> in previous test cases, the patch might not be readable. I am thinking to
+> split this at-least like this
+> 1. A patch to remove CAT test case
+> 2. A patch to remove CQM test case
+> 3. Patches that just add CAT and CQM (without other changes)
+> 
+> Please let me know if you think otherwise
 
-This looks good to me. Further clean-ups here could probably make this
-look less messy (there are long lines, unnecessary parentheses that are
-rather confusing, especially on that 4/5 factor, "magic" constants that
-might make sense to figure out the meaning of, etc.).
+I think this patch can be split up into logical changes without breaking
+the tests along the way. In my original review I identified two changes
+that can be split out. Other things that can be split out:
+- have CAT test take shareable bits into account
+- enable measurement of cache references (addition of this new perf
+event attribute, hooks to get measurements, etc.)
+- transition CAT test to use "perf rate" measurement instead of "perf count"
+- etc.
 
-Reviewed-by: Stefano Brivio <sbrivio@redhat.com>
 
--- 
-Stefano
+> 
+>> On 3/6/2020 7:40 PM, Sai Praneeth Prakhya wrote:
+
+[SNIP]
+
+>>> -static struct perf_event_attr pea_llc_miss;
+>>> +static struct perf_event_attr pea_llc_miss, pea_llc_access;
+>>>  static struct read_format rf_cqm;
+>>> -static int fd_lm;
+>>> +static int fd_lm, fd_la;
+>>>  char llc_occup_path[1024];
+>>>  
+>>>  static void initialize_perf_event_attr(void)
+>>> @@ -27,15 +27,30 @@ static void initialize_perf_event_attr(void)
+>>>  	pea_llc_miss.inherit = 1;
+>>>  	pea_llc_miss.exclude_guest = 1;
+>>>  	pea_llc_miss.disabled = 1;
+>>> +
+>>> +	pea_llc_access.type = PERF_TYPE_HARDWARE;
+>>> +	pea_llc_access.size = sizeof(struct perf_event_attr);
+>>> +	pea_llc_access.read_format = PERF_FORMAT_GROUP;
+>>> +	pea_llc_access.exclude_kernel = 1;
+>>> +	pea_llc_access.exclude_hv = 1;
+>>> +	pea_llc_access.exclude_idle = 1;
+>>> +	pea_llc_access.exclude_callchain_kernel = 1;
+>>> +	pea_llc_access.inherit = 1;
+>>> +	pea_llc_access.exclude_guest = 1;
+>>> +	pea_llc_access.disabled = 1;
+>>> +
+>>
+>> This initialization appears to duplicate the initialization done above.
+>> Perhaps this function could be a wrapper that calls an initialization
+>> function with pointer to perf_event_attr that initializes structure the
+>> same?
+> 
+> I did think about a wrapper but since pea_llc_access and pea_llc_miss are
+> global variables, I thought passing them as variables might not look good (why
+> do we want to pass a global variable?). I will try and see if I can make these
+> local variables.
+
+My goal was to avoid the duplicated code to initialize them identically.
+It is not clear to me why you think that would not look good. Perhaps I
+have not thought it through correctly ...
+
+Reinette
+
 
