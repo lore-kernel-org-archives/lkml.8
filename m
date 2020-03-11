@@ -2,114 +2,93 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=ham
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EF7BC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 13:07:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17BE2C18E5A
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 13:08:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65F7322464
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 13:07:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="LV46Wzqo"
+	by mail.kernel.org (Postfix) with ESMTP id DA6C4222C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 13:08:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583932088;
+	bh=r6UkvKocCWXfWoUTp/3k8C7Wtq2slxbJkg8qw1n69t0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XE2F8xXVUu3a1LkATca7xOIkusWJp/YVEps7nYTTkgRQlN5enpZtcMsqf8tKxF4OP
+	 Znvj2h5+CBvEbwNVWrHV3SLR5QqPUijbUYzsP5CLzsquyESbbMbwub2bIUmAMaQtya
+	 dVaLA5cHsYfDDzutThcrKXi80vKe/Wjy7NDB3uTM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729482AbgCKNH6 (ORCPT
+        id S1729539AbgCKNIH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 09:07:58 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:64978 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729331AbgCKNH5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 09:07:57 -0400
-X-UUID: 428ecd7073f44e89a7ac1fcf3f96f3d5-20200311
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=ClGTqPIGoVqVr3jF7yujqXX6Xpj7o2+++464APlQxj8=;
-        b=LV46WzqoLmIqPw8Wv7lHymUdjdvBT1Cdo1c9eAdaXElWx/V/xGaSci8c7/+kVw80LuR0ok4gaXOXA2U18MZyKJ968MVMcJFrIGbjg9jJXctJ5YS7Fs0uWX8k+FmYXas41unGSKcfzTk+LzNeEisLSZaRX6qdRpUhpQOYjZnegyM=;
-X-UUID: 428ecd7073f44e89a7ac1fcf3f96f3d5-20200311
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 888826361; Wed, 11 Mar 2020 21:07:52 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs06n2.mediatek.inc (172.21.101.130) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 11 Mar 2020 21:07:50 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 11 Mar 2020 21:06:53 +0800
-Message-ID: <1583932064.29614.6.camel@mtksdaap41>
-Subject: Re: [PATCH v11 4/5] soc / drm: mediatek: Move routing control to
- mmsys device
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-CC:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <p.zabel@pengutronix.de>, <airlied@linux.ie>,
-        <mturquette@baylibre.com>, <sboyd@kernel.org>,
-        <ulrich.hecht+renesas@gmail.com>,
-        <laurent.pinchart@ideasonboard.com>,
-        "Matthias Brugger" <matthias.bgg@gmail.com>,
-        <linux-media@vger.kernel.org>,
-        "Allison Randal" <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-mediatek@lists.infradead.org>,
-        "Collabora Kernel ML" <kernel@collabora.com>,
-        <dri-devel@lists.freedesktop.org>,
-        "Seiya Wang" <seiya.wang@mediatek.com>,
-        <linux-kernel@vger.kernel.org>, <wens@csie.org>,
-        Daniel Vetter <daniel@ffwll.ch>, <linux-clk@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        <devicetree@vger.kernel.org>,
-        "Matthias Brugger" <mbrugger@suse.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        <frank-w@public-files.de>, <linux-arm-kernel@lists.infradead.org>,
-        <hsinyi@chromium.org>, Richard Fontana <rfontana@redhat.com>,
-        mtk01761 <wendell.lin@mediatek.com>,
-        Weiyi Lu <weiyi.lu@mediatek.com>, <sean.wang@mediatek.com>,
-        <rdunlap@infradead.org>, <matthias.bgg@kernel.org>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        Minghsiu Tsai <minghsiu.tsai@mediatek.com>
-Date:   Wed, 11 Mar 2020 21:07:44 +0800
-In-Reply-To: <20200311115614.1425528-5-enric.balletbo@collabora.com>
-References: <20200311115614.1425528-1-enric.balletbo@collabora.com>
-         <20200311115614.1425528-5-enric.balletbo@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Wed, 11 Mar 2020 09:08:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42756 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729331AbgCKNIG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 09:08:06 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D68A721D7E;
+        Wed, 11 Mar 2020 13:08:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583932086;
+        bh=r6UkvKocCWXfWoUTp/3k8C7Wtq2slxbJkg8qw1n69t0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=aaJPwka78Pd+pZxKdxxVN1+RkH4b2FWIDPHDGe/pukiUjVOOyH85jF6GIXXVN6q3e
+         Xc6fK64M8cHSHAS9rSwpKguKE/moN2ZBFCrh/Cz1UOZhKKJ65nRCPcw8P9vUtyV+2L
+         vPJ9tOoC2opKeg83BIg5cEFkhm4LVhXKUv9bm0UA=
+Date:   Wed, 11 Mar 2020 14:08:04 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     shuah <shuah@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+Subject: Re: [PATCH 4.14 000/126] 4.14.173-stable review
+Message-ID: <20200311130804.GB3833342@kroah.com>
+References: <20200310124203.704193207@linuxfoundation.org>
+ <0074ed5d-1c87-4e0c-7d3f-bb5cc4e80366@kernel.org>
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: D78B7E686CD1B535834D80DC0678BB113F1681C82C2C2E34388BCBCE202CC48B2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0074ed5d-1c87-4e0c-7d3f-bb5cc4e80366@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIEVucmljOg0KDQpPbiBXZWQsIDIwMjAtMDMtMTEgYXQgMTI6NTYgKzAxMDAsIEVucmljIEJh
-bGxldGJvIGkgU2VycmEgd3JvdGU6DQo+IFByb3ZpZGUgYSBtdGtfbW1zeXNfZGRwX2Nvbm5lY3Qo
-KSBhbmQgbXRrX21tc3lzX2Rpc2Nvbm5lY3QoKSBmdW5jdGlvbnMgdG8NCj4gcmVwbGFjZSBtdGtf
-ZGRwX2FkZF9jb21wX3RvX3BhdGgoKSBhbmQgbXRrX2RkcF9yZW1vdmVfY29tcF9mcm9tX3BhdGgo
-KS4NCj4gVGhvc2UgZnVuY3Rpb25zIHdpbGwgYWxsb3cgRFJNIGRyaXZlciBhbmQgb3RoZXJzIHRv
-IGNvbnRyb2wgdGhlIGRhdGENCj4gcGF0aCByb3V0aW5nLg0KPiANCg0KUmV2aWV3ZWQtYnk6IENL
-IEh1IDxjay5odUBtZWRpYXRlay5jb20+DQoNCj4gU2lnbmVkLW9mZi1ieTogRW5yaWMgQmFsbGV0
-Ym8gaSBTZXJyYSA8ZW5yaWMuYmFsbGV0Ym9AY29sbGFib3JhLmNvbT4NCj4gUmV2aWV3ZWQtYnk6
-IE1hdHRoaWFzIEJydWdnZXIgPG1hdHRoaWFzLmJnZ0BnbWFpbC5jb20+DQo+IC0tLQ0KPiANCj4g
-Q2hhbmdlcyBpbiB2MTE6IE5vbmUNCj4gQ2hhbmdlcyBpbiB2MTA6DQo+IC0gU2VsZWN0IENPTkZJ
-R19NVEtfTU1TWVMgKENLKQ0KPiAtIFBhc3MgZGV2aWNlIHBvaW50ZXIgb2YgbW1zeXMgZGV2aWNl
-IGluc3RlYWQgb2YgY29uZmlnIHJlZ3MgKENLKQ0KPiANCj4gQ2hhbmdlcyBpbiB2OToNCj4gLSBJ
-bnRyb2R1Y2VkIGEgbmV3IHBhdGNoIHRvIG1vdmUgcm91dGluZyBjb250cm9sIGludG8gbW1zeXMg
-ZHJpdmVyLg0KPiAtIFJlbW92ZWQgdGhlIHBhdGNoIHRvIHVzZSByZWdtYXAgYXMgaXMgbm90IG5l
-ZWRlZCBhbnltb3JlLg0KPiANCj4gQ2hhbmdlcyBpbiB2ODogTm9uZQ0KPiBDaGFuZ2VzIGluIHY3
-OiBOb25lDQo+IA0KPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL0tjb25maWcgICAgICAgIHwg
-ICAxICsNCj4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2NydGMuYyB8ICAxOSAr
-LQ0KPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwLmMgIHwgMjU2IC0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0NCj4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2Rk
-cC5oICB8ICAgNyAtDQo+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kcnYuYyAg
-fCAgMTQgKy0NCj4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2Rydi5oICB8ICAg
-MiArLQ0KPiAgZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLW1tc3lzLmMgICAgICAgIHwgMjc5ICsr
-KysrKysrKysrKysrKysrKysrKysrKw0KPiAgaW5jbHVkZS9saW51eC9zb2MvbWVkaWF0ZWsvbXRr
-LW1tc3lzLmggIHwgIDIwICsrDQo+ICA4IGZpbGVzIGNoYW5nZWQsIDMxNiBpbnNlcnRpb25zKCsp
-LCAyODIgZGVsZXRpb25zKC0pDQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgaW5jbHVkZS9saW51eC9z
-b2MvbWVkaWF0ZWsvbXRrLW1tc3lzLmgNCj4gDQoNCg==
+On Tue, Mar 10, 2020 at 03:26:54PM -0600, shuah wrote:
+> On 3/10/20 6:40 AM, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 4.14.173 release.
+> > There are 126 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> > 
+> > Responses should be made by Thu, 12 Mar 2020 12:41:42 +0000.
+> > Anything received after that time might be too late.
+> > 
+> > The whole patch series can be found in one patch at:
+> > 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.173-rc1.gz
+> > or in the git tree and branch at:
+> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
+> > and the diffstat can be found below.
+> > 
+> > thanks,
+> > 
+> > greg k-h
+> > 
+> 
+> Compiled and booted on my test system. I have a new alert on my system:
+> 
+> RIP: kvm_mmu_set_mmio_spte_mask+0x34/0x40 [kvm] RSP: ffffb4f7415b7be8
+> 
+> I haven't tracked it yet.
 
+I think I know what this is, let me release a -rc2 with the proposed
+fix.
+
+thanks,
+
+greg k-h
