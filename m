@@ -5,50 +5,189 @@ X-Spam-Level: *
 X-Spam-Status: No, score=1.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	RDNS_NONE,SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
-Received: from mga14.intel.com ([192.55.52.115]:2894 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729956AbgCKQFJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 12:05:09 -0400
-From: "Luck, Tony" <tony.luck@intel.com>
-To: Wei Huang <wei.huang2@amd.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC: "bp@suse.de" <bp@suse.de>,
-        "yazen.ghannam@amd.com" <yazen.ghannam@amd.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "smita.koralahallichannabasappa@amd.com"
-        <smita.koralahallichannabasappa@amd.com>
-Subject: RE: [PATCH 1/1] x86/mce/amd: Add PPIN support for AMD MCE
-Date: Wed, 11 Mar 2020 16:05:07 +0000
-Message-ID: <3908561D78D1C84285E8C5FCA982C28F7F59AA85@ORSMSX115.amr.corp.intel.com>
-References: <20200311044409.2717587-1-wei.huang2@amd.com>
-In-Reply-To: <20200311044409.2717587-1-wei.huang2@amd.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:51192 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729921AbgCKQGB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 12:06:01 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02BG1pBj076682
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 12:06:00 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2yq0hbqer3-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 12:05:58 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ravi.bangoria@linux.ibm.com>;
+        Wed, 11 Mar 2020 16:00:50 -0000
+Subject: Re: [RFC 00/11] perf: Enhancing perf to export processor hazard
+ information
+To: Kim Phillips <kim.phillips@amd.com>
+Cc: Stephane Eranian <eranian@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linuxppc-dev@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        "Liang, Kan" <kan.liang@linux.intel.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        yao.jin@linux.intel.com, Robert Richter <robert.richter@amd.com>,
+        maddy@linux.ibm.com, Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+References: <20200302052355.36365-1-ravi.bangoria@linux.ibm.com>
+ <20200302101332.GS18400@hirez.programming.kicks-ass.net>
+ <CABPqkBSzwpR6p7UZs7g1vWGCJRLsh565mRMGc6m0Enn1SnkC4w@mail.gmail.com>
+ <df966d6e-8898-029f-e697-8496500a1663@amd.com>
+ <2550ec4d-a015-4625-ca24-ff10632dbe2e@linux.ibm.com>
+ <d3c82708-dd09-80e0-4e9f-1cbab118a169@amd.com>
+From: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Date: Wed, 11 Mar 2020 21:30:18 +0530
 MIME-Version: 1.0
+In-Reply-To: <d3c82708-dd09-80e0-4e9f-1cbab118a169@amd.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+Message-Id: <8a4d966c-acc9-b2b7-8ab7-027aefab201c@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 List-ID: <linux-kernel.vger.kernel.org>
 
-+		if ((val & 3UL) == 2UL)
-+			set_cpu_cap(c, X86_FEATURE_PPIN);
+Hi Kim,
 
-You may have copied a bug of mine from upstream. We recently found
-a system where the BIOS enabled PPIN and set the lock bit.
+On 3/6/20 3:36 AM, Kim Phillips wrote:
+>> On 3/3/20 3:55 AM, Kim Phillips wrote:
+>>> On 3/2/20 2:21 PM, Stephane Eranian wrote:
+>>>> On Mon, Mar 2, 2020 at 2:13 AM Peter Zijlstra <peterz@infradead.org> wrote:
+>>>>>
+>>>>> On Mon, Mar 02, 2020 at 10:53:44AM +0530, Ravi Bangoria wrote:
+>>>>>> Modern processors export such hazard data in Performance
+>>>>>> Monitoring Unit (PMU) registers. Ex, 'Sampled Instruction Event
+>>>>>> Register' on IBM PowerPC[1][2] and 'Instruction-Based Sampling' on
+>>>>>> AMD[3] provides similar information.
+>>>>>>
+>>>>>> Implementation detail:
+>>>>>>
+>>>>>> A new sample_type called PERF_SAMPLE_PIPELINE_HAZ is introduced.
+>>>>>> If it's set, kernel converts arch specific hazard information
+>>>>>> into generic format:
+>>>>>>
+>>>>>>     struct perf_pipeline_haz_data {
+>>>>>>            /* Instruction/Opcode type: Load, Store, Branch .... */
+>>>>>>            __u8    itype;
+>>>>>>            /* Instruction Cache source */
+>>>>>>            __u8    icache;
+>>>>>>            /* Instruction suffered hazard in pipeline stage */
+>>>>>>            __u8    hazard_stage;
+>>>>>>            /* Hazard reason */
+>>>>>>            __u8    hazard_reason;
+>>>>>>            /* Instruction suffered stall in pipeline stage */
+>>>>>>            __u8    stall_stage;
+>>>>>>            /* Stall reason */
+>>>>>>            __u8    stall_reason;
+>>>>>>            __u16   pad;
+>>>>>>     };
+>>>>>
+>>>>> Kim, does this format indeed work for AMD IBS?
+>>>
+>>> It's not really 1:1, we don't have these separations of stages
+>>> and reasons, for example: we have missed in L2 cache, for example.
+>>> So IBS output is flatter, with more cycle latency figures than
+>>> IBM's AFAICT.
+>>
+>> AMD IBS captures pipeline latency data incase Fetch sampling like the
+>> Fetch latency, tag to retire latency, completion to retire latency and
+>> so on. Yes, Ops sampling do provide more data on load/store centric
+>> information. But it also captures more detailed data for Branch instructions.
+>> And we also looked at ARM SPE, which also captures more details pipeline
+>> data and latency information.
+>>
+>>>> Personally, I don't like the term hazard. This is too IBM Power
+>>>> specific. We need to find a better term, maybe stall or penalty.
+>>>
+>>> Right, IBS doesn't have a filter to only count stalled or otherwise
+>>> bad events.  IBS' PPR descriptions has one occurrence of the
+>>> word stall, and no penalty.  The way I read IBS is it's just
+>>> reporting more sample data than just the precise IP: things like
+>>> hits, misses, cycle latencies, addresses, types, etc., so words
+>>> like 'extended', or the 'auxiliary' already used today even
+>>> are more appropriate for IBS, although I'm the last person to
+>>> bikeshed.
+>>
+>> We are thinking of using "pipeline" word instead of Hazard.
+> 
+> Hm, the word 'pipeline' occurs 0 times in IBS documentation.
 
-If that is possible on AMD, then you should just check for enabled at this
-point. "if (val & 2UL)"
+NP. We thought pipeline is generic hw term so we proposed "pipeline"
+word. We are open to term which can be generic enough.
 
-See this commit in TIP tree:
+> 
+> I realize there are a couple of core pipeline-specific pieces
+> of information coming out of it, but the vast majority
+> are addresses, latencies of various components in the memory
+> hierarchy, and various component hit/miss bits.
 
-59b5809655bd ("x86/mce: Fix logic and comments around MSR_PPIN_CTL")
+Yes. we should capture core pipeline specific details. For example,
+IBS generates Branch unit information(IbsOpData1) and Icahce related
+data(IbsFetchCtl) which is something that shouldn't be extended as
+part of perf-mem, IMO.
 
-Otherwise looks fine:
+> 
+> What's needed here is a vendor-specific extended
+> sample information that all these technologies gather,
+> of which things like e.g., 'L1 TLB cycle latency' we
+> all should have in common.
 
-Acked-by: Tony Luck <tony.luck@intel.com>
+Yes. We will include fields to capture the latency cycles (like Issue
+latency, Instruction completion latency etc..) along with other pipeline
+details in the proposed structure.
 
--Tony
+> 
+> I'm not sure why a new PERF_SAMPLE_PIPELINE_HAZ is needed
+> either.  Can we use PERF_SAMPLE_AUX instead?
+
+We took a look at PERF_SAMPLE_AUX. IIUC, PERF_SAMPLE_AUX is intended when
+large volume of data needs to be captured as part of perf.data without
+frequent PMIs. But proposed type is to address the capture of pipeline
+information on each sample using PMI at periodic intervals. Hence proposing
+PERF_SAMPLE_PIPELINE_HAZ.
+
+>  Take a look at
+> commit 98dcf14d7f9c "perf tools: Add kernel AUX area sampling
+> definitions".  The sample identifier can be used to determine
+> which vendor's sampling IP's data is in it, and events can
+> be recorded just by copying the content of the SIER, etc.
+> registers, and then events get synthesized from the aux
+> sample at report/inject/annotate etc. time.  This allows
+> for less sample recording overhead, and moves all the vendor
+> specific decoding and common event conversions for userspace
+> to figure out.
+
+When AUX buffer data is structured, tool side changes added to present the
+pipeline data can be re-used.
+
+> 
+>>>> Also worth considering is the support of ARM SPE (Statistical
+>>>> Profiling Extension) which is their version of IBS.
+>>>> Whatever gets added need to cover all three with no limitations.
+>>>
+>>> I thought Intel's various LBR, PEBS, and PT supported providing
+>>> similar sample data in perf already, like with perf mem/c2c?
+>>
+>> perf-mem is more of data centric in my opinion. It is more towards
+>> memory profiling. So proposal here is to expose pipeline related
+>> details like stalls and latencies.
+> 
+> Like I said, I don't see it that way, I see it as "any particular
+> vendor's event's extended details', and these pipeline details
+> have overlap with existing infrastructure within perf, e.g., L2
+> cache misses.
+> 
+> Kim
+> 
 
