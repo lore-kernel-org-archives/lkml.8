@@ -1,155 +1,89 @@
-Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <linux-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
-Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BFDDC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:40:43 +0000 (UTC)
-Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AAA8206E9
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:40:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583952044;
-	bh=eX5YfPx9BOUw1wpNupQktNlo5QE61r8GJsSfY9aO0j8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=uQDERPnvNggGzDZ95zR/rrBUTlK+iFFDrgnaIhkJx+oGzkXwtqv4rTCW/x73OpfQ/
-	 wSSBbciWnOaHnjMwzSVE3FC7s6UtlWyInjRXmSro84Kg2C4xWW3Z4rCYggEb9p6foW
-	 XCwsQJEjXOMzgUqjGdI5xKXVua+pN3riWHjiO/gQ=
-Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730874AbgCKSkm (ORCPT
-        <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 14:40:42 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:39064 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730779AbgCKSkm (ORCPT
+X-Spam-Level: *
+X-Spam-Status: No, score=1.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	RDNS_NONE,SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:25228 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729809AbgCKQeL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 14:40:42 -0400
-Received: by mail-pg1-f193.google.com with SMTP id s2so1665849pgv.6;
-        Wed, 11 Mar 2020 11:40:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=LhEArLNs7yTgrwrh8ppvMZscU8fBidqt0+run5uu778=;
-        b=miziYrnFGj5q/3KNzAQD7A1EW0goAUAKr23NuSrnxySJK/LArBoxN6WRuNqTU+CIa7
-         n1Uv/5X7Km78lOxGKIw8oORIGgmTgVpMKLG5ygVfnQuRODa9dAE0rX6vIimJ7ngm2J09
-         xZkdE0x3HcVYTwmLEu8v+vEm14P+efxPlInqyqdK6GQUg9kDsXaBSIfbct3gTQ2Y+r4f
-         +iNz1cVhFi//L6iIaH1obGmsrwwZJVs3i8zCuNK9fjKsDZQln8JZ4p13Ispq8nCETLtN
-         YwpEfEeY9Ge1i7OT621BgHffm6mR7H9bhFgW/28tchS9o7WKX/vcxdzIEDTicKK+QreJ
-         vrww==
-X-Gm-Message-State: ANhLgQ2lEitGOrNfLKG0oPXURmOGDr1JVN6NkY0qeljkaowXxdWKr7F4
-        DI1VR8HTSxJM34CmWy2NkdM=
-X-Google-Smtp-Source: ADFU+vtKIXTgk7ItAsQoDUPk8VMextzmtkVqChxTjhlpMtIE68/BUmHDJyax3UL59pgxKzo6TkaBmg==
-X-Received: by 2002:aa7:85c8:: with SMTP id z8mr4031003pfn.66.1583952039317;
-        Wed, 11 Mar 2020 11:40:39 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id 136sm50668117pgh.26.2020.03.11.11.40.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Mar 2020 11:40:38 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id B4F364028E; Wed, 11 Mar 2020 18:40:37 +0000 (UTC)
-Date:   Wed, 11 Mar 2020 18:40:37 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     NeilBrown <neilb@suse.com>, Josh Triplett <josh@joshtriplett.org>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        stable@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jeff Vander Stoep <jeffv@google.com>,
-        Jessica Yu <jeyu@kernel.org>, Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH] kmod: make request_module() return an error when
- autoloading is disabled
-Message-ID: <20200311184037.GP11244@42.do-not-panic.com>
-References: <20200310223731.126894-1-ebiggers@kernel.org>
- <20200311043221.GK11244@42.do-not-panic.com>
- <20200311052620.GD46757@gmail.com>
- <20200311063130.GL11244@42.do-not-panic.com>
- <20200311173545.GA20006@gmail.com>
- <20200311180002.GN11244@42.do-not-panic.com>
- <20200311182130.GA41227@sol.localdomain>
+        Wed, 11 Mar 2020 12:34:11 -0400
+Received: by mail-wr1-f72.google.com with SMTP id v6so1173123wrg.22
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 09:34:05 -0700 (PDT)
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: Updating cypress/brcm firmware in linux-firmware for
+ CVE-2019-15126
+To: chi-hsien.lin@cypress.com,
+        Christopher Rumpf <Christopher.Rumpf@cypress.com>,
+        Chung-Hsien Hsu <cnhu@cypress.com>
+Cc: linux-firmware@kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <93dba8d2-6e46-9157-d292-4d93feb8ec1a@redhat.com>
+ <c2f75e84-6c8d-f4f0-bcc6-5fb2b662de33@redhat.com>
+ <3cf961a6-56c8-81fb-3bf9-fc36e2601d2c@cypress.com>
+Message-ID: <0a5933fc-ae5f-07fa-2e36-8924ea5c2b27@redhat.com>
+Date: Wed, 11 Mar 2020 17:34:02 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200311182130.GA41227@sol.localdomain>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <3cf961a6-56c8-81fb-3bf9-fc36e2601d2c@cypress.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
-Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
-X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 11:21:30AM -0700, Eric Biggers wrote:
-> On Wed, Mar 11, 2020 at 06:00:02PM +0000, Luis Chamberlain wrote:
-> > On Wed, Mar 11, 2020 at 10:35:45AM -0700, Eric Biggers wrote:
-> > > On Wed, Mar 11, 2020 at 06:31:30AM +0000, Luis Chamberlain wrote:
-> > > > On Tue, Mar 10, 2020 at 10:26:20PM -0700, Eric Biggers wrote:
-> > > > > On Wed, Mar 11, 2020 at 04:32:21AM +0000, Luis Chamberlain wrote:
-> > > > > > On Tue, Mar 10, 2020 at 03:37:31PM -0700, Eric Biggers wrote:
-> > > > > > > From: Eric Biggers <ebiggers@google.com>
-> > > > > > > 
-> > > > > > > It's long been possible to disable kernel module autoloading completely
-> > > > > > > by setting /proc/sys/kernel/modprobe to the empty string.  This can be
-> > > > > > > preferable
-> > > > > > 
-> > > > > > preferable but ... not documented. Or was this documented or recommended
-> > > > > > somewhere?
-> > > > > > 
-> > > > > > > to setting it to a nonexistent file since it avoids the
-> > > > > > > overhead of an attempted execve(), avoids potential deadlocks, and
-> > > > > > > avoids the call to security_kernel_module_request() and thus on
-> > > > > > > SELinux-based systems eliminates the need to write SELinux rules to
-> > > > > > > dontaudit module_request.
-> > > > > 
-> > > > > Not that I know of, though I didn't look too hard.  proc(5) mentions
-> > > > > /proc/sys/kernel/modprobe but doesn't mention the empty string case.
-> > > > > 
-> > > > > In any case, it's been supported for a long time, and it's useful for the
-> > > > > reasons I mentioned.
-> > > > 
-> > > > Sure. I think then its important to document it as such then, or perhaps
-> > > > make a kconfig option which sets this to empty and document it on the
-> > > > kconfig entry.
-> > > 
-> > > I'll send a man-pages patch to document it in proc(5).
-> > > 
-> > > Most users, including the one I have in mind, should just be able to run
-> > > 'echo > /proc/sys/kernel/modprobe' early in the boot process.  So I don't think
-> > > the need for a kconfig option to control the default value has been clearly
-> > > demonstrated yet.  You're certainly welcome to send a patch for it if you
-> > > believe it would be useful, though.
-> > 
-> > When doing a rewrite of some of this code I did wonder who would use
-> > this and clear it out. A kconfig entry would remove any doubt over its
-> > use and would allow one to skip the userspace / early init requirement
-> > to empty it out, therefore actually being safer because you are not
-> > racing against modules being loaded.
-> > 
-> > Is avoiding the race more suitable for your needs than echo'ing early on boot?
-> > 
+Hi,
+
+On 3/5/20 4:50 AM, Chi-Hsien Lin wrote:
+> (+Chris)
 > 
-> Maybe.  It would avoid the chance of races, but I haven't seen any yet.
-> Also, our userspace has to support old kernels, so we still need the
-> 'echo > /proc/sys/kernel/modprobe' anyway.  If that turns out to be good enough,
-> then it makes things easier for everyone.
+> On 03/04/2020 7:45, Hans de Goede wrote:
+>> Hi,
+>>
+>> On 2/26/20 11:16 PM, Hans de Goede wrote:
+>>> Hello Cypress people,
+>>>
+>>> Can we please get updated firmware for
+>>> brcm/brcmfmac4356-pcie.bin and brcm/brcmfmac4356-sdio.bin
+>>> fixing CVE-2019-15126 as well as for any other affected
+>>> models (the 4356 is explicitly named in the CVE description) ?
+>>>
+>>> The current Cypress firmware files in linux-firmware are
+>>> quite old, e.g. for brcm/brcmfmac4356-pcie.bin linux-firmware has:
+>>> version 7.35.180.176 dated 2017-10-23, way before the CVE
+>>>
+>>> Where as https://community.cypress.com/docs/DOC-19000 /
+>>> cypress-fmac-v4.14.77-2020_0115.zip has:
+>>> version 7.35.180.197 which presumably contains a fix (no changelog)
+>>
+>> Ping?
+>>
+>> The very old age of the firmware files in linux-firmware is really
+>> UNACCEPTABLE and very irresponsible from a security POV. Please
+>> fix this very soon.
+>>
+>> If you do not reply to this email I see no choice but to switch
+>> the firmwares in linux-firmware over to the ones from the SDK which
+>> you do regularly update, e.g. those from:
+>> https://community.cypress.com/docs/DOC-19000
+>>
+>> Yes those are under an older, slightly different version of the Cypress
+>> license, which is less then ideal, but that license is still acceptable
+>> for linux-firmware (*) and since you are not providing any updates to
+>> the special builds you have been doing for linux-firmware you are
+>> really leaving us no option other then switching to the SDK version
+>> of the firmwares.
 > 
-> If setting the default at build time turns out to be needed, then sure in that
-> case I'll send a patch that adds a kconfig option to do that.  But I'm first
-> trying to use the existing kernel functionality.
-> 
-> Also, a kconfig option isn't really a substitute for documenting this existing
-> sysctl.  We still need to document it properly in proc(5) and
-> Documentation/admin-guide/sysctl/kernel.rst.
+> Hans,
 
-Yes, sure. Whatever mechanism you find *suitable* I think you may the
-shiny best new user of it, and so given all that is shared now, I'm sure
-you will document do what is needed. Whatever guidance you can provide
-based on your experience is of huge value to this little corner of the
-kernel.
+<snip>
 
-I just wanted to do away with unclear tribal knowledge and ensure we
-support / test whatever you do well moving forward.
+> Chris owns the Cypress firmware upstream strategy and will explain our going-forward strategy to you.
 
-  Luis
+Ping? It has been a week and we have not heard anything from Chris about this yet?
+
+Regards,
+
+Hans
+
