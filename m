@@ -2,140 +2,272 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B8C9C0044D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 21:20:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B991AC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 21:22:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D7B92074C
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 21:20:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D2E22074C
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 21:22:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HJVymAgn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UMF8S/Ho"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729332AbgCKVUG (ORCPT
+        id S1729443AbgCKVWj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 17:20:06 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:46037 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726579AbgCKVUF (ORCPT
+        Wed, 11 Mar 2020 17:22:39 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:39244 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726579AbgCKVWj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 17:20:05 -0400
-Received: by mail-qt1-f193.google.com with SMTP id a4so2726451qto.12
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 14:20:05 -0700 (PDT)
+        Wed, 11 Mar 2020 17:22:39 -0400
+Received: by mail-wm1-f67.google.com with SMTP id f7so3834931wml.4;
+        Wed, 11 Mar 2020 14:22:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=QrR6IkxbfB/5ffdnPqJAfi5wAANIcwpGNJdV+0yyLdE=;
-        b=HJVymAgnYNpp0H9H2fG1EpM9HBNGIVbg7acU0APh6f5Yk9gueinXfSMRtSNG866FaV
-         bULm8TjLgRbSfMnXDgLibjxcg7Bf8JrxOCtHUETjHSmqxC8fBGVmcw8p+hgjb3f4FzHD
-         FCP+dYFRJlf/fPhnRTn/g1FfSpKIulL8PXWRJs1HeXXdCmRQXz+9fahyiAhIhS7RYC4C
-         tggHxa/VVWVHIk3HbByQJFvKK69nEo12/0HtOR5QX45gho7f+JLc5G3bVc8Glgfa9oz5
-         xiKhK5diZGmN3GoihAAc2pQX872fzB2AbIwg9tzi/WJJe3gaaRmiZ4FCOEi7QPPd9Efw
-         753w==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=zEBGqNmWMkfjp7ivVWJDStnNO+UDHuPLvuDXhLZVQUs=;
+        b=UMF8S/HobM25YsLhi/9YE5JMe1VZlxnGiXBgNrvzJoAxzniYqtDbtNWNn+B1Y+Ztpz
+         MfsSDuCIyK1RDV4vWnFfwz0cQqFdT/fJejeIzSidn7FMlEQyhbOWniV5ZlW5SHjgdllb
+         SzTQYiIONoIqMgwJ0aPHgZJuG9d3z50uWdIPaVPuakXQdpVnRFfM5G8/5jzF9KaQ04bt
+         Y2UYwg1GuYHxisoyyxbcIG9KKxogzm6C66URrEUTVcWxr6krxXadHbYu4Jchh0mwFbWq
+         q4yIE7P9VgIXRX26DAEVTYDUAxhIO/S5OXECQud15b6g0lwntgNUlkjXzlr/0oFOSzIp
+         Mfhw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=QrR6IkxbfB/5ffdnPqJAfi5wAANIcwpGNJdV+0yyLdE=;
-        b=jNegV+3xsTkt0qr9La9MkTrseRaJIG+dtH117f4pMkRXdQ9Z9VeBY0Amgbrh1zKr+H
-         VuAJ/Cq0Se+xqbOvKXu07q8U4BOXcoPdljr4aFTgA7eGhueXCKrVVl9d13G8t+utxwbm
-         FQhIJbYpacm5CSe4agvIP0z0apNseJbjmQerTiuarVLsMS83kv8pVDxwyp1gpK2YVdAk
-         LXwgW42AoK4kpXsGq/sSS1ZFt6wgE4QtlagO6ZPw9Ow/ycSAQ8anKVfmyMYqNy26YXeS
-         tSOiQFIw9RpkBggJ447HvLiUM3LZZ0bqRTJYAIV3GQh7tJz2dQ8H368/ajoSJYXV+V5a
-         QK8g==
-X-Gm-Message-State: ANhLgQ3gXVkHXm/qG7vtXpzNuIy5XzYXP9flgHIMimoG3LuTVjk490jT
-        L1IumJUrseBr9Na3pYlRC6waot+XXgA=
-X-Google-Smtp-Source: ADFU+vvwNWe54LWCG1kbwgZ+neaGkcg/wjvgZkU0yes0SQnMQ1kaDfq0gTo3L3CQqHVoebP7wDS7mA==
-X-Received: by 2002:ac8:c4f:: with SMTP id l15mr4533613qti.177.1583961604617;
-        Wed, 11 Mar 2020 14:20:04 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id x19sm25848523qtm.47.2020.03.11.14.20.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Mar 2020 14:20:04 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Wed, 11 Mar 2020 17:20:02 -0400
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        kbuild test robot <lkp@intel.com>, kbuild-all@lists.01.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH resend] x86/purgatory: Make sure we fail the build if
- purgatory.ro has missing symbols
-Message-ID: <20200311212000.GA4022430@rani.riverdale.lan>
-References: <20200221165941.508653-1-hdegoede@redhat.com>
- <202003010150.eyjF3gp0%lkp@intel.com>
- <b9a34773-ab38-a3c7-3e35-7da95dc625f4@redhat.com>
- <20200311204813.GM3470@zn.tnic>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=zEBGqNmWMkfjp7ivVWJDStnNO+UDHuPLvuDXhLZVQUs=;
+        b=gzh5dDIxELl0XrCIZQIAXZk72h4tvHKOpa+rnaA6HmIOnPRbTRbKu9VFFSNJ1SqbCM
+         ObNQ27pKvqoFVwUOCWCR99EPEimU9Mcc2/Bts1xnGWx5WUyxyXPd1WX1Mmg/BniM021K
+         r/tI1HDvHIgsmfK8foJAepQuv5CjDzyjqbxa/LEeizf+536Dol/bc50onJx1I4XHhW9x
+         hxKGLXzfh7VBh4tnrrhEfdlbIsmgJr4cb4E+wzADHyJsU5JAMOcm9YTlAU4cnuumD0Vh
+         stiW4TACYdITXfHGSPmbGvxnlnAGsoqYGDGO4hf6B7jA3PYEXTMsg/WFcBkssEDpxXEK
+         csHA==
+X-Gm-Message-State: ANhLgQ0Hug7DbhddtICcROwK1Qc8amo9cbG5vNay2ywBzzjBgZwFwqJo
+        saP7J9hfIA4gf98EcpeOl/w+9OYr
+X-Google-Smtp-Source: ADFU+vtTPgkZUZ+xcybs1bUaKk0QR5IVaGjMmnyNIP8AFwmwlOexaMQ/KMxo3oADFhzLkBH4YzKK7g==
+X-Received: by 2002:a7b:cb97:: with SMTP id m23mr648895wmi.140.1583961755916;
+        Wed, 11 Mar 2020 14:22:35 -0700 (PDT)
+Received: from ?IPv6:2003:ea:8f29:6000:cddc:500b:7233:8488? (p200300EA8F296000CDDC500B72338488.dip0.t-ipconnect.de. [2003:ea:8f29:6000:cddc:500b:7233:8488])
+        by smtp.googlemail.com with ESMTPSA id n11sm295851wrt.74.2020.03.11.14.22.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Mar 2020 14:22:35 -0700 (PDT)
+Subject: Re: [PATCH net] net: phy: Avoid multiple suspends
+To:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Florian Fainelli <f.fainelli@gmail.com>
+Cc:     David Miller <davem@davemloft.net>,
+        netdev <netdev@vger.kernel.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Russell King <linux@armlinux.org.uk>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+References: <20200220233454.31514-1-f.fainelli@gmail.com>
+ <20200223.205911.1667092059432885700.davem@davemloft.net>
+ <CAMuHMdWuP1_3vqOpf7KEimLLTKiWpWku9fUAdP3CCR6WbHyQdg@mail.gmail.com>
+ <c2a4edcb-dbf9-bc60-4399-3eaec9a20fe7@gmail.com>
+ <CAMuHMdUMM0Q6W7A0mVgSf7XmF8yROZb3uzHPU1ETbMAfvTtfow@mail.gmail.com>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Message-ID: <ca2abe1a-a9ed-23c9-ceaa-b0042be49be9@gmail.com>
+Date:   Wed, 11 Mar 2020 22:22:27 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
+In-Reply-To: <CAMuHMdUMM0Q6W7A0mVgSf7XmF8yROZb3uzHPU1ETbMAfvTtfow@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200311204813.GM3470@zn.tnic>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 09:49:54PM +0100, Borislav Petkov wrote:
-> On Sat, Feb 29, 2020 at 07:12:57PM +0100, Hans de Goede wrote:
-> > Hi,
-> > 
-> > On 2/29/20 6:16 PM, kbuild test robot wrote:
-> > > Hi Hans,
-> > > 
-> > > I love your patch! Yet something to improve:
-> > > 
-> > > [auto build test ERROR on tip/x86/core]
-> > > [also build test ERROR on v5.6-rc3 next-20200228]
-> > > [cannot apply to tip/auto-latest]
-> > > [if your patch is applied to the wrong git tree, please drop us a note to help
-> > > improve the system. BTW, we also suggest to use '--base' option to specify the
-> > > base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
-> > > 
-> > > url:    https://github.com/0day-ci/linux/commits/Hans-de-Goede/x86-purgatory-Make-sure-we-fail-the-build-if-purgatory-ro-has-missing-symbols/20200223-040035
-> > > base:   https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git 248ed51048c40d36728e70914e38bffd7821da57
-> > > config: x86_64-randconfig-s1-20200229 (attached as .config)
-> > > compiler: gcc-4.9 (Debian 4.9.2-10+deb8u1) 4.9.2
-> > > reproduce:
-> > >          # save the attached .config to linux build tree
-> > >          make ARCH=x86_64
-> > > 
-> > > If you fix the issue, kindly add following tag
-> > > Reported-by: kbuild test robot <lkp@intel.com>
-> > > 
-> > > All errors (new ones prefixed by >>):
-> > > 
-> > >     ld: arch/x86/purgatory/purgatory.ro: in function `kstrtoull':
-> > > > > (.text+0x2b0e): undefined reference to `ftrace_likely_update'
-> > 
-> > AFAICT this is the patch working as intended and pointing out an actual issue
-> > with the purgatory code. Which shows that we really should get this
-> > patch merged...
+On 11.03.2020 10:17, Geert Uytterhoeven wrote:
+> On Tue, Mar 10, 2020 at 5:47 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
+>>
+>> On 3/10/20 7:16 AM, Geert Uytterhoeven wrote:
+>>> Hi Florian, David,
+>>>
+>>> On Mon, Feb 24, 2020 at 5:59 AM David Miller <davem@davemloft.net> wrote:
+>>>> From: Florian Fainelli <f.fainelli@gmail.com>
+>>>> Date: Thu, 20 Feb 2020 15:34:53 -0800
+>>>>
+>>>>> It is currently possible for a PHY device to be suspended as part of a
+>>>>> network device driver's suspend call while it is still being attached to
+>>>>> that net_device, either via phy_suspend() or implicitly via phy_stop().
+>>>>>
+>>>>> Later on, when the MDIO bus controller get suspended, we would attempt
+>>>>> to suspend again the PHY because it is still attached to a network
+>>>>> device.
+>>>>>
+>>>>> This is both a waste of time and creates an opportunity for improper
+>>>>> clock/power management bugs to creep in.
+>>>>>
+>>>>> Fixes: 803dd9c77ac3 ("net: phy: avoid suspending twice a PHY")
+>>>>> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+>>>>
+>>>> Applied, and queued up for -stable, thanks Florian.
+>>>
+>>> This patch causes a regression on r8a73a4/ape6evm and sh73a0/kzm9g.
+>>> After resume from s2ram, Ethernet no longer works:
+>>>
+>>>         PM: suspend exit
+>>>         nfs: server aaa.bbb.ccc.ddd not responding, still trying
+>>>         ...
+>>>
+>>> Reverting commit 503ba7c6961034ff ("net: phy: Avoid multiple suspends")
+>>> fixes the issue.
+>>>
+>>> On both boards, an SMSC LAN9220 is connected to a power-managed local
+>>> bus.
+>>>
+>>> I added some debug code to check when the clock driving the local bus
+>>> is stopped and started, but I see no difference before/after.  Hence I
+>>> suspect the Ethernet chip is no longer reinitialized after resume.
+>>
+>> Can you provide a complete log?
 > 
-> ... and break the build? I don't think so.
+> With some debug info:
 > 
-> I know, it would fail silently now but I don't recall anyone complaining
-> about it. So it was a don't care so far.
+>     SDHI0 Vcc: disabling
+>     PM: suspend entry (deep)
+>     Filesystems sync: 0.002 seconds
+>     Freezing user space processes ... (elapsed 0.001 seconds) done.
+>     OOM killer disabled.
+>     Freezing remaining freezable tasks ... (elapsed 0.001 seconds) done.
+>     PM: ==== a3sp/ee120000.sd: stop
+>     PM: ==== a3sp/ee100000.sd: stop
+>     smsc911x 8000000.ethernet: smsc911x_suspend:2577
+>     smsc911x 8000000.ethernet: smsc911x_suspend:2579 running
+>     smsc911x 8000000.ethernet: smsc911x_suspend:2584
+>     PM: ==== a3sp/ee200000.mmc: stop
+>     PM: ==== c4/fec10000.bus: stop
+>     PM: ==== a3sp/e6c40000.serial: stop
+>     PM: ==== c5/e61f0000.thermal: stop
+>     PM: ==== c4/e61c0200.interrupt-controller: stop
+>     PM: == a3sp: power off
+>     rmobile_pd_power_down: a3sp
+>     Disabling non-boot CPUs ...
+>     PM: ==== c4/e61c0200.interrupt-controller: start
+>     PM: ==== c5/e61f0000.thermal: start
+>     PM: ==== a3sp/e6c40000.serial: start
+>     PM: ==== c4/fec10000.bus: start
+>     PM: ==== a3sp/ee200000.mmc: start
+>     smsc911x 8000000.ethernet: smsc911x_resume:2606
+>     smsc911x 8000000.ethernet: smsc911x_resume:2625 running
+>     PM: ==== a3sp/ee100000.sd: start
+>     OOM killer enabled.
+>     Restarting tasks ... done.
+>     PM: ==== a3sp/ee120000.sd: start
+>     PM: suspend exit
+>     nfs: server aaa.bbb.ccc.ddd not responding, still trying
+>     ...
 > 
-> IOW, first this ftrace_likely_update thing needs to be sorted out and
-> then this merged.
+> But no difference between the good and the bad case, except for the nfs
+> failures.
 > 
-> Thx.
+>> Do you use the Generic PHY driver or a
+>> specialized one?
 > 
-> -- 
-> Regards/Gruss,
->     Boris.
+> CONFIG_FIXED_PHY=y
+> CONFIG_SMSC_PHY=y
 > 
-> https://people.kernel.org/tglx/notes-about-netiquette
+> Just the smsc,lan9115 node, cfr. arch/arm/boot/dts/r8a73a4-ape6evm.dts
+> 
+>> Do you have a way to dump the registers at the time of
+>> failure and see if BMCR.PDOWN is still set somehow?
+> 
+> Added a hook into "nfs: server not responding", which prints:
+> 
+>     MII_BMCR = 0x1900
+> 
+> i.e. BMCR_PDOWN = 0x0800 is still set.
+> 
+>> Does the following help:
+>>
+>> diff --git a/drivers/net/ethernet/smsc/smsc911x.c
+>> b/drivers/net/ethernet/smsc/smsc911x.c
+>> index 49a6a9167af4..df17190c76c0 100644
+>> --- a/drivers/net/ethernet/smsc/smsc911x.c
+>> +++ b/drivers/net/ethernet/smsc/smsc911x.c
+>> @@ -2618,6 +2618,7 @@ static int smsc911x_resume(struct device *dev)
+>>         if (netif_running(ndev)) {
+>>                 netif_device_attach(ndev);
+>>                 netif_start_queue(ndev);
+>> +               phy_resume(dev->phydev);
+>>         }
+>>
+> 
+> Yes i does, after s/dev->/ndev->/.
+> Thanks!
+> 
 
-Hans, I think adding -DDISABLE_BRANCH_PROFILING to PURGATORY_CFLAGS
-might fix this.
+This seems to be a workaround. And the same issue we may have with
+other drivers too. Could you please alternatively test the following?
+It tackles the issue that mdio_bus_phy_may_suspend() is used in
+suspend AND resume, and both calls may return different values.
 
-Thanks.
+With this patch we call mdio_bus_phy_may_suspend() only when
+suspending, and let the phy_device store whether it was suspended
+by MDIO bus PM.
+
+diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+index 32a5ceddc..6d6c6a178 100644
+--- a/drivers/net/phy/phy_device.c
++++ b/drivers/net/phy/phy_device.c
+@@ -286,6 +286,8 @@ static int mdio_bus_phy_suspend(struct device *dev)
+ 	if (!mdio_bus_phy_may_suspend(phydev))
+ 		return 0;
+ 
++	phydev->suspended_by_mdio_bus = 1;
++
+ 	return phy_suspend(phydev);
+ }
+ 
+@@ -294,9 +296,11 @@ static int mdio_bus_phy_resume(struct device *dev)
+ 	struct phy_device *phydev = to_phy_device(dev);
+ 	int ret;
+ 
+-	if (!mdio_bus_phy_may_suspend(phydev))
++	if (!phydev->suspended_by_mdio_bus)
+ 		goto no_resume;
+ 
++	phydev->suspended_by_mdio_bus = 0;
++
+ 	ret = phy_resume(phydev);
+ 	if (ret < 0)
+ 		return ret;
+diff --git a/include/linux/phy.h b/include/linux/phy.h
+index 8b299476b..118de9f5b 100644
+--- a/include/linux/phy.h
++++ b/include/linux/phy.h
+@@ -357,6 +357,7 @@ struct macsec_ops;
+  * is_gigabit_capable: Set to true if PHY supports 1000Mbps
+  * has_fixups: Set to true if this phy has fixups/quirks.
+  * suspended: Set to true if this phy has been suspended successfully.
++ * suspended_by_mdio_bus: Set to true if this phy was suspended by MDIO bus.
+  * sysfs_links: Internal boolean tracking sysfs symbolic links setup/removal.
+  * loopback_enabled: Set true if this phy has been loopbacked successfully.
+  * state: state of the PHY for management purposes
+@@ -396,6 +397,7 @@ struct phy_device {
+ 	unsigned is_gigabit_capable:1;
+ 	unsigned has_fixups:1;
+ 	unsigned suspended:1;
++	unsigned suspended_by_mdio_bus:1;
+ 	unsigned sysfs_links:1;
+ 	unsigned loopback_enabled:1;
+ 
+-- 
+2.25.1
+
+
+
+
+
+
