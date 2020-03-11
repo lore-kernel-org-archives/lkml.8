@@ -2,141 +2,130 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AA84C2BAEE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 23:27:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ECE1C2BAEE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 23:32:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 620C420755
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 23:27:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pUb+BoV8"
+	by mail.kernel.org (Postfix) with ESMTP id 1553C2074D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 23:32:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583969521;
+	bh=pqH2gD8vz1tcgbvk8nKS/2i0+P0FgUGY6BHcL+Tkx3A=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=YL5woNwKgR7VvLnMlJHAZ49gDmZhKIoOIjWeg8WFfpTl2//2FLRgo/Wez+wDJp9fz
+	 bl5AFRwF3O56qc1WL/ifiSZwsF/RaYTicpIpuFJ6mLQxfH0c5dxWUaoNzyfpA10C8/
+	 tTcLpzoxhjgP8nJ5z1hzVuIq1z+BP7h3Nx0XrKs0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731547AbgCKX1x (ORCPT
+        id S1731520AbgCKXb7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 19:27:53 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:32989 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731392AbgCKX1w (ORCPT
+        Wed, 11 Mar 2020 19:31:59 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:44652 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731364AbgCKXb7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 19:27:52 -0400
-Received: by mail-pg1-f194.google.com with SMTP id m5so2053012pgg.0;
-        Wed, 11 Mar 2020 16:27:51 -0700 (PDT)
+        Wed, 11 Mar 2020 19:31:59 -0400
+Received: by mail-il1-f196.google.com with SMTP id j69so3734486ila.11
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 16:31:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:message-id:in-reply-to:references:subject
-         :mime-version:content-transfer-encoding;
-        bh=5R3NN9uod3puJ0jWV50H8GmRPXUpheE41lirnX7p648=;
-        b=pUb+BoV8jLVjeU16S4PEOg3tBCYrl5lqKfkvCxyc+ZfjKZgAaINNZ8KJ/1oTikFe8s
-         mPDwEAOF5NDA0lxRp36m7kCFnwbrHMHhiYJxbiwcJ5Qljsv/chgvvzxjYblRFDayLY3s
-         0RRjmrXiN+op5rNo9h1txoctx3RBu1uVQM3899eVOktFKtV+MZx4WEVNkCj8TNFZasE+
-         oO7Uya6N8CwDWFMJaL9PzIkXIrQa+9nceOo2fRZ8IrJOdnKvZUtxb/2h8gEW2ynMfFew
-         LdP3kLU3b2xGOILVhG0SzNi4c+/3oBFEp+ovA7zCLYW23q22bP2UgA3HI+tb3g2Gv/Lg
-         Eh5Q==
+        d=linuxfoundation.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=tWMg+vrny6yAnLZ7P1+Uq3GSafHzz2ZiJHHvFx+tZ+Q=;
+        b=VrP/U/elKH+pog6YRt0R7QB8ZGkgty6E35ojdAtd5sL2GKz1jEg4osj8N6DyDrDTDA
+         yhzO33zMD9xi3xkYRBLOyYTpGe9X9BroyoGSgiwHdiFEDKOdbAGPv5xeJBo83VP4fpjP
+         Bh+gNtxZNR1ji390quo6DWINdj8nVunK0fGGg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:message-id:in-reply-to
-         :references:subject:mime-version:content-transfer-encoding;
-        bh=5R3NN9uod3puJ0jWV50H8GmRPXUpheE41lirnX7p648=;
-        b=k06GApmRV5i0kT8YZSSESuezdXZwFRvOW3Xlf7wjghVpfGJqMFgBZhikbR0axHmHq0
-         NgriyldMbjLooZjJKY82ae1u+UWel6hQtGfr3N4vRLtYXwGbx8e7VADeGTaWUNoxlxS6
-         Y9DrwSUsmtjAxyybRz4Mz3RQmmHJuGDyoxA5kKYPhc0oh43fxeI6mdeONqbTLbGBOtXg
-         QBWWpfj2KDB+3a3gyyjsNYPTOo9OHdFPYPpknUi5KeBY86+yOV8os/6zDWBqma8iWw/e
-         SvfUkn8aSs6HXNhpTka1hmxS9qIH9r0fO5ldzL/YYBH9r6qRZEBOPVywtM+B9edSBw2M
-         8ExQ==
-X-Gm-Message-State: ANhLgQ08mWuqKd9xq5SRPs8byTuxGOK5y7FVUifZDnuoPz3ClHqvJ8CK
-        Op8rv679zPGvE8vpOusR2KQ=
-X-Google-Smtp-Source: ADFU+vv6GiZ+6i0Ggxj8wOsDrW2Db/Q/QKiHSDPVYXlxRL+9oE8tICzz8OwXEDaeg2yNeK7CmNyYoA==
-X-Received: by 2002:a62:cdcc:: with SMTP id o195mr3095617pfg.323.1583969271400;
-        Wed, 11 Mar 2020 16:27:51 -0700 (PDT)
-Received: from localhost ([184.63.162.180])
-        by smtp.gmail.com with ESMTPSA id s18sm6479240pjp.24.2020.03.11.16.27.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Mar 2020 16:27:50 -0700 (PDT)
-Date:   Wed, 11 Mar 2020 16:27:41 -0700
-From:   John Fastabend <john.fastabend@gmail.com>
-To:     Lorenz Bauer <lmb@cloudflare.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jakub Sitnicki <jakub@cloudflare.com>,
-        Lorenz Bauer <lmb@cloudflare.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>
-Cc:     kernel-team@cloudflare.com, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-Message-ID: <5e6973ed90f8d_20552ab9153405b4ca@john-XPS-13-9370.notmuch>
-In-Reply-To: <20200310174711.7490-5-lmb@cloudflare.com>
-References: <20200310174711.7490-1-lmb@cloudflare.com>
- <20200310174711.7490-5-lmb@cloudflare.com>
-Subject: RE: [PATCH 4/5] bpf: sockmap, sockhash: return file descriptors from
- privileged lookup
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=tWMg+vrny6yAnLZ7P1+Uq3GSafHzz2ZiJHHvFx+tZ+Q=;
+        b=kpOUkhKpqzD0g85IQqev9v7sXfolgTqf8YrKai1fz1FnsfKUFayUsX7EPXbbPA/sSY
+         yWT89uxGlKqyi0dl+NO9TIWwOkZxjGROtVb9s/EvI9np5uQyiWY+q+mGGPO0L9Ev1g06
+         0jJbm7qlViDpbBmQV1ZwcwzBBMCSFd1aYmrOPKw/hY3NtSrst8zRIqHSVjrQAs/fJ55U
+         olmBF0N4ZHbaZNcNrcKQkrHvSknZz8fbT3VNRVdlxv7GXrkrcogBqZ9wxB9bQaMEw6uL
+         KKjiEXu5FucupYL59jFJ0X1SVJDy2K8c4VreNl8VS84cNJ2aWpQuwlAocRIWb+u2IXCn
+         2Iag==
+X-Gm-Message-State: ANhLgQ3MdQ99AmrBL/6Tqj/3ePnZpbGGWMorVkl3z7jlprsVIrXFE5W4
+        yBHUH9OEPA+w9aGRnc5ZbhoI1Q==
+X-Google-Smtp-Source: ADFU+vtFXxSt5AFuuZzVRZiUmKdtjk4VJ4VPJuuo7GpY1CyX4omGF7b4hkWMjEmRoqTiTD61+FeMeA==
+X-Received: by 2002:a92:88d0:: with SMTP id m77mr5234082ilh.282.1583969518243;
+        Wed, 11 Mar 2020 16:31:58 -0700 (PDT)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id b5sm2334097iln.64.2020.03.11.16.31.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Mar 2020 16:31:57 -0700 (PDT)
+Subject: Re: [PATCH 1/4] selftests: Fix kselftest O=objdir build from
+ cluttering top level objdir
+To:     Kevin Hilman <khilman@baylibre.com>, shuah@kernel.org
+Cc:     mpe@ellerman.id.au, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Shuah Khan <skhan@linuxfoundation.org>
+References: <cover.1583358715.git.skhan@linuxfoundation.org>
+ <58d954867391c90fe0792d87e09a82bda26ba4fc.1583358715.git.skhan@linuxfoundation.org>
+ <7hwo7qijn0.fsf@baylibre.com>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <ceb910b1-2ab7-b27f-7e53-c445d96cdeb1@linuxfoundation.org>
+Date:   Wed, 11 Mar 2020 17:31:56 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <7hwo7qijn0.fsf@baylibre.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Lorenz Bauer wrote:
-> Allow callers with CAP_NET_ADMIN to retrieve file descriptors from a
-> sockmap and sockhash. O_CLOEXEC is enforced on all fds.
+On 3/11/20 4:58 PM, Kevin Hilman wrote:
+> Shuah Khan <skhan@linuxfoundation.org> writes:
 > 
-> Without this, it's difficult to resize or otherwise rebuild existing
-> sockmap or sockhashes.
+>> make kselftest-all O=objdir builds create generated objects in objdir.
+>> This clutters the top level directory with kselftest objects. Fix it
+>> to create sub-directory under objdir for kselftest objects.
+>>
+>> Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
 > 
-> Suggested-by: Jakub Sitnicki <jakub@cloudflare.com>
-> Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
-> ---
->  net/core/sock_map.c | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
+> Only somewhat related to this patch, another problem that wasn't in your
+> doci is that the current O= support doesn't support relative paths.
 > 
-> diff --git a/net/core/sock_map.c b/net/core/sock_map.c
-> index 03e04426cd21..3228936aa31e 100644
-> --- a/net/core/sock_map.c
-> +++ b/net/core/sock_map.c
-> @@ -347,12 +347,31 @@ static void *sock_map_lookup(struct bpf_map *map, void *key)
->  static int __sock_map_copy_value(struct bpf_map *map, struct sock *sk,
->  				 void *value)
->  {
-> +	struct file *file;
-> +	int fd;
-> +
->  	switch (map->value_size) {
->  	case sizeof(u64):
->  		sock_gen_cookie(sk);
->  		*(u64 *)value = atomic64_read(&sk->sk_cookie);
->  		return 0;
->  
-> +	case sizeof(u32):
-> +		if (!capable(CAP_NET_ADMIN))
-> +			return -EPERM;
-> +
-> +		fd = get_unused_fd_flags(O_CLOEXEC);
-> +		if (unlikely(fd < 0))
-> +			return fd;
-> +
-> +		read_lock_bh(&sk->sk_callback_lock);
-> +		file = get_file(sk->sk_socket->file);
-> +		read_unlock_bh(&sk->sk_callback_lock);
-> +
-> +		fd_install(fd, file);
-> +		*(u32 *)value = fd;
-> +		return 0;
-> +
 
-Hi Lorenz, Can you say something about what happens if the sk
-is deleted from the map or the sock is closed/unhashed ideally
-in the commit message so we have it for later reference. I guess
-because we are in an rcu block here the sk will be OK and psock
-reference will exist until after the rcu block at least because
-of call_rcu(). If the psock is destroyed from another path then
-the fd will still point at the sock. correct?
+Yes I am aware of it and it is in the document as something that will
+be addressed later.
 
-Thanks.
+"Note: Relative paths don’t work - supporting relative paths breaks 
+work-flows e.g:
+powerpc. Explore fix. Compile work-flows. Not planning to support at the 
+moment."
+
+> For example, using O=/tmp/build-arm64 works, but O=build-arm64 doesn't.
+> Try this:
+> 
+> $ make ARCH=arm64 HOSTCC=gcc CROSS_COMPILE=aarch64-linux-gnu- O=build-arm64 defconfig
+> $ make ARCH=arm64 HOSTCC=gcc CROSS_COMPILE=aarch64-linux-gnu- O=build-arm64 kselftest-all
+> make[1]: Entering directory '/work/kernel/linux/build-arm64'
+> make --no-builtin-rules INSTALL_HDR_PATH=$BUILD/usr \
+> 	ARCH=arm64 -C ../../.. headers_install
+> make[4]: ../scripts/Makefile.build: No such file or directory
+> make[4]: *** No rule to make target '../scripts/Makefile.build'.  Stop.
+> Makefile:500: recipe for target 'scripts_basic' failed
+> make[3]: *** [scripts_basic] Error 2
+> Makefile:151: recipe for target 'khdr' failed
+> make[2]: *** [khdr] Error 2
+> /work/kernel/linux/Makefile:1220: recipe for target 'kselftest-all' failed
+> make[1]: *** [kselftest-all] Error 2
+> make[1]: Leaving directory '/work/kernel/linux/build-arm64'
+> Makefile:179: recipe for target 'sub-make' failed
+> make: *** [sub-make] Error 2
+> 
+
+I am looking to address build and install issues first.
+
+thanks,
+-- Shuah
