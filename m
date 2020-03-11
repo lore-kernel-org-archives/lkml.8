@@ -2,141 +2,123 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A6A3C10F27
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 11:49:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 035BBC10F27
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 11:50:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 136A921655
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 11:49:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC10522464
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 11:50:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583927435;
+	bh=0QZIZ6z4r//h99dqhvoPJr28cgoyW+Awh/esZL/Xdlo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=RgRI/Cjshcmc9V/syxUq4Sl05pX//aeXJIzP0JuADf12CmEBBshvercOccSY84hR/
+	 2IUtTvk56CwZYeuXM28HQ8VrAfdprisgVdE3ZuzJIK7GPrqlk4aGbQL33TxDNveKz9
+	 agjERkec1WbTv3JtNRZe3rNIQGkzRmckv+eLMeJo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729212AbgCKLtm (ORCPT
+        id S1729230AbgCKLue (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 07:49:42 -0400
-Received: from retiisi.org.uk ([95.216.213.190]:40214 "EHLO
-        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729165AbgCKLtl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 07:49:41 -0400
-Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Wed, 11 Mar 2020 07:50:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50018 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729016AbgCKLue (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 07:50:34 -0400
+Received: from onda.lan (unknown [217.110.198.118])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 0450A634C87;
-        Wed, 11 Mar 2020 13:48:48 +0200 (EET)
-Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
-        (envelope-from <sakari.ailus@retiisi.org.uk>)
-        id 1jBzqy-0001Rt-6p; Wed, 11 Mar 2020 13:48:48 +0200
-Date:   Wed, 11 Mar 2020 13:48:48 +0200
-From:   Sakari Ailus <sakari.ailus@iki.fi>
-To:     Robert Foss <robert.foss@linaro.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        ben.kao@intel.com, mchehab@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, matthias.bgg@gmail.com, davem@davemloft.net,
-        gregkh@linuxfoundation.org, Jonathan.Cameron@huawei.com,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        Dongchun Zhu <dongchun.zhu@mediatek.com>,
-        Tomasz Figa <tfiga@chromium.org>
-Subject: Re: [v1 2/3] media: ov8856: Add devicetree support
-Message-ID: <20200311114848.GJ2619@valkosipuli.retiisi.org.uk>
-References: <20200310134603.30260-1-robert.foss@linaro.org>
- <20200310134603.30260-3-robert.foss@linaro.org>
- <20200310142652.GK1922688@smile.fi.intel.com>
- <CAG3jFyu5S1H=r6pV92tc_a2LoCUnhb0mDbOegP2BCO8a5C1nVg@mail.gmail.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id B861E2146E;
+        Wed, 11 Mar 2020 11:50:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583927433;
+        bh=0QZIZ6z4r//h99dqhvoPJr28cgoyW+Awh/esZL/Xdlo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=faex73CAVSzJi+pmyTcYP9sIGrW4npHmO5kYhOVghj7YOD5ZWLX5JuwjxXzv3SBCk
+         Ald909m2mEjZrEr9OlPEm+Tqu5uPZfiIAEAfIMB2fzEbOs/ZP+IqEgiuAfTiLBGkjP
+         9DPC/Ywctl/wD8GhzwH4zNmtJvhX+wglDSXW5aLc=
+Date:   Wed, 11 Mar 2020 12:50:24 +0100
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Adaptec OEM Raid Solutions <aacraid@microsemi.com>,
+        Kai =?UTF-8?B?TcOka2lzYXJh?= <Kai.Makisara@kolumbus.fi>,
+        linux-scsi@vger.kernel.org,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        YOKOTA Hiroshi <yokota@netlab.is.tsukuba.ac.jp>,
+        megaraidlinux.pdl@broadcom.com,
+        Sumit Saxena <sumit.saxena@broadcom.com>,
+        esc.storagedev@microsemi.com, Doug Gilbert <dgilbert@interlog.com>,
+        HighPoint Linux Team <linux@highpoint-tech.com>,
+        Michael Schmitz <schmitzmic@gmail.com>,
+        Hannes Reinecke <hare@suse.com>, dc395x@twibble.org,
+        Oliver Neukum <oliver@neukum.org>,
+        Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
+        "Juergen E. Fischer" <fischer@norbit.de>,
+        Khalid Aziz <khalid@gonehiking.org>,
+        Kashyap Desai <kashyap.desai@broadcom.com>,
+        Jamie Lenehan <lenehan@twibble.org>,
+        Ali Akcaagac <aliakc@web.de>,
+        Don Brace <don.brace@microsemi.com>,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Finn Thain <fthain@telegraphics.com.au>,
+        Avri Altman <avri.altman@wdc.com>,
+        GOTO Masanori <gotom@debian.or.jp>
+Subject: Re: [PATCH 00/42] Manually convert SCSI documentation to ReST
+ format
+Message-ID: <20200311125024.6acd2567@onda.lan>
+In-Reply-To: <yq14kuvu6cc.fsf@oracle.com>
+References: <cover.1583136624.git.mchehab+huawei@kernel.org>
+        <yq14kuvu6cc.fsf@oracle.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAG3jFyu5S1H=r6pV92tc_a2LoCUnhb0mDbOegP2BCO8a5C1nVg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Robert,
+Hi Martin,
 
-On Tue, Mar 10, 2020 at 04:55:20PM +0100, Robert Foss wrote:
-> Hi Andy,
-> 
-> On Tue, 10 Mar 2020 at 15:26, Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> >
-> > On Tue, Mar 10, 2020 at 02:46:02PM +0100, Robert Foss wrote:
-> > > Add devicetree match table, and enable ov8856_probe()
-> > > to initialize power, clocks and reset pins.
-> >
-> > ...
-> >
-> > > +#define OV8856_NUM_SUPPLIES ARRAY_SIZE(ov8856_supply_names)
-> >
-> > Use ARRAY_SIZE() directly.
-> 
-> Ack.
-> 
-> >
-> > Have you seen Sakari's comments?
-> > Sakari, do I have déją vu or you indeed commented this driver?
-> 
-> Yes, I may have missed some part of it, so please tell me if I have.
-> 
-> There is a patchset floating around that implements a larger chunk of
-> functionality,
-> including a couple of new modes. This is based on that series.
-
-Please see earlier comments given against an earlier variant of this set.
-They're on LMML.
+Em Tue, 10 Mar 2020 19:40:19 -0400
+"Martin K. Petersen" <martin.petersen@oracle.com> escreveu:
 
 > 
-> >
-> > ...
-> >
-> > > +     gpiod_set_value_cansleep(ov8856->n_shutdn_gpio, GPIOD_OUT_LOW);
-> >
-> > > +     gpiod_set_value_cansleep(ov8856->n_shutdn_gpio, GPIOD_OUT_HIGH);
-> >
-> > Yes, seems this one is inverted.
-> >
-> > ...
-> >
-> > > +{
-> > > +     gpiod_set_value_cansleep(ov8856->n_shutdn_gpio, GPIOD_OUT_LOW);
-> > > +     regulator_bulk_disable(OV8856_NUM_SUPPLIES, ov8856->supplies);
-> > > +     clk_disable_unprepare(ov8856->xvclk);
-> > > +}
-> > > +
-> > > +
-> >
-> > One blank line is enough.
-> >
-> > ...
-> >
-> > > +     ov8856->xvclk = devm_clk_get(&client->dev, "xvclk");
-> > > +     if (IS_ERR(ov8856->xvclk)) {
-> > > +             dev_err(&client->dev, "failed to get xvclk\n");
-> > > +             return -EINVAL;
-> > > +     }
-> >
-> > Previously it worked without clock provider, now you make a dependency.
-> >
-> > This won't work.
+> Mauro,
 > 
-> So the ideal behavior would be to only use the xclk if it is provided?
+> > This patch series manually convert all SCSI documentation files to
+> > ReST.
+> >
+> > This is part of a bigger series that finaly finishes the migration to
+> > ReST.  After that, we can focus on more interesting tasks from the
+> > documentation PoV, like cleaning obsolete stuff and filling the gaps.
+> 
+> Applied to 5.7/scsi-queue.
+> 
+> For some reason patch 23 didn't show up in the mbox so I had a bunch of
+> conflicts due to the ncr53c8xx entry missing from index.rst. I thought
+> you had somehow lost that patch along the way and decided to proceed
+> regardless. However, it turns out the patch was missing due to a lore
+> issue. By the time I figured out what the problem was, I had made it to
+> the end of the series. And as a result, in my tree the ncr53c8xx patch
+> comes last.
 
-See e.g. the smiapp driver on how to do this so it continues to work on
-ACPI.
+No problem. Yeah, sometimes some of those patches are big, and
+vger ends by silently dropping the big guys.
 
-I think it'd be also appropriate to add the usleep() after lifting reset
-only if the reset GPIO is defined for the device.
+Btw, maybe due to the conflict you had, I double-checked that two
+files ended by being deleted instead of converted (looking at
+today's linux-next).
 
-Also do consider dropping some people from the distribution. For many this
-is just noise.
+So, I'm sending a followup patch re-adding them after the conversion.
 
--- 
-Kind regards,
+Feel free to either apply it as a separate patch at the end or to
+fold with the previously applied patches. Whatever works best for you.
 
-Sakari Ailus
+Regards,
+Mauro
