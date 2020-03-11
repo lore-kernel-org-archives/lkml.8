@@ -2,154 +2,56 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26A51C10F27
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 14:18:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84DD2C10F27
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 14:18:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3005222D9
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 14:18:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PdYhcmI7"
+	by mail.kernel.org (Postfix) with ESMTP id 61F17222C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 14:18:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729816AbgCKOSZ (ORCPT
+        id S1729825AbgCKOSw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 10:18:25 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:40664 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729798AbgCKOSZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 10:18:25 -0400
-Received: by mail-wr1-f66.google.com with SMTP id p2so2839497wrw.7;
-        Wed, 11 Mar 2020 07:18:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=UlqHsGcMH2wgZ4HNYQSAfQVihbtUyreW0G2xFxwpzcs=;
-        b=PdYhcmI7s3rv/HMRFF/5hUVPIoLN4hdtpSANHt1mmnYHd7bvwLK/oGC56J9RethYth
-         +H9fjEMKeBDyP/sBCAjJGnkXzzwhlfGin+8iMaNGcxpbvbV96pZBQ/UBopbr7B8cFg8S
-         SxYq5gUPBKhAJN4jVfyflW8sGzRweWAD/9keqVDhqxMMFgL9Y7gblvTCpa+iZ6JrITEk
-         H+HlG2w8NvqamdHQMk0ZRPotGvpBILQmL3bJzWVVCH3OErZjB9v7FgdeReAzV5OhB5w1
-         1tFvQ+9MhnRGDXTkpuiIoE7rS6bxZrBxBw5RLfp9G3hvhDa8QMIhm2Reb52dR9/wC1BX
-         LpJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=UlqHsGcMH2wgZ4HNYQSAfQVihbtUyreW0G2xFxwpzcs=;
-        b=pxjY5zXlk6GvWBjrC5Mm/bPXpkiEj0g4QFAFXbhqm0Ys9J201hy5GkU5HHIOJdEkoU
-         MIMvs99H03pPE81hUGQyfquhDaskscmXlQhdd1bNqikxYgcuNzTgujNuHAQfYsI46swa
-         tREyZVPx7/iLhLwYKTOxyMl5rxujJwqBRFyUKgcN8qRfOpGV3xE6BCUHw1tAnVfiHkEI
-         V1MilP/U/AjKJdmRM0pvv8LlsIbitJjw0nIKCHQCLzWTKLGhfvkEJ/Dmdx/m8XwgaIDT
-         fZKiIWNop+J2hwhZxqH0HA8cQS4weoIe4VZZqYH6XluK7QMII2SgbT0dHlOdYAJyaeOr
-         3igg==
-X-Gm-Message-State: ANhLgQ1yhBGmUS6muyTLggI6B9OihSAm7YDh6yuWwBRWP+rhUWEdNMZ7
-        Bpu0jgJhb+jypyZIuFT5BgRxu4GR
-X-Google-Smtp-Source: ADFU+vsw6V6UgCNg8FHXcehLCdyjM4B1DerfYBOPeu8xfu5rzRUy1y7z6jr/QaB3Qyd9/Wiihx1TAA==
-X-Received: by 2002:a05:6000:100d:: with SMTP id a13mr4580847wrx.234.1583936301649;
-        Wed, 11 Mar 2020 07:18:21 -0700 (PDT)
-Received: from localhost ([185.92.221.13])
-        by smtp.gmail.com with ESMTPSA id q4sm26328172wro.56.2020.03.11.07.18.20
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 11 Mar 2020 07:18:21 -0700 (PDT)
-Date:   Wed, 11 Mar 2020 14:18:20 +0000
-From:   Wei Yang <richard.weiyang@gmail.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Baoquan He <bhe@redhat.com>,
-        Wei Yang <richard.weiyang@gmail.com>
-Subject: Re: [PATCH v1 2/5] drivers/base/memory: map MMOP_OFFLINE to 0
-Message-ID: <20200311141820.zgmwiz3rdj5co6kf@master>
-Reply-To: Wei Yang <richard.weiyang@gmail.com>
-References: <20200311123026.16071-1-david@redhat.com>
- <20200311123026.16071-3-david@redhat.com>
+        Wed, 11 Mar 2020 10:18:52 -0400
+Received: from foss.arm.com ([217.140.110.172]:50274 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729656AbgCKOSw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 10:18:52 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6EBC931B;
+        Wed, 11 Mar 2020 07:18:51 -0700 (PDT)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.71])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A4A993F67D;
+        Wed, 11 Mar 2020 07:18:50 -0700 (PDT)
+Date:   Wed, 11 Mar 2020 14:18:48 +0000
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Qian Cai <cai@lca.pw>
+Cc:     akpm@linux-foundation.org, elver@google.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next 1/2] mm: disable KCSAN for kmemleak
+Message-ID: <20200311141848.GG3216816@arrakis.emea.arm.com>
+References: <1583263716-25150-1-git-send-email-cai@lca.pw>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200311123026.16071-3-david@redhat.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <1583263716-25150-1-git-send-email-cai@lca.pw>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 01:30:23PM +0100, David Hildenbrand wrote:
->I have no idea why we have to start at -1. Just treat 0 as the special
->case. Clarify a comment (which was wrong, when we come via
->device_online() the first time, the online_type would have been 0 /
->MEM_ONLINE). The default is now always MMOP_OFFLINE.
->
->This is a preparation to use the online_type as an array index.
->
->Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->Cc: Andrew Morton <akpm@linux-foundation.org>
->Cc: Michal Hocko <mhocko@kernel.org>
->Cc: Oscar Salvador <osalvador@suse.de>
->Cc: "Rafael J. Wysocki" <rafael@kernel.org>
->Cc: Baoquan He <bhe@redhat.com>
->Cc: Wei Yang <richard.weiyang@gmail.com>
->Signed-off-by: David Hildenbrand <david@redhat.com>
-
-Reviewed-by: Wei Yang <richard.weiyang@gmail.com>
-
->---
-> drivers/base/memory.c          | 11 ++++-------
-> include/linux/memory_hotplug.h |  2 +-
-> 2 files changed, 5 insertions(+), 8 deletions(-)
->
->diff --git a/drivers/base/memory.c b/drivers/base/memory.c
->index 8c5ce42c0fc3..e7e77cafef80 100644
->--- a/drivers/base/memory.c
->+++ b/drivers/base/memory.c
->@@ -211,17 +211,14 @@ static int memory_subsys_online(struct device *dev)
-> 		return 0;
+On Tue, Mar 03, 2020 at 02:28:35PM -0500, Qian Cai wrote:
+> Kmemleak could scan task stacks while plain writes happens to those
+> stack variables which could results in data races. For example, in
+> sys_rt_sigaction and do_sigaction(), it could have plain writes in
+> a 32-byte size. Since the kmemleak does not care about the actual values
+> of a non-pointer and all do_sigaction() call sites only copy to stack
+> variables, just disable KCSAN for kmemleak to avoid annotating anything
+> outside Kmemleak just because Kmemleak scans everything.
 > 
-> 	/*
->-	 * If we are called from state_store(), online_type will be
->-	 * set >= 0 Otherwise we were called from the device online
->-	 * attribute and need to set the online_type.
->+	 * When called via device_online() without configuring the online_type,
->+	 * we want to default to MMOP_ONLINE.
-> 	 */
->-	if (mem->online_type < 0)
->+	if (mem->online_type == MMOP_OFFLINE)
-> 		mem->online_type = MMOP_ONLINE;
-> 
-> 	ret = memory_block_change_state(mem, MEM_ONLINE, MEM_OFFLINE);
->-
->-	/* clear online_type */
->-	mem->online_type = -1;
->+	mem->online_type = MMOP_OFFLINE;
-> 
-> 	return ret;
-> }
->diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
->index 261dbf010d5d..c2e06ed5e0e9 100644
->--- a/include/linux/memory_hotplug.h
->+++ b/include/linux/memory_hotplug.h
->@@ -48,7 +48,7 @@ enum {
-> /* Types for control the zone type of onlined and offlined memory */
-> enum {
-> 	/* Offline the memory. */
->-	MMOP_OFFLINE = -1,
->+	MMOP_OFFLINE = 0,
-> 	/* Online the memory. Zone depends, see default_zone_for_pfn(). */
-> 	MMOP_ONLINE,
-> 	/* Online the memory to ZONE_NORMAL. */
->-- 
->2.24.1
+> Suggested-by: Marco Elver <elver@google.com>
+> Signed-off-by: Qian Cai <cai@lca.pw>
 
--- 
-Wei Yang
-Help you, Help me
+Acked-by: Catalin Marinas <catalin.marinas@arm.com>
