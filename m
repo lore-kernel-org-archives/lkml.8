@@ -2,120 +2,132 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D993C0044D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 17:35:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 325C1C0044D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 17:35:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8850E20754
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 17:35:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB38F20738
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 17:35:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583948150;
+	bh=MbY9qlpF44j0kKHATaQuiVivILUnP2tRY5dGbQNpF8Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ITMWB4Jisp6o8FL4+9Vp908RoT9k2HfgRO29j2BFygCbp/kTVyONI/renzhki+ucN
+	 9Rc2/3jtulXT4Zjisg/mlZWjORH7kZ7IXyHzJ1HSJvowyoz9kmmOyDqorxE8S+flvd
+	 QIfPun4aTFJ8l18CSlSHJ1qbuSQ2W051nilyeTKU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730619AbgCKRfX (ORCPT
+        id S1730622AbgCKRft (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 13:35:23 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:32856 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730366AbgCKRfX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 13:35:23 -0400
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        Wed, 11 Mar 2020 13:35:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51338 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730193AbgCKRfs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 13:35:48 -0400
+Received: from gmail.com (unknown [104.132.1.77])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 79F2C293DC6;
-        Wed, 11 Mar 2020 17:35:21 +0000 (GMT)
-Date:   Wed, 11 Mar 2020 18:35:17 +0100
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     "Shivamurthy Shastri (sshivamurthy)" <sshivamurthy@micron.com>
-Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Frieder Schrempf <frieder.schrempf@kontron.de>,
-        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "shiva.linuxworks@gmail.com" <shiva.linuxworks@gmail.com>
-Subject: Re: [EXT] Re: [PATCH v6 0/6] Add new series Micron SPI NAND devices
-Message-ID: <20200311183517.054cc300@collabora.com>
-In-Reply-To: <MN2PR08MB6397BAEC050EF2C1A9CE8CDAB8FC0@MN2PR08MB6397.namprd08.prod.outlook.com>
-References: <20200309115230.7207-1-sshivamurthy@micron.com>
-        <20200311164932.23cc7a42@xps13>
-        <MN2PR08MB6397BAEC050EF2C1A9CE8CDAB8FC0@MN2PR08MB6397.namprd08.prod.outlook.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        by mail.kernel.org (Postfix) with ESMTPSA id 029502072F;
+        Wed, 11 Mar 2020 17:35:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583948148;
+        bh=MbY9qlpF44j0kKHATaQuiVivILUnP2tRY5dGbQNpF8Y=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=UrO01ddduZpwSwXvJ5QPi/FiMHExJaka5FpC/zwV5XUY60Xqbeuq5DZhoReMG3MX/
+         d25tmidlV6uf+FABBOF1lv9HKRiCzLkfluuP5bazXTJinooIfduxQS+AIpb4FZv8nL
+         KEG/+1Tg85KZzKi2T7+IMkPQEL8jT5lebPhpqTOY=
+Date:   Wed, 11 Mar 2020 10:35:45 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     NeilBrown <neilb@suse.com>, Josh Triplett <josh@joshtriplett.org>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        stable@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jeff Vander Stoep <jeffv@google.com>,
+        Jessica Yu <jeyu@kernel.org>, Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH] kmod: make request_module() return an error when
+ autoloading is disabled
+Message-ID: <20200311173545.GA20006@gmail.com>
+References: <20200310223731.126894-1-ebiggers@kernel.org>
+ <20200311043221.GK11244@42.do-not-panic.com>
+ <20200311052620.GD46757@gmail.com>
+ <20200311063130.GL11244@42.do-not-panic.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200311063130.GL11244@42.do-not-panic.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 11 Mar 2020 17:33:41 +0000
-"Shivamurthy Shastri (sshivamurthy)" <sshivamurthy@micron.com> wrote:
+On Wed, Mar 11, 2020 at 06:31:30AM +0000, Luis Chamberlain wrote:
+> On Tue, Mar 10, 2020 at 10:26:20PM -0700, Eric Biggers wrote:
+> > On Wed, Mar 11, 2020 at 04:32:21AM +0000, Luis Chamberlain wrote:
+> > > On Tue, Mar 10, 2020 at 03:37:31PM -0700, Eric Biggers wrote:
+> > > > From: Eric Biggers <ebiggers@google.com>
+> > > > 
+> > > > It's long been possible to disable kernel module autoloading completely
+> > > > by setting /proc/sys/kernel/modprobe to the empty string.  This can be
+> > > > preferable
+> > > 
+> > > preferable but ... not documented. Or was this documented or recommended
+> > > somewhere?
+> > > 
+> > > > to setting it to a nonexistent file since it avoids the
+> > > > overhead of an attempted execve(), avoids potential deadlocks, and
+> > > > avoids the call to security_kernel_module_request() and thus on
+> > > > SELinux-based systems eliminates the need to write SELinux rules to
+> > > > dontaudit module_request.
+> > 
+> > Not that I know of, though I didn't look too hard.  proc(5) mentions
+> > /proc/sys/kernel/modprobe but doesn't mention the empty string case.
+> > 
+> > In any case, it's been supported for a long time, and it's useful for the
+> > reasons I mentioned.
+> 
+> Sure. I think then its important to document it as such then, or perhaps
+> make a kconfig option which sets this to empty and document it on the
+> kconfig entry.
 
-> Hi Miquel,
-> 
-> > 
-> > Hi Shiva,
-> > 
-> > shiva.linuxworks@gmail.com wrote on Mon,  9 Mar 2020 12:52:24 +0100:
-> >   
-> > > From: Shivamurthy Shastri <sshivamurthy@micron.com>
-> > >
-> > > This patchset is for the new series of Micron SPI NAND devices, and the
-> > > following links are their datasheets.
-> > >
-> > > M78A:
-> > > [1] https://www.micron.com/~/media/documents/products/data-  
-> > sheet/nand-flash/70-series/m78a_1gb_3v_nand_spi.pdf  
-> > > [2] https://www.micron.com/~/media/documents/products/data-  
-> > sheet/nand-flash/70-series/m78a_1gb_1_8v_nand_spi.pdf  
-> > >
-> > > M79A:
-> > > [3] https://www.micron.com/~/media/documents/products/data-  
-> > sheet/nand-flash/70-series/m79a_2gb_1_8v_nand_spi.pdf  
-> > > [4] https://www.micron.com/~/media/documents/products/data-  
-> > sheet/nand-flash/70-series/m79a_ddp_4gb_3v_nand_spi.pdf  
-> > >
-> > > M70A:
-> > > [5] https://www.micron.com/~/media/documents/products/data-  
-> > sheet/nand-flash/70-series/m70a_4gb_3v_nand_spi.pdf  
-> > > [6] https://www.micron.com/~/media/documents/products/data-  
-> > sheet/nand-flash/70-series/m70a_4gb_1_8v_nand_spi.pdf  
-> > > [7] https://www.micron.com/~/media/documents/products/data-  
-> > sheet/nand-flash/70-series/m70a_ddp_8gb_3v_nand_spi.pdf  
-> > > [8] https://www.micron.com/~/media/documents/products/data-  
-> > sheet/nand-flash/70-series/m70a_ddp_8gb_1_8v_nand_spi.pdf  
-> > >
-> > > Changes since v5:
-> > > -----------------
-> > >
-> > > 1. Rebased series to v5.6-rc1.  
-> > 
-> > I am very sorry but actually I had issues applying all your patches not
-> > because they were not based on v5.6-rc1, but because since then I
-> > applied a patch changing the detection that changed the content of a
-> > lot of structures (including in Micron's patches).
-> > 
-> > Can you please rebase again on top of the current nand/next? I am very
-> > sorry for this extra work, this is my mistake.
-> > 
-> > Head should be:
-> > 
-> > 	a5d53ad26a8b ("mtd: rawnand: brcmnand: Add support for flash-edu
-> > for dma transfers")
-> > 
-> > And the culprit commit is:
-> > 
-> > 	f1541773af49 ("mtd: spinand: rework detect procedure for different
-> > READ_ID operation")  
-> 
-> 
-> I will rebase and send the patches.
-> Meanwhile, there will be small code change because of the READ_ID patch.
-> 
-> Do I need to drop Reviewed-by from Boris?
+I'll send a man-pages patch to document it in proc(5).
 
-Nope, you can keep it.
+Most users, including the one I have in mind, should just be able to run
+'echo > /proc/sys/kernel/modprobe' early in the boot process.  So I don't think
+the need for a kconfig option to control the default value has been clearly
+demonstrated yet.  You're certainly welcome to send a patch for it if you
+believe it would be useful, though.
+
+> > So I don't see
+> > why it would be controversial?  I already went through all callers of
+> > request_module() that check its return value, and they all appear to work better
+> > with -ENOENT, since they assume that 0 means the module was loaded.
+> 
+> Thanks for doing that, but I note that getting 0 is not assurance
+> either. The de-facto best practive for the request_module() call is to
+> do your own in place verifier.
+> 
+> > Incorrectly returning 0 typically causes unnecessary work (checking again
+> > whether the module's functionality is available) or misleading log messages.
+> 
+> Yes but returning 0 cannot be relied upon today for assuming the module
+> is loaded. *If* we revisit that decision and want the kernel to do a
+> generic verifier, then yes, we can get rid of all the caller specific
+> verfifiers, but not today.
+> 
+
+Sure, I understand all that; I think we're actually on the same page.  Even if
+we make the return value of request_module() completely correct, nothing stops
+another process from loading or unloading the module immediately afterwards.
+
+However, callers do sometimes use the return value opportunisticly, like to log
+an appropriate message or to return early if module loading failed.  Those seem
+like relatively appropriate uses.  The thing which you really can't do, which I
+didn't see anyone doing, is use 'ret == 0' as a signal to go ahead and run code
+that will crash if the module has been unloaded already.
+
+- Eric
