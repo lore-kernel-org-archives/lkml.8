@@ -2,141 +2,94 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE631C2BAEE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:03:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54017C0044D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:03:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8051D206E9
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:03:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBADE20691
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:03:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730628AbgCKSD0 (ORCPT
+        id S1730680AbgCKSDc convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 14:03:26 -0400
-Received: from mga01.intel.com ([192.55.52.88]:21410 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730468AbgCKSD0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 14:03:26 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Mar 2020 11:03:24 -0700
-X-IronPort-AV: E=Sophos;i="5.70,541,1574150400"; 
-   d="scan'208";a="277469185"
-Received: from rchatre-mobl.amr.corp.intel.com (HELO [10.251.23.31]) ([10.251.23.31])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 11 Mar 2020 11:03:26 -0700
-Subject: Re: [PATCH V1 11/13] selftests/resctrl: Change Cache Quality
- Monitoring (CQM) test
-To:     Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
-        shuah@kernel.org, linux-kselftest@vger.kernel.org
-Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        tony.luck@intel.com, babu.moger@amd.com, james.morse@arm.com,
-        ravi.v.shankar@intel.com, fenghua.yu@intel.com, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-References: <cover.1583657204.git.sai.praneeth.prakhya@intel.com>
- <26086dda86f062bba4116878a012a553503924b2.1583657204.git.sai.praneeth.prakhya@intel.com>
- <e7bd79cf-4da8-7a61-ac09-4d124315fa93@intel.com>
- <cf8fbdebd8096900d47a97f0e23a852d94df257a.camel@intel.com>
- <e7c85e35-9efb-77da-a33f-dd9447a6cf07@intel.com>
- <04c252f59062450e14642fcbef4b85845f6a7427.camel@intel.com>
-From:   Reinette Chatre <reinette.chatre@intel.com>
-Message-ID: <e0bada87-9464-2d08-c4cb-751e30866585@intel.com>
-Date:   Wed, 11 Mar 2020 11:03:23 -0700
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Wed, 11 Mar 2020 14:03:32 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:37541 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730468AbgCKSDb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 14:03:31 -0400
+Received: from 2.general.sarnold.us.vpn ([10.172.64.71] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <seth.arnold@canonical.com>)
+        id 1jC5hY-0003jD-1j; Wed, 11 Mar 2020 18:03:28 +0000
+Date:   Wed, 11 Mar 2020 18:03:26 +0000
+From:   Seth Arnold <seth.arnold@canonical.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] fs_parse: Remove pr_notice() about each validation
+Message-ID: <20200311180326.GA2007141@millbarge>
+References: <202003061617.A8835CAAF@keescook>
 MIME-Version: 1.0
-In-Reply-To: <04c252f59062450e14642fcbef4b85845f6a7427.camel@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <202003061617.A8835CAAF@keescook>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sai,
-
-On 3/11/2020 10:33 AM, Sai Praneeth Prakhya wrote:
-> On Wed, 2020-03-11 at 10:19 -0700, Reinette Chatre wrote:
->> On 3/10/2020 7:46 PM, Sai Praneeth Prakhya wrote:
->>> On Tue, 2020-03-10 at 15:18 -0700, Reinette Chatre wrote:
->>>> On 3/6/2020 7:40 PM, Sai Praneeth Prakhya wrote:
->>>>>  		.mum_resctrlfs	= 0,
->>>>>  		.filename	= RESULT_FILE_NAME,
->>>>> -		.mask		= ~(long_mask << n) & long_mask,
->>>>> -		.span		= cache_size * n / count_of_bits,
->>>>>  		.num_of_runs	= 0,
->>>>> -		.setup		= cqm_setup,
->>>>> +		.setup		= cqm_setup
->>>>>  	};
->>>>> +	int ret;
->>>>> +	char schemata[64];
->>>>> +	unsigned long long_mask;
->>>>>  
->>>>> -	if (strcmp(benchmark_cmd[0], "fill_buf") == 0)
->>>>> -		sprintf(benchmark_cmd[1], "%lu", param.span);
->>>>> +	ret = remount_resctrlfs(1);
->>>>> +	if (ret)
->>>>> +		return ret;
->>>>
->>>> Here resctrl is remounted and followed by some changes to the root
->>>> group's schemata. That is followed by a call to resctrl_val that
->>>> attempts to remount resctrl again that will undo all the configurations
->>>> inbetween.
->>>
->>> No, it wouldn't because mum_resctrlfs is 0. When resctrl FS is already
->>> mounted
->>> and mum_resctrlfs is 0, then remount_resctrlfs() is a noop.
->>>
->>
->> I missed that. Thank you.
->>
->> fyi ... when I tried these tests I encountered the following error
->> related to unmounting:
->>
->> [SNIP]
->> ok Write schema "L3:1=7fff" to resctrl FS
->> ok Write schema "L3:1=ffff" to resctrl FS
->> ok Write schema "L3:1=1ffff" to resctrl FS
->> ok Write schema "L3:1=3ffff" to resctrl FS
->> # Unable to umount resctrl: Device or resource busy
->> # Results are displayed in (Bytes)
->> ok CQM: diff within 5% for mask 1
->> # alloc_llc_cache_size: 2883584
->> # avg_llc_occu_resc: 2973696
->> ok CQM: diff within 5% for mask 3
->> [SNIP]
->>
->> This seems to originate from resctrl_val() that forces an unmount but if
->> that fails the error is not propagated.
+On Fri, Mar 06, 2020 at 04:20:02PM -0800, Kees Cook wrote:
+> This notice fills my boot logs with scary-looking asterisks but doesn't
+> really tell me anything. Let's just remove it; validation errors
+> are already reported separately, so this is just a redundant list of
+> filesystems.
 > 
-> Yes, that's right and it's a good test. I didn't encounter this issue during
-> my testing because I wasn't using resctrl FS from other terminals (I think you
-> were using resctrl FS from other terminal and hence resctrl_test was unable to
-> unmount it).
+> $ dmesg | grep VALIDATE
+> [    0.306256] *** VALIDATE tmpfs ***
+> [    0.307422] *** VALIDATE proc ***
+> [    0.308355] *** VALIDATE cgroup ***
+> [    0.308741] *** VALIDATE cgroup2 ***
+> [    0.813256] *** VALIDATE bpf ***
+> [    0.815272] *** VALIDATE ramfs ***
+> [    0.815665] *** VALIDATE hugetlbfs ***
+> [    0.876970] *** VALIDATE nfs ***
+> [    0.877383] *** VALIDATE nfs4 ***
+> 
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-I was not explicitly testing for this but this may have been the case.
+Excellent, these messages haven't been useful in helping users diagnose
+problems and they look quite noisy considering how mundane they are.
 
-As a sidenote ... could remount_resctrlfs() be called consistently? It
-seems to switch between being called with true/false and 1/0. Since its
-parameter type is boolean using true/false seems most appropriate.
+Reviewed-by: Seth Arnold <seth.arnold@canonical.com>
 
-> I think the error should not be propagated because unmounting resctrl FS
-> shouldn't stop us from checking the results. If measuring values reports an
-> error then we shouldn't check for results.
+Thanks
 
-This sounds right. It is inconsistent though ... the CQM test unmounts
-resctrl after it is run but the CAT test does not. Looking closer the
-CAT test seems to leave its artifacts around in resctrl and this should
-be cleaned up.
-
-I am not sure about the expectations here. Unmounting resctrl after a
-test is run is indeed the easiest to clean up and may be ok. It may be a
-surprise to the user though. Perhaps there can be a snippet in the
-README that warns people about this?
-
-Thank you very much
-
-Reinette
+> ---
+>  fs/fs_parser.c | 2 --
+>  1 file changed, 2 deletions(-)
+> 
+> diff --git a/fs/fs_parser.c b/fs/fs_parser.c
+> index 7e6fb43f9541..ab53e42a874a 100644
+> --- a/fs/fs_parser.c
+> +++ b/fs/fs_parser.c
+> @@ -368,8 +368,6 @@ bool fs_validate_description(const char *name,
+>  	const struct fs_parameter_spec *param, *p2;
+>  	bool good = true;
+>  
+> -	pr_notice("*** VALIDATE %s ***\n", name);
+> -
+>  	for (param = desc; param->name; param++) {
+>  		/* Check for duplicate parameter names */
+>  		for (p2 = desc; p2 < param; p2++) {
+> -- 
+> 2.20.1
+> 
+> 
+> -- 
+> Kees Cook
