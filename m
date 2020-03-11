@@ -2,144 +2,247 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97A9EC0044D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 17:33:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC30FC2BAEE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 17:34:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1DE620738
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 17:33:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 415A420746
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 17:34:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=micron.com header.i=@micron.com header.b="HgpKqJid"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cE+csesK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730390AbgCKRdt (ORCPT
+        id S1730454AbgCKRe0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 13:33:49 -0400
-Received: from mail-eopbgr750089.outbound.protection.outlook.com ([40.107.75.89]:13594
-        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726099AbgCKRds (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 13:33:48 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=SqgdoSPvPd6gDO7S1yw8ErmHh23MiGNtL8Mm7lcSOyEqAfSv7MH755pCqrsD+qUAP8EBlhKjzUVnp8At/RNJkEgiCtSqyUfDPsmQ/TuktQWZ6m2vW55pGrIfSpwBxmo2lGeVaeaqczvfAKNgo+sc2LZsLuLsa+EaLyanzJIXKLzqh97O48FAGeRuu/Dg+iUYcVAR1IhFjKbExM6mKJpGq7YLeDv5wElA4NJlkTe51LKrTIJPxzb8qzhCFKX+Cz2vURtythgmo6FTqRQVhDG/vU5MQBfh6USpNUKYj3NIMhTV3KLQmXnbRyc3DOBXq/mFeAPOVxH0cLxi6EjaYNbHnA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dWhV3jmCXxDWPeTdzbQSVVspoCjPdH5Uq6CkBDOgp2I=;
- b=IDqI9uZpJ7K/EaIUIQaZ/USb1bMLC3z2eQ4uuN2egf92CChP44vXpXsAXhdKP1K1KO1db3fnlgfep3OrmBKMs/4TDIcphiWGS8xGTd8oixRYcusy87tIcatqfTBRkB8cVt56AamaCl9tOPyIa3c7QhEn6QYAgy+xwOy79OXHDAr3CYXcZzBLlaARU7ICX4cCQokmbRkOOvg3o1RjH8RUSUP9K0TtldJIMxt0CJ9V7HPm02euyMLwdcvFdIMNckD+Q066l6KSBIjoC4ZWJY5/xS2Bzgz9eeBvKX2mxAWlJovtWQ4QDsuQv8yEBpSxDwS6z5iCV735exj2rJocAnNhgA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=micron.com; dmarc=pass action=none header.from=micron.com;
- dkim=pass header.d=micron.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=micron.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dWhV3jmCXxDWPeTdzbQSVVspoCjPdH5Uq6CkBDOgp2I=;
- b=HgpKqJidu2Y5W9A4SSYggtF8GPBLusJKaLkvEUm/BYcGIbjaGtRqgP0hgdd39fMNt1/Tq/ZdCDWyMv0m+xsL64geXxN+DzAnBOT89YeS8OxttuJ20VFhWS9dao4U0syp2Sb2rExscHzB19Bv+UTEJCItIrKzVlIk19x4Zz4XueY=
-Received: from MN2PR08MB6397.namprd08.prod.outlook.com (2603:10b6:208:1aa::10)
- by MN2PR08MB5936.namprd08.prod.outlook.com (2603:10b6:208:11a::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.14; Wed, 11 Mar
- 2020 17:33:41 +0000
-Received: from MN2PR08MB6397.namprd08.prod.outlook.com
- ([fe80::884a:b0f5:3cf5:f4a4]) by MN2PR08MB6397.namprd08.prod.outlook.com
- ([fe80::884a:b0f5:3cf5:f4a4%4]) with mapi id 15.20.2793.018; Wed, 11 Mar 2020
- 17:33:41 +0000
-From:   "Shivamurthy Shastri (sshivamurthy)" <sshivamurthy@micron.com>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Boris Brezillon <boris.brezillon@collabora.com>
-CC:     Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Frieder Schrempf <frieder.schrempf@kontron.de>,
-        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "shiva.linuxworks@gmail.com" <shiva.linuxworks@gmail.com>
-Subject: RE: [EXT] Re: [PATCH v6 0/6] Add new series Micron SPI NAND devices
-Thread-Topic: [EXT] Re: [PATCH v6 0/6] Add new series Micron SPI NAND devices
-Thread-Index: AQHV97yqdMFOd0WUj0Kd2FcGzJVvLKhDpJ6Q
-Date:   Wed, 11 Mar 2020 17:33:41 +0000
-Message-ID: <MN2PR08MB6397BAEC050EF2C1A9CE8CDAB8FC0@MN2PR08MB6397.namprd08.prod.outlook.com>
-References: <20200309115230.7207-1-sshivamurthy@micron.com>
- <20200311164932.23cc7a42@xps13>
-In-Reply-To: <20200311164932.23cc7a42@xps13>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-dg-rorf: true
-x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcc3NoaXZhbXVydGh5XGFwcGRhdGFccm9hbWluZ1wwOWQ4NDliNi0zMmQzLTRhNDAtODVlZS02Yjg0YmEyOWUzNWJcbXNnc1xtc2ctNzE1YWU1ODctNjNiZS0xMWVhLWIxZWEtOTgzYjhmNzQ1MjUxXGFtZS10ZXN0XDcxNWFlNTg5LTYzYmUtMTFlYS1iMWVhLTk4M2I4Zjc0NTI1MWJvZHkudHh0IiBzej0iMjM0MSIgdD0iMTMyMjg0MjE2MTk1MDkyMTM1IiBoPSJOVHVwYk54WXdxbU5kaURRQ3ZIdkV5eFFMV009IiBpZD0iIiBibD0iMCIgYm89IjEiIGNpPSJjQUFBQUVSSFUxUlNSVUZOQ2dVQUFIQUFBQUNuRHJNenkvZlZBU3VBZ3YreE1QZGZLNENDLzdFdzkxOEFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUJBQUFCQUFBQUlTQjI1d0FBQUFBQUFBQUFBQUFBQUE9PSIvPjwvbWV0YT4=
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=sshivamurthy@micron.com; 
-x-originating-ip: [165.225.86.136]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: dc52d287-c8bf-445c-0c44-08d7c5e2576c
-x-ms-traffictypediagnostic: MN2PR08MB5936:|MN2PR08MB5936:|MN2PR08MB5936:
-x-microsoft-antispam-prvs: <MN2PR08MB5936EB61C70B962F6D849135B8FC0@MN2PR08MB5936.namprd08.prod.outlook.com>
-x-ms-exchange-transport-forked: True
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0339F89554
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(376002)(396003)(366004)(39860400002)(346002)(199004)(5660300002)(478600001)(966005)(2906002)(55236004)(7696005)(54906003)(81156014)(71200400001)(6506007)(8676002)(86362001)(81166006)(9686003)(110136005)(55016002)(4326008)(66446008)(64756008)(66556008)(66476007)(33656002)(316002)(66946007)(52536014)(26005)(76116006)(186003)(8936002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR08MB5936;H:MN2PR08MB6397.namprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-received-spf: None (protection.outlook.com: micron.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: AjykihFX52q5/+Ha6jc1Jo9JnTpH0SMm9xiJZoFBGFLtF80HAG6jaCL7jHoM3Iw/Gfk5jcr5sFhnpwPYVX37TdaBLXsZ1JxyhBqc+OL4hvOMefBal6VmoMrO8lPKMfQbuHMcLFrsYItRI7Wr437+XATF4FXuAbQdR6w9JP7yGo3UP6TnF/jPdHbH8xiCHOQNcABLew+Ncd8/ch6BnaZtFnYJuniAUbcU5CFILs8IpbS8vyxi2gDGVZLA78YrIwQ3GzMyZqo9v03wd6rKYd2NcNYJbKemYyXI7D6bgdAExYQ2DPuuKhZSUOjywDDmcdbXdv4gYzfhx/XOri2BeY/8n0fX8tG2T5VIqNBrKthgHSAig1MOR9vyvBNck0wGLqDK93KgViwdnpAR4BBNM6H+xlYSFPZ98xZv4Zr+Zbfpaiu8Qzjvx4rJ8GjCPwOqp+7X04b6ZHzDwVaMajSDNScmWeAXnT9PSkq4mVKDQlQPCGiCZvods8mOcu01+vXY/oFIQMigDEK3UDdsKBAxpzviHQ==
-x-ms-exchange-antispam-messagedata: 2ZBuwFxcJEFwmmZyzSSOOKQvIfHhMD547fYrnXroDtdnIeJ/j9GIhOFgwXsCGO3D4r5kV4fMVFxyG4dPfvWvuDrS9ZhMr0GhPdPdJLxMolM4w5yz+Htvy0w+Z0LH6hZxkNVbvNXsyCWaWFle+oH2lA==
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 11 Mar 2020 13:34:26 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:34596 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726099AbgCKReZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 13:34:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583948063;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=YxDI+gJiBUTsbW70/4a/jRnjqZbO21J+vKCSG+NYW2I=;
+        b=cE+csesKC5qSYLInQPHHV5C5JwoxFIPEnYtnABqYpnLSDCMfL9XVV2NdozsE7Q1BwLBGXA
+        tq00mS7iHGwakVJ8Ylksw47cy3FyjCMtOcwFgulBxbUGm41S9eji1HTYLvKH3Fai5KGFJI
+        Ztykffe+ySserYSq6aW8t0kkgifw29o=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-65-x_M0gZcdMA-ImuOio__G3Q-1; Wed, 11 Mar 2020 13:34:20 -0400
+X-MC-Unique: x_M0gZcdMA-ImuOio__G3Q-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DB2B2107ACC4;
+        Wed, 11 Mar 2020 17:34:18 +0000 (UTC)
+Received: from localhost (unknown [10.36.118.127])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0554D60FC2;
+        Wed, 11 Mar 2020 17:34:06 +0000 (UTC)
+Date:   Wed, 11 Mar 2020 17:34:05 +0000
+From:   Stefan Hajnoczi <stefanha@redhat.com>
+To:     Vivek Goyal <vgoyal@redhat.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvdimm@lists.01.org, virtio-fs@redhat.com, miklos@szeredi.hu,
+        dgilbert@redhat.com, mst@redhat.com,
+        Sebastien Boeuf <sebastien.boeuf@intel.com>,
+        kbuild test robot <lkp@intel.com>
+Subject: Re: [PATCH 04/20] virtio: Implement get_shm_region for PCI transport
+Message-ID: <20200311173405.GI281087@stefanha-x1.localdomain>
+References: <20200304165845.3081-1-vgoyal@redhat.com>
+ <20200304165845.3081-5-vgoyal@redhat.com>
+ <20200310110437.GI140737@stefanha-x1.localdomain>
+ <20200310181936.GC38440@redhat.com>
 MIME-Version: 1.0
-X-OriginatorOrg: micron.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: dc52d287-c8bf-445c-0c44-08d7c5e2576c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Mar 2020 17:33:41.5138
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: f38a5ecd-2813-4862-b11b-ac1d563c806f
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: wS1E46hHTeYaRZz3O9+xUMD8ZcHGjoKZHoa5i2uMc7KdayuK07Y4w57pSIxtoxV6ap0zu8ydt5GXNSJ0teYf3Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR08MB5936
+In-Reply-To: <20200310181936.GC38440@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="TKDEsImF70pdVIl+"
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgTWlxdWVsLA0KDQo+IA0KPiBIaSBTaGl2YSwNCj4gDQo+IHNoaXZhLmxpbnV4d29ya3NAZ21h
-aWwuY29tIHdyb3RlIG9uIE1vbiwgIDkgTWFyIDIwMjAgMTI6NTI6MjQgKzAxMDA6DQo+IA0KPiA+
-IEZyb206IFNoaXZhbXVydGh5IFNoYXN0cmkgPHNzaGl2YW11cnRoeUBtaWNyb24uY29tPg0KPiA+
-DQo+ID4gVGhpcyBwYXRjaHNldCBpcyBmb3IgdGhlIG5ldyBzZXJpZXMgb2YgTWljcm9uIFNQSSBO
-QU5EIGRldmljZXMsIGFuZCB0aGUNCj4gPiBmb2xsb3dpbmcgbGlua3MgYXJlIHRoZWlyIGRhdGFz
-aGVldHMuDQo+ID4NCj4gPiBNNzhBOg0KPiA+IFsxXSBodHRwczovL3d3dy5taWNyb24uY29tL34v
-bWVkaWEvZG9jdW1lbnRzL3Byb2R1Y3RzL2RhdGEtDQo+IHNoZWV0L25hbmQtZmxhc2gvNzAtc2Vy
-aWVzL203OGFfMWdiXzN2X25hbmRfc3BpLnBkZg0KPiA+IFsyXSBodHRwczovL3d3dy5taWNyb24u
-Y29tL34vbWVkaWEvZG9jdW1lbnRzL3Byb2R1Y3RzL2RhdGEtDQo+IHNoZWV0L25hbmQtZmxhc2gv
-NzAtc2VyaWVzL203OGFfMWdiXzFfOHZfbmFuZF9zcGkucGRmDQo+ID4NCj4gPiBNNzlBOg0KPiA+
-IFszXSBodHRwczovL3d3dy5taWNyb24uY29tL34vbWVkaWEvZG9jdW1lbnRzL3Byb2R1Y3RzL2Rh
-dGEtDQo+IHNoZWV0L25hbmQtZmxhc2gvNzAtc2VyaWVzL203OWFfMmdiXzFfOHZfbmFuZF9zcGku
-cGRmDQo+ID4gWzRdIGh0dHBzOi8vd3d3Lm1pY3Jvbi5jb20vfi9tZWRpYS9kb2N1bWVudHMvcHJv
-ZHVjdHMvZGF0YS0NCj4gc2hlZXQvbmFuZC1mbGFzaC83MC1zZXJpZXMvbTc5YV9kZHBfNGdiXzN2
-X25hbmRfc3BpLnBkZg0KPiA+DQo+ID4gTTcwQToNCj4gPiBbNV0gaHR0cHM6Ly93d3cubWljcm9u
-LmNvbS9+L21lZGlhL2RvY3VtZW50cy9wcm9kdWN0cy9kYXRhLQ0KPiBzaGVldC9uYW5kLWZsYXNo
-LzcwLXNlcmllcy9tNzBhXzRnYl8zdl9uYW5kX3NwaS5wZGYNCj4gPiBbNl0gaHR0cHM6Ly93d3cu
-bWljcm9uLmNvbS9+L21lZGlhL2RvY3VtZW50cy9wcm9kdWN0cy9kYXRhLQ0KPiBzaGVldC9uYW5k
-LWZsYXNoLzcwLXNlcmllcy9tNzBhXzRnYl8xXzh2X25hbmRfc3BpLnBkZg0KPiA+IFs3XSBodHRw
-czovL3d3dy5taWNyb24uY29tL34vbWVkaWEvZG9jdW1lbnRzL3Byb2R1Y3RzL2RhdGEtDQo+IHNo
-ZWV0L25hbmQtZmxhc2gvNzAtc2VyaWVzL203MGFfZGRwXzhnYl8zdl9uYW5kX3NwaS5wZGYNCj4g
-PiBbOF0gaHR0cHM6Ly93d3cubWljcm9uLmNvbS9+L21lZGlhL2RvY3VtZW50cy9wcm9kdWN0cy9k
-YXRhLQ0KPiBzaGVldC9uYW5kLWZsYXNoLzcwLXNlcmllcy9tNzBhX2RkcF84Z2JfMV84dl9uYW5k
-X3NwaS5wZGYNCj4gPg0KPiA+IENoYW5nZXMgc2luY2UgdjU6DQo+ID4gLS0tLS0tLS0tLS0tLS0t
-LS0NCj4gPg0KPiA+IDEuIFJlYmFzZWQgc2VyaWVzIHRvIHY1LjYtcmMxLg0KPiANCj4gSSBhbSB2
-ZXJ5IHNvcnJ5IGJ1dCBhY3R1YWxseSBJIGhhZCBpc3N1ZXMgYXBwbHlpbmcgYWxsIHlvdXIgcGF0
-Y2hlcyBub3QNCj4gYmVjYXVzZSB0aGV5IHdlcmUgbm90IGJhc2VkIG9uIHY1LjYtcmMxLCBidXQg
-YmVjYXVzZSBzaW5jZSB0aGVuIEkNCj4gYXBwbGllZCBhIHBhdGNoIGNoYW5naW5nIHRoZSBkZXRl
-Y3Rpb24gdGhhdCBjaGFuZ2VkIHRoZSBjb250ZW50IG9mIGENCj4gbG90IG9mIHN0cnVjdHVyZXMg
-KGluY2x1ZGluZyBpbiBNaWNyb24ncyBwYXRjaGVzKS4NCj4gDQo+IENhbiB5b3UgcGxlYXNlIHJl
-YmFzZSBhZ2FpbiBvbiB0b3Agb2YgdGhlIGN1cnJlbnQgbmFuZC9uZXh0PyBJIGFtIHZlcnkNCj4g
-c29ycnkgZm9yIHRoaXMgZXh0cmEgd29yaywgdGhpcyBpcyBteSBtaXN0YWtlLg0KPiANCj4gSGVh
-ZCBzaG91bGQgYmU6DQo+IA0KPiAJYTVkNTNhZDI2YThiICgibXRkOiByYXduYW5kOiBicmNtbmFu
-ZDogQWRkIHN1cHBvcnQgZm9yIGZsYXNoLWVkdQ0KPiBmb3IgZG1hIHRyYW5zZmVycyIpDQo+IA0K
-PiBBbmQgdGhlIGN1bHByaXQgY29tbWl0IGlzOg0KPiANCj4gCWYxNTQxNzczYWY0OSAoIm10ZDog
-c3BpbmFuZDogcmV3b3JrIGRldGVjdCBwcm9jZWR1cmUgZm9yIGRpZmZlcmVudA0KPiBSRUFEX0lE
-IG9wZXJhdGlvbiIpDQoNCg0KSSB3aWxsIHJlYmFzZSBhbmQgc2VuZCB0aGUgcGF0Y2hlcy4NCk1l
-YW53aGlsZSwgdGhlcmUgd2lsbCBiZSBzbWFsbCBjb2RlIGNoYW5nZSBiZWNhdXNlIG9mIHRoZSBS
-RUFEX0lEIHBhdGNoLg0KDQpEbyBJIG5lZWQgdG8gZHJvcCBSZXZpZXdlZC1ieSBmcm9tIEJvcmlz
-Pw0KDQpUaGFua3MsDQpTaGl2YQ0K
+--TKDEsImF70pdVIl+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Mar 10, 2020 at 02:19:36PM -0400, Vivek Goyal wrote:
+> On Tue, Mar 10, 2020 at 11:04:37AM +0000, Stefan Hajnoczi wrote:
+> > On Wed, Mar 04, 2020 at 11:58:29AM -0500, Vivek Goyal wrote:
+> > > diff --git a/drivers/virtio/virtio_pci_modern.c b/drivers/virtio/virt=
+io_pci_modern.c
+> > > index 7abcc50838b8..52f179411015 100644
+> > > --- a/drivers/virtio/virtio_pci_modern.c
+> > > +++ b/drivers/virtio/virtio_pci_modern.c
+> > > @@ -443,6 +443,111 @@ static void del_vq(struct virtio_pci_vq_info *i=
+nfo)
+> > >  =09vring_del_virtqueue(vq);
+> > >  }
+> > > =20
+> > > +static int virtio_pci_find_shm_cap(struct pci_dev *dev,
+> > > +                                   u8 required_id,
+> > > +                                   u8 *bar, u64 *offset, u64 *len)
+> > > +{
+> > > +=09int pos;
+> > > +
+> > > +        for (pos =3D pci_find_capability(dev, PCI_CAP_ID_VNDR);
+> >=20
+> > Please fix the mixed tabs vs space indentation in this patch.
+>=20
+> Will do. There are plenty of these in this patch.
+>=20
+> >=20
+> > > +static bool vp_get_shm_region(struct virtio_device *vdev,
+> > > +=09=09=09      struct virtio_shm_region *region, u8 id)
+> > > +{
+> > > +=09struct virtio_pci_device *vp_dev =3D to_vp_device(vdev);
+> > > +=09struct pci_dev *pci_dev =3D vp_dev->pci_dev;
+> > > +=09u8 bar;
+> > > +=09u64 offset, len;
+> > > +=09phys_addr_t phys_addr;
+> > > +=09size_t bar_len;
+> > > +=09int ret;
+> > > +
+> > > +=09if (!virtio_pci_find_shm_cap(pci_dev, id, &bar, &offset, &len)) {
+> > > +=09=09return false;
+> > > +=09}
+> > > +
+> > > +=09ret =3D pci_request_region(pci_dev, bar, "virtio-pci-shm");
+> > > +=09if (ret < 0) {
+> > > +=09=09dev_err(&pci_dev->dev, "%s: failed to request BAR\n",
+> > > +=09=09=09__func__);
+> > > +=09=09return false;
+> > > +=09}
+> > > +
+> > > +=09phys_addr =3D pci_resource_start(pci_dev, bar);
+> > > +=09bar_len =3D pci_resource_len(pci_dev, bar);
+> > > +
+> > > +        if (offset + len > bar_len) {
+> > > +                dev_err(&pci_dev->dev,
+> > > +                        "%s: bar shorter than cap offset+len\n",
+> > > +                        __func__);
+> > > +                return false;
+> > > +        }
+> > > +
+> > > +=09region->len =3D len;
+> > > +=09region->addr =3D (u64) phys_addr + offset;
+> > > +
+> > > +=09return true;
+> > > +}
+> >=20
+> > Missing pci_release_region()?
+>=20
+> Good catch. We don't have a mechanism to call pci_relese_region() and=20
+> virtio-mmio device's ->get_shm_region() implementation does not even
+> seem to reserve the resources.
+>=20
+> So how about we leave this resource reservation to the caller.
+> ->get_shm_region() just returns the addr/len pair of requested resource.
+>=20
+> Something like this patch.
+>=20
+> ---
+>  drivers/virtio/virtio_pci_modern.c |    8 --------
+>  fs/fuse/virtio_fs.c                |   13 ++++++++++---
+>  2 files changed, 10 insertions(+), 11 deletions(-)
+>=20
+> Index: redhat-linux/fs/fuse/virtio_fs.c
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> --- redhat-linux.orig/fs/fuse/virtio_fs.c=092020-03-10 09:13:34.624565666=
+ -0400
+> +++ redhat-linux/fs/fuse/virtio_fs.c=092020-03-10 14:11:10.970284651 -040=
+0
+> @@ -763,11 +763,18 @@ static int virtio_fs_setup_dax(struct vi
+>  =09if (!have_cache) {
+>  =09=09dev_notice(&vdev->dev, "%s: No cache capability\n", __func__);
+>  =09=09return 0;
+> -=09} else {
+> -=09=09dev_notice(&vdev->dev, "Cache len: 0x%llx @ 0x%llx\n",
+> -=09=09=09   cache_reg.len, cache_reg.addr);
+>  =09}
+> =20
+> +=09if (!devm_request_mem_region(&vdev->dev, cache_reg.addr, cache_reg.le=
+n,
+> +=09=09=09=09     dev_name(&vdev->dev))) {
+> +=09=09dev_warn(&vdev->dev, "could not reserve region addr=3D0x%llx"
+> +=09=09=09 " len=3D0x%llx\n", cache_reg.addr, cache_reg.len);
+> +=09=09return -EBUSY;
+> +        }
+> +
+> +=09dev_notice(&vdev->dev, "Cache len: 0x%llx @ 0x%llx\n", cache_reg.len,
+> +=09=09   cache_reg.addr);
+> +
+>  =09pgmap =3D devm_kzalloc(&vdev->dev, sizeof(*pgmap), GFP_KERNEL);
+>  =09if (!pgmap)
+>  =09=09return -ENOMEM;
+> Index: redhat-linux/drivers/virtio/virtio_pci_modern.c
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> --- redhat-linux.orig/drivers/virtio/virtio_pci_modern.c=092020-03-10 08:=
+51:36.886565666 -0400
+> +++ redhat-linux/drivers/virtio/virtio_pci_modern.c=092020-03-10 13:43:15=
+.168753543 -0400
+> @@ -511,19 +511,11 @@ static bool vp_get_shm_region(struct vir
+>  =09u64 offset, len;
+>  =09phys_addr_t phys_addr;
+>  =09size_t bar_len;
+> -=09int ret;
+> =20
+>  =09if (!virtio_pci_find_shm_cap(pci_dev, id, &bar, &offset, &len)) {
+>  =09=09return false;
+>  =09}
+> =20
+> -=09ret =3D pci_request_region(pci_dev, bar, "virtio-pci-shm");
+> -=09if (ret < 0) {
+> -=09=09dev_err(&pci_dev->dev, "%s: failed to request BAR\n",
+> -=09=09=09__func__);
+> -=09=09return false;
+> -=09}
+> -
+>  =09phys_addr =3D pci_resource_start(pci_dev, bar);
+>  =09bar_len =3D pci_resource_len(pci_dev, bar);
+
+Do pci_resource_start()/pci_resource_len() work on a BAR where
+pci_request_region() hasn't been called yet?  (I haven't checked the
+code, sorry...)
+
+Assuming yes, then my next question is whether devm_request_mem_region()
+works in both the VIRTIO PCI and MMIO cases?
+
+If yes, then this looks like a solution, though the need for
+devm_request_mem_region() should be explained in the vp_get_shm_region()
+doc comments so that callers remember to make that call.  Or maybe it
+can be included in vp_get_shm_region().
+
+Stefan
+
+--TKDEsImF70pdVIl+
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl5pIQ0ACgkQnKSrs4Gr
+c8hRcwgAllE7XHaHgyhW//Kd35rBaIMwficvtTMl5oYcfsKBVGTrjWnaAYzbseXT
+s/UX6DzqH/qO3skX5n9rq5tlVwW1POLhLYSjtXB0GFeC/utVMyQKrcdlYUAYeHFF
+bROTGHuMNT0b3YbZiiHbA08BWfcuTOfhtzEwUPajlf+D8LvY11d1lyDGXb2GxcRI
+vIx5hpsok29/NpOn2KgYcUSTZ1f8jk7mHnMscCRjvp9o8WJVCt7nIT2tJYYRuOKE
++VCiza9iW/P8w+PrwdQj1lraakETWKPmDXQPjCz5BUyyDrqDJr7RMDY+KdPrll0l
+kDFkAzr2D64PwzwaXaM3sNXecZXK4w==
+=pAoo
+-----END PGP SIGNATURE-----
+
+--TKDEsImF70pdVIl+--
+
