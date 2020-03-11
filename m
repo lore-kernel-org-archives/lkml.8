@@ -2,90 +2,91 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0113EC10F27
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 10:28:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 282CFC18E5A
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 10:28:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA3E3208E4
+	by mail.kernel.org (Postfix) with ESMTP id F4113222C3
 	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 10:28:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="X452yBY9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728988AbgCKK2O (ORCPT
+        id S1729003AbgCKK2Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 06:28:14 -0400
-Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17873 "EHLO
-        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726000AbgCKK2O (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 06:28:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1583922472;
-        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
-        h=Date:In-Reply-To:References:MIME-Version:Content-Type:Content-Transfer-Encoding:Subject:To:CC:From:Message-ID;
-        bh=3JtcSwh2mJxc7wOGkPwcMUPW0qPL58nKY7AyPUUwUa0=;
-        b=X452yBY9ONVbwpQAj0flhzXrLG/MY1sKLO46rhgX15EuWaZYodJfE8PQflfVkC5a
-        gittBRI/vWJzL1sDLeKux26J6fF2PbM+px34+CBBvP+65xabEiVjknNI2hfB6i84ylr
-        5M9+kR0wMbzyd5pwKPjvldeRMYhOwZ/PZ+n7cFbk=
-Received: from [10.233.233.252] (60.177.107.241 [60.177.107.241]) by mx.zoho.com.cn
-        with SMTPS id 1583922468959882.4961712556443; Wed, 11 Mar 2020 18:27:48 +0800 (CST)
-Date:   Wed, 11 Mar 2020 18:27:48 +0800
-User-Agent: K-9 Mail for Android
-In-Reply-To: <CAOLZvyHEnnpWWhEAWx9RZASVjjQ=6HTREqwY+LK0hm=J4Wd8Xg@mail.gmail.com>
-References: <1583908414-22858-1-git-send-email-yangtiezhu@loongson.cn> <CAOLZvyHEnnpWWhEAWx9RZASVjjQ=6HTREqwY+LK0hm=J4Wd8Xg@mail.gmail.com>
+        Wed, 11 Mar 2020 06:28:16 -0400
+Received: from mga06.intel.com ([134.134.136.31]:1938 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726000AbgCKK2P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 06:28:15 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Mar 2020 03:28:14 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,540,1574150400"; 
+   d="scan'208";a="353855467"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by fmsmga001.fm.intel.com with SMTP; 11 Mar 2020 03:28:12 -0700
+Received: by lahna (sSMTP sendmail emulation); Wed, 11 Mar 2020 12:28:11 +0200
+Date:   Wed, 11 Mar 2020 12:28:11 +0200
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI/PM: Skip link training delay for S3 resume
+Message-ID: <20200311102811.GA2540@lahna.fi.intel.com>
+References: <20200311045249.5200-1-kai.heng.feng@canonical.com>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] MIPS: Loongson: Add model name to /proc/cpuinfo
-To:     Manuel Lauss <manuel.lauss@gmail.com>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>
-CC:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Linux-MIPS <linux-mips@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Xuefeng Li <lixuefeng@loongson.cn>
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-Message-ID: <788597FA-6AD6-4218-886F-35C0916EA3F2@flygoat.com>
-X-ZohoCNMailClient: External
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200311045249.5200-1-kai.heng.feng@canonical.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-=E4=BA=8E 2020=E5=B9=B43=E6=9C=8811=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=885=
-:58:48, Manuel Lauss <manuel=2Elauss@gmail=2Ecom> =E5=86=99=E5=88=B0:
->Hello,
->
->> Model name:            Loongson-3A R3 (Loongson-3A3000) @ 1449MHz
->
->How is this different from the __cpu_name[] array?  Doesn't it serve
->the same purpose?
->E=2Eg=2E on Alchemy, it lists the correct Model name=2E (I=2Ee=2E "Au1000=
-",
->"Au1250", =2E=2E=2E)
-
 Hi,
 
-__cpu_name[] will be displayed as "cpu model" in cpuinfo, however
-in x86 world, the name line is started with "model name"=2E
-Most user applications like lscpu, hwinfo is following x86's rule, we don'=
-t have superpower to move all of them=2E
+On Wed, Mar 11, 2020 at 12:52:49PM +0800, Kai-Heng Feng wrote:
+> Commit ad9001f2f411 ("PCI/PM: Add missing link delays required by the
+> PCIe spec") added a 1100ms delay on resume for bridges that don't
+> support Link Active Reporting.
+> 
+> The commit also states that the delay can be skipped for S3, as the
+> firmware should already handled the case for us.
 
-Also rename "cpu model" will break current ABI, so just create a new array
-for it would be a better option=2E
+Delay can be skipped if the firmware provides _DSM with function 8
+implemented according to PCI firmwre spec 3.2 sec 4.6.8.
 
-For why Loongson is doing this, I guess they need a chance to show
-their business processor name instead of revision=2E
+> So let's skip the link training delay for S3, to save 1100ms resume
+> time.
+> 
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> ---
+>  drivers/pci/pci-driver.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+> index 0454ca0e4e3f..3050375bad04 100644
+> --- a/drivers/pci/pci-driver.c
+> +++ b/drivers/pci/pci-driver.c
+> @@ -916,7 +916,8 @@ static int pci_pm_resume_noirq(struct device *dev)
+>  	pci_fixup_device(pci_fixup_resume_early, pci_dev);
+>  	pcie_pme_root_status_cleanup(pci_dev);
+>  
+> -	if (!skip_bus_pm && prev_state == PCI_D3cold)
+> +	if (!skip_bus_pm && prev_state == PCI_D3cold
+> +	    && !pm_resume_via_firmware())
 
-Thanks
+So this would need to check for the _DSM result as well. We do evaluate
+it in pci_acpi_optimize_delay() (drivers/pci/pci-acpi.c) and that ends
+up lowering ->d3cold_delay so maybe check that here.
 
->
->Manuel
-
---=20
-Jiaxun Yang
+>  		pci_bridge_wait_for_secondary_bus(pci_dev);
+>  
+>  	if (pci_has_legacy_pm_support(pci_dev))
+> -- 
+> 2.17.1
