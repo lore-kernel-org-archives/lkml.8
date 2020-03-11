@@ -2,275 +2,149 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F05BAC10F27
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 08:21:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16C5FC18E5A
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 08:21:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA1C92082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 08:21:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sswH5hsk"
+	by mail.kernel.org (Postfix) with ESMTP id E039720873
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 08:21:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583914884;
+	bh=xOsCy17pMnIpN8H6F7yfTfdZSqkG2zR+BQaWBdsM8Ew=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GRhi2OkcFPwYH2FS/FNYVh2xe9DEkEZqYZvvf8wwemvw0XSxQzA2noIXVEDa/+E8y
+	 6neI0R7iUwg3E0KUr3+N/exPOSNnXc83Oq0vcK/tQ7q8qIp9eTlTpYOhNz8NmYsN4V
+	 3URVPT0B5WHun16+EPhoV9Cu8vjvMXEizC3g6FGg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728608AbgCKIVS (ORCPT
+        id S1728619AbgCKIVY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 04:21:18 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:37179 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726923AbgCKIVS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 04:21:18 -0400
-Received: by mail-lf1-f65.google.com with SMTP id j11so921877lfg.4
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 01:21:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=/H44xo9YVbjQU2jF8VsFwG+fQELUXeP3PySlq2Oi+ZU=;
-        b=sswH5hskdEuA+AVikpt0FFbATlmickLcGGKFoeCnwSLyfud9SEuMptPh7I0IqKqmrQ
-         JY0DbfPNjMfpNtTfVv3UkbF8bU6LX4dX3Bs4WqIpMWcwyIcRDB/TuthViJojm0W1s92K
-         SApwJ3xPBjPZ59CsDFnRA4MFGfGw3bD1U1M0Fhy0XQ6kWsZeWiEjqUOFiNBSyEViQQUM
-         sNITfek9Z/pfJJGTKb14aqqi5HBBaaLQPJu2cq8+qGG11fW3DDcbpBX6bCl/0RgQZuPE
-         R+b9aMxLWrAusGIn+dlmVxrAfXR14w3z58Du4DKj3AKPSKoMlEubaunBM7lJm8f1Bd+l
-         D4Bw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=/H44xo9YVbjQU2jF8VsFwG+fQELUXeP3PySlq2Oi+ZU=;
-        b=lpRT84t8OZhhNgcMuE8BlqsuGmewUKJ46fkNrC5oCbIvJ1ak3wd7aHH0KHp2lXfO6N
-         /SxJpOeZz+e5E6aWjNB4mMrAtL2BQyaQrj2/QzZgfO9iwtKGwJins2hRYKHIVeF0QVh1
-         ZTTOA2fYWPrxHSrnkzFTPA3EudOuOv3lizFVwJz04qdT0ndgCoCox3m9DHPzBM2gaueT
-         JVMH6viOe/g6UN8CelBwVIFhV9tVsdyR0RUNJx78u7EW8C7DQmhBvn5C2isyyoPAoQ02
-         2mvtkWrsCHFKdkafG6oPC/X8yIwoTBLFj9AUJUJkeS0R7RvpsPvSGYJA8t78VdwBWr89
-         3xyA==
-X-Gm-Message-State: ANhLgQ0TsRH7HvI/ba3HT+rJQF0IoDyDzR8MfYxQ64WzL9LAFed5KsL8
-        B0L3miKInKFMTjaA05POYTcHhpzNgu2/nne8kUo7fg==
-X-Google-Smtp-Source: ADFU+vuttkx3YOuB8M4MIP0FHI7sbtyY4OuMHmkIcMSsUUV+RcyFRZiPwXRwDoU0GdfmZKpUr4BX4GbNVF4HtmXO8fw=
-X-Received: by 2002:a05:6512:1042:: with SMTP id c2mr1366390lfb.6.1583914875135;
- Wed, 11 Mar 2020 01:21:15 -0700 (PDT)
+        Wed, 11 Mar 2020 04:21:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54682 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726097AbgCKIVX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 04:21:23 -0400
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1AABB20866;
+        Wed, 11 Mar 2020 08:21:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583914882;
+        bh=xOsCy17pMnIpN8H6F7yfTfdZSqkG2zR+BQaWBdsM8Ew=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=EQFu+RDgOck99iq5cpUODmlkEEvvRJB9iQ8d/Pcc/SkS8NJ2/c0WYgYces3+rwr0+
+         Ie/m2HlmM+BB8bcRVCxWun+TT3lToNZdm4w0YFJfKLS8FHbFVNREAAFvwZIda3r+0H
+         VjDJeZpVanZ/rWZKdhv7D2IwZoPQ5nhqHw1GHj1I=
+Date:   Wed, 11 Mar 2020 16:21:17 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Zhiqiang Hou <Zhiqiang.Hou@nxp.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        robh+dt@kernel.org, michael@walle.cc, leoyang.li@nxp.com,
+        Mingkai.Hu@nxp.com, Minghuan.Lian@nxp.com,
+        Xiaowei Bao <xiaowei.bao@nxp.com>
+Subject: Re: [PATCHv7] arm64: dts: ls1028a: Add PCIe controller DT nodes
+Message-ID: <20200311082117.GA29269@dragon>
+References: <20200302042305.15639-1-Zhiqiang.Hou@nxp.com>
 MIME-Version: 1.0
-References: <20200310123601.053680753@linuxfoundation.org>
-In-Reply-To: <20200310123601.053680753@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Wed, 11 Mar 2020 13:50:48 +0530
-Message-ID: <CA+G9fYsmBrJp2LRY_ixWMgKcNZXDC=TwNbGFN08iFwxybpSBUQ@mail.gmail.com>
-Subject: Re: [PATCH 4.4 00/72] 4.4.216-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        lkft-triage@lists.linaro.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        linux- stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200302042305.15639-1-Zhiqiang.Hou@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 10 Mar 2020 at 18:11, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 4.4.216 release.
-> There are 72 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Thu, 12 Mar 2020 12:34:10 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.4.216-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.4.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+On Mon, Mar 02, 2020 at 12:23:05PM +0800, Zhiqiang Hou wrote:
+> From: Xiaowei Bao <xiaowei.bao@nxp.com>
+> 
+> LS1028a implements 2 PCIe 3.0 controllers.
+> 
+> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> Tested-by: Michael Walle <michael@walle.cc>
+> ---
+> V7:
+>  - Rebased the patch to the latest code base.
+>  - Added property 'iommu-map'.
+> 
+>  .../arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 54 +++++++++++++++++++
+>  1 file changed, 54 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> index 41c9633293fb..3f31641dcced 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> @@ -717,6 +717,60 @@
+>  			#thermal-sensor-cells = <1>;
+>  		};
+>  
+> +		pcie@3400000 {
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+Please keep nodes sorted in unit-address.
 
-Summary
-------------------------------------------------------------------------
+Shawn
 
-kernel: 4.4.216-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.4.y
-git commit: 836f82655232ea02028bb5857f19bfd950b33c33
-git describe: v4.4.215-73-g836f82655232
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.4-oe/bui=
-ld/v4.4.215-73-g836f82655232
-
-No regressions (compared to build v4.4.215)
-
-No fixes (compared to build v4.4.215)
-
-Ran 21137 total tests in the following environments and test suites.
-
-Environments
---------------
-- i386
-- juno-r2 - arm64
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
-
-Test Suites
------------
-* build
-* kselftest
-* kvm-unit-tests
-* libhugetlbfs
-* linux-log-parser
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-crypto-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* network-basic-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* ltp-cap_bounds-64k-page_size-tests
-* ltp-cap_bounds-kasan-tests
-* ltp-commands-64k-page_size-tests
-* ltp-commands-kasan-tests
-* ltp-containers-64k-page_size-tests
-* ltp-containers-kasan-tests
-* ltp-cpuhotplug-64k-page_size-tests
-* ltp-cpuhotplug-kasan-tests
-* ltp-crypto-64k-page_size-tests
-* ltp-crypto-kasan-tests
-* ltp-cve-64k-page_size-tests
-* ltp-cve-kasan-tests
-* ltp-dio-64k-page_size-tests
-* ltp-dio-kasan-tests
-* ltp-fcntl-locktests-64k-page_size-tests
-* ltp-fcntl-locktests-kasan-tests
-* ltp-filecaps-64k-page_size-tests
-* ltp-filecaps-kasan-tests
-* ltp-fs-64k-page_size-tests
-* ltp-fs-kasan-tests
-* ltp-fs_bind-64k-page_size-tests
-* ltp-fs_bind-kasan-tests
-* ltp-fs_perms_simple-64k-page_size-tests
-* ltp-fs_perms_simple-kasan-tests
-* ltp-fsx-64k-page_size-tests
-* ltp-fsx-kasan-tests
-* ltp-hugetlb-64k-page_size-tests
-* ltp-hugetlb-kasan-tests
-* ltp-io-64k-page_size-tests
-* ltp-io-kasan-tests
-* ltp-ipc-64k-page_size-tests
-* ltp-ipc-kasan-tests
-* ltp-math-64k-page_size-tests
-* ltp-math-kasan-tests
-* ltp-mm-64k-page_size-tests
-* ltp-mm-kasan-tests
-* ltp-nptl-64k-page_size-tests
-* ltp-nptl-kasan-tests
-* ltp-pty-64k-page_size-tests
-* ltp-pty-kasan-tests
-* ltp-sched-64k-page_size-tests
-* ltp-sched-kasan-tests
-* ltp-securebits-64k-page_size-tests
-* ltp-securebits-kasan-tests
-* ltp-syscalls-64k-page_size-tests
-* ltp-syscalls-compat-tests
-* ltp-syscalls-kasan-tests
-* install-android-platform-tools-r2600
-* ltp-open-posix-tests
-* kselftest-vsyscall-mode-none
-
-Summary
-------------------------------------------------------------------------
-
-kernel: 4.4.216-rc1
-git repo: https://git.linaro.org/lkft/arm64-stable-rc.git
-git branch: 4.4.216-rc1-hikey-20200310-664
-git commit: ac3d5b19a0a5c40aaa3436bb63d6b0098eb7ce7b
-git describe: 4.4.216-rc1-hikey-20200310-664
-Test details: https://qa-reports.linaro.org/lkft/linaro-hikey-stable-rc-4.4=
--oe/build/4.4.216-rc1-hikey-20200310-664
-
-
-No regressions (compared to build 4.4.216-rc1-hikey-20200309-663)
-
-
-No fixes (compared to build 4.4.216-rc1-hikey-20200309-663)
-
-Ran 1682 total tests in the following environments and test suites.
-
-Environments
---------------
-- hi6220-hikey - arm64
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* libhugetlbfs
-* linux-log-parser
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
+> +			compatible = "fsl,ls1028a-pcie";
+> +			reg = <0x00 0x03400000 0x0 0x00100000   /* controller registers */
+> +			       0x80 0x00000000 0x0 0x00002000>; /* configuration space */
+> +			reg-names = "regs", "config";
+> +			interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>, /* PME interrupt */
+> +				     <GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>; /* aer interrupt */
+> +			interrupt-names = "pme", "aer";
+> +			#address-cells = <3>;
+> +			#size-cells = <2>;
+> +			device_type = "pci";
+> +			dma-coherent;
+> +			num-viewport = <8>;
+> +			bus-range = <0x0 0xff>;
+> +			ranges = <0x81000000 0x0 0x00000000 0x80 0x00010000 0x0 0x00010000   /* downstream I/O */
+> +				  0x82000000 0x0 0x40000000 0x80 0x40000000 0x0 0x40000000>; /* non-prefetchable memory */
+> +			msi-parent = <&its>;
+> +			#interrupt-cells = <1>;
+> +			interrupt-map-mask = <0 0 0 7>;
+> +			interrupt-map = <0000 0 0 1 &gic 0 0 GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>,
+> +					<0000 0 0 2 &gic 0 0 GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>,
+> +					<0000 0 0 3 &gic 0 0 GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH>,
+> +					<0000 0 0 4 &gic 0 0 GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>;
+> +			iommu-map = <0 &smmu 0 1>; /* Fixed-up by bootloader */
+> +			status = "disabled";
+> +		};
+> +
+> +		pcie@3500000 {
+> +			compatible = "fsl,ls1028a-pcie";
+> +			reg = <0x00 0x03500000 0x0 0x00100000   /* controller registers */
+> +			       0x88 0x00000000 0x0 0x00002000>; /* configuration space */
+> +			reg-names = "regs", "config";
+> +			interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH>;
+> +			interrupt-names = "pme", "aer";
+> +			#address-cells = <3>;
+> +			#size-cells = <2>;
+> +			device_type = "pci";
+> +			dma-coherent;
+> +			num-viewport = <8>;
+> +			bus-range = <0x0 0xff>;
+> +			ranges = <0x81000000 0x0 0x00000000 0x88 0x00010000 0x0 0x00010000   /* downstream I/O */
+> +				  0x82000000 0x0 0x40000000 0x88 0x40000000 0x0 0x40000000>; /* non-prefetchable memory */
+> +			msi-parent = <&its>;
+> +			#interrupt-cells = <1>;
+> +			interrupt-map-mask = <0 0 0 7>;
+> +			interrupt-map = <0000 0 0 1 &gic 0 0 GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH>,
+> +					<0000 0 0 2 &gic 0 0 GIC_SPI 115 IRQ_TYPE_LEVEL_HIGH>,
+> +					<0000 0 0 3 &gic 0 0 GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>,
+> +					<0000 0 0 4 &gic 0 0 GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>;
+> +			iommu-map = <0 &smmu 0 1>; /* Fixed-up by bootloader */
+> +			status = "disabled";
+> +		};
+> +
+>  		pcie@1f0000000 { /* Integrated Endpoint Root Complex */
+>  			compatible = "pci-host-ecam-generic";
+>  			reg = <0x01 0xf0000000 0x0 0x100000>;
+> -- 
+> 2.17.1
+> 
