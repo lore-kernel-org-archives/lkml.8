@@ -1,88 +1,74 @@
 Return-Path: <linux-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PULL_REQUEST,RDNS_NONE,SPF_HELO_NONE,SPF_NONE autolearn=no
-	autolearn_force=no version=3.4.0
-Received: from youngberry.canonical.com ([91.189.89.112]:60826 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729977AbgCKPpA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 11:45:00 -0400
-From: Christian Brauner <christian.brauner@ubuntu.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL] thread fixes v5.6-rc6
-Date: Wed, 11 Mar 2020 16:44:05 +0100
-Message-Id: <20200311154405.3137527-1-christian.brauner@ubuntu.com>
+X-Spam-Level: *
+X-Spam-Status: No, score=1.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	RDNS_NONE,SPF_HELO_NONE,SPF_NONE autolearn=no autolearn_force=no version=3.4.0
+Received: from foss.arm.com ([217.140.110.172]:51138 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729742AbgCKPrQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 11:47:16 -0400
+Subject: Re: [PATCH] ARM: dts: dra7: Add bus_dma_limit for L3 bus
+To: Tony Lindgren <tony@atomide.com>, Roger Quadros <rogerq@ti.com>
+Cc: Tero Kristo <t-kristo@ti.com>, hch@lst.de, robh+dt@kernel.org,
+        nm@ti.com, nsekhar@ti.com, linux-omap@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200310115309.31354-1-rogerq@ti.com>
+ <e7df4db7-6fe1-cfa4-841b-ddd395864bb8@ti.com>
+ <20200310154829.GS37466@atomide.com>
+ <d2e217a4-4a45-bc46-4610-84e6c8567d5f@ti.com>
+ <20200311152347.GW37466@atomide.com>
+From: Robin Murphy <robin.murphy@arm.com>
+Message-ID: <e031b768-8fb8-ce62-a644-69925757cbc6@arm.com>
+Date: Wed, 11 Mar 2020 15:47:12 +0000
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200311152347.GW37466@atomide.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 List-ID: <linux-kernel.vger.kernel.org>
 
-Hey Linus,
+On 11/03/2020 3:23 pm, Tony Lindgren wrote:
+> * Roger Quadros <rogerq@ti.com> [200311 07:21]:
+>>
+>>
+>> On 10/03/2020 17:48, Tony Lindgren wrote:
+>>> * Tero Kristo <t-kristo@ti.com> [200310 14:46]:
+>>>> On 10/03/2020 13:53, Roger Quadros wrote:
+>>>>> The L3 interconnect can access only 32-bits of address.
+>>>>> Add the dma-ranges property to reflect this limit.
+>>>>>
+>>>>> This will ensure that no device under L3 is
+>>>>> given > 32-bit address for DMA.
+>>>>>
+>>>>> Issue was observed only with SATA on DRA7-EVM with 4GB RAM
+>>>>> and CONFIG_ARM_LPAE enabled. This is because the controller
+>>>>> can perform 64-bit DMA and was setting the dma_mask to 64-bit.
+>>>>>
+>>>>> Setting the correct bus_dma_limit fixes the issue.
+>>>>
+>>>> This seems kind of messy to modify almost every DT node because of this....
+>>>> Are you sure this is the only way to get it done? No way to modify the sata
+>>>> node only which is impacted somehow?
+>>>>
+>>>> Also, what if you just pass 0xffffffff to the dma-ranges property? That
+>>>> would avoid modifying every node I guess.
+>>>
+>>> Also, I think these interconnects are not limited to 32-bit access.
+>>
+>> But from Table 2-1. L3_MAIN Memory Map
+>>
+>> Start address	0x0000_0000
+>> End address	0xFFFF_FFFF
+>>
+>> So it is 32-bit limit, right?
+> 
+> Hmm so what war Robin saying earlier that DMA access seems to be
+> limited to lower 2GB only though?
 
-/* Summary */
-This contains a single fix for a regression which was introduced when we
-introduced the ability to select a specific pid at process creation time. When
-this feature is requested, the error value will be set to -EPERM after exiting
-the pid allocation loop. This caused EPERM to be returned when e.g. the init
-process/child subreaper of the pid namespace has already died where we used to
-return ENOMEM before.
-The first patch here simply fixes the regression by unconditionally setting the
-return value back to ENOMEM again once we've successfully allocated the
-requested pid number. This should be easy to backport to v5.5.
+That's the lower 2GB *of DRAM*, which occupies the upper 2GB of the L3 
+memory map ;)
 
-The second patch adds a comment explaining that we must keep returning ENOMEM
-since we've been doing it for a long time and have explicitly documented this
-behavior for userspace. This seemed worthwhile because we now have at least two
-separate example where people tried to change the return value to something
-other than ENOMEM (The first version of the regression fix did that too and the
-commit message links to an earlier patch that tried to do the same.).
-
-I have a simple regression test to make sure we catch this regression in the
-future but since that introduces a whole new selftest subdir and test files
-I'll keep this for v5.7.
-
-/* Testing */
-All patches have seen exposure in linux-next and are based on v5.6-rc1.
-I've had a build warning reported to me for the first version of the second
-patch two days ago that tried to remove the unconditional initalization but
-that's fixed and linux-next seemed happy. The second patch is now a pure
-non-functional change.
-
-/* Conflicts */
-At the time of creating this pr no merge conflicts were reported with anything
-that is expected to land this merge window.
-
-The following changes since commit 98d54f81e36ba3bf92172791eba5ca5bd813989b:
-
-  Linux 5.6-rc4 (2020-03-01 16:38:46 -0600)
-
-are available in the Git repository at:
-
-  git@gitolite.kernel.org:pub/scm/linux/kernel/git/brauner/linux tags/for-linus-2020-03-10
-
-for you to fetch changes up to 10dab84caf400f2f5f8b010ebb0c7c4272ec5093:
-
-  pid: make ENOMEM return value more obvious (2020-03-09 23:40:05 +0100)
-
-Please consider pulling these changes from the signed for-linus-2020-03-10 tag.
-
-Thanks!
-Christian
-
-----------------------------------------------------------------
-for-linus-2020-03-10
-
-----------------------------------------------------------------
-Christian Brauner (1):
-      pid: make ENOMEM return value more obvious
-
-Corey Minyard (1):
-      pid: Fix error return value in some cases
-
- kernel/pid.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+Robin.
 
