@@ -2,143 +2,140 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E826C2BAEE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:53:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CCCBC4CC9E
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:53:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58EE9206BE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:53:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 516CB20736
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:53:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ndufresne-ca.20150623.gappssmtp.com header.i=@ndufresne-ca.20150623.gappssmtp.com header.b="ygDsOdtY"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gy6OvkUe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730916AbgCKSxn (ORCPT
+        id S1730951AbgCKSxx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 14:53:43 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:33386 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730705AbgCKSxn (ORCPT
+        Wed, 11 Mar 2020 14:53:53 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:43342 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730927AbgCKSxx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 14:53:43 -0400
-Received: by mail-qk1-f194.google.com with SMTP id p62so3192528qkb.0
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 11:53:41 -0700 (PDT)
+        Wed, 11 Mar 2020 14:53:53 -0400
+Received: by mail-pf1-f193.google.com with SMTP id c144so1832538pfb.10
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 11:53:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ndufresne-ca.20150623.gappssmtp.com; s=20150623;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=/dNPHeH2JZmJ2dMMclVWXH5FnCXDvSk9raw7HY/zLIQ=;
-        b=ygDsOdtY6QApFOfgyPzrx2YcP1OlBPCDu+mbKNx62lxfET7c++bIcIv7VAPT7xD+AM
-         HBLi/TBK9SQzFp6tSZ1apwYr4NEZtIjQKrVdleubLxSXTK9HiMiJ6OTmZt3eDFFoy9Mo
-         66tCLtaGGmTijrMelKjuDHFOas9Rl6fYaBH5AfQR8a4FgZAx8dUSt0aGPAfgkn/4FDL7
-         eKhzvpKLREUjx5S1Hh3hSJakrnOsra+GKMUeE510a9zYDWmO3GmJYrD6U5m2cewGd7N/
-         SkzHDu/3OQzW47rJkLahb0aKEACA0ITGxh1SMrT0N5r3CvGCNeggcird9UZZBL4QWxDg
-         mEXA==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=VDvnNzuVZRF1OQ+owZ2HapaaeoLU1qYO7HZNkHLtFHQ=;
+        b=gy6OvkUeXGeKaiQsNa9fM23j5TYpXenPdxP8SzNFiO3ORUUU4+FO2hEMgeun8Qne5v
+         vd4GU6iwXK9iudf6/mOVqAbdPSbMtFm1ANBBbYj5HHUy0M6X3mtgb4LMBFtWX8scU8PR
+         Ad9FOFuKRowitYA2nAxkqTi8vG/9U34BWV/2o=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=/dNPHeH2JZmJ2dMMclVWXH5FnCXDvSk9raw7HY/zLIQ=;
-        b=CoRHY/yP42YJhjFvw9VtZK5cp+CU2nHfddLywVkLpYJ1nyEnzAiGOUgSGeNJkJ5DhB
-         DlZBnMBg2K22VWIPWm3NgTa+i01uIO2eRBQfd+NYyLeWRMj6LYtyZ+CyCIOqDfWZWCEH
-         7Cb6y7N04du3wkhErn81IoYyS5BB+bvcP/r+vCTH2lcuedn9FK4g0o0JRsJk5hrDejA1
-         TZpkbyEsdKxASev/Ak9ki30gRlLKR7LrXRjT9BRoJu4xUa+JGRZyWZjlfeuY01AQwWFP
-         Frad+xFWVwbtcCQ1l/cNeShylFodVq1R5LMJmubT065MnhMEaiaTE2zh81GCZSqChE/x
-         0CWw==
-X-Gm-Message-State: ANhLgQ0bdNQvLaBuP46RNWdAF70GUO31jwJ/QerBBzzvFYbXjnKIlKQ2
-        Pd/eMfyncgf0Ft+lUP9iBYnQig==
-X-Google-Smtp-Source: ADFU+vtD1QK3Nnp06tnpyor3kMVvaCQ5Li6lEy6jtxXZyL53FFKlmeks+gc5PIIA+MN2WNDram2iHA==
-X-Received: by 2002:a37:b304:: with SMTP id c4mr4250035qkf.348.1583952820524;
-        Wed, 11 Mar 2020 11:53:40 -0700 (PDT)
-Received: from nicolas-tpx395.localdomain ([2610:98:8005::527])
-        by smtp.gmail.com with ESMTPSA id f13sm21354104qkm.42.2020.03.11.11.53.39
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=VDvnNzuVZRF1OQ+owZ2HapaaeoLU1qYO7HZNkHLtFHQ=;
+        b=ZqaUHp5IKEWxK/qME0Ib6UWMeN/5vlvGcVRF+cqBcXD4pb5KFm9Ugq5xc/IZ3btdl1
+         f4QEgCBKahvJwrkGQN0Eu2E5eLd7of5kg0+/VHbhMxzw24gjlhHlNA16JrtEf5VxDOQW
+         muTVHLr4VvulZnzesRUt6lSB1ml6Io3NLDPkL64o1ZCt2xhyEdDtkrTgLcfG3crD5IVk
+         uQ2pTcWqX1kmeyFo+5J0ZiNBDb3l4y5I4Y6Rjba9x0gTL7YzqnS50FOHSZ2UT0a+SmHu
+         W0e2BXdjlXVYqSp1vMEO3k/u+z3bPe0AJigKdkv3L1yzq03MR4XUPpXOLg+Y6seNA3bI
+         75XQ==
+X-Gm-Message-State: ANhLgQ3eAn6lADfVTiqurJJDSpjcXuWdjEKf1ywgMKRsO5ZkMB9ZTqjr
+        p8HWDtoJEmL5xmFIHg9pfZdzaQ==
+X-Google-Smtp-Source: ADFU+vvTWaKfyc2n6gEYsa1Kpaa2di3XtHi232URM9zPqVf3eyBLvR6B2d0u5N8KlTiOP7L1tPCgUw==
+X-Received: by 2002:a62:cdcc:: with SMTP id o195mr2111873pfg.323.1583952832074;
+        Wed, 11 Mar 2020 11:53:52 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id i13sm431770pfd.180.2020.03.11.11.53.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Mar 2020 11:53:39 -0700 (PDT)
-Message-ID: <7b0e33f9c66dd87904b787218389c3d639f7469a.camel@ndufresne.ca>
-Subject: Re: [PATCH 1/6] v4l2-mem2mem: return CAPTURE buffer first
-From:   Nicolas Dufresne <nicolas@ndufresne.ca>
-To:     Ezequiel Garcia <ezequiel@collabora.com>,
-        linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Jeffrey Kardatzke <jkardatzke@chromium.org>
-Date:   Wed, 11 Mar 2020 14:53:37 -0400
-In-Reply-To: <20200311174300.19407-2-ezequiel@collabora.com>
-References: <20200311174300.19407-1-ezequiel@collabora.com>
-         <20200311174300.19407-2-ezequiel@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        Wed, 11 Mar 2020 11:53:51 -0700 (PDT)
+Date:   Wed, 11 Mar 2020 11:53:50 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Bernd Edlinger <bernd.edlinger@hotmail.de>
+Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Andrei Vagin <avagin@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Yuyang Du <duyuyang@gmail.com>,
+        David Hildenbrand <david@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        David Howells <dhowells@redhat.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christian Kellner <christian@kellner.me>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>
+Subject: Re: [PATCH 3/4] mm: docs: Fix a comment in process_vm_rw_core
+Message-ID: <202003111153.A77D048@keescook>
+References: <878sk94eay.fsf@x220.int.ebiederm.org>
+ <AM6PR03MB517086003BD2C32E199690A3E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87r1y12yc7.fsf@x220.int.ebiederm.org>
+ <87k13t2xpd.fsf@x220.int.ebiederm.org>
+ <87d09l2x5n.fsf@x220.int.ebiederm.org>
+ <AM6PR03MB5170F0F9DC18F5EA77C9A857E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <871rq12vxu.fsf@x220.int.ebiederm.org>
+ <AM6PR03MB5170DF45E3245F55B95CCD91E4FE0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <877dzt1fnf.fsf@x220.int.ebiederm.org>
+ <AM6PR03MB5170ED6D4D216EEEEF400136E4FF0@AM6PR03MB5170.eurprd03.prod.outlook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <AM6PR03MB5170ED6D4D216EEEEF400136E4FF0@AM6PR03MB5170.eurprd03.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le mercredi 11 mars 2020 à 14:42 -0300, Ezequiel Garcia a écrit :
-> When the request API is used, typically an OUTPUT (src) buffer
-> will be part of a request. A userspace process will be typically
-> blocked, waiting on the request file descriptor.
+On Tue, Mar 10, 2020 at 02:44:10PM +0100, Bernd Edlinger wrote:
+> This removes a duplicate "a" in the comment in process_vm_rw_core.
 > 
-> Returning the OUTPUT (src) buffer will wake-up such processes,
-> who will immediately attempt to dequeue the CAPTURE buffer,
-> only to find it's still unavailable.
-> 
-> Therefore, change v4l2_m2m_buf_done_and_job_finish returning
-> the CAPTURE (dst) buffer first, to avoid signalling the request
-> file descriptor prematurely, i.e. before the CAPTURE buffer is done.
-> 
-> When the request API is not used, this change should have
-> no impact.
-> 
-> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+> Signed-off-by: Bernd Edlinger <bernd.edlinger@hotmail.de>
 
-This was tested with upcoming GStreamer element with O_NONBLOCK flag passed when
-opening the video node. Before this change, EAGAIN would from time to time be
-returned when DQBUF(CAPTURE) was called.
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-  gst-launch-1.0 filesrc location=somefile.mp4 ! parsebin ! v4l2slh264dec ! fakevideosink
-  https://gitlab.freedesktop.org/ndufresne/gst-plugins-bad/-/blob/v4l2codecs-hantro-v3/sys/v4l2codecs/gstv4l2decoder.c#L139
-
-Tested-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+-Kees
 
 > ---
->  drivers/media/v4l2-core/v4l2-mem2mem.c | 11 ++++++++++-
->  1 file changed, 10 insertions(+), 1 deletion(-)
+>  mm/process_vm_access.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/media/v4l2-core/v4l2-mem2mem.c b/drivers/media/v4l2-
-> core/v4l2-mem2mem.c
-> index 8986c31176e9..62ac9424c92a 100644
-> --- a/drivers/media/v4l2-core/v4l2-mem2mem.c
-> +++ b/drivers/media/v4l2-core/v4l2-mem2mem.c
-> @@ -504,12 +504,21 @@ void v4l2_m2m_buf_done_and_job_finish(struct
-> v4l2_m2m_dev *m2m_dev,
->  
->  	if (WARN_ON(!src_buf || !dst_buf))
->  		goto unlock;
-> -	v4l2_m2m_buf_done(src_buf, state);
->  	dst_buf->is_held = src_buf->flags & V4L2_BUF_FLAG_M2M_HOLD_CAPTURE_BUF;
->  	if (!dst_buf->is_held) {
->  		v4l2_m2m_dst_buf_remove(m2m_ctx);
->  		v4l2_m2m_buf_done(dst_buf, state);
->  	}
-> +	/*
-> +	 * If the request API is being used, returning the OUTPUT
-> +	 * (src) buffer will wake-up any process waiting on the
-> +	 * request file descriptor.
-> +	 *
-> +	 * Therefore, return the CAPTURE (dst) buffer first,
-> +	 * to avoid signalling the request file descriptor
-> +	 * before the CAPTURE buffer is done.
-> +	 */
-> +	v4l2_m2m_buf_done(src_buf, state);
->  	schedule_next = _v4l2_m2m_job_finish(m2m_dev, m2m_ctx);
->  unlock:
->  	spin_unlock_irqrestore(&m2m_dev->job_spinlock, flags);
+> diff --git a/mm/process_vm_access.c b/mm/process_vm_access.c
+> index 357aa7b..b3e6eb5 100644
+> --- a/mm/process_vm_access.c
+> +++ b/mm/process_vm_access.c
+> @@ -204,7 +204,7 @@ static ssize_t process_vm_rw_core(pid_t pid, struct iov_iter *iter,
+>  	if (!mm || IS_ERR(mm)) {
+>  		rc = IS_ERR(mm) ? PTR_ERR(mm) : -ESRCH;
+>  		/*
+> -		 * Explicitly map EACCES to EPERM as EPERM is a more a
+> +		 * Explicitly map EACCES to EPERM as EPERM is a more
+>  		 * appropriate error code for process_vw_readv/writev
+>  		 */
+>  		if (rc == -EACCES)
+> -- 
+> 1.9.1
 
+-- 
+Kees Cook
