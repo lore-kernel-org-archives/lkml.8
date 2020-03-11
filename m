@@ -2,232 +2,107 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC3B3C0044D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 16:53:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FFA2C5ACC1
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 16:53:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAC6620735
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 16:53:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B86A820739
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 16:53:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="kX58gJ61"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730316AbgCKQxh (ORCPT
+        id S1730382AbgCKQxt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 12:53:37 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:60606 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730247AbgCKQxg (ORCPT
+        Wed, 11 Mar 2020 12:53:49 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:21907 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730175AbgCKQxg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 11 Mar 2020 12:53:36 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 55DD9295FA6
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-To:     robh+dt@kernel.org, mark.rutland@arm.com, ck.hu@mediatek.com,
-        p.zabel@pengutronix.de, airlied@linux.ie, mturquette@baylibre.com,
-        sboyd@kernel.org, ulrich.hecht+renesas@gmail.com,
-        laurent.pinchart@ideasonboard.com
-Cc:     Allison Randal <allison@lohutok.net>,
-        Matthias Brugger <matthias.bgg@gmail.com>, wens@csie.org,
-        linux-media@vger.kernel.org, sean.wang@mediatek.com,
-        hsinyi@chromium.org, rdunlap@infradead.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        dri-devel@lists.freedesktop.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Weiyi Lu <weiyi.lu@mediatek.com>,
-        Seiya Wang <seiya.wang@mediatek.com>,
-        Matthias Brugger <mbrugger@suse.com>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        linux-clk@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        Daniel Vetter <daniel@ffwll.ch>,
-        linux-arm-kernel@lists.infradead.org, matthias.bgg@kernel.org,
-        Minghsiu Tsai <minghsiu.tsai@mediatek.com>,
-        frank-w@public-files.de, devicetree@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Collabora Kernel ML <kernel@collabora.com>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        linux-kernel@vger.kernel.org, mtk01761 <wendell.lin@mediatek.com>,
-        Richard Fontana <rfontana@redhat.com>
-Subject: [PATCH v12 1/5] drm/mediatek: Omit warning on probe defers
-Date:   Wed, 11 Mar 2020 17:53:18 +0100
-Message-Id: <20200311165322.1594233-2-enric.balletbo@collabora.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200311165322.1594233-1-enric.balletbo@collabora.com>
-References: <20200311165322.1594233-1-enric.balletbo@collabora.com>
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1583945616; h=Date: Message-Id: Cc: To: References:
+ In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
+ Content-Type: Sender; bh=ubLoWCp3h01mj32RDpUyl192zHsOqVXscIZcMtW7IbI=;
+ b=kX58gJ61nDsqeKDYnIW49H4I/gNAApfOGCGgZloiaXTioQQWbk+Irhci8nsoLcTOsrRU7dIP
+ FO3yXVzja0zTls65TEWh9upIawlXCM6He1XqsupEyegkjYBZ9x8ZPVSDl+wVzTkQFKFJwE4b
+ 8vb1xR6EEN5TvOzAG4fsUIOCURc=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e69178a.7fc3b35dc500-smtp-out-n01;
+ Wed, 11 Mar 2020 16:53:30 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 7184BC433D2; Wed, 11 Mar 2020 16:53:30 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id E469BC433CB;
+        Wed, 11 Mar 2020 16:53:27 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E469BC433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] ath9k: Handle txpower changes even when TPC is disabled
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20200229161347.31341-1-repk@triplefau.lt>
+References: <20200229161347.31341-1-repk@triplefau.lt>
+To:     Remi Pommarel <repk@triplefau.lt>
+Cc:     Lorenzo Bianconi <lorenzo@kernel.org>,
+        QCA ath9k Development <ath9k-devel@qca.qualcomm.com>,
+        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Remi Pommarel <repk@triplefau.lt>, stable@vger.kernel.org
+User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
+Message-Id: <20200311165330.7184BC433D2@smtp.codeaurora.org>
+Date:   Wed, 11 Mar 2020 16:53:30 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthias Brugger <mbrugger@suse.com>
+Remi Pommarel <repk@triplefau.lt> wrote:
 
-It can happen that the mmsys clock drivers aren't probed before the
-platform driver gets invoked. The platform driver used to print a warning
-that the driver failed to get the clocks. Omit this error on
-the defered probe path.
+> When TPC is disabled IEEE80211_CONF_CHANGE_POWER event can be handled to
+> reconfigure HW's maximum txpower.
+> 
+> This fixes 0dBm txpower setting when user attaches to an interface for
+> the first time with the following scenario:
+> 
+> ieee80211_do_open()
+>     ath9k_add_interface()
+>         ath9k_set_txpower() /* Set TX power with not yet initialized
+>                                sc->hw->conf.power_level */
+> 
+>     ieee80211_hw_config() /* Iniatilize sc->hw->conf.power_level and
+>                              raise IEEE80211_CONF_CHANGE_POWER */
+> 
+>     ath9k_config() /* IEEE80211_CONF_CHANGE_POWER is ignored */
+> 
+> This issue can be reproduced with the following:
+> 
+>   $ modprobe -r ath9k
+>   $ modprobe ath9k
+>   $ wpa_supplicant -i wlan0 -c /tmp/wpa.conf &
+>   $ iw dev /* Here TX power is either 0 or 3 depending on RF chain */
+>   $ killall wpa_supplicant
+>   $ iw dev /* TX power goes back to calibrated value and subsequent
+>               calls will be fine */
+> 
+> Fixes: 283dd11994cde ("ath9k: add per-vif TX power capability")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Remi Pommarel <repk@triplefau.lt>
+> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 
-Signed-off-by: Matthias Brugger <mbrugger@suse.com>
-Reviewed-by: CK Hu <ck.hu@mediatek.com>
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
----
+Patch applied to ath-next branch of ath.git, thanks.
 
-Changes in v12: None
-Changes in v10: None
-Changes in v9: None
-Changes in v8: None
-Changes in v7: None
+968ae2caad07 ath9k: Handle txpower changes even when TPC is disabled
 
- drivers/gpu/drm/mediatek/mtk_disp_color.c |  5 ++++-
- drivers/gpu/drm/mediatek/mtk_disp_ovl.c   |  5 ++++-
- drivers/gpu/drm/mediatek/mtk_disp_rdma.c  |  5 ++++-
- drivers/gpu/drm/mediatek/mtk_dpi.c        | 12 +++++++++---
- drivers/gpu/drm/mediatek/mtk_drm_ddp.c    |  3 ++-
- drivers/gpu/drm/mediatek/mtk_dsi.c        |  8 ++++++--
- drivers/gpu/drm/mediatek/mtk_hdmi.c       |  4 +++-
- 7 files changed, 32 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/gpu/drm/mediatek/mtk_disp_color.c b/drivers/gpu/drm/mediatek/mtk_disp_color.c
-index 6fb0d6983a4a..3ae9c810845b 100644
---- a/drivers/gpu/drm/mediatek/mtk_disp_color.c
-+++ b/drivers/gpu/drm/mediatek/mtk_disp_color.c
-@@ -119,7 +119,10 @@ static int mtk_disp_color_probe(struct platform_device *pdev)
- 	ret = mtk_ddp_comp_init(dev, dev->of_node, &priv->ddp_comp, comp_id,
- 				&mtk_disp_color_funcs);
- 	if (ret) {
--		dev_err(dev, "Failed to initialize component: %d\n", ret);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "Failed to initialize component: %d\n",
-+				ret);
-+
- 		return ret;
- 	}
- 
-diff --git a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
-index 891d80c73e04..28651bc579bc 100644
---- a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
-+++ b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
-@@ -386,7 +386,10 @@ static int mtk_disp_ovl_probe(struct platform_device *pdev)
- 	ret = mtk_ddp_comp_init(dev, dev->of_node, &priv->ddp_comp, comp_id,
- 				&mtk_disp_ovl_funcs);
- 	if (ret) {
--		dev_err(dev, "Failed to initialize component: %d\n", ret);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "Failed to initialize component: %d\n",
-+				ret);
-+
- 		return ret;
- 	}
- 
-diff --git a/drivers/gpu/drm/mediatek/mtk_disp_rdma.c b/drivers/gpu/drm/mediatek/mtk_disp_rdma.c
-index 0cb848d64206..e04319fedf46 100644
---- a/drivers/gpu/drm/mediatek/mtk_disp_rdma.c
-+++ b/drivers/gpu/drm/mediatek/mtk_disp_rdma.c
-@@ -294,7 +294,10 @@ static int mtk_disp_rdma_probe(struct platform_device *pdev)
- 	ret = mtk_ddp_comp_init(dev, dev->of_node, &priv->ddp_comp, comp_id,
- 				&mtk_disp_rdma_funcs);
- 	if (ret) {
--		dev_err(dev, "Failed to initialize component: %d\n", ret);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "Failed to initialize component: %d\n",
-+				ret);
-+
- 		return ret;
- 	}
- 
-diff --git a/drivers/gpu/drm/mediatek/mtk_dpi.c b/drivers/gpu/drm/mediatek/mtk_dpi.c
-index 01fa8b8d763d..1b219edef541 100644
---- a/drivers/gpu/drm/mediatek/mtk_dpi.c
-+++ b/drivers/gpu/drm/mediatek/mtk_dpi.c
-@@ -701,21 +701,27 @@ static int mtk_dpi_probe(struct platform_device *pdev)
- 	dpi->engine_clk = devm_clk_get(dev, "engine");
- 	if (IS_ERR(dpi->engine_clk)) {
- 		ret = PTR_ERR(dpi->engine_clk);
--		dev_err(dev, "Failed to get engine clock: %d\n", ret);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "Failed to get engine clock: %d\n", ret);
-+
- 		return ret;
- 	}
- 
- 	dpi->pixel_clk = devm_clk_get(dev, "pixel");
- 	if (IS_ERR(dpi->pixel_clk)) {
- 		ret = PTR_ERR(dpi->pixel_clk);
--		dev_err(dev, "Failed to get pixel clock: %d\n", ret);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "Failed to get pixel clock: %d\n", ret);
-+
- 		return ret;
- 	}
- 
- 	dpi->tvd_clk = devm_clk_get(dev, "pll");
- 	if (IS_ERR(dpi->tvd_clk)) {
- 		ret = PTR_ERR(dpi->tvd_clk);
--		dev_err(dev, "Failed to get tvdpll clock: %d\n", ret);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "Failed to get tvdpll clock: %d\n", ret);
-+
- 		return ret;
- 	}
- 
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-index 13035c906035..b885f60f474c 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-@@ -628,7 +628,8 @@ static int mtk_ddp_probe(struct platform_device *pdev)
- 	if (!ddp->data->no_clk) {
- 		ddp->clk = devm_clk_get(dev, NULL);
- 		if (IS_ERR(ddp->clk)) {
--			dev_err(dev, "Failed to get clock\n");
-+			if (PTR_ERR(ddp->clk) != -EPROBE_DEFER)
-+				dev_err(dev, "Failed to get clock\n");
- 			return PTR_ERR(ddp->clk);
- 		}
- 	}
-diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
-index 5fa1073cf26b..a45ed0270531 100644
---- a/drivers/gpu/drm/mediatek/mtk_dsi.c
-+++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
-@@ -1194,14 +1194,18 @@ static int mtk_dsi_probe(struct platform_device *pdev)
- 	dsi->engine_clk = devm_clk_get(dev, "engine");
- 	if (IS_ERR(dsi->engine_clk)) {
- 		ret = PTR_ERR(dsi->engine_clk);
--		dev_err(dev, "Failed to get engine clock: %d\n", ret);
-+
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "Failed to get engine clock: %d\n", ret);
- 		goto err_unregister_host;
- 	}
- 
- 	dsi->digital_clk = devm_clk_get(dev, "digital");
- 	if (IS_ERR(dsi->digital_clk)) {
- 		ret = PTR_ERR(dsi->digital_clk);
--		dev_err(dev, "Failed to get digital clock: %d\n", ret);
-+
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "Failed to get digital clock: %d\n", ret);
- 		goto err_unregister_host;
- 	}
- 
-diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi.c b/drivers/gpu/drm/mediatek/mtk_hdmi.c
-index 5e4a4dbda443..69c6a146c561 100644
---- a/drivers/gpu/drm/mediatek/mtk_hdmi.c
-+++ b/drivers/gpu/drm/mediatek/mtk_hdmi.c
-@@ -1451,7 +1451,9 @@ static int mtk_hdmi_dt_parse_pdata(struct mtk_hdmi *hdmi,
- 
- 	ret = mtk_hdmi_get_all_clk(hdmi, np);
- 	if (ret) {
--		dev_err(dev, "Failed to get clocks: %d\n", ret);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "Failed to get clocks: %d\n", ret);
-+
- 		return ret;
- 	}
- 
 -- 
-2.25.1
+https://patchwork.kernel.org/patch/11413917/
 
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
