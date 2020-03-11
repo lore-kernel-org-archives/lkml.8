@@ -2,126 +2,206 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13983C10F27
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 08:27:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4070C18E5A
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 08:31:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E05E720848
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 08:27:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D24E208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 08:31:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583915263;
-	bh=YA9GhQZV5L6bynEq7gS0i8wlNt1x1Jqt9yMiyPHrT8U=;
+	s=default; t=1583915461;
+	bh=rIWT9c23MTBVlaTh1Eb6lpf59lA1osIAXiNlIrkeg/U=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=x7nrSKEtt4cY2tgriLHazvIvzFIo/mm/yyZoJfl0lgBzFF8AnigtWTeqEDrcQA+h5
-	 Ct7PI1U2aL/BENPCrzU596kOuB1jKkHuyS21+FwQ/lotVCNlRz3X46lfLk8OZ5bx1E
-	 CfZEc3vshK3bnGz6EyMqMBLTGv24TbdvKcLI0CpE=
+	b=KKLUddvswgfL3gnuA9Vk3dc18o8K00kqb/G9QFhIXJPTCHH4uUWQ2h09yqvLoXR+v
+	 HaBiktAh74ZfCaiCpcd/1ElqoNGve/Gj7ESzdnGCbez94BstJJc+vSUlPhYPEm2ET4
+	 6nmjS1QBJ4c2pcoC2JsdgZXo5DL6JyagAB3kmepQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728556AbgCKI1m (ORCPT
+        id S1728445AbgCKIbA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 04:27:42 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:55436 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726160AbgCKI1m (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 04:27:42 -0400
-Received: by mail-wm1-f66.google.com with SMTP id 6so1035489wmi.5
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 01:27:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=t/jUgb2WsM9EoAjEAHRyAbPDuMelzLd2J5nybEhmsYU=;
-        b=jHuIGIPOTjRCns6e64/dXbYgRrRsDy+pS6K8S4EmExmqKFFbUgBTaLKS4L5ZwUkSzM
-         SPQn9Xlo7E6IjBDgvDbIJ+Kb0eaBIU2dSDHtm5jjesh0aZ2ks/HtL8gHNN4l8j4SHcBW
-         d/j/znw+ORjHUBrQrpgvdlbuqrqNKDRUuoyIp1OS7n8tTS3t0Mjr+atdWtVNFge92vvo
-         MJFqHvO3eUkl4/ZJ+ljSx8qy7T0+MiZyC1VprLhkuzRU+RXTyo5+y1+wiDiKeFQZU6O1
-         yV3dTWSzv238IubogBkkJbe0RPjVPd9AV5/OzTr9CbofAuhatDfPnCcnC+VqCdQ0Zr8B
-         YJlw==
-X-Gm-Message-State: ANhLgQ0dShsrGl9ByBHtY4HExhaOoiJckSJxlgeFeQ9NpPcvdFGFE2Ky
-        79mDbRyI7np5NjsORZU6sOU=
-X-Google-Smtp-Source: ADFU+vt1rzvjovs9Fqx3ZtwpZNkzPk0A8oKdn7NCmBdaEs2hWB3Vz0N8ji7oL3cMOzx5S1SulIhugw==
-X-Received: by 2002:a1c:9904:: with SMTP id b4mr2565466wme.34.1583915258992;
-        Wed, 11 Mar 2020 01:27:38 -0700 (PDT)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id y184sm7683553wmd.43.2020.03.11.01.27.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Mar 2020 01:27:38 -0700 (PDT)
-Date:   Wed, 11 Mar 2020 09:27:36 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     David Rientjes <rientjes@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: Re: [patch] mm, oom: prevent soft lockup on memcg oom for UP systems
-Message-ID: <20200311082736.GA23944@dhcp22.suse.cz>
-References: <alpine.DEB.2.21.2003101438510.161160@chino.kir.corp.google.com>
- <20200310221019.GE8447@dhcp22.suse.cz>
- <alpine.DEB.2.21.2003101556270.177273@chino.kir.corp.google.com>
+        Wed, 11 Mar 2020 04:31:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55944 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726198AbgCKIbA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 04:31:00 -0400
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C91AC20848;
+        Wed, 11 Mar 2020 08:30:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583915459;
+        bh=rIWT9c23MTBVlaTh1Eb6lpf59lA1osIAXiNlIrkeg/U=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=PmrV3SBmAO/5xRR+ybHP68yc0R7xxRl/oaiqY1r4hJ8wa9wRJUgPn1CQKEA9GHKVi
+         UA9LjjCVNtrwB+IJCS7PWZOgeeI5Br2yGlnux0CRVoPfmpPJkdPRvYXPkXeCwcZI1s
+         /cxWTtSI/ddBabdOgeSrp1Hzg7Vwmg6IJtKTd9Fk=
+Date:   Wed, 11 Mar 2020 16:30:52 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     peng.fan@nxp.com
+Cc:     viresh.kumar@linaro.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+        Anson.Huang@nxp.com, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        robh+dt@kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH 1/3] ARM: dts: imx: add nvmem property for cpu0
+Message-ID: <20200311083052.GD29269@dragon>
+References: <1583201690-16068-1-git-send-email-peng.fan@nxp.com>
+ <1583201690-16068-2-git-send-email-peng.fan@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.2003101556270.177273@chino.kir.corp.google.com>
+In-Reply-To: <1583201690-16068-2-git-send-email-peng.fan@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 10-03-20 16:02:23, David Rientjes wrote:
-> On Tue, 10 Mar 2020, Michal Hocko wrote:
+On Tue, Mar 03, 2020 at 10:14:48AM +0800, peng.fan@nxp.com wrote:
+> From: Peng Fan <peng.fan@nxp.com>
 > 
-> > > When a process is oom killed as a result of memcg limits and the victim
-> > > is waiting to exit, nothing ends up actually yielding the processor back
-> > > to the victim on UP systems with preemption disabled.  Instead, the
-> > > charging process simply loops in memcg reclaim and eventually soft
-> > > lockups.
-> > > 
-> > > Memory cgroup out of memory: Killed process 808 (repro) total-vm:41944kB, anon-rss:35344kB, file-rss:504kB, shmem-rss:0kB, UID:0 pgtables:108kB oom_score_adj:0
-> > > watchdog: BUG: soft lockup - CPU#0 stuck for 23s! [repro:806]
-> > > CPU: 0 PID: 806 Comm: repro Not tainted 5.6.0-rc5+ #136
-> > > RIP: 0010:shrink_lruvec+0x4e9/0xa40
-> > > ...
-> > > Call Trace:
-> > >  shrink_node+0x40d/0x7d0
-> > >  do_try_to_free_pages+0x13f/0x470
-> > >  try_to_free_mem_cgroup_pages+0x16d/0x230
-> > >  try_charge+0x247/0xac0
-> > >  mem_cgroup_try_charge+0x10a/0x220
-> > >  mem_cgroup_try_charge_delay+0x1e/0x40
-> > >  handle_mm_fault+0xdf2/0x15f0
-> > >  do_user_addr_fault+0x21f/0x420
-> > >  page_fault+0x2f/0x40
-> > > 
-> > > Make sure that something ends up actually yielding the processor back to
-> > > the victim to allow for memory freeing.  Most appropriate place appears to
-> > > be shrink_node_memcgs() where the iteration of all decendant memcgs could
-> > > be particularly lengthy.
-> > 
-> > There is a cond_resched in shrink_lruvec and another one in
-> > shrink_page_list. Why doesn't any of them hit? Is it because there are
-> > no pages on the LRU list? Because rss data suggests there should be
-> > enough pages to go that path. Or maybe it is shrink_slab path that takes
-> > too long?
-> > 
+> Add nvmem related property for cpu0, then nvmem API could be used
+> to read cpu speed grading to avoid directly read OCOTP registers
+> mapped which could not handle defer probe.
 > 
-> I think it can be a number of cases, most notably mem_cgroup_protected() 
-> checks which is why the cond_resched() is added above it.  Rather than add 
-> cond_resched() only for MEMCG_PROT_MIN and for certain MEMCG_PROT_LOW, the 
-> cond_resched() is added above the switch clause because the iteration 
-> itself may be potentially very lengthy.
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> ---
+>  arch/arm/boot/dts/imx6dl.dtsi  | 2 ++
+>  arch/arm/boot/dts/imx6q.dtsi   | 2 ++
+>  arch/arm/boot/dts/imx6qdl.dtsi | 7 +++++++
+>  arch/arm/boot/dts/imx6sl.dtsi  | 9 +++++++++
+>  arch/arm/boot/dts/imx6sll.dtsi | 6 ++++++
+>  arch/arm/boot/dts/imx6sx.dtsi  | 6 ++++++
+>  6 files changed, 32 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/imx6dl.dtsi b/arch/arm/boot/dts/imx6dl.dtsi
+> index 4b3a128d9260..055f1d875bac 100644
+> --- a/arch/arm/boot/dts/imx6dl.dtsi
+> +++ b/arch/arm/boot/dts/imx6dl.dtsi
+> @@ -44,6 +44,8 @@
+>  			arm-supply = <&reg_arm>;
+>  			pu-supply = <&reg_pu>;
+>  			soc-supply = <&reg_soc>;
+> +			nvmem-cells = <&cpu_speed_grade>;
+> +			nvmem-cell-names = "speed_grade";
+>  		};
+>  
+>  		cpu@1 {
+> diff --git a/arch/arm/boot/dts/imx6q.dtsi b/arch/arm/boot/dts/imx6q.dtsi
+> index 0fad13f9d336..d3ba9d4a1290 100644
+> --- a/arch/arm/boot/dts/imx6q.dtsi
+> +++ b/arch/arm/boot/dts/imx6q.dtsi
+> @@ -49,6 +49,8 @@
+>  			arm-supply = <&reg_arm>;
+>  			pu-supply = <&reg_pu>;
+>  			soc-supply = <&reg_soc>;
+> +			nvmem-cells = <&cpu_speed_grade>;
+> +			nvmem-cell-names = "speed_grade";
+>  		};
+>  
+>  		cpu1: cpu@1 {
+> diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
+> index 70fb8b56b1d7..982f546b0b89 100644
+> --- a/arch/arm/boot/dts/imx6qdl.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl.dtsi
+> @@ -1165,6 +1165,13 @@
+>  				compatible = "fsl,imx6q-ocotp", "syscon";
+>  				reg = <0x021bc000 0x4000>;
+>  				clocks = <&clks IMX6QDL_CLK_IIM>;
+> +
 
-Was any of the above the case for your soft lockup case? How have you
-managed to trigger it? As I've said I am not against the patch but I
-would really like to see an actual explanation what happened rather than
-speculations of what might have happened. If for nothing else then for
-the future reference.
+Please drop such newline.  Do not really think they are necessary.
 
-If this is really about all the hierarchy being MEMCG_PROT_MIN protected
-and that results in a very expensive and pointless reclaim walk that can
-trigger soft lockup then it should be explicitly mentioned in the
-changelog.
--- 
-Michal Hocko
-SUSE Labs
+Shawn
+
+> +				#address-cells = <1>;
+> +				#size-cells = <1>;
+> +
+> +				cpu_speed_grade: speed-grade@10 {
+> +					reg = <0x10 4>;
+> +				};
+>  			};
+>  
+>  			tzasc@21d0000 { /* TZASC1 */
+> diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
+> index c8ec46fe8302..de943341e4f2 100644
+> --- a/arch/arm/boot/dts/imx6sl.dtsi
+> +++ b/arch/arm/boot/dts/imx6sl.dtsi
+> @@ -74,6 +74,8 @@
+>  			arm-supply = <&reg_arm>;
+>  			pu-supply = <&reg_pu>;
+>  			soc-supply = <&reg_soc>;
+> +			nvmem-cells = <&cpu_speed_grade>;
+> +			nvmem-cell-names = "speed_grade";
+>  		};
+>  	};
+>  
+> @@ -953,6 +955,13 @@
+>  				compatible = "fsl,imx6sl-ocotp", "syscon";
+>  				reg = <0x021bc000 0x4000>;
+>  				clocks = <&clks IMX6SL_CLK_OCOTP>;
+> +
+> +				#address-cells = <1>;
+> +				#size-cells = <1>;
+> +
+> +				cpu_speed_grade: speed-grade@10 {
+> +					reg = <0x10 4>;
+> +				};
+>  			};
+>  
+>  			audmux: audmux@21d8000 {
+> diff --git a/arch/arm/boot/dts/imx6sll.dtsi b/arch/arm/boot/dts/imx6sll.dtsi
+> index 797f850492fe..6b7fb3cec9f6 100644
+> --- a/arch/arm/boot/dts/imx6sll.dtsi
+> +++ b/arch/arm/boot/dts/imx6sll.dtsi
+> @@ -72,6 +72,8 @@
+>  				 <&clks IMX6SLL_CLK_PLL1_SYS>;
+>  			clock-names = "arm", "pll2_pfd2_396m", "step",
+>  				      "pll1_sw", "pll1_sys";
+> +			nvmem-cells = <&cpu_speed_grade>;
+> +			nvmem-cell-names = "speed_grade";
+>  		};
+>  	};
+>  
+> @@ -791,6 +793,10 @@
+>  				reg = <0x021bc000 0x4000>;
+>  				clocks = <&clks IMX6SLL_CLK_OCOTP>;
+>  
+> +				cpu_speed_grade: speed-grade@10 {
+> +					reg = <0x10 4>;
+> +				};
+> +
+>  				tempmon_calib: calib@38 {
+>  					reg = <0x38 4>;
+>  				};
+> diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
+> index e47d346a3543..63aa19d81b42 100644
+> --- a/arch/arm/boot/dts/imx6sx.dtsi
+> +++ b/arch/arm/boot/dts/imx6sx.dtsi
+> @@ -87,6 +87,8 @@
+>  				      "pll1_sw", "pll1_sys";
+>  			arm-supply = <&reg_arm>;
+>  			soc-supply = <&reg_soc>;
+> +			nvmem-cells = <&cpu_speed_grade>;
+> +			nvmem-cell-names = "speed_grade";
+>  		};
+>  	};
+>  
+> @@ -1058,6 +1060,10 @@
+>  				reg = <0x021bc000 0x4000>;
+>  				clocks = <&clks IMX6SX_CLK_OCOTP>;
+>  
+> +				cpu_speed_grade: speed-grade@10 {
+> +					reg = <0x10 4>;
+> +				};
+> +
+>  				tempmon_calib: calib@38 {
+>  					reg = <0x38 4>;
+>  				};
+> -- 
+> 2.16.4
+> 
