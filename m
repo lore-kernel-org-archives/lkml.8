@@ -2,127 +2,113 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF572C10F27
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 09:03:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE76AC10F27
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 09:04:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C446C208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 09:03:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583917432;
-	bh=ibkYfT8H8iwwHnGO0guecciLLSfXPKRIswI7WrzOsAU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Kpqfcz4NPnVEKJxu91eNNl7bpNi8LQd1ur4quh08grTEWTuRAG8QzVzLVCj25cfTZ
-	 zMxnlaBISnuYFPRlGBHJdTPd3RweSbyCruIPkrYsVPbru9V92S5onntczzk7M9cPP3
-	 d53PBuZdGZGUAlXQiH28YSnWmntziHTyMaKMTBeU=
+	by mail.kernel.org (Postfix) with ESMTP id 8CD4420873
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 09:04:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728737AbgCKJDv (ORCPT
+        id S1728613AbgCKJEa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 05:03:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41626 "EHLO mail.kernel.org"
+        Wed, 11 Mar 2020 05:04:30 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39460 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728150AbgCKJDv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 05:03:51 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C1A520873;
-        Wed, 11 Mar 2020 09:03:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583917430;
-        bh=ibkYfT8H8iwwHnGO0guecciLLSfXPKRIswI7WrzOsAU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=fqXpF49MGci3+/2P1nx05RN+C8Q7kAwE1N+DvnF1cM+9+DQmXANQlSecX4bDgB5Te
-         UDGPbYKaFfd2wiuPtW52npjmWKskS+tC8pOAhkN0jD6YwZ7mSbLGwNgsWmNSMaq6dH
-         Al/hCcA5OZoMyq9ueqOAbRQv/roYKcq5MtGN7tiQ=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jBxHI-00BrMA-Ow; Wed, 11 Mar 2020 09:03:48 +0000
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 11 Mar 2020 09:03:48 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Robert Richter <rrichter@marvell.com>
-Cc:     kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
-        Eric Auger <eric.auger@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <Andrew.Murray@arm.com>,
-        Zenghui Yu <yuzenghui@huawei.com>
-Subject: Re: [PATCH v3 03/32] irqchip/gic-v3: Workaround Cavium TX1 erratum
- when reading GICD_TYPER2
-In-Reply-To: <20200311084515.5vbfudbls3cj2cre@rric.localdomain>
-References: <20191224111055.11836-1-maz@kernel.org>
- <20191224111055.11836-4-maz@kernel.org>
- <20200309221137.5pjh4vkc62ft3h2a@rric.localdomain>
- <b1b7db1f0e1c47b7d9e2dfbbe3409b77@kernel.org>
- <20200311084515.5vbfudbls3cj2cre@rric.localdomain>
-Message-ID: <74682a83c75bc8e517462d181e6c24c7@kernel.org>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/1.3.10
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: rrichter@marvell.com, kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org, eric.auger@redhat.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com, tglx@linutronix.de, jason@lakedaemon.net, lorenzo.pieralisi@arm.com, Andrew.Murray@arm.com, yuzenghui@huawei.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+        id S1726934AbgCKJEa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 05:04:30 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 49B66AD08;
+        Wed, 11 Mar 2020 09:04:28 +0000 (UTC)
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Dominik Brodowski <linux@dominikbrodowski.net>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH] pcmcia: Use scnprintf() for avoiding potential buffer overflow
+Date:   Wed, 11 Mar 2020 10:04:26 +0100
+Message-Id: <20200311090426.20161-1-tiwai@suse.de>
+X-Mailer: git-send-email 2.16.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Robert,
+Since snprintf() returns the would-be-output size instead of the
+actual output size, the succeeding calls may go beyond the given
+buffer limit.  Fix it by replacing with scnprintf().
 
-On 2020-03-11 08:45, Robert Richter wrote:
-> Hi Marc,
-> 
-> On 10.03.20 11:41:09, Marc Zyngier wrote:
->> On 2020-03-09 22:11, Robert Richter wrote:
->> > On 24.12.19 11:10:26, Marc Zyngier wrote:
-> 
->> > > @@ -1502,6 +1512,12 @@ static const struct gic_quirk gic_quirks[] = {
->> > >  		.mask	= 0xffffffff,
->> > >  		.init	= gic_enable_quirk_hip06_07,
->> > >  	},
->> > > +	{
->> > > +		.desc	= "GICv3: Cavium TX1 GICD_TYPER2 erratum",
->> >
->> > There is no errata number yet.
->> 
->> Please let me know when/if you obtain one.
-> 
-> GIC-38539: GIC faults when accessing reserved GICD_TYPER2 register
-> 
-> Applies to (covered with iidr mask below):
-> 
->  ThunderX: CN88xx
->  OCTEON TX: CN83xx, CN81xx
->  OCTEON TX2: CN93xx, CN96xx, CN98xx, CNF95xx*
-> 
-> Issue: Access to GIC reserved registers results in an exception.
-> Notes:
-> 1) This applies to other reserved registers too.
-> 2) The errata number is unique over all IP blocks, so a macro
->    CAVIUM_ERRATUM_38539 is ok.
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+---
+ drivers/pcmcia/rsrc_nonstatic.c |  6 +++---
+ drivers/pcmcia/yenta_socket.c   | 10 +++++-----
+ 2 files changed, 8 insertions(+), 8 deletions(-)
 
-Great, thanks a lot for chasing this. One question though: does this
-apply to the distributor only? Or to all reserved registers regardless
-of the architectural block they are in?
-
-It won't change the workaround for now, but knowing the scope of the
-erratum will help future developments.
-
-Thanks,
-
-         M.
+diff --git a/drivers/pcmcia/rsrc_nonstatic.c b/drivers/pcmcia/rsrc_nonstatic.c
+index 9e6922c08ef6..3b05760e69d6 100644
+--- a/drivers/pcmcia/rsrc_nonstatic.c
++++ b/drivers/pcmcia/rsrc_nonstatic.c
+@@ -1076,7 +1076,7 @@ static ssize_t show_io_db(struct device *dev,
+ 	for (p = data->io_db.next; p != &data->io_db; p = p->next) {
+ 		if (ret > (PAGE_SIZE - 10))
+ 			continue;
+-		ret += snprintf(&buf[ret], (PAGE_SIZE - ret - 1),
++		ret += scnprintf(&buf[ret], (PAGE_SIZE - ret - 1),
+ 				"0x%08lx - 0x%08lx\n",
+ 				((unsigned long) p->base),
+ 				((unsigned long) p->base + p->num - 1));
+@@ -1133,7 +1133,7 @@ static ssize_t show_mem_db(struct device *dev,
+ 	     p = p->next) {
+ 		if (ret > (PAGE_SIZE - 10))
+ 			continue;
+-		ret += snprintf(&buf[ret], (PAGE_SIZE - ret - 1),
++		ret += scnprintf(&buf[ret], (PAGE_SIZE - ret - 1),
+ 				"0x%08lx - 0x%08lx\n",
+ 				((unsigned long) p->base),
+ 				((unsigned long) p->base + p->num - 1));
+@@ -1142,7 +1142,7 @@ static ssize_t show_mem_db(struct device *dev,
+ 	for (p = data->mem_db.next; p != &data->mem_db; p = p->next) {
+ 		if (ret > (PAGE_SIZE - 10))
+ 			continue;
+-		ret += snprintf(&buf[ret], (PAGE_SIZE - ret - 1),
++		ret += scnprintf(&buf[ret], (PAGE_SIZE - ret - 1),
+ 				"0x%08lx - 0x%08lx\n",
+ 				((unsigned long) p->base),
+ 				((unsigned long) p->base + p->num - 1));
+diff --git a/drivers/pcmcia/yenta_socket.c b/drivers/pcmcia/yenta_socket.c
+index 49b1c6a1bdbe..bf6529b0b5b0 100644
+--- a/drivers/pcmcia/yenta_socket.c
++++ b/drivers/pcmcia/yenta_socket.c
+@@ -180,12 +180,12 @@ static ssize_t show_yenta_registers(struct device *yentadev, struct device_attri
+ 	for (i = 0; i < 0x24; i += 4) {
+ 		unsigned val;
+ 		if (!(i & 15))
+-			offset += snprintf(buf + offset, PAGE_SIZE - offset, "\n%02x:", i);
++			offset += scnprintf(buf + offset, PAGE_SIZE - offset, "\n%02x:", i);
+ 		val = cb_readl(socket, i);
+-		offset += snprintf(buf + offset, PAGE_SIZE - offset, " %08x", val);
++		offset += scnprintf(buf + offset, PAGE_SIZE - offset, " %08x", val);
+ 	}
+ 
+-	offset += snprintf(buf + offset, PAGE_SIZE - offset, "\n\nExCA registers:");
++	offset += scnprintf(buf + offset, PAGE_SIZE - offset, "\n\nExCA registers:");
+ 	for (i = 0; i < 0x45; i++) {
+ 		unsigned char val;
+ 		if (!(i & 7)) {
+@@ -193,10 +193,10 @@ static ssize_t show_yenta_registers(struct device *yentadev, struct device_attri
+ 				memcpy(buf + offset, " -", 2);
+ 				offset += 2;
+ 			} else
+-				offset += snprintf(buf + offset, PAGE_SIZE - offset, "\n%02x:", i);
++				offset += scnprintf(buf + offset, PAGE_SIZE - offset, "\n%02x:", i);
+ 		}
+ 		val = exca_readb(socket, i);
+-		offset += snprintf(buf + offset, PAGE_SIZE - offset, " %02x", val);
++		offset += scnprintf(buf + offset, PAGE_SIZE - offset, " %02x", val);
+ 	}
+ 	buf[offset++] = '\n';
+ 	return offset;
 -- 
-Jazz is not dead. It just smells funny...
+2.16.4
+
