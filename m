@@ -2,132 +2,211 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C401C0044D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:05:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18B11C2BAEE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:06:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 739422074B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:05:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E194220749
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:06:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ndufresne-ca.20150623.gappssmtp.com header.i=@ndufresne-ca.20150623.gappssmtp.com header.b="evlE+ihy"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Kec16bco"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730997AbgCKTFv (ORCPT
+        id S1731031AbgCKTGO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 15:05:51 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:43935 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730762AbgCKTFu (ORCPT
+        Wed, 11 Mar 2020 15:06:14 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:28464 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730926AbgCKTGN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 15:05:50 -0400
-Received: by mail-qk1-f194.google.com with SMTP id q18so3174870qki.10
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 12:05:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ndufresne-ca.20150623.gappssmtp.com; s=20150623;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=b3Cgy29Dqf3TWGwP4FeGEObg2LE3ugs0svlpIKXT5us=;
-        b=evlE+ihydYjvf1CAzYyc/cSmxxZTJf+v9vTFOJSzv2Aj22RAqC1XIPri4QkoIaA7Rg
-         YWH1rx5+g5h3hW45C5qCh7qB3r9L9xrZaF8yAiO3IOF3z/p0aQBYEjgAjUuLkxmUPbWb
-         T6oh7sa0WwsHJtffQYyRQpDoHyQaWIITdaprkiJOUURxo0SN9dT7/GF75CDPOm9tlfvx
-         VghETFrGNVya0yqpgHHJCvYDHbnCHDali4+2/V/y2SCL9qWqxoLruOjJr8+fVh/yV30p
-         JDfOphA9lXyQf/VOGOG7LyJFGDfl66AAM7JE1gWyliuSIDI6zR3Obh+y4dMGTwGkcXvC
-         5s/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=b3Cgy29Dqf3TWGwP4FeGEObg2LE3ugs0svlpIKXT5us=;
-        b=bVBM+ysuHivYdYHV9Oj2csIrgFGaLOtzWIwN9YQDyZ4oJwctpDxkWJMc5yknt5Kmkb
-         +0CJ6gkLt3G8VFgXdU+WpiPM20mcglPyrr5sQYJkFni50hGAkVwb2qbgJelQekSgbTzv
-         2pdXZS1VETwfbjoUgkrYOy4J9i8dqNW1bpvjCYdTP+1ge8+ayEwVl368N9t2kjoWT6FV
-         81+9eMnujYsMpbZNPunIFSQLdlgyyCJ4jlPNXY1OtU7o34CxWN7BVwFKMJoZm7yBNq3G
-         jngXmoT/M/pQCVzzNVsAqkcjBiEY16/lDSLNeT+h9CcgtoKsmEtMa6JSXUN3bMhk4oku
-         DJBg==
-X-Gm-Message-State: ANhLgQ1PAbwsQPE31u6blJS6DLHduHcC4kbGSKrUhi6zHqfyBmlWBwH2
-        s78QFGjVZ3u3c/6UGYgj1ZrQ2A==
-X-Google-Smtp-Source: ADFU+vtPh9VFF6uJppdFwQULJigLWibp0JW5x3C7j90z+Fnfcy70E2+wXDbPb0ezgo71+CPAU84wHg==
-X-Received: by 2002:a37:d96:: with SMTP id 144mr3785883qkn.324.1583953549721;
-        Wed, 11 Mar 2020 12:05:49 -0700 (PDT)
-Received: from nicolas-tpx395.localdomain ([2610:98:8005::527])
-        by smtp.gmail.com with ESMTPSA id f13sm6334201qka.83.2020.03.11.12.05.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Mar 2020 12:05:47 -0700 (PDT)
-Message-ID: <b24e52a8b9c110ad7ded0b031cadc57c74ec8b84.camel@ndufresne.ca>
-Subject: Re: [PATCH 6/6] hantro: Refactor for V4L2 API spec compliancy
-From:   Nicolas Dufresne <nicolas@ndufresne.ca>
-To:     Ezequiel Garcia <ezequiel@collabora.com>,
-        linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Jeffrey Kardatzke <jkardatzke@chromium.org>
-Date:   Wed, 11 Mar 2020 15:05:46 -0400
-In-Reply-To: <02c89cb555c10ae61a365a2f54eb72bc4aee3c78.camel@collabora.com>
-References: <20200311174300.19407-1-ezequiel@collabora.com>
-         <20200311174300.19407-7-ezequiel@collabora.com>
-         <02c89cb555c10ae61a365a2f54eb72bc4aee3c78.camel@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        Wed, 11 Mar 2020 15:06:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583953572;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=4vRow86Hd2ZBIEcluwNv2v8O/2kX9pz0tfQuIM2Vv3g=;
+        b=Kec16bcokVB9Anpvdc3iFIb9F6IsDPmgridY1UOJ3wWShg8joN7y9UgZGWAJqSVTZ9kyY2
+        F4n7BuBxvV7hDwHb2e1sWpcbrf4wWB2BnK+GCL5Obfm7WAuRTiSMqcjF1iynHyvQnLmob/
+        dPogzeCNTa/MNvF+kB1x09KXzCiZAjs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-120--n0kgix7NPSBEl50H2xOWQ-1; Wed, 11 Mar 2020 15:06:07 -0400
+X-MC-Unique: -n0kgix7NPSBEl50H2xOWQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7116F1005509;
+        Wed, 11 Mar 2020 19:06:06 +0000 (UTC)
+Received: from [10.10.120.19] (ovpn-120-19.rdu2.redhat.com [10.10.120.19])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 29D148F364;
+        Wed, 11 Mar 2020 19:06:02 +0000 (UTC)
+Subject: Re: [Patch v1] KVM: x86: Initializing all kvm_lapic_irq fields
+To:     Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mtosatti@redhat.com,
+        vkuznets@redhat.com, sean.j.christopherson@intel.com,
+        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org
+References: <1583951685-202743-1-git-send-email-nitesh@redhat.com>
+ <c4370fce-1bc7-3a82-91a7-37fcd013bd77@redhat.com>
+From:   Nitesh Narayan Lal <nitesh@redhat.com>
+Autocrypt: addr=nitesh@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ VujM7c/b4pps
+Organization: Red Hat Inc,
+Message-ID: <1ee122a6-7c6a-f630-ea38-9f78960b76be@redhat.com>
+Date:   Wed, 11 Mar 2020 15:05:59 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <c4370fce-1bc7-3a82-91a7-37fcd013bd77@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="4qb8WLNjq3ajil9xtH0BeNRe2tGFbwosw"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le mercredi 11 mars 2020 à 16:01 -0300, Ezequiel Garcia a écrit :
-> On Wed, 2020-03-11 at 14:43 -0300, Ezequiel Garcia wrote:
-> > Refactor how S_FMT and TRY_FMT are handled, and also make sure
-> > internal initial format and format reset are done properly.
-> > 
-> > The latter is achieved by making sure the same hantro_{set,try}_fmt
-> > helpers are called on all paths that set the format (which is
-> > part of the driver state).
-> > 
-> > This commit removes the following v4l2-compliance warnings:
-> > 
-> > test VIDIOC_G_FMT: OK
-> > 	fail: v4l2-test-formats.cpp(711): Video Capture Multiplanar: TRY_FMT(G_FMT) != G_FMT
-> > test VIDIOC_TRY_FMT: FAIL
-> > 	fail: v4l2-test-formats.cpp(1116): Video Capture Multiplanar: S_FMT(G_FMT) != G_FMT
-> > test VIDIOC_S_FMT: FAIL
-> > 
-> > Reported-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-> > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-> > ---
-> [..]
-> > @@ -227,12 +232,12 @@ static int vidioc_g_fmt_cap_mplane(struct file *file, void *priv,
-> >  	return 0;
-> >  }
-> >  
-> > -static int vidioc_try_fmt(struct file *file, void *priv, struct v4l2_format *f,
-> > -			  bool capture)
-> > +static int hantro_try_fmt(const struct hantro_ctx *ctx,
-> 
-> Oops, it seems there's a warning due to ctx being const-qualified.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--4qb8WLNjq3ajil9xtH0BeNRe2tGFbwosw
+Content-Type: multipart/mixed; boundary="QX3AFwGDvJNzwG4cp2sIXiy3edNL1QisG"
 
-Indeed:
+--QX3AFwGDvJNzwG4cp2sIXiy3edNL1QisG
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
 
-drivers/staging/media/hantro/hantro_v4l2.c: In function ‘hantro_try_fmt’:
-drivers/staging/media/hantro/hantro_v4l2.c:282:30: warning: passing argument 1 of ‘hantro_needs_postproc’ discards ‘const’ qualifier from pointer target type [-Wdiscarded-qualifiers]
-  282 |       !hantro_needs_postproc(ctx, fmt))
-      |                              ^~~
-In file included from drivers/staging/media/hantro/hantro_v4l2.c:29:
-drivers/staging/media/hantro/hantro.h:420:42: note: expected ‘struct hantro_ctx *’ but argument is of type ‘const struct hantro_ctx *’
-  420 | hantro_needs_postproc(struct hantro_ctx *ctx, const struct hantro_fmt *fmt)
-      |                       ~~~~~~~~~~~~~~~~~~~^~~
 
-> 
-> That should be fixed of course.
-> 
-> Regards,
-> Ezequiel
-> 
-> 
+On 3/11/20 2:49 PM, Paolo Bonzini wrote:
+> On 11/03/20 19:34, Nitesh Narayan Lal wrote:
+>> Previously all fields of structure kvm_lapic_irq were not initialized
+>> before it was passed to kvm_bitmap_or_dest_vcpus(). Which will cause
+>> an issue when any of those fields are used for processing a request.
+>> This patch initializes all the fields of kvm_lapic_irq based on the
+>> values which are passed through the ioapic redirect_entry object.
+> Can you explain better how the bug manifests itself?
+
+For example not initializing the irq.msi_redir_hint field, could lead to a
+situation where it carries garbage (non-zero) value.
+This will lead to misbehavior of kvm_apic_map_get_dest_lapic() when it invo=
+kes
+the kvm_lowest_prio_delivery(), that will return true because of non-zero
+msi_redir_hint field.
+To be on the safe side, I thought of initializing other struct fields as we=
+ll.
+
+If the above explanation makes sense, I can include it in the patch
+subject and send a second version of this patch?
+
+>
+> Thanks,
+>
+> Paolo
+>
+>> Fixes: 7ee30bc132c6("KVM: x86: deliver KVM IOAPIC scan request to target=
+ vCPUs")
+>> Signed-off-by: Nitesh Narayan Lal <nitesh@redhat.com>
+>> ---
+>>  arch/x86/kvm/ioapic.c | 7 +++++--
+>>  1 file changed, 5 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/arch/x86/kvm/ioapic.c b/arch/x86/kvm/ioapic.c
+>> index 7668fed..3a8467d 100644
+>> --- a/arch/x86/kvm/ioapic.c
+>> +++ b/arch/x86/kvm/ioapic.c
+>> @@ -378,12 +378,15 @@ static void ioapic_write_indirect(struct kvm_ioapi=
+c *ioapic, u32 val)
+>>  =09=09if (e->fields.delivery_mode =3D=3D APIC_DM_FIXED) {
+>>  =09=09=09struct kvm_lapic_irq irq;
+>> =20
+>> -=09=09=09irq.shorthand =3D APIC_DEST_NOSHORT;
+>>  =09=09=09irq.vector =3D e->fields.vector;
+>>  =09=09=09irq.delivery_mode =3D e->fields.delivery_mode << 8;
+>> -=09=09=09irq.dest_id =3D e->fields.dest_id;
+>>  =09=09=09irq.dest_mode =3D
+>>  =09=09=09    kvm_lapic_irq_dest_mode(!!e->fields.dest_mode);
+>> +=09=09=09irq.level =3D 1;
+>> +=09=09=09irq.trig_mode =3D e->fields.trig_mode;
+>> +=09=09=09irq.shorthand =3D APIC_DEST_NOSHORT;
+>> +=09=09=09irq.dest_id =3D e->fields.dest_id;
+>> +=09=09=09irq.msi_redir_hint =3D false;
+>>  =09=09=09bitmap_zero(&vcpu_bitmap, 16);
+>>  =09=09=09kvm_bitmap_or_dest_vcpus(ioapic->kvm, &irq,
+>>  =09=09=09=09=09=09 &vcpu_bitmap);
+>>
+--=20
+Nitesh
+
+
+--QX3AFwGDvJNzwG4cp2sIXiy3edNL1QisG--
+
+--4qb8WLNjq3ajil9xtH0BeNRe2tGFbwosw
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEkXcoRVGaqvbHPuAGo4ZA3AYyozkFAl5pNpcACgkQo4ZA3AYy
+oznNVw//bf/rilGP0lQnt2uVyp8SPqfAN70HM/Q2mUHJjGNzfJz8G/YXs9FeTgkO
+qek7aheW278l6TXlZSDu8TDt1vNFZ7tXS6bfKCS2GgSMQt7jhu+4GfpudqQStvMZ
+nKeIZDEhiMNrAmERG3XqdTvzwiTjzdTfRn6QUpsx/GUBGbKC6GwIoAydqOj6/Ld4
+BCVFakVnXeKDQwwlZDhj8DnQ9bSp7BwGCjptZw/TpYVpBGg/NqM1nE2Pya8yJtvA
+zs11b22i6E1fRydDVwdjb5qspwgqXoRmw99WBvax0/WOPscp3UvT9C2rwT9pOaqJ
+C6OcERCXRmgSDBHFlEEab9hViDPhBBhvl8obJVo/7Y354o5ySi1df+enN/yaWpc1
+B5YQnohSP7fSMWowXcJvlzCEg/jds5onFlwIvCXWBmAvFHDo/R3XX+c7uHTfbuqa
+3tIEzZwxuFr1B/h5FsRvdvdQ12B2jSqi9cZM8uKEq5IOb880JSRMubzYmV00n4kY
+nOfRLCkyW3hmAgyqZSNxD27eOc9AsIbdlFBL9QQKW2IthBobE3KpKp/4yGbSab/+
+JBqguvnoLs8SGGL894CfUdih5Tu5eDyFqXjpIdbTzK4j1mFthffh5ZwtlR0z13S+
+cS8FCSyNlnw2zZ1FmUoagsM/RW3K3sbRSfsfLntT4yaBYBa9CZA=
+=JuN2
+-----END PGP SIGNATURE-----
+
+--4qb8WLNjq3ajil9xtH0BeNRe2tGFbwosw--
 
