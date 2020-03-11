@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB414C18E5A
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 13:41:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01AA0C10F29
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 13:41:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E56E20873
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 13:41:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB9A52146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 13:41:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="jzc8Slbh"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="P/CN4sXj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729608AbgCKNlV (ORCPT
+        id S1729670AbgCKNlZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 09:41:21 -0400
-Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:50464 "EHLO
+        Wed, 11 Mar 2020 09:41:25 -0400
+Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:50472 "EHLO
         smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729345AbgCKNlU (ORCPT
+        by vger.kernel.org with ESMTP id S1729535AbgCKNlV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 09:41:20 -0400
+        Wed, 11 Mar 2020 09:41:21 -0400
 Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 3383643B13;
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id A785243B60;
         Wed, 11 Mar 2020 13:41:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1583934080; bh=Jsae6YmAanO4z9FCcsjbrAEHTLrNXGOZPwk43q6ik60=;
+        t=1583934080; bh=MrYqWoJsLLc48EYOcna6bzraId29vA+POfySYiFDcto=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jzc8SlbhBKj3TbiyL2YRoFTe5fhXmG1Z0VAoSeJbljwzo/7pZuO533oHLT1M8RNoZ
-         TABbi9Pza/pL5Y2fJpzD6/cH5X8yaBSI+NJ1e/8P8bFUvLVoQvTmUzwA3KlRfhzc/7
-         7zSLlza3k2qtD15FVKjXgigCzRH+gOoCDHg5Z42yg7TXRJc68nDVAUHhg5FBzJBnOA
-         qVQ6Li/zeCIlTIhKaZrL4gQn4itl3tNz9DS8HX+rld77XFmNfKyqPC3rZzocq7bdu0
-         W89agejxYGrlH/bmhkip6R8VOvaS1zOU9iMqXzCz5asMeX/gQWGAIVrtKMbk44LX49
-         8CzvI7N1QzUWg==
+        b=P/CN4sXj58UqoIpsW4r9iBWNBV9e2ghWDYdt6Rnv2sdAvNBFlQv3/ZR+Jn5n9WGEe
+         eVzF2YfV2bURfjeSQI74i5fX0ojR4tn6EaA3g1FjOvNhRBtbPIZ/dmkH4FaD3/ROrV
+         yyFi7ST30lj44kBoHHOFrSp19lO9Oop4rxUreaV4gWLPR197kHINcNjx+WuZ4PR8Vp
+         ll+29ymICQHJxLG3hi5099RTxYWu7B2fXeS0Tnk5MrgGjWoLTL94pWh2ZTktMua4q9
+         z2hAp+Q5+835a8hAz0VnngDfHOcWDE2HNXYbVDTF+hC88AtSdMJjXT4bWUtAqf4iCU
+         tdDK0+iZDO4pw==
 Received: from paltsev-e7480.internal.synopsys.com (unknown [10.121.8.79])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 5A381A0062;
+        by mailhost.synopsys.com (Postfix) with ESMTP id F380CA0063;
         Wed, 11 Mar 2020 13:41:18 +0000 (UTC)
 From:   Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
 To:     linux-clk@vger.kernel.org
@@ -47,9 +47,9 @@ Cc:     linux-kernel@vger.kernel.org, linux-snps-arc@lists.infradead.org,
         Stephen Boyd <sboyd@kernel.org>,
         Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
         Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Subject: [PATCH 1/3] CLK: HSDK: CGU: check if PLL is bypassed first
-Date:   Wed, 11 Mar 2020 16:41:13 +0300
-Message-Id: <20200311134115.13257-2-Eugeniy.Paltsev@synopsys.com>
+Subject: [PATCH 2/3] CLK: HSDK: CGU: support PLL bypassing
+Date:   Wed, 11 Mar 2020 16:41:14 +0300
+Message-Id: <20200311134115.13257-3-Eugeniy.Paltsev@synopsys.com>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200311134115.13257-1-Eugeniy.Paltsev@synopsys.com>
 References: <20200311134115.13257-1-Eugeniy.Paltsev@synopsys.com>
@@ -60,37 +60,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If PLL is bypassed the EN (enable) bit has no effect on
-output clock.
+Support setting PLL to bypass mode to support output frequency
+equal to input one.
 
 Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
 ---
- drivers/clk/clk-hsdk-pll.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/clk/clk-hsdk-pll.c | 61 +++++++++++++++++++++-----------------
+ 1 file changed, 34 insertions(+), 27 deletions(-)
 
 diff --git a/drivers/clk/clk-hsdk-pll.c b/drivers/clk/clk-hsdk-pll.c
-index 97d1e8c35b71..b47a559f3528 100644
+index b47a559f3528..0ea7af57a5b1 100644
 --- a/drivers/clk/clk-hsdk-pll.c
 +++ b/drivers/clk/clk-hsdk-pll.c
-@@ -172,14 +172,14 @@ static unsigned long hsdk_pll_recalc_rate(struct clk_hw *hw,
+@@ -53,35 +53,37 @@ struct hsdk_pll_cfg {
+ 	u32 fbdiv;
+ 	u32 odiv;
+ 	u32 band;
++	u32 bypass;
+ };
  
- 	dev_dbg(clk->dev, "current configuration: %#x\n", val);
+ static const struct hsdk_pll_cfg asdt_pll_cfg[] = {
+-	{ 100000000,  0, 11, 3, 0 },
+-	{ 133000000,  0, 15, 3, 0 },
+-	{ 200000000,  1, 47, 3, 0 },
+-	{ 233000000,  1, 27, 2, 0 },
+-	{ 300000000,  1, 35, 2, 0 },
+-	{ 333000000,  1, 39, 2, 0 },
+-	{ 400000000,  1, 47, 2, 0 },
+-	{ 500000000,  0, 14, 1, 0 },
+-	{ 600000000,  0, 17, 1, 0 },
+-	{ 700000000,  0, 20, 1, 0 },
+-	{ 800000000,  0, 23, 1, 0 },
+-	{ 900000000,  1, 26, 0, 0 },
+-	{ 1000000000, 1, 29, 0, 0 },
+-	{ 1100000000, 1, 32, 0, 0 },
+-	{ 1200000000, 1, 35, 0, 0 },
+-	{ 1300000000, 1, 38, 0, 0 },
+-	{ 1400000000, 1, 41, 0, 0 },
+-	{ 1500000000, 1, 44, 0, 0 },
+-	{ 1600000000, 1, 47, 0, 0 },
++	{ 100000000,  0, 11, 3, 0, 0 },
++	{ 133000000,  0, 15, 3, 0, 0 },
++	{ 200000000,  1, 47, 3, 0, 0 },
++	{ 233000000,  1, 27, 2, 0, 0 },
++	{ 300000000,  1, 35, 2, 0, 0 },
++	{ 333000000,  1, 39, 2, 0, 0 },
++	{ 400000000,  1, 47, 2, 0, 0 },
++	{ 500000000,  0, 14, 1, 0, 0 },
++	{ 600000000,  0, 17, 1, 0, 0 },
++	{ 700000000,  0, 20, 1, 0, 0 },
++	{ 800000000,  0, 23, 1, 0, 0 },
++	{ 900000000,  1, 26, 0, 0, 0 },
++	{ 1000000000, 1, 29, 0, 0, 0 },
++	{ 1100000000, 1, 32, 0, 0, 0 },
++	{ 1200000000, 1, 35, 0, 0, 0 },
++	{ 1300000000, 1, 38, 0, 0, 0 },
++	{ 1400000000, 1, 41, 0, 0, 0 },
++	{ 1500000000, 1, 44, 0, 0, 0 },
++	{ 1600000000, 1, 47, 0, 0, 0 },
+ 	{}
+ };
  
--	/* Check if PLL is disabled */
--	if (val & CGU_PLL_CTRL_PD)
--		return 0;
--
- 	/* Check if PLL is bypassed */
- 	if (val & CGU_PLL_CTRL_BYPASS)
- 		return parent_rate;
+ static const struct hsdk_pll_cfg hdmi_pll_cfg[] = {
+-	{ 297000000,  0, 21, 2, 0 },
+-	{ 540000000,  0, 19, 1, 0 },
+-	{ 594000000,  0, 21, 1, 0 },
++	{ 27000000,   0, 0,  0, 0, 1 },
++	{ 297000000,  0, 21, 2, 0, 0 },
++	{ 540000000,  0, 19, 1, 0, 0 },
++	{ 594000000,  0, 21, 1, 0, 0 },
+ 	{}
+ };
  
-+	/* Check if PLL is disabled */
-+	if (val & CGU_PLL_CTRL_PD)
-+		return 0;
-+
- 	/* input divider = reg.idiv + 1 */
- 	idiv = 1 + ((val & CGU_PLL_CTRL_IDIV_MASK) >> CGU_PLL_CTRL_IDIV_SHIFT);
- 	/* fb divider = 2*(reg.fbdiv + 1) */
+@@ -134,11 +136,16 @@ static inline void hsdk_pll_set_cfg(struct hsdk_pll_clk *clk,
+ {
+ 	u32 val = 0;
+ 
+-	/* Powerdown and Bypass bits should be cleared */
+-	val |= cfg->idiv << CGU_PLL_CTRL_IDIV_SHIFT;
+-	val |= cfg->fbdiv << CGU_PLL_CTRL_FBDIV_SHIFT;
+-	val |= cfg->odiv << CGU_PLL_CTRL_ODIV_SHIFT;
+-	val |= cfg->band << CGU_PLL_CTRL_BAND_SHIFT;
++	if (cfg->bypass) {
++		val = hsdk_pll_read(clk, CGU_PLL_CTRL);
++		val |= CGU_PLL_CTRL_BYPASS;
++	} else {
++		/* Powerdown and Bypass bits should be cleared */
++		val |= cfg->idiv << CGU_PLL_CTRL_IDIV_SHIFT;
++		val |= cfg->fbdiv << CGU_PLL_CTRL_FBDIV_SHIFT;
++		val |= cfg->odiv << CGU_PLL_CTRL_ODIV_SHIFT;
++		val |= cfg->band << CGU_PLL_CTRL_BAND_SHIFT;
++	}
+ 
+ 	dev_dbg(clk->dev, "write configuration: %#x\n", val);
+ 
 -- 
 2.21.1
 
