@@ -2,140 +2,140 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3F1CC10F27
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 09:22:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED3AEC10F27
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 09:24:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C57042146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 09:22:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xdd2sbdb"
+	by mail.kernel.org (Postfix) with ESMTP id BE75D20828
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 09:24:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583918668;
+	bh=rrlZpoQvhREhLmdMclb1adRCxmBTNBjsqdG0JIe+Srs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=DXyjwTJMklJ/s8Vtm7Ug0fzJqkg9NZCW2bMfzLwyAkiOGZ9rmVivfRqAFAeaSRwzm
+	 xPNNyyMEUqpvGjr9gJwGAVdfq2wx07dhAq5XIv21tqHQ3iCllmvwW0QMeXeDHEAPVU
+	 7dExgFfGPLTGaFaAFhHk7tEYuL3lfUHt4guZthjo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728732AbgCKJW4 (ORCPT
+        id S1728739AbgCKJY1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 05:22:56 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:42946 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726097AbgCKJW4 (ORCPT
+        Wed, 11 Mar 2020 05:24:27 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:42209 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726097AbgCKJY1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 05:22:56 -0400
-Received: by mail-lf1-f68.google.com with SMTP id t21so1046440lfe.9
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 02:22:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=FFOIcJ8aA8MC+A81Xp31rj9IpZBEBuoyDecAuyY6Qf4=;
-        b=xdd2sbdbLzlr/nvNeuw/etWKTZ9dXOgTeJCcBl/rDbC6k2BtGDtF4fya+FHqGrQSYj
-         60GBpnSYiQxlY90g77NId/kKZ+IEUoVyUrd8JX74q2/23WaR+9bO6SsmhHVNYfqheaX2
-         SJGWcZgFE4ec+R6wpl9vN10iOZzi9rJNS0z52CKHUEeew4gV1Evm00Un0ja38T4rS98s
-         rmDlKEc49WyVAPiHevyCB+6Vw21w/zEEPBUhSVY+kB0198Yxox939yphpGS/Z+CkKuEa
-         iyERpwXNh576qjRmgnGFKTr1iT+8obdmfCtq1RWcPpqqvFzvBBHf+WdgJx7WqUW3+OvK
-         pqCQ==
+        Wed, 11 Mar 2020 05:24:27 -0400
+Received: by mail-lj1-f193.google.com with SMTP id q19so1456590ljp.9;
+        Wed, 11 Mar 2020 02:24:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=FFOIcJ8aA8MC+A81Xp31rj9IpZBEBuoyDecAuyY6Qf4=;
-        b=QGKJsE/jtBCTYJEZzIrNo43HLgeg+5culIIXw5WdrsJR+Y1FjGKfcfYjJB2PGdh6Zl
-         jGY3I2uJq/6A6FMILg6/V+X0I582pehJXr7N3Dj/USg1WA0IvkYIP4m0IbVSYAKkPEDU
-         PYDribogZIaBa+/Ufx5X4i9GgHC+eixcghnq3pZk8+5TkyJ3wZKM42xLeW3ukr60tZCU
-         4PAx3tNju7bDaz6vWLEQVzMqSFDxVCIPBJNPt766U6LkKVvW/dvsYodx3zqgCSfhDF4l
-         c0tHHhgI7ZGSJ71eZAIn/gfbGwcZXyXYlsiv+KuwSEOetP+BLy+ovZukp7q4GRUDmMBS
-         /bvg==
-X-Gm-Message-State: ANhLgQ1xQ+Dd2S6nWznerYC1XGJLc3L75NWhMoZNpcj4IQ12jhOl86uq
-        oackbpyp8Aqje6V/Qqul0bdburHWCnRUCHtvEcsBcxE8Z2RK2g==
-X-Google-Smtp-Source: ADFU+vtB2lW6BTUCdwkuQqNNimAuA5Ox6/OlefcUhjx2f4403d6W229KlOQE588qAuFLnoqg7laaGbEjv0ck85D61VY=
-X-Received: by 2002:a19:c18e:: with SMTP id r136mr1524001lff.4.1583918573645;
- Wed, 11 Mar 2020 02:22:53 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=oTEgx+0q+wWx+G15t9Th6GjnGh/fBTDFvpJM0EhSSqg=;
+        b=fwxu2w7MMtm/x0hf3Cffk7yAO5eCmJidEVDf7cUyikp7L+Of/ZryD6H873cV9fR4lx
+         a0UWKNzkamTKmkOTh+xfwNH6iP50GbpJwDhVww3NWe8aS9HGQbHgQpKJFGIJJdZH8Osc
+         9cauMHySd8mtWNKj8k6Q3gb3i/DFIdl2NhF4anpTiNRF/ZljOcYib50hWk9Wi813R+KL
+         TajokvhN+1M/4Xok3Serw40kRx0E/0lwBUOUBccNYKasvLcvUynJXF74bFCT6aOkumsS
+         kp/1eHP40hus1keHPX71IrUYM5CXifL6m6yPVEYwqmSXDktAW9OIYLbdxyrgOzLZnzf1
+         aKaA==
+X-Gm-Message-State: ANhLgQ096Y2DDBdIwrOQs7fWcRW5Y3hNZB2gGWJzF6aDFMReezeEkD/e
+        HEcPrgmb1LINnU7+6049OZ8=
+X-Google-Smtp-Source: ADFU+vvQvYAE4SLupfEd5gDlFgHDl8iVN8OI49a+BbJLpOrASXqS8Bxt0ncyKf6hhI+pJzBAPHKQdQ==
+X-Received: by 2002:a2e:801a:: with SMTP id j26mr1519598ljg.249.1583918665226;
+        Wed, 11 Mar 2020 02:24:25 -0700 (PDT)
+Received: from xi.terra (c-12aae455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.170.18])
+        by smtp.gmail.com with ESMTPSA id t3sm14614706lfp.81.2020.03.11.02.24.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Mar 2020 02:24:24 -0700 (PDT)
+Received: from johan by xi.terra with local (Exim 4.92.3)
+        (envelope-from <johan@kernel.org>)
+        id 1jBxb2-0004UZ-7N; Wed, 11 Mar 2020 10:24:12 +0100
+Date:   Wed, 11 Mar 2020 10:24:12 +0100
+From:   Johan Hovold <johan@kernel.org>
+To:     Rocky Liao <rjliao@codeaurora.org>
+Cc:     marcel@holtmann.org, johan.hedberg@gmail.com,
+        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org,
+        c-hbandi@codeaurora.org, hemantg@codeaurora.org, mka@chromium.org
+Subject: Re: [PATCH v1] Bluetooth: hci_qca: Replace devm_gpiod_get() with
+ devm_gpiod_get_optional()
+Message-ID: <20200311092412.GH14211@localhost>
+References: <20200304131645.22057-1-rjliao@codeaurora.org>
 MIME-Version: 1.0
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 11 Mar 2020 10:22:42 +0100
-Message-ID: <CACRpkdYZbx_3AgtTYSwtBcr0G4PisWt8As=T7nqq60rTPXjYCA@mail.gmail.com>
-Subject: [GIT PULL] pin control fixes for v5.6
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200304131645.22057-1-rjliao@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Wed, Mar 04, 2020 at 09:16:45PM +0800, Rocky Liao wrote:
+> This patch replaces devm_gpiod_get() with devm_gpiod_get_optional() to get
+> bt_en and replaces devm_clk_get() with devm_clk_get_optional() to get
+> susclk. It also uses NULL check to determine whether the resource is
+> available or not.
+> 
+> Fixes: 8a208b24d770 ("Bluetooth: hci_qca: Make bt_en and susclk not mandatory for QCA Rome")
+> Signed-off-by: Rocky Liao <rjliao@codeaurora.org>
+> ---
+>  drivers/bluetooth/hci_qca.c | 16 ++++++++--------
+>  1 file changed, 8 insertions(+), 8 deletions(-)
 
-here are some pin control fixes for the v5.6 series.
-It comes down to memory leaks in the core and
-driver fixes. Some should have been sent earlier
-but they kept piling up and the world is just so full
-of distractions these days.
+> @@ -1901,15 +1901,15 @@ static int qca_serdev_probe(struct serdev_device *serdev)
+>  		}
+>  	} else {
+>  		qcadev->btsoc_type = QCA_ROME;
+> -		qcadev->bt_en = devm_gpiod_get(&serdev->dev, "enable",
+> +		qcadev->bt_en = devm_gpiod_get_optional(&serdev->dev, "enable",
+>  					       GPIOD_OUT_LOW);
+> -		if (IS_ERR(qcadev->bt_en)) {
+> +		if (!qcadev->bt_en) {
+>  			dev_warn(&serdev->dev, "failed to acquire enable gpio\n");
 
-Please pull it in.
+Shouldn't this be dev_dbg() if the gpio is indeed optional?
 
-Yours,
-Linus Walleij
+>  			power_ctrl_enabled = false;
+>  		}
+>  
+> -		qcadev->susclk = devm_clk_get(&serdev->dev, NULL);
+> -		if (IS_ERR(qcadev->susclk)) {
+> +		qcadev->susclk = devm_clk_get_optional(&serdev->dev, NULL);
+> +		if (!qcadev->susclk) {
+>  			dev_warn(&serdev->dev, "failed to acquire clk\n");
 
-The following changes since commit bb6d3fb354c5ee8d6bde2d576eb7220ea09862b9:
+Same here.
 
-  Linux 5.6-rc1 (2020-02-09 16:08:48 -0800)
+>  		} else {
+>  			err = clk_set_rate(qcadev->susclk, SUSCLK_RATE_32KHZ);
+> @@ -1924,7 +1924,7 @@ static int qca_serdev_probe(struct serdev_device *serdev)
+>  		err = hci_uart_register_device(&qcadev->serdev_hu, &qca_proto);
+>  		if (err) {
+>  			BT_ERR("Rome serdev registration failed");
+> -			if (!IS_ERR(qcadev->susclk))
+> +			if (qcadev->susclk)
+>  				clk_disable_unprepare(qcadev->susclk);
 
-are available in the Git repository at:
+The clock framework allows you to pass in NULL precisely to be able to
+handle optional resources without sprinkling conditionals all over (the
+gpio subsystem does not however).
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
-tags/pinctrl-v5.6-2
+Applies to clk_set_rate() etc. above as well.
 
-for you to fetch changes up to 1cada2f307665e208a486d7ac2294ed9a6f74a6f:
+>  			return err;
+>  		}
+> @@ -1945,7 +1945,7 @@ static void qca_serdev_remove(struct serdev_device *serdev)
+>  
+>  	if (qca_is_wcn399x(qcadev->btsoc_type))
+>  		qca_power_shutdown(&qcadev->serdev_hu);
+> -	else if (!IS_ERR(qcadev->susclk))
+> +	else if (qcadev->susclk)
+>  		clk_disable_unprepare(qcadev->susclk);
 
-  pinctrl: qcom: Assign irq_eoi conditionally (2020-03-09 16:31:34 +0100)
+Same here.
 
-----------------------------------------------------------------
-Pin control fixes for the v5.6 kernel series:
+>  	hci_uart_unregister_device(&qcadev->serdev_hu);
 
-- Fix some inverted pins in the Meson GLX driver.
-
-- Align the i.MX SC message structs causing warnings from
-  KASan.
-
-- Balance the kref in pinctrl hogs so they are actually free:d
-  when removing a pin control module. We haven't seen it before
-  as people don't use modules for pin control that much, I
-  think.
-
-- Add a missing call to pinctrl_unregister_mappings() another
-  memory leak when using modules.
-
-- Fix the fwspec parsing in the Qualcomm driver.
-
-- Fix a syntax error in the Falcon driver.
-
-- Assign .irq_eoi conditionally in the Qualcomm driver, fixing
-  a bug affecting elder Qualcomm platforms.
-
-----------------------------------------------------------------
-Charles Keepax (2):
-      pinctrl: core: Remove extra kref_get which blocks hogs being freed
-      pinctrl: madera: Add missing call to pinctrl_unregister_mappings
-
-Leonard Crestez (1):
-      pinctrl: imx: scu: Align imx sc msg structs to 4
-
-Linus Walleij (2):
-      pinctrl: qcom: ssbi-gpio: Fix fwspec parsing bug
-      pinctrl: qcom: Assign irq_eoi conditionally
-
-Mathias Kresin (1):
-      pinctrl: falcon: fix syntax error
-
-Nicolas Belin (1):
-      pinctrl: meson-gxl: fix GPIOX sdio pins
-
- drivers/pinctrl/cirrus/pinctrl-madera-core.c | 13 +++++++++++++
- drivers/pinctrl/core.c                       |  1 -
- drivers/pinctrl/freescale/pinctrl-scu.c      |  4 ++--
- drivers/pinctrl/meson/pinctrl-meson-gxl.c    |  4 ++--
- drivers/pinctrl/pinctrl-falcon.c             |  2 +-
- drivers/pinctrl/qcom/pinctrl-msm.c           |  3 +--
- drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c     |  2 +-
- 7 files changed, 20 insertions(+), 9 deletions(-)
+Johan
