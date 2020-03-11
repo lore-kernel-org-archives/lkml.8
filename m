@@ -2,143 +2,132 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E420C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:20:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92C2CC0044D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:21:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11E8820578
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:20:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B76520578
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:21:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZD45WIyb"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Cskmlpgv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731188AbgCKTUQ (ORCPT
+        id S1731067AbgCKTVb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 15:20:16 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:35642 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730807AbgCKTUP (ORCPT
+        Wed, 11 Mar 2020 15:21:31 -0400
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:54305 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730807AbgCKTVa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 15:20:15 -0400
-Received: by mail-lf1-f67.google.com with SMTP id v8so1778909lfe.2;
-        Wed, 11 Mar 2020 12:20:12 -0700 (PDT)
+        Wed, 11 Mar 2020 15:21:30 -0400
+Received: by mail-pj1-f66.google.com with SMTP id np16so1434668pjb.4
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 12:21:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=jIT0hRGBkVYntfrYROvzPZ3SfddFZ8uhqeGjnA9rcCc=;
-        b=ZD45WIybvMukm6PzyF+6qTs6iJXur3e5iu1pc8oPQLmdzPWopAl7ujPePfPAqLCIp6
-         F8r6n2l7AaKvSPfr75wHIUi2V0rUDaq4vQEGJbrFTaUmW4FEWcfPCtdQD0I+EWNsQvzD
-         Uf8olBoZbK7/GkLGh+r4JBuKis4vqDkTiIkYXMLm2YpmbyLUqSFBzc3dR0GZnmhTROTI
-         lkLWyMLNn8RImIzjhS4uiSMztAGu1W2EkmGfj0jqT0WCp96kV9eoPINCPqJM5md39Tqg
-         A9xTq3zPcY00fsazrRbRJ8VLcmghoTEayM9X9LEFUZCPhvUH5AGnNBuPD4KRnLaeXyry
-         oR1w==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=VEJi8Ua1KT556ICDNdI7F0+UTqFndAFbSPbblW/yU4g=;
+        b=CskmlpgvnMkA+wCApbaonRYRAZxJC54spPJq8d7JehKzT58xoCzRO6Mve3c49n44zK
+         PWaabpLQB2dYbC1TL0adRVYluFtMdH6VS6c57Nq+R2wCQ1fnEEBFcVQbzwH9RJ2dW0Gf
+         YlkYkImwr4Pw4lwLfm270n07AFNPb1Mw2sLP0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=jIT0hRGBkVYntfrYROvzPZ3SfddFZ8uhqeGjnA9rcCc=;
-        b=aZKUxin1QXPjhlpTqZWVFFDbTjG7Nh6CFKLY4Z+o929sUE7eWG0+OYYMKsMAlTYJBr
-         /6KbO/BgKA2vNRkJeBQW/Vu/5v0121EiJCL7+6TRtrUskZ96ZbuAHQbbchtNU3YjGuGz
-         EQBi2eWhVDTtJuAUXLF4RMjENiBf8/nt53gO04GdeW7yFIACLU89V5EwK10IakfeJnAq
-         91T5qenFEkXodJcFuvke1oI9wb3KR8TxFQeno5BS3kfkDgHMnNXyqf1cPaxRf0Ik4wdc
-         FRSsJtlmd+tj44+ogOoqLDCgt59adysZs7dEnZUGxJ+5ey7peWaro48jw3bjJ0mdgYLX
-         41Gg==
-X-Gm-Message-State: ANhLgQ1k/CJZYm37/4jaEs+C0zWtM9cK2uxVPmqeZk5VrxYkM2/fp/UR
-        oMP7hU1it25dc/qYmz1Y+EkqpO0kkVM=
-X-Google-Smtp-Source: ADFU+vvT9LxkUnHGGi05BhkyVwjNFxcm4DkqshVmzyLeSsqI3fOkltz/jsjzWglA1VgcuuaIOafQdQ==
-X-Received: by 2002:ac2:5f50:: with SMTP id 16mr2904608lfz.194.1583954412015;
-        Wed, 11 Mar 2020 12:20:12 -0700 (PDT)
-Received: from z50.localnet (109241122244.gdansk.vectranet.pl. [109.241.122.244])
-        by smtp.gmail.com with ESMTPSA id k23sm3261755ljk.40.2020.03.11.12.20.10
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=VEJi8Ua1KT556ICDNdI7F0+UTqFndAFbSPbblW/yU4g=;
+        b=qoChOHA2BYF9N3fkibWNVp387XE+GZd5mCbRvDnLzqFyLJh0vcGa4YNNtUfKalBpba
+         lwvjD/L4h3saJ43benAFXSqgcTw/3Ry30pc1YGBfLnfE1rvYH0mgaBfU7su/QLOnmYdK
+         U0DGYCxvvRVkjIr1dNkTkQrsxbOo3efqj0UAtfymRXIvQoKFOXeCEL6vQa7VLRNAXvJs
+         A01Kg2ijOwp0F4PTdNRh/Oa8Mheu245JFQYhTOTCDkNu6f8NvnuuZl5ibS7P/t9SNFne
+         pACiz99vW/wJ+ftxsGbyILu5HBWLLkrgflTNfyb9NvmRTq9k8HBBJWAmerTOpCYbklNS
+         59PQ==
+X-Gm-Message-State: ANhLgQ24VLRCwc9YishHEpHWNPlXxQRp2kUB9QmoZfPh9MB79KdM4Rcw
+        GkH8iPOwzeMehdy0LUpSjnocEw==
+X-Google-Smtp-Source: ADFU+vsktVXh9K4NFSSqaFcAbmhWXGfMzDHwE2OpVAMfq8OnBjo81CK/wXvkV7Zt9DyhUeVelrrm9w==
+X-Received: by 2002:a17:902:bb82:: with SMTP id m2mr4510185pls.197.1583954489691;
+        Wed, 11 Mar 2020 12:21:29 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id k1sm48202611pgt.70.2020.03.11.12.21.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Mar 2020 12:20:10 -0700 (PDT)
-From:   Janusz Krzysztofik <jmkrzyszt@gmail.com>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the nand tree
-Date:   Wed, 11 Mar 2020 20:20:08 +0100
-Message-ID: <5581444.lOV4Wx5bFT@z50>
-In-Reply-To: <20200311111041.2dd477f5@xps13>
-References: <20200311131616.41e728a1@canb.auug.org.au> <20200311111041.2dd477f5@xps13>
+        Wed, 11 Mar 2020 12:21:28 -0700 (PDT)
+Date:   Wed, 11 Mar 2020 12:21:28 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Shuah Khan <shuah@kernel.org>
+Cc:     Andy Lutomirski <luto@amacapital.net>,
+        Will Drewry <wad@chromium.org>,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] selftests/seccomp: Adjust test fixture counts
+Message-ID: <202003111220.2D3AD27460@keescook>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Miquel,
+The seccomp selftest reported the wrong test counts since it was using
+slightly the wrong API for defining text fixtures. Adjust the API usage.
 
-On Wednesday, March 11, 2020 11:10:41 A.M. CET Miquel Raynal wrote:
-> Hi Stephen,
->=20
-> + Janusz, ams-delta patch author
->=20
-> Stephen Rothwell <sfr@canb.auug.org.au> wrote on Wed, 11 Mar 2020
-> 13:16:16 +1100:
->=20
-> > Hi all,
-> >=20
-> > After merging the nand tree, today's linux-next build (x86_64
-> > allmodconfig) failed like this:
->=20
-> Thanks for the report.
->=20
-> >=20
-> > FATAL: modpost: drivers/mtd/nand/raw/ams-delta: sizeof(struct of_device=
-_id)=3D200 is not a modulo of the size of section __mod_of__<identifier>_de=
-vice_table=3D64.
-> > Fix definition of struct of_device_id in mod_devicetable.h
-> >=20
-> > Maybe caused by commit
-> >=20
-> >   966d708517e3 ("mtd: rawnand: ams-delta: Add module device tables")
-> >=20
-> > But I have no idea why.
-> >=20
->=20
-> This is strange. I think this is caused because of the addition of a
-> second device table with the same "of" scope. Changing one of them to
-> "platform" (the legacy one) seems to fix the problem.
->=20
-> Janusz, Is the following change okay for you? I would like to apply it
-> today so that linux-next get's updated with the 50+ stack of new
-> patches by tomorrow.
->=20
-> 	--- a/drivers/mtd/nand/raw/ams-delta.c
-> 	+++ b/drivers/mtd/nand/raw/ams-delta.c
-> 	@@ -411,7 +411,7 @@ static const struct platform_device_id gpio_nand_pla=
-t_id_table[] =3D {
-> 	                /* sentinel */
-> 	        },
-> 	 };
-> 	-MODULE_DEVICE_TABLE(of, gpio_nand_plat_id_table);
-> 	+MODULE_DEVICE_TABLE(platform, gpio_nand_plat_id_table);
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ tools/testing/selftests/seccomp/seccomp_bpf.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-Evidently a copy-paste error on my side, sorry for that.
-
-Acked-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
-
-Thanks,
-Janusz
-
-> =20
-> 	 static struct platform_driver gpio_nand_driver =3D {
-> 	        .probe          =3D gpio_nand_probe,
->=20
->=20
-> Thanks,
-> Miqu=E8l
->=20
+diff --git a/tools/testing/selftests/seccomp/seccomp_bpf.c b/tools/testing/selftests/seccomp/seccomp_bpf.c
+index a9ad3bd8b2ad..89fb3e0b552e 100644
+--- a/tools/testing/selftests/seccomp/seccomp_bpf.c
++++ b/tools/testing/selftests/seccomp/seccomp_bpf.c
+@@ -913,7 +913,7 @@ TEST(ERRNO_order)
+ 	EXPECT_EQ(12, errno);
+ }
+ 
+-FIXTURE_DATA(TRAP) {
++FIXTURE(TRAP) {
+ 	struct sock_fprog prog;
+ };
+ 
+@@ -1024,7 +1024,7 @@ TEST_F(TRAP, handler)
+ 	EXPECT_NE(0, (unsigned long)sigsys->_call_addr);
+ }
+ 
+-FIXTURE_DATA(precedence) {
++FIXTURE(precedence) {
+ 	struct sock_fprog allow;
+ 	struct sock_fprog log;
+ 	struct sock_fprog trace;
+@@ -1513,7 +1513,7 @@ void tracer_poke(struct __test_metadata *_metadata, pid_t tracee, int status,
+ 	EXPECT_EQ(0, ret);
+ }
+ 
+-FIXTURE_DATA(TRACE_poke) {
++FIXTURE(TRACE_poke) {
+ 	struct sock_fprog prog;
+ 	pid_t tracer;
+ 	long poked;
+@@ -1821,7 +1821,7 @@ void tracer_ptrace(struct __test_metadata *_metadata, pid_t tracee,
+ 		change_syscall(_metadata, tracee, -1, -ESRCH);
+ }
+ 
+-FIXTURE_DATA(TRACE_syscall) {
++FIXTURE(TRACE_syscall) {
+ 	struct sock_fprog prog;
+ 	pid_t tracer, mytid, mypid, parent;
+ };
+@@ -2326,7 +2326,7 @@ struct tsync_sibling {
+ 		}							\
+ 	} while (0)
+ 
+-FIXTURE_DATA(TSYNC) {
++FIXTURE(TSYNC) {
+ 	struct sock_fprog root_prog, apply_prog;
+ 	struct tsync_sibling sibling[TSYNC_SIBLINGS];
+ 	sem_t started;
+-- 
+2.20.1
 
 
-
-
+-- 
+Kees Cook
