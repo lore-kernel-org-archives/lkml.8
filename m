@@ -2,87 +2,154 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1390FC18E5A
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 14:18:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26A51C10F27
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 14:18:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF0DB20727
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 14:18:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3005222D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 14:18:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ph2wxm08"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PdYhcmI7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729796AbgCKOSR (ORCPT
+        id S1729816AbgCKOSZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 10:18:17 -0400
-Received: from ozlabs.org ([203.11.71.1]:53959 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729559AbgCKOSQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 10:18:16 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48cvFG60Tbz9sPF;
-        Thu, 12 Mar 2020 01:18:10 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1583936294;
-        bh=7/Zpw+iQg6yYYoyvhDYNahBVanAKxjeXCSO/xB7KURM=;
-        h=Date:From:To:Cc:Subject:From;
-        b=ph2wxm08Vgrk1cRuxoio2XPs0veC+rrubQUK14mHY30HB4td3+9+MTjwMfTdJz8WM
-         9zMTQ+dz9w0LIB3hUU3A8jsaSOLXAMdik+JkWxLUqUVsiW3fG6CdgeJxFwOdfHc/JY
-         LaKgFbVSw4BUHRFyKZehG7nXBqfUNr7MlAT7Q2I7bhQkH0N7ZKGeFNdAnjVrFI2vCA
-         s8LFm+42y+zm9fugHyaCt1uE/pENvERVNuZ7X1ldsec6YCAOOA5cI6DVwmXwtDE068
-         0WaxAeGEwe4a6W4Q/YoC49CIres7OLz6aBzWutX4ycUIcAyzrDBZ3MGISgcjmJc6qA
-         ntzz4kxwevlQg==
-Date:   Thu, 12 Mar 2020 01:18:09 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        NeilBrown <neilb@suse.de>
-Subject: linux-next: Signed-off-by missing for commit in the file-locks tree
-Message-ID: <20200312011809.408fd045@canb.auug.org.au>
+        Wed, 11 Mar 2020 10:18:25 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:40664 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729798AbgCKOSZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 10:18:25 -0400
+Received: by mail-wr1-f66.google.com with SMTP id p2so2839497wrw.7;
+        Wed, 11 Mar 2020 07:18:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=UlqHsGcMH2wgZ4HNYQSAfQVihbtUyreW0G2xFxwpzcs=;
+        b=PdYhcmI7s3rv/HMRFF/5hUVPIoLN4hdtpSANHt1mmnYHd7bvwLK/oGC56J9RethYth
+         +H9fjEMKeBDyP/sBCAjJGnkXzzwhlfGin+8iMaNGcxpbvbV96pZBQ/UBopbr7B8cFg8S
+         SxYq5gUPBKhAJN4jVfyflW8sGzRweWAD/9keqVDhqxMMFgL9Y7gblvTCpa+iZ6JrITEk
+         H+HlG2w8NvqamdHQMk0ZRPotGvpBILQmL3bJzWVVCH3OErZjB9v7FgdeReAzV5OhB5w1
+         1tFvQ+9MhnRGDXTkpuiIoE7rS6bxZrBxBw5RLfp9G3hvhDa8QMIhm2Reb52dR9/wC1BX
+         LpJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=UlqHsGcMH2wgZ4HNYQSAfQVihbtUyreW0G2xFxwpzcs=;
+        b=pxjY5zXlk6GvWBjrC5Mm/bPXpkiEj0g4QFAFXbhqm0Ys9J201hy5GkU5HHIOJdEkoU
+         MIMvs99H03pPE81hUGQyfquhDaskscmXlQhdd1bNqikxYgcuNzTgujNuHAQfYsI46swa
+         tREyZVPx7/iLhLwYKTOxyMl5rxujJwqBRFyUKgcN8qRfOpGV3xE6BCUHw1tAnVfiHkEI
+         V1MilP/U/AjKJdmRM0pvv8LlsIbitJjw0nIKCHQCLzWTKLGhfvkEJ/Dmdx/m8XwgaIDT
+         fZKiIWNop+J2hwhZxqH0HA8cQS4weoIe4VZZqYH6XluK7QMII2SgbT0dHlOdYAJyaeOr
+         3igg==
+X-Gm-Message-State: ANhLgQ1yhBGmUS6muyTLggI6B9OihSAm7YDh6yuWwBRWP+rhUWEdNMZ7
+        Bpu0jgJhb+jypyZIuFT5BgRxu4GR
+X-Google-Smtp-Source: ADFU+vsw6V6UgCNg8FHXcehLCdyjM4B1DerfYBOPeu8xfu5rzRUy1y7z6jr/QaB3Qyd9/Wiihx1TAA==
+X-Received: by 2002:a05:6000:100d:: with SMTP id a13mr4580847wrx.234.1583936301649;
+        Wed, 11 Mar 2020 07:18:21 -0700 (PDT)
+Received: from localhost ([185.92.221.13])
+        by smtp.gmail.com with ESMTPSA id q4sm26328172wro.56.2020.03.11.07.18.20
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 11 Mar 2020 07:18:21 -0700 (PDT)
+Date:   Wed, 11 Mar 2020 14:18:20 +0000
+From:   Wei Yang <richard.weiyang@gmail.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Baoquan He <bhe@redhat.com>,
+        Wei Yang <richard.weiyang@gmail.com>
+Subject: Re: [PATCH v1 2/5] drivers/base/memory: map MMOP_OFFLINE to 0
+Message-ID: <20200311141820.zgmwiz3rdj5co6kf@master>
+Reply-To: Wei Yang <richard.weiyang@gmail.com>
+References: <20200311123026.16071-1-david@redhat.com>
+ <20200311123026.16071-3-david@redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/q8Qt0lCox7tKsfSN0bsFcmc";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200311123026.16071-3-david@redhat.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/q8Qt0lCox7tKsfSN0bsFcmc
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Wed, Mar 11, 2020 at 01:30:23PM +0100, David Hildenbrand wrote:
+>I have no idea why we have to start at -1. Just treat 0 as the special
+>case. Clarify a comment (which was wrong, when we come via
+>device_online() the first time, the online_type would have been 0 /
+>MEM_ONLINE). The default is now always MMOP_OFFLINE.
+>
+>This is a preparation to use the online_type as an array index.
+>
+>Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>Cc: Andrew Morton <akpm@linux-foundation.org>
+>Cc: Michal Hocko <mhocko@kernel.org>
+>Cc: Oscar Salvador <osalvador@suse.de>
+>Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+>Cc: Baoquan He <bhe@redhat.com>
+>Cc: Wei Yang <richard.weiyang@gmail.com>
+>Signed-off-by: David Hildenbrand <david@redhat.com>
 
-Hi all,
+Reviewed-by: Wei Yang <richard.weiyang@gmail.com>
 
-Commit
+>---
+> drivers/base/memory.c          | 11 ++++-------
+> include/linux/memory_hotplug.h |  2 +-
+> 2 files changed, 5 insertions(+), 8 deletions(-)
+>
+>diff --git a/drivers/base/memory.c b/drivers/base/memory.c
+>index 8c5ce42c0fc3..e7e77cafef80 100644
+>--- a/drivers/base/memory.c
+>+++ b/drivers/base/memory.c
+>@@ -211,17 +211,14 @@ static int memory_subsys_online(struct device *dev)
+> 		return 0;
+> 
+> 	/*
+>-	 * If we are called from state_store(), online_type will be
+>-	 * set >= 0 Otherwise we were called from the device online
+>-	 * attribute and need to set the online_type.
+>+	 * When called via device_online() without configuring the online_type,
+>+	 * we want to default to MMOP_ONLINE.
+> 	 */
+>-	if (mem->online_type < 0)
+>+	if (mem->online_type == MMOP_OFFLINE)
+> 		mem->online_type = MMOP_ONLINE;
+> 
+> 	ret = memory_block_change_state(mem, MEM_ONLINE, MEM_OFFLINE);
+>-
+>-	/* clear online_type */
+>-	mem->online_type = -1;
+>+	mem->online_type = MMOP_OFFLINE;
+> 
+> 	return ret;
+> }
+>diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
+>index 261dbf010d5d..c2e06ed5e0e9 100644
+>--- a/include/linux/memory_hotplug.h
+>+++ b/include/linux/memory_hotplug.h
+>@@ -48,7 +48,7 @@ enum {
+> /* Types for control the zone type of onlined and offlined memory */
+> enum {
+> 	/* Offline the memory. */
+>-	MMOP_OFFLINE = -1,
+>+	MMOP_OFFLINE = 0,
+> 	/* Online the memory. Zone depends, see default_zone_for_pfn(). */
+> 	MMOP_ONLINE,
+> 	/* Online the memory to ZONE_NORMAL. */
+>-- 
+>2.24.1
 
-  e2de130a568c ("locks: reintroduce locks_delete_lock shortcut")
-
-is missing a Signed-off-by from its author.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/q8Qt0lCox7tKsfSN0bsFcmc
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5o8yEACgkQAVBC80lX
-0Gx93Af9GDGS5lFo2SBj9y+p7l7uPx8fKx0o4iECB1GxWVGnY2wNXkXjiIJIO2ih
-moMtlkqIiqk9260fxNlxLuf79zkf4yrLBIyJMCifH8mooJ0tm7UL5dGRnZ8jFHi8
-1mkzSva/3W5kpu8r4E+RpWsxOnhvWoBPTRH2n2oGBA1IH/1vYHCNu+Q9y/OHKIMG
-3pHBX68lIVxugpEouZ1PUDXPB84tnDIJihgfkzm3pSjD3tfV60zvEsYsbt25wYoe
-x5XHxnocnZQ2FOvWGRnJCTNAXTy//NTqMkpX0XL3QS3uwzqyoLpkDxfDActa8+32
-mS5SbKll+a2BTltmWhPlxOi4THmDlg==
-=uqnI
------END PGP SIGNATURE-----
-
---Sig_/q8Qt0lCox7tKsfSN0bsFcmc--
+-- 
+Wei Yang
+Help you, Help me
