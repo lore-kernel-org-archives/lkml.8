@@ -2,200 +2,127 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70715C2BAEE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:23:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD6D6C2BAEE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:25:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D4762072F
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:23:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B8382072F
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:25:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="f/sLS2XO"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UXLY8qz/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730865AbgCKSXo (ORCPT
+        id S1730763AbgCKSZD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 14:23:44 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:51346 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730691AbgCKSXn (ORCPT
+        Wed, 11 Mar 2020 14:25:03 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:41023 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730703AbgCKSZD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 14:23:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1583951010; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
+        Wed, 11 Mar 2020 14:25:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583951101;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=QboM6rXBouaMwAgrN8IO8KzOPqal71bApdk4LvjvUTk=;
-        b=f/sLS2XOj73Dbi4Z7qB+yO9DMhX6Wp7XqAhP1c9swekfCuMShAJDaQEyB2b5PsWpgj9Ud3
-        XFuNnSG/8Es/HT+I6ghtn3CzjSXZc2HUt/cepTlKSgIATlrL9IKxB0at3Uquvy8uvHTXaV
-        iBelRYORUKO83WnPlEY5P7Oc4VWwG60=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     od@zcrc.me, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v2 3/3] dt-bindings: rtc: Convert and update jz4740-rtc doc to YAML
-Date:   Wed, 11 Mar 2020 19:23:18 +0100
-Message-Id: <20200311182318.22154-3-paul@crapouillou.net>
-In-Reply-To: <20200311182318.22154-1-paul@crapouillou.net>
-References: <20200311182318.22154-1-paul@crapouillou.net>
+        bh=uaZ9c6mFKi33dS6s6gMieJUilQtBx6d2khI9AiP0fEw=;
+        b=UXLY8qz/iNEK3qgOVaDqRRNpjKCBsnNwnmUOnm8Ze7kf4iZchQgE04xLM1Z3sesdeS4tNL
+        S5lyaMfIv0WBc9wZXcoTw+OitZXFpwlRPidNnXxYafnGuOv9FrjAT+1rusHn1xaZDwKlG/
+        OdPxHQ5QJnE8zF3hUyvokWi7fJBNqeE=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-64-VNJ6haIENoCLoojk7TFfmA-1; Wed, 11 Mar 2020 14:25:00 -0400
+X-MC-Unique: VNJ6haIENoCLoojk7TFfmA-1
+Received: by mail-wr1-f70.google.com with SMTP id p11so1324796wrn.10
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 11:24:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=uaZ9c6mFKi33dS6s6gMieJUilQtBx6d2khI9AiP0fEw=;
+        b=QSg7bFsZG3ntylLa2yn6p9CZi6W6JmlKMEEFRfCgKIbFrpkPv8RntozF6Elw6HTR6x
+         e3XSC0tkEhp5DInmdzJV7q8Gh49Ymsc0lY5bZ6cSRM+r5foZ0K61fqiQ9gzN+2SSh68S
+         JsKTOWhQqsj5ws0Lf3l+TdFRfhF6ObPjyVKrvkxPEnQd0brMRSdz/cqbtWfC2eLrkZRh
+         zBSurGosC/ycl0eIm1fIo5Eh4QuI+TpIch0xA8yqvZwPNbbxUF64dAzTU1xmx6v7c405
+         vtZcmPKaF2fUbjFoFEopJMvOifJPElC69oefsjkfrLIFp/PvWYp5zivtZ0N9iY/ZX4D0
+         gthQ==
+X-Gm-Message-State: ANhLgQ1NObBf9jFkPkcnDtTd7Gk0TuX4fSNuFjsssUqhBLT8rRHhX5OJ
+        Pws2IBrbJ2RCZtwbIa2l00pKnSpNR+WUHzts3p/WtUVLHDf1FkYQq2mfE1NfuNri7jZk4hWyo0m
+        M/ERIltDWmn1MTNdlYjv7o6Vs
+X-Received: by 2002:a5d:4683:: with SMTP id u3mr6044461wrq.251.1583951098564;
+        Wed, 11 Mar 2020 11:24:58 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vuFwa2rQIlp3Ndabf9/ozMQ9Cr3LXBZlBnnVx+Xl6lybR3w5KhAONmLioZJaJ7wCHoT+edMNw==
+X-Received: by 2002:a5d:4683:: with SMTP id u3mr6044427wrq.251.1583951098327;
+        Wed, 11 Mar 2020 11:24:58 -0700 (PDT)
+Received: from x1.localdomain (2001-1c00-0c0c-fe00-fc7e-fd47-85c1-1ab3.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:fc7e:fd47:85c1:1ab3])
+        by smtp.gmail.com with ESMTPSA id 12sm9267987wmo.30.2020.03.11.11.24.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Mar 2020 11:24:56 -0700 (PDT)
+Subject: Re: [RFC v2] x86: Select HARDIRQS_SW_RESEND on x86
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>
+Cc:     linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+References: <87sgk4naqh.fsf@nanos.tec.linutronix.de>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <0e5b484d-89f5-c018-328a-fb4a04c6cd91@redhat.com>
+Date:   Wed, 11 Mar 2020 19:24:55 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <87sgk4naqh.fsf@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the jz4740-rtc doc to YAML, and update it to reflect the new
-changes in the driver:
-- More compatible strings are specified, with fallbacks if needed,
-- The vendor-specific properties are now properly prefixed with the
-  'ingenic,' prefix.
+Hi Thomas,
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
----
- .../bindings/rtc/ingenic,jz4740-rtc.txt       | 37 ---------
- .../devicetree/bindings/rtc/ingenic,rtc.yaml  | 83 +++++++++++++++++++
- 2 files changed, 83 insertions(+), 37 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/rtc/ingenic,jz4740-rtc.txt
- create mode 100644 Documentation/devicetree/bindings/rtc/ingenic,rtc.yaml
+On 1/24/20 4:19 PM, Thomas Gleixner wrote:
+> Hans,
+> 
+> Hans de Goede <hdegoede@redhat.com> writes:
+>>
+>> The Intel GPIO controllers do not allow implementing irq_retrigger without
+>> emulating it in software, at which point we are better of just using the
+>> generic HARDIRQS_SW_RESEND mechanism rather then re-implementing software
+>> emulation for this separately in aprox. 14 different pinctrl drivers.
+> 
+> Indeed.
+> 
+>> I'm sending this out as a RFC since I'm not %100 sure this is the best
+>> solution and it seems like a somewhat big change to make.
+> 
+> It's not that bad. The only affected interrupt chips on x86 should be
+> secondary interrupt chips like the GPIO controller.
+> 
+> ioapic/msi/... have irq_retrigger() functionality, so it won't do the
+> software resend.
+> 
+> I just need to stare at the legacy PIC and the virt stuff.
+> 
+>> Also maybe we should add a Cc: stable@vger.kernel.org ??? This seems like
+>> somewhat a big change for that but it does solve some real issues...
+> 
+> Yes. Let me stare at the couple of weird irqchips which might get
+> surprised. I'll teach them not to do that :)
 
-diff --git a/Documentation/devicetree/bindings/rtc/ingenic,jz4740-rtc.txt b/Documentation/devicetree/bindings/rtc/ingenic,jz4740-rtc.txt
-deleted file mode 100644
-index 41c7ae18fd7b..000000000000
---- a/Documentation/devicetree/bindings/rtc/ingenic,jz4740-rtc.txt
-+++ /dev/null
-@@ -1,37 +0,0 @@
--JZ4740 and similar SoCs real-time clock driver
--
--Required properties:
--
--- compatible: One of:
--  - "ingenic,jz4740-rtc" - for use with the JZ4740 SoC
--  - "ingenic,jz4780-rtc" - for use with the JZ4780 SoC
--- reg: Address range of rtc register set
--- interrupts: IRQ number for the alarm interrupt
--- clocks: phandle to the "rtc" clock
--- clock-names: must be "rtc"
--
--Optional properties:
--- system-power-controller: To use this component as the
--  system power controller
--- reset-pin-assert-time-ms: Reset pin low-level assertion
--  time after wakeup (default 60ms; range 0-125ms if RTC clock
--  at 32 kHz)
--- min-wakeup-pin-assert-time-ms: Minimum wakeup pin assertion
--  time (default 100ms; range 0-2s if RTC clock at 32 kHz)
--
--Example:
--
--rtc@10003000 {
--	compatible = "ingenic,jz4740-rtc";
--	reg = <0x10003000 0x40>;
--
--	interrupt-parent = <&intc>;
--	interrupts = <32>;
--
--	clocks = <&rtc_clock>;
--	clock-names = "rtc";
--
--	system-power-controller;
--	reset-pin-assert-time-ms = <60>;
--	min-wakeup-pin-assert-time-ms = <100>;
--};
-diff --git a/Documentation/devicetree/bindings/rtc/ingenic,rtc.yaml b/Documentation/devicetree/bindings/rtc/ingenic,rtc.yaml
-new file mode 100644
-index 000000000000..4206bf8a2469
---- /dev/null
-+++ b/Documentation/devicetree/bindings/rtc/ingenic,rtc.yaml
-@@ -0,0 +1,83 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/rtc/ingenic,rtc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Ingenic SoCs Real-Time Clock DT bindings
-+
-+maintainers:
-+  - Paul Cercueil <paul@crapouillou.net>
-+
-+allOf:
-+  - $ref: rtc.yaml#
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - enum:
-+        - ingenic,jz4740-rtc
-+        - ingenic,jz4760-rtc
-+      - items:
-+        - const: ingenic,jz4725b-rtc
-+        - const: ingenic,jz4740-rtc
-+      - items:
-+        - enum:
-+          - ingenic,jz4770-rtc
-+          - ingenic,jz4780-rtc
-+        - const: ingenic,jz4760-rtc
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-names:
-+    const: rtc
-+
-+  system-power-controller:
-+    description: |
-+      Indicates that the RTC is responsible for powering OFF
-+      the system.
-+    type: boolean
-+
-+  ingenic,reset-pin-assert-time-ms:
-+    minimum: 0
-+    maximum: 125
-+    default: 60
-+    description: |
-+      Reset pin low-level assertion time after wakeup
-+      (assuming RTC clock at 32 kHz)
-+
-+  ingenic,min-wakeup-pin-assert-time-ms:
-+    minimum: 0
-+    maximum: 2000
-+    default: 100
-+    description: |
-+      Minimum wakeup pin assertion time
-+      (assuming RTC clock at 32 kHz)
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - clock-names
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/jz4740-cgu.h>
-+    rtc_dev: rtc@10003000 {
-+      compatible = "ingenic,jz4740-rtc";
-+      reg = <0x10003000 0x40>;
-+
-+      interrupt-parent = <&intc>;
-+      interrupts = <15>;
-+
-+      clocks = <&cgu JZ4740_CLK_RTC>;
-+      clock-names = "rtc";
-+    };
--- 
-2.25.1
+I know that you are very busy, still I'm wondering is there any progress
+on this ?
+
+Regards,
+
+Hans
 
