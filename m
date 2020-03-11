@@ -2,121 +2,103 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2537C18E5A
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 14:29:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3E94C18E5A
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 14:29:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC34320936
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 14:29:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 050C220774
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 14:29:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729772AbgCKO3L (ORCPT
+        id S1729813AbgCKO33 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 10:29:11 -0400
-Received: from foss.arm.com ([217.140.110.172]:50372 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729057AbgCKO3L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 10:29:11 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3CF0F31B;
-        Wed, 11 Mar 2020 07:29:10 -0700 (PDT)
-Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.71])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AEA6A3F67D;
-        Wed, 11 Mar 2020 07:29:07 -0700 (PDT)
-Date:   Wed, 11 Mar 2020 14:29:05 +0000
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Nishanth Menon <nm@ti.com>,
-        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
-        Tero Kristo <t-kristo@ti.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Rik van Riel <riel@surriel.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Dave Chinner <david@fromorbit.com>,
+        Wed, 11 Mar 2020 10:29:29 -0400
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:46179 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729057AbgCKO32 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 10:29:28 -0400
+X-Originating-IP: 90.89.41.158
+Received: from xps13 (lfbn-tou-1-1473-158.w90-89.abo.wanadoo.fr [90.89.41.158])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 9615760009;
+        Wed, 11 Mar 2020 14:29:23 +0000 (UTC)
+Date:   Wed, 11 Mar 2020 15:29:22 +0100
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Joe Perches <joe@perches.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Harvey Hunt <harveyhuntnexus@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        Yafang Shao <laoar.shao@gmail.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        kernel-team@fb.com, Kishon Vijay Abraham I <kishon@ti.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>
-Subject: Re: [PATCH] vfs: keep inodes with page cache off the inode shrinker
- LRU
-Message-ID: <20200311142905.GI3216816@arrakis.emea.arm.com>
-References: <20200212085004.GL25745@shell.armlinux.org.uk>
- <CAK8P3a3pzgVvwyDhHPoiSOqyv+h_ixbsdWMqG3sELenRJqFuew@mail.gmail.com>
- <671b05bc-7237-7422-3ece-f1a4a3652c92@oracle.com>
- <CAK8P3a13jGdjVW1TzvCKjRBg-Yscs_WB2K1kw9AzRfn3G9a=-Q@mail.gmail.com>
- <7c4c1459-60d5-24c8-6eb9-da299ead99ea@oracle.com>
- <20200306203439.peytghdqragjfhdx@kahuna>
- <CAK8P3a0Gyqu7kzO1JF=j9=jJ0T5ut=hbKepvke-2bppuPNKTuQ@mail.gmail.com>
- <20200309155945.GA4124965@arrakis.emea.arm.com>
- <20200309160919.GM25745@shell.armlinux.org.uk>
- <CAK8P3a2yyJLmkifpSabMwtUiAvumMPwLEzT5RpsBA=LYn=ZXUw@mail.gmail.com>
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        linux-mtd@lists.infradead.org, alsa-devel@alsa-project.org
+Subject: Re: [PATCH -next 013/491] INGENIC JZ47xx SoCs: Use fallthrough;
+Message-ID: <20200311152922.2dc56137@xps13>
+In-Reply-To: <CAPDyKFo2UensmH_gYkH+u22bs=K9Xn0q3Dr9v6tq6GPNRg_Lew@mail.gmail.com>
+References: <cover.1583896344.git.joe@perches.com>
+        <ad408ff8dc4e5fae0884312cb0aa618664e546e5.1583896348.git.joe@perches.com>
+        <20200311084052.3ca3c331@xps13>
+        <CAPDyKFo2UensmH_gYkH+u22bs=K9Xn0q3Dr9v6tq6GPNRg_Lew@mail.gmail.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a2yyJLmkifpSabMwtUiAvumMPwLEzT5RpsBA=LYn=ZXUw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 09, 2020 at 08:46:18PM +0100, Arnd Bergmann wrote:
-> On Mon, Mar 9, 2020 at 5:09 PM Russell King - ARM Linux admin
-> <linux@armlinux.org.uk> wrote:
-> > On Mon, Mar 09, 2020 at 03:59:45PM +0000, Catalin Marinas wrote:
-> > > On Sun, Mar 08, 2020 at 11:58:52AM +0100, Arnd Bergmann wrote:
-> > > > - revisit CONFIG_VMSPLIT_4G_4G for arm32 (and maybe mips32)
-> > > >   to see if it can be done, and what the overhead is. This is probably
-> > > >   more work than the others combined, but also the most promising
-> > > >   as it allows the most user address space and physical ram to be used.
-> > >
-> > > A rough outline of such support (and likely to miss some corner cases):
-> > >
-> > > 1. Kernel runs with its own ASID and non-global page tables.
-> > >
-> > > 2. Trampoline code on exception entry/exit to handle the TTBR0 switching
-> > >    between user and kernel.
-> > >
-> > > 3. uaccess routines need to be reworked to pin the user pages in memory
-> > >    (get_user_pages()) and access them via the kernel address space.
-> > >
-> > > Point 3 is probably the ugliest and it would introduce a noticeable
-> > > slowdown in certain syscalls.
-> 
-> There are probably a number of ways to do the basic design. The idea
-> I had (again, probably missing more corner cases than either of you
-> two that actually understand the details of the mmu):
-> 
-> - Assuming we have LPAE, run the kernel vmlinux and modules inside
->   the vmalloc space, in the top 256MB or 512MB on TTBR1
-> 
-> - Map all the physical RAM (up to 3.75GB) into a reserved ASID
->   with TTBR0
-> 
-> - Flip TTBR0 on kernel entry/exit, and again during user access.
-> 
-> This is probably more work to implement than your idea, but
-> I would hope this has a lower overhead on most microarchitectures
-> as it doesn't require pinning the pages. Depending on the
-> microarchitecture, I'd hope the overhead would be comparable
-> to that of ARM64_SW_TTBR0_PAN.
 
-This still doesn't solve the copy_{from,to}_user() case where both
-address spaces need to be available during copy. So you either pin the
-user pages in memory and access them via the kernel mapping or you
-temporarily map (kmap?) the destination/source kernel address. The
-overhead I'd expect to be significantly greater than ARM64_SW_TTBR0_PAN
-for the uaccess routines. For user entry/exit, your suggestion is
-probably comparable with SW PAN.
+Ulf Hansson <ulf.hansson@linaro.org> wrote on Wed, 11 Mar 2020 15:20:59
++0100:
 
--- 
-Catalin
+> On Wed, 11 Mar 2020 at 08:40, Miquel Raynal <miquel.raynal@bootlin.com> wrote:
+> >
+> > Hi Joe,
+> >
+> > Joe Perches <joe@perches.com> wrote on Tue, 10 Mar 2020 21:51:27 -0700:
+> >  
+> > > Convert the various uses of fallthrough comments to fallthrough;
+> > >
+> > > Done via script
+> > > Link: https://lore.kernel.org/lkml/b56602fcf79f849e733e7b521bb0e17895d390fa.1582230379.git.joe.com/
+> > >
+> > > Signed-off-by: Joe Perches <joe@perches.com>
+> > > ---
+> > >  drivers/gpu/drm/ingenic/ingenic-drm.c           | 2 +-
+> > >  drivers/mmc/host/jz4740_mmc.c                   | 6 ++----
+> > >  drivers/mtd/nand/raw/ingenic/ingenic_nand_drv.c | 2 +-
+> > >  drivers/mtd/nand/raw/ingenic/jz4725b_bch.c      | 4 ++--
+> > >  drivers/mtd/nand/raw/ingenic/jz4780_bch.c       | 4 ++--
+> > >  sound/soc/codecs/jz4770.c                       | 2 +-
+> > >  6 files changed, 9 insertions(+), 11 deletions(-)  
+> >
+> > I like very much the new way to advertise for fallthrough statements,
+> > but I am not willing to take any patch converting a single driver
+> > anymore. I had too many from Gustavo when these comments had to be
+> > inserted. I would really prefer a MTD-wide or a NAND-wide or at least a
+> > raw-NAND-wide single patch (anything inside drivers/mtd/nand/raw/).
+> >
+> > Hope you'll understand!  
+> 
+> I fully agree (for mmc). One patch please.
+> 
+> Another option is to make a big fat tree wide patch and ask Linus if
+> he want to pick up immediately after an rc1. That should cause less
+> disturbance for everyone, no?
+
+Absolutely.
+
+Miquèl
