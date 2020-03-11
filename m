@@ -1,90 +1,87 @@
-Return-Path: <linux-kernel-owner@vger.kernel.org>
+Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,PDS_HP_HELO_NORDNS,RDNS_NONE,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_NONE,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:33235 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726044AbgCKLDI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 07:03:08 -0400
-Received: by mail-ed1-f68.google.com with SMTP id z65so2374384ede.0
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 04:03:02 -0700 (PDT)
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com. [209.85.221.47])
-        by smtp.gmail.com with ESMTPSA id m3sm1415728ejj.22.2020.03.11.04.03.00
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Mar 2020 04:03:00 -0700 (PDT)
-Received: by mail-wr1-f47.google.com with SMTP id t11so2026469wrw.5
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 04:03:00 -0700 (PDT)
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
+Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8636EC2BAEE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:28:27 +0000 (UTC)
+Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
+	by mail.kernel.org (Postfix) with ESMTP id 286BB20735
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:28:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583951308;
+	bh=lW4JIv7aa68oSCknjnA/9gvAsIpDfxMJp7nWCIG5B34=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JERfGOqFM5vH865jlGPFJ0Gsz/yFAybpcV26eALEZEo9GHk2kWo5XichOFIOmdE6F
+	 C9Lid61tc1hTHKjwh8OzxD6XXpnfz+VmY95FeXbji0Co8Jw7rlf7LF7/bep0UahPVa
+	 ofiFkg9wW30uv3Iq7El1dn8hU/vHMFWHvloVpnOY=
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1730855AbgCKS20 (ORCPT
+        <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 11 Mar 2020 14:28:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41348 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730468AbgCKS20 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 14:28:26 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C97DF2072F;
+        Wed, 11 Mar 2020 18:28:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583951306;
+        bh=lW4JIv7aa68oSCknjnA/9gvAsIpDfxMJp7nWCIG5B34=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=dBMzRBwStYgZb348uwVYx1xMQStiMomc4gh55B6cktIdpyZKoQbsV8V9SUpoDWYQh
+         VkgzVPjy0TplqmFgywaG3pJHIQtEray1b40ahvA0rqlOjkH5gzNzmRwU4jpcosKIaB
+         roUif+wLMlMevaEtd5/cEQldD1SLtHIIizRgeFFA=
+Date:   Wed, 11 Mar 2020 19:28:23 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     shuah <shuah@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+Subject: Re: [PATCH 5.5 000/189] 5.5.9-stable review
+Message-ID: <20200311182823.GB4021147@kroah.com>
+References: <20200310123639.608886314@linuxfoundation.org>
+ <80505589-baa7-2428-d392-a6ede33bf6fc@kernel.org>
 MIME-Version: 1.0
-References: <20200303123446.20095-1-xia.jiang@mediatek.com> <20200303123446.20095-4-xia.jiang@mediatek.com>
-In-Reply-To: <20200303123446.20095-4-xia.jiang@mediatek.com>
-From: Tomasz Figa <tfiga@chromium.org>
-Date: Wed, 11 Mar 2020 20:02:48 +0900
-Message-ID:
- <CAAFQd5AA6NtLDsqL3Ph8cwv5=ZYoPOiu4Wa85ky037qOyMH1QQ@mail.gmail.com>
-Subject: Re: [PATCH v7 03/11] media: platform: Improve s_selection flow for
- bug fixing
-To: Xia Jiang <xia.jiang@mediatek.com>
-Cc: Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rick Chang <rick.chang@mediatek.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support"
-        <linux-mediatek@lists.infradead.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        srv_heupstream <srv_heupstream@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <80505589-baa7-2428-d392-a6ede33bf6fc@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
+Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
-Message-ID: <20200311110248.xav-AHWFObuYj98PeoFZe20bkBxlfkxQD6ytEp8G81s@z>
+X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Xia,
+On Tue, Mar 10, 2020 at 03:15:39PM -0600, shuah wrote:
+> On 3/10/20 6:37 AM, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 5.5.9 release.
+> > There are 189 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> > 
+> > Responses should be made by Thu, 12 Mar 2020 12:34:10 +0000.
+> > Anything received after that time might be too late.
+> > 
+> > The whole patch series can be found in one patch at:
+> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.5.9-rc1.gz
+> > or in the git tree and branch at:
+> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.5.y
+> > and the diffstat can be found below.
+> > 
+> > thanks,
+> > 
+> > greg k-h
+> > 
+> 
+> Compiled and booted on my test system. No dmesg regressions.
 
-On Tue, Mar 3, 2020 at 9:35 PM Xia Jiang <xia.jiang@mediatek.com> wrote:
->
-> Get correct compose value in mtk_jpeg_s_selection function.
+Thanks for testing all of these and letting me know.
 
-It's a good practice to describe why the current code is wrong and new is good.
-
->
-> Signed-off-by: Xia Jiang <xia.jiang@mediatek.com>
-> ---
->  drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-
-Thanks for the patch. Please see my comment inline.
-
-> diff --git a/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c b/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
-> index da0dae4b0fc9..fb2c8d026580 100644
-> --- a/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
-> +++ b/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
-> @@ -492,8 +492,8 @@ static int mtk_jpeg_s_selection(struct file *file, void *priv,
->         case V4L2_SEL_TGT_COMPOSE:
->                 s->r.left = 0;
->                 s->r.top = 0;
-> -               s->r.width = ctx->out_q.w;
-> -               s->r.height = ctx->out_q.h;
-> +               ctx->out_q.w = s->r.width;
-> +               ctx->out_q.h = s->r.height;
->                 break;
->         default:
->                 return -EINVAL;
-
-The decoder compose target means the visible rectangle of the decoded
-image, which comes from the stream metadata. It's not something that
-can be set by the userspace.
-
-Best regards,
-Tomasz
-
+greg k-h
