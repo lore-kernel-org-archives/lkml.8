@@ -2,176 +2,84 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DATE_IN_FUTURE_06_12,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,MSGID_FROM_MTA_HEADER,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D470C10F27
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 08:36:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 310D0C10F27
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 08:36:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DB3E20637
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 08:36:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="TChfvu36"
+	by mail.kernel.org (Postfix) with ESMTP id EC844208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 08:36:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583915800;
+	bh=YYtQkcvWF1e+/AAYxtZFP70G9SXWzMfru0YI8OcLILc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Sg9G3SJqbgziEI4r804SearNfbQ5gbuPbyADrkrEctil874TphakzClSpbHg4ah1h
+	 3cTF7TR5j1X56Bw/fhHGkyU3++T1iU3VVV8VnxDr3vTGxNm6FBC2r8itCmtOsZf6hs
+	 c06wzy6BvGuviPNU8oMn+VSv8Pf/38EVUWcbkmro=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728887AbgCKIge (ORCPT
+        id S1728897AbgCKIgj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 04:36:34 -0400
-Received: from mail-vi1eur05on2078.outbound.protection.outlook.com ([40.107.21.78]:6134
-        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728605AbgCKIgd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 04:36:33 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LS3Nap5szBbOWWDTplPJ6LN2uxI3Hu5MXpDDWrExOYjrXTt865SlV8eF9MAdk66Y2ZlxMcG95Jp4jQ4CMRjm4HrHl3cpTRwPDzLG9oq3vZydoQE2Wm+mezodGK9sVzELOI+tiHaiCDj+Ds230P17Je4FuzA7gJ5NH4Yrvo5WCyi28vPJ81OPsLCEQy7ZI345/1EeBPBlkucBnt2uB2WlkmyUe+Af5kInhUdAd7qTsT4MJzskJzSi9VWlznGCFqhBhwSDl82p+wzgM3H96osql6FwNsRuotqpIec3Nlgg/I3ec5VPHfhb0kWuq4a/XUEXpyHZmURXGxM8P05ujg2Ddw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WEoEhyBGFSr+T0WmOOJnN6+RjSQtavc5N5PmyRlXha4=;
- b=aGYReKMuaFUAz4Br6EqrUadobmZ2LX+yWE0Q3BPwe4PSpezLVAh/FnTCogQey+XNS5kcYFVIJAXHCiXIXpeUNbxz/iZWlzpxYIOJZ2fOBI6e3ZhdkBthUz22DwQ1OqcxNjTSzM/IMxaDRAHGfNKGp+fHCCkbGctsk0CrvYfArjCUfyEb5XZiPTk0djedPDkq9lD69kwJkYeXY9ZsHCckb3GhSTQxSJFWDQqpf+FoQQrLfaHsoZzXjqxGTiZzaKw1syrK+rVX3AcKNvhocaLjj4GvTDD83tLHaUtFOfgV4wFCiiZbVTM1DCFCN5zHx1toVPoyTl5/qzfQtCmWGvepWg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WEoEhyBGFSr+T0WmOOJnN6+RjSQtavc5N5PmyRlXha4=;
- b=TChfvu36NAVavV0pY+KGIhR/cbqldWO4K6kk2o/lU4xy5UNV97vGkbxMfN06OI2tq2jmk9LDYZSjN4Bk98yVw0zvfcd9prXX/Wh8OgGwMv/LGYgRMCAybkxAjICNOBOMxH6ls+LpRgosf/uCfw+UCGl1tS77B3V4ZijUyDADR6w=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=yibin.gong@nxp.com; 
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (20.179.232.15) by
- VE1PR04MB6462.eurprd04.prod.outlook.com (20.179.232.205) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2793.15; Wed, 11 Mar 2020 08:36:30 +0000
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::490:6caa:24b:4a31]) by VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::490:6caa:24b:4a31%6]) with mapi id 15.20.2793.018; Wed, 11 Mar 2020
- 08:36:30 +0000
-From:   Robin Gong <yibin.gong@nxp.com>
-To:     s.hauer@pengutronix.de, vkoul@kernel.org, shawnguo@kernel.org,
-        u.kleine-koenig@pengutronix.de, broonie@kernel.org,
-        robh+dt@kernel.org, festevam@gmail.com, dan.j.williams@intel.com,
-        mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com,
-        l.stach@pengutronix.de, martin.fuzzey@flowbird.group
-Cc:     kernel@pengutronix.de, linux-spi@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-imx@nxp.com, dmaengine@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH v7 13/13] dmaengine: imx-sdma: add uart rom script
-Date:   Thu, 12 Mar 2020 00:36:36 +0800
-Message-Id: <1583944596-23410-14-git-send-email-yibin.gong@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1583944596-23410-1-git-send-email-yibin.gong@nxp.com>
-References: <1583944596-23410-1-git-send-email-yibin.gong@nxp.com>
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR04CA0158.apcprd04.prod.outlook.com (2603:1096:4::20)
- To VE1PR04MB6638.eurprd04.prod.outlook.com (2603:10a6:803:119::15)
+        Wed, 11 Mar 2020 04:36:39 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:42278 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728889AbgCKIgh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 04:36:37 -0400
+Received: by mail-lf1-f66.google.com with SMTP id t21so931703lfe.9;
+        Wed, 11 Mar 2020 01:36:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=nxsT/Pc8YS3W4ZZbR+LaSW4I86pvWwbfPSU1ExyyG6U=;
+        b=nbEVRocpIJP8LvofR0LPbJO/aPK5j9qOTaGBU7WHAxNAHVpQYBqpLYrCKNfE3wClj9
+         JgiY+QCg6hAS//NiNj6rt48hpWGdoO3JDw6+EpmfUFJxR5R9fzaIwvdIA/d3Aq3L5Tgq
+         DnW+fxbGGN3DFXGbysnBe69XEq+fJ3DP7rLp2TtranOz8lhoEUid2b9oSi6MkwAHvswl
+         9t/YlLycGXsOnwxy7nWqFsP9vJflnDoC3cVeuMP2o2csclmBPIX5xP6QroldYIWruWlb
+         APwaKR6nyXGDWMAwp8ar/lfgJbMvuugTnM6BNopk/KJuIlfQV979RkDCzkDl/HoF8aS2
+         eV9g==
+X-Gm-Message-State: ANhLgQ3hiswKEZ9I0jVQ9pGZO7LCmjMgTcDU1H+uoMOYY0PYPxKBhIxW
+        ta00htN0Wdv4Eb1iEsFi1RI=
+X-Google-Smtp-Source: ADFU+vu8cHvztLldR7/bpVxcHh3+auPWWweHqV0Ar/pwg2Az9cV9+LLhqwFEXQ3cj3dcSEtIgP3V8Q==
+X-Received: by 2002:a19:fc15:: with SMTP id a21mr1513099lfi.78.1583915795890;
+        Wed, 11 Mar 2020 01:36:35 -0700 (PDT)
+Received: from xi.terra (c-12aae455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.170.18])
+        by smtp.gmail.com with ESMTPSA id f10sm11433323ljn.44.2020.03.11.01.36.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Mar 2020 01:36:35 -0700 (PDT)
+Received: from johan by xi.terra with local (Exim 4.92.3)
+        (envelope-from <johan@kernel.org>)
+        id 1jBwqk-00012M-RT; Wed, 11 Mar 2020 09:36:22 +0100
+Date:   Wed, 11 Mar 2020 09:36:22 +0100
+From:   Johan Hovold <johan@kernel.org>
+To:     Scott Chen <scott@labau.com.tw>
+Cc:     young@labau.com.tw, jocelyn@labau.com.tw, larsm17@gmail.com,
+        Johan Hovold <johan@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] USB: serial: pl2303: add a new PID for HP
+Message-ID: <20200311083622.GF14211@localhost>
+References: <20200311061423.20686-1-scott@labau.com.tw>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from robin-OptiPlex-790.ap.freescale.net (119.31.174.66) by SG2PR04CA0158.apcprd04.prod.outlook.com (2603:1096:4::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2793.15 via Frontend Transport; Wed, 11 Mar 2020 08:36:25 +0000
-X-Mailer: git-send-email 2.7.4
-X-Originating-IP: [119.31.174.66]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: bf9208a5-7ba0-4abf-0d88-08d7c5974c1f
-X-MS-TrafficTypeDiagnostic: VE1PR04MB6462:|VE1PR04MB6462:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VE1PR04MB646290CBE057361D19880D0389FC0@VE1PR04MB6462.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:5236;
-X-Forefront-PRVS: 0339F89554
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(39860400002)(376002)(346002)(136003)(396003)(199004)(52116002)(7416002)(36756003)(5660300002)(6506007)(8936002)(966005)(478600001)(66556008)(66476007)(66946007)(6666004)(316002)(2906002)(86362001)(2616005)(956004)(6486002)(81166006)(16526019)(186003)(81156014)(8676002)(6512007)(26005)(4326008)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6462;H:VE1PR04MB6638.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-Received-SPF: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: txh/e2uH6tqtFuTnhC3yrq3IVzhmMW7/rRJI5sGX4iJL0aUs7cv7VO8NcvWCuXiAquNcG4MRd9DCm2BbpAF02xBdr1OrQ/IHKoMq+pVR8CUnVrde6muVqHp+7xz6j3VjK7hdTWCtwLbpovziUBLb3ZV5Tz34+RjbxmJVE6+H0q3mjcuhZVcyjJpUO3B21a+4eHX8/jkR2RLjs9iZd7V8eBkn2/4Hstyytx9Y8ypmQ4OjL/I58wOHwitBWRjJo6CzoY9lxGRJfowZT3YTuXTaV1rDviiKnOCcfHCMBP/0IKwgkQVTkeBRceVwn2AeFtHPzW3xgtZ+3VFIbprnichFYkfitSWlAaR69KUFJndOojryOBsa0WDuSww4wr8mGYUx/5AALkexGgnzwW+a7IwFjuw/K+O/bMkBDkfeX47f4bPAf8TAD1Xj+UeD5xwiCtYqhQWyni2DBy/2XhTi9ktyqr2ReHY6+w7su+9zksLfcdIqlOgaobtCvULHqpIzpcc7h94Jo2oAB0bBbFhNYABgvX5iF5i4xvtJ8Dp56vjUFlwpyeCy8A6fCl5jgXM3xnYmwyU7kkBWZG2PJ/Ky/Hz9BQ==
-X-MS-Exchange-AntiSpam-MessageData: BaLbwh/7TZc7vJX958bxr4Z2mQlzh5ffh+LLv2+Q1Jo2pdYniTyTdROqAYYlhwe4AcIZ40eMw9vWRU4zq7E+AhBLYrRMU+3Vb7lwa7WVy8UJ7TKpY5l+lmP5QxW+Pm4WUIi94bIDppuOR1RmjcEihA==
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bf9208a5-7ba0-4abf-0d88-08d7c5974c1f
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Mar 2020 08:36:30.5880
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: eviAbhssZLkjgpGF5l/FMEfAfp4haUdAEH1Yl+9lghiW9+Z/RRt/5SGET7D7tx4VybzZMWYHifwwClKB7Sp9gw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6462
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200311061423.20686-1-scott@labau.com.tw>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For the compatibility of NXP internal legacy kernel before 4.19 which
-is based on uart ram script and upstreaming kernel based on uart rom
-script, add both uart ram/rom script in latest sdma firmware. By default
-uart rom script used.
-Besides, add two multi-fifo scripts for SAI/PDM on i.mx8m/8mm and add
-back qspi script miss for v4(i.mx7d/8m/8mm family, but v3 is for i.mx6).
+On Wed, Mar 11, 2020 at 02:14:23PM +0800, Scott Chen wrote:
+> Add a device id for HP LD381 Display
+> LD381:   03f0:0f7f
+> 
+> Signed-off-by: Scott Chen <scott@labau.com.tw>
+> ---
+>  Changes in v2:
+>   - keep HP entries sorted by PID
 
-rom script:
-        uart_2_mcu_addr
-	uartsh_2_mcu_addr /* through spba bus */
-am script:
-	uart_2_mcu_ram_addr
-	uartsh_2_mcu_ram_addr /* through spba bus */
+Thanks for the update. Now applied.
 
-Please get latest sdma firmware from the below and put them into the path
-(/lib/firmware/imx/sdma/):
-https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git
-/tree/imx/sdma
-
-Signed-off-by: Robin Gong <yibin.gong@nxp.com>
-Acked-by: Vinod Koul <vkoul@kernel.org>
----
- drivers/dma/imx-sdma.c                     | 4 ++--
- include/linux/platform_data/dma-imx-sdma.h | 8 ++++++--
- 2 files changed, 8 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
-index 9d49aaf..01422e7 100644
---- a/drivers/dma/imx-sdma.c
-+++ b/drivers/dma/imx-sdma.c
-@@ -1718,8 +1718,8 @@ static void sdma_issue_pending(struct dma_chan *chan)
- 
- #define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V1	34
- #define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V2	38
--#define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V3	41
--#define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V4	42
-+#define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V3	45
-+#define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V4	46
- 
- static void sdma_add_scripts(struct sdma_engine *sdma,
- 		const struct sdma_script_start_addrs *addr)
-diff --git a/include/linux/platform_data/dma-imx-sdma.h b/include/linux/platform_data/dma-imx-sdma.h
-index 30e676b..e12d2e8 100644
---- a/include/linux/platform_data/dma-imx-sdma.h
-+++ b/include/linux/platform_data/dma-imx-sdma.h
-@@ -20,12 +20,12 @@ struct sdma_script_start_addrs {
- 	s32 per_2_firi_addr;
- 	s32 mcu_2_firi_addr;
- 	s32 uart_2_per_addr;
--	s32 uart_2_mcu_addr;
-+	s32 uart_2_mcu_ram_addr;
- 	s32 per_2_app_addr;
- 	s32 mcu_2_app_addr;
- 	s32 per_2_per_addr;
- 	s32 uartsh_2_per_addr;
--	s32 uartsh_2_mcu_addr;
-+	s32 uartsh_2_mcu_ram_addr;
- 	s32 per_2_shp_addr;
- 	s32 mcu_2_shp_addr;
- 	s32 ata_2_mcu_addr;
-@@ -52,6 +52,10 @@ struct sdma_script_start_addrs {
- 	s32 zcanfd_2_mcu_addr;
- 	s32 zqspi_2_mcu_addr;
- 	s32 mcu_2_ecspi_addr;
-+	s32 mcu_2_sai_addr;
-+	s32 sai_2_mcu_addr;
-+	s32 uart_2_mcu_addr;
-+	s32 uartsh_2_mcu_addr;
- 	/* End of v3 array */
- 	s32 mcu_2_zqspi_addr;
- 	/* End of v4 array */
--- 
-2.7.4
-
+Johan
