@@ -2,73 +2,120 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C71CC18E5A
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 09:30:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29CE0C10F29
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 09:31:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 134452146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 09:30:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583919008;
-	bh=2FUHCqW2t4fYOxAPSeOyaauGmNpMQoDtDDJi5ocXgU8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0RMBv5GItqHdmi0lJY/0mvqUYTArmJlX29iOZm2IHKAVIrw11zCg100v5W4sPqtUY
-	 EXWKmZPEeieF2OHUDaIWN5dVOA31WA+L0O7MxWBVLrHFCZ8v9KlGKAFdqqPkxj3vgi
-	 eukvuWGjsV7LXHV+QGaacNGLByyJpU5JJ2REDVY8=
+	by mail.kernel.org (Postfix) with ESMTP id 0859621D56
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 09:31:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728886AbgCKJaH (ORCPT
+        id S1728712AbgCKJbm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 05:30:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60014 "EHLO mail.kernel.org"
+        Wed, 11 Mar 2020 05:31:42 -0400
+Received: from mail.manjaro.org ([176.9.38.148]:38072 "EHLO mail.manjaro.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728349AbgCKJaH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 05:30:07 -0400
-Received: from localhost (unknown [106.201.105.99])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB7CE20828;
-        Wed, 11 Mar 2020 09:30:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583919006;
-        bh=2FUHCqW2t4fYOxAPSeOyaauGmNpMQoDtDDJi5ocXgU8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=S2gvekh43x5kX8cOIsE8hTMTtUNMSUEYAjd/5vEWZiw0IzTzEKz+h1zaKPU3znKo5
-         DGLJC755JpM5vSrIszko6IYhHqQ8w4CKBUAcSTYMPpvbkqGZCfyKapivgGRG2Vaoim
-         f1npNR9h9/yxdtE7FW923AhUYRDXBXi+YcK2Uc9o=
-Date:   Wed, 11 Mar 2020 15:00:02 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Cc:     Dave Jiang <dave.jiang@intel.com>, dmaengine@vger.kernel.org,
-        Joe Perches <joe@perches.com>, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] MAINTAINERS: rectify the INTEL IADX DRIVER entry
-Message-ID: <20200311093002.GN4885@vkoul-mobl>
-References: <20200307205737.5829-1-lukas.bulwahn@gmail.com>
+        id S1726934AbgCKJbl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 05:31:41 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.manjaro.org (Postfix) with ESMTP id B7B813702434;
+        Wed, 11 Mar 2020 10:31:39 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at manjaro.org
+Received: from mail.manjaro.org ([127.0.0.1])
+        by localhost (manjaro.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 7nuUTOLPg9mT; Wed, 11 Mar 2020 10:31:37 +0100 (CET)
+From:   Tobias Schramm <t.schramm@manjaro.org>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     Maxime Ripard <mripard@kernel.org>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Mark Brown <broonie@kernel.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Tobias Schramm <t.schramm@manjaro.org>
+Subject: [PATCH v3 0/3] Add support for CellWise cw2015 fuel gauge
+Date:   Wed, 11 Mar 2020 10:30:40 +0100
+Message-Id: <20200311093043.3636807-1-t.schramm@manjaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200307205737.5829-1-lukas.bulwahn@gmail.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07-03-20, 21:57, Lukas Bulwahn wrote:
-> Commit bfe1d56091c1 ("dmaengine: idxd: Init and probe for Intel data
-> accelerators") added the INTEL IADX DRIVER entry in MAINTAINERS, which
-> mentions include/linux/idxd.h as file entry. However, this header file was
-> not added in this commit, nor in any later one.
-> 
-> Hence, since then, ./scripts/get_maintainer.pl --self-test complains:
-> 
->   warning: no file matches F: include/linux/idxd.h
-> 
-> Drop the file entry to the non-existing file in INTEL IADX DRIVER now.
+This patchset adds support for the CellWise cw2015 fuel gauge.
 
-Applied, thanks
+The CellWise cw2015 fuel gauge is a shuntless, single-cell Li-Ion fuel
+gauge. It is used in the pine64 Pinebook Pro laptop.
+
+This is v3 of the patchset. This version incorporates a review by Andy and
+includes a commit documenting the cellwise vendor prefix which I forgot to
+send in v2.
+
+I've kept the cellwise,battery-profile property in the device tree. Its
+content describes characteristics of the battery built into a device. The
+exact format is unknown and not publicly documented. It is likely
+comprised of some key parameters of the battery (chemistry, voltages,
+design capacity) and parameters for tuning the internal state of charge
+approximation function.
+Since v2 CellWise has confirmed to me that the only way to obtain the
+profile blob is to mail them batteries for testing. Thus we will need to
+keep that property.
+
+In general I'm not 100 % sure about my json-schema binding for the gauge.
+It is my first time ever writing a json-schema binding and I'm not sure
+whether properties like power-supplies or monitored-battery need to be
+added to a separate, common schema for power supplies or not.
+
+
+Best Regards,
+
+Tobias Schramm
+
+Changelog:
+ v2:
+  * Change subject to "Add support for CellWise cw2015 fuel gauge"
+  * Rewrite bindings as json-schema
+  * Use default power-supplies handling
+  * Use regmap for register access
+  * Use standard simple-battery node
+  * Replace printk/pr_* by dev_{dbg,info,warn,err}
+  * Use cancel_delayed_work_sync in remove
+  * General code cleanup
+ v3:
+  * Incorporate review by Andy
+  * Add cellwise vendor prefix
+  * Rename cellwise,bat-config-info property to cellwise,battery-profile
+  * Remove most state of charge post-processing
+  * Use fwnode interface
+  * General code cleanup
+  * Lots of code style fixes
+
+Tobias Schramm (3):
+  dt-bindings: Document cellwise vendor-prefix
+  dt-bindings: power: supply: add cw2015_battery bindings
+  power: supply: add CellWise cw2015 fuel gauge driver
+
+ .../bindings/power/supply/cw2015_battery.yaml |  83 ++
+ .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+ MAINTAINERS                                   |   6 +
+ drivers/power/supply/Kconfig                  |   8 +
+ drivers/power/supply/Makefile                 |   1 +
+ drivers/power/supply/cw2015_battery.c         | 785 ++++++++++++++++++
+ 6 files changed, 885 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/supply/cw2015_battery.yaml
+ create mode 100644 drivers/power/supply/cw2015_battery.c
 
 -- 
-~Vinod
+2.24.1
+
