@@ -2,140 +2,142 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 217DDC10F27
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 11:31:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09C96C10F27
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 11:33:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC7CC2192A
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 11:31:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="USusKr2+"
+	by mail.kernel.org (Postfix) with ESMTP id CD52021D7E
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 11:33:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729128AbgCKLbC (ORCPT
+        id S1729085AbgCKLd3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 07:31:02 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:40267 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726000AbgCKLbC (ORCPT
+        Wed, 11 Mar 2020 07:33:29 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:10356 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726000AbgCKLd3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 07:31:02 -0400
-Received: by mail-wm1-f68.google.com with SMTP id e26so1685965wme.5
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 04:31:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=+qi8Gsy+phH8WfKkqtpOwo0DUN440dJfBPdiDNKzZv0=;
-        b=USusKr2+/LjqIljnqjUN7DohKHee85EjKx+StCQUGw7AqB1NylzxED+zXCPiFtcmu+
-         QsaYzsXP6As1w78W81uzKwVSIfx+BiJuxH0nmYRflHGoR4iim5IFwealghWlYXNSFPWC
-         AlUpFUsNRYrFg3g5899YGHoxrGl2xBzDZ9LqxfvmYhn3ai5PjbkCtqh9wzRCC6wjGbh0
-         ACBnkce2FcS6nb8vwgmUxGun68fmRwpBjQjeCBhqwSh0u5MkSAY9t34GLsIMJBLJsB0P
-         dq6GZpIRj/eSTPacBH+l4Co6EFwpgYAx9uVWbYn2DhgVmC4Lx2xmvZWDY2ZD3Hsb8g3Z
-         /B+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=+qi8Gsy+phH8WfKkqtpOwo0DUN440dJfBPdiDNKzZv0=;
-        b=fJKeeg2HRJyn6wc0Pu/4A9itimQZm/EuKFETPdtJx97nxgiw5viOqpeb2lFFNsWPwJ
-         SPHUGs/ZlED4K4vJwPYtyM6Qfz7DxuHZNG48t6Yn/WGsx+cj97KGjcwFz+ZOz4WrKjoU
-         lc2OcPCS2WDB8fX9lVRyq3EjGJ2syg+GS/azA3z7VKvXfEKASD4xKslKJE9s8DJTi7v+
-         dxFU+UdzD0stbtjybSVVwNgvjwb6a2MPKLLpA/2dwJmFwwLhAvqtvc+odjZvsMHlLzzU
-         GuQ0NzWcXfAju9ZRx1JDbf0wKl45tdiScgmxMOcI0w1FQVpWKQzdP5K1I0q/2ybsihHR
-         nCYg==
-X-Gm-Message-State: ANhLgQ20VSCbjDLcfrL54xL9fka5ufdgHA1KIzCaTjpXtFXnhWIRh8G2
-        DGALCb/NPrLXptR89n8s4IH0ky46irI=
-X-Google-Smtp-Source: ADFU+vu8yQwphkn83vEuD1GGYen9Zs60Do+28oOVyU/sJjeCMep301H0NxJVRU99RGuiKzeLl72aJQ==
-X-Received: by 2002:a05:600c:2283:: with SMTP id 3mr3399437wmf.100.1583926260082;
-        Wed, 11 Mar 2020 04:31:00 -0700 (PDT)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id f2sm10373193wrv.48.2020.03.11.04.30.58
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 11 Mar 2020 04:30:59 -0700 (PDT)
-Subject: Re: [RFC PATCH] soundwire: bus: Add flag to mark DPN_BlockCtrl1 as
- readonly
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        vkoul@kernel.org
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-References: <20200309173755.955-1-srinivas.kandagatla@linaro.org>
- <d94fca16-ed61-632a-6f8c-84e3a97869c7@linux.intel.com>
- <92d3ae1b-bace-1d20-ef99-82f7e1a0a644@linaro.org>
- <a2b24f84-0f9a-29ab-8748-dc5a26c05ffa@linux.intel.com>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <dec47c3a-08e9-e9a0-707c-2610cb10fe64@linaro.org>
-Date:   Wed, 11 Mar 2020 11:30:58 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 11 Mar 2020 07:33:29 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02BBKNk4019901
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 07:33:28 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ypxx9safb-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 07:33:28 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <borntraeger@de.ibm.com>;
+        Wed, 11 Mar 2020 11:33:26 -0000
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 11 Mar 2020 11:33:22 -0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02BBXLpu34930838
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 11 Mar 2020 11:33:21 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 63821AE045;
+        Wed, 11 Mar 2020 11:33:21 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E111BAE053;
+        Wed, 11 Mar 2020 11:33:20 +0000 (GMT)
+Received: from oc7455500831.ibm.com (unknown [9.145.53.58])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 11 Mar 2020 11:33:20 +0000 (GMT)
+From:   Christian Borntraeger <borntraeger@de.ibm.com>
+Subject: Re: [PATCH -next 018/491] KERNEL VIRTUAL MACHINE for s390 (KVM/s390):
+ Use fallthrough;
+To:     Joe Perches <joe@perches.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>
+Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <cover.1583896344.git.joe@perches.com>
+ <d63c86429f3e5aa806aa3e185c97d213904924a5.1583896348.git.joe@perches.com>
+Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
+ 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
+ nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
+Date:   Wed, 11 Mar 2020 12:33:20 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <a2b24f84-0f9a-29ab-8748-dc5a26c05ffa@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <d63c86429f3e5aa806aa3e185c97d213904924a5.1583896348.git.joe@perches.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 20031111-0016-0000-0000-000002EF5F5F
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20031111-0017-0000-0000-00003352C82E
+Message-Id: <26a7b1c0-df95-e706-b8a0-3532f38c7b77@de.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-11_05:2020-03-11,2020-03-11 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=966 phishscore=0
+ adultscore=0 suspectscore=0 lowpriorityscore=0 spamscore=0 bulkscore=0
+ malwarescore=0 mlxscore=0 priorityscore=1501 clxscore=1015 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2003110074
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks for the inputs
 
-On 10/03/2020 15:53, Pierre-Louis Bossart wrote:
-> Hi Srinivas,
-> 
->>>  > My recommendation would be to add a DisCo property stating the
->>> WordLength value can be used by the bus code but not written to the 
->>> Slave device registers.
->>
->> Does something like "mipi-sdw-read-only-wordlength" as slave property, 
->> make sense?
-> 
-> The properties can be handled at two levels.
-> 
-> First, you'd want to change include/linux/soundwire/sdw.h, and add a new 
-> field in
-> 
-> struct sdw_dpn_prop {
->      u32 num;
->      u32 max_word;
->      u32 min_word;
->      u32 num_words;
->      u32 *words;
-> +       bool read_only_wordlength;
-> 
-> Once this is added, along with the code that bypasses the programming of 
-> DPn_BlockCtrl1, the implementation has two choices:
-> 
-> a) hard-code the field value in the codec driver.
 
-This totally works for me.
+On 11.03.20 05:51, Joe Perches wrote:
+> Convert the various uses of fallthrough comments to fallthrough;
+> 
+> Done via script
+> Link: https://lore.kernel.org/lkml/b56602fcf79f849e733e7b521bb0e17895d390fa.1582230379.git.joe.com/
 
-> 
-> b) read the property from firmware with the DisCo helpers.
-> 
+That link does not work. lore asks if this is the right one
+https://lore.kernel.org/lkml/b56602fcf79f849e733e7b521bb0e17895d390fa.1582230379.git.joe@perches.com/
 
-I would defer adding this for now till there is a real users for this.
+Shall I fix that up when applying?
 
-> There is no requirement that all properties be read from firmware, and 
-> if you look at existing code base sdw_slave_read_prop() is currently 
-> unused, each codec implements its own .read_prop() callback.
-> 
-> We really wanted to be pragmatic, and give the possibility to either 
-> override bad firmware or extend incomplete firmware to avoid coupling OS 
-> and firmware too much. If you foresee cases where this implementation 
-> might vary and firmware distribution is not a problem, then a property 
-> read would make sense.
-> 
-> Just once procedural reminder that all 'mipi-sdw' properties are handled 
-> by the MIPI software WG, so we'd need to have this property added in a 
-> formal MIPI document update.
-> 
-> I suggest you talk with Lior first on this.
-
-Sure, I will talk to him.
-
-> 
-> Hope this helps
-> -Pierre
