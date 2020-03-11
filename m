@@ -2,142 +2,123 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 780CBC2BAEE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:32:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 957E6C0044D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:32:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C4FC206E9
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:32:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D9D4206E9
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:32:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="K1flaRtF"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GsHVNura"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730851AbgCKScJ (ORCPT
+        id S1730860AbgCKScr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 14:32:09 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:36490 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730784AbgCKScI (ORCPT
+        Wed, 11 Mar 2020 14:32:47 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:40658 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730784AbgCKScq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 14:32:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583951527;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=spM5agWGar+ORsG2ukJRJ/Acpiv+8pritJ4Z+l+AEgc=;
-        b=K1flaRtFchzQeOMhixPvlwqSz+v0Ebn2VBtiQLHQWJYJeTTEu9I1lqg+pNy7bwKhD3jHKw
-        N3zrQm0puphZ1aPXISBZTltX/UOrkDePgLycjyusz9BeyFMBRZ0jSZS3hFGJuFexA01tAW
-        uJM1kKKEH2IAPsBjizBXz8f7o1p4pWI=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-36-3oG0_XDyPGO4VhMOP5uzFg-1; Wed, 11 Mar 2020 14:32:04 -0400
-X-MC-Unique: 3oG0_XDyPGO4VhMOP5uzFg-1
-Received: by mail-qv1-f69.google.com with SMTP id v4so1923568qvt.3
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 11:32:04 -0700 (PDT)
+        Wed, 11 Mar 2020 14:32:46 -0400
+Received: by mail-qk1-f193.google.com with SMTP id m2so3084683qka.7
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 11:32:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=PMlJ0CCM2ETRao/Z/x1Z86bkEWgQuSAvpITBlu5A7Ik=;
+        b=GsHVNura2eRqqet/zqMCRx+4UATBBNXBlkdjyf760G2mIglKf0RCQsU2N9XDzUtMID
+         QOG6zFpKUeZhp6O3MYB9yzjPslgY4XcfmdM/hdPwv5gb8UV/IKebOp+1qOGbfdzUbBPw
+         9AR0C06BREbED/nGqz1/MikJY3hy6t/5at9PShhTx37TJf2aW491moWc/W0MZQUfSBsP
+         vNpuR9okDgiyWAt8bpKK33D5Quc3CW1GlLXA3ov7/4oSEqyoKeP1Uu3Juf1/XHfbg0rM
+         m2oeoGJS8K5ESND7Tz3zgE4yqVsVO5wLgraKFSg6iQlDt8VR/ZtS0TVptvtPiHFfYWf4
+         C+FA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=spM5agWGar+ORsG2ukJRJ/Acpiv+8pritJ4Z+l+AEgc=;
-        b=Scf31Q8InfJUNlKFKGZc5OITSq88Nb6Z6UR6ycReW5TOgA789CKUufxnZ2LQyqLMKw
-         p6wf9NRmXW2N/J2gUt87Nk0YKqIM8dvQ97XwKjuefTjQH0FnCP8yOvYSYBvLFcfec6G1
-         8foHBwb6Zt5GiGqk49YapHPYeeFPuiUSIwc/+hb9S50RvM+kBMiDNOooweLmPnjaf1W2
-         qUHw3S9IEMubo5skp18BMW/6MariVqaFx5MTCekp4Xs65/fh9IiFL51p4FHij8x821JE
-         W8smuIyg65bD/oskazbolIkBquwyUCoh0dbLfvbIJIGgZ94hKoh66Ithv+OtiPILpw82
-         5NTw==
-X-Gm-Message-State: ANhLgQ1RL1nx9f4AwBnwiu4z9Mcc82nqyVZmRJY9j2KOOo2WDIHmZtYN
-        7Ypeg02RscD49FwCzAVv58hcWKEZGSEOP+GXXEr1MB/ZgCyu+iceC9UnI8T5XjcbO+uHsOAqwG8
-        vFEmgNfG3QdSxTffCU3HHesrw
-X-Received: by 2002:a0c:bf0b:: with SMTP id m11mr4107321qvi.63.1583951524038;
-        Wed, 11 Mar 2020 11:32:04 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vvDO0+2HivD9CsnZqlnawBVE/5XfG4sJ4JQNxOeTz1KiYixvBmarAvMLC1hUJiRKxZ4PT/7NA==
-X-Received: by 2002:a0c:bf0b:: with SMTP id m11mr4107299qvi.63.1583951523712;
-        Wed, 11 Mar 2020 11:32:03 -0700 (PDT)
-Received: from xz-x1 ([2607:9880:19c0:32::2])
-        by smtp.gmail.com with ESMTPSA id w132sm3565718qkb.96.2020.03.11.11.32.02
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=PMlJ0CCM2ETRao/Z/x1Z86bkEWgQuSAvpITBlu5A7Ik=;
+        b=eDt23OVp7mGDos2SjrYjiGeFHZ/3BGaLANjLQ4Uf6ESrLWVcL5ez87uzALh2cOcfiP
+         yZvbqw0RP+3fXlhCgk+TCS+VxKtnZGVYhFJuCg9dfaQBzOG8jBua/9iX+neVvoeiAa2n
+         IZuit8tDj03LnQkk84sGJUvao0xoTABZSGXvKFZFBDigIrHxcVMFJNTBXzKRu/5P9Eb+
+         IwnecAUKtWN+H8VDNPxrZGyb9M/yRUFi77dCyEX5KCx5vnABcrgX5h+LlUAbVLX08AZt
+         N1IC+TIrPpPqqQlHnGQMiIaPDD6CRZw4yv54v15LhUX6LEbkAgtfwKeR+iU9jC0bxUhr
+         kn+w==
+X-Gm-Message-State: ANhLgQ36TmpBLNoNzW2W5Pf/Es4uY6pRJb2w60pqkYxNsA58qy2F+HBM
+        eM320MeHRY8YU3R4+R+M9oQ=
+X-Google-Smtp-Source: ADFU+vuM3E1+agajz5s4tUI3265OjGZw2LgwOJgXOunpsr50yTdq+JhLk2aPugNEWTHtVYnSf1er0w==
+X-Received: by 2002:a05:620a:1236:: with SMTP id v22mr4091581qkj.101.1583951563826;
+        Wed, 11 Mar 2020 11:32:43 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id p191sm9264884qke.6.2020.03.11.11.32.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Mar 2020 11:32:02 -0700 (PDT)
-Date:   Wed, 11 Mar 2020 14:32:01 -0400
-From:   Peter Xu <peterx@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        linux-mips@vger.kernel.org, Vitaly Kuznetsov <vkuznets@redhat.com>
-Subject: Re: [PATCH RFC 0/4] KVM: MIPS: Provide arch-specific
- kvm_flush_remote_tlbs()
-Message-ID: <20200311183201.GK479302@xz-x1>
-References: <20200207223520.735523-1-peterx@redhat.com>
- <44ba59d6-39a5-4221-1ae6-41e5a305d316@redhat.com>
+        Wed, 11 Mar 2020 11:32:43 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Wed, 11 Mar 2020 14:32:41 -0400
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Cannon Matthews <cannonmatthews@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Rientjes <rientjes@google.com>,
+        Greg Thelen <gthelen@google.com>,
+        Salman Qazi <sqazi@google.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH] mm: clear 1G pages with streaming stores on x86
+Message-ID: <20200311183240.GA3880414@rani.riverdale.lan>
+References: <20200307010353.172991-1-cannonmatthews@google.com>
+ <20200309000820.f37opzmppm67g6et@box>
+ <20200309090630.GC8447@dhcp22.suse.cz>
+ <20200309153831.GK1454533@tassilo.jf.intel.com>
+ <20200309183704.GA1573@bombadil.infradead.org>
+ <CAJfu=UfPKZwqjGR5AdhFRo_je7X5q2=zpBSBQkrbh2KhYrOJiA@mail.gmail.com>
+ <20200311005447.jkpsaghrpk3c4rwu@box>
+ <20200311033552.GA3657254@rani.riverdale.lan>
+ <20200311081607.3ahlk4msosj4qjsj@box>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <44ba59d6-39a5-4221-1ae6-41e5a305d316@redhat.com>
+In-Reply-To: <20200311081607.3ahlk4msosj4qjsj@box>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 12, 2020 at 01:25:30PM +0100, Paolo Bonzini wrote:
-> On 07/02/20 23:35, Peter Xu wrote:
-> > [This series is RFC because I don't have MIPS to compile and test]
+On Wed, Mar 11, 2020 at 11:16:07AM +0300, Kirill A. Shutemov wrote:
+> On Tue, Mar 10, 2020 at 11:35:54PM -0400, Arvind Sankar wrote:
 > > 
-> > kvm_flush_remote_tlbs() can be arch-specific, by either:
+> > The rationale for MOVNTI instruction is supposed to be that it avoids
+> > cache pollution. Aside from the bench that shows MOVNTI to be faster for
+> > the move itself, shouldn't it have an additional benefit in not trashing
+> > the CPU caches?
 > > 
-> > - Completely replace kvm_flush_remote_tlbs(), like ARM, who is the
-> >   only user of CONFIG_HAVE_KVM_ARCH_TLB_FLUSH_ALL so far
-> > 
-> > - Doing something extra before kvm_flush_remote_tlbs(), like MIPS VZ
-> >   support, however still wants to have the common tlb flush to be part
-> >   of the process.  Could refer to kvm_vz_flush_shadow_all().  Then in
-> >   MIPS it's awkward to flush remote TLBs: we'll need to call the mips
-> >   hooks.
-> > 
-> > It's awkward to have different ways to specialize this procedure,
-> > especially MIPS cannot use the genenal interface which is quite a
-> > pity.  It's good to make it a common interface.
-> > 
-> > This patch series removes the 2nd MIPS usage above, and let it also
-> > use the common kvm_flush_remote_tlbs() interface.  It should be
-> > suggested that we always keep kvm_flush_remote_tlbs() be a common
-> > entrance for tlb flushing on all archs.
-> > 
-> > This idea comes from the reading of Sean's patchset on dynamic memslot
-> > allocation, where a new dirty log specific hook is added for flushing
-> > TLBs only for the MIPS code [1].  With this patchset, logically the
-> > new hook in that patch can be dropped so we can directly use
-> > kvm_flush_remote_tlbs().
-> > 
-> > TODO: We can even extend another common interface for ranged TLB, but
-> > let's see how we think about this series first.
-> > 
-> > Any comment is welcomed, thanks.
-> > 
-> > Peter Xu (4):
-> >   KVM: Provide kvm_flush_remote_tlbs_common()
-> >   KVM: MIPS: Drop flush_shadow_memslot() callback
-> >   KVM: MIPS: Replace all the kvm_flush_remote_tlbs() references
-> >   KVM: MIPS: Define arch-specific kvm_flush_remote_tlbs()
-> > 
-> >  arch/mips/include/asm/kvm_host.h |  7 -------
-> >  arch/mips/kvm/Kconfig            |  1 +
-> >  arch/mips/kvm/mips.c             | 22 ++++++++++------------
-> >  arch/mips/kvm/trap_emul.c        | 15 +--------------
-> >  arch/mips/kvm/vz.c               | 14 ++------------
-> >  include/linux/kvm_host.h         |  1 +
-> >  virt/kvm/kvm_main.c              | 10 ++++++++--
-> >  7 files changed, 23 insertions(+), 47 deletions(-)
-> > 
+> > As string instructions improve, why wouldn't the same improvements be
+> > applied to MOVNTI?
 > 
-> Compile-tested and queued.
+> String instructions inherently more flexible. Implementation can choose
+> caching strategy depending on the operation size (cx) and other factors.
+> Like if operation is large enough and cache is full of dirty cache lines
+> that expensive to free up, it can choose to bypass cache. MOVNTI is more
+> strict on semantics and more opaque to CPU.
 
-Just in case it fells through the crach - Paolo, do you still have
-plan to queue this again?
+But with today's processors, wouldn't writing 1G via the string
+operations empty out almost the whole cache? Or are there already
+optimizations to prevent one thread from hogging the L3?
 
-Thanks,
+If we do want to just use the string operations, it seems like the
+clear_page routines should just call memset instead of duplicating it.
 
--- 
-Peter Xu
-
+> 
+> And more importantly string instructions, unlike MOVNTI, is something that
+> generated often by compiler and used in standard libraries a lot. It is
+> and will be focus of optimization of CPU architects.
+> 
+> -- 
+>  Kirill A. Shutemov
