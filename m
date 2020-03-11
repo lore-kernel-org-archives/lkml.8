@@ -2,146 +2,163 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 011AFC18E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 10:34:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEACCC10F29
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 10:38:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAECB208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 10:34:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B56E020848
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 10:38:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Fa1Mst/D"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="NRkbCNZF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729010AbgCKKes (ORCPT
+        id S1728974AbgCKKiG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 06:34:48 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:61397 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726672AbgCKKes (ORCPT
+        Wed, 11 Mar 2020 06:38:06 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:49781 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726684AbgCKKiF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 06:34:48 -0400
-Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200311103445epoutp01fd170a3262182e243725c2bb47dd9e66~7OXjf67mg0723607236epoutp01d
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 10:34:45 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200311103445epoutp01fd170a3262182e243725c2bb47dd9e66~7OXjf67mg0723607236epoutp01d
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1583922885;
-        bh=62Jjuc6/Y2f5Kkiso4Xvn+Oim+hE7rByIazg5bBNNFc=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=Fa1Mst/DFQzsQQ3rhgKg2CdAEy32LGEScI0fBVn2DAiB7K13uyksgGk1UjbPrJurc
-         4HKnRmcMSjm0aijbWYWqGpxSiKr8Q3PLVfVMq16vkd9xLpILdii2bTkOK/h2jwLR0O
-         hN14+c3kYXQstHoDPX+KrvHqo8DaXKErf0pqzzJ4=
-Received: from epsmges5p1new.samsung.com (unknown [182.195.42.73]) by
-        epcas5p1.samsung.com (KnoxPortal) with ESMTP id
-        20200311103443epcas5p12d9bfa8ad90323226af85bebe48394e7~7OXiK0hBp2624126241epcas5p12;
-        Wed, 11 Mar 2020 10:34:43 +0000 (GMT)
-Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
-        epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        53.21.19726.3CEB86E5; Wed, 11 Mar 2020 19:34:43 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200311103443epcas5p2e97b8f3a8e52dc6f02eb551e0c97f132~7OXhpAlqY0906409064epcas5p2b;
-        Wed, 11 Mar 2020 10:34:43 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200311103443epsmtrp2f3a4b66906b00296d07588e581cb6a9a~7OXhoUU822380023800epsmtrp2V;
-        Wed, 11 Mar 2020 10:34:43 +0000 (GMT)
-X-AuditID: b6c32a49-7a9ff70000014d0e-a9-5e68bec380a4
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        1E.A6.06569.3CEB86E5; Wed, 11 Mar 2020 19:34:43 +0900 (KST)
-Received: from Jaguar.sa.corp.samsungelectronics.net (unknown
-        [107.108.73.139]) by epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200311103438epsmtip2c7aa065bd8c5b47fe95f57da41cb28f3~7OXc4Eu6C2573525735epsmtip2k;
-        Wed, 11 Mar 2020 10:34:37 +0000 (GMT)
-From:   Shradha Todi <shradha.t@samsung.com>
-To:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     kishon@ti.com, lorenzo.pieralisi@arm.com, bhelgaas@google.com,
-        pankaj.dubey@samsung.com, Shradha Todi <shradha.t@samsung.com>,
-        Sriram Dash <sriram.dash@samsung.com>
-Subject: [PATCH] PCI: endpoint: Fix NULL pointer dereference for
- ->get_features()
-Date:   Wed, 11 Mar 2020 15:58:52 +0530
-Message-Id: <20200311102852.5207-1-shradha.t@samsung.com>
-X-Mailer: git-send-email 2.17.1
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrJIsWRmVeSWpSXmKPExsWy7bCmhu7hfRlxBssf6lgsacqwuPC0h83i
-        8q45bBZn5x1ns3jz+wW7xaKtX9gteg/XWtxYz+7A4bFm3hpGjwWbSj36tqxi9Dh+YzuTx+dN
-        cgGsUVw2Kak5mWWpRfp2CVwZrx81MBWc4a1Yt2I/UwPjE+4uRg4OCQETiRl35boYuTiEBHYz
-        Smz4d4IFwvnEKHF8ew+U841RorFjF2MXIydYx+ujV9ghEnsZJR4cuwbltDBJXLvzFayKTUBL
-        ovFrFzOILSJgLdHwahUrSBGzwBpGiVVLV4ElhAWCJZY/essKYrMIqEqs+XCYDcTmFbCUmLX2
-        JzvEOnmJ1RsOMIM0Swg0skm8XzoPKuEi8e77elYIW1ji1fEtUHEpic/v9rJB2PkSUy88ZYH4
-        tEJieU8dRNhe4sCVOWBhZgFNifW79EHCzAJ8Er2/nzBBVPNKdLQJQVQrS3z5u4cFwpaUmHfs
-        MtRSD4mvEy4wgdhCArESU1s/sk9glJmFMHQBI+MqRsnUguLc9NRi0wLDvNRyveLE3OLSvHS9
-        5PzcTYzgCNfy3ME465zPIUYBDkYlHt4XdelxQqyJZcWVuYcYJTiYlUR44+WBQrwpiZVVqUX5
-        8UWlOanFhxilOViUxHknsV6NERJITyxJzU5NLUgtgskycXBKNTDmai7f66iwxCVuaVah68zo
-        vOJbk4NOtZU9Y5x1+Vl9+JP4CeGpvNt4TWZUzpbaVVYU3l34ccpZy/6/2pPd332f7LXlckzN
-        sbZkg5LsVuks+4eRcu9PX7re5vt1d8fNl9ZrZT+oSi4Mq4mbWxpeEhu7nHXGiYquRV57T4So
-        pb3jyyk8xDKvNESJpTgj0VCLuag4EQBTPQyR7AIAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupjluLIzCtJLcpLzFFi42LZdlhJXvfwvow4gyuneSyWNGVYXHjaw2Zx
-        edccNouz846zWbz5/YLdYtHWL+wWvYdrLW6sZ3fg8Fgzbw2jx4JNpR59W1Yxehy/sZ3J4/Mm
-        uQDWKC6blNSczLLUIn27BK6M148amArO8FasW7GfqYHxCXcXIyeHhICJxOujV9i7GLk4hAR2
-        M0qsW7eMHSIhKfH54jomCFtYYuW/51BFTUwSs1/uYwRJsAloSTR+7WIGsUUEbCUa/nYwgxQx
-        C2xilHh6uYsNJCEsECjR03odzGYRUJVY8+EwmM0rYCkxa+1PqG3yEqs3HGCewMizgJFhFaNk
-        akFxbnpusWGBUV5quV5xYm5xaV66XnJ+7iZGcChpae1gPHEi/hCjAAejEg/vi7r0OCHWxLLi
-        ytxDjBIczEoivPHyQCHelMTKqtSi/Pii0pzU4kOM0hwsSuK88vnHIoUE0hNLUrNTUwtSi2Cy
-        TBycUg2Mui7/tTKrHLPjLrl/zNuWeLXQ2k5CxFtr9vFzUu3pT7OOc1z//k8rtCp3zvneI3ns
-        Ec+e6MVZrXgjm+GS37vWuuLelE9KJ2N1dJJ2Ptavf7D+77e6V5Nzpi8VKZ8YdIvrtr3YljV+
-        TpaP3yffsjc4tG+DsldH0M/FQav/9C5ISRBffW6v/5bbSizFGYmGWsxFxYkA29JrryECAAA=
-X-CMS-MailID: 20200311103443epcas5p2e97b8f3a8e52dc6f02eb551e0c97f132
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20200311103443epcas5p2e97b8f3a8e52dc6f02eb551e0c97f132
-References: <CGME20200311103443epcas5p2e97b8f3a8e52dc6f02eb551e0c97f132@epcas5p2.samsung.com>
+        Wed, 11 Mar 2020 06:38:05 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1583923085; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=sybUymT2tahVIh0Sofyvb7j/sJL1ubpg84loPZROPYM=; b=NRkbCNZFdlJLIWCl2JtXkaXCQpuysMPVugEXL9W0DMvDy3ajqx/fK/gXIa7iePnRphgazSm+
+ XSzV6DSO8ArY2+zv7wcJLbzZlZHL4KsGEKTG9bMkGXGDB3QVJRedlg/dnn8XuMwF5Iz9bJbA
+ c3kScijJi8FaJM06SRpQJ+oyp8k=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e68bf8b.7fe380132340-smtp-out-n02;
+ Wed, 11 Mar 2020 10:38:03 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 2DE3DC433BA; Wed, 11 Mar 2020 10:38:03 +0000 (UTC)
+Received: from codeaurora.org (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: stummala)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9E3B3C433CB;
+        Wed, 11 Mar 2020 10:38:00 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9E3B3C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=stummala@codeaurora.org
+From:   Sahitya Tummala <stummala@codeaurora.org>
+To:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Sahitya Tummala <stummala@codeaurora.org>,
+        Pradeep P V K <ppvk@codeaurora.org>
+Subject: [PATCH] block: Fix use-after-free issue accessing struct io_cq
+Date:   Wed, 11 Mar 2020 16:07:50 +0530
+Message-Id: <1583923070-22245-1-git-send-email-stummala@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-get_features ops of pci_epc_ops may return NULL, causing NULL pointer
-dereference in pci_epf_test_bind function. Let us add a check for
-pci_epc_feature pointer in pci_epf_test_bind before we access it to
-avoid any such NULL pointer dereference and return -ENOTSUPP in case
-pci_epc_feature is not found.
+There is a potential race between ioc_release_fn() and
+ioc_clear_queue() as shown below, due to which below kernel
+crash is observed. It also can result into use-after-free
+issue.
 
-Reviewed-by: Pankaj Dubey <pankaj.dubey@samsung.com>
-Signed-off-by: Sriram Dash <sriram.dash@samsung.com>
-Signed-off-by: Shradha Todi <shradha.t@samsung.com>
+context#1:				context#2:
+ioc_release_fn()			__ioc_clear_queue() gets the same icq
+->spin_lock(&ioc->lock);		->spin_lock(&ioc->lock);
+->ioc_destroy_icq(icq);
+  ->list_del_init(&icq->q_node);
+  ->call_rcu(&icq->__rcu_head,
+  	icq_free_icq_rcu);
+->spin_unlock(&ioc->lock);
+					->ioc_destroy_icq(icq);
+					  ->hlist_del_init(&icq->ioc_node);
+					  This results into below crash as this memory
+					  is now used by icq->__rcu_head in context#1.
+					  There is a chance that icq could be free'd
+					  as well.
+
+22150.386550:   <6> Unable to handle kernel write to read-only memory
+at virtual address ffffffaa8d31ca50
+...
+Call trace:
+22150.607350:   <2>  ioc_destroy_icq+0x44/0x110
+22150.611202:   <2>  ioc_clear_queue+0xac/0x148
+22150.615056:   <2>  blk_cleanup_queue+0x11c/0x1a0
+22150.619174:   <2>  __scsi_remove_device+0xdc/0x128
+22150.623465:   <2>  scsi_forget_host+0x2c/0x78
+22150.627315:   <2>  scsi_remove_host+0x7c/0x2a0
+22150.631257:   <2>  usb_stor_disconnect+0x74/0xc8
+22150.635371:   <2>  usb_unbind_interface+0xc8/0x278
+22150.639665:   <2>  device_release_driver_internal+0x198/0x250
+22150.644897:   <2>  device_release_driver+0x24/0x30
+22150.649176:   <2>  bus_remove_device+0xec/0x140
+22150.653204:   <2>  device_del+0x270/0x460
+22150.656712:   <2>  usb_disable_device+0x120/0x390
+22150.660918:   <2>  usb_disconnect+0xf4/0x2e0
+22150.664684:   <2>  hub_event+0xd70/0x17e8
+22150.668197:   <2>  process_one_work+0x210/0x480
+22150.672222:   <2>  worker_thread+0x32c/0x4c8
+
+Fix this by adding a new ICQ_DESTROYED flag in ioc_destroy_icq() to
+indicate this icq is once marked as destroyed. Also, ensure
+__ioc_clear_queue() is accessing icq within rcu_read_lock/unlock so
+that icq doesn't get free'd up while it is still using it.
+
+Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
+Co-developed-by: Pradeep P V K <ppvk@codeaurora.org>
+Signed-off-by: Pradeep P V K <ppvk@codeaurora.org>
 ---
- drivers/pci/endpoint/functions/pci-epf-test.c | 15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+ block/blk-ioc.c           | 7 +++++++
+ include/linux/iocontext.h | 1 +
+ 2 files changed, 8 insertions(+)
 
-diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-index c9121b1b9fa9..af4537a487bf 100644
---- a/drivers/pci/endpoint/functions/pci-epf-test.c
-+++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-@@ -510,14 +510,17 @@ static int pci_epf_test_bind(struct pci_epf *epf)
- 		return -EINVAL;
+diff --git a/block/blk-ioc.c b/block/blk-ioc.c
+index 5ed59ac..9df50fb 100644
+--- a/block/blk-ioc.c
++++ b/block/blk-ioc.c
+@@ -84,6 +84,7 @@ static void ioc_destroy_icq(struct io_cq *icq)
+ 	 * making it impossible to determine icq_cache.  Record it in @icq.
+ 	 */
+ 	icq->__rcu_icq_cache = et->icq_cache;
++	icq->flags |= ICQ_DESTROYED;
+ 	call_rcu(&icq->__rcu_head, icq_free_icq_rcu);
+ }
  
- 	epc_features = pci_epc_get_features(epc, epf->func_no);
--	if (epc_features) {
--		linkup_notifier = epc_features->linkup_notifier;
--		msix_capable = epc_features->msix_capable;
--		msi_capable = epc_features->msi_capable;
--		test_reg_bar = pci_epc_get_first_free_bar(epc_features);
--		pci_epf_configure_bar(epf, epc_features);
-+	if (!epc_features) {
-+		dev_err(dev, "epc_features not implemented\n");
-+		return -ENOTSUPP;
+@@ -212,15 +213,21 @@ static void __ioc_clear_queue(struct list_head *icq_list)
+ {
+ 	unsigned long flags;
+ 
++	rcu_read_lock();
+ 	while (!list_empty(icq_list)) {
+ 		struct io_cq *icq = list_entry(icq_list->next,
+ 						struct io_cq, q_node);
+ 		struct io_context *ioc = icq->ioc;
+ 
+ 		spin_lock_irqsave(&ioc->lock, flags);
++		if (icq->flags & ICQ_DESTROYED) {
++			spin_unlock_irqrestore(&ioc->lock, flags);
++			continue;
++		}
+ 		ioc_destroy_icq(icq);
+ 		spin_unlock_irqrestore(&ioc->lock, flags);
  	}
++	rcu_read_unlock();
+ }
  
-+	linkup_notifier = epc_features->linkup_notifier;
-+	msix_capable = epc_features->msix_capable;
-+	msi_capable = epc_features->msi_capable;
-+	test_reg_bar = pci_epc_get_first_free_bar(epc_features);
-+	pci_epf_configure_bar(epf, epc_features);
-+
- 	epf_test->test_reg_bar = test_reg_bar;
- 	epf_test->epc_features = epc_features;
+ /**
+diff --git a/include/linux/iocontext.h b/include/linux/iocontext.h
+index dba15ca..1dcd919 100644
+--- a/include/linux/iocontext.h
++++ b/include/linux/iocontext.h
+@@ -8,6 +8,7 @@
  
+ enum {
+ 	ICQ_EXITED		= 1 << 2,
++	ICQ_DESTROYED		= 1 << 3,
+ };
+ 
+ /*
 -- 
-2.17.1
-
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
