@@ -2,99 +2,121 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AC48C10F25
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 06:18:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A257C10F25
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 06:18:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E826220873
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 06:18:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 235BC20873
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 06:18:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vHdraEU9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727480AbgCKGSJ (ORCPT
+        id S1728156AbgCKGSl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 02:18:09 -0400
-Received: from verein.lst.de ([213.95.11.211]:57420 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725976AbgCKGSI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 02:18:08 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 5597968C4E; Wed, 11 Mar 2020 07:18:06 +0100 (CET)
-Date:   Wed, 11 Mar 2020 07:18:06 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     Michael Walle <michael@walle.cc>
-Cc:     linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Christoph Hellwig <hch@lst.de>, Rob Herring <robh@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Russell King <linux@armlinux.org.uk>
-Subject: Re: [RFC PATCH] mfd: mfd-core: inherit only valid dma_masks/flags
- from parent
-Message-ID: <20200311061806.GB10902@lst.de>
-References: <20200310230935.23962-1-michael@walle.cc>
+        Wed, 11 Mar 2020 02:18:41 -0400
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:39956 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725976AbgCKGSk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 02:18:40 -0400
+Received: by mail-pj1-f65.google.com with SMTP id gv19so464396pjb.5
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 23:18:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=1lEpduL7xZKe+1xFm5EOElJ3D+S/whf41wP88yrzLmc=;
+        b=vHdraEU9oEKRmN/aO1eG26kjWGjH81KxED3NM4nZHoB/x1KrttSyklZ7Gf5jLvxYO9
+         0M1Cly43XGEEvR6SB0kuk+vzDhVRnx4YM6aosUcb6dgueW6qDthtW86BNmPFgzGzXV7v
+         HdLn6SjhvNJBC8zGztkO4AqiIFy8X/ShovdnTXKEW+m+RhRplbTjCqmnqhp3jf19cil8
+         CXQ1bcSEQbdG0qdvlHdl5deAf9cc5YJSbhPSpsdumwE+4KKSLICyKyaeyZhwlDPceaRf
+         R/TKunyvDzhfGf9dJ8VQfxJ9m92GP4rEwyfzs7KGLB/xT60TA/DbdLnVxMrVwYS4Go5R
+         nv9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=1lEpduL7xZKe+1xFm5EOElJ3D+S/whf41wP88yrzLmc=;
+        b=pWoRaaz1nF5tEfYcaqOEc9yM0Tg9MF28MJWJOzkB2vgfDf74Y3x0LIAOmSHjyIzbDo
+         XpdJjZytzGEX4IgbELynsSrHCd5teLQeNuwAWyUUj+XUXaY+8nq6Z2qgmROBwYDoWODU
+         8qTZ1vKaFuP+OIp0tLO02v43Bg9NOwvXWo3BhK9+oMxMDMvX8ud/Qdaod8oc0tH8LYFD
+         Z0PaHW4SawfjN3ZFz30OGy9KZ9cpqDYs1R0urnz2tOWwvjv7Lgsp0Bd6X9N/WImXziV3
+         vO+2W9z1YK/ZksP8H9l34hKRkp/Xr7KNBycQ6JvQigAgj1ha0CsQsZzZkuOOXPyiOYqD
+         JtOw==
+X-Gm-Message-State: ANhLgQ1zZd58fErkKjkLIfDs9Oc+voHEU0uLXReegNgBabrEYOlvsPvM
+        t3HEacTW85Ob6s7kJ1OELhA=
+X-Google-Smtp-Source: ADFU+vvS8O47fL1BGe7jlGGM8z07cg2pwVbWu8GfRTzu/U5pydFEmKmrdWddDvTjCX+HUyR8V0pt/A==
+X-Received: by 2002:a17:902:d88d:: with SMTP id b13mr1593323plz.228.1583907519508;
+        Tue, 10 Mar 2020 23:18:39 -0700 (PDT)
+Received: from localhost ([2401:fa00:8f:203:5bbb:c872:f2b1:f53b])
+        by smtp.gmail.com with ESMTPSA id gx7sm4180800pjb.16.2020.03.10.23.18.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Mar 2020 23:18:38 -0700 (PDT)
+Date:   Wed, 11 Mar 2020 15:18:36 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     Jaewon Kim <jaewon31.kim@samsung.com>
+Cc:     adobriyan@gmail.com, akpm@linux-foundation.org, labbott@redhat.com,
+        sumit.semwal@linaro.org, minchan@kernel.org, ngupta@vflare.org,
+        sergey.senozhatsky.work@gmail.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, jaewon31.kim@gmail.com
+Subject: Re: [RFC PATCH 1/3] proc/meminfo: introduce extra meminfo
+Message-ID: <20200311061836.GA83589@google.com>
+References: <20200311034441.23243-1-jaewon31.kim@samsung.com>
+ <CGME20200311034454epcas1p184680d40f89d37eec7f934074c4a9fcf@epcas1p1.samsung.com>
+ <20200311034441.23243-2-jaewon31.kim@samsung.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200310230935.23962-1-michael@walle.cc>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20200311034441.23243-2-jaewon31.kim@samsung.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 12:09:35AM +0100, Michael Walle wrote:
-> Only copy the dma_masks and flags from the parent device, if the parent
-> has a valid dma_mask/flags. Commit cdfee5623290 ("driver core:
-> initialize a default DMA mask for platform device") initialize the DMA
-> masks of a platform device. But if the parent doesn't have a dma_mask
-> set, for example if it's an I2C device, the dma_mask of the child
-> platform device will be set to zero again. Which leads to many "DMA mask
-> not set" warnings, if the MFD cell has the of_compatible property set.
-> 
-> [    1.877937] sl28cpld-pwm sl28cpld-pwm: DMA mask not set
-> [    1.883282] sl28cpld-pwm sl28cpld-pwm.0: DMA mask not set
-> [    1.888795] sl28cpld-gpio sl28cpld-gpio: DMA mask not set
-> 
-> Thus a MFD child should just inherit valid dma_masks and keep the
-> platform default otherwise.
-> 
-> Cc: Christoph Hellwig <hch@lst.de>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: Robin Murphy <robin.murphy@arm.com>
-> Cc: Russell King <linux@armlinux.org.uk>
-> Signed-off-by: Michael Walle <michael@walle.cc>
-> ---
-> 
-> Hi,
-> 
-> I don't know if that is the correct way of handling things. Maybe I'm
-> also doing something wrong in my driver, I had a look at other I2C MFD
-> drivers but couldn't find a clue why they shouldn't have the same
-> problem.
-> 
-> There was also a thread [1] about this topic, but there seems to be no
-> conclusion.
-> 
-> [1] https://www.spinics.net/lists/linux-renesas-soc/msg31581.html
-> 
->  drivers/mfd/mfd-core.c | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/mfd/mfd-core.c b/drivers/mfd/mfd-core.c
-> index b9eb8f40c073..5d8ea5e8e93c 100644
-> --- a/drivers/mfd/mfd-core.c
-> +++ b/drivers/mfd/mfd-core.c
-> @@ -139,9 +139,12 @@ static int mfd_add_device(struct device *parent, int id,
->  
->  	pdev->dev.parent = parent;
->  	pdev->dev.type = &mfd_dev_type;
-> -	pdev->dev.dma_mask = parent->dma_mask;
-> -	pdev->dev.dma_parms = parent->dma_parms;
-> -	pdev->dev.coherent_dma_mask = parent->coherent_dma_mask;
-> +	if (parent->dma_mask)
-> +		pdev->dev.dma_mask = parent->dma_mask;
-> +	if (parent->dma_parms)
-> +		pdev->dev.dma_parms = parent->dma_parms;
+On (20/03/11 12:44), Jaewon Kim wrote:
+[..]
+> +#define NAME_SIZE      15
+> +#define NAME_BUF_SIZE  (NAME_SIZE + 2) /* ':' and '\0' */
+> +
+> +struct extra_meminfo {
+> +	struct list_head list;
+> +	atomic_long_t *val;
+> +	int shift_for_page;
+> +	char name[NAME_BUF_SIZE];
+> +	char name_pad[NAME_BUF_SIZE];
+> +};
+> +
+> +int register_extra_meminfo(atomic_long_t *val, int shift, const char *name)
+> +{
+> +	struct extra_meminfo *meminfo, *memtemp;
+> +	int len;
+> +	int error = 0;
+> +
+> +	meminfo = kzalloc(sizeof(*meminfo), GFP_KERNEL);
+> +	if (!meminfo) {
+> +		error = -ENOMEM;
+> +		goto out;
+> +	}
+> +
+> +	meminfo->val = val;
+> +	meminfo->shift_for_page = shift;
+> +	strncpy(meminfo->name, name, NAME_SIZE);
+> +	len = strlen(meminfo->name);
+> +	meminfo->name[len] = ':';
+> +	strncpy(meminfo->name_pad, meminfo->name, NAME_BUF_SIZE);
 
-Both of these are pointers, and we can't just share them.  You need
-to allocate storage for them and the allocate the values over.
+What happens if there is no NULL byte among the first NAME_SIZE bytes
+of passed `name'?
+
+[..]
+
+> +	spin_lock(&meminfo_lock);
+
+Does this need to be a spinlock?
+
+	-ss
