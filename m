@@ -2,164 +2,143 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B51BDC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:50:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E826C2BAEE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:53:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7995E206BE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:50:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58EE9206BE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:53:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TkvesgPu"
+	dkim=pass (2048-bit key) header.d=ndufresne-ca.20150623.gappssmtp.com header.i=@ndufresne-ca.20150623.gappssmtp.com header.b="ygDsOdtY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730975AbgCKSu1 (ORCPT
+        id S1730916AbgCKSxn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 14:50:27 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:36946 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730805AbgCKSu0 (ORCPT
+        Wed, 11 Mar 2020 14:53:43 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:33386 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730705AbgCKSxn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 14:50:26 -0400
-Received: by mail-lj1-f196.google.com with SMTP id r24so3560271ljd.4
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 11:50:23 -0700 (PDT)
+        Wed, 11 Mar 2020 14:53:43 -0400
+Received: by mail-qk1-f194.google.com with SMTP id p62so3192528qkb.0
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 11:53:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LnTrTKnk0g/RH8zM4WZS8y2NAu9H2imsDcqUNNoLStw=;
-        b=TkvesgPuZRaGjQDQW6T+eZITafm2pIlZPeKTSNl4AkOEqBPjOpc8/o+Gm/soX2t8FS
-         1X5syjcEu3dJOU8Jx2UFtzxv8W8wyngVfdVfNNBi56LaxM711Zv3NobZo4akdjBUAk9m
-         pcN0X3RcTKSuYYpwfyvPd5ZPqMaNGJOI19h30=
+        d=ndufresne-ca.20150623.gappssmtp.com; s=20150623;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=/dNPHeH2JZmJ2dMMclVWXH5FnCXDvSk9raw7HY/zLIQ=;
+        b=ygDsOdtY6QApFOfgyPzrx2YcP1OlBPCDu+mbKNx62lxfET7c++bIcIv7VAPT7xD+AM
+         HBLi/TBK9SQzFp6tSZ1apwYr4NEZtIjQKrVdleubLxSXTK9HiMiJ6OTmZt3eDFFoy9Mo
+         66tCLtaGGmTijrMelKjuDHFOas9Rl6fYaBH5AfQR8a4FgZAx8dUSt0aGPAfgkn/4FDL7
+         eKhzvpKLREUjx5S1Hh3hSJakrnOsra+GKMUeE510a9zYDWmO3GmJYrD6U5m2cewGd7N/
+         SkzHDu/3OQzW47rJkLahb0aKEACA0ITGxh1SMrT0N5r3CvGCNeggcird9UZZBL4QWxDg
+         mEXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LnTrTKnk0g/RH8zM4WZS8y2NAu9H2imsDcqUNNoLStw=;
-        b=fvCklbhPPThfoaSq73IVM1tmxbqD1cB6i0OwJs6F1i95wliD4Xm44IaX+ag2pm1TeU
-         WsSOfuWEHocAQXKLVu+ZXTlMX8ulv7lFVFhAGUYpXj3N6gfg2cbiXCD+/ral5wh/MwzY
-         CZB5Xb1YH5iu0goFu0KmPdvPGoNH7CbbtbwTARaLukKZj/LeATzVFaVDxlHW6WrlOXF6
-         /b9H6/+RJdDfCUfZj1vl9CCSr4KC7S2p9WgwFgEk2g3lCl6gpqzvpHPbhEqkdyTzu4U+
-         L742ia58DqTC2wtAUo6GDGEbtuDiRIbzH/I0pIr7+sgsZp236eaBSAiij3qIOkVmyLJ4
-         4I1w==
-X-Gm-Message-State: ANhLgQ3rYWToHVlEf0ORxtNlwySIxSEoV5LAB9xCUdGBKdCFu9jeXBWV
-        ur9T1Sf9zHVpRLW+KIfvU5Y/wbYOfOw=
-X-Google-Smtp-Source: ADFU+vsmiRwexV9gvKWp9t7FpEbf6mLXk3TYxMSGA3r3uym01+S/mAUG1y2wT3pi8XrCyiMfiik7NA==
-X-Received: by 2002:a2e:b54a:: with SMTP id a10mr3039593ljn.47.1583952622579;
-        Wed, 11 Mar 2020 11:50:22 -0700 (PDT)
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com. [209.85.208.179])
-        by smtp.gmail.com with ESMTPSA id z1sm13831977ljh.17.2020.03.11.11.50.21
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Mar 2020 11:50:21 -0700 (PDT)
-Received: by mail-lj1-f179.google.com with SMTP id o10so3521909ljc.8
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 11:50:21 -0700 (PDT)
-X-Received: by 2002:a2e:869a:: with SMTP id l26mr2839395lji.286.1583952620980;
- Wed, 11 Mar 2020 11:50:20 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200306235951.214678-1-dianders@chromium.org>
- <20200306155707.RFT.2.Iaddc29b72772e6ea381238a0ee85b82d3903e5f2@changeid>
- <285d3315-7558-d9f6-fe65-24d8ad07949d@codeaurora.org> <CAD=FV=W5RGwu=ywtM7aCv3H-EpJ1i23S0awgVc8QtOsXtige4w@mail.gmail.com>
-In-Reply-To: <CAD=FV=W5RGwu=ywtM7aCv3H-EpJ1i23S0awgVc8QtOsXtige4w@mail.gmail.com>
-From:   Evan Green <evgreen@chromium.org>
-Date:   Wed, 11 Mar 2020 11:49:44 -0700
-X-Gmail-Original-Message-ID: <CAE=gft7Z0aq5p5sPhBH7Q86T-pHmOL1i-E5sPBV2PQH3tFLMAQ@mail.gmail.com>
-Message-ID: <CAE=gft7Z0aq5p5sPhBH7Q86T-pHmOL1i-E5sPBV2PQH3tFLMAQ@mail.gmail.com>
-Subject: Re: [RFT PATCH 2/9] drivers: qcom: rpmh-rsc: Document the register
- layout better
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Maulik Shah <mkshah@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=/dNPHeH2JZmJ2dMMclVWXH5FnCXDvSk9raw7HY/zLIQ=;
+        b=CoRHY/yP42YJhjFvw9VtZK5cp+CU2nHfddLywVkLpYJ1nyEnzAiGOUgSGeNJkJ5DhB
+         DlZBnMBg2K22VWIPWm3NgTa+i01uIO2eRBQfd+NYyLeWRMj6LYtyZ+CyCIOqDfWZWCEH
+         7Cb6y7N04du3wkhErn81IoYyS5BB+bvcP/r+vCTH2lcuedn9FK4g0o0JRsJk5hrDejA1
+         TZpkbyEsdKxASev/Ak9ki30gRlLKR7LrXRjT9BRoJu4xUa+JGRZyWZjlfeuY01AQwWFP
+         Frad+xFWVwbtcCQ1l/cNeShylFodVq1R5LMJmubT065MnhMEaiaTE2zh81GCZSqChE/x
+         0CWw==
+X-Gm-Message-State: ANhLgQ0bdNQvLaBuP46RNWdAF70GUO31jwJ/QerBBzzvFYbXjnKIlKQ2
+        Pd/eMfyncgf0Ft+lUP9iBYnQig==
+X-Google-Smtp-Source: ADFU+vtD1QK3Nnp06tnpyor3kMVvaCQ5Li6lEy6jtxXZyL53FFKlmeks+gc5PIIA+MN2WNDram2iHA==
+X-Received: by 2002:a37:b304:: with SMTP id c4mr4250035qkf.348.1583952820524;
+        Wed, 11 Mar 2020 11:53:40 -0700 (PDT)
+Received: from nicolas-tpx395.localdomain ([2610:98:8005::527])
+        by smtp.gmail.com with ESMTPSA id f13sm21354104qkm.42.2020.03.11.11.53.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Mar 2020 11:53:39 -0700 (PDT)
+Message-ID: <7b0e33f9c66dd87904b787218389c3d639f7469a.camel@ndufresne.ca>
+Subject: Re: [PATCH 1/6] v4l2-mem2mem: return CAPTURE buffer first
+From:   Nicolas Dufresne <nicolas@ndufresne.ca>
+To:     Ezequiel Garcia <ezequiel@collabora.com>,
+        linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Jeffrey Kardatzke <jkardatzke@chromium.org>
+Date:   Wed, 11 Mar 2020 14:53:37 -0400
+In-Reply-To: <20200311174300.19407-2-ezequiel@collabora.com>
+References: <20200311174300.19407-1-ezequiel@collabora.com>
+         <20200311174300.19407-2-ezequiel@collabora.com>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 8:28 AM Doug Anderson <dianders@chromium.org> wrote:
->
-> Hi,
->
-> On Wed, Mar 11, 2020 at 2:35 AM Maulik Shah <mkshah@codeaurora.org> wrote:
-> >
-> > Hi Doug,
-> >
-> > On 3/7/2020 5:29 AM, Douglas Anderson wrote:
-> > > Perhaps it's just me, it took a really long time to understand what
-> > > the register layout of rpmh-rsc was just from the #defines.
-> > i don't understand why register layout is so important for you to understand?
-> >
-> > besides, i think all required registers are properly named with #define
-> >
-> > for e.g.
-> > /* Register offsets */
-> > #define RSC_DRV_IRQ_ENABLE              0x00
-> > #define RSC_DRV_IRQ_STATUS              0x04
-> > #define RSC_DRV_IRQ_CLEAR               0x08
-> >
-> > now when you want to enable/disable irq in driver code, its pretty simple to figure out
-> > that we need to read/write at RSC_DRV_IRQ_ENABLE offset.
->
-> It's not the specific layout that's important to me.  It's the
-> relationships between everything.  In other words:
->
-> a) one rpmh-rsc contains some registers and then a whole bunch of TCS blocks
->
-> b) one TCS block contains some registers and space for up to 16 commands.
->
-> c) each command has a handful of registers
->
-> Nothing describes this in the existing code--you've gotta read through
-> all the code and figure out how it's reading/writing registers to
-> figure it out.
->
->
-> > this seems unnecessary change to me, can you please drop this when you spin v2?
->
-> In v2 I'll replace this with the prose below.  Personally I find this
-> inferior to the struct definitions which are easier to read
-> at-a-glance, but it seems like it would be less controversial...
->
-> /*
->  * Here's a high level overview of how all the registers in RPMH work
->  * together:
->  *
->  * - The main rpmh-rsc address is the base of a register space that can
->  *   be used to find overall configuration of the hardware
->  *   (DRV_PRNT_CHLD_CONFIG).  Also found within the rpmh-rsc register
->  *   space are all the TCS blocks.  The offset of the TCS blocks is
->  *   specified in the device tree by "qcom,tcs-offset" and used to
->  *   compute tcs_base.
->  * - TCS blocks come one after another.  Type, count, and order are
->  *   specified by the device tree as "qcom,tcs-config".
->  * - Each TCS block has some registers, then space for up to 16 commands.
->  *   Note that though address space is reserved for 16 commands, fewer
->  *   might be present.  See ncpt (num cmds per TCS).
->  * - The first TCS block is special in that it has registers to control
->  *   interrupts (RSC_DRV_IRQ_XXX).  Space for these registers is reserved
->  *   in all TCS blocks to make the math easier, but only the first one
->  *   matters.
->  */
->
-> I'll also move the documentation of "irq_clear", "cmd_wait_for_cmpl",
-> "status", and "cmd_enable" next to the respective #defines.
+Le mercredi 11 mars 2020 à 14:42 -0300, Ezequiel Garcia a écrit :
+> When the request API is used, typically an OUTPUT (src) buffer
+> will be part of a request. A userspace process will be typically
+> blocked, waiting on the request file descriptor.
+> 
+> Returning the OUTPUT (src) buffer will wake-up such processes,
+> who will immediately attempt to dequeue the CAPTURE buffer,
+> only to find it's still unavailable.
+> 
+> Therefore, change v4l2_m2m_buf_done_and_job_finish returning
+> the CAPTURE (dst) buffer first, to avoid signalling the request
+> file descriptor prematurely, i.e. before the CAPTURE buffer is done.
+> 
+> When the request API is not used, this change should have
+> no impact.
+> 
+> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
 
-Perhaps, I'm biased in the same way Doug is, but reviewing RPMh
-patches is especially difficult because exactly this kind of
-documentation is missing. The relationship and inheritance between
-TCS, DRV, RSC, and how many of each are inside of what is never really
-spelled out. This makes it difficult to reason about what new patches
-are doing and whether or not it works. Having the register layout and
-documentation helps convey these relationships, and helps others to
-ensure that the code is correctly doing what it's intended to do.
+This was tested with upcoming GStreamer element with O_NONBLOCK flag passed when
+opening the video node. Before this change, EAGAIN would from time to time be
+returned when DQBUF(CAPTURE) was called.
 
--Evan
+  gst-launch-1.0 filesrc location=somefile.mp4 ! parsebin ! v4l2slh264dec ! fakevideosink
+  https://gitlab.freedesktop.org/ndufresne/gst-plugins-bad/-/blob/v4l2codecs-hantro-v3/sys/v4l2codecs/gstv4l2decoder.c#L139
+
+Tested-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+
+> ---
+>  drivers/media/v4l2-core/v4l2-mem2mem.c | 11 ++++++++++-
+>  1 file changed, 10 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/media/v4l2-core/v4l2-mem2mem.c b/drivers/media/v4l2-
+> core/v4l2-mem2mem.c
+> index 8986c31176e9..62ac9424c92a 100644
+> --- a/drivers/media/v4l2-core/v4l2-mem2mem.c
+> +++ b/drivers/media/v4l2-core/v4l2-mem2mem.c
+> @@ -504,12 +504,21 @@ void v4l2_m2m_buf_done_and_job_finish(struct
+> v4l2_m2m_dev *m2m_dev,
+>  
+>  	if (WARN_ON(!src_buf || !dst_buf))
+>  		goto unlock;
+> -	v4l2_m2m_buf_done(src_buf, state);
+>  	dst_buf->is_held = src_buf->flags & V4L2_BUF_FLAG_M2M_HOLD_CAPTURE_BUF;
+>  	if (!dst_buf->is_held) {
+>  		v4l2_m2m_dst_buf_remove(m2m_ctx);
+>  		v4l2_m2m_buf_done(dst_buf, state);
+>  	}
+> +	/*
+> +	 * If the request API is being used, returning the OUTPUT
+> +	 * (src) buffer will wake-up any process waiting on the
+> +	 * request file descriptor.
+> +	 *
+> +	 * Therefore, return the CAPTURE (dst) buffer first,
+> +	 * to avoid signalling the request file descriptor
+> +	 * before the CAPTURE buffer is done.
+> +	 */
+> +	v4l2_m2m_buf_done(src_buf, state);
+>  	schedule_next = _v4l2_m2m_job_finish(m2m_dev, m2m_ctx);
+>  unlock:
+>  	spin_unlock_irqrestore(&m2m_dev->job_spinlock, flags);
+
