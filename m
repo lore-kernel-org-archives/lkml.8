@@ -5,11 +5,11 @@ X-Spam-Level:
 X-Spam-Status: No, score=-6.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MENTIONS_GIT_HOSTING,RDNS_NONE,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_NONE
 	autolearn=ham autolearn_force=no version=3.4.0
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:36751 "EHLO
-        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729999AbgCKPoh (ORCPT
+Received: from relay2-d.mail.gandi.net ([217.70.183.194]:55273 "EHLO
+        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729988AbgCKPop (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 11:44:37 -0400
+        Wed, 11 Mar 2020 11:44:45 -0400
 From: Miquel Raynal <miquel.raynal@bootlin.com>
 To: Kamal Dasu <kdasu.kdev@gmail.com>, linux-kernel@vger.kernel.org
 Cc: Miquel Raynal <miquel.raynal@bootlin.com>,
@@ -27,22 +27,24 @@ Cc: Miquel Raynal <miquel.raynal@bootlin.com>,
         Brian Norris <computersforpeace@gmail.com>,
         Sumit Semwal <sumit.semwal@linaro.org>,
         linux-media@vger.kernel.org
-Subject: Re: [PATCH V4 3/3] mtd: rawnand: brcmnand: Add support for flash-edu for dma transfers
-Date: Wed, 11 Mar 2020 16:44:33 +0100
-Message-Id: <20200311154433.25431-1-miquel.raynal@bootlin.com>
-In-Reply-To: <20200122213313.35820-4-kdasu.kdev@gmail.com>
+Subject: Re: [PATCH V4 2/3] arch: mips: brcm: Add 7425 flash-edu support
+Date: Wed, 11 Mar 2020 16:44:39 +0100
+Message-Id: <20200311154439.25493-1-miquel.raynal@bootlin.com>
+In-Reply-To: <20200122213313.35820-3-kdasu.kdev@gmail.com>
 References: 
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 List-ID: <linux-kernel.vger.kernel.org>
 
-On Wed, 2020-01-22 at 21:33:13 UTC, Kamal Dasu wrote:
-> Legacy mips soc platforms that have controller v5.0 and 6.0 use
-> flash-edu block for dma transfers. This change adds support for
-> nand dma transfers using the EDU block.
+On Wed, 2020-01-22 at 21:33:12 UTC, Kamal Dasu wrote:
+> Nand controller v5.0 and v6.0 have nand edu blocks that enable
+> dma nand flash transfers. This allows for faster read and write
+> access.
 > 
 > Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
+> Acked-by: Paul Burton <paulburton@kernel.org>
+> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 
 Applied to https://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git nand/next, thanks.
 
