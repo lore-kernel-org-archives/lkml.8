@@ -3,135 +3,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,PDS_HP_HELO_NORDNS,RDNS_NONE,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_NONE,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
-Received: from mail-vk1-f193.google.com ([209.85.221.193]:44213 "EHLO
-        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730020AbgCKPfT (ORCPT
+	INCLUDES_PATCH,RDNS_NONE,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
+Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:55378 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729521AbgCKPh2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 11:35:19 -0400
-Received: by mail-vk1-f193.google.com with SMTP id s194so642844vkb.11
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 08:35:17 -0700 (PDT)
+        Wed, 11 Mar 2020 11:37:28 -0400
+From: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+To: linux-snps-arc@lists.infradead.org,
+        Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Cc: linux-kernel@vger.kernel.org,
+        Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Subject: [PATCH] ARC: [plat-axs10x]: PGU: remove unused encoder-slave property
+Date: Wed, 11 Mar 2020 18:37:24 +0300
+Message-Id: <20200311153724.16140-1-Eugeniy.Paltsev@synopsys.com>
 MIME-Version: 1.0
-References: <20200305151228.24692-1-faiz_abbas@ti.com>
-In-Reply-To: <20200305151228.24692-1-faiz_abbas@ti.com>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Wed, 11 Mar 2020 16:34:40 +0100
-Message-ID: <CAPDyKFrRcCzLs=Oab_ct_1yLkfCAT9mB4exT3er-UyFUKK_ePw@mail.gmail.com>
-Subject: Re: [PATCH v2] mmc: sdhci-omap: Add Support for Suspend/Resume
-To: Faiz Abbas <faiz_abbas@ti.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Kishon <kishon@ti.com>, Adrian Hunter <adrian.hunter@intel.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 List-ID: <linux-kernel.vger.kernel.org>
 
-On Thu, 5 Mar 2020 at 16:10, Faiz Abbas <faiz_abbas@ti.com> wrote:
->
-> Add power management ops which save and restore the driver context and
-> facilitate a system suspend and resume.
->
-> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+ARC PGU is looking for encoder via endpoint mechanism and doesn't
+use "encoder-slave" property for a long time. Let's drop unused
+"encoder-slave" property from ARC PGU node in axs10x.
 
-Applied for next, thanks!
+Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+---
+ arch/arc/boot/dts/axs10x_mb.dtsi | 1 -
+ 1 file changed, 1 deletion(-)
 
-Kind regards
-Uffe
-
-
-> ---
-> v2:
-> 1. Save and restore only those registers which are not written to by
->    core
-> 2. Use force_suspend()/resume() APIs instead of runtime_resume()/suspend()
->    as the driver has no runtime PM support.
->  drivers/mmc/host/sdhci-omap.c | 57 +++++++++++++++++++++++++++++++++++
->  1 file changed, 57 insertions(+)
->
-> diff --git a/drivers/mmc/host/sdhci-omap.c b/drivers/mmc/host/sdhci-omap.c
-> index 882053151a47..989133ec74d6 100644
-> --- a/drivers/mmc/host/sdhci-omap.c
-> +++ b/drivers/mmc/host/sdhci-omap.c
-> @@ -108,6 +108,11 @@ struct sdhci_omap_host {
->         struct pinctrl          *pinctrl;
->         struct pinctrl_state    **pinctrl_state;
->         bool                    is_tuning;
-> +       /* Omap specific context save */
-> +       u32                     con;
-> +       u32                     hctl;
-> +       u32                     sysctl;
-> +       u32                     capa;
->  };
->
->  static void sdhci_omap_start_clock(struct sdhci_omap_host *omap_host);
-> @@ -1232,12 +1237,64 @@ static int sdhci_omap_remove(struct platform_device *pdev)
->
->         return 0;
->  }
-> +#ifdef CONFIG_PM_SLEEP
-> +static void sdhci_omap_context_save(struct sdhci_omap_host *omap_host)
-> +{
-> +       omap_host->con = sdhci_omap_readl(omap_host, SDHCI_OMAP_CON);
-> +       omap_host->hctl = sdhci_omap_readl(omap_host, SDHCI_OMAP_HCTL);
-> +       omap_host->capa = sdhci_omap_readl(omap_host, SDHCI_OMAP_CAPA);
-> +}
-> +
-> +static void sdhci_omap_context_restore(struct sdhci_omap_host *omap_host)
-> +{
-> +       sdhci_omap_writel(omap_host, SDHCI_OMAP_CON, omap_host->con);
-> +       sdhci_omap_writel(omap_host, SDHCI_OMAP_HCTL, omap_host->hctl);
-> +       sdhci_omap_writel(omap_host, SDHCI_OMAP_CAPA, omap_host->capa);
-> +}
-> +
-> +static int __maybe_unused sdhci_omap_suspend(struct device *dev)
-> +{
-> +       struct sdhci_host *host = dev_get_drvdata(dev);
-> +       struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-> +       struct sdhci_omap_host *omap_host = sdhci_pltfm_priv(pltfm_host);
-> +
-> +       sdhci_suspend_host(host);
-> +
-> +       sdhci_omap_context_save(omap_host);
-> +
-> +       pinctrl_pm_select_idle_state(dev);
-> +
-> +       pm_runtime_force_suspend(dev);
-> +
-> +       return 0;
-> +}
-> +
-> +static int __maybe_unused sdhci_omap_resume(struct device *dev)
-> +{
-> +       struct sdhci_host *host = dev_get_drvdata(dev);
-> +       struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-> +       struct sdhci_omap_host *omap_host = sdhci_pltfm_priv(pltfm_host);
-> +
-> +       pm_runtime_force_resume(dev);
-> +
-> +       pinctrl_pm_select_default_state(dev);
-> +
-> +       sdhci_omap_context_restore(omap_host);
-> +
-> +       sdhci_resume_host(host);
-> +
-> +       return 0;
-> +}
-> +#endif
-> +static SIMPLE_DEV_PM_OPS(sdhci_omap_dev_pm_ops, sdhci_omap_suspend,
-> +                        sdhci_omap_resume);
->
->  static struct platform_driver sdhci_omap_driver = {
->         .probe = sdhci_omap_probe,
->         .remove = sdhci_omap_remove,
->         .driver = {
->                    .name = "sdhci-omap",
-> +                  .pm = &sdhci_omap_dev_pm_ops,
->                    .of_match_table = omap_sdhci_match,
->                   },
->  };
-> --
-> 2.19.2
->
+diff --git a/arch/arc/boot/dts/axs10x_mb.dtsi b/arch/arc/boot/dts/axs10x_mb.dtsi
+index 1d109b06e7d8..99d3e7175bf7 100644
+--- a/arch/arc/boot/dts/axs10x_mb.dtsi
++++ b/arch/arc/boot/dts/axs10x_mb.dtsi
+@@ -305,7 +305,6 @@
+ 		pgu@17000 {
+ 			compatible = "snps,arcpgu";
+ 			reg = <0x17000 0x400>;
+-			encoder-slave = <&adv7511>;
+ 			clocks = <&pguclk>;
+ 			clock-names = "pxlclk";
+ 			memory-region = <&frame_buffer>;
+-- 
+2.21.1
 
