@@ -2,73 +2,130 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 429D1C10F25
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 05:14:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45B8BC10F29
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 05:16:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BA0E208C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 05:14:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CCB1208C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 05:16:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583903769;
+	bh=LlF5ctAEjJDdjvoW8h21v26PbNVIN5sEBNVN0kT1peo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Geyuf/PSqTJvfWO41WrVxx7O5oLYXw9QWnBKA0QjWC/5Xfro5xxbpo1v/wpBu3g8+
+	 xhVAHM6R/OCWXMQewlEzJTSSOA7//WPPYfeS9OjkiVMKHbctmgR5GLz3vk7Jkt1gnr
+	 E+efJ8v8d3/mwctEAsKVwGO4lWWti3/lxeLZk0yQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728130AbgCKFOK (ORCPT
+        id S1726513AbgCKFQI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 01:14:10 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:51906 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726883AbgCKFOC (ORCPT
+        Wed, 11 Mar 2020 01:16:08 -0400
+Received: from conssluserg-03.nifty.com ([210.131.2.82]:63734 "EHLO
+        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725813AbgCKFQH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 01:14:02 -0400
-Received: by mail-io1-f71.google.com with SMTP id h2so650102iow.18
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 22:14:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=y2hVpEQqKWh3yJxXsOzl5nrGR83I9+fKU1M1RVWvyPs=;
-        b=uaEdVLiztmpuOClQBRDB0Tq+3ZRmIcBrgJO66nKmACHFb3DSBqKjiLTHZ/j4gHArHe
-         5Z3wRTVHxyME6Id9B32LnlDMI71W67U6qjZ2UKyRLVIHFVfONl2iZImOLCqt07TX413R
-         1wQeXWdjLpHiwQCKAI26R19+EScoMd1e9ulj6s9s3hTeTH5mDXPZLRaM3rhF+o9191LB
-         5QFiZtVBvSatIaFoGn62XE8AHGqk2RoCrA9JO8JNm+Ec9H//+3DDKhe8RqGWxc8PNFnb
-         Cgd67X776Hc+xIhfVSBbAgDNgOAF5nmcLHM6y7SNPEPxMBQ1f0YIbqGCCU/CVfzsdiiq
-         CtuQ==
-X-Gm-Message-State: ANhLgQ2z5DeUhnvb7T2FFQISrezMw+Ho4I9leY51AWEqPS1zwM3h3zVI
-        lz7WB95ZNdND6cdpAitA6aQUG1EMr0ytCC7wdKSHZCuLWEJD
-X-Google-Smtp-Source: ADFU+vt5z22CinsEa4J20FC0o79+4pntXOyIVUtMDbKuRwnpcjat0DQwZbtCeu25P6gsSLudopbiXfK1NVr6hZMf3ewRKmzDM21x
+        Wed, 11 Mar 2020 01:16:07 -0400
+Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com [209.85.217.50]) (authenticated)
+        by conssluserg-03.nifty.com with ESMTP id 02B5FkZZ020142;
+        Wed, 11 Mar 2020 14:15:47 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com 02B5FkZZ020142
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1583903747;
+        bh=AfcAhhaYncg48rG2V8lvHQMNiBncmFjUl9msHr0LZLM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=KvW0KXepxAE2RCGteQEv1YSqRNHr0J2XMAXuIYCj1s+nNf63JyYw/9OC9czBm81xE
+         clTtP0F838rdSrlae7fdZfuzjmaW0k88pzKs1nbAHtt3Uyh7o4zAnMyop6uGwQMinE
+         NUBaWFVGEx5beaInaYhJb4d+us0M18Nqvb1KiMlrWdMedpw91/J8E1PkpEXG7Ht7zT
+         rVUpsbRqkZkR22fGL28i63NHiw+bHariqNs76uyEyY8rldbzsX0Sk34pYYQb0u70Nz
+         ULCMR1b9jSK/sN8ZGBLFycql4/3VhoWvwXQ13Iufs7qQd+LmBIQEq4ymjyhFCl2QBq
+         HF1nFpJqD1/Zg==
+X-Nifty-SrcIP: [209.85.217.50]
+Received: by mail-vs1-f50.google.com with SMTP id o24so526334vsp.4;
+        Tue, 10 Mar 2020 22:15:46 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ1iS79NXyHGjr5Ln4CBuy9C5hQ1nfkb0VZG1E7q4wBgFYqfNZEX
+        MP3pryAH7yS5gil8kKLCes5O8O84eMHvsF2wTA0=
+X-Google-Smtp-Source: ADFU+vueM9zpX/w41+7KRQJKMve2nE9ggiD45SMOr/dEVd886cFoVN80tyg4r4qMFhRNb5dCuud4jNxETWUlZpLQMEc=
+X-Received: by 2002:a05:6102:8f:: with SMTP id t15mr878244vsp.215.1583903745980;
+ Tue, 10 Mar 2020 22:15:45 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a5e:c70c:: with SMTP id f12mr1381398iop.130.1583903641662;
- Tue, 10 Mar 2020 22:14:01 -0700 (PDT)
-Date:   Tue, 10 Mar 2020 22:14:01 -0700
-In-Reply-To: <CAM_iQpXLZ1PaG757i1NiQH9q+xuZAzhued0DYEGNH2XtAWZq2A@mail.gmail.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000eb7a5405a08d4d7e@google.com>
-Subject: Re: KASAN: invalid-free in tcf_exts_destroy
-From:   syzbot <syzbot+dcc34d54d68ef7d2d53d@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, jhs@mojatatu.com, jiri@resnulli.us,
-        kuba@kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        xiyou.wangcong@gmail.com
+References: <cover.1583896344.git.joe@perches.com> <dae0878058223a42c77d725b8d7c5845a7ef9dc0.1583896348.git.joe@perches.com>
+In-Reply-To: <dae0878058223a42c77d725b8d7c5845a7ef9dc0.1583896348.git.joe@perches.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Wed, 11 Mar 2020 14:15:10 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAS7GAk9yXkPhbS3ByU+n9Gb-rk0PeLcXLCNwpW1B22aeg@mail.gmail.com>
+Message-ID: <CAK7LNAS7GAk9yXkPhbS3ByU+n9Gb-rk0PeLcXLCNwpW1B22aeg@mail.gmail.com>
+Subject: Re: [PATCH -next 005/491] ARM/UNIPHIER ARCHITECTURE: Use fallthrough;
+To:     Joe Perches <joe@perches.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Wed, Mar 11, 2020 at 2:07 PM Joe Perches <joe@perches.com> wrote:
+>
+> Convert the various uses of fallthrough comments to fallthrough;
+>
+> Done via script
+> Link: https://lore.kernel.org/lkml/b56602fcf79f849e733e7b521bb0e17895d390fa.1582230379.git.joe.com/
+>
+> Signed-off-by: Joe Perches <joe@perches.com>
 
-syzbot has tested the proposed patch and the reproducer did not trigger crash:
 
-Reported-and-tested-by: syzbot+dcc34d54d68ef7d2d53d@syzkaller.appspotmail.com
+Acked-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-Tested on:
 
-commit:         2c19e526 net_sched: hold rtnl lock for tcindex_partial_des..
-git tree:       https://github.com/congwang/linux.git tcindex
-kernel config:  https://syzkaller.appspot.com/x/.config?x=bcbe864577669742
-dashboard link: https://syzkaller.appspot.com/bug?extid=dcc34d54d68ef7d2d53d
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-userspace arch: i386
+But, I think the patch subject should be prefixed:
+"serial: 8250_uniphier:"
 
-Note: testing is done by a robot and is best-effort only.
+
+
+> ---
+>  drivers/tty/serial/8250/8250_uniphier.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/tty/serial/8250/8250_uniphier.c b/drivers/tty/serial/8250/8250_uniphier.c
+> index e0b73a5..a2978ab 100644
+> --- a/drivers/tty/serial/8250/8250_uniphier.c
+> +++ b/drivers/tty/serial/8250/8250_uniphier.c
+> @@ -75,7 +75,7 @@ static unsigned int uniphier_serial_in(struct uart_port *p, int offset)
+>                 break;
+>         case UART_LCR:
+>                 valshift = 8;
+> -               /* fall through */
+> +               fallthrough;
+>         case UART_MCR:
+>                 offset = UNIPHIER_UART_LCR_MCR;
+>                 break;
+> @@ -101,7 +101,7 @@ static void uniphier_serial_out(struct uart_port *p, int offset, int value)
+>         case UART_SCR:
+>                 /* No SCR for this hardware.  Use CHAR as a scratch register */
+>                 valshift = 8;
+> -               /* fall through */
+> +               fallthrough;
+>         case UART_FCR:
+>                 offset = UNIPHIER_UART_CHAR_FCR;
+>                 break;
+> @@ -109,7 +109,7 @@ static void uniphier_serial_out(struct uart_port *p, int offset, int value)
+>                 valshift = 8;
+>                 /* Divisor latch access bit does not exist. */
+>                 value &= ~UART_LCR_DLAB;
+> -               /* fall through */
+> +               fallthrough;
+>         case UART_MCR:
+>                 offset = UNIPHIER_UART_LCR_MCR;
+>                 break;
+> --
+> 2.24.0
+>
+
+
+-- 
+Best Regards
+Masahiro Yamada
