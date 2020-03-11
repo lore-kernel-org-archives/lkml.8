@@ -2,143 +2,71 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86EC8C0044D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 17:24:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D4C3C0044D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 17:25:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A91220736
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 17:24:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE6CA20737
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 17:25:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730420AbgCKRYl (ORCPT
+        id S1730461AbgCKRY7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 13:24:41 -0400
-Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:44082 "EHLO
-        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730195AbgCKRYk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 13:24:40 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=bo.liu@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0TsK.c7b_1583947470;
-Received: from rsjd01523.et2sqa(mailfrom:bo.liu@linux.alibaba.com fp:SMTPD_---0TsK.c7b_1583947470)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 12 Mar 2020 01:24:36 +0800
-Date:   Thu, 12 Mar 2020 01:24:30 +0800
-From:   Liu Bo <bo.liu@linux.alibaba.com>
-To:     Vivek Goyal <vgoyal@redhat.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, virtio-fs@redhat.com, miklos@szeredi.hu,
-        stefanha@redhat.com, dgilbert@redhat.com, mst@redhat.com
-Subject: Re: [PATCH 20/20] fuse,virtiofs: Add logic to free up a memory range
-Message-ID: <20200311172429.wmiflrlube3k2rkw@rsjd01523.et2sqa>
-Reply-To: bo.liu@linux.alibaba.com
-References: <20200304165845.3081-1-vgoyal@redhat.com>
- <20200304165845.3081-21-vgoyal@redhat.com>
- <20200311051641.l6gonmmyb4o5rcrb@rsjd01523.et2sqa>
- <20200311125923.GA83257@redhat.com>
+        Wed, 11 Mar 2020 13:24:59 -0400
+Received: from mx2.suse.de ([195.135.220.15]:48876 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730366AbgCKRY7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 13:24:59 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 4E24BABD7;
+        Wed, 11 Mar 2020 17:24:57 +0000 (UTC)
+From:   Vlastimil Babka <vbabka@suse.cz>
+To:     Mike Kravetz <mike.kravetz@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: [PATCH] mm/hugetlb: remove unnecessary memory fetch in PageHeadHuge()
+Date:   Wed, 11 Mar 2020 18:24:40 +0100
+Message-Id: <20200311172440.6988-1-vbabka@suse.cz>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200311125923.GA83257@redhat.com>
-User-Agent: NeoMutt/20180223
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 08:59:23AM -0400, Vivek Goyal wrote:
-> On Wed, Mar 11, 2020 at 01:16:42PM +0800, Liu Bo wrote:
-> 
-> [..]
-> > > @@ -719,6 +723,7 @@ void fuse_conn_put(struct fuse_conn *fc)
-> > >  	if (refcount_dec_and_test(&fc->count)) {
-> > >  		struct fuse_iqueue *fiq = &fc->iq;
-> > >  
-> > > +		flush_delayed_work(&fc->dax_free_work);
-> > 
-> > Today while debugging another case, I realized that flushing work here
-> > at the very last fuse_conn_put() is a bit too late, here's my analysis,
-> > 
-> >          umount                                                   kthread
-> > 
-> > deactivate_locked_super
-> >   ->virtio_kill_sb                                            try_to_free_dmap_chunks
-> >     ->generic_shutdown_super                                    ->igrab()
-> >                                                                 ...
-> >      ->evict_inodes()  -> check all inodes' count
-> >      ->fuse_conn_put                                            ->iput
-> >  ->virtio_fs_free_devs
-> >    ->fuse_dev_free
-> >      ->fuse_conn_put // vq1
-> >    ->fuse_dev_free
-> >      ->fuse_conn_put // vq2
-> >        ->flush_delayed_work
-> > 
-> > The above can end up with a warning message reported by evict_inodes()
-> > about stable inodes.
-> 
-> Hi Liu Bo,
-> 
-> Which warning is that? Can you point me to it in code.
->
+Commit f1e61557f023 ("mm: pack compound_dtor and compound_order into one word
+in struct page") changed compound_dtor from a pointer to an array index in
+order to pack it. To check if page has the hugeltbfs compound_dtor, we can
+just compare the index directly without fetching the function pointer.
+Said commit did that with PageHuge() and we can do the same with PageHeadHuge()
+to make the code a bit smaller and faster.
 
-Hmm, it was actually in generic_shutdow_super,
+Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+Cc: Mike Kravetz <mike.kravetz@oracle.com>
+Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 ---
-              printk("VFS: Busy inodes after unmount of %s. "
-                           "Self-destruct in 5 seconds.  Have a nice day...\n",
----
+ mm/hugetlb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> > So I think it's necessary to put either
-> > cancel_delayed_work_sync() or flush_delayed_work() before going to
-> > generic_shutdown_super().
-> 
-> In general I agree that shutting down memory range freeing worker
-> earling in unmount/shutdown sequence makes sense. It does not seem
-> to help to let it run while filesystem is going away. How about following
-> patch.
-> 
-> ---
->  fs/fuse/inode.c     |    1 -
->  fs/fuse/virtio_fs.c |    5 +++++
->  2 files changed, 5 insertions(+), 1 deletion(-)
-> 
-> Index: redhat-linux/fs/fuse/virtio_fs.c
-> ===================================================================
-> --- redhat-linux.orig/fs/fuse/virtio_fs.c	2020-03-10 14:11:10.970284651 -0400
-> +++ redhat-linux/fs/fuse/virtio_fs.c	2020-03-11 08:27:08.103330039 -0400
-> @@ -1295,6 +1295,11 @@ static void virtio_kill_sb(struct super_
->  	vfs = fc->iq.priv;
->  	fsvq = &vfs->vqs[VQ_HIPRIO];
->  
-> +	/* Stop dax worker. Soon evict_inodes() will be called which will
-> +	 * free all memory ranges belonging to all inodes.
-> +	 */
-> +	flush_delayed_work(&fc->dax_free_work);
-> +
->  	/* Stop forget queue. Soon destroy will be sent */
->  	spin_lock(&fsvq->lock);
->  	fsvq->connected = false;
-> Index: redhat-linux/fs/fuse/inode.c
-> ===================================================================
-> --- redhat-linux.orig/fs/fuse/inode.c	2020-03-10 09:13:35.132565666 -0400
-> +++ redhat-linux/fs/fuse/inode.c	2020-03-11 08:22:02.685330039 -0400
-> @@ -723,7 +723,6 @@ void fuse_conn_put(struct fuse_conn *fc)
->  	if (refcount_dec_and_test(&fc->count)) {
->  		struct fuse_iqueue *fiq = &fc->iq;
->  
-> -		flush_delayed_work(&fc->dax_free_work);
->  		if (fc->dax_dev)
->  			fuse_free_dax_mem_ranges(&fc->free_ranges);
->  		if (fiq->ops->release)
+diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+index dd8737a94bec..ba1ca452aa7f 100644
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -1313,7 +1313,7 @@ int PageHeadHuge(struct page *page_head)
+ 	if (!PageHead(page_head))
+ 		return 0;
+ 
+-	return get_compound_page_dtor(page_head) == free_huge_page;
++	return page_head[1].compound_dtor == HUGETLB_PAGE_DTOR;
+ }
+ 
+ pgoff_t __basepage_index(struct page *page)
+-- 
+2.25.1
 
-Looks good, it should be safe now, but I feel like
-cancel_delayed_work_sync() would be a good alternative for "stop dax
-worker".
-
-Reviewed-by: Liu Bo <bo.liu@linux.alibaba.com>
-
-Fine with either folding directly or a new patch, thanks for fixing it.
-
-thanks,
--liubo
