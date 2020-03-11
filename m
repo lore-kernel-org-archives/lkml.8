@@ -2,107 +2,192 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FFA2C5ACC1
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 16:53:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D360DC2BAEE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 16:53:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B86A820739
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 16:53:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="kX58gJ61"
+	by mail.kernel.org (Postfix) with ESMTP id 2431620735
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 16:53:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730382AbgCKQxt (ORCPT
+        id S1730391AbgCKQxv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 12:53:49 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:21907 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730175AbgCKQxg (ORCPT
+        Wed, 11 Mar 2020 12:53:51 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:60748 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730342AbgCKQxs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 12:53:36 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1583945616; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=ubLoWCp3h01mj32RDpUyl192zHsOqVXscIZcMtW7IbI=;
- b=kX58gJ61nDsqeKDYnIW49H4I/gNAApfOGCGgZloiaXTioQQWbk+Irhci8nsoLcTOsrRU7dIP
- FO3yXVzja0zTls65TEWh9upIawlXCM6He1XqsupEyegkjYBZ9x8ZPVSDl+wVzTkQFKFJwE4b
- 8vb1xR6EEN5TvOzAG4fsUIOCURc=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e69178a.7fc3b35dc500-smtp-out-n01;
- Wed, 11 Mar 2020 16:53:30 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 7184BC433D2; Wed, 11 Mar 2020 16:53:30 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E469BC433CB;
-        Wed, 11 Mar 2020 16:53:27 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E469BC433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Wed, 11 Mar 2020 12:53:48 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id A9F3B2930CF
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+To:     robh+dt@kernel.org, mark.rutland@arm.com, ck.hu@mediatek.com,
+        p.zabel@pengutronix.de, airlied@linux.ie, mturquette@baylibre.com,
+        sboyd@kernel.org, ulrich.hecht+renesas@gmail.com,
+        laurent.pinchart@ideasonboard.com
+Cc:     Allison Randal <allison@lohutok.net>,
+        Matthias Brugger <matthias.bgg@gmail.com>, wens@csie.org,
+        linux-media@vger.kernel.org, sean.wang@mediatek.com,
+        hsinyi@chromium.org, rdunlap@infradead.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        dri-devel@lists.freedesktop.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Weiyi Lu <weiyi.lu@mediatek.com>,
+        Seiya Wang <seiya.wang@mediatek.com>,
+        Matthias Brugger <mbrugger@suse.com>,
+        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
+        linux-clk@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        Daniel Vetter <daniel@ffwll.ch>,
+        linux-arm-kernel@lists.infradead.org, matthias.bgg@kernel.org,
+        Minghsiu Tsai <minghsiu.tsai@mediatek.com>,
+        frank-w@public-files.de, devicetree@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Collabora Kernel ML <kernel@collabora.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        linux-kernel@vger.kernel.org, mtk01761 <wendell.lin@mediatek.com>,
+        Richard Fontana <rfontana@redhat.com>
+Subject: [PATCH v12 5/5] soc / drm: mediatek: Fix mediatek-drm device probing
+Date:   Wed, 11 Mar 2020 17:53:22 +0100
+Message-Id: <20200311165322.1594233-6-enric.balletbo@collabora.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200311165322.1594233-1-enric.balletbo@collabora.com>
+References: <20200311165322.1594233-1-enric.balletbo@collabora.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] ath9k: Handle txpower changes even when TPC is disabled
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20200229161347.31341-1-repk@triplefau.lt>
-References: <20200229161347.31341-1-repk@triplefau.lt>
-To:     Remi Pommarel <repk@triplefau.lt>
-Cc:     Lorenzo Bianconi <lorenzo@kernel.org>,
-        QCA ath9k Development <ath9k-devel@qca.qualcomm.com>,
-        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Remi Pommarel <repk@triplefau.lt>, stable@vger.kernel.org
-User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20200311165330.7184BC433D2@smtp.codeaurora.org>
-Date:   Wed, 11 Mar 2020 16:53:30 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remi Pommarel <repk@triplefau.lt> wrote:
+In the actual implementation the same compatible string
+"mediatek,<chip>-mmsys" is used to bind the clock drivers
+(drivers/soc/mediatek) as well as to the gpu driver
+(drivers/gpu/drm/mediatek/mtk_drm_drv.c). This ends with the problem
+that the only probed driver is the clock driver and there is no display
+at all.
 
-> When TPC is disabled IEEE80211_CONF_CHANGE_POWER event can be handled to
-> reconfigure HW's maximum txpower.
-> 
-> This fixes 0dBm txpower setting when user attaches to an interface for
-> the first time with the following scenario:
-> 
-> ieee80211_do_open()
->     ath9k_add_interface()
->         ath9k_set_txpower() /* Set TX power with not yet initialized
->                                sc->hw->conf.power_level */
-> 
->     ieee80211_hw_config() /* Iniatilize sc->hw->conf.power_level and
->                              raise IEEE80211_CONF_CHANGE_POWER */
-> 
->     ath9k_config() /* IEEE80211_CONF_CHANGE_POWER is ignored */
-> 
-> This issue can be reproduced with the following:
-> 
->   $ modprobe -r ath9k
->   $ modprobe ath9k
->   $ wpa_supplicant -i wlan0 -c /tmp/wpa.conf &
->   $ iw dev /* Here TX power is either 0 or 3 depending on RF chain */
->   $ killall wpa_supplicant
->   $ iw dev /* TX power goes back to calibrated value and subsequent
->               calls will be fine */
-> 
-> Fixes: 283dd11994cde ("ath9k: add per-vif TX power capability")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Remi Pommarel <repk@triplefau.lt>
-> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+In any case having the same compatible string for two drivers is not
+correct and should be fixed. To fix this, and maintain backward
+compatibility, we can consider that the mmsys driver is the top-level
+entry point for the multimedia subsystem, so is not a pure clock
+controller but a system controller, and the drm driver is instantiated
+by that MMSYS driver.
 
-Patch applied to ath-next branch of ath.git, thanks.
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Reviewed-by: CK Hu <ck.hu@mediatek.com>
+Acked-by: CK Hu <ck.hu@mediatek.com>
+---
 
-968ae2caad07 ath9k: Handle txpower changes even when TPC is disabled
+Changes in v12: None
+Changes in v10:
+- Match driver data to get display routing.
 
+Changes in v9:
+- Do not move the display routing from the drm driver (CK)
+
+Changes in v8:
+- New patch introduced in this series.
+
+Changes in v7: None
+
+ drivers/gpu/drm/mediatek/mtk_drm_drv.c | 31 ++++++++++++++++----------
+ drivers/soc/mediatek/mtk-mmsys.c       |  6 +++++
+ 2 files changed, 25 insertions(+), 12 deletions(-)
+
+diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.c b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+index 208f9c5256ef..bb26e346750a 100644
+--- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
++++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+@@ -422,9 +422,21 @@ static const struct of_device_id mtk_ddp_comp_dt_ids[] = {
+ 	{ }
+ };
+ 
++static const struct of_device_id mtk_drm_of_ids[] = {
++	{ .compatible = "mediatek,mt2701-mmsys",
++	  .data = &mt2701_mmsys_driver_data},
++	{ .compatible = "mediatek,mt2712-mmsys",
++	  .data = &mt2712_mmsys_driver_data},
++	{ .compatible = "mediatek,mt8173-mmsys",
++	  .data = &mt8173_mmsys_driver_data},
++	{ }
++};
++
+ static int mtk_drm_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
++	struct device_node *phandle = dev->parent->of_node;
++	const struct of_device_id *of_id;
+ 	struct mtk_drm_private *private;
+ 	struct device_node *node;
+ 	struct component_match *match = NULL;
+@@ -442,8 +454,14 @@ static int mtk_drm_probe(struct platform_device *pdev)
+ 		return -ENODEV;
+ 	}
+ 
++	of_id = of_match_node(mtk_drm_of_ids, phandle);
++	if (!of_id)
++		return -ENODEV;
++
++	private->data = of_id->data;
++
+ 	/* Iterate over sibling DISP function blocks */
+-	for_each_child_of_node(dev->of_node->parent, node) {
++	for_each_child_of_node(phandle->parent, node) {
+ 		const struct of_device_id *of_id;
+ 		enum mtk_ddp_comp_type comp_type;
+ 		int comp_id;
+@@ -575,22 +593,11 @@ static int mtk_drm_sys_resume(struct device *dev)
+ static SIMPLE_DEV_PM_OPS(mtk_drm_pm_ops, mtk_drm_sys_suspend,
+ 			 mtk_drm_sys_resume);
+ 
+-static const struct of_device_id mtk_drm_of_ids[] = {
+-	{ .compatible = "mediatek,mt2701-mmsys",
+-	  .data = &mt2701_mmsys_driver_data},
+-	{ .compatible = "mediatek,mt2712-mmsys",
+-	  .data = &mt2712_mmsys_driver_data},
+-	{ .compatible = "mediatek,mt8173-mmsys",
+-	  .data = &mt8173_mmsys_driver_data},
+-	{ }
+-};
+-
+ static struct platform_driver mtk_drm_platform_driver = {
+ 	.probe	= mtk_drm_probe,
+ 	.remove	= mtk_drm_remove,
+ 	.driver	= {
+ 		.name	= "mediatek-drm",
+-		.of_match_table = mtk_drm_of_ids,
+ 		.pm     = &mtk_drm_pm_ops,
+ 	},
+ };
+diff --git a/drivers/soc/mediatek/mtk-mmsys.c b/drivers/soc/mediatek/mtk-mmsys.c
+index 4b286b525cd3..32a92ec447c5 100644
+--- a/drivers/soc/mediatek/mtk-mmsys.c
++++ b/drivers/soc/mediatek/mtk-mmsys.c
+@@ -285,6 +285,7 @@ static int mtk_mmsys_probe(struct platform_device *pdev)
+ 	const struct mtk_mmsys_driver_data *data;
+ 	struct device *dev = &pdev->dev;
+ 	struct platform_device *clks;
++	struct platform_device *drm;
+ 	void __iomem *config_regs;
+ 	struct resource *mem;
+ 	int ret;
+@@ -307,6 +308,11 @@ static int mtk_mmsys_probe(struct platform_device *pdev)
+ 	if (IS_ERR(clks))
+ 		return PTR_ERR(clks);
+ 
++	drm = platform_device_register_data(&pdev->dev, "mediatek-drm",
++					    PLATFORM_DEVID_AUTO, NULL, 0);
++	if (IS_ERR(drm))
++		return PTR_ERR(drm);
++
+ 	return 0;
+ }
+ 
 -- 
-https://patchwork.kernel.org/patch/11413917/
+2.25.1
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
