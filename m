@@ -1,130 +1,100 @@
-Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <linux-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
-Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 511D8C5ACBF
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:21:34 +0000 (UTC)
-Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1F7520735
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:21:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583950895;
-	bh=EMTCcOIumdt7jEeudStF/nDyAUTZ9+64dBQJKN/EsCs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fqrDaofMW211jZY0vIKcJ9llRnL5YokLa/XpvI/+745s/lfzM0lwhZxtOlJV1wdpc
-	 ry1gadV6gaTIhoWgmO/WXST0WyzCt1vvXy0xnSbFRfCCQn8G/FD1ZM3GZjG5hnvXN6
-	 EoBq5y9tzllj0mV9G7QYYY2u/rq4p0wFZwXJ2VGc=
-Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730809AbgCKSVd (ORCPT
-        <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 14:21:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34566 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730677AbgCKSVd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 14:21:33 -0400
-Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 756F52072F;
-        Wed, 11 Mar 2020 18:21:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583950892;
-        bh=EMTCcOIumdt7jEeudStF/nDyAUTZ9+64dBQJKN/EsCs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pNyDx7AIzb6Z8gnHZtLGHSTGfrLVHI7ISZtKRl/W/4N8aHSNsMMXhVQI9aIVRZY65
-         UcSfexfQDroVVkYxjUgMgIGK1V7Z3DbBBpIc3HAI53WDUznw14tsPtXfl0UPquNv7+
-         sXwWK+yCO5HduWIprk+5ucTWMRPSxpApl4VnAO/0=
-Date:   Wed, 11 Mar 2020 11:21:30 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     NeilBrown <neilb@suse.com>, Josh Triplett <josh@joshtriplett.org>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        stable@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jeff Vander Stoep <jeffv@google.com>,
-        Jessica Yu <jeyu@kernel.org>, Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH] kmod: make request_module() return an error when
- autoloading is disabled
-Message-ID: <20200311182130.GA41227@sol.localdomain>
-References: <20200310223731.126894-1-ebiggers@kernel.org>
- <20200311043221.GK11244@42.do-not-panic.com>
- <20200311052620.GD46757@gmail.com>
- <20200311063130.GL11244@42.do-not-panic.com>
- <20200311173545.GA20006@gmail.com>
- <20200311180002.GN11244@42.do-not-panic.com>
+X-Spam-Level: *
+X-Spam-Status: No, score=1.8 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FREEMAIL_REPLYTO_END_DIGIT,
+	HEADER_FROM_DIFFERENT_DOMAINS,LOTS_OF_MONEY,PDS_HP_HELO_NORDNS,RDNS_NONE,
+	SPF_HELO_NONE,SPF_NONE,SPOOFED_FREEMAIL_NO_RDNS,T_MONEY_PERCENT autolearn=no
+	autolearn_force=no version=3.4.0
+Received: from mail-il1-f196.google.com ([209.85.166.196]:41967 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728661AbgCKIto (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 04:49:44 -0400
+Received: by mail-il1-f196.google.com with SMTP id l14so1218376ilj.8
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 01:49:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200311180002.GN11244@42.do-not-panic.com>
+Reply-To: kantesulaman3@gmail.com
+From: sulaman Kante <mrs.belinda.djante@gmail.com>
+Date: Wed, 11 Mar 2020 01:49:38 -0700
+Message-ID: <CAD10yUHxmSY+cPdDBha_nF8ZykYLDeO=vs4UF48vWy=iBoO2Hw@mail.gmail.com>
+Subject: Greetings
+To: undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
-Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
-X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 06:00:02PM +0000, Luis Chamberlain wrote:
-> On Wed, Mar 11, 2020 at 10:35:45AM -0700, Eric Biggers wrote:
-> > On Wed, Mar 11, 2020 at 06:31:30AM +0000, Luis Chamberlain wrote:
-> > > On Tue, Mar 10, 2020 at 10:26:20PM -0700, Eric Biggers wrote:
-> > > > On Wed, Mar 11, 2020 at 04:32:21AM +0000, Luis Chamberlain wrote:
-> > > > > On Tue, Mar 10, 2020 at 03:37:31PM -0700, Eric Biggers wrote:
-> > > > > > From: Eric Biggers <ebiggers@google.com>
-> > > > > > 
-> > > > > > It's long been possible to disable kernel module autoloading completely
-> > > > > > by setting /proc/sys/kernel/modprobe to the empty string.  This can be
-> > > > > > preferable
-> > > > > 
-> > > > > preferable but ... not documented. Or was this documented or recommended
-> > > > > somewhere?
-> > > > > 
-> > > > > > to setting it to a nonexistent file since it avoids the
-> > > > > > overhead of an attempted execve(), avoids potential deadlocks, and
-> > > > > > avoids the call to security_kernel_module_request() and thus on
-> > > > > > SELinux-based systems eliminates the need to write SELinux rules to
-> > > > > > dontaudit module_request.
-> > > > 
-> > > > Not that I know of, though I didn't look too hard.  proc(5) mentions
-> > > > /proc/sys/kernel/modprobe but doesn't mention the empty string case.
-> > > > 
-> > > > In any case, it's been supported for a long time, and it's useful for the
-> > > > reasons I mentioned.
-> > > 
-> > > Sure. I think then its important to document it as such then, or perhaps
-> > > make a kconfig option which sets this to empty and document it on the
-> > > kconfig entry.
-> > 
-> > I'll send a man-pages patch to document it in proc(5).
-> > 
-> > Most users, including the one I have in mind, should just be able to run
-> > 'echo > /proc/sys/kernel/modprobe' early in the boot process.  So I don't think
-> > the need for a kconfig option to control the default value has been clearly
-> > demonstrated yet.  You're certainly welcome to send a patch for it if you
-> > believe it would be useful, though.
-> 
-> When doing a rewrite of some of this code I did wonder who would use
-> this and clear it out. A kconfig entry would remove any doubt over its
-> use and would allow one to skip the userspace / early init requirement
-> to empty it out, therefore actually being safer because you are not
-> racing against modules being loaded.
-> 
-> Is avoiding the race more suitable for your needs than echo'ing early on boot?
-> 
+Greetings My Dear Friend,
 
-Maybe.  It would avoid the chance of races, but I haven't seen any yet.
-Also, our userspace has to support old kernels, so we still need the
-'echo > /proc/sys/kernel/modprobe' anyway.  If that turns out to be good enough,
-then it makes things easier for everyone.
+Before I introduce myself, I wish to inform you that this letter is
+not a hoax mail and I urge you to treat it serious.This letter must
+come to you as a big surprise, but I believe it is only a day that
+people meet and become great friends and business partners. Please I
+want you to read this letter very carefully and I must apologize for
+barging this message into your mail box without any formal
+introduction due to the urgency and confidentiality of this business
+and I know that this message will come to you as a surprise. Please
+this is not a joke and I will not like you to joke with it ok,With due
+respect to your person and much sincerity of purpose, I make this
+contact with you as I believe that you can be of great assistance to
+me. My name is Mr.sulaman Kante, from Burkina Faso, West Africa. I
+work with BIB BANK (BIB BANK) as telex manager, please see this as a
+confidential message and do not reveal it to another person and let me
+know whether you can be of assistance regarding my proposal below
+because it is top secret.
 
-If setting the default at build time turns out to be needed, then sure in that
-case I'll send a patch that adds a kconfig option to do that.  But I'm first
-trying to use the existing kernel functionality.
+I am about to retire from active Banking service to start a new life
+but I am skeptical to reveal this particular secret to a stranger. You
+must assure me that everything will be handled confidentially because
+we are not going to suffer again in life. It has been 10 years now
+that most of the greedy African Politicians used our bank to launder
+money overseas through the help of their Political advisers. Most of
+the funds which they transferred out of the shores of Africa were gold
+and oil money that was supposed to have been used to develop the
+continent. Their Political advisers always inflated the amounts before
+transferring to foreign accounts, so I also used the opportunity to
+divert part of the funds hence I am aware that there is no official
+trace of how much was transferred as all the accounts used for such
+transfers were being closed after transfer. I acted as the Bank
+Officer to most of the politicians and when I discovered that they
+were using me to succeed in their greedy act; I also cleaned some of
+their banking records from the Bank files and no one cared to ask me
+because the money was too much for them to control. They laundered
+over $5billion Dollars during the process.
 
-Also, a kconfig option isn't really a substitute for documenting this existing
-sysctl.  We still need to document it properly in proc(5) and
-Documentation/admin-guide/sysctl/kernel.rst.
+Before I send this message to you, I have already diverted
+($10.6million Dollars) to an escrow account belonging to no one in the
+bank. The bank is anxious now to know who the beneficiary to the funds
+is because they have made a lot of profits with the funds. It is more
+than Eight years now and most of the politicians are no longer using
+our bank to transfer funds overseas. The ($10.6million Dollars) has
+been laying waste in our bank and I don=E2=80=99t want to retire from the b=
+ank
+without transferring the funds to a foreign account to enable me share
+the proceeds with the receiver (a foreigner). The money will be shared
+60% for me and 40% for you. There is no one coming to ask you about
+the funds because I secured everything. I only want you to assist me
+by providing a reliable bank account where the funds can be
+transferred.
 
-- Eric
+You are not to face any difficulties or legal implications as I am
+going to handle the transfer personally. If you are capable of
+receiving the funds, do let me know immediately to enable me give you
+a detailed information on what to do. For me, I have not stolen the
+money from anyone because the other people that took the whole money
+did not face any problems. This is my chance to grab my own life
+opportunity but you must keep the details of the funds secret to avoid
+any leakages as no one in the bank knows about my plans.Please get
+back to me if you are interested and capable to handle this project, I
+shall intimate you on what to do when I hear from your confirmation
+and acceptance.If you are capable of being my trusted associate, do
+declare your consent to me I am looking forward to hear from you
+immediately for further information
+Thanks with my best regards.
+Mr.sulaman Kante,
+Telex Manager
+(BIB BANK)
+Burkina Faso.
+
