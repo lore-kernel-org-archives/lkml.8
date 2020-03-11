@@ -1,60 +1,59 @@
 Return-Path: <linux-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	RDNS_NONE,SPF_NONE autolearn=no autolearn_force=no version=3.4.0
-Received: from mga12.intel.com ([192.55.52.136]:45305 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730123AbgCKQLy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 12:11:54 -0400
-Date: Wed, 11 Mar 2020 09:11:52 -0700
-From: Sean Christopherson <sean.j.christopherson@intel.com>
-To: Peter Xu <peterx@redhat.com>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Yan Zhao <yan.y.zhao@intel.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Christophe de Dinechin <dinechin@redhat.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [PATCH v6 03/14] KVM: X86: Don't track dirty for
- KVM_SET_[TSS_ADDR|IDENTITY_MAP_ADDR]
-Message-ID: <20200311161152.GF21852@linux.intel.com>
-References: <20200309214424.330363-1-peterx@redhat.com>
- <20200309214424.330363-4-peterx@redhat.com>
- <20200310150637.GB7600@linux.intel.com>
- <20200311160119.GF479302@xz-x1>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200311160119.GF479302@xz-x1>
+X-Spam-Level: 
+X-Spam-Status: No, score=-4.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,PDS_HP_HELO_NORDNS,RDNS_NONE,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_NONE autolearn=no autolearn_force=no version=3.4.0
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:38879 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730040AbgCKQMq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 12:12:46 -0400
+Received: by mail-wr1-f66.google.com with SMTP id t11so3400093wrw.5
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 09:12:45 -0700 (PDT)
+From: Jack Wang <jinpu.wang@cloud.ionos.com>
+To: linux-block@vger.kernel.org, linux-rdma@vger.kernel.org
+Cc: axboe@kernel.dk, hch@infradead.org, sagi@grimberg.me,
+        bvanassche@acm.org, leon@kernel.org, dledford@redhat.com,
+        jgg@ziepe.ca, danil.kipnis@cloud.ionos.com,
+        jinpu.wang@cloud.ionos.com, rpenyaev@suse.de,
+        pankaj.gupta@cloud.ionos.com,
+        Roman Pen <roman.penyaev@profitbricks.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v10 01/26] sysfs: export sysfs_remove_file_self()
+Date: Wed, 11 Mar 2020 17:12:15 +0100
+Message-Id: <20200311161240.30190-2-jinpu.wang@cloud.ionos.com>
+In-Reply-To: <20200311161240.30190-1-jinpu.wang@cloud.ionos.com>
+References: <20200311161240.30190-1-jinpu.wang@cloud.ionos.com>
 Sender: linux-kernel-owner@vger.kernel.org
 List-ID: <linux-kernel.vger.kernel.org>
 
-On Wed, Mar 11, 2020 at 12:01:19PM -0400, Peter Xu wrote:
-> On Tue, Mar 10, 2020 at 08:06:37AM -0700, Sean Christopherson wrote:
-> > On Mon, Mar 09, 2020 at 05:44:13PM -0400, Peter Xu wrote:
-> > > -	idx = srcu_read_lock(&kvm->srcu);
-> > > -	fn = to_kvm_vmx(kvm)->tss_addr >> PAGE_SHIFT;
-> > > -	r = kvm_clear_guest_page(kvm, fn, 0, PAGE_SIZE);
-> > > -	if (r < 0)
-> > > -		goto out;
-> > > +	for (idx = 0; idx < 3; idx++) {
-> > > +		r = __copy_to_user(ua + PAGE_SIZE * idx, zero_page, PAGE_SIZE);
-> > > +		if (r)
-> > > +			return -EFAULT;
-> > > +	}
-> > 
-> > Can this be done in a single __copy_to_user(), or do those helpers not like
-> > crossing page boundaries?
-> 
-> Maybe because the zero_page is only PAGE_SIZE long? :)
+Function is going to be used in transport over RDMA module
+in subsequent patches, so export it to GPL modules.
 
-Ha, yeah, that'd be a good reason to loop.
+Signed-off-by: Roman Pen <roman.penyaev@profitbricks.com>
+Acked-by: Tejun Heo <tj@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+[jwang: extend the commit message]
+Signed-off-by: Jack Wang <jinpu.wang@cloud.ionos.com>
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+---
+ fs/sysfs/file.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-> [...]
+diff --git a/fs/sysfs/file.c b/fs/sysfs/file.c
+index 130fc6fbcc03..1ff4672d7746 100644
+--- a/fs/sysfs/file.c
++++ b/fs/sysfs/file.c
+@@ -492,6 +492,7 @@ bool sysfs_remove_file_self(struct kobject *kobj, const struct attribute *attr)
+ 	kernfs_put(kn);
+ 	return ret;
+ }
++EXPORT_SYMBOL_GPL(sysfs_remove_file_self);
+ 
+ void sysfs_remove_files(struct kobject *kobj, const struct attribute * const *ptr)
+ {
+-- 
+2.17.1
 
