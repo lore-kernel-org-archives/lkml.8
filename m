@@ -2,230 +2,503 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11FC5C2BAEE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 22:22:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1817BC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 22:23:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0ADB520750
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 22:22:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03AC52074F
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 22:23:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sEVwc1UO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729999AbgCKWWi (ORCPT
+        id S1730134AbgCKWXh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 18:22:38 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58788 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729506AbgCKWWi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 18:22:38 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 871E5B120;
-        Wed, 11 Mar 2020 22:22:34 +0000 (UTC)
-From:   NeilBrown <neilb@suse.de>
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Jeff Layton <jlayton@kernel.org>
-Date:   Thu, 12 Mar 2020 09:22:26 +1100
-Cc:     yangerkun <yangerkun@huawei.com>,
-        kernel test robot <rong.a.chen@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org,
-        Bruce Fields <bfields@fieldses.org>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Subject: Re: [locks] 6d390e4b5d: will-it-scale.per_process_ops -96.6% regression
-In-Reply-To: <CAHk-=whUgeZGcs5YAfZa07BYKNDCNO=xr4wT6JLATJTpX0bjGg@mail.gmail.com>
-References: <20200308140314.GQ5972@shao2-debian> <e3783d060c778cb41b77380ad3e278133b52f57e.camel@kernel.org> <CAHk-=whGK712fPqmQ3FSHxqe3Aqny4bEeWEvfaytLeLV2+ijCQ@mail.gmail.com> <34355c4fe6c3968b1f619c60d5ff2ca11a313096.camel@kernel.org> <1bfba96b4bf0d3ca9a18a2bced3ef3a2a7b44dad.camel@kernel.org> <87blp5urwq.fsf@notabene.neil.brown.name> <41c83d34ae4c166f48e7969b2b71e43a0f69028d.camel@kernel.org> <ed73fb5d-ddd5-fefd-67ae-2d786e68544a@huawei.com> <923487db2c9396c79f8e8dd4f846b2b1762635c8.camel@kernel.org> <36c58a6d07b67aac751fca27a4938dc1759d9267.camel@kernel.org> <878sk7vs8q.fsf@notabene.neil.brown.name> <c4ef31a663fbf7a3de349696e9f00f2f5c4ec89a.camel@kernel.org> <875zfbvrbm.fsf@notabene.neil.brown.name> <CAHk-=wg8N4fDRC3M21QJokoU+TQrdnv7HqoaFW-Z-ZT8z_Bi7Q@mail.gmail.com> <0066a9f150a55c13fcc750f6e657deae4ebdef97.camel@kernel.org> <CAHk-=whUgeZGcs5YAfZa07BYKNDCNO=xr4wT6JLATJTpX0bjGg@mail.gmail.com>
-Message-ID: <87v9nattul.fsf@notabene.neil.brown.name>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+        Wed, 11 Mar 2020 18:23:37 -0400
+Received: from mail-pg1-f201.google.com ([209.85.215.201]:34907 "EHLO
+        mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729506AbgCKWXh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 18:23:37 -0400
+Received: by mail-pg1-f201.google.com with SMTP id w8so2175546pgr.2
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Mar 2020 15:23:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=U1iDEFww1El8Gt3tduRVoHHQdOCf1b56TafCNW0JF/k=;
+        b=sEVwc1UOBv3VuEQdbGvIlYBgWBX9D5LBgKc0pHQga6mdAVXEcAhDqMVylP1BOQq9eF
+         95IpyRVVUevnLdQPbuGavljctufDUdoUnDjn3g0O4BK69JGE3V5pWtp6Oz6RsNT5Auhc
+         Uu52Q47dquYxfNtPVchhlmv88Dbv68m2kIi1urohmXZoVklMGNpDku+awGzifErSK+dd
+         kJMfYOTDi0KUXPa3DXFeeAgqRq6zpEnuU9DLvl5WUrhvGE0jP1CzPvSZdYJg++UXWTV7
+         jdJjwDZnUooCQwEr1xla9kX0a17STbuZlnHJhFk5Yss1ujt5Zgrrk3TeMCYL5p0HILDS
+         fovg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=U1iDEFww1El8Gt3tduRVoHHQdOCf1b56TafCNW0JF/k=;
+        b=daO0yOUrBJjh5FTF72kvcBKdL7BGl/D/NHI2okdm36UTn5LGey9USS5S3yNaSHLmED
+         yJ5UGk6BYCCiqO3T32WkT975Loecy6xEQb7348eWhLe62Xnj6XA7/ddSVLYa0B+JJUgO
+         1qMwddd2UAfpRm0EXvwHtSwxmOLM+0ATiYvYKxViaNIW6/qhRAu89qCPJp/xmknyAD6w
+         97ITmHAq2gIe84zWWSYiXssPbQa3FQWpsD0jJ8iV0VKWyTzw3JxidWTCNqgTfg/PEPrV
+         FSBhwrG/2OCPGjMpdviDFL+VH1CLo27WveX9D5EGa5GWUIJr39mAHzYU65d7HFUlTaxr
+         91Ig==
+X-Gm-Message-State: ANhLgQ3H07Vit6vxgGeae0YM1K7oHCQbM+F5NdlBdDTolPvcZGt1LTcl
+        MClF1oGXAiVia8teiCl+V5Mx6LY8ACZPdg==
+X-Google-Smtp-Source: ADFU+vtPmQMywB2cfUJ8IMDMCSLvMM0dwQYxNSolQ4ed+sEYHP4nCR3VOvylDNPizZTqIGFDCYaWDmt8o2dbUw==
+X-Received: by 2002:a63:cb:: with SMTP id 194mr1177160pga.37.1583965413686;
+ Wed, 11 Mar 2020 15:23:33 -0700 (PDT)
+Date:   Wed, 11 Mar 2020 15:21:58 -0700
+Message-Id: <20200311222157.259707-1-davidgow@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
+Subject: [RFC PATCH kunit-next] kunit: kunit_tool: Separate out config/build/exec/parse
+From:   David Gow <davidgow@google.com>
+To:     Brendan Higgins <brendanhiggins@google.com>
+Cc:     linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org, David Gow <davidgow@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+Add new subcommands to kunit.py to allow stages of the existing 'run'
+subcommand to be run independently:
+- 'config': Verifies that .config is a subset of .kunitconfig
+- 'build': Compiles a UML kernel for KUnit
+- 'exec': Runs the kernel, and outputs the test results.
+- 'parse': Parses test results from a file or stdin
 
-On Tue, Mar 10 2020, Linus Torvalds wrote:
+Most of these are not hugely useful by themselves yet, and there's room
+for plenty of bikeshedding on the names, but this hopefully can form a
+foundation for future improvements.
 
-> On Tue, Mar 10, 2020 at 3:07 PM Jeff Layton <jlayton@kernel.org> wrote:
->>
->> Given that, and the fact that Neil pointed out that yangerkun's latest
->> patch would reintroduce the original race, I'm leaning back toward the
->> patch Neil sent yesterday. It relies solely on spinlocks, and so doesn't
->> have the subtle memory-ordering requirements of the others.
->
-> It has subtle locking changes, though.
->
-> It now calls the "->lm_notify()" callback with the wait queue spinlock he=
-ld.
->
-> is that ok? It's not obvious. Those functions take other spinlocks,
-> and wake up other things. See for example nlmsvc_notify_blocked()..
-> Yes, it was called under the blocked_lock_lock spinlock before too,
-> but now there's an _additional_ spinlock, and it must not call
-> "wake_up(&waiter->fl_wait))" in the callback, for example, because it
-> already holds the lock on that wait queue.
->
-> Maybe that is never done. I don't know the callbacks.
->
-> I was really hoping that the simple memory ordering of using that
-> smp_store_release -> smp_load_acquire using fl_blocker would be
-> sufficient. That's a particularly simple and efficient ordering.
->
-> Oh well. If you want to go that spinlock way, it needs to document why
-> it's safe to do a callback under it.
->
->                   Linus
+Signed-off-by: David Gow <davidgow@google.com>
+---
+[Whoops: typo-ed Brendan's email. Sorry about that!]
 
-I've learn recently to dislike calling callbacks while holding a lock.
-I don't think the current callbacks care, but the requirement imposes a
-burden on future callbacks too.
+As was briefly disccussed in [1], this change is part of a "separation
+of concerns" in kunit_tool. This should make it easier to integrate
+kunit_tool into other setups.
 
-We can combine the two ideas - move the list_del_init() later, and still
-protect it with the wq locks.  This avoids holding the lock across the
-callback, but provides clear atomicity guarantees.
+Of particular intrest is probably 'kunit.py parse', which should allow
+KUnit results to be parsed from other sources, such as after loading a
+module, or from a non-UML kernel, or from debugfs when that's
+supported[2].
 
-NeilBrown
+[1]: https://lkml.org/lkml/2020/2/5/552
+[2]: https://patchwork.kernel.org/patch/11419901/
 
-From: NeilBrown <neilb@suse.de>
-Subject: [PATCH] Subject: [PATCH] locks: restore locks_delete_lock
- optimization
+ tools/testing/kunit/kunit.py           | 236 ++++++++++++++++++++-----
+ tools/testing/kunit/kunit_tool_test.py |  55 ++++++
+ 2 files changed, 242 insertions(+), 49 deletions(-)
 
-A recent patch (see Fixes: below) removed an optimization which is
-important as it avoids taking a lock in a common case.
+diff --git a/tools/testing/kunit/kunit.py b/tools/testing/kunit/kunit.py
+index 180ad1e1b04f..92a634594cf6 100755
+--- a/tools/testing/kunit/kunit.py
++++ b/tools/testing/kunit/kunit.py
+@@ -20,8 +20,12 @@ import kunit_config
+ import kunit_kernel
+ import kunit_parser
+ 
+-KunitResult = namedtuple('KunitResult', ['status','result'])
++KunitResult = namedtuple('KunitResult', ['status','result','elapsed_time'])
+ 
++KunitConfigRequest = namedtuple('KunitConfigRequest', ['build_dir', 'defconfig'])
++KunitBuildRequest = namedtuple('KunitBuildRequest', ['jobs', 'build_dir'])
++KunitExecRequest = namedtuple('KunitExecRequest', ['timeout', 'build_dir'])
++KunitParseRequest = namedtuple('KunitParseRequest', ['raw_output', 'input_data'])
+ KunitRequest = namedtuple('KunitRequest', ['raw_output','timeout', 'jobs', 'build_dir', 'defconfig'])
+ 
+ KernelDirectoryPath = sys.argv[0].split('tools/testing/kunit/')[0]
+@@ -44,14 +48,25 @@ def get_kernel_root_path():
+ 		sys.exit(1)
+ 	return parts[0]
+ 
+-def run_tests(linux: kunit_kernel.LinuxSourceTree,
+-	      request: KunitRequest) -> KunitResult:
++def config_tests(linux: kunit_kernel.LinuxSourceTree,
++		 request: KunitConfigRequest) -> KunitResult:
++	kunit_parser.print_with_timestamp('Configuring KUnit Kernel ...')
++
+ 	config_start = time.time()
++	if request.defconfig:
++		create_default_kunitconfig()
+ 	success = linux.build_reconfig(request.build_dir)
+ 	config_end = time.time()
+ 	if not success:
+-		return KunitResult(KunitStatus.CONFIG_FAILURE, 'could not configure kernel')
++		return KunitResult(KunitStatus.CONFIG_FAILURE,
++				   'could not configure kernel',
++				   config_end - config_start)
++	return KunitResult(KunitStatus.SUCCESS,
++			   'configured kernel successfully',
++			   config_end - config_start)
+ 
++def build_tests(linux: kunit_kernel.LinuxSourceTree,
++		request: KunitBuildRequest) -> KunitResult:
+ 	kunit_parser.print_with_timestamp('Building KUnit Kernel ...')
+ 
+ 	build_start = time.time()
+@@ -59,73 +74,156 @@ def run_tests(linux: kunit_kernel.LinuxSourceTree,
+ 	build_end = time.time()
+ 	if not success:
+ 		return KunitResult(KunitStatus.BUILD_FAILURE, 'could not build kernel')
++	if not success:
++		return KunitResult(KunitStatus.BUILD_FAILURE,
++				   'could not build kernel',
++				   build_end - build_start)
++	return KunitResult(KunitStatus.SUCCESS,
++			   'built kernel successfully',
++			   build_end - build_start)
+ 
++def exec_tests(linux: kunit_kernel.LinuxSourceTree,
++	       request: KunitExecRequest) -> KunitResult:
+ 	kunit_parser.print_with_timestamp('Starting KUnit Kernel ...')
+ 	test_start = time.time()
+ 
++	result = linux.run_kernel(timeout=request.timeout,
++				  build_dir=request.build_dir)
++	test_end = time.time()
++
++	return KunitResult(KunitStatus.SUCCESS,
++			   result,
++			   test_end - test_start)
++
++def parse_tests(request: KunitParseRequest) -> KunitResult:
++	parse_start = time.time()
++
+ 	test_result = kunit_parser.TestResult(kunit_parser.TestStatus.SUCCESS,
+ 					      [],
+ 					      'Tests not Parsed.')
+ 	if request.raw_output:
+-		kunit_parser.raw_output(
+-			linux.run_kernel(timeout=request.timeout,
+-					 build_dir=request.build_dir))
++		kunit_parser.raw_output(request.input_data)
+ 	else:
+-		kunit_output = linux.run_kernel(timeout=request.timeout,
+-						build_dir=request.build_dir)
+-		test_result = kunit_parser.parse_run_tests(kunit_output)
+-	test_end = time.time()
++		test_result = kunit_parser.parse_run_tests(request.input_data)
++	parse_end = time.time()
++
++	if test_result.status != kunit_parser.TestStatus.SUCCESS:
++		return KunitResult(KunitStatus.TEST_FAILURE, test_result,
++				   parse_end - parse_start)
++
++	return KunitResult(KunitStatus.SUCCESS, test_result,
++				parse_end - parse_start)
++
++
++def run_tests(linux: kunit_kernel.LinuxSourceTree,
++	      request: KunitRequest) -> KunitResult:
++	run_start = time.time()
++
++	config_request = KunitConfigRequest(request.build_dir, request.defconfig)
++	config_result = config_tests(linux, config_request)
++	if config_result.status != KunitStatus.SUCCESS:
++		return config_result
++
++	build_request = KunitBuildRequest(request.jobs, request.build_dir)
++	build_result = build_tests(linux, build_request)
++	if build_result.status != KunitStatus.SUCCESS:
++		return build_result
++
++	exec_request = KunitExecRequest(request.timeout, request.build_dir)
++	exec_result = exec_tests(linux, exec_request)
++	if exec_result.status != KunitStatus.SUCCESS:
++		return exec_result
++
++	parse_request = KunitParseRequest(request.raw_output, exec_result.result)
++	parse_result = parse_tests(parse_request)
++
++	run_end = time.time()
+ 
+ 	kunit_parser.print_with_timestamp((
+ 		'Elapsed time: %.3fs total, %.3fs configuring, %.3fs ' +
+ 		'building, %.3fs running\n') % (
+-				test_end - config_start,
+-				config_end - config_start,
+-				build_end - build_start,
+-				test_end - test_start))
++				run_end - run_start,
++				config_result.elapsed_time,
++				build_result.elapsed_time,
++				exec_result.elapsed_time))
++	return parse_result
++
++def add_common_opts(parser):
++	parser.add_argument('--build_dir',
++			    help='As in the make command, it specifies the build '
++			    'directory.',
++			    type=str, default='', metavar='build_dir')
++
++def add_config_opts(parser):
++	parser.add_argument('--defconfig',
++				help='Uses a default .kunitconfig.',
++				action='store_true')
++
++def add_build_opts(parser):
++	parser.add_argument('--jobs',
++			    help='As in the make command, "Specifies  the number of '
++			    'jobs (commands) to run simultaneously."',
++			    type=int, default=8, metavar='jobs')
++
++def add_exec_opts(parser):
++	parser.add_argument('--timeout',
++			    help='maximum number of seconds to allow for all tests '
++			    'to run. This does not include time taken to build the '
++			    'tests.',
++			    type=int,
++			    default=300,
++			    metavar='timeout')
++
++def add_parse_opts(parser):
++	parser.add_argument('--raw_output', help='don\'t format output from kernel',
++			    action='store_true')
+ 
+-	if test_result.status != kunit_parser.TestStatus.SUCCESS:
+-		return KunitResult(KunitStatus.TEST_FAILURE, test_result)
+-	else:
+-		return KunitResult(KunitStatus.SUCCESS, test_result)
+ 
+ def main(argv, linux=None):
+ 	parser = argparse.ArgumentParser(
+ 			description='Helps writing and running KUnit tests.')
+ 	subparser = parser.add_subparsers(dest='subcommand')
+ 
++	# The 'run' command will config, build, exec, and parse in one go.
+ 	run_parser = subparser.add_parser('run', help='Runs KUnit tests.')
+-	run_parser.add_argument('--raw_output', help='don\'t format output from kernel',
+-				action='store_true')
++	add_common_opts(run_parser)
++	add_config_opts(run_parser)
++	add_build_opts(run_parser)
++	add_exec_opts(run_parser)
++	add_parse_opts(run_parser)
+ 
+-	run_parser.add_argument('--timeout',
+-				help='maximum number of seconds to allow for all tests '
+-				'to run. This does not include time taken to build the '
+-				'tests.',
+-				type=int,
+-				default=300,
+-				metavar='timeout')
+-
+-	run_parser.add_argument('--jobs',
+-				help='As in the make command, "Specifies  the number of '
+-				'jobs (commands) to run simultaneously."',
+-				type=int, default=8, metavar='jobs')
+-
+-	run_parser.add_argument('--build_dir',
+-				help='As in the make command, it specifies the build '
+-				'directory.',
+-				type=str, default='', metavar='build_dir')
+-
+-	run_parser.add_argument('--defconfig',
+-				help='Uses a default .kunitconfig.',
+-				action='store_true')
++	config_parser = subparser.add_parser('config',
++						help='Ensures that .config contains all of '
++						'the options in .kunitconfig')
++	add_common_opts(config_parser)
++	add_config_opts(config_parser)
+ 
+-	cli_args = parser.parse_args(argv)
++	build_parser = subparser.add_parser('build', help='Builds a kernel with KUnit tests')
++	add_common_opts(build_parser)
++	add_build_opts(build_parser)
+ 
+-	if cli_args.subcommand == 'run':
+-		if get_kernel_root_path():
+-			os.chdir(get_kernel_root_path())
++	exec_parser = subparser.add_parser('exec', help='Run a kernel with KUnit tests')
++	add_common_opts(exec_parser)
++	add_exec_opts(exec_parser)
++	add_parse_opts(exec_parser)
++
++	# The 'parse' option is special, as it doesn't need the kernel source
++	# (therefore there is no need for a build_dir, hence no add_common_opts)
++	# and the '--file' argument is not relevant to 'run', so isn't in
++	# add_parse_opts()
++	parse_parser = subparser.add_parser('parse',
++					    help='Parses KUnit results from a file, '
++					    'and parses formatted results.')
++	add_parse_opts(parse_parser)
++	parse_parser.add_argument('file',
++				  help='Specifies the file to read results from.',
++				  type=str, default='-', metavar='input_file')
++
++	cli_args = parser.parse_args(argv)
+ 
++	# Set up the build_dir and source tree for commands which use it
++	# (everything but 'parse')
++	if cli_args.subcommand != 'parse':
+ 		if cli_args.build_dir:
+ 			if not os.path.exists(cli_args.build_dir):
+ 				os.mkdir(cli_args.build_dir)
+@@ -133,12 +231,11 @@ def main(argv, linux=None):
+ 				cli_args.build_dir,
+ 				kunit_kernel.kunitconfig_path)
+ 
+-		if cli_args.defconfig:
+-			create_default_kunitconfig()
+-
+ 		if not linux:
+ 			linux = kunit_kernel.LinuxSourceTree()
+ 
++
++	if cli_args.subcommand == 'run':
+ 		request = KunitRequest(cli_args.raw_output,
+ 				       cli_args.timeout,
+ 				       cli_args.jobs,
+@@ -147,6 +244,47 @@ def main(argv, linux=None):
+ 		result = run_tests(linux, request)
+ 		if result.status != KunitStatus.SUCCESS:
+ 			sys.exit(1)
++	elif cli_args.subcommand == 'config':
++		request = KunitConfigRequest(cli_args.build_dir,
++					     cli_args.defconfig)
++		result = config_tests(linux, request)
++		kunit_parser.print_with_timestamp((
++			'Elapsed time: %.3fs\n') % (
++				result.elapsed_time))
++		if result.status != KunitStatus.SUCCESS:
++			sys.exit(1)
++	elif cli_args.subcommand == 'build':
++		request = KunitBuildRequest(cli_args.jobs,
++					    cli_args.build_dir)
++		result = build_tests(linux, request)
++		kunit_parser.print_with_timestamp((
++			'Elapsed time: %.3fs\n') % (
++				result.elapsed_time))
++		if result.status != KunitStatus.SUCCESS:
++			sys.exit(1)
++	elif cli_args.subcommand == 'exec':
++		exec_request = KunitExecRequest(cli_args.timeout,
++						cli_args.build_dir)
++		exec_result = exec_tests(linux, exec_request)
++		parse_request = KunitParseRequest(cli_args.raw_output,
++						  exec_result.result)
++		result = parse_tests(parse_request)
++		kunit_parser.print_with_timestamp((
++			'Elapsed time: %.3fs\n') % (
++				exec_result.elapsed_time))
++		if result.status != KunitStatus.SUCCESS:
++			sys.exit(1)
++	elif cli_args.subcommand == 'parse':
++		if cli_args.file == '-':
++			kunit_output = sys.stdin
++		else:
++			with open(cli_args.file, 'r') as f:
++				kunit_output = f.read().splitlines()
++		request = KunitParseRequest(cli_args.raw_output,
++					    kunit_output)
++		result = parse_tests(request)
++		if result.status != KunitStatus.SUCCESS:
++			sys.exit(1)
+ 	else:
+ 		parser.print_help()
+ 
+diff --git a/tools/testing/kunit/kunit_tool_test.py b/tools/testing/kunit/kunit_tool_test.py
+index cba97756ac4a..0d04425ead04 100755
+--- a/tools/testing/kunit/kunit_tool_test.py
++++ b/tools/testing/kunit/kunit_tool_test.py
+@@ -170,6 +170,24 @@ class KUnitMainTest(unittest.TestCase):
+ 		self.print_patch.stop()
+ 		pass
+ 
++	def test_config_passes_args_pass(self):
++		kunit.main(['config'], self.linux_source_mock)
++		assert self.linux_source_mock.build_reconfig.call_count == 1
++		assert self.linux_source_mock.run_kernel.call_count == 0
++
++	def test_build_passes_args_pass(self):
++		kunit.main(['build'], self.linux_source_mock)
++		assert self.linux_source_mock.build_reconfig.call_count == 0
++		self.linux_source_mock.build_um_kernel.assert_called_once_with(8, '')
++		assert self.linux_source_mock.run_kernel.call_count == 0
++
++	def test_exec_passes_args_pass(self):
++		kunit.main(['exec'], self.linux_source_mock)
++		assert self.linux_source_mock.build_reconfig.call_count == 0
++		assert self.linux_source_mock.run_kernel.call_count == 1
++		self.linux_source_mock.run_kernel.assert_called_once_with(build_dir='', timeout=300)
++		self.print_mock.assert_any_call(StrContains('Testing complete.'))
++
+ 	def test_run_passes_args_pass(self):
+ 		kunit.main(['run'], self.linux_source_mock)
+ 		assert self.linux_source_mock.build_reconfig.call_count == 1
+@@ -177,6 +195,13 @@ class KUnitMainTest(unittest.TestCase):
+ 		self.linux_source_mock.run_kernel.assert_called_once_with(build_dir='', timeout=300)
+ 		self.print_mock.assert_any_call(StrContains('Testing complete.'))
+ 
++	def test_exec_passes_args_fail(self):
++		self.linux_source_mock.run_kernel = mock.Mock(return_value=[])
++		with self.assertRaises(SystemExit) as e:
++			kunit.main(['exec'], self.linux_source_mock)
++		assert type(e.exception) == SystemExit
++		assert e.exception.code == 1
++
+ 	def test_run_passes_args_fail(self):
+ 		self.linux_source_mock.run_kernel = mock.Mock(return_value=[])
+ 		with self.assertRaises(SystemExit) as e:
+@@ -187,6 +212,14 @@ class KUnitMainTest(unittest.TestCase):
+ 		assert self.linux_source_mock.run_kernel.call_count == 1
+ 		self.print_mock.assert_any_call(StrContains(' 0 tests run'))
+ 
++	def test_exec_raw_output(self):
++		self.linux_source_mock.run_kernel = mock.Mock(return_value=[])
++		kunit.main(['exec', '--raw_output'], self.linux_source_mock)
++		assert self.linux_source_mock.run_kernel.call_count == 1
++		for kall in self.print_mock.call_args_list:
++			assert kall != mock.call(StrContains('Testing complete.'))
++			assert kall != mock.call(StrContains(' 0 tests run'))
++
+ 	def test_run_raw_output(self):
+ 		self.linux_source_mock.run_kernel = mock.Mock(return_value=[])
+ 		kunit.main(['run', '--raw_output'], self.linux_source_mock)
+@@ -196,6 +229,12 @@ class KUnitMainTest(unittest.TestCase):
+ 			assert kall != mock.call(StrContains('Testing complete.'))
+ 			assert kall != mock.call(StrContains(' 0 tests run'))
+ 
++	def test_exec_timeout(self):
++		timeout = 3453
++		kunit.main(['exec', '--timeout', str(timeout)], self.linux_source_mock)
++		self.linux_source_mock.run_kernel.assert_called_once_with(build_dir='', timeout=timeout)
++		self.print_mock.assert_any_call(StrContains('Testing complete.'))
++
+ 	def test_run_timeout(self):
+ 		timeout = 3453
+ 		kunit.main(['run', '--timeout', str(timeout)], self.linux_source_mock)
+@@ -210,5 +249,21 @@ class KUnitMainTest(unittest.TestCase):
+ 		self.linux_source_mock.run_kernel.assert_called_once_with(build_dir=build_dir, timeout=300)
+ 		self.print_mock.assert_any_call(StrContains('Testing complete.'))
+ 
++	def test_config_builddir(self):
++		build_dir = '.kunit'
++		kunit.main(['config', '--build_dir', build_dir], self.linux_source_mock)
++		assert self.linux_source_mock.build_reconfig.call_count == 1
++
++	def test_build_builddir(self):
++		build_dir = '.kunit'
++		kunit.main(['build', '--build_dir', build_dir], self.linux_source_mock)
++		self.linux_source_mock.build_um_kernel.assert_called_once_with(8, build_dir)
++
++	def test_exec_builddir(self):
++		build_dir = '.kunit'
++		kunit.main(['exec', '--build_dir', build_dir], self.linux_source_mock)
++		self.linux_source_mock.run_kernel.assert_called_once_with(build_dir=build_dir, timeout=300)
++		self.print_mock.assert_any_call(StrContains('Testing complete.'))
++
+ if __name__ == '__main__':
+ 	unittest.main()
+-- 
+2.25.1.481.gfbce0eb801-goog
 
-The comment justifying the optimisation was correct as far as it went,
-in that if the tests succeeded, then the values would remain stable and
-the test result will remain valid even without a lock.
-
-However after the test succeeds the lock can be freed while some other
-thread might have only just set ->blocker to NULL (thus allowing the
-test to succeed) but has not yet called wake_up() on the wq in the lock.
-If the wake_up happens after the lock is freed, a use-after-free error occu=
-rs.
-
-This patch restores the optimization and reorders code to avoid the
-use-after-free.  Specifically we move the list_del_init on
-fl_blocked_member to *after* the wake_up(), and add an extra test on
-fl_block_member() to locks_delete_lock() before deciding to avoid taking
-the spinlock.
-
-To ensure correct ordering for the list_empty() test and the
-list_del_init() call, we protect them both with the wq spinlock.  This
-provides required atomicity, while scaling much better than taking the
-global blocked_lock_lock.
-
-Fixes: 6d390e4b5d48 ("locks: fix a potential use-after-free problem when wa=
-keup a waiter")
-Signed-off-by: NeilBrown <neilb@suse.de>
-=2D--
- fs/locks.c | 46 ++++++++++++++++++++++++++++++++++++++--------
- 1 file changed, 38 insertions(+), 8 deletions(-)
-
-diff --git a/fs/locks.c b/fs/locks.c
-index 426b55d333d5..16098a209d63 100644
-=2D-- a/fs/locks.c
-+++ b/fs/locks.c
-@@ -721,11 +721,19 @@ static void locks_delete_global_blocked(struct file_l=
-ock *waiter)
-  *
-  * Must be called with blocked_lock_lock held.
-  */
-=2Dstatic void __locks_delete_block(struct file_lock *waiter)
-+static void __locks_delete_block(struct file_lock *waiter, bool notify)
- {
- 	locks_delete_global_blocked(waiter);
-=2D	list_del_init(&waiter->fl_blocked_member);
- 	waiter->fl_blocker =3D NULL;
-+	if (notify) {
-+		if (waiter->fl_lmops && waiter->fl_lmops->lm_notify)
-+			waiter->fl_lmops->lm_notify(waiter);
-+		else
-+			wake_up(&waiter->fl_wait);
-+	}
-+	spin_lock(&waiter->fl_wait.lock);
-+	list_del_init(&waiter->fl_blocked_member);
-+	spin_unlock(&waiter->fl_wait.lock);
- }
-=20
- static void __locks_wake_up_blocks(struct file_lock *blocker)
-@@ -735,11 +743,7 @@ static void __locks_wake_up_blocks(struct file_lock *b=
-locker)
-=20
- 		waiter =3D list_first_entry(&blocker->fl_blocked_requests,
- 					  struct file_lock, fl_blocked_member);
-=2D		__locks_delete_block(waiter);
-=2D		if (waiter->fl_lmops && waiter->fl_lmops->lm_notify)
-=2D			waiter->fl_lmops->lm_notify(waiter);
-=2D		else
-=2D			wake_up(&waiter->fl_wait);
-+		__locks_delete_block(waiter, true);
- 	}
- }
-=20
-@@ -753,11 +757,37 @@ int locks_delete_block(struct file_lock *waiter)
- {
- 	int status =3D -ENOENT;
-=20
-+	/*
-+	 * If fl_blocker is NULL, it won't be set again as this thread
-+	 * "owns" the lock and is the only one that might try to claim
-+	 * the lock.  So it is safe to test fl_blocker locklessly.
-+	 * Also if fl_blocker is NULL, this waiter is not listed on
-+	 * fl_blocked_requests for some lock, so no other request can
-+	 * be added to the list of fl_blocked_requests for this
-+	 * request.  So if fl_blocker is NULL, it is safe to
-+	 * locklessly check if fl_blocked_requests is empty.  If both
-+	 * of these checks succeed, there is no need to take the lock.
-+	 * We also check fl_blocked_member is empty un the fl_wait.lock.
-+	 * If this fails, __locks_delete_block() must still be notifying
-+	 * waiters, so it isn't yet safe to return and free the file_lock.
-+	 * Doing this under fl_wait.lock allows significantly better scaling
-+	 * than unconditionally taking blocks_lock_lock.
-+	 */
-+	if (waiter->fl_blocker =3D=3D NULL &&
-+	    list_empty(&waiter->fl_blocked_requests)) {
-+		spin_lock(&waiter->fl_wait.lock);
-+		if (list_empty(&waiter->fl_blocked_member)) {
-+			spin_unlock(&waiter->fl_wait.lock);
-+			return status;
-+		}
-+		/* Notification is still happening */
-+		spin_unlock(&waiter->fl_wait.lock);
-+	}
- 	spin_lock(&blocked_lock_lock);
- 	if (waiter->fl_blocker)
- 		status =3D 0;
- 	__locks_wake_up_blocks(waiter);
-=2D	__locks_delete_block(waiter);
-+	__locks_delete_block(waiter, false);
- 	spin_unlock(&blocked_lock_lock);
- 	return status;
- }
-=2D-=20
-2.25.1
-
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl5pZKIACgkQOeye3VZi
-gblaRQ//Zv/qB6qeBxOzj+SUU1zKJYz61dPDpVVmXD9KiV6Yr6udcKEZ1G01os6b
-zqUyd6VBIe+bqx+moaEKwMvjY7ksvZbLfyW3uGvJ2hMrlgis4ZWUWVu3e0O89uX2
-/YWNABeXVYWZwoafPmy6Zz4cWsD5Ku0/GkpQP6lxLufsEb1AijOGjsBWGg01vqV1
-zj1fvzNKckzRGHCS0aaA3dJ2rh0TnPJwXvkUNbOECsjNfvSWAuJFt/e1IWGH3vJJ
-ELuNnrioDCh/leuS5KOoZp0BJGBf7a8nRkkJUMKcrHvDZUy82UilDSBNvsv3s9N5
-OVxQ8/beN9k1qaLvJzFYPKUxyHqaubavEUS5ouh4SL+kZC4FQvanGMuSbUU2vv5c
-c3Ajz0Ca8vXPWAyAEBu2G64nyBKcc7NhHj9lLsZfBDAJN/+BM3ejL/vGJiIKWs1U
-SxtVVQKjjet/lWogC6zI/811MuUbiAfiK1mn7rgHxPDjpDkKIPf3FNqZISpfxyEU
-WmTLF0LVvQNWm/+W2arnNby9cwyL1fBl+4kcvjCEZepo8rhN9Snje0QlDEVmCAbr
-mNkUY81M2MEnHMW3eC3qkFVkhN1uLI4IMNjpsgtkKLwueF8zZcd/P5TyNm2ushNz
-Vjs3N16EsYMuWdKM2AA1zRYx/URdpSAG9/Kx4646j6nHXjsDGfs=
-=4AgQ
------END PGP SIGNATURE-----
---=-=-=--
