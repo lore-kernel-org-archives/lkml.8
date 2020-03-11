@@ -2,89 +2,106 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61C16C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:27:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7888DC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:27:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 070B720735
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:27:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583951252;
-	bh=JLWjuj8B8lVUJKRqhwC4EOaviiNoOLpnA4UUmlfhk3w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KrSRGu/SwGhPp9m9tU2h+6Fdy1L9Yq8RsRJcGEz4DRxUwTVdwbBJGwfSlvlT4PBvQ
-	 uxZSUwsZ+n4s7G8TIvKfxUTPxRSP6WXIqlRUe9iw78ARlypweLtaqWxCGyjEjxUwCM
-	 5gHYRmeNAAbYDo/sXdWziqrYCYR0bi5KMyacfLrY=
+	by mail.kernel.org (Postfix) with ESMTP id 34E292072F
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:27:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730812AbgCKS1a (ORCPT
+        id S1730836AbgCKS1p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 14:27:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40180 "EHLO mail.kernel.org"
+        Wed, 11 Mar 2020 14:27:45 -0400
+Received: from mga07.intel.com ([134.134.136.100]:25702 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730468AbgCKS13 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 14:27:29 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 660882072F;
-        Wed, 11 Mar 2020 18:27:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583951249;
-        bh=JLWjuj8B8lVUJKRqhwC4EOaviiNoOLpnA4UUmlfhk3w=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ElkI9DnO591Fg4rDQWDb6iaXgF4ksYb9QJrogIIQlYq5TFgIx2a8ap6e6DKWjTdEz
-         e13MHlUugjxV838WCyHOx2diZYNA6rYdFOcdWb1GpN2YRDszXPJnvl0tPV2Vs713Ko
-         JgIDFOOU0LbFbFDjOpb/YMGQ7Nm7Go9e89Vt08wM=
-Date:   Wed, 11 Mar 2020 19:27:26 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 5.5 000/190] 5.5.9-rc2 review
-Message-ID: <20200311182726.GA4021147@kroah.com>
-References: <20200311181532.692464938@linuxfoundation.org>
+        id S1730468AbgCKS1p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 14:27:45 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Mar 2020 11:27:44 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,541,1574150400"; 
+   d="scan'208";a="236370876"
+Received: from sai-dev-mach.sc.intel.com ([143.183.140.153])
+  by fmsmga008.fm.intel.com with ESMTP; 11 Mar 2020 11:27:44 -0700
+Message-ID: <664cf142449b0a1ef7f09d04111f96ff84738e28.camel@intel.com>
+Subject: Re: [PATCH V1 01/13] selftests/resctrl: Fix feature detection
+From:   Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>
+To:     Reinette Chatre <reinette.chatre@intel.com>,
+        "shuah@kernel.org" <shuah@kernel.org>,
+        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>
+Cc:     "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "Luck, Tony" <tony.luck@intel.com>,
+        "babu.moger@amd.com" <babu.moger@amd.com>,
+        "james.morse@arm.com" <james.morse@arm.com>,
+        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
+        "Yu, Fenghua" <fenghua.yu@intel.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Date:   Wed, 11 Mar 2020 11:22:57 -0700
+In-Reply-To: <b83ba95d-9f0f-4d4f-b68c-c5a612afece4@intel.com>
+References: <cover.1583657204.git.sai.praneeth.prakhya@intel.com>
+         <7e3e4b91f5786a489e68eecda21e1d8049b60181.1583657204.git.sai.praneeth.prakhya@intel.com>
+         <a7407b0d-4e4d-d0cf-621c-769d218fdace@intel.com>
+         <FFF73D592F13FD46B8700F0A279B802F57307F89@ORSMSX114.amr.corp.intel.com>
+         <d0409729-b546-f0b9-4944-cbe5c9a74f76@intel.com>
+         <FFF73D592F13FD46B8700F0A279B802F573084EC@ORSMSX114.amr.corp.intel.com>
+         <b83ba95d-9f0f-4d4f-b68c-c5a612afece4@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200311181532.692464938@linuxfoundation.org>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 07:19:11PM +0100, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.5.9 release.
-> There are 190 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+Hi Reinette,
+
+On Wed, 2020-03-11 at 11:06 -0700, Reinette Chatre wrote:
+> Hi Sai,
 > 
-> Responses should be made by Fri, 13 Mar 2020 18:14:21 +0000.
-> Anything received after that time might be too late.
+> On 3/9/2020 3:51 PM, Prakhya, Sai Praneeth wrote:
+> > > -----Original Message-----
+> > > From: Reinette Chatre <reinette.chatre@intel.com>
+> > > Sent: Monday, March 9, 2020 3:34 PM
+> > 
+> > [SNIP]
+> > 
+> > > > That's a good point and makes sense to me. I think we could fix it in
+> > > > two ways 1. grep for strings in dmesg but that will still leave
+> > > > ambiguity in deciding b/w mbm and cqm because kernel prints "resctrl:
+> > > > L3
+> > > monitoring detected" for both the features 2. Check in "info" directory
+> > > > 	a. For cat_l3, we could search for info/L3
+> > > > 	b. For mba, we could search for info/MB
+> > > > 	c. For cqm and mbm, we could search for specified string in
+> > > > info/L3_MON/mon_features
+> > > > 
+> > > > I think option 2 might be better because it can handle all cases,
+> > > > please let me
+> > > know what you think.
+> > > 
+> > > I agree. For the reasons you mention and also that (1) may not be
+> > > possible if the
+> > > loglevel prevents those lines from being printed.
+> > 
+> > Makes sense. I will work on the fix.
 > 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.5.9-rc2.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.5.y
-> and the diffstat can be found below.
+> One more note about this ... from what I can tell the test for a feature
+> currently fails if the platform does not support the feature. Would it
+> be possible to just skip the test in this case instead?
 
-I got the request from some of the teams doing "automatic testing" that
-it was hard to trigger their test runs when I did a -rc2 and -rc3 and so
-on, as I was just responding to them "by hand".
+That's because the output of the test should be just "ok" or "not ok".
 
-So I tweaked my scripts a bit and now will send out these types of
-automated emails for when I push out a new -rc for the stable releases.
+I can change it to something like "# Skip <test_name> because platform doesn't
+support the feature", but not really sure if it complies with TAP 13 protocol.
 
-For those that didn't know, there are a bunch of "X-KernelTest-" headers
-in these emails, that should be enough to help trigger just about any
-type of test systems out there.  If there's any info missing there, that
-will help you out, please let me know.
+Regards,
+Sai
 
-thanks,
-
-greg k-h
