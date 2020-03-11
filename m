@@ -2,105 +2,70 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55472C0044D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:55:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C481CC0044D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:55:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58DB620737
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:55:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="QxSjkDa8"
+	by mail.kernel.org (Postfix) with ESMTP id CF85320739
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 19:55:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387450AbgCKTzD (ORCPT
+        id S2387461AbgCKTzd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 15:55:03 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:48822 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387418AbgCKTzC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 15:55:02 -0400
-Received: from zn.tnic (p200300EC2F12AA006409EF873197E31D.dip0.t-ipconnect.de [IPv6:2003:ec:2f12:aa00:6409:ef87:3197:e31d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4932B1EC0CE5;
-        Wed, 11 Mar 2020 20:44:44 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1583955884;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=qhR6fZY9T1iS1MlozbrwkvsgypJ7t9l1Cqgx8z0l+kI=;
-        b=QxSjkDa88cjKLLavCeDIljf3TJTfbpfbXYijlZarldmJUMiZo8E2ovyQL0oOO0w3QRL619
-        4rZ5pA3j48Xqft54Rhc+/eNztqXUw93f+Y+SKPGkqGvHi+1vFhT1fIuqAugLvom2WqzvWf
-        4p1J9rX8TTK11yvJ3fSlQV0Cex0eCWA=
-Date:   Wed, 11 Mar 2020 20:44:46 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Jason Gunthorpe <jgg@mellanox.com>,
-        Hector Marco-Gisbert <hecmargi@upv.es>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Will Deacon <will@kernel.org>, Jann Horn <jannh@google.com>,
-        x86@kernel.org, linux-arm-kernel@lists.infradead.org,
-        kernel-hardening@lists.openwall.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/6] x86/elf: Add table to document READ_IMPLIES_EXEC
-Message-ID: <20200311194446.GL3470@zn.tnic>
-References: <20200225051307.6401-1-keescook@chromium.org>
- <20200225051307.6401-2-keescook@chromium.org>
+        Wed, 11 Mar 2020 15:55:33 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:60859 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387452AbgCKTzd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 15:55:33 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jC7Rx-00079X-18; Wed, 11 Mar 2020 20:55:29 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jC7Rw-0000Pp-FD; Wed, 11 Mar 2020 20:55:28 +0100
+Date:   Wed, 11 Mar 2020 20:55:28 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     rishi gupta <gupt21@gmail.com>
+Cc:     thierry.reding@gmail.com, s.trumtrar@pengutronix.de,
+        linux-pwm@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/1] pwm: pca9685: replace CONFIG_PM with __maybe_unused
+ to prevent build issues
+Message-ID: <20200311195528.iplmlcuvp2jjaecn@pengutronix.de>
+References: <1583941429-10921-1-git-send-email-gupt21@gmail.com>
+ <20200311164449.flzzwxqqhcxisil3@pengutronix.de>
+ <CALUj-guwTDR=WMz6KKADFjfFfdS3_aijfrTRCFzh9iPnFAaG6A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200225051307.6401-2-keescook@chromium.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CALUj-guwTDR=WMz6KKADFjfFfdS3_aijfrTRCFzh9iPnFAaG6A@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ozenn Mon, Feb 24, 2020 at 09:13:02PM -0800, Kees Cook wrote:
-> Add a table to document the current behavior of READ_IMPLIES_EXEC in
-> preparation for changing the behavior.
-> 
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
-> ---
->  arch/x86/include/asm/elf.h | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
-> 
-> diff --git a/arch/x86/include/asm/elf.h b/arch/x86/include/asm/elf.h
-> index 69c0f892e310..733f69c2b053 100644
-> --- a/arch/x86/include/asm/elf.h
-> +++ b/arch/x86/include/asm/elf.h
-> @@ -281,6 +281,25 @@ extern u32 elf_hwcap2;
->  /*
->   * An executable for which elf_read_implies_exec() returns TRUE will
->   * have the READ_IMPLIES_EXEC personality flag set automatically.
-> + *
-> + * The decision process for determining the results are:
-> + *
-> + *              CPU: | lacks NX*  | has NX, ia32     | has NX, x86_64 |
-> + * ELF:              |            |                  |                |
-> + * -------------------------------|------------------|----------------|
-> + * missing GNU_STACK | exec-all   | exec-all         | exec-all       |
-> + * GNU_STACK == RWX  | exec-all   | exec-all         | exec-all       |
-> + * GNU_STACK == RW   | exec-none  | exec-none        | exec-none      |
+On Thu, Mar 12, 2020 at 01:16:28AM +0530, rishi gupta wrote:
+> These 2 links contains more details:
+> https://lore.kernel.org/patchwork/patch/732981
+> https://lkml.org/lkml/2019/1/17/437
 
-In all those tables, you wanna do:
+These are both about SIMPLE_DEV_PM_OPS which doesn't apply to
+pwm-pca9685.
 
-s/GNU_STACK/PT_GNU_STACK/g
-
-so that it is clear what this define is.
-
-Thx.
+Best regards
+Uwe
 
 -- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Pengutronix e.K.                           | Uwe Kleine-K�nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
