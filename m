@@ -2,94 +2,87 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F595C18E5A
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 12:05:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CB9BC10F27
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 12:05:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4421B208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 12:05:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 629E9208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 12:05:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583928354;
+	bh=BPHaWjg6587a5T0Mvx0zEB0ljqLxgY6uyCgYbogdwXc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xraEpncnfQAkMhCp7s5k4gFnn91J4wP/Y0NDiA8CtMqY2c4SzR7a/c0oNqjozM/He
+	 +rz22Pccr9IshGauM+ySBUwN/K8BC7eK+L0jhbCjQTeA66ulFrTf+ZbCvnYITmgCPY
+	 4ziJjWSzpxcYygSv5U2OPF+PYqzL/seFLC/MHxOY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729300AbgCKME4 (ORCPT
+        id S1729352AbgCKMFx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 08:04:56 -0400
-Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:28645 "EHLO
-        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729275AbgCKMEz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 08:04:55 -0400
-Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
-  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 11 Mar 2020 17:34:47 +0530
-Received: from c-sanm-linux.qualcomm.com ([10.206.25.31])
-  by ironmsg01-blr.qualcomm.com with ESMTP; 11 Mar 2020 17:34:27 +0530
-Received: by c-sanm-linux.qualcomm.com (Postfix, from userid 2343233)
-        id 0415726C0; Wed, 11 Mar 2020 17:34:25 +0530 (IST)
-From:   Sandeep Maheswaram <sanm@codeaurora.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Doug Anderson <dianders@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>,
-        Sandeep Maheswaram <sanm@codeaurora.org>
-Subject: [PATCH v4 2/4] dt-bindings: phy: qcom,qmp: Add support for SC7180
-Date:   Wed, 11 Mar 2020 17:34:10 +0530
-Message-Id: <1583928252-21246-3-git-send-email-sanm@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1583928252-21246-1-git-send-email-sanm@codeaurora.org>
-References: <1583928252-21246-1-git-send-email-sanm@codeaurora.org>
+        Wed, 11 Mar 2020 08:05:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53366 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728996AbgCKMFx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 08:05:53 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 785F421655;
+        Wed, 11 Mar 2020 12:05:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583928352;
+        bh=BPHaWjg6587a5T0Mvx0zEB0ljqLxgY6uyCgYbogdwXc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=dOzItMQyR9PScuscKHGb1Bmz4d3c4WWbrd81LPFhy6i32RGNUfU2APundDziWZIl/
+         Zg8AVeqFxDSuCQC0eF6PFckXvP6MbLfwl/6aBo8zO2cE3F8R42XmG3PPD/e3zYg+jK
+         GN2xvKoPwggOfV+QTe8BuIcbkktHzdPPXsIysGgo=
+Date:   Wed, 11 Mar 2020 13:05:47 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Tetsuhiro Kohada <Kohada.Tetsuhiro@dc.mitsubishielectric.co.jp>
+Cc:     devel@driverdev.osuosl.org,
+        Valdis Kletnieks <valdis.kletnieks@vt.edu>,
+        motai.hirotaka@aj.mitsubishielectric.co.jp,
+        linux-kernel@vger.kernel.org,
+        Mori.Takahiro@ab.mitsubishielectric.co.jp,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 1/5] staging: exfat: conform 'pbr_sector_t' definition to
+ exFAT specification
+Message-ID: <20200311120547.GA3757838@kroah.com>
+References: <20200311105245.125564-1-Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200311105245.125564-1-Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add compatible for SC7180 in QMP PHY bindings.
+On Wed, Mar 11, 2020 at 07:52:41PM +0900, Tetsuhiro Kohada wrote:
+> Redefine 'pbr_sector_t' as 'boot_sector_t' to comply with exFAT specification.
+>  - Redefine 'pbr_sector_t' as 'boot_sector_t'.
+>  - Rename variable names including 'pbr'.
+>  - Replace GET**()/SET**() macro with cpu_to_le**()/le**_ to_cpu().
+>  - Remove fs_info_t.PBR_sector (always 0).
+>  - Remove unused definitions.
+> 
+> Reviewed-by: Takahiro Mori <Mori.Takahiro@ab.MitsubishiElectric.co.jp>
+> Signed-off-by: Tetsuhiro Kohada <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
+> ---
+>  drivers/staging/exfat/exfat.h       | 139 +++++++---------------------
+>  drivers/staging/exfat/exfat_core.c  |  62 ++++++-------
+>  drivers/staging/exfat/exfat_super.c |  14 ++-
+>  3 files changed, 65 insertions(+), 150 deletions(-)
 
-Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+The drivers/staging/exfat/ tree is now gone from my staging-next branch
+as there is a "real" version of exfat now in linux-next from the vfs
+tree.
 
-diff --git a/Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml b/Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml
-index 39ec3f24..c7c413c 100644
---- a/Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml
-+++ b/Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml
-@@ -23,6 +23,7 @@ properties:
-       - qcom,msm8998-qmp-pcie-phy
-       - qcom,msm8998-qmp-ufs-phy
-       - qcom,msm8998-qmp-usb3-phy
-+      - qcom,sc7180-qmp-usb3-phy
-       - qcom,sdm845-qhp-pcie-phy
-       - qcom,sdm845-qmp-pcie-phy
-       - qcom,sdm845-qmp-ufs-phy
-@@ -108,6 +109,7 @@ allOf:
-         compatible:
-           contains:
-             enum:
-+              - qcom,sc7180-qmp-usb3-phy
-               - qcom,sdm845-qmp-usb3-phy
-               - qcom,sdm845-qmp-usb3-uni-phy
-     then:
-@@ -265,7 +267,9 @@ allOf:
-       properties:
-         compatible:
-           contains:
--            const: qcom,sdm845-qmp-usb3-phy
-+            enum:
-+              - qcom,sc7180-qmp-usb3-phy
-+              - qcom,sdm845-qmp-usb3-phy
-     then:
-       required:
-         - reg-names
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+I suggest you start working on the fs/extfat/ code.
 
+thanks,
+
+
+greg k-h
