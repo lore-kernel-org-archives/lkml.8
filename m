@@ -2,130 +2,104 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9869C10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 00:00:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D63CBC10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 00:04:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A54321D56
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 00:00:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BA4921D56
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 00:04:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="pbwHjYC6"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="E2WEtHLm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727789AbgCKAAM (ORCPT
+        id S1727709AbgCKAEP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 20:00:12 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:37626 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726899AbgCKAAM (ORCPT
+        Tue, 10 Mar 2020 20:04:15 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:36944 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726899AbgCKAEP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 20:00:12 -0400
-Received: by mail-qt1-f193.google.com with SMTP id l20so317199qtp.4
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 17:00:11 -0700 (PDT)
+        Tue, 10 Mar 2020 20:04:15 -0400
+Received: by mail-qk1-f196.google.com with SMTP id y126so435282qke.4
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Mar 2020 17:04:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=6LrB/QDB8/+9bMeHbl1G5SHGJAWHX7k/1TXkj1uMy8U=;
-        b=pbwHjYC6HIZiGsiNaSQogQyA8mwPFjrSsCN/p9MqJR5r4PIE+X+600DpIax/EpnnMD
-         owUdmxNGULtRKav7JAzvOxDo+e214//K51jHYQ+1r/wJi4qkaGagA80V4MbFb1z4XDre
-         TSsUpCq5w1gq9118Vy4P0pglXDMHE9W9jLFtX+iUs7wC3/wZwiNR0pc6VwbwtKcuYucj
-         7NTN2qBrYKdKRCxPy+nmC5Xhh5E4WPiAarBUhaQDH/vpm+JrTcxYDmbxNXojUbdJ/EHC
-         0JWAiRIk+1SRppVBZPWvIVTTvRGdc2CTci6uIzm0eXci7sds6BzvDwKOHnREksVmE+xB
-         pwrQ==
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=kC2peWxJ+qm6+wzfyf0pDsl2H945cR1gyhQhbsBrJUE=;
+        b=E2WEtHLmwgB1sqZ9NdN+PYhK/kzD9WlEKX/XMkqkvWCWgVvKOdHt3kMMRwtGfKRedx
+         QsHdLUiE9T/DCGZnU+D3JmKEHaXbAlZw33XyyKsnL4XHMyDuuZcaq2W0rlKEV98nBwyh
+         Q+YaCLmxO0cP74zP1i1WT34kG+5Y6HXbSFaP7yuHmRzWGFTGDRQ4I0VPFwEmU408GL9t
+         YFrllVedIhQ7MkNwS5EzCYRzr3NTi8htqDcq920NygGPq565EI+nBd7M53aNAKuMiePM
+         LSo5JbqR4rfT8Blrr8ChWL888Avah/D0nF/RIs3usG2MvXnSKLbhKaBlylwEX3uJkwrK
+         lgbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=6LrB/QDB8/+9bMeHbl1G5SHGJAWHX7k/1TXkj1uMy8U=;
-        b=tqf9ZIJ7LWeGe3jTqV8qWxAJGZwleG9JmpKMiAznZMus8AooDSBYOtR+pClJo+VRad
-         SeEhfSb3VyufQkITg6HIOdpDSAZIFY/PsH36j6ddM1q7ZHNNbFKc6rK72WUTWcOLGqux
-         LllifhgCtdt8Nt6GeTc8e+9OImNLyi2feqyE4wOWYyOfZTJhhFYpBFT5HkjH0ylMeW7f
-         GehEG6EsK1HvRY7oGVW9qstOP8CdDNwvWddf5e2XAwNHjDZ8IdpclRkeEg4AmcivsC3D
-         mn1FUmgm8PldSYMtDhcn6l+BcKZdPbGco6fYCbwVyzVv5C3/SH6YAGAbKF+rnr4S+QnE
-         W+aA==
-X-Gm-Message-State: ANhLgQ3s0lHl86FSgZ2/ZJCj202WOfufFrJfusNjuWtw+orKQ1WvlRfJ
-        R/J1IdpVvwe8mKdubo2TevkkXQ==
-X-Google-Smtp-Source: ADFU+vtdB+LdcSVR1g0nETbAZ5AkLI725z4xGiRbhfDsBZb6WqkxKXfMOcA/1mJnXQLZLw5g0L9XYg==
-X-Received: by 2002:ac8:41c9:: with SMTP id o9mr422919qtm.156.1583884810848;
-        Tue, 10 Mar 2020 17:00:10 -0700 (PDT)
-Received: from ovpn-121-75.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id r29sm3431503qtj.76.2020.03.10.17.00.09
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=kC2peWxJ+qm6+wzfyf0pDsl2H945cR1gyhQhbsBrJUE=;
+        b=PJlv4OzO9fB021yMGJqHtfmr0wDsBLfx0Tmb21f4mEbZ/dgP01ciSJTi7vrtVjqgSh
+         QYi83oM0103Si8kQYiC9TfV/K++OvtDHsvnVa6VrpjKAEOMF3owfjNbSK2KieXEBY+NU
+         qqYM+8QDdzzkZ+2UyhDarHI3/W3/5Dd05WJfjbhC7DdjT1S8BWmVN0wxSJ626qkLq2fv
+         wjGB1xuUW/ofDEy4dZZbOT6BXwp9lFRLYuiIdEzKRnqrjQpEf1AvNaRafCp1c5PjPCFv
+         BrEcM4UbLl70SFXch3cNC8Zesjw6GzTk4wcHvfCCsVf5NqviUXoLBAXV0Pch3hBs1D/z
+         hV5Q==
+X-Gm-Message-State: ANhLgQ0UpKeAqU2QC+ZNK4QpSozJJiTGaQULlKoAWZxMJobaSm6IpwXM
+        49gV+EP4PH9b1XEqNWfXIFXg6A==
+X-Google-Smtp-Source: ADFU+vtmJ6y6O/Iq61etnzU2K2Cxevzv7kwYYoSGBz/QzRp5dQLU85KeY+jR709MQ0G+347olKfG2g==
+X-Received: by 2002:a05:620a:109a:: with SMTP id g26mr416744qkk.166.1583885053989;
+        Tue, 10 Mar 2020 17:04:13 -0700 (PDT)
+Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id i28sm25764085qtc.57.2020.03.10.17.04.12
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 10 Mar 2020 17:00:10 -0700 (PDT)
+        Tue, 10 Mar 2020 17:04:13 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
+Subject: Re: [PATCH] mm, numa: fix bad pmd by atomically check for
+ pmd_trans_huge when marking page tables prot_numa
 From:   Qian Cai <cai@lca.pw>
-To:     akpm@linux-foundation.org
-Cc:     ying.huang@intel.com, kirill.shutemov@linux.intel.com,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Qian Cai <cai@lca.pw>, stable@vger.kernel.org
-Subject: [PATCH] page-flags: fix a crash at SetPageError(THP_SWAP)
-Date:   Tue, 10 Mar 2020 19:58:46 -0400
-Message-Id: <20200310235846.1319-1-cai@lca.pw>
-X-Mailer: git-send-email 2.21.0 (Apple Git-122.2)
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200309150531.GD25642@optiplex-lnx>
+Date:   Tue, 10 Mar 2020 20:04:11 -0400
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        mgorman <mgorman@techsingularity.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Vlastimil Babka <vbabka@suse.cz>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <917137D2-FD66-4175-AC69-23F8206186C5@lca.pw>
+References: <20200216191800.22423-1-aquini@redhat.com>
+ <2E0766B8-DDD1-4448-8605-8535A16670FC@lca.pw> <20200307030530.GB4093@t490s>
+ <9124C8B9-FB47-44F5-8606-DD9261BCB383@lca.pw> <20200308231423.GA22348@t490s>
+ <C5CED45A-FFDA-46C7-A116-284431CF5940@lca.pw>
+ <20200309150531.GD25642@optiplex-lnx>
+To:     Rafael Aquini <aquini@redhat.com>
+X-Mailer: Apple Mail (2.3608.60.0.2.5)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The commit bd4c82c22c36 ("mm, THP, swap: delay splitting THP after
-swapped out") supported writing THP to a swap device but forgot to
-upgrade an older commit df8c94d13c7e ("page-flags: define behavior of
-FS/IO-related flags on compound pages") which could trigger a crash
-during THP swapping out with DEBUG_VM_PGFLAGS=y,
 
-kernel BUG at include/linux/page-flags.h:317!
 
-page dumped because: VM_BUG_ON_PAGE(1 && PageCompound(page))
-page:fffff3b2ec3a8000 refcount:512 mapcount:0 mapping:000000009eb0338c
-index:0x7f6e58200 head:fffff3b2ec3a8000 order:9 compound_mapcount:0
-compound_pincount:0
-anon flags:
-0x45fffe0000d8454(uptodate|lru|workingset|owner_priv_1|writeback|head|reclaim|swapbacked)
+> On Mar 9, 2020, at 11:05 AM, Rafael Aquini <aquini@redhat.com> wrote:
+> I'm still waiting on a similar system to become available, so I can
+> work on your reproducer case, as well as to dig and wrap my head =
+around it.
+>=20
+> I still don't think that skipping the pmd_none() in the =
+change-protection walk=20
+> should cause a big fuss like you observed here (yet, it seems it =
+does), and=20
+> the fact that we need that race window to take the __split_huge_pmd() =
+suggests,
+> at least to me, that we might be missing this proper split somewhere =
+else.
 
-end_swap_bio_write()
-  SetPageError(page)
-    VM_BUG_ON_PAGE(1 && PageCompound(page))
+I have sent out another patch which should be more correct,
 
-<IRQ>
-bio_endio+0x297/0x560
-dec_pending+0x218/0x430 [dm_mod]
-clone_endio+0xe4/0x2c0 [dm_mod]
-bio_endio+0x297/0x560
-blk_update_request+0x201/0x920
-scsi_end_request+0x6b/0x4b0
-scsi_io_completion+0x509/0x7e0
-scsi_finish_command+0x1ed/0x2a0
-scsi_softirq_done+0x1c9/0x1d0
-__blk_mqnterrupt+0xf/0x20
-</IRQ>
-
-Fix by checking PF_NO_TAIL in those places instead.
-
-Fixes: bd4c82c22c36 ("mm, THP, swap: delay splitting THP after swapped out")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Qian Cai <cai@lca.pw>
----
- include/linux/page-flags.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
-index 1bf83c8fcaa7..77de28bfefb0 100644
---- a/include/linux/page-flags.h
-+++ b/include/linux/page-flags.h
-@@ -311,7 +311,7 @@ static inline int TestClearPage##uname(struct page *page) { return 0; }
- 
- __PAGEFLAG(Locked, locked, PF_NO_TAIL)
- PAGEFLAG(Waiters, waiters, PF_ONLY_HEAD) __CLEARPAGEFLAG(Waiters, waiters, PF_ONLY_HEAD)
--PAGEFLAG(Error, error, PF_NO_COMPOUND) TESTCLEARFLAG(Error, error, PF_NO_COMPOUND)
-+PAGEFLAG(Error, error, PF_NO_TAIL) TESTCLEARFLAG(Error, error, PF_NO_TAIL)
- PAGEFLAG(Referenced, referenced, PF_HEAD)
- 	TESTCLEARFLAG(Referenced, referenced, PF_HEAD)
- 	__SETPAGEFLAG(Referenced, referenced, PF_HEAD)
--- 
-2.21.0 (Apple Git-122.2)
-
+https://lore.kernel.org/lkml/20200310235846.1319-1-cai@lca.pw/=
