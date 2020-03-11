@@ -2,85 +2,119 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B392C2BAEE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 23:16:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4205AC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 23:19:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1077D20754
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 23:16:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CD1B20751
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 23:19:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="RaC3mQ3i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731533AbgCKXQx (ORCPT
+        id S1731453AbgCKXTH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 19:16:53 -0400
-Received: from mail.manjaro.org ([176.9.38.148]:58946 "EHLO mail.manjaro.org"
+        Wed, 11 Mar 2020 19:19:07 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:54723 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731338AbgCKXQx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 19:16:53 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.manjaro.org (Postfix) with ESMTP id 0C1C937024CE;
-        Thu, 12 Mar 2020 00:16:51 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at manjaro.org
-Received: from mail.manjaro.org ([127.0.0.1])
-        by localhost (manjaro.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id rHUPSS9K2eTQ; Thu, 12 Mar 2020 00:16:48 +0100 (CET)
-Subject: Re: [PATCH v3 2/3] dt-bindings: power: supply: add cw2015_battery
- bindings
-To:     Daniel Thompson <daniel.thompson@linaro.org>,
-        Tobias Schramm <t.schramm@manjaro.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Mark Brown <broonie@kernel.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200311093043.3636807-1-t.schramm@manjaro.org>
- <20200311093043.3636807-3-t.schramm@manjaro.org>
- <20200311172056.wjn3574zrfqxipw6@holly.lan>
-From:   Tobias Schramm <t.schramm@manjaro.org>
-Message-ID: <bd1bea1c-e42b-8ccc-7fbb-2ed268f1b1a5@manjaro.org>
-Date:   Thu, 12 Mar 2020 00:17:55 +0100
+        id S1726194AbgCKXTG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 19:19:06 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48d7FK2RvPz9sRR;
+        Thu, 12 Mar 2020 10:19:01 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1583968743;
+        bh=RY4jhSfTQdX+/9tbmwG83fYt5HRfbczE83/K96nIVBU=;
+        h=Date:From:To:Cc:Subject:From;
+        b=RaC3mQ3i7nIzMdU69+bNPWOQM2wrPTk2r/EyiUO1w9+cRdMnB73lTGpFkBSspod5w
+         3KJQZEm1BQhW4hVvcpNWzu+xNzuubpd1MHA/J1lTTxo6zyLA0LQFf4sCpsNiYQCfCO
+         3eClgeUjTtmulGMdrmEJyOOOuKeGF+0O/wcmv9uLxm3Uxtn4HcYJ2mA8PNEhbHm6Om
+         9R7fHOdjQK7/eDhl2XagP/XzO15/DCWlxNYdH4pr5PhZReSmh11NVb1U9kvB746h2Z
+         i8x7NdbLfRV1khDQVhKM2+qy725RnivDYY5s5OjHvCWcVfBXgaSsJzHedRgARCeQaj
+         joY1G4kNRDAqw==
+Date:   Thu, 12 Mar 2020 10:18:54 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Shawn Guo <shawnguo@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Yangtao Li <tiny.windzz@gmail.com>,
+        Maxime Ripard <maxime@cerno.tech>,
+        Anson Huang <Anson.Huang@nxp.com>
+Subject: linux-next: manual merge of the imx-mxs tree with Linus' tree
+Message-ID: <20200312101854.3c261c88@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20200311172056.wjn3574zrfqxipw6@holly.lan>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US-large
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/cKAl/mrWKXLyRajs26N7V+P";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Daniel,
+--Sig_/cKAl/mrWKXLyRajs26N7V+P
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-thanks for reviewing. The typo will be fixed for v4.
+Hi all,
 
->> +  power-supplies:
->> +    description:
->> +      Specifies supplies used for charging the battery connected to this gauge
->> +    allOf:
->> +      - $ref: /schemas/types.yaml#/definitions/phandle-array
->> +      - minItems: 1
->> +        maxItems: 8 # Should be enough
-> 
-> Is it necessary to set a maximum? power_supply.txt is still a text file
-> but there is no mention of a maximum there.
-> 
-I think so? Removing maxItems and running dtbs_check on a dts with more
-than one supply phandle in the power-supplies property results in an error:
-linux/arch/arm64/boot/dts/rockchip/rk3399-pinebook-pro.dt.yaml:
-cw2015@62: power-supplies: [[142], [50]] is too long
+Today's linux-next merge of the imx-mxs tree got a conflict in:
 
-Best Regards,
+  arch/arm64/configs/defconfig
 
-Tobias
+between commit:
+
+  4a453ccf87d5 ("arm64: defconfig: Enable CONFIG_SUN8I_THERMAL")
+
+from Linus' tree and commit:
+
+  34e46ed80df6 ("arm64: defconfig: add i.MX system controller thermal suppo=
+rt")
+
+from the imx-mxs tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc arch/arm64/configs/defconfig
+index 4db223dbc549,31d098438a43..000000000000
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@@ -452,7 -454,7 +454,8 @@@ CONFIG_THERMAL_GOV_POWER_ALLOCATOR=3D
+  CONFIG_CPU_THERMAL=3Dy
+  CONFIG_THERMAL_EMULATION=3Dy
+  CONFIG_QORIQ_THERMAL=3Dm
+ +CONFIG_SUN8I_THERMAL=3Dy
++ CONFIG_IMX_SC_THERMAL=3Dm
+  CONFIG_ROCKCHIP_THERMAL=3Dm
+  CONFIG_RCAR_THERMAL=3Dy
+  CONFIG_RCAR_GEN3_THERMAL=3Dy
+
+--Sig_/cKAl/mrWKXLyRajs26N7V+P
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5pcd4ACgkQAVBC80lX
+0Gw2/Af/cQLTK+KcHabQnTGtd2CRmzLxRRSss9bc1a4w+G8+iUd8C7Qc5lYIjdVo
++w5lvZxxiilj9aWuuDlUhC3vZZYl2G8+fv1ms2O+ntB0Y5Q9nad7qKZf4szCnz7F
+AmY2nXhLzbAwgHKMI09TthZIf2AnMP6nPRos2loyh0Wu98dHeZ18s6e1l5+sswwQ
+zGSgGx36OaXXkX561zX4X3DG7BJqTxapDKzwUx8e8ZT7irkuTFq5AmEaDvSRjaWX
+T++Kb/Azl26wnnjnYZDCTshZRzrob21IKRXL3hg+RVlM45AVXnBl7DmgFuALfGH8
++TJforGOkwMYTH2QXPbQT4wKMfUbjA==
+=7tD9
+-----END PGP SIGNATURE-----
+
+--Sig_/cKAl/mrWKXLyRajs26N7V+P--
