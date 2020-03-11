@@ -2,123 +2,82 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50812C2BAEE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:10:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BAFDC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:10:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB176206BE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:10:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 044DF206E9
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:10:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583950253;
+	bh=7O660q3RwjCgBY9WqCX9aItV5KFsyT+RF1lpgKaTQMs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bUPG6a/Fa9xfMlGLLLz/qTjgYB4K10B/U76AhtHMMLlXPGRgBT3xwEGufVFv1dAEF
+	 boFGuGIPVRqg0eXp/6LQdpglCctgjPxrDNwlGsHzJfW3KdMlPVkmOR/uAdD83Rulzf
+	 7bV39PJwcrUNITi38NE9mkrqnEoX/Cnxa55mduuM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730711AbgCKSK1 (ORCPT
+        id S1730741AbgCKSKv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 14:10:27 -0400
-Received: from mga05.intel.com ([192.55.52.43]:60981 "EHLO mga05.intel.com"
+        Wed, 11 Mar 2020 14:10:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56830 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730468AbgCKSK0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 14:10:26 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Mar 2020 11:10:25 -0700
-X-IronPort-AV: E=Sophos;i="5.70,541,1574150400"; 
-   d="scan'208";a="277470813"
-Received: from rchatre-mobl.amr.corp.intel.com (HELO [10.251.23.31]) ([10.251.23.31])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 11 Mar 2020 11:10:25 -0700
-Subject: Re: [PATCH V1 09/13] selftests/resctrl: Modularize fill_buf for new
- CAT test case
-To:     Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
-        shuah@kernel.org, linux-kselftest@vger.kernel.org
-Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        tony.luck@intel.com, babu.moger@amd.com, james.morse@arm.com,
-        ravi.v.shankar@intel.com, fenghua.yu@intel.com, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-References: <cover.1583657204.git.sai.praneeth.prakhya@intel.com>
- <43b368952bb006ee973311d9c9ae0eb53d8e7f60.1583657204.git.sai.praneeth.prakhya@intel.com>
- <4c84be1d-8839-2c85-b294-7e3c454240bb@intel.com>
- <7a1f93d4516a7de99c5dbc4afd6279d6fe7aa126.camel@intel.com>
- <50cb755f-e112-5d71-11fa-a7cbc951d91e@intel.com>
- <588d18133c0ad76b375a920b6e6cc1598564163a.camel@intel.com>
-From:   Reinette Chatre <reinette.chatre@intel.com>
-Message-ID: <2b7e2ef2-8e80-1e5e-41ac-4fc4726425ac@intel.com>
-Date:   Wed, 11 Mar 2020 11:10:23 -0700
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        id S1730468AbgCKSKv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 14:10:51 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D51E9206BE;
+        Wed, 11 Mar 2020 18:10:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583950251;
+        bh=7O660q3RwjCgBY9WqCX9aItV5KFsyT+RF1lpgKaTQMs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=u21//3ycvNsNd3it9gY9yPrZIFCWwPMR8ENPH1lnXHw7XPHAdaxOK0hj5wZD+jff3
+         6WdMoTAc6uIIhPtTZTpoa4X4Q4LFFwFjW5Gzcn6Wc/1bKP+nzK5KjiYCNFNXMTqj5k
+         X15ALsvfmDKMUelnQLOCs5lly2XOEVqQj6gJ5wmQ=
+Date:   Wed, 11 Mar 2020 19:10:48 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org,
+        Holger =?iso-8859-1?Q?Hoffst=E4tte?= 
+        <holger@applied-asynchrony.com>
+Subject: Re: [PATCH 5.5 000/189] 5.5.9-stable review
+Message-ID: <20200311181048.GB3970258@kroah.com>
+References: <20200310123639.608886314@linuxfoundation.org>
+ <da0afb1f-1045-d7c2-cf34-bb357fdce15e@roeck-us.net>
 MIME-Version: 1.0
-In-Reply-To: <588d18133c0ad76b375a920b6e6cc1598564163a.camel@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <da0afb1f-1045-d7c2-cf34-bb357fdce15e@roeck-us.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sai,
-
-On 3/11/2020 10:45 AM, Sai Praneeth Prakhya wrote:
-> On Wed, 2020-03-11 at 08:44 -0700, Reinette Chatre wrote:
->> On 3/10/2020 6:04 PM, Sai Praneeth Prakhya wrote:
->>> On Tue, 2020-03-10 at 14:59 -0700, Reinette Chatre wrote:
->>>> On 3/6/2020 7:40 PM, Sai Praneeth Prakhya wrote:
->>>>> Currently fill_buf (in-built benchmark) runs as a separate process a
->>>>>
->>>>
+On Tue, Mar 10, 2020 at 09:02:19AM -0700, Guenter Roeck wrote:
+> On 3/10/20 5:37 AM, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 5.5.9 release.
+> > There are 189 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> > 
+> > Responses should be made by Thu, 12 Mar 2020 12:34:10 +0000.
+> > Anything received after that time might be too late.
+> > 
 > 
-> [SNIP]
+> block/bfq-wf2q.c: In function 'bfq_forget_entity':
+> ./include/linux/kernel.h:987:51: error: 'struct bfq_group' has no member named 'entity'
+>   987 |  BUILD_BUG_ON_MSG(!__same_type(*(ptr), ((type *)0)->member) && \
 > 
->>>> Should buffer be freed on this error path?
->>>
->>> Yes, that's right.. my bad. Will fix it. But the right fix is,
->>> use_buffer_forever() should not return at all. It's meant to loop around
->>> the
->>> buffer _forever_.
->>>
->>>> I think the asymmetrical nature of the memory allocation and release
->>>> creates traps like this.
->>>>
->>>> It may be less error prone to have the pointer returned by init_buffer
->>>> and the acted on and released within fill_cache(), passed to
->>>> "use_buffer_forever()" as a parameter.  The buffer size is known here,
->>>> there is no need to keep an "end pointer" around.
->>>
->>> The main reason for having "startptr" as a global variable is to free
->>> memory
->>> when fill_buf is killed. fill_buf runs as a separate process (for test
->>> cases
->>> like MBM, MBA and CQM) and when user issues Ctrl_c or when the test kills
->>> benchmark_pid (i.e. fill_buf), the buffer is freed (please see
->>> ctrl_handler()).
->>
->> I see. Got it, thanks.
->>
->>> So, I thought, as "startptr" is anyways global, why pass it around as an
->>> argument? While making this change I thought it's natural to make "endptr"
->>> global as well because the function didn't really look good to just take
->>> endptr as an argument without startptr.
->>
->> Maintaining the end pointer is unusual. The start of the buffer and the
->> size are known properties that the end of the buffer can be computed
->> from. Not a problem, it just seems inconsistent that some of the buffer
->> functions operate on the start pointer and size while others operate on
->> the start pointer and end pointer.
-> 
-> Ok.. makes sense. I will try to make it consistent by using endptr all the
-> time. One advantage of using endptr is that we could just compute endptr once
-> and use it when needed by passing it as variable (will try to not make it
-> global variable).
+> Guess this is the same problem that is also seen with v5.4.25-rc1.
 
-This may add unnecessary complexity because from what I can tell some of
-those calls require buffer size and this would then require needing to
-recompute the buffer size based on the start and end pointers. Do you
-really need the end pointer? Can you not just use the start pointer and
-buffer size?
+Thanks for the report, I should have that now fixed up for 5.5.y and
+5.4.y.
 
-Reinette
-
-
-
-
-
+greg k-h
