@@ -2,86 +2,83 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AB2AC2BAEE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 22:09:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFA83C0044D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 22:10:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 649F4206E7
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 22:09:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2086206E7
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 22:10:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729888AbgCKWJy (ORCPT
+        id S1729927AbgCKWKj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 18:09:54 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:40816 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729535AbgCKWJx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 18:09:53 -0400
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jC9Xu-0001sJ-Cb; Wed, 11 Mar 2020 23:09:46 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id C2842100F5A; Wed, 11 Mar 2020 23:09:45 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Hans de Goede <hdegoede@redhat.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>
-Cc:     linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC v2] x86: Select HARDIRQS_SW_RESEND on x86
-In-Reply-To: <218eb262-011f-0739-8e74-9ca3ef793bb8@redhat.com>
-References: <87sgk4naqh.fsf@nanos.tec.linutronix.de> <0e5b484d-89f5-c018-328a-fb4a04c6cd91@redhat.com> <87fteek27x.fsf@nanos.tec.linutronix.de> <218eb262-011f-0739-8e74-9ca3ef793bb8@redhat.com>
-Date:   Wed, 11 Mar 2020 23:09:45 +0100
-Message-ID: <87a74mk0gm.fsf@nanos.tec.linutronix.de>
+        Wed, 11 Mar 2020 18:10:39 -0400
+Received: from mga04.intel.com ([192.55.52.120]:59207 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729535AbgCKWKj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 18:10:39 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Mar 2020 15:10:38 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,542,1574150400"; 
+   d="scan'208";a="277550528"
+Received: from fjan-mobl.amr.corp.intel.com (HELO pbossart-mobl3.amr.corp.intel.com) ([10.251.25.157])
+  by fmsmga002.fm.intel.com with ESMTP; 11 Mar 2020 15:10:36 -0700
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+To:     alsa-devel@alsa-project.org
+Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
+        vkoul@kernel.org, gregkh@linuxfoundation.org, jank@cadence.com,
+        srinivas.kandagatla@linaro.org, slawomir.blauciak@intel.com,
+        Bard liao <yung-chuan.liao@linux.intel.com>,
+        Rander Wang <rander.wang@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Hui Wang <hui.wang@canonical.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Subject: [PATCH 0/7] SoundWire: intel: fix SHIM programming sequences
+Date:   Wed, 11 Mar 2020 17:10:19 -0500
+Message-Id: <20200311221026.18174-1-pierre-louis.bossart@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hans de Goede <hdegoede@redhat.com> writes:
-> On 3/11/20 10:31 PM, Thomas Gleixner wrote:
->> Hans de Goede <hdegoede@redhat.com> writes:
->>>> I just need to stare at the legacy PIC and the virt stuff.
->>>>
->>>>> Also maybe we should add a Cc: stable@vger.kernel.org ??? This seems like
->>>>> somewhat a big change for that but it does solve some real issues...
->>>>
->>>> Yes. Let me stare at the couple of weird irqchips which might get
->>>> surprised. I'll teach them not to do that :)
->>>
->>> I know that you are very busy, still I'm wondering is there any progress
->>> on this ?
->> 
->> Bah. That fell through the cracks, but actually I looked at this due to
->> the PCI-E AER wreckage. So yes, this is fine, but we want:
->> 
->>   https://lkml.kernel.org/r/20200306130623.590923677@linutronix.de
->>   https://lkml.kernel.org/r/20200306130623.684591280@linutronix.de
->> 
->> if we want to backport this to stable.
->
-> So far I have seen a few, but not a lot of devices which need this, so
-> I'm not 100% sure what to do here.
->
-> Do you consider this change safe / suitable for stable if those 2 patches
-> are backported and applied first?
+The low-level register programming sequences contributed in
+71bb8a1b059ecd ('soundwire: intel: Add Intel Master driver') do not
+follow the internal documentation and recommended flows. It's anyone's
+guess how the code might have worked. Fix and add all missing helpers
+for clock-stop and hardware-based synchronization.
 
-I think so. The two patches are on my list for backports anyway, but I
-wanted to give them some time to simmer.
+This patchset needs to be applied on top of "[PATCH 00/16] SoundWire:
+cadence: add clock stop and fix programming sequences"
 
-Thanks,
+Reviewers might object that the code is provided without some required
+initializations for mutexes and shim masks, they will be added as part
+of the transition to sdw_master_device - still stuck as of 3/11.
 
-        tglx
+Pierre-Louis Bossart (6):
+  soundwire: intel: add helpers for link power down and shim wake
+  soundwire: intel: reuse code for wait loops to set/clear bits
+  soundwire: intel: add mutex to prevent concurrent access to SHIM
+    registers
+  soundwire: intel: add definitions for shim_mask
+  soundwire: intel: introduce a helper to arm link synchronization
+  soundwire: intel: introduce helper for link synchronization
+
+Rander Wang (1):
+  soundwire: intel: follow documentation sequences for SHIM registers
+
+ drivers/soundwire/intel.c           | 342 ++++++++++++++++++++++------
+ drivers/soundwire/intel.h           |   4 +
+ include/linux/soundwire/sdw_intel.h |   2 +
+ 3 files changed, 277 insertions(+), 71 deletions(-)
+
+-- 
+2.20.1
+
