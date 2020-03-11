@@ -2,96 +2,141 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A80FC10F27
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 03:25:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39946C10F27
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 03:26:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E9EE20637
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 03:25:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E4F621927
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 03:26:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="h5J3He0I"
+	dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b="TrxEz737";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="CsgbMFq0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728085AbgCKDZA (ORCPT
+        id S1728095AbgCKD0z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 23:25:00 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:47152 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727648AbgCKDY7 (ORCPT
+        Tue, 10 Mar 2020 23:26:55 -0400
+Received: from wnew2-smtp.messagingengine.com ([64.147.123.27]:52289 "EHLO
+        wnew2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727648AbgCKD0x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 23:24:59 -0400
-X-UUID: 1e0ac38db6e4476eaea91aa593267a54-20200311
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=Hs7qXhY4scbN9V12HC8l5mpj1ZLtWI/x/58EtakrmHg=;
-        b=h5J3He0IDt7KmfFWkOHEjGDcyD/zqs9HUtmqCQUV55d28qxfIB+LNNenXupAOOAfbiHXyFHEw2VZHtP2eoGPb12SJzhjOmAsCgaFD6JH+xnxCPJkyOWkDPkLGukj/KZD8Gvj9PX3n9E3SW4ENArCgkD1LElcDfHe/iIJM1STNxU=;
-X-UUID: 1e0ac38db6e4476eaea91aa593267a54-20200311
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
-        (envelope-from <yingjoe.chen@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 2050323538; Wed, 11 Mar 2020 11:24:53 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 11 Mar 2020 11:23:38 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 11 Mar 2020 11:24:38 +0800
-Message-ID: <1583897091.14612.1.camel@mtksdaap41>
-Subject: Re: [PATCH v9 4/5] rtc: mt6397: Add support for the MediaTek MT6358
- RTC
-From:   Yingjoe Chen <yingjoe.chen@mediatek.com>
-To:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-CC:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Alessandro Zummo" <a.zummo@towertech.it>,
-        Josef Friedl <josef.friedl@speed.at>,
-        "Nicolas Boichat" <drinkcat@chromium.org>,
-        <srv_heupstream@mediatek.com>,
-        "Frank Wunderlich" <frank-w@public-files.de>,
-        Ran Bi <ran.bi@mediatek.com>,
-        "Sean Wang" <sean.wang@mediatek.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Richard Fontana <rfontana@redhat.com>,
-        <devicetree@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-pm@vger.kernel.org>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        Eddie Huang <eddie.huang@mediatek.com>,
-        <linux-rtc@vger.kernel.org>
-Date:   Wed, 11 Mar 2020 11:24:51 +0800
-In-Reply-To: <1583835040-19157-5-git-send-email-hsin-hsiung.wang@mediatek.com>
-References: <1583835040-19157-1-git-send-email-hsin-hsiung.wang@mediatek.com>
-         <1583835040-19157-5-git-send-email-hsin-hsiung.wang@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Tue, 10 Mar 2020 23:26:53 -0400
+X-Greylist: delayed 471 seconds by postgrey-1.27 at vger.kernel.org; Tue, 10 Mar 2020 23:26:53 EDT
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
+        by mailnew.west.internal (Postfix) with ESMTP id C6EC46BE;
+        Tue, 10 Mar 2020 23:19:00 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute2.internal (MEProxy); Tue, 10 Mar 2020 23:19:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sakamocchi.jp;
+         h=date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=n7m72Tx+CWEa02zHghdkj9AV/pW
+        oZotPpODUQGq39GM=; b=TrxEz737tfc4toeTcWR6JE6dB+EN4l1X7zs9bym9ZW3
+        6HcmOb6wtTuWJRtDKH8N6LWA6iVwY6S1lvkdLnp8DJRFN4yE/LlCXVS9Czh7M+Zr
+        WJCwXjQnSM0NuK4fmv4wjXJYZ5a1U26aBPHKl+MIGlHh53Yyu5o8CxEzNtsDlo+s
+        nsnb7nw0sNQV95CBjm9uwt8DsHoBsYCeqZxZyWHFoz/ydz6oZLvV9tSmY4OElaO2
+        scjr9g8LRd+CpR292Oj1p5qHrpchE9KxnZbA+hkNMxsVrsilWRZkAMdX4xAtBGqO
+        6SZ3rgaoNt8BRmB32jYRExf+5bMu9Fq/5F2aiWtpsBA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=n7m72T
+        x+CWEa02zHghdkj9AV/pWoZotPpODUQGq39GM=; b=CsgbMFq0GBoJbAzszr8IH5
+        /25ZkX1Z3ZP6p9bO86zYssPEZCBQ6NPhk1yj1WI5YSEKe+IxdVnObvWw7xCM1rJg
+        cysDqa8PwmcLR1au8LKZxNDpkzEQ3iGz730i59Fu9CaOrwrzN72erFKw+NN312B3
+        6S1JGk6LnGQXuPqKwnOkgrJ52tK8x5dbsgBo+5Sq5upCD5fvBKPHaArzO3ng1+db
+        pdiDJ/TomXx3EA03ZXpoiZXESNmKpqOt7Ss9MZz5bNr67FtX0Yq1Sv50KZrVvyHv
+        1OExx+A0fZkSrVLoF13nKioeCyvsfBRmiWH8+RtdpqWtuF4Vv7WwGLZwDc7Jwy2A
+        ==
+X-ME-Sender: <xms:o1hoXiE9F8d63W5FJwaI-hRTaAe0E3KcYFl4fj5Bb0eJ5jyLm_putg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedruddvuddgheekucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjfgesthdtredttdervdenucfhrhhomhepvfgrkhgr
+    shhhihcuufgrkhgrmhhothhouceoohdqthgrkhgrshhhihesshgrkhgrmhhotggthhhird
+    hjpheqnecukfhppedugedrfedrjeegrdduieeknecuvehluhhsthgvrhfuihiivgeptden
+    ucfrrghrrghmpehmrghilhhfrhhomhepohdqthgrkhgrshhhihesshgrkhgrmhhotggthh
+    hirdhjph
+X-ME-Proxy: <xmx:o1hoXpyvpK075-EuV3DK9-cOJwJdQNqwHsLwAtPjM8IeJlo0jnvfzA>
+    <xmx:o1hoXk8k5N5gJTt-jqWBtt8oEPd9rAMHIUfdRsIvW7jMV9nE7x8Hrw>
+    <xmx:o1hoXrVjRku8AwyWmYO0iMwZ51L9dICuSIv63yN3yZQSPxOSyWBYxg>
+    <xmx:pFhoXrIdJdSGK1Dh7-0w7wkFolMYiM2ibdevR8DbGPFC5QjW7P7na5qWUJU>
+Received: from workstation (ae074168.dynamic.ppp.asahi-net.or.jp [14.3.74.168])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 7370B328005A;
+        Tue, 10 Mar 2020 23:18:56 -0400 (EDT)
+Date:   Wed, 11 Mar 2020 12:18:54 +0900
+From:   Takashi Sakamoto <o-takashi@sakamocchi.jp>
+To:     Jules Irenge <jbi.octave@gmail.com>
+Cc:     boqun.feng@gmail.com, linux-kernel@vger.kernel.org,
+        bpf@vger.kernel.org, netdev@vger.kernel.org,
+        Clemens Ladisch <clemens@ladisch.de>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        "moderated list:FIREWIRE AUDIO DRIVERS and IEC 61883-1/6 PACKET..." 
+        <alsa-devel@alsa-project.org>
+Subject: Re: [PATCH 8/8] ALSA: firewire-tascam: Add missing annotation for
+ tscm_hwdep_read_locked()
+Message-ID: <20200311031853.GA8197@workstation>
+Mail-Followup-To: Jules Irenge <jbi.octave@gmail.com>, boqun.feng@gmail.com,
+        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        netdev@vger.kernel.org, Clemens Ladisch <clemens@ladisch.de>,
+        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        "moderated list:FIREWIRE AUDIO DRIVERS and IEC 61883-1/6 PACKET..." <alsa-devel@alsa-project.org>
+References: <0/8>
+ <20200311010908.42366-1-jbi.octave@gmail.com>
+ <20200311010908.42366-9-jbi.octave@gmail.com>
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200311010908.42366-9-jbi.octave@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVHVlLCAyMDIwLTAzLTEwIGF0IDE4OjEwICswODAwLCBIc2luLUhzaXVuZyBXYW5nIHdyb3Rl
-Og0KPiBGcm9tOiBSYW4gQmkgPHJhbi5iaUBtZWRpYXRlay5jb20+DQo+IA0KPiBUaGlzIGFkZCBz
-dXBwb3J0IGZvciB0aGUgTWVkaWFUZWsgTVQ2MzU4IFJUQy4gRHJpdmVyIHVzaW5nDQo+IGNvbXBh
-dGlibGUgZGF0YSB0byBzdG9yZSBkaWZmZXJlbnQgUlRDX1dSVEdSIGFkZHJlc3Mgb2Zmc2V0Lg0K
-PiBUaGlzIHJlcGxhY2UgUlRDX1dSVEdSIHRvIFJUQ19XUlRHUl9NVDYzMjMgaW4gbXQ2MzIzLXBv
-d2Vyb2ZmDQo+IGRyaXZlciB3aGljaCBvbmx5IG5lZWRlZCBieSBhcm12NyBDUFUgd2l0aG91dCBB
-VEYuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBSYW4gQmkgPHJhbi5iaUBtZWRpYXRlay5jb20+DQo+
-IFNpZ25lZC1vZmYtYnk6IEhzaW4tSHNpdW5nIFdhbmcgPGhzaW4taHNpdW5nLndhbmdAbWVkaWF0
-ZWsuY29tPg0KPiAtLS0NCg0KPC4uLj4NCg0KPiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS9saW51eC9t
-ZmQvbXQ2Mzk3L3J0Yy5oIGIvaW5jbHVkZS9saW51eC9tZmQvbXQ2Mzk3L3J0Yy5oDQo+IGluZGV4
-IDdkZmI2M2IuLjNkYzQ4ZTggMTAwNjQ0DQo+IC0tLSBhL2luY2x1ZGUvbGludXgvbWZkL210NjM5
-Ny9ydGMuaA0KPiArKysgYi9pbmNsdWRlL2xpbnV4L21mZC9tdDYzOTcvcnRjLmgNCg0KPC4uLj4N
-Cg0KPiArDQo+ICtzdGF0aWMgY29uc3Qgc3RydWN0IG10a19ydGNfZGF0YSBtdDYzNThfcnRjX2Rh
-dGEgPSB7DQo+ICsJLndydGdyID0gUlRDX1dSVEdSX01UNjM1OCwNCj4gK307DQo+ICsNCj4gK3N0
-YXRpYyBjb25zdCBzdHJ1Y3QgbXRrX3J0Y19kYXRhIG10NjM5N19ydGNfZGF0YSA9IHsNCj4gKwku
-d3J0Z3IgPSBSVENfV1JUR1JfTVQ2Mzk3LA0KPiAgfTsNCg0KSGksDQoNCm10NjMyMy1wb3dlcm9m
-Zi5jIGRvZXNuJ3QgbmVlZCB0aGVzZSBfcnRjX2RhdGEuIFBsZWFzZSBwdXQgdGhlbSBpbg0KcnRj
-LW10NjM5Ny5jDQoNCkpvZS5DDQoNCg==
+Hi,
 
+On Wed, Mar 11, 2020 at 01:09:08AM +0000, Jules Irenge wrote:
+> Sparse reports a warning at tscm_hwdep_read_locked()
+> 
+> warning: context imbalance in tscm_hwdep_read_locked() - unexpected unlock
+> 
+> The root cause is the missing annotation at tscm_hwdep_read_locked()
+> Add the missing __releases(&tscm->lock) annotation
+> 
+> Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
+> ---
+>  sound/firewire/tascam/tascam-hwdep.c | 1 +
+>  1 file changed, 1 insertion(+)
+
+Thanks for your care of the warning. Although I have found it, I had
+no idea to suppress it.
+
+Acked-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+
+> diff --git a/sound/firewire/tascam/tascam-hwdep.c b/sound/firewire/tascam/tascam-hwdep.c
+> index 9801e33e7f2a..6f38335fe10b 100644
+> --- a/sound/firewire/tascam/tascam-hwdep.c
+> +++ b/sound/firewire/tascam/tascam-hwdep.c
+> @@ -17,6 +17,7 @@
+>  
+>  static long tscm_hwdep_read_locked(struct snd_tscm *tscm, char __user *buf,
+>  				   long count, loff_t *offset)
+> +	__releases(&tscm->lock)
+>  {
+>  	struct snd_firewire_event_lock_status event = {
+>  		.type = SNDRV_FIREWIRE_EVENT_LOCK_STATUS,
+> -- 
+> 2.24.1
+> 
