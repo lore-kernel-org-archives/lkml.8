@@ -1,99 +1,155 @@
-Return-Path: <linux-kernel-owner@vger.kernel.org>
+Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,RDNS_NONE,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
-Received: from hermes.aosc.io ([199.195.250.187]:58064 "EHLO hermes.aosc.io"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729809AbgCKQeG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 12:34:06 -0400
-From: Icenowy Zheng <icenowy@aosc.io>
-To: Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, Ondrej Jirman <megous@megous.com>
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-sunxi@googlegroups.com, Icenowy Zheng <icenowy@aosc.io>
-Subject: [PATCH 2/5] dt-bindings: panel: add binding for Xingbangda XBD599 panel
-Date: Thu, 12 Mar 2020 00:33:26 +0800
-Message-Id: <20200311163329.221840-3-icenowy@aosc.io>
-In-Reply-To: <20200311163329.221840-1-icenowy@aosc.io>
-References: <20200311163329.221840-1-icenowy@aosc.io>
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BFDDC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:40:43 +0000 (UTC)
+Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
+	by mail.kernel.org (Postfix) with ESMTP id 3AAA8206E9
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 18:40:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583952044;
+	bh=eX5YfPx9BOUw1wpNupQktNlo5QE61r8GJsSfY9aO0j8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=uQDERPnvNggGzDZ95zR/rrBUTlK+iFFDrgnaIhkJx+oGzkXwtqv4rTCW/x73OpfQ/
+	 wSSBbciWnOaHnjMwzSVE3FC7s6UtlWyInjRXmSro84Kg2C4xWW3Z4rCYggEb9p6foW
+	 XCwsQJEjXOMzgUqjGdI5xKXVua+pN3riWHjiO/gQ=
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1730874AbgCKSkm (ORCPT
+        <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 11 Mar 2020 14:40:42 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:39064 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730779AbgCKSkm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 14:40:42 -0400
+Received: by mail-pg1-f193.google.com with SMTP id s2so1665849pgv.6;
+        Wed, 11 Mar 2020 11:40:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=LhEArLNs7yTgrwrh8ppvMZscU8fBidqt0+run5uu778=;
+        b=miziYrnFGj5q/3KNzAQD7A1EW0goAUAKr23NuSrnxySJK/LArBoxN6WRuNqTU+CIa7
+         n1Uv/5X7Km78lOxGKIw8oORIGgmTgVpMKLG5ygVfnQuRODa9dAE0rX6vIimJ7ngm2J09
+         xZkdE0x3HcVYTwmLEu8v+vEm14P+efxPlInqyqdK6GQUg9kDsXaBSIfbct3gTQ2Y+r4f
+         +iNz1cVhFi//L6iIaH1obGmsrwwZJVs3i8zCuNK9fjKsDZQln8JZ4p13Ispq8nCETLtN
+         YwpEfEeY9Ge1i7OT621BgHffm6mR7H9bhFgW/28tchS9o7WKX/vcxdzIEDTicKK+QreJ
+         vrww==
+X-Gm-Message-State: ANhLgQ2lEitGOrNfLKG0oPXURmOGDr1JVN6NkY0qeljkaowXxdWKr7F4
+        DI1VR8HTSxJM34CmWy2NkdM=
+X-Google-Smtp-Source: ADFU+vtKIXTgk7ItAsQoDUPk8VMextzmtkVqChxTjhlpMtIE68/BUmHDJyax3UL59pgxKzo6TkaBmg==
+X-Received: by 2002:aa7:85c8:: with SMTP id z8mr4031003pfn.66.1583952039317;
+        Wed, 11 Mar 2020 11:40:39 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id 136sm50668117pgh.26.2020.03.11.11.40.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Mar 2020 11:40:38 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id B4F364028E; Wed, 11 Mar 2020 18:40:37 +0000 (UTC)
+Date:   Wed, 11 Mar 2020 18:40:37 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     NeilBrown <neilb@suse.com>, Josh Triplett <josh@joshtriplett.org>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        stable@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jeff Vander Stoep <jeffv@google.com>,
+        Jessica Yu <jeyu@kernel.org>, Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH] kmod: make request_module() return an error when
+ autoloading is disabled
+Message-ID: <20200311184037.GP11244@42.do-not-panic.com>
+References: <20200310223731.126894-1-ebiggers@kernel.org>
+ <20200311043221.GK11244@42.do-not-panic.com>
+ <20200311052620.GD46757@gmail.com>
+ <20200311063130.GL11244@42.do-not-panic.com>
+ <20200311173545.GA20006@gmail.com>
+ <20200311180002.GN11244@42.do-not-panic.com>
+ <20200311182130.GA41227@sol.localdomain>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200311182130.GA41227@sol.localdomain>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
+Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
 
-Xingbangda XBD599 is a 5.99" 720x1440 MIPI-DSI LCD panel.
+On Wed, Mar 11, 2020 at 11:21:30AM -0700, Eric Biggers wrote:
+> On Wed, Mar 11, 2020 at 06:00:02PM +0000, Luis Chamberlain wrote:
+> > On Wed, Mar 11, 2020 at 10:35:45AM -0700, Eric Biggers wrote:
+> > > On Wed, Mar 11, 2020 at 06:31:30AM +0000, Luis Chamberlain wrote:
+> > > > On Tue, Mar 10, 2020 at 10:26:20PM -0700, Eric Biggers wrote:
+> > > > > On Wed, Mar 11, 2020 at 04:32:21AM +0000, Luis Chamberlain wrote:
+> > > > > > On Tue, Mar 10, 2020 at 03:37:31PM -0700, Eric Biggers wrote:
+> > > > > > > From: Eric Biggers <ebiggers@google.com>
+> > > > > > > 
+> > > > > > > It's long been possible to disable kernel module autoloading completely
+> > > > > > > by setting /proc/sys/kernel/modprobe to the empty string.  This can be
+> > > > > > > preferable
+> > > > > > 
+> > > > > > preferable but ... not documented. Or was this documented or recommended
+> > > > > > somewhere?
+> > > > > > 
+> > > > > > > to setting it to a nonexistent file since it avoids the
+> > > > > > > overhead of an attempted execve(), avoids potential deadlocks, and
+> > > > > > > avoids the call to security_kernel_module_request() and thus on
+> > > > > > > SELinux-based systems eliminates the need to write SELinux rules to
+> > > > > > > dontaudit module_request.
+> > > > > 
+> > > > > Not that I know of, though I didn't look too hard.  proc(5) mentions
+> > > > > /proc/sys/kernel/modprobe but doesn't mention the empty string case.
+> > > > > 
+> > > > > In any case, it's been supported for a long time, and it's useful for the
+> > > > > reasons I mentioned.
+> > > > 
+> > > > Sure. I think then its important to document it as such then, or perhaps
+> > > > make a kconfig option which sets this to empty and document it on the
+> > > > kconfig entry.
+> > > 
+> > > I'll send a man-pages patch to document it in proc(5).
+> > > 
+> > > Most users, including the one I have in mind, should just be able to run
+> > > 'echo > /proc/sys/kernel/modprobe' early in the boot process.  So I don't think
+> > > the need for a kconfig option to control the default value has been clearly
+> > > demonstrated yet.  You're certainly welcome to send a patch for it if you
+> > > believe it would be useful, though.
+> > 
+> > When doing a rewrite of some of this code I did wonder who would use
+> > this and clear it out. A kconfig entry would remove any doubt over its
+> > use and would allow one to skip the userspace / early init requirement
+> > to empty it out, therefore actually being safer because you are not
+> > racing against modules being loaded.
+> > 
+> > Is avoiding the race more suitable for your needs than echo'ing early on boot?
+> > 
+> 
+> Maybe.  It would avoid the chance of races, but I haven't seen any yet.
+> Also, our userspace has to support old kernels, so we still need the
+> 'echo > /proc/sys/kernel/modprobe' anyway.  If that turns out to be good enough,
+> then it makes things easier for everyone.
+> 
+> If setting the default at build time turns out to be needed, then sure in that
+> case I'll send a patch that adds a kconfig option to do that.  But I'm first
+> trying to use the existing kernel functionality.
+> 
+> Also, a kconfig option isn't really a substitute for documenting this existing
+> sysctl.  We still need to document it properly in proc(5) and
+> Documentation/admin-guide/sysctl/kernel.rst.
 
-Add its device tree binding.
+Yes, sure. Whatever mechanism you find *suitable* I think you may the
+shiny best new user of it, and so given all that is shared now, I'm sure
+you will document do what is needed. Whatever guidance you can provide
+based on your experience is of huge value to this little corner of the
+kernel.
 
-Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
----
- .../display/panel/xingbangda,xbd599.yaml      | 50 +++++++++++++++++++
- 1 file changed, 50 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/panel/xingbangda,xbd599.yaml
+I just wanted to do away with unclear tribal knowledge and ensure we
+support / test whatever you do well moving forward.
 
-diff --git a/Documentation/devicetree/bindings/display/panel/xingbangda,xbd599.yaml b/Documentation/devicetree/bindings/display/panel/xingbangda,xbd599.yaml
-new file mode 100644
-index 000000000000..62816b34de31
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/xingbangda,xbd599.yaml
-@@ -0,0 +1,50 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/panel/xingbangda,xbd599.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Xingbangda XBD599 5.99in MIPI-DSI LCD panel
-+
-+maintainers:
-+  - Icenowy Zheng <icenowy@aosc.io>
-+
-+allOf:
-+  - $ref: panel-common.yaml#
-+
-+properties:
-+  compatible:
-+    const: xingbangda,xbd599
-+  reg: true
-+  backlight: true
-+  reset-gpios: true
-+  vcc-supply:
-+     description: regulator that supplies the VCC voltage
-+  iovcc-supply:
-+     description: regulator that supplies the IOVCC voltage
-+
-+required:
-+  - compatible
-+  - reg
-+  - backlight
-+  - vcc-supply
-+  - iovcc-supply
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    &dsi {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        panel@0 {
-+            compatible = "xingbangda,xbd599";
-+            reg = <0>;
-+            backlight = <&backlight>;
-+            iovcc-supply = <&reg_dldo2>;
-+            vcc-supply = <&reg_ldo_io0>;
-+        };
-+    };
-+
-+...
--- 
-2.24.1
-
+  Luis
