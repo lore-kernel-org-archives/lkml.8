@@ -2,77 +2,165 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCC75C2BAEE
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 22:11:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB267C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 22:13:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7EA320746
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 22:11:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE2A920739
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 22:13:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583964808;
+	bh=XDwYOCwLlIjaYDhDaMndJ3w/2y6fpCRMc1hos5CsEsc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=kZHEudj7A0SCQwtPpJ+zzNGjevR3tSVi8ig0bvao0/b3gyL7PtEyv4Lja7POwIuOI
+	 EehcxuU5ced9j1QMrG67INMZorfC4E4CUig8EpH6PT+QNX0ETdSYkHi2wHDbSNfVsD
+	 zbObKkMF7QOVW7mTjYANWlhh8umsFiSTi/X6fhaM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731224AbgCKWLK (ORCPT
+        id S1729782AbgCKWN1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Mar 2020 18:11:10 -0400
-Received: from smtprelay0191.hostedemail.com ([216.40.44.191]:34216 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729518AbgCKWLK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Mar 2020 18:11:10 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay07.hostedemail.com (Postfix) with ESMTP id F39FF181D330D;
-        Wed, 11 Mar 2020 22:11:08 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: loaf59_60ffb32fe5a07
-X-Filterd-Recvd-Size: 1958
-Received: from XPS-9350 (unknown [172.58.78.137])
-        (Authenticated sender: joe@perches.com)
-        by omf08.hostedemail.com (Postfix) with ESMTPA;
-        Wed, 11 Mar 2020 22:11:06 +0000 (UTC)
-Message-ID: <3fc2c61e4c1c25d847fd7f284c818b664b64441c.camel@perches.com>
-Subject: Re: [PATCH -next 023/491] AMD KFD: Use fallthrough;
-From:   Joe Perches <joe@perches.com>
-To:     Felix Kuehling <felix.kuehling@amd.com>
-Cc:     Alex Deucher <alexander.deucher@amd.com>,
-        Christian =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Date:   Wed, 11 Mar 2020 15:09:22 -0700
-In-Reply-To: <12c75b17-1d0e-6cc4-4ed1-a6f5003772ae@amd.com>
-References: <cover.1583896344.git.joe@perches.com>
-         <3cfc40c8f750abc672d6a60418fe220cb663a0f5.1583896349.git.joe@perches.com>
-         <12c75b17-1d0e-6cc4-4ed1-a6f5003772ae@amd.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Wed, 11 Mar 2020 18:13:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47862 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729518AbgCKWN1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Mar 2020 18:13:27 -0400
+Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F1F06206E7;
+        Wed, 11 Mar 2020 22:13:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583964806;
+        bh=XDwYOCwLlIjaYDhDaMndJ3w/2y6fpCRMc1hos5CsEsc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=tIIychkVL7uL/54jdo61QjlSxreiOg8crsryAwdL/A9sObGM3QGHAcYsYhV6PHs2x
+         YxEhlXqM73+TajVDlwTSUzxI6PyPnXPfNl1tWnK2JCYcBWMNgDG/xAr/nPx91mkT70
+         BOzqn7UCM7LjrqmjdqY+KCo1XY4LNoBV/gs9vdA0=
+Date:   Wed, 11 Mar 2020 17:13:24 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc:     Austin.Bolen@dell.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ashok.raj@intel.com
+Subject: Re: [PATCH v17 09/12] PCI/AER: Allow clearing Error Status Register
+ in FF mode
+Message-ID: <20200311221324.GA195204@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ddf5d142-09e7-67ee-16e4-37447df6b112@linux.intel.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-03-11 at 17:50 -0400, Felix Kuehling wrote:
-> On 2020-03-11 12:51 a.m., Joe Perches wrote:
-> > Convert the various uses of fallthrough comments to fallthrough;
+On Wed, Mar 11, 2020 at 02:25:18PM -0700, Kuppuswamy Sathyanarayanan wrote:
+> On 3/11/20 1:33 PM, Bjorn Helgaas wrote:
+> > On Wed, Mar 11, 2020 at 05:27:35PM +0000, Austin.Bolen@dell.com wrote:
+> > > On 3/11/2020 12:12 PM, Bjorn Helgaas wrote:
+> > > <SNIP>
+> > > > > > > For the normative text describing when OS clears the AER bits
+> > > > > > > following the informative flow chart, it could say that OS clears
+> > > > > > > AER as soon as possible after OST returns and before OS processes
+> > > > > > > _HPX and loading drivers.  Open to other suggestions as well.
+> > > > > > I'm not sure what to do with "as soon as possible" either.  That
+> > > > > > doesn't seem like something firmware and the OS can agree on.
+> > > > > I can just state that it's done after OST returns but before _HPX or
+> > > > > driver is loaded. Any time in that range is fine. I can't get super
+> > > > > specific here because different OSes do different things.  Even for
+> > > > > a given OS they change over time. And I need something generic
+> > > > > enough to support a wide variety of OS implementations.
+> > > > Yeah.  I don't know how to solve this.
+> > > > 
+> > > > Linux doesn't actually unload and reload drivers for the child devices
+> > > > (Sathy, correct me if I'm wrong here) even though DPC containment
+> > > > takes the link down and effectively unplugs and replugs the device.  I
+> > > > would *like* to handle it like hotplug, but some higher-level software
+> > > > doesn't deal well with things like storage devices disappearing and
+> > > > reappearing.
+> > > > 
+> > > > Since Linux doesn't actually re-enumerate the child devices, it
+> > > > wouldn't evaluate _HPX again.  It would probably be cleaner if it did,
+> > > > but it's all tied up with the whole unplug/replug problem.
+
+> > > DPC resets everything below it and so to get it back up and running it
+> > > would mean that all buses and resources need to be assigned, _HPX
+> > > evaluated, and drivers reloaded. If those things don't happen then the
+> > > whole hierarchy below the port that triggered DPC will be inaccessible.
+
+> > Hmm, I think I might be confusing this with another situation.  Sathy,
+> > can you help me understand this?  I don't have a way to actually
+> > exercise this EDR path.  Is there some way the pciehp hotplug driver
+> > gets involved here?
 > > 
-> > Done via script
-> > Link: https://lore.kernel.org/lkml/b56602fcf79f849e733e7b521bb0e17895d390fa.1582230379.git.joe.com/
-> 
-> The link seems to be broken. This one works: 
-> https://lore.kernel.org/lkml/b56602fcf79f849e733e7b521bb0e17895d390fa.1582230379.git.joe@perches.com/
+> > Here's how this seems to work as far as I can tell:
+> > 
+> >    - Linux does not have DPC or AER control
+> > 
+> >    - Linux installs EDR notify handler
+> > 
+> >    - Linux evaluates DPC Enable _DSM
+> > 
+> >    - DPC containment event occurs
+> > 
+> >    - Firmware fields DPC interrupt
+> > 
+> >    - DPC event is not a surprise remove
+> > 
+> >    - Firmware sends EDR notification
+> > 
+> >    - Linux EDR notify handler evaluates Locate _DSM
+> > 
+> >    - Linux reads and logs DPC and AER error information for port in
+> >      containment mode.  [If it was an RP PIO error, Linux clears RP PIO
+> >      error status, which is an asymmetry with the non-RP PIO path.]
+> > 
+> >    - Linux clears AER error status (pci_aer_raw_clear_status())
+> > 
+> >    - Linux calls driver .error_detected() methods for all child devices
+> >      of the port in containment mode (pcie_do_recovery()).  These
+> >      devices are inaccessible because the link is down.
+> > 
+> >    - Linux clears DPC Trigger Status (dpc_reset_link() from
+> >      pcie_do_recovery()).
+> > 
+> >    - Linux calls driver .mmio_enabled() methods for all child devices.
+> > 
+> > This is where I get lost.  These child devices are now accessible, but
+> > they've been reset, so I don't know how their config space got
+> > restored.  Did pciehp enumerate them?  Did we do something like
+> > pci_restore_state()?  I don't see where either of these happens.
 
-Thanks.
+> AFAIK, AER error status registers  are sticky (RW1CS) and hence
+> will be preserved during reset.
 
-I neglected to use a backslash on the generating script.
-In the script in 0/491,
+I'm not concerned about the AER registers.  I'm wondering about bus
+numbers & windows (for bridges), BAR settings, MSI programming, etc.:
+all the normal stuff the driver expects.  Or do we actually detach the
+driver, remove the device, hot-add the device, re-enumerate, and
+rebind the driver?
 
-Link: https://lore.kernel.org/lkml/b56602fcf79f849e733e7b521bb0e17895d390fa.1582230379.git.joe@perches.com/
+> > So they want to basically do native AER handling even though firmware
+> > owns AER?  My head hurts.
 
-likely should have been:
+> No, it's meant only for clearing AER registers. In EDR path, since
+> OS owns clearing DPC registers, they want to let OS own clearing AER
+> registers as well. Also, it would give OS a chance to decide
+> whether we want to keep the device on based on error status and
+> history of the device attached.
 
-Link: https://lore.kernel.org/lkml/b56602fcf79f849e733e7b521bb0e17895d390fa.1582230379.git.joe\@perches.com/
+It's obviously not meant "only for clearing AER registers" if the OS
+is going to decide things based on the error status.  How is deciding
+things and clearing AER registers different from native AER handling?
 
+This sort of makes a mockery of the idea of "AER ownership".  But I
+guess the spec doesn't actually say anything that limits OS access to
+the AER capability, even if firmware retains "control".  It does
+restrict *firmware* from modifying the AER cap if it grants control
+to the OS, but not the other way around.
 
+Bjorn
