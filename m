@@ -2,157 +2,224 @@ Return-Path: <SRS0=Ktsx=44=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05D89C3F2D0
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 00:19:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FC3CC10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 00:19:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCADD222C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 00:19:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583885952;
-	bh=UcNtWpBPblu9vR73y/1seDmYC7BGlEjFnb+kqdeS3Bk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=RESrt4nA8G7ua56ueZ5M73oz16H56sI+DDLI1M5MQ5S8yY0TaZ3TGj500mPP9qi7e
-	 qb/4VPR6MVBURMnocdHe8m6tuXsOeCZjESUwF33xIKZfcqPaH9Gm7/zvLFT7BSMjDE
-	 H59HH7Dn/AFIxixjLAo8fHTRCVZnZiQS5FUJB1zQ=
+	by mail.kernel.org (Postfix) with ESMTP id 3F7FF215A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Mar 2020 00:19:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="RZBtsU2u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727881AbgCKASW (ORCPT
+        id S1727892AbgCKATR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Mar 2020 20:18:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38446 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726463AbgCKASW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Mar 2020 20:18:22 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 86637222C4;
-        Wed, 11 Mar 2020 00:18:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583885901;
-        bh=UcNtWpBPblu9vR73y/1seDmYC7BGlEjFnb+kqdeS3Bk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=zkmttxiF36VLz6lg5tyYyttgoIp2YkTtMDmbi+ciIQ/EXhdFDmRQAzjeAkVf9I9gp
-         cHJ2iJu1z9A3KSuYWOQYtYFY+R5y6kp+KfCtp77SKI7WMz2RzjVp+KbLCUBN6Cwj1f
-         YCIpFEhGYhi1ygDGR/zWxoyr5cx2FyIDleoO6X00=
-Date:   Wed, 11 Mar 2020 09:18:15 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Tue, 10 Mar 2020 20:19:17 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:10359 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726463AbgCKATR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Mar 2020 20:19:17 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e682e770000>; Tue, 10 Mar 2020 17:19:03 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Tue, 10 Mar 2020 17:19:16 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Tue, 10 Mar 2020 17:19:16 -0700
+Received: from [10.2.175.232] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 11 Mar
+ 2020 00:19:15 +0000
+Subject: Re: LKFT: arm x15: mmc1: cache flush error -110
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+CC:     Jon Hunter <jonathanh@nvidia.com>,
+        Bitan Biswas <bbiswas@nvidia.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Jens Axboe <axboe@kernel.dk>,
         Alexei Starovoitov <ast@kernel.org>,
-        paulmck <paulmck@kernel.org>,
-        "Joel Fernandes, Google" <joel@joelfernandes.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Jason Wessel <jason.wessel@windriver.com>
-Subject: Re: Instrumentation and RCU
-Message-Id: <20200311091815.fce458348bb7641b60f600d9@kernel.org>
-In-Reply-To: <1760242532.23694.1583857291763.JavaMail.zimbra@efficios.com>
-References: <87mu8p797b.fsf@nanos.tec.linutronix.de>
-        <20200309141546.5b574908@gandalf.local.home>
-        <87fteh73sp.fsf@nanos.tec.linutronix.de>
-        <20200310170951.87c29e9c1cfbddd93ccd92b3@kernel.org>
-        <87pndk5tb4.fsf@nanos.tec.linutronix.de>
-        <450878559.23455.1583854311078.JavaMail.zimbra@efficios.com>
-        <20200310114657.099122fd@gandalf.local.home>
-        <1760242532.23694.1583857291763.JavaMail.zimbra@efficios.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        linux-block <linux-block@vger.kernel.org>,
+        <lkft-triage@lists.linaro.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        John Stultz <john.stultz@linaro.org>,
+        Faiz Abbas <faiz_abbas@ti.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Kishon <kishon@ti.com>
+References: <CA+G9fYuqAQfhzF2BzHr7vMHx68bo8-jT+ob_F3eHQ3=oFjgYdg@mail.gmail.com>
+ <757853cf-987e-f6b6-9259-b4560a031692@nvidia.com>
+ <d12fe142-7e72-ab58-33ab-17817e35096f@nvidia.com>
+ <c216f131-6f83-c9c9-9d17-8d44ec06972d@nvidia.com>
+ <87ad7586-9569-4276-044a-adb64e84ca15@nvidia.com>
+ <a0962e0b-0f1d-9f32-f6e9-92f69f93167f@nvidia.com>
+ <57ddddc2-3ee8-d867-bba0-0dd9929ba37d@nvidia.com>
+ <CAPDyKFqZSd9E3+16yFsmpee2JsbRJ-DGThxx7NJHu6UE00Xi1Q@mail.gmail.com>
+ <26ee7225-9483-4664-c2d7-b5cefeadcd4b@nvidia.com>
+ <CAPDyKFqwVQDEnPNi33mc9ycTxpaT1cRLejbR3Ja4c8dha4gFRw@mail.gmail.com>
+ <0301bbd5-8d4d-4a77-42c7-8a1391c2d60a@nvidia.com>
+ <CAPDyKFp93H0=ttazofW9NMBtL5VnjB4PdkwN0FDCtWR0pMHrPA@mail.gmail.com>
+ <f01b5533-124a-d978-a90a-9c9c6235fb65@nvidia.com>
+ <CAPDyKFqJjsuHect-azQKO8cCoq5JJQrZ=eShsdLHq97NXgXnuQ@mail.gmail.com>
+ <227d9f08-582e-fd79-e1dc-7695bddd162d@nvidia.com>
+ <2456654f-2724-0b6d-8936-afa05f345344@nvidia.com>
+ <df939962-2cb4-1c36-0baf-d82e3527d05a@nvidia.com>
+Message-ID: <41348c8f-6bc7-a5a3-e1ed-9143f60cbdae@nvidia.com>
+Date:   Tue, 10 Mar 2020 17:22:00 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <df939962-2cb4-1c36-0baf-d82e3527d05a@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1583885943; bh=2e2I880Je2/5JSweQkCP1utti59vYA+9B+zzD06/JIA=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=RZBtsU2uPCJump1bxE5UmlWFnvuZh519Sr3GUfYlfhlvE+nqWdXvpYlw7O8CiiOAW
+         mxRN+v2d2szBj6yfQVdq0Gf9RyxqhshhGgi+5fxJIW/sI36Ix5gww02PiPh4XthPDY
+         DwHJdOja8tXqtO9wgwwHrAnkBOuQhKDt4lzIeT20/FuKWTmukD/dmnNBxVeRqiFs94
+         NC7u6horjZhr347QubXdSdZIOaiPHY91OgFNsu8SaP7jX314+HRAaZIwZ+uESIzaC7
+         2dPsXwgkowc0SEo7gjFmq4mcR+VgXp8/6xH5g2b+ghmYERKAQOp0X1Hh8/v3tc49Io
+         Bgw4GUC5/GkRA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mathieu,
 
-On Tue, 10 Mar 2020 12:21:31 -0400 (EDT)
-Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
+On 3/10/20 4:10 PM, Sowjanya Komatineni wrote:
+>
+> On 3/10/20 2:59 PM, Sowjanya Komatineni wrote:
+>>
+>> On 3/10/20 10:27 AM, Sowjanya Komatineni wrote:
+>>>
+>>> On 3/10/20 10:09 AM, Ulf Hansson wrote:
+>>>> External email: Use caution opening links or attachments
+>>>>
+>>>>
+>>>> [...]
+>>>>
+>>>>>>>> I would like to get the regression fixed asap, but I also would 
+>>>>>>>> like
+>>>>>>>> to avoid reverting patches, unless really necessary. May I 
+>>>>>>>> propose the
+>>>>>>>> following two options.
+>>>>>>>>
+>>>>>>>> 1. Find out why polling with ->card_busy() or CMD13, for a CMD6 
+>>>>>>>> with
+>>>>>>>> an R1 response doesn't work - and then fix that behaviour.
+>>>>>>>>
+>>>>>>>> 2. Set the mmc->max_busy_timeout to zero for sdhci-tegra, which 
+>>>>>>>> makes
+>>>>>>>> the core to always use R1B for CMD6 (and erase). This also 
+>>>>>>>> means that
+>>>>>>>> when the cmd->busy_timeout becomes longer than 11s, sdhci-tegra 
+>>>>>>>> must
+>>>>>>>> disable the HW busy timeout and just wait "forever".
+>>>>>>>>
+>>>>>>>> If you decide for 2, you can add the software timeout support 
+>>>>>>>> on top,
+>>>>>>>> but make that can be considered as a next step of an improvement,
+>>>>>>>> rather than needed as fix. Note that, I believe there are some 
+>>>>>>>> support
+>>>>>>>> for software timeout already in the sdhci core, maybe you need to
+>>>>>>>> tweak it a bit for your case, I don't know.
+>>>>>>>>
+>>>>>>>> Kind regards
+>>>>>>>> Uffe
+>>>>>>> Hi Uffe
+>>>>>>>
+>>>>>>> Will go with 2nd option and will send patches out when ready.
+>>>>>> Okay, good.
+>>>>>>
+>>>>>>> BTW, Tegra host also supports 
+>>>>>>> SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK for
+>>>>>>> data timeout based on host clock when using finite mode (HW busy
+>>>>>>> detection based on DATA TIMEOUT count value when cmd operation 
+>>>>>>> timeout
+>>>>>>> is < 11s for tegra host).
+>>>>>>>
+>>>>>>> So, looks like we cant set host max_busy_timeout to 0 for Tegra 
+>>>>>>> host to
+>>>>>>> force R1B during SWITCH and SLEEP_AWAKE.
+>>>>>>>
+>>>>>>> So, was thinking to introduce host capability 
+>>>>>>> MMC_CAP2_LONG_WAIT_HW_BUSY
+>>>>>>> which can be used for hosts supporting long or infinite HW busy 
+>>>>>>> wait
+>>>>>>> detection and will update mmc and mmc_ops drivers to not allow 
+>>>>>>> convert
+>>>>>>> R1B to R1B for hosts with this capability during SLEEP_AWAKE and 
+>>>>>>> SWITCH.
+>>>>>> That seems reasonable, it becomes probably both easier and 
+>>>>>> clearer by
+>>>>>> adding a new host cap.
+>>>>>>
+>>>>>> In any case, let me help out and cook a patch for this for the core
+>>>>>> part (I leave the sdhci change to you). It may be a bit tricky,
+>>>>>> especially since I have currently queued a bunch of new changes for
+>>>>>> v5.7, that enables more users of mmc_poll_for_busy() in the core.
+>>>>>> Maybe I need to temporarily drop them, so we can fix these problems
+>>>>>> first. I will check.
+>>>>>>
+>>>>>> Probably, I would also name the cap MMC_CAP_HW_NEED_RSP_BUSY, as 
+>>>>>> that
+>>>>>> seems to be describing the common problem we have for sdhci
+>>>>>> omap/tegra.
+>>>>>>
+>>>>>> Finally, it seems like MMC_CAP_WAIT_WHILE_BUSY should be set for
+>>>>>> sdhci- tegra, so while at it, perhaps you can cook a patch for 
+>>>>>> that as
+>>>>>> well.
+>>>>>>
+>>>>>> Kind regards
+>>>>>> Uffe
+>>>>> OK, I sent v1 yesterday. Please ignore them then.
+>>>> Oh, I haven't seen them. In any case, I am ignoring them.
+>>>>
+>>>>> Will send out patches only for HW busy wait modes program based on 
+>>>>> cmd
+>>>>> timeout and WAIT_WHILE_BUSY enabled.
+>>>> Great, thanks!
+>>>>
+>>>> Please help test the series I just posted as well, if you have the
+>>>> time ofcourse.
+>>>>
+>>>> Kind regards
+>>>> Uffe
+>>>
+>>> Sure,
+>>>
+>>> Thanks
+>>>
+>>> Sowjanya
+>>
+>>
+>> mmc_sleep() also needs update to force R1B when host sets capability 
+>> MMC_CAP_NEED_RSP_BUSY
+>>
+>>
+> Tested patches and they work good.
+>
+Sent sdhci-tegra v2 patches
 
-> ----- On Mar 10, 2020, at 11:46 AM, rostedt rostedt@goodmis.org wrote:
-> 
-> > On Tue, 10 Mar 2020 11:31:51 -0400 (EDT)
-> > Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
-> > 
-> >> I think there are two distinct problems we are trying to solve here,
-> >> and it would be good to spell them out to see which pieces of technical
-> >> solution apply to which.
-> >> 
-> >> Problem #1) Tracer invoked from partially initialized kernel context
-> >> 
-> >>   - Moving the early/late entry/exit points into sections invisible from
-> >>     instrumentation seems to make tons of sense for this.
-> >> 
-> >> Problem #2) Tracer recursion
-> >> 
-> >>   - I'm much less convinced that hiding entry points from instrumentation
-> >>     works for this. As an example, with the isntr_begin/end() approach you
-> >>     propose above, as soon as you have a tracer recursing into itself because
-> >>     something below do_stuff() has been instrumented, having hidden the entry
-> >>     point did not help at all.
-> >> 
-> >> So I would be tempted to use the "hide entry/exit points" with explicit
-> >> instr begin/end annotation to solve Problem #1, but I'm still thinking there
-> >> is value in the per recursion context "in_tracing" flag to prevent tracer
-> >> recursion.
-> > 
-> > The only recursion issue that I've seen discussed is breakpoints. And
-> > that's outside of the tracer infrastructure. Basically, if someone added a
-> > breakpoint for a kprobe on something that gets called in the int3 code
-> > before kprobes is called we have (let's say rcu_nmi_enter()):
-> > 
-> > 
-> > rcu_nmi_enter();
-> >  <int3>
-> >     do_int3() {
-> >        rcu_nmi_enter();
-> >          <int3>
-> >             do_int3();
-> >                [..]
-> > 
-> > Where would a "in_tracer" flag help here? Perhaps a "in_breakpoint" could?
-> 
-> An approach where the "in_tracer" flag is tested and set by the instrumentation
-> (function tracer, kprobes, tracepoints) would work here. Let's say the beginning
-> of the int3 ISR is part of the code which is invisible to instrumentation, and
-> before we issue rcu_nmi_enter(), we handle the in_tracer flag:
-> 
-> rcu_nmi_enter();
->  <int3>
->     (recursion_ctx->in_tracer == false)
->     set recursion_ctx->in_tracer = true
->     do_int3() {
->        rcu_nmi_enter();
->          <int3>
->             if (recursion_ctx->in_tracer == true)
->                 iret
-> 
-> We can change "in_tracer" for "in_breakpoint", "in_tracepoint" and
-> "in_function_trace" if we ever want to allow different types of instrumentation
-> to nest. I'm not sure whether this is useful or not through.
+- includes busy wait mode programming based on cmd busy_timeout
 
-Kprobes already has its own "in_kprobe" flag, and the recursion path is
-not so simple. Since the int3 replaces the original instruction, we have to
-execute the original instruction with single-step and fixup.
+- enables MMC_CAP_WAIT_WHILE_BUSY
 
-This means it involves do_debug() too. Thus, we can not do iret directly
-from do_int3 like above, but if recursion happens, we have no way to
-recover to origonal execution path (and call BUG()).
+Thanks
 
-As my previous email, I showed a patch which is something like
-"bust_kprobes()" for oops path. That is not safe but no other way to escape
-from this recursion hell. (Maybe we can try to call it instead of calling
-BUG() so that the kernel can continue to run, but I'm not sure we can
-safely make the pagetable to readonly again.)
+Sowjanya
 
-Thank you,
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
